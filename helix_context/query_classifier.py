@@ -36,6 +36,9 @@ _NUMERIC_KEYWORDS = ("calculate", "total", "sum")
 # Multi-word keywords (lowercase substring match).
 _MULTIWORD_KEYWORDS = ("critical path",)
 
+_WH_WORDS = ("who", "what", "where", "when", "which")
+_FACTUAL_MAX_WORDS = 15  # strict less-than
+
 
 def _scan_arithmetic(lower: str) -> List[str]:
     """Return the list of arithmetic signal tags matched in `lower`."""
@@ -65,6 +68,24 @@ def _arithmetic_meets_threshold(signals: List[str]) -> bool:
     return has_op and has_kw
 
 
+def _is_factual(lower: str) -> Optional[List[str]]:
+    """Return signal list if factual; None otherwise.
+
+    Length check is **AND** — both leading wh-word AND `< 15` words required.
+    """
+    stripped = lower.lstrip()
+    leading = stripped.split(maxsplit=1)
+    if not leading:
+        return None
+    first = leading[0].rstrip("?.,!:;")
+    if first not in _WH_WORDS:
+        return None
+    word_count = len(stripped.split())
+    if word_count >= _FACTUAL_MAX_WORDS:
+        return None
+    return [f"wh:{first}", f"length:{word_count}"]
+
+
 _DEFAULT = ClassifierResult(cls="default")
 
 
@@ -90,6 +111,18 @@ def classify_query(query: Optional[str]) -> ClassifierResult:
                 threshold_required=2,
                 assembly_max_genes_cap=2,
                 decoder_mode="minimal",
+            )
+
+        # Priority 2: factual
+        fact_signals = _is_factual(lower)
+        if fact_signals is not None:
+            return ClassifierResult(
+                cls="factual",
+                signals_matched=fact_signals,
+                signal_count=len(fact_signals),
+                threshold_required=1,
+                assembly_max_genes_cap=5,
+                decoder_mode="condensed",
             )
 
         return _DEFAULT
