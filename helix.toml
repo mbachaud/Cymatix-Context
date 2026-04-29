@@ -156,6 +156,13 @@ use_embeddings = false                  # Use Gene.embedding when populated (req
 harmonic_links = true                   # Compute weighted co-activation edges between expressed genes
 distance_metric = "cosine"              # "cosine" (weighted dot) | "w1" (Werman 1986 circular Wasserstein-1; Singh 2020 CMD)
 
+[classifier]
+# Upstream rule-based query classifier / injection router.
+# When enabled, contributes a decoder-mode hint and an assembly-stage
+# gene-count cap to build_context(). See
+# docs/specs/2026-04-29-query-classifier-injection-router-design.md.
+enabled = true
+
 [retrieval]
 # Tier 5.5 — Successor Representation (Stachenfeld 2017). γ-discounted
 # future-occupancy boost over the co-activation graph. Lazy, on-demand.

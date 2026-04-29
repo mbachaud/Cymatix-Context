@@ -174,3 +174,27 @@ def test_classifier_never_raises_on_pathological_input():
     # Surrogate pairs, control chars, etc. Must not raise.
     weird = "\x00\x01\x02 what \udcff is this?"
     classify_query(weird)  # no assertion — just no exception
+
+
+def test_classifier_config_defaults_to_enabled(tmp_path):
+    from helix_context.config import load_config
+    cfg_path = tmp_path / "helix.toml"
+    cfg_path.write_text("[classifier]\nenabled = true\n", encoding="utf-8")
+    cfg = load_config(str(cfg_path))
+    assert cfg.classifier.enabled is True
+
+
+def test_classifier_config_can_be_disabled(tmp_path):
+    from helix_context.config import load_config
+    cfg_path = tmp_path / "helix.toml"
+    cfg_path.write_text("[classifier]\nenabled = false\n", encoding="utf-8")
+    cfg = load_config(str(cfg_path))
+    assert cfg.classifier.enabled is False
+
+
+def test_classifier_config_default_when_section_absent(tmp_path):
+    from helix_context.config import load_config
+    cfg_path = tmp_path / "helix.toml"
+    cfg_path.write_text("", encoding="utf-8")
+    cfg = load_config(str(cfg_path))
+    assert cfg.classifier.enabled is True

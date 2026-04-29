@@ -244,6 +244,17 @@ class RetrievalConfig:
 
 
 @dataclass
+class ClassifierConfig:
+    """Upstream rule-based query classifier / injection router.
+
+    When enabled, contributes a decoder-mode hint and an assembly-stage
+    gene-count cap to build_context(). See
+    docs/specs/2026-04-29-query-classifier-injection-router-design.md.
+    """
+    enabled: bool = True
+
+
+@dataclass
 class PLRConfig:
     """Stacked PLR query-confidence head (STATISTICAL_FUSION.md §C3).
 
@@ -301,6 +312,7 @@ class HelixConfig:
     session: SessionConfig = field(default_factory=SessionConfig)
     plr: PLRConfig = field(default_factory=PLRConfig)
     headroom: HeadroomConfig = field(default_factory=HeadroomConfig)
+    classifier: ClassifierConfig = field(default_factory=ClassifierConfig)
     synonym_map: Dict[str, List[str]] = field(default_factory=dict)
 
 
@@ -517,6 +529,14 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             port=int(h.get("port", cfg.headroom.port)),
             mode=str(h.get("mode", cfg.headroom.mode)),
             dashboard_path=str(h.get("dashboard_path", cfg.headroom.dashboard_path)),
+        )
+
+    # Classifier — upstream rule-based query classifier / injection router
+    if "classifier" in raw:
+        cls_section = raw["classifier"]
+        _warn_unknown("classifier", cls_section, ClassifierConfig)
+        cfg.classifier = ClassifierConfig(
+            enabled=bool(cls_section.get("enabled", cfg.classifier.enabled)),
         )
 
     # Fix 1: synonym map
