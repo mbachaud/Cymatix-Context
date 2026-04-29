@@ -39,6 +39,14 @@ _MULTIWORD_KEYWORDS = ("critical path",)
 _WH_WORDS = ("who", "what", "where", "when", "which")
 _FACTUAL_MAX_WORDS = 15  # strict less-than
 
+_PROCEDURAL_PATTERNS = ("how do i", "how to", "steps", "walk me through")
+
+_MULTIHOP_CONNECTIVES = (
+    "and then", "because", "after that", "compare", " vs ",
+)
+_MULTIHOP_BETWEEN_RE = re.compile(r"\bbetween\s+\S+\s+and\s+\S+", re.IGNORECASE)
+_MULTIHOP_LONG_WORDS = 25  # strict greater-than
+
 
 def _scan_arithmetic(lower: str) -> List[str]:
     """Return the list of arithmetic signal tags matched in `lower`."""
@@ -86,6 +94,22 @@ def _is_factual(lower: str) -> Optional[List[str]]:
     return [f"wh:{first}", f"length:{word_count}"]
 
 
+def _scan_procedural(lower: str) -> List[str]:
+    return [f"keyword:{p}" for p in _PROCEDURAL_PATTERNS if p in lower]
+
+
+def _scan_multi_hop(lower: str, raw: str) -> List[str]:
+    signals: List[str] = []
+    for c in _MULTIHOP_CONNECTIVES:
+        if c in lower:
+            signals.append(f"connective:{c.strip()}")
+    if _MULTIHOP_BETWEEN_RE.search(raw):
+        signals.append("connective:between-x-and-y")
+    if len(raw.split()) > _MULTIHOP_LONG_WORDS:
+        signals.append(f"length:{len(raw.split())}")
+    return signals
+
+
 _DEFAULT = ClassifierResult(cls="default")
 
 
@@ -123,6 +147,31 @@ def classify_query(query: Optional[str]) -> ClassifierResult:
                 threshold_required=1,
                 assembly_max_genes_cap=5,
                 decoder_mode="condensed",
+            )
+
+        # Priority 3 vs 4: procedural before multi_hop is PROVISIONAL.
+        # The ordering between these two is asserted, not benchmarked.
+        # See spec section 3 — revisit after first procedural benchmark run.
+        proc_signals = _scan_procedural(lower)
+        if proc_signals:
+            return ClassifierResult(
+                cls="procedural",
+                signals_matched=proc_signals,
+                signal_count=len(proc_signals),
+                threshold_required=1,
+                assembly_max_genes_cap=6,
+                decoder_mode="full",
+            )
+
+        mh_signals = _scan_multi_hop(lower, text)
+        if mh_signals:
+            return ClassifierResult(
+                cls="multi_hop",
+                signals_matched=mh_signals,
+                signal_count=len(mh_signals),
+                threshold_required=1,
+                assembly_max_genes_cap=8,
+                decoder_mode="full",
             )
 
         return _DEFAULT

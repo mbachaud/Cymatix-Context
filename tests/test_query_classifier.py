@@ -90,3 +90,40 @@ def test_factual_no_wh_word_does_not_fire():
     # Short, but no leading wh-word.
     r = classify_query("Helix port number.")
     assert r.cls != "factual"
+
+
+# --- procedural ---
+
+
+def test_procedural_how_to_fires():
+    r = classify_query("How do I configure the ribosome timeout?")
+    assert r.cls == "procedural"
+    assert r.assembly_max_genes_cap == 6
+    assert r.decoder_mode == "full"
+
+
+def test_procedural_steps_keyword_fires():
+    r = classify_query("Walk me through the ingest steps.")
+    assert r.cls == "procedural"
+
+
+# --- multi_hop ---
+
+
+def test_multi_hop_connective_fires():
+    r = classify_query("Compare the cold tier and the hot tier.")
+    assert r.cls == "multi_hop"
+    assert r.assembly_max_genes_cap == 8
+    assert r.decoder_mode == "full"
+
+
+def test_multi_hop_long_query_fires():
+    # > 25 words, no other markers — length alone qualifies.
+    q = " ".join(["token"] * 26)
+    r = classify_query(q)
+    assert r.cls == "multi_hop"
+
+
+def test_multi_hop_and_then_connective():
+    r = classify_query("Run ingest and then verify the gene count.")
+    assert r.cls == "multi_hop"
