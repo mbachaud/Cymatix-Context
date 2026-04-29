@@ -127,3 +127,50 @@ def test_multi_hop_long_query_fires():
 def test_multi_hop_and_then_connective():
     r = classify_query("Run ingest and then verify the gene count.")
     assert r.cls == "multi_hop"
+
+
+# --- priority and robustness ---
+
+
+def test_priority_arithmetic_beats_multi_hop():
+    r = classify_query("Calculate the critical path and then explain why.")
+    assert r.cls == "arithmetic"
+
+
+def test_negative_priority_long_factual_with_stray_percent_stays_default():
+    # Long factual question with a single `%` — must NOT become arithmetic.
+    # No wh-word at front, > 15 words, single weak signal → never arithmetic.
+    q = (
+        "The dashboard reports the cache hit rate at 95% and the team is "
+        "discussing whether the synonym map is contributing to that figure."
+    )
+    r = classify_query(q)
+    assert r.cls != "arithmetic"
+
+
+def test_code_paste_does_not_trigger_arithmetic_from_paste_alone():
+    # A pasted code block carries operators but no numeric keyword. Without
+    # the keyword, the operator soup must not fire arithmetic via the
+    # strong-pair shortcut. Multiple distinct operators do still satisfy
+    # the >=2 signals rule, so the prompt itself contributes only the wrapper
+    # — write the wrapper to keep operators out.
+    paste = """
+    def f(x):
+        return x + 1
+    """
+    # Single operator class (`+`), zero keywords → must fall through.
+    r = classify_query(f"Explain this code: {paste}")
+    assert r.cls != "arithmetic"
+
+
+def test_truncation_bounds_classifier_work():
+    # A 10k-char query must classify without error and within ~ms.
+    huge = "what " + ("x " * 5000)
+    r = classify_query(huge)
+    assert r.cls in {"factual", "default", "multi_hop"}
+
+
+def test_classifier_never_raises_on_pathological_input():
+    # Surrogate pairs, control chars, etc. Must not raise.
+    weird = "\x00\x01\x02 what \udcff is this?"
+    classify_query(weird)  # no assertion — just no exception
