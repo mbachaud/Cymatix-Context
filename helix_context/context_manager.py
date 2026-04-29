@@ -37,6 +37,7 @@ from . import legibility
 from . import session_delivery as _session_delivery
 from .ribosome import DisabledBackend, LiteLLMBackend, Ribosome, OllamaBackend
 from .provenance import apply_metadata_hints, apply_provenance
+from .query_classifier import ClassifierResult, classify_query
 from .schemas import (
     ChromatinState,
     ContextHealth,
@@ -622,13 +623,38 @@ class HelixContextManager:
         """
         self._maybe_compact()
 
-        # Resolve per-request decoder override without mutating shared
-        # instance state (prevents races on the singleton manager under
-        # concurrent /context calls). None falls back to self._decoder_prompt.
+        # Step 0a: Upstream query classifier / injection router.
+        # Always runs (cheap, no I/O) — even when decoder_override is set,
+        # so the audit trail records what the classifier *would* have picked.
+        # See docs/specs/2026-04-29-query-classifier-injection-router-design.md.
+        classifier_enabled = getattr(
+            getattr(self.config, "classifier", None), "enabled", True,
+        )
+        classifier_result: Optional[ClassifierResult] = None
+        if classifier_enabled:
+            classifier_result = classify_query(query)
+
+        # Defensive defaults — referenced later by the classifier metadata
+        # block; must be defined on every code path that reaches the bottom.
+        override_applied = False
+        candidate_pool_size = 0
+
+        # Decoder selection: explicit caller override > classifier hint > default.
+        # Resolved per-request without mutating shared instance state to prevent
+        # races on the singleton manager under concurrent /context calls.
         if decoder_override and decoder_override in DECODER_MODES:
             effective_decoder_prompt = DECODER_MODES[decoder_override]
+            override_applied = True
+        elif (
+            classifier_result is not None
+            and classifier_result.decoder_mode
+            and classifier_result.decoder_mode in DECODER_MODES
+        ):
+            effective_decoder_prompt = DECODER_MODES[classifier_result.decoder_mode]
+            override_applied = False
         else:
             effective_decoder_prompt = self._decoder_prompt
+            override_applied = False
 
         # Reset per-call cold-tier markers (set by _express when cold fires)
         self._last_cold_tier_used = False
@@ -823,6 +849,24 @@ class HelixContextManager:
                         # so failures don't silently disable the tier.
                         log.warning("Lagrange pull-back failed", exc_info=True)
 
+        # Step 3.6: Apply classifier assembly cap.
+        # Invariant: classifier can only LOWER the assembled gene count.
+        # It cannot raise it, and it cannot reduce retrieval depth — the
+        # score-ratio tier above already saw the full candidate set.
+        candidate_pool_size = len(candidates)
+        if (
+            classifier_result is not None
+            and classifier_result.assembly_max_genes_cap is not None
+            and len(candidates) > classifier_result.assembly_max_genes_cap
+        ):
+            log.debug(
+                "Classifier cap: assembled %d -> %d (class=%s)",
+                len(candidates),
+                classifier_result.assembly_max_genes_cap,
+                classifier_result.cls,
+            )
+            candidates = candidates[: classifier_result.assembly_max_genes_cap]
+
         # Step 3.5: NLI classification (optional, DeBERTa backend only)
         relation_graph = {}
         if hasattr(self.ribosome, 'classify_relations'):
@@ -883,6 +927,22 @@ class HelixContextManager:
         if window.metadata is not None:
             window.metadata["budget_tier"] = budget_tier
             window.metadata["budget_tokens_est"] = budget_tokens_est
+
+        # Classifier observability payload (spec section 5.2).
+        if classifier_result is not None and window.metadata is not None:
+            window.metadata["classifier"] = {
+                "class": classifier_result.cls,
+                "signals_matched": list(classifier_result.signals_matched),
+                "signal_count": classifier_result.signal_count,
+                "threshold_required": classifier_result.threshold_required,
+                "assembly_max_genes_cap": classifier_result.assembly_max_genes_cap,
+                "max_genes_effective": len(candidates),
+                "decoder_selected": classifier_result.decoder_mode,
+                "override_applied": override_applied,
+                "candidate_pool_size": candidate_pool_size,
+            }
+            if classifier_result.reason:
+                window.metadata["classifier"]["reason"] = classifier_result.reason
 
         # Touch expressed genes (update epigenetics)
         expressed_ids = [g.gene_id for g in candidates]
