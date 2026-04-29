@@ -26,6 +26,7 @@ python examples/quickstart.py
 A transparent OpenAI-compatible proxy that intercepts LLM requests and injects compressed context from a persistent SQLite genome.
 
 **6-step pipeline per turn:**
+0a. **Classify** — rule-based query classifier picks decoder mode + assembly cap (no model call)
 1. **Extract** — heuristic keyword extraction from query (no model call)
 2. **Express** — SQLite promoter-tag lookup + synonym expansion + co-activation
 3. **Re-rank** — small CPU model scores candidates by relevance
@@ -44,6 +45,7 @@ A transparent OpenAI-compatible proxy that intercepts LLM requests and injects c
 | `genome.py` | SQLite DDL, promoter index, synonym expansion, co-activation |
 | `ribosome.py` | pack/re_rank/splice/replicate + timeout fallbacks |
 | `context_manager.py` | 6-step pipeline orchestrator + pending replication buffer |
+| `query_classifier.py` | Upstream rule-based router: classify_query() → decoder mode + assembly cap |
 | `server.py` | FastAPI proxy + /ingest, /context, /stats, /health endpoints |
 | `integrations/scorerift.py` | CD spectroscope bridge to ScoreRift audit system |
 
