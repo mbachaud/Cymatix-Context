@@ -53,6 +53,15 @@ from typing import Optional
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import httpx  # noqa: E402
+from helix_context.lexical_rescue import (  # noqa: E402
+    lexical_rescue_sources,
+    merge_source_ids,
+)
+from helix_context.chunk_fetch import fetch_relevant_chunks  # noqa: E402
+from helix_context.relevance_window import (  # noqa: E402
+    annotate_window,
+    best_relevance_window,
+)
 
 HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
 GENOME_PATH = os.environ.get(
@@ -334,7 +343,7 @@ def _resolve_path(source_id: str) -> Optional[Path]:
     return None
 
 
-def cell_helix_rag(client: httpx.Client, needle: dict, max_files: int = 12,
+def cell_helix_rag(client: httpx.Client, needle: dict, max_files: int = 16,
                    chars_per_file: int = 5000) -> dict:
     t0 = time.time()
     try:
@@ -352,39 +361,65 @@ def cell_helix_rag(client: httpx.Client, needle: dict, max_files: int = 12,
     except Exception as exc:
         return {"cell": "helix_rag", "error": str(exc)}
 
-    source_ids: list[str] = []
+    packet_source_ids: list[str] = []
     for bucket in ("verified", "stale_risk", "contradictions"):
         for item in packet.get(bucket, []) or []:
             sid = item.get("source_id")
-            if sid and sid not in source_ids:
-                source_ids.append(sid)
+            if sid and sid not in packet_source_ids:
+                packet_source_ids.append(sid)
     for tgt in packet.get("refresh_targets", []) or []:
         sid = tgt.get("source_id")
-        if sid and sid not in source_ids:
-            source_ids.append(sid)
+        if sid and sid not in packet_source_ids:
+            packet_source_ids.append(sid)
+
+    rescued_source_ids = lexical_rescue_sources(
+        needle["query"],
+        genome_path=GENOME_PATH,
+        limit=4,
+        exclude_source_ids=packet_source_ids,
+    )
+    source_ids = merge_source_ids(
+        packet_source_ids,
+        rescued_source_ids,
+        max_sources=max_files,
+    )
 
     fetched = {}
     n_read = 0
     n_missing = 0
-    for sid in source_ids[:max_files]:
+    for sid in source_ids:
         path = _resolve_path(sid)
         if path is None:
             n_missing += 1
             continue
         try:
-            fetched[sid] = path.read_text(encoding="utf-8", errors="replace")[:chars_per_file]
+            fetched[sid] = path.read_text(encoding="utf-8", errors="replace")
             n_read += 1
         except Exception:
             n_missing += 1
 
-    content = "\n---\n".join(fetched.values())
+    content = "\n".join(
+        annotate_window(
+            sid,
+            best_relevance_window(
+                text,
+                needle["query"],
+                max_chars=chars_per_file,
+            ),
+            len(text),
+        )
+        for sid, text in fetched.items()
+    )
     return {
         "cell": "helix_rag",
         "latency_s": round(time.time() - t0, 3),
-        "delivered_srcs": source_ids[:max_files],
-        "n_delivered": len(source_ids[:max_files]),
+        "delivered_srcs": source_ids,
+        "n_delivered": len(source_ids),
         "n_read": n_read,
         "n_missing": n_missing,
+        "packet_source_ids": packet_source_ids,
+        "lexical_rescue_sources": rescued_source_ids,
+        "n_lexical_rescued": len(rescued_source_ids),
         "content": content,
         "content_chars": len(content),
     }
@@ -394,7 +429,7 @@ def cell_helix_rag(client: httpx.Client, needle: dict, max_files: int = 12,
 
 
 def cell_helix_full_stack(client: httpx.Client, needle: dict,
-                          max_files: int = 12,
+                          max_files: int = 16,
                           chars_per_file: int = 5000) -> dict:
     """Packet → DAG-resolved claims + cached DAL fetch.
 
@@ -433,34 +468,92 @@ def cell_helix_full_stack(client: httpx.Client, needle: dict,
         # DAG optional — graceful fallback
         log_msg = f"DAG resolution skipped: {exc}"
 
-    # DAL (cached): fetch every packet source
+    packet_source_ids: list[str] = []
+    for bucket in ("verified", "stale_risk", "contradictions"):
+        for item in packet.get(bucket, []) or []:
+            sid = item.get("source_id")
+            if sid and sid not in packet_source_ids:
+                packet_source_ids.append(sid)
+    for tgt in packet.get("refresh_targets", []) or []:
+        sid = tgt.get("source_id")
+        if sid and sid not in packet_source_ids:
+            packet_source_ids.append(sid)
+
+    rescued_source_ids = lexical_rescue_sources(
+        needle["query"],
+        genome_path=GENOME_PATH,
+        limit=4,
+        exclude_source_ids=packet_source_ids,
+    )
+    source_ids = merge_source_ids(
+        packet_source_ids,
+        rescued_source_ids,
+        max_sources=max_files,
+    )
+
+    chunk_hits = fetch_relevant_chunks(
+        needle["query"],
+        genome_path=GENOME_PATH,
+        limit=6,
+    )
+
+    # DAL (cached): fetch packet sources plus bounded lexical rescues.
     try:
-        from helix_context.adapters.cache import (
-            CachedDAL, fetch_packet_sources_cached,
-        )
+        from helix_context.adapters.cache import CachedDAL
         from helix_context.adapters.dal import DAL
-        cache = CachedDAL(DAL(max_bytes=chars_per_file))
-        fetched = fetch_packet_sources_cached(
-            packet, cache=cache, max_sources=max_files,
-        )
+        cache = CachedDAL(DAL(max_bytes=max(chars_per_file * 8, 50000)))
+        fetched = [(sid, cache.fetch(sid)) for sid in source_ids]
     except Exception as exc:
         return {"cell": "helix_full_stack", "error": f"DAL: {exc}"}
 
     # Build content blob: claim texts + fetched file contents
     claim_text = "\n".join(c.get("claim_text", "") for c in resolved_claims)
-    file_text = "\n---\n".join(
-        r.text for _, r in fetched if r.ok and r.text
+    file_text = "\n".join(
+        annotate_window(
+            sid,
+            best_relevance_window(
+                r.text or "",
+                needle["query"],
+                max_chars=chars_per_file,
+            ),
+            len(r.text or ""),
+        )
+        for sid, r in fetched
+        if r.ok and r.text
     )
-    content = f"CLAIMS:\n{claim_text}\n\nFETCHED:\n{file_text}" \
-        if claim_text else file_text
+    chunk_text = "\n---\n".join(
+        f"CHUNK {hit.gene_id} src={hit.source_id} score={hit.score:.2f}\n"
+        f"{hit.content}"
+        for hit in chunk_hits
+        if hit.content
+    )
+    parts = []
+    if claim_text:
+        parts.append(f"CLAIMS:\n{claim_text}")
+    if chunk_text:
+        parts.append(f"CHUNKS:\n{chunk_text}")
+    if file_text:
+        parts.append(f"FETCHED:\n{file_text}")
+    content = "\n\n".join(parts)
 
     delivered_srcs = [sid for sid, _ in fetched]
+    chunk_source_ids = [hit.source_id for hit in chunk_hits if hit.source_id]
     return {
         "cell": "helix_full_stack",
         "latency_s": round(time.time() - t0, 3),
-        "delivered_srcs": delivered_srcs,
+        "delivered_srcs": merge_source_ids(
+            delivered_srcs,
+            chunk_source_ids,
+            max_sources=max_files + len(chunk_source_ids),
+        ),
         "n_delivered": len(delivered_srcs),
         "n_claims_resolved": len(resolved_claims),
+        "chunk_gene_ids": [hit.gene_id for hit in chunk_hits],
+        "chunk_source_ids": chunk_source_ids,
+        "n_chunks": len(chunk_hits),
+        "packet_source_ids": packet_source_ids,
+        "lexical_rescue_sources": rescued_source_ids,
+        "n_lexical_rescued": len(rescued_source_ids),
         "content": content,
         "content_chars": len(content),
     }
@@ -591,6 +684,25 @@ def print_aggregate(results: list[dict]) -> None:
               f"{(lat_sum/n)*1000:>6.0f} ms")
 
 
+def _answer_full_count(results: list[dict], cell_name: str) -> int:
+    total = 0
+    for r in results:
+        score = r["cells"][cell_name]["score"]
+        if "error" not in score and score.get("content_full"):
+            total += 1
+    return total
+
+
+def print_bm25_delta(results: list[dict]) -> None:
+    bm25 = _answer_full_count(results, "pure_rag_bm25")
+    full = _answer_full_count(results, "helix_full_stack")
+    rag = _answer_full_count(results, "helix_rag")
+    print("\n=== BM25 parity gate ===")
+    print(f"pure_rag_bm25 answer_full:    {bm25}/{len(results)}")
+    print(f"helix_rag answer_full:        {rag}/{len(results)}  delta={rag - bm25:+d}")
+    print(f"helix_full_stack answer_full: {full}/{len(results)}  delta={full - bm25:+d}")
+
+
 def main() -> int:
     if not Path(GENOME_PATH).exists():
         print(f"ERROR: genome not found at {GENOME_PATH}")
@@ -630,6 +742,7 @@ def main() -> int:
     print()
     print_per_needle(results)
     print_aggregate(results)
+    print_bm25_delta(results)
 
     out = Path("benchmarks/results") / f"helix_rag_composition_{time.strftime('%Y-%m-%d')}.json"
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -651,6 +764,13 @@ def main() -> int:
         "results": trimmed,
     }, indent=2))
     print(f"\nsaved to {out}")
+    if (
+        os.environ.get("HELIX_BENCH_REQUIRE_BM25_PARITY", "0") == "1"
+        and _answer_full_count(results, "helix_full_stack")
+        < _answer_full_count(results, "pure_rag_bm25")
+    ):
+        print("ERROR: helix_full_stack is below pure_rag_bm25 answer_full")
+        return 2
     return 0
 
 

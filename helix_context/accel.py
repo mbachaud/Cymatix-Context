@@ -137,6 +137,45 @@ STOP_WORDS: FrozenSet[str] = frozenset({
 _STRIP_CHARS = "?.,!;:'\"()[]{}*~`"
 
 
+def _singular_plural_variants(term: str) -> list[str]:
+    """Return conservative singular/plural retrieval variants."""
+    if len(term) <= 3:
+        return []
+    variants: list[str] = []
+    if term.endswith("ies") and len(term) > 4:
+        variants.append(term[:-3] + "y")
+    elif term.endswith("s") and not term.endswith(("ss", "us")):
+        variants.append(term[:-1])
+    else:
+        variants.append(term + "s")
+    return [v for v in variants if v and v != term and len(v) > 2]
+
+
+def expand_query_terms(terms: list[str]) -> list[str]:
+    """Expand query terms with compound parts and tiny morphology."""
+    expanded: list[str] = []
+    seen: set[str] = set()
+
+    def _add(term: str) -> None:
+        t = term.strip(_STRIP_CHARS).lower()
+        if len(t) > 2 and t not in STOP_WORDS and t not in seen:
+            seen.add(t)
+            expanded.append(t)
+
+    for term in terms:
+        base = term.strip(_STRIP_CHARS).lower()
+        if not base:
+            continue
+        parts = [p for p in re.split(r"[_\-/]+", base) if p]
+        candidates = [base] + parts
+        for candidate in candidates:
+            _add(candidate)
+        for candidate in candidates:
+            for variant in _singular_plural_variants(candidate):
+                _add(variant)
+    return expanded
+
+
 def extract_query_signals(query: str) -> Tuple[List[str], List[str]]:
     """
     Fast keyword extraction from query for promoter matching.
@@ -144,7 +183,7 @@ def extract_query_signals(query: str) -> Tuple[List[str], List[str]]:
     Uses pre-built frozenset and avoids per-call set construction.
     Returns (domains, entities) tuple.
     """
-    words = query.lower().split()
+    words = re.findall(r"[a-z0-9_/\-]+", query.lower())
     keywords = []
     for w in words:
         stripped = w.strip(_STRIP_CHARS)
@@ -153,7 +192,8 @@ def extract_query_signals(query: str) -> Tuple[List[str], List[str]]:
 
     # isupper() branch was dead — `words` was already lowercased above,
     # so w[0].isupper() can never be true. Length-only filter preserved.
-    entities = [w for w in keywords if len(w) > 4]
+    expanded_keywords = expand_query_terms(keywords)
+    entities = [w for w in expanded_keywords if len(w) >= 4]
     domains = keywords[:5]
     return domains, entities
 
