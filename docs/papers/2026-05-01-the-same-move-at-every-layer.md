@@ -144,7 +144,15 @@ What's left is the part where I'm honest about what's converged, what hasn't, an
 
 ## What converges, what doesn't, what's next (§8, ~500w)
 
-<!-- TODO Task 9 -->
+**The two-part move is the convergence; layer is the variable.** What's converged across five layers is the *concern*: persistence and selective expression as one architectural problem, not two. What hasn't converged is the *answer* — which layer a given system places the move at, and *who* makes the selection decision. HOPE puts it below the model boundary; KVzip puts it on the cache; SPLADE/RAPTOR/GraphRAG put it on the index; MemGPT puts the LLM itself on policy duty; Letta peels consolidation off the hot path. Five layers, five live disagreements about implementation. The agreement is on the shape, not the shape's filling.
+
+**Some things look adjacent but aren't the move.** **LLMLingua**, flagged back in §2, is the canonical example: half (b) without half (a), a per-call compressor with no state across requests. The other neighbor worth naming, since it shows up in production stacks all the time, is **pure caching without policy** — the kind that just keeps everything until eviction pressure forces a drop. That's half (a) with half (b) reduced to "first in, first out." Both are useful; both are off the convergence map for the same kind of reason. Off the map isn't a verdict on quality, it's a statement about which architectural concern the tool is solving. Different concern, not worse concern.
+
+**The interesting open question is composition.** Each layer-walk so far has held the others fixed. Nobody has actually run a stack where the move appears at every layer simultaneously: a Helix-style substrate underneath an agent-memory layer running on top of a compressed KV cache running on top of a HOPE-style runtime-updating model. The pieces exist in isolation. The configuration is not yet a tested object. When somebody builds it, they will discover whether the layers compose — each one's persistence and selection cleanly nested inside the next — or whether they interfere, with overlapping caches fighting over what's hot and which copy is authoritative. The next interesting research at this layer isn't "who wins Layer N." It's whether the moves stack.
+
+The shape of the next post follows from that. Helix isn't v1.0 yet, and the §7 BM25 receipt makes the reason concrete: a head-to-head benchmark fight between Helix and the neighbors already on the map — KVzip, GraphRAG, Letta — would be premature while the substrate pieces are still moving. So that fight is the next post, deferred until after the BM25-loss, the PKI tier issue, and the 4555-char assembly ceiling from §7 are closed. It will be evidence-shaped, not hero-shaped, in the same register as this one. Until then, the contribution this paper is trying to make is the *map* — five layers, the same move at each, three findings about how the field splits — not a claim about Helix's position on it.
+
+The field is getting interesting in the way fields get interesting right before they get loud. I'd rather show up to the loud part with receipts than with a story, so that's what the next one will have.
 
 ---
 
