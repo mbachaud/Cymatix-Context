@@ -53,7 +53,17 @@ One thing to flag before the layer walk begins: half (a) is the easy half. Persi
 
 ## Layer 1 — Model internals: HOPE (§3, ~500w, Bucket 2 hedged)
 
-<!-- TODO Task 4 -->
+Start at the bottom of the stack. **HOPE** is the architecture Google Research introduced alongside the *Nested Learning* paradigm, presented at NeurIPS 2025. From the public write-ups, it's positioned as a self-modifying recurrent architecture that treats training and inference as the same kind of process running at different rates, rather than as two phases separated by a deployment boundary. The framing seems to be: a model is not one optimizer wrapped around frozen weights, but a stack of nested optimizers, each with its own update frequency, each carrying its own slice of state forward. The slogan from the blog post — that architecture and optimizer are "fundamentally the same concepts" at different levels — is the part I want to take seriously here.
+
+Map that onto the two-part move from §2 and it lines up cleanly, if I'm reading the materials correctly.
+
+Half (a), persistence, is the model's *own internal state* — not weights frozen at training time, but state that the inner loops continue to update across calls. As I read it, HOPE leans on a Continuum Memory System: blocks of state that update at different frequencies, so that some of the model's parameters behave like fast scratch memory, some behave like slower consolidated memory, and some behave like the conventional, almost-static weights we're used to. Persistence isn't bolted on — it *is* the architecture.
+
+Half (b), selective expression, is the inner loop itself. The Titans line of work this builds on prioritizes memory updates by how *surprising* an input is; HOPE's self-referential variant, if I understand correctly, lets the model influence its own update rule rather than running a fixed one. Which slice of incoming experience gets written into which memory tier, at which frequency — that is the selection policy. It is learned, it is in-architecture, and it is running on the same hot path as generation rather than off in a nightly fine-tune job.
+
+**Property callout: same shape, lowest layer.** The thing I want to flag is that this is the *same two-part move* the rest of the paper will trace through KV caches, indexes, agent memory, and substrate — but it appears here below the API surface. Most of the field's continual-learning conversation lives one layer up, framed as a *training* problem (LoRA, periodic fine-tunes, RLHF cycles). Nested Learning's contribution, as I read it, is to relocate that conversation into runtime: continual learning as a property of how the model *runs*, not of how it was last trained. That is a layer-shift, not just a technique.
+
+At every layer above this one, the persistence-and-selection move recurs — but always above the model boundary, working on activations or text or files. HOPE is what the same move looks like when it dives below that boundary and operates on the model's own state directly. ([Google Research — *Introducing Nested Learning*](https://research.google/blog/introducing-nested-learning-a-new-ml-paradigm-for-continual-learning/))
 
 ## Layer 2 — KV cache: KVzip, KVPress (§4, ~500w, Bucket 2 hedged)
 
