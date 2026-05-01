@@ -93,7 +93,26 @@ Above the retrieval index, the substrate stops being static. At Layer 4, half (a
 
 ## Layer 4 — Agent memory: MemGPT, Letta (§6, ~700w)
 
-<!-- TODO Task 7 -->
+Layer 4 is where the move was *named first*. [MemGPT](https://arxiv.org/abs/2310.08560) — Packer et al., 2023 — reached for an OS-paging analogy and built an LLM-memory architecture around it, and that act of naming is a lot of why this layer is the one most readers reach for when they hear "AI memory." The vocabulary the rest of the field now uses for memory tiers came from here. It is also the layer where the substrate stops being static: the index doesn't have to freeze once it's built; persistence and selective expression can run as a live loop.
+
+**MemGPT.** Run the two-part move test. Half **(a) — persistence —** is the two-tier memory hierarchy modeled on virtual memory. *Main context* is the in-context tier (≈ RAM): system instructions, a working context block the model can edit, and a FIFO queue of recent messages. *External context* is the out-of-context tier (≈ disk): *recall storage* for short-term message history, and *archival storage* for long-term notes the agent has chosen to keep. Both tiers outlive any single call. Half **(b) — the selective-expression policy — is the LLM itself**, exercised through a fixed set of function calls. `archival_memory_search` retrieves from the long-term tier; `archival_memory_insert` writes to it; `recall_memory_search` retrieves from the short-term tier; the `working_context_*` family lets the model directly edit its in-context working block. When the main context fills, MemGPT issues a *pressure warning* back to the model so it can decide what to evict, what to push to archival, and what to summarize — the OS-paging analogy carried all the way through. A `request_heartbeat=true` keyword in a function call lets the model chain these moves across multiple steps without waiting for new user input. The contribution wasn't a new retrieval algorithm; it was making the LLM the policy and giving the field the language ("hot," "cold," "evict," "page in") to talk about that arrangement as one architecture.
+
+**Letta.** [Letta](https://www.letta.com/) is the production framework that grew out of MemGPT, and its meaningful architectural addition is the **dual-agent split**. The *primary agent* handles user requests on the hot path: it executes tasks, reads external memory through the same MemGPT-style tool calls, and serves the response. Crucially, in this configuration the primary agent does **not** directly edit its own core (in-context) memory. The *sleep-time agent* runs **asynchronously, during idle periods**, manages its own scratch memory, and is the one that curates the primary's core in-context block. Read against §2's vocabulary, what Letta has done is separate the *express* decision from the *consolidate* decision: expression stays synchronous and request-driven, while consolidation moves off the hot path and onto an idle-time schedule. Same move, two clocks.
+
+**The first cross-layer finding.** With Layer 4 on the table, the convergence map sharpens enough to state a finding the prior layers were only setting up. Reach back to RAPTOR and GraphRAG from §5 and lay all four selection policies side by side:
+
+| System | Who decides what's expressed | Mode |
+|---|---|---|
+| RAPTOR | heuristic (cosine top-k at each tree level) | sync |
+| GraphRAG | LLM-rated (self-scored helpfulness in map-reduce) | sync |
+| MemGPT | LLM self-edit via tool calls | sync |
+| Letta sleep-time agent | LLM self-edit via a separate agent | **async** |
+
+The selection decision exists, in identifiable form, in every one of these systems. *Who* makes it — a fixed cosine rule, an LLM rating its own partial answers, an LLM editing its own memory through tool calls, or an entirely separate LLM running off the hot path — splits four ways across four otherwise unrelated projects. The field has converged on the *existence and shape* of the policy without converging at all on its implementation. That's the finding, and it's the first one this paper can make without hedging: not "everyone is doing the same thing," but "everyone agrees this is a thing, and disagrees about everything else."
+
+The move is most legible here, which is partly why it's easy to mistake the agent-memory layer for the whole story. MemGPT's OS-paging frame and Letta's dual-agent split are vivid, easy to explain, and easy to ship — and the vocabulary they minted now travels back down to KV-cache work and up into substrate work. Legibility is not the same as completeness.
+
+At Layer 5, the move shows up *below* the agent — at the substrate that an agent's memory tiers might run on top of. That's where the receipts live.
 
 ## Layer 5 — Substrate: Helix as one Agentome-stack instance (§7, ~900w)
 
