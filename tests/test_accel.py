@@ -13,6 +13,7 @@ from helix_context.accel import (
     json_dumps,
     json_dumps_bytes,
     estimate_tokens,
+    expand_query_terms,
     extract_query_signals,
     STOP_WORDS,
     PromptBuilder,
@@ -171,6 +172,31 @@ class TestQuerySignalExtraction:
 
     def test_stop_words_is_frozen(self):
         assert isinstance(STOP_WORDS, frozenset)
+
+    def test_expands_plural_and_singular_variants(self):
+        expanded = expand_query_terms(["claim", "ports", "values"])
+        assert "claims" in expanded
+        assert "port" in expanded
+        assert "value" in expanded
+
+    def test_splits_compound_query_terms(self):
+        expanded = expand_query_terms(["claim_type"])
+        assert "claim_type" in expanded
+        assert "claim" in expanded
+        assert "claims" in expanded
+        assert "type" in expanded
+        assert "types" in expanded
+
+    def test_query_entities_include_expanded_retrieval_terms(self):
+        domains, entities = extract_query_signals(
+            "claim_type allowed values helix claims layer specification"
+        )
+        combined = set(domains) | set(entities)
+        assert "claim" in combined
+        assert "claims" in combined
+        assert "type" in combined
+        assert "values" in combined
+        assert "value" in combined
 
 
 # ── Pre-compiled regex patterns ──────────────────────────────────
