@@ -47,9 +47,35 @@ Both halves are required. A vector database with no selection policy on top is j
 
 The cleanest adjacent-but-not-convergent example is **LLMLingua**. LLMLingua compresses prompts in flight — it shrinks whatever you hand it before the model reads it. There is no state across requests; the next call starts over. Useful, but it sits next to the move rather than on it: half (b), none of (a).
 
-This definition is load-bearing for the rest of the paper. Every later section uses it as a test: when I say a system is on the map, I mean it has both halves, in that shape. When I say a system is adjacent, I mean one half is missing or vestigial.
+This definition is load-bearing for the rest of the paper. Every later section uses it as a test: when I say a system is on the map, I mean it has both halves, in that shape. When I say a system is adjacent, I mean one half is missing or vestigial. That test cuts both ways: §8 comes back to the useful systems that fail it, because adjacency is not the same as convergence.
 
 One thing to flag before the layer walk begins: half (a) is the easy half. Persistence is everywhere — caches, indexes, weights, files. The interesting variation, and where the field is actually splitting apart, is in half (b). Heuristic vs. learned vs. LLM-self-edit. Synchronous on the hot path vs. asynchronous between turns. That's what the next five sections walk through.
+
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│  L1  MODEL INTERNALS                                                 │
+│      weights & optimizer state evolve at runtime                     │
+│      [(a) state]  ──(b) selects──▶  HOPE                             │
+├──────────────────────────────────────────────────────────────────────┤
+│  L2  KV CACHE                                                        │
+│      compressed cache reused across calls                            │
+│      [(a) state]  ──(b) selects──▶  KVzip · KVPress                  │
+├──────────────────────────────────────────────────────────────────────┤
+│  L3  RETRIEVAL INDEX                                                 │
+│      static index, varied selection policies                         │
+│      [(a) state]  ──(b) selects──▶  SPLADE · RAPTOR · GraphRAG       │
+├──────────────────────────────────────────────────────────────────────┤
+│  L4  AGENT MEMORY                                                    │
+│      tiers managed by the LLM, sync or async                         │
+│      [(a) state]  ──(b) selects──▶  MemGPT · Letta                   │
+├──────────────────────────────────────────────────────────────────────┤
+│  L5  SUBSTRATE                                                       │
+│      persistent across processes & agents                            │
+│      [(a) state]  ──(b) selects──▶  ⟦ Helix ⟧                        │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
+*Helix is one instance at one layer. The shape is the field's, not Helix's.*
 
 ## Layer 1 — Model internals: HOPE (§3, ~500w, Bucket 2 hedged)
 
@@ -89,7 +115,7 @@ Layer 3 is where half (a) has the longest tenure. Databases outlived requests be
 
 So three techniques, one layer, three different answers to "how do we choose what's hot." Learned weights, vector geometry, model self-rating. The two-part-move test passes for all three — but it passes by appealing to wildly different machinery for the same half. That's worth flagging on its own: convergence on the *shape* of the move does not imply convergence on its *implementation*, and Layer 3 is the cleanest place to see that. The other thing worth flagging — and it's a setup, not a conclusion — is that both RAPTOR and GraphRAG explicitly freeze their persistent state once the index pipeline finishes. The tree is static. The graph is static. That's a Layer-3 trait.
 
-Above the retrieval index, the substrate stops being static. At Layer 4, half (a) starts updating on its own.
+Above the retrieval index, the substrate stops being static. At Layer 4, half (a) stops being frozen.
 
 ## Layer 4 — Agent memory: MemGPT, Letta (§6, ~700w)
 
@@ -124,19 +150,19 @@ Layer 5 is below the agent. If MemGPT and Letta are doing memory at the agent bo
 |---|---|---|
 | OPEN (hot) | 12,401 | Default retrieval target |
 | EUCHROMATIN (warm) | 1,895 | Included with hot queries |
-| HETEROCHROMATIN (cold) | 3,327 | Opt-in, queryable via ΣĒMA cosine fallthrough |
+| HETEROCHROMATIN (cold) | 3,327 | Opt-in, queryable via ΣĒMA cosine fallthrough (defined below) |
 
 The chromatin metaphor isn't decorative. Each tier has different read/write economics — OPEN is what the default retrieval pipeline scans on every query; EUCHROMATIN rides along when the hot tier matches; HETEROCHROMATIN is silent unless something explicitly reaches for it. That asymmetry is half **(a)** of the move from §2: state that persists past the request, with the persistence shaped so that *most of it is cold most of the time*. 670 MB on disk, but only ~12K genes are paying for default-query attention.
 
-**Selection in code.** Half **(b)** — the policy that decides what becomes hot — runs in two places. The first is **ΣĒMA cosine fallthrough**, the OPEN→HETEROCHROMATIN bridge: when the hot tier doesn't match, the cold tier is queried by 20-dimensional semantic cosine. The second is **density-gated admission**, which decides which tier a gene lives in to begin with. The thresholds in [`helix_context/genome.py`](../../helix_context/genome.py) are: `_DENSITY_HETEROCHROMATIN_THRESHOLD = 0.50` (below this, a gene drops to cold), `_DENSITY_EUCHROMATIN_THRESHOLD = 1.00` (between 0.50 and 1.00 is warm, above is hot), and `_DENSITY_ACCESS_OVERRIDE = 5` (any gene with `access_count >= 5` stays OPEN regardless of density score). Crucially, this promotion logic is **asynchronous** — it runs between requests, not on the hot path. The synchronous query never blocks on tier reorganization. That asynchrony is the architectural choice §6 was setting up; I'll come back to it.
+**Selection in code.** Half **(b)** — the policy that decides what becomes hot — splits into a sync half and an async half, and that split is itself the architectural claim. **ΣĒMA cosine fallthrough** runs on the hot path: it's the OPEN→HETEROCHROMATIN bridge that fires synchronously when the hot tier doesn't match, querying the cold tier by 20-dimensional semantic cosine. **Density-gated admission** runs between requests: it decides which tier a gene lives in to begin with, and rebalances tiers without blocking any active query. The thresholds in [`helix_context/genome.py`](../../helix_context/genome.py) are: `_DENSITY_HETEROCHROMATIN_THRESHOLD = 0.50` (below this, a gene drops to cold), `_DENSITY_EUCHROMATIN_THRESHOLD = 1.00` (between 0.50 and 1.00 is warm, above is hot), and `_DENSITY_ACCESS_OVERRIDE = 5` (any gene with `access_count >= 5` stays OPEN regardless of density score). Sync expression, async consolidation — that's the split §6 was setting up, and Finding 3 below comes back to it.
 
-**Self-organization, with the caveat.** From the same field report: *"the biological architecture self-organized into thirteen retrieval lanes. All of them are wired. An A/B experiment is running right now that may cut the count back to eleven. Cymatics works. E8 does not."* Thirteen lanes today, possibly eleven after the in-flight A/B; the count isn't final and shouldn't be reported as if it were. Calling the cymatics-works/E8-doesn't beat out is the point — this is a system that's being *measured* against alternatives, not just shipped, and that distinction matters more than the lane count itself.
+**Self-organization, with the caveat.** From the same field report: *"the biological architecture self-organized into thirteen retrieval lanes. All of them are wired. An A/B experiment is running right now that may cut the count back to eleven. Cymatics works."* Thirteen lanes today, possibly eleven after the in-flight A/B; the count isn't final and shouldn't be reported as if it were. The point isn't the metaphor — the point is that competing lane topologies are being tested against each other, with some surviving measurement and others not. This is a system being *measured* against alternatives, not just shipped, and that distinction matters more than the lane count itself.
 
 **The honest tax.** On the 2026-04-22 needle benchmark ([2026-04-22 research review](../research/RESEARCH_REVIEW_2026-04-22.md)), pure BM25 hit **8/8 content_full at 151 ms** while `helix_rag` (the BM25-augmented Helix mode) hit **4/8 at 1793 ms**. That's the headline. The pure-Helix `helix_only` mode is a separate config and currently has its own **4555-char assembly ceiling** issue. Three stacked failures explain the regression. *Population dilution at 17K genes:* test and doc files mention `port` and `helix` hundreds of times in fixtures and assertions, while `helix.toml` mentions them once each — the tag-exact, FTS5, and source-authority lanes accumulate on test files until config files can't compete, while BM25's IDF trivially finds the needle. *PKI tier structurally broken on this genome:* `packet_notes` reports `"source_index unavailable; using gene-local metadata only"` on 6 of 8 needles, the 0.30 coordinate-confidence floor sends everything to `refresh_targets` instead of `verified`, and PKI does exact-equality matching so query term `ports` (plural) never matches `kv_key=port` (singular). *The 4555-char ceiling:* the ribosome splice budget hits before useful content escapes the pipeline — a content-delivery bug, not a ranking failure. This is what it looks like to be on the map but not yet the best instance on it. It belongs here, in the same paragraph as the genome-shape numbers, because the "evidence > hero" framing only earns its keep if the negative receipt is as visible as the positive one.
 
 **Cross-process and cross-agent reach.** What makes Helix specifically a Layer-5 instance, rather than a Layer-4 one, is that the genome surface lives below any individual agent. The MCP server attaches `Participant` records keyed on session handles — `laude`, `raude`, `taude`, `gemini`, `batman` — and [`helix_context/sharding.py`](../../helix_context/sharding.py) carries this through into per-handle SQLite shards (`laude.genome.db`, etc.). Sparse persistent state survives process restarts, and the same genome is reachable by multiple agents who attach with their own handle. That's what "substrate" means in this taxonomy: state that is not *the* agent's memory, but a layer agents read from and write to.
 
-**Finding 2 — static-vs-evolving substrate splits along layer.** RAPTOR and GraphRAG (Layer 3) freeze their persistent artifact post-construction; the tree is static, the graph is static. MemGPT and Letta (Layer 4) evolve, with the LLM editing memory at runtime. Helix (Layer 5) sits *across both*: retrieval-layer machinery (lanes, ΣĒMA) under memory-layer dynamism (chromatin promotion). The chromatin-promotion logic is the bridge — it lets the *retrieval surface itself* be evolving substrate. Whether this position is uniquely Helix's is not the claim; the claim is that the position itself is interesting and underexplored.
+**Finding 2 — static-vs-evolving substrate splits along layer.** RAPTOR and GraphRAG (Layer 3) freeze their persistent artifact post-construction; the tree is static, the graph is static. MemGPT and Letta (Layer 4) evolve, with the LLM editing memory at runtime. Helix (Layer 5) sits *across both*: retrieval-layer machinery (lanes, ΣĒMA) under memory-layer dynamism (chromatin promotion). The chromatin-promotion logic is the bridge — it lets the *retrieval surface itself* be evolving substrate. In practice, that means the same artifact a query reads from is the artifact the consolidator rewrites. Whether this position is uniquely Helix's is not the claim; the claim is that the position itself is interesting and underexplored.
 
 **Finding 3 — Letta sleep-time agent ↔ Helix chromatin promotion.** The closest direct convergence with Helix is the architectural choice §6 traced through Letta: separate *express* (sync, hot path) from *consolidate* (async, between-turns). Letta runs a second LLM as the consolidator; Helix runs density-gated admission as the consolidator. Different machinery, different layers, same architectural split.
 
