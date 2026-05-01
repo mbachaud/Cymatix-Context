@@ -30,6 +30,7 @@ helix.db-wal
 helix.log
 metrics.json
 overnight_logs/
+logs/
 genomes/
 
 # Benchmark incremental traces (one line per needle)
@@ -45,6 +46,12 @@ benchmarks/docs_tidy_diff.md
 benchmarks/docs_tidy_*.json
 benchmarks/*error*.json
 benchmarks/snow/results/*error*.json
+# Benchmark run outputs — regenerable, large, per-run timestamps. If a JSON
+# *should* be tracked (curated fixture, etc.) commit it with `git add -f`.
+benchmarks/*.json
+benchmarks/results/
+benchmarks/*_report.txt
+benchmarks/*_report_utf8.txt
 
 # IDE
 .vscode/
@@ -65,6 +72,8 @@ core_ingest.log
 
 # Server runtime log (redirected stdout when starting via `python -m helix_context.server > helix_server.log`)
 helix_server.log
+# Catches sharded_server.log, helix_mcpo_server.log, etc. — any *_server.log shape.
+*_server.log
 
 # cwola_log export staging area (scripts/export_cwola_log.py writes here before rclone upload)
 cwola_export/
@@ -72,6 +81,11 @@ cwola_export/
 # Upload tarballs built for R2 delivery (see scripts/ + docs/collab/)
 helix-collab-bundle*.tar.gz
 helix-code-bundle*.tar.gz
+
+# Local scratch + benchmark backups (e.g. helix.toml.bench-backup written by
+# overnight orchestrators while temporarily tuning config for a run).
+temp_*.md
+*.bench-backup
 
 # OS
 Thumbs.db
