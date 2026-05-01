@@ -1,7 +1,7 @@
 # Figure spec — Layer-stack diagram
 
 **Used in:** [`docs/papers/2026-05-01-the-same-move-at-every-layer.md`](../2026-05-01-the-same-move-at-every-layer.md)
-**Position in paper:** Below §1 (after the verdict is stated; serves as the visual companion to the layer-stack frame). Single figure for the post.
+**Position in paper:** After §2 (after the (a)/(b) test is in the reader's hands; the figure embeds those labels, so the test should be in the reader's head before they see them). Single figure for the post.
 
 ---
 

@@ -1,22 +1,8 @@
-<!--
-SPEC: docs/specs/2026-05-01-convergence-paper-design.md
-PLAN: docs/superpowers/plans/2026-05-01-convergence-paper.md
-
-DON'T SAY (grep these before publish):
-  - "Helix is the first to"
-  - "synthetic nervous system"
-  - "bridge to embodied AGI"
-  - "Our results show"
-  - any sentence using Agentome and Helix as synonyms
-
-WORD BUDGET: ~4,500 total. Section budgets in headers.
--->
-
 # The Same Move at Every Layer
 
 *Notes from a crowded field. Substack #2.*
 
-## Opening (§1, ~400w)
+## Opening
 
 I shipped [Agentome](https://mbachaud.substack.com/p/agentome) thinking the metaphor was rare. It wasn't. The move the metaphor describes — compress the long tail, keep a small working set hot, route on cheap signals before paying for the expensive ones — is showing up at every layer of the stack, independently, this year. My SIKE-stage draft of this paper had a sentence claiming we'd been first to a particular trick. That sentence is gone. I was wrong about the field's timing, not about the trick.
 
@@ -36,7 +22,7 @@ So here is the verdict, up front, for the reader who only skims §1:
 
 The frame for the rest of the paper is a five-layer walk: model internals, KV cache, retrieval index, agent memory, substrate. At each layer, the same two-part move appears — and at each layer, it appears in work that wasn't talking to ours.
 
-## The shared move, defined (§2, ~300w)
+## The shared move, defined
 
 Here's the move, stated tightly. A system is doing it when both halves are present:
 
@@ -77,7 +63,7 @@ One thing to flag before the layer walk begins: half (a) is the easy half. Persi
 
 *Helix is one instance at one layer. The shape is the field's, not Helix's.*
 
-## Layer 1 — Model internals: HOPE (§3, ~500w, Bucket 2 hedged)
+## Layer 1 — Model internals: HOPE
 
 Start at the bottom of the stack. **HOPE** is the architecture Google Research introduced alongside the *Nested Learning* paradigm, presented at NeurIPS 2025. From the public write-ups, it's positioned as a self-modifying recurrent architecture that treats training and inference as the same kind of process running at different rates, rather than as two phases separated by a deployment boundary. The framing seems to be: a model is not one optimizer wrapped around frozen weights, but a stack of nested optimizers, each with its own update frequency, each carrying its own slice of state forward. The slogan from the blog post — that architecture and optimizer are "fundamentally the same concepts" at different levels — is the part I want to take seriously here.
 
@@ -91,7 +77,7 @@ Half (b), selective expression, is the inner loop itself. The Titans line of wor
 
 At every layer above this one, the persistence-and-selection move recurs — but always above the model boundary, working on activations or text or files. HOPE is what the same move looks like when it dives below that boundary and operates on the model's own state directly. ([Google Research — *Introducing Nested Learning*](https://research.google/blog/introducing-nested-learning-a-new-ml-paradigm-for-continual-learning/))
 
-## Layer 2 — KV cache: KVzip, KVPress (§4, ~500w, Bucket 2 hedged)
+## Layer 2 — KV cache: KVzip, KVPress
 
 [KVzip](https://arxiv.org/abs/2505.23416) is the paper that forced the rewrite of this Substack series. I had a SIKE-stage draft that leaned on a claim about KV-cache reuse being unusual outside our setup; KVzip — a Seoul National University paper from this past November — was the moment I realized that wasn't true. The convergence wasn't in some adjacent field I hadn't looked at; it was right above HOPE's layer, working on the artifact every transformer already produces. So Layer 2 starts here.
 
@@ -99,13 +85,13 @@ At every layer above this one, the persistence-and-selection move recurs — but
 
 **What KVPress is.** [KVPress](https://github.com/NVIDIA/kvpress) is NVIDIA's open-source framework for KV-cache compression. From the README it's a *library* rather than a single algorithm: it ships a stable of "presses" — RandomPress, SnapKV, StreamingLLM, ExpectedAttention, TOVA, ThinKPress, KVzipPress, and others — behind a common interface that hooks into Transformers prefill (and, experimentally, decode). Most of the methods it ships are per-request: half (b) is the whole game, with half (a) reduced to "the cache lives as long as this generation does." But the framework treats compression as *infrastructure* — a press you attach to a model — rather than as a research artifact. The framing seems to be that this is no longer an academic curiosity; the platform vendors are shipping the move as a library you import.
 
-KVzip's cross-request persistence claim has already been pushed forward. [KVzap](https://arxiv.org/abs/2601.07891) (Jegou & Jeblick, Feb 2026) approximates the same reconstruction-importance scoring in a single pass, addressing KVzip's prefilling-tax problem. The move at this layer is being iterated on actively — same shape, faster.
+KVzip's cross-request persistence claim has already been pushed forward. [KVzap](https://arxiv.org/abs/2601.07891) (Jegou & Jeblick, Jan. 2026) is a fast, input-adaptive approximation of KVzip that targets the prefilling-tax problem and works in both prefilling and decoding. The move at this layer is being iterated on actively — same shape, faster.
 
 **Property callout.** The same shape from HOPE, one notch up: *the cache wants to outlive the request.* Some of these methods are still per-call — half (b) running against ephemeral state. But KVzip in particular, and the direction KVPress points at by exposing it as one press among many, is the cache becoming a substrate rather than a per-request artifact. State you build once and select from many times. Persistence first; selection second.
 
 At the next layer up, that asymmetry inverts. The retrieval index has always outlived the request — half (a) was solved before LLMs arrived. The convergence at Layer 3 is on the *selection* half catching up.
 
-## Layer 3 — Retrieval index: SPLADE, RAPTOR, GraphRAG (§5, ~700w)
+## Layer 3 — Retrieval index: SPLADE, RAPTOR, GraphRAG
 
 Layer 3 is where half (a) has the longest tenure. Databases outlived requests before LLMs were a category — a retrieval index is, by construction, state that persists past the call. The interesting question at this layer is what's happening to half (b). The expression policy — *which slice of the index becomes hot for this query* — is the half that's been moving, and it's been moving in three different directions at once. Learned sparse weights (SPLADE). Hierarchical summarization with cosine descent (RAPTOR). Graph-structured retrieval with LLM-rated reduction (GraphRAG). Same layer, three flavors of "smarter."
 
@@ -113,13 +99,13 @@ Layer 3 is where half (a) has the longest tenure. Databases outlived requests be
 
 **RAPTOR.** [RAPTOR](https://arxiv.org/abs/2401.18059) builds the persistent half into a tree. At index time, the corpus is cut into ~100-token chunks, each chunk is SBERT-embedded, and a Gaussian Mixture Model clusters the embeddings — with BIC choosing the cluster count rather than a fixed *k*. Each cluster is summarized by gpt-3.5-turbo, the summaries are re-embedded, and the procedure recurses upward until further clustering becomes infeasible. The output is a tree of summaries layered over the leaves. At query time there are two retrieval modes: *tree traversal*, which descends layer by layer taking top-k cosine matches at each level, and *collapsed tree*, which flattens every level into one pile and takes a single top-k. Mapped onto the move: half (a) is the tree itself, **static post-construction** — once built, the summaries don't update. Half (b) is **heuristic cosine** at each layer. Selection here is smarter than flat dense retrieval mostly because the *targets* are richer (summaries, not raw chunks); the policy choosing among them is still vector similarity.
 
-**GraphRAG.** [GraphRAG](https://arxiv.org/abs/2404.16130) takes the same impulse — build hierarchy at index time, retrieve from it at query time — and routes it through a graph instead of a tree. The indexing pipeline runs source documents through chunking, then uses an LLM to extract entities and relations into a knowledge graph, then runs **hierarchical Leiden community detection** to find nested clusters of densely-connected nodes, then has the LLM write a summary for every community at every level. The persistent artifact is the graph plus its layered community summaries. At query time the strategy is map-reduce: community summaries are shuffled into chunks, the LLM writes a partial answer for each chunk *along with a self-rated helpfulness score*, the partials are sorted by score, and the top ones reduce into a final answer. Half (a) is the graph and its summaries — again **static post-construction**. Half (b) is the part that breaks from RAPTOR: selection isn't cosine, it's the LLM rating its own partial answers. The policy is itself a model call. [E²GraphRAG](https://arxiv.org/abs/2505.24226) (Zhao et al., 2025) takes the same shape and ships 10× faster indexing — same move, optimized.
+**GraphRAG.** [GraphRAG](https://arxiv.org/abs/2404.16130) takes the same impulse — build hierarchy at index time, retrieve from it at query time — and routes it through a graph instead of a tree. The indexing pipeline runs source documents through chunking, then uses an LLM to extract entities and relations into a knowledge graph, then runs **hierarchical Leiden community detection** to find nested clusters of densely-connected nodes, then has the LLM write a summary for every community at every level. The persistent artifact is the graph plus its layered community summaries. At query time the strategy is map-reduce: community summaries are shuffled into chunks, the LLM writes a partial answer for each chunk *along with a self-rated helpfulness score*, the partials are sorted by score, and the top ones reduce into a final answer. Half (a) is the graph and its summaries — again **static post-construction**. Half (b) is the part that breaks from RAPTOR: selection isn't cosine, it's the LLM rating its own partial answers. The policy is itself a model call. [E²GraphRAG](https://arxiv.org/abs/2505.24226) (Zhao et al., 2025) takes the same shape and reports up to 10× faster indexing — same move, optimized.
 
 So three techniques, one layer, three different answers to "how do we choose what's hot." Learned weights, vector geometry, model self-rating. The two-part-move test passes for all three — but it passes by appealing to wildly different machinery for the same half. That's worth flagging on its own: convergence on the *shape* of the move does not imply convergence on its *implementation*, and Layer 3 is the cleanest place to see that. The other thing worth flagging — and it's a setup, not a conclusion — is that both RAPTOR and GraphRAG explicitly freeze their persistent state once the index pipeline finishes. The tree is static. The graph is static. That's a Layer-3 trait.
 
 Above the retrieval index, the substrate stops being static. At Layer 4, half (a) stops being frozen.
 
-## Layer 4 — Agent memory: MemGPT, Letta (§6, ~700w)
+## Layer 4 — Agent memory: MemGPT, Letta
 
 Layer 4 is where the move was *named first*. [MemGPT](https://arxiv.org/abs/2310.08560) — Packer et al., 2023 — reached for an OS-paging analogy and built an LLM-memory architecture around it, and that act of naming is a lot of why this layer is the one most readers reach for when they hear "AI memory." The vocabulary the rest of the field now uses for memory tiers came from here. It is also the layer where the substrate stops being static: the index doesn't have to freeze once it's built; persistence and selective expression can run as a live loop.
 
@@ -142,7 +128,7 @@ The move is most legible here, which is partly why it's easy to mistake the agen
 
 At Layer 5, the move shows up *below* the agent — at the substrate that an agent's memory tiers might run on top of. That's where the receipts live.
 
-## Layer 5 — Substrate: Helix as one Agentome-stack instance (§7, ~900w)
+## Layer 5 — Substrate: Helix as one Agentome-stack instance
 
 Layer 5 is below the agent. If MemGPT and Letta are doing memory at the agent boundary — the LLM editing its own context through tool calls, or a sleep-time twin curating that context off the hot path — then Layer 5 is the substrate those memory tiers run *on top of*. An Agentome-shaped stack would assume something like this exists. Helix is one concrete instance at this layer; the receipts below are Helix receipts.
 
@@ -170,7 +156,7 @@ The chromatin metaphor isn't decorative. Each tier pays attention differently �
 
 What's left is the part where I'm honest about what's converged, what hasn't, and where this goes next.
 
-## What converges, what doesn't, what's next (§8, ~500w)
+## What converges, what doesn't, what's next
 
 **The two-part move is the convergence; layer is the variable.** What's converged across five layers is the *concern*: persistence and selective expression as one architectural problem, not two. What hasn't converged is the *answer* — which layer a given system places the move at, and *who* makes the selection decision. HOPE puts it below the model boundary; KVzip puts it on the cache; SPLADE/RAPTOR/GraphRAG put it on the index; MemGPT puts the LLM itself on policy duty; Letta peels consolidation off the hot path. Five layers, five live disagreements about implementation. The agreement is on the shape, not the shape's filling.
 
@@ -181,7 +167,3 @@ What's left is the part where I'm honest about what's converged, what hasn't, an
 The shape of the next post follows from that. Helix isn't v1.0 yet, and the §7 BM25 receipt makes the reason concrete: a head-to-head benchmark fight between Helix and the neighbors already on the map — KVzip, GraphRAG, Letta — would be premature while the substrate pieces are still moving. So that fight is the next post, deferred until after the BM25-loss, the PKI tier issue, and the 4555-char assembly ceiling from §7 are closed. It will be evidence-shaped, not hero-shaped, in the same register as this one. Until then, the contribution this paper is trying to make is the *map* — five layers, the same move at each, three findings about how the field splits — not a claim about Helix's position on it.
 
 The field is getting interesting in the way fields get interesting right before they get loud. I'd rather show up to the loud part with receipts than with a story, so that's what the next one will have.
-
----
-
-*Figure: see [`figures/2026-05-01-layer-stack.md`](figures/2026-05-01-layer-stack.md)*
