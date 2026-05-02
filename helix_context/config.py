@@ -148,7 +148,7 @@ class ServerConfig:
     host: str = "127.0.0.1"
     port: int = 11437
     upstream: str = "http://localhost:11434"
-    upstream_timeout: float = 120.0     # Timeout for proxied requests to Ollama
+    upstream_timeout: float = 180.0     # Timeout for proxied requests to Ollama. Bumped from 120s on 2026-05-02 — observed Proxy 500s on slow gemma4:e4b GPQA queries at ~125s; 180s gives long-tail generation room without letting truly stuck requests hang. Override per-deployment via [server] in helix.toml.
 
 
 @dataclass
