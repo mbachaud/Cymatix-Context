@@ -685,6 +685,13 @@ class HelixContextManager:
 
         max_genes = self.config.budget.max_genes_per_turn
 
+        # ABSTAIN gate enable-state: config flag AND no env override.
+        # Resolved per-call so HELIX_ABSTAIN_DISABLE flips without restart.
+        abstain_enabled = (
+            self.config.budget.abstain_enabled
+            and not _env_truthy("HELIX_ABSTAIN_DISABLE")
+        )
+
         # Budget-zone cap (spike) — clamp max_genes down when the caller's
         # incoming prompt already fills a large share of their window.
         # Returns None when the feature flag is off or the signal is
@@ -780,6 +787,32 @@ class HelixContextManager:
                 shadow_pool: List[Gene] = [g for g in candidates if scores.get(g.gene_id, 0) < floor]
                 if len(gated) >= 3:
                     candidates = gated
+
+                # ── ABSTAIN gate ──────────────────────────────────────────────────
+                # When retrieval is weak on BOTH the absolute floor AND the ratio,
+                # inject a marker-only ContextWindow so the small model answers from
+                # weights instead of digesting 12K of irrelevant noise. Reuses the
+                # existing FOCUSED_SCORE_FLOOR (defined just below) verbatim — strict
+                # < on both axes. Telemetry counter is recorded inside the helper's
+                # call site below, alongside the existing tier counts.
+                FOCUSED_SCORE_FLOOR_FOR_ABSTAIN = 2.5    # mirrors the local FOCUSED_SCORE_FLOOR below
+                if (
+                    abstain_enabled
+                    and top_score < FOCUSED_SCORE_FLOOR_FOR_ABSTAIN
+                    and ratio < 1.8
+                ):
+                    try:
+                        from .telemetry import budget_tier_counter
+                        budget_tier_counter().add(1, attributes={"tier": "abstain"})
+                    except Exception:  # pragma: no cover
+                        pass
+                    return self._build_abstain_window(
+                        query=query,
+                        effective_decoder_prompt=effective_decoder_prompt,
+                        top_score=top_score,
+                        ratio=ratio,
+                        reason="score_below_floor",
+                    )
 
                 # Confidence tiering (with shadow pool tracking)
                 #
