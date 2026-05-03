@@ -82,3 +82,79 @@ def test_build_abstain_window_shape(abstain_manager):
     assert win.metadata["top_score"] == 1.5
     assert win.metadata["ratio"] == 1.2
     assert win.compression_ratio == 1.0
+
+
+def _stub_express(manager, *, candidates, scores):
+    """Replace _express with a canned-result version for deterministic tests.
+
+    Real _express runs the genome lookup + co-activation expansion + tier
+    accumulation. For ABSTAIN tier tests we need precise top_score/ratio
+    control, so we bypass the retrieval pipeline and stuff
+    last_query_scores directly. We also stub _apply_candidate_refiners
+    to a no-op pass-through so cymatics / harmonic-bin / TCM don't
+    perturb the injected scores.
+    """
+    def fake_express(domains, entities, max_genes, **_kwargs):
+        # Real _express has positional-or-keyword args (query_text,
+        # include_cold, party_id, use_harmonic, use_sr, read_only). The
+        # caller in _build_context_internal passes 4 of those by keyword;
+        # **_kwargs absorbs whichever the production code happens to pass
+        # so this stub stays robust if the real signature evolves.
+        manager.genome.last_query_scores = dict(scores)
+        return list(candidates)
+    manager._express = fake_express
+
+    def fake_refiners(query, candidates, max_genes, **_kwargs):
+        return list(candidates), {}
+    manager._apply_candidate_refiners = fake_refiners
+
+
+def _weak_setup(abstain_manager, *, top_score=1.5, ratio=1.2, n=8):
+    """Seed n candidates whose scores yield (top_score, ratio).
+
+    Solves: top = top_score, mean = top_score / ratio. We distribute
+    n-1 candidates at score = (n*mean - top) / (n - 1) so the mean
+    lands exactly. Returns (candidates, scores).
+    """
+    from tests.conftest import make_gene
+    candidates = [
+        make_gene(f"weak_{i}", gene_id=f"weak_gene_{i:010d}")
+        for i in range(n)
+    ]
+    mean = top_score / ratio
+    rest = (n * mean - top_score) / (n - 1)
+    scores = {candidates[0].gene_id: top_score}
+    for c in candidates[1:]:
+        scores[c.gene_id] = rest
+    return candidates, scores
+
+
+def test_weak_retrieval_triggers_abstain(abstain_manager):
+    """top_score < 2.5 AND ratio < 1.8 → ABSTAIN."""
+    candidates, scores = _weak_setup(abstain_manager, top_score=1.5, ratio=1.2)
+    _stub_express(abstain_manager, candidates=candidates, scores=scores)
+
+    win = abstain_manager.build_context("anything")
+
+    assert win.metadata["budget_tier"] == "abstain"
+    assert win.context_health.status == "abstain"
+    assert win.expressed_context == cm._ABSTAIN_MARKER
+    assert win.metadata["abstain_reason"] == "score_below_floor"
+    # top_score and ratio in metadata reflect what the gate observed
+    assert win.metadata["top_score"] == pytest.approx(1.5, abs=1e-6)
+    assert win.metadata["ratio"] == pytest.approx(1.2, abs=1e-3)
+    assert win.context_health.genes_expressed == 0
+
+
+def test_focused_score_floor_constants_in_sync():
+    """The ABSTAIN gate mirrors the FOCUSED_SCORE_FLOOR = 2.5 constant
+    defined just below it in context_manager.py. If one is bumped
+    without the other, the gate's strict-less-than semantic and the
+    FOCUSED tier's threshold will drift. This test pins them together.
+    """
+    import inspect
+    src = inspect.getsource(cm.HelixContextManager._build_context_internal) \
+        if hasattr(cm.HelixContextManager, "_build_context_internal") \
+        else inspect.getsource(cm)
+    assert "FOCUSED_SCORE_FLOOR_FOR_ABSTAIN = 2.5" in src
+    assert "FOCUSED_SCORE_FLOOR = 2.5" in src
