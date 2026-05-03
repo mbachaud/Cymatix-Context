@@ -259,6 +259,12 @@ def test_telemetry_counter_increments_with_abstain_label(
     _stub_express(abstain_manager, candidates=candidates, scores=scores)
     abstain_manager.build_context("anything")
 
-    abstain_calls = [c for c in calls if c["attributes"].get("tier") == "abstain"]
-    assert len(abstain_calls) == 1
-    assert abstain_calls[0]["value"] == 1
+    # Strong invariant: on a single weak-retrieval build_context, the gate
+    # short-circuits BEFORE the existing tier-counter call site, so we
+    # expect EXACTLY ONE counter call total — not just one abstain call
+    # plus possibly some other tier label. A regression that moves the
+    # early-return below the existing emission would double-count and
+    # would be caught by the strict equality on `len(calls) == 1`.
+    assert len(calls) == 1
+    assert calls[0]["attributes"] == {"tier": "abstain"}
+    assert calls[0]["value"] == 1
