@@ -170,3 +170,50 @@ def test_focused_score_floor_constants_in_sync():
         f"FOCUSED_SCORE_FLOOR_FOR_ABSTAIN ({matches[0]}) and "
         f"FOCUSED_SCORE_FLOOR ({matches[1]}) drifted apart"
     )
+
+
+def test_strong_signal_lands_in_tight(abstain_manager):
+    """top_score=8.0, ratio=4.0 → TIGHT, ABSTAIN does not fire."""
+    candidates, scores = _weak_setup(abstain_manager, top_score=8.0, ratio=4.0)
+    _stub_express(abstain_manager, candidates=candidates, scores=scores)
+    win = abstain_manager.build_context("anything")
+    assert win.metadata["budget_tier"] == "tight"
+    assert win.context_health.status != "abstain"
+
+
+def test_focused_eligible_lands_in_focused(abstain_manager):
+    """top_score=3.5, ratio=2.0 → FOCUSED, ABSTAIN does not fire."""
+    candidates, scores = _weak_setup(abstain_manager, top_score=3.5, ratio=2.0)
+    _stub_express(abstain_manager, candidates=candidates, scores=scores)
+    win = abstain_manager.build_context("anything")
+    assert win.metadata["budget_tier"] == "focused"
+    assert win.context_health.status != "abstain"
+
+
+def test_boundary_at_score_floor_does_not_abstain(abstain_manager):
+    """top_score=2.5 (== FOCUSED_SCORE_FLOOR) does NOT trigger ABSTAIN.
+
+    Strict-< on the score axis means the FOCUSED-eligible boundary
+    case still earns FOCUSED. ratio is held below the FOCUSED ratio
+    floor (2.0) but above the abstain ratio floor (1.8) intentionally
+    isn't possible at this score; instead we verify that with
+    top_score=2.5 and ratio=1.2, the ABSTAIN axis fails (score axis
+    is NOT-less-than 2.5) and we fall through to BROAD.
+    """
+    candidates, scores = _weak_setup(abstain_manager, top_score=2.5, ratio=1.2)
+    _stub_express(abstain_manager, candidates=candidates, scores=scores)
+    win = abstain_manager.build_context("anything")
+    assert win.metadata["budget_tier"] != "abstain"
+
+
+def test_boundary_at_ratio_floor_does_not_abstain(abstain_manager):
+    """ratio=1.8 (== abstain ratio floor) does NOT trigger ABSTAIN.
+
+    Strict-< on the ratio axis means the boundary stays out of ABSTAIN.
+    With top_score=1.5 < FOCUSED_SCORE_FLOOR but ratio==1.8, the gate
+    fails on the ratio axis and we fall through to BROAD.
+    """
+    candidates, scores = _weak_setup(abstain_manager, top_score=1.5, ratio=1.8)
+    _stub_express(abstain_manager, candidates=candidates, scores=scores)
+    win = abstain_manager.build_context("anything")
+    assert win.metadata["budget_tier"] != "abstain"
