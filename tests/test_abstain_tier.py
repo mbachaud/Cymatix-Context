@@ -239,3 +239,26 @@ def test_abstain_env_override_beats_config_flag(abstain_manager, monkeypatch):
     win = abstain_manager.build_context("anything")
     assert win.metadata["budget_tier"] == "broad"
     assert win.context_health.status != "abstain"
+
+
+def test_telemetry_counter_increments_with_abstain_label(
+    abstain_manager, monkeypatch
+):
+    """Verify budget_tier_counter is called with attributes={'tier': 'abstain'}."""
+    calls: list[dict] = []
+
+    class _Recorder:
+        def add(self, value, attributes=None):
+            calls.append({"value": value, "attributes": dict(attributes or {})})
+
+    monkeypatch.setattr(
+        "helix_context.telemetry.budget_tier_counter",
+        lambda: _Recorder(),
+    )
+    candidates, scores = _weak_setup(abstain_manager, top_score=1.5, ratio=1.2)
+    _stub_express(abstain_manager, candidates=candidates, scores=scores)
+    abstain_manager.build_context("anything")
+
+    abstain_calls = [c for c in calls if c["attributes"].get("tier") == "abstain"]
+    assert len(abstain_calls) == 1
+    assert abstain_calls[0]["value"] == 1
