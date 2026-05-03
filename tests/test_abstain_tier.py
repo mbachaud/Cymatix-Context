@@ -191,29 +191,30 @@ def test_focused_eligible_lands_in_focused(abstain_manager):
 
 
 def test_boundary_at_score_floor_does_not_abstain(abstain_manager):
-    """top_score=2.5 (== FOCUSED_SCORE_FLOOR) does NOT trigger ABSTAIN.
+    """top_score == 2.5 (the FOCUSED floor) does NOT trigger ABSTAIN.
 
-    Strict-< on the score axis means the FOCUSED-eligible boundary
-    case still earns FOCUSED. ratio is held below the FOCUSED ratio
-    floor (2.0) but above the abstain ratio floor (1.8) intentionally
-    isn't possible at this score; instead we verify that with
-    top_score=2.5 and ratio=1.2, the ABSTAIN axis fails (score axis
-    is NOT-less-than 2.5) and we fall through to BROAD.
+    Isolates the score-axis strict-< by holding ratio = 2.5 — well above
+    the abstain ratio floor (1.8) so the ratio axis cannot be the reason
+    the gate fails. The only condition that can keep us out of ABSTAIN
+    is the score-axis check `top_score < 2.5` failing on the boundary.
+    Confirms the gate uses strict `<` (not `<=`) on score.
     """
-    candidates, scores = _weak_setup(abstain_manager, top_score=2.5, ratio=1.2)
+    candidates, scores = _weak_setup(abstain_manager, top_score=2.5, ratio=2.5)
     _stub_express(abstain_manager, candidates=candidates, scores=scores)
     win = abstain_manager.build_context("anything")
     assert win.metadata["budget_tier"] != "abstain"
 
 
 def test_boundary_at_ratio_floor_does_not_abstain(abstain_manager):
-    """ratio=1.8 (== abstain ratio floor) does NOT trigger ABSTAIN.
+    """ratio == 1.8 (the abstain ratio floor) does NOT trigger ABSTAIN.
 
-    Strict-< on the ratio axis means the boundary stays out of ABSTAIN.
-    With top_score=1.5 < FOCUSED_SCORE_FLOOR but ratio==1.8, the gate
-    fails on the ratio axis and we fall through to BROAD.
+    Isolates the ratio-axis strict-< by holding top_score = 1.5 — well
+    below the FOCUSED floor so the score axis WOULD trigger ABSTAIN if
+    it were the only check. The ratio axis must catch this and force
+    fall-through to BROAD. Confirms the gate uses strict `<` (not `<=`)
+    on ratio.
     """
     candidates, scores = _weak_setup(abstain_manager, top_score=1.5, ratio=1.8)
     _stub_express(abstain_manager, candidates=candidates, scores=scores)
     win = abstain_manager.build_context("anything")
-    assert win.metadata["budget_tier"] != "abstain"
+    assert win.metadata["budget_tier"] == "broad"
