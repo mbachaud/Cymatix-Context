@@ -97,7 +97,7 @@ def _stub_express(manager, *, candidates, scores):
     def fake_express(domains, entities, max_genes, **_kwargs):
         # Real _express has positional-or-keyword args (query_text,
         # include_cold, party_id, use_harmonic, use_sr, read_only). The
-        # caller in _build_context_internal passes 4 of those by keyword;
+        # caller in build_context passes 4 of those by keyword;
         # **_kwargs absorbs whichever the production code happens to pass
         # so this stub stays robust if the real signature evolves.
         manager.genome.last_query_scores = dict(scores)
