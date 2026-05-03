@@ -218,3 +218,23 @@ def test_boundary_at_ratio_floor_does_not_abstain(abstain_manager):
     _stub_express(abstain_manager, candidates=candidates, scores=scores)
     win = abstain_manager.build_context("anything")
     assert win.metadata["budget_tier"] == "broad"
+
+
+def test_abstain_disabled_via_config_falls_through_to_broad(abstain_manager):
+    """abstain_enabled=False on weak retrieval → BROAD (legacy behavior)."""
+    abstain_manager.config.budget.abstain_enabled = False
+    candidates, scores = _weak_setup(abstain_manager, top_score=1.5, ratio=1.2)
+    _stub_express(abstain_manager, candidates=candidates, scores=scores)
+    win = abstain_manager.build_context("anything")
+    assert win.metadata["budget_tier"] == "broad"
+    assert win.context_health.status != "abstain"
+
+
+def test_abstain_env_override_beats_config_flag(abstain_manager, monkeypatch):
+    """HELIX_ABSTAIN_DISABLE=1 forces off even when config flag is on."""
+    monkeypatch.setenv("HELIX_ABSTAIN_DISABLE", "1")
+    assert abstain_manager.config.budget.abstain_enabled is True   # config still on
+    candidates, scores = _weak_setup(abstain_manager, top_score=1.5, ratio=1.2)
+    _stub_express(abstain_manager, candidates=candidates, scores=scores)
+    win = abstain_manager.build_context("anything")
+    assert win.metadata["budget_tier"] == "broad"
