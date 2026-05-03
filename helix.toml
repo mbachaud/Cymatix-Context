@@ -56,6 +56,16 @@ legibility_enabled = true
 # that don't supply one). Set to false to restore pre-MVP dark behavior.
 # See helix_context/session_delivery.py.
 session_delivery_enabled = true
+# Confidence-gated context attachment (ABSTAIN tier). When true (default),
+# build_context returns a marker-only ContextWindow when post-refinement
+# retrieval is weak on BOTH absolute score (top_score < 2.5) AND ratio
+# (top_score/mean < 1.8) — the negative space of the TIGHT and FOCUSED
+# tiers. Goal: skip the 12K-token BROAD fallback on queries where helix
+# can't help, so the small model answers from weights instead of digesting
+# irrelevant noise. Set to false to restore the legacy always-inject
+# behavior (BROAD takes the negative space). HELIX_ABSTAIN_DISABLE=1 env
+# var forces off without redeploy. See docs/specs/2026-05-02-abstain-tier-design.md.
+abstain_enabled = true
 
 [session]
 # CWoLa session / party fallback. Prior to 2026-04-13 the /context endpoint
