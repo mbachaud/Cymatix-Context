@@ -144,6 +144,15 @@ DECODER_MODES = {
 RIBOSOME_DECODER = DECODER_FULL
 
 
+# Shared marker injected when build_context has nothing useful to ship —
+# either the genome had no candidates ("denatured") or post-refinement
+# scores fell below the FOCUSED floor on both axes ("abstain"). Both
+# branches ship the same bytes so the small model's prompt-conditioning
+# is identical regardless of which short-circuit fired. The semantic
+# difference is observable only via context_health.status.
+_ABSTAIN_MARKER = "(no relevant context found in genome)"
+
+
 class HelixContextManager:
     """
     Main orchestrator. Sits between the client and the upstream LLM.
@@ -703,7 +712,7 @@ class HelixContextManager:
             )
             return ContextWindow(
                 ribosome_prompt=effective_decoder_prompt,
-                expressed_context="(no relevant context found in genome)",
+                expressed_context=_ABSTAIN_MARKER,
                 total_estimated_tokens=estimate_tokens(effective_decoder_prompt),
                 compression_ratio=1.0,
                 context_health=empty_health,
