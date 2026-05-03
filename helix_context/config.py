@@ -132,6 +132,7 @@ class BudgetConfig:
     # pay full token cost for content it already holds. Dark on first
     # ship — flip to true in helix.toml to A/B. See session_delivery.py.
     session_delivery_enabled: bool = False
+    abstain_enabled: bool = True       # NEW — see docs/specs/2026-05-02-abstain-tier-design.md
 
 
 @dataclass
@@ -391,6 +392,7 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             decoder_mode=b.get("decoder_mode", cfg.budget.decoder_mode),
             legibility_enabled=bool(b.get("legibility_enabled", cfg.budget.legibility_enabled)),
             session_delivery_enabled=bool(b.get("session_delivery_enabled", cfg.budget.session_delivery_enabled)),
+            abstain_enabled=bool(b.get("abstain_enabled", cfg.budget.abstain_enabled)),
         )
 
     # Genome
