@@ -71,8 +71,11 @@ def test_build_abstain_window_shape(abstain_manager):
         reason="score_below_floor",
     )
     assert win.expressed_context == cm._ABSTAIN_MARKER
+    assert win.ribosome_prompt == "DECODER"
+    assert win.total_estimated_tokens == cm.estimate_tokens("DECODER")
     assert win.context_health.status == "abstain"
     assert win.context_health.genes_expressed == 0
+    assert win.metadata["query"] == "anything"
     assert win.metadata["genes_expressed"] == 0
     assert win.metadata["budget_tier"] == "abstain"
     assert win.metadata["abstain_reason"] == "score_below_floor"
