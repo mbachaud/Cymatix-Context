@@ -238,3 +238,4 @@ def test_abstain_env_override_beats_config_flag(abstain_manager, monkeypatch):
     _stub_express(abstain_manager, candidates=candidates, scores=scores)
     win = abstain_manager.build_context("anything")
     assert win.metadata["budget_tier"] == "broad"
+    assert win.context_health.status != "abstain"
