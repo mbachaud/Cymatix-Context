@@ -793,8 +793,9 @@ class HelixContextManager:
                 # inject a marker-only ContextWindow so the small model answers from
                 # weights instead of digesting 12K of irrelevant noise. Reuses the
                 # existing FOCUSED_SCORE_FLOOR (defined just below) verbatim — strict
-                # < on both axes. Telemetry counter is recorded inside the helper's
-                # call site below, alongside the existing tier counts.
+                # < on both axes. Telemetry fires here before the early-return so
+                # tier="abstain" lands on budget_tier_counter alongside the other
+                # tier counts emitted by the existing call site below.
                 FOCUSED_SCORE_FLOOR_FOR_ABSTAIN = 2.5    # mirrors the local FOCUSED_SCORE_FLOOR below
                 if (
                     abstain_enabled

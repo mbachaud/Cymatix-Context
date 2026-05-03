@@ -123,7 +123,7 @@ zero.
 
 ## 5. Integration Point
 
-The gate slots into `HelixContextManager._build_context_internal` between
+The gate slots into `HelixContextManager.build_context` between
 the existing score-gate floor (15%-of-top hard floor) and the TIGHT/FOCUSED
 absolute-floor checks. Concretely, inside the `if len(candidates) > 3:`
 block at `context_manager.py:739`, after `top_score`, `mean_score`, and

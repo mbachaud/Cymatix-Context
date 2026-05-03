@@ -150,11 +150,23 @@ def test_focused_score_floor_constants_in_sync():
     """The ABSTAIN gate mirrors the FOCUSED_SCORE_FLOOR = 2.5 constant
     defined just below it in context_manager.py. If one is bumped
     without the other, the gate's strict-less-than semantic and the
-    FOCUSED tier's threshold will drift. This test pins them together.
+    FOCUSED tier's threshold will drift. This test pins them together
+    by extracting both literals and asserting numeric equality — robust
+    to formatting changes (extra whitespace, comments, scientific
+    notation) that string-matching would miss.
     """
     import inspect
-    src = inspect.getsource(cm.HelixContextManager._build_context_internal) \
-        if hasattr(cm.HelixContextManager, "_build_context_internal") \
-        else inspect.getsource(cm)
-    assert "FOCUSED_SCORE_FLOOR_FOR_ABSTAIN = 2.5" in src
-    assert "FOCUSED_SCORE_FLOOR = 2.5" in src
+    import re
+
+    src = inspect.getsource(cm.HelixContextManager.build_context)
+    matches = re.findall(
+        r"FOCUSED_SCORE_FLOOR(?:_FOR_ABSTAIN)?\s*=\s*([\d.]+(?:[eE][-+]?\d+)?)",
+        src,
+    )
+    assert len(matches) == 2, (
+        f"expected exactly 2 FOCUSED_SCORE_FLOOR literals, got {matches}"
+    )
+    assert float(matches[0]) == float(matches[1]), (
+        f"FOCUSED_SCORE_FLOOR_FOR_ABSTAIN ({matches[0]}) and "
+        f"FOCUSED_SCORE_FLOOR ({matches[1]}) drifted apart"
+    )
