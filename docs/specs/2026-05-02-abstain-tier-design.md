@@ -199,8 +199,10 @@ class BudgetConfig:
     abstain_enabled: bool = True
 ```
 
-Loader in `_load_helix_config` reads `b.get("abstain_enabled",
-cfg.budget.abstain_enabled)` like the other budget keys.
+Loader in `load_config` reads `b.get("abstain_enabled",
+cfg.budget.abstain_enabled)` like the other budget keys. (The loader is
+named `load_config`, not `_load_helix_config` — it's public, not
+underscore-prefixed.)
 
 ### 6.3 Env override
 

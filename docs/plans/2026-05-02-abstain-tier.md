@@ -16,7 +16,7 @@
 
 | File | Action | Responsibility |
 | --- | --- | --- |
-| `helix_context/config.py` | Modify | Add `abstain_enabled: bool = True` field to `BudgetConfig` + loader entry in `_load_helix_config`. |
+| `helix_context/config.py` | Modify | Add `abstain_enabled: bool = True` field to `BudgetConfig` + loader entry in `load_config`. |
 | `helix.toml` | Modify | Add `abstain_enabled = true` to `[budget]` with comment block explaining the gate. |
 | `helix_context/context_manager.py` | Modify | Add `_ABSTAIN_MARKER` constant, local `_abstain_env_disabled()` helper, `_resolve_abstain_enabled()` method, `_build_abstain_window()` helper, and the gate inside `_build_context_internal`. Refactor empty-candidates branch (line 706) to reference the constant. |
 | `helix_context/telemetry.py` | Modify | One-line update to `budget_tier_counter` docstring listing `abstain` as a valid label value. |
@@ -58,13 +58,13 @@ def test_budget_abstain_enabled_default_is_true():
 
 def test_budget_abstain_enabled_toml_override(tmp_path):
     """Regression: helix.toml [budget] abstain_enabled = false is honored."""
-    from helix_context.config import _load_helix_config
+    from helix_context.config import load_config
     toml = tmp_path / "helix.toml"
     toml.write_text(
         "[budget]\nabstain_enabled = false\n",
         encoding="utf-8",
     )
-    cfg = _load_helix_config(str(toml))
+    cfg = load_config(str(toml))
     assert cfg.budget.abstain_enabled is False
 ```
 
@@ -87,7 +87,7 @@ class BudgetConfig:
 
 - [ ] **Step 4: Add the loader entry**
 
-In `_load_helix_config` (around line 382-394), inside the `if "budget" in raw:` block, add the new key alongside the others:
+In `load_config` (around line 382-394), inside the `if "budget" in raw:` block, add the new key alongside the others:
 
 ```python
 cfg.budget = BudgetConfig(
