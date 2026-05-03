@@ -153,6 +153,20 @@ RIBOSOME_DECODER = DECODER_FULL
 _ABSTAIN_MARKER = "(no relevant context found in genome)"
 
 
+def _env_truthy(name: str) -> bool:
+    """Return True iff env var is set to a truthy value.
+
+    Truthy values (case-insensitive): '1', 'true', 'yes', 'on'. Anything
+    else (including unset) returns False. This is the 2-state variant of
+    helix_context.launcher.app._env_truthy — defined locally to avoid a
+    context_manager → launcher import edge.
+    """
+    v = os.environ.get(name)
+    if v is None:
+        return False
+    return v.strip().lower() in ("1", "true", "yes", "on")
+
+
 class HelixContextManager:
     """
     Main orchestrator. Sits between the client and the upstream LLM.
