@@ -1577,8 +1577,9 @@ class HelixContextManager:
         """Return the marker-only ContextWindow shipped when the ABSTAIN tier fires.
 
         See docs/specs/2026-05-02-abstain-tier-design.md §4. Distinct from the
-        empty-candidates branch (line ~694) only on context_health.status —
-        the LLM-visible bytes are identical (both ship _ABSTAIN_MARKER).
+        empty-candidates branch (above, in build_context) only on
+        context_health.status — the LLM-visible bytes are identical (both
+        ship _ABSTAIN_MARKER).
         """
         health = ContextHealth(
             ellipticity=0.0,
