@@ -1531,6 +1531,46 @@ class HelixContextManager:
 
         return deduped[:max_genes * 2]
 
+    def _build_abstain_window(
+        self,
+        *,
+        query: str,
+        effective_decoder_prompt: str,
+        top_score: float,
+        ratio: float,
+        reason: str,
+    ) -> ContextWindow:
+        """Return the marker-only ContextWindow shipped when the ABSTAIN tier fires.
+
+        See docs/specs/2026-05-02-abstain-tier-design.md §4. Distinct from the
+        empty-candidates branch (line ~694) only on context_health.status —
+        the LLM-visible bytes are identical (both ship _ABSTAIN_MARKER).
+        """
+        health = ContextHealth(
+            ellipticity=0.0,
+            coverage=0.0,
+            density=0.0,
+            freshness=0.0,
+            genes_available=self.genome.stats().get("total_genes", 0),
+            genes_expressed=0,
+            status="abstain",
+        )
+        return ContextWindow(
+            ribosome_prompt=effective_decoder_prompt,
+            expressed_context=_ABSTAIN_MARKER,
+            total_estimated_tokens=estimate_tokens(effective_decoder_prompt),
+            compression_ratio=1.0,
+            context_health=health,
+            metadata={
+                "query": query,
+                "genes_expressed": 0,
+                "budget_tier": "abstain",
+                "abstain_reason": reason,
+                "top_score": float(top_score),
+                "ratio": float(ratio),
+            },
+        )
+
     def _apply_candidate_refiners(
         self,
         query: str,
