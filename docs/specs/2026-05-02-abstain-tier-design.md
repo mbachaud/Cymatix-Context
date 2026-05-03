@@ -102,9 +102,14 @@ _ABSTAIN_MARKER = "(no relevant context found in genome)"
 ```
 
 The empty-candidates branch (`context_manager.py:704-711`) is refactored
-to reference this constant — both branches ship the **same bytes** to the
-LLM, so the small model's prompt-conditioning is identical regardless of
-which short-circuit fired. The semantic difference is observable only in
+to reference this constant — but **only the marker string is shared**.
+The empty-candidates branch keeps its existing `status="denatured"` and
+its existing `ContextWindow` shape; only the literal `"(no relevant
+context found in genome)"` is lifted to `_ABSTAIN_MARKER`. The new
+abstain branch returns its own `ContextWindow` with `status="abstain"`
+(see §4 above). Both branches ship the **same bytes** to the LLM, so
+the small model's prompt-conditioning is identical regardless of which
+short-circuit fired. The semantic difference is observable only in
 `status` (`"denatured"` vs `"abstain"`) and in `metadata["budget_tier"]`.
 
 ### 4.2 Why a marker, not an empty string
