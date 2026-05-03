@@ -249,11 +249,10 @@ The change lives entirely inside the BROAD branch of the budget-tier block in
 # else: broad — keep current up-to-max_genes set
 #   (weak absolute scores or weak ratio → widen the net)
 
-# NEW: foveated-splice (BROAD only)
-foveated_enabled = (
-    self.config.budget.foveated_enabled
-    and not _env_truthy("HELIX_FOVEATED_DISABLE")  # consistency with ABSTAIN
-)
+# NEW: foveated-splice (BROAD only). No env override in v1 — see §6.3.
+# When foveated flips on by default in a future release, add
+# HELIX_FOVEATED_DISABLE via the existing _env_truthy helper at that point.
+foveated_enabled = self.config.budget.foveated_enabled
 if budget_tier == "broad" and foveated_enabled and len(candidates) > 1:
     α = self.config.budget.foveated_alpha
     c_min = self.config.budget.foveated_c_min
@@ -369,7 +368,7 @@ backend, controllable scores via `_stub_express`).
 | 3 | Enabled, TIGHT | True | tight | `metadata["foveated_caps"]` absent (foveated only fires on BROAD) |
 | 4 | Enabled, FOCUSED | True | focused | `metadata["foveated_caps"]` absent |
 | 5 | Enabled, ABSTAIN | True | abstain | `metadata["foveated_caps"]` absent (gate fires before BROAD branch) |
-| 6 | α formula | True | broad | for N=12, α=1: caps[0] == 1.0, caps[5] == 0.5, caps[11] == max(0.15, 1/12) |
+| 6 | α formula | True | broad | for N=12, α=1: caps[0] == 1.0, caps[1] == 0.5, caps[5] ≈ 1/6, caps[11] == max(0.15, 1/12) (= 0.15 since 1/12 < c_min) |
 | 7 | Reverse-rank order | True | broad | the gene with the highest score is the LAST in the assembled candidates list |
 | 8 | c_min floor | True | broad | for α=2 and N=12, caps[5..11] all == c_min (0.15) |
 
