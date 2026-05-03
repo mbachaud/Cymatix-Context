@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:subagent-driven-development` (recommended) or `superpowers:executing-plans` to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Add an ABSTAIN tier above BROAD in `_build_context_internal` so weak retrieval (`top_score < 2.5` AND `ratio < 1.8`) returns a marker-only ContextWindow instead of dumping ~12K tokens of irrelevant gene expressions to the small e4b model.
+**Goal:** Add an ABSTAIN tier above BROAD in `build_context` so weak retrieval (`top_score < 2.5` AND `ratio < 1.8`) returns a marker-only ContextWindow instead of dumping ~12K tokens of irrelevant gene expressions to the small e4b model.
 
 **Architecture:** A single new branch inside the existing dynamic-budget-tier block in `context_manager.py:746-787`. Reuses already-calibrated `FOCUSED_SCORE_FLOOR = 2.5` and `ratio < 1.8` thresholds verbatim — the trigger is simply the negative space of TIGHT/FOCUSED. Output reuses the empty-candidates path's marker string `"(no relevant context found in genome)"` (lifted to a shared module constant) but emits a new `ContextHealth.status = "abstain"` so observability can distinguish "genome had nothing" (`denatured`) from "genome had weak signals" (`abstain`).
 
@@ -18,7 +18,7 @@
 | --- | --- | --- |
 | `helix_context/config.py` | Modify | Add `abstain_enabled: bool = True` field to `BudgetConfig` + loader entry in `load_config`. |
 | `helix.toml` | Modify | Add `abstain_enabled = true` to `[budget]` with comment block explaining the gate. |
-| `helix_context/context_manager.py` | Modify | Add `_ABSTAIN_MARKER` constant, local `_abstain_env_disabled()` helper, `_resolve_abstain_enabled()` method, `_build_abstain_window()` helper, and the gate inside `_build_context_internal`. Refactor empty-candidates branch (line 706) to reference the constant. |
+| `helix_context/context_manager.py` | Modify | Add `_ABSTAIN_MARKER` constant, local `_abstain_env_disabled()` helper, `_resolve_abstain_enabled()` method, `_build_abstain_window()` helper, and the gate inside `build_context`. Refactor empty-candidates branch (line 706) to reference the constant. |
 | `helix_context/telemetry.py` | Modify | One-line update to `budget_tier_counter` docstring listing `abstain` as a valid label value. |
 | `tests/test_abstain_tier.py` | Create | All eight test cases from spec §8 plus `_env_truthy` and `_build_abstain_window` unit tests. |
 | `tests/test_config.py` | Modify | Extend with `abstain_enabled` default + toml-override regression tests. |
@@ -188,7 +188,7 @@ In `helix_context/context_manager.py`, near the top of the file (after the impor
 _ABSTAIN_MARKER = "(no relevant context found in genome)"
 ```
 
-Then locate the empty-candidates branch in `_build_context_internal` (around line 694-711) and replace the literal at line 706:
+Then locate the empty-candidates branch in `build_context` (around line 694-711) and replace the literal at line 706:
 
 ```python
 return ContextWindow(
@@ -461,7 +461,7 @@ def _stub_express(manager, *, candidates, scores):
     def fake_express(domains, entities, max_genes, **_kwargs):
         # Real _express has positional-or-keyword args (query_text,
         # include_cold, party_id, use_harmonic, use_sr, read_only). The
-        # caller in _build_context_internal passes 4 of those by keyword;
+        # caller in build_context passes 4 of those by keyword;
         # **_kwargs absorbs whichever the production code happens to pass
         # so this stub stays robust if the real signature evolves.
         manager.genome.last_query_scores = dict(scores)
@@ -517,7 +517,7 @@ Expected: FAIL — current code falls into BROAD, so `metadata["budget_tier"]` w
 
 - [ ] **Step 3: Resolve `_abstain_enabled` per-call**
 
-In `helix_context/context_manager.py`, inside `_build_context_internal` near where `max_genes` is initialized (around line 663), add the per-call resolution:
+In `helix_context/context_manager.py`, inside `build_context` near where `max_genes` is initialized (around line 663), add the per-call resolution:
 
 ```python
 max_genes = self.config.budget.max_genes_per_turn
@@ -594,8 +594,8 @@ def test_focused_score_floor_constants_in_sync():
     FOCUSED tier's threshold will drift. This test pins them together.
     """
     import inspect
-    src = inspect.getsource(cm.HelixContextManager._build_context_internal) \
-        if hasattr(cm.HelixContextManager, "_build_context_internal") \
+    src = inspect.getsource(cm.HelixContextManager.build_context) \
+        if hasattr(cm.HelixContextManager, "build_context") \
         else inspect.getsource(cm)
     assert "FOCUSED_SCORE_FLOOR_FOR_ABSTAIN = 2.5" in src
     assert "FOCUSED_SCORE_FLOOR = 2.5" in src
