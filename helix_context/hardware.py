@@ -116,8 +116,77 @@ def reset_for_test() -> None:
     _cached_info = None
 
 
+def _detect_cuda_or_rocm(rocm: bool) -> Optional[Dict[str, Any]]:
+    """Returns dict with device fields, or None if not available.
+    Single-device pick (multi-GPU enumeration is Task 6)."""
+    import torch
+    if not torch.cuda.is_available() or torch.cuda.device_count() == 0:
+        return None
+    if rocm and getattr(torch.version, "hip", None) is None:
+        return None
+    if not rocm and getattr(torch.version, "hip", None) is not None:
+        return None
+    idx = 0
+    free_b, total_b = torch.cuda.mem_get_info(idx)
+    device_str = f"{'rocm' if rocm else 'cuda'}:{idx}"
+    ok, reason = _probe(f"cuda:{idx}")
+    if not ok:
+        log.warning("Device %s probe failed: %s", device_str, reason)
+        return None
+    return {
+        "device": device_str,
+        "device_type": "rocm" if rocm else "cuda",
+        "device_name": torch.cuda.get_device_name(idx),
+        "vram_total_gb": total_b / (1024 ** 3),
+        "vram_free_gb": free_b / (1024 ** 3),
+    }
+
+
+def _detect_mps() -> Optional[Dict[str, Any]]:
+    import torch
+    if not (torch.backends.mps.is_available() and torch.backends.mps.is_built()):
+        return None
+    ok, reason = _probe("mps")
+    if not ok:
+        log.warning("MPS probe failed: %s", reason)
+        return None
+    return {
+        "device": "mps",
+        "device_type": "mps",
+        "device_name": "Apple Silicon (MPS)",
+        "vram_total_gb": None,
+        "vram_free_gb": None,
+    }
+
+
 def _detect() -> HardwareInfo:
     cpu = _detect_cpu()
+    requested = "auto"  # Task 7 wires env+config
+
+    for label, fn in (
+        ("cuda", lambda: _detect_cuda_or_rocm(rocm=False)),
+        ("rocm", lambda: _detect_cuda_or_rocm(rocm=True)),
+        ("mps",  _detect_mps),
+    ):
+        try:
+            d = fn()
+        except Exception:
+            log.warning("hardware candidate %s failed", label, exc_info=True)
+            continue
+        if d is not None:
+            return HardwareInfo(
+                device=d["device"],
+                device_type=d["device_type"],
+                device_name=d["device_name"],
+                vram_total_gb=d["vram_total_gb"],
+                vram_free_gb=d["vram_free_gb"],
+                cpu_arch=cpu["cpu_arch"],
+                cpu_brand=cpu["cpu_brand"],
+                system_ram_gb=cpu["system_ram_gb"],
+                requested_device=requested,
+                fallback_reason=None,
+            )
+
     return HardwareInfo(
         device="cpu",
         device_type="cpu",
@@ -127,6 +196,6 @@ def _detect() -> HardwareInfo:
         cpu_arch=cpu["cpu_arch"],
         cpu_brand=cpu["cpu_brand"],
         system_ram_gb=cpu["system_ram_gb"],
-        requested_device="auto",
+        requested_device=requested,
         fallback_reason=None,
     )

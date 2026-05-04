@@ -133,3 +133,106 @@ def test_probe_to_failure(monkeypatch):
     ok, reason = hardware._probe("cuda:0")
     assert ok is False
     assert "device not available" in reason
+
+
+@pytest.fixture
+def mock_torch(monkeypatch):
+    """Shared torch mock for picker tests. Returns a state dict so each
+    test can configure which backends are advertised. Defaults: CPU-only.
+    """
+    state = {
+        "cuda_available": False,
+        "cuda_device_count": 0,
+        "cuda_device_names": [],
+        "cuda_mem": [],            # list of (free_gb, total_gb) per index
+        "hip_version": None,
+        "mps_available": False,
+        "mps_built": False,
+        "probe_results": {},       # device_str -> (ok, reason) overrides
+    }
+
+    def _is_available(): return state["cuda_available"]
+    def _device_count(): return state["cuda_device_count"]
+    def _get_device_name(i): return state["cuda_device_names"][i]
+    def _mem_get_info(i):
+        free_gb, total_gb = state["cuda_mem"][i]
+        return (int(free_gb * 1024**3), int(total_gb * 1024**3))
+    def _mps_is_available(): return state["mps_available"]
+    def _mps_is_built(): return state["mps_built"]
+
+    monkeypatch.setattr("torch.cuda.is_available", _is_available)
+    monkeypatch.setattr("torch.cuda.device_count", _device_count)
+    monkeypatch.setattr("torch.cuda.get_device_name", _get_device_name)
+    monkeypatch.setattr("torch.cuda.mem_get_info", _mem_get_info)
+    monkeypatch.setattr("torch.backends.mps.is_available", _mps_is_available)
+    monkeypatch.setattr("torch.backends.mps.is_built", _mps_is_built)
+
+    import torch
+    monkeypatch.setattr(torch.version, "hip", state["hip_version"], raising=False)
+
+    def _probe_stub(device_str: str):
+        if device_str in state["probe_results"]:
+            return state["probe_results"][device_str]
+        return (True, None)
+    monkeypatch.setattr(hardware, "_probe", _probe_stub)
+
+    def _set_hip(v):
+        state["hip_version"] = v
+        monkeypatch.setattr(torch.version, "hip", v, raising=False)
+    state["set_hip"] = _set_hip
+    return state
+
+
+def test_auto_picks_cuda_when_available(mock_torch):
+    mock_torch["cuda_available"] = True
+    mock_torch["cuda_device_count"] = 1
+    mock_torch["cuda_device_names"] = ["NVIDIA GeForce RTX 4090"]
+    mock_torch["cuda_mem"] = [(22.4, 24.0)]
+    info = hardware._detect()
+    assert info.device_type == "cuda"
+    assert info.device == "cuda:0"
+    assert info.device_name == "NVIDIA GeForce RTX 4090"
+    assert info.vram_total_gb == pytest.approx(24.0, rel=1e-3)
+
+
+def test_auto_picks_cpu_when_nothing_available(mock_torch):
+    info = hardware._detect()
+    assert info.device_type == "cpu"
+    assert info.device == "cpu"
+
+
+def test_auto_picks_rocm_when_hip_advertised(mock_torch):
+    """ROCm builds set torch.version.hip; cuda.is_available() also returns
+    True on a ROCm build (HIP devices surface through the cuda API)."""
+    mock_torch["cuda_available"] = True
+    mock_torch["cuda_device_count"] = 1
+    mock_torch["cuda_device_names"] = ["AMD Radeon RX 7900 XTX"]
+    mock_torch["cuda_mem"] = [(20.0, 24.0)]
+    mock_torch["set_hip"]("5.7.0")
+    info = hardware._detect()
+    assert info.device_type == "rocm"
+    assert info.device == "rocm:0"
+    assert "Radeon" in info.device_name
+
+
+def test_auto_picks_mps_when_only_mps_available(mock_torch):
+    mock_torch["mps_available"] = True
+    mock_torch["mps_built"] = True
+    info = hardware._detect()
+    assert info.device_type == "mps"
+    assert info.device == "mps"
+
+
+def test_auto_falls_through_when_cuda_probe_fails(mock_torch):
+    """Mocked-multi: simulate CUDA advertised but probe fails; MPS available.
+    Real-world this can't happen (CUDA + MPS aren't on the same wheel) but
+    the fall-through logic must work for the explicit-fallback path too."""
+    mock_torch["cuda_available"] = True
+    mock_torch["cuda_device_count"] = 1
+    mock_torch["cuda_device_names"] = ["Broken GPU"]
+    mock_torch["cuda_mem"] = [(0.0, 4.0)]
+    mock_torch["probe_results"]["cuda:0"] = (False, "RuntimeError: bad")
+    mock_torch["mps_available"] = True
+    mock_torch["mps_built"] = True
+    info = hardware._detect()
+    assert info.device_type == "mps"
