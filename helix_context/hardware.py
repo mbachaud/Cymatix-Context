@@ -17,10 +17,50 @@ singleton plumbing only.
 from __future__ import annotations
 
 import logging
+import platform
 from dataclasses import dataclass, field
-from typing import Mapping, Optional
+from typing import Any, Dict, Mapping, Optional
 
 log = logging.getLogger("helix.hardware")
+
+
+def _cpuinfo_get_info() -> Optional[Dict[str, Any]]:
+    """Wrap py-cpuinfo behind a function so tests can mock it cleanly.
+    Returns None if py-cpuinfo isn't installed."""
+    try:
+        import cpuinfo
+    except ImportError:
+        return None
+    try:
+        return cpuinfo.get_cpu_info()
+    except Exception:
+        log.warning("py-cpuinfo get_cpu_info() raised; falling back", exc_info=True)
+        return None
+
+
+def _detect_cpu() -> Dict[str, Any]:
+    """Detect cpu_arch, cpu_brand, system_ram_gb. Pure dict to keep
+    HardwareInfo construction in one place (in _detect)."""
+    info = _cpuinfo_get_info()
+    if info and info.get("brand_raw"):
+        cpu_brand = info["brand_raw"]
+    else:
+        proc = platform.processor()
+        cpu_brand = proc if proc else "unknown CPU"
+
+    try:
+        import psutil
+        ram_bytes = psutil.virtual_memory().total
+        system_ram_gb = ram_bytes / (1024 ** 3)
+    except Exception:
+        log.warning("psutil.virtual_memory() failed; system_ram_gb=0", exc_info=True)
+        system_ram_gb = 0.0
+
+    return {
+        "cpu_arch": platform.machine() or "unknown",
+        "cpu_brand": cpu_brand,
+        "system_ram_gb": system_ram_gb,
+    }
 
 
 @dataclass(frozen=True)
@@ -59,17 +99,16 @@ def reset_for_test() -> None:
 
 
 def _detect() -> HardwareInfo:
-    """Stub — filled in by Tasks 3-10. Returns a synthetic CPU info for now
-    so Task 2's tests pass."""
+    cpu = _detect_cpu()
     return HardwareInfo(
         device="cpu",
         device_type="cpu",
-        device_name="unknown CPU",
+        device_name=cpu["cpu_brand"],
         vram_total_gb=None,
         vram_free_gb=None,
-        cpu_arch="unknown",
-        cpu_brand="unknown CPU",
-        system_ram_gb=0.0,
+        cpu_arch=cpu["cpu_arch"],
+        cpu_brand=cpu["cpu_brand"],
+        system_ram_gb=cpu["system_ram_gb"],
         requested_device="auto",
         fallback_reason=None,
     )

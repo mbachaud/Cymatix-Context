@@ -56,3 +56,45 @@ def test_reset_for_test_clears_cached_singleton(monkeypatch):
     hardware.reset_for_test()
     info3 = hardware.get_hardware()
     assert info3.device_name == "Other"
+
+
+def test_cpu_brand_from_py_cpuinfo(monkeypatch):
+    """When py-cpuinfo is installed and returns brand_raw, use it."""
+    fake_cpuinfo = {"brand_raw": "AMD Ryzen 9 7900X 12-Core Processor"}
+    monkeypatch.setattr(
+        "helix_context.hardware._cpuinfo_get_info",
+        lambda: fake_cpuinfo,
+    )
+    monkeypatch.setattr("platform.processor", lambda: "should not be used")
+    info = hardware._detect_cpu()
+    assert info["cpu_brand"] == "AMD Ryzen 9 7900X 12-Core Processor"
+
+
+def test_cpu_brand_falls_back_to_platform_processor(monkeypatch):
+    """When py-cpuinfo is absent, fall back to platform.processor()."""
+    monkeypatch.setattr("helix_context.hardware._cpuinfo_get_info", lambda: None)
+    monkeypatch.setattr("platform.processor", lambda: "Intel64 Family 6 Model 158")
+    info = hardware._detect_cpu()
+    assert info["cpu_brand"] == "Intel64 Family 6 Model 158"
+
+
+def test_cpu_brand_terminal_fallback(monkeypatch):
+    """When both sources fail, return 'unknown CPU' (no crash)."""
+    monkeypatch.setattr("helix_context.hardware._cpuinfo_get_info", lambda: None)
+    monkeypatch.setattr("platform.processor", lambda: "")
+    info = hardware._detect_cpu()
+    assert info["cpu_brand"] == "unknown CPU"
+
+
+def test_cpu_arch_uses_platform_machine(monkeypatch):
+    monkeypatch.setattr("platform.machine", lambda: "x86_64")
+    info = hardware._detect_cpu()
+    assert info["cpu_arch"] == "x86_64"
+
+
+def test_system_ram_via_psutil(monkeypatch):
+    class _FakeVM:
+        total = 64 * 1024 * 1024 * 1024  # 64 GiB
+    monkeypatch.setattr("psutil.virtual_memory", lambda: _FakeVM())
+    info = hardware._detect_cpu()
+    assert info["system_ram_gb"] == pytest.approx(64.0, rel=1e-3)
