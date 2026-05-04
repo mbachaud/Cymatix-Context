@@ -130,6 +130,33 @@ def test_powershell_install_script_handles_targz():
     assert "tar" in text.lower(), "PowerShell script missing tar branch (Tempo Windows is .tar.gz)"
 
 
+def test_powershell_install_script_names_temp_archive_with_real_extension():
+    """Expand-Archive (the PS1 unzipper) requires the input file to literally
+    end in .zip; a generic .tmp suffix fails with
+    NotSupportedArchiveFileExtension. tar.exe sniffs content and tolerates
+    any extension, so a generic .tmp suffix masked this for tar.gz only.
+
+    Caught a real regression where prometheus (a .zip download) failed
+    with: 'Expand-Archive : .tmp is not a supported archive file format'.
+
+    Pin: the script MUST derive the temp archive's extension from the
+    URL, not hardcode .tmp.
+    """
+    text = PS_SCRIPT.read_text(encoding="utf-8")
+    # The simple-minded form `helix-native-otel-$svc.tmp` was the bug.
+    # Allow the substring inside a fallback branch but require explicit
+    # `.zip` and `.tar.gz` cases too.
+    assert '$url.EndsWith(".zip")' in text, (
+        "PowerShell install script must derive the archive extension "
+        "from the URL (e.g., $url.EndsWith(\".zip\") branch). "
+        "Hardcoding .tmp breaks Expand-Archive for .zip downloads."
+    )
+    assert '$url.EndsWith(".tar.gz")' in text, (
+        "PowerShell install script must handle the .tar.gz extension "
+        "explicitly so the named temp file has the right suffix."
+    )
+
+
 def test_powershell_install_script_resolves_repo_root_in_body_not_param():
     r"""Param default `(Resolve-Path "$PSScriptRoot\..").Path` is unreliable
     under `powershell.exe -File <script>` because $PSScriptRoot can be

@@ -122,7 +122,16 @@ foreach ($svc in $binaries.Keys) {
     }
 
     Write-Host "[install][$svc] downloading $url"
-    $tmpArchive = Join-Path $env:TEMP "helix-native-otel-$svc.tmp"
+    # Name the temp archive with its real extension. Expand-Archive (used
+    # for .zip below) requires the input path to literally end in .zip;
+    # a generic .tmp suffix fails with NotSupportedArchiveFileExtension.
+    # tar.exe doesn't care about extension (sniffs content), so tar.gz
+    # tolerated the bug, but .zip didn't.
+    $archiveExt = if ($url.EndsWith(".zip")) { ".zip" }
+                  elseif ($url.EndsWith(".tar.gz")) { ".tar.gz" }
+                  elseif ($url.EndsWith(".tgz")) { ".tgz" }
+                  else { ".tmp" }
+    $tmpArchive = Join-Path $env:TEMP "helix-native-otel-$svc$archiveExt"
     & $python -m helix_context.launcher._install_helpers download $url $tmpArchive --timeout 120
     if ($LASTEXITCODE -ne 0) {
         Write-Error "[install][$svc] download failed"
