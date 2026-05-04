@@ -72,3 +72,47 @@ def test_state_dir_no_doubled_helix_context_segment():
         f"state_dir must contain exactly one 'helix-context' segment per "
         f"spec §5; got {state_dir()!s}"
     )
+
+
+# ── Manifest constants (single source of truth for service+config names) ──
+
+
+def test_all_services_manifest_constant_exists_and_matches_spec():
+    """ALL_SERVICES tuple lives in observability_paths so supervisor +
+    render + app can import a single source of truth. Order matches
+    spec §7.3 spawn-order doc-prose: collector, prometheus, tempo,
+    loki, grafana."""
+    from helix_context.launcher.observability_paths import ALL_SERVICES
+    assert isinstance(ALL_SERVICES, tuple)
+    assert ALL_SERVICES == (
+        "collector",
+        "prometheus",
+        "tempo",
+        "loki",
+        "grafana",
+    )
+
+
+def test_all_config_files_manifest_constant_exists_and_matches_spec():
+    """ALL_CONFIG_FILES tuple is the rendered-config filename list
+    used by the install-complete check, supervisor pre-flight verify,
+    and the render module's _RULES."""
+    from helix_context.launcher.observability_paths import ALL_CONFIG_FILES
+    assert isinstance(ALL_CONFIG_FILES, tuple)
+    assert ALL_CONFIG_FILES == (
+        "otel-collector-config.yaml",
+        "prometheus.yml",
+        "tempo.yaml",
+        "loki-config.yaml",
+        "datasources.yml",
+    )
+
+
+def test_supervisor_all_services_is_same_set_as_paths_manifest():
+    """observability_supervisor.ALL_SERVICES must contain the same set of
+    services as the manifest in observability_paths — the supervisor's
+    list is constrained to spawn-phase order (which differs from manifest
+    order) but the membership is the single source of truth."""
+    from helix_context.launcher import observability_paths as paths_mod
+    from helix_context.launcher import observability_supervisor as sup_mod
+    assert set(sup_mod.ALL_SERVICES) == set(paths_mod.ALL_SERVICES)

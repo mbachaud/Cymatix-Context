@@ -39,6 +39,8 @@ from .observability_health import (
     wait_for_port,
 )
 from .observability_paths import (
+    ALL_CONFIG_FILES,
+    ALL_SERVICES as _MANIFEST_SERVICES,
     binary_path,
     configs_dir,
     logs_dir,
@@ -65,7 +67,16 @@ SPAWN_PHASES: List[List[str]] = [
     ["grafana"],
 ]
 
+# Spawn-order list (preserves the historical supervisor iteration order
+# that matters for shutdown's `reversed(ALL_SERVICES)` semantics:
+# grafana → collector → loki → tempo → prometheus). The set membership
+# must equal the manifest in observability_paths.ALL_SERVICES — verified
+# at import time so a manifest drift fails loudly instead of silently.
 ALL_SERVICES: List[str] = [s for phase in SPAWN_PHASES for s in phase]
+assert set(ALL_SERVICES) == set(_MANIFEST_SERVICES), (
+    f"SPAWN_PHASES drift: {set(ALL_SERVICES)} vs manifest "
+    f"{set(_MANIFEST_SERVICES)}"
+)
 
 
 # ── Status enum (kept as plain strings for tray-menu readability) ────
@@ -184,14 +195,7 @@ class ObservabilitySupervisor:
 
     def _verify_configs(self) -> None:
         cfg = configs_dir()
-        required = [
-            "otel-collector-config.yaml",
-            "prometheus.yml",
-            "tempo.yaml",
-            "loki-config.yaml",
-            "datasources.yml",
-        ]
-        missing = [n for n in required if not (cfg / n).exists()]
+        missing = [n for n in ALL_CONFIG_FILES if not (cfg / n).exists()]
         if missing:
             raise ConfigsMissing(
                 f"Rendered configs missing: {missing}. "

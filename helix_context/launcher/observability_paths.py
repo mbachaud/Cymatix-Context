@@ -32,6 +32,31 @@ _BINARY_LAYOUT = {
 }
 
 
+# ── Manifest constants ──────────────────────────────────────────────
+# Single source of truth for the 5-service / 5-config pair used by:
+#   - observability_supervisor (start-order, verify_configs, verify_binaries)
+#   - observability_render (_RULES output names)
+#   - launcher.app._observability_install_complete
+# Keeping these here (rather than in supervisor) lets the install-complete
+# check on app.py read them without importing the supervisor module, which
+# pulls in pywin32 + threading scaffolding we don't want at app-import time.
+ALL_SERVICES: tuple[str, ...] = (
+    "collector",
+    "prometheus",
+    "tempo",
+    "loki",
+    "grafana",
+)
+
+ALL_CONFIG_FILES: tuple[str, ...] = (
+    "otel-collector-config.yaml",
+    "prometheus.yml",
+    "tempo.yaml",
+    "loki-config.yaml",
+    "datasources.yml",
+)
+
+
 def _user_data_dir() -> Path:
     """Wrap platformdirs.user_data_dir; isolated for monkeypatching in tests."""
     try:

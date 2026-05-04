@@ -20,7 +20,12 @@ import logging
 import sys
 from pathlib import Path
 
-from .observability_paths import configs_dir, service_state_dir, state_dir
+from .observability_paths import (
+    ALL_CONFIG_FILES,
+    configs_dir,
+    service_state_dir,
+    state_dir,
+)
 
 log = logging.getLogger("helix.launcher.render")
 
@@ -120,7 +125,9 @@ def _sub_datasources(text: str) -> str:
 
 
 _RULES = [
-    # (source path relative to deploy/otel, rendered name, sub fn)
+    # (source path relative to deploy/otel, rendered name, sub fn).
+    # The rendered names below MUST equal observability_paths.ALL_CONFIG_FILES
+    # (single source of truth for the rendered-config filename set).
     ("otel-collector-config.yaml", "otel-collector-config.yaml", _sub_collector),
     ("prometheus.yml", "prometheus.yml", _sub_prometheus),
     ("tempo.yaml", "tempo.yaml", _sub_tempo),
@@ -131,6 +138,13 @@ _RULES = [
         _sub_datasources,
     ),
 ]
+# Verify _RULES output names match the manifest at import time so any
+# drift fails loudly (rather than the supervisor's _verify_configs
+# discovering a mismatch only at start_all() time).
+assert tuple(dst for _, dst, _ in _RULES) == ALL_CONFIG_FILES, (
+    f"_RULES output names {tuple(dst for _, dst, _ in _RULES)} drifted "
+    f"from manifest ALL_CONFIG_FILES {ALL_CONFIG_FILES}"
+)
 
 
 def _wire_grafana_provisioning() -> None:
