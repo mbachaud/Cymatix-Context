@@ -1404,16 +1404,19 @@ def test_no_docker_dns_hostnames_remain_in_any_render(rendered):
     Catches accidental drift if a future config-source adds another
     container hostname that the render module didn't know about.
     """
-    docker_hosts = ["tempo:", "prometheus:", "loki:", "otel-collector:"]
+    # Require a digit after the colon so we match real Docker DNS host:port
+    # forms (tempo:4317) and not YAML map keys like otlp/tempo: (which is the
+    # collector exporter name, not a hostname).
+    docker_host_re = re.compile(r"\b(?:tempo|prometheus|loki|otel-collector):\d")
     for f in rendered.iterdir():
         if not f.is_file() or f.name == ".gitkeep":
             continue
         text = f.read_text()
-        for host in docker_hosts:
-            assert host not in text, (
-                f"{f.name}: still mentions Docker DNS hostname {host!r} "
-                f"after render — render module needs an extra rule."
-            )
+        m = docker_host_re.search(text)
+        assert m is None, (
+            f"{f.name}: still mentions Docker DNS host:port form {m.group()!r} "
+            f"after render — render module needs an extra rule."
+        )
 
 
 def test_structural_diff_is_only_hostnames_and_paths(rendered):
@@ -1427,15 +1430,32 @@ def test_structural_diff_is_only_hostnames_and_paths(rendered):
         ("loki-config.yaml", "loki-config.yaml"),
         ("grafana/provisioning/datasources/datasources.yml", "datasources.yml"),
     ]
-    sub_re = re.compile(
-        r"(localhost|tempo|prometheus|loki|otel-collector)(:\d+)?"
-        r"|(?:[A-Za-z]:)?[\\/]\S+(?:tempo|loki|prometheus|grafana)\S*"
+    # Layered normalization. A single regex with a Windows-drive branch
+    # like (?:[A-Za-z]:)? greedy-matches `p://` from `http://tempo:4317`
+    # and consumes the URL inconsistently between source and render. Apply
+    # in priority order: URLs first (so `http://...` is consumed as a unit),
+    # then bare host:port, then absolute filesystem paths that mention a
+    # service name.
+    url_re = re.compile(
+        r"https?://(?:localhost|tempo|prometheus|loki|otel-collector)(?::\d+)?"
+        r"(?:/\S*)?"
     )
+    hostport_re = re.compile(
+        r"\b(?:localhost|tempo|prometheus|loki|otel-collector)(?::\d+)?\b"
+    )
+    path_re = re.compile(
+        r"(?:[A-Za-z]:)?[\\/](?:\S*?[\\/])?(?:tempo|loki|prometheus|grafana)\S*"
+    )
+    def _norm(text: str) -> str:
+        text = url_re.sub("<URL>", text)
+        text = hostport_re.sub("<HOSTPORT>", text)
+        text = path_re.sub("<PATH>", text)
+        return text
     for src_rel, dst_name in pairs:
         src = (DEPLOY / src_rel).read_text()
         dst = (rendered / dst_name).read_text()
-        src_norm = sub_re.sub("<SUB>", src)
-        dst_norm = sub_re.sub("<SUB>", dst)
+        src_norm = _norm(src)
+        dst_norm = _norm(dst)
         assert src_norm == dst_norm, (
             f"{dst_name}: structural diff is more than hostnames+paths.\n"
             f"--- src normalized ---\n{src_norm}\n"
@@ -1513,6 +1533,20 @@ def _sub_collector(text: str) -> str:
     text = text.replace(
         "endpoint: http://loki:3100/otlp",
         "endpoint: http://localhost:3100/otlp",
+    )
+    # Doc-comment header at top of source mentions the same Docker DNS
+    # URLs in prose form. Rewrite them too so the rendered file is
+    # self-consistent under cat/log inspection. These replacements only
+    # touch the comment header (the substring forms below appear ONLY in
+    # those comment lines — the endpoint lines above use different forms).
+    text = text.replace("http://tempo:4317", "http://localhost:4317")
+    text = text.replace(
+        "http://prometheus:9090/api/v1/write",
+        "http://localhost:9090/api/v1/write",
+    )
+    text = text.replace(
+        "http://loki:3100/otlp/v1/logs",
+        "http://localhost:3100/otlp/v1/logs",
     )
     return text
 
