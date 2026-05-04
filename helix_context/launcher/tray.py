@@ -32,9 +32,17 @@ import signal
 import subprocess
 import sys
 import threading
+import time
 import webbrowser
 from pathlib import Path
 from typing import Callable, Optional
+
+# Windows process-creation flags used for auto-restart detach. Defined as
+# module-level constants so tests can introspect them and so non-Windows
+# platforms (where these would be 0) still see the names cleanly.
+# Values per MSDN CreateProcess flags:
+DETACHED_PROCESS = 0x00000008
+CREATE_NEW_PROCESS_GROUP = 0x00000200
 
 from .supervisor import (
     AlreadyRunning,
@@ -278,14 +286,7 @@ class HelixTrayIcon:
         the user closes the tray before install completes, the spawned
         subprocess keeps running.
         """
-        # repo-relative scripts/install-native-observability.ps1 — three
-        # parents up from tray.py:
-        #   tray.py → helix_context/launcher/ → helix_context/ → <repo>/
-        script_path = (
-            Path(__file__).resolve().parent.parent.parent
-            / "scripts"
-            / "install-native-observability.ps1"
-        )
+        script_path = self._repo_root() / "scripts" / "install-native-observability.ps1"
         cmd = [
             "powershell.exe",
             "-NoProfile",
@@ -298,19 +299,166 @@ class HelixTrayIcon:
         # the user gets visual feedback even if the install takes a while.
         self.stop_install_pulse()
         try:
-            # Fire-and-forget: no .wait/.communicate. CREATE_NO_WINDOW
-            # keeps the install console hidden on Windows (per global
-            # CLAUDE.md subprocess-safety guideline). On non-Windows
-            # platforms CREATE_NO_WINDOW is 0, which Popen tolerates.
-            subprocess.Popen(
-                cmd,
-                creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
-            )
+            # Fire-and-forget: no .wait/.communicate. creationflags=0
+            # INTENTIONALLY shows the PowerShell console — the install
+            # downloads ~400MB of binaries over 5-10 minutes, and a hidden
+            # console gives the user no progress feedback ("is it stuck?").
+            # Every other Popen in this module still uses CREATE_NO_WINDOW
+            # (per global CLAUDE.md subprocess-safety); only the user-
+            # facing install console gets visibility.
+            subprocess.Popen(cmd, creationflags=0)
         except Exception:
             log.warning(
                 "Tray: failed to launch install-native-observability.ps1",
                 exc_info=True,
             )
+            return
+        # Spawn was successful — kick off the daemon watcher that polls
+        # for the completion sentinel and triggers the auto-restart so
+        # the freshly-installed binaries get picked up without the user
+        # having to manually quit + re-launch.
+        try:
+            watcher = threading.Thread(
+                target=self._install_completion_watcher,
+                name="helix-install-watcher",
+                daemon=True,
+            )
+            watcher.start()
+        except Exception:
+            log.warning(
+                "Tray: failed to start install-completion watcher thread",
+                exc_info=True,
+            )
+
+    # ── repo-root + install completion watcher + auto-restart ────
+
+    def _repo_root(self) -> Path:
+        """Resolve the repo root from this module's filesystem location.
+
+        tray.py lives at <repo>/helix_context/launcher/tray.py, so three
+        parents up from __file__ is the repo. Computed lazily so tests
+        can monkeypatch this method to redirect to a tmp_path tree.
+        """
+        return Path(__file__).resolve().parent.parent.parent
+
+    def _install_completion_watcher(self) -> None:
+        """Daemon thread: poll for tools/native-otel/.install-complete
+        every 2 s. When the sentinel appears, the install script wrote
+        it just before exiting — fire balloon, remove sentinel, and
+        auto-restart the launcher so the new tray picks up the freshly-
+        installed binaries.
+
+        Caps at 30 minutes total (900 iterations × 2 s) so a failed
+        install doesn't leave a watcher thread polling forever. Exits
+        early if the user explicitly dismissed the install pulse —
+        treats dismissal as "I changed my mind, don't auto-restart."
+        """
+        sentinel = self._repo_root() / "tools" / "native-otel" / ".install-complete"
+        max_iterations = 900  # 30 minutes at 2 s cadence
+        for _ in range(max_iterations):
+            if self._install_pulse_dismissed:
+                log.info(
+                    "Tray: install-completion watcher exiting "
+                    "(user dismissed install pulse)"
+                )
+                return
+            try:
+                found = sentinel.exists()
+            except OSError:
+                # Transient FS error (network drive hiccup, AV scan, ...).
+                # Don't crash the watcher — keep polling.
+                log.debug(
+                    "Tray: sentinel exists() raised OSError, will retry",
+                    exc_info=True,
+                )
+                found = False
+            if found:
+                log.info(
+                    "Tray: install-completion sentinel detected at %s",
+                    sentinel,
+                )
+                # Notify the user, then remove the sentinel BEFORE the
+                # restart so a subsequent re-launch with binaries already
+                # present doesn't re-trigger this code path. Best-effort —
+                # if removal fails the next run will still proceed.
+                if self._icon is not None:
+                    try:
+                        self._icon.notify(
+                            "Native observability installed — "
+                            "restarting helix launcher...",
+                            title="Helix Launcher",
+                        )
+                    except Exception:
+                        log.debug("Tray: notify on install complete failed",
+                                  exc_info=True)
+                try:
+                    sentinel.unlink()
+                except OSError:
+                    log.warning(
+                        "Tray: failed to remove install sentinel %s",
+                        sentinel, exc_info=True,
+                    )
+                self._auto_restart_launcher()
+                return
+            time.sleep(2.0)
+        log.warning(
+            "Tray: install-completion watcher timed out after 30 min "
+            "without seeing sentinel — install may have failed"
+        )
+
+    def _auto_restart_launcher(self) -> None:
+        """Spawn a fresh tray launcher in a fully-detached process and
+        stop the current tray icon. The detach flags
+        (DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP) on Windows ensure
+        the new launcher survives even when the current process exits.
+        """
+        repo_root = self._repo_root()
+        bat_path = repo_root / "Start-helix-tray.bat"
+        if not bat_path.exists():
+            log.warning(
+                "Tray: auto-restart skipped — Start-helix-tray.bat not "
+                "found at %s. User must manually relaunch.",
+                bat_path,
+            )
+            return
+        # Windows detach flags. On non-Windows the named constants are
+        # still numerically valid (0x208) but Popen ignores them — the
+        # auto-restart path is Windows-only in practice (the .bat file is
+        # not portable), but keeping the constants module-level rather
+        # than os.name-gated keeps the code testable across platforms.
+        flags = DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP
+        try:
+            subprocess.Popen(
+                [str(bat_path)],
+                creationflags=flags,
+                cwd=str(repo_root),
+                close_fds=True,
+            )
+        except OSError:
+            log.warning(
+                "Tray: auto-restart spawn failed — current tray will "
+                "stay alive rather than dying with no replacement",
+                exc_info=True,
+            )
+            return
+        except Exception:
+            log.warning(
+                "Tray: auto-restart spawn failed (unexpected exception)",
+                exc_info=True,
+            )
+            return
+        # New launcher is up — stop the current tray icon. pystray's
+        # run() returns once stop() is called, app.py's main() proceeds
+        # to its tray-exit handler which shuts the supervisor down
+        # cleanly. The new tray we just spawned has its own supervisor.
+        if self._icon is not None:
+            try:
+                self._icon.stop()
+            except Exception:
+                log.warning(
+                    "Tray: icon.stop after auto-restart failed",
+                    exc_info=True,
+                )
 
     def _start_helix(self, icon, item) -> None:  # noqa: ARG002
         log.info("Tray: starting helix")

@@ -172,3 +172,14 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Write-Host "[install] Native observability install complete."
+
+# Write the completion sentinel — the helix tray polls for this file
+# every 2 s and auto-restarts the launcher when it appears, so the
+# freshly-installed binaries get picked up without the user having to
+# manually quit + re-launch. Sentinel is removed by the tray after
+# detection so re-runs don't re-trigger the auto-restart.
+$sentinelPath = Join-Path $RepoRoot "tools\native-otel\.install-complete"
+New-Item -Path $sentinelPath -ItemType File -Force | Out-Null
+Write-Host "[install] Wrote completion sentinel: $sentinelPath"
+Write-Host "[install] Helix tray will auto-restart shortly. You can close this window."
+Start-Sleep -Seconds 2

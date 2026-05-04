@@ -317,17 +317,21 @@ class TestInstallPendingSubmenu:
             t and t.startswith("Install Observability") for t in sub_titles
         ), f"Install action missing from submenu: {sub_titles}"
 
-    def test_install_action_invokes_powershell_with_no_window(
+    def test_install_action_invokes_powershell_visibly(
         self, tmp_path,
     ):
         """Clicking Install Observability spawns the bundled
         scripts/install-native-observability.ps1 via subprocess.Popen
-        with CREATE_NO_WINDOW (per global CLAUDE.md subprocess-safety
-        guideline) and is fire-and-forget (no .wait/.communicate)."""
+        with creationflags=0 — the install console is intentionally
+        VISIBLE so the user can see download progress during the
+        ~5-10 minute install (UX gap fix). Fire-and-forget (no
+        .wait/.communicate)."""
         icon = _build_install_pending_tray(tmp_path)
         with patch(
             "helix_context.launcher.tray.subprocess.Popen"
-        ) as mock_popen:
+        ) as mock_popen, patch(
+            "helix_context.launcher.tray.threading.Thread"
+        ):
             mock_popen.return_value = MagicMock()
             icon._run_install_observability(None, None)
         mock_popen.assert_called_once()
@@ -342,9 +346,13 @@ class TestInstallPendingSubmenu:
         file_idx = cmd.index("-File")
         script_path = cmd[file_idx + 1]
         assert script_path.endswith("install-native-observability.ps1")
-        # CREATE_NO_WINDOW flag — value 0 on non-Windows is fine, the key
-        # is that creationflags is forwarded.
-        assert "creationflags" in kwargs
+        # creationflags MUST be 0 — install console is intentionally visible
+        # so the user sees download progress during the multi-minute install.
+        # CREATE_NO_WINDOW is 0x08000000 on Windows; we want it OFF here.
+        assert kwargs.get("creationflags", 0) == 0, (
+            "Install spawn must NOT use CREATE_NO_WINDOW — console is "
+            "intentionally visible for progress feedback during the long install."
+        )
 
     def test_install_action_path_resolves_to_repo_script(
         self, tmp_path,
@@ -355,7 +363,9 @@ class TestInstallPendingSubmenu:
         icon = _build_install_pending_tray(tmp_path)
         with patch(
             "helix_context.launcher.tray.subprocess.Popen"
-        ) as mock_popen:
+        ) as mock_popen, patch(
+            "helix_context.launcher.tray.threading.Thread"
+        ):
             mock_popen.return_value = MagicMock()
             icon._run_install_observability(None, None)
         cmd = mock_popen.call_args[0][0]
@@ -379,7 +389,7 @@ class TestInstallPendingSubmenu:
         with patch(
             "helix_context.launcher.tray.subprocess.Popen",
             return_value=proc_mock,
-        ):
+        ), patch("helix_context.launcher.tray.threading.Thread"):
             icon._run_install_observability(None, None)
         proc_mock.wait.assert_not_called()
         proc_mock.communicate.assert_not_called()
@@ -449,7 +459,7 @@ class TestInstallPendingSubmenu:
         with patch(
             "helix_context.launcher.tray.subprocess.Popen",
             side_effect=OSError("powershell missing"),
-        ):
+        ), patch("helix_context.launcher.tray.threading.Thread"):
             # Should not raise
             icon._run_install_observability(None, None)
 
@@ -661,3 +671,230 @@ class TestInstallPulse:
             assert icon._install_pulse_state != initial
             # update_menu should have been called on the icon.
             assert icon._icon.update_menu.called
+
+
+# ── Install completion watcher + auto-restart (UX gap fix) ─────────────
+
+
+class TestInstallCompletionWatcher:
+    """When the user clicks Install Observability, the tray spawns a
+    daemon thread that polls for tools/native-otel/.install-complete
+    every 2 s. When the sentinel appears, the watcher fires the
+    auto-restart path: balloon → remove sentinel → spawn fresh launcher
+    detached → icon.stop()."""
+
+    def test_run_install_starts_watcher_thread(self, tmp_path):
+        """_run_install_observability must spawn a watcher daemon thread."""
+        icon = _build_install_pending_tray(tmp_path)
+        with patch(
+            "helix_context.launcher.tray.subprocess.Popen"
+        ), patch(
+            "helix_context.launcher.tray.threading.Thread"
+        ) as mock_thread:
+            mock_thread.return_value = MagicMock()
+            icon._run_install_observability(None, None)
+        mock_thread.assert_called_once()
+        # Thread must be daemon=True so it doesn't block process exit.
+        _args, kwargs = mock_thread.call_args
+        assert kwargs.get("daemon", False) is True
+        # The thread target must be the sentinel watcher.
+        target = kwargs.get("target")
+        assert target == icon._install_completion_watcher
+
+    def test_watcher_does_not_start_if_spawn_fails(self, tmp_path):
+        """If Popen raises (e.g. powershell missing), no watcher is
+        scheduled — there's no install to wait for."""
+        icon = _build_install_pending_tray(tmp_path)
+        with patch(
+            "helix_context.launcher.tray.subprocess.Popen",
+            side_effect=OSError("missing"),
+        ), patch(
+            "helix_context.launcher.tray.threading.Thread"
+        ) as mock_thread:
+            icon._run_install_observability(None, None)
+        mock_thread.assert_not_called()
+
+    def test_watcher_detects_sentinel_and_calls_auto_restart(self, tmp_path):
+        """When the sentinel file appears, the watcher loop calls
+        _auto_restart_launcher and removes the sentinel before exiting."""
+        icon = _build_install_pending_tray(tmp_path)
+        # Build a fake repo root with the sentinel pre-staged.
+        repo_root = tmp_path / "repo"
+        (repo_root / "tools" / "native-otel").mkdir(parents=True)
+        sentinel = repo_root / "tools" / "native-otel" / ".install-complete"
+        sentinel.write_text("done")
+        # Stub _repo_root() and _auto_restart_launcher.
+        icon._repo_root = lambda: repo_root  # type: ignore[method-assign]
+        icon._auto_restart_launcher = MagicMock()  # type: ignore[method-assign]
+        # Patch sleep so the loop returns immediately.
+        with patch("helix_context.launcher.tray.time.sleep"):
+            icon._install_completion_watcher()
+        icon._auto_restart_launcher.assert_called_once()
+        assert not sentinel.exists(), (
+            "Sentinel must be removed after detection so re-launches "
+            "don't re-trigger the auto-restart."
+        )
+
+    def test_watcher_exits_when_dismissed(self, tmp_path):
+        """If the user explicitly dismissed the install pulse, the
+        watcher must stop polling (no auto-restart)."""
+        icon = _build_install_pending_tray(tmp_path)
+        repo_root = tmp_path / "repo"
+        (repo_root / "tools" / "native-otel").mkdir(parents=True)
+        # No sentinel — would loop forever; dismiss flag should break out.
+        icon._repo_root = lambda: repo_root  # type: ignore[method-assign]
+        icon._auto_restart_launcher = MagicMock()  # type: ignore[method-assign]
+        icon._install_pulse_dismissed = True
+        with patch("helix_context.launcher.tray.time.sleep"):
+            icon._install_completion_watcher()
+        icon._auto_restart_launcher.assert_not_called()
+
+    def test_watcher_caps_at_30_minutes(self, tmp_path):
+        """If the sentinel never appears, the watcher must cap at 30 min
+        (900 iterations at 2 s) and exit without auto-restarting."""
+        icon = _build_install_pending_tray(tmp_path)
+        repo_root = tmp_path / "repo"
+        (repo_root / "tools" / "native-otel").mkdir(parents=True)
+        icon._repo_root = lambda: repo_root  # type: ignore[method-assign]
+        icon._auto_restart_launcher = MagicMock()  # type: ignore[method-assign]
+        # Count sleeps — must cap, not infinite loop.
+        sleep_count = {"n": 0}
+
+        def fake_sleep(secs):  # noqa: ARG001
+            sleep_count["n"] += 1
+            if sleep_count["n"] > 1000:
+                raise RuntimeError("Watcher did not cap — would loop forever")
+
+        with patch(
+            "helix_context.launcher.tray.time.sleep", side_effect=fake_sleep
+        ):
+            icon._install_completion_watcher()
+        icon._auto_restart_launcher.assert_not_called()
+        # Should have run roughly 900 iterations (30 min / 2 s) — not infinite.
+        assert 100 < sleep_count["n"] <= 1000
+
+    def test_watcher_handles_oserror_on_stat(self, tmp_path):
+        """If exists() raises (e.g. transient FS error), the watcher
+        catches OSError and continues polling rather than crashing."""
+        icon = _build_install_pending_tray(tmp_path)
+        repo_root = tmp_path / "repo"
+        (repo_root / "tools" / "native-otel").mkdir(parents=True)
+        icon._repo_root = lambda: repo_root  # type: ignore[method-assign]
+        icon._auto_restart_launcher = MagicMock()  # type: ignore[method-assign]
+
+        # First two checks raise OSError; third returns False so the loop
+        # eventually exits via the dismiss flag.
+        call_count = {"n": 0}
+
+        def fake_exists(_self):
+            call_count["n"] += 1
+            if call_count["n"] <= 2:
+                raise OSError("transient")
+            # Trigger graceful exit on third call.
+            icon._install_pulse_dismissed = True
+            return False
+
+        with patch("pathlib.Path.exists", new=fake_exists), patch(
+            "helix_context.launcher.tray.time.sleep"
+        ):
+            # Should not raise.
+            icon._install_completion_watcher()
+        icon._auto_restart_launcher.assert_not_called()
+
+
+class TestAutoRestart:
+    """The auto-restart path spawns Start-helix-tray.bat in a fully
+    detached process (DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP) so
+    the new tray survives the dying one, then calls icon.stop() to wind
+    down the current tray cleanly."""
+
+    def test_auto_restart_spawns_detached_launcher_and_stops_icon(
+        self, tmp_path,
+    ):
+        icon = _build_install_pending_tray(tmp_path)
+        repo_root = tmp_path / "repo"
+        repo_root.mkdir()
+        bat = repo_root / "Start-helix-tray.bat"
+        bat.write_text("@echo on\n")
+        icon._repo_root = lambda: repo_root  # type: ignore[method-assign]
+
+        with patch(
+            "helix_context.launcher.tray.subprocess.Popen"
+        ) as mock_popen:
+            icon._auto_restart_launcher()
+        mock_popen.assert_called_once()
+        args, kwargs = mock_popen.call_args
+        cmd = args[0]
+        # First element is the bat path.
+        from pathlib import Path
+        assert Path(cmd[0]).name == "Start-helix-tray.bat"
+        # Detach flags: DETACHED_PROCESS (0x08) | CREATE_NEW_PROCESS_GROUP (0x200) = 0x208.
+        cf = kwargs.get("creationflags", 0)
+        DETACHED_PROCESS = 0x00000008
+        CREATE_NEW_PROCESS_GROUP = 0x00000200
+        assert cf & DETACHED_PROCESS, (
+            f"creationflags missing DETACHED_PROCESS: 0x{cf:x}"
+        )
+        assert cf & CREATE_NEW_PROCESS_GROUP, (
+            f"creationflags missing CREATE_NEW_PROCESS_GROUP: 0x{cf:x}"
+        )
+        # cwd must be repo_root so relative paths in the bat resolve.
+        assert Path(str(kwargs.get("cwd"))) == repo_root
+        # close_fds=True for fully detached child.
+        assert kwargs.get("close_fds") is True
+        # icon.stop() called after spawning the new launcher.
+        icon._icon.stop.assert_called_once()
+
+    def test_auto_restart_skips_if_bat_missing(self, tmp_path):
+        """If Start-helix-tray.bat doesn't exist, auto-restart logs a
+        warning and skips — icon.stop is NOT called (don't kill the
+        current tray when we can't bring up a replacement)."""
+        icon = _build_install_pending_tray(tmp_path)
+        repo_root = tmp_path / "repo"
+        repo_root.mkdir()
+        # No .bat file written.
+        icon._repo_root = lambda: repo_root  # type: ignore[method-assign]
+
+        with patch(
+            "helix_context.launcher.tray.subprocess.Popen"
+        ) as mock_popen:
+            icon._auto_restart_launcher()
+        mock_popen.assert_not_called()
+        icon._icon.stop.assert_not_called()
+
+    def test_auto_restart_swallows_spawn_errors(self, tmp_path):
+        """A failed Popen for the new launcher must not crash the
+        watcher thread."""
+        icon = _build_install_pending_tray(tmp_path)
+        repo_root = tmp_path / "repo"
+        repo_root.mkdir()
+        bat = repo_root / "Start-helix-tray.bat"
+        bat.write_text("@echo on\n")
+        icon._repo_root = lambda: repo_root  # type: ignore[method-assign]
+
+        with patch(
+            "helix_context.launcher.tray.subprocess.Popen",
+            side_effect=OSError("spawn failed"),
+        ):
+            # Should not raise.
+            icon._auto_restart_launcher()
+        # icon.stop is best-effort skipped when spawn fails — keep current
+        # tray alive rather than dying with no replacement.
+        icon._icon.stop.assert_not_called()
+
+
+class TestRepoRootHelper:
+    def test_repo_root_resolves_from_module_path(self, tmp_path, fake_supervisor):
+        """_repo_root() returns the repo containing helix_context/, computed
+        from the tray.py module location (not cwd-dependent)."""
+        icon = HelixTrayIcon(
+            supervisor=fake_supervisor,
+            dashboard_url="http://127.0.0.1:11438/",
+        )
+        repo = icon._repo_root()
+        from pathlib import Path
+        assert isinstance(repo, Path)
+        # The resolved repo must contain helix_context/ as a subdirectory.
+        assert (repo / "helix_context").is_dir()
+        # And scripts/install-native-observability.ps1 must live under it.
+        assert (repo / "scripts" / "install-native-observability.ps1").exists()
