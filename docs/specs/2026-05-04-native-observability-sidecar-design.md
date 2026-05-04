@@ -41,7 +41,7 @@ Replace the Docker Compose stack with native binaries running as subprocesses of
 └────────────────────────────────────────────────────┘
 ```
 
-Helix-context's exporter sends OTel signals to `localhost:4317` exactly as today. The receiver is now a native binary instead of a container. Wire format, OTLP/gRPC port, Prometheus scrape, Grafana datasource configs — all unchanged.
+Helix-context's exporter sends OTel signals to `localhost:4317` exactly as today. The receiver is now a native binary instead of a container. Wire format, OTLP/gRPC port, Prometheus scrape, dashboard provisioning, and the OTel pipeline shape are all unchanged. Datasource and component config files are *templated* (hostnames + state-dir paths only — no structural diff); see §5 + §6.3.
 
 ## 5. File layout
 
@@ -165,7 +165,14 @@ Re-runs are safe. Bumping a version in `.versions` and re-running upgrades only 
 
 `Start-helix-tray.bat` already runs the Python tray launcher. We extend the launcher's startup path:
 
-1. **First-launch detection.** If `tools/native-otel/` is missing or any component binary absent, prompt the user: *"Native observability is not installed. Run `scripts/install-native-observability.ps1` now? (Y/n)"*. On accept, run the script and continue. On decline, set observability state to "skipped" and continue.
+1. **First-launch detection.** If `tools/native-otel/` is missing, any
+   component binary absent, OR any rendered config in
+   `tools/native-otel/configs/` absent, prompt the user: *"Native
+   observability is not installed. Run `scripts/install-native-observability.ps1`
+   now? (Y/n)"*. On accept, run the script and continue. On decline, set
+   observability state to "skipped" and continue. (The render step in §6.3
+   is part of "installed" — supervisor refuses to spawn a binary whose
+   config wasn't rendered, so we don't get a half-installed state.)
 
 2. **Port pre-flight.** For each service, check whether its port is already bound:
    - Collector: 4317 (OTLP/gRPC), 4318 (OTLP/HTTP), 8889 (Prom scrape)
@@ -238,14 +245,15 @@ Layout explanation, install script invocation, version-update procedure, where s
 
 ### Unit
 - `tests/test_install_observability.py` — mock release-URL HTTP, inject corrupt download, assert SHA256 verification fails loud and leaves prior binary untouched.
-- `tests/test_observability_supervisor.py` — mock `subprocess.Popen`, assert spawn order, assert Job Object setup on Windows, assert cleanup cascade on shutdown.
+- `tests/test_observability_config_render.py` — feed each `deploy/otel/*.yaml` source through the render step, assert: (a) every Docker DNS hostname is rewritten to `localhost`, (b) every Linux container path is rewritten to a platform-appropriate user-state path, (c) the rendered YAML still parses and preserves the structural diff with the source as exactly hostnames + paths (no other keys touched). Catches accidental config drift on either runtime.
+- `tests/test_observability_supervisor.py` — mock `subprocess.Popen`, assert spawn order, assert Job Object setup on Windows, assert cleanup cascade on shutdown, assert refusal to spawn when rendered config is absent (per §7.1).
 - `tests/test_observability_health.py` — port-bind poll behavior, HTTP-endpoint poll behavior, timeout boundaries.
 
 ### Integration (Windows-only)
 1. **Clean-machine first launch.** Fresh checkout, no `tools/native-otel/`, no Docker. Run `Start-helix-tray.bat`. Verify: install script prompted, accept-path installs all 5 binaries, tray launches with all green status, helix-context emits a metric, metric visible at `http://localhost:8889/metrics` and in a Grafana panel.
 2. **Re-launch.** Quit tray, re-run. Verify all binaries skip download (already present), services come back up cleanly.
 3. **Port-collision.** Manually start a separate Prometheus on :9090, then run tray. Verify supervisor logs "external instance detected on :9090", does not spawn its own Prometheus, other services start normally.
-4. **Per-service failure.** Corrupt one binary on disk, launch. Verify supervisor logs the spawn error, marks service red, helix-context starts normally.
+4. **Per-service failure.** Replace one binary with a deterministic-failure stand-in (zero-byte file, or script that exits 1 — see §11.6 for the open question on which to pick), launch. Verify supervisor logs the spawn error, marks service red, helix-context starts normally.
 5. **Opt-out.** `set HELIX_OBSERVABILITY=0`, launch. Verify no observability process spawned, no install prompt, helix-context starts normally.
 6. **Docker-compose path still works.** `cd deploy/otel && docker-compose up -d`. Verify identical behavior to today.
 
