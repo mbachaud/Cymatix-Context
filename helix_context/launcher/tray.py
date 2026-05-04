@@ -126,6 +126,19 @@ class HelixTrayIcon:
         self._icon = None  # type: ignore[assignment]
         self._quit_event = threading.Event()
 
+        # Install-prompt pulse state (spec §11.4 — balloon + tray-menu
+        # pulse). The Observability submenu label alternates between
+        # "Observability ●" and "Observability ○" on a 1 s cadence to draw
+        # the user's eye until they either click an observability menu
+        # item (acknowledgment) or explicitly Dismiss. Dismissal persists
+        # for THIS process lifetime; pulse returns next launch if still
+        # not installed.
+        self._install_pulse_lock = threading.Lock()
+        self._install_pulse_active: bool = False
+        self._install_pulse_state: int = 0  # 0 → ●, 1 → ○
+        self._install_pulse_timer: Optional[threading.Timer] = None
+        self._install_pulse_dismissed: bool = False
+
     # ── menu action handlers ───────────────────────────────────────
 
     def _open_dashboard(self, icon, item) -> None:  # noqa: ARG002 — pystray API
@@ -206,6 +219,9 @@ class HelixTrayIcon:
         def _h(icon, item):  # noqa: ARG001 — pystray API
             if self.observability is None:
                 return
+            # Treat any observability submenu click as acknowledgment of
+            # the install-prompt (spec §11.4).
+            self.stop_install_pulse()
             log.info("Tray: restart observability/%s", service)
             try:
                 self.observability.restart_service(service)
@@ -216,6 +232,8 @@ class HelixTrayIcon:
         return _h
 
     def _open_obs_log_dir(self, icon, item):  # noqa: ARG002
+        # Treat as acknowledgment of the install-prompt (spec §11.4).
+        self.stop_install_pulse()
         from .observability_paths import logs_dir
         p = logs_dir(create=True)
         log.info("Tray: open log dir %s", p)
@@ -232,6 +250,14 @@ class HelixTrayIcon:
                 )
         except Exception:
             log.warning("Tray: failed to open log dir", exc_info=True)
+
+    def _dismiss_install_pulse(self, icon, item) -> None:  # noqa: ARG002
+        """User explicitly dismissed the install-prompt pulse from the
+        Observability submenu. Persists for this process lifetime."""
+        log.info("Tray: install-prompt pulse dismissed by user")
+        self.stop_install_pulse()
+        self._install_pulse_dismissed = True
+        self._refresh_menu()
 
     def _start_helix(self, icon, item) -> None:  # noqa: ARG002
         log.info("Tray: starting helix")
@@ -422,9 +448,19 @@ class HelixTrayIcon:
             obs_items.append(pystray.MenuItem(
                 "Open log directory", self._open_obs_log_dir,
             ))
+            # Conditional "Dismiss install reminder" item — only visible
+            # while the install-prompt pulse is active (spec §11.4).
+            obs_items.append(pystray.MenuItem(
+                "Dismiss install reminder",
+                self._dismiss_install_pulse,
+                visible=lambda item: self._install_pulse_active,  # noqa: ARG005
+            ))
+            # Top-level "Observability" label is callable so it can render
+            # the pulse suffix (● / ○) without rebuilding the whole menu.
             items.append(pystray.Menu.SEPARATOR)
             items.append(pystray.MenuItem(
-                "Observability", pystray.Menu(*obs_items),
+                self._observability_label,
+                pystray.Menu(*obs_items),
             ))
 
         items.extend([
@@ -436,7 +472,15 @@ class HelixTrayIcon:
     def notify_install_needed(self) -> None:
         """Show a Windows balloon prompting the user to install native
         observability binaries. Called by app.py after detecting the
-        bootstrap is missing or incomplete (spec §11.4)."""
+        bootstrap is missing or incomplete (spec §11.4).
+
+        Also starts the Observability submenu label pulse (spec §11.4 —
+        "balloon notification + tray-menu pulse"). Pulse runs until the
+        user clicks an observability submenu item (acknowledgment) or
+        explicitly dismisses it. Dismissal persists for this process
+        lifetime — pulse will only re-appear on a future launch if the
+        bootstrap is still incomplete.
+        """
         if self._icon is None:
             return
         try:
@@ -449,6 +493,85 @@ class HelixTrayIcon:
             )
         except Exception:
             log.warning("notify_install_needed failed", exc_info=True)
+        # Pulse the Observability submenu label until acknowledged.
+        self.start_install_pulse()
+
+    # ── install-prompt pulse (spec §11.4) ──────────────────────────
+
+    def _observability_label(self, item) -> str:  # noqa: ARG002 — pystray API
+        """Compute the Observability submenu's top-level label.
+
+        When idle: "Observability". When pulsing: alternates between
+        "Observability ●" (filled) and "Observability ○" (open) on each
+        timer tick. The label is rendered lazily by pystray on every
+        menu re-display, so update_menu() after a state toggle is enough
+        to refresh the visible label.
+        """
+        with self._install_pulse_lock:
+            active = self._install_pulse_active
+            state = self._install_pulse_state
+        if not active:
+            return "Observability"
+        return "Observability ●" if state == 0 else "Observability ○"
+
+    def start_install_pulse(self) -> None:
+        """Begin the Observability submenu label pulse. Idempotent — a
+        second call while already pulsing is a no-op. No-op if the user
+        has already dismissed the pulse during this process lifetime."""
+        with self._install_pulse_lock:
+            if self._install_pulse_dismissed:
+                log.debug("Tray: install-pulse suppressed (already dismissed)")
+                return
+            if self._install_pulse_active:
+                return
+            self._install_pulse_active = True
+            self._install_pulse_state = 0
+        self._schedule_pulse_tick()
+        self._refresh_menu()
+
+    def stop_install_pulse(self) -> None:
+        """Stop the pulse and cancel the active timer. Idempotent — safe
+        to call repeatedly and from any thread."""
+        with self._install_pulse_lock:
+            self._install_pulse_active = False
+            timer = self._install_pulse_timer
+            self._install_pulse_timer = None
+        if timer is not None:
+            try:
+                timer.cancel()
+            except Exception:
+                log.debug("Tray: pulse timer cancel failed", exc_info=True)
+        self._refresh_menu()
+
+    def _schedule_pulse_tick(self) -> None:
+        """Arm the next 1 s pulse tick. The timer is daemon=True so it
+        never blocks process exit."""
+        timer = threading.Timer(1.0, self._tick_pulse)
+        timer.daemon = True
+        with self._install_pulse_lock:
+            # If a stop raced us, abandon this scheduled timer.
+            if not self._install_pulse_active:
+                return
+            self._install_pulse_timer = timer
+        try:
+            timer.start()
+        except Exception:
+            log.warning("Tray: failed to start pulse timer", exc_info=True)
+
+    def _tick_pulse(self) -> None:
+        """Toggle the pulse state, refresh the menu, and reschedule.
+
+        Runs on the timer thread. Aborts cleanly if the pulse was stopped
+        between the previous tick scheduling and this callback firing.
+        """
+        with self._install_pulse_lock:
+            if not self._install_pulse_active:
+                return
+            self._install_pulse_state = 1 - self._install_pulse_state
+        # Refresh the menu so pystray re-evaluates the callable label.
+        self._refresh_menu()
+        # Reschedule the next tick.
+        self._schedule_pulse_tick()
 
     def _refresh_menu(self) -> None:
         if self._icon is not None:
