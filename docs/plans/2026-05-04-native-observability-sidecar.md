@@ -349,7 +349,7 @@ sha256_darwin_amd64 = "TODO_darwin_amd64"
 
 [tempo]
 version = "2.6.0"
-url_windows_amd64 = "https://github.com/grafana/tempo/releases/download/v2.6.0/tempo_2.6.0_windows_amd64.zip"
+url_windows_amd64 = "https://github.com/grafana/tempo/releases/download/v2.6.0/tempo_2.6.0_windows_amd64.tar.gz"
 sha256_windows_amd64 = "PLAN_NOTE_FILL_FROM_RELEASE_PAGE_AT_IMPL_TIME_64HEXCHARS_____"
 url_linux_amd64 = "https://github.com/grafana/tempo/releases/download/v2.6.0/tempo_2.6.0_linux_amd64.tar.gz"
 sha256_linux_amd64 = "TODO_linux_amd64"
