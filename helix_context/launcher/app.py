@@ -38,6 +38,7 @@ from .headroom_supervisor import (
     HeadroomNotInstalled,
     is_headroom_installed,
 )
+from .observability_paths import binary_path, configs_dir
 
 log = logging.getLogger("helix.launcher.app")
 
@@ -398,6 +399,60 @@ def _maybe_build_headroom(
     return headroom, dashboard_url
 
 
+_OBS_INSTALL_PENDING = False
+
+
+def _set_observability_install_pending(v: bool) -> None:
+    global _OBS_INSTALL_PENDING
+    _OBS_INSTALL_PENDING = bool(v)
+
+
+def _observability_install_complete() -> bool:
+    """True iff every binary AND every rendered config is present."""
+    services = ("collector", "prometheus", "tempo", "loki", "grafana")
+    rendered = (
+        "otel-collector-config.yaml",
+        "prometheus.yml",
+        "tempo.yaml",
+        "loki-config.yaml",
+        "datasources.yml",
+    )
+    if not all(binary_path(s).exists() for s in services):
+        return False
+    cfg = configs_dir()
+    return all((cfg / r).exists() for r in rendered)
+
+
+def _maybe_build_observability():
+    """Return an ObservabilitySupervisor, or None when:
+        - HELIX_OBSERVABILITY=0 (opt-out)
+        - install is incomplete (sets pending flag for tray balloon)
+        - import error (extras not installed)
+    """
+    if os.environ.get("HELIX_OBSERVABILITY", "1").strip() in ("0", "false", "no", "off"):
+        log.info("Observability skipped: HELIX_OBSERVABILITY=0")
+        return None
+
+    if not _observability_install_complete():
+        log.info(
+            "Observability install incomplete; tray will surface a balloon. "
+            "Run scripts/install-native-observability.ps1 to enable."
+        )
+        _set_observability_install_pending(True)
+        return None
+
+    try:
+        from .observability_supervisor import ObservabilitySupervisor
+        return ObservabilitySupervisor()
+    except ImportError:
+        log.warning(
+            "Observability deps missing — install with "
+            "pip install helix-context[launcher-tray]",
+            exc_info=True,
+        )
+        return None
+
+
 def _handle_service_command(command: str, dry_run: bool) -> int:
     """Handle install-service / uninstall-service subcommands.
 
@@ -540,6 +595,8 @@ def main(argv: Optional[list] = None) -> int:
         server_thread.start()
         _wait_for_port_bound(args.host, args.port)  # replaces 0.4s race
 
+        observability_sup = _maybe_build_observability()
+
         tray_icon = HelixTrayIcon(
             supervisor=supervisor,
             dashboard_url=url,
@@ -547,10 +604,42 @@ def main(argv: Optional[list] = None) -> int:
             prometheus_url=args.prometheus_url,
             headroom_supervisor=headroom_supervisor,
             headroom_dashboard_url=headroom_dashboard_url,
+            observability_supervisor=observability_sup,
         )
+
+        # Start observability subprocesses BEFORE tray_icon.run() blocks.
+        # If start_all raises (configs missing despite the pre-check, or a
+        # binary fails to spawn), log + continue — helix-context itself
+        # must not be blocked on observability.
+        if observability_sup is not None:
+            try:
+                observability_sup.start_all()
+            except Exception:
+                log.warning(
+                    "ObservabilitySupervisor.start_all failed; "
+                    "tray will indicate via per-service red status",
+                    exc_info=True,
+                )
+
+        # Surface the install-needed balloon if we set the flag earlier.
+        if _OBS_INSTALL_PENDING:
+            try:
+                # Defer one tick so the icon is fully constructed.
+                threading.Timer(1.0, tray_icon.notify_install_needed).start()
+            except Exception:
+                log.warning("install-needed balloon scheduling failed", exc_info=True)
+
         log.info("Tray mode active — dashboard at %s", url)
         log.info("Click the tray icon to open the dashboard; Quit from its menu to exit.")
         tray_icon.run()  # blocks until Quit
+
+        # Tray exited — shut down observability (Job Object would do this on
+        # Windows even on hard exit, but the clean path is courteous).
+        if observability_sup is not None:
+            try:
+                observability_sup.shutdown()
+            except Exception:
+                log.warning("ObservabilitySupervisor.shutdown failed", exc_info=True)
         return 0
 
     if args.native:

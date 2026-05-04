@@ -360,3 +360,43 @@ class TestHeadroomAutoRoute:
         assert routed is False
         assert "HELIX_SERVER_UPSTREAM" not in os.environ
         assert "OPENAI_TARGET_API_URL" not in os.environ
+
+
+def test_observability_disabled_via_env(monkeypatch, tmp_path):
+    """HELIX_OBSERVABILITY=0 → no supervisor built."""
+    monkeypatch.setenv("HELIX_OBSERVABILITY", "0")
+    from helix_context.launcher.app import _maybe_build_observability
+    sup = _maybe_build_observability()
+    assert sup is None
+
+
+def test_observability_enabled_when_unset(monkeypatch, tmp_path):
+    """Default — env unset → returns a supervisor (or None if configs
+    haven't been rendered yet; either way, not silently disabled)."""
+    monkeypatch.delenv("HELIX_OBSERVABILITY", raising=False)
+    monkeypatch.setattr(
+        "helix_context.launcher.app._observability_install_complete",
+        lambda: True,
+    )
+    from helix_context.launcher.app import _maybe_build_observability
+    sup = _maybe_build_observability()
+    assert sup is not None
+
+
+def test_observability_skipped_when_install_incomplete(monkeypatch):
+    """Install incomplete → supervisor not built, tray notification queued
+    via _set_observability_install_pending."""
+    monkeypatch.delenv("HELIX_OBSERVABILITY", raising=False)
+    monkeypatch.setattr(
+        "helix_context.launcher.app._observability_install_complete",
+        lambda: False,
+    )
+    pending = []
+    monkeypatch.setattr(
+        "helix_context.launcher.app._set_observability_install_pending",
+        lambda v: pending.append(v),
+    )
+    from helix_context.launcher.app import _maybe_build_observability
+    sup = _maybe_build_observability()
+    assert sup is None
+    assert pending == [True]
