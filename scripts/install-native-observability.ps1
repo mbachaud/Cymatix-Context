@@ -106,7 +106,12 @@ foreach ($svc in $binaries.Keys) {
     }
 
     # Skip if already installed and matches.
-    & $python -m helix_context.launcher._install_helpers verify-hash $absPath $expected 2>$null
+    # Use `should-skip` (not `verify-hash`) so a missing-file or hash-drift
+    # predicate is silent -- PowerShell 5.1 with ErrorActionPreference=Stop
+    # turns ANY native-command stderr into a script-terminating error,
+    # which defeats `2>$null` redirection. should-skip writes nothing to
+    # stderr in the normal "please download" path.
+    & $python -m helix_context.launcher._install_helpers should-skip $absPath $expected
     if ($LASTEXITCODE -eq 0) {
         Write-Host "[install][$svc] up-to-date (sha256 ok) - skipping"
         continue

@@ -67,7 +67,12 @@ while IFS=":" read -r svc relpath; do
             ;;
     esac
 
-    if $PYTHON -m helix_context.launcher._install_helpers verify-hash "$abspath" "$expected" 2>/dev/null; then
+    # `should-skip` is silent on missing-file / hash-drift (the expected
+    # "please download" outcomes); verify-hash treats them as errors and
+    # writes to stderr, which trips PowerShell 5.1 ErrorActionPreference=Stop
+    # on the .ps1 sibling — keep both shells using the same predicate for
+    # parity.
+    if $PYTHON -m helix_context.launcher._install_helpers should-skip "$abspath" "$expected"; then
         echo "[install][$svc] up-to-date - skipping"
         continue
     fi

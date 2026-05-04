@@ -244,3 +244,82 @@ def test_install_helpers_cli_verify_hash_returns_nonzero_on_mismatch(tmp_path):
     )
     assert proc.returncode != 0
     assert "MISMATCH" in proc.stderr or "ERROR" in proc.stderr
+
+
+def test_install_helpers_cli_should_skip_returns_zero_on_match(tmp_path):
+    """should-skip succeeds (exit 0) when binary exists and hash matches —
+    install script uses this to skip the download."""
+    f = tmp_path / "binary.bin"
+    f.write_bytes(b"cli should-skip match")
+    expected = _real_sha256(f)
+    creationflags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
+    proc = subprocess.run(
+        [sys.executable, "-m", "helix_context.launcher._install_helpers",
+         "should-skip", str(f), expected],
+        capture_output=True,
+        text=True,
+        timeout=10,
+        creationflags=creationflags,
+    )
+    assert proc.returncode == 0, f"stderr={proc.stderr}"
+    # Critical: silent on success too — no informational chatter.
+    assert proc.stderr == ""
+
+
+def test_install_helpers_cli_should_skip_silent_on_missing_file(tmp_path):
+    """should-skip MUST be silent (no stderr) when the file doesn't exist.
+    PowerShell 5.1 with ErrorActionPreference=Stop turns native-command
+    stderr into a script-terminating error, which would defeat the
+    install script's `if ($LASTEXITCODE -eq 0)` skip-gate. Pin this:
+    missing file → exit 1, stderr empty."""
+    missing = tmp_path / "does-not-exist.bin"
+    creationflags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
+    proc = subprocess.run(
+        [sys.executable, "-m", "helix_context.launcher._install_helpers",
+         "should-skip", str(missing), "0" * 64],
+        capture_output=True,
+        text=True,
+        timeout=10,
+        creationflags=creationflags,
+    )
+    assert proc.returncode == 1, f"expected exit 1, got {proc.returncode}"
+    assert proc.stderr == "", (
+        f"should-skip must be silent on missing file (PS5.1 stderr-as-error "
+        f"contract); got stderr={proc.stderr!r}"
+    )
+
+
+def test_install_helpers_cli_should_skip_silent_on_hash_drift(tmp_path):
+    """Same silence contract for hash-drift case — also an expected
+    "please download" outcome, not an error condition."""
+    f = tmp_path / "binary.bin"
+    f.write_bytes(b"cli drift")
+    creationflags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
+    proc = subprocess.run(
+        [sys.executable, "-m", "helix_context.launcher._install_helpers",
+         "should-skip", str(f), "0" * 64],
+        capture_output=True,
+        text=True,
+        timeout=10,
+        creationflags=creationflags,
+    )
+    assert proc.returncode == 1, f"expected exit 1, got {proc.returncode}"
+    assert proc.stderr == "", (
+        f"should-skip must be silent on hash drift; got stderr={proc.stderr!r}"
+    )
+
+
+def test_install_scripts_use_should_skip_not_verify_hash():
+    """Install scripts MUST use should-skip for the existing-binary check
+    so PowerShell 5.1's stderr-as-error semantics don't trip the install
+    flow. verify-hash stays available for downloaded-archive verification
+    where missing IS a real error."""
+    ps_text = PS_SCRIPT.read_text(encoding="utf-8")
+    sh_text = (REPO / "scripts" / "install-native-observability.sh").read_text(encoding="utf-8")
+    # The existing-binary check should use should-skip.
+    assert "should-skip $absPath $expected" in ps_text or 'should-skip "$abspath"' in ps_text or "should-skip $absPath" in ps_text, (
+        "PowerShell install script must call `should-skip` for the existing-binary check."
+    )
+    assert 'should-skip "$abspath"' in sh_text, (
+        "Bash install script must call `should-skip` for the existing-binary check."
+    )

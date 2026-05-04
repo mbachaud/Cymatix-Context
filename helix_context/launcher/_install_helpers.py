@@ -112,6 +112,9 @@ def _cli(argv: Optional[list] = None) -> int:
     s_v = sub.add_parser("verify-hash")
     s_v.add_argument("path")
     s_v.add_argument("expected_hex")
+    s_s = sub.add_parser("should-skip")
+    s_s.add_argument("path")
+    s_s.add_argument("expected_hex")
     s_d = sub.add_parser("download")
     s_d.add_argument("url")
     s_d.add_argument("dest")
@@ -121,6 +124,16 @@ def _cli(argv: Optional[list] = None) -> int:
         if args.cmd == "verify-hash":
             verify_hash(Path(args.path), args.expected_hex)
             print("OK")
+        elif args.cmd == "should-skip":
+            # Silent decision predicate for the install script's
+            # existing-binary check. Missing file + hash drift are both
+            # EXPECTED outcomes ("please download"); they must NOT write
+            # to stderr because PowerShell 5.1 with ErrorActionPreference=Stop
+            # turns native-command stderr into a script-terminating error,
+            # defeating the script's 2>$null redirect.
+            if should_skip(Path(args.path), args.expected_hex):
+                return 0
+            return 1
         elif args.cmd == "download":
             download_to(args.url, Path(args.dest), timeout=args.timeout)
             print("OK")
