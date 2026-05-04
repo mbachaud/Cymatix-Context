@@ -48,27 +48,45 @@ New module: **`helix_context/hardware.py`**.
 ```python
 @dataclass(frozen=True)
 class HardwareInfo:
-    device: torch.device              # what backends pass to .to()
-    device_type: str                  # "cuda" | "rocm" | "mps" | "cpu"
+    device: str                       # "cuda:0" | "cuda:1" | "rocm:0" | "mps" | "cpu"
+                                       # — string form so HardwareInfo is constructible
+                                       # even if torch failed to import (§5.5).
+                                       # Backends call torch.device(info.device).
+    device_type: str                  # "cuda" | "rocm" | "mps" | "cpu" — picker key
     device_name: str                  # e.g. "NVIDIA GeForce RTX 4090"
-    vram_total_gb: float | None       # None for cpu
-    vram_free_gb: float | None        # None for cpu / mps
+    vram_total_gb: float | None       # None for cpu — used by batch-size table
+    vram_free_gb: float | None        # None for cpu / mps — INFORMATIONAL ONLY
+                                       # (cached at startup; see "free vs total" below)
     cpu_arch: str                     # "x86_64" | "arm64" | "aarch64"
-    cpu_brand: str                    # short name from cpuinfo / platform.processor()
+    cpu_brand: str                    # see "cpu brand source" below
     system_ram_gb: float
-    requested_device: str             # "auto" | "cuda" | ...
+    requested_device: str             # "auto" | "cuda" | ... — what user asked for
     fallback_reason: str | None       # set when requested_device != device_type
+    batch_size_overrides: Mapping[str, int]   # parsed from [hardware] batch_sizes
+                                       # config; consulted by recommended_batch_size().
 
 def get_hardware() -> HardwareInfo: ...     # cached singleton
 def reset_for_test() -> None: ...           # test-only cache reset
-def recommended_batch_size(model: str) -> int: ...
+def recommended_batch_size(model: str) -> int: ...   # consults singleton; see §7.3
 ```
 
 **Singleton with lazy first-call computation.** Importing the module does not trigger any torch CUDA-driver loading; the first call to `get_hardware()` performs detection and caches the result for the process lifetime. `reset_for_test()` clears the cache for unit tests that mock torch internals.
 
 **No public mutation.** The dataclass is `frozen=True`. Overrides flow through config or env var (Section 4), not via setters.
 
-**Atomic snapshot rationale.** A dataclass return ensures that a consumer reading `device` and `vram_free_gb` in two separate calls cannot get inconsistent values from a stale cache. Since the singleton is computed once and reused, this is mostly belt-and-braces for future evolution (e.g., periodic re-polling of `vram_free_gb`).
+**Free VRAM vs total VRAM.** `vram_free_gb` is captured *once* at startup and reused; the actual free VRAM at request time will differ. **Batch-size sizing therefore keys on `vram_total_gb`** (Section 7.1), which is invariant for the GPU. `vram_free_gb` is reported in the startup banner and `/health` for visibility only — useful to spot "the GPU is already half-consumed by another process at startup", not to drive runtime decisions. If we ever need free-VRAM-aware behavior, it would re-poll `mem_get_info()` per-call rather than reading the cached field.
+
+**`device` as string, not `torch.device`.** Storing the device as a string makes `HardwareInfo` constructible in the torch-not-installed posture (§5.5) where `torch.device` is unavailable. Backends construct `torch.device(info.device)` when they need the actual object — one extra line at the call site, zero coupling at the dataclass.
+
+**`cpu_brand` source.** Resolved in this order:
+
+1. `cpuinfo.get_cpu_info()["brand_raw"]` (from `py-cpuinfo`, added to the `launcher` extra)
+2. `platform.processor()` if non-empty
+3. `"unknown CPU"` as terminal fallback
+
+`py-cpuinfo` is MIT-licensed, single-file, ~50 KB, no native deps. Adding it as a dep is part of PR1's `pyproject.toml` change.
+
+**`batch_size_overrides` field.** Parsed from `[hardware] batch_sizes` at config-load time; empty mapping when `batch_sizes = "auto"` (default). Consulted by `recommended_batch_size()` to enforce the override hierarchy (Section 7.3).
 
 ### 3.2 Affected backends
 
@@ -120,7 +138,8 @@ low_vram_threshold_gb = 4.0
 
 `[ribosome] device` is read for one release with a backwards-compat shim:
 
-- If `[ribosome] device` is present and `[hardware] device` is **not**, helix uses the ribosome value and logs a single `DeprecationWarning` line at startup pointing the user to migrate.
+- If `[ribosome] device` is present and `[hardware] device` is **not**, helix uses the ribosome value and logs a single `WARNING` from `helix.config` at startup pointing the user to migrate (see §9.1 for the wording).
+- If both `[ribosome] device` and `[hardware] device` are present, `[hardware] device` wins and the deprecation warning still fires noting the override.
 - After one release, the shim is removed (one-line change in `config.py`).
 
 Splade and sema have no current device config, so nothing to deprecate there — they newly consult `[hardware]` (clean addition).
@@ -131,39 +150,43 @@ Splade and sema have no current device config, so nothing to deprecate there —
 
 ### 5.1 Auto-mode picking order
 
-Each candidate is checked for both **availability** and **probed usability** (see §5.2):
+Each candidate is checked for both **wheel-level availability** (does the installed torch build advertise this backend?) and **per-device probed usability** (is at least one device of that backend healthy enough to round-trip a tensor?). The picker walks the list in order and stops at the first candidate that passes both:
 
-1. **CUDA** — `torch.cuda.is_available()` AND `torch.cuda.device_count() > 0` AND probe succeeds
-2. **ROCm** — `torch.version.hip is not None` AND a HIP device probes successfully (Linux + AMD only in practice)
+1. **CUDA** — `torch.cuda.is_available()` AND `torch.cuda.device_count() > 0` AND at least one device probes successfully (§5.2 / §5.3)
+2. **ROCm** — `torch.version.hip is not None` AND `torch.cuda.device_count() > 0` AND at least one device probes successfully
 3. **MPS** — `torch.backends.mps.is_available()` AND `torch.backends.mps.is_built()` AND probe succeeds
 4. **CPU** — terminal fallback; always succeeds
 
+**Mutual-exclusion note.** A given torch wheel is built for exactly one of CUDA / ROCm; it cannot serve both. On real hardware, `torch.version.hip is not None` is True only on a ROCm build (where `torch.cuda.is_available()` reports `True` and surfaces HIP devices through the same `torch.cuda` API). So in practice steps 1 and 2 are mutually exclusive at the wheel level — only one of them ever passes its first check on any single host. The fall-through-on-probe-failure path within auto-mode therefore *normally* drops straight to MPS or CPU, since the unsupported sibling backend short-circuits on its availability check before being probed. Mocked tests (§8.1) exercise the fall-through logic by simulating multiple candidates simultaneously available — that is a logic test, not a real-world configuration.
+
 ### 5.2 Probe protocol
 
-For each candidate device, run a 1-element zero-tensor round-trip in a try/except:
+For each candidate device, run a 1-element zero-tensor round-trip in a try/except, **targeting the specific device index** (not just the device-type string):
 
 ```python
-def _probe(device_type: str) -> tuple[bool, str | None]:
+def _probe(device_str: str) -> tuple[bool, str | None]:
+    """device_str = 'cuda:0' / 'cuda:1' / 'mps' / 'cpu'."""
     try:
-        t = torch.zeros(1).to(device_type)
-        _ = t.cpu()  # round-trip
+        t = torch.zeros(1).to(device_str)
+        _ = t.cpu()
         return True, None
     except Exception as exc:
         return False, f"probe failed: {type(exc).__name__}: {exc}"
 ```
 
-This catches the "looks present, isn't usable" failure mode (stale CUDA driver, detached eGPU, container-without-device-passthrough). Probe is ~1 ms on healthy hardware.
+Probe is ~1 ms on healthy hardware. Catches "looks present, isn't usable" failure modes (stale CUDA driver, detached eGPU, container-without-device-passthrough, dead device in a multi-GPU box).
 
-### 5.3 Multi-GPU posture
+### 5.3 Multi-GPU device selection
 
-If `torch.cuda.device_count() > 1`:
+For CUDA / ROCm (which share the `torch.cuda.device_count()` API):
 
-- Pick the device with the most free VRAM (`torch.cuda.mem_get_info(i)`)
-- Log all detected devices in the startup banner
-- Set the chosen device's index in `device = torch.device("cuda:N")`
-- Users who want to pin a specific card can use `CUDA_VISIBLE_DEVICES`; no helix-specific override needed
+1. Enumerate all device indices `0..device_count() - 1`
+2. For each index, attempt `torch.cuda.mem_get_info(i)` — devices that raise are dead and skipped
+3. Among the live devices, pick the one with the most **free** VRAM at startup (free here is fine; it's a one-shot pick, not a runtime budget)
+4. Probe `cuda:N` (or the equivalent on ROCm) for the chosen N — if probe fails, repeat from step 2 with the next-best device, and so on. If no devices probe, the candidate is rejected and auto-mode falls through.
+5. Set `info.device = "cuda:N"` for the winner. Log all enumerated devices (live and dead) in the startup banner.
 
-ROCm follows the same pattern via `torch.cuda.device_count()` (which counts HIP devices on a ROCm build).
+This avoids the "device 0 is broken, device 1 is healthy, but probing 'cuda' (default 0) rejects CUDA entirely" failure. Users who want to pin a specific card can still use `CUDA_VISIBLE_DEVICES` — that masks devices before the picker even sees them.
 
 ### 5.4 Explicit-device fallback policy
 
@@ -231,7 +254,7 @@ INFO helix.hardware - device=cuda (NVIDIA GeForce RTX 4090, 24.0 GB total / 22.4
 
 `helix_health_check` (and any other consumer of `/health`) gets fallback state for free.
 
-### 6.3 Tray balloon
+### 6.3 Tray balloon (launcher-only)
 
 Same pattern as the native-observability "install pending" balloon in `helix_context/launcher/tray.py`. A balloon fires once per state-change combination:
 
@@ -240,13 +263,17 @@ Same pattern as the native-observability "install pending" balloon in `helix_con
 - Sentinel file at `<state_dir>/.hardware-fallback-acknowledged-{requested}-{active}` dedupes
 - A new combination (e.g., user fixed CUDA → no balloon; later they unplug GPU and now MPS falls to CPU → new balloon) re-fires
 
+**Scope:** the balloon channel covers `fallback_active == true` only — the case where the user explicitly asked for a device they didn't get, and we want to make sure they know. **Low-VRAM warnings are NOT balloon-surfaced**; they're a hint, not a fault, and would be annoying to bubble. Low-VRAM stays on logs + `/health` (`hardware.low_vram_warning: true`).
+
+**Headless / server posture:** the balloon channel is launcher-only. Headless server deployments rely on logs (§6.1) and `/health` (§6.2) — both fire identically regardless of whether a tray exists.
+
 ### 6.4 Why three channels
 
 - Logs miss eyes that don't grep
 - `/health` misses users who never poll it
 - Tray balloons miss users running helix as a server
 
-Together they catch every audience without spam (one balloon per state-change, not per launch).
+Together they catch every audience without spam (one balloon per state-change, not per launch). The channels degrade independently — a tray-less server still gets logs + `/health`; a user who never polls `/health` still sees the log line + the balloon.
 
 ---
 
@@ -254,10 +281,12 @@ Together they catch every audience without spam (one balloon per state-change, n
 
 ### 7.1 Lookup table
 
+The table is keyed on **`vram_total_gb`** for CUDA/ROCm (invariant per GPU; safe across runs) and on **`system_ram_gb`** for MPS (shared with system) and CPU. Free VRAM at startup (§3.1) is informational only and never drives the table.
+
 ```python
 # (device_type, ram_tier_gb_min) → batch sizes per model
 _BATCH_TABLE: dict[tuple[str, float], dict[str, int]] = {
-    # CUDA / ROCm tiers — VRAM-keyed
+    # CUDA / ROCm tiers — keyed on TOTAL VRAM
     ("cuda", 24.0): {"rerank": 64, "splice": 128, "splade": 32, "nli": 32},
     ("cuda", 12.0): {"rerank": 32, "splice": 64,  "splade": 16, "nli": 16},
     ("cuda",  8.0): {"rerank": 16, "splice": 32,  "splade":  8, "nli":  8},
@@ -271,6 +300,7 @@ _BATCH_TABLE: dict[tuple[str, float], dict[str, int]] = {
     # MPS — keyed on system_ram_gb (MPS shares system RAM)
     ("mps",  16.0): {"rerank": 16, "splice": 32,  "splade":  8, "nli":  8},
     ("mps",   8.0): {"rerank":  8, "splice": 16,  "splade":  4, "nli":  4},
+    ("mps",   0.0): {"rerank":  4, "splice":  8,  "splade":  2, "nli":  2},  # defensive floor
     # CPU — keyed on system_ram_gb, conservative defaults
     ("cpu",  16.0): {"rerank":  8, "splice": 16,  "splade":  4, "nli":  4},
     ("cpu",   8.0): {"rerank":  4, "splice":  8,  "splade":  2, "nli":  2},
@@ -278,7 +308,7 @@ _BATCH_TABLE: dict[tuple[str, float], dict[str, int]] = {
 }
 ```
 
-`recommended_batch_size("rerank")` finds the highest tier row whose threshold ≤ available VRAM (or system RAM for cpu/mps), reads the model column.
+`recommended_batch_size("rerank")` finds the highest tier row whose threshold ≤ `vram_total_gb` (CUDA/ROCm) or `system_ram_gb` (MPS/CPU), reads the model column.
 
 **Calibration.** Numbers are starting points keyed on rough rules of thumb (deberta-v3-small at 256 max-len ≈ 60 MB activation per batch item at fp32; halve again for safety). PR1's bench gate (Section 9) verifies they don't regress on our 24 GB rig. Lower tiers ship as conservative heuristics; users on those cards can report back via the enhancement template.
 
@@ -296,9 +326,24 @@ The chunked pattern already exists in `splade_backend.encode_batch` (line 116) a
 
 ### 7.3 Override hierarchy for batch sizes
 
-1. Explicit caller-passed `batch_size=` argument (preserves existing test patterns)
-2. `[hardware] batch_sizes = { rerank = 16 }` config dict for the named model
-3. Auto from the table (default)
+The hierarchy lives partly in `recommended_batch_size()` and partly at the call site. Resolution per model name:
+
+1. **Explicit caller-passed `batch_size=` argument** at the backend's call site (e.g., a test passing `batch_size=2`). Bypasses `recommended_batch_size()` entirely. Preserved verbatim from existing test patterns.
+2. **`[hardware] batch_sizes = { rerank = 16 }` config dict** for the named model. Read at config-load and stored in `HardwareInfo.batch_size_overrides`. `recommended_batch_size("rerank")` checks this first and short-circuits the table lookup if the key is present.
+3. **Auto from the table** (default). The table is consulted only when steps 1 and 2 don't resolve.
+
+Function shape:
+
+```python
+def recommended_batch_size(model: str) -> int:
+    info = get_hardware()
+    if model in info.batch_size_overrides:
+        return info.batch_size_overrides[model]
+    tier_key = info.vram_total_gb if info.device_type in {"cuda", "rocm"} else info.system_ram_gb
+    return _lookup_table(info.device_type, tier_key, model)
+```
+
+Backends call `recommended_batch_size(model)` with no arguments other than the model name, then optionally override via the call-site `batch_size=` parameter when present.
 
 ---
 
@@ -310,13 +355,17 @@ The chunked pattern already exists in `splade_backend.encode_batch` (line 116) a
 
 **Coverage:**
 
-- Auto-mode picks correct device for each `(cuda?, rocm?, mps?, cpu)` matrix combination
-- Probe-failure on CUDA falls through to ROCm in auto mode (not skipped)
-- Probe-failure on explicit `device = "cuda"` falls back to CPU directly (not ROCm/MPS)
+- Auto-mode picks correct device for each `(cuda?, rocm?, mps?)` matrix combination — including the realistic-build cases (only one of CUDA/ROCm advertised at a time) and the mocked-multi case (both advertised, exercises fall-through logic per §5.1's mutual-exclusion note)
+- Multi-GPU CUDA: dead device-0 + healthy device-1 → picker selects `cuda:1`, never rejects CUDA outright (regression pin for B2)
+- Probe-failure on CUDA in auto mode (with all CUDA devices dead) falls through to the next advertised candidate, not to CPU directly
+- Probe-failure on explicit `device = "cuda"` falls back to CPU directly (not ROCm/MPS) — the asymmetry from §5.4
 - `recommended_batch_size` returns expected value for each tier boundary (boundary tests at 4.0 / 8.0 / 12.0 / 24.0)
+- `recommended_batch_size` consults `info.batch_size_overrides` first and returns the override value when set; falls through to the table when the model name isn't in the override dict
+- `vram_total_gb` drives the table lookup; mutating `vram_free_gb` between calls does NOT change the result (regression pin for B3)
 - HardwareInfo cache is reset by `reset_for_test()`
 - `HELIX_DEVICE` env var beats `[hardware] device` config beats default
-- `[ribosome] device` deprecation warning fires once per process and is overridden by `[hardware] device` when both are set
+- `[ribosome] device` deprecation warning fires once per process; `[hardware] device` overrides ribosome-device when both are set; warning still fires noting the override
+- `cpu_brand` source order: py-cpuinfo present → uses it; py-cpuinfo absent + `platform.processor()` non-empty → uses that; both absent → `"unknown CPU"` (no crash)
 
 **Mocking pattern:** `monkeypatch.setattr("torch.cuda.is_available", lambda: True)` — same idiom used in `tests/test_observability_paths.py` for platformdirs.
 
@@ -374,10 +423,17 @@ Test files: `tests/test_hardware_rocm.py`, `tests/test_hardware_cuda_real.py`. A
 - `helix_context/deberta_backend.py`, `nli_backend.py`, `splade_backend.py`, `sema.py` — consult `get_hardware()`, chunk batches
 - `helix_context/server.py` `health()` — add `hardware` block
 - `helix_context/launcher/tray.py` — fallback balloon + sentinel-file dedup
+- `pyproject.toml` — add `py-cpuinfo>=9.0` to the `launcher` extra (see §3.1 for the cpu_brand source rationale)
 
 **No new device backends.** `device = "rocm"` or `"mps"` parses cleanly but resolves to CPU fallback in PR1. The picker's auto-mode order documents the future hooks but only the CUDA branch is wired up.
 
-**Bench gate (mandatory before merge):** GPQA Diamond n=20 with native sidecar still up. p95 delta vs `benchmarks/results/gpqa_native_n20_2026-05-04.json` (the sidecar PR's bench artifact) ≤ 5 s. Same gate shape used for the sidecar PR. The risk being measured: chunked batch processing in deberta might add per-chunk overhead.
+**Bench gate (mandatory before merge):** GPQA Diamond n=20 procedure (same shape as the sidecar PR's Task 14). The bench artifact `benchmarks/results/gpqa_native_n20_2026-05-04.json` from the sidecar PR was kept local-only; it is NOT on master. The bench-gate procedure for PR1:
+
+1. Re-run the n=20 native-stack bench against `master` HEAD before applying PR1's changes — capture as the local baseline JSON
+2. Run the same n=20 bench against PR1's HEAD
+3. Compare same-IDs p95 delta — must be ≤ 5 s
+
+This avoids relying on a stale local artifact, and gives a clean baseline at the moment PR1 opens. Both runs use the same native sidecar instance to keep observability constant. The risk being measured: chunked batch processing in deberta might add per-chunk overhead that wasn't there before.
 
 **Deprecation behavior:** If `[ribosome] device` is present and `[hardware]` is absent:
 
