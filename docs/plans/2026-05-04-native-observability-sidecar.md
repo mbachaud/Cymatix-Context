@@ -1573,11 +1573,56 @@ _RULES = [
 ]
 
 
+def _wire_grafana_provisioning() -> None:
+    """Copy the rendered datasources + source dashboards into Grafana's
+    conf/provisioning tree so Grafana auto-loads them at startup.
+
+    Grafana resolves provisioning relative to its --homepath, not relative
+    to a CLI flag, so the rendered datasources.yml has to physically land
+    at <graf_home>/conf/provisioning/datasources/datasources.yml.
+
+    Best-effort: skips silently if Grafana isn't installed (the config
+    render runs before the binary may have been extracted in some flows).
+    """
+    import shutil
+
+    from .observability_paths import binary_path
+
+    graf_bin = binary_path("grafana")
+    if not graf_bin.exists():
+        log.info("grafana binary absent — skipping provisioning wire-up")
+        return
+    graf_home = graf_bin.parent.parent  # tools/native-otel/grafana
+
+    rendered_ds = configs_dir() / "datasources.yml"
+    target_ds_dir = graf_home / "conf" / "provisioning" / "datasources"
+    target_ds_dir.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(rendered_ds, target_ds_dir / "datasources.yml")
+
+    deploy = _deploy_dir()
+    src_dash_prov = deploy / "grafana" / "provisioning" / "dashboards"
+    if src_dash_prov.exists():
+        target_dash_prov = graf_home / "conf" / "provisioning" / "dashboards"
+        target_dash_prov.mkdir(parents=True, exist_ok=True)
+        for f in src_dash_prov.iterdir():
+            if f.is_file():
+                shutil.copy2(f, target_dash_prov / f.name)
+
+    src_dash = deploy / "grafana" / "dashboards"
+    if src_dash.exists():
+        target_dash = graf_home / "conf" / "provisioning" / "dashboards-content"
+        target_dash.mkdir(parents=True, exist_ok=True)
+        for f in src_dash.iterdir():
+            if f.is_file():
+                shutil.copy2(f, target_dash / f.name)
+
+
 def render_all() -> list[Path]:
     """Render every source into configs_dir(); return list of written paths.
 
     Creates state_dir() (and per-service subdirs touched in the rendered
-    output) so binaries can write to them at first launch.
+    output) so binaries can write to them at first launch. Also wires the
+    rendered datasources into Grafana's provisioning tree.
     """
     out_dir = configs_dir(create=True)
     state_dir(create=True)
@@ -1595,6 +1640,11 @@ def render_all() -> list[Path]:
     # Ensure per-service state dirs exist (binaries need to write here).
     for svc in ("prometheus", "tempo", "loki", "grafana"):
         service_state_dir(svc, create=True)
+
+    try:
+        _wire_grafana_provisioning()
+    except Exception:
+        log.warning("grafana provisioning wire-up failed", exc_info=True)
 
     return written
 
@@ -2533,14 +2583,18 @@ class ObservabilitySupervisor:
         if svc == "grafana":
             # Grafana finds its conf/provisioning via working dir.
             graf_home = binary_path("grafana").parent.parent  # tools/native-otel/grafana
+            # Provisioning lives in repo deploy/otel/grafana/provisioning,
+            # but datasources MUST be the rendered (localhost) variant.
+            # The render module + bootstrap together copy:
+            #   configs/datasources.yml ──► graf_home/conf/provisioning/datasources/datasources.yml
+            #   deploy/otel/grafana/provisioning/dashboards/* ──► graf_home/conf/provisioning/dashboards/
+            #   deploy/otel/grafana/dashboards/* ──► graf_home/conf/provisioning/dashboards-content/
+            # This wiring lives in observability_render.render_all (Task 5)
+            # under _wire_grafana_provisioning helper. See spec §6.3.
             return [
                 bin_p,
                 f"--homepath={graf_home}",
                 f"--config={graf_home / 'conf' / 'defaults.ini'}",
-                # Provisioning lives in repo deploy/otel/grafana/provisioning,
-                # but datasources need the rendered version. Implementer must
-                # symlink or copy datasources.yml at install time so Grafana
-                # auto-loads the localhost variant. See spec §6.3.
             ]
         raise ValueError(svc)
 
