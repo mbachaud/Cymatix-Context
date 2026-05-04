@@ -7,11 +7,28 @@ Job Object setup on Windows, cleanup cascade.
 
 from __future__ import annotations
 
+import io
 import sys
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
+
+
+def _empty_stdout_proc(pid: int = 12345) -> MagicMock:
+    """Build a fake Popen result whose stdout is an already-closed pipe.
+
+    The supervisor spawns a per-service log-drainer thread that reads
+    proc.stdout line-by-line and exits on b''. A bare MagicMock returns
+    MagicMock for readline(), which never matches the b'' sentinel — the
+    drainer would loop forever and starve the test process. Giving each
+    fake proc an empty BytesIO makes the drainer exit immediately.
+    """
+    m = MagicMock()
+    m.pid = pid
+    m.poll.return_value = None
+    m.stdout = io.BytesIO(b"")
+    return m
 
 
 SERVICES = ("collector", "prometheus", "tempo", "loki", "grafana")
@@ -79,10 +96,7 @@ def test_port_already_bound_skips_spawn_and_marks_external(fake_paths):
     )
 
     def _make_proc(*a, **kw):
-        m = MagicMock()
-        m.pid = 22000
-        m.poll.return_value = None
-        return m
+        return _empty_stdout_proc(pid=22000)
 
     with patch(
         "helix_context.launcher.observability_supervisor.is_port_bound",
@@ -123,10 +137,7 @@ def test_spawn_order_phase1_then_collector_then_grafana(fake_paths):
             if any(svc in str(p) for p in cmd):
                 spawn_order.append(svc)
                 break
-        m = MagicMock()
-        m.pid = 12345
-        m.poll.return_value = None
-        return m
+        return _empty_stdout_proc(pid=12345)
 
     with patch(
         "helix_context.launcher.observability_supervisor.is_port_bound",
@@ -160,9 +171,7 @@ def test_shutdown_terminates_all_children(fake_paths):
     )
     procs = []
     def _make(*a, **kw):
-        m = MagicMock()
-        m.pid = 22000 + len(procs)
-        m.poll.return_value = None
+        m = _empty_stdout_proc(pid=22000 + len(procs))
         procs.append(m)
         return m
 
@@ -213,10 +222,7 @@ def test_job_object_created_on_windows(fake_paths):
         "helix_context.launcher.observability_supervisor.wait_for_port",
         return_value=True,
     ):
-        m = MagicMock()
-        m.pid = 9999
-        m.poll.return_value = None
-        popen.return_value = m
+        popen.return_value = _empty_stdout_proc(pid=9999)
 
         from helix_context.launcher.observability_supervisor import (
             ObservabilitySupervisor,
@@ -239,10 +245,7 @@ def test_posix_uses_start_new_session(fake_paths):
     captured_kwargs = []
     def _capture(*args, **kwargs):
         captured_kwargs.append(kwargs)
-        m = MagicMock()
-        m.pid = 7777
-        m.poll.return_value = None
-        return m
+        return _empty_stdout_proc(pid=7777)
 
     with patch(
         "helix_context.launcher.observability_supervisor.is_port_bound",
@@ -270,9 +273,7 @@ def test_restart_service_kills_then_respawns(fake_paths):
 
     procs_made = []
     def _make(*a, **kw):
-        m = MagicMock()
-        m.pid = 30000 + len(procs_made)
-        m.poll.return_value = None
+        m = _empty_stdout_proc(pid=30000 + len(procs_made))
         procs_made.append(m)
         return m
 
@@ -294,3 +295,115 @@ def test_restart_service_kills_then_respawns(fake_paths):
 
     assert prom_first is not prom_second, "restart should produce a new Popen"
     assert prom_first.terminate.called or prom_first.kill.called
+
+
+# ── Task 7.5 — log rotation (spec §7.4) ─────────────────────────────
+#
+# Spec mandates: stdout/stderr → `<service>.log`, rotated at 10MB, last
+# 3 retained. Implementation uses a per-service reader thread that
+# drains the child's piped stdout into a logging.handlers.RotatingFileHandler.
+# This works on Windows (where renaming an open file fails with
+# ERROR_SHARING_VIOLATION) because the parent owns the file handle, not
+# the child.
+
+def test_log_rotation_triggers_at_size_threshold(fake_paths, tmp_path):
+    """Push >10MB of bytes through the drainer; verify .log.1 is created
+    and the active .log is reset (smaller than the threshold)."""
+    import io
+    import time
+
+    from helix_context.launcher import observability_paths as ops
+    from helix_context.launcher.observability_supervisor import (
+        ObservabilitySupervisor,
+    )
+
+    sup = ObservabilitySupervisor()
+
+    # Build a fake child whose stdout produces ~11MB of line-terminated
+    # bytes, then EOF (b"").
+    line = (b"x" * 1023) + b"\n"          # 1024 bytes per line
+    n_lines = 11 * 1024                    # 11 MiB total
+    fake_stdout = io.BytesIO(line * n_lines)
+    fake_proc = MagicMock()
+    fake_proc.stdout = fake_stdout
+    fake_proc.poll.return_value = 0  # exited cleanly
+
+    # Drive the drainer for a real service name.
+    svc = "prometheus"
+    log_path = ops.logs_dir(create=True) / f"{svc}.log"
+
+    thread = sup._start_log_drainer(svc, fake_proc)
+    thread.join(timeout=30.0)
+    assert not thread.is_alive(), "drainer should exit when child closes pipe"
+
+    # Force handler flush + close so on-disk state is observable.
+    sup._close_log_handler(svc)
+
+    backup = log_path.with_name(log_path.name + ".1")
+    assert backup.exists(), (
+        f"expected rotated backup at {backup}; dir contents: "
+        f"{list(log_path.parent.iterdir())}"
+    )
+    # Active log must be < threshold (a fresh post-rotation file).
+    assert log_path.stat().st_size < 10 * 1024 * 1024
+
+
+def test_keeps_only_three_backups(fake_paths, tmp_path):
+    """Force ≥4 rotations and verify .log.4 does NOT exist
+    (RotatingFileHandler with backupCount=3 must drop the oldest)."""
+    import io
+
+    from helix_context.launcher import observability_paths as ops
+    from helix_context.launcher.observability_supervisor import (
+        ObservabilitySupervisor,
+    )
+
+    sup = ObservabilitySupervisor()
+
+    # ~45 MiB → ≥4 rotations against a 10 MiB threshold.
+    line = (b"y" * 1023) + b"\n"
+    n_lines = 45 * 1024
+    fake_stdout = io.BytesIO(line * n_lines)
+    fake_proc = MagicMock()
+    fake_proc.stdout = fake_stdout
+    fake_proc.poll.return_value = 0
+
+    svc = "tempo"
+    log_path = ops.logs_dir(create=True) / f"{svc}.log"
+
+    thread = sup._start_log_drainer(svc, fake_proc)
+    thread.join(timeout=60.0)
+    assert not thread.is_alive()
+
+    sup._close_log_handler(svc)
+
+    # .log.1, .log.2, .log.3 may exist; .log.4 MUST NOT.
+    too_old = log_path.with_name(log_path.name + ".4")
+    assert not too_old.exists(), (
+        f"backup count exceeded 3; dir contents: "
+        f"{sorted(p.name for p in log_path.parent.iterdir())}"
+    )
+
+
+def test_log_drainer_handles_child_exit(fake_paths):
+    """When the child closes its stdout pipe, the drainer thread must
+    exit cleanly (no infinite loop, no exception bubbling out)."""
+    import io
+
+    from helix_context.launcher.observability_supervisor import (
+        ObservabilitySupervisor,
+    )
+
+    sup = ObservabilitySupervisor()
+
+    # Empty stdout → first readline returns b"" → drainer exits immediately.
+    fake_proc = MagicMock()
+    fake_proc.stdout = io.BytesIO(b"")
+    fake_proc.poll.return_value = 0
+
+    svc = "loki"
+    thread = sup._start_log_drainer(svc, fake_proc)
+    thread.join(timeout=5.0)
+
+    assert not thread.is_alive(), "drainer must exit when stdout is closed"
+    sup._close_log_handler(svc)

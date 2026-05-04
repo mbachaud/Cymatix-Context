@@ -21,6 +21,7 @@ Spec: docs/specs/2026-05-04-native-observability-sidecar-design.md §7.
 from __future__ import annotations
 
 import logging
+import logging.handlers
 import os
 import subprocess
 import sys
@@ -49,6 +50,10 @@ log = logging.getLogger("helix.launcher.observability")
 
 _HEALTH_POLL_INTERVAL_S = 30.0
 _TERM_GRACE_S = 5.0
+
+# Spec §7.4 — rotate child stdout/stderr at 10 MiB, retain last 3 backups.
+_LOG_ROTATE_MAX_BYTES = 10 * 1024 * 1024
+_LOG_ROTATE_BACKUP_COUNT = 3
 
 
 # ── Spawn-order ──────────────────────────────────────────────────────
@@ -153,6 +158,12 @@ class ObservabilitySupervisor:
         self._job_handle = None  # Windows-only
         self._health_thread: Optional[threading.Thread] = None
         self._stop_event = threading.Event()
+        # Per-service rotating log handlers + drainer threads. The parent
+        # process owns the file handle (the child writes to a pipe), so
+        # rotation works on Windows where renaming an open file held by
+        # a child fails with ERROR_SHARING_VIOLATION. Spec §7.4.
+        self._log_handlers: Dict[str, logging.handlers.RotatingFileHandler] = {}
+        self._log_drainers: Dict[str, threading.Thread] = {}
 
     # ── public surface ────────────────────────────────────────────
 
@@ -261,15 +272,20 @@ class ObservabilitySupervisor:
         else:
             start_new_session = True
 
-        with open(log_path, "ab") as logf:
-            proc = subprocess.Popen(
-                cmd,
-                stdout=logf,
-                stderr=subprocess.STDOUT,
-                creationflags=creationflags,
-                start_new_session=start_new_session,
-                close_fds=True,
-            )
+        # Spec §7.4: stdout+stderr → pipe → reader-thread → RotatingFileHandler.
+        # We can't reassign a running child's stdout fd from the parent, so
+        # the parent owns the rotating handle and a daemon thread drains
+        # the pipe. This is the only design that works on Windows where
+        # renaming a file held by a child fails with ERROR_SHARING_VIOLATION.
+        proc = subprocess.Popen(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            creationflags=creationflags,
+            start_new_session=start_new_session,
+            close_fds=True,
+            bufsize=1,  # line-buffered (best-effort; binaries may override)
+        )
 
         # Attach to Job Object (Windows only).
         if sys.platform == "win32" and self._job_handle is not None:
@@ -282,6 +298,102 @@ class ObservabilitySupervisor:
             self._services[svc].proc = proc
             self._services[svc].log_path = log_path
             self._services[svc].status = STATUS_PENDING
+
+        # Spawn the drainer thread (daemon=True; dies with the process).
+        self._start_log_drainer(svc, proc)
+
+    # ── log rotation (spec §7.4) ─────────────────────────────────
+
+    def _setup_log_handler(self, svc: str) -> logging.Logger:
+        """Build (or fetch cached) per-service Logger backed by a
+        RotatingFileHandler at logs_dir/<svc>.log, 10 MiB, 3 backups."""
+        logger = logging.getLogger(f"helix.observability.{svc}")
+        logger.setLevel(logging.INFO)
+        logger.propagate = False  # don't bubble child stdout to root logger
+
+        # If we already attached a handler for this svc, reuse it (restart path).
+        if svc in self._log_handlers:
+            return logger
+
+        # Logger objects are global singletons; if a previous supervisor
+        # instance left a stale RotatingFileHandler attached (test or
+        # prod re-init), close + detach it before installing the fresh one.
+        for stale in list(logger.handlers):
+            try:
+                logger.removeHandler(stale)
+                stale.close()
+            except Exception:
+                pass
+
+        log_path = logs_dir(create=True) / f"{svc}.log"
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+
+        handler = logging.handlers.RotatingFileHandler(
+            log_path,
+            maxBytes=_LOG_ROTATE_MAX_BYTES,
+            backupCount=_LOG_ROTATE_BACKUP_COUNT,
+            encoding="utf-8",
+        )
+        # Child stdout is already framed text; don't add timestamps/levels.
+        handler.setFormatter(logging.Formatter("%(message)s"))
+        logger.addHandler(handler)
+        self._log_handlers[svc] = handler
+        return logger
+
+    def _start_log_drainer(
+        self, svc: str, proc: subprocess.Popen,
+    ) -> threading.Thread:
+        """Drain proc.stdout into the per-service rotating log.
+
+        Returns the spawned daemon thread (tests join it; production code
+        ignores it — it dies when the child closes its pipe).
+        """
+        logger = self._setup_log_handler(svc)
+
+        def _drain() -> None:
+            stdout = proc.stdout
+            if stdout is None:
+                return
+            try:
+                for raw in iter(stdout.readline, b""):
+                    try:
+                        line = raw.decode("utf-8", errors="replace").rstrip("\r\n")
+                    except Exception:
+                        # Defensive: never let a decode glitch kill the drainer.
+                        line = repr(raw)
+                    logger.info(line)
+            except Exception:
+                log.warning("[%s] log drainer error", svc, exc_info=True)
+            finally:
+                try:
+                    stdout.close()
+                except Exception:
+                    pass
+
+        thread = threading.Thread(
+            target=_drain, name=f"obs-log-{svc}", daemon=True,
+        )
+        thread.start()
+        self._log_drainers[svc] = thread
+        return thread
+
+    def _close_log_handler(self, svc: str) -> None:
+        """Detach + close the per-service rotating handler.
+
+        Called on shutdown and on restart so the file handle is released
+        before respawn (Windows file-locking hygiene)."""
+        handler = self._log_handlers.pop(svc, None)
+        if handler is None:
+            return
+        logger = logging.getLogger(f"helix.observability.{svc}")
+        try:
+            logger.removeHandler(handler)
+        except Exception:
+            pass
+        try:
+            handler.close()
+        except Exception:
+            pass
 
     def _command_for(self, svc: str) -> List[str]:
         bin_p = str(binary_path(svc))
@@ -389,6 +501,10 @@ class ObservabilitySupervisor:
         with self._lock:
             self._services[svc].status = STATUS_DOWN
             self._services[svc].proc = None
+        # Drainer thread will exit on its own once the child closes the
+        # pipe; close + detach the rotating handler so the file is
+        # released before any respawn.
+        self._close_log_handler(svc)
 
     # ── shutdown ─────────────────────────────────────────────────
 
