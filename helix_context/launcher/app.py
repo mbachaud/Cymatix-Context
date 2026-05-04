@@ -15,7 +15,7 @@ import time
 import webbrowser
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 from urllib.parse import urlparse
 
 from fastapi import FastAPI, Request
@@ -32,9 +32,9 @@ from .supervisor import (
     StartupTimeout,
     SupervisorError,
 )
+from .update_check import UpdateChecker
 from .headroom_supervisor import (
     HeadroomSupervisor,
-    HeadroomSupervisorError,
     HeadroomNotInstalled,
     is_headroom_installed,
 )
@@ -46,6 +46,9 @@ from .observability_paths import (
 )
 
 log = logging.getLogger("helix.launcher.app")
+
+if TYPE_CHECKING:
+    from .observability_supervisor import ObservabilitySupervisor
 
 LAUNCHER_DIR = Path(__file__).resolve().parent
 TEMPLATES_DIR = LAUNCHER_DIR / "templates"
@@ -541,10 +544,12 @@ def main(argv: Optional[list] = None) -> int:
         helix_host=args.helix_host,
         helix_port=args.helix_port,
     )
+    update_checker = UpdateChecker()
 
     collector = StateCollector(
         supervisor=supervisor,
         ollama_base_url=args.ollama_base_url,
+        update_checker=update_checker,
     )
 
     # Optional Headroom proxy — if a proxy is already running on the
@@ -617,6 +622,7 @@ def main(argv: Optional[list] = None) -> int:
             headroom_dashboard_url=headroom_dashboard_url,
             observability_supervisor=observability_sup,
             install_pending=observability_install_pending,
+            update_checker=update_checker,
         )
 
         # Start observability subprocesses BEFORE tray_icon.run() blocks.
@@ -640,6 +646,10 @@ def main(argv: Optional[list] = None) -> int:
                 threading.Timer(1.0, tray_icon.notify_install_needed).start()
             except Exception:
                 log.warning("install-needed balloon scheduling failed", exc_info=True)
+        try:
+            threading.Timer(2.0, tray_icon.notify_update_available).start()
+        except Exception:
+            log.warning("update balloon scheduling failed", exc_info=True)
 
         log.info("Tray mode active — dashboard at %s", url)
         log.info("Click the tray icon to open the dashboard; Quit from its menu to exit.")

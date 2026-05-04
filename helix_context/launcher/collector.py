@@ -14,7 +14,6 @@ raising — the dashboard is expected to hide panels whose data is empty.
 from __future__ import annotations
 
 import logging
-import time
 from typing import Any, Dict, List, Optional
 
 import httpx
@@ -32,15 +31,19 @@ class StateCollector:
         supervisor: HelixSupervisor,
         ollama_base_url: str = "http://127.0.0.1:11434",
         http_timeout: float = 4.0,
+        update_checker: Optional[Any] = None,
     ) -> None:
         self.supervisor = supervisor
         self.ollama_base_url = ollama_base_url.rstrip("/")
         self.http_timeout = http_timeout
+        self.update_checker = update_checker
 
     def collect(self) -> Dict[str, Any]:
         """Return the full launcher state dict. Never raises."""
         helix_state = self._collect_helix_process()
         state: Dict[str, Any] = {"helix": helix_state}
+        if self.update_checker is not None:
+            state["update"] = self.update_checker.check().as_dict()
 
         if not helix_state["running"]:
             return state
@@ -48,13 +51,17 @@ class StateCollector:
         base = f"http://{self.supervisor.helix_host}:{self.supervisor.helix_port}"
         client = httpx.Client(base_url=base, timeout=self.http_timeout)
         health_seen = False
+        endpoint_seen = False
         try:
             stats = self._safe_get_json(client, "/stats")
             if stats:
+                endpoint_seen = True
+                self._copy_helix_version(state["helix"], stats)
                 state["genes"] = self._genes_panel(stats)
 
             sessions = self._safe_get_json(client, "/sessions", params={"status": "all"})
             if sessions and sessions.get("participants"):
+                endpoint_seen = True
                 participants = sessions["participants"]
                 state["parties"] = self._parties_panel(participants)
                 state["participants"] = self._participants_panel(participants)
@@ -66,6 +73,8 @@ class StateCollector:
             health = self._safe_get_json(client, "/health")
             if health:
                 health_seen = True
+                endpoint_seen = True
+                self._copy_helix_version(state["helix"], health)
                 state["helix"]["ribosome"] = health.get("ribosome")
                 checks = health.get("checks", {}) or {}
                 state["helix"]["availability"] = (
@@ -91,17 +100,24 @@ class StateCollector:
 
             components = self._safe_get_json(client, "/admin/components")
             if components and components.get("components"):
+                endpoint_seen = True
                 tools = self._tools_panel(components)
                 if tools:
                     state["tools"] = tools
 
             tokens = self._safe_get_json(client, "/metrics/tokens")
             if tokens and (tokens.get("session") or tokens.get("lifetime")):
+                endpoint_seen = True
                 state["tokens"] = self._tokens_panel(tokens)
         finally:
             client.close()
 
-        if not health_seen:
+        if not health_seen and endpoint_seen:
+            state["helix"]["availability"] = "available"
+            state["helix"]["next_action"] = (
+                "Helix is responding. This version does not expose the launcher health endpoint."
+            )
+        elif not health_seen:
             state["helix"]["availability"] = "degraded"
             state["helix"]["next_action"] = (
                 "The Helix process exists but did not answer its health endpoints. "
@@ -113,6 +129,11 @@ class StateCollector:
             state["models"] = models
 
         return state
+
+    def _copy_helix_version(self, helix: Dict[str, Any], payload: Dict[str, Any]) -> None:
+        version = payload.get("version") or payload.get("helix_version")
+        if isinstance(version, str) and version.strip():
+            helix["version"] = version.strip()
 
     # ── helix process ──────────────────────────────────────────────
 

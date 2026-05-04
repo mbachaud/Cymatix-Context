@@ -117,6 +117,7 @@ class HelixTrayIcon:
         headroom_dashboard_url: Optional[str] = None,
         observability_supervisor=None,
         install_pending: bool = False,
+        update_checker=None,
     ) -> None:
         self.supervisor = supervisor
         self.dashboard_url = dashboard_url
@@ -134,6 +135,8 @@ class HelixTrayIcon:
         # enabled (HELIX_OBSERVABILITY != 0 and install bootstrap is
         # complete). Drives the Observability submenu (spec §7.5, §11.4).
         self.observability = observability_supervisor
+        self.update_checker = update_checker
+        self._update_notified = False
         # Task 13 fix: when binaries are missing, _maybe_build_observability
         # returns (None, install_pending=True). The tray must still surface
         # the Observability submenu in that state so the user has a
@@ -722,6 +725,23 @@ class HelixTrayIcon:
             log.warning("notify_install_needed failed", exc_info=True)
         # Pulse the Observability submenu label until acknowledged.
         self.start_install_pulse()
+
+    def notify_update_available(self) -> None:
+        """Show a one-shot balloon when a newer Helix Context release exists."""
+        if self._icon is None or self.update_checker is None or self._update_notified:
+            return
+        info = self.update_checker.check()
+        if not info.update_available:
+            return
+        try:
+            self._icon.notify(
+                f"Helix Context {info.latest_version} is available "
+                f"(installed {info.current_version}).",
+                title="Helix Launcher",
+            )
+            self._update_notified = True
+        except Exception:
+            log.warning("notify_update_available failed", exc_info=True)
 
     # ── install-prompt pulse (spec §11.4) ──────────────────────────
 

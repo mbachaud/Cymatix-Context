@@ -12,6 +12,7 @@ import pytest
 
 from helix_context.launcher import tray as tray_mod
 from helix_context.launcher.tray import HelixTrayIcon, _build_icon_image, is_tray_available
+from helix_context.launcher.update_check import UpdateInfo
 from helix_context.launcher.supervisor import (
     AlreadyRunning,
     NotRunning,
@@ -101,6 +102,25 @@ class TestMenuActions:
         fake_supervisor.stop.side_effect = NotRunning("not running")
         # Should not raise
         tray_icon._stop_helix(None, None)
+
+    def test_notify_update_available_is_one_shot(self, fake_supervisor):
+        checker = MagicMock()
+        checker.check.return_value = UpdateInfo(
+            current_version="0.13.4",
+            latest_version="0.14.0",
+            update_available=True,
+        )
+        icon = HelixTrayIcon(
+            supervisor=fake_supervisor,
+            dashboard_url="http://127.0.0.1:11438/",
+            update_checker=checker,
+        )
+        icon._icon = MagicMock()
+
+        icon.notify_update_available()
+        icon.notify_update_available()
+
+        icon._icon.notify.assert_called_once()
 
 
 class TestQuitAction:
