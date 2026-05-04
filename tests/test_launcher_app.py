@@ -362,12 +362,44 @@ class TestHeadroomAutoRoute:
         assert "OPENAI_TARGET_API_URL" not in os.environ
 
 
-def test_observability_disabled_via_env(monkeypatch, tmp_path):
-    """HELIX_OBSERVABILITY=0 → no supervisor built."""
-    monkeypatch.setenv("HELIX_OBSERVABILITY", "0")
+@pytest.mark.parametrize("env_value, expects_skip", [
+    ("0", True),
+    ("false", True),
+    ("False", True),     # mixed case
+    ("FALSE", True),     # all caps
+    ("no", True),
+    ("NO", True),
+    ("off", True),
+    ("Off", True),
+    ("1", False),        # default opt-IN
+    ("true", False),
+    ("yes", False),
+    ("anything", False), # unrecognized → opt-IN per spec semantics
+    ("", False),         # empty → default opt-IN
+])
+def test_observability_env_opt_out(monkeypatch, env_value, expects_skip):
+    """HELIX_OBSERVABILITY parsing is case-insensitive across recognised
+    opt-out tokens; everything else (including unknown strings) falls
+    through to the default opt-IN behaviour."""
+    monkeypatch.setenv("HELIX_OBSERVABILITY", env_value)
+    # Stub install-complete so the opt-IN branches actually return a
+    # supervisor rather than skipping due to missing binaries/configs.
+    monkeypatch.setattr(
+        "helix_context.launcher.app._observability_install_complete",
+        lambda: True,
+    )
     from helix_context.launcher.app import _maybe_build_observability
     sup = _maybe_build_observability()
-    assert sup is None
+    if expects_skip:
+        assert sup is None, (
+            f"HELIX_OBSERVABILITY={env_value!r} should opt out, "
+            f"but a supervisor was built"
+        )
+    else:
+        assert sup is not None, (
+            f"HELIX_OBSERVABILITY={env_value!r} should opt in, "
+            f"but no supervisor was built"
+        )
 
 
 def test_observability_enabled_when_unset(monkeypatch, tmp_path):

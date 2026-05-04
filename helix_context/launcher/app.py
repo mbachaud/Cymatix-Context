@@ -429,7 +429,7 @@ def _maybe_build_observability():
         - install is incomplete (sets pending flag for tray balloon)
         - import error (extras not installed)
     """
-    if os.environ.get("HELIX_OBSERVABILITY", "1").strip() in ("0", "false", "no", "off"):
+    if os.environ.get("HELIX_OBSERVABILITY", "1").strip().lower() in ("0", "false", "no", "off"):
         log.info("Observability skipped: HELIX_OBSERVABILITY=0")
         return None
 
