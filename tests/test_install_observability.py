@@ -130,6 +130,34 @@ def test_powershell_install_script_handles_targz():
     assert "tar" in text.lower(), "PowerShell script missing tar branch (Tempo Windows is .tar.gz)"
 
 
+def test_powershell_install_script_resolves_repo_root_in_body_not_param():
+    r"""Param default `(Resolve-Path "$PSScriptRoot\..").Path` is unreliable
+    under `powershell.exe -File <script>` because $PSScriptRoot can be
+    empty during param-block evaluation. When empty, "$PSScriptRoot\.."
+    collapses to "\.." which Resolve-Path interprets as the drive root,
+    making $RepoRoot equal to "F:\" instead of the repo path.
+
+    Caught a real regression where the tray-launched install hit
+    `F:\tools\native-otel\.versions not found` because the resolution
+    happened in the param default.
+
+    Pin: the file MUST NOT contain the broken pattern in the param block
+    AND MUST resolve via $MyInvocation.MyCommand.Path in the script body
+    (which is reliably set after param parsing).
+    """
+    text = PS_SCRIPT.read_text(encoding="utf-8")
+    assert 'Resolve-Path "$PSScriptRoot' not in text, (
+        "PowerShell install script uses the unreliable "
+        "(Resolve-Path \"$PSScriptRoot\\..\") pattern in the param block. "
+        "Move repo-root resolution into the script body using "
+        "$MyInvocation.MyCommand.Path to ensure it works under -File."
+    )
+    assert "$MyInvocation.MyCommand.Path" in text, (
+        "PowerShell install script must resolve repo root via "
+        "$MyInvocation.MyCommand.Path in the script body."
+    )
+
+
 def test_powershell_install_script_is_ascii_only():
     """PowerShell 5.1 (the default `powershell.exe` on Windows) reads .ps1
     files without a BOM as ANSI/CP1252. UTF-8 multi-byte chars (em-dashes,

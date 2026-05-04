@@ -31,11 +31,28 @@
 
 [CmdletBinding(SupportsShouldProcess=$true)]
 param(
-  [string]$RepoRoot = (Resolve-Path "$PSScriptRoot\..").Path
+  [string]$RepoRoot
 )
 
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
+
+# Resolve repo root inside the script body, NOT in the param default.
+# $PSScriptRoot is unreliable during param-block evaluation under some
+# PowerShell invocation paths (notably `powershell.exe -File`), causing
+# "$PSScriptRoot\.." to collapse to "\.." which Resolve-Path interprets
+# as the drive root. $MyInvocation.MyCommand.Path is always the running
+# script's absolute path once we are in the body.
+if (-not $RepoRoot) {
+    $scriptPath = $MyInvocation.MyCommand.Path
+    if (-not $scriptPath) {
+        Write-Error "[install] Cannot determine script location; pass -RepoRoot explicitly."
+        exit 1
+    }
+    $scriptDir = Split-Path -Parent $scriptPath
+    $RepoRoot = Split-Path -Parent $scriptDir
+}
+Write-Host "[install] Repo root: $RepoRoot"
 
 # Locate venv python (preferred) or fall back to PATH.
 $python = "python"
