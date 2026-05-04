@@ -10,8 +10,7 @@ Public surface:
   get_hardware()          -- cached singleton; first call performs detection
   reset_for_test()        -- test-only cache reset
 
-Subsequent tasks fill in detection logic; Task 2 lays the dataclass +
-singleton plumbing only.
+Subsequent tasks add detection logic incrementally.
 """
 
 from __future__ import annotations
@@ -61,6 +60,25 @@ def _detect_cpu() -> Dict[str, Any]:
         "cpu_brand": cpu_brand,
         "system_ram_gb": system_ram_gb,
     }
+
+
+def _probe(device_str: str) -> tuple[bool, Optional[str]]:
+    """Round-trip a 1-element zero tensor through the device.
+
+    device_str: e.g. 'cuda:0', 'cuda:1', 'mps', 'cpu'.
+
+    Returns (True, None) on success, (False, '<ExcType>: <message>') on
+    failure. Catches the 'wheel says yes but kernel launch fails' failure
+    mode (stale driver, dead GPU, container without device passthrough).
+    Probe is ~1ms on healthy hardware.
+    """
+    import torch  # local import — torch may be absent (§5.5)
+    try:
+        t = torch.zeros(1).to(device_str)
+        _ = t.cpu()
+        return True, None
+    except Exception as exc:
+        return False, f"{type(exc).__name__}: {exc}"
 
 
 @dataclass(frozen=True)

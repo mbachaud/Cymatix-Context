@@ -98,3 +98,38 @@ def test_system_ram_via_psutil(monkeypatch):
     monkeypatch.setattr("psutil.virtual_memory", lambda: _FakeVM())
     info = hardware._detect_cpu()
     assert info["system_ram_gb"] == pytest.approx(64.0, rel=1e-3)
+
+
+def test_probe_success(monkeypatch):
+    """Round-trip succeeds -> (True, None)."""
+    class _FakeTensor:
+        def to(self, device): return self
+        def cpu(self): return self
+    monkeypatch.setattr("torch.zeros", lambda *a, **kw: _FakeTensor())
+    ok, reason = hardware._probe("cuda:0")
+    assert ok is True
+    assert reason is None
+
+
+def test_probe_failure_returns_reason(monkeypatch):
+    """torch.zeros() raises -> (False, formatted reason)."""
+    def _raise(*a, **kw):
+        raise RuntimeError("CUDA driver version is insufficient")
+    monkeypatch.setattr("torch.zeros", _raise)
+    ok, reason = hardware._probe("cuda:0")
+    assert ok is False
+    assert reason is not None
+    assert "RuntimeError" in reason
+    assert "CUDA driver version is insufficient" in reason
+
+
+def test_probe_to_failure(monkeypatch):
+    """torch.zeros() succeeds but .to(device) raises -> probe fails."""
+    class _BadTensor:
+        def to(self, device):
+            raise RuntimeError("device not available")
+        def cpu(self): return self
+    monkeypatch.setattr("torch.zeros", lambda *a, **kw: _BadTensor())
+    ok, reason = hardware._probe("cuda:0")
+    assert ok is False
+    assert "device not available" in reason
