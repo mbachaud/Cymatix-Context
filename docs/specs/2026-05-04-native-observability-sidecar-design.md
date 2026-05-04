@@ -50,16 +50,24 @@ Helix-context's exporter sends OTel signals to `localhost:4317` exactly as today
 ```
 deploy/otel/
   docker-compose.yml           # UNCHANGED — alternate install path
-  otel-collector-config.yaml   # UNCHANGED
-  prometheus.yml               # UNCHANGED — native Prometheus reads same file
-  tempo.yaml                   # UNCHANGED
+  otel-collector-config.yaml   # SOURCE — Docker uses verbatim; native uses as template (see §6.3)
+  prometheus.yml               # SOURCE — Docker uses verbatim; native uses as template (see §6.3)
+  tempo.yaml                   # SOURCE — Docker uses verbatim; native uses as template (see §6.3)
+  loki-config.yaml             # NEW — explicit config required for native (Docker image
+                               #       previously used built-in default; we make it explicit
+                               #       so both runtimes share one source of truth)
   grafana/
-    dashboards/                # UNCHANGED — provisioned dashboards (JSON)
-    provisioning/              # UNCHANGED — datasource + dashboard YAMLs
+    dashboards/                # UNCHANGED — provisioned dashboards (JSON, runtime-agnostic)
+    provisioning/
+      dashboards/              # UNCHANGED — dashboard provisioning YAML
+      datasources/             # SOURCE — Docker uses verbatim; native templates the
+                               #          datasource URLs (Docker DNS → localhost)
 
 tools/native-otel/
   .versions                    # NEW — pinned versions + SHA256 per platform
-  configs/                     # NEW — generated runtime configs (template + render)
+  configs/                     # NEW — rendered runtime configs (output of §6.3 templating
+                               #       step; each file mirrors a deploy/otel source with
+                               #       hostnames + paths substituted for native runtime)
   README.md                    # NEW — explains layout, points at install script
 
 scripts/
@@ -70,6 +78,18 @@ helix_context/launcher/
   observability_supervisor.py  # NEW — owns the 5 subprocess lifecycles
   observability_health.py      # NEW — port-bind / HTTP health checks
 ```
+
+**Why configs are templated, not "unchanged":** the `deploy/otel/*.yaml` files in
+their current form bake in Docker-Compose service-DNS hostnames (`tempo:4317`,
+`http://prometheus:9090/api/v1/write`, `http://loki:3100/otlp`, `otel-collector:8889`)
+and Linux-container absolute paths (`/var/tempo/traces`, `/var/tempo/wal`,
+`/var/tempo/generator/wal`). These work for Docker but not for native binaries
+running on the host. The native install path templates these to `localhost:*` URLs
+and `%LOCALAPPDATA%\helix-context\observability\<service>\…` paths during the
+install script's render step. Docker keeps reading the originals byte-for-byte;
+native reads the rendered copies in `tools/native-otel/configs/`. Wire format,
+ports, dashboards, and OTel pipeline shape are bit-for-bit identical between the
+two runtimes — only host/path strings differ.
 
 ### Gitignored, populated by install script
 
@@ -114,7 +134,22 @@ On Linux: `~/.local/share/helix-context/observability/`. On macOS: `~/Library/Ap
    - If present and SHA256 matches the platform-specific hash in `.versions` → skip.
    - Otherwise: download release tarball/zip from the official release URL, verify SHA256, extract to `tools/native-otel/<service>/`, log "installed" or "updated".
    - SHA256 mismatch → fail loud, leave previous binary untouched.
-3. After all components installed, render runtime configs from `configs/*.tmpl` into `configs/<service>.yaml`, substituting state-dir paths (`%LOCALAPPDATA%/...`) so each binary writes to the per-user state location.
+3. After all components installed, render runtime configs from the
+   `deploy/otel/` sources into `tools/native-otel/configs/<service>.yaml`,
+   substituting:
+   - **Hostnames** — Docker service DNS (`tempo`, `prometheus`, `loki`,
+     `otel-collector`) → `localhost`. Affects `otel-collector-config.yaml`
+     (exporters), `prometheus.yml` (scrape targets), `tempo.yaml`
+     (`metrics_generator.storage.remote_write` URL), and the Grafana
+     provisioning datasources YAML.
+   - **State-dir paths** — Linux container paths (`/var/tempo/...`,
+     `/var/loki/...`) → platform-appropriate user-state directory resolved
+     via `platformdirs.user_data_dir("helix-context")` (`%LOCALAPPDATA%\
+     helix-context\observability\<service>\` on Windows, equivalents on
+     Linux/macOS — see §5).
+   The render is a straight string-template substitution (Jinja2 already a
+   `launcher` extra dep, so reuse it). No structural changes to any config —
+   the diff between Docker source and native render is hostnames + paths only.
 
 ### Pinned hashes
 
@@ -165,7 +200,16 @@ Re-runs are safe. Bumping a version in `.versions` and re-running upgrades only 
 
 ### Opt-out
 
-`HELIX_OBSERVABILITY=0` env var (set in `Start-helix-tray.bat` or shell): skip all native observability auto-start logic, including first-launch prompt. Existing Docker-compose path is unaffected by this var.
+`HELIX_OBSERVABILITY=0` env var (set in shell, or by adding `set
+"HELIX_OBSERVABILITY=0"` to `Start-helix-tray.bat` alongside the existing
+`HELIX_OTEL_*` block — the var is not currently set in that file): skip all
+native observability auto-start logic, including the first-launch prompt.
+Existing Docker-compose path is unaffected by this var. Existing
+`HELIX_OTEL_ENABLED=0` (which gates the helix-context exporter itself,
+already implemented in `helix_context/telemetry.py`) and the new
+`HELIX_OBSERVABILITY=0` are independent: the former silences the producer,
+the latter skips spawning the receiver stack. Either alone is sufficient
+for "no observability"; both are honored.
 
 ## 8. Documentation
 
@@ -218,9 +262,11 @@ Re-run a short GPQA suite (n=20, mode=on) with native observability vs the exist
 ## 11. Open questions / risks
 
 1. **Grafana Windows binary licensing.** Grafana is AGPL; redistributing the binary in our repo would propagate the license. The bootstrap script downloads from `grafana.com/grafana/download` at install time — user-side download, not redistribution by us. Confirm this is the right interpretation before committing.
-2. **Loki on Windows is less battle-tested** than the other components. If startup is flaky we may degrade to "Loki disabled by default, opt-in via env var." Defer this decision to bench validation.
-3. **Job Object behavior with Python.** `pywin32` exposes Job Object APIs; need to verify the kill-on-close flag actually fires when the tray Python process is force-killed (not just on clean exit). Test in integration phase.
+2. **Loki on Windows is less battle-tested** than the other components. If startup is flaky we may degrade to "Loki disabled by default, opt-in via env var." Defer this decision to bench validation. Related: native Loki requires an explicit config file (Docker uses the image's built-in default at `/etc/loki/local-config.yaml`); we add `deploy/otel/loki-config.yaml` so both runtimes share the same source — confirm during plan-writing that the docker-compose path is updated to mount this file (preserves "zero functional change" intent).
+3. **Job Object behavior with Python.** `pywin32` exposes Job Object APIs; need to verify the kill-on-close flag actually fires when the tray Python process is force-killed (not just on clean exit). Test in integration phase. `pywin32` is not currently a dep — added under a new `launcher-observability` extra (or rolled into `launcher-tray`); plan-writing should pick the placement.
 4. **First-launch prompt UX.** A blocking "Y/n" prompt in a tray-context is awkward. Likely better as a balloon notification or a tray-menu pulse-state until the user clicks "Install observability." Decide during plan-writing.
+5. **New dependencies introduced.** `platformdirs` (state-dir resolution, cross-platform), `pywin32` (Job Object APIs, Windows-only — guard import behind `sys.platform == "win32"` per global preference). Both are net-new to the project. Plan-writing should decide which optional-dependency extra (`launcher`, `launcher-tray`, or a new `launcher-observability`) carries them.
+6. **Test plan integration item 4 ("corrupt one binary on disk").** A corrupt exe on Windows often fails at process-start with an opaque OS error rather than a clean spawn failure that the supervisor can classify. Plan-writing should pick a deterministic failure mode for this test (e.g., zero-byte file, or replace exe with a script that exits 1) so the supervisor's red-dot path is exercised reliably.
 
 ## 12. Related work
 
@@ -232,8 +278,10 @@ Re-run a short GPQA suite (n=20, mode=on) with native observability vs the exist
 
 - [ ] Architecture preserves OTel wire format, ports, and dashboard provisioning bit-for-bit
 - [ ] File layout split (binaries/state/provisioning) is consistent with the file-layout decisions
+- [ ] Config templating story is clear: which files are byte-identical between Docker and native, which are templated, what gets substituted (§5 + §6.3)
 - [ ] First-launch UX described concretely (prompt vs notification — open question §11.4)
 - [ ] Cross-platform claim is bounded (capable, untested) and §3 non-goals match
 - [ ] Test plan covers: install verification, supervisor lifecycle, port collision, per-service failure, opt-out
-- [ ] Docker-compose path explicitly preserved with zero functional changes
+- [ ] Docker-compose path explicitly preserved with zero functional changes (including: if `loki-config.yaml` is added, docker-compose mounts it so behavior remains identical)
 - [ ] AGPL/Grafana redistribution concern flagged (§11.1)
+- [ ] New dependencies (`platformdirs`, `pywin32`) and their extra placement called out (§11.5)
