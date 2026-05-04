@@ -7,7 +7,6 @@ GPU. Pattern mirrors tests/test_observability_paths.py.
 from __future__ import annotations
 
 import dataclasses
-import logging
 import pytest
 
 from helix_context import hardware

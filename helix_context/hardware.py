@@ -9,7 +9,6 @@ Public surface:
   HardwareInfo            -- frozen dataclass returned by get_hardware()
   get_hardware()          -- cached singleton; first call performs detection
   reset_for_test()        -- test-only cache reset
-  recommended_batch_size  -- table-driven, override-aware
 
 Subsequent tasks fill in detection logic; Task 2 lays the dataclass +
 singleton plumbing only.
