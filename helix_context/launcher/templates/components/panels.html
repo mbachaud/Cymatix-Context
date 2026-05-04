@@ -1,5 +1,11 @@
 {# Panel assembly — conditionally renders each panel only if its data is present. #}
 
+{% if state.update and state.update.update_available %}
+<div class="panel panel--health-warning">
+  <p>Helix Context {{ state.update.latest_version }} is available. Installed version: {{ state.update.current_version }}.</p>
+</div>
+{% endif %}
+
 {% if state.helix.availability == "unavailable" or not state.helix.running %}
   <div class="panel panel--empty">
     <p>Helix is stopped. Click <strong>Start</strong> to launch the server.</p>

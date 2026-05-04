@@ -58,12 +58,19 @@ otel = [
     "opentelemetry-exporter-otlp-proto-grpc>=1.27",
     "opentelemetry-instrumentation-fastapi>=0.48b0",
 ]
-launcher = ["jinja2>=3.1", "psutil>=5.9"]
-launcher-native = ["jinja2>=3.1", "psutil>=5.9", "pywebview>=5.0"]
+launcher = ["jinja2>=3.1", "psutil>=5.9", "platformdirs>=4.0"]
+launcher-native = [
+    "jinja2>=3.1", "psutil>=5.9", "platformdirs>=4.0",
+    "pywebview>=5.0",
+]
 # pystray is LGPL-3. It is a runtime-only optional dep that the user
 # installs explicitly; the helix-context wheel itself does not bundle
 # pystray, so the core package stays Apache-2.0-clean.
-launcher-tray = ["jinja2>=3.1", "psutil>=5.9", "pystray>=0.19", "Pillow>=10"]
+launcher-tray = [
+    "jinja2>=3.1", "psutil>=5.9", "platformdirs>=4.0",
+    "pystray>=0.19", "Pillow>=10",
+    "pywin32>=306; sys_platform == 'win32'",
+]
 ast = [
     "tree-sitter>=0.23",
     "tree-sitter-python>=0.23",
@@ -92,6 +99,7 @@ all = [
     "opentelemetry-instrumentation-fastapi>=0.48b0",
     "jinja2>=3.1",
     "psutil>=5.9",
+    "platformdirs>=4.0",
     "tree-sitter>=0.23",
     "tree-sitter-python>=0.23",
     "tree-sitter-rust>=0.23",

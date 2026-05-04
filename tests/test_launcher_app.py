@@ -360,3 +360,100 @@ class TestHeadroomAutoRoute:
         assert routed is False
         assert "HELIX_SERVER_UPSTREAM" not in os.environ
         assert "OPENAI_TARGET_API_URL" not in os.environ
+
+
+@pytest.mark.parametrize("env_value, expects_skip", [
+    ("0", True),
+    ("false", True),
+    ("False", True),     # mixed case
+    ("FALSE", True),     # all caps
+    ("no", True),
+    ("NO", True),
+    ("off", True),
+    ("Off", True),
+    ("1", False),        # default opt-IN
+    ("true", False),
+    ("yes", False),
+    ("anything", False), # unrecognized → opt-IN per spec semantics
+    ("", False),         # empty → default opt-IN
+])
+def test_observability_env_opt_out(monkeypatch, env_value, expects_skip):
+    """HELIX_OBSERVABILITY parsing is case-insensitive across recognised
+    opt-out tokens; everything else (including unknown strings) falls
+    through to the default opt-IN behaviour.
+
+    Cleanup A: assertion is on the (supervisor, install_pending) tuple
+    returned by _maybe_build_observability — the previous module-level
+    _OBS_INSTALL_PENDING global has been removed."""
+    monkeypatch.setenv("HELIX_OBSERVABILITY", env_value)
+    # Stub install-complete so the opt-IN branches actually return a
+    # supervisor rather than skipping due to missing binaries/configs.
+    monkeypatch.setattr(
+        "helix_context.launcher.app._observability_install_complete",
+        lambda: True,
+    )
+    from helix_context.launcher.app import _maybe_build_observability
+    sup, install_pending = _maybe_build_observability()
+    if expects_skip:
+        assert sup is None, (
+            f"HELIX_OBSERVABILITY={env_value!r} should opt out, "
+            f"but a supervisor was built"
+        )
+        # Opt-out path never marks install-pending; the user explicitly
+        # disabled observability, so don't pester them with an install
+        # balloon.
+        assert install_pending is False
+    else:
+        assert sup is not None, (
+            f"HELIX_OBSERVABILITY={env_value!r} should opt in, "
+            f"but no supervisor was built"
+        )
+        # Opt-IN with install complete → no install balloon needed.
+        assert install_pending is False
+
+
+def test_observability_enabled_when_unset(monkeypatch, tmp_path):
+    """Default — env unset → returns a supervisor (or None if configs
+    haven't been rendered yet; either way, not silently disabled)."""
+    monkeypatch.delenv("HELIX_OBSERVABILITY", raising=False)
+    monkeypatch.setattr(
+        "helix_context.launcher.app._observability_install_complete",
+        lambda: True,
+    )
+    from helix_context.launcher.app import _maybe_build_observability
+    sup, install_pending = _maybe_build_observability()
+    assert sup is not None
+    assert install_pending is False
+
+
+def test_observability_skipped_when_install_incomplete(monkeypatch):
+    """Install incomplete → supervisor not built, install_pending=True
+    so the tray-startup block schedules the install-needed balloon.
+
+    Cleanup A: previously this was tracked through a module-level
+    _OBS_INSTALL_PENDING global + setter. The helper now returns the
+    flag in the tuple so the caller doesn't depend on global state."""
+    monkeypatch.delenv("HELIX_OBSERVABILITY", raising=False)
+    monkeypatch.setattr(
+        "helix_context.launcher.app._observability_install_complete",
+        lambda: False,
+    )
+    from helix_context.launcher.app import _maybe_build_observability
+    sup, install_pending = _maybe_build_observability()
+    assert sup is None
+    assert install_pending is True
+
+
+def test_observability_module_global_pending_flag_removed():
+    """Cleanup A pin: the deprecated module-level globals are gone.
+
+    Asserts that the historical _OBS_INSTALL_PENDING flag and its
+    _set_observability_install_pending setter are no longer attributes
+    on the module. The flag is now a return-tuple field."""
+    from helix_context.launcher import app as app_mod
+    assert not hasattr(app_mod, "_OBS_INSTALL_PENDING"), (
+        "_OBS_INSTALL_PENDING should be dropped (Cleanup A: state via tuple)"
+    )
+    assert not hasattr(app_mod, "_set_observability_install_pending"), (
+        "_set_observability_install_pending should be dropped (Cleanup A)"
+    )

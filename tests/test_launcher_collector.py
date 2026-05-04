@@ -134,20 +134,22 @@ class TestGenesPanel:
                 state = collector.collect()
         assert state["helix"]["availability"] == "available"
 
-    def test_missing_health_marks_degraded(self, collector):
+    def test_missing_health_still_available_when_older_helix_answers_stats(self, collector):
         responses = {
             "/stats": {
                 "total_genes": 8000,
                 "total_chars_raw": 47_000_000,
                 "total_chars_compressed": 17_500_000,
                 "compression_ratio": 2.69,
+                "version": "0.2.0",
             },
             "/sessions": {"participants": []},
         }
         with patch("httpx.Client", return_value=_mock_client(responses)):
             with patch.object(collector, "_collect_models", return_value=None):
                 state = collector.collect()
-        assert state["helix"]["availability"] == "degraded"
+        assert state["helix"]["availability"] == "available"
+        assert state["helix"]["version"] == "0.2.0"
 
 
 class TestPartiesAndParticipants:

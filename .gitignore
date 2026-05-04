@@ -90,3 +90,18 @@ temp_*.md
 # OS
 Thumbs.db
 .DS_Store
+
+# Native observability sidecar — binaries downloaded by the install script.
+tools/native-otel/collector/
+tools/native-otel/prometheus/
+tools/native-otel/tempo/
+tools/native-otel/loki/
+tools/native-otel/grafana/
+# Install-completion sentinel written by scripts/install-native-observability.ps1
+# and consumed (then removed) by the tray's auto-restart watcher.
+tools/native-otel/.install-complete
+# Rendered configs are local to each install (paths embedded reflect the
+# user's home/AppData). Don't commit them.
+tools/native-otel/configs/*.yaml
+tools/native-otel/configs/*.yml
+!tools/native-otel/configs/.gitkeep

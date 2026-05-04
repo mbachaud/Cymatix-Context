@@ -12,6 +12,15 @@ receivers:
       http:
         endpoint: 0.0.0.0:4318
 
+extensions:
+  # health_check exposes a JSON status endpoint at :13133/ for supervisor
+  # readiness gating (helix_context.launcher.observability_health probes
+  # this URL during the spawn-order sequence). Same port + path on Docker
+  # and native runtimes; collector-only — other services have built-in
+  # health endpoints (/-/healthy, /ready, /api/health).
+  health_check:
+    endpoint: 0.0.0.0:13133
+
 processors:
   batch:
     timeout: 5s
@@ -46,6 +55,7 @@ exporters:
     namespace: otel_collector
 
 service:
+  extensions: [health_check]
   pipelines:
     traces:
       receivers: [otlp]

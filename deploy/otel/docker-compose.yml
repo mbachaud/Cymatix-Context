@@ -46,6 +46,7 @@ services:
     container_name: helix-loki
     command: ["-config.file=/etc/loki/local-config.yaml"]
     volumes:
+      - ./loki-config.yaml:/etc/loki/local-config.yaml:ro
       - loki-data:/loki
     ports:
       - "3100:3100"

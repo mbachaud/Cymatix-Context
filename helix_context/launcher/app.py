@@ -15,7 +15,7 @@ import time
 import webbrowser
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 from urllib.parse import urlparse
 
 from fastapi import FastAPI, Request
@@ -32,14 +32,23 @@ from .supervisor import (
     StartupTimeout,
     SupervisorError,
 )
+from .update_check import UpdateChecker
 from .headroom_supervisor import (
     HeadroomSupervisor,
-    HeadroomSupervisorError,
     HeadroomNotInstalled,
     is_headroom_installed,
 )
+from .observability_paths import (
+    ALL_CONFIG_FILES,
+    ALL_SERVICES,
+    binary_path,
+    configs_dir,
+)
 
 log = logging.getLogger("helix.launcher.app")
+
+if TYPE_CHECKING:
+    from .observability_supervisor import ObservabilitySupervisor
 
 LAUNCHER_DIR = Path(__file__).resolve().parent
 TEMPLATES_DIR = LAUNCHER_DIR / "templates"
@@ -398,6 +407,64 @@ def _maybe_build_headroom(
     return headroom, dashboard_url
 
 
+def _observability_install_complete() -> bool:
+    """True iff every binary AND every rendered config is present."""
+    if not all(binary_path(s).exists() for s in ALL_SERVICES):
+        return False
+    cfg = configs_dir()
+    return all((cfg / r).exists() for r in ALL_CONFIG_FILES)
+
+
+def _should_skip_observability() -> bool:
+    """True iff HELIX_OBSERVABILITY is explicitly set to an opt-out token.
+
+    The default is opt-IN: unset or unrecognized strings yield False
+    (run observability). The opt-out vocabulary is "0"/"false"/"no"/"off"
+    (case-insensitive). Distinct from `_env_truthy` semantics (which
+    matches OPT-IN tokens — the inverse vocabulary), so we keep this as
+    a small named helper rather than forcing a negate-of-truthy fit.
+    """
+    return os.environ.get("HELIX_OBSERVABILITY", "1").strip().lower() in (
+        "0", "false", "no", "off",
+    )
+
+
+def _maybe_build_observability() -> tuple[
+    Optional["ObservabilitySupervisor"], bool,
+]:
+    """Return (supervisor, install_pending).
+
+    supervisor is None when:
+        - HELIX_OBSERVABILITY is opt-out (install_pending=False)
+        - install is incomplete (install_pending=True — tray will balloon)
+        - import error / extras not installed (install_pending=False)
+
+    install_pending is True only when the bin/config layout is incomplete
+    and the caller should schedule the install-needed balloon.
+    """
+    if _should_skip_observability():
+        log.info("Observability skipped: HELIX_OBSERVABILITY=0")
+        return None, False
+
+    if not _observability_install_complete():
+        log.info(
+            "Observability install incomplete; tray will surface a balloon. "
+            "Run scripts/install-native-observability.ps1 to enable."
+        )
+        return None, True
+
+    try:
+        from .observability_supervisor import ObservabilitySupervisor
+        return ObservabilitySupervisor(), False
+    except ImportError:
+        log.warning(
+            "Observability deps missing — install with "
+            "pip install helix-context[launcher-tray]",
+            exc_info=True,
+        )
+        return None, False
+
+
 def _handle_service_command(command: str, dry_run: bool) -> int:
     """Handle install-service / uninstall-service subcommands.
 
@@ -477,10 +544,12 @@ def main(argv: Optional[list] = None) -> int:
         helix_host=args.helix_host,
         helix_port=args.helix_port,
     )
+    update_checker = UpdateChecker()
 
     collector = StateCollector(
         supervisor=supervisor,
         ollama_base_url=args.ollama_base_url,
+        update_checker=update_checker,
     )
 
     # Optional Headroom proxy — if a proxy is already running on the
@@ -540,6 +609,10 @@ def main(argv: Optional[list] = None) -> int:
         server_thread.start()
         _wait_for_port_bound(args.host, args.port)  # replaces 0.4s race
 
+        observability_sup, observability_install_pending = (
+            _maybe_build_observability()
+        )
+
         tray_icon = HelixTrayIcon(
             supervisor=supervisor,
             dashboard_url=url,
@@ -547,10 +620,48 @@ def main(argv: Optional[list] = None) -> int:
             prometheus_url=args.prometheus_url,
             headroom_supervisor=headroom_supervisor,
             headroom_dashboard_url=headroom_dashboard_url,
+            observability_supervisor=observability_sup,
+            install_pending=observability_install_pending,
+            update_checker=update_checker,
         )
+
+        # Start observability subprocesses BEFORE tray_icon.run() blocks.
+        # If start_all raises (configs missing despite the pre-check, or a
+        # binary fails to spawn), log + continue — helix-context itself
+        # must not be blocked on observability.
+        if observability_sup is not None:
+            try:
+                observability_sup.start_all()
+            except Exception:
+                log.warning(
+                    "ObservabilitySupervisor.start_all failed; "
+                    "tray will indicate via per-service red status",
+                    exc_info=True,
+                )
+
+        # Surface the install-needed balloon if the build helper flagged it.
+        if observability_install_pending:
+            try:
+                # Defer one tick so the icon is fully constructed.
+                threading.Timer(1.0, tray_icon.notify_install_needed).start()
+            except Exception:
+                log.warning("install-needed balloon scheduling failed", exc_info=True)
+        try:
+            threading.Timer(2.0, tray_icon.notify_update_available).start()
+        except Exception:
+            log.warning("update balloon scheduling failed", exc_info=True)
+
         log.info("Tray mode active — dashboard at %s", url)
         log.info("Click the tray icon to open the dashboard; Quit from its menu to exit.")
         tray_icon.run()  # blocks until Quit
+
+        # Tray exited — shut down observability (Job Object would do this on
+        # Windows even on hard exit, but the clean path is courteous).
+        if observability_sup is not None:
+            try:
+                observability_sup.shutdown()
+            except Exception:
+                log.warning("ObservabilitySupervisor.shutdown failed", exc_info=True)
         return 0
 
     if args.native:

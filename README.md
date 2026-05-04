@@ -108,6 +108,27 @@ helix-status
 Point any OpenAI-compatible client at `http://127.0.0.1:11437/v1` and
 chat. Context compression happens transparently through `/context`.
 
+#### Native observability (default)
+
+First launch prompts to install ~500MB of native binaries (Prometheus,
+Tempo, Loki, Grafana, OTel Collector) into `tools/native-otel/`. The
+tray manages their lifecycle — quit the tray to stop everything.
+Right-click the tray icon → Observability ▸ Status to see per-service
+health.
+
+To skip: `set HELIX_OBSERVABILITY=0` before running `Start-helix-tray.bat`.
+
+Implementation is verified on Windows 11. macOS and Linux are capable
+but unverified — the launcher and download pipeline support both, but
+the integration suite has only been walked on Windows (see spec §3
+non-goals).
+
+> **Advanced — Docker stack.** For production-shape deployment, multi-host
+> setups, or environments where native binaries don't fit, `docker-compose
+> up -d` in `deploy/otel/` runs the same stack containerized. Wire format,
+> ports, and dashboard provisioning are identical. See
+> [deploy/otel/README.md](deploy/otel/README.md) for details.
+
 ### Seed the genome
 
 ```bash

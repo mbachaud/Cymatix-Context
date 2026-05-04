@@ -19,6 +19,15 @@ set "HELIX_OTEL_ENDPOINT=localhost:4317"
 set "HELIX_OTEL_INSECURE=1"
 set "HELIX_OTEL_SAMPLER_RATIO=1.0"
 
+REM ── Native observability sidecar (default ON) ───────────────────
+REM The tray launcher manages 5 native binaries (Prometheus, Tempo,
+REM Loki, Grafana, OTel Collector). First launch prompts to install
+REM if scripts/install-native-observability.ps1 hasn't been run yet.
+REM
+REM Set HELIX_OBSERVABILITY=0 to skip — useful when you're using the
+REM Docker compose stack at deploy/otel/ instead, or want no obs at all.
+REM set "HELIX_OBSERVABILITY=0"
+
 REM ── Budget-zone gene-cap spike (2026-04-14) ─────────────────────
 REM When set, the expression pipeline clamps max_genes based on the
 REM caller's incoming prompt token count so big prompts don't get the
