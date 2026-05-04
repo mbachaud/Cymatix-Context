@@ -3462,7 +3462,7 @@ EOF
 )"
 ```
 
-> **Plan note:** No code change in this task; it's a docs/process step. Placed mid-plan so the comment lands while the PR diff is small + focused. If the implementer prefers to defer it until merge, swap with Task 13.
+> **Plan note:** No code change in this task; it's a docs/process step. Independent of Tasks 13 + 14, so can run any time after Task 10 (which is what determines the matrix entries). Placed here so the comment lands while the PR diff is still in flight.
 
 - [ ] **Step 4: Verify the comment posted**
 
