@@ -373,9 +373,10 @@ def budget_tier_counter():
         _instruments["budget_tier"] = meter.create_counter(
             "helix_budget_tier_total",
             description="Dynamic budget tier selected per /context call, labelled "
-                        "by tier (tight | focused | broad). Tier reflects "
+                        "by tier (tight | focused | broad | abstain). Tier reflects "
                         "retrieval confidence: tight = single-gene dominance, "
-                        "focused = moderate, broad = weak signal / widen the net.",
+                        "focused = moderate, broad = weak signal / widen the net, "
+                        "abstain = below FOCUSED floor on both axes (no injection).",
         )
     return _instruments["budget_tier"]
 

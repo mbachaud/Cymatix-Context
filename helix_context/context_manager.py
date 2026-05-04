@@ -144,6 +144,29 @@ DECODER_MODES = {
 RIBOSOME_DECODER = DECODER_FULL
 
 
+# Shared marker injected when build_context has nothing useful to ship —
+# either the genome had no candidates ("denatured") or post-refinement
+# scores fell below the FOCUSED floor on both axes ("abstain"). Both
+# branches ship the same bytes so the small model's prompt-conditioning
+# is identical regardless of which short-circuit fired. The semantic
+# difference is observable only via context_health.status.
+_ABSTAIN_MARKER = "(no relevant context found in genome)"
+
+
+def _env_truthy(name: str) -> bool:
+    """Return True iff env var is set to a truthy value.
+
+    Truthy values (case-insensitive): '1', 'true', 'yes', 'on'. Anything
+    else (including unset) returns False. This is the 2-state variant of
+    helix_context.launcher.app._env_truthy — defined locally to avoid a
+    context_manager → launcher import edge.
+    """
+    v = os.environ.get(name)
+    if v is None:
+        return False
+    return v.strip().lower() in ("1", "true", "yes", "on")
+
+
 class HelixContextManager:
     """
     Main orchestrator. Sits between the client and the upstream LLM.
@@ -662,6 +685,13 @@ class HelixContextManager:
 
         max_genes = self.config.budget.max_genes_per_turn
 
+        # ABSTAIN gate enable-state: config flag AND no env override.
+        # Resolved per-call so HELIX_ABSTAIN_DISABLE flips without restart.
+        abstain_enabled = (
+            self.config.budget.abstain_enabled
+            and not _env_truthy("HELIX_ABSTAIN_DISABLE")
+        )
+
         # Budget-zone cap (spike) — clamp max_genes down when the caller's
         # incoming prompt already fills a large share of their window.
         # Returns None when the feature flag is off or the signal is
@@ -703,7 +733,7 @@ class HelixContextManager:
             )
             return ContextWindow(
                 ribosome_prompt=effective_decoder_prompt,
-                expressed_context="(no relevant context found in genome)",
+                expressed_context=_ABSTAIN_MARKER,
                 total_estimated_tokens=estimate_tokens(effective_decoder_prompt),
                 compression_ratio=1.0,
                 context_health=empty_health,
@@ -757,6 +787,33 @@ class HelixContextManager:
                 shadow_pool: List[Gene] = [g for g in candidates if scores.get(g.gene_id, 0) < floor]
                 if len(gated) >= 3:
                     candidates = gated
+
+                # ── ABSTAIN gate ──────────────────────────────────────────────────
+                # When retrieval is weak on BOTH the absolute floor AND the ratio,
+                # inject a marker-only ContextWindow so the small model answers from
+                # weights instead of digesting 12K of irrelevant noise. Reuses the
+                # existing FOCUSED_SCORE_FLOOR (defined just below) verbatim — strict
+                # < on both axes. Telemetry fires here before the early-return so
+                # tier="abstain" lands on budget_tier_counter alongside the other
+                # tier counts emitted by the existing call site below.
+                FOCUSED_SCORE_FLOOR_FOR_ABSTAIN = 2.5    # mirrors the local FOCUSED_SCORE_FLOOR below
+                if (
+                    abstain_enabled
+                    and top_score < FOCUSED_SCORE_FLOOR_FOR_ABSTAIN
+                    and ratio < 1.8
+                ):
+                    try:
+                        from .telemetry import budget_tier_counter
+                        budget_tier_counter().add(1, attributes={"tier": "abstain"})
+                    except Exception:  # pragma: no cover
+                        pass
+                    return self._build_abstain_window(
+                        query=query,
+                        effective_decoder_prompt=effective_decoder_prompt,
+                        top_score=top_score,
+                        ratio=ratio,
+                        reason="score_below_floor",
+                    )
 
                 # Confidence tiering (with shadow pool tracking)
                 #
@@ -1507,6 +1564,47 @@ class HelixContextManager:
                     log.warning("cold-tier retrieval failed", exc_info=True)
 
         return deduped[:max_genes * 2]
+
+    def _build_abstain_window(
+        self,
+        *,
+        query: str,
+        effective_decoder_prompt: str,
+        top_score: float,
+        ratio: float,
+        reason: str,
+    ) -> ContextWindow:
+        """Return the marker-only ContextWindow shipped when the ABSTAIN tier fires.
+
+        See docs/specs/2026-05-02-abstain-tier-design.md §4. Distinct from the
+        empty-candidates branch (above, in build_context) only on
+        context_health.status — the LLM-visible bytes are identical (both
+        ship _ABSTAIN_MARKER).
+        """
+        health = ContextHealth(
+            ellipticity=0.0,
+            coverage=0.0,
+            density=0.0,
+            freshness=0.0,
+            genes_available=self.genome.stats().get("total_genes", 0),
+            genes_expressed=0,
+            status="abstain",
+        )
+        return ContextWindow(
+            ribosome_prompt=effective_decoder_prompt,
+            expressed_context=_ABSTAIN_MARKER,
+            total_estimated_tokens=estimate_tokens(effective_decoder_prompt),
+            compression_ratio=1.0,
+            context_health=health,
+            metadata={
+                "query": query,
+                "genes_expressed": 0,
+                "budget_tier": "abstain",
+                "abstain_reason": reason,
+                "top_score": float(top_score),
+                "ratio": float(ratio),
+            },
+        )
 
     def _apply_candidate_refiners(
         self,
