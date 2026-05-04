@@ -291,3 +291,63 @@ def test_multi_gpu_all_dead_falls_through_to_cpu(mock_torch):
     mock_torch["probe_results"]["cuda:1"] = (False, "bad")
     info = hardware._detect()
     assert info.device_type == "cpu"
+
+
+def test_explicit_cuda_succeeds(mock_torch, monkeypatch):
+    monkeypatch.setenv("HELIX_DEVICE", "cuda")
+    mock_torch["cuda_available"] = True
+    mock_torch["cuda_device_count"] = 1
+    mock_torch["cuda_device_names"] = ["RTX 4090"]
+    mock_torch["cuda_mem"] = [(22.0, 24.0)]
+    info = hardware._detect()
+    assert info.device_type == "cuda"
+    assert info.requested_device == "cuda"
+    assert info.fallback_reason is None
+
+
+def test_explicit_cuda_falls_back_to_cpu_on_probe_failure(mock_torch, monkeypatch):
+    """Explicit cuda + no GPU available -> cpu directly (NOT rocm/mps even if available).
+
+    Spec §5.4 asymmetry: auto picks the best available; explicit means
+    'I want this exactly, downgrade to CPU if not there'."""
+    monkeypatch.setenv("HELIX_DEVICE", "cuda")
+    mock_torch["cuda_available"] = False
+    mock_torch["mps_available"] = True
+    mock_torch["mps_built"] = True
+    info = hardware._detect()
+    assert info.device_type == "cpu"
+    assert info.fallback_reason is not None
+    assert "cuda" in info.fallback_reason.lower()
+
+
+def test_helix_device_env_var_case_insensitive(mock_torch, monkeypatch):
+    monkeypatch.setenv("HELIX_DEVICE", "CPU")
+    info = hardware._detect()
+    assert info.device_type == "cpu"
+    assert info.requested_device == "cpu"
+
+
+def test_helix_device_env_var_invalid_falls_back_to_auto(mock_torch, monkeypatch, caplog):
+    monkeypatch.setenv("HELIX_DEVICE", "nonsense")
+    mock_torch["cuda_available"] = True
+    mock_torch["cuda_device_count"] = 1
+    mock_torch["cuda_device_names"] = ["RTX 4090"]
+    mock_torch["cuda_mem"] = [(22.0, 24.0)]
+    import logging
+    with caplog.at_level(logging.WARNING, logger="helix.hardware"):
+        info = hardware._detect()
+    assert info.requested_device == "auto"
+    assert info.device_type == "cuda"
+    assert any(
+        "invalid helix_device" in rec.message.lower()
+        or "ignoring helix_device" in rec.message.lower()
+        for rec in caplog.records
+    )
+
+
+def test_explicit_mps_on_non_mps_host_falls_back_to_cpu(mock_torch, monkeypatch):
+    monkeypatch.setenv("HELIX_DEVICE", "mps")
+    info = hardware._detect()
+    assert info.device_type == "cpu"
+    assert info.fallback_reason is not None
+    assert "mps" in info.fallback_reason.lower()

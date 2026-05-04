@@ -16,11 +16,33 @@ Subsequent tasks add detection logic incrementally.
 from __future__ import annotations
 
 import logging
+import os
 import platform
 from dataclasses import dataclass, field
 from typing import Any, Dict, Mapping, Optional
 
 log = logging.getLogger("helix.hardware")
+
+_VALID_DEVICES = ("auto", "cuda", "rocm", "mps", "cpu")
+
+
+def _resolve_requested_device() -> str:
+    """Resolve the user's requested device from HELIX_DEVICE env var.
+    Config plumbing is added in Task 9; for now env-var-only.
+
+    Returns one of _VALID_DEVICES; invalid values log a warning and
+    return 'auto'."""
+    env_value = os.environ.get("HELIX_DEVICE")
+    if env_value is None:
+        return "auto"
+    normalized = env_value.strip().lower()
+    if normalized not in _VALID_DEVICES:
+        log.warning(
+            "Invalid HELIX_DEVICE=%r (valid: %s); ignoring HELIX_DEVICE and using 'auto'",
+            env_value, ", ".join(_VALID_DEVICES),
+        )
+        return "auto"
+    return normalized
 
 
 def _cpuinfo_get_info() -> Optional[Dict[str, Any]]:
@@ -178,17 +200,38 @@ def _detect_mps() -> Optional[Dict[str, Any]]:
 
 def _detect() -> HardwareInfo:
     cpu = _detect_cpu()
-    requested = "auto"  # Task 7 wires env+config
+    requested = _resolve_requested_device()
 
-    for label, fn in (
-        ("cuda", lambda: _detect_cuda_or_rocm(rocm=False)),
-        ("rocm", lambda: _detect_cuda_or_rocm(rocm=True)),
-        ("mps",  _detect_mps),
-    ):
+    if requested == "auto":
+        attempts = [
+            ("cuda", lambda: _detect_cuda_or_rocm(rocm=False)),
+            ("rocm", lambda: _detect_cuda_or_rocm(rocm=True)),
+            ("mps",  _detect_mps),
+        ]
+        explicit = False
+    elif requested == "cpu":
+        attempts = []
+        explicit = True
+    elif requested == "cuda":
+        attempts = [("cuda", lambda: _detect_cuda_or_rocm(rocm=False))]
+        explicit = True
+    elif requested == "rocm":
+        attempts = [("rocm", lambda: _detect_cuda_or_rocm(rocm=True))]
+        explicit = True
+    elif requested == "mps":
+        attempts = [("mps", _detect_mps)]
+        explicit = True
+    else:
+        attempts = []
+        explicit = True
+
+    last_failure_reason: Optional[str] = None
+    for label, fn in attempts:
         try:
             d = fn()
-        except Exception:
+        except Exception as exc:
             log.warning("hardware candidate %s failed", label, exc_info=True)
+            last_failure_reason = f"{label} candidate raised: {exc}"
             continue
         if d is not None:
             return HardwareInfo(
@@ -203,6 +246,19 @@ def _detect() -> HardwareInfo:
                 requested_device=requested,
                 fallback_reason=None,
             )
+        else:
+            last_failure_reason = (
+                last_failure_reason
+                or f"{label} not available (is_available()/probe returned False)"
+            )
+
+    if requested != "auto" and requested != "cpu":
+        fallback_reason = (
+            f"requested {requested!r} but probe/availability failed: "
+            f"{last_failure_reason or 'no usable device found'}"
+        )
+    else:
+        fallback_reason = None
 
     return HardwareInfo(
         device="cpu",
@@ -214,5 +270,5 @@ def _detect() -> HardwareInfo:
         cpu_brand=cpu["cpu_brand"],
         system_ram_gb=cpu["system_ram_gb"],
         requested_device=requested,
-        fallback_reason=None,
+        fallback_reason=fallback_reason,
     )
