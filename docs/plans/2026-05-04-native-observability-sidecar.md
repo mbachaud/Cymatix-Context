@@ -72,7 +72,10 @@ Spec §11.2 — locked: Loki config is shared by Docker and native runtimes.
 from pathlib import Path
 
 import pytest
-import yaml
+
+# pyyaml ships transitively (sentence-transformers, etc.) but isn't a
+# declared dep; skip cleanly in barebones envs rather than ImportError.
+yaml = pytest.importorskip("yaml")
 
 
 REPO = Path(__file__).resolve().parent.parent
@@ -1291,7 +1294,8 @@ import re
 from pathlib import Path
 
 import pytest
-import yaml
+
+yaml = pytest.importorskip("yaml")
 
 
 REPO = Path(__file__).resolve().parent.parent
@@ -1992,20 +1996,32 @@ def test_port_already_bound_skips_spawn_and_marks_external(fake_paths):
         ObservabilitySupervisor,
     )
 
+    def _make_proc(*a, **kw):
+        m = MagicMock()
+        m.pid = 22000
+        m.poll.return_value = None
+        return m
+
     with patch(
         "helix_context.launcher.observability_supervisor.is_port_bound",
         side_effect=lambda host, port: port == 9090,
     ), patch(
-        "helix_context.launcher.observability_supervisor.subprocess.Popen"
+        "helix_context.launcher.observability_supervisor.subprocess.Popen",
+        side_effect=_make_proc,
     ) as popen, patch(
         "helix_context.launcher.observability_supervisor.wait_for_port",
         return_value=True,
     ):
         sup = ObservabilitySupervisor()
         sup.start_all()
-        spawned = [c.args[0] for c in popen.call_args_list]
+        # Each Popen call's first positional arg is the cmd list; the
+        # binary path is its first element.
+        spawned_cmds = [call.args[0] for call in popen.call_args_list]
+        spawned_bin_paths = [str(cmd[0]) for cmd in spawned_cmds]
         # No prometheus binary in the spawn list.
-        assert not any("prometheus" in str(a[0]) for a in spawned)
+        assert not any("prometheus" in p for p in spawned_bin_paths), (
+            f"prometheus should be skipped when :9090 is bound; got {spawned_bin_paths}"
+        )
         assert sup.status("prometheus") == "external"
 
 
@@ -2414,9 +2430,11 @@ class ObservabilitySupervisor:
         self._verify_binaries()
 
         # Create per-user state dirs (binaries write here).
+        # Collector has no on-disk state, but creating an empty dir is harmless
+        # and keeps the loop one line.
         state_dir(create=True)
         for s in ALL_SERVICES:
-            service_state_dir(s.replace("collector", "collector"), create=True)
+            service_state_dir(s, create=True)
 
         # Job Object on Windows.
         if sys.platform == "win32" and self._job_handle is None:
@@ -2658,9 +2676,27 @@ Adds an Observability submenu to the existing tray menu: per-service status indi
 Append to `tests/test_launcher_tray.py`:
 
 ```python
+def _menu_titles(menu) -> list:
+    """Robust extraction of item.text strings from a pystray.Menu.
+
+    pystray.Menu exposes its items via .items in 0.19+; older versions
+    expose ._items. Either way we want the list of MenuItem.text values
+    (or None for separators). This helper exists so tests don't break
+    when pystray bumps minor versions.
+    """
+    raw = getattr(menu, "items", None)
+    if raw is None:
+        raw = getattr(menu, "_items", [])
+    out = []
+    for it in raw:
+        out.append(getattr(it, "text", None))
+    return out
+
+
 def test_tray_observability_submenu_built_when_supervisor_present(tmp_path):
     """When an ObservabilitySupervisor is wired, the tray menu gains an
     Observability submenu with per-service status entries."""
+    pytest.importorskip("pystray")  # only meaningful if [launcher-tray] installed
     from helix_context.launcher.tray import HelixTrayIcon
     from helix_context.launcher.observability_supervisor import (
         ObservabilitySupervisor,
@@ -2679,18 +2715,16 @@ def test_tray_observability_submenu_built_when_supervisor_present(tmp_path):
         dashboard_url="http://127.0.0.1:11438",
         observability_supervisor=obs_sup,
     )
-    # Build the menu tree and capture item titles for the assertion. The
-    # private _build_menu returns a pystray.Menu; iterate items.
-    menu = icon._build_menu()
-    titles = [getattr(i, "text", None) for i in menu.items]
     # The Observability submenu lives as a single item titled "Observability";
     # the per-service status content is rendered when the submenu is opened.
+    titles = _menu_titles(icon._build_menu())
     assert "Observability" in titles
 
 
 def test_tray_observability_submenu_omitted_without_supervisor(tmp_path):
     """No supervisor wired → no Observability submenu (clean menu for
     users who opted out)."""
+    pytest.importorskip("pystray")
     from helix_context.launcher.tray import HelixTrayIcon
     from helix_context.launcher.state import StateStore
     from helix_context.launcher.supervisor import HelixSupervisor
@@ -2705,8 +2739,7 @@ def test_tray_observability_submenu_omitted_without_supervisor(tmp_path):
         dashboard_url="http://127.0.0.1:11438",
         observability_supervisor=None,
     )
-    menu = icon._build_menu()
-    titles = [getattr(i, "text", None) for i in menu.items]
+    titles = _menu_titles(icon._build_menu())
     assert "Observability" not in titles
 ```
 
