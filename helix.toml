@@ -90,6 +90,7 @@ replica_sync_interval = 100             # sync replicas every N inserts
 host = "127.0.0.1"
 port = 11437
 upstream = "http://localhost:11434"     # Ollama
+# upstream_timeout = 180                # Per-request timeout for proxied calls to Ollama. Default in config.py is 180s. Raise to 240+ for very slow models or large prompts; lower if you want fail-fast.
 
 # ──────────────────────────────────────────────────────────────────────
 # [headroom] — OPTIONAL PROXY LIFECYCLE (launcher only).
