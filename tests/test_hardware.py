@@ -236,3 +236,58 @@ def test_auto_falls_through_when_cuda_probe_fails(mock_torch):
     mock_torch["mps_built"] = True
     info = hardware._detect()
     assert info.device_type == "mps"
+
+
+def test_multi_gpu_picks_largest_free_vram(mock_torch):
+    """Two healthy GPUs — pick the one with more free VRAM."""
+    mock_torch["cuda_available"] = True
+    mock_torch["cuda_device_count"] = 2
+    mock_torch["cuda_device_names"] = ["RTX 3070", "RTX 4090"]
+    mock_torch["cuda_mem"] = [(4.0, 8.0), (22.0, 24.0)]
+    info = hardware._detect()
+    assert info.device == "cuda:1"
+    assert info.device_name == "RTX 4090"
+
+
+def test_multi_gpu_dead_first_device_falls_through(mock_torch, monkeypatch):
+    """device-0 mem_get_info raises (dead); device-1 healthy. Pick cuda:1."""
+    mock_torch["cuda_available"] = True
+    mock_torch["cuda_device_count"] = 2
+    mock_torch["cuda_device_names"] = ["DeadCard", "RTX 4090"]
+    mock_torch["cuda_mem"] = [(0.0, 0.0), (22.0, 24.0)]
+
+    def _mem(i):
+        if i == 0:
+            raise RuntimeError("device 0 is dead")
+        free_gb, total_gb = mock_torch["cuda_mem"][i]
+        return (int(free_gb * 1024**3), int(total_gb * 1024**3))
+    monkeypatch.setattr("torch.cuda.mem_get_info", _mem)
+
+    info = hardware._detect()
+    assert info.device == "cuda:1"
+    assert info.device_name == "RTX 4090"
+
+
+def test_multi_gpu_probe_failure_on_best_falls_through(mock_torch):
+    """Best-VRAM device probe fails; pick the next-best healthy one."""
+    mock_torch["cuda_available"] = True
+    mock_torch["cuda_device_count"] = 2
+    mock_torch["cuda_device_names"] = ["RTX 4090 (broken)", "RTX 3070"]
+    mock_torch["cuda_mem"] = [(22.0, 24.0), (6.0, 8.0)]
+    mock_torch["probe_results"]["cuda:0"] = (False, "RuntimeError: kernel launch failed")
+    info = hardware._detect()
+    assert info.device == "cuda:1"
+    assert info.device_name == "RTX 3070"
+
+
+def test_multi_gpu_all_dead_falls_through_to_cpu(mock_torch):
+    """All CUDA devices fail their probes -> CUDA candidate rejected,
+    auto-mode falls through to CPU (no MPS in this scenario)."""
+    mock_torch["cuda_available"] = True
+    mock_torch["cuda_device_count"] = 2
+    mock_torch["cuda_device_names"] = ["broken1", "broken2"]
+    mock_torch["cuda_mem"] = [(4.0, 8.0), (4.0, 8.0)]
+    mock_torch["probe_results"]["cuda:0"] = (False, "bad")
+    mock_torch["probe_results"]["cuda:1"] = (False, "bad")
+    info = hardware._detect()
+    assert info.device_type == "cpu"

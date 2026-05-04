@@ -117,8 +117,9 @@ def reset_for_test() -> None:
 
 
 def _detect_cuda_or_rocm(rocm: bool) -> Optional[Dict[str, Any]]:
-    """Returns dict with device fields, or None if not available.
-    Single-device pick (multi-GPU enumeration is Task 6)."""
+    """Enumerate live devices, pick the most-free-VRAM one that probes
+    successfully. Falls through to next-best on probe failure. Returns
+    None if no devices probe successfully."""
     import torch
     if not torch.cuda.is_available() or torch.cuda.device_count() == 0:
         return None
@@ -126,20 +127,36 @@ def _detect_cuda_or_rocm(rocm: bool) -> Optional[Dict[str, Any]]:
         return None
     if not rocm and getattr(torch.version, "hip", None) is not None:
         return None
-    idx = 0
-    free_b, total_b = torch.cuda.mem_get_info(idx)
-    device_str = f"{'rocm' if rocm else 'cuda'}:{idx}"
-    ok, reason = _probe(f"cuda:{idx}")
-    if not ok:
-        log.warning("Device %s probe failed: %s", device_str, reason)
+
+    candidates = []  # list of (free_gb, total_gb, idx)
+    for idx in range(torch.cuda.device_count()):
+        try:
+            free_b, total_b = torch.cuda.mem_get_info(idx)
+        except Exception as exc:
+            log.warning("cuda:%d mem_get_info failed (treated as dead): %s", idx, exc)
+            continue
+        candidates.append((free_b / (1024**3), total_b / (1024**3), idx))
+
+    if not candidates:
         return None
-    return {
-        "device": device_str,
-        "device_type": "rocm" if rocm else "cuda",
-        "device_name": torch.cuda.get_device_name(idx),
-        "vram_total_gb": total_b / (1024 ** 3),
-        "vram_free_gb": free_b / (1024 ** 3),
-    }
+
+    candidates.sort(reverse=True)  # largest free VRAM first
+
+    for free_gb, total_gb, idx in candidates:
+        ok, reason = _probe(f"cuda:{idx}")
+        if not ok:
+            log.warning("cuda:%d probe failed: %s — falling through", idx, reason)
+            continue
+        device_type = "rocm" if rocm else "cuda"
+        device_str = f"{device_type}:{idx}"
+        return {
+            "device": device_str,
+            "device_type": device_type,
+            "device_name": torch.cuda.get_device_name(idx),
+            "vram_total_gb": total_gb,
+            "vram_free_gb": free_gb,
+        }
+    return None
 
 
 def _detect_mps() -> Optional[Dict[str, Any]]:
