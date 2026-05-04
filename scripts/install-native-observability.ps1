@@ -171,10 +171,19 @@ foreach ($svc in $binaries.Keys) {
     }
 
     # Find the target binary anywhere inside the staging tree and copy it.
+    # The on-disk canonical name is $exeName (e.g., loki.exe), but some
+    # archives publish the binary under a platform-suffixed name (Loki
+    # ships as loki-windows-amd64.exe). Copy-Item renames it to the
+    # canonical name on the destination, so binary_path() in the supervisor
+    # continues to resolve cleanly.
     $exeName = Split-Path -Leaf $absPath
-    $found = Get-ChildItem -Path $stagingDir -Recurse -Filter $exeName -File | Select-Object -First 1
+    $archiveExeName = switch ($svc) {
+        "loki" { "loki-windows-amd64.exe" }
+        default { $exeName }
+    }
+    $found = Get-ChildItem -Path $stagingDir -Recurse -Filter $archiveExeName -File | Select-Object -First 1
     if ($null -eq $found) {
-        Write-Error "[install][$svc] $exeName not found inside $tmpArchive"
+        Write-Error "[install][$svc] $archiveExeName not found inside $tmpArchive"
         exit 5
     }
     Copy-Item -Path $found.FullName -Destination $absPath -Force
