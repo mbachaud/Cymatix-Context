@@ -267,14 +267,27 @@ Re-run a short GPQA suite (n=20, mode=on) with native observability vs the exist
 3. No migration required. Users who don't run the install script keep using Docker exactly as before — the code paths don't conflict.
 4. Telemetry confirms native vs Docker adoption (collector reports a `helix_observability_runtime` label = `native|docker|skipped`, populated by the launcher at startup).
 
-## 11. Open questions / risks
+## 11. Decisions and remaining risks
 
-1. **Grafana Windows binary licensing.** Grafana is AGPL; redistributing the binary in our repo would propagate the license. The bootstrap script downloads from `grafana.com/grafana/download` at install time — user-side download, not redistribution by us. Confirm this is the right interpretation before committing.
-2. **Loki on Windows is less battle-tested** than the other components. If startup is flaky we may degrade to "Loki disabled by default, opt-in via env var." Defer this decision to bench validation. Related: native Loki requires an explicit config file (Docker uses the image's built-in default at `/etc/loki/local-config.yaml`); we add `deploy/otel/loki-config.yaml` so both runtimes share the same source — confirm during plan-writing that the docker-compose path is updated to mount this file (preserves "zero functional change" intent).
-3. **Job Object behavior with Python.** `pywin32` exposes Job Object APIs; need to verify the kill-on-close flag actually fires when the tray Python process is force-killed (not just on clean exit). Test in integration phase. `pywin32` is not currently a dep — added under a new `launcher-observability` extra (or rolled into `launcher-tray`); plan-writing should pick the placement.
-4. **First-launch prompt UX.** A blocking "Y/n" prompt in a tray-context is awkward. Likely better as a balloon notification or a tray-menu pulse-state until the user clicks "Install observability." Decide during plan-writing.
-5. **New dependencies introduced.** `platformdirs` (state-dir resolution, cross-platform), `pywin32` (Job Object APIs, Windows-only — guard import behind `sys.platform == "win32"` per global preference). Both are net-new to the project. Plan-writing should decide which optional-dependency extra (`launcher`, `launcher-tray`, or a new `launcher-observability`) carries them.
-6. **Test plan integration item 4 ("corrupt one binary on disk").** A corrupt exe on Windows often fails at process-start with an opaque OS error rather than a clean spawn failure that the supervisor can classify. Plan-writing should pick a deterministic failure mode for this test (e.g., zero-byte file, or replace exe with a script that exits 1) so the supervisor's red-dot path is exercised reliably.
+### Decisions locked (resolved during brainstorm + spec review)
+
+- **§11.1 Grafana AGPL — locked: user-side download, not redistribution.** The bootstrap script fetches Grafana from `grafana.com/grafana/download` at install time on the user's machine. We host no Grafana binary in our repo. This is the same posture as `pip install` of any AGPL Python package: the user obtains the artifact, we provide the recipe. No license propagation to helix-context.
+
+- **§11.4 First-launch UX — locked: balloon notification + tray-menu pulse.** No blocking prompts. On detection of missing/incomplete `tools/native-otel/` install, the tray emits a Windows balloon notification ("Native observability not installed — click to install") and pulses the relevant tray-menu item until clicked or dismissed. Click → run install script in a subprocess and surface progress in the tray menu. Dismiss → mark observability "skipped" for this launch; pulse returns next launch. Requires `pystray` notification API (already a dep via `[launcher-tray]`) plus the existing tray menu plumbing.
+
+- **§11.2 Loki config sharing — locked: add `deploy/otel/loki-config.yaml` to repo and mount it in docker-compose.** Both runtimes read the same source. The docker-compose `loki` service gains a `./loki-config.yaml:/etc/loki/local-config.yaml:ro` volume mount and a `command: ["-config.file=/etc/loki/local-config.yaml"]` to point at it. Native runtime points its `--config.file` flag at the rendered template in `tools/native-otel/configs/loki.yaml`. Behavior is preserved on the Docker side because Loki's built-in default and our explicit config will be byte-identical to start; future tuning then propagates to both.
+
+- **§11.3 + §11.5 New dependencies — locked: tracked in [issue #8](https://github.com/SwiftWing21/helix-context/issues/8) (extras matrix).** Two additions:
+  - `platformdirs` — state-dir resolution, cross-platform. Lightweight (no transitive deps). Belongs in `[launcher]` (always needed when launcher is present, regardless of tray).
+  - `pywin32` — Job Object APIs, Windows-only. Belongs in `[launcher-tray]` since the Job Object cleanup is paired with the tray's lifecycle ownership; non-tray launcher modes don't manage observability subprocesses. Imports guarded behind `sys.platform == "win32"` per global preference.
+
+  Plan-writing tasks include: bumping `pyproject.toml`, posting an updating-comment on issue #8 with the new entries in the extras matrix, and updating any extras-matrix doc the issue references.
+
+### Remaining risks (require follow-up during implementation)
+
+- **Loki on Windows reliability.** Less battle-tested than the other four components. If startup is flaky during integration testing, degrade to "Loki disabled by default, opt-in via env var." Decision deferred to bench validation in the integration phase.
+- **Job Object kill-on-close verification.** `pywin32` exposes the API; we need to verify the `JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE` flag actually fires when the tray Python process is force-killed (not just on clean exit). Integration test 4 exercises this; failure here would force a fallback to atexit-style cleanup with weaker guarantees.
+- **§9 integration test 4 deterministic-failure mode.** A corrupt `.exe` on Windows often fails at process-start with an opaque OS error rather than a clean spawn failure the supervisor can classify. Plan-writing should pick a deterministic failure mode (zero-byte file, or replace exe with a script that exits 1) so the supervisor's red-dot path is exercised reliably.
 
 ## 12. Related work
 
