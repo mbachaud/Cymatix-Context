@@ -18,7 +18,7 @@
   Show what would be downloaded without actually fetching.
 
 .NOTES
-  Spec: docs/specs/2026-05-04-native-observability-sidecar-design.md §6
+  Spec: docs/specs/2026-05-04-native-observability-sidecar-design.md Section 6
 
   Exit codes:
     0  success
@@ -49,7 +49,7 @@ if (-not (Test-Path $versionsFile)) {
     exit 1
 }
 
-# Parse .versions via Python (TOML — Windows PowerShell has no native parser).
+# Parse .versions via Python (TOML -- Windows PowerShell has no native parser).
 $specJson = & $python -c @"
 import json, sys
 try:
@@ -115,7 +115,7 @@ foreach ($svc in $binaries.Keys) {
         exit 4
     }
 
-    # Extract — .zip vs .tar.gz handled inline. Tempo + otelcol-contrib
+    # Extract -- .zip vs .tar.gz handled inline. Tempo + otelcol-contrib
     # ship .tar.gz on Windows; the others ship .zip.
     New-Item -ItemType Directory -Force -Path $svcDir | Out-Null
     $stagingDir = Join-Path $env:TEMP "helix-native-otel-$svc-extract"
@@ -167,13 +167,13 @@ foreach ($svc in $binaries.Keys) {
 Write-Host "[install] Rendering runtime configs to tools/native-otel/configs/ ..."
 & $python -m helix_context.launcher.observability_render render-all
 if ($LASTEXITCODE -ne 0) {
-    Write-Error "[install] render step failed (helix_context.launcher.observability_render — landed by a later task in the native-observability-sidecar plan)"
+    Write-Error "[install] render step failed (helix_context.launcher.observability_render -- landed by a later task in the native-observability-sidecar plan)"
     exit 6
 }
 
 Write-Host "[install] Native observability install complete."
 
-# Write the completion sentinel — the helix tray polls for this file
+# Write the completion sentinel -- the helix tray polls for this file
 # every 2 s and auto-restarts the launcher when it appears, so the
 # freshly-installed binaries get picked up without the user having to
 # manually quit + re-launch. Sentinel is removed by the tray after

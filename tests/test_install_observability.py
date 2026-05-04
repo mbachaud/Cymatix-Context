@@ -130,6 +130,60 @@ def test_powershell_install_script_handles_targz():
     assert "tar" in text.lower(), "PowerShell script missing tar branch (Tempo Windows is .tar.gz)"
 
 
+def test_powershell_install_script_is_ascii_only():
+    """PowerShell 5.1 (the default `powershell.exe` on Windows) reads .ps1
+    files without a BOM as ANSI/CP1252. UTF-8 multi-byte chars (em-dashes,
+    section signs, smart quotes) become mojibake that breaks the parser
+    mid-string. Pin the script to ASCII so it parses on every Windows box.
+
+    Caught a real regression where an em-dash in a Write-Error string
+    broke the install action at runtime.
+    """
+    script = REPO / "scripts" / "install-native-observability.ps1"
+    text = script.read_text(encoding="utf-8")
+    non_ascii = [
+        (i + 1, c)
+        for i, line in enumerate(text.splitlines())
+        for c in line
+        if ord(c) > 127
+    ]
+    assert not non_ascii, (
+        f"PowerShell install script contains non-ASCII chars that will "
+        f"mojibake under powershell.exe (Windows PowerShell 5.1, no BOM): "
+        f"{non_ascii[:5]}. Use ASCII alternatives (-- for em-dash, "
+        f"'Section' for §)."
+    )
+
+
+@pytest.mark.skipif(sys.platform != "win32", reason="powershell.exe only on Windows")
+def test_powershell_install_script_parses_cleanly():
+    """Spawn powershell.exe in parse-only mode to verify the script is
+    syntactically valid. Mirrors `bash -n` for the .sh sibling. Catches
+    syntax errors AND encoding-induced parse failures (e.g., the em-dash
+    bug that the ASCII-only test above pins, viewed from the parser side).
+    """
+    script = REPO / "scripts" / "install-native-observability.ps1"
+    creationflags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
+    # `[scriptblock]::Create` parses without executing — equivalent of
+    # bash -n. Exit 0 on parse success, non-zero on parse error.
+    proc = subprocess.run(
+        [
+            "powershell.exe",
+            "-NoProfile",
+            "-NonInteractive",
+            "-Command",
+            f"$null = [scriptblock]::Create((Get-Content -Raw -Path '{script}'))",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=10,
+        creationflags=creationflags,
+    )
+    assert proc.returncode == 0, (
+        f"PowerShell parse failed:\nstderr={proc.stderr}\nstdout={proc.stdout}"
+    )
+
+
 def test_install_helpers_cli_verify_hash_returns_zero_on_match(tmp_path):
     """The CLI surface is what the shell scripts shell out to. Smoke-test
     it end-to-end so wiring drift between Python and shell is caught."""
