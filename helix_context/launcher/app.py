@@ -616,6 +616,7 @@ def main(argv: Optional[list] = None) -> int:
             headroom_supervisor=headroom_supervisor,
             headroom_dashboard_url=headroom_dashboard_url,
             observability_supervisor=observability_sup,
+            install_pending=observability_install_pending,
         )
 
         # Start observability subprocesses BEFORE tray_icon.run() blocks.

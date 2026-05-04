@@ -221,8 +221,8 @@ def test_tray_observability_submenu_built_when_supervisor_present(tmp_path):
 
 
 def test_tray_observability_submenu_omitted_without_supervisor(tmp_path):
-    """No supervisor wired → no Observability submenu (clean menu for
-    users who opted out)."""
+    """No supervisor wired AND install not pending → no Observability submenu
+    (clean menu for users who opted out via HELIX_OBSERVABILITY=0)."""
     pytest.importorskip("pystray")
     from helix_context.launcher.tray import HelixTrayIcon
     from helix_context.launcher.state import StateStore
@@ -237,9 +237,221 @@ def test_tray_observability_submenu_omitted_without_supervisor(tmp_path):
         supervisor=helix_sup,
         dashboard_url="http://127.0.0.1:11438",
         observability_supervisor=None,
+        install_pending=False,
     )
     titles = _menu_titles(icon._build_menu())
     assert "Observability" not in titles
+
+
+# ── Install-pending submenu (Task 13 fix) ──────────────────────────────
+
+
+def _build_install_pending_tray(tmp_path):
+    """Build a tray with no supervisor but install_pending=True.
+
+    Mirrors the actual app.py wiring path on a fresh checkout where
+    tools/native-otel/ is missing — _maybe_build_observability returns
+    (None, install_pending=True), and the tray must still surface a
+    submenu with an Install action.
+    """
+    pytest.importorskip("pystray")
+    from helix_context.launcher.state import StateStore
+    from helix_context.launcher.supervisor import HelixSupervisor
+
+    store = StateStore(path=tmp_path / "state.json")
+    helix_sup = HelixSupervisor(
+        store=store, helix_host="127.0.0.1", helix_port=11999,
+        helix_log_path=tmp_path / "h.log",
+    )
+    icon = HelixTrayIcon(
+        supervisor=helix_sup,
+        dashboard_url="http://127.0.0.1:11438",
+        observability_supervisor=None,
+        install_pending=True,
+    )
+    icon._icon = MagicMock()
+    return icon
+
+
+def _submenu_items_for_observability(menu):
+    """Return the visible submenu items (text-resolved) under the
+    top-level Observability entry."""
+    item = _find_observability_item(menu)
+    if item is None:
+        return []
+    sm = getattr(item, "submenu", None)
+    if sm is None:
+        return []
+    raw = getattr(sm, "items", None)
+    if raw is None:
+        raw = getattr(sm, "_items", [])
+    return [
+        _resolve_text(x) for x in raw
+        if getattr(x, "visible", True)
+    ]
+
+
+class TestInstallPendingSubmenu:
+    def test_submenu_rendered_when_install_pending_without_supervisor(
+        self, tmp_path,
+    ):
+        """Task 13 fix: when binaries are missing, the tray still shows
+        an Observability submenu so the user has a clickable Install
+        action — not just a balloon notification."""
+        icon = _build_install_pending_tray(tmp_path)
+        titles = _menu_titles(icon._build_menu())
+        # Top-level Observability entry must be present (label may carry
+        # pulse suffix when active, so use a startswith check).
+        assert any(
+            t and t.startswith("Observability") for t in titles
+        ), f"Observability label missing from top-level titles: {titles}"
+
+    def test_install_action_present_in_install_pending_submenu(
+        self, tmp_path,
+    ):
+        """The install-pending submenu must contain an "Install
+        Observability..." item that the user can click."""
+        icon = _build_install_pending_tray(tmp_path)
+        sub_titles = _submenu_items_for_observability(icon._build_menu())
+        assert any(
+            t and t.startswith("Install Observability") for t in sub_titles
+        ), f"Install action missing from submenu: {sub_titles}"
+
+    def test_install_action_invokes_powershell_with_no_window(
+        self, tmp_path,
+    ):
+        """Clicking Install Observability spawns the bundled
+        scripts/install-native-observability.ps1 via subprocess.Popen
+        with CREATE_NO_WINDOW (per global CLAUDE.md subprocess-safety
+        guideline) and is fire-and-forget (no .wait/.communicate)."""
+        icon = _build_install_pending_tray(tmp_path)
+        with patch(
+            "helix_context.launcher.tray.subprocess.Popen"
+        ) as mock_popen:
+            mock_popen.return_value = MagicMock()
+            icon._run_install_observability(None, None)
+        mock_popen.assert_called_once()
+        args, kwargs = mock_popen.call_args
+        cmd = args[0]
+        assert cmd[0].lower().endswith("powershell.exe") or cmd[0] == "powershell.exe"
+        assert "-NoProfile" in cmd
+        assert "-ExecutionPolicy" in cmd
+        assert "Bypass" in cmd
+        assert "-File" in cmd
+        # The path passed to -File must end in the install script name.
+        file_idx = cmd.index("-File")
+        script_path = cmd[file_idx + 1]
+        assert script_path.endswith("install-native-observability.ps1")
+        # CREATE_NO_WINDOW flag — value 0 on non-Windows is fine, the key
+        # is that creationflags is forwarded.
+        assert "creationflags" in kwargs
+
+    def test_install_action_path_resolves_to_repo_script(
+        self, tmp_path,
+    ):
+        """The script path must be the repo-relative
+        scripts/install-native-observability.ps1, computed from the
+        tray.py module location (not cwd-dependent)."""
+        icon = _build_install_pending_tray(tmp_path)
+        with patch(
+            "helix_context.launcher.tray.subprocess.Popen"
+        ) as mock_popen:
+            mock_popen.return_value = MagicMock()
+            icon._run_install_observability(None, None)
+        cmd = mock_popen.call_args[0][0]
+        file_idx = cmd.index("-File")
+        from pathlib import Path
+        script_path = Path(cmd[file_idx + 1])
+        # The script must actually exist at the resolved path —
+        # otherwise the user click will fail at runtime.
+        assert script_path.exists(), (
+            f"Install script not found at resolved path: {script_path}"
+        )
+
+    def test_install_action_does_not_block_tray_thread(
+        self, tmp_path,
+    ):
+        """Spec-critical: subprocess must NOT call .wait() or
+        .communicate() — that would freeze the tray UI thread for the
+        ~minutes-long install."""
+        icon = _build_install_pending_tray(tmp_path)
+        proc_mock = MagicMock()
+        with patch(
+            "helix_context.launcher.tray.subprocess.Popen",
+            return_value=proc_mock,
+        ):
+            icon._run_install_observability(None, None)
+        proc_mock.wait.assert_not_called()
+        proc_mock.communicate.assert_not_called()
+
+    def test_dismiss_item_present_in_install_pending_submenu(
+        self, tmp_path,
+    ):
+        """The install-pending submenu must include the existing
+        Dismiss action so users have a non-install opt-out path. Pulse
+        is started by notify_install_needed, which controls Dismiss
+        visibility — so we activate the pulse before sampling."""
+        icon = _build_install_pending_tray(tmp_path)
+        with patch("helix_context.launcher.tray.threading.Timer"):
+            icon.start_install_pulse()
+        try:
+            sub_titles = _submenu_items_for_observability(icon._build_menu())
+            assert any(
+                t and t.startswith("Dismiss") for t in sub_titles
+            ), f"Dismiss item missing from submenu: {sub_titles}"
+        finally:
+            icon.stop_install_pulse()
+
+    def test_pulse_label_alternates_in_install_pending_state(
+        self, tmp_path,
+    ):
+        """Pulse animation must work in install-pending state — the
+        pulse only depends on _install_pulse_active, not on supervisor
+        presence (Task 8.5 contract)."""
+        icon = _build_install_pending_tray(tmp_path)
+        with patch("helix_context.launcher.tray.threading.Timer"):
+            icon.start_install_pulse()
+        try:
+            menu = icon._build_menu()
+            item = _find_observability_item(menu)
+            assert item is not None
+            icon._install_pulse_state = 0
+            label_a = _resolve_text(item)
+            icon._install_pulse_state = 1
+            label_b = _resolve_text(item)
+            assert label_a != label_b
+            assert label_a.startswith("Observability ")
+            assert label_b.startswith("Observability ")
+            # ●/○ alternation
+            assert ("●" in label_a and "○" in label_b) or (
+                "○" in label_a and "●" in label_b
+            )
+        finally:
+            icon.stop_install_pulse()
+
+    def test_install_pending_default_false_preserves_existing_callers(
+        self, tmp_path, fake_supervisor,
+    ):
+        """Constructor's install_pending kwarg must default to False so
+        existing call sites keep working without modification."""
+        icon = HelixTrayIcon(
+            supervisor=fake_supervisor,
+            dashboard_url="http://127.0.0.1:11438/",
+        )
+        assert icon._install_pending is False
+
+    def test_install_action_swallows_subprocess_errors(
+        self, tmp_path,
+    ):
+        """Spawn failures must not crash the tray thread — log + return
+        per the global error-handling rule."""
+        icon = _build_install_pending_tray(tmp_path)
+        with patch(
+            "helix_context.launcher.tray.subprocess.Popen",
+            side_effect=OSError("powershell missing"),
+        ):
+            # Should not raise
+            icon._run_install_observability(None, None)
 
 
 # ── Task 8.5: install-pulse on the Observability submenu ───────────────

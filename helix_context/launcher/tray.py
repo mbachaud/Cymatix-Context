@@ -29,9 +29,11 @@ from __future__ import annotations
 import logging
 import os
 import signal
+import subprocess
 import sys
 import threading
 import webbrowser
+from pathlib import Path
 from typing import Callable, Optional
 
 from .supervisor import (
@@ -106,6 +108,7 @@ class HelixTrayIcon:
         headroom_supervisor=None,
         headroom_dashboard_url: Optional[str] = None,
         observability_supervisor=None,
+        install_pending: bool = False,
     ) -> None:
         self.supervisor = supervisor
         self.dashboard_url = dashboard_url
@@ -123,6 +126,11 @@ class HelixTrayIcon:
         # enabled (HELIX_OBSERVABILITY != 0 and install bootstrap is
         # complete). Drives the Observability submenu (spec §7.5, §11.4).
         self.observability = observability_supervisor
+        # Task 13 fix: when binaries are missing, _maybe_build_observability
+        # returns (None, install_pending=True). The tray must still surface
+        # the Observability submenu in that state so the user has a
+        # clickable Install action — not just an ephemeral balloon.
+        self._install_pending = bool(install_pending)
         self._icon = None  # type: ignore[assignment]
         self._quit_event = threading.Event()
 
@@ -258,6 +266,51 @@ class HelixTrayIcon:
         self.stop_install_pulse()
         self._install_pulse_dismissed = True
         self._refresh_menu()
+
+    def _run_install_observability(self, icon, item) -> None:  # noqa: ARG002
+        """Spawn the bundled install script as a fire-and-forget
+        subprocess (Task 13 fix). Invoked when the user clicks
+        "Install Observability..." from the install-pending submenu.
+
+        The install runs to completion in its own PowerShell process —
+        we never .wait() or .communicate() because that would freeze the
+        tray UI thread for the multi-minute download/extract pass. If
+        the user closes the tray before install completes, the spawned
+        subprocess keeps running.
+        """
+        # repo-relative scripts/install-native-observability.ps1 — three
+        # parents up from tray.py:
+        #   tray.py → helix_context/launcher/ → helix_context/ → <repo>/
+        script_path = (
+            Path(__file__).resolve().parent.parent.parent
+            / "scripts"
+            / "install-native-observability.ps1"
+        )
+        cmd = [
+            "powershell.exe",
+            "-NoProfile",
+            "-ExecutionPolicy", "Bypass",
+            "-File", str(script_path),
+        ]
+        log.info("Tray: launching native-observability installer (%s)",
+                 script_path)
+        # Treat clicking Install as acknowledgment — stop the pulse so
+        # the user gets visual feedback even if the install takes a while.
+        self.stop_install_pulse()
+        try:
+            # Fire-and-forget: no .wait/.communicate. CREATE_NO_WINDOW
+            # keeps the install console hidden on Windows (per global
+            # CLAUDE.md subprocess-safety guideline). On non-Windows
+            # platforms CREATE_NO_WINDOW is 0, which Popen tolerates.
+            subprocess.Popen(
+                cmd,
+                creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+            )
+        except Exception:
+            log.warning(
+                "Tray: failed to launch install-native-observability.ps1",
+                exc_info=True,
+            )
 
     def _start_helix(self, icon, item) -> None:  # noqa: ARG002
         log.info("Tray: starting helix")
@@ -422,11 +475,17 @@ class HelixTrayIcon:
                     enabled=lambda item: self.headroom.is_running(),  # noqa: ARG005
                 ),
             ])
-        # Observability submenu — only when an ObservabilitySupervisor is
-        # wired (spec §7.5). Per-service status entries are disabled menu
-        # items whose labels are computed lazily so the green/red dots
-        # reflect the latest health-loop snapshot every time the user
-        # opens the menu.
+        # Observability submenu — rendered in two cases (spec §7.5, §11.4
+        # + Task 13 fix):
+        #   1. Supervisor wired (install complete, services running): per-
+        #      service status + restart actions + Open log directory.
+        #   2. Supervisor None but install_pending=True (Task 13 — fresh
+        #      checkout, binaries missing): Install Observability action +
+        #      Dismiss reminder. Without this branch the user sees ONLY
+        #      the balloon and has no clickable surface.
+        # When supervisor is None AND install_pending is False (e.g. user
+        # opted out via HELIX_OBSERVABILITY=0), the submenu is omitted
+        # entirely so the menu stays clean.
         if self.observability is not None:
             obs_services = ["collector", "prometheus", "tempo", "loki", "grafana"]
 
@@ -457,6 +516,26 @@ class HelixTrayIcon:
             ))
             # Top-level "Observability" label is callable so it can render
             # the pulse suffix (● / ○) without rebuilding the whole menu.
+            items.append(pystray.Menu.SEPARATOR)
+            items.append(pystray.MenuItem(
+                self._observability_label,
+                pystray.Menu(*obs_items),
+            ))
+        elif self._install_pending:
+            # Task 13 fix path: no supervisor (install incomplete) but
+            # the caller flagged install_pending. Surface a minimal
+            # submenu with the Install action + Dismiss reminder.
+            obs_items = [
+                pystray.MenuItem(
+                    "Install Observability...",
+                    self._run_install_observability,
+                ),
+                pystray.MenuItem(
+                    "Dismiss install reminder",
+                    self._dismiss_install_pulse,
+                    visible=lambda item: self._install_pulse_active,  # noqa: ARG005
+                ),
+            ]
             items.append(pystray.Menu.SEPARATOR)
             items.append(pystray.MenuItem(
                 self._observability_label,
