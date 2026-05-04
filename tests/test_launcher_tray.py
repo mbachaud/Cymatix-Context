@@ -173,3 +173,70 @@ class TestCLIIntegration:
     def test_check_tray_available_returns_bool(self):
         from helix_context.launcher.app import _check_tray_available
         assert isinstance(_check_tray_available(), bool)
+
+
+def _menu_titles(menu) -> list:
+    """Robust extraction of item.text strings from a pystray.Menu.
+
+    pystray.Menu exposes its items via .items in 0.19+; older versions
+    expose ._items. Either way we want the list of MenuItem.text values
+    (or None for separators). This helper exists so tests don't break
+    when pystray bumps minor versions.
+    """
+    raw = getattr(menu, "items", None)
+    if raw is None:
+        raw = getattr(menu, "_items", [])
+    out = []
+    for it in raw:
+        out.append(getattr(it, "text", None))
+    return out
+
+
+def test_tray_observability_submenu_built_when_supervisor_present(tmp_path):
+    """When an ObservabilitySupervisor is wired, the tray menu gains an
+    Observability submenu with per-service status entries."""
+    pytest.importorskip("pystray")  # only meaningful if [launcher-tray] installed
+    from helix_context.launcher.tray import HelixTrayIcon
+    from helix_context.launcher.observability_supervisor import (
+        ObservabilitySupervisor,
+    )
+    from helix_context.launcher.state import StateStore
+    from helix_context.launcher.supervisor import HelixSupervisor
+
+    store = StateStore(path=tmp_path / "state.json")
+    helix_sup = HelixSupervisor(
+        store=store, helix_host="127.0.0.1", helix_port=11999,
+        helix_log_path=tmp_path / "h.log",
+    )
+    obs_sup = ObservabilitySupervisor()
+    icon = HelixTrayIcon(
+        supervisor=helix_sup,
+        dashboard_url="http://127.0.0.1:11438",
+        observability_supervisor=obs_sup,
+    )
+    # The Observability submenu lives as a single item titled "Observability";
+    # the per-service status content is rendered when the submenu is opened.
+    titles = _menu_titles(icon._build_menu())
+    assert "Observability" in titles
+
+
+def test_tray_observability_submenu_omitted_without_supervisor(tmp_path):
+    """No supervisor wired → no Observability submenu (clean menu for
+    users who opted out)."""
+    pytest.importorskip("pystray")
+    from helix_context.launcher.tray import HelixTrayIcon
+    from helix_context.launcher.state import StateStore
+    from helix_context.launcher.supervisor import HelixSupervisor
+
+    store = StateStore(path=tmp_path / "state.json")
+    helix_sup = HelixSupervisor(
+        store=store, helix_host="127.0.0.1", helix_port=11999,
+        helix_log_path=tmp_path / "h.log",
+    )
+    icon = HelixTrayIcon(
+        supervisor=helix_sup,
+        dashboard_url="http://127.0.0.1:11438",
+        observability_supervisor=None,
+    )
+    titles = _menu_titles(icon._build_menu())
+    assert "Observability" not in titles

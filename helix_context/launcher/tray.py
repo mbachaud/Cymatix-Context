@@ -29,6 +29,7 @@ from __future__ import annotations
 import logging
 import os
 import signal
+import sys
 import threading
 import webbrowser
 from typing import Callable, Optional
@@ -104,6 +105,7 @@ class HelixTrayIcon:
         prometheus_url: Optional[str] = None,
         headroom_supervisor=None,
         headroom_dashboard_url: Optional[str] = None,
+        observability_supervisor=None,
     ) -> None:
         self.supervisor = supervisor
         self.dashboard_url = dashboard_url
@@ -117,6 +119,10 @@ class HelixTrayIcon:
         # allowed to manage one from config.
         self.headroom = headroom_supervisor
         self.headroom_dashboard_url = headroom_dashboard_url
+        # Optional — wired when the native observability sidecar stack is
+        # enabled (HELIX_OBSERVABILITY != 0 and install bootstrap is
+        # complete). Drives the Observability submenu (spec §7.5, §11.4).
+        self.observability = observability_supervisor
         self._icon = None  # type: ignore[assignment]
         self._quit_event = threading.Event()
 
@@ -193,6 +199,39 @@ class HelixTrayIcon:
             log.error("Tray Headroom stop failed: %s", exc, exc_info=True)
         finally:
             self._refresh_menu()
+
+    # ── Observability handlers ────────────────────────────────────
+
+    def _restart_obs_service(self, service: str):
+        def _h(icon, item):  # noqa: ARG001 — pystray API
+            if self.observability is None:
+                return
+            log.info("Tray: restart observability/%s", service)
+            try:
+                self.observability.restart_service(service)
+            except Exception:
+                log.warning("Tray restart obs/%s failed", service, exc_info=True)
+            finally:
+                self._refresh_menu()
+        return _h
+
+    def _open_obs_log_dir(self, icon, item):  # noqa: ARG002
+        from .observability_paths import logs_dir
+        p = logs_dir(create=True)
+        log.info("Tray: open log dir %s", p)
+        try:
+            if os.name == "nt":
+                os.startfile(str(p))  # type: ignore[attr-defined]
+            else:
+                import subprocess
+                opener = "open" if sys.platform == "darwin" else "xdg-open"
+                subprocess.Popen(
+                    [opener, str(p)],
+                    creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+                    start_new_session=(sys.platform != "win32"),
+                )
+        except Exception:
+            log.warning("Tray: failed to open log dir", exc_info=True)
 
     def _start_helix(self, icon, item) -> None:  # noqa: ARG002
         log.info("Tray: starting helix")
@@ -357,11 +396,59 @@ class HelixTrayIcon:
                     enabled=lambda item: self.headroom.is_running(),  # noqa: ARG005
                 ),
             ])
+        # Observability submenu — only when an ObservabilitySupervisor is
+        # wired (spec §7.5). Per-service status entries are disabled menu
+        # items whose labels are computed lazily so the green/red dots
+        # reflect the latest health-loop snapshot every time the user
+        # opens the menu.
+        if self.observability is not None:
+            obs_services = ["collector", "prometheus", "tempo", "loki", "grafana"]
+
+            def _status_label(svc: str):
+                return lambda item: f"{svc.capitalize()}: {self.observability.status(svc)}"  # noqa: ARG005
+
+            obs_items = [
+                pystray.MenuItem(
+                    _status_label(svc), None, enabled=False,
+                )
+                for svc in obs_services
+            ]
+            obs_items.append(pystray.Menu.SEPARATOR)
+            for svc in obs_services:
+                obs_items.append(pystray.MenuItem(
+                    f"Restart {svc}", self._restart_obs_service(svc),
+                ))
+            obs_items.append(pystray.Menu.SEPARATOR)
+            obs_items.append(pystray.MenuItem(
+                "Open log directory", self._open_obs_log_dir,
+            ))
+            items.append(pystray.Menu.SEPARATOR)
+            items.append(pystray.MenuItem(
+                "Observability", pystray.Menu(*obs_items),
+            ))
+
         items.extend([
             pystray.Menu.SEPARATOR,
             pystray.MenuItem("Quit", self._quit),
         ])
         return pystray.Menu(*items)
+
+    def notify_install_needed(self) -> None:
+        """Show a Windows balloon prompting the user to install native
+        observability binaries. Called by app.py after detecting the
+        bootstrap is missing or incomplete (spec §11.4)."""
+        if self._icon is None:
+            return
+        try:
+            # pystray's notify is a no-op on backends that don't support it.
+            self._icon.notify(
+                "Native observability not installed — "
+                "right-click the tray icon, choose Observability ▸ "
+                "Install, or run scripts/install-native-observability.ps1",
+                title="Helix Launcher",
+            )
+        except Exception:
+            log.warning("notify_install_needed failed", exc_info=True)
 
     def _refresh_menu(self) -> None:
         if self._icon is not None:
