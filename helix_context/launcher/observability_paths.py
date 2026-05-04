@@ -41,7 +41,11 @@ def _user_data_dir() -> Path:
             "platformdirs is required. "
             "Install with: pip install helix-context[launcher]"
         ) from exc
-    return Path(user_data_dir(_APP_NAME))
+    # appauthor=False on Windows omits the appauthor folder; without it,
+    # platformdirs reuses appname for both, producing a doubled
+    # ...\helix-context\helix-context\... segment. Spec §5 documents the
+    # single-segment form, so opt out.
+    return Path(user_data_dir(_APP_NAME, appauthor=False))
 
 
 def _repo_root() -> Path:

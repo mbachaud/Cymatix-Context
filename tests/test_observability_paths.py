@@ -59,3 +59,16 @@ def test_state_dir_creates_on_request(tmp_path, monkeypatch):
     monkeypatch.setattr(ops, "_user_data_dir", lambda: tmp_path)
     p = ops.state_dir(create=True)
     assert p.exists()
+
+
+def test_state_dir_no_doubled_helix_context_segment():
+    """Spec §5 documents %LOCALAPPDATA%\\helix-context\\observability\\
+    (single helix-context segment). Without appauthor=False, platformdirs
+    on Windows produces ...\\helix-context\\helix-context\\... — pinning
+    against that regression here."""
+    from helix_context.launcher.observability_paths import state_dir
+    parts = state_dir().parts
+    assert parts.count("helix-context") == 1, (
+        f"state_dir must contain exactly one 'helix-context' segment per "
+        f"spec §5; got {state_dir()!s}"
+    )
