@@ -62,16 +62,24 @@ This unblocks Task 4 (CPU detection). Pure dep change, no tests.
 Run: `grep -n "launcher" pyproject.toml`
 Expected: locates the `launcher = [...]` and `launcher-tray = [...]` extras lines (sidecar PR landed these around 2026-05-04).
 
-- [ ] **Step 2: Add `py-cpuinfo>=9.0` to both `launcher` and `launcher-tray` extras**
+- [ ] **Step 2: Add `py-cpuinfo>=9.0` to ALL THREE launcher extras (`launcher`, `launcher-native`, `launcher-tray`)**
+
+There are three extras, not two — `launcher-native` was added in the native-observability sidecar PR and also pulls launcher-class deps. All three need the cpuinfo dep so the cpu_brand path doesn't `ImportError` for users on `launcher-native` only.
 
 ```toml
 launcher = ["jinja2>=3.1", "psutil>=5.9", "platformdirs>=4.0", "py-cpuinfo>=9.0"]
+launcher-native = [
+    "jinja2>=3.1", "psutil>=5.9", "platformdirs>=4.0", "py-cpuinfo>=9.0",
+    # ... existing native-only deps stay as they are
+]
 launcher-tray = [
     "jinja2>=3.1", "psutil>=5.9", "platformdirs>=4.0", "py-cpuinfo>=9.0",
     "pystray>=0.19", "Pillow>=10",
     "pywin32>=306; sys_platform == 'win32'",
 ]
 ```
+
+(Implementer: open the file, locate the three extras at pyproject.toml:61, :62, :69, add `py-cpuinfo>=9.0` to each. Do not invent deps for `launcher-native` — leave its native-only deps untouched and just append py-cpuinfo.)
 
 - [ ] **Step 3: Install the new dep into the active venv**
 
@@ -1242,14 +1250,17 @@ Wires the `[hardware]` TOML section through `Config` and into the hardware singl
 
 - [ ] **Step 1: Inspect current config shape**
 
-Run: `grep -n "device\|class Ribosome\|class Server\|class.*Config" helix_context/config.py | head -30`
-Expected: locates `Ribosome` config class + the `from_dict` constructors.
+Run: `grep -n "def load_config\|class HelixConfig\|class Ribosome" helix_context/config.py | head -10`
+Expected: confirms `class HelixConfig` at line ~304 and `def load_config(path)` at line ~335. The actual public API is `load_config()` returning a `HelixConfig` instance — there is NO `Config.from_file` and NO `from_dict` classmethod. Section parsing happens inline inside `load_config()`.
 
 - [ ] **Step 2: Write the failing tests in `tests/test_config.py`**
 
-Append:
+Append (note: imports use `load_config` and `HelixConfig`, NOT `Config.from_file`):
 
 ```python
+from helix_context.config import load_config
+
+
 def test_hardware_section_parses(tmp_path):
     """[hardware] section parses with all defaults."""
     cfg_text = """
@@ -1260,7 +1271,7 @@ low_vram_threshold_gb = 4.0
 """
     p = tmp_path / "helix.toml"
     p.write_text(cfg_text)
-    cfg = Config.from_file(str(p))
+    cfg = load_config(str(p))
     assert cfg.hardware.device == "cuda"
     assert cfg.hardware.batch_sizes == {}  # "auto" -> empty override dict
     assert cfg.hardware.low_vram_threshold_gb == 4.0
@@ -1274,7 +1285,7 @@ batch_sizes = { rerank = 16, splice = 32 }
 """
     p = tmp_path / "helix.toml"
     p.write_text(cfg_text)
-    cfg = Config.from_file(str(p))
+    cfg = load_config(str(p))
     assert cfg.hardware.batch_sizes == {"rerank": 16, "splice": 32}
 
 
@@ -1287,7 +1298,7 @@ device = "cuda"
     p = tmp_path / "helix.toml"
     p.write_text(cfg_text)
     with caplog.at_level("WARNING", logger="helix.config"):
-        cfg = Config.from_file(str(p))
+        cfg = load_config(str(p))
     assert cfg.hardware.device == "cuda"  # ribosome value used
     assert any(
         "ribosome" in rec.message.lower() and "deprecated" in rec.message.lower()
@@ -1307,7 +1318,7 @@ device = "cuda"
     p = tmp_path / "helix.toml"
     p.write_text(cfg_text)
     with caplog.at_level("WARNING", logger="helix.config"):
-        cfg = Config.from_file(str(p))
+        cfg = load_config(str(p))
     assert cfg.hardware.device == "cuda"  # [hardware] wins
     assert any(
         "deprecated" in rec.message.lower() and "override" in rec.message.lower()
@@ -1319,7 +1330,7 @@ def test_no_device_config_defaults_to_auto(tmp_path):
     """Empty config -> [hardware].device = "auto"."""
     p = tmp_path / "helix.toml"
     p.write_text("# empty\n")
-    cfg = Config.from_file(str(p))
+    cfg = load_config(str(p))
     assert cfg.hardware.device == "auto"
     assert cfg.hardware.batch_sizes == {}
 ```
@@ -1329,9 +1340,9 @@ def test_no_device_config_defaults_to_auto(tmp_path):
 Run: `pytest tests/test_config.py::test_hardware_section_parses -v`
 Expected: `AttributeError: 'Config' object has no attribute 'hardware'`.
 
-- [ ] **Step 4: Add `Hardware` config dataclass + parser**
+- [ ] **Step 4: Add `Hardware` config dataclass + parser inside `load_config`**
 
-In `helix_context/config.py`, add a `Hardware` dataclass (near `Ribosome`):
+In `helix_context/config.py`, add a `Hardware` dataclass near the `HelixConfig` definition (around line 290-304):
 
 ```python
 @dataclass
@@ -1342,9 +1353,12 @@ class Hardware:
     low_vram_threshold_gb: float = 4.0
 ```
 
-In `Config.from_dict()` (or wherever the section parsers live), add:
+Add `hardware: Hardware = field(default_factory=Hardware)` as a field on `HelixConfig`.
+
+Inside `load_config()` (around line 335+), after the existing `[ribosome]` section is parsed (look for "# Ribosome" comment block, ~line 357), add:
 
 ```python
+# Hardware section
 hw = data.get("hardware", {})
 if isinstance(hw.get("batch_sizes"), str) and hw["batch_sizes"] == "auto":
     bs = {}
@@ -1369,15 +1383,14 @@ if ribosome_device is not None:
         )
         hardware_device = ribosome_device
 
-hardware_cfg = Hardware(
+cfg.hardware = Hardware(
     device=str(hardware_device),
     batch_sizes=bs,
     low_vram_threshold_gb=float(hw.get("low_vram_threshold_gb", 4.0)),
 )
-cfg.hardware = hardware_cfg
 ```
 
-(Implementer: place these blocks in the existing `from_dict`/`from_file` flow at the right indent level. The exact line is whatever follows the existing `[ribosome]` parse.)
+(`cfg` is the `HelixConfig` instance under construction in `load_config()` — implementer: confirm the variable name in your local context; older code may use `helix_config` or similar.)
 
 - [ ] **Step 5: Run config tests**
 
@@ -1454,7 +1467,23 @@ def reset_for_test() -> None:
     _config_overrides = {}
 ```
 
-- [ ] **Step 7: Add hardware-side test for config flow**
+- [ ] **Step 7: Wire `init_from_config` into server startup BEFORE backends construct**
+
+This is critical for correctness. The hardware singleton caches on first `get_hardware()` call. If a backend's `__init__` (deberta / nli / splade / sema) calls `get_hardware()` before `init_from_config()` runs, the singleton caches an env-only result and the config-supplied `device` + `batch_size_overrides` are lost.
+
+In `helix_context/server.py`, find the early-startup block where `cfg = load_config(...)` is called and where the helix object is constructed. Add immediately after `cfg = load_config(...)`:
+
+```python
+from helix_context.hardware import init_from_config
+init_from_config(
+    config_device=cfg.hardware.device,
+    batch_size_overrides=cfg.hardware.batch_sizes,
+)
+```
+
+This must happen BEFORE any code path that might construct `Ribosome` / `DeBERTaRibosome` / `NLIClassifier` / `SemaCodec` / call `splade_backend.encode()`.
+
+- [ ] **Step 8: Add hardware-side test for config flow**
 
 Append to `tests/test_hardware.py`:
 
@@ -1473,16 +1502,46 @@ def test_init_from_config_routes_through_singleton(mock_torch):
     assert info.requested_device == "cuda"
     assert info.batch_size_overrides == {"rerank": 8}
     assert hardware.recommended_batch_size("rerank") == 8  # override wins
+
+
+def test_init_from_config_must_run_before_get_hardware(mock_torch, monkeypatch):
+    """Regression pin: if get_hardware() runs before init_from_config(),
+    the cached singleton ignores config. This test documents that
+    server startup MUST call init_from_config() first."""
+    monkeypatch.setenv("HELIX_DEVICE", "auto")
+    mock_torch["cuda_available"] = True
+    mock_torch["cuda_device_count"] = 1
+    mock_torch["cuda_device_names"] = ["RTX 4090"]
+    mock_torch["cuda_mem"] = [(22.0, 24.0)]
+    hardware.reset_for_test()
+    # Simulate a backend calling get_hardware() too early.
+    info_early = hardware.get_hardware()
+    assert info_early.batch_size_overrides == {}
+    # init_from_config now runs but the cache is already poisoned.
+    info_late = hardware.init_from_config(
+        config_device="cuda",
+        batch_size_overrides={"rerank": 8},
+    )
+    # The cached singleton wins; the config-supplied overrides are LOST.
+    # This is by design — init_from_config is idempotent. The fix is to
+    # call init_from_config FIRST in server startup.
+    assert info_late.batch_size_overrides == {}
+    # Operator must reset_for_test if they want to override — which is
+    # exactly the wiring guarantee Step 7 enforces.
 ```
 
 Run: `pytest tests/test_hardware.py -v`
-Expected: 32 passed.
+Expected: 33 passed.
 
-- [ ] **Step 8: Commit**
+- [ ] **Step 9: Commit**
 
 ```bash
-git add helix_context/hardware.py helix_context/config.py tests/test_config.py tests/test_hardware.py
-git commit -m "feat(hardware): config plumbing — [hardware] section + ribosome.device shim"
+git add helix_context/hardware.py helix_context/config.py helix_context/server.py tests/test_config.py tests/test_hardware.py
+git commit -m "feat(hardware): config plumbing — [hardware] section + ribosome.device shim
+
+Wires init_from_config() at server startup BEFORE any backend
+constructs to avoid the cached-singleton-poisoning failure mode.
+Regression pinned in test_init_from_config_must_run_before_get_hardware."
 ```
 
 ---
@@ -1518,7 +1577,7 @@ low_vram_threshold_gb = 4.0
 
 - [ ] **Step 2: Verify config still loads**
 
-Run: `python -c "from helix_context.config import Config; c = Config.from_file('helix.toml'); print(c.hardware)"`
+Run: `python -c "from helix_context.config import load_config; c = load_config('helix.toml'); print(c.hardware)"`
 Expected: prints `Hardware(device='auto', batch_sizes={}, low_vram_threshold_gb=4.0)`.
 
 - [ ] **Step 3: Commit**
@@ -1538,16 +1597,83 @@ This task is split into 4 sub-tasks (one per backend) so each commit is reviewab
 
 **Files:**
 - Modify: `helix_context/deberta_backend.py`
-- Modify: `tests/test_ribosome.py`
+- Create: `tests/test_deberta_backend.py` (NEW — `tests/test_ribosome.py` only tests the Ollama-backed `Ribosome`, not `DeBERTaRibosome`. There is no existing test harness for the cross-encoder backend, so this is a fresh file.)
 
 - [ ] **Step 1: Read the current `re_rank` and `splice` to understand the all-at-once tokenize pattern**
 
-Run: `grep -n "def re_rank\|def splice\|tokenizer(.*texts_a" helix_context/deberta_backend.py`
-Expected: locates the entry points + the tokenizer call sites.
+Run: `grep -n "def re_rank\|def splice\|tokenizer(.*texts_a\|class DeBERTaRibosome" helix_context/deberta_backend.py`
+Expected: locates `class DeBERTaRibosome`, `def re_rank`, `def splice`, and the tokenizer call sites (`self._rerank_tokenizer(texts_a, texts_b, ...)`).
 
-- [ ] **Step 2: Write a test that PINS the chunked-batch behavior**
+- [ ] **Step 2: Create the failing test in a NEW file `tests/test_deberta_backend.py`**
 
-In `tests/test_ribosome.py`, add a test that mocks the tokenizer + model, forces a 16-batch via `recommended_batch_size`, feeds 100 candidates, and asserts the tokenizer was called 7 times (6 full + 1 partial). Adapt to existing fixtures in that file.
+Since no existing fixtures cover DeBERTa, build minimal fakes that count tokenizer calls. Pattern uses pytest + monkeypatch (matches `tests/test_observability_paths.py` style):
+
+```python
+"""Unit tests for helix_context.deberta_backend (mocked tokenizer + model).
+
+Exists separately from tests/test_ribosome.py because that file tests the
+Ollama-backed Ribosome class with MockBackend, not the DeBERTa cross-encoder
+backend. The chunked-batch test below pins that re_rank/splice consume
+recommended_batch_size from the hardware module instead of one-shot
+tokenizing all pairs.
+"""
+from __future__ import annotations
+
+from unittest.mock import MagicMock
+import pytest
+import torch
+
+from helix_context import hardware
+
+
+@pytest.fixture(autouse=True)
+def _reset_hardware_cache():
+    hardware.reset_for_test()
+    yield
+    hardware.reset_for_test()
+
+
+def _make_gene(gene_id: str, content: str = "x", domains=None):
+    # Build the smallest Gene-like object accepted by re_rank's pair-builder.
+    # See helix_context/schemas.py for the Gene shape; if Gene requires more
+    # fields, expand here.
+    from helix_context.schemas import Gene
+    return Gene(gene_id=gene_id, content=content, ...)  # adapt to real Gene shape
+
+
+def test_deberta_rerank_chunks_in_recommended_batch_size(monkeypatch):
+    """Force batch=16 via override; feed 100 candidates; expect 7 tokenizer
+    calls (6 full + 1 partial of 4)."""
+    # Force the hardware singleton to a CPU info with a rerank=16 override.
+    info = hardware.HardwareInfo(
+        device="cpu", device_type="cpu", device_name="test",
+        vram_total_gb=None, vram_free_gb=None,
+        cpu_arch="x86_64", cpu_brand="test",
+        system_ram_gb=16.0, requested_device="auto",
+        fallback_reason=None, batch_size_overrides={"rerank": 16},
+    )
+    monkeypatch.setattr(hardware, "_detect", lambda: info)
+
+    from helix_context.deberta_backend import DeBERTaRibosome
+
+    # Stub tokenizer + model on a fresh DeBERTaRibosome instance.
+    rib = DeBERTaRibosome.__new__(DeBERTaRibosome)  # bypass __init__
+    rib._device = torch.device("cpu")
+    rib._rerank_pretrained = False
+    rib._rerank_tokenizer = MagicMock(return_value=MagicMock(
+        to=lambda dev: {"input_ids": torch.zeros(1, 1, dtype=torch.long)}
+    ))
+    fake_logits = MagicMock(squeeze=lambda dim: torch.zeros(16))
+    rib._rerank_model = MagicMock(return_value=MagicMock(logits=fake_logits))
+
+    candidates = [_make_gene(f"g_{i}") for i in range(100)]
+    rib.re_rank("query", candidates, k=10)
+
+    # 100 candidates / 16 batch = 6 full + 1 partial = 7 tokenizer calls.
+    assert rib._rerank_tokenizer.call_count == 7
+```
+
+(Implementer note: the `_make_gene` helper above sketches the call site but the real `Gene` constructor signature lives in `helix_context/schemas.py` — fill in required fields when writing the test. Confirm with `grep -n "class Gene" helix_context/schemas.py`.)
 
 - [ ] **Step 3: Run test to verify it fails**
 
@@ -1607,13 +1733,13 @@ def __init__(self, ..., device: Optional[str] = None, ...):
 
 - [ ] **Step 5: Run tests**
 
-Run: `pytest tests/test_ribosome.py -v`
-Expected: all existing tests still pass + the new chunked-batch test passes.
+Run: `pytest tests/test_deberta_backend.py tests/test_ribosome.py -v`
+Expected: new chunked-batch test passes; existing test_ribosome.py tests (Ollama backend) unaffected.
 
 - [ ] **Step 6: Commit**
 
 ```bash
-git add helix_context/deberta_backend.py tests/test_ribosome.py
+git add helix_context/deberta_backend.py tests/test_deberta_backend.py
 git commit -m "feat(deberta): chunk re_rank+splice batches via recommended_batch_size"
 ```
 
@@ -1719,13 +1845,13 @@ git add helix_context/splade_backend.py
 git commit -m "feat(splade): consult hardware module for device + default batch_size"
 ```
 
-#### Task 11d: `sema.py` — `SemanticEncoder` consults hardware module for default device
+#### Task 11d: `sema.py` — `SemaCodec` consults hardware module for default device
 
 **Files:**
-- Modify: `helix_context/sema.py`
+- Modify: `helix_context/sema.py` (the class is `SemaCodec` at line 112, NOT `SemanticEncoder` — the spec doc had a typo carried into the v0 plan; fixed here)
 - Modify: `tests/test_sema.py`
 
-- [ ] **Step 1: Update `SemanticEncoder.__init__`**
+- [ ] **Step 1: Update `SemaCodec.__init__`**
 
 ```python
 def __init__(self, model_name="...", device=None):
@@ -1742,7 +1868,7 @@ def __init__(self, model_name="...", device=None):
 In `tests/test_sema.py`:
 
 ```python
-def test_semantic_encoder_default_device_from_hardware(monkeypatch):
+def test_sema_codec_default_device_from_hardware(monkeypatch):
     from helix_context import hardware
     hardware.reset_for_test()
     monkeypatch.setattr(hardware, "_detect", lambda: hardware.HardwareInfo(
@@ -1760,8 +1886,8 @@ def test_semantic_encoder_default_device_from_hardware(monkeypatch):
         def encode(self, *a, **kw): return [[0.0] * 384]
     monkeypatch.setattr("sentence_transformers.SentenceTransformer", _FakeST)
 
-    from helix_context.sema import SemanticEncoder
-    SemanticEncoder()  # no device arg — should default from hardware
+    from helix_context.sema import SemaCodec
+    SemaCodec()  # no device arg — should default from hardware
     assert captured["device"] == "cpu"
 ```
 
@@ -1774,7 +1900,7 @@ Expected: green.
 
 ```bash
 git add helix_context/sema.py tests/test_sema.py
-git commit -m "feat(sema): SemanticEncoder default device from hardware module"
+git commit -m "feat(sema): SemaCodec default device from hardware module"
 ```
 
 ---
