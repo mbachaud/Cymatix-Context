@@ -35,7 +35,7 @@ def rendered(tmp_path, monkeypatch):
     return tmp_path / "configs"
 
 
-def test_all_five_configs_rendered(rendered):
+def test_all_configs_rendered(rendered):
     """Each source has a corresponding rendered file."""
     expected = {
         "otel-collector-config.yaml",
@@ -43,6 +43,7 @@ def test_all_five_configs_rendered(rendered):
         "tempo.yaml",
         "loki-config.yaml",
         "datasources.yml",
+        "dashboards.yml",
     }
     actual = {p.name for p in rendered.iterdir() if p.is_file()}
     assert expected.issubset(actual), (
@@ -108,6 +109,16 @@ def test_grafana_datasources_use_localhost(rendered):
     assert by_name["Loki"]["url"] == "http://localhost:3100"
 
 
+def test_grafana_dashboard_provider_uses_native_dashboard_path(rendered):
+    spec = yaml.safe_load((rendered / "dashboards.yml").read_text())
+    providers = spec["providers"]
+    provider_path = providers[0]["options"]["path"]
+    assert provider_path.replace("\\", "/").endswith(
+        "grafana/conf/provisioning/dashboards-content"
+    )
+    assert "/var/lib/grafana/dashboards" not in provider_path
+
+
 def test_no_docker_dns_hostnames_remain_in_any_render(rendered):
     """Cross-cutting check: no rendered file mentions a Docker DNS name.
 
@@ -152,6 +163,7 @@ def test_structural_diff_is_only_hostnames_and_paths(rendered):
         ("tempo.yaml", "tempo.yaml"),
         ("loki-config.yaml", "loki-config.yaml"),
         ("grafana/provisioning/datasources/datasources.yml", "datasources.yml"),
+        ("grafana/provisioning/dashboards/dashboards.yml", "dashboards.yml"),
     ]
     url_re = re.compile(
         r"https?://(?:localhost|tempo|prometheus|loki|otel-collector|grafana)"
@@ -161,8 +173,8 @@ def test_structural_diff_is_only_hostnames_and_paths(rendered):
         r"\b(?:localhost|tempo|prometheus|loki|otel-collector):\d+\b"
     )
     path_re = re.compile(
-        r"(?:[A-Z]:)?/(?:[\w.-]+/)*"
-        r"(?:tempo|loki|prometheus|grafana)(?:/[\w.-]+)*"
+        r"(?:[A-Z]:)?[/\\](?:[\w.-]+[/\\])*"
+        r"(?:tempo|loki|prometheus|grafana)(?:[/\\][\w.-]+)*"
     )
 
     def _norm(s: str) -> str:

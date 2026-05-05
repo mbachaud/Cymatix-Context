@@ -47,6 +47,9 @@ from .observability_paths import (
 
 log = logging.getLogger("helix.launcher.app")
 
+DEFAULT_GRAFANA_URL = "http://127.0.0.1:3000/d/helix-a27094-pipeline-observatory"
+DEFAULT_PROMETHEUS_URL = "http://127.0.0.1:9090/graph"
+
 if TYPE_CHECKING:
     from .observability_supervisor import ObservabilitySupervisor
 
@@ -614,6 +617,11 @@ def main(argv: Optional[list] = None) -> int:
         observability_sup, observability_install_pending = (
             _maybe_build_observability()
         )
+        if observability_sup is not None:
+            if args.grafana_url is None:
+                args.grafana_url = DEFAULT_GRAFANA_URL
+            if args.prometheus_url is None:
+                args.prometheus_url = DEFAULT_PROMETHEUS_URL
 
         tray_icon = HelixTrayIcon(
             supervisor=supervisor,

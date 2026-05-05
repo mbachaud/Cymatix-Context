@@ -22,6 +22,7 @@ from pathlib import Path
 
 from .observability_paths import (
     ALL_CONFIG_FILES,
+    binary_path,
     configs_dir,
     service_state_dir,
     state_dir,
@@ -124,6 +125,21 @@ def _sub_datasources(text: str) -> str:
     return text
 
 
+def _grafana_home() -> Path:
+    return binary_path("grafana").parent.parent
+
+
+def _grafana_dashboards_path() -> Path:
+    return _grafana_home() / "conf" / "provisioning" / "dashboards-content"
+
+
+def _sub_dashboards(text: str) -> str:
+    return text.replace(
+        "path: /var/lib/grafana/dashboards",
+        f"path: {_grafana_dashboards_path().as_posix()}",
+    )
+
+
 _RULES = [
     # (source path relative to deploy/otel, rendered name, sub fn).
     # The rendered names below MUST equal observability_paths.ALL_CONFIG_FILES
@@ -136,6 +152,11 @@ _RULES = [
         "grafana/provisioning/datasources/datasources.yml",
         "datasources.yml",
         _sub_datasources,
+    ),
+    (
+        "grafana/provisioning/dashboards/dashboards.yml",
+        "dashboards.yml",
+        _sub_dashboards,
     ),
 ]
 # Verify _RULES output names match the manifest at import time so any
@@ -160,31 +181,24 @@ def _wire_grafana_provisioning() -> None:
     """
     import shutil
 
-    from .observability_paths import binary_path
-
     graf_bin = binary_path("grafana")
     if not graf_bin.exists():
         log.info("grafana binary absent — skipping provisioning wire-up")
         return
-    graf_home = graf_bin.parent.parent  # tools/native-otel/grafana
+    graf_home = _grafana_home()  # tools/native-otel/grafana
 
-    rendered_ds = configs_dir() / "datasources.yml"
+    rendered_cfg = configs_dir()
     target_ds_dir = graf_home / "conf" / "provisioning" / "datasources"
     target_ds_dir.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(rendered_ds, target_ds_dir / "datasources.yml")
+    shutil.copy2(rendered_cfg / "datasources.yml", target_ds_dir / "datasources.yml")
 
-    deploy = _deploy_dir()
-    src_dash_prov = deploy / "grafana" / "provisioning" / "dashboards"
-    if src_dash_prov.exists():
-        target_dash_prov = graf_home / "conf" / "provisioning" / "dashboards"
-        target_dash_prov.mkdir(parents=True, exist_ok=True)
-        for f in src_dash_prov.iterdir():
-            if f.is_file():
-                shutil.copy2(f, target_dash_prov / f.name)
+    target_dash_prov = graf_home / "conf" / "provisioning" / "dashboards"
+    target_dash_prov.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(rendered_cfg / "dashboards.yml", target_dash_prov / "dashboards.yml")
 
-    src_dash = deploy / "grafana" / "dashboards"
+    src_dash = _deploy_dir() / "grafana" / "dashboards"
     if src_dash.exists():
-        target_dash = graf_home / "conf" / "provisioning" / "dashboards-content"
+        target_dash = _grafana_dashboards_path()
         target_dash.mkdir(parents=True, exist_ok=True)
         for f in src_dash.iterdir():
             if f.is_file():

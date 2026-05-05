@@ -55,6 +55,7 @@ def fake_paths(tmp_path, monkeypatch):
         "tempo.yaml",
         "loki-config.yaml",
         "datasources.yml",
+        "dashboards.yml",
     ):
         (cfg_dir / name).write_text("# stub\n", encoding="utf-8")
 
