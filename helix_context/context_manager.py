@@ -167,6 +167,27 @@ def _env_truthy(name: str) -> bool:
     return v.strip().lower() in ("1", "true", "yes", "on")
 
 
+def _compute_foveated_caps(
+    n: int,
+    alpha: float,
+    c_min: float,
+    c_max: float = 1.0,
+) -> list[float]:
+    """Power-law per-gene compression caps for foveated-splice.
+
+    c_i = max(c_min, c_max · i^(-α))    for i ∈ [1, N]
+
+    Returns a list of N floats in forward-rank order (caps[0] = rank-1 cap,
+    caps[N-1] = rank-N cap). Caller reverses to pair with reverse-rank
+    candidate placement.
+
+    Spec: docs/specs/2026-05-03-foveated-splice-design.md §4.1
+    """
+    if n <= 0:
+        return []
+    return [max(c_min, c_max * ((i + 1) ** -alpha)) for i in range(n)]
+
+
 class HelixContextManager:
     """
     Main orchestrator. Sits between the client and the upstream LLM.
