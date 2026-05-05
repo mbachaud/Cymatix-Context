@@ -54,6 +54,7 @@ ALL_CONFIG_FILES: tuple[str, ...] = (
     "tempo.yaml",
     "loki-config.yaml",
     "datasources.yml",
+    "dashboards.yml",
 )
 
 

@@ -105,6 +105,7 @@ def test_all_config_files_manifest_constant_exists_and_matches_spec():
         "tempo.yaml",
         "loki-config.yaml",
         "datasources.yml",
+        "dashboards.yml",
     )
 
 
