@@ -19,7 +19,7 @@ from typing import TYPE_CHECKING, Optional
 from urllib.parse import urlparse
 
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from .collector import StateCollector
@@ -117,8 +117,10 @@ def create_app(
         return HTMLResponse(html)
 
     @app.get("/api/state/panels", response_class=HTMLResponse)
-    async def panels_partial() -> HTMLResponse:
+    async def panels_partial(request: Request):
         """Server-rendered HTML partial — just the panels, for polling."""
+        if request.headers.get("sec-fetch-mode") == "navigate":
+            return RedirectResponse("/", status_code=303)
         state = collector.collect()
         template = templates.get_template("components/panels.html")
         html = template.render(state=state)

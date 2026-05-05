@@ -1,0 +1,127 @@
+<details class="panel panel--agents" open data-agent-panel>
+  <summary class="panel-summary">
+    <span class="panel-title">
+      Agents
+      {% if state.all_agents %}
+        <span class="panel-count">{{ state.all_agents.active_count }}</span>
+        <span class="panel-count-muted">active</span>
+        <span class="panel-count-muted">/ {{ state.all_agents.count }} all</span>
+      {% endif %}
+      {% if state.disconnected_agents %}
+        <span class="panel-count-muted">/ {{ state.disconnected_agents.count }} historical disconnected</span>
+      {% endif %}
+      <span class="sr-only">Disconnected Agents</span>
+    </span>
+    <span class="panel-collapse-hint" aria-hidden="true">Collapse</span>
+  </summary>
+
+  <div class="section-tabs" role="tablist" aria-label="Agent views">
+    <button type="button" class="section-tab is-active" data-agent-tab="active" role="tab" aria-selected="true">
+      Active
+      {% if state.all_agents %}
+        <span>{{ state.all_agents.active_count }}</span>
+      {% endif %}
+    </button>
+    <button type="button" class="section-tab" data-agent-tab="all" role="tab" aria-selected="false">
+      All
+      {% if state.all_agents %}
+        <span>{{ state.all_agents.count }}</span>
+      {% endif %}
+    </button>
+    <button type="button" class="section-tab" data-agent-tab="disconnected" role="tab" aria-selected="false">
+      Historical disconnected
+      {% if state.disconnected_agents %}
+        <span>{{ state.disconnected_agents.count }}</span>
+      {% endif %}
+    </button>
+  </div>
+
+  <div class="agent-views">
+    <div class="agent-view" data-agent-view="active">
+      {% if state.all_agents and state.all_agents.active_count %}
+        <ul class="panel-list">
+          {% for agent in state.all_agents.entries %}
+            {% if agent.status == "active" %}
+              <li class="panel-list__item panel-list__item--stacked">
+                <div class="panel-list__row">
+                  <span class="chip chip--participant">{{ agent.handle }}</span>
+                  <span class="chip chip--agent-id">{{ agent.participant_id_short }}</span>
+                  {% if agent.host_label %}
+                    <span class="chip chip--agent-host">{{ agent.host_label }}</span>
+                  {% endif %}
+                  <span class="muted">/ {{ agent.status }} / {{ agent.last_seen_s_ago }}s ago</span>
+                </div>
+                <div class="panel-list__row">
+                  <span class="muted">identity: {{ agent.identifier }}</span>
+                  {% if agent.identity_detail %}
+                    <span class="muted">/ {{ agent.identity_detail }}</span>
+                  {% endif %}
+                  <span class="muted">/ full id {{ agent.participant_id }}</span>
+                </div>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="panel-note">No active agents right now.</p>
+      {% endif %}
+    </div>
+
+    <div class="agent-view" data-agent-view="all" hidden>
+      {% if state.all_agents and state.all_agents.count %}
+        <ul class="panel-list">
+          {% for agent in state.all_agents.entries %}
+            <li class="panel-list__item panel-list__item--stacked">
+              <div class="panel-list__row">
+                <span class="chip chip--participant">{{ agent.handle }}</span>
+                <span class="chip chip--agent-id">{{ agent.participant_id_short }}</span>
+                {% if agent.host_label %}
+                  <span class="chip chip--agent-host">{{ agent.host_label }}</span>
+                {% endif %}
+                <span class="muted">/ {{ agent.status }} / {{ agent.last_seen_s_ago }}s ago</span>
+              </div>
+              <div class="panel-list__row">
+                <span class="muted">identity: {{ agent.identifier }}</span>
+                {% if agent.identity_detail %}
+                  <span class="muted">/ {{ agent.identity_detail }}</span>
+                {% endif %}
+                <span class="muted">/ full id {{ agent.participant_id }}</span>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="panel-note">No agent sessions have checked in yet.</p>
+      {% endif %}
+    </div>
+
+    <div class="agent-view" data-agent-view="disconnected" hidden>
+      {% if state.disconnected_agents and state.disconnected_agents.count %}
+        <ul class="panel-list">
+          {% for agent in state.disconnected_agents.entries %}
+            <li class="panel-list__item panel-list__item--stacked">
+              <div class="panel-list__row">
+                <span class="chip chip--participant">{{ agent.handle }}</span>
+                <span class="chip chip--agent-id">{{ agent.participant_id_short }}</span>
+                {% if agent.host_label %}
+                  <span class="chip chip--agent-host">{{ agent.host_label }}</span>
+                {% endif %}
+                <span class="chip chip--agent-status chip--agent-status-{{ agent.status }}">{{ agent.status }}</span>
+                <span class="muted">{{ agent.last_seen_s_ago }}s ago</span>
+              </div>
+              <div class="panel-list__row">
+                <span class="muted">identity: {{ agent.identifier }}</span>
+                {% if agent.identity_detail %}
+                  <span class="muted">/ {{ agent.identity_detail }}</span>
+                {% endif %}
+                <span class="muted">full id {{ agent.participant_id }}</span>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="panel-note">No historical disconnected agents.</p>
+      {% endif %}
+    </div>
+  </div>
+</details>

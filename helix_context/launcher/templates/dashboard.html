@@ -3,9 +3,29 @@
 {% block main %}
   {% include "components/controls.html" %}
 
+  <nav class="tab-bar" aria-label="Dashboard sections">
+    <button type="button" class="tab is-active" data-tab="overview">
+      <span class="tab-icon" aria-hidden="true">+</span>
+      <span>Overview</span>
+    </button>
+    <button type="button" class="tab" data-tab="agents">
+      <span class="tab-icon" aria-hidden="true">o</span>
+      <span>Agents</span>
+    </button>
+    <button type="button" class="tab" data-tab="genome">
+      <span class="tab-icon" aria-hidden="true">x</span>
+      <span>Genome</span>
+    </button>
+    <button type="button" class="tab" data-tab="monitoring">
+      <span class="tab-icon" aria-hidden="true">~</span>
+      <span>Monitoring</span>
+    </button>
+  </nav>
+
   <section
     id="panels"
     class="panels"
+    data-active-tab="overview"
     data-poll-url="/api/state/panels"
     data-poll-interval-ms="2000"
   >

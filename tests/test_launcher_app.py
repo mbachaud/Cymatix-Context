@@ -134,6 +134,15 @@ class TestPanelsPartial:
         # Empty state when helix down
         assert "Helix is stopped" in resp.text
 
+    def test_panels_partial_browser_navigation_redirects_to_dashboard(self, client):
+        resp = client.get(
+            "/api/state/panels",
+            headers={"sec-fetch-mode": "navigate"},
+            follow_redirects=False,
+        )
+        assert resp.status_code == 303
+        assert resp.headers["location"] == "/"
+
     def test_panels_partial_renders_degraded_message(self, client, fake_collector):
         fake_collector.collect.return_value = {
             "helix": {
