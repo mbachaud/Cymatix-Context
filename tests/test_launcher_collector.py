@@ -252,6 +252,8 @@ class TestToolsPanel:
                 state = collector.collect()
 
         assert state["tools"]["count"] == 1
+        assert state["tools"]["source_count"] == 2
+        assert state["tools"]["hidden_count"] == 1
         assert state["tools"]["last_activity_s_ago"] == 12.4
         assert len(state["tools"]["entries"]) == 1
         assert state["tools"]["entries"][0]["name"] == "splade"
