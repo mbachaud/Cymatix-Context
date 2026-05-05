@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+# Cancel in-progress runs on the same ref so a fast follow-up push
+# doesn't keep a stale run alive.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install CPU-only torch
+        run: pip install --index-url https://download.pytorch.org/whl/cpu torch
+
+      - name: Install package + test deps
+        run: pip install -e ".[dev]" psutil platformdirs py-cpuinfo
+
+      - name: Run unit suite
+        run: pytest tests/ -v
+
+  test-macos-mps:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install package + test deps + transformers (for MPS smoke test)
+        run: pip install -e ".[dev]" torch transformers psutil platformdirs py-cpuinfo
+
+      - name: Run unit suite (MPS smoke test runs only on this job)
+        run: pytest tests/ -v
+
+  test-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install CPU-only torch
+        run: pip install --index-url https://download.pytorch.org/whl/cpu torch
+
+      - name: Install package + test deps
+        run: pip install -e ".[dev]" psutil platformdirs py-cpuinfo
+
+      - name: Run unit suite
+        run: pytest tests/ -v
