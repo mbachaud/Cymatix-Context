@@ -43,7 +43,9 @@ def _ensure_loaded(model_name: str = "naver/splade-cocondenser-ensembledistil"):
     import torch
     from transformers import AutoModelForMaskedLM, AutoTokenizer
 
-    _device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    from helix_context.hardware import get_hardware
+
+    _device = torch.device(get_hardware().device)
     _tokenizer = AutoTokenizer.from_pretrained(model_name)
     _model = AutoModelForMaskedLM.from_pretrained(model_name).to(_device)
     _model.eval()
@@ -100,16 +102,24 @@ def encode(text: str, top_k: int = 128, model_name: str = "naver/splade-coconden
 def encode_batch(
     texts: List[str],
     top_k: int = 128,
-    batch_size: int = 16,
+    batch_size: Optional[int] = None,
     model_name: str = "naver/splade-cocondenser-ensembledistil",
 ) -> List[Dict[str, float]]:
     """
     Batch-encode texts into SPLADE sparse vectors.
     More efficient than calling encode() in a loop due to batched forward passes.
+
+    ``batch_size`` defaults to ``recommended_batch_size("splade")`` when unset,
+    sized for the detected hardware (VRAM tier on CUDA/ROCm, system RAM on
+    MPS/CPU). Pass an explicit value to override.
     """
     import torch
 
     _ensure_loaded(model_name)
+
+    if batch_size is None:
+        from helix_context.hardware import recommended_batch_size
+        batch_size = recommended_batch_size("splade")
 
     results: List[Dict[str, float]] = []
 
