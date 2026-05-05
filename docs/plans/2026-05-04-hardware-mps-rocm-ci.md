@@ -362,15 +362,17 @@ def test_deberta_classifier_two_pair_forward_pass_on_mps():
     import torch
     from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
-    # Smallest-stable cross-encoder we already pin via deberta_backend's
-    # default. Keeping the model name local to the test (not importing
-    # deberta_backend) avoids ImportError surfaces on macOS-14 if optional
-    # extras aren't installed.
-    model_id = "cross-encoder/ms-marco-MiniLM-L-6-v2"
+    # Smallest stable deberta-class cross-encoder available on the Hub.
+    # Spec §8.2 calls for "deberta tokenizer" specifically — this catches
+    # deberta-specific disentangled-attention regressions on MPS that a
+    # BERT-style model would miss. Keeping the model name local (not
+    # importing deberta_backend) avoids ImportError surfaces on macOS-14
+    # if optional helix-context extras aren't installed.
+    model_id = "cross-encoder/nli-deberta-v3-xsmall"  # ~80 MB, NLI 3-class output
     tokenizer = AutoTokenizer.from_pretrained(model_id)
     model = AutoModelForSequenceClassification.from_pretrained(model_id)
     model = model.to("mps")
-    model.eval()
+    model.train(False)  # nn.Module inference mode — same effect as .eval()
 
     pairs_a = ["What is helix-context?", "How does the picker work?"]
     pairs_b = ["A retrieval system.", "It walks CUDA, ROCm, MPS, then CPU."]
@@ -383,8 +385,11 @@ def test_deberta_classifier_two_pair_forward_pass_on_mps():
     with torch.no_grad():
         out = model(**enc).logits
 
-    assert out.shape == (2, 1) or out.shape == (2,), (
-        f"Expected logits shape (2, 1) or (2,); got {tuple(out.shape)!r}"
+    # nli-deberta-v3-xsmall outputs (batch, 3) for the 3 NLI classes.
+    # Allow (2, N) for any N >= 1 to remain robust if the model is
+    # swapped for a single-output cross-encoder later.
+    assert out.dim() == 2 and out.shape[0] == 2 and out.shape[1] >= 1, (
+        f"Expected logits shape (2, N>=1); got {tuple(out.shape)!r}"
     )
     # Round-trip back to CPU to catch silent fallback / NaN-on-MPS issues
     cpu_logits = out.cpu()
@@ -398,10 +403,10 @@ Note: `model.eval()` here calls torch's `nn.Module.eval()` (sets dropout/batchno
 Run: `python -m pytest tests/test_hardware_mps_smoke.py -v 2>&1 | head -10`
 Expected: Test `SKIPPED [reason: Requires darwin + MPS-capable hardware (skipped on Linux/Windows runners)]`.
 
-- [ ] **Step 3: Verify the file imports without error** (the platform-guarded skip is at decorator level, but the module-level imports must not fail)
+- [ ] **Step 3: Verify the file collects under pytest** (the platform-guarded skip is at decorator level, but the module-level imports must not fail at collection time)
 
-Run: `python -c "import tests.test_hardware_mps_smoke"`
-Expected: Exit code 0, no output. (If `transformers` isn't installed locally, this Step would fail with ImportError. That's acceptable since the macOS-14 CI runner installs `transformers` per Task 5; on this Windows dev box, transformers is already pulled in by the launcher venv per PR1's setup. If it does fail locally, note it but proceed — CI will catch the regression on a clean environment.)
+Run: `python -m pytest tests/test_hardware_mps_smoke.py --collect-only -q 2>&1 | head -10`
+Expected: Test collected and shown as `<1 test collected>` followed by the deselected/skipped marker. No `ImportError` or collection failure. (If `transformers` isn't installed locally, collection would fail because the `import transformers` line is inside the test body — but pytest only runs that body when the test isn't skipped. Since we're on Windows and the platform guard skips the test, the body never runs and the `transformers` import never executes. CI on macos-14 installs `transformers` per Task 5; this Windows host doesn't need it for the collection check.)
 
 - [ ] **Step 4: Commit**
 
@@ -593,7 +598,7 @@ Use Read tool on `docs/specs/2026-05-04-hardware-detection-design.md` lines 42-1
 
 - [ ] **Step 2: Add a new bullet under §3 disclaimers**
 
-The exact insertion point: after the "Goals" / "Non-goals" paragraphs near §3, before the §3.1 "Module shape" subheading. Add a clearly-marked subsection "**Verification posture**":
+The exact insertion point: between the `## 3. Architecture` heading and the `### 3.1 Module shape` subheading. There is no body text currently between those two lines — the new `### Verification posture` subsection slots cleanly in that gap, becoming the first subsection under §3 (so §3.1 "Module shape" follows it). Add the following subsection content:
 
 ```markdown
 ### Verification posture
@@ -641,17 +646,16 @@ Expected: Push succeeds, branch tracking set up.
 
 - [ ] **Step 2: Open the PR via gh CLI**
 
-Use a HEREDOC for the body. PR title: `feat: hardware detection PR2 — MPS + ROCm + CI workflow`.
+Single-quoted HEREDOC keeps em-dashes / backticks / `$()` literal. Run exactly as written below (bash / Git Bash):
 
-PR body content (paste into HEREDOC):
-
-```
+```bash
+gh pr create --title "feat: hardware detection PR2 — MPS + ROCm + CI workflow" --body "$(cat <<'EOF'
 ## Summary
 
 PR2 of the hardware-detection split (PR1 was #17, merged at `f25211c`). PR1 over-implemented — the picker branches and `_BATCH_TABLE` rows for ROCm + MPS already shipped in PR1 — so this PR is exclusively the testing/CI infrastructure that proves the module works end-to-end:
 
 - New `.github/workflows/ci.yml` — 3-job matrix (Linux + macOS-14 + Windows)
-- New macOS-14 MPS smoke test: load deberta tokenizer + 2-pair forward pass on `mps`, assert output shape (per spec §8.2)
+- New macOS-14 MPS smoke test: deberta-class tokenizer + 2-pair forward pass on `mps`, assert output shape (per spec §8.2)
 - New skip-by-default opt-in real-hardware test scaffolds (`HELIX_TEST_ROCM=1` / `HELIX_TEST_CUDA=1`)
 - New general enhancement-request issue template (Intel XPU as natural first use case)
 - Spec §3 verification-posture section: ROCm "capable but unverified" disclaimer
@@ -676,18 +680,13 @@ PR2 of the hardware-detection split (PR1 was #17, merged at `f25211c`). PR1 over
 - Spec: `docs/specs/2026-05-04-hardware-detection-design.md` §9.2
 - Plan: `docs/plans/2026-05-04-hardware-mps-rocm-ci.md`
 - PR1: #17 (merged)
-```
 
-Run via:
-```bash
-gh pr create --title "feat: hardware detection PR2 — MPS + ROCm + CI workflow" --body "$(cat <<'EOF'
-<paste the body content above here, including a trailing line:
-🤖 Generated with [Claude Code](https://claude.com/claude-code)>
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
 EOF
 )"
 ```
 
-Expected: PR URL printed. Capture the number for Step 3.
+Expected: PR URL printed. Capture the PR number for Step 3.
 
 - [ ] **Step 3: Wait for CI and verify all 3 jobs pass**
 
