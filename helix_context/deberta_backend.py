@@ -49,7 +49,7 @@ class DeBERTaRibosome:
         splice_model_path: str = "training/models/splice",
         nli_model_path: str = "training/models/nli",
         ollama_ribosome=None,
-        device: str = "auto",
+        device: Optional[str] = None,
         splice_threshold: float = 0.5,
         nli_splice_bonus: float = 0.15,
         nli_splice_penalty: float = 0.15,
@@ -57,8 +57,13 @@ class DeBERTaRibosome:
     ):
         from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
-        if device == "auto":
-            self._device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        # Device resolution: defer to the hardware module's singleton when
+        # the caller passes None. Explicit "auto" (legacy callers) goes
+        # through the same path so detection is centralized; explicit
+        # device strings ("cpu", "cuda:0", ...) are honored as-is.
+        if device is None or device == "auto":
+            from helix_context.hardware import get_hardware
+            self._device = torch.device(get_hardware().device)
         else:
             self._device = torch.device(device)
 
@@ -101,6 +106,9 @@ class DeBERTaRibosome:
 
         t0 = time.perf_counter()
 
+        from helix_context.hardware import recommended_batch_size
+        batch_size = recommended_batch_size("rerank")
+
         # Build text pairs
         texts_a = []
         texts_b = []
@@ -110,26 +118,28 @@ class DeBERTaRibosome:
             domains = ", ".join(g.promoter.domains)
             texts_b.append(f"{summary} [{domains}]" if domains else summary)
 
-        # Tokenize all pairs at once
-        encodings = self._rerank_tokenizer(
-            texts_a,
-            texts_b,
-            truncation=True,
-            max_length=256,
-            padding=True,
-            return_tensors="pt",
-        ).to(self._device)
-
-        # Score
+        # Score in chunks sized by the hardware-recommended batch size so
+        # large candidate pools don't blow up VRAM. Chunked tokenize +
+        # forward, then concatenate the per-chunk score lists.
+        scores: List[float] = []
         with torch.no_grad():
-            outputs = self._rerank_model(**encodings)
-            scores = outputs.logits.squeeze(-1)
-            # Clamp to 0-1 range
-            scores = torch.clamp(scores, 0.0, 1.0).cpu().tolist()
-
-        # If single candidate, scores is a scalar
-        if isinstance(scores, float):
-            scores = [scores]
+            for i in range(0, len(texts_a), batch_size):
+                chunk_a = texts_a[i : i + batch_size]
+                chunk_b = texts_b[i : i + batch_size]
+                encodings = self._rerank_tokenizer(
+                    chunk_a,
+                    chunk_b,
+                    truncation=True,
+                    max_length=256,
+                    padding=True,
+                    return_tensors="pt",
+                ).to(self._device)
+                outputs = self._rerank_model(**encodings)
+                chunk_scores = outputs.logits.squeeze(-1)
+                chunk_scores = torch.clamp(chunk_scores, 0.0, 1.0).cpu().tolist()
+                if isinstance(chunk_scores, float):
+                    chunk_scores = [chunk_scores]
+                scores.extend(chunk_scores)
 
         # For pretrained cross-encoders (e.g. MS MARCO), skip position bonus —
         # they produce calibrated relevance scores that don't need retrieval-order bias.
@@ -181,24 +191,29 @@ class DeBERTaRibosome:
         if not all_pairs_a:
             return {g.gene_id: g.complement or g.content[:500] for g in genes}
 
-        # Tokenize all at once
-        encodings = self._splice_tokenizer(
-            all_pairs_a,
-            all_pairs_b,
-            truncation=True,
-            max_length=128,
-            padding=True,
-            return_tensors="pt",
-        ).to(self._device)
+        from helix_context.hardware import recommended_batch_size
+        batch_size = recommended_batch_size("splice")
 
-        # Predict
+        # Predict in chunks sized by the hardware-recommended batch size.
+        probs: List[float] = []
         with torch.no_grad():
-            outputs = self._splice_model(**encodings)
-            logits = outputs.logits.squeeze(-1)
-            probs = torch.sigmoid(logits).cpu().tolist()
-
-        if isinstance(probs, float):
-            probs = [probs]
+            for i in range(0, len(all_pairs_a), batch_size):
+                chunk_a = all_pairs_a[i : i + batch_size]
+                chunk_b = all_pairs_b[i : i + batch_size]
+                encodings = self._splice_tokenizer(
+                    chunk_a,
+                    chunk_b,
+                    truncation=True,
+                    max_length=128,
+                    padding=True,
+                    return_tensors="pt",
+                ).to(self._device)
+                outputs = self._splice_model(**encodings)
+                logits = outputs.logits.squeeze(-1)
+                chunk_probs = torch.sigmoid(logits).cpu().tolist()
+                if isinstance(chunk_probs, float):
+                    chunk_probs = [chunk_probs]
+                probs.extend(chunk_probs)
 
         # Extract query keywords for content-match preservation
         query_lower = query.lower().split()
