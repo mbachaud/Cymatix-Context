@@ -26,7 +26,7 @@ jobs:
         run: pip install --index-url https://download.pytorch.org/whl/cpu torch
 
       - name: Install package + test deps
-        run: pip install -e ".[dev]" psutil platformdirs py-cpuinfo
+        run: pip install -e ".[dev]" psutil platformdirs py-cpuinfo numpy joblib scikit-learn
 
       - name: Run unit suite
         run: pytest tests/ -v
@@ -41,7 +41,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install package + test deps + transformers (for MPS smoke test)
-        run: pip install -e ".[dev]" torch transformers psutil platformdirs py-cpuinfo
+        run: pip install -e ".[dev]" torch transformers psutil platformdirs py-cpuinfo numpy joblib scikit-learn
 
       - name: Run unit suite (MPS smoke test runs only on this job)
         run: pytest tests/ -v
@@ -59,7 +59,7 @@ jobs:
         run: pip install --index-url https://download.pytorch.org/whl/cpu torch
 
       - name: Install package + test deps
-        run: pip install -e ".[dev]" psutil platformdirs py-cpuinfo
+        run: pip install -e ".[dev]" psutil platformdirs py-cpuinfo numpy joblib scikit-learn
 
       - name: Run unit suite
         run: pytest tests/ -v
