@@ -49,8 +49,12 @@ jobs:
       - name: Install package + test deps + transformers (for MPS smoke test)
         run: pip install -e ".[dev]" torch transformers psutil platformdirs py-cpuinfo numpy joblib scikit-learn
 
-      - name: Run unit suite (MPS smoke test runs only on this job)
-        run: pytest tests/ -v
+      # Scope: run only the hardware-module test files. The MPS smoke test
+      # is the actual integration check this job is for; the wider unit
+      # suite has pre-existing CI-hostile import-time side effects
+      # (server.py:3091) that PR2 isn't supposed to fix.
+      - name: Run hardware test suite (MPS smoke test runs only on this job)
+        run: pytest tests/test_hardware.py tests/test_hardware_rocm.py tests/test_hardware_cuda_real.py tests/test_hardware_mps_smoke.py -v
 
   test-windows:
     runs-on: windows-latest
