@@ -351,3 +351,76 @@ def test_explicit_mps_on_non_mps_host_falls_back_to_cpu(mock_torch, monkeypatch)
     assert info.device_type == "cpu"
     assert info.fallback_reason is not None
     assert "mps" in info.fallback_reason.lower()
+
+
+def test_batch_size_24gb_cuda_tier(mock_torch):
+    mock_torch["cuda_available"] = True
+    mock_torch["cuda_device_count"] = 1
+    mock_torch["cuda_device_names"] = ["RTX 4090"]
+    mock_torch["cuda_mem"] = [(22.0, 24.0)]
+    hardware.reset_for_test()
+    assert hardware.recommended_batch_size("rerank") == 64
+    assert hardware.recommended_batch_size("splice") == 128
+    assert hardware.recommended_batch_size("splade") == 32
+    assert hardware.recommended_batch_size("nli") == 32
+
+
+def test_batch_size_4gb_cuda_tier(mock_torch):
+    mock_torch["cuda_available"] = True
+    mock_torch["cuda_device_count"] = 1
+    mock_torch["cuda_device_names"] = ["GTX 1650"]
+    mock_torch["cuda_mem"] = [(3.5, 4.0)]
+    hardware.reset_for_test()
+    assert hardware.recommended_batch_size("rerank") == 8
+
+
+def test_batch_size_under_4gb_cuda_tier(mock_torch):
+    mock_torch["cuda_available"] = True
+    mock_torch["cuda_device_count"] = 1
+    mock_torch["cuda_device_names"] = ["MX150"]
+    mock_torch["cuda_mem"] = [(1.5, 2.0)]
+    hardware.reset_for_test()
+    assert hardware.recommended_batch_size("rerank") == 4
+
+
+def test_batch_size_cpu_tier_uses_system_ram(monkeypatch, mock_torch):
+    """CPU batch sizes key on system_ram_gb, not VRAM."""
+    class _FakeVM:
+        total = 16 * 1024 ** 3  # 16 GiB
+    monkeypatch.setattr("psutil.virtual_memory", lambda: _FakeVM())
+    hardware.reset_for_test()
+    assert hardware.recommended_batch_size("rerank") == 8
+
+
+def test_batch_size_total_not_free_drives_lookup(mock_torch):
+    """Even if free VRAM is tiny, total VRAM picks the tier.
+
+    Regression pin for spec-review B3 — vram_free_gb is informational
+    only; the table keys on vram_total_gb.
+    """
+    mock_torch["cuda_available"] = True
+    mock_torch["cuda_device_count"] = 1
+    mock_torch["cuda_device_names"] = ["RTX 4090"]
+    mock_torch["cuda_mem"] = [(0.5, 24.0)]  # almost all VRAM in use
+    hardware.reset_for_test()
+    assert hardware.recommended_batch_size("rerank") == 64  # 24GB tier wins
+
+
+def test_batch_size_override_beats_table(mock_torch):
+    """batch_size_overrides field short-circuits the table lookup."""
+    mock_torch["cuda_available"] = True
+    mock_torch["cuda_device_count"] = 1
+    mock_torch["cuda_device_names"] = ["RTX 4090"]
+    mock_torch["cuda_mem"] = [(22.0, 24.0)]
+    hardware.reset_for_test()
+    info = hardware.get_hardware()
+    forced = dataclasses.replace(info, batch_size_overrides={"rerank": 16})
+    hardware._cached_info = forced  # direct cache poke for test
+    assert hardware.recommended_batch_size("rerank") == 16
+    assert hardware.recommended_batch_size("splice") == 128
+
+
+def test_batch_size_unknown_model_returns_minimum(mock_torch):
+    """Asking for a model not in the table returns the conservative floor."""
+    hardware.reset_for_test()
+    assert hardware.recommended_batch_size("unknown_model") == 1

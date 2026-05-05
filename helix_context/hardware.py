@@ -8,6 +8,7 @@ loudly to CPU on probe failure but never block. See:
 Public surface:
   HardwareInfo            -- frozen dataclass returned by get_hardware()
   get_hardware()          -- cached singleton; first call performs detection
+  recommended_batch_size(model) -- per-model batch size from table or override
   reset_for_test()        -- test-only cache reset
 
 Subsequent tasks add detection logic incrementally.
@@ -272,3 +273,58 @@ def _detect() -> HardwareInfo:
         requested_device=requested,
         fallback_reason=fallback_reason,
     )
+
+
+# Batch-size table — keys are (device_type, ram_threshold_gb_min).
+# Lookup picks the highest threshold row whose minimum is <= the
+# observed value. See spec §7.1 for calibration rationale.
+_BATCH_TABLE: Dict[tuple, Dict[str, int]] = {
+    # CUDA / ROCm tiers — keyed on TOTAL VRAM (invariant per GPU).
+    ("cuda", 24.0): {"rerank": 64, "splice": 128, "splade": 32, "nli": 32},
+    ("cuda", 12.0): {"rerank": 32, "splice": 64,  "splade": 16, "nli": 16},
+    ("cuda",  8.0): {"rerank": 16, "splice": 32,  "splade":  8, "nli":  8},
+    ("cuda",  4.0): {"rerank":  8, "splice": 16,  "splade":  4, "nli":  4},
+    ("cuda",  0.0): {"rerank":  4, "splice":  8,  "splade":  2, "nli":  2},
+    ("rocm", 24.0): {"rerank": 64, "splice": 128, "splade": 32, "nli": 32},
+    ("rocm", 12.0): {"rerank": 32, "splice": 64,  "splade": 16, "nli": 16},
+    ("rocm",  8.0): {"rerank": 16, "splice": 32,  "splade":  8, "nli":  8},
+    ("rocm",  4.0): {"rerank":  8, "splice": 16,  "splade":  4, "nli":  4},
+    ("rocm",  0.0): {"rerank":  4, "splice":  8,  "splade":  2, "nli":  2},
+    # MPS — keyed on system_ram_gb (MPS shares system RAM).
+    ("mps", 16.0): {"rerank": 16, "splice": 32, "splade":  8, "nli":  8},
+    ("mps",  8.0): {"rerank":  8, "splice": 16, "splade":  4, "nli":  4},
+    ("mps",  0.0): {"rerank":  4, "splice":  8, "splade":  2, "nli":  2},
+    # CPU — keyed on system_ram_gb.
+    ("cpu", 16.0): {"rerank":  8, "splice": 16, "splade":  4, "nli":  4},
+    ("cpu",  8.0): {"rerank":  4, "splice":  8, "splade":  2, "nli":  2},
+    ("cpu",  0.0): {"rerank":  2, "splice":  4, "splade":  1, "nli":  1},
+}
+
+
+def _lookup_batch_size(device_type: str, tier_value: float, model: str) -> int:
+    """Find the highest-threshold row whose min <= tier_value."""
+    matching = [
+        (threshold, row[model])
+        for (dt, threshold), row in _BATCH_TABLE.items()
+        if dt == device_type and threshold <= tier_value and model in row
+    ]
+    if not matching:
+        return 1  # ultra-conservative floor for unknown model / table miss
+    matching.sort(reverse=True)
+    return matching[0][1]
+
+
+def recommended_batch_size(model: str) -> int:
+    """Resolve batch size for `model`. Order:
+    1. info.batch_size_overrides[model] if present
+    2. _BATCH_TABLE lookup based on device_type + (vram_total_gb or system_ram_gb)
+    3. Conservative floor (1) for unknown models.
+    """
+    info = get_hardware()
+    if model in info.batch_size_overrides:
+        return info.batch_size_overrides[model]
+    if info.device_type in {"cuda", "rocm"}:
+        tier = info.vram_total_gb if info.vram_total_gb is not None else 0.0
+    else:
+        tier = info.system_ram_gb
+    return _lookup_batch_size(info.device_type, tier, model)
