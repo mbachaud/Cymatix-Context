@@ -53,7 +53,15 @@ jobs:
       # is the actual integration check this job is for; the wider unit
       # suite has pre-existing CI-hostile import-time side effects
       # (server.py:3091) that PR2 isn't supposed to fix.
+      #
+      # PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.0 disables PyTorch's internal MPS
+      # memory ceiling. On the GHA macos-14 runner the default ceiling is
+      # too tight and trips on tiny allocations even when ~7 GiB is free.
+      # This is the documented workaround
+      # (https://pytorch.org/docs/stable/notes/mps.html).
       - name: Run hardware test suite (MPS smoke test runs only on this job)
+        env:
+          PYTORCH_MPS_HIGH_WATERMARK_RATIO: "0.0"
         run: pytest tests/test_hardware.py tests/test_hardware_rocm.py tests/test_hardware_cuda_real.py tests/test_hardware_mps_smoke.py -v
 
   test-windows:
