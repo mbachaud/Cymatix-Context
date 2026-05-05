@@ -388,3 +388,119 @@ class TestFoveatedBudgetTrim:
             "reverse-rank ordering parts[-1] is the TOP-rank gene; the "
             "trim must pop from the FRONT (lowest rank) instead."
         )
+
+
+def _make_manager_with_n_genes_classifier_enabled(n, scores_fn):
+    """Same shape as _make_manager_with_n_genes, but with the classifier
+    ENABLED so a wh-style factual query routes through assembly_max_genes_cap=5.
+
+    Used by TestFoveatedClassifierInteraction to exercise the C1 invariant
+    (foveated must run AFTER classifier cap, not before).
+    """
+    from helix_context.config import (
+        BudgetConfig, ClassifierConfig, GenomeConfig, HelixConfig,
+        RibosomeConfig,
+    )
+    from helix_context.context_manager import HelixContextManager
+    from tests.conftest import make_gene
+
+    cfg = HelixConfig(
+        ribosome=RibosomeConfig(model="mock", timeout=5),
+        budget=BudgetConfig(max_genes_per_turn=n + 2, abstain_enabled=True),
+        genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
+        classifier=ClassifierConfig(enabled=True),
+    )
+    mgr = HelixContextManager(cfg)
+    candidates = [
+        make_gene(f"gene_{i} content", gene_id=f"gene_{i:02d}")
+        for i in range(n)
+    ]
+    scores = {candidates[i].gene_id: scores_fn(i) for i in range(n)}
+    _stub_express(mgr, candidates=candidates, scores=scores)
+    return mgr
+
+
+class TestFoveatedClassifierInteraction:
+    """Regression tests for the foveated x classifier-cap interaction (C1).
+
+    Foveated reversal must operate on the FINAL post-cap candidate list. If
+    foveated runs BEFORE classifier cap, then candidates[:cap] keeps the
+    LOWEST-ranked genes (top-rank was reversed to candidates[-1] and gets
+    dropped). Plus foveated_caps would be misaligned with the truncated list.
+    """
+
+    def test_foveated_top_rank_survives_classifier_cap(self):
+        """Regression: foveated must run AFTER classifier cap, not before.
+
+        Setup: 12 BROAD genes with descending scores + a wh-style factual
+        query ("what is the helix port") that the classifier routes to
+        assembly_max_genes_cap=5. Foveated enabled.
+
+        Assertions:
+          - foveated_caps exists and len == 5 (post-cap), NOT 12 (pre-cap).
+          - foveated_cap_top == 1.0 (c_max applied to surviving top-rank).
+          - "gene_00" (top-rank) appears in expressed_context (survived cap).
+          - "gene_11" (bottom-rank) does NOT appear (capped out).
+        """
+        # 12 genes, scores 3.0, 2.9, ..., 1.9 → BROAD tier
+        # (top=3.0 < TIGHT_SCORE_FLOOR=5.0, ratio≈1.22 < 1.8 → BROAD).
+        mgr = _make_manager_with_n_genes_classifier_enabled(
+            12,
+            lambda i: 3.0 - i * 0.1,
+        )
+        try:
+            mgr.config.budget.foveated_enabled = True
+            # "what is X" is a wh-word + <15 words → cls=factual → cap=5.
+            window = mgr.build_context("what is the helix retrieval port")
+
+            # Sanity: BROAD tier resolved (foveated only fires on BROAD).
+            assert window.metadata.get("budget_tier") == "broad"
+
+            caps = window.metadata.get("foveated_caps")
+            assert caps is not None, (
+                "foveated_caps absent — foveated did not fire. Either the "
+                "classifier didn't route to factual or BROAD didn't resolve."
+            )
+            # C1 invariant: caps length matches post-cap candidate count.
+            # If foveated ran BEFORE the cap, caps would have length 12.
+            assert len(caps) == 5, (
+                f"foveated_caps length={len(caps)}; expected 5 (post-cap). "
+                "If this is 12, foveated ran BEFORE classifier cap (C1)."
+            )
+
+            # Scalar reductions (I3) — caps[-1] is c_max for top-rank gene.
+            assert window.metadata.get("foveated_cap_top") == 1.0
+            assert window.metadata.get("foveated_cap_n") == 5
+            assert window.metadata.get("foveated_cap_min") == caps[0]
+
+            # The actual top-rank gene must survive. Under the BUGGY pre-cap
+            # ordering: foveated reversed first → candidates[:5] kept genes
+            # 11..7 (worst 5), and gene_00 (best) was dropped.
+            assert "gene_00" in window.expressed_context, (
+                "Top-rank gene was dropped by classifier cap because "
+                "foveated reversed candidates BEFORE the cap (C1 bug)."
+            )
+            # And the bottom-rank gene must be capped out.
+            assert "gene_11" not in window.expressed_context, (
+                "Bottom-rank gene survived — classifier cap did not fire."
+            )
+        finally:
+            mgr.close()
+
+    def test_foveated_scalar_reductions_present_when_active(
+        self, helix_manager_broad_with_twelve_genes,
+    ):
+        """I3: when foveated fires, the scalar reductions are stashed
+        alongside the list. Confirms keys exist on the no-classifier path
+        (the fixture has classifier disabled) so non-classifier callers
+        also benefit from the scalar reductions for Prom translation."""
+        m = helix_manager_broad_with_twelve_genes
+        m.config.budget.foveated_enabled = True
+        window = m.build_context("a query that lands in BROAD")
+        assert window.metadata.get("budget_tier") == "broad"
+        assert "foveated_cap_top" in window.metadata
+        assert "foveated_cap_min" in window.metadata
+        assert "foveated_cap_n" in window.metadata
+        # Reverse-rank: caps[-1] (top-rank) == 1.0 (c_max).
+        assert window.metadata["foveated_cap_top"] == 1.0
+        assert window.metadata["foveated_cap_n"] == 12

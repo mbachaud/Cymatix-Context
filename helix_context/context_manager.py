@@ -667,6 +667,15 @@ class HelixContextManager:
         """
         self._maybe_compact()
 
+        # Per-call locals for foveated-splice state (spec §4-5). Local —
+        # not instance state — so concurrent build_context calls cannot
+        # race on writes/reads, and a prior call's state cannot leak in
+        # if the dynamic-budget block is skipped this call (e.g. small
+        # candidate set or all-zero scores). Same threading pattern as
+        # decoder_prompt_override at line ~1949. See code review I1/I2.
+        foveated_caps: Optional[List[float]] = None
+        foveated_active: bool = False
+
         # Step 0a: Upstream query classifier / injection router.
         # Always runs (cheap, no I/O) — even when decoder_override is set,
         # so the audit trail records what the classifier *would* have picked.
@@ -864,35 +873,6 @@ class HelixContextManager:
                 # else: broad — keep current up-to-max_genes set
                 #   (weak absolute scores or weak ratio → widen the net)
 
-                # Foveated-splice (spec §4-5): for BROAD only, replace uniform
-                # per-gene compression with a rank-scaled power-law schedule
-                # AND reverse the assembly order so top-rank lands nearest
-                # the user query (lost-in-the-middle exploit). Off by default;
-                # see docs/specs/2026-05-03-foveated-splice-design.md §6.3.
-                # No env override in v1 — when foveated flips on by default
-                # later, add HELIX_FOVEATED_DISABLE via _env_truthy at that
-                # point (spec §6.3).
-                foveated_active = (
-                    budget_tier == "broad"
-                    and self.config.budget.foveated_enabled
-                    and len(candidates) > 1
-                )
-                if foveated_active:
-                    caps = _compute_foveated_caps(
-                        n=len(candidates),
-                        alpha=self.config.budget.foveated_alpha,
-                        c_min=self.config.budget.foveated_c_min,
-                        c_max=1.0,
-                    )
-                    # Reverse together so caps[i] still pairs with candidates[i]
-                    candidates = list(reversed(candidates))
-                    caps = list(reversed(caps))
-                    self._last_foveated_caps = caps
-                    self._last_foveated_active = True
-                else:
-                    self._last_foveated_caps = None
-                    self._last_foveated_active = False
-
                 # Stash shadow pool for Lagrange check (#3)
                 self._last_shadow_pool = shadow_pool
                 self._last_shadow_scores = {
@@ -974,6 +954,37 @@ class HelixContextManager:
             )
             candidates = candidates[: classifier_result.assembly_max_genes_cap]
 
+        # Foveated-splice (spec §4-5): for BROAD only, replace uniform per-gene
+        # compression with a rank-scaled power-law schedule AND reverse the
+        # assembly order so top-rank lands nearest the user query (lost-in-the-
+        # middle exploit). Off by default; see docs/specs/2026-05-03-foveated-
+        # splice-design.md §6.3.
+        #
+        # Placed AFTER the classifier cap so reversal operates on the final
+        # post-cap candidate list (otherwise classifier truncation would
+        # silently drop the top-rank gene under reverse-rank — see code
+        # review C1).
+        #
+        # Uses local variables (not self._last_*) so concurrent build_context
+        # calls don't race and stale state from a prior call can't leak into
+        # the current one (see code review I1/I2; same pattern as
+        # decoder_prompt_override threading).
+        if (
+            budget_tier == "broad"
+            and self.config.budget.foveated_enabled
+            and len(candidates) > 1
+        ):
+            caps = _compute_foveated_caps(
+                n=len(candidates),
+                alpha=self.config.budget.foveated_alpha,
+                c_min=self.config.budget.foveated_c_min,
+                c_max=1.0,
+            )
+            # Reverse together so caps[i] still pairs with candidates[i].
+            candidates = list(reversed(candidates))
+            foveated_caps = list(reversed(caps))
+            foveated_active = True
+
         # Step 3.5: NLI classification (optional, DeBERTa backend only)
         relation_graph = {}
         if hasattr(self.ribosome, 'classify_relations'):
@@ -987,7 +998,7 @@ class HelixContextManager:
         # Dense format minimizes prose for small model extraction.
         spliced_map = {}
         answer_slate_lines = []  # MoE answer slate — flat KV pairs
-        foveated_caps = getattr(self, "_last_foveated_caps", None)
+        # foveated_caps / foveated_active are call-local; see top of build_context.
         foveated_base = self.config.budget.foveated_base_chars
         for idx, g in enumerate(candidates):
             src = g.source_id or ""
@@ -1038,18 +1049,29 @@ class HelixContextManager:
             session_id=session_id,
             ignore_delivered=ignore_delivered,
             decoder_prompt_override=effective_decoder_prompt,
-            respect_caller_order=getattr(self, "_last_foveated_active", False),
+            respect_caller_order=foveated_active,
         )
 
         # Annotate window with dynamic budget tier (for telemetry/benchmarks)
         if window.metadata is not None:
             window.metadata["budget_tier"] = budget_tier
             window.metadata["budget_tokens_est"] = budget_tokens_est
-            if getattr(self, "_last_foveated_active", False):
+            if foveated_active and foveated_caps is not None:
                 # Spec §8: per-call provenance for post-hoc α-curve attribution.
                 # Absent when foveated_enabled=false or tier != broad.
-                window.metadata["foveated_caps"] = self._last_foveated_caps
+                window.metadata["foveated_caps"] = foveated_caps
                 window.metadata["foveated_alpha"] = self.config.budget.foveated_alpha
+                # Scalar reductions for Prometheus translation paths that
+                # flatten only scalar attributes (the list above can be
+                # silently dropped). See code review I3. Under reverse-rank
+                # ordering caps[-1] is the c_max applied to the TOP-rank
+                # gene (closest to the user query) and caps[0] is the
+                # c_min applied to the BOTTOM-rank gene — the names
+                # `_top` / `_min` reflect the rank semantic, not the
+                # list-index semantic.
+                window.metadata["foveated_cap_top"] = foveated_caps[-1]
+                window.metadata["foveated_cap_min"] = foveated_caps[0]
+                window.metadata["foveated_cap_n"] = len(foveated_caps)
 
         # Classifier observability payload (spec section 5.2).
         if classifier_result is not None and window.metadata is not None:
