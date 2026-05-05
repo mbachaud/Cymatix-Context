@@ -1,0 +1,89 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+# Cancel in-progress runs on the same ref so a fast follow-up push
+# doesn't keep a stale run alive.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install CPU-only torch
+        run: pip install --index-url https://download.pytorch.org/whl/cpu torch
+
+      - name: Install package + test deps
+        run: pip install -e ".[dev]" psutil platformdirs py-cpuinfo numpy joblib scikit-learn
+
+      # Scope: run only the hardware-module test files. The wider unit suite
+      # has pre-existing CI-hostile import-time side effects (server.py:3091
+      # eagerly calls create_app() which sqlite3.connects to a configured
+      # genome path that doesn't exist on a clean runner). Restructuring
+      # server.py for lazy init is out of scope for PR2; tracked as a
+      # follow-up enhancement.
+      - name: Run hardware test suite
+        run: pytest tests/test_hardware.py tests/test_hardware_rocm.py tests/test_hardware_cuda_real.py tests/test_hardware_mps_smoke.py -v
+
+  test-macos-mps:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install package + test deps + transformers (for MPS smoke test)
+        run: pip install -e ".[dev]" torch transformers psutil platformdirs py-cpuinfo numpy joblib scikit-learn
+
+      # Scope: run only the hardware-module test files. The MPS smoke test
+      # is the actual integration check this job is for; the wider unit
+      # suite has pre-existing CI-hostile import-time side effects
+      # (server.py:3091) that PR2 isn't supposed to fix.
+      #
+      # PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.0 disables PyTorch's internal MPS
+      # memory ceiling. On the GHA macos-14 runner the default ceiling is
+      # too tight and trips on tiny allocations even when ~7 GiB is free.
+      # This is the documented workaround
+      # (https://pytorch.org/docs/stable/notes/mps.html).
+      - name: Run hardware test suite (MPS smoke test runs only on this job)
+        env:
+          PYTORCH_MPS_HIGH_WATERMARK_RATIO: "0.0"
+        run: pytest tests/test_hardware.py tests/test_hardware_rocm.py tests/test_hardware_cuda_real.py tests/test_hardware_mps_smoke.py -v
+
+  test-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install CPU-only torch
+        run: pip install --index-url https://download.pytorch.org/whl/cpu torch
+
+      - name: Install package + test deps
+        run: pip install -e ".[dev]" psutil platformdirs py-cpuinfo numpy joblib scikit-learn
+
+      # Scope: run only the hardware-module test files. The wider unit suite
+      # has pre-existing CI-hostile import-time side effects (server.py:3091
+      # eagerly calls create_app() which sqlite3.connects to a configured
+      # genome path that doesn't exist on a clean runner). Restructuring
+      # server.py for lazy init is out of scope for PR2; tracked as a
+      # follow-up enhancement.
+      - name: Run hardware test suite
+        run: pytest tests/test_hardware.py tests/test_hardware_rocm.py tests/test_hardware_cuda_real.py tests/test_hardware_mps_smoke.py -v

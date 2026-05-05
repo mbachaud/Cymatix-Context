@@ -41,6 +41,14 @@ Two PRs ship the work:
 
 ## 3. Architecture
 
+### Verification posture
+
+- **NVIDIA + CUDA-built torch:** validated on this rig (RTX-class consumer card, Windows 11, CUDA 12.1 wheel). PR1 bench gate measured −20.74 s p95 vs master baseline.
+- **ROCm + AMD GPU on Linux:** wired in PR1, *capable but unverified* — no maintainer with ROCm hardware has run the opt-in `tests/test_hardware_rocm.py` against real silicon. Same posture as the native-observability sidecar's macOS/Linux scripts (#16 §3 non-goals). Contributors with ROCm rigs are invited to validate via `HELIX_TEST_ROCM=1 pytest tests/test_hardware_rocm.py`.
+- **MPS / Apple Silicon:** wired in PR1, *capable but unverified* — same posture as ROCm. The smoke-test scaffold lives at `tests/test_hardware_mps_smoke.py` for any future maintainer with a Mac to run locally, but it is **not** exercised in CI: the GHA macos-14 runner's MPS shared pool OOMs at ~1 GiB peak on every cross-encoder forward pass we tried (deberta-v2-xsmall, MiniLM-L-6), even with `PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.0`. PR2 attempted the smoke gate per spec §8.2 but the runner's resource ceiling defeats it; the test self-skips when `GITHUB_ACTIONS=true`. Re-enabling on CI is tracked as a follow-up that needs a real Apple-Silicon dev rig to validate against first. Contributors with Macs are invited to run `pytest tests/test_hardware_mps_smoke.py -v` locally and report findings.
+- **CPU on x86 (Intel/AMD) and ARM (Linux/macOS):** validated indirectly — the CPU branch is the fallback of last resort and is exercised on every CI run (Linux + Windows runners) via the unit suite.
+- **Intel XPU:** not wired; deferred to enhancement-request via `.github/ISSUE_TEMPLATE/enhancement.md`. The picker recognizes the device-type string but resolves to CPU fallback per §2 non-goals.
+
 ### 3.1 Module shape
 
 New module: **`helix_context/hardware.py`**.
