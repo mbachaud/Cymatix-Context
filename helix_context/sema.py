@@ -123,6 +123,10 @@ class SemaCodec:
         model_name: str = "all-MiniLM-L6-v2",
         device: Optional[str] = None,
     ):
+        if device is None or device == "auto":
+            from helix_context.hardware import get_hardware
+            device = get_hardware().device
+
         from sentence_transformers import SentenceTransformer
 
         self._model = SentenceTransformer(model_name, device=device)

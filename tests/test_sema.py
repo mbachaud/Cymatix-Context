@@ -178,3 +178,55 @@ def test_error_prime_high_for_exceptions(codec):
         f"error prime (idx={error_idx}) not in top 5: "
         f"{[(PRIMES[i].name, f'{v:.2f}') for i, v in scored[:5]]}"
     )
+
+
+# ── Hardware-module device defaulting ────────────────────────────────
+
+def test_sema_codec_default_device_from_hardware(monkeypatch):
+    """SemaCodec() with no device arg should consult helix_context.hardware
+    instead of falling through to sentence-transformers' own auto-detect."""
+    from helix_context import hardware
+
+    hardware.reset_for_test()
+    monkeypatch.setattr(
+        hardware,
+        "_detect",
+        lambda: hardware.HardwareInfo(
+            device="cpu",
+            device_type="cpu",
+            device_name="test",
+            vram_total_gb=None,
+            vram_free_gb=None,
+            cpu_arch="x86_64",
+            cpu_brand="test",
+            system_ram_gb=16.0,
+            requested_device="auto",
+            fallback_reason=None,
+            batch_size_overrides={},
+        ),
+    )
+
+    captured = {}
+
+    class _FakeST:
+        def __init__(self, model_name, device):
+            captured["model_name"] = model_name
+            captured["device"] = device
+
+        def get_sentence_embedding_dimension(self):
+            return 384
+
+        def encode(self, *a, **kw):
+            # encode() is called by _build_projection() with the 20 anchors
+            # → return shape (20, 384) of zeros.
+            import numpy as np
+            return np.zeros((20, 384), dtype=np.float32)
+
+    monkeypatch.setattr("sentence_transformers.SentenceTransformer", _FakeST)
+
+    from helix_context.sema import SemaCodec
+
+    SemaCodec()  # no device arg — should default from hardware module
+    assert captured["device"] == "cpu"
+
+    hardware.reset_for_test()
