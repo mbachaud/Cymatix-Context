@@ -152,3 +152,189 @@ class TestAssembleRespectsCallerOrder:
         )
         # L came first in input → stays first in text. H last in input → last.
         assert window.expressed_context.find("L") < window.expressed_context.find("M") < window.expressed_context.find("H")
+
+
+# ---------------------------------------------------------------------------
+# Fixtures + helpers for tier-gating + reverse-rank end-to-end tests.
+#
+# We replicate _stub_express inline (rather than importing from
+# tests.test_abstain_tier) because that module transitively imports
+# tests.test_pipeline, which fails at collection time due to a
+# module-level helix_context.server.create_app() call without a real
+# genome DB. Inline replication keeps this file collectable in
+# isolation. See plan §"Step 1: Write the failing tests" notes.
+# ---------------------------------------------------------------------------
+
+
+def _stub_express(manager, *, candidates, scores):
+    """Replicated from tests/test_abstain_tier.py:87 to avoid the broken
+    test_pipeline import path. Bypasses real retrieval so tier-resolution
+    tests can pin top_score/ratio precisely."""
+    def fake_express(domains, entities, max_genes, **_kwargs):
+        manager.genome.last_query_scores = dict(scores)
+        return list(candidates)
+    manager._express = fake_express
+
+    def fake_refiners(query, candidates, max_genes, **_kwargs):
+        return list(candidates), {}
+    manager._apply_candidate_refiners = fake_refiners
+
+
+def _make_manager_with_n_genes(n, scores_fn):
+    """Build a HelixContextManager and stub _express to return n genes
+    with scores supplied by scores_fn(i) for i in [0, n).
+
+    scores_fn maps position to score. Caller picks scores to land the
+    tier resolution at the desired bucket.
+    """
+    from helix_context.config import (
+        BudgetConfig, ClassifierConfig, GenomeConfig, HelixConfig,
+        RibosomeConfig,
+    )
+    from helix_context.context_manager import HelixContextManager
+    from tests.conftest import make_gene
+
+    cfg = HelixConfig(
+        ribosome=RibosomeConfig(model="mock", timeout=5),
+        budget=BudgetConfig(max_genes_per_turn=n + 2, abstain_enabled=True),
+        genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
+        classifier=ClassifierConfig(enabled=False),
+    )
+    mgr = HelixContextManager(cfg)
+    candidates = [
+        make_gene(f"gene_{i} content", gene_id=f"gene_{i:02d}")
+        for i in range(n)
+    ]
+    scores = {candidates[i].gene_id: scores_fn(i) for i in range(n)}
+    _stub_express(mgr, candidates=candidates, scores=scores)
+    return mgr
+
+
+@pytest.fixture
+def helix_manager_broad_with_twelve_genes():
+    """12 genes whose scores land the dynamic budget in BROAD.
+
+    Scores: 3.0, 2.9, 2.8, ..., 1.9 → top=3.0 (>=2.5 escapes ABSTAIN,
+    <5.0 fails TIGHT). mean ≈ 2.45, ratio ≈ 1.22 (<1.8 fails FOCUSED) → BROAD.
+    """
+    mgr = _make_manager_with_n_genes(
+        12,
+        lambda i: 3.0 - i * 0.1,
+    )
+    yield mgr
+    mgr.close()
+
+
+@pytest.fixture
+def helix_manager_tight():
+    """4 genes — top dominates so the dynamic budget tiers as TIGHT.
+
+    top=20.0, others=0.1 → mean≈5.075, ratio≈3.94. PASSES TIGHT
+    (ratio>=3.0, top>=5.0, len>=3). The score-floor gates 3 of the 4
+    out (floor = 20*0.15 = 3.0), but len(gated)<3 so candidates stays
+    at 4, then TIGHT trims to candidates[:3].
+    """
+    mgr = _make_manager_with_n_genes(
+        4,
+        lambda i: 20.0 if i == 0 else 0.1,
+    )
+    yield mgr
+    mgr.close()
+
+
+@pytest.fixture
+def helix_manager_focused():
+    """6 genes that pass FOCUSED but fail TIGHT.
+
+    top=4.5, others=2.0 → mean=2.42, ratio≈1.86. PASSES FOCUSED
+    (ratio>=1.8, top>=2.5, len>=6). Fails TIGHT (top<5.0 and ratio<3.0).
+    Score floor = 4.5*0.15 = 0.675 → all 6 survive.
+    """
+    mgr = _make_manager_with_n_genes(
+        6,
+        lambda i: 4.5 if i == 0 else 2.0,
+    )
+    yield mgr
+    mgr.close()
+
+
+@pytest.fixture
+def helix_manager_abstain():
+    """8 genes whose scores trigger ABSTAIN: top<2.5 AND ratio<1.8.
+
+    top=1.5, others=1.2 → mean≈1.24, ratio≈1.21. ABSTAIN gate fires
+    before BROAD/TIGHT/FOCUSED resolution.
+    """
+    mgr = _make_manager_with_n_genes(
+        8,
+        lambda i: 1.5 if i == 0 else 1.2,
+    )
+    yield mgr
+    mgr.close()
+
+
+class TestFoveatedTierGating:
+    """Foveated only fires on BROAD (spec §3, §10 Tests 1-5)."""
+
+    def test_disabled_broad_no_metadata(self, helix_manager_broad_with_twelve_genes):
+        """Test 1: foveated_enabled=False on BROAD → no metadata key, uniform compression."""
+        m = helix_manager_broad_with_twelve_genes
+        m.config.budget.foveated_enabled = False
+        window = m.build_context("a query that lands in BROAD")
+        assert window.metadata.get("budget_tier") == "broad"
+        assert "foveated_caps" not in window.metadata
+
+    def test_enabled_broad_metadata_present(self, helix_manager_broad_with_twelve_genes):
+        """Test 2: foveated_enabled=True on BROAD → metadata['foveated_caps'] is a list, len = N."""
+        m = helix_manager_broad_with_twelve_genes
+        m.config.budget.foveated_enabled = True
+        window = m.build_context("a query that lands in BROAD")
+        assert window.metadata.get("budget_tier") == "broad"
+        caps = window.metadata.get("foveated_caps")
+        assert isinstance(caps, list)
+        assert len(caps) == 12
+        assert window.metadata.get("foveated_alpha") == 1.0
+
+    def test_enabled_tight_no_metadata(self, helix_manager_tight):
+        """Test 3: foveated_enabled=True but tier=tight → no metadata key."""
+        m = helix_manager_tight
+        m.config.budget.foveated_enabled = True
+        window = m.build_context("a query that lands in TIGHT")
+        assert window.metadata.get("budget_tier") == "tight"
+        assert "foveated_caps" not in window.metadata
+
+    def test_enabled_focused_no_metadata(self, helix_manager_focused):
+        """Test 4: foveated_enabled=True but tier=focused → no metadata key."""
+        m = helix_manager_focused
+        m.config.budget.foveated_enabled = True
+        window = m.build_context("a query that lands in FOCUSED")
+        assert window.metadata.get("budget_tier") == "focused"
+        assert "foveated_caps" not in window.metadata
+
+    def test_enabled_abstain_no_metadata(self, helix_manager_abstain):
+        """Test 5: foveated_enabled=True but ABSTAIN gate fired first → no metadata key."""
+        m = helix_manager_abstain
+        m.config.budget.foveated_enabled = True
+        window = m.build_context("a weak query that triggers ABSTAIN")
+        assert window.metadata.get("budget_tier") == "abstain"
+        assert "foveated_caps" not in window.metadata
+
+
+class TestFoveatedReverseRankEndToEnd:
+    """Top-rank gene lands LAST in the assembled prompt (spec §10 Test 7)."""
+
+    def test_top_rank_gene_appears_last_in_window_text(
+        self, helix_manager_broad_with_twelve_genes,
+    ):
+        m = helix_manager_broad_with_twelve_genes
+        m.config.budget.foveated_enabled = True
+        window = m.build_context("a query that lands in BROAD")
+        # The fixture seeds gene_0..gene_11 with descending scores. With
+        # foveated on, gene_0 (highest score) should be reversed to LAST.
+        idx_top = window.expressed_context.find("gene_0")
+        idx_bottom = window.expressed_context.find("gene_11")
+        assert idx_top != -1 and idx_bottom != -1
+        assert idx_top > idx_bottom, (
+            "Reverse-rank failed: top-score gene should appear AFTER "
+            "bottom-rank gene in the assembled window."
+        )

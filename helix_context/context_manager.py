@@ -864,6 +864,35 @@ class HelixContextManager:
                 # else: broad — keep current up-to-max_genes set
                 #   (weak absolute scores or weak ratio → widen the net)
 
+                # Foveated-splice (spec §4-5): for BROAD only, replace uniform
+                # per-gene compression with a rank-scaled power-law schedule
+                # AND reverse the assembly order so top-rank lands nearest
+                # the user query (lost-in-the-middle exploit). Off by default;
+                # see docs/specs/2026-05-03-foveated-splice-design.md §6.3.
+                # No env override in v1 — when foveated flips on by default
+                # later, add HELIX_FOVEATED_DISABLE via _env_truthy at that
+                # point (spec §6.3).
+                foveated_active = (
+                    budget_tier == "broad"
+                    and self.config.budget.foveated_enabled
+                    and len(candidates) > 1
+                )
+                if foveated_active:
+                    caps = _compute_foveated_caps(
+                        n=len(candidates),
+                        alpha=self.config.budget.foveated_alpha,
+                        c_min=self.config.budget.foveated_c_min,
+                        c_max=1.0,
+                    )
+                    # Reverse together so caps[i] still pairs with candidates[i]
+                    candidates = list(reversed(candidates))
+                    caps = list(reversed(caps))
+                    self._last_foveated_caps = caps
+                    self._last_foveated_active = True
+                else:
+                    self._last_foveated_caps = None
+                    self._last_foveated_active = False
+
                 # Stash shadow pool for Lagrange check (#3)
                 self._last_shadow_pool = shadow_pool
                 self._last_shadow_scores = {
@@ -958,14 +987,16 @@ class HelixContextManager:
         # Dense format minimizes prose for small model extraction.
         spliced_map = {}
         answer_slate_lines = []  # MoE answer slate — flat KV pairs
-        for g in candidates:
+        foveated_caps = getattr(self, "_last_foveated_caps", None)
+        foveated_base = self.config.budget.foveated_base_chars
+        for idx, g in enumerate(candidates):
             src = g.source_id or ""
             short = ""
             if src and not src.startswith("_"):
                 parts = src.replace("\\", "/").split("/")
                 try:
-                    idx = parts.index("Projects")
-                    short = "/".join(parts[idx + 1:])
+                    j = parts.index("Projects")
+                    short = "/".join(parts[j + 1:])
                 except ValueError:
                     short = "/".join(parts[-3:]) if len(parts) > 3 else src
             # Dense XML gene format — structured for small model extraction
@@ -983,9 +1014,17 @@ class HelixContextManager:
             # diff→DiffCompressor, else→Kompress (ModernBERT).
             # CodeCompressor disabled (40% invalid syntax — see 2f518dc).
             # Falls back to content[:1000].strip() when headroom is unavailable.
+            #
+            # Foveated path overrides the uniform 1000-char target with a
+            # rank-proportional cap per gene. When foveated_caps is None
+            # (default / non-BROAD / disabled), preserve current behavior.
+            if foveated_caps is not None:
+                target = max(1, int(foveated_caps[idx] * foveated_base))
+            else:
+                target = 1000
             content = compress_text(
                 g.content,
-                target_chars=1000,
+                target_chars=target,
                 content_type=g.promoter.domains,
             )
             spliced_map[g.gene_id] = f"<GENE{src_attr}{kv_attrs}>\n{content}\n</GENE>"
@@ -999,12 +1038,18 @@ class HelixContextManager:
             session_id=session_id,
             ignore_delivered=ignore_delivered,
             decoder_prompt_override=effective_decoder_prompt,
+            respect_caller_order=getattr(self, "_last_foveated_active", False),
         )
 
         # Annotate window with dynamic budget tier (for telemetry/benchmarks)
         if window.metadata is not None:
             window.metadata["budget_tier"] = budget_tier
             window.metadata["budget_tokens_est"] = budget_tokens_est
+            if getattr(self, "_last_foveated_active", False):
+                # Spec §8: per-call provenance for post-hoc α-curve attribution.
+                # Absent when foveated_enabled=false or tier != broad.
+                window.metadata["foveated_caps"] = self._last_foveated_caps
+                window.metadata["foveated_alpha"] = self.config.budget.foveated_alpha
 
         # Classifier observability payload (spec section 5.2).
         if classifier_result is not None and window.metadata is not None:
