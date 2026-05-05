@@ -137,17 +137,12 @@ def test_budget_foveated_defaults_off_with_alpha_one():
 
 def test_budget_foveated_toml_override(tmp_path):
     """Regression: helix.toml [budget] foveated_* keys are honored."""
-    import tomli_w
     from helix_context.config import load_config
     p = tmp_path / "helix.toml"
-    p.write_bytes(tomli_w.dumps({
-        "budget": {
-            "foveated_enabled": True,
-            "foveated_alpha": 2.0,
-            "foveated_c_min": 0.20,
-            "foveated_base_chars": 1500,
-        }
-    }).encode())
+    p.write_text(
+        "[budget]\nfoveated_enabled = true\nfoveated_alpha = 2.0\nfoveated_c_min = 0.20\nfoveated_base_chars = 1500\n",
+        encoding="utf-8",
+    )
     cfg = load_config(str(p))
     assert cfg.budget.foveated_enabled is True
     assert cfg.budget.foveated_alpha == 2.0
