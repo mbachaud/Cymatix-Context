@@ -27,23 +27,31 @@ log = logging.getLogger("helix.hardware")
 _VALID_DEVICES = ("auto", "cuda", "rocm", "mps", "cpu")
 
 
-def _resolve_requested_device() -> str:
-    """Resolve the user's requested device from HELIX_DEVICE env var.
-    Config plumbing is added in Task 9; for now env-var-only.
+def _resolve_requested_device(config_device: str = "auto") -> str:
+    """Resolve the user's requested device.
 
-    Returns one of _VALID_DEVICES; invalid values log a warning and
-    return 'auto'."""
+    Order of precedence:
+      1. ``HELIX_DEVICE`` env var (operator override at launch).
+      2. ``config_device`` arg (from ``[hardware] device`` in helix.toml).
+      3. ``"auto"`` (sentinel; the picker walks CUDA -> ROCm -> MPS -> CPU).
+
+    Returns one of ``_VALID_DEVICES``; invalid env/config values log a
+    warning and fall through to the next layer."""
     env_value = os.environ.get("HELIX_DEVICE")
-    if env_value is None:
-        return "auto"
-    normalized = env_value.strip().lower()
-    if normalized not in _VALID_DEVICES:
+    if env_value is not None:
+        normalized = env_value.strip().lower()
+        if normalized in _VALID_DEVICES:
+            return normalized
         log.warning(
-            "Invalid HELIX_DEVICE=%r (valid: %s); ignoring HELIX_DEVICE and using 'auto'",
+            "Invalid HELIX_DEVICE=%r (valid: %s); ignoring HELIX_DEVICE",
             env_value, ", ".join(_VALID_DEVICES),
         )
-        return "auto"
-    return normalized
+        # fall through to config / auto
+    cfg_norm = config_device.strip().lower() if isinstance(config_device, str) else ""
+    if cfg_norm in _VALID_DEVICES:
+        return cfg_norm
+    log.warning("Invalid [hardware] device=%r; using 'auto'", config_device)
+    return "auto"
 
 
 def _cpuinfo_get_info() -> Optional[Dict[str, Any]]:
@@ -123,6 +131,10 @@ class HardwareInfo:
 
 
 _cached_info: Optional[HardwareInfo] = None
+# Config-supplied defaults consumed by ``_detect()``. ``init_from_config``
+# is the only public setter; ``reset_for_test`` clears them.
+_config_device: str = "auto"
+_config_overrides: Mapping[str, int] = {}
 
 
 def get_hardware() -> HardwareInfo:
@@ -133,10 +145,38 @@ def get_hardware() -> HardwareInfo:
     return _cached_info
 
 
+def init_from_config(
+    config_device: str = "auto",
+    batch_size_overrides: Optional[Mapping[str, int]] = None,
+) -> HardwareInfo:
+    """One-shot init at server startup.
+
+    Sets the config-supplied ``requested_device`` and ``batch_size_overrides``
+    that ``_detect()`` will stamp onto the singleton, then forces detection.
+
+    **Idempotent on the cache**: if ``get_hardware()`` (or a previous
+    ``init_from_config()``) already populated the singleton, the cached
+    ``HardwareInfo`` is returned unchanged. This is the
+    cached-singleton-poisoning failure mode pinned by
+    ``tests/test_hardware.py::test_init_from_config_must_run_before_get_hardware``
+    — the call order at server startup matters.
+
+    Returns the (possibly-cached) ``HardwareInfo``."""
+    global _cached_info, _config_device, _config_overrides
+    if _cached_info is not None:
+        return _cached_info
+    _config_device = config_device
+    _config_overrides = dict(batch_size_overrides) if batch_size_overrides else {}
+    _cached_info = _detect()
+    return _cached_info
+
+
 def reset_for_test() -> None:
-    """Clear the cached HardwareInfo. Test-only."""
-    global _cached_info
+    """Clear the cached HardwareInfo + config state. Test-only."""
+    global _cached_info, _config_device, _config_overrides
     _cached_info = None
+    _config_device = "auto"
+    _config_overrides = {}
 
 
 def _detect_cuda_or_rocm(rocm: bool) -> Optional[Dict[str, Any]]:
@@ -201,7 +241,8 @@ def _detect_mps() -> Optional[Dict[str, Any]]:
 
 def _detect() -> HardwareInfo:
     cpu = _detect_cpu()
-    requested = _resolve_requested_device()
+    requested = _resolve_requested_device(_config_device)
+    overrides = dict(_config_overrides)
 
     if requested == "auto":
         attempts = [
@@ -246,6 +287,7 @@ def _detect() -> HardwareInfo:
                 system_ram_gb=cpu["system_ram_gb"],
                 requested_device=requested,
                 fallback_reason=None,
+                batch_size_overrides=overrides,
             )
         else:
             last_failure_reason = (
@@ -272,6 +314,7 @@ def _detect() -> HardwareInfo:
         system_ram_gb=cpu["system_ram_gb"],
         requested_device=requested,
         fallback_reason=fallback_reason,
+        batch_size_overrides=overrides,
     )
 
 

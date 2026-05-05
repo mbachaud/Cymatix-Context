@@ -349,6 +349,20 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
     if config is None:
         config = load_config()
 
+    # ── Hardware init MUST happen BEFORE any backend constructs. ────
+    # The hardware singleton caches on first ``get_hardware()`` call;
+    # if any backend (deberta / nli / splade / sema) calls
+    # ``get_hardware()`` before ``init_from_config()`` runs, the
+    # singleton caches an env-only result and the config-supplied
+    # ``device`` + ``batch_size_overrides`` are silently lost. The
+    # regression is pinned in
+    # tests/test_hardware.py::test_init_from_config_must_run_before_get_hardware.
+    from .hardware import init_from_config
+    init_from_config(
+        config_device=config.hardware.device,
+        batch_size_overrides=config.hardware.batch_sizes,
+    )
+
     # ── Cost-visibility startup warning (W2-B) ─────────────────────
     # Surface paid-API ribosome backends loudly so operators are
     # never surprised by metered cost. Local-first is the helix

@@ -424,3 +424,41 @@ def test_batch_size_unknown_model_returns_minimum(mock_torch):
     """Asking for a model not in the table returns the conservative floor."""
     hardware.reset_for_test()
     assert hardware.recommended_batch_size("unknown_model") == 1
+
+
+# ── Config flow (Task 9) ────────────────────────────────────────────
+# init_from_config wires [hardware] section through to the singleton.
+
+def test_init_from_config_routes_through_singleton(mock_torch):
+    """init_from_config sets requested_device + batch_size_overrides."""
+    mock_torch["cuda_available"] = True
+    mock_torch["cuda_device_count"] = 1
+    mock_torch["cuda_device_names"] = ["RTX 4090"]
+    mock_torch["cuda_mem"] = [(22.0, 24.0)]
+    hardware.reset_for_test()
+    info = hardware.init_from_config(
+        config_device="cuda",
+        batch_size_overrides={"rerank": 8},
+    )
+    assert info.requested_device == "cuda"
+    assert info.batch_size_overrides == {"rerank": 8}
+    assert hardware.recommended_batch_size("rerank") == 8
+
+
+def test_init_from_config_must_run_before_get_hardware(mock_torch, monkeypatch):
+    """Regression pin: if get_hardware() runs before init_from_config(),
+    the cached singleton ignores config. This test documents that
+    server startup MUST call init_from_config() first."""
+    monkeypatch.setenv("HELIX_DEVICE", "auto")
+    mock_torch["cuda_available"] = True
+    mock_torch["cuda_device_count"] = 1
+    mock_torch["cuda_device_names"] = ["RTX 4090"]
+    mock_torch["cuda_mem"] = [(22.0, 24.0)]
+    hardware.reset_for_test()
+    info_early = hardware.get_hardware()
+    assert info_early.batch_size_overrides == {}
+    info_late = hardware.init_from_config(
+        config_device="cuda",
+        batch_size_overrides={"rerank": 8},
+    )
+    assert info_late.batch_size_overrides == {}  # cache wins; config lost
