@@ -1743,6 +1743,7 @@ class HelixContextManager:
         session_id: Optional[str] = None,
         ignore_delivered: bool = False,
         decoder_prompt_override: Optional[str] = None,
+        respect_caller_order: bool = False,
     ) -> ContextWindow:
         """
         Sort spliced parts, join with dividers, wrap in expressed_context tags.
@@ -1759,7 +1760,13 @@ class HelixContextManager:
         elision. ignore_delivered=True bypasses the check (still logs).
         """
         use_slate = answer_slate is not None
-        if use_slate:
+        if respect_caller_order:
+            # Foveated-splice path (spec §5): the caller has already arranged
+            # candidates in the desired emission order (e.g., reverse-rank
+            # for BROAD). Skip the re-sort so reverse-rank actually reaches
+            # the prompt instead of being clobbered back to score-DESC.
+            sorted_genes = list(candidates)
+        elif use_slate:
             # MoE/small-model: relevance-first ordering — best gene at position 0
             # so it's within every sliding-window attention layer
             scores = self.genome.last_query_scores or {}
