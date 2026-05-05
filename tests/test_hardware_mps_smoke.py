@@ -1,14 +1,21 @@
-"""macOS MPS smoke test — runs on darwin only.
+"""macOS MPS smoke test — runs on darwin only, and only outside GHA.
 
 Loads a tiny cross-encoder tokenizer + model and does a 2-pair forward
-pass on mps to catch MPS-branch regressions on every PR. Skipped on
-non-darwin platforms (Linux / Windows). See spec
-``docs/specs/2026-05-04-hardware-detection-design.md`` §8.2 + §3
-verification posture (model substitution rationale).
+pass on mps to catch MPS-branch regressions. Skipped on non-darwin
+platforms (Linux / Windows) AND on GitHub Actions runners — see spec
+``docs/specs/2026-05-04-hardware-detection-design.md`` §3 verification
+posture: the GHA macos-14 runner's MPS shared pool can't accommodate
+even small transformer forward passes (OOMs at ~1 GiB peak on every
+attention-head model we tried, including a 22 MB MiniLM, even with
+PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.0). Re-enabling on CI is tracked as
+a follow-up that needs a real Apple-Silicon dev rig to validate first.
+Until then, the test scaffold is preserved so a maintainer with a Mac
+can run it locally.
 """
 
 from __future__ import annotations
 
+import os
 import sys
 
 import pytest
@@ -26,15 +33,24 @@ def _mps_available() -> bool:
     )
 
 
+def _on_gha() -> bool:
+    return os.environ.get("GITHUB_ACTIONS") == "true"
+
+
 requires_mps_runtime = pytest.mark.skipif(
-    not _mps_available(),
-    reason="Requires darwin + MPS-capable hardware (skipped on Linux/Windows runners)",
+    not _mps_available() or _on_gha(),
+    reason=(
+        "Requires darwin + MPS-capable hardware AND not running on GHA "
+        "(GHA macos-14 MPS shared pool OOMs even on tiny models — see "
+        "spec §3 verification posture; tracked for re-enable when a real "
+        "Mac dev rig is available)"
+    ),
 )
 
 
 @requires_mps_runtime
 @pytest.mark.requires_mps
-def test_deberta_classifier_two_pair_forward_pass_on_mps():
+def test_cross_encoder_two_pair_forward_pass_on_mps():
     """Load a small cross-encoder, run a 2-pair forward pass on mps, assert
     output shape == (2,). Catches MPS-branch regressions before they reach
     users."""
