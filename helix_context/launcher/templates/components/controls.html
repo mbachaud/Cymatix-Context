@@ -1,27 +1,53 @@
 <section class="controls">
-  <div class="controls-status">
-    <span class="status-dot status-dot--{{ 'running' if state.helix.running else 'stopped' }}"></span>
-    <span class="status-label">
-      {% if state.helix.running %}
-        Running · pid {{ state.helix.pid }} · port {{ state.helix.port }}
-      {% else %}
-        Stopped
+  <div class="controls-primary">
+    <div class="controls-status">
+      <span class="status-dot status-dot--{{ 'running' if state.helix.running else 'stopped' }}"></span>
+      <div>
+        <p class="eyebrow">Server</p>
+        <p class="status-label">
+          {% if state.helix.running %}
+            Running / pid {{ state.helix.pid }} / port {{ state.helix.port }}
+          {% else %}
+            Stopped
+          {% endif %}
+        </p>
+      </div>
+    </div>
+
+    <div class="controls-metrics" aria-label="Quick metrics">
+      {% if state.participants %}
+        <div class="metric">
+          <span class="metric-value">{{ state.participants.count }}</span>
+          <span class="metric-label">identities</span>
+        </div>
       {% endif %}
-    </span>
+      {% if state.genes %}
+        <div class="metric">
+          <span class="metric-value">{{ "{:,}".format(state.genes.total) }}</span>
+          <span class="metric-label">genes</span>
+        </div>
+      {% endif %}
+      {% if state.tools %}
+        <div class="metric">
+          <span class="metric-value">{{ state.tools.count }}</span>
+          <span class="metric-label">tools</span>
+        </div>
+      {% endif %}
+    </div>
   </div>
 
   <div class="controls-buttons">
     <button type="button" class="btn btn--start" data-action="start"
       {% if state.helix.running %}disabled{% endif %}>
-      ▶ Start
+      Start
     </button>
     <button type="button" class="btn btn--restart" data-action="restart"
       {% if not state.helix.running %}disabled{% endif %}>
-      ↻ Restart
+      Restart
     </button>
     <button type="button" class="btn btn--stop" data-action="stop"
       {% if not state.helix.running %}disabled{% endif %}>
-      ■ Stop
+      Stop
     </button>
   </div>
 </section>

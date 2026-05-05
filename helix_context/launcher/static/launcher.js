@@ -1,16 +1,8 @@
 /*
- * Helix Launcher — tiny reactivity layer.
+ * Helix Launcher dashboard reactivity.
  *
- * Two jobs:
- *   1. Poll /api/state/panels every N ms and replace the panels content
- *   2. Wire Start/Restart/Stop buttons to POST /api/control/{action}
- *
- * No framework, no vendored library. Pure DOM.
- *
- * Note on HTML parsing: the panels partial is rendered server-side by
- * Jinja2 with autoescape enabled for html+xml. All interpolated values
- * are auto-escaped, so the returned HTML is trusted. We still use
- * DOMParser + replaceChildren (not innerHTML =) as defense in depth.
+ * Polls server-rendered panels, wires lifecycle actions, and preserves
+ * selected dashboard tabs across refreshes.
  */
 
 (function () {
@@ -22,14 +14,89 @@
   const pollUrl = panels.dataset.pollUrl || "/api/state/panels";
   const pollIntervalMs = parseInt(panels.dataset.pollIntervalMs || "2000", 10);
   const domParser = new DOMParser();
+  const tabStorageKey = "helix-dashboard-tab";
+  const agentTabStorageKey = "helix-dashboard-agent-tab";
+  const agentOpenStorageKey = "helix-dashboard-agent-open";
 
   let pollTimer = null;
   let inFlight = false;
 
+  function setActiveTab(tab) {
+    const nextTab = tab || "overview";
+    panels.dataset.activeTab = nextTab;
+    document.querySelectorAll("[data-tab]").forEach((btn) => {
+      btn.classList.toggle("is-active", btn.dataset.tab === nextTab);
+    });
+    try {
+      window.localStorage.setItem(tabStorageKey, nextTab);
+    } catch (err) {
+      // Storage is optional.
+    }
+  }
+
+  function restoreActiveTab() {
+    try {
+      const saved = window.localStorage.getItem(tabStorageKey);
+      if (saved) {
+        setActiveTab(saved);
+        return;
+      }
+    } catch (err) {
+      // Ignore storage failures.
+    }
+    setActiveTab(panels.dataset.activeTab || "overview");
+  }
+
+  function setAgentTab(tab) {
+    const nextTab = tab || "active";
+    document.querySelectorAll("[data-agent-panel]").forEach((panel) => {
+      panel.querySelectorAll("[data-agent-tab]").forEach((btn) => {
+        const active = btn.dataset.agentTab === nextTab;
+        btn.classList.toggle("is-active", active);
+        btn.setAttribute("aria-selected", active ? "true" : "false");
+      });
+      panel.querySelectorAll("[data-agent-view]").forEach((view) => {
+        view.hidden = view.dataset.agentView !== nextTab;
+      });
+    });
+    try {
+      window.localStorage.setItem(agentTabStorageKey, nextTab);
+    } catch (err) {
+      // Storage is optional.
+    }
+  }
+
+  function restoreAgentTab() {
+    try {
+      setAgentTab(window.localStorage.getItem(agentTabStorageKey) || "active");
+      return;
+    } catch (err) {
+      // Ignore storage failures.
+    }
+    setAgentTab("active");
+  }
+
+  function restoreAgentOpenState() {
+    let open = true;
+    try {
+      const saved = window.localStorage.getItem(agentOpenStorageKey);
+      if (saved === "false") open = false;
+    } catch (err) {
+      // Ignore storage failures.
+    }
+    document.querySelectorAll("[data-agent-panel]").forEach((panel) => {
+      panel.open = open;
+    });
+  }
+
   function swapPanelsHtml(htmlString) {
+    const activeTab = panels.dataset.activeTab || "overview";
     const doc = domParser.parseFromString(htmlString, "text/html");
     const newNodes = Array.from(doc.body.childNodes);
     panels.replaceChildren(...newNodes);
+    panels.dataset.activeTab = activeTab;
+    restoreAgentOpenState();
+    restoreAgentTab();
   }
 
   async function fetchPanels() {
@@ -68,7 +135,7 @@
       if (statusLabel) {
         if (running) {
           statusLabel.textContent =
-            "Running · pid " + state.helix.pid + " · port " + state.helix.port;
+            "Running / pid " + state.helix.pid + " / port " + state.helix.port;
         } else {
           statusLabel.textContent = "Stopped";
         }
@@ -81,7 +148,7 @@
       if (btnRestart) btnRestart.disabled = !running;
       if (btnStop) btnStop.disabled = !running;
     } catch (err) {
-      // ignore — next poll will retry
+      // The next poll will retry.
     }
   }
 
@@ -101,8 +168,6 @@
       pollTimer = null;
     }
   }
-
-  // ── Control button wiring ──────────────────────────────────
 
   async function sendControl(action) {
     const btn = document.querySelector('[data-action="' + action + '"]');
@@ -130,14 +195,37 @@
   document.addEventListener("click", function (evt) {
     const target = evt.target;
     if (!(target instanceof HTMLElement)) return;
-    const action = target.dataset.action;
-    if (!action) return;
+
+    const tabButton = target.closest("[data-tab]");
+    if (tabButton instanceof HTMLElement) {
+      setActiveTab(tabButton.dataset.tab || "overview");
+      return;
+    }
+
+    const agentTabButton = target.closest("[data-agent-tab]");
+    if (agentTabButton instanceof HTMLElement) {
+      setAgentTab(agentTabButton.dataset.agentTab || "active");
+      return;
+    }
+
+    const actionButton = target.closest("[data-action]");
+    if (!(actionButton instanceof HTMLElement)) return;
+    const action = actionButton.dataset.action;
     if (action === "start" || action === "stop" || action === "restart") {
       sendControl(action);
     }
   });
 
-  // ── Visibility-aware polling (pause when tab is hidden) ────
+  document.addEventListener("toggle", function (evt) {
+    const target = evt.target;
+    if (!(target instanceof HTMLDetailsElement)) return;
+    if (!target.matches("[data-agent-panel]")) return;
+    try {
+      window.localStorage.setItem(agentOpenStorageKey, target.open ? "true" : "false");
+    } catch (err) {
+      // Storage is optional.
+    }
+  }, true);
 
   document.addEventListener("visibilitychange", function () {
     if (document.hidden) {
@@ -147,6 +235,8 @@
     }
   });
 
-  // Kick it off.
+  restoreActiveTab();
+  restoreAgentOpenState();
+  restoreAgentTab();
   startPolling();
 })();
