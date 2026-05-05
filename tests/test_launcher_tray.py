@@ -918,3 +918,89 @@ class TestRepoRootHelper:
         assert (repo / "helix_context").is_dir()
         # And scripts/install-native-observability.ps1 must live under it.
         assert (repo / "scripts" / "install-native-observability.ps1").exists()
+
+
+# ── Hardware-fallback balloon (Task 13 — feat/hardware-detection) ─────
+
+
+class TestHardwareFallbackBalloon:
+    """Spec §6 third surface: tray balloon when the active device differs
+    from the requested device. Sentinel encodes (requested, active) so a
+    state-change re-fires; same-state re-launches stay quiet."""
+
+    def test_hardware_fallback_balloon_fires_first_launch(self, tmp_path, monkeypatch):
+        """Balloon fires once when fallback_active=True and no sentinel exists."""
+        from helix_context import hardware
+
+        monkeypatch.setattr("helix_context.launcher.observability_paths.state_dir",
+                            lambda create=False: tmp_path)
+        hardware.reset_for_test()
+        fake = hardware.HardwareInfo(
+            device="cpu", device_type="cpu", device_name="CPU",
+            vram_total_gb=None, vram_free_gb=None,
+            cpu_arch="x86_64", cpu_brand="CPU",
+            system_ram_gb=16.0, requested_device="cuda",
+            fallback_reason="cuda not available",
+            batch_size_overrides={},
+        )
+        monkeypatch.setattr(hardware, "_detect", lambda: fake)
+
+        from helix_context.launcher.tray import _should_fire_hardware_fallback_balloon
+        assert _should_fire_hardware_fallback_balloon() is True
+
+    def test_hardware_fallback_balloon_dedups_via_sentinel(self, tmp_path, monkeypatch):
+        """Sentinel exists -> balloon suppressed."""
+        monkeypatch.setattr("helix_context.launcher.observability_paths.state_dir",
+                            lambda create=False: tmp_path)
+        sentinel = tmp_path / ".hardware-fallback-acknowledged-cuda-cpu"
+        sentinel.touch()
+
+        from helix_context import hardware
+        hardware.reset_for_test()
+        monkeypatch.setattr(hardware, "_detect", lambda: hardware.HardwareInfo(
+            device="cpu", device_type="cpu", device_name="CPU",
+            vram_total_gb=None, vram_free_gb=None,
+            cpu_arch="x86_64", cpu_brand="CPU", system_ram_gb=16.0,
+            requested_device="cuda", fallback_reason="cuda not available",
+            batch_size_overrides={},
+        ))
+
+        from helix_context.launcher.tray import _should_fire_hardware_fallback_balloon
+        assert _should_fire_hardware_fallback_balloon() is False
+
+    def test_hardware_fallback_balloon_refires_on_different_state(self, tmp_path, monkeypatch):
+        """Different requested/active combo => different sentinel => balloon fires."""
+        monkeypatch.setattr("helix_context.launcher.observability_paths.state_dir",
+                            lambda create=False: tmp_path)
+        (tmp_path / ".hardware-fallback-acknowledged-cuda-cpu").touch()
+
+        from helix_context import hardware
+        hardware.reset_for_test()
+        monkeypatch.setattr(hardware, "_detect", lambda: hardware.HardwareInfo(
+            device="cpu", device_type="cpu", device_name="CPU",
+            vram_total_gb=None, vram_free_gb=None,
+            cpu_arch="x86_64", cpu_brand="CPU", system_ram_gb=16.0,
+            requested_device="mps", fallback_reason="mps not available",
+            batch_size_overrides={},
+        ))
+
+        from helix_context.launcher.tray import _should_fire_hardware_fallback_balloon
+        # Sentinel is for cuda->cpu; current state is mps->cpu.
+        assert _should_fire_hardware_fallback_balloon() is True
+
+    def test_hardware_fallback_balloon_skipped_when_no_fallback(self, tmp_path, monkeypatch):
+        """fallback_reason is None => no balloon ever."""
+        monkeypatch.setattr("helix_context.launcher.observability_paths.state_dir",
+                            lambda create=False: tmp_path)
+        from helix_context import hardware
+        hardware.reset_for_test()
+        monkeypatch.setattr(hardware, "_detect", lambda: hardware.HardwareInfo(
+            device="cuda:0", device_type="cuda", device_name="RTX 4090",
+            vram_total_gb=24.0, vram_free_gb=22.0,
+            cpu_arch="x86_64", cpu_brand="CPU", system_ram_gb=64.0,
+            requested_device="auto", fallback_reason=None,
+            batch_size_overrides={},
+        ))
+
+        from helix_context.launcher.tray import _should_fire_hardware_fallback_balloon
+        assert _should_fire_hardware_fallback_balloon() is False

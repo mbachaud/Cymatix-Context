@@ -96,6 +96,56 @@ def _build_icon_image(size: int = 64):
     return img
 
 
+# ── Hardware-fallback balloon (spec §6, Task 13) ──────────────────────
+#
+# Mirrors the install-pending balloon pattern used by the
+# native-observability sidecar PR. Sentinel filename encodes the
+# (requested, active) tuple so a state-change re-fires the balloon
+# while same-state re-launches stay quiet.
+
+
+def _hardware_fallback_sentinel_path(requested: str, active: str) -> Path:
+    """Sentinel filename encodes the (requested, active) tuple so a
+    state-change re-fires the balloon."""
+    from helix_context.launcher.observability_paths import state_dir
+    return state_dir(create=True) / f".hardware-fallback-acknowledged-{requested}-{active}"
+
+
+def _should_fire_hardware_fallback_balloon() -> bool:
+    """True iff there is an active fallback AND the sentinel for the
+    current (requested, active) tuple does not yet exist."""
+    from helix_context.hardware import get_hardware
+    info = get_hardware()
+    if info.fallback_reason is None:
+        return False
+    sentinel = _hardware_fallback_sentinel_path(info.requested_device, info.device_type)
+    return not sentinel.exists()
+
+
+def _fire_hardware_fallback_balloon(tray_icon) -> None:
+    """Fire a one-shot balloon describing the fallback. Caller should
+    write the sentinel after firing (so re-launches don't nag)."""
+    from helix_context.hardware import get_hardware
+    info = get_hardware()
+    if info.fallback_reason is None:
+        return
+    title = "Helix: device fallback active"
+    msg = (
+        f"Requested {info.requested_device!r}, using {info.device_type!r}. "
+        f"Reason: {info.fallback_reason}"
+    )
+    try:
+        tray_icon.notify(msg, title)
+    except Exception:
+        log.warning("Tray balloon failed; fallback only logged", exc_info=True)
+        return
+    sentinel = _hardware_fallback_sentinel_path(info.requested_device, info.device_type)
+    try:
+        sentinel.touch()
+    except Exception:
+        log.warning("Could not write hardware-fallback sentinel %s", sentinel, exc_info=True)
+
+
 class HelixTrayIcon:
     """Wraps a pystray.Icon with launcher-aware menu actions.
 
@@ -725,6 +775,21 @@ class HelixTrayIcon:
             log.warning("notify_install_needed failed", exc_info=True)
         # Pulse the Observability submenu label until acknowledged.
         self.start_install_pulse()
+
+    def notify_hardware_fallback(self) -> None:
+        """Show a Windows balloon when the active device differs from the
+        requested device (spec §6 third surface). Sentinel-file dedup
+        ensures the balloon fires once per (requested, active) state
+        change — same-state re-launches stay quiet.
+
+        Mirrors the install-pending balloon pattern from the
+        native-observability sidecar PR.
+        """
+        if self._icon is None:
+            return
+        if not _should_fire_hardware_fallback_balloon():
+            return
+        _fire_hardware_fallback_balloon(self._icon)
 
     def notify_update_available(self) -> None:
         """Show a one-shot balloon when a newer Helix Context release exists."""

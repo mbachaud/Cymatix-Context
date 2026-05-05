@@ -35,3 +35,84 @@ def test_budget_abstain_enabled_toml_override(tmp_path):
     )
     cfg = load_config(str(toml))
     assert cfg.budget.abstain_enabled is False
+
+
+# ── Hardware section + ribosome.device deprecation shim (Task 9) ─────
+# Tests pin parsing of the [hardware] TOML section and the deprecation
+# warning emitted for legacy [ribosome] device usage. See
+# docs/specs/2026-05-04-hardware-detection-design.md for the contract.
+
+from helix_context.config import load_config
+
+
+def test_hardware_section_parses(tmp_path):
+    """[hardware] section parses with all defaults."""
+    cfg_text = """
+[hardware]
+device = "cuda"
+batch_sizes = "auto"
+low_vram_threshold_gb = 4.0
+"""
+    p = tmp_path / "helix.toml"
+    p.write_text(cfg_text)
+    cfg = load_config(str(p))
+    assert cfg.hardware.device == "cuda"
+    assert cfg.hardware.batch_sizes == {}
+    assert cfg.hardware.low_vram_threshold_gb == 4.0
+
+
+def test_hardware_section_batch_sizes_dict(tmp_path):
+    cfg_text = """
+[hardware]
+device = "auto"
+batch_sizes = { rerank = 16, splice = 32 }
+"""
+    p = tmp_path / "helix.toml"
+    p.write_text(cfg_text)
+    cfg = load_config(str(p))
+    assert cfg.hardware.batch_sizes == {"rerank": 16, "splice": 32}
+
+
+def test_ribosome_device_deprecation_warning(tmp_path, caplog):
+    """[ribosome] device alone (no [hardware]) triggers deprecation warning."""
+    cfg_text = """
+[ribosome]
+device = "cuda"
+"""
+    p = tmp_path / "helix.toml"
+    p.write_text(cfg_text)
+    with caplog.at_level("WARNING", logger="helix_context.config"):
+        cfg = load_config(str(p))
+    assert cfg.hardware.device == "cuda"
+    assert any(
+        "ribosome" in rec.message.lower() and "deprecated" in rec.message.lower()
+        for rec in caplog.records
+    )
+
+
+def test_hardware_overrides_ribosome_device(tmp_path, caplog):
+    """When both are set, [hardware] wins; warning still fires noting override."""
+    cfg_text = """
+[ribosome]
+device = "cpu"
+
+[hardware]
+device = "cuda"
+"""
+    p = tmp_path / "helix.toml"
+    p.write_text(cfg_text)
+    with caplog.at_level("WARNING", logger="helix_context.config"):
+        cfg = load_config(str(p))
+    assert cfg.hardware.device == "cuda"
+    assert any(
+        "deprecated" in rec.message.lower() and "override" in rec.message.lower()
+        for rec in caplog.records
+    )
+
+
+def test_no_device_config_defaults_to_auto(tmp_path):
+    p = tmp_path / "helix.toml"
+    p.write_text("# empty\n")
+    cfg = load_config(str(p))
+    assert cfg.hardware.device == "auto"
+    assert cfg.hardware.batch_sizes == {}

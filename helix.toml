@@ -36,6 +36,22 @@ query_expansion_enabled = false         # Step 0 LLM query-intent expansion. fal
 # claude_base_url = ""                          # "" = direct Anthropic API; set to a proxy URL (e.g. http://127.0.0.1:8787) to route through a gateway
 # litellm_model = "ollama/gemma4:e2b"           # LiteLLM model string — only used when backend = "litellm"
 
+[hardware]
+# Device picker. "auto" picks best-available (cuda -> rocm -> mps -> cpu).
+# Explicit values fall back loudly to CPU on probe failure; helix never
+# blocks on hardware mismatch -- see /health for fallback state.
+# Override one-shot via HELIX_DEVICE=cpu env var.
+device = "auto"        # auto | cuda | rocm | mps | cpu
+
+# Batch-size policy. "auto" consults the VRAM/RAM-aware table in
+# helix_context/hardware.py. Override per model when tuning:
+#   batch_sizes = { rerank = 16, splice = 32, splade = 8, nli = 8 }
+batch_sizes = "auto"
+
+# Soft-warn threshold. Below this, /health returns a "low_vram" hint and
+# the tray surfaces a one-time balloon. Set to 0 to disable.
+low_vram_threshold_gb = 4.0
+
 [budget]
 ribosome_tokens = 3000                  # fixed decoder prompt
 expression_tokens = 12000               # 1:10 ratio at 128K = ~12.8K total context budget

@@ -132,6 +132,41 @@ class TestHealthEndpoint:
         assert data["checks"]["upstream_ready"] is False
         assert "upstream model server is unreachable" in data["message"].lower()
 
+    def test_health_endpoint_includes_hardware_block(self, client, monkeypatch):
+        """Task 12: /health surfaces the detected hardware + fallback state
+        so operators can see at a glance whether they ended up on CPU
+        because cuda probe failed, etc."""
+        monkeypatch.setattr(
+            server_mod,
+            "_probe_upstream",
+            lambda _url, timeout_s=1.0: {"reachable": True, "probe": "/api/tags", "status_code": 200},
+        )
+        from helix_context import hardware
+        hardware.reset_for_test()
+        fake = hardware.HardwareInfo(
+            device="cpu", device_type="cpu", device_name="AMD Ryzen 9 7900X",
+            vram_total_gb=None, vram_free_gb=None,
+            cpu_arch="x86_64", cpu_brand="AMD Ryzen 9 7900X",
+            system_ram_gb=64.0, requested_device="cuda",
+            fallback_reason="cuda probe failed: RuntimeError: no driver",
+            batch_size_overrides={},
+        )
+        monkeypatch.setattr(hardware, "_detect", lambda: fake)
+
+        response = client.get("/health")
+        assert response.status_code == 200
+        body = response.json()
+        assert "hardware" in body
+        hw = body["hardware"]
+        assert hw["device"] == "cpu"
+        assert hw["device_name"] == "AMD Ryzen 9 7900X"
+        assert hw["requested_device"] == "cuda"
+        assert hw["fallback_active"] is True
+        assert "cuda probe failed" in hw["fallback_reason"]
+        assert hw["vram_total_gb"] is None
+        assert hw["system_ram_gb"] == 64.0
+        assert hw["low_vram_warning"] is False
+
 
 class TestStatsEndpoint:
     def test_stats_returns_genome_info(self, client):

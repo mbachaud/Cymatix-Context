@@ -18,7 +18,7 @@ from __future__ import annotations
 
 import logging
 import time
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import torch
 
@@ -44,14 +44,14 @@ class NLIClassifier:
     def __init__(
         self,
         model_path: str = "training/models/nli",
-        device: str = "auto",
+        device: Optional[str] = None,
     ):
         from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
-        if device == "auto":
-            self._device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        else:
-            self._device = torch.device(device)
+        if device is None or device == "auto":
+            from helix_context.hardware import get_hardware
+            device = get_hardware().device
+        self._device = torch.device(device)
 
         log.info("Loading NLI model from %s", model_path)
         self._tokenizer = AutoTokenizer.from_pretrained(model_path)
@@ -84,31 +84,47 @@ class NLIClassifier:
     def classify_batch(
         self, pairs: List[Tuple[str, str]]
     ) -> List[Tuple[NLRelation, float]]:
-        """Classify relations for a batch of text pairs."""
+        """Classify relations for a batch of text pairs.
+
+        Pairs are processed in chunks of ``recommended_batch_size("nli")`` to
+        keep peak VRAM bounded on long inputs. The hardware module returns the
+        per-device tier (with ``[hardware] batch_size_overrides.nli`` taking
+        precedence).
+        """
         if not pairs:
             return []
+
+        from helix_context.hardware import recommended_batch_size
+        batch_size = recommended_batch_size("nli")
 
         texts_a = [p[0] for p in pairs]
         texts_b = [p[1] for p in pairs]
 
-        encodings = self._tokenizer(
-            texts_a, texts_b,
-            truncation=True,
-            max_length=256,
-            padding=True,
-            return_tensors="pt",
-        ).to(self._device)
+        all_results: List[Tuple[NLRelation, float]] = []
+        for i in range(0, len(texts_a), batch_size):
+            chunk_a = texts_a[i : i + batch_size]
+            chunk_b = texts_b[i : i + batch_size]
 
-        with torch.no_grad():
-            outputs = self._model(**encodings)
-            probs = torch.softmax(outputs.logits, dim=-1)
-            pred_classes = probs.argmax(dim=-1).cpu().tolist()
-            confidences = probs.max(dim=-1).values.cpu().tolist()
+            encodings = self._tokenizer(
+                chunk_a, chunk_b,
+                truncation=True,
+                max_length=256,
+                padding=True,
+                return_tensors="pt",
+            ).to(self._device)
 
-        return [
-            (NLRelation(cls), conf)
-            for cls, conf in zip(pred_classes, confidences)
-        ]
+            with torch.no_grad():
+                outputs = self._model(**encodings)
+                probs = torch.softmax(outputs.logits, dim=-1)
+                pred_classes = probs.argmax(dim=-1).cpu().tolist()
+                confidences = probs.max(dim=-1).values.cpu().tolist()
+
+            all_results.extend(
+                (NLRelation(cls), conf)
+                for cls, conf in zip(pred_classes, confidences)
+            )
+
+        return all_results
 
     def build_relation_graph(
         self, genes: List[Gene]

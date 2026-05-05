@@ -349,6 +349,20 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
     if config is None:
         config = load_config()
 
+    # ── Hardware init MUST happen BEFORE any backend constructs. ────
+    # The hardware singleton caches on first ``get_hardware()`` call;
+    # if any backend (deberta / nli / splade / sema) calls
+    # ``get_hardware()`` before ``init_from_config()`` runs, the
+    # singleton caches an env-only result and the config-supplied
+    # ``device`` + ``batch_size_overrides`` are silently lost. The
+    # regression is pinned in
+    # tests/test_hardware.py::test_init_from_config_must_run_before_get_hardware.
+    from .hardware import init_from_config
+    init_from_config(
+        config_device=config.hardware.device,
+        batch_size_overrides=config.hardware.batch_sizes,
+    )
+
     # ── Cost-visibility startup warning (W2-B) ─────────────────────
     # Surface paid-API ribosome backends loudly so operators are
     # never surprised by metered cost. Local-first is the helix
@@ -2244,6 +2258,27 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
         else:
             message = "Upstream model server is unreachable; final chat proxy calls will fail."
 
+        # Hardware fallback surface — operators need to see at a glance
+        # whether we ended up on CPU because cuda probe failed, or whether
+        # we're on a low-VRAM tier where batch sizes will be conservative.
+        # See docs/specs/2026-05-04-hardware-detection-design.md §5.7.
+        from helix_context.hardware import get_hardware
+        hw_info = get_hardware()
+        low_vram = bool(
+            hw_info.vram_total_gb is not None
+            and hw_info.vram_total_gb < config.hardware.low_vram_threshold_gb
+        )
+        hardware_block = {
+            "device": hw_info.device,
+            "device_name": hw_info.device_name,
+            "requested_device": hw_info.requested_device,
+            "fallback_active": hw_info.fallback_reason is not None,
+            "fallback_reason": hw_info.fallback_reason,
+            "vram_total_gb": hw_info.vram_total_gb,
+            "system_ram_gb": hw_info.system_ram_gb,
+            "low_vram_warning": low_vram,
+        }
+
         # Intentionally minimized response — documented contract in
         # CLAUDE.md is "ribosome model, gene count, upstream URL". We keep
         # those and omit raw error strings, cost class, and the full
@@ -2258,6 +2293,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
             "genes": total_genes,
             "upstream": config.server.upstream,
             "upstream_reachable": upstream_reachable,
+            "hardware": hardware_block,
             "checks": {
                 "genome_ready": genome_ready,
                 "upstream_ready": upstream_reachable,

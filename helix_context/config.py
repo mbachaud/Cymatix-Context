@@ -301,6 +301,26 @@ class HeadroomConfig:
 
 
 @dataclass
+class Hardware:
+    """[hardware] config — see docs/specs/2026-05-04-hardware-detection-design.md.
+
+    device: ``auto`` | ``cuda`` | ``rocm`` | ``mps`` | ``cpu``. Wired into
+    ``hardware.init_from_config()`` at server startup.
+
+    batch_sizes: per-model overrides applied on top of the auto-detected
+    table. Empty dict means "use the table". The TOML literal string
+    ``"auto"`` is also accepted and equivalent to ``{}``.
+
+    low_vram_threshold_gb: under this VRAM tier the operator may want
+    fp8 / quantized variants. Surfaced for downstream consumers; not
+    used by the picker itself.
+    """
+    device: str = "auto"
+    batch_sizes: Dict[str, int] = field(default_factory=dict)
+    low_vram_threshold_gb: float = 4.0
+
+
+@dataclass
 class HelixConfig:
     ribosome: RibosomeConfig = field(default_factory=RibosomeConfig)
     budget: BudgetConfig = field(default_factory=BudgetConfig)
@@ -314,6 +334,7 @@ class HelixConfig:
     plr: PLRConfig = field(default_factory=PLRConfig)
     headroom: HeadroomConfig = field(default_factory=HeadroomConfig)
     classifier: ClassifierConfig = field(default_factory=ClassifierConfig)
+    hardware: Hardware = field(default_factory=Hardware)
     synonym_map: Dict[str, List[str]] = field(default_factory=dict)
 
 
@@ -540,6 +561,45 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
         cfg.classifier = ClassifierConfig(
             enabled=bool(cls_section.get("enabled", cfg.classifier.enabled)),
         )
+
+    # Hardware section — see docs/specs/2026-05-04-hardware-detection-design.md.
+    # Always run, even if [hardware] is absent, because the [ribosome]
+    # device deprecation shim must fire whenever the legacy key is set.
+    hw = raw.get("hardware", {})
+    if isinstance(hw, dict):
+        _warn_unknown("hardware", hw, Hardware)
+    if isinstance(hw.get("batch_sizes"), str) and hw["batch_sizes"] == "auto":
+        bs: Dict[str, int] = {}
+    elif isinstance(hw.get("batch_sizes"), dict):
+        bs = {k: int(v) for k, v in hw["batch_sizes"].items()}
+    else:
+        bs = {}
+    hardware_device = hw.get("device", "auto")
+
+    # Deprecation shim for [ribosome] device. Fires whenever the legacy
+    # key is present, even if [hardware] is also set — the warning text
+    # MUST contain both "deprecated" and "override" in the both-set case
+    # so test_hardware_overrides_ribosome_device's substring asserts
+    # match. Don't reword without updating the tests.
+    ribosome_device = raw.get("ribosome", {}).get("device")
+    if ribosome_device is not None:
+        if "device" in hw:
+            log.warning(
+                "[ribosome] device is deprecated; [hardware] device=%r takes "
+                "precedence (override). Remove [ribosome] device.", hardware_device,
+            )
+        else:
+            log.warning(
+                "[ribosome] device is deprecated; move to [hardware] device. "
+                "Using ribosome.device=%r for now.", ribosome_device,
+            )
+            hardware_device = ribosome_device
+
+    cfg.hardware = Hardware(
+        device=str(hardware_device),
+        batch_sizes=bs,
+        low_vram_threshold_gb=float(hw.get("low_vram_threshold_gb", 4.0)),
+    )
 
     # Fix 1: synonym map
     if "synonyms" in raw:

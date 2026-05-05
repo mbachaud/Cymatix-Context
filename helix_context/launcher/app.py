@@ -651,6 +651,15 @@ def main(argv: Optional[list] = None) -> int:
         except Exception:
             log.warning("update balloon scheduling failed", exc_info=True)
 
+        # Surface the hardware-fallback balloon (spec §6 third surface) —
+        # fires once per (requested, active) state change. Mirrors the
+        # install-pending balloon pattern above. Defer past notify_update
+        # so balloons don't stack on top of each other on startup.
+        try:
+            threading.Timer(3.0, tray_icon.notify_hardware_fallback).start()
+        except Exception:
+            log.warning("hardware-fallback balloon scheduling failed", exc_info=True)
+
         log.info("Tray mode active — dashboard at %s", url)
         log.info("Click the tray icon to open the dashboard; Quit from its menu to exit.")
         tray_icon.run()  # blocks until Quit
