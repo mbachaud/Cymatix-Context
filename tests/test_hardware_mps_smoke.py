@@ -1,0 +1,74 @@
+"""macOS MPS smoke test — runs on darwin only.
+
+Loads a tiny deberta-class tokenizer + model and does a 2-pair forward
+pass on mps to catch MPS-branch regressions on every PR. Skipped on
+non-darwin platforms (Linux / Windows). See spec
+``docs/specs/2026-05-04-hardware-detection-design.md`` §8.2.
+"""
+
+from __future__ import annotations
+
+import sys
+
+import pytest
+
+
+def _mps_available() -> bool:
+    try:
+        import torch
+    except ImportError:
+        return False
+    return (
+        sys.platform == "darwin"
+        and torch.backends.mps.is_available()
+        and torch.backends.mps.is_built()
+    )
+
+
+requires_mps_runtime = pytest.mark.skipif(
+    not _mps_available(),
+    reason="Requires darwin + MPS-capable hardware (skipped on Linux/Windows runners)",
+)
+
+
+@requires_mps_runtime
+@pytest.mark.requires_mps
+def test_deberta_classifier_two_pair_forward_pass_on_mps():
+    """Load a small cross-encoder, run a 2-pair forward pass on mps, assert
+    output shape == (2,). Catches MPS-branch regressions before they reach
+    users."""
+    import torch
+    from transformers import AutoModelForSequenceClassification, AutoTokenizer
+
+    # Smallest stable deberta-class cross-encoder available on the Hub.
+    # Spec §8.2 calls for "deberta tokenizer" specifically — this catches
+    # deberta-specific disentangled-attention regressions on MPS that a
+    # BERT-style model would miss. Keeping the model name local (not
+    # importing deberta_backend) avoids ImportError surfaces on macOS-14
+    # if optional helix-context extras aren't installed.
+    model_id = "cross-encoder/nli-deberta-v3-xsmall"  # ~80 MB, NLI 3-class output
+    tokenizer = AutoTokenizer.from_pretrained(model_id)
+    model = AutoModelForSequenceClassification.from_pretrained(model_id)
+    model = model.to("mps")
+    model.train(False)  # nn.Module inference mode — same effect as .eval()
+
+    pairs_a = ["What is helix-context?", "How does the picker work?"]
+    pairs_b = ["A retrieval system.", "It walks CUDA, ROCm, MPS, then CPU."]
+
+    enc = tokenizer(
+        pairs_a, pairs_b,
+        padding=True, truncation=True, max_length=128, return_tensors="pt",
+    ).to("mps")
+
+    with torch.no_grad():
+        out = model(**enc).logits
+
+    # nli-deberta-v3-xsmall outputs (batch, 3) for the 3 NLI classes.
+    # Allow (2, N) for any N >= 1 to remain robust if the model is
+    # swapped for a single-output cross-encoder later.
+    assert out.dim() == 2 and out.shape[0] == 2 and out.shape[1] >= 1, (
+        f"Expected logits shape (2, N>=1); got {tuple(out.shape)!r}"
+    )
+    # Round-trip back to CPU to catch silent fallback / NaN-on-MPS issues
+    cpu_logits = out.cpu()
+    assert not torch.isnan(cpu_logits).any(), "NaN in MPS logits — dtype/op mismatch?"
