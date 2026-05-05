@@ -1,9 +1,10 @@
 """macOS MPS smoke test — runs on darwin only.
 
-Loads a tiny deberta-class tokenizer + model and does a 2-pair forward
+Loads a tiny cross-encoder tokenizer + model and does a 2-pair forward
 pass on mps to catch MPS-branch regressions on every PR. Skipped on
 non-darwin platforms (Linux / Windows). See spec
-``docs/specs/2026-05-04-hardware-detection-design.md`` §8.2.
+``docs/specs/2026-05-04-hardware-detection-design.md`` §8.2 + §3
+verification posture (model substitution rationale).
 """
 
 from __future__ import annotations
@@ -40,13 +41,14 @@ def test_deberta_classifier_two_pair_forward_pass_on_mps():
     import torch
     from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
-    # Smallest stable deberta-class cross-encoder available on the Hub.
-    # Spec §8.2 calls for "deberta tokenizer" specifically — this catches
-    # deberta-specific disentangled-attention regressions on MPS that a
-    # BERT-style model would miss. Keeping the model name local (not
-    # importing deberta_backend) avoids ImportError surfaces on macOS-14
-    # if optional helix-context extras aren't installed.
-    model_id = "cross-encoder/nli-deberta-v3-xsmall"  # ~80 MB, NLI 3-class output
+    # MiniLM cross-encoder — BERT-style attention, ~22 MB. Initial plan
+    # picked nli-deberta-v3-xsmall for spec §8.2 "deberta tokenizer"
+    # faithfulness, but the GHA macos-14 runner's MPS shared pool is too
+    # small for deberta-v2's disentangled attention (OOM at ~1 GiB peak
+    # even with PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.0). MiniLM exercises
+    # the same MPS wiring on the available runner. Trade-off documented
+    # in spec §3 verification posture.
+    model_id = "cross-encoder/ms-marco-MiniLM-L-6-v2"  # ~22 MB, single-output
     tokenizer = AutoTokenizer.from_pretrained(model_id)
     model = AutoModelForSequenceClassification.from_pretrained(model_id)
     model = model.to("mps")
