@@ -330,11 +330,61 @@ class TestFoveatedReverseRankEndToEnd:
         m.config.budget.foveated_enabled = True
         window = m.build_context("a query that lands in BROAD")
         # The fixture seeds gene_0..gene_11 with descending scores. With
-        # foveated on, gene_0 (highest score) should be reversed to LAST.
-        idx_top = window.expressed_context.find("gene_0")
+        # foveated on, gene_00 (highest score) should be reversed to LAST.
+        # Search by full gene_id (gene_00, gene_11) — the bare prefix
+        # "gene_0" would also match gene_01..gene_09 and find the wrong
+        # position under reverse-rank ordering.
+        idx_top = window.expressed_context.find("gene_00")
         idx_bottom = window.expressed_context.find("gene_11")
         assert idx_top != -1 and idx_bottom != -1
         assert idx_top > idx_bottom, (
             "Reverse-rank failed: top-score gene should appear AFTER "
             "bottom-rank gene in the assembled window."
+        )
+
+
+class TestFoveatedBudgetTrim:
+    """Budget-overflow trim must drop the BOTTOM-rank gene under reverse-rank,
+    not the top-rank gene (spec §5 placement invariant).
+
+    Latent under default config (default budget never overflows for 12 short
+    genes), but a footgun the moment foveated_base_chars is bumped at bench
+    time: parts[-1] under reverse-rank IS the top-rank gene, so a naive
+    parts.pop() at the trim site would silently drop the most important
+    gene first — the exact opposite of what foveated wants.
+
+    Fix shape: when respect_caller_order=True, _assemble pops from the FRONT
+    of parts (and sorted_genes in lockstep) instead of the back.
+    """
+
+    def test_top_rank_survives_budget_trim_under_reverse_rank(
+        self, helix_manager_broad_with_twelve_genes,
+    ):
+        m = helix_manager_broad_with_twelve_genes
+        m.config.budget.foveated_enabled = True
+        # Force the budget-overflow trim to fire by shrinking the budget
+        # below what 12 genes can fit. With 12 genes and reverse-rank
+        # assembly, even short test content + the legibility headers
+        # comfortably overflows a ~30-token budget.
+        m.config.budget.expression_tokens = 20
+        m.config.budget.ribosome_tokens = 10
+
+        window = m.build_context("a query that lands in BROAD")
+
+        # Sanity: the trim actually fired (we should have fewer than 12
+        # genes in the final window).
+        assert window.metadata.get("budget_tier") == "broad"
+        assert window.metadata.get("genes_expressed", 12) < 12, (
+            "Test setup did not force a budget-overflow trim — bump the "
+            "budget down further or seed longer content."
+        )
+
+        # The actual invariant: the TOP-rank gene (gene_00, highest score)
+        # MUST still be in the assembled context after the trim. Under
+        # reverse-rank ordering parts[-1] is gene_00, so popping from the
+        # back (the pre-fix behavior) would have dropped it first.
+        assert "gene_00" in window.expressed_context, (
+            "Foveated budget-trim dropped the top-rank gene. Under "
+            "reverse-rank ordering parts[-1] is the TOP-rank gene; the "
+            "trim must pop from the FRONT (lowest rank) instead."
         )

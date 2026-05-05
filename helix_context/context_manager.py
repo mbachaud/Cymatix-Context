@@ -1955,9 +1955,29 @@ class HelixContextManager:
         budget = self.config.budget.ribosome_tokens + self.config.budget.expression_tokens
 
         if est_tokens > budget and len(parts) > 1:
-            # Drop from the end (lowest-ranked after re-rank)
+            # Default path: parts[-1] is the LOWEST-rank gene (sorted_genes was
+            # ordered score-DESC or by sequence_index), so popping from the
+            # back drops the least-important entry first.
+            #
+            # Foveated reverse-rank path (respect_caller_order=True, spec §5):
+            # the caller emits BROAD candidates in REVERSE-rank order so the
+            # top-rank gene lands LAST in the prompt (closest to user query
+            # under decoder-only attention). Under that ordering parts[-1] is
+            # the TOP-rank gene — popping from the back here would silently
+            # drop the most important gene first, the exact opposite of what
+            # the spec wants. Pop from the FRONT instead to drop the
+            # bottom-rank gene and preserve the placement invariant.
+            #
+            # sorted_genes is kept aligned with parts so the post-trim
+            # delivered_ids / expressed_gene_ids slices stay correct under
+            # both directions.
             while est_tokens > budget and len(parts) > 1:
-                parts.pop()
+                if respect_caller_order:
+                    parts.pop(0)
+                    sorted_genes.pop(0)
+                else:
+                    parts.pop()
+                    sorted_genes.pop()
                 expressed = "\n---\n".join(parts)
                 expressed_wrapped = f"<expressed_context>\n{expressed}\n</expressed_context>"
                 est_tokens = estimate_tokens(decoder_prompt) + estimate_tokens(expressed_wrapped)
