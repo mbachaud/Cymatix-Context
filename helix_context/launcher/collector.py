@@ -354,21 +354,25 @@ class StateCollector:
     # ── models ─────────────────────────────────────────────────────
 
     def _tools_panel(self, components: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-        """Project /admin/components into the launcher tools panel.
+        """Project /admin/components into the launcher components panel.
 
         The launcher already has dedicated Helix health and model panels.
         Hide the ribosome here so Ollama/model activity does not get
         mistaken for a separate operator-facing tool.
         """
+        all_components = components.get("components", [])
         entries = [
             component
-            for component in components.get("components", [])
+            for component in all_components
             if self._is_operator_tool(component)
         ]
         if not entries:
             return None
+        source_count = int(components.get("count", len(all_components)) or 0)
         return {
             "count": len(entries),
+            "source_count": source_count,
+            "hidden_count": max(0, source_count - len(entries)),
             "entries": entries,
             "last_activity_s_ago": components.get("last_activity_s_ago"),
         }
