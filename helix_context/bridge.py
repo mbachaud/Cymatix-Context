@@ -463,11 +463,11 @@ class AgentBridge:
             body["ide_override"] = ide_override
 
         try:
-            self._http_post(
+            result = self._http_post(
                 f"/sessions/{self._participant_id}/announce",
                 json_body=body,
             )
-            return True
+            return result is not None
         except Exception as exc:
             log.warning("announce() failed: %s", exc)
             return False
