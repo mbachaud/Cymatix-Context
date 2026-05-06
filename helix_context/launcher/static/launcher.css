@@ -816,7 +816,7 @@ p {
   margin-bottom: 6px;
   padding: 8px 12px;
   background: rgba(20, 20, 24, 0.96);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--color-border);
   border-radius: 4px;
   white-space: nowrap;
   pointer-events: none;
