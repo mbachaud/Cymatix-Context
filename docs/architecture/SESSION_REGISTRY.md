@@ -157,6 +157,13 @@ MCP host identity first-class in the registry:
 
 - `agent_kind`    — vendor family ("claude-code", "codex", "gemini") — added 2026-05-05
 - `mcp_host`      — host capability tag ("antigravity", "vscode", "cursor") — added 2026-05-05
+- `ide_detected`       — adapter env-var fingerprint at register time
+                         ("vscode", "cursor", or NULL on no_match) — added 2026-05-06
+- `ide_detection_via`  — how IDE was determined ("env:VSCODE_PID",
+                         "explicit:HELIX_MCP_HOST", "agent_override",
+                         "no_match") — added 2026-05-06
+- `model_id`           — agent self-reported via helix_announce
+                         (free-form, NULL until announced) — added 2026-05-06
 
 Both are nullable. Pre-2026-05-05 rows read as `NULL`. These fields are sourced from the
 `HELIX_AGENT_KIND` and `HELIX_MCP_HOST` environment variables respectively and persist on
@@ -249,6 +256,9 @@ Request body:
 | `metadata` | object | no | Arbitrary JSON for future extension. |
 | `agent_kind` | string | no | Vendor family — `"claude-code"`, `"codex"`, `"gemini"`. Sourced from `HELIX_AGENT_KIND`. Added 2026-05-05. |
 | `mcp_host` | string | no | Host capability tag — `"antigravity"`, `"vscode"`, `"cursor"`. Sourced from `HELIX_MCP_HOST`. The literal `"unknown"` is normalized to NULL at the wire. Added 2026-05-05. |
+| `ide_detected` | string | no | Adapter env-var fingerprint result. Sourced from `helix_context.launcher.ide_fingerprint.detect_ide()`. Added 2026-05-06. |
+| `ide_detection_via` | string | no | The evidence behind `ide_detected`. Added 2026-05-06. |
+| `model_id` | string | no | Optional at register time — typically supplied later via the announce endpoint. Added 2026-05-06. |
 
 Response:
 
@@ -292,6 +302,32 @@ Response:
 If the participant was previously `stale` or `gone`, the heartbeat resurrects
 it and returns `status: "active"`. If the `participant_id` is unknown, returns
 `404` and the client should re-register.
+
+<a id="announce-endpoint"></a>
+### POST /sessions/{participant_id}/announce  *(added 2026-05-06)*
+
+Agent self-report endpoint. Called once per session by the agent via
+the `helix_announce` MCP tool, after the MCP adapter has registered
+the participant.
+
+```bash
+curl -X POST http://127.0.0.1:11437/sessions/<participant_id>/announce \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model_id": "claude-opus-4-7",
+    "ide_override": "cursor"
+  }'
+```
+
+Request body:
+
+| Field | Type | Required | Notes |
+|---|---|---|---|
+| `model_id` | string | yes | Free-form model identifier. No allowlist validation. |
+| `ide_override` | string | no | Replaces `ide_detected` and forces `ide_detection_via='agent_override'`. |
+
+Silent no-op on unknown `participant_id` (returns 200) — matches
+heartbeat semantics. Multiple calls are idempotent (last-write-wins).
 
 ### `GET /sessions`
 

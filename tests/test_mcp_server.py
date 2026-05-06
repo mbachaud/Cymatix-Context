@@ -9,6 +9,8 @@ from helix_context.mcp_server import _default_ingest_identity, _normalize_health
 def mock_bridge(monkeypatch):
     class _MockBridge:
         register_participant_calls = []
+        announce_calls = []
+        _participant_id = "mock-participant-id"
 
         def __init__(self, *args, **kwargs):
             pass
@@ -17,8 +19,17 @@ def mock_bridge(monkeypatch):
             type(self).register_participant_calls.append(kwargs)
             return "mock-participant-id"
 
+        @classmethod
+        def announce(cls, model_id, ide_override=None):
+            cls.announce_calls.append({
+                "model_id": model_id,
+                "ide_override": ide_override,
+            })
+            return True
+
     monkeypatch.setattr("helix_context.bridge.AgentBridge", _MockBridge)
     _MockBridge.register_participant_calls = []  # reset between tests
+    _MockBridge.announce_calls = []
     yield _MockBridge
 
 
@@ -142,3 +153,48 @@ class TestRegisterWithRegistry:
         call = mock_bridge.register_participant_calls[-1]
         assert call["agent_kind"] is None
         assert call["mcp_host"] == "antigravity"
+
+
+def test_register_with_registry_calls_detect_ide(monkeypatch, mock_bridge):
+    """_register_with_registry calls detect_ide() and forwards both fields."""
+    monkeypatch.setenv("HELIX_MCP_HANDLE", "laude")
+    monkeypatch.setenv("HELIX_PARTY_ID", "swift_wing21")
+    monkeypatch.delenv("HELIX_MCP_HOST", raising=False)
+    monkeypatch.setenv("VSCODE_PID", "9999")
+
+    from helix_context import mcp_server
+    mcp_server._register_with_registry()
+
+    call = mock_bridge.register_participant_calls[-1]
+    assert call["ide_detected"] == "vscode"
+    assert call["ide_detection_via"] == "env:VSCODE_PID"
+
+
+def test_register_with_registry_no_match_sends_none(monkeypatch, mock_bridge):
+    """When fingerprint chain has no signal, ide_detected is None and via is no_match."""
+    monkeypatch.setenv("HELIX_MCP_HANDLE", "laude")
+    monkeypatch.setenv("HELIX_PARTY_ID", "swift_wing21")
+    monkeypatch.delenv("HELIX_MCP_HOST", raising=False)
+    monkeypatch.delenv("VSCODE_PID", raising=False)
+    monkeypatch.delenv("CURSOR_TRACE_ID", raising=False)
+
+    from helix_context import mcp_server
+    mcp_server._register_with_registry()
+
+    call = mock_bridge.register_participant_calls[-1]
+    assert call["ide_detected"] is None
+    assert call["ide_detection_via"] == "no_match"
+
+
+def test_helix_announce_tool_calls_bridge_announce(monkeypatch, mock_bridge):
+    """The helix_announce MCP tool delegates to AgentBridge.announce()."""
+    from helix_context import mcp_server
+    # Force the module to think it's registered so helix_announce proceeds
+    mcp_server._registered_bridge = mock_bridge
+    result = mcp_server.helix_announce(
+        model_id="claude-opus-4-7",
+        ide_override=None,
+    )
+    call = mock_bridge.announce_calls[-1]
+    assert call["model_id"] == "claude-opus-4-7"
+    assert call["ide_override"] is None

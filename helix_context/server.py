@@ -1881,6 +1881,9 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
                 display_name=data.get("display_name"),
                 agent_kind=data.get("agent_kind"),
                 mcp_host=data.get("mcp_host"),
+                ide_detected=data.get("ide_detected"),
+                ide_detection_via=data.get("ide_detection_via"),
+                model_id=data.get("model_id"),
             )
         except Exception as exc:
             log.warning("Session register failed: %s", exc, exc_info=True)
@@ -1896,6 +1899,49 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
             "heartbeat_interval_s": DEFAULT_HEARTBEAT_INTERVAL_S,
             "ttl_s": DEFAULT_TTL_S,
         }
+
+    @app.post("/sessions/{participant_id}/announce")
+    async def session_announce_endpoint(participant_id: str, request: Request):
+        """Update model_id and (optionally) ide_detected on a participant.
+
+        Called by the agent via the helix_announce MCP tool after the MCP
+        adapter has registered the session. Body fields:
+
+        - model_id: optional string. Free-form, no validation. When omitted,
+          model_id is preserved (no-op for that field; useful when the agent
+          is only setting ide_override).
+        - ide_override: optional string. Replaces ide_detected and sets
+          ide_detection_via='agent_override'.
+
+        Silent no-op on unknown participant_id (matches heartbeat semantics
+        and registry update_announcement contract).
+        """
+        try:
+            data = await request.json()
+        except Exception:
+            return JSONResponse({"error": "Invalid JSON body"}, status_code=400)
+
+        model_id = data.get("model_id")
+        ide_override = data.get("ide_override")
+        if model_id is not None and not isinstance(model_id, str):
+            raise HTTPException(status_code=400, detail="model_id must be a string")
+        if ide_override is not None and not isinstance(ide_override, str):
+            raise HTTPException(status_code=400, detail="ide_override must be a string")
+
+        try:
+            registry.update_announcement(
+                participant_id=participant_id,
+                model_id=model_id,
+                ide_override=ide_override,
+            )
+        except Exception as exc:
+            log.warning("Announce failed: %s", exc, exc_info=True)
+            return JSONResponse(
+                {"error": f"Announce failed: {exc}"},
+                status_code=500,
+            )
+
+        return JSONResponse({"ok": True})
 
     @app.post("/sessions/{participant_id}/heartbeat")
     async def session_heartbeat_endpoint(

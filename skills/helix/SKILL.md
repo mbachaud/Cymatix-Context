@@ -66,6 +66,12 @@ Start with `helix_context`.
 5. When coordinating with sibling agents, use `helix_sessions_list` and `helix_session_recent` instead of guessing from logs or git state.
 6. Treat session presence and authored ingests as complementary:
    `helix_sessions_list` tells you who is alive now; ingest attribution tells you who authored a stored gene.
+7. After your first `helix_health` call in a session, also call
+   `helix_announce(model_id=...)` once with your model identifier
+   (e.g., `"claude-opus-4-7"`, `"gpt-5"`, `"gemini-2-5-pro"`) so the
+   dashboard can display your model in the agent badge tooltip. If
+   the IDE auto-detection got it wrong, pass `ide_override=...` to
+   correct it.
 
 ## Attribution Expectations
 

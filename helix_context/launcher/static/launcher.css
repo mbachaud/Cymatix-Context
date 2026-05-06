@@ -802,3 +802,53 @@ p {
     grid-template-columns: 1fr;
   }
 }
+
+/* Tooltip — CSS-only :hover reveal on the agent host chip. */
+.chip-with-tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.chip-with-tooltip .tooltip-content {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  margin-bottom: 6px;
+  padding: 8px 12px;
+  background: rgba(20, 20, 24, 0.96);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 120ms ease, visibility 0s linear 120ms;
+  z-index: 10;
+  font-size: 12px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.chip-with-tooltip:hover .tooltip-content {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.chip-with-tooltip .tooltip-row {
+  display: flex;
+  gap: 8px;
+}
+
+.chip-with-tooltip .tooltip-key {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  min-width: 64px;
+}
+
+.chip-with-tooltip .tooltip-via {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 11px;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+}

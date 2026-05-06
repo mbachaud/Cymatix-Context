@@ -37,6 +37,31 @@ def bridge(tmp_path):
     return AgentBridge(shared_dir=str(tmp_path / "shared"))
 
 
+@pytest.fixture
+def bridge_with_capture(tmp_path):
+    """Fixture that provides a bridge + a dict to capture httpx.post requests.
+
+    Used by tests that need to verify request body contents.
+    Returns (bridge, captured_dict) where captured_dict has 'url', 'body', etc.
+    """
+    bridge = AgentBridge(shared_dir=str(tmp_path / "shared"))
+    captured = {}
+
+    def capture_post(url, json=None, **kwargs):
+        captured["url"] = url
+        captured["body"] = json
+        return _ok_response({
+            "participant_id": "test-participant-123",
+            "party_id": "test-party",
+            "registered_at": time.time(),
+            "heartbeat_interval_s": 30.0,
+            "ttl_s": 120.0,
+        })
+
+    with patch("httpx.post", side_effect=capture_post):
+        yield bridge, captured
+
+
 def _ok_response(json_body):
     resp = MagicMock()
     resp.status_code = 200
@@ -123,6 +148,49 @@ class TestRegisterParticipant:
             bridge.register_participant(party_id="max@local", handle="taude")
         assert "pid" in captured["body"]
         assert isinstance(captured["body"]["pid"], int)
+
+    def test_register_participant_sends_announce_fields(self, bridge_with_capture):
+        """AgentBridge.register_participant forwards ide_detected/via and model_id."""
+        bridge, captured = bridge_with_capture
+        bridge.register_participant(
+            party_id="party_z",
+            handle="laude",
+            ide_detected="vscode",
+            ide_detection_via="env:VSCODE_PID",
+        )
+        body = captured["body"]
+        assert body["ide_detected"] == "vscode"
+        assert body["ide_detection_via"] == "env:VSCODE_PID"
+        # model_id NOT included when not passed (don't send NULL kwargs)
+        assert "model_id" not in body
+
+    def test_register_participant_omits_unset_announce_fields(self, bridge_with_capture):
+        """When kwargs are None, the body omits them entirely."""
+        bridge, captured = bridge_with_capture
+        bridge.register_participant(party_id="party_y", handle="taude")
+        body = captured["body"]
+        assert "ide_detected" not in body
+        assert "ide_detection_via" not in body
+        assert "model_id" not in body
+
+    def test_announce_method_posts_to_announce_endpoint(self, bridge_with_capture):
+        """AgentBridge.announce(participant_id, model_id, ide_override) hits
+        POST /sessions/{participant_id}/announce."""
+        bridge, captured = bridge_with_capture
+        bridge._participant_id = "test-pid-123"
+        bridge.announce(model_id="claude-opus-4-7", ide_override="cursor")
+        assert captured["url"].endswith("/sessions/test-pid-123/announce")
+        body = captured["body"]
+        assert body["model_id"] == "claude-opus-4-7"
+        assert body["ide_override"] == "cursor"
+
+    def test_announce_method_without_ide_override(self, bridge_with_capture):
+        bridge, captured = bridge_with_capture
+        bridge._participant_id = "test-pid-456"
+        bridge.announce(model_id="gpt-5")
+        body = captured["body"]
+        assert body["model_id"] == "gpt-5"
+        assert "ide_override" not in body  # not included when None
 
 
 class TestHeartbeat:

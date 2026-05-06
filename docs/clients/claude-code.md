@@ -92,6 +92,22 @@ only smuggled in via `capabilities`). The dashboard's Agents and
 Identities panels render a "Claude Code + VS Code" pretty-label
 chip when both are present.
 
+As of 2026-05-06, the MCP adapter additionally **auto-detects** the
+host IDE from intentional env vars (`VSCODE_PID`, `CURSOR_TRACE_ID`)
+and the agent **self-reports** its model via the new `helix_announce`
+MCP tool. Together they populate three new columns on the
+`participants` row — `ide_detected`, `ide_detection_via`, `model_id`
+— and the dashboard renders the full identity in a tooltip on the
+agent host chip. See
+[`SESSION_REGISTRY.md`](../architecture/SESSION_REGISTRY.md#announce-endpoint)
+for the API and [`skills/helix/SKILL.md`](../../skills/helix/SKILL.md#workflow)
+for the agent contract.
+
+The legacy `HELIX_MCP_HOST` env var is now optional — the adapter
+will detect the IDE without it. Set it only when you want to override
+the auto-detection (e.g., running Claude Code from a non-VS-Code
+terminal but want the chip to say `"vscode"` anyway).
+
 ## Request lifecycle
 
 **On MCP subprocess start** — `mcp_server.py:_register_with_registry()`:

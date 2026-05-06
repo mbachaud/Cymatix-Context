@@ -1173,3 +1173,84 @@ class TestSessionsRegister:
         assert len(matching) == 1
         assert matching[0].get("agent_kind") is None
         assert matching[0].get("mcp_host") is None
+
+
+# -- Announce endpoint tests -------------------------------------------
+
+
+def test_sessions_register_accepts_announce_fields(client):
+    resp = client.post(
+        "/sessions/register",
+        json={
+            "party_id": "party_register_announce",
+            "handle": "laude",
+            "ide_detected": "vscode",
+            "ide_detection_via": "env:VSCODE_PID",
+        },
+    )
+    assert resp.status_code == 200, resp.text
+    pid = resp.json()["participant_id"]
+
+    listing = client.get("/sessions", params={"party_id": "party_register_announce"}).json()
+    rows = listing if isinstance(listing, list) else listing.get("participants", [])
+    matching = [r for r in rows if r.get("participant_id") == pid]
+    assert len(matching) == 1
+    assert matching[0]["ide_detected"] == "vscode"
+    assert matching[0]["ide_detection_via"] == "env:VSCODE_PID"
+    assert matching[0].get("model_id") is None
+
+
+def test_announce_endpoint_sets_model_id(client):
+    """POST /sessions/{participant_id}/announce updates model_id."""
+    reg = client.post(
+        "/sessions/register",
+        json={"party_id": "party_announce", "handle": "laude"},
+    )
+    pid = reg.json()["participant_id"]
+
+    resp = client.post(
+        f"/sessions/{pid}/announce",
+        json={"model_id": "claude-opus-4-7"},
+    )
+    assert resp.status_code == 200, resp.text
+
+    listing = client.get("/sessions", params={"party_id": "party_announce"}).json()
+    rows = listing if isinstance(listing, list) else listing.get("participants", [])
+    matching = [r for r in rows if r.get("participant_id") == pid]
+    assert matching[0]["model_id"] == "claude-opus-4-7"
+
+
+def test_announce_endpoint_with_ide_override_sets_agent_override_via(client):
+    reg = client.post(
+        "/sessions/register",
+        json={
+            "party_id": "party_override",
+            "handle": "laude",
+            "ide_detected": "vscode",
+            "ide_detection_via": "env:VSCODE_PID",
+        },
+    )
+    pid = reg.json()["participant_id"]
+
+    resp = client.post(
+        f"/sessions/{pid}/announce",
+        json={"model_id": "gpt-5", "ide_override": "cursor"},
+    )
+    assert resp.status_code == 200, resp.text
+
+    listing = client.get("/sessions", params={"party_id": "party_override"}).json()
+    rows = listing if isinstance(listing, list) else listing.get("participants", [])
+    matching = [r for r in rows if r.get("participant_id") == pid]
+    assert matching[0]["ide_detected"] == "cursor"
+    assert matching[0]["ide_detection_via"] == "agent_override"
+    assert matching[0]["model_id"] == "gpt-5"
+
+
+def test_announce_endpoint_unknown_participant_returns_200(client):
+    """Silent no-op on unknown participant_id matches registry semantics
+    and avoids leaking participant existence via 404 vs 200 distinction."""
+    resp = client.post(
+        "/sessions/does-not-exist/announce",
+        json={"model_id": "claude-opus-4-7"},
+    )
+    assert resp.status_code == 200, resp.text

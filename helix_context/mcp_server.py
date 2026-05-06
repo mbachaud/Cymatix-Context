@@ -118,6 +118,10 @@ TIMEOUT_S = float(os.environ.get("HELIX_MCP_TIMEOUT", "30"))
 # scheme, so the session_id here aligns with the registry participant.
 MCP_SESSION_ID = os.environ.get("HELIX_MCP_HANDLE", f"mcp-{os.getpid()}")
 
+# Set by _register_with_registry on success; consumed by the
+# helix_announce MCP tool to PATCH the same participant row.
+_registered_bridge: Optional[Any] = None
+
 
 def _default_party_id() -> str:
     """Resolve a party_id without hardcoded project defaults.
@@ -663,6 +667,47 @@ def helix_health() -> Dict[str, Any]:
     return _normalize_health_payload(_http("GET", "/health"))
 
 
+# ── Tool: helix_announce ─────────────────────────────────────────────
+# Self-report model identity + optional IDE override. Call once per
+# session after helix_health so the dashboard can display the model
+# in the agent badge tooltip.
+
+@mcp.tool()
+def helix_announce(
+    model_id: str,
+    ide_override: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Self-report the agent's model identity and (optionally) override
+    the auto-detected IDE.
+
+    Call this once per session, after your first ``helix_health`` call,
+    so the dashboard can display your model in the agent badge tooltip.
+
+    Args:
+        model_id: Free-form model identifier. Examples:
+            "claude-opus-4-7", "claude-sonnet-4-6", "gpt-5",
+            "gemini-2-5-pro". The dashboard pretty-maps known IDs to
+            display names; unknown IDs render verbatim.
+        ide_override: Optional. Replaces the adapter's auto-detected
+            IDE. Use only when env-var detection got it wrong.
+
+    Returns:
+        {"ok": True} on success, {"ok": False, "error": "..."} on
+        failure. Failures are non-fatal — the rest of the session
+        continues to work.
+    """
+    if _registered_bridge is None:
+        return {
+            "ok": False,
+            "error": "Not yet registered with helix; announce skipped.",
+        }
+    success = _registered_bridge.announce(
+        model_id=model_id,
+        ide_override=ide_override,
+    )
+    return {"ok": success}
+
+
 # ── Tool: helix_metrics_tokens ───────────────────────────────────────
 # Session + lifetime token counters, exact-from-upstream when possible,
 # char-estimate fallback. Surfaces helix's cost/savings story.
@@ -913,6 +958,7 @@ def _register_with_registry() -> None:
     """
     try:
         from helix_context.bridge import AgentBridge
+        from helix_context.launcher.ide_fingerprint import detect_ide
     except Exception as exc:
         log.warning("Registry bridge import failed, skipping registration: %s", exc)
         return
@@ -935,6 +981,11 @@ def _register_with_registry() -> None:
     # older dashboard parsers that expect the "host:<x>" capability tag.
     capabilities = ["mcp_tools", f"host:{mcp_host_env}"]
 
+    # IDE auto-detect via env-var fingerprint chain. Falls back to
+    # (None, "no_match") when no signal — agent can later override via
+    # helix_announce(ide_override=...).
+    ide_detected, ide_detection_via = detect_ide()
+
     bridge = AgentBridge(helix_base_url=HELIX_URL)
     participant_id = bridge.register_participant(
         party_id=party_id,
@@ -943,12 +994,18 @@ def _register_with_registry() -> None:
         capabilities=capabilities,
         agent_kind=agent_kind_env,
         mcp_host=mcp_host,
+        ide_detected=ide_detected,
+        ide_detection_via=ide_detection_via,
         start_auto_heartbeat=True,
     )
+    # Stash the bridge for the helix_announce tool to use later.
     if participant_id:
+        global _registered_bridge
+        _registered_bridge = bridge
         log.info(
-            "Registered as %s (party=%s, kind=%s, host=%s, pid=%d)",
-            handle, party_id, agent_kind_env, mcp_host, os.getpid(),
+            "Registered as %s (party=%s, kind=%s, host=%s, ide=%s/%s, pid=%d)",
+            handle, party_id, agent_kind_env, mcp_host,
+            ide_detected, ide_detection_via, os.getpid(),
         )
     else:
         log.warning(

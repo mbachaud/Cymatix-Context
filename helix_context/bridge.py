@@ -381,6 +381,9 @@ class AgentBridge:
         start_auto_heartbeat: bool = False,
         agent_kind: Optional[str] = None,
         mcp_host: Optional[str] = None,
+        ide_detected: Optional[str] = None,
+        ide_detection_via: Optional[str] = None,
+        model_id: Optional[str] = None,
     ) -> Optional[str]:
         """Register a participant with the helix session registry.
 
@@ -408,6 +411,12 @@ class AgentBridge:
             body["agent_kind"] = agent_kind
         if mcp_host is not None:
             body["mcp_host"] = mcp_host
+        if ide_detected is not None:
+            body["ide_detected"] = ide_detected
+        if ide_detection_via is not None:
+            body["ide_detection_via"] = ide_detection_via
+        if model_id is not None:
+            body["model_id"] = model_id
         try:
             body["pid"] = os.getpid()
         except Exception:
@@ -429,6 +438,39 @@ class AgentBridge:
         if start_auto_heartbeat:
             self.start_auto_heartbeat()
         return self._participant_id
+
+    def announce(
+        self,
+        model_id: str,
+        ide_override: Optional[str] = None,
+    ) -> bool:
+        """POST to /sessions/{participant_id}/announce for self-report.
+
+        Requires that ``register_participant`` has already been called
+        successfully (sets ``self._participant_id``). If not yet
+        registered, this is a no-op returning False — the agent shouldn't
+        call announce before the adapter has registered.
+
+        Returns True on HTTP 200, False otherwise. Failures are logged
+        but non-fatal — model_id is best-effort.
+        """
+        if not getattr(self, "_participant_id", None):
+            log.warning("announce() called before register_participant; skipping")
+            return False
+
+        body: Dict[str, Any] = {"model_id": model_id}
+        if ide_override is not None:
+            body["ide_override"] = ide_override
+
+        try:
+            result = self._http_post(
+                f"/sessions/{self._participant_id}/announce",
+                json_body=body,
+            )
+            return result is not None
+        except Exception as exc:
+            log.warning("announce() failed: %s", exc)
+            return False
 
     @property
     def participant_id(self) -> Optional[str]:

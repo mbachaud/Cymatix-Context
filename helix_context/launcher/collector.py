@@ -19,9 +19,48 @@ from typing import Any, Dict, List, Optional
 import httpx
 
 from .supervisor import HelixSupervisor
-from .host_labels import compose_label
+from .host_labels import compose_label, host_pretty, vendor_pretty
+from .model_labels import model_pretty
 
 log = logging.getLogger("helix.launcher.collector")
+
+
+def _build_tooltip(participant: Dict[str, Any]) -> Dict[str, str]:
+    """Compose the tooltip field bundle from a participant dict.
+
+    Each label is either a pretty-mapped value or an explicit placeholder
+    that hints at the cause:
+      - model_label: "Not announced" when model_id is NULL
+      - ide_label:   "Not detected" when ide_detected is NULL
+      - agent_kind_label: "Not set"  when agent_kind is NULL
+    The ide_detection_via line tells the operator how (or whether) the
+    IDE value was obtained: "env:VSCODE_PID", "agent_override",
+    "no_match", "explicit:HELIX_MCP_HOST".
+
+    ide_label fallback chain (in order):
+      1. ide_detected — populated by the adapter at register time, or by
+         an agent's ide_override via helix_announce. Authoritative when present.
+      2. mcp_host — PR #26's column. Sessions registered after PR #26 but
+         before this change will have ide_detected=NULL but mcp_host set
+         from HELIX_MCP_HOST env. Fall back so those sessions' chips
+         still render correctly until they re-register.
+      3. "Not detected" — explicit placeholder when neither column
+         carries a value, so the tooltip surfaces the gap rather than
+         hiding the row.
+
+    There is no equivalent fallback chain for model_id (the column is
+    new in this change; there is no prior column to fall back to).
+    """
+    return {
+        "model_label": model_pretty(participant.get("model_id")) or "Not announced",
+        "ide_label": (
+            host_pretty(participant.get("ide_detected"))
+            or host_pretty(participant.get("mcp_host"))   # PR #26 backward-compat fallback
+            or "Not detected"
+        ),
+        "agent_kind_label": vendor_pretty(participant.get("agent_kind")) or "Not set",
+        "ide_detection_via": participant.get("ide_detection_via") or "no_match",
+    }
 
 
 class StateCollector:
@@ -223,6 +262,7 @@ class StateCollector:
                         participant.get("agent_kind"),
                         participant.get("mcp_host"),
                     ),
+                    "tooltip": _build_tooltip(participant),
                 }
                 grouped[key] = group
 
@@ -270,6 +310,7 @@ class StateCollector:
                         participant.get("agent_kind"),
                         participant.get("mcp_host"),
                     ),
+                    "tooltip": _build_tooltip(participant),
                 }
             )
         return {
@@ -305,6 +346,7 @@ class StateCollector:
                         participant.get("agent_kind"),
                         participant.get("mcp_host"),
                     ),
+                    "tooltip": _build_tooltip(participant),
                 }
             )
         if not entries:

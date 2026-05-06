@@ -311,6 +311,9 @@ class Participant(BaseModel):
     metadata: Optional[dict] = None
     agent_kind: Optional[str] = None    # vendor family — "claude-code", "codex"
     mcp_host: Optional[str] = None      # host tag — "vscode", "cursor"
+    ide_detected: Optional[str] = None        # adapter detect at register time
+    ide_detection_via: Optional[str] = None   # "env:VSCODE_PID", "agent_override", etc.
+    model_id: Optional[str] = None            # agent self-reported via helix_announce
 
 
 class ParticipantInfo(BaseModel):
@@ -324,6 +327,9 @@ class ParticipantInfo(BaseModel):
     started_at: float
     agent_kind: Optional[str] = None
     mcp_host: Optional[str] = None
+    ide_detected: Optional[str] = None
+    ide_detection_via: Optional[str] = None
+    model_id: Optional[str] = None
 
 
 class GeneAttribution(BaseModel):
