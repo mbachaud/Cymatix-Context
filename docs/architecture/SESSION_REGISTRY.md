@@ -231,7 +231,9 @@ curl -X POST http://127.0.0.1:11437/sessions/register \
     "handle": "taude",
     "workspace": "/f/Projects/Education",
     "pid": 48213,
-    "capabilities": ["ingest", "query"]
+    "capabilities": ["ingest", "query"],
+    "agent_kind": "claude-code",
+    "mcp_host": "vscode"
   }'
 ```
 
@@ -245,6 +247,8 @@ Request body:
 | `pid` | int | no | OS process id of the runtime. |
 | `capabilities` | list[str] | no | What this participant can do. Free-form for now. |
 | `metadata` | object | no | Arbitrary JSON for future extension. |
+| `agent_kind` | string | no | Vendor family — `"claude-code"`, `"codex"`, `"gemini"`. Sourced from `HELIX_AGENT_KIND`. Added 2026-05-05. |
+| `mcp_host` | string | no | Host capability tag — `"antigravity"`, `"vscode"`, `"cursor"`. Sourced from `HELIX_MCP_HOST`. The literal `"unknown"` is normalized to NULL at the wire. Added 2026-05-05. |
 
 Response:
 
