@@ -1149,3 +1149,56 @@ def test_participant_info_defaults_vendor_host_to_none():
     )
     assert p.agent_kind is None
     assert p.mcp_host is None
+
+
+def test_register_participant_persists_vendor_host(registry, genome):
+    """register_participant stores agent_kind and mcp_host on the row."""
+    p = registry.register_participant(
+        party_id="party_x",
+        handle="laude",
+        agent_kind="claude-code",
+        mcp_host="vscode",
+    )
+    assert p.agent_kind == "claude-code"
+    assert p.mcp_host == "vscode"
+
+    cur = genome.conn.cursor()
+    row = cur.execute(
+        "SELECT agent_kind, mcp_host FROM participants WHERE participant_id = ?",
+        (p.participant_id,),
+    ).fetchone()
+    assert row[0] == "claude-code"
+    assert row[1] == "vscode"
+
+
+def test_register_participant_omitting_vendor_host_stores_null(registry, genome):
+    """Backwards-compat: callers that don't pass the new fields get NULL."""
+    p = registry.register_participant(party_id="party_y", handle="taude")
+    assert p.agent_kind is None
+    assert p.mcp_host is None
+
+
+def test_list_participants_projects_vendor_host(registry):
+    registry.register_participant(
+        party_id="party_z",
+        handle="laude",
+        agent_kind="codex",
+        mcp_host="cursor",
+    )
+    rows = registry.list_participants(party_id="party_z", status_filter="all")
+    assert len(rows) == 1
+    assert rows[0].agent_kind == "codex"
+    assert rows[0].mcp_host == "cursor"
+
+
+def test_get_participant_projects_vendor_host(registry):
+    p = registry.register_participant(
+        party_id="party_w",
+        handle="laude",
+        agent_kind="gemini",
+        mcp_host="antigravity",
+    )
+    fetched = registry.get_participant(p.participant_id)
+    assert fetched is not None
+    assert fetched.agent_kind == "gemini"
+    assert fetched.mcp_host == "antigravity"
