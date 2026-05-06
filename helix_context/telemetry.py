@@ -404,6 +404,88 @@ def ribosome_info_gauge():
     return _instruments["ribosome_info"]
 
 
+# ── Per-stage pipeline telemetry (feat/per-stage-telemetry) ──────────
+
+
+def pipeline_stage_histogram():
+    """Histogram for per-stage /context pipeline latency.
+
+    Attributes: {stage: str}  — e.g. "classify", "express", "refine",
+    "assemble". Optionally decorated with {decoder_mode: str} by the
+    caller when the label is cheap to produce.
+    """
+    if "pipeline_stage" not in _instruments:
+        _instruments["pipeline_stage"] = meter.create_histogram(
+            "helix_pipeline_stage_seconds",
+            unit="s",
+            description="Latency of each /context pipeline stage.",
+        )
+    return _instruments["pipeline_stage"]
+
+
+def ribosome_call_histogram():
+    """Histogram for individual ribosome backend.complete() calls.
+
+    Attributes: {backend: str, model: str, call_kind: str}
+    call_kind is one of: pack | rerank | splice | replicate | unknown
+    """
+    if "ribosome_call" not in _instruments:
+        _instruments["ribosome_call"] = meter.create_histogram(
+            "helix_ribosome_call_seconds",
+            unit="s",
+            description="Latency of each ribosome backend.complete() call, "
+                        "labelled by backend, model, and call_kind.",
+        )
+    return _instruments["ribosome_call"]
+
+
+def genome_signal_histogram():
+    """Histogram for per-signal latency inside query_genes().
+
+    Attributes: {signal: str}  — e.g. "fts5", "splade", "sema_boost",
+    "tag_exact", "tag_prefix", "pki", "harmonic", "sr".
+    """
+    if "genome_signal" not in _instruments:
+        _instruments["genome_signal"] = meter.create_histogram(
+            "helix_genome_signal_seconds",
+            unit="s",
+            description="Latency of each retrieval signal inside query_genes(), "
+                        "labelled by signal name.",
+        )
+    return _instruments["genome_signal"]
+
+
+def genome_wal_size_gauge():
+    """Gauge for the WAL file size in bytes.
+
+    Updated by the background WAL-health task (every 30 s). Stale when
+    OTel is disabled — the noop instrument silently drops the call.
+    """
+    if "genome_wal_size" not in _instruments:
+        _instruments["genome_wal_size"] = meter.create_gauge(
+            "helix_genome_wal_size_bytes",
+            unit="By",
+            description="SQLite WAL file size in bytes. Spikes indicate "
+                        "checkpoint pressure; sustained high values = WAL bloat.",
+        )
+    return _instruments["genome_wal_size"]
+
+
+def genome_checkpoint_blocked_counter():
+    """Counter incremented when a WAL checkpoint reports busy=1.
+
+    A rising count means readers are holding WAL snapshots long enough
+    to block TRUNCATE checkpoints. Correlates with WAL bloat (PR #32).
+    """
+    if "genome_checkpoint_blocked" not in _instruments:
+        _instruments["genome_checkpoint_blocked"] = meter.create_counter(
+            "helix_genome_checkpoint_blocked_total",
+            description="Number of WAL checkpoints that returned busy=1, "
+                        "meaning a reader was holding a snapshot.",
+        )
+    return _instruments["genome_checkpoint_blocked"]
+
+
 def _emit_snapshot_values(
     *,
     chrom_rows: list[tuple[Any, Any]],
