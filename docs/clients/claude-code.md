@@ -86,6 +86,12 @@ session pill uses to tag which IDE spawned a given participant.
 [Identity Contract](../../skills/helix/SKILL.md#identity-contract)
 defines both.
 
+As of 2026-05-05, `HELIX_AGENT_KIND` and `HELIX_MCP_HOST` are
+persisted as first-class columns on the `participants` row (not
+only smuggled in via `capabilities`). The dashboard's Agents and
+Identities panels render a "Claude Code + VS Code" pretty-label
+chip when both are present.
+
 ## Request lifecycle
 
 **On MCP subprocess start** — `mcp_server.py:_register_with_registry()`:
