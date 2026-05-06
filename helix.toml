@@ -82,6 +82,26 @@ session_delivery_enabled = true
 # behavior (BROAD takes the negative space). HELIX_ABSTAIN_DISABLE=1 env
 # var forces off without redeploy. See docs/specs/2026-05-02-abstain-tier-design.md.
 abstain_enabled = true
+# Foveated-splice (BROAD tier only). When True, the BROAD branch of the
+# dynamic-budget tier replaces uniform per-gene compression with a rank-
+# scaled power-law schedule and reverses the assembly order so the top-
+# ranked gene lands immediately before the user query. Off by default for
+# the measurement period — see docs/specs/2026-05-03-foveated-splice-
+# design.md §6.3.
+foveated_enabled = false
+
+# Power-law exponent: c_i = max(c_min, c_max · i^(-α)). α=0.5 = gentle
+# decay, α=1.0 (default) = harmonic-ish, α=2.0 = aggressive top-bias.
+# Bench Phase 2 sweeps {0.5, 1.0, 2.0}; ship the winner.
+foveated_alpha = 1.0
+
+# Rank-N (bottom of BROAD) compression floor. Each gene's effective char
+# cap = max(foveated_c_min · base, c_i · base) where c_i = c_max · i^(-α).
+foveated_c_min = 0.15
+
+# Per-gene char-budget multiplier. target_chars per gene = int(c_i · base).
+# Default 1000 matches current uniform Step 4 behavior at c_i = 1.0.
+foveated_base_chars = 1000
 
 [session]
 # CWoLa session / party fallback. Prior to 2026-04-13 the /context endpoint

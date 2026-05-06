@@ -167,6 +167,27 @@ def _env_truthy(name: str) -> bool:
     return v.strip().lower() in ("1", "true", "yes", "on")
 
 
+def _compute_foveated_caps(
+    n: int,
+    alpha: float,
+    c_min: float,
+    c_max: float = 1.0,
+) -> list[float]:
+    """Power-law per-gene compression caps for foveated-splice.
+
+    c_i = max(c_min, c_max · i^(-α))    for i ∈ [1, N]
+
+    Returns a list of N floats in forward-rank order (caps[0] = rank-1 cap,
+    caps[N-1] = rank-N cap). Caller reverses to pair with reverse-rank
+    candidate placement.
+
+    Spec: docs/specs/2026-05-03-foveated-splice-design.md §4.1
+    """
+    if n <= 0:
+        return []
+    return [max(c_min, c_max * ((i + 1) ** -alpha)) for i in range(n)]
+
+
 class HelixContextManager:
     """
     Main orchestrator. Sits between the client and the upstream LLM.
@@ -646,6 +667,15 @@ class HelixContextManager:
         """
         self._maybe_compact()
 
+        # Per-call locals for foveated-splice state (spec §4-5). Local —
+        # not instance state — so concurrent build_context calls cannot
+        # race on writes/reads, and a prior call's state cannot leak in
+        # if the dynamic-budget block is skipped this call (e.g. small
+        # candidate set or all-zero scores). Same threading pattern as
+        # decoder_prompt_override at line ~1949. See code review I1/I2.
+        foveated_caps: Optional[List[float]] = None
+        foveated_active: bool = False
+
         # Step 0a: Upstream query classifier / injection router.
         # Always runs (cheap, no I/O) — even when decoder_override is set,
         # so the audit trail records what the classifier *would* have picked.
@@ -924,6 +954,37 @@ class HelixContextManager:
             )
             candidates = candidates[: classifier_result.assembly_max_genes_cap]
 
+        # Foveated-splice (spec §4-5): for BROAD only, replace uniform per-gene
+        # compression with a rank-scaled power-law schedule AND reverse the
+        # assembly order so top-rank lands nearest the user query (lost-in-the-
+        # middle exploit). Off by default; see docs/specs/2026-05-03-foveated-
+        # splice-design.md §6.3.
+        #
+        # Placed AFTER the classifier cap so reversal operates on the final
+        # post-cap candidate list (otherwise classifier truncation would
+        # silently drop the top-rank gene under reverse-rank — see code
+        # review C1).
+        #
+        # Uses local variables (not self._last_*) so concurrent build_context
+        # calls don't race and stale state from a prior call can't leak into
+        # the current one (see code review I1/I2; same pattern as
+        # decoder_prompt_override threading).
+        if (
+            budget_tier == "broad"
+            and self.config.budget.foveated_enabled
+            and len(candidates) > 1
+        ):
+            caps = _compute_foveated_caps(
+                n=len(candidates),
+                alpha=self.config.budget.foveated_alpha,
+                c_min=self.config.budget.foveated_c_min,
+                c_max=1.0,
+            )
+            # Reverse together so caps[i] still pairs with candidates[i].
+            candidates = list(reversed(candidates))
+            foveated_caps = list(reversed(caps))
+            foveated_active = True
+
         # Step 3.5: NLI classification (optional, DeBERTa backend only)
         relation_graph = {}
         if hasattr(self.ribosome, 'classify_relations'):
@@ -937,14 +998,16 @@ class HelixContextManager:
         # Dense format minimizes prose for small model extraction.
         spliced_map = {}
         answer_slate_lines = []  # MoE answer slate — flat KV pairs
-        for g in candidates:
+        # foveated_caps / foveated_active are call-local; see top of build_context.
+        foveated_base = self.config.budget.foveated_base_chars
+        for idx, g in enumerate(candidates):
             src = g.source_id or ""
             short = ""
             if src and not src.startswith("_"):
                 parts = src.replace("\\", "/").split("/")
                 try:
-                    idx = parts.index("Projects")
-                    short = "/".join(parts[idx + 1:])
+                    j = parts.index("Projects")
+                    short = "/".join(parts[j + 1:])
                 except ValueError:
                     short = "/".join(parts[-3:]) if len(parts) > 3 else src
             # Dense XML gene format — structured for small model extraction
@@ -962,9 +1025,17 @@ class HelixContextManager:
             # diff→DiffCompressor, else→Kompress (ModernBERT).
             # CodeCompressor disabled (40% invalid syntax — see 2f518dc).
             # Falls back to content[:1000].strip() when headroom is unavailable.
+            #
+            # Foveated path overrides the uniform 1000-char target with a
+            # rank-proportional cap per gene. When foveated_caps is None
+            # (default / non-BROAD / disabled), preserve current behavior.
+            if foveated_caps is not None:
+                target = max(1, int(foveated_caps[idx] * foveated_base))
+            else:
+                target = 1000
             content = compress_text(
                 g.content,
-                target_chars=1000,
+                target_chars=target,
                 content_type=g.promoter.domains,
             )
             spliced_map[g.gene_id] = f"<GENE{src_attr}{kv_attrs}>\n{content}\n</GENE>"
@@ -978,12 +1049,29 @@ class HelixContextManager:
             session_id=session_id,
             ignore_delivered=ignore_delivered,
             decoder_prompt_override=effective_decoder_prompt,
+            respect_caller_order=foveated_active,
         )
 
         # Annotate window with dynamic budget tier (for telemetry/benchmarks)
         if window.metadata is not None:
             window.metadata["budget_tier"] = budget_tier
             window.metadata["budget_tokens_est"] = budget_tokens_est
+            if foveated_active and foveated_caps is not None:
+                # Spec §8: per-call provenance for post-hoc α-curve attribution.
+                # Absent when foveated_enabled=false or tier != broad.
+                window.metadata["foveated_caps"] = foveated_caps
+                window.metadata["foveated_alpha"] = self.config.budget.foveated_alpha
+                # Scalar reductions for Prometheus translation paths that
+                # flatten only scalar attributes (the list above can be
+                # silently dropped). See code review I3. Under reverse-rank
+                # ordering caps[-1] is the c_max applied to the TOP-rank
+                # gene (closest to the user query) and caps[0] is the
+                # c_min applied to the BOTTOM-rank gene — the names
+                # `_top` / `_min` reflect the rank semantic, not the
+                # list-index semantic.
+                window.metadata["foveated_cap_top"] = foveated_caps[-1]
+                window.metadata["foveated_cap_min"] = foveated_caps[0]
+                window.metadata["foveated_cap_n"] = len(foveated_caps)
 
         # Classifier observability payload (spec section 5.2).
         if classifier_result is not None and window.metadata is not None:
@@ -1722,6 +1810,7 @@ class HelixContextManager:
         session_id: Optional[str] = None,
         ignore_delivered: bool = False,
         decoder_prompt_override: Optional[str] = None,
+        respect_caller_order: bool = False,
     ) -> ContextWindow:
         """
         Sort spliced parts, join with dividers, wrap in expressed_context tags.
@@ -1738,7 +1827,13 @@ class HelixContextManager:
         elision. ignore_delivered=True bypasses the check (still logs).
         """
         use_slate = answer_slate is not None
-        if use_slate:
+        if respect_caller_order:
+            # Foveated-splice path (spec §5): the caller has already arranged
+            # candidates in the desired emission order (e.g., reverse-rank
+            # for BROAD). Skip the re-sort so reverse-rank actually reaches
+            # the prompt instead of being clobbered back to score-DESC.
+            sorted_genes = list(candidates)
+        elif use_slate:
             # MoE/small-model: relevance-first ordering — best gene at position 0
             # so it's within every sliding-window attention layer
             scores = self.genome.last_query_scores or {}
@@ -1882,9 +1977,29 @@ class HelixContextManager:
         budget = self.config.budget.ribosome_tokens + self.config.budget.expression_tokens
 
         if est_tokens > budget and len(parts) > 1:
-            # Drop from the end (lowest-ranked after re-rank)
+            # Default path: parts[-1] is the LOWEST-rank gene (sorted_genes was
+            # ordered score-DESC or by sequence_index), so popping from the
+            # back drops the least-important entry first.
+            #
+            # Foveated reverse-rank path (respect_caller_order=True, spec §5):
+            # the caller emits BROAD candidates in REVERSE-rank order so the
+            # top-rank gene lands LAST in the prompt (closest to user query
+            # under decoder-only attention). Under that ordering parts[-1] is
+            # the TOP-rank gene — popping from the back here would silently
+            # drop the most important gene first, the exact opposite of what
+            # the spec wants. Pop from the FRONT instead to drop the
+            # bottom-rank gene and preserve the placement invariant.
+            #
+            # sorted_genes is kept aligned with parts so the post-trim
+            # delivered_ids / expressed_gene_ids slices stay correct under
+            # both directions.
             while est_tokens > budget and len(parts) > 1:
-                parts.pop()
+                if respect_caller_order:
+                    parts.pop(0)
+                    sorted_genes.pop(0)
+                else:
+                    parts.pop()
+                    sorted_genes.pop()
                 expressed = "\n---\n".join(parts)
                 expressed_wrapped = f"<expressed_context>\n{expressed}\n</expressed_context>"
                 est_tokens = estimate_tokens(decoder_prompt) + estimate_tokens(expressed_wrapped)

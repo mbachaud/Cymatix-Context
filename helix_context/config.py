@@ -133,6 +133,23 @@ class BudgetConfig:
     # ship — flip to true in helix.toml to A/B. See session_delivery.py.
     session_delivery_enabled: bool = False
     abstain_enabled: bool = True       # NEW — see docs/specs/2026-05-02-abstain-tier-design.md
+    # Foveated-splice (BROAD tier only). Off by default for the measurement
+    # period — see docs/specs/2026-05-03-foveated-splice-design.md §6.3 and
+    # docs/plans/2026-05-05-foveated-splice.md. Flip to True only after the
+    # phased α-sweep bench (§9) identifies a winning configuration.
+    foveated_enabled: bool = False
+    # Power-law exponent for c_i = max(c_min, c_max · i^(-α)). α=0.5 = gentle
+    # decay, α=1.0 = harmonic-ish, α=2.0 = aggressive top-bias.
+    foveated_alpha: float = 1.0
+    # Rank-N floor compression ratio. Pinned at 0.15 by spec §4.1.
+    foveated_c_min: float = 0.15
+    # Per-gene char-budget multiplier. Each gene's target_chars =
+    # int(c_i · foveated_base_chars). Default 1000 matches the current
+    # uniform behavior at c_i = 1.0. The Step 4 compression loop in
+    # context_manager.py uses 1000 today; keeping this configurable lets
+    # bench cells (and a future on-by-default ship) tune the top-1 ceiling
+    # without touching code.
+    foveated_base_chars: int = 1000
 
 
 @dataclass
@@ -414,6 +431,10 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             legibility_enabled=bool(b.get("legibility_enabled", cfg.budget.legibility_enabled)),
             session_delivery_enabled=bool(b.get("session_delivery_enabled", cfg.budget.session_delivery_enabled)),
             abstain_enabled=bool(b.get("abstain_enabled", cfg.budget.abstain_enabled)),
+            foveated_enabled=bool(b.get("foveated_enabled", cfg.budget.foveated_enabled)),
+            foveated_alpha=float(b.get("foveated_alpha", cfg.budget.foveated_alpha)),
+            foveated_c_min=float(b.get("foveated_c_min", cfg.budget.foveated_c_min)),
+            foveated_base_chars=int(b.get("foveated_base_chars", cfg.budget.foveated_base_chars)),
         )
 
     # Genome
