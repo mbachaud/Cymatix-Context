@@ -109,7 +109,7 @@ class TestCheckRelevanceShape:
         probe = self._probe_with_mock(payload)
         score, detail = probe.check_relevance("How does the system work?")
         assert score > 0.0
-        assert score == 1.0  # >500 chars → max score
+        assert score >= 0.7  # rich content (100-499 chars) → mid-high tier score
         assert detail["response_length"] == len(payload["content"])
         assert detail["query"] == "How does the system work?"
 

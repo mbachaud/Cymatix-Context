@@ -16,6 +16,11 @@ import time
 
 import pytest
 
+# sliding_window_features relies on numpy for correlation computation.
+# Skip the whole module gracefully when numpy is absent rather than
+# letting individual tests fail with confusing degenerate=True results.
+pytest.importorskip("numpy")
+
 from helix_context import cwola
 
 

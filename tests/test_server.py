@@ -527,12 +527,17 @@ class TestProxyEndpoint:
 
     def test_proxy_no_user_message_attempts_passthrough(self, client):
         """If no user message, proxy should attempt to forward raw.
-        Result depends on whether upstream is running."""
+        Outcome depends on the upstream:
+          - 200: upstream accepted the forwarded request
+          - 400/404: upstream is up and rejected (model not pulled, bad shape)
+          - 502/503: upstream is unreachable
+          - 500: forwarded request raised on upstream
+        Any of these prove the proxy didn't short-circuit on its own."""
         resp = client.post("/v1/chat/completions", json={
+            "model": "llama3",
             "messages": [{"role": "system", "content": "test"}],
         })
-        # If upstream is running, we get 200 (passthrough); if not, 500
-        assert resp.status_code in (200, 500, 502, 503)
+        assert resp.status_code in (200, 400, 404, 500, 502, 503)
 
 
 class TestHITLEndpoints:

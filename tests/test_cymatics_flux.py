@@ -104,7 +104,7 @@ class TestFluxScore:
         b = build_spectrum(["auth"])
         w = build_weight_vector("auth")
         score = flux_score(a, b, w)
-        assert 0.0 <= score <= 1.0
+        assert score == pytest.approx(1.0, abs=1e-9)
 
     def test_symmetry(self):
         a = build_spectrum(["auth", "db"])
