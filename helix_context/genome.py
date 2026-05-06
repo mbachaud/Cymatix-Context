@@ -787,6 +787,19 @@ class Genome:
             except sqlite3.OperationalError:
                 pass  # column already exists — idempotent
 
+        # Announce columns (added 2026-05-06; design spec
+        # docs/superpowers/specs/2026-05-06-helix-announce-self-report-design.md).
+        # `ide_detected`:      adapter-side env-var fingerprint at register time
+        #                      ("vscode", "cursor", "claude-code", or NULL on no_match).
+        # `ide_detection_via`: how we figured it out — "env:VSCODE_PID",
+        #                      "explicit:HELIX_MCP_HOST", "agent_override", "no_match".
+        # `model_id`:          agent self-reported via helix_announce; NULL until announced.
+        for col in ("ide_detected", "ide_detection_via", "model_id"):
+            try:
+                cur.execute(f"ALTER TABLE participants ADD COLUMN {col} TEXT")
+            except sqlite3.OperationalError:
+                pass  # column already exists — idempotent
+
         # ── Layer 4: agents (AI personas under a participant) ───────
         # An agent is the AI persona doing the work on behalf of a human
         # participant: "laude", "taude", "raude", "claude-code", "gemini",

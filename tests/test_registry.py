@@ -137,6 +137,14 @@ class TestSchemaMigration:
         genome._ensure_registry_schema(cur)
         genome.conn.commit()
 
+    def test_participants_table_has_announce_columns(self, genome):
+        """Schema migration adds ide_detected, ide_detection_via, model_id columns."""
+        cur = genome.conn.cursor()
+        cols = {r[1] for r in cur.execute("PRAGMA table_info(participants)").fetchall()}
+        assert "ide_detected" in cols, f"ide_detected missing; got {cols}"
+        assert "ide_detection_via" in cols, f"ide_detection_via missing; got {cols}"
+        assert "model_id" in cols, f"model_id missing; got {cols}"
+
 
 class TestRegisterParticipant:
     def test_register_creates_party_on_first_use(self, registry, genome):
