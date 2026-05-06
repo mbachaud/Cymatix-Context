@@ -9,10 +9,15 @@ import hashlib
 import json
 from pathlib import Path
 
-import joblib
-import numpy as np
 import pytest
-from sklearn.ensemble import GradientBoostingClassifier
+
+pytest.importorskip("numpy", reason="fusion_plr stacked head needs numpy")
+pytest.importorskip("sklearn", reason="fusion_plr stacked head needs scikit-learn")
+pytest.importorskip("joblib", reason="fusion_plr stacked head needs joblib")
+
+import joblib  # noqa: E402
+import numpy as np  # noqa: E402
+from sklearn.ensemble import GradientBoostingClassifier  # noqa: E402
 
 from helix_context import fusion_plr
 from helix_context.fusion_plr import (

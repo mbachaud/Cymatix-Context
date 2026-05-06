@@ -20,6 +20,12 @@ import time
 import pytest
 from fastapi.testclient import TestClient
 
+try:
+    import pytest_asyncio  # noqa: F401
+    _PYTEST_ASYNCIO_AVAILABLE = True
+except ImportError:
+    _PYTEST_ASYNCIO_AVAILABLE = False
+
 
 async def await_until(condition, timeout: float = 2.0, interval: float = 0.02) -> bool:
     """Await ``condition()`` returning truthy, polling every ``interval``
@@ -489,6 +495,10 @@ class TestSweep:
         assert row["status"] == "stale"
 
 
+@pytest.mark.skipif(
+    not _PYTEST_ASYNCIO_AVAILABLE,
+    reason="async tests require pytest-asyncio (install via pip install -e .[dev])",
+)
 class TestBackgroundSweepTask:
     """Item 7 — _background_registry_sweep async helper.
 

@@ -12,6 +12,8 @@ from __future__ import annotations
 
 import pytest
 
+pytest.importorskip("spacy", reason="CpuTagger imports spacy at runtime via _get_nlp()")
+
 from helix_context.tagger import CpuTagger
 
 _TAGGER = None
