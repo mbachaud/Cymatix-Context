@@ -561,7 +561,14 @@ Add a new method `update_announcement` (placement near `heartbeat()` — they're
         self.genome.conn.commit()
 ```
 
-`COALESCE(?, model_id)` lets the announce call set OR clear OR no-op on `model_id` cleanly: passing `None` keeps the existing value (no-op), passing a string overwrites. (If you actively want to NULL out model_id, that's a separate concern not in this spec.)
+**About the `COALESCE(?, model_id)` pattern (read this carefully):**
+
+- When the bound parameter is `None` (Python passes `None` for an unset kwarg), `COALESCE` returns the column's existing value — the UPDATE is a **no-op for that field**.
+- When the bound parameter is a real string (e.g. `"claude-opus-4-7"`), `COALESCE` returns the string — the column is **overwritten**.
+
+This lets one method handle both "agent set the model" and "agent only sent ide_override, leave model alone". If you actively want to clear `model_id` back to NULL, you'd need a separate code path; this spec doesn't require that.
+
+The `ide_override` branch does NOT use COALESCE because when `ide_override` is set, we want to unconditionally overwrite both `ide_detected` and `ide_detection_via` (the via must become `'agent_override'` exactly).
 
 - [ ] **Step 4: Run tests to verify they pass**
 
@@ -824,7 +831,7 @@ def test_announce_method_without_ide_override(monkeypatch, bridge_with_capture):
     assert "ide_override" not in body  # not included when None
 ```
 
-If `bridge_with_capture` doesn't already exist as a fixture in this file, build one that captures the http_post payload. The existing PR-#26 test for `register_participant_sends_vendor_host` likely uses a similar pattern — copy it.
+If `bridge_with_capture` doesn't already exist as a fixture in this file, build one that captures the http_post payload. The existing PR-#26 test for `register_participant_sends_vendor_host` uses an inline `httpx.post` patch with a `captured` dict — copy that pattern into a fixture and yield `(bridge, captured)`. Do NOT mutate any existing fixture; the existing PR #26 tests should keep working unchanged. If you find yourself touching an existing fixture, stop and add a new one instead.
 
 - [ ] **Step 2: Run tests to verify they fail**
 
@@ -970,7 +977,17 @@ def test_helix_announce_tool_calls_bridge_announce(monkeypatch, mock_bridge):
     assert call["ide_override"] is None
 ```
 
-The `mock_bridge` fixture from PR #26 needs to grow an `announce_calls` list. Update the fixture:
+The `mock_bridge` fixture from PR #26 needs to grow an `announce_calls` list AND a stub `announce()` method. **The reset block at the end of the fixture must reset BOTH lists** so cross-test pollution doesn't sneak in (a missing reset would let one test's announce call leak into another's assertions).
+
+After updating, run the existing PR #26 MCP tests (`test_register_with_registry_sends_env_vendor_host`, `test_register_with_registry_omits_unset_env`) explicitly to confirm the fixture mutation didn't break them:
+
+```bash
+python -m pytest tests/test_mcp_server.py -v
+```
+
+Expected: existing tests + 3 new pass; zero regressions.
+
+Updated fixture:
 
 ```python
 @pytest.fixture
@@ -1372,6 +1389,21 @@ def _build_tooltip(participant: Dict[str, Any]) -> Dict[str, str]:
     The ide_detection_via line tells the operator how (or whether) the
     IDE value was obtained: "env:VSCODE_PID", "agent_override",
     "no_match", "explicit:HELIX_MCP_HOST".
+
+    ide_label fallback chain (in order):
+      1. ide_detected — populated by this change's adapter detect at
+         register time, or by an agent's ide_override via helix_announce.
+         Authoritative when present.
+      2. mcp_host — PR #26's column. Sessions registered after PR #26 but
+         before this change will have ide_detected=NULL but mcp_host set
+         from HELIX_MCP_HOST env. Fall back so those sessions' chips
+         still render correctly until they re-register.
+      3. "Not detected" — explicit placeholder when neither column
+         carries a value, so the tooltip surfaces the gap rather than
+         hiding the row.
+
+    There is no equivalent fallback chain for model_id (the column is
+    new in this change; there is no prior column to fall back to).
     """
     return {
         "model_label": model_pretty(participant.get("model_id")) or "Not announced",
@@ -1417,13 +1449,29 @@ CSS-only `:hover` reveal. No JS.
 - Modify: `helix_context/launcher/templates/components/participants_panel.html`
 - Modify: `helix_context/launcher/static/launcher.css`
 
-- [ ] **Step 1: Read the existing chip block in agents_panel.html**
+- [ ] **Step 1: Locate every chip block to wrap**
 
-Read `helix_context/launcher/templates/components/agents_panel.html` to find the existing `chip--agent-host` block from PR #26 (around line 49). The new tooltip wraps this chip so the existing `:hover` target stays the chip itself.
+The `chip--agent-host` chip from PR #26 appears in **three places** inside `agents_panel.html` — one per sub-view (active, all, historical disconnected). Find them all before editing:
 
-- [ ] **Step 2: Modify agents_panel.html**
+```bash
+grep -n "chip--agent-host" helix_context/launcher/templates/components/agents_panel.html
+```
 
-Replace each occurrence of the `chip--agent-host` chip block (there are three — active, all, historical) with a wrapped version. Pattern for the active sub-view:
+Expected output: 3 matches. The plan's wrapping change must apply to all three; missing one leaves an inconsistent dashboard.
+
+In each match, the surrounding loop variable is `agent` (the iteration var of the outer `{% for agent in state.all_agents.entries %}`). Confirm by reading 5 lines of context above each match.
+
+The participants panel has the same chip in **one place** (added in PR #26 Task 9):
+
+```bash
+grep -n "chip--agent-host" helix_context/launcher/templates/components/participants_panel.html
+```
+
+Expected: 1 match. The loop variable there is `p`, not `agent`.
+
+- [ ] **Step 2: Modify agents_panel.html — wrap all three occurrences**
+
+For each of the three matches found in Step 1, replace the chip block with a wrapped version. Pattern (loop variable is `agent`):
 
 ```jinja
 {% if agent.host_label or agent.tooltip %}
