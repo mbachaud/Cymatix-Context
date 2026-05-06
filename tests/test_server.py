@@ -529,9 +529,10 @@ class TestProxyEndpoint:
         """If no user message, proxy should attempt to forward raw.
         Result depends on whether upstream is running."""
         resp = client.post("/v1/chat/completions", json={
+            "model": "llama3",
             "messages": [{"role": "system", "content": "test"}],
         })
-        # If upstream is running, we get 200 (passthrough); if not, 500
+        # If upstream is running, we get 200 (passthrough); if not, 502/503
         assert resp.status_code in (200, 500, 502, 503)
 
 
