@@ -887,7 +887,13 @@ class TestHITLEvents:
         # used ``time.sleep(0.02)`` which is flaky on slow CI runners and
         # slows the suite for no reason.
         from helix_context import registry as registry_mod
-        ticks = iter([100.0, 100.05, 100.10])
+        # Each emit_hitl_event() call consumes two ticks: one for the event
+        # timestamp (now = time.time()) and one inside touch_heartbeat().
+        # Provide 6 ticks — event ticks at 100.0 / 100.05 / 100.10 interleaved
+        # with heartbeat ticks — so future tick-count drift does not re-break
+        # this test.  Use itertools.cycle as an open-ended fallback guard.
+        import itertools
+        ticks = itertools.cycle([100.0, 100.0, 100.05, 100.05, 100.10, 100.10])
         monkeypatch.setattr(registry_mod.time, "time", lambda: next(ticks))
 
         registry.emit_hitl_event(participant_id=p.participant_id, pause_type="other")
