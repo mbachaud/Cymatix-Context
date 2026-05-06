@@ -1210,3 +1210,51 @@ def test_get_participant_projects_vendor_host(registry):
     assert fetched is not None
     assert fetched.agent_kind == "gemini"
     assert fetched.mcp_host == "antigravity"
+
+
+def test_participant_model_accepts_announce_fields():
+    from helix_context.schemas import Participant
+    p = Participant(
+        participant_id="abc",
+        party_id="party",
+        handle="laude",
+        ide_detected="vscode",
+        ide_detection_via="env:VSCODE_PID",
+        model_id="claude-opus-4-7",
+    )
+    assert p.ide_detected == "vscode"
+    assert p.ide_detection_via == "env:VSCODE_PID"
+    assert p.model_id == "claude-opus-4-7"
+
+
+def test_participant_info_accepts_announce_fields():
+    from helix_context.schemas import ParticipantInfo
+    p = ParticipantInfo(
+        participant_id="abc",
+        party_id="party",
+        handle="laude",
+        status="active",
+        last_seen_s_ago=0.0,
+        started_at=0.0,
+        ide_detected="cursor",
+        ide_detection_via="env:CURSOR_TRACE_ID",
+        model_id="gpt-5",
+    )
+    assert p.ide_detected == "cursor"
+    assert p.ide_detection_via == "env:CURSOR_TRACE_ID"
+    assert p.model_id == "gpt-5"
+
+
+def test_participant_info_defaults_announce_fields_to_none():
+    from helix_context.schemas import ParticipantInfo
+    p = ParticipantInfo(
+        participant_id="abc",
+        party_id="party",
+        handle="laude",
+        status="active",
+        last_seen_s_ago=0.0,
+        started_at=0.0,
+    )
+    assert p.ide_detected is None
+    assert p.ide_detection_via is None
+    assert p.model_id is None
