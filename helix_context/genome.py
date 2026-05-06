@@ -372,6 +372,9 @@ class Genome:
         self.conn.row_factory = sqlite3.Row
         self.conn.execute("PRAGMA journal_mode=WAL")
         self.conn.execute("PRAGMA busy_timeout=30000")  # 30s retry on lock
+        # Cap WAL file size — without this, SQLite resets (zero-fills) the
+        # WAL on truncate but keeps the high-water-mark size on disk.
+        self.conn.execute("PRAGMA journal_size_limit=67108864")  # 64 MB
         self._upsert_count = 0  # WAL checkpoint cadence counter
         self.last_query_scores: Dict[str, float] = {}  # Retrieval scores from last query
         # Per-tier score breakdown for the last query: {gene_id: {tier_name: score}}.
@@ -391,10 +394,15 @@ class Genome:
 
         # Dedicated read-only connection — WAL allows concurrent readers
         # without blocking the writer. Separate connection = no lock contention.
+        # isolation_level=None makes Python's sqlite3 module skip the implicit
+        # BEGIN around SELECTs. Without it, the first read pins a WAL snapshot
+        # for the lifetime of the process and prevents wal_checkpoint(TRUNCATE)
+        # from advancing — which is the dominant cause of WAL bloat.
         if self.path != ":memory:":
             self._reader = sqlite3.connect(
                 f"file:{self.path}?mode=ro", uri=True,
                 check_same_thread=False, timeout=10,
+                isolation_level=None,
             )
             self._reader.row_factory = sqlite3.Row
             self._reader.execute("PRAGMA busy_timeout=10000")
@@ -3121,6 +3129,7 @@ class Genome:
             self.conn.row_factory = sqlite3.Row
             self.conn.execute("PRAGMA journal_mode=WAL")
             self.conn.execute("PRAGMA busy_timeout=30000")
+            self.conn.execute("PRAGMA journal_size_limit=67108864")  # 64 MB
 
     # ── Close ───────────────────────────────────────────────────────
 
@@ -3140,8 +3149,29 @@ class Genome:
         if mode not in ("PASSIVE", "FULL", "RESTART", "TRUNCATE"):
             mode = "PASSIVE"
         try:
-            self.conn.execute(f"PRAGMA wal_checkpoint({mode})")
-            log.debug("WAL checkpoint (%s) completed", mode)
+            # Best-effort: release the reader's WAL snapshot before checkpointing
+            # so a TRUNCATE can actually advance. Safe no-op when the reader is
+            # already in autocommit mode (isolation_level=None).
+            if self._reader is not None:
+                try:
+                    self._reader.commit()
+                except Exception:
+                    pass
+            row = self.conn.execute(
+                f"PRAGMA wal_checkpoint({mode})"
+            ).fetchone()
+            # Returns (busy, log_pages, checkpointed_pages). busy=1 means a
+            # reader was holding a snapshot and the checkpoint was incomplete.
+            if row and row[0]:
+                log.warning(
+                    "WAL checkpoint (%s) blocked by reader: %d/%d pages flushed",
+                    mode, row[2] or 0, row[1] or 0,
+                )
+            else:
+                log.debug(
+                    "WAL checkpoint (%s) completed: %d pages flushed",
+                    mode, (row[2] if row else 0) or 0,
+                )
         except Exception:
             log.warning("WAL checkpoint (%s) failed", mode, exc_info=True)
 
@@ -3195,6 +3225,7 @@ class Genome:
         self.conn.row_factory = sqlite3.Row
         self.conn.execute("PRAGMA journal_mode=WAL")
         self.conn.execute("PRAGMA busy_timeout=30000")
+        self.conn.execute("PRAGMA journal_size_limit=67108864")  # 64 MB
 
         after = os.path.getsize(path) if os.path.exists(path) else 0
         reclaimed = before - after
