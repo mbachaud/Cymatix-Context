@@ -75,6 +75,31 @@ class TestRegisterParticipant:
         assert bridge._registered_party_id == "max@local"
         assert bridge._heartbeat_interval_s == 30.0
 
+    def test_register_participant_sends_vendor_host(self, bridge):
+        """AgentBridge.register_participant includes agent_kind/mcp_host in body."""
+        captured = {}
+
+        def capture_post(url, json=None, **kwargs):
+            captured["body"] = json
+            return _ok_response({
+                "participant_id": "abc456",
+                "party_id": "party_bridge_vh",
+                "registered_at": time.time(),
+                "heartbeat_interval_s": 30.0,
+                "ttl_s": 120.0,
+            })
+
+        with patch("httpx.post", side_effect=capture_post):
+            pid = bridge.register_participant(
+                party_id="party_bridge_vh",
+                handle="laude",
+                agent_kind="claude-code",
+                mcp_host="vscode",
+            )
+        assert pid == "abc456"
+        assert captured["body"]["agent_kind"] == "claude-code"
+        assert captured["body"]["mcp_host"] == "vscode"
+
     def test_register_failure_returns_none(self, bridge):
         with patch("httpx.post", return_value=_err_response(400, "bad")):
             pid = bridge.register_participant(party_id="max@local", handle="taude")

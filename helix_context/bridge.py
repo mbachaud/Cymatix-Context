@@ -379,6 +379,8 @@ class AgentBridge:
         capabilities: Optional[List[str]] = None,
         display_name: Optional[str] = None,
         start_auto_heartbeat: bool = False,
+        agent_kind: Optional[str] = None,
+        mcp_host: Optional[str] = None,
     ) -> Optional[str]:
         """Register a participant with the helix session registry.
 
@@ -402,6 +404,10 @@ class AgentBridge:
             body["capabilities"] = capabilities
         if display_name is not None:
             body["display_name"] = display_name
+        if agent_kind is not None:
+            body["agent_kind"] = agent_kind
+        if mcp_host is not None:
+            body["mcp_host"] = mcp_host
         try:
             body["pid"] = os.getpid()
         except Exception:
