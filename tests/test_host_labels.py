@@ -70,3 +70,11 @@ def test_compose_label_dedupes_when_vendor_equals_host():
     """Common case: HELIX_AGENT_KIND=claude-code and HELIX_MCP_HOST=claude-code.
     Render as a single chip, not 'Claude Code + Claude Code'."""
     assert compose_label("claude-code", "claude-code") == "Claude Code"
+
+
+def test_compose_label_dedupes_case_insensitive():
+    """Asymmetric mapping: 'codex' vendor maps to 'Codex' via _VENDOR_MAP,
+    but the same string as a host echoes verbatim ('codex'). Case-insensitive
+    dedup collapses them to a single 'Codex' chip rather than 'Codex + codex'.
+    Observed in the wild: Codex's MCP wrapper sends agent_kind=mcp_host=codex."""
+    assert compose_label("codex", "codex") == "Codex"

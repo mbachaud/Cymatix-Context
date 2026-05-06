@@ -57,7 +57,11 @@ def compose_label(
     """
     v = vendor_pretty(agent_kind)
     h = host_pretty(mcp_host)
-    if v and h and v == h:
+    # Case-insensitive dedup: a vendor like "codex" maps to "Codex" via
+    # _VENDOR_MAP, but the same string as a host echoes verbatim through
+    # host_pretty. Case-insensitive equality catches the asymmetry so a
+    # client that sends agent_kind=mcp_host=<x> still gets a single chip.
+    if v and h and v.lower() == h.lower():
         return v
     if v and h:
         return f"{v} + {h}"
