@@ -1,6 +1,25 @@
 """Tests for helix_context.mcp_server helper behavior."""
 
+import pytest
+
 from helix_context.mcp_server import _default_ingest_identity, _normalize_health_payload
+
+
+@pytest.fixture
+def mock_bridge(monkeypatch):
+    class _MockBridge:
+        register_participant_calls = []
+
+        def __init__(self, *args, **kwargs):
+            pass
+
+        def register_participant(self, **kwargs):
+            type(self).register_participant_calls.append(kwargs)
+            return "mock-participant-id"
+
+    monkeypatch.setattr("helix_context.bridge.AgentBridge", _MockBridge)
+    _MockBridge.register_participant_calls = []  # reset between tests
+    yield _MockBridge
 
 
 class TestNormalizeHealthPayload:
@@ -91,3 +110,35 @@ class TestDefaultIngestIdentity:
             "agent_handle": "laude",
             "agent_kind": "claude-code",
         }
+
+
+class TestRegisterWithRegistry:
+    def test_register_with_registry_sends_env_vendor_host(self, monkeypatch, mock_bridge):
+        """_register_with_registry reads HELIX_AGENT_KIND and HELIX_MCP_HOST
+        from env and forwards them to AgentBridge.register_participant."""
+        monkeypatch.setenv("HELIX_MCP_HANDLE", "laude")
+        monkeypatch.setenv("HELIX_PARTY_ID", "swift_wing21")
+        monkeypatch.setenv("HELIX_AGENT_KIND", "claude-code")
+        monkeypatch.setenv("HELIX_MCP_HOST", "vscode")
+
+        from helix_context import mcp_server
+        mcp_server._register_with_registry()
+
+        call = mock_bridge.register_participant_calls[-1]
+        assert call["agent_kind"] == "claude-code"
+        assert call["mcp_host"] == "vscode"
+        assert call["handle"] == "laude"
+
+    def test_register_with_registry_omits_unset_env(self, monkeypatch, mock_bridge):
+        """If HELIX_AGENT_KIND is unset, registration sends None (not 'unknown')."""
+        monkeypatch.delenv("HELIX_AGENT_KIND", raising=False)
+        monkeypatch.setenv("HELIX_MCP_HOST", "antigravity")
+        monkeypatch.setenv("HELIX_MCP_HANDLE", "raude")
+        monkeypatch.setenv("HELIX_PARTY_ID", "party_test")
+
+        from helix_context import mcp_server
+        mcp_server._register_with_registry()
+
+        call = mock_bridge.register_participant_calls[-1]
+        assert call["agent_kind"] is None
+        assert call["mcp_host"] == "antigravity"
