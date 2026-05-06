@@ -1907,7 +1907,9 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
         Called by the agent via the helix_announce MCP tool after the MCP
         adapter has registered the session. Body fields:
 
-        - model_id: required string. Free-form, no validation.
+        - model_id: optional string. Free-form, no validation. When omitted,
+          model_id is preserved (no-op for that field; useful when the agent
+          is only setting ide_override).
         - ide_override: optional string. Replaces ide_detected and sets
           ide_detection_via='agent_override'.
 
