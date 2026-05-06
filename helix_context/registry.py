@@ -104,6 +104,9 @@ class Registry:
         display_name: Optional[str] = None,
         agent_kind: Optional[str] = None,
         mcp_host: Optional[str] = None,
+        ide_detected: Optional[str] = None,
+        ide_detection_via: Optional[str] = None,
+        model_id: Optional[str] = None,
     ) -> Participant:
         """Register a new participant. Creates the party row on first use (trust-on-first-use).
 
@@ -124,8 +127,9 @@ class Registry:
         cur.execute(
             "INSERT INTO participants "
             "(participant_id, party_id, handle, workspace, pid, started_at, "
-            " last_heartbeat, status, capabilities, metadata, agent_kind, mcp_host) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?, 'active', ?, ?, ?, ?)",
+            " last_heartbeat, status, capabilities, metadata, agent_kind, mcp_host, "
+            " ide_detected, ide_detection_via, model_id) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, 'active', ?, ?, ?, ?, ?, ?, ?)",
             (
                 participant_id,
                 party_id,
@@ -138,6 +142,9 @@ class Registry:
                 json_dumps(metadata) if metadata else None,
                 agent_kind,
                 mcp_host,
+                ide_detected,
+                ide_detection_via,
+                model_id,
             ),
         )
         self.genome.conn.commit()
@@ -159,6 +166,9 @@ class Registry:
             metadata=metadata,
             agent_kind=agent_kind,
             mcp_host=mcp_host,
+            ide_detected=ide_detected,
+            ide_detection_via=ide_detection_via,
+            model_id=model_id,
         )
 
     def local_org(
@@ -353,6 +363,50 @@ class Registry:
         self.genome.conn.commit()
         return (DEFAULT_TTL_S, "active")
 
+    def update_announcement(
+        self,
+        participant_id: str,
+        model_id: Optional[str] = None,
+        ide_override: Optional[str] = None,
+    ) -> None:
+        """PATCH model_id and (optionally) ide_detected on a participant row.
+
+        Called by the announce endpoint when an agent self-reports its
+        identity. ``ide_override`` replaces ``ide_detected`` and forces
+        ``ide_detection_via='agent_override'`` so the tooltip can surface
+        that the IDE came from the agent rather than env detection.
+
+        ``COALESCE(?, model_id)`` lets a None Python value (unset kwarg)
+        leave the existing column value intact, while a real string
+        overwrites it. This handles "agent sent only ide_override, leave
+        model alone" without a separate code path. To clear model_id back
+        to NULL a distinct code path would be needed; this spec does not
+        require it.
+
+        Idempotent: multiple calls overwrite (last write wins). Silently
+        no-ops on unknown ``participant_id`` to match the heartbeat path
+        — the agent has no useful action to take if the participant has
+        already TTL'd out.
+        """
+        cur = self.genome.conn.cursor()
+        if ide_override is not None:
+            cur.execute(
+                "UPDATE participants "
+                "SET model_id = COALESCE(?, model_id), "
+                "    ide_detected = ?, "
+                "    ide_detection_via = 'agent_override' "
+                "WHERE participant_id = ?",
+                (model_id, ide_override, participant_id),
+            )
+        else:
+            cur.execute(
+                "UPDATE participants "
+                "SET model_id = COALESCE(?, model_id) "
+                "WHERE participant_id = ?",
+                (model_id, participant_id),
+            )
+        self.genome.conn.commit()
+
     def upsert_presence_gene(
         self,
         participant_id: str,
@@ -483,7 +537,8 @@ class Registry:
         cur = self.genome.conn.cursor()
         sql = (
             "SELECT participant_id, party_id, handle, workspace, "
-            "       started_at, last_heartbeat, agent_kind, mcp_host "
+            "       started_at, last_heartbeat, agent_kind, mcp_host, "
+            "       ide_detected, ide_detection_via, model_id "
             "FROM participants"
         )
         params: list = []
@@ -515,6 +570,9 @@ class Registry:
                 started_at=r["started_at"],
                 agent_kind=r["agent_kind"],
                 mcp_host=r["mcp_host"],
+                ide_detected=r["ide_detected"],
+                ide_detection_via=r["ide_detection_via"],
+                model_id=r["model_id"],
             ))
         return out
 
@@ -524,7 +582,8 @@ class Registry:
         r = cur.execute(
             "SELECT participant_id, party_id, handle, workspace, pid, "
             "       started_at, last_heartbeat, status, capabilities, metadata, "
-            "       agent_kind, mcp_host "
+            "       agent_kind, mcp_host, "
+            "       ide_detected, ide_detection_via, model_id "
             "FROM participants WHERE participant_id = ?",
             (participant_id,),
         ).fetchone()
@@ -553,6 +612,9 @@ class Registry:
             metadata=meta,
             agent_kind=r["agent_kind"],
             mcp_host=r["mcp_host"],
+            ide_detected=r["ide_detected"],
+            ide_detection_via=r["ide_detection_via"],
+            model_id=r["model_id"],
         )
 
     def get_recent_by_handle(

@@ -1258,3 +1258,115 @@ def test_participant_info_defaults_announce_fields_to_none():
     assert p.ide_detected is None
     assert p.ide_detection_via is None
     assert p.model_id is None
+
+
+def test_register_participant_persists_announce_fields(registry, genome):
+    p = registry.register_participant(
+        party_id="party_a",
+        handle="laude",
+        ide_detected="vscode",
+        ide_detection_via="env:VSCODE_PID",
+    )
+    assert p.ide_detected == "vscode"
+    assert p.ide_detection_via == "env:VSCODE_PID"
+    assert p.model_id is None  # not yet announced
+
+    cur = genome.conn.cursor()
+    row = cur.execute(
+        "SELECT ide_detected, ide_detection_via, model_id "
+        "FROM participants WHERE participant_id = ?",
+        (p.participant_id,),
+    ).fetchone()
+    assert row[0] == "vscode"
+    assert row[1] == "env:VSCODE_PID"
+    assert row[2] is None
+
+
+def test_register_participant_omitting_announce_fields_stores_null(registry):
+    p = registry.register_participant(party_id="party_b", handle="taude")
+    assert p.ide_detected is None
+    assert p.ide_detection_via is None
+    assert p.model_id is None
+
+
+def test_list_participants_projects_announce_fields(registry):
+    registry.register_participant(
+        party_id="party_c",
+        handle="laude",
+        ide_detected="cursor",
+        ide_detection_via="env:CURSOR_TRACE_ID",
+    )
+    rows = registry.list_participants(party_id="party_c", status_filter="all")
+    assert len(rows) == 1
+    assert rows[0].ide_detected == "cursor"
+    assert rows[0].ide_detection_via == "env:CURSOR_TRACE_ID"
+    assert rows[0].model_id is None
+
+
+def test_get_participant_projects_announce_fields(registry):
+    p = registry.register_participant(
+        party_id="party_d",
+        handle="laude",
+        ide_detected="vscode",
+        ide_detection_via="env:VSCODE_PID",
+    )
+    fetched = registry.get_participant(p.participant_id)
+    assert fetched is not None
+    assert fetched.ide_detected == "vscode"
+    assert fetched.model_id is None
+
+
+def test_update_announcement_sets_model_id(registry):
+    p = registry.register_participant(
+        party_id="party_e",
+        handle="laude",
+        ide_detected="vscode",
+        ide_detection_via="env:VSCODE_PID",
+    )
+    registry.update_announcement(
+        participant_id=p.participant_id,
+        model_id="claude-opus-4-7",
+    )
+    fetched = registry.get_participant(p.participant_id)
+    assert fetched.model_id == "claude-opus-4-7"
+    # IDE should be unchanged when no override is supplied
+    assert fetched.ide_detected == "vscode"
+    assert fetched.ide_detection_via == "env:VSCODE_PID"
+
+
+def test_update_announcement_with_ide_override_sets_via_to_agent_override(registry):
+    p = registry.register_participant(
+        party_id="party_f",
+        handle="laude",
+        ide_detected="vscode",
+        ide_detection_via="env:VSCODE_PID",
+    )
+    registry.update_announcement(
+        participant_id=p.participant_id,
+        model_id="gpt-5",
+        ide_override="cursor",
+    )
+    fetched = registry.get_participant(p.participant_id)
+    assert fetched.ide_detected == "cursor"
+    assert fetched.ide_detection_via == "agent_override"
+    assert fetched.model_id == "gpt-5"
+
+
+def test_update_announcement_is_idempotent(registry):
+    """Multiple calls overwrite — last write wins."""
+    p = registry.register_participant(party_id="party_g", handle="laude")
+    registry.update_announcement(participant_id=p.participant_id, model_id="claude-opus-4-7")
+    registry.update_announcement(participant_id=p.participant_id, model_id="claude-sonnet-4-6")
+    fetched = registry.get_participant(p.participant_id)
+    assert fetched.model_id == "claude-sonnet-4-6"
+
+
+def test_update_announcement_unknown_participant_id_silent_no_op(registry):
+    """Calling update_announcement on an unknown id should not raise.
+    The registry's existing heartbeat() updates silently no-op on unknown
+    ids, and update_announcement should match that contract."""
+    registry.update_announcement(
+        participant_id="does-not-exist",
+        model_id="claude-opus-4-7",
+    )
+    # Should not raise. No further assertion needed.
