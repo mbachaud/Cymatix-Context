@@ -50,6 +50,38 @@ from .schemas import (
 
 log = logging.getLogger("helix.context_manager")
 
+
+# ── Stage-timer context manager ──────────────────────────────────────
+# Wraps each named pipeline stage with a monotonic-clock measurement and
+# records a single OTel histogram entry on exit. Exceptions in telemetry
+# are suppressed so a broken collector never kills the pipeline.
+
+import time as _time
+from .telemetry import pipeline_stage_histogram as _pipeline_stage_histogram
+
+
+class _stage_timer:
+    """Context manager that records helix_pipeline_stage_seconds on exit."""
+
+    __slots__ = ("stage", "labels", "_t0")
+
+    def __init__(self, stage: str, labels: Optional[dict] = None):
+        self.stage = stage
+        self.labels = labels or {}
+
+    def __enter__(self):
+        self._t0 = _time.monotonic()
+        return self
+
+    def __exit__(self, *exc):
+        try:
+            _pipeline_stage_histogram().record(
+                _time.monotonic() - self._t0,
+                {"stage": self.stage, **self.labels},
+            )
+        except Exception:
+            pass  # never let telemetry break the pipeline
+
 # Thread pool for running sync ribosome calls from async context
 _executor = ThreadPoolExecutor(max_workers=2, thread_name_prefix="helix-ribosome")
 
@@ -738,18 +770,20 @@ class HelixContextManager:
         # Restates the query with expanded keywords BEFORE promoter lookup.
         # This sharpens the initial frequency so retrieval falls into the
         # right gravity well instead of optimizing the wrong one.
-        expanded_query, domains, entities = self._prepare_query_signals(
-            query,
-            session_context=session_context,
-            expand_query=True,
-        )
+        with _stage_timer("extract"):
+            expanded_query, domains, entities = self._prepare_query_signals(
+                query,
+                session_context=session_context,
+                expand_query=True,
+            )
 
         # Step 2: Express (genome query + pending buffer + optional cold tier)
-        candidates = self._express(
-            domains, entities, max_genes,
-            query_text=query, include_cold=include_cold, party_id=party_id,
-            read_only=read_only,
-        )
+        with _stage_timer("express"):
+            candidates = self._express(
+                domains, entities, max_genes,
+                query_text=query, include_cold=include_cold, party_id=party_id,
+                read_only=read_only,
+            )
 
         if not candidates:
             empty_health = ContextHealth(
@@ -770,15 +804,16 @@ class HelixContextManager:
                 metadata={"query": query, "genes_expressed": 0},
             )
 
-        candidates, _ = self._apply_candidate_refiners(
-            query,
-            candidates,
-            max_genes,
-            use_cymatics=True,
-            use_harmonic_bin=True,
-            use_tcm=True,
-            allow_rerank=True,
-        )
+        with _stage_timer("rerank"):
+            candidates, _ = self._apply_candidate_refiners(
+                query,
+                candidates,
+                max_genes,
+                use_cymatics=True,
+                use_harmonic_bin=True,
+                use_tcm=True,
+                allow_rerank=True,
+            )
 
         # Dynamic budget tiers — size the expression window based on
         # retrieval confidence instead of always sending max_genes.
@@ -1000,6 +1035,7 @@ class HelixContextManager:
         answer_slate_lines = []  # MoE answer slate — flat KV pairs
         # foveated_caps / foveated_active are call-local; see top of build_context.
         foveated_base = self.config.budget.foveated_base_chars
+        _splice_t0 = _time.monotonic()
         for idx, g in enumerate(candidates):
             src = g.source_id or ""
             short = ""
@@ -1040,17 +1076,26 @@ class HelixContextManager:
             )
             spliced_map[g.gene_id] = f"<GENE{src_attr}{kv_attrs}>\n{content}\n</GENE>"
 
+        # Record splice-stage timing (covers compress_text loop over all genes)
+        try:
+            _pipeline_stage_histogram().record(
+                _time.monotonic() - _splice_t0, {"stage": "splice"},
+            )
+        except Exception:
+            pass
+
         # Step 5: Assemble (MoE/small-model aware)
         use_slate = self._should_use_slate(downstream_model)
-        window = self._assemble(
-            query, candidates, spliced_map, relation_graph,
-            query_signals=(domains, entities),
-            answer_slate=answer_slate_lines if use_slate else None,
-            session_id=session_id,
-            ignore_delivered=ignore_delivered,
-            decoder_prompt_override=effective_decoder_prompt,
-            respect_caller_order=foveated_active,
-        )
+        with _stage_timer("assemble"):
+            window = self._assemble(
+                query, candidates, spliced_map, relation_graph,
+                query_signals=(domains, entities),
+                answer_slate=answer_slate_lines if use_slate else None,
+                session_id=session_id,
+                ignore_delivered=ignore_delivered,
+                decoder_prompt_override=effective_decoder_prompt,
+                respect_caller_order=foveated_active,
+            )
 
         # Annotate window with dynamic budget tier (for telemetry/benchmarks)
         if window.metadata is not None:

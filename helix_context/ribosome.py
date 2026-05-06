@@ -74,6 +74,7 @@ DO NOT delete this file or its methods without explicit coordination.
 from __future__ import annotations
 
 import logging
+import time as _time
 from typing import Dict, List, Optional, Protocol
 
 import httpx
@@ -492,6 +493,41 @@ class Ribosome:
         self.encoder = encoder or CodonEncoder()
         self.splice_aggressiveness = splice_aggressiveness
 
+    def _timed_complete(
+        self,
+        prompt: str,
+        system: str = "",
+        temperature: float = 0.0,
+        call_kind: str = "unknown",
+    ) -> str:
+        """Call backend.complete() and record helix_ribosome_call_seconds.
+
+        call_kind labels the histogram entry so callers can distinguish
+        pack / rerank / splice / replicate latency. Telemetry is best-effort:
+        if the histogram call raises for any reason the original exception
+        (or result) still propagates.
+        """
+        backend_name = type(self.backend).__name__
+        model_name = getattr(self.backend, "model", "unknown")
+        t0 = _time.monotonic()
+        try:
+            result = self.backend.complete(prompt, system=system, temperature=temperature)
+        finally:
+            elapsed = _time.monotonic() - t0
+            try:
+                from .telemetry import ribosome_call_histogram
+                ribosome_call_histogram().record(
+                    elapsed,
+                    {
+                        "backend": backend_name,
+                        "model": str(model_name),
+                        "call_kind": call_kind,
+                    },
+                )
+            except Exception:
+                pass  # never let telemetry break the ribosome
+        return result
+
     # ── Pack: raw text → Gene ───────────────────────────────────────
 
     def pack(self, content: str, content_type: str = "text") -> Gene:
@@ -521,7 +557,7 @@ class Ribosome:
         prompt = f"Encode the following content into codons:\n\n{numbered}"
 
         try:
-            raw = self.backend.complete(prompt, system=_PACK_SYSTEM)
+            raw = self._timed_complete(prompt, system=_PACK_SYSTEM, call_kind="pack")
             parsed = _parse_json(raw)
         except Exception as exc:
             raise TranscriptionError(f"Pack failed: {exc}") from exc
@@ -570,7 +606,9 @@ class Ribosome:
         prompt = f"Extract key-value facts from this content:\n\n{truncated}"
 
         try:
-            raw = self.backend.complete(prompt, system=_KV_EXTRACT_SYSTEM)
+            raw = self._timed_complete(
+                prompt, system=_KV_EXTRACT_SYSTEM, call_kind="pack"
+            )
             parsed = _parse_json(raw)
         except Exception:
             log.debug("KV extraction failed (non-fatal)", exc_info=True)
@@ -619,7 +657,9 @@ class Ribosome:
         prompt = pb.build()
 
         try:
-            raw = self.backend.complete(prompt, system=_EXPRESS_SYSTEM)
+            raw = self._timed_complete(
+                prompt, system=_EXPRESS_SYSTEM, call_kind="rerank"
+            )
             scores = _parse_json(raw)
         except Exception:
             # Fix 4: timeout or model failure — fall back to input order
@@ -683,7 +723,7 @@ class Ribosome:
         system = _splice_system(self.splice_aggressiveness)
 
         try:
-            raw = self.backend.complete(prompt, system=system)
+            raw = self._timed_complete(prompt, system=system, call_kind="splice")
             parsed = _parse_json(raw)
         except Exception:
             # Fix 4: timeout/failure — fall back to complement for all genes
@@ -747,7 +787,9 @@ class Ribosome:
         prompt = f"Encode this conversation exchange:\n\n{numbered}"
 
         try:
-            raw = self.backend.complete(prompt, system=_REPLICATE_SYSTEM)
+            raw = self._timed_complete(
+                prompt, system=_REPLICATE_SYSTEM, call_kind="replicate"
+            )
             parsed = _parse_json(raw)
         except Exception:
             # Replication is best-effort (background task) — don't crash

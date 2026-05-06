@@ -44,6 +44,7 @@ log = logging.getLogger("helix.server")
 
 _CHECKPOINT_INTERVAL = 60  # seconds between background WAL checkpoints
 _REGISTRY_SWEEP_INTERVAL = 60  # seconds between session registry status sweeps
+_WAL_GAUGE_INTERVAL = 30  # seconds between WAL-size gauge emissions
 
 
 def _local_timezone() -> Optional[str]:
@@ -315,6 +316,20 @@ async def _background_checkpoint(helix: HelixContextManager) -> None:
             log.warning("Background WAL checkpoint failed", exc_info=True)
 
 
+async def _background_wal_gauge(helix: HelixContextManager) -> None:
+    """Emit helix_genome_wal_size_bytes every _WAL_GAUGE_INTERVAL seconds.
+
+    Best-effort: failures are ignored so the gauge never affects uptime.
+    No-op when OTel is disabled (noop instruments silently drop the call).
+    """
+    while True:
+        await asyncio.sleep(_WAL_GAUGE_INTERVAL)
+        try:
+            helix.genome.emit_wal_health_gauges()
+        except Exception:
+            pass  # diagnostic path; never block the event loop
+
+
 async def _background_registry_sweep(registry_obj) -> None:
     """Periodically sweep session registry status.
 
@@ -441,10 +456,12 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
 
         task = asyncio.create_task(_background_checkpoint(helix))
         sweep_task = asyncio.create_task(_background_registry_sweep(registry))
+        wal_gauge_task = asyncio.create_task(_background_wal_gauge(helix))
         yield
         task.cancel()
         sweep_task.cancel()
-        for _t in (task, sweep_task):
+        wal_gauge_task.cancel()
+        for _t in (task, sweep_task, wal_gauge_task):
             try:
                 await _t
             except asyncio.CancelledError:

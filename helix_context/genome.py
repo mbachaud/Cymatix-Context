@@ -1782,6 +1782,7 @@ class Genome:
         # on the 2026-04-12 KV-harvest bench before this fix).
         q_lower_tokens = [t.lower() for t in query_terms if t]
         if q_lower_tokens:
+            _pki_t0 = time.monotonic()
             try:
                 # Group hits by (path_token, kv_key) to compute per-pair
                 # cardinality. SQLite GROUP BY + COUNT does this in one
@@ -1845,6 +1846,14 @@ class Genome:
                         tier_contrib.setdefault(gid, {})["pki"] = capped
             except Exception as exc:
                 log.debug("path_key_index tier skipped: %s", exc)
+            finally:
+                try:
+                    from .telemetry import genome_signal_histogram
+                    genome_signal_histogram().record(
+                        time.monotonic() - _pki_t0, {"signal": "pki"}
+                    )
+                except Exception:
+                    pass
 
         # ── Tier 0.5: filename-anchor boost (flag-gated spike) ─────
         # Dewey bench 2026-04-14: filename alone drives retrieval lift;
@@ -1867,6 +1876,7 @@ class Genome:
                 log.debug("filename_anchor tier skipped: %s", exc)
 
         # ── Tier 1: exact promoter tag match (weight 3.0) ──────────
+        _tag_exact_t0 = time.monotonic()
         placeholders = ",".join("?" * len(query_terms))
         rows = cur.execute(
             f"""
@@ -1885,9 +1895,17 @@ class Genome:
             tag_score = r["match_count"] * 3.0
             gene_scores[r["gene_id"]] = tag_score
             tier_contrib.setdefault(r["gene_id"], {})["tag_exact"] = tag_score
+        try:
+            from .telemetry import genome_signal_histogram
+            genome_signal_histogram().record(
+                time.monotonic() - _tag_exact_t0, {"signal": "tag_exact"}
+            )
+        except Exception:
+            pass
 
         # ── Tier 2: prefix tag match (weight 1.5) ──────────────────
         # "server" matches "serverconfig", "server_api", etc.
+        _tag_prefix_t0 = time.monotonic()
         prefix_conditions = " OR ".join(
             "pi.tag_value LIKE ?" for _ in query_terms
         )
@@ -1910,10 +1928,18 @@ class Genome:
             prefix_score = r["match_count"] * 1.5
             gene_scores[gid] = gene_scores.get(gid, 0) + prefix_score
             tier_contrib.setdefault(gid, {})["tag_prefix"] = prefix_score
+        try:
+            from .telemetry import genome_signal_histogram
+            genome_signal_histogram().record(
+                time.monotonic() - _tag_prefix_t0, {"signal": "tag_prefix"}
+            )
+        except Exception:
+            pass
 
         # ── Tier 3: FTS5 content search (weight 3.0) ───────────────
         if self._fts_available:
             # Build FTS5 query: OR-join all terms
+            _fts5_t0 = time.monotonic()
             fts_query = " OR ".join(
                 f'"{t}"' for t in query_terms if len(t) > 2
             )
@@ -1954,9 +1980,18 @@ class Genome:
                             tier_contrib.setdefault(gid, {})["fts5"] = fts_score
                 except Exception:
                     log.warning("FTS5 query failed", exc_info=True)
+                finally:
+                    try:
+                        from .telemetry import genome_signal_histogram
+                        genome_signal_histogram().record(
+                            time.monotonic() - _fts5_t0, {"signal": "fts5"}
+                        )
+                    except Exception:
+                        pass
 
         # ── Tier 3.5: SPLADE sparse retrieval (weight 3.5) ─────────
         if self._splade_enabled:
+            _splade_t0 = time.monotonic()
             try:
                 from . import splade_backend
                 # Check if splade_terms table exists
@@ -1974,6 +2009,14 @@ class Genome:
                         tier_contrib.setdefault(gid, {})["splade"] = splade_score
             except Exception:
                 log.warning("SPLADE retrieval failed", exc_info=True)
+            finally:
+                try:
+                    from .telemetry import genome_signal_histogram
+                    genome_signal_histogram().record(
+                        time.monotonic() - _splade_t0, {"signal": "splade"}
+                    )
+                except Exception:
+                    pass
 
         # ── Tier 4: ΣĒMA semantic retrieval + re-ranking ───────────────
         # Two modes:
@@ -1986,6 +2029,7 @@ class Genome:
                 top_score = max(gene_scores.values()) if gene_scores else 0
 
                 # Mode A: Boost existing candidates when confidence is weak
+                _sema_boost_t0 = time.monotonic()
                 if gene_scores and top_score < 20.0:
                     existing_ids = list(gene_scores.keys())
                     id_ph = ",".join("?" * len(existing_ids))
@@ -2015,6 +2059,13 @@ class Genome:
                                     sema_boost = sim * 2.0 * boost_scale
                                     gene_scores[gid] += sema_boost
                                     tier_contrib.setdefault(gid, {})["sema_boost"] = sema_boost
+                try:
+                    from .telemetry import genome_signal_histogram
+                    genome_signal_histogram().record(
+                        time.monotonic() - _sema_boost_t0, {"signal": "sema_boost"}
+                    )
+                except Exception:
+                    pass
 
                 # Mode B: Add new candidates when pool is undersized
                 # Uses pre-materialized numpy cache for fast cosine scan
@@ -3167,6 +3218,13 @@ class Genome:
                     "WAL checkpoint (%s) blocked by reader: %d/%d pages flushed",
                     mode, row[2] or 0, row[1] or 0,
                 )
+                try:
+                    from .telemetry import genome_checkpoint_blocked_counter
+                    genome_checkpoint_blocked_counter().add(
+                        1, {"mode": mode}
+                    )
+                except Exception:
+                    pass
             else:
                 log.debug(
                     "WAL checkpoint (%s) completed: %d pages flushed",
@@ -3174,6 +3232,23 @@ class Genome:
                 )
         except Exception:
             log.warning("WAL checkpoint (%s) failed", mode, exc_info=True)
+
+    def emit_wal_health_gauges(self) -> None:
+        """Emit helix_genome_wal_size_bytes gauge for the current genome WAL.
+
+        Intended to be called from a background task every ~30 s. No-op for
+        in-memory genomes and when OTel is disabled (noop instruments drop the
+        call silently). Never raises — failures are logged at DEBUG level.
+        """
+        if self.path == ":memory:":
+            return
+        try:
+            wal_path = self.path + "-wal"
+            wal_size = os.path.getsize(wal_path) if os.path.exists(wal_path) else 0
+            from .telemetry import genome_wal_size_gauge
+            genome_wal_size_gauge().set(wal_size)
+        except Exception:
+            log.debug("emit_wal_health_gauges failed", exc_info=True)
 
     def vacuum(self) -> Dict[str, int]:
         """
