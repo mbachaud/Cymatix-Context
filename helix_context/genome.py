@@ -777,6 +777,16 @@ class Genome:
             "ON participants(status)"
         )
 
+        # Vendor + host axes for dashboard badges (added 2026-05-05).
+        # `agent_kind`: vendor family — "claude-code", "codex", "gemini".
+        # `mcp_host`:   host capability tag — "antigravity", "vscode", "cursor".
+        # Both are nullable; pre-2026-05-05 rows simply read NULL.
+        for col in ("agent_kind", "mcp_host"):
+            try:
+                cur.execute(f"ALTER TABLE participants ADD COLUMN {col} TEXT")
+            except sqlite3.OperationalError:
+                pass  # column already exists — idempotent
+
         # ── Layer 4: agents (AI personas under a participant) ───────
         # An agent is the AI persona doing the work on behalf of a human
         # participant: "laude", "taude", "raude", "claude-code", "gemini",

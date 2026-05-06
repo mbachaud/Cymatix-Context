@@ -123,6 +123,20 @@ class TestSchemaMigration:
         genome._ensure_registry_schema(cur)
         genome.conn.commit()
 
+    def test_participants_table_has_agent_kind_and_mcp_host_columns(self, genome):
+        """Schema migration adds agent_kind and mcp_host columns idempotently."""
+        cur = genome.conn.cursor()
+        cols = {r[1] for r in cur.execute("PRAGMA table_info(participants)").fetchall()}
+        assert "agent_kind" in cols, f"agent_kind missing; got {cols}"
+        assert "mcp_host" in cols, f"mcp_host missing; got {cols}"
+
+    def test_schema_migration_is_idempotent(self, genome):
+        """Re-running _ensure_registry_schema does not raise on existing columns."""
+        cur = genome.conn.cursor()
+        # Should not raise even though columns already exist.
+        genome._ensure_registry_schema(cur)
+        genome.conn.commit()
+
 
 class TestRegisterParticipant:
     def test_register_creates_party_on_first_use(self, registry, genome):
