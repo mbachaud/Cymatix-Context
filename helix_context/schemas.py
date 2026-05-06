@@ -309,6 +309,8 @@ class Participant(BaseModel):
     status: str = "active"              # "active" | "idle" | "stale" | "gone"
     capabilities: List[str] = Field(default_factory=list)
     metadata: Optional[dict] = None
+    agent_kind: Optional[str] = None    # vendor family — "claude-code", "codex"
+    mcp_host: Optional[str] = None      # host tag — "vscode", "cursor"
 
 
 class ParticipantInfo(BaseModel):
@@ -320,6 +322,8 @@ class ParticipantInfo(BaseModel):
     status: str
     last_seen_s_ago: float
     started_at: float
+    agent_kind: Optional[str] = None
+    mcp_host: Optional[str] = None
 
 
 class GeneAttribution(BaseModel):

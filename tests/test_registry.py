@@ -1106,3 +1106,46 @@ class TestRecentEndpoint:
         assert resp.status_code == 200
         data = resp.json()
         assert data["count"] == 0
+
+
+def test_participant_model_accepts_vendor_host_fields():
+    from helix_context.schemas import Participant
+    p = Participant(
+        participant_id="abc",
+        party_id="party",
+        handle="laude",
+        agent_kind="claude-code",
+        mcp_host="vscode",
+    )
+    assert p.agent_kind == "claude-code"
+    assert p.mcp_host == "vscode"
+
+
+def test_participant_info_accepts_vendor_host_fields():
+    from helix_context.schemas import ParticipantInfo
+    p = ParticipantInfo(
+        participant_id="abc",
+        party_id="party",
+        handle="laude",
+        status="active",
+        last_seen_s_ago=0.0,
+        started_at=0.0,
+        agent_kind="codex",
+        mcp_host="cursor",
+    )
+    assert p.agent_kind == "codex"
+    assert p.mcp_host == "cursor"
+
+
+def test_participant_info_defaults_vendor_host_to_none():
+    from helix_context.schemas import ParticipantInfo
+    p = ParticipantInfo(
+        participant_id="abc",
+        party_id="party",
+        handle="laude",
+        status="active",
+        last_seen_s_ago=0.0,
+        started_at=0.0,
+    )
+    assert p.agent_kind is None
+    assert p.mcp_host is None
