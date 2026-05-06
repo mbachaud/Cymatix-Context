@@ -1130,3 +1130,46 @@ class TestContextPacketEndpoint:
             "max_genes": "not-an-int",
         })
         assert resp2.status_code == 200
+
+
+class TestSessionsRegister:
+    """Tests for /sessions/register endpoint — optional vendor fields."""
+
+    def test_sessions_register_accepts_vendor_host(self, client):
+        """Register a participant with agent_kind and mcp_host fields."""
+        resp = client.post(
+            "/sessions/register",
+            json={
+                "party_id": "party_vh",
+                "handle": "laude",
+                "agent_kind": "claude-code",
+                "mcp_host": "vscode",
+            },
+        )
+        assert resp.status_code == 200, resp.text
+        pid = resp.json()["participant_id"]
+
+        # Verify it landed in the registry projection
+        listing = client.get("/sessions", params={"party_id": "party_vh"}).json()
+        rows = listing.get("participants", [])
+        matching = [r for r in rows if r.get("participant_id") == pid]
+        assert len(matching) == 1
+        assert matching[0]["agent_kind"] == "claude-code"
+        assert matching[0]["mcp_host"] == "vscode"
+
+    def test_sessions_register_omitting_vendor_host_still_works(self, client):
+        """Pre-existing clients (no agent_kind / mcp_host in body) keep working."""
+        resp = client.post(
+            "/sessions/register",
+            json={"party_id": "party_legacy", "handle": "taude"},
+        )
+        assert resp.status_code == 200, resp.text
+        pid = resp.json()["participant_id"]
+
+        # Verify it registered without agent_kind/mcp_host (should be None)
+        listing = client.get("/sessions", params={"party_id": "party_legacy"}).json()
+        rows = listing.get("participants", [])
+        matching = [r for r in rows if r.get("participant_id") == pid]
+        assert len(matching) == 1
+        assert matching[0].get("agent_kind") is None
+        assert matching[0].get("mcp_host") is None

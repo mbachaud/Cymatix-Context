@@ -12,6 +12,9 @@
     {% for p in state.participants.entries %}
       <li class="panel-list__item">
         <span class="chip chip--participant">{{ p.handle }}</span>
+        {% if p.host_label %}
+          <span class="chip chip--agent-host">{{ p.host_label }}</span>
+        {% endif %}
         <span class="muted">· {{ p.identifier }}</span>
         <span class="muted">· {{ p.status }} · {{ p.last_seen_s_ago }}s ago</span>
         {% if p.session_count > 1 %}

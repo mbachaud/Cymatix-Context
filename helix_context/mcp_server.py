@@ -900,6 +900,13 @@ def _register_with_registry() -> None:
                            ``GET /sessions`` can tell which IDE spawned
                            this process. E.g. "claude-code",
                            "antigravity", "cursor". Default: "unknown".
+                           The literal "unknown" default is normalised to
+                           None at the wire level so the column is not
+                           polluted with a sentinel string.
+        HELIX_AGENT_KIND   Agent implementation flavour — e.g.
+                           "claude-code", "gemini-cli", "codex". If
+                           unset, None is passed to the bridge (no
+                           default fallback).
 
     Registration failure is non-fatal — tool calls still proxy to the
     HTTP API. Logged as a warning so the user can diagnose.
@@ -912,7 +919,11 @@ def _register_with_registry() -> None:
 
     handle = os.environ.get("HELIX_MCP_HANDLE", f"mcp-{os.getpid()}")
     party_id = _default_party_id()
-    mcp_host = os.environ.get("HELIX_MCP_HOST", "unknown")
+    mcp_host_env = os.environ.get("HELIX_MCP_HOST", "unknown")
+    agent_kind_env = os.environ.get("HELIX_AGENT_KIND")  # no default — None means "unset"
+    # Normalize the literal "unknown" sentinel to None at the wire level
+    # so the column doesn't get polluted with the env default.
+    mcp_host = None if mcp_host_env == "unknown" else mcp_host_env
     workspace: Optional[str]
     try:
         workspace = os.getcwd()
@@ -920,7 +931,9 @@ def _register_with_registry() -> None:
         workspace = None
 
     # Capability tags let GET /sessions consumers filter by host/role.
-    capabilities = ["mcp_tools", f"host:{mcp_host}"]
+    # Use mcp_host_env (raw env value) to preserve backward compat with
+    # older dashboard parsers that expect the "host:<x>" capability tag.
+    capabilities = ["mcp_tools", f"host:{mcp_host_env}"]
 
     bridge = AgentBridge(helix_base_url=HELIX_URL)
     participant_id = bridge.register_participant(
@@ -928,12 +941,14 @@ def _register_with_registry() -> None:
         handle=handle,
         workspace=workspace,
         capabilities=capabilities,
+        agent_kind=agent_kind_env,
+        mcp_host=mcp_host,
         start_auto_heartbeat=True,
     )
     if participant_id:
         log.info(
-            "Registered as %s (party=%s, host=%s, pid=%d)",
-            handle, party_id, mcp_host, os.getpid(),
+            "Registered as %s (party=%s, kind=%s, host=%s, pid=%d)",
+            handle, party_id, agent_kind_env, mcp_host, os.getpid(),
         )
     else:
         log.warning(

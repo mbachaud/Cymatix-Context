@@ -140,6 +140,8 @@ CREATE TABLE IF NOT EXISTS participants (
     last_heartbeat   REAL NOT NULL,
     status           TEXT NOT NULL DEFAULT 'active',  -- "active" | "idle" | "stale" | "gone"
     capabilities     TEXT,                  -- optional JSON: ["ingest", "query", "admin"]
+    agent_kind       TEXT,                  -- vendor family ("claude-code", "codex", "gemini") — added 2026-05-05
+    mcp_host         TEXT,                  -- host capability tag ("antigravity", "vscode", "cursor") — added 2026-05-05
     metadata         TEXT                   -- optional JSON blob
 );
 
@@ -147,6 +149,19 @@ CREATE INDEX IF NOT EXISTS idx_participants_party ON participants(party_id);
 CREATE INDEX IF NOT EXISTS idx_participants_heartbeat ON participants(last_heartbeat);
 CREATE INDEX IF NOT EXISTS idx_participants_status ON participants(status);
 ```
+
+#### Vendor+host columns
+
+Two additional columns (`agent_kind` and `mcp_host`) were added on 2026-05-05 to make
+MCP host identity first-class in the registry:
+
+- `agent_kind`    — vendor family ("claude-code", "codex", "gemini") — added 2026-05-05
+- `mcp_host`      — host capability tag ("antigravity", "vscode", "cursor") — added 2026-05-05
+
+Both are nullable. Pre-2026-05-05 rows read as `NULL`. These fields are sourced from the
+`HELIX_AGENT_KIND` and `HELIX_MCP_HOST` environment variables respectively and persist on
+the participant row so dashboard panels can render vendor and IDE labels without consulting
+the capabilities JSON.
 
 ### `gene_attribution`
 
@@ -216,7 +231,9 @@ curl -X POST http://127.0.0.1:11437/sessions/register \
     "handle": "taude",
     "workspace": "/f/Projects/Education",
     "pid": 48213,
-    "capabilities": ["ingest", "query"]
+    "capabilities": ["ingest", "query"],
+    "agent_kind": "claude-code",
+    "mcp_host": "vscode"
   }'
 ```
 
@@ -230,6 +247,8 @@ Request body:
 | `pid` | int | no | OS process id of the runtime. |
 | `capabilities` | list[str] | no | What this participant can do. Free-form for now. |
 | `metadata` | object | no | Arbitrary JSON for future extension. |
+| `agent_kind` | string | no | Vendor family — `"claude-code"`, `"codex"`, `"gemini"`. Sourced from `HELIX_AGENT_KIND`. Added 2026-05-05. |
+| `mcp_host` | string | no | Host capability tag — `"antigravity"`, `"vscode"`, `"cursor"`. Sourced from `HELIX_MCP_HOST`. The literal `"unknown"` is normalized to NULL at the wire. Added 2026-05-05. |
 
 Response:
 

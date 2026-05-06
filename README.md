@@ -171,6 +171,11 @@ exposes `helix_context_packet` and `helix_refresh_targets` (the
 agent-safe tools) alongside `helix_context`, `helix_stats`,
 `helix_ingest`, `helix_resonance`, and the session/HITL toolkit.
 
+**Client-specific integration guides:**
+
+- [`docs/clients/claude-code.md`](docs/clients/claude-code.md) — Claude Code routing, `.mcp.json` env contract, per-host variants, troubleshooting
+- [`skills/helix/SKILL.md`](skills/helix/SKILL.md) — agent-side skill (identity contract + tool-use rules); install into `~/.claude/skills/helix/` or a project-level `.claude/skills/helix/`
+
 ## How It Works
 
 ### The 3-layer view

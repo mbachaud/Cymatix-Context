@@ -19,6 +19,7 @@ from typing import Any, Dict, List, Optional
 import httpx
 
 from .supervisor import HelixSupervisor
+from .host_labels import compose_label
 
 log = logging.getLogger("helix.launcher.collector")
 
@@ -218,6 +219,10 @@ class StateCollector:
                     "last_seen_s_ago": participant["last_seen_s_ago"],
                     "session_count": 0,
                     "active_session_count": 0,
+                    "host_label": compose_label(
+                        participant.get("agent_kind"),
+                        participant.get("mcp_host"),
+                    ),
                 }
                 grouped[key] = group
 
@@ -261,6 +266,10 @@ class StateCollector:
                     "participant_id": participant_id,
                     "participant_id_short": participant_id[:8],
                     "identifier": self._identity_label(participant),
+                    "host_label": compose_label(
+                        participant.get("agent_kind"),
+                        participant.get("mcp_host"),
+                    ),
                 }
             )
         return {
@@ -292,6 +301,10 @@ class StateCollector:
                     "participant_id": participant_id,
                     "participant_id_short": participant_id[:8],
                     "identifier": self._identity_label(participant),
+                    "host_label": compose_label(
+                        participant.get("agent_kind"),
+                        participant.get("mcp_host"),
+                    ),
                 }
             )
         if not entries:

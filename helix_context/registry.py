@@ -102,6 +102,8 @@ class Registry:
         capabilities: Optional[List[str]] = None,
         metadata: Optional[dict] = None,
         display_name: Optional[str] = None,
+        agent_kind: Optional[str] = None,
+        mcp_host: Optional[str] = None,
     ) -> Participant:
         """Register a new participant. Creates the party row on first use (trust-on-first-use).
 
@@ -122,8 +124,8 @@ class Registry:
         cur.execute(
             "INSERT INTO participants "
             "(participant_id, party_id, handle, workspace, pid, started_at, "
-            " last_heartbeat, status, capabilities, metadata) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?, 'active', ?, ?)",
+            " last_heartbeat, status, capabilities, metadata, agent_kind, mcp_host) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, 'active', ?, ?, ?, ?)",
             (
                 participant_id,
                 party_id,
@@ -134,6 +136,8 @@ class Registry:
                 now,
                 json_dumps(capabilities or []),
                 json_dumps(metadata) if metadata else None,
+                agent_kind,
+                mcp_host,
             ),
         )
         self.genome.conn.commit()
@@ -153,6 +157,8 @@ class Registry:
             status="active",
             capabilities=capabilities or [],
             metadata=metadata,
+            agent_kind=agent_kind,
+            mcp_host=mcp_host,
         )
 
     def local_org(
@@ -477,7 +483,7 @@ class Registry:
         cur = self.genome.conn.cursor()
         sql = (
             "SELECT participant_id, party_id, handle, workspace, "
-            "       started_at, last_heartbeat "
+            "       started_at, last_heartbeat, agent_kind, mcp_host "
             "FROM participants"
         )
         params: list = []
@@ -507,6 +513,8 @@ class Registry:
                 status=live_status,
                 last_seen_s_ago=round(now - r["last_heartbeat"], 1),
                 started_at=r["started_at"],
+                agent_kind=r["agent_kind"],
+                mcp_host=r["mcp_host"],
             ))
         return out
 
@@ -515,7 +523,8 @@ class Registry:
         cur = self.genome.conn.cursor()
         r = cur.execute(
             "SELECT participant_id, party_id, handle, workspace, pid, "
-            "       started_at, last_heartbeat, status, capabilities, metadata "
+            "       started_at, last_heartbeat, status, capabilities, metadata, "
+            "       agent_kind, mcp_host "
             "FROM participants WHERE participant_id = ?",
             (participant_id,),
         ).fetchone()
@@ -542,6 +551,8 @@ class Registry:
             status=_status_from_last_heartbeat(r["last_heartbeat"]),
             capabilities=caps,
             metadata=meta,
+            agent_kind=r["agent_kind"],
+            mcp_host=r["mcp_host"],
         )
 
     def get_recent_by_handle(

@@ -129,6 +129,20 @@ class TestSchemaMigration:
         genome._ensure_registry_schema(cur)
         genome.conn.commit()
 
+    def test_participants_table_has_agent_kind_and_mcp_host_columns(self, genome):
+        """Schema migration adds agent_kind and mcp_host columns idempotently."""
+        cur = genome.conn.cursor()
+        cols = {r[1] for r in cur.execute("PRAGMA table_info(participants)").fetchall()}
+        assert "agent_kind" in cols, f"agent_kind missing; got {cols}"
+        assert "mcp_host" in cols, f"mcp_host missing; got {cols}"
+
+    def test_schema_migration_is_idempotent(self, genome):
+        """Re-running _ensure_registry_schema does not raise on existing columns."""
+        cur = genome.conn.cursor()
+        # Should not raise even though columns already exist.
+        genome._ensure_registry_schema(cur)
+        genome.conn.commit()
+
 
 class TestRegisterParticipant:
     def test_register_creates_party_on_first_use(self, registry, genome):
@@ -1108,3 +1122,99 @@ class TestRecentEndpoint:
         assert resp.status_code == 200
         data = resp.json()
         assert data["count"] == 0
+
+
+def test_participant_model_accepts_vendor_host_fields():
+    from helix_context.schemas import Participant
+    p = Participant(
+        participant_id="abc",
+        party_id="party",
+        handle="laude",
+        agent_kind="claude-code",
+        mcp_host="vscode",
+    )
+    assert p.agent_kind == "claude-code"
+    assert p.mcp_host == "vscode"
+
+
+def test_participant_info_accepts_vendor_host_fields():
+    from helix_context.schemas import ParticipantInfo
+    p = ParticipantInfo(
+        participant_id="abc",
+        party_id="party",
+        handle="laude",
+        status="active",
+        last_seen_s_ago=0.0,
+        started_at=0.0,
+        agent_kind="codex",
+        mcp_host="cursor",
+    )
+    assert p.agent_kind == "codex"
+    assert p.mcp_host == "cursor"
+
+
+def test_participant_info_defaults_vendor_host_to_none():
+    from helix_context.schemas import ParticipantInfo
+    p = ParticipantInfo(
+        participant_id="abc",
+        party_id="party",
+        handle="laude",
+        status="active",
+        last_seen_s_ago=0.0,
+        started_at=0.0,
+    )
+    assert p.agent_kind is None
+    assert p.mcp_host is None
+
+
+def test_register_participant_persists_vendor_host(registry, genome):
+    """register_participant stores agent_kind and mcp_host on the row."""
+    p = registry.register_participant(
+        party_id="party_x",
+        handle="laude",
+        agent_kind="claude-code",
+        mcp_host="vscode",
+    )
+    assert p.agent_kind == "claude-code"
+    assert p.mcp_host == "vscode"
+
+    cur = genome.conn.cursor()
+    row = cur.execute(
+        "SELECT agent_kind, mcp_host FROM participants WHERE participant_id = ?",
+        (p.participant_id,),
+    ).fetchone()
+    assert row[0] == "claude-code"
+    assert row[1] == "vscode"
+
+
+def test_register_participant_omitting_vendor_host_stores_null(registry, genome):
+    """Backwards-compat: callers that don't pass the new fields get NULL."""
+    p = registry.register_participant(party_id="party_y", handle="taude")
+    assert p.agent_kind is None
+    assert p.mcp_host is None
+
+
+def test_list_participants_projects_vendor_host(registry):
+    registry.register_participant(
+        party_id="party_z",
+        handle="laude",
+        agent_kind="codex",
+        mcp_host="cursor",
+    )
+    rows = registry.list_participants(party_id="party_z", status_filter="all")
+    assert len(rows) == 1
+    assert rows[0].agent_kind == "codex"
+    assert rows[0].mcp_host == "cursor"
+
+
+def test_get_participant_projects_vendor_host(registry):
+    p = registry.register_participant(
+        party_id="party_w",
+        handle="laude",
+        agent_kind="gemini",
+        mcp_host="antigravity",
+    )
+    fetched = registry.get_participant(p.participant_id)
+    assert fetched is not None
+    assert fetched.agent_kind == "gemini"
+    assert fetched.mcp_host == "antigravity"
