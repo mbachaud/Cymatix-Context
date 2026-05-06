@@ -1822,7 +1822,8 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
         """Register a participant under a party. Trust-on-first-use for party_id.
 
         Required body fields: party_id, handle.
-        Optional: workspace, pid, capabilities (list), metadata (dict), display_name.
+        Optional: workspace, pid, capabilities (list), metadata (dict), display_name,
+                  agent_kind, mcp_host.
         """
         try:
             data = await request.json()
@@ -1878,6 +1879,8 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
                 capabilities=data.get("capabilities"),
                 metadata=data.get("metadata"),
                 display_name=data.get("display_name"),
+                agent_kind=data.get("agent_kind"),
+                mcp_host=data.get("mcp_host"),
             )
         except Exception as exc:
             log.warning("Session register failed: %s", exc, exc_info=True)
