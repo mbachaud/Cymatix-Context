@@ -274,8 +274,10 @@ def cast_evidence_rays(
     # Accumulator
     energy_acc: Dict[str, float] = {}
 
-    # Seeds should not absorb their own rays' terminal energy — the whole
-    # point is to surface *connected* genes, not echo back the seed set.
+    # Seeds are skipped as deposit targets only when rays propagate beyond
+    # them.  Isolated seeds (zero edges, bounces_taken == 0) still
+    # self-deposit so that cast_evidence_rays always reports something for
+    # every reachable node, including singletons.
     seed_set = set(seed_gene_ids)
 
     # Distribute rays across seeds
@@ -284,6 +286,7 @@ def cast_evidence_rays(
         start = seed_gene_ids[ray_idx % len(seed_gene_ids)]
         energy = 1.0
         current = start
+        bounces_taken = 0
 
         for _bounce in range(max_bounces):
             neighbors = adjacency.get(current, [])
@@ -308,14 +311,17 @@ def cast_evidence_rays(
             # Decay
             energy *= decay_per_bounce
 
+            bounces_taken += 1
             if energy < ABSORPTION_THRESHOLD:
                 current = next_gene
                 break
 
             current = next_gene
 
-        # Deposit remaining energy at terminal node — but skip seeds.
-        if current not in seed_set:
+        # Deposit remaining energy at terminal node.
+        # Skip seeds only when the ray propagated at least one bounce —
+        # isolated seeds (no edges, bounces_taken == 0) self-deposit.
+        if current not in seed_set or bounces_taken == 0:
             energy_acc[current] = energy_acc.get(current, 0.0) + energy
 
     return energy_acc
@@ -415,10 +421,6 @@ def read_overtone_series(
     # Track: for each ray, which genes it visited
     visit_count: Dict[str, int] = {}
 
-    # Seeds are not overtones of themselves — exclude them from
-    # visit_count so they don't always dominate the fundamental band.
-    seed_set = set(seed_gene_ids)
-
     for ray_idx in range(k_rays):
         start = seed_gene_ids[ray_idx % len(seed_gene_ids)]
         current = start
@@ -437,10 +439,9 @@ def read_overtone_series(
                 current = rng.choice(neighbors)
             visited.add(current)
 
-        # Count unique gene visits for this ray — skipping seeds.
+        # Count unique gene visits for this ray (seeds included — they
+        # are fundamentals when present in every ray's path).
         for gid in visited:
-            if gid in seed_set:
-                continue
             visit_count[gid] = visit_count.get(gid, 0) + 1
 
     # Convert to overtone weights via harmonic bins
