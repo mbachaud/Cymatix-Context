@@ -322,7 +322,7 @@ maintenance = ["admin", "vacuum", "refresh", "checkpoint", "compact"]
 # fan_out_threshold = 5000          # split domain folders above this count
 # redact_body = false               # true → replace body with sha+excerpt
 #                                   # recommended for cloud-synced setups
-# stale_threshold = 0.5             # _stale/ population threshold
+# stale_threshold = 0.5             # genes with live_truth_score < this go to _stale/
 #
 # [vault.traces]
 # enabled = true                    # auto-export every /context call
@@ -330,6 +330,6 @@ maintenance = ["admin", "vacuum", "refresh", "checkpoint", "compact"]
 # max_retention_hours_hard = 720    # force-deletes pinned past this; 0 disables
 # max_count = 10000                 # safety cap on burst floods
 # rollup_enabled = true
-# rollup_shard = "hour"             # daily | hour
+# rollup_shard = "hour"             # hour | daily
 # prune_interval_minutes = 60
 # trigger_only = false              # if true, only on threshold (latency/sparse)

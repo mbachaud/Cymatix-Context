@@ -339,6 +339,8 @@ class Hardware:
 
 @dataclass
 class VaultTracesConfig:
+    """Per-trace TTL/rollup knobs — see [vault.traces] in helix.toml."""
+
     enabled: bool = True
     retention_hours: int = 48
     max_retention_hours_hard: int = 720  # 30 days; 0 disables
@@ -351,6 +353,8 @@ class VaultTracesConfig:
 
 @dataclass
 class VaultConfig:
+    """Obsidian vault export settings — off by default (enabled = False)."""
+
     enabled: bool = False
     path: str = "~/.helix/vault"
     party_id: str = ""  # empty = use server's primary party
@@ -648,7 +652,9 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
 
     # Vault — Obsidian export (opt-in, off by default)
     v_section = raw.get("vault", {})
+    _warn_unknown("vault", v_section, VaultConfig)
     v_traces_section = v_section.get("traces", {})
+    _warn_unknown("vault.traces", v_traces_section, VaultTracesConfig)
     cfg.vault = VaultConfig(
         enabled=v_section.get("enabled", cfg.vault.enabled),
         path=v_section.get("path", cfg.vault.path),
