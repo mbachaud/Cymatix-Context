@@ -201,3 +201,134 @@ class TestRenderTraceMarkdown:
         assert "[[a-stem]] (rank 1, score 0.00)" in md
         assert "[[b-stem]] (rank 2, score 0.00)" in md
         assert "[[c-stem]] (rank 3, score 0.75)" in md
+
+
+# ---------------------------------------------------------------------------
+# Task 8 — full_export
+# ---------------------------------------------------------------------------
+
+def _make_test_gene(content: str, source_id: str, domains=None):
+    """Build a test gene with explicit source_id and EUCHROMATIN to survive the density gate."""
+    from tests.conftest import make_gene
+    from helix_context.schemas import ChromatinState
+
+    g = make_gene(content, domains=domains or [], chromatin=ChromatinState.EUCHROMATIN)
+    g.source_id = source_id
+    return g
+
+
+class TestFullExport:
+    @pytest.fixture
+    def vault_root(self, tmp_path: Path) -> Path:
+        return tmp_path / "vault"
+
+    @pytest.fixture
+    def genome(self, tmp_path: Path):
+        """File-based genome (not in-memory) so VaultLock can live alongside it."""
+        from helix_context.genome import Genome
+
+        db_path = tmp_path / "genome.db"
+        g = Genome(path=str(db_path))
+        yield g
+        g.close()
+
+    @pytest.fixture
+    def state(self, vault_root: Path):
+        from helix_context.vault.state import VaultState
+
+        vault_root.mkdir(parents=True, exist_ok=True, mode=0o700)
+        vs = VaultState(vault_root)
+        yield vs
+        vs.close()
+
+    @pytest.fixture
+    def lock(self, vault_root: Path):
+        from helix_context.vault.locking import VaultLock
+
+        vault_root.mkdir(parents=True, exist_ok=True, mode=0o700)
+        return VaultLock(vault_root, timeout=10.0)
+
+    def test_exports_all_genes(self, genome, state, lock, vault_root):
+        import time
+        from helix_context.vault.writer import full_export
+
+        g1 = _make_test_gene("def foo(): pass", "src/foo.py", domains=["auth"])
+        g2 = _make_test_gene("def bar(): pass", "src/bar.py", domains=["db"])
+        genome.upsert_gene(g1)
+        genome.upsert_gene(g2)
+        genome.conn.commit()
+
+        result = full_export(
+            genome=genome,
+            state=state,
+            lock=lock,
+            vault_root=vault_root,
+            party_id=None,
+            redact_body=False,
+            fan_out_threshold=50,
+            batch_size=500,
+        )
+
+        assert result["genes_exported"] == 2
+        assert result["errors"] == 0
+        # Files must exist somewhere under vault_root/genes/
+        gene_files = list(vault_root.glob("genes/**/*.md"))
+        assert len(gene_files) == 2
+
+    def test_export_filters_by_party(self, genome, state, lock, vault_root):
+        import time
+        from helix_context.vault.writer import full_export
+
+        g1 = _make_test_gene("def alpha(): pass", "src/alpha.py", domains=["auth"])
+        g2 = _make_test_gene("def beta(): pass", "src/beta.py", domains=["db"])
+        gid_a = genome.upsert_gene(g1)
+        genome.conn.execute(
+            "INSERT INTO gene_attribution (gene_id, party_id, participant_id, authored_at)"
+            " VALUES (?, ?, ?, ?)",
+            (gid_a, "party_a", "h_a", time.time()),
+        )
+        gid_b = genome.upsert_gene(g2)
+        genome.conn.execute(
+            "INSERT INTO gene_attribution (gene_id, party_id, participant_id, authored_at)"
+            " VALUES (?, ?, ?, ?)",
+            (gid_b, "party_b", "h_b", time.time()),
+        )
+        genome.conn.commit()
+
+        result = full_export(
+            genome=genome,
+            state=state,
+            lock=lock,
+            vault_root=vault_root,
+            party_id="party_a",
+            redact_body=False,
+            fan_out_threshold=50,
+            batch_size=500,
+        )
+
+        assert result["genes_exported"] == 1
+        gene_files = list(vault_root.glob("genes/**/*.md"))
+        assert len(gene_files) == 1
+
+    def test_state_records_each_gene(self, genome, state, lock, vault_root):
+        from helix_context.vault.writer import full_export
+
+        g1 = _make_test_gene("def record_me(): pass", "src/record.py", domains=["core"])
+        gid = genome.upsert_gene(g1)
+        genome.conn.commit()
+
+        full_export(
+            genome=genome,
+            state=state,
+            lock=lock,
+            vault_root=vault_root,
+            party_id=None,
+            redact_body=False,
+            fan_out_threshold=50,
+            batch_size=500,
+        )
+
+        record = state.get_record(gid)
+        assert record is not None
+        assert record.vault_path.startswith("genes/")
+        assert record.last_exported_disk_hash is not None
