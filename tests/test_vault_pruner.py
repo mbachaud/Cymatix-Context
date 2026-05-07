@@ -119,3 +119,88 @@ class TestForcePruneHardCap:
         )
         assert result["force_pruned_count"] == 0
         assert p.exists()
+
+
+class TestRollupAppend:
+    def test_creates_hour_sharded_file(self, vault_root):
+        past = int(time.time()) - 100
+        content = (
+            "---\n"
+            "request_id: req1\n"
+            "created_at: '2026-05-06T14:23:00Z'\n"
+            "expires_at: '2026-05-06T14:23:00Z'\n"
+            "total_latency_ms: 5000\n"
+            "health_status: aligned\n"
+            "trigger_reason: auto\n"
+            "pinned: false\n"
+            "---\n\nbody\n"
+        )
+        (vault_root / "_traces" / f"2026-05-06T14-23-00_req1_exp{past}.md").write_text(content)
+
+        prune_traces(
+            vault_root=vault_root,
+            max_retention_hours_hard=720,
+            rollup_enabled=True,
+            rollup_shard="hour",
+        )
+        rollup = vault_root / "_meta" / "trace-rollups" / "2026-05-06" / "14.md"
+        assert rollup.exists()
+        text = rollup.read_text()
+        assert "req1" in text
+        assert "5000" in text
+        assert "aligned" in text
+
+    def test_appends_to_existing_file(self, vault_root):
+        d = vault_root / "_meta" / "trace-rollups" / "2026-05-06"
+        d.mkdir(parents=True)
+        (d / "14.md").write_text("# Existing rollup\n\n| time | id |\n|---|---|\n| previous | yes |\n")
+
+        past = int(time.time()) - 100
+        content = (
+            "---\n"
+            "request_id: req2\n"
+            "created_at: '2026-05-06T14:55:00Z'\n"
+            "expires_at: '2026-05-06T14:55:00Z'\n"
+            "total_latency_ms: 100\n"
+            "health_status: sparse\n"
+            "trigger_reason: latency_outlier\n"
+            "pinned: false\n"
+            "---\n\nbody\n"
+        )
+        (vault_root / "_traces" / f"2026-05-06T14-55-00_req2_exp{past}.md").write_text(content)
+
+        prune_traces(
+            vault_root=vault_root,
+            max_retention_hours_hard=720,
+            rollup_enabled=True,
+            rollup_shard="hour",
+        )
+        rollup = (vault_root / "_meta" / "trace-rollups" / "2026-05-06" / "14.md")
+        text = rollup.read_text()
+        assert "previous" in text
+        assert "req2" in text
+
+    def test_daily_shard(self, vault_root):
+        past = int(time.time()) - 100
+        content = (
+            "---\n"
+            "request_id: req3\n"
+            "created_at: '2026-05-06T14:00:00Z'\n"
+            "expires_at: '2026-05-06T14:00:00Z'\n"
+            "total_latency_ms: 0\n"
+            "health_status: aligned\n"
+            "trigger_reason: auto\n"
+            "pinned: false\n"
+            "---\n\nbody\n"
+        )
+        (vault_root / "_traces" / f"2026-05-06T14-00-00_req3_exp{past}.md").write_text(content)
+
+        prune_traces(
+            vault_root=vault_root,
+            max_retention_hours_hard=720,
+            rollup_enabled=True,
+            rollup_shard="daily",
+        )
+        rollup = vault_root / "_meta" / "trace-rollups" / "2026-05-06.md"
+        assert rollup.exists()
+        assert "req3" in rollup.read_text()
