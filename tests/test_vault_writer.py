@@ -332,3 +332,33 @@ class TestFullExport:
         assert record is not None
         assert record.vault_path.startswith("genes/")
         assert record.last_exported_disk_hash is not None
+
+    def test_attribute_error_in_adapter_propagates(self, tmp_path: Path, monkeypatch):
+        """Programmer bugs (AttributeError) should NOT be silently swallowed."""
+        from helix_context.genome import Genome
+        from helix_context.vault import writer as vault_writer
+        from helix_context.vault.locking import VaultLock
+        from helix_context.vault.state import VaultState
+
+        def broken_adapter(row):
+            raise AttributeError("simulated bug in row adapter")
+
+        monkeypatch.setattr(vault_writer, "_row_to_gene", broken_adapter)
+
+        genome = Genome(path=str(tmp_path / "genome.db"), synonym_map={})
+        try:
+            genome.upsert_gene(_make_test_gene("x", "x.py", ["d"]))
+            vault_root = tmp_path / "vault"
+            state = VaultState(vault_root=vault_root)
+            lock = VaultLock(vault_root=vault_root)
+            try:
+                with pytest.raises(AttributeError, match="simulated bug"):
+                    vault_writer.full_export(
+                        genome=genome, state=state, lock=lock,
+                        vault_root=vault_root, party_id="",
+                        redact_body=False, fan_out_threshold=5000,
+                    )
+            finally:
+                state.close()
+        finally:
+            genome.close()

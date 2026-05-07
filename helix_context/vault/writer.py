@@ -7,6 +7,7 @@ helix-side writes.
 from __future__ import annotations
 
 import hashlib
+import json
 import logging
 import os
 import time
@@ -154,7 +155,10 @@ def _row_to_gene(row: Any) -> Any:
 
     # Derive content_type from source_id extension (best-effort)
     source_id = row["source_id"] or ""
-    content_type = "code"  # default
+    if source_id.endswith((".md", ".rst", ".txt")):
+        content_type = "doc"
+    else:
+        content_type = "code"
 
     # last_seen_ts: prefer last_seen if it's numeric, else fall back to mtime
     last_seen_raw = row["last_seen"]
@@ -210,6 +214,10 @@ def full_export(
     genes_exported = 0
     errors = 0
 
+    # fan_out_threshold is accepted now for forward compat with Task 13's
+    # eager fan-out migration; v1 full_export does not yet split by domain count.
+    del fan_out_threshold
+
     sql = (
         "SELECT g.gene_id, g.content, g.source_id, g.chromatin, "
         "g.content_hash, g.last_seen, g.promoter, g.mtime, "
@@ -222,11 +230,13 @@ def full_export(
     else:
         params = ()
 
-    # Use read_conn if available (prefers WAL reader); fall back to .conn
-    conn = getattr(genome, "read_conn", None) or genome.conn
-    cur = conn.execute(sql, params)
-
     with lock:
+        # Use read_conn if available (prefers WAL reader); fall back to .conn.
+        # The cursor is opened inside the lock so the lock spans the full read
+        # snapshot as well as all writes — prevents a concurrent vault mutation
+        # from racing the cursor between fetchmany calls.
+        conn = getattr(genome, "read_conn", None) or genome.conn
+        cur = conn.execute(sql, params)
         while True:
             rows = cur.fetchmany(batch_size)
             if not rows:
@@ -252,13 +262,33 @@ def full_export(
                         disk_hash=disk_hash,
                     )
                     genes_exported += 1
-                except Exception:
+                except ValueError as exc:
+                    # Data-level error: path traversal, malformed domain, bad
+                    # JSON in promoter, etc. — skip this gene and continue.
                     log.warning(
-                        "full_export: error processing gene_id=%s",
+                        "full_export: export skipped for gene %s: %s",
                         row["gene_id"] if row["gene_id"] else "<unknown>",
-                        exc_info=True,
+                        exc,
                     )
                     errors += 1
+                except (KeyError, json.JSONDecodeError) as exc:
+                    log.warning(
+                        "full_export: export skipped for gene %s: %s",
+                        row["gene_id"] if row["gene_id"] else "<unknown>",
+                        exc,
+                    )
+                    errors += 1
+                except OSError as exc:
+                    # I/O failure during write_atomic — log and continue, don't
+                    # abort the whole export run.
+                    log.warning(
+                        "full_export: export I/O failure for gene %s: %s",
+                        row["gene_id"] if row["gene_id"] else "<unknown>",
+                        exc,
+                    )
+                    errors += 1
+                # Note: AttributeError, TypeError, NameError propagate up —
+                # they indicate code bugs and should fail fast.
 
         # Update top-level vault state
         try:
