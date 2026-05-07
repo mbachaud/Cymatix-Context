@@ -3212,6 +3212,8 @@ def _register_vault_routes(app: "FastAPI") -> None:
     @app.post("/vault/traces/{request_id}/pin")
     async def post_pin_trace(request_id: str, request: Request):
         vault = request.app.state.vault
+        if not vault._started:
+            return {"ok": False, "error": "vault disabled"}
         traces_dir = vault.vault_root / "_traces"
         pinned_dir = vault.vault_root / "_traces-pinned"
         pinned_dir.mkdir(exist_ok=True, mode=0o700)
@@ -3227,6 +3229,8 @@ def _register_vault_routes(app: "FastAPI") -> None:
     @app.post("/vault/traces/{request_id}/unpin")
     async def post_unpin_trace(request_id: str, request: Request):
         vault = request.app.state.vault
+        if not vault._started:
+            return {"ok": False, "error": "vault disabled"}
         pinned_dir = vault.vault_root / "_traces-pinned"
         traces_dir = vault.vault_root / "_traces"
         matches = list(pinned_dir.glob(f"*_{request_id}.md"))

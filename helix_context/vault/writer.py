@@ -176,7 +176,7 @@ def _row_to_gene(row: Any) -> Any:
         content=row["content"] or "",
         content_type=content_type,
         source_id=source_id,
-        source_lines="",  # not in genes table; v1.1 may add a column
+        source_lines="",  # TODO(v1.1): not stored in genes table v1
         domains=domains,
         chromatin=chromatin_str,
         content_sha256=row["content_hash"] or "",

@@ -15,6 +15,7 @@ import threading
 from pathlib import Path
 from typing import Optional
 
+from helix_context.telemetry import vault_file_count_gauge
 from helix_context.vault import pruner as pruner_mod
 from helix_context.vault import writer as writer_mod
 from helix_context.vault.locking import VaultLock
@@ -202,7 +203,7 @@ class VaultManager:
             "last_full_export_ts": top["last_full_export_ts"],
             "last_incremental_export_ts": top["last_incremental_export_ts"],
             "exported_gene_count": top["exported_gene_count"],
-            "watcher_state": 0,
+            "watcher_state": 0,  # TODO(v1.1): file-watcher state (not yet wired)
             "file_counts": file_counts,
             "disk_bytes": disk_bytes,
         }
@@ -215,6 +216,13 @@ class VaultManager:
                 counts[sub] = sum(1 for p in d.rglob("*.md"))
             else:
                 counts[sub] = 0
+        # Emit per-folder gauge values for Prometheus visibility.
+        try:
+            gauge = vault_file_count_gauge()
+            for folder, count in counts.items():
+                gauge.set(count, {"folder": folder})
+        except Exception:
+            pass  # noop-safe — telemetry must not break vault.status()
         return counts
 
     def _compute_disk_bytes(self) -> int:

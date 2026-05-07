@@ -15,6 +15,7 @@ from typing import Optional
 
 import yaml as _yaml
 
+from helix_context.schemas import ChromatinState
 from helix_context.telemetry import vault_pruner_histogram, vault_force_prune_counter
 
 log = logging.getLogger(__name__)
@@ -181,7 +182,9 @@ def refresh_stale_view(
     """Repopulate the _stale/ folder based on live_truth_score.
 
     v1: pointer notes on all platforms (containing [[gene-<id>]] wikilink).
-    Symlinks deferred to v1.1.
+
+    TODO(v1.1): replace pointer notes with symlinks on POSIX for live updates;
+    Obsidian renders both fine but symlinks reflect content changes immediately.
     """
     from helix_context.vault.schema import derive_gene_filename
 
@@ -191,9 +194,9 @@ def refresh_stale_view(
     sql = (
         "SELECT g.gene_id, g.source_id "
         "FROM genes g LEFT JOIN gene_attribution ga ON g.gene_id = ga.gene_id "
-        "WHERE g.live_truth_score < ? AND g.chromatin = 1"  # 1 = euchromatin
+        "WHERE g.live_truth_score < ? AND g.chromatin = ?"
     )
-    params: list = [stale_threshold]
+    params: list = [stale_threshold, int(ChromatinState.EUCHROMATIN)]
     if party_id:
         sql += " AND ga.party_id = ?"
         params.append(party_id)

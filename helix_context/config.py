@@ -344,11 +344,11 @@ class VaultTracesConfig:
     enabled: bool = True
     retention_hours: int = 48
     max_retention_hours_hard: int = 720  # 30 days; 0 disables
-    max_count: int = 10_000
+    max_count: int = 10_000  # v1.1: not yet enforced
     rollup_enabled: bool = True
     rollup_shard: str = "hour"  # "hour" | "daily"
     prune_interval_minutes: int = 60
-    trigger_only: bool = False
+    trigger_only: bool = False  # v1.1: not yet enforced
 
 
 @dataclass
