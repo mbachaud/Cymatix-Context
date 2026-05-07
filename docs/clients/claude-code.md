@@ -199,3 +199,29 @@ chosen handle, `HELIX_MCP_HANDLE` didn't carry. In both cases, fix the
   [`docs/architecture/raude_antigravity_persona.md`](../architecture/raude_antigravity_persona.md).
   This doc covers Claude Code specifically; per-host variants follow the
   same env contract with different `HELIX_MCP_HOST` / `HELIX_AGENT` values.
+
+## Obsidian vault export (v1, opt-in)
+
+As of 2026-05-06, helix can export the genome to a configurable directory as
+an Obsidian-compatible markdown vault. v1 is read-only — operator edits in
+Obsidian are not synced back. Diagnostic traces of every `/context` call are
+auto-exported and TTL-pruned (default 48h).
+
+Enable in `helix.toml`:
+
+```toml
+[vault]
+enabled = true
+path = "~/.helix/vault"
+# party_id = ""           # empty = server's primary party
+# redact_body = false     # set true if Obsidian Sync / iCloud watches the path
+
+[vault.traces]
+retention_hours = 48
+# max_retention_hours_hard = 720    # hard cap for compliance retention
+```
+
+CLI: `helix-vault {export, status, trace, pin, unpin}`. See
+`docs/superpowers/specs/2026-05-06-obsidian-vault-export-design.md` for the
+full v1 surface, and the `-full-design-v1.1plus.md` sibling for the deferred
+authored-delta-sync work.
