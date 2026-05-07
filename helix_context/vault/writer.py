@@ -402,6 +402,14 @@ def incremental_export(
                 # Note: AttributeError, TypeError, NameError propagate up —
                 # they indicate code bugs and should fail fast.
 
+        # Update top-level vault state
+        try:
+            state.update_top_level_state(
+                last_incremental_export_ts=time.time(),
+            )
+        except Exception:
+            log.warning("incremental_export: failed to update top-level state", exc_info=True)
+
     elapsed = time.monotonic() - t_start
     return {
         "genes_exported": genes_exported,

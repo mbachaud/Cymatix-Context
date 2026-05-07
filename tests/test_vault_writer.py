@@ -449,3 +449,40 @@ class TestIncrementalExport:
                 state.close()
         finally:
             genome.close()
+
+    def test_updates_last_incremental_export_ts(self, tmp_path: Path):
+        from helix_context.vault.writer import full_export, incremental_export
+        import time
+
+        from helix_context.genome import Genome
+        from helix_context.vault.locking import VaultLock
+        from helix_context.vault.state import VaultState
+
+        genome = Genome(path=str(tmp_path / "genome.db"), synonym_map={})
+        try:
+            genome.upsert_gene(_make_test_gene("hi", "x.py", ["d"]))
+            vault_root = tmp_path / "vault"
+            state = VaultState(vault_root=vault_root)
+            lock = VaultLock(vault_root=vault_root)
+            try:
+                assert state.read_top_level_state()["last_incremental_export_ts"] == 0.0
+                full_export(
+                    genome=genome, state=state, lock=lock,
+                    vault_root=vault_root, party_id="",
+                    redact_body=False, fan_out_threshold=5000,
+                )
+                t_before = time.time()
+                time.sleep(0.01)
+                incremental_export(
+                    genome=genome, state=state, lock=lock,
+                    vault_root=vault_root, party_id="",
+                    redact_body=False, fan_out_threshold=5000,
+                    since_ts=0.0,  # match all genes
+                )
+                top = state.read_top_level_state()
+                assert top["last_incremental_export_ts"] > t_before, \
+                    "incremental_export should bump last_incremental_export_ts"
+            finally:
+                state.close()
+        finally:
+            genome.close()
