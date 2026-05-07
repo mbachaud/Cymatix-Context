@@ -158,17 +158,21 @@ def render_trace_markdown(
     stage_rows = "\n".join(f"| {s} | {ms} |" for s, ms in stage_timing_ms.items())
     stage_section = (
         "## Per-stage timing\n\n"
-        "| stage | ms |\n|---|---|\n" + (stage_rows if stage_rows else "*(no per-stage data)*")
+        + ("| stage | ms |\n|---|---|\n" + stage_rows
+           if stage_rows
+           else "*(no per-stage data)*")
     )
 
     fp_section = "## Fingerprint route\n\n" + (fingerprint_route or "*(none)*")
     fov_section = "## Foveated rank assignments\n\n" + (foveated_ranks or "*(none)*")
 
     if final_genes:
-        gene_lines = "\n".join(
-            f"- [[{stem}]] (rank {rank}, score {score:.2f})"
-            for (stem, rank, score) in final_genes
-        )
+        gene_lines_list = []
+        for (stem, rank, score) in final_genes:
+            # Guard score against None / NaN — diagnostic data may be incomplete.
+            safe_score = score if (score is not None and score == score) else 0.0
+            gene_lines_list.append(f"- [[{stem}]] (rank {rank}, score {safe_score:.2f})")
+        gene_lines = "\n".join(gene_lines_list)
     else:
         gene_lines = "*(no genes returned)*"
     final_section = "## Final budget genes\n\n" + gene_lines

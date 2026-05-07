@@ -177,3 +177,27 @@ class TestRenderTraceMarkdown:
         assert fm["request_id"] == "x"
         assert fm["expires_at"] == "t2"
         assert fm["pinned"] is False
+        # Body sanity: empty stage_timing_ms must NOT emit a header-only table.
+        assert "| stage | ms |" not in md
+        assert "*(no per-stage data)*" in md
+        assert "*(none)*" in md  # fingerprint_route + foveated_ranks both empty
+        assert "*(no genes returned)*" in md
+
+    def test_handles_none_and_nan_scores(self):
+        from helix_context.vault.writer import render_trace_markdown
+
+        md = render_trace_markdown(
+            request_id="x", created_at="t1", expires_at="t2",
+            pinned=False, trigger_reason="auto",
+            total_latency_ms=0, health_status="aligned",
+            stage_timing_ms={}, fingerprint_route="", foveated_ranks="",
+            final_genes=[
+                ("a-stem", 1, None),
+                ("b-stem", 2, float("nan")),
+                ("c-stem", 3, 0.75),
+            ],
+        )
+        # None and NaN should both render as 0.00; valid score renders normally.
+        assert "[[a-stem]] (rank 1, score 0.00)" in md
+        assert "[[b-stem]] (rank 2, score 0.00)" in md
+        assert "[[c-stem]] (rank 3, score 0.75)" in md
