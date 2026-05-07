@@ -14,7 +14,7 @@ from typing import Any
 
 import yaml
 
-from helix_context.vault.schema import authored_placeholders
+from helix_context.vault.schema import authored_placeholders, safe_resolve_under
 
 log = logging.getLogger(__name__)
 
@@ -32,9 +32,11 @@ def write_atomic(*, vault_root: Path, target: Path, content: str) -> None:
     Caller is responsible for holding the vault-root lock.
     """
     target = Path(target)
+    vault_root = Path(vault_root)
+    target = safe_resolve_under(vault_root, target)  # raises ValueError if escapes
     target.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
     tmp = target.with_suffix(target.suffix + ".tmp")
-    sentinel = Path(vault_root) / SENTINEL_FILENAME
+    sentinel = vault_root / SENTINEL_FILENAME
 
     with tmp.open("w", encoding="utf-8", newline="\n") as f:
         f.write(content)
@@ -42,6 +44,13 @@ def write_atomic(*, vault_root: Path, target: Path, content: str) -> None:
     sentinel.touch(exist_ok=True)
     try:
         os.replace(tmp, target)
+    except OSError:
+        log.warning("write_atomic: os.replace failed for %s", target, exc_info=True)
+        try:
+            tmp.unlink(missing_ok=True)
+        except Exception:
+            log.warning("write_atomic: failed to clean up tmp file %s", tmp, exc_info=True)
+        raise
     finally:
         try:
             sentinel.unlink()
@@ -67,7 +76,7 @@ def _build_frontmatter(gene: Any) -> dict:
     fm["source_id"] = getattr(gene, "source_id", "")
     fm["source_lines"] = getattr(gene, "source_lines", "")
     fm["content_sha256"] = getattr(gene, "content_sha256", "")
-    fm["last_seen"] = getattr(gene, "last_seen", "")
+    fm["last_seen"] = getattr(gene, "last_seen", None) or None
     fm["last_seen_ts"] = float(getattr(gene, "last_seen_ts", 0.0) or 0.0)
     fm["live_truth_score"] = float(getattr(gene, "live_truth_score", 0.0) or 0.0)
     fm["co_activation_partners"] = int(getattr(gene, "co_activation_partners", 0) or 0)
@@ -78,18 +87,21 @@ def _build_frontmatter(gene: Any) -> dict:
 
 
 def _build_body(gene: Any, *, redact_body: bool) -> str:
-    title = f"# {gene.source_id}"
-    if getattr(gene, "source_lines", ""):
-        title += f":{gene.source_lines}"
+    source_id = getattr(gene, "source_id", "")
+    source_lines = getattr(gene, "source_lines", "")
+    content_type = getattr(gene, "content_type", "code")
+    content = getattr(gene, "content", "") or ""
+
+    title = f"# {source_id}"
+    if source_lines:
+        title += f":{source_lines}"
 
     if redact_body:
         body_sha = getattr(gene, "content_sha256", "")[:16]
-        body_section = (
-            f"```\n[redacted body — sha256={body_sha}]\n```"
-        )
+        body_section = f"```\n[redacted body — sha256={body_sha}]\n```"
     else:
-        lang = "python" if (gene.content_type == "code" and gene.source_id.endswith(".py")) else ""
-        body_section = f"```{lang}\n{gene.content or ''}\n```"
+        lang = "python" if (content_type == "code" and source_id.endswith(".py")) else ""
+        body_section = f"```{lang}\n{content}\n```"
 
     typed_edges = (
         "## Typed edges\n\n"
@@ -105,6 +117,6 @@ def _build_body(gene: Any, *, redact_body: bool) -> str:
 def render_gene_markdown(gene: Any, *, redact_body: bool) -> str:
     """Render a Gene to a complete markdown document (frontmatter + body)."""
     fm = _build_frontmatter(gene)
-    fm_yaml = yaml.safe_dump(fm, sort_keys=True, allow_unicode=True)
+    fm_yaml = yaml.safe_dump(fm, sort_keys=True, allow_unicode=True, default_flow_style=False)
     body = _build_body(gene, redact_body=redact_body)
     return f"---\n{fm_yaml}---\n\n{body}\n"

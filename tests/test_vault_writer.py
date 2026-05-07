@@ -37,6 +37,19 @@ class TestWriteAtomic:
         write_atomic(vault_root=tmp_path, target=target, content="hi")
         assert target.exists()
 
+    def test_target_outside_vault_raises(self, tmp_path: Path):
+        outside = tmp_path / ".." / "evil" / "x.md"
+        with pytest.raises(ValueError, match="outside vault root"):
+            write_atomic(vault_root=tmp_path, target=outside, content="bad")
+
+    def test_write_atomic_then_compute_disk_hash_roundtrip(self, tmp_path: Path):
+        """Confirms writer encoding matches hasher's binary read."""
+        target = tmp_path / "x.md"
+        content = "hellö 世界\nline2\n"
+        write_atomic(vault_root=tmp_path, target=target, content=content)
+        h = compute_disk_hash(target)
+        assert h == hashlib.sha256(content.encode("utf-8")).hexdigest()
+
 
 class TestComputeDiskHash:
     def test_returns_sha256_hex(self, tmp_path: Path):
@@ -107,8 +120,10 @@ class TestRenderGeneMarkdown:
     def test_redact_body_replaces_with_summary(self, gene):
         md = render_gene_markdown(gene, redact_body=True)
         assert "def hello():" not in md
-        body_sha = "[redacted body]"
-        assert body_sha in md or "redacted" in md.lower()
+        # The exact format must remain stable for downstream parsers.
+        assert "[redacted body — sha256=" in md
+        # First 16 hex chars of content_sha256 should appear.
+        assert gene.content_sha256[:16] in md
 
     def test_empty_domains_does_not_crash(self, gene):
         gene.domains = []
