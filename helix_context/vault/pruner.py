@@ -15,6 +15,8 @@ from typing import Optional
 
 import yaml as _yaml
 
+from helix_context.telemetry import vault_pruner_histogram, vault_force_prune_counter
+
 log = logging.getLogger(__name__)
 
 _TRACE_EXP_RE = re.compile(r"_exp(\d+)\.md$")
@@ -39,6 +41,7 @@ def prune_traces(
     errors = 0
 
     now = time.time()
+    _t0 = time.monotonic()
     traces_dir = vault_root / "_traces"
     pinned_dir = vault_root / "_traces-pinned"
 
@@ -87,6 +90,12 @@ def prune_traces(
                 log.warning("force-prune failed for %s", entry, exc_info=True)
                 errors += 1
 
+    try:
+        vault_pruner_histogram().record(time.monotonic() - _t0, {})
+        if force_pruned > 0:
+            vault_force_prune_counter().add(force_pruned, {"reason": "max_retention_hard"})
+    except Exception:
+        pass
     return {
         "pruned_count": pruned,
         "force_pruned_count": force_pruned,

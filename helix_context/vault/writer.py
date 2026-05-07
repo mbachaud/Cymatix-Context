@@ -18,6 +18,7 @@ from typing import TYPE_CHECKING, Any, Optional
 import yaml
 
 from helix_context.vault.schema import authored_placeholders, derive_gene_relpath, safe_resolve_under
+from helix_context.telemetry import vault_export_histogram
 
 if TYPE_CHECKING:
     from helix_context.vault.locking import VaultLock
@@ -301,6 +302,10 @@ def full_export(
             log.warning("full_export: failed to update top-level state", exc_info=True)
 
     elapsed = time.monotonic() - t_start
+    try:
+        vault_export_histogram().record(elapsed, {"kind": "full"})
+    except Exception:
+        pass
     return {
         "genes_exported": genes_exported,
         "elapsed_seconds": elapsed,
@@ -412,6 +417,10 @@ def incremental_export(
             log.warning("incremental_export: failed to update top-level state", exc_info=True)
 
     elapsed = time.monotonic() - t_start
+    try:
+        vault_export_histogram().record(elapsed, {"kind": "incremental"})
+    except Exception:
+        pass
     return {
         "genes_exported": genes_exported,
         "elapsed_seconds": elapsed,
@@ -497,6 +506,7 @@ def trace_export(
     Filename encodes expires_at as `_exp<unix-epoch>` so the pruner can
     filter expired traces by name without parsing frontmatter.
     """
+    _t0 = time.monotonic()
     now_ts = time.time()
     expires_unix = int(now_ts + retention_hours * 3600)
 
@@ -526,4 +536,11 @@ def trace_export(
 
     with lock:
         write_atomic(vault_root=vault_root, target=target, content=md)
+    try:
+        vault_export_histogram().record(
+            time.monotonic() - _t0,
+            {"kind": "trace"},
+        )
+    except Exception:
+        pass
     return target

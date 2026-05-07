@@ -194,11 +194,35 @@ class VaultManager:
         if not self._started:
             return {"enabled": False, "reason": "not started"}
         top = self.state.read_top_level_state()
+        file_counts = self._compute_file_counts()
+        disk_bytes = self._compute_disk_bytes()
         return {
             "enabled": True,
             "vault_root": str(self.vault_root),
             "last_full_export_ts": top["last_full_export_ts"],
             "last_incremental_export_ts": top["last_incremental_export_ts"],
             "exported_gene_count": top["exported_gene_count"],
-            "watcher_state": 0,  # v1: no watcher
+            "watcher_state": 0,
+            "file_counts": file_counts,
+            "disk_bytes": disk_bytes,
         }
+
+    def _compute_file_counts(self) -> dict:
+        counts = {}
+        for sub in ("genes", "_traces", "_traces-pinned", "_inbox", "_stale"):
+            d = self.vault_root / sub
+            if d.exists():
+                counts[sub] = sum(1 for p in d.rglob("*.md"))
+            else:
+                counts[sub] = 0
+        return counts
+
+    def _compute_disk_bytes(self) -> int:
+        total = 0
+        for p in self.vault_root.rglob("*"):
+            if p.is_file():
+                try:
+                    total += p.stat().st_size
+                except OSError:
+                    pass
+        return total
