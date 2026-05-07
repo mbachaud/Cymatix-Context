@@ -62,3 +62,16 @@ def test_concurrent_threads_serialize(tmp_path: Path):
     assert order[1] == order[0].replace("-enter", "-exit")
     assert order[2].endswith("-enter")
     assert order[3] == order[2].replace("-enter", "-exit")
+
+
+def test_same_instance_is_reentrant(tmp_path: Path):
+    """Nested ``with lock:`` on the same instance must not silently release."""
+    lock = VaultLock(vault_root=tmp_path, timeout=5.0)
+    interloper = VaultLock(vault_root=tmp_path, timeout=0.1)
+    with lock:
+        with lock:  # re-entrant: filelock's counter goes to 2
+            pass    # inner exits: counter goes to 1; OS lock still held
+        # Outer still holds the OS lock; interloper must time out.
+        with pytest.raises(TimeoutError):
+            with interloper:
+                pass
