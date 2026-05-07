@@ -483,12 +483,14 @@ class Genome:
         if "compression_tier" not in existing_columns:
             cur.execute("ALTER TABLE genes ADD COLUMN compression_tier INTEGER DEFAULT 0")
             log.info("Added compression_tier column to genes table")
+            existing_columns.add("compression_tier")
 
         # Auto-add last_seen column — Unix epoch of the most recent retrieval;
         # used by the vault incremental export (Task 9) for efficient range scan.
         if "last_seen" not in existing_columns:
             cur.execute("ALTER TABLE genes ADD COLUMN last_seen REAL")
             log.info("Added last_seen column to genes table")
+            existing_columns.add("last_seen")
 
         cur.execute(
             "CREATE INDEX IF NOT EXISTS idx_genes_last_seen ON genes(last_seen)"
