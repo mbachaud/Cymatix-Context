@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import hashlib
+import time
 from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
 import yaml
 
+from helix_context.vault.locking import VaultLock
 from helix_context.vault.writer import (
     compute_disk_hash,
     render_gene_markdown,
@@ -486,3 +488,52 @@ class TestIncrementalExport:
                 state.close()
         finally:
             genome.close()
+
+
+class TestTraceExport:
+    def test_writes_trace_file(self, tmp_path: Path):
+        from helix_context.vault.writer import trace_export
+
+        vault_root = tmp_path / "vault"
+        vault_root.mkdir(mode=0o700)
+        lock = VaultLock(vault_root=vault_root)
+
+        path = trace_export(
+            vault_root=vault_root, lock=lock,
+            request_id="abc12345",
+            trigger_reason="auto",
+            total_latency_ms=1234,
+            health_status="aligned",
+            stage_timing_ms={"extract": 12, "rerank": 1000},
+            fingerprint_route="path A",
+            foveated_ranks="(top-3)",
+            final_genes=[("middleware-7f3a1c", 1, 0.92)],
+            retention_hours=48,
+        )
+        assert path.exists()
+        assert "abc12345" in path.name
+        assert "_exp" in path.name
+        body = path.read_text()
+        assert "abc12345" in body
+        assert "rerank" in body
+
+    def test_filename_contains_unix_expiry(self, tmp_path: Path):
+        from helix_context.vault.writer import trace_export
+
+        vault_root = tmp_path / "vault"
+        vault_root.mkdir(mode=0o700)
+        lock = VaultLock(vault_root=vault_root)
+
+        path = trace_export(
+            vault_root=vault_root, lock=lock,
+            request_id="x", trigger_reason="auto",
+            total_latency_ms=0, health_status="aligned",
+            stage_timing_ms={}, fingerprint_route="", foveated_ranks="",
+            final_genes=[], retention_hours=24,
+        )
+        import re
+        m = re.search(r"_exp(\d+)\.md$", path.name)
+        assert m is not None
+        unix_expiry = int(m.group(1))
+        now = int(time.time())
+        assert now + 23 * 3600 < unix_expiry < now + 25 * 3600

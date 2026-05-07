@@ -6,6 +6,7 @@ helix-side writes.
 """
 from __future__ import annotations
 
+import datetime as _dt
 import hashlib
 import json
 import logging
@@ -475,3 +476,54 @@ def render_trace_markdown(
 
     body = "\n\n".join([title, stage_section, fp_section, fov_section, final_section])
     return f"---\n{fm_yaml}---\n\n{body}\n"
+
+
+def trace_export(
+    *,
+    vault_root: Path,
+    lock: "VaultLock",
+    request_id: str,
+    trigger_reason: str,
+    total_latency_ms: int,
+    health_status: str,
+    stage_timing_ms: dict,
+    fingerprint_route: str,
+    foveated_ranks: str,
+    final_genes: list,
+    retention_hours: int,
+) -> Path:
+    """Export a /context call trace to _traces/<ts>_<id>_exp<unix>.md.
+
+    Filename encodes expires_at as `_exp<unix-epoch>` so the pruner can
+    filter expired traces by name without parsing frontmatter.
+    """
+    now_ts = time.time()
+    expires_unix = int(now_ts + retention_hours * 3600)
+
+    # Use timezone-aware UTC; .replace(tzinfo=None) for strftime portability.
+    created_dt = _dt.datetime.fromtimestamp(now_ts, tz=_dt.timezone.utc)
+    expires_dt = _dt.datetime.fromtimestamp(expires_unix, tz=_dt.timezone.utc)
+
+    fname = (
+        f"{created_dt.strftime('%Y-%m-%dT%H-%M-%S')}_"
+        f"{request_id}_exp{expires_unix}.md"
+    )
+    target = vault_root / "_traces" / fname
+
+    md = render_trace_markdown(
+        request_id=request_id,
+        created_at=created_dt.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        expires_at=expires_dt.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        pinned=False,
+        trigger_reason=trigger_reason,
+        total_latency_ms=total_latency_ms,
+        health_status=health_status,
+        stage_timing_ms=stage_timing_ms,
+        fingerprint_route=fingerprint_route,
+        foveated_ranks=foveated_ranks,
+        final_genes=final_genes,
+    )
+
+    with lock:
+        write_atomic(vault_root=vault_root, target=target, content=md)
+    return target
