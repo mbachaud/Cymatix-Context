@@ -362,3 +362,90 @@ class TestFullExport:
                 state.close()
         finally:
             genome.close()
+
+
+# ---------------------------------------------------------------------------
+# Task 9 — incremental_export
+# ---------------------------------------------------------------------------
+
+class TestIncrementalExport:
+    def test_returns_zero_when_nothing_changed(self, tmp_path: Path):
+        from helix_context.genome import Genome
+        from helix_context.vault.locking import VaultLock
+        from helix_context.vault.state import VaultState
+        from helix_context.vault.writer import full_export, incremental_export
+        import time
+
+        genome = Genome(path=str(tmp_path / "genome.db"), synonym_map={})
+        try:
+            genome.upsert_gene(_make_test_gene("v1", "a.py", ["x"]))
+            genome.upsert_gene(_make_test_gene("v1", "b.py", ["x"]))
+
+            vault_root = tmp_path / "vault"
+            state = VaultState(vault_root=vault_root)
+            lock = VaultLock(vault_root=vault_root)
+            try:
+                full_export(
+                    genome=genome, state=state, lock=lock,
+                    vault_root=vault_root, party_id="",
+                    redact_body=False, fan_out_threshold=5000,
+                )
+                # Sleep slightly so time.time() is strictly after last upsert's last_seen
+                time.sleep(0.01)
+                stats = incremental_export(
+                    genome=genome, state=state, lock=lock,
+                    vault_root=vault_root, party_id="",
+                    redact_body=False, fan_out_threshold=5000,
+                    since_ts=time.time(),
+                )
+                assert stats["genes_exported"] == 0, (
+                    f"expected 0 genes exported, got {stats}"
+                )
+            finally:
+                state.close()
+        finally:
+            genome.close()
+
+    def test_only_re_exports_changed_genes(self, tmp_path: Path):
+        from helix_context.genome import Genome
+        from helix_context.vault.locking import VaultLock
+        from helix_context.vault.state import VaultState
+        from helix_context.vault.writer import full_export, incremental_export
+        import time
+
+        genome = Genome(path=str(tmp_path / "genome.db"), synonym_map={})
+        try:
+            genome.upsert_gene(_make_test_gene("v1", "a.py", ["x"]))
+            genome.upsert_gene(_make_test_gene("v1", "b.py", ["x"]))
+
+            vault_root = tmp_path / "vault"
+            state = VaultState(vault_root=vault_root)
+            lock = VaultLock(vault_root=vault_root)
+            try:
+                full_export(
+                    genome=genome, state=state, lock=lock,
+                    vault_root=vault_root, party_id="",
+                    redact_body=False, fan_out_threshold=5000,
+                )
+                t_after_full = time.time()
+                time.sleep(0.05)
+
+                # Modify only a.py: new content → new gene_id (content-addressed)
+                genome.upsert_gene(_make_test_gene("v2_changed", "a.py", ["x"]))
+
+                stats = incremental_export(
+                    genome=genome, state=state, lock=lock,
+                    vault_root=vault_root, party_id="",
+                    redact_body=False, fan_out_threshold=5000,
+                    since_ts=t_after_full,
+                )
+                # upsert_gene with new content creates a NEW gene_id (content-addressed),
+                # so exactly 1 NEW gene has last_seen > t_after_full.
+                # The original v1 a.py and v1 b.py have last_seen <= t_after_full.
+                assert stats["genes_exported"] == 1, (
+                    f"expected only the changed gene, got {stats}"
+                )
+            finally:
+                state.close()
+        finally:
+            genome.close()

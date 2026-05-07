@@ -307,6 +307,109 @@ def full_export(
     }
 
 
+def incremental_export(
+    *,
+    genome: Any,
+    state: "VaultState",
+    lock: "VaultLock",
+    vault_root: Path,
+    party_id: Optional[str],
+    redact_body: bool,
+    fan_out_threshold: int,
+    since_ts: float,
+    batch_size: int = 500,
+) -> dict:
+    """Export only genes whose last_seen > since_ts from genome to vault_root.
+
+    Uses the idx_genes_last_seen index for efficient range filtering.
+    Returns a dict with keys: genes_exported, elapsed_seconds, errors.
+
+    Acquires the vault lock for the entire export. Each row is processed
+    inside a try/except so a malformed row does not abort the whole export.
+    """
+    # Lazy imports to avoid circular import at module load time.
+    from helix_context.vault.locking import VaultLock  # noqa: F811
+    from helix_context.vault.state import VaultState  # noqa: F811
+
+    vault_root = Path(vault_root)
+    t_start = time.monotonic()
+    genes_exported = 0
+    errors = 0
+
+    # fan_out_threshold is accepted for forward compat; v1 does not split by domain count.
+    del fan_out_threshold
+
+    sql = (
+        "SELECT g.gene_id, g.content, g.source_id, g.chromatin, "
+        "g.content_hash, g.last_seen, g.promoter, g.mtime, "
+        "ga.party_id, ga.participant_id "
+        "FROM genes g LEFT JOIN gene_attribution ga ON g.gene_id = ga.gene_id "
+        "WHERE g.last_seen > ?"
+    )
+    params: list = [since_ts]
+    if party_id:
+        sql += " AND ga.party_id = ?"
+        params.append(party_id)
+
+    with lock:
+        conn = getattr(genome, "read_conn", None) or genome.conn
+        cur = conn.execute(sql, params)
+        while True:
+            rows = cur.fetchmany(batch_size)
+            if not rows:
+                break
+            for row in rows:
+                try:
+                    gene = _row_to_gene(row)
+                    domain = gene.domains[0] if gene.domains else None
+                    relpath = derive_gene_relpath(
+                        domain=domain,
+                        source_id=gene.source_id,
+                        gene_id=gene.gene_id,
+                    )
+                    target = vault_root / relpath
+                    markdown = render_gene_markdown(gene, redact_body=redact_body)
+                    write_atomic(vault_root=vault_root, target=target, content=markdown)
+                    disk_hash = compute_disk_hash(target)
+                    state.upsert_record(
+                        gene_id=gene.gene_id,
+                        path=relpath,
+                        ts=time.time(),
+                        disk_hash=disk_hash,
+                    )
+                    genes_exported += 1
+                except ValueError as exc:
+                    log.warning(
+                        "incremental_export: export skipped for gene %s: %s",
+                        row["gene_id"] if row["gene_id"] else "<unknown>",
+                        exc,
+                    )
+                    errors += 1
+                except (KeyError, json.JSONDecodeError) as exc:
+                    log.warning(
+                        "incremental_export: export skipped for gene %s: %s",
+                        row["gene_id"] if row["gene_id"] else "<unknown>",
+                        exc,
+                    )
+                    errors += 1
+                except OSError as exc:
+                    log.warning(
+                        "incremental_export: export I/O failure for gene %s: %s",
+                        row["gene_id"] if row["gene_id"] else "<unknown>",
+                        exc,
+                    )
+                    errors += 1
+                # Note: AttributeError, TypeError, NameError propagate up —
+                # they indicate code bugs and should fail fast.
+
+    elapsed = time.monotonic() - t_start
+    return {
+        "genes_exported": genes_exported,
+        "elapsed_seconds": elapsed,
+        "errors": errors,
+    }
+
+
 def render_trace_markdown(
     *,
     request_id: str,

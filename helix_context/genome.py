@@ -1442,8 +1442,8 @@ class Genome:
             "chromatin, is_fragment, embedding, source_id, repo_root, source_kind, "
             "observed_at, mtime, content_hash, volatility_class, authority_class, "
             "support_span, last_verified_at, version, supersedes, key_values, "
-            "compression_tier) "
-            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            "compression_tier, last_seen) "
+            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (
                 gene_id,
                 gene.content,
@@ -1468,6 +1468,7 @@ class Genome:
                 gene.supersedes,
                 json_dumps(gene.key_values) if gene.key_values else None,
                 tier,
+                time.time(),  # last_seen: always stamp current epoch on every upsert
             ),
         )
         # Invalidate parse cache for this gene's promoter/epigenetics
