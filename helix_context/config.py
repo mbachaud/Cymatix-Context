@@ -338,6 +338,33 @@ class Hardware:
 
 
 @dataclass
+class VaultTracesConfig:
+    """Per-trace TTL/rollup knobs — see [vault.traces] in helix.toml."""
+
+    enabled: bool = True
+    retention_hours: int = 48
+    max_retention_hours_hard: int = 720  # 30 days; 0 disables
+    max_count: int = 10_000  # v1.1: not yet enforced
+    rollup_enabled: bool = True
+    rollup_shard: str = "hour"  # "hour" | "daily"
+    prune_interval_minutes: int = 60
+    trigger_only: bool = False  # v1.1: not yet enforced
+
+
+@dataclass
+class VaultConfig:
+    """Obsidian vault export settings — off by default (enabled = False)."""
+
+    enabled: bool = False
+    path: str = "~/.helix/vault"
+    party_id: str = ""  # empty = use server's primary party
+    fan_out_threshold: int = 5000
+    redact_body: bool = False
+    stale_threshold: float = 0.5
+    traces: VaultTracesConfig = field(default_factory=VaultTracesConfig)
+
+
+@dataclass
 class HelixConfig:
     ribosome: RibosomeConfig = field(default_factory=RibosomeConfig)
     budget: BudgetConfig = field(default_factory=BudgetConfig)
@@ -352,6 +379,7 @@ class HelixConfig:
     headroom: HeadroomConfig = field(default_factory=HeadroomConfig)
     classifier: ClassifierConfig = field(default_factory=ClassifierConfig)
     hardware: Hardware = field(default_factory=Hardware)
+    vault: VaultConfig = field(default_factory=VaultConfig)
     synonym_map: Dict[str, List[str]] = field(default_factory=dict)
 
 
@@ -620,6 +648,30 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
         device=str(hardware_device),
         batch_sizes=bs,
         low_vram_threshold_gb=float(hw.get("low_vram_threshold_gb", 4.0)),
+    )
+
+    # Vault — Obsidian export (opt-in, off by default)
+    v_section = raw.get("vault", {})
+    _warn_unknown("vault", v_section, VaultConfig)
+    v_traces_section = v_section.get("traces", {})
+    _warn_unknown("vault.traces", v_traces_section, VaultTracesConfig)
+    cfg.vault = VaultConfig(
+        enabled=v_section.get("enabled", cfg.vault.enabled),
+        path=v_section.get("path", cfg.vault.path),
+        party_id=v_section.get("party_id", cfg.vault.party_id),
+        fan_out_threshold=v_section.get("fan_out_threshold", cfg.vault.fan_out_threshold),
+        redact_body=v_section.get("redact_body", cfg.vault.redact_body),
+        stale_threshold=v_section.get("stale_threshold", cfg.vault.stale_threshold),
+        traces=VaultTracesConfig(
+            enabled=v_traces_section.get("enabled", cfg.vault.traces.enabled),
+            retention_hours=v_traces_section.get("retention_hours", cfg.vault.traces.retention_hours),
+            max_retention_hours_hard=v_traces_section.get("max_retention_hours_hard", cfg.vault.traces.max_retention_hours_hard),
+            max_count=v_traces_section.get("max_count", cfg.vault.traces.max_count),
+            rollup_enabled=v_traces_section.get("rollup_enabled", cfg.vault.traces.rollup_enabled),
+            rollup_shard=v_traces_section.get("rollup_shard", cfg.vault.traces.rollup_shard),
+            prune_interval_minutes=v_traces_section.get("prune_interval_minutes", cfg.vault.traces.prune_interval_minutes),
+            trigger_only=v_traces_section.get("trigger_only", cfg.vault.traces.trigger_only),
+        ),
     )
 
     # Fix 1: synonym map

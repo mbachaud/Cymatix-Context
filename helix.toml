@@ -311,3 +311,25 @@ moe = ["mixture_of_experts", "sliding_window", "swa", "gemma4", "tissue", "answe
 slate = ["answer_slate", "kv_facts", "front_loaded", "extraction", "moe"]
 decoder = ["decoder_mode", "condensed", "moe", "ribosome_prompt", "instructions"]
 maintenance = ["admin", "vacuum", "refresh", "checkpoint", "compact"]
+
+# ── Vault export (Obsidian) — opt-in, off by default ────────────────────
+# Renders the genome as a browsable markdown vault for operators.
+# v1: read-only export + diagnostic /context traces. Curation/inbox in v1.1.
+# [vault]
+# enabled = false
+# path = "~/.helix/vault"
+# party_id = ""                     # empty = server's primary party
+# fan_out_threshold = 5000          # split domain folders above this count
+# redact_body = false               # true → replace body with sha+excerpt
+#                                   # recommended for cloud-synced setups
+# stale_threshold = 0.5             # genes with live_truth_score < this go to _stale/
+#
+# [vault.traces]
+# enabled = true                    # auto-export every /context call
+# retention_hours = 48              # default; ≥720 for 30-day audit
+# max_retention_hours_hard = 720    # force-deletes pinned past this; 0 disables
+# max_count = 10000                 # safety cap on burst floods (v1.1: not yet enforced)
+# rollup_enabled = true
+# rollup_shard = "hour"             # hour | daily
+# prune_interval_minutes = 60
+# trigger_only = false              # emit only on threshold (v1.1: not yet enforced)

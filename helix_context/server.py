@@ -34,11 +34,13 @@ import httpx
 import uvicorn
 from fastapi import BackgroundTasks, FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse, StreamingResponse
+from pydantic import BaseModel
 
 from .config import HelixConfig, load_config
 from .context_packet import build_context_packet, get_refresh_targets
 from .context_manager import HelixContextManager
 from .registry import DEFAULT_HEARTBEAT_INTERVAL_S, DEFAULT_TTL_S, Registry
+from .vault import VaultManager
 
 log = logging.getLogger("helix.server")
 
@@ -356,6 +358,17 @@ async def _background_registry_sweep(registry_obj) -> None:
             log.warning("Background registry sweep failed", exc_info=True)
 
 
+class _TraceBody(BaseModel):
+    request_id: str
+    trigger_reason: str
+    total_latency_ms: int
+    health_status: str
+    stage_timing_ms: dict
+    fingerprint_route: str
+    foveated_ranks: str
+    final_genes: list
+
+
 def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
     """Factory -- creates the FastAPI app with a HelixContextManager."""
     import os  # for getpid() in lifespan stamps
@@ -430,6 +443,10 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
     # Reuses helix.genome.conn; the DAL operates on the same SQLite file.
     registry = Registry(helix.genome)
 
+    # Vault manager — operator-facing markdown export.
+    # Reads from helix.genome (same instance as /context); start/stop in lifespan.
+    vault = VaultManager(config=config, genome=helix.genome)
+
     @asynccontextmanager
     async def lifespan(app: FastAPI):
         """
@@ -457,6 +474,13 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
         task = asyncio.create_task(_background_checkpoint(helix))
         sweep_task = asyncio.create_task(_background_registry_sweep(registry))
         wal_gauge_task = asyncio.create_task(_background_wal_gauge(helix))
+
+        # Vault export — opt-in, off if config.vault.enabled=false.
+        try:
+            vault.start()
+        except Exception:
+            log.warning("vault.start failed; continuing without vault", exc_info=True)
+
         yield
         task.cancel()
         sweep_task.cancel()
@@ -467,6 +491,11 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
             except asyncio.CancelledError:
                 pass
         helix.genome.checkpoint("TRUNCATE")
+
+        try:
+            vault.stop()
+        except Exception:
+            log.warning("vault.stop failed", exc_info=True)
 
         # Flush token counter so lifetime totals persist across restart.
         try:
@@ -493,6 +522,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
     app.state.helix = helix  # Expose for testing
     app.state.bridge = bridge  # Expose for testing
     app.state.registry = registry  # Expose for testing
+    app.state.vault = vault
 
     # OpenTelemetry init (disabled unless HELIX_OTEL_ENABLED=1). Wraps
     # every FastAPI route in a span + exposes shared tracer/meter globals
@@ -2879,6 +2909,9 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
         bridge.write_signal(name, data)
         return {"ok": True, "signal": name}
 
+    # Register vault endpoints (export, status, trace, pin/unpin).
+    _register_vault_routes(app)
+
     return app
 
 
@@ -3139,6 +3172,77 @@ async def _forward_raw(body: dict, config: HelixConfig, helix: Optional[HelixCon
             log.debug("Token counter update failed (raw)", exc_info=True)
 
     return JSONResponse(data)
+
+
+# ── Vault endpoints (Obsidian export + diagnostic traces) ──────────────
+# NOTE: these are defined at module scope referencing the `app` produced by
+# create_app(). Because server.py defines routes inside create_app via
+# @app.post decorators, these 5 endpoints follow the same pattern but are
+# attached after the `app` object is available — they are *registered* in
+# create_app via the inner-scope `app` just like all other routes.
+# (Defined below create_app body; see _register_vault_routes call at end of
+# create_app.)  To keep things surgical, we use a helper that closes over
+# the `app` object and registers the routes.
+
+
+def _register_vault_routes(app: "FastAPI") -> None:
+    """Register vault endpoints on the given FastAPI app instance."""
+    import re
+    import time as _time
+
+    @app.post("/export/obsidian")
+    async def post_export_obsidian(request: Request):
+        body = await request.json()
+        full = bool(body.get("full", False))
+        vault = request.app.state.vault
+        if full:
+            return vault.full_export()
+        return vault.incremental_export()
+
+    @app.get("/vault/status")
+    async def get_vault_status(request: Request):
+        return request.app.state.vault.status()
+
+    @app.post("/vault/trace")
+    async def post_vault_trace(body: _TraceBody, request: Request):
+        vault = request.app.state.vault
+        path = vault.trace_export(**body.model_dump())
+        return {"path": str(path), "request_id": body.request_id}
+
+    @app.post("/vault/traces/{request_id}/pin")
+    async def post_pin_trace(request_id: str, request: Request):
+        vault = request.app.state.vault
+        if not vault._started:
+            return {"ok": False, "error": "vault disabled"}
+        traces_dir = vault.vault_root / "_traces"
+        pinned_dir = vault.vault_root / "_traces-pinned"
+        pinned_dir.mkdir(exist_ok=True, mode=0o700)
+        matches = list(traces_dir.glob(f"*_{request_id}_exp*.md"))
+        if not matches:
+            return {"ok": False, "error": f"trace {request_id} not found in _traces/"}
+        src = matches[0]
+        new_name = re.sub(r"_exp\d+\.md$", ".md", src.name)
+        dst = pinned_dir / new_name
+        src.replace(dst)
+        return {"ok": True, "pinned_path": str(dst)}
+
+    @app.post("/vault/traces/{request_id}/unpin")
+    async def post_unpin_trace(request_id: str, request: Request):
+        vault = request.app.state.vault
+        if not vault._started:
+            return {"ok": False, "error": "vault disabled"}
+        pinned_dir = vault.vault_root / "_traces-pinned"
+        traces_dir = vault.vault_root / "_traces"
+        matches = list(pinned_dir.glob(f"*_{request_id}.md"))
+        if not matches:
+            return {"ok": False, "error": f"trace {request_id} not found in _traces-pinned/"}
+        src = matches[0]
+        retention_hours = vault.config.vault.traces.retention_hours
+        expires_unix = int(_time.time() + retention_hours * 3600)
+        new_name = src.stem + f"_exp{expires_unix}.md"
+        dst = traces_dir / new_name
+        src.replace(dst)
+        return {"ok": True, "unpinned_path": str(dst)}
 
 
 # -- Entry point -------------------------------------------------------

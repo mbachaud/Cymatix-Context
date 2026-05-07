@@ -404,6 +404,45 @@ def ribosome_info_gauge():
     return _instruments["ribosome_info"]
 
 
+def vault_export_histogram():
+    if "vault_export" not in _instruments:
+        _instruments["vault_export"] = meter.create_histogram(
+            "helix_vault_export_seconds",
+            unit="s",
+            description="Latency of vault export operations.",
+        )
+    return _instruments["vault_export"]
+
+
+def vault_pruner_histogram():
+    if "vault_pruner" not in _instruments:
+        _instruments["vault_pruner"] = meter.create_histogram(
+            "helix_vault_pruner_seconds",
+            unit="s",
+            description="Latency of one pruner cycle.",
+        )
+    return _instruments["vault_pruner"]
+
+
+def vault_force_prune_counter():
+    if "vault_force_prune" not in _instruments:
+        _instruments["vault_force_prune"] = meter.create_counter(
+            "helix_vault_force_prune_total",
+            description="Pinned traces force-deleted per max_retention_hours_hard.",
+        )
+    return _instruments["vault_force_prune"]
+
+
+def vault_file_count_gauge():
+    """Imperative gauge — VaultManager.status() updates it on each call."""
+    if "vault_file_count" not in _instruments:
+        _instruments["vault_file_count"] = meter.create_gauge(
+            "helix_vault_file_count",
+            description="Files in each vault folder (per `folder` label).",
+        )
+    return _instruments["vault_file_count"]
+
+
 # ── Per-stage pipeline telemetry (feat/per-stage-telemetry) ──────────
 
 

@@ -483,6 +483,25 @@ class Genome:
         if "compression_tier" not in existing_columns:
             cur.execute("ALTER TABLE genes ADD COLUMN compression_tier INTEGER DEFAULT 0")
             log.info("Added compression_tier column to genes table")
+            existing_columns.add("compression_tier")
+
+        # Auto-add last_seen column — Unix epoch of the most recent retrieval;
+        # used by the vault incremental export (Task 9) for efficient range scan.
+        if "last_seen" not in existing_columns:
+            cur.execute("ALTER TABLE genes ADD COLUMN last_seen REAL")
+            log.info("Added last_seen column to genes table")
+            existing_columns.add("last_seen")
+
+        cur.execute(
+            "CREATE INDEX IF NOT EXISTS idx_genes_last_seen ON genes(last_seen)"
+        )
+
+        # Auto-add live_truth_score column — freshness score [0.0, 1.0];
+        # 1.0 = fully fresh (default). Used by _stale/ view in the vault pruner.
+        if "live_truth_score" not in existing_columns:
+            cur.execute("ALTER TABLE genes ADD COLUMN live_truth_score REAL DEFAULT 1.0")
+            log.info("Added live_truth_score column to genes table")
+            existing_columns.add("live_truth_score")
 
         cur.execute("""
         CREATE TABLE IF NOT EXISTS promoter_index (
@@ -1430,8 +1449,8 @@ class Genome:
             "chromatin, is_fragment, embedding, source_id, repo_root, source_kind, "
             "observed_at, mtime, content_hash, volatility_class, authority_class, "
             "support_span, last_verified_at, version, supersedes, key_values, "
-            "compression_tier) "
-            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            "compression_tier, last_seen) "
+            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (
                 gene_id,
                 gene.content,
@@ -1456,6 +1475,7 @@ class Genome:
                 gene.supersedes,
                 json_dumps(gene.key_values) if gene.key_values else None,
                 tier,
+                time.time(),  # last_seen: always stamp current epoch on every upsert
             ),
         )
         # Invalidate parse cache for this gene's promoter/epigenetics
