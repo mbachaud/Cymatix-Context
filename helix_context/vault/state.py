@@ -17,6 +17,14 @@ log = logging.getLogger(__name__)
 SCHEMA_VERSION = 1
 TOP_LEVEL_FILENAME = ".helix-state.json"
 
+_TOP_LEVEL_STATE_KEYS = frozenset({
+    "schema_version",
+    "last_full_export_ts",
+    "last_incremental_export_ts",
+    "exported_gene_count",
+    "fan_out_engaged_domains",
+})
+
 
 @dataclass(frozen=True)
 class VaultStateRecord:
@@ -31,6 +39,9 @@ class VaultState:
 
     vault.db holds per-gene rows (vault_state table).
     .helix-state.json holds top-level state (schema_version, export timestamps).
+
+    Callers must call close() explicitly. Context manager support
+    will be added in Task 14 alongside VaultManager lifecycle.
     """
 
     class SchemaVersionMismatch(Exception):
@@ -42,9 +53,10 @@ class VaultState:
         self._db_path = self.vault_root / "vault.db"
         self._json_path = self.vault_root / TOP_LEVEL_FILENAME
 
-        # Open SQLite connection (autocommit reader pattern from PR #32)
+        # Connection follows genome.py WAL hygiene from PR #32
+        # (autocommit + WAL + busy_timeout + journal_size_limit).
         self._conn = sqlite3.connect(
-            str(self._db_path), check_same_thread=False, timeout=30
+            str(self._db_path), check_same_thread=False, timeout=30, isolation_level=None
         )
         self._conn.row_factory = sqlite3.Row
         self._conn.execute("PRAGMA journal_mode=WAL")
@@ -63,11 +75,12 @@ class VaultState:
                 last_exported_ts         REAL NOT NULL,
                 last_exported_disk_hash  TEXT
             );
+            -- Speculative index for Task 13 orphan-file sweep (lookup by path).
             CREATE INDEX IF NOT EXISTS idx_vault_state_path
                 ON vault_state(vault_path);
             """
         )
-        self._conn.commit()
+        self._conn.commit()  # executescript implicitly commits in autocommit; harmless redundancy
 
     def _ensure_top_level_state(self) -> None:
         if not self._json_path.exists():
@@ -93,15 +106,25 @@ class VaultState:
             return json.load(f)
 
     def update_top_level_state(self, **fields) -> None:
+        unknown = set(fields) - _TOP_LEVEL_STATE_KEYS
+        if unknown:
+            raise ValueError(f"unknown top-level state keys: {sorted(unknown)!r}")
         current = self.read_top_level_state()
         current.update(fields)
         self._write_top_level_state(current)
 
     def _write_top_level_state(self, data: dict) -> None:
         tmp = self._json_path.with_suffix(self._json_path.suffix + ".tmp")
-        with tmp.open("w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2)
-        tmp.replace(self._json_path)
+        try:
+            with tmp.open("w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2)
+            tmp.replace(self._json_path)
+        except Exception:
+            try:
+                tmp.unlink(missing_ok=True)
+            except Exception:
+                log.warning("failed to clean up tmp state file %s", tmp, exc_info=True)
+            raise
 
     def upsert_record(
         self, *, gene_id: str, path: str, ts: float, disk_hash: Optional[str]
@@ -151,6 +174,10 @@ class VaultState:
             )
 
     def close(self) -> None:
+        try:
+            self._conn.execute("PRAGMA wal_checkpoint(TRUNCATE)")
+        except Exception:
+            log.warning("vault.db WAL checkpoint on close failed", exc_info=True)
         try:
             self._conn.close()
         except Exception:

@@ -9,14 +9,17 @@ from helix_context.vault.state import VaultState
 
 
 @pytest.fixture
-def state(tmp_path: Path) -> VaultState:
-    return VaultState(vault_root=tmp_path)
+def state(tmp_path: Path):
+    s = VaultState(vault_root=tmp_path)
+    yield s
+    s.close()
 
 
 class TestSchemaCreation:
     def test_vault_db_created_on_init(self, tmp_path: Path):
-        VaultState(vault_root=tmp_path)
+        s = VaultState(vault_root=tmp_path)
         assert (tmp_path / "vault.db").exists()
+        s.close()
 
     def test_top_level_state_initialized(self, tmp_path: Path):
         s = VaultState(vault_root=tmp_path)
@@ -25,6 +28,7 @@ class TestSchemaCreation:
         assert top["last_full_export_ts"] == 0.0
         assert top["last_incremental_export_ts"] == 0.0
         assert top["exported_gene_count"] == 0
+        s.close()
 
 
 class TestVaultStateRecord:
@@ -72,6 +76,7 @@ class TestTopLevelStatePersistence:
         assert top["last_full_export_ts"] == 999.0
         assert top["exported_gene_count"] == 42
         assert top["schema_version"] == 1
+        s2.close()
 
 
 class TestSchemaVersion:
@@ -86,3 +91,13 @@ class TestSchemaVersion:
         state_file.write_text(json.dumps(data))
         with pytest.raises(VaultState.SchemaVersionMismatch):
             VaultState(vault_root=tmp_path)
+
+
+class TestTypoGuard:
+    def test_unknown_top_level_key_raises(self, tmp_path: Path):
+        s = VaultState(vault_root=tmp_path)
+        try:
+            with pytest.raises(ValueError, match="unknown top-level state keys"):
+                s.update_top_level_state(last_full_export_TS=999.0)  # typo: TS vs ts
+        finally:
+            s.close()
