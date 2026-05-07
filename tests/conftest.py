@@ -1,7 +1,14 @@
 """Shared fixtures for Helix Context tests."""
 
+import os
 import pytest
 from pathlib import Path
+
+# Guard: the module-level `app = create_app()` in server.py (used by uvicorn
+# --reload) runs at import time. Without a real genome path it raises
+# sqlite3.OperationalError during collection. Set :memory: so tests can
+# import helix_context.server without a real DB file on disk.
+os.environ.setdefault("HELIX_GENOME_PATH", ":memory:")
 
 from helix_context.genome import Genome
 from helix_context.schemas import Gene, PromoterTags, EpigeneticMarkers, ChromatinState
