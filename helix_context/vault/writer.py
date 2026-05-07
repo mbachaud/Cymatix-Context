@@ -120,3 +120,58 @@ def render_gene_markdown(gene: Any, *, redact_body: bool) -> str:
     fm_yaml = yaml.safe_dump(fm, sort_keys=True, allow_unicode=True, default_flow_style=False)
     body = _build_body(gene, redact_body=redact_body)
     return f"---\n{fm_yaml}---\n\n{body}\n"
+
+
+def render_trace_markdown(
+    *,
+    request_id: str,
+    created_at: str,
+    expires_at: str,
+    pinned: bool,
+    trigger_reason: str,
+    total_latency_ms: int,
+    health_status: str,
+    stage_timing_ms: dict,
+    fingerprint_route: str,
+    foveated_ranks: str,
+    final_genes: list,  # list of (filename_stem, rank, score)
+) -> str:
+    """Render a /context call trace to markdown.
+
+    The trace export feeds Goal 2 (diagnostic console). Filename includes
+    the expires_at unix epoch so the pruner can filter expired traces by
+    name without parsing frontmatter.
+    """
+    fm = {
+        "request_id": request_id,
+        "created_at": created_at,
+        "expires_at": expires_at,
+        "pinned": pinned,
+        "trigger_reason": trigger_reason,
+        "total_latency_ms": total_latency_ms,
+        "health_status": health_status,
+    }
+    fm_yaml = yaml.safe_dump(fm, sort_keys=True, allow_unicode=True, default_flow_style=False)
+
+    title = f"# Trace: {request_id}"
+
+    stage_rows = "\n".join(f"| {s} | {ms} |" for s, ms in stage_timing_ms.items())
+    stage_section = (
+        "## Per-stage timing\n\n"
+        "| stage | ms |\n|---|---|\n" + (stage_rows if stage_rows else "*(no per-stage data)*")
+    )
+
+    fp_section = "## Fingerprint route\n\n" + (fingerprint_route or "*(none)*")
+    fov_section = "## Foveated rank assignments\n\n" + (foveated_ranks or "*(none)*")
+
+    if final_genes:
+        gene_lines = "\n".join(
+            f"- [[{stem}]] (rank {rank}, score {score:.2f})"
+            for (stem, rank, score) in final_genes
+        )
+    else:
+        gene_lines = "*(no genes returned)*"
+    final_section = "## Final budget genes\n\n" + gene_lines
+
+    body = "\n\n".join([title, stage_section, fp_section, fov_section, final_section])
+    return f"---\n{fm_yaml}---\n\n{body}\n"

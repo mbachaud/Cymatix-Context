@@ -132,3 +132,48 @@ class TestRenderGeneMarkdown:
         end = rest.index("---\n")
         fm = yaml.safe_load(rest[:end])
         assert fm["domains"] == []
+
+
+class TestRenderTraceMarkdown:
+    def test_includes_request_id_and_timing(self):
+        from helix_context.vault.writer import render_trace_markdown
+
+        md = render_trace_markdown(
+            request_id="abc12345",
+            created_at="2026-05-06T22:14:06Z",
+            expires_at="2026-05-08T22:14:06Z",
+            pinned=False,
+            trigger_reason="latency_outlier",
+            total_latency_ms=18432,
+            health_status="sparse",
+            stage_timing_ms={
+                "extract": 12, "express": 45, "rerank": 12_400,
+                "splice": 5_800, "assemble": 175,
+            },
+            fingerprint_route="(no fingerprint payload)",
+            foveated_ranks="(none)",
+            final_genes=[("middleware-7f3a1c", 1, 0.92)],
+        )
+        assert "abc12345" in md
+        assert "18432" in md
+        assert "rerank" in md
+        assert "12_400" in md or "12400" in md
+        assert "[[middleware-7f3a1c]]" in md
+        assert md.startswith("---\n")
+
+    def test_frontmatter_contains_expires_at(self):
+        from helix_context.vault.writer import render_trace_markdown
+
+        md = render_trace_markdown(
+            request_id="x", created_at="t1", expires_at="t2",
+            pinned=False, trigger_reason="auto",
+            total_latency_ms=0, health_status="aligned",
+            stage_timing_ms={}, fingerprint_route="", foveated_ranks="",
+            final_genes=[],
+        )
+        rest = md[len("---\n"):]
+        end = rest.index("---\n")
+        fm = yaml.safe_load(rest[:end])
+        assert fm["request_id"] == "x"
+        assert fm["expires_at"] == "t2"
+        assert fm["pinned"] is False
