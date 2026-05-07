@@ -40,8 +40,11 @@ AUTHORED_FIELDS = frozenset({
     "tests",
 })
 
-assert COMPUTED_FIELDS.isdisjoint(AUTHORED_FIELDS), \
-    "field classification overlap — must be disjoint"
+if not COMPUTED_FIELDS.isdisjoint(AUTHORED_FIELDS):
+    _overlap = COMPUTED_FIELDS & AUTHORED_FIELDS
+    raise AssertionError(
+        f"field classification overlap — fields in both sets: {sorted(_overlap)!r}"
+    )
 
 
 def authored_placeholders() -> dict:
@@ -72,6 +75,10 @@ def derive_gene_filename(source_id: str, gene_id: str) -> str:
     """Derive a vault-side filename from source path + gene_id.
 
     Pattern: <source_stem>-<short_id>.md
+
+    Note: compound extensions strip only the last suffix
+    (e.g., 'foo.tar.gz' → 'foo.tar'). Helix typically operates on
+    single-extension files so this is rarely surprising.
     """
     stem = Path(source_id).stem if Path(source_id).suffix else Path(source_id).name
     short = gene_id[:_SHORT_ID_LEN]
@@ -82,8 +89,12 @@ def derive_gene_relpath(*, domain: Optional[str], source_id: str, gene_id: str) 
     """Vault-relative path for a gene: genes/<domain>/<filename>.
 
     If domain is None or empty, falls back to genes/_orphan/.
+    Raises ValueError if domain contains path-separator characters
+    or '..' segments.
     """
     sub = domain if domain else "_orphan"
+    if sub != "_orphan" and ("/" in sub or "\\" in sub or ".." in sub):
+        raise ValueError(f"domain {domain!r} contains path-separator characters")
     return f"genes/{sub}/{derive_gene_filename(source_id, gene_id)}"
 
 

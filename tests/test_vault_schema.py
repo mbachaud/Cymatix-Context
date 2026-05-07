@@ -46,6 +46,9 @@ class TestAuthoredPlaceholders:
         for k in ("supersedes", "contradicts", "implements", "documented_by", "tests"):
             assert p[k] == []
 
+    def test_placeholder_keys_match_authored_fields(self):
+        assert set(authored_placeholders().keys()) == set(AUTHORED_FIELDS)
+
 
 class TestDeriveFilename:
     def test_simple_python_path(self):
@@ -86,6 +89,10 @@ class TestDeriveRelpath:
             gene_id="abc123def456",
         ) == "genes/_orphan/y-abc123.md"
 
+    def test_traversal_in_domain_raises(self):
+        with pytest.raises(ValueError, match="path-separator characters"):
+            derive_gene_relpath(domain="../etc", source_id="x.py", gene_id="abc123def456")
+
 
 class TestSafeResolveUnder:
     def test_normal_path_resolves(self, tmp_path: Path):
@@ -97,8 +104,8 @@ class TestSafeResolveUnder:
         with pytest.raises(ValueError, match="outside vault root"):
             safe_resolve_under(tmp_path, outside)
 
-    def test_traversal_via_symlink_raises(self, tmp_path: Path):
-        # Construct a path that resolves outside via "..", regardless of FS
+    def test_double_dot_traversal_raises(self, tmp_path: Path):
+        # Construct a path with ".." segments that resolves outside vault root
         candidate = tmp_path / "a" / ".." / ".." / "outside"
         with pytest.raises(ValueError, match="outside vault root"):
             safe_resolve_under(tmp_path, candidate)
