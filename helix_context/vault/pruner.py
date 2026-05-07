@@ -7,6 +7,7 @@ compliance retention window.
 from __future__ import annotations
 
 import logging
+import os
 import re
 import time
 from pathlib import Path
@@ -159,3 +160,128 @@ def _read_trace_frontmatter(path: Path) -> Optional[dict]:
     except _yaml.YAMLError:
         log.warning("could not parse frontmatter in %s", path, exc_info=True)
         return None
+
+
+def refresh_stale_view(
+    *,
+    vault_root: Path,
+    genome,
+    stale_threshold: float,
+    party_id: str,
+) -> dict:
+    """Repopulate the _stale/ folder based on live_truth_score.
+
+    v1: pointer notes on all platforms (containing [[gene-<id>]] wikilink).
+    Symlinks deferred to v1.1.
+    """
+    from helix_context.vault.schema import derive_gene_filename
+
+    stale_dir = vault_root / "_stale"
+    stale_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
+
+    sql = (
+        "SELECT g.gene_id, g.source_id "
+        "FROM genes g LEFT JOIN gene_attribution ga ON g.gene_id = ga.gene_id "
+        "WHERE g.live_truth_score < ? AND g.chromatin = 1"  # 1 = euchromatin
+    )
+    params: list = [stale_threshold]
+    if party_id:
+        sql += " AND ga.party_id = ?"
+        params.append(party_id)
+
+    expected_filenames: set[str] = set()
+    added = 0
+    errors = 0
+
+    conn = getattr(genome, "read_conn", None) or genome.conn
+    for row in conn.execute(sql, params):
+        gene_id = row["gene_id"]
+        source_id = row["source_id"] or ""
+        stale_name = derive_gene_filename(source_id, gene_id)
+        expected_filenames.add(stale_name)
+        target = stale_dir / stale_name
+        if target.exists():
+            continue
+        try:
+            link_text = f"[[{Path(stale_name).stem}]]"
+            target.write_text(
+                f"# Stale (live_truth_score < {stale_threshold})\n\n{link_text}\n",
+                encoding="utf-8",
+            )
+            added += 1
+        except OSError:
+            log.warning("stale view write failed for %s", gene_id, exc_info=True)
+            errors += 1
+
+    removed = 0
+    for entry in list(stale_dir.iterdir()):
+        if entry.is_file() and entry.name.endswith(".md") and entry.name not in expected_filenames:
+            try:
+                entry.unlink()
+                removed += 1
+            except OSError:
+                errors += 1
+
+    return {"added": added, "removed": removed, "errors": errors}
+
+
+def migrate_fan_out_if_needed(
+    *,
+    vault_root: Path,
+    state,
+    fan_out_threshold: int,
+) -> dict:
+    """Migrate flat domain folders past the threshold to 2-level fan-out.
+
+    Eager — fires the moment a flat folder crosses the threshold. Updates
+    state.vault_path for each migrated gene to keep wikilinks coherent.
+    """
+    genes_root = vault_root / "genes"
+    if not genes_root.exists():
+        return {"migrated_domains": [], "files_migrated": 0}
+
+    # Pre-build path → record dict for O(1) lookups during migration
+    records_by_path = {rec.vault_path: rec for rec in state.iter_records()}
+
+    migrated_domains: list = []
+    files_migrated = 0
+    for domain_dir in genes_root.iterdir():
+        if not domain_dir.is_dir() or domain_dir.name.startswith("_"):
+            continue
+        flat_files = [p for p in domain_dir.iterdir() if p.is_file() and p.suffix == ".md"]
+        if len(flat_files) <= fan_out_threshold:
+            continue
+        log.info(
+            "migrating fan-out for domain=%s (%d files)", domain_dir.name, len(flat_files)
+        )
+        for f in flat_files:
+            stem = f.stem
+            try:
+                short_id = stem.rsplit("-", 1)[1]
+            except IndexError:
+                continue
+            first2 = short_id[:2]
+            new_dir = domain_dir / first2
+            new_dir.mkdir(exist_ok=True, mode=0o700)
+            new_path = new_dir / f.name
+            os.replace(f, new_path)
+            relpath_old = f"genes/{domain_dir.name}/{f.name}"
+            relpath_new = f"genes/{domain_dir.name}/{first2}/{f.name}"
+            rec = records_by_path.get(relpath_old)
+            if rec is not None:
+                state.upsert_record(
+                    gene_id=rec.gene_id,
+                    path=relpath_new,
+                    ts=rec.last_exported_ts,
+                    disk_hash=rec.last_exported_disk_hash,
+                )
+            files_migrated += 1
+        migrated_domains.append(domain_dir.name)
+
+    if migrated_domains:
+        top = state.read_top_level_state()
+        engaged = set(top.get("fan_out_engaged_domains", []))
+        engaged.update(migrated_domains)
+        state.update_top_level_state(fan_out_engaged_domains=sorted(engaged))
+
+    return {"migrated_domains": migrated_domains, "files_migrated": files_migrated}

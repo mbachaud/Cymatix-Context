@@ -496,6 +496,13 @@ class Genome:
             "CREATE INDEX IF NOT EXISTS idx_genes_last_seen ON genes(last_seen)"
         )
 
+        # Auto-add live_truth_score column — freshness score [0.0, 1.0];
+        # 1.0 = fully fresh (default). Used by _stale/ view in the vault pruner.
+        if "live_truth_score" not in existing_columns:
+            cur.execute("ALTER TABLE genes ADD COLUMN live_truth_score REAL DEFAULT 1.0")
+            log.info("Added live_truth_score column to genes table")
+            existing_columns.add("live_truth_score")
+
         cur.execute("""
         CREATE TABLE IF NOT EXISTS promoter_index (
             gene_id   TEXT,

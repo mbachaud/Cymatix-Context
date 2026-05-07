@@ -52,3 +52,18 @@ def test_upsert_stamps_last_seen(tmp_path: Path):
         )
     finally:
         g.close()
+
+
+def test_live_truth_score_column_present_with_default(tmp_path: Path):
+    """live_truth_score column must exist and default to 1.0 on new rows."""
+    from tests.conftest import make_gene
+
+    g = Genome(path=str(tmp_path / "genome.db"), synonym_map={})
+    try:
+        gid = g.upsert_gene(make_gene("hello"))
+        row = g.conn.execute(
+            "SELECT live_truth_score FROM genes WHERE gene_id = ?", (gid,)
+        ).fetchone()
+        assert row[0] == 1.0
+    finally:
+        g.close()
