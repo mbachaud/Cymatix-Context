@@ -114,7 +114,7 @@ class HelixSupervisor:
             self.python_executable,
             "-m",
             "uvicorn",
-            "helix_context.server:app",
+            "helix_context._asgi:app",
             "--host",
             self.helix_host,
             "--port",
@@ -150,7 +150,7 @@ class HelixSupervisor:
             self.store.clear_helix()
             self._owns_helix_process = False
             return False
-        expected_marker = "helix_context.server:app"
+        expected_marker = "helix_context._asgi:app"
         if not any(expected_marker in part for part in cmdline):
             log.warning(
                 "PID %d exists but command line doesn't match helix uvicorn; clearing state",
@@ -209,7 +209,7 @@ class HelixSupervisor:
 
         Uses psutil's process-wide connection table to find the listener
         on helix_host:helix_port, then walks up to the uvicorn parent
-        process whose command line matches helix_context.server:app.
+        process whose command line matches helix_context._asgi:app.
 
         Returns the uvicorn **parent** PID (the one ``subprocess.Popen``
         would hand us if we'd started helix ourselves), or None if no
@@ -251,7 +251,7 @@ class HelixSupervisor:
         except (psutil.NoSuchProcess, psutil.AccessDenied):
             return None
 
-        expected_marker = "helix_context.server:app"
+        expected_marker = "helix_context._asgi:app"
         if not any(expected_marker in part for part in listener_cmdline):
             log.debug(
                 "Orphan scan: PID %d listens on %d but is not helix (%r)",

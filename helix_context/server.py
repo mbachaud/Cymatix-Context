@@ -3255,10 +3255,14 @@ def main():
     uvicorn.run(app, host=config.server.host, port=config.server.port)
 
 
-# Module-level app for `uvicorn helix_context.server:app --reload`
-# Only create when imported by uvicorn (not when run via `python -m`)
-if __name__ != "__main__":
-    app = create_app()
+# Module-level app object is intentionally NOT created here.
+# Importing server.py must not open a database connection — doing so breaks
+# pytest collection in any environment where the genome path doesn't exist
+# (e.g. git worktrees, fresh clones, CI without a test genome).
+#
+# For uvicorn, use the dedicated entry point instead:
+#   uvicorn helix_context._asgi:app
+# See helix_context/_asgi.py.
 
 if __name__ == "__main__":
     main()
