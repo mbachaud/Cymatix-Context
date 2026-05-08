@@ -1692,9 +1692,9 @@ class Genome:
         bm25_terms = [t for t in query_terms if len(t) > 2]
         if not bm25_terms:
             return None
+        cur = self.read_conn.cursor()
         try:
-            bm25_match = " OR ".join(f'"{t}"' for t in bm25_terms)
-            cur = self.read_conn.cursor()
+            bm25_match = " OR ".join(f'"{t.replace(chr(34), chr(34)*2)}"' for t in bm25_terms)
             rows = cur.execute(
                 "SELECT gene_id FROM genes_fts WHERE genes_fts MATCH ? ORDER BY rank LIMIT ?",
                 (bm25_match, size),
@@ -1705,6 +1705,8 @@ class Genome:
         except Exception:
             log.warning("BM25 pre-filter failed — falling back to full corpus", exc_info=True)
             return None
+        finally:
+            cur.close()
 
     def query_genes(
         self,
@@ -1762,10 +1764,11 @@ class Genome:
         _prefilter_bare_clause = ""      # for Tier 3/3.5 without alias
         _prefilter_params: list = []
         if _prefilter_set is not None:
-            ph = ",".join("?" * len(_prefilter_set))
+            _prefilter_ids = list(_prefilter_set)[:998]  # SQLite variable limit is 999
+            ph = ",".join("?" * len(_prefilter_ids))
             _prefilter_aliased_clause = f" AND g.gene_id IN ({ph})"
             _prefilter_bare_clause = f" AND gene_id IN ({ph})"
-            _prefilter_params = list(_prefilter_set)
+            _prefilter_params = _prefilter_ids
 
         # Gene scores: gene_id → float (accumulated across tiers)
         gene_scores: Dict[str, float] = {}
