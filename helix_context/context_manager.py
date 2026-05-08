@@ -1631,6 +1631,22 @@ class HelixContextManager:
             return self._decompose_cache[query]
 
         if not getattr(getattr(self.config, "ribosome", None), "query_decomposition_enabled", False):
+            # Try LLM-free template routing based on query intent heuristic
+            try:
+                from .intent_router import sub_queries_for
+                from .tagger import CpuTagger
+                from .schemas import IntentClass
+                _tagger = CpuTagger.__new__(CpuTagger)
+                guessed_class = _tagger._classify_intent(query)
+                if guessed_class != IntentClass.UNKNOWN:
+                    sub_qs = sub_queries_for(query, guessed_class)
+                    if len(sub_qs) > 1:
+                        if len(self._decompose_cache) > 256:
+                            self._decompose_cache.clear()
+                        self._decompose_cache[query] = sub_qs
+                        return sub_qs
+            except Exception:
+                pass
             self._decompose_cache[query] = [query]
             return [query]
 

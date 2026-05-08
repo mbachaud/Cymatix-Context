@@ -61,10 +61,15 @@ def test_merge_subquery_candidates_deduplicates():
 
 
 def test_decompose_disabled_returns_original(ctx_manager):
-    """When query_decomposition_enabled=False, _decompose_query returns [original_query]."""
+    """When query_decomposition_enabled=False and intent is UNKNOWN, returns [original_query].
+
+    Step 3B added LLM-free heuristic routing for recognized intent classes;
+    for queries that classify as UNKNOWN the passthrough is still the same.
+    """
     ctx_manager.config.ribosome.query_decomposition_enabled = False
-    result = ctx_manager._decompose_query("how does the density gate work")
-    assert result == ["how does the density gate work"]
+    # Use a query whose intent_class classifies as UNKNOWN (no matching heuristic keyword)
+    result = ctx_manager._decompose_query("xyzzy frob quux blorp")
+    assert result == ["xyzzy frob quux blorp"]
 
 
 def test_decompose_is_cached(ctx_manager):
