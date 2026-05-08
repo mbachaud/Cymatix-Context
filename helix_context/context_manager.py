@@ -323,6 +323,7 @@ class HelixContextManager:
             bm25_shortlist_size=config.retrieval.bm25_shortlist_size,
             bm25_prefilter_enabled=config.retrieval.bm25_prefilter_enabled,
             bm25_prefilter_size=config.retrieval.bm25_prefilter_size,
+            entity_graph_retrieval_enabled=config.retrieval.entity_graph_retrieval_enabled,
         )
 
         # Replication manager (distributed genome clones)
@@ -1764,6 +1765,7 @@ class HelixContextManager:
                 party_id=party_id,
                 use_harmonic=use_harmonic,
                 use_sr=use_sr,
+                use_entity_graph=self.genome._entity_graph_retrieval_enabled,
                 read_only=read_only,
             )
         except PromoterMismatch:

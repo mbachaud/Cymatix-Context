@@ -60,9 +60,10 @@
      attribution     gene_attr  live rows  party gate   scoring bonus
                      +registry  + /ingest   + citations still pending
 
- D8  Co-activation   [████]    [████]     [▓▓▓░]       [░░░░]
+ D8  Co-activation   [████]    [████]     [████]       [░░░░]
      graph           entity_    entity_gr  harmonic +   SR/entity
-                     graph +    + 227k     ray-trace    graph bench
+                     graph +    + 227k     ray-trace +  graph bench
+                                           entity graph
                      harmonic   links      live; SR off pending
 
 
@@ -175,7 +176,7 @@ Current live wiring:
 
 Still partial:
 
-- `entity_graph` is populated but not a first-class read path in retrieval fusion
+- `entity_graph` is now a first-class retrieval signal (Tier 5b, Step 3C, 2026-05-08); dark-shipped (`entity_graph_retrieval_enabled = false`) pending bench gate
 - SR (`sr_boost`) exists under D8; `sr_enabled = true` in helix.toml (flip 2026-04-22) but gate bench (2026-05-08) found no recall gain at N=50 — leaving enabled pending higher-N validation
 - seeded edges exist but are dark-shipped by default
 

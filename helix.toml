@@ -243,6 +243,10 @@ bm25_shortlist_size = 50
 # Enable for A/B against bm25_shortlist. Disable shortlist when using this.
 bm25_prefilter_enabled = false
 bm25_prefilter_size = 200
+# Tier 5b: entity graph co-occurrence boost (Step 3C, 2026-05-08).
+# Genes sharing entity nodes with query terms get a small score boost.
+# Dark ship — flip to true for A/B once D8 bench is ready.
+entity_graph_retrieval_enabled = false
 
 [plr]
 # Stacked PLR query-confidence head (STATISTICAL_FUSION.md §C3).

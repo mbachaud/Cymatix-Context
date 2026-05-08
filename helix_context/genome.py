@@ -330,6 +330,7 @@ class Genome:
         bm25_shortlist_size: int = 50,
         bm25_prefilter_enabled: bool = False,
         bm25_prefilter_size: int = 200,
+        entity_graph_retrieval_enabled: bool = False,
         main_conn: Optional[sqlite3.Connection] = None,
         shard_name: str = "main",
     ):
@@ -339,6 +340,10 @@ class Genome:
         self._replication_mgr = None  # Set by set_replication_manager()
         self._splade_enabled = splade_enabled
         self._entity_graph_enabled = entity_graph
+        # Tier 5b: entity graph retrieval boost (Step 3C, 2026-05-08).
+        # Separate from _entity_graph_enabled (write-side) — this controls
+        # whether entity_graph rows are consulted during query_genes().
+        self._entity_graph_retrieval_enabled: bool = bool(entity_graph_retrieval_enabled)
         # Tier 5.5 Successor Representation (Sprint 2, Stachenfeld 2017).
         self._sr_enabled = sr_enabled
         self._sr_gamma = sr_gamma
@@ -1716,6 +1721,7 @@ class Genome:
         party_id: Optional[str] = None,
         use_harmonic: bool = True,
         use_sr: Optional[bool] = None,
+        use_entity_graph: Optional[bool] = None,
         read_only: bool = False,
     ) -> List[Gene]:
         """
@@ -2257,6 +2263,33 @@ class Genome:
                     tier_contrib.setdefault(gid, {})["sr"] = bonus
             except Exception:
                 log.debug("SR Tier 5.5 failed", exc_info=True)
+
+        # ── Tier 5b: entity graph co-occurrence boost ─────────────────────
+        # Genes sharing entity nodes with query entities get a score boost.
+        # Additive on top of Tier 5 harmonic; capped at +2.0 per gene.
+        # entity_graph schema: entity (TEXT), gene_id (TEXT) — no weight col.
+        _eg_enabled = self._entity_graph_retrieval_enabled if use_entity_graph is None else bool(use_entity_graph)
+        if _eg_enabled and entities and gene_scores:
+            try:
+                _eg_t0 = time.monotonic()
+                eq_ph = ",".join("?" * len(entities))
+                eg_rows = cur.execute(
+                    f"SELECT gene_id FROM entity_graph "
+                    f"WHERE entity IN ({eq_ph})",
+                    entities,
+                ).fetchall()
+                for row in eg_rows:
+                    gid = row["gene_id"]
+                    if gid in gene_scores:
+                        bonus = min(1.0 * 0.5, 2.0)  # weight=1.0, cap 2.0
+                        gene_scores[gid] += bonus
+                        tier_contrib.setdefault(gid, {})["entity_graph"] = (
+                            tier_contrib.get(gid, {}).get("entity_graph", 0.0) + bonus
+                        )
+                log.debug("tier 5b entity_graph: %d hits, %.1fms",
+                          len(eg_rows), (time.monotonic() - _eg_t0) * 1000)
+            except Exception:
+                log.warning("entity_graph tier 5b failed", exc_info=True)
 
         # ── Party attribution bonus (+0.5) ────────────────────────
         if party_id is not None and _party_filter and gene_scores:
