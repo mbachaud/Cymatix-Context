@@ -837,21 +837,26 @@ class HelixContextManager:
             else:
                 import concurrent.futures
 
-                def _run_sub(sq: str) -> list:
+                def _run_sub(sq: str):
                     eq, d, e = self._prepare_query_signals(sq, session_context)
-                    return self._express(
+                    genes = self._express(
                         d, e, max_genes,
                         query_text=sq, include_cold=include_cold,
                         party_id=party_id, read_only=read_only,
                     )
+                    scores = dict(self.genome.last_query_scores or {})  # snapshot immediately
+                    return genes, scores
 
                 with concurrent.futures.ThreadPoolExecutor(
                     max_workers=len(_sub_queries)
                 ) as pool:
-                    sub_results = list(pool.map(_run_sub, _sub_queries))
+                    pairs = list(pool.map(_run_sub, _sub_queries))
+
+                sub_results = [genes for genes, _ in pairs]
                 base_scores: dict = {}
-                for sr in sub_results:
-                    base_scores.update(self.genome.last_query_scores or {})
+                for _, scores in pairs:
+                    base_scores.update(scores)
+
                 candidates = _merge_subquery_candidates(sub_results, base_scores)
                 candidates = candidates[: max_genes * 2]
 
