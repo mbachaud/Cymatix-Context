@@ -2505,6 +2505,10 @@ class Genome:
         min_genes: int | None = None,
         domains: list[str] | None = None,
         entities: list[str] | None = None,
+        party_id: Optional[str] = None,
+        use_harmonic: bool = True,
+        use_sr: Optional[bool] = None,
+        use_entity_graph: Optional[bool] = None,
     ) -> List[Gene]:
         """Threshold-based ANN retrieval using BGE-M3 dense vectors.
 
@@ -2522,7 +2526,15 @@ class Genome:
         domains = domains or []
         entities = entities or []
 
-        candidates = self.query_genes(domains, entities, max_genes=max_genes)
+        candidates = self.query_genes(
+            domains,
+            entities,
+            max_genes=max_genes,
+            party_id=party_id,
+            use_harmonic=use_harmonic,
+            use_sr=use_sr,
+            use_entity_graph=use_entity_graph,
+        )
         if not candidates or not self._dense_embedding_enabled:
             return candidates
 

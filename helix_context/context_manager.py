@@ -1770,6 +1770,11 @@ class HelixContextManager:
                     query=query_text,
                     domains=domains,
                     entities=entities,
+                    max_genes=max_genes,
+                    party_id=party_id,
+                    use_harmonic=use_harmonic,
+                    use_sr=use_sr,
+                    use_entity_graph=self.genome._entity_graph_retrieval_enabled,
                 )
             else:
                 candidates = self.genome.query_genes(
