@@ -41,6 +41,9 @@ benchmarks/*.monitor.jsonl
 benchmarks/*.log
 benchmarks/*.stdout.log
 
+# IDE workspace state
+.obsidian/
+
 # Visual companion / brainstorming sessions (Claude Code superpowers plugin)
 .superpowers/
 
