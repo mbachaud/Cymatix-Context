@@ -40,6 +40,16 @@ benchmarks/*.monitor.jsonl
 # Benchmark stdout captures and runtime logs (ephemeral; archive selectively if needed)
 benchmarks/*.log
 benchmarks/*.stdout.log
+
+# Visual companion / brainstorming sessions (Claude Code superpowers plugin)
+.superpowers/
+
+# Benchmark logs directory and large result outputs
+benchmarks/logs/
+benchmarks/results/*.json
+
+# Dev scripts not part of the project
+foveated_smoke_*.sh
 # Local benchmark scratch and explicit error outputs
 benchmarks/_fingerprint_*.json
 benchmarks/docs_tidy_diff.md
