@@ -331,6 +331,11 @@ class Genome:
         bm25_prefilter_enabled: bool = False,
         bm25_prefilter_size: int = 200,
         entity_graph_retrieval_enabled: bool = False,
+        dense_embedding_enabled: bool = False,
+        dense_embedding_dim: int = 256,
+        ann_similarity_threshold: float = 0.35,
+        ann_threshold_min_genes: int = 1,
+        ann_threshold_max_genes: int = 12,
         main_conn: Optional[sqlite3.Connection] = None,
         shard_name: str = "main",
     ):
@@ -359,6 +364,13 @@ class Genome:
         self._bm25_shortlist_size = int(bm25_shortlist_size) if bm25_shortlist_size else 50
         self._bm25_prefilter_enabled = bool(bm25_prefilter_enabled)
         self._bm25_prefilter_size = int(bm25_prefilter_size)
+        # Step 4 — BGE-M3 dense vectors + ANN threshold (2026-05-08).
+        self._dense_embedding_enabled: bool = bool(dense_embedding_enabled)
+        self._dense_embedding_dim: int = int(dense_embedding_dim)
+        self._ann_threshold: float = float(ann_similarity_threshold)
+        self._ann_min_genes: int = int(ann_threshold_min_genes)
+        self._ann_max_genes: int = int(ann_threshold_max_genes)
+        self._dense_codec: "BGEM3Codec | None" = None  # lazy-loaded
         # Phase 2 claims layer (2026-04-19). Optional hook — when a main.db
         # connection is supplied, upsert_gene emits literal claims into it
         # after each ingest. None = no auto-hook, preserving legacy behavior.
@@ -457,7 +469,8 @@ class Genome:
             last_verified_at REAL,
             version      INTEGER,
             supersedes   TEXT,
-            key_values   TEXT     -- JSON list[str] | NULL
+            key_values   TEXT,    -- JSON list[str] | NULL
+            embedding_dense TEXT  -- JSON list[float] | NULL (BGE-M3, Step 4)
         )
         """)
 
@@ -482,6 +495,7 @@ class Genome:
             ("authority_class", "TEXT"),
             ("support_span", "TEXT"),
             ("last_verified_at", "REAL"),
+            ("embedding_dense", "TEXT"),  # BGE-M3 dense vector (Step 4, 2026-05-08)
         ):
             if column_name not in existing_columns:
                 cur.execute(f"ALTER TABLE genes ADD COLUMN {column_name} {column_def}")
@@ -2473,6 +2487,80 @@ class Genome:
                 result.append(g)
 
         return result[:limit]
+
+    # ── BGE-M3 dense retrieval (Step 4, 2026-05-08) ─────────────────
+
+    def _get_dense_codec(self):
+        """Lazy-load the BGE-M3 codec on first use."""
+        if self._dense_codec is None:
+            from .bgem3_codec import BGEM3Codec
+            self._dense_codec = BGEM3Codec(dim=self._dense_embedding_dim)
+        return self._dense_codec
+
+    def query_genes_ann(
+        self,
+        query: str,
+        threshold: float | None = None,
+        max_genes: int | None = None,
+        min_genes: int | None = None,
+        domains: list[str] | None = None,
+        entities: list[str] | None = None,
+    ) -> List[Gene]:
+        """Threshold-based ANN retrieval using BGE-M3 dense vectors.
+
+        1. Run standard query_genes() to get candidate pool.
+        2. Embed the query (BGE-M3 query task).
+        3. Load embedding_dense for each candidate.
+        4. Sort by cosine similarity.
+        5. Include candidates until similarity drops below threshold.
+           Un-embedded genes (backfill incomplete) get sim=threshold-0.01
+           so they can still satisfy min_genes but don't crowd out embedded ones.
+        """
+        threshold = threshold if threshold is not None else self._ann_threshold
+        max_genes = max_genes if max_genes is not None else self._ann_max_genes
+        min_genes = min_genes if min_genes is not None else self._ann_min_genes
+        domains = domains or []
+        entities = entities or []
+
+        candidates = self.query_genes(domains, entities, max_genes=max_genes)
+        if not candidates or not self._dense_embedding_enabled:
+            return candidates
+
+        codec = self._get_dense_codec()
+        query_vec = codec.encode(query, task="query")
+
+        gene_ids = [g.gene_id for g in candidates]
+        ph = ",".join("?" * len(gene_ids))
+        rows = self.read_conn.cursor().execute(
+            f"SELECT gene_id, embedding_dense FROM genes WHERE gene_id IN ({ph})",
+            gene_ids,
+        ).fetchall()
+        dense_map: dict[str, list[float]] = {}
+        for r in rows:
+            if r["embedding_dense"]:
+                import json as _json
+                try:
+                    dense_map[r["gene_id"]] = _json.loads(r["embedding_dense"])
+                except Exception:
+                    pass
+
+        scored: list[tuple[Gene, float]] = []
+        for gene in candidates:
+            vec = dense_map.get(gene.gene_id)
+            if vec is not None:
+                sim = codec.similarity(query_vec, vec)
+            else:
+                sim = threshold - 0.01
+            scored.append((gene, sim))
+        scored.sort(key=lambda x: x[1], reverse=True)
+
+        result: List[Gene] = []
+        for gene, sim in scored:
+            if sim >= threshold or len(result) < min_genes:
+                result.append(gene)
+            else:
+                break
+        return result[:max_genes]
 
     # ── Entity graph: auto-link genes sharing entities ───────────────
 

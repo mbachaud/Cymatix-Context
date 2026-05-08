@@ -247,6 +247,12 @@ bm25_prefilter_size = 200
 # Genes sharing entity nodes with query terms get a small score boost.
 # Dark ship — flip to true for A/B once D8 bench is ready.
 entity_graph_retrieval_enabled = false
+# BGE-M3 dense vectors + ANN threshold (Step 4, 2026-05-08). Dark ship.
+dense_embedding_enabled = false
+dense_embedding_dim = 256
+ann_similarity_threshold = 0.35
+ann_threshold_min_genes = 1
+ann_threshold_max_genes = 12
 
 [plr]
 # Stacked PLR query-confidence head (STATISTICAL_FUSION.md §C3).

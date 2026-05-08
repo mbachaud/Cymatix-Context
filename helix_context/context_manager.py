@@ -324,6 +324,11 @@ class HelixContextManager:
             bm25_prefilter_enabled=config.retrieval.bm25_prefilter_enabled,
             bm25_prefilter_size=config.retrieval.bm25_prefilter_size,
             entity_graph_retrieval_enabled=config.retrieval.entity_graph_retrieval_enabled,
+            dense_embedding_enabled=config.retrieval.dense_embedding_enabled,
+            dense_embedding_dim=config.retrieval.dense_embedding_dim,
+            ann_similarity_threshold=config.retrieval.ann_similarity_threshold,
+            ann_threshold_min_genes=config.retrieval.ann_threshold_min_genes,
+            ann_threshold_max_genes=config.retrieval.ann_threshold_max_genes,
         )
 
         # Replication manager (distributed genome clones)
@@ -1758,16 +1763,25 @@ class HelixContextManager:
 
         # ── Hot-tier retrieval (chromatin < HETEROCHROMATIN) ────────────
         try:
-            candidates = self.genome.query_genes(
-                domains,
-                entities,
-                max_genes=max_genes,
-                party_id=party_id,
-                use_harmonic=use_harmonic,
-                use_sr=use_sr,
-                use_entity_graph=self.genome._entity_graph_retrieval_enabled,
-                read_only=read_only,
-            )
+            if self.genome._dense_embedding_enabled and query_text:
+                # Step 4: ANN threshold path — uses BGE-M3 dense vectors to
+                # dynamically gate the candidate count by similarity threshold.
+                candidates = self.genome.query_genes_ann(
+                    query=query_text,
+                    domains=domains,
+                    entities=entities,
+                )
+            else:
+                candidates = self.genome.query_genes(
+                    domains,
+                    entities,
+                    max_genes=max_genes,
+                    party_id=party_id,
+                    use_harmonic=use_harmonic,
+                    use_sr=use_sr,
+                    use_entity_graph=self.genome._entity_graph_retrieval_enabled,
+                    read_only=read_only,
+                )
         except PromoterMismatch:
             pass
 

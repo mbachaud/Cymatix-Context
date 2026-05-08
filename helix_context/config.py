@@ -269,6 +269,13 @@ class RetrievalConfig:
     # Genes sharing entity nodes with query terms get a score boost proportional
     # to entity overlap. Dark ship — flip to true for A/B.
     entity_graph_retrieval_enabled: bool = False
+    # Step 4 — BGE-M3 dense vectors + ANN threshold-based dynamic gene counts
+    # (2026-05-08). Dark ship — all flags off by default.
+    dense_embedding_enabled: bool = False
+    dense_embedding_dim: int = 256
+    ann_similarity_threshold: float = 0.35
+    ann_threshold_min_genes: int = 1
+    ann_threshold_max_genes: int = 12
 
 
 @dataclass
@@ -551,6 +558,11 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             bm25_prefilter_enabled=bool(r.get("bm25_prefilter_enabled", cfg.retrieval.bm25_prefilter_enabled)),
             bm25_prefilter_size=int(r.get("bm25_prefilter_size", cfg.retrieval.bm25_prefilter_size)),
             entity_graph_retrieval_enabled=bool(r.get("entity_graph_retrieval_enabled", cfg.retrieval.entity_graph_retrieval_enabled)),
+            dense_embedding_enabled=bool(r.get("dense_embedding_enabled", cfg.retrieval.dense_embedding_enabled)),
+            dense_embedding_dim=int(r.get("dense_embedding_dim", cfg.retrieval.dense_embedding_dim)),
+            ann_similarity_threshold=float(r.get("ann_similarity_threshold", cfg.retrieval.ann_similarity_threshold)),
+            ann_threshold_min_genes=int(r.get("ann_threshold_min_genes", cfg.retrieval.ann_threshold_min_genes)),
+            ann_threshold_max_genes=int(r.get("ann_threshold_max_genes", cfg.retrieval.ann_threshold_max_genes)),
         )
 
     # Session (CWoLa session/party fallback — 2026-04-13 fix for always-A bucket bug)
