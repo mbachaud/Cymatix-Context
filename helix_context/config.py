@@ -46,6 +46,10 @@ class RibosomeConfig:
     # run on raw query text + synonym map. See context_manager
     # _expand_query_intent.
     query_expansion_enabled: bool = True
+    # Step 2 sub-query decomposition: decomposes broad queries into 2-4
+    # point-fact sub-queries via one LLM call. Only fires for multi_hop/default
+    # classifier classes. Dark-shipped (default off).
+    query_decomposition_enabled: bool = False
 
     # ── Cost classification (W2-B) ─────────────────────────────────
     # Derived classification of the chosen backend's cost profile. Used
@@ -417,6 +421,7 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             nli_splice_penalty=float(r.get("nli_splice_penalty", cfg.ribosome.nli_splice_penalty)),
             device=r.get("device", cfg.ribosome.device),
             query_expansion_enabled=bool(r.get("query_expansion_enabled", cfg.ribosome.query_expansion_enabled)),
+            query_decomposition_enabled=bool(r.get("query_decomposition_enabled", cfg.ribosome.query_decomposition_enabled)),
         )
 
     # Budget

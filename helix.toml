@@ -26,6 +26,9 @@ timeout = 120                            # Increased for bulk ingestion
 keep_alive = "30m"                      # keep Ollama model loaded
 warmup = false                          # pre-load Ollama model on server start (disabled for N=1000 bench — qwen3:4b holds VRAM)
 query_expansion_enabled = false         # Step 0 LLM query-intent expansion. false = strictly LLM-free /context (the 12 retrieval tiers never need this). Flip on for an extra 2-3pp on ambiguous queries at the cost of one ribosome call per request.
+# Sub-query decomposition — decomposes broad queries into 3 point-fact sub-queries.
+# Only fires for multi_hop/default classifier class. Requires query_expansion_enabled = true.
+query_decomposition_enabled = false
 
 # Cloud-backend opt-in — keep commented so local stays default.
 # Useful for partner/vendor eval (Anthropic, Google, etc.) plugging a
