@@ -595,7 +595,7 @@ class CpuTagger:
         from .schemas import IntentClass
         import re
         t = text.lower()
-        if re.search(r'\b\w+\s*[=:]\s*[\w\d.]+', text) or any(
+        if re.search(r'\b\w+\s*[=:]\s*(true|false|\d[\d.]*|"[^"]*")', text, re.IGNORECASE) or any(
             kw in t for kw in ("threshold", "timeout", "limit", "enabled", "config", "setting", "flag", "default")
         ):
             return IntentClass.CONFIG_KNOB
@@ -609,6 +609,8 @@ class CpuTagger:
             return IntentClass.MECHANISM
         if re.search(r'\b\d+\b', text) and any(kw in t for kw in (" is ", " are ", " has ", "= ")):
             return IntentClass.FACT
+        if any(kw in t for kw in ("depends on", "calls ", "implements", "inherits", "extends", "wraps", "delegates to")):
+            return IntentClass.RELATIONSHIP
         return IntentClass.UNKNOWN
 
     # ── Summary extraction ────────────────────────────────────────
