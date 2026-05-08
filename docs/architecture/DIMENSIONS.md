@@ -176,8 +176,26 @@ Current live wiring:
 Still partial:
 
 - `entity_graph` is populated but not a first-class read path in retrieval fusion
-- SR (`sr_boost`) exists under D8 but is dark-shipped by default
+- SR (`sr_boost`) exists under D8; `sr_enabled = true` in helix.toml (flip 2026-04-22) but gate bench (2026-05-08) found no recall gain at N=50 — leaving enabled pending higher-N validation
 - seeded edges exist but are dark-shipped by default
+
+**SR Gate Bench Result (2026-05-08, N=50, SEED=42, gemma4:e4b, same-genome A/B):**
+
+| Axis | Axes | SR-OFF retrieval | SR-ON retrieval | Delta |
+|---|---|---|---|---|
+| 1 | key | 10.0% | 10.0% | +0.0pp |
+| 2 | key+project | 10.0% | 8.0% | -2.0pp |
+| 3 | key+project+module | 14.0% | 14.0% | +0.0pp |
+| 4 | key+project+module+filename | 32.0% | 32.0% | +0.0pp |
+
+Gate criterion: ≥2pp gain on any axis without regression on others.
+Result: **GATE NOT MET.** No retrieval_pct gain on any axis. Axis-2 shows -2pp regression
+(within N=50 noise floor of ±1 needle). SR's in_context_pct shows marginal +2pp on axes 2-3
+but this does not clear the gate on the primary recall@1 metric.
+
+SR remains enabled in helix.toml (flip 2026-04-22 was signal-positive in earlier sweep) and
+does not harm latency. Recommend re-gate at N=200+ or with a larger genome snapshot before
+deciding to disable or promote SR to a required-on tier.
 
 ### D9 — Temporal Context Model (built, lightly wired)
 
