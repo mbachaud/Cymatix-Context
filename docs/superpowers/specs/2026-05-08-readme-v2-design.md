@@ -67,14 +67,19 @@ Token savings table — 6 rows covering the full savings range (2.7×–28.7×):
 | "How does the density gate work?" | conceptual system | 2,971 | 8,000 | **2.7×** |
 
 *RAG baseline: top-5 chunks × 1,500 tokens + 500 overhead = 8,000 tokens/query
-(Pinecone/LangChain defaults). Results from `benchmarks/bench_rag_vs_sike_tokens.py`,
-N=15, seed=42.*
+(Pinecone/LangChain defaults). Source file:
+`benchmarks/results/overnight_e4b_2026-05-08_0012/rag_vs_sike_n200_2026-05-08_0012.json`,
+N=15. Median SIKE = 1,493 tokens (5.4× savings).*
 
 GPQA accuracy mini-stats row (inline, not a full table):
 
 ```
 GPQA diamond · gemma4:e4b · N=100:  OFF 22%  →  ON 26%  (+4 pp)
 ```
+
+*Source: `benchmarks/results/overnight_e4b_2026-05-08_0012/gpqa_{on,off}_diamond_e4b_n100_2026-05-08_0012.json`.
+Note: an earlier bench run (2026-05-01, N=198) showed a larger delta on different
+genome state. The 2026-05-08 N=100 result is the one cited here.*
 
 ### §3 Pipeline diagram + terminal recording
 
@@ -178,8 +183,9 @@ path = "genomes/main/genome.db"   # relative to helix run directory
 ```
 
 **Multiple projects** — one helix instance per genome. Each reads its
-own `helix.toml`. Use `helix-hgt` (Horizontal Gene Transfer) to share
-genes across instances.
+own `helix.toml`. Use the HGT Python API (`helix_context.hgt`) to
+export/import genes across instances. No dedicated CLI entry point yet;
+HGT is a library-level operation.
 
 **Backup** — WAL mode means the .db file is safe to copy while helix
 is running:
@@ -200,7 +206,7 @@ register S3 or git backends as needed:
 ```python
 from helix_context.adapters.dal import DAL
 dal = DAL()
-dal.register_scheme("s3", my_s3_fetcher)
+dal.register("s3", my_s3_fetcher)
 text, meta = dal.fetch("s3://bucket/schema.json")
 ```
 
@@ -280,7 +286,7 @@ Create two files:
 ## Section 3 — .gitignore additions
 
 ```gitignore
-# Visual companion / brainstorming sessions
+# Visual companion / brainstorming sessions (Claude Code superpowers plugin)
 .superpowers/
 
 # Benchmark logs and large result outputs
