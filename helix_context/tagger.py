@@ -250,6 +250,7 @@ class CpuTagger:
 
         # 6. Generate intent (first sentence heuristic)
         intent = self._extract_intent(doc, content, content_type)
+        intent_class = self._classify_intent(intent)
 
         # 7. Generate summary
         summary = self._extract_summary(doc, content)
@@ -265,6 +266,7 @@ class CpuTagger:
                 domains=domains[:10],
                 entities=entities[:15],
                 intent=intent,
+                intent_class=intent_class,
                 summary=summary,
                 sequence_index=sequence_index,
             ),
@@ -585,6 +587,31 @@ class CpuTagger:
                 return first[:200]
 
         return content[:100].strip()
+
+    # ── Intent classification ─────────────────────────────────────
+
+    def _classify_intent(self, text: str) -> "IntentClass":
+        """Classify intent text into the IntentClass taxonomy. Pure heuristic, no model."""
+        from .schemas import IntentClass
+        import re
+        t = text.lower()
+        if re.search(r'\b\w+\s*[=:]\s*(true|false|\d[\d.]*|"[^"]*")', text, re.IGNORECASE) or any(
+            kw in t for kw in ("threshold", "timeout", "limit", "enabled", "config", "setting", "flag", "default")
+        ):
+            return IntentClass.CONFIG_KNOB
+        if re.search(r'\bcreate\s+table\b|\bschema\b|\bcolumn\b|\bindex\b', t):
+            return IntentClass.DATA_STRUCTURE
+        if any(kw in t for kw in ("when ", "if ", "trigger", "gate condition", "condition", "fires when")):
+            return IntentClass.TRIGGER_CONDITION
+        if any(kw in t for kw in ("step ", "pipeline", "then ", "followed by", "sequence")):
+            return IntentClass.PROCESS_STEP
+        if any(kw in t for kw in ("how ", "computes", "calculates", "works by", "operates")):
+            return IntentClass.MECHANISM
+        if re.search(r'\b\d+\b', text) and any(kw in t for kw in (" is ", " are ", " has ", "= ")):
+            return IntentClass.FACT
+        if any(kw in t for kw in ("depends on", "calls ", "implements", "inherits", "extends", "wraps", "delegates to")):
+            return IntentClass.RELATIONSHIP
+        return IntentClass.UNKNOWN
 
     # ── Summary extraction ────────────────────────────────────────
 

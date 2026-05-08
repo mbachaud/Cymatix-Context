@@ -220,6 +220,31 @@ def _compute_foveated_caps(
     return [max(c_min, c_max * ((i + 1) ** -alpha)) for i in range(n)]
 
 
+def _merge_subquery_candidates(
+    sub_results: list,
+    base_scores: dict,
+) -> list:
+    """Merge gene lists from multiple sub-queries.
+
+    Genes appearing in more sub-queries rank higher regardless of base score.
+    Within the same hit count, base_score is the tiebreaker.
+    Returns a deduplicated list ordered by (hit_count DESC, base_score DESC).
+    """
+    from collections import Counter
+    seen: dict = {}
+    hit_counts: Counter = Counter()
+    for sub_list in sub_results:
+        for gene in sub_list:
+            hit_counts[gene.gene_id] += 1
+            if gene.gene_id not in seen:
+                seen[gene.gene_id] = gene
+    return sorted(
+        seen.values(),
+        key=lambda g: (hit_counts[g.gene_id], base_scores.get(g.gene_id, 0.0)),
+        reverse=True,
+    )
+
+
 class HelixContextManager:
     """
     Main orchestrator. Sits between the client and the upstream LLM.
@@ -296,6 +321,14 @@ class HelixContextManager:
             filename_anchor_weight=config.retrieval.filename_anchor_weight,
             bm25_shortlist_enabled=config.retrieval.bm25_shortlist_enabled,
             bm25_shortlist_size=config.retrieval.bm25_shortlist_size,
+            bm25_prefilter_enabled=config.retrieval.bm25_prefilter_enabled,
+            bm25_prefilter_size=config.retrieval.bm25_prefilter_size,
+            entity_graph_retrieval_enabled=config.retrieval.entity_graph_retrieval_enabled,
+            dense_embedding_enabled=config.retrieval.dense_embedding_enabled,
+            dense_embedding_dim=config.retrieval.dense_embedding_dim,
+            ann_similarity_threshold=config.retrieval.ann_similarity_threshold,
+            ann_threshold_min_genes=config.retrieval.ann_threshold_min_genes,
+            ann_threshold_max_genes=config.retrieval.ann_threshold_max_genes,
         )
 
         # Replication manager (distributed genome clones)
@@ -766,24 +799,73 @@ class HelixContextManager:
             )
             max_genes = _zone_cap
 
+        # Step 0b: Sub-query decomposition for broad/multi_hop queries.
+        _use_decomposition = (
+            classifier_result is not None
+            and classifier_result.cls in ("multi_hop", "default")
+            and getattr(
+                getattr(self.config, "ribosome", None),
+                "query_decomposition_enabled", False,
+            )
+        )
+        _sub_queries: list = (
+            self._decompose_query(query) if _use_decomposition else [query]
+        )
+
         # Step 0: Query intent expansion (LLM-based, cached)
         # Restates the query with expanded keywords BEFORE promoter lookup.
         # This sharpens the initial frequency so retrieval falls into the
         # right gravity well instead of optimizing the wrong one.
         with _stage_timer("extract"):
-            expanded_query, domains, entities = self._prepare_query_signals(
-                query,
-                session_context=session_context,
-                expand_query=True,
-            )
+            if len(_sub_queries) == 1:
+                expanded_query, domains, entities = self._prepare_query_signals(
+                    _sub_queries[0],
+                    session_context=session_context,
+                    expand_query=True,
+                )
+            else:
+                # Multi-sub-query: prepare signals for the primary query as
+                # the canonical expanded_query (used downstream for logging/health).
+                expanded_query, domains, entities = self._prepare_query_signals(
+                    query,
+                    session_context=session_context,
+                    expand_query=True,
+                )
 
         # Step 2: Express (genome query + pending buffer + optional cold tier)
         with _stage_timer("express"):
-            candidates = self._express(
-                domains, entities, max_genes,
-                query_text=query, include_cold=include_cold, party_id=party_id,
-                read_only=read_only,
-            )
+            if len(_sub_queries) == 1:
+                candidates = self._express(
+                    domains, entities, max_genes,
+                    query_text=_sub_queries[0], include_cold=include_cold,
+                    party_id=party_id, read_only=read_only,
+                )
+            else:
+                import concurrent.futures
+
+                def _run_sub(sq: str):
+                    eq, d, e = self._prepare_query_signals(sq, session_context)
+                    genes = self._express(
+                        d, e, max_genes,
+                        query_text=sq, include_cold=include_cold,
+                        party_id=party_id, read_only=read_only,
+                    )
+                    with self.genome._last_query_scores_lock:
+                        scores = dict(self.genome.last_query_scores or {})
+                    return genes, scores
+
+                with concurrent.futures.ThreadPoolExecutor(
+                    max_workers=len(_sub_queries)
+                ) as pool:
+                    pairs = list(pool.map(_run_sub, _sub_queries))
+
+                sub_results = [genes for genes, _ in pairs]
+                base_scores: dict = {}
+                for _, scores in pairs:
+                    base_scores.update(scores)
+
+                candidates = _merge_subquery_candidates(sub_results, base_scores)
+                candidates = candidates[: max_genes * 2]
 
         if not candidates:
             empty_health = ContextHealth(
@@ -1544,6 +1626,70 @@ class HelixContextManager:
         self._intent_cache[query] = expanded
         return expanded
 
+    def _decompose_query(self, query: str) -> list:
+        """Decompose a broad query into 2-4 point-fact sub-queries via one LLM call.
+
+        Returns [query] unchanged when disabled, no backend available, or on any failure.
+        LRU-cached at 256 entries.
+        """
+        if not hasattr(self, "_decompose_cache"):
+            self._decompose_cache: dict = {}
+        if query in self._decompose_cache:
+            return self._decompose_cache[query]
+
+        if not getattr(getattr(self.config, "ribosome", None), "query_decomposition_enabled", False):
+            # Try LLM-free template routing based on query intent heuristic
+            try:
+                from .intent_router import sub_queries_for
+                from .tagger import CpuTagger
+                from .schemas import IntentClass
+                _tagger = CpuTagger.__new__(CpuTagger)
+                guessed_class = _tagger._classify_intent(query)
+                if guessed_class != IntentClass.UNKNOWN:
+                    sub_qs = sub_queries_for(query, guessed_class)
+                    if len(sub_qs) > 1:
+                        if len(self._decompose_cache) > 256:
+                            self._decompose_cache.clear()
+                        self._decompose_cache[query] = sub_qs
+                        return sub_qs
+            except Exception:
+                pass
+            self._decompose_cache[query] = [query]
+            return [query]
+
+        if not hasattr(self.ribosome, "backend") or getattr(
+            self.ribosome.backend, "is_disabled_backend", False
+        ):
+            self._decompose_cache[query] = [query]
+            return [query]
+
+        system = (
+            "You are a retrieval query decomposer. Given a broad question, output "
+            "2 to 4 SHORT, SPECIFIC sub-questions that together answer it. Each "
+            "sub-question must be answerable from a single fact or rule. "
+            "Format: one sub-question per line, numbered. No prose, no headings."
+        )
+        prompt = f"Broad question: {query}\n\nSub-questions:"
+
+        try:
+            import re as _re
+            raw = self.ribosome.backend.complete(prompt, system=system, temperature=0.0)
+            sub_qs = [
+                _re.sub(r"^\d+\.\s*", "", line).strip()
+                for line in raw.strip().splitlines()
+                if _re.match(r"^\d+\.", line.strip()) and len(line.strip()) > 10
+            ]
+            if not 2 <= len(sub_qs) <= 4:
+                sub_qs = [query]
+        except Exception:
+            log.debug("Query decomposition failed, using raw query", exc_info=True)
+            sub_qs = [query]
+
+        if len(self._decompose_cache) > 256:
+            self._decompose_cache.clear()
+        self._decompose_cache[query] = sub_qs
+        return sub_qs
+
     def _prepare_query_signals(
         self,
         query: str,
@@ -1618,15 +1764,31 @@ class HelixContextManager:
 
         # ── Hot-tier retrieval (chromatin < HETEROCHROMATIN) ────────────
         try:
-            candidates = self.genome.query_genes(
-                domains,
-                entities,
-                max_genes=max_genes,
-                party_id=party_id,
-                use_harmonic=use_harmonic,
-                use_sr=use_sr,
-                read_only=read_only,
-            )
+            if self.genome._dense_embedding_enabled and query_text:
+                # Step 4: ANN threshold path — uses BGE-M3 dense vectors to
+                # dynamically gate the candidate count by similarity threshold.
+                candidates = self.genome.query_genes_ann(
+                    query=query_text,
+                    domains=domains,
+                    entities=entities,
+                    max_genes=max_genes,
+                    party_id=party_id,
+                    use_harmonic=use_harmonic,
+                    use_sr=use_sr,
+                    use_entity_graph=self.genome._entity_graph_retrieval_enabled,
+                    read_only=read_only,
+                )
+            else:
+                candidates = self.genome.query_genes(
+                    domains,
+                    entities,
+                    max_genes=max_genes,
+                    party_id=party_id,
+                    use_harmonic=use_harmonic,
+                    use_sr=use_sr,
+                    use_entity_graph=self.genome._entity_graph_retrieval_enabled,
+                    read_only=read_only,
+                )
         except PromoterMismatch:
             pass
 

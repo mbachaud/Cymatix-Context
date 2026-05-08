@@ -42,11 +42,28 @@ class ChromatinState(IntEnum):
     HETEROCHROMATIN = 2 # Compacted, stale — excluded from queries
 
 
+class IntentClass(str, Enum):
+    """Structured intent taxonomy for sub-query routing (D8 completion, Step 3B).
+
+    Assigned at ingest by GeneTagExtractor._classify_intent().
+    Used by intent_router.py for LLM-free sub-query decomposition.
+    """
+    UNKNOWN = "unknown"
+    MECHANISM = "mechanism"
+    CONFIG_KNOB = "config_knob"
+    DATA_STRUCTURE = "data_structure"
+    PROCESS_STEP = "process_step"
+    TRIGGER_CONDITION = "trigger_condition"
+    FACT = "fact"
+    RELATIONSHIP = "relationship"
+
+
 class PromoterTags(BaseModel):
     """Retrieval metadata — how the genome finds this gene."""
     domains: List[str] = Field(default_factory=list)
     entities: List[str] = Field(default_factory=list)
     intent: str = ""
+    intent_class: IntentClass = IntentClass.UNKNOWN
     summary: str = ""
     sequence_index: Optional[int] = None
     metadata: dict = Field(default_factory=dict)

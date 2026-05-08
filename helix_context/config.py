@@ -46,6 +46,10 @@ class RibosomeConfig:
     # run on raw query text + synonym map. See context_manager
     # _expand_query_intent.
     query_expansion_enabled: bool = True
+    # Step 2 sub-query decomposition: decomposes broad queries into 2-4
+    # point-fact sub-queries via one LLM call. Only fires for multi_hop/default
+    # classifier classes. Dark-shipped (default off).
+    query_decomposition_enabled: bool = False
 
     # ── Cost classification (W2-B) ─────────────────────────────────
     # Derived classification of the chosen backend's cost profile. Used
@@ -259,6 +263,19 @@ class RetrievalConfig:
     # candidate-generation optimisation). Dark ship.
     bm25_shortlist_enabled: bool = False
     bm25_shortlist_size: int = 50           # BM25 top-N kept in the final ranking
+    bm25_prefilter_enabled: bool = False
+    bm25_prefilter_size: int = 200          # BM25 top-N fed into tier scoring
+    # Tier 5b: entity graph co-occurrence boost (Step 3C, 2026-05-08).
+    # Genes sharing entity nodes with query terms get a score boost proportional
+    # to entity overlap. Dark ship — flip to true for A/B.
+    entity_graph_retrieval_enabled: bool = False
+    # Step 4 — BGE-M3 dense vectors + ANN threshold-based dynamic gene counts
+    # (2026-05-08). Dark ship — all flags off by default.
+    dense_embedding_enabled: bool = False
+    dense_embedding_dim: int = 256
+    ann_similarity_threshold: float = 0.35
+    ann_threshold_min_genes: int = 1
+    ann_threshold_max_genes: int = 12
 
 
 @dataclass
@@ -443,6 +460,7 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             nli_splice_penalty=float(r.get("nli_splice_penalty", cfg.ribosome.nli_splice_penalty)),
             device=r.get("device", cfg.ribosome.device),
             query_expansion_enabled=bool(r.get("query_expansion_enabled", cfg.ribosome.query_expansion_enabled)),
+            query_decomposition_enabled=bool(r.get("query_decomposition_enabled", cfg.ribosome.query_decomposition_enabled)),
         )
 
     # Budget
@@ -565,6 +583,14 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             filename_anchor_weight=float(r.get("filename_anchor_weight", cfg.retrieval.filename_anchor_weight)),
             bm25_shortlist_enabled=bool(r.get("bm25_shortlist_enabled", cfg.retrieval.bm25_shortlist_enabled)),
             bm25_shortlist_size=int(r.get("bm25_shortlist_size", cfg.retrieval.bm25_shortlist_size)),
+            bm25_prefilter_enabled=bool(r.get("bm25_prefilter_enabled", cfg.retrieval.bm25_prefilter_enabled)),
+            bm25_prefilter_size=int(r.get("bm25_prefilter_size", cfg.retrieval.bm25_prefilter_size)),
+            entity_graph_retrieval_enabled=bool(r.get("entity_graph_retrieval_enabled", cfg.retrieval.entity_graph_retrieval_enabled)),
+            dense_embedding_enabled=bool(r.get("dense_embedding_enabled", cfg.retrieval.dense_embedding_enabled)),
+            dense_embedding_dim=int(r.get("dense_embedding_dim", cfg.retrieval.dense_embedding_dim)),
+            ann_similarity_threshold=float(r.get("ann_similarity_threshold", cfg.retrieval.ann_similarity_threshold)),
+            ann_threshold_min_genes=int(r.get("ann_threshold_min_genes", cfg.retrieval.ann_threshold_min_genes)),
+            ann_threshold_max_genes=int(r.get("ann_threshold_max_genes", cfg.retrieval.ann_threshold_max_genes)),
         )
 
     # Session (CWoLa session/party fallback — 2026-04-13 fix for always-A bucket bug)

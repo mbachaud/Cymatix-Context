@@ -21,6 +21,7 @@ import logging
 import os
 import re
 import sqlite3
+import threading
 import time
 from typing import Dict, List, Optional
 
@@ -328,6 +329,14 @@ class Genome:
         filename_anchor_weight: float = 4.0,
         bm25_shortlist_enabled: bool = False,
         bm25_shortlist_size: int = 50,
+        bm25_prefilter_enabled: bool = False,
+        bm25_prefilter_size: int = 200,
+        entity_graph_retrieval_enabled: bool = False,
+        dense_embedding_enabled: bool = False,
+        dense_embedding_dim: int = 256,
+        ann_similarity_threshold: float = 0.35,
+        ann_threshold_min_genes: int = 1,
+        ann_threshold_max_genes: int = 12,
         main_conn: Optional[sqlite3.Connection] = None,
         shard_name: str = "main",
     ):
@@ -337,6 +346,10 @@ class Genome:
         self._replication_mgr = None  # Set by set_replication_manager()
         self._splade_enabled = splade_enabled
         self._entity_graph_enabled = entity_graph
+        # Tier 5b: entity graph retrieval boost (Step 3C, 2026-05-08).
+        # Separate from _entity_graph_enabled (write-side) — this controls
+        # whether entity_graph rows are consulted during query_genes().
+        self._entity_graph_retrieval_enabled: bool = bool(entity_graph_retrieval_enabled)
         # Tier 5.5 Successor Representation (Sprint 2, Stachenfeld 2017).
         self._sr_enabled = sr_enabled
         self._sr_gamma = sr_gamma
@@ -350,6 +363,15 @@ class Genome:
         self._filename_anchor_weight = filename_anchor_weight
         self._bm25_shortlist_enabled = bool(bm25_shortlist_enabled)
         self._bm25_shortlist_size = int(bm25_shortlist_size) if bm25_shortlist_size else 50
+        self._bm25_prefilter_enabled = bool(bm25_prefilter_enabled)
+        self._bm25_prefilter_size = int(bm25_prefilter_size)
+        # Step 4 — BGE-M3 dense vectors + ANN threshold (2026-05-08).
+        self._dense_embedding_enabled: bool = bool(dense_embedding_enabled)
+        self._dense_embedding_dim: int = int(dense_embedding_dim)
+        self._ann_threshold: float = float(ann_similarity_threshold)
+        self._ann_min_genes: int = int(ann_threshold_min_genes)
+        self._ann_max_genes: int = int(ann_threshold_max_genes)
+        self._dense_codec: "BGEM3Codec | None" = None  # lazy-loaded
         # Phase 2 claims layer (2026-04-19). Optional hook — when a main.db
         # connection is supplied, upsert_gene emits literal claims into it
         # after each ingest. None = no auto-hook, preserving legacy behavior.
@@ -377,6 +399,7 @@ class Genome:
         self.conn.execute("PRAGMA journal_size_limit=67108864")  # 64 MB
         self._upsert_count = 0  # WAL checkpoint cadence counter
         self.last_query_scores: Dict[str, float] = {}  # Retrieval scores from last query
+        self._last_query_scores_lock = threading.Lock()
         # Per-tier score breakdown for the last query: {gene_id: {tier_name: score}}.
         # Populated alongside last_query_scores in query_genes(). Lets the bench /
         # profiler see which retrieval signals fired (and how strongly) for each
@@ -448,7 +471,8 @@ class Genome:
             last_verified_at REAL,
             version      INTEGER,
             supersedes   TEXT,
-            key_values   TEXT     -- JSON list[str] | NULL
+            key_values   TEXT,    -- JSON list[str] | NULL
+            embedding_dense TEXT  -- JSON list[float] | NULL (BGE-M3, Step 4)
         )
         """)
 
@@ -473,6 +497,7 @@ class Genome:
             ("authority_class", "TEXT"),
             ("support_span", "TEXT"),
             ("last_verified_at", "REAL"),
+            ("embedding_dense", "TEXT"),  # BGE-M3 dense vector (Step 4, 2026-05-08)
         ):
             if column_name not in existing_columns:
                 cur.execute(f"ALTER TABLE genes ADD COLUMN {column_name} {column_def}")
@@ -1701,6 +1726,29 @@ class Genome:
 
     # ── Core retrieval (Step 2) — hybrid promoter + FTS5 ────────────
 
+    def _bm25_candidate_set(self, query_terms: list[str], size: int) -> set[str] | None:
+        """Return FTS5 BM25 top-N gene_ids, or None if FTS unavailable/empty. Soft-fails to None."""
+        if not self._fts_available:
+            return None
+        bm25_terms = [t for t in query_terms if len(t) > 2]
+        if not bm25_terms:
+            return None
+        cur = self.read_conn.cursor()
+        try:
+            bm25_match = " OR ".join(f'"{t.replace(chr(34), chr(34)*2)}"' for t in bm25_terms)
+            rows = cur.execute(
+                "SELECT gene_id FROM genes_fts WHERE genes_fts MATCH ? ORDER BY rank LIMIT ?",
+                (bm25_match, size),
+            ).fetchall()
+            if not rows:
+                return None
+            return {r["gene_id"] for r in rows}
+        except Exception:
+            log.warning("BM25 pre-filter failed — falling back to full corpus", exc_info=True)
+            return None
+        finally:
+            cur.close()
+
     def query_genes(
         self,
         domains: List[str],
@@ -1709,6 +1757,7 @@ class Genome:
         party_id: Optional[str] = None,
         use_harmonic: bool = True,
         use_sr: Optional[bool] = None,
+        use_entity_graph: Optional[bool] = None,
         read_only: bool = False,
     ) -> List[Gene]:
         """
@@ -1745,6 +1794,23 @@ class Genome:
         self._refresh_snapshot()  # See latest WAL state (external thinning, deletes)
         cur = self.read_conn.cursor()  # Read path — avoids WAL lock contention
         limit = max_genes * 2
+
+        # ── BM25 pre-filter (tier-0, 2026-05-08 upgrade) ──────────────
+        _prefilter_set: set[str] | None = None
+        if self._bm25_prefilter_enabled:
+            _prefilter_set = self._bm25_candidate_set(query_terms, self._bm25_prefilter_size)
+            log.debug("bm25 prefilter: size=%d result=%s", self._bm25_prefilter_size,
+                      len(_prefilter_set) if _prefilter_set is not None else "fallback")
+
+        _prefilter_aliased_clause = ""   # for Tier 1/2 using g.gene_id alias
+        _prefilter_bare_clause = ""      # for Tier 3/3.5 without alias
+        _prefilter_params: list = []
+        if _prefilter_set is not None:
+            _prefilter_ids = list(_prefilter_set)[:998]  # SQLite variable limit is 999
+            ph = ",".join("?" * len(_prefilter_ids))
+            _prefilter_aliased_clause = f" AND g.gene_id IN ({ph})"
+            _prefilter_bare_clause = f" AND gene_id IN ({ph})"
+            _prefilter_params = _prefilter_ids
 
         # Gene scores: gene_id → float (accumulated across tiers)
         gene_scores: Dict[str, float] = {}
@@ -1906,9 +1972,10 @@ class Genome:
             WHERE pi.tag_value IN ({placeholders})
               AND g.chromatin < ?
               {_party_filter}
+              {_prefilter_aliased_clause}
             GROUP BY g.gene_id
             """,
-            (*query_terms, int(ChromatinState.HETEROCHROMATIN), *_party_params),
+            (*query_terms, int(ChromatinState.HETEROCHROMATIN), *_party_params, *_prefilter_params),
         ).fetchall()
 
         for r in rows:
@@ -1938,9 +2005,10 @@ class Genome:
             WHERE ({prefix_conditions})
               AND g.chromatin < ?
               {_party_filter}
+              {_prefilter_aliased_clause}
             GROUP BY g.gene_id
             """,
-            (*prefix_params, int(ChromatinState.HETEROCHROMATIN), *_party_params),
+            (*prefix_params, int(ChromatinState.HETEROCHROMATIN), *_party_params, *_prefilter_params),
         ).fetchall()
 
         for r in rows:
@@ -1966,14 +2034,15 @@ class Genome:
             if fts_query:
                 try:
                     fts_rows = cur.execute(
-                        """
+                        f"""
                         SELECT gene_id, rank
                         FROM genes_fts
                         WHERE genes_fts MATCH ?
+                        {_prefilter_bare_clause}
                         ORDER BY rank
                         LIMIT ?
                         """,
-                        (fts_query, limit * 2),
+                        (fts_query, *_prefilter_params, limit * 2),
                     ).fetchall()
 
                     # Filter by chromatin state (batch lookup)
@@ -2022,6 +2091,8 @@ class Genome:
                     query_text = " ".join(query_terms)
                     query_sparse = splade_backend.encode(query_text)
                     splade_hits = splade_backend.query_splade(self.read_conn, query_sparse, limit=limit * 2)
+                    if _prefilter_set is not None:
+                        splade_hits = [(gid, s) for gid, s in splade_hits if gid in _prefilter_set]
                     for gid, score in splade_hits:
                         # Normalize SPLADE score to be comparable with other tiers
                         splade_score = min(score, 20.0) * 3.5 / 20.0  # Cap at 3.5
@@ -2156,8 +2227,9 @@ class Genome:
                     f"SELECT pi.gene_id FROM promoter_index pi "
                     f"JOIN genes g ON pi.gene_id = g.gene_id "
                     f"WHERE pi.tag_value = ? AND g.chromatin < ?"
-                    f" {_party_filter}",
-                    (term, int(ChromatinState.HETEROCHROMATIN), *_party_params),
+                    f" {_party_filter}"
+                    f" {_prefilter_aliased_clause}",
+                    (term, int(ChromatinState.HETEROCHROMATIN), *_party_params, *_prefilter_params),
                 ).fetchall()
                 for r in anchor_genes:
                     gid = r["gene_id"]
@@ -2228,6 +2300,33 @@ class Genome:
             except Exception:
                 log.debug("SR Tier 5.5 failed", exc_info=True)
 
+        # ── Tier 5b: entity graph co-occurrence boost ─────────────────────
+        # Genes sharing entity nodes with query entities get a score boost.
+        # Additive on top of Tier 5 harmonic; capped at +2.0 per gene.
+        # entity_graph schema: entity (TEXT), gene_id (TEXT) — no weight col.
+        _eg_enabled = self._entity_graph_retrieval_enabled if use_entity_graph is None else bool(use_entity_graph)
+        if _eg_enabled and entities and gene_scores:
+            try:
+                _eg_t0 = time.monotonic()
+                eq_ph = ",".join("?" * len(entities))
+                eg_rows = cur.execute(
+                    f"SELECT gene_id FROM entity_graph "
+                    f"WHERE entity IN ({eq_ph})",
+                    entities,
+                ).fetchall()
+                for row in eg_rows:
+                    gid = row["gene_id"]
+                    if gid in gene_scores:
+                        bonus = min(1.0 * 0.5, 2.0)  # weight=1.0, cap 2.0
+                        gene_scores[gid] += bonus
+                        tier_contrib.setdefault(gid, {})["entity_graph"] = (
+                            tier_contrib.get(gid, {}).get("entity_graph", 0.0) + bonus
+                        )
+                log.debug("tier 5b entity_graph: %d hits, %.1fms",
+                          len(eg_rows), (time.monotonic() - _eg_t0) * 1000)
+            except Exception:
+                log.warning("entity_graph tier 5b failed", exc_info=True)
+
         # ── Party attribution bonus (+0.5) ────────────────────────
         if party_id is not None and _party_filter and gene_scores:
             try:
@@ -2281,7 +2380,8 @@ class Genome:
 
         # Expose scores + per-tier breakdown for score-gated expression in
         # context_manager + the activation profiler bench.
-        self.last_query_scores = dict(gene_scores)
+        with self._last_query_scores_lock:
+            self.last_query_scores = dict(gene_scores)
         self.last_tier_contributions = tier_contrib
 
         # Emit per-tier contribution telemetry (OTel — no-op when off).
@@ -2316,6 +2416,7 @@ class Genome:
         # latency work. Soft-fails to the unfiltered ranking on any error.
         if (
             getattr(self, "_bm25_shortlist_enabled", False)
+            and not self._bm25_prefilter_enabled  # don't double-filter
             and self._fts_available
             and gene_scores
         ):
@@ -2409,6 +2510,94 @@ class Genome:
                 result.append(g)
 
         return result[:limit]
+
+    # ── BGE-M3 dense retrieval (Step 4, 2026-05-08) ─────────────────
+
+    def _get_dense_codec(self):
+        """Lazy-load the BGE-M3 codec on first use."""
+        if self._dense_codec is None:
+            from .bgem3_codec import BGEM3Codec
+            self._dense_codec = BGEM3Codec(dim=self._dense_embedding_dim)
+        return self._dense_codec
+
+    def query_genes_ann(
+        self,
+        query: str,
+        threshold: float | None = None,
+        max_genes: int | None = None,
+        min_genes: int | None = None,
+        domains: list[str] | None = None,
+        entities: list[str] | None = None,
+        party_id: Optional[str] = None,
+        use_harmonic: bool = True,
+        use_sr: Optional[bool] = None,
+        use_entity_graph: Optional[bool] = None,
+        read_only: bool = False,
+    ) -> List[Gene]:
+        """Threshold-based ANN retrieval using BGE-M3 dense vectors.
+
+        1. Run standard query_genes() to get candidate pool.
+        2. Embed the query (BGE-M3 query task).
+        3. Load embedding_dense for each candidate.
+        4. Sort by cosine similarity.
+        5. Include candidates until similarity drops below threshold.
+           Un-embedded genes (backfill incomplete) get sim=threshold-0.01
+           so they can still satisfy min_genes but don't crowd out embedded ones.
+        """
+        threshold = threshold if threshold is not None else self._ann_threshold
+        max_genes = max_genes if max_genes is not None else self._ann_max_genes
+        min_genes = min_genes if min_genes is not None else self._ann_min_genes
+        domains = domains or []
+        entities = entities or []
+
+        candidates = self.query_genes(
+            domains,
+            entities,
+            max_genes=max_genes,
+            party_id=party_id,
+            use_harmonic=use_harmonic,
+            use_sr=use_sr,
+            use_entity_graph=use_entity_graph,
+            read_only=read_only,
+        )
+        if not candidates or not self._dense_embedding_enabled:
+            return candidates
+
+        codec = self._get_dense_codec()
+        query_vec = codec.encode(query, task="query")
+
+        gene_ids = [g.gene_id for g in candidates]
+        ph = ",".join("?" * len(gene_ids))
+        rows = self.read_conn.cursor().execute(
+            f"SELECT gene_id, embedding_dense FROM genes WHERE gene_id IN ({ph})",
+            gene_ids,
+        ).fetchall()
+        dense_map: dict[str, list[float]] = {}
+        for r in rows:
+            if r["embedding_dense"]:
+                import json as _json
+                try:
+                    dense_map[r["gene_id"]] = _json.loads(r["embedding_dense"])
+                except Exception:
+                    pass
+
+        scored: list[tuple[Gene, float]] = []
+        for gene in candidates:
+            vec = dense_map.get(gene.gene_id)
+            if vec is not None:
+                sim = codec.similarity(query_vec, vec)
+            else:
+                sim = threshold - 0.01
+            scored.append((gene, sim))
+        scored.sort(key=lambda x: x[1], reverse=True)
+
+        result: List[Gene] = []
+        for gene, sim in scored:
+            if sim >= threshold or len(result) < min_genes:
+                result.append(gene)
+            else:
+                break
+        return result[:max_genes]
 
     # ── Entity graph: auto-link genes sharing entities ───────────────
 
