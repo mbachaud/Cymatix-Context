@@ -296,6 +296,8 @@ class HelixContextManager:
             filename_anchor_weight=config.retrieval.filename_anchor_weight,
             bm25_shortlist_enabled=config.retrieval.bm25_shortlist_enabled,
             bm25_shortlist_size=config.retrieval.bm25_shortlist_size,
+            bm25_prefilter_enabled=config.retrieval.bm25_prefilter_enabled,
+            bm25_prefilter_size=config.retrieval.bm25_prefilter_size,
         )
 
         # Replication manager (distributed genome clones)

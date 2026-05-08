@@ -328,6 +328,8 @@ class Genome:
         filename_anchor_weight: float = 4.0,
         bm25_shortlist_enabled: bool = False,
         bm25_shortlist_size: int = 50,
+        bm25_prefilter_enabled: bool = False,
+        bm25_prefilter_size: int = 200,
         main_conn: Optional[sqlite3.Connection] = None,
         shard_name: str = "main",
     ):
@@ -350,6 +352,8 @@ class Genome:
         self._filename_anchor_weight = filename_anchor_weight
         self._bm25_shortlist_enabled = bool(bm25_shortlist_enabled)
         self._bm25_shortlist_size = int(bm25_shortlist_size) if bm25_shortlist_size else 50
+        self._bm25_prefilter_enabled = bool(bm25_prefilter_enabled)
+        self._bm25_prefilter_size = int(bm25_prefilter_size)
         # Phase 2 claims layer (2026-04-19). Optional hook — when a main.db
         # connection is supplied, upsert_gene emits literal claims into it
         # after each ingest. None = no auto-hook, preserving legacy behavior.
@@ -1681,6 +1685,27 @@ class Genome:
 
     # ── Core retrieval (Step 2) — hybrid promoter + FTS5 ────────────
 
+    def _bm25_candidate_set(self, query_terms: list[str], size: int) -> set[str] | None:
+        """Return FTS5 BM25 top-N gene_ids, or None if FTS unavailable/empty. Soft-fails to None."""
+        if not self._fts_available:
+            return None
+        bm25_terms = [t for t in query_terms if len(t) > 2]
+        if not bm25_terms:
+            return None
+        try:
+            bm25_match = " OR ".join(f'"{t}"' for t in bm25_terms)
+            cur = self.read_conn.cursor()
+            rows = cur.execute(
+                "SELECT gene_id FROM genes_fts WHERE genes_fts MATCH ? ORDER BY rank LIMIT ?",
+                (bm25_match, size),
+            ).fetchall()
+            if not rows:
+                return None
+            return {r["gene_id"] for r in rows}
+        except Exception:
+            log.warning("BM25 pre-filter failed — falling back to full corpus", exc_info=True)
+            return None
+
     def query_genes(
         self,
         domains: List[str],
@@ -1725,6 +1750,22 @@ class Genome:
         self._refresh_snapshot()  # See latest WAL state (external thinning, deletes)
         cur = self.read_conn.cursor()  # Read path — avoids WAL lock contention
         limit = max_genes * 2
+
+        # ── BM25 pre-filter (tier-0, 2026-05-08 upgrade) ──────────────
+        _prefilter_set: set[str] | None = None
+        if self._bm25_prefilter_enabled:
+            _prefilter_set = self._bm25_candidate_set(query_terms, self._bm25_prefilter_size)
+            log.debug("bm25 prefilter: size=%d result=%s", self._bm25_prefilter_size,
+                      len(_prefilter_set) if _prefilter_set is not None else "fallback")
+
+        _prefilter_aliased_clause = ""   # for Tier 1/2 using g.gene_id alias
+        _prefilter_bare_clause = ""      # for Tier 3/3.5 without alias
+        _prefilter_params: list = []
+        if _prefilter_set is not None:
+            ph = ",".join("?" * len(_prefilter_set))
+            _prefilter_aliased_clause = f" AND g.gene_id IN ({ph})"
+            _prefilter_bare_clause = f" AND gene_id IN ({ph})"
+            _prefilter_params = list(_prefilter_set)
 
         # Gene scores: gene_id → float (accumulated across tiers)
         gene_scores: Dict[str, float] = {}
@@ -1886,9 +1927,10 @@ class Genome:
             WHERE pi.tag_value IN ({placeholders})
               AND g.chromatin < ?
               {_party_filter}
+              {_prefilter_aliased_clause}
             GROUP BY g.gene_id
             """,
-            (*query_terms, int(ChromatinState.HETEROCHROMATIN), *_party_params),
+            (*query_terms, int(ChromatinState.HETEROCHROMATIN), *_party_params, *_prefilter_params),
         ).fetchall()
 
         for r in rows:
@@ -1918,9 +1960,10 @@ class Genome:
             WHERE ({prefix_conditions})
               AND g.chromatin < ?
               {_party_filter}
+              {_prefilter_aliased_clause}
             GROUP BY g.gene_id
             """,
-            (*prefix_params, int(ChromatinState.HETEROCHROMATIN), *_party_params),
+            (*prefix_params, int(ChromatinState.HETEROCHROMATIN), *_party_params, *_prefilter_params),
         ).fetchall()
 
         for r in rows:
@@ -1946,14 +1989,15 @@ class Genome:
             if fts_query:
                 try:
                     fts_rows = cur.execute(
-                        """
+                        f"""
                         SELECT gene_id, rank
                         FROM genes_fts
                         WHERE genes_fts MATCH ?
+                        {_prefilter_bare_clause}
                         ORDER BY rank
                         LIMIT ?
                         """,
-                        (fts_query, limit * 2),
+                        (fts_query, *_prefilter_params, limit * 2),
                     ).fetchall()
 
                     # Filter by chromatin state (batch lookup)
@@ -2002,6 +2046,8 @@ class Genome:
                     query_text = " ".join(query_terms)
                     query_sparse = splade_backend.encode(query_text)
                     splade_hits = splade_backend.query_splade(self.read_conn, query_sparse, limit=limit * 2)
+                    if _prefilter_set is not None:
+                        splade_hits = [(gid, s) for gid, s in splade_hits if gid in _prefilter_set]
                     for gid, score in splade_hits:
                         # Normalize SPLADE score to be comparable with other tiers
                         splade_score = min(score, 20.0) * 3.5 / 20.0  # Cap at 3.5
@@ -2136,8 +2182,9 @@ class Genome:
                     f"SELECT pi.gene_id FROM promoter_index pi "
                     f"JOIN genes g ON pi.gene_id = g.gene_id "
                     f"WHERE pi.tag_value = ? AND g.chromatin < ?"
-                    f" {_party_filter}",
-                    (term, int(ChromatinState.HETEROCHROMATIN), *_party_params),
+                    f" {_party_filter}"
+                    f" {_prefilter_aliased_clause}",
+                    (term, int(ChromatinState.HETEROCHROMATIN), *_party_params, *_prefilter_params),
                 ).fetchall()
                 for r in anchor_genes:
                     gid = r["gene_id"]
@@ -2296,6 +2343,7 @@ class Genome:
         # latency work. Soft-fails to the unfiltered ranking on any error.
         if (
             getattr(self, "_bm25_shortlist_enabled", False)
+            and not self._bm25_prefilter_enabled  # don't double-filter
             and self._fts_available
             and gene_scores
         ):

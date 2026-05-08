@@ -236,6 +236,10 @@ filename_anchor_weight = 4.0            # Per-match boost (Tier 1 exact-tag = 3.
 # Dark by default — flip to true for Stage-2 A/B measurement.
 bm25_shortlist_enabled = true           # Keep on (2026-04-22 sprint): +1/8 ans_full on helix_rag + helix_full_stack, clean attribution
 bm25_shortlist_size = 50
+# BM25 pre-filter — fires BEFORE tier scoring (inverse of shortlist).
+# Enable for A/B against bm25_shortlist. Disable shortlist when using this.
+bm25_prefilter_enabled = false
+bm25_prefilter_size = 200
 
 [plr]
 # Stacked PLR query-confidence head (STATISTICAL_FUSION.md §C3).

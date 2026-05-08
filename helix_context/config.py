@@ -259,6 +259,8 @@ class RetrievalConfig:
     # candidate-generation optimisation). Dark ship.
     bm25_shortlist_enabled: bool = False
     bm25_shortlist_size: int = 50           # BM25 top-N kept in the final ranking
+    bm25_prefilter_enabled: bool = False
+    bm25_prefilter_size: int = 200          # BM25 top-N fed into tier scoring
 
 
 @dataclass
@@ -537,6 +539,8 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             filename_anchor_weight=float(r.get("filename_anchor_weight", cfg.retrieval.filename_anchor_weight)),
             bm25_shortlist_enabled=bool(r.get("bm25_shortlist_enabled", cfg.retrieval.bm25_shortlist_enabled)),
             bm25_shortlist_size=int(r.get("bm25_shortlist_size", cfg.retrieval.bm25_shortlist_size)),
+            bm25_prefilter_enabled=bool(r.get("bm25_prefilter_enabled", cfg.retrieval.bm25_prefilter_enabled)),
+            bm25_prefilter_size=int(r.get("bm25_prefilter_size", cfg.retrieval.bm25_prefilter_size)),
         )
 
     # Session (CWoLa session/party fallback — 2026-04-13 fix for always-A bucket bug)
