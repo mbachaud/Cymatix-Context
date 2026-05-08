@@ -850,7 +850,8 @@ class HelixContextManager:
                         query_text=sq, include_cold=include_cold,
                         party_id=party_id, read_only=read_only,
                     )
-                    scores = dict(self.genome.last_query_scores or {})  # snapshot immediately
+                    with self.genome._last_query_scores_lock:
+                        scores = dict(self.genome.last_query_scores or {})
                     return genes, scores
 
                 with concurrent.futures.ThreadPoolExecutor(
@@ -1775,6 +1776,7 @@ class HelixContextManager:
                     use_harmonic=use_harmonic,
                     use_sr=use_sr,
                     use_entity_graph=self.genome._entity_graph_retrieval_enabled,
+                    read_only=read_only,
                 )
             else:
                 candidates = self.genome.query_genes(

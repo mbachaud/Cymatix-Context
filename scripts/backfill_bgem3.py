@@ -1,6 +1,6 @@
 """One-shot BGE-M3 re-embedding of all genes. Run once after Step 4 ships.
 
-Usage: python scripts/backfill_bgem3.py
+Usage: python scripts/backfill_bgem3.py [path/to/genome.db]
 """
 import json
 import sqlite3
@@ -10,9 +10,14 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from helix_context.bgem3_codec import BGEM3Codec
+from helix_context.config import load_config
 
-DB = "F:/Projects/helix-context/genomes/main/genome.db"
-DIM = 256
+# Read genome path from helix.toml; CLI arg overrides if provided
+_repo_root = Path(__file__).resolve().parents[1]
+cfg = load_config()
+_default_db = str(_repo_root / cfg.genome.path)
+DB = sys.argv[1] if len(sys.argv) > 1 else _default_db
+DIM = cfg.retrieval.dense_embedding_dim
 BATCH = 100
 
 codec = BGEM3Codec(dim=DIM)

@@ -21,6 +21,7 @@ import logging
 import os
 import re
 import sqlite3
+import threading
 import time
 from typing import Dict, List, Optional
 
@@ -398,6 +399,7 @@ class Genome:
         self.conn.execute("PRAGMA journal_size_limit=67108864")  # 64 MB
         self._upsert_count = 0  # WAL checkpoint cadence counter
         self.last_query_scores: Dict[str, float] = {}  # Retrieval scores from last query
+        self._last_query_scores_lock = threading.Lock()
         # Per-tier score breakdown for the last query: {gene_id: {tier_name: score}}.
         # Populated alongside last_query_scores in query_genes(). Lets the bench /
         # profiler see which retrieval signals fired (and how strongly) for each
@@ -2358,7 +2360,8 @@ class Genome:
 
         # Expose scores + per-tier breakdown for score-gated expression in
         # context_manager + the activation profiler bench.
-        self.last_query_scores = dict(gene_scores)
+        with self._last_query_scores_lock:
+            self.last_query_scores = dict(gene_scores)
         self.last_tier_contributions = tier_contrib
 
         # Emit per-tier contribution telemetry (OTel — no-op when off).
@@ -2509,6 +2512,7 @@ class Genome:
         use_harmonic: bool = True,
         use_sr: Optional[bool] = None,
         use_entity_graph: Optional[bool] = None,
+        read_only: bool = False,
     ) -> List[Gene]:
         """Threshold-based ANN retrieval using BGE-M3 dense vectors.
 
@@ -2534,6 +2538,7 @@ class Genome:
             use_harmonic=use_harmonic,
             use_sr=use_sr,
             use_entity_graph=use_entity_graph,
+            read_only=read_only,
         )
         if not candidates or not self._dense_embedding_enabled:
             return candidates
