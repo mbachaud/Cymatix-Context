@@ -160,6 +160,16 @@ curl http://localhost:11437/context \
   -d '{"query": "what is the main entry point?"}'
 ```
 
+### Native observability (default)
+
+Canonical path: the tray (`start-helix-tray.bat`) manages the native OpenTelemetry
+binaries in `tools/native-otel/` automatically. A balloon notification confirms
+the sidecar is running. To opt out: `HELIX_OBSERVABILITY=0 start-helix-tray.bat`.
+
+> **Advanced — Docker stack:** if you prefer a full Docker-compose observability
+> stack (Prometheus, Tempo, Loki, Grafana), see
+> [deploy/otel/README.md](deploy/otel/README.md).
+
 ### MCP setup (Claude Code / Cursor / Continue)
 
 Add to `~/.claude/settings.json` (or your IDE's MCP config):
