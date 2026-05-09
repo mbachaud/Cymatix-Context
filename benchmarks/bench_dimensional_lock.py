@@ -32,7 +32,7 @@ the needles are directly comparable to prior NIAH runs.
 Usage:
     python benchmarks/bench_dimensional_lock.py
     N=50 SEED=42 HELIX_MODEL=qwen3:8b python benchmarks/bench_dimensional_lock.py
-    GENOME_DB=F:/Projects/helix-context/genome-bench-N1000.db \\
+    GENOME_DB=F:/Projects/helix-context/genome-bench-2026-05-08.db \\
         python benchmarks/bench_dimensional_lock.py
 
 Output:
@@ -71,7 +71,7 @@ from bench_needle_1000 import (  # noqa: E402
 HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
 GENOME_DB = os.environ.get(
     "GENOME_DB",
-    "F:/Projects/helix-context/genome-bench-N1000.db",
+    "F:/Projects/helix-context/genome-bench-2026-05-08.db",
 )
 MODEL = os.environ.get("HELIX_MODEL", "qwen3:8b")
 N_TOTAL = int(os.environ.get("N", "50"))
