@@ -82,7 +82,7 @@ class TestIsRunning:
         store.set_helix(pid=12345, command=["python"], port=11999)
         fake = _FakePsutil(
             alive_pids={12345},
-            cmdlines={12345: ["python", "-m", "uvicorn", "helix_context.server:app"]},
+            cmdlines={12345: ["python", "-m", "uvicorn", "helix_context._asgi:app"]},
         )
         supervisor._psutil = fake
         assert supervisor.is_running() is True
@@ -93,7 +93,7 @@ class TestStart:
         store.set_helix(pid=12345, command=["python"], port=11999)
         supervisor._psutil = _FakePsutil(
             alive_pids={12345},
-            cmdlines={12345: ["python", "-m", "uvicorn", "helix_context.server:app"]},
+            cmdlines={12345: ["python", "-m", "uvicorn", "helix_context._asgi:app"]},
         )
         with pytest.raises(AlreadyRunning):
             supervisor.start()
@@ -157,7 +157,7 @@ class TestStop:
         store.set_helix(pid=12345, command=["python"], port=11999)
         supervisor._psutil = _FakePsutil(
             alive_pids={12345},
-            cmdlines={12345: ["python", "-m", "uvicorn", "helix_context.server:app"]},
+            cmdlines={12345: ["python", "-m", "uvicorn", "helix_context._asgi:app"]},
         )
 
         announce_mock = MagicMock()
@@ -187,7 +187,7 @@ class TestAdopt:
         store.set_helix(pid=12345, command=["python"], port=11999)
         supervisor._psutil = _FakePsutil(
             alive_pids={12345},
-            cmdlines={12345: ["python", "-m", "uvicorn", "helix_context.server:app"]},
+            cmdlines={12345: ["python", "-m", "uvicorn", "helix_context._asgi:app"]},
         )
         assert supervisor.adopt() is True
 
@@ -197,7 +197,7 @@ class TestCommand:
         cmd = supervisor._command()
         assert "-m" in cmd
         assert "uvicorn" in cmd
-        assert "helix_context.server:app" in cmd
+        assert "helix_context._asgi:app" in cmd
         assert "11999" in cmd
 
 
@@ -262,11 +262,11 @@ class TestFindOrphanHelix:
 
     def test_helix_worker_with_uvicorn_parent_returns_parent_pid(self, supervisor):
         parent = _make_fake_process([
-            "python", "-m", "uvicorn", "helix_context.server:app", "--host", "127.0.0.1", "--port", "11999",
+            "python", "-m", "uvicorn", "helix_context._asgi:app", "--host", "127.0.0.1", "--port", "11999",
         ])
         worker = _make_fake_process(
             [
-                "python", "-m", "uvicorn", "helix_context.server:app",
+                "python", "-m", "uvicorn", "helix_context._asgi:app",
                 "--host", "127.0.0.1", "--port", "11999",
             ],
             parent=parent,
@@ -281,7 +281,7 @@ class TestFindOrphanHelix:
     def test_helix_listener_with_no_matching_parent_returns_listener_pid(self, supervisor):
         worker = _make_fake_process(
             [
-                "python", "-m", "uvicorn", "helix_context.server:app",
+                "python", "-m", "uvicorn", "helix_context._asgi:app",
                 "--host", "127.0.0.1", "--port", "11999",
             ],
             parent=None,
@@ -299,18 +299,18 @@ class TestAdoptOrphan:
         store.set_helix(pid=12345, command=["python"], port=11999)
         supervisor._psutil = _FakePsutil(
             alive_pids={12345},
-            cmdlines={12345: ["python", "-m", "uvicorn", "helix_context.server:app"]},
+            cmdlines={12345: ["python", "-m", "uvicorn", "helix_context._asgi:app"]},
         )
         assert supervisor.adopt() is True
         assert store.state.helix_pid == 12345
 
     def test_adopt_orphan_when_state_file_empty(self, supervisor, store):
         parent = _make_fake_process(
-            ["python", "-m", "uvicorn", "helix_context.server:app"],
+            ["python", "-m", "uvicorn", "helix_context._asgi:app"],
         )
         parent.pid = 200
         worker = _make_fake_process(
-            ["python", "-m", "uvicorn", "helix_context.server:app"],
+            ["python", "-m", "uvicorn", "helix_context._asgi:app"],
             parent=parent,
         )
 
@@ -332,11 +332,11 @@ class TestAdoptOrphan:
 class TestStartAdoptsOrphan:
     def test_start_adopts_orphan_when_port_busy_with_helix(self, supervisor, store):
         parent = _make_fake_process(
-            ["python", "-m", "uvicorn", "helix_context.server:app"],
+            ["python", "-m", "uvicorn", "helix_context._asgi:app"],
         )
         parent.pid = 200
         worker = _make_fake_process(
-            ["python", "-m", "uvicorn", "helix_context.server:app"],
+            ["python", "-m", "uvicorn", "helix_context._asgi:app"],
             parent=parent,
         )
 
