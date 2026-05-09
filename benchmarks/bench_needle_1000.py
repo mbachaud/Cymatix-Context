@@ -11,7 +11,7 @@ needle through Helix + downstream model and computes:
   - Failure mode taxonomy (retrieval miss vs extraction miss)
 
 Reproducibility:
-  - Uses a snapshot at genome-bench-2026-04-10.db
+  - Uses a snapshot at genome-bench-2026-05-08.db
   - random.seed(42) for stable needle selection
   - Results saved to benchmarks/needle_1000_results.json
 
@@ -42,7 +42,7 @@ import httpx
 HARNESS_VERSION = 2
 
 HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
-GENOME_DB = os.environ.get("GENOME_DB", "F:/Projects/helix-context/genome-bench-2026-04-10.db")
+GENOME_DB = os.environ.get("GENOME_DB", "F:/Projects/helix-context/genome-bench-2026-05-08.db")
 MODEL = os.environ.get("HELIX_MODEL", "qwen3:4b")
 N_TOTAL = int(os.environ.get("N", "1000"))
 SEED = int(os.environ.get("SEED", "42"))
