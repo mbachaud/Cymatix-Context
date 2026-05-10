@@ -510,6 +510,19 @@ class HelixContextManager:
         self._last_cold_tier_used: bool = False
         self._last_cold_tier_count: int = 0
 
+        # Stage 7 (2026-05-08, spec §5) — per-process mtime cache for
+        # the freshness gate. Keyed on absolute source path; value is
+        # ``(mtime, cached_at)``. Lives on the manager (per-batch
+        # state) rather than Genome so /admin/refresh can clear it
+        # without touching the DB. TTL defaults to 60s — see
+        # ``helix_context.freshness.DEFAULT_CACHE_TTL_S``.
+        self._mtime_cache: Dict[str, Tuple[float, float]] = {}
+
+        # Stage 7 (spec §6) — last cold-peek refresh_targets so the
+        # /context route can attach them to a MissBlock(reason="cold")
+        # without re-running the cold-tier query. Reset per build.
+        self._last_cold_peek_targets: List[str] = []
+
         # Session buffer -- accumulates query+response pairs for consolidation
         self._session_buffer: List[Tuple[str, str]] = []
         self._session_buffer_lock = threading.Lock()
@@ -805,6 +818,9 @@ class HelixContextManager:
         # Reset per-call cold-tier markers (set by _express when cold fires)
         self._last_cold_tier_used = False
         self._last_cold_tier_count = 0
+        # Stage 7 (spec §6): reset per-build cold-peek state so a
+        # previous query's refresh_targets cannot bleed into this one.
+        self._last_cold_peek_targets = []
 
         max_genes = self.config.budget.max_genes_per_turn
 
@@ -2340,13 +2356,17 @@ class HelixContextManager:
         Measures four dimensions:
             coverage  — fraction of query terms that matched genome tags
             density   — fraction of expression token budget actually used
-            freshness — average decay score of expressed genes (1=fresh, 0=stale)
+            freshness — three signals (Stage 7, 2026-05-08): freshness_min,
+                        freshness_top1, freshness_weighted. Replaces the
+                        prior mean(decay_score) so a stale top-1 needle is
+                        no longer masked by fresh padding genes.
             ellipticity — composite score (geometric mean of the three)
 
         Status thresholds:
             aligned   — ellipticity >= 0.7 (genome is well-grounded)
             sparse    — ellipticity >= 0.3 (genome has gaps, model may guess)
-            stale     — freshness < 0.4 (expressed genes are outdated)
+            stale     — freshness_top1 < 0.4 OR freshness_weighted < 0.5
+                        (Stage 7: top-1 stale, OR score-weighted body stale)
             denatured — ellipticity < 0.3 (context is unreliable)
         """
         import math
@@ -2385,11 +2405,55 @@ class HelixContextManager:
         effective_budget = self.config.budget.expression_tokens * 4 * max(expressed_ratio, 0.25)
         density = min(1.0, compressed_chars / max(effective_budget, 1))
 
-        # Freshness: average decay score of expressed genes
+        # Freshness — Stage 7 rewrite (2026-05-08, spec §3):
+        # three signals computed in one pass over score-desc-ordered
+        # candidates. The previous mean(decay) collapsed the entire
+        # expressed set into a single number and let 11 fresh padding
+        # genes mask one stale needle (regression test
+        # ``test_freshness_top1_dominates_padding``). The replacement:
+        #   freshness_min      = min decay (worst gene in set)
+        #   freshness_top1     = decay of the top-1 by retrieval score
+        #   freshness_weighted = score-weighted sum of decays
+        #
+        # The back-compat ``freshness`` field is aliased to
+        # freshness_weighted so legacy consumers keep a meaningful
+        # number — when scores are uniform it equals mean(decay), the
+        # exact prior behavior, but when there's a strong top-1 the
+        # weighting follows it. New code should read freshness_top1 /
+        # freshness_min directly.
         if candidates:
-            freshness = sum(g.epigenetics.decay_score for g in candidates) / len(candidates)
+            decays = [
+                float(getattr(g.epigenetics, "decay_score", 0.0) or 0.0)
+                for g in candidates
+            ]
+            freshness_min = min(decays)
+            # candidates are passed in score-desc order; freshness_top1
+            # is the head of that list (NOT min, NOT mean).
+            freshness_top1 = decays[0]
+            scores_for_weight = (
+                getattr(self.genome, "last_query_scores", None) or {}
+            )
+            raw_scores = [
+                max(float(scores_for_weight.get(g.gene_id, 0.0) or 0.0), 0.0)
+                for g in candidates
+            ]
+            s_total = sum(raw_scores)
+            if s_total <= 0.0:
+                # Equal-weight fallback when score map is empty (e.g.,
+                # cold-start retrieval with no last_query_scores) — keeps
+                # back-compat numerically equal to mean(decay).
+                weights = [1.0 / len(candidates)] * len(candidates)
+            else:
+                weights = [s / s_total for s in raw_scores]
+            freshness_weighted = sum(w * d for w, d in zip(weights, decays))
         else:
-            freshness = 0.0
+            freshness_min = 0.0
+            freshness_top1 = 0.0
+            freshness_weighted = 0.0
+        # Back-compat shim — external callers that read
+        # ``health.freshness`` keep working; the value now carries the
+        # score-weighted signal so a stale top-1 pulls it down.
+        freshness = freshness_weighted
 
         # Logical coherence (from NLI relation graph, if available)
         logical_coherence = 0.0
@@ -2413,8 +2477,17 @@ class HelixContextManager:
             # 3-factor ellipticity (backward compat)
             ellipticity = (c * d * f) ** (1.0 / 3.0)
 
-        # Status classification
-        if freshness < 0.4 and genes_expressed > 0:
+        # Status classification — Stage 7 rule (spec §3):
+        #   freshness_top1   < 0.4  → "stale" (the gene we'd answer
+        #                              from is itself stale)
+        #   freshness_weighted < 0.5 → "stale" (score-weighted body
+        #                              of expressed set is stale)
+        # Either trigger fires "stale". The previous rule used a single
+        # mean(decay) < 0.4, which 11 fresh padding genes around one
+        # stale needle could trivially mask.
+        if genes_expressed > 0 and (
+            freshness_top1 < 0.4 or freshness_weighted < 0.5
+        ):
             status = "stale"
         elif ellipticity >= 0.7:
             status = "aligned"
@@ -2534,7 +2607,71 @@ class HelixContextManager:
             top_dominance=round(top_dominance, 4),
             path_token_coverage=round(path_token_coverage, 4),
             file_token_coverage=round(file_token_coverage, 4),
+            # Stage 7 (spec §3, §2 surface row 2446-2470): three
+            # freshness signals, populated from the per-pass values
+            # computed above. Optional[float] so legacy snapshots /
+            # tests that build ContextHealth() with no candidates keep
+            # working.
+            freshness_min=round(freshness_min, 4),
+            freshness_top1=round(freshness_top1, 4),
+            freshness_weighted=round(freshness_weighted, 4),
         )
+
+    # -- Stage 7: cold-tier peek + freshness pipeline ------------------
+
+    def _cold_tier_peek(
+        self,
+        query: str,
+        *,
+        k: int = 3,
+        min_cosine: float = 0.4,
+    ) -> List[str]:
+        """Stage 7 (spec §6) — surface heterochromatin SEMA hits as
+        ``refresh_targets`` so the agent can re-ingest archived sources.
+
+        Trigger contract (caller's responsibility): only invoke this
+        when the hot tier returned thin results AND the corpus health
+        is not "abstain". This helper is idempotent — it does NOT
+        mutate ``last_cold_tier_used`` markers or promote any genes.
+
+        Threshold default of 0.4 is tighter than ``query_cold_tier``'s
+        own default (0.15) because cold peek competes with
+        ``MissBlock(reason="sparse")``: we want it firing only on real
+        archived hits, not on every weak SEMA neighbor.
+
+        Returns:
+          List of refresh targets — one ``source_id`` per cold gene
+          returned, deduped while preserving order. Empty list when
+          the SEMA codec is unavailable, the cold-tier index is
+          empty, or no match clears ``min_cosine``.
+        """
+        try:
+            cold_hits = self.genome.query_cold_tier(
+                query, k=k, min_cosine=min_cosine,
+            )
+        except Exception:
+            log.debug("_cold_tier_peek: query_cold_tier failed", exc_info=True)
+            return []
+        if not cold_hits:
+            return []
+
+        seen: set[str] = set()
+        targets: List[str] = []
+        for g in cold_hits:
+            # spec §6: prefer source_path under epigenetics, then fall
+            # through to source_id. Path-shaped string is what the
+            # agent will re-read.
+            src = (
+                getattr(getattr(g, "epigenetics", None), "source_path", None)
+                or getattr(g, "source_id", None)
+            )
+            if not src:
+                continue
+            if src in seen:
+                continue
+            seen.add(src)
+            targets.append(str(src))
+        return targets
 
     # -- Internal: compaction ------------------------------------------
 

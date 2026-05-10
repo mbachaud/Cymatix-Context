@@ -47,9 +47,14 @@ log = logging.getLogger("helix.know_calibration")
 # Defaults (Stage 6 ship-time values from §3 of the spec)
 # ─────────────────────────────────────────────────────────────────────
 
-# (b0, b1, b2, b3, b4)  ──  intercept + 4 feature coefficients.
-# # STAGE-7-EXT: append b5 default of +1.5 here for freshness_min.
-DEFAULT_BETAS: tuple[float, ...] = (-2.0, 2.0, 1.5, 0.7, 1.8)
+# (b0, b1, b2, b3, b4, b5)  ──  intercept + 5 feature coefficients.
+# Stage 7 (2026-05-08) appended b5 = +1.5 for freshness_min: a fresh
+# top-1 (decay near 1.0) adds ~+1.5 to the logit, a stale top-1
+# (decay near 0.0) contributes nothing — pushing borderline-confident
+# stale retrievals below ``emit_floor`` so they fall through to
+# MissBlock(reason="stale") instead of emitting a soft-known answer
+# the agent will treat as authoritative.
+DEFAULT_BETAS: tuple[float, ...] = (-2.0, 2.0, 1.5, 0.7, 1.8, 1.5)
 
 # Feature-scale references for tanh-squashing on top_score / score_gap.
 DEFAULT_S_REF: float = 1.0
@@ -60,8 +65,8 @@ DEFAULT_G_REF: float = 0.5
 DEFAULT_EMIT_FLOOR: float = 0.55
 
 # Number of feature inputs (excluding intercept) the logistic accepts.
-# # STAGE-7-EXT: bump to 5 for freshness_min.
-N_FEATURES: int = 4
+# Stage 7: bumped to 5 — added freshness_min as feature index 4.
+N_FEATURES: int = 5
 
 
 # ─────────────────────────────────────────────────────────────────────
@@ -115,11 +120,9 @@ def compute_confidence(
     lexical_dense_agree: bool,
     coordinate_confidence: float,
     calibration: Optional[KnowCalibration] = None,
-    # STAGE-7-EXT: add `freshness_min: float | None = None` and
-    # plumb it into the z computation below as
-    #     + betas[5] * float(freshness_min if freshness_min is not None else 0.0)
+    freshness_min: Optional[float] = None,
 ) -> float:
-    """Map four signals to a calibrated KnowBlock confidence.
+    """Map five signals to a calibrated KnowBlock confidence.
 
     All inputs are clamped/squashed before entering the linear
     combination so out-of-distribution values do not blow up the
@@ -133,6 +136,14 @@ def compute_confidence(
         coordinate_confidence: blend of folder + file-grain path overlap
             in [0, 1] (see context_packet._coordinate_confidence).
         calibration: optional override; defaults to ``KnowCalibration()``.
+        freshness_min: Stage 7 (spec §10) — minimum decay across the
+            expressed candidates, in [0, 1]. ``None`` is treated as
+            "freshness unknown" (no contribution to z) — preserves
+            back-compat for legacy rows where ``last_verified_at`` is
+            NULL. With the default β5 = +1.5, a fully fresh top-K adds
+            ~+1.5 to the logit; a fully stale top-K adds ~0.0,
+            shaving ~0.3 off the calibrated probability and pushing
+            borderline cases under emit_floor.
 
     Returns:
         Probability in [0, 1].
@@ -159,7 +170,13 @@ def compute_confidence(
     z += float(betas[2]) * math.tanh(float(score_gap) / g_ref)
     z += float(betas[3]) * (1.0 if lexical_dense_agree else 0.0)
     z += float(betas[4]) * max(0.0, min(1.0, float(coordinate_confidence)))
-    # STAGE-7-EXT: append `+ betas[5] * clamp01(freshness_min)` here.
+    # Stage 7 — β5 * clamp01(freshness_min). ``None`` falls through as
+    # 0 contribution rather than 0.0-clamped — operationally these
+    # are similar in this defaults regime, but the None branch
+    # preserves the spec semantics of "freshness unknown" being
+    # neutral rather than maximally-stale.
+    if freshness_min is not None and len(betas) >= 6:
+        z += float(betas[5]) * max(0.0, min(1.0, float(freshness_min)))
 
     return _sigmoid(z)
 

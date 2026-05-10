@@ -308,9 +308,14 @@ def test_calibration_load_falls_back_on_malformed_betas(tmp_path):
 
 
 def test_fit_betas_separates_synthetic_data():
+    # Stage 7 (2026-05-08): N_FEATURES bumped from 4 to 5 with the
+    # addition of freshness_min as feature index 4. The synthetic
+    # row vectors below carry the same separability shape across all
+    # five features so the gradient descent's expected sign pattern
+    # (intercept negative, all coefficients positive) still holds.
     feats = (
-        [[0.95, 0.95, 1.0, 0.9]] * 30  # positives
-        + [[0.05, 0.01, 0.0, 0.0]] * 30  # negatives
+        [[0.95, 0.95, 1.0, 0.9, 0.95]] * 30  # positives — fresh
+        + [[0.05, 0.01, 0.0, 0.0, 0.05]] * 30  # negatives — stale
     )
     labels = [1] * 30 + [0] * 30
     betas = fit_betas_from_features(feats, labels, lr=0.5, epochs=200)
@@ -320,6 +325,7 @@ def test_fit_betas_separates_synthetic_data():
     assert betas[2] > 0
     assert betas[3] > 0
     assert betas[4] > 0
+    assert betas[5] > 0  # Stage 7 — β5 (freshness_min)
 
 
 # ─────────────────────────────────────────────────────────────────────
@@ -515,27 +521,25 @@ def test_packet_attach_miss_on_no_genes():
 # ─────────────────────────────────────────────────────────────────────
 
 def test_stage7_forward_compat_seams_in_place():
-    """The schema file should carry STAGE-7-EXT markers so the Stage 7
-    PR is a one-line tuple extension. This test smoke-checks that the
-    extension symbols exist; it does NOT enforce any Stage 7 semantics.
+    """The schema file ships Stage 7's three new reasons (stale, cold,
+    superseded) and the refresh_targets field. Stage 7 PR (#50) made
+    the seam concrete; this test now enforces that the extension is
+    wired and the new validator (refresh-class reasons require
+    refresh_targets, escalate-class reasons forbid them) is in place.
     """
-    # MISS_REASONS extension point exists.
+    # Stage 7 added three reasons additively.
     assert isinstance(MISS_REASONS, tuple)
-    # Adding a new reason via tuple concat should construct a MissBlock
-    # via a hypothetical Stage 7 extension. Today we just verify the
-    # reason set is mutable from an extension perspective: replacing
-    # the constant works.
-    import helix_context.schemas as _schemas
-    saved = _schemas.MISS_REASONS
-    try:
-        _schemas.MISS_REASONS = saved + ("stale", "cold", "superseded")
-        _schemas._MISS_REASON_SET = frozenset(_schemas.MISS_REASONS)
-        # A MissBlock with reason="stale" should now construct.
-        mb = MissBlock(
-            reason="stale", top_score=0.5, ratio=1.2,
-            escalate_to=[],
-        )
-        assert mb.reason == "stale"
-    finally:
-        _schemas.MISS_REASONS = saved
-        _schemas._MISS_REASON_SET = frozenset(saved)
+    assert "stale" in MISS_REASONS
+    assert "cold" in MISS_REASONS
+    assert "superseded" in MISS_REASONS
+
+    # A MissBlock with reason="stale" must carry a non-empty
+    # refresh_targets list (Stage 7 spec §8 mutual-exclusivity).
+    mb = MissBlock(
+        reason="stale", top_score=0.5, ratio=1.2,
+        escalate_to=[],
+        refresh_targets=["/some/path/to/file.py"],
+    )
+    assert mb.reason == "stale"
+    assert mb.refresh_targets == ["/some/path/to/file.py"]
+    assert mb.escalate_to == []

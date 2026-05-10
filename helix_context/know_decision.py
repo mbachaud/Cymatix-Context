@@ -312,8 +312,12 @@ def decide_know_or_miss(
     top_gene: "Optional[Gene]" = None,
     ratio: Optional[float] = None,
     calibration: Optional[KnowCalibration] = None,
-    # STAGE-7-EXT: add `freshness_min: float | None = None`
-    # STAGE-7-EXT: add `genome=None` so check_superseded() can run before sparse.
+    # Stage 7 (spec §3, §7, §8) additions — all keyword-only so older
+    # callers (tests, /context wrapper) keep working without churn.
+    freshness_min: Optional[float] = None,
+    freshness_status: Optional[str] = None,
+    successor_source_id: Optional[str] = None,
+    cold_refresh_targets: Optional[Sequence[str]] = None,
 ) -> KnowBlock | MissBlock:
     """Single source of truth for the know/miss split.
 
@@ -329,6 +333,18 @@ def decide_know_or_miss(
             ``window.metadata["ratio"]``, then 0.0.
         calibration: override; defaults to KnowCalibration() (= helix.toml
             defaults if loaded by the route; module defaults otherwise).
+        freshness_min: Stage 7 — min decay across expressed candidates;
+            plumbed through to ``compute_confidence`` for β5 application.
+            ``None`` is "unknown" (legacy rows / no candidates).
+        freshness_status: Stage 7 (spec §5) — caller's freshness verdict
+            on top-1, one of "fresh" | "stale" | "missing" | "unknown".
+            Only "stale" / "missing" demote to MissBlock(reason="stale").
+        successor_source_id: Stage 7 (spec §7) — when not None, the
+            top-1 has a Path-A successor; demote to
+            MissBlock(reason="superseded") with this as refresh_target.
+        cold_refresh_targets: Stage 7 (spec §6) — when non-empty AND
+            we'd otherwise emit MissBlock(reason="sparse"), demote to
+            MissBlock(reason="cold") with these as refresh_targets.
 
     Returns either a KnowBlock or a MissBlock — never both, never neither.
     """
@@ -374,19 +390,69 @@ def decide_know_or_miss(
             escalate_to=_pick_escalation(query, "no_promoter_match"),
         )
 
-    # STAGE-7-EXT: insert superseded / stale / cold checks here, in
-    #  this order. Each returns MissBlock with reason and refresh_targets.
+    # Branches 3a/3b/3c — Stage 7 freshness gate (spec §7, §5, §6).
+    # Order matters: superseded is the strongest signal (a NEWER gene
+    # exists, so the agent can re-aim immediately), stale is next (the
+    # source moved, refresh in place), cold runs after the confidence
+    # floor below because it competes with reason="sparse".
 
-    # Branch 4: weak retrieval — confidence below floor.
+    # Branch 3a: superseded — the top-1 has a successor row (spec §7,
+    # Path A reverse-lookup of ``genes.supersedes``). Refresh target is
+    # the successor's source_id.
+    if successor_source_id:
+        top_source = getattr(top_gene, "source_id", None) if top_gene else None
+        # Defensive guard: if Path A returned the top-1's own source_id
+        # (shouldn't happen but a malformed row could) we don't demote.
+        if successor_source_id and successor_source_id != top_source:
+            return MissBlock(
+                reason="superseded",
+                top_score=float(top_score),
+                ratio=eff_ratio,
+                escalate_to=[],
+                refresh_targets=[str(successor_source_id)],
+            )
+
+    # Branch 3b: stale — top-1's underlying source has moved past
+    # ``last_verified_at`` (spec §5). Refresh target is the top-1's
+    # own source_id; the agent re-reads it and re-calls /context.
+    if freshness_status in ("stale", "missing") and top_gene is not None:
+        top_source = getattr(top_gene, "source_id", None)
+        if top_source:
+            return MissBlock(
+                reason="stale",
+                top_score=float(top_score),
+                ratio=eff_ratio,
+                escalate_to=[],
+                refresh_targets=[str(top_source)],
+            )
+
+    # Branch 4: weak retrieval — confidence below floor. Stage 7
+    # plumbs freshness_min through so a stale top-K shaves the
+    # confidence and may push otherwise borderline retrievals under
+    # emit_floor (spec §10).
     confidence = compute_confidence(
         top_score=top_score,
         score_gap=score_gap,
         lexical_dense_agree=lexical_dense_agree,
         coordinate_confidence=coordinate_confidence,
         calibration=cal,
-        # STAGE-7-EXT: pass freshness_min through here.
+        freshness_min=freshness_min,
     )
     if confidence < cal.emit_floor:
+        # Branch 3c: cold — would-be sparse miss but the cold-tier
+        # peek surfaced archived hits (spec §6). Promote to "cold"
+        # so the agent gets refresh_targets instead of an
+        # ask_human/rag escalation.
+        if cold_refresh_targets:
+            cleaned = [str(t) for t in cold_refresh_targets if t]
+            if cleaned:
+                return MissBlock(
+                    reason="cold",
+                    top_score=float(top_score),
+                    ratio=eff_ratio,
+                    escalate_to=[],
+                    refresh_targets=cleaned,
+                )
         return MissBlock(
             reason="sparse",
             top_score=float(top_score),
@@ -394,7 +460,14 @@ def decide_know_or_miss(
             escalate_to=_pick_escalation(query, "sparse"),
         )
 
-    # Branch 5: KnowBlock.
+    # Branch 5: KnowBlock. Stage 7 — soft-stale = top-1 fresh enough
+    # to act on (otherwise we'd be in branch 3b) but supporting
+    # context (rank 2..K) is stale (freshness_min < 0.5). Carries
+    # ``soft_stale=True`` for the route to surface
+    # ``recommendation="refresh"`` (spec §9).
+    soft_stale = bool(
+        freshness_min is not None and freshness_min < 0.5
+    )
     return KnowBlock(
         confidence=float(confidence),
         top_score=float(top_score),
@@ -404,6 +477,7 @@ def decide_know_or_miss(
         coordinate_confidence=float(
             max(0.0, min(1.0, coordinate_confidence))
         ),
+        soft_stale=soft_stale,
     )
 
 
