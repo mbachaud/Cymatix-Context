@@ -113,6 +113,37 @@ def _scan_multi_hop(lower: str, raw: str) -> List[str]:
 _DEFAULT = ClassifierResult(cls="default")
 
 
+# Stage 5 (2026-05-08) — caller_model_class × classifier.cls decoder_mode table.
+# Spec §6 (15 cells). The `generic` column is byte-identical to today's
+# hard-coded ClassifierResult.decoder_mode values (spec §7 regression table)
+# and the byte-identical golden test (test 6) is the live enforcement.
+#
+# Outer key = classifier.cls. Inner key = caller_model_class. Value is the
+# decoder_mode string, or None for "fall back to manager default" (matches
+# today's _DEFAULT behavior at line 113).
+DECODER_MODE_TABLE: dict[str, dict[str, Optional[str]]] = {
+    "arithmetic": {"generic": "minimal",   "small_moe": "answer_slate_only",    "frontier": "minimal"},
+    "factual":    {"generic": "condensed", "small_moe": "answer_slate_only",    "frontier": "condensed"},
+    "procedural": {"generic": "full",      "small_moe": "condensed_with_slate", "frontier": "full"},
+    "multi_hop":  {"generic": "full",      "small_moe": "condensed_with_slate", "frontier": "full"},
+    "default":    {"generic": None,        "small_moe": "condensed_with_slate", "frontier": None},
+}
+
+
+def resolve_decoder_mode(cls: str, caller_model_class: str) -> Optional[str]:
+    """Resolve decoder_mode given classifier class and caller_model_class.
+
+    Stage 5 §6 lookup. Unknown cls falls back to the ``default`` row;
+    unknown caller_model_class falls back to the ``generic`` column.
+    Returns ``None`` for cells where the manager should keep its configured
+    default decoder prompt (e.g. generic × default).
+    """
+    row = DECODER_MODE_TABLE.get(cls) or DECODER_MODE_TABLE["default"]
+    if caller_model_class not in row:
+        caller_model_class = "generic"
+    return row[caller_model_class]
+
+
 def classify_query(query: Optional[str]) -> ClassifierResult:
     """Classify a query into one of the router classes.
 

@@ -678,3 +678,22 @@ class ContextResponseEnvelope(BaseModel):
 # that both are defined. Without this, ContextPacket(...) blows up the
 # first time a route tries to construct it.
 ContextPacket.model_rebuild()
+
+
+# ── Stage 5 (2026-05-08): caller_model_class wire format ────────────────────
+#
+# See docs/specs/2026-05-08-stage-5-caller-model-class.md §3. Opt-in render-
+# branch selector for /context. The /context endpoint accepts an optional
+# "caller_model_class" string; unknown values return 400. Default is
+# "generic" — that branch is regression-locked byte-identical to pre-Stage-5
+# output (see test_generic_branch_byte_identical_to_pre_stage5_output).
+
+
+class CallerModelClass(str, Enum):
+    """Caller model class for /context render-branch selection (spec §3)."""
+    generic   = "generic"
+    small_moe = "small_moe"
+    frontier  = "frontier"
+
+
+CALLER_MODEL_CLASS_DEFAULT = "generic"
