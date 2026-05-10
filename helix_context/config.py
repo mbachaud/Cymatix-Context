@@ -131,6 +131,12 @@ class BudgetConfig:
     # helix_context/legibility.py. Default on; flip off to restore the
     # pre-Sprint-1 plain-dividers format (useful for bench A/B).
     legibility_enabled: bool = True
+    # Stage 5 (2026-05-08): char-budget for the small_moe JSON answer slate.
+    # Counts the rendered string the model actually sees, INCLUDING the
+    # <helix:slate>...</helix:slate> wrapper, JSON braces, quotes, commas,
+    # and per-KV separators. Spec §5 default is 1500. Generic and frontier
+    # branches do not consult this knob.
+    slate_char_budget: int = 1500
     # Sprint 2 session working-set register: track delivered genes per
     # session, elide repeats with a pointer stub so the consumer doesn't
     # pay full token cost for content it already holds. Dark on first
@@ -572,6 +578,7 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             foveated_alpha=float(b.get("foveated_alpha", cfg.budget.foveated_alpha)),
             foveated_c_min=float(b.get("foveated_c_min", cfg.budget.foveated_c_min)),
             foveated_base_chars=int(b.get("foveated_base_chars", cfg.budget.foveated_base_chars)),
+            slate_char_budget=int(b.get("slate_char_budget", cfg.budget.slate_char_budget)),
         )
 
     # Genome

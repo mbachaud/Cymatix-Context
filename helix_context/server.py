@@ -790,10 +790,24 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
             )
         except Exception:
             _prompt_tokens = None
+        # Stage 5 (2026-05-08): /v1/chat/completions proxies whatever
+        # caller_model_class the body specifies, defaulting to "generic"
+        # which preserves today's behavior for Continue and other Continue-
+        # compatible callers. Spec §3.
+        from .schemas import CallerModelClass, CALLER_MODEL_CLASS_DEFAULT
+        _proxy_cmc_raw = body.get("caller_model_class")
+        if _proxy_cmc_raw is None:
+            _proxy_caller_model_class = CALLER_MODEL_CLASS_DEFAULT
+        else:
+            try:
+                _proxy_caller_model_class = CallerModelClass(str(_proxy_cmc_raw)).value
+            except ValueError:
+                _proxy_caller_model_class = CALLER_MODEL_CLASS_DEFAULT
         context_window = await helix.build_context_async(
             user_query,
             downstream_model=downstream_model,
             prompt_tokens_hint=_prompt_tokens,
+            caller_model_class=_proxy_caller_model_class,
         )
 
         # Delta-epsilon health signal
@@ -1105,6 +1119,28 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
             else None
         )
 
+        # Stage 5 (2026-05-08): caller_model_class opt-in render branch.
+        # Spec docs/specs/2026-05-08-stage-5-caller-model-class.md §3.
+        # Default "generic" is regression-locked byte-identical to pre-Stage-5
+        # behavior; "small_moe" and "frontier" enable the new render branches.
+        # Unknown values return 400 with the allowed list (mirrors
+        # response_mode validation above).
+        from .schemas import CallerModelClass, CALLER_MODEL_CLASS_DEFAULT
+        _caller_model_class_raw = data.get("caller_model_class")
+        if _caller_model_class_raw is None:
+            caller_model_class = CALLER_MODEL_CLASS_DEFAULT
+        else:
+            try:
+                caller_model_class = CallerModelClass(str(_caller_model_class_raw)).value
+            except ValueError:
+                return JSONResponse(
+                    {
+                        "error": "Invalid caller_model_class",
+                        "allowed": [c.value for c in CallerModelClass],
+                    },
+                    status_code=400,
+                )
+
         # Budget-zone signal: the /context endpoint has no messages[] so
         # callers must supply prompt_tokens explicitly if they want the
         # zone cap to kick in. Missing => treated as clean/no-cap.
@@ -1130,7 +1166,15 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
             ignore_delivered=_ignore_delivered,
             read_only=read_only,
             decoder_override=_decoder_override,
+            caller_model_class=caller_model_class,
         )
+
+        # Stage 5 §3: echo caller_model_class on response.metadata so callers
+        # (and bench harnesses) can confirm the branch that ran. Lives on
+        # window.metadata so the standard /context payload picks it up via
+        # the agent.* projection below.
+        if window.metadata is not None:
+            window.metadata["caller_model_class"] = caller_model_class
 
         health = window.context_health
         latency_ms = round((_time.time() - t0) * 1000, 1)
@@ -1389,15 +1433,23 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
         # downstream of the retrieval. Labelled by health status so the
         # aligned/sparse/denatured/stale split is visible in Grafana.
         try:
-            from .telemetry import context_latency_histogram, redact_query
+            from .telemetry import (
+                context_latency_histogram,
+                context_calls_by_class_counter,
+                redact_query,
+            )
             context_latency_histogram().record(
                 _time.time() - t0,
                 {
                     "health": health.status,
                     "budget_tier": window.metadata.get("budget_tier", "broad"),
                     "cold_tier_used": str(getattr(helix, "_last_cold_tier_used", False)),
+                    # Stage 5 §11: class label for per-class p95 dashboards.
+                    "class": caller_model_class,
                 },
             )
+            # Stage 5 §11: per-call class counter.
+            context_calls_by_class_counter().add(1, {"class": caller_model_class})
         except Exception:
             # Promoted to warning so silent histogram failures surface.
             # /context latency is the primary user-visible health metric;

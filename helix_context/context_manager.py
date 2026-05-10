@@ -164,12 +164,41 @@ SMALL_MODEL_PATTERNS = {
     "phi-3.5:mini": 3.2, "gemma2:2b": 2.0,
 }
 
+# Stage 5 (2026-05-08): two new decoder modes for the small_moe class.
+# See docs/specs/2026-05-08-stage-5-caller-model-class.md §6.
+#   answer_slate_only — slate is the entire decoder context (~150 tokens),
+#                        no <expressed_context> block. Used for arithmetic
+#                        and factual classes on small_moe callers.
+#   condensed_with_slate — slate FIRST (so attention locks before prose),
+#                          then the condensed decoder prompt. Used for
+#                          procedural/multi_hop/default on small_moe.
+# The {answer_slate} placeholder is filled by _assemble at render time.
+DECODER_ANSWER_SLATE_ONLY = """Answer the question using ONLY the ANSWER SLATE below.
+The slate contains pre-extracted facts from the knowledge base.
+Find the key that matches the question and return its EXACT value.
+
+ANSWER SLATE:
+{answer_slate}
+
+If no slate key matches, reply: "(no slate key matched)"
+Do NOT reason, speculate, or invent values."""
+
+DECODER_CONDENSED_WITH_SLATE = """ANSWER SLATE (use first if a key matches):
+{answer_slate}
+
+The <expressed_context> below contains project data selected for your query.
+If a Facts: line is present, check it FIRST — it contains pre-extracted key-value pairs.
+Answer with the exact value, not a description."""
+
 DECODER_MODES = {
     "full": DECODER_FULL,
     "condensed": DECODER_CONDENSED,
     "minimal": DECODER_MINIMAL,
     "none": DECODER_NONE,
     "moe": DECODER_MOE,
+    # Stage 5 §6 — small_moe class branches.
+    "answer_slate_only": DECODER_ANSWER_SLATE_ONLY,
+    "condensed_with_slate": DECODER_CONDENSED_WITH_SLATE,
 }
 
 # Keep backward compatibility
@@ -246,6 +275,91 @@ def _compute_foveated_caps(
     if n <= 0:
         return []
     return [max(c_min, c_max * ((i + 1) ** -alpha)) for i in range(n)]
+
+
+# Stage 5 (2026-05-08) §5: small_moe slate render — JSON-shaped, char-bounded,
+# greedy-fill ordered by per-KV score (best-first; caller sorts upstream).
+# See docs/specs/2026-05-08-stage-5-caller-model-class.md §5.
+_SLATE_WRAPPER_OPEN = "<helix:slate>"
+_SLATE_WRAPPER_CLOSE = "</helix:slate>"
+_SLATE_MIN_VALUE_CHARS = 8  # Truncation rule per spec §5.
+
+
+def _render_small_moe_slate(
+    unique_slate: List[str],
+    char_budget: int,
+) -> str:
+    """Render the small_moe answer slate as compact JSON within a char budget.
+
+    Spec §5: greedy fill ordered by caller-provided rank, parse each line as
+    `key=value`, dedup keys (first-write-wins). When adding a KV would
+    exceed the budget, truncate that KV's value to fit (minimum
+    ``_SLATE_MIN_VALUE_CHARS`` retained — drop the entry if the value cannot
+    fit). Do NOT silently stop iterating: a low-rank short KV can still fit
+    after a high-rank long one was truncated.
+
+    The budget counts the rendered string the model actually sees, INCLUDING
+    the wrapper tag, the JSON braces/quotes/commas, and per-KV separators.
+
+    Returns the wrapped slate string `<helix:slate>{...}</helix:slate>` or an
+    empty wrapper `<helix:slate>{}</helix:slate>` if no KV fits.
+    """
+    import json as _json
+    # Reserve room for wrapper + the empty-object braces.
+    wrapper_len = len(_SLATE_WRAPPER_OPEN) + len(_SLATE_WRAPPER_CLOSE)
+    minimal_len = wrapper_len + 2  # the two braces of an empty object {}
+    if char_budget <= minimal_len:
+        # Budget too small to fit even an empty object — fail soft.
+        return _SLATE_WRAPPER_OPEN + "{}" + _SLATE_WRAPPER_CLOSE
+
+    # First pass: parse + dedup keys (first-write-wins).
+    parsed: List[Tuple[str, str]] = []
+    seen_keys: set[str] = set()
+    for idx, line in enumerate(unique_slate):
+        if "=" in line:
+            k, _, v = line.partition("=")
+            k = k.strip() or f"kv{idx}"
+            v = v
+        else:
+            k = f"kv{idx}"
+            v = line
+        if k in seen_keys:
+            continue
+        seen_keys.add(k)
+        parsed.append((k, v))
+
+    # Greedy-fill: try each (k, v) in order; if it fits, keep it; if not,
+    # truncate v to fit; if v can't fit, drop and continue (don't stop).
+    accepted: dict[str, str] = {}
+    for k, v in parsed:
+        # Try with full value.
+        candidate = dict(accepted)
+        candidate[k] = v
+        rendered = _json.dumps(candidate, ensure_ascii=False, separators=(",", ":"))
+        if wrapper_len + len(rendered) <= char_budget:
+            accepted = candidate
+            continue
+        # Try with truncated value.
+        # Compute headroom: budget - wrapper - non-this-KV serialized cost.
+        # Easier: binary-search on the value length until it fits or hits min.
+        lo, hi = _SLATE_MIN_VALUE_CHARS, len(v)
+        best_v: Optional[str] = None
+        while lo <= hi:
+            mid = (lo + hi) // 2
+            trial = dict(accepted)
+            trial[k] = v[:mid]
+            trial_rendered = _json.dumps(trial, ensure_ascii=False, separators=(",", ":"))
+            if wrapper_len + len(trial_rendered) <= char_budget:
+                best_v = v[:mid]
+                lo = mid + 1
+            else:
+                hi = mid - 1
+        if best_v is not None:
+            accepted[k] = best_v
+        # else: this KV can't even fit at min-length; drop and continue.
+
+    rendered = _json.dumps(accepted, ensure_ascii=False, separators=(",", ":"))
+    return _SLATE_WRAPPER_OPEN + rendered + _SLATE_WRAPPER_CLOSE
 
 
 def _merge_subquery_candidates(
@@ -735,13 +849,28 @@ class HelixContextManager:
 
     # -- Build context: the main per-turn operation --------------------
 
-    def _should_use_slate(self, downstream_model: Optional[str] = None) -> bool:
+    def _should_use_slate(
+        self,
+        downstream_model: Optional[str] = None,
+        caller_model_class: str = "generic",
+    ) -> bool:
         """Check if answer-slate mode should activate for this request.
 
-        Activates for:
+        Stage 5 (2026-05-08): caller_model_class overrides the legacy
+        detection axis (spec §4 behavior matrix):
+          - small_moe → always ON
+          - frontier  → always OFF
+          - generic   → preserve legacy detection (regression baseline)
+
+        Legacy generic-branch detection activates for:
           1. Server-level MoE detection (ribosome model is gemma4 etc.)
           2. Per-request downstream model detection (sub-4B or MoE family)
         """
+        if caller_model_class == "small_moe":
+            return True
+        if caller_model_class == "frontier":
+            return False
+        # generic — preserve legacy behavior byte-identical to pre-Stage-5.
         if self._is_moe:
             return True
         if downstream_model:
@@ -810,6 +939,7 @@ class HelixContextManager:
         ignore_delivered: bool = False,
         read_only: bool = False,
         decoder_override: Optional[str] = None,
+        caller_model_class: str = "generic",
     ) -> ContextWindow:
         """
         Build the active context window for a query.
@@ -861,18 +991,30 @@ class HelixContextManager:
         override_applied = False
         candidate_pool_size = 0
 
-        # Decoder selection: explicit caller override > classifier hint > default.
+        # Decoder selection: explicit caller override > classifier × class hint > default.
         # Resolved per-request without mutating shared instance state to prevent
         # races on the singleton manager under concurrent /context calls.
+        #
+        # Stage 5 (2026-05-08): the classifier-hint branch now consults the
+        # 15-cell §6 lookup table via resolve_decoder_mode(cls, caller_model_class)
+        # rather than the hard-coded ClassifierResult.decoder_mode literal. The
+        # `generic` column of the table is byte-identical to the legacy literals
+        # (spec §7 — verified by test_generic_branch_byte_identical_to_pre_stage5_output).
+        from .query_classifier import resolve_decoder_mode as _resolve_decoder_mode
+        effective_decoder_mode_name: Optional[str] = None
         if decoder_override and decoder_override in DECODER_MODES:
             effective_decoder_prompt = DECODER_MODES[decoder_override]
+            effective_decoder_mode_name = decoder_override
             override_applied = True
-        elif (
-            classifier_result is not None
-            and classifier_result.decoder_mode
-            and classifier_result.decoder_mode in DECODER_MODES
-        ):
-            effective_decoder_prompt = DECODER_MODES[classifier_result.decoder_mode]
+        elif classifier_result is not None:
+            _resolved = _resolve_decoder_mode(
+                classifier_result.cls, caller_model_class,
+            )
+            if _resolved is not None and _resolved in DECODER_MODES:
+                effective_decoder_prompt = DECODER_MODES[_resolved]
+                effective_decoder_mode_name = _resolved
+            else:
+                effective_decoder_prompt = self._decoder_prompt
             override_applied = False
         else:
             effective_decoder_prompt = self._decoder_prompt
@@ -1218,19 +1360,45 @@ class HelixContextManager:
         # Invariant: classifier can only LOWER the assembled gene count.
         # It cannot raise it, and it cannot reduce retrieval depth — the
         # score-ratio tier above already saw the full candidate set.
+        #
+        # Stage 5 (2026-05-08) §4: caller_model_class adjusts the effective cap
+        # AFTER the classifier-derived cap.
+        #   small_moe → min(classifier_cap, 4)   (small models drown in >4 genes)
+        #   frontier  → max(12, classifier_cap*2) (frontier callers have 200k+ contexts)
+        #   generic   → unchanged (regression baseline; classifier_cap as-is)
         candidate_pool_size = len(candidates)
-        if (
-            classifier_result is not None
-            and classifier_result.assembly_max_genes_cap is not None
-            and len(candidates) > classifier_result.assembly_max_genes_cap
-        ):
+        _classifier_cap = (
+            classifier_result.assembly_max_genes_cap
+            if classifier_result is not None and classifier_result.assembly_max_genes_cap is not None
+            else None
+        )
+        if _classifier_cap is not None and len(candidates) > _classifier_cap:
             log.debug(
                 "Classifier cap: assembled %d -> %d (class=%s)",
                 len(candidates),
-                classifier_result.assembly_max_genes_cap,
-                classifier_result.cls,
+                _classifier_cap,
+                classifier_result.cls if classifier_result is not None else "n/a",
             )
-            candidates = candidates[: classifier_result.assembly_max_genes_cap]
+            candidates = candidates[:_classifier_cap]
+        # Stage 5 §4: per-class assembly cap applied on top of (or instead of)
+        # classifier cap. Generic skips this block entirely so the generic
+        # branch stays byte-identical to pre-Stage-5.
+        if caller_model_class == "small_moe":
+            _moe_cap = min(_classifier_cap, 4) if _classifier_cap is not None else 4
+            if len(candidates) > _moe_cap:
+                candidates = candidates[:_moe_cap]
+        elif caller_model_class == "frontier":
+            _frontier_cap = (
+                max(12, _classifier_cap * 2) if _classifier_cap is not None else 12
+            )
+            # Frontier RAISES the cap relative to classifier_cap, so this is a
+            # widening — only meaningful if the candidate pool was bigger than
+            # the classifier cap. The classifier cap was already applied above
+            # (potentially truncating); re-running with a wider cap would not
+            # restore lost candidates. So we only honor the wider cap when the
+            # classifier cap was None (no truncation happened upstream).
+            if _classifier_cap is None and len(candidates) > _frontier_cap:
+                candidates = candidates[:_frontier_cap]
 
         # Foveated-splice (spec §4-5): for BROAD only, replace uniform per-gene
         # compression with a rank-scaled power-law schedule AND reverse the
@@ -1247,11 +1415,26 @@ class HelixContextManager:
         # calls don't race and stale state from a prior call can't leak into
         # the current one (see code review I1/I2; same pattern as
         # decoder_prompt_override threading).
-        if (
-            budget_tier == "broad"
-            and self.config.budget.foveated_enabled
-            and len(candidates) > 1
-        ):
+        #
+        # Stage 5 (2026-05-08) §8: caller_model_class gates foveated.
+        #   frontier  → SKIP entirely (forward rank-1-first order; long-context
+        #               attention regresses under reverse-rank).
+        #   small_moe → ON regardless of budget_tier (always benefits from
+        #               recency on the gene that holds the answer).
+        #   generic   → unchanged (broad-tier-only, regression baseline).
+        if caller_model_class == "frontier":
+            _foveated_should_run = False
+        elif caller_model_class == "small_moe":
+            _foveated_should_run = (
+                self.config.budget.foveated_enabled and len(candidates) > 1
+            )
+        else:
+            _foveated_should_run = (
+                budget_tier == "broad"
+                and self.config.budget.foveated_enabled
+                and len(candidates) > 1
+            )
+        if _foveated_should_run:
             # Stage 4 (2026-05-08): per-classifier foveated alpha. mode='global'
             # returns config.budget.foveated_alpha (legacy); 'per_classifier'
             # returns the per-class value with 'default' fallback.
@@ -1280,6 +1463,23 @@ class HelixContextManager:
         # Dense format minimizes prose for small model extraction.
         spliced_map = {}
         answer_slate_lines = []  # MoE answer slate — flat KV pairs
+
+        # Stage 5 (2026-05-08) §5: small_moe slate is best-first by per-KV score
+        # (Gemini's `_best_first` sort preserved as the source order). Generic
+        # branch keeps the original "collect during candidate loop" approach
+        # for byte-identity with pre-Stage-5 output.
+        if caller_model_class == "small_moe":
+            _slate_scores = self.genome.last_query_scores or {}
+            _best_first = sorted(
+                candidates,
+                key=lambda _g: _slate_scores.get(_g.gene_id, 0),
+                reverse=True,
+            )
+            for _g in _best_first:
+                if _g.key_values:
+                    for _kv in _g.key_values[:5]:
+                        answer_slate_lines.append(_kv)
+
         # foveated_caps / foveated_active are call-local; see top of build_context.
         foveated_base = self.config.budget.foveated_base_chars
         _splice_t0 = _time.monotonic()
@@ -1299,9 +1499,12 @@ class HelixContextManager:
                 # Top 5 KVs as XML attributes for instant scanning
                 kv_pairs = " ".join(g.key_values[:5])
                 kv_attrs = f' facts="{kv_pairs}"'
-                # Collect KVs for MoE answer slate
-                for kv in g.key_values[:5]:
-                    answer_slate_lines.append(kv)
+                # Collect KVs for MoE answer slate (generic branch only —
+                # small_moe pre-pass above already populated the slate in
+                # best-first order per spec §5).
+                if caller_model_class != "small_moe":
+                    for kv in g.key_values[:5]:
+                        answer_slate_lines.append(kv)
             src_attr = f' src="{short}"' if short else ""
             # Semantic compression via Headroom (by Tejas Chopra, Apache-2.0).
             # Dispatches by promoter domain: log→LogCompressor,
@@ -1332,7 +1535,9 @@ class HelixContextManager:
             pass
 
         # Step 5: Assemble (MoE/small-model aware)
-        use_slate = self._should_use_slate(downstream_model)
+        # Stage 5 §4: caller_model_class refines slate emission (small_moe
+        # always-on, frontier always-off, generic preserves legacy).
+        use_slate = self._should_use_slate(downstream_model, caller_model_class)
         with _stage_timer("assemble"):
             window = self._assemble(
                 query, candidates, spliced_map, relation_graph,
@@ -1342,6 +1547,7 @@ class HelixContextManager:
                 ignore_delivered=ignore_delivered,
                 decoder_prompt_override=effective_decoder_prompt,
                 respect_caller_order=foveated_active,
+                caller_model_class=caller_model_class,
             )
 
         # Annotate window with dynamic budget tier (for telemetry/benchmarks)
@@ -1452,6 +1658,7 @@ class HelixContextManager:
         ignore_delivered: bool = False,
         read_only: bool = False,
         decoder_override: Optional[str] = None,
+        caller_model_class: str = "generic",
     ) -> ContextWindow:
         """Async wrapper -- runs the sync pipeline in thread pool."""
         loop = asyncio.get_event_loop()
@@ -1468,6 +1675,7 @@ class HelixContextManager:
             ignore_delivered,
             read_only,
             decoder_override,
+            caller_model_class,
         )
 
     def reset_session_state(self) -> None:
@@ -2197,6 +2405,7 @@ class HelixContextManager:
         ignore_delivered: bool = False,
         decoder_prompt_override: Optional[str] = None,
         respect_caller_order: bool = False,
+        caller_model_class: str = "generic",
     ) -> ContextWindow:
         """
         Sort spliced parts, join with dividers, wrap in expressed_context tags.
@@ -2211,6 +2420,16 @@ class HelixContextManager:
         this session are emitted as elision stubs rather than full content;
         fresh deliveries are logged to session_delivery_log for future
         elision. ignore_delivered=True bypasses the check (still logs).
+
+        Stage 5 §4 candidate_order branches (caller_model_class):
+          - generic   → unchanged (regression baseline). respect_caller_order
+                        wins; else slate→score DESC; else sequence_index.
+          - small_moe → reversed (foveated always-on); respect_caller_order
+                        path covers this — same code path as generic.
+          - frontier  → forward rank-1-first (narrative coherence). Not
+                        sequence-index ordered — frontier wants the strongest
+                        evidence at the top of the prompt under long-context
+                        attention.
         """
         use_slate = answer_slate is not None
         if respect_caller_order:
@@ -2219,6 +2438,16 @@ class HelixContextManager:
             # for BROAD). Skip the re-sort so reverse-rank actually reaches
             # the prompt instead of being clobbered back to score-DESC.
             sorted_genes = list(candidates)
+        elif caller_model_class == "frontier":
+            # Stage 5 §4: frontier callers want forward rank-1-first ordering
+            # (long-context attention prefers narrative coherence with the
+            # top evidence at the front of the prompt).
+            scores = self.genome.last_query_scores or {}
+            sorted_genes = sorted(
+                candidates,
+                key=lambda g: scores.get(g.gene_id, 0),
+                reverse=True,
+            )
         elif use_slate:
             # MoE/small-model: relevance-first ordering — best gene at position 0
             # so it's within every sliding-window attention layer
@@ -2236,7 +2465,13 @@ class HelixContextManager:
         # expressed gene set so every header's confidence symbol is
         # calibrated against THIS response (not a genome-wide baseline).
         # See helix_context/legibility.py + docs/FUTURE/AI_CONSUMER_ROADMAP_2026-04-14.md.
-        legibility_on = self.config.budget.legibility_enabled
+        #
+        # Stage 5 §4: small_moe suppresses legibility headers entirely
+        # (~80 tok/gene cost > legibility benefit for 4B-class callers).
+        legibility_on = (
+            self.config.budget.legibility_enabled
+            and caller_model_class != "small_moe"
+        )
         if legibility_on:
             _leg_scores = self.genome.last_query_scores or {}
             _leg_tiers = getattr(self.genome, "last_tier_contributions", None) or {}
@@ -2347,17 +2582,39 @@ class HelixContextManager:
         )
 
         # MoE answer slate: inject pre-extracted KVs into decoder prompt
-        # so they land in the first ~200 tokens (inside every SWA window)
+        # so they land in the first ~200 tokens (inside every SWA window).
+        #
+        # Stage 5 (2026-05-08) §5: small_moe gets a JSON-shaped, char-bounded
+        # slate wrapped in <helix:slate>...</helix:slate>. Generic preserves
+        # the legacy newline-joined 20-entry cap (regression baseline).
         if answer_slate:
-            # Dedupe and limit slate to 20 entries
+            # Dedupe in arrival order (caller ordered them per §5 already).
             seen_kvs: set[str] = set()
             unique_slate: list[str] = []
             for kv in answer_slate:
                 if kv not in seen_kvs:
                     seen_kvs.add(kv)
                     unique_slate.append(kv)
-            slate_text = "\n".join(unique_slate[:20])
-            decoder_prompt = DECODER_MOE.replace("{answer_slate}", slate_text)
+
+            if caller_model_class == "small_moe":
+                # Spec §5: char-bounded greedy fill, JSON shape, MoE-friendly.
+                slate_budget = int(getattr(
+                    self.config.budget, "slate_char_budget", 1500,
+                ))
+                slate_text = _render_small_moe_slate(unique_slate, slate_budget)
+                # Honor decoder_prompt_override if it has the slate placeholder
+                # (answer_slate_only / condensed_with_slate); else fall back
+                # to DECODER_MOE for compatibility.
+                _template = decoder_prompt_override or DECODER_MOE
+                if "{answer_slate}" in _template:
+                    decoder_prompt = _template.replace("{answer_slate}", slate_text)
+                else:
+                    decoder_prompt = DECODER_MOE.replace("{answer_slate}", slate_text)
+            else:
+                # Generic branch — byte-identical to pre-Stage-5: newline-
+                # joined, 20-entry cap, DECODER_MOE template.
+                slate_text = "\n".join(unique_slate[:20])
+                decoder_prompt = DECODER_MOE.replace("{answer_slate}", slate_text)
         else:
             # Honor per-request override (threaded from build_context) to
             # avoid racing on self._decoder_prompt across concurrent calls.

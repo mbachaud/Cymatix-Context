@@ -250,6 +250,20 @@ def context_latency_histogram():
     return _instruments["context_latency"]
 
 
+def context_calls_by_class_counter():
+    """Stage 5 (2026-05-08): per-call counter labelled by caller_model_class.
+
+    Emits one increment per /context request with the resolved class
+    (generic|small_moe|frontier). Spec §11.
+    """
+    if "context_calls_by_class" not in _instruments:
+        _instruments["context_calls_by_class"] = meter.create_counter(
+            "helix_context_calls_by_class",
+            description="/context calls bucketed by caller_model_class (Stage 5)",
+        )
+    return _instruments["context_calls_by_class"]
+
+
 def cwola_bucket_counter():
     if "cwola_bucket" not in _instruments:
         _instruments["cwola_bucket"] = meter.create_counter(
