@@ -270,9 +270,33 @@ def render_predictions(results: list[dict]) -> str:
 # ── Main ─────────────────────────────────────────────────────────────
 
 def main() -> int:
+    # Stage 3 (2026-05-08): --fusion-mode flag (spec §11 A/B harness).
+    # Annotates the run output with the fusion_mode the operator
+    # claims is active server-side. The bench is HTTP-only — to
+    # actually flip the mode you must restart the helix server with
+    # the new helix.toml [retrieval] fusion_mode value (or via
+    # HELIX_FUSION_MODE_OVERRIDE if/when wired). This flag exists so
+    # the A/B sweep result file records which side was being measured.
+    import argparse
+    parser = argparse.ArgumentParser(
+        description="Probe /context for tier activation matrix.",
+    )
+    parser.add_argument(
+        "--fusion-mode",
+        choices=("additive", "rrf"),
+        default=os.environ.get("HELIX_FUSION_MODE_LABEL", "additive"),
+        help=(
+            "Annotation only — the bench reads server output as-is. "
+            "Restart the helix server with [retrieval] fusion_mode=<this> "
+            "before running the bench to actually exercise the path."
+        ),
+    )
+    args = parser.parse_args()
+
     print(f"=== Skill / tool activation profiler ===")
     print(f"Server: {HELIX_URL}")
     print(f"Shapes: {len(PROMPT_SHAPES)}")
+    print(f"Fusion mode (annotation): {args.fusion_mode}")
     print()
 
     # Sanity ping
@@ -306,6 +330,8 @@ def main() -> int:
     out = {
         "timestamp": time.time(),
         "n_shapes": len(PROMPT_SHAPES),
+        # Stage 3 annotation — operator-claimed server fusion_mode.
+        "fusion_mode": args.fusion_mode,
         "results": results,
     }
     Path(OUTPUT_PATH).write_text(json.dumps(out, indent=2))

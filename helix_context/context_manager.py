@@ -357,6 +357,20 @@ class HelixContextManager:
             ann_similarity_threshold=config.retrieval.ann_similarity_threshold,
             ann_threshold_min_genes=config.retrieval.ann_threshold_min_genes,
             ann_threshold_max_genes=config.retrieval.ann_threshold_max_genes,
+            dense_pool_size=config.retrieval.dense_pool_size,
+            # Stage 3 (2026-05-08): RRF fusion + per-tier weights.
+            fusion_mode=config.retrieval.fusion_mode,
+            rrf_k=config.retrieval.rrf_k,
+            fts5_weight=config.retrieval.fts5_weight,
+            splade_weight=config.retrieval.splade_weight,
+            tag_exact_weight=config.retrieval.tag_exact_weight,
+            tag_prefix_weight=config.retrieval.tag_prefix_weight,
+            sema_cold_weight=config.retrieval.sema_cold_weight,
+            lex_anchor_weight=config.retrieval.lex_anchor_weight,
+            harmonic_weight=config.retrieval.harmonic_weight,
+            entity_graph_weight=config.retrieval.entity_graph_weight,
+            dense_weight=config.retrieval.dense_weight,
+            pki_weight=config.retrieval.pki_weight,
         )
 
         # Replication manager (distributed genome clones)
@@ -1037,13 +1051,30 @@ class HelixContextManager:
                 # the larger candidate set gives them a recall chance.
                 TIGHT_SCORE_FLOOR = 5.0
                 FOCUSED_SCORE_FLOOR = 2.5
-                if ratio >= 3.0 and top_score >= TIGHT_SCORE_FLOOR and len(candidates) >= 3:
+                # ── Stage 3 transitional bypass (spec §9) ──
+                # Under RRF, the score scale collapses to ~Σweight/(k+1) ≈ 0.3
+                # max — the absolute TIGHT/FOCUSED floors are calibrated for
+                # the additive scale and would force every query to BROAD.
+                # Stage 4 owns the recalibrated floors. Until then, RRF mode
+                # operates on ratio gates only.
+                skip_absolute_floors = (
+                    getattr(self.genome, "_fusion_mode", "additive") == "rrf"
+                )
+                if (
+                    ratio >= 3.0
+                    and (skip_absolute_floors or top_score >= TIGHT_SCORE_FLOOR)
+                    and len(candidates) >= 3
+                ):
                     # High confidence — top gene dominates AND is strong, send 3
                     shadow_pool = shadow_pool + candidates[3:]
                     candidates = candidates[:3]
                     budget_tier = "tight"
                     budget_tokens_est = 6000
-                elif ratio >= 1.8 and top_score >= FOCUSED_SCORE_FLOOR and len(candidates) >= 6:
+                elif (
+                    ratio >= 1.8
+                    and (skip_absolute_floors or top_score >= FOCUSED_SCORE_FLOOR)
+                    and len(candidates) >= 6
+                ):
                     # Moderate confidence — narrow to 6
                     shadow_pool = shadow_pool + candidates[6:]
                     candidates = candidates[:6]
