@@ -254,9 +254,18 @@ entity_graph_retrieval_enabled = false
 # dense_pool_size decouples recall breadth from the final cut (max_genes).
 dense_embedding_enabled = false
 dense_embedding_dim = 1024
-ann_similarity_threshold = 0.35
+ann_similarity_threshold = 0.35           # legacy / fallback when calibration row missing
 ann_threshold_min_genes = 1
 ann_threshold_max_genes = 12
+# Stage 4 (2026-05-08): margin-over-random ANN threshold. Spec
+# docs/specs/2026-05-08-stage-4-threshold-calibration.md §3+§6.
+# "absolute" (default) keeps Stage-3 behavior byte-for-byte: query_genes_ann
+# uses ann_similarity_threshold above. Flip to "margin_over_random" after
+# running scripts/calibrate_thresholds.py — the runtime then reads the
+# persisted threshold from genome_calibration. Falls back to
+# ann_similarity_threshold (with one-time WARN) if the row is missing.
+ann_threshold_mode = "absolute"           # "absolute" | "margin_over_random"
+ann_threshold_sigma_multiplier = 3.0      # mu + N*sigma over random pairs
 dense_pool_size = 500
 # Stage 3 (2026-05-08): Reciprocal Rank Fusion. Spec
 # docs/specs/2026-05-08-stage-3-rrf-fusion.md replaces the additive
@@ -376,3 +385,47 @@ maintenance = ["admin", "vacuum", "refresh", "checkpoint", "compact"]
 # rollup_shard = "hour"             # hour | daily
 # prune_interval_minutes = 60
 # trigger_only = false              # emit only on threshold (v1.1: not yet enforced)
+
+# ── Stage 4 (2026-05-08): per-classifier confidence floors ──────────────
+# Spec: docs/specs/2026-05-08-stage-4-threshold-calibration.md §6.
+# When mode='global' (default), context_manager uses the legacy hard-coded
+# TIGHT_SCORE_FLOOR=5.0 / FOCUSED_SCORE_FLOOR=2.5 / abstain=2.5 — pre-Stage-4
+# behavior byte-for-byte. Flip to 'per_classifier' after running
+# scripts/calibrate_thresholds.py to consume the emitted [abstain.<cls>] blocks.
+#
+# 'per_classifier' REQUIRES an [abstain.default] block (loader raises
+# ConfigError otherwise). Other classes may be omitted — runtime falls back
+# to [abstain.default].
+[abstain]
+mode = "global"  # "global" | "per_classifier"
+
+# Example calibrated blocks (commented out — populated by calibrate_thresholds.py):
+# [abstain.factual]
+# abstain_top = 0.42
+# focused_top = 0.71
+# tight_top = 1.18
+# foveated_alpha = 1.4
+#
+# [abstain.multi_hop]
+# abstain_top = 0.38
+# focused_top = 0.55
+# tight_top = 0.92
+# foveated_alpha = 0.6
+#
+# [abstain.arithmetic]
+# abstain_top = 0.30
+# focused_top = 0.60
+# tight_top = 1.00
+# foveated_alpha = 1.6
+#
+# [abstain.procedural]
+# abstain_top = 0.40
+# focused_top = 0.65
+# tight_top = 1.10
+# foveated_alpha = 0.9
+#
+# [abstain.default]
+# abstain_top = 0.40
+# focused_top = 0.65
+# tight_top = 1.10
+# foveated_alpha = 1.0

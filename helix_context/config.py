@@ -280,6 +280,14 @@ class RetrievalConfig:
     ann_similarity_threshold: float = 0.35
     ann_threshold_min_genes: int = 1
     ann_threshold_max_genes: int = 12
+    # Stage 4 (2026-05-08): margin-over-random ANN calibration. Spec
+    # docs/specs/2026-05-08-stage-4-threshold-calibration.md §3-§6.
+    # ``"absolute"`` (default) keeps Stage-3 behavior byte-for-byte;
+    # ``"margin_over_random"`` reads the persisted threshold from the
+    # ``genome_calibration`` table (populated by
+    # ``scripts/calibrate_thresholds.py``).
+    ann_threshold_mode: str = "absolute"
+    ann_threshold_sigma_multiplier: float = 3.0
     # Stage 2 (2026-05-08): dense recall pool size. Decoupled from
     # ann_threshold_max_genes (the final cut). 500 hits ~3% of an 18.9k
     # corpus per spec §4.
@@ -304,6 +312,59 @@ class RetrievalConfig:
     dense_weight: float = 1.0               # Stage 2 dense recall, RRF participant
     pki_weight: float = 1.0                 # PKI tier, RRF participant
     # Note: filename_anchor_weight, sr_weight reuse their existing knobs above.
+
+
+@dataclass
+class AbstainClassFloors:
+    """Stage 4 per-classifier confidence floors.
+
+    Replaces the global ``TIGHT_SCORE_FLOOR=5.0`` / ``FOCUSED_SCORE_FLOOR=2.5``
+    / ``FOCUSED_SCORE_FLOOR_FOR_ABSTAIN=2.5`` constants in
+    ``context_manager.py:946-989`` with per-class values calibrated from
+    ``located_n1000.json`` score distributions.
+
+    Spec: docs/specs/2026-05-08-stage-4-threshold-calibration.md §4 + §6.
+    """
+    # p85 of MISS scores — anything strictly below this is abstain.
+    abstain_top: float = 2.5
+    # p25 of HIT scores — at-or-above this enters FOCUSED tier (with ratio gate).
+    focused_top: float = 2.5
+    # p60 of HIT scores — at-or-above this enters TIGHT tier (with ratio gate).
+    tight_top: float = 5.0
+    # Per-class foveated splice power-law exponent. Replaces
+    # ``budget.foveated_alpha`` when ``[abstain].mode = "per_classifier"``.
+    foveated_alpha: float = 1.0
+
+
+@dataclass
+class AbstainConfig:
+    """Stage 4 abstain/floor configuration block.
+
+    ``mode``:
+      - ``"global"`` (default) preserves Stage-3 behavior byte-for-byte —
+        the hard-coded floors in ``context_manager.py`` apply unchanged.
+      - ``"per_classifier"`` consults ``per_class[cls]`` (with ``default``
+        fallback). Loader RAISES ``ConfigError`` if any required block is
+        missing.
+    """
+    mode: str = "global"
+    per_class: Dict[str, AbstainClassFloors] = field(default_factory=dict)
+
+    def floors_for(self, cls: Optional[str]) -> AbstainClassFloors:
+        """Per-spec lookup with ``default`` fallback.
+
+        Returns the global-equivalent floors when ``mode == "global"``.
+        """
+        if self.mode == "global":
+            # Identity floors — context_manager uses its hard-coded constants
+            # in this branch and never consults this object except for telemetry.
+            return AbstainClassFloors()
+        if cls and cls in self.per_class:
+            return self.per_class[cls]
+        if "default" in self.per_class:
+            return self.per_class["default"]
+        # Last-resort identity — should not happen if loader validation passed.
+        return AbstainClassFloors()
 
 
 @dataclass
@@ -419,6 +480,8 @@ class HelixConfig:
     context: ContextConfig = field(default_factory=ContextConfig)
     cymatics: CymaticsConfig = field(default_factory=CymaticsConfig)
     retrieval: RetrievalConfig = field(default_factory=RetrievalConfig)
+    # Stage 4 (2026-05-08) per-classifier confidence floors.
+    abstain: AbstainConfig = field(default_factory=AbstainConfig)
     session: SessionConfig = field(default_factory=SessionConfig)
     plr: PLRConfig = field(default_factory=PLRConfig)
     headroom: HeadroomConfig = field(default_factory=HeadroomConfig)
@@ -619,6 +682,12 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             ann_similarity_threshold=float(r.get("ann_similarity_threshold", cfg.retrieval.ann_similarity_threshold)),
             ann_threshold_min_genes=int(r.get("ann_threshold_min_genes", cfg.retrieval.ann_threshold_min_genes)),
             ann_threshold_max_genes=int(r.get("ann_threshold_max_genes", cfg.retrieval.ann_threshold_max_genes)),
+            # Stage 4 (2026-05-08) margin-over-random calibration mode.
+            ann_threshold_mode=str(r.get("ann_threshold_mode", cfg.retrieval.ann_threshold_mode)),
+            ann_threshold_sigma_multiplier=float(r.get(
+                "ann_threshold_sigma_multiplier",
+                cfg.retrieval.ann_threshold_sigma_multiplier,
+            )),
             # Stage 2 (2026-05-08): dense recall pool size, decoupled from final cut.
             dense_pool_size=int(r.get("dense_pool_size", cfg.retrieval.dense_pool_size)),
             # Stage 3 (2026-05-08): RRF fusion. Default "additive" preserves
@@ -638,6 +707,47 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             dense_weight=float(r.get("dense_weight", cfg.retrieval.dense_weight)),
             pki_weight=float(r.get("pki_weight", cfg.retrieval.pki_weight)),
         )
+
+    # Stage 4 (2026-05-08) abstain config — global vs per_classifier mode.
+    # Spec docs/specs/2026-05-08-stage-4-threshold-calibration.md §6.
+    if "abstain" in raw:
+        a = raw["abstain"]
+        if not isinstance(a, dict):
+            log.warning("[abstain] is not a table; ignoring")
+        else:
+            mode = str(a.get("mode", "global"))
+            if mode not in ("global", "per_classifier"):
+                log.warning(
+                    "[abstain].mode=%r is invalid; falling back to 'global'", mode
+                )
+                mode = "global"
+            per_class: Dict[str, AbstainClassFloors] = {}
+            # Discover sub-tables — any [abstain.<cls>] block.
+            for cls, block in a.items():
+                if cls == "mode" or not isinstance(block, dict):
+                    continue
+                _warn_unknown(f"abstain.{cls}", block, AbstainClassFloors)
+                per_class[cls] = AbstainClassFloors(
+                    abstain_top=float(block.get("abstain_top",
+                                                AbstainClassFloors.abstain_top)),
+                    focused_top=float(block.get("focused_top",
+                                                AbstainClassFloors.focused_top)),
+                    tight_top=float(block.get("tight_top",
+                                              AbstainClassFloors.tight_top)),
+                    foveated_alpha=float(block.get("foveated_alpha",
+                                                   AbstainClassFloors.foveated_alpha)),
+                )
+            if mode == "per_classifier":
+                # Spec §6: per_classifier requires a `default` block (the runtime
+                # fallback for missing classes). Other classes may be omitted
+                # without raising — `floors_for(cls)` will fall back to default.
+                if "default" not in per_class:
+                    from .exceptions import ConfigError
+                    raise ConfigError(
+                        "[abstain].mode='per_classifier' requires an "
+                        "[abstain.default] block (loader §6); none found."
+                    )
+            cfg.abstain = AbstainConfig(mode=mode, per_class=per_class)
 
     # Session (CWoLa session/party fallback — 2026-04-13 fix for always-A bucket bug)
     if "session" in raw:

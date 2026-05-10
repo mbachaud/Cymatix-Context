@@ -23,7 +23,7 @@ import re
 import sqlite3
 import threading
 import time
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from .accel import (
     json_loads,
@@ -339,6 +339,14 @@ class Genome:
         ann_similarity_threshold: float = 0.35,
         ann_threshold_min_genes: int = 1,
         ann_threshold_max_genes: int = 12,
+        # Stage 4 (2026-05-08): margin-over-random ANN calibration. When
+        # ``ann_threshold_mode == "margin_over_random"``, query_genes_ann
+        # reads the persisted threshold from ``genome_calibration``, falling
+        # back to ``ann_similarity_threshold`` if the row is missing (with
+        # one-time WARN). ``"absolute"`` keeps the legacy hand-picked value.
+        # See docs/specs/2026-05-08-stage-4-threshold-calibration.md §3.
+        ann_threshold_mode: str = "absolute",
+        ann_threshold_sigma_multiplier: float = 3.0,
         # Stage 2: dense recall pool size, decoupled from ann_threshold_max_genes.
         dense_pool_size: int = 500,
         # Stage 3 (2026-05-08): Reciprocal Rank Fusion (spec
@@ -393,6 +401,15 @@ class Genome:
         self._ann_threshold: float = float(ann_similarity_threshold)
         self._ann_min_genes: int = int(ann_threshold_min_genes)
         self._ann_max_genes: int = int(ann_threshold_max_genes)
+        # Stage 4: persisted calibration mode + cache.
+        # ``_ann_threshold_calibrated`` is the lazily-loaded value from
+        # ``genome_calibration``; ``None`` means "not loaded yet" and the
+        # next ``_get_effective_ann_threshold`` call will populate it.
+        self._ann_threshold_mode: str = str(ann_threshold_mode)
+        self._ann_threshold_sigma_multiplier: float = float(ann_threshold_sigma_multiplier)
+        self._ann_threshold_calibrated: Optional[float] = None
+        self._ann_threshold_calibration_meta: Optional[Dict[str, Any]] = None
+        self._ann_threshold_fallback_warned: bool = False
         # Stage 2 (2026-05-08): pool size for dense + lex recall, decoupled
         # from max_genes (the post-ranking final cut).
         self._dense_pool_size: int = int(dense_pool_size)
@@ -1164,6 +1181,22 @@ class Genome:
             "ON harmonic_links(gene_id_b)"
         )
 
+        # ── Stage 4: persisted threshold calibration (provenance) ────
+        # Spec: docs/specs/2026-05-08-stage-4-threshold-calibration.md §3.
+        # Single-row-per-key key/value table for calibration provenance:
+        #   key='ann_threshold' -> {'value': float, 'mu': float,
+        #                           'sigma': float, 'N': int, 'dim': int,
+        #                           'sigma_mult': float, 'seed': int}
+        # Idempotent CREATE — older databases pick this up on next open.
+        # query_genes_ann reads this lazily via _get_effective_ann_threshold.
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS genome_calibration (
+            key          TEXT PRIMARY KEY,
+            value_json   TEXT NOT NULL,
+            computed_at  REAL NOT NULL
+        )
+        """)
+
     # ── WAL snapshot management ──────────────────────────────────────
 
     def _refresh_snapshot(self) -> None:
@@ -1423,11 +1456,117 @@ class Genome:
             log.debug("cold-tier ΣĒMA retrieval failed", exc_info=True)
             return []
 
+    # ── Stage 4: calibrated ANN threshold reader ─────────────────────
+
+    def _get_effective_ann_threshold(self) -> float:
+        """Return the active ANN cosine cutoff for ``query_genes_ann``.
+
+        Stage 4 (spec §3): when ``ann_threshold_mode == "margin_over_random"``,
+        read the persisted ``ann_threshold`` row from ``genome_calibration``
+        on first call and cache it. If the row is missing (e.g. operator has
+        not yet run ``scripts/calibrate_thresholds.py``), log a one-time WARN
+        and fall back to the legacy absolute ``self._ann_threshold``.
+
+        ``"absolute"`` mode returns the legacy value with no DB read —
+        ``mode="global"`` callers (the default) get byte-identical pre-Stage-4
+        behavior.
+
+        Cache invalidation: ``set_replication_manager`` clears the cache so
+        readers connected through a swapped replica re-read on next call.
+        """
+        if self._ann_threshold_mode != "margin_over_random":
+            return self._ann_threshold
+        if self._ann_threshold_calibrated is not None:
+            return self._ann_threshold_calibrated
+
+        try:
+            row = self.read_conn.execute(
+                "SELECT value_json FROM genome_calibration WHERE key = 'ann_threshold'"
+            ).fetchone()
+        except Exception:
+            # Table may not exist on a pre-Stage-4 database — treat as missing.
+            log.debug("genome_calibration read failed", exc_info=True)
+            row = None
+
+        if row is None:
+            if not self._ann_threshold_fallback_warned:
+                log.warning(
+                    "ann_threshold_mode='margin_over_random' but no calibration row in "
+                    "genome_calibration — falling back to ann_similarity_threshold=%.3f. "
+                    "Run scripts/calibrate_thresholds.py to populate.",
+                    self._ann_threshold,
+                )
+                self._ann_threshold_fallback_warned = True
+            self._ann_threshold_calibrated = self._ann_threshold
+            return self._ann_threshold
+
+        try:
+            meta = json_loads(row["value_json"]) if hasattr(row, "__getitem__") else json_loads(row[0])
+            value = float(meta["value"])
+        except Exception:
+            log.warning(
+                "genome_calibration ann_threshold row is malformed; falling back to "
+                "ann_similarity_threshold=%.3f",
+                self._ann_threshold,
+                exc_info=True,
+            )
+            self._ann_threshold_calibrated = self._ann_threshold
+            return self._ann_threshold
+
+        self._ann_threshold_calibrated = value
+        self._ann_threshold_calibration_meta = meta
+        return value
+
+    def get_calibration_provenance(self) -> Optional[Dict[str, Any]]:
+        """Return the cached calibration metadata (for /health and /context).
+
+        Triggers a lazy load via ``_get_effective_ann_threshold`` if the cache
+        is empty AND mode is ``margin_over_random``. Returns ``None`` if the
+        mode is ``absolute`` OR no calibration row is present.
+        """
+        if self._ann_threshold_mode != "margin_over_random":
+            return None
+        # Trigger lazy load.
+        self._get_effective_ann_threshold()
+        if self._ann_threshold_calibration_meta is None:
+            return None
+        # Defensive copy — callers may mutate.
+        return dict(self._ann_threshold_calibration_meta)
+
+    def upsert_calibration(self, key: str, value: Dict[str, Any]) -> None:
+        """UPSERT a row into ``genome_calibration``. Used by the calibration
+        script and tests. Idempotent — last write wins.
+
+        SQLite's ``busy_timeout=30000`` and the journal_mode=WAL configuration
+        on ``self.conn`` (set in ``__init__``) handle writer serialization;
+        no in-process lock is needed.
+        """
+        payload = json_dumps(value)
+        now = time.time()
+        self.conn.execute(
+            "INSERT INTO genome_calibration (key, value_json, computed_at) "
+            "VALUES (?, ?, ?) "
+            "ON CONFLICT(key) DO UPDATE SET "
+            "  value_json = excluded.value_json, "
+            "  computed_at = excluded.computed_at",
+            (key, payload, now),
+        )
+        self.conn.commit()
+        # Invalidate cache so the next read sees the new value.
+        if key == "ann_threshold":
+            self._ann_threshold_calibrated = None
+            self._ann_threshold_calibration_meta = None
+            self._ann_threshold_fallback_warned = False
+
     # ── Replication ──────────────────────────────────────────────────
 
     def set_replication_manager(self, mgr) -> None:
         """Attach a ReplicationManager for distributed genome clones."""
         self._replication_mgr = mgr
+        # Stage 4: invalidate calibration cache so a swapped replica re-reads.
+        self._ann_threshold_calibrated = None
+        self._ann_threshold_calibration_meta = None
+        self._ann_threshold_fallback_warned = False
 
     def corpus_size(self) -> int:
         """Return the memoized total gene count for IDF weighting.
@@ -3023,7 +3162,10 @@ class Genome:
         Back-compat: callers that pass only positional/keyword args still
         work; ``pool_size`` is keyword-only and optional.
         """
-        threshold = threshold if threshold is not None else self._ann_threshold
+        # Stage 4: when mode='margin_over_random', read the calibrated value
+        # from genome_calibration; falls back to self._ann_threshold (legacy
+        # absolute) on missing row. Caller-supplied ``threshold`` still wins.
+        threshold = threshold if threshold is not None else self._get_effective_ann_threshold()
         max_genes = max_genes if max_genes is not None else self._ann_max_genes
         min_genes = min_genes if min_genes is not None else self._ann_min_genes
         pool_size = pool_size if pool_size is not None else self._dense_pool_size
