@@ -333,10 +333,14 @@ class Genome:
         bm25_prefilter_size: int = 200,
         entity_graph_retrieval_enabled: bool = False,
         dense_embedding_enabled: bool = False,
-        dense_embedding_dim: int = 256,
+        # Stage 2 (2026-05-08): default dim raised from 256 -> 1024 (full
+        # BGE-M3 Matryoshka). dim=256 collapsed random-pair cosine.
+        dense_embedding_dim: int = 1024,
         ann_similarity_threshold: float = 0.35,
         ann_threshold_min_genes: int = 1,
         ann_threshold_max_genes: int = 12,
+        # Stage 2: dense recall pool size, decoupled from ann_threshold_max_genes.
+        dense_pool_size: int = 500,
         main_conn: Optional[sqlite3.Connection] = None,
         shard_name: str = "main",
     ):
@@ -371,7 +375,19 @@ class Genome:
         self._ann_threshold: float = float(ann_similarity_threshold)
         self._ann_min_genes: int = int(ann_threshold_min_genes)
         self._ann_max_genes: int = int(ann_threshold_max_genes)
+        # Stage 2 (2026-05-08): pool size for dense + lex recall, decoupled
+        # from max_genes (the post-ranking final cut).
+        self._dense_pool_size: int = int(dense_pool_size)
         self._dense_codec: "BGEM3Codec | None" = None  # lazy-loaded
+        # Stage 2: in-memory hot-tier dense matrix cache. Populated lazily by
+        # _ensure_dense_matrix() on first dense recall query; invalidated by
+        # _invalidate_dense_matrix() after upsert/delete batches.
+        self._dense_matrix: "np.ndarray | None" = None
+        self._dense_matrix_ids: "list[str] | None" = None
+        self._dense_matrix_lock = threading.Lock()
+        # One-time-only flags so we don't spam logs.
+        self._dense_v2_partial_warned: bool = False
+        self._threshold_dim_warned: bool = False
         # Phase 2 claims layer (2026-04-19). Optional hook — when a main.db
         # connection is supplied, upsert_gene emits literal claims into it
         # after each ingest. None = no auto-hook, preserving legacy behavior.
@@ -498,11 +514,26 @@ class Genome:
             ("support_span", "TEXT"),
             ("last_verified_at", "REAL"),
             ("embedding_dense", "TEXT"),  # BGE-M3 dense vector (Step 4, 2026-05-08)
+            # Stage 2 (2026-05-08): BLOB column for raw little-endian fp32
+            # BGE-M3 vectors at full 1024-dim. 18.9k * 1024 * 4 = 77.6 MiB raw,
+            # vs ~600 MiB for JSON-encoded text. np.frombuffer is zero-copy.
+            ("embedding_dense_v2", "BLOB"),
         ):
             if column_name not in existing_columns:
                 cur.execute(f"ALTER TABLE genes ADD COLUMN {column_name} {column_def}")
                 log.info("Added %s column to genes table", column_name)
                 existing_columns.add(column_name)
+
+        # Stage 2: partial index over hot-tier rows with v2 vectors. Lets
+        # the dense-recall matrix loader stream populated rows without a
+        # full table scan during partial-rollout / backfill.
+        # chromatin < 2 == hot tier (OPEN | EUCHROMATIN); HETEROCHROMATIN
+        # genes are reachable via query_cold_tier() instead.
+        cur.execute(
+            "CREATE INDEX IF NOT EXISTS idx_genes_dense_v2_hot "
+            "ON genes(gene_id) "
+            "WHERE embedding_dense_v2 IS NOT NULL AND chromatin < 2"
+        )
 
         # Auto-add compression_tier column (0=OPEN, 1=EUCHROMATIN, 2=HETEROCHROMATIN)
         if "compression_tier" not in existing_columns:
@@ -1612,6 +1643,10 @@ class Genome:
             self._sema_cache = None
         if self._cold_sema_cache is not None:
             self._cold_sema_cache = None
+        # Stage 2: invalidate the in-memory dense matrix. Rebuild is full
+        # (~78 MiB / sub-200 ms at 18.9k rows) on first dense recall after
+        # this batch. See spec §4 "Invalidation".
+        self._invalidate_dense_matrix()
 
         # Notify replication manager (if attached)
         if self._replication_mgr is not None:
@@ -2511,14 +2546,170 @@ class Genome:
 
         return result[:limit]
 
-    # ── BGE-M3 dense retrieval (Step 4, 2026-05-08) ─────────────────
+    # ── BGE-M3 dense retrieval (Step 4, 2026-05-08; Stage 2 first-class) ─────
 
     def _get_dense_codec(self):
-        """Lazy-load the BGE-M3 codec on first use."""
+        """Lazy-load the BGE-M3 codec on first use.
+
+        Stage 2 (2026-05-08): Genome wires _dense_embedding_dim from config,
+        which now defaults to 1024 (full BGE-M3 Matryoshka). The codec itself
+        warns if the dim is not a sanctioned breakpoint.
+        """
         if self._dense_codec is None:
             from .bgem3_codec import BGEM3Codec
             self._dense_codec = BGEM3Codec(dim=self._dense_embedding_dim)
+            # One-time threshold-staleness warn: if v2 coverage is non-empty
+            # AND the threshold was calibrated at a different dim, surface it.
+            # Threshold recalibration is Stage 4; we just want it loud.
+            if self._dense_embedding_enabled and not self._threshold_dim_warned:
+                try:
+                    coverage = self._reader.execute(
+                        "SELECT COUNT(*) AS c FROM genes WHERE embedding_dense_v2 IS NOT NULL"
+                    ).fetchone() if self._reader is not None else None
+                    has_v2 = bool(coverage and coverage["c"] > 0)
+                except Exception:
+                    has_v2 = False
+                if has_v2:
+                    log.warning(
+                        "ann_similarity_threshold=%.3f is calibrated for dim=256; "
+                        "v2 vectors are dim=%d. Threshold recalibration is Stage 4. "
+                        "Recall pool is independent of threshold.",
+                        self._ann_threshold, self._dense_embedding_dim,
+                    )
+                    self._threshold_dim_warned = True
         return self._dense_codec
+
+    def _invalidate_dense_matrix(self, force: bool = False) -> None:
+        """Drop the in-memory dense matrix so it rebuilds on next query.
+
+        Called from upsert/delete paths after an ingest batch. Rebuild is full
+        (not incremental) — at ~78 MiB and 18.9k rows this is sub-200 ms and
+        triggers only on the first dense recall after an ingest batch.
+
+        ``force=True`` is a no-op flag retained for API symmetry (spec §4) —
+        the rebuild semantics are always full.
+        """
+        with self._dense_matrix_lock:
+            self._dense_matrix = None
+            self._dense_matrix_ids = None
+
+    def _ensure_dense_matrix(self):
+        """Build/load the hot-tier (chromatin < 2) dense matrix.
+
+        Returns ``(matrix, gene_ids)`` or ``(None, None)`` if the v2 column is
+        empty. Hot-tier only — heterochromatin (chromatin=2) is reachable via
+        ``query_cold_tier()``. Stage 7 surfaces cold matches as MissBlocks.
+
+        Raw BLOB layout: little-endian fp32, ``dim * 4`` bytes per row,
+        zero-copy via ``np.frombuffer``.
+        """
+        with self._dense_matrix_lock:
+            if self._dense_matrix is not None and self._dense_matrix_ids is not None:
+                return self._dense_matrix, self._dense_matrix_ids
+
+            try:
+                import numpy as np
+            except ImportError:
+                log.debug("numpy unavailable; dense recall disabled")
+                return None, None
+
+            # Hot-tier scan. Partial index idx_genes_dense_v2_hot makes this
+            # an index range scan rather than a full table scan during
+            # partial-rollout / backfill.
+            cur = self._reader.cursor() if self._reader is not None else self.conn.cursor()
+            rows = cur.execute(
+                "SELECT gene_id, embedding_dense_v2 FROM genes "
+                "WHERE embedding_dense_v2 IS NOT NULL AND chromatin < ?",
+                (int(ChromatinState.HETEROCHROMATIN),),
+            ).fetchall()
+            if not rows:
+                return None, None
+
+            dim = self._dense_embedding_dim
+            expected_bytes = dim * 4  # fp32
+            ids: list[str] = []
+            vecs: list[np.ndarray] = []
+            for r in rows:
+                blob = r["embedding_dense_v2"]
+                if blob is None or len(blob) != expected_bytes:
+                    continue
+                # Little-endian fp32, zero-copy view -> copy into accum array.
+                vec = np.frombuffer(blob, dtype="<f4")
+                if vec.shape[0] != dim:
+                    continue
+                ids.append(r["gene_id"])
+                vecs.append(vec)
+            if not vecs:
+                return None, None
+            matrix = np.stack(vecs).astype(np.float32, copy=False)
+            self._dense_matrix = matrix
+            self._dense_matrix_ids = ids
+            log.debug(
+                "dense matrix loaded: shape=%s dtype=%s ids=%d",
+                matrix.shape, matrix.dtype, len(ids),
+            )
+            return matrix, ids
+
+    def query_genes_dense_recall(
+        self,
+        query: str,
+        *,
+        k: int = 500,
+        party_id: Optional[str] = None,
+        read_only: bool = False,
+    ) -> List[tuple[str, float]]:
+        """Stage 2 first-class dense recall.
+
+        Returns ``[(gene_id, cosine), ...]`` sorted descending. Hot-tier only.
+        Does NOT load gene bodies — that's deferred to ``query_genes_ann`` so
+        we body-fetch once after the lex+dense union.
+
+        Falls back to ``[]`` (with one-time warn) if v2 coverage is empty —
+        callers degrade to lexical-only.
+
+        ``party_id`` and ``read_only`` are accepted for API symmetry with
+        ``query_genes_ann``; party-aware sharding is out of scope for Stage 2
+        (spec §13 punts it to a later release).
+        """
+        del party_id, read_only  # reserved; spec §13 explicitly defers sharding
+        if not self._dense_embedding_enabled:
+            return []
+        try:
+            import numpy as np
+        except ImportError:
+            return []
+
+        matrix, ids = self._ensure_dense_matrix()
+        if matrix is None or ids is None:
+            if not self._dense_v2_partial_warned:
+                log.warning(
+                    "embedding_dense_v2 coverage is empty; dense recall disabled. "
+                    "Run scripts/backfill_bgem3_v2.py against this genome to populate."
+                )
+                self._dense_v2_partial_warned = True
+            return []
+
+        codec = self._get_dense_codec()
+        query_vec = np.asarray(codec.encode(query, task="query"), dtype=np.float32)
+        if query_vec.shape[0] != matrix.shape[1]:
+            log.warning(
+                "dense recall dim mismatch: query=%d matrix=%d; returning []",
+                query_vec.shape[0], matrix.shape[1],
+            )
+            return []
+
+        # All vectors are L2-normalized at encode/backfill time (codec
+        # contract). matmul == cosine.
+        sims = matrix @ query_vec
+        n = sims.shape[0]
+        k_eff = min(int(k), n)
+        if k_eff <= 0:
+            return []
+        # argpartition is O(n); the ~k tail is then sorted.
+        idx_part = np.argpartition(-sims, k_eff - 1)[:k_eff]
+        # Sort the partition descending by similarity.
+        idx_sorted = idx_part[np.argsort(-sims[idx_part])]
+        return [(ids[int(i)], float(sims[int(i)])) for i in idx_sorted]
 
     def query_genes_ann(
         self,
@@ -2533,71 +2724,117 @@ class Genome:
         use_sr: Optional[bool] = None,
         use_entity_graph: Optional[bool] = None,
         read_only: bool = False,
+        *,
+        pool_size: int | None = None,
     ) -> List[Gene]:
-        """Threshold-based ANN retrieval using BGE-M3 dense vectors.
+        """Stage 2 retrieval: parallel lex + dense recall, union, threshold cut.
 
-        1. Run standard query_genes() to get candidate pool.
-        2. Embed the query (BGE-M3 query task).
-        3. Load embedding_dense for each candidate.
-        4. Sort by cosine similarity.
-        5. Include candidates until similarity drops below threshold.
-           Un-embedded genes (backfill incomplete) get sim=threshold-0.01
-           so they can still satisfy min_genes but don't crowd out embedded ones.
+        Refactor (spec §6):
+
+        1. Resolve ``pool_size = pool_size or self._dense_pool_size``.
+        2. Fan out:
+           - lex pool via ``query_genes(..., max_genes=pool_size)``
+           - dense pool via ``query_genes_dense_recall(query, k=pool_size)``
+        3. Union by gene_id, preserving best score per source.
+        4. Body-fetch once via ``_load_genes_by_ids``.
+        5. Apply threshold + ``min_genes`` floor; cap at ``max_genes``.
+
+        Stage 2 is **threshold-stale**: ``ann_similarity_threshold`` was
+        calibrated at dim=256; v2 vectors are dim=1024. Stage 4 recalibrates.
+        ``max_genes`` is the hard cap, so blast radius is bounded even if the
+        threshold over-includes.
+
+        Back-compat: callers that pass only positional/keyword args still
+        work; ``pool_size`` is keyword-only and optional.
         """
         threshold = threshold if threshold is not None else self._ann_threshold
         max_genes = max_genes if max_genes is not None else self._ann_max_genes
         min_genes = min_genes if min_genes is not None else self._ann_min_genes
+        pool_size = pool_size if pool_size is not None else self._dense_pool_size
         domains = domains or []
         entities = entities or []
 
-        candidates = self.query_genes(
+        # ── 1. Lex recall pool (size = pool_size, NOT max_genes). ─────
+        lex_pool = self.query_genes(
             domains,
             entities,
-            max_genes=max_genes,
+            max_genes=pool_size,
             party_id=party_id,
             use_harmonic=use_harmonic,
             use_sr=use_sr,
             use_entity_graph=use_entity_graph,
             read_only=read_only,
         )
-        if not candidates or not self._dense_embedding_enabled:
-            return candidates
 
-        codec = self._get_dense_codec()
-        query_vec = codec.encode(query, task="query")
+        # Dense disabled -> degrade to legacy lex-only flow, capped at max_genes.
+        if not self._dense_embedding_enabled:
+            return lex_pool[:max_genes]
 
-        gene_ids = [g.gene_id for g in candidates]
-        ph = ",".join("?" * len(gene_ids))
-        rows = self.read_conn.cursor().execute(
-            f"SELECT gene_id, embedding_dense FROM genes WHERE gene_id IN ({ph})",
-            gene_ids,
-        ).fetchall()
-        dense_map: dict[str, list[float]] = {}
-        for r in rows:
-            if r["embedding_dense"]:
-                import json as _json
-                try:
-                    dense_map[r["gene_id"]] = _json.loads(r["embedding_dense"])
-                except Exception:
-                    pass
+        # ── 2. Dense recall pool (id+score, no bodies). ──────────────
+        dense_hits = self.query_genes_dense_recall(
+            query, k=pool_size, party_id=party_id, read_only=read_only,
+        )
 
+        # ── 3. Union by gene_id. Lex genes get sim=threshold-0.01 unless
+        # they also appeared in the dense pool. Dense-only ids get loaded
+        # via _load_genes_by_ids so we body-fetch once.
+        codec = self._get_dense_codec() if dense_hits else None
+        query_vec = codec.encode(query, task="query") if codec is not None else None
+
+        sim_by_id: dict[str, float] = {gid: float(s) for gid, s in dense_hits}
+        ordered_ids: list[str] = [gid for gid, _ in dense_hits]
+        seen: set[str] = set(ordered_ids)
+        for gene in lex_pool:
+            if gene.gene_id not in seen:
+                seen.add(gene.gene_id)
+                ordered_ids.append(gene.gene_id)
+                # Lex-only id w/o dense score: pin slightly below threshold so
+                # the min_genes floor can still rescue them. Spec §8 retains
+                # this behavior; Stage 3 (RRF) replaces the placeholder.
+                sim_by_id[gene.gene_id] = threshold - 0.01
+
+        # Body-fetch missing ids in bulk. Lex pool already has bodies; only
+        # dense-only ids need loading.
+        lex_by_id = {g.gene_id: g for g in lex_pool}
+        missing_ids = [gid for gid in ordered_ids if gid not in lex_by_id]
+        loaded = self._load_genes_by_ids(missing_ids) if missing_ids else {}
+
+        # ── 4. Resolve final Gene objects in score order. ────────────
         scored: list[tuple[Gene, float]] = []
-        for gene in candidates:
-            vec = dense_map.get(gene.gene_id)
-            if vec is not None:
-                sim = codec.similarity(query_vec, vec)
-            else:
-                sim = threshold - 0.01
-            scored.append((gene, sim))
+        for gid in ordered_ids:
+            gene = lex_by_id.get(gid) or loaded.get(gid)
+            if gene is None:
+                continue
+            scored.append((gene, sim_by_id[gid]))
         scored.sort(key=lambda x: x[1], reverse=True)
 
-        result: List[Gene] = []
+        # ── 5. Threshold cut + min_genes floor + max_genes cap. ──────
+        result: list[Gene] = []
         for gene, sim in scored:
             if sim >= threshold or len(result) < min_genes:
                 result.append(gene)
             else:
                 break
         return result[:max_genes]
+
+    def _load_genes_by_ids(self, gene_ids: list[str]) -> dict[str, Gene]:
+        """Bulk-load Gene objects by id. Used by query_genes_ann to fetch
+        bodies for dense-only hits exactly once.
+        """
+        if not gene_ids:
+            return {}
+        ph = ",".join("?" * len(gene_ids))
+        rows = self.read_conn.cursor().execute(
+            f"SELECT * FROM genes WHERE gene_id IN ({ph})",
+            gene_ids,
+        ).fetchall()
+        out: dict[str, Gene] = {}
+        for r in rows:
+            try:
+                out[r["gene_id"]] = self._row_to_gene(r)
+            except Exception:
+                log.debug("row_to_gene failed for %s", r["gene_id"], exc_info=True)
+        return out
 
     # ── Entity graph: auto-link genes sharing entities ───────────────
 
@@ -3693,6 +3930,8 @@ class Genome:
             self._sema_cache = None
         if self._cold_sema_cache is not None:
             self._cold_sema_cache = None
+        # Stage 2: hot/cold transitions change the dense matrix membership too.
+        self._invalidate_dense_matrix()
         log.debug("Moved gene %s to HETEROCHROMATIN (non-destructive)", gene_id)
         return True
 
