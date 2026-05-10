@@ -194,10 +194,12 @@ def _compute_know_or_miss_block(
     None only on hard-failure paths (the route falls back gracefully
     instead of bubbling).
 
-    # STAGE-7-EXT: this is the seam where Stage 7 will hook the
-    #  freshness pipeline (revalidate top-K, check_superseded). The
-    #  resulting freshness_min and any pre-emptive MissBlock are
-    #  merged in before decide_know_or_miss runs.
+    Stage 7 (2026-05-08) hooks the freshness pipeline here:
+      * top-1 mtime revalidation via ``freshness.revalidate_and_mark``
+      * Path-A supersession check via ``freshness.check_superseded``
+      * cold-tier peek via ``HelixContextManager._cold_tier_peek``
+      * ``health.freshness_min`` plumbed through to ``compute_confidence``
+        for the β5 contribution.
     """
     # Pull retrieval scores. ``last_query_scores`` is the post-fusion
     # per-gene score map (gene_id → float). Top-1 / score-gap are
@@ -262,6 +264,122 @@ def _compute_know_or_miss_block(
     # tomllib parses ~kB in microseconds; falls back to defaults).
     cal = load_calibration_from_toml()
 
+    # Stage 7 (spec §3) — freshness_min from the rebuilt _compute_health.
+    # ``ContextHealth.freshness_min`` is Optional[float]; None falls
+    # through to compute_confidence as "freshness unknown" (neutral).
+    freshness_min = getattr(window.context_health, "freshness_min", None)
+
+    # Stage 7 (spec §5) — top-1 source revalidation. Need a real Gene
+    # (not just the source-id proxy used for the beacon) to read
+    # ``last_verified_at``. Fetch only top-1 to keep latency bounded
+    # (~3 stat calls warm = sub-millisecond per spec §5).
+    freshness_status: Optional[str] = None
+    successor_source_id: Optional[str] = None
+    cold_targets: list[str] = []
+    if top_gene is not None and gene_ids:
+        try:
+            from .freshness import (
+                check_superseded,
+                revalidate_and_mark,
+            )
+            from .schemas import EpigeneticMarkers, Gene as _Gene
+
+            top_gid = gene_ids[0]
+            cur = helix.genome.read_conn.cursor()
+            row = cur.execute(
+                "SELECT gene_id, source_id, last_verified_at, "
+                "epigenetics, supersedes "
+                "FROM genes WHERE gene_id = ? LIMIT 1",
+                (top_gid,),
+            ).fetchone()
+            if row is not None:
+                # Build a minimal Gene-shaped object the freshness
+                # helpers can read. Constructing a full Gene blows
+                # up on missing columns; a SimpleNamespace-like proxy
+                # with the four attributes the helpers actually use
+                # is enough.
+                class _FreshGeneProxy:
+                    __slots__ = (
+                        "gene_id", "source_id",
+                        "last_verified_at", "epigenetics", "supersedes",
+                    )
+                    def __init__(self, gid, sid, lva, epi, sup):
+                        self.gene_id = gid
+                        self.source_id = sid
+                        self.last_verified_at = lva
+                        self.epigenetics = epi
+                        self.supersedes = sup
+
+                # Parse epigenetics blob lazily so we have a
+                # ``source_path`` attr if the JSON carried one.
+                epi_obj = None
+                try:
+                    import json as _json
+                    epi_raw = row["epigenetics"] if "epigenetics" in row.keys() else None
+                    if epi_raw:
+                        # EpigeneticMarkers doesn't carry source_path
+                        # in its model, but the freshness helpers fall
+                        # back to source_id when source_path is absent.
+                        epi_dict = _json.loads(epi_raw)
+                        # Best-effort hydrate; ignore unknown keys.
+                        epi_obj = EpigeneticMarkers.model_validate(
+                            {k: v for k, v in epi_dict.items()
+                             if k in EpigeneticMarkers.model_fields}
+                        )
+                except Exception:
+                    epi_obj = None
+
+                top_proxy = _FreshGeneProxy(
+                    row["gene_id"],
+                    row["source_id"] if "source_id" in row.keys() else None,
+                    row["last_verified_at"] if "last_verified_at" in row.keys() else None,
+                    epi_obj,
+                    row["supersedes"] if "supersedes" in row.keys() else None,
+                )
+
+                import time as _time
+                now_ts = _time.time()
+                # Read-only contract — /context is a read endpoint, so
+                # mark_verified is a no-op here. The cache MAY still
+                # update (in-memory; not a genome write).
+                try:
+                    freshness_status = revalidate_and_mark(
+                        helix.genome,
+                        top_proxy,
+                        mtime_cache=helix._mtime_cache,
+                        now_ts=now_ts,
+                        read_only=True,
+                    )
+                except Exception:
+                    log.debug("Stage-7 revalidate failed", exc_info=True)
+                    freshness_status = None
+
+                try:
+                    successor_source_id = check_superseded(
+                        helix.genome, top_proxy,
+                    )
+                except Exception:
+                    log.debug("Stage-7 supersession check failed", exc_info=True)
+                    successor_source_id = None
+        except Exception:
+            log.debug("Stage-7 top-1 fetch failed", exc_info=True)
+
+    # Cold-tier peek — fires only when expressed set is thin AND
+    # corpus health is not abstain (spec §6). Caches the
+    # refresh_targets on the manager so the route layer can attach
+    # them to the agent payload without re-querying.
+    try:
+        genes_expressed_n = int(
+            getattr(window.context_health, "genes_expressed", 0) or 0
+        )
+        health_status = getattr(window.context_health, "status", "")
+        if genes_expressed_n < 3 and health_status not in ("abstain", "denatured"):
+            cold_targets = helix._cold_tier_peek(query, k=3, min_cosine=0.4)
+            helix._last_cold_peek_targets = list(cold_targets)
+    except Exception:
+        log.debug("Stage-7 cold-tier peek failed", exc_info=True)
+        cold_targets = []
+
     return decide_know_or_miss(
         window=window,
         query=query,
@@ -272,6 +390,10 @@ def _compute_know_or_miss_block(
         top_gene=top_gene,
         ratio=ratio,
         calibration=cal,
+        freshness_min=freshness_min,
+        freshness_status=freshness_status,
+        successor_source_id=successor_source_id,
+        cold_refresh_targets=cold_targets,
     )
 
 
@@ -1116,16 +1238,40 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
             # (trust, verify, refresh, reread_raw) remain valid for
             # the KnowBlock branch.
             #
-            # # STAGE-7-EXT: when MissBlock.reason in {stale, cold,
-            #  superseded}, recommendation flips to "refresh" instead
-            #  of "escalate"; soft-stale on KnowBlock also recommends
-            #  "refresh". Stage 6 only ships the four base reasons.
+            # Stage 7 (2026-05-08, spec §9): MissBlock.reason in
+            # {stale, cold, superseded} recommends "refresh" (the
+            # answer IS here, just out of date — fetch and retry)
+            # rather than "escalate" (the answer is NOT here — go
+            # ask elsewhere). Soft-stale on KnowBlock also flips
+            # the recommendation to "refresh".
             if isinstance(kmblock, MissBlock):
-                recommendation = "escalate"
+                if kmblock.reason in ("stale", "cold", "superseded"):
+                    recommendation = "refresh"
+                    targets_preview = ", ".join(
+                        kmblock.refresh_targets[:3]
+                    ) or "(none)"
+                    hint = (
+                        f"Genome has a {kmblock.reason} candidate. Do "
+                        f"not answer from genome. Re-read "
+                        f"refresh_targets and re-call /context: "
+                        f"{targets_preview}"
+                    )
+                else:
+                    recommendation = "escalate"
+                    hint = (
+                        "Genome has no usable signal for query. Do not "
+                        "answer from genome. Use a tool from "
+                        f"escalate_to: {kmblock.escalate_to}"
+                    )
+            elif isinstance(kmblock, KnowBlock) and getattr(kmblock, "soft_stale", False):
+                # Soft-stale know — top-1 fresh enough to act on, but
+                # supporting context (rank 2..K) is stale. Agent may
+                # answer AND should plan a refresh on its own schedule.
+                recommendation = "refresh"
                 hint = (
-                    "Genome has no usable signal for query. Do not "
-                    "answer from genome. Use a tool from "
-                    f"escalate_to: {kmblock.escalate_to}"
+                    "Top-1 is fresh; supporting context is stale. "
+                    "Answer is safe to use, plan a refresh of "
+                    "lower-ranked supporting genes."
                 )
             elif health.status == "aligned":
                 recommendation = "trust"

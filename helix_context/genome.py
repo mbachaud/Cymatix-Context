@@ -552,6 +552,17 @@ class Genome:
             "CREATE INDEX IF NOT EXISTS idx_genes_last_seen ON genes(last_seen)"
         )
 
+        # Stage 7 (2026-05-08, spec §2 + §7) — partial index over the
+        # reverse-supersedes column. ``check_superseded(gene)`` runs:
+        #   SELECT gene_id, source_id FROM genes WHERE supersedes = ? LIMIT 1
+        # in the hot path, so an index is mandatory. Partial filter on
+        # ``supersedes IS NOT NULL`` keeps it tight: most rows will not
+        # have a predecessor pointer.
+        cur.execute(
+            "CREATE INDEX IF NOT EXISTS idx_genes_supersedes "
+            "ON genes(supersedes) WHERE supersedes IS NOT NULL"
+        )
+
         # Auto-add live_truth_score column — freshness score [0.0, 1.0];
         # 1.0 = fully fresh (default). Used by _stale/ view in the vault pruner.
         if "live_truth_score" not in existing_columns:
@@ -1276,6 +1287,52 @@ class Genome:
         """Mark cold-tier cache stale — rebuilt on next query_cold_tier call."""
         self._cold_sema_cache = None
 
+    def mark_verified(
+        self,
+        gene_ids: List[str],
+        ts: float,
+        *,
+        read_only: bool = False,
+    ) -> int:
+        """Stage 7: bump ``last_verified_at`` for the listed gene_ids.
+
+        Spec: docs/specs/2026-05-08-stage-7-freshness-gate.md §4 + §5.
+
+        Called from ``freshness.revalidate_and_mark`` after a successful
+        mtime-fresh check. ``read_only`` gates the write — under
+        ``read_only=True`` this is a no-op so the Stage-1 read_only
+        contract holds. Cache updates in ``revalidate_source`` happen
+        in-memory and are NOT a DB write, so they remain allowed.
+
+        Returns the number of rows actually updated. Zero is a valid
+        return (e.g. caller passed unknown gene_ids); the freshness
+        gate uses this method as a hint, not as a correctness check.
+        """
+        if read_only:
+            # No-op under the read_only contract. Stage 7 spec §5
+            # requires this to be silent — no warning, no exception.
+            return 0
+        if not gene_ids:
+            return 0
+        try:
+            cur = self.conn.cursor()
+            placeholders = ",".join("?" * len(gene_ids))
+            cur.execute(
+                f"UPDATE genes SET last_verified_at = ? "
+                f"WHERE gene_id IN ({placeholders})",
+                (float(ts), *gene_ids),
+            )
+            updated = cur.rowcount or 0
+            self.conn.commit()
+            return int(updated)
+        except Exception:
+            log.warning(
+                "mark_verified: UPDATE failed for %d gene_ids",
+                len(gene_ids),
+                exc_info=True,
+            )
+            return 0
+
     def query_cold_tier(
         self,
         query_text: str,
@@ -1493,10 +1550,18 @@ class Genome:
         content_hash = gene.content_hash
         if content_hash is None and gene.content:
             content_hash = hashlib.sha256(gene.content.encode("utf-8")).hexdigest()
+        # Stage 7 (2026-05-08, spec §4) — wire ``last_verified_at`` on
+        # ingest. The column has shipped since Stage 1 (DDL row :471,
+        # ALTER row :499); Stage 7 only ensures the writer populates it.
+        # Order: gene-supplied > observed_at fallback > now(). Setting
+        # to now() on legacy bare-inserts means the freshness gate has
+        # something to compare mtime against on the very next turn,
+        # rather than treating every newly-ingested gene as
+        # "freshness unknown" forever.
         last_verified_at = (
             gene.last_verified_at
             if gene.last_verified_at is not None
-            else observed_at
+            else (observed_at if observed_at is not None else time.time())
         )
 
         cur.execute(

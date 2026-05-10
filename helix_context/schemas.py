@@ -167,11 +167,21 @@ class ContextHealth(BaseModel):
     ellipticity: float = 1.0            # 0=denatured, 1=perfectly grounded
     coverage: float = 0.0               # Fraction of query terms that matched genes
     density: float = 0.0                # Fraction of expression budget used
-    freshness: float = 1.0              # Average decay score of expressed genes
+    freshness: float = 1.0              # Back-compat: aliases freshness_weighted (Stage 7)
     logical_coherence: float = 0.0      # Pairwise relation coherence of expressed genes
     genes_available: int = 0            # Total genes in genome
     genes_expressed: int = 0            # Genes expressed for this query
     status: str = "unmeasured"          # aligned | sparse | stale | denatured
+
+    # Stage 7 (2026-05-08): three freshness signals replace the single
+    # mean(decay) value to stop a stale top-1 needle from being masked
+    # by fresh padding genes. ``freshness`` (back-compat field above) is
+    # set to ``freshness_weighted`` so legacy consumers keep a meaningful
+    # number; new consumers should branch on ``freshness_top1`` /
+    # ``freshness_min``. None until populated by ``_compute_health``.
+    freshness_min: Optional[float] = None       # min decay over candidates
+    freshness_top1: Optional[float] = None      # decay of the top-1 (score-desc)
+    freshness_weighted: Optional[float] = None  # score-weighted decay sum
     # Step 1b weighing surface (2026-04-17): pre-delivery confidence the
     # consumer can use for know-vs-go decisions. Separate from ellipticity
     # (which is retrospective "did we deliver good context"). These measure
@@ -438,16 +448,30 @@ class HITLEvent(BaseModel):
 # `# STAGE-7-EXT` markers to find them.
 # ─────────────────────────────────────────────────────────────────────
 
-# Stage 6 reason vocabulary. Stage 7 will append "stale" | "cold" |
-# "superseded" — adding a value is a one-line change to this tuple, and
-# pydantic will accept it everywhere via the Literal[*MISS_REASONS]
-# unpacking below. # STAGE-7-EXT: extend MISS_REASONS
+# Stage 6 reason vocabulary. Stage 7 (2026-05-08) appended
+# "stale" | "cold" | "superseded" for the freshness-gate demotions.
+# Adding a value is a one-line change to this tuple; pydantic accepts
+# it everywhere via the runtime check in MissBlock._validate_*. The
+# split into "escalate-class" vs "refresh-class" reasons drives the
+# new mutual-exclusivity validator below.
 MISS_REASONS: tuple[str, ...] = (
     "abstain",
     "denatured",
     "sparse",
     "no_promoter_match",
+    # Stage 7 freshness-gate reasons (require refresh_targets)
+    "stale",
+    "cold",
+    "superseded",
 )
+
+# Stage 7 (spec §8): reasons that REQUIRE refresh_targets and FORBID
+# escalate_to. Mutual-exclusivity is enforced by the model_validator
+# on MissBlock.
+_REFRESH_REASONS: frozenset[str] = frozenset({"stale", "cold", "superseded"})
+_ESCALATE_REASONS: frozenset[str] = frozenset({
+    "abstain", "denatured", "sparse", "no_promoter_match",
+})
 
 # Tools an agent can escalate to. Helix only signals the class; the
 # consumer registers the concrete tool. Kept narrow on purpose.
@@ -472,7 +496,10 @@ class KnowBlock(BaseModel):
     expressed_context bytes are grounded — you may answer from them."
 
     Stage 7 extends this additively (NOT a redesign):
-      # STAGE-7-EXT: add `soft_stale: bool = False`
+      * ``soft_stale: bool`` — top-1 fresh enough to act on, but
+        supporting context (rank 2..K) is stale. The agent can answer
+        from the genome AND should plan a refresh on its own schedule.
+        Legacy parsers ignore unknown fields.
     """
 
     model_config = {"extra": "forbid"}
@@ -484,6 +511,11 @@ class KnowBlock(BaseModel):
     lexical_dense_agree: bool
     gene_id_match: Optional[str] = None
     coordinate_confidence: float = Field(ge=0.0, le=1.0)
+    # Stage 7 (spec §9): soft-stale signal — set True when the
+    # KnowBlock is still emittable (top-1 is fresh) but
+    # freshness_min < 0.5 indicates lower-ranked supporting genes are
+    # stale. Drives ``recommendation="refresh"`` at the route layer.
+    soft_stale: bool = False
 
 
 class MissBlock(BaseModel):
@@ -494,10 +526,16 @@ class MissBlock(BaseModel):
     contract bit: the frontier agent MUST honor it (see
     docs/agent-sdk-fragment.md / HELIX_NO_MATCH_FRAGMENT).
 
-    Stage 7 extends this additively:
-      # STAGE-7-EXT: add `refresh_targets: list[str] = Field(default_factory=list)`
-      # STAGE-7-EXT: extend MISS_REASONS with stale|cold|superseded
-      # STAGE-7-EXT: add a model_validator gating refresh_targets vs escalate_to
+    Stage 7 extends this additively (spec §8):
+      * ``refresh_targets: list[str]`` — concrete file paths or URLs
+        the agent should re-read before retrying. Populated for
+        reasons in {stale, cold, superseded}.
+      * ``MISS_REASONS`` extended with ``stale | cold | superseded``.
+      * ``model_validator`` enforces mutual-exclusivity:
+          - refresh-class reason ⇒ refresh_targets non-empty AND
+            escalate_to == [].
+          - escalate-class reason ⇒ refresh_targets == [] AND
+            escalate_to non-empty.
     """
 
     model_config = {"extra": "forbid"}
@@ -510,6 +548,10 @@ class MissBlock(BaseModel):
     top_score: float
     ratio: float
     escalate_to: List[str] = Field(default_factory=list)
+    # Stage 7 (spec §8): refresh targets — concrete file paths or
+    # URLs the agent should re-read before retrying. Mutually
+    # exclusive with ``escalate_to`` per the model_validator below.
+    refresh_targets: List[str] = Field(default_factory=list)
     do_not_answer_from_genome: Literal[True] = True
 
     @model_validator(mode="after")
@@ -525,7 +567,79 @@ class MissBlock(BaseModel):
                     f"MissBlock.escalate_to entry {tool!r} not in "
                     f"ESCALATE_TARGETS ({sorted(ESCALATE_TARGETS)})"
                 )
+        # Stage 7 (spec §8) — refresh-vs-escalate mutual exclusivity.
+        # The two list fields encode different next-step semantics:
+        # ``refresh_targets`` says "the answer is here, just out of
+        # date — fetch and retry"; ``escalate_to`` says "the answer
+        # isn't here — go ask elsewhere". Conflating them defeats the
+        # whole point of the Stage 7 contract.
+        if self.reason in _REFRESH_REASONS:
+            if not self.refresh_targets:
+                raise ValueError(
+                    f"MissBlock.reason={self.reason!r} requires "
+                    "refresh_targets to be non-empty"
+                )
+            if self.escalate_to:
+                raise ValueError(
+                    f"MissBlock.reason={self.reason!r} forbids "
+                    f"escalate_to (got {self.escalate_to!r})"
+                )
+        elif self.reason in _ESCALATE_REASONS:
+            if self.refresh_targets:
+                raise ValueError(
+                    f"MissBlock.reason={self.reason!r} forbids "
+                    f"refresh_targets (got {self.refresh_targets!r})"
+                )
+            # escalate-class reasons must carry at least one tool
+            # so the consumer always has a next-step. Empty
+            # escalate_to is allowed only on refresh-class reasons.
+            if not self.escalate_to:
+                raise ValueError(
+                    f"MissBlock.reason={self.reason!r} requires "
+                    "escalate_to to be non-empty"
+                )
         return self
+
+    # Stage 7 (spec §11): adapter to ``RefreshTarget`` so the
+    # /context/refresh-plan route can convert a MissBlock-shaped
+    # demotion into the existing wire format without callers
+    # duplicating the mapping. Returns an empty list when this miss
+    # is escalate-class.
+    def to_refresh_targets(self) -> List["RefreshTarget"]:
+        """Convert ``refresh_targets`` to the RefreshTarget adapter shape.
+
+        Mapping (spec §11):
+          MissBlock.refresh_targets[i]              -> source_id
+          ("file" if no scheme else "url")          -> target_kind
+          stale->stale_mtime, cold->cold_tier,
+          superseded->superseded_by_successor       -> reason
+          1.0 - freshness_min (or 0.5 default)      -> priority
+
+        ``freshness_min`` is not carried on MissBlock today; callers
+        that have it pass it via the wider context. Default priority
+        is 0.5 — a neutral mid-band so the refresh plan UI doesn't
+        bias against MissBlock-sourced targets relative to other
+        sources of refresh demand.
+        """
+        if not self.refresh_targets:
+            return []
+        reason_map = {
+            "stale": "stale_mtime",
+            "cold": "cold_tier",
+            "superseded": "superseded_by_successor",
+        }
+        out: List[RefreshTarget] = []
+        for source_id in self.refresh_targets:
+            kind = "url" if "://" in str(source_id)[:32] else "file"
+            out.append(
+                RefreshTarget(
+                    target_kind=kind,
+                    source_id=str(source_id),
+                    reason=reason_map.get(self.reason, self.reason),
+                    priority=0.5,
+                )
+            )
+        return out
 
 
 class ContextResponseEnvelope(BaseModel):

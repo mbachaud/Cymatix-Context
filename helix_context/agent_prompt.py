@@ -1,6 +1,7 @@
 """Importable agent-prompt fragments for the Helix know/miss contract.
 
-Spec: docs/specs/2026-05-08-stage-6-know-miss-blocks.md §12.
+Spec: docs/specs/2026-05-08-stage-6-know-miss-blocks.md §12 +
+      docs/specs/2026-05-08-stage-7-freshness-gate.md §12.
 
 The Stage 6 machine-tagged contract is load-bearing only if the
 frontier agent's system prompt teaches it to honor the
@@ -8,13 +9,14 @@ frontier agent's system prompt teaches it to honor the
 field. This module exposes the fragment as a Python constant so callers
 can prepend it to the system prompt without parsing markdown.
 
+Stage 7 (2026-05-08) adds ``HELIX_REFRESH_FRAGMENT`` for the new
+``recommendation="refresh"`` branch — distinct from ``"escalate"`` —
+plus a ``full_fragment()`` helper that concatenates both for callers
+that want the full instruction set in one string.
+
 The same text lives in ``docs/agent-sdk-fragment.md`` — keep them in
 sync. The markdown is the human-readable canonical form; this constant
 is the programmatic mirror.
-
-# STAGE-7-EXT: when Stage 7 lands, this module also exports
-# HELIX_REFRESH_FRAGMENT (the "answer is here but stale, refresh"
-# branch) and a convenience ``full_fragment()`` that concatenates them.
 """
 
 from __future__ import annotations
@@ -54,4 +56,44 @@ HELIX KNOW/MISS retrieval returns one of two top-level blocks at every
 """
 
 
-__all__ = ["HELIX_NO_MATCH_FRAGMENT"]
+HELIX_REFRESH_FRAGMENT: str = """\
+HELIX REFRESH branch — Stage 7 contract.
+
+If `recommendation` is "refresh" (NOT "escalate"):
+  The genome found a candidate but the underlying source is stale,
+  archived, or superseded.
+
+  1. DO NOT answer from the genome content (still binding).
+  2. Read each path in `refresh_targets` from disk, OR fetch each URL.
+       - "stale":      file mtime moved past last verification — re-read.
+       - "cold":       archived match — re-read to re-warm hot tier.
+       - "superseded": a newer source replaces the queried one.
+  3. After fetching, re-call /context with the same query.
+  4. The next response will reflect the refreshed state.
+
+"refresh" means "the answer is here, just out of date — fetch and retry."
+"escalate" means "the answer is NOT here — go ask elsewhere."
+These are distinct branches. Do not conflate them.
+
+Soft-stale on a `know` block (`know.soft_stale=true`,
+`recommendation="refresh"`) is the one place a `know` block requests
+a refresh. Top-1 is fresh enough to act on; supporting context is
+stale. You may answer from the genome AND should plan a refresh.
+"""
+
+
+def full_fragment() -> str:
+    """Concatenated Stage 6 + Stage 7 agent-prompt fragments.
+
+    Convenience for callers that want the full instruction set in a
+    single string (e.g., system-prompt prefix injectors). Identical
+    to ``HELIX_NO_MATCH_FRAGMENT + "\\n\\n" + HELIX_REFRESH_FRAGMENT``.
+    """
+    return HELIX_NO_MATCH_FRAGMENT + "\n\n" + HELIX_REFRESH_FRAGMENT
+
+
+__all__ = [
+    "HELIX_NO_MATCH_FRAGMENT",
+    "HELIX_REFRESH_FRAGMENT",
+    "full_fragment",
+]
