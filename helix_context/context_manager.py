@@ -1216,41 +1216,49 @@ class HelixContextManager:
             if classifier_result.reason:
                 window.metadata["classifier"]["reason"] = classifier_result.reason
 
-        # Touch expressed genes (update epigenetics)
+        # Touch expressed genes (update epigenetics).
+        # Read-only contract (Stage 1): clean=true ⇒ read_only=True ⇒ skip
+        # all genome mutations below. Learning/replication is suppressed so
+        # synthetic benches and audit-style queries cannot pollute genome
+        # state. log_health (further down) is intentionally OUTSIDE the
+        # gate — it writes only to `health_log` (observability, not
+        # learning) and is the only way to see what a read-only run did.
         expressed_ids = [g.gene_id for g in candidates]
-        self.genome.touch_genes(expressed_ids)
-        self.genome.link_coactivated(expressed_ids)
+        if not read_only:
+            self.genome.touch_genes(expressed_ids)
+            self.genome.link_coactivated(expressed_ids)
 
-        # Compute harmonic weights between expressed genes (cymatics)
-        if self._use_cymatics and self.config.cymatics.harmonic_links:
-            try:
-                from .cymatics import compute_harmonic_weights
-                weights = compute_harmonic_weights(
-                    candidates, peak_width=self._cymatics_peak_width,
-                )
-                if weights:
-                    self.genome.store_harmonic_weights(weights)
-            except Exception:
-                # Harmonic links are diagnostic, not critical — non-blocking,
-                # but log so failures don't disappear silently.
-                log.warning("Harmonic link persistence failed", exc_info=True)
+            # Compute harmonic weights between expressed genes (cymatics)
+            if self._use_cymatics and self.config.cymatics.harmonic_links:
+                try:
+                    from .cymatics import compute_harmonic_weights
+                    weights = compute_harmonic_weights(
+                        candidates, peak_width=self._cymatics_peak_width,
+                    )
+                    if weights:
+                        self.genome.store_harmonic_weights(weights)
+                except Exception:
+                    # Harmonic links are diagnostic, not critical — non-blocking,
+                    # but log so failures don't disappear silently.
+                    log.warning("Harmonic link persistence failed", exc_info=True)
 
-        # Update TCM session context with expressed genes
+            # Store typed relations in genome (if available)
+            if relation_graph:
+                batch = []
+                for (gid_a, gid_b), (relation, confidence) in relation_graph.items():
+                    if confidence >= 0.6:
+                        batch.append((gid_a, gid_b, int(relation), confidence))
+                if batch:
+                    self.genome.store_relations_batch(batch)
+
+        # Update TCM session context with expressed genes (in-memory only,
+        # not gated — TCM session is per-process state, not genome state).
         if self._tcm_session is not None:
             try:
                 for gene in candidates:
                     self._tcm_session.update_from_gene(gene)
             except Exception:
                 pass  # TCM is diagnostic, not critical
-
-        # Store typed relations in genome (if available)
-        if relation_graph:
-            batch = []
-            for (gid_a, gid_b), (relation, confidence) in relation_graph.items():
-                if confidence >= 0.6:
-                    batch.append((gid_a, gid_b, int(relation), confidence))
-            if batch:
-                self.genome.store_relations_batch(batch)
 
         # Log health signal for historical tracking
         health = window.context_health

@@ -855,12 +855,18 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
             except (TypeError, ValueError):
                 max_genes = config.budget.max_genes_per_turn
             max_genes = max(1, min(max_genes, 32))
+            # Stage 1: thread read_only into the in-handler packet branch so
+            # `clean=true` here behaves identically to the dedicated
+            # /context/packet route (which has plumbed read_only since the
+            # route was added). Without this, response_mode="packet" was a
+            # silent escape hatch for genome writes when callers used /context.
             packet = build_context_packet(
                 str(query),
                 task_type=str(data.get("task_type", "explain") or "explain"),
                 genome=helix.genome,
                 max_genes=max_genes,
                 now_ts=t0,
+                read_only=read_only,
             )
             payload = packet.model_dump()
             payload["response_mode"] = "packet"
