@@ -20,8 +20,18 @@ from tests.test_pipeline import PipelineMockBackend
 
 def test_abstain_marker_constant_is_exported():
     """The shared marker string is exposed at module scope so the empty-
-    candidates branch and the abstain branch can ship identical bytes."""
-    assert cm._ABSTAIN_MARKER == "(no relevant context found in genome)"
+    candidates branch and the abstain branch can ship identical bytes.
+
+    Stage 6 (2026-05-08, §6): the prose marker is replaced with the
+    structured `<helix:no_match reason="abstain" do_not_answer="true"/>`
+    tag. ``_ABSTAIN_MARKER`` is preserved as a deprecated alias that
+    points at the new tag for one release, so call sites migrate
+    transparently.
+    """
+    assert cm._ABSTAIN_MARKER == cm._no_match_token("abstain")
+    assert cm._ABSTAIN_MARKER == (
+        '<helix:no_match reason="abstain" do_not_answer="true"/>'
+    )
 
 
 @pytest.mark.parametrize("value,expected", [

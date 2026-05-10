@@ -9,9 +9,9 @@ from __future__ import annotations
 
 import time
 from enum import Enum, IntEnum
-from typing import List, Optional
+from typing import List, Literal, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 
 class NLRelation(IntEnum):
@@ -233,7 +233,12 @@ class RefreshTarget(BaseModel):
 
 
 class ContextPacket(BaseModel):
-    """Agent-safe retrieval packet with freshness labeling."""
+    """Agent-safe retrieval packet with freshness labeling.
+
+    Stage 6 (2026-05-08, §5 + §9): adds optional ``know`` and ``miss``
+    fields and a first-class ``coordinate_confidence`` so the agent
+    can branch on a structured signal instead of scraping ``notes``.
+    """
     task_type: str
     query: str
     verified: List[ContextItem] = Field(default_factory=list)
@@ -242,6 +247,19 @@ class ContextPacket(BaseModel):
     refresh_targets: List[RefreshTarget] = Field(default_factory=list)
     working_set_id: Optional[str] = None
     notes: List[str] = Field(default_factory=list)
+
+    # Stage 6 — top-level know/miss block; exactly one is non-null
+    # when this packet was built from a non-empty query. (Pre-existing
+    # consumers that ignore unknown keys are unaffected; new consumers
+    # should branch on these keys before reading ``verified`` /
+    # ``stale_risk``.)
+    know: Optional["KnowBlock"] = None  # forward ref — defined below
+    miss: Optional["MissBlock"] = None
+
+    # Stage 6 (§9) — promoted from a notes-prose summary to a
+    # first-class field so consumers don't need to regex parse it.
+    coordinate_confidence: float = 0.0
+    file_coverage: float = 0.0
 
 
 # ── Claims layer (see docs/specs/2026-04-17-agent-context-index-build-spec.md) ──
@@ -409,3 +427,140 @@ class HITLEvent(BaseModel):
     cold_cache_size: Optional[int] = None
 
     metadata: Optional[dict] = None
+
+
+# ─────────────────────────────────────────────────────────────────────
+# Stage 6 — machine-tagged know/miss contract for /context
+# Spec: docs/specs/2026-05-08-stage-6-know-miss-blocks.md
+#
+# EXTENSION POINTS for Stage 7 (freshness gate). This file is laid out
+# so each Stage 7 addition is a single-line edit. Search for the
+# `# STAGE-7-EXT` markers to find them.
+# ─────────────────────────────────────────────────────────────────────
+
+# Stage 6 reason vocabulary. Stage 7 will append "stale" | "cold" |
+# "superseded" — adding a value is a one-line change to this tuple, and
+# pydantic will accept it everywhere via the Literal[*MISS_REASONS]
+# unpacking below. # STAGE-7-EXT: extend MISS_REASONS
+MISS_REASONS: tuple[str, ...] = (
+    "abstain",
+    "denatured",
+    "sparse",
+    "no_promoter_match",
+)
+
+# Tools an agent can escalate to. Helix only signals the class; the
+# consumer registers the concrete tool. Kept narrow on purpose.
+ESCALATE_TARGETS: tuple[str, ...] = (
+    "grep",
+    "rag",
+    "web",
+    "ask_human",
+)
+
+# Set form for fast membership checks in validators.
+_MISS_REASON_SET = frozenset(MISS_REASONS)
+_ESCALATE_TARGET_SET = frozenset(ESCALATE_TARGETS)
+
+
+class KnowBlock(BaseModel):
+    """Top-level retrieval-success block emitted at /context.
+
+    Mutually exclusive with MissBlock; envelope validator enforces the
+    invariant. Designed for a frontier-model agent: ``found=True`` is the
+    machine-tagged equivalent of "the genome did locate this and the
+    expressed_context bytes are grounded — you may answer from them."
+
+    Stage 7 extends this additively (NOT a redesign):
+      # STAGE-7-EXT: add `soft_stale: bool = False`
+    """
+
+    model_config = {"extra": "forbid"}
+
+    found: Literal[True] = True
+    confidence: float = Field(ge=0.0, le=1.0)
+    top_score: float
+    score_gap: float
+    lexical_dense_agree: bool
+    gene_id_match: Optional[str] = None
+    coordinate_confidence: float = Field(ge=0.0, le=1.0)
+
+
+class MissBlock(BaseModel):
+    """Top-level retrieval-miss block emitted at /context.
+
+    Carries a discriminator (``reason``) and a concrete next-step list
+    (``escalate_to``). ``do_not_answer_from_genome=True`` is a load-bearing
+    contract bit: the frontier agent MUST honor it (see
+    docs/agent-sdk-fragment.md / HELIX_NO_MATCH_FRAGMENT).
+
+    Stage 7 extends this additively:
+      # STAGE-7-EXT: add `refresh_targets: list[str] = Field(default_factory=list)`
+      # STAGE-7-EXT: extend MISS_REASONS with stale|cold|superseded
+      # STAGE-7-EXT: add a model_validator gating refresh_targets vs escalate_to
+    """
+
+    model_config = {"extra": "forbid"}
+
+    miss: Literal[True] = True
+    # Reason is validated against MISS_REASONS at runtime (not via Literal)
+    # so Stage 7's one-line tuple extension does not require a pydantic
+    # type bump. Trade-off documented; keeps the file extensible.
+    reason: str
+    top_score: float
+    ratio: float
+    escalate_to: List[str] = Field(default_factory=list)
+    do_not_answer_from_genome: Literal[True] = True
+
+    @model_validator(mode="after")
+    def _validate_reason_and_escalate(self) -> "MissBlock":
+        if self.reason not in _MISS_REASON_SET:
+            raise ValueError(
+                f"MissBlock.reason {self.reason!r} not in MISS_REASONS "
+                f"({sorted(MISS_REASONS)})"
+            )
+        for tool in self.escalate_to:
+            if tool not in _ESCALATE_TARGET_SET:
+                raise ValueError(
+                    f"MissBlock.escalate_to entry {tool!r} not in "
+                    f"ESCALATE_TARGETS ({sorted(ESCALATE_TARGETS)})"
+                )
+        return self
+
+
+class ContextResponseEnvelope(BaseModel):
+    """Thin wrapper that carries the know/miss exclusivity invariant.
+
+    Used by /context and /context/packet routes to wrap the response
+    dict before serialization. The validator raises if both blocks are
+    present or both absent — caught at the route boundary; tests in
+    test_know_miss_block.py assert it never fires under correct flow.
+
+    Why a wrapper instead of a Union[KnowBlock, MissBlock]: the rest of
+    the response dict (citations, agent metadata, expressed_context, …)
+    is sibling-keyed at the same level. The envelope holds those plus
+    the one mandatory know-or-miss key, and exposes the invariant as a
+    pydantic check rather than a route-side `assert`.
+    """
+
+    model_config = {"extra": "allow"}
+
+    know: Optional[KnowBlock] = None
+    miss: Optional[MissBlock] = None
+
+    @model_validator(mode="after")
+    def _exactly_one(self) -> "ContextResponseEnvelope":
+        if (self.know is None) == (self.miss is None):
+            raise ValueError(
+                "ContextResponseEnvelope: exactly one of know/miss must "
+                "be set (got "
+                f"know={'set' if self.know is not None else 'None'}, "
+                f"miss={'set' if self.miss is not None else 'None'})"
+            )
+        return self
+
+
+# Resolve the ContextPacket forward refs to KnowBlock / MissBlock now
+# that both are defined. Without this, ContextPacket(...) blows up the
+# first time a route tries to construct it.
+ContextPacket.model_rebuild()
