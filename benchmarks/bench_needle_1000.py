@@ -36,10 +36,25 @@ from typing import Optional
 
 import httpx
 
+# We reuse the dim-lock locator parser so the located axis sees the exact same
+# (project, module, filename) decomposition that variant 4 used at N=200.
+# Imported lazily inside build_query_located() to avoid a circular import:
+# bench_dimensional_lock itself imports `harvest_needles` and `categorize`
+# from this module, so a top-level import here would cycle.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 # Harness version — bump when filter logic changes so older result files stay
 # comparable. v1 = original (phantom-prone) harvest. v2 = literal-value filter,
 # dotted-chain reject, assignment-context check, word-boundary retrieval match.
-HARNESS_VERSION = 2
+# v3 = two-axis split (blind vs located), token-field unification
+# (injected_tokens → injected_tokens_est in ASK_PROXY=0 path), read-only
+# isolation contract for clean=true.
+HARNESS_VERSION = 3
+
+# Axis selector: "located" → 4-axis locator query (default headline number),
+# "blind" → legacy bare-key form (preserves prior 13.8% baseline).
+# CLI: --axis {blind,located}; env override: BENCH_AXIS={blind,located}.
+AXIS = os.environ.get("BENCH_AXIS", "located").lower()
 
 HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
 GENOME_DB = os.environ.get("GENOME_DB", "F:/Projects/helix-context/genome-bench-2026-05-08.db")
@@ -322,13 +337,20 @@ def harvest_needles(db_path: str, n: int, seed: int) -> list[dict]:
     return selected[:n]
 
 
-def build_query(needle: dict) -> str:
-    """Generate a natural-language question for a KV fact."""
-    k = needle["key"]
-    # Turn snake_case / camelCase keys into readable phrases
-    phrase = re.sub(r"[_\-]+", " ", k)
+def _key_phrase(key: str) -> str:
+    """Convert snake_case / camelCase key into a human-readable phrase."""
+    phrase = re.sub(r"[_\-]+", " ", key)
     phrase = re.sub(r"([a-z])([A-Z])", r"\1 \2", phrase).lower().strip()
-    # Pick a template based on key shape
+    return phrase
+
+
+def build_query_blind(needle: dict) -> str:
+    """Legacy bare-key query (preserves v1/v2 wording exactly).
+
+    Templates are unchanged from the v2 single-axis baseline so the
+    `blind` axis remains a 1:1 reproduction of the prior 13.8% headline.
+    """
+    phrase = _key_phrase(needle["key"])
     if any(t in phrase for t in ("port", "size", "count", "limit", "threshold", "budget")):
         return f"What is the {phrase} in the {needle['category']} source?"
     if "path" in phrase or "url" in phrase or "file" in phrase:
@@ -336,6 +358,47 @@ def build_query(needle: dict) -> str:
     if "name" in phrase or "title" in phrase:
         return f"What is the {phrase}?"
     return f"What is the value of {phrase}?"
+
+
+def build_query_located(needle: dict) -> str:
+    """4-axis locator query (mirrors dim-lock variant 4, DEWEY=0 mode).
+
+    Falls back gracefully when locator components are missing:
+    - 4 axes available: ``key + project + module + filename``
+    - 3 axes:           ``key + project + module``
+    - 2 axes:           ``key + project``
+    - 1 axis:           ``key`` only (delegates to build_query_blind)
+    """
+    # Lazy import to break the bench_needle_1000 ↔ bench_dimensional_lock
+    # cycle. dim-lock imports harvest_needles + categorize from us at module
+    # top, so we can't reciprocate at the top level.
+    from bench_dimensional_lock import _split_source  # noqa: E402
+
+    phrase = _key_phrase(needle["key"])
+    src = needle.get("source", "") or ""
+    project, module, filename = _split_source(src)
+
+    if project and module and filename:
+        return f"What is the {phrase} value in {project}/{module}/{filename}?"
+    if project and module:
+        return f"What is the {phrase} configured in {project} {module}?"
+    if project:
+        return f"What is the value of {phrase} in {project}?"
+    # Locator components unavailable — fall back to bare-key form.
+    return build_query_blind(needle)
+
+
+def build_query(needle: dict, axis: str | None = None) -> str:
+    """Dispatcher — routes to the per-axis builder.
+
+    Kept for backward compatibility with any caller that imported the
+    single-symbol form. Uses the module-level AXIS by default so existing
+    `for n in needles: n["query"] = build_query(n)` calls Just Work.
+    """
+    selected_axis = axis if axis is not None else AXIS
+    if selected_axis == "blind":
+        return build_query_blind(needle)
+    return build_query_located(needle)
 
 
 def run_needle(client: httpx.Client, needle: dict) -> dict:
@@ -485,12 +548,22 @@ def summarize(results: list[dict]) -> dict:
         k = int(len(lst) * p / 100)
         return round(lst[min(k, len(lst) - 1)], 3)
 
-    # Token economics — skip zeros (missing data in older runs)
-    injected = [r.get("injected_tokens_est", 0) for r in results if r.get("injected_tokens_est")]
+    # Token economics — skip zeros (missing data in older runs).
+    # Tolerant reads: rows from the ASK_PROXY=0 path on the unmerged
+    # foveated/slate branch emit the unsuffixed `injected_tokens` /
+    # `budget_tokens` keys; harness v3 unifies on `_est` but we still
+    # accept the legacy form so cross-branch JSONs aggregate cleanly.
+    def _injected(r: dict) -> int:
+        return r.get("injected_tokens_est") or r.get("injected_tokens") or 0
+
+    def _budget(r: dict) -> int:
+        return r.get("budget_tokens_est") or r.get("budget_tokens") or 0
+
+    injected = [_injected(r) for r in results if _injected(r)]
     compression = [r.get("compression_ratio", 0) for r in results if r.get("compression_ratio")]
     budget_util = [r.get("budget_utilization", 0) for r in results if r.get("budget_utilization")]
     genes_exp = [r.get("genes_expressed", 0) for r in results]
-    budget = [r.get("budget_tokens_est", 0) for r in results if r.get("budget_tokens_est")]
+    budget = [_budget(r) for r in results if _budget(r)]
 
     def avg(lst):
         return round(sum(lst) / len(lst), 3) if lst else 0
@@ -685,7 +758,56 @@ See each run's `summary.failure_modes` for the breakdown.
     print(f"Done → https://huggingface.co/datasets/{repo}")
 
 
+def _parse_axis_flag(argv: list[str]) -> str:
+    """Resolve axis from CLI > env > default-located."""
+    for i, arg in enumerate(argv):
+        if arg == "--axis" and i + 1 < len(argv):
+            v = argv[i + 1].lower().strip()
+            if v in ("blind", "located"):
+                return v
+            print(
+                f"ERROR: --axis must be 'blind' or 'located', got {argv[i + 1]!r}",
+                file=sys.stderr,
+            )
+            sys.exit(2)
+        if arg.startswith("--axis="):
+            v = arg.split("=", 1)[1].lower().strip()
+            if v in ("blind", "located"):
+                return v
+            print(
+                f"ERROR: --axis must be 'blind' or 'located', got {v!r}",
+                file=sys.stderr,
+            )
+            sys.exit(2)
+    return AXIS  # env-default; module-level AXIS already honors BENCH_AXIS
+
+
+def _axis_output_path(base_path: str, axis: str) -> str:
+    """Templating: insert axis suffix into the output path stem.
+
+    `.../needle_1000_results.json` → `.../needle_1000_results_{axis}.json`
+    The incremental jsonl mirror follows the same suffix convention.
+    """
+    if axis == "blind":
+        suffix = "_blind"
+    else:
+        suffix = "_located"
+    root, ext = os.path.splitext(base_path)
+    if root.endswith(suffix):
+        return base_path  # already templated by env var
+    return f"{root}{suffix}{ext}"
+
+
 def main():
+    global AXIS, OUTPUT_PATH
+    # Resolve axis (CLI flag overrides env). Mutate module-level AXIS so the
+    # build_query() dispatcher and any later imports see the chosen axis.
+    AXIS = _parse_axis_flag(sys.argv)
+    # Template OUTPUT_PATH if the user didn't already specify an axis-tagged
+    # path via the OUTPUT env var. _axis_output_path is a no-op when the
+    # path stem already ends in the matching suffix.
+    OUTPUT_PATH = _axis_output_path(OUTPUT_PATH, AXIS)
+
     # --upload short-circuit (no benchmark run, just publish existing results)
     if "--upload" in sys.argv:
         repo = os.environ.get("HF_REPO")
@@ -710,6 +832,8 @@ def main():
     print(f"Server:  {HELIX_URL}")
     print(f"Model:   {MODEL}")
     print(f"Seed:    {SEED}")
+    print(f"Axis:    {AXIS}")
+    print(f"Output:  {OUTPUT_PATH}")
     print()
 
     # Harvest needles
@@ -718,9 +842,9 @@ def main():
     print(f"Selected {len(needles)} needles")
     print()
 
-    # Attach queries
+    # Attach queries (per the active axis)
     for n in needles:
-        n["query"] = build_query(n)
+        n["query"] = build_query(n, axis=AXIS)
 
     # Force unbuffered stdout so progress is visible in background runs
     try:
@@ -868,6 +992,7 @@ def main():
     output = {
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S"),
         "harness_version": 1 if LEGACY_HARVEST else HARNESS_VERSION,
+        "axis": AXIS,
         "n": summary["n"],
         "model": MODEL,
         "seed": SEED,
