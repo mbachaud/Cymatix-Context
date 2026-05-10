@@ -7,4 +7,4 @@ set "HELIX_OTEL_INSECURE=1"
 set "HELIX_OTEL_SAMPLER_RATIO=1.0"
 set "HELIX_USER=max"
 set "HELIX_AGENT=raude"
-python -m uvicorn helix_context.server:app --host 127.0.0.1 --port 11437
+python -m uvicorn helix_context._asgi:app --host 127.0.0.1 --port 11437

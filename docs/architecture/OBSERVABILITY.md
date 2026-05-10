@@ -32,7 +32,7 @@ pip install "helix-context[otel]"
 ```bash
 export HELIX_OTEL_ENABLED=1
 export HELIX_OTEL_ENDPOINT=localhost:4317   # default
-python -m uvicorn helix_context.server:app --port 11437
+python -m uvicorn helix_context._asgi:app --port 11437
 ```
 
 Open <http://localhost:3000/d/helix-overview>. Retrieval latency, tier contributions, CWoLa f_gap, chromatin distribution, harmonic-edges-by-source — all live.
@@ -92,7 +92,7 @@ cd deploy/otel && docker compose up -d
 
 # In another shell, start helix with OTel on
 export HELIX_OTEL_ENABLED=1
-python -m uvicorn helix_context.server:app --port 11437
+python -m uvicorn helix_context._asgi:app --port 11437
 
 # Hit /context to emit spans + tier metrics
 curl -s -X POST http://localhost:11437/context \
