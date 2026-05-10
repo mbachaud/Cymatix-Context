@@ -272,10 +272,18 @@ class RetrievalConfig:
     # Step 4 — BGE-M3 dense vectors + ANN threshold-based dynamic gene counts
     # (2026-05-08). Dark ship — all flags off by default.
     dense_embedding_enabled: bool = False
-    dense_embedding_dim: int = 256
+    # Stage 2 (2026-05-08): default dim raised from 256 -> 1024. Full BGE-M3
+    # Matryoshka. dim=256 collapsed random-pair cosine to ~0.6, sabotaging
+    # threshold semantics. Stage 4 will recalibrate ann_similarity_threshold
+    # at the new dim.
+    dense_embedding_dim: int = 1024
     ann_similarity_threshold: float = 0.35
     ann_threshold_min_genes: int = 1
     ann_threshold_max_genes: int = 12
+    # Stage 2 (2026-05-08): dense recall pool size. Decoupled from
+    # ann_threshold_max_genes (the final cut). 500 hits ~3% of an 18.9k
+    # corpus per spec §4.
+    dense_pool_size: int = 500
 
 
 @dataclass
@@ -591,6 +599,8 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             ann_similarity_threshold=float(r.get("ann_similarity_threshold", cfg.retrieval.ann_similarity_threshold)),
             ann_threshold_min_genes=int(r.get("ann_threshold_min_genes", cfg.retrieval.ann_threshold_min_genes)),
             ann_threshold_max_genes=int(r.get("ann_threshold_max_genes", cfg.retrieval.ann_threshold_max_genes)),
+            # Stage 2 (2026-05-08): dense recall pool size, decoupled from final cut.
+            dense_pool_size=int(r.get("dense_pool_size", cfg.retrieval.dense_pool_size)),
         )
 
     # Session (CWoLa session/party fallback — 2026-04-13 fix for always-A bucket bug)
