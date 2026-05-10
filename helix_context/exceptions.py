@@ -32,3 +32,12 @@ class TranscriptionError(HelixError):
 
 class GenomeFullError(HelixError):
     """Genome storage limit reached."""
+
+
+class ConfigError(HelixError):
+    """helix.toml is structurally invalid.
+
+    Raised by the Stage 4 loader when ``[abstain].mode = "per_classifier"``
+    is set but a required per-class block is missing. See
+    ``docs/specs/2026-05-08-stage-4-threshold-calibration.md`` §6.
+    """

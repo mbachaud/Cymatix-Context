@@ -1299,6 +1299,11 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
                 # C.2 of B->C: cold-tier retrieval markers
                 "cold_tier_used": getattr(helix, "_last_cold_tier_used", False),
                 "cold_tier_count": getattr(helix, "_last_cold_tier_count", 0),
+                # Stage 4 (2026-05-08): calibration provenance — spec §9.
+                # Lets the agent see WHICH calibration set this response was
+                # produced under without an extra /health roundtrip.
+                "ann_threshold_mode": config.retrieval.ann_threshold_mode,
+                "abstain_mode": config.abstain.mode,
             }
 
             # Activation profile: per-tier score breakdown for the
@@ -2692,6 +2697,24 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
 
         # Intentionally minimized response — documented contract in
         # CLAUDE.md is "ribosome model, gene count, upstream URL". We keep
+        # Stage 4 (2026-05-08): calibration provenance surface. Spec §9.
+        # Surfaces ann_threshold mode + meta (mu/sigma/N/dim/computed_at) and
+        # abstain mode + per-class count so operators can verify a calibrated
+        # snapshot is in use without grepping logs. ``ann_threshold`` sub-key
+        # is omitted when mode='absolute' OR no calibration row is present.
+        calibration_block = {
+            "ann_threshold_mode": config.retrieval.ann_threshold_mode,
+            "abstain_mode": config.abstain.mode,
+            "abstain_classes": sorted(config.abstain.per_class.keys()),
+        }
+        try:
+            ann_meta = helix.genome.get_calibration_provenance()
+        except Exception:
+            ann_meta = None
+            log.debug("/health calibration provenance read failed", exc_info=True)
+        if ann_meta is not None:
+            calibration_block["ann_threshold"] = ann_meta
+
         # those and omit raw error strings, cost class, and the full
         # probe dict to avoid leaking internal paths/configuration.
         return {
@@ -2705,6 +2728,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
             "upstream": config.server.upstream,
             "upstream_reachable": upstream_reachable,
             "hardware": hardware_block,
+            "calibration": calibration_block,
             "checks": {
                 "genome_ready": genome_ready,
                 "upstream_ready": upstream_reachable,

@@ -357,6 +357,9 @@ class HelixContextManager:
             ann_similarity_threshold=config.retrieval.ann_similarity_threshold,
             ann_threshold_min_genes=config.retrieval.ann_threshold_min_genes,
             ann_threshold_max_genes=config.retrieval.ann_threshold_max_genes,
+            # Stage 4 (2026-05-08): margin-over-random calibration mode.
+            ann_threshold_mode=config.retrieval.ann_threshold_mode,
+            ann_threshold_sigma_multiplier=config.retrieval.ann_threshold_sigma_multiplier,
             dense_pool_size=config.retrieval.dense_pool_size,
             # Stage 3 (2026-05-08): RRF fusion + per-tier weights.
             fusion_mode=config.retrieval.fusion_mode,
@@ -749,6 +752,52 @@ class HelixContextManager:
                 return True
         return False
 
+    # ─── Stage 4: per-classifier floor / alpha lookup ────────────────────
+
+    # Legacy global constants — kept here as a single source of truth so
+    # ``mode="global"`` returns byte-identical pre-Stage-4 values from
+    # ``_floors_for`` and ``_alpha_for_cls`` and the inline call sites pick
+    # them up unchanged.
+    _GLOBAL_TIGHT_FLOOR = 5.0
+    _GLOBAL_FOCUSED_FLOOR = 2.5
+    _GLOBAL_ABSTAIN_FLOOR = 2.5  # mirrors FOCUSED_SCORE_FLOOR_FOR_ABSTAIN
+
+    def _floors_for(self, cls: Optional[str]):
+        """Return ``AbstainClassFloors`` for this query's class.
+
+        ``mode="global"`` returns the legacy hard-coded 5.0/2.5/2.5 floors
+        regardless of ``cls`` (preserves Stage-3 behavior byte-for-byte).
+        ``mode="per_classifier"`` consults ``config.abstain.per_class[cls]``
+        with ``default`` fallback.
+
+        Spec: docs/specs/2026-05-08-stage-4-threshold-calibration.md §6 + §7.
+        """
+        from .config import AbstainClassFloors
+        ab = getattr(self.config, "abstain", None)
+        if ab is None or ab.mode == "global":
+            # Identity floors that match the legacy hard-coded constants.
+            return AbstainClassFloors(
+                abstain_top=self._GLOBAL_ABSTAIN_FLOOR,
+                focused_top=self._GLOBAL_FOCUSED_FLOOR,
+                tight_top=self._GLOBAL_TIGHT_FLOOR,
+                foveated_alpha=self.config.budget.foveated_alpha,
+            )
+        return ab.floors_for(cls)
+
+    def _alpha_for_cls(self, cls: Optional[str]) -> float:
+        """Return the foveated splice power-law alpha for this query's class.
+
+        ``mode="global"`` returns ``config.budget.foveated_alpha`` (legacy).
+        ``mode="per_classifier"`` returns the per-class alpha with ``default``
+        fallback.
+
+        Spec §7.
+        """
+        ab = getattr(self.config, "abstain", None)
+        if ab is None or ab.mode == "global":
+            return self.config.budget.foveated_alpha
+        return ab.floors_for(cls).foveated_alpha
+
     def build_context(
         self,
         query: str,
@@ -925,6 +974,14 @@ class HelixContextManager:
                 candidates = _merge_subquery_candidates(sub_results, base_scores)
                 candidates = candidates[: max_genes * 2]
 
+        # Stage 4 (2026-05-08): hoist classifier-derived `cls` so per-classifier
+        # floor and alpha lookups work regardless of which downstream branch
+        # fires. mode='global' (default) ignores this entirely; 'per_classifier'
+        # consults config.abstain.per_class[cls] (with 'default' fallback).
+        cls_for_floors: Optional[str] = (
+            classifier_result.cls if classifier_result is not None else None
+        )
+
         if not candidates:
             total_genes = self.genome.stats().get("total_genes", 0)
             # Stage 6 (§6): the legacy "denatured if genome non-empty
@@ -1019,7 +1076,14 @@ class HelixContextManager:
                 # < on both axes. Telemetry fires here before the early-return so
                 # tier="abstain" lands on budget_tier_counter alongside the other
                 # tier counts emitted by the existing call site below.
-                FOCUSED_SCORE_FLOOR_FOR_ABSTAIN = 2.5    # mirrors the local FOCUSED_SCORE_FLOOR below
+                #
+                # Stage 4 (2026-05-08): when [abstain].mode='per_classifier', use
+                # the calibrated abstain_top for this query's class instead of
+                # the hard-coded 2.5. mode='global' (default) preserves the
+                # legacy constant byte-for-byte. ``cls_for_floors`` is hoisted
+                # above (set from classifier_result so all branches see it).
+                _cls_floors = self._floors_for(cls_for_floors)
+                FOCUSED_SCORE_FLOOR_FOR_ABSTAIN = _cls_floors.abstain_top
                 if (
                     abstain_enabled
                     and top_score < FOCUSED_SCORE_FLOOR_FOR_ABSTAIN
@@ -1049,8 +1113,12 @@ class HelixContextManager:
                 # queries landed in tight mode with top_score < 3.0. Adding the
                 # absolute floor keeps weak-signal queries in BROAD mode where
                 # the larger candidate set gives them a recall chance.
-                TIGHT_SCORE_FLOOR = 5.0
-                FOCUSED_SCORE_FLOOR = 2.5
+                # Stage 4 (2026-05-08): per-classifier tight/focused floors.
+                # mode='global' (default) keeps the legacy 5.0 / 2.5 constants
+                # exactly. mode='per_classifier' substitutes the calibrated
+                # tight_top / focused_top for this query's class.
+                TIGHT_SCORE_FLOOR = _cls_floors.tight_top
+                FOCUSED_SCORE_FLOOR = _cls_floors.focused_top
                 # ── Stage 3 transitional bypass (spec §9) ──
                 # Under RRF, the score scale collapses to ~Σweight/(k+1) ≈ 0.3
                 # max — the absolute TIGHT/FOCUSED floors are calibrated for
@@ -1184,9 +1252,13 @@ class HelixContextManager:
             and self.config.budget.foveated_enabled
             and len(candidates) > 1
         ):
+            # Stage 4 (2026-05-08): per-classifier foveated alpha. mode='global'
+            # returns config.budget.foveated_alpha (legacy); 'per_classifier'
+            # returns the per-class value with 'default' fallback.
+            _alpha_for_caps = self._alpha_for_cls(cls_for_floors)
             caps = _compute_foveated_caps(
                 n=len(candidates),
-                alpha=self.config.budget.foveated_alpha,
+                alpha=_alpha_for_caps,
                 c_min=self.config.budget.foveated_c_min,
                 c_max=1.0,
             )
