@@ -258,6 +258,27 @@ ann_similarity_threshold = 0.35
 ann_threshold_min_genes = 1
 ann_threshold_max_genes = 12
 dense_pool_size = 500
+# Stage 3 (2026-05-08): Reciprocal Rank Fusion. Spec
+# docs/specs/2026-05-08-stage-3-rrf-fusion.md replaces the additive
+# gene_scores += tier_score accumulator with rank-level RRF (Cormack 2009).
+# Default "additive" is byte-identical to pre-Stage-3 behavior. Flip to
+# "rrf" to enable the new path. Per-tier weights below are RRF
+# post-multipliers (preserve current implicit weights).
+# Deprecation timeline: v(N) ships additive default; v(N+1) flips to rrf
+# default; v(N+2) removes the additive code path.
+fusion_mode = "additive"                # "additive" | "rrf"
+rrf_k = 60                              # Cormack 2009 default
+fts5_weight = 3.0                       # current FTS5 cap
+splade_weight = 3.5                     # current SPLADE cap
+tag_exact_weight = 3.0                  # Tier 1 weight × match_count
+tag_prefix_weight = 1.5                 # Tier 2 weight × match_count
+sema_cold_weight = 3.0                  # ΣĒMA cold-start sim multiplier
+lex_anchor_weight = 1.5                 # IDF anchor multiplier
+harmonic_weight = 1.0                   # Tier 5 per-link weight
+entity_graph_weight = 0.5               # Tier 5b entity boost
+dense_weight = 1.0                      # Stage 2 dense recall, RRF participant
+pki_weight = 1.0                        # path-key-index tier, RRF participant
+# Note: filename_anchor_weight (above) and sr_weight (above) are reused.
 
 [plr]
 # Stacked PLR query-confidence head (STATISTICAL_FUSION.md §C3).
