@@ -23,7 +23,7 @@ import re
 import sqlite3
 import threading
 import time
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 from .accel import (
     json_loads,
@@ -341,6 +341,24 @@ class Genome:
         ann_threshold_max_genes: int = 12,
         # Stage 2: dense recall pool size, decoupled from ann_threshold_max_genes.
         dense_pool_size: int = 500,
+        # Stage 3 (2026-05-08): Reciprocal Rank Fusion (spec
+        # docs/specs/2026-05-08-stage-3-rrf-fusion.md). Default
+        # "additive" preserves pre-Stage-3 ranking byte-for-byte; flip
+        # to "rrf" to enable rank fusion. Per-tier weights are RRF
+        # post-multipliers; defaults map to the existing implicit
+        # additive weights.
+        fusion_mode: str = "additive",
+        rrf_k: int = 60,
+        fts5_weight: float = 3.0,
+        splade_weight: float = 3.5,
+        tag_exact_weight: float = 3.0,
+        tag_prefix_weight: float = 1.5,
+        sema_cold_weight: float = 3.0,
+        lex_anchor_weight: float = 1.5,
+        harmonic_weight: float = 1.0,
+        entity_graph_weight: float = 0.5,
+        dense_weight: float = 1.0,
+        pki_weight: float = 1.0,
         main_conn: Optional[sqlite3.Connection] = None,
         shard_name: str = "main",
     ):
@@ -387,6 +405,30 @@ class Genome:
         self._dense_matrix_lock = threading.Lock()
         # One-time-only flags so we don't spam logs.
         self._dense_v2_partial_warned: bool = False
+        # ── Stage 3 (2026-05-08): RRF fusion mode + per-tier weights ──
+        # Spec: docs/specs/2026-05-08-stage-3-rrf-fusion.md.
+        # When "additive", query_genes() uses the legacy gene_scores +=
+        # tier_score accumulator unchanged. When "rrf", each tier ALSO
+        # ranks its output through the Fuser and the final sort uses
+        # fused scores. Per-tier weights below are RRF post-multipliers.
+        # Validate now so a typo in helix.toml fails fast at construction
+        # instead of producing surprising rankings at query time.
+        if fusion_mode not in ("additive", "rrf"):
+            raise ValueError(
+                f"fusion_mode must be 'additive' or 'rrf', got {fusion_mode!r}"
+            )
+        self._fusion_mode: str = fusion_mode
+        self._rrf_k: int = int(rrf_k)
+        self._fts5_weight: float = float(fts5_weight)
+        self._splade_weight: float = float(splade_weight)
+        self._tag_exact_weight: float = float(tag_exact_weight)
+        self._tag_prefix_weight: float = float(tag_prefix_weight)
+        self._sema_cold_weight: float = float(sema_cold_weight)
+        self._lex_anchor_weight: float = float(lex_anchor_weight)
+        self._harmonic_weight: float = float(harmonic_weight)
+        self._entity_graph_weight: float = float(entity_graph_weight)
+        self._dense_weight: float = float(dense_weight)
+        self._pki_weight: float = float(pki_weight)
         self._threshold_dim_warned: bool = False
         # Phase 2 claims layer (2026-04-19). Optional hook — when a main.db
         # connection is supplied, upsert_gene emits literal claims into it
@@ -1694,6 +1736,8 @@ class Genome:
         cur,
         gene_scores: Dict[str, float],
         query_terms: List[str],
+        rerank_additive: Optional[Dict[str, float]] = None,
+        tier_contrib: Optional[Dict[str, Dict[str, float]]] = None,
     ) -> None:
         """
         Post-rank boosts that distinguish authoritative genes from tangential ones.
@@ -1758,6 +1802,15 @@ class Genome:
 
             if boost > 0:
                 gene_scores[gid] += boost
+                # Stage 3: dual-write to the post-fusion additives map
+                # so RRF mode can apply authority on top of the fused
+                # score (per spec §3 / §99: re-rank class).
+                if rerank_additive is not None:
+                    rerank_additive[gid] = rerank_additive.get(gid, 0.0) + boost
+                if tier_contrib is not None:
+                    tier_contrib.setdefault(gid, {})["authority"] = (
+                        tier_contrib.get(gid, {}).get("authority", 0.0) + boost
+                    )
 
     # ── Core retrieval (Step 2) — hybrid promoter + FTS5 ────────────
 
@@ -1856,6 +1909,35 @@ class Genome:
         # for the activation profiler bench (bench_skill_activation.py).
         tier_contrib: Dict[str, Dict[str, float]] = {}
 
+        # ── Stage 3: Reciprocal Rank Fusion accumulator ────────────
+        # Spec: docs/specs/2026-05-08-stage-3-rrf-fusion.md.
+        # In "rrf" mode, every recall/discovery tier ALSO calls
+        # fuser.add_tier(...) with its (gid, raw_score) ranked list and
+        # the operator-tunable post-multiplier weight. The final sort
+        # branches on _fusion_mode at line ~2489.
+        #
+        # In "additive" mode, the Fuser is built but never queried —
+        # the existing gene_scores accumulator runs unchanged so the
+        # output is byte-identical to pre-Stage-3 ranking.
+        #
+        # Re-rank/tiebreaker tiers (sema_boost, authority, party_attr,
+        # access_rate) stay ADDITIVE on top of the fused score. Per
+        # spec §3 rule of thumb: agreement across recall tiers is the
+        # signal RRF expresses; "is this gene authoritative?" is a
+        # different question that survives unchanged.
+        from .fusion import Fuser as _Fuser
+        fuser = _Fuser(k=self._rrf_k)
+
+        # ── Stage 3: re-rank-class additive collector ──────────────
+        # The post-fusion additives — sema_boost (gate-only re-rank
+        # confidence boost), authority_*, party_attr, access_rate —
+        # capture the "is this gene authoritative?" signal. Per spec
+        # §3 these stay ADDITIVE on top of the fused score, NOT
+        # rank-fused. We dual-write them to gene_scores (additive mode
+        # path) and to rerank_additive (RRF mode path) so the sort can
+        # trivially compose fused + rerank without re-deriving anything.
+        rerank_additive: Dict[str, float] = {}
+
         # ── party_id filter clause (reused across Tiers 1-3) ──────
         # Semantics: when party_id is provided, return genes that are
         # EITHER attributed to this party OR have no attribution at all
@@ -1951,6 +2033,7 @@ class Genome:
                 PKI_FLOOR = 2.0
                 # Hard-skip pairs with cardinality > this — they're noise
                 PKI_NOISE_CUTOFF = 200
+                _pki_ranked: List[Tuple[str, float]] = []  # Stage 3 RRF
                 for gid, pairs in gene_pairs.items():
                     bonus = 0.0
                     for pair in pairs:
@@ -1965,6 +2048,12 @@ class Genome:
                         capped = min(bonus, 12.0)
                         gene_scores[gid] = gene_scores.get(gid, 0) + capped
                         tier_contrib.setdefault(gid, {})["pki"] = capped
+                        _pki_ranked.append((gid, capped))
+                # Stage 3: feed PKI ranks into the Fuser regardless of
+                # fusion_mode — the Fuser is queried only when "rrf",
+                # so additive mode pays a tiny add_tier cost (~1µs per
+                # 100 genes) but stays byte-identical at the output.
+                fuser.add_tier("pki", _pki_ranked, weight=self._pki_weight)
             except Exception as exc:
                 log.debug("path_key_index tier skipped: %s", exc)
             finally:
@@ -1984,6 +2073,14 @@ class Genome:
         if getattr(self, "_filename_anchor_enabled", False):
             try:
                 from . import filename_anchor as _fa
+                # Stage 3: capture which gids the filename_anchor tier
+                # contributed to so we can feed the Fuser. The boost
+                # helper writes tier_contrib[gid]["filename_anchor"] —
+                # we diff before/after to extract the (gid, score) pairs.
+                _fa_gids_before = {
+                    gid for gid, contribs in tier_contrib.items()
+                    if "filename_anchor" in contribs
+                }
                 _fa.boost_scores(
                     cur.connection,
                     query_terms,
@@ -1992,6 +2089,16 @@ class Genome:
                     weight=getattr(self, "_filename_anchor_weight", 4.0),
                     party_filter_sql=_party_filter,
                     party_params=tuple(_party_params),
+                )
+                _fa_ranked: List[Tuple[str, float]] = [
+                    (gid, contribs["filename_anchor"])
+                    for gid, contribs in tier_contrib.items()
+                    if "filename_anchor" in contribs and gid not in _fa_gids_before
+                ]
+                fuser.add_tier(
+                    "filename_anchor",
+                    _fa_ranked,
+                    weight=getattr(self, "_filename_anchor_weight", 4.0),
                 )
             except Exception as exc:
                 log.debug("filename_anchor tier skipped: %s", exc)
@@ -2013,10 +2120,16 @@ class Genome:
             (*query_terms, int(ChromatinState.HETEROCHROMATIN), *_party_params, *_prefilter_params),
         ).fetchall()
 
+        _tag_exact_ranked: List[Tuple[str, float]] = []  # Stage 3 RRF
         for r in rows:
             tag_score = r["match_count"] * 3.0
             gene_scores[r["gene_id"]] = tag_score
             tier_contrib.setdefault(r["gene_id"], {})["tag_exact"] = tag_score
+            _tag_exact_ranked.append((r["gene_id"], tag_score))
+        # Stage 3: count tier — rank by raw score (= match_count × 3.0)
+        # which is monotone in match_count, so the rank order matches
+        # the spec's "rank by match_count descending" rule (§4).
+        fuser.add_tier("tag_exact", _tag_exact_ranked, weight=self._tag_exact_weight)
         try:
             from .telemetry import genome_signal_histogram
             genome_signal_histogram().record(
@@ -2046,11 +2159,14 @@ class Genome:
             (*prefix_params, int(ChromatinState.HETEROCHROMATIN), *_party_params, *_prefilter_params),
         ).fetchall()
 
+        _tag_prefix_ranked: List[Tuple[str, float]] = []  # Stage 3 RRF
         for r in rows:
             gid = r["gene_id"]
             prefix_score = r["match_count"] * 1.5
             gene_scores[gid] = gene_scores.get(gid, 0) + prefix_score
             tier_contrib.setdefault(gid, {})["tag_prefix"] = prefix_score
+            _tag_prefix_ranked.append((gid, prefix_score))
+        fuser.add_tier("tag_prefix", _tag_prefix_ranked, weight=self._tag_prefix_weight)
         try:
             from .telemetry import genome_signal_histogram
             genome_signal_histogram().record(
@@ -2093,6 +2209,7 @@ class Genome:
                         ).fetchall()
                         valid_ids = {r["gene_id"] for r in valid}
 
+                        _fts5_ranked: List[Tuple[str, float]] = []  # Stage 3 RRF
                         for gid in fts_ids:
                             if gid not in valid_ids:
                                 continue
@@ -2102,6 +2219,13 @@ class Genome:
                             fts_score = min(-fts_ranks[gid], 6.0)
                             gene_scores[gid] = gene_scores.get(gid, 0) + fts_score
                             tier_contrib.setdefault(gid, {})["fts5"] = fts_score
+                            # Stage 3: feed Fuser with the RAW
+                            # negative-bm25 magnitude (-fts_ranks[gid])
+                            # rather than the capped value, so the rank
+                            # order matches FTS5's true ordering even at
+                            # the score-cap saturation point.
+                            _fts5_ranked.append((gid, -fts_ranks[gid]))
+                        fuser.add_tier("fts5", _fts5_ranked, weight=self._fts5_weight)
                 except Exception:
                     log.warning("FTS5 query failed", exc_info=True)
                 finally:
@@ -2128,11 +2252,17 @@ class Genome:
                     splade_hits = splade_backend.query_splade(self.read_conn, query_sparse, limit=limit * 2)
                     if _prefilter_set is not None:
                         splade_hits = [(gid, s) for gid, s in splade_hits if gid in _prefilter_set]
+                    _splade_ranked: List[Tuple[str, float]] = []  # Stage 3 RRF
                     for gid, score in splade_hits:
                         # Normalize SPLADE score to be comparable with other tiers
                         splade_score = min(score, 20.0) * 3.5 / 20.0  # Cap at 3.5
                         gene_scores[gid] = gene_scores.get(gid, 0) + splade_score
                         tier_contrib.setdefault(gid, {})["splade"] = splade_score
+                        # Stage 3: feed Fuser with the RAW SPLADE score
+                        # (uncapped) so saturated genes still have a
+                        # well-defined rank.
+                        _splade_ranked.append((gid, float(score)))
+                    fuser.add_tier("splade", _splade_ranked, weight=self._splade_weight)
             except Exception:
                 log.warning("SPLADE retrieval failed", exc_info=True)
             finally:
@@ -2185,6 +2315,8 @@ class Genome:
                                     sema_boost = sim * 2.0 * boost_scale
                                     gene_scores[gid] += sema_boost
                                     tier_contrib.setdefault(gid, {})["sema_boost"] = sema_boost
+                                    # Stage 3: post-fusion additive (re-rank class).
+                                    rerank_additive[gid] = rerank_additive.get(gid, 0.0) + sema_boost
                 try:
                     from .telemetry import genome_signal_histogram
                     genome_signal_histogram().record(
@@ -2217,6 +2349,7 @@ class Genome:
                                 # Get top-k indices
                                 top_idx = np.argsort(sims)[::-1]
                                 added = 0
+                                _sema_cold_ranked: List[Tuple[str, float]] = []
                                 for idx in top_idx:
                                     if added >= fill_count:
                                         break
@@ -2228,11 +2361,72 @@ class Genome:
                                         sema_new = sim * 3.0
                                         gene_scores[gid] = sema_new
                                         tier_contrib.setdefault(gid, {})["sema_cold"] = sema_new
+                                        # Stage 3: rank by RAW cosine
+                                        # similarity, not the *3.0
+                                        # multiplied score — the
+                                        # multiplier is the additive
+                                        # weight, but rank comes from
+                                        # the cosine ordering itself.
+                                        _sema_cold_ranked.append((gid, sim))
                                         added += 1
+                                fuser.add_tier(
+                                    "sema_cold", _sema_cold_ranked,
+                                    weight=self._sema_cold_weight,
+                                )
                         except ImportError:
                             pass  # numpy not available
             except Exception:
                 log.debug("ΣĒMA retrieval failed, continuing without")
+
+        # ── Stage 2/3: dense recall as RRF participant ──────────────
+        # Stage 2's query_genes_dense_recall returns [(gid, cosine), ...]
+        # already sorted descending. We feed it directly as a tier so
+        # the Fuser can rank-fuse it with the lex tiers under RRF mode.
+        # This also seeds gene_scores in additive mode so the dense
+        # contribution survives the back-compat path — but at the
+        # cosine·dense_weight scale it's roughly noise next to the lex
+        # weights (3.0+), which is why Stage 2 didn't merge it into
+        # query_genes() in the first place. Under RRF, cosine ordering
+        # is what matters and the rank-1 dense hit gets the same
+        # 1/(k+1) weight as the rank-1 FTS hit.
+        # Dense participation runs only under RRF mode. In additive mode
+        # we skip it to keep byte-identical compatibility with pre-Stage-3
+        # ranking — pre-Stage-3 query_genes() never called dense recall
+        # (dense was query_genes_ann's job). Stage 4 may revisit this.
+        if self._dense_embedding_enabled and self._fusion_mode == "rrf":
+            try:
+                _dense_t0 = time.monotonic()
+                dense_hits = self.query_genes_dense_recall(
+                    " ".join(query_terms),
+                    k=min(self._dense_pool_size, limit * 4),
+                    party_id=party_id,
+                    read_only=read_only,
+                )
+                # Stage 3: feed Fuser. raw_score = cosine.
+                fuser.add_tier(
+                    "dense", dense_hits, weight=self._dense_weight,
+                )
+                # Also record in tier_contrib for telemetry (raw cosine,
+                # not multiplied — matches the rule "telemetry observes
+                # raw pre-RRF scores", spec §6).
+                for gid, cosine in dense_hits:
+                    tier_contrib.setdefault(gid, {})["dense"] = float(cosine)
+                    # Ensure dense-only genes appear in gene_scores so
+                    # they survive the eligible_ids gate at the sort.
+                    # Use a tiny epsilon so we don't perturb additive
+                    # ranking (which is unreachable in this branch
+                    # anyway). The actual ordering comes from the Fuser.
+                    if gid not in gene_scores:
+                        gene_scores[gid] = 1e-9
+                try:
+                    from .telemetry import genome_signal_histogram
+                    genome_signal_histogram().record(
+                        time.monotonic() - _dense_t0, {"signal": "dense"}
+                    )
+                except Exception:
+                    pass
+            except Exception:
+                log.debug("dense recall tier skipped", exc_info=True)
 
         if not gene_scores:
             raise PromoterMismatch("Zero genes matched across all tiers")
@@ -2246,6 +2440,11 @@ class Genome:
         # large genomes, nullifying the boost.
         total_genes_est = max(self.corpus_size(), len(gene_scores), 100)
         import math as _math
+        # Stage 3: lex_anchor accumulates over multiple query terms.
+        # We capture per-gene total contribution after the loop and
+        # rank-feed it as one tier (a single tier name covering all
+        # IDF-anchored genes — same semantics as the existing
+        # tier_contrib["lex_anchor"] aggregation).
         for term in query_terms:
             term_freq = cur.execute(
                 "SELECT COUNT(DISTINCT gene_id) FROM promoter_index WHERE tag_value = ?",
@@ -2272,9 +2471,26 @@ class Genome:
                     # Anchor IDF can fire for multiple terms in same query; sum them.
                     tc = tier_contrib.setdefault(gid, {})
                     tc["lex_anchor"] = tc.get("lex_anchor", 0.0) + boost
+        # Stage 3: feed accumulated lex_anchor totals into the Fuser.
+        # Aggregated total IS the per-gene strength of the IDF signal,
+        # so ranking by it is the right thing.
+        _lex_anchor_ranked: List[Tuple[str, float]] = [
+            (gid, contribs["lex_anchor"])
+            for gid, contribs in tier_contrib.items()
+            if "lex_anchor" in contribs
+        ]
+        fuser.add_tier(
+            "lex_anchor", _lex_anchor_ranked, weight=self._lex_anchor_weight,
+        )
 
         # ── Authority boosts: distinguish "about X" from "mentions X" ──
-        self._apply_authority_boosts(cur, gene_scores, query_terms)
+        # Stage 3: thread rerank_additive + tier_contrib so RRF mode
+        # can apply the authority bonus on top of the fused score.
+        self._apply_authority_boosts(
+            cur, gene_scores, query_terms,
+            rerank_additive=rerank_additive,
+            tier_contrib=tier_contrib,
+        )
 
         # ── Tier 5: harmonic co-activation boost ──────────────────
         # For each candidate, add a score bonus from genes that are
@@ -2305,9 +2521,14 @@ class Genome:
                             harmonic_bonus[gid] = min(
                                 harmonic_bonus.get(gid, 0) + 1.0, 3.0,
                             )
+                    _harmonic_ranked: List[Tuple[str, float]] = []  # Stage 3 RRF
                     for gid, bonus in harmonic_bonus.items():
                         gene_scores[gid] = gene_scores.get(gid, 0) + bonus
                         tier_contrib.setdefault(gid, {})["harmonic"] = bonus
+                        _harmonic_ranked.append((gid, bonus))
+                    fuser.add_tier(
+                        "harmonic", _harmonic_ranked, weight=self._harmonic_weight,
+                    )
                 except Exception:
                     log.debug("Harmonic boost failed", exc_info=True)
 
@@ -2329,9 +2550,13 @@ class Genome:
                     weight=self._sr_weight,
                     cap=self._sr_cap,
                 )
+                _sr_ranked: List[Tuple[str, float]] = []  # Stage 3 RRF
                 for gid, bonus in sr_bonus.items():
                     gene_scores[gid] = gene_scores.get(gid, 0) + bonus
                     tier_contrib.setdefault(gid, {})["sr"] = bonus
+                    _sr_ranked.append((gid, bonus))
+                # Reuse existing _sr_weight knob (spec §3).
+                fuser.add_tier("sr", _sr_ranked, weight=self._sr_weight)
             except Exception:
                 log.debug("SR Tier 5.5 failed", exc_info=True)
 
@@ -2349,6 +2574,7 @@ class Genome:
                     f"WHERE entity IN ({eq_ph})",
                     entities,
                 ).fetchall()
+                _eg_ranked: List[Tuple[str, float]] = []  # Stage 3 RRF
                 for row in eg_rows:
                     gid = row["gene_id"]
                     if gid in gene_scores:
@@ -2357,6 +2583,10 @@ class Genome:
                         tier_contrib.setdefault(gid, {})["entity_graph"] = (
                             tier_contrib.get(gid, {}).get("entity_graph", 0.0) + bonus
                         )
+                        _eg_ranked.append((gid, bonus))
+                fuser.add_tier(
+                    "entity_graph", _eg_ranked, weight=self._entity_graph_weight,
+                )
                 log.debug("tier 5b entity_graph: %d hits, %.1fms",
                           len(eg_rows), (time.monotonic() - _eg_t0) * 1000)
             except Exception:
@@ -2375,6 +2605,8 @@ class Genome:
                     gid = ar["gene_id"]
                     gene_scores[gid] += 0.5
                     tier_contrib.setdefault(gid, {})["party_attr"] = 0.5
+                    # Stage 3: post-fusion additive (re-rank class).
+                    rerank_additive[gid] = rerank_additive.get(gid, 0.0) + 0.5
             except Exception:
                 log.debug("Party attribution bonus failed", exc_info=True)
 
@@ -2399,6 +2631,8 @@ class Genome:
                             gid = er["gene_id"]
                             gene_scores[gid] += bonus
                             tier_contrib.setdefault(gid, {})["access_rate"] = bonus
+                            # Stage 3: post-fusion additive (tiebreaker class).
+                            rerank_additive[gid] = rerank_additive.get(gid, 0.0) + bonus
                     except Exception:
                         continue
             except Exception:
@@ -2485,8 +2719,50 @@ class Genome:
                     exc_info=True,
                 )
 
-        # Sort by combined score, fetch top genes
-        ranked_ids = sorted(gene_scores, key=gene_scores.get, reverse=True)[:limit]
+        # ── Stage 3: branch on fusion_mode for the final ranking ──
+        # Spec: docs/specs/2026-05-08-stage-3-rrf-fusion.md §5.
+        # additive (default for one release): unchanged sort on the
+        #   accumulated gene_scores.
+        # rrf: take fused scores from the Fuser, add re-rank-class
+        #   additives (sema_boost, authority, party_attr, access_rate)
+        #   on top, restrict to genes that survived the bm25 shortlist
+        #   filter (= present in gene_scores), then sort.
+        if self._fusion_mode == "rrf":
+            fused_scores = fuser.all_scores()
+            # The bm25_shortlist filter mutated gene_scores above; honor
+            # that filter under RRF too — only genes still in
+            # gene_scores are eligible. Genes dense-recall surfaced but
+            # bm25_shortlist dropped should not resurface in the fused
+            # output.
+            eligible_ids = set(gene_scores.keys())
+            final_scores: Dict[str, float] = {}
+            for gid in eligible_ids:
+                final_scores[gid] = (
+                    fused_scores.get(gid, 0.0)
+                    + rerank_additive.get(gid, 0.0)
+                )
+            # Sort: primary key = final fused+additive score desc,
+            # secondary = gene_id asc (matches Fuser's tie-break).
+            ranked_ids = sorted(
+                final_scores,
+                key=lambda gid: (-final_scores[gid], gid),
+            )[:limit]
+            # last_query_scores semantics under RRF: the fused+additive
+            # final score, NOT the raw additive accumulator. This is
+            # what context_manager reads for ratio gates.
+            with self._last_query_scores_lock:
+                self.last_query_scores = dict(final_scores)
+            # Optional new telemetry: rrf_fused_score_histogram (spec §6).
+            try:
+                from .telemetry import rrf_fused_score_histogram
+                hist = rrf_fused_score_histogram()
+                for gid, score in final_scores.items():
+                    hist.record(float(score), {"gene_id": gid})
+            except Exception:
+                pass  # New histogram is optional — telemetry module may not declare it yet.
+        else:
+            # Additive mode — pre-Stage-3 behavior, byte-identical.
+            ranked_ids = sorted(gene_scores, key=gene_scores.get, reverse=True)[:limit]
 
         # Walking tie-break (opt-in via HELIX_WALKING_TIEBREAK=1).
         # When adjacent top-k genes have bitwise-identical fused scores,

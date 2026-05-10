@@ -284,6 +284,26 @@ class RetrievalConfig:
     # ann_threshold_max_genes (the final cut). 500 hits ~3% of an 18.9k
     # corpus per spec §4.
     dense_pool_size: int = 500
+    # Stage 3 (2026-05-08): Reciprocal Rank Fusion accumulator.
+    # Spec: docs/specs/2026-05-08-stage-3-rrf-fusion.md.
+    # When ``fusion_mode == "additive"`` (default for one release), the
+    # legacy ``gene_scores += tier_score`` accumulator path is unchanged.
+    # When ``"rrf"``, each tier writes both raw scores AND ranks the
+    # tier output through the Fuser; the final sort uses fused scores.
+    # Per-tier weights below are RRF post-multipliers.
+    fusion_mode: str = "additive"           # "additive" | "rrf"
+    rrf_k: int = 60                         # Cormack 2009 default
+    fts5_weight: float = 3.0                # current implicit cap (see genome.py FTS tier)
+    splade_weight: float = 3.5              # current implicit cap
+    tag_exact_weight: float = 3.0           # current weight × match_count
+    tag_prefix_weight: float = 1.5          # current weight × match_count
+    sema_cold_weight: float = 3.0           # current sim·3.0 multiplier
+    lex_anchor_weight: float = 1.5          # current idf·1.5 (capped at 3.0)
+    harmonic_weight: float = 1.0            # current per-link weight
+    entity_graph_weight: float = 0.5        # current 1.0·0.5 implicit
+    dense_weight: float = 1.0               # Stage 2 dense recall, RRF participant
+    pki_weight: float = 1.0                 # PKI tier, RRF participant
+    # Note: filename_anchor_weight, sr_weight reuse their existing knobs above.
 
 
 @dataclass
@@ -601,6 +621,22 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             ann_threshold_max_genes=int(r.get("ann_threshold_max_genes", cfg.retrieval.ann_threshold_max_genes)),
             # Stage 2 (2026-05-08): dense recall pool size, decoupled from final cut.
             dense_pool_size=int(r.get("dense_pool_size", cfg.retrieval.dense_pool_size)),
+            # Stage 3 (2026-05-08): RRF fusion. Default "additive" preserves
+            # pre-Stage-3 behavior byte-for-byte. Flip to "rrf" for the new
+            # rank-fusion path. Spec §7 deprecation timeline keeps both
+            # implementations alive for one release.
+            fusion_mode=str(r.get("fusion_mode", cfg.retrieval.fusion_mode)),
+            rrf_k=int(r.get("rrf_k", cfg.retrieval.rrf_k)),
+            fts5_weight=float(r.get("fts5_weight", cfg.retrieval.fts5_weight)),
+            splade_weight=float(r.get("splade_weight", cfg.retrieval.splade_weight)),
+            tag_exact_weight=float(r.get("tag_exact_weight", cfg.retrieval.tag_exact_weight)),
+            tag_prefix_weight=float(r.get("tag_prefix_weight", cfg.retrieval.tag_prefix_weight)),
+            sema_cold_weight=float(r.get("sema_cold_weight", cfg.retrieval.sema_cold_weight)),
+            lex_anchor_weight=float(r.get("lex_anchor_weight", cfg.retrieval.lex_anchor_weight)),
+            harmonic_weight=float(r.get("harmonic_weight", cfg.retrieval.harmonic_weight)),
+            entity_graph_weight=float(r.get("entity_graph_weight", cfg.retrieval.entity_graph_weight)),
+            dense_weight=float(r.get("dense_weight", cfg.retrieval.dense_weight)),
+            pki_weight=float(r.get("pki_weight", cfg.retrieval.pki_weight)),
         )
 
     # Session (CWoLa session/party fallback — 2026-04-13 fix for always-A bucket bug)
