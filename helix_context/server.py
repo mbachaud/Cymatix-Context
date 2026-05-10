@@ -39,7 +39,14 @@ from pydantic import BaseModel
 from .config import HelixConfig, load_config
 from .context_packet import build_context_packet, get_refresh_targets
 from .context_manager import HelixContextManager
+from .know_calibration import load_calibration_from_toml
+from .know_decision import (
+    _agree_from_tier_contributions,
+    decide_know_or_miss,
+    _is_code_shaped,
+)
 from .registry import DEFAULT_HEARTBEAT_INTERVAL_S, DEFAULT_TTL_S, Registry
+from .schemas import ContextResponseEnvelope, KnowBlock, MissBlock
 from .vault import VaultManager
 
 log = logging.getLogger("helix.server")
@@ -171,6 +178,101 @@ def _normalize_identity_token(value: Optional[str]) -> Optional[str]:
         return None
     normalized = str(value).strip().lower()[:64]
     return normalized or None
+
+
+def _compute_know_or_miss_block(
+    *,
+    helix: "HelixContextManager",
+    window,  # ContextWindow
+    query: str,
+):
+    """Run the Stage 6 know/miss discriminator for a finished /context turn.
+
+    Pulls together the four discriminator inputs from the manager and
+    the genome's per-call state, then defers the actual decision to
+    ``decide_know_or_miss``. Returns ``KnowBlock | MissBlock | None`` —
+    None only on hard-failure paths (the route falls back gracefully
+    instead of bubbling).
+
+    # STAGE-7-EXT: this is the seam where Stage 7 will hook the
+    #  freshness pipeline (revalidate top-K, check_superseded). The
+    #  resulting freshness_min and any pre-emptive MissBlock are
+    #  merged in before decide_know_or_miss runs.
+    """
+    # Pull retrieval scores. ``last_query_scores`` is the post-fusion
+    # per-gene score map (gene_id → float). Top-1 / score-gap are
+    # derived from a sorted-desc view of this map.
+    raw_scores = helix.genome.last_query_scores or {}
+    if raw_scores:
+        sorted_scores = sorted(raw_scores.values(), reverse=True)
+        top_score = float(sorted_scores[0])
+        score_gap = float(sorted_scores[0] - sorted_scores[1]) if len(sorted_scores) > 1 else float(sorted_scores[0])
+        # Score ratio (top1 / 2nd) used by MissBlock for downstream
+        # debugging — falls back to top_score for the singleton case.
+        ratio = float(sorted_scores[0] / sorted_scores[1]) if len(sorted_scores) > 1 and sorted_scores[1] > 0 else float(sorted_scores[0])
+    else:
+        top_score = 0.0
+        score_gap = 0.0
+        ratio = 0.0
+
+    # Lexical-dense agreement from per-tier contribution map.
+    tier_contrib = getattr(helix.genome, "last_tier_contributions", {}) or {}
+    lex_dense_agree = _agree_from_tier_contributions(tier_contrib, k=3)
+
+    # Coordinate confidence — promoted to first-class in Stage 6 (§9).
+    # Lazy-import to avoid a server -> context_packet -> server cycle.
+    from .context_packet import _coordinate_confidence
+    from .genome import Gene as _GeneType  # for type discipline below
+
+    # Re-fetch the expressed genes by id from the genome's read conn so
+    # we can run path-grain coverage. Cheap (genes are 1-row reads).
+    gene_ids = list(window.expressed_gene_ids or [])
+    genes: list = []
+    top_gene = None
+    if gene_ids:
+        try:
+            cur = helix.genome.read_conn.cursor()
+            placeholders = ",".join("?" * len(gene_ids))
+            rows = cur.execute(
+                f"SELECT gene_id, source_id FROM genes WHERE gene_id IN ({placeholders})",
+                gene_ids,
+            ).fetchall()
+            row_map = {r["gene_id"]: r for r in rows}
+            # Preserve the response order (same as expressed_gene_ids).
+            for gid in gene_ids:
+                r = row_map.get(gid)
+                if r is None:
+                    continue
+                # Build a tiny Gene-like proxy object — _coordinate_confidence
+                # and the beacon both only need ``source_id``.
+                class _GeneProxy:
+                    __slots__ = ("gene_id", "source_id")
+                    def __init__(self, gid, sid):
+                        self.gene_id = gid
+                        self.source_id = sid
+                genes.append(_GeneProxy(gid, r["source_id"] or ""))
+            if genes:
+                top_gene = genes[0]
+        except Exception:
+            log.debug("Stage-6 gene fetch for coordinate_confidence failed", exc_info=True)
+
+    coord_conf = _coordinate_confidence(query, genes) if genes else 0.0
+
+    # Calibration — load fresh helix.toml [know] table per call (cheap;
+    # tomllib parses ~kB in microseconds; falls back to defaults).
+    cal = load_calibration_from_toml()
+
+    return decide_know_or_miss(
+        window=window,
+        query=query,
+        top_score=top_score,
+        score_gap=score_gap,
+        lexical_dense_agree=lex_dense_agree,
+        coordinate_confidence=coord_conf,
+        top_gene=top_gene,
+        ratio=ratio,
+        calibration=cal,
+    )
 
 
 def _compute_plr_confidence(
@@ -911,8 +1013,36 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
         health = window.context_health
         latency_ms = round((_time.time() - t0) * 1000, 1)
 
-        # Build base response (Continue-compatible)
-        response = {
+        # ── Stage 6: machine-tagged know/miss block ────────────────
+        # The /context route used to communicate retrieval outcome
+        # via the prose marker inside expressed_context. Stage 6
+        # promotes that to a structured top-level block so a frontier
+        # agent can branch on a tag instead of a string match. See
+        # docs/specs/2026-05-08-stage-6-know-miss-blocks.md §5.
+        #
+        # # STAGE-7-EXT: this is also the call site for the freshness
+        #  pipeline (revalidate top-K, run check_superseded) — Stage 7
+        #  inserts those steps just before decide_know_or_miss().
+        try:
+            kmblock = _compute_know_or_miss_block(
+                helix=helix,
+                window=window,
+                query=str(query),
+            )
+        except Exception:
+            log.warning("Stage-6 know/miss decision failed", exc_info=True)
+            kmblock = None
+
+        # Build base response (Continue-compatible). The know/miss
+        # block is lifted to the top of the dict so consumers see it
+        # before parsing expressed_context.
+        response = {}
+        if isinstance(kmblock, KnowBlock):
+            response["know"] = kmblock.model_dump()
+        elif isinstance(kmblock, MissBlock):
+            response["miss"] = kmblock.model_dump()
+
+        response.update({
             "name": "Helix Genome Context",
             "description": (
                 f"{health.genes_expressed} genes expressed, "
@@ -921,7 +1051,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
             ),
             "content": window.expressed_context,
             "context_health": health.model_dump(),
-        }
+        })
 
         # Agent-mode fields: structured metadata for programmatic use
         # Always included (low cost, high value for agents)
@@ -977,8 +1107,27 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
                             pass
                     citations.append(citation)
 
-            # Actionable recommendation for the agent based on health
-            if health.status == "aligned":
+            # Actionable recommendation for the agent.
+            #
+            # Stage 6 (§7): when a MissBlock fires, recommend
+            # ``escalate`` — the fifth agent recommendation value. It
+            # is the ONLY value that may co-exist with a ``miss`` key
+            # at the top of the response. The four legacy values
+            # (trust, verify, refresh, reread_raw) remain valid for
+            # the KnowBlock branch.
+            #
+            # # STAGE-7-EXT: when MissBlock.reason in {stale, cold,
+            #  superseded}, recommendation flips to "refresh" instead
+            #  of "escalate"; soft-stale on KnowBlock also recommends
+            #  "refresh". Stage 6 only ships the four base reasons.
+            if isinstance(kmblock, MissBlock):
+                recommendation = "escalate"
+                hint = (
+                    "Genome has no usable signal for query. Do not "
+                    "answer from genome. Use a tool from "
+                    f"escalate_to: {kmblock.escalate_to}"
+                )
+            elif health.status == "aligned":
                 recommendation = "trust"
                 hint = "Context is well-grounded. Use directly."
             elif health.status == "sparse":
@@ -1154,7 +1303,21 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
             include_raw=include_raw,
             max_item_chars=max_item_chars,
         )
-        payload = packet.model_dump()
+        packet_dict = packet.model_dump()
+
+        # Stage 6 (§5): lift the know/miss block to the top of the
+        # response so consumers see it before walking the verified /
+        # stale_risk lists. Pydantic preserves insertion order in
+        # model_dump, so we re-build the dict with know/miss first.
+        payload: dict = {}
+        if packet_dict.get("know") is not None:
+            payload["know"] = packet_dict["know"]
+        elif packet_dict.get("miss") is not None:
+            payload["miss"] = packet_dict["miss"]
+        for k, v in packet_dict.items():
+            if k in ("know", "miss"):
+                continue  # already lifted
+            payload[k] = v
         payload["response_mode"] = "packet"
 
         # PLR query-confidence head (STATISTICAL_FUSION.md §C3, Option A —

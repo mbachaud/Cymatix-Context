@@ -280,6 +280,38 @@ model_path = "training/models/stacked_plr.joblib"
 expected_sha256 = ""                    # Empty = trust the .sha256 sidecar (written by the trainer)
 high_risk_threshold = 0.5               # `prob_B > this` surfaces a coarse "likely-to-re-query" boolean
 
+[know]
+# Stage 6 (2026-05-08) — KnowBlock confidence logistic.
+#
+# Spec: docs/specs/2026-05-08-stage-6-know-miss-blocks.md §3, §11.
+#
+# Maps four retrieval signals to a calibrated probability that the
+# /context retrieval is ground-truth correct:
+#
+#   z = b0 + b1*tanh(top_score / s_ref)
+#          + b2*tanh(score_gap / g_ref)
+#          + b3*lexical_dense_agree
+#          + b4*coordinate_confidence
+#   confidence = 1 / (1 + exp(-z))
+#
+# When confidence >= emit_floor a KnowBlock is emitted; otherwise the
+# decision falls through to MissBlock(reason="sparse").
+#
+# These are SHIP-TIME defaults. Operator action post-merge:
+#   python scripts/calibrate_know_confidence.py \
+#       --input results/located_n1000.jsonl \
+#       --out helix.toml
+# Calibration requires Stage 1 to land first (it produces the bench
+# JSONL).
+#
+# # STAGE-7-EXT: Stage 7 will append b5 (default +1.5) for
+# # freshness_min as the fifth feature; the betas list grows to 6
+# # entries. The calibration script auto-detects the feature count.
+emit_floor      = 0.55
+s_ref           = 1.0
+g_ref           = 0.5
+betas           = [-2.0, 2.0, 1.5, 0.7, 1.8]
+
 [mem_sync]
 # Auto-memory → helix sync. Every .md file in a watched dir becomes a
 # gene; persona/agent attribution comes from HELIX_AGENT / HELIX_USER

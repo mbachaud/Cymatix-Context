@@ -491,6 +491,14 @@ def build_context_packet(
     # a downgrade even when the composite passes.
     folder_cov, file_cov = _coordinate_signals(query, genes)
     coordinate_confidence = 0.4 * folder_cov + 0.6 * file_cov
+
+    # Stage 6 (§9): promote coordinate_confidence + file_coverage
+    # from prose-in-notes to first-class packet fields. The notes
+    # entries below remain (humans read them; the threshold-trigger
+    # form is more readable than the raw numbers).
+    packet.coordinate_confidence = float(coordinate_confidence)
+    packet.file_coverage = float(file_cov)
+
     if coordinate_confidence < _COORDINATE_CONFIDENCE_FLOOR:
         packet.notes.append(
             f"coordinate_confidence={coordinate_confidence:.2f} below "
@@ -539,7 +547,140 @@ def build_context_packet(
         reverse=True,
     )
     packet.refresh_targets.sort(key=lambda target: target.priority, reverse=True)
+
+    # ── Stage 6: machine-tagged know/miss block on the packet ─────
+    # The /context/packet route lifts this to the top of the response.
+    # Soft-fail: any exception leaves know/miss as None and the
+    # contract degrades cleanly (consumers that don't know about
+    # Stage 6 see no change).
+    try:
+        _attach_know_or_miss(
+            packet,
+            query=query,
+            genes=genes,
+            score_map=score_map,
+            coordinate_confidence=coordinate_confidence,
+        )
+    except Exception:
+        import logging
+        logging.getLogger("helix.context_packet").warning(
+            "Stage-6 know/miss attach failed", exc_info=True
+        )
+
     return packet
+
+
+# ─────────────────────────────────────────────────────────────────────
+# Stage 6 know/miss helper (kept here so the genome read for
+# tier_contributions stays close to the score_map fetch above).
+# ─────────────────────────────────────────────────────────────────────
+
+def _attach_know_or_miss(
+    packet: "ContextPacket",
+    *,
+    query: str,
+    genes: list,
+    score_map: dict,
+    coordinate_confidence: float,
+) -> None:
+    """Compute decide_know_or_miss and stash on packet.know / packet.miss.
+
+    Mirror of the /context route logic in server._compute_know_or_miss_block
+    but works directly with the locals already accumulated in
+    ``build_context_packet`` instead of re-fetching from the genome.
+    """
+    from .know_calibration import load_calibration_from_toml
+    from .know_decision import (
+        _agree_from_tier_contributions,
+        decide_know_or_miss,
+    )
+    from .schemas import ContextHealth, ContextWindow, KnowBlock, MissBlock
+
+    # Compute discriminator inputs from the post-fusion score map.
+    if score_map:
+        sorted_scores = sorted(score_map.values(), reverse=True)
+        top_score = float(sorted_scores[0])
+        score_gap = (
+            float(sorted_scores[0] - sorted_scores[1])
+            if len(sorted_scores) > 1
+            else float(sorted_scores[0])
+        )
+        if len(sorted_scores) > 1 and sorted_scores[1] > 0:
+            ratio = float(sorted_scores[0] / sorted_scores[1])
+        else:
+            ratio = float(sorted_scores[0])
+    else:
+        top_score = 0.0
+        score_gap = 0.0
+        ratio = 0.0
+
+    # Build a shim ContextWindow so decide_know_or_miss can reuse the
+    # same input shape as the /context route. Fields beyond
+    # context_health.status / genes_expressed are not read by the
+    # discriminator (verified by inspection of know_decision.py).
+    n_genes = len(genes)
+    if n_genes == 0:
+        # No candidates returned: route to the no_promoter_match branch
+        # of the discriminator. We use status="sparse" + genes_expressed=0
+        # because (1) "denatured" is reserved for "genome shape is bad"
+        # which we cannot detect from the packet builder, and (2) the
+        # discriminator ordering (§5) checks genes_expressed==0 ahead
+        # of any sparse-confidence floor, so this routes to
+        # MissBlock(reason="no_promoter_match"). The packet builder
+        # does not emit ABSTAIN; that's the /context endpoint's
+        # responsibility.
+        status = "sparse"
+    else:
+        status = "aligned"
+    health = ContextHealth(
+        ellipticity=0.0,
+        coverage=0.0,
+        density=0.0,
+        freshness=0.0,
+        genes_available=0,
+        genes_expressed=n_genes,
+        status=status,
+    )
+    shim_window = ContextWindow(
+        ribosome_prompt="",
+        expressed_context="",
+        context_health=health,
+        metadata={"query": query, "ratio": ratio},
+    )
+
+    # Tier contributions for lex/dense agreement. The packet builder
+    # does not currently capture per-tier contribs (it only takes the
+    # post-fusion score_map). Best-effort: pull off the genome if the
+    # caller wired one through. Otherwise treat as no-agreement signal.
+    tier_contrib = {}
+    # genes elements may be Gene objects from genome.query_genes, which
+    # don't carry tier-level info. The router/genome's last_tier_-
+    # contributions is the source of truth — we expect the route to
+    # have set it. The packet builder does NOT currently surface the
+    # genome handle past _query_genes; until that's plumbed, we leave
+    # this False, which is the safe direction (no false-positive
+    # confidence boost).
+    lex_dense_agree = _agree_from_tier_contributions(tier_contrib, k=3)
+
+    cal = load_calibration_from_toml()
+    top_gene = genes[0] if genes else None
+    block = decide_know_or_miss(
+        window=shim_window,
+        query=query,
+        top_score=top_score,
+        score_gap=score_gap,
+        lexical_dense_agree=lex_dense_agree,
+        coordinate_confidence=coordinate_confidence,
+        top_gene=top_gene,
+        ratio=ratio,
+        calibration=cal,
+    )
+    if isinstance(block, KnowBlock):
+        packet.know = block
+        packet.miss = None
+    elif isinstance(block, MissBlock):
+        packet.miss = block
+        packet.know = None
 
 
 def get_refresh_targets(

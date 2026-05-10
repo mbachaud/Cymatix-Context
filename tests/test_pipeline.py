@@ -122,7 +122,10 @@ def seeded_helix(helix):
 class TestBuildContext:
     def test_empty_genome_returns_empty_window(self, helix):
         window = helix.build_context("anything")
-        assert "no relevant context" in window.expressed_context.lower()
+        # Stage 6 (§6): empty genome ships the no_promoter_match form
+        # of the structured tag (was the prose "no relevant context"
+        # marker). Lowercasing the bytes still allows substring matches.
+        assert "<helix:no_match" in window.expressed_context
         assert window.total_estimated_tokens > 0  # decoder prompt still counts
 
     def test_matching_query_returns_context(self, seeded_helix):

@@ -182,7 +182,35 @@ RIBOSOME_DECODER = DECODER_FULL
 # branches ship the same bytes so the small model's prompt-conditioning
 # is identical regardless of which short-circuit fired. The semantic
 # difference is observable only via context_health.status.
-_ABSTAIN_MARKER = "(no relevant context found in genome)"
+#
+# Stage 6 (2026-05-08): the prose marker is replaced with a structured
+# `<helix:no_match reason="..." do_not_answer="true"/>` token so a
+# frontier agent can branch on a tag rather than a string match. The
+# four spec-defined reasons (§6) map 1:1 onto the MissBlock.reason
+# enum. _ABSTAIN_MARKER is kept for one release as a deprecated alias
+# to keep tests/test_abstain_tier.py passing without modification.
+_NO_MATCH_TAG = '<helix:no_match reason="{reason}" do_not_answer="true"/>'
+
+
+def _no_match_token(reason: str) -> str:
+    """Format the lowercase, fixed-attribute-order, self-closing tag.
+
+    Defined as a function so tests can assert exact bytes via the
+    function rather than scraping the string template. The four valid
+    reasons are MissBlock.reason values; passing anything else returns
+    the abstain form (defensive default — the discriminator never
+    feeds an unknown reason here in practice).
+    """
+    valid = {"abstain", "denatured", "sparse", "no_promoter_match"}
+    if reason not in valid:
+        reason = "abstain"
+    return _NO_MATCH_TAG.format(reason=reason)
+
+
+# Deprecated alias (one-release lifetime — Stage 6 §6). Existing tests
+# read this; they migrate transparently because the value is the
+# abstain form of the new tag.
+_ABSTAIN_MARKER = _no_match_token("abstain")
 
 
 def _env_truthy(name: str) -> bool:
@@ -868,22 +896,40 @@ class HelixContextManager:
                 candidates = candidates[: max_genes * 2]
 
         if not candidates:
+            total_genes = self.genome.stats().get("total_genes", 0)
+            # Stage 6 (§6): the legacy "denatured if genome non-empty
+            # else sparse" status maps onto two distinct MissBlock
+            # reasons:
+            #   - genome has genes, none matched → "no_promoter_match"
+            #   - genome is empty                → "no_promoter_match"
+            # Both ship the same expressed_context byte so the LLM-
+            # visible prompt is identical; downstream discriminator
+            # picks the MissBlock.reason from health.status +
+            # genes_expressed.
+            empty_status = "denatured" if total_genes > 0 else "sparse"
+            no_match_reason = (
+                "denatured" if empty_status == "denatured" else "no_promoter_match"
+            )
             empty_health = ContextHealth(
                 ellipticity=0.0,
                 coverage=0.0,
                 density=0.0,
                 freshness=0.0,
-                genes_available=self.genome.stats().get("total_genes", 0),
+                genes_available=total_genes,
                 genes_expressed=0,
-                status="denatured" if self.genome.stats().get("total_genes", 0) > 0 else "sparse",
+                status=empty_status,
             )
             return ContextWindow(
                 ribosome_prompt=effective_decoder_prompt,
-                expressed_context=_ABSTAIN_MARKER,
+                expressed_context=_no_match_token(no_match_reason),
                 total_estimated_tokens=estimate_tokens(effective_decoder_prompt),
                 compression_ratio=1.0,
                 context_health=empty_health,
-                metadata={"query": query, "genes_expressed": 0},
+                metadata={
+                    "query": query,
+                    "genes_expressed": 0,
+                    "no_match_reason": no_match_reason,
+                },
             )
 
         with _stage_timer("rerank"):
@@ -1881,8 +1927,13 @@ class HelixContextManager:
 
         See docs/specs/2026-05-02-abstain-tier-design.md §4. Distinct from the
         empty-candidates branch (above, in build_context) only on
-        context_health.status — the LLM-visible bytes are identical (both
-        ship _ABSTAIN_MARKER).
+        context_health.status — the LLM-visible bytes are identical
+        (both ship the abstain form of <helix:no_match/>).
+
+        Stage 6 (§6): the bytes are now the structured tag rather than
+        the prose marker. ``_ABSTAIN_MARKER`` is preserved as the same
+        string (``_no_match_token("abstain")``) so external callers
+        comparing against it keep working for one release.
         """
         health = ContextHealth(
             ellipticity=0.0,
@@ -1895,7 +1946,7 @@ class HelixContextManager:
         )
         return ContextWindow(
             ribosome_prompt=effective_decoder_prompt,
-            expressed_context=_ABSTAIN_MARKER,
+            expressed_context=_no_match_token("abstain"),
             total_estimated_tokens=estimate_tokens(effective_decoder_prompt),
             compression_ratio=1.0,
             context_health=health,
@@ -1906,6 +1957,7 @@ class HelixContextManager:
                 "abstain_reason": reason,
                 "top_score": float(top_score),
                 "ratio": float(ratio),
+                "no_match_reason": "abstain",
             },
         )
 
@@ -2161,7 +2213,12 @@ class HelixContextManager:
                     )
             total_raw += len(g.content)
 
-        expressed = "\n---\n".join(parts) if parts else "(no relevant context found)"
+        # Stage 6 (§6): if assembly produced no parts despite having
+        # candidates, ship the structured no-match tag rather than the
+        # legacy prose so the agent can branch on a tag.
+        expressed = (
+            "\n---\n".join(parts) if parts else _no_match_token("no_promoter_match")
+        )
 
         # Wrap in tags
         expressed_wrapped = (
