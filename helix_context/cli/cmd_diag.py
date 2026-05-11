@@ -64,10 +64,6 @@ def run(argv: list[str]) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
 
-    if args.target != "corpus":
-        parser.print_help()
-        return output.EXIT_BAD_ARGS
-
     try:
         sess = open_session()
         stats = sess.stats()
