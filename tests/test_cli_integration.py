@@ -83,11 +83,15 @@ def test_end_to_end_ingest_then_query():
 
 
 @pytest.mark.live
-def test_end_to_end_diag_corpus_reports_genes():
-    """After ingest, diag corpus shows non-zero gene count."""
+def test_end_to_end_diag_corpus_returns_well_shaped_payload():
+    """`helix diag corpus --json` returns a well-shaped JSON payload
+    against a fresh :memory: genome. Verifies pipeline wiring, not
+    retrieval quality — total_genes may legitimately be 0."""
     rc, out, err = _run(["diag", "corpus", "--json"])
     assert rc == 0, err
     payload = json.loads(out)
     assert isinstance(payload["total_genes"], int)
-    # Allow zero (fresh :memory: genome) — we just check the field exists.
     assert payload["total_genes"] >= 0
+    # Wire-format smoke: tier_distribution + compression_ratio must be present.
+    assert "tier_distribution" in payload
+    assert "compression_ratio" in payload
