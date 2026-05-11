@@ -2769,12 +2769,22 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
 
         # those and omit raw error strings, cost class, and the full
         # probe dict to avoid leaking internal paths/configuration.
+        #
+        # When ribosome is disabled (the default), `ribosome_configured_backend`
+        # would otherwise echo the TOML placeholder ("ollama" historically,
+        # "none" going forward) — that's misleading because the placeholder
+        # is never dispatched. Report ``null`` instead so operators don't
+        # mistake the placeholder for an active backend. The runbook for
+        # turning the ribosome on lives in helix.toml's [ribosome] block.
+        configured_backend = (
+            config.ribosome.normalized_backend if config.ribosome.enabled else None
+        )
         return {
             "status": status,
             "message": message,
             "ribosome": ribosome_model,
             "ribosome_backend": config.ribosome.effective_backend,
-            "ribosome_configured_backend": config.ribosome.normalized_backend,
+            "ribosome_configured_backend": configured_backend,
             "ribosome_cost_class": config.ribosome.cost_class,
             "genes": total_genes,
             "upstream": config.server.upstream,

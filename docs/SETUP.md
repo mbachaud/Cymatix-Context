@@ -663,6 +663,8 @@ documentation belongs in `.env.example` (cross-link below).
 | `HELIX_OTEL_INSECURE` | `1` for plaintext gRPC (default for local sidecar). |
 | `HELIX_OTEL_SAMPLER_RATIO` | Trace sampling ratio (0.0–1.0). Default `1.0` in the tray flow. |
 | `HELIX_OTEL_REDACT_QUERY` | Redact query text from emitted traces (privacy). |
+| `HELIX_OTEL_LOGS_ENABLED` | `1` (default) ships Python log records via OTLP to the collector → Loki; `0` keeps traces + metrics on while suppressing log shipment (useful under Loki disk pressure or PII-sensitive deployments). |
+| `HELIX_OTEL_LOGS_LEVEL` | Minimum level forwarded to OTel: `DEBUG` / `INFO` / `WARNING` / `ERROR` / `CRITICAL`. Default `INFO`. Tunes log volume without touching traces/metrics. |
 | `HELIX_OBSERVABILITY` | Set to `0` to skip the native observability sidecar. Useful when you're using the Docker compose stack at `deploy/otel/` or want no observability at all. |
 | `HELIX_HEADROOM_ENABLED` | `1` to wire the Headroom proxy lifecycle into the launcher. |
 | `HELIX_HEADROOM_AUTOSTART` | `1` to spawn a fresh headroom child if no existing proxy is found on the configured port. |

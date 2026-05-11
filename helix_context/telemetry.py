@@ -19,6 +19,15 @@ Environment:
     HELIX_OTEL_INSECURE      - "1" for plain gRPC, default "1" (dev-local)
     HELIX_OTEL_SAMPLER_RATIO - trace sampler 0.0-1.0, default 1.0
     HELIX_OTEL_REDACT_QUERY  - "1" to hash query strings in spans, default "1"
+    HELIX_OTEL_LOGS_ENABLED  - "1" to ship Python log records to OTel
+                               (collector → Loki), default "1". Set "0"
+                               to keep traces+metrics on while suppressing
+                               log shipment — useful under Loki disk
+                               pressure or for PII-sensitive deployments.
+    HELIX_OTEL_LOGS_LEVEL    - Minimum log level forwarded to OTel: one
+                               of DEBUG / INFO / WARNING / ERROR /
+                               CRITICAL. Default "INFO". Tunes log
+                               volume without disabling traces/metrics.
 """
 
 from __future__ import annotations
@@ -116,6 +125,24 @@ class _LoggerNameInjector(logging.Filter):
         return True
 
 
+_LOG_LEVEL_NAMES = {"DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"}
+
+
+def _resolve_logs_level(raw: Optional[str]) -> int:
+    """Map HELIX_OTEL_LOGS_LEVEL → numeric level, defaulting to INFO on
+    unrecognised values."""
+    if not raw:
+        return logging.INFO
+    name = raw.strip().upper()
+    if name in _LOG_LEVEL_NAMES:
+        return getattr(logging, name)
+    log.warning(
+        "HELIX_OTEL_LOGS_LEVEL=%r is not one of %s — falling back to INFO",
+        raw, sorted(_LOG_LEVEL_NAMES),
+    )
+    return logging.INFO
+
+
 def _attach_otlp_logging_handler(
     *,
     endpoint: str,
@@ -132,7 +159,22 @@ def _attach_otlp_logging_handler(
 
     Re-uses the same OTLP endpoint as the trace/metric exporters so a
     single collector receiver handles all three signals.
+
+    Honors two env vars:
+
+    - ``HELIX_OTEL_LOGS_ENABLED`` (default ``"1"``): set ``"0"`` to skip
+      log shipping entirely while keeping traces + metrics enabled.
+    - ``HELIX_OTEL_LOGS_LEVEL`` (default ``"INFO"``): minimum level
+      forwarded to OTel. DEBUG / INFO / WARNING / ERROR / CRITICAL.
     """
+    if os.environ.get("HELIX_OTEL_LOGS_ENABLED", "1") != "1":
+        log.info(
+            "OTel log shipping disabled "
+            "(HELIX_OTEL_LOGS_ENABLED=0) — traces + metrics still on, "
+            "Loki Logs panel will stay empty",
+        )
+        return
+    level = _resolve_logs_level(os.environ.get("HELIX_OTEL_LOGS_LEVEL"))
     try:
         # Resource hint: tells Loki's OTLP ingest to promote `logger`
         # (and `service.name`, which Loki promotes by default but we
@@ -150,7 +192,7 @@ def _attach_otlp_logging_handler(
         set_logger_provider(logger_provider)
 
         otel_handler = LoggingHandler(
-            level=logging.INFO, logger_provider=logger_provider,
+            level=level, logger_provider=logger_provider,
         )
         otel_handler.addFilter(_LoggerNameInjector())
         root = logging.getLogger()

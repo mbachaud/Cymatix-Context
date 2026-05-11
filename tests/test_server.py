@@ -116,8 +116,31 @@ class TestHealthEndpoint:
         data = resp.json()
         assert data["ribosome"] == "disabled"
         assert data["ribosome_backend"] == "disabled"
-        assert data["ribosome_configured_backend"] == "ollama"
+        # Honest reporting: while [ribosome].enabled=false, the placeholder
+        # backend string is not dispatched, so we report None instead of
+        # echoing the TOML default (which was a recurring source of "is
+        # this LLM-backed?" confusion). When enabled flips to true, this
+        # field reflects the configured backend string verbatim — see
+        # ``test_health_reports_configured_backend_when_ribosome_enabled``.
+        assert data["ribosome_configured_backend"] is None
         assert data["ribosome_cost_class"] == "disabled"
+
+    def test_health_reports_configured_backend_when_ribosome_enabled(self, monkeypatch):
+        monkeypatch.setattr(
+            server_mod,
+            "_probe_upstream",
+            lambda _url, timeout_s=1.0: {"reachable": True, "probe": "/api/tags", "status_code": 200},
+        )
+        app = create_app(HelixConfig(
+            genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
+            server=ServerConfig(upstream="http://localhost:11434"),
+            ribosome=RibosomeConfig(enabled=True, backend="litellm"),
+        ))
+        with TestClient(app) as default_client:
+            resp = default_client.get("/health")
+        data = resp.json()
+        assert data["ribosome_configured_backend"] == "litellm"
+        assert data["ribosome_backend"] == "litellm"
 
     def test_health_degrades_when_upstream_unreachable(self, client, monkeypatch):
         monkeypatch.setattr(

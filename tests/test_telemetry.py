@@ -1,9 +1,16 @@
 import logging
+from unittest.mock import MagicMock
+
+import pytest
 
 from helix_context.genome import Genome
 from helix_context.shard_schema import init_main_db, open_main_db, register_shard
 from helix_context.sharding import ShardedGenomeAdapter
-from helix_context.telemetry import emit_gauges_snapshot
+from helix_context.telemetry import (
+    _attach_otlp_logging_handler,
+    _resolve_logs_level,
+    emit_gauges_snapshot,
+)
 
 from tests.conftest import make_gene
 
@@ -81,3 +88,118 @@ def test_emit_gauges_snapshot_reads_registered_shards_without_warning(
     finally:
         shard.close()
         main_conn.close()
+
+
+# -- HELIX_OTEL_LOGS_* env-var toggle --------------------------------
+
+def test_resolve_logs_level_accepts_canonical_names():
+    assert _resolve_logs_level("INFO") == logging.INFO
+    assert _resolve_logs_level("debug") == logging.DEBUG
+    assert _resolve_logs_level("WARNING") == logging.WARNING
+    assert _resolve_logs_level(None) == logging.INFO
+
+
+def test_resolve_logs_level_falls_back_on_garbage():
+    """Unknown level names log a warning and default to INFO rather than
+    crashing the OTel setup path. Matches the soft-fail policy elsewhere
+    in setup_telemetry — telemetry init is opt-in and must never block
+    helix from serving /context."""
+    assert _resolve_logs_level("LOUD") == logging.INFO
+    assert _resolve_logs_level("") == logging.INFO
+
+
+@pytest.mark.parametrize("env_value", ["0", "false", "no"])
+def test_attach_otlp_logging_handler_skips_when_disabled(monkeypatch, env_value):
+    """HELIX_OTEL_LOGS_ENABLED=0 (or any non-'1') keeps traces+metrics on
+    but skips log shipment. The downstream LoggerProvider / handler
+    constructors should never be called — keeps Loki disk pressure or
+    PII concerns fully addressable without forcing a full telemetry
+    shutdown."""
+    monkeypatch.setenv("HELIX_OTEL_LOGS_ENABLED", env_value)
+
+    LoggerProvider = MagicMock()
+    BatchLogRecordProcessor = MagicMock()
+    OTLPLogExporter = MagicMock()
+    LoggingHandler = MagicMock()
+    set_logger_provider = MagicMock()
+
+    _attach_otlp_logging_handler(
+        endpoint="localhost:4317",
+        insecure=True,
+        resource=MagicMock(),
+        LoggerProvider=LoggerProvider,
+        BatchLogRecordProcessor=BatchLogRecordProcessor,
+        OTLPLogExporter=OTLPLogExporter,
+        LoggingHandler=LoggingHandler,
+        set_logger_provider=set_logger_provider,
+    )
+    LoggerProvider.assert_not_called()
+    LoggingHandler.assert_not_called()
+    OTLPLogExporter.assert_not_called()
+    set_logger_provider.assert_not_called()
+
+
+def test_attach_otlp_logging_handler_wires_root_when_enabled(monkeypatch):
+    """Default path (HELIX_OTEL_LOGS_ENABLED unset → "1") builds the
+    LoggerProvider and attaches a LoggingHandler to the root logger."""
+    monkeypatch.delenv("HELIX_OTEL_LOGS_ENABLED", raising=False)
+    monkeypatch.setenv("HELIX_OTEL_LOGS_LEVEL", "WARNING")
+
+    # Real-shape stub so `type(resource).create({...})` resolves to a
+    # classmethod the production code can actually call. MagicMock can't
+    # provide that because `type(MagicMock())` is the bare MagicMock class.
+    class FakeResource:
+        @classmethod
+        def create(cls, attrs):
+            inst = cls()
+            inst.attrs = attrs
+            return inst
+
+        def merge(self, other):
+            merged = FakeResource()
+            merged.attrs = {**getattr(self, "attrs", {}), **getattr(other, "attrs", {})}
+            return merged
+
+    fake_resource = FakeResource()
+    LoggerProvider = MagicMock()
+    BatchLogRecordProcessor = MagicMock()
+    OTLPLogExporter = MagicMock()
+
+    class FakeLoggingHandler:
+        def __init__(self, level, logger_provider):
+            self.level = level
+            self.logger_provider = logger_provider
+            self.filters = []
+
+        def addFilter(self, f):
+            self.filters.append(f)
+
+    set_logger_provider = MagicMock()
+    # Ensure no leftover FakeLoggingHandler from a prior test.
+    root = logging.getLogger()
+    prior = list(root.handlers)
+    try:
+        _attach_otlp_logging_handler(
+            endpoint="localhost:4317",
+            insecure=True,
+            resource=fake_resource,
+            LoggerProvider=LoggerProvider,
+            BatchLogRecordProcessor=BatchLogRecordProcessor,
+            OTLPLogExporter=OTLPLogExporter,
+            LoggingHandler=FakeLoggingHandler,
+            set_logger_provider=set_logger_provider,
+        )
+        # LoggerProvider received a merged Resource containing the
+        # loki.attribute.labels hint that promotes `logger` to a Loki label.
+        kwargs = LoggerProvider.call_args.kwargs
+        assert "resource" in kwargs
+        assert kwargs["resource"].attrs.get("loki.attribute.labels") == "logger"
+        set_logger_provider.assert_called_once()
+        attached = [h for h in root.handlers if isinstance(h, FakeLoggingHandler)]
+        assert len(attached) == 1
+        assert attached[0].level == logging.WARNING
+    finally:
+        # Restore root state so we don't leak handlers between tests.
+        for h in list(root.handlers):
+            if h not in prior:
+                root.removeHandler(h)
