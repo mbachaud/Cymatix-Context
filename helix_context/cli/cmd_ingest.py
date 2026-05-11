@@ -39,7 +39,10 @@ def _build_parser() -> argparse.ArgumentParser:
 def _collect_files(root: Path, recursive: bool, exts: Iterable[str]) -> List[Path]:
     ext_set = {e.lower() if e.startswith(".") else "." + e.lower() for e in exts}
     if root.is_file():
-        return [root]
+        # Honor the extension filter even when the user pointed at a single file
+        # — otherwise `helix ingest binary.exe` would silently ingest replacement
+        # characters via the errors="replace" decode.
+        return [root] if root.suffix.lower() in ext_set else []
     if not root.is_dir():
         return []
     iterator = root.rglob("*") if recursive else root.iterdir()

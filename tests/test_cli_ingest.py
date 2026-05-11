@@ -77,3 +77,16 @@ def test_ingest_recursive_flag_walks_subdirs(fake_session, tmp_path):
     assert rc == 0, err
     payload = json.loads(out)
     assert payload["files_processed"] == 2  # a.txt + sub/c.txt
+
+
+def test_ingest_rejects_single_file_with_unsupported_extension(tmp_path):
+    """Single-file ingest must honor the extension filter — otherwise a
+    user pointing at a binary file would silently ingest replacement chars."""
+    bin_file = tmp_path / "blob.exe"
+    bin_file.write_bytes(b"\x00\x01MZ\x90\x00\x03")
+
+    rc, out, err = _run(["ingest", str(bin_file), "--json"])
+    assert rc == 1
+    payload = json.loads(out)
+    assert payload["ok"] is False
+    assert "no matching files" in payload["error"].lower()
