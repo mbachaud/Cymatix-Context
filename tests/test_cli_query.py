@@ -96,3 +96,24 @@ def test_query_returns_one_when_session_raises():
     payload = json.loads(out)
     assert payload["ok"] is False
     assert "genome unreachable" in payload["error"]
+
+
+def test_query_text_mode_includes_verdict(fake_session):
+    """Text mode must surface the verdict from to_agent_json()."""
+    with patch("helix_context.cli.cmd_query.open_session", return_value=fake_session):
+        rc, out, err = _run(["query", "hello world"])
+    assert rc == 0
+    assert "verdict:" in out
+
+
+def test_query_text_mode_error_goes_to_stderr():
+    """Plain-text error path writes the error string to stderr (not stdout)
+    and returns EXIT_ERROR."""
+    sess = MagicMock()
+    sess.query.side_effect = RuntimeError("genome unreachable")
+    with patch("helix_context.cli.cmd_query.open_session", return_value=sess):
+        rc, out, err = _run(["query", "test"])  # no --json
+    assert rc == 1
+    assert "genome unreachable" in err
+    # Stdout should NOT contain the error message in text mode.
+    assert "genome unreachable" not in out
