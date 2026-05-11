@@ -81,22 +81,24 @@ def _resolve(name: str) -> Optional[Callable[[list[str]], int]]:
 
 def main(argv: Optional[list[str]] = None) -> int:
     parser = _build_parser()
-    args = argv if argv is not None else None
-    # `helix` with no args → print help to stderr, return 1.
-    if not args:
+    # No args → print usage to stderr and exit 1.
+    if not argv:
         parser.print_help(file=sys.stderr)
         return output.EXIT_ERROR
-    # `helix --help` / `helix -h` → argparse default (exit 0).
-    if args[0] in ("--help", "-h"):
-        parser.parse_args(args)  # this SystemExit(0)s
-        return output.EXIT_OK    # unreachable, kept for type clarity
 
-    sub_name, sub_argv = args[0], args[1:]
+    # Let argparse handle top-level flags (--help → SystemExit(0); unknown
+    # subcommand → SystemExit(2); future --version / --verbose work as
+    # declared on the parser). Only parse the first token to keep
+    # subcommand-specific flags untouched.
+    parsed = parser.parse_args(argv[:1])
+    sub_name = parsed.subcommand
+    if sub_name is None:
+        parser.print_help(file=sys.stderr)
+        return output.EXIT_ERROR
+
     runner = _resolve(sub_name)
     if runner is None:
-        # Force argparse to do the "invalid choice" error formatting for us
-        # so the message matches what users expect.
-        parser.parse_args(args)
-        return output.EXIT_BAD_ARGS  # unreachable
+        # Defensive — argparse should have errored above on unknown choices.
+        return output.EXIT_BAD_ARGS
 
-    return runner(sub_argv)
+    return runner(argv[1:])
