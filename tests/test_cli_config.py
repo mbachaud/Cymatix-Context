@@ -49,3 +49,20 @@ def test_config_show_falls_back_to_defaults_when_no_toml(monkeypatch, tmp_path):
     payload = json.loads(out)
     assert isinstance(payload.get("budget"), dict)
     assert isinstance(payload.get("server"), dict)
+
+
+def test_config_show_text_mode_uses_json_scalars(monkeypatch, tmp_path):
+    """Booleans + None should serialize as JSON (true/false/null), not Python repr."""
+    cfg = tmp_path / "helix.toml"
+    cfg.write_text(
+        "[budget]\nlegibility_enabled = true\nsession_delivery_enabled = false\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("HELIX_CONFIG", str(cfg))
+
+    rc, out, err = _run(["config", "show", "--text"])
+    assert rc == 0, err
+    assert "= true" in out
+    assert "= false" in out
+    assert "= True" not in out
+    assert "= False" not in out

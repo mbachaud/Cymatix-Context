@@ -42,12 +42,12 @@ def _flatten_for_text(obj: Any, prefix: str = "") -> list[str]:
             key = f"{prefix}.{k}" if prefix else k
             if isinstance(v, dict):
                 lines.extend(_flatten_for_text(v, prefix=key))
-            elif isinstance(v, list):
-                lines.append(f"{key} = {json.dumps(v)}")
             else:
-                lines.append(f"{key} = {v}")
+                # Use json.dumps for scalars AND lists — keeps booleans,
+                # None, and strings unambiguous in the flattened output.
+                lines.append(f"{key} = {json.dumps(v)}")
     else:
-        lines.append(f"{prefix} = {obj}")
+        lines.append(f"{prefix} = {json.dumps(obj)}")
     return lines
 
 
