@@ -128,6 +128,42 @@ setup-helix.bat
 - `setup-helix.bat -SkipPipInstall` — refresh shortcuts without
   reinstalling the package.
 
+If you specifically want the **Grafana telemetry stack without the tray**
+(servers, CI, headless workstations) — or want to pre-warm the
+collector + Prometheus + Tempo + Loki + Grafana binaries before the
+first tray launch — use the dedicated wrapper:
+
+```cmd
+:: Windows
+scripts\setup-grafana-telem.ps1
+
+:: Linux / macOS
+scripts/setup-grafana-telem.sh
+```
+
+That script:
+
+1. Verifies `[otel]` and `[launcher]` extras are importable.
+2. Calls `scripts/install-native-observability.{ps1,sh}` to download +
+   verify-sha + extract the five pinned binaries into
+   [`tools/native-otel/`](../tools/native-otel/).
+3. Runs `python -m helix_context.launcher.observability_render render-all`
+   to materialize `tools/native-otel/configs/` (substitutes
+   `tempo:4317` → `localhost:4317`, container paths → per-user state
+   dirs) and copy dashboard JSON + datasource provisioning into
+   Grafana's `conf/provisioning/` tree.
+4. Smoke-tests Grafana `:3000` and Prometheus `:9090` if the supervisor
+   is already running, otherwise prints next-step instructions.
+
+Useful flags: `--skip-download` (binaries already on disk),
+`--verify-only` (just smoke-test the running stack), `--server-only`
+(render configs only — for CI).
+
+The script does NOT start the supervisor itself — running it once is a
+one-time on-disk-state prep, after which `start-helix-tray.bat` (or
+`helix-launcher --tray`) spawns the five binaries. Re-runs are
+idempotent.
+
 Then daily-launch via:
 
 ```cmd
@@ -290,6 +326,59 @@ capable model paints over `do_not_answer_from_genome=true` and answers
 from its training prior — which is scored as a hard failure in offline
 eval. See [`docs/agent-sdk-fragment.md`](agent-sdk-fragment.md) for the
 full contract.
+
+#### Optional: Grafana telemetry for agent sessions
+
+When helix is consumed via MCP from a headless agent process, the
+proxy-only flow does **not** spawn the observability supervisor (no
+tray, no launcher). If you want the four operations dashboards to light
+up so you can audit agent activity — `/context` rate, know/miss ratio,
+per-stage latency, calibration provenance, token spend — run the
+dedicated setup script once per machine:
+
+```cmd
+:: Windows
+scripts\setup-grafana-telem.ps1
+
+:: Linux / macOS
+scripts/setup-grafana-telem.sh
+```
+
+That installs the five native binaries (collector, Prometheus, Tempo,
+Loki, Grafana), renders runtime configs, and wires dashboard
+provisioning. After it completes, start the helix backend with OTel
+enabled:
+
+```bash
+export HELIX_OTEL_ENABLED=1
+export HELIX_OTEL_ENDPOINT=localhost:4317
+python -m uvicorn helix_context._asgi:app --host 127.0.0.1 --port 11437
+```
+
+Bring the supervisor up the same way the tray does — the obs binaries
+are spawned implicitly by the launcher; pass `--no-autostart` if the
+agent host is managing the helix backend itself:
+
+```bash
+helix-launcher --no-autostart        # observability only, no helix backend
+helix-launcher                        # observability + helix backend
+```
+
+Or, if the agent host doesn't have `[launcher]` installed, use the
+docker-compose stack at [`deploy/otel/`](../deploy/otel/) — it is
+bit-for-bit compatible with the rendered native configs (same datasource
+UIDs, same dashboard JSON).
+
+Smoke-test that telemetry is flowing end-to-end after the agent issues
+its first `/context` call:
+
+```bash
+curl 'http://localhost:9090/api/v1/query?query=helix_context_latency_seconds_count'
+```
+
+A non-empty `data.result` array confirms the wiring is correct. The
+Grafana panels at <http://localhost:3000/d/helix-overview> populate
+within ~15s (one Prometheus scrape interval).
 
 ## Implicit requirements
 

@@ -52,16 +52,36 @@ def test_all_configs_rendered(rendered):
 
 
 def test_collector_hostnames_rewritten_to_localhost(rendered):
+    from helix_context.launcher.observability_render import TEMPO_OTLP_PORT
+
     text = (rendered / "otel-collector-config.yaml").read_text()
     spec = yaml.safe_load(text)
-    # tempo:4317 → localhost:4317
-    assert spec["exporters"]["otlp/tempo"]["endpoint"] == "localhost:4317"
+    # tempo:4317 → localhost:<TEMPO_OTLP_PORT> (remapped off 4317 so the
+    # collector's own intake on 4317 has no conflict on bare-metal localhost).
+    assert spec["exporters"]["otlp/tempo"]["endpoint"] == f"localhost:{TEMPO_OTLP_PORT}"
     # http://prometheus:9090/api/v1/write → http://localhost:9090/api/v1/write
     assert spec["exporters"]["prometheusremotewrite"]["endpoint"] == \
         "http://localhost:9090/api/v1/write"
     # http://loki:3100/otlp → http://localhost:3100/otlp
     assert spec["exporters"]["otlphttp/loki"]["endpoint"] == \
         "http://localhost:3100/otlp"
+
+
+def test_tempo_otlp_receiver_remapped_off_collector_port(rendered):
+    """Tempo's OTLP gRPC receiver must move off 4317 in the native render
+    so the supervisor's external-instance pre-flight check doesn't mistake
+    a healthy tempo for a pre-existing collector and skip spawning ours.
+
+    Regression test for the wiring bug where helix's OTel exporter saw
+    `StatusCode.UNIMPLEMENTED` because tempo (which only accepts traces)
+    was answering on 4317.
+    """
+    from helix_context.launcher.observability_render import TEMPO_OTLP_PORT
+
+    spec = yaml.safe_load((rendered / "tempo.yaml").read_text())
+    otlp_grpc = spec["distributor"]["receivers"]["otlp"]["protocols"]["grpc"]
+    assert otlp_grpc["endpoint"] == f"0.0.0.0:{TEMPO_OTLP_PORT}"
+    assert TEMPO_OTLP_PORT != 4317, "remapped port must not be the collector's"
 
 
 def test_prometheus_scrape_target_rewritten(rendered):
@@ -170,7 +190,13 @@ def test_structural_diff_is_only_hostnames_and_paths(rendered):
         r"(?::\d+)?(?:/\S*)?"
     )
     hostport_re = re.compile(
-        r"\b(?:localhost|tempo|prometheus|loki|otel-collector):\d+\b"
+        # 0.0.0.0:\d+ is included so the tempo OTLP receiver remap
+        # (`0.0.0.0:4317` → `0.0.0.0:14317`) normalizes to the same
+        # placeholder in source and render. The remap is intentional
+        # structural diff (see observability_render.TEMPO_OTLP_PORT) —
+        # the dedicated test_tempo_otlp_receiver_remapped_off_collector_port
+        # asserts the new value, so this normalizer doesn't hide drift.
+        r"\b(?:localhost|tempo|prometheus|loki|otel-collector|0\.0\.0\.0):\d+\b"
     )
     path_re = re.compile(
         r"(?:[A-Z]:)?[/\\](?:[\w.-]+[/\\])*"

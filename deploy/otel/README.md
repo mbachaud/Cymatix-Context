@@ -1,8 +1,12 @@
 # deploy/otel/ — Docker observability stack (advanced)
 
 The default helix install ships native observability binaries managed
-by the tray launcher. This Docker Compose stack is the alternate path —
-useful for:
+by the tray launcher. To set those up without bringing up the tray, run
+[`scripts/setup-grafana-telem.ps1`](../../scripts/setup-grafana-telem.ps1)
+(Windows) or [`scripts/setup-grafana-telem.sh`](../../scripts/setup-grafana-telem.sh)
+(Linux / macOS).
+
+This Docker Compose stack is the alternate path — useful for:
 
 - Production-shape deployment (containerized, declarative)
 - Environments where native binaries don't fit (locked-down user dirs,

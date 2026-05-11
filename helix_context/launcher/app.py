@@ -485,13 +485,52 @@ def _handle_service_command(command: str, dry_run: bool) -> int:
     return 0 if ok else 1
 
 
+def _configure_logging(verbose: bool) -> None:
+    """Attach a console handler AND a rotating file handler at
+    ``~/.helix/launcher/launcher.log``.
+
+    Without the file handler, autostart failures are invisible — the
+    ``start "..." /B python -m helix_context.launcher.app`` invocation in
+    ``start-helix-tray.bat`` redirects stdout/stderr to the calling cmd
+    window, which exits immediately, so any WARN/ERROR from
+    ``_maybe_build_headroom`` or ``supervisor.start()`` is lost.
+    """
+    level = logging.DEBUG if verbose else logging.INFO
+    fmt = "[%(asctime)s] %(name)s %(levelname)s: %(message)s"
+    root = logging.getLogger()
+    root.setLevel(level)
+    # Drop any handlers basicConfig may have left so we own configuration.
+    for h in list(root.handlers):
+        root.removeHandler(h)
+
+    stream_handler = logging.StreamHandler()
+    stream_handler.setLevel(level)
+    stream_handler.setFormatter(logging.Formatter(fmt))
+    root.addHandler(stream_handler)
+
+    try:
+        from logging.handlers import RotatingFileHandler
+
+        log_dir = Path.home() / ".helix" / "launcher"
+        log_dir.mkdir(parents=True, exist_ok=True)
+        file_handler = RotatingFileHandler(
+            log_dir / "launcher.log",
+            maxBytes=2 * 1024 * 1024,
+            backupCount=3,
+            encoding="utf-8",
+        )
+        file_handler.setLevel(level)
+        file_handler.setFormatter(logging.Formatter(fmt))
+        root.addHandler(file_handler)
+    except Exception as exc:
+        # Console-only is acceptable; don't fail launcher boot for a log file.
+        log.warning("launcher.log file handler unavailable: %s", exc)
+
+
 def main(argv: Optional[list] = None) -> int:
     args = _parse_args(argv)
 
-    logging.basicConfig(
-        level=logging.DEBUG if args.verbose else logging.INFO,
-        format="[%(asctime)s] %(name)s %(levelname)s: %(message)s",
-    )
+    _configure_logging(verbose=args.verbose)
 
     # Service install/uninstall subcommands — do not start any server.
     if args.command in ("install-service", "uninstall-service"):
@@ -567,6 +606,27 @@ def main(argv: Optional[list] = None) -> int:
         enabled_override=_env_truthy("HELIX_HEADROOM_ENABLED"),
     )
 
+    # Build + start the observability stack BEFORE helix in tray mode so
+    # the collector is already bound to :4317 when helix's OTLP exporter
+    # dials it. Otherwise helix dials a dead port at startup, the gRPC
+    # channel wedges, and metrics drop with `StatusCode.UNIMPLEMENTED`
+    # even after the collector eventually binds.
+    observability_sup: Optional["ObservabilitySupervisor"] = None
+    observability_install_pending = False
+    if args.tray:
+        observability_sup, observability_install_pending = (
+            _maybe_build_observability()
+        )
+        if observability_sup is not None:
+            try:
+                observability_sup.start_all()
+            except Exception:
+                log.warning(
+                    "ObservabilitySupervisor.start_all failed; tray will "
+                    "indicate via per-service red status",
+                    exc_info=True,
+                )
+
     # Adopt or start helix before the UI comes up.
     if not supervisor.adopt() and not args.no_autostart:
         try:
@@ -614,9 +674,9 @@ def main(argv: Optional[list] = None) -> int:
         server_thread.start()
         _wait_for_port_bound(args.host, args.port)  # replaces 0.4s race
 
-        observability_sup, observability_install_pending = (
-            _maybe_build_observability()
-        )
+        # observability_sup was built + started above (BEFORE helix), so the
+        # collector is already bound to :4317 when helix's OTLP exporter
+        # dials on first metric push. Only the menu URLs need wiring here.
         if observability_sup is not None:
             if args.grafana_url is None:
                 args.grafana_url = DEFAULT_GRAFANA_URL
@@ -634,20 +694,6 @@ def main(argv: Optional[list] = None) -> int:
             install_pending=observability_install_pending,
             update_checker=update_checker,
         )
-
-        # Start observability subprocesses BEFORE tray_icon.run() blocks.
-        # If start_all raises (configs missing despite the pre-check, or a
-        # binary fails to spawn), log + continue — helix-context itself
-        # must not be blocked on observability.
-        if observability_sup is not None:
-            try:
-                observability_sup.start_all()
-            except Exception:
-                log.warning(
-                    "ObservabilitySupervisor.start_all failed; "
-                    "tray will indicate via per-service red status",
-                    exc_info=True,
-                )
 
         # Surface the install-needed balloon if the build helper flagged it.
         if observability_install_pending:

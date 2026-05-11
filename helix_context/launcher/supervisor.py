@@ -277,7 +277,7 @@ class HelixSupervisor:
 
     # ── lifecycle ──────────────────────────────────────────────────
 
-    def start(self, wait_ready: bool = True, timeout: float = 30.0) -> int:
+    def start(self, wait_ready: bool = True, timeout: float = 90.0) -> int:
         """Spawn a new helix uvicorn subprocess, or adopt an existing one.
 
         If the port is occupied by another helix uvicorn process (e.g.
@@ -349,15 +349,20 @@ class HelixSupervisor:
             try:
                 self._wait_for_ready(timeout=timeout)
             except StartupTimeout as exc:
-                # Roll back: kill whatever started and clear state.
-                try:
-                    self._kill_tree(proc.pid)
-                except Exception:
-                    pass
-                self.store.clear_helix()
-                self._owns_helix_process = False
+                # Cold-start /stats can exceed `timeout` (spaCy + sentence-
+                # transformers + 19k-gene genome load on first-boot-of-day).
+                # Killing here would force the operator to click Start
+                # again from the tray, defeating autostart. Leave the
+                # spawned process running and keep state so the tray's
+                # periodic is_running()/ping() poll surfaces "starting…"
+                # via the disabled Start button until /stats answers.
+                log.warning(
+                    "Helix did not answer /stats within %.0fs (pid=%d still "
+                    "running; tray will pick it up on the next refresh): %s",
+                    timeout, proc.pid, exc,
+                )
                 self._record_error("start", str(exc))
-                raise
+                return proc.pid
 
         log.info("Helix started (pid=%d)", proc.pid)
         self._clear_error()

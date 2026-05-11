@@ -126,7 +126,15 @@ class TestStart:
         # It's an int — either CREATE_NO_WINDOW (0x08000000) or 0
         assert isinstance(popen_kwargs["creationflags"], int)
 
-    def test_start_rolls_back_on_startup_timeout(self, supervisor, store):
+    def test_start_keeps_process_running_on_startup_timeout(self, supervisor, store):
+        """When /stats does not answer within `timeout`, the spawned uvicorn
+        is left running and state is preserved. Cold-start (spaCy + sentence-
+        transformers + 19k-gene genome load) routinely exceeds the timeout,
+        and killing here forced operators to click Start a second time from
+        the tray. The tray's periodic `is_running()` poll now picks the
+        proc up on its next refresh and surfaces it via the disabled-Start
+        button until /stats answers.
+        """
         supervisor._psutil = _FakePsutil(alive_pids=set())
 
         fake_popen = MagicMock()
@@ -139,12 +147,12 @@ class TestStart:
                     side_effect=StartupTimeout("timeout"),
                 ):
                     with patch.object(supervisor, "_kill_tree") as kill_mock:
-                        with pytest.raises(StartupTimeout):
-                            supervisor.start()
-                        kill_mock.assert_called_once_with(54321)
+                        pid = supervisor.start()
+                        assert pid == 54321
+                        kill_mock.assert_not_called()
 
-        # State should be cleared after rollback
-        assert store.state.helix_pid is None
+        # State remains set; the tray will probe /stats on the next refresh.
+        assert store.state.helix_pid == 54321
 
 
 class TestStop:
@@ -386,8 +394,9 @@ class TestLastErrorTelemetry:
                     side_effect=StartupTimeout("timed out"),
                 ):
                     with patch.object(supervisor, "_kill_tree"):
-                        with pytest.raises(StartupTimeout):
-                            supervisor.start()
+                        # Timeout is now non-fatal — state is kept and the
+                        # error is recorded so the tray can surface it.
+                        supervisor.start()
 
         last = supervisor.get_last_error()
         assert last is not None

@@ -211,6 +211,20 @@ text, meta = dal.fetch("s3://bucket/schema.json")
 
 The tray (`start-helix-tray.bat`) manages the native OpenTelemetry binaries in `tools/native-otel/` automatically. A balloon notification confirms the sidecar is running. To opt out: `HELIX_OBSERVABILITY=0 start-helix-tray.bat`.
 
+If you want Grafana telemetry without the tray (headless servers, CI, MCP-only agent setups), run the dedicated setup script — it downloads the pinned collector + Prometheus + Tempo + Loki + Grafana binaries, renders configs, and smoke-tests the stack:
+
+```powershell
+# Windows
+scripts\setup-grafana-telem.ps1
+```
+
+```bash
+# Linux / macOS
+scripts/setup-grafana-telem.sh
+```
+
+After it completes, open <http://localhost:3000/d/helix-overview> (default credentials `admin` / `admin`, rotate on first login). The script is idempotent; re-running it refreshes configs without re-downloading.
+
 > **Advanced — Docker stack:** if you prefer a full Docker-compose observability stack (Prometheus, Tempo, Loki, Grafana), see [deploy/otel/README.md](deploy/otel/README.md).
 
 ## Architecture

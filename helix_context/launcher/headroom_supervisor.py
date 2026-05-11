@@ -328,7 +328,7 @@ class HeadroomSupervisor:
 
     # ── lifecycle ──────────────────────────────────────────────────
 
-    def start(self, wait_ready: bool = True, timeout: float = 20.0) -> int:
+    def start(self, wait_ready: bool = True, timeout: float = 60.0) -> int:
         """Spawn headroom, or adopt an existing one.
 
         Raises:
@@ -408,14 +408,21 @@ class HeadroomSupervisor:
         if wait_ready:
             try:
                 self._wait_for_ready(timeout=timeout)
-            except HeadroomStartupTimeout:
-                try:
-                    self._kill_tree(proc.pid)
-                except Exception:
-                    pass
-                self.store.clear_headroom()
-                self._owns_process = False
-                raise
+            except HeadroomStartupTimeout as exc:
+                # First-boot-of-day headroom downloads ModernBERT ONNX
+                # weights (~200 MB) plus technique-router + siglip ONNX
+                # artifacts from HF Hub; that can exceed `timeout`. Don't
+                # kill the spawned process — it's healthy, just slow to
+                # answer /health. Keep state so the tray's periodic poll
+                # surfaces "starting…" until /health responds, and the
+                # operator doesn't have to click Start again.
+                log.warning(
+                    "Headroom did not answer /health within %.0fs (pid=%d "
+                    "still running; tray will pick it up on the next "
+                    "refresh): %s",
+                    timeout, proc.pid, exc,
+                )
+                return proc.pid
 
         log.info("Headroom started (pid=%d)", proc.pid)
         return proc.pid
