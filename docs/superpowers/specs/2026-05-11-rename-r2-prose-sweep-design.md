@@ -62,7 +62,7 @@ For each occurrence of `gene` / `genome` / `ribosome` / `chromatin` / `codon` / 
 4. Inside `docs/archive/**` or `docs/ROSETTA.md`.
 5. A legitimate non-bio English word: `expression` in "regex/regular expression", `promotion` in ranking/score-math contexts.
 
-Class 5 is judgment-call — flagged in the verification step.
+Class 5 is judgment-call — flagged in the verification step. **Word-boundary false positives also fall under Class 5**: `gene` inside `generate` / `general` / `genetic`, `express` inside `expressive`, `promot` inside `promotional`. The grep in §4 uses `\b$term\b` (both boundaries) to keep these out of the count; any that slip through are left in place.
 
 ### Canonical substitutions
 
@@ -100,7 +100,7 @@ The mapping the sweep applies (canonical = right column from ROSETTA.md):
    - `docs/ops/**` (incl. `RESTART_PROTOCOL.md`, `SKILLS_BUNDLE.md`)
    - `docs/benchmarks/**` (incl. `BENCHMARKS.md`, `BENCHMARK_RATIONALE.md`)
    - `docs/clients/**` (incl. `claude-code.md`)
-   - Excludes: `docs/archive/**`, `docs/ROSETTA.md`, `docs/superpowers/**` (these are spec/plan docs that talk about the rename — their bio terms are legitimate).
+   - Excludes: `docs/archive/**`, `docs/ROSETTA.md`, `docs/superpowers/**` (these are spec/plan docs that talk about the rename — their bio terms are legitimate). **This spec and its sibling plan are explicitly out of scope for the sweep** — a future automated pass must not rewrite the spec's own legacy-term references.
 4. **Top-of-repo docs**: `README.md`, `CLAUDE.md`.
 
 ### Commit cadence
@@ -116,6 +116,7 @@ Five commits expected:
 ### Mechanics
 
 - **Primary tools:** Edit + Grep. Pure text replacement is faster with these than Serena's symbol tools.
+- **Pass shape:** one-pass-per-file. Read the full file, identify every hit, batch the substitutions into as few Edit calls as the file's structure allows. Avoid one-Edit-per-hit — it inflates the commit's surface and the reviewer's read.
 - **Serena's role this sprint:** light. Use `find_referencing_symbols` as a verification cross-check when a docstring names another module (confirms the rename target). Save the heavy `rename_symbol` lifting for R3.
 - **Doctest guard:** `pytest --doctest-modules helix_context/` runs after the Python sweep to catch any sample code in docstrings that referenced a real function whose name accidentally shifted.
 
@@ -132,11 +133,13 @@ The PR body posts a baseline-vs-post-sweep count for each bio term:
 for term in gene genome ribosome chromatin codon promoter epigenetics \
             transcription express replicat harmonic_link HGT; do
   echo -n "$term: "
-  grep -rIE "\\b$term" helix_context/ docs/ README.md CLAUDE.md \
+  grep -rIE "\\b$term\\b" helix_context/ docs/ README.md CLAUDE.md \
     --exclude-dir=archive --exclude-dir=superpowers \
-    --exclude=ROSETTA.md 2>/dev/null | wc -l
+    --exclude=ROSETTA.md --exclude=aliases.py 2>/dev/null | wc -l
 done
 ```
+
+The grep uses `\b$term\b` on both ends to filter out compound-word false positives (`generate`, `expressive`, `promotional`). `aliases.py` is excluded because it intentionally retains legacy class names by design — its hits would otherwise create a fixed floor that artificially deflates the post-sweep ratio.
 
 **Acceptance:** post-sweep count drops by **≥ 80%** from baseline for each term. The remaining ≤ 20% must each fall into one of the protected classes from §2's translation rule — every remaining hit is justified in a verification comment block in the PR body.
 
