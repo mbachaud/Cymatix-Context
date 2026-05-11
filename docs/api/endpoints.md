@@ -67,7 +67,7 @@ Navigation-first retrieval — scores and metadata without content. Supports `sc
 
 ### POST /ingest
 
-Ingest a document or conversation exchange into the genome.
+Ingest a document or conversation exchange into the knowledge store.
 
 **Request:**
 ```json
@@ -81,17 +81,17 @@ Ingest a document or conversation exchange into the genome.
 
 ### POST /replicate
 
-Persist a context exchange back into the genome (co-activation learning).
+Persist a context exchange back into the knowledge store (co-activation learning).
 
 ### POST /compact
 
-Compact the genome — run the density gate over all OPEN genes and demote low-signal ones to EUCHROMATIN/HETEROCHROMATIN.
+Compact the knowledge store — run the density gate over all OPEN documents and demote low-signal ones to EUCHROMATIN/HETEROCHROMATIN.
 
 ## Admin / Maintenance
 
 ### GET /stats
 
-Returns genome size, compression ratio, and tier metrics.
+Returns knowledge store size, compression ratio, and tier metrics.
 
 ```json
 {

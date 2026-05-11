@@ -16,7 +16,7 @@ handlers are at [`helix_context/server.py`](../../helix_context/server.py).
 
 `POST /context` is the primary read endpoint for an LLM agent. The agent
 sends a query string; helix-context runs its retrieval pipeline against the
-local genome (SQLite) and returns a structured envelope containing either
+local knowledge store (SQLite) and returns a structured envelope containing either
 (a) a `know` block with grounded `expressed_context` bytes the agent may
 answer from, or (b) a `miss` block whose `reason` field tells the agent how
 to recover (escalate to a tool, refresh a stale source, ask a human).
@@ -60,7 +60,7 @@ fields documented from `_request_read_only` are at
 | `party_id` | `str \| null` | `config.session.default_party_id` | Trust identity. Defaults to the configured party when `null`. |
 | `caller_model_class` | `"generic" \| "small_moe" \| "frontier"` | `"generic"` | **Stage 5.** Render-branch selector. Unknown values return 400 (`server.py:1135-1142`). The `generic` branch is regression-locked byte-identical to pre-Stage-5 output. See §7 for the behavior matrix. Wire enum at [`schemas.py:692-696`](../../helix_context/schemas.py#L692). |
 | `clean` | `bool` | `false` | **Stage 1.** When true: (a) implies `read_only=true` (`server.py:1008`); (b) calls `helix.reset_session_state()` to clear per-session caches before the request runs (`server.py:1075-1079`). Used by synthetic benches to isolate from prior state. |
-| `read_only` | `bool \| null` | `null` | Explicit override. When non-null, takes precedence over `clean`'s implicit value (`_request_read_only` at `server.py:1000`). When true: no genome learning, no `touch_genes`, no `link_coactivated`, no harmonic/relation writes. Mtime cache may still update (in-memory; not a genome write). |
+| `read_only` | `bool \| null` | `null` | Explicit override. When non-null, takes precedence over `clean`'s implicit value (`_request_read_only` at `server.py:1000`). When true: no knowledge store learning, no `touch_genes`, no `link_coactivated`, no harmonic/relation writes. Mtime cache may still update (in-memory; not a knowledge store write). |
 | `response_mode` | `"continue" \| "packet"` | `"continue"` | When `"packet"`, the route delegates to `build_context_packet` and returns a `ContextPacket`-shaped payload instead of the Continue-compatible envelope (`server.py:1090-1111`). Other values return 400. |
 | `format` | `str \| null` | — | Legacy alias for `response_mode`. Ignored when `response_mode` is set; otherwise its value is used (`server.py:1019`). |
 | `include_cold` | `bool \| null` | (config flag) | Cold-tier override. `null` defers to config (`config.budget.cold_tier_enabled`). `true` forces cold-tier ON for this request; `false` forces it OFF (`server.py:1027-1029`). |
@@ -70,7 +70,7 @@ fields documented from `_request_read_only` are at
 | `session_context` | `dict \| null` | `null` | Editor context: `{"active_project": str, "active_files": list[str], "active_projects": list[str]}`. Plumbed through to the path_key_index tier so PKI can fire on `(project, key)` pairs even when the query string itself is short. |
 | `task_type` | `str` | `"explain"` | Only consumed when `response_mode == "packet"`; selects the packet builder's task profile (`server.py:1103`). |
 | `max_genes` | `int` | `config.budget.max_genes_per_turn` | Only consumed when `response_mode == "packet"`. Clamped to `[1, 32]` (`server.py:1095`). |
-| `ignore_delivered` | `bool` | `false` | Bypasses the session working-set elision so already-delivered genes can re-fire (used by benches and smoke tests, `server.py:1157`). |
+| `ignore_delivered` | `bool` | `false` | Bypasses the session working-set elision so already-delivered documents can re-fire (used by benches and smoke tests, `server.py:1157`). |
 
 ### 2.1 Example request
 
@@ -125,7 +125,7 @@ Defined at [`schemas.py:490-518`](../../helix_context/schemas.py#L490).
 | `lexical_dense_agree` | `bool` | — | `True` if lexical-cluster top-K and dense-cluster top-K share at least one gene_id (k=3); see [`know_decision.py:237-297`](../../helix_context/know_decision.py#L237) |
 | `gene_id_match` | `str \| null` | — | Beacon: query token that exactly (case-insensitive) matches a top-1 file or path token. `null` when no match. See §3.1.2. |
 | `coordinate_confidence` | `float` | `[0.0, 1.0]` | Blend of folder + file-grain query/source agreement; computed by `context_packet._coordinate_confidence` |
-| `soft_stale` | `bool` | default `false` | **Stage 7.** `True` when top-1 is fresh enough to act on, but `freshness_min < 0.5` indicates lower-ranked supporting genes are stale. Drives `agent.recommendation = "refresh"` even though the agent may answer from the genome. |
+| `soft_stale` | `bool` | default `false` | **Stage 7.** `True` when top-1 is fresh enough to act on, but `freshness_min < 0.5` indicates lower-ranked supporting documents are stale. Drives `agent.recommendation = "refresh"` even though the agent may answer from the knowledge store. |
 
 #### 3.1.1 Confidence formula (Stage 6 + Stage 7)
 
@@ -429,9 +429,9 @@ and emits the result — there is no distinct `<helix:answer_slate>` tag.
 Templates at
 [`context_manager.py:176-192`](../../helix_context/context_manager.py#L176).
 
-### 6.4 Per-gene legibility headers
+### 6.4 Per-document legibility headers
 
-When legibility headers are enabled, each delivered gene is preceded by
+When legibility headers are enabled, each delivered document is preceded by
 a single bracketed line emitted by `format_gene_header` at
 [`legibility.py:122-157`](../../helix_context/legibility.py#L122):
 
@@ -441,7 +441,7 @@ a single bracketed line emitted by `format_gene_header` at
 
 `<symbol>` is one of `◆ / ◇ / ·` (z-normalized confidence). Tier slice
 caps at top-3 by default. Size form is `<raw>→<compressed>c` when the
-splice trimmed the gene, else `<n>c`. Headers are suppressed for
+splice trimmed the document, else `<n>c`. Headers are suppressed for
 `small_moe` callers (cost > benefit at 4B params; see Stage 5 spec §4).
 
 ---
@@ -473,7 +473,7 @@ Rationale for the load-bearing cells:
   callers have 200k+ context and the classifier caps were tuned for
   4B-parameter prompt windows.
 - `small_moe × foveated = ON always` (not just `broad`): small models
-  always benefit from recency on the gene that holds the answer.
+  always benefit from recency on the document that holds the answer.
 - `small_moe × slate_format = JSON`: flat newlines have no structural
   lock for MoE attention routing; JSON braces give the model a fixed
   attention sink.
@@ -519,7 +519,7 @@ Handler: [`server.py:1461-1544`](../../helix_context/server.py#L1461).
 Request fields: `query` (required), `task_type` (default `"explain"`),
 `max_genes` (default 8, clamped to `[1, 32]`), `clean`, `read_only`,
 `include_raw` (default `false` — when true, item content is the full
-gene body instead of the 280-char ribosome-compressed thumbnail),
+document body instead of the 280-char compressor-compressed thumbnail),
 `max_item_chars` (per-item cap when `include_raw`).
 Response is a `ContextPacket` dict (see
 [`schemas.py:245-272`](../../helix_context/schemas.py#L245)) with
@@ -545,7 +545,7 @@ Request fields: `query` (required), `profile`
 `config.context.fingerprint_mode_profile`), `include_cold`,
 `session_context`, `clean`, `max_results` (clamped to `[1, 200]`),
 `score_floor` (final post-refiner score threshold), `party_id`.
-Returns tier-score breakdowns per candidate gene (`gene_id`, `score`,
+Returns tier-score breakdowns per candidate document (`gene_id`, `score`,
 `preview`, `path`, `source`, `domains`, `entities`, `chromatin`,
 `tier_contributions`) plus accounting fields (`evaluated_total`,
 `above_floor_total`, `returned`, `filtered_by_floor`,
@@ -555,7 +555,7 @@ Returns tier-score breakdowns per candidate gene (`gene_id`, `score`,
 
 Handler: [`server.py:2672-2690`](../../helix_context/server.py#L2672).
 No request body. Distills the session buffer into consolidated
-knowledge genes, extracting only new facts, decisions, and
+knowledge documents, extracting only new facts, decisions, and
 discoveries. Returns `{"facts_extracted": int, "gene_ids":
 list[str]}`. On error returns 500 with `{"error": ..., "facts_extracted":
 0, "gene_ids": []}`.
@@ -570,17 +570,17 @@ strings, ≥3 chars, no NULL bytes). Optional: `workspace`, `pid`,
 for `party_id`. Returns `{"participant_id", "party_id",
 "registered_at", "heartbeat_interval_s", "ttl_s"}`.
 
-### 9.6 `POST /admin/refresh` — reopen genome connection
+### 9.6 `POST /admin/refresh` — reopen knowledge store connection
 
 Handler: [`server.py:2805-2810`](../../helix_context/server.py#L2805).
-No body. Reopens the genome connection so external changes
+No body. Reopens the knowledge store connection so external changes
 (deletions, thinning) become visible. Returns
 `{"refreshed": true, "genes": <new_count>}`.
 
 ### 9.7 `POST /admin/vacuum` — reclaim SQLite pages
 
 Handler: [`server.py:2812-2828`](../../helix_context/server.py#L2812).
-No body. Runs SQLite `VACUUM` to compact the genome file after
+No body. Runs SQLite `VACUUM` to compact the knowledge store file after
 thinning, compaction, or large-scale deletions. Blocks all writers
 during the operation — run during maintenance windows. Returns
 `{"ok": true, ...}` with before/after sizes; on failure returns 500
@@ -596,10 +596,10 @@ Returns `status` (`"ok" | "degraded"`), `message`, `ribosome` model,
 (`ann_threshold_mode`, `abstain_mode`, `abstain_classes`, optional
 `ann_threshold` provenance dict), and a `checks` block.
 
-### 9.9 `GET /stats` — genome metrics
+### 9.9 `GET /stats` — knowledge store metrics
 
 Handler: [`server.py:1829-1838`](../../helix_context/server.py#L1829).
-Returns `helix.stats()` — genome metrics, compression ratio, per-tier
+Returns `helix.stats()` — knowledge store metrics, compression ratio, per-tier
 counters. Cheap synchronous DB read; safe to poll.
 
 ---
@@ -778,21 +778,21 @@ calibration set the response was produced under without an extra
 ([`schemas.py:182-184`](../../helix_context/schemas.py#L182)) replace
 the single `mean(decay)` value from pre-Stage-7:
 
-- `freshness_min` — min decay across expressed candidates.
+- `freshness_min` — min decay across retrieved candidates.
 - `freshness_top1` — decay of the top-1 by score.
 - `freshness_weighted` — score-weighted decay sum (also aliased to
   the back-compat `freshness` field).
 
 Status mapping (see Stage 7 spec §3): `genes_expressed > 0 AND
 (freshness_top1 < 0.4 OR freshness_weighted < 0.5)` ⇒
-`status="stale"` regardless of how many fresh padding genes accompany
+`status="stale"` regardless of how many fresh padding documents accompany
 the stale needle.
 
 **Soft-stale on `know`.** When the discriminator emits a `KnowBlock`
 but `freshness_min < 0.5`, `know.soft_stale = true` and
 `agent.recommendation = "refresh"`. The agent MAY answer from the
-genome (top-1 is fresh) AND should plan a refresh of lower-ranked
-supporting genes on its own schedule
+knowledge store (top-1 is fresh) AND should plan a refresh of lower-ranked
+supporting documents on its own schedule
 ([`server.py:1310-1319`](../../helix_context/server.py#L1310)).
 
 **Refresh tool layer.** `MissBlock.refresh_targets` is the contract

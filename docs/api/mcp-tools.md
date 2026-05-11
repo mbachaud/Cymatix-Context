@@ -19,7 +19,7 @@ Retrieve and compress context for a query. Equivalent to `POST /context`.
 
 ## helix_ingest
 
-Ingest content into the genome.
+Ingest content into the knowledge store.
 
 **Input schema:**
 ```json

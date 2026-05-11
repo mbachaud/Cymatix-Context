@@ -5,18 +5,18 @@ Plan: helix-context retrieval-fix, Stage 7 of 6+1 (council 2026-05-08, two-revie
 ## 1. Goals + non-goals
 
 **Goals.**
-- A `know` block can only be emitted when the top-1 gene's underlying source is fresh enough to act on.
+- A `know` block can only be emitted when the top-1 document's underlying source is fresh enough to act on.
 - Stale, cold-tier-only, and superseded top-1 results downgrade to `MissBlock(reason ∈ {stale, cold, superseded})` carrying `refresh_targets`.
 - Replace `mean(decay_score)` health math with three signals so a stale needle is no longer masked by fresh padding.
 - New `agent.recommendation="refresh"` distinguishes "re-fetch then come back" from `"escalate"`.
 - Surface heterochromatin SEMA hits as `MissBlock(reason="cold")` instead of dropping them silently.
 
 **Non-goals.**
-- No LLM in the freshness path (ribosome stays disabled).
+- No LLM in the freshness path (compressor stays disabled).
 - No KnowBlock/MissBlock redesign — extend Stage 6 additively.
 - No hash-based revalidation; MVP is mtime + URL delegation to `/consolidate`.
 - No auto-consolidation triggered by stale detection.
-- No multi-version / point-in-time genome queries.
+- No multi-version / point-in-time knowledge store queries.
 
 ## 2. Surface area
 
@@ -66,7 +66,7 @@ elif ellipticity >= 0.3: status = "sparse"
 else:                    status = "denatured"
 ```
 
-`freshness_top1 < 0.4` catches "the gene we'd answer from is stale". `freshness_weighted < 0.5` catches "score-weighted neighborhood is stale" — padding genes only contribute proportional to their score share, so 11 cap-fillers can no longer mathematically mask a stale needle.
+`freshness_top1 < 0.4` catches "the document we'd answer from is stale". `freshness_weighted < 0.5` catches "score-weighted neighborhood is stale" — padding documents only contribute proportional to their score share, so 11 cap-fillers can no longer mathematically mask a stale needle.
 
 **Back-compat shim.** `ContextHealth.freshness` (the only field external callers read) becomes `freshness_weighted` so it stays meaningful (a stale top-1 will pull it down) without renaming. New three fields are additive. The `status` string vocabulary (`aligned|sparse|stale|denatured`) is unchanged so OTel dashboards do not break.
 
@@ -81,7 +81,7 @@ DDL inspection: `last_verified_at REAL` is already at `genome.py:471` and ALTER-
 
 No migration needed; existing snapshots already have the column. Stage-1 read_only contract preserved because `mark_verified` gates on it.
 
-## 5. Per-gene source revalidation contract
+## 5. Per-document source revalidation contract
 
 New module `helix_context/freshness.py`:
 
@@ -105,9 +105,9 @@ def revalidate_source(
     """
 ```
 
-**Cache.** Keyed on `source_path`, value `(mtime, cached_at)`. Skip `os.stat` when `now_ts - cached_at < cache_ttl_s`. TTL=60s. Lives on `HelixContextManager` (per-batch state, not Genome). Evicted on `/admin/refresh`.
+**Cache.** Keyed on `source_path`, value `(mtime, cached_at)`. Skip `os.stat` when `now_ts - cached_at < cache_ttl_s`. TTL=60s. Lives on `HelixContextManager` (per-batch state, not KnowledgeStore). Evicted on `/admin/refresh`.
 
-**read_only contract (Stage 1 boundary).** mtime cache is in-memory — populating it is NOT a genome mutation, so read_only callers MAY update the cache. They MUST NOT call `genome.mark_verified` (writes the column):
+**read_only contract (Stage 1 boundary).** mtime cache is in-memory — populating it is NOT a knowledge store mutation, so read_only callers MAY update the cache. They MUST NOT call `genome.mark_verified` (writes the column):
 
 ```python
 def revalidate_and_mark(genome, gene, *, mtime_cache, now_ts, read_only):
@@ -134,7 +134,7 @@ AND not classifier.disable_cold_tier
 
 If trigger fires, call `genome.query_cold_tier(query, k=3, min_cosine=0.4)`. Threshold 0.4 is tighter than the function default (0.15): cold peek competes with `MissBlock(reason="sparse")` and we want it only on real archived hits.
 
-**Translation to `refresh_targets`.** For each cold gene returned, take `gene.epigenetics.source_path or gene.source_id`. Emit:
+**Translation to `refresh_targets`.** For each cold document returned, take `gene.epigenetics.source_path or gene.source_id`. Emit:
 
 ```python
 MissBlock(
@@ -151,7 +151,7 @@ Cold matches are NOT auto-promoted to hot tier — the agent re-ingests by re-re
 
 `check_superseded(genome, gene) -> Optional[str]`. Two source paths exist:
 
-**Path A — gene-level pointer.** `genes.supersedes TEXT` at `genome.py:473` is "this gene replaces ...". Reverse lookup ("who replaces me?"):
+**Path A — document-level pointer.** `genes.supersedes TEXT` at `genome.py:473` is "this document replaces ...". Reverse lookup ("who replaces me?"):
 
 ```sql
 SELECT gene_id, source_id FROM genes WHERE supersedes = ? LIMIT 1
@@ -159,9 +159,9 @@ SELECT gene_id, source_id FROM genes WHERE supersedes = ? LIMIT 1
 
 If a row exists, return `successor.source_id`.
 
-**Path B — claim-edge chain.** `claims_graph.latest_in_chain` walks `claim_edges` for `supersedes` edges. For each top-1's claim_id, if `latest_in_chain != claim_id`, the head's gene's `source_id` is the successor.
+**Path B — claim-edge chain.** `claims_graph.latest_in_chain` walks `claim_edges` for `supersedes` edges. For each top-1's claim_id, if `latest_in_chain != claim_id`, the head's document's `source_id` is the successor.
 
-**Stage 7 ships Path A only.** Path A is one indexed query; Path B is recursive walk plus claim→gene mapping. Add `idx_genes_supersedes` index in §2's migration. Path B is flagged Stage 7+1 if the bench surfaces gene rows whose `supersedes IS NULL` but a claim chain exists.
+**Stage 7 ships Path A only.** Path A is one indexed query; Path B is recursive walk plus claim→document mapping. Add `idx_genes_supersedes` index in §2's migration. Path B is flagged Stage 7+1 if the bench surfaces document rows whose `supersedes IS NULL` but a claim chain exists.
 
 **Wiring** — called from `decide_know_or_miss` against top-1 only:
 
@@ -220,7 +220,7 @@ Sixth value, distinct from `"escalate"`. Rules append to Stage 6 at `server.py:9
 |---|---|---|
 | `MissBlock(stale)` | top1 mtime > last_verified_at | `"refresh"` |
 | `MissBlock(cold)` | cold-peek hit, no hot match | `"refresh"` |
-| `MissBlock(superseded)` | top1 has successor gene | `"refresh"` |
+| `MissBlock(superseded)` | top1 has successor document | `"refresh"` |
 | `MissBlock(abstain/denatured/sparse/no_promoter_match)` | (Stage 6) | `"escalate"` |
 | `KnowBlock` AND `freshness_min < 0.5` AND `freshness_top1 >= 0.5` | soft-stale | `"refresh"` + `KnowBlock.soft_stale=true` |
 | `KnowBlock` otherwise | normal | `"trust"`/`"verify"` |
@@ -299,7 +299,7 @@ Reuses Stage 6 fixtures.
 ## 14. Acceptance criteria
 
 - On `located_n1000` with planted-stale needles (mtime artificially aged so `freshness_min < 0.4` for planted top-1): **≥ 95%** emit `MissBlock(reason="stale")`. Bench flag `--plant-stale 0.05` ages 5% of needles.
-- 11 fresh padding genes around a stale needle does **NOT** flip status from `"stale"` to `"aligned"` (regression vs `mean(decay)` math).
+- 11 fresh padding documents around a stale needle does **NOT** flip status from `"stale"` to `"aligned"` (regression vs `mean(decay)` math).
 - Cold-tier visibility: corpus with 5% heterochromatin matches → **≥ 90%** of heterochromatin-only-match queries emit `MissBlock(reason="cold")` with non-empty `refresh_targets`, instead of `MissBlock(reason="sparse")`.
 - Generic branch byte-compat: `health.freshness` shifts to `freshness_weighted`, equals `mean(decay)` exactly when all weights are equal — verify on the 100-query golden set.
 - All Stage 1–6 tests stay green; `pytest tests/ -m "not live" -v` exits 0.
@@ -310,7 +310,7 @@ Reuses Stage 6 fixtures.
 - URL revalidation logic itself (delegated to `/consolidate`).
 - Auto-consolidation triggered by stale detection (would write in the read flow — violates Stage 1's read_only contract).
 - Per-tenant freshness policies (party-aware mtime tolerances).
-- Multi-version / point-in-time genome queries.
+- Multi-version / point-in-time knowledge store queries.
 - Path B supersession via `claim_edges` chains.
 - Auto-retuning of `β5` outside the existing Stage 6 calibration script.
 

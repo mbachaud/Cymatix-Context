@@ -6,7 +6,7 @@ travels with each call, and where the agent-side skill lives.
 **See also:**
 - [`skills/helix/SKILL.md`](../../skills/helix/SKILL.md) — the agent-side skill (identity contract + tool-use rules)
 - [`docs/architecture/SESSION_REGISTRY.md`](../architecture/SESSION_REGISTRY.md) — server-side presence + attribution model
-- [`docs/ops/SKILLS_BUNDLE.md`](../ops/SKILLS_BUNDLE.md) — how a skills.md file becomes retrievable genes (a different lifecycle — content ingest, not connection routing)
+- [`docs/ops/SKILLS_BUNDLE.md`](../ops/SKILLS_BUNDLE.md) — how a skills.md file becomes retrievable documents (a different lifecycle — content ingest, not connection routing)
 
 ## The shape
 
@@ -64,7 +64,7 @@ The eight identity vars are not optional in spirit. Anything you omit
 falls back to a default that erodes attribution. Defaults are documented
 in [`mcp_server.py`](../../helix_context/mcp_server.py) — the registry
 will still accept the registration, but the badges in the dashboard and
-the `authored_by_*` columns in the genome will read as `unknown` or
+the `authored_by_*` columns in the knowledge store will read as `unknown` or
 `mcp-<pid>` instead of `laude` / `claude-code`.
 
 ## Per-host variants
@@ -127,7 +127,7 @@ terminal but want the chip to say `"vscode"` anyway).
 2. The MCP adapter wraps the args into an HTTP request and posts to
    the helix server (`HELIX_MCP_URL`).
 3. For ingest paths, the adapter attaches the four identity layers
-   (`org`, `party`, `participant`, `agent`) so authored genes carry
+   (`org`, `party`, `participant`, `agent`) so authored documents carry
    attribution. See the contract in
    [SKILL.md "Attribution Expectations"](../../skills/helix/SKILL.md#attribution-expectations).
 4. The HTTP server returns the result; the adapter forwards it back
@@ -185,13 +185,13 @@ chosen handle, `HELIX_MCP_HANDLE` didn't carry. In both cases, fix the
 |---|---|---|
 | MCP tool calls return network errors | `HELIX_MCP_URL` unreachable; server not running | Start `python -m uvicorn helix_context.server:app --host 127.0.0.1 --port 11437` |
 | Tool calls work but participant never appears in dashboard | Registration silently failed | Check the MCP adapter's stderr for the warning from `_register_with_registry` |
-| Authored genes show `agent=unknown` | `HELIX_AGENT` (or fallback chain) unset in MCP env | Set `HELIX_AGENT` in `.mcp.json` |
+| Authored documents show `agent=unknown` | `HELIX_AGENT` (or fallback chain) unset in MCP env | Set `HELIX_AGENT` in `.mcp.json` |
 | Two Claude panels collide on one handle | Both panels share `HELIX_MCP_HANDLE` | Give each panel a distinct handle, or omit it (`mcp-<pid>` is unique per process) |
 | `helix_sessions_list` empty | Helix bridge import failed at adapter startup | Check the adapter's startup log; likely a missing dep in the spawn env |
 
 ## What's not covered here
 
-- The genome lifecycle of an ingested skill — see
+- The knowledge store lifecycle of an ingested skill — see
   [`docs/ops/SKILLS_BUNDLE.md`](../ops/SKILLS_BUNDLE.md).
 - Federation / cross-tenant routing — see
   [`docs/architecture/FEDERATION_LOCAL.md`](../architecture/FEDERATION_LOCAL.md).
@@ -202,7 +202,7 @@ chosen handle, `HELIX_MCP_HANDLE` didn't carry. In both cases, fix the
 
 ## Obsidian vault export (v1, opt-in)
 
-As of 2026-05-06, helix can export the genome to a configurable directory as
+As of 2026-05-06, helix can export the knowledge store to a configurable directory as
 an Obsidian-compatible markdown vault. v1 is read-only — operator edits in
 Obsidian are not synced back. Diagnostic traces of every `/context` call are
 auto-exported and TTL-pruned (default 48h).

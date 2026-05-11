@@ -5,12 +5,12 @@
 
 ## The Simple Version
 
-A skill is just a markdown file. It enters the genome through the normal ingest
-pipeline, gets chunked into genes, tagged with promoters, embedded with ΣĒMA,
+A skill is just a markdown file. It enters the knowledge store through the normal ingest
+pipeline, gets chunked into documents, tagged with tags, embedded with ΣĒMA,
 and becomes retrievable via SIKE scoring. Headroom compresses the output when
 a downstream model requests context.
 
-There is no special "skills runtime." The genome IS the skills database.
+There is no special "skills runtime." The knowledge store IS the skills database.
 
 ---
 
@@ -102,16 +102,16 @@ There is no special "skills runtime." The genome IS the skills database.
 
 | Component | Role | CPU/LLM |
 |---|---|---|
-| **Chunker** | Split skill content into gene-sized strands | CPU |
-| **CpuTagger** | Extract codons, promoters, KVs, complement | CPU (spaCy) |
-| **ΣĒMA** | 20-dim semantic embedding per gene | CPU |
-| **Density gate** | Admit or demote genes based on quality/source | CPU |
+| **Chunker** | Split skill content into document-sized strands | CPU |
+| **CpuTagger** | Extract fragments, tags, KVs, complement | CPU (spaCy) |
+| **ΣĒMA** | 20-dim semantic embedding per document | CPU |
+| **Density gate** | Admit or demote documents based on quality/source | CPU |
 | **FTS5 + SPLADE** | Full-text + sparse term retrieval | CPU |
 | **Cymatics** | Frequency-domain relevance scoring | CPU |
-| **Cold-tier** | ΣĒMA cosine fallthrough for demoted genes | CPU |
+| **Cold-tier** | ΣĒMA cosine fallthrough for demoted documents | CPU |
 | **SIKE** | Scale-invariant scoring (model-agnostic) | CPU |
 
-### Headroom (compression at expression time)
+### Headroom (compression at retrieval time)
 
 | Component | Role | CPU/LLM |
 |---|---|---|
@@ -123,7 +123,7 @@ There is no special "skills runtime." The genome IS the skills database.
 ### The Bundle
 
 helix + Headroom together = **fully CPU-based context pipeline.** No LLM calls
-required at any step from ingest through expression. The downstream model is the
+required at any step from ingest through retrieval. The downstream model is the
 first and only LLM in the chain.
 
 ```
@@ -147,7 +147,7 @@ curl -X POST http://localhost:11437/ingest \
 python scripts/ingest_all.py --roots skills/ --ext .md
 ```
 
-### From another helix instance (HGT)
+### From another helix instance (cross-store import)
 ```python
 from helix_context.hgt import export_genome, import_genome
 
@@ -160,7 +160,7 @@ import_genome("target_genome.db", "skills_export.helix", strategy="skip_existing
 
 ---
 
-## What a Skill Gene Looks Like in the Genome
+## What a Skill Document Looks Like in the KnowledgeStore
 
 After ingesting `skills/code_review.md`:
 
@@ -177,7 +177,7 @@ source_id:   "skills/code_review.md"
 ```
 
 Retrieval query `"review this PR for security issues"` would:
-1. Match promoter tags `code`, `review`, `security`
+1. Match tags `code`, `review`, `security`
 2. Score via cymatics resonance on frequency spectrum
 3. Compress via Headroom Kompress to ~1000 chars
 4. Deliver as `<GENE src="skills/code_review.md">...</GENE>`
@@ -204,6 +204,6 @@ When federation ships, the bundle extends:
   HGT export for "copy this skill"
 ```
 
-This is the D7 (gene attribution) dependency. Until `gene_attribution` has data
+This is the D7 (document attribution) dependency. Until `gene_attribution` has data
 flowing, federation is schema-only. See [DIMENSIONS.md](DIMENSIONS.md) for the
 lane graph.

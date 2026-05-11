@@ -58,13 +58,13 @@ Rows = caller_model_class, columns = behavior knobs. **`generic` row is the regr
 
 Notes on cells:
 - `frontier × foveated = OFF` is the load-bearing change. Council seat 4's ~14% → 60%+ frontier-hit-rate jump.
-- `small_moe × foveated = ON always` (not just `broad`): small models always benefit from recency on the gene that holds the answer.
+- `small_moe × foveated = ON always` (not just `broad`): small models always benefit from recency on the document that holds the answer.
 - `frontier × assembly_cap = max(12, classifier_cap*2)` because frontier callers have 200k+ context and the classifier caps were tuned for 4B prompt windows.
 - `small_moe × candidate_order` stays reversed even though foveated is on, because the slate is the primary surface for small_moe and the prose tail is secondary.
 
 ## 5. Slate format change
 
-Today: `"\n".join(unique_slate[:20])` at context_manager.py:2181. Entry-bounded cap silently drops the answer KV when the genome surfaces >20 KVs, and breaks MoE attention-routing because flat newlines have no structural lock.
+Today: `"\n".join(unique_slate[:20])` at context_manager.py:2181. Entry-bounded cap silently drops the answer KV when the knowledge store surfaces >20 KVs, and breaks MoE attention-routing because flat newlines have no structural lock.
 
 **New (small_moe branch only):**
 

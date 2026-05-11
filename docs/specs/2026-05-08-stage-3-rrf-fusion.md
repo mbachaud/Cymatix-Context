@@ -4,7 +4,7 @@ Plan: helix-context retrieval-fix, Stage 3 of 6 (council 2026-05-08). Depends on
 
 ## 1. Goals + non-goals
 
-**Goals.** Replace the additive `gene_scores[gid] += tier_score` accumulator in `query_genes()` with rank-level Reciprocal Rank Fusion (Cormack 2009). Per-tier scores are non-commensurate (FTS5 negative-bm25, BGE cosine ∈ [-1,1], promoter exact ∈ {0, 3.0}, harmonic ∈ {0..3}, filename_anchor 4.0/match, etc.); their sum is mathematically meaningless and currently lets one over-scaled tier dominate. RRF is invariant to scale. Stack with Stages 1+2 to hit ≥75% located_n1000 retrieval@1.
+**Goals.** Replace the additive `gene_scores[gid] += tier_score` accumulator in `query_genes()` with rank-level Reciprocal Rank Fusion (Cormack 2009). Per-tier scores are non-commensurate (FTS5 negative-bm25, BGE cosine ∈ [-1,1], tags exact ∈ {0, 3.0}, harmonic ∈ {0..3}, filename_anchor 4.0/match, etc.); their sum is mathematically meaningless and currently lets one over-scaled tier dominate. RRF is invariant to scale. Stack with Stages 1+2 to hit ≥75% located_n1000 retrieval@1.
 
 **Non-goals.** No threshold recalibration of TIGHT/FOCUSED/BROAD floors (Stage 4). No per-classifier floors (Stage 4). No new tiers. No LLM in the fusion path. No change to candidate-generation order or BM25 pre/post-filter logic. No change to `query_genes_ann()` outer wrapper.
 
@@ -45,19 +45,19 @@ Every site that writes `gene_scores[gid] +=` or `gene_scores[gid] =` in `query_g
 | `access_rate` | 2346–2370 | 0.05 .. 0.25 | hardcoded | **no** — explicit tiebreaker, applied AFTER RRF |
 | `dense` (Stage 2) | new (Stage 2 spec) | cosine ∈ [-1,1], top-500 | `dense_weight = 1.0` (new) | yes | `dense_weight = 1.0` |
 
-**Rule of thumb.** Recall/discovery tiers participate in RRF. Re-rank/tiebreaker/policy boosts (sema_boost gate, authority, party, access_rate) stay additive on top of the fused score so the user's "is this gene authoritative?" semantics survive unchanged.
+**Rule of thumb.** Recall/discovery tiers participate in RRF. Re-rank/tiebreaker/policy boosts (sema_boost gate, authority, party, access_rate) stay additive on top of the fused score so the user's "is this document authoritative?" semantics survive unchanged.
 
 ## 4. RRF formula and parameters
 
-For each gene `d` and each participating tier `t`:
+For each document `d` and each participating tier `t`:
 ```
 score(d) = Σ_{t ∈ tiers}  weight_t · 1 / (k + rank_t(d))
 ```
-where `rank_t(d)` is `d`'s 1-based rank in tier `t`'s descending-score-ordered list (genes not in tier `t` contribute 0). Constants:
+where `rank_t(d)` is `d`'s 1-based rank in tier `t`'s descending-score-ordered list (documents not in tier `t` contribute 0). Constants:
 
 - `k = 60` (Cormack default; configurable as `[retrieval] rrf_k`).
 - `weight_t` from helix.toml (post-multipliers above).
-- **Ties.** Stable rank-by-(score desc, gene_id asc). Genes with bitwise-equal float scores get adjacent ranks (NOT shared rank — keeps RRF strictly monotone in input order).
+- **Ties.** Stable rank-by-(score desc, gene_id asc). Documents with bitwise-equal float scores get adjacent ranks (NOT shared rank — keeps RRF strictly monotone in input order).
 - **Float tiers** (FTS5 BM25, dense cosine, SEMA cosine): rank by raw score descending.
 - **Count tiers** (tag_exact, tag_prefix, filename_anchor): rank by match_count descending; ties broken by gene_id.
 
@@ -100,7 +100,7 @@ Authority/party/access_rate post-additives (re-rank class) apply to `last_query_
 
 ## 6. Per-tier telemetry preservation
 
-`tier_contribution_histogram()` and `tier_fired_counter()` must keep observing **raw pre-RRF** scores so panels remain interpretable. The existing emit block at lines 2387–2407 reads `tier_contrib[gid][tier_name]` (raw scores) and is unchanged. Each tier still writes its raw score to `tier_contrib` *before* calling `fuser.add_tier(...)`. **Single emit point** stays at line 2392; do not move it. Add a parallel `rrf_fused_score_histogram` (new, gated on `fusion_mode=="rrf"`) emitting the post-fusion score per gene for the new "RRF distribution" panel.
+`tier_contribution_histogram()` and `tier_fired_counter()` must keep observing **raw pre-RRF** scores so panels remain interpretable. The existing emit block at lines 2387–2407 reads `tier_contrib[gid][tier_name]` (raw scores) and is unchanged. Each tier still writes its raw score to `tier_contrib` *before* calling `fuser.add_tier(...)`. **Single emit point** stays at line 2392; do not move it. Add a parallel `rrf_fused_score_histogram` (new, gated on `fusion_mode=="rrf"`) emitting the post-fusion score per document for the new "RRF distribution" panel.
 
 ## 7. Config flag
 
@@ -126,7 +126,7 @@ pki_weight = 1.0
 
 ## 8. Tied-tier semantics
 
-When two tiers both rank gene G at rank 1, RRF awards `weight_a/(60+1) + weight_b/(60+1)`. **Independent contribution per tier.** No max, no min, no per-gene cap. This is the math working as intended: agreement across tiers is the strongest signal RRF can express. Tied-tier covered by unit test `test_rrf_tier_independence`.
+When two tiers both rank document G at rank 1, RRF awards `weight_a/(60+1) + weight_b/(60+1)`. **Independent contribution per tier.** No max, no min, no per-document cap. This is the math working as intended: agreement across tiers is the strongest signal RRF can retrieve. Tied-tier covered by unit test `test_rrf_tier_independence`.
 
 ## 9. Score-ratio compatibility (TIGHT/FOCUSED/BROAD)
 
@@ -140,9 +140,9 @@ Hand-off note: "Stage 4 owns absolute floor recalibration. Until then, RRF mode 
 
 In `tests/test_fusion_rrf.py`:
 
-- `test_rrf_pool_dominates_when_dense_alone_misses_lexical_match` — dense ranks gene A at 1, FTS ranks B at 1, A at 2; assert B > A only if FTS weight > dense weight; assert tie-breakable by k.
+- `test_rrf_pool_dominates_when_dense_alone_misses_lexical_match` — dense ranks document A at 1, FTS ranks B at 1, A at 2; assert B > A only if FTS weight > dense weight; assert tie-breakable by k.
 - `test_rrf_with_zero_weights_disables_tier` — set `fts5_weight=0`; assert FTS-only candidates absent from output.
-- `test_rrf_preserves_filename_anchor_winners` — replay 2026-04-22 Dewey axis-2 corpus; assert filename-anchored gene at rank 1 (regression for +12pp result).
+- `test_rrf_preserves_filename_anchor_winners` — replay 2026-04-22 Dewey axis-2 corpus; assert filename-anchored document at rank 1 (regression for +12pp result).
 - `test_fusion_mode_additive_unchanged` — back-compat: bench 50 known queries under `fusion_mode="additive"`; assert ranked_ids identical to pre-Stage-3 baseline (snapshot test).
 - `test_rrf_tier_independence` — two tiers both rank G at rank 1; assert score = `2·w/(k+1)`.
 - `test_rrf_telemetry_emits_raw_pre_rrf` — record observations to a fake meter; assert raw bm25/cosine values surface, not RRF fractions.

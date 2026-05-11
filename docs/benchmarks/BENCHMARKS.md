@@ -4,11 +4,11 @@
 
 Helix solves a specific problem: **agents drowning in RAG search context.** A typical RAG
 pipeline dumps 15-50 kilobytes of candidate chunks into the prompt per turn and hopes the
-model can find the needle. Helix instead selects, compresses, and expresses a minimal
+model can find the needle. Helix instead selects, compresses, and retrieves a minimal
 window — then measures whether the answer survives.
 
 This document describes the two benchmark layers, their methodology, and the current
-results. All scripts live in `benchmarks/` and are reproducible with a pinned genome
+results. All scripts live in `benchmarks/` and are reproducible with a pinned knowledge store
 snapshot.
 
 ## Why two layers?
@@ -19,7 +19,7 @@ scoreboards so you can see the ceiling AND the floor:
 | Layer | Methodology | Question it answers |
 |---|---|---|
 | **Layer 1 — SIKE (curated)** | Hand-written needles with unambiguous phrasing | *Can retrieval scale invariantly across model sizes when queries are clear?* |
-| **Layer 2 — KV-harvest (synthetic)** | Auto-generated from genome KV facts, stratified by source | *What is the floor on noisy, real-world retrieval?* |
+| **Layer 2 — KV-harvest (synthetic)** | Auto-generated from knowledge store KV facts, stratified by source | *What is the floor on noisy, real-world retrieval?* |
 
 **A well-phrased question finds its answer across every model (Layer 1 = 10/10).** A
 random KV fact template finds it ~45% of the time regardless of model size (Layer 2 =
@@ -35,7 +35,7 @@ competes on *how much we can remove while keeping the answer*.
 |---|---:|---|
 | Naive "stuff the context" RAG | 25,000 – 50,000 | Top-k chunks, no compression |
 | Long-context API baseline | up to 128,000 – 1,000,000 | Full document dump |
-| **Helix static (12 genes × 1000 char)** | **~15,000** | Selective expression |
+| **Helix static (12 documents × 1000 char)** | **~15,000** | Selective retrieval |
 | **Helix dynamic (3-tier budget)** | **~6,000 – 15,000** | Confidence-based tier |
 | **Helix + Headroom (CPU codec)** | **~400** | Semantic compression over Helix output |
 
@@ -55,7 +55,7 @@ Helix should find the same answer as a frontier model with Helix.
 
 ### Needles
 
-Ten hand-crafted questions, each targeting a literal fact in the genome:
+Ten hand-crafted questions, each targeting a literal fact in the knowledge store:
 
 ```
 What port does the Helix proxy server listen on?           → 11437
@@ -108,12 +108,12 @@ HELIX_MODEL=qwen3:4b python benchmarks/bench_needle.py
 
 **Script:** `benchmarks/bench_needle_1000.py`
 **Methodology:** Stratified random sampling of pre-extracted key-value facts from the
-genome's `key_values` column. Each fact becomes a template query.
+knowledge store's `key_values` column. Each fact becomes a template query.
 **Purpose:** Establish the **floor** on noisy, synthetic queries — the stress test.
 
 ### Generation
 
-1. Load all genes with non-empty `key_values` from the genome snapshot
+1. Load all documents with non-empty `key_values` from the knowledge store snapshot
 2. Filter to quality KVs (value is meaningful, globally unique, literally in content)
 3. Stratify sample across 7 source categories (`steam`, `education_public`, `helix`,
    `cosmic`, `tally`, `scorerift`, `other`) with a noise-weighted mix
@@ -132,7 +132,7 @@ so older runs remain identifiable after filter changes.
 
 v2 was triggered by raude's forensic on the N=20 Headroom A/B run: three
 "failures" turned out to be harness bugs (docstring fragments harvested as
-"values", function-call expressions captured verbatim, substring-matched
+"values", function-call retrievals captured verbatim, substring-matched
 retrieval). See `tests/test_bench_harvest.py` for the pinned cases.
 
 **v1 → v2 audit on `genome-bench-2026-04-10.db`:**
@@ -164,7 +164,7 @@ scorerift          5%   (public repo — audit tool)
 other              5%
 ```
 
-### Genome snapshot
+### KnowledgeStore snapshot
 
 All Layer 2 runs use a pinned snapshot for reproducibility:
 
@@ -179,13 +179,13 @@ Size: 557 MB uncompressed, frozen at 2026-04-10 00:52
 After the first static N=50 run showed 91% padding waste, Helix added confidence-based
 tiers (commit in `context_manager.py`):
 
-| Tier | Trigger (top_score / mean_score) | Genes | Est. tokens |
+| Tier | Trigger (top_score / mean_score) | Documents | Est. tokens |
 |---|---|---:|---:|
 | **tight** | ratio ≥ 3.0 | 3 | ~6,000 |
 | **focused** | ratio 1.8 – 3.0 | 6 | ~9,000 |
 | **broad** (default) | ratio < 1.8 | up to 12 | ~15,000 |
 
-A 4th "desperate" tier (ratio < 1.0, 18 genes, ~17K tokens) is designed but not shipped.
+A 4th "desperate" tier (ratio < 1.0, 18 documents, ~17K tokens) is designed but not shipped.
 
 ### Run history
 
@@ -205,14 +205,14 @@ A 4th "desperate" tier (ratio < 1.0, 18 genes, ~17K tokens) is designed but not 
 | 12 | 50 | qwen3:8b | **v2 post-B/C** | Headroom + cold | **20.0%** | **16.0%** | 12.3 min | 6.6s | **hot+cold (96% fire) — net 0 vs hot-only** |
 
 **⚠ Dual-load warning (runs #1 and #2):** During the initial static-budget runs the
-GPU held both `gemma4:e4b` (ribosome, 3.6 GB) and `qwen3:4b` (downstream, 3.7 GB)
+GPU held both `gemma4:e4b` (compressor, 3.6 GB) and `qwen3:4b` (downstream, 3.7 GB)
 simultaneously, putting the 3080 Ti at 10.9/12.0 GB VRAM with thermal pressure.
-Subsequent runs unloaded the ribosome via `/admin/ribosome/pause` before execution.
+Subsequent runs unloaded the compressor via `/admin/ribosome/pause` before execution.
 
 ### The v1 vs v2 harness delta (headline finding)
 
 Runs #8, #9, #10 are a single controlled triple: same N (50), same seed (42),
-same model (qwen3:8b), same frozen genome snapshot, same ribosome-paused server
+same model (qwen3:8b), same frozen knowledge store snapshot, same compressor-paused server
 state. Only the harness version and the Headroom toggle vary.
 
 | Variant | Retrieval | Answer | Δ vs v1 baseline |
@@ -225,7 +225,7 @@ state. Only the harness version and the Headroom toggle vary.
 much v1 was being inflated by phantom KVs matching docstring substrings during
 the retrieval check. v2 rejects ~61% of the v1 candidate pool at harvest time,
 and enforces word-boundary matching at the retrieval check — so phantom
-"successes" (docstring fragments happening to appear in the expressed context
+"successes" (docstring fragments happening to appear in the retrieved context
 for unrelated reasons) disappear. The v2 floor is the truer measurement.
 
 **v2 Headroom A/B: neutral.** The +2pp delta between runs #9 and #10 is well
@@ -244,7 +244,7 @@ edge cases. Retrieval at ~16% is still the dominant bottleneck by an order of
 magnitude.
 
 **Why v2 runs are ~2x slower than v1 runs** (context p95 11s vs 1.4s) is an
-open question — likely v2 needle selection hitting different gene patterns that
+open question — likely v2 needle selection hitting different document patterns that
 trigger expensive retrievals. Flagged for investigation; does not affect the
 accuracy numbers.
 The static-budget retrieval numbers (55-58%) may be slightly inflated by a smaller
@@ -253,11 +253,11 @@ a clean baseline.
 
 ### Hot-tier vs hot+cold-tier retrieval (C.2 of B→C, 2026-04-10)
 
-The density gate (`d1d7602`, raude) demotes structurally-noisy genes to
-**heterochromatin** (chromatin tier 2). With C.1 (`b99e47a`) the demotion is
-**non-destructive** — content, complement, codons, SPLADE terms, and FTS5
+The density gate (`d1d7602`, raude) demotes structurally-noisy documents to
+**heterochromatin** (lifecycle tier tier 2). With C.1 (`b99e47a`) the demotion is
+**non-destructive** — content, complement, fragments, SPLADE terms, and FTS5
 indices are all preserved. With C.2 (`86c20f6` library + this commit's wiring)
-a new opt-in retrieval path consults heterochromatin genes via **ΣĒMA cosine
+a new opt-in retrieval path consults heterochromatin documents via **ΣĒMA cosine
 similarity** in 20-dim space, restoring full content for top-k matches.
 
 This means a single benchmark run can now report **two retrieval ceilings**:
@@ -265,12 +265,12 @@ This means a single benchmark run can now report **two retrieval ceilings**:
 | Metric | Definition |
 |---|---|
 | **Hot-only retrieval** | Result of `query_genes()` — `chromatin < HETEROCHROMATIN`, the standard /context behavior |
-| **Hot + cold retrieval** | Hot-tier result PLUS up to `cold_tier_k` heterochromatin genes via ΣĒMA cosine fallthrough, when hot returns ≤ `cold_tier_min_hot_genes` |
+| **Hot + cold retrieval** | Hot-tier result PLUS up to `cold_tier_k` heterochromatin documents via ΣĒMA cosine fallthrough, when hot returns ≤ `cold_tier_min_hot_genes` |
 
-The hot+cold metric measures the **upper bound on what the genome can serve**
+The hot+cold metric measures the **upper bound on what the knowledge store can serve**
 for a given query — including knowledge that has been demoted from the active
 retrieval pool but is still semantically reachable through ΣĒMA similarity.
-For NIAH specifically (where every needle's gene is known to exist in the
+For NIAH specifically (where every needle's document is known to exist in the
 corpus), the hot+cold ceiling is what determines whether 100% retrieval is
 even possible.
 
@@ -312,7 +312,7 @@ codec.encode("user authentication login password check")
 
 ### Post-recovery measurement (2026-04-11)
 
-After committing B/C.1/C.2, the live genome was restored from
+After committing B/C.1/C.2, the live knowledge store was restored from
 `genome.db.pre-compact.1775865733.bak`, the replicas were re-synced from the
 restored master, and the new sweep was run with B's corrected deny list +
 C.1's non-destructive compression:
@@ -335,12 +335,12 @@ Density gate compaction sweep (APPLIED, post B+C)
 
 **99.9% of steam content preserved (2,696 / 2,700 OPEN)** — the user's
 "steam is high-SNR signal" reframe is in production. The 4 demoted steam
-genes hit the score gate individually (genuinely low density), not the
+documents hit the score gate individually (genuinely low density), not the
 deny list. **Heterochromatin content is intact** (verified on Factorio
 EULA, Afrikaans/Arabic localization samples — `compress_to_heterochromatin`
 non-destructive contract holds).
 
-#### N=50 v2 hot-only vs hot+cold (qwen3:8b, seed 42, restored + re-swept genome)
+#### N=50 v2 hot-only vs hot+cold (qwen3:8b, seed 42, restored + re-swept knowledge store)
 
 | Run | Headroom | include_cold | Retrieval | Answer | Errors | Cold-tier fired |
 |---|---|---|---:|---:|---:|---:|
@@ -362,9 +362,9 @@ sweep is helping even though the demoted set is mostly build artifacts**.
 | helix | 14.3% / 0.0% | 14.3% / 0.0% | — |
 | cosmic / scorerift / other | 0% / 0% | 0% / 0% | — |
 
-**Cold-tier fires on 96% of queries** (48/50, returning 144 cold-gene
+**Cold-tier fires on 96% of queries** (48/50, returning 144 cold-document
 candidates total at k=3 each) but the rerank produces the same number of
-final answers as hot-only. Reading: **the demoted set (1,370 genes,
+final answers as hot-only. Reading: **the demoted set (1,370 documents,
 mostly Next.js build artifacts under cosmic) doesn't overlap meaningfully
 with where the NIAH benchmark needles live.** Cold-tier rescues a single
 tally needle (the historic blind zone — extraction failed afterward
@@ -380,7 +380,7 @@ The infrastructure is in place; the value will materialize when:
 **SEMA cosine threshold note (calibration finding):** Initial default of
 `min_cosine = 0.25` was too strict — cold-tier returned 0 results for
 typical NIAH queries even when 754 vectors were in the cold cache. Empirical
-distribution on the live genome showed top-10 matches at 0.79–0.84 for some
+distribution on the live knowledge store showed top-10 matches at 0.79–0.84 for some
 queries (Factorio mod portal example) and 0.10–0.20 for others (sparse
 auth-paraphrase pair). **Default lowered to 0.15** in `helix.toml` and
 `Genome.query_cold_tier`. Tests use 0.05 in fixtures because in-memory
@@ -390,7 +390,7 @@ synthetic content scores even lower.
 SQLite replicas (`C:/helix-cache/genome.db`, `E:/helix-cache/genome.db`)
 configured in `helix.toml [genome]`. The sweep modifies the master only —
 replicas need to be synced separately for the live server to see the new
-chromatin state. Forgetting this step means the live `_cold_sema_cache`
+lifecycle tier. Forgetting this step means the live `_cold_sema_cache`
 builds from stale replica state and returns no results despite the master
 being correct. Worth noting in the launcher / supervisor track if it
 manages replica sync.
@@ -424,7 +424,7 @@ answered correctly   14   28% — end-to-end success
 | Category | N | Retrieval | Accuracy | Notes |
 |---|---:|---:|---:|---|
 | steam (game data) | 13 | 54% | 54% | best — unique strings, cheap to find |
-| helix (self) | 7 | 71% | 0% | genome finds genes, can't bind abstract config keys |
+| helix (self) | 7 | 71% | 0% | knowledge store finds documents, can't bind abstract config keys |
 | education_public | 16 | 38% | 25% | largest + most diverse, hardest |
 | cosmic | 6 | 33% | 33% | consistent |
 | other | 2 | 50% | 50% | small N |
@@ -432,8 +432,8 @@ answered correctly   14   28% — end-to-end success
 | **tally** | **4** | **0%** | **0%** | **universal blind spot — all models fail** |
 
 The **tally blind spot** (4/4 zero across every model tested) is not a model failure —
-it is a genome indexing gap. BookKeeper KVs were extracted during ingest but never
-wired into the promoter index for retrieval. This is a known open issue.
+it is a knowledge store indexing gap. BookKeeper KVs were extracted during ingest but never
+wired into the tags index for retrieval. This is a known open issue.
 
 ### Headroom uplift run (N=20, 2026-04-10 12:15)
 
@@ -450,7 +450,7 @@ wired into the promoter index for retrieval. This is a known open issue.
 | Avg compression ratio | — | 2.17x | (Headroom's own metric) |
 
 **The token compression is real but the retrieval uplift did not materialize.** Headroom
-took Helix's 3-gene, 6K-token output and compressed it to an average of 399 tokens per
+took Helix's 3-document, 6K-token output and compressed it to an average of 399 tokens per
 turn. Retrieval quality was identical (both runs found exactly 9/20 needles — Headroom
 is compressing what Helix retrieved, not changing what gets retrieved). Extraction
 dropped 5pp (7 → 6 answers on N=20) which is within statistical noise at this sample
@@ -491,7 +491,7 @@ GENOME_DB=F:/Projects/helix-context/genome-bench-2026-04-10.db
 The reason both benchmarks matter:
 
 **Layer 1** shows that **quality is model-invariant** when the query is clear. A 0.6B
-model finds the same answer as Opus. The genome is the librarian; the model is just the
+model finds the same answer as Opus. The knowledge store is the librarian; the model is just the
 reader.
 
 **Layer 2** shows the floor when queries are noisy. Every model — local or API — caps
@@ -507,7 +507,7 @@ delivered to any model, with equivalent extraction to a 6000-token window.
 A modern agent doing tool calls, RAG lookups, and document reads burns through its
 context window in minutes. Helix + Headroom together propose a different model:
 
-- The **knowledge base** lives in a genome (SQLite, 523 MB compacted, 46 MB raw text)
+- The **knowledge base** lives in a knowledge store (SQLite, 523 MB compacted, 46 MB raw text)
 - The **per-turn injection** is ~400 tokens of semantically compressed evidence
 - The **full turn budget** (128K – 1M tokens on modern APIs) stays available for
   conversation, multi-step reasoning, and tool-call chains
@@ -519,8 +519,8 @@ model needs to answer the current question.
 
 ## Open work
 
-- **Tally blind spot:** Re-index BookKeeper KVs into the promoter index (0/4 retrieval
-  across every model tested). Known genome gap.
+- **Tally blind spot:** Re-index BookKeeper KVs into the tags index (0/4 retrieval
+  across every model tested). Known knowledge store gap.
 - **N=1000 full run:** All Layer 2 runs to date are N=20 or N=50. A confidence-interval-
   grade result needs N≥500. Projected runtime with qwen3:8b dynamic: ~130 minutes.
 - **4th "desperate" tier:** Designed but not shipped. Intended to boost retrieval on

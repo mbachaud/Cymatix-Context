@@ -6,13 +6,13 @@ Plan: helix-context retrieval-fix, Stage 1 of 6 (council 2026-05-08). Stage 1 is
 
 **Goals**
 - Split the headline benchmark into `located_n1000` (4-axis locator query, target retrieval@1 ≥ 0.85) and `blind_n1000` (legacy bare-key form, target ≥ 0.35).
-- Make `clean=true` request-time isolation a real read-only contract: zero genome mutation when set, verified by row-count assertion.
+- Make `clean=true` request-time isolation a real read-only contract: zero knowledge store mutation when set, verified by row-count assertion.
 - Fix the `injected_tokens` ↔ `injected_tokens_est` field-name mismatch so summarize() reports non-zero token telemetry across both ASK_PROXY paths.
 - Default the new harness to `--axis located` so the headline number is the locator-bearing one going forward.
 
 **Non-goals**
-- No genome schema change (keep promoter-tag indices, KV columns, chromatin column as-is).
-- No ribosome / LLM call introduction in retrieval (LLM-free retrieval design pillar).
+- No knowledge store schema change (keep tags-tag indices, KV columns, lifecycle tier column as-is).
+- No compressor / LLM call introduction in retrieval (LLM-free retrieval design pillar).
 - No regeneration of historical `n1000_t030_*` result dirs — they remain valid baselines for the `blind` axis only.
 - No tuning of decoder, classifier, or BGE-M3 codec in this stage (that's stages 2-4).
 - No change to dim-lock bench itself; it stays the curve-shape diagnostic, this bench is the headline number.
@@ -94,9 +94,9 @@ if not read_only:
             self.genome.store_relations_batch(batch)
 ```
 
-`log_health` at 1262-1272 is intentionally OUTSIDE the gate — health logging is observation, not genome mutation. Confirm `genome.log_health` writes only to `health_log` table (not `genes` / `coactivation`) before merging; if it touches state, also gate it.
+`log_health` at 1262-1272 is intentionally OUTSIDE the gate — health logging is observation, not knowledge store mutation. Confirm `genome.log_health` writes only to `health_log` table (not `genes` / `coactivation`) before merging; if it touches state, also gate it.
 
-**Read-only contract scope.** `read_only=True` means *no genome learning or mutation* — zero writes to `genes`, `coactivation`, `harmonic_weights`, or `gene_relations`. Observational writes to `health_log` ARE permitted (they record observations about the request, not state mutations). Bench harnesses requiring byte-identical DB snapshots between rows must take a fresh DB copy per run; `read_only=True` alone is not equivalent to a no-op transaction. Stage 7's per-gene `last_verified_at` revalidation cache also respects this contract: in-memory cache may update under `read_only`, but the column itself is not written.
+**Read-only contract scope.** `read_only=True` means *no knowledge store learning or mutation* — zero writes to `genes`, `coactivation`, `harmonic_weights`, or `gene_relations`. Observational writes to `health_log` ARE permitted (they record observations about the request, not state mutations). Bench harnesses requiring byte-identical DB snapshots between rows must take a fresh DB copy per run; `read_only=True` alone is not equivalent to a no-op transaction. Stage 7's per-document `last_verified_at` revalidation cache also respects this contract: in-memory cache may update under `read_only`, but the column itself is not written.
 
 Audit: `store_relations_batch` writes to `gene_relations`. `_express` already accepts `read_only=read_only` (line 841/851) and is the only other write path during build_context — confirm in code review that `_express(read_only=True)` already skips its own writes (per existing parameter contract). Add an assertion in the new test that the `gene_relations` row count is unchanged after a clean=true call.
 
@@ -149,18 +149,18 @@ Audit: `store_relations_batch` writes to `gene_relations`. `_express` already ac
 - `bash benchmarks/_run_n1000_blind.sh` reproduces the prior 13.8% headline within ±2pp on the same snapshot/seed (regression guard: bench split must not change the legacy measurement).
 - `pytest tests/test_clean_isolation.py -v` passes all five cases against a freshly copied snapshot DB.
 - `summarize()` output: `summary.tokens.avg_injected > 0` for both ASK_PROXY=0 and ASK_PROXY=1 runs (token-field rename verified end-to-end).
-- No genes, coactivation rows, harmonic weights, or relations rows are added when running the located harness with `clean=true` (assert via row-count diff in test).
+- No documents, coactivation rows, harmonic weights, or relations rows are added when running the located harness with `clean=true` (assert via row-count diff in test).
 
 ## 10. Out of scope
 
 - `helix_context/genome.py` — no schema, index, or DDL changes.
 - `helix_context/query_classifier.py` — no rule additions or cap retuning.
 - `helix_context/codons.py` (BGE-M3 codec) — no changes.
-- `helix_context/ribosome.py` — explicitly forbidden to introduce new ribosome calls in the retrieval path.
+- `helix_context/ribosome.py` — explicitly forbidden to introduce new compressor calls in the retrieval path.
 - Decoder / splice / re-rank tuning — Stage 2-4 territory.
 - `bench_dimensional_lock.py` itself — stays as the curve-shape diagnostic; only its `_split_source` helper is imported.
 - HF dataset card schema migration — separate ticket once both axes have ≥3 runs each.
 
 ---
 
-**Surface-area summary:** 1 bench file restructured, 1 server file confirmed (no edit), 1 manager file with a 4-line gate addition, 2 launcher scripts added, 1 test file added. No genome, classifier, codec, or ribosome changes. Headline metric becomes located retrieval@1; blind retrieval@1 retained as ambiguity-control.
+**Surface-area summary:** 1 bench file restructured, 1 server file confirmed (no edit), 1 manager file with a 4-line gate addition, 2 launcher scripts added, 1 test file added. No knowledge store, classifier, codec, or compressor changes. Headline metric becomes located retrieval@1; blind retrieval@1 retained as ambiguity-control.

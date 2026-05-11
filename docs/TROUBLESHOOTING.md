@@ -226,7 +226,7 @@ The server log shows:
 ```
 TranscriptionError: Ribosome model call failed entirely
 ```
-when the ribosome is enabled (`helix_context/exceptions.py:29-30`).
+when the compressor is enabled (`helix_context/exceptions.py:29-30`).
 
 **Cause.** The proxy's upstream probe at
 `helix_context/server.py:492-532` tries `/api/tags`, `/v1/models`, and
@@ -237,7 +237,7 @@ break it:
 1. Ollama is not running.
 2. `[server] upstream` (or the `HELIX_SERVER_UPSTREAM` env override at
    `config.py:616-617`) points to the wrong host/port.
-3. The ribosome model in `[ribosome] model` is configured but has not
+3. The compressor model in `[ribosome] model` is configured but has not
    been pulled, so Ollama 404s on the first generation call.
 
 **Fix.**
@@ -266,7 +266,7 @@ break it:
    export HELIX_SERVER_UPSTREAM="http://localhost:11434"
    ```
 
-4. Pull the ribosome model and the chat model:
+4. Pull the compressor model and the chat model:
    ```bash
    ollama pull gemma4:e2b      # ribosome (helix.toml [ribosome] model)
    ollama pull gemma4:e4b      # chat
@@ -413,7 +413,7 @@ threshold. The most common triggers in practice:
 sqlite3 genomes/main/genome.db "PRAGMA journal_mode; \
   SELECT COUNT(*) FROM genes;"
 ```
-Expected: `wal` followed by an integer gene count. If the `SELECT`
+Expected: `wal` followed by an integer document count. If the `SELECT`
 hangs, another writer is still holding the lock.
 
 **Prevention.** One server per `genome.db`. If you need a side
@@ -480,7 +480,7 @@ caller's responsibility. The compiled fragment lives at
    retry"; escalate means "the answer is NOT here — go ask
    elsewhere". Conflating them defeats the contract.
 
-**Verify.** Run a query you know is NOT in the genome (e.g., a
+**Verify.** Run a query you know is NOT in the knowledge store (e.g., a
 synthetic UUID). Expected: the agent emits a tool call (grep / rag /
 web), not an answer. Inspect via your agent's trace, or run the
 offline compliance harness:
@@ -502,7 +502,7 @@ contract is enforced only by you.
 **Symptom.** `bench_needle_1000.py` retrieval rate stays under 30%;
 `/context` debug logs show
 `query_genes_dense_recall: empty matrix, falling back to lexical-only`.
-The genome was ingested before the 7-stage merge, or pulled but never
+The knowledge store was ingested before the 7-stage merge, or pulled but never
 backfilled.
 
 **Cause.** Stage 2's backfill was not run after pulling the 7-stage
@@ -690,7 +690,7 @@ catch up.
 
 ## spaCy NER model not downloaded — ingestion falls back, /context quality degrades silently
 
-**Symptom.** `/ingest` POSTs succeed but ingested gene quality drops
+**Symptom.** `/ingest` POSTs succeed but ingested document quality drops
 visibly: tag set is sparse, entity-graph (`[ingestion] entity_graph =
 true`) edges fail to populate, and `/context` retrieval rate on
 entity-heavy queries falls. The server log shows a single
@@ -703,7 +703,7 @@ soft-imports `CpuTagger` so an `ImportError` at module load does not
 crash the server, but a missing *model* is a runtime error inside
 `_get_nlp()` and surfaces only when ingestion actually runs. The
 tagger has no graceful regex fallback — when the spaCy load fails,
-the call stack unwinds and that ingest gene gets none of the NER /
+the call stack unwinds and that ingest document gets none of the NER /
 noun-chunk enrichment, dropping its tag count.
 
 **Fix.**
@@ -752,7 +752,7 @@ image so cold starts do not race the network.
 
 **Symptom.** The Stage 4 calibrated floors in `helix.toml`
 (`[abstain.factual]`, `[abstain.multi_hop]`, etc.) were generated
-weeks ago against a different genome snapshot. `/context` now
+weeks ago against a different knowledge store snapshot. `/context` now
 abstains on queries it used to answer (or vice versa). Bench
 retrieval rates drift while no code has changed.
 
@@ -760,7 +760,7 @@ retrieval rates drift while no code has changed.
 floors from the `[abstain.<cls>]` blocks and uses them as hard
 gates. Those floors are calibrated empirically by
 `scripts/calibrate_thresholds.py` from a bench JSONL of located
-queries — if the genome has grown (or shifted in topic mix) since
+queries — if the knowledge store has grown (or shifted in topic mix) since
 the calibration run, the score distribution shifts too, and the old
 floors no longer reflect reality. The loader at
 `helix_context/config.py:718-757` accepts the stale values without
@@ -814,12 +814,12 @@ python benchmarks/bench_needle_1000.py \
   --report
 ```
 Expected: retrieval rate within 1-2 pp of the figure recorded the
-last time the floors were calibrated. A larger gap means the genome
+last time the floors were calibrated. A larger gap means the knowledge store
 has shifted enough to warrant a recalibration cadence (monthly is a
 reasonable default).
 
 **Prevention.** Recalibrate after any of: large ingestion run,
-shard split, ribosome model change, or fusion-mode flip
+shard split, compressor model change, or fusion-mode flip
 (additive ↔ rrf). Pin the calibration JSONL alongside the floors so
 reviewers can see what data the threshold was fit against.
 

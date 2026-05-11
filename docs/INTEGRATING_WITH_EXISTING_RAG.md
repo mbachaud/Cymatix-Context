@@ -5,7 +5,7 @@
 > search). Call Helix first to narrow the candidate set + get a
 > freshness verdict. Then fetch the content from your existing pipeline.
 >
-> On an 8-needle multi-needle NIAH against a 7,846-gene corpus, the
+> On an 8-needle multi-needle NIAH against a 7,846-document corpus, the
 > composition pattern beats every single retriever used alone:
 >
 > | Retriever | ans_partial | ans_full | latency |
@@ -188,7 +188,7 @@ content).
 
 ## What Helix needs to know about your corpus
 
-For the coordinate index to be useful, Helix needs ingested genes
+For the coordinate index to be useful, Helix needs ingested documents
 referencing the source_ids your RAG uses. You ingest once at indexing
 time; after that `/context/packet` knows your corpus exists.
 
@@ -225,7 +225,7 @@ documents and chunks on retrieval.
 
 ## Authority + volatility — advanced tuning
 
-The freshness math has two knobs you can adjust per gene:
+The freshness math has two knobs you can adjust per document:
 
 - `volatility_class`: `stable` (7d half-life), `medium` (12h), `hot`
   (15min). Default is derived from `content_type` but you can
@@ -398,13 +398,13 @@ across agents on the same device.** Design table:
 | TTL | Per `volatility_class` | Helix owns freshness; cache honors it |
 | Invalidation | `invalidate(source_id)` / `invalidate_by_prefix()` / `invalidate_all()` | Wire to your ingest hooks |
 | Sharing across agents in one party | **Yes, by default** | Laude + Taude on one box see identical bytes; cache hit is correct |
-| Sharing across parties | **No** | Different machines; use shared genome + ingest instead |
+| Sharing across parties | **No** | Different machines; use shared knowledge store + ingest instead |
 
 Practical pattern for a launcher running Laude + Taude + Raude as
 three agents: one `CachedDAL` instance in the launcher process,
 handed to each agent. Hit rate climbs as soon as two personas touch
 the same files. Cross-machine caching is **not** the cache's job —
-that's what Helix's shared genome metadata + ingest replication
+that's what Helix's shared knowledge store metadata + ingest persistence
 handles.
 
 For ingest-driven invalidation, wire your ingest pipeline to call
@@ -501,7 +501,7 @@ the packet fields carry enough signal to dispatch correctly.
 ### Bench: 5-cell composition (2026-04-19)
 
 Empirical check of the stack against the multi-needle NIAH on a
-7,846-gene genome. 78,472 claims backfilled via
+7,846-document knowledge store. 78,472 claims backfilled via
 [`scripts/backfill_claims.py`](../scripts/backfill_claims.py):
 
 | Cell | ptr_partial | ans_full | ans_partial | latency |
@@ -521,7 +521,7 @@ is a no-op right now, so it's a pure +37ms overhead.
 When `claim_edges` gets populated (contradiction detection landing),
 this cell diverges: the DAG resolves conflicts before the agent
 commits to a belief, and the full-stack cell should lift recall on
-any needle where the genome holds both a stale and a current answer.
+any needle where the knowledge store holds both a stale and a current answer.
 
 Today the full-stack cell matters as **composition-correctness proof**
 — the router pattern works end-to-end — not as a recall boost.
@@ -567,9 +567,9 @@ After landing `helix_context/claims_analyze.py` and backfilling
 edges into the existing 78,472-claim main.db, we detected:
 
 - **50,362 contradicts** (same entity_key, low-Jaccard text)
-- **45,020 duplicates** (same entity_key, high-Jaccard text, diff genes)
+- **45,020 duplicates** (same entity_key, high-Jaccard text, diff documents)
 - **0 supersedes** (needs diverging `observed_at` on near-duplicate
-  pairs — most genes in the corpus were ingested together)
+  pairs — most documents in the corpus were ingested together)
 - Total: **95,382 edges** across 20,978 entity_key groups (190s scan)
 
 With `claim_edges` populated, the `helix_full_stack` cell re-ran on
