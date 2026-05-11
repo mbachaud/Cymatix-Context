@@ -6,20 +6,25 @@ Genome-based context compression for local LLMs. Makes 9k tokens of context wind
 
 ```bash
 # Install
-pip install -e .
+pip install helix-context
 
-# Ensure Ollama is running with at least one small model
-ollama pull gemma4:e2b
+# Ingest some content
+helix ingest path/to/your/docs/ --recursive
 
-# Start the proxy server
-python -m uvicorn helix_context.server:app --host 127.0.0.1 --port 11437
+# Query the genome
+helix query "what does the splice step do?"
 
-# Seed the genome (in another terminal)
-python examples/seed_genome.py path/to/your/docs/
+# Inspect corpus state
+helix diag corpus
+helix status
 
-# Or use the Python API directly
-python examples/quickstart.py
+# Run the legacy FastAPI proxy (still useful for IDE integrations)
+helix-server
+# or
+python -m uvicorn helix_context._asgi:app --host 127.0.0.1 --port 11437
 ```
+
+Full CLI reference: `docs/clients/cli.md`.
 
 ## How It Works
 
