@@ -2,13 +2,13 @@
 NLI Classifier — MacCartney-Manning natural logic relation detection.
 
 Uses a fine-tuned DeBERTa-v3-small to classify the logical relation
-between gene pairs or codon pairs into one of 7 classes:
+between document pairs or fragment pairs into one of 7 classes:
 
     entailment, reverse_entailment, equivalence,
     alternation, negation, cover, independence
 
 Integration points:
-    - Step 3.5 in context_manager: classify relations between expressed genes
+    - Step 3.5 in context_manager: classify relations between retrieved documents
     - Splice post-processing: bias keep/drop based on entailment/alternation
     - Co-activation typing: store typed links instead of bare gene_id lists
     - Health signal: logical coherence metric
@@ -130,10 +130,10 @@ class NLIClassifier:
         self, genes: List[Gene]
     ) -> Dict[Tuple[str, str], Tuple[NLRelation, float]]:
         """
-        Classify relations between all pairs of expressed genes.
+        Classify relations between all pairs of retrieved documents.
 
-        For N genes, produces N*(N-1)/2 classifications.
-        8 genes = 28 pairs, ~5-10ms on GPU.
+        For N documents, produces N*(N-1)/2 classifications.
+        8 documents = 28 pairs, ~5-10ms on GPU.
         """
         if len(genes) < 2:
             return {}
@@ -171,7 +171,7 @@ def compute_logical_coherence(
     Compute logical coherence from a relation graph.
 
     Returns a score in [0, 1] where:
-      1.0 = all expressed genes are entailment/equivalence-linked
+      1.0 = all retrieved documents are entailment/equivalence-linked
       0.5 = mixed (some entailment, some independence)
       0.0 = contradictory (alternation/negation dominate)
     """
@@ -189,7 +189,7 @@ def compute_logical_coherence(
 
 
 def _gene_summary_text(g: Gene) -> str:
-    """Build representative text for a gene."""
+    """Build representative text for a document."""
     parts = []
     if g.promoter.summary:
         parts.append(g.promoter.summary)

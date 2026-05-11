@@ -1,23 +1,23 @@
 """
-Horizontal Gene Transfer (HGT) -- Genome export/import.
+Horizontal Document Transfer (cross-store import) -- KnowledgeStore export/import.
 
-Enables portable genome files (.helix) that can be transferred
+Enables portable knowledge store files (.helix) that can be transferred
 between Helix instances, seeding new projects with institutional
 memory from mature ones.
 
-Biology:
+Bio analogue (legacy term: HGT):
     Horizontal gene transfer is the movement of genetic material
     between organisms that is not via vertical transmission
     (parent to offspring). Bacteria use it to share antibiotic
-    resistance genes. We use it to share project knowledge.
+    resistance documents. We use it to share project knowledge.
 
 Export format (.helix):
     A JSON file containing:
-    - header: metadata (source, timestamp, gene count, version)
-    - genes: list of Gene objects (full fidelity, including epigenetics)
+    - header: metadata (source, timestamp, document count, version)
+    - documents: list of Document objects (full fidelity, including signals)
     - promoter_index: list of (gene_id, tag_type, tag_value) tuples
 
-    Content-addressed gene IDs ensure deduplication on import --
+    Content-addressed document IDs ensure deduplication on import --
     identical content produces identical IDs across instances.
 """
 
@@ -44,20 +44,20 @@ def export_genome(
     include_heterochromatin: bool = False,
 ) -> Dict:
     """
-    Export the genome to a portable .helix file.
+    Export the knowledge store to a portable .helix file.
 
     Args:
-        genome: Source genome to export
+        knowledge store: Source knowledge store to export
         output_path: Path to write the .helix file
-        description: Human-readable description of this genome snapshot
-        include_heterochromatin: Include stale/compacted genes (default: skip them)
+        description: Human-readable description of this knowledge store snapshot
+        include_heterochromatin: Include stale/compacted documents (default: skip them)
 
     Returns:
-        Export summary dict with gene count and file size
+        Export summary dict with document count and file size
     """
     cur = genome.conn.cursor()
 
-    # Fetch genes
+    # Fetch documents
     if include_heterochromatin:
         rows = cur.execute("SELECT * FROM genes").fetchall()
     else:
@@ -67,7 +67,7 @@ def export_genome(
 
     genes = [genome._row_to_gene(r) for r in rows]
 
-    # Fetch promoter index
+    # Fetch tags index
     gene_ids = {g.gene_id for g in genes}
     index_rows = cur.execute("SELECT gene_id, tag_type, tag_value FROM promoter_index").fetchall()
     promoter_index = [
@@ -111,18 +111,18 @@ def import_genome(
     merge_strategy: str = "skip_existing",
 ) -> Dict:
     """
-    Import genes from a .helix file into the genome.
+    Import documents from a .helix file into the knowledge store.
 
     Args:
-        genome: Target genome to import into
+        knowledge store: Target knowledge store to import into
         input_path: Path to the .helix file
-        merge_strategy: How to handle duplicate gene IDs
-            - "skip_existing": Keep the existing gene (default, safe)
-            - "overwrite": Replace existing genes with imported ones
-            - "newest": Keep whichever gene was accessed more recently
+        merge_strategy: How to handle duplicate document IDs
+            - "skip_existing": Keep the existing document (default, safe)
+            - "overwrite": Replace existing documents with imported ones
+            - "newest": Keep whichever document was accessed more recently
 
     Returns:
-        Import summary with counts of imported, skipped, and total genes
+        Import summary with counts of imported, skipped, and total documents
     """
     data = json.loads(Path(input_path).read_text(encoding="utf-8"))
 
@@ -189,9 +189,9 @@ def import_genome(
 
 def genome_diff(genome: Genome, helix_path: str) -> Dict:
     """
-    Compare a genome against a .helix file without modifying anything.
+    Compare a knowledge store against a .helix file without modifying anything.
 
-    Returns counts of genes that are new, shared, or only in the file.
+    Returns counts of documents that are new, shared, or only in the file.
     Useful for previewing an import before committing.
     """
     data = json.loads(Path(helix_path).read_text(encoding="utf-8"))

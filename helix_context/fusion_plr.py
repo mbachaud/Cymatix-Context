@@ -8,18 +8,18 @@ current labelling discipline.
 
 ## Scope — read before wiring
 
-STATISTICAL_FUSION.md §C3 describes a **per-(query, gene) stacked fuser** that
-replaces the additive gene ranker. The CWoLa logger shipped since Sprint 1 has
-been query-level, not per-gene: `cwola_log.tier_features` holds the *sum* of
-tier contributions across all genes in the retrieval (see
+STATISTICAL_FUSION.md §C3 describes a **per-(query, document) stacked fuser** that
+replaces the additive document ranker. The CWoLa logger shipped since Sprint 1 has
+been query-level, not per-document: `cwola_log.tier_features` holds the *sum* of
+tier contributions across all documents in the retrieval (see
 `server.py::log_query` call site near line 900). The trained artifact is
 therefore a **query-quality head**, not a ranker — every candidate in a given
 query has the same feature vector, so the classifier can't order them.
 
 Option B (per-(q,g) refactor): change `cwola.log_query()` to emit one row per
-top-K candidate with per-gene tier scores, reset the ~2K-row label corpus,
+top-K candidate with per-document tier scores, reset the ~2K-row label corpus,
 re-accumulate. Not rejected — may be necessary if the additive `lex_anchor +291`
-problem needs the spec's original per-gene fuser. For now we ship A and treat
+problem needs the spec's original per-document fuser. For now we ship A and treat
 B as a considered follow-up.
 
 ## How to use
@@ -28,7 +28,7 @@ Config: `[plr] enabled = true`, `model_path = "training/models/stacked_plr.jobli
 
 The /context packet path calls `StackedPLRFuser.query_confidence()` with the
 same aggregates already computed for CWoLa logging, attaches the log-odds to
-the response as `plr_confidence`, and leaves gene ranking untouched.
+the response as `plr_confidence`, and leaves document ranking untouched.
 """
 
 from __future__ import annotations
@@ -164,8 +164,8 @@ class StackedPLRFuser:
         """Build a single feature vector matching the artifact's layout.
 
         Missing features fill to 0 — matches training where tiers that didn't
-        fire were left at 0, and the aggregate over genes sums to 0 when no
-        gene contributed a score for that tier.
+        fire were left at 0, and the aggregate over documents sums to 0 when no
+        document contributed a score for that tier.
         """
         x = np.zeros(len(self._feat_names), dtype=float)
         tt = tier_totals or {}

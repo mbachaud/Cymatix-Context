@@ -9,7 +9,7 @@ Where:
     t_i     -- context vector after item i
     rho_i   -- normalization constant ensuring ||t_i|| = 1
     beta    -- context integration rate (default 0.5)
-    t^IN_i  -- input representation of the accessed gene
+    t^IN_i  -- input representation of the accessed document
 
 Key property: **forward-recall asymmetry** -- queries about early items
 preferentially surface later items from the same session, because the
@@ -101,14 +101,14 @@ def _cosine_similarity(a: List[float], b: List[float]) -> float:
     return dot / (na * nb)
 
 
-# -- Gene -> 20D input vector ----------------------------------
+# -- Document -> 20D input vector ----------------------------------
 
 def gene_input_vector(gene: Gene) -> List[float]:
-    """Derive a 20D input representation for a gene.
+    """Derive a 20D input representation for a document.
 
     Strategy:
         1. If gene.embedding exists and is 20D, use it directly (SEMA).
-        2. Otherwise, build a deterministic 20D vector from promoter tags:
+        2. Otherwise, build a deterministic 20D vector from tags:
            hash each tag to a dimension index (mod 20), accumulate weights.
            Then normalize to unit length.
     """
@@ -116,10 +116,10 @@ def gene_input_vector(gene: Gene) -> List[float]:
     if gene.embedding is not None and len(gene.embedding) == N_DIMS:
         return _normalize(list(gene.embedding))
 
-    # Fallback: hash promoter tags into dimensions
+    # Fallback: hash tags into dimensions
     tags = list(gene.promoter.domains) + list(gene.promoter.entities)
     if not tags:
-        # Last resort: use codons
+        # Last resort: use fragments
         tags = list(gene.codons[:5])
 
     if not tags:
@@ -141,7 +141,7 @@ def gene_input_vector(gene: Gene) -> List[float]:
 class SessionContext:
     """Temporal Context Model state for a single session.
 
-    Tracks the evolving context vector as genes are accessed during a
+    Tracks the evolving context vector as documents are accessed during a
     session.  The context drifts toward recently accessed items, producing
     the forward-recall asymmetry described by Howard & Kahana (2002).
     """
@@ -248,7 +248,7 @@ class SessionContext:
         self.prev_raw_input = raw_input
 
     def update_from_gene(self, gene: Gene) -> None:
-        """Convenience: derive input vector from a Gene and update."""
+        """Convenience: derive input vector from a Document and update."""
         vec = gene_input_vector(gene)
         self.update(gene.gene_id, vec)
 
@@ -282,7 +282,7 @@ def tcm_bonus(
     Bonus = weight * context_similarity(gene_vector).
     This is a TIEBREAKER, not a primary signal.  Default weight is 0.3.
 
-    Returns 0.0 for genes with no computable input vector, and for
+    Returns 0.0 for documents with no computable input vector, and for
     sessions with no history (empty context).
     """
     if session.depth == 0:

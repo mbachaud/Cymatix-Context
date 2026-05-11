@@ -11,7 +11,7 @@ future visits to every other state. Tier 5's harmonic boost is
 effectively the k=1 slice of this; SR generalises to multi-hop
 futures without densifying the whole matrix.
 
-For helix's 18K-gene genome, dense M is 18K x 18K float32 = 1.3 GB.
+For helix's 18K-document knowledge store, dense M is 18K x 18K float32 = 1.3 GB.
 We never build that. Instead, per query, we compute M[seed, :] via a
 truncated sparse power series over the co-activation graph - one row
 per seed, k_steps sparse matvecs.
@@ -20,7 +20,7 @@ Per-row cost at k=4 and branching ~10 is ~10^4 ops, sub-millisecond.
 
 Integration: slots between Tier 5 (harmonic, 1-hop co-activation) and
 the access-rate tiebreaker in query_genes(). Contributes a "sr" bonus
-per gene to the tier_contributions dict alongside the existing tiers.
+per document to the tier_contributions dict alongside the existing tiers.
 
 See SUCCESSOR_REPRESENTATION.md for design + validation notes.
 """
@@ -57,15 +57,15 @@ def sr_boost(
 
     Walks k_steps from the seed set, spreading mass to co-activated
     neighbours at each step with discount factor gamma. Returns a
-    {gene_id: bonus} dict for all genes reached, excluding seeds (they
+    {gene_id: bonus} dict for all documents reached, excluding seeds (they
     already scored on Tiers 0-5).
 
     Parameters mirror Stachenfeld 2017 sect "Modeling SR as RL value
     function":
       gamma    — discount factor (0.5: ~1.5-hop, 0.85: ~6-hop, 0.99: ~70-hop)
       k_steps  — truncation depth of sum_k gamma^k P^k
-      weight   — per-gene contribution multiplier
-      cap      — max per-gene boost; prevents a single runaway
+      weight   — per-document contribution multiplier
+      cap      — max per-document boost; prevents a single runaway
                  propagation chain from saturating the score.
 
     co_activation_cache lets the caller hand in a prefetched adjacency
@@ -78,8 +78,8 @@ def sr_boost(
     from .ray_trace import _load_co_activated
 
     # Build the neighbour lookup cache ONCE up-front. Without this, each
-    # hop issued one SQL query per frontier gene — k_steps=4 over a
-    # ~10K-gene frontier on the 191K-edge harmonic_links table was
+    # hop issued one SQL query per frontier document — k_steps=4 over a
+    # ~10K-document frontier on the 191K-edge harmonic_links table was
     # ~30s per /context call (discovered via staged dim_lock A/B on
     # 2026-04-13). The lookup is now O(1) per frontier node after a
     # single-pass seed scan + BFS expansion.
@@ -117,7 +117,7 @@ def sr_boost(
                     link_lookup[b].append(a)
         except Exception:
             log.warning("harmonic_links bulk read failed", exc_info=True)
-        # Union + dedupe per gene, store in cache.
+        # Union + dedupe per document, store in cache.
         for g in missing:
             seen = set()
             out: List[str] = []

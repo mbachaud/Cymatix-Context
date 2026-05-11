@@ -1,6 +1,6 @@
 """Agent-safe context packet builder.
 
-Additive surface for the Helix index work: it reuses existing promoter
+Additive surface for the Helix index work: it reuses existing tags
 retrieval, then labels results by freshness/authority so callers can
 decide whether to trust, reread, or refresh before acting.
 """
@@ -197,7 +197,7 @@ def _item_title(gene: Gene, meta: dict) -> str:
 
 _DEFAULT_MAX_ITEM_CHARS = 280
 # Opt-in raw cap: when callers pass include_raw=True they're signalling
-# they want the full gene.content (not the ribosome-compressed summary)
+# they want the full gene.content (not the compressor-compressed summary)
 # for direct consumption as LLM context. 48k chars ~ 12k tokens per item
 # — a single item can't exceed a typical context window by itself, but a
 # packet of 8 max_genes × 48k would be 384k chars. Callers that need a
@@ -213,7 +213,7 @@ def _item_content(
 ) -> str:
     """Per-item content string for the packet.
 
-    The default 280-char cap uses ``gene.complement`` (the ribosome
+    The default 280-char cap uses ``gene.complement`` (the compressor
     compressed summary) and truncates aggressively — appropriate when the
     packet is itself routing metadata and the LLM will re-fetch on demand.
 
@@ -239,10 +239,10 @@ def _item_citations(gene: Gene, meta: dict) -> list[str]:
 
 
 def _coordinate_signals(query: str, genes: list[Gene]) -> tuple[float, float]:
-    """Folder-grain + file-grain path overlap between query and delivered genes.
+    """Folder-grain + file-grain path overlap between query and delivered documents.
 
     Returns ``(folder_coverage, file_coverage)`` — both in [0, 1]. Each is
-    the fraction of delivered genes whose path/file tokens intersect the
+    the fraction of delivered documents whose path/file tokens intersect the
     query's significant tokens.
 
     - **folder_coverage** uses ``path_tokens()`` (folder + file tokens mixed).
@@ -278,7 +278,7 @@ def _coordinate_confidence(query: str, genes: list[Gene]) -> float:
     Blends ``_coordinate_signals`` into a single number suitable for
     threshold-based downgrades. File-grain is weighted higher because
     same-folder-wrong-file is the dominant silent-miss mode (see
-    2026-04-18 session-close handoff). A gene whose filename tokens
+    2026-04-18 session-close handoff). A document whose filename tokens
     match the query is much more likely to be the right coordinate
     than one that just happens to share a project folder.
     """
@@ -446,7 +446,7 @@ def build_context_packet(
 ) -> ContextPacket:
     """Return a freshness-labeled packet for the given query.
 
-    ``include_raw=True`` switches each item's content from the ribosome-
+    ``include_raw=True`` switches each item's content from the compressor-
     compressed summary to the full ``gene.content``, and bumps the per-item
     cap to ``_RAW_MAX_ITEM_CHARS`` (48k) unless ``max_item_chars`` overrides.
     This is the "helix_only ships the real content" path from the
@@ -571,7 +571,7 @@ def build_context_packet(
 
 
 # ─────────────────────────────────────────────────────────────────────
-# Stage 6 know/miss helper (kept here so the genome read for
+# Stage 6 know/miss helper (kept here so the knowledge store read for
 # tier_contributions stays close to the score_map fetch above).
 # ─────────────────────────────────────────────────────────────────────
 
@@ -587,7 +587,7 @@ def _attach_know_or_miss(
 
     Mirror of the /context route logic in server._compute_know_or_miss_block
     but works directly with the locals already accumulated in
-    ``build_context_packet`` instead of re-fetching from the genome.
+    ``build_context_packet`` instead of re-fetching from the knowledge store.
     """
     from .know_calibration import load_calibration_from_toml
     from .know_decision import (
@@ -622,7 +622,7 @@ def _attach_know_or_miss(
     if n_genes == 0:
         # No candidates returned: route to the no_promoter_match branch
         # of the discriminator. We use status="sparse" + genes_expressed=0
-        # because (1) "denatured" is reserved for "genome shape is bad"
+        # because (1) "denatured" is reserved for "knowledge store shape is bad"
         # which we cannot detect from the packet builder, and (2) the
         # discriminator ordering (§5) checks genes_expressed==0 ahead
         # of any sparse-confidence floor, so this routes to
@@ -650,14 +650,14 @@ def _attach_know_or_miss(
 
     # Tier contributions for lex/dense agreement. The packet builder
     # does not currently capture per-tier contribs (it only takes the
-    # post-fusion score_map). Best-effort: pull off the genome if the
+    # post-fusion score_map). Best-effort: pull off the knowledge store if the
     # caller wired one through. Otherwise treat as no-agreement signal.
     tier_contrib = {}
-    # genes elements may be Gene objects from genome.query_genes, which
+    # documents elements may be Document objects from genome.query_genes, which
     # don't carry tier-level info. The router/genome's last_tier_-
     # contributions is the source of truth — we expect the route to
     # have set it. The packet builder does NOT currently surface the
-    # genome handle past _query_genes; until that's plumbed, we leave
+    # knowledge store handle past _query_genes; until that's plumbed, we leave
     # this False, which is the safe direction (no false-positive
     # confidence boost).
     lex_dense_agree = _agree_from_tier_contributions(tier_contrib, k=3)

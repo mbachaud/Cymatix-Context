@@ -6,19 +6,19 @@ Dewey bench 2026-04-14 showed `key+filename` → 30% recall@1 vs
 project/module over-constrain and hurt retrieval when all axes fire.
 
 This module adds a new retrieval tier (Tier 0.5) that treats filename
-stems as first-class anchors — when a query term matches a gene's
-filename stem, the gene gets a dedicated boost larger than any single
+stems as first-class anchors — when a query term matches a document's
+filename stem, the document gets a dedicated boost larger than any single
 path-token match. Project/module tokens continue through the existing
 path_key_index tier.
 
 Structure:
     filename_index table:   (filename_stem TEXT, gene_id TEXT)
                             PRIMARY KEY (filename_stem, gene_id)
-    Populated at gene upsert from ``filename_stem(source_id)``.
+    Populated at document upsert from ``filename_stem(source_id)``.
     Retrieval tier reads it like a reverse index.
 
 Noise stems are excluded — generic names like ``__init__`` / ``index`` /
-``main`` match too many genes to discriminate. See ``_NOISE_STEMS``.
+``main`` match too many documents to discriminate. See ``_NOISE_STEMS``.
 
 Flag-gated: ``[retrieval].filename_anchor_enabled`` in helix.toml and
 ``HELIX_FILENAME_ANCHOR_ENABLED=1`` env var. Default off so the existing
@@ -36,7 +36,7 @@ from typing import Dict, List, Optional, Set
 log = logging.getLogger("helix.filename_anchor")
 
 # Noise stems — generic filenames that appear across many projects and
-# would blanket-boost genes if we treated them as discriminators. This
+# would blanket-boost documents if we treated them as discriminators. This
 # list is intentionally conservative; grow it only when a specific stem
 # shows up as false-positive in a bench.
 _NOISE_STEMS = frozenset({
@@ -100,10 +100,10 @@ def ensure_schema(conn: sqlite3.Connection) -> None:
 
 
 def index_gene(conn: sqlite3.Connection, gene_id: str, source_id: Optional[str]) -> None:
-    """Upsert a gene's filename_stem into filename_index.
+    """Upsert a document's filename_stem into filename_index.
 
     Called from genome.upsert_gene alongside path_key_index population.
-    Silently no-ops when the gene has no filename-shaped source_id or
+    Silently no-ops when the document has no filename-shaped source_id or
     the stem is a known noise word.
     """
     stem = filename_stem(source_id)
@@ -120,7 +120,7 @@ def index_gene(conn: sqlite3.Connection, gene_id: str, source_id: Optional[str])
 
 
 def remove_gene(conn: sqlite3.Connection, gene_id: str) -> None:
-    """Remove a gene from filename_index. Called when a gene is deleted."""
+    """Remove a document from filename_index. Called when a document is deleted."""
     try:
         conn.execute(
             "DELETE FROM filename_index WHERE gene_id = ?", (gene_id,)
@@ -146,11 +146,11 @@ def boost_scores(
     """Add filename-anchor bonus to gene_scores in place.
 
     For each query term that matches an indexed filename stem, every
-    gene with that stem gets +weight added to its score. Multi-term
-    matches accumulate (a gene with filename "config" hit by a query
+    document with that stem gets +weight added to its score. Multi-term
+    matches accumulate (a document with filename "config" hit by a query
     containing "config" twice gets +2*weight — rare but correct).
 
-    Returns the count of genes that received any boost, for logging.
+    Returns the count of documents that received any boost, for logging.
     """
     if not query_terms:
         return 0

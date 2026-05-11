@@ -2,9 +2,9 @@
 Session working-set register — Sprint 2 of the AI-consumer roadmap.
 
 Every /context call today is stateless: the same LLM querying Helix 20-60
-times in one conversation pays full token cost for overlapping gene sets
+times in one conversation pays full token cost for overlapping document sets
 delivered on nearly every turn. The expected ~40% token reduction comes
-from elidng genes the consumer already holds.
+from elidng documents the consumer already holds.
 
 This module owns the `session_delivery_log` table — one row per
 (session_id, gene_id, delivered_at) triple — plus the thin DAL the
@@ -20,8 +20,8 @@ Design notes:
 * **Scope is per-session, not per-party.** Federation (share deliveries
   across sessions under the same party) is a later concern; the simpler
   model gets the consumer most of the way.
-* **Content hash is over the EXPRESSED text**, not the raw gene. Different
-  splice modes of the same gene count as distinct deliveries, because the
+* **Content hash is over the EXPRESSED text**, not the raw document. Different
+  splice modes of the same document count as distinct deliveries, because the
   downstream LLM genuinely saw different strings.
 * **Opt-out exists.** Callers that *want* redundancy (benchmarks running
   controlled fixtures, eval rigs measuring per-call quality) pass
@@ -31,7 +31,7 @@ Design notes:
 Schema is co-located in `Genome._create_schema` alongside cwola_log so
 the tables migrate together. This module exposes a bare `ensure_schema`
 for the in-memory test fixture path — production always gets it via
-genome init.
+knowledge store init.
 
 See docs/FUTURE/AI_CONSUMER_ROADMAP_2026-04-14.md Sprint 2.
 """
@@ -69,7 +69,7 @@ CREATE INDEX IF NOT EXISTS idx_sdl_session_time
 def ensure_schema(conn: sqlite3.Connection) -> None:
     """Create the session_delivery_log table + indexes if absent.
 
-    Idempotent — safe to call on every genome open. Production sqlite
+    Idempotent — safe to call on every knowledge store open. Production sqlite
     instances go through `Genome._create_schema` which already calls
     this path; in-memory test fixtures may call it directly.
     """
@@ -82,7 +82,7 @@ def ensure_schema(conn: sqlite3.Connection) -> None:
 def content_hash(text: str) -> str:
     """16-char hex prefix of sha256(text) — stable, cheap, short.
 
-    Used to detect re-expression: if the same gene is spliced differently
+    Used to detect re-retrieval: if the same document is spliced differently
     on a later call, its content hash changes and the consumer sees a
     *new* delivery rather than a stale elision stub.
 
@@ -200,9 +200,9 @@ def count_queries_in_session_since(
     """How many /context calls landed in this session AFTER `since`?
 
     Uses `cwola_log` (which logs one row per /context call) rather than
-    `session_delivery_log` (which logs one row per delivered gene). The
+    `session_delivery_log` (which logs one row per delivered document). The
     distinction matters for the "N queries ago" marker — otherwise a
-    single 12-gene response would inflate the age count 12x.
+    single 12-document response would inflate the age count 12x.
 
     Returns 0 if cwola_log doesn't exist in the connection (tests, etc.).
     """
@@ -214,7 +214,7 @@ def count_queries_in_session_since(
         ).fetchone()
         return int(row["n"]) if row else 0
     except sqlite3.OperationalError:
-        # cwola_log absent — tests, or a minimal genome without it
+        # cwola_log absent — tests, or a minimal knowledge store without it
         return 0
 
 
@@ -228,13 +228,13 @@ def format_elision_stub(
     queries_ago: int,
     id_width: int = 12,
 ) -> str:
-    """One-line stub replacing a gene's spliced text when the same gene
+    """One-line stub replacing a document's spliced text when the same document
     was already delivered earlier in this session.
 
     Shape matches Sprint 1's `[gene=abc12345 ...]` header so downstream
     parsers can treat them uniformly:
 
-        [gene=abc12345 ↻ delivered 3 queries ago / 45s — see earlier response]
+        [document=abc12345 ↻ delivered 3 queries ago / 45s — see earlier response]
 
     The ↻ glyph is chosen to visually distinguish from ◆/◇/⬦ confidence
     markers — it's a "same thing, already shipped" signal, not a quality

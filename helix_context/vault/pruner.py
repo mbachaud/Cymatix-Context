@@ -181,7 +181,7 @@ def refresh_stale_view(
 ) -> dict:
     """Repopulate the _stale/ folder based on live_truth_score.
 
-    v1: pointer notes on all platforms (containing [[gene-<id>]] wikilink).
+    v1: pointer notes on all platforms (containing [[document-<id>]] wikilink).
 
     TODO(v1.1): replace pointer notes with symlinks on POSIX for live updates;
     Obsidian renders both fine but symlinks reflect content changes immediately.
@@ -246,7 +246,7 @@ def migrate_fan_out_if_needed(
     """Migrate flat domain folders past the threshold to 2-level fan-out.
 
     Eager — fires the moment a flat folder crosses the threshold. Updates
-    state.vault_path for each migrated gene to keep wikilinks coherent.
+    state.vault_path for each migrated document to keep wikilinks coherent.
     """
     genes_root = vault_root / "genes"
     if not genes_root.exists():

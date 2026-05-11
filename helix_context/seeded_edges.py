@@ -2,22 +2,22 @@
 Sprint 4 - Seeded co-activation edges with Hebbian evidence decay.
 
 Solves the "cold-start graph-topology" gap flagged in Sprint 2:
-brand-new OPEN genes have no co_activated_with history, so the Tier 5
+brand-new OPEN documents have no co_activated_with history, so the Tier 5
 harmonic boost and Tier 5.5 SR propagation cannot surface them on the
 first few retrievals after ingest. Seeding edges at ingest time - when
-multi-signal agreement suggests two genes are semantically linked -
-gives new genes a "social standing" in the graph before the first
+multi-signal agreement suggests two documents are semantically linked -
+gives new documents a "social standing" in the graph before the first
 retrieval lands.
 
 Design
 ------
 Three edge classes, provenance-tagged on harmonic_links.source:
   seeded            weight_mul 0.3   - admitted on multi-signal agreement
-  co_retrieved      weight_mul 0.7   - observed co-expression in retrieval
+  co_retrieved      weight_mul 0.7   - observed co-retrieval in retrieval
   cwola_validated   weight_mul 1.0   - classifier-confirmed (Sprint 3)
 
 Each edge carries Laplace-smoothed evidence counters:
-  co_count          - # co-retrievals (both endpoints in expressed set)
+  co_count          - # co-retrievals (both endpoints in retrieved set)
   miss_count        - sum of dense-rank weighted miss events
 
 Effective weight during retrieval scoring:
@@ -25,7 +25,7 @@ Effective weight during retrieval scoring:
   weight = raw_weight * source_mul * ratio
 
 This gives new seeds Optimistic Neutrality (ratio=0.5 at no evidence),
-promoting with sustained co-expression and attriting under contradiction.
+promoting with sustained co-retrieval and attriting under contradiction.
 
 Promotion thresholds:
   seeded -> co_retrieved         co_count >= 3 AND ratio >= 0.4
@@ -33,7 +33,7 @@ Promotion thresholds:
 
 Pruning: effective weight < PRUNE_FLOOR drops the edge entirely.
 
-Miss counting uses dense-rank so tied genes at the cutoff share the
+Miss counting uses dense-rank so tied documents at the cutoff share the
 same miss_weight, preventing stable-sort artifacts from creating
 "persistent bad-luck" seeds.
 
@@ -65,7 +65,7 @@ SOURCE_WEIGHT_MULTIPLIER = {
 CO_PROMOTE_MIN_COUNT = 3      # co_count floor for seeded -> co_retrieved
 CO_PROMOTE_MIN_RATIO = 0.4    # Laplace ratio floor for seeded -> co_retrieved
 PRUNE_FLOOR = 0.05            # effective-weight floor below which edge is deleted
-SEEDING_CAP = 200             # max genes per seed_edges call — O(n²) pair loop
+SEEDING_CAP = 200             # max documents per seed_edges call — O(n²) pair loop
                               # blows up beyond this; matches FRONTIER_CAP pattern
                               # in sr.py. Caller gets a warning + truncation.
 
@@ -86,7 +86,7 @@ def dense_rank(sorted_scores: List[float]) -> Dict[int, int]:
     """Return {index_in_sorted_list: dense_rank}, rank 1 for the top.
 
     Tied scores share a rank. sorted_scores must already be sorted
-    descending. Used for miss-weight computation so genes tied at the
+    descending. Used for miss-weight computation so documents tied at the
     cutoff share the same penalty rather than having it arbitrarily
     pinned to whoever stable-sort happened to put first.
     """
@@ -122,9 +122,9 @@ def seed_edges(
     overlap_fn=None,
     weight: float = 1.0,
 ) -> int:
-    """Ingest-batch seeding pass over OPEN genes only.
+    """Ingest-batch seeding pass over OPEN documents only.
 
-    For each unordered pair in gene_ids, check if overlap_fn(genome, a, b)
+    For each unordered pair in gene_ids, check if overlap_fn(knowledge store, a, b)
     returns True (multi-signal agreement gate); if so insert or
     refresh a 'seeded' edge. Returns the number of edges written.
 
@@ -177,7 +177,7 @@ def multi_signal_overlap(genome: "Genome", gene_id_a: str, gene_id_b: str) -> bo
       - shared domain tag
       - shared entity tag
       - shared KV key (ignores value)
-      - both OPEN chromatin state
+      - both OPEN lifecycle tier
     Same-directory proximity alone is NOT enough - the gate's whole
     purpose is to avoid file-system coincidence edges.
     """
@@ -235,7 +235,7 @@ def update_edge_evidence(
     *,
     max_genes: int,
 ) -> int:
-    """Walk seeded / co_retrieved edges anchored at expressed genes,
+    """Walk seeded / co_retrieved edges anchored at retrieved documents,
     increment co_count or miss_count per dense-rank miss weighting.
 
     Returns count of edges updated. Intended to be called once per
@@ -274,8 +274,8 @@ def update_edge_evidence(
         if a == b:
             continue
         # Decide which endpoint anchors this event. If both are
-        # expressed it's a co_count event (order doesn't matter). If
-        # one is expressed, the other is either a candidate miss or
+        # retrieved it's a co_count event (order doesn't matter). If
+        # one is retrieved, the other is either a candidate miss or
         # outside the pool (candidacy gate via id_to_rank).
         if a in expressed_set and b in expressed_set:
             new_co = row["co_count"] + 1

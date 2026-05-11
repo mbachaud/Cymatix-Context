@@ -86,7 +86,7 @@ def derive_gene_filename(source_id: str, gene_id: str) -> str:
 
 
 def derive_gene_relpath(*, domain: Optional[str], source_id: str, gene_id: str) -> str:
-    """Vault-relative path for a gene: genes/<domain>/<filename>.
+    """Vault-relative path for a document: genes/<domain>/<filename>.
 
     If domain is None or empty, falls back to genes/_orphan/.
     Raises ValueError if domain contains path-separator characters

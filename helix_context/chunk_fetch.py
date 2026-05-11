@@ -2,7 +2,7 @@
 
 Full-stack composition can often answer from relevant genes/chunks
 without rereading the whole source file. This module fetches a small
-set of gene chunks using promoter tags plus FTS as bounded lexical
+set of document chunks using tags plus FTS as bounded lexical
 rescue.
 """
 
@@ -40,7 +40,7 @@ def fetch_relevant_chunks(
     genome_path: str,
     limit: int = 8,
 ) -> list[ChunkHit]:
-    """Return relevant gene chunks for a query, ordered by lexical signal."""
+    """Return relevant document chunks for a query, ordered by lexical signal."""
     terms = expand_query_terms(sum(extract_query_signals(query), []))
     if not terms or limit <= 0:
         return []

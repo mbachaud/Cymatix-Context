@@ -2,17 +2,17 @@
 HelixContextManager -- The cell nucleus.
 
 Orchestrates the full DNA context pipeline per turn:
-    1. Extract promoter signals from query (heuristic, no model)
-    2. Express -- find relevant genes via promoter matching + co-activation
-    3. Re-rank -- score candidates via ribosome (CPU, optional)
+    1. Extract tags signals from query (heuristic, no model)
+    2. Retrieve -- find relevant documents via tags matching + co-activation
+    3. Re-rank -- score candidates via compressor (CPU, optional)
     4. Splice -- trim introns, keep exons (CPU, batched)
-    5. Assemble -- build the 3k ribosome prompt + 6k expressed context window
-    6. Replicate -- pack query+response exchange into genome (background)
+    5. Assemble -- build the 3k compressor prompt + 6k retrieved context window
+    6. Persist -- pack query+response exchange into knowledge store (background)
 
 Token budget:
-    3k  = ribosome decoder prompt (fixed, tells big model how to read codons)
-    6k  = expressed context (codon-encoded, spliced)
-    600k = genome (cold storage, never fully loaded)
+    3k  = compressor decoder prompt (fixed, tells big model how to read fragments)
+    6k  = retrieved context (fragment-encoded, spliced)
+    600k = knowledge store (cold storage, never fully loaded)
 """
 
 from __future__ import annotations
@@ -82,11 +82,11 @@ class _stage_timer:
         except Exception:
             pass  # never let telemetry break the pipeline
 
-# Thread pool for running sync ribosome calls from async context
+# Thread pool for running sync compressor calls from async context
 _executor = ThreadPoolExecutor(max_workers=2, thread_name_prefix="helix-ribosome")
 
 
-# -- Ribosome decoder prompt (3k fixed, tells the big model how to read context) --
+# -- Compressor decoder prompt (3k fixed, tells the big model how to read context) --
 
 # -- Adaptive decoder prompts (tiered by model capability) --------
 #
@@ -206,7 +206,7 @@ RIBOSOME_DECODER = DECODER_FULL
 
 
 # Shared marker injected when build_context has nothing useful to ship —
-# either the genome had no candidates ("denatured") or post-refinement
+# either the knowledge store had no candidates ("denatured") or post-refinement
 # scores fell below the FOCUSED floor on both axes ("abstain"). Both
 # branches ship the same bytes so the small model's prompt-conditioning
 # is identical regardless of which short-circuit fired. The semantic
@@ -262,7 +262,7 @@ def _compute_foveated_caps(
     c_min: float,
     c_max: float = 1.0,
 ) -> list[float]:
-    """Power-law per-gene compression caps for foveated-splice.
+    """Power-law per-document compression caps for foveated-splice.
 
     c_i = max(c_min, c_max · i^(-α))    for i ∈ [1, N]
 
@@ -366,9 +366,9 @@ def _merge_subquery_candidates(
     sub_results: list,
     base_scores: dict,
 ) -> list:
-    """Merge gene lists from multiple sub-queries.
+    """Merge document lists from multiple sub-queries.
 
-    Genes appearing in more sub-queries rank higher regardless of base score.
+    Documents appearing in more sub-queries rank higher regardless of base score.
     Within the same hit count, base_score is the tiebreaker.
     Returns a deduplicated list ordered by (hit_count DESC, base_score DESC).
     """
@@ -438,7 +438,7 @@ class HelixContextManager:
         except Exception:
             log.warning("ΣĒMA codec failed to load", exc_info=True)
 
-        # Genome (SQLite storage) — swapped for a ShardedGenomeAdapter when
+        # KnowledgeStore (SQLite storage) — swapped for a ShardedGenomeAdapter when
         # HELIX_USE_SHARDS=1 and the configured path is a routing DB. Writes
         # become no-ops in that mode; suitable for read-heavy serving and
         # benchmarks until ingest-time sharding (spec Task 6) lands.
@@ -490,7 +490,7 @@ class HelixContextManager:
             pki_weight=config.retrieval.pki_weight,
         )
 
-        # Replication manager (distributed genome clones)
+        # Persistence manager (distributed knowledge store clones)
         self._replication_mgr = None
         if config.genome.replicas:
             from .replication import ReplicationManager
@@ -505,8 +505,8 @@ class HelixContextManager:
         self.chunker = CodonChunker(max_chars_per_strand=4000)
         self.encoder = CodonEncoder()
 
-        # Ribosome (small model codec) — explicit opt-in only. Legacy/default
-        # Ollama ribosome config stays in the file for future use but is
+        # Compressor (small model codec) — explicit opt-in only. Legacy/default
+        # Ollama compressor config stays in the file for future use but is
         # intentionally ignored unless a supported backend is selected.
         self.ribosome = Ribosome(
             backend=DisabledBackend(),
@@ -603,7 +603,7 @@ class HelixContextManager:
                 "MoE/SWA" if is_moe else "sub-4B",
             )
 
-        # Pending replication buffer -- genes from background replication
+        # Pending persistence buffer -- documents from background persistence
         # that haven't committed to SQLite yet. Checked during Step 2
         # so follow-up queries don't lose context from the previous turn.
         self._pending: List[Gene] = []
@@ -628,7 +628,7 @@ class HelixContextManager:
         except Exception:
             log.debug("TCM not available", exc_info=True)
 
-        # Shadow pool (soft elimination — genes cut from top-k keep
+        # Shadow pool (soft elimination — documents cut from top-k keep
         # residual weight, eligible for Lagrange pull-back if the
         # winners' cluster looks like a gravity well rather than merit).
         self._last_shadow_pool: List[Gene] = []
@@ -644,7 +644,7 @@ class HelixContextManager:
         # Stage 7 (2026-05-08, spec §5) — per-process mtime cache for
         # the freshness gate. Keyed on absolute source path; value is
         # ``(mtime, cached_at)``. Lives on the manager (per-batch
-        # state) rather than Genome so /admin/refresh can clear it
+        # state) rather than KnowledgeStore so /admin/refresh can clear it
         # without touching the DB. TTL defaults to 60s — see
         # ``helix_context.freshness.DEFAULT_CACHE_TTL_S``.
         self._mtime_cache: Dict[str, Tuple[float, float]] = {}
@@ -663,11 +663,11 @@ class HelixContextManager:
         # Compaction timer
         self._last_compact = time.time()
 
-    # -- Ingest: add new content to the genome -------------------------
+    # -- Ingest: add new content to the knowledge store -------------------------
 
     def ingest(self, content: str, content_type: str = "text", metadata: Optional[Dict] = None) -> List[str]:
         """
-        Pack new content and store in the genome.
+        Pack new content and store in the knowledge store.
         Call for documents, files, or conversation history.
         Returns list of gene_ids created.
         """
@@ -744,13 +744,13 @@ class HelixContextManager:
             # Density gate now lives in genome.upsert_gene() itself so that
             # bulk ingest scripts (ingest_steam.py, ingest_all.py, etc.)
             # that call upsert_gene directly also respect it. The gate
-            # reads the final chromatin state back onto the gene object
+            # reads the final lifecycle tier back onto the document object
             # and sets compression_tier accordingly during the INSERT.
             # See helix_context/genome.py:apply_density_gate for the logic.
             gid = self.genome.upsert_gene(gene)
             gene_ids.append(gid)
 
-            # If the gate demoted the gene to heterochromatin, the content
+            # If the gate demoted the document to heterochromatin, the content
             # column is still populated — compress_to_heterochromatin()
             # drops it and strips SPLADE/FTS indices. Run this post-insert
             # for consistency with the historical behavior.
@@ -759,7 +759,7 @@ class HelixContextManager:
             elif gene.chromatin == ChromatinState.EUCHROMATIN:
                 self.genome.compress_to_euchromatin(gid)
 
-        # Layered fingerprints: create a parent gene when a file chunks
+        # Layered fingerprints: create a parent document when a file chunks
         # into N >= 2 strands. Parent aggregates child fingerprints at
         # query time so multi-chunk hits surface the whole file.
         # See docs/FUTURE/LAYERED_FINGERPRINTS.md.
@@ -798,12 +798,12 @@ class HelixContextManager:
         child_gene_ids: List[str],
         original_content: str,
     ) -> Optional[str]:
-        """Create or refresh a parent gene for a multi-chunk file.
+        """Create or refresh a parent document for a multi-chunk file.
 
         Parent shape:
             gene_id      — deterministic from source_path
             content      — first 1024 chars of original file
-            codons       — ordered list of child gene_ids (reassembly key)
+            fragments       — ordered list of child gene_ids (reassembly key)
             key_values   — [chunk_count=N, total_size_bytes=B, is_parent=true]
             is_fragment  — False
             sequence_index = -1 (file-level sentinel)
@@ -843,7 +843,7 @@ class HelixContextManager:
         return parent_gid
 
     async def ingest_async(self, content: str, content_type: str = "text", metadata: Optional[Dict] = None) -> List[str]:
-        """Async wrapper for ingest -- runs ribosome calls in thread pool."""
+        """Async wrapper for ingest -- runs compressor calls in thread pool."""
         loop = asyncio.get_event_loop()
         return await loop.run_in_executor(_executor, self.ingest, content, content_type, metadata)
 
@@ -863,7 +863,7 @@ class HelixContextManager:
           - generic   → preserve legacy detection (regression baseline)
 
         Legacy generic-branch detection activates for:
-          1. Server-level MoE detection (ribosome model is gemma4 etc.)
+          1. Server-level MoE detection (compressor model is gemma4 etc.)
           2. Per-request downstream model detection (sub-4B or MoE family)
         """
         if caller_model_class == "small_moe":
@@ -943,7 +943,7 @@ class HelixContextManager:
     ) -> ContextWindow:
         """
         Build the active context window for a query.
-        Runs the 5-step expression pipeline (Steps 1-5).
+        Runs the 5-step retrieval pipeline (Steps 1-5).
 
         Args:
             downstream_model: optional model name from the proxy request,
@@ -1062,7 +1062,7 @@ class HelixContextManager:
         )
 
         # Step 0: Query intent expansion (LLM-based, cached)
-        # Restates the query with expanded keywords BEFORE promoter lookup.
+        # Restates the query with expanded keywords BEFORE tags lookup.
         # This sharpens the initial frequency so retrieval falls into the
         # right gravity well instead of optimizing the wrong one.
         with _stage_timer("extract"):
@@ -1081,7 +1081,7 @@ class HelixContextManager:
                     expand_query=True,
                 )
 
-        # Step 2: Express (genome query + pending buffer + optional cold tier)
+        # Step 2: Retrieve (knowledge store query + pending buffer + optional cold tier)
         with _stage_timer("express"):
             if len(_sub_queries) == 1:
                 candidates = self._express(
@@ -1126,11 +1126,11 @@ class HelixContextManager:
 
         if not candidates:
             total_genes = self.genome.stats().get("total_genes", 0)
-            # Stage 6 (§6): the legacy "denatured if genome non-empty
+            # Stage 6 (§6): the legacy "denatured if knowledge store non-empty
             # else sparse" status maps onto two distinct MissBlock
             # reasons:
-            #   - genome has genes, none matched → "no_promoter_match"
-            #   - genome is empty                → "no_promoter_match"
+            #   - knowledge store has documents, none matched → "no_promoter_match"
+            #   - knowledge store is empty                → "no_promoter_match"
             # Both ship the same expressed_context byte so the LLM-
             # visible prompt is identical; downstream discriminator
             # picks the MissBlock.reason from health.status +
@@ -1172,26 +1172,26 @@ class HelixContextManager:
                 allow_rerank=True,
             )
 
-        # Dynamic budget tiers — size the expression window based on
+        # Dynamic budget tiers — size the retrieval window based on
         # retrieval confidence instead of always sending max_genes.
         #
         # The insight: on a CURATED query ("what port does helix use?") the
-        # top gene will score 5-10x higher than #12. Sending 12 genes for a
+        # top document will score 5-10x higher than #12. Sending 12 documents for a
         # query with an obvious winner wastes 91% of the budget on padding
         # and dilutes the small model's attention.
         #
         # Tiers (confidence = top_score / mean_score ratio):
-        #   - TIGHT   (ratio >= 3.0): top 3 genes   — ~6K total tokens
-        #   - FOCUSED (ratio 1.8-3.0): top 6 genes  — ~9K total tokens
+        #   - TIGHT   (ratio >= 3.0): top 3 documents   — ~6K total tokens
+        #   - FOCUSED (ratio 1.8-3.0): top 6 documents  — ~9K total tokens
         #   - BROAD   (ratio < 1.8):  top max_genes — ~15K total tokens
         #
-        # Score-gate floor: always drop genes scoring < 15% of top score.
+        # Score-gate floor: always drop documents scoring < 15% of top score.
         budget_tier = "broad"  # default
         budget_tokens_est = 15000
         if len(candidates) > 3:
             all_scores = self.genome.last_query_scores
-            # Compute ratio over CANDIDATES only, not all scored genes
-            # (all_scores includes genes that didn't make top-N cut,
+            # Compute ratio over CANDIDATES only, not all scored documents
+            # (all_scores includes documents that didn't make top-N cut,
             # dragging down mean and inflating ratio → always "tight")
             candidate_ids = {g.gene_id for g in candidates}
             scores = {gid: s for gid, s in (all_scores or {}).items() if gid in candidate_ids}
@@ -1201,7 +1201,7 @@ class HelixContextManager:
                 ratio = top_score / max(mean_score, 0.01)
 
                 # Hard floor: drop anything below 15% of top
-                # Shadow scores: preserve cut genes' scores with 0.5x weight
+                # Shadow scores: preserve cut documents' scores with 0.5x weight
                 # so Lagrange check and harmonic binning can pull them back
                 # if the landscape changes downstream.
                 floor = top_score * 0.15
@@ -1275,7 +1275,7 @@ class HelixContextManager:
                     and (skip_absolute_floors or top_score >= TIGHT_SCORE_FLOOR)
                     and len(candidates) >= 3
                 ):
-                    # High confidence — top gene dominates AND is strong, send 3
+                    # High confidence — top document dominates AND is strong, send 3
                     shadow_pool = shadow_pool + candidates[3:]
                     candidates = candidates[:3]
                     budget_tier = "tight"
@@ -1314,7 +1314,7 @@ class HelixContextManager:
                 except Exception:  # pragma: no cover
                     pass
 
-                # Lagrange point check: a gene in the shadow pool with HIGH
+                # Lagrange point check: a document in the shadow pool with HIGH
                 # standalone score but LOW co-activation with the winners is
                 # being deflected by cluster gravity, not rejected on merit.
                 # Pull it back if its standalone > 70% of winners' floor AND
@@ -1348,7 +1348,7 @@ class HelixContextManager:
                                     "Lagrange pull-back: gene %s (score=%.2f, overlap=%.1f%%)",
                                     g.gene_id[:12], shadow_score, overlap_ratio * 100,
                                 )
-                                # Replace the weakest winner with this gene
+                                # Replace the weakest winner with this document
                                 candidates[-1] = g
                                 break
                     except Exception:
@@ -1357,13 +1357,13 @@ class HelixContextManager:
                         log.warning("Lagrange pull-back failed", exc_info=True)
 
         # Step 3.6: Apply classifier assembly cap.
-        # Invariant: classifier can only LOWER the assembled gene count.
+        # Invariant: classifier can only LOWER the assembled document count.
         # It cannot raise it, and it cannot reduce retrieval depth — the
         # score-ratio tier above already saw the full candidate set.
         #
         # Stage 5 (2026-05-08) §4: caller_model_class adjusts the effective cap
         # AFTER the classifier-derived cap.
-        #   small_moe → min(classifier_cap, 4)   (small models drown in >4 genes)
+        #   small_moe → min(classifier_cap, 4)   (small models drown in >4 documents)
         #   frontier  → max(12, classifier_cap*2) (frontier callers have 200k+ contexts)
         #   generic   → unchanged (regression baseline; classifier_cap as-is)
         candidate_pool_size = len(candidates)
@@ -1400,7 +1400,7 @@ class HelixContextManager:
             if _classifier_cap is None and len(candidates) > _frontier_cap:
                 candidates = candidates[:_frontier_cap]
 
-        # Foveated-splice (spec §4-5): for BROAD only, replace uniform per-gene
+        # Foveated-splice (spec §4-5): for BROAD only, replace uniform per-document
         # compression with a rank-scaled power-law schedule AND reverse the
         # assembly order so top-rank lands nearest the user query (lost-in-the-
         # middle exploit). Off by default; see docs/specs/2026-05-03-foveated-
@@ -1408,7 +1408,7 @@ class HelixContextManager:
         #
         # Placed AFTER the classifier cap so reversal operates on the final
         # post-cap candidate list (otherwise classifier truncation would
-        # silently drop the top-rank gene under reverse-rank — see code
+        # silently drop the top-rank document under reverse-rank — see code
         # review C1).
         #
         # Uses local variables (not self._last_*) so concurrent build_context
@@ -1420,7 +1420,7 @@ class HelixContextManager:
         #   frontier  → SKIP entirely (forward rank-1-first order; long-context
         #               attention regresses under reverse-rank).
         #   small_moe → ON regardless of budget_tier (always benefits from
-        #               recency on the gene that holds the answer).
+        #               recency on the document that holds the answer).
         #   generic   → unchanged (broad-tier-only, regression baseline).
         if caller_model_class == "frontier":
             _foveated_should_run = False
@@ -1458,8 +1458,8 @@ class HelixContextManager:
             except Exception:
                 log.warning("NLI classification failed, proceeding without", exc_info=True)
 
-        # Step 4: Dense gene expression
-        # Each gene expressed as: Facts (KV pairs) + Source + Raw content
+        # Step 4: Dense document retrieval
+        # Each document retrieved as: Facts (KV pairs) + Source + Raw content
         # Dense format minimizes prose for small model extraction.
         spliced_map = {}
         answer_slate_lines = []  # MoE answer slate — flat KV pairs
@@ -1493,7 +1493,7 @@ class HelixContextManager:
                     short = "/".join(parts[j + 1:])
                 except ValueError:
                     short = "/".join(parts[-3:]) if len(parts) > 3 else src
-            # Dense XML gene format — structured for small model extraction
+            # Dense XML document format — structured for small model extraction
             kv_attrs = ""
             if g.key_values:
                 # Top 5 KVs as XML attributes for instant scanning
@@ -1507,13 +1507,13 @@ class HelixContextManager:
                         answer_slate_lines.append(kv)
             src_attr = f' src="{short}"' if short else ""
             # Semantic compression via Headroom (by Tejas Chopra, Apache-2.0).
-            # Dispatches by promoter domain: log→LogCompressor,
+            # Dispatches by tags domain: log→LogCompressor,
             # diff→DiffCompressor, else→Kompress (ModernBERT).
             # CodeCompressor disabled (40% invalid syntax — see 2f518dc).
             # Falls back to content[:1000].strip() when headroom is unavailable.
             #
             # Foveated path overrides the uniform 1000-char target with a
-            # rank-proportional cap per gene. When foveated_caps is None
+            # rank-proportional cap per document. When foveated_caps is None
             # (default / non-BROAD / disabled), preserve current behavior.
             if foveated_caps is not None:
                 target = max(1, int(foveated_caps[idx] * foveated_base))
@@ -1526,7 +1526,7 @@ class HelixContextManager:
             )
             spliced_map[g.gene_id] = f"<GENE{src_attr}{kv_attrs}>\n{content}\n</GENE>"
 
-        # Record splice-stage timing (covers compress_text loop over all genes)
+        # Record splice-stage timing (covers compress_text loop over all documents)
         try:
             _pipeline_stage_histogram().record(
                 _time.monotonic() - _splice_t0, {"stage": "splice"},
@@ -1563,8 +1563,8 @@ class HelixContextManager:
                 # flatten only scalar attributes (the list above can be
                 # silently dropped). See code review I3. Under reverse-rank
                 # ordering caps[-1] is the c_max applied to the TOP-rank
-                # gene (closest to the user query) and caps[0] is the
-                # c_min applied to the BOTTOM-rank gene — the names
+                # document (closest to the user query) and caps[0] is the
+                # c_min applied to the BOTTOM-rank document — the names
                 # `_top` / `_min` reflect the rank semantic, not the
                 # list-index semantic.
                 window.metadata["foveated_cap_top"] = foveated_caps[-1]
@@ -1587,10 +1587,10 @@ class HelixContextManager:
             if classifier_result.reason:
                 window.metadata["classifier"]["reason"] = classifier_result.reason
 
-        # Touch expressed genes (update epigenetics).
+        # Touch retrieved documents (update signals).
         # Read-only contract (Stage 1): clean=true ⇒ read_only=True ⇒ skip
-        # all genome mutations below. Learning/replication is suppressed so
-        # synthetic benches and audit-style queries cannot pollute genome
+        # all knowledge store mutations below. Learning/replication is suppressed so
+        # synthetic benches and audit-style queries cannot pollute knowledge store
         # state. log_health (further down) is intentionally OUTSIDE the
         # gate — it writes only to `health_log` (observability, not
         # learning) and is the only way to see what a read-only run did.
@@ -1599,7 +1599,7 @@ class HelixContextManager:
             self.genome.touch_genes(expressed_ids)
             self.genome.link_coactivated(expressed_ids)
 
-            # Compute harmonic weights between expressed genes (cymatics)
+            # Compute harmonic weights between retrieved documents (cymatics)
             if self._use_cymatics and self.config.cymatics.harmonic_links:
                 try:
                     from .cymatics import compute_harmonic_weights
@@ -1613,7 +1613,7 @@ class HelixContextManager:
                     # but log so failures don't disappear silently.
                     log.warning("Harmonic link persistence failed", exc_info=True)
 
-            # Store typed relations in genome (if available)
+            # Store typed relations in knowledge store (if available)
             if relation_graph:
                 batch = []
                 for (gid_a, gid_b), (relation, confidence) in relation_graph.items():
@@ -1622,8 +1622,8 @@ class HelixContextManager:
                 if batch:
                     self.genome.store_relations_batch(batch)
 
-        # Update TCM session context with expressed genes (in-memory only,
-        # not gated — TCM session is per-process state, not genome state).
+        # Update TCM session context with retrieved documents (in-memory only,
+        # not gated — TCM session is per-process state, not knowledge store state).
         if self._tcm_session is not None:
             try:
                 for gene in candidates:
@@ -1693,9 +1693,9 @@ class HelixContextManager:
           - _last_shadow_pool / _last_shadow_scores (Lagrange leftovers)
 
         Does NOT touch:
-          - genome content (genes, embeddings, attribution)
+          - knowledge store content (documents, embeddings, attribution)
           - LRU-cached parse results (those are content-keyed)
-          - chromatin tier state (per-gene)
+          - lifecycle tier tier state (per-document)
 
         Safe to call between every /context request when running
         in synthetic-bench mode. Typical real-user sessions should NOT
@@ -1722,7 +1722,7 @@ class HelixContextManager:
         except Exception:
             pass
 
-    # -- Learn: replicate exchange back to genome (Step 6) -------------
+    # -- Learn: persist exchange back to knowledge store (Step 6) -------------
 
     def learn(self, query: str, response: str, timeout_s: float = 15.0) -> Optional[str]:
         """
@@ -1730,11 +1730,11 @@ class HelixContextManager:
 
         Appends to the session buffer (last 10 exchanges) and triggers
         auto-consolidation every N learns. The exchange is also immediately
-        replicated to the genome for pending-buffer retrieval continuity.
+        persisted to the knowledge store for pending-buffer retrieval continuity.
 
-        The ribosome replicate call is wrapped in a thread timeout so a
+        The compressor persist call is wrapped in a thread timeout so a
         slow/overloaded backend can never hang the background task forever.
-        On timeout, a minimal gene is synthesized from the raw exchange
+        On timeout, a minimal document is synthesized from the raw exchange
         (same fallback path used by ``Ribosome.replicate`` on error).
 
         Returns gene_id or None on failure.
@@ -1748,7 +1748,7 @@ class HelixContextManager:
             self._session_learn_count += 1
 
         try:
-            # Wrap replicate in a thread timeout so a stuck ribosome
+            # Wrap persist in a thread timeout so a stuck compressor
             # can't block this background task indefinitely.
             import concurrent.futures as _cf
             with _cf.ThreadPoolExecutor(max_workers=1) as _ex:
@@ -1761,7 +1761,7 @@ class HelixContextManager:
                         "building minimal gene from raw exchange",
                         timeout_s,
                     )
-                    # Build minimal gene without the ribosome (same shape
+                    # Build minimal document without the compressor (same shape
                     # as Ribosome.replicate's own fallback path)
                     from .genome import Genome as _Genome
                     from .schemas import Gene as _Gene, PromoterTags as _PT, EpigeneticMarkers as _EM
@@ -1775,7 +1775,7 @@ class HelixContextManager:
                         epigenetics=_EM(),
                     )
 
-            # Attach ΣĒMA vector to replicated gene
+            # Attach ΣĒMA vector to persisted document
             if self._sema_codec is not None:
                 try:
                     gene.embedding = self._sema_codec.encode(gene.content[:1000])
@@ -1816,9 +1816,9 @@ class HelixContextManager:
 
     def consolidate_session(self) -> List[str]:
         """
-        Distill the session buffer into consolidated knowledge genes.
+        Distill the session buffer into consolidated knowledge documents.
 
-        Sends buffered exchanges to the ribosome with a "distill facts" prompt.
+        Sends buffered exchanges to the compressor with a "distill facts" prompt.
         Extracts only new knowledge -- facts, config changes, decisions, discoveries.
         Skips greetings, acknowledgments, and trivial exchanges.
 
@@ -1910,7 +1910,7 @@ class HelixContextManager:
     # -- Stats ---------------------------------------------------------
 
     def stats(self) -> Dict:
-        self.genome.refresh()  # See latest gene count from external writers
+        self.genome.refresh()  # See latest document count from external writers
         genome_stats = self.genome.stats()
         health_summary = self.genome.health_summary()
         return {
@@ -1937,7 +1937,7 @@ class HelixContextManager:
 
     def _extract_query_signals(self, query: str) -> Tuple[List[str], List[str]]:
         """
-        Lightweight keyword extraction from the query for promoter matching.
+        Lightweight keyword extraction from the query for tags matching.
         No model call -- uses pre-built frozenset from accel module.
         """
         return extract_query_signals(query)
@@ -1946,9 +1946,9 @@ class HelixContextManager:
         """
         Step 0: Sharpen the initial query frequency via LLM expansion.
 
-        A small ribosome call (~100 tokens out) restates the query with
-        expanded keywords BEFORE promoter lookup. This changes which 12
-        genes get pulled in the first place — upstream of every bracket
+        A small compressor call (~100 tokens out) restates the query with
+        expanded keywords BEFORE tags lookup. This changes which 12
+        documents get pulled in the first place — upstream of every bracket
         cut in the pipeline.
 
         The Thinker metaphor: don't optimize the judge; fix the signal.
@@ -2101,7 +2101,7 @@ class HelixContextManager:
 
         return expanded_query, domains, entities
 
-    # -- Internal: Step 2 (express) ------------------------------------
+    # -- Internal: Step 2 (retrieve) ------------------------------------
 
     def _express(
         self,
@@ -2115,7 +2115,7 @@ class HelixContextManager:
         use_sr: Optional[bool] = None,
         read_only: bool = False,
     ) -> List[Gene]:
-        """Query genome + pending buffer for matching genes.
+        """Query knowledge store + pending buffer for matching documents.
 
         Parameters
         ----------
@@ -2135,15 +2135,15 @@ class HelixContextManager:
             touching the config file.
         party_id : str, optional
             Caller's party identity. When provided, ``query_genes``
-            excludes genes attributed to OTHER parties (cross-party
-            leakage prevention) and grants a +0.5 score bonus to genes
-            attributed to this party. Unattributed legacy genes remain
+            excludes documents attributed to OTHER parties (cross-party
+            leakage prevention) and grants a +0.5 score bonus to documents
+            attributed to this party. Unattributed legacy documents remain
             retrievable regardless. ``None`` = no filtering, no bonus
             (existing behavior).
         """
         candidates: List[Gene] = []
 
-        # ── Hot-tier retrieval (chromatin < HETEROCHROMATIN) ────────────
+        # ── Hot-tier retrieval (lifecycle tier < HETEROCHROMATIN) ────────────
         try:
             if self.genome._dense_embedding_enabled and query_text:
                 # Step 4: ANN threshold path — uses BGE-M3 dense vectors to
@@ -2173,7 +2173,7 @@ class HelixContextManager:
         except PromoterMismatch:
             pass
 
-        # Check pending buffer for recently replicated genes not yet committed
+        # Check pending buffer for recently persisted documents not yet committed
         with self._pending_lock:
             for gene in self._pending:
                 gene_domains = set(d.lower() for d in gene.promoter.domains)
@@ -2192,8 +2192,8 @@ class HelixContextManager:
                 deduped.append(g)
 
         # ── Cold-tier fallthrough (C.2 of B→C, opt-in) ──────────────────
-        # When cold-tier is enabled, consult heterochromatin genes via
-        # SEMA cosine similarity. Cold genes still hold their content
+        # When cold-tier is enabled, consult heterochromatin documents via
+        # SEMA cosine similarity. Cold documents still hold their content
         # thanks to C.1's non-destructive demotion.
         #
         # Trigger semantics:
@@ -2299,7 +2299,7 @@ class HelixContextManager:
         use_tcm: bool = True,
         allow_rerank: bool = True,
     ) -> Tuple[List[Gene], Dict[str, Dict[str, float]]]:
-        """Apply post-express candidate refiners before assembly or fingerprinting."""
+        """Apply post-retrieve candidate refiners before assembly or fingerprinting."""
         refiner_contrib: Dict[str, Dict[str, float]] = {}
 
         if use_cymatics and self._use_cymatics and len(candidates) > 1:
@@ -2410,13 +2410,13 @@ class HelixContextManager:
         """
         Sort spliced parts, join with dividers, wrap in expressed_context tags.
 
-        MoE mode: sorts genes by retrieval score (highest first) instead of
+        MoE mode: sorts documents by retrieval score (highest first) instead of
         sequence_index, so the best match lands in position 0 — inside every
         SWA local attention window. Also injects an answer slate into the
         decoder prompt for front-loaded fact extraction.
 
         Session working-set (Sprint 2): when session_id is provided and
-        budget.session_delivery_enabled is on, genes already delivered in
+        budget.session_delivery_enabled is on, documents already delivered in
         this session are emitted as elision stubs rather than full content;
         fresh deliveries are logged to session_delivery_log for future
         elision. ignore_delivered=True bypasses the check (still logs).
@@ -2449,7 +2449,7 @@ class HelixContextManager:
                 reverse=True,
             )
         elif use_slate:
-            # MoE/small-model: relevance-first ordering — best gene at position 0
+            # MoE/small-model: relevance-first ordering — best document at position 0
             # so it's within every sliding-window attention layer
             scores = self.genome.last_query_scores or {}
             sorted_genes = sorted(
@@ -2462,8 +2462,8 @@ class HelixContextManager:
             sorted_genes = sorted(candidates, key=lambda g: g.promoter.sequence_index or 0)
 
         # Sprint 1 legibility pack: compute z-score stats once over the
-        # expressed gene set so every header's confidence symbol is
-        # calibrated against THIS response (not a genome-wide baseline).
+        # retrieved document set so every header's confidence symbol is
+        # calibrated against THIS response (not a knowledge store-wide baseline).
         # See helix_context/legibility.py + docs/FUTURE/AI_CONSUMER_ROADMAP_2026-04-14.md.
         #
         # Stage 5 §4: small_moe suppresses legibility headers entirely
@@ -2484,7 +2484,7 @@ class HelixContextManager:
             _leg_tiers = {}
             _score_stats = (0.0, 0.0)
 
-        # Sprint 2 session working-set: look up prior deliveries so genes
+        # Sprint 2 session working-set: look up prior deliveries so documents
         # the consumer already holds can be elided with a stub. Bypassed
         # when flag off, session_id missing, or caller opted out.
         session_on = (
@@ -2512,13 +2512,13 @@ class HelixContextManager:
 
         parts: List[str] = []
         total_raw = 0
-        # Track per-gene log intent so budget-trim can discard entries
+        # Track per-document log intent so budget-trim can discard entries
         # that didn't actually make it to the consumer. Value is
         # (mode, content_hash) for fresh deliveries, or None for elided.
         _delivery_log_map: Dict[str, Optional[Tuple[str, str]]] = {}
 
         for g in sorted_genes:
-            # Prefer ribosome-spliced text; fall back to complement summary;
+            # Prefer compressor-spliced text; fall back to complement summary;
             # last resort is Headroom semantic compression (was content[:500]).
             spliced_text = spliced_map.get(g.gene_id) or g.complement or compress_text(
                 g.content,
@@ -2527,7 +2527,7 @@ class HelixContextManager:
             )
             prior = _prior_deliveries.get(g.gene_id) if session_on else None
             if prior is not None:
-                # Gene already delivered in this session — elide content
+                # Document already delivered in this session — elide content
                 prior_ts, _prior_mode, _prior_hash = prior
                 try:
                     queries_ago = _session_delivery.count_queries_in_session_since(
@@ -2620,23 +2620,23 @@ class HelixContextManager:
             # avoid racing on self._decoder_prompt across concurrent calls.
             decoder_prompt = decoder_prompt_override or self._decoder_prompt
 
-        # Budget enforcement: if over token budget, drop lowest-scored genes
+        # Budget enforcement: if over token budget, drop lowest-scored documents
         est_tokens = estimate_tokens(decoder_prompt) + estimate_tokens(expressed_wrapped)
         budget = self.config.budget.ribosome_tokens + self.config.budget.expression_tokens
 
         if est_tokens > budget and len(parts) > 1:
-            # Default path: parts[-1] is the LOWEST-rank gene (sorted_genes was
+            # Default path: parts[-1] is the LOWEST-rank document (sorted_genes was
             # ordered score-DESC or by sequence_index), so popping from the
             # back drops the least-important entry first.
             #
             # Foveated reverse-rank path (respect_caller_order=True, spec §5):
             # the caller emits BROAD candidates in REVERSE-rank order so the
-            # top-rank gene lands LAST in the prompt (closest to user query
+            # top-rank document lands LAST in the prompt (closest to user query
             # under decoder-only attention). Under that ordering parts[-1] is
-            # the TOP-rank gene — popping from the back here would silently
-            # drop the most important gene first, the exact opposite of what
+            # the TOP-rank document — popping from the back here would silently
+            # drop the most important document first, the exact opposite of what
             # the spec wants. Pop from the FRONT instead to drop the
-            # bottom-rank gene and preserve the placement invariant.
+            # bottom-rank document and preserve the placement invariant.
             #
             # sorted_genes is kept aligned with parts so the post-trim
             # delivered_ids / expressed_gene_ids slices stay correct under
@@ -2655,7 +2655,7 @@ class HelixContextManager:
         compressed_chars = len(expressed)
 
         # Sprint 2 session working-set: persist deliveries that actually
-        # made it to the consumer (post-budget-trim). Elided genes (stubs)
+        # made it to the consumer (post-budget-trim). Elided documents (stubs)
         # already had their original delivery logged on the prior turn, so
         # we don't re-log them here. Any exception is swallowed — a log
         # hiccup must not break the retrieval response.
@@ -2714,17 +2714,17 @@ class HelixContextManager:
         Compute the delta-epsilon context health signal.
 
         Measures four dimensions:
-            coverage  — fraction of query terms that matched genome tags
-            density   — fraction of expression token budget actually used
+            coverage  — fraction of query terms that matched knowledge store tags
+            density   — fraction of retrieval token budget actually used
             freshness — three signals (Stage 7, 2026-05-08): freshness_min,
                         freshness_top1, freshness_weighted. Replaces the
                         prior mean(decay_score) so a stale top-1 needle is
-                        no longer masked by fresh padding genes.
+                        no longer masked by fresh padding documents.
             ellipticity — composite score (geometric mean of the three)
 
         Status thresholds:
-            aligned   — ellipticity >= 0.7 (genome is well-grounded)
-            sparse    — ellipticity >= 0.3 (genome has gaps, model may guess)
+            aligned   — ellipticity >= 0.7 (knowledge store is well-grounded)
+            sparse    — ellipticity >= 0.3 (knowledge store has gaps, model may guess)
             stale     — freshness_top1 < 0.4 OR freshness_weighted < 0.5
                         (Stage 7: top-1 stale, OR score-weighted body stale)
             denatured — ellipticity < 0.3 (context is unreliable)
@@ -2735,11 +2735,11 @@ class HelixContextManager:
         total_genes = genome_stats.get("total_genes", 0)
         genes_expressed = len(candidates)
 
-        # Coverage: what fraction of query terms were found in the genome?
-        # Checks promoter tags, FTS5 content matches, and key-value extracts.
+        # Coverage: what fraction of query terms were found in the knowledge store?
+        # Checks tags, FTS5 content matches, and key-value extracts.
         if query_terms:
             matched = 0
-            # Collect all searchable text from expressed genes
+            # Collect all searchable text from retrieved documents
             all_tags: set[str] = set()
             all_content_lower = ""
             for g in candidates:
@@ -2747,7 +2747,7 @@ class HelixContextManager:
                 all_tags.update(e.lower() for e in g.promoter.entities)
                 if g.key_values:
                     all_tags.update(kv.lower() for kv in g.key_values)
-                # Content presence check (for FTS5/SPLADE-found genes)
+                # Content presence check (for FTS5/SPLADE-found documents)
                 all_content_lower += " " + (g.content[:2000] or "").lower()
             for term in query_terms:
                 t = term.lower()
@@ -2757,9 +2757,9 @@ class HelixContextManager:
         else:
             coverage = 0.0
 
-        # Density: how much of the effective expression capacity did we use?
-        # Scale budget by genes expressed vs max — a query that correctly
-        # expresses 4 focused genes shouldn't be penalized for not filling 12 slots.
+        # Density: how much of the effective retrieval capacity did we use?
+        # Scale budget by documents retrieved vs max — a query that correctly
+        # retrieves 4 focused documents shouldn't be penalized for not filling 12 slots.
         max_genes = self.config.budget.max_genes_per_turn
         expressed_ratio = genes_expressed / max(max_genes, 1)
         effective_budget = self.config.budget.expression_tokens * 4 * max(expressed_ratio, 0.25)
@@ -2768,10 +2768,10 @@ class HelixContextManager:
         # Freshness — Stage 7 rewrite (2026-05-08, spec §3):
         # three signals computed in one pass over score-desc-ordered
         # candidates. The previous mean(decay) collapsed the entire
-        # expressed set into a single number and let 11 fresh padding
-        # genes mask one stale needle (regression test
+        # retrieved set into a single number and let 11 fresh padding
+        # documents mask one stale needle (regression test
         # ``test_freshness_top1_dominates_padding``). The replacement:
-        #   freshness_min      = min decay (worst gene in set)
+        #   freshness_min      = min decay (worst document in set)
         #   freshness_top1     = decay of the top-1 by retrieval score
         #   freshness_weighted = score-weighted sum of decays
         #
@@ -2838,12 +2838,12 @@ class HelixContextManager:
             ellipticity = (c * d * f) ** (1.0 / 3.0)
 
         # Status classification — Stage 7 rule (spec §3):
-        #   freshness_top1   < 0.4  → "stale" (the gene we'd answer
+        #   freshness_top1   < 0.4  → "stale" (the document we'd answer
         #                              from is itself stale)
         #   freshness_weighted < 0.5 → "stale" (score-weighted body
-        #                              of expressed set is stale)
+        #                              of retrieved set is stale)
         # Either trigger fires "stale". The previous rule used a single
-        # mean(decay) < 0.4, which 11 fresh padding genes around one
+        # mean(decay) < 0.4, which 11 fresh padding documents around one
         # stale needle could trivially mask.
         if genes_expressed > 0 and (
             freshness_top1 < 0.4 or freshness_weighted < 0.5
@@ -2992,7 +2992,7 @@ class HelixContextManager:
         Trigger contract (caller's responsibility): only invoke this
         when the hot tier returned thin results AND the corpus health
         is not "abstain". This helper is idempotent — it does NOT
-        mutate ``last_cold_tier_used`` markers or promote any genes.
+        mutate ``last_cold_tier_used`` markers or promote any documents.
 
         Threshold default of 0.4 is tighter than ``query_cold_tier``'s
         own default (0.15) because cold peek competes with
@@ -3000,7 +3000,7 @@ class HelixContextManager:
         archived hits, not on every weak SEMA neighbor.
 
         Returns:
-          List of refresh targets — one ``source_id`` per cold gene
+          List of refresh targets — one ``source_id`` per cold document
           returned, deduped while preserving order. Empty list when
           the SEMA codec is unavailable, the cold-tier index is
           empty, or no match clears ``min_cosine``.
@@ -3018,7 +3018,7 @@ class HelixContextManager:
         seen: set[str] = set()
         targets: List[str] = []
         for g in cold_hits:
-            # spec §6: prefer source_path under epigenetics, then fall
+            # spec §6: prefer source_path under signals, then fall
             # through to source_id. Path-shaped string is what the
             # agent will re-read.
             src = (

@@ -3,7 +3,7 @@ OpenTelemetry setup for helix-context.
 
 Makes the retrieval pipeline observable: traces per /context span, metric
 histograms per tier, counters for CWoLa bucket accumulation, gauges for
-chromatin + graph density. Everything degrades gracefully if the
+lifecycle tier + graph density. Everything degrades gracefully if the
 opentelemetry packages aren't installed — helix still runs, just blind.
 
 Usage:
@@ -396,7 +396,7 @@ def budget_tier_counter():
 
 
 def ribosome_info_gauge():
-    """Info-metric gauge for ribosome cost visibility (W2-B).
+    """Info-metric gauge for compressor cost visibility (W2-B).
 
     Set once at server startup with value=1 and labels
     {backend, model, cost_class}. Standard Prometheus
@@ -463,7 +463,7 @@ def vault_file_count_gauge():
 def pipeline_stage_histogram():
     """Histogram for per-stage /context pipeline latency.
 
-    Attributes: {stage: str}  — e.g. "classify", "express", "refine",
+    Attributes: {stage: str}  — e.g. "classify", "retrieve", "refine",
     "assemble". Optionally decorated with {decoder_mode: str} by the
     caller when the label is cheap to produce.
     """
@@ -477,7 +477,7 @@ def pipeline_stage_histogram():
 
 
 def ribosome_call_histogram():
-    """Histogram for individual ribosome backend.complete() calls.
+    """Histogram for individual compressor backend.complete() calls.
 
     Attributes: {backend: str, model: str, call_kind: str}
     call_kind is one of: pack | rerank | splice | replicate | unknown
@@ -547,7 +547,7 @@ def _emit_snapshot_values(
     compressed_chars: Optional[int],
     in_degrees: list[int],
 ) -> None:
-    """Write an aggregate genome snapshot into the OTel gauges."""
+    """Write an aggregate knowledge store snapshot into the OTel gauges."""
     chrom_gauge = chromatin_state_counter()
     for state, n in chrom_rows:
         label = {0: "open", 1: "euchromatin", 2: "heterochromatin"}.get(
@@ -647,7 +647,7 @@ def _emit_sharded_gauges_snapshot(genome) -> None:
 
 
 def emit_gauges_snapshot(genome) -> None:
-    """Poll-driven gauges for chromatin + harmonic-edges + genome size.
+    """Poll-driven gauges for lifecycle tier + harmonic-edges + knowledge store size.
 
     Prometheus scrapes via the collector every 15s; we refresh these
     absolute-value metrics on each /stats call (cheap DB queries) so
@@ -686,7 +686,7 @@ def emit_gauges_snapshot(genome) -> None:
         )
     except Exception:
         # Promoted from debug to warning: silent debug-level was hiding a
-        # real failure (chromatin gauge would emit, harmonic/hub/genome_size
+        # real failure (lifecycle tier gauge would emit, harmonic/hub/genome_size
         # would silently disappear). If you see this in normal operation,
         # the SQL inside this function raised — likely a stale read_conn
         # schema cache or a replica-vs-master path mismatch.

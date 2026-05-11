@@ -8,22 +8,22 @@ letting the consumer follow a thread without spinning up a fresh
 Today the LLM consuming /context has to reverse-engineer the retrieval
 to expand on something it just saw:
 
-    "I got gene=abc12345 fired=harmonic:2.3 — what's connected to it?"
+    "I got document=abc12345 fired=harmonic:2.3 — what's connected to it?"
     → invent a synthetic follow-up query → /context → run all 6 pipeline
     steps → pay 2-8k tokens, most of it redundant
 
 This module short-circuits that. Given a gene_id and a direction, walk
-the existing co-activation graph (or the gene's stored
+the existing co-activation graph (or the document's stored
 `co_activated_with` list) and return a compact summary of the 1-hop
-neighborhood — sub-100 tokens typical, no ribosome splice, no rerank.
+neighborhood — sub-100 tokens typical, no compressor splice, no rerank.
 
 Three directions (per roadmap):
     forward:  harmonic_links.gene_id_a = X   (things X points to)
     backward: harmonic_links.gene_id_b = X   (things that point at X)
-    sideways: gene.epigenetics.co_activated_with (the gene's own
+    sideways: gene.epigenetics.co_activated_with (the document's own
               memory of what it's been co-retrieved with)
 
-When `session_id` is provided, the response filters out genes the
+When `session_id` is provided, the response filters out documents the
 consumer already has (via session_delivery_log), so expand responses
 stay non-redundant with the conversation's running context.
 
@@ -93,7 +93,7 @@ def fetch_sideways_neighbors(
     ~1.0 - (k-1)*step. This keeps the response shape uniform with the
     forward/backward paths without promising a real edge weight.
 
-    Returns an empty list if the gene is missing from the genome.
+    Returns an empty list if the document is missing from the knowledge store.
     """
     try:
         g = genome.get_gene(gene_id)
@@ -117,10 +117,10 @@ def format_neighbor_compact(
     *,
     summary_max_chars: int = 80,
 ) -> Dict[str, Any]:
-    """Serialize a Gene to a small JSON blob for the expand response.
+    """Serialize a Document to a small JSON blob for the expand response.
 
     Targeting ~20-30 tokens per neighbor: gene_id, rounded score,
-    trimmed summary, promoter tag lists. No content, no codons — the
+    trimmed summary, tag lists. No content, no fragments — the
     consumer can re-query via /genes/{gene_id} if they want more.
     """
     summary = (gene.promoter.summary or "")[:summary_max_chars]
@@ -145,7 +145,7 @@ def expand_neighbors(
 ) -> Dict[str, Any]:
     """1-hop neighborhood from `gene_id` in the given direction.
 
-    When `session_id` is provided, filters out genes already delivered
+    When `session_id` is provided, filters out documents already delivered
     in that session (via session_delivery_log) so the response is
     non-redundant with whatever the consumer is currently holding.
 
@@ -196,7 +196,7 @@ def expand_neighbors(
                 log.debug("already_delivered lookup failed", exc_info=True)
                 # Fall through: don't drop the neighbor just because the
                 # log check errored — consumer can still decide to skip.
-        # Resolve the gene row so we can emit summary + promoter tags.
+        # Resolve the document row so we can emit summary + tags.
         try:
             gene = genome.get_gene(gid)
         except Exception:

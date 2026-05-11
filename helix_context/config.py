@@ -23,11 +23,11 @@ except ImportError:
 
 @dataclass
 class RibosomeConfig:
-    enabled: bool = False              # Master switch; false = ignore ribosome config/runtime
+    enabled: bool = False              # Master switch; false = ignore compressor config/runtime
     model: str = "auto"
     base_url: str = "http://localhost:11434"
     timeout: float = 10.0
-    keep_alive: str = "30m"     # How long Ollama keeps the ribosome model loaded
+    keep_alive: str = "30m"     # How long Ollama keeps the compressor model loaded
     warmup: bool = True         # Pre-load model on server start
     backend: str = "ollama"     # legacy placeholder; only "deberta" or "litellm" are honored when enabled
     claude_model: str = "claude-haiku-4-5-20251001"   # Claude model when backend="claude"
@@ -37,8 +37,8 @@ class RibosomeConfig:
     splice_model_path: str = "training/models/splice"
     splice_threshold: float = 0.5
     nli_model_path: str = "training/models/nli"
-    nli_splice_bonus: float = 0.15       # Prob bonus for entailment-linked codons
-    nli_splice_penalty: float = 0.15     # Prob penalty for alternation-linked codons
+    nli_splice_bonus: float = 0.15       # Prob bonus for entailment-linked fragments
+    nli_splice_penalty: float = 0.15     # Prob penalty for alternation-linked fragments
     device: str = "auto"        # "auto", "cpu", "cuda"
     # Step 0 query-intent expansion fires ONE LLM call per novel query
     # (LRU-cached) upstream of the 12-tone retrieval stack. Flip to false
@@ -54,7 +54,7 @@ class RibosomeConfig:
     # ── Cost classification (W2-B) ─────────────────────────────────
     # Derived classification of the chosen backend's cost profile. Used
     # by /health and by a server-startup WARNING so operators are never
-    # surprised by paid-API ribosome calls. Add new backends to the
+    # surprised by paid-API compressor calls. Add new backends to the
     # appropriate tuple.
     _LOCAL_BACKENDS = ("ollama", "deberta")
     _PAID_API_BACKENDS = ("claude",)
@@ -69,7 +69,7 @@ class RibosomeConfig:
     def effective_backend(self) -> str:
         """Return the backend Helix should actually run.
 
-        Ribosome is opt-in. Legacy/default backends like ``ollama`` are kept
+        Compressor is opt-in. Legacy/default backends like ``ollama`` are kept
         in config for future reference but intentionally ignored unless a
         supported backend is selected explicitly.
         """
@@ -83,7 +83,7 @@ class RibosomeConfig:
     def cost_class(self) -> str:
         """Return one of ``disabled`` | ``local`` | ``api+free`` | ``api+paid``.
 
-        - ``disabled``= ribosome is intentionally inactive.
+        - ``disabled``= compressor is intentionally inactive.
         - ``local``   = runs on the operator's machine (Ollama / DeBERTa).
         - ``api+free``= remote API with no metered cost (none today).
         - ``api+paid``= remote API that bills per call (Claude direct, or
@@ -126,7 +126,7 @@ class BudgetConfig:
     splice_aggressiveness: float = 0.5
     decoder_mode: str = "full"  # "full"|"condensed"|"minimal"|"none"
     # Sprint 1 legibility pack (AI-consumer roadmap): emit a one-line
-    # metadata header per gene in expressed_context — fired tiers,
+    # metadata header per document in expressed_context — fired tiers,
     # confidence marker, short gene_id, compression ratio. See
     # helix_context/legibility.py. Default on; flip off to restore the
     # pre-Sprint-1 plain-dividers format (useful for bench A/B).
@@ -137,7 +137,7 @@ class BudgetConfig:
     # and per-KV separators. Spec §5 default is 1500. Generic and frontier
     # branches do not consult this knob.
     slate_char_budget: int = 1500
-    # Sprint 2 session working-set register: track delivered genes per
+    # Sprint 2 session working-set register: track delivered documents per
     # session, elide repeats with a pointer stub so the consumer doesn't
     # pay full token cost for content it already holds. Dark on first
     # ship — flip to true in helix.toml to A/B. See session_delivery.py.
@@ -153,7 +153,7 @@ class BudgetConfig:
     foveated_alpha: float = 1.0
     # Rank-N floor compression ratio. Pinned at 0.15 by spec §4.1.
     foveated_c_min: float = 0.15
-    # Per-gene char-budget multiplier. Each gene's target_chars =
+    # Per-document char-budget multiplier. Each document's target_chars =
     # int(c_i · foveated_base_chars). Default 1000 matches the current
     # uniform behavior at c_i = 1.0. The Step 4 compression loop in
     # context_manager.py uses 1000 today; keeping this configurable lets
@@ -166,7 +166,7 @@ class BudgetConfig:
 class GenomeConfig:
     path: str = "genome.db"
     compact_interval: float = 3600.0    # Seconds between source-change checks
-    cold_start_threshold: int = 10      # Fix 3: genes needed before history stripping
+    cold_start_threshold: int = 10      # Fix 3: documents needed before history stripping
     replicas: List[str] = field(default_factory=list)  # Read-only clone paths
     replica_sync_interval: int = 100    # Sync replicas every N inserts
 
@@ -181,7 +181,7 @@ class ServerConfig:
 
 @dataclass
 class IngestionConfig:
-    """Controls which backend encodes raw content into genes."""
+    """Controls which backend encodes raw content into documents."""
     backend: str = "ollama"         # "ollama" | "cpu" | "hybrid"
     splade_enabled: bool = False    # Phase 2: SPLADE sparse expansion at index time
     rerank_model: str = ""          # Phase 3: pretrained cross-encoder HF model ID
@@ -195,13 +195,13 @@ class ContextConfig:
     """Retrieval-time behavior for context_manager.
 
     Cold-tier knobs were added 2026-04-10 (C.2 of B->C). Cold-tier is the
-    opt-in retrieval path that consults heterochromatin genes via SEMA
+    opt-in retrieval path that consults heterochromatin documents via SEMA
     cosine similarity, returning their preserved content (only possible
     after C.1 made compress_to_heterochromatin non-destructive).
     """
     cold_tier_enabled: bool = False         # Master opt-in for cold-tier fallthrough
-    cold_tier_min_hot_genes: int = 0        # Fall through when hot returns <= this many genes (0 = only on empty)
-    cold_tier_k: int = 3                    # Max cold-tier genes to retrieve per query
+    cold_tier_min_hot_genes: int = 0        # Fall through when hot returns <= this many documents (0 = only on empty)
+    cold_tier_k: int = 3                    # Max cold-tier documents to retrieve per query
     cold_tier_min_cosine: float = 0.15      # SEMA cosine floor (sparse 20-dim — see Genome.query_cold_tier)
     fingerprint_mode_profile: str = "balanced"  # "fast" | "balanced" | "quality"
 
@@ -244,12 +244,12 @@ class RetrievalConfig:
     sr_enabled: bool = False            # Dark ship — flip on for A/B
     sr_gamma: float = 0.85              # Discount factor (5-10 hop horizon at 0.9)
     sr_k_steps: int = 4                 # Power-series truncation depth
-    sr_weight: float = 1.5              # Per-gene contribution multiplier
-    sr_cap: float = 3.0                 # Max per-gene SR boost (matches harmonic cap)
+    sr_weight: float = 1.5              # Per-document contribution multiplier
+    sr_cap: float = 3.0                 # Max per-document SR boost (matches harmonic cap)
     # Theta alternation (Wang/Foster/Pfeiffer 2020) — fore/aft ray_trace
     # sampling biased by the current TCM velocity vector.
     ray_trace_theta: bool = False       # Dark ship
-    theta_weight: float = 1.0           # Softmax temperature on v·gene dot product
+    theta_weight: float = 1.0           # Softmax temperature on v·document dot product
     # Sprint 4 — seeded co-activation edges with Hebbian evidence decay.
     # Three-class edge provenance (seeded / co_retrieved / cwola_validated)
     # with Laplace-smoothed co_count vs miss_count per edge.
@@ -257,12 +257,12 @@ class RetrievalConfig:
     seeded_edge_weight: float = 1.0     # Base weight written on seed insertion
     # Tier 0.5 filename-anchor (2026-04-15 Dewey-pivot spike).
     # Dewey bench showed filename alone outperforms the full
-    # project+module+filename bag by 24pp. Boosts genes whose
+    # project+module+filename bag by 24pp. Boosts documents whose
     # filename_stem matches a query term.
     filename_anchor_enabled: bool = False   # Dark ship — flip for A/B
     filename_anchor_weight: float = 4.0     # Per-match boost (higher than Tier 1's 3.0)
     # BM25 shortlist post-filter (2026-04-22, research-review Pareto move 1).
-    # When enabled, query_genes restricts its final ranking to genes that
+    # When enabled, query_genes restricts its final ranking to documents that
     # cleared a BM25/FTS5 top-N pass — other tiers still accumulate scores,
     # but candidates BM25 would never surface are dropped before the sort.
     # Post-filter by design (isolates the ranking-set hypothesis from the
@@ -272,10 +272,10 @@ class RetrievalConfig:
     bm25_prefilter_enabled: bool = False
     bm25_prefilter_size: int = 200          # BM25 top-N fed into tier scoring
     # Tier 5b: entity graph co-occurrence boost (Step 3C, 2026-05-08).
-    # Genes sharing entity nodes with query terms get a score boost proportional
+    # Documents sharing entity nodes with query terms get a score boost proportional
     # to entity overlap. Dark ship — flip to true for A/B.
     entity_graph_retrieval_enabled: bool = False
-    # Step 4 — BGE-M3 dense vectors + ANN threshold-based dynamic gene counts
+    # Step 4 — BGE-M3 dense vectors + ANN threshold-based dynamic document counts
     # (2026-05-08). Dark ship — all flags off by default.
     dense_embedding_enabled: bool = False
     # Stage 2 (2026-05-08): default dim raised from 256 -> 1024. Full BGE-M3
@@ -378,7 +378,7 @@ class ClassifierConfig:
     """Upstream rule-based query classifier / injection router.
 
     When enabled, contributes a decoder-mode hint and an assembly-stage
-    gene-count cap to build_context(). See
+    document-count cap to build_context(). See
     docs/specs/2026-04-29-query-classifier-injection-router-design.md.
     """
     enabled: bool = True
@@ -392,7 +392,7 @@ class PLRConfig:
     when a trained artifact is on disk. Dark by default — callers that need
     the router / HITL signal flip `enabled=true`.
 
-    The current artifact is a **query-quality head** (same score for all genes
+    The current artifact is a **query-quality head** (same score for all documents
     in a retrieval) rather than the per-(q,g) ranker the spec originally
     described. See `helix_context/fusion_plr.py` docstring and
     STATISTICAL_FUSION.md §C3 addendum for the trade-off.
@@ -534,7 +534,7 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
 
     cfg = HelixConfig()
 
-    # Ribosome
+    # Compressor
     if "ribosome" in raw:
         r = raw["ribosome"]
         _warn_unknown("ribosome", r, RibosomeConfig)
@@ -581,7 +581,7 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             slate_char_budget=int(b.get("slate_char_budget", cfg.budget.slate_char_budget)),
         )
 
-    # Genome
+    # KnowledgeStore
     if "genome" in raw:
         g = raw["genome"]
         _warn_unknown("genome", g, GenomeConfig)
@@ -604,7 +604,7 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             upstream_timeout=float(s.get("upstream_timeout", cfg.server.upstream_timeout)),
         )
 
-    # Genome path override — lets sharded vs monolithic servers coexist
+    # KnowledgeStore path override — lets sharded vs monolithic servers coexist
     # on different ports without duplicating helix.toml. Typical use:
     # ``HELIX_GENOME_PATH=genomes/main.genome.db HELIX_USE_SHARDS=1`` for a
     # sharded bench server on a side port; defaults still serve monolithic.
@@ -801,7 +801,7 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
         )
 
     # Hardware section — see docs/specs/2026-05-04-hardware-detection-design.md.
-    # Always run, even if [hardware] is absent, because the [ribosome]
+    # Always run, even if [hardware] is absent, because the [compressor]
     # device deprecation shim must fire whenever the legacy key is set.
     hw = raw.get("hardware", {})
     if isinstance(hw, dict):
@@ -814,7 +814,7 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
         bs = {}
     hardware_device = hw.get("device", "auto")
 
-    # Deprecation shim for [ribosome] device. Fires whenever the legacy
+    # Deprecation shim for [compressor] device. Fires whenever the legacy
     # key is present, even if [hardware] is also set — the warning text
     # MUST contain both "deprecated" and "override" in the both-set case
     # so test_hardware_overrides_ribosome_device's substring asserts

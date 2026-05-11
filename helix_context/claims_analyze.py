@@ -1,14 +1,14 @@
 """Claim-edge detection — post-extraction pass that populates claim_edges.
 
-Extraction (claims.py) produces literal claims from gene content. This
+Extraction (claims.py) produces literal claims from document content. This
 module groups those claims by ``entity_key`` and emits structural
 edges the DAG walker (claims_graph.py) consumes:
 
 - ``contradicts``: same entity_key, conflicting text from different
-  genes. Fires when text similarity is LOW — two genes disagree on
+  documents. Fires when text similarity is LOW — two documents disagree on
   what the entity should be.
 - ``duplicates``: same entity_key, near-identical text from different
-  genes. The same fact recorded in multiple places.
+  documents. The same fact recorded in multiple places.
 - ``supersedes``: same entity_key + comparable text, one claim has a
   strictly newer ``observed_at`` than the other. Picks the newer claim
   as the canonical one.
@@ -123,8 +123,8 @@ def detect_edges_for_group(
 
     Rules:
         - Skip self-comparisons (same claim_id).
-        - Skip pairs where both claims come from the *same gene* —
-          same gene can't contradict itself.
+        - Skip pairs where both claims come from the *same document* —
+          same document can't contradict itself.
         - Jaccard ≥ ``duplicate_threshold``:
             if both have ``observed_at`` and one is strictly newer
                 → ``supersedes`` (older → newer)
@@ -191,7 +191,7 @@ def detect_and_persist_edges(
     Typical usage:
         - After bulk backfill (`scripts/backfill_claims.py`), call
           this once over all groups: ``detect_and_persist_edges(main_db)``.
-        - After per-gene ingest that added claims, call with the
+        - After per-document ingest that added claims, call with the
           affected entity_keys only:
           ``detect_and_persist_edges(main_db, entity_keys=set(keys))``.
     """

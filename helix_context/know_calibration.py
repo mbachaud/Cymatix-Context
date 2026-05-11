@@ -137,7 +137,7 @@ def compute_confidence(
             in [0, 1] (see context_packet._coordinate_confidence).
         calibration: optional override; defaults to ``KnowCalibration()``.
         freshness_min: Stage 7 (spec §10) — minimum decay across the
-            expressed candidates, in [0, 1]. ``None`` is treated as
+            retrieved candidates, in [0, 1]. ``None`` is treated as
             "freshness unknown" (no contribution to z) — preserves
             back-compat for legacy rows where ``last_verified_at`` is
             NULL. With the default β5 = +1.5, a fully fresh top-K adds

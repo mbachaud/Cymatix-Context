@@ -1,13 +1,13 @@
 """
-Replication — Distributed genome clones across drives.
+Persistence — Distributed knowledge store clones across drives.
 
-Biology analogy:
+Bio analogue (legacy term: replication):
     DNA replication creates identical copies of the genome for each
-    daughter cell. Our replication creates read-only copies of genome.db
+    daughter cell. Our persistence creates read-only copies of genome.db
     across multiple drives so parallel agents can query without contention.
 
 Architecture:
-    - Master genome (F:/Projects/helix-context/genome.db) — receives all writes
+    - Master knowledge store (F:/Projects/helix-context/genome.db) — receives all writes
     - Read replicas (C:/helix-cache/genome.db, E:/helix-cache/genome.db) — read-only
     - Delta-sync: WAL checkpoint + file copy every N inserts
     - Agents open replicas with ?mode=ro for zero write contention
@@ -46,9 +46,9 @@ log = logging.getLogger("helix.replication")
 
 class ReplicationManager:
     """
-    Manages read-only genome clones across multiple drives.
+    Manages read-only knowledge store clones across multiple drives.
 
-    The master genome receives all writes. After every `sync_interval`
+    The master knowledge store receives all writes. After every `sync_interval`
     writes, a WAL checkpoint + file copy propagates changes to replicas.
     Replicas are opened read-only by query agents for zero contention.
     """
@@ -92,7 +92,7 @@ class ReplicationManager:
             )
 
     def notify_write(self) -> None:
-        """Called after each write to the master genome. Syncs when threshold reached."""
+        """Called after each write to the master knowledge store. Syncs when threshold reached."""
         with self._lock:
             self._write_count += 1
             if self._write_count >= self.sync_interval:
@@ -116,7 +116,7 @@ class ReplicationManager:
         """Delta-sync master to all replicas using SQLite backup API.
 
         Uses sqlite3.Connection.backup() which copies only changed pages —
-        true delta replication. For a 500MB genome with 100 new genes,
+        true delta persistence. For a 500MB knowledge store with 100 new documents,
         this transfers ~1-5MB instead of the full file.
         """
         try:
@@ -219,7 +219,7 @@ class ReplicationManager:
                     )
 
     def status(self) -> dict:
-        """Return replication status."""
+        """Return persistence status."""
         replica_status = []
         for replica in self.replicas:
             exists = os.path.exists(replica)

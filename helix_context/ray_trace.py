@@ -1,8 +1,8 @@
 """
-Monte Carlo evidence propagation over the gene co-activation graph.
+Monte Carlo evidence propagation over the document co-activation graph.
 
 Ports the ScoreRift ray-trace pattern into a retrieval dimension for
-helix-context.  Casts random rays from seed genes through co-activation
+helix-context.  Casts random rays from seed documents through co-activation
 edges (``co_activated_with`` + ``harmonic_links``), accumulating energy
 at terminal nodes.  High-energy terminals are "supported by evidence"
 from the seed set and receive a retrieval boost.
@@ -19,7 +19,7 @@ Origin story (2026-04-11):
     4. Monte Carlo over a graph IS evidence propagation
     5. Which is what ScoreRift's ``cast_ray`` already does on compliance
        dimensions
-    6. Which maps onto the gene co-activation graph...
+    6. Which maps onto the document co-activation graph...
     7. → this module exists
 
   The current implementation is pure Python on CPU.  The RT cores are
@@ -69,7 +69,7 @@ BOOST_CAP = 2.0
 # ── Helpers ─────────────────────────────────────────────────────────────
 
 def _load_co_activated(genome: "Genome", gene_id: str) -> List[str]:
-    """Read co_activated_with list for a single gene from the DB."""
+    """Read co_activated_with list for a single document from the DB."""
     cur = genome.conn.cursor()
     row = cur.execute(
         "SELECT epigenetics FROM genes WHERE gene_id = ?", (gene_id,)
@@ -114,8 +114,8 @@ def _build_direction_scores(
     gene_ids,
     velocity_vector: List[float],
 ) -> Dict[str, float]:
-    """Cosine(sema(g), velocity) per gene. Reads the pre-materialized
-    ΣĒMA cache so we don't JSON-parse per ray. Genes missing from the
+    """Cosine(sema(g), velocity) per document. Reads the pre-materialized
+    ΣĒMA cache so we don't JSON-parse per ray. Documents missing from the
     cache score 0 (neutral — falls back to uniform sampling)."""
     scores: Dict[str, float] = {}
     cache = getattr(genome, "_sema_cache", None)
@@ -187,7 +187,7 @@ def _load_harmonic_weights(
     genome: "Genome",
     gene_ids: set,
 ) -> Dict[tuple, float]:
-    """Load harmonic_links weights for all gene pairs in the neighbourhood."""
+    """Load harmonic_links weights for all document pairs in the neighbourhood."""
     weights: Dict[tuple, float] = {}
     cur = genome.conn.cursor()
 
@@ -226,14 +226,14 @@ def cast_evidence_rays(
     theta_weight: float = 1.0,
 ) -> Dict[str, float]:
     """
-    Cast Monte Carlo rays from seed genes through co-activation graph.
+    Cast Monte Carlo rays from seed documents through co-activation graph.
 
-    Returns {gene_id: accumulated_energy} for all genes rays landed on.
+    Returns {gene_id: accumulated_energy} for all documents rays landed on.
     Higher energy = more evidence support from the seed set.
 
     Args:
-        seed_gene_ids: Starting gene IDs to cast rays from.
-        genome: Genome instance (uses genome.conn for DB reads).
+        seed_gene_ids: Starting document IDs to cast rays from.
+        knowledge store: KnowledgeStore instance (uses genome.conn for DB reads).
         k_rays: Total number of rays to cast (distributed across seeds).
         max_bounces: Maximum hops per ray before forced deposit.
         decay_per_bounce: Energy multiplier at each bounce.
@@ -260,7 +260,7 @@ def cast_evidence_rays(
 
     # Theta-alternation prep: when the caller provides a velocity
     # vector, bias each bounce's neighbour sample by the cosine of
-    # gene-ΣĒMA against the velocity, alternating sign per bounce
+    # document-ΣĒMA against the velocity, alternating sign per bounce
     # (Wang/Foster/Pfeiffer 2020 fore/aft sweep).
     direction_scores: Dict[str, float] = {}
     use_theta = velocity_vector is not None
@@ -337,14 +337,14 @@ def ray_trace_boost(
     theta_weight: float = 1.0,
 ) -> Dict[str, float]:
     """
-    Compute retrieval boost for genes connected to seeds via evidence rays.
+    Compute retrieval boost for documents connected to seeds via evidence rays.
 
     Returns {gene_id: boost} where boost is normalised to [0, 2.0].
     Intended as a Tier 6 addition to query_genes() scoring.
 
     Args:
-        seed_gene_ids: Gene IDs from which to propagate evidence.
-        genome: Genome instance.
+        seed_gene_ids: Document IDs from which to propagate evidence.
+        knowledge store: KnowledgeStore instance.
         k_rays: Total number of rays.
         max_bounces: Max hops per ray.
         seed: RNG seed for reproducibility.
@@ -387,15 +387,15 @@ def read_overtone_series(
 
     Cymatics insight: the Chladni plate doesn't run a tournament — it
     applies one frequency and the sand finds nodes simultaneously at
-    every scale. A gene appearing in k rays' paths IS the antinode.
+    every scale. A document appearing in k rays' paths IS the antinode.
 
     Returns {gene_id: overtone_weight} where:
-      - Fundamental (gene appears in >= 70% of rays' paths): weight 1.0
+      - Fundamental (document appears in >= 70% of rays' paths): weight 1.0
       - First harmonic (appears in 40-70%): weight 0.5
       - Second harmonic (appears in 20-40%): weight 0.25
       - Noise (< 20%): weight 0.0 (excluded)
 
-    The fundamental IS the expression candidate. Harmonics are candidate
+    The fundamental IS the retrieval candidate. Harmonics are candidate
     support. This reframes ranked cutoffs as resonance reading.
     """
     if not seed_gene_ids:
@@ -418,7 +418,7 @@ def read_overtone_series(
         if not direction_scores:
             use_theta = False
 
-    # Track: for each ray, which genes it visited
+    # Track: for each ray, which documents it visited
     visit_count: Dict[str, int] = {}
 
     for ray_idx in range(k_rays):
@@ -439,7 +439,7 @@ def read_overtone_series(
                 current = rng.choice(neighbors)
             visited.add(current)
 
-        # Count unique gene visits for this ray (seeds included — they
+        # Count unique document visits for this ray (seeds included — they
         # are fundamentals when present in every ray's path).
         for gid in visited:
             visit_count[gid] = visit_count.get(gid, 0) + 1
@@ -488,7 +488,7 @@ def harmonic_bin_boost(
 # ── Diagnostics ─────────────────────────────────────────────────────────
 
 def ray_trace_info(result: Dict[str, float]) -> Dict:
-    """Summary stats: total energy, unique genes reached, max/mean energy."""
+    """Summary stats: total energy, unique documents reached, max/mean energy."""
     if not result:
         return {
             "total_energy": 0.0,

@@ -1,7 +1,7 @@
 """vault.db sibling state — gene_id → path + content-hash sentinel.
 
 Lives in <vault_root>/vault.db, NOT in genome.db. Lifecycle is the vault's,
-not the genome's. See spec section "State tracking — sibling vault.db".
+not the knowledge store's. See spec section "State tracking — sibling vault.db".
 """
 from __future__ import annotations
 
@@ -37,7 +37,7 @@ class VaultStateRecord:
 class VaultState:
     """SQLite + JSON state for the vault.
 
-    vault.db holds per-gene rows (vault_state table).
+    vault.db holds per-document rows (vault_state table).
     .helix-state.json holds top-level state (schema_version, export timestamps).
 
     Callers must call close() explicitly. Context manager support

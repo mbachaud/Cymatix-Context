@@ -1,5 +1,5 @@
 """
-Headroom bridge — CPU-resident semantic compression for gene content.
+Headroom bridge — CPU-resident semantic compression for document content.
 
 Replaces the legacy character-level truncation (``g.content[:1000]``) at the
 retrieval seam with query-agnostic semantic compression via the Headroom
@@ -47,7 +47,7 @@ def _headroom_disabled_by_env() -> bool:
     When set to a truthy value (1/true/yes/on), compress_text bypasses all
     Headroom specialists and falls through to legacy character-level
     truncation. Useful for comparing v0.3.0b4-equivalent behavior against
-    v0.3.0b5 on the same genome without reverting code.
+    v0.3.0b5 on the same knowledge store without reverting code.
     """
     return os.environ.get("HELIX_DISABLE_HEADROOM", "").lower() in _TRUTHY
 
@@ -144,8 +144,8 @@ _CODE_DOMAINS = frozenset({
 })
 _LOG_DOMAINS = frozenset({
     # Strictly log-output-signaling tokens. Tool names like "cargo", "npm",
-    # "build" are excluded because they also appear in code genes (e.g. a
-    # Rust source file naturally has promoter domain "cargo" from Cargo.toml).
+    # "build" are excluded because they also appear in code documents (e.g. a
+    # Rust source file naturally has tags domain "cargo" from Cargo.toml).
     "log", "logs", "stderr", "stdout", "pytest", "jest", "traceback",
 })
 _DIFF_DOMAINS = frozenset({"diff", "patch", "git_diff"})
@@ -164,7 +164,7 @@ def _pick_specialist(domains: Iterable[str]) -> str:
 
     NOTE (2026-04-12): CodeAwareCompressor disabled. Headroom 0.5.23
     changelog confirmed AST-based code compression produces invalid
-    syntax on ~40% of real files. Code genes now fall through to
+    syntax on ~40% of real files. Code documents now fall through to
     Kompress (ModernBERT), which handles code adequately without
     corrupting syntax. See headroom-ai changelog for 0.5.23.
     """

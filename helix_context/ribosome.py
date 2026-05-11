@@ -1,28 +1,28 @@
 """
-Ribosome — The universal decoder.
+Compressor — The universal decoder.
 
-Biology:
+Bio analogue (legacy term: ribosome):
     The ribosome reads mRNA codons and assembles proteins.
     It doesn't "understand" the protein — it's a mechanical translator.
 
-    Our ribosome is a small (2-4B) model running on CPU.
+    Our compressor is a small (2-4B) model running on CPU.
     Four operations:
-        pack      — raw text → codons + promoter tags + complement
-        re_rank   — score candidate genes against a query
+        pack      — raw text → fragments + tags + complement
+        re_rank   — score candidate documents against a query
         splice    — remove introns, keep exons (BATCHED single call)
-        replicate — encode a query+response exchange for genome storage
+        replicate — encode a query+response exchange for knowledge store storage
 
-    The ribosome is DUMB but CONSISTENT. Same input → same output.
-    The intelligence lives in the big model; the ribosome is firmware.
+    The compressor is DUMB but CONSISTENT. Same input → same output.
+    The intelligence lives in the big model; the compressor is firmware.
 
 Fixes incorporated:
-    Fix 2 — Empty splice guard: if ribosome returns empty for a gene,
-            keep first N codons or fall back to complement
+    Fix 2 — Empty splice guard: if compressor returns empty for a document,
+            keep first N fragments or fall back to complement
     Fix 4 — Timeout fallback: httpx timeout on all model calls,
             catch and fall back to deterministic ordering / raw complement
 
 ================================================================
-CURRENT STATE (as of v0.3.0b3): LLM RIBOSOME IS PAUSED BY DEFAULT
+CURRENT STATE (as of v0.3.0b3): LLM COMPRESSOR IS PAUSED BY DEFAULT
 ================================================================
 
 Every method in this file is an LLM function call. The operations are:
@@ -33,7 +33,7 @@ Every method in this file is an LLM function call. The operations are:
     replicate  → backend.complete()  (ribosome.py:535, wrapped in 15s timeout)
 
 As of v0.3.0b3, the default runtime configuration disables the LLM
-ribosome via two mechanisms:
+compressor via two mechanisms:
 
     1. helix.toml:  ribosome.warmup = false
        → server does NOT pre-load gemma4:e4b on startup
@@ -41,22 +41,22 @@ ribosome via two mechanisms:
     2. /admin/ribosome/pause endpoint + background_tasks.add_task wrapper
        → monkey-patches backend.complete() to raise RuntimeError
        → existing fallback paths in pack/replicate synthesize minimal
-         genes from raw exchange when the LLM call raises
+         documents from raw exchange when the LLM call raises
 
 The LLM path still EXISTS — it can be re-enabled per-session via
 /admin/ribosome/resume. It's not deleted, just turned off.
 
-WHY IT'S OFF: the ribosome competed for GPU VRAM with concurrent
-benchmark workloads (qwen3:4b, qwen3:8b inference). Paused ribosome
-= zero VRAM contention, minimal-gene fallback path is good enough
+WHY IT'S OFF: the compressor competed for GPU VRAM with concurrent
+benchmark workloads (qwen3:4b, qwen3:8b inference). Paused compressor
+= zero VRAM contention, minimal-document fallback path is good enough
 for learn()/replicate() until we pick a permanent small-model codec.
 
 WHAT'S NEXT (pending headroom meeting 2026-04-10):
-The LLM ribosome is the swap point for a CPU-native codec. Two
+The LLM compressor is the swap point for a CPU-native codec. Two
 candidates on the table:
 
     - LLMLingua-2 (microsoft, MIT, mBERT-base token classifier)
-      → drop-in peer to the current ribosome, 700MB model download,
+      → drop-in peer to the current compressor, 700MB model download,
         MeetingBank-prose bias, 512-token chunking seam
 
     - Kompress (chopratejas/headroom, Apache-2.0, ModernBERT)
@@ -107,7 +107,7 @@ class ModelBackend(Protocol):
 class OllamaBackend:
     """Talk to a local Ollama instance.
 
-    Uses keep_alive to pin the ribosome model in memory so Ollama
+    Uses keep_alive to pin the compressor model in memory so Ollama
     doesn't unload it every time the big model runs. This eliminates
     the 10-30s model-swap latency on each turn.
     """
@@ -150,7 +150,7 @@ class OllamaBackend:
         return resp.json()["response"]
 
     def _warmup(self) -> None:
-        """Pre-load the ribosome model into Ollama's memory.
+        """Pre-load the compressor model into Ollama's memory.
 
         Sends a minimal generate request with keep_alive so the model
         stays resident. Subsequent calls skip the cold-load entirely.
@@ -183,7 +183,7 @@ class OllamaBackend:
             # Prefer gemma family (good at structured JSON output)
             gemma = [m for m in models if "gemma" in m.get("name", "").lower()]
             if gemma:
-                # Pick smallest gemma model (best for CPU ribosome duty)
+                # Pick smallest gemma model (best for CPU compressor duty)
                 gemma.sort(key=lambda m: m.get("size", float("inf")))
                 pick = gemma[0]["name"]
                 log.info("Auto-detected ribosome model: %s (gemma family)", pick)
@@ -203,7 +203,7 @@ class OllamaBackend:
 # ── Claude API backend ─────────────────────────────────────────────
 
 class ClaudeBackend:
-    """Anthropic Claude API backend for the ribosome.
+    """Anthropic Claude API backend for the compressor.
 
     Drop-in replacement for OllamaBackend. Routes through a proxy (e.g.
     Headroom at :8787) when claude_base_url is set in helix.toml; hits
@@ -348,7 +348,7 @@ class LiteLLMBackend:
 
 
 class DisabledBackend:
-    """No-op ribosome backend used when ribosome is intentionally disabled."""
+    """No-op compressor backend used when compressor is intentionally disabled."""
 
     model = "disabled"
     is_disabled_backend = True
@@ -464,20 +464,20 @@ Focus on:
 Do NOT just summarize the text — capture the *meaning* of the exchange."""
 
 
-# ── Ribosome ────────────────────────────────────────────────────────
+# ── Compressor ────────────────────────────────────────────────────────
 
 class Ribosome:
     """
     CPU-bound small model that handles context codec operations.
 
-    The ribosome doesn't participate in conversation — it's a
+    The compressor doesn't participate in conversation — it's a
     preprocessing/postprocessing engine that runs between turns.
 
     ── IMPORTANT: This class calls the LLM via self.backend.complete() ──
     As of v0.3.0b3 the default runtime keeps this path PAUSED via
     /admin/ribosome/pause. Every method below that calls backend.complete
     will raise RuntimeError if the pause is active; callers already have
-    fallback paths (minimal-gene synthesis from raw exchange).
+    fallback paths (minimal-document synthesis from raw exchange).
 
     Swap target: pending headroom meeting decision on LLMLingua-2 vs
     Kompress as a CPU-native codec replacement. See module docstring.
@@ -525,18 +525,18 @@ class Ribosome:
                     },
                 )
             except Exception:
-                pass  # never let telemetry break the ribosome
+                pass  # never let telemetry break the compressor
         return result
 
-    # ── Pack: raw text → Gene ───────────────────────────────────────
+    # ── Pack: raw text → Document ───────────────────────────────────────
 
     def pack(self, content: str, content_type: str = "text") -> Gene:
         """
-        Encode raw content into a Gene ready for genome storage.
+        Encode raw content into a Document ready for knowledge store storage.
 
-        1. Chunk the content into proto-codons (sentence groups)
-        2. Send numbered groups to the ribosome for encoding
-        3. Assemble Gene with promoter tags and complement
+        1. Chunk the content into proto-fragments (sentence groups)
+        2. Send numbered groups to the compressor for encoding
+        3. Assemble Document with tags and complement
         """
         from .genome import Genome
 
@@ -565,12 +565,12 @@ class Ribosome:
         if not isinstance(parsed, dict):
             raise FoldingError(f"Pack returned non-dict: {type(parsed)}")
 
-        # Assemble codon meanings
+        # Assemble fragment meanings
         codon_meanings = []
         for i, c in enumerate(parsed.get("codons", [])):
             codon_meanings.append(c.get("meaning", f"chunk_{i}"))
 
-        # Build Gene
+        # Build Document
         gene_id = Genome.make_gene_id(content)
         promoter_data = parsed.get("promoter", {})
 
@@ -597,7 +597,7 @@ class Ribosome:
 
     def _extract_key_values(self, content: str) -> List[str]:
         """
-        Extract key-value facts from content via a second ribosome call.
+        Extract key-value facts from content via a second compressor call.
         Returns a list of short fact strings like ["port=11437", "model=qwen3"].
         Best-effort — returns empty list on failure.
         """
@@ -629,13 +629,13 @@ class Ribosome:
 
     def re_rank(self, query: str, candidates: List[Gene], k: int = 5) -> List[Gene]:
         """
-        Score candidate genes by relevance to the query.
-        Uses promoter summaries (not full content) to stay within token budget.
+        Score candidate documents by relevance to the query.
+        Uses tags summaries (not full content) to stay within token budget.
 
-        Lost-in-the-middle guard: if ribosome scores < 50% of candidates,
+        Lost-in-the-middle guard: if compressor scores < 50% of candidates,
         pad with next-best SQLite results (already in the candidates list).
 
-        Fix 4: on timeout, fall back to promoter-score ordering (input order).
+        Fix 4: on timeout, fall back to tags-score ordering (input order).
         """
         if not candidates:
             return []
@@ -682,7 +682,7 @@ class Ribosome:
             scored_ids = {g.gene_id for _, g in scored}
             for g in candidates:
                 if g.gene_id not in scored_ids and len(scored) < k:
-                    scored.append((0.25, g))  # Default score for padded genes
+                    scored.append((0.25, g))  # Default score for padded documents
 
         scored.sort(key=lambda x: x[0], reverse=True)
         return [g for _, g in scored[:k]]
@@ -696,12 +696,12 @@ class Ribosome:
         min_codons_kept: int = 2,
     ) -> Dict[str, str]:
         """
-        Batched splice: single ribosome call for all genes.
-        Returns {gene_id: spliced_text} for each gene.
+        Batched splice: single compressor call for all documents.
+        Returns {gene_id: spliced_text} for each document.
 
-        Fix 2: if ribosome returns empty list for a gene, keep first
-               min_codons_kept codons or fall back to complement.
-        Fix 4: on timeout, fall back to complement for all genes.
+        Fix 2: if compressor returns empty list for a document, keep first
+               min_codons_kept fragments or fall back to complement.
+        Fix 4: on timeout, fall back to complement for all documents.
         """
         if not genes:
             return {}
@@ -726,7 +726,7 @@ class Ribosome:
             raw = self._timed_complete(prompt, system=system, call_kind="splice")
             parsed = _parse_json(raw)
         except Exception:
-            # Fix 4: timeout/failure — fall back to complement for all genes
+            # Fix 4: timeout/failure — fall back to complement for all documents
             log.warning("Splice failed, falling back to complement", exc_info=True)
             return {g.gene_id: g.complement or g.content[:500] for g in genes}
 
@@ -734,20 +734,20 @@ class Ribosome:
             log.warning("Splice returned non-dict, falling back to complement")
             return {g.gene_id: g.complement or g.content[:500] for g in genes}
 
-        # Build spliced text per gene
+        # Build spliced text per document
         result: Dict[str, str] = {}
         for g in genes:
             indices = parsed.get(g.gene_id)
 
             if not isinstance(indices, list):
-                # Gene wasn't in the response — use complement
+                # Document wasn't in the response — use complement
                 result[g.gene_id] = g.complement or g.content[:500]
                 continue
 
             # Fix 2: empty splice guard
             if not indices and g.codons:
-                # Ribosome said "keep nothing" — don't trust it
-                # Keep first N codons as a safety net
+                # Compressor said "keep nothing" — don't trust it
+                # Keep first N fragments as a safety net
                 kept = g.codons[:min_codons_kept]
                 log.info(
                     "Empty splice for gene %s, keeping first %d codons",
@@ -765,18 +765,18 @@ class Ribosome:
                 # All indices were invalid — fall back to complement
                 result[g.gene_id] = g.complement or g.content[:500]
 
-        # Handle genes missing from parsed response
+        # Handle documents missing from parsed response
         for g in genes:
             if g.gene_id not in result:
                 result[g.gene_id] = g.complement or g.content[:500]
 
         return result
 
-    # ── Replicate: pack a query+response exchange ───────────────────
+    # ── Persist: pack a query+response exchange ───────────────────
 
     def replicate(self, query: str, response: str) -> Gene:
         """
-        Encode a conversation exchange into a Gene for genome storage.
+        Encode a conversation exchange into a Document for knowledge store storage.
         Captures intent and state changes, not just raw facts.
         """
         from .genome import Genome
@@ -792,7 +792,7 @@ class Ribosome:
             )
             parsed = _parse_json(raw)
         except Exception:
-            # Replication is best-effort (background task) — don't crash
+            # Persistence is best-effort (background task) — don't crash
             log.warning("Replicate failed, creating minimal gene", exc_info=True)
             gene_id = Genome.make_gene_id(exchange)
             return Gene(

@@ -6,36 +6,36 @@ proxies each call to helix's HTTP API. Lets Claude Code / Claude Desktop
 / Cursor consume helix without any HTTP client boilerplate in the host.
 
 Tools exposed:
-    Retrieval / genome:
+    Retrieval / knowledge store:
       helix_context         — main retrieval (the big one)
       helix_context_packet  — agent-safe packet with freshness labels +
                                refresh plan (per agent-context-index
                                build spec, 2026-04-17)
       helix_refresh_targets — just the reread plan for an edit/ops task
-      helix_stats           — genome health + size
-      helix_ingest          — add content to the genome
+      helix_stats           — knowledge store health + size
+      helix_ingest          — add content to the knowledge store
       helix_resonance       — four-primitive introspection chart (ΣĒMA +
                                cymatic + harmonic + neighbor set) — new in
                                2026-04-14, see server.py:/debug/resonance
       helix_consolidate     — distill the session buffer into
-                               consolidated knowledge genes
+                               consolidated knowledge documents
 
     Session registry:
       helix_sessions_list   — list active participants (filter by party,
                                status, workspace)
-      helix_session_recent  — genes authored by a handle, chronological
+      helix_session_recent  — documents authored by a handle, chronological
 
     HITL events:
       helix_hitl_emit       — record a Human-In-The-Loop pause event
       helix_hitl_recent     — query recent HITL events
 
     Operational:
-      helix_health          — ribosome / genes / upstream readiness probe
+      helix_health          — compressor / documents / upstream readiness probe
       helix_metrics_tokens  — session + lifetime token counters
       helix_bridge_status   — federation/bridge inbox + signal state
 
     Introspection / debugging:
-      helix_gene_get        — fetch a single gene by ID
+      helix_gene_get        — fetch a single document by ID
       helix_neighbors       — top-k SEMA neighbors for a query (light)
       helix_splice_preview  — dry-run retrieval pipeline (skip splice)
 
@@ -110,7 +110,7 @@ TIMEOUT_S = float(os.environ.get("HELIX_MCP_TIMEOUT", "30"))
 
 # Stable session_id for this MCP subprocess lifetime. Used to attribute
 # every `helix_context` call from this host to the same row in
-# session_delivery_log, so already-delivered genes can be elided with a
+# session_delivery_log, so already-delivered documents can be elided with a
 # pointer stub on subsequent calls within the same MCP session. Prefer
 # HELIX_MCP_HANDLE when set (hosts commonly set "laude", "raude", etc);
 # otherwise fall back to "mcp-<pid>" which is still stable for one
@@ -314,11 +314,11 @@ def helix_context(
     downstream_model: Optional[str] = None,
     session_id: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Build a compressed context window for `query` from the helix genome.
+    """Build a compressed context window for `query` from the helix knowledge store.
 
     decoder_mode: "condensed" (default), "broad", or "dense". Controls
-        how genes are unfolded into tokens. "broad" → more genes, less
-        per-gene detail. "condensed" → fewer genes, more detail each.
+        how documents are unfolded into tokens. "broad" → more documents, less
+        per-document detail. "condensed" → fewer documents, more detail each.
     downstream_model: hint string so helix can size the budget for the
         target model (e.g. "claude-opus-4-6", "gpt-4").
     session_id: explicit session id for the working-set register. When
@@ -403,11 +403,11 @@ def helix_refresh_targets(
 
 @mcp.tool()
 def helix_stats() -> Dict[str, Any]:
-    """Return genome health + size stats.
+    """Return knowledge store health + size stats.
 
-    Gives gene counts, chromatin distribution, session info, current
-    ribosome model. Useful as a readiness probe or to confirm the
-    genome looks healthy before heavy retrieval work.
+    Gives document counts, lifecycle tier distribution, session info, current
+    compressor model. Useful as a readiness probe or to confirm the
+    knowledge store looks healthy before heavy retrieval work.
     """
     return _http("GET", "/stats")
 
@@ -420,12 +420,12 @@ def helix_ingest(
     content_type: str = "text",
     metadata: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
-    """Ingest raw text into the genome.
+    """Ingest raw text into the knowledge store.
 
     content_type: "text" | "markdown" | "python" | "rust" | ... — see
         helix's tree_chunker for the full list. Affects how content is
-        split into genes.
-    metadata: optional dict stamped onto every created gene. Include
+        split into documents.
+    metadata: optional dict stamped onto every created document. Include
         "source_id" to make re-ingests idempotent.
 
     Attribution defaults come from this MCP process's env vars and are
@@ -458,7 +458,7 @@ def helix_resonance(query: str, k: int = 10, downsample: int = 64) -> Dict[str, 
     anytime without affecting retrieval state.
 
     Use this when you want to debug *why* a query is retrieving what it
-    does, or to visualize the genome's local structure around a concept.
+    does, or to visualize the knowledge store's local structure around a concept.
     """
     path = f"/debug/resonance?query={urllib.request.quote(query)}&k={k}&downsample={downsample}"
     return _http("GET", path)
@@ -501,7 +501,7 @@ def helix_hitl_emit(
         rather than dropping silently.
 
     Returns {event_id, ok: true} on success, {error: str} on failure.
-    Does not mutate genome state; only writes to hitl_events.
+    Does not mutate knowledge store state; only writes to hitl_events.
     """
     body: Dict[str, Any] = {"pause_type": pause_type}
 
@@ -603,9 +603,9 @@ def helix_sessions_list(
 
 
 # ── Tool: helix_session_recent ───────────────────────────────────────
-# Genes authored by a specific handle, chronological. This is the
+# Documents authored by a specific handle, chronological. This is the
 # reliable broadcast channel -- short notes surface here regardless of
-# how much code/spec material lives in the genome.
+# how much code/spec material lives in the knowledge store.
 
 @mcp.tool()
 def helix_session_recent(
@@ -614,10 +614,10 @@ def helix_session_recent(
     party_id: Optional[str] = None,
     since_ts: Optional[float] = None,
 ) -> Dict[str, Any]:
-    """Recent genes authored by `handle`, newest first. No BM25 scoring.
+    """Recent documents authored by `handle`, newest first. No BM25 scoring.
 
     handle: session handle (e.g. "laude", "raude", "gemini", "batman")
-    limit: max genes to return (default 10)
+    limit: max documents to return (default 10)
     party_id: optional scope -- narrows to a single party if a handle
         is reused across parties (uncommon).
     since_ts: optional Unix timestamp lower bound.
@@ -635,14 +635,14 @@ def helix_session_recent(
 
 # ── Tool: helix_consolidate ──────────────────────────────────────────
 # Trigger session memory consolidation. Distills the session buffer
-# into consolidated knowledge genes.
+# into consolidated knowledge documents.
 
 @mcp.tool()
 def helix_consolidate() -> Dict[str, Any]:
-    """Consolidate the current session buffer into long-term knowledge genes.
+    """Consolidate the current session buffer into long-term knowledge documents.
 
     Extracts only new facts, decisions, and discoveries from the
-    buffered exchange stream, packing them as genes in the genome.
+    buffered exchange stream, packing them as documents in the knowledge store.
     Cheap but non-idempotent -- call at natural checkpoints (end of
     task, before handoff) not on every turn.
 
@@ -653,16 +653,16 @@ def helix_consolidate() -> Dict[str, Any]:
 
 # ── Tool: helix_health ───────────────────────────────────────────────
 # Lightweight readiness probe. Separate from helix_stats (which is
-# heavier) -- useful for "is the server reachable / ribosome configured?"
-# checks without pulling full genome aggregates.
+# heavier) -- useful for "is the server reachable / compressor configured?"
+# checks without pulling full knowledge store aggregates.
 
 @mcp.tool()
 def helix_health() -> Dict[str, Any]:
-    """Ribosome model, gene count, upstream URL, and overall status.
+    """Compressor model, document count, upstream URL, and overall status.
 
     Cheaper than helix_stats -- returns just the readiness signals
-    (status, ribosome backend, total genes, upstream). Use this for
-    connectivity probes; use helix_stats for detailed genome health.
+    (status, compressor backend, total documents, upstream). Use this for
+    connectivity probes; use helix_stats for detailed knowledge store health.
     """
     return _normalize_health_payload(_http("GET", "/health"))
 
@@ -743,18 +743,18 @@ def helix_bridge_status() -> Dict[str, Any]:
 
 
 # ── Tool: helix_gene_get ─────────────────────────────────────────────
-# Fetch a single gene by ID. Indispensable for debugging retrieval
-# results -- "what were this gene's promoter tags? what's the content?"
+# Fetch a single document by ID. Indispensable for debugging retrieval
+# results -- "what were this document's tags? what's the content?"
 
 @mcp.tool()
 def helix_gene_get(gene_id: str) -> Dict[str, Any]:
-    """Fetch a single gene by ID.
+    """Fetch a single document by ID.
 
-    Returns the full gene model as JSON -- content, promoter tags
-    (domains, entities, intent, summary), epigenetics (access_rate,
-    co_activated_with), codons, chromatin state, embedding vector.
+    Returns the full document model as JSON -- content, tags
+    (domains, entities, intent, summary), signals (access_rate,
+    co_activated_with), fragments, lifecycle tier, embedding vector.
 
-    Use when investigating a specific retrieval result: "gene X ranked
+    Use when investigating a specific retrieval result: "document X ranked
     #3, let me see what its tags were."
 
     Returns {error: str} if the gene_id is unknown.
@@ -775,7 +775,7 @@ def helix_neighbors(query: str, k: int = 10) -> Dict[str, Any]:
     path}], count}. No cymatic spectrum, no harmonic edges, no query
     SEMA vector -- just the neighbor list.
 
-    Use this when debugging "which genes are semantically closest to X?"
+    Use this when debugging "which documents are semantically closest to X?"
     and you don't need the full four-primitive introspection of
     helix_resonance.
     """
@@ -784,25 +784,25 @@ def helix_neighbors(query: str, k: int = 10) -> Dict[str, Any]:
 
 
 # ── Tool: helix_splice_preview ───────────────────────────────────────
-# Dry-run the retrieval pipeline: extract -> express -> candidates,
+# Dry-run the retrieval pipeline: extract -> retrieve -> candidates,
 # SKIPS the expensive splice step. Answers "what WOULD be in the context
-# window?" without paying full /context cost (no ribosome calls).
+# window?" without paying full /context cost (no compressor calls).
 
 @mcp.tool()
 def helix_splice_preview(query: str, max_genes: int = 12) -> Dict[str, Any]:
-    """Preview which genes WOULD be selected for a query's context window.
+    """Preview which documents WOULD be selected for a query's context window.
 
     Runs the cheap half of the /context pipeline: query keyword
-    extraction + multi-tier express (promoter tags, FTS, SEMA,
+    extraction + multi-tier retrieve (tags, FTS, SEMA,
     harmonic boost, TCM tiebreaker, access-rate tiebreaker), then
     STOPS before the splice step.
 
     Returns {query, extracted: {domains, entities}, candidates:
     [{rank, gene_id, score, preview, path, domains, entities,
-    chromatin}], count}.
+    lifecycle tier}], count}.
 
-    Much cheaper than a full /context call -- no ribosome calls
-    at all. Use for "why isn't query X surfacing gene Y?" debugging
+    Much cheaper than a full /context call -- no compressor calls
+    at all. Use for "why isn't query X surfacing document Y?" debugging
     without burning model quota on splice.
     """
     path = (
@@ -862,7 +862,7 @@ def helix_document_query(
 
     session_id: explicit session id for the working-set register. When
         omitted, defaults to MCP_SESSION_ID so repeated calls within
-        this MCP subprocess elide already-delivered genes.
+        this MCP subprocess elide already-delivered documents.
     """
     body: Dict[str, Any] = {"query": query}
     if decoder_mode:
@@ -922,7 +922,7 @@ def helix_document_fingerprint(
 #
 # Pattern A is the "reduce MCP count" story — useful once the user
 # actually installs codebase-memory-mcp. Pattern B is the bigger long-
-# term win: helix gene scoring gains structural signal. Both deferred
+# term win: helix document scoring gains structural signal. Both deferred
 # until codebase-memory-mcp stabilizes (currently off-by-default). Hook
 # points: this file for A, helix_context/context_manager.py for B.
 

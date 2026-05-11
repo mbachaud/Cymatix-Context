@@ -2,7 +2,7 @@
 
 Phase 1 of ``docs/specs/2026-04-17-agent-context-index-build-spec.md``
 requires ingest to populate ``source_kind``, ``volatility_class``, and
-``last_verified_at`` on genes so the packet builder can answer freshness
+``last_verified_at`` on documents so the packet builder can answer freshness
 questions. Without these fields, every packet item degrades to
 ``stale_risk`` / ``needs_refresh`` because ``freshness_known=False``.
 
@@ -173,7 +173,7 @@ def _normalize_kind_hint(value: Optional[str]) -> Optional[str]:
 
 
 def _kind_from_path_hints(source_id: Optional[str]) -> Optional[str]:
-    """Infer a richer kind than extension alone can express."""
+    """Infer a richer kind than extension alone can retrieve."""
     if not source_id:
         return None
     sid = str(source_id).replace("\\", "/").lower()
@@ -313,7 +313,7 @@ def apply_metadata_hints(
     content_type: Optional[str] = None,
     total_strands: Optional[int] = None,
 ) -> None:
-    """Copy ingest metadata into the gene fields the packet builder uses."""
+    """Copy ingest metadata into the document fields the packet builder uses."""
     md = metadata or {}
 
     if getattr(gene, "repo_root", None) is None and md.get("repo_root"):
@@ -359,11 +359,11 @@ def apply_provenance(
     observed_at: Optional[float] = None,
     content_type: Optional[str] = None,
 ) -> None:
-    """Populate missing provenance fields on a Gene in-place.
+    """Populate missing provenance fields on a Document in-place.
 
     Only writes fields that are currently None - never clobbers
     caller-supplied values. Safe to call unconditionally in the ingest
-    path; a no-op for genes without a resolvable source_path.
+    path; a no-op for documents without a resolvable source_path.
     """
     sid = source_path or getattr(gene, "source_id", None)
     if not sid and not content_type:

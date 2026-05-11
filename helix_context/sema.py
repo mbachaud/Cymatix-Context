@@ -2,12 +2,12 @@
 ΣĒMA — Post-linguistic semantic encoding.
 
 Sigma-Epsilon-Mu-Alpha: a 20-dimensional universal semantic coordinate
-system for context genes. Each dimension (a "prime") captures a
+system for context documents. Each dimension (a "prime") captures a
 fundamental axis of meaning that holds across all domains — code,
 prose, conversation, data.
 
 Biology analogy:
-    If promoter tags are restriction enzyme binding sites (discrete),
+    If tags are restriction enzyme binding sites (discrete),
     ΣĒMA vectors are the 3D protein fold coordinates (continuous).
     Tags find the neighborhood; ΣĒMA finds the exact position.
 
@@ -48,7 +48,7 @@ log = logging.getLogger("helix.sema")
 # Selection criteria:
 #   - Domain-agnostic (works for code, prose, config, data)
 #   - Maximally orthogonal (each captures a distinct meaning axis)
-#   - Retrieval-useful (genes close in prime-space are semantically related)
+#   - Retrieval-useful (documents close in prime-space are semantically related)
 
 @dataclass(frozen=True)
 class SemaPrime:

@@ -1,17 +1,18 @@
 """
 Cymatics — Frequency-domain context compression.
 
-Maps the biological metaphors of helix-context onto wave physics:
-    Gene          → Resonant mode (excited by query "frequencies")
-    Codon weight  → Spectral amplitude
+Maps the biological metaphors of helix-context (gene, genome, chromatin)
+onto wave physics:
+    Document (gene)       → Resonant mode (excited by query "frequencies")
+    Fragment weight  → Spectral amplitude
     Co-activation → Harmonic coupling
     Chromatin     → Mode damping level
     Splice        → Bandwidth filtering (Q-factor)
     Decay score   → Exponential amplitude decay
 
 Core idea: instead of asking an LLM to judge relevance (re_rank)
-and select codons (splice), compute interference patterns between
-query and gene frequency spectra. Cosine similarity on 256-bin
+and select fragments (splice), compute interference patterns between
+query and document frequency spectra. Cosine similarity on 256-bin
 spectra replaces two LLM calls (~2-4s) with CPU math (~5ms).
 
 Numpy is optional — pure-Python fallback is always available.
@@ -50,7 +51,7 @@ _STRIP_CHARS = ".,;:!?'\"()[]{}<>/@#$%^&*+=~`|\\—–-"
 
 
 def extract_query_signals(query: str) -> Tuple[List[str], List[str]]:
-    """Fast keyword extraction from query for promoter matching."""
+    """Fast keyword extraction from query for tags matching."""
     words = query.lower().split()
     keywords = []
     for w in words:
@@ -122,7 +123,7 @@ def build_spectrum(
     Multiple terms at nearby frequencies constructively interfere.
 
     Args:
-        terms: Semantic labels (promoter domains, entities, codon meanings)
+        terms: Semantic labels (tags domains, entities, fragment meanings)
         weights: Amplitude per term (default 1.0 each)
         decay: Global damping factor from EpigeneticMarkers.decay_score
         peak_width: Gaussian width in bins (from Q-factor mapping)
@@ -206,13 +207,13 @@ def gene_spectrum(
     peak_width: float = 3.0,
 ) -> List[float]:
     """
-    Build a frequency spectrum from a Gene's promoter tags and decay state.
+    Build a frequency spectrum from a Document's tags and decay state.
 
     Domains and entities become spectral peaks, damped by decay_score.
     """
     terms = list(gene.promoter.domains) + list(gene.promoter.entities)
     if not terms:
-        # Fall back to codon meanings if no promoter tags
+        # Fall back to fragment meanings if no tags
         terms = list(gene.codons[:5])
 
     decay = gene.epigenetics.decay_score
@@ -228,10 +229,10 @@ def _cached_gene_spectrum(
     peak_width: float,
 ) -> Tuple[float, ...]:
     """
-    LRU-cached gene spectrum computation.
+    LRU-cached document spectrum computation.
 
     Returns tuple (immutable) for cache compatibility.
-    Key is composite of gene identity + semantic content + decay state.
+    Key is composite of document identity + semantic content + decay state.
     """
     terms = list(domains_key.split("|")) + list(entities_key.split("|"))
     terms = [t for t in terms if t]  # filter empty strings
@@ -240,7 +241,7 @@ def _cached_gene_spectrum(
 
 
 def cached_gene_spectrum(gene: Gene, peak_width: float = 3.0) -> List[float]:
-    """Get a gene's spectrum, using LRU cache for repeated access."""
+    """Get a document's spectrum, using LRU cache for repeated access."""
     domains_key = "|".join(sorted(gene.promoter.domains))
     entities_key = "|".join(sorted(gene.promoter.entities))
     t = _cached_gene_spectrum(
@@ -252,7 +253,7 @@ def cached_gene_spectrum(gene: Gene, peak_width: float = 3.0) -> List[float]:
 
 
 def clear_spectrum_cache() -> None:
-    """Clear the gene spectrum LRU cache. Call after genome mutations."""
+    """Clear the document spectrum LRU cache. Call after knowledge store mutations."""
     _cached_gene_spectrum.cache_clear()
 
 
@@ -424,7 +425,7 @@ def flux_score(
 
     When weights are uniform, this equals resonance_score().
     When weights amplify query-relevant bins, domain-matched
-    genes score higher than spectrally-distant ones.
+    documents score higher than spectrally-distant ones.
 
     Returns 0.0-1.0.
     """
@@ -461,7 +462,7 @@ def resonance_rank(
     distance_metric: str = "cosine",
 ) -> List[Gene]:
     """
-    Rank candidate genes by resonance with the query spectrum.
+    Rank candidate documents by resonance with the query spectrum.
 
     Drop-in replacement for Ribosome.re_rank(). Builds query spectrum
     once, scores all candidates via cosine similarity, returns top-k.
@@ -502,7 +503,7 @@ def resonance_rank(
         scored_ids = {g.gene_id for _, g in scored}
         for gene in candidates:
             if gene.gene_id not in scored_ids and len(scored) < k:
-                scored.append((0.1, gene))  # Default score for padded genes
+                scored.append((0.1, gene))  # Default score for padded documents
 
     scored.sort(key=lambda x: x[0], reverse=True)
     return [g for _, g in scored[:k]]
@@ -519,10 +520,10 @@ def interference_splice(
     min_codons_kept: int = 2,
 ) -> Dict[str, str]:
     """
-    Splice genes using frequency interference instead of an LLM.
+    Splice documents using frequency interference instead of an LLM.
 
-    For each gene, for each codon meaning, compute resonance between
-    the codon's mini-spectrum and the query spectrum. Codons that
+    For each document, for each fragment meaning, compute resonance between
+    the fragment's mini-spectrum and the query spectrum. Fragments that
     constructively interfere (above threshold) survive as exons.
     Those below threshold are spliced as introns.
 
@@ -543,7 +544,7 @@ def interference_splice(
             result[gene.gene_id] = gene.complement or gene.content[:500]
             continue
 
-        # Score each codon against the query
+        # Score each fragment against the query
         kept: List[str] = []
         for codon_meaning in gene.codons:
             codon_spec = build_spectrum([codon_meaning], peak_width=peak_width)
@@ -565,7 +566,7 @@ def interference_splice(
             # Total miss — fall back to complement (Fix 4)
             result[gene.gene_id] = gene.complement or gene.content[:500]
 
-    # Handle genes missing from result
+    # Handle documents missing from result
     for gene in genes:
         if gene.gene_id not in result:
             result[gene.gene_id] = gene.complement or gene.content[:500]
@@ -577,7 +578,7 @@ def interference_splice(
 
 def harmonic_weight(gene_a: Gene, gene_b: Gene, peak_width: float = 3.0) -> float:
     """
-    Compute harmonic coupling strength between two genes.
+    Compute harmonic coupling strength between two documents.
 
     Converts the binary co_activated_with link into a weighted edge.
     High weight = spectrally similar (same resonant frequencies).
@@ -593,7 +594,7 @@ def compute_harmonic_weights(
     peak_width: float = 3.0,
 ) -> List[Tuple[str, str, float]]:
     """
-    Compute pairwise harmonic weights for a set of expressed genes.
+    Compute pairwise harmonic weights for a set of retrieved documents.
 
     Returns list of (gene_id_a, gene_id_b, weight) tuples.
     Only returns pairs where weight > 0.1 (above noise floor).
