@@ -72,3 +72,20 @@ def test_status_text_mode_human_readable(monkeypatch, tmp_path):
     assert rc == 0, err
     assert "Genome:" in out
     assert "Config:" in out
+
+
+def test_status_probes_genome_on_absolute_windows_path(monkeypatch, tmp_path):
+    """Regression: as_uri() must produce a SQLite-parseable URI on Windows paths."""
+    monkeypatch.delenv("HELIX_GENOME_PATH", raising=False)
+    genome = tmp_path / "genome.db"
+    _make_genome_file(genome)
+    cfg = tmp_path / "helix.toml"
+    # TOML literal string (single quotes) preserves backslashes verbatim,
+    # so this works for native Windows paths and POSIX paths alike.
+    cfg.write_text(f"[genome]\npath = '{genome.resolve()}'\n", encoding="utf-8")
+    monkeypatch.setenv("HELIX_CONFIG", str(cfg))
+
+    rc, out, err = _run(["status", "--json", "--no-network"])
+    assert rc == 0, err
+    payload = json.loads(out)
+    assert payload["genome"]["reachable"] is True

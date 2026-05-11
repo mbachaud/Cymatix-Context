@@ -21,7 +21,9 @@ def _probe_genome(path: str) -> Dict[str, Any]:
         }
     try:
         # Open URI-style read-only so we don't accidentally lock the file.
-        uri = f"file:{p.as_posix()}?mode=ro"
+        # Use Path.as_uri() so Windows drive-letter paths produce the
+        # SQLite-parseable form `file:///C:/...` (not `file:C:/...`).
+        uri = p.resolve().as_uri() + "?mode=ro"
         conn = sqlite3.connect(uri, uri=True, timeout=2.0)
         try:
             row = conn.execute("SELECT COUNT(*) FROM genes").fetchone()
@@ -32,6 +34,7 @@ def _probe_genome(path: str) -> Dict[str, Any]:
             "reachable": True,
             "path": str(p),
             "gene_count": gene_count,
+            "next_action": "",
         }
     except sqlite3.DatabaseError as exc:
         return {
