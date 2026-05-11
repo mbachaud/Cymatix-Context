@@ -110,7 +110,8 @@ all = [
 ]
 
 [project.scripts]
-helix = "helix_context.server:main"
+helix = "helix_context.cli:main"
+helix-server = "helix_context.server:main"
 helix-launcher = "helix_context.launcher.app:main"
 helix-status = "helix_status:main"
 helix-vault = "helix_context.vault.cli:main"
