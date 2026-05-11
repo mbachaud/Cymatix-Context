@@ -35,7 +35,7 @@ export HELIX_OTEL_ENDPOINT=localhost:4317   # default
 python -m uvicorn helix_context.server:app --port 11437
 ```
 
-Open <http://localhost:3000/d/helix-overview>. Retrieval latency, tier contributions, CWoLa f_gap, chromatin distribution, harmonic-edges-by-source — all live.
+Open <http://localhost:3000/d/helix-overview>. Retrieval latency, tier contributions, CWoLa f_gap, lifecycle tier distribution, harmonic-edges-by-source — all live.
 
 ## What's instrumented
 
@@ -82,7 +82,7 @@ Query text is hashed by default — spans carry `query=<first-50-chars>[hash:<12
 
 - **Retrieval row** — p50/p95/p99 `/context` latency split by health (`aligned` / `sparse` / `stale` / `denatured`), tier activation rate (which tiers are firing), per-tier contribution heatmap (score magnitude × tier). This is the live replacement for `bench_skill_activation.py`.
 - **CWoLa Label Clock row** — bucket accumulation (A / B / pending) with a prominent f_gap_sq gauge. Red below 0.05, yellow 0.05–0.16, green ≥ 0.16. When it goes green, Sprint 3 PLR training is unblocked per `STATISTICAL_FUSION.md` §C2.
-- **Graph & Chromatin row** — `harmonic_links` edge count by provenance (seeded vs co_retrieved vs cwola_validated) tracking the Sprint 4 Hebbian promotion cycle, and chromatin state pie (OPEN / EUCHROMATIN / HETEROCHROMATIN) tracking density-gate pressure over time. Plus **hub-concentration ratio** (top-1% inbound degree / mean) — the order parameter for preferential-attachment condensation: as N grows, retrieval flow funnels through fewer hubs even when total edge count is healthy. Backfill caps inbound-degree at 500; sustained ratios alongside p99 ≈ 500 mean the cap is the binding constraint, not organic structure. Healthy ≲ ~10×; rising trend warrants attention before quality regresses.
+- **Graph & Chromatin row** — `harmonic_links` edge count by provenance (seeded vs co_retrieved vs cwola_validated) tracking the Sprint 4 Hebbian promotion cycle, and lifecycle tier pie (OPEN / EUCHROMATIN / HETEROCHROMATIN) tracking density-gate pressure over time. Plus **hub-concentration ratio** (top-1% inbound degree / mean) — the order parameter for preferential-attachment condensation: as N grows, retrieval flow funnels through fewer hubs even when total edge count is healthy. Backfill caps inbound-degree at 500; sustained ratios alongside p99 ≈ 500 mean the cap is the binding constraint, not organic structure. Healthy ≲ ~10×; rising trend warrants attention before quality regresses.
 
 ## Verifying the stack
 

@@ -3,7 +3,7 @@
 > *"The simplest path to federation is to use what the OS already knows."*
 
 This document describes the local federation primitive shipped 2026-04-12.
-It captures **4-layer** identity attribution for every ingested gene
+It captures **4-layer** identity attribution for every ingested document
 with zero auth infrastructure — using OS environment as the source of
 truth. It's the on-ramp to the full enterprise federation model in
 [`ENTERPRISE.md`](ENTERPRISE.md): same schema, different ID resolver.
@@ -14,7 +14,7 @@ truth. It's the on-ramp to the full enterprise federation model in
 
 Real-world identity has at least four independent axes that we want to
 query separately, plus a temporal forensic axis (the IANA timezone in
-which each gene was authored):
+which each document was authored):
 
 | Layer | What it represents | Example | Why we need it separately |
 |---|---|---|---|
@@ -24,7 +24,7 @@ which each gene was authored):
 | **agent** | software actor / AI persona | `laude`, `conductor` | "Which AI did the work?" — distinguishes Laude vs Taude vs manual |
 | **+ tz** (forensic) | IANA timezone at write | `America/Los_Angeles` | Travel detection, DST drift, jurisdiction context |
 
-Each gene's `gene_attribution` row carries all four identity axes plus
+Each document's `gene_attribution` row carries all four identity axes plus
 the timezone. Any axis may be NULL — NULL `agent_id` = "manual ingest,
 no AI involved." NULL `org_id` = defaults to the seeded `local` org.
 NULL `authored_tz` = pre-2026-04-12 ingest (legacy).
@@ -56,7 +56,7 @@ gene_attribution.authored_tz  -- per-write tz (forensic — captures travel)
 ```
 
 Together these distinguish "where the device usually is" from "where
-this specific gene was actually written." Useful queries:
+this specific document was actually written." Useful queries:
 
 ```sql
 -- "Find genes authored in a different tz from the device's home"
@@ -154,10 +154,10 @@ What changes across federation tiers is **the source of those IDs**:
 | **Small team** | `HELIX_ORG` env | `HELIX_DEVICE` env | `HELIX_USER` env | `HELIX_AGENT` env |
 | **Enterprise SSO** | OAuth org claim / tenant root | hostname / SaaS gateway | OAuth user claim | request header / agent token |
 
-Because the schema is invariant, every gene attributed at the local tier
+Because the schema is invariant, every document attributed at the local tier
 remains validly attributed when SSO comes online. The auth edge replaces
 the resolver; the rest of the pipeline (`query_genes(party_id=...)`, the
-`/context` endpoint, the chromatin tier rules) keeps working unchanged.
+`/context` endpoint, the lifecycle tier tier rules) keeps working unchanged.
 
 ## How it resolves IDs today (4-axis + tz)
 
@@ -271,7 +271,7 @@ export HELIX_AGENT=conductor
 
 All four agents end up as distinct rows in the `agents` table under the
 SAME `participant_id` (max), under the SAME `party_id` (gandalf), under
-the SAME `org_id` (swiftwing). Each gene each agent creates is
+the SAME `org_id` (swiftwing). Each document each agent creates is
 independently queryable:
 
 ```sql
@@ -298,12 +298,12 @@ SELECT party_id, COUNT(*) FROM gene_attribution
 
 ## What this gives you for free, today
 
-1. **Multi-agent attribution** — every gene knows who created it
+1. **Multi-agent attribution** — every document knows who created it
 2. **Cross-machine separation** — `party_id = hostname` distinguishes
    dev box from laptop from server
 3. **Cross-account separation** — `getpass.getuser()` distinguishes
    accounts on the same machine
-4. **Audit trail** — `gene_attribution.authored_at` is a per-gene
+4. **Audit trail** — `gene_attribution.authored_at` is a per-document
    creation timestamp by definition; Δq queries become possible
 5. **Cleanup primitive** — `DELETE FROM gene_attribution WHERE
    participant_id = ?` is the start of a "forget this agent's
@@ -315,7 +315,7 @@ SELECT party_id, COUNT(*) FROM gene_attribution
    Local trust model assumes the machine itself is trusted (typical for
    solo-dev boxes; not OK for multi-tenant production).
 2. **Authorization** — there's no role-based access control over which
-   genes a participant can read. `query_genes(party_id=X)` filters, but
+   documents a participant can read. `query_genes(party_id=X)` filters, but
    participant-level scoping isn't wired into retrieval yet.
 3. **Cross-machine identity** — "max on gandalf" and "max on laptop" are
    two distinct participants today. SSO would unify them.
@@ -335,13 +335,13 @@ When the OAuth edge layer ships:
 3. Sets these on the request before forward
 4. The ingest path sees `participant_id` already populated, **skips
    the OS fallback**, and writes attribution with the SSO-derived ID
-5. Existing genes attributed at the OS tier remain valid — they just
+5. Existing documents attributed at the OS tier remain valid — they just
    point to participant_ids that haven't been re-mapped to SSO IDs yet
 6. A one-shot migration script can reconcile by joining
    `participants.handle` → SSO email lookup, updating `gene_attribution`
    to use the new participant_id
 
-No data migration required for the genes themselves. Schema invariance
+No data migration required for the documents themselves. Schema invariance
 is the gift that keeps giving.
 
 ## How this connects to the conductor/librarian pattern
@@ -388,9 +388,9 @@ OS account is who you are; HELIX_ORG / HELIX_AGENT env vars override.
 
 The `gene_attribution.authored_tz` backfill for legacy pre-2026-04-12
 rows uses `parties.timezone` as a best-effort fallback. This is only
-accurate if the device's home timezone hasn't changed since those genes
+accurate if the device's home timezone hasn't changed since those documents
 were authored — which is fine for stationary dev machines but wrong for
-travelers (a gene authored in PT will be backfilled as Berlin if the
+travelers (a document authored in PT will be backfilled as Berlin if the
 laptop's current home tz is now Berlin).
 
 This is acceptable because:
@@ -427,7 +427,7 @@ UPDATE gene_attribution
  WHERE org_id IS NULL;
 ```
 
-Verified on the 2026-04-12 genome: 100% of `gene_attribution.org_id`
+Verified on the 2026-04-12 knowledge store: 100% of `gene_attribution.org_id`
 populated, with a clean split between historical (`org_id='local',
 agent_id=NULL`) and post-upgrade (`org_id='swiftwing',
 agent_id=<conductor uuid>`).

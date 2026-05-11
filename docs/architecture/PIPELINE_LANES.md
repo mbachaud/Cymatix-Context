@@ -108,7 +108,7 @@ Lanes:
 Ingest is unchanged from v1 except for the **9 provenance fields**
 that now get auto-populated. These flow into both the `genes` table
 (direct columns) and — when a shard is registered — `main.db`
-`source_index` (when Phase 1 full ships; currently gene-local is the
+`source_index` (when Phase 1 full ships; currently document-local is the
 single source of truth).
 
 ### Provenance fields (auto-populated since 3c6ead6)
@@ -281,7 +281,7 @@ Status thresholds are task-sensitive:
 
 - **stale_by_age** (3) — stable@30d, hot@1h, medium@2d → all flag
 - **coordinate_mismatch** (2) — edit vs explain on off-target retrieval
-- **task_sensitivity** (2) — same gene, different task → different verdict
+- **task_sensitivity** (2) — same document, different task → different verdict
 - **authority_downgrade** (1) — inferred authority on ops → refresh
 - **clean_verified** (2) — fresh + aligned + primary → stays verified
 
@@ -314,7 +314,7 @@ RETURN: {
 ## `/fingerprint` flow (NEW in v2)
 
 Navigation-first retrieval per GT's fingerprint-mode plan. Returns
-scored gene pointers + tier contribution metadata — no content, no
+scored document pointers + tier contribution metadata — no content, no
 packet labels. Fast path for callers that want to inspect the
 retrieval without paying for compression or weighing.
 
@@ -370,7 +370,7 @@ Both halves are needed:
   folder. A verified config from 3 days ago has `coord_conf = 1.0`
   but is still stale for an ops task.
 - **Freshness alone** doesn't catch wrong-folder retrievals. A fresh
-  gene with `last_verified_at = now` from the wrong repo is still the
+  document with `last_verified_at = now` from the wrong repo is still the
   wrong answer.
 
 The status label encodes the composition:
@@ -394,8 +394,8 @@ for the authoritative design.
 | `domains` | regex + heuristics in CpuTagger | ingest | Tiers 1, 2, 3 |
 | `entities` | spaCy NER + EntityRuler | ingest | Tiers 1, 2, 3, entity_graph |
 | `key_values` | regex `key=value` extractor | ingest | path_key_index, ellipticity health |
-| `complement` | Ribosome LLM (legacy) | ingest | retrieval display only (not score) |
-| `codons` | Ribosome LLM (legacy) | ingest | expressed_context formatting |
+| `complement` | Compressor LLM (legacy) | ingest | retrieval display only (not score) |
+| `codons` | Compressor LLM (legacy) | ingest | expressed_context formatting |
 | `path_token` | `path_tokens(source_id)` | ingest | path_key_index Tier 0 + packet coord_confidence |
 | `cymatics spectrum` | term-hashed Gaussian | ingest | resonance + flux + harmonic bins |
 | `embedding (SEMA)` | sentence-transformer | ingest | Tier 4 cold-tier |
@@ -425,7 +425,7 @@ for the authoritative design.
 | `genes.volatility_class` (new) | `/context/packet` | freshness half-life selection |
 | `genes.last_verified_at` (new) | `/context/packet` | freshness_score decay input |
 | `genes.authority_class` (new) | `/context/packet` | authority score lookup |
-| `source_index` (future Phase 1 full) | `/context/packet` | overrides gene-local provenance |
+| `source_index` (future Phase 1 full) | `/context/packet` | overrides document-local provenance |
 | `agents` | all paths | citation enrichment |
 | `parties` | all paths | citation enrichment + tz |
 | `orgs` | analytics | cross-tenant aggregation |
