@@ -60,3 +60,30 @@ def test_diag_unknown_target_returns_two(fake_session):
     with pytest.raises(SystemExit) as exc:
         main(["diag", "nope"])
     assert exc.value.code == 2
+
+
+def test_diag_corpus_json_remains_valid_when_session_raises(monkeypatch):
+    """Regression: `helix diag corpus --json` must emit a parseable JSON
+    payload on the error path, not a half-printed traceback.
+
+    cmd_diag.run wraps open_session() + sess.stats() in a single try/except;
+    if either raises, the error payload must still serialize as valid JSON
+    so machine consumers (CI, MCP bridges) don't choke.
+    """
+    from helix_context.cli import cmd_diag
+    from helix_context.cli.output import EXIT_ERROR
+
+    def _boom(*_a, **_kw):
+        raise RuntimeError("boom")
+
+    monkeypatch.setattr(cmd_diag, "open_session", _boom)
+
+    rc, out, err = _run(["diag", "corpus", "--json"])
+    # The assertion is "this parses" — if json.loads raises, the regression
+    # is back.
+    payload = json.loads(out)
+    assert payload["ok"] is False
+    assert "error" in payload
+    assert "RuntimeError" in payload["error"]
+    assert "boom" in payload["error"]
+    assert rc == EXIT_ERROR

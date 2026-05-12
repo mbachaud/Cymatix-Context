@@ -83,6 +83,85 @@ def test_end_to_end_ingest_then_query():
 
 
 @pytest.mark.live
+def test_end_to_end_cold_start_constructs_manager_lazily(monkeypatch, tmp_path):
+    """Regression for review #11: the integration suite was pre-warming
+    ``api._DEFAULT_MANAGER`` in its autouse fixture, so the cold-start
+    branch in ``open_session()`` (``if _DEFAULT_MANAGER is None: ...
+    HelixContextManager(config=cfg)``) was never exercised.
+
+    This test explicitly clears the cached manager AFTER the autouse
+    fixture has run, points the construction at an in-memory genome via
+    a monkeypatched ``HelixConfig`` factory, and verifies that ingest +
+    query both succeed and return well-shaped JSON — proving the lazy
+    construction path works end-to-end.
+    """
+    from helix_context import api
+    from helix_context.config import HelixConfig, IngestionConfig
+
+    # 1. Wipe the manager the autouse fixture pre-warmed. This is the
+    #    whole point: we want open_session() to hit `_DEFAULT_MANAGER is None`.
+    api._DEFAULT_MANAGER = None
+
+    # 2. Monkeypatch the HelixConfig used inside api.open_session so that
+    #    when it calls `HelixConfig()` (no args), we get a CPU/:memory:
+    #    config instead of the disk-backed default. open_session() does
+    #    NOT call load_config — it constructs HelixConfig() directly —
+    #    so an env-var-only approach won't redirect the genome path.
+    def _cpu_memory_config():
+        cfg = HelixConfig()
+        cfg.genome.path = ":memory:"
+        cfg.ingestion = IngestionConfig(backend="cpu")
+        return cfg
+
+    monkeypatch.setattr(api, "HelixConfig", _cpu_memory_config)
+
+    # Track whether the cold-start branch actually fires by wrapping
+    # HelixContextManager construction. This makes the regression
+    # explicit: if a future change re-introduces pre-warming, this
+    # assertion will catch it.
+    from helix_context import context_manager as cm_mod
+    construction_count = {"n": 0}
+    real_ctor = cm_mod.HelixContextManager
+
+    def _counting_ctor(*args, **kwargs):
+        construction_count["n"] += 1
+        return real_ctor(*args, **kwargs)
+
+    monkeypatch.setattr(cm_mod, "HelixContextManager", _counting_ctor)
+
+    import tempfile
+    with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False) as f:
+        f.write("Cold-start regression: the manager must be constructed lazily.\n")
+        fname = f.name
+
+    try:
+        # 3. Run ingest — this triggers open_session() → cold-start branch.
+        rc, out, err = _run(["ingest", fname, "--json"])
+        assert rc == 0, err
+        ingest_payload = json.loads(out)
+        assert ingest_payload["ok"] is True
+        assert ingest_payload["files_processed"] == 1
+
+        # 4. Run query — should reuse the now-cached manager (no second ctor).
+        rc, out, err = _run(["query", "cold-start", "--json"])
+        assert rc == 0, err
+        query_payload = json.loads(out)
+        assert "verdict" in query_payload
+        assert "expressed_context" in query_payload
+        assert isinstance(query_payload["evidence"], list)
+
+        # 5. The cold-start branch fired exactly once (on first ingest);
+        #    the query reused the cached manager.
+        assert construction_count["n"] == 1, (
+            f"expected lazy ctor to fire once, got {construction_count['n']}"
+        )
+    finally:
+        os.unlink(fname)
+        # Finalizer: keep test isolation by resetting the cached manager.
+        api.close_manager()
+
+
+@pytest.mark.live
 def test_end_to_end_diag_corpus_returns_well_shaped_payload():
     """`helix diag corpus --json` returns a well-shaped JSON payload
     against a fresh :memory: genome. Verifies pipeline wiring, not
