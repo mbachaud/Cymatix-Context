@@ -60,7 +60,7 @@ A transparent OpenAI-compatible proxy that intercepts LLM requests and injects c
 - **1. Extract** — heuristic keyword extraction from query (no model call).
 - **2. Retrieve** — SQLite tag lookup + BGE-M3 dense recall + synonym expansion + co-activation. Ranks candidates via Reciprocal Rank Fusion over `{dense, FTS5, promoter, harmonic, SR}` when `[retrieval] fusion_mode = "rrf"` (default `"additive"`, see Gotchas).
 - **3. Re-rank** — small CPU model scores candidates for relevance.
-- **4. Splice** — small CPU model trims introns, keeps exons (batched single call; optional).
+- **4. Splice** — small CPU model compresses each candidate, keeping only the high-value fragments (batched single call; optional).
 - **5. Assemble** — join spliced parts, enforce token budget, wrap in tags. The Stage 7 health pass downgrades to `MissBlock(reason="stale")` when the top-1 source mtime exceeds `last_verified_at`.
 - **6. Persist** — pack query + response into the knowledge store (background).
 

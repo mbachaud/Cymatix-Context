@@ -30,7 +30,7 @@ A transparent OpenAI-compatible proxy that intercepts LLM requests and injects c
 1. **Extract** — heuristic keyword extraction from query (no model call)
 2. **Retrieve** — SQLite tag lookup + synonym expansion + co-activation
 3. **Re-rank** — small CPU model scores candidates by relevance
-4. **Splice** — small CPU model trims introns, keeps exons (batched single call)
+4. **Splice** — small CPU model compresses each candidate, keeping only the high-value fragments (batched single call)
 5. **Assemble** — join spliced parts, enforce token budget, wrap in tags
 6. **Persist** — pack query+response exchange back into knowledge store (background)
 

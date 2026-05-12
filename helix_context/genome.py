@@ -11,7 +11,7 @@ Includes:
     - Content-addressed document IDs (SHA256[:16])
     - Fix 1: synonym expansion for tags queries
     - Fix 1: co-activation pull-forward (associative memory)
-    - Compaction (decay stale documents → HETEROCHROMATIN)
+    - Compaction (decay stale documents → COLD lifecycle tier)
 """
 
 from __future__ import annotations

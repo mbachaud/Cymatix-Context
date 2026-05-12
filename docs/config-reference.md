@@ -1117,8 +1117,9 @@ the per-section tables above for key-by-key behavior.
 # alone and /context never touches an LLM.
 #
 # Think of it as a "subconscious" layer: reflective re-processing
-# during idle, tighter complements, cross-gene pattern noticing with
-# a larger model — separate subsystem against the same genome, not a
+# during idle, tighter complements, cross-document pattern noticing
+# with a larger model — separate subsystem against the same knowledge
+# store, not a
 # dependency of the retrieval loop. Partner/vendor eval hook too —
 # Anthropic / Google / etc. can plug a hosted compression model into
 # this seam without forking.

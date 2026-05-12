@@ -1,11 +1,11 @@
 """
-HelixContextManager -- The cell nucleus.
+HelixContextManager -- The pipeline orchestrator.
 
-Orchestrates the full DNA context pipeline per turn:
+Orchestrates the full /context pipeline per turn:
     1. Extract tags signals from query (heuristic, no model)
     2. Retrieve -- find relevant documents via tags matching + co-activation
     3. Re-rank -- score candidates via compressor (CPU, optional)
-    4. Splice -- trim introns, keep exons (CPU, batched)
+    4. Splice -- compress each candidate, keep high-value fragments (CPU, batched)
     5. Assemble -- build the 3k compressor prompt + 6k retrieved context window
     6. Persist -- pack query+response exchange into knowledge store (background)
 

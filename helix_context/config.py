@@ -1,5 +1,5 @@
 """
-Config — Epigenetic environment.
+Config — Runtime signal environment.
 
 Loads helix.toml and exposes typed configuration for all modules.
 Falls back to sensible defaults if no config file exists.
