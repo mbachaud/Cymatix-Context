@@ -1,7 +1,7 @@
 """
 Helix-ScoreRift Integration -- The CD Spectroscope.
 
-Bridges Helix Context (genome memory) with ScoreRift (divergence detection)
+Bridges Helix Context (knowledge store memory) with ScoreRift (divergence detection)
 using a Circular Dichroism (CD) metaphor:
 
     epsilon_L (left beam)  = automated engine score (ScoreRift auto)
@@ -9,9 +9,9 @@ using a Circular Dichroism (CD) metaphor:
     delta_epsilon (CD signal) = structural anomaly in context health
 
 Three integration points, zero coupling:
-    1. GenomeHealthProbe  -- ScoreRift dimension that probes the Helix genome
+    1. GenomeHealthProbe  -- ScoreRift dimension that probes the Helix knowledge store
     2. cd_signal()        -- the divergence math (delta_epsilon)
-    3. resolution_to_gene() -- packages divergence resolutions as Helix genes
+    3. resolution_to_gene() -- packages divergence resolutions as Helix documents
 
 Usage with ScoreRift:
     from scorerift import AuditEngine, Tier
@@ -106,18 +106,18 @@ def cd_signal(
     )
 
 
-# -- Genome Health Probe ----------------------------------------------
+# -- KnowledgeStore Health Probe ----------------------------------------------
 
 @dataclass
 class GenomeHealthProbe:
     """
-    Probes a running Helix server to assess genome health.
+    Probes a running Helix server to assess knowledge store health.
 
     Checks:
-        - genome_freshness: ratio of OPEN genes to total (are genes being accessed?)
+        - genome_freshness: ratio of OPEN documents to total (are documents being accessed?)
         - compression_quality: is the compression ratio in a healthy range?
-        - gene_coverage: does the genome have enough genes to be useful?
-        - context_relevance: given a test query, does the genome return useful context?
+        - gene_coverage: does the knowledge store have enough documents to be useful?
+        - context_relevance: given a test query, does the knowledge store return useful context?
     """
     helix_url: str = "http://127.0.0.1:11437"
     timeout: float = 30.0
@@ -129,7 +129,7 @@ class GenomeHealthProbe:
     # -- Individual checks (ScoreRift dimension format) ---------------
 
     def check_freshness(self) -> tuple[float, dict]:
-        """Score based on what fraction of genes are in OPEN chromatin state."""
+        """Score based on what fraction of documents are in OPEN lifecycle tier."""
         stats = self._stats()
         total = stats.get("total_genes", 0)
         if total == 0:
@@ -171,11 +171,11 @@ class GenomeHealthProbe:
         })
 
     def check_coverage(self) -> tuple[float, dict]:
-        """Score based on whether the genome has enough genes to be useful."""
+        """Score based on whether the knowledge store has enough documents to be useful."""
         stats = self._stats()
         total = stats.get("total_genes", 0)
 
-        # Cold start: <5 genes is barely functional. 20+ is healthy.
+        # Cold start: <5 documents is barely functional. 20+ is healthy.
         if total == 0:
             score = 0.0
         elif total < 5:
@@ -188,7 +188,7 @@ class GenomeHealthProbe:
         return (score, {"total_genes": total})
 
     def check_relevance(self, test_query: str = "How does the system work?") -> tuple[float, dict]:
-        """Score based on whether the genome returns context for a test query."""
+        """Score based on whether the knowledge store returns context for a test query."""
         try:
             resp = self._client.post("/context", json={"query": test_query})
             if resp.status_code != 200:
@@ -228,7 +228,7 @@ class GenomeHealthProbe:
     # -- Full scan ----------------------------------------------------
 
     def full_scan(self, test_query: str = "How does the system work?") -> dict:
-        """Run all genome health checks and compute aggregate CD signals."""
+        """Run all knowledge store health checks and compute aggregate CD signals."""
         checks = {
             "freshness": self.check_freshness(),
             "compression": self.check_compression(),
@@ -273,7 +273,7 @@ class GenomeHealthProbe:
         self._client.close()
 
 
-# -- Resolution -> Gene Pipeline --------------------------------------
+# -- Resolution -> Document Pipeline --------------------------------------
 
 def resolution_to_gene(
     dimension: str,
@@ -285,11 +285,11 @@ def resolution_to_gene(
     timeout: float = 60.0,
 ) -> Optional[str]:
     """
-    Package a divergence resolution as a Helix gene.
+    Package a divergence resolution as a Helix document.
 
     When a ScoreRift divergence is resolved (manual grade updated,
     acknowledged, or re-audited), this function ingests the resolution
-    context back into the genome so the system learns from it.
+    context back into the knowledge store so the system learns from it.
 
     Returns the gene_id if successful, None on failure.
     """
@@ -339,7 +339,7 @@ def make_genome_dimensions(
     test_query: str = "How does the system work?",
 ) -> list:
     """
-    Create ScoreRift Dimension objects for genome health monitoring.
+    Create ScoreRift Dimension objects for knowledge store health monitoring.
 
     Returns a list ready for engine.register_many().
     Requires scorerift to be installed (imports at call time, not module level).

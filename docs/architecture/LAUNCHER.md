@@ -40,7 +40,7 @@ The launcher solves all four with one small supervisor process.
 - Not an observability dashboard. No charts, no time-series graphs, no
   historical drill-down. Only current state.
 - Not an admin console. Admin actions like vacuum, consolidate, and
-  ribosome pause stay on the existing `/admin/*` endpoints and are not
+  compressor pause stay on the existing `/admin/*` endpoints and are not
   exposed through the launcher UI.
 - Not a config editor. `helix.toml` stays file-edited; launcher only
   reads it.
@@ -75,7 +75,7 @@ launcher announces the restart via `POST /admin/announce_restart`, waits
 
 The launcher NEVER imports `helix_context.server` directly. It talks to
 helix exclusively over HTTP at `http://127.0.0.1:11437`. This keeps the
-launcher's own process memory light (no genome load, no model) and means
+launcher's own process memory light (no knowledge store load, no model) and means
 the launcher keeps working when helix is stopped.
 
 ## Tech stack

@@ -3,9 +3,9 @@ Helix error types — every error has a fallback, the pipeline never crashes.
 
 Biology → Error map:
     CodonAlignmentError  — chunker produces un-processable fragment
-    PromoterMismatch     — query activates zero genes
-    FoldingError         — ribosome JSON output unparseable
-    TranscriptionError   — ribosome model call fails entirely
+    PromoterMismatch     — query activates zero documents
+    FoldingError         — compressor JSON output unparseable
+    TranscriptionError   — compressor model call fails entirely
     GenomeFullError      — storage limit hit (future)
 """
 
@@ -19,19 +19,19 @@ class CodonAlignmentError(HelixError):
 
 
 class PromoterMismatch(HelixError):
-    """Query matched zero genes in the genome."""
+    """Query matched zero documents in the knowledge store."""
 
 
 class FoldingError(HelixError):
-    """Ribosome returned unparseable JSON."""
+    """Compressor returned unparseable JSON."""
 
 
 class TranscriptionError(HelixError):
-    """Ribosome model call failed entirely (network, OOM, etc.)."""
+    """Compressor model call failed entirely (network, OOM, etc.)."""
 
 
 class GenomeFullError(HelixError):
-    """Genome storage limit reached."""
+    """KnowledgeStore storage limit reached."""
 
 
 class ConfigError(HelixError):

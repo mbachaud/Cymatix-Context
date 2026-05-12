@@ -1,10 +1,10 @@
 """
-CpuTagger — CPU-native gene encoding without LLM inference.
+CpuTagger — CPU-native document encoding without LLM inference.
 
 Replaces the two Ollama calls in ribosome.pack() and _extract_key_values()
 with spaCy NER, regex patterns, and extractive summarization.
 
-Biology:
+Bio analogue (legacy term: ribosome):
     The ribosome translates mRNA into protein using physical chemistry.
     The CpuTagger does the same translation using statistical NLP —
     no autoregressive generation, just pattern matching and classification.
@@ -28,7 +28,7 @@ from .schemas import EpigeneticMarkers, Gene, PromoterTags
 log = logging.getLogger("helix.tagger")
 
 
-# ── Minimal stop words for codon filtering ────────────────────────
+# ── Minimal stop words for fragment filtering ────────────────────────
 #
 # Defined at module top because the CpuTagger class below references
 # it at method-call time — if loaded later in the file, any caller
@@ -181,14 +181,14 @@ _KV_TYPE_ANNOTATION_NAMES = frozenset({
 
 class CpuTagger:
     """
-    CPU-native gene encoder. Drop-in replacement for ribosome.pack()
-    that produces the same Gene schema without any LLM calls.
+    CPU-native document encoder. Drop-in replacement for ribosome.pack()
+    that produces the same Document schema without any LLM calls.
 
     Encoding pipeline per chunk:
         1. spaCy NER → entities (PERSON, ORG, PRODUCT, GPE, etc.)
         2. Tech dictionary scan → domains (language, framework, tool terms)
         3. Regex patterns → key_values ("port=11437", "model=gemma4:e4b")
-        4. spaCy noun chunks → codon meaning labels
+        4. spaCy noun chunks → fragment meaning labels
         5. Sentence info-density ranking → complement (extractive summary)
         6. First sentence heuristic → intent
     """
@@ -211,10 +211,10 @@ class CpuTagger:
         sequence_index: Optional[int] = None,
     ) -> Gene:
         """
-        Encode raw content into a Gene. Same output contract as ribosome.pack().
+        Encode raw content into a Document. Same output contract as ribosome.pack().
 
-        Returns a Gene with: gene_id, content, complement, codons, promoter,
-        epigenetics, key_values, source_id, is_fragment.
+        Returns a Document with: gene_id, content, complement, fragments, tags,
+        signals, key_values, source_id, is_fragment.
         """
         from .genome import Genome
 
@@ -242,7 +242,7 @@ class CpuTagger:
         # 3. Extract key-value facts via regex
         key_values = self._extract_key_values(content)
 
-        # 4. Generate codon meaning labels
+        # 4. Generate fragment meaning labels
         codons = self._extract_codons(doc, content, content_type)
 
         # 5. Generate complement (extractive summary)
@@ -457,13 +457,13 @@ class CpuTagger:
 
         return kvs[:15]
 
-    # ── Codon extraction (noun chunks as meaning labels) ──────────
+    # ── Fragment extraction (noun chunks as meaning labels) ──────────
 
     def _extract_codons(
         self, doc, content: str, content_type: str
     ) -> List[str]:
         """
-        Generate codon meaning labels from content.
+        Generate fragment meaning labels from content.
 
         For text: most distinctive noun phrase per sentence group.
         For code: function/class names + key identifiers.
@@ -471,7 +471,7 @@ class CpuTagger:
         codons: List[str] = []
 
         if content_type == "code":
-            # Extract function/class definitions as codons
+            # Extract function/class definitions as fragments
             for match in re.finditer(
                 r'(?:def|class|async def|function|const|export)\s+(\w+)',
                 content[:20_000],

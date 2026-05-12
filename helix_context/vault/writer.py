@@ -1,4 +1,4 @@
-"""Vault writer — atomic file writes + gene markdown rendering.
+"""Vault writer — atomic file writes + document markdown rendering.
 
 Atomic writes use a tmp+rename pattern with a vault-root sentinel so that any
 external file watcher (in v1.1, our own watcher) can suppress events for
@@ -123,7 +123,7 @@ def _build_body(gene: Any, *, redact_body: bool) -> str:
 
 
 def render_gene_markdown(gene: Any, *, redact_body: bool) -> str:
-    """Render a Gene to a complete markdown document (frontmatter + body)."""
+    """Render a Document to a complete markdown document (frontmatter + body)."""
     fm = _build_frontmatter(gene)
     fm_yaml = yaml.safe_dump(fm, sort_keys=True, allow_unicode=True, default_flow_style=False)
     body = _build_body(gene, redact_body=redact_body)
@@ -133,13 +133,13 @@ def render_gene_markdown(gene: Any, *, redact_body: bool) -> str:
 def _row_to_gene(row: Any) -> Any:
     """Adapt a sqlite3.Row to the SimpleNamespace shape that ``_build_frontmatter`` reads.
 
-    Maps the actual genome schema (gene_attribution.participant_id, content_hash,
-    promoter JSON blob) to the gene shape used by render_gene_markdown.
+    Maps the actual knowledge store schema (gene_attribution.participant_id, content_hash,
+    tags JSON blob) to the document shape used by render_gene_markdown.
     """
     import json
     from types import SimpleNamespace
 
-    # Domains live inside the promoter JSON blob as promoter.domains
+    # Domains live inside the tags JSON blob as promoter.domains
     domains: list = []
     promoter_raw = row["promoter"]
     if promoter_raw:
@@ -149,7 +149,7 @@ def _row_to_gene(row: Any) -> Any:
         except (json.JSONDecodeError, TypeError):
             domains = []
 
-    # Map chromatin int → string (genes table stores int via int(ChromatinState))
+    # Map lifecycle tier int → string (documents table stores int via int(LifecycleTier))
     chromatin_int = row["chromatin"]
     chromatin_str = {0: "open", 1: "euchromatin", 2: "heterochromatin"}.get(
         chromatin_int, "open"
@@ -176,13 +176,13 @@ def _row_to_gene(row: Any) -> Any:
         content=row["content"] or "",
         content_type=content_type,
         source_id=source_id,
-        source_lines="",  # TODO(v1.1): not stored in genes table v1
+        source_lines="",  # TODO(v1.1): not stored in documents table v1
         domains=domains,
         chromatin=chromatin_str,
         content_sha256=row["content_hash"] or "",
         last_seen="",  # ISO string version not stored; leave empty (renders as null in YAML)
         last_seen_ts=last_seen_ts,
-        live_truth_score=0.0,  # not tracked in genes table v1
+        live_truth_score=0.0,  # not tracked in documents table v1
         co_activation_partners=0,  # YAGNI for v1
         party_id=row["party_id"] or "",
         participant_handle=row["participant_id"] or "",  # participant_id → participant_handle in vault
@@ -200,7 +200,7 @@ def full_export(
     fan_out_threshold: int,
     batch_size: int = 500,
 ) -> dict:
-    """Export all (or party-filtered) genes from genome to vault_root.
+    """Export all (or party-filtered) documents from knowledge store to vault_root.
 
     Returns a dict with keys: genes_exported, elapsed_seconds, errors.
 
@@ -266,7 +266,7 @@ def full_export(
                     genes_exported += 1
                 except ValueError as exc:
                     # Data-level error: path traversal, malformed domain, bad
-                    # JSON in promoter, etc. — skip this gene and continue.
+                    # JSON in tags, etc. — skip this document and continue.
                     log.warning(
                         "full_export: export skipped for gene %s: %s",
                         row["gene_id"] if row["gene_id"] else "<unknown>",
@@ -325,7 +325,7 @@ def incremental_export(
     since_ts: float,
     batch_size: int = 500,
 ) -> dict:
-    """Export only genes whose last_seen > since_ts from genome to vault_root.
+    """Export only documents whose last_seen > since_ts from knowledge store to vault_root.
 
     Uses the idx_genes_last_seen index for efficient range filtering.
     Returns a dict with keys: genes_exported, elapsed_seconds, errors.

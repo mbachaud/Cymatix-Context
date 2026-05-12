@@ -21,7 +21,7 @@ Deployment model:
   Partitioning would defeat the cache's purpose (Laude fetches, Taude
   refetches the same file 10 seconds later).
 - **NOT cross-party.** Don't share caches across devices. Use a
-  shared genome + ingest instead — Helix syncs metadata, not bytes.
+  shared knowledge store + ingest instead — Helix syncs metadata, not bytes.
 
 TTLs come from Helix's ``volatility_class`` (``stable=7d, medium=12h,
 hot=15min``) or an explicit ``ttl_s`` argument at fetch time.

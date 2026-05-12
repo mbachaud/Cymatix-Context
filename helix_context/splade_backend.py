@@ -1,10 +1,10 @@
 """
-SPLADE Backend — Learned sparse expansion for the genome.
+SPLADE Backend — Learned sparse expansion for the knowledge store.
 
-Biology:
+Bio analogue (legacy term: epigenetics):
     SPLADE is like an epigenetic mark that makes hidden genes visible.
     Where BM25 only sees exact words, SPLADE expands each chunk with
-    semantically related terms at index time — making genes findable
+    semantically related terms at index time — making documents findable
     by meaning, not just surface text.
 
 Implementation:
@@ -182,7 +182,7 @@ def create_splade_table(conn) -> None:
 
 
 def upsert_splade_terms(conn, gene_id: str, sparse: Dict[str, float]) -> None:
-    """Store SPLADE sparse vector for a gene (replaces existing entries)."""
+    """Store SPLADE sparse vector for a document (replaces existing entries)."""
     conn.execute("DELETE FROM splade_terms WHERE gene_id = ?", (gene_id,))
     if sparse:
         conn.executemany(
@@ -206,11 +206,11 @@ def query_splade(
     if not query_sparse:
         return []
 
-    # Build SQL: sum(query_weight * doc_weight) per gene
+    # Build SQL: sum(query_weight * doc_weight) per document
     terms = list(query_sparse.keys())
     placeholders = ",".join("?" * len(terms))
 
-    # Candidate gene ids (pre-filtered by raw-weight sum so we don't pull the
+    # Candidate document ids (pre-filtered by raw-weight sum so we don't pull the
     # full inverted list for rare terms).
     candidate_rows = conn.execute(
         f"SELECT gene_id, SUM(weight) as raw_score "
@@ -229,7 +229,7 @@ def query_splade(
     candidate_ids = [gid for gid, _ in candidate_rows]
 
     # Single SQL to pull (gene_id, term, weight) for every (candidate, query-term)
-    # pair — replaces the per-gene N+1 SELECT. Ordering by gene_id lets us
+    # pair — replaces the per-document N+1 SELECT. Ordering by gene_id lets us
     # aggregate rows into the query-weighted dot product without needing a
     # GROUP BY that recomputes Python-side anyway.
     gene_placeholders = ",".join("?" * len(candidate_ids))
@@ -240,7 +240,7 @@ def query_splade(
         list(candidate_ids) + terms,
     ).fetchall()
 
-    # Query-weighted dot product per gene.
+    # Query-weighted dot product per document.
     dot_by_gene: Dict[str, float] = {gid: 0.0 for gid in candidate_ids}
     for gene_id, term, weight in pair_rows:
         dot_by_gene[gene_id] = dot_by_gene.get(gene_id, 0.0) + (

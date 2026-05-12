@@ -1,18 +1,18 @@
-"""Stage 7 freshness gate — per-gene mtime revalidation + supersession.
+"""Stage 7 freshness gate — per-document mtime revalidation + supersession.
 
 Spec: docs/specs/2026-05-08-stage-7-freshness-gate.md §5, §7.
 
 Three pure-ish functions plus an in-memory mtime cache. None of them
-touch an LLM or the ribosome — Stage 7 is LLM-free by design. The
+touch an LLM or the compressor — Stage 7 is LLM-free by design. The
 ``_revalidate_*`` pair compares on-disk mtime against
 ``gene.last_verified_at`` to decide whether the underlying source has
-moved since the genome last vouched for it; ``check_superseded`` walks
+moved since the knowledge store last vouched for it; ``check_superseded`` walks
 the ``genes.supersedes`` reverse pointer (Path A only — Path B
 ``claim_edges`` chain walking is explicitly out-of-scope per spec §15).
 
 Read-only contract (Stage 1 boundary, spec §5):
   * ``revalidate_source`` may populate the in-memory mtime cache under
-    ``read_only=True`` — the cache is per-process, not a genome write.
+    ``read_only=True`` — the cache is per-process, not a knowledge store write.
   * ``revalidate_and_mark`` calls ``genome.mark_verified`` only when
     ``read_only=False``; under ``read_only=True`` the column is left
     alone and the next non-read-only call re-stats (cache-served if
@@ -20,7 +20,7 @@ Read-only contract (Stage 1 boundary, spec §5):
 
 Cache shape: ``dict[str, tuple[float, float]]`` keyed on absolute
 source path, value is ``(mtime, cached_at)``. TTL defaults to 60s. The
-cache lives on ``HelixContextManager`` (per-batch state, not Genome) so
+cache lives on ``HelixContextManager`` (per-batch state, not KnowledgeStore) so
 admin /admin/refresh can clear it without touching the DB.
 """
 
@@ -68,7 +68,7 @@ def _looks_like_url(source_path: str) -> bool:
 
 
 # ─────────────────────────────────────────────────────────────────────
-# Per-gene revalidation
+# Per-document revalidation
 # ─────────────────────────────────────────────────────────────────────
 
 def revalidate_source(
@@ -89,14 +89,14 @@ def revalidate_source(
       mtime  > last_verified_at                    -> "stale"
 
     Cache:
-      key   = source_path (the gene's file path)
+      key   = source_path (the document's file path)
       value = (mtime, cached_at)
       Skip ``os.stat`` when ``now_ts - cached_at < cache_ttl_s``.
 
     Args:
-      gene: the Gene whose source will be stat'd.
+      document: the Document whose source will be stat'd.
       mtime_cache: shared dict; this function MAY mutate it (writing
-        the cache is not a genome mutation, so it is allowed under
+        the cache is not a knowledge store mutation, so it is allowed under
         read_only=True per spec §5).
       now_ts: caller-provided "now" — passed in (rather than calling
         ``time.time()`` here) so tests can simulate TTL expiry without
@@ -135,7 +135,7 @@ def revalidate_source(
         except OSError as exc:
             # Permission error / path-too-long / other transient stat
             # failure. Treat as "unknown" — the freshness gate should
-            # not down-rank a gene because the OS hiccuped on stat.
+            # not down-rank a document because the OS hiccuped on stat.
             log.warning(
                 "revalidate_source: os.stat(%s) failed: %s",
                 source_path,
@@ -167,7 +167,7 @@ def revalidate_and_mark(
 
     Read-only contract (spec §5):
       * Cache is updated on every call (in-memory, per-process — not a
-        genome mutation).
+        knowledge store mutation).
       * ``genome.mark_verified`` is called only when status == "fresh"
         AND ``read_only=False``. Under read_only=True the column is left
         unchanged; the next non-read-only call re-stats (or hits the
@@ -209,15 +209,15 @@ def check_superseded(genome, gene: "Gene") -> Optional[str]:
 
     Path A only (spec §7, §15): single SELECT on the reverse-index of
     ``genes.supersedes``. If a row exists where ``supersedes = gene.gene_id``,
-    that row's gene is the successor and its ``source_id`` becomes the
+    that row's document is the successor and its ``source_id`` becomes the
     refresh target.
 
     Path B (claim-chain walking via ``claim_edges``) is explicitly out
-    of scope. Stage 7+1 will pick it up if benches surface gene rows
+    of scope. Stage 7+1 will pick it up if benches surface document rows
     whose ``supersedes IS NULL`` but a claim chain exists.
 
     Returns:
-      The successor gene's ``source_id`` (a string), or ``None`` when
+      The successor document's ``source_id`` (a string), or ``None`` when
       no successor row exists or the successor has no source_id.
     """
     gene_id = getattr(gene, "gene_id", None)

@@ -1,7 +1,7 @@
 # Helix-Context Retrieval Dimensions
 
 > **Last reviewed:** 2026-04-17 (working tree)
-> **Genome snapshot:** 19,738 genes (13,710 OPEN / 1,949 EUCHRO / 4,079 HETERO)
+> **Knowledge store snapshot:** 19,738 documents (13,710 OPEN / 1,949 EUCHRO / 4,079 HETERO)
 >
 > **Status: LLM-free pipeline as of 2026-04-09 (CPU pipeline commit) +
 > 2026-04-13 (Sprints 1-4).** Every dimension below — D1 through D9,
@@ -99,9 +99,9 @@ Related live adjuncts, not counted as separate dimensions:
 - `path_key_index` Tier 0 compound retrieval (`path_token` + `kv_key`)
 - optional `filename_anchor` lexical boost (dark-shipped by default)
 
-### D2 — Promoter Tagging
+### D2 — Tagging (promoter index)
 
-Keyword + entity tag matching at retrieval time. Genes tagged at ingest via `promoter_index`.
+Keyword + entity tag matching at retrieval time. Documents tagged at ingest via `promoter_index`.
 Query terms expanded through `helix.toml [synonyms]`.
 
 ### D3 — Source Provenance
@@ -135,8 +135,8 @@ Maps retrieval onto wave physics. CPU-based (~5 ms) replacement for LLM re_rank 
 
 | Concept | Biology | Cymatics |
 |---|---|---|
-| Gene | Resonant mode | Excited by query "frequencies" |
-| Codon weight | Spectral amplitude | Peak height in 256-bin spectrum |
+| Document | Resonant mode | Excited by query "frequencies" |
+| Fragment weight | Spectral amplitude | Peak height in 256-bin spectrum |
 | Co-activation | Harmonic coupling | Weighted spectral edges (`harmonic_links`) |
 | Splice | Bandwidth filtering | Q-factor from `splice_aggressiveness` |
 
@@ -144,7 +144,7 @@ Integrated at Step 3 of `context_manager._express()` as a blended score bonus.
 Current live path uses `query_spectrum()` + `flux_score_dispatch()` to add a
 small bonus and re-sort candidates. The old "LLM fallback" language is legacy.
 
-### D7 — Gene Attribution (partial, live data path)
+### D7 — Document Attribution (partial, live data path)
 
 Schema and data flow are now live: `/ingest` can resolve or accept explicit
 `org_id`, `party_id`, `participant_handle`, and `agent_handle`, and writes
@@ -152,7 +152,7 @@ Schema and data flow are now live: `/ingest` can resolve or accept explicit
 
 Current consumers:
 
-1. **Per-party scoping** — `query_genes(..., party_id=...)` excludes genes attributed to other parties while still allowing unattributed legacy genes through.
+1. **Per-party scoping** — `query_genes(..., party_id=...)` excludes documents attributed to other parties while still allowing unattributed legacy documents through.
 2. **Citation enrichment** — `/context` citations can emit `authored_by_party` and `authored_by_handle`.
 
 Still pending:
@@ -165,9 +165,9 @@ Three data sources exist, and part of the graph stack is now read at query time:
 
 | Source | Location | Rows |
 |---|---|---|
-| Legacy co-activation | `epigenetics.co_activated_with` | Per-gene JSON |
+| Legacy co-activation | `epigenetics.co_activated_with` | Per-document JSON |
 | Entity graph | `entity_graph` table | Varies |
-| Cymatics harmonics | `harmonic_links` table | 227k+ in current genome |
+| Cymatics harmonics | `harmonic_links` table | 227k+ in current knowledge store |
 
 Current live wiring:
 
@@ -180,7 +180,7 @@ Still partial:
 - SR (`sr_boost`) exists under D8; `sr_enabled = true` in helix.toml (flip 2026-04-22) but gate bench (2026-05-08) found no recall gain at N=50 — leaving enabled pending higher-N validation
 - seeded edges exist but are dark-shipped by default
 
-**SR Gate Bench Result (2026-05-08, N=50, SEED=42, gemma4:e4b, same-genome A/B):**
+**SR Gate Bench Result (2026-05-08, N=50, SEED=42, gemma4:e4b, same knowledge-store A/B):**
 
 | Axis | Axes | SR-OFF retrieval | SR-ON retrieval | Delta |
 |---|---|---|---|---|
@@ -195,7 +195,7 @@ Result: **GATE NOT MET.** No retrieval_pct gain on any axis. Axis-2 shows -2pp r
 but this does not clear the gate on the primary recall@1 metric.
 
 SR remains enabled in helix.toml (flip 2026-04-22 was signal-positive in earlier sweep) and
-does not harm latency. Recommend re-gate at N=200+ or with a larger genome snapshot before
+does not harm latency. Recommend re-gate at N=200+ or with a larger knowledge-store snapshot before
 deciding to disable or promote SR to a required-on tier.
 
 ### D9 — Temporal Context Model (built, lightly wired)

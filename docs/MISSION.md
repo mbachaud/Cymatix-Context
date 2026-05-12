@@ -16,7 +16,7 @@ off-the-shelf tools fit the math.**
 
 The architecture is not a metaphor. The math converges because biology,
 wave physics, and information retrieval are all different lenses on the
-same underlying problem: selective expression of stored information under
+same underlying problem: selective retrieval of stored information under
 contextual signals.
 
 ```
@@ -72,7 +72,7 @@ all the same substrate viewed through different lenses:
 - Cymatics (Chladni, 1787) — resonance as pattern
 - litellm (2024) — universal model router
 
-The "glue" is the genome schema + the 13-dimension expression pipeline.
+The "glue" is the knowledge store schema + the 13-dimension retrieval pipeline.
 Everything else is off-the-shelf. The contribution is the *arrangement*,
 not the parts.
 
@@ -99,7 +99,7 @@ Success is not "helix beats RAG on benchmark X." Success is:
    frontier models. Because correct expression IS correct retrieval —
    it's substrate-level, not scale-level.
 
-3. The 13-dimension engine converges on a smaller correct set (3 genes)
+3. The 13-dimension engine converges on a smaller correct set (3 documents)
    instead of the larger uncertain set (50 chunks) that RAG needs.
 
 4. Anyone reading this document in 5 years recognizes the architecture

@@ -1,5 +1,5 @@
 """
-WriteQueue — Serialized write access to the genome.
+WriteQueue — Serialized write access to the knowledge store.
 
 Problem: Multiple agents (Claude, Gemini, CpuTagger, ingest scripts)
 all want to write to genome.db simultaneously. SQLite WAL mode handles
@@ -17,12 +17,12 @@ Usage:
 
     writer = GenomeWriter("genome.db")
 
-    # Submit a gene for writing (non-blocking)
-    future = writer.submit_gene(gene)
+    # Submit a document for writing (non-blocking)
+    future = writer.submit_gene(document)
     gene_id = future.result(timeout=30)  # blocks until written
 
     # Submit a batch
-    futures = writer.submit_genes(genes)
+    futures = writer.submit_genes(documents)
 
     # Graceful shutdown
     writer.close()
@@ -83,10 +83,10 @@ class GenomeWriter:
         fts_values: Optional[tuple] = None,
     ) -> Future:
         """
-        Submit a gene upsert (INSERT OR REPLACE + promoter index + FTS5).
+        Submit a document upsert (INSERT OR REPLACE + tags index + FTS5).
 
         Args:
-            values: tuple of column values for genes table
+            values: tuple of column values for documents table
             promoter_tags: list of (gene_id, tag_type, tag_value) tuples
             fts_values: optional (gene_id, content, complement) for FTS5
         """
@@ -187,14 +187,14 @@ class GenomeWriter:
                     try:
                         gene_id = values[0]
 
-                        # INSERT OR REPLACE gene
+                        # INSERT OR REPLACE document
                         placeholders = ",".join("?" * len(values))
                         cur.execute(
                             f"INSERT OR REPLACE INTO genes VALUES ({placeholders})",
                             values,
                         )
 
-                        # Rebuild promoter index
+                        # Rebuild tags index
                         cur.execute(
                             "DELETE FROM promoter_index WHERE gene_id = ?",
                             (gene_id,),

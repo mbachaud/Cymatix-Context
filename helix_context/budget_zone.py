@@ -1,5 +1,5 @@
 """
-Budget-zone gene expression cap — spike.
+Budget-zone document retrieval cap — spike.
 
 Complements the existing confidence-tier logic in ``context_manager.py``
 (TIGHT=3 / FOCUSED=6 / BROAD=12) by adding a second axis driven by the
@@ -12,7 +12,7 @@ speak the same language:
     soft      (25-40%)   cap = 12      (= broad max, no-op by default)
     pressure  (40-60%)   cap = 6       (= focused max)
     cap       (60-80%)   cap = 3       (= tight max)
-    emergency (80%+)     cap = 1       (single strongest gene)
+    emergency (80%+)     cap = 1       (single strongest document)
 
 The returned value is a CEILING, not a set-point. The confidence tier
 continues to pick the actual number within that ceiling, so behavior
@@ -39,7 +39,7 @@ _ZONE_BOUNDARIES = (
     (0.40, 12,   "soft"),      # 25-40% — cap at broad max
     (0.60, 6,    "pressure"),  # 40-60% — clamp to focused
     (0.80, 3,    "cap"),       # 60-80% — clamp to tight
-    (float("inf"), 1, "emergency"),  # 80%+ — single gene
+    (float("inf"), 1, "emergency"),  # 80%+ — single document
 )
 
 
@@ -63,7 +63,7 @@ def zone_cap(
     prompt_tokens: Optional[int],
     window_tokens: int = DEFAULT_WINDOW_TOKENS,
 ) -> Optional[int]:
-    """Return the gene-count ceiling for a given prompt size.
+    """Return the document-count ceiling for a given prompt size.
 
     Returns None when no cap should apply (clean zone, missing signal,
     or the feature flag is off). Callers should do
@@ -84,7 +84,7 @@ def zone_metadata(
     prompt_tokens: Optional[int],
     window_tokens: int = DEFAULT_WINDOW_TOKENS,
 ) -> dict:
-    """Structured telemetry payload — emitted alongside each expression."""
+    """Structured telemetry payload — emitted alongside each retrieval."""
     if prompt_tokens is None:
         return {"enabled": is_enabled(), "zone": None, "cap": None, "ratio": None}
     ratio = prompt_tokens / max(window_tokens, 1)

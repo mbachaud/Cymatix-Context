@@ -1,6 +1,6 @@
 # Helix Context
 
-Genome-based context compression for local LLMs. Makes 9k tokens of context window feel like 600k.
+Knowledge-store-based context compression for local LLMs. Makes 9k tokens of context window feel like 600k.
 
 ## Quick Start
 
@@ -23,16 +23,16 @@ python examples/quickstart.py
 
 ## How It Works
 
-A transparent OpenAI-compatible proxy that intercepts LLM requests and injects compressed context from a persistent SQLite genome.
+A transparent OpenAI-compatible proxy that intercepts LLM requests and injects compressed context from a persistent SQLite knowledge store.
 
 **6-step pipeline per turn:**
 0a. **Classify** — rule-based query classifier picks decoder mode + assembly cap (no model call)
 1. **Extract** — heuristic keyword extraction from query (no model call)
-2. **Express** — SQLite promoter-tag lookup + synonym expansion + co-activation
+2. **Retrieve** — SQLite tag lookup + synonym expansion + co-activation
 3. **Re-rank** — small CPU model scores candidates by relevance
-4. **Splice** — small CPU model trims introns, keeps exons (batched single call)
+4. **Splice** — small CPU model compresses each candidate, keeping only the high-value fragments (batched single call)
 5. **Assemble** — join spliced parts, enforce token budget, wrap in tags
-6. **Replicate** — pack query+response exchange back into genome (background)
+6. **Persist** — pack query+response exchange back into knowledge store (background)
 
 ## Structure
 
@@ -42,9 +42,9 @@ A transparent OpenAI-compatible proxy that intercepts LLM requests and injects c
 | `exceptions.py` | 5 error types, all with fallbacks |
 | `config.py` | TOML loader, synonym map, cold-start threshold |
 | `codons.py` | CodonChunker (RawStrand) + CodonEncoder (Codon) |
-| `genome.py` | SQLite DDL, promoter index, synonym expansion, co-activation |
+| `genome.py` | SQLite DDL, tags index, synonym expansion, co-activation |
 | `ribosome.py` | pack/re_rank/splice/replicate + timeout fallbacks |
-| `context_manager.py` | 6-step pipeline orchestrator + pending replication buffer |
+| `context_manager.py` | 6-step pipeline orchestrator + pending persistence buffer |
 | `query_classifier.py` | Upstream rule-based router: classify_query() → decoder mode + assembly cap |
 | `server.py` | FastAPI proxy + /ingest, /context, /stats, /health endpoints |
 | `integrations/scorerift.py` | CD spectroscope bridge to ScoreRift audit system |
@@ -129,8 +129,8 @@ models:
 
 ## Gotchas
 
-- **Model swap latency:** The ribosome (small model) and the generation model share Ollama. Use `keep_alive = "30m"` in helix.toml to pin the ribosome in memory.
-- **Synonym map is critical:** If queries return "no relevant context", check that your query keywords map to the promoter tags the ribosome assigned. Add synonyms in `[synonyms]` section of helix.toml.
-- **Short content may fail ingestion:** The ribosome struggles with very short inputs (<200 chars). Pad with context or combine small files before ingesting.
+- **Model swap latency:** The compressor (small model) and the generation model share Ollama. Use `keep_alive = "30m"` in helix.toml to pin the compressor in memory.
+- **Synonym map is critical:** If queries return "no relevant context", check that your query keywords map to the tags the compressor assigned. Add synonyms in `[synonyms]` section of helix.toml.
+- **Short content may fail ingestion:** The compressor struggles with very short inputs (<200 chars). Pad with context or combine small files before ingesting.
 - **genome.db persists:** Delete it to start fresh. It auto-creates on first use.
 - **Continue Agent mode:** Use Chat mode, not Agent mode. The proxy doesn't handle tool routing.

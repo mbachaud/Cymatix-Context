@@ -82,6 +82,98 @@ work.
 
 ---
 
+## Metric & label vocabulary (Prometheus surface)
+
+Prometheus metric names and label values are a **contract** for anyone
+querying them — Grafana panels, alert rules, ad-hoc PromQL. The same
+"don't rename what's already a contract" logic that protects the SQL
+schema applies here. The translation table below is therefore a
+*reading* aid; helix does not rename metrics. Dashboard panel titles
+*do* use the engineering vocabulary (and reference the legacy term
+inline so navigation stays one-step).
+
+| Prometheus metric (canonical, stays) | Bio framing (legacy) | Engineering meaning |
+|---|---|---|
+| `helix_chromatin_state_total` | chromatin state distribution | document lifecycle tier (OPEN / WARM / COLD) |
+| `helix_harmonic_edges_total` | harmonic links by source | co-activation edges by provenance |
+| `helix_ribosome_call_seconds` | ribosome call timing | compressor call latency, by `call_kind` ∈ {pack, rerank, splice, replicate, ...} |
+| `helix_ribosome_info` | active ribosome model | active compressor backend + model + cost class |
+| `helix_genome_size_genes` | gene count in genome | document count in knowledge store |
+| `helix_genome_wal_size_bytes` | — | SQLite WAL file size |
+| `helix_genome_signal_seconds` | genome signal timing | per-signal SQLite query latency |
+| `helix_genome_checkpoint_blocked_total` | — | WAL checkpoint contention events |
+| `helix_pipeline_stage_seconds` | — | per-stage /context handler latency, by `stage` ∈ {classify, extract, express, rerank, splice, assemble} |
+| `helix_tier_fired_total` | tier activation | retrieval-signal firing, by `tier` |
+| `helix_tier_contribution` | per-tier score contribution | per-signal score magnitude added to gene_scores |
+| `helix_cwola_bucket_total` | CWoLa bucket accumulation | A/B unsupervised-partition bucket fill |
+| `helix_cwola_f_gap_sq` | f_gap_sq divergence | A/B partition divergence gate (≥ 0.16 = pass) |
+| `helix_hub_concentration_ratio` | hub concentration | top-1%-inbound / mean-inbound on co-activation graph |
+| `helix_hub_inbound_degree` | hub inbound degree | inbound-degree distribution stats (max/p99/p95/p50/mean) |
+| `helix_context_health_status_total` | — | retrieval health classification (aligned/sparse/stale/denatured) |
+| `helix_context_ellipticity` | — (CD-spectroscopy term — STAYS) | per-query retrieval shape: geometric mean of coverage × density × freshness |
+| `helix_context_cache_outcome_total` | — | /context cache outcome (hit / miss / partial) |
+| `helix_pipeline_stage_seconds` (span) | — | also emits a `helix.pipeline.<stage>` span via `pipeline_stage_span()` |
+| `helix_genai_client_token_usage` | n/a — new OTel surface | OTel `gen_ai.client.token.usage`, by `gen_ai.token.type` ∈ {input, output, cached, reasoning} |
+| `helix_genai_time_to_first_chunk_seconds` | n/a — new OTel surface | OTel `gen_ai.response.time_to_first_chunk` (TTFT, streaming) |
+| `helix_genai_cost_usd` | n/a — new surface | per-call USD cost from `helix_context.genai_telemetry.PRICE_TABLE` |
+| `helix_genai_finish_reasons_total` | n/a — new OTel surface | OTel `gen_ai.response.finish_reasons` distribution |
+
+**The standardized labels on the new `helix_genai_*` metrics follow the
+OTel GenAI semantic-convention attribute namespace:** `gen_ai.provider.name`,
+`gen_ai.operation.name` ∈ {chat, text_generation, embeddings, rerank,
+classify}, `gen_ai.request.model`, `gen_ai.response.model`,
+`gen_ai.token.type`. In Prometheus these come through with `.` replaced
+by `_` (so `gen_ai.provider.name` → label `gen_ai_provider_name`).
+
+---
+
+## Dashboard panel-title vocabulary
+
+The Grafana dashboards under `deploy/otel/grafana/dashboards/` use
+engineering panel titles with the legacy bio term referenced inline
+(e.g. `"Compressor call latency p95 by operation"` + description
+`"Legacy term: ribosome call."`). The table below is the bidirectional
+index for panel-hunting.
+
+| Engineering panel title (canonical, used in dashboards) | Bio framing (legacy) |
+|---|---|
+| Compressor backend cost class                  | Ribosome backend |
+| Active compressor model                        | Active ribosome model |
+| Compressor call latency p95 by operation       | Ribosome call latency by call_kind |
+| Compressor call rate by operation              | Ribosome call rate |
+| Compressor call latency heatmap                | Ribosome call timing heatmap |
+| Document count                                 | Gene count / Genome size |
+| Knowledge store (row title)                    | Genome (row title) |
+| Lifecycle tier distribution                    | Chromatin state distribution |
+| Co-activation edges by provenance              | harmonic_links edges by source |
+| Tier activations / minute                      | tier_fired per minute |
+| Per-tier contribution score (heatmap)          | Per-tier contribution histogram |
+| A/B Cluster Convergence (row title)            | CWoLa Label Clock |
+| Bucket accumulation                            | CWoLa bucket accumulation |
+| f_gap_sq divergence — (f_A − f_B)²             | (kept verbatim — physics term) |
+| Hub concentration ratio (top-1% inbound / mean) | (kept verbatim — graph-theory term) |
+| Inbound-degree distribution                    | (kept verbatim — graph-theory term) |
+| Genome-signal latency p95 by signal            | (kept — `genome` reads as the SQLite store, signal as the query path) |
+
+The three top-level dashboards that consume the canonical vocabulary:
+
+- **Helix — Operations Overview** (`helix-overview.json`): top-line
+  request/latency/cache/pipeline KPIs in engineering names. Default
+  landing dashboard.
+- **Helix — GenAI** (`helix-genai.json`): the new `helix_genai_*` /
+  `gen_ai.*` surface — token usage by direction, TTFT, cost, finish
+  reasons, cache hit ratio.
+- **Helix — Internals & Research** (`helix-internals.json`): preserved
+  bio/research panels (CWoLa, chromatin, harmonic_links, hub
+  concentration, tier dynamics) with engineering titles + inline legacy
+  references.
+- **Helix — Retrieval Quality + HITL** (`helix-retrieval-hitl.json`):
+  per-query ellipticity / health status / HITL pause-event signals.
+  Uses the technical-term vocabulary (ellipticity, denatured) that is
+  already on the "STAYS" list.
+
+---
+
 ## Terms that STAY (not biology, not tax)
 
 These are domain-specific technical terms with established meaning

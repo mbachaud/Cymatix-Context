@@ -5,7 +5,7 @@ Optional backend for CodonChunker._chunk_code. Uses tree-sitter to
 split code along real AST boundaries (functions, classes, methods)
 instead of regex-matched keywords.
 
-Biology:
+Bio analogue (legacy terms: codon / gene):
     The regex chunker cuts wherever it sees 'def' or 'class' — like
     a restriction enzyme that can't tell a real cut site from a
     sequence that happens to look like one. Tree-sitter understands

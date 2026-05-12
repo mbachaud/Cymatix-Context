@@ -4,7 +4,7 @@ Plan: helix-context retrieval-fix, Stage 4 of 6 (council 2026-05-08). Depends on
 
 ## 1. Goals + non-goals
 
-**Goals.** Replace two hand-picked constants with reproducible, data-derived calibrations: (a) the absolute ANN cosine cutoff in `genome.py:371`, and (b) the global confidence floors in `context_manager.py:946-989`. After Stages 2 (1024-dim restore) and 3 (RRF fusion), both are stale. Stage 4 produces a `scripts/calibrate_thresholds.py` artifact that re-derives both from a genome snapshot + bench JSON, persists provenance, and exposes it via `/health` and `/context`.
+**Goals.** Replace two hand-picked constants with reproducible, data-derived calibrations: (a) the absolute ANN cosine cutoff in `genome.py:371`, and (b) the global confidence floors in `context_manager.py:946-989`. After Stages 2 (1024-dim restore) and 3 (RRF fusion), both are stale. Stage 4 produces a `scripts/calibrate_thresholds.py` artifact that re-derives both from a knowledge store snapshot + bench JSON, persists provenance, and exposes it via `/health` and `/context`.
 
 **Non-goals.** No new query classes, no LLM calls, no changes to retrieval signal mix (Stages 2/3), no `caller_model_class` (Stage 5), no know/miss block (Stage 6).
 
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS genome_calibration (
 );
 ```
 
-Genome `query_genes()` reads `ann_threshold` once at first call (cache on `self`), invalidated on `set_replication_manager` rotation. If the row is missing AND `mode=margin_over_random`, log warning and fall back to the legacy absolute value from helix.toml.
+KnowledgeStore `query_genes()` reads `ann_threshold` once at first call (cache on `self`), invalidated on `set_replication_manager` rotation. If the row is missing AND `mode=margin_over_random`, log warning and fall back to the legacy absolute value from helix.toml.
 
 ## 4. Per-classifier confidence floors
 
@@ -68,13 +68,13 @@ Reasoning: abstain at the upper tail of misses (cheap to be wrong: re-engages BR
 
 | cls | assembly_max_genes_cap | abstain_top | focused_top | tight_top | foveated_alpha |
 |---|---|---|---|---|---|
-| arithmetic | 2 | p85_miss | p25_hit | p60_hit | 1.6 (sharp — only 2 genes ever) |
+| arithmetic | 2 | p85_miss | p25_hit | p60_hit | 1.6 (sharp — only 2 documents ever) |
 | factual | 5 | p85_miss | p25_hit | p60_hit | 1.4 |
 | procedural | 6 | p85_miss | p25_hit | p60_hit | 0.9 |
 | multi_hop | 8 | p85_miss | p25_hit | p60_hit | 0.6 (flat — distribute budget) |
 | default | (unset) | p85_miss | p25_hit | p60_hit | 1.0 |
 
-Numeric values are **derived** at calibration time per genome+bench. The α column ships as defaults; the script also emits suggested α from observed mean compression-ratio per cls (out of scope to retune α automatically — manual review).
+Numeric values are **derived** at calibration time per knowledge store+bench. The α column ships as defaults; the script also emits suggested α from observed mean compression-ratio per cls (out of scope to retune α automatically — manual review).
 
 ## 5. Calibration script
 

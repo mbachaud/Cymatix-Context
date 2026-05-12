@@ -1,5 +1,5 @@
 """
-Schemas — Pydantic models for the Helix genome data layer.
+Schemas — Pydantic models for the Helix knowledge store data layer.
 
 These are the stable internal contracts. All models are JSON-serializable
 for SQLite storage (via model_dump_json / model_validate_json).
@@ -32,11 +32,11 @@ class StructuralRelation(IntEnum):
     gene_relations table is a discriminated union on relation code:
     0-6 are NL semantic links, 100+ are structural hierarchy edges.
     """
-    CHUNK_OF = 100          # gene_id_a is a chunk of gene_id_b (parent file gene)
+    CHUNK_OF = 100          # gene_id_a is a chunk of gene_id_b (parent file document)
 
 
 class ChromatinState(IntEnum):
-    """Gene accessibility state — mirrors biological chromatin compaction."""
+    """Document accessibility state — mirrors biological chromatin compaction (legacy term)."""
     OPEN = 0            # Recently accessed, hot
     EUCHROMATIN = 1     # Accessible, normal state
     HETEROCHROMATIN = 2 # Compacted, stale — excluded from queries
@@ -59,7 +59,7 @@ class IntentClass(str, Enum):
 
 
 class PromoterTags(BaseModel):
-    """Retrieval metadata — how the genome finds this gene."""
+    """Retrieval metadata — how the knowledge store finds this document."""
     domains: List[str] = Field(default_factory=list)
     entities: List[str] = Field(default_factory=list)
     intent: str = ""
@@ -77,7 +77,7 @@ class TypedCoActivation(BaseModel):
 
 
 class EpigeneticMarkers(BaseModel):
-    """Usage and association metadata — how the gene evolves over time."""
+    """Usage and association metadata — how the document evolves over time."""
     created_at: float = Field(default_factory=lambda: time.time())
     last_accessed: float = Field(default_factory=lambda: time.time())
     access_count: int = 0
@@ -89,10 +89,10 @@ class EpigeneticMarkers(BaseModel):
     # Ring buffer of recent access timestamps used to compute a windowed
     # access rate. The monotonic `access_count` above conflates "hot last
     # hour" with "hot once a year ago"; this field lets callers ask "how
-    # often has this gene been touched in the last N seconds" via the
+    # often has this document been touched in the last N seconds" via the
     # `access_rate()` helper below.
     #
-    # Capped to the most recent 100 timestamps so a single gene's marker
+    # Capped to the most recent 100 timestamps so a single document's marker
     # blob stays bounded (~800 bytes worst case). Older entries are
     # dropped on append by the touch path; readers can also tolerate any
     # length without breaking.
@@ -108,13 +108,13 @@ class EpigeneticMarkers(BaseModel):
 
         Counts entries in `recent_accesses` whose timestamp is newer than
         `now - window_seconds`, divided by the window duration. Returns
-        0.0 if the field is empty (e.g. for a gene that hasn't been
+        0.0 if the field is empty (e.g. for a document that hasn't been
         touched since Slice 2 wired the population path, or a freshly
-        ingested gene that hasn't been retrieved yet).
+        ingested document that hasn't been retrieved yet).
 
         This is the working-set inference primitive from the "n over x
         bell curve" insight: software cannot directly query whether a
-        gene is cache-resident, but the access pattern over a sliding
+        document is cache-resident, but the access pattern over a sliding
         window is a sufficient Bayesian proxy for tier residency.
 
         Use as a tiebreaker / prefetch hint, not as a primary relevance
@@ -131,7 +131,7 @@ class EpigeneticMarkers(BaseModel):
 
 
 class Gene(BaseModel):
-    """The fundamental storage unit in the genome."""
+    """The fundamental storage unit in the knowledge store."""
     gene_id: str
     content: str
     complement: str                     # Dense summary (fallback for splice failures)
@@ -165,17 +165,17 @@ class Gene(BaseModel):
 class ContextHealth(BaseModel):
     """Delta-epsilon context health signal — the 'Check Engine Light.'"""
     ellipticity: float = 1.0            # 0=denatured, 1=perfectly grounded
-    coverage: float = 0.0               # Fraction of query terms that matched genes
-    density: float = 0.0                # Fraction of expression budget used
+    coverage: float = 0.0               # Fraction of query terms that matched documents
+    density: float = 0.0                # Fraction of retrieval budget used
     freshness: float = 1.0              # Back-compat: aliases freshness_weighted (Stage 7)
-    logical_coherence: float = 0.0      # Pairwise relation coherence of expressed genes
-    genes_available: int = 0            # Total genes in genome
-    genes_expressed: int = 0            # Genes expressed for this query
+    logical_coherence: float = 0.0      # Pairwise relation coherence of retrieved documents
+    genes_available: int = 0            # Total documents in knowledge store
+    genes_expressed: int = 0            # Documents retrieved for this query
     status: str = "unmeasured"          # aligned | sparse | stale | denatured
 
     # Stage 7 (2026-05-08): three freshness signals replace the single
     # mean(decay) value to stop a stale top-1 needle from being masked
-    # by fresh padding genes. ``freshness`` (back-compat field above) is
+    # by fresh padding documents. ``freshness`` (back-compat field above) is
     # set to ``freshness_weighted`` so legacy consumers keep a meaningful
     # number; new consumers should branch on ``freshness_top1`` /
     # ``freshness_min``. None until populated by ``_compute_health``.
@@ -195,20 +195,20 @@ class ContextHealth(BaseModel):
     # the alternates. path_token_coverage is the discriminator (delta +0.48).
     top_score_raw: float = 0.0          # Absolute top-1 score (scale-sensitive)
     top_dominance: float = 0.0          # top / mean(all scored) — how much #1 dominates
-    path_token_coverage: float = 0.0    # Fraction of delivered genes whose source_path
+    path_token_coverage: float = 0.0    # Fraction of delivered documents whose source_path
                                         # tokens overlap the extracted query signals
     # File-grain coord signal (2026-04-18): path_token_coverage is folder+file
     # tokens mixed; this is basename-only. Catches "same folder, wrong file"
     # silent-miss mode where the delivered set is all in the right project
     # directory but none of the filenames match the queried concept.
-    file_token_coverage: float = 0.0    # Fraction of delivered genes whose basename
+    file_token_coverage: float = 0.0    # Fraction of delivered documents whose basename
                                         # tokens overlap the extracted query signals
 
 
 class ContextWindow(BaseModel):
     """The assembled context ready for the big model."""
     ribosome_prompt: str                # 3k fixed decoder layer
-    expressed_context: str              # 6k codon-encoded active context
+    expressed_context: str              # 6k fragment-encoded active context
     expressed_gene_ids: List[str] = Field(default_factory=list)
     total_estimated_tokens: int = 0
     compression_ratio: float = 0.0
@@ -291,9 +291,9 @@ CLAIM_EDGE_TYPES = ("contradicts", "supports", "supersedes", "duplicates")
 
 
 class Claim(BaseModel):
-    """A structured fact extracted from a gene.
+    """A structured fact extracted from a document.
 
-    Agents reason over claims, not bulk gene content. A claim carries
+    Agents reason over claims, not bulk document content. A claim carries
     enough provenance (gene_id, shard_name, observed_at) that the
     packet builder can answer freshness questions without opening the
     owning shard's content tier.
@@ -326,7 +326,7 @@ class ClaimEdge(BaseModel):
 class Party(BaseModel):
     """A trust identity — a human principal, tenant, or org service identity.
 
-    Parties hold genes. A party may contain many participants. Parties are
+    Parties hold documents. A party may contain many participants. Parties are
     atomic: they do NOT self-reference. Grouping of parties is handled by
     the future `collectives` layer.
     """
@@ -341,7 +341,7 @@ class Participant(BaseModel):
     """A live runtime actor (Claude session, sub-agent, swarm member).
 
     Participants belong to exactly one party. They are ephemeral — they
-    come and go as sessions start and stop. Attribution of genes survives
+    come and go as sessions start and stop. Attribution of documents survives
     participant turnover via the party.
     """
     participant_id: str                 # ULID / uuid4
@@ -378,7 +378,7 @@ class ParticipantInfo(BaseModel):
 
 
 class GeneAttribution(BaseModel):
-    """Attribution row linking a gene to the party/participant that authored it."""
+    """Attribution row linking a document to the party/participant that authored it."""
     gene_id: str
     party_id: str
     participant_id: Optional[str] = None
@@ -407,9 +407,9 @@ class HITLEvent(BaseModel):
 
     Motivated by laude's 2026-04-11 HITL observation (handoff off-git)
     and raude's M1 discriminating test which established that the
-    mechanism behind the 2026-04-10 HITL shift was NOT genome-mediated.
+    mechanism behind the 2026-04-10 HITL shift was NOT knowledge store-mediated.
     This means the logger needs to record chat-channel signals in
-    addition to genome-state snapshots — see the optional fields below.
+    addition to knowledge store-state snapshots — see the optional fields below.
 
     All signal fields are nullable; the minimal valid event has only
     `party_id`, `ts`, and `pause_type`. Additional fields are populated
@@ -425,13 +425,13 @@ class HITLEvent(BaseModel):
     task_context: Optional[str] = None
     resolved_without_operator: bool = False
 
-    # Chat-channel signals (added per M1 finding — mechanism was non-genome)
+    # Chat-channel signals (added per M1 finding — mechanism was non-knowledge store)
     operator_tone_uncertainty: Optional[float] = None     # 0-1 proxy score
     operator_risk_keywords: List[str] = Field(default_factory=list)
     time_since_last_risk_event: Optional[float] = None    # seconds
     recoverability_signal: Optional[str] = None           # "recoverable" | "uncertain" | "lost"
 
-    # Genome state snapshot (for M3 prospective correlation)
+    # KnowledgeStore state snapshot (for M3 prospective correlation)
     genome_total_genes: Optional[int] = None
     genome_hetero_count: Optional[int] = None
     cold_cache_size: Optional[int] = None
@@ -492,13 +492,13 @@ class KnowBlock(BaseModel):
 
     Mutually exclusive with MissBlock; envelope validator enforces the
     invariant. Designed for a frontier-model agent: ``found=True`` is the
-    machine-tagged equivalent of "the genome did locate this and the
+    machine-tagged equivalent of "the knowledge store did locate this and the
     expressed_context bytes are grounded — you may answer from them."
 
     Stage 7 extends this additively (NOT a redesign):
       * ``soft_stale: bool`` — top-1 fresh enough to act on, but
         supporting context (rank 2..K) is stale. The agent can answer
-        from the genome AND should plan a refresh on its own schedule.
+        from the knowledge store AND should plan a refresh on its own schedule.
         Legacy parsers ignore unknown fields.
     """
 
@@ -513,7 +513,7 @@ class KnowBlock(BaseModel):
     coordinate_confidence: float = Field(ge=0.0, le=1.0)
     # Stage 7 (spec §9): soft-stale signal — set True when the
     # KnowBlock is still emittable (top-1 is fresh) but
-    # freshness_min < 0.5 indicates lower-ranked supporting genes are
+    # freshness_min < 0.5 indicates lower-ranked supporting documents are
     # stale. Drives ``recommendation="refresh"`` at the route layer.
     soft_stale: bool = False
 

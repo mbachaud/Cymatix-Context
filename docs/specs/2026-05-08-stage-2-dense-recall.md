@@ -4,25 +4,25 @@ Plan: helix-context retrieval-fix, Stage 2 of 6 (council 2026-05-08). Depends on
 
 ## 1. Goals + non-goals
 
-**Goals.** Promote BGE-M3 dense retrieval from a 12-candidate re-ranker to a parallel first-class recall source returning top-K=500 over the full 18.9k-gene corpus. Restore full 1024-dim BGE-M3 vectors. Decouple `pool_size` (recall breadth) from `max_genes` (final cut). Keep retrieval LLM-free, flat-numpy, and back-compat with `query_genes_ann` callers.
+**Goals.** Promote BGE-M3 dense retrieval from a 12-candidate re-ranker to a parallel first-class recall source returning top-K=500 over the full 18.9k-document corpus. Restore full 1024-dim BGE-M3 vectors. Decouple `pool_size` (recall breadth) from `max_genes` (final cut). Keep retrieval LLM-free, flat-numpy, and back-compat with `query_genes_ann` callers.
 
-**Non-goals.** RRF / score fusion (Stage 3). Threshold recalibration (Stage 4). HNSW / sqlite-vec / USearch (later, if scan latency exceeds budget at >100k genes).
+**Non-goals.** RRF / score fusion (Stage 3). Threshold recalibration (Stage 4). HNSW / sqlite-vec / USearch (later, if scan latency exceeds budget at >100k documents).
 
 ## 2. Surface area
 
 | File:line | Change |
 |---|---|
-| `helix_context/genome.py:451-477` (genes DDL) | Add `embedding_dense_v2 BLOB` column (alter-block at lines 490-503 pattern). |
-| `helix_context/genome.py:369-374` (Genome `__init__` config wires) | Read new `dense_pool_size` config; keep existing keys; emit deprecation warn. |
+| `helix_context/genome.py:451-477` (documents DDL) | Add `embedding_dense_v2 BLOB` column (alter-block at lines 490-503 pattern). |
+| `helix_context/genome.py:369-374` (KnowledgeStore `__init__` config wires) | Read new `dense_pool_size` config; keep existing keys; emit deprecation warn. |
 | `helix_context/genome.py:2516-2521` (`_get_dense_codec`) | Pass `dim=1024` (new default); reuse instance. |
 | `helix_context/genome.py:2523-2600` (`query_genes_ann`) | Refactor: split pool/cut, fan out lexical + dense in parallel, union, body-fetch once. |
 | `helix_context/genome.py` (new method) | `query_genes_dense_recall(query, *, k=500, party_id, read_only) -> List[tuple[str, float]]`. |
 | `helix_context/genome.py` (new attr in `__init__`) | `self._dense_matrix: np.ndarray | None`, `self._dense_matrix_ids: list[str] | None`, `self._dense_matrix_lock: threading.Lock`. |
 | `helix_context/genome.py` (new method) | `_load_dense_matrix(force=False)` — bulk-read v2 BLOBs into fp32 (n,1024). |
-| `helix_context/genome.py` (existing inserts) | Hook `_invalidate_dense_matrix()` after every gene insert/update path. |
+| `helix_context/genome.py` (existing inserts) | Hook `_invalidate_dense_matrix()` after every document insert/update path. |
 | `helix_context/bgem3_codec.py:17` | Default `dim=1024`. |
 | `helix_context/bgem3_codec.py:53-58` | Drop `vec[:self.dim]` truncation when `dim==raw_dim`; keep renormalize. |
-| `scripts/backfill_bgem3_v2.py` (new) | Re-encode all genes at 1024-dim, write BLOB to `embedding_dense_v2`. |
+| `scripts/backfill_bgem3_v2.py` (new) | Re-encode all documents at 1024-dim, write BLOB to `embedding_dense_v2`. |
 | `scripts/bench_dense_recall_latency.py` (new) | p50/p95 micro-bench for matmul scan. |
 | `helix.toml:250-257` | Add `dense_pool_size = 500`, `dense_embedding_dim = 1024`; comment-mark `ann_similarity_threshold` as needing Stage-4 recalibration. |
 | `tests/test_dense_recall.py` (new) | Tests enumerated in §9. |
@@ -41,7 +41,7 @@ CREATE INDEX IF NOT EXISTS idx_genes_dense_v2_hot
     ON genes(gene_id) WHERE embedding_dense_v2 IS NOT NULL AND chromatin < 2;
 ```
 
-The partial index streams hot-tier (chromatin < HETEROCHROMATIN) populated rows during the partial-rollout window without a table scan. Heterochromatin (chromatin=2) genes are intentionally excluded — they remain reachable via the separate `query_cold_tier` path.
+The partial index streams hot-tier (lifecycle tier < HETEROCHROMATIN) populated rows during the partial-rollout window without a table scan. Heterochromatin (lifecycle tier=2) documents are intentionally excluded — they remain reachable via the separate `query_cold_tier` path.
 
 **Backfill (`scripts/backfill_bgem3_v2.py`)** mirrors `backfill_bgem3.py` but:
 - Initialises `BGEM3Codec(dim=1024)`.
@@ -74,9 +74,9 @@ with self._dense_matrix_lock:
     self._dense_matrix_ids = list(ids)
 ```
 
-**Hot-tier only.** Dense recall scans hot-tier (chromatin < HETEROCHROMATIN) genes only — matches the existing hot-tier convention at [genome.py:1135](../../helix_context/genome.py#L1135) and [:1182-1184](../../helix_context/genome.py#L1182-L1184). Cold-tier genes are reachable via the separate `query_cold_tier()` path. Stage 7 surfaces cold-tier matches as `MissBlock(reason="cold", refresh_targets=[...])` rather than silently filtering them — see Stage 7 §6.
+**Hot-tier only.** Dense recall scans hot-tier (lifecycle tier < HETEROCHROMATIN) documents only — matches the existing hot-tier convention at [genome.py:1135](../../helix_context/genome.py#L1135) and [:1182-1184](../../helix_context/genome.py#L1182-L1184). Cold-tier documents are reachable via the separate `query_cold_tier()` path. Stage 7 surfaces cold-tier matches as `MissBlock(reason="cold", refresh_targets=[...])` rather than silently filtering them — see Stage 7 §6.
 
-**Invalidation.** Coverage-based + count-based. After every insert/update path (ingest, replicate, consolidate) call `self._invalidate_dense_matrix()` which sets `_dense_matrix=None`. Rebuild is full, not incremental — at 78 MiB and 18.9k rows, full rebuild is ≤ 200 ms and triggered only on first query after an ingest batch. (Incremental append is a future optimisation if ingest QPS rises.) An explicit refresh tick on `/admin/refresh` also calls `_invalidate_dense_matrix(force=True)`.
+**Invalidation.** Coverage-based + count-based. After every insert/update path (ingest, persist, consolidate) call `self._invalidate_dense_matrix()` which sets `_dense_matrix=None`. Rebuild is full, not incremental — at 78 MiB and 18.9k rows, full rebuild is ≤ 200 ms and triggered only on first query after an ingest batch. (Incremental append is a future optimisation if ingest QPS rises.) An explicit refresh tick on `/admin/refresh` also calls `_invalidate_dense_matrix(force=True)`.
 
 **Fallback.** If v2 coverage is partial (`count(v2) < 0.95 * count(genes)`), `query_genes_dense_recall` logs a one-time warn and returns `[]`; callers degrade to lexical-only.
 
@@ -98,7 +98,7 @@ def query_genes_dense_recall(
     """
 ```
 
-Body. Encode query (BGE-M3 query task, full 1024-dim). Ensure matrix loaded. Compute `sims = self._dense_matrix @ query_vec` (vectors are L2-normalised, so dot = cosine). `top_idx = np.argpartition(-sims, k)[:k]`; sort that slice descending; map indices to ids. `party_id` filtering applies post-rank against the per-gene `party_id` column (cheap dict lookup against an in-memory id→party map cached alongside the matrix).
+Body. Encode query (BGE-M3 query task, full 1024-dim). Ensure matrix loaded. Compute `sims = self._dense_matrix @ query_vec` (vectors are L2-normalised, so dot = cosine). `top_idx = np.argpartition(-sims, k)[:k]`; sort that slice descending; map indices to ids. `party_id` filtering applies post-rank against the per-document `party_id` column (cheap dict lookup against an in-memory id→party map cached alongside the matrix).
 
 ## 6. Pool/cut separation in `query_genes_ann`
 
@@ -127,11 +127,11 @@ def query_genes_ann(
 
 1. Resolve `pool_size = pool_size or self._dense_pool_size` (default 500 when dense enabled, else falls back to `max_genes` for back-compat).
 2. **Parallel recall** (sequential calls; "parallel" = independent sources, both feed pool):
-   - `lex_candidates = self.query_genes(domains, entities, max_genes=pool_size, ...)` — returns up to `pool_size` Genes by lexical/promoter/harmonic/SR scoring.
+   - `lex_candidates = self.query_genes(domains, entities, max_genes=pool_size, ...)` — returns up to `pool_size` Documents by lexical/promoter/harmonic/SR scoring.
    - `dense_pairs = self.query_genes_dense_recall(query, k=pool_size, party_id=party_id, read_only=read_only)` — returns up to `pool_size` `(gene_id, cosine)` pairs. Returns `[]` when `dense_embedding_enabled=False`.
-3. **Union** by gene_id. For ranking inside this stage: keep dense cosine where present; lexical-only candidates get `sim = threshold - 0.01` (preserves existing min_genes-fill behavior for un-embedded genes). **Stage 3 will replace this with RRF — out of scope here.**
+3. **Union** by gene_id. For ranking inside this stage: keep dense cosine where present; lexical-only candidates get `sim = threshold - 0.01` (preserves existing min_genes-fill behavior for un-embedded documents). **Stage 3 will replace this with RRF — out of scope here.**
 4. Sort by sim descending, `result_ids = [...][:max_genes]` after applying min_genes / threshold logic identical to current lines 2594-2599.
-5. Single batched body load via `_load_genes_by_ids(result_ids)` preserving rank order. Lexical Genes from step 2a are reused (no re-fetch) for ids already materialised.
+5. Single batched body load via `_load_genes_by_ids(result_ids)` preserving rank order. Lexical Documents from step 2a are reused (no re-fetch) for ids already materialised.
 
 `min_genes` / `threshold` semantics unchanged. Dense candidates that didn't make the lexical cut are still subject to the same threshold gate.
 
@@ -148,7 +148,7 @@ def query_genes_ann(
 
 Existing `ann_similarity_threshold = 0.35` was calibrated against 256-dim collapsed geometry. At 1024-dim, random-pair cosine drops materially; the absolute threshold becomes invalid. Stage 2 does **not** recalibrate.
 
-Stage 2 emits a **single warn** at Genome init when `dense_embedding_enabled=True` AND v2 coverage > 0:
+Stage 2 emits a **single warn** at KnowledgeStore init when `dense_embedding_enabled=True` AND v2 coverage > 0:
 
 ```python
 log.warning(
@@ -165,12 +165,12 @@ Threshold still gates the final cut in `query_genes_ann` to preserve current beh
 
 `tests/test_dense_recall.py`:
 
-- `test_dense_recall_finds_needle_outside_top12_lexical` — seed corpus with 1 needle gene whose content shares only synonyms (not surface tokens) with query; verify `query_genes_dense_recall(k=500)` returns the needle, AND that `query_genes(max_genes=12)` does NOT.
+- `test_dense_recall_finds_needle_outside_top12_lexical` — seed corpus with 1 needle document whose content shares only synonyms (not surface tokens) with query; verify `query_genes_dense_recall(k=500)` returns the needle, AND that `query_genes(max_genes=12)` does NOT.
 - `test_query_genes_ann_pool_size_independent_of_max_genes` — assert `len(union of lex+dense)` reaches ≥ 100 with `pool_size=500` even when `max_genes=12`. Final return ≤ 12.
 - `test_codec_full_1024_dim_on_encode` — `BGEM3Codec().encode("hello", "passage")` returns len 1024; norm ≈ 1.0; random-pair cosine on 1k pairs has mean < 0.10 (regression guard against the dim=256 collapse).
 - `test_v2_blob_roundtrip_matches_json` — encode same passage, write JSON via legacy path and BLOB via v2 path, decode both, assert `np.allclose` within fp32 epsilon.
 - `test_backfill_v2_idempotent` — run `backfill_bgem3_v2.py` twice; second run touches 0 rows; matrix shape unchanged.
-- `test_dense_matrix_invalidation_after_insert` — call recall, insert gene, call recall again, assert new gene appears in pool.
+- `test_dense_matrix_invalidation_after_insert` — call recall, insert document, call recall again, assert new document appears in pool.
 
 ## 10. Back-compat
 
@@ -192,7 +192,7 @@ Threshold still gates the final cut in `query_genes_ann` to preserve current beh
 2. `/context` endpoint p95 latency at corpus=18.9k does not exceed current p95 by more than 20 ms.
 3. `tests/` pass (mock + live).
 4. `backfill_bgem3_v2.py` completes on a fresh `genomes/main/genome.db` clone and reports 100% v2 coverage.
-5. No new ribosome / LLM calls on the `/context` path (auditable via existing OTel `tier_fired_counter`).
+5. No new compressor / LLM calls on the `/context` path (auditable via existing OTel `tier_fired_counter`).
 
 ## 13. Out of scope
 
@@ -200,7 +200,7 @@ Threshold still gates the final cut in `query_genes_ann` to preserve current beh
 - **Stage 4:** Margin-over-random threshold recalibration at 1024-dim. Likely lands at ~0.55-0.65 cosine but will be measured.
 - **Stage 5+:** sqlite-vec / USearch / HNSW. Triggered when corpus exceeds ~100k or scan p95 exceeds 25 ms.
 - Dropping legacy `embedding_dense TEXT` column (deferred one release).
-- Per-gene party-aware matrix sharding (single-tenant assumption holds at current scale).
+- Per-document party-aware matrix sharding (single-tenant assumption holds at current scale).
 
 ---
 

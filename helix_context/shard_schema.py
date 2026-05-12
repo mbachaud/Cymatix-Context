@@ -1,14 +1,14 @@
-"""Main.db schema — routing table + fingerprint index for sharded genomes.
+"""Main.db schema — routing table + fingerprint index for sharded knowledge stores.
 
-Main.db is the routing layer for genome sharding (see
-docs/FUTURE/GENOME_SHARDING.md and docs/specs/2026-04-17-genome-sharding-plan.md).
+Main.db is the routing layer for knowledge store sharding (see
+docs/FUTURE/GENOME_SHARDING.md and docs/specs/2026-04-17-knowledge store-sharding-plan.md).
 
 It holds only what's needed to pick a shard for a query:
     - shards: registry of category shard .db files
-    - fingerprint_index: the ~150 tok push payload per gene
+    - fingerprint_index: the ~150 tok push payload per document
     - identity tables: mirror of the 4-layer registry for cross-shard joins
 
-It does NOT hold content, complement, codons, embeddings, or any other
+It does NOT hold content, complement, fragments, embeddings, or any other
 tier-1/2/3 bulk data. Those stay in category shards.
 
 Schema is additive and idempotent — safe to run on every startup.
@@ -32,7 +32,7 @@ SHARD_CATEGORIES = ("participant", "agent", "reference", "org", "cold")
 def open_main_db(path: str) -> sqlite3.Connection:
     """Open or create main.db with WAL + busy_timeout, return connection.
 
-    Mirrors Genome's connection setup so both layers behave identically
+    Mirrors KnowledgeStore's connection setup so both layers behave identically
     under contention.
     """
     Path(path).parent.mkdir(parents=True, exist_ok=True)
@@ -84,14 +84,14 @@ def _create_shards_table(cur: sqlite3.Cursor) -> None:
 
 
 def _create_fingerprint_index(cur: sqlite3.Cursor) -> None:
-    """fingerprint_index — ~150 tok push payload per gene.
+    """fingerprint_index — ~150 tok push payload per document.
 
     Router queries this FIRST to pick which shards have candidate
     matches, then opens those shards for real FTS/scoring.
 
     Columns mirror what PUSH_PULL_CONTEXT.md specifies as the eager
     push payload: gene_id, shard location, source_id, domains,
-    entities, key_values. No content, no codons, no embeddings.
+    entities, key_values. No content, no fragments, no embeddings.
     """
     cur.execute("""
     CREATE TABLE IF NOT EXISTS fingerprint_index (
@@ -121,11 +121,11 @@ def _create_fingerprint_index(cur: sqlite3.Cursor) -> None:
 
 
 def _create_source_index(cur: sqlite3.Cursor) -> None:
-    """source_index — provenance + freshness metadata per gene.
+    """source_index — provenance + freshness metadata per document.
 
     Lightweight metadata only. This lets the agent-context layer answer
     freshness and authority questions without reopening every shard or
-    loading bulk gene content.
+    loading bulk document content.
     """
     cur.execute("""
     CREATE TABLE IF NOT EXISTS source_index (
@@ -168,12 +168,12 @@ def _create_source_index(cur: sqlite3.Cursor) -> None:
 
 
 def _create_claims_tables(cur: sqlite3.Cursor) -> None:
-    """claims + claim_edges — structured fact layer over genes.
+    """claims + claim_edges — structured fact layer over documents.
 
     Claims are the unit an agent reasons over: exact literal paths,
     config values, API routes, benchmark metrics, operational state.
-    Extracted from gene content at ingest (literal kind) or backfilled
-    lazily for legacy genomes (derived/inferred kinds).
+    Extracted from document content at ingest (literal kind) or backfilled
+    lazily for legacy knowledge stores (derived/inferred kinds).
 
     claim_edges records contradiction / support / supersedes links
     between claims, so the packet builder can surface conflict without
@@ -492,7 +492,7 @@ def upsert_source_index(
     last_verified_at: float | None = None,
     invalidated_at: float | None = None,
 ) -> None:
-    """Write or replace a source_index row for a gene."""
+    """Write or replace a source_index row for a document."""
     conn.execute(
         "INSERT OR REPLACE INTO source_index "
         "(gene_id, shard_name, source_id, repo_root, source_kind, observed_at, "

@@ -18,7 +18,7 @@ Discriminator order (§5):
     5. else                           -> KnowBlock(...)
 
 # STAGE-7-EXT: Stage 7 inserts three new branches between (3) and (4):
-#   - check_superseded(genome, top1)    -> MissBlock(reason="superseded")
+#   - check_superseded(knowledge store, top1)    -> MissBlock(reason="superseded")
 #   - revalidate_source(top1) == "stale" -> MissBlock(reason="stale")
 #   - cold_tier_only_match               -> MissBlock(reason="cold")
 #  All carry refresh_targets, NOT escalate_to. The current 5-step order
@@ -155,7 +155,7 @@ _PATH_BEACON_MIN_LEN = 4
 
 
 def _gene_id_beacon(query: str, top_gene: "Optional[Gene]") -> Optional[str]:
-    """Return a token from the query that exactly matches the top-1 gene's
+    """Return a token from the query that exactly matches the top-1 document's
     filename or path tokens; None otherwise.
 
     Rules (§8):
@@ -167,7 +167,7 @@ def _gene_id_beacon(query: str, top_gene: "Optional[Gene]") -> Optional[str]:
     The asymmetric cost of false-positives drives the strictness: a
     wrong beacon makes the frontier model lock in a wrong answer; a
     missing beacon merely lowers KnowBlock.confidence and the agent
-    still gets the gene.
+    still gets the document.
     """
     if not query or top_gene is None:
         return None
@@ -176,7 +176,7 @@ def _gene_id_beacon(query: str, top_gene: "Optional[Gene]") -> Optional[str]:
     if not source_id:
         return None
 
-    # Lazy import to keep this module from circular-importing genome.
+    # Lazy import to keep this module from circular-importing knowledge store.
     from .genome import file_tokens, path_tokens
 
     domains, entities = extract_query_signals(query)
@@ -263,8 +263,8 @@ def _agree_from_tier_contributions(
     """Compute lexical_dense_agree from ``genome.last_tier_contributions``.
 
     ``tier_contributions`` is the dict ``{gene_id: {tier_name: score}}``
-    surfaced by Genome._express. We synthesize a per-gene lexical
-    score = sum over _LEXICAL_TIERS, and a per-gene dense score = sum
+    surfaced by Genome._express. We synthesize a per-document lexical
+    score = sum over _LEXICAL_TIERS, and a per-document dense score = sum
     over _DENSE_TIERS; pick top-K of each by score; check intersection.
 
     Returns False on any malformed input — the discriminator treats
@@ -328,12 +328,12 @@ def decide_know_or_miss(
         score_gap: top1 - top2 score gap.
         lexical_dense_agree: see _lexical_dense_agree().
         coordinate_confidence: blend of folder + file-grain match.
-        top_gene: the rank-1 Gene, used only for the gene_id_match beacon.
+        top_gene: the rank-1 Document, used only for the gene_id_match beacon.
         ratio: top/2nd score ratio if pre-computed; defaults derived from
             ``window.metadata["ratio"]``, then 0.0.
         calibration: override; defaults to KnowCalibration() (= helix.toml
             defaults if loaded by the route; module defaults otherwise).
-        freshness_min: Stage 7 — min decay across expressed candidates;
+        freshness_min: Stage 7 — min decay across retrieved candidates;
             plumbed through to ``compute_confidence`` for β5 application.
             ``None`` is "unknown" (legacy rows / no candidates).
         freshness_status: Stage 7 (spec §5) — caller's freshness verdict
@@ -372,7 +372,7 @@ def decide_know_or_miss(
             escalate_to=_pick_escalation(query, "abstain"),
         )
 
-    # Branch 2: genome too inconsistent to trust.
+    # Branch 2: knowledge store too inconsistent to trust.
     if status == "denatured":
         return MissBlock(
             reason="denatured",
@@ -381,7 +381,7 @@ def decide_know_or_miss(
             escalate_to=_pick_escalation(query, "denatured"),
         )
 
-    # Branch 3: nothing came back — promoter-tag whiff.
+    # Branch 3: nothing came back — tags-tag whiff.
     if genes_expressed == 0:
         return MissBlock(
             reason="no_promoter_match",
@@ -391,7 +391,7 @@ def decide_know_or_miss(
         )
 
     # Branches 3a/3b/3c — Stage 7 freshness gate (spec §7, §5, §6).
-    # Order matters: superseded is the strongest signal (a NEWER gene
+    # Order matters: superseded is the strongest signal (a NEWER document
     # exists, so the agent can re-aim immediately), stale is next (the
     # source moved, refresh in place), cold runs after the confidence
     # floor below because it competes with reason="sparse".

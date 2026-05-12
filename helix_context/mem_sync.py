@@ -2,12 +2,12 @@
 Auto-memory → helix sync.
 
 Watches Claude Code auto-memory directories and ingests each `.md` file
-as a gene. Persona/agent attribution is automatic via helix's existing
+as a document. Persona/agent attribution is automatic via helix's existing
 4-layer federation (HELIX_USER / HELIX_AGENT / HELIX_DEVICE / HELIX_ORG)
-— whichever env vars are set in the syncer's process become the gene's
+— whichever env vars are set in the syncer's process become the document's
 provenance tags at ingest time.
 
-Why: before mem_sync, nothing from live sessions reached the genome.
+Why: before mem_sync, nothing from live sessions reached the knowledge store.
 Every conversation summary and feedback note was trapped in file-based
 memory, invisible to retrieval. With sync, Raude writing
 `feedback_pwpc.md` in one session becomes discoverable by Laude via
@@ -18,7 +18,7 @@ Sync model:
     - Poll each watched dir every `sync_interval_s` seconds
     - Hash each .md file; compare against last-known hash
     - Ingest new / changed → POST to /ingest with source_id = "mem://{path}"
-    - Deleted files → mark gene chromatin=2 (tombstone, excluded from retrieval)
+    - Deleted files → mark document lifecycle tier=2 (tombstone, excluded from retrieval)
     - MEMORY.md itself is skipped (index only, churn heavy)
 
 Opt-out: any memory file with `private: true` in frontmatter is skipped.
@@ -163,10 +163,10 @@ def _ingest_file(
 
 
 def _tombstone_file(helix_url: str, path: Path) -> None:
-    """Mark a removed memory's gene as heterochromatin (retrieval-excluded).
+    """Mark a removed memory's document as heterochromatin (retrieval-excluded).
 
     Uses /admin/genes/tombstone if available; else just removes from
-    local state (gene stays live but won't be re-synced). Non-fatal.
+    local state (document stays live but won't be re-synced). Non-fatal.
     """
     source_id = f"mem://{path.name}"
     try:
@@ -180,7 +180,7 @@ def _tombstone_file(helix_url: str, path: Path) -> None:
             pass
     except Exception:
         # Endpoint may not exist yet — drop from local state so we stop
-        # tracking it, but leave the gene alone server-side.
+        # tracking it, but leave the document alone server-side.
         log.info("mem_sync tombstone skipped for %s (endpoint missing or down)",
                  path.name)
 

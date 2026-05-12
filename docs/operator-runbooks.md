@@ -4,24 +4,25 @@ This document is the operator reference for `helix-context` post-deployment
 maintenance and the three calibration scripts the 2026-05-08 7-stage
 retrieval-fix landed in `master` on 2026-05-10. After upgrading to a
 release with the Stage 2 / Stage 4 / Stage 6 / Stage 7 changes, the new
-code paths take effect on a production genome only after these scripts
+code paths take effect on a production knowledge store only after these scripts
 run against it.
 
-Assumptions: `helix.toml` at repo root (or `HELIX_CONFIG`); active genome
-at `genomes/main/genome.db`; server bound to loopback at `127.0.0.1:11437`.
-Admin endpoints are auth-free by design — bind to loopback or a reverse
-proxy that enforces auth in front; do not expose to a public interface.
+Assumptions: `helix.toml` at repo root (or `HELIX_CONFIG`); active
+knowledge store at `genomes/main/genome.db`; server bound to loopback
+at `127.0.0.1:11437`. Admin endpoints are auth-free by design — bind
+to loopback or a reverse proxy that enforces auth in front; do not
+expose to a public interface.
 
 ## Overview
 
 Apply the three calibration runbooks in this order, exactly once, the
-first time you bring a genome up against a release containing PR #46
+first time you bring a knowledge store up against a release containing PR #46
 (Stage 2) through the Stage 7 freshness gate:
 
 1. **Pull and stop traffic** — block writers (`/v1/chat/completions`,
    `/ingest`, `/consolidate`) by stopping the helix process.
 2. **Runbook 1 — BGE-M3 1024-dim backfill** (Stage 2). Re-encode every
-   gene into the new `embedding_dense_v2 BLOB` column.
+   document into the new `embedding_dense_v2 BLOB` column.
 3. **Runbook 2 — Threshold calibration** (Stage 4). Derive a
    margin-over-random ANN cutoff and per-classifier floors from
    `located_n1000`.
@@ -41,7 +42,7 @@ verified against the script's `argparse` definitions in this worktree.
 
 ## Runbook 1: BGE-M3 1024-dim backfill (Stage 2)
 
-`scripts/backfill_bgem3_v2.py` re-encodes each gene's content at the full
+`scripts/backfill_bgem3_v2.py` re-encodes each document's content at the full
 1024-dim BGE-M3 embedding and writes raw little-endian fp32 bytes into a
 new `embedding_dense_v2 BLOB` column on the `genes` table. After Stage 2,
 this column is what the dense recall path reads; the legacy
@@ -51,7 +52,7 @@ release as a rollback safety net.
 ### When to run
 
 After upgrading to a release containing PR #46 (Stage 2 dense recall).
-First-time only on a given genome; idempotent on rerun. The Stage 2 spec
+First-time only on a given knowledge store; idempotent on rerun. The Stage 2 spec
 ships an init-time warning at `Genome.__init__`: if
 `dense_embedding_enabled=True` AND v2 coverage is non-zero, helix warns
 once that `ann_similarity_threshold` is calibrated for dim=256 and
@@ -59,14 +60,14 @@ invalid against dim=1024 — Runbook 2 is the fix.
 
 ### Wall time
 
-- CPU sentence-transformers BGE-M3: ~30-90 minutes for an 18.9k-gene genome.
+- CPU sentence-transformers BGE-M3: ~30-90 minutes for an 18.9k-document knowledge store.
 - FlagEmbedding + GPU: ~5-15 minutes for the same corpus.
 
 Source: docstring at `scripts/backfill_bgem3_v2.py:22-23`. The dominant
 cost is the embedding forward pass, not the SQLite write. Disk space:
 18.9k × 1024 × 4 = 77.6 MiB raw fp32 BLOB vs ~600 MiB for the legacy
 JSON column (spec `docs/specs/2026-05-08-stage-2-dense-recall.md` §3) —
-allow ~5 MiB per 1,000 genes.
+allow ~5 MiB per 1,000 documents.
 
 ### Pre-flight checklist
 
@@ -76,7 +77,7 @@ allow ~5 MiB per 1,000 genes.
 2. Snapshot-copy `genomes/main/genome.db` to a side path. The script is
    non-destructive (adds a column, writes to NULL rows), but the snapshot
    guards an interrupted encode that leaves a half-written row.
-3. Verify free disk space: ~5 MiB per 1,000 genes on top of the existing
+3. Verify free disk space: ~5 MiB per 1,000 documents on top of the existing
    DB size, plus headroom for the WAL during the encode.
 
 ### Backfill command
@@ -120,9 +121,9 @@ The main loop (`scripts/backfill_bgem3_v2.py:126-156`):
 1. `_ensure_v2_schema(conn)` (`scripts/backfill_bgem3_v2.py:43-55`) —
    adds the `embedding_dense_v2 BLOB` column when missing, then
    unconditionally `CREATE INDEX IF NOT EXISTS idx_genes_dense_v2_hot ON
-   genes(gene_id) WHERE embedding_dense_v2 IS NOT NULL AND chromatin <
+   genes(gene_id) WHERE embedding_dense_v2 IS NOT NULL AND lifecycle tier <
    2`. The partial index covers hot-tier rows; heterochromatin
-   (chromatin=2) is reachable via `query_cold_tier()`.
+   (lifecycle tier=2) is reachable via `query_cold_tier()`.
 2. Pre-flight coverage report: `genes total=N v2_populated_before=K`.
 3. Selects rows where `embedding_dense_v2 IS NULL OR
    length(embedding_dense_v2) != dim*4` — the length check guards
@@ -204,11 +205,11 @@ the problem.
 ## Runbook 2: Threshold calibration (Stage 4)
 
 `scripts/calibrate_thresholds.py` derives two artifacts from a backfilled
-genome plus a `located_n1000` bench JSON:
+knowledge store plus a `located_n1000` bench JSON:
 
 1. The margin-over-random ANN cosine cutoff,
    `threshold = mu + sigma_mult * sigma`, computed from N=10,000 random
-   gene-pair cosines drawn from `embedding_dense_v2`.
+   document-pair cosines drawn from `embedding_dense_v2`.
 2. Per-classifier `abstain_top` / `focused_top` / `tight_top` floors,
    derived from the bench's `agent.score_top` distributions split by
    query class (`factual`, `multi_hop`, `arithmetic`, `procedural`,
@@ -222,7 +223,7 @@ operator pastes into `helix.toml`, plus a JSON provenance report.
 After Runbook 1 is complete (the calibration reads
 `embedding_dense_v2` BLOBs directly), AND after a fresh
 `scripts/bench_needle_1000.py --axis located` run produces a current
-`located_n1000.json`. The bench must reflect the genome you are
+`located_n1000.json`. The bench must reflect the knowledge store you are
 calibrating; calibrating against a stale bench is the most common failure
 mode.
 
@@ -238,13 +239,13 @@ mode.
    The TOML snippet emits an inline `# WARNING:` comment for any
    degenerate class
    (`scripts/calibrate_thresholds.py:385-389`).
-3. The genome must have at least 2 dense-encoded genes
+3. The knowledge store must have at least 2 dense-encoded documents
    (`scripts/calibrate_thresholds.py:136-140`). On a freshly-backfilled
-   18.9k-gene genome this is trivially true.
+   18.9k-document knowledge store this is trivially true.
 
 ### Threshold-calibration wall time
 
-Minutes for an 18.9k-gene genome. Random-pair sampling at N=10,000 is
+Minutes for an 18.9k-document knowledge store. Random-pair sampling at N=10,000 is
 ~50 ms; `_load_dense_vectors` is bounded by SQLite read throughput at a
 few hundred ms; per-classifier floor compute is `classify_query` once
 per bench row (~1000 × ~ms). Total runtime is dominated by imports,
@@ -345,7 +346,7 @@ Three outputs:
 3. Append every `[abstain.<cls>]` block from the snippet. The loader
    raises `ConfigError` at startup if a per-class block is missing for
    any emitted class (Stage 4 spec §6).
-4. Restart helix or POST `/admin/refresh`. The genome reads
+4. Restart helix or POST `/admin/refresh`. The knowledge store reads
    `ann_threshold` from `genome_calibration` on the first
    `query_genes()` after refresh; the cache invalidates on
    `set_replication_manager` rotation per Stage 4 spec §3.
@@ -575,7 +576,7 @@ labels or all-zero features.
 
 ### Skip rationale
 
-Without `located_n1000` ground truth (early bring-up, novel genome, no
+Without `located_n1000` ground truth (early bring-up, novel knowledge store, no
 Stage 1 bench), the default `(-2.0, 2.0, 1.5, 0.7, 1.8, 1.5)` is a
 reasonable cold-start. The loader at
 `helix_context/know_calibration.py:160` falls back to defaults on a
@@ -602,7 +603,7 @@ NOT touch `helix.toml`. Confirms the script wires together.
 ## Runbook 4: `/admin/refresh` (admin-only)
 
 The `/admin/refresh` endpoint at `helix_context/server.py:2805-2810`
-forces the genome connection to reopen its WAL snapshot. Effective on
+forces the knowledge store connection to reopen its WAL snapshot. Effective on
 external writers — useful when ingest happened via a sibling replica or
 direct sqlite3 write.
 
@@ -612,7 +613,7 @@ direct sqlite3 write.
   full process restart. The `helix.toml` loader is a pure function
   invoked per relevant code path, so most config flips already hot-reload;
   use `/admin/refresh` for the conservative case where you want the
-  genome connection itself reset.
+  knowledge store connection itself reset.
 - After a `genome_calibration` UPSERT from `calibrate_thresholds.py`
   outside the server process, if you want the cached `ann_threshold` to
   re-read on the next `query_genes()` call.
@@ -654,12 +655,12 @@ rebuild.
 ## Runbook 5: `/admin/vacuum` (admin-only)
 
 The `/admin/vacuum` endpoint at `helix_context/server.py:2812-2828`
-calls `Genome.vacuum()` to reclaim free pages from the SQLite genome
+calls `Genome.vacuum()` to reclaim free pages from the SQLite knowledge store
 file after thinning, compaction, or large-scale deletions.
 
 ### When to vacuum
 
-- After large bulk ingests that thinned a lot of duplicate genes — the
+- After large bulk ingests that thinned a lot of duplicate documents — the
   pages stay marked free until VACUUM releases them. Common after a
   `scripts/compact_genome_sweep.py` run, or after a `/admin/compact`
   POST with a non-trivial demotion count.
@@ -668,7 +669,7 @@ file after thinning, compaction, or large-scale deletions.
 - Quarterly on a low-traffic window, even if no thinning happened —
   SQLite page fragmentation accumulates over long-lived databases.
 - When `genome.db` size is more than 1.5x the logical content size you
-  would expect from the gene count.
+  would expect from the document count.
 
 ### Vacuum command
 
@@ -684,9 +685,9 @@ Returns `{"ok": true, "before_bytes": ..., "after_bytes": ...,
 
 Depends on DB size. SQLite `VACUUM` rewrites the entire file:
 
-- Small genome (< 100 MiB): seconds.
-- Medium genome (100 MiB - 1 GiB): tens of seconds to a few minutes.
-- Large genome (> 1 GiB): minutes.
+- Small knowledge store (< 100 MiB): seconds.
+- Medium knowledge store (100 MiB - 1 GiB): tens of seconds to a few minutes.
+- Large knowledge store (> 1 GiB): minutes.
 
 Disk usage temporarily doubles during the rewrite. Run during a
 maintenance window — the operation blocks all writers for its duration.
@@ -711,27 +712,27 @@ the time the exception surfaces, so subsequent reads still work.
 
 ---
 
-## Runbook 6: `/consolidate` (rewrite stale gene bodies)
+## Runbook 6: `/consolidate` (rewrite stale document bodies)
 
 The `/consolidate` endpoint at `helix_context/server.py:2672-2690`
-distills the session buffer into consolidated knowledge genes,
+distills the session buffer into consolidated knowledge documents,
 extracting only new facts, decisions, and discoveries.
 
 ### When to consolidate
 
-- A gene's source file mtime moved past its `last_verified_at` (Stage 7
-  freshness check) AND the gene body is structurally outdated (the file
+- A document's source file mtime moved past its `last_verified_at` (Stage 7
+  freshness check) AND the document body is structurally outdated (the file
   changed shape, not just a tweak).
 - After a session-mode interaction has built up `pending_replication`
   buffer and you want to commit those distilled exchanges as long-lived
-  genes rather than letting them age out.
+  documents rather than letting them age out.
 - As the bulk recovery option after a partial restore from WAL — see
   Runbook 9.
 
 Stage 7's `MissBlock(reason="stale")` carries `refresh_targets: list[str]`
-that typically point at gene source paths the agent should refetch.
+that typically point at document source paths the agent should refetch.
 `/consolidate` is the server-side counterpart for the case where the
-refresh target IS a gene the helix process owns and can rewrite from
+refresh target IS a document the helix process owns and can rewrite from
 its source.
 
 ### Consolidate command
@@ -749,17 +750,17 @@ session buffer. The handler invokes
 (Note: the endpoint signature in the worktree's `server.py:2673` does
 not parse a request body; the spec phrasing
 `{"gene_id": "..."}` does not match the implementation. To consolidate a
-specific gene-by-id, use `/admin/compact` with appropriate filters or
-work directly against the genome — `/consolidate` operates on the
-session buffer aggregate, not a single gene.)
+specific document-by-id, use `/admin/compact` with appropriate filters or
+work directly against the knowledge store — `/consolidate` operates on the
+session buffer aggregate, not a single document.)
 
 ### Consolidate effect
 
 - Distills the session buffer (recent in-memory exchanges) into
-  long-lived consolidated genes via the ribosome's
+  long-lived consolidated documents via the compressor's
   `pack`/`re_rank`/`splice` paths.
-- Updates `last_verified_at` on rewritten genes.
-- Extends the genome's coverage of the session's distilled knowledge,
+- Updates `last_verified_at` on rewritten documents.
+- Extends the knowledge store's coverage of the session's distilled knowledge,
   which means the next `/context` query against a related topic gets a
   better hit.
 
@@ -776,11 +777,11 @@ failure; retry is safe.
 convenience over `/context/packet`: it returns only the `refresh_targets`
 list — the set of source paths or URLs the agent should refetch — without
 the full evidence items (no `KnowBlock`, no `expressed_context`, no
-genes). Use it when the caller already has the genome content cached
+documents). Use it when the caller already has the knowledge store content cached
 (typical for an agent that just made a `/context` call seconds ago and
 wants to know whether to re-read its sources before acting), and only
 needs the cheap reread plan. The handler short-circuits past the
-ribosome and assembly paths and runs only the refresh-target extractor —
+compressor and assembly paths and runs only the refresh-target extractor —
 much cheaper than `/context` itself, no LLM calls. For everything else,
 use `/context` (the full contract) or `/context/packet` (the full
 contract plus the agent-safe verified/stale_risk/refresh_targets
@@ -795,7 +796,7 @@ breakout). See Stage 7 spec §11 for the round-trip mapping between
 ### Symptoms
 
 - `database disk image is malformed` from sqlite3 or any helix endpoint
-  that reads the genome.
+  that reads the knowledge store.
 - `/health` returns `status: "degraded"` with `genome_ready: false` and
   the message `Genome stats failed; inspect the local knowledge store.`
 - `Genome.vacuum()` raises in pre-checkpoint or in the VACUUM connection.
@@ -809,26 +810,26 @@ breakout). See Stage 7 spec §11 for the round-trip mapping between
    succeeds, swap `recovered.db` in for `genome.db` and skip to step 5.
 3. If `.recover` fails, drop back to the most recent WAL-checkpointed
    replica snapshot under `[genome] replicas`.
-4. Re-ingest from source paths: each gene carries a `source_id`
+4. Re-ingest from source paths: each document carries a `source_id`
    pointing back at the file or URL it was extracted from. Bulk path:
    `python scripts/ingest_all.py <source_root>` against the recovered
-   genome. Single-source: POST `/consolidate` (Runbook 6), which uses
-   each gene's `source_id` fingerprint to rewrite the body.
+   knowledge store. Single-source: POST `/consolidate` (Runbook 6), which uses
+   each document's `source_id` fingerprint to rewrite the body.
 5. Re-run all three calibration runbooks — the `genome_calibration`
    table is gone if you started from a fresh DB.
-6. Bring helix up. Verify `/health` reports `status: "ok"` and the gene
+6. Bring helix up. Verify `/health` reports `status: "ok"` and the document
    count matches the pre-corruption snapshot.
 
-`/consolidate` is also the bulk-recovery option for per-gene corruption
-(rather than file-level): for any gene returning malformed content,
-POST `/consolidate` to have the ribosome rewrite the body from source.
+`/consolidate` is also the bulk-recovery option for per-document corruption
+(rather than file-level): for any document returning malformed content,
+POST `/consolidate` to have the compressor rewrite the body from source.
 
 ---
 
 ## Runbook 9: Quarterly hygiene checklist
 
 Run this checklist on a low-traffic window every quarter, or after
-significant changes to the genome corpus.
+significant changes to the knowledge store corpus.
 
 1. **Re-run the bench** to detect retrieval drift:
 
@@ -858,7 +859,7 @@ significant changes to the genome corpus.
    Apply the new TOML snippet to `helix.toml`; POST `/admin/refresh`.
 
 3. **Run `/admin/vacuum`** if `genome.db` size is more than 1.5x the
-   logical content size (gene count × average content length × ~2 for
+   logical content size (document count × average content length × ~2 for
    indexes and metadata):
 
    ```bash
@@ -878,7 +879,7 @@ significant changes to the genome corpus.
    3. The loader emits a startup WARNING when this exceeds 30 days
    (Stage 4 spec §9).
 
-5. **Re-snapshot the genome** to a versioned backup directory before the
+5. **Re-snapshot the knowledge store** to a versioned backup directory before the
    next quarter's work begins.
 
 6. **Audit `docs/calibrations/`**: confirm every `.toml` has a

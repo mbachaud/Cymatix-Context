@@ -1,4 +1,4 @@
-"""Helix vault — operator-facing markdown export of the genome.
+"""Helix vault — operator-facing markdown export of the knowledge store.
 
 VaultManager is the public API. It owns:
 - VaultState (vault.db)

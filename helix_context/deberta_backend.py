@@ -1,9 +1,9 @@
 """
-DeBERTa Ribosome Backend — Drop-in replacement for OllamaBackend.
+DeBERTa Compressor Backend — Drop-in replacement for OllamaBackend.
 
-Replaces the two most expensive ribosome operations:
+Replaces the two most expensive compressor operations:
     re_rank  — cross-encoder scoring (query, gene_summary) -> relevance
-    splice   — binary classification (query, codon) -> keep/drop
+    splice   — binary classification (query, fragment) -> keep/drop
 
 PACK and REPLICATE still use the Ollama backend (they need generation).
 
@@ -14,7 +14,7 @@ This backend loads two fine-tuned DeBERTa-v3-small models:
 Usage:
     from helix_context.deberta_backend import DeBERTaRibosome
 
-    ribosome = DeBERTaRibosome(
+    compressor = DeBERTaRibosome(
         rerank_model_path="training/models/rerank",
         splice_model_path="training/models/splice",
         ollama_fallback=OllamaBackend(),  # for pack/replicate
@@ -36,11 +36,11 @@ log = logging.getLogger("helix.ribosome.deberta")
 
 class DeBERTaRibosome:
     """
-    Hybrid ribosome: DeBERTa for re_rank + splice, Ollama for pack + replicate.
+    Hybrid compressor: DeBERTa for re_rank + splice, Ollama for pack + persist.
 
     Drop-in compatible with helix_context.ribosome.Ribosome — same method
     signatures for re_rank() and splice(). Pack/replicate delegate to the
-    Ollama-backed Ribosome passed at init.
+    Ollama-backed Compressor passed at init.
     """
 
     def __init__(
@@ -98,7 +98,7 @@ class DeBERTaRibosome:
     # ── Re-rank ────────────────────────────────────────────────────────
 
     def re_rank(self, query: str, candidates: List[Gene], k: int = 5) -> List[Gene]:
-        """Score candidate genes by relevance using the cross-encoder."""
+        """Score candidate documents by relevance using the cross-encoder."""
         if not candidates:
             return []
         if len(candidates) <= k:
@@ -170,14 +170,14 @@ class DeBERTaRibosome:
         genes: List[Gene],
         min_codons_kept: int = 2,
     ) -> Dict[str, str]:
-        """Classify each codon as keep/drop using the binary classifier."""
+        """Classify each fragment as keep/drop using the binary classifier."""
         if not genes:
             return {}
 
         t0 = time.perf_counter()
         result: Dict[str, str] = {}
 
-        # Batch all (query, codon) pairs across all genes
+        # Batch all (query, fragment) pairs across all documents
         all_pairs_a = []
         all_pairs_b = []
         pair_index = []  # (gene_idx, codon_idx) for reconstruction
@@ -219,10 +219,10 @@ class DeBERTaRibosome:
         query_lower = query.lower().split()
         query_keywords = {w.strip("?.,!;:'\"()[]{}") for w in query_lower if len(w) > 2}
 
-        # Reconstruct per-gene decisions
+        # Reconstruct per-document decisions
         gene_keep: Dict[int, List[int]] = {i: [] for i in range(len(genes))}
         for (gi, ci), prob in zip(pair_index, probs):
-            # Always keep codons that contain query terms (content-match preservation)
+            # Always keep fragments that contain query terms (content-match preservation)
             codon_lower = genes[gi].codons[ci].lower() if ci < len(genes[gi].codons) else ""
             content_match = any(kw in codon_lower for kw in query_keywords)
             if prob >= self.splice_threshold or content_match:
@@ -269,7 +269,7 @@ class DeBERTaRibosome:
         return self._nli
 
     def classify_relations(self, genes: List[Gene]) -> Dict:
-        """Classify NLI relations between expressed genes. Returns relation graph."""
+        """Classify NLI relations between retrieved documents. Returns relation graph."""
         nli = self._load_nli()
         if nli is None:
             return {}
@@ -278,13 +278,13 @@ class DeBERTaRibosome:
     # ── Delegated to Ollama ────────────────────────────────────────────
 
     def pack(self, content: str, content_type: str = "text") -> Gene:
-        """Delegate to Ollama ribosome (needs generation)."""
+        """Delegate to Ollama compressor (needs generation)."""
         if self._ollama is None:
             raise RuntimeError("DeBERTa ribosome requires an Ollama fallback for pack()")
         return self._ollama.pack(content, content_type)
 
     def replicate(self, query: str, response: str) -> Gene:
-        """Delegate to Ollama ribosome (needs generation)."""
+        """Delegate to Ollama compressor (needs generation)."""
         if self._ollama is None:
             raise RuntimeError("DeBERTa ribosome requires an Ollama fallback for replicate()")
         return self._ollama.replicate(query, response)

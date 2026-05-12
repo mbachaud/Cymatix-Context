@@ -1,8 +1,8 @@
 """ShardRouter — federated query across category shard .db files.
 
-Task 2 of phase-2 sharding (docs/specs/2026-04-17-genome-sharding-plan.md).
+Task 2 of phase-2 sharding (docs/specs/2026-04-17-knowledge store-sharding-plan.md).
 
-Owns main.db (routing + fingerprint_index) and a lazy cache of Genome
+Owns main.db (routing + fingerprint_index) and a lazy cache of KnowledgeStore
 instances for each category shard. On query, picks candidate shards from
 fingerprint_index, fans out the query to each, merges results by score,
 returns the top-K.
@@ -43,18 +43,18 @@ class ShardRouter:
 
     Owns:
         - main.db connection (fingerprint_index + shards + identity)
-        - lazy dict of Genome instances keyed by shard_name
+        - lazy dict of KnowledgeStore instances keyed by shard_name
 
-    Exposes a subset of Genome's API (query_genes for now; ingest
+    Exposes a subset of KnowledgeStore's API (query_genes for now; ingest
     lands in Task 6).
     """
 
     def __init__(self, main_path: str, **genome_kwargs):
-        """Open main.db. Shard Genomes open lazily on first access.
+        """Open main.db. Shard KnowledgeStores open lazily on first access.
 
-        genome_kwargs are forwarded to each Genome on lazy-open — keep
+        genome_kwargs are forwarded to each KnowledgeStore on lazy-open — keep
         them identical to what HelixContextManager passes when
-        constructing a solo Genome, so sharded + non-sharded return
+        constructing a solo KnowledgeStore, so sharded + non-sharded return
         identical tiers.
         """
         self.main_path = main_path
@@ -62,7 +62,7 @@ class ShardRouter:
         self._genome_kwargs = genome_kwargs
         self._shards: Dict[str, Genome] = {}
 
-        # Retrieval introspection — mirrors Genome's interface so
+        # Retrieval introspection — mirrors KnowledgeStore's interface so
         # callers can use either interchangeably.
         self.last_query_scores: Dict[str, float] = {}
         self.last_tier_contributions: Dict[str, Dict[str, float]] = {}
@@ -70,7 +70,7 @@ class ShardRouter:
     # ── Shard lifecycle ─────────────────────────────────────────────
 
     def _open_shard(self, shard_name: str) -> Genome:
-        """Lazy-open a Genome against the shard .db. Cached."""
+        """Lazy-open a KnowledgeStore against the shard .db. Cached."""
         if shard_name not in self._shards:
             row = self.main_conn.execute(
                 "SELECT path FROM shards WHERE shard_name = ? AND health = 'ok'",
@@ -169,7 +169,7 @@ class ShardRouter:
                     **kwargs,
                 )
             except TypeError:
-                # Kwarg mismatch with an older Genome schema — fall back to
+                # Kwarg mismatch with an older KnowledgeStore schema — fall back to
                 # the minimal signature so a stale shard still contributes.
                 log.warning(
                     "shard %s rejected kwargs %s; falling back to base signature",
@@ -217,7 +217,7 @@ class ShardRouter:
     # ── Lifecycle ───────────────────────────────────────────────────
 
     def close(self) -> None:
-        """Close all lazy-opened shard genomes + main.db."""
+        """Close all lazy-opened shard knowledge stores + main.db."""
         for shard_name, genome in self._shards.items():
             try:
                 genome.conn.close()

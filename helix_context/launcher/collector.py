@@ -221,7 +221,7 @@ class StateCollector:
 
         return out
 
-    # ── genes ──────────────────────────────────────────────────────
+    # ── documents ──────────────────────────────────────────────────────
 
     def _genes_panel(self, stats: Dict[str, Any]) -> Dict[str, Any]:
         return {
@@ -412,7 +412,7 @@ class StateCollector:
         """Project /admin/components into the launcher components panel.
 
         The launcher already has dedicated Helix health and model panels.
-        Hide the ribosome here so Ollama/model activity does not get
+        Hide the compressor here so Ollama/model activity does not get
         mistaken for a separate operator-facing tool.
         """
         all_components = components.get("components", [])

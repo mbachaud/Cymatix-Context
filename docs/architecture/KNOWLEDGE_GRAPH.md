@@ -1,6 +1,6 @@
 # Helix Knowledge Graph
 
-> How genes, dimensions, and connections form a queryable knowledge graph
+> How documents, dimensions, and connections form a queryable knowledge graph
 > in the helix-context + Headroom stack.
 
 ## Graph Structure
@@ -51,9 +51,9 @@
 
 ## Node Types
 
-### Gene (primary node)
+### Document (primary node)
 
-The fundamental unit. Every piece of knowledge in helix is a gene.
+The fundamental unit. Every piece of knowledge in helix is a document.
 
 ```
 ┌─────────────────────────────────────────────┐
@@ -92,7 +92,7 @@ The fundamental unit. Every piece of knowledge in helix is a gene.
 └─────────────────────────────────────────────┘
 ```
 
-### Edge Types (connections between genes)
+### Edge Types (connections between documents)
 
 ```
  Gene A ────── co_activated_with ──────► Gene B
@@ -288,7 +288,7 @@ genome.db (SQLite)
 └─────────────────────────────────────────────────────────────┘
 ```
 
-**Zero LLM calls from ingest to expression.** The first LLM in the chain is
+**Zero LLM calls from ingest to retrieval.** The first LLM in the chain is
 the downstream model that receives the compressed context. This is the core
 value proposition: helix + Headroom turn raw files into query-ready, compressed,
 scored context using only CPU, making it model-agnostic and cost-free at

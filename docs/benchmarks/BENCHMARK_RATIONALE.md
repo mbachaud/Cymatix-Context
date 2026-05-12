@@ -14,7 +14,7 @@ Date: 2026-04-13 (after the path_key_index + 4-layer federation work)
 
 ## What we observed
 
-Two benchmark runs against the **same 17,961-gene fresh genome**, the
+Two benchmark runs against the **same 17,961-document fresh knowledge store**, the
 **same retrieval pipeline**, the **same answer model** (qwen3:8b), in
 the **same session**:
 
@@ -62,20 +62,20 @@ Helix's data model violates all three:
 
 ### 1. There is rarely *one* correct answer
 
-The 17K-gene genome contains:
-- 3,273 genes with `url=` keys
-- ~500 genes with `port=` keys
-- ~2,000 genes with `model=` keys
+The 17K-document knowledge store contains:
+- 3,273 documents with `url=` keys
+- ~500 documents with `port=` keys
+- ~2,000 documents with `model=` keys
 
 When the bench asks "What is the value of `url`?", there are 3,273
 valid answers. The bench grades a hit ONLY if helix returns the *one
-specific gene* the bench randomly picked. Under this rule, even a
+specific document* the bench randomly picked. Under this rule, even a
 perfect retrieval system would score ~0.03% on average — telepathy
 is not a retrieval property.
 
 ### 2. Recall@1 ignores the multi-axis index
 
-Every helix gene is addressed by **12 retrieval signals + 4–5
+Every helix document is addressed by **12 retrieval signals + 4–5
 attribution axes** (see `MUSIC_OF_RETRIEVAL.md`, `FEDERATION_LOCAL.md`):
 
 ```
@@ -116,7 +116,7 @@ columns.
 
 The synthetic NIAH query *"What is the value of `port`?"* uses one of
 those three axes. It has no way to lock on. Recall is the same as
-random pick from genes containing `port=`.
+random pick from documents containing `port=`.
 
 ## The diagnostic curve
 
@@ -129,7 +129,7 @@ For each needle, generate four query variants:
 |---|---|---|
 | 1 | 1 (just key) | "What is the value of `port`?" |
 | 2 | 2 (key + project) | "What is the value of `port` in helix?" |
-| 3 | 3 (key + project + module) | "What is the helix ribosome `port`?" |
+| 3 | 3 (key + project + module) | "What is the helix compressor `port`?" |
 | 4 | 4 (key + project + module + filename) | "What is the `port` value in helix-context helix.toml?" |
 
 Run all four through the same retrieval pipeline. Grade recall@1 for

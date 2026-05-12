@@ -27,7 +27,7 @@ class ClassifierResult:
 
 
 # Operator characters that count as one signal per *distinct* operator class
-# present (de-duplicated so a math expression with three `+` is still 1 signal).
+# present (de-duplicated so a math retrieval with three `+` is still 1 signal).
 _OPERATOR_CHARS = ("+", "-", "*", "/", "%")
 
 # Single-word numeric/quantity keywords (lowercase, word-boundary matched).

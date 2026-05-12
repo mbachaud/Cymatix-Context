@@ -1,7 +1,7 @@
-"""Path layout, routing helpers, and Genome-shape adapter for the
+"""Path layout, routing helpers, and KnowledgeStore-shape adapter for the
 filesystem-mirroring shard scheme.
 
-The sharded genome layout mirrors the source filesystem so that (a) a shard
+The sharded knowledge store layout mirrors the source filesystem so that (a) a shard
 filename is self-identifying in backups and (b) a fresh clone can map a
 file path back to its owning shard without consulting ``main.genome.db``:
 
@@ -100,7 +100,7 @@ class IngestTargetRouter:
 
     Given a set of registered ``(source_root, shard_db_path)`` pairs, the
     router returns the longest-prefix-matching shard DB for any file path.
-    Used by ``scripts/ingest_all.py`` to decide where each gene is written.
+    Used by ``scripts/ingest_all.py`` to decide where each document is written.
     """
 
     def __init__(self) -> None:
@@ -140,7 +140,7 @@ class IngestTargetRouter:
         return iter(self._registered)
 
 
-# ── Read-only Genome-shape adapter ────────────────────────────────────
+# ── Read-only KnowledgeStore-shape adapter ────────────────────────────────────
 
 
 import logging
@@ -160,12 +160,12 @@ class ShardedGenomeAdapter:
 
     Limitations (V1):
       - ``upsert_gene`` / ``store_*`` / ``touch_*`` etc. are silent no-ops;
-        anything that needs to write hot state (replication, session delivery)
+        anything that needs to write hot state (persistence, session delivery)
         will not persist.
       - ``query_cold_tier`` returns empty; cold-tier fan-out across shards
         is deferred.
       - ``conn`` returns the main-routing connection. Callers that expect a
-        full genome schema (session_delivery tables, genes table) will see
+        full knowledge store schema (session_delivery tables, documents table) will see
         SQLite ``no such table`` errors; guard those paths with
         ``hasattr(genome, '_sharded_adapter')``.
     """
@@ -208,7 +208,7 @@ class ShardedGenomeAdapter:
                  "genes": r["gene_count"], "bytes": r["byte_size"]}
                 for r in rows
             ],
-            # Per-shard compression ratios aren't replicated to main.db in V1;
+            # Per-shard compression ratios aren't persisted to main.db in V1;
             # return 0.0 as a sentinel so numeric consumers don't crash.
             "compression_ratio": 0.0,
         }
@@ -238,7 +238,7 @@ class ShardedGenomeAdapter:
         return self._router.main_conn
 
     def get_gene(self, gene_id: str):
-        """Fetch a gene by id across shards.
+        """Fetch a document by id across shards.
 
         Uses ``fingerprint_index`` to locate the owning shard, then opens
         that shard and delegates. Returns ``None`` if the gene_id is not

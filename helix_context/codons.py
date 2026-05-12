@@ -1,16 +1,16 @@
 """
-Codons — Semantic chunking and codon encoding.
+Fragments — Semantic chunking and fragment encoding.
 
 Two distinct roles:
     1. CodonChunker  — restriction enzyme: cuts raw text into RawStrands
-       (pre-gene chunks sized for the ribosome to process)
-    2. CodonEncoder  — serialization: converts codon meaning labels into
+       (pre-document chunks sized for the compressor to process)
+    2. CodonEncoder  — serialization: converts fragment meaning labels into
        prompt-ready strings for the big model
 
-Biology:
+Bio analogue (legacy term: codon):
     DNA codons are nucleotide triplets mapping to amino acids.
-    Our codons are semantic groups mapping to meaning labels.
-    The ribosome (small model) does the actual encoding;
+    Our fragments are semantic groups mapping to meaning labels.
+    The compressor (small model) does the actual encoding;
     this module provides the chunking and serialization primitives.
 """
 
@@ -29,11 +29,11 @@ from .accel import (
 )
 
 
-# ── Pre-gene chunk (output of chunking, input to ribosome) ──────────
+# ── Pre-document chunk (output of chunking, input to compressor) ──────────
 
 @dataclass
 class RawStrand:
-    """A pre-gene chunk of raw text waiting for Ribosome translation."""
+    """A pre-document chunk of raw text waiting for Compressor translation."""
     content: str
     sequence_index: int
     is_fragment: bool
@@ -41,12 +41,12 @@ class RawStrand:
     metadata: Dict[str, Any] = field(default_factory=dict)
 
 
-# ── Encoded codon (output of ribosome pack) ─────────────────────────
+# ── Encoded fragment (output of compressor pack) ─────────────────────────
 
 @dataclass
 class Codon:
     """A semantic unit — the fundamental piece of compressed context."""
-    tokens: List[str]           # Raw tokens that make up this codon
+    tokens: List[str]           # Raw tokens that make up this fragment
     meaning: str                # Semantic label / compressed representation
     weight: float = 1.0         # 1.0=critical, 0.5=useful, 0.1=filler
     is_exon: bool = True        # True=load-bearing, False=can be spliced out
@@ -64,7 +64,7 @@ class CodonChunker:
     """
 
     def __init__(self, max_chars_per_strand: int = 4000):
-        # ~4000 chars ≈ ~1000 tokens, safe for a small ribosome model
+        # ~4000 chars ≈ ~1000 tokens, safe for a small compressor model
         self.max_chars = max_chars_per_strand
 
     def chunk(
@@ -227,8 +227,8 @@ class CodonChunker:
 
 class CodonEncoder:
     """
-    Serializes codon meaning labels for injection into the big model's prompt.
-    Also provides sentence-level chunking used by the ribosome's pack operation.
+    Serializes fragment meaning labels for injection into the big model's prompt.
+    Also provides sentence-level chunking used by the compressor's pack operation.
     """
 
     def __init__(self, chunk_target: int = 3, overlap: int = 0):
@@ -248,7 +248,7 @@ class CodonEncoder:
         self.overlap = overlap
 
     def chunk_text(self, text: str) -> List[List[str]]:
-        """Split text into sentence groups (proto-codons for ribosome pack)."""
+        """Split text into sentence groups (proto-fragments for compressor pack)."""
         sentences = self._split_sentences(text)
         if not sentences:
             return []
@@ -262,7 +262,7 @@ class CodonEncoder:
         return groups
 
     def chunk_code(self, code: str) -> List[List[str]]:
-        """Split code into logical blocks (one block = one codon group)."""
+        """Split code into logical blocks (one block = one fragment group)."""
         blocks = self._split_code_blocks(code)
         return [[b] for b in blocks] if blocks else [[code]]
 
@@ -276,12 +276,12 @@ class CodonEncoder:
         return groups
 
     def codons_to_sequence(self, codons: List[Codon], exon_only: bool = False) -> str:
-        """Serialize codons into a compact string representation."""
+        """Serialize fragments into a compact string representation."""
         filtered = [c for c in codons if c.is_exon] if exon_only else codons
         return " ".join(f"[{c.meaning}|w={c.weight:.1f}]" for c in filtered)
 
     def sequence_to_prompt(self, expressed: str) -> str:
-        """Wrap expressed context for injection into the big model's prompt."""
+        """Wrap retrieved context for injection into the big model's prompt."""
         return (
             "<expressed_context>\n"
             f"{expressed}\n"

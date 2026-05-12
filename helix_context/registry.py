@@ -4,7 +4,7 @@ Registry — Presence and attribution for multi-session Helix usage.
 Provides the data-access layer for:
     - Parties (trust identities — humans, tenants, org service identities)
     - Participants (live runtime actors — Claude sessions, sub-agents)
-    - Gene attribution (which party/participant authored which gene)
+    - Document attribution (which party/participant authored which document)
 
 Schema lives in ``genome.py::_ensure_registry_schema``. See
 ``docs/SESSION_REGISTRY.md`` for the full design rationale.
@@ -12,20 +12,20 @@ Schema lives in ``genome.py::_ensure_registry_schema``. See
 Concurrency:
     All methods — reads AND writes — use ``genome.conn`` (the master
     connection), not ``genome.read_conn``. This is deliberate: the
-    replication manager propagates gene rows to replicas but does NOT
+    persistence manager propagates document rows to replicas but does NOT
     sync schema, so the registry tables only exist on the master. WAL
     mode means reads on the master don't block writers, so there is no
     perf penalty for bypassing the replica path. Registry tables are
-    metadata, not bulk genome data — master is the right source.
+    metadata, not bulk knowledge store data — master is the right source.
 
     Writes match the existing ``upsert_gene`` pattern in ``Genome``:
     direct cursor + commit, no separate writer queue.
 
 Cascade / FK semantics:
-    SQLite foreign keys are NOT enabled on the genome connection by
+    SQLite foreign keys are NOT enabled on the knowledge store connection by
     default. The FK declarations in the schema are documentation of
     intent. Until the pragma is enabled, dangling attribution rows from
-    deleted genes are harmless — they simply never appear in any
+    deleted documents are harmless — they simply never appear in any
     retrieval path because the JOIN against ``genes`` filters them out.
     A future sweep task can clean them up opportunistically.
 
@@ -85,10 +85,10 @@ def _status_from_last_heartbeat(last_heartbeat: float, now: Optional[float] = No
 
 
 class Registry:
-    """Session registry DAL. Holds a reference to a Genome and operates on its conn."""
+    """Session registry DAL. Holds a reference to a KnowledgeStore and operates on its conn."""
 
     def __init__(self, genome) -> None:
-        # Avoid import cycle — type hint Genome lazily
+        # Avoid import cycle — type hint KnowledgeStore lazily
         self.genome = genome
 
     # ── party / participant lifecycle ───────────────────────────────
@@ -261,7 +261,7 @@ class Registry:
         """Find-or-create a participant identified by (party_id, handle).
 
         This is the OS-level federation entry point — it lets ingest paths
-        attribute genes to "max@desktop", "laude@desktop", etc. without
+        attribute documents to "max@desktop", "laude@desktop", etc. without
         any auth infrastructure. The handle is the OS username (HELIX_USER
         or getpass.getuser()); the party_id is the hostname (HELIX_DEVICE
         or HELIX_PARTY or socket.gethostname()). See FEDERATION_LOCAL.md.
@@ -297,7 +297,7 @@ class Registry:
         # parties.timezone reflects "where this device usually is now"
         # while gene_attribution.authored_tz captures per-write history.
         # Together they distinguish "device's home" from "where each
-        # gene was actually authored."
+        # document was actually authored."
         if timezone:
             cur.execute(
                 "UPDATE parties SET timezone = ? WHERE party_id = ?",
@@ -419,21 +419,21 @@ class Registry:
         last_commit_hash: Optional[str] = None,
         extra_notes: Optional[str] = None,
     ) -> str:
-        """Upsert a retrievable presence gene for this participant.
+        """Upsert a retrievable presence document for this participant.
 
-        Creates or replaces a gene with stable id ``presence:{participant_id}``
+        Creates or replaces a document with stable id ``presence:{participant_id}``
         rendering the participant's current state as readable markdown. Other
-        participants' sessions can retrieve this gene through the normal
+        participants' sessions can retrieve this document through the normal
         /context path — no new retrieval codepath is needed.
 
-        The gene's chromatin decays naturally with access patterns; callers
+        The document's lifecycle tier decays naturally with access patterns; callers
         heartbeating regularly keep it OPEN and retrievable. A participant
-        that stops heartbeating has their presence gene demote to EUCHROMATIN
-        then HETEROCHROMATIN like any other gene — which is the correct
+        that stops heartbeating has their presence document demote to EUCHROMATIN
+        then HETEROCHROMATIN like any other document — which is the correct
         "went away" semantics.
 
         This is the smallest affordance for multi-session team coordination
-        that doesn't require any new retrieval, chromatin, or access-control
+        that doesn't require any new retrieval, lifecycle tier, or access-control
         primitives. Everything else composes on top of it.
         """
         now = time.time()
@@ -461,9 +461,9 @@ class Registry:
             lines.append(extra_notes)
         content = "\n".join(lines)
 
-        # Build the Gene directly — bypass the density gate so presence
-        # genes always land OPEN, ensuring they're retrievable for the TTL
-        # window. Gate re-applies naturally at the next chromatin sweep.
+        # Build the Document directly — bypass the density gate so presence
+        # documents always land OPEN, ensuring they're retrievable for the TTL
+        # window. Gate re-applies naturally at the next lifecycle tier sweep.
         from .schemas import (
             ChromatinState,
             EpigeneticMarkers,
@@ -624,7 +624,7 @@ class Registry:
         party_id: Optional[str] = None,
         since: Optional[float] = None,
     ) -> List[dict]:
-        """Return genes recently authored by participants with a given handle.
+        """Return documents recently authored by participants with a given handle.
 
         This is the BM25 bypass — chronological, no scoring. Joins
         ``gene_attribution`` -> ``participants`` (to match handle) ->
@@ -676,7 +676,7 @@ class Registry:
         agent_id: Optional[str] = None,
         authored_tz: Optional[str] = None,
     ) -> Optional[GeneAttribution]:
-        """Write a 4-axis attribution row for a gene.
+        """Write a 4-axis attribution row for a document.
 
         Identity layers (any may be NULL except party_id):
             org_id          top-level tenant (org/team)
@@ -755,7 +755,7 @@ class Registry:
         )
 
     def get_attribution(self, gene_id: str) -> Optional[GeneAttribution]:
-        """Look up attribution for a single gene. Returns None if not attributed."""
+        """Look up attribution for a single document. Returns None if not attributed."""
         cur = self.genome.conn.cursor()
         r = cur.execute(
             "SELECT gene_id, party_id, participant_id, authored_at "
@@ -781,7 +781,7 @@ class Registry:
         are mutable across re-registrations of the same logical persona, so
         we resolve at read time rather than caching at write time).
 
-        Genes without an attribution row are simply absent from the result.
+        Documents without an attribution row are simply absent from the result.
         Empty input returns ``{}`` without hitting the database.
         """
         if not gene_ids:
@@ -807,10 +807,10 @@ class Registry:
     # ── HITL event logging ──────────────────────────────────────────
     #
     # Motivated by laude's 2026-04-11 HITL observation handoff and
-    # raude's M1 discriminating test. The M1 test ruled out genome-
+    # raude's M1 discriminating test. The M1 test ruled out knowledge store-
     # mediated propagation of the HITL shift — the mechanism lives in
-    # the chat channel, not in the genome substrate. So the logger
-    # records chat-channel signals in addition to genome-state snapshots.
+    # the chat channel, not in the knowledge store substrate. So the logger
+    # records chat-channel signals in addition to knowledge store-state snapshots.
     # See ~/.helix/shared/handoffs/2026-04-11_hitl_observation.md.
     #
     # None of the methods below raise on bad input — instrumentation

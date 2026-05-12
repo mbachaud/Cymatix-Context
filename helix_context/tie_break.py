@@ -1,7 +1,7 @@
 """
 Walking tie-break — associative-graph-informed ordering for tied top-k scores.
 
-When helix's 12-tier fusion produces two or more genes with bitwise-identical
+When helix's 12-tier fusion produces two or more documents with bitwise-identical
 scores, the current behaviour is to fall through to dict insertion order —
 effectively arbitrary. This module replaces that arbitrary choice with a
 deterministic ladder of signals drawn from data helix already computes.
@@ -42,15 +42,15 @@ def is_enabled() -> bool:
     return os.environ.get("HELIX_WALKING_TIEBREAK", "").lower() in _TRUTHY
 
 
-# ── Per-gene attribute lookup (batched for efficiency) ──────────────
+# ── Per-document attribute lookup (batched for efficiency) ──────────────
 
 def _fetch_gene_attrs(
     conn: sqlite3.Connection, gene_ids: Sequence[str]
 ) -> Dict[str, Dict]:
-    """Fetch neighbor counts + freshness for each gene in one round trip.
+    """Fetch neighbor counts + freshness for each document in one round trip.
 
     Returns: gene_id -> {"neighbors": int, "freshness": int}
-    Genes absent from genes table or with no harmonic_links still get an
+    Documents absent from documents table or with no harmonic_links still get an
     entry with sensible defaults (neighbors=0, freshness=0). The ladder
     treats "no data" as a decidable value, not as missing.
     """
@@ -75,9 +75,9 @@ def _fetch_gene_attrs(
 
     # Freshness proxy — SQLite rowid is monotonically increasing with
     # INSERT order, so "larger rowid = later ingest." Not perfect (a
-    # rewritten gene keeps its rowid), but deterministic and available
+    # rewritten document keeps its rowid), but deterministic and available
     # without a dedicated created_at column. Missing rows → 0 (treated
-    # as oldest possible, so known-ingested genes beat unknown ones).
+    # as oldest possible, so known-ingested documents beat unknown ones).
     freshness: Dict[str, int] = {gid: 0 for gid in gene_ids}
     for gid, rid in conn.execute(
         f"SELECT gene_id, rowid FROM genes WHERE gene_id IN ({placeholders})",
@@ -193,8 +193,8 @@ def _rule_nli_entailment(
 def _rule_freshness_fallback(
     a: str, b: str, edges: Dict, attrs: Dict
 ) -> Optional[int]:
-    """Final non-arbitrary fallback: prefer the fresher gene. Recency is
-    a real signal (new genes more likely to match current context) and
+    """Final non-arbitrary fallback: prefer the fresher document. Recency is
+    a real signal (new documents more likely to match current context) and
     is deterministic."""
     ta = attrs[a]["freshness"]
     tb = attrs[b]["freshness"]
@@ -221,7 +221,7 @@ def walking_reorder(
     """Re-order tied-score runs within an already-sorted gene_ids list.
 
     Groups consecutive gene_ids with identical scores, then applies the
-    walking ladder to each multi-gene group. Single-gene groups (no tie)
+    walking ladder to each multi-document group. Single-document groups (no tie)
     pass through unchanged.
 
     The overall score ordering is preserved — only within-tie ordering
@@ -230,7 +230,7 @@ def walking_reorder(
     if len(gene_ids_sorted) < 2:
         return list(gene_ids_sorted)
 
-    # Group adjacent tied genes
+    # Group adjacent tied documents
     groups: List[List[str]] = []
     i = 0
     while i < len(gene_ids_sorted):
@@ -245,7 +245,7 @@ def walking_reorder(
     if not any(len(g) > 1 for g in groups):
         return list(gene_ids_sorted)
 
-    # Batched attribute fetch for every gene in a tied group
+    # Batched attribute fetch for every document in a tied group
     tied_gene_ids = [gid for g in groups if len(g) > 1 for gid in g]
     attrs = _fetch_gene_attrs(conn, tied_gene_ids)
     edges = _fetch_pairwise_edges(conn, tied_gene_ids)
@@ -282,7 +282,7 @@ def explain_pair(
     """Return a per-rule verdict trace for a single tied pair.
 
     Used by the A/B benchmark to render why the walking tie-break chose
-    one gene over another. Shape: {rule_name: "a" | "b" | "abstain"}.
+    one document over another. Shape: {rule_name: "a" | "b" | "abstain"}.
     """
     attrs = _fetch_gene_attrs(conn, [a, b])
     edges = _fetch_pairwise_edges(conn, [a, b])

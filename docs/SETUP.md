@@ -28,7 +28,7 @@ problem ended up reading this file.
   you have a choice, pin 3.12 or 3.13.
 - **Ollama** (latest stable), reachable at `http://localhost:11434`.
   Helix uses Ollama as its default chat upstream and as the optional
-  ribosome backend. Verify with `curl -s http://localhost:11434/api/tags`
+  compressor backend. Verify with `curl -s http://localhost:11434/api/tags`
   — the response must be JSON, not a connection-refused.
 - **SQLite with FTS5.**
   - Windows + Linux: bundled with the Python `sqlite3` module that ships
@@ -55,12 +55,12 @@ problem ended up reading this file.
 
     If that prints anything other than `ok`, FTS5 is not linked.
     Without FTS5 the BM25 tier (Tier 5 of the 9-tier fusion scorer)
-    is unavailable and `helix ingest` will fail at gene-table init.
+    is unavailable and `helix ingest` will fail at document-table init.
 - **Disk.** A full `pip install -e ".[all]"` pulls roughly 2 GB —
   dominated by `torch`, `sentence-transformers`, `headroom-ai`, and
   `tree-sitter` parser binaries. The lean proxy-only path
-  (`embeddings,cpu`) is roughly 150 MB. The genome itself grows linearly
-  with corpus size; an 18.5k-gene main genome is ~250 MB on disk.
+  (`embeddings,cpu`) is roughly 150 MB. The knowledge store itself grows linearly
+  with corpus size; an 18.5k-document main knowledge store is ~250 MB on disk.
 
 ## Extras decision matrix
 
@@ -81,7 +81,7 @@ block, lines 39–113.
 | `launcher` ([`pyproject.toml:62`](../pyproject.toml)) | `jinja2`, `psutil`, `platformdirs`, `py-cpuinfo`. The `helix-launcher` and `helix-status` console scripts. | Tray / supervisor flow — required by every flow that uses `start-helix-tray.bat`, `setup-helix.bat`, `backend-with-otel.bat`, or `launcher-with-otel.bat`. |
 | `launcher-native` ([`pyproject.toml:63`](../pyproject.toml)) | Everything in `launcher` plus `pywebview`. Adds the native-window dashboard (`helix-launcher --native`) instead of opening the dashboard in a browser tab. | You want a native desktop window UI but cannot or will not install LGPL dependencies. |
 | `launcher-tray` ([`pyproject.toml:70`](../pyproject.toml)) | Everything in `launcher` plus `pystray>=0.19` + `Pillow>=10` + `pywin32` (Windows only). Enables the system-tray icon with start/stop/restart, "Open Grafana", and "Open Prometheus" menu items. | **Canonical daily-driver flow.** Note: `pystray` is **LGPL-3** licensed. Helix itself stays Apache-2.0-clean because `launcher-tray` is a runtime-only optional dep — the helix-context wheel does not bundle pystray. If LGPL is a license concern for your distribution, install `launcher-native` instead. |
-| `ast` ([`pyproject.toml:75`](../pyproject.toml)) | `tree-sitter` core + parsers for Python, Rust, JavaScript, TypeScript. Used by the code-aware ingest path to extract function/class boundaries for promoter tagging. | You ingest source code (not just docs / markdown / conversations). |
+| `ast` ([`pyproject.toml:75`](../pyproject.toml)) | `tree-sitter` core + parsers for Python, Rust, JavaScript, TypeScript. Used by the code-aware ingest path to extract function/class boundaries for tag-based indexing. | You ingest source code (not just docs / markdown / conversations). |
 | `scorerift` ([`pyproject.toml:82`](../pyproject.toml)) | The `scorerift` companion package (CD spectroscope bridge). Powers ScoreRift dimensions in the audit pipeline. | You are running the ScoreRift integration. Most operators do not need this. |
 | `codec` ([`pyproject.toml:85`](../pyproject.toml)) | `headroom-ai[proxy,code]>=0.5.21` — Tejas Chopra's CPU-resident semantic compression proxy + dashboard. | You want the Headroom dashboard at `http://127.0.0.1:8787/dashboard` and the tray's "Open Headroom Dashboard" + Start/Restart/Stop menu items. The launcher adopts an already-running headroom proxy on its configured port; otherwise it spawns one. See `[headroom]` in [`helix.toml`](../helix.toml) lines 163–169. |
 | `dev` ([`pyproject.toml:86`](../pyproject.toml)) | `pytest`, `pytest-asyncio`, `numpy`, `spacy>=3.7`, `hypothesis>=6.0`. | You are a contributor running the test suite. Not for production. |
@@ -257,8 +257,8 @@ curl -s -X POST http://127.0.0.1:11437/context \
   -d '{"query":"hello"}' | python -m json.tool
 ```
 
-This flow expects the genome to live at the path configured in
-[`helix.toml`](../helix.toml) line 127 (`[genome] path =
+This flow expects the knowledge store to live at the path configured in
+[`helix.toml`](../helix.toml) line 127 (`[knowledge store] path =
 "genomes/main/genome.db"`). Override with `HELIX_GENOME_PATH=/abs/path`
 or by editing the TOML.
 
@@ -398,7 +398,7 @@ python -m spacy download en_core_web_sm
 ```
 
 Without the model, the `CpuTagger` ingest path silently falls back to a
-keyword-only tagger. Promoter tags become coarser, NER nodes in the
+keyword-only tagger. Tags become coarser, NER nodes in the
 entity graph are absent, and `/context` retrieval quality on
 entity-bearing queries degrades by 10–30 percentage points depending on
 corpus.
@@ -416,8 +416,8 @@ curl -s http://localhost:11434/api/tags
 The response must be a JSON object with a `models` array. If the server
 is not reachable, `/v1/chat/completions` proxy requests fail
 end-to-end, and **`/context` returns an empty `expressed_context` with
-no warning** when the ribosome backend is set to `"ollama"` (which is
-the default placeholder, even when ribosome is disabled — see
+no warning** when the compressor backend is set to `"ollama"` (which is
+the default placeholder, even when compressor is disabled — see
 [`helix.toml`](../helix.toml) lines 21–22).
 
 If you want to use a different upstream (e.g., a remote Ollama, a
@@ -490,7 +490,7 @@ Stage 2 promoted BGE-M3 dense retrieval from a 12-candidate re-ranker
 to a parallel first-class recall source over the full corpus, and
 restored the full 1024-dim Matryoshka representation (the previous
 256-dim truncation collapsed random-pair cosine to ~0.6). To use the
-new path, every gene's `embedding_dense_v2` BLOB column must be
+new path, every document's `embedding_dense_v2` BLOB column must be
 populated.
 
 ```bash
@@ -504,7 +504,7 @@ estimate from
 [`scripts/backfill_bgem3_v2.py`](../scripts/backfill_bgem3_v2.py) lines
 22–24:
 
-- ~30–90 minutes on CPU `sentence-transformers` BGE-M3 at 18.9k genes.
+- ~30–90 minutes on CPU `sentence-transformers` BGE-M3 at 18.9k documents.
 - ~5–15 minutes with `FlagEmbedding` + GPU.
 
 Recommended runbook from the same script (lines 15–20):
@@ -545,7 +545,7 @@ python scripts/calibrate_thresholds.py \
     --bench results/located_n1000.json
 ```
 
-The script samples random gene pairs from the genome's
+The script samples random document pairs from the knowledge store's
 `embedding_dense_v2` BLOBs, computes a `mu + sigma_mult * sigma` ANN
 cosine cutoff (margin-over-random), and segments
 `agent.score_top` distributions by classifier class. It outputs:
@@ -627,10 +627,10 @@ Spec:
 ### Idempotency and re-runs
 
 All three calibration runs are idempotent. Re-run after corpus changes
-that materially shift the gene-pair cosine distribution or the
+that materially shift the document-pair cosine distribution or the
 classifier-segmented score distribution. Typical triggers:
 
-- A new ingest batch that adds more than ~20% of total gene count.
+- A new ingest batch that adds more than ~20% of total document count.
 - A schema migration that changes the BGE-M3 codec version.
 - A bench discipline change (different `located_n1000` sampling).
 
@@ -649,7 +649,7 @@ documentation belongs in `.env.example` (cross-link below).
 | `HELIX_ORG` | Organization tag for 4-layer federation attribution. |
 | `HELIX_DEVICE` | Machine identifier for CWoLa + session registry. |
 | `HELIX_USER` | Operator handle. Defaults to `"max"` in `start-helix-tray.bat` if unset. |
-| `HELIX_AGENT` | Persona writing genes (e.g., `laude`, `raude`, `taude`, `gemini`). If unset, ingests tag as "manual". |
+| `HELIX_AGENT` | Persona writing documents (e.g., `laude`, `raude`, `taude`, `gemini`). If unset, ingests tag as "manual". |
 | `HELIX_AGENT_KIND` | Tool-kind stamp (e.g., `claude-code`, `ollama-chat`). |
 | `HELIX_PARTY_ID` | Multi-tenant party tag. Falls back to `[session] default_party_id` in `helix.toml`. |
 | `HELIX_MCP_HANDLE` | Session-registry handle for the MCP host process. Disambiguates Claude Code / OpenWebUI / etc. on shared machines. |
@@ -672,7 +672,7 @@ documentation belongs in `.env.example` (cross-link below).
 | `HELIX_HEADROOM_AUTOSTART` | `1` to spawn a fresh headroom child if no existing proxy is found on the configured port. |
 | `HELIX_HEADROOM_ROUTE_UPSTREAM_AUTO` | `1` to auto-route non-local upstreams through Headroom. |
 | `HELIX_DISABLE_HEADROOM` | Hard kill switch. Overrides every other Headroom toggle. |
-| `HELIX_BUDGET_ZONE` | `1` to enable the budget-zone gene-cap clamp (clamps `max_genes` based on caller's prompt-token-zone). Set by `start-helix-tray.bat`. |
+| `HELIX_BUDGET_ZONE` | `1` to enable the budget-zone document-cap clamp (clamps `max_genes` based on caller's prompt-token-zone). Set by `start-helix-tray.bat`. |
 | `HELIX_DEVICE` | Device picker for hardware-aware codec/rerank: `auto \| cuda \| rocm \| mps \| cpu`. Default `auto`. |
 | `HELIX_FILENAME_ANCHOR_ENABLED` | Override `[retrieval] filename_anchor_enabled`. |
 | `HELIX_ABSTAIN_DISABLE` | `1` forces `[budget] abstain_enabled = false` without redeploy. |
@@ -697,7 +697,7 @@ tracks adding it). Until that file lands, the canonical source is the
 ## Uninstall / cleanup
 
 A clean uninstall has three steps. Each step is independent — you may
-keep the Python package installed but delete the genome, or vice versa.
+keep the Python package installed but delete the knowledge store, or vice versa.
 
 ### 1. Remove the Python package
 
@@ -722,7 +722,7 @@ Remove-Item -Recurse -Force "$env:USERPROFILE\.helix"
 This directory holds the supervisor's PID files and Unix sockets, the
 tray's state JSON, the launcher's update-check cache, and any
 session-registry metadata. Deleting it forces a fresh launcher boot;
-no genes are lost (genes live in `genomes/`).
+no documents are lost (documents live in `genomes/`).
 
 ### 3. Delete the genome(s)
 
@@ -734,7 +734,7 @@ rm -rf genomes/
 rm -rf genomes/main/
 ```
 
-Genomes are SQLite `.db` files (plus their `-wal` and `-shm`
+KnowledgeStores are SQLite `.db` files (plus their `-wal` and `-shm`
 companions). They are durable data — back them up before deleting if
 you might need them again.
 

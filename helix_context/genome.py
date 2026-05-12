@@ -1,17 +1,17 @@
 """
-Genome — SQLite cold storage for the gene pool.
+KnowledgeStore — SQLite cold storage for the document pool.
 
-Biology:
+Bio analogue (legacy term: genome):
     The genome is the full DNA library. Only ~1% is expressed per cell cycle.
-    Our genome stores all context genes in SQLite with a promoter index
+    Our knowledge store stores all context documents in SQLite with a tags index
     for fast retrieval. Chromatin state controls accessibility.
 
 Includes:
-    - DDL (genes table + promoter_index join table)
-    - Content-addressed gene IDs (SHA256[:16])
-    - Fix 1: synonym expansion for promoter queries
+    - DDL (documents table + promoter_index join table)
+    - Content-addressed document IDs (SHA256[:16])
+    - Fix 1: synonym expansion for tags queries
     - Fix 1: co-activation pull-forward (associative memory)
-    - Compaction (decay stale genes → HETEROCHROMATIN)
+    - Compaction (decay stale documents → COLD lifecycle tier)
 """
 
 from __future__ import annotations
@@ -41,7 +41,7 @@ log = logging.getLogger(__name__)
 
 # ── Struggle 1 fix: source-path deny list ───────────────────────────────
 #
-# Paths that are structurally noise regardless of content. Any gene whose
+# Paths that are structurally noise regardless of content. Any document whose
 # source_id matches one of these patterns goes directly to HETEROCHROMATIN
 # without computing a density score — it's cheaper and more reliable than
 # relying on the scorer for content types we already know are noise.
@@ -64,7 +64,7 @@ log = logging.getLogger(__name__)
 #     2026-04-10. Game files are content-dense with unambiguous literal
 #     values (configs, enums, item IDs, code) and empirically produced
 #     86% of correct answers on the N=50 v2 NIAH benchmark before the
-#     original gate. Individual low-density game genes still get caught
+#     original gate. Individual low-density game documents still get caught
 #     by the score gate; the structural path is no longer a categorical
 #     reject. See docs/BENCHMARKS.md and ~/.helix/shared/handoffs/ for
 #     the full empirical basis.
@@ -114,7 +114,7 @@ def is_denied_source(source_id: Optional[str]) -> bool:
     """Return True iff source_id matches the structural noise deny list.
 
     Exposed as a module-level function so tests and scripts can reuse it
-    without constructing a full Genome instance.
+    without constructing a full KnowledgeStore instance.
     """
     if not source_id:
         return False
@@ -123,9 +123,9 @@ def is_denied_source(source_id: Optional[str]) -> bool:
 
 # ── Path tokenization for the path_key_index retrieval layer ────────────
 # Splits source_id on common path separators + common filename punctuation.
-# Each token becomes a retrieval signal paired with the gene's key_values
+# Each token becomes a retrieval signal paired with the document's key_values
 # keys. A query like "what is the value of helix_port?" hits the index on
-# path_token='helix' AND kv_key='port' → direct boost to the gene.
+# path_token='helix' AND kv_key='port' → direct boost to the document.
 #
 # No LLM, no manual project list, no re-ingest required — purely derived
 # from source_id + CpuTagger-extracted key_values. When a new project
@@ -136,7 +136,7 @@ _PATH_SPLIT_RE = re.compile(r"[\\/\-_.\s:]+")
 # Tokens that appear on nearly every path and carry no discriminating
 # signal. Keeping this list tiny on purpose — it's the only maintenance
 # burden, and overflowing it would be throwing signal away. Subset
-# chosen from the actual source_id distribution on the 2026-04-12 genome.
+# chosen from the actual source_id distribution on the 2026-04-12 knowledge store.
 _PATH_NOISE_TOKENS = frozenset({
     "",
     # Drive / filesystem roots
@@ -165,7 +165,7 @@ def _kv_keys_from_list(kv_list) -> list:
     lowercased, deduped, skipping empties.
 
     Works transparently on dict inputs too for forward-compat — if a future
-    gene schema changes key_values to Dict[str, str], this still returns
+    document schema changes key_values to Dict[str, str], this still returns
     the right keys.
     """
     if not kv_list:
@@ -196,7 +196,7 @@ def path_tokens(source_id: Optional[str]) -> set:
     Splits on path separators and common filename punctuation, lowercases
     everything, drops single-char tokens and generic noise (see
     _PATH_NOISE_TOKENS). The result is the set of tokens that meaningfully
-    identify this gene's provenance for compound-lookup retrieval.
+    identify this document's provenance for compound-lookup retrieval.
 
     Examples:
         "F:/Projects/helix-context/helix_context/config.py"
@@ -209,7 +209,7 @@ def path_tokens(source_id: Optional[str]) -> set:
           → {"cosmictasha", "components", "hero"}
 
     Exposed as a module-level function so tests, backfill scripts, and
-    retrieval code can reuse it without constructing a Genome.
+    retrieval code can reuse it without constructing a KnowledgeStore.
     """
     if not source_id:
         return set()
@@ -237,8 +237,8 @@ def file_tokens(source_id: Optional[str]) -> set:
     Companion to path_tokens() — where that returns folder + file tokens
     mixed together, this returns only the basename's tokens. Motivated by
     the "same-folder-wrong-file" failure mode on the 10-needle bench:
-    a query for "helix pipeline" matches path_tokens on any gene under
-    helix-context/, but only the genes whose filename itself mentions
+    a query for "helix pipeline" matches path_tokens on any document under
+    helix-context/, but only the documents whose filename itself mentions
     "pipeline" deserve a coordinate-confidence boost.
 
     Uses the same split + noise rules as path_tokens() but restricts
@@ -252,7 +252,7 @@ def file_tokens(source_id: Optional[str]) -> set:
           → {"retrieval"}
 
         "F:/Projects/helix-context/helix_context/genome.py"
-          → {"genome"}
+          → {"knowledge store"}
     """
     if not source_id:
         return set()
@@ -281,22 +281,22 @@ def file_tokens(source_id: Optional[str]) -> set:
 
 
 # Thresholds for the score-based gate. Calibrated against the 2026-04-10
-# noise-diluted genome (8,063 genes, ~42% structural noise). See
+# noise-diluted knowledge store (8,063 documents, ~42% structural noise). See
 # scripts/simulate_density_gate_v2.py for the empirical basis.
 _DENSITY_HETEROCHROMATIN_THRESHOLD = 0.50
 _DENSITY_EUCHROMATIN_THRESHOLD = 1.00
 _DENSITY_CONTENT_LENGTH_FLOOR = 100  # chars — prevents tiny-content score explosion
-_DENSITY_ACCESS_OVERRIDE = 5         # access_count >= this keeps gene OPEN regardless
+_DENSITY_ACCESS_OVERRIDE = 5         # access_count >= this keeps document OPEN regardless
 
 # Working-set inference (Phase 1 slice 2 of the 8D dimensional roadmap).
-# A gene with at least _DENSITY_RATE_MIN_HITS accesses in the last
+# A document with at least _DENSITY_RATE_MIN_HITS accesses in the last
 # _DENSITY_RATE_WINDOW seconds is considered "actively used right now"
 # and gets the OPEN override regardless of static density score. The
 # rate signal is sharper than the monotonic _DENSITY_ACCESS_OVERRIDE
 # because it distinguishes "hot last hour" from "hot once a year ago" —
-# the monotonic counter conflates them. Genes with empty recent_accesses
-# buffers (legacy genes that pre-date Phase 1, or freshly ingested
-# genes that haven't been touched yet) fall through to the monotonic
+# the monotonic counter conflates them. Documents with empty recent_accesses
+# buffers (legacy documents that pre-date Phase 1, or freshly ingested
+# documents that haven't been touched yet) fall through to the monotonic
 # fallback path, preserving backward compatibility.
 #
 # Reference: ~/.helix/shared/handoffs/2026-04-11_8d_dimensional_roadmap.md
@@ -310,7 +310,7 @@ _CORPUS_SIZE_TTL = 60.0
 
 
 class Genome:
-    """SQLite-backed gene storage with promoter-tag retrieval."""
+    """SQLite-backed document storage with tags-tag retrieval."""
 
     def __init__(
         self,
@@ -478,7 +478,7 @@ class Genome:
         # Per-tier score breakdown for the last query: {gene_id: {tier_name: score}}.
         # Populated alongside last_query_scores in query_genes(). Lets the bench /
         # profiler see which retrieval signals fired (and how strongly) for each
-        # candidate gene — turns the lane graph into a measurable activation matrix.
+        # candidate document — turns the lane graph into a measurable activation matrix.
         # See benchmarks/bench_skill_activation.py and docs/PIPELINE_LANES.md.
         self.last_tier_contributions: Dict[str, Dict[str, float]] = {}
         self._sema_cache: Optional[Dict] = None  # Pre-materialized ΣĒMA vectors (hot tier)
@@ -586,8 +586,8 @@ class Genome:
         # Stage 2: partial index over hot-tier rows with v2 vectors. Lets
         # the dense-recall matrix loader stream populated rows without a
         # full table scan during partial-rollout / backfill.
-        # chromatin < 2 == hot tier (OPEN | EUCHROMATIN); HETEROCHROMATIN
-        # genes are reachable via query_cold_tier() instead.
+        # lifecycle tier < 2 == hot tier (OPEN | EUCHROMATIN); HETEROCHROMATIN
+        # documents are reachable via query_cold_tier() instead.
         cur.execute(
             "CREATE INDEX IF NOT EXISTS idx_genes_dense_v2_hot "
             "ON genes(gene_id) "
@@ -613,7 +613,7 @@ class Genome:
 
         # Stage 7 (2026-05-08, spec §2 + §7) — partial index over the
         # reverse-supersedes column. ``check_superseded(gene)`` runs:
-        #   SELECT gene_id, source_id FROM genes WHERE supersedes = ? LIMIT 1
+        #   SELECT gene_id, source_id FROM documents WHERE supersedes = ? LIMIT 1
         # in the hot path, so an index is mandatory. Partial filter on
         # ``supersedes IS NOT NULL`` keeps it tight: most rows will not
         # have a predecessor pointer.
@@ -663,7 +663,7 @@ class Genome:
         )
         """)
 
-        # Entity graph — maps entities to genes for graph-based co-activation
+        # Entity graph — maps entities to documents for graph-based co-activation
         cur.execute("""
         CREATE TABLE IF NOT EXISTS entity_graph (
             entity   TEXT NOT NULL,
@@ -682,10 +682,10 @@ class Genome:
 
         # path_key_index: compound (path_token, kv_key) → gene_id lookup for
         # fast retrieval on template queries like "what is the value of
-        # helix_port?" where the answer gene has the key "port" and lives
+        # helix_port?" where the answer document has the key "port" and lives
         # under a path containing "helix-context". Populated at ingest from
         # source_id tokenization + key_values.keys(). Auto-applies to every
-        # gene that has a source_id + extracted key_values — no LLM, no
+        # document that has a source_id + extracted key_values — no LLM, no
         # manual tagging, no project bucket list to maintain.
         cur.execute("""
         CREATE TABLE IF NOT EXISTS path_key_index (
@@ -757,7 +757,7 @@ class Genome:
         if repaired:
             self.conn.commit()
 
-        # FTS5 full-text index on gene content + complement
+        # FTS5 full-text index on document content + complement
         # Standalone table (not content-synced) for simplicity
         try:
             cur.execute("""
@@ -769,14 +769,14 @@ class Genome:
             """)
             self._fts_available = True
 
-            # Incremental FTS5 sync — only add missing genes, don't rebuild
-            # Full rebuild is O(N) and blocks startup. At 100K+ genes it takes
-            # 30+ seconds. Incremental sync is O(delta) — typically <100 genes.
+            # Incremental FTS5 sync — only add missing documents, don't rebuild
+            # Full rebuild is O(N) and blocks startup. At 100K+ documents it takes
+            # 30+ seconds. Incremental sync is O(delta) — typically <100 documents.
             gene_count = cur.execute("SELECT COUNT(*) FROM genes").fetchone()[0]
             fts_count = cur.execute("SELECT COUNT(*) FROM genes_fts").fetchone()[0]
             delta = gene_count - fts_count
             if delta > 0:
-                # Add only genes missing from FTS5
+                # Add only documents missing from FTS5
                 cur.execute(
                     "INSERT INTO genes_fts(gene_id, content, complement) "
                     "SELECT g.gene_id, "
@@ -826,7 +826,7 @@ class Genome:
             - parties:           devices (PCs) belonging to an org
             - participants:      humans (users) on a device
             - agents:            AI personas working on a user's behalf
-            - gene_attribution:  4-axis attribution row per gene
+            - gene_attribution:  4-axis attribution row per document
 
         Each layer is independently queryable so we can answer
         "what did Laude on gandalf, on max's behalf, in SwiftWing21, do?"
@@ -1021,7 +1021,7 @@ class Genome:
 
         # authored_tz — IANA timezone name at the moment of write.
         # Together with authored_at (Unix epoch UTC) this gives full
-        # forensic context: when AND where (regionally) a gene was
+        # forensic context: when AND where (regionally) a document was
         # authored. Detects travel ("max wrote this from Berlin"),
         # DST drift (silent offset shift in the same party's authored_tz
         # over time), and supports cross-jurisdiction compliance queries.
@@ -1052,7 +1052,7 @@ class Genome:
         # hitl_events — per-session HITL pause log, added 2026-04-11 following
         # laude's HITL observation handoff and raude's M1 discriminating test.
         # The chat-channel signal columns (operator_tone_uncertainty, etc) are
-        # deliberately broad because the M1 finding ruled out genome-mediated
+        # deliberately broad because the M1 finding ruled out knowledge store-mediated
         # propagation of the HITL effect — the mechanism lives in the chat
         # channel and must be instrumented there. See handoff
         # ~/.helix/shared/handoffs/2026-04-11_hitl_observation.md
@@ -1136,7 +1136,7 @@ class Genome:
         )
 
         # ── AI-Consumer Sprint 2: session working-set register ────────
-        # Tracks which genes have been delivered to which session so
+        # Tracks which documents have been delivered to which session so
         # re-retrievals can elide with a pointer stub rather than
         # re-shipping the full spliced text. See session_delivery.py +
         # docs/FUTURE/AI_CONSUMER_ROADMAP_2026-04-14.md.
@@ -1234,7 +1234,7 @@ class Genome:
         cosine similarity. Eliminates 7K json_loads() per Mode B query.
 
         Cache structure:
-            gene_ids: list[str] — ordered gene IDs
+            gene_ids: list[str] — ordered document IDs
             matrix: np.ndarray (N, 20) — float32 ΣĒMA vectors
         """
         try:
@@ -1296,11 +1296,11 @@ class Genome:
 
     # ── Cold-tier ΣĒMA retrieval (C.2, 2026-04-10) ─────────────────────
     #
-    # The hot-tier retrieval paths all filter `WHERE chromatin <
-    # HETEROCHROMATIN`, so heterochromatin genes are invisible to normal
+    # The hot-tier retrieval paths all filter `WHERE lifecycle tier <
+    # HETEROCHROMATIN`, so heterochromatin documents are invisible to normal
     # /context queries. C.1 made compress_to_heterochromatin non-destructive
     # so the underlying content/complement/codons are preserved. This
-    # block adds the opt-in retrieval path that consults cold-tier genes
+    # block adds the opt-in retrieval path that consults cold-tier documents
     # via ΣĒMA cosine similarity and returns them with content restored.
     #
     # Design notes:
@@ -1309,7 +1309,7 @@ class Genome:
     #   - Lazy build on first use. Invalidated on any upsert.
     #   - Requires numpy for batched cosine similarity (falls back to
     #     empty result if unavailable, matching hot-tier Mode B behavior).
-    #   - Requires a SemaCodec attached to the Genome instance (for
+    #   - Requires a SemaCodec attached to the KnowledgeStore instance (for
     #     encoding the query text). If no codec, returns empty.
     #   - Callers must explicitly request cold-tier retrieval — it is
     #     never invoked implicitly from query_genes(). The wiring into
@@ -1319,7 +1319,7 @@ class Genome:
     def _build_cold_sema_cache(self) -> None:
         """Build the heterochromatin ΣĒMA vector cache for fast cosine scans.
 
-        Scans all genes at ``chromatin = HETEROCHROMATIN`` that still have
+        Scans all documents at ``chromatin = HETEROCHROMATIN`` that still have
         an embedding (ΣĒMA vector). Normalizes and stacks them into a
         dense numpy matrix for batched cosine similarity at query time.
         """
@@ -1414,7 +1414,7 @@ class Genome:
         k: int = 3,
         min_cosine: float = 0.15,
     ) -> List[Gene]:
-        """Search heterochromatin-tier genes by ΣĒMA cosine similarity.
+        """Search heterochromatin-tier documents by ΣĒMA cosine similarity.
 
         Cold-tier retrieval is opt-in — normal ``query_genes()`` does not
         consult this path. Use when a query is known to target archived
@@ -1426,7 +1426,7 @@ class Genome:
         query_text : str
             Natural-language query to encode via the attached SemaCodec.
         k : int
-            Maximum number of cold-tier genes to return. Defaults to 3 —
+            Maximum number of cold-tier documents to return. Defaults to 3 —
             cold retrieval should be a precision tool, not a dump.
         min_cosine : float
             Similarity floor in 20-dim ΣĒMA space. Matches below this
@@ -1441,18 +1441,18 @@ class Genome:
 
         Returns
         -------
-        list[Gene]
-            Up to ``k`` heterochromatin genes with full content restored,
-            sorted by cosine similarity descending. Each gene's
+        list[Document]
+            Up to ``k`` heterochromatin documents with full content restored,
+            sorted by cosine similarity descending. Each document's
             ``chromatin`` field will still show HETEROCHROMATIN — the
             caller is responsible for deciding whether to promote the
-            gene back to OPEN based on the retrieval event (e.g., by
+            document back to OPEN based on the retrieval event (e.g., by
             updating access_count and letting a future sweep reconsider it).
 
         Returns empty list when any precondition fails:
             - No SemaCodec attached (self._sema_codec is None)
             - numpy unavailable
-            - No heterochromatin genes with embeddings in the genome
+            - No heterochromatin documents with embeddings in the knowledge store
             - No matches clear the min_cosine threshold
         """
         if self._sema_codec is None:
@@ -1496,7 +1496,7 @@ class Genome:
             if not selected_ids:
                 return []
 
-            # Fetch full Gene objects (content is preserved thanks to C.1)
+            # Fetch full Document objects (content is preserved thanks to C.1)
             genes: List[Gene] = []
             for gid in selected_ids:
                 gene = self.get_gene(gid)
@@ -1615,10 +1615,10 @@ class Genome:
             self._ann_threshold_calibration_meta = None
             self._ann_threshold_fallback_warned = False
 
-    # ── Replication ──────────────────────────────────────────────────
+    # ── Persistence ──────────────────────────────────────────────────
 
     def set_replication_manager(self, mgr) -> None:
-        """Attach a ReplicationManager for distributed genome clones."""
+        """Attach a ReplicationManager for distributed knowledge store clones."""
         self._replication_mgr = mgr
         # Stage 4: invalidate calibration cache so a swapped replica re-reads.
         self._ann_threshold_calibrated = None
@@ -1626,15 +1626,15 @@ class Genome:
         self._ann_threshold_fallback_warned = False
 
     def corpus_size(self) -> int:
-        """Return the memoized total gene count for IDF weighting.
+        """Return the memoized total document count for IDF weighting.
 
         Refreshed from ``SELECT COUNT(*) FROM genes`` at most once per
         ``_CORPUS_SIZE_TTL`` seconds. Used by the IDF-weighted lexical
-        anchor tier so rare-term boosts reflect the *genome* size, not
+        anchor tier so rare-term boosts reflect the *knowledge store* size, not
         the size of the scored-candidate pool.
         """
         now = time.time()
-        # Check the timestamp, not the value: a legitimately empty genome
+        # Check the timestamp, not the value: a legitimately empty knowledge store
         # (count = 0) would otherwise never get cached and every call
         # would re-hit SQLite. _corpus_size_ts is initialized to 0.0 in
         # __init__, so a stale/never-refreshed cache still falls through.
@@ -1657,7 +1657,7 @@ class Genome:
         Dedicated read-only connection. In WAL mode, readers and writers
         don't block each other — but only if they use separate connections.
 
-        Priority: replication replica > dedicated reader > write connection.
+        Priority: persistence replica > dedicated reader > write connection.
         """
         if self._replication_mgr is not None:
             try:
@@ -1668,7 +1668,7 @@ class Genome:
             return self._reader
         return self.conn
 
-    # ── Gene ID (content-addressable) ───────────────────────────────
+    # ── Document ID (content-addressable) ───────────────────────────────
 
     @staticmethod
     def make_gene_id(content: str) -> str:
@@ -1678,14 +1678,14 @@ class Genome:
 
     def upsert_gene(self, gene: Gene, apply_gate: bool = True) -> str:
         """
-        Insert or replace a gene in the genome.
+        Insert or replace a document in the knowledge store.
 
         If ``apply_gate`` is True (the default), the density gate runs
-        before storage and may override the gene's chromatin state. Callers
-        that have a reason to bypass the gate — HGT imports, benchmark
+        before storage and may override the document's lifecycle tier. Callers
+        that have a reason to bypass the gate — cross-store import imports, benchmark
         setup scripts, explicit backfill tools, manual `compact_genome`
         re-runs — can pass ``apply_gate=False`` to preserve the incoming
-        chromatin state as-is.
+        lifecycle tier as-is.
 
         Returns the gene_id (content-addressed if not pre-populated).
         """
@@ -1697,12 +1697,12 @@ class Genome:
         # gate. Previously the gate lived in context_manager.ingest() and
         # was bypassed by every bulk ingest path. See:
         #   scripts/simulate_density_gate_v2.py for the empirical basis
-        #   (51.6% of the noise-diluted genome demoted, >97% signal retained).
+        #   (51.6% of the noise-diluted knowledge store demoted, >97% signal retained).
         #
-        # Crucially, the gate only acts on genes arriving as OPEN — if the
+        # Crucially, the gate only acts on documents arriving as OPEN — if the
         # caller has explicitly set EUCHROMATIN or HETEROCHROMATIN, we
-        # trust that decision. This means HGT imports, test fixtures, and
-        # any code that deliberately creates demoted genes retain their
+        # trust that decision. This means cross-store import imports, test fixtures, and
+        # any code that deliberately creates demoted documents retain their
         # intended state. The gate is admission-control, not state-reset.
         if apply_gate and gene.chromatin == ChromatinState.OPEN:
             new_state, reason = self.apply_density_gate(gene)
@@ -1715,7 +1715,7 @@ class Genome:
         else:
             reason = "gate_bypassed" if not apply_gate else "explicit_chromatin_preserved"
 
-        # Compute compression tier from final chromatin state
+        # Compute compression tier from final lifecycle tier
         tier = 0  # OPEN
         if gene.chromatin == ChromatinState.EUCHROMATIN:
             tier = 1
@@ -1734,10 +1734,10 @@ class Genome:
         # Stage 7 (2026-05-08, spec §4) — wire ``last_verified_at`` on
         # ingest. The column has shipped since Stage 1 (DDL row :471,
         # ALTER row :499); Stage 7 only ensures the writer populates it.
-        # Order: gene-supplied > observed_at fallback > now(). Setting
+        # Order: document-supplied > observed_at fallback > now(). Setting
         # to now() on legacy bare-inserts means the freshness gate has
         # something to compare mtime against on the very next turn,
-        # rather than treating every newly-ingested gene as
+        # rather than treating every newly-ingested document as
         # "freshness unknown" forever.
         last_verified_at = (
             gene.last_verified_at
@@ -1780,10 +1780,10 @@ class Genome:
                 time.time(),  # last_seen: always stamp current epoch on every upsert
             ),
         )
-        # Invalidate parse cache for this gene's promoter/epigenetics
+        # Invalidate parse cache for this document's promoter/epigenetics
         clear_parse_caches()
 
-        # Rebuild promoter index for this gene
+        # Rebuild tags index for this document
         cur.execute("DELETE FROM promoter_index WHERE gene_id = ?", (gene_id,))
 
         for d in gene.promoter.domains:
@@ -1797,7 +1797,7 @@ class Genome:
                 (gene_id, e.lower()),
             )
 
-        # Sync FTS5 index — include source_id + promoter tags in searchable content
+        # Sync FTS5 index — include source_id + tags in searchable content
         # so tag-based knowledge survives FTS5 rebuilds
         if self._fts_available:
             try:
@@ -1813,7 +1813,7 @@ class Genome:
                 )
             except Exception:
                 # FTS sync failure is non-fatal for the ingest, but silently
-                # swallowing it means a gene is unindexed for full-text search.
+                # swallowing it means a document is unindexed for full-text search.
                 log.warning(
                     "FTS5 sync failed for gene %s", gene_id, exc_info=True,
                 )
@@ -1826,12 +1826,12 @@ class Genome:
                     "INSERT OR IGNORE INTO entity_graph (entity, gene_id) VALUES (?, ?)",
                     (ent.lower(), gene_id),
                 )
-            # Auto-link: find genes sharing 2+ entities with this gene
+            # Auto-link: find documents sharing 2+ entities with this document
             self._auto_link_by_entity(gene_id, gene.promoter.entities, cur)
 
         # path_key_index — compound (path_token, kv_key) → gene_id for
         # fast template-query retrieval ("what is the value of helix_port?"
-        # → index hit on (helix, port) → this gene). Auto-derived from
+        # → index hit on (helix, port) → this document). Auto-derived from
         # source_id + already-extracted key_values; no LLM, no manual list.
         cur.execute("DELETE FROM path_key_index WHERE gene_id = ?", (gene_id,))
         if gene.source_id and gene.key_values:
@@ -1849,7 +1849,7 @@ class Genome:
         # filename_index — single-stem reverse index used by the
         # filename-anchor retrieval tier (Tier 0.5, flag-gated). Updated
         # unconditionally at upsert time so the index is ready the moment
-        # the flag flips on; no backfill stage required for new genes.
+        # the flag flips on; no backfill stage required for new documents.
         cur.execute("DELETE FROM filename_index WHERE gene_id = ?", (gene_id,))
         try:
             from . import filename_anchor as _fa
@@ -1872,19 +1872,19 @@ class Genome:
             except Exception:
                 log.debug("SPLADE indexing failed for gene %s", gene_id, exc_info=True)
 
-        # Single atomic commit — gene + promoter + FTS5 + entity graph + SPLADE
+        # Single atomic commit — document + tags + FTS5 + entity graph + SPLADE
         self.conn.commit()
 
         # Periodic WAL checkpoint to prevent data loss on crash
-        # PASSIVE every 50 genes (~non-blocking), TRUNCATE every 500 (resets WAL)
+        # PASSIVE every 50 documents (~non-blocking), TRUNCATE every 500 (resets WAL)
         self._upsert_count += 1
         if self._upsert_count % 500 == 0:
             self.checkpoint("TRUNCATE")
         elif self._upsert_count % 50 == 0:
             self.checkpoint("PASSIVE")
 
-        # Invalidate ΣĒMA caches (new gene may have embedding, and
-        # chromatin state changes can reshuffle hot/cold tier membership)
+        # Invalidate ΣĒMA caches (new document may have embedding, and
+        # lifecycle tier changes can reshuffle hot/cold tier membership)
         if self._sema_cache is not None:
             self._sema_cache = None
         if self._cold_sema_cache is not None:
@@ -1894,7 +1894,7 @@ class Genome:
         # this batch. See spec §4 "Invalidation".
         self._invalidate_dense_matrix()
 
-        # Notify replication manager (if attached)
+        # Notify persistence manager (if attached)
         if self._replication_mgr is not None:
             self._replication_mgr.notify_write()
 
@@ -1944,18 +1944,18 @@ class Genome:
         tier_contrib: Optional[Dict[str, Dict[str, float]]] = None,
     ) -> None:
         """
-        Post-rank boosts that distinguish authoritative genes from tangential ones.
+        Post-rank boosts that distinguish authoritative documents from tangential ones.
 
         Three signals:
           1. Source authority (+2.0): query term in source_id path
              — a file named BENCHMARK_NOTES.md answering "benchmark" is authoritative
-          2. Domain primacy (+1.5): query term in top-3 promoter domains
-             — primary domains = what the gene is ABOUT, not mentions
-          3. Creation recency (+0.5): gene created in last 48 hours
+          2. Domain primacy (+1.5): query term in top-3 tags domains
+             — primary domains = what the document is ABOUT, not mentions
+          3. Creation recency (+0.5): document created in last 48 hours
              — bootstraps new concepts before they build co-activation history
 
         All boosts are additive to existing scores. Low risk — only raises
-        the ceiling on already-scored genes, never adds new candidates.
+        the ceiling on already-scored documents, never adds new candidates.
         """
         if not gene_scores:
             return
@@ -1968,7 +1968,7 @@ class Genome:
         id_ph = ",".join("?" * len(gene_ids))
         lower_terms = [t.lower() for t in query_terms]
 
-        # Fetch source_id, promoter, epigenetics for all candidates in one query
+        # Fetch source_id, tags, signals for all candidates in one query
         rows = cur.execute(
             f"SELECT gene_id, source_id, promoter, epigenetics "
             f"FROM genes WHERE gene_id IN ({id_ph})",
@@ -1984,7 +1984,7 @@ class Genome:
             if source and any(t in source for t in lower_terms):
                 boost += 2.0
 
-            # 2. Domain primacy: query term in top-3 promoter domains
+            # 2. Domain primacy: query term in top-3 tags domains
             try:
                 prom = parse_promoter(r["promoter"]) if r["promoter"] else None
                 if prom and prom.domains:
@@ -1994,7 +1994,7 @@ class Genome:
             except Exception:
                 pass
 
-            # 3. Creation recency: gene created in last 48h
+            # 3. Creation recency: document created in last 48h
             try:
                 epi = parse_epigenetics(r["epigenetics"]) if r["epigenetics"] else None
                 if epi and epi.created_at > 0:
@@ -2016,7 +2016,7 @@ class Genome:
                         tier_contrib.get(gid, {}).get("authority", 0.0) + boost
                     )
 
-    # ── Core retrieval (Step 2) — hybrid promoter + FTS5 ────────────
+    # ── Core retrieval (Step 2) — hybrid tags + FTS5 ────────────
 
     def _bm25_candidate_set(self, query_terms: list[str], size: int) -> set[str] | None:
         """Return FTS5 BM25 top-N gene_ids, or None if FTS unavailable/empty. Soft-fails to None."""
@@ -2053,23 +2053,23 @@ class Genome:
         read_only: bool = False,
     ) -> List[Gene]:
         """
-        Find genes matching the given promoter signals.
+        Find documents matching the given tags signals.
 
         Multi-tier retrieval:
-            1. Exact promoter tag match (highest confidence)
+            1. Exact tag match (highest confidence)
             2. Prefix tag match — "server" matches "serverconfig" (medium)
-            3. FTS5 content search — searches gene text directly (fallback)
+            3. FTS5 content search — searches document text directly (fallback)
             3.5 SPLADE sparse retrieval
             4. SEMA semantic retrieval + re-ranking
             5. Harmonic co-activation boost (mutual reinforcement)
-            Tiebreaker: access-rate bonus for equal-scored genes
+            Tiebreaker: access-rate bonus for equal-scored documents
 
-        When party_id is provided, Tiers 1-3 exclude genes attributed
-        to OTHER parties (cross-party leakage prevention). Genes with
+        When party_id is provided, Tiers 1-3 exclude documents attributed
+        to OTHER parties (cross-party leakage prevention). Documents with
         NO attribution row (legacy ingests, bridge inbox drops without
         a participant_id) remain retrievable — without this fallback,
-        retrieval on an unattributed legacy genome would collapse to
-        ~0 hits. Attributed-to-this-party genes do NOT get a retrieval
+        retrieval on an unattributed legacy knowledge store would collapse to
+        ~0 hits. Attributed-to-this-party documents do NOT get a retrieval
         bonus here — that is a separate concern handled at a higher
         layer (see roadmap Phase 2c).
 
@@ -2104,7 +2104,7 @@ class Genome:
             _prefilter_bare_clause = f" AND gene_id IN ({ph})"
             _prefilter_params = _prefilter_ids
 
-        # Gene scores: gene_id → float (accumulated across tiers)
+        # Document scores: gene_id → float (accumulated across tiers)
         gene_scores: Dict[str, float] = {}
 
         # Per-tier contribution tracking (parallel to gene_scores).
@@ -2127,7 +2127,7 @@ class Genome:
         # Re-rank/tiebreaker tiers (sema_boost, authority, party_attr,
         # access_rate) stay ADDITIVE on top of the fused score. Per
         # spec §3 rule of thumb: agreement across recall tiers is the
-        # signal RRF expresses; "is this gene authoritative?" is a
+        # signal RRF retrieves; "is this document authoritative?" is a
         # different question that survives unchanged.
         from .fusion import Fuser as _Fuser
         fuser = _Fuser(k=self._rrf_k)
@@ -2135,7 +2135,7 @@ class Genome:
         # ── Stage 3: re-rank-class additive collector ──────────────
         # The post-fusion additives — sema_boost (gate-only re-rank
         # confidence boost), authority_*, party_attr, access_rate —
-        # capture the "is this gene authoritative?" signal. Per spec
+        # capture the "is this document authoritative?" signal. Per spec
         # §3 these stay ADDITIVE on top of the fused score, NOT
         # rank-fused. We dual-write them to gene_scores (additive mode
         # path) and to rerank_additive (RRF mode path) so the sort can
@@ -2143,12 +2143,12 @@ class Genome:
         rerank_additive: Dict[str, float] = {}
 
         # ── party_id filter clause (reused across Tiers 1-3) ──────
-        # Semantics: when party_id is provided, return genes that are
+        # Semantics: when party_id is provided, return documents that are
         # EITHER attributed to this party OR have no attribution at all
-        # (legacy genes ingested before the registry shipped). This keeps
+        # (legacy documents ingested before the registry shipped). This keeps
         # retrieval useful on the predominantly-unattributed current
-        # genome — a strict IN(...) clause would collapse to ~0 hits.
-        # Cross-party leakage is still prevented: genes attributed to a
+        # knowledge store — a strict IN(...) clause would collapse to ~0 hits.
+        # Cross-party leakage is still prevented: documents attributed to a
         # DIFFERENT party are excluded via the NOT IN sub-select.
         _party_filter = ""
         _party_params: list = []
@@ -2172,20 +2172,20 @@ class Genome:
         # ── Tier 0: path-key compound index (IDF-weighted) ─────────
         # Highest-confidence retrieval signal — a hit means the query
         # mentions both a path-token (project/module) AND a kv_key that
-        # an indexed gene was tagged with at ingest. This catches
+        # an indexed document was tagged with at ingest. This catches
         # template queries like "what is the value of helix_port?" where
         # FTS5/SPLADE both miss because the query lacks domain context.
         #
         # CRITICAL: bonus is INVERSELY proportional to the (path_token,
         # kv_key) pair cardinality. Rare pairs like (helix, port) — only
-        # 2-3 genes share — each get a strong boost (~+5). Common pairs
-        # like (steamapps, url) — 3000+ genes share — get ~zero boost,
+        # 2-3 documents share — each get a strong boost (~+5). Common pairs
+        # like (steamapps, url) — 3000+ documents share — get ~zero boost,
         # so they don't drown the signal. This is the standard IDF
         # idea applied to compound retrieval keys.
         #
         # Without IDF weighting, a query containing common terms like
         # "url" or "value" would dump +8 on thousands of false-positive
-        # genes, regressing retrieval (empirically observed 12% -> 6%
+        # documents, regressing retrieval (empirically observed 12% -> 6%
         # on the 2026-04-12 KV-harvest bench before this fix).
         q_lower_tokens = [t.lower() for t in query_terms if t]
         if q_lower_tokens:
@@ -2212,7 +2212,7 @@ class Genome:
                     pki_params = pki_params + [party_id]
                 pki_hits = cur.execute(pki_sql, pki_params).fetchall()
 
-                # Bucket: pair_count[(pt, kk)] = number of distinct genes
+                # Bucket: pair_count[(pt, kk)] = number of distinct documents
                 # gene_pairs[gene_id] = list of (pt, kk) pairs that hit
                 pair_count: Dict[tuple, int] = {}
                 gene_pairs: Dict[str, list] = {}
@@ -2223,16 +2223,16 @@ class Genome:
                     pair_count[(pt, kk)] = pair_count.get((pt, kk), 0) + 1
                     gene_pairs.setdefault(gid, []).append((pt, kk))
 
-                # Score each gene by sum of inverse-cardinality boosts
+                # Score each document by sum of inverse-cardinality boosts
                 # over all (pt, kk) pairs it matched on.
                 #
                 # Boost formula:
                 #   per-pair bonus = PKI_BASE / max(pair_card, PKI_FLOOR)
                 # where:
                 #   PKI_BASE  = 10.0  (so a unique pair lands at +10)
-                #   PKI_FLOOR =  2.0  (caps top-end at +5 for 2-gene pairs)
-                # A pair with 100 genes contributes only +0.1 per gene —
-                # essentially noise. A pair with 5 genes contributes +2.
+                #   PKI_FLOOR =  2.0  (caps top-end at +5 for 2-document pairs)
+                # A pair with 100 documents contributes only +0.1 per document —
+                # essentially noise. A pair with 5 documents contributes +2.
                 PKI_BASE = 10.0
                 PKI_FLOOR = 2.0
                 # Hard-skip pairs with cardinality > this — they're noise
@@ -2246,7 +2246,7 @@ class Genome:
                             continue  # too common, skip
                         bonus += PKI_BASE / max(card, PKI_FLOOR)
                     if bonus > 0:
-                        # Cap total bonus to keep one runaway gene from
+                        # Cap total bonus to keep one runaway document from
                         # saturating; 12.0 is roughly 3x the strongest
                         # single signal.
                         capped = min(bonus, 12.0)
@@ -2256,7 +2256,7 @@ class Genome:
                 # Stage 3: feed PKI ranks into the Fuser regardless of
                 # fusion_mode — the Fuser is queried only when "rrf",
                 # so additive mode pays a tiny add_tier cost (~1µs per
-                # 100 genes) but stays byte-identical at the output.
+                # 100 documents) but stays byte-identical at the output.
                 fuser.add_tier("pki", _pki_ranked, weight=self._pki_weight)
             except Exception as exc:
                 log.debug("path_key_index tier skipped: %s", exc)
@@ -2272,7 +2272,7 @@ class Genome:
         # ── Tier 0.5: filename-anchor boost (flag-gated spike) ─────
         # Dewey bench 2026-04-14: filename alone drives retrieval lift;
         # project/module over-constrain once filename pins location.
-        # Boosts genes whose filename_stem matches a query term.
+        # Boosts documents whose filename_stem matches a query term.
         # Flag-off is a no-op. See helix_context/filename_anchor.py.
         if getattr(self, "_filename_anchor_enabled", False):
             try:
@@ -2307,7 +2307,7 @@ class Genome:
             except Exception as exc:
                 log.debug("filename_anchor tier skipped: %s", exc)
 
-        # ── Tier 1: exact promoter tag match (weight 3.0) ──────────
+        # ── Tier 1: exact tag match (weight 3.0) ──────────
         _tag_exact_t0 = time.monotonic()
         placeholders = ",".join("?" * len(query_terms))
         rows = cur.execute(
@@ -2400,7 +2400,7 @@ class Genome:
                         (fts_query, *_prefilter_params, limit * 2),
                     ).fetchall()
 
-                    # Filter by chromatin state (batch lookup)
+                    # Filter by lifecycle tier (batch lookup)
                     if fts_rows:
                         fts_ids = [r["gene_id"] for r in fts_rows]
                         fts_ranks = {r["gene_id"]: r["rank"] for r in fts_rows}
@@ -2463,7 +2463,7 @@ class Genome:
                         gene_scores[gid] = gene_scores.get(gid, 0) + splade_score
                         tier_contrib.setdefault(gid, {})["splade"] = splade_score
                         # Stage 3: feed Fuser with the RAW SPLADE score
-                        # (uncapped) so saturated genes still have a
+                        # (uncapped) so saturated documents still have a
                         # well-defined rank.
                         _splade_ranked.append((gid, float(score)))
                     fuser.add_tier("splade", _splade_ranked, weight=self._splade_weight)
@@ -2547,7 +2547,7 @@ class Genome:
                                 q = q / q_norm
                                 # Batch cosine similarity: (N,20) @ (20,) → (N,)
                                 sims = cache["matrix"] @ q
-                                # Mask already-scored genes
+                                # Mask already-scored documents
                                 existing = set(gene_scores.keys())
                                 fill_count = limit - len(gene_scores)
                                 # Get top-k indices
@@ -2615,7 +2615,7 @@ class Genome:
                 # raw pre-RRF scores", spec §6).
                 for gid, cosine in dense_hits:
                     tier_contrib.setdefault(gid, {})["dense"] = float(cosine)
-                    # Ensure dense-only genes appear in gene_scores so
+                    # Ensure dense-only documents appear in gene_scores so
                     # they survive the eligible_ids gate at the sort.
                     # Use a tiny epsilon so we don't perturb additive
                     # ranking (which is unreachable in this branch
@@ -2637,17 +2637,17 @@ class Genome:
 
         # ── Lexical anchoring: IDF-weighted rare-term boost ────────
         # Weight query terms by inverse document frequency — rare terms
-        # are stronger discriminators. A gene matching "conductor" (3 genes)
-        # is much more likely the answer than one matching "biged" (200+ genes).
-        # Use the real (memoized) genome size, NOT len(gene_scores) — the
+        # are stronger discriminators. A document matching "conductor" (3 documents)
+        # is much more likely the answer than one matching "biged" (200+ documents).
+        # Use the real (memoized) knowledge store size, NOT len(gene_scores) — the
         # latter is the scored-candidate pool and collapses IDF to ~0 on
-        # large genomes, nullifying the boost.
+        # large knowledge stores, nullifying the boost.
         total_genes_est = max(self.corpus_size(), len(gene_scores), 100)
         import math as _math
         # Stage 3: lex_anchor accumulates over multiple query terms.
-        # We capture per-gene total contribution after the loop and
+        # We capture per-document total contribution after the loop and
         # rank-feed it as one tier (a single tier name covering all
-        # IDF-anchored genes — same semantics as the existing
+        # IDF-anchored documents — same semantics as the existing
         # tier_contrib["lex_anchor"] aggregation).
         for term in query_terms:
             term_freq = cur.execute(
@@ -2676,7 +2676,7 @@ class Genome:
                     tc = tier_contrib.setdefault(gid, {})
                     tc["lex_anchor"] = tc.get("lex_anchor", 0.0) + boost
         # Stage 3: feed accumulated lex_anchor totals into the Fuser.
-        # Aggregated total IS the per-gene strength of the IDF signal,
+        # Aggregated total IS the per-document strength of the IDF signal,
         # so ranking by it is the right thing.
         _lex_anchor_ranked: List[Tuple[str, float]] = [
             (gid, contribs["lex_anchor"])
@@ -2697,7 +2697,7 @@ class Genome:
         )
 
         # ── Tier 5: harmonic co-activation boost ──────────────────
-        # For each candidate, add a score bonus from genes that are
+        # For each candidate, add a score bonus from documents that are
         # harmonically linked to OTHER candidates (mutual reinforcement).
         # Weight: 1.0 per link, capped at 3.0 total bonus.
         if use_harmonic and gene_scores:
@@ -2765,8 +2765,8 @@ class Genome:
                 log.debug("SR Tier 5.5 failed", exc_info=True)
 
         # ── Tier 5b: entity graph co-occurrence boost ─────────────────────
-        # Genes sharing entity nodes with query entities get a score boost.
-        # Additive on top of Tier 5 harmonic; capped at +2.0 per gene.
+        # Documents sharing entity nodes with query entities get a score boost.
+        # Additive on top of Tier 5 harmonic; capped at +2.0 per document.
         # entity_graph schema: entity (TEXT), gene_id (TEXT) — no weight col.
         _eg_enabled = self._entity_graph_retrieval_enabled if use_entity_graph is None else bool(use_entity_graph)
         if _eg_enabled and entities and gene_scores:
@@ -2816,7 +2816,7 @@ class Genome:
 
         # ── Access-rate tiebreaker ────────────────────────────────
         # Small bonus: score += 0.05 * min(rate * 3600, 5). Max 0.25.
-        # Only a tiebreaker — breaks ties for genes with equal scores.
+        # Only a tiebreaker — breaks ties for documents with equal scores.
         if gene_scores:
             try:
                 rate_ids = list(gene_scores.keys())
@@ -2842,7 +2842,7 @@ class Genome:
             except Exception:
                 log.debug("Access-rate tiebreaker failed", exc_info=True)
 
-        # Layered fingerprints: inject parent-gene aggregate scores when
+        # Layered fingerprints: inject parent-document aggregate scores when
         # ≥ 2 chunks of the same file surface in candidates. Opt-in via
         # HELIX_LAYERED_FINGERPRINTS=1. See docs/FUTURE/LAYERED_FINGERPRINTS.md.
         if os.environ.get("HELIX_LAYERED_FINGERPRINTS", "0") == "1":
@@ -2851,14 +2851,14 @@ class Genome:
             except Exception:
                 log.warning("parent fingerprint aggregation failed", exc_info=True)
 
-        # Expose scores + per-tier breakdown for score-gated expression in
+        # Expose scores + per-tier breakdown for score-gated retrieval in
         # context_manager + the activation profiler bench.
         with self._last_query_scores_lock:
             self.last_query_scores = dict(gene_scores)
         self.last_tier_contributions = tier_contrib
 
         # Emit per-tier contribution telemetry (OTel — no-op when off).
-        # One histogram observation per (tier, gene) pair; a single
+        # One histogram observation per (tier, document) pair; a single
         # counter tick per tier that fired at all, labelled by tier
         # name. Makes the bench_skill_activation heatmap live-observable
         # instead of a one-shot static file.
@@ -2880,10 +2880,10 @@ class Genome:
             log.warning("tier telemetry emit failed", exc_info=True)
 
         # ── BM25 shortlist post-filter (research review 2026-04-22) ──
-        # When enabled, restrict the final ranking to genes that cleared a
+        # When enabled, restrict the final ranking to documents that cleared a
         # BM25 top-N pass. All tiers still accumulated scores above; this
         # drops candidates BM25 would never surface before the sort. Tests
-        # the hypothesis that tier-based scoring on BM25-invisible genes
+        # the hypothesis that tier-based scoring on BM25-invisible documents
         # is pulling wrong answers into the top-k. Post-filter by design —
         # isolates the ranking-set question from candidate-generation
         # latency work. Soft-fails to the unfiltered ranking on any error.
@@ -2929,13 +2929,13 @@ class Genome:
         #   accumulated gene_scores.
         # rrf: take fused scores from the Fuser, add re-rank-class
         #   additives (sema_boost, authority, party_attr, access_rate)
-        #   on top, restrict to genes that survived the bm25 shortlist
+        #   on top, restrict to documents that survived the bm25 shortlist
         #   filter (= present in gene_scores), then sort.
         if self._fusion_mode == "rrf":
             fused_scores = fuser.all_scores()
             # The bm25_shortlist filter mutated gene_scores above; honor
-            # that filter under RRF too — only genes still in
-            # gene_scores are eligible. Genes dense-recall surfaced but
+            # that filter under RRF too — only documents still in
+            # gene_scores are eligible. Documents dense-recall surfaced but
             # bm25_shortlist dropped should not resurface in the fused
             # output.
             eligible_ids = set(gene_scores.keys())
@@ -2969,7 +2969,7 @@ class Genome:
             ranked_ids = sorted(gene_scores, key=gene_scores.get, reverse=True)[:limit]
 
         # Walking tie-break (opt-in via HELIX_WALKING_TIEBREAK=1).
-        # When adjacent top-k genes have bitwise-identical fused scores,
+        # When adjacent top-k documents have bitwise-identical fused scores,
         # re-order them using associative-graph signals (neighborhood
         # size, direct edge weight, NLI entailment, freshness) instead
         # of dict insertion order. Overall score ordering is preserved —
@@ -2988,9 +2988,9 @@ class Genome:
         # ── Sprint 4: Hebbian evidence accumulation on seeded edges ───
         # Fire-and-forget update to harmonic_links so seeded / co_retrieved
         # rows accrue co_count (both endpoints in top-k) or miss_count
-        # (one endpoint expressed, other in candidate pool but below the
+        # (one endpoint retrieved, other in candidate pool but below the
         # cut — weighted by dense-rank distance to cutoff). Candidacy
-        # gate: genes outside gene_scores are ignored (topical-orthogonal
+        # gate: documents outside gene_scores are ignored (topical-orthogonal
         # queries should not punish the edge). Soft-fails — logger
         # hiccups never perturb the retrieval result.
         if self._seeded_edges_enabled and ranked_ids and not read_only:
@@ -3002,7 +3002,7 @@ class Genome:
             except Exception:
                 log.debug("Hebbian edge update failed", exc_info=True)
 
-        # Batch fetch gene rows
+        # Batch fetch document rows
         id_placeholders = ",".join("?" * len(ranked_ids))
         rows = cur.execute(
             f"SELECT * FROM genes WHERE gene_id IN ({id_placeholders})",
@@ -3031,7 +3031,7 @@ class Genome:
     def _get_dense_codec(self):
         """Lazy-load the BGE-M3 codec on first use.
 
-        Stage 2 (2026-05-08): Genome wires _dense_embedding_dim from config,
+        Stage 2 (2026-05-08): KnowledgeStore wires _dense_embedding_dim from config,
         which now defaults to 1024 (full BGE-M3 Matryoshka). The codec itself
         warns if the dim is not a sanctioned breakpoint.
         """
@@ -3074,10 +3074,10 @@ class Genome:
             self._dense_matrix_ids = None
 
     def _ensure_dense_matrix(self):
-        """Build/load the hot-tier (chromatin < 2) dense matrix.
+        """Build/load the hot-tier (lifecycle tier < 2) dense matrix.
 
         Returns ``(matrix, gene_ids)`` or ``(None, None)`` if the v2 column is
-        empty. Hot-tier only — heterochromatin (chromatin=2) is reachable via
+        empty. Hot-tier only — heterochromatin (lifecycle tier=2) is reachable via
         ``query_cold_tier()``. Stage 7 surfaces cold matches as MissBlocks.
 
         Raw BLOB layout: little-endian fp32, ``dim * 4`` bytes per row,
@@ -3141,7 +3141,7 @@ class Genome:
         """Stage 2 first-class dense recall.
 
         Returns ``[(gene_id, cosine), ...]`` sorted descending. Hot-tier only.
-        Does NOT load gene bodies — that's deferred to ``query_genes_ann`` so
+        Does NOT load document bodies — that's deferred to ``query_genes_ann`` so
         we body-fetch once after the lex+dense union.
 
         Falls back to ``[]`` (with one-time warn) if v2 coverage is empty —
@@ -3258,7 +3258,7 @@ class Genome:
             query, k=pool_size, party_id=party_id, read_only=read_only,
         )
 
-        # ── 3. Union by gene_id. Lex genes get sim=threshold-0.01 unless
+        # ── 3. Union by gene_id. Lex documents get sim=threshold-0.01 unless
         # they also appeared in the dense pool. Dense-only ids get loaded
         # via _load_genes_by_ids so we body-fetch once.
         codec = self._get_dense_codec() if dense_hits else None
@@ -3282,7 +3282,7 @@ class Genome:
         missing_ids = [gid for gid in ordered_ids if gid not in lex_by_id]
         loaded = self._load_genes_by_ids(missing_ids) if missing_ids else {}
 
-        # ── 4. Resolve final Gene objects in score order. ────────────
+        # ── 4. Resolve final Document objects in score order. ────────────
         scored: list[tuple[Gene, float]] = []
         for gid in ordered_ids:
             gene = lex_by_id.get(gid) or loaded.get(gid)
@@ -3301,7 +3301,7 @@ class Genome:
         return result[:max_genes]
 
     def _load_genes_by_ids(self, gene_ids: list[str]) -> dict[str, Gene]:
-        """Bulk-load Gene objects by id. Used by query_genes_ann to fetch
+        """Bulk-load Document objects by id. Used by query_genes_ann to fetch
         bodies for dense-only hits exactly once.
         """
         if not gene_ids:
@@ -3319,11 +3319,11 @@ class Genome:
                 log.debug("row_to_gene failed for %s", r["gene_id"], exc_info=True)
         return out
 
-    # ── Entity graph: auto-link genes sharing entities ───────────────
+    # ── Entity graph: auto-link documents sharing entities ───────────────
 
     def _auto_link_by_entity(self, gene_id: str, entities: List[str], cur) -> None:
         """
-        Find genes that share 2+ entities with this gene and create
+        Find documents that share 2+ entities with this document and create
         co-activation links. This builds the knowledge graph incrementally
         at ingestion time without any LLM calls.
         """
@@ -3333,7 +3333,7 @@ class Genome:
         ent_lower = [e.lower() for e in entities[:15]]
         placeholders = ",".join("?" * len(ent_lower))
 
-        # Find genes sharing entities (excluding self)
+        # Find documents sharing entities (excluding self)
         rows = cur.execute(
             f"SELECT gene_id, COUNT(*) as shared "
             f"FROM entity_graph "
@@ -3363,7 +3363,7 @@ class Genome:
         self, gene_ids: List[str], limit: int, cur
     ) -> List[str]:
         """
-        Given retrieved gene IDs, find additional genes that share
+        Given retrieved document IDs, find additional documents that share
         entities with them via 1-hop graph traversal.
         """
         if not gene_ids:
@@ -3371,7 +3371,7 @@ class Genome:
 
         id_ph = ",".join("?" * len(gene_ids))
 
-        # Get entities of retrieved genes
+        # Get entities of retrieved documents
         rows = cur.execute(
             f"SELECT DISTINCT entity FROM entity_graph WHERE gene_id IN ({id_ph})",
             gene_ids,
@@ -3383,7 +3383,7 @@ class Genome:
 
         ent_ph = ",".join("?" * len(entities))
 
-        # Find genes sharing those entities (1-hop), excluding already retrieved
+        # Find documents sharing those entities (1-hop), excluding already retrieved
         neighbor_rows = cur.execute(
             f"SELECT gene_id, COUNT(*) as shared "
             f"FROM entity_graph "
@@ -3454,7 +3454,7 @@ class Genome:
         extra = [self._row_to_gene(r) for r in rows]
         return genes + extra
 
-    # ── Row → Gene ──────────────────────────────────────────────────
+    # ── Row → Document ──────────────────────────────────────────────────
 
     def _row_to_gene(self, row: sqlite3.Row) -> Gene:
         def _opt(key: str, default=None):
@@ -3487,7 +3487,7 @@ class Genome:
         return Gene(
             gene_id=row["gene_id"],
             content=row["content"] or "",
-            # Heterochromatin-compressed genes have complement=NULL after
+            # Heterochromatin-compressed documents have complement=NULL after
             # compress_to_heterochromatin(). Fall back to "" for Pydantic.
             complement=row["complement"] or "",
             codons=json_loads(row["codons"]) if row["codons"] else [],
@@ -3511,7 +3511,7 @@ class Genome:
             key_values=key_values,
         )
 
-    # ── Touch (update epigenetics on access) ────────────────────────
+    # ── Touch (update signals on access) ────────────────────────
 
     def touch_genes(self, gene_ids: List[str]) -> None:
         if not gene_ids:
@@ -3520,7 +3520,7 @@ class Genome:
         cur = self.conn.cursor()
         now = time.time()
 
-        # Batch fetch all epigenetics in one query
+        # Batch fetch all signals in one query
         placeholders = ",".join("?" * len(gene_ids))
         rows = cur.execute(
             f"SELECT gene_id, epigenetics FROM genes WHERE gene_id IN ({placeholders})",
@@ -3528,7 +3528,7 @@ class Genome:
         ).fetchall()
 
         # Individual UPDATEs — safe against column-swap corruption
-        # (CASE WHEN batch was causing epigenetics JSON to land in chromatin)
+        # (CASE WHEN batch was causing signals JSON to land in lifecycle tier)
         for row in rows:
             if not row["epigenetics"]:
                 continue
@@ -3554,20 +3554,20 @@ class Genome:
     # ── Update co-activation links (mutual) ─────────────────────────
 
     def link_coactivated(self, gene_ids: List[str]) -> None:
-        """Create mutual co-activation links between all expressed genes."""
+        """Create mutual co-activation links between all retrieved documents."""
         if len(gene_ids) < 2:
             return
 
         cur = self.conn.cursor()
 
-        # Batch fetch all epigenetics in one query
+        # Batch fetch all signals in one query
         placeholders = ",".join("?" * len(gene_ids))
         rows = cur.execute(
             f"SELECT gene_id, epigenetics FROM genes WHERE gene_id IN ({placeholders})",
             gene_ids,
         ).fetchall()
 
-        # Build individual updates (epigenetics only, preserve chromatin)
+        # Build individual updates (signals only, preserve lifecycle tier)
         for row in rows:
             if not row["epigenetics"]:
                 continue
@@ -3594,7 +3594,7 @@ class Genome:
 
         As of Sprint 4, edges carry provenance and Hebbian evidence counters:
           source            - 'seeded' | 'co_retrieved' | 'cwola_validated'
-          co_count          - # times both endpoints co-expressed in a query
+          co_count          - # times both endpoints co-retrieved in a query
           miss_count        - fractional (dense-rank weighted) miss events
           created_at        - epoch seconds
         co_retrieved and cwola_validated promotion happens in update_edge_evidence().
@@ -3640,13 +3640,13 @@ class Genome:
             )
         self.conn.commit()
 
-    # ── Typed gene relations (NLI) ───────────────────────────────────
+    # ── Typed document relations (NLI) ───────────────────────────────────
 
     def store_relation(
         self, gene_id_a: str, gene_id_b: str,
         relation: int, confidence: float,
     ) -> None:
-        """Store a typed logical relation between two genes."""
+        """Store a typed logical relation between two documents."""
         import time as _time
         self.conn.execute(
             "INSERT OR REPLACE INTO gene_relations "
@@ -3671,7 +3671,7 @@ class Genome:
         self.conn.commit()
 
     def get_relations(self, gene_id: str) -> list:
-        """Get all typed relations for a gene. Returns [(other_id, relation, confidence)]."""
+        """Get all typed relations for a document. Returns [(other_id, relation, confidence)]."""
         cur = self.conn.cursor()
         rows = cur.execute(
             "SELECT gene_id_b AS other, relation, confidence "
@@ -3690,7 +3690,7 @@ class Genome:
         gene_scores: Dict[str, float],
         tier_contrib: Dict[str, Dict[str, float]],
     ) -> None:
-        """Inject parent-gene aggregate scores into gene_scores + tier_contrib
+        """Inject parent-document aggregate scores into gene_scores + tier_contrib
         when ≥ 2 chunks of the same file hit current candidates.
 
         Mutates the two dicts in place. Called only when
@@ -3762,10 +3762,10 @@ class Genome:
     # ── Layered fingerprints: parent-pull reassembly ──────────────────
 
     def reassemble(self, parent_gene_id: str, separator: str = "\n\n") -> dict:
-        """Reassemble a file-level parent gene into its full content.
+        """Reassemble a file-level parent document into its full content.
 
         Reads the parent's ``codons`` field (ordered list of child gene_ids),
-        fetches each child's content from the genes table, sorts by
+        fetches each child's content from the documents table, sorts by
         ``promoter.sequence_index`` for deterministic ordering, and joins
         with the given separator.
 
@@ -3781,7 +3781,7 @@ class Genome:
             }
 
         Raises:
-            ValueError: gene_id does not exist, or is not a parent gene.
+            ValueError: gene_id does not exist, or is not a parent document.
         """
         from .schemas import StructuralRelation as _SR  # local import, cycle-safe
 
@@ -3855,29 +3855,29 @@ class Genome:
             "missing_children": missing,
         }
 
-    # ── Compaction (decay stale genes) ──────────────────────────────
+    # ── Compaction (decay stale documents) ──────────────────────────────
 
     def compact(self) -> int:
         """
-        Check genes for source file changes. No time-based decay.
+        Check documents for source file changes. No time-based decay.
 
-        Genes are NEVER removed by time alone. Knowledge doesn't expire.
-        Only two things change a gene's state:
+        Documents are NEVER removed by time alone. Knowledge doesn't expire.
+        Only two things change a document's state:
 
         1. SOURCE CHANGED: if gene.source_id points to a file whose mtime
            is newer than last_accessed, decay_score drops to 0.5 (AGING)
-           and chromatin moves to EUCHROMATIN. The gene is still queryable
+           and lifecycle tier moves to EUCHROMATIN. The document is still queryable
            but the system knows it's outdated. Re-ingesting resets it.
 
-        2. EXPLICIT SPLICE: the ribosome's splice operation cuts introns
-           per-query (irrelevant codons). This is the RNA splicing analog —
-           relevance filtering happens at expression time, not storage time.
+        2. EXPLICIT SPLICE: the compressor's splice operation cuts introns
+           per-query (irrelevant fragments). This is the RNA splicing analog —
+           relevance filtering happens at retrieval time, not storage time.
 
-        Time since last access is used ONLY for expression priority
-        (recently accessed genes rank higher in query results), never
+        Time since last access is used ONLY for retrieval priority
+        (recently accessed documents rank higher in query results), never
         for deletion or decay.
 
-        Returns the number of genes marked as source-changed.
+        Returns the number of documents marked as source-changed.
         """
         cur = self.conn.cursor()
         change_detected = 0
@@ -3899,7 +3899,7 @@ class Genome:
             epi = parse_epigenetics(row["epigenetics"], use_cache=False)
 
             if file_mtime > epi.last_accessed:
-                # Source changed — gene is outdated but NOT removed
+                # Source changed — document is outdated but NOT removed
                 epi.decay_score = min(epi.decay_score, 0.5)
                 new_chromatin = int(ChromatinState.EUCHROMATIN)
                 change_detected += 1
@@ -3968,7 +3968,7 @@ class Genome:
             },
         }
 
-    # ── Get single gene ─────────────────────────────────────────────
+    # ── Get single document ─────────────────────────────────────────────
 
     def get_gene(self, gene_id: str) -> Optional[Gene]:
         row = self.conn.execute(
@@ -4052,10 +4052,10 @@ class Genome:
     # ── FTS5 index rebuild ────────────────────────────────────────────
 
     def rebuild_fts(self) -> int:
-        """Rebuild the FTS5 index from all genes. Returns count indexed.
+        """Rebuild the FTS5 index from all documents. Returns count indexed.
 
-        Includes source_id + promoter tags in the searchable content so
-        tag-based knowledge survives rebuilds. At 100K+ genes this takes
+        Includes source_id + tags in the searchable content so
+        tag-based knowledge survives rebuilds. At 100K+ documents this takes
         several seconds — prefer incremental sync for normal operation.
         """
         if not self._fts_available:
@@ -4123,7 +4123,7 @@ class Genome:
             TRUNCATE — like FULL, then truncates WAL file to zero bytes
 
         Call periodically during bulk ingest to prevent data loss on crash.
-        Recommended cadence: PASSIVE every 50 genes, TRUNCATE every 500.
+        Recommended cadence: PASSIVE every 50 documents, TRUNCATE every 500.
         """
         mode = mode.upper()
         if mode not in ("PASSIVE", "FULL", "RESTART", "TRUNCATE"):
@@ -4163,10 +4163,10 @@ class Genome:
             log.warning("WAL checkpoint (%s) failed", mode, exc_info=True)
 
     def emit_wal_health_gauges(self) -> None:
-        """Emit helix_genome_wal_size_bytes gauge for the current genome WAL.
+        """Emit helix_genome_wal_size_bytes gauge for the current knowledge store WAL.
 
         Intended to be called from a background task every ~30 s. No-op for
-        in-memory genomes and when OTel is disabled (noop instruments drop the
+        in-memory knowledge stores and when OTel is disabled (noop instruments drop the
         call silently). Never raises — failures are logged at DEBUG level.
         """
         if self.path == ":memory:":
@@ -4181,11 +4181,11 @@ class Genome:
 
     def vacuum(self) -> Dict[str, int]:
         """
-        Reclaim free pages from the genome database.
+        Reclaim free pages from the knowledge store database.
 
         After large-scale operations (thinning, compaction, source-change
         repair) SQLite holds deleted pages until a VACUUM releases them.
-        For a heavily-thinned genome this can be 30-50% of the file size.
+        For a heavily-thinned knowledge store this can be 30-50% of the file size.
 
         This method:
           1. Checkpoints the WAL so all data is in the main DB file
@@ -4241,7 +4241,7 @@ class Genome:
             "reclaimed_pct": round(reclaimed / max(before, 1) * 100, 1),
         }
 
-    # ── Cold-storage compression (ΣĒMA-based chromatin tiers) ──────
+    # ── Cold-storage compression (ΣĒMA-based lifecycle tier tiers) ──────
 
     TIER_OPEN = 0           # Full fidelity — hot retrieval pool
     TIER_EUCHROMATIN = 1    # Summary + ΣĒMA — warm, reduced storage
@@ -4249,21 +4249,21 @@ class Genome:
 
     def compute_density_score(self, gene: Gene) -> float:
         """
-        Information density score for a gene. Higher = more valuable.
+        Information density score for a document. Higher = more valuable.
 
         Combines:
-          - Entity/domain tag count (promoter richness)
+          - Entity/domain tag count (tags richness)
           - Key-value extraction count (factual density)
           - Content length efficiency (short + rich > long + sparse)
-          - Access count (usage signal from epigenetics)
+          - Access count (usage signal from signals)
 
         Uses a content-length floor (100 chars) in the denominator to
-        prevent tiny-content genes from producing nonsensical tag-density
+        prevent tiny-content documents from producing nonsensical tag-density
         scores of 20+. See _DENSITY_CONTENT_LENGTH_FLOOR above.
         """
         tag_count = len(gene.promoter.domains) + len(gene.promoter.entities)
         kv_count = len(gene.key_values) if gene.key_values else 0
-        # Floor the content length so a 30-char gene with 5 tags doesn't
+        # Floor the content length so a 30-char document with 5 tags doesn't
         # produce tag_density = 166 and break all downstream thresholds
         effective_len = max(len(gene.content), _DENSITY_CONTENT_LENGTH_FLOOR)
 
@@ -4283,7 +4283,7 @@ class Genome:
 
     def apply_density_gate(self, gene: Gene) -> tuple[ChromatinState, str]:
         """
-        Decide the chromatin state for a gene at ingest time.
+        Decide the lifecycle tier for a document at ingest time.
 
         Returns (chromatin_state, reason) — reason is one of:
             "deny_list"           : source path matches structural deny list
@@ -4291,28 +4291,28 @@ class Genome:
             "low_score_euchro"    : score below euchromatin threshold
             "access_rate_override": active in the windowed-rate sense
                                     (Phase 1 slice 2 — preferred when the
-                                    gene's recent_accesses buffer has data)
+                                    document's recent_accesses buffer has data)
             "access_override"     : accessed >= _DENSITY_ACCESS_OVERRIDE
                                     times monotonically (legacy fallback for
-                                    genes whose rate buffer is empty)
+                                    documents whose rate buffer is empty)
             "open"                : high score or unknown source, keep OPEN
 
         Never raises. Never touches the database. Pure decision function.
 
         The gate has three stages:
           1. Path deny list (fast-reject for structural noise)
-          2. Access override (never demote frequently-used genes)
+          2. Access override (never demote frequently-used documents)
              2a. Windowed access-rate (preferred — sharper signal)
              2b. Monotonic access-count (legacy fallback for empty buffers)
           3. Score-based demotion (tag + KV density with recalibrated thresholds)
 
-        Stages 2a and 2b run BEFORE the score check so that a gene
+        Stages 2a and 2b run BEFORE the score check so that a document
         that's been touched multiple times can't be killed by a batch
         compact_genome sweep just because its static content is sparse.
 
         Stage 2a is a strict improvement on Stage 2b: it distinguishes
         "actively used right now" from "popular at some point in the
-        past." Stage 2b remains as the fallback because all genes that
+        past." Stage 2b remains as the fallback because all documents that
         pre-date the slice 1 schema change have empty recent_accesses
         buffers and need the monotonic counter to remain a valid signal
         until they're touched again under the slice 2 wiring.
@@ -4343,9 +4343,9 @@ class Genome:
 
     def compress_to_euchromatin(self, gene_id: str) -> bool:
         """
-        Compress a gene to EUCHROMATIN tier: drop raw content, keep summary.
+        Compress a document to EUCHROMATIN tier: drop raw content, keep summary.
 
-        Keeps: complement, codons, promoter, epigenetics, embedding, key_values
+        Keeps: complement, fragments, tags, signals, embedding, key_values
         Drops: content (replaced with pointer to source_id for unwinding)
         """
         cur = self.conn.cursor()
@@ -4366,32 +4366,32 @@ class Genome:
 
     def compress_to_heterochromatin(self, gene_id: str) -> bool:
         """
-        Move a gene to HETEROCHROMATIN tier (cold storage).
+        Move a document to HETEROCHROMATIN tier (cold storage).
 
         As of 2026-04-10 (C.1 of B→C), this is **non-destructive**. The
         function only flips the ``chromatin`` and ``compression_tier``
         flags — it does NOT drop ``content``, ``complement``, ``codons``,
         SPLADE terms, or FTS5 index entries.
 
-        Rationale: the chromatin flag + ``WHERE chromatin < HETEROCHROMATIN``
+        Rationale: the lifecycle tier flag + ``WHERE chromatin < HETEROCHROMATIN``
         filter on all hot-tier retrieval paths already excludes demoted
-        genes from normal ``/context`` queries. Destroying the underlying
+        documents from normal ``/context`` queries. Destroying the underlying
         content eliminated any possibility of cold-tier retrieval (via
         ΣĒMA cosine similarity on the retained embedding) actually
         returning useful data — you'd match the embedding but have
         nothing to show.
 
         With content preserved, the cold-tier retrieval path added in C.2
-        can reactivate demoted genes on-demand for queries that specifically
+        can reactivate demoted documents on-demand for queries that specifically
         need them. The storage cost is modest — SPLADE terms and FTS5
-        index entries are small per-gene — and the optional nature of
+        index entries are small per-document — and the optional nature of
         cold-tier retrieval means hot queries are unaffected.
 
         Callers who explicitly want to reclaim disk space on a known-dead
-        gene can call ``delete_gene()`` instead. Heterochromatin is now
+        document can call ``delete_gene()`` instead. Heterochromatin is now
         strictly a **tier flag**, not a destructive compression.
 
-        Keeps: everything (content, complement, codons, SPLADE, FTS5)
+        Keeps: everything (content, complement, fragments, SPLADE, FTS5)
         Flips: ``chromatin = 2``, ``compression_tier = 2``
         """
         cur = self.conn.cursor()
@@ -4408,7 +4408,7 @@ class Genome:
             (gene_id,),
         )
         self.conn.commit()
-        # Gene moved hot → cold — both tier caches are now stale
+        # Document moved hot → cold — both tier caches are now stale
         if self._sema_cache is not None:
             self._sema_cache = None
         if self._cold_sema_cache is not None:
@@ -4421,24 +4421,24 @@ class Genome:
     def compact_genome(self, dry_run: bool = False) -> Dict:
         """
         Run a compaction sweep: apply the density gate to every currently-OPEN
-        gene and demote those that fail it.
+        document and demote those that fail it.
 
-        Shares gate logic with ingest-time `apply_density_gate()`, so a gene
+        Shares gate logic with ingest-time `apply_density_gate()`, so a document
         that would be demoted by a fresh ingest will also be demoted by a
         retroactive sweep. The three stages are the same:
           1. Structural deny list (Steam, build artifacts, lockfiles, etc.)
-          2. Access-count override (access_count >= 5 keeps gene OPEN)
+          2. Access-count override (access_count >= 5 keeps document OPEN)
           3. Score-based thresholds (< 0.5 hetero, < 1.0 euchro, else open)
 
-        Only operates on genes currently at compression_tier = 0 (OPEN).
-        Already-demoted genes are left alone.
+        Only operates on documents currently at compression_tier = 0 (OPEN).
+        Already-demoted documents are left alone.
 
         When ``dry_run=True``, returns the same stats without writing to
         the DB. Useful for previewing the impact before running the sweep
-        against a live genome.
+        against a live knowledge store.
 
         Returns a dict with:
-            scanned               : number of OPEN genes examined
+            scanned               : number of OPEN documents examined
             to_heterochromatin    : count that would go to HETEROCHROMATIN
             to_euchromatin        : count that would go to EUCHROMATIN
             kept_open             : count that would stay OPEN
@@ -4474,17 +4474,17 @@ class Genome:
                 stats["kept_open"] += 1
                 continue
 
-            # Deny-listed genes ALWAYS demote — with or without embedding.
+            # Deny-listed documents ALWAYS demote — with or without embedding.
             # The whole point of the deny list is "this is structural
             # noise we never want to retrieve again." compress_to_heterochromatin
-            # only needs source_id (it strips content, complement, codons,
+            # only needs source_id (it strips content, complement, fragments,
             # SPLADE, and FTS). The pre-existing no-embedding guard below
-            # was a safety for score-based demotions, where a gene might
+            # was a safety for score-based demotions, where a document might
             # later turn out to be useful and we want the ΣĒMA vector
             # available for reactivation. That reasoning doesn't apply
             # to structural deny-list hits. Previously this guard cost
-            # us ~40% of expected demotions on the 2026-04-10 genome
-            # (3358 genes with no embeddings, mostly from pre-ΣĒMA
+            # us ~40% of expected demotions on the 2026-04-10 knowledge store
+            # (3358 documents with no embeddings, mostly from pre-ΣĒMA
             # bulk ingests like ingest_steam.py).
             if reason == "deny_list":
                 if not dry_run:
@@ -4493,7 +4493,7 @@ class Genome:
                 continue
 
             # Score-based demotions keep the embedding guard — these
-            # genes might turn out to be useful later, so we want the
+            # documents might turn out to be useful later, so we want the
             # ΣĒMA vector available for reactivation via cosine similarity.
             has_embedding = r["embedding"] is not None
             if not has_embedding:
@@ -4530,15 +4530,15 @@ class Genome:
         return stats
 
     def _compact_row_to_gene(self, row) -> Optional[Gene]:
-        """Convert a compact database row to a Gene object. Returns None on error.
+        """Convert a compact database row to a Document object. Returns None on error.
 
         Pre-existing bug fix (2026-04-10): the original version passed
         key_values=None when the DB column was NULL, but Gene.key_values
-        is declared as list[str] and Pydantic rejects None. Any gene
-        without extracted KVs (~35% of the 2026-04-10 genome sample)
+        is declared as list[str] and Pydantic rejects None. Any document
+        without extracted KVs (~35% of the 2026-04-10 knowledge store sample)
         silently failed parsing, causing compact_genome to skip them.
         Now we pass [] as the empty-list fallback, matching how other
-        list fields (codons) are handled.
+        list fields (fragments) are handled.
         """
         try:
             def _opt(key: str, default=None):

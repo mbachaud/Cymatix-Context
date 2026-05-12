@@ -9,8 +9,8 @@ Endpoints:
     POST /v1/chat/completions  -- proxy (primary integration)
     POST /ingest               -- manual content ingestion
     POST /context              -- Continue HTTP context provider format
-    GET  /stats                -- genome and compression metrics
-    GET  /health               -- ribosome model and gene count
+    GET  /stats                -- knowledge store and compression metrics
+    GET  /health               -- compressor model and document count
 """
 
 from __future__ import annotations
@@ -23,7 +23,7 @@ import socket
 from contextlib import asynccontextmanager
 from typing import Dict, Optional
 
-# Module-level stash for paused ribosome backends. Maps id(backend) →
+# Module-level stash for paused compressor backends. Maps id(backend) →
 # original complete() method. Not persisted — lost on server restart,
 # which is fine because restart defaults to un-paused.
 _paused_ribosomes: Dict[int, object] = {}
@@ -242,7 +242,7 @@ def _compute_know_or_miss_block(
     """Run the Stage 6 know/miss discriminator for a finished /context turn.
 
     Pulls together the four discriminator inputs from the manager and
-    the genome's per-call state, then defers the actual decision to
+    the knowledge store's per-call state, then defers the actual decision to
     ``decide_know_or_miss``. Returns ``KnowBlock | MissBlock | None`` —
     None only on hard-failure paths (the route falls back gracefully
     instead of bubbling).
@@ -255,7 +255,7 @@ def _compute_know_or_miss_block(
         for the β5 contribution.
     """
     # Pull retrieval scores. ``last_query_scores`` is the post-fusion
-    # per-gene score map (gene_id → float). Top-1 / score-gap are
+    # per-document score map (gene_id → float). Top-1 / score-gap are
     # derived from a sorted-desc view of this map.
     raw_scores = helix.genome.last_query_scores or {}
     if raw_scores:
@@ -279,8 +279,8 @@ def _compute_know_or_miss_block(
     from .context_packet import _coordinate_confidence
     from .genome import Gene as _GeneType  # for type discipline below
 
-    # Re-fetch the expressed genes by id from the genome's read conn so
-    # we can run path-grain coverage. Cheap (genes are 1-row reads).
+    # Re-fetch the retrieved documents by id from the knowledge store's read conn so
+    # we can run path-grain coverage. Cheap (documents are 1-row reads).
     gene_ids = list(window.expressed_gene_ids or [])
     genes: list = []
     top_gene = None
@@ -298,7 +298,7 @@ def _compute_know_or_miss_block(
                 r = row_map.get(gid)
                 if r is None:
                     continue
-                # Build a tiny Gene-like proxy object — _coordinate_confidence
+                # Build a tiny Document-like proxy object — _coordinate_confidence
                 # and the beacon both only need ``source_id``.
                 class _GeneProxy:
                     __slots__ = ("gene_id", "source_id")
@@ -322,7 +322,7 @@ def _compute_know_or_miss_block(
     # through to compute_confidence as "freshness unknown" (neutral).
     freshness_min = getattr(window.context_health, "freshness_min", None)
 
-    # Stage 7 (spec §5) — top-1 source revalidation. Need a real Gene
+    # Stage 7 (spec §5) — top-1 source revalidation. Need a real Document
     # (not just the source-id proxy used for the beacon) to read
     # ``last_verified_at``. Fetch only top-1 to keep latency bounded
     # (~3 stat calls warm = sub-millisecond per spec §5).
@@ -346,8 +346,8 @@ def _compute_know_or_miss_block(
                 (top_gid,),
             ).fetchone()
             if row is not None:
-                # Build a minimal Gene-shaped object the freshness
-                # helpers can read. Constructing a full Gene blows
+                # Build a minimal Document-shaped object the freshness
+                # helpers can read. Constructing a full Document blows
                 # up on missing columns; a SimpleNamespace-like proxy
                 # with the four attributes the helpers actually use
                 # is enough.
@@ -363,14 +363,14 @@ def _compute_know_or_miss_block(
                         self.epigenetics = epi
                         self.supersedes = sup
 
-                # Parse epigenetics blob lazily so we have a
+                # Parse signals blob lazily so we have a
                 # ``source_path`` attr if the JSON carried one.
                 epi_obj = None
                 try:
                     import json as _json
                     epi_raw = row["epigenetics"] if "epigenetics" in row.keys() else None
                     if epi_raw:
-                        # EpigeneticMarkers doesn't carry source_path
+                        # DocumentSignals doesn't carry source_path
                         # in its model, but the freshness helpers fall
                         # back to source_id when source_path is absent.
                         epi_dict = _json.loads(epi_raw)
@@ -394,7 +394,7 @@ def _compute_know_or_miss_block(
                 now_ts = _time.time()
                 # Read-only contract — /context is a read endpoint, so
                 # mark_verified is a no-op here. The cache MAY still
-                # update (in-memory; not a genome write).
+                # update (in-memory; not a knowledge store write).
                 try:
                     freshness_status = revalidate_and_mark(
                         helix.genome,
@@ -417,7 +417,7 @@ def _compute_know_or_miss_block(
         except Exception:
             log.debug("Stage-7 top-1 fetch failed", exc_info=True)
 
-    # Cold-tier peek — fires only when expressed set is thin AND
+    # Cold-tier peek — fires only when retrieved set is thin AND
     # corpus health is not abstain (spec §6). Caches the
     # refresh_targets on the manager so the route layer can attach
     # them to the agent payload without re-querying.
@@ -466,7 +466,7 @@ def _compute_plr_confidence(
 
     This is a **query-level** head. Every candidate in a given retrieval has
     the same feature vector, so callers should treat ``plr_confidence`` as a
-    query-quality signal, not a per-gene ranking input. See
+    query-quality signal, not a per-document ranking input. See
     ``helix_context/fusion_plr.py`` docstring for the trade-off.
     """
     try:
@@ -477,7 +477,7 @@ def _compute_plr_confidence(
     if fuser is None:
         return None
 
-    # 1. Aggregate tier_totals across all genes in the current retrieval.
+    # 1. Aggregate tier_totals across all documents in the current retrieval.
     #    Mirrors the CWoLa-logger aggregation at server.py ~line 898.
     tier_contrib_all = getattr(helix.genome, "last_tier_contributions", {}) or {}
     tier_totals: dict[str, float] = {}
@@ -533,7 +533,7 @@ def _compute_plr_confidence(
 
 
 def _merge_tier_contributions(base: dict, extra: dict) -> dict:
-    """Merge per-gene tier contributions without mutating inputs."""
+    """Merge per-document tier contributions without mutating inputs."""
     merged = {gid: dict(contribs) for gid, contribs in (base or {}).items()}
     for gid, contribs in (extra or {}).items():
         row = merged.setdefault(gid, {})
@@ -669,7 +669,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
     )
 
     # ── Cost-visibility startup warning (W2-B) ─────────────────────
-    # Surface paid-API ribosome backends loudly so operators are
+    # Surface paid-API compressor backends loudly so operators are
     # never surprised by metered cost. Local-first is the helix
     # promise; making a paid backend silent broke that promise
     # for hours of bench work in the 2026-04-14 session.
@@ -697,7 +697,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
 
     helix = HelixContextManager(config)
 
-    # W2-B: emit the ribosome info-metric for dashboard visibility.
+    # W2-B: emit the compressor info-metric for dashboard visibility.
     # No-op if OTel is disabled.
     try:
         from .telemetry import ribosome_info_gauge
@@ -830,7 +830,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
             # No user message -- pass through unmodified
             return await _forward_raw(body, config, helix)
 
-        # Step 1-5: Expression pipeline
+        # Step 1-5: Retrieval pipeline
         downstream_model = body.get("model")
         # Budget-zone signal: sum all message content tokens so the
         # pipeline can see how full the caller's window already is.
@@ -932,7 +932,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
         # doesn't supply explicit IDs, derive (org, device, user, agent)
         # from env vars (HELIX_ORG / HELIX_DEVICE|HELIX_PARTY /
         # HELIX_USER / HELIX_AGENT) with safe fallbacks to socket and
-        # getpass. Every gene auto-attributes across all four layers
+        # getpass. Every document auto-attributes across all four layers
         # without any auth infrastructure. See docs/FEDERATION_LOCAL.md.
         # Caller can disable by passing ``"local_federation": false``.
         local_federation = data.get("local_federation", True)
@@ -954,7 +954,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
         # Reject binary content declared as text. SQLite's TEXT column
         # silently truncates at the first NULL byte, so a caller that
         # utf-8-decodes raw bytes with errors="replace" and POSTs the
-        # result produces ghost genes with zero or near-zero stored
+        # result produces ghost documents with zero or near-zero stored
         # content. Force callers to base64-encode binary payloads (no
         # NULLs) or use a content-type that maps to BLOB storage later.
         # See tests/diagnostics/test_file_type_ingest.py.
@@ -1072,7 +1072,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
             data.get("response_mode", data.get("format", "continue"))
         ).strip().lower()
         decoder_override = data.get("decoder_mode")
-        verbose = data.get("verbose", False)  # Agent-mode: include gene citations
+        verbose = data.get("verbose", False)  # Agent-mode: include document citations
         # Per-request cold-tier override (C.2 of B->C, 2026-04-10)
         # None  = honor [context] cold_tier_enabled config flag
         # True  = force cold-tier ON for this request
@@ -1150,7 +1150,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
             # `clean=true` here behaves identically to the dedicated
             # /context/packet route (which has plumbed read_only since the
             # route was added). Without this, response_mode="packet" was a
-            # silent escape hatch for genome writes when callers used /context.
+            # silent escape hatch for knowledge store writes when callers used /context.
             packet = build_context_packet(
                 str(query),
                 task_type=str(data.get("task_type", "explain") or "explain"),
@@ -1205,7 +1205,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
                 _prompt_tokens_hint = None
 
         # Sprint 2 session working-set: thread session_id into the
-        # pipeline so _assemble can elide already-delivered genes.
+        # pipeline so _assemble can elide already-delivered documents.
         # ignore_delivered=true bypasses elision (benches, smoke tests).
         _ignore_delivered = bool(data.get("ignore_delivered", False))
 
@@ -1276,7 +1276,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
         # Always included (low cost, high value for agents)
         try:
             scores = helix.genome.last_query_scores or {}
-            # Fetch source_id for expressed genes for citation
+            # Fetch source_id for retrieved documents for citation
             gene_ids = window.expressed_gene_ids or []
             citations = []
             if gene_ids:
@@ -1290,7 +1290,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
                 row_map = {r["gene_id"]: r for r in rows}
 
                 # Session registry citation enrichment (item 6 of SESSION_REGISTRY.md):
-                # batch-resolve attribution for the expressed genes so each
+                # batch-resolve attribution for the retrieved documents so each
                 # citation can carry authored_by_party / authored_by_handle
                 # when available. Soft-fails — citations still render without
                 # attribution if the registry is unreachable.
@@ -1315,7 +1315,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
                         if attribution.get("handle"):
                             citation["authored_by_handle"] = attribution["handle"]
                     if verbose:
-                        # Include promoter tags for deeper inspection
+                        # Include tags for deeper inspection
                         try:
                             from .accel import parse_promoter
                             prom = parse_promoter(r["promoter"]) if r["promoter"] else None
@@ -1404,7 +1404,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
             }
 
             # Activation profile: per-tier score breakdown for the
-            # genes that made the top-k cut. Used by the skill activation
+            # documents that made the top-k cut. Used by the skill activation
             # profiler bench to visualize WHICH retrieval signals fired
             # for which query shapes. Only populated when verbose=true to
             # avoid bloating responses for non-debug callers.
@@ -1418,7 +1418,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
                         if gid in expressed_ids
                     }
                     # Aggregate: sum of contributions per tier across
-                    # expressed genes — gives the "what fired and how much"
+                    # retrieved documents — gives the "what fired and how much"
                     # heatmap row for this query.
                     tier_totals: dict = {}
                     for contribs in activation.values():
@@ -1452,7 +1452,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
             # downstream retrieval-manifold trainer has semantic signal, not
             # just normalized tier features. See docs/collab/comms/
             # REPLY_PWPC_FROM_LAUDE.md. Soft-fails: missing codec or missing
-            # gene embedding → NULL columns, which the trainer already handles.
+            # document embedding → NULL columns, which the trainer already handles.
             query_sema_vec = None
             top_candidate_sema_vec = None
             try:
@@ -1532,7 +1532,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
         task_type = data.get("task_type", "explain")
         max_genes = data.get("max_genes", 8)
         # research-review Proposal 3 (2026-04-22): opt-in mode that puts
-        # the full gene.content on each item instead of the ribosome-
+        # the full gene.content on each item instead of the compressor-
         # compressed 280-char thumbnail. Default off — existing callers
         # that expect the thumbnail contract keep getting it.
         include_raw = bool(data.get("include_raw", False))
@@ -2007,17 +2007,17 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
             )
             raise HTTPException(status_code=500, detail="Internal error")
 
-    # -- Debug: single-gene fetch ---------------------------------------
+    # -- Debug: single-document fetch ---------------------------------------
 
     @app.get("/genes/{gene_id}")
     async def gene_get_endpoint(gene_id: str):
-        """Fetch a single gene by ID.
+        """Fetch a single document by ID.
 
-        Returns the full gene model as JSON (content, promoter tags,
-        epigenetics, codons, chromatin state, embedding). 404 if unknown.
+        Returns the full document model as JSON (content, tags,
+        signals, fragments, lifecycle tier, embedding). 404 if unknown.
 
-        Intended for debugging retrieval: "why did gene X rank where it
-        did? what were its promoter tags?"
+        Intended for debugging retrieval: "why did document X rank where it
+        did? what were its tags?"
         """
         try:
             gene = helix.genome.get_gene(gene_id)
@@ -2041,7 +2041,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
         Returns just neighbors (gene_id, sema_cos_sim, preview, path)
         without the cymatic spectrum, harmonic edges, or query SEMA
         vector. Cheapest introspection path when the caller just wants
-        "which genes are closest to this query in SEMA space?".
+        "which documents are closest to this query in SEMA space?".
 
         Read-only; safe to call anytime.
         """
@@ -2119,14 +2119,14 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
         """Dry-run the retrieval pipeline up to candidate selection.
 
         Runs the cheap part of the /context pipeline -- query extraction
-        + multi-tier express -- but SKIPS the splice step (which is the
-        expensive ribosome-heavy leg). Returns the candidate genes that
+        + multi-tier retrieve -- but SKIPS the splice step (which is the
+        expensive compressor-heavy leg). Returns the candidate documents that
         WOULD be fed to splice, their scores, and the extracted query
         signals.
 
-        Useful for debugging "why isn't my query surfacing gene X?"
+        Useful for debugging "why isn't my query surfacing document X?"
         without paying the full /context cost. Much cheaper than
-        /context itself; no ribosome calls.
+        /context itself; no compressor calls.
 
         ``score_floor`` mirrors the /fingerprint knob: candidates whose
         post-refiner score falls below the threshold are filtered out.
@@ -2431,7 +2431,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
         """Refresh last_heartbeat for a participant. Returns 404 if unknown.
 
         Optional body (all fields optional) publishes a retrievable presence
-        gene so other participants' /context queries can surface this
+        document so other participants' /context queries can surface this
         participant's state:
 
             {
@@ -2445,7 +2445,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
             }
 
         Empty body keeps the original behavior — registry heartbeat only,
-        no presence gene emitted. See docs/TEAM_PRESENCE.md (when written).
+        no presence document emitted. See docs/TEAM_PRESENCE.md (when written).
         """
         result = registry.heartbeat(participant_id)
         if result is None:
@@ -2455,8 +2455,8 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
             )
         ttl_remaining_s, status = result
 
-        # Optional presence-gene emit. Body is optional + additive; we must
-        # not fail the heartbeat if the gene emit chokes.
+        # Optional presence-document emit. Body is optional + additive; we must
+        # not fail the heartbeat if the document emit chokes.
         presence_gene_id: Optional[str] = None
         try:
             body = await request.json()
@@ -2518,10 +2518,10 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
         party_id: Optional[str] = None,
         since: Optional[float] = None,
     ):
-        """Return recent genes authored by a handle, chronologically (no BM25).
+        """Return recent documents authored by a handle, chronologically (no BM25).
 
         This is the reliable broadcast channel — short notes surface here
-        regardless of how much code/spec material lives in the genome.
+        regardless of how much code/spec material lives in the knowledge store.
         """
         try:
             genes = registry.get_recent_by_handle(
@@ -2545,10 +2545,10 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
     # -- AI-Consumer Sprint 3: 1-hop neighborhood expand --------------
     #
     # /context/expand?gene_id=X&direction=forward|backward|sideways&k=5
-    # Lets the consumer follow a thread from a known gene without a
+    # Lets the consumer follow a thread from a known document without a
     # full /context round-trip. Uses the existing harmonic_links graph
     # (or gene.epigenetics.co_activated_with for sideways). Filters
-    # already-delivered genes when session_id is supplied.
+    # already-delivered documents when session_id is supplied.
 
     @app.get("/context/expand")
     async def context_expand_endpoint(
@@ -2579,14 +2579,14 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
 
     # -- AI-Consumer Sprint 2: session working-set introspection -------
     #
-    # /session/{id}/manifest — returns everything the genome has shipped
+    # /session/{id}/manifest — returns everything the knowledge store has shipped
     # to a given session, most-recent first. Lets a client introspect
     # what's "held in suspension" for their session so they can reason
     # about redundancy without a round-trip through /context.
 
     @app.get("/session/{session_id}/manifest")
     async def session_manifest_endpoint(session_id: str, limit: int = 500):
-        """List gene deliveries recorded for a session.
+        """List document deliveries recorded for a session.
 
         Response shape: {"session_id": "...", "deliveries": [...], "count": N}
         Each delivery row includes: delivery_id, gene_id, delivered_at,
@@ -2651,7 +2651,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
           - ``metadata`` (dict): free-form JSON, stamped onto the event
 
         Returns ``{event_id}`` on success, ``{error}`` on failure.
-        Never mutates genome state; only writes to the ``hitl_events`` table.
+        Never mutates knowledge store state; only writes to the ``hitl_events`` table.
         """
         try:
             data = await request.json()
@@ -2734,7 +2734,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
     async def consolidate_endpoint():
         """Trigger session memory consolidation.
 
-        Distills the session buffer into consolidated knowledge genes,
+        Distills the session buffer into consolidated knowledge documents,
         extracting only new facts, decisions, and discoveries.
         """
         try:
@@ -2809,7 +2809,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
         }
 
         # Intentionally minimized response — documented contract in
-        # CLAUDE.md is "ribosome model, gene count, upstream URL". We keep
+        # CLAUDE.md is "compressor model, document count, upstream URL". We keep
         # Stage 4 (2026-05-08): calibration provenance surface. Spec §9.
         # Surfaces ann_threshold mode + meta (mu/sigma/N/dim/computed_at) and
         # abstain mode + per-class count so operators can verify a calibrated
@@ -2871,18 +2871,18 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
         synced = helix._replication_mgr.sync_now()
         return {"synced": synced}
 
-    # ── Admin: genome management ────────────────────────────────
+    # ── Admin: knowledge store management ────────────────────────────────
 
     @app.post("/admin/refresh")
     async def admin_refresh():
-        """Reopen genome connection to see external changes (deletions, thinning)."""
+        """Reopen knowledge store connection to see external changes (deletions, thinning)."""
         helix.genome.refresh()
         new_count = helix.genome.stats()["total_genes"]
         return {"refreshed": True, "genes": new_count}
 
     @app.post("/admin/vacuum")
     async def admin_vacuum():
-        """Reclaim free pages from the genome database.
+        """Reclaim free pages from the knowledge store database.
 
         Runs VACUUM to compact the SQLite file after thinning, compaction,
         or large-scale deletions. Blocks all writers during the operation —
@@ -2900,7 +2900,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
 
     @app.post("/admin/kv-backfill")
     async def admin_kv_backfill():
-        """Run CPU regex KV extraction on genes missing key_values."""
+        """Run CPU regex KV extraction on documents missing key_values."""
         import re as _re
         from .accel import json_dumps, json_loads
         cur = helix.genome.conn.cursor()
@@ -2936,7 +2936,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
 
     @app.post("/admin/compact")
     async def admin_compact(dry_run: bool = False, density_threshold: float = 0.3, access_threshold: int = 5):
-        """Run compaction sweep: demote low-density genes to compressed tiers."""
+        """Run compaction sweep: demote low-density documents to compressed tiers."""
         result = helix.genome.compact_genome(
             density_threshold=density_threshold,
             access_threshold=access_threshold,
@@ -2953,21 +2953,21 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
     @app.post("/admin/ribosome/pause")
     async def admin_ribosome_pause():
         """
-        Disable the ribosome's LLM calls without unloading or restarting anything.
+        Disable the compressor's LLM calls without unloading or restarting anything.
 
-        Monkey-patches ``backend.complete()`` on the live Ribosome instance to
+        Monkey-patches ``backend.complete()`` on the live Compressor instance to
         raise a RuntimeError. The existing fallback paths in ``replicate()``
-        and ``pack()`` already catch this and produce minimal genes from the
+        and ``pack()`` already catch this and produce minimal documents from the
         raw exchange, so ``learn()`` stays fully functional — it just skips
         the LLM pass.
 
         Use case: when something else (e.g., a concurrent benchmark) needs
-        GPU VRAM and you want to unload the ribosome model from Ollama
+        GPU VRAM and you want to unload the compressor model from Ollama
         without Helix re-triggering a load on the next ``learn()`` call.
 
         Pair with:
             curl -X POST localhost:11434/api/generate \
-                 -d '{"model": "<ribosome-model>", "keep_alive": 0}'
+                 -d '{"model": "<compressor-model>", "keep_alive": 0}'
 
         Resume with ``POST /admin/ribosome/resume``.
         """
@@ -3004,7 +3004,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
 
     @app.post("/admin/ribosome/resume")
     async def admin_ribosome_resume():
-        """Restore the ribosome backend after /admin/ribosome/pause."""
+        """Restore the compressor backend after /admin/ribosome/pause."""
         backend = helix.ribosome.backend
         backend_id = id(backend)
         if backend_id not in _paused_ribosomes:
@@ -3022,7 +3022,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
 
     @app.get("/admin/ribosome/status")
     async def admin_ribosome_status():
-        """Check whether the ribosome is currently paused."""
+        """Check whether the compressor is currently paused."""
         backend = helix.ribosome.backend
         return {
             "paused": id(backend) in _paused_ribosomes,
@@ -3095,7 +3095,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
 
         Body:
             {
-                "reason": "swapping ribosome model for benchmark",
+                "reason": "swapping compressor model for benchmark",
                 "actor": "laude",
                 "expected_downtime_s": 30  (optional, default 30)
             }
@@ -3179,7 +3179,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
 
         components = []
 
-        # Ribosome — hide it when paused so the launcher only shows
+        # Compressor — hide it when paused so the launcher only shows
         # active/online tools, matching the panel contract.
         if not ribosome_paused and not ribosome_disabled:
             ribosome_backend = "unknown"
@@ -3245,7 +3245,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
 
     @app.post("/admin/sema/rebuild")
     async def admin_sema_rebuild():
-        """Force-rebuild the ΣĒMA vector cache from the current genome state.
+        """Force-rebuild the ΣĒMA vector cache from the current knowledge store state.
 
         Useful after bulk ingest or external DB changes when the cache
         would otherwise stay stale until the next upsert invalidates it.
@@ -3266,14 +3266,14 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
 
         What this refreshes:
           - helix.toml config (ports, thresholds, budget, model routing)
-          - Genome WAL snapshot (see external writes)
-          - ΣĒMA vector cache (rebuild from current genome)
+          - KnowledgeStore WAL snapshot (see external writes)
+          - ΣĒMA vector cache (rebuild from current knowledge store)
           - last_query_scores (clear stale per-query state)
 
         What this does NOT do:
           - Reload Python code (needs process restart)
           - Reconnect the write DB connection (read conn refresh only)
-          - Rebuild the ribosome backend (model stays loaded)
+          - Rebuild the compressor backend (model stays loaded)
 
         Use /admin/reload for config/data changes; restart the process
         for code changes.
@@ -3294,7 +3294,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
         except Exception as exc:
             changes["config_error"] = str(exc)[:200]
 
-        # 2. Refresh genome snapshot (see external WAL state)
+        # 2. Refresh knowledge store snapshot (see external WAL state)
         try:
             helix.genome.refresh()
             total = helix.genome.stats().get("total_genes", 0)
@@ -3340,7 +3340,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
 
     @app.post("/bridge/collect")
     async def bridge_collect():
-        """Collect inbox files and ingest into genome."""
+        """Collect inbox files and ingest into knowledge store."""
         # collect_inbox() is sync file I/O — offload it.
         items = await asyncio.to_thread(bridge.collect_inbox)
         gene_ids: list = []
@@ -3387,13 +3387,13 @@ def _munge_messages(
     cold_start_threshold: int,
 ) -> list[dict]:
     """
-    Inject expressed context into the system message.
-    Apply history stripping based on genome maturity (Fix 3).
+    Inject retrieved context into the system message.
+    Apply history stripping based on knowledge store maturity (Fix 3).
 
     Fix 3 (cold-start bootstrap):
         If total_genes < threshold, retain the last 2 conversation turns
-        alongside the current turn. Once the genome matures, strip all
-        prior turns -- the genome covers them.
+        alongside the current turn. Once the knowledge store matures, strip all
+        prior turns -- the knowledge store covers them.
     """
     if not messages:
         return messages
@@ -3426,7 +3426,7 @@ def _munge_messages(
         # Cold start: keep last 2 turns + current for continuity
         history_window = other_messages[-3:-1] if len(other_messages) > 2 else other_messages[:-1]
         result.extend(history_window)
-    # else: strip all history -- genome covers it
+    # else: strip all history -- knowledge store covers it
 
     if current_turn:
         result.append(current_turn)
@@ -3445,7 +3445,7 @@ async def _stream_and_tee(
 ):
     """
     Stream chunks from upstream to client while accumulating the
-    full response for background replication.
+    full response for background persistence.
 
     Inspects the upstream HTTP status before the first yield; non-2xx
     responses raise HTTPException so FastAPI propagates the real status
@@ -3506,7 +3506,7 @@ async def _stream_and_tee(
                     except (ValueError, TypeError):
                         pass
 
-    # Stream is complete -- fire background replication
+    # Stream is complete -- fire background persistence
     full_response = "".join(accumulated)
     if full_response:
         background_tasks.add_task(helix.learn, user_query, full_response)
@@ -3534,7 +3534,7 @@ async def _forward_and_replicate(
     user_query: str,
     background_tasks: BackgroundTasks,
 ):
-    """Forward non-streaming request, then replicate."""
+    """Forward non-streaming request, then persist."""
     async with httpx.AsyncClient(timeout=config.server.upstream_timeout) as client:
         resp = await client.post(
             f"{config.server.upstream}/v1/chat/completions",
@@ -3719,8 +3719,8 @@ def main():
 
 # Module-level app object is intentionally NOT created here.
 # Importing server.py must not open a database connection — doing so breaks
-# pytest collection in any environment where the genome path doesn't exist
-# (e.g. git worktrees, fresh clones, CI without a test genome).
+# pytest collection in any environment where the knowledge store path doesn't exist
+# (e.g. git worktrees, fresh clones, CI without a test knowledge store).
 #
 # For uvicorn, use the dedicated entry point instead:
 #   uvicorn helix_context._asgi:app

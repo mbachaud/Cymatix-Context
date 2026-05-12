@@ -1,4 +1,4 @@
-# Helix Session Registry — Parties, Participants, and Authored Genes
+# Helix Session Registry — Parties, Participants, and Authored Documents
 
 A presence and attribution layer for multi-session Helix usage. Lets sibling
 Claude/Gemini sessions see each other, tag what they ingest, and retrieve each
@@ -38,7 +38,7 @@ Known gaps (tracked as follow-up work, not blockers):
   Registration failure is non-fatal — tool calls still proxy. Each
   MCP-host spawn gets its own `participant_id`; stale participants
   TTL out naturally.
-- **Phase 2** (GeneAttribution wired into `query_genes` for per-party
+- **Phase 2** (DocumentAttribution wired into `query_genes` for per-party
   scoping + authorship-class scoring) — design in
   `~/.helix/shared/handoffs/2026-04-11_8d_dimensional_roadmap.md` §
   Phase 2. Unblocked now that the registry is on master.
@@ -56,19 +56,19 @@ they cannot:
 
 1. **See each other.** There is no presence/liveness layer. If Laude wants to
    know whether Raude is currently working, there is nothing to query.
-2. **Attribute genes.** `/ingest` accepts an opaque `metadata` dict but nothing
+2. **Attribute documents.** `/ingest` accepts an opaque `metadata` dict but nothing
    standardizes "who authored this." The informal `source="laude"` convention in
    `AgentBridge.drop_to_inbox` is a hint, not a contract, and doesn't survive
-   into the genome.
+   into the knowledge store.
 3. **Broadcast reliably.** Short text notes (e.g., "VS Code 1.115 shipped, check
    out the Agents companion") get drowned in BM25 retrieval by the much larger
-   code and spec genes. Empirically verified 2026-04-10: two ingests totalling
+   code and spec documents. Empirically verified 2026-04-10: two ingests totalling
    ~400 chars were both invisible to targeted queries after ingestion because
    the retrieval budget preferred older, larger matches.
 
 The session registry solves all three with three additive concepts: a **party**
 layer for stable execution-side identity, a **participant** layer for live actors, and an
-**authored-genes** view that bypasses BM25 for recency-sorted retrieval.
+**authored-documents** view that bypasses BM25 for recency-sorted retrieval.
 
 ## The layering
 
@@ -178,7 +178,7 @@ Rationale: the existing `genes` table has no top-level `created_at` column
 index we need for `GET /sessions/{handle}/recent` would have nothing to sort
 on without denormalizing. A dedicated attribution table is cleaner: it keeps
 `genes` unchanged, gives us native indexable `authored_at`, and makes
-attribution a first-class concern rather than a squatter on the gene row.
+attribution a first-class concern rather than a squatter on the document row.
 
 ```sql
 CREATE TABLE IF NOT EXISTS gene_attribution (
@@ -199,12 +199,12 @@ CREATE INDEX IF NOT EXISTS idx_attribution_participant_time
 
 Semantics:
 
-- One row per attributed gene. Genes without attribution (legacy ingests,
+- One row per attributed document. Documents without attribution (legacy ingests,
   bridge inbox drops without a `participant_id`) simply have no row in this
   table — they remain retrievable by the normal BM25 path.
-- `gene_id` is the primary key because a gene has exactly one author.
-- `ON DELETE CASCADE` on the `gene_id` FK means vacuuming a gene from the
-  genome cleans up its attribution automatically.
+- `gene_id` is the primary key because a document has exactly one author.
+- `ON DELETE CASCADE` on the `gene_id` FK means vacuuming a document from the
+  knowledge store cleans up its attribution automatically.
 - `participant_id` is nullable so that party-level attribution (e.g., a
   server-side ingest that knows the party but not the specific participant)
   is expressible.
@@ -216,7 +216,7 @@ Semantics:
 - On server startup, run a one-shot `_ensure_registry_schema()` that creates
   `parties`, `participants`, and `gene_attribution` inside a single
   transaction.
-- No data migration needed. Historical genes have no `gene_attribution` row
+- No data migration needed. Historical documents have no `gene_attribution` row
   and the retrieval paths treat absence as "unknown author, goes through
   normal BM25."
 
@@ -375,7 +375,7 @@ Response:
 
 ### `GET /sessions/{handle}/recent`
 
-**The BM25 bypass.** Returns the most recent genes authored by any participant
+**The BM25 bypass.** Returns the most recent documents authored by any participant
 with a given handle, in reverse chronological order, with no retrieval
 scoring. This is the reliable broadcast channel.
 
@@ -387,9 +387,9 @@ Query params:
 
 | Param | Default | Notes |
 |---|---|---|
-| `limit` | 10 | Max genes to return. |
+| `limit` | 10 | Max documents to return. |
 | `party_id` | *(all)* | Scope to one party if handles are ambiguous across parties. |
-| `since` | *(none)* | Unix timestamp — only return genes created after this. |
+| `since` | *(none)* | Unix timestamp — only return documents created after this. |
 
 Response:
 
@@ -437,7 +437,7 @@ New optional fields:
 
 | Field | Type | Notes |
 |---|---|---|
-| `participant_id` | string | If present, the resulting genes are tagged with both the participant and its party (looked up via the registry). |
+| `participant_id` | string | If present, the resulting documents are tagged with both the participant and its party (looked up via the registry). |
 | `party_id` | string | Rarely needed — only for server-side ingestion flows that don't have a participant but know the party. Ignored if `participant_id` is also provided. |
 
 Behavior:
@@ -446,17 +446,17 @@ Behavior:
   `gene_attribution` row is written (and a warning is logged). This
   preserves the "registry is additive" invariant — ingest never fails
   because of registry state.
-- Tagged ingests write one `gene_attribution` row per resulting gene, with
+- Tagged ingests write one `gene_attribution` row per resulting document, with
   `authored_at = time.time()` at ingest time (not the epigenetic
   `created_at`, though in practice they are within milliseconds of each other
-  for new genes).
+  for new documents).
 - Tagged ingests also update `last_heartbeat` on the participant row
   (implicit heartbeat on activity — saves a round trip).
 
 ### Extension to `POST /context`
 
 No breaking change. The citation objects in the `agent.citations` response
-array gain two optional fields when the source gene has a
+array gain two optional fields when the source document has a
 `gene_attribution` row:
 
 ```json
@@ -469,16 +469,16 @@ array gain two optional fields when the source gene has a
 }
 ```
 
-Implementation: a LEFT JOIN from the expressed gene_ids to `gene_attribution`
+Implementation: a LEFT JOIN from the retrieved gene_ids to `gene_attribution`
 and `participants` resolves the party and current handle in a single query
-alongside the existing citation enrichment. Genes without attribution simply
+alongside the existing citation enrichment. Documents without attribution simply
 omit both fields.
 
 ## Trust model (deferred)
 
 **This spec does NOT implement authentication.** Parties are **self-asserted**
 on registration (trust-on-first-use). A malicious client on the local machine
-could register as any `party_id` it wants and tag genes accordingly.
+could register as any `party_id` it wants and tag documents accordingly.
 
 For the current use case — single user running multiple Claude panels against
 a local Helix server on `localhost:11437` — this is acceptable. The threat
@@ -587,7 +587,7 @@ A periodic sweep task runs every `ttl_s / 2` seconds, updates `status` based
 on `last_heartbeat`, and logs transitions at INFO level.
 
 Sweep is NOT destructive — `gone` participants are kept for historical
-attribution of their authored genes. Only after 7 days of `gone` status are
+attribution of their authored documents. Only after 7 days of `gone` status are
 they hard-deleted, at which point the `gene_attribution.participant_id`
 column is NULLed out for any rows that referenced them. The `party_id`
 remains intact — party-level attribution survives participant turnover,
@@ -598,15 +598,15 @@ identity, the participant is the ephemeral actor.
 
 | Failure | Behavior |
 |---|---|
-| Client registers, never heartbeats | Transitions active → idle → stale → gone on schedule. No impact on genes already authored. |
+| Client registers, never heartbeats | Transitions active → idle → stale → gone on schedule. No impact on documents already authored. |
 | Client heartbeats unknown participant_id | `404`, client re-registers. |
-| Two participants register with the same handle simultaneously | Both get distinct `participant_id`s. They coexist. `GET /sessions/{handle}/recent` returns genes from all of them (ordered by time). |
+| Two participants register with the same handle simultaneously | Both get distinct `participant_id`s. They coexist. `GET /sessions/{handle}/recent` returns documents from all of them (ordered by time). |
 | Server restarts mid-session | All `participants` rows remain in the DB. On next heartbeat, participants resume active status. If the restart was announced via the restart protocol, observing sessions already know to pause. |
-| Ingest with unknown `participant_id` | Ingest succeeds, gene is NOT tagged, server logs warning. |
+| Ingest with unknown `participant_id` | Ingest succeeds, document is NOT tagged, server logs warning. |
 | Sweep task dies | No correctness impact — `GET /sessions` computes status on the fly from `last_heartbeat`. The persisted `status` column is a cache, not the source of truth. |
 | Party row deleted while participants reference it | FK constraint blocks the delete. To remove a party, participants must be removed first, or the delete must cascade explicitly. |
-| Gene deleted (vacuum/consolidate) | `ON DELETE CASCADE` on `gene_attribution.gene_id` cleans up automatically. No orphaned attribution rows. |
-| Legacy gene re-ingested after registry shipped | A new `gene_attribution` row is written for the re-ingest. If the same `gene_id` already had an attribution row, the PK collision is resolved by updating `party_id` / `participant_id` / `authored_at` to the newer ingest (most recent author wins). |
+| Document deleted (vacuum/consolidate) | `ON DELETE CASCADE` on `gene_attribution.gene_id` cleans up automatically. No orphaned attribution rows. |
+| Legacy document re-ingested after registry shipped | A new `gene_attribution` row is written for the re-ingest. If the same `gene_id` already had an attribution row, the PK collision is resolved by updating `party_id` / `participant_id` / `authored_at` to the newer ingest (most recent author wins). |
 
 ## What this spec does NOT do
 
@@ -639,7 +639,7 @@ testable unit.
    `heartbeat`, `list_participants`, `get_recent_by_handle`, `sweep`.
 4. **FastAPI endpoints.** Wire into `server.py` alongside existing endpoints.
 5. **Ingest extension.** `ingest_endpoint` accepts `participant_id`, resolves
-   `party_id` via registry, writes both columns on the gene row.
+   `party_id` via registry, writes both columns on the document row.
 6. **Context enrichment.** `context_endpoint` citation objects gain
    `authored_by_party` / `authored_by_handle` when present.
 7. **Sweep task.** Add to the lifespan startup block, respecting

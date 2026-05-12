@@ -1,13 +1,13 @@
-"""Literal claim extraction over genes — Phase 2 of the agent-context-index.
+"""Literal claim extraction over documents — Phase 2 of the agent-context-index.
 
-Turns gene content into structured facts (claims) that the packet
+Turns document content into structured facts (claims) that the packet
 builder can query without reopening bulk content. V1 prioritizes
 literal claims: exact path/value/symbol/port extraction via regex.
 
 Dispatch on ``Gene.source_kind`` with a per-kind extractor. If
 ``source_kind`` is unset, we still harvest ``Gene.key_values`` (already
 pre-extracted ``k=v`` facts at ingest) as config-value claims — that
-alone answers "what ports/paths/models does the genome know about?"
+alone answers "what ports/paths/models does the knowledge store know about?"
 without any per-kind logic.
 
 See ``docs/specs/2026-04-17-agent-context-index-build-spec.md`` §279
@@ -148,7 +148,7 @@ def _extract_doc_claims(gene: Gene, shard_name: str) -> list[Claim]:
 
 
 def _extract_benchmark_claims(gene: Gene, shard_name: str) -> list[Claim]:
-    """Parse ``metric: value`` and ``metric = value`` pairs from gene content."""
+    """Parse ``metric: value`` and ``metric = value`` pairs from document content."""
     out: list[Claim] = []
     for line in gene.content.splitlines():
         m = _KV_RE.match(line)
@@ -233,7 +233,7 @@ def extract_literal_claims(
     shard_name: str = "main",
     dedup: bool = True,
 ) -> list[Claim]:
-    """Extract literal claims from a gene.
+    """Extract literal claims from a document.
 
     Always harvests ``gene.key_values`` (pre-extracted facts at ingest).
     Then dispatches on ``gene.source_kind`` for kind-specific claims.
@@ -299,7 +299,7 @@ def persist_claims(
     """Write claims to ``main.db`` via ``shard_schema.upsert_claim``.
 
     Returns the number of rows upserted. Takes a sqlite connection, not
-    a Genome — claims live in main.db, not the per-shard content dbs.
+    a KnowledgeStore — claims live in main.db, not the per-shard content dbs.
     """
     from .shard_schema import upsert_claim
     n = 0

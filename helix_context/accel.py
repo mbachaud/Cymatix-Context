@@ -178,7 +178,7 @@ def expand_query_terms(terms: list[str]) -> list[str]:
 
 def extract_query_signals(query: str) -> Tuple[List[str], List[str]]:
     """
-    Fast keyword extraction from query for promoter matching.
+    Fast keyword extraction from query for tags matching.
 
     Uses pre-built frozenset and avoids per-call set construction.
     Returns (domains, entities) tuple.
@@ -204,11 +204,11 @@ def extract_query_signals(query: str) -> Tuple[List[str], List[str]]:
 # overhead on every call. CPython's re module caches the last ~512
 # patterns, but explicit pre-compilation is still 1.3-1.5x faster.
 
-# Codons: text chunking
+# Fragments: text chunking
 RE_PARAGRAPH_SPLIT = re.compile(r"\n\s*\n")
 RE_SENTENCE_SPLIT = re.compile(r"(?<=[.!?])\s+")
 
-# Codons: code boundary detection
+# Fragments: code boundary detection
 RE_CODE_BOUNDARY = re.compile(
     r"(^(?:def |class |async def |struct |interface |type |export ))",
     re.MULTILINE,
@@ -221,7 +221,7 @@ RE_CODE_BLOCK_SPLIT = re.compile(
     re.MULTILINE,
 )
 
-# Ribosome: JSON fence stripping
+# Compressor: JSON fence stripping
 RE_MARKDOWN_FENCE_START = re.compile(r"^```\w*\n?")
 RE_MARKDOWN_FENCE_END = re.compile(r"\n?```$")
 
@@ -233,7 +233,7 @@ class PromptBuilder:
     Efficient prompt string assembly using StringIO.
 
     Avoids O(n²) string concatenation when building large prompts
-    from many gene sections. ~2x faster than += for >5 sections.
+    from many document sections. ~2x faster than += for >5 sections.
     """
 
     __slots__ = ("_buf", "_count")
@@ -269,28 +269,28 @@ class PromptBuilder:
         return self._count
 
 
-# ── Gene deserialization cache ─────────────────────────────────────
+# ── Document deserialization cache ─────────────────────────────────────
 #
-# Frequently accessed genes (recent co-activation peers, hot genes)
+# Frequently accessed documents (recent co-activation peers, hot documents)
 # get deserialized repeatedly within a single build_context call.
 # Cache the Pydantic parse to avoid redundant JSON→model conversion.
 
 @lru_cache(maxsize=128)
 def _cached_promoter_parse(json_str: str):
-    """Cache PromoterTags deserialization by JSON string identity."""
+    """Cache DocumentTags deserialization by JSON string identity."""
     from .schemas import PromoterTags
     return PromoterTags.model_validate_json(json_str)
 
 
 @lru_cache(maxsize=128)
 def _cached_epigenetics_parse(json_str: str):
-    """Cache EpigeneticMarkers deserialization by JSON string identity."""
+    """Cache DocumentSignals deserialization by JSON string identity."""
     from .schemas import EpigeneticMarkers
     return EpigeneticMarkers.model_validate_json(json_str)
 
 
 def parse_promoter(json_str: str, *, use_cache: bool = True):
-    """Parse PromoterTags from JSON, with optional LRU caching."""
+    """Parse DocumentTags from JSON, with optional LRU caching."""
     if use_cache:
         return _cached_promoter_parse(json_str)
     from .schemas import PromoterTags
@@ -298,7 +298,7 @@ def parse_promoter(json_str: str, *, use_cache: bool = True):
 
 
 def parse_epigenetics(json_str: str, *, use_cache: bool = True):
-    """Parse EpigeneticMarkers from JSON, with optional LRU caching."""
+    """Parse DocumentSignals from JSON, with optional LRU caching."""
     if use_cache:
         return _cached_epigenetics_parse(json_str)
     from .schemas import EpigeneticMarkers
@@ -306,7 +306,7 @@ def parse_epigenetics(json_str: str, *, use_cache: bool = True):
 
 
 def clear_parse_caches() -> None:
-    """Clear LRU caches. Call after bulk genome mutations."""
+    """Clear LRU caches. Call after bulk knowledge store mutations."""
     _cached_promoter_parse.cache_clear()
     _cached_epigenetics_parse.cache_clear()
 
@@ -324,7 +324,7 @@ def batch_update_epigenetics(gene_updates: List[Tuple[str, str, int]]) -> Tuple[
         (sql, params) tuple ready for cursor.execute()
 
     Uses CASE WHEN for single-roundtrip batch update instead of
-    N separate UPDATE queries. 5-10x faster on typical 8-gene batches.
+    N separate UPDATE queries. 5-10x faster on typical 8-document batches.
     """
     if not gene_updates:
         return "", []

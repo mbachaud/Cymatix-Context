@@ -8,7 +8,7 @@
 **Authors:** Max + Laude, after a full-day session where the feedback loop
 driving helix decisions was explicitly "ask Laude / Raude / Taude what hurts."
 Raude's Dewey filename-anchor pivot (+12pp), Laude's PWPC Phase 1 shipment
-and lockstep-test correction, and the presence-gene substrate all came out of
+and lockstep-test correction, and the presence-document substrate all came out of
 that methodology.
 
 This document names the framing so future contributors — human or agent —
@@ -20,7 +20,7 @@ don't drift back into "optimise for the human reader."
 
 Until this point, most design decisions could be read either way:
 
-- Gene content as markdown (human-legible) *or* as a compressed payload (LLM-
+- Document content as markdown (human-legible) *or* as a compressed payload (LLM-
   consumable)
 - Compression ratio as a headline metric *or* retrieval precision as the real
   target
@@ -31,7 +31,7 @@ These fork in different directions depending on who the query originator is.
 Until today the ambiguity was harmless. With three LLM agents (Laude, Raude,
 Taude) as the actual daily users of helix, the ambiguity starts costing
 decisions — and it's already silently shaping trade-offs like how /context
-renders gene content and what "good retrieval" means in benchmarks.
+renders document content and what "good retrieval" means in benchmarks.
 
 ---
 
@@ -58,7 +58,7 @@ are how consumers actually consume helix. Therefore:
 
 - API schemas must be stable, versioned, typed.
 - Error responses must be structured (code + hint), not prose.
-- Deterministic gene IDs (e.g. `presence:{participant_id}`) are preferable to
+- Deterministic document IDs (e.g. `presence:{participant_id}`) are preferable to
   content-addressed hashes when the consumer knows the referent.
 - `/genes/by-source/{source_id}` and `/genes/{id}/neighbors` matter more than
   any dashboard panel, because LLMs often know *what* they need, not a fuzzy
@@ -68,10 +68,10 @@ are how consumers actually consume helix. Therefore:
 
 A human reading a compressed summary can often eyeball "is this the right
 context?" An LLM cannot — and when helix is wrong in ways that look confident,
-LLMs propagate the error. So the response must carry *why* each gene was
+LLMs propagate the error. So the response must carry *why* each document was
 surfaced:
 
-- Per-gene tier scores in the response, not only in `/debug/*`
+- Per-document tier scores in the response, not only in `/debug/*`
 - Provenance: which source file, which commit, who authored, when ingested
 - Trust signals: tier-agreement indicator, health status, freshness age
 - Lockstep warnings: if all 9 tiers agree strongly, flag it (the antiresonance
@@ -90,7 +90,7 @@ building the primary trust-signal substrate for LLM-as-consumer.
 
 ### 5. LLM-to-LLM coordination is a first-class use case
 
-Presence genes (`presence:{participant_id}`), structured handoffs, and the
+Presence documents (`presence:{participant_id}`), structured handoffs, and the
 4-layer identity registry (**org** → **party** → **participant** → **agent**)
 exist so that *one* agent's context surfaces *another* agent's state. The
 layering is deliberate:
@@ -102,7 +102,7 @@ layering is deliberate:
 | `participant` | Human user on that device | `max`, `todd` |
 | `agent` | Agent session / tool call / sub-agent | `laude-vscode-left`, `raude-mcp-pid42` |
 
-Each gene is attributed across all four layers so retrieval can scope by
+Each document is attributed across all four layers so retrieval can scope by
 whichever is load-bearing for the query — "what did Laude do on this device
 tonight" (agent+party), "what does Max's org know about X" (org), "what did
 this human type themselves vs what did an agent write" (participant vs
@@ -151,7 +151,7 @@ Stone rename (commit `09d5548`, canonical aliases non-breaking) is
 deliberately bilingual, not a migration.
 
 **This extends the "introspection is a feature" principle (§3).** Runtime
-introspection surfaces *why* each gene was retrieved. Naming-time introspection
+introspection surfaces *why* each document was retrieved. Naming-time introspection
 surfaces *why* each concept exists in the architecture. Both are how helix tells
 its consumer "here is the reasoning I'm running on." Symbol-level introspection
 is invisible in a response schema but it's where LLMs first engage.
@@ -210,7 +210,7 @@ trust calibration) generalise.
 
 ### Not "abandon human readability"
 
-Markdown gene content, readable summaries, promoter fields — these still have
+Markdown document content, readable summaries, tags fields — these still have
 value *for operator debugging* and *for paper-track legibility*. The frame
 shift is about weighting, not elimination. When a choice forces a trade-off,
 the LLM consumer wins; when there's no trade-off, keep the human-legible form.
@@ -242,11 +242,11 @@ this doc should be updated to match.
 
 | Decision | Before this doc | After |
 |---|---|---|
-| Presence gene access pattern | fuzzy retrieval via /context | accept fuzzy miss; direct `/genes/presence:{pid}` lookup is the intended access pattern |
+| Presence document access pattern | fuzzy retrieval via /context | accept fuzzy miss; direct `/genes/presence:{pid}` lookup is the intended access pattern |
 | PWPC Phase 1 schema | tier scores only | add `query_sema` + `top_candidate_sema` so LLM consumers can reason about semantic agreement |
 | Antiresonance finding | surface as tuning issue | surface as primary trust-calibration signal in future retrievals |
 | Walkability endpoints (`/genes/{id}/neighbors` etc.) | "dashboard feature" | priority for next sprint — LLMs often know *what* to walk to |
-| Heartbeat endpoint presence-gene emit | optional body was "nice-to-have" | it's the primary LLM-to-LLM coordination signal |
+| Heartbeat endpoint presence-document emit | optional body was "nice-to-have" | it's the primary LLM-to-LLM coordination signal |
 
 ---
 

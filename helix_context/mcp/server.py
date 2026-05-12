@@ -1,16 +1,16 @@
 """
-Helix Context MCP Server — exposes genome tools to Claude Code.
+Helix Context MCP Server — exposes knowledge store tools to Claude Code.
 
 LEGACY SERVER: kept for rollback compatibility only.
 Prefer `python -m helix_context.mcp_server` with `HELIX_MCP_URL`.
 
 Three tools:
     helix_context    — query compressed context for a topic (the money saver)
-    helix_ingest     — ingest content into the genome
-    helix_stats      — genome health metrics + delta-epsilon history
+    helix_ingest     — ingest content into the knowledge store
+    helix_stats      — knowledge store health metrics + delta-epsilon history
 
 Claude auto-discovers these tools and calls them when relevant,
-replacing raw file reads with 7x compressed genome context.
+replacing raw file reads with 7x compressed knowledge store context.
 
 Usage:
     Register in .mcp.json:

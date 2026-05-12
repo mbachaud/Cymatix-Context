@@ -2,17 +2,17 @@
 Bridge — Shared memory layer between AI assistants.
 
 Creates a file-based protocol that any AI assistant (Claude, Gemini, etc.)
-can read and write to share context through the Agentome genome.
+can read and write to share context through the Agentome knowledge store.
 
 Architecture:
     ~/.helix/shared/          — shared memory directory
         inbox/                — files TO ingest (any assistant drops files here)
-        outbox/               — genome context snapshots (assistants read from here)
+        outbox/               — knowledge store context snapshots (assistants read from here)
         signals/              — lightweight status signals between assistants
-        SHARED_CONTEXT.md     — always-current genome summary for instruction files
+        SHARED_CONTEXT.md     — always-current knowledge store summary for instruction files
 
-    The bridge watches inbox/ and auto-ingests new files into the genome.
-    It periodically snapshots the genome health + recent genes into outbox/.
+    The bridge watches inbox/ and auto-ingests new files into the knowledge store.
+    It periodically snapshots the knowledge store health + recent documents into outbox/.
     Signals allow lightweight coordination ("I'm ingesting", "query X").
 
 Usage:
@@ -26,7 +26,7 @@ Usage:
 Integration:
     - Claude Code: reads SHARED_CONTEXT.md via /helix skill
     - Gemini Code Assist: reads SHARED_CONTEXT.md via GEMINI.md include
-    - Any agent: drops files into inbox/ for genome ingestion
+    - Any agent: drops files into inbox/ for knowledge store ingestion
 """
 
 from __future__ import annotations
@@ -87,7 +87,7 @@ class AgentBridge:
         filename: Optional[str] = None,
     ) -> Path:
         """
-        Drop content into the inbox for genome ingestion.
+        Drop content into the inbox for knowledge store ingestion.
         Any assistant can call this to share knowledge.
         """
         if filename is None:
@@ -119,11 +119,11 @@ class AgentBridge:
                     log.warning("Failed to collect inbox file: %s", f, exc_info=True)
         return items
 
-    # ── Outbox: publish genome state for other assistants ─────────
+    # ── Outbox: publish knowledge store state for other assistants ─────────
 
     def update_shared_context(self, stats: Dict, recent_queries: Optional[List] = None) -> Path:
         """
-        Write SHARED_CONTEXT.md — a live summary of the genome state
+        Write SHARED_CONTEXT.md — a live summary of the knowledge store state
         that other assistants can read from their instruction files.
         """
         lines = [
@@ -242,7 +242,7 @@ class AgentBridge:
         server process.
 
         Recommended pattern:
-            bridge.announce_restart("swapping ribosome model", actor="laude")
+            bridge.announce_restart("swapping compressor model", actor="laude")
             time.sleep(0.75)  # let filesystem flush + observers see it
             # ... trigger the actual restart ...
 
@@ -526,11 +526,11 @@ class AgentBridge:
         limit: int = 10,
         party_id: Optional[str] = None,
     ) -> Optional[List[Dict]]:
-        """Fetch recent genes authored by a handle, chronologically.
+        """Fetch recent documents authored by a handle, chronologically.
 
         Uses the BM25-bypass /sessions/{handle}/recent path so short
-        broadcasts surface even when the genome holds a much larger
-        unrelated corpus. Returns the genes list, or None on failure.
+        broadcasts surface even when the knowledge store holds a much larger
+        unrelated corpus. Returns the documents list, or None on failure.
         """
         params: Dict[str, str] = {"limit": str(int(limit))}
         if party_id:
@@ -547,10 +547,10 @@ class AgentBridge:
         metadata: Optional[Dict] = None,
         attribute: bool = True,
     ) -> Optional[Dict]:
-        """Ingest content into the genome via the helix /ingest endpoint.
+        """Ingest content into the knowledge store via the helix /ingest endpoint.
 
         If ``attribute=True`` (default) and a participant has been
-        registered, the resulting genes are tagged via the session
+        registered, the resulting documents are tagged via the session
         registry attribution path so they can be retrieved later via
         recent_by_handle().
 

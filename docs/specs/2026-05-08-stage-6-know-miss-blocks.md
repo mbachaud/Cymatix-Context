@@ -57,7 +57,7 @@ confidence = 1.0 / (1.0 + exp(-z))
 
 `s_ref`, `g_ref`, and the four `β` coefficients live in `[know]` of `helix.toml`. Defaults shipped in code (cold-start) until calibration runs: `β = (-2.0, +2.0, +1.5, +0.7, +1.8)`, `s_ref = 1.0`, `g_ref = 0.5`. These defaults intentionally produce `confidence ≈ 0.5` at boundary cases — a `know` block is only emitted when `confidence >= know.emit_floor` (default `0.55`); below that we fall through to `MissBlock(reason="sparse")`.
 
-**Stage 7 extension (forthcoming).** Stage 7 adds `freshness_min` (the worst per-gene decay score across top-K) as a fifth feature β5 with default ≈ +1.5. The logistic becomes 5-feature; `know` cannot be emitted if the top-1 gene's source is stale. This is required because the current `_compute_health` averages decay scores ([context_manager.py:2315](../../helix_context/context_manager.py#L2315)), masking a stale needle when fresh padding accompanies it. Stage 6 ships with the 4-feature logistic; Stage 7 retunes via the same calibration script.
+**Stage 7 extension (forthcoming).** Stage 7 adds `freshness_min` (the worst per-document decay score across top-K) as a fifth feature β5 with default ≈ +1.5. The logistic becomes 5-feature; `know` cannot be emitted if the top-1 document's source is stale. This is required because the current `_compute_health` averages decay scores ([context_manager.py:2315](../../helix_context/context_manager.py#L2315)), masking a stale needle when fresh padding accompanies it. Stage 6 ships with the 4-feature logistic; Stage 7 retunes via the same calibration script.
 
 ## 4. New schema — `MissBlock`
 
@@ -78,13 +78,13 @@ class MissBlock(BaseModel):
 
 1. **Code-shaped query** (matches `r"[A-Za-z_][A-Za-z0-9_]*\.[A-Za-z_]"` OR contains `def `, `class `, `import `, `function ` OR ≥1 `path_token` resembling a filename `.py|.ts|.go|.rs|.md`) → `["grep", "rag"]`.
 2. **Entity-shaped query** (extract_query_signals returns ≥1 entity AND no code shape) and `reason == "no_promoter_match"` → `["rag", "web"]`.
-3. **Reason `denatured`** (genome inconsistent) → `["grep", "ask_human"]` — don't trust RAG over a denatured corpus, but local grep still works.
+3. **Reason `denatured`** (knowledge store inconsistent) → `["grep", "ask_human"]` — don't trust RAG over a denatured corpus, but local grep still works.
 4. **Reason `abstain` and short query (≤3 tokens)** → `["ask_human", "rag"]` — ambiguity.
 5. **Default fallback** → `["rag"]`.
 
 `do_not_answer_from_genome` is a `Literal[True]` so the field's *presence* is the signal — agents don't compare strings.
 
-**Stage 7 extension (forthcoming).** Stage 7 adds three new reasons to the `Literal[...]`: `"stale"` (gene retrieved successfully but source mtime > last_verified_at), `"cold"` (heterochromatin match — gene exists but isn't safe to act on without re-warming), `"superseded"` (claims_graph has a successor edge from a newer gene). All three use a different routing — `agent.recommendation="refresh"` (new sixth value), and a new required field `refresh_targets: list[str]` (file paths or URLs to re-fetch before retrying). Stage 6 ships with the four reasons above; Stage 7 extends without breaking back-compat (consumers parse the union, new reasons fall through unknown→escalate for legacy clients).
+**Stage 7 extension (forthcoming).** Stage 7 adds three new reasons to the `Literal[...]`: `"stale"` (document retrieved successfully but source mtime > last_verified_at), `"cold"` (heterochromatin match — document exists but isn't safe to act on without re-warming), `"superseded"` (claims_graph has a successor edge from a newer document). All three use a different routing — `agent.recommendation="refresh"` (new sixth value), and a new required field `refresh_targets: list[str]` (file paths or URLs to re-fetch before retrying). Stage 6 ships with the four reasons above; Stage 7 extends without breaking back-compat (consumers parse the union, new reasons fall through unknown→escalate for legacy clients).
 
 ## 5. ContextResponse top-level addition
 
@@ -132,13 +132,13 @@ The existing four values (`trust`, `verify`, `refresh`, `reread_raw`) remain val
 Populate `KnowBlock.gene_id_match` with the matched token (string), or leave `None`. Implemented in `context_packet.py::_gene_id_beacon(query, top_gene)`:
 
 - Tokenize the query with `extract_query_signals` (existing).
-- For the top-1 gene only:
+- For the top-1 document only:
   - Compute `file_tokens(top_gene.source_id)` and `path_tokens(top_gene.source_id)` (both already exist).
   - If any query token is in `file_tokens(...)` → set `gene_id_match` to that token. Filename match wins.
   - Else if any query token is in `path_tokens(...)` AND that token has length ≥ 4 (avoid `src`, `lib`, `app`) → set `gene_id_match` to that token.
 - **Exact, case-insensitive equality only.** No prefix match, no substring match, no edit distance, no synonym expansion.
 
-False-positive cost > false-negative cost: a wrong beacon causes the frontier model to lock in a wrong answer; a missing beacon merely lowers `confidence` and the agent still gets the gene.
+False-positive cost > false-negative cost: a wrong beacon causes the frontier model to lock in a wrong answer; a missing beacon merely lowers `confidence` and the agent still gets the document.
 
 ## 9. `coordinate_confidence` promotion
 
@@ -150,19 +150,19 @@ Today `context_packet.py:484–506` appends `f"coordinate_confidence={x:.2f}..."
 
 ## 10. Test plan (`tests/test_know_miss_block.py`)
 
-- `test_know_block_emitted_when_found_and_high_confidence` — seed planted gene, query its filename, assert `know.found=True`, `know.confidence > 0.7`, `know.gene_id_match == "<filename_token>"`, `miss is None`.
+- `test_know_block_emitted_when_found_and_high_confidence` — seed planted document, query its filename, assert `know.found=True`, `know.confidence > 0.7`, `know.gene_id_match == "<filename_token>"`, `miss is None`.
 - `test_miss_block_emitted_on_abstain` — abstain manager fixture, assert `miss.reason == "abstain"`, `miss.do_not_answer_from_genome is True`, `know is None`, `escalate_to` non-empty.
 - `test_gene_id_match_beacon_only_on_exact_filename_match` — three subcases: (a) exact filename token match → set; (b) substring `"manage"` vs file `"context_manager.py"` → `None`; (c) folder-only match `"src"` → `None` (length filter).
 - `test_expressed_context_has_no_match_tag_on_miss` — assert `expressed_context == '<helix:no_match reason="abstain" do_not_answer="true"/>'` exactly.
 - `test_agent_recommendation_escalate_on_code_shaped_miss` — abstain with query `"def parse_promoter"`, assert `agent.recommendation == "escalate"` and `miss.escalate_to == ["grep", "rag"]`.
-- `test_no_block_when_neither_found_nor_abstain` — **edge case spec.** Score above ABSTAIN floor but `confidence < know.emit_floor` (e.g., low `coordinate_confidence`, no agreement, score just clears floor). The discriminator emits `MissBlock(reason="sparse")` — never neither, never both. Test asserts exactly that: response has `miss`, not `know`, and `expressed_context` carries the populated genes (because we did retrieve, just weakly) plus the `<helix:no_match reason="sparse"/>` token *appended* (not replacing) so the agent still sees the weak hits but is told to escalate.
+- `test_no_block_when_neither_found_nor_abstain` — **edge case spec.** Score above ABSTAIN floor but `confidence < know.emit_floor` (e.g., low `coordinate_confidence`, no agreement, score just clears floor). The discriminator emits `MissBlock(reason="sparse")` — never neither, never both. Test asserts exactly that: response has `miss`, not `know`, and `expressed_context` carries the populated documents (because we did retrieve, just weakly) plus the `<helix:no_match reason="sparse"/>` token *appended* (not replacing) so the agent still sees the weak hits but is told to escalate.
 
 ## 11. Confidence calibration
 
 `scripts/calibrate_know_confidence.py`:
 
 1. Load `located_n1000` ground truth (Stage 1 bench output).
-2. For each row, invoke `/context` against the locked-in fixture genome and record `(top_score, score_gap, lexical_dense_agree, file_cov, planted_gene_id == retrieved_top1)`.
+2. For each row, invoke `/context` against the locked-in fixture knowledge store and record `(top_score, score_gap, lexical_dense_agree, file_cov, planted_gene_id == retrieved_top1)`.
 3. Fit `sklearn.linear_model.LogisticRegression(penalty="l2", C=1.0)` on the four features → `(planted == top1)` label. Extract `β` and intercept.
 4. Pick `s_ref = median(top_score)`, `g_ref = median(score_gap)` from the calibration set so `tanh(...)` saturates around the typical scale.
 5. Pick `know.emit_floor` as the precision-95 operating point on the held-out 20% split.
