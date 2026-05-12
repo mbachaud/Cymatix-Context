@@ -54,3 +54,14 @@ The genome contains compressed knowledge from:
 - Don't modify genome.db directly — use the /ingest endpoint or inbox
 - Don't ingest API keys, secrets, or credentials
 - Don't assume genome content is current — check source file mtimes
+
+## Observability (Grafana telemetry)
+
+To inspect helix activity live, set up the native OTel sidecar once per machine:
+
+```bash
+scripts/setup-grafana-telem.sh        # Linux / macOS / Git Bash
+scripts\setup-grafana-telem.ps1       # Windows PowerShell
+```
+
+Then start helix with `HELIX_OTEL_ENABLED=1 HELIX_OTEL_ENDPOINT=localhost:4317`. Dashboards at <http://localhost:3000/d/helix-overview> (admin/admin, rotate on first login). The script is idempotent; re-run safely.

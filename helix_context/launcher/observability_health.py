@@ -145,10 +145,16 @@ HEALTH_ENDPOINTS: dict[str, str] = {
 
 # Ports a healthy instance binds. Used both for the spawn-order port-bind
 # poll (§7.3) and the port-collision pre-flight check (§7.2).
+#
+# Tempo's OTLP receiver lives at 14317 in the native render (see
+# `observability_render.TEMPO_OTLP_PORT`) so it doesn't collide with the
+# collector's OTLP intake on 4317. Listing 14317 here makes the supervisor's
+# external-instance detection symmetric across services: if 4317 is already
+# bound at boot, it really IS an external collector (not tempo leaking).
 SERVICE_PORTS: dict[str, list[int]] = {
     "collector":  [4317, 4318, 8889],
     "prometheus": [9090],
-    "tempo":      [3200],
+    "tempo":      [3200, 14317],
     "loki":       [3100],
     "grafana":    [3000],
 }

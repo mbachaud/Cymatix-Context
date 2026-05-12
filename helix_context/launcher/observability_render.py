@@ -6,8 +6,14 @@ The deploy/otel YAMLs bake in Docker-Compose service-DNS hostnames
 `/var/loki/...`, `/loki`). For the native runtime we substitute these
 to `localhost:*` and `platformdirs.user_data_dir(...)` paths.
 
-No structural changes. The diff between source and render is hostnames
-+ paths only, enforced by tests/test_observability_render.py.
+There is one structural delta beyond hostnames + paths: tempo's OTLP
+receiver moves from 4317 to ``TEMPO_OTLP_PORT`` (14317) and the
+collector's ``otlp/tempo`` exporter is rewritten to match. In Docker
+each service has its own network namespace and both can bind 4317
+inside their respective containers; on bare-metal localhost they
+collide, so the supervisor's `_maybe_external("collector")` check
+mistakes tempo's 4317 for a pre-existing collector and skips spawning
+ours. See tests/test_observability_render.py for the lockdown.
 
 Usage:
     python -m helix_context.launcher.observability_render render-all
@@ -39,6 +45,14 @@ def _deploy_dir() -> Path:
     return _repo_root() / "deploy" / "otel"
 
 
+# In Docker, tempo's OTLP receiver and the collector's OTLP receiver
+# both bind 4317 inside their own container network namespaces with no
+# conflict. On bare-metal localhost they would collide, so we remap
+# tempo's native OTLP receiver to this port and rewrite the collector's
+# `otlp/tempo` exporter to match.
+TEMPO_OTLP_PORT = 14317
+
+
 # ── substitution rules ───────────────────────────────────────────────
 # Each rule: (compiled regex, replacement fn). Replacement fn returns the
 # substituted string given the match.
@@ -54,7 +68,12 @@ def _path_for(service: str, *parts: str) -> str:
 
 
 def _sub_collector(text: str) -> str:
-    text = text.replace("endpoint: tempo:4317", "endpoint: localhost:4317")
+    # Tempo's OTLP receiver is remapped to TEMPO_OTLP_PORT in the native
+    # render (see module docstring); the exporter endpoint here must match.
+    text = text.replace(
+        "endpoint: tempo:4317",
+        f"endpoint: localhost:{TEMPO_OTLP_PORT}",
+    )
     text = text.replace(
         "endpoint: http://prometheus:9090/api/v1/write",
         "endpoint: http://localhost:9090/api/v1/write",
@@ -65,9 +84,12 @@ def _sub_collector(text: str) -> str:
     )
     # Doc-comment header at top of the source file mentions Docker DNS
     # hostnames in prose ("traces -> Tempo (http://tempo:4317)"). Rewrite
-    # to localhost too — pure documentation text, but keeps the rendered
-    # config self-consistent with what the native runtime actually does.
-    text = text.replace("http://tempo:4317", "http://localhost:4317")
+    # to localhost + remapped tempo port so the rendered config is
+    # self-consistent with what the native runtime actually does.
+    text = text.replace(
+        "http://tempo:4317",
+        f"http://localhost:{TEMPO_OTLP_PORT}",
+    )
     text = text.replace(
         "http://prometheus:9090/api/v1/write",
         "http://localhost:9090/api/v1/write",
@@ -93,6 +115,14 @@ def _sub_tempo(text: str) -> str:
     text = text.replace(
         "url: http://prometheus:9090/api/v1/write",
         "url: http://localhost:9090/api/v1/write",
+    )
+    # Remap tempo's OTLP receiver off 4317 so it doesn't collide with the
+    # collector's intake port. The collector exports traces to tempo at
+    # this port (see `_sub_collector`). Docker leaves 4317 alone — each
+    # container has its own network namespace there.
+    text = text.replace(
+        "endpoint: 0.0.0.0:4317",
+        f"endpoint: 0.0.0.0:{TEMPO_OTLP_PORT}",
     )
     return text
 

@@ -16,16 +16,28 @@
 # dependency of the retrieval loop. Partner/vendor eval hook too —
 # Anthropic / Google / etc. can plug a hosted compression model into
 # this seam without forking.
+#
+# ── To turn the ribosome ON (default is OFF): ────────────────────────
+#   1. Set enabled = true.
+#   2. Pick a backend: "litellm" (cloud or local via LiteLLM model
+#      string), "deberta" (hybrid — DeBERTa for rerank/splice +
+#      Ollama for pack/replicate), or "claude" (commented below).
+#   3. Configure the matching model/url field for your chosen backend.
+#
+# Any other backend string (including the default "none") is reported
+# by /health as ``ribosome_backend = "disabled"`` and dispatches the
+# no-op DisabledBackend. See helix_context/ribosome.py:24 for the
+# rationale on why the ribosome stays paused by default.
 # ──────────────────────────────────────────────────────────────────────
 [ribosome]
-enabled = false                        # Explicit opt-in. Disabled/legacy ribosome config is ignored unless you turn this on.
-backend = "ollama"                      # Legacy/default placeholder. Only "litellm" and "deberta" are honored when enabled=true.
-model = "gemma4:e2b"                    # Ollama model for pack + replicate (light, ~2GB VRAM)
+enabled = false                          # Explicit opt-in. Backend string is ignored entirely while this is false.
+backend = "none"                         # Disabled-state placeholder. Live options: "litellm" | "deberta" | "claude". See the "To turn the ribosome ON" runbook above.
+model = "gemma4:e2b"                     # Ollama model used by "deberta" backend's pack/replicate fallback (light, ~2GB VRAM)
 base_url = "http://localhost:11434"
 timeout = 120                            # Increased for bulk ingestion
-keep_alive = "30m"                      # keep Ollama model loaded
-warmup = false                          # pre-load Ollama model on server start (disabled for N=1000 bench — qwen3:4b holds VRAM)
-query_expansion_enabled = false         # Step 0 LLM query-intent expansion. false = strictly LLM-free /context (the 12 retrieval tiers never need this). Flip on for an extra 2-3pp on ambiguous queries at the cost of one ribosome call per request.
+keep_alive = "30m"                       # keep the underlying Ollama model loaded
+warmup = false                           # pre-load on server start (disabled for N=1000 bench — qwen3:4b holds VRAM)
+query_expansion_enabled = false          # Step 0 LLM query-intent expansion. false = strictly LLM-free /context (the 12 retrieval tiers never need this). Flip on for an extra 2-3pp on ambiguous queries at the cost of one ribosome call per request.
 # Sub-query decomposition — decomposes broad queries into 3 point-fact sub-queries.
 # Only fires for multi_hop/default classifier class. Requires query_expansion_enabled = true.
 query_decomposition_enabled = false
@@ -35,7 +47,7 @@ query_decomposition_enabled = false
 # hosted compression/extraction model into the ribosome seam without
 # forking, or for freeing the local GPU during heavy bench runs.
 # backend = "claude"
-# claude_model = "claude-haiku-4-5-20251001"   # haiku = cost-effective bulk; swap to claude-sonnet-4-6 for higher resolution
+# claude_model = "claude-haiku-4-5-20251001"    # haiku = cost-effective bulk; swap to claude-sonnet-4-6 for higher resolution
 # claude_base_url = ""                          # "" = direct Anthropic API; set to a proxy URL (e.g. http://127.0.0.1:8787) to route through a gateway
 # litellm_model = "ollama/gemma4:e2b"           # LiteLLM model string — only used when backend = "litellm"
 
