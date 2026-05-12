@@ -75,35 +75,66 @@ def run(argv: list[str]) -> int:
             output.eprint(msg["error"])
         return output.EXIT_ERROR
 
+    # Opening the session itself is a hard-stop failure — no partial
+    # progress is possible if we can't even talk to the genome.
     try:
         sess = open_session()
-        all_gene_ids: list[str] = []
-        total_bytes = 0
-        for f in files:
-            content = f.read_text(encoding="utf-8", errors="replace")
-            result = sess.ingest(content)
-            all_gene_ids.extend(result.gene_ids)
-            total_bytes += result.bytes_written
     except Exception as exc:
-        err = {"ok": False, "error": f"{type(exc).__name__}: {exc}"}
+        err = {
+            "ok": False,
+            "error": f"{type(exc).__name__}: {exc}",
+            "files_processed": 0,
+            "gene_ids": [],
+            "bytes_written": 0,
+            "errors": [],
+        }
         if args.json:
             output.print_json(err)
         else:
             output.eprint(err["error"])
         return output.EXIT_ERROR
 
+    all_gene_ids: list[str] = []
+    total_bytes = 0
+    errors: list[dict] = []
+    files_processed = 0
+    for f in files:
+        # Per-file try/except so one bad file (locked, permission denied,
+        # pipeline error mid-batch) doesn't nuke the progress from the
+        # other 999 files in the directory. KeyboardInterrupt is allowed
+        # to propagate so Ctrl-C still works.
+        try:
+            content = f.read_text(encoding="utf-8", errors="replace")
+            result = sess.ingest(content)
+            all_gene_ids.extend(result.gene_ids)
+            total_bytes += result.bytes_written
+            files_processed += 1
+        except KeyboardInterrupt:
+            raise
+        except Exception as exc:
+            errors.append({
+                "file": str(f),
+                "error": f"{type(exc).__name__}: {exc}",
+            })
+
     payload = {
-        "ok": True,
-        "files_processed": len(files),
+        "ok": not errors,
+        "files_processed": files_processed,
         "gene_ids": all_gene_ids,
         "bytes_written": total_bytes,
+        "errors": errors,
     }
     if args.json:
         output.print_json(payload)
     else:
-        output.print_lines([
-            f"ingested {len(files)} file(s)",
+        lines = [
+            f"ingested {files_processed} file(s)",
             f"  gene_ids: {len(all_gene_ids)}",
             f"  bytes:    {total_bytes}",
-        ])
-    return output.EXIT_OK
+        ]
+        if errors:
+            lines.append(f"  failed:   {len(errors)} file(s)")
+            for e in errors:
+                lines.append(f"    - {e['file']}: {e['error']}")
+        output.print_lines(lines)
+    return output.EXIT_OK if not errors else output.EXIT_ERROR

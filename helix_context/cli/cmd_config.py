@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import dataclasses
 import json
+import sys
 from typing import Any, Dict
 
 from . import output
@@ -55,13 +56,31 @@ def run(argv: list[str]) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
     if args.action != "show":
-        parser.print_help()
+        # Help to stderr keeps stdout clean for `--json` consumers — matches
+        # dispatcher.py's convention.
+        parser.print_help(file=sys.stderr)
         return output.EXIT_BAD_ARGS
 
     # Late import — avoid loading config module when other subcommands run.
     from helix_context.config import load_config
 
-    cfg = load_config(args.config)
+    try:
+        cfg = load_config(args.config)
+    except Exception as exc:
+        # A malformed helix.toml previously dumped a raw traceback. CI
+        # consumers that pipe `helix config show --json` need structured
+        # error output instead. Mirrors cmd_status._probe_config's pattern.
+        err = {
+            "ok": False,
+            "error": f"{type(exc).__name__}: {exc}",
+            "next_action": "Fix the [genome]/[server]/... sections in helix.toml.",
+        }
+        if args.text:
+            output.eprint(err["error"])
+        else:
+            output.print_json(err)
+        return output.EXIT_ERROR
+
     payload = _config_to_dict(cfg)
 
     if args.text:
