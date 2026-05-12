@@ -2,11 +2,14 @@
 from __future__ import annotations
 
 import argparse
+import logging
 import sqlite3
 from pathlib import Path
 from typing import Any, Dict
 
 from . import output
+
+log = logging.getLogger(__name__)
 
 
 def _probe_genome(path: str) -> Dict[str, Any]:
@@ -116,14 +119,31 @@ def run(argv: list[str]) -> int:
     args = parser.parse_args(argv)
 
     from helix_context.config import load_config
+    config_load_failed = False
     try:
         cfg = load_config(args.config)
         genome_path = cfg.genome.path
-    except Exception:
+    except Exception as exc:
+        # Don't silently swallow — surface via warning so the operator sees
+        # *why* status fell back. The downstream _probe_config call will also
+        # report the structured error, but we still need to log here because
+        # the genome path we hand to _probe_genome is a guess, not config.
+        log.warning(
+            "load_config failed (%s: %s); falling back to 'genome.db' for probe",
+            type(exc).__name__,
+            exc,
+        )
         genome_path = "genome.db"   # best-effort default
+        config_load_failed = True
 
     config_report = _probe_config(args.config)
     genome_report = _probe_genome(genome_path)
+    # If config load failed, annotate the genome report so --json consumers
+    # know the path isn't authoritative — it's a CWD-relative fallback, not
+    # whatever the user configured. The underlying config error is already in
+    # config_report["error"]/["detail"].
+    if config_load_failed:
+        genome_report["path_source"] = "fallback_default"
 
     report: Dict[str, Any] = {
         "genome": genome_report,
@@ -132,8 +152,23 @@ def run(argv: list[str]) -> int:
 
     # Optional network probes — reuse the existing helix-status logic.
     if not args.no_network:
+        # Narrow catch around the *import* so we can distinguish "probe code
+        # itself is broken" (module missing/renamed) from "probe ran and
+        # returned a structured down/error payload". If we collapsed both
+        # into one except, an ImportError would leave report["launcher"]
+        # unset and --json consumers would silently lose the key.
         try:
             from helix_status import collect_status
+        except ImportError as exc:
+            err = f"helix_status import failed: {type(exc).__name__}: {exc}"
+            report["server"] = {"reachable": False, "error": err}
+            report["launcher"] = {"reachable": False, "error": err}
+        else:
+            # collect_status() / _get_json() already return structured error
+            # payloads with reachable=False on network failure (see
+            # helix_status._get_json), so we surface those directly rather
+            # than papering over them with a top-level except. Any *other*
+            # exception here is a real bug — let it propagate.
             net = collect_status()
             report["server"] = {
                 "reachable": net["server"]["reachable"],
@@ -143,8 +178,6 @@ def run(argv: list[str]) -> int:
                 "reachable": net["launcher"]["reachable"],
                 "url": net["launcher"]["url"],
             }
-        except Exception as exc:
-            report["server"] = {"reachable": False, "error": str(exc)}
 
     # Compute aggregate next_action + return code.
     if not genome_report["reachable"]:
