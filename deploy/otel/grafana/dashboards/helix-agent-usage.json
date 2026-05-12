@@ -1,0 +1,172 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Per-agent /context traffic — request rate, latency, and caller_model_class mix labelled by `agent`. Sourced from the `agent` label on helix_context_latency_seconds and helix_context_calls_by_class_total (default `unknown`; `other` for handles outside the allowlist). MCP shims forward HELIX_AGENT automatically; direct callers can set the `agent` body field or X-Helix-Agent header.",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [
+    {"title": "Helix — Operations Overview", "type": "dashboards", "tags": ["helix", "operations"], "asDropdown": false, "icon": "external link"},
+    {"title": "Helix — Retrieval Quality + HITL", "type": "dashboards", "tags": ["helix", "retrieval"], "asDropdown": false, "icon": "external link"}
+  ],
+  "liveNow": false,
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 0},
+      "id": 1,
+      "panels": [],
+      "title": "Per-agent traffic",
+      "type": "row"
+    },
+    {
+      "type": "timeseries",
+      "title": "/context request rate by agent (req/s)",
+      "description": "Stacked rate of /context calls grouped by caller-supplied `agent` label. Direct API callers without an agent label fold into `unknown`; any handle outside the allowlist collapses to `other`.",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 1},
+      "id": 2,
+      "targets": [
+        {
+          "expr": "sum by (agent) (rate(helix_context_latency_seconds_count[$__rate_interval]))",
+          "legendFormat": "{{agent}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "custom": {
+            "drawStyle": "line",
+            "stacking": {"mode": "normal", "group": "A"},
+            "fillOpacity": 30,
+            "lineWidth": 1
+          }
+        }
+      },
+      "options": {
+        "legend": {"displayMode": "table", "placement": "right", "showLegend": true},
+        "tooltip": {"mode": "multi", "sort": "desc"}
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "/context p95 latency by agent (seconds)",
+      "description": "p95 of helix_context_latency_seconds per agent. Spikes localized to a single agent typically mean a specific MCP host is sending pathological queries; spikes across all agents point at helix-side regressions.",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 1},
+      "id": 3,
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum by (le, agent) (rate(helix_context_latency_seconds_bucket[$__rate_interval])))",
+          "legendFormat": "{{agent}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "custom": {"drawStyle": "line", "fillOpacity": 0, "lineWidth": 2}
+        }
+      },
+      "options": {
+        "legend": {"displayMode": "table", "placement": "right", "showLegend": true},
+        "tooltip": {"mode": "multi", "sort": "desc"}
+      }
+    },
+    {
+      "collapsed": false,
+      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 9},
+      "id": 4,
+      "panels": [],
+      "title": "Caller mix",
+      "type": "row"
+    },
+    {
+      "type": "timeseries",
+      "title": "caller_model_class breakdown by agent",
+      "description": "Stacked rate of helix_context_calls_by_class_total grouped by (agent, class). Lets you see which agents are sending `frontier` vs `small_moe` vs `generic` requests over time — useful when calibrating decoder-mode tradeoffs per caller.",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 9, "w": 16, "x": 0, "y": 10},
+      "id": 5,
+      "targets": [
+        {
+          "expr": "sum by (agent, class) (rate(helix_context_calls_by_class_total[$__rate_interval]))",
+          "legendFormat": "{{agent}} / {{class}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "custom": {
+            "drawStyle": "line",
+            "stacking": {"mode": "normal", "group": "A"},
+            "fillOpacity": 30,
+            "lineWidth": 1
+          }
+        }
+      },
+      "options": {
+        "legend": {"displayMode": "table", "placement": "right", "showLegend": true, "calcs": ["mean", "lastNotNull"]},
+        "tooltip": {"mode": "multi", "sort": "desc"}
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Active agents (last hour)",
+      "description": "Distinct `agent` label values that produced at least one /context call in the last hour. Sanity check for the cardinality cap (allowlist + 'other' + 'unknown' is the bound).",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 9, "w": 8, "x": 16, "y": 10},
+      "id": 6,
+      "targets": [
+        {
+          "expr": "count(count by (agent) (increase(helix_context_latency_seconds_count[1h])))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"color": "green", "value": null},
+              {"color": "yellow", "value": 8},
+              {"color": "red", "value": 20}
+            ]
+          }
+        }
+      },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "area",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
+        "textMode": "auto"
+      }
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "tags": ["helix", "agents", "operations"],
+  "templating": {"list": []},
+  "time": {"from": "now-1h", "to": "now"},
+  "timepicker": {},
+  "timezone": "",
+  "title": "Helix — Agent Usage",
+  "uid": "helix-agent-usage",
+  "version": 1,
+  "weekStart": ""
+}

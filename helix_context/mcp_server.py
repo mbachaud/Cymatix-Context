@@ -118,6 +118,14 @@ TIMEOUT_S = float(os.environ.get("HELIX_MCP_TIMEOUT", "30"))
 # scheme, so the session_id here aligns with the registry participant.
 MCP_SESSION_ID = os.environ.get("HELIX_MCP_HANDLE", f"mcp-{os.getpid()}")
 
+# Agent label passed to helix's per-agent telemetry path. Same handle the
+# session registry uses, so dashboards align with attribution. HELIX_AGENT
+# is the canonical env var; HELIX_MCP_HANDLE is the older host-set
+# fallback (Claude Code, OpenWebUI, etc. commonly set this).
+MCP_AGENT_HANDLE: Optional[str] = (
+    os.environ.get("HELIX_AGENT") or os.environ.get("HELIX_MCP_HANDLE") or None
+)
+
 # Set by _register_with_registry on success; consumed by the
 # helix_announce MCP tool to PATCH the same participant row.
 _registered_bridge: Optional[Any] = None
@@ -332,6 +340,11 @@ def helix_context(
     if downstream_model:
         body["downstream_model"] = downstream_model
     body["session_id"] = session_id or MCP_SESSION_ID
+    if MCP_AGENT_HANDLE:
+        # Plumb agent identity through so helix's per-agent telemetry
+        # labels (request rate / latency by agent) reflect THIS shim,
+        # not the bare HELIX_AGENT env on the helix server process.
+        body["agent"] = MCP_AGENT_HANDLE
     return _http("POST", "/context", body)
 
 
@@ -870,6 +883,11 @@ def helix_document_query(
     if downstream_model:
         body["downstream_model"] = downstream_model
     body["session_id"] = session_id or MCP_SESSION_ID
+    if MCP_AGENT_HANDLE:
+        # Plumb agent identity through so helix's per-agent telemetry
+        # labels (request rate / latency by agent) reflect THIS shim,
+        # not the bare HELIX_AGENT env on the helix server process.
+        body["agent"] = MCP_AGENT_HANDLE
     return _http("POST", "/context", body)
 
 
