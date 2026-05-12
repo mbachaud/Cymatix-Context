@@ -69,7 +69,7 @@ low_vram_threshold_gb = 4.0
 
 [budget]
 ribosome_tokens = 3000                  # fixed decoder prompt
-expression_tokens = 12000               # 1:10 ratio at 128K = ~12.8K total context budget
+expression_tokens = 7000                # ~7K expressions cap (BROAD tighten 2026-05-12, bench-gated #73)
 max_genes_per_turn = 12
 max_fingerprints_per_turn = 40          # navigation-first fingerprint payload cap (final returned count, not frontier width)
 splice_aggressiveness = 0.3             # 0=keep all, 1=ruthless trim (lower preserves more literal detail)
