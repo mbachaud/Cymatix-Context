@@ -56,19 +56,20 @@ See:
 """
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
 from .config import HelixConfig
 from .schemas import (
     ContextItem,
-    ContextPacket,
     ContextWindow,
-    Gene,
     KnowBlock,
     MissBlock,
     RefreshTarget,
 )
+
+log = logging.getLogger(__name__)
 
 
 # ── Result types ──────────────────────────────────────────────────────
@@ -228,8 +229,11 @@ class HelixSession:
             k: Cap on returned documents. ``None`` honors the static
                config (per-session adaptive caps deferred to v2).
             decoder_mode: Override classifier-picked decoder mode.
-               One of {"navigation", "answer", "synthesis", ...}.
-               ``None`` = let the classifier pick.
+               One of the keys in ``context_manager.DECODER_MODES``:
+               ``"full"``, ``"condensed"``, ``"minimal"``, ``"none"``,
+               ``"moe"``, ``"answer_slate_only"``,
+               ``"condensed_with_slate"``. The CLI flag ``--tier focused``
+               maps to ``"condensed"``. ``None`` = let the classifier pick.
             downstream_model: Hint for MoE/small-model detection at the
                compression layer. Pass-through to ``build_context``.
             include_cold: Per-call override for cold-tier retrieval.
@@ -345,48 +349,15 @@ class HelixSession:
             },
         )
 
-    # ── Walk-aware surface (v1) ──────────────────────────────────────
+    # ── Walk-aware surface (deferred past v1) ────────────────────────
     #
-    # These power the "agent walks the corpus" workflow: query for
-    # candidates, drill into a specific document, fetch related ones,
-    # re-query with a refined understanding. Public method names use
-    # the boring vocabulary (document/related/corpus); the underlying
-    # types stay ``Gene`` until the schema-level rename lands.
-
-    def document(self, document_id: str) -> Optional[Gene]:
-        """Fetch a single document by id. Returns ``None`` if not found."""
-        # TODO: delegate to manager.genome.get_gene(document_id) when
-        # the read-path API is wired in v1 implementation.
-        raise NotImplementedError("Wire to Genome.get_gene in v1 implementation")
-
-    def related(
-        self,
-        document_id: str,
-        *,
-        depth: int = 1,
-        relation: Optional[str] = None,
-    ) -> List[Gene]:
-        """Return co-activated / structurally-related documents.
-
-        Powers the agent's graph walk: 'show me documents connected to
-        the one you just gave me'. The ``relation`` filter narrows to
-        a specific NLRelation or StructuralRelation.
-        """
-        raise NotImplementedError(
-            "Wire to genome.list_neighbors / typed_co_activated in v1"
-        )
-
-    def packet(self, query: str, *, task_type: str = "default") -> ContextPacket:
-        """Agent-safe verified/stale_risk/refresh_targets bundle.
-
-        The packet shape (see ``schemas.ContextPacket``) is the richer
-        sibling to ``query``: same retrieval pipeline, different
-        framing. Use when the agent needs structured freshness signals
-        before it acts on retrieved context.
-        """
-        raise NotImplementedError(
-            "Delegate to the existing /context/packet builder in v1"
-        )
+    # The agent-walks-the-corpus workflow (drill into a document,
+    # fetch related ones, re-query with refined understanding) is
+    # NOT part of the v1 surface. Once the read-path API is wired
+    # through the manager (Genome.get_gene + list_neighbors) and the
+    # /context/packet builder is finalized, those methods will be
+    # added here. Until then callers should drive walks via repeated
+    # ``query()`` calls.
 
     # ── Replication surface (v1.1) ──────────────────────────────────
 
@@ -497,8 +468,13 @@ def close_manager() -> None:
     if _DEFAULT_MANAGER is not None:
         try:
             _DEFAULT_MANAGER.close()
-        except Exception:
-            pass
+        except Exception as exc:
+            # Best-effort shutdown — do not reraise, but never silent.
+            log.warning(
+                "close_manager: manager.close() raised %s: %s",
+                type(exc).__name__,
+                exc,
+            )
         _DEFAULT_MANAGER = None
 
 
