@@ -570,8 +570,21 @@ def open_session(
     """
     global _DEFAULT_MANAGER
     if _DEFAULT_MANAGER is None:
+        from .config import load_config  # late import — cheap, but keeps the
+        # top-level import surface narrow
         from .context_manager import HelixContextManager  # late import
-        cfg = config or HelixConfig()
+
+        # If the caller hands us a config explicitly, honor it. Otherwise
+        # go through ``load_config`` so HELIX_CONFIG (path to helix.toml)
+        # and HELIX_GENOME_PATH (override of [genome] path) are respected
+        # the same way ``helix status`` already honors them. Before this
+        # call site used ``HelixConfig()`` directly, every cold-start CLI
+        # subcommand (query, packet, gene, neighbors, refresh-targets,
+        # diag corpus) silently fell back to defaults and read/created
+        # ./genome.db regardless of what the operator configured — which
+        # made ``helix status`` look healthy but ``helix query`` look at
+        # an entirely different (often empty) genome.
+        cfg = config or load_config()
         _DEFAULT_MANAGER = HelixContextManager(config=cfg)
     return HelixSession(
         manager=_DEFAULT_MANAGER,

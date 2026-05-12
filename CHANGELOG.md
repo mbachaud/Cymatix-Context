@@ -2,6 +2,40 @@
 
 ## Unreleased
 
+- **fix(api): `open_session()` now honors `HELIX_CONFIG` / `HELIX_GENOME_PATH`.**
+  Pre-fix, every cold-start CLI subcommand (query, diag corpus, packet,
+  gene, neighbors, refresh-targets) called `HelixConfig()` (defaults) and
+  silently created/read `./genome.db` regardless of what the operator had
+  configured — so `helix status` looked at the configured genome but
+  `helix query` looked at an empty one. Now routes through `load_config()`
+  the same way `helix status` does. Surfaced by AI-user testing on
+  `93deaf2`.
+- **fix(status): bump `/health` probe timeout default 1.5s → 10s, override
+  via `HELIX_STATUS_TIMEOUT_S`.** Cold-start `/health` can take 5-10s
+  under model warmup + manager init + WAL replay; the old 1.5s timeout
+  silently reported a healthy-but-slow server as `unreachable` in
+  `helix status --json`.
+- **fix(mcp): unwrap the Continue list shape in `helix_context` /
+  `helix_document_query` tools.** `POST /context` returns the
+  Continue-IDE HTTP context-provider list (`[{name, description, content,
+  ...}]`) so the FastAPI endpoint stays drop-in compatible with Continue.
+  MCP hosts validate tool returns against the declared `Dict[str, Any]`
+  schema and rejected the list. New `_unwrap_context_list` helper flattens
+  the single-entry list, passes error envelopes through, and wraps
+  unexpected shapes with a diagnostic note.
+- **fix(config): auto-fallback `ingestion.backend` → `"cpu"` when
+  `ribosome.enabled = false`.** The two settings contradict each other —
+  ingest with the ribosome disabled raised
+  `TranscriptionError: Pack failed: Ribosome is disabled` on the first
+  chunk. `load_config()` now flips ingestion to the spaCy/heuristic
+  CpuTagger path and logs a WARNING. Honors explicit `cpu` / `hybrid`
+  settings without override.
+- **feat(cli): `python -m helix_context.cli` works as a console-script
+  fallback.** Adds `helix_context/cli/__main__.py` so an agent or
+  operator with a broken pip-installed `helix.exe` (deleted editable
+  source path, Scripts dir off PATH) always has a module-direct
+  invocation. Documented in `docs/clients/cli.md`.
+
 - **feat(cli): agent walk-aware surface — `packet` / `gene` / `neighbors` /
   `refresh-targets`.** Four new subcommands that complete the v1 CLI as a
   full agent surface — agents drive genome lookups via subprocess CLI

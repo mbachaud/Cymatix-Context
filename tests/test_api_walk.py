@@ -199,6 +199,50 @@ def test_neighbors_sorts_by_similarity_desc():
     assert out[0]["path"] == "helix_context/splice.py"
 
 
+def test_open_session_honors_helix_config_env(monkeypatch, tmp_path):
+    """`open_session()` must route through ``load_config()`` so that
+    ``HELIX_CONFIG`` and ``HELIX_GENOME_PATH`` are honored exactly like
+    ``helix status`` already honors them. Pre-fix this used the
+    ``HelixConfig()`` default and silently fell back to ``./genome.db``
+    regardless of operator config — making ``helix status`` and
+    ``helix query`` look at different genomes."""
+    import helix_context.api as api
+
+    # Reset the cached manager so the test exercises the cold-start path.
+    api._DEFAULT_MANAGER = None
+
+    cfg_path = tmp_path / "helix.toml"
+    cfg_path.write_text(
+        "[genome]\npath = \"" + str(tmp_path / "configured.db").replace("\\", "/") + "\"\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("HELIX_CONFIG", str(cfg_path))
+    # The test environment sets HELIX_GENOME_PATH=:memory: to keep tests
+    # off-disk; that env var wins over helix.toml at load_config time
+    # (see config.py:611). Delete it for this test so we exercise the
+    # TOML-discovery path. Real operators usually don't set both.
+    monkeypatch.delenv("HELIX_GENOME_PATH", raising=False)
+
+    seen: dict = {}
+
+    class _FakeMgr:
+        def __init__(self, config):
+            seen["config"] = config
+
+    monkeypatch.setattr(
+        "helix_context.context_manager.HelixContextManager", _FakeMgr,
+    )
+
+    api.open_session()
+    assert seen["config"].genome.path.endswith("configured.db"), (
+        "open_session() did not propagate HELIX_CONFIG → load_config(); got: "
+        f"{seen['config'].genome.path!r}"
+    )
+
+    # Cleanup so subsequent tests start cold.
+    api._DEFAULT_MANAGER = None
+
+
 def test_neighbors_skips_malformed_embedding_row():
     """A row whose embedding column is non-JSON gets logged + skipped;
     the rest of the result still comes back."""

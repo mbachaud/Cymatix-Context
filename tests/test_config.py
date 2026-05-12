@@ -37,6 +37,57 @@ def test_budget_abstain_enabled_toml_override(tmp_path):
     assert cfg.budget.abstain_enabled is False
 
 
+# ── Ingestion / ribosome coherence guard ──────────────────────────────
+# Tests pin the auto-fallback added 2026-05-12: when [ribosome] is
+# disabled (LLM-free pillar) but [ingestion] still points at an LLM
+# backend, ``load_config`` flips ingestion to "cpu" so `helix ingest`
+# doesn't crash with "Ribosome is disabled". See AI-user feedback on
+# cli+mcp ingest path.
+
+
+def test_ingestion_falls_back_to_cpu_when_ribosome_disabled(tmp_path, caplog):
+    """Default-disabled ribosome + ollama ingest → auto-flip to cpu."""
+    import logging
+    from helix_context.config import load_config
+
+    toml = tmp_path / "helix.toml"
+    toml.write_text(
+        "[ribosome]\nenabled = false\n[ingestion]\nbackend = \"ollama\"\n",
+        encoding="utf-8",
+    )
+    with caplog.at_level(logging.WARNING, logger="helix_context.config"):
+        cfg = load_config(str(toml))
+    assert cfg.ingestion.backend == "cpu"
+    assert any("auto-falling-back" in r.message for r in caplog.records), (
+        "expected an auto-fallback WARNING; got: "
+        f"{[r.message for r in caplog.records]}"
+    )
+
+
+def test_ingestion_left_alone_when_ribosome_enabled(tmp_path):
+    """Operators who enable ribosome + ollama get exactly what they asked for."""
+    from helix_context.config import load_config
+    toml = tmp_path / "helix.toml"
+    toml.write_text(
+        "[ribosome]\nenabled = true\n[ingestion]\nbackend = \"ollama\"\n",
+        encoding="utf-8",
+    )
+    cfg = load_config(str(toml))
+    assert cfg.ingestion.backend == "ollama"
+
+
+def test_ingestion_left_alone_when_explicitly_cpu(tmp_path):
+    """Explicit cpu / hybrid backends stay put even with ribosome off."""
+    from helix_context.config import load_config
+    toml = tmp_path / "helix.toml"
+    toml.write_text(
+        "[ribosome]\nenabled = false\n[ingestion]\nbackend = \"hybrid\"\n",
+        encoding="utf-8",
+    )
+    cfg = load_config(str(toml))
+    assert cfg.ingestion.backend == "hybrid"
+
+
 # ── Hardware section + ribosome.device deprecation shim (Task 9) ─────
 # Tests pin parsing of the [hardware] TOML section and the deprecation
 # warning emitted for legacy [ribosome] device usage. See

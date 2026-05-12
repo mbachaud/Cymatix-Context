@@ -17,6 +17,35 @@ helix --help
 The legacy FastAPI launcher is still available as `helix-server` (or
 `python -m uvicorn helix_context._asgi:app`).
 
+### If `helix` says "no such command" or points at a deleted path
+
+The pip console script (`helix`, `helix-server`, `helix-status`,
+`helix-vault`, `helix-launcher`) is generated at install time and
+hardcodes the absolute path of the Python interpreter and the
+`helix_context` package. Two recovery cases:
+
+1. **`helix` is on PATH but resolves to a deleted editable-install
+   path** (you moved or removed the source tree). Re-install:
+   ```bash
+   pip install --force-reinstall --no-deps helix-context
+   ```
+   `--no-deps` keeps the long dependency chain from re-resolving;
+   `--force-reinstall` rewrites the console scripts against the
+   currently-active Python.
+
+2. **`helix` is not on PATH at all.** The console scripts land in
+   `<python-prefix>/Scripts` on Windows or `<python-prefix>/bin` on
+   POSIX. Either add that directory to PATH or invoke the entry point
+   directly:
+   ```bash
+   python -m helix_context.cli --help              # always works
+   python -c "from helix_context.cli import main; main()" status
+   ```
+
+The module-direct form (`python -m helix_context.cli`) bypasses the
+console script entirely and is the most reliable fallback when an
+agent or operator is debugging a broken install.
+
 ## Title page — what the CLI does for an agent vs. an operator
 
 | Use case | Reach for |
