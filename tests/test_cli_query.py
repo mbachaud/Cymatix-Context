@@ -63,12 +63,24 @@ def test_query_passes_k_through(fake_session):
     assert kwargs["k"] == 8
 
 
-def test_query_tier_broad_maps_to_broad_decoder(fake_session):
+def test_query_tier_broad_is_rejected_by_argparse(fake_session):
+    """v1 does not expose --tier broad. argparse must reject it with exit 2
+    so we don't silently no-op on a value the internal decoder won't honor.
+    The full broad/focused/tight vocabulary lands in v1.1.
+
+    argparse calls ``sys.exit(2)`` on invalid choices, which raises
+    ``SystemExit`` — we catch it here and assert on the code directly
+    rather than relying on the dispatcher's normal return path.
+    """
+    out, err = io.StringIO(), io.StringIO()
     with patch("helix_context.cli.cmd_query.open_session", return_value=fake_session):
-        rc, _, _ = _run(["query", "test", "--tier", "broad"])
-    assert rc == 0
-    _, kwargs = fake_session.query.call_args
-    assert kwargs["decoder_mode"] == "broad"
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            with pytest.raises(SystemExit) as exc:
+                main(["query", "test", "--tier", "broad"])
+    assert exc.value.code == 2
+    assert "broad" in err.getvalue()
+    # The mock session must never have been called — we bailed in argparse.
+    assert fake_session.query.call_count == 0
 
 
 def test_query_tier_focused_maps_to_condensed_decoder(fake_session):

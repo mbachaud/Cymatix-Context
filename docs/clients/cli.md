@@ -19,7 +19,7 @@ The legacy FastAPI launcher is still available as `helix-server` (or
 
 ## Subcommands
 
-### `helix query "<text>" [--k N] [--json] [--tier broad|focused] [--learn]`
+### `helix query "<text>" [--k N] [--json] [--tier focused] [--learn]`
 
 Run the retrieval pipeline once and print the result.
 
@@ -28,11 +28,12 @@ Run the retrieval pipeline once and print the result.
 - `--json` — emit `to_agent_json()` shape (verdict / evidence /
   expressed_context / estimated_tokens / decision_reason / next_action).
   This is the format the walk-bench harness expects.
-- `--tier broad|focused` — walk-tier hint. `broad` = scatter-gather
-  scout. `focused` = narrow converge. Maps to internal `decoder_mode`:
-  `broad → broad`, `focused → condensed`. The vocabulary drift between
-  spec (broad/focused/tight) and code (condensed/broad/dense) is a
-  v1.1 follow-up.
+- `--tier focused` — walk-tier hint. Maps to internal `decoder_mode=
+  condensed` (fewer genes, tighter). v1 only exposes `focused` because
+  it is the only spec-vocab value the internal decoder honors today.
+  The full bench-spec vocabulary (`broad` / `focused` / `tight`) lands
+  in v1.1 alongside the corresponding decoder modes; until then, passing
+  any value other than `focused` is rejected by argparse with exit 2.
 - `--learn` — replicate the query back into the genome (default off,
   so repeated CLI calls never silently mutate state).
 

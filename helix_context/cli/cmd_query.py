@@ -2,13 +2,16 @@
 
 The CLI is a thin wrapper around ``helix_context.api.HelixSession.query``.
 Mapping notes:
-  * --tier broad   → decoder_mode="broad"     (more genes, longer)
   * --tier focused → decoder_mode="condensed" (fewer genes, tighter)
   * --tier (omit)  → no override; classifier picks
 
-The drift between the bench spec's {broad, focused} vocabulary and the
-internal {condensed, broad, dense} vocabulary is intentional in v1;
-reconciliation is a v1.1 follow-up.
+v1 only exposes ``focused`` because it is the only spec-vocab value the
+internal decoder honors today (see ``DECODER_MODES`` in
+``helix_context.context_manager``). The full bench-spec vocabulary
+(broad / focused / tight) lands in v1.1 alongside the corresponding
+decoder modes; exposing ``broad`` now would silently no-op, so it is
+deliberately omitted from ``choices=`` rather than aliased to something
+the spec does not define.
 """
 from __future__ import annotations
 
@@ -19,9 +22,10 @@ from . import output
 from helix_context.api import open_session
 
 
-# Spec-vocab → internal-vocab mapping (see module docstring).
+# Spec-vocab → internal-vocab mapping (see module docstring). Only entries
+# whose values are real ``DECODER_MODES`` members belong here; the rest of
+# the bench-spec vocabulary is a v1.1 follow-up.
 _TIER_TO_DECODER = {
-    "broad": "broad",
     "focused": "condensed",
 }
 
@@ -41,8 +45,12 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Machine-readable JSON output (use for agent / bench consumption).",
     )
     parser.add_argument(
-        "--tier", choices=("broad", "focused"), default=None,
-        help="Walk-tier hint. broad=scout, focused=narrow. See cli.md for vocabulary.",
+        "--tier", choices=("focused",), default=None,
+        help=(
+            "Walk-tier hint. v1 only exposes 'focused' (maps to decoder_mode="
+            "'condensed'); the full broad/focused/tight vocabulary lands in "
+            "v1.1. See cli.md."
+        ),
     )
     parser.add_argument(
         "--learn", action="store_true",
