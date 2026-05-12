@@ -317,7 +317,7 @@ pki_weight = 1.0                        # path-key-index tier, RRF participant
 # Train a fresh artifact with:
 #   python scripts/pwpc/sprint3.py <windowed_export.json> \
 #       --save-model training/models/stacked_plr.joblib --save-label-set best
-enabled = false                         # Dark by default; bench before flipping
+enabled = true                          # Bench-gated 2026-05-12 (#74): plr_confidence on /context/packet; p95 delta < 50ms; presence >= 90% of packets-with-items
 model_path = "training/models/stacked_plr.joblib"
 expected_sha256 = ""                    # Empty = trust the .sha256 sidecar (written by the trainer)
 high_risk_threshold = 0.5               # `prob_B > this` surfaces a coarse "likely-to-re-query" boolean
