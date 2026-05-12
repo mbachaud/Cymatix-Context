@@ -354,6 +354,16 @@ s_ref           = 1.0
 g_ref           = 0.5
 betas           = [-2.0, 2.0, 1.5, 0.7, 1.8, 1.5]
 
+# Stage 4 (spec §9, issue #63) — calibration staleness window in days.
+# When ``calibrated_at`` (set by scripts/calibrate_know_confidence.py)
+# is older than this threshold the /context response surfaces:
+#   agent.calibration_age_days : int    — days since calibration
+#   agent.calibration_stale    : bool   — true iff age > threshold
+#   agent.warnings             : [..., "calibration_stale"]
+# The check is strict (age > N) so the boundary day still reads fresh.
+# Operator action when this fires: re-run the calibration script.
+stale_after_days = 30
+
 [mem_sync]
 # Auto-memory → helix sync. Every .md file in a watched dir becomes a
 # gene; persona/agent attribution comes from HELIX_AGENT / HELIX_USER

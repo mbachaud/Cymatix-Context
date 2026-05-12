@@ -596,3 +596,134 @@ def test_calibration_script_smoke(fixture_genome, tmp_path):
     assert row is not None
     payload = json.loads(row[0])
     assert abs(payload["value"] - report["ann_threshold"]["value"]) < 1e-9
+
+
+# ─── Stage 4 §9 (issue #63): calibration staleness surface ───────────────
+#
+# Three caller-facing fields on the /context ``agent`` block:
+#   - calibration_age_days : int|None
+#   - calibration_stale    : bool
+#   - warnings             : list[str] (always present; appends
+#                            "calibration_stale" when threshold trips)
+#
+# These tests exercise the underlying helpers in
+# ``helix_context.know_calibration`` so the contract is enforced without
+# spinning up FastAPI for every assertion.
+
+
+from datetime import datetime, timedelta, timezone
+
+from helix_context.know_calibration import (
+    DEFAULT_STALE_AFTER_DAYS,
+    KnowCalibration,
+    calibration_age_days,
+    is_calibration_stale,
+    load_calibration_from_toml,
+)
+
+
+def _iso_days_ago(days: int, now: float) -> str:
+    """ISO-8601 timestamp ``days`` days before ``now`` (UTC, with Z)."""
+    dt = datetime.fromtimestamp(now, tz=timezone.utc) - timedelta(days=days)
+    return dt.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def test_calibration_age_fresh_returns_zero():
+    """Fresh calibration (just now) reports age 0, not stale, no warning."""
+    now = 1_750_000_000.0  # fixed epoch second so the test is deterministic
+    cal_at = _iso_days_ago(0, now)
+    age = calibration_age_days(cal_at, now=now)
+    assert age == 0
+    assert is_calibration_stale(age, DEFAULT_STALE_AFTER_DAYS) is False
+
+
+def test_calibration_age_stale_trips_warning():
+    """A 2025-01-01 calibration vs 2026-05-11 evaluation is stale."""
+    # 2026-05-11 evaluation point — well past the 30-day threshold from
+    # a 2025-01-01 calibration (~495 days old).
+    now = datetime(2026, 5, 11, tzinfo=timezone.utc).timestamp()
+    age = calibration_age_days("2025-01-01T00:00:00Z", now=now)
+    assert age is not None and age > DEFAULT_STALE_AFTER_DAYS
+    assert is_calibration_stale(age, DEFAULT_STALE_AFTER_DAYS) is True
+
+
+def test_calibration_age_none_when_calibrated_at_missing():
+    """Missing calibrated_at → age=None, stale=False (safe default)."""
+    assert calibration_age_days(None) is None
+    assert calibration_age_days("") is None
+    assert is_calibration_stale(None, DEFAULT_STALE_AFTER_DAYS) is False
+
+
+def test_calibration_stale_strict_greater_than_at_boundary():
+    """Age exactly at threshold is NOT stale — strict ``>`` per spec §9.
+
+    The boundary day reads as fresh so operators get one day of
+    notice before the warning fires.
+    """
+    threshold = DEFAULT_STALE_AFTER_DAYS
+    # exactly threshold days old → not stale
+    assert is_calibration_stale(threshold, threshold) is False
+    # one day past threshold → stale
+    assert is_calibration_stale(threshold + 1, threshold) is True
+
+
+def test_calibration_age_unparseable_returns_none():
+    """Garbage in calibrated_at degrades silently to age=None."""
+    assert calibration_age_days("not-a-timestamp") is None
+    assert calibration_age_days("2026-13-99") is None
+
+
+def test_calibration_age_future_dated_clamps_to_zero():
+    """A calibrated_at in the future clamps to age=0, not negative."""
+    now = 1_750_000_000.0
+    future_iso = (
+        datetime.fromtimestamp(now, tz=timezone.utc) + timedelta(days=5)
+    ).strftime("%Y-%m-%dT%H:%M:%SZ")
+    assert calibration_age_days(future_iso, now=now) == 0
+
+
+def test_load_calibration_from_toml_reads_stale_after_days(tmp_path):
+    """Loader picks up stale_after_days from [know] table."""
+    toml = tmp_path / "helix.toml"
+    toml.write_text(
+        "[know]\n"
+        "emit_floor = 0.55\n"
+        "s_ref = 1.0\n"
+        "g_ref = 0.5\n"
+        "betas = [-2.0, 2.0, 1.5, 0.7, 1.8, 1.5]\n"
+        "stale_after_days = 7\n",
+        encoding="utf-8",
+    )
+    cal = load_calibration_from_toml(toml)
+    assert cal.stale_after_days == 7
+
+
+def test_load_calibration_from_toml_defaults_stale_after_days(tmp_path):
+    """Missing stale_after_days → DEFAULT_STALE_AFTER_DAYS (30)."""
+    toml = tmp_path / "helix.toml"
+    toml.write_text(
+        "[know]\n"
+        "emit_floor = 0.55\n"
+        "betas = [-2.0, 2.0, 1.5, 0.7, 1.8, 1.5]\n",
+        encoding="utf-8",
+    )
+    cal = load_calibration_from_toml(toml)
+    assert cal.stale_after_days == DEFAULT_STALE_AFTER_DAYS
+
+
+def test_load_calibration_from_toml_rejects_negative_stale_days(tmp_path):
+    """Negative stale_after_days falls back to default with a warning."""
+    toml = tmp_path / "helix.toml"
+    toml.write_text(
+        "[know]\n"
+        "betas = [-2.0, 2.0, 1.5, 0.7, 1.8, 1.5]\n"
+        "stale_after_days = -3\n",
+        encoding="utf-8",
+    )
+    cal = load_calibration_from_toml(toml)
+    assert cal.stale_after_days == DEFAULT_STALE_AFTER_DAYS
+
+
+def test_know_calibration_default_stale_after_days_is_thirty():
+    """The bare KnowCalibration() ships with the documented default."""
+    assert KnowCalibration().stale_after_days == DEFAULT_STALE_AFTER_DAYS
