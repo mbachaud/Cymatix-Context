@@ -300,6 +300,14 @@ def _detect() -> HardwareInfo:
             f"requested {requested!r} but probe/availability failed: "
             f"{last_failure_reason or 'no usable device found'}"
         )
+        # SF2 (#65): headless deployments miss the tray balloon. A summary
+        # WARNING here means operators tailing logs see one clear line
+        # connecting the per-candidate probe failures above to the
+        # final "we ended up on CPU" outcome.
+        log.warning(
+            "Hardware fallback: requested=%s active=cpu — %s",
+            requested, fallback_reason,
+        )
     else:
         fallback_reason = None
 

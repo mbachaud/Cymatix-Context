@@ -320,6 +320,54 @@ def test_explicit_cuda_falls_back_to_cpu_on_probe_failure(mock_torch, monkeypatc
     assert "cuda" in info.fallback_reason.lower()
 
 
+def test_fallback_emits_summary_warning_for_headless_operators(
+    mock_torch, monkeypatch, caplog
+):
+    """SF2 (#65): operators tailing logs on a headless deployment miss
+    the tray balloon. _detect() must emit a single WARNING line tying the
+    requested/active devices to the fallback_reason so the cause is in
+    line-of-sight, not just a downstream /health field."""
+    import logging
+    monkeypatch.setenv("HELIX_DEVICE", "cuda")
+    mock_torch["cuda_available"] = False
+    with caplog.at_level(logging.WARNING, logger="helix.hardware"):
+        info = hardware._detect()
+    assert info.device_type == "cpu"
+    assert info.fallback_reason is not None
+    summary_lines = [
+        rec.message
+        for rec in caplog.records
+        if "hardware fallback" in rec.message.lower()
+    ]
+    assert summary_lines, (
+        "expected a 'Hardware fallback: ...' summary WARNING; got: "
+        f"{[r.message for r in caplog.records]}"
+    )
+    msg = summary_lines[0].lower()
+    assert "requested=cuda" in msg
+    assert "active=cpu" in msg
+
+
+def test_auto_picker_does_not_emit_fallback_warning(mock_torch, caplog):
+    """When the user requested 'auto' and we landed on CPU, that's a
+    normal outcome (no GPU on this box), not a fallback. The summary
+    WARNING from SF2 must not fire — auto-on-CPU is not noteworthy."""
+    import logging
+    # mock_torch fixture defaults all backends to unavailable -> auto -> cpu
+    with caplog.at_level(logging.WARNING, logger="helix.hardware"):
+        info = hardware._detect()
+    assert info.device_type == "cpu"
+    assert info.fallback_reason is None
+    summary_lines = [
+        rec.message
+        for rec in caplog.records
+        if "hardware fallback" in rec.message.lower()
+    ]
+    assert not summary_lines, (
+        f"auto-on-cpu should not fire the fallback WARNING; got: {summary_lines}"
+    )
+
+
 def test_helix_device_env_var_case_insensitive(mock_torch, monkeypatch):
     monkeypatch.setenv("HELIX_DEVICE", "CPU")
     info = hardware._detect()

@@ -119,6 +119,8 @@ class TestStart:
         assert store.state.helix_pid == 54321
         assert store.state.helix_port == 11999
         assert popen_mock.called
+        # Success path: pending flag is cleared (closes #72).
+        assert supervisor.last_start_pending is False
 
         # Verify CREATE_NO_WINDOW was passed on Windows, 0 elsewhere
         popen_kwargs = popen_mock.call_args.kwargs
@@ -153,6 +155,9 @@ class TestStart:
 
         # State remains set; the tray will probe /stats on the next refresh.
         assert store.state.helix_pid == 54321
+        # Pending flag is set so REST callers can distinguish ready vs
+        # alive-but-not-ready (closes #72).
+        assert supervisor.last_start_pending is True
 
 
 class TestStop:

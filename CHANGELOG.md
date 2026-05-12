@@ -2,6 +2,27 @@
 
 ## Unreleased
 
+- **fix(launcher): `POST /api/control/start` no longer reports success on a
+  hung backend; returns `202 Accepted` with `started_pending=true`.** PR #68
+  made `supervisor.start()` non-fatal on `/stats` timeout (proc left
+  running so the tray's next poll picks it up). The REST handler still
+  treated this as success and returned `{ok: true, pid}`, so external
+  automation hitting `/api/control/start` directly couldn't distinguish
+  ready from alive-but-not-ready. New `supervisor.last_start_pending`
+  flag flips on the timeout path; REST surface returns 202 with a
+  `started_pending: true` field and a hint to poll `/api/state` or
+  `GET /stats`. Same treatment on `/api/control/restart`. Closes #72.
+- **fix(hardware): summary `WARNING` line when explicit-device probe
+  falls back to CPU.** The tray fires a balloon, but headless deployments
+  (server, supervisor-managed, agents) miss that signal. `_detect()` now
+  emits one `log.warning("Hardware fallback: requested=X active=cpu — ...")`
+  alongside the per-candidate probe failures so operators tailing logs
+  see the cause in line-of-sight. `auto`→cpu is unchanged (not noteworthy).
+  Closes #65 SF2 — SF1, SF3, SF4 were already addressed on master
+  (per-rewrite log.info, `cost_class` in `/health` + Prometheus info
+  metric + startup WARN, and the WAL-bloat section in
+  `docs/TROUBLESHOOTING.md` + `/admin/checkpoint` admin endpoint).
+
 - **fix(api): `open_session()` now honors `HELIX_CONFIG` / `HELIX_GENOME_PATH`.**
   Pre-fix, every cold-start CLI subcommand (query, diag corpus, packet,
   gene, neighbors, refresh-targets) called `HelixConfig()` (defaults) and
