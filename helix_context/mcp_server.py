@@ -202,6 +202,29 @@ def _http(method: str, path: str, body: Optional[Dict] = None) -> Dict[str, Any]
         raise
 
 
+def _unwrap_context_list(result: Any) -> Dict[str, Any]:
+    """Unwrap the Continue HTTP context-provider list shape into the flat
+    dict that MCP tool consumers (and the ``Dict[str, Any]`` return-type
+    annotation) expect.
+
+    ``POST /context`` returns ``[response]`` — a single-entry list — to
+    stay drop-in compatible with the Continue IDE HTTP context provider
+    protocol. MCP hosts validate tool returns against their declared
+    schema and reject a list when a dict was declared. This helper:
+
+      * unwraps a single-entry dict list ``[{...}]`` → ``{...}``
+      * passes through error envelopes already produced by ``_http``
+        (``{_error: ...}``, ``{_raw: ...}``)
+      * defensively wraps any unexpected list shape so MCP callers see
+        a validatable dict plus a diagnostic note
+    """
+    if isinstance(result, list):
+        if len(result) == 1 and isinstance(result[0], dict):
+            return result[0]
+        return {"items": result, "_note": "unexpected list shape from /context"}
+    return result
+
+
 def _normalize_health_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
     """Project raw /health or transport errors into a stable status shape."""
     normalized: Dict[str, Any] = {"server": payload}
@@ -345,7 +368,7 @@ def helix_context(
         # labels (request rate / latency by agent) reflect THIS shim,
         # not the bare HELIX_AGENT env on the helix server process.
         body["agent"] = MCP_AGENT_HANDLE
-    return _http("POST", "/context", body)
+    return _unwrap_context_list(_http("POST", "/context", body))
 
 
 # ── Tool: helix_context_packet ───────────────────────────────────────
@@ -888,7 +911,7 @@ def helix_document_query(
         # labels (request rate / latency by agent) reflect THIS shim,
         # not the bare HELIX_AGENT env on the helix server process.
         body["agent"] = MCP_AGENT_HANDLE
-    return _http("POST", "/context", body)
+    return _unwrap_context_list(_http("POST", "/context", body))
 
 
 @mcp.tool()

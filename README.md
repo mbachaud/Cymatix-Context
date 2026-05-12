@@ -12,9 +12,10 @@ Coordinate-index engine for LLM agents. Helix retrieves, weighs, and compresses 
 
 ## At a glance
 
-- **Compression**: collapses ~9k tokens of raw working set into a ~600 effective-token assembled context (28.7× headline on production workloads, 5.4× median across 15 query shapes).
+- **Compression**: collapses ~9k tokens of raw working set into a ~600 effective-token assembled context. Best-case single-query result **28.7×** (WAL-checkpoint point-fact), **5.4× median across N=15 query shapes** on the May 2026 internal overnight bench. Reproducer: [`benchmarks/bench_rag_vs_sike_tokens.py`](benchmarks/bench_rag_vs_sike_tokens.py); methodology + per-shape breakdown in [`docs/benchmarks/BENCHMARKS.md`](docs/benchmarks/BENCHMARKS.md). The overnight result file is internal; running the script against your own genome reproduces the per-query numbers.
 - **Agent contract**: every `/context` response carries a top-level `know{}` (grounded, you may answer) or `miss{}` (`do_not_answer_from_genome:true`, plus `escalate_to` tools or `refresh_targets` paths). Stale `know` blocks downgrade to `miss(reason="stale"|"cold"|"superseded")` via the Stage 7 freshness gate.
 - **LLM-free retrieval**: `/context` runs spaCy NER, SQLite FTS5 BM25, BGE-M3 dense recall, RRF fusion, Howard-2005 TCM, and Hebbian co-activation — zero compressor calls. The only LLM call is downstream at `/v1/chat/completions`.
+- **Two agent surfaces, one operator surface**: agents drive helix via **MCP** (`python -m helix_context.mcp_server`) or **the CLI** (`helix query`, `helix packet`, `helix gene get`, `helix neighbors`, `helix refresh-targets`) — both expose the same retrieval primitives. The HTTP proxy and tray launcher are the operator surface; agents don't need them. See [`docs/clients/cli.md`](docs/clients/cli.md) and [`docs/clients/claude-code.md`](docs/clients/claude-code.md).
 - **Three install paths**: compact tray flow (`start-helix-tray.bat`) for the daily driver, proxy-only for `OPENAI_BASE_URL` redirection, agent-SDK fragment for frontier-model integration.
 
 ### Quick navigation
@@ -51,6 +52,23 @@ python scripts/backfill_bgem3_v2.py genomes/main/genome.db
 ```
 
 For full options including the extras matrix, see [docs/SETUP.md](docs/SETUP.md).
+
+## Agent CLI surface (no server required)
+
+The `helix` CLI is a cold-start agent surface: each invocation opens the SQLite genome read-only, runs one operation, and exits. Agents can drive a full retrieval-and-walk loop entirely through subprocess calls — no HTTP server, no MCP host, no long-lived daemon.
+
+```bash
+helix query    "what does the splice step do?" --json
+helix packet   "edit the splice step" --task-type edit --json
+helix gene get gene-abc123 --json
+helix gene preview gene-abc123 --chars 240 --json
+helix neighbors "splice step" --k 10 --json
+helix refresh-targets "edit the splice step" --json
+```
+
+Each subcommand emits the same JSON shape as the corresponding [MCP tool](docs/api/mcp-tools.md) and HTTP endpoint, so an agent can swap surfaces without changing call logic. Full reference: [`docs/clients/cli.md`](docs/clients/cli.md).
+
+If you want the FastAPI proxy as well (for `OPENAI_BASE_URL` redirection or Continue IDE), it ships as a separate entry point: `helix-server`.
 
 ## Pipeline
 

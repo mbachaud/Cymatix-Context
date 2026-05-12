@@ -869,5 +869,31 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             k: list(v) for k, v in raw["synonyms"].items()
         }
 
+    # Coherence guard: if the ribosome is disabled (the LLM-free design
+    # default — see docs/MISSION.md) but ingestion.backend still asks for
+    # an LLM-backed path (``ollama`` / ``deberta`` / ``litellm``), the
+    # CLI ``helix ingest`` call will raise ``TranscriptionError: Pack
+    # failed: Ribosome is disabled`` on the first chunk. The two settings
+    # contradict each other; flip ``ingestion.backend`` to ``"cpu"`` so
+    # the spaCy/heuristic CpuTagger handles the ingest. Emit at WARNING
+    # so the operator can see the auto-fallback in logs and disable it
+    # by either (a) enabling ``[ribosome]`` explicitly or (b) setting
+    # ``[ingestion] backend = "cpu"`` themselves. Requires the ``[cpu]``
+    # extra (spaCy) to be installed — CpuTagger logs its own warning if
+    # spaCy is missing.
+    if (
+        not cfg.ribosome.enabled
+        and cfg.ingestion.backend in ("ollama", "deberta", "litellm")
+    ):
+        log.warning(
+            "[ribosome] enabled=false but [ingestion] backend=%r requires the "
+            "ribosome — auto-falling-back to backend='cpu' (spaCy CpuTagger). "
+            "Install the [cpu] extra if you have not. Override by either "
+            "enabling [ribosome] or setting [ingestion] backend='cpu' / 'hybrid' "
+            "explicitly in helix.toml.",
+            cfg.ingestion.backend,
+        )
+        cfg.ingestion.backend = "cpu"
+
     log.info("Config loaded from %s", config_path)
     return cfg

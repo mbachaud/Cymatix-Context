@@ -18,8 +18,30 @@ from typing import Any, Dict, Optional
 DEFAULT_SERVER_URL = os.environ.get("HELIX_STATUS_URL", "http://127.0.0.1:11437").rstrip("/")
 DEFAULT_LAUNCHER_URL = os.environ.get("HELIX_LAUNCHER_URL", "http://127.0.0.1:11438").rstrip("/")
 
+# Status probe timeout (seconds). The pre-fix default was 1.5s, which
+# silently reported a healthy but slow server as ``unreachable`` —
+# cold-start ``/health`` can take 5-10s under model warmup / manager
+# init / SQLite WAL replay. 10s is generous for a status check and
+# matches the operator's expectation that "alive but slow" is still
+# alive. Override via ``HELIX_STATUS_TIMEOUT_S`` for tight CI loops
+# (e.g. ``0.5``) or for very large genomes (e.g. ``30``).
+_DEFAULT_STATUS_TIMEOUT_S = 10.0
+try:
+    DEFAULT_STATUS_TIMEOUT_S = float(
+        os.environ.get("HELIX_STATUS_TIMEOUT_S", _DEFAULT_STATUS_TIMEOUT_S)
+    )
+except ValueError:
+    # Never let a malformed env var crash status — fall back, warn the
+    # operator on stderr so the override gets noticed and fixed.
+    import sys
+    sys.stderr.write(
+        f"HELIX_STATUS_TIMEOUT_S={os.environ.get('HELIX_STATUS_TIMEOUT_S')!r} "
+        f"is not a float; falling back to {_DEFAULT_STATUS_TIMEOUT_S}s\n"
+    )
+    DEFAULT_STATUS_TIMEOUT_S = _DEFAULT_STATUS_TIMEOUT_S
 
-def _get_json(url: str, timeout_s: float = 1.5) -> Dict[str, Any]:
+
+def _get_json(url: str, timeout_s: float = DEFAULT_STATUS_TIMEOUT_S) -> Dict[str, Any]:
     try:
         with urllib.request.urlopen(url, timeout=timeout_s) as resp:
             return json.loads(resp.read().decode("utf-8"))

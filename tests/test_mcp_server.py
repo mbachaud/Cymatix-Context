@@ -2,7 +2,11 @@
 
 import pytest
 
-from helix_context.mcp_server import _default_ingest_identity, _normalize_health_payload
+from helix_context.mcp_server import (
+    _default_ingest_identity,
+    _normalize_health_payload,
+    _unwrap_context_list,
+)
 
 
 @pytest.fixture
@@ -184,6 +188,68 @@ def test_register_with_registry_no_match_sends_none(monkeypatch, mock_bridge):
     call = mock_bridge.register_participant_calls[-1]
     assert call["ide_detected"] is None
     assert call["ide_detection_via"] == "no_match"
+
+
+class TestUnwrapContextList:
+    """The MCP ``helix_context`` tool declares ``Dict[str, Any]`` but
+    ``POST /context`` returns the Continue HTTP context-provider list
+    shape. _unwrap_context_list bridges the two without breaking the
+    HTTP layer for Continue IDE."""
+
+    def test_single_entry_list_unwraps_to_dict(self):
+        out = _unwrap_context_list(
+            [{"name": "helix", "description": "...", "content": "x"}]
+        )
+        assert isinstance(out, dict)
+        assert out["name"] == "helix"
+
+    def test_error_envelope_dict_passes_through(self):
+        envelope = {"_error": "helix unreachable", "_detail": "connection refused"}
+        assert _unwrap_context_list(envelope) is envelope
+
+    def test_raw_envelope_dict_passes_through(self):
+        envelope = {"_raw": "not-json bytes"}
+        assert _unwrap_context_list(envelope) is envelope
+
+    def test_unexpected_multi_entry_list_wrapped_with_diagnostic(self):
+        out = _unwrap_context_list([{"a": 1}, {"b": 2}])
+        assert isinstance(out, dict)
+        assert out["items"] == [{"a": 1}, {"b": 2}]
+        assert "_note" in out
+
+    def test_empty_list_wrapped_with_diagnostic(self):
+        out = _unwrap_context_list([])
+        assert isinstance(out, dict)
+        assert out["items"] == []
+
+
+def test_helix_context_unwraps_continue_list_shape(monkeypatch):
+    """End-to-end: helix_context tool returns a flat dict even though
+    /context responds with the Continue list shape. This is the failure
+    the AI-user feedback hit on origin/master@93deaf2."""
+    from helix_context import mcp_server
+
+    captured: dict = {}
+
+    def _fake_http(method, path, body=None):
+        captured["call"] = (method, path, body)
+        # Mirror what the real /context endpoint returns — a single-entry
+        # list whose entry is the Continue context-provider dict.
+        return [{
+            "name": "helix",
+            "description": "helix context",
+            "content": "<helix>example</helix>",
+        }]
+
+    monkeypatch.setattr(mcp_server, "_http", _fake_http)
+    out = mcp_server.helix_context("what does the splice step do?")
+    assert isinstance(out, dict), f"expected dict, got {type(out).__name__}: {out!r}"
+    assert out["content"] == "<helix>example</helix>"
+    # Verify the call was made with the expected shape so we don't
+    # accidentally regress the body payload.
+    method, path, body = captured["call"]
+    assert (method, path) == ("POST", "/context")
+    assert body["query"] == "what does the splice step do?"
 
 
 def test_helix_announce_tool_calls_bridge_announce(monkeypatch, mock_bridge):
