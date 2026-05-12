@@ -2625,29 +2625,41 @@ class HelixContextManager:
         budget = self.config.budget.ribosome_tokens + self.config.budget.expression_tokens
 
         if est_tokens > budget and len(parts) > 1:
-            # Default path: parts[-1] is the LOWEST-rank gene (sorted_genes was
-            # ordered score-DESC or by sequence_index), so popping from the
-            # back drops the least-important entry first.
+            # Default path: drop the lowest-SCORED gene regardless of its
+            # position in the assembled prompt. Position-based pop() drops
+            # parts[-1], which is the lowest-rank gene only when sorted_genes
+            # is in score-DESC order. Under sequence_index ordering (the
+            # default for narrative coherence on factual/multi_hop queries),
+            # parts[-1] is whichever gene came last by source coordinate —
+            # often the highest-scored gene if it sits near the end of a
+            # file. Score-aware lookup via genome.last_query_scores ensures
+            # the actual lowest-ranked candidate is dropped first.
             #
             # Foveated reverse-rank path (respect_caller_order=True, spec §5):
             # the caller emits BROAD candidates in REVERSE-rank order so the
             # top-rank gene lands LAST in the prompt (closest to user query
-            # under decoder-only attention). Under that ordering parts[-1] is
-            # the TOP-rank gene — popping from the back here would silently
-            # drop the most important gene first, the exact opposite of what
-            # the spec wants. Pop from the FRONT instead to drop the
-            # bottom-rank gene and preserve the placement invariant.
+            # under decoder-only attention). Position-0 IS the lowest-rank
+            # gene by construction of that ordering, so positional pop(0)
+            # is correct here and preserves the placement invariant. A
+            # score-aware variant would be a strict improvement under
+            # invariant violations, but is out of scope for this PR (see
+            # the Stage 5 manager's note in the original #58 thread).
             #
             # sorted_genes is kept aligned with parts so the post-trim
             # delivered_ids / expressed_gene_ids slices stay correct under
             # both directions.
+            trim_scores = self.genome.last_query_scores or {}
             while est_tokens > budget and len(parts) > 1:
                 if respect_caller_order:
                     parts.pop(0)
                     sorted_genes.pop(0)
                 else:
-                    parts.pop()
-                    sorted_genes.pop()
+                    worst_idx = min(
+                        range(len(sorted_genes)),
+                        key=lambda i: trim_scores.get(sorted_genes[i].gene_id, 0.0),
+                    )
+                    parts.pop(worst_idx)
+                    sorted_genes.pop(worst_idx)
                 expressed = "\n---\n".join(parts)
                 expressed_wrapped = f"<expressed_context>\n{expressed}\n</expressed_context>"
                 est_tokens = estimate_tokens(decoder_prompt) + estimate_tokens(expressed_wrapped)
