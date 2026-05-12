@@ -174,6 +174,12 @@ def _attach_otlp_logging_handler(
             "Loki Logs panel will stay empty",
         )
         return
+    # Idempotency: bail BEFORE constructing a new LoggerProvider so a
+    # second call doesn't orphan the prior BatchLogRecordProcessor's
+    # background export thread by overwriting the global provider.
+    root = logging.getLogger()
+    if any(isinstance(h, LoggingHandler) for h in root.handlers):
+        return
     level = _resolve_logs_level(os.environ.get("HELIX_OTEL_LOGS_LEVEL"))
     try:
         # Resource hint: tells Loki's OTLP ingest to promote `logger`
@@ -195,10 +201,7 @@ def _attach_otlp_logging_handler(
             level=level, logger_provider=logger_provider,
         )
         otel_handler.addFilter(_LoggerNameInjector())
-        root = logging.getLogger()
-        # Avoid duplicate attachment if setup_telemetry runs twice.
-        if not any(isinstance(h, LoggingHandler) for h in root.handlers):
-            root.addHandler(otel_handler)
+        root.addHandler(otel_handler)
     except Exception:
         log.warning(
             "Could not attach OTLP logging handler — Loki log panel "

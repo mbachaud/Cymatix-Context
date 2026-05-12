@@ -149,7 +149,9 @@ That script:
    [`tools/native-otel/`](../tools/native-otel/).
 3. Runs `python -m helix_context.launcher.observability_render render-all`
    to materialize `tools/native-otel/configs/` (substitutes
-   `tempo:4317` → `localhost:4317`, container paths → per-user state
+   `tempo:4317` → `localhost:14317` — Tempo's OTLP receiver is
+   remapped off `4317` so it doesn't collide with the collector's
+   intake on bare-metal localhost; container paths → per-user state
    dirs) and copy dashboard JSON + datasource provisioning into
    Grafana's `conf/provisioning/` tree.
 4. Smoke-tests Grafana `:3000` and Prometheus `:9090` if the supervisor
