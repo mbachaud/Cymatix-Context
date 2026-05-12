@@ -2914,8 +2914,14 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
 
     @app.post("/admin/refresh")
     async def admin_refresh():
-        """Reopen knowledge store connection to see external changes (deletions, thinning)."""
+        """Reopen knowledge store connection to see external changes (deletions, thinning).
+
+        Also invalidates the in-memory dense matrix so out-of-process inserts
+        (e.g., backfill scripts) are visible on the next dense recall. See
+        Stage 2 spec §4 "Invalidation".
+        """
         helix.genome.refresh()
+        helix.genome._invalidate_dense_matrix(force=True)
         new_count = helix.genome.stats()["total_genes"]
         return {"refreshed": True, "genes": new_count}
 
