@@ -179,6 +179,14 @@ host = "127.0.0.1"
 port = 8787                             # Default headroom proxy port
 mode = "token"                          # "token" (compression-first) | "cache" (prefix-cache-stable)
 dashboard_path = "/dashboard"           # Appended to http://{host}:{port} for the tray menu link
+# route_upstream — controls whether the launcher rewrites helix's chat upstream
+# to dial this proxy. Off by default. Turn on ONLY when (a) Headroom is
+# actually installed/running AND (b) you want to pay its compression-pass
+# latency on every /v1/chat/completions call. Loopback upstreams (Ollama at
+# localhost:11434, etc.) are never rewritten regardless of this flag — the
+# proxy hop doesn't buy anything for a localhost model server. The env var
+# HELIX_HEADROOM_ROUTE_UPSTREAM_AUTO=0|1 overrides this per-launch.
+route_upstream = false
 
 [ingestion]
 backend = "cpu"                         # "ollama" (LLM, slow) | "cpu" (spaCy+regex, fast) | "hybrid"

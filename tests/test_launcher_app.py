@@ -371,29 +371,92 @@ class TestMaybeBuildHeadroom:
 
 
 class TestHeadroomAutoRoute:
-    def test_remote_upstream_routes_helix_via_headroom(self, monkeypatch):
+    def test_remote_upstream_does_not_route_when_route_upstream_disabled(self, monkeypatch):
+        """Default config (route_upstream=False) must NOT rewrite the
+        upstream even for a remote target. Pre-fix this routed silently
+        and pointed helix at a dead :8787 when Headroom wasn't installed."""
         from helix_context.launcher import app as app_mod
 
         cfg = HelixConfig(
             server=ServerConfig(upstream="https://api.openai.com/v1"),
             headroom=HeadroomConfig(host="127.0.0.1", port=8787),
         )
+        assert cfg.headroom.route_upstream is False  # contract guard
 
         monkeypatch.delenv("HELIX_SERVER_UPSTREAM", raising=False)
         monkeypatch.delenv("OPENAI_TARGET_API_URL", raising=False)
+        # auto_override=None means "defer to config" — the precedence path under
+        # test (HELIX_HEADROOM_ROUTE_UPSTREAM_AUTO unset at the call site).
+        routed = app_mod._configure_helix_upstream_routing(cfg, auto_override=None)
 
-        routed = app_mod._configure_helix_upstream_routing(cfg, auto_override=True)
+        assert routed is False
+        assert "HELIX_SERVER_UPSTREAM" not in os.environ
+        assert "OPENAI_TARGET_API_URL" not in os.environ
+
+    def test_remote_upstream_routes_when_route_upstream_opted_in(self, monkeypatch):
+        """Explicit opt-in via [headroom] route_upstream = true keeps the
+        original auto-route behavior for operators who do want it."""
+        from helix_context.launcher import app as app_mod
+
+        cfg = HelixConfig(
+            server=ServerConfig(upstream="https://api.openai.com/v1"),
+            headroom=HeadroomConfig(host="127.0.0.1", port=8787, route_upstream=True),
+        )
+
+        monkeypatch.delenv("HELIX_SERVER_UPSTREAM", raising=False)
+        monkeypatch.delenv("OPENAI_TARGET_API_URL", raising=False)
+        routed = app_mod._configure_helix_upstream_routing(cfg, auto_override=None)
 
         assert routed is True
         assert os.environ["HELIX_SERVER_UPSTREAM"] == "http://127.0.0.1:8787"
         assert os.environ["OPENAI_TARGET_API_URL"] == "https://api.openai.com/v1"
 
+    def test_env_var_false_forces_off_even_when_config_opted_in(self, monkeypatch):
+        """HELIX_HEADROOM_ROUTE_UPSTREAM_AUTO=0 is the per-launch kill
+        switch: must override route_upstream=True. Useful when the proxy
+        is misbehaving and the operator wants helix direct for one session."""
+        from helix_context.launcher import app as app_mod
+
+        cfg = HelixConfig(
+            server=ServerConfig(upstream="https://api.openai.com/v1"),
+            headroom=HeadroomConfig(host="127.0.0.1", port=8787, route_upstream=True),
+        )
+
+        monkeypatch.delenv("HELIX_SERVER_UPSTREAM", raising=False)
+        monkeypatch.delenv("OPENAI_TARGET_API_URL", raising=False)
+        # auto_override=False simulates HELIX_HEADROOM_ROUTE_UPSTREAM_AUTO=0
+        routed = app_mod._configure_helix_upstream_routing(cfg, auto_override=False)
+
+        assert routed is False
+        assert "HELIX_SERVER_UPSTREAM" not in os.environ
+        assert "OPENAI_TARGET_API_URL" not in os.environ
+
+    def test_env_var_true_forces_on_even_when_config_disabled(self, monkeypatch):
+        """HELIX_HEADROOM_ROUTE_UPSTREAM_AUTO=1 is also a per-launch
+        override: must turn routing on even when route_upstream=False
+        in config. Symmetric to the kill-switch test."""
+        from helix_context.launcher import app as app_mod
+
+        cfg = HelixConfig(
+            server=ServerConfig(upstream="https://api.openai.com/v1"),
+            headroom=HeadroomConfig(host="127.0.0.1", port=8787),  # route_upstream defaults False
+        )
+
+        monkeypatch.delenv("HELIX_SERVER_UPSTREAM", raising=False)
+        monkeypatch.delenv("OPENAI_TARGET_API_URL", raising=False)
+        routed = app_mod._configure_helix_upstream_routing(cfg, auto_override=True)
+
+        assert routed is True
+        assert os.environ["HELIX_SERVER_UPSTREAM"] == "http://127.0.0.1:8787"
+
     def test_local_ollama_upstream_stays_direct(self, monkeypatch):
+        """Loopback upstream is never rewritten, even with route_upstream=True
+        (Headroom proxy hop doesn't buy anything for a localhost model server)."""
         from helix_context.launcher import app as app_mod
 
         cfg = HelixConfig(
             server=ServerConfig(upstream="http://localhost:11434"),
-            headroom=HeadroomConfig(host="127.0.0.1", port=8787),
+            headroom=HeadroomConfig(host="127.0.0.1", port=8787, route_upstream=True),
         )
 
         monkeypatch.setenv("HELIX_SERVER_UPSTREAM", "http://127.0.0.1:8787")

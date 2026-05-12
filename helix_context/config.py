@@ -420,6 +420,16 @@ class HeadroomConfig:
     surfaces it in the tray menu. When it's already running on
     ``port``, the launcher **adopts** the existing process rather than
     spawning a duplicate — the adopted process survives launcher Quit.
+
+    ``enabled`` controls the proxy lifecycle (start / adopt the process).
+    ``route_upstream`` controls whether helix's chat upstream is
+    rewritten to dial this proxy. Separate concerns: you may want the
+    proxy + dashboard running without the chat redirect, or vice versa.
+    Both default off so a fresh install never silently rewrites the
+    upstream to a proxy that isn't actually running. The
+    ``HELIX_HEADROOM_ROUTE_UPSTREAM_AUTO`` env var (truthy → force on,
+    falsy → force off, unset → defer to config) continues to work as a
+    per-launch override.
     """
     enabled: bool = False               # Master switch; false = do nothing
     autostart: bool = True              # When enabled: adopt if running, spawn if not
@@ -427,6 +437,7 @@ class HeadroomConfig:
     port: int = 8787
     mode: str = "token"                 # "token" | "cache" (passed to --mode)
     dashboard_path: str = "/dashboard"  # Appended to http://{host}:{port}
+    route_upstream: bool = False        # When true: launcher points helix's chat upstream at this proxy
 
 
 @dataclass
@@ -790,6 +801,7 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             port=int(h.get("port", cfg.headroom.port)),
             mode=str(h.get("mode", cfg.headroom.mode)),
             dashboard_path=str(h.get("dashboard_path", cfg.headroom.dashboard_path)),
+            route_upstream=bool(h.get("route_upstream", cfg.headroom.route_upstream)),
         )
 
     # Classifier — upstream rule-based query classifier / injection router

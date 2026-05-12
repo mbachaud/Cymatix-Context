@@ -320,15 +320,29 @@ def _is_loopback_host(host: Optional[str]) -> bool:
 
 
 def _should_route_helix_upstream_via_headroom(cfg, auto_override: Optional[bool] = None) -> bool:
-    """Auto-route only remote/OpenAI-compatible upstreams through Headroom.
+    """Decide whether the launcher should rewrite helix's chat upstream
+    to dial the local Headroom proxy.
 
-    Local model servers stay direct by default — especially Ollama on
-    localhost:11434 — because the extra proxy hop doesn't buy much there.
-    Remote upstreams can benefit from Headroom's compression/cache layer.
+    Precedence (highest wins):
+
+      1. ``auto_override`` (from ``HELIX_HEADROOM_ROUTE_UPSTREAM_AUTO``):
+         truthy forces ON, falsy forces OFF, ``None`` defers to config.
+      2. ``cfg.headroom.route_upstream``: must be ``True`` to route.
+         Defaults False so a fresh install never silently rewrites the
+         upstream to a proxy that isn't running. Separate from
+         ``cfg.headroom.enabled`` (which is the proxy *lifecycle* switch)
+         so an operator can run the proxy + dashboard without rerouting
+         chat, or vice versa.
+      3. Upstream must be a parseable non-loopback URL (local model
+         servers like Ollama on localhost:11434 stay direct).
+      4. Upstream must not already point at the configured Headroom
+         (avoid double-route).
     """
-    auto_route = True if auto_override is None else auto_override
-    if not auto_route:
+    if auto_override is False:
         return False
+    if auto_override is None and not getattr(cfg.headroom, "route_upstream", False):
+        return False
+    # auto_override is True OR config explicitly opted in.
 
     upstream = str(cfg.server.upstream or "").strip()
     if not upstream:

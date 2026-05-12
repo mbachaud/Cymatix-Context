@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+- **fix(launcher): `[headroom] route_upstream` is now a separate, default-off
+  config knob; routing no longer happens implicitly from "upstream is remote".**
+  Pre-fix, `_should_route_helix_upstream_via_headroom` returned True for any
+  remote (non-loopback) upstream as long as `HELIX_HEADROOM_ROUTE_UPSTREAM_AUTO`
+  wasn't explicitly set falsy. So an operator with `cfg.server.upstream =
+  "https://api.openai.com/v1"` and `cfg.headroom.enabled = false` (defaults!)
+  would have the launcher rewrite `HELIX_SERVER_UPSTREAM` to
+  `http://127.0.0.1:8787` and start helix pointing at a Headroom proxy that
+  was never started — every chat call then failed with ECONNREFUSED, with
+  no clear diagnostic. `route_upstream` is now an explicit `[headroom]` bool
+  (default `false`) gating the rewrite. `HELIX_HEADROOM_ROUTE_UPSTREAM_AUTO`
+  remains as a per-launch override (truthy → on, falsy → off, unset →
+  defer to config). The existing test
+  `test_remote_upstream_routes_helix_via_headroom` (which pinned the buggy
+  behavior) is replaced with four tests covering the new precedence rules.
+
 - **fix(launcher): `POST /api/control/start` no longer reports success on a
   hung backend; returns `202 Accepted` with `started_pending=true`.** PR #68
   made `supervisor.start()` non-fatal on `/stats` timeout (proc left
