@@ -91,6 +91,10 @@ class HelixSupervisor:
         self._last_error: Optional[str] = None
         self._last_error_at: Optional[float] = None
         self._last_error_operation: Optional[str] = None
+        # True iff the most recent start() returned a pid for a process that
+        # did not answer /stats within the wait timeout. Read by REST callers
+        # (closes #72) so a hung backend doesn't look like "ok pid=42".
+        self._last_start_pending: bool = False
         self._owns_helix_process = False
         # Tracked Popen handle — used for POSIX zombie reap via poll().
         # Windows reaps through taskkill; POSIX needs a wait() sibling call.
@@ -187,6 +191,17 @@ class HelixSupervisor:
             "message": self._last_error,
             "at": self._last_error_at,
         }
+
+    @property
+    def last_start_pending(self) -> bool:
+        """True iff the most recent ``start()`` returned a pid for a process
+        that did not answer ``/stats`` within the wait timeout. PR #68 made
+        cold-start /stats timeout non-fatal (the spawned proc is left running
+        for the tray's next poll); this flag lets REST callers detect the
+        "alive but not ready" state so they don't report success on a hung
+        backend (closes #72). Reset to False on the next start() success or
+        adoption path."""
+        return self._last_start_pending
 
     def _record_error(self, operation: str, message: str) -> None:
         self._last_error = message
@@ -308,6 +323,7 @@ class HelixSupervisor:
                     port=self.helix_port,
                 )
                 self._owns_helix_process = False
+                self._last_start_pending = False
                 self._clear_error()
                 return orphan_pid
 
@@ -362,9 +378,11 @@ class HelixSupervisor:
                     timeout, proc.pid, exc,
                 )
                 self._record_error("start", str(exc))
+                self._last_start_pending = True
                 return proc.pid
 
         log.info("Helix started (pid=%d)", proc.pid)
+        self._last_start_pending = False
         self._clear_error()
         return proc.pid
 

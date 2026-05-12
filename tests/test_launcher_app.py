@@ -17,7 +17,7 @@ from helix_context.launcher.supervisor import (
     AlreadyRunning,
     NotRunning,
     ShutdownTimeout,
-    StartupTimeout,
+    SupervisorError,
 )
 
 
@@ -187,17 +187,37 @@ class TestPanelsPartial:
 class TestControlStart:
     def test_start_success(self, client, fake_supervisor):
         fake_supervisor.start.return_value = 99999
+        fake_supervisor.last_start_pending = False
         resp = client.post("/api/control/start")
         assert resp.status_code == 200
-        assert resp.json() == {"ok": True, "pid": 99999}
+        assert resp.json() == {"ok": True, "pid": 99999, "started_pending": False}
 
     def test_start_already_running_returns_409(self, client, fake_supervisor):
         fake_supervisor.start.side_effect = AlreadyRunning("already")
         resp = client.post("/api/control/start")
         assert resp.status_code == 409
 
-    def test_start_timeout_returns_500(self, client, fake_supervisor):
-        fake_supervisor.start.side_effect = StartupTimeout("did not start")
+    def test_start_pending_returns_202_with_started_pending_field(
+        self, client, fake_supervisor
+    ):
+        """Regression for #72: PR #68 made supervisor.start() return pid
+        on /stats timeout (proc left running for tray's next poll). REST
+        callers must see a distinct alive-but-not-ready signal instead of
+        the success-shaped 200."""
+        fake_supervisor.start.return_value = 99999
+        fake_supervisor.last_start_pending = True
+        resp = client.post("/api/control/start")
+        assert resp.status_code == 202
+        body = resp.json()
+        assert body["ok"] is True
+        assert body["pid"] == 99999
+        assert body["started_pending"] is True
+        assert "did not answer" in body["message"]
+
+    def test_start_supervisor_error_returns_500(self, client, fake_supervisor):
+        """Non-timeout supervisor failures (port collision, psutil missing,
+        etc) still surface as 500 — only /stats timeouts are 202."""
+        fake_supervisor.start.side_effect = SupervisorError("port collision")
         resp = client.post("/api/control/start")
         assert resp.status_code == 500
 
@@ -223,9 +243,24 @@ class TestControlStop:
 class TestControlRestart:
     def test_restart_success(self, client, fake_supervisor):
         fake_supervisor.restart.return_value = 88888
+        fake_supervisor.last_start_pending = False
         resp = client.post("/api/control/restart")
         assert resp.status_code == 200
-        assert resp.json() == {"ok": True, "pid": 88888}
+        assert resp.json() == {"ok": True, "pid": 88888, "started_pending": False}
+
+    def test_restart_pending_returns_202_with_started_pending_field(
+        self, client, fake_supervisor
+    ):
+        """Same alive-but-not-ready surface as /api/control/start (#72)."""
+        fake_supervisor.restart.return_value = 88888
+        fake_supervisor.last_start_pending = True
+        resp = client.post("/api/control/restart")
+        assert resp.status_code == 202
+        body = resp.json()
+        assert body["ok"] is True
+        assert body["pid"] == 88888
+        assert body["started_pending"] is True
+        assert "did not answer" in body["message"]
 
 
 class TestNativeFailFast:

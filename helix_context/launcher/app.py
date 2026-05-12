@@ -29,7 +29,6 @@ from .supervisor import (
     HelixSupervisor,
     NotRunning,
     ShutdownTimeout,
-    StartupTimeout,
     SupervisorError,
 )
 from .update_check import UpdateChecker
@@ -141,11 +140,32 @@ def create_app(
     async def api_control_start():
         try:
             pid = supervisor.start()
-            return {"ok": True, "pid": pid}
         except AlreadyRunning as exc:
             return JSONResponse({"error": str(exc)}, status_code=409)
-        except (StartupTimeout, SupervisorError) as exc:
+        except SupervisorError as exc:
+            # NB: StartupTimeout is no longer raised by start() (PR #68); it is
+            # surfaced via ``supervisor.last_start_pending`` below. SupervisorError
+            # still covers port-collisions and non-timeout failures.
             return JSONResponse({"error": str(exc)}, status_code=500)
+        # PR #68 made cold-start /stats timeout non-fatal — proc is left running
+        # for the tray's next poll. REST callers need to distinguish "ready"
+        # from "alive-but-not-ready" so an external automation doesn't treat
+        # a hung backend as success (closes #72).
+        if supervisor.last_start_pending:
+            return JSONResponse(
+                {
+                    "ok": True,
+                    "pid": pid,
+                    "started_pending": True,
+                    "message": (
+                        "Backend pid was spawned but /stats did not answer "
+                        "within the wait timeout. The process is still alive; "
+                        "poll /api/state or GET /stats to confirm readiness."
+                    ),
+                },
+                status_code=202,
+            )
+        return {"ok": True, "pid": pid, "started_pending": False}
 
     @app.post("/api/control/stop")
     async def api_control_stop():
@@ -163,9 +183,24 @@ def create_app(
     async def api_control_restart():
         try:
             pid = supervisor.restart(reason="manual restart from launcher UI")
-            return {"ok": True, "pid": pid}
-        except (StartupTimeout, ShutdownTimeout, SupervisorError) as exc:
+        except (ShutdownTimeout, SupervisorError) as exc:
             return JSONResponse({"error": str(exc)}, status_code=500)
+        # Same alive-but-not-ready surface as /api/control/start (closes #72).
+        if supervisor.last_start_pending:
+            return JSONResponse(
+                {
+                    "ok": True,
+                    "pid": pid,
+                    "started_pending": True,
+                    "message": (
+                        "Backend pid was respawned but /stats did not answer "
+                        "within the wait timeout. The process is still alive; "
+                        "poll /api/state or GET /stats to confirm readiness."
+                    ),
+                },
+                status_code=202,
+            )
+        return {"ok": True, "pid": pid, "started_pending": False}
 
     return app
 
