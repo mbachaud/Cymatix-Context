@@ -334,13 +334,13 @@ high_risk_threshold = 0.5               # `prob_B > this` surfaces a coarse "lik
 # Calibration requires Stage 1 to land first (it produces the bench
 # JSONL).
 #
-# # STAGE-7-EXT: Stage 7 will append b5 (default +1.5) for
-# # freshness_min as the fifth feature; the betas list grows to 6
-# # entries. The calibration script auto-detects the feature count.
+# Stage 7 added b5 (default +1.5) for freshness_min as the fifth
+# feature, so the betas list is now 6 entries. The calibration script
+# auto-detects the feature count.
 emit_floor      = 0.55
 s_ref           = 1.0
 g_ref           = 0.5
-betas           = [-2.0, 2.0, 1.5, 0.7, 1.8]
+betas           = [-2.0, 2.0, 1.5, 0.7, 1.8, 1.5]
 
 [mem_sync]
 # Auto-memory → helix sync. Every .md file in a watched dir becomes a
