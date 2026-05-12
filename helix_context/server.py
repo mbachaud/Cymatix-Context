@@ -1330,6 +1330,36 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
                 recommendation = "reread_raw"
                 hint = "Context is unreliable. Read raw files instead of trusting the genome."
 
+            # Stage 4 (spec §9, issue #63) — calibration staleness surface.
+            # Load cal once for both the age computation and to read the
+            # configured threshold. Soft-fails to defaults so a missing or
+            # malformed helix.toml never poisons /context.
+            try:
+                from .know_calibration import (
+                    calibration_age_days as _cal_age_days,
+                    is_calibration_stale as _is_cal_stale,
+                )
+                _cal_for_warn = load_calibration_from_toml()
+                _cal_age = _cal_age_days(_cal_for_warn.calibrated_at)
+                _cal_stale = _is_cal_stale(
+                    _cal_age, _cal_for_warn.stale_after_days,
+                )
+            except Exception:
+                log.debug(
+                    "Stage 4 §9 calibration staleness compute failed",
+                    exc_info=True,
+                )
+                _cal_age = None
+                _cal_stale = False
+
+            # ``warnings`` is always present (even when empty) so callers
+            # do not have to branch on key existence. Append the
+            # ``calibration_stale`` token when the threshold trips; other
+            # warning sources may be added here in future stages.
+            _warnings: list[str] = []
+            if _cal_stale:
+                _warnings.append("calibration_stale")
+
             response["agent"] = {
                 "recommendation": recommendation,
                 "hint": hint,
@@ -1348,6 +1378,15 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
                 # produced under without an extra /health roundtrip.
                 "ann_threshold_mode": config.retrieval.ann_threshold_mode,
                 "abstain_mode": config.abstain.mode,
+                # Stage 4 §9 (issue #63) — calibration staleness fields.
+                # ``calibration_age_days`` is None when calibrated_at is
+                # absent or unparseable; ``calibration_stale`` is False in
+                # the same "unknown" case (safe default).
+                "calibration_age_days": _cal_age,
+                "calibration_stale": _cal_stale,
+                # Always-present warning list — callers iterate without
+                # checking for key existence.
+                "warnings": _warnings,
             }
 
             # Activation profile: per-tier score breakdown for the

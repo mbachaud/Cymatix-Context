@@ -64,6 +64,14 @@ DEFAULT_G_REF: float = 0.5
 # decision falls through to MissBlock(reason="sparse").
 DEFAULT_EMIT_FLOOR: float = 0.55
 
+# Stage 4 (spec §9, issue #63): age in days after which a calibration
+# row is considered stale and ``calibration_stale`` flips to True on
+# the /context response. The check is strict ``age > threshold`` so a
+# row exactly at the boundary still reads as fresh — gives operators
+# a one-day window to re-run the calibration script before the warning
+# fires.
+DEFAULT_STALE_AFTER_DAYS: int = 30
+
 # Number of feature inputs (excluding intercept) the logistic accepts.
 # Stage 7: bumped to 5 — added freshness_min as feature index 4.
 N_FEATURES: int = 5
@@ -86,6 +94,12 @@ class KnowCalibration:
     emit_floor: float = DEFAULT_EMIT_FLOOR
     calibrated_at: Optional[str] = None
     calibrated_on_n: Optional[int] = None
+    # Stage 4 (spec §9, issue #63) — staleness threshold in days. When
+    # ``calibrated_at`` is older than this the /context response sets
+    # ``agent.calibration_stale = True`` and appends "calibration_stale"
+    # to ``agent.warnings``. Operator action: re-run
+    # ``scripts/calibrate_know_confidence.py``.
+    stale_after_days: int = DEFAULT_STALE_AFTER_DAYS
 
     def expected_betas_len(self) -> int:
         """Required length of the betas tuple: intercept + N_FEATURES.
@@ -93,6 +107,84 @@ class KnowCalibration:
         Used by validators and the calibration script.
         """
         return 1 + N_FEATURES
+
+
+# ─────────────────────────────────────────────────────────────────────
+# Staleness helpers (Stage 4 spec §9, issue #63)
+# ─────────────────────────────────────────────────────────────────────
+
+def calibration_age_days(
+    calibrated_at: Optional[str],
+    *,
+    now: Optional[float] = None,
+) -> Optional[int]:
+    """Days since ``calibrated_at`` (an ISO-8601 timestamp), or None.
+
+    Returns ``None`` when ``calibrated_at`` is None or unparseable —
+    callers should treat None as "age unknown, do not warn".
+
+    ``now`` is the current wall-clock time in seconds since epoch
+    (UTC). Defaults to ``time.time()``; tests pass a fixed value to
+    pin the result.
+
+    Soft-fails on unparseable timestamps with a debug log so a bad
+    helix.toml entry does not break /context.
+    """
+    if not calibrated_at:
+        return None
+
+    import time as _time
+    from datetime import datetime, timezone
+
+    if now is None:
+        now = _time.time()
+
+    raw = str(calibrated_at).strip()
+    # tomllib hands us either a string or a datetime; normalize.
+    try:
+        # Accept trailing 'Z' as UTC, matching ISO-8601 shorthand.
+        if raw.endswith("Z"):
+            raw = raw[:-1] + "+00:00"
+        dt = datetime.fromisoformat(raw)
+        # Bare timestamps (no offset) are assumed UTC — same convention
+        # used elsewhere for ``last_verified_at``.
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        age_seconds = float(now) - dt.timestamp()
+        # Clamp negatives (future-dated timestamps) to 0 — they
+        # shouldn't fire a staleness warning, but they're also not a
+        # crash-worthy state. A debug log makes the anomaly traceable.
+        if age_seconds < 0:
+            log.debug(
+                "know_calibration: calibrated_at %r is in the future; "
+                "treating age as 0",
+                calibrated_at,
+            )
+            return 0
+        return int(age_seconds // 86400)
+    except (ValueError, TypeError):
+        log.debug(
+            "know_calibration: could not parse calibrated_at %r",
+            calibrated_at,
+            exc_info=True,
+        )
+        return None
+
+
+def is_calibration_stale(
+    age_days: Optional[int],
+    stale_after_days: int,
+) -> bool:
+    """True iff ``age_days`` exceeds ``stale_after_days`` (strict >).
+
+    Strict greater-than (not ``>=``) is deliberate: a row exactly at
+    the boundary day reads as fresh so operators get one day of
+    notice before the warning surfaces. ``age_days is None`` returns
+    False — unknown age is the safe default.
+    """
+    if age_days is None:
+        return False
+    return int(age_days) > int(stale_after_days)
 
 
 # ─────────────────────────────────────────────────────────────────────
@@ -248,6 +340,23 @@ def load_calibration_from_toml(
             )
             betas = DEFAULT_BETAS
 
+        # Stage 4 (spec §9, issue #63) — parse stale_after_days with the
+        # same soft-fail discipline as the other numeric fields.
+        try:
+            stale_after_days = int(
+                table.get("stale_after_days", DEFAULT_STALE_AFTER_DAYS)
+            )
+            if stale_after_days < 0:
+                raise ValueError("negative")
+        except (TypeError, ValueError):
+            log.warning(
+                "know_calibration: malformed stale_after_days in %s; "
+                "using default %d",
+                toml_path,
+                DEFAULT_STALE_AFTER_DAYS,
+            )
+            stale_after_days = DEFAULT_STALE_AFTER_DAYS
+
         return KnowCalibration(
             betas=betas,
             s_ref=float(table.get("s_ref", DEFAULT_S_REF)),
@@ -263,6 +372,7 @@ def load_calibration_from_toml(
                 if table.get("calibrated_on_n") is not None
                 else None
             ),
+            stale_after_days=stale_after_days,
         )
     except Exception:
         log.warning(
