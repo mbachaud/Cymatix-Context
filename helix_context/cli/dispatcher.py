@@ -81,6 +81,11 @@ def _resolve(name: str) -> Optional[Callable[[list[str]], int]]:
 
 def main(argv: Optional[list[str]] = None) -> int:
     parser = _build_parser()
+    # When called as an installed entry point (no explicit argv), read from
+    # sys.argv[1:] — the standard Python CLI convention.
+    if argv is None:
+        argv = sys.argv[1:]
+
     # No args → print usage to stderr and exit 1.
     if not argv:
         parser.print_help(file=sys.stderr)
