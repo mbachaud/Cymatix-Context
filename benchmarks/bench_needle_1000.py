@@ -65,6 +65,17 @@ OUTPUT_PATH = os.environ.get("OUTPUT", "F:/Projects/helix-context/benchmarks/nee
 # Opt-in to legacy v1 behavior (no-op fixes) for reproducing old runs.
 LEGACY_HARVEST = os.environ.get("BENCH_LEGACY_HARVEST") == "1"
 
+# ASK_PROXY toggle — controls whether each needle invocation hits the full
+# proxy chat path (/v1/chat/completions) or stops after retrieval (/context).
+# The wrapper script benchmarks/_run_n1000_blind.sh has exported this since
+# 2026-04-14 and the harness header docs it as "retrieval-only", but the
+# script was previously unconditionally dispatching to /chat — making the
+# retrieval-only path unreachable and the "25-40 min" wall-time estimate
+# inaccessible. Defaults to "1" (full pipeline) to preserve historical
+# behavior; set "0" for A/B retrieval-only runs (helix budget knobs,
+# fusion-signal toggles, etc) where the downstream model is irrelevant.
+ASK_PROXY = os.environ.get("ASK_PROXY", "1").strip().lower() in ("1", "true", "yes", "on")
+
 # Cold-tier opt-in (C.2 of B->C, 2026-04-10).
 # When set to "1"/"true", every /context call sends include_cold=true in the
 # request body, forcing the server to consult heterochromatin genes via SEMA
@@ -456,40 +467,48 @@ def run_needle(client: httpx.Client, needle: dict) -> dict:
     else:
         retrieved = _word_boundary_match(content, needle["value"])
 
-    # Step 2: downstream model extraction
-    t1 = time.time()
-    try:
-        proxy_resp = client.post(f"{HELIX_URL}/v1/chat/completions", json={
-            "model": MODEL,
-            "messages": [{"role": "user", "content": query}],
-            "stream": False,
-            "options": {"temperature": 0, "num_predict": 128},
-        }, timeout=90)
-    except Exception as e:
-        result.update({
-            "retrieved": retrieved, "answered": False,
-            "context_latency_s": round(ctx_latency, 3),
-            "proxy_latency_s": time.time() - t1,
-            "error": f"proxy: {e}",
-            "ellipticity": health.get("ellipticity", 0),
-            "genes_expressed": health.get("genes_expressed", 0),
-        })
-        return result
-
-    proxy_latency = time.time() - t1
-    answer_text = ""
-    answered = False
-    if proxy_resp.status_code == 200:
+    # Step 2: downstream model extraction (skipped when ASK_PROXY=0;
+    # /chat dispatches the downstream model AND triggers the proxy's
+    # background helix.learn replication that MUTATES the genome —
+    # neither is wanted for a clean A/B on retrieval-only knobs).
+    if not ASK_PROXY:
+        proxy_latency = 0.0
+        answer_text = ""
+        answered = False
+    else:
+        t1 = time.time()
         try:
-            choices = proxy_resp.json().get("choices", [])
-            if choices:
-                answer_text = choices[0].get("message", {}).get("content", "") or ""
-                if LEGACY_HARVEST:
-                    answered = accept in answer_text.lower()
-                else:
-                    answered = _word_boundary_match(answer_text, needle["value"])
-        except Exception:
-            pass
+            proxy_resp = client.post(f"{HELIX_URL}/v1/chat/completions", json={
+                "model": MODEL,
+                "messages": [{"role": "user", "content": query}],
+                "stream": False,
+                "options": {"temperature": 0, "num_predict": 128},
+            }, timeout=90)
+        except Exception as e:
+            result.update({
+                "retrieved": retrieved, "answered": False,
+                "context_latency_s": round(ctx_latency, 3),
+                "proxy_latency_s": time.time() - t1,
+                "error": f"proxy: {e}",
+                "ellipticity": health.get("ellipticity", 0),
+                "genes_expressed": health.get("genes_expressed", 0),
+            })
+            return result
+
+        proxy_latency = time.time() - t1
+        answer_text = ""
+        answered = False
+        if proxy_resp.status_code == 200:
+            try:
+                choices = proxy_resp.json().get("choices", [])
+                if choices:
+                    answer_text = choices[0].get("message", {}).get("content", "") or ""
+                    if LEGACY_HARVEST:
+                        answered = accept in answer_text.lower()
+                    else:
+                        answered = _word_boundary_match(answer_text, needle["value"])
+            except Exception:
+                pass
 
     injected = agent_meta.get("total_tokens_est", 0)
     budget = agent_meta.get("budget_tokens_est", 15000)
