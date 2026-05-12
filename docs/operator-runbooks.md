@@ -7,9 +7,11 @@ release with the Stage 2 / Stage 4 / Stage 6 / Stage 7 changes, the new
 code paths take effect on a production knowledge store only after these scripts
 run against it.
 
-Assumptions: `helix.toml` at repo root (or `HELIX_CONFIG`); active knowledge store
-at `genomes/main/genome.db`; server at `127.0.0.1:11437`;
-`HELIX_AUTH_TOKEN` set for admin endpoints.
+Assumptions: `helix.toml` at repo root (or `HELIX_CONFIG`); active
+knowledge store at `genomes/main/genome.db`; server bound to loopback
+at `127.0.0.1:11437`. Admin endpoints are auth-free by design — bind
+to loopback or a reverse proxy that enforces auth in front; do not
+expose to a public interface.
 
 ## Overview
 
@@ -621,8 +623,7 @@ direct sqlite3 write.
 ### Refresh command
 
 ```bash
-curl -X POST http://127.0.0.1:11437/admin/refresh \
-     -H "Authorization: Bearer $HELIX_AUTH_TOKEN"
+curl -X POST http://127.0.0.1:11437/admin/refresh
 ```
 
 The endpoint handler at `helix_context/server.py:2806-2810` calls
@@ -673,8 +674,7 @@ file after thinning, compaction, or large-scale deletions.
 ### Vacuum command
 
 ```bash
-curl -X POST http://127.0.0.1:11437/admin/vacuum \
-     -H "Authorization: Bearer $HELIX_AUTH_TOKEN"
+curl -X POST http://127.0.0.1:11437/admin/vacuum
 ```
 
 Returns `{"ok": true, "before_bytes": ..., "after_bytes": ...,
@@ -863,8 +863,7 @@ significant changes to the knowledge store corpus.
    indexes and metadata):
 
    ```bash
-   curl -X POST http://127.0.0.1:11437/admin/vacuum \
-        -H "Authorization: Bearer $HELIX_AUTH_TOKEN"
+   curl -X POST http://127.0.0.1:11437/admin/vacuum
    ```
 
 4. **Verify calibration freshness** in `/context` responses:

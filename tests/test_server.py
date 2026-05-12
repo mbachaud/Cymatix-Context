@@ -116,8 +116,31 @@ class TestHealthEndpoint:
         data = resp.json()
         assert data["ribosome"] == "disabled"
         assert data["ribosome_backend"] == "disabled"
-        assert data["ribosome_configured_backend"] == "ollama"
+        # Honest reporting: while [ribosome].enabled=false, the placeholder
+        # backend string is not dispatched, so we report None instead of
+        # echoing the TOML default (which was a recurring source of "is
+        # this LLM-backed?" confusion). When enabled flips to true, this
+        # field reflects the configured backend string verbatim — see
+        # ``test_health_reports_configured_backend_when_ribosome_enabled``.
+        assert data["ribosome_configured_backend"] is None
         assert data["ribosome_cost_class"] == "disabled"
+
+    def test_health_reports_configured_backend_when_ribosome_enabled(self, monkeypatch):
+        monkeypatch.setattr(
+            server_mod,
+            "_probe_upstream",
+            lambda _url, timeout_s=1.0: {"reachable": True, "probe": "/api/tags", "status_code": 200},
+        )
+        app = create_app(HelixConfig(
+            genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
+            server=ServerConfig(upstream="http://localhost:11434"),
+            ribosome=RibosomeConfig(enabled=True, backend="litellm"),
+        ))
+        with TestClient(app) as default_client:
+            resp = default_client.get("/health")
+        data = resp.json()
+        assert data["ribosome_configured_backend"] == "litellm"
+        assert data["ribosome_backend"] == "litellm"
 
     def test_health_degrades_when_upstream_unreachable(self, client, monkeypatch):
         monkeypatch.setattr(
@@ -481,6 +504,64 @@ class TestContextEndpoint:
             "response_mode": "banana",
         })
         assert resp.status_code == 400
+
+
+class TestResolveCallerAgent:
+    """The _resolve_caller_agent helper resolves the `agent` telemetry
+    label per /context request. Cardinality-bounded via an allowlist that
+    collapses unknown handles to "other" so Prometheus label cardinality
+    can't explode when callers ship freeform handles.
+    """
+
+    def _make_request(self, headers=None):
+        from types import SimpleNamespace
+        return SimpleNamespace(headers=headers or {})
+
+    def test_body_agent_takes_precedence(self, monkeypatch):
+        from helix_context.server import _resolve_caller_agent
+        monkeypatch.setenv("HELIX_AGENT", "raude")
+        req = self._make_request({"x-helix-agent": "taude"})
+        assert _resolve_caller_agent(req, {"agent": "laude"}) == "laude"
+
+    def test_header_when_body_missing(self, monkeypatch):
+        from helix_context.server import _resolve_caller_agent
+        monkeypatch.setenv("HELIX_AGENT", "raude")
+        req = self._make_request({"x-helix-agent": "taude"})
+        assert _resolve_caller_agent(req, {}) == "taude"
+
+    def test_env_when_body_and_header_missing(self, monkeypatch):
+        from helix_context.server import _resolve_caller_agent
+        monkeypatch.setenv("HELIX_AGENT", "gemini")
+        assert _resolve_caller_agent(self._make_request(), {}) == "gemini"
+
+    def test_unknown_when_no_source_supplies(self, monkeypatch):
+        from helix_context.server import _resolve_caller_agent
+        monkeypatch.delenv("HELIX_AGENT", raising=False)
+        assert _resolve_caller_agent(self._make_request(), {}) == "unknown"
+
+    def test_off_allowlist_collapses_to_other(self, monkeypatch):
+        """Cardinality cap: any handle not in the allowlist (or
+        HELIX_AGENT_ALLOW extension) becomes "other", protecting
+        Prometheus from per-pid / per-tab handles."""
+        from helix_context.server import _resolve_caller_agent
+        monkeypatch.delenv("HELIX_AGENT_ALLOW", raising=False)
+        req = self._make_request()
+        assert _resolve_caller_agent(req, {"agent": "weird-tab-37"}) == "other"
+
+    def test_helix_agent_allow_extends_allowlist(self, monkeypatch):
+        from helix_context.server import _resolve_caller_agent
+        monkeypatch.setenv("HELIX_AGENT_ALLOW", "qaude, vaude")
+        req = self._make_request()
+        assert _resolve_caller_agent(req, {"agent": "qaude"}) == "qaude"
+        assert _resolve_caller_agent(req, {"agent": "vaude"}) == "vaude"
+        # Still collapses things not in either set.
+        assert _resolve_caller_agent(req, {"agent": "rogue"}) == "other"
+
+    def test_normalizes_case_and_whitespace(self, monkeypatch):
+        from helix_context.server import _resolve_caller_agent
+        monkeypatch.delenv("HELIX_AGENT", raising=False)
+        req = self._make_request()
+        assert _resolve_caller_agent(req, {"agent": "  Laude  "}) == "laude"
 
 
 class TestContextPacketEndpointFreshness:

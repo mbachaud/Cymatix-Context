@@ -19,6 +19,15 @@ Environment:
     HELIX_OTEL_INSECURE      - "1" for plain gRPC, default "1" (dev-local)
     HELIX_OTEL_SAMPLER_RATIO - trace sampler 0.0-1.0, default 1.0
     HELIX_OTEL_REDACT_QUERY  - "1" to hash query strings in spans, default "1"
+    HELIX_OTEL_LOGS_ENABLED  - "1" to ship Python log records to OTel
+                               (collector → Loki), default "1". Set "0"
+                               to keep traces+metrics on while suppressing
+                               log shipment — useful under Loki disk
+                               pressure or for PII-sensitive deployments.
+    HELIX_OTEL_LOGS_LEVEL    - Minimum log level forwarded to OTel: one
+                               of DEBUG / INFO / WARNING / ERROR /
+                               CRITICAL. Default "INFO". Tunes log
+                               volume without disabling traces/metrics.
 """
 
 from __future__ import annotations
@@ -96,6 +105,111 @@ def _instrument_fastapi(app: Any) -> None:
         log.warning("FastAPI auto-instrumentation failed", exc_info=True)
 
 
+class _LoggerNameInjector(logging.Filter):
+    """Promote the Python logger name to an OTel LogRecord attribute.
+
+    OTel's default LoggingHandler maps the Python logger name to the
+    InstrumentationScope.name, which the collector → Loki bridge does
+    NOT promote to a Loki stream label by default. The
+    helix-overview "Proxy call log" panel queries `{logger="helix.proxy"}`,
+    so we surface the logger name as a record attribute and add the
+    `loki.attribute.labels` resource hint below so Loki's OTLP ingest
+    promotes it to a stream label.
+    """
+
+    def filter(self, record: logging.LogRecord) -> bool:  # noqa: D401
+        # `logger` is consumed by Loki via the loki.attribute.labels
+        # resource hint set on the LoggerProvider resource.
+        if not hasattr(record, "logger") or record.logger is None:
+            record.logger = record.name
+        return True
+
+
+_LOG_LEVEL_NAMES = {"DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"}
+
+
+def _resolve_logs_level(raw: Optional[str]) -> int:
+    """Map HELIX_OTEL_LOGS_LEVEL → numeric level, defaulting to INFO on
+    unrecognised values."""
+    if not raw:
+        return logging.INFO
+    name = raw.strip().upper()
+    if name in _LOG_LEVEL_NAMES:
+        return getattr(logging, name)
+    log.warning(
+        "HELIX_OTEL_LOGS_LEVEL=%r is not one of %s — falling back to INFO",
+        raw, sorted(_LOG_LEVEL_NAMES),
+    )
+    return logging.INFO
+
+
+def _attach_otlp_logging_handler(
+    *,
+    endpoint: str,
+    insecure: bool,
+    resource: Any,
+    LoggerProvider: Any,
+    BatchLogRecordProcessor: Any,
+    OTLPLogExporter: Any,
+    LoggingHandler: Any,
+    set_logger_provider: Any,
+) -> None:
+    """Wire the Python logging root → OTel LogRecord → OTLP → collector →
+    Loki. Safe to call once per process; subsequent calls are no-ops.
+
+    Re-uses the same OTLP endpoint as the trace/metric exporters so a
+    single collector receiver handles all three signals.
+
+    Honors two env vars:
+
+    - ``HELIX_OTEL_LOGS_ENABLED`` (default ``"1"``): set ``"0"`` to skip
+      log shipping entirely while keeping traces + metrics enabled.
+    - ``HELIX_OTEL_LOGS_LEVEL`` (default ``"INFO"``): minimum level
+      forwarded to OTel. DEBUG / INFO / WARNING / ERROR / CRITICAL.
+    """
+    if os.environ.get("HELIX_OTEL_LOGS_ENABLED", "1") != "1":
+        log.info(
+            "OTel log shipping disabled "
+            "(HELIX_OTEL_LOGS_ENABLED=0) — traces + metrics still on, "
+            "Loki Logs panel will stay empty",
+        )
+        return
+    # Idempotency: bail BEFORE constructing a new LoggerProvider so a
+    # second call doesn't orphan the prior BatchLogRecordProcessor's
+    # background export thread by overwriting the global provider.
+    root = logging.getLogger()
+    if any(isinstance(h, LoggingHandler) for h in root.handlers):
+        return
+    level = _resolve_logs_level(os.environ.get("HELIX_OTEL_LOGS_LEVEL"))
+    try:
+        # Resource hint: tells Loki's OTLP ingest to promote `logger`
+        # (and `service.name`, which Loki promotes by default but we
+        # name it explicitly for clarity) from a record attribute to a
+        # stream label so `{logger="helix.proxy"}` queries work.
+        merged_resource = resource.merge(
+            type(resource).create({"loki.attribute.labels": "logger"})
+        )
+        logger_provider = LoggerProvider(resource=merged_resource)
+        logger_provider.add_log_record_processor(
+            BatchLogRecordProcessor(
+                OTLPLogExporter(endpoint=endpoint, insecure=insecure)
+            )
+        )
+        set_logger_provider(logger_provider)
+
+        otel_handler = LoggingHandler(
+            level=level, logger_provider=logger_provider,
+        )
+        otel_handler.addFilter(_LoggerNameInjector())
+        root.addHandler(otel_handler)
+    except Exception:
+        log.warning(
+            "Could not attach OTLP logging handler — Loki log panel "
+            "will stay empty",
+            exc_info=True,
+        )
+
+
 def setup_telemetry(
     app: Any = None,
     service_name: str = "helix-context",
@@ -119,6 +233,7 @@ def setup_telemetry(
         return False
     try:
         from opentelemetry import trace, metrics
+        from opentelemetry._logs import set_logger_provider
         from opentelemetry.sdk.trace import TracerProvider
         from opentelemetry.sdk.trace.export import BatchSpanProcessor
         from opentelemetry.sdk.trace.sampling import (
@@ -131,12 +246,17 @@ def setup_telemetry(
         from opentelemetry.sdk.metrics.export import (
             AggregationTemporality, PeriodicExportingMetricReader,
         )
+        from opentelemetry.sdk._logs import LoggerProvider, LoggingHandler
+        from opentelemetry.sdk._logs.export import BatchLogRecordProcessor
         from opentelemetry.sdk.resources import Resource, SERVICE_NAME, SERVICE_VERSION
         from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import (
             OTLPSpanExporter,
         )
         from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import (
             OTLPMetricExporter,
+        )
+        from opentelemetry.exporter.otlp.proto.grpc._log_exporter import (
+            OTLPLogExporter,
         )
     except ImportError:
         log.warning(
@@ -202,6 +322,18 @@ def setup_telemetry(
     )
     metrics.set_meter_provider(meter_provider)
     meter = metrics.get_meter(service_name, service_version)
+
+    # Logs → OTLP → collector → Loki. Without this, helix emits zero log
+    # records via OTel and the helix-overview "Proxy call log" panel
+    # stays empty. Attached at INFO so uvicorn access logs flow through.
+    _attach_otlp_logging_handler(
+        endpoint=endpoint, insecure=insecure, resource=resource,
+        LoggerProvider=LoggerProvider,
+        BatchLogRecordProcessor=BatchLogRecordProcessor,
+        OTLPLogExporter=OTLPLogExporter,
+        LoggingHandler=LoggingHandler,
+        set_logger_provider=set_logger_provider,
+    )
 
     _initialised = True
     # Auto-instrument FastAPI if an app was provided. Wraps every route
@@ -474,6 +606,69 @@ def pipeline_stage_histogram():
             description="Latency of each /context pipeline stage.",
         )
     return _instruments["pipeline_stage"]
+
+
+def pipeline_stage_span(stage: str, *, decoder_mode: Optional[str] = None):
+    """Open a span bracketing one /context pipeline stage.
+
+    The span name is ``helix.pipeline.<stage>`` (e.g.
+    ``helix.pipeline.classify``). Use as a context manager around the
+    stage's code block; pairs with ``pipeline_stage_histogram()`` so
+    each stage emits BOTH a span (visible in Tempo as the per-request
+    waterfall) AND a histogram point (visible in Prometheus as the
+    aggregate latency distribution).
+
+    The root span ``helix.pipeline.build_context`` should wrap the full
+    /context handler so per-stage spans nest under it correctly.
+
+    Returns the underlying tracer span; the caller can ``set_attribute``
+    additional helix-namespace fields (e.g. ``helix.cache_outcome``,
+    ``helix.context_block``).
+
+    Args:
+        stage: stage identifier, e.g. ``"classify"``, ``"extract"``,
+            ``"express"``, ``"rerank"``, ``"splice"``, ``"assemble"``,
+            ``"build_context"`` (root).
+        decoder_mode: optional ``CallerModelClass`` value (``"generic"``,
+            ``"small_moe"``, ``"frontier"``) to tag the stage's branch.
+    """
+    cm = tracer.start_as_current_span(f"helix.pipeline.{stage}")
+    # The OTel tracer returns a context manager; the noop tracer
+    # returns a _NoopSpan that is itself a context manager. Both
+    # support the same protocol, so we wrap the entry/exit by hand
+    # to be able to set attributes before yielding.
+    span = cm.__enter__()
+    try:
+        span.set_attribute("helix.pipeline.stage", stage)
+        if decoder_mode:
+            span.set_attribute("helix.pipeline.decoder_mode", decoder_mode)
+    except Exception:
+        pass
+    return _PipelineStageSpanCM(cm, span)
+
+
+class _PipelineStageSpanCM:
+    """Internal context-manager wrapper for ``pipeline_stage_span``.
+
+    Exists so callers can use the natural ``with pipeline_stage_span(...)
+    as span:`` form even though we needed to enter the underlying span
+    eagerly to set its attributes.
+    """
+
+    def __init__(self, cm, span):
+        self._cm = cm
+        self._span = span
+
+    def __enter__(self):
+        return self._span
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if exc_val is not None:
+            try:
+                self._span.record_exception(exc_val)
+            except Exception:
+                pass
+        return self._cm.__exit__(exc_type, exc_val, exc_tb)
 
 
 def ribosome_call_histogram():

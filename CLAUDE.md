@@ -89,6 +89,27 @@ python -m pytest tests/ -m live -v -s
 python -m pytest tests/ -v
 ```
 
+## Observability (Grafana telemetry)
+
+Helix ships a native OTel sidecar (collector + Prometheus + Tempo + Loki + Grafana). To set it up without the tray:
+
+```powershell
+scripts\setup-grafana-telem.ps1     # Windows
+scripts/setup-grafana-telem.sh      # Linux / macOS
+```
+
+Then enable telemetry on the backend:
+
+```bash
+HELIX_OTEL_ENABLED=1 HELIX_OTEL_ENDPOINT=localhost:4317 \
+  python -m uvicorn helix_context._asgi:app --port 11437
+```
+
+Dashboards: <http://localhost:3000/d/helix-overview> (admin/admin, rotate on first login).
+Verify metrics flowing: `curl 'http://localhost:9090/api/v1/query?query=helix_context_latency_seconds_count'`.
+
+See [`docs/architecture/OBSERVABILITY.md`](docs/architecture/OBSERVABILITY.md) for the full instrumentation surface.
+
 ## Continue IDE Integration
 
 Add to `~/.continue/config.yaml`:

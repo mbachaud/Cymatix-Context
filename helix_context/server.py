@@ -180,6 +180,59 @@ def _normalize_identity_token(value: Optional[str]) -> Optional[str]:
     return normalized or None
 
 
+# Cardinality cap for the `agent` telemetry label. The known-agents
+# allowlist below covers our shipped MCP-host handles; anything else gets
+# folded into "other" to prevent a label-cardinality blow-up if a caller
+# starts shipping per-pid handles or freeform strings. Operators who
+# really want a custom label can extend this set via HELIX_AGENT_ALLOW.
+_KNOWN_AGENTS_DEFAULT = frozenset({
+    "laude", "raude", "taude", "gemini", "codex", "claude", "manual",
+})
+
+
+def _agent_allowlist() -> frozenset[str]:
+    extra = os.environ.get("HELIX_AGENT_ALLOW", "")
+    if not extra:
+        return _KNOWN_AGENTS_DEFAULT
+    extra_set = {
+        t for t in (s.strip().lower() for s in extra.split(","))
+        if t and t != "other" and t != "unknown"
+    }
+    return _KNOWN_AGENTS_DEFAULT | extra_set
+
+
+def _resolve_caller_agent(request, data: dict) -> str:
+    """Pick the agent label for a /context request.
+
+    Precedence:
+      1. body ``agent`` field — explicit caller-provided handle
+      2. header ``X-Helix-Agent`` — for callers that can't shape the body
+      3. env ``HELIX_AGENT`` — per-process default set by the host bat /
+         shim (start-helix-tray.bat, MCP shim, etc.)
+      4. ``"unknown"`` — last-resort label so the metric always carries
+         a value (avoiding NULL-style gaps that confuse stacked-area
+         dashboards).
+
+    Returns a normalized lowercase handle. Unknown handles outside the
+    allowlist collapse to ``"other"`` to keep Prometheus label
+    cardinality bounded.
+    """
+    candidates = (
+        data.get("agent") if isinstance(data, dict) else None,
+        request.headers.get("x-helix-agent") if request is not None else None,
+        os.environ.get("HELIX_AGENT"),
+    )
+    handle = None
+    for c in candidates:
+        normalized = _normalize_identity_token(c)
+        if normalized:
+            handle = normalized
+            break
+    if handle is None:
+        return "unknown"
+    return handle if handle in _agent_allowlist() else "other"
+
+
 def _compute_know_or_miss_block(
     *,
     helix: "HelixContextManager",
@@ -1438,6 +1491,11 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
                 context_calls_by_class_counter,
                 redact_query,
             )
+            # Agent label for per-agent dashboards (request rate, latency,
+            # know/miss breakdown by caller). Allowlist-collapsed to "other"
+            # for unknown handles so Prometheus cardinality stays bounded;
+            # see _resolve_caller_agent.
+            agent_label = _resolve_caller_agent(request, data)
             context_latency_histogram().record(
                 _time.time() - t0,
                 {
@@ -1446,10 +1504,13 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
                     "cold_tier_used": str(getattr(helix, "_last_cold_tier_used", False)),
                     # Stage 5 §11: class label for per-class p95 dashboards.
                     "class": caller_model_class,
+                    "agent": agent_label,
                 },
             )
             # Stage 5 §11: per-call class counter.
-            context_calls_by_class_counter().add(1, {"class": caller_model_class})
+            context_calls_by_class_counter().add(
+                1, {"class": caller_model_class, "agent": agent_label},
+            )
         except Exception:
             # Promoted to warning so silent histogram failures surface.
             # /context latency is the primary user-visible health metric;
@@ -2769,12 +2830,22 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
 
         # those and omit raw error strings, cost class, and the full
         # probe dict to avoid leaking internal paths/configuration.
+        #
+        # When ribosome is disabled (the default), `ribosome_configured_backend`
+        # would otherwise echo the TOML placeholder ("ollama" historically,
+        # "none" going forward) — that's misleading because the placeholder
+        # is never dispatched. Report ``null`` instead so operators don't
+        # mistake the placeholder for an active backend. The runbook for
+        # turning the ribosome on lives in helix.toml's [ribosome] block.
+        configured_backend = (
+            config.ribosome.normalized_backend if config.ribosome.enabled else None
+        )
         return {
             "status": status,
             "message": message,
             "ribosome": ribosome_model,
             "ribosome_backend": config.ribosome.effective_backend,
-            "ribosome_configured_backend": config.ribosome.normalized_backend,
+            "ribosome_configured_backend": configured_backend,
             "ribosome_cost_class": config.ribosome.cost_class,
             "genes": total_genes,
             "upstream": config.server.upstream,

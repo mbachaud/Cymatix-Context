@@ -196,7 +196,7 @@ def load_calibration_from_toml(
         emit_floor      = 0.55
         s_ref           = 1.0
         g_ref           = 0.5
-        betas           = [-2.0, 2.0, 1.5, 0.7, 1.8]
+        betas           = [-2.0, 2.0, 1.5, 0.7, 1.8, 1.5]
         calibrated_at   = "2026-05-08T..."
         calibrated_on_n = 800
 
