@@ -33,6 +33,22 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Run one retrieval pipeline pass over the genome and print the result.",
     )
     sub.add_parser(
+        "packet",
+        help="Build a freshness-labeled agent-safe evidence bundle.",
+    )
+    sub.add_parser(
+        "refresh-targets",
+        help="Reread plan only — refresh_targets without evidence items.",
+    )
+    sub.add_parser(
+        "gene",
+        help="Inspect a single document (`helix gene get|preview <id>`).",
+    )
+    sub.add_parser(
+        "neighbors",
+        help="Top-k SEMA neighbors for a query (semantic graph walk).",
+    )
+    sub.add_parser(
         "ingest",
         help="Add a file (or directory of files) to the genome.",
     )
@@ -61,6 +77,18 @@ def _resolve(name: str) -> Optional[Callable[[list[str]], int]]:
     if name == "query":
         from . import cmd_query
         return cmd_query.run
+    if name == "packet":
+        from . import cmd_packet
+        return cmd_packet.run
+    if name == "refresh-targets":
+        from . import cmd_refresh_targets
+        return cmd_refresh_targets.run
+    if name == "gene":
+        from . import cmd_gene
+        return cmd_gene.run
+    if name == "neighbors":
+        from . import cmd_neighbors
+        return cmd_neighbors.run
     if name == "ingest":
         from . import cmd_ingest
         return cmd_ingest.run

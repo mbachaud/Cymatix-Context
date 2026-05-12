@@ -62,7 +62,7 @@ work.
 | `epigenetics` (field) | `signals` | |
 | `ChromatinState` | `LifecycleTier` | The hot/warm/cold storage tier enum. |
 | `chromatin` (field) | `tier` | |
-| `OPEN` / `EUCHROMATIN` / `HETEROCHROMATIN` | `OPEN` / `WARM` / `COLD` | Tier values. The numeric IntEnum values stay the same. |
+| `OPEN` / `EUCHROMATIN` / `HETEROCHROMATIN` | `OPEN` / `WARM` / `COLD` | Tier values. Names are **not yet renamed in code** — `ChromatinState` in `schemas.py` still emits the bio names. The canonical name pair is the right-hand column; the rename is deferred to R3 (it would change pydantic field-string values, so it ships behind the same gate as the symbol rename). Numeric IntEnum values stay the same throughout. |
 | `codon` / `Codon` | `Fragment` / `Chunk` | The within-document compressed unit. |
 | `codons` (field) | `fragments` | |
 | `Ribosome` | `Compressor` | The small-model pipeline that encodes raw text into compressed documents. |
@@ -78,7 +78,33 @@ work.
 | `harmonic_bin_boost` | `random_walk_boost` | The Monte Carlo neighbour-expansion tier. |
 | `gene_attribution` | `document_attribution` | The party/participant authorship metadata on each document. |
 | `GeneAttribution` | `DocumentAttribution` | |
-| `HGT` (horizontal gene transfer) | `cross_store_import` | Importing documents from another helix instance. |
+| `HGT` (horizontal gene transfer) | `cross_store_import` | Importing documents from another helix instance. **Forward-pointer:** no code under either name today; `cross_store_import` is the name the feature will ship under when it lands. The legacy `HGT` acronym remains the term-of-art in design docs until then. |
+
+---
+
+## Response & routing types (STAYS — no biology twin)
+
+These types travel on the wire between helix and its callers (HTTP
+clients, MCP hosts, the CLI). They are the *response envelope*
+vocabulary, not the storage vocabulary. No biology metaphor applies;
+they keep their engineering names everywhere.
+
+| Type | Purpose | Where it surfaces |
+|---|---|---|
+| `ContextWindow` | Full pipeline output — the bytes the agent reads. Carries `expressed_context`, `expressed_gene_ids`, `total_estimated_tokens`, plus the `metadata` dict that pipes `know`/`miss` upward. | `helix_context.schemas.ContextWindow`; returned from `HelixContextManager.build_context()`. |
+| `QueryResult` | Agent-facing projection of `ContextWindow`. Adds `verdict` / `next_action` / `decision_reason`. The shape `helix query --json` emits via `to_agent_json()`. | `helix_context.api.QueryResult`. |
+| `ContextPacket` | Freshness-labeled agent-safe bundle for high-risk actions. Holds `verified[]`, `stale_risk[]`, `refresh_targets[]`, plus `coordinate_confidence` and `file_coverage`. | `helix_context.schemas.ContextPacket`; built by `build_context_packet()`; emitted by `/context/packet`, `helix packet`, and the `helix_context_packet` MCP tool. |
+| `ContextItem` | One evidence row inside a packet — `gene_id` / `title` / `content` / `relevance_score` / `live_truth_score` / `status` (`"verified"` / `"stale"` / `"missing"`). | `helix_context.schemas.ContextItem`. |
+| `RefreshTarget` | One reread directive in a packet — `target_kind` / `source_id` / `reason` / `priority`. | `helix_context.schemas.RefreshTarget`; emitted by `helix refresh-targets`. |
+| `KnowBlock` | Top-level "you may answer from this evidence" verdict. Fields: `found`, `confidence`, `gene_id_match`, `soft_stale`, etc. Mutually exclusive with `MissBlock` on a single response. | `helix_context.schemas.KnowBlock`; populated by `know_decision.decide_know_or_miss()`. |
+| `MissBlock` | Top-level "do **not** answer from the knowledge store" verdict. Carries `reason` (`"miss"` / `"stale"` / `"cold"` / `"superseded"`), `escalate_to[]`, `refresh_targets[]`, `do_not_answer_from_genome:true`. | `helix_context.schemas.MissBlock`; populated by `know_decision.decide_know_or_miss()`. |
+| `ContextHealth` | "Check-engine light" for a single retrieval — `ellipticity`, `coverage`, `density`, freshness signals, `coordinate_crispness`, `status` ∈ {`aligned`, `sparse`, `stale`, `denatured`}. | `helix_context.schemas.ContextHealth`; logged to the `health_log` table; not on the wire. |
+| `IngestResult` | One-shot ingest projection — `gene_ids[]`, `chunks`, `bytes_written`. | `helix_context.api.IngestResult`. |
+| `StatsResult` | One-shot stats projection used by `helix diag corpus`. | `helix_context.api.StatsResult`. |
+
+Note: `ellipticity` and `denatured` are CD-spectroscopy / physics terms,
+not biology. They remain on the [Terms that STAY](#terms-that-stay-not-biology-not-tax)
+list and are unrenamed.
 
 ---
 

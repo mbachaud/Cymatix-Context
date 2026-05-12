@@ -63,7 +63,9 @@ from typing import Any, Dict, List, Optional
 from .config import HelixConfig
 from .schemas import (
     ContextItem,
+    ContextPacket,
     ContextWindow,
+    Gene,
     KnowBlock,
     MissBlock,
     RefreshTarget,
@@ -349,15 +351,133 @@ class HelixSession:
             },
         )
 
-    # ── Walk-aware surface (deferred past v1) ────────────────────────
+    # ── Walk-aware surface (v1.x — added 2026-05-12) ──────────────────
     #
-    # The agent-walks-the-corpus workflow (drill into a document,
-    # fetch related ones, re-query with refined understanding) is
-    # NOT part of the v1 surface. Once the read-path API is wired
-    # through the manager (Genome.get_gene + list_neighbors) and the
-    # /context/packet builder is finalized, those methods will be
-    # added here. Until then callers should drive walks via repeated
-    # ``query()`` calls.
+    # The agent-walks-the-corpus workflow (drill into a document, fetch
+    # related ones, decide whether to act or reread). Each method is a
+    # thin in-process wrapper over the existing primitives — no HTTP,
+    # no separate server, so cold-start CLI keeps its single-process
+    # promise. Identical semantics to the matching MCP tools
+    # (helix_gene_get / helix_neighbors / helix_context_packet /
+    # helix_refresh_targets) so agents can switch surfaces without
+    # changing call logic.
+
+    def gene_get(self, gene_id: str) -> Optional[Gene]:
+        """Fetch a single document by ID.
+
+        Returns the full ``Gene`` model (content, tags, signals,
+        fragments, lifecycle tier, embedding) or ``None`` when the
+        gene_id is unknown. Read-only; never mutates the store.
+        """
+        return self._manager.genome.get_gene(gene_id)
+
+    def packet(
+        self,
+        query: str,
+        *,
+        task_type: str = "explain",
+        max_genes: int = 8,
+        include_raw: bool = False,
+    ) -> ContextPacket:
+        """Build a freshness-labeled agent-safe evidence packet.
+
+        Same builder the ``/context/packet`` HTTP endpoint uses.
+        ``task_type`` ∈ {"plan", "explain", "review", "edit", "debug",
+        "ops", "quote"} — higher-risk types apply stricter freshness
+        and coordinate-confidence gates. ``include_raw=True`` swaps
+        each item's compressed body for the full ``gene.content`` (the
+        2026-04-22 "real bytes" path).
+
+        Read-only: ``build_context_packet`` is called with
+        ``read_only=True`` so a CLI agent loop never mutates the store
+        by inspecting it.
+        """
+        from .context_packet import build_context_packet  # late import — heavy
+        return build_context_packet(
+            query,
+            task_type=task_type,
+            genome=self._manager.genome,
+            max_genes=max_genes,
+            read_only=True,
+            include_raw=include_raw,
+        )
+
+    def refresh_targets(
+        self,
+        query: str,
+        *,
+        task_type: str = "edit",
+        max_genes: int = 8,
+    ) -> List[RefreshTarget]:
+        """Return just the reread plan for a high-risk action.
+
+        Builds a full ``ContextPacket`` and returns the
+        ``refresh_targets`` list. Defaults to ``task_type="edit"`` —
+        that's the usual caller (an agent about to mutate a file).
+        See ``packet`` for the full bundle.
+        """
+        return list(self.packet(
+            query, task_type=task_type, max_genes=max_genes,
+        ).refresh_targets)
+
+    def neighbors(self, query: str, *, k: int = 10) -> List[Dict[str, Any]]:
+        """Top-k SEMA neighbors for ``query``.
+
+        Returns a list of ``{gene_id, sema_cos_sim, preview, path}``
+        dicts — the same shape the ``/debug/neighbors`` HTTP endpoint
+        and the ``helix_neighbors`` MCP tool emit. Read-only.
+
+        Returns an empty list when the SEMA codec is unavailable
+        (e.g. the ``embeddings`` extra is not installed, or no genes
+        have embeddings yet). Callers can distinguish "no neighbors"
+        from "codec missing" by checking ``stats().total_genes``.
+        """
+        import json as _json
+
+        codec = getattr(self._manager, "_sema_codec", None)
+        if codec is None:
+            return []
+
+        rows = self._manager.genome.read_conn.execute(
+            "SELECT gene_id, embedding FROM genes "
+            "WHERE embedding IS NOT NULL AND chromatin < 2 "
+            "LIMIT 20000"
+        ).fetchall()
+        if not rows:
+            return []
+
+        q_vec = codec.encode(query)
+        scored: List[tuple] = []
+        for r in rows:
+            try:
+                vec = _json.loads(r["embedding"])
+            except (TypeError, ValueError, _json.JSONDecodeError):
+                # Skip rows whose embedding column is malformed; never
+                # silent — log once at warning so the operator can
+                # spot a corrupted ingest.
+                log.warning(
+                    "neighbors: skipping gene %s with malformed embedding",
+                    r["gene_id"],
+                )
+                continue
+            scored.append((codec.similarity(q_vec, vec), r["gene_id"]))
+        scored.sort(key=lambda x: x[0], reverse=True)
+
+        out: List[Dict[str, Any]] = []
+        for sim, gid in scored[:k]:
+            g = self._manager.genome.get_gene(gid)
+            if g is None:
+                continue
+            path = None
+            if g.promoter and g.promoter.metadata:
+                path = g.promoter.metadata.get("path")
+            out.append({
+                "gene_id": gid,
+                "sema_cos_sim": round(float(sim), 4),
+                "preview": (g.content or "")[:160],
+                "path": path,
+            })
+        return out
 
     # ── Replication surface (v1.1) ──────────────────────────────────
 
@@ -499,6 +619,44 @@ def stats() -> StatsResult:
     return sess.stats()
 
 
+def gene_get(gene_id: str) -> Optional[Gene]:
+    """One-shot module-level gene_get. See ``query`` for lifecycle notes."""
+    return open_session().gene_get(gene_id)
+
+
+def packet(
+    query_text: str,
+    *,
+    task_type: str = "explain",
+    max_genes: int = 8,
+    include_raw: bool = False,
+) -> ContextPacket:
+    """One-shot module-level context-packet builder."""
+    return open_session().packet(
+        query_text,
+        task_type=task_type,
+        max_genes=max_genes,
+        include_raw=include_raw,
+    )
+
+
+def refresh_targets(
+    query_text: str,
+    *,
+    task_type: str = "edit",
+    max_genes: int = 8,
+) -> List[RefreshTarget]:
+    """One-shot module-level refresh-targets builder."""
+    return open_session().refresh_targets(
+        query_text, task_type=task_type, max_genes=max_genes,
+    )
+
+
+def neighbors(query_text: str, *, k: int = 10) -> List[Dict[str, Any]]:
+    """One-shot module-level SEMA neighbors lookup."""
+    return open_session().neighbors(query_text, k=k)
+
+
 # ── What this module deliberately does NOT expose ─────────────────────
 #
 # Belongs on the FastAPI surface (cross-device telemetry / ops):
@@ -526,4 +684,8 @@ __all__ = [
     "query",
     "ingest",
     "stats",
+    "gene_get",
+    "packet",
+    "refresh_targets",
+    "neighbors",
 ]
