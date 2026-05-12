@@ -69,9 +69,16 @@ def test_root_readme_demotes_docker_to_advanced_footnote():
 
 
 def test_root_readme_preserves_canonical_launch_section():
-    """Regression: don't rip out existing Quick Start ▸ Launch content."""
+    """Regression: don't rip out existing Quick Start ▸ Launch content.
+
+    The original 'Canonical path' marker was reworded by the R2 rename
+    sweep (commit 5c00a21); pin on the section header + the tray entry
+    point, both of which the launch flow can't function without.
+    """
     body = _read("README.md")
-    assert "Canonical path" in body
+    assert "## Quick Start" in body, (
+        "Root README must keep the '## Quick Start' section"
+    )
     assert "start-helix-tray.bat" in body.lower()
 
 
