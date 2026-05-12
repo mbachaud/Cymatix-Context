@@ -157,28 +157,26 @@ def test_weak_retrieval_triggers_abstain(abstain_manager):
 
 
 def test_focused_score_floor_constants_in_sync():
-    """The ABSTAIN gate mirrors the FOCUSED_SCORE_FLOOR = 2.5 constant
-    defined just below it in context_manager.py. If one is bumped
-    without the other, the gate's strict-less-than semantic and the
-    FOCUSED tier's threshold will drift. This test pins them together
-    by extracting both literals and asserting numeric equality — robust
-    to formatting changes (extra whitespace, comments, scientific
-    notation) that string-matching would miss.
-    """
-    import inspect
-    import re
+    """The ABSTAIN gate threshold mirrors the FOCUSED tier threshold.
+    If one is bumped without the other, the gate's strict-less-than
+    semantic and the FOCUSED tier's at-or-above threshold drift apart.
 
-    src = inspect.getsource(cm.HelixContextManager.build_context)
-    matches = re.findall(
-        r"FOCUSED_SCORE_FLOOR(?:_FOR_ABSTAIN)?\s*=\s*([\d.]+(?:[eE][-+]?\d+)?)",
-        src,
-    )
-    assert len(matches) == 2, (
-        f"expected exactly 2 FOCUSED_SCORE_FLOOR literals, got {matches}"
-    )
-    assert float(matches[0]) == float(matches[1]), (
-        f"FOCUSED_SCORE_FLOOR_FOR_ABSTAIN ({matches[0]}) and "
-        f"FOCUSED_SCORE_FLOOR ({matches[1]}) drifted apart"
+    Stage 4 (2026-05-08) moved the literal floors out of build_context
+    into _floors_for / AbstainClassFloors. Both modes need pinning:
+    - global mode reads _GLOBAL_FOCUSED_FLOOR / _GLOBAL_ABSTAIN_FLOOR
+      from HelixContextManager;
+    - per_classifier mode falls back to AbstainClassFloors defaults
+      when a class lacks an explicit block.
+    """
+    from helix_context.config import AbstainClassFloors
+
+    assert (
+        cm.HelixContextManager._GLOBAL_FOCUSED_FLOOR
+        == cm.HelixContextManager._GLOBAL_ABSTAIN_FLOOR
+    ), "global-mode floors drifted apart"
+    defaults = AbstainClassFloors()
+    assert defaults.focused_top == defaults.abstain_top, (
+        "AbstainClassFloors default focused_top / abstain_top drifted apart"
     )
 
 
