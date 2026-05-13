@@ -837,7 +837,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
         # Computed here (not in context_manager) because messages[] is
         # a proxy-layer concept. No-op unless HELIX_BUDGET_ZONE=1.
         try:
-            from .metrics import estimate_tokens as _est_tokens
+            from .telemetry.metrics import estimate_tokens as _est_tokens
             _prompt_tokens = sum(
                 _est_tokens(m.get("content", "") or "") for m in messages
             )
@@ -3560,7 +3560,7 @@ async def _stream_and_tee(
     # else estimate from the user query + accumulated response.
     try:
         if not helix.token_counter.add_from_usage(captured_usage):
-            from .metrics import estimate_tokens
+            from .telemetry.metrics import estimate_tokens
             helix.token_counter.add(
                 prompt_tokens=estimate_tokens(user_query),
                 completion_tokens=estimate_tokens(full_response),
@@ -3612,7 +3612,7 @@ async def _forward_and_replicate(
     # Token accounting — exact if usage was provided, else estimated.
     try:
         if not helix.token_counter.add_from_usage(data.get("usage")):
-            from .metrics import estimate_tokens
+            from .telemetry.metrics import estimate_tokens
             helix.token_counter.add(
                 prompt_tokens=estimate_tokens(user_query),
                 completion_tokens=estimate_tokens(content),

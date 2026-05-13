@@ -416,7 +416,7 @@ class HelixContextManager:
         # the lifetime counter survives restarts. See helix_context/metrics.py
         # and the /metrics/tokens endpoint.
         from pathlib import Path as _Path
-        from .metrics import TokenCounter
+        from .telemetry.metrics import TokenCounter
         _genome_path = _Path(config.genome.path)
         if str(_genome_path) == ":memory:":
             # In-memory tests: keep metrics in-memory too (write to a tmp path
