@@ -513,12 +513,12 @@ def build_context_packet(
             "right folder but no filenames match the queried concept"
         )
 
-    for gene in genes:
-        source_row = _lookup_source_row(effective_main_conn, gene.gene_id)
-        meta = _effective_meta(gene, source_row)
+    for doc in genes:
+        source_row = _lookup_source_row(effective_main_conn, doc.gene_id)
+        meta = _effective_meta(doc, source_row)
         item, status = _build_item(
-            gene,
-            relevance_score=score_map.get(gene.gene_id, 0.0),
+            doc,
+            relevance_score=score_map.get(doc.gene_id, 0.0),
             meta=meta,
             task_type=task_type,
             now_ts=now_ts,
