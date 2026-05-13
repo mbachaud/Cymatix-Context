@@ -612,7 +612,7 @@ class HelixContextManager:
         # Cymatics (frequency-domain re_rank + splice, replaces LLM calls)
         self._use_cymatics = config.cymatics.enabled
         if self._use_cymatics:
-            from .cymatics import aggressiveness_to_peak_width
+            from .scoring.cymatics import aggressiveness_to_peak_width
             self._cymatics_peak_width = aggressiveness_to_peak_width(
                 config.budget.splice_aggressiveness
             )
@@ -622,7 +622,7 @@ class HelixContextManager:
         # TCM session context (Howard & Kahana 2002 temporal drift)
         self._tcm_session = None
         try:
-            from .tcm import SessionContext
+            from .scoring.tcm import SessionContext
             self._tcm_session = SessionContext(n_dims=20, beta=0.5)
             log.info("TCM session context initialized (20D, beta=0.5)")
         except Exception:
@@ -1602,7 +1602,7 @@ class HelixContextManager:
             # Compute harmonic weights between retrieved documents (cymatics)
             if self._use_cymatics and self.config.cymatics.harmonic_links:
                 try:
-                    from .cymatics import compute_harmonic_weights
+                    from .scoring.cymatics import compute_harmonic_weights
                     weights = compute_harmonic_weights(
                         candidates, peak_width=self._cymatics_peak_width,
                     )
@@ -1708,7 +1708,7 @@ class HelixContextManager:
             pass
         try:
             if self._tcm_session is not None:
-                from .tcm import SessionContext
+                from .scoring.tcm import SessionContext
                 self._tcm_session = SessionContext(n_dims=20, beta=0.5)
         except Exception:
             pass
@@ -2304,7 +2304,7 @@ class HelixContextManager:
 
         if use_cymatics and self._use_cymatics and len(candidates) > 1:
             try:
-                from .cymatics import (
+                from .scoring.cymatics import (
                     query_spectrum, cached_doc_spectrum,
                     flux_score_dispatch, build_weight_vector,
                 )
@@ -2345,7 +2345,7 @@ class HelixContextManager:
 
         if use_harmonic_bin and len(candidates) >= 3:
             try:
-                from .ray_trace import harmonic_bin_boost
+                from .scoring.ray_trace import harmonic_bin_boost
                 seed_ids = [g.gene_id for g in candidates[:3]]
                 velocity = None
                 theta_w = 1.0
@@ -2378,7 +2378,7 @@ class HelixContextManager:
 
         if use_tcm and self._tcm_session is not None and self._tcm_session.depth > 0:
             try:
-                from .tcm import tcm_bonus
+                from .scoring.tcm import tcm_bonus
                 bonuses = tcm_bonus(self._tcm_session, candidates, weight=0.3)
                 for gid, bonus in bonuses.items():
                     if bonus:

@@ -45,7 +45,7 @@ import random
 from typing import Dict, List, Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .genome import Genome
+    from ..genome import Genome
 
 __all__ = [
     "cast_evidence_rays",

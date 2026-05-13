@@ -39,8 +39,8 @@ from pydantic import BaseModel
 from .config import HelixConfig, load_config
 from .context_packet import build_context_packet, get_refresh_targets
 from .context_manager import HelixContextManager
-from .know_calibration import load_calibration_from_toml
-from .know_decision import (
+from .scoring.know_calibration import load_calibration_from_toml
+from .scoring.know_decision import (
     _agree_from_tier_contributions,
     decide_know_or_miss,
     _is_code_shaped,
@@ -1388,7 +1388,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
             # configured threshold. Soft-fails to defaults so a missing or
             # malformed helix.toml never poisons /context.
             try:
-                from .know_calibration import (
+                from .scoring.know_calibration import (
                     calibration_age_days as _cal_age_days,
                     is_calibration_stale as _is_cal_stale,
                 )
@@ -1951,7 +1951,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
             genome = helix.genome
             codec = getattr(helix, "_sema_codec", None)
 
-            from .cymatics import query_spectrum, cached_doc_spectrum, resonance_score
+            from .scoring.cymatics import query_spectrum, cached_doc_spectrum, resonance_score
             q_spec = query_spectrum(query)
             q_sema = codec.encode(query) if codec is not None else None
 

@@ -589,8 +589,8 @@ def _attach_know_or_miss(
     but works directly with the locals already accumulated in
     ``build_context_packet`` instead of re-fetching from the knowledge store.
     """
-    from .know_calibration import load_calibration_from_toml
-    from .know_decision import (
+    from .scoring.know_calibration import load_calibration_from_toml
+    from .scoring.know_decision import (
         _agree_from_tier_contributions,
         decide_know_or_miss,
     )

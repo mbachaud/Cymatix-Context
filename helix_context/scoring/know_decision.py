@@ -31,12 +31,12 @@ import logging
 import re
 from typing import TYPE_CHECKING, Optional, Sequence
 
-from .accel import extract_query_signals
+from ..accel import extract_query_signals
 from .know_calibration import (
     KnowCalibration,
     compute_confidence,
 )
-from .schemas import (
+from ..schemas import (
     ESCALATE_TARGETS,
     KnowBlock,
     MISS_REASONS,
@@ -44,7 +44,7 @@ from .schemas import (
 )
 
 if TYPE_CHECKING:
-    from .schemas import ContextWindow, Gene
+    from ..schemas import ContextWindow, Gene
 
 log = logging.getLogger("helix.know_decision")
 
@@ -177,7 +177,7 @@ def _gene_id_beacon(query: str, top_gene: "Optional[Gene]") -> Optional[str]:
         return None
 
     # Lazy import to keep this module from circular-importing knowledge store.
-    from .genome import file_tokens, path_tokens
+    from ..genome import file_tokens, path_tokens
 
     domains, entities = extract_query_signals(query)
     # Lowercase for case-insensitive equality.

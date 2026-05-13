@@ -23,7 +23,7 @@ from pydantic import ValidationError
 from helix_context import context_manager as cm
 from helix_context.agent_prompt import HELIX_NO_MATCH_FRAGMENT
 from helix_context.context_packet import _attach_know_or_miss
-from helix_context.know_calibration import (
+from helix_context.scoring.know_calibration import (
     DEFAULT_BETAS,
     DEFAULT_EMIT_FLOOR,
     KnowCalibration,
@@ -31,7 +31,7 @@ from helix_context.know_calibration import (
     fit_betas_from_features,
     load_calibration_from_toml,
 )
-from helix_context.know_decision import (
+from helix_context.scoring.know_decision import (
     _agree_from_tier_contributions,
     _gene_id_beacon,
     _is_code_shaped,

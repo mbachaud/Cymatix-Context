@@ -44,7 +44,7 @@ from typing import List, Optional, Sequence, Tuple
 _SCRIPT_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(_SCRIPT_DIR.parent))
 
-from helix_context.know_calibration import (  # noqa: E402
+from helix_context.scoring.know_calibration import (  # noqa: E402
     DEFAULT_EMIT_FLOOR,
     DEFAULT_G_REF,
     DEFAULT_S_REF,

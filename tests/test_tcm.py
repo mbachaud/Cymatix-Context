@@ -4,7 +4,7 @@ import math
 import pytest
 
 from helix_context.schemas import Gene, PromoterTags
-from helix_context.tcm import (
+from helix_context.scoring.tcm import (
     SessionContext,
     gene_input_vector,
     tcm_bonus,

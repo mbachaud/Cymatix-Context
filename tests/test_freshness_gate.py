@@ -47,11 +47,11 @@ from helix_context.retrieval.freshness import (
     revalidate_and_mark,
     revalidate_source,
 )
-from helix_context.know_calibration import (
+from helix_context.scoring.know_calibration import (
     KnowCalibration,
     compute_confidence,
 )
-from helix_context.know_decision import decide_know_or_miss
+from helix_context.scoring.know_decision import decide_know_or_miss
 from helix_context.schemas import (
     ContextHealth,
     ContextWindow,
