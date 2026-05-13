@@ -3,164 +3,219 @@
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![PyPI version](https://img.shields.io/pypi/v/helix-context.svg)](https://pypi.org/project/helix-context/)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![Tests: 1950+](https://img.shields.io/badge/tests-1950%2B-brightgreen.svg)](tests/)
 [![LLM-free pipeline](https://img.shields.io/badge/pipeline-LLM--free-brightgreen.svg)](docs/architecture/PIPELINE_LANES.md)
 [![Paper: Agentome](https://img.shields.io/badge/paper-Agentome-purple.svg)](https://mbachaud.substack.com/p/agentome)
 
-**Knowledge-store-based context compression for local LLMs, with a machine-tagged know/miss agent contract.**
+> Coordinate-index engine for LLM agents. Retrieves, weighs, and compresses
+> your codebase into a context window — without a single LLM call on the
+> retrieval path.
 
-Coordinate-index engine for LLM agents. Helix retrieves, weighs, and compresses your codebase into a context window — without a single LLM call on the retrieval path.
+---
 
-## At a glance
+## Proof (30 seconds)
 
-- **Compression**: collapses ~9k tokens of raw working set into a ~600 effective-token assembled context. Best-case single-query result **28.7×** (WAL-checkpoint point-fact), **5.4× median across N=15 query shapes** on the May 2026 internal overnight bench. Reproducer: [`benchmarks/bench_rag_vs_sike_tokens.py`](benchmarks/bench_rag_vs_sike_tokens.py); methodology + per-shape breakdown in [`docs/benchmarks/BENCHMARKS.md`](docs/benchmarks/BENCHMARKS.md). The overnight result file is internal; running the script against your own genome reproduces the per-query numbers.
-- **Agent contract**: every `/context` response carries a top-level `know{}` (grounded, you may answer) or `miss{}` (`do_not_answer_from_genome:true`, plus `escalate_to` tools or `refresh_targets` paths). Stale `know` blocks downgrade to `miss(reason="stale"|"cold"|"superseded")` via the Stage 7 freshness gate.
-- **LLM-free retrieval**: `/context` runs spaCy NER, SQLite FTS5 BM25, BGE-M3 dense recall, RRF fusion, Howard-2005 TCM, and Hebbian co-activation — zero compressor calls. The only LLM call is downstream at `/v1/chat/completions`.
-- **Two agent surfaces, one operator surface**: agents drive helix via **MCP** (`python -m helix_context.mcp_server`) or **the CLI** (`helix query`, `helix packet`, `helix gene get`, `helix neighbors`, `helix refresh-targets`) — both expose the same retrieval primitives. The HTTP proxy and tray launcher are the operator surface; agents don't need them. See [`docs/clients/cli.md`](docs/clients/cli.md) and [`docs/clients/claude-code.md`](docs/clients/claude-code.md).
-- **Three install paths**: compact tray flow (`start-helix-tray.bat`) for the daily driver, proxy-only for `OPENAI_BASE_URL` redirection, agent-SDK fragment for frontier-model integration.
+**WIP benchmark numbers** — compressor disabled (default LLM-free config), N=15 query shapes, May 2026:
 
-### Quick navigation
+| metric | tokens | vs standard RAG (top-5 @ 1500) |
+|--------|--------|-------------------------------|
+| median | 2,757 | **2.9×** fewer tokens |
+| best (focused query) | 1,410 | **5.7×** |
+| worst (broad 12-doc) | 3,755 | **2.1×** |
 
-- [Setup guide](docs/SETUP.md) — extras matrix, OS-specific install paths, calibration runbook
-- [Troubleshooting](docs/TROUBLESHOOTING.md) — common errors and recovery
-- [`/context` API reference](docs/api/context-endpoint.md) — request/response schema, render branches, field-by-field
-- [Operator runbooks](docs/operator-runbooks.md) — backfill, calibrate, consolidate, vacuum
-- [Config reference](docs/config-reference.md) — every key in `helix.toml`
-- [Agent SDK integration](docs/agent-sdk-fragment.md) — frontier prompt fragment + compliance eval
-- [Environment variables](.env.example) — runtime overrides
+With the optional compressor enabled (Claude Haiku splice), median improves to ~5×.
+In multi-turn sessions, the session delivery register elides already-seen documents — observed **37× reduction** on repeated retrievals within a conversation.
 
-## Quick Start
+Reproducer: `python benchmarks/bench_rag_vs_sike_tokens.py` against your own genome.
+
+**Agent contract**: every `/context` response carries `know { found, confidence }` (grounded — you may answer) or `miss { reason, escalate_to }` (not found — don't answer from genome). Stale results downgrade to `miss(reason="stale"|"cold"|"superseded")` via the freshness gate.
+
+## Get started (60 seconds)
 
 ```bash
 # 1. Install
-pip install -e ".[all,launcher,otel]"
+pip install helix-context
 python -m spacy download en_core_web_sm
 
-# 2. Pull a small model for the ribosome (optional — disabled by default)
-ollama pull gemma3:e4b
+# 2. Ingest your codebase
+helix ingest path/to/your/project/ --recursive
 
-# 3. Start the proxy
-python -m uvicorn helix_context._asgi:app --host 127.0.0.1 --port 11437
+# 3. Query it
+helix query "how does the splice step work?"
 
-# 4. Or, daily-driver tray (Windows):
-start-helix-tray.bat
-
-# 5. Seed your genome (one-time)
-python examples/seed_genome.py path/to/your/docs/
-
-# 6. Post-merge: backfill 1024-dim BGE-M3 vectors for Stage 2 dense recall
-python scripts/backfill_bgem3_v2.py genomes/main/genome.db
+# 4. Or start the proxy for IDE integration
+helix-server   # binds to 127.0.0.1:11437
 ```
 
-For full options including the extras matrix, see [docs/SETUP.md](docs/SETUP.md).
+For extras matrix, BGE-M3 backfill, and tray setup: [docs/SETUP.md](docs/SETUP.md).
 
-## Agent CLI surface (no server required)
+## Agent surfaces
 
-The `helix` CLI is a cold-start agent surface: each invocation opens the SQLite genome read-only, runs one operation, and exits. Agents can drive a full retrieval-and-walk loop entirely through subprocess calls — no HTTP server, no MCP host, no long-lived daemon.
+Three ways to drive Helix — same retrieval primitives, same JSON shapes:
+
+| Surface | Best for | Example |
+|---------|----------|---------|
+| **CLI** | Scripts, CI, cold-start agents | `helix query "..." --json` |
+| **MCP** | Claude Code, Cursor, Claude Desktop | Add to `settings.json` |
+| **HTTP proxy** | Continue IDE, `OPENAI_BASE_URL` redirect | `POST /context` |
 
 ```bash
+# CLI — no server, no daemon, subprocess-drivable
 helix query    "what does the splice step do?" --json
 helix packet   "edit the splice step" --task-type edit --json
-helix gene get gene-abc123 --json
-helix gene preview gene-abc123 --chars 240 --json
+helix gene get abc123 --json
 helix neighbors "splice step" --k 10 --json
 helix refresh-targets "edit the splice step" --json
+helix status
+helix diag corpus
 ```
 
-Each subcommand emits the same JSON shape as the corresponding [MCP tool](docs/api/mcp-tools.md) and HTTP endpoint, so an agent can swap surfaces without changing call logic. Full reference: [`docs/clients/cli.md`](docs/clients/cli.md).
+Full CLI reference: [`docs/clients/cli.md`](docs/clients/cli.md).
+MCP tool schemas: [`docs/api/mcp-tools.md`](docs/api/mcp-tools.md).
 
-If you want the FastAPI proxy as well (for `OPENAI_BASE_URL` redirection or Continue IDE), it ships as a separate entry point: `helix-server`.
+## Pipeline (2 minutes)
 
-## Pipeline
+Seven stages per turn, all LLM-free except optional splice:
 
-A transparent OpenAI-compatible proxy that intercepts LLM requests and injects compressed context from a persistent SQLite knowledge store. Six stages per turn, all LLM-free except step 4 splice (optional compressor) and the downstream completion call:
-
-- **0a. Classify** — rule-based query classifier picks decoder mode + assembly cap (no model call).
-- **1. Extract** — heuristic keyword extraction from query (no model call).
-- **2. Retrieve** — SQLite tag lookup + BGE-M3 dense recall + synonym expansion + co-activation. Ranks candidates via Reciprocal Rank Fusion over `{dense, FTS5, promoter, harmonic, SR}` when `[retrieval] fusion_mode = "rrf"` (default `"additive"`, see Gotchas).
-- **3. Re-rank** — small CPU model scores candidates for relevance.
-- **4. Splice** — small CPU model compresses each candidate, keeping only the high-value fragments (batched single call; optional).
-- **5. Assemble** — join spliced parts, enforce token budget, wrap in tags. The Stage 7 health pass downgrades to `MissBlock(reason="stale")` when the top-1 source mtime exceeds `last_verified_at`.
-- **6. Persist** — pack query + response into the knowledge store (background).
-
-→ Swim-lane reference: [`docs/architecture/PIPELINE_LANES.md`](docs/architecture/PIPELINE_LANES.md)
-→ Retrieval dimensions: [`docs/architecture/DIMENSIONS.md`](docs/architecture/DIMENSIONS.md)
-
-## Agent integration
-
-Every `/context` response carries one of two top-level blocks:
-
-- **`know { found, confidence, gene_id_match, ... }`** — retrieval succeeded; the `expressed_context` bytes are grounded. The agent may answer from them.
-- **`miss { reason, escalate_to | refresh_targets, do_not_answer_from_genome:true }`** — retrieval did NOT find it (or found it but it is stale, cold, or superseded). The agent should NOT answer from the knowledge store; it should call an escalation tool from `escalate_to` (`grep | rag | web | ask_human`) or refetch from `refresh_targets`.
-
-To make a frontier model honor the contract, prepend the helix-context prompt fragment to your system prompt:
-
-```python
-from helix_context.agent_prompt import full_fragment
-
-system_prompt = full_fragment() + "\n\n" + your_existing_system_prompt
+```
+  query
+    │
+    ▼
+┌──────────────┐
+│ 0. Classify  │  rule-based: decoder mode + assembly cap
+└──────┬───────┘
+       ▼
+┌──────────────┐
+│ 1. Extract   │  heuristic keyword + entity extraction
+└──────┬───────┘
+       ▼
+┌──────────────┐  FTS5 BM25 + BGE-M3 dense (1024-dim) + tags
+│ 2. Retrieve  │  + synonym expansion + co-activation + SR
+│              │  ranked via RRF or additive fusion
+└──────┬───────┘
+       ▼
+┌──────────────┐
+│ 3. Re-rank   │  CPU classifier scores (optional)
+└──────┬───────┘
+       ▼
+┌──────────────┐
+│ 4. Splice    │  Headroom Kompress (CPU) or LLM compressor
+└──────┬───────┘
+       ▼
+┌──────────────┐  token budget + legibility headers (fired tiers,
+│ 5. Assemble  │  confidence ◆/◇/⬦, compression ratio) +
+│   + Stage 7  │  freshness gate (stale/cold/superseded → miss)
+└──────┬───────┘  + session delivery (elide already-seen docs)
+       ▼
+┌──────────────┐
+│ 6. Persist   │  query+response → knowledge store (background)
+└──────┘───────┘
+       ▼
+   know { } or miss { }
 ```
 
-Without the fragment, frontier models will paper over `do_not_answer_from_genome` and confabulate. See [docs/agent-sdk-fragment.md](docs/agent-sdk-fragment.md) for the full template, the `<helix:no_match/>` token semantics, and the compliance eval recipe.
+- **know/miss contract**: `know` means the context is grounded, agent may answer. `miss` means don't answer from genome — escalate via `escalate_to` tools or refetch from `refresh_targets`.
+- **Caller model class**: `/context` accepts `caller_model_class: "generic" | "small_moe" | "frontier"` to select render branch (ordering, assembly cap, decoder mode). See [docs/api/context-endpoint.md §7](docs/api/context-endpoint.md).
 
-### Caller model class
+<details>
+<summary><strong>Configuration (17 sections in helix.toml)</strong></summary>
 
-`/context` accepts an optional `caller_model_class: "generic" | "small_moe" | "frontier"` field that selects the render branch:
+| Section | Key settings |
+|---------|-------------|
+| `[ribosome]` | `enabled`, `backend` (`"none"` / `"litellm"` / `"claude"` / `"deberta"`), query_expansion |
+| `[hardware]` | Device auto-detection (CUDA → ROCm → MPS → CPU) |
+| `[budget]` | `expression_tokens` (7k default), `max_genes_per_turn`, splice_aggressiveness, `legibility_enabled`, `session_delivery_enabled` |
+| `[session]` | Synthetic session windows, default party_id |
+| `[genome]` | `path` (`genomes/main/genome.db`), compact_interval, replicas |
+| `[server]` | host, port, upstream |
+| `[headroom]` | Optional Headroom proxy lifecycle |
+| `[ingestion]` | `backend` (`"cpu"` / `"ollama"`), splade_enabled, entity_graph |
+| `[context]` | Cold-tier retrieval: enabled, k, min_cosine |
+| `[cymatics]` | Frequency-domain scoring, harmonic_links, distance_metric |
+| `[classifier]` | Rule-based query classification thresholds |
+| `[retrieval]` | `fusion_mode` (`"additive"` / `"rrf"`), SR, ray_trace_theta, seeded_edges |
+| `[plr]` | Piecewise linear reranker model |
+| `[know]` | Know/miss calibration: confidence_floor, margin_threshold |
+| `[mem_sync]` | Auto-memory → helix sync: watch_dirs, interval |
+| `[synonyms]` | Query expansion map (e.g., "cache" → ["redis", "ttl"]) |
+| `[abstain]` | Low-confidence abstention thresholds |
 
-- **`frontier`** (Claude Opus, GPT-5, Gemini 3 Pro): forward rank-1-first ordering, larger assembly cap, full decoder mode.
-- **`small_moe`** (qwen3:4b, gemma3:e4b): foveated reverse-rank order, JSON-shaped char-bounded answer slate, condensed decoder.
-- **`generic`** (default): regression-locked byte-identical to pre-Stage-5 behavior.
+Full reference: [docs/config-reference.md](docs/config-reference.md).
 
-See [docs/api/context-endpoint.md §7](docs/api/context-endpoint.md) for the full behavior matrix.
+</details>
 
-## Surfaces and endpoints
+<details>
+<summary><strong>Full endpoint reference</strong></summary>
 
+**Core retrieval:**
 | Endpoint | Purpose |
-| --- | --- |
-| `POST /context` | know/miss + `expressed_context` (primary integration). |
-| `POST /context/packet` | Agent-safe bundle: `verified` / `stale_risk` / `refresh_targets`. |
-| `POST /context/refresh-plan` | `refresh_targets` only — reread plan, no evidence items. |
-| `POST /fingerprint` | Navigation-first payload (scores + metadata, no body). |
-| `POST /consolidate` | Rewrite stale document bodies from their source fingerprints (Stage 7 counterpart to `refresh_targets`). |
-| `POST /sessions/register` | Register an agent participant (taude / laude / …) for attribution. |
-| `POST /admin/refresh` | Force a retrieval-layer refresh (admin only). |
-| `POST /admin/vacuum` | Reclaim SQLite pages after compaction (admin only). |
-| `POST /ingest` | Add a document or exchange to the knowledge store. |
-| `GET /stats` | Knowledge-store metrics + compression ratio. |
-| `GET /health` | Compressor model, document count, upstream URL, **calibration provenance** (Stage 4). |
-| `POST /v1/chat/completions` | OpenAI-compatible proxy with automatic context injection. |
+|----------|---------|
+| `POST /context` | know/miss + expressed_context (primary) |
+| `POST /context/packet` | Agent-safe bundle: verified / stale_risk / refresh_targets |
+| `POST /context/refresh-plan` | Refresh targets only (reread plan) |
+| `POST /fingerprint` | Navigation-first payload (scores, no body) |
+| `GET /context/expand` | 1-hop neighborhood from a gene_id |
+| `POST /v1/chat/completions` | OpenAI-compatible proxy |
 
-→ Full endpoint reference: [`docs/api/endpoints.md`](docs/api/endpoints.md) and [`docs/api/context-endpoint.md`](docs/api/context-endpoint.md)
-→ MCP tool schemas: [`docs/api/mcp-tools.md`](docs/api/mcp-tools.md)
+**Ingestion + maintenance:**
+| Endpoint | Purpose |
+|----------|---------|
+| `POST /ingest` | Add content to the knowledge store |
+| `POST /consolidate` | Rewrite stale docs from source fingerprints |
+| `POST /admin/refresh` | Force retrieval-layer refresh |
+| `POST /admin/vacuum` | Reclaim SQLite pages |
+| `POST /admin/swap-db` | Hot-swap the .db file without restart |
 
-**Two surfaces, two caller types:**
+**Identity + sessions:**
+| Endpoint | Purpose |
+|----------|---------|
+| `POST /sessions/register` | Register agent participant |
+| `GET /sessions` | List registered participants |
+| `GET /session/{id}/manifest` | Session delivery log |
+| `POST /hitl/emit` | Record HITL pause event |
 
-| | `/context` | `/context/packet` |
-| --- | --- | --- |
-| Returns | Assembled compressed window | Pointer + verdict + refresh plan |
-| LLM reads? | Directly | No — agent fetches if needed |
-| Verdict emitted? | Top-level `know` / `miss` | First-class: `verified / stale_risk / needs_refresh` |
-| Best for | Chat clients, Continue | MCP agents, programmatic use |
+**Diagnostics:**
+| Endpoint | Purpose |
+|----------|---------|
+| `GET /stats` | Corpus metrics + compression ratio |
+| `GET /health` | Model, doc count, calibration provenance |
+| `GET /genes/{gene_id}` | Single document detail |
+| `GET /debug/resonance` | Tier activation profile |
+| `GET /metrics/tokens` | Token usage counters |
 
-## Continue IDE Integration
+Full schema: [docs/api/endpoints.md](docs/api/endpoints.md).
 
-Add to `~/.continue/config.yaml`:
+</details>
 
-```yaml
-models:
-  - name: Helix (Local)
-    provider: openai
-    model: gemma3:e4b           # or whatever is loaded in Ollama
-    apiBase: http://127.0.0.1:11437/v1
-    apiKey: EMPTY
-    roles: [chat]
-    defaultCompletionOptions:
-      contextLength: 128000     # Helix handles compression downstream
-      maxTokens: 4096
-```
+<details>
+<summary><strong>Package structure (16 packages, post-PR #90)</strong></summary>
 
-### MCP setup (Claude Code / Cursor / Claude Desktop)
+| Package | Purpose |
+|---------|---------|
+| `adapters/` | Cache, DAL, external retriever protocol |
+| `backends/` | Compressor, BGE-M3 codec, DeBERTa, NLI, SEMA, SPLADE |
+| `cli/` | `helix` CLI: query, packet, gene, neighbors, ingest, diag, config, status |
+| `encoding/` | Chunking, fragments, legibility headers, Headroom bridge |
+| `identity/` | CWoLa logger, session delivery, registry, provenance, claims |
+| `pipeline/` | Tier logic, stage helpers |
+| `retrieval/` | Expand, freshness, RRF/additive fusion, PLR, intent router, SR, seeded edges, query classifier |
+| `scoring/` | Cymatics, know-calibration, know-decision, ray-trace, TCM |
+| `server/` | FastAPI app factory + route modules (context, ingest, registry, admin) |
+| `storage/` | DDL, indexes, co-activation graph |
+| `telemetry/` | OTel metrics, histogram instrumentation |
+| `vault/` | Obsidian vault export (diagnostic traces) |
+| `launcher/` | System-tray supervisor |
+| `mcp/` | MCP tool surface for Claude Code / Desktop |
+| `integrations/` | ScoreRift bridge |
 
-Add to `~/.claude/settings.json`:
+Back-compat shims: `genome.py`, `ribosome.py`, `server.py`, `replication.py`, `hgt.py` re-export from new locations. Lexicon: [docs/ROSETTA.md](docs/ROSETTA.md).
+
+</details>
+
+## IDE + MCP integration
+
+<details>
+<summary><strong>MCP setup (Claude Code / Cursor / Claude Desktop)</strong></summary>
 
 ```json
 {
@@ -169,136 +224,98 @@ Add to `~/.claude/settings.json`:
       "command": "python",
       "args": ["-m", "helix_context.mcp_server"],
       "cwd": "/absolute/path/to/your/project",
-      "env": {
-        "HELIX_MCP_URL": "http://127.0.0.1:11437"
-      }
+      "env": { "HELIX_MCP_URL": "http://127.0.0.1:11437" }
     }
   }
 }
 ```
 
-### OpenAI-compatible proxy (zero code changes)
+</details>
+
+<details>
+<summary><strong>Continue IDE</strong></summary>
+
+```yaml
+models:
+  - name: Helix (Local)
+    provider: openai
+    model: gemma3:e4b
+    apiBase: http://127.0.0.1:11437/v1
+    apiKey: EMPTY
+    roles: [chat]
+    defaultCompletionOptions:
+      contextLength: 128000
+      maxTokens: 4096
+```
+
+</details>
+
+<details>
+<summary><strong>OpenAI-compatible proxy (zero code changes)</strong></summary>
 
 ```bash
-ANTHROPIC_BASE_URL=http://localhost:11437 claude
 OPENAI_BASE_URL=http://localhost:11437/v1 your-app
 ```
 
+</details>
+
 ## Knowledge store management
-
-### Knowledge store path
-
-Set `path` in `[genome]` to a file or directory:
 
 ```toml
 [genome]
 path = "genomes/main/genome.db"   # relative to helix run directory
-# Put this on your fastest NVMe for best ingest throughput.
-# Example: path = "D:/helix/genome.db"
 ```
 
-One helix instance per knowledge store — each reads its own `helix.toml`. Use the `helix_context.hgt` Python API to share documents across instances (cross-store import; legacy term: Horizontal Gene Transfer).
-
-### Backup
-
-SQLite WAL mode makes it safe to copy the `.db` file while helix is running:
-
+Backup (safe while running — WAL mode):
 ```bash
-# cron / Linux
 cp genomes/main/genome.db backups/genome-$(date +%Y%m%d).db
 ```
 
-```powershell
-# PowerShell / Windows
-Copy-Item genomes\main\genome.db backups\genome-$(Get-Date -Format yyyyMMdd).db
-```
-
-### DAL — source-content fetching
-
-`/context/packet` returns `source_id` pointers. Callers resolve them to bytes via the DAL:
-
-```python
-from helix_context.adapters.dal import DAL
-
-dal = DAL()                          # file + HTTP built-in
-dal.register("s3", my_s3_fetcher)    # register additional schemes
-text, meta = dal.fetch("s3://bucket/schema.json")
-```
-
-### Native observability (default)
-
-The tray (`start-helix-tray.bat`) manages the native OpenTelemetry binaries in `tools/native-otel/` automatically. A balloon notification confirms the sidecar is running. To opt out: `HELIX_OBSERVABILITY=0 start-helix-tray.bat`.
-
-If you want Grafana telemetry without the tray (headless servers, CI, MCP-only agent setups), run the dedicated setup script — it downloads the pinned collector + Prometheus + Tempo + Loki + Grafana binaries, renders configs, and smoke-tests the stack:
-
-```powershell
-# Windows
-scripts\setup-grafana-telem.ps1
-```
-
+BGE-M3 backfill (one-time, after install):
 ```bash
-# Linux / macOS
-scripts/setup-grafana-telem.sh
+python scripts/backfill_bgem3_v2.py genomes/main/genome.db
 ```
 
-After it completes, open <http://localhost:3000/d/helix-overview> (default credentials `admin` / `admin`, rotate on first login). The script is idempotent; re-running it refreshes configs without re-downloading.
+## Observability
 
-> **Advanced — Docker stack:** if you prefer a full Docker-compose observability stack (Prometheus, Tempo, Loki, Grafana), see [deploy/otel/README.md](deploy/otel/README.md).
+```powershell
+scripts\setup-grafana-telem.ps1     # Windows
+scripts/setup-grafana-telem.sh      # Linux / macOS
+```
 
-## Architecture
-
-| Doc | Topic |
-| --- | --- |
-| [PIPELINE_LANES.md](docs/architecture/PIPELINE_LANES.md) | Swim-lane reference: ingest, context, packet, fingerprint flows |
-| [DIMENSIONS.md](docs/architecture/DIMENSIONS.md) | The 9 retrieval dimensions — schema, data, bench status |
-| [LAUNCHER.md](docs/architecture/LAUNCHER.md) | Supervisor, tray, observability stack lifecycle |
-| [SESSION_REGISTRY.md](docs/architecture/SESSION_REGISTRY.md) | Multi-agent session + party isolation |
-| [OBSERVABILITY.md](docs/architecture/OBSERVABILITY.md) | Prometheus metrics, Grafana dashboards, alert rules |
-| [KNOWLEDGE_GRAPH.md](docs/architecture/KNOWLEDGE_GRAPH.md) | Entity graph, co-activation edges, Hebbian co-activation |
+Dashboard: <http://localhost:3000/d/helix-overview>.
+Full surface: [docs/architecture/OBSERVABILITY.md](docs/architecture/OBSERVABILITY.md).
 
 ## Gotchas
 
-- **Model swap latency**: the compressor (small model) and the generation model share Ollama. Use `keep_alive = "30m"` in helix.toml to pin the compressor in memory.
-- **Synonym map is critical**: if queries return "no relevant context", check that query keywords map to the tags the compressor assigned. Add synonyms in `[synonyms]` of helix.toml.
-- **Short content may fail ingestion**: the compressor struggles with very short inputs (<200 chars). Pad with context or combine small files before ingesting.
-- **`genome.db` persists**: delete it to start fresh. It auto-creates on first use.
-- **Continue Agent mode**: use Chat mode, not Agent mode. The proxy does not handle tool routing.
-- **`know`/`miss` block requires the agent prompt fragment** to be honored — without it, frontier models confabulate. Import `helix_context.agent_prompt.full_fragment()` and prepend it to your system prompt.
-- **Stage 2 backfill is a one-time post-merge action** — `embedding_dense_v2 IS NULL` until you run `scripts/backfill_bgem3_v2.py`. Symptom: `/context` retrieval rate plateaus low; check coverage via `sqlite3 genome.db "SELECT COUNT(*) FROM genes WHERE embedding_dense_v2 IS NOT NULL"`.
-- **Default `[retrieval] fusion_mode = "additive"` is back-compat**; flip to `"rrf"` after running `scripts/calibrate_thresholds.py` so the absolute-floor gates do not strand every query in BROAD.
-- **Default `[abstain].mode = "global"` is back-compat**; flip to `"per_classifier"` after calibration to use the bench-derived floors.
+- **Knowledge store path** is `genomes/main/genome.db` (not project root). Delete to start fresh.
+- **BGE-M3 backfill** is one-time post-install — `embedding_dense_v2 IS NULL` until you run `scripts/backfill_bgem3_v2.py`. Low retrieval rate without it.
+- **Fusion mode** defaults to `"additive"` (back-compat). Flip to `"rrf"` in `[retrieval]` after running `scripts/calibrate_thresholds.py`.
+- **Session delivery** (`session_delivery_enabled = true`) tracks delivered docs per session, elides repeats. ~40% token savings on multi-turn. Pass `ignore_delivered: true` in `/context` body for benchmarks.
+- **know/miss contract** requires the agent prompt fragment to be honored — without it, frontier models confabulate. Import `helix_context.agent_prompt.full_fragment()`.
+- **Naming lexicon**: biology terms (gene, genome, ribosome) have canonical software equivalents (document, knowledge store, compressor). Both work in code; new code uses software terms. See [docs/ROSETTA.md](docs/ROSETTA.md).
 
 ## Testing
 
 ```bash
-# All mock tests (no Ollama needed, ~6s)
-python -m pytest tests/ -m "not live" -v
-
-# Live tests (requires Ollama running)
-python -m pytest tests/ -m live -v -s
-
-# Full suite
-python -m pytest tests/ -v
+python -m pytest tests/ -m "not live" -v   # ~1950 tests, no external services
 ```
 
-The 7-stage retrieval-fix added Stage-by-Stage contract tests:
-`tests/test_dense_recall.py` (Stage 2), `tests/test_fusion_rrf.py` (Stage 3),
-`tests/test_calibration.py` (Stage 4), `tests/test_caller_model_class.py` (Stage 5),
-`tests/test_know_miss_block.py` (Stage 6), `tests/test_freshness_gate.py` (Stage 7).
+## Documentation
+
+| Start here | Go deeper |
+|-----------|-----------|
+| [Setup guide](docs/SETUP.md) | [Pipeline lanes](docs/architecture/PIPELINE_LANES.md) |
+| [Troubleshooting](docs/TROUBLESHOOTING.md) | [Retrieval dimensions](docs/architecture/DIMENSIONS.md) |
+| [`/context` API](docs/api/context-endpoint.md) | [Knowledge graph](docs/architecture/KNOWLEDGE_GRAPH.md) |
+| [Config reference](docs/config-reference.md) | [Session registry](docs/architecture/SESSION_REGISTRY.md) |
+| [Agent SDK fragment](docs/agent-sdk-fragment.md) | [Observability](docs/architecture/OBSERVABILITY.md) |
+| [Operator runbooks](docs/operator-runbooks.md) | [Launcher architecture](docs/architecture/LAUNCHER.md) |
 
 ## Acknowledgments
 
-Built on: [spaCy](https://spacy.io/) NER · [Howard 2005](https://doi.org/10.1037/0033-295X.112.3.559) TCM · [Stachenfeld 2017](https://www.nature.com/articles/nn.4650) SR · SQLite FTS5 BM25 · [Kompress](https://huggingface.co/chopratejas/kompress-base) · [Headroom](https://github.com/chopratejas/headroom)
+Built on: [spaCy](https://spacy.io/) NER · [Howard 2005](https://doi.org/10.1037/0033-295X.112.3.559) TCM · [Stachenfeld 2017](https://www.nature.com/articles/nn.4650) SR · SQLite FTS5 BM25 · [BGE-M3](https://huggingface.co/BAAI/bge-m3) · [Kompress](https://huggingface.co/chopratejas/kompress-base) · [Headroom](https://github.com/chopratejas/headroom)
 
-Licensed under [Apache-2.0](LICENSE). See [NOTICE](NOTICE) for third-party attributions.
+## License
 
-## Further reading
-
-- [Setup guide](docs/SETUP.md)
-- [Troubleshooting](docs/TROUBLESHOOTING.md)
-- [`/context` API reference](docs/api/context-endpoint.md)
-- [Operator runbooks](docs/operator-runbooks.md)
-- [Config reference](docs/config-reference.md)
-- [Agent SDK integration](docs/agent-sdk-fragment.md)
-- [Environment variables](.env.example)
-- [Agentome paper](https://mbachaud.substack.com/p/agentome)
+[Apache-2.0](LICENSE). See [NOTICE](NOTICE) for third-party attributions.
