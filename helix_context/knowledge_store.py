@@ -3267,35 +3267,35 @@ class KnowledgeStore:
         sim_by_id: dict[str, float] = {gid: float(s) for gid, s in dense_hits}
         ordered_ids: list[str] = [gid for gid, _ in dense_hits]
         seen: set[str] = set(ordered_ids)
-        for gene in lex_pool:
-            if gene.gene_id not in seen:
-                seen.add(gene.gene_id)
-                ordered_ids.append(gene.gene_id)
+        for doc in lex_pool:
+            if doc.gene_id not in seen:
+                seen.add(doc.gene_id)
+                ordered_ids.append(doc.gene_id)
                 # Lex-only id w/o dense score: pin slightly below threshold so
                 # the min_genes floor can still rescue them. Spec §8 retains
                 # this behavior; Stage 3 (RRF) replaces the placeholder.
-                sim_by_id[gene.gene_id] = threshold - 0.01
+                sim_by_id[doc.gene_id] = threshold - 0.01
 
         # Body-fetch missing ids in bulk. Lex pool already has bodies; only
         # dense-only ids need loading.
-        lex_by_id = {g.gene_id: g for g in lex_pool}
+        lex_by_id = {d.gene_id: d for d in lex_pool}
         missing_ids = [gid for gid in ordered_ids if gid not in lex_by_id]
         loaded = self._load_genes_by_ids(missing_ids) if missing_ids else {}
 
         # ── 4. Resolve final Document objects in score order. ────────────
         scored: list[tuple[Gene, float]] = []
         for gid in ordered_ids:
-            gene = lex_by_id.get(gid) or loaded.get(gid)
-            if gene is None:
+            doc = lex_by_id.get(gid) or loaded.get(gid)
+            if doc is None:
                 continue
-            scored.append((gene, sim_by_id[gid]))
+            scored.append((doc, sim_by_id[gid]))
         scored.sort(key=lambda x: x[1], reverse=True)
 
         # ── 5. Threshold cut + min_genes floor + max_genes cap. ──────
         result: list[Gene] = []
-        for gene, sim in scored:
+        for doc, sim in scored:
             if sim >= threshold or len(result) < min_genes:
-                result.append(gene)
+                result.append(doc)
             else:
                 break
         return result[:max_genes]
