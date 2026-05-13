@@ -430,7 +430,7 @@ class HelixContextManager:
         # ΣĒMA codec (optional — loaded if sentence-transformers available)
         self._sema_codec = None
         try:
-            from .sema import SemaCodec
+            from .backends.sema import SemaCodec
             self._sema_codec = SemaCodec()
             log.info("ΣĒMA codec loaded — semantic retrieval enabled")
         except ImportError:
@@ -536,7 +536,7 @@ class HelixContextManager:
                 log.warning("LiteLLMBackend failed to load, disabling ribosome", exc_info=True)
         elif effective_backend == "deberta":
             try:
-                from .deberta_backend import DeBERTaRibosome
+                from .backends.deberta_backend import DeBERTaRibosome
                 ollama_backend = OllamaBackend(
                     model=config.ribosome.model,
                     base_url=config.ribosome.base_url,
@@ -2832,7 +2832,7 @@ class HelixContextManager:
         logical_coherence = 0.0
         if relation_graph:
             try:
-                from .nli_backend import compute_logical_coherence
+                from .backends.nli_backend import compute_logical_coherence
                 logical_coherence = compute_logical_coherence(relation_graph)
             except Exception:
                 pass

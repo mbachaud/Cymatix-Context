@@ -90,7 +90,7 @@ def test_nli_classify_batch_chunks_in_recommended_batch_size(monkeypatch):
     tokenizer calls (16 + 16 + 16 + 2)."""
     _override_hardware(monkeypatch, nli_batch=16)
 
-    from helix_context.nli_backend import NLIClassifier
+    from helix_context.backends.nli_backend import NLIClassifier
 
     clf = NLIClassifier.__new__(NLIClassifier)  # bypass __init__
     clf._device = torch.device("cpu")
@@ -115,7 +115,7 @@ def test_nli_classify_batch_empty_returns_empty(monkeypatch):
     """Empty input must short-circuit before consulting hardware."""
     _override_hardware(monkeypatch, nli_batch=16)
 
-    from helix_context.nli_backend import NLIClassifier
+    from helix_context.backends.nli_backend import NLIClassifier
 
     clf = NLIClassifier.__new__(NLIClassifier)
     clf._device = torch.device("cpu")
@@ -138,7 +138,7 @@ def test_nli_init_consults_get_hardware_when_device_none(monkeypatch):
 
     _override_hardware(monkeypatch, nli_batch=8)
 
-    import helix_context.nli_backend as nb
+    import helix_context.backends.nli_backend as nb
 
     monkeypatch.setattr(
         "transformers.AutoTokenizer.from_pretrained",

@@ -79,15 +79,15 @@ from typing import Dict, List, Optional, Protocol
 
 import httpx
 
-from .accel import (
+from ..accel import (
     json_loads,
     PromptBuilder,
     RE_MARKDOWN_FENCE_START,
     RE_MARKDOWN_FENCE_END,
 )
-from .codons import CodonEncoder
-from .exceptions import FoldingError, TranscriptionError
-from .schemas import (
+from ..codons import CodonEncoder
+from ..exceptions import FoldingError, TranscriptionError
+from ..schemas import (
     Document,
     DocumentSignals,
     DocumentTags,
@@ -522,7 +522,7 @@ class Compressor:
         finally:
             elapsed = _time.monotonic() - t0
             try:
-                from .telemetry import ribosome_call_histogram
+                from ..telemetry import ribosome_call_histogram
                 ribosome_call_histogram().record(
                     elapsed,
                     {
@@ -545,7 +545,7 @@ class Compressor:
         2. Send numbered groups to the compressor for encoding
         3. Assemble Document with tags and complement
         """
-        from .genome import Genome
+        from ..genome import Genome
 
         if content_type == "code":
             groups = self.encoder.chunk_code(content)
@@ -786,7 +786,7 @@ class Compressor:
         Encode a conversation exchange into a Document for knowledge store storage.
         Captures intent and state changes, not just raw facts.
         """
-        from .genome import Genome
+        from ..genome import Genome
 
         exchange = f"User query: {query}\n\nAssistant response: {response}"
 

@@ -510,7 +510,7 @@ class KnowledgeStore:
         # Create SPLADE inverted index if enabled
         if self._splade_enabled:
             try:
-                from . import splade_backend
+                from .backends import splade_backend
                 splade_backend.create_splade_table(self.conn)
                 log.info("SPLADE inverted index ready")
             except ImportError:
@@ -1860,7 +1860,7 @@ class KnowledgeStore:
         # SPLADE sparse index (if enabled, non-blocking)
         if self._splade_enabled:
             try:
-                from . import splade_backend
+                from .backends import splade_backend
                 sparse = splade_backend.encode(gene.content[:1000])
                 # Inline the upsert without a separate commit
                 cur.execute("DELETE FROM splade_terms WHERE gene_id = ?", (gene_id,))
@@ -2445,7 +2445,7 @@ class KnowledgeStore:
         if self._splade_enabled:
             _splade_t0 = time.monotonic()
             try:
-                from . import splade_backend
+                from .backends import splade_backend
                 # Check if splade_terms table exists
                 has_table = cur.execute(
                     "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='splade_terms'"
@@ -3036,7 +3036,7 @@ class KnowledgeStore:
         warns if the dim is not a sanctioned breakpoint.
         """
         if self._dense_codec is None:
-            from .bgem3_codec import BGEM3Codec
+            from .backends.bgem3_codec import BGEM3Codec
             self._dense_codec = BGEM3Codec(dim=self._dense_embedding_dim)
             # One-time threshold-staleness warn: if v2 coverage is non-empty
             # AND the threshold was calibrated at a different dim, surface it.

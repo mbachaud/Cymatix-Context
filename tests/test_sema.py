@@ -5,7 +5,7 @@ import pytest
 # Skip all tests if sentence-transformers not installed
 st = pytest.importorskip("sentence_transformers")
 
-from helix_context.sema import (
+from helix_context.backends.sema import (
     SemaCodec,
     SemaPrime,
     PRIMES,
@@ -224,7 +224,7 @@ def test_sema_codec_default_device_from_hardware(monkeypatch):
 
     monkeypatch.setattr("sentence_transformers.SentenceTransformer", _FakeST)
 
-    from helix_context.sema import SemaCodec
+    from helix_context.backends.sema import SemaCodec
 
     SemaCodec()  # no device arg — should default from hardware module
     assert captured["device"] == "cpu"

@@ -32,7 +32,7 @@ from unittest.mock import MagicMock, patch
 import numpy as np
 import pytest
 
-from helix_context.bgem3_codec import BGEM3Codec
+from helix_context.backends.bgem3_codec import BGEM3Codec
 from helix_context.genome import Genome
 from helix_context.schemas import (
     ChromatinState, EpigeneticMarkers, Gene, PromoterTags,
@@ -320,7 +320,7 @@ def test_backfill_v2_idempotent(tmp_path):
 
     # Patch the codec import inside the backfill script so it returns a fake.
     fake = _FakeCodec(dim=1024)
-    with patch("helix_context.bgem3_codec.BGEM3Codec", lambda dim, **kw: fake):
+    with patch("helix_context.backends.bgem3_codec.BGEM3Codec", lambda dim, **kw: fake):
         # Run twice with --limit so the script doesn't try to phone home.
         repo_root = Path(__file__).resolve().parents[1]
         script = repo_root / "scripts" / "backfill_bgem3_v2.py"
@@ -350,7 +350,7 @@ def test_backfill_v2_idempotent(tmp_path):
     assert populated_after_first == 5, f"first run populated {populated_after_first}/5"
 
     # Second run — should skip everyone.
-    with patch("helix_context.bgem3_codec.BGEM3Codec", lambda dim, **kw: fake):
+    with patch("helix_context.backends.bgem3_codec.BGEM3Codec", lambda dim, **kw: fake):
         sys.path.insert(0, str(repo_root / "scripts"))
         try:
             import importlib.util
