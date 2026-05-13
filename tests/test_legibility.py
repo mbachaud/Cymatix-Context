@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import pytest
 
-from helix_context.legibility import (
+from helix_context.encoding.legibility import (
     _confidence_symbol,
     _format_fired_tiers,
     _z_normalize,

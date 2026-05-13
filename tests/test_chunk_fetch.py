@@ -1,6 +1,6 @@
 """Tests for chunk-level retrieval helpers."""
 
-from helix_context.chunk_fetch import fetch_relevant_chunks
+from helix_context.encoding.chunk_fetch import fetch_relevant_chunks
 from helix_context.genome import Genome
 
 from tests.conftest import make_gene

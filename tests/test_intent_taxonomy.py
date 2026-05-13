@@ -1,7 +1,7 @@
 """Intent taxonomy tests (Step 3B, 2026-05-08)."""
 import pytest
 from helix_context.schemas import PromoterTags, IntentClass
-from helix_context.intent_router import sub_queries_for
+from helix_context.retrieval.intent_router import sub_queries_for
 
 
 def test_promoter_tags_has_intent_class():

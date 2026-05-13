@@ -7,7 +7,7 @@ interference-based splice, harmonic co-activation, and Q-factor mapping.
 import math
 import pytest
 
-from helix_context.cymatics import (
+from helix_context.scoring.cymatics import (
     N_BINS,
     MATH_BACKEND,
     term_to_frequency,

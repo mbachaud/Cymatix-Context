@@ -28,7 +28,7 @@ import logging
 import math
 from typing import Dict, List, Optional, Tuple
 
-from .schemas import Gene
+from ..schemas import Gene
 
 log = logging.getLogger("helix.tcm")
 

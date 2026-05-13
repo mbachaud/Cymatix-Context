@@ -510,7 +510,7 @@ class KnowledgeStore:
         # Create SPLADE inverted index if enabled
         if self._splade_enabled:
             try:
-                from . import splade_backend
+                from .backends import splade_backend
                 splade_backend.create_splade_table(self.conn)
                 log.info("SPLADE inverted index ready")
             except ImportError:
@@ -521,692 +521,13 @@ class KnowledgeStore:
                 self._splade_enabled = False
 
     def _init_db(self) -> None:
-        cur = self.conn.cursor()
-
-        cur.execute("""
-        CREATE TABLE IF NOT EXISTS genes (
-            gene_id      TEXT PRIMARY KEY,
-            content      TEXT,
-            complement   TEXT,
-            codons       TEXT,     -- JSON list[str]
-            promoter     TEXT,     -- JSON PromoterTags
-            epigenetics  TEXT,     -- JSON EpigeneticMarkers
-            chromatin    INTEGER,
-            is_fragment  INTEGER,
-            embedding    TEXT,     -- JSON list[float] | NULL
-            source_id    TEXT,
-            repo_root    TEXT,
-            source_kind  TEXT,
-            observed_at  REAL,
-            mtime        REAL,
-            content_hash TEXT,
-            volatility_class TEXT,
-            authority_class  TEXT,
-            support_span     TEXT,
-            last_verified_at REAL,
-            version      INTEGER,
-            supersedes   TEXT,
-            key_values   TEXT,    -- JSON list[str] | NULL
-            embedding_dense TEXT  -- JSON list[float] | NULL (BGE-M3, Step 4)
-        )
-        """)
-
-        existing_columns = {
-            row["name"]
-            for row in cur.execute("PRAGMA table_info(genes)").fetchall()
-        }
-
-        # Auto-add key_values column if upgrading from older schema
-        if "key_values" not in existing_columns:
-            cur.execute("ALTER TABLE genes ADD COLUMN key_values TEXT")
-            log.info("Added key_values column to genes table")
-            existing_columns.add("key_values")
-
-        for column_name, column_def in (
-            ("repo_root", "TEXT"),
-            ("source_kind", "TEXT"),
-            ("observed_at", "REAL"),
-            ("mtime", "REAL"),
-            ("content_hash", "TEXT"),
-            ("volatility_class", "TEXT"),
-            ("authority_class", "TEXT"),
-            ("support_span", "TEXT"),
-            ("last_verified_at", "REAL"),
-            ("embedding_dense", "TEXT"),  # BGE-M3 dense vector (Step 4, 2026-05-08)
-            # Stage 2 (2026-05-08): BLOB column for raw little-endian fp32
-            # BGE-M3 vectors at full 1024-dim. 18.9k * 1024 * 4 = 77.6 MiB raw,
-            # vs ~600 MiB for JSON-encoded text. np.frombuffer is zero-copy.
-            ("embedding_dense_v2", "BLOB"),
-        ):
-            if column_name not in existing_columns:
-                cur.execute(f"ALTER TABLE genes ADD COLUMN {column_name} {column_def}")
-                log.info("Added %s column to genes table", column_name)
-                existing_columns.add(column_name)
-
-        # Stage 2: partial index over hot-tier rows with v2 vectors. Lets
-        # the dense-recall matrix loader stream populated rows without a
-        # full table scan during partial-rollout / backfill.
-        # lifecycle tier < 2 == hot tier (OPEN | EUCHROMATIN); HETEROCHROMATIN
-        # documents are reachable via query_cold_tier() instead.
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_genes_dense_v2_hot "
-            "ON genes(gene_id) "
-            "WHERE embedding_dense_v2 IS NOT NULL AND chromatin < 2"
-        )
-
-        # Auto-add compression_tier column (0=OPEN, 1=EUCHROMATIN, 2=HETEROCHROMATIN)
-        if "compression_tier" not in existing_columns:
-            cur.execute("ALTER TABLE genes ADD COLUMN compression_tier INTEGER DEFAULT 0")
-            log.info("Added compression_tier column to genes table")
-            existing_columns.add("compression_tier")
-
-        # Auto-add last_seen column — Unix epoch of the most recent retrieval;
-        # used by the vault incremental export (Task 9) for efficient range scan.
-        if "last_seen" not in existing_columns:
-            cur.execute("ALTER TABLE genes ADD COLUMN last_seen REAL")
-            log.info("Added last_seen column to genes table")
-            existing_columns.add("last_seen")
-
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_genes_last_seen ON genes(last_seen)"
-        )
-
-        # Stage 7 (2026-05-08, spec §2 + §7) — partial index over the
-        # reverse-supersedes column. ``check_superseded(gene)`` runs:
-        #   SELECT gene_id, source_id FROM documents WHERE supersedes = ? LIMIT 1
-        # in the hot path, so an index is mandatory. Partial filter on
-        # ``supersedes IS NOT NULL`` keeps it tight: most rows will not
-        # have a predecessor pointer.
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_genes_supersedes "
-            "ON genes(supersedes) WHERE supersedes IS NOT NULL"
-        )
-
-        # Auto-add live_truth_score column — freshness score [0.0, 1.0];
-        # 1.0 = fully fresh (default). Used by _stale/ view in the vault pruner.
-        if "live_truth_score" not in existing_columns:
-            cur.execute("ALTER TABLE genes ADD COLUMN live_truth_score REAL DEFAULT 1.0")
-            log.info("Added live_truth_score column to genes table")
-            existing_columns.add("live_truth_score")
-
-        cur.execute("""
-        CREATE TABLE IF NOT EXISTS promoter_index (
-            gene_id   TEXT,
-            tag_type  TEXT,   -- 'domain' | 'entity'
-            tag_value TEXT
-        )
-        """)
-
-        cur.execute("""
-        CREATE TABLE IF NOT EXISTS health_log (
-            id         INTEGER PRIMARY KEY AUTOINCREMENT,
-            timestamp  REAL,
-            query      TEXT,
-            ellipticity REAL,
-            coverage   REAL,
-            density    REAL,
-            freshness  REAL,
-            genes_expressed INTEGER,
-            genes_available INTEGER,
-            status     TEXT
-        )
-        """)
-
-        cur.execute("""
-        CREATE TABLE IF NOT EXISTS gene_relations (
-            gene_id_a  TEXT,
-            gene_id_b  TEXT,
-            relation   INTEGER,
-            confidence REAL,
-            updated_at REAL,
-            PRIMARY KEY (gene_id_a, gene_id_b)
-        )
-        """)
-
-        # Entity graph — maps entities to documents for graph-based co-activation
-        cur.execute("""
-        CREATE TABLE IF NOT EXISTS entity_graph (
-            entity   TEXT NOT NULL,
-            gene_id  TEXT NOT NULL,
-            PRIMARY KEY (entity, gene_id)
-        )
-        """)
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_entity_graph_entity "
-            "ON entity_graph(entity)"
-        )
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_entity_graph_gene "
-            "ON entity_graph(gene_id)"
-        )
-
-        # path_key_index: compound (path_token, kv_key) → gene_id lookup for
-        # fast retrieval on template queries like "what is the value of
-        # helix_port?" where the answer document has the key "port" and lives
-        # under a path containing "helix-context". Populated at ingest from
-        # source_id tokenization + key_values.keys(). Auto-applies to every
-        # document that has a source_id + extracted key_values — no LLM, no
-        # manual tagging, no project bucket list to maintain.
-        cur.execute("""
-        CREATE TABLE IF NOT EXISTS path_key_index (
-            path_token TEXT NOT NULL,
-            kv_key     TEXT NOT NULL,
-            gene_id    TEXT NOT NULL,
-            PRIMARY KEY (path_token, kv_key, gene_id)
-        )
-        """)
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_pki_lookup "
-            "ON path_key_index(path_token, kv_key)"
-        )
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_pki_gene "
-            "ON path_key_index(gene_id)"
-        )
-
-        # filename_index: single-stem reverse index for the
-        # filename-anchor retrieval tier (flag-gated). See
-        # helix_context/filename_anchor.py.
-        try:
-            from . import filename_anchor as _fa
-            _fa.ensure_schema(cur.connection)
-        except Exception:
-            # Silent failure here would disable the filename-anchor
-            # retrieval tier without warning; escalate to warning.
-            log.warning(
-                "filename_index schema init failed — filename-anchor tier disabled",
-                exc_info=True,
-            )
-
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_promoter_value "
-            "ON promoter_index(tag_value)"
-        )
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_promoter_gene "
-            "ON promoter_index(gene_id)"
-        )
-
-        # ── Auto-repair corrupt data on startup ──────────────────
-        repaired = 0
-        bad = cur.execute(
-            "SELECT COUNT(*) FROM genes WHERE typeof(chromatin) != 'integer' "
-            "OR chromatin IS NULL OR chromatin NOT IN (0, 1, 2)"
-        ).fetchone()[0]
-        if bad:
-            cur.execute(
-                "UPDATE genes SET chromatin = 0 "
-                "WHERE typeof(chromatin) != 'integer' "
-                "OR chromatin IS NULL OR chromatin NOT IN (0, 1, 2)"
-            )
-            repaired += bad
-            log.warning("Auto-repaired %d genes with corrupt chromatin", bad)
-
-        null_epi = cur.execute(
-            "SELECT COUNT(*) FROM genes WHERE epigenetics IS NULL"
-        ).fetchone()[0]
-        if null_epi:
-            default_epi = '{"created_at":0,"last_accessed":0,"access_count":0,"co_activated_with":[],"typed_co_activated":[],"decay_score":1.0}'
-            cur.execute(
-                "UPDATE genes SET epigenetics = ? WHERE epigenetics IS NULL",
-                (default_epi,),
-            )
-            repaired += null_epi
-            log.warning("Auto-repaired %d genes with NULL epigenetics", null_epi)
-
-        if repaired:
-            self.conn.commit()
-
-        # FTS5 full-text index on document content + complement
-        # Standalone table (not content-synced) for simplicity
-        try:
-            cur.execute("""
-            CREATE VIRTUAL TABLE IF NOT EXISTS genes_fts USING fts5(
-                gene_id,
-                content,
-                complement
-            )
-            """)
-            self._fts_available = True
-
-            # Incremental FTS5 sync — only add missing documents, don't rebuild
-            # Full rebuild is O(N) and blocks startup. At 100K+ documents it takes
-            # 30+ seconds. Incremental sync is O(delta) — typically <100 documents.
-            gene_count = cur.execute("SELECT COUNT(*) FROM genes").fetchone()[0]
-            fts_count = cur.execute("SELECT COUNT(*) FROM genes_fts").fetchone()[0]
-            delta = gene_count - fts_count
-            if delta > 0:
-                # Add only documents missing from FTS5
-                cur.execute(
-                    "INSERT INTO genes_fts(gene_id, content, complement) "
-                    "SELECT g.gene_id, "
-                    "  COALESCE(g.source_id,'') || ' ' || "
-                    "  COALESCE((SELECT GROUP_CONCAT(pi.tag_value, ' ') "
-                    "    FROM promoter_index pi WHERE pi.gene_id = g.gene_id), '') "
-                    "  || ' ' || g.content, "
-                    "  COALESCE(g.complement, '') "
-                    "FROM genes g "
-                    "WHERE g.gene_id NOT IN (SELECT gene_id FROM genes_fts)"
-                )
-                self.conn.commit()
-                log.info("FTS5 incremental sync: +%d genes (total: %d)", delta, gene_count)
-            elif delta < 0:
-                # FTS5 has orphan entries — remove them
-                cur.execute(
-                    "DELETE FROM genes_fts "
-                    "WHERE gene_id NOT IN (SELECT gene_id FROM genes)"
-                )
-                self.conn.commit()
-                log.info("FTS5 cleanup: removed %d orphan entries", -delta)
-        except Exception:
-            log.warning(
-                "FTS5 not available — content search disabled",
-                exc_info=True,
-            )
-            self._fts_available = False
-
-        # ── Session registry tables (see docs/SESSION_REGISTRY.md) ──
-        # Purely additive — presence, attribution, and the BM25 bypass for
-        # `GET /sessions/{handle}/recent`. Schema creation is idempotent;
-        # skipping this block would leave older databases unable to use
-        # the registry endpoints but would not break anything else.
-        try:
-            self._ensure_registry_schema(cur)
-        except Exception:
-            log.warning("Session registry schema init failed", exc_info=True)
-
-        self.conn.commit()
+        from .storage.ddl import init_db
+        self._fts_available = init_db(self.conn)
 
     def _ensure_registry_schema(self, cur: sqlite3.Cursor) -> None:
-        """Create session registry tables + indexes. Idempotent.
-
-        Implements the 4-layer federated identity model (see
-        docs/FEDERATION_LOCAL.md):
-            - orgs:              top-level tenant (org/team)
-            - parties:           devices (PCs) belonging to an org
-            - participants:      humans (users) on a device
-            - agents:            AI personas working on a user's behalf
-            - gene_attribution:  4-axis attribution row per document
-
-        Each layer is independently queryable so we can answer
-        "what did Laude on gandalf, on max's behalf, in SwiftWing21, do?"
-        with a single composite filter.
-
-        Schema is additive: pre-2026-04-12 databases auto-upgrade via
-        IF NOT EXISTS table creates and ALTER ADD COLUMN for new fields
-        on existing tables. Existing attribution rows keep their party_id +
-        participant_id and acquire NULL org_id/agent_id (interpreted as
-        "default org, manual ingest" by the resolver).
-        """
-        # ── Layer 1: orgs (top-level tenant) ────────────────────────
-        # Sits above parties — devices belong to an org. For solo-dev
-        # this defaults to "local" so existing single-tenant flows
-        # remain semantically valid without explicit org assignment.
-        cur.execute("""
-        CREATE TABLE IF NOT EXISTS orgs (
-            org_id         TEXT PRIMARY KEY,
-            display_name   TEXT NOT NULL,
-            trust_domain   TEXT NOT NULL DEFAULT 'local',
-            created_at     REAL NOT NULL,
-            metadata       TEXT
-        )
-        """)
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_orgs_trust_domain "
-            "ON orgs(trust_domain)"
-        )
-        # Seed the default 'local' org so trust-on-first-use writes have
-        # a foreign-key target without needing an explicit register call.
-        cur.execute(
-            "INSERT OR IGNORE INTO orgs "
-            "(org_id, display_name, trust_domain, created_at) "
-            "VALUES ('local', 'Local Org (default)', 'local', ?)",
-            (time.time(),),
-        )
-
-        cur.execute("""
-        CREATE TABLE IF NOT EXISTS parties (
-            party_id      TEXT PRIMARY KEY,
-            display_name  TEXT NOT NULL,
-            trust_domain  TEXT NOT NULL DEFAULT 'local',
-            created_at    REAL NOT NULL,
-            metadata      TEXT
-        )
-        """)
-        # Add org_id column to existing parties table (4-layer extension).
-        # Devices belong to an org. NULL = legacy row without org link;
-        # treat as "local" org at query/resolver time.
-        try:
-            cur.execute(
-                "ALTER TABLE parties ADD COLUMN org_id TEXT "
-                "REFERENCES orgs(org_id)"
-            )
-        except sqlite3.OperationalError:
-            pass  # column already exists — schema is idempotent
-
-        # parties.timezone — IANA name (e.g., "America/Los_Angeles"),
-        # NOT the offset. The IANA database handles DST transitions,
-        # historical rule changes, and post-DST policy shifts cleanly.
-        # Storing the offset directly would mean a device's identity
-        # silently bifurcates twice a year — see docs/FEDERATION_LOCAL.md.
-        # NULL = unknown (legacy row pre-2026-04-12); treat as UTC.
-        try:
-            cur.execute("ALTER TABLE parties ADD COLUMN timezone TEXT")
-        except sqlite3.OperationalError:
-            pass
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_parties_trust_domain "
-            "ON parties(trust_domain)"
-        )
-
-        cur.execute("""
-        CREATE TABLE IF NOT EXISTS participants (
-            participant_id   TEXT PRIMARY KEY,
-            party_id         TEXT NOT NULL REFERENCES parties(party_id),
-            handle           TEXT NOT NULL,
-            workspace        TEXT,
-            pid              INTEGER,
-            started_at       REAL NOT NULL,
-            last_heartbeat   REAL NOT NULL,
-            status           TEXT NOT NULL DEFAULT 'active',
-            capabilities     TEXT,
-            metadata         TEXT
-        )
-        """)
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_participants_party "
-            "ON participants(party_id)"
-        )
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_participants_heartbeat "
-            "ON participants(last_heartbeat)"
-        )
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_participants_handle "
-            "ON participants(handle)"
-        )
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_participants_status "
-            "ON participants(status)"
-        )
-
-        # Vendor + host axes for dashboard badges (added 2026-05-05).
-        # `agent_kind`: vendor family — "claude-code", "codex", "gemini".
-        # `mcp_host`:   host capability tag — "antigravity", "vscode", "cursor".
-        # Both are nullable; pre-2026-05-05 rows simply read NULL.
-        for col in ("agent_kind", "mcp_host"):
-            try:
-                cur.execute(f"ALTER TABLE participants ADD COLUMN {col} TEXT")
-            except sqlite3.OperationalError:
-                pass  # column already exists — idempotent
-
-        # Announce columns (added 2026-05-06; design spec
-        # docs/superpowers/specs/2026-05-06-helix-announce-self-report-design.md).
-        # `ide_detected`:      adapter-side env-var fingerprint at register time
-        #                      ("vscode", "cursor", "claude-code", or NULL on no_match).
-        # `ide_detection_via`: how we figured it out — "env:VSCODE_PID",
-        #                      "explicit:HELIX_MCP_HOST", "agent_override", "no_match".
-        # `model_id`:          agent self-reported via helix_announce; NULL until announced.
-        for col in ("ide_detected", "ide_detection_via", "model_id"):
-            try:
-                cur.execute(f"ALTER TABLE participants ADD COLUMN {col} TEXT")
-            except sqlite3.OperationalError:
-                pass  # column already exists — idempotent
-
-        # ── Layer 4: agents (AI personas under a participant) ───────
-        # An agent is the AI persona doing the work on behalf of a human
-        # participant: "laude", "taude", "raude", "claude-code", "gemini",
-        # "gpt-4". One human can drive many agents; one agent kind can
-        # be invoked by many humans across orgs. The (participant_id,
-        # handle) pair is unique — same human, same agent name = same row.
-        # NULL agent_id at attribution time means "manual ingest" (no AI
-        # involvement), which is its own meaningful signal.
-        cur.execute("""
-        CREATE TABLE IF NOT EXISTS agents (
-            agent_id        TEXT PRIMARY KEY,
-            participant_id  TEXT NOT NULL
-                            REFERENCES participants(participant_id) ON DELETE CASCADE,
-            handle          TEXT NOT NULL,
-            kind            TEXT,             -- "claude-code", "gemini", "gpt-4", ...
-            created_at      REAL NOT NULL,
-            last_seen_at    REAL,
-            metadata        TEXT,
-            UNIQUE (participant_id, handle)
-        )
-        """)
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_agents_participant "
-            "ON agents(participant_id)"
-        )
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_agents_handle "
-            "ON agents(handle)"
-        )
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_agents_kind "
-            "ON agents(kind)"
-        )
-
-        cur.execute("""
-        CREATE TABLE IF NOT EXISTS gene_attribution (
-            gene_id         TEXT PRIMARY KEY
-                            REFERENCES genes(gene_id) ON DELETE CASCADE,
-            party_id        TEXT NOT NULL
-                            REFERENCES parties(party_id),
-            participant_id  TEXT
-                            REFERENCES participants(participant_id) ON DELETE SET NULL,
-            authored_at     REAL NOT NULL
-        )
-        """)
-        # 4-layer attribution columns added 2026-04-12. Denormalized for
-        # fast filter without joins; they should match the resolved
-        # (party.org_id, agent_id-via-participant) but we store them on
-        # the row so historical queries don't need expensive joins, and
-        # so re-parented entities (party moved to a new org) preserve
-        # the original write-time identity.
-        try:
-            cur.execute(
-                "ALTER TABLE gene_attribution ADD COLUMN org_id TEXT "
-                "REFERENCES orgs(org_id)"
-            )
-        except sqlite3.OperationalError:
-            pass
-        try:
-            cur.execute(
-                "ALTER TABLE gene_attribution ADD COLUMN agent_id TEXT "
-                "REFERENCES agents(agent_id) ON DELETE SET NULL"
-            )
-        except sqlite3.OperationalError:
-            pass
-
-        # authored_tz — IANA timezone name at the moment of write.
-        # Together with authored_at (Unix epoch UTC) this gives full
-        # forensic context: when AND where (regionally) a document was
-        # authored. Detects travel ("max wrote this from Berlin"),
-        # DST drift (silent offset shift in the same party's authored_tz
-        # over time), and supports cross-jurisdiction compliance queries.
-        try:
-            cur.execute(
-                "ALTER TABLE gene_attribution ADD COLUMN authored_tz TEXT"
-            )
-        except sqlite3.OperationalError:
-            pass
-
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_attribution_party_time "
-            "ON gene_attribution(party_id, authored_at DESC)"
-        )
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_attribution_participant_time "
-            "ON gene_attribution(participant_id, authored_at DESC)"
-        )
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_attribution_org_time "
-            "ON gene_attribution(org_id, authored_at DESC)"
-        )
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_attribution_agent_time "
-            "ON gene_attribution(agent_id, authored_at DESC)"
-        )
-
-        # hitl_events — per-session HITL pause log, added 2026-04-11 following
-        # laude's HITL observation handoff and raude's M1 discriminating test.
-        # The chat-channel signal columns (operator_tone_uncertainty, etc) are
-        # deliberately broad because the M1 finding ruled out knowledge store-mediated
-        # propagation of the HITL effect — the mechanism lives in the chat
-        # channel and must be instrumented there. See handoff
-        # ~/.helix/shared/handoffs/2026-04-11_hitl_observation.md
-        cur.execute("""
-        CREATE TABLE IF NOT EXISTS hitl_events (
-            event_id                   TEXT PRIMARY KEY,
-            party_id                   TEXT NOT NULL
-                                       REFERENCES parties(party_id),
-            participant_id             TEXT
-                                       REFERENCES participants(participant_id) ON DELETE SET NULL,
-            ts                         REAL NOT NULL,
-
-            pause_type                 TEXT NOT NULL,
-            task_context               TEXT,
-            resolved_without_operator  INTEGER NOT NULL DEFAULT 0,
-
-            operator_tone_uncertainty  REAL,
-            operator_risk_keywords     TEXT,
-            time_since_last_risk_event REAL,
-            recoverability_signal      TEXT,
-
-            genome_total_genes         INTEGER,
-            genome_hetero_count        INTEGER,
-            cold_cache_size            INTEGER,
-
-            metadata                   TEXT
-        )
-        """)
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_hitl_party_time "
-            "ON hitl_events(party_id, ts DESC)"
-        )
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_hitl_participant_time "
-            "ON hitl_events(participant_id, ts DESC)"
-        )
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_hitl_pause_type "
-            "ON hitl_events(pause_type)"
-        )
-
-        # ── CWoLa label log (STATISTICAL_FUSION §C2) ─────────────────
-        # Captures (tier_features, session, party, query) per retrieval
-        # so the Sprint 3 CWoLa trainer can bucket into A (accepted) vs
-        # B (re-queried within 60s) and train a classifier from those
-        # two unlabeled mixtures. Metodiev/Nachman/Thaler 2017,
-        # arXiv:1708.02949 — the factorised labels are not needed.
-        cur.execute("""
-        CREATE TABLE IF NOT EXISTS cwola_log (
-            retrieval_id       INTEGER PRIMARY KEY AUTOINCREMENT,
-            ts                 REAL    NOT NULL,
-            session_id         TEXT,
-            party_id           TEXT,
-            query              TEXT,
-            tier_features      TEXT,     -- JSON: {tier_name: score}
-            top_gene_id        TEXT,
-            bucket             TEXT,     -- 'A' (accepted) | 'B' (re-queried) | NULL (pending)
-            bucket_assigned_at REAL,
-            requery_delta_s    REAL,     -- seconds to the next same-session query (NULL if none within 60s)
-            query_sema         TEXT,     -- JSON: List[float] 20d query SEMA vector (PWPC Phase 1)
-            top_candidate_sema TEXT      -- JSON: List[float] 20d top-gene SEMA vector (PWPC Phase 1)
-        )
-        """)
-        # PWPC Phase 1 enrichment — add columns to pre-existing tables
-        # created before the 2026-04-14 schema change.
-        for _alter in (
-            "ALTER TABLE cwola_log ADD COLUMN query_sema TEXT",
-            "ALTER TABLE cwola_log ADD COLUMN top_candidate_sema TEXT",
-        ):
-            try:
-                cur.execute(_alter)
-            except sqlite3.OperationalError:
-                pass  # already present
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_cwola_session_time "
-            "ON cwola_log(session_id, ts)"
-        )
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_cwola_bucket "
-            "ON cwola_log(bucket)"
-        )
-
-        # ── AI-Consumer Sprint 2: session working-set register ────────
-        # Tracks which documents have been delivered to which session so
-        # re-retrievals can elide with a pointer stub rather than
-        # re-shipping the full spliced text. See session_delivery.py +
-        # docs/FUTURE/AI_CONSUMER_ROADMAP_2026-04-14.md.
-        cur.execute("""
-        CREATE TABLE IF NOT EXISTS session_delivery_log (
-            delivery_id     INTEGER PRIMARY KEY AUTOINCREMENT,
-            session_id      TEXT NOT NULL,
-            gene_id         TEXT NOT NULL,
-            retrieval_id    INTEGER,
-            delivered_at    REAL NOT NULL,
-            content_hash    TEXT,
-            mode            TEXT
-        )
-        """)
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_sdl_session_gene "
-            "ON session_delivery_log(session_id, gene_id)"
-        )
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_sdl_session_time "
-            "ON session_delivery_log(session_id, delivered_at)"
-        )
-
-        # ── Sprint 4: seeded-edge provenance + Hebbian counters ──────
-        # Table was previously created lazily inside
-        # store_cymatics_harmonic_links; move to init so seeded_edges.py
-        # and the Sprint 4 update hook can assume it exists. Pre-Sprint-4
-        # databases get the columns added via the ALTER path in
-        # store_cymatics_harmonic_links; new databases get them here.
-        cur.execute("""
-        CREATE TABLE IF NOT EXISTS harmonic_links (
-            gene_id_a  TEXT NOT NULL,
-            gene_id_b  TEXT NOT NULL,
-            weight     REAL NOT NULL,
-            updated_at REAL NOT NULL,
-            source     TEXT NOT NULL DEFAULT 'co_retrieved',
-            co_count   INTEGER NOT NULL DEFAULT 0,
-            miss_count REAL NOT NULL DEFAULT 0.0,
-            created_at REAL,
-            PRIMARY KEY (gene_id_a, gene_id_b)
-        )
-        """)
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_harmonic_source "
-            "ON harmonic_links(source)"
-        )
-        # Bidirectional lookup index — critical for sr_boost's bulk
-        # neighbour query (WHERE gene_id_a IN (...) OR gene_id_b IN (...)).
-        # Without this, SR on a 191K-edge graph times out at 30s on a
-        # multi-hop frontier. Discovered via the 2026-04-13 staged A/B.
-        cur.execute(
-            "CREATE INDEX IF NOT EXISTS idx_harmonic_b "
-            "ON harmonic_links(gene_id_b)"
-        )
-
-        # ── Stage 4: persisted threshold calibration (provenance) ────
-        # Spec: docs/specs/2026-05-08-stage-4-threshold-calibration.md §3.
-        # Single-row-per-key key/value table for calibration provenance:
-        #   key='ann_threshold' -> {'value': float, 'mu': float,
-        #                           'sigma': float, 'N': int, 'dim': int,
-        #                           'sigma_mult': float, 'seed': int}
-        # Idempotent CREATE — older databases pick this up on next open.
-        # query_genes_ann reads this lazily via _get_effective_ann_threshold.
-        cur.execute("""
-        CREATE TABLE IF NOT EXISTS genome_calibration (
-            key          TEXT PRIMARY KEY,
-            value_json   TEXT NOT NULL,
-            computed_at  REAL NOT NULL
-        )
-        """)
+        """Delegate to storage.ddl.ensure_registry_schema."""
+        from .storage.ddl import ensure_registry_schema
+        ensure_registry_schema(cur, self.conn)
 
     # ── WAL snapshot management ──────────────────────────────────────
 
@@ -1783,94 +1104,21 @@ class KnowledgeStore:
         # Invalidate parse cache for this document's promoter/epigenetics
         clear_parse_caches()
 
-        # Rebuild tags index for this document
-        cur.execute("DELETE FROM promoter_index WHERE gene_id = ?", (gene_id,))
-
-        for d in gene.promoter.domains:
-            cur.execute(
-                "INSERT INTO promoter_index VALUES (?, 'domain', ?)",
-                (gene_id, d.lower()),
-            )
-        for e in gene.promoter.entities:
-            cur.execute(
-                "INSERT INTO promoter_index VALUES (?, 'entity', ?)",
-                (gene_id, e.lower()),
-            )
-
-        # Sync FTS5 index — include source_id + tags in searchable content
-        # so tag-based knowledge survives FTS5 rebuilds
-        if self._fts_available:
-            try:
-                tag_text = " ".join(
-                    [d.lower() for d in gene.promoter.domains]
-                    + [e.lower() for e in gene.promoter.entities]
-                )
-                fts_content = f"{gene.source_id or ''} {tag_text} {gene.content}"
-                cur.execute(
-                    "INSERT OR REPLACE INTO genes_fts(gene_id, content, complement) "
-                    "VALUES (?, ?, ?)",
-                    (gene_id, fts_content, gene.complement or ""),
-                )
-            except Exception:
-                # FTS sync failure is non-fatal for the ingest, but silently
-                # swallowing it means a document is unindexed for full-text search.
-                log.warning(
-                    "FTS5 sync failed for gene %s", gene_id, exc_info=True,
-                )
-
-        # Entity graph — index entities for graph-based co-activation
-        if self._entity_graph_enabled and gene.promoter.entities:
-            cur.execute("DELETE FROM entity_graph WHERE gene_id = ?", (gene_id,))
-            for ent in gene.promoter.entities[:15]:
-                cur.execute(
-                    "INSERT OR IGNORE INTO entity_graph (entity, gene_id) VALUES (?, ?)",
-                    (ent.lower(), gene_id),
-                )
-            # Auto-link: find documents sharing 2+ entities with this document
-            self._auto_link_by_entity(gene_id, gene.promoter.entities, cur)
-
-        # path_key_index — compound (path_token, kv_key) → gene_id for
-        # fast template-query retrieval ("what is the value of helix_port?"
-        # → index hit on (helix, port) → this document). Auto-derived from
-        # source_id + already-extracted key_values; no LLM, no manual list.
-        cur.execute("DELETE FROM path_key_index WHERE gene_id = ?", (gene_id,))
-        if gene.source_id and gene.key_values:
-            p_tokens = path_tokens(gene.source_id)
-            kv_keys = _kv_keys_from_list(gene.key_values)
-            if p_tokens and kv_keys:
-                for pt in p_tokens:
-                    for kk in kv_keys:
-                        cur.execute(
-                            "INSERT OR IGNORE INTO path_key_index "
-                            "(path_token, kv_key, gene_id) VALUES (?, ?, ?)",
-                            (pt, kk, gene_id),
-                        )
-
-        # filename_index — single-stem reverse index used by the
-        # filename-anchor retrieval tier (Tier 0.5, flag-gated). Updated
-        # unconditionally at upsert time so the index is ready the moment
-        # the flag flips on; no backfill stage required for new documents.
-        cur.execute("DELETE FROM filename_index WHERE gene_id = ?", (gene_id,))
-        try:
-            from . import filename_anchor as _fa
-            _fa.index_gene(cur.connection, gene_id, gene.source_id)
-        except Exception:
-            log.debug("filename_index upsert skipped for gene=%s", gene_id, exc_info=True)
-
-        # SPLADE sparse index (if enabled, non-blocking)
-        if self._splade_enabled:
-            try:
-                from . import splade_backend
-                sparse = splade_backend.encode(gene.content[:1000])
-                # Inline the upsert without a separate commit
-                cur.execute("DELETE FROM splade_terms WHERE gene_id = ?", (gene_id,))
-                if sparse:
-                    cur.executemany(
-                        "INSERT INTO splade_terms (gene_id, term, weight) VALUES (?, ?, ?)",
-                        [(gene_id, term, weight) for term, weight in sparse.items()],
-                    )
-            except Exception:
-                log.debug("SPLADE indexing failed for gene %s", gene_id, exc_info=True)
+        # ── Index population (delegated to storage.indexes) ──────────
+        from .storage.indexes import (
+            rebuild_promoter_index,
+            sync_fts5,
+            sync_entity_graph,
+            sync_path_key_index,
+            sync_filename_index,
+            sync_splade_index,
+        )
+        rebuild_promoter_index(cur, gene_id, gene)
+        sync_fts5(cur, gene_id, gene, self._fts_available)
+        sync_entity_graph(cur, gene_id, gene, self._entity_graph_enabled)
+        sync_path_key_index(cur, gene_id, gene)
+        sync_filename_index(cur, gene_id, gene.source_id)
+        sync_splade_index(cur, gene_id, gene.content, self._splade_enabled)
 
         # Single atomic commit — document + tags + FTS5 + entity graph + SPLADE
         self.conn.commit()
@@ -1902,14 +1150,14 @@ class KnowledgeStore:
         # Soft-fail — ingest should never break because of claim extraction.
         if self._main_conn is not None:
             try:
-                from .claims import extract_literal_claims, persist_claims
+                from .identity.claims import extract_literal_claims, persist_claims
                 claims = extract_literal_claims(gene, shard_name=self._shard_name)
                 if claims:
                     persist_claims(self._main_conn, claims)
                     # Edge detection scoped to the new claims' entity_keys.
                     # Narrow scan keeps per-ingest cost bounded; groups
                     # larger than max_group_size are skipped anyway.
-                    from .claims_analyze import detect_and_persist_edges
+                    from .identity.claims_analyze import detect_and_persist_edges
                     touched_keys = {
                         c.entity_key for c in claims if c.entity_key
                     }
@@ -2129,7 +1377,7 @@ class KnowledgeStore:
         # spec §3 rule of thumb: agreement across recall tiers is the
         # signal RRF retrieves; "is this document authoritative?" is a
         # different question that survives unchanged.
-        from .fusion import Fuser as _Fuser
+        from .retrieval.fusion import Fuser as _Fuser
         fuser = _Fuser(k=self._rrf_k)
 
         # ── Stage 3: re-rank-class additive collector ──────────────
@@ -2445,7 +1693,7 @@ class KnowledgeStore:
         if self._splade_enabled:
             _splade_t0 = time.monotonic()
             try:
-                from . import splade_backend
+                from .backends import splade_backend
                 # Check if splade_terms table exists
                 has_table = cur.execute(
                     "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='splade_terms'"
@@ -2745,7 +1993,7 @@ class KnowledgeStore:
         sr_enabled = self._sr_enabled if use_sr is None else bool(use_sr)
         if sr_enabled and gene_scores:
             try:
-                from .sr import sr_boost
+                from .retrieval.sr import sr_boost
                 sr_bonus = sr_boost(
                     self,
                     list(gene_scores.keys()),
@@ -2977,7 +2225,7 @@ class KnowledgeStore:
         # the tie-break path falls through to the original ranking.
         # See docs/FUTURE/tie_break_walking.md for the empirical basis.
         try:
-            from . import tie_break
+            from .retrieval import tie_break
             if tie_break.is_enabled():
                 ranked_ids = tie_break.walking_reorder(
                     self.conn, ranked_ids, gene_scores,
@@ -2995,7 +2243,7 @@ class KnowledgeStore:
         # hiccups never perturb the retrieval result.
         if self._seeded_edges_enabled and ranked_ids and not read_only:
             try:
-                from .seeded_edges import update_edge_evidence
+                from .retrieval.seeded_edges import update_edge_evidence
                 update_edge_evidence(
                     self, gene_scores, ranked_ids, max_genes=max_genes,
                 )
@@ -3036,7 +2284,7 @@ class KnowledgeStore:
         warns if the dim is not a sanctioned breakpoint.
         """
         if self._dense_codec is None:
-            from .bgem3_codec import BGEM3Codec
+            from .backends.bgem3_codec import BGEM3Codec
             self._dense_codec = BGEM3Codec(dim=self._dense_embedding_dim)
             # One-time threshold-staleness warn: if v2 coverage is non-empty
             # AND the threshold was calibrated at a different dim, surface it.
@@ -3322,137 +2570,24 @@ class KnowledgeStore:
     # ── Entity graph: auto-link documents sharing entities ───────────────
 
     def _auto_link_by_entity(self, gene_id: str, entities: List[str], cur) -> None:
-        """
-        Find documents that share 2+ entities with this document and create
-        co-activation links. This builds the knowledge graph incrementally
-        at ingestion time without any LLM calls.
-        """
-        if len(entities) < 2:
-            return
-
-        ent_lower = [e.lower() for e in entities[:15]]
-        placeholders = ",".join("?" * len(ent_lower))
-
-        # Find documents sharing entities (excluding self)
-        rows = cur.execute(
-            f"SELECT gene_id, COUNT(*) as shared "
-            f"FROM entity_graph "
-            f"WHERE entity IN ({placeholders}) AND gene_id != ? "
-            f"GROUP BY gene_id "
-            f"HAVING shared >= 2 "
-            f"ORDER BY shared DESC "
-            f"LIMIT 10",
-            ent_lower + [gene_id],
-        ).fetchall()
-
-        for r in rows:
-            peer_id = r["gene_id"]
-            shared_count = r["shared"]
-            confidence = min(shared_count / len(ent_lower), 1.0)
-            # Store as COVER relation (overlapping topics)
-            cur.execute(
-                "INSERT OR REPLACE INTO gene_relations "
-                "(gene_id_a, gene_id_b, relation, confidence, updated_at) "
-                "VALUES (?, ?, ?, ?, ?)",
-                (gene_id, peer_id, 5, confidence, time.time()),  # 5 = COVER
-            )
-
-    # ── Entity graph: expand retrieval by entity overlap ──────────
+        """Delegate to storage.co_activation.auto_link_by_entity."""
+        from .storage.co_activation import auto_link_by_entity
+        auto_link_by_entity(gene_id, entities, cur)
 
     def _expand_by_entity_graph(
         self, gene_ids: List[str], limit: int, cur
     ) -> List[str]:
-        """
-        Given retrieved document IDs, find additional documents that share
-        entities with them via 1-hop graph traversal.
-        """
-        if not gene_ids:
-            return []
-
-        id_ph = ",".join("?" * len(gene_ids))
-
-        # Get entities of retrieved documents
-        rows = cur.execute(
-            f"SELECT DISTINCT entity FROM entity_graph WHERE gene_id IN ({id_ph})",
-            gene_ids,
-        ).fetchall()
-        entities = [r["entity"] for r in rows]
-
-        if not entities:
-            return []
-
-        ent_ph = ",".join("?" * len(entities))
-
-        # Find documents sharing those entities (1-hop), excluding already retrieved
-        neighbor_rows = cur.execute(
-            f"SELECT gene_id, COUNT(*) as shared "
-            f"FROM entity_graph "
-            f"WHERE entity IN ({ent_ph}) AND gene_id NOT IN ({id_ph}) "
-            f"GROUP BY gene_id "
-            f"HAVING shared >= 2 "
-            f"ORDER BY shared DESC "
-            f"LIMIT ?",
-            entities + gene_ids + [limit],
-        ).fetchall()
-
-        return [r["gene_id"] for r in neighbor_rows]
+        """Delegate to storage.co_activation.expand_by_entity_graph."""
+        from .storage.co_activation import expand_by_entity_graph
+        return expand_by_entity_graph(gene_ids, limit, cur)
 
     # ── Co-activation expansion ─────────────────────────────────────
 
     def _expand_coactivated(self, genes: List[Gene], limit: int) -> List[Gene]:
-        cur = self.conn.cursor()  # Always master — replicas may lag
-
-        existing_ids = {g.gene_id for g in genes}
-        additional_ids: set[str] = set()
-
-        for g in genes:
-            # Prefer typed relations if available
-            if g.epigenetics.typed_co_activated:
-                for link in g.epigenetics.typed_co_activated[:5]:
-                    if link.gene_id in existing_ids:
-                        continue
-                    # Entailment/equivalence: always pull forward
-                    if link.relation in (0, 1, 2):  # ENTAILMENT, REVERSE_ENTAILMENT, EQUIVALENCE
-                        additional_ids.add(link.gene_id)
-                    # Alternation: skip (mutually exclusive)
-                    elif link.relation == 3:  # ALTERNATION
-                        pass
-                    # Independence/cover/negation: pull only if high confidence
-                    elif link.confidence > 0.7:
-                        additional_ids.add(link.gene_id)
-            else:
-                # Fall back to untyped co-activation
-                for gid in g.epigenetics.co_activated_with[:3]:
-                    if gid not in existing_ids:
-                        additional_ids.add(gid)
-
-        # Entity graph expansion (1-hop neighbor pull)
-        if self._entity_graph_enabled:
-            try:
-                graph_ids = self._expand_by_entity_graph(
-                    [g.gene_id for g in genes],
-                    limit=5,
-                    cur=cur,
-                )
-                additional_ids.update(gid for gid in graph_ids if gid not in existing_ids)
-            except Exception:
-                log.debug("Entity graph expansion failed", exc_info=True)
-
-        if not additional_ids:
-            return genes
-
-        placeholders = ",".join("?" * len(additional_ids))
-        rows = cur.execute(
-            f"""
-            SELECT * FROM genes
-            WHERE gene_id IN ({placeholders})
-              AND chromatin < ?
-            """,
-            (*additional_ids, int(ChromatinState.HETEROCHROMATIN)),
-        ).fetchall()
-
-        extra = [self._row_to_gene(r) for r in rows]
-        return genes + extra
+        from .storage.co_activation import expand_coactivated
+        return expand_coactivated(
+            genes, limit, self.conn, self._entity_graph_enabled,
+        )
 
     # ── Row → Document ──────────────────────────────────────────────────
 
@@ -3590,55 +2725,9 @@ class KnowledgeStore:
     # ── Harmonic weights (cymatics) ──────────────────────────────────
 
     def store_harmonic_weights(self, weights: List[Tuple[str, str, float]]) -> None:
-        """Store weighted co-activation edges from cymatics spectral overlap.
-
-        As of Sprint 4, edges carry provenance and Hebbian evidence counters:
-          source            - 'seeded' | 'co_retrieved' | 'cwola_validated'
-          co_count          - # times both endpoints co-retrieved in a query
-          miss_count        - fractional (dense-rank weighted) miss events
-          created_at        - epoch seconds
-        co_retrieved and cwola_validated promotion happens in update_edge_evidence().
-        """
-        if not weights:
-            return
-        cur = self.conn.cursor()
-        cur.execute("""
-            CREATE TABLE IF NOT EXISTS harmonic_links (
-                gene_id_a  TEXT NOT NULL,
-                gene_id_b  TEXT NOT NULL,
-                weight     REAL NOT NULL,
-                updated_at REAL NOT NULL,
-                source     TEXT NOT NULL DEFAULT 'co_retrieved',
-                co_count   INTEGER NOT NULL DEFAULT 0,
-                miss_count REAL NOT NULL DEFAULT 0.0,
-                created_at REAL,
-                PRIMARY KEY (gene_id_a, gene_id_b)
-            )
-        """)
-        # Best-effort ALTER for pre-Sprint-4 schemas (fails silently if
-        # columns already present — SQLite has no IF NOT EXISTS for ADD COLUMN).
-        for col, defn in (
-            ("source", "TEXT NOT NULL DEFAULT 'co_retrieved'"),
-            ("co_count", "INTEGER NOT NULL DEFAULT 0"),
-            ("miss_count", "REAL NOT NULL DEFAULT 0.0"),
-            ("created_at", "REAL"),
-        ):
-            try:
-                cur.execute(f"ALTER TABLE harmonic_links ADD COLUMN {col} {defn}")
-            except sqlite3.OperationalError:
-                pass
-        now = time.time()
-        for a, b, w in weights:
-            cur.execute(
-                """INSERT INTO harmonic_links
-                   (gene_id_a, gene_id_b, weight, updated_at, source, created_at)
-                   VALUES (?, ?, ?, ?, 'co_retrieved', ?)
-                   ON CONFLICT(gene_id_a, gene_id_b) DO UPDATE SET
-                     weight = excluded.weight,
-                     updated_at = excluded.updated_at""",
-                (a, b, w, now, now),
-            )
-        self.conn.commit()
+        """Delegate to storage.co_activation.store_harmonic_weights."""
+        from .storage.co_activation import store_harmonic_weights
+        store_harmonic_weights(self.conn, weights)
 
     # ── Typed document relations (NLI) ───────────────────────────────────
 
@@ -3646,42 +2735,21 @@ class KnowledgeStore:
         self, gene_id_a: str, gene_id_b: str,
         relation: int, confidence: float,
     ) -> None:
-        """Store a typed logical relation between two documents."""
-        import time as _time
-        self.conn.execute(
-            "INSERT OR REPLACE INTO gene_relations "
-            "(gene_id_a, gene_id_b, relation, confidence, updated_at) "
-            "VALUES (?, ?, ?, ?, ?)",
-            (gene_id_a, gene_id_b, relation, confidence, _time.time()),
-        )
-        self.conn.commit()
+        """Delegate to storage.co_activation.store_relation."""
+        from .storage.co_activation import store_relation
+        store_relation(self.conn, gene_id_a, gene_id_b, relation, confidence)
 
     def store_relations_batch(
         self, relations: list,
     ) -> None:
-        """Store multiple typed relations. Each item: (id_a, id_b, relation, confidence)."""
-        import time as _time
-        now = _time.time()
-        self.conn.executemany(
-            "INSERT OR REPLACE INTO gene_relations "
-            "(gene_id_a, gene_id_b, relation, confidence, updated_at) "
-            "VALUES (?, ?, ?, ?, ?)",
-            [(a, b, r, c, now) for a, b, r, c in relations],
-        )
-        self.conn.commit()
+        """Delegate to storage.co_activation.store_relations_batch."""
+        from .storage.co_activation import store_relations_batch
+        store_relations_batch(self.conn, relations)
 
     def get_relations(self, gene_id: str) -> list:
-        """Get all typed relations for a document. Returns [(other_id, relation, confidence)]."""
-        cur = self.conn.cursor()
-        rows = cur.execute(
-            "SELECT gene_id_b AS other, relation, confidence "
-            "FROM gene_relations WHERE gene_id_a = ? "
-            "UNION "
-            "SELECT gene_id_a AS other, relation, confidence "
-            "FROM gene_relations WHERE gene_id_b = ?",
-            (gene_id, gene_id),
-        ).fetchall()
-        return [(r["other"], r["relation"], r["confidence"]) for r in rows]
+        """Delegate to storage.co_activation.get_relations."""
+        from .storage.co_activation import get_relations
+        return get_relations(self.conn, gene_id)
 
     # ── Layered fingerprints: query-time parent aggregation ──────────
 

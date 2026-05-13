@@ -20,7 +20,7 @@ import hashlib
 from dataclasses import dataclass, field
 from typing import List, Dict, Any, Optional
 
-from .accel import (
+from ..accel import (
     RE_PARAGRAPH_SPLIT,
     RE_SENTENCE_SPLIT,
     RE_CODE_BOUNDARY,

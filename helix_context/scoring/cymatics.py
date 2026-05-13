@@ -26,7 +26,7 @@ import math
 from functools import lru_cache
 from typing import Dict, List, Optional, Tuple
 
-from .schemas import Document, Gene  # Gene retained as legacy alias
+from ..schemas import Document, Gene  # Gene retained as legacy alias
 
 log = logging.getLogger("helix.cymatics")
 

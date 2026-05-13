@@ -75,7 +75,7 @@ def sr_boost(
         return {}
 
     # Lazy import avoids a genome.py <-> sr.py circular dep.
-    from .ray_trace import _load_co_activated
+    from ..scoring.ray_trace import _load_co_activated
 
     # Build the neighbour lookup cache ONCE up-front. Without this, each
     # hop issued one SQL query per frontier document — k_steps=4 over a

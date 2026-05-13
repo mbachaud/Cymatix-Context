@@ -6,7 +6,7 @@ or when no LLM backend is available.
 """
 from __future__ import annotations
 import re
-from .schemas import IntentClass
+from ..schemas import IntentClass
 
 
 _TEMPLATES: dict[IntentClass, list[str]] = {

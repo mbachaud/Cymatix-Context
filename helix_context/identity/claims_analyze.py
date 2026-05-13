@@ -35,7 +35,7 @@ import sqlite3
 from collections import defaultdict
 from typing import Iterable, Optional
 
-from .shard_schema import upsert_claim_edge
+from ..shard_schema import upsert_claim_edge
 
 log = logging.getLogger("helix.claims_analyze")
 

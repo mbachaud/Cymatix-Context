@@ -3,7 +3,7 @@
 import json
 import pytest
 
-from helix_context.ray_trace import (
+from helix_context.scoring.ray_trace import (
     cast_evidence_rays,
     ray_trace_boost,
     ray_trace_info,

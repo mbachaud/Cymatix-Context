@@ -31,7 +31,7 @@ from .replication import ReplicationManager
 
 # ΣĒMA is optional (requires sentence-transformers)
 try:
-    from .sema import SemaCodec, SemaPrime, PRIMES, PRIME_COUNT
+    from .backends.sema import SemaCodec, SemaPrime, PRIMES, PRIME_COUNT
 except ImportError:
     SemaCodec = None
     SemaPrime = None

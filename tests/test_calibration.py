@@ -613,7 +613,7 @@ def test_calibration_script_smoke(fixture_genome, tmp_path):
 
 from datetime import datetime, timedelta, timezone
 
-from helix_context.know_calibration import (
+from helix_context.scoring.know_calibration import (
     DEFAULT_STALE_AFTER_DAYS,
     KnowCalibration,
     calibration_age_days,

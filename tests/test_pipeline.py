@@ -338,7 +338,7 @@ class TestColdTierWiring:
 
     @pytest.fixture(scope="class")
     def codec(self):
-        from helix_context.sema import SemaCodec
+        from helix_context.backends.sema import SemaCodec
         return SemaCodec()
 
     @pytest.fixture

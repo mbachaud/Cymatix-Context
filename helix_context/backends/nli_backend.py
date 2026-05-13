@@ -22,7 +22,7 @@ from typing import Dict, List, Optional, Tuple
 
 import torch
 
-from .schemas import Gene, NLRelation
+from ..schemas import Gene, NLRelation
 
 log = logging.getLogger("helix.nli")
 

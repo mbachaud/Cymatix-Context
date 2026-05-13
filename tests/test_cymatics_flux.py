@@ -3,7 +3,7 @@
 import math
 import pytest
 
-from helix_context.cymatics import (
+from helix_context.scoring.cymatics import (
     N_BINS,
     build_weight_vector,
     flux_score,

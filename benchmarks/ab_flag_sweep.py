@@ -185,7 +185,7 @@ def main() -> int:
         results.append(r)
         print(f"[{name}] done\n", flush=True)
 
-    summary_path = REPO / "benchmarks/ab_sweep_summary.json"
+    summary_path = REPO / "benchmarks/results/ab_sweep_summary.json"
     summary_path.write_text(json.dumps(results, indent=2), encoding="utf-8")
     print(f"Summary written to {summary_path}")
     return 0

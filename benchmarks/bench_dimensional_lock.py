@@ -78,7 +78,7 @@ N_TOTAL = int(os.environ.get("N", "50"))
 SEED = int(os.environ.get("SEED", "42"))
 OUTPUT_PATH = os.environ.get(
     "OUTPUT",
-    str(_HERE / "dimensional_lock_results.json"),
+    str(_HERE / "results" / "dimensional_lock_results.json"),
 )
 INCREMENTAL_PATH = OUTPUT_PATH.replace(".json", ".incremental.jsonl")
 

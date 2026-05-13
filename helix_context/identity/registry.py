@@ -45,8 +45,8 @@ import time
 import uuid
 from typing import List, Optional, Tuple
 
-from .accel import json_dumps, json_loads
-from .schemas import (
+from ..accel import json_dumps, json_loads
+from ..schemas import (
     GeneAttribution,
     HITLEvent,
     HITLPauseType,
@@ -464,7 +464,7 @@ class Registry:
         # Build the Document directly — bypass the density gate so presence
         # documents always land OPEN, ensuring they're retrievable for the TTL
         # window. Gate re-applies naturally at the next lifecycle tier sweep.
-        from .schemas import (
+        from ..schemas import (
             ChromatinState,
             EpigeneticMarkers,
             Gene,
@@ -929,7 +929,7 @@ class Registry:
         # helix_context_ellipticity to correlate HITL spikes with
         # degraded context windows.
         try:
-            from .telemetry import hitl_events_counter
+            from ..telemetry import hitl_events_counter
             hitl_events_counter().add(
                 1,
                 attributes={

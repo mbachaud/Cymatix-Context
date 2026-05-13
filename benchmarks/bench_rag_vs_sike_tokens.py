@@ -45,7 +45,7 @@ import httpx
 HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
 OUTPUT_PATH = os.environ.get(
     "OUTPUT",
-    str(Path(__file__).resolve().parent / "rag_vs_sike_tokens.json"),
+    str(Path(__file__).resolve().parent / "results" / "rag_vs_sike_tokens.json"),
 )
 
 # Industry-typical RAG defaults. Configurable so users can model their

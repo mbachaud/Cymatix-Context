@@ -62,11 +62,11 @@ def test_emit_gauges_snapshot_reads_registered_shards_without_warning(
         hub = _GaugeRecorder()
         degree = _GaugeRecorder()
 
-        monkeypatch.setattr("helix_context.telemetry.chromatin_state_counter", lambda: chrom)
-        monkeypatch.setattr("helix_context.telemetry.harmonic_edges_counter", lambda: edges)
-        monkeypatch.setattr("helix_context.telemetry.genome_size_gauge", lambda: size)
-        monkeypatch.setattr("helix_context.telemetry.hub_concentration_gauge", lambda: hub)
-        monkeypatch.setattr("helix_context.telemetry.hub_inbound_degree_gauge", lambda: degree)
+        monkeypatch.setattr("helix_context.telemetry.otel.chromatin_state_counter", lambda: chrom)
+        monkeypatch.setattr("helix_context.telemetry.otel.harmonic_edges_counter", lambda: edges)
+        monkeypatch.setattr("helix_context.telemetry.otel.genome_size_gauge", lambda: size)
+        monkeypatch.setattr("helix_context.telemetry.otel.hub_concentration_gauge", lambda: hub)
+        monkeypatch.setattr("helix_context.telemetry.otel.hub_inbound_degree_gauge", lambda: degree)
 
         adapter = ShardedGenomeAdapter(str(main_path))
         try:

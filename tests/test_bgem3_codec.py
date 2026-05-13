@@ -2,7 +2,7 @@
 import numpy as np
 import pytest
 from unittest.mock import MagicMock, patch
-from helix_context.bgem3_codec import BGEM3Codec
+from helix_context.backends.bgem3_codec import BGEM3Codec
 
 
 def _make_codec_with_mock(dim=256):

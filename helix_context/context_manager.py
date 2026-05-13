@@ -32,12 +32,12 @@ from .config import HelixConfig
 from .exceptions import PromoterMismatch
 from .genome import Genome
 from .budget_zone import is_enabled as _budget_zone_is_enabled, zone_cap as _budget_zone_cap
-from .headroom_bridge import compress_text
-from . import legibility
-from . import session_delivery as _session_delivery
+from .encoding.headroom_bridge import compress_text
+from .encoding import legibility
+from .identity import session_delivery as _session_delivery
 from .ribosome import DisabledBackend, LiteLLMBackend, Ribosome, OllamaBackend
-from .provenance import apply_metadata_hints, apply_provenance
-from .query_classifier import ClassifierResult, classify_query
+from .identity.provenance import apply_metadata_hints, apply_provenance
+from .retrieval.query_classifier import ClassifierResult, classify_query
 from .schemas import (
     ChromatinState,
     ContextHealth,
@@ -416,7 +416,7 @@ class HelixContextManager:
         # the lifetime counter survives restarts. See helix_context/metrics.py
         # and the /metrics/tokens endpoint.
         from pathlib import Path as _Path
-        from .metrics import TokenCounter
+        from .telemetry.metrics import TokenCounter
         _genome_path = _Path(config.genome.path)
         if str(_genome_path) == ":memory:":
             # In-memory tests: keep metrics in-memory too (write to a tmp path
@@ -430,7 +430,7 @@ class HelixContextManager:
         # ΣĒMA codec (optional — loaded if sentence-transformers available)
         self._sema_codec = None
         try:
-            from .sema import SemaCodec
+            from .backends.sema import SemaCodec
             self._sema_codec = SemaCodec()
             log.info("ΣĒMA codec loaded — semantic retrieval enabled")
         except ImportError:
@@ -536,7 +536,7 @@ class HelixContextManager:
                 log.warning("LiteLLMBackend failed to load, disabling ribosome", exc_info=True)
         elif effective_backend == "deberta":
             try:
-                from .deberta_backend import DeBERTaRibosome
+                from .backends.deberta_backend import DeBERTaRibosome
                 ollama_backend = OllamaBackend(
                     model=config.ribosome.model,
                     base_url=config.ribosome.base_url,
@@ -612,7 +612,7 @@ class HelixContextManager:
         # Cymatics (frequency-domain re_rank + splice, replaces LLM calls)
         self._use_cymatics = config.cymatics.enabled
         if self._use_cymatics:
-            from .cymatics import aggressiveness_to_peak_width
+            from .scoring.cymatics import aggressiveness_to_peak_width
             self._cymatics_peak_width = aggressiveness_to_peak_width(
                 config.budget.splice_aggressiveness
             )
@@ -622,7 +622,7 @@ class HelixContextManager:
         # TCM session context (Howard & Kahana 2002 temporal drift)
         self._tcm_session = None
         try:
-            from .tcm import SessionContext
+            from .scoring.tcm import SessionContext
             self._tcm_session = SessionContext(n_dims=20, beta=0.5)
             log.info("TCM session context initialized (20D, beta=0.5)")
         except Exception:
@@ -1000,7 +1000,7 @@ class HelixContextManager:
         # rather than the hard-coded ClassifierResult.decoder_mode literal. The
         # `generic` column of the table is byte-identical to the legacy literals
         # (spec §7 — verified by test_generic_branch_byte_identical_to_pre_stage5_output).
-        from .query_classifier import resolve_decoder_mode as _resolve_decoder_mode
+        from .retrieval.query_classifier import resolve_decoder_mode as _resolve_decoder_mode
         effective_decoder_mode_name: Optional[str] = None
         if decoder_override and decoder_override in DECODER_MODES:
             effective_decoder_prompt = DECODER_MODES[decoder_override]
@@ -1172,189 +1172,29 @@ class HelixContextManager:
                 allow_rerank=True,
             )
 
-        # Dynamic budget tiers — size the retrieval window based on
-        # retrieval confidence instead of always sending max_genes.
-        #
-        # The insight: on a CURATED query ("what port does helix use?") the
-        # top document will score 5-10x higher than #12. Sending 12 documents for a
-        # query with an obvious winner wastes 91% of the budget on padding
-        # and dilutes the small model's attention.
-        #
-        # Tiers (confidence = top_score / mean_score ratio):
-        #   - TIGHT   (ratio >= 3.0): top 3 documents   — ~6K total tokens
-        #   - FOCUSED (ratio 1.8-3.0): top 6 documents  — ~9K total tokens
-        #   - BROAD   (ratio < 1.8):  top max_genes — ~15K total tokens
-        #
-        # Score-gate floor: always drop documents scoring < 15% of top score.
-        budget_tier = "broad"  # default
-        budget_tokens_est = 15000
-        if len(candidates) > 3:
-            all_scores = self.genome.last_query_scores
-            # Compute ratio over CANDIDATES only, not all scored documents
-            # (all_scores includes documents that didn't make top-N cut,
-            # dragging down mean and inflating ratio → always "tight")
-            candidate_ids = {g.gene_id for g in candidates}
-            scores = {gid: s for gid, s in (all_scores or {}).items() if gid in candidate_ids}
-            if scores and any(scores.values()):
-                top_score = max(scores.values())
-                mean_score = sum(scores.values()) / len(scores) if scores else 1.0
-                ratio = top_score / max(mean_score, 0.01)
-
-                # Hard floor: drop anything below 15% of top
-                # Shadow scores: preserve cut documents' scores with 0.5x weight
-                # so Lagrange check and harmonic binning can pull them back
-                # if the landscape changes downstream.
-                floor = top_score * 0.15
-                gated = [g for g in candidates if scores.get(g.gene_id, 0) >= floor]
-                shadow_pool: List[Gene] = [g for g in candidates if scores.get(g.gene_id, 0) < floor]
-                if len(gated) >= 3:
-                    candidates = gated
-
-                # ── ABSTAIN gate ──────────────────────────────────────────────────
-                # When retrieval is weak on BOTH the absolute floor AND the ratio,
-                # inject a marker-only ContextWindow so the small model answers from
-                # weights instead of digesting 12K of irrelevant noise. Reuses the
-                # existing FOCUSED_SCORE_FLOOR (defined just below) verbatim — strict
-                # < on both axes. Telemetry fires here before the early-return so
-                # tier="abstain" lands on budget_tier_counter alongside the other
-                # tier counts emitted by the existing call site below.
-                #
-                # Stage 4 (2026-05-08): when [abstain].mode='per_classifier', use
-                # the calibrated abstain_top for this query's class instead of
-                # the hard-coded 2.5. mode='global' (default) preserves the
-                # legacy constant byte-for-byte. ``cls_for_floors`` is hoisted
-                # above (set from classifier_result so all branches see it).
-                _cls_floors = self._floors_for(cls_for_floors)
-                FOCUSED_SCORE_FLOOR_FOR_ABSTAIN = _cls_floors.abstain_top
-                if (
-                    abstain_enabled
-                    and top_score < FOCUSED_SCORE_FLOOR_FOR_ABSTAIN
-                    and ratio < 1.8
-                ):
-                    try:
-                        from .telemetry import budget_tier_counter
-                        budget_tier_counter().add(1, attributes={"tier": "abstain"})
-                    except Exception:  # pragma: no cover
-                        pass
-                    return self._build_abstain_window(
-                        query=query,
-                        effective_decoder_prompt=effective_decoder_prompt,
-                        top_score=top_score,
-                        ratio=ratio,
-                        reason="score_below_floor",
-                    )
-
-                # Confidence tiering (with shadow pool tracking)
-                #
-                # Absolute floors prevent the ratio from triggering TIGHT/FOCUSED
-                # when ALL candidates are weak. Before the floor, a query with
-                # top_score=1.2, mean=0.4 (ratio=3.0) got the same "tight" treatment
-                # as top=8.5, mean=2.8 — even though the first is "retrieval is
-                # uncertain, widen the net" and the second is "we found it, send 3."
-                # Empirically: on N=50 KV-harvest bench (2026-04-12), 45/50 failed
-                # queries landed in tight mode with top_score < 3.0. Adding the
-                # absolute floor keeps weak-signal queries in BROAD mode where
-                # the larger candidate set gives them a recall chance.
-                # Stage 4 (2026-05-08): per-classifier tight/focused floors.
-                # mode='global' (default) keeps the legacy 5.0 / 2.5 constants
-                # exactly. mode='per_classifier' substitutes the calibrated
-                # tight_top / focused_top for this query's class.
-                TIGHT_SCORE_FLOOR = _cls_floors.tight_top
-                FOCUSED_SCORE_FLOOR = _cls_floors.focused_top
-                # ── Stage 3 transitional bypass (spec §9) ──
-                # Under RRF, the score scale collapses to ~Σweight/(k+1) ≈ 0.3
-                # max — the absolute TIGHT/FOCUSED floors are calibrated for
-                # the additive scale and would force every query to BROAD.
-                # Stage 4 owns the recalibrated floors. Until then, RRF mode
-                # operates on ratio gates only.
-                skip_absolute_floors = (
-                    getattr(self.genome, "_fusion_mode", "additive") == "rrf"
-                )
-                if (
-                    ratio >= 3.0
-                    and (skip_absolute_floors or top_score >= TIGHT_SCORE_FLOOR)
-                    and len(candidates) >= 3
-                ):
-                    # High confidence — top document dominates AND is strong, send 3
-                    shadow_pool = shadow_pool + candidates[3:]
-                    candidates = candidates[:3]
-                    budget_tier = "tight"
-                    budget_tokens_est = 6000
-                elif (
-                    ratio >= 1.8
-                    and (skip_absolute_floors or top_score >= FOCUSED_SCORE_FLOOR)
-                    and len(candidates) >= 6
-                ):
-                    # Moderate confidence — narrow to 6
-                    shadow_pool = shadow_pool + candidates[6:]
-                    candidates = candidates[:6]
-                    budget_tier = "focused"
-                    budget_tokens_est = 9000
-                # else: broad — keep current up-to-max_genes set
-                #   (weak absolute scores or weak ratio → widen the net)
-
-                # Stash shadow pool for Lagrange check (#3)
-                self._last_shadow_pool = shadow_pool
-                self._last_shadow_scores = {
-                    g.gene_id: scores.get(g.gene_id, 0) * 0.5
-                    for g in shadow_pool
-                }
-
-                log.debug(
-                    "Dynamic budget: tier=%s ratio=%.2f top=%.1f mean=%.1f genes=%d shadow=%d",
-                    budget_tier, ratio, top_score, mean_score, len(candidates), len(shadow_pool),
-                )
-
-                # Telemetry: budget-tier distribution over queries.
-                try:
-                    from .telemetry import budget_tier_counter
-                    budget_tier_counter().add(
-                        1, attributes={"tier": budget_tier},
-                    )
-                except Exception:  # pragma: no cover
-                    pass
-
-                # Lagrange point check: a document in the shadow pool with HIGH
-                # standalone score but LOW co-activation with the winners is
-                # being deflected by cluster gravity, not rejected on merit.
-                # Pull it back if its standalone > 70% of winners' floor AND
-                # its co-activation overlap with winners is < 20%.
-                if shadow_pool and len(candidates) >= 3 and budget_tier != "broad":
-                    try:
-                        winner_ids = {g.gene_id for g in candidates}
-                        winner_coact: set[str] = set()
-                        for g in candidates:
-                            winner_coact.update(g.epigenetics.co_activated_with or [])
-                        winner_floor = min(scores.get(g.gene_id, 0) for g in candidates)
-                        lagrange_threshold = winner_floor * 0.7
-
-                        # Rank shadow pool by standalone score
-                        shadow_ranked = sorted(
-                            shadow_pool,
-                            key=lambda g: self._last_shadow_scores.get(g.gene_id, 0),
-                            reverse=True,
-                        )
-                        for g in shadow_ranked[:3]:  # check top 3 shadow candidates
-                            shadow_score = scores.get(g.gene_id, 0)
-                            if shadow_score < lagrange_threshold:
-                                break  # standalone too weak
-                            # Co-activation overlap with winners
-                            g_coact = set(g.epigenetics.co_activated_with or [])
-                            overlap = len(g_coact & (winner_ids | winner_coact))
-                            overlap_ratio = overlap / max(len(g_coact), 1) if g_coact else 1.0
-                            if overlap_ratio < 0.2:
-                                # Low co-activation with winners → being deflected
-                                log.debug(
-                                    "Lagrange pull-back: gene %s (score=%.2f, overlap=%.1f%%)",
-                                    g.gene_id[:12], shadow_score, overlap_ratio * 100,
-                                )
-                                # Replace the weakest winner with this document
-                                candidates[-1] = g
-                                break
-                    except Exception:
-                        # Lagrange check is a bonus, never blocks — but log
-                        # so failures don't silently disable the tier.
-                        log.warning("Lagrange pull-back failed", exc_info=True)
+        # Dynamic budget tiers — delegates to pipeline.tier_logic.
+        from .pipeline.tier_logic import apply_budget_tiers as _apply_tiers
+        _cls_floors = self._floors_for(cls_for_floors)
+        _tier = _apply_tiers(
+            candidates,
+            self.genome.last_query_scores,
+            _cls_floors,
+            abstain_enabled=abstain_enabled,
+            fusion_mode=getattr(self.genome, "_fusion_mode", "additive"),
+        )
+        if _tier.abstain:
+            return self._build_abstain_window(
+                query=query,
+                effective_decoder_prompt=effective_decoder_prompt,
+                top_score=_tier.abstain_top_score,
+                ratio=_tier.abstain_ratio,
+                reason="score_below_floor",
+            )
+        candidates = _tier.candidates
+        budget_tier = _tier.budget_tier
+        budget_tokens_est = _tier.budget_tokens_est
+        self._last_shadow_pool = _tier.shadow_pool
+        self._last_shadow_scores = _tier.shadow_scores
 
         # Step 3.6: Apply classifier assembly cap.
         # Invariant: classifier can only LOWER the assembled document count.
@@ -1602,7 +1442,7 @@ class HelixContextManager:
             # Compute harmonic weights between retrieved documents (cymatics)
             if self._use_cymatics and self.config.cymatics.harmonic_links:
                 try:
-                    from .cymatics import compute_harmonic_weights
+                    from .scoring.cymatics import compute_harmonic_weights
                     weights = compute_harmonic_weights(
                         candidates, peak_width=self._cymatics_peak_width,
                     )
@@ -1708,7 +1548,7 @@ class HelixContextManager:
             pass
         try:
             if self._tcm_session is not None:
-                from .tcm import SessionContext
+                from .scoring.tcm import SessionContext
                 self._tcm_session = SessionContext(n_dims=20, beta=0.5)
         except Exception:
             pass
@@ -2021,7 +1861,7 @@ class HelixContextManager:
         if not getattr(getattr(self.config, "ribosome", None), "query_decomposition_enabled", False):
             # Try LLM-free template routing based on query intent heuristic
             try:
-                from .intent_router import sub_queries_for
+                from .retrieval.intent_router import sub_queries_for
                 from .tagger import CpuTagger
                 from .schemas import IntentClass
                 _tagger = CpuTagger.__new__(CpuTagger)
@@ -2299,99 +2139,30 @@ class HelixContextManager:
         use_tcm: bool = True,
         allow_rerank: bool = True,
     ) -> Tuple[List[Gene], Dict[str, Dict[str, float]]]:
-        """Apply post-retrieve candidate refiners before assembly or fingerprinting."""
-        refiner_contrib: Dict[str, Dict[str, float]] = {}
+        """Apply post-retrieve candidate refiners before assembly or fingerprinting.
 
-        if use_cymatics and self._use_cymatics and len(candidates) > 1:
-            try:
-                from .cymatics import (
-                    query_spectrum, cached_doc_spectrum,
-                    flux_score_dispatch, build_weight_vector,
-                )
-                metric = self.config.cymatics.distance_metric
-                q_spec = query_spectrum(
-                    query, synonym_map=self.config.synonym_map,
-                    peak_width=self._cymatics_peak_width,
-                )
-                weights = build_weight_vector(
-                    query, synonym_map=self.config.synonym_map,
-                    peak_width=self._cymatics_peak_width,
-                )
-                scores = self.genome.last_query_scores or {}
-                for doc in candidates:
-                    g_spec = cached_doc_spectrum(doc, peak_width=self._cymatics_peak_width)
-                    bonus = flux_score_dispatch(q_spec, g_spec, weights, metric) * 0.5
-                    if bonus:
-                        refiner_contrib.setdefault(doc.gene_id, {})["cymatics"] = bonus
-                    scores[doc.gene_id] = scores.get(doc.gene_id, 0) + bonus
-                self.genome.last_query_scores = scores
-                candidates.sort(key=lambda g: scores.get(g.gene_id, 0), reverse=True)
-            except Exception:
-                log.debug("Cymatics blend failed", exc_info=True)
-
-        if len(candidates) > max_genes:
-            if (
-                allow_rerank
-                and self.config.ingestion.rerank_enabled
-                and hasattr(self.ribosome, "rerank")
-            ):
-                try:
-                    candidates = self.ribosome.rerank(query, candidates, k=max_genes)
-                except Exception:
-                    log.warning("Re-rank failed, falling back to retrieval order", exc_info=True)
-                    candidates = candidates[:max_genes]
-            else:
-                candidates = candidates[:max_genes]
-
-        if use_harmonic_bin and len(candidates) >= 3:
-            try:
-                from .ray_trace import harmonic_bin_boost
-                seed_ids = [g.gene_id for g in candidates[:3]]
-                velocity = None
-                theta_w = 1.0
-                if (
-                    getattr(self.config.retrieval, "ray_trace_theta", False)
-                    and self._tcm_session is not None
-                    and self._tcm_session.depth >= 2
-                ):
-                    velocity = list(self._tcm_session.context_vector)
-                    theta_w = self.config.retrieval.theta_weight
-                overtones = harmonic_bin_boost(
-                    seed_ids,
-                    self.genome,
-                    k_rays=100,
-                    max_bounces=2,
-                    velocity_vector=velocity,
-                    theta_weight=theta_w,
-                )
-                if overtones:
-                    scores = self.genome.last_query_scores or {}
-                    for doc in candidates:
-                        if doc.gene_id in overtones:
-                            bonus = overtones[doc.gene_id]
-                            refiner_contrib.setdefault(doc.gene_id, {})["harmonic_bin"] = bonus
-                            scores[doc.gene_id] = scores.get(doc.gene_id, 0) + bonus
-                    self.genome.last_query_scores = scores
-                    candidates.sort(key=lambda g: scores.get(g.gene_id, 0), reverse=True)
-            except Exception:
-                log.debug("Harmonic bin boost failed", exc_info=True)
-
-        if use_tcm and self._tcm_session is not None and self._tcm_session.depth > 0:
-            try:
-                from .tcm import tcm_bonus
-                bonuses = tcm_bonus(self._tcm_session, candidates, weight=0.3)
-                for gid, bonus in bonuses.items():
-                    if bonus:
-                        refiner_contrib.setdefault(gid, {})["tcm"] = bonus
-                scores = self.genome.last_query_scores or {}
-                candidates.sort(
-                    key=lambda g: scores.get(g.gene_id, 0) + bonuses.get(g.gene_id, 0),
-                    reverse=True,
-                )
-            except Exception:
-                pass
-
-        return candidates, refiner_contrib
+        Delegates to :func:`scoring.blend.apply_candidate_refiners`.
+        """
+        from .scoring.blend import apply_candidate_refiners as _blend
+        return _blend(
+            query,
+            candidates,
+            max_genes,
+            genome=self.genome,
+            cymatics_enabled=self._use_cymatics,
+            cymatics_peak_width=self._cymatics_peak_width,
+            cymatics_distance_metric=self.config.cymatics.distance_metric,
+            synonym_map=self.config.synonym_map,
+            use_cymatics=use_cymatics,
+            use_harmonic_bin=use_harmonic_bin,
+            use_tcm=use_tcm,
+            allow_rerank=allow_rerank,
+            rerank_enabled=self.config.ingestion.rerank_enabled,
+            ribosome=self.ribosome,
+            tcm_session=self._tcm_session,
+            ray_trace_theta=getattr(self.config.retrieval, "ray_trace_theta", False),
+            theta_weight=self.config.retrieval.theta_weight,
+        )
 
     # -- Internal: Step 5 (assemble) -----------------------------------
 
@@ -2832,7 +2603,7 @@ class HelixContextManager:
         logical_coherence = 0.0
         if relation_graph:
             try:
-                from .nli_backend import compute_logical_coherence
+                from .backends.nli_backend import compute_logical_coherence
                 logical_coherence = compute_logical_coherence(relation_graph)
             except Exception:
                 pass

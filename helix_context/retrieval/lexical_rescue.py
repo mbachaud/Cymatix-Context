@@ -11,7 +11,7 @@ from __future__ import annotations
 import sqlite3
 from typing import Iterable
 
-from .accel import expand_query_terms, extract_query_signals
+from ..accel import expand_query_terms, extract_query_signals
 
 _CONFIG_EXTENSIONS = (".toml", ".yaml", ".yml", ".json", ".ini", ".env", ".bat")
 

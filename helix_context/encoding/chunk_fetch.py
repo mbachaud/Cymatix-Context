@@ -11,7 +11,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import sqlite3
 
-from .accel import expand_query_terms, extract_query_signals
+from ..accel import expand_query_terms, extract_query_signals
 
 
 @dataclass(frozen=True)

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from helix_context.seeded_edges import (
+from helix_context.retrieval.seeded_edges import (
     SOURCE_SEEDED,
     SOURCE_CO_RETRIEVED,
     SOURCE_CWOLA,

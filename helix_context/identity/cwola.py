@@ -126,7 +126,7 @@ def log_query(
         )
         conn.commit()
         try:
-            from .telemetry import cwola_bucket_counter
+            from ..telemetry import cwola_bucket_counter
             cwola_bucket_counter().add(1, {"bucket": "pending"})
         except Exception:
             pass
@@ -216,7 +216,7 @@ def sweep_buckets(
         # with the current f_gap_sq divergence (Gauge sets absolute value
         # rather than accumulating deltas).
         try:
-            from .telemetry import cwola_bucket_counter, cwola_f_gap_gauge
+            from ..telemetry import cwola_bucket_counter, cwola_f_gap_gauge
             # Re-read the just-assigned rows by retrieval_id rather than a
             # time-window query — a 1s window races with commit latency,
             # skipping rows that committed slightly later than `now-1.0`.

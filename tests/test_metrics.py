@@ -12,7 +12,7 @@ import time
 
 import pytest
 
-from helix_context.metrics import (
+from helix_context.telemetry.metrics import (
     CHARS_PER_TOKEN_ESTIMATE,
     TokenCounter,
     estimate_tokens,
