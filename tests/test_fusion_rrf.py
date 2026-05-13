@@ -326,16 +326,28 @@ def test_rrf_skips_absolute_floors_in_context_manager():
 
     # Read the bypass conditional from source — guards against silent
     # rewrite that would break the §9 contract.
+    # The tier logic was extracted to pipeline/tier_logic.py (Sprint refactor,
+    # 2026-05); check both the extracted module AND the delegation site in
+    # context_manager.py.
+    tier_path = (
+        Path(__file__).resolve().parents[1]
+        / "helix_context" / "pipeline" / "tier_logic.py"
+    )
+    tier_text = tier_path.read_text(encoding="utf-8")
+    assert "skip_absolute_floors" in tier_text, (
+        "pipeline/tier_logic.py lost the §9 transitional bypass"
+    )
+    assert 'fusion_mode == "rrf"' in tier_text, (
+        "pipeline/tier_logic.py bypass should check fusion_mode"
+    )
+    # The delegation site in context_manager.py should pass fusion_mode
     cm_path = (
         Path(__file__).resolve().parents[1]
         / "helix_context" / "context_manager.py"
     )
-    text = cm_path.read_text(encoding="utf-8")
-    assert "skip_absolute_floors" in text, (
-        "context_manager lost the §9 transitional bypass"
-    )
-    assert 'getattr(self.genome, "_fusion_mode"' in text, (
-        "context_manager bypass should read genome._fusion_mode"
+    cm_text = cm_path.read_text(encoding="utf-8")
+    assert "_fusion_mode" in cm_text, (
+        "context_manager should pass _fusion_mode to tier logic"
     )
     g_additive.close()
     g_rrf.close()
