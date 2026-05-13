@@ -51,16 +51,18 @@ def _make_gene(gene_id="gene-001", content="splice trims fragments"):
 
 def test_gene_get_delegates_to_genome():
     mgr = MagicMock()
-    mgr.genome.get_gene.return_value = _make_gene()
+    # R3 Stage C renamed KnowledgeStore.get_gene -> get_doc with a legacy
+    # alias. api.py:gene_get calls the canonical name, so configure that.
+    mgr.genome.get_doc.return_value = _make_gene()
     sess = _make_session(mgr)
     gene = sess.gene_get("gene-001")
     assert gene.gene_id == "gene-001"
-    mgr.genome.get_gene.assert_called_once_with("gene-001")
+    mgr.genome.get_doc.assert_called_once_with("gene-001")
 
 
 def test_gene_get_returns_none_on_unknown_id():
     mgr = MagicMock()
-    mgr.genome.get_gene.return_value = None
+    mgr.genome.get_doc.return_value = None
     sess = _make_session(mgr)
     assert sess.gene_get("nope") is None
 
@@ -190,7 +192,7 @@ def test_neighbors_sorts_by_similarity_desc():
     def _get_gene(gid):
         return _make_gene(gene_id=gid, content=f"content of {gid}")
 
-    mgr.genome.get_gene.side_effect = _get_gene
+    mgr.genome.get_doc.side_effect = _get_gene  # R3 Stage C canonical
 
     sess = _make_session(mgr)
     out = sess.neighbors("query", k=2)
@@ -261,7 +263,7 @@ def test_neighbors_skips_malformed_embedding_row():
         Row(gene_id="gene-B", embedding="[1.0, 0.0]"),
     ]
     mgr.genome.read_conn.execute.return_value.fetchall.return_value = rows
-    mgr.genome.get_gene.side_effect = lambda gid: _make_gene(gene_id=gid)
+    mgr.genome.get_doc.side_effect = lambda gid: _make_gene(gene_id=gid)  # R3 Stage C canonical
 
     sess = _make_session(mgr)
     out = sess.neighbors("q", k=10)
