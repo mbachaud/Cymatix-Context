@@ -26,7 +26,7 @@ import math
 from functools import lru_cache
 from typing import Dict, List, Optional, Tuple
 
-from .schemas import Gene
+from .schemas import Document, Gene  # Gene retained as legacy alias
 
 log = logging.getLogger("helix.cymatics")
 
@@ -203,7 +203,7 @@ def query_spectrum(
 
 
 def doc_spectrum(
-    gene: Gene,
+    doc: Document,
     peak_width: float = 3.0,
 ) -> List[float]:
     """
@@ -211,12 +211,12 @@ def doc_spectrum(
 
     Domains and entities become spectral peaks, damped by decay_score.
     """
-    terms = list(gene.promoter.domains) + list(gene.promoter.entities)
+    terms = list(doc.promoter.domains) + list(doc.promoter.entities)
     if not terms:
         # Fall back to fragment meanings if no tags
-        terms = list(gene.codons[:5])
+        terms = list(doc.codons[:5])
 
-    decay = gene.epigenetics.decay_score
+    decay = doc.epigenetics.decay_score
     return build_spectrum(terms, decay=decay, peak_width=peak_width)
 
 
@@ -248,13 +248,13 @@ def _cached_doc_spectrum(
 _cached_gene_spectrum = _cached_doc_spectrum
 
 
-def cached_doc_spectrum(gene: Gene, peak_width: float = 3.0) -> List[float]:
+def cached_doc_spectrum(doc: Document, peak_width: float = 3.0) -> List[float]:
     """Get a document's spectrum, using LRU cache for repeated access."""
-    domains_key = "|".join(sorted(gene.promoter.domains))
-    entities_key = "|".join(sorted(gene.promoter.entities))
+    domains_key = "|".join(sorted(doc.promoter.domains))
+    entities_key = "|".join(sorted(doc.promoter.entities))
     t = _cached_doc_spectrum(
-        gene.gene_id, domains_key, entities_key,
-        round(gene.epigenetics.decay_score, 2),  # Round for cache stability
+        doc.gene_id, domains_key, entities_key,
+        round(doc.epigenetics.decay_score, 2),  # Round for cache stability
         peak_width,
     )
     return list(t)
@@ -500,50 +500,50 @@ def resonance_rank(
     if use_flux:
         weights = build_weight_vector(query, synonym_map=synonym_map, peak_width=peak_width)
 
-    scored: List[Tuple[float, Gene]] = []
-    for gene in candidates:
-        g_spec = cached_doc_spectrum(gene, peak_width=peak_width)
+    scored: List[Tuple[float, Document]] = []
+    for doc in candidates:
+        g_spec = cached_doc_spectrum(doc, peak_width=peak_width)
         if weights:
             score = flux_score_dispatch(q_spec, g_spec, weights, distance_metric)
         else:
             score = resonance_score(q_spec, g_spec)
         if score > 0.05:  # Noise floor
-            scored.append((score, gene))
+            scored.append((score, doc))
 
-    # Lost-in-the-middle guard (same as ribosome.re_rank)
+    # Lost-in-the-middle guard (same as Compressor.rerank)
     if len(scored) < len(candidates) * 0.5:
-        scored_ids = {g.gene_id for _, g in scored}
-        for gene in candidates:
-            if gene.gene_id not in scored_ids and len(scored) < k:
-                scored.append((0.1, gene))  # Default score for padded documents
+        scored_ids = {d.gene_id for _, d in scored}
+        for doc in candidates:
+            if doc.gene_id not in scored_ids and len(scored) < k:
+                scored.append((0.1, doc))  # Default score for padded documents
 
     scored.sort(key=lambda x: x[0], reverse=True)
-    return [g for _, g in scored[:k]]
+    return [d for _, d in scored[:k]]
 
 
 # ── Section 3: Interference Splice ─────────────────────────────────
 
 def interference_trim(
     query: str,
-    genes: List[Gene],
+    docs: List[Document],
     splice_aggressiveness: float = 0.3,
     synonym_map: Optional[Dict[str, List[str]]] = None,
     peak_width: float = 3.0,
     min_codons_kept: int = 2,
 ) -> Dict[str, str]:
     """
-    Splice documents using frequency interference instead of an LLM.
+    Trim documents using frequency interference instead of an LLM.
 
     For each document, for each fragment meaning, compute resonance between
     the fragment's mini-spectrum and the query spectrum. Fragments that
     constructively interfere (above threshold) survive as exons.
-    Those below threshold are spliced as introns.
+    Those below threshold are dropped.
 
-    Preserves Fix 2 (empty splice guard) and Fix 4 (complement fallback).
+    Preserves Fix 2 (empty trim guard) and Fix 4 (complement fallback).
 
-    Returns {gene_id: spliced_text} — same format as Ribosome.splice().
+    Returns {doc_id: trimmed_text} -- same format as Compressor.trim().
     """
-    if not genes:
+    if not docs:
         return {}
 
     threshold = splice_aggressiveness * 0.7
@@ -551,37 +551,37 @@ def interference_trim(
 
     result: Dict[str, str] = {}
 
-    for gene in genes:
-        if not gene.codons:
-            result[gene.gene_id] = gene.complement or gene.content[:500]
+    for doc in docs:
+        if not doc.codons:
+            result[doc.gene_id] = doc.complement or doc.content[:500]
             continue
 
         # Score each fragment against the query
         kept: List[str] = []
-        for codon_meaning in gene.codons:
+        for codon_meaning in doc.codons:
             codon_spec = build_spectrum([codon_meaning], peak_width=peak_width)
             score = resonance_score(q_spec, codon_spec)
             if score >= threshold:
                 kept.append(codon_meaning)
 
-        # Fix 2: empty splice guard
-        if not kept and gene.codons:
-            kept = gene.codons[:min_codons_kept]
+        # Fix 2: empty trim guard
+        if not kept and doc.codons:
+            kept = doc.codons[:min_codons_kept]
             log.info(
-                "Empty cymatics splice for gene %s, keeping first %d codons",
-                gene.gene_id, len(kept),
+                "Empty cymatics trim for doc %s, keeping first %d fragments",
+                doc.gene_id, len(kept),
             )
 
         if kept:
-            result[gene.gene_id] = " | ".join(kept)
+            result[doc.gene_id] = " | ".join(kept)
         else:
             # Total miss — fall back to complement (Fix 4)
-            result[gene.gene_id] = gene.complement or gene.content[:500]
+            result[doc.gene_id] = doc.complement or doc.content[:500]
 
     # Handle documents missing from result
-    for gene in genes:
-        if gene.gene_id not in result:
-            result[gene.gene_id] = gene.complement or gene.content[:500]
+    for doc in docs:
+        if doc.gene_id not in result:
+            result[doc.gene_id] = doc.complement or doc.content[:500]
 
     return result
 
@@ -592,7 +592,7 @@ interference_splice = interference_trim
 
 # ── Section 4: Harmonic Co-activation ──────────────────────────────
 
-def harmonic_weight(gene_a: Gene, gene_b: Gene, peak_width: float = 3.0) -> float:
+def harmonic_weight(doc_a: Document, doc_b: Document, peak_width: float = 3.0) -> float:
     """
     Compute harmonic coupling strength between two documents.
 
@@ -600,30 +600,31 @@ def harmonic_weight(gene_a: Gene, gene_b: Gene, peak_width: float = 3.0) -> floa
     High weight = spectrally similar (same resonant frequencies).
     Low weight = co-occurred but spectrally dissimilar.
     """
-    spec_a = cached_doc_spectrum(gene_a, peak_width=peak_width)
-    spec_b = cached_doc_spectrum(gene_b, peak_width=peak_width)
+    spec_a = cached_doc_spectrum(doc_a, peak_width=peak_width)
+    spec_b = cached_doc_spectrum(doc_b, peak_width=peak_width)
     return resonance_score(spec_a, spec_b)
 
 
 def compute_harmonic_weights(
-    genes: List[Gene],
+    docs: List[Document],
     peak_width: float = 3.0,
 ) -> List[Tuple[str, str, float]]:
     """
     Compute pairwise harmonic weights for a set of retrieved documents.
 
-    Returns list of (gene_id_a, gene_id_b, weight) tuples.
+    Returns list of (doc_id_a, doc_id_b, weight) tuples. (The field on
+    Document is still ``gene_id`` — SQL contract.)
     Only returns pairs where weight > 0.1 (above noise floor).
     """
-    if len(genes) < 2:
+    if len(docs) < 2:
         return []
 
     weights: List[Tuple[str, str, float]] = []
-    for i, ga in enumerate(genes):
-        for gb in genes[i + 1:]:
-            w = harmonic_weight(ga, gb, peak_width=peak_width)
+    for i, da in enumerate(docs):
+        for db in docs[i + 1:]:
+            w = harmonic_weight(da, db, peak_width=peak_width)
             if w > 0.1:
-                weights.append((ga.gene_id, gb.gene_id, w))
+                weights.append((da.gene_id, db.gene_id, w))
     return weights
 
 
