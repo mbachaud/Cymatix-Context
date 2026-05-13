@@ -107,10 +107,11 @@ def dense_genome():
         dense_embedding_dim=1024,
         dense_pool_size=500,
     )
-    _orig_upsert = g.upsert_gene
+    _orig_upsert = g.upsert_doc
     def _ungated(gene, apply_gate=False):
         return _orig_upsert(gene, apply_gate=apply_gate)
-    g.upsert_gene = _ungated
+    g.upsert_doc = _ungated  # canonical (R3 Stage C)
+    g.upsert_gene = _ungated  # legacy alias
     yield g
     g.close()
 
@@ -195,17 +196,19 @@ def test_query_genes_ann_pool_size_independent_of_max_genes(dense_genome):
         result = original_lex(domains, entities, **kw)
         lex_pool_sizes.append(len(result))
         return result
-    g.query_genes = lex_spy
+    g.query_docs = lex_spy   # canonical (R3 Stage C); internal code calls this
+    g.query_genes = lex_spy  # legacy alias
 
-    original_dense = g.query_genes_dense_recall
+    original_dense = g.query_docs_dense_recall
     dense_pool_sizes: list[int] = []
     def dense_spy(*a, **kw):
         result = original_dense(*a, **kw)
         dense_pool_sizes.append(len(result))
         return result
-    g.query_genes_dense_recall = dense_spy
+    g.query_docs_dense_recall = dense_spy   # canonical (R3 Stage C)
+    g.query_genes_dense_recall = dense_spy  # legacy alias
 
-    out = g.query_genes_ann(
+    out = g.query_docs_ann(
         "alpha query",
         domains=["alpha"], entities=[],
         max_genes=12,

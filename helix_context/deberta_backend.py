@@ -281,10 +281,10 @@ class DeBERTaRibosome:
         """Delegate to Ollama compressor (needs generation)."""
         if self._ollama is None:
             raise RuntimeError("DeBERTa ribosome requires an Ollama fallback for pack()")
-        return self._ollama.pack(content, content_type)
+        return self._ollama.encode(content, content_type)
 
     def replicate(self, query: str, response: str) -> Gene:
         """Delegate to Ollama compressor (needs generation)."""
         if self._ollama is None:
             raise RuntimeError("DeBERTa ribosome requires an Ollama fallback for replicate()")
-        return self._ollama.replicate(query, response)
+        return self._ollama.persist(query, response)

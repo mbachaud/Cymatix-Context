@@ -512,7 +512,7 @@ def _compute_plr_confidence(
         if last_scores:
             top_gene_id = max(last_scores, key=last_scores.get)
         if top_gene_id:
-            gene = helix.genome.get_gene(top_gene_id)
+            gene = helix.genome.get_doc(top_gene_id)
             if gene is not None and gene.embedding and q_sema is not None:
                 # inline cosine to avoid extra imports
                 a, b = q_sema, gene.embedding
@@ -1499,7 +1499,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
                 if codec is not None:
                     query_sema_vec = codec.encode(query)
                 if top_gene:
-                    gene = helix.genome.get_gene(top_gene)
+                    gene = helix.genome.get_doc(top_gene)
                     if gene is not None and gene.embedding:
                         top_candidate_sema_vec = gene.embedding
             except Exception:
@@ -1783,7 +1783,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
                 session_context=session_context,
                 expand_query=expand_query,
             )
-            candidates = helix._express(
+            candidates = helix._retrieve(
                 domains,
                 entities,
                 eval_budget,
@@ -1951,7 +1951,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
             genome = helix.genome
             codec = getattr(helix, "_sema_codec", None)
 
-            from .cymatics import query_spectrum, cached_gene_spectrum, resonance_score
+            from .cymatics import query_spectrum, cached_doc_spectrum, resonance_score
             q_spec = query_spectrum(query)
             q_sema = codec.encode(query) if codec is not None else None
 
@@ -1974,11 +1974,11 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
                 top = scored[:k]
 
                 for sim, gid in top:
-                    g = genome.get_gene(gid)
+                    g = genome.get_doc(gid)
                     if g is None:
                         continue
                     try:
-                        g_spec = cached_gene_spectrum(g)
+                        g_spec = cached_doc_spectrum(g)
                         cym_sim = resonance_score(q_spec, g_spec)
                     except Exception:
                         cym_sim = 0.0
@@ -2059,7 +2059,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
         did? what were its tags?"
         """
         try:
-            gene = helix.genome.get_gene(gene_id)
+            gene = helix.genome.get_doc(gene_id)
         except Exception as exc:
             log.warning("/genes/%s failed: %s", gene_id, exc, exc_info=True)
             return JSONResponse(
@@ -2122,7 +2122,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
 
             neighbors: list = []
             for sim, gid in top:
-                g = helix.genome.get_gene(gid)
+                g = helix.genome.get_doc(gid)
                 if g is None:
                     continue
                 path = None
@@ -2206,7 +2206,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
                 session_context=None,
                 expand_query=expand_query,
             )
-            candidates = helix._express(
+            candidates = helix._retrieve(
                 domains=domains,
                 entities=entities,
                 max_genes=eval_budget,

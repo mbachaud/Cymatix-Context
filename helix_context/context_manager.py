@@ -706,7 +706,7 @@ class HelixContextManager:
                     sequence_index=strand.sequence_index,
                 )
             else:
-                gene = self.ribosome.pack(strand.content, content_type=content_type)
+                gene = self.ribosome.encode(strand.content, content_type=content_type)
             # Preserve sequence index from chunking
             gene.promoter.sequence_index = strand.sequence_index
             if metadata:
@@ -741,13 +741,13 @@ class HelixContextManager:
             if sema_vectors is not None and i < len(sema_vectors):
                 gene.embedding = sema_vectors[i]
 
-            # Density gate now lives in genome.upsert_gene() itself so that
+            # Density gate now lives in genome.upsert_doc() itself so that
             # bulk ingest scripts (ingest_steam.py, ingest_all.py, etc.)
             # that call upsert_gene directly also respect it. The gate
             # reads the final lifecycle tier back onto the document object
             # and sets compression_tier accordingly during the INSERT.
             # See helix_context/genome.py:apply_density_gate for the logic.
-            gid = self.genome.upsert_gene(gene)
+            gid = self.genome.upsert_doc(gene)
             gene_ids.append(gid)
 
             # If the gate demoted the document to heterochromatin, the content
@@ -765,7 +765,7 @@ class HelixContextManager:
         # See docs/FUTURE/LAYERED_FINGERPRINTS.md.
         if len(gene_ids) >= 2 and source_path:
             try:
-                parent_gid = self._upsert_parent_gene(
+                parent_gid = self._upsert_parent_doc(
                     source_path=source_path,
                     child_gene_ids=gene_ids,
                     original_content=content,
@@ -782,7 +782,7 @@ class HelixContextManager:
         return gene_ids
 
     @staticmethod
-    def _make_parent_gene_id(source_path: str) -> str:
+    def _make_parent_doc_id(source_path: str) -> str:
         """Deterministic parent gene_id from source path.
 
         Uses a distinct hash input (suffix "::parent") so parent IDs
@@ -792,7 +792,7 @@ class HelixContextManager:
             (source_path + "::parent").encode("utf-8")
         ).hexdigest()[:16]
 
-    def _upsert_parent_gene(
+    def _upsert_parent_doc(
         self,
         source_path: str,
         child_gene_ids: List[str],
@@ -810,7 +810,7 @@ class HelixContextManager:
 
         Also inserts CHUNK_OF edges from each child to the parent.
         """
-        parent_gid = self._make_parent_gene_id(source_path)
+        parent_gid = self._make_parent_doc_id(source_path)
         n_chunks = len(child_gene_ids)
         total_bytes = len(original_content)
 
@@ -833,7 +833,7 @@ class HelixContextManager:
         apply_provenance(parent, source_path, content_type="text")
         # apply_gate=False: parents are metadata aggregators, not content —
         # they should not be density-gated into heterochromatin.
-        self.genome.upsert_gene(parent, apply_gate=False)
+        self.genome.upsert_doc(parent, apply_gate=False)
 
         edges = [
             (child_gid, parent_gid, int(StructuralRelation.CHUNK_OF), 1.0)
@@ -1084,7 +1084,7 @@ class HelixContextManager:
         # Step 2: Retrieve (knowledge store query + pending buffer + optional cold tier)
         with _stage_timer("express"):
             if len(_sub_queries) == 1:
-                candidates = self._express(
+                candidates = self._retrieve(
                     domains, entities, max_genes,
                     query_text=_sub_queries[0], include_cold=include_cold,
                     party_id=party_id, read_only=read_only,
@@ -1094,7 +1094,7 @@ class HelixContextManager:
 
                 def _run_sub(sq: str):
                     eq, d, e = self._prepare_query_signals(sq, session_context)
-                    genes = self._express(
+                    genes = self._retrieve(
                         d, e, max_genes,
                         query_text=sq, include_cold=include_cold,
                         party_id=party_id, read_only=read_only,
@@ -1786,7 +1786,7 @@ class HelixContextManager:
             with self._pending_lock:
                 self._pending.append(gene)
 
-            gid = self.genome.upsert_gene(gene)
+            gid = self.genome.upsert_doc(gene)
 
             # Remove from pending now that it's committed
             with self._pending_lock:
@@ -1877,7 +1877,7 @@ class HelixContextManager:
         gene_ids = []
         for fact in facts:
             try:
-                gene = self.ribosome.pack(fact, content_type="text")
+                gene = self.ribosome.encode(fact, content_type="text")
                 gene.source_id = "__session__"
                 # Add session_memory and chat_context to domains
                 existing_domains = set(gene.promoter.domains)
@@ -1891,7 +1891,7 @@ class HelixContextManager:
                     except Exception:
                         pass
 
-                gid = self.genome.upsert_gene(gene)
+                gid = self.genome.upsert_doc(gene)
                 gene_ids.append(gid)
             except Exception:
                 log.warning("Failed to create gene from fact: %s", fact[:100], exc_info=True)
@@ -2103,7 +2103,7 @@ class HelixContextManager:
 
     # -- Internal: Step 2 (retrieve) ------------------------------------
 
-    def _express(
+    def _retrieve(
         self,
         domains: List[str],
         entities: List[str],
@@ -2148,7 +2148,7 @@ class HelixContextManager:
             if self.genome._dense_embedding_enabled and query_text:
                 # Step 4: ANN threshold path — uses BGE-M3 dense vectors to
                 # dynamically gate the candidate count by similarity threshold.
-                candidates = self.genome.query_genes_ann(
+                candidates = self.genome.query_docs_ann(
                     query=query_text,
                     domains=domains,
                     entities=entities,
@@ -2160,7 +2160,7 @@ class HelixContextManager:
                     read_only=read_only,
                 )
             else:
-                candidates = self.genome.query_genes(
+                candidates = self.genome.query_docs(
                     domains,
                     entities,
                     max_genes=max_genes,
@@ -2305,7 +2305,7 @@ class HelixContextManager:
         if use_cymatics and self._use_cymatics and len(candidates) > 1:
             try:
                 from .cymatics import (
-                    query_spectrum, cached_gene_spectrum,
+                    query_spectrum, cached_doc_spectrum,
                     flux_score_dispatch, build_weight_vector,
                 )
                 metric = self.config.cymatics.distance_metric
@@ -2319,7 +2319,7 @@ class HelixContextManager:
                 )
                 scores = self.genome.last_query_scores or {}
                 for gene in candidates:
-                    g_spec = cached_gene_spectrum(gene, peak_width=self._cymatics_peak_width)
+                    g_spec = cached_doc_spectrum(gene, peak_width=self._cymatics_peak_width)
                     bonus = flux_score_dispatch(q_spec, g_spec, weights, metric) * 0.5
                     if bonus:
                         refiner_contrib.setdefault(gene.gene_id, {})["cymatics"] = bonus
@@ -2333,10 +2333,10 @@ class HelixContextManager:
             if (
                 allow_rerank
                 and self.config.ingestion.rerank_enabled
-                and hasattr(self.ribosome, "re_rank")
+                and hasattr(self.ribosome, "rerank")
             ):
                 try:
-                    candidates = self.ribosome.re_rank(query, candidates, k=max_genes)
+                    candidates = self.ribosome.rerank(query, candidates, k=max_genes)
                 except Exception:
                     log.warning("Re-rank failed, falling back to retrieval order", exc_info=True)
                     candidates = candidates[:max_genes]
@@ -3059,3 +3059,14 @@ class HelixContextManager:
 
     def close(self) -> None:
         self.genome.close()
+
+    # ── Legacy method aliases (R3 Stage C; see docs/ROSETTA.md) ─────
+    # Each alias points to the *same function object* as the canonical
+    # method. External callers that still call the legacy names (tests
+    # that monkey-patch _express, scripts that call manager._express)
+    # keep working unchanged at the *class* level. Tests that
+    # monkey-patch via instance attribute assignment must patch the
+    # canonical name (or both — see tests/conftest.py for the pattern).
+    _express              = _retrieve
+    _make_parent_gene_id  = _make_parent_doc_id
+    _upsert_parent_gene   = _upsert_parent_doc

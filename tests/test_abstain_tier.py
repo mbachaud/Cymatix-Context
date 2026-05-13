@@ -112,6 +112,9 @@ def _stub_express(manager, *, candidates, scores):
         # so this stub stays robust if the real signature evolves.
         manager.genome.last_query_scores = dict(scores)
         return list(candidates)
+    # Patch canonical and legacy names both (R3 Stage C);
+    # internal callers use `_retrieve`, but `_express` is still a valid alias.
+    manager._retrieve = fake_express
     manager._express = fake_express
 
     def fake_refiners(query, candidates, max_genes, **_kwargs):

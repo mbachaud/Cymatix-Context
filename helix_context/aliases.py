@@ -1,66 +1,76 @@
-"""Canonical software-vocabulary aliases for the legacy biology lexicon.
+"""Canonical software-vocabulary surface for the helix knowledge store.
 
-Helix's original vocabulary borrowed from molecular biology (gene, genome,
-ribosome, chromatin, etc). This module exposes the same underlying
-classes and modules under standard software names so new code can
-sidestep the cognitive tax of holding two mental models in parallel.
+**Post-R3:** the canonical names are now the *real* class definitions.
+``Document``, ``KnowledgeStore``, ``Compressor``, ``DocumentTags``,
+``DocumentSignals``, ``LifecycleTier``, and ``DocumentAttribution``
+live in their home modules as the primary class identities. The
+legacy biology names (``Gene``, ``Genome``, ``Ribosome``,
+``PromoterTags``, ``EpigeneticMarkers``, ``ChromatinState``,
+``GeneAttribution``) remain valid as one-line aliases declared
+immediately after each class definition.
 
-All aliases preserve identity — ``Document is Gene`` is True; importing
-``DocumentTags`` and ``PromoterTags`` from the two surfaces returns the
-same class object. There is no subclassing, no wrapping, and no runtime
-cost to using the canonical names.
+This module exists for two reasons:
 
-The legacy names remain valid for back-compat: existing imports, docs,
-papers, handoffs, and git messages stay readable without modification.
-The full bidirectional mapping lives in ``docs/ROSETTA.md``.
+1. **A single import point** — ``from helix_context.aliases import
+   Document, KnowledgeStore, Compressor, ...`` works without having
+   to know which module each class lives in.
+2. **Provenance documentation** — the ``_RENAME_LOG`` table at the
+   bottom records every pre-R3 name and where the alias survives.
 
-Usage:
+Identity holds in both directions:
 
-    from helix_context.aliases import (
-        Document, KnowledgeStore, Compressor,
-        DocumentTags, DocumentSignals, LifecycleTier,
-        DocumentAttribution,
-    )
+    from helix_context.schemas import Gene
+    from helix_context.aliases import Document
+    assert Document is Gene
+    assert Gene is Document
+    assert Document.__name__ == "Document"   # post-R3
 
-Lexicon: see ``docs/ROSETTA.md`` for the legacy biology terms and their
-canonical software equivalents used elsewhere in the codebase.
+There is no subclassing, no wrapping, and no runtime cost to using
+either name. Pydantic field names (``gene_id``, ``promoter``,
+``epigenetics``, ``chromatin``, ``codons``) and SQL table/column
+contracts are unchanged.
+
+Lexicon: see ``docs/ROSETTA.md`` for the full bidirectional mapping
+and the R1/R2/R3 status table.
 """
 
 from __future__ import annotations
 
-# ── Schemas (pydantic classes — identity-preserving aliases) ─────────────
+# ── Schemas (canonical pydantic classes — Document is the real def) ─────
 from helix_context.schemas import (
-    ChromatinState as LifecycleTier,
-    EpigeneticMarkers as DocumentSignals,
-    Gene as Document,
-    GeneAttribution as DocumentAttribution,
-    PromoterTags as DocumentTags,
+    Document,
+    DocumentAttribution,
+    DocumentSignals,
+    DocumentTags,
+    LifecycleTier,
 )
 
-# ── Core modules (module-level class aliases) ────────────────────────────
-from helix_context.genome import Genome as KnowledgeStore
-from helix_context.ribosome import Ribosome as Compressor
+# ── Core modules (canonical class names) ────────────────────────────────
+from helix_context.genome import KnowledgeStore
+from helix_context.ribosome import Compressor
 
 
 __all__ = [
-    "Compressor",        # was Ribosome
-    "Document",          # was Gene
-    "DocumentAttribution",  # was GeneAttribution
-    "DocumentSignals",   # was EpigeneticMarkers
-    "DocumentTags",      # was PromoterTags
-    "KnowledgeStore",    # was Genome
-    "LifecycleTier",     # was ChromatinState
+    "Compressor",          # canonical for Ribosome
+    "Document",            # canonical for Gene
+    "DocumentAttribution", # canonical for GeneAttribution
+    "DocumentSignals",     # canonical for EpigeneticMarkers
+    "DocumentTags",        # canonical for PromoterTags
+    "KnowledgeStore",      # canonical for Genome
+    "LifecycleTier",       # canonical for ChromatinState
 ]
 
 
-# Per-alias provenance comments, useful for code-search tools that surface
+# Per-alias provenance, useful for code-search tools that surface
 # rename history. Read once at import; not used at runtime.
+#
+# Format: {canonical_name: ("legacy_name", "home_module")}
 _RENAME_LOG = {
-    "Document": "renamed from Gene (helix_context.schemas)",
-    "DocumentAttribution": "renamed from GeneAttribution (helix_context.schemas)",
-    "DocumentSignals": "renamed from EpigeneticMarkers (helix_context.schemas)",
-    "DocumentTags": "renamed from PromoterTags (helix_context.schemas)",
-    "KnowledgeStore": "renamed from Genome (helix_context.genome)",
-    "LifecycleTier": "renamed from ChromatinState (helix_context.schemas)",
-    "Compressor": "renamed from Ribosome (helix_context.ribosome)",
+    "Document":            ("Gene",              "helix_context.schemas"),
+    "DocumentAttribution": ("GeneAttribution",   "helix_context.schemas"),
+    "DocumentSignals":     ("EpigeneticMarkers", "helix_context.schemas"),
+    "DocumentTags":        ("PromoterTags",      "helix_context.schemas"),
+    "LifecycleTier":       ("ChromatinState",    "helix_context.schemas"),
+    "KnowledgeStore":      ("Genome",            "helix_context.genome"),
+    "Compressor":          ("Ribosome",          "helix_context.ribosome"),
 }

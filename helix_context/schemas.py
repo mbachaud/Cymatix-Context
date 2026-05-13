@@ -35,11 +35,16 @@ class StructuralRelation(IntEnum):
     CHUNK_OF = 100          # gene_id_a is a chunk of gene_id_b (parent file document)
 
 
-class ChromatinState(IntEnum):
+class LifecycleTier(IntEnum):
     """Document accessibility state — mirrors biological chromatin compaction (legacy term)."""
     OPEN = 0            # Recently accessed, hot
-    EUCHROMATIN = 1     # Accessible, normal state
-    HETEROCHROMATIN = 2 # Compacted, stale — excluded from queries
+    EUCHROMATIN = 1     # Accessible, normal state — kept for SQL/string contract
+    HETEROCHROMATIN = 2 # Compacted, stale — excluded from queries; SQL/string contract
+
+
+# R3 legacy alias — pre-R3 callers still import ChromatinState. Identity
+# preserved: ChromatinState is LifecycleTier. See docs/ROSETTA.md.
+ChromatinState = LifecycleTier
 
 
 class IntentClass(str, Enum):
@@ -58,7 +63,7 @@ class IntentClass(str, Enum):
     RELATIONSHIP = "relationship"
 
 
-class PromoterTags(BaseModel):
+class DocumentTags(BaseModel):
     """Retrieval metadata — how the knowledge store finds this document."""
     domains: List[str] = Field(default_factory=list)
     entities: List[str] = Field(default_factory=list)
@@ -69,6 +74,10 @@ class PromoterTags(BaseModel):
     metadata: dict = Field(default_factory=dict)
 
 
+# R3 legacy alias — pre-R3 callers still import PromoterTags. See docs/ROSETTA.md.
+PromoterTags = DocumentTags
+
+
 class TypedCoActivation(BaseModel):
     """A co-activation link with a typed logical relation."""
     gene_id: str
@@ -76,7 +85,7 @@ class TypedCoActivation(BaseModel):
     confidence: float = 0.0
 
 
-class EpigeneticMarkers(BaseModel):
+class DocumentSignals(BaseModel):
     """Usage and association metadata — how the document evolves over time."""
     created_at: float = Field(default_factory=lambda: time.time())
     last_accessed: float = Field(default_factory=lambda: time.time())
@@ -130,7 +139,11 @@ class EpigeneticMarkers(BaseModel):
         return n / window_seconds
 
 
-class Gene(BaseModel):
+# R3 legacy alias — pre-R3 callers still import EpigeneticMarkers. See docs/ROSETTA.md.
+EpigeneticMarkers = DocumentSignals
+
+
+class Document(BaseModel):
     """The fundamental storage unit in the knowledge store."""
     gene_id: str
     content: str
@@ -160,6 +173,13 @@ class Gene(BaseModel):
     last_verified_at: Optional[float] = None
     version: Optional[int] = None
     supersedes: Optional[str] = None
+
+
+# R3 legacy alias — pre-R3 callers still import Gene. The Pydantic field
+# names (gene_id, codons, promoter, epigenetics, chromatin, etc) stay as
+# the SQL contract; only the class identity moved to Document. See
+# docs/ROSETTA.md.
+Gene = Document
 
 
 class ContextHealth(BaseModel):
@@ -377,12 +397,16 @@ class ParticipantInfo(BaseModel):
     model_id: Optional[str] = None
 
 
-class GeneAttribution(BaseModel):
+class DocumentAttribution(BaseModel):
     """Attribution row linking a document to the party/participant that authored it."""
     gene_id: str
     party_id: str
     participant_id: Optional[str] = None
     authored_at: float
+
+
+# R3 legacy alias — pre-R3 callers still import GeneAttribution. See docs/ROSETTA.md.
+GeneAttribution = DocumentAttribution
 
 
 # ── HITL event logging (see ~/.helix/shared/handoffs/2026-04-11_hitl_observation.md) ──

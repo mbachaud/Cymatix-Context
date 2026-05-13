@@ -96,7 +96,7 @@ def fetch_sideways_neighbors(
     Returns an empty list if the document is missing from the knowledge store.
     """
     try:
-        g = genome.get_gene(gene_id)
+        g = genome.get_doc(gene_id)
     except Exception:
         log.debug("get_gene(%s) failed", gene_id, exc_info=True)
         return []
@@ -198,7 +198,7 @@ def expand_neighbors(
                 # log check errored — consumer can still decide to skip.
         # Resolve the document row so we can emit summary + tags.
         try:
-            gene = genome.get_gene(gid)
+            gene = genome.get_doc(gid)
         except Exception:
             log.debug("get_gene(%s) failed during expand", gid, exc_info=True)
             gene = None

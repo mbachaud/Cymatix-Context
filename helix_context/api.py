@@ -369,7 +369,7 @@ class HelixSession:
         fragments, lifecycle tier, embedding) or ``None`` when the
         gene_id is unknown. Read-only; never mutates the store.
         """
-        return self._manager.genome.get_gene(gene_id)
+        return self._manager.genome.get_doc(gene_id)
 
     def packet(
         self,
@@ -465,7 +465,7 @@ class HelixSession:
 
         out: List[Dict[str, Any]] = []
         for sim, gid in scored[:k]:
-            g = self._manager.genome.get_gene(gid)
+            g = self._manager.genome.get_doc(gid)
             if g is None:
                 continue
             path = None
