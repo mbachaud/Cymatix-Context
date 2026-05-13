@@ -303,7 +303,7 @@ def main():
     parser.add_argument("--no-ingest", action="store_true",
                         help="Skip ingestion (use existing genome)")
     parser.add_argument("--model", default=os.environ.get("HELIX_MODEL", "qwen3:4b"))
-    parser.add_argument("--output", default="benchmarks/babilong_results.json")
+    parser.add_argument("--output", default="benchmarks/results/babilong_results.json")
     args = parser.parse_args()
 
     client = httpx.Client(timeout=300)

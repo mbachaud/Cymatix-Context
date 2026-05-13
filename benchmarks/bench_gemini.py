@@ -340,7 +340,7 @@ def main() -> None:
         "needles": needle_summaries,
     }
 
-    out_path = Path(__file__).parent / "gemini_results.json"
+    out_path = Path(__file__).parent / "results" / "gemini_results.json"
     out_path.write_text(json.dumps(output, indent=2))
     print(f"\nResults → {out_path}")
 

@@ -61,7 +61,7 @@ GENOME_DB = os.environ.get("GENOME_DB", "F:/Projects/helix-context/genome-bench-
 MODEL = os.environ.get("HELIX_MODEL", "qwen3:4b")
 N_TOTAL = int(os.environ.get("N", "1000"))
 SEED = int(os.environ.get("SEED", "42"))
-OUTPUT_PATH = os.environ.get("OUTPUT", "F:/Projects/helix-context/benchmarks/needle_1000_results.json")
+OUTPUT_PATH = os.environ.get("OUTPUT", "F:/Projects/helix-context/benchmarks/results/needle_1000_results.json")
 # Opt-in to legacy v1 behavior (no-op fixes) for reproducing old runs.
 LEGACY_HARVEST = os.environ.get("BENCH_LEGACY_HARVEST") == "1"
 

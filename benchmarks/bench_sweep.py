@@ -279,7 +279,7 @@ def main():
         "expression_budget": 15095,
         "models": all_results,
     }
-    out_path = os.path.join(os.path.dirname(__file__), "sweep_results.json")
+    out_path = os.path.join(os.path.dirname(__file__), "results", "sweep_results.json")
     with open(out_path, "w") as f:
         json.dump(output, f, indent=2)
     print(f"\nResults saved to {out_path}")

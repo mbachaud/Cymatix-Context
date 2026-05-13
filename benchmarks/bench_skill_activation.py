@@ -41,7 +41,7 @@ import httpx
 HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
 OUTPUT_PATH = os.environ.get(
     "OUTPUT",
-    str(Path(__file__).resolve().parent / "skill_activation_results.json"),
+    str(Path(__file__).resolve().parent / "results" / "skill_activation_results.json"),
 )
 REQUEST_TIMEOUT_S = 30.0
 

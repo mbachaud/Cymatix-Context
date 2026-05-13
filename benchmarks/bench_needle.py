@@ -414,7 +414,7 @@ def main():
         },
     }
 
-    out_path = os.path.join(os.path.dirname(__file__), "needle_results.json")
+    out_path = os.path.join(os.path.dirname(__file__), "results", "needle_results.json")
     with open(out_path, "w") as f:
         json.dump(output, f, indent=2)
     print(f"\nResults saved to {out_path}")
