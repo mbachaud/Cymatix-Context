@@ -194,13 +194,13 @@ class ShardRouter:
             # across shards if the same content was extracted twice
             # (legitimate in copy-extract phase). Keep the highest-score
             # copy.
-            for gene in genes:
-                score = shard.last_query_scores.get(gene.gene_id, 0.0)
-                if gene.gene_id not in merged or score > merged_scores.get(gene.gene_id, 0.0):
-                    merged[gene.gene_id] = gene
-                    merged_scores[gene.gene_id] = score
-                    merged_tier[gene.gene_id] = dict(
-                        shard.last_tier_contributions.get(gene.gene_id, {})
+            for doc in genes:
+                score = shard.last_query_scores.get(doc.gene_id, 0.0)
+                if doc.gene_id not in merged or score > merged_scores.get(doc.gene_id, 0.0):
+                    merged[doc.gene_id] = doc
+                    merged_scores[doc.gene_id] = score
+                    merged_tier[doc.gene_id] = dict(
+                        shard.last_tier_contributions.get(doc.gene_id, {})
                     )
 
         # Rank merged candidates by score, take top-K.

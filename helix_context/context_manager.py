@@ -376,10 +376,10 @@ def _merge_subquery_candidates(
     seen: dict = {}
     hit_counts: Counter = Counter()
     for sub_list in sub_results:
-        for gene in sub_list:
-            hit_counts[gene.gene_id] += 1
-            if gene.gene_id not in seen:
-                seen[gene.gene_id] = gene
+        for doc in sub_list:
+            hit_counts[doc.gene_id] += 1
+            if doc.gene_id not in seen:
+                seen[doc.gene_id] = doc
     return sorted(
         seen.values(),
         key=lambda g: (hit_counts[g.gene_id], base_scores.get(g.gene_id, 0.0)),
@@ -1626,8 +1626,8 @@ class HelixContextManager:
         # not gated — TCM session is per-process state, not knowledge store state).
         if self._tcm_session is not None:
             try:
-                for gene in candidates:
-                    self._tcm_session.update_from_gene(gene)
+                for doc in candidates:
+                    self._tcm_session.update_from_gene(doc)
             except Exception:
                 pass  # TCM is diagnostic, not critical
 
@@ -2175,13 +2175,13 @@ class HelixContextManager:
 
         # Check pending buffer for recently persisted documents not yet committed
         with self._pending_lock:
-            for gene in self._pending:
-                gene_domains = set(d.lower() for d in gene.promoter.domains)
-                gene_entities = set(e.lower() for e in gene.promoter.entities)
+            for doc in self._pending:
+                doc_domains = set(d.lower() for d in doc.promoter.domains)
+                doc_entities = set(e.lower() for e in doc.promoter.entities)
                 query_terms = set(d.lower() for d in domains + entities)
 
-                if gene_domains & query_terms or gene_entities & query_terms:
-                    candidates.append(gene)
+                if doc_domains & query_terms or doc_entities & query_terms:
+                    candidates.append(doc)
 
         # Dedupe
         seen: set[str] = set()
@@ -2318,12 +2318,12 @@ class HelixContextManager:
                     peak_width=self._cymatics_peak_width,
                 )
                 scores = self.genome.last_query_scores or {}
-                for gene in candidates:
-                    g_spec = cached_doc_spectrum(gene, peak_width=self._cymatics_peak_width)
+                for doc in candidates:
+                    g_spec = cached_doc_spectrum(doc, peak_width=self._cymatics_peak_width)
                     bonus = flux_score_dispatch(q_spec, g_spec, weights, metric) * 0.5
                     if bonus:
-                        refiner_contrib.setdefault(gene.gene_id, {})["cymatics"] = bonus
-                    scores[gene.gene_id] = scores.get(gene.gene_id, 0) + bonus
+                        refiner_contrib.setdefault(doc.gene_id, {})["cymatics"] = bonus
+                    scores[doc.gene_id] = scores.get(doc.gene_id, 0) + bonus
                 self.genome.last_query_scores = scores
                 candidates.sort(key=lambda g: scores.get(g.gene_id, 0), reverse=True)
             except Exception:
@@ -2366,11 +2366,11 @@ class HelixContextManager:
                 )
                 if overtones:
                     scores = self.genome.last_query_scores or {}
-                    for gene in candidates:
-                        if gene.gene_id in overtones:
-                            bonus = overtones[gene.gene_id]
-                            refiner_contrib.setdefault(gene.gene_id, {})["harmonic_bin"] = bonus
-                            scores[gene.gene_id] = scores.get(gene.gene_id, 0) + bonus
+                    for doc in candidates:
+                        if doc.gene_id in overtones:
+                            bonus = overtones[doc.gene_id]
+                            refiner_contrib.setdefault(doc.gene_id, {})["harmonic_bin"] = bonus
+                            scores[doc.gene_id] = scores.get(doc.gene_id, 0) + bonus
                     self.genome.last_query_scores = scores
                     candidates.sort(key=lambda g: scores.get(g.gene_id, 0), reverse=True)
             except Exception:

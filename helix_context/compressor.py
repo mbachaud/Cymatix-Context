@@ -87,7 +87,14 @@ from .accel import (
 )
 from .codons import CodonEncoder
 from .exceptions import FoldingError, TranscriptionError
-from .schemas import EpigeneticMarkers, Gene, PromoterTags
+from .schemas import (
+    Document,
+    DocumentSignals,
+    DocumentTags,
+    EpigeneticMarkers,  # legacy alias retained for backward-compat surfaces
+    Gene,               # legacy alias for Document
+    PromoterTags,       # legacy alias for DocumentTags
+)
 
 log = logging.getLogger(__name__)
 
@@ -530,7 +537,7 @@ class Compressor:
 
     # ── Pack: raw text → Document ───────────────────────────────────────
 
-    def encode(self, content: str, content_type: str = "text") -> Gene:
+    def encode(self, content: str, content_type: str = "text") -> Document:
         """
         Encode raw content into a Document ready for knowledge store storage.
 
@@ -571,27 +578,27 @@ class Compressor:
             codon_meanings.append(c.get("meaning", f"chunk_{i}"))
 
         # Build Document
-        gene_id = Genome.make_gene_id(content)
-        promoter_data = parsed.get("promoter", {})
+        doc_id = Genome.make_gene_id(content)
+        tags_data = parsed.get("promoter", {})
 
-        gene = Gene(
-            gene_id=gene_id,
+        doc = Document(
+            gene_id=doc_id,
             content=content,
             complement=parsed.get("complement", content[:500]),
             codons=codon_meanings,
-            promoter=PromoterTags(
-                domains=promoter_data.get("domains", []),
-                entities=promoter_data.get("entities", []),
-                intent=promoter_data.get("intent", ""),
-                summary=promoter_data.get("summary", ""),
+            promoter=DocumentTags(
+                domains=tags_data.get("domains", []),
+                entities=tags_data.get("entities", []),
+                intent=tags_data.get("intent", ""),
+                summary=tags_data.get("summary", ""),
             ),
-            epigenetics=EpigeneticMarkers(),
+            epigenetics=DocumentSignals(),
         )
 
         # KV extraction — extract concrete facts for downstream small models
-        gene.key_values = self._extract_key_values(content)
+        doc.key_values = self._extract_key_values(content)
 
-        return gene
+        return doc
 
     # ── KV extraction: pull concrete facts from content ────────────
 
@@ -627,7 +634,7 @@ class Compressor:
 
     # ── Re-rank: score candidates against query ─────────────────────
 
-    def rerank(self, query: str, candidates: List[Gene], k: int = 5) -> List[Gene]:
+    def rerank(self, query: str, candidates: List[Document], k: int = 5) -> List[Document]:
         """
         Score candidate documents by relevance to the query.
         Uses tags summaries (not full content) to stay within token budget.
@@ -692,7 +699,7 @@ class Compressor:
     def trim(
         self,
         query: str,
-        genes: List[Gene],
+        genes: List[Document],
         min_codons_kept: int = 2,
     ) -> Dict[str, str]:
         """
@@ -774,7 +781,7 @@ class Compressor:
 
     # ── Persist: encode a query+response exchange ─────────────────
 
-    def persist(self, query: str, response: str) -> Gene:
+    def persist(self, query: str, response: str) -> Document:
         """
         Encode a conversation exchange into a Document for knowledge store storage.
         Captures intent and state changes, not just raw facts.
@@ -793,44 +800,44 @@ class Compressor:
             parsed = _parse_json(raw)
         except Exception:
             # Persistence is best-effort (background task) — don't crash
-            log.warning("Replicate failed, creating minimal gene", exc_info=True)
-            gene_id = Genome.make_gene_id(exchange)
-            return Gene(
-                gene_id=gene_id,
+            log.warning("Persist failed, creating minimal Document", exc_info=True)
+            doc_id = Genome.make_gene_id(exchange)
+            return Document(
+                gene_id=doc_id,
                 content=exchange,
                 complement=f"Q: {query[:200]} A: {response[:300]}",
                 codons=["exchange"],
-                promoter=PromoterTags(summary=query[:100]),
-                epigenetics=EpigeneticMarkers(),
+                promoter=DocumentTags(summary=query[:100]),
+                epigenetics=DocumentSignals(),
             )
 
         if not isinstance(parsed, dict):
-            gene_id = Genome.make_gene_id(exchange)
-            return Gene(
-                gene_id=gene_id,
+            doc_id = Genome.make_gene_id(exchange)
+            return Document(
+                gene_id=doc_id,
                 content=exchange,
                 complement=f"Q: {query[:200]} A: {response[:300]}",
                 codons=["exchange"],
-                promoter=PromoterTags(summary=query[:100]),
-                epigenetics=EpigeneticMarkers(),
+                promoter=DocumentTags(summary=query[:100]),
+                epigenetics=DocumentSignals(),
             )
 
-        gene_id = Genome.make_gene_id(exchange)
-        promoter_data = parsed.get("promoter", {})
+        doc_id = Genome.make_gene_id(exchange)
+        tags_data = parsed.get("promoter", {})
         codon_meanings = [c.get("meaning", "exchange") for c in parsed.get("codons", [])]
 
-        return Gene(
-            gene_id=gene_id,
+        return Document(
+            gene_id=doc_id,
             content=exchange,
             complement=parsed.get("complement", exchange[:500]),
             codons=codon_meanings or ["exchange"],
-            promoter=PromoterTags(
-                domains=promoter_data.get("domains", []),
-                entities=promoter_data.get("entities", []),
-                intent=promoter_data.get("intent", "conversation exchange"),
-                summary=promoter_data.get("summary", query[:100]),
+            promoter=DocumentTags(
+                domains=tags_data.get("domains", []),
+                entities=tags_data.get("entities", []),
+                intent=tags_data.get("intent", "conversation exchange"),
+                summary=tags_data.get("summary", query[:100]),
             ),
-            epigenetics=EpigeneticMarkers(),
+            epigenetics=DocumentSignals(),
         )
 
     # ── Legacy method aliases (R3 Stage C; see docs/ROSETTA.md) ─────
