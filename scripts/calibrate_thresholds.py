@@ -236,7 +236,7 @@ def _percentile(values: List[float], pct: float) -> float:
 
 def _classify_bench_row(query: str) -> str:
     """Re-run the rule-based classifier against the bench query."""
-    from helix_context.query_classifier import classify_query
+    from helix_context.retrieval.query_classifier import classify_query
     result = classify_query(query)
     return result.cls
 

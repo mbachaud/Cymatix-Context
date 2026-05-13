@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from helix_context.sr import sr_boost, DEFAULT_GAMMA, DEFAULT_K_STEPS
+from helix_context.retrieval.sr import sr_boost, DEFAULT_GAMMA, DEFAULT_K_STEPS
 
 
 class _FakeGenome:

@@ -24,7 +24,7 @@ from pathlib import Path
 
 import pytest
 
-from helix_context.fusion import DEFAULT_RRF_K, Fuser
+from helix_context.retrieval.fusion import DEFAULT_RRF_K, Fuser
 from helix_context.genome import Genome
 from helix_context.schemas import (
     ChromatinState, EpigeneticMarkers, Gene, PromoterTags,

@@ -37,7 +37,7 @@ from . import legibility
 from . import session_delivery as _session_delivery
 from .ribosome import DisabledBackend, LiteLLMBackend, Ribosome, OllamaBackend
 from .provenance import apply_metadata_hints, apply_provenance
-from .query_classifier import ClassifierResult, classify_query
+from .retrieval.query_classifier import ClassifierResult, classify_query
 from .schemas import (
     ChromatinState,
     ContextHealth,
@@ -1000,7 +1000,7 @@ class HelixContextManager:
         # rather than the hard-coded ClassifierResult.decoder_mode literal. The
         # `generic` column of the table is byte-identical to the legacy literals
         # (spec §7 — verified by test_generic_branch_byte_identical_to_pre_stage5_output).
-        from .query_classifier import resolve_decoder_mode as _resolve_decoder_mode
+        from .retrieval.query_classifier import resolve_decoder_mode as _resolve_decoder_mode
         effective_decoder_mode_name: Optional[str] = None
         if decoder_override and decoder_override in DECODER_MODES:
             effective_decoder_prompt = DECODER_MODES[decoder_override]
@@ -2021,7 +2021,7 @@ class HelixContextManager:
         if not getattr(getattr(self.config, "ribosome", None), "query_decomposition_enabled", False):
             # Try LLM-free template routing based on query intent heuristic
             try:
-                from .intent_router import sub_queries_for
+                from .retrieval.intent_router import sub_queries_for
                 from .tagger import CpuTagger
                 from .schemas import IntentClass
                 _tagger = CpuTagger.__new__(CpuTagger)

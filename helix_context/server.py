@@ -331,7 +331,7 @@ def _compute_know_or_miss_block(
     cold_targets: list[str] = []
     if top_gene is not None and gene_ids:
         try:
-            from .freshness import (
+            from .retrieval.freshness import (
                 check_superseded,
                 revalidate_and_mark,
             )
@@ -470,7 +470,7 @@ def _compute_plr_confidence(
     ``helix_context/fusion_plr.py`` docstring for the trade-off.
     """
     try:
-        from . import fusion_plr
+        from .retrieval import fusion_plr
     except ImportError:
         return None
     fuser = fusion_plr.get_fuser(config.plr.model_path)
@@ -2598,7 +2598,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
     ):
         """1-hop expand from `gene_id`. See helix_context/expand.py."""
         try:
-            from . import expand as _expand
+            from .retrieval import expand as _expand
             result = _expand.expand_neighbors(
                 helix.genome,
                 gene_id=gene_id,

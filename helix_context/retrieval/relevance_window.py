@@ -10,7 +10,7 @@ from __future__ import annotations
 import math
 import re
 
-from .accel import expand_query_terms, extract_query_signals
+from ..accel import expand_query_terms, extract_query_signals
 
 
 def _query_terms(query: str) -> list[str]:

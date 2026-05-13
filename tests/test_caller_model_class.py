@@ -28,7 +28,7 @@ from helix_context.config import (
     ServerConfig,
 )
 from helix_context.context_manager import HelixContextManager
-from helix_context.query_classifier import (
+from helix_context.retrieval.query_classifier import (
     DECODER_MODE_TABLE,
     resolve_decoder_mode,
 )

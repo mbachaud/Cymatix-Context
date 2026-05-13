@@ -1,6 +1,6 @@
 """Unit tests for helix_context.query_classifier."""
 
-from helix_context.query_classifier import (
+from helix_context.retrieval.query_classifier import (
     ClassifierResult,
     classify_query,
 )

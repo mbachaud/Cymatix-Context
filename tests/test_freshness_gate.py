@@ -41,7 +41,7 @@ from helix_context.agent_prompt import (
     full_fragment,
 )
 from helix_context.context_manager import HelixContextManager
-from helix_context.freshness import (
+from helix_context.retrieval.freshness import (
     DEFAULT_CACHE_TTL_S,
     check_superseded,
     revalidate_and_mark,

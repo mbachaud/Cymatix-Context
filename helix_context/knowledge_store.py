@@ -2129,7 +2129,7 @@ class KnowledgeStore:
         # spec §3 rule of thumb: agreement across recall tiers is the
         # signal RRF retrieves; "is this document authoritative?" is a
         # different question that survives unchanged.
-        from .fusion import Fuser as _Fuser
+        from .retrieval.fusion import Fuser as _Fuser
         fuser = _Fuser(k=self._rrf_k)
 
         # ── Stage 3: re-rank-class additive collector ──────────────
@@ -2745,7 +2745,7 @@ class KnowledgeStore:
         sr_enabled = self._sr_enabled if use_sr is None else bool(use_sr)
         if sr_enabled and gene_scores:
             try:
-                from .sr import sr_boost
+                from .retrieval.sr import sr_boost
                 sr_bonus = sr_boost(
                     self,
                     list(gene_scores.keys()),
@@ -2977,7 +2977,7 @@ class KnowledgeStore:
         # the tie-break path falls through to the original ranking.
         # See docs/FUTURE/tie_break_walking.md for the empirical basis.
         try:
-            from . import tie_break
+            from .retrieval import tie_break
             if tie_break.is_enabled():
                 ranked_ids = tie_break.walking_reorder(
                     self.conn, ranked_ids, gene_scores,
@@ -2995,7 +2995,7 @@ class KnowledgeStore:
         # hiccups never perturb the retrieval result.
         if self._seeded_edges_enabled and ranked_ids and not read_only:
             try:
-                from .seeded_edges import update_edge_evidence
+                from .retrieval.seeded_edges import update_edge_evidence
                 update_edge_evidence(
                     self, gene_scores, ranked_ids, max_genes=max_genes,
                 )

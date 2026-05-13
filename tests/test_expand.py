@@ -16,7 +16,8 @@ from __future__ import annotations
 import pytest
 from fastapi.testclient import TestClient
 
-from helix_context import expand, session_delivery
+from helix_context.retrieval import expand
+from helix_context import session_delivery
 from helix_context.config import (
     BudgetConfig,
     GenomeConfig,

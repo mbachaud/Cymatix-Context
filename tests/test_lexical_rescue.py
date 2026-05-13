@@ -1,7 +1,7 @@
 """Tests for bounded BM25 lexical rescue."""
 
 from helix_context.genome import Genome
-from helix_context.lexical_rescue import (
+from helix_context.retrieval.lexical_rescue import (
     lexical_rescue_sources,
     merge_source_ids,
 )
