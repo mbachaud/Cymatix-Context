@@ -157,8 +157,10 @@ def _mk_shortlist_genome(enabled: bool, size: int = 50) -> Genome:
         bm25_shortlist_size=size,
     )
     # Ungate inserts like the regular fixture does.
-    _orig = g.upsert_gene
-    g.upsert_gene = lambda gene, apply_gate=False: _orig(gene, apply_gate=apply_gate)
+    _orig = g.upsert_doc
+    _shim = lambda gene, apply_gate=False: _orig(gene, apply_gate=apply_gate)
+    g.upsert_doc = _shim   # canonical (R3 Stage C)
+    g.upsert_gene = _shim  # legacy alias
     return g
 
 

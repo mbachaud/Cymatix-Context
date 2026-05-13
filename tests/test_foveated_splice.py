@@ -173,6 +173,8 @@ def _stub_express(manager, *, candidates, scores):
     def fake_express(domains, entities, max_genes, **_kwargs):
         manager.genome.last_query_scores = dict(scores)
         return list(candidates)
+    # Patch canonical and legacy names both (R3 Stage C).
+    manager._retrieve = fake_express
     manager._express = fake_express
 
     def fake_refiners(query, candidates, max_genes, **_kwargs):

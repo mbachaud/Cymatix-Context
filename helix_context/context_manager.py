@@ -765,7 +765,7 @@ class HelixContextManager:
         # See docs/FUTURE/LAYERED_FINGERPRINTS.md.
         if len(gene_ids) >= 2 and source_path:
             try:
-                parent_gid = self._upsert_parent_gene(
+                parent_gid = self._upsert_parent_doc(
                     source_path=source_path,
                     child_gene_ids=gene_ids,
                     original_content=content,
@@ -782,7 +782,7 @@ class HelixContextManager:
         return gene_ids
 
     @staticmethod
-    def _make_parent_gene_id(source_path: str) -> str:
+    def _make_parent_doc_id(source_path: str) -> str:
         """Deterministic parent gene_id from source path.
 
         Uses a distinct hash input (suffix "::parent") so parent IDs
@@ -792,7 +792,7 @@ class HelixContextManager:
             (source_path + "::parent").encode("utf-8")
         ).hexdigest()[:16]
 
-    def _upsert_parent_gene(
+    def _upsert_parent_doc(
         self,
         source_path: str,
         child_gene_ids: List[str],
@@ -810,7 +810,7 @@ class HelixContextManager:
 
         Also inserts CHUNK_OF edges from each child to the parent.
         """
-        parent_gid = self._make_parent_gene_id(source_path)
+        parent_gid = self._make_parent_doc_id(source_path)
         n_chunks = len(child_gene_ids)
         total_bytes = len(original_content)
 
@@ -1084,7 +1084,7 @@ class HelixContextManager:
         # Step 2: Retrieve (knowledge store query + pending buffer + optional cold tier)
         with _stage_timer("express"):
             if len(_sub_queries) == 1:
-                candidates = self._express(
+                candidates = self._retrieve(
                     domains, entities, max_genes,
                     query_text=_sub_queries[0], include_cold=include_cold,
                     party_id=party_id, read_only=read_only,
@@ -1094,7 +1094,7 @@ class HelixContextManager:
 
                 def _run_sub(sq: str):
                     eq, d, e = self._prepare_query_signals(sq, session_context)
-                    genes = self._express(
+                    genes = self._retrieve(
                         d, e, max_genes,
                         query_text=sq, include_cold=include_cold,
                         party_id=party_id, read_only=read_only,
@@ -2103,7 +2103,7 @@ class HelixContextManager:
 
     # -- Internal: Step 2 (retrieve) ------------------------------------
 
-    def _express(
+    def _retrieve(
         self,
         domains: List[str],
         entities: List[str],
@@ -2305,7 +2305,7 @@ class HelixContextManager:
         if use_cymatics and self._use_cymatics and len(candidates) > 1:
             try:
                 from .cymatics import (
-                    query_spectrum, cached_gene_spectrum,
+                    query_spectrum, cached_doc_spectrum,
                     flux_score_dispatch, build_weight_vector,
                 )
                 metric = self.config.cymatics.distance_metric
@@ -2319,7 +2319,7 @@ class HelixContextManager:
                 )
                 scores = self.genome.last_query_scores or {}
                 for gene in candidates:
-                    g_spec = cached_gene_spectrum(gene, peak_width=self._cymatics_peak_width)
+                    g_spec = cached_doc_spectrum(gene, peak_width=self._cymatics_peak_width)
                     bonus = flux_score_dispatch(q_spec, g_spec, weights, metric) * 0.5
                     if bonus:
                         refiner_contrib.setdefault(gene.gene_id, {})["cymatics"] = bonus
@@ -3059,3 +3059,14 @@ class HelixContextManager:
 
     def close(self) -> None:
         self.genome.close()
+
+    # ── Legacy method aliases (R3 Stage C; see docs/ROSETTA.md) ─────
+    # Each alias points to the *same function object* as the canonical
+    # method. External callers that still call the legacy names (tests
+    # that monkey-patch _express, scripts that call manager._express)
+    # keep working unchanged at the *class* level. Tests that
+    # monkey-patch via instance attribute assignment must patch the
+    # canonical name (or both — see tests/conftest.py for the pattern).
+    _express              = _retrieve
+    _make_parent_gene_id  = _make_parent_doc_id
+    _upsert_parent_gene   = _upsert_parent_doc

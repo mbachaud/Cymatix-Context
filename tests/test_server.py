@@ -889,6 +889,9 @@ class TestDebugIntrospectionEndpoints:
         def _fake_refiners(query, candidates, max_genes, **_kw):
             return list(candidates), {gid: {} for gid, _ in scored}
 
+        # R3 Stage C renamed _express -> _retrieve (with _express alias).
+        # Internal callers use the canonical name, so patch that.
+        monkeypatch.setattr(helix, "_retrieve", _fake_express)
         monkeypatch.setattr(helix, "_express", _fake_express)
         monkeypatch.setattr(helix, "_apply_candidate_refiners", _fake_refiners)
 
@@ -1023,6 +1026,9 @@ class TestDebugIntrospectionEndpoints:
         def _fake_refiners(query, candidates, max_results, **_kw):
             return list(candidates), {gid: {} for gid, _ in scored}
 
+        # R3 Stage C renamed _express -> _retrieve (with _express alias).
+        # Internal callers use the canonical name, so patch that.
+        monkeypatch.setattr(helix, "_retrieve", _fake_express)
         monkeypatch.setattr(helix, "_express", _fake_express)
         monkeypatch.setattr(helix, "_apply_candidate_refiners", _fake_refiners)
 

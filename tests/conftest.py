@@ -51,7 +51,8 @@ def genome():
     _original_upsert = g.upsert_gene
     def _ungated_upsert(gene, apply_gate=False):
         return _original_upsert(gene, apply_gate=apply_gate)
-    g.upsert_gene = _ungated_upsert
+    g.upsert_doc = _ungated_upsert  # canonical name (R3 Stage C); legacy
+    g.upsert_gene = _ungated_upsert  # alias path — keep both for safety
 
     yield g
     g.close()

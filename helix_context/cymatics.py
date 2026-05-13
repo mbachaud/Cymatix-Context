@@ -202,7 +202,7 @@ def query_spectrum(
     return build_spectrum(terms, weights, decay=1.0, peak_width=peak_width)
 
 
-def gene_spectrum(
+def doc_spectrum(
     gene: Gene,
     peak_width: float = 3.0,
 ) -> List[float]:
@@ -220,8 +220,12 @@ def gene_spectrum(
     return build_spectrum(terms, decay=decay, peak_width=peak_width)
 
 
+# R3 Stage C legacy alias — pre-R3 callers + tests still import gene_spectrum.
+gene_spectrum = doc_spectrum
+
+
 @lru_cache(maxsize=512)
-def _cached_gene_spectrum(
+def _cached_doc_spectrum(
     gene_id: str,
     domains_key: str,
     entities_key: str,
@@ -240,11 +244,15 @@ def _cached_gene_spectrum(
     return tuple(spectrum)
 
 
-def cached_gene_spectrum(gene: Gene, peak_width: float = 3.0) -> List[float]:
+# R3 Stage C legacy alias — preserves .cache_clear() / .cache_info() access.
+_cached_gene_spectrum = _cached_doc_spectrum
+
+
+def cached_doc_spectrum(gene: Gene, peak_width: float = 3.0) -> List[float]:
     """Get a document's spectrum, using LRU cache for repeated access."""
     domains_key = "|".join(sorted(gene.promoter.domains))
     entities_key = "|".join(sorted(gene.promoter.entities))
-    t = _cached_gene_spectrum(
+    t = _cached_doc_spectrum(
         gene.gene_id, domains_key, entities_key,
         round(gene.epigenetics.decay_score, 2),  # Round for cache stability
         peak_width,
@@ -252,9 +260,13 @@ def cached_gene_spectrum(gene: Gene, peak_width: float = 3.0) -> List[float]:
     return list(t)
 
 
+# R3 Stage C legacy alias.
+cached_gene_spectrum = cached_doc_spectrum
+
+
 def clear_spectrum_cache() -> None:
     """Clear the document spectrum LRU cache. Call after knowledge store mutations."""
-    _cached_gene_spectrum.cache_clear()
+    _cached_doc_spectrum.cache_clear()
 
 
 # ── Section 2: Resonance Scoring ───────────────────────────────────
@@ -490,7 +502,7 @@ def resonance_rank(
 
     scored: List[Tuple[float, Gene]] = []
     for gene in candidates:
-        g_spec = cached_gene_spectrum(gene, peak_width=peak_width)
+        g_spec = cached_doc_spectrum(gene, peak_width=peak_width)
         if weights:
             score = flux_score_dispatch(q_spec, g_spec, weights, distance_metric)
         else:
@@ -511,7 +523,7 @@ def resonance_rank(
 
 # ── Section 3: Interference Splice ─────────────────────────────────
 
-def interference_splice(
+def interference_trim(
     query: str,
     genes: List[Gene],
     splice_aggressiveness: float = 0.3,
@@ -574,6 +586,10 @@ def interference_splice(
     return result
 
 
+# R3 Stage C legacy alias.
+interference_splice = interference_trim
+
+
 # ── Section 4: Harmonic Co-activation ──────────────────────────────
 
 def harmonic_weight(gene_a: Gene, gene_b: Gene, peak_width: float = 3.0) -> float:
@@ -584,8 +600,8 @@ def harmonic_weight(gene_a: Gene, gene_b: Gene, peak_width: float = 3.0) -> floa
     High weight = spectrally similar (same resonant frequencies).
     Low weight = co-occurred but spectrally dissimilar.
     """
-    spec_a = cached_gene_spectrum(gene_a, peak_width=peak_width)
-    spec_b = cached_gene_spectrum(gene_b, peak_width=peak_width)
+    spec_a = cached_doc_spectrum(gene_a, peak_width=peak_width)
+    spec_b = cached_doc_spectrum(gene_b, peak_width=peak_width)
     return resonance_score(spec_a, spec_b)
 
 
@@ -634,7 +650,7 @@ def cymatics_info() -> Dict:
     return {
         "math_backend": MATH_BACKEND,
         "n_bins": N_BINS,
-        "spectrum_cache_size": _cached_gene_spectrum.cache_info().maxsize,
-        "spectrum_cache_hits": _cached_gene_spectrum.cache_info().hits,
-        "spectrum_cache_misses": _cached_gene_spectrum.cache_info().misses,
+        "spectrum_cache_size": _cached_doc_spectrum.cache_info().maxsize,
+        "spectrum_cache_hits": _cached_doc_spectrum.cache_info().hits,
+        "spectrum_cache_misses": _cached_doc_spectrum.cache_info().misses,
     }

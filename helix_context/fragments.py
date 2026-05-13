@@ -289,9 +289,12 @@ class CodonEncoder:
         )
 
     @staticmethod
-    def codon_id(tokens: List[str]) -> str:
+    def fragment_id(tokens: List[str]) -> str:
         raw = "||".join(tokens)
         return hashlib.md5(raw.encode()).hexdigest()[:12]
+
+    # R3 Stage C legacy alias (same staticmethod descriptor).
+    codon_id = fragment_id
 
     @staticmethod
     def _split_sentences(text: str) -> List[str]:
