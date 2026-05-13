@@ -229,10 +229,14 @@ The rename ships in waves so back-compat stays solid throughout.
 
 | Phase | Scope | Status |
 |---|---|---|
-| **R1** | Rosetta Stone doc + Python alias module + new MCP tool aliases (additive only) | shipping now |
-| **R2** | Docstring + comment sweep — Python files and `docs/*.md` prose use canonical terms | next |
-| **R3** | Internal symbol rename — non-exported helpers (e.g. `gene_input_vector` → `document_vector`). Pydantic class FIELDS stay (renaming them breaks the SQL schema). | after R2 |
-| **R4** | Soft-deprecate legacy MCP tool names with docstring nudge. No removal. | after R3 |
+| **R1** | Rosetta Stone doc + Python alias module + new MCP tool aliases (additive only) | **shipped @ `09d5548` (2026-04-15)** |
+| **R2** | Docstring + comment sweep — Python files and `docs/*.md` prose use canonical terms | **shipped @ PR #70 `87fcb68` (2026-05-12)** |
+| **R3 Stage A** | Class-def flip + alias inversion (7 schemas + KnowledgeStore + Compressor) | **shipped @ `56fcbed` (PR #88, 2026-05-13)** |
+| **R3 Stage B** | Module file moves (`ribosome→compressor`, `genome→knowledge_store`, `codons→fragments`, `replication→persistence`, `hgt→cross_store_import`) + shim modules | **shipped @ `460d824..9e7471f` (PR #88, 2026-05-13)** |
+| **R3 Stage C** | Internal method renames (`pack→encode`, `splice→trim`, `replicate→persist`, `re_rank→rerank`, `upsert_gene→upsert_doc`, `query_genes*→query_docs*`, `get_gene→get_doc`, `_express→_retrieve`, cymatics + fragments helpers) | **shipped @ `edc0194..71469ba` (PR #88, 2026-05-13)** |
+| **R3 Stage D** | Local-variable + parameter sweep (`for gene in` → `for doc in`, `gene_a/gene_b` → `doc_a/doc_b`, `genes: List[Gene]` → `docs: List[Document]` in module bodies) | **in progress @ PR #89** |
+| **R3 Stage E** | This phase-table refresh + R3 design spec stub at `docs/superpowers/specs/2026-05-13-rename-r3-symbol-rename-design.md` | **in progress @ PR #89** |
+| **R4** | Soft-deprecate legacy MCP tool names with docstring nudge. No removal. | **deferred** — see #87 |
 
 ### What we are explicitly NOT doing
 
