@@ -13,8 +13,8 @@ from __future__ import annotations
 
 import pytest
 
-from helix_context import headroom_bridge
-from helix_context.headroom_bridge import (
+from helix_context.encoding import headroom_bridge
+from helix_context.encoding.headroom_bridge import (
     _detect_language,
     _pick_specialist,
     compress_text,

@@ -3271,7 +3271,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
 
         # Headroom bridge — decoder, optional (loaded if [codec] extra installed).
         try:
-            from .headroom_bridge import is_headroom_available
+            from .encoding.headroom_bridge import is_headroom_available
             if is_headroom_available():
                 components.append({
                     "name": "headroom",
