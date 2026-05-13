@@ -56,7 +56,7 @@ from helix_context.config import (
     RibosomeConfig,
     ServerConfig,
 )
-from helix_context.registry import (
+from helix_context.identity.registry import (
     DEFAULT_TTL_S,
     IDLE_TTL_S,
     STALE_TTL_S,
@@ -918,7 +918,7 @@ class TestHITLEvents:
         # three events land at distinct, known timestamps. Previous version
         # used ``time.sleep(0.02)`` which is flaky on slow CI runners and
         # slows the suite for no reason.
-        from helix_context import registry as registry_mod
+        from helix_context.identity import registry as registry_mod
         # Each emit_hitl_event() call consumes two ticks: one for the event
         # timestamp (now = time.time()) and one inside touch_heartbeat().
         # Provide 6 ticks — event ticks at 100.0 / 100.05 / 100.10 interleaved
@@ -957,7 +957,7 @@ class TestHITLEvents:
         assert eid is not None
 
         # Force participant into gone state past hard-delete cutoff
-        from helix_context.registry import HARD_DELETE_AFTER_S
+        from helix_context.identity.registry import HARD_DELETE_AFTER_S
         registry.genome.conn.execute(
             "UPDATE participants SET last_heartbeat = ?, status = 'gone' "
             "WHERE participant_id = ?",

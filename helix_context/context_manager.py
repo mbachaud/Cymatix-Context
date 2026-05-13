@@ -34,9 +34,9 @@ from .genome import Genome
 from .budget_zone import is_enabled as _budget_zone_is_enabled, zone_cap as _budget_zone_cap
 from .encoding.headroom_bridge import compress_text
 from .encoding import legibility
-from . import session_delivery as _session_delivery
+from .identity import session_delivery as _session_delivery
 from .ribosome import DisabledBackend, LiteLLMBackend, Ribosome, OllamaBackend
-from .provenance import apply_metadata_hints, apply_provenance
+from .identity.provenance import apply_metadata_hints, apply_provenance
 from .retrieval.query_classifier import ClassifierResult, classify_query
 from .schemas import (
     ChromatinState,

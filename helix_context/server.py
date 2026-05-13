@@ -45,7 +45,7 @@ from .scoring.know_decision import (
     decide_know_or_miss,
     _is_code_shaped,
 )
-from .registry import DEFAULT_HEARTBEAT_INTERVAL_S, DEFAULT_TTL_S, Registry
+from .identity.registry import DEFAULT_HEARTBEAT_INTERVAL_S, DEFAULT_TTL_S, Registry
 from .schemas import ContextResponseEnvelope, KnowBlock, MissBlock
 from .vault import VaultManager
 
@@ -489,7 +489,7 @@ def _compute_plr_confidence(
     #    fuser treats missing window entries as zero, same as training.
     window_features: Optional[dict] = None
     try:
-        from . import cwola
+        from .identity import cwola
         # /context/packet doesn't currently thread a session_id through the
         # call, so we can't ask for sliding-window correlations. Leaving
         # window_features empty is the honest move; the classifier trains
@@ -1478,7 +1478,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
         # needed. Always soft-fails — the retrieval result must not be
         # affected by logger hiccups.
         try:
-            from . import cwola
+            from .identity import cwola
             tier_contrib_all = getattr(helix.genome, "last_tier_contributions", {}) or {}
             cwola_tier_totals: dict = {}
             for contribs in tier_contrib_all.values():
@@ -2634,7 +2634,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
         about a fresh session).
         """
         try:
-            from . import session_delivery as _sd
+            from .identity import session_delivery as _sd
             rows = _sd.session_manifest(
                 helix.genome.conn,
                 session_id=session_id,

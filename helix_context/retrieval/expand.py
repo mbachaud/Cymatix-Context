@@ -36,7 +36,7 @@ import logging
 import sqlite3
 from typing import Any, Dict, List, Optional, Tuple
 
-from .. import session_delivery as _session_delivery
+from ..identity import session_delivery as _session_delivery
 from ..schemas import Gene
 
 log = logging.getLogger("helix.expand")

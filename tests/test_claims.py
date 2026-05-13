@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from helix_context.claims import (
+from helix_context.identity.claims import (
     claim_id_for,
     extract_entity_keys,
     extract_literal_claims,

@@ -19,7 +19,7 @@ import sqlite3
 
 import pytest
 
-from helix_context import session_delivery
+from helix_context.identity import session_delivery
 
 
 @pytest.fixture

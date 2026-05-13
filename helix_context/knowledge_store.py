@@ -1902,14 +1902,14 @@ class KnowledgeStore:
         # Soft-fail — ingest should never break because of claim extraction.
         if self._main_conn is not None:
             try:
-                from .claims import extract_literal_claims, persist_claims
+                from .identity.claims import extract_literal_claims, persist_claims
                 claims = extract_literal_claims(gene, shard_name=self._shard_name)
                 if claims:
                     persist_claims(self._main_conn, claims)
                     # Edge detection scoped to the new claims' entity_keys.
                     # Narrow scan keeps per-ingest cost bounded; groups
                     # larger than max_group_size are skipped anyway.
-                    from .claims_analyze import detect_and_persist_edges
+                    from .identity.claims_analyze import detect_and_persist_edges
                     touched_keys = {
                         c.entity_key for c in claims if c.entity_key
                     }

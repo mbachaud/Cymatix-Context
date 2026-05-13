@@ -20,7 +20,7 @@ import hashlib
 import re
 from typing import Iterable, Optional
 
-from .schemas import Claim, Gene
+from ..schemas import Claim, Gene
 
 # ── Entity-key extraction ────────────────────────────────────────────
 
@@ -301,7 +301,7 @@ def persist_claims(
     Returns the number of rows upserted. Takes a sqlite connection, not
     a KnowledgeStore — claims live in main.db, not the per-shard content dbs.
     """
-    from .shard_schema import upsert_claim
+    from ..shard_schema import upsert_claim
     n = 0
     for c in claims:
         upsert_claim(

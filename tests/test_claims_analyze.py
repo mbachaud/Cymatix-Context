@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from helix_context.claims_analyze import (
+from helix_context.identity.claims_analyze import (
     _NOISE_ENTITY_KEYS,
     _jaccard,
     _tokenize,

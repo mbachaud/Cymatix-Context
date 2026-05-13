@@ -6,7 +6,7 @@ import time
 
 import pytest
 
-from helix_context import cwola
+from helix_context.identity import cwola
 
 
 @pytest.fixture

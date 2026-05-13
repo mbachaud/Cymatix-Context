@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from helix_context.claims_graph import (
+from helix_context.identity.claims_graph import (
     contradiction_clusters,
     latest_in_chain,
     resolve,
