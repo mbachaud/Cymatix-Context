@@ -466,7 +466,7 @@ Do NOT just summarize the text — capture the *meaning* of the exchange."""
 
 # ── Compressor ────────────────────────────────────────────────────────
 
-class Ribosome:
+class Compressor:
     """
     CPU-bound small model that handles context codec operations.
 
@@ -867,3 +867,9 @@ def _parse_json(raw: str) -> dict | list:
 
     log.warning("Ribosome returned unparseable output: %s", raw[:200])
     raise FoldingError(f"Unparseable JSON: {raw[:200]}")
+
+
+# R3 legacy alias — pre-R3 callers still import Ribosome. Identity preserved:
+# Ribosome is Compressor. Method names (pack/splice/replicate/re_rank) stay
+# unchanged in Stage A; Stage C renames those. See docs/ROSETTA.md.
+Ribosome = Compressor

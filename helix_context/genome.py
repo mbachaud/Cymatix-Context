@@ -309,7 +309,7 @@ _DENSITY_RATE_MIN_HITS = 3      # ≥3 accesses in the window → override
 _CORPUS_SIZE_TTL = 60.0
 
 
-class Genome:
+class KnowledgeStore:
     """SQLite-backed document storage with tags-tag retrieval."""
 
     def __init__(
@@ -4580,3 +4580,9 @@ class Genome:
             except Exception:
                 pass
         self.conn.close()
+
+
+# R3 legacy alias — pre-R3 callers still import Genome. Identity preserved:
+# Genome is KnowledgeStore. SQL table/column names (genes, gene_id, etc) are
+# the on-disk contract and remain untouched. See docs/ROSETTA.md.
+Genome = KnowledgeStore
