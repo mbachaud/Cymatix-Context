@@ -703,6 +703,35 @@ def helix_health() -> Dict[str, Any]:
     return _normalize_health_payload(_http("GET", "/health"))
 
 
+# ── Tool: helix_swap_db ─────────────────────────────────────────────
+# Hot-swap the knowledge store .db file without restarting the server.
+# Useful for bench runs and multi-tenant exploration.
+
+@mcp.tool()
+def helix_swap_db(
+    path: str,
+    read_only: bool = False,
+) -> Dict[str, Any]:
+    """Hot-swap the knowledge store .db file without restarting the server.
+
+    Switches the active knowledge store to a different SQLite database.
+    Useful for bench runs, multi-tenant exploration, or A/B comparisons
+    between different corpora.
+
+    Args:
+        path: Filesystem path to the .db file to swap in.
+        read_only: If true, the new store rejects writes (upsert, link,
+            touch, log_health) so bench runs cannot pollute the target.
+
+    Returns:
+        Swap result with old_path, new_path, gene count, and elapsed_ms.
+    """
+    return _http("POST", "/admin/swap-db", {
+        "path": path,
+        "read_only": read_only,
+    })
+
+
 # ── Tool: helix_announce ─────────────────────────────────────────────
 # Self-report model identity + optional IDE override. Call once per
 # session after helix_health so the dashboard can display the model
