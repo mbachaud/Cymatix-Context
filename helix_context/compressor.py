@@ -530,7 +530,7 @@ class Compressor:
 
     # ── Pack: raw text → Document ───────────────────────────────────────
 
-    def pack(self, content: str, content_type: str = "text") -> Gene:
+    def encode(self, content: str, content_type: str = "text") -> Gene:
         """
         Encode raw content into a Document ready for knowledge store storage.
 
@@ -627,7 +627,7 @@ class Compressor:
 
     # ── Re-rank: score candidates against query ─────────────────────
 
-    def re_rank(self, query: str, candidates: List[Gene], k: int = 5) -> List[Gene]:
+    def rerank(self, query: str, candidates: List[Gene], k: int = 5) -> List[Gene]:
         """
         Score candidate documents by relevance to the query.
         Uses tags summaries (not full content) to stay within token budget.
@@ -687,9 +687,9 @@ class Compressor:
         scored.sort(key=lambda x: x[0], reverse=True)
         return [g for _, g in scored[:k]]
 
-    # ── Splice: remove introns (BATCHED single call) ────────────────
+    # ── Trim: remove low-value fragments (BATCHED single call) ──────
 
-    def splice(
+    def trim(
         self,
         query: str,
         genes: List[Gene],
@@ -772,9 +772,9 @@ class Compressor:
 
         return result
 
-    # ── Persist: pack a query+response exchange ───────────────────
+    # ── Persist: encode a query+response exchange ─────────────────
 
-    def replicate(self, query: str, response: str) -> Gene:
+    def persist(self, query: str, response: str) -> Gene:
         """
         Encode a conversation exchange into a Document for knowledge store storage.
         Captures intent and state changes, not just raw facts.
@@ -832,6 +832,17 @@ class Compressor:
             ),
             epigenetics=EpigeneticMarkers(),
         )
+
+    # ── Legacy method aliases (R3 Stage C; see docs/ROSETTA.md) ─────
+    # Each alias points to the *same function object* as the canonical
+    # method (``pack is encode`` is True). No wrapper, no double-counting
+    # in latency histograms, no identity surprise. External callers
+    # that still call .pack() / .splice() / .replicate() / .re_rank()
+    # keep working unchanged.
+    pack      = encode
+    splice    = trim
+    replicate = persist
+    re_rank   = rerank
 
 
 # ── JSON parsing (tolerant) ────────────────────────────────────────

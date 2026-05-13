@@ -706,7 +706,7 @@ class HelixContextManager:
                     sequence_index=strand.sequence_index,
                 )
             else:
-                gene = self.ribosome.pack(strand.content, content_type=content_type)
+                gene = self.ribosome.encode(strand.content, content_type=content_type)
             # Preserve sequence index from chunking
             gene.promoter.sequence_index = strand.sequence_index
             if metadata:
@@ -1877,7 +1877,7 @@ class HelixContextManager:
         gene_ids = []
         for fact in facts:
             try:
-                gene = self.ribosome.pack(fact, content_type="text")
+                gene = self.ribosome.encode(fact, content_type="text")
                 gene.source_id = "__session__"
                 # Add session_memory and chat_context to domains
                 existing_domains = set(gene.promoter.domains)
@@ -2333,10 +2333,10 @@ class HelixContextManager:
             if (
                 allow_rerank
                 and self.config.ingestion.rerank_enabled
-                and hasattr(self.ribosome, "re_rank")
+                and hasattr(self.ribosome, "rerank")
             ):
                 try:
-                    candidates = self.ribosome.re_rank(query, candidates, k=max_genes)
+                    candidates = self.ribosome.rerank(query, candidates, k=max_genes)
                 except Exception:
                     log.warning("Re-rank failed, falling back to retrieval order", exc_info=True)
                     candidates = candidates[:max_genes]
