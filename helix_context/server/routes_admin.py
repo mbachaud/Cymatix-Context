@@ -834,6 +834,83 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
         log.info("Admin reload complete: %s", changes)
         return {"reloaded": True, "changes": changes}
 
+    # ---- Admin: hot-swap knowledge store .db file ----
+
+    @app.post("/admin/swap-db")
+    async def admin_swap_db(request: Request):
+        """Hot-swap the knowledge store .db file without restarting.
+
+        Body: { "path": "genomes/bench/oauth/small.db", "read_only": false }
+        """
+        import os as _os
+        import time as _time
+
+        data = await request.json()
+        path = data.get("path", "")
+        read_only = bool(data.get("read_only", False))
+
+        if not path or not _os.path.exists(path):
+            return JSONResponse(
+                {"error": f"path not found: {path}"}, status_code=400,
+            )
+
+        t0 = _time.time()
+        old_path = str(helix.genome.path)
+
+        try:
+            from ..sharding import open_read_source
+
+            new_store = open_read_source(
+                genome_path=path,
+                synonym_map=config.synonym_map,
+                sema_codec=getattr(helix, "_sema_codec", None),
+                splade_enabled=config.ingestion.splade_enabled,
+                entity_graph=config.ingestion.entity_graph,
+                sr_enabled=config.retrieval.sr_enabled,
+                sr_gamma=config.retrieval.sr_gamma,
+                sr_k_steps=config.retrieval.sr_k_steps,
+                sr_weight=config.retrieval.sr_weight,
+                sr_cap=config.retrieval.sr_cap,
+                seeded_edges_enabled=config.retrieval.seeded_edges_enabled,
+            )
+            new_store.read_only = read_only
+
+            # Rebuild caches on the new store
+            new_store.invalidate_sema_cache()
+            new_store._build_sema_cache()
+
+            # Atomic swap
+            old_store = helix.genome
+            helix.genome = new_store
+            helix.genome.last_query_scores = {}
+
+            # Close old store (best-effort)
+            try:
+                old_store.close()
+            except Exception:
+                log.warning("swap-db: failed to close old store", exc_info=True)
+
+            elapsed_ms = round((_time.time() - t0) * 1000, 1)
+            genes = new_store.stats().get("total_genes", 0)
+
+            log.info(
+                "swap-db: %s -> %s (%d genes, read_only=%s, %.1fms)",
+                old_path, path, genes, read_only, elapsed_ms,
+            )
+            return {
+                "swapped": True,
+                "old_path": old_path,
+                "new_path": str(path),
+                "read_only": read_only,
+                "genes": genes,
+                "elapsed_ms": elapsed_ms,
+            }
+        except Exception as exc:
+            log.warning("swap-db failed: %s", exc, exc_info=True)
+            return JSONResponse(
+                {"error": f"swap failed: {exc}"}, status_code=500,
+            )
+
     # ---- Bridge: shared memory between AI assistants ----
 
     @app.get("/bridge/status")

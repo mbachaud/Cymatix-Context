@@ -369,8 +369,10 @@ class KnowledgeStore:
         pki_weight: float = 1.0,
         main_conn: Optional[sqlite3.Connection] = None,
         shard_name: str = "main",
+        read_only: bool = False,
     ):
         self.path = path
+        self.read_only = read_only
         self.synonym_map = synonym_map or {}
         self._sema_codec = sema_codec  # Optional SemaCodec for Tier 4 retrieval
         self._replication_mgr = None  # Set by set_replication_manager()
@@ -1011,6 +1013,9 @@ class KnowledgeStore:
         Returns the gene_id (content-addressed if not pre-populated).
         """
         gene_id = gene.gene_id or self.make_gene_id(gene.content)
+        if self.read_only:
+            log.debug("read_only: skipping upsert_doc")
+            return gene_id
 
         # Struggle 1 fix: apply density gate at the storage boundary so
         # that bulk ingest scripts (ingest_steam.py, ingest_fdrive.py,
@@ -2649,6 +2654,9 @@ class KnowledgeStore:
     # ── Touch (update signals on access) ────────────────────────
 
     def touch_genes(self, gene_ids: List[str]) -> None:
+        if self.read_only:
+            log.debug("read_only: skipping touch_genes")
+            return
         if not gene_ids:
             return
 
@@ -2690,6 +2698,9 @@ class KnowledgeStore:
 
     def link_coactivated(self, gene_ids: List[str]) -> None:
         """Create mutual co-activation links between all retrieved documents."""
+        if self.read_only:
+            log.debug("read_only: skipping link_coactivated")
+            return
         if len(gene_ids) < 2:
             return
 
@@ -2726,6 +2737,9 @@ class KnowledgeStore:
 
     def store_harmonic_weights(self, weights: List[Tuple[str, str, float]]) -> None:
         """Delegate to storage.co_activation.store_harmonic_weights."""
+        if self.read_only:
+            log.debug("read_only: skipping store_harmonic_weights")
+            return
         from .storage.co_activation import store_harmonic_weights
         store_harmonic_weights(self.conn, weights)
 
@@ -3058,6 +3072,9 @@ class KnowledgeStore:
         status: str,
     ) -> None:
         """Record a health signal for historical tracking."""
+        if self.read_only:
+            log.debug("read_only: skipping log_health")
+            return
         self.conn.execute(
             "INSERT INTO health_log (timestamp, query, ellipticity, coverage, "
             "density, freshness, genes_expressed, genes_available, status) "
