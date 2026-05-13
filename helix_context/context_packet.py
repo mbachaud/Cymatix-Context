@@ -409,7 +409,7 @@ def _query_genes(
             domains = [fallback]
 
     if router is not None:
-        genes = router.query_genes(
+        genes = router.query_docs(
             domains=domains,
             entities=entities,
             max_genes=max_genes,
@@ -419,7 +419,7 @@ def _query_genes(
         return genes, score_map
 
     if genome is not None:
-        genes = genome.query_genes(
+        genes = genome.query_docs(
             domains=domains,
             entities=entities,
             max_genes=max_genes,

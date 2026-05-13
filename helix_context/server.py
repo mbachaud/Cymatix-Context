@@ -512,7 +512,7 @@ def _compute_plr_confidence(
         if last_scores:
             top_gene_id = max(last_scores, key=last_scores.get)
         if top_gene_id:
-            gene = helix.genome.get_gene(top_gene_id)
+            gene = helix.genome.get_doc(top_gene_id)
             if gene is not None and gene.embedding and q_sema is not None:
                 # inline cosine to avoid extra imports
                 a, b = q_sema, gene.embedding
@@ -1499,7 +1499,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
                 if codec is not None:
                     query_sema_vec = codec.encode(query)
                 if top_gene:
-                    gene = helix.genome.get_gene(top_gene)
+                    gene = helix.genome.get_doc(top_gene)
                     if gene is not None and gene.embedding:
                         top_candidate_sema_vec = gene.embedding
             except Exception:
@@ -1974,7 +1974,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
                 top = scored[:k]
 
                 for sim, gid in top:
-                    g = genome.get_gene(gid)
+                    g = genome.get_doc(gid)
                     if g is None:
                         continue
                     try:
@@ -2059,7 +2059,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
         did? what were its tags?"
         """
         try:
-            gene = helix.genome.get_gene(gene_id)
+            gene = helix.genome.get_doc(gene_id)
         except Exception as exc:
             log.warning("/genes/%s failed: %s", gene_id, exc, exc_info=True)
             return JSONResponse(
@@ -2122,7 +2122,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
 
             neighbors: list = []
             for sim, gid in top:
-                g = helix.genome.get_gene(gid)
+                g = helix.genome.get_doc(gid)
                 if g is None:
                     continue
                 path = None

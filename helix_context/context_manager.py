@@ -741,13 +741,13 @@ class HelixContextManager:
             if sema_vectors is not None and i < len(sema_vectors):
                 gene.embedding = sema_vectors[i]
 
-            # Density gate now lives in genome.upsert_gene() itself so that
+            # Density gate now lives in genome.upsert_doc() itself so that
             # bulk ingest scripts (ingest_steam.py, ingest_all.py, etc.)
             # that call upsert_gene directly also respect it. The gate
             # reads the final lifecycle tier back onto the document object
             # and sets compression_tier accordingly during the INSERT.
             # See helix_context/genome.py:apply_density_gate for the logic.
-            gid = self.genome.upsert_gene(gene)
+            gid = self.genome.upsert_doc(gene)
             gene_ids.append(gid)
 
             # If the gate demoted the document to heterochromatin, the content
@@ -833,7 +833,7 @@ class HelixContextManager:
         apply_provenance(parent, source_path, content_type="text")
         # apply_gate=False: parents are metadata aggregators, not content —
         # they should not be density-gated into heterochromatin.
-        self.genome.upsert_gene(parent, apply_gate=False)
+        self.genome.upsert_doc(parent, apply_gate=False)
 
         edges = [
             (child_gid, parent_gid, int(StructuralRelation.CHUNK_OF), 1.0)
@@ -1786,7 +1786,7 @@ class HelixContextManager:
             with self._pending_lock:
                 self._pending.append(gene)
 
-            gid = self.genome.upsert_gene(gene)
+            gid = self.genome.upsert_doc(gene)
 
             # Remove from pending now that it's committed
             with self._pending_lock:
@@ -1891,7 +1891,7 @@ class HelixContextManager:
                     except Exception:
                         pass
 
-                gid = self.genome.upsert_gene(gene)
+                gid = self.genome.upsert_doc(gene)
                 gene_ids.append(gid)
             except Exception:
                 log.warning("Failed to create gene from fact: %s", fact[:100], exc_info=True)
@@ -2148,7 +2148,7 @@ class HelixContextManager:
             if self.genome._dense_embedding_enabled and query_text:
                 # Step 4: ANN threshold path — uses BGE-M3 dense vectors to
                 # dynamically gate the candidate count by similarity threshold.
-                candidates = self.genome.query_genes_ann(
+                candidates = self.genome.query_docs_ann(
                     query=query_text,
                     domains=domains,
                     entities=entities,
@@ -2160,7 +2160,7 @@ class HelixContextManager:
                     read_only=read_only,
                 )
             else:
-                candidates = self.genome.query_genes(
+                candidates = self.genome.query_docs(
                     domains,
                     entities,
                     max_genes=max_genes,

@@ -3,7 +3,7 @@
 Spec: ``docs/specs/2026-05-08-stage-3-rrf-fusion.md`` §4-§5.
 
 Replaces the additive ``gene_scores[gid] += tier_score`` accumulator in
-``Genome.query_genes()`` with rank-level fusion (Cormack 2009).
+``Genome.query_docs()`` with rank-level fusion (Cormack 2009).
 
 Per-tier scores are non-commensurate — FTS5 negative-bm25, BGE cosine
 ∈[-1,1], tags exact ∈ {0, 3.0}, harmonic ∈ {0..3}, filename_anchor

@@ -21,7 +21,7 @@ Usage:
         sync_interval=100,  # sync every 100 inserts
     )
 
-    # Called by genome.upsert_gene() after each write
+    # Called by KnowledgeStore.upsert_doc() after each write
     mgr.notify_write()  # increments counter, syncs when threshold reached
 
     # Manual sync

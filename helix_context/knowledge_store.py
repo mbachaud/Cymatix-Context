@@ -1499,7 +1499,7 @@ class KnowledgeStore:
             # Fetch full Document objects (content is preserved thanks to C.1)
             genes: List[Gene] = []
             for gid in selected_ids:
-                gene = self.get_gene(gid)
+                gene = self.get_doc(gid)
                 if gene is not None:
                     genes.append(gene)
 
@@ -1676,7 +1676,7 @@ class KnowledgeStore:
 
     # ── Upsert ──────────────────────────────────────────────────────
 
-    def upsert_gene(self, gene: Gene, apply_gate: bool = True) -> str:
+    def upsert_doc(self, gene: Gene, apply_gate: bool = True) -> str:
         """
         Insert or replace a document in the knowledge store.
 
@@ -2041,7 +2041,7 @@ class KnowledgeStore:
         finally:
             cur.close()
 
-    def query_genes(
+    def query_docs(
         self,
         domains: List[str],
         entities: List[str],
@@ -2600,7 +2600,7 @@ class KnowledgeStore:
         if self._dense_embedding_enabled and self._fusion_mode == "rrf":
             try:
                 _dense_t0 = time.monotonic()
-                dense_hits = self.query_genes_dense_recall(
+                dense_hits = self.query_docs_dense_recall(
                     " ".join(query_terms),
                     k=min(self._dense_pool_size, limit * 4),
                     party_id=party_id,
@@ -3130,7 +3130,7 @@ class KnowledgeStore:
             )
             return matrix, ids
 
-    def query_genes_dense_recall(
+    def query_docs_dense_recall(
         self,
         query: str,
         *,
@@ -3191,7 +3191,7 @@ class KnowledgeStore:
         idx_sorted = idx_part[np.argsort(-sims[idx_part])]
         return [(ids[int(i)], float(sims[int(i)])) for i in idx_sorted]
 
-    def query_genes_ann(
+    def query_docs_ann(
         self,
         query: str,
         threshold: float | None = None,
@@ -3238,7 +3238,7 @@ class KnowledgeStore:
         entities = entities or []
 
         # ── 1. Lex recall pool (size = pool_size, NOT max_genes). ─────
-        lex_pool = self.query_genes(
+        lex_pool = self.query_docs(
             domains,
             entities,
             max_genes=pool_size,
@@ -3254,7 +3254,7 @@ class KnowledgeStore:
             return lex_pool[:max_genes]
 
         # ── 2. Dense recall pool (id+score, no bodies). ──────────────
-        dense_hits = self.query_genes_dense_recall(
+        dense_hits = self.query_docs_dense_recall(
             query, k=pool_size, party_id=party_id, read_only=read_only,
         )
 
@@ -3970,7 +3970,7 @@ class KnowledgeStore:
 
     # ── Get single document ─────────────────────────────────────────────
 
-    def get_gene(self, gene_id: str) -> Optional[Gene]:
+    def get_doc(self, gene_id: str) -> Optional[Gene]:
         row = self.conn.execute(
             "SELECT * FROM genes WHERE gene_id = ?", (gene_id,)
         ).fetchone()
@@ -4580,6 +4580,21 @@ class KnowledgeStore:
             except Exception:
                 pass
         self.conn.close()
+
+    # ── Legacy method aliases (R3 Stage C; see docs/ROSETTA.md) ─────
+    # Each alias points to the *same function object* as the canonical
+    # method ("upsert_gene is upsert_doc" is True). External callers
+    # that still call .upsert_doc() / .query_docs() / .get_doc()
+    # keep working unchanged (notably api.py::gene_get and the
+    # cross_store_import / sharding paths).
+    #
+    # SQL column names (gene_id, etc.) are unchanged — only the Python
+    # method-name surface moved.
+    upsert_gene              = upsert_doc
+    query_genes              = query_docs
+    query_genes_ann          = query_docs_ann
+    query_genes_dense_recall = query_docs_dense_recall
+    get_gene                 = get_doc
 
 
 # R3 legacy alias — pre-R3 callers still import Genome. Identity preserved:

@@ -160,7 +160,7 @@ class ShardRouter:
                 continue
 
             try:
-                genes = shard.query_genes(
+                genes = shard.query_docs(
                     domains=domains,
                     entities=entities,
                     max_genes=max_genes,
@@ -176,7 +176,7 @@ class ShardRouter:
                     shard_name, list(kwargs.keys()),
                 )
                 try:
-                    genes = shard.query_genes(
+                    genes = shard.query_docs(
                         domains=domains,
                         entities=entities,
                         max_genes=max_genes,

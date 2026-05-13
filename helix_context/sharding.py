@@ -181,7 +181,7 @@ class ShardedGenomeAdapter:
     # ── Reads ─────────────────────────────────────────────────────────
 
     def query_genes(self, *args: Any, **kwargs: Any) -> List:
-        genes = self._router.query_genes(*args, **kwargs)
+        genes = self._router.query_docs(*args, **kwargs)
         self.last_query_scores = dict(self._router.last_query_scores)
         self.last_tier_contributions = dict(self._router.last_tier_contributions)
         return genes
@@ -255,7 +255,7 @@ class ShardedGenomeAdapter:
         except Exception:
             log.warning("get_gene: shard %s unavailable", row["shard_name"], exc_info=True)
             return None
-        return shard.get_gene(gene_id)
+        return shard.get_doc(gene_id)
 
     def health_history(self, limit: int = 10) -> list:
         """No cross-shard health log in V1 — return empty."""

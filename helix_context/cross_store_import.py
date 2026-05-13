@@ -153,7 +153,7 @@ def import_genome(
             tampered += 1
             continue
 
-        existing = genome.get_gene(gene.gene_id)
+        existing = genome.get_doc(gene.gene_id)
 
         if existing is not None:
             if merge_strategy == "skip_existing":
@@ -165,10 +165,10 @@ def import_genome(
                     continue
             # overwrite or newest-wins: fall through to upsert
             overwritten += 1
-            genome.upsert_gene(gene)
+            genome.upsert_doc(gene)
             continue
 
-        genome.upsert_gene(gene)
+        genome.upsert_doc(gene)
         imported += 1
 
     log.info(

@@ -501,7 +501,7 @@ class Registry:
             key_values=key_values,
             chromatin=ChromatinState.OPEN,
         )
-        self.genome.upsert_gene(gene, apply_gate=False)
+        self.genome.upsert_doc(gene, apply_gate=False)
         return gene.gene_id
 
     def touch_heartbeat(self, participant_id: str) -> None:
