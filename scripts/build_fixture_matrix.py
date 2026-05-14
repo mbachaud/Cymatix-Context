@@ -961,6 +961,12 @@ def main() -> int:
         "--chunksize", type=int, default=4,
         help="mp.Pool chunksize for --parallel (default: 4).",
     )
+    parser.add_argument(
+        "--shard-workers", type=int, default=0,
+        help="Number of parallel shard-builders (sharded mode only). "
+             "0 = auto via helix_context.parallel.auto_shard_workers; "
+             "1 = serial.",
+    )
     args = parser.parse_args()
 
     profiles = parse_profile_arg(args.profile)
@@ -1003,14 +1009,25 @@ def main() -> int:
     os.makedirs(out_dir, exist_ok=True)
     log.info("BUILD START mode=sharded profiles=%s out_dir=%s", profiles, out_dir)
 
+    if args.shard_workers <= 0:
+        from helix_context.parallel import auto_shard_workers
+        shard_workers = auto_shard_workers()
+    else:
+        shard_workers = args.shard_workers
+
     results = {}
     for name in profiles:
         profile_dir = os.path.join(out_dir, name)
-        log.info("### Profile: %s (sharded) ###", name)
+        log.info(
+            "### Profile: %s (sharded, %d workers) ###",
+            name, shard_workers,
+        )
         stats = build_profile_sharded(
             name=name,
             profile_out_dir=profile_dir,
             shard_category=args.shard_category,
+            shard_workers=shard_workers,
+            batch_size=args.batch_size,
         )
         update_manifest(out_dir, stats, mode="sharded")
         results[name] = stats
