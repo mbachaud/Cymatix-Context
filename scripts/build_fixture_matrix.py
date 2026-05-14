@@ -741,14 +741,21 @@ def _build_one_shard(
             byte_size = 0
         elapsed = round(time.perf_counter() - s_stats["t0"], 1)
 
-        # Build fingerprint payload here (with the shard still open) so the
-        # parent process can write to main.db without re-opening the shard.
+        # Build fingerprint + source_index payloads here (with the shard
+        # still open) so the parent process can write to main.db without
+        # re-opening the shard. Mirrors the column set copied by
+        # ``scripts/ingest_all.py:_copy_indexes_from_shard`` so bench
+        # fixtures exercise the same packet-freshness path that real
+        # ingest produces (PR #113 + follow-up).
         fp_rows = shard.conn.execute(
-            "SELECT gene_id, source_id, promoter, key_values, is_fragment "
+            "SELECT gene_id, source_id, repo_root, source_kind, observed_at, "
+            "mtime, content_hash, volatility_class, authority_class, "
+            "support_span, last_verified_at, promoter, key_values, is_fragment "
             "FROM genes"
         ).fetchall()
         now = time.time()
         fp_payload = []
+        si_payload = []
         for r in fp_rows:
             promoter_blob = r["promoter"]
             domains_json = None
@@ -765,6 +772,27 @@ def _build_one_shard(
                 domains_json, entities_json, r["key_values"],
                 0 if r["is_fragment"] else 1, None, now,
             ))
+            # source_index row -- defaults match the table DDL so build-time
+            # rows look like a real ingest's "never observed/verified yet"
+            # state. ``observed_at`` / ``last_verified_at`` fall back to
+            # build time so freshness logic has a non-NULL timestamp to
+            # reason about; volatility_class / authority_class default
+            # to ``medium`` / ``primary`` per the column defaults.
+            observed_at = r["observed_at"] if r["observed_at"] is not None else now
+            last_verified_at = (
+                r["last_verified_at"]
+                if r["last_verified_at"] is not None
+                else now
+            )
+            si_payload.append((
+                r["gene_id"], label, r["source_id"], r["repo_root"],
+                r["source_kind"], observed_at, r["mtime"], r["content_hash"],
+                r["volatility_class"] or "medium",
+                r["authority_class"] or "primary",
+                r["support_span"], last_verified_at,
+                None,  # invalidated_at
+                now,   # updated_at
+            ))
 
         return {
             "label": label,
@@ -779,6 +807,7 @@ def _build_one_shard(
             "errors": s_stats["errors"],
             "missing_roots": s_stats["missing_roots"],
             "fingerprint_payload": fp_payload,
+            "source_index_payload": si_payload,
         }
     finally:
         shard.close()
@@ -938,11 +967,27 @@ def build_profile_sharded(
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 res["fingerprint_payload"],
             )
+        si_payload = res.get("source_index_payload") or []
+        if si_payload:
+            # Mirror ``ingest_all._copy_indexes_from_shard`` so bench fixtures
+            # exercise the same packet-freshness path as real ingest. Without
+            # this the table is empty and ``context_packet._lookup_source_row``
+            # returns None for every gene_id (PR #113).
+            main_conn.executemany(
+                "INSERT OR REPLACE INTO source_index "
+                "(gene_id, shard_name, source_id, repo_root, source_kind, "
+                "observed_at, mtime, content_hash, volatility_class, "
+                "authority_class, support_span, last_verified_at, "
+                "invalidated_at, updated_at) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                si_payload,
+            )
         main_conn.commit()
         log.info(
-            "  %s: %d genes, %d fingerprint rows, %.1f MB (%.1fs)",
+            "  %s: %d genes, %d fingerprint rows, %d source rows, %.1f MB (%.1fs)",
             res["label"], res["gene_count"],
             len(res["fingerprint_payload"]),
+            len(si_payload),
             res["byte_size"] / 1_048_576, res["elapsed_s"],
         )
         totals["shards"].append({
@@ -951,6 +996,7 @@ def build_profile_sharded(
             "path": res["shard_db_path"],
             "genes": res["gene_count"],
             "fingerprint_rows": len(res["fingerprint_payload"]),
+            "source_index_rows": len(si_payload),
             "bytes": res["byte_size"],
             "elapsed_s": res["elapsed_s"],
         })

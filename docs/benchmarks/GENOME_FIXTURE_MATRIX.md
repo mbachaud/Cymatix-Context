@@ -100,3 +100,33 @@ The expected testing shape is:
 
 That yields six total test genomes when sharded coverage is active: four
 variable-size monolithic blobs plus two sharded variants.
+
+## Sharded main.db indexes
+
+When `scripts/build_fixture_matrix.py` runs in sharded mode it writes two
+tables into `main.genome.db` so bench code matches the surface the live
+ingest path (`scripts/ingest_all.py`) produces:
+
+- **`fingerprint_index`** — one row per gene_id, used by
+  `ShardRouter.route` to decide which shards to open for a query.
+- **`source_index`** — one row per (gene_id, shard_name), used by
+  `helix_context/context_packet.py::_lookup_source_row` for packet
+  freshness and authority decisions (PR #113).
+
+`source_index` rows are written alongside the fingerprint payload from the
+shard's `genes` table, with conservative defaults for any field the
+shard build didn't observe yet:
+
+| Field | Build-time value |
+|---|---|
+| `observed_at` | shard `genes.observed_at` if set, else build time |
+| `last_verified_at` | shard `genes.last_verified_at` if set, else build time |
+| `mtime`, `content_hash`, `repo_root`, `source_kind`, `support_span` | passed through from the shard's `genes` row (may be NULL) |
+| `volatility_class` | shard value or `'medium'` |
+| `authority_class` | shard value or `'primary'` |
+| `invalidated_at` | always NULL at build time |
+| `updated_at` | build time |
+
+These defaults are conservative on purpose: a bench fixture exercises
+freshness logic without forcing every classifier to run during the build.
+A real ingest path will overwrite the row on its next observation cycle.

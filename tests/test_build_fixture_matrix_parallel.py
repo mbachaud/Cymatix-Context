@@ -431,3 +431,180 @@ def test_build_profile_sharded_preserves_order_when_disabled(tmp_path, monkeypat
     assert captured_order == [a_slug, b_slug]
     assert stats["sort_largest_first"] is False
 
+
+# ── source_index population on sharded builds (PR #113 follow-up) ─────────
+
+
+def test_sharded_build_populates_source_index(tmp_path, monkeypatch):
+    """Sharded build must write rows to ``main.genome.db:source_index``.
+
+    Prior to this regression test the build path only populated
+    ``fingerprint_index``. ``helix_context/context_packet.py::_lookup_source_row``
+    (added in PR #113) reads from ``source_index`` for packet freshness +
+    authority, so bench fixtures with an empty ``source_index`` silently
+    skipped that path.
+
+    Uses a stubbed ``_shard_worker_entry`` so the test stays under the
+    ``slow`` threshold -- no SPLADE / spaCy loading.
+    """
+    import build_fixture_matrix as bfm
+
+    a = tmp_path / "rootA"
+    b = tmp_path / "rootB"
+    a.mkdir()
+    b.mkdir()
+    (a / "alpha.py").write_text("def alpha():\n    return 1\n", encoding="utf-8")
+    (b / "beta.py").write_text("def beta():\n    return 2\n", encoding="utf-8")
+
+    now = 1_700_000_000.0
+
+    def fake_entry(task):
+        # Mimic the real ``_build_one_shard`` return: a fingerprint payload
+        # and a source_index payload, both keyed on a synthetic gene_id.
+        label = task["label"]
+        gid = f"g_{label}_0"
+        fp_row = (gid, label, "src/0", None, None, None, 1, None, now)
+        si_row = (
+            gid, label, "src/0", task["root"], "code",
+            now, now, "deadbeef", "medium", "primary",
+            None, now, None, now,
+        )
+        return {
+            "label": label, "root": task["root"],
+            "shard_db_path": task["shard_db_path"],
+            "gene_count": 1, "byte_size": 0, "elapsed_s": 0.0,
+            "files": 1, "genes": 1, "skipped": 0, "errors": 0,
+            "missing_roots": [],
+            "fingerprint_payload": [fp_row],
+            "source_index_payload": [si_row],
+        }
+
+    monkeypatch.setattr(bfm, "_shard_worker_entry", fake_entry)
+    monkeypatch.setattr(bfm, "PROFILES", {
+        "tiny_si": {
+            "label": "source_index regression",
+            "active_roots": 2,
+            "roots": [str(a), str(b)],
+            "extra_skip_dirs": set(),
+            "extra_filename_filters": [],
+        }
+    })
+
+    out = tmp_path / "out"
+    stats = bfm.build_profile_sharded(
+        "tiny_si", str(out),
+        shard_workers=1, shard_file_workers=1, batch_size=8,
+    )
+
+    main_db = out / "main.genome.db"
+    assert main_db.exists()
+    conn = sqlite3.connect(str(main_db))
+    try:
+        si_count = conn.execute(
+            "SELECT COUNT(*) FROM source_index"
+        ).fetchone()[0]
+        # Two shards × one synthetic gene_id each.
+        assert si_count == 2, (
+            f"source_index should have 2 rows, got {si_count}"
+        )
+
+        # Spot-check the schema fields landed correctly.
+        rows = conn.execute(
+            "SELECT gene_id, shard_name, source_id, repo_root, source_kind, "
+            "observed_at, mtime, content_hash, volatility_class, "
+            "authority_class, last_verified_at, invalidated_at, updated_at "
+            "FROM source_index ORDER BY gene_id"
+        ).fetchall()
+        assert len(rows) == 2
+        for row in rows:
+            (gid, shard, src_id, repo_root, source_kind, observed_at,
+             mtime, content_hash, vol, auth, last_verif, invalidated,
+             updated_at) = row
+            assert gid.startswith("g_")
+            assert shard in {bfm._slug_for_root(str(a)),
+                             bfm._slug_for_root(str(b))}
+            assert src_id == "src/0"
+            assert repo_root in {str(a), str(b)}
+            assert source_kind == "code"
+            assert vol == "medium"
+            assert auth == "primary"
+            assert observed_at == now
+            assert mtime == now
+            assert content_hash == "deadbeef"
+            assert last_verif == now
+            assert invalidated is None
+            assert updated_at is not None
+    finally:
+        conn.close()
+
+    # The per-shard manifest entry should also include the count.
+    assert all("source_index_rows" in s for s in stats["shards"])
+    assert sum(s["source_index_rows"] for s in stats["shards"]) == 2
+
+
+def test_sharded_build_source_index_lookup_returns_row(tmp_path, monkeypatch):
+    """``context_packet._lookup_source_row`` must find a row for a gene_id
+    written by the sharded build path. This is the failure mode PR #113
+    surfaced — empty ``source_index`` makes the lookup return None for
+    every gene_id in a matrix-built fixture."""
+    import build_fixture_matrix as bfm
+    from helix_context.context_packet import _lookup_source_row
+
+    root = tmp_path / "root"
+    root.mkdir()
+    (root / "alpha.py").write_text("def f(): pass\n", encoding="utf-8")
+
+    now = 1_700_000_000.0
+    target_gid = "test_lookup_gene_id"
+
+    def fake_entry(task):
+        label = task["label"]
+        fp_row = (target_gid, label, "src/0", None, None, None, 1, None, now)
+        si_row = (
+            target_gid, label, "src/0", task["root"], "code",
+            now, now, "abcd1234", "medium", "primary",
+            None, now, None, now,
+        )
+        return {
+            "label": label, "root": task["root"],
+            "shard_db_path": task["shard_db_path"],
+            "gene_count": 1, "byte_size": 0, "elapsed_s": 0.0,
+            "files": 1, "genes": 1, "skipped": 0, "errors": 0,
+            "missing_roots": [],
+            "fingerprint_payload": [fp_row],
+            "source_index_payload": [si_row],
+        }
+
+    monkeypatch.setattr(bfm, "_shard_worker_entry", fake_entry)
+    monkeypatch.setattr(bfm, "PROFILES", {
+        "tiny_si2": {
+            "label": "source_index lookup regression",
+            "active_roots": 1,
+            "roots": [str(root)],
+            "extra_skip_dirs": set(),
+            "extra_filename_filters": [],
+        }
+    })
+
+    out = tmp_path / "out"
+    bfm.build_profile_sharded(
+        "tiny_si2", str(out),
+        shard_workers=1, shard_file_workers=1, batch_size=8,
+    )
+
+    conn = sqlite3.connect(str(out / "main.genome.db"))
+    conn.row_factory = sqlite3.Row
+    try:
+        row = _lookup_source_row(conn, target_gid)
+    finally:
+        conn.close()
+
+    assert row is not None, (
+        "expected _lookup_source_row to return a row for a sharded-build "
+        "gene_id, got None (source_index likely empty)"
+    )
+    assert row["gene_id"] == target_gid
+    assert row["volatility_class"] == "medium"
+    assert row["authority_class"] == "primary"
+    assert row["content_hash"] == "abcd1234"
+
