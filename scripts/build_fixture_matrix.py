@@ -43,6 +43,9 @@ Parallel modes (issue #92)
                             processes. 0 = auto from VRAM + CPU.
     --shard-file-workers N  CPU-only chunk/tag workers inside each shard
                             process. 0 = auto from CPU budget.
+    --no-shard-sort         Disable largest-first shard ordering. Default
+                            is enabled: pre-scan eligible bytes per shard
+                            so the long pole dispatches first (issue #97).
     --batch-size N          SPLADE batch size in the writer (default 64).
 
 Examples:
@@ -188,6 +191,48 @@ def _chunk_and_tag_file(args: tuple[str, str]) -> list[dict]:
 
 
 # ── File discovery iterator (drop-in for ingest_tree's walk) ─────────────
+
+
+def _estimate_eligible_bytes(
+    root: str,
+    skip_dirs: set[str],
+    extra_filename_filters: list,
+) -> tuple[int, int]:
+    """Walk ``root`` and return ``(eligible_files, eligible_bytes)``.
+
+    Counts only files that would pass the same ingestion filters as
+    :func:`_iter_ingestable_files`: extension in ``INGEST_EXTS``, not
+    filtered by ``extra_filename_filters``, and within
+    ``MIN_FILE_SIZE..MAX_FILE_SIZE``. Used by sharded builds to order
+    the shard queue largest-first so the long pole gets the longest
+    head start on the worker pool (issue #97, option A.1).
+
+    Filesystem errors on individual files are swallowed — the estimate
+    is a sizing hint, not a contract; the actual ingest walks the tree
+    again under the same filters and will report the truth.
+    """
+    if not os.path.exists(root):
+        return 0, 0
+    eligible_files = 0
+    eligible_bytes = 0
+    for dirpath, dirnames, filenames in os.walk(root):
+        dirnames[:] = [d for d in dirnames if d not in skip_dirs]
+        for fname in filenames:
+            ext = os.path.splitext(fname)[1].lower()
+            if ext not in INGEST_EXTS:
+                continue
+            fpath = os.path.join(dirpath, fname)
+            if any(f(fpath) for f in extra_filename_filters):
+                continue
+            try:
+                size = os.path.getsize(fpath)
+            except OSError:
+                continue
+            if size < MIN_FILE_SIZE or size > MAX_FILE_SIZE:
+                continue
+            eligible_files += 1
+            eligible_bytes += size
+    return eligible_files, eligible_bytes
 
 
 def _iter_ingestable_files(
@@ -761,6 +806,7 @@ def build_profile_sharded(
     shard_workers: int = 1,
     shard_file_workers: int = 0,
     batch_size: int = 64,
+    sort_largest_first: bool = True,
 ) -> dict:
     """Build the profile as a sharded layout under ``profile_out_dir``.
 
@@ -769,6 +815,14 @@ def build_profile_sharded(
     returns, serialized through SQLite's ``busy_timeout``. Each shard may
     also run ``shard_file_workers`` CPU-only workers for chunk+tag prep;
     ``0`` auto-sizes from the CPU budget.
+
+    When ``sort_largest_first`` is True (default), shards are pre-scanned
+    for eligible-byte count and submitted to the worker pool from
+    largest to smallest. On uneven workloads (#97) this gives the long
+    pole the longest head start: e.g., XL's ``F:/Projects`` (~60% of
+    eligible bytes) dispatches first instead of waiting for 11 small
+    shards to drain. The pre-scan is a quick metadata walk, dwarfed by
+    the actual ingest cost.
     """
     profile = PROFILES[name]
     if shard_file_workers <= 0:
@@ -837,6 +891,34 @@ def build_profile_sharded(
             "shard_file_workers": shard_file_workers,
             "shard_file_chunksize": 4,
         })
+
+    # Pre-ingest sizing — order shards largest-first so the long pole
+    # gets the longest head start on the worker pool (issue #97 A.1).
+    # When ``shard_workers <= 1`` the order doesn't affect wall-clock,
+    # but we still record the estimate in the manifest for diagnostics.
+    if sort_largest_first and tasks:
+        sizing_t0 = time.perf_counter()
+        for task in tasks:
+            files, bytes_ = _estimate_eligible_bytes(
+                task["root"], skip_dirs, extra_filename_filters,
+            )
+            task["eligible_files"] = files
+            task["eligible_bytes"] = bytes_
+        tasks.sort(key=lambda t: t["eligible_bytes"], reverse=True)
+        sizing_elapsed = time.perf_counter() - sizing_t0
+        log.info(
+            "pre-ingest sizing complete in %.1fs — shard order:", sizing_elapsed,
+        )
+        for task in tasks:
+            log.info(
+                "  %s: %d eligible files, %.1f MB",
+                task["label"], task["eligible_files"],
+                task["eligible_bytes"] / 1_048_576,
+            )
+        totals["sizing_elapsed_s"] = round(sizing_elapsed, 1)
+        totals["sort_largest_first"] = True
+    else:
+        totals["sort_largest_first"] = False
 
     # Per-shard execution -- serial or pool.
     def _commit_shard_result(res: dict) -> None:
@@ -1021,6 +1103,15 @@ def main() -> int:
              "(sharded mode only). 0 = auto via "
              "helix_context.parallel.auto_shard_file_workers; 1 = serial.",
     )
+    parser.add_argument(
+        "--no-shard-sort", action="store_true",
+        help="Disable largest-first shard ordering (sharded mode only). "
+             "Default: shards are pre-scanned for eligible bytes and "
+             "submitted to the worker pool from largest to smallest so "
+             "the long pole gets the longest head start. Disable for "
+             "deterministic ordering (e.g., parity benches against "
+             "original declared order).",
+    )
     args = parser.parse_args()
 
     profiles = parse_profile_arg(args.profile)
@@ -1088,6 +1179,7 @@ def main() -> int:
             shard_workers=shard_workers,
             shard_file_workers=shard_file_workers,
             batch_size=args.batch_size,
+            sort_largest_first=not args.no_shard_sort,
         )
         update_manifest(out_dir, stats, mode="sharded")
         results[name] = stats
