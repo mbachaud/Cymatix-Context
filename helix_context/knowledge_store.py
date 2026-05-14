@@ -3066,6 +3066,51 @@ class KnowledgeStore:
         ).fetchone()
         return self._row_to_gene(row) if row else None
 
+    # Alias for the sharded adapter's method name so callers can be
+    # polymorphic without branching on adapter type. See sharding.py.
+    def get_gene(self, gene_id: str) -> Optional[Gene]:
+        return self.get_doc(gene_id)
+
+    # ── Citation lookup (polymorphic with ShardedGenomeAdapter) ─────────
+
+    def get_citation_rows(self, gene_ids: List[str]) -> Dict[str, Dict]:
+        """Return source_id + parsed promoter tags for a batch of gene_ids.
+
+        Used by /context and packet-builder citation construction. Mirrors
+        ``ShardedGenomeAdapter.get_citation_rows`` so callers don't need to
+        branch on adapter type. Missing ids are simply absent from the
+        return map.
+
+        Return shape (per gene_id):
+            ``{"source_id": str, "domains": list[str], "entities": list[str]}``
+        """
+        if not gene_ids:
+            return {}
+        ph = ",".join("?" * len(gene_ids))
+        rows = self.read_conn.cursor().execute(
+            f"SELECT gene_id, source_id, promoter FROM genes "
+            f"WHERE gene_id IN ({ph})",
+            gene_ids,
+        ).fetchall()
+        out: Dict[str, Dict] = {}
+        for r in rows:
+            domains: List[str] = []
+            entities: List[str] = []
+            if r["promoter"]:
+                try:
+                    prom = parse_promoter(r["promoter"])
+                    if prom is not None:
+                        domains = list(prom.domains)
+                        entities = list(prom.entities)
+                except Exception:
+                    pass
+            out[r["gene_id"]] = {
+                "source_id": r["source_id"] or "",
+                "domains": domains,
+                "entities": entities,
+            }
+        return out
+
     # ── Health logging ─────────────────────────────────────────────
 
     def log_health(
