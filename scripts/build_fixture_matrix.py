@@ -460,8 +460,20 @@ def ingest_tree(
 # ── Build one profile ─────────────────────────────────────────────────────
 
 
-def build_profile(name: str, db_path: str) -> dict:
-    """Build the profile named ``name`` into a fresh ``.db`` at ``db_path``."""
+def build_profile(
+    name: str,
+    db_path: str,
+    parallel: bool = False,
+    n_workers: int = 0,
+    batch_size: int = 64,
+    chunksize: int = 4,
+) -> dict:
+    """Build the profile named ``name`` into a fresh ``.db`` at ``db_path``.
+
+    When ``parallel=True`` use the mp.Pool + batched-SPLADE path (issue
+    #92). When False (default) preserve the original sequential
+    :func:`ingest_tree` behaviour byte-for-byte.
+    """
     profile = PROFILES[name]
 
     out_dir = os.path.dirname(os.path.abspath(db_path))
@@ -482,8 +494,6 @@ def build_profile(name: str, db_path: str) -> dict:
         splade_enabled=True,
         entity_graph=True,
     )
-    tagger = CpuTagger()
-    chunker = CodonChunker()
 
     skip_dirs = SKIP_DIRS_COMMON | profile["extra_skip_dirs"]
     extra_filename_filters = profile["extra_filename_filters"]
@@ -501,18 +511,39 @@ def build_profile(name: str, db_path: str) -> dict:
         "errors": 0,
         "missing_roots": [],
         "t0": time.perf_counter(),
+        "mode": "parallel" if parallel else "sequential",
     }
 
-    for root in profile["roots"]:
-        ingest_tree(
-            root=root,
-            genome=genome,
-            tagger=tagger,
-            chunker=chunker,
-            stats=stats,
-            skip_dirs=skip_dirs,
-            extra_filename_filters=extra_filename_filters,
+    if parallel:
+        from helix_context.parallel import auto_workers
+        if n_workers <= 0:
+            n_workers = auto_workers()
+        files = _iter_ingestable_files(
+            profile["roots"], skip_dirs, extra_filename_filters, stats,
         )
+        stats["discovered_files"] = len(files)
+        _parallel_ingest_to_genome(
+            files=files,
+            genome=genome,
+            stats=stats,
+            n_workers=n_workers,
+            batch_size=batch_size,
+            chunksize=chunksize,
+        )
+        stats["workers"] = n_workers
+    else:
+        tagger = CpuTagger()
+        chunker = CodonChunker()
+        for root in profile["roots"]:
+            ingest_tree(
+                root=root,
+                genome=genome,
+                tagger=tagger,
+                chunker=chunker,
+                stats=stats,
+                skip_dirs=skip_dirs,
+                extra_filename_filters=extra_filename_filters,
+            )
 
     elapsed = time.perf_counter() - stats["t0"]
     stats["elapsed_s"] = round(elapsed, 1)
@@ -536,7 +567,7 @@ def build_profile(name: str, db_path: str) -> dict:
         stats["bytes"] = -1
 
     log.info("=" * 60)
-    log.info("DONE %s in %.1fs", name, elapsed)
+    log.info("DONE %s (%s) in %.1fs", name, stats["mode"], elapsed)
     log.info("  files=%d genes=%d skipped=%d errors=%d",
              stats["files"], stats["genes"], stats["skipped"], stats["errors"])
     log.info("  total_genes=%d harmonic_links=%d bytes=%d",
@@ -821,6 +852,24 @@ def main() -> int:
         choices=["participant", "agent", "reference", "org", "cold"],
         help="Shard category recorded in main.db (sharded mode only)",
     )
+    parser.add_argument(
+        "--parallel", action="store_true",
+        help="Use mp.Pool + batched-SPLADE ingest (blob mode only). "
+             "Default: sequential.",
+    )
+    parser.add_argument(
+        "--workers", type=int, default=0,
+        help="Worker count for --parallel (0 = auto via "
+             "helix_context.parallel.auto_workers).",
+    )
+    parser.add_argument(
+        "--batch-size", type=int, default=64,
+        help="SPLADE batch size in the writer (default: 64).",
+    )
+    parser.add_argument(
+        "--chunksize", type=int, default=4,
+        help="mp.Pool chunksize for --parallel (default: 4).",
+    )
     args = parser.parse_args()
 
     profiles = parse_profile_arg(args.profile)
@@ -833,8 +882,17 @@ def main() -> int:
         results = {}
         for name in profiles:
             db_path = os.path.join(out_dir, f"{name}.db")
-            log.info("### Profile: %s (blob) ###", name)
-            stats = build_profile(name, db_path)
+            log.info(
+                "### Profile: %s (blob, %s) ###",
+                name, "parallel" if args.parallel else "sequential",
+            )
+            stats = build_profile(
+                name, db_path,
+                parallel=args.parallel,
+                n_workers=args.workers,
+                batch_size=args.batch_size,
+                chunksize=args.chunksize,
+            )
             update_manifest(out_dir, stats, mode="blob")
             results[name] = stats
 
@@ -879,4 +937,6 @@ def main() -> int:
 
 
 if __name__ == "__main__":
+    import multiprocessing as mp
+    mp.freeze_support()  # required on Windows for --parallel / --shard-workers
     sys.exit(main())
