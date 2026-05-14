@@ -22,8 +22,12 @@ import os
 import re
 import sys
 import time
+from pathlib import Path
 
 import httpx
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import _citations  # noqa: E402
 
 HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
 
@@ -123,21 +127,33 @@ NEEDLES = [
 
 # ── Gold-gene delivery check (Waude diagnostic 2026-04-17) ────────────
 
-GENE_BLOCK_RE = re.compile(
-    r'<GENE src="([^"]+)"[^>]*>(.*?)</GENE>', re.DOTALL,
-)
+# Legacy assembly markup -- retained as a fallback for historical JSONL
+# inputs. The live /context renderer emits ``[gene=...]`` legibility
+# headers + structured ``agent.citations`` instead (see issue #101).
+# `benchmarks/_citations.py` is the canonical parser.
+GENE_BLOCK_RE = _citations.LEGACY_GENE_BLOCK_RE
 
 
 def parse_delivered_genes(content: str):
-    """Extract (src, body) tuples from the delivered /context payload.
+    """Extract (src, body) tuples from a legacy content string.
 
-    Helix embeds each expressed gene as ``<GENE src="path/to/file"
-    facts="...">BODY</GENE>``. Parsing these gives an honest list of
-    what was actually delivered, rather than relying on substring
-    match against the whole payload (which picks up URL ports and
-    compression metadata — see waude_diagnostic_2026-04-17.md).
+    Kept for historical JSONL inspection. For live /context responses,
+    use ``parse_delivered_genes_from_response`` -- modern payloads carry
+    structured citations at ``response[0]["agent"]["citations"]`` and no
+    longer embed ``<GENE src=...>`` markup in ``content``.
     """
-    return GENE_BLOCK_RE.findall(content or "")
+    return _citations.parse_legacy_gene_blocks(content or "")
+
+
+def parse_delivered_genes_from_response(payload):
+    """Extract (src, body) tuples from a /context response.
+
+    Prefers ``agent.citations`` + the corresponding per-block bodies
+    parsed from the legibility-headered content blob. Falls back to the
+    legacy ``<GENE>...</GENE>`` regex when no structured citations are
+    present (historical JSONL replays).
+    """
+    return [(src, body) for src, _gid, body in _citations.extract_block_bodies(payload)]
 
 
 def _body_contains_accept(body: str, accept) -> bool:
@@ -154,10 +170,15 @@ def _body_contains_accept(body: str, accept) -> bool:
     return False
 
 
-def check_gold_delivery(content: str, gold_sources, accept):
+def check_gold_delivery(content: str, gold_sources, accept, *, response=None):
     """Honest delivery check for a needle.
 
-    Returns a dict with two independent dimensions:
+    Pass ``response`` for live /context payloads (modern shape with
+    ``agent.citations``). ``content`` is retained as a fallback so the
+    helper still works on historical JSONL records whose only artifact
+    is the inline assembly string.
+
+    Returns a dict with these dimensions:
       - ``gold_delivered``: gold source file is in delivered top-K
         (the retrieval-rank metric — addresses D-category failures
         directly, per Waude diagnostic 2026-04-17)
@@ -170,7 +191,10 @@ def check_gold_delivery(content: str, gold_sources, accept):
         fires BUT no gene body has a word-boundary match (i.e.,
         the match is pure metadata/header/URL noise)
     """
-    blocks = parse_delivered_genes(content)
+    if response is not None:
+        blocks = parse_delivered_genes_from_response(response)
+    else:
+        blocks = parse_delivered_genes(content)
 
     def src_matches(src: str) -> bool:
         src_norm = src.replace("\\", "/").lower()
@@ -242,10 +266,17 @@ def find_needle(client, needle):
     # the answer's source file to be in the delivered gene set AND
     # that block's body to contain an accept substring. Fall back to
     # payload substring if a needle has no gold_source defined.
+    #
+    # The full ``data`` (list-wrapped response) is passed through so the
+    # citation parser can read ``agent.citations`` for modern responses
+    # and fall back to legacy ``<GENE src=...>`` markup automatically
+    # (issue #101).
     accept = needle.get("accept", [needle["expected"]])
     gold_sources = needle.get("gold_source", [])
     if gold_sources:
-        gold = check_gold_delivery(content, gold_sources, accept)
+        gold = check_gold_delivery(
+            content, gold_sources, accept, response=data,
+        )
         # Primary metric: does any delivered gene BODY contain the
         # answer with word-boundary match. This is what the consumer
         # actually sees, minus metadata/URL false positives.
@@ -261,7 +292,7 @@ def find_needle(client, needle):
         gold_has_answer = found_in_context
         false_positive = False
         n_gold_blocks = 0
-        n_delivered_blocks = len(parse_delivered_genes(content))
+        n_delivered_blocks = len(parse_delivered_genes_from_response(data))
 
     # Step 2: Full proxy query for answer accuracy
     t1 = time.time()

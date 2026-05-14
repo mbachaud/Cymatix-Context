@@ -14,38 +14,37 @@ Usage:
 from __future__ import annotations
 
 import json
-import re
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "benchmarks"))
 
 import httpx  # noqa: E402
+
+import _citations  # noqa: E402
 
 from benchmarks.bench_needle import NEEDLES  # noqa: E402
 from helix_context.accel import extract_query_signals  # noqa: E402
 from helix_context.genome import file_tokens, path_tokens  # noqa: E402
 
 HELIX_URL = "http://localhost:11437"
-GENE_SRC_RE = re.compile(r'<GENE src="([^"]+)"')
 
 
 def fetch_delivered_srcs(client: httpx.Client, query: str) -> list[str]:
+    """Return delivered source paths from /context for `query`.
+
+    Sources come from the structured ``agent.citations`` payload on
+    modern responses; falls back to legacy ``<GENE src=...>`` regex on
+    historical JSONL replays (issue #101).
+    """
     r = client.post(
         f"{HELIX_URL}/context",
         json={"query": query, "task_type": "explain"},
         timeout=60,
     )
     r.raise_for_status()
-    payload = r.json()
-    # /context returns list-of-blocks; each has .content with embedded <GENE> tags
-    if isinstance(payload, list):
-        content = "\n".join(b.get("content", "") for b in payload if isinstance(b, dict))
-    elif isinstance(payload, dict):
-        content = payload.get("expressed_context") or payload.get("content") or ""
-    else:
-        content = ""
-    return GENE_SRC_RE.findall(content)
+    return _citations.extract_sources(r.json())
 
 
 def coverage(q_set: set, srcs: list[str], token_fn) -> float:

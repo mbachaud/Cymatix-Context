@@ -34,7 +34,7 @@ A transparent OpenAI-compatible proxy that intercepts LLM requests and injects c
 
 0. **Classify** — rule-based query classifier picks decoder mode + assembly cap (no model call)
 1. **Extract** — heuristic keyword extraction from query (no model call)
-2. **Retrieve** — tag lookup + BGE-M3 dense recall + synonym expansion + co-activation; ranks via Reciprocal Rank Fusion when `[retrieval] fusion_mode = "rrf"` (default: `"additive"`)
+2. **Retrieve** — FTS5 lexical + tag lookup + synonym expansion + co-activation + cymatics 256-bin spectrum scoring (all default-on, no neural inference at query time); optional BGE-M3 dense recall (`[retrieval] dense_embedding_enabled`, default off) and SPLADE sparse expansion (`[ingestion] splade_enabled`, default off) add transformer query-encoding when enabled; ranks via Reciprocal Rank Fusion when `[retrieval] fusion_mode = "rrf"` (default: `"additive"`)
 3. **Re-rank** — CPU model scores candidates by relevance (optional, off by default)
 4. **Splice** — CPU model compresses each candidate, keeping high-value fragments (batched)
 5. **Assemble** — join spliced parts, enforce token budget, attach per-document legibility headers (fired tiers, confidence marker, compression ratio), elide already-delivered documents via session working-set register
