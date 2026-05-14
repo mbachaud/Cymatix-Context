@@ -41,12 +41,14 @@ Parallel modes (issue #92)
                             (0 = auto via helix_context.parallel.auto_workers).
     --shard-workers N       Run sharded builds with N concurrent shard
                             processes. 0 = auto from VRAM + CPU.
+    --shard-file-workers N  CPU-only chunk/tag workers inside each shard
+                            process. 0 = auto from CPU budget.
     --batch-size N          SPLADE batch size in the writer (default 64).
 
 Examples:
     python scripts/build_fixture_matrix.py --profile medium --parallel
     python scripts/build_fixture_matrix.py --profile xl --parallel --workers 6
-    python scripts/build_fixture_matrix.py --profile xl --mode sharded --shard-workers 3
+    python scripts/build_fixture_matrix.py --profile xl --mode sharded --shard-workers 2 --shard-file-workers 3
 
 The script does not talk to the running Helix server -- it builds fresh
 SQLite files directly. Use ``POST /admin/swap-db`` with ``mode="blob"``
@@ -57,8 +59,10 @@ of the resulting files into a running server without restarting.
 from __future__ import annotations
 
 import argparse
+from concurrent.futures import ProcessPoolExecutor, as_completed
 import json
 import logging
+import multiprocessing as mp
 import os
 import re
 import sys
@@ -125,6 +129,11 @@ SQLITE_SIDECAR_SUFFIXES = (".db", ".sqlite", ".sqlite3", ".db-wal", ".db-shm",
 
 MAX_FILE_SIZE = 200_000
 MIN_FILE_SIZE = 50
+
+
+def _is_sqlite_sidecar(path: str) -> bool:
+    """Picklable filter for SQLite sidecars in process-pool shard tasks."""
+    return any(path.lower().endswith(s) for s in SQLITE_SIDECAR_SUFFIXES)
 
 
 # ── File -> gene-dict helper (shared by sequential + parallel paths) ──────
@@ -292,8 +301,6 @@ def _parallel_ingest_to_genome(
 
     Caller is responsible for opening / closing ``genome``.
     """
-    import multiprocessing as mp
-
     log.info(
         "parallel ingest: %d files, %d workers, batch_size=%d",
         len(files), n_workers, batch_size,
@@ -305,6 +312,29 @@ def _parallel_ingest_to_genome(
         )
         _drain_with_batched_splade(
             gene_dict_iter, genome, stats, batch_size=batch_size,
+        )
+
+
+def _iter_chunked_file_gene_dicts(
+    files: list[tuple[str, str]],
+    file_workers: int,
+    chunksize: int = 4,
+) -> Iterable[list[dict]]:
+    """Yield per-file gene dict lists, optionally using shard-local CPU workers."""
+    file_workers = max(1, int(file_workers or 1))
+    if file_workers <= 1:
+        _init_worker()
+        for f in files:
+            yield _chunk_and_tag_file(f)
+        return
+
+    log.info(
+        "shard file ingest: %d files, %d file_workers, chunksize=%d",
+        len(files), file_workers, chunksize,
+    )
+    with mp.Pool(file_workers, initializer=_init_worker) as pool:
+        yield from pool.imap_unordered(
+            _chunk_and_tag_file, files, chunksize=chunksize,
         )
 
 
@@ -342,22 +372,14 @@ PROFILES: dict[str, dict] = {
         "extra_skip_dirs": set(),
         # Skip any .db / .sqlite sidecars under helix-context. The walker
         # already filters by extension; this is just an extra safety belt.
-        "extra_filename_filters": [
-            lambda path: any(
-                path.lower().endswith(s) for s in SQLITE_SIDECAR_SUFFIXES
-            ),
-        ],
+        "extra_filename_filters": [_is_sqlite_sidecar],
     },
     "large": {
         "label": "Full projects corpus",
         "active_roots": 1,
         "roots": [r"F:\Projects"],
         "extra_skip_dirs": set(),
-        "extra_filename_filters": [
-            lambda path: any(
-                path.lower().endswith(s) for s in SQLITE_SIDECAR_SUFFIXES
-            ),
-        ],
+        "extra_filename_filters": [_is_sqlite_sidecar],
     },
     "xl": {
         "label": "Projects plus external Steam/game code corpus",
@@ -383,11 +405,7 @@ PROFILES: dict[str, dict] = {
             "crashdump", "CrashDump", "Crashes",
             "PlayerData", "Recordings",
         },
-        "extra_filename_filters": [
-            lambda path: any(
-                path.lower().endswith(s) for s in SQLITE_SIDECAR_SUFFIXES
-            ),
-        ],
+        "extra_filename_filters": [_is_sqlite_sidecar],
     },
 }
 
@@ -618,14 +636,17 @@ def _build_one_shard(
     extra_filename_filters: list,
     use_batched_splade: bool = True,
     batch_size: int = 64,
+    file_workers: int = 1,
+    file_chunksize: int = 4,
 ) -> dict:
     """Build a single shard ``.db`` for ``root``. Returns the shard's
     fingerprint payload + stats -- caller writes rows into main.db.
 
-    Runs end-to-end in one process: discover files, chunk+tag, batched
-    SPLADE upsert. Used by both the serial sharded build (called from
-    the parent process) and the parallel pool (called inside subprocesses
-    via :func:`_shard_worker_entry`).
+    Runs one SPLADE-owning shard process; chunk+tag may fan out to a
+    shard-local CPU-only file pool before batched SPLADE upsert. Used by
+    both the serial sharded build (called from the parent process) and the
+    parallel shard executor (called inside subprocesses via
+    :func:`_shard_worker_entry`).
     """
     p = Path(shard_db_path)
     if p.exists():
@@ -649,8 +670,9 @@ def _build_one_shard(
             files = _iter_ingestable_files(
                 [root], skip_dirs, extra_filename_filters, s_stats,
             )
-            _init_worker()  # fill module-level chunker/tagger
-            gen = (_chunk_and_tag_file(f) for f in files)
+            gen = _iter_chunked_file_gene_dicts(
+                files, file_workers=file_workers, chunksize=file_chunksize,
+            )
             _drain_with_batched_splade(
                 gen, shard, s_stats, batch_size=batch_size,
             )
@@ -727,6 +749,8 @@ def _shard_worker_entry(task: dict) -> dict:
         extra_filename_filters=task["extra_filename_filters"],
         use_batched_splade=True,
         batch_size=task.get("batch_size", 64),
+        file_workers=task.get("shard_file_workers", 1),
+        file_chunksize=task.get("shard_file_chunksize", 4),
     )
 
 
@@ -735,18 +759,23 @@ def build_profile_sharded(
     profile_out_dir: str,
     shard_category: str = "reference",
     shard_workers: int = 1,
+    shard_file_workers: int = 0,
     batch_size: int = 64,
 ) -> dict:
     """Build the profile as a sharded layout under ``profile_out_dir``.
 
-    When ``shard_workers > 1`` the per-shard builds run in an ``mp.Pool``;
-    main.db writes happen in the parent process after each shard returns,
-    serialized through SQLite's ``busy_timeout``. ``shard_workers == 1``
-    (default) is the serial path.
+    When ``shard_workers > 1`` the per-shard builds run in a process
+    executor; main.db writes happen in the parent process after each shard
+    returns, serialized through SQLite's ``busy_timeout``. Each shard may
+    also run ``shard_file_workers`` CPU-only workers for chunk+tag prep;
+    ``0`` auto-sizes from the CPU budget.
     """
-    import multiprocessing as mp
-
     profile = PROFILES[name]
+    if shard_file_workers <= 0:
+        from helix_context.parallel import auto_shard_file_workers
+        shard_file_workers = auto_shard_file_workers(shard_workers)
+    else:
+        shard_file_workers = max(1, int(shard_file_workers))
     os.makedirs(profile_out_dir, exist_ok=True)
 
     main_path = main_db_path(profile_out_dir)
@@ -763,8 +792,8 @@ def build_profile_sharded(
     except Exception:
         log.debug("busy_timeout pragma failed", exc_info=True)
     log.info(
-        "sharded main.db at %s (shard_workers=%d)",
-        main_path, shard_workers,
+        "sharded main.db at %s (shard_workers=%d, shard_file_workers=%d)",
+        main_path, shard_workers, shard_file_workers,
     )
 
     skip_dirs = SKIP_DIRS_COMMON | profile["extra_skip_dirs"]
@@ -785,6 +814,7 @@ def build_profile_sharded(
         "missing_roots": [],
         "shards": [],
         "shard_workers": shard_workers,
+        "shard_file_workers": shard_file_workers,
         "t0": time.perf_counter(),
     }
 
@@ -804,6 +834,8 @@ def build_profile_sharded(
             "skip_dirs": skip_dirs,
             "extra_filename_filters": extra_filename_filters,
             "batch_size": batch_size,
+            "shard_file_workers": shard_file_workers,
+            "shard_file_chunksize": 4,
         })
 
     # Per-shard execution -- serial or pool.
@@ -853,12 +885,13 @@ def build_profile_sharded(
             _commit_shard_result(_shard_worker_entry(task))
     else:
         log.info(
-            "dispatching %d shards across %d workers",
-            len(tasks), shard_workers,
+            "dispatching %d shards across %d workers (%d file_workers each)",
+            len(tasks), shard_workers, shard_file_workers,
         )
-        with mp.Pool(shard_workers) as pool:
-            for res in pool.imap_unordered(_shard_worker_entry, tasks):
-                _commit_shard_result(res)
+        with ProcessPoolExecutor(max_workers=shard_workers) as pool:
+            futures = [pool.submit(_shard_worker_entry, task) for task in tasks]
+            for fut in as_completed(futures):
+                _commit_shard_result(fut.result())
 
     elapsed = time.perf_counter() - totals["t0"]
     totals["elapsed_s"] = round(elapsed, 1)
@@ -982,6 +1015,12 @@ def main() -> int:
              "0 = auto via helix_context.parallel.auto_shard_workers; "
              "1 = serial.",
     )
+    parser.add_argument(
+        "--shard-file-workers", type=int, default=0,
+        help="CPU-only file workers inside each shard-builder "
+             "(sharded mode only). 0 = auto via "
+             "helix_context.parallel.auto_shard_file_workers; 1 = serial.",
+    )
     args = parser.parse_args()
 
     profiles = parse_profile_arg(args.profile)
@@ -1024,24 +1063,30 @@ def main() -> int:
     os.makedirs(out_dir, exist_ok=True)
     log.info("BUILD START mode=sharded profiles=%s out_dir=%s", profiles, out_dir)
 
+    from helix_context.parallel import auto_shard_file_workers
     if args.shard_workers <= 0:
         from helix_context.parallel import auto_shard_workers
         shard_workers = auto_shard_workers()
     else:
         shard_workers = args.shard_workers
+    if args.shard_file_workers <= 0:
+        shard_file_workers = auto_shard_file_workers(shard_workers)
+    else:
+        shard_file_workers = max(1, args.shard_file_workers)
 
     results = {}
     for name in profiles:
         profile_dir = os.path.join(out_dir, name)
         log.info(
-            "### Profile: %s (sharded, %d workers) ###",
-            name, shard_workers,
+            "### Profile: %s (sharded, %d shard workers x %d file workers) ###",
+            name, shard_workers, shard_file_workers,
         )
         stats = build_profile_sharded(
             name=name,
             profile_out_dir=profile_dir,
             shard_category=args.shard_category,
             shard_workers=shard_workers,
+            shard_file_workers=shard_file_workers,
             batch_size=args.batch_size,
         )
         update_manifest(out_dir, stats, mode="sharded")
