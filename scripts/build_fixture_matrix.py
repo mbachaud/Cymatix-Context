@@ -163,6 +163,136 @@ def _chunk_and_tag_file(args: tuple[str, str]) -> list[dict]:
     return genes
 
 
+# ── File discovery iterator (drop-in for ingest_tree's walk) ─────────────
+
+
+def _iter_ingestable_files(
+    roots: list[str],
+    skip_dirs: set[str],
+    extra_filename_filters: list,
+    stats: dict,
+) -> list[tuple[str, str]]:
+    """Walk ``roots`` and return [(fpath, ext)] passing all filters.
+
+    Updates ``stats['missing_roots']`` and ``stats['skipped']`` in place.
+    """
+    files: list[tuple[str, str]] = []
+    for root in roots:
+        if not os.path.exists(root):
+            log.warning("root %s does not exist, skipping", root)
+            stats["missing_roots"].append(root)
+            continue
+        log.info("=== Discovering %s ===", root)
+        for dirpath, dirnames, filenames in os.walk(root):
+            dirnames[:] = [d for d in dirnames if d not in skip_dirs]
+            for fname in filenames:
+                ext = os.path.splitext(fname)[1].lower()
+                if ext not in INGEST_EXTS:
+                    stats["skipped"] += 1
+                    continue
+                fpath = os.path.join(dirpath, fname)
+                if any(f(fpath) for f in extra_filename_filters):
+                    stats["skipped"] += 1
+                    continue
+                try:
+                    size = os.path.getsize(fpath)
+                except OSError:
+                    continue
+                if size < MIN_FILE_SIZE or size > MAX_FILE_SIZE:
+                    stats["skipped"] += 1
+                    continue
+                files.append((fpath, ext))
+    return files
+
+
+# ── Batched-SPLADE writer (drains gene dicts -> genome) ──────────────────
+
+
+def _drain_with_batched_splade(
+    gene_dict_iter,
+    genome,
+    stats: dict,
+    batch_size: int = 64,
+) -> None:
+    """Drain ``gene_dict_iter`` (yielding lists of gene dicts per file)
+    into ``genome``. SPLADE encoding is batched across ``batch_size`` genes
+    instead of per-gene. Stats are updated in place.
+    """
+    from helix_context.backends import splade_backend
+    from helix_context.schemas import Gene
+
+    buf: list = []  # Gene instances buffered before batch flush
+
+    def _flush(batch: list) -> None:
+        if not batch:
+            return
+        sparses = splade_backend.encode_batch(
+            [g.content[:1000] for g in batch]
+        )
+        for g, sp in zip(batch, sparses):
+            try:
+                genome.upsert_doc(g, apply_gate=True, splade_sparse=sp)
+                stats["genes"] += 1
+            except Exception:
+                stats["errors"] += 1
+        if stats["genes"] % 500 < batch_size and stats["genes"] > 0:
+            elapsed = time.perf_counter() - stats["t0"]
+            log.info(
+                "[%d files, %d genes] %.1f genes/s",
+                stats["files"], stats["genes"],
+                stats["genes"] / max(elapsed, 0.001),
+            )
+
+    for gene_dicts in gene_dict_iter:
+        if not gene_dicts:
+            stats["errors"] += 1
+            continue
+        for gd in gene_dicts:
+            try:
+                buf.append(Gene(**gd))
+            except Exception:
+                stats["errors"] += 1
+        stats["files"] += 1
+        while len(buf) >= batch_size:
+            _flush(buf[:batch_size])
+            del buf[:batch_size]
+
+    if buf:
+        _flush(buf)
+
+
+# ── Parallel mode: file-level mp.Pool + main-process writer ──────────────
+
+
+def _parallel_ingest_to_genome(
+    files: list[tuple[str, str]],
+    genome,
+    stats: dict,
+    n_workers: int,
+    batch_size: int = 64,
+    chunksize: int = 4,
+) -> None:
+    """Chunk+tag files in parallel via ``mp.Pool``; drain into ``genome``
+    via the batched-SPLADE writer in the main process.
+
+    Caller is responsible for opening / closing ``genome``.
+    """
+    import multiprocessing as mp
+
+    log.info(
+        "parallel ingest: %d files, %d workers, batch_size=%d",
+        len(files), n_workers, batch_size,
+    )
+
+    with mp.Pool(n_workers, initializer=_init_worker) as pool:
+        gene_dict_iter = pool.imap_unordered(
+            _chunk_and_tag_file, files, chunksize=chunksize,
+        )
+        _drain_with_batched_splade(
+            gene_dict_iter, genome, stats, batch_size=batch_size,
+        )
+
+
 # ── Profile definitions ───────────────────────────────────────────────────
 
 PROFILES: dict[str, dict] = {
