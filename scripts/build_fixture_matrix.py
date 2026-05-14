@@ -719,14 +719,18 @@ def build_profile_sharded(
     name: str,
     profile_out_dir: str,
     shard_category: str = "reference",
+    shard_workers: int = 1,
+    batch_size: int = 64,
 ) -> dict:
     """Build the profile as a sharded layout under ``profile_out_dir``.
 
-    One per-source-root shard ``.db`` (under filesystem-mirroring layout)
-    plus a ``main.genome.db`` routing DB with the ``fingerprint_index``
-    populated. Shards are registered under ``shard_category`` (default
-    "reference" — appropriate for bench corpora).
+    When ``shard_workers > 1`` the per-shard builds run in an ``mp.Pool``;
+    main.db writes happen in the parent process after each shard returns,
+    serialized through SQLite's ``busy_timeout``. ``shard_workers == 1``
+    (default) is the serial path.
     """
+    import multiprocessing as mp
+
     profile = PROFILES[name]
     os.makedirs(profile_out_dir, exist_ok=True)
 
@@ -739,10 +743,15 @@ def build_profile_sharded(
                 os.remove(sidecar)
     main_conn = open_main_db(str(main_path))
     init_main_db(main_conn)
-    log.info("sharded main.db at %s", main_path)
+    try:
+        main_conn.execute("PRAGMA busy_timeout = 30000")
+    except Exception:
+        log.debug("busy_timeout pragma failed", exc_info=True)
+    log.info(
+        "sharded main.db at %s (shard_workers=%d)",
+        main_path, shard_workers,
+    )
 
-    tagger = CpuTagger()
-    chunker = CodonChunker()
     skip_dirs = SKIP_DIRS_COMMON | profile["extra_skip_dirs"]
     extra_filename_filters = profile["extra_filename_filters"]
 
@@ -760,74 +769,81 @@ def build_profile_sharded(
         "errors": 0,
         "missing_roots": [],
         "shards": [],
+        "shard_workers": shard_workers,
         "t0": time.perf_counter(),
     }
 
+    # Build the task list (filter out missing roots up front).
+    tasks: list[dict] = []
     for root in profile["roots"]:
         if not os.path.exists(root):
             log.warning("root %s does not exist, skipping", root)
             totals["missing_roots"].append(root)
             continue
-
         label = _slug_for_root(root)
         shard_db = corpus_shard_db(root, label, profile_out_dir)
-        shard_db.parent.mkdir(parents=True, exist_ok=True)
+        tasks.append({
+            "label": label,
+            "root": root,
+            "shard_db_path": str(shard_db),
+            "skip_dirs": skip_dirs,
+            "extra_filename_filters": extra_filename_filters,
+            "batch_size": batch_size,
+        })
 
-        if shard_db.exists():
-            log.info("removing existing shard %s", shard_db)
-            shard_db.unlink()
-            for sidecar in (str(shard_db) + "-wal", str(shard_db) + "-shm"):
-                if os.path.exists(sidecar):
-                    os.remove(sidecar)
-
-        log.info("=== Shard %s @ %s -> %s ===", label, root, shard_db)
-        shard = Genome(
-            path=str(shard_db), synonym_map={},
-            splade_enabled=True, entity_graph=True,
+    # Per-shard execution -- serial or pool.
+    def _commit_shard_result(res: dict) -> None:
+        register_shard(
+            main_conn,
+            shard_name=res["label"],
+            category=shard_category,
+            path=res["shard_db_path"],
+            gene_count=res["gene_count"],
+            byte_size=res["byte_size"],
         )
-        s_stats = {
-            "files": 0, "genes": 0, "skipped": 0, "errors": 0,
-            "missing_roots": [],
-            "t0": time.perf_counter(),
-        }
-        try:
-            ingest_tree(
-                root=root,
-                genome=shard,
-                tagger=tagger,
-                chunker=chunker,
-                stats=s_stats,
-                skip_dirs=skip_dirs,
-                extra_filename_filters=extra_filename_filters,
+        if res["fingerprint_payload"]:
+            main_conn.executemany(
+                "INSERT OR REPLACE INTO fingerprint_index "
+                "(gene_id, shard_name, source_id, domains, entities, "
+                "key_values, is_parent, sequence_idx, updated_at) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                res["fingerprint_payload"],
             )
-            gene_count = shard.stats().get("total_genes", 0)
-            byte_size = shard_db.stat().st_size if shard_db.is_file() else 0
-            register_shard(
-                main_conn,
-                shard_name=label,
-                category=shard_category,
-                path=str(shard_db),
-                gene_count=gene_count,
-                byte_size=byte_size,
-            )
-            fp_rows = _copy_fingerprint_indexes(main_conn, shard, label)
-            log.info(
-                "  %s: %d genes, %d fingerprint rows, %.1f MB",
-                label, gene_count, fp_rows, byte_size / 1_048_576,
-            )
-            totals["shards"].append({
-                "name": label,
-                "root": root,
-                "path": str(shard_db),
-                "genes": gene_count,
-                "fingerprint_rows": fp_rows,
-                "bytes": byte_size,
-                "elapsed_s": round(time.perf_counter() - s_stats["t0"], 1),
-            })
-        finally:
-            shard.close()
+        main_conn.commit()
+        log.info(
+            "  %s: %d genes, %d fingerprint rows, %.1f MB (%.1fs)",
+            res["label"], res["gene_count"],
+            len(res["fingerprint_payload"]),
+            res["byte_size"] / 1_048_576, res["elapsed_s"],
+        )
+        totals["shards"].append({
+            "name": res["label"],
+            "root": res["root"],
+            "path": res["shard_db_path"],
+            "genes": res["gene_count"],
+            "fingerprint_rows": len(res["fingerprint_payload"]),
+            "bytes": res["byte_size"],
+            "elapsed_s": res["elapsed_s"],
+        })
         for k in ("files", "genes", "skipped", "errors"):
-            totals[k] += s_stats[k]
+            totals[k] += res[k]
+        totals["missing_roots"].extend(res["missing_roots"])
+
+    if shard_workers <= 1:
+        for task in tasks:
+            log.info(
+                "=== Shard %s @ %s -> %s ===",
+                task["label"], task["root"], task["shard_db_path"],
+            )
+            _commit_shard_result(_shard_worker_entry(task))
+    else:
+        log.info(
+            "dispatching %d shards across %d workers",
+            len(tasks), shard_workers,
+        )
+        with mp.Pool(shard_workers) as pool:
+            for res in pool.imap_unordered(_shard_worker_entry, tasks):
+                _commit_shard_result(res)
 
     elapsed = time.perf_counter() - totals["t0"]
     totals["elapsed_s"] = round(elapsed, 1)
