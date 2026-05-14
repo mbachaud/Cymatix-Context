@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import logging
 import sqlite3
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 from ..schemas import Gene
 
@@ -158,18 +158,27 @@ def sync_splade_index(
     gene_id: str,
     content: str,
     splade_enabled: bool,
+    splade_sparse: Optional[Dict[str, float]] = None,
 ) -> None:
-    """Populate the SPLADE sparse-term index.  No-op when disabled."""
+    """Populate the SPLADE sparse-term index.  No-op when disabled.
+
+    When ``splade_sparse`` is None (default), encode ``content[:1000]``
+    inline via :mod:`helix_context.backends.splade_backend`. When provided,
+    use the supplied sparse dict as-is and skip the inline encode -- used
+    by the parallel ingest paths (issue #92) so SPLADE can be batched
+    outside the per-document upsert.
+    """
     if not splade_enabled:
         return
     try:
-        from ..backends import splade_backend
-        sparse = splade_backend.encode(content[:1000])
+        if splade_sparse is None:
+            from ..backends import splade_backend
+            splade_sparse = splade_backend.encode(content[:1000])
         cur.execute("DELETE FROM splade_terms WHERE gene_id = ?", (gene_id,))
-        if sparse:
+        if splade_sparse:
             cur.executemany(
                 "INSERT INTO splade_terms (gene_id, term, weight) VALUES (?, ?, ?)",
-                [(gene_id, term, weight) for term, weight in sparse.items()],
+                [(gene_id, term, weight) for term, weight in splade_sparse.items()],
             )
     except Exception:
         log.debug("SPLADE indexing failed for gene %s", gene_id, exc_info=True)
