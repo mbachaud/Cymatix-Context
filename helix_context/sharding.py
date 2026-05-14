@@ -297,6 +297,17 @@ class ShardedGenomeAdapter:
         on the main routing connection's read path. Missing ids are
         absent from the returned map.
 
+        Determinism contract (PR #103 + #106 follow-up):
+            ``fingerprint_index`` PK is composite ``(gene_id, shard_name)``,
+            so the same content-addressed gene_id may appear in multiple
+            shards. We ``ORDER BY shard_name ASC`` and use ``setdefault``
+            in the dict-build loop, so the lexicographically minimum
+            ``shard_name`` always wins. Content is byte-identical across
+            shards (gene_id is sha256 of content), so the picked
+            ``source_id`` is a valid citation regardless — but the choice
+            is now stable across re-runs against the same fixture, which
+            matters for bench reproducibility.
+
         Return shape (per gene_id):
             ``{"source_id": str, "domains": list[str], "entities": list[str]}``
         """
@@ -306,11 +317,16 @@ class ShardedGenomeAdapter:
         ph = ",".join("?" * len(gene_ids))
         rows = self._router.main_conn.execute(
             f"SELECT gene_id, source_id, domains, entities "
-            f"FROM fingerprint_index WHERE gene_id IN ({ph})",
+            f"FROM fingerprint_index WHERE gene_id IN ({ph}) "
+            f"ORDER BY shard_name ASC",
             gene_ids,
         ).fetchall()
         out: dict = {}
         for r in rows:
+            # First-seen wins: rows are sorted by shard_name ASC above,
+            # so setdefault keeps the lexicographically minimum shard.
+            if r["gene_id"] in out:
+                continue
             domains: List = []
             entities: List = []
             if r["domains"]:
