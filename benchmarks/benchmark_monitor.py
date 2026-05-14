@@ -108,6 +108,8 @@ class BenchmarkMonitor:
         ollama_url: str = "http://localhost:11434",
         monitor_log_path: Optional[str] = None,
         config: Optional[MonitorConfig] = None,
+        ask_proxy: bool = True,
+        health_timeout_s: float = 15.0,
     ):
         self.benchmark_model = benchmark_model.lower()
         self.allowed_models = [m.lower() for m in (allowed_models or [benchmark_model])]
@@ -116,6 +118,14 @@ class BenchmarkMonitor:
         self.helix_url = helix_url.rstrip("/")
         self.ollama_url = ollama_url.rstrip("/")
         self.cfg = config or MonitorConfig()
+        # ask_proxy=False → retrieval-only run (/context, no /v1/chat). The
+        # downstream model never gets invoked, so skip the Ollama-reachable,
+        # benchmark-model-loaded, and unauthorized-models gates entirely.
+        self.ask_proxy = ask_proxy
+        # /health timeout in preflight — raised from 5s to ride out the
+        # cache-warm window right after POST /admin/swap-db. Periodic checks
+        # in _run_check still use their own (tighter) timeout.
+        self.health_timeout_s = health_timeout_s
 
         # Config-driven genome path — resolved from helix.toml unless overridden
         if genome_snapshot_path:
@@ -375,6 +385,9 @@ class BenchmarkMonitor:
         self._print(f"Helix URL:         {self.helix_url}")
         self._print(f"Ollama URL:        {self.ollama_url}")
         self._print(f"Total needles:     {self.total_needles}")
+        self._print(f"Ask-proxy mode:    {self.ask_proxy} "
+                    f"({'full /v1/chat path' if self.ask_proxy else 'retrieval-only /context'})")
+        self._print(f"Health timeout:    {self.health_timeout_s}s")
         self._print(f"Restart threshold: {self._restart_threshold_pct()*100:.1f}% "
                     f"(~{int(self.total_needles * self._restart_threshold_pct())} needles)")
 
@@ -382,7 +395,7 @@ class BenchmarkMonitor:
 
         # 1. Helix server reachable?
         try:
-            r = self._client.get(f"{self.helix_url}/health", timeout=5)
+            r = self._client.get(f"{self.helix_url}/health", timeout=self.health_timeout_s)
             if r.status_code != 200:
                 fatal.append(f"Helix server returned HTTP {r.status_code}")
             else:
@@ -392,36 +405,43 @@ class BenchmarkMonitor:
         except Exception as e:
             fatal.append(f"Helix server unreachable at {self.helix_url}: {e}")
 
-        # 2. Ollama reachable?
-        try:
-            r = self._client.get(f"{self.ollama_url}/api/tags", timeout=5)
-            if r.status_code != 200:
-                fatal.append(f"Ollama returned HTTP {r.status_code}")
-            else:
-                self._print(f"[OK] Ollama alive")
-        except Exception as e:
-            fatal.append(f"Ollama unreachable at {self.ollama_url}: {e}")
+        # 2-4. Ollama-side gates — skipped entirely in retrieval-only mode.
+        # When ask_proxy=False, no /v1/chat call is ever issued so Ollama
+        # readiness has no bearing on the run.
+        if self.ask_proxy:
+            # 2. Ollama reachable?
+            try:
+                r = self._client.get(f"{self.ollama_url}/api/tags", timeout=5)
+                if r.status_code != 200:
+                    fatal.append(f"Ollama returned HTTP {r.status_code}")
+                else:
+                    self._print(f"[OK] Ollama alive")
+            except Exception as e:
+                fatal.append(f"Ollama unreachable at {self.ollama_url}: {e}")
 
-        # 3 + 4. Loaded models
-        loaded = self._loaded_models()
-        loaded_names = [m.get("name") for m in loaded]
-        self._print(f"Loaded models: {loaded_names or '(none)'}")
+            # 3 + 4. Loaded models
+            loaded = self._loaded_models()
+            loaded_names = [m.get("name") for m in loaded]
+            self._print(f"Loaded models: {loaded_names or '(none)'}")
 
-        if not self._benchmark_model_loaded(loaded):
-            fatal.append(
-                f"Benchmark model '{self.benchmark_model}' is not loaded. "
-                f"Pre-load with: curl http://localhost:11434/api/generate "
-                f"-d '{{\"model\":\"{self.benchmark_model}\",\"prompt\":\"hi\","
-                f"\"stream\":false,\"keep_alive\":\"12h\",\"options\":{{\"num_predict\":1}}}}'"
-            )
+            if not self._benchmark_model_loaded(loaded):
+                fatal.append(
+                    f"Benchmark model '{self.benchmark_model}' is not loaded. "
+                    f"Pre-load with: curl http://localhost:11434/api/generate "
+                    f"-d '{{\"model\":\"{self.benchmark_model}\",\"prompt\":\"hi\","
+                    f"\"stream\":false,\"keep_alive\":\"12h\",\"options\":{{\"num_predict\":1}}}}'"
+                )
 
-        unauthorized = self._unauthorized_models(loaded)
-        if unauthorized:
-            fatal.append(
-                f"Unauthorized models loaded: {unauthorized}. "
-                f"Unload with: curl -X POST {self.ollama_url}/api/generate "
-                f"-d '{{\"model\":\"<name>\",\"keep_alive\":\"0s\"}}'"
-            )
+            unauthorized = self._unauthorized_models(loaded)
+            if unauthorized:
+                fatal.append(
+                    f"Unauthorized models loaded: {unauthorized}. "
+                    f"Unload with: curl -X POST {self.ollama_url}/api/generate "
+                    f"-d '{{\"model\":\"<name>\",\"keep_alive\":\"0s\"}}'"
+                )
+        else:
+            self._print("[skip] Ollama / model-loaded / unauthorized gates skipped "
+                        "(ask_proxy=False, retrieval-only run)")
 
         # 5. Genome snapshot
         if not self.genome_path.exists():

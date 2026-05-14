@@ -3066,11 +3066,6 @@ class KnowledgeStore:
         ).fetchone()
         return self._row_to_gene(row) if row else None
 
-    # Alias for the sharded adapter's method name so callers can be
-    # polymorphic without branching on adapter type. See sharding.py.
-    def get_gene(self, gene_id: str) -> Optional[Gene]:
-        return self.get_doc(gene_id)
-
     # ── Citation lookup (polymorphic with ShardedGenomeAdapter) ─────────
 
     def get_citation_rows(self, gene_ids: List[str]) -> Dict[str, Dict]:

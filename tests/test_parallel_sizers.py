@@ -4,7 +4,11 @@ from __future__ import annotations
 
 from unittest.mock import patch
 
-from helix_context.parallel import auto_workers, auto_shard_workers
+from helix_context.parallel import (
+    auto_shard_file_workers,
+    auto_shard_workers,
+    auto_workers,
+)
 
 
 @patch("helix_context.parallel.os.cpu_count", return_value=8)
@@ -38,16 +42,33 @@ def test_auto_workers_handles_unknown_cpu(_):
 
 
 class _FakeHardware:
-    def __init__(self, vram: float | None):
+    def __init__(self, vram: float | None, free: float | None = None):
         self.vram_total_gb = vram
+        self.vram_free_gb = free
 
 
 @patch("helix_context.parallel.os.cpu_count", return_value=8)
 def test_auto_shard_workers_3080ti(_):
-    """12 GB VRAM + 8-core CPU: min(12//4, auto_workers) = min(3, 6) = 3."""
+    """12 GB VRAM + 8-core CPU: min(3 VRAM workers, 6 CPU workers) = 3."""
     with patch("helix_context.hardware.get_hardware",
                return_value=_FakeHardware(vram=12.0)):
         assert auto_shard_workers() == 3
+
+
+@patch("helix_context.parallel.os.cpu_count", return_value=8)
+def test_auto_shard_workers_3080ti_fractional_total(_):
+    """CUDA can report 11.9995 GB for a 12 GB card; that still allows 3."""
+    with patch("helix_context.hardware.get_hardware",
+               return_value=_FakeHardware(vram=11.99951171875)):
+        assert auto_shard_workers() == 3
+
+
+@patch("helix_context.parallel.os.cpu_count", return_value=8)
+def test_auto_shard_workers_respects_live_free_vram(_):
+    """When the server is already using VRAM, auto keeps startup below OOM."""
+    with patch("helix_context.hardware.get_hardware",
+               return_value=_FakeHardware(vram=12.0, free=10.8)):
+        assert auto_shard_workers() == 2
 
 
 @patch("helix_context.parallel.os.cpu_count", return_value=16)
@@ -80,3 +101,15 @@ def test_auto_shard_workers_hardware_import_error(_):
     with patch("helix_context.hardware.get_hardware",
                side_effect=RuntimeError("no torch")):
         assert auto_shard_workers() >= 1
+
+
+@patch("helix_context.parallel.os.cpu_count", return_value=8)
+def test_auto_shard_file_workers_feeds_two_splade_workers(_):
+    """5800X-class box: 2 shard workers get 3 CPU file workers each."""
+    assert auto_shard_file_workers(2) == 3
+
+
+@patch("helix_context.parallel.os.cpu_count", return_value=8)
+def test_auto_shard_file_workers_feeds_three_splade_workers(_):
+    """5800X-class box: 3 shard workers get 2 CPU file workers each."""
+    assert auto_shard_file_workers(3) == 2

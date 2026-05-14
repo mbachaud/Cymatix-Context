@@ -144,6 +144,7 @@ class IngestTargetRouter:
 
 
 import logging
+import threading
 from typing import Any, List
 
 log = logging.getLogger(__name__)
@@ -178,13 +179,41 @@ class ShardedGenomeAdapter:
         self.last_tier_contributions: dict = {}
         self._sharded_adapter = True  # sentinel for callers to detect
 
+        # Mirror the KnowledgeStore attributes that context_manager._retrieve
+        # and routes_admin read directly off self.genome. The adapter itself
+        # doesn't run dense or entity-graph retrieval — each per-shard
+        # Genome handles those internally during fan-out — so the
+        # adapter-level flags default to False.
+        self._dense_embedding_enabled: bool = False
+        self._entity_graph_retrieval_enabled: bool = False
+        # context_manager._build_signals uses this lock when fanning sub-queries
+        # across threads to read last_query_scores atomically.
+        self._last_query_scores_lock = threading.Lock()
+
+    @property
+    def path(self) -> str:
+        """Routing-DB path. Mirrors ``KnowledgeStore.path`` so
+        ``/admin/swap-db`` and other callers reading ``genome.path`` work
+        on a sharded knowledge store."""
+        return self._router.main_path
+
     # ── Reads ─────────────────────────────────────────────────────────
 
-    def query_genes(self, *args: Any, **kwargs: Any) -> List:
-        genes = self._router.query_docs(*args, **kwargs)
+    def query_docs(self, *args: Any, **kwargs: Any) -> List:
+        """Federated read across shards. R3 canonical name.
+
+        The router still exposes its read API under the legacy
+        ``query_genes`` name; bridge to it here so renaming the router
+        and renaming the adapter can ship independently.
+        """
+        genes = self._router.query_genes(*args, **kwargs)
         self.last_query_scores = dict(self._router.last_query_scores)
         self.last_tier_contributions = dict(self._router.last_tier_contributions)
         return genes
+
+    # Back-compat alias so older callers (and the existing shard-router
+    # tests) keep working after the canonical rename.
+    query_genes = query_docs
 
     def query_cold_tier(self, *args: Any, **kwargs: Any) -> list:
         """Cold-tier queries aren't fanned out in V1; return empty."""
@@ -237,8 +266,8 @@ class ShardedGenomeAdapter:
         """
         return self._router.main_conn
 
-    def get_gene(self, gene_id: str):
-        """Fetch a document by id across shards.
+    def get_doc(self, gene_id: str):
+        """Fetch a document by id across shards (R3 canonical name).
 
         Uses ``fingerprint_index`` to locate the owning shard, then opens
         that shard and delegates. Returns ``None`` if the gene_id is not
@@ -253,14 +282,12 @@ class ShardedGenomeAdapter:
         try:
             shard = self._router._open_shard(row["shard_name"])
         except Exception:
-            log.warning("get_gene: shard %s unavailable", row["shard_name"], exc_info=True)
+            log.warning("get_doc: shard %s unavailable", row["shard_name"], exc_info=True)
             return None
         return shard.get_doc(gene_id)
 
-    # Alias so callers polymorphic with ``Genome.get_doc`` don't need a
-    # hasattr branch. See knowledge_store.py for the matching Genome side.
-    def get_doc(self, gene_id: str):
-        return self.get_gene(gene_id)
+    # Back-compat alias for callers still using the pre-R3 name.
+    get_gene = get_doc
 
     def get_citation_rows(self, gene_ids: List[str]) -> dict:
         """Resolve source_id + promoter tags for a batch of gene_ids.
@@ -303,15 +330,39 @@ class ShardedGenomeAdapter:
             }
         return out
 
+    def query_docs_ann(self, *args: Any, **kwargs: Any) -> List:
+        """ANN-dense retrieval is per-shard, not adapter-level.
+
+        ``context_manager._retrieve`` only calls this when
+        ``self.genome._dense_embedding_enabled`` is true; that flag is
+        False on the adapter, so the path is unreachable in V1. Provide
+        an empty list anyway so future callers don't ``AttributeError``.
+        """
+        return []
+
+    # Back-compat alias for callers still using the pre-R3 name.
+    query_genes_ann = query_docs_ann
+
+    def get_calibration_provenance(self):
+        """No cross-shard calibration record in V1 — return None.
+
+        Mirrors ``KnowledgeStore.get_calibration_provenance`` which can
+        also return None when no calibration has been recorded.
+        """
+        return None
+
     def health_history(self, limit: int = 10) -> list:
         """No cross-shard health log in V1 — return empty."""
         return []
 
     # ── Write surface (no-ops in V1) ──────────────────────────────────
 
-    def upsert_gene(self, gene, **_kw) -> str:
-        log.debug("sharded-adapter: upsert_gene no-op for %s", getattr(gene, "gene_id", "?"))
+    def upsert_doc(self, gene, **_kw) -> str:
+        log.debug("sharded-adapter: upsert_doc no-op for %s", getattr(gene, "gene_id", "?"))
         return getattr(gene, "gene_id", "")
+
+    # Back-compat alias for callers still using the pre-R3 name.
+    upsert_gene = upsert_doc
 
     def touch_genes(self, *_a, **_kw) -> None: pass
     def link_coactivated(self, *_a, **_kw) -> None: pass
@@ -329,6 +380,7 @@ class ShardedGenomeAdapter:
     def compact_genome(self, *_a, **_kw) -> dict: return {"compacted": 0, "sharded": True}
     def invalidate_sema_cache(self, *_a, **_kw) -> None: pass
     def _build_sema_cache(self, *_a, **_kw) -> None: pass
+    def _invalidate_dense_matrix(self, *_a, **_kw) -> None: pass
 
     # SEMA cache is main-only (not per-shard in V1); expose an empty one.
     _sema_cache: dict = {}
