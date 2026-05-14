@@ -57,6 +57,16 @@ HELIX KNOW/MISS retrieval returns one of two top-level blocks at every
 The agent's compliance with this contract is the load-bearing piece;
 without it the structured tags are noise. Every `miss` row that
 produces a fabricated answer fails the eval.
+
+NOTE: the `<helix:no_match/>` inline tag is a legacy-compat surface
+that only carries the four Stage-6 reasons listed above. Stage-7
+freshness-gate reasons (`stale`, `cold`, `superseded`) appear ONLY
+in the structured `miss.reason` field (alongside non-empty
+expressed_context and a populated `refresh_targets` list). Always
+prefer reading the structured `know`/`miss` blocks over scraping
+the inline tag — the structured envelope is the canonical contract.
+See docs/architecture/adr/2026-05-14-spec-vs-code-design-decisions.md
+for the design rationale.
 ```
 
 ---
