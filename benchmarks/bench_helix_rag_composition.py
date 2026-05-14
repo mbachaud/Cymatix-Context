@@ -72,7 +72,10 @@ MAIN_DB_PATH = os.environ.get(
     "HELIX_MAIN_DB_PATH",
     str(Path(__file__).resolve().parents[1] / "genomes" / "main.db"),
 )
-GENE_SRC_RE = re.compile(r'<GENE src="([^"]+)"')
+# All cells in this bench resolve delivered source_ids from
+# /context/packet items (already structured) rather than regexing the
+# /context content string. The legacy ``<GENE src=...>`` markup is no
+# longer in live responses (see issue #101 + benchmarks/_citations.py).
 
 # FTS5 has a tokenizer but natural-language queries aren't valid MATCH
 # syntax (operators like "what", "does" are fine as literal tokens but

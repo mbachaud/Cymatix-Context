@@ -188,16 +188,30 @@ Step 4 — Compression (Headroom)
     ...
 
 Step 5 — Assembly
-    <expressed_context>
-      <GENE src="fleet/skills/auth.py" score="0.89" facts="token_expiry=30m...">
-        compressed auth middleware content...
-      </GENE>
-      <GENE src="fleet/session_manager.py" score="0.72" facts="store=redis...">
-        compressed session content...
-      </GENE>
+    response[0].content:
+      [gene=abc12345 ◆ fired=harmonic:2.3,sema_boost:1.4 3200→980c]
+      compressed auth middleware content...
+      ---
+      [gene=def67890 ◇ fired=harmonic:1.8,working_set:0.5 2100→720c]
+      compressed session content...
       ...
-    </expressed_context>
+
+    response[0].agent.citations:
+      [
+        {"gene_id": "abc12345...", "source": "fleet/skills/auth.py",   "score": 0.89},
+        {"gene_id": "def67890...", "source": "fleet/session_manager.py", "score": 0.72},
+        ...
+      ]
 ```
+
+Per-document metadata (gene_id, source path, score, optional attribution)
+lives in `agent.citations[]`. The inline `[gene=...]` headers are the
+legibility-header format defined in `helix_context/encoding/legibility.py`.
+
+> The pre-2026-05 renderer emitted `<GENE src="..." score="..." facts="...">BODY</GENE>`
+> blocks inline. That markup is gone from live `/context` responses;
+> historical JSONL files still carry it and are parseable via the
+> legacy fallback in `benchmarks/_citations.py`.
 
 ---
 
