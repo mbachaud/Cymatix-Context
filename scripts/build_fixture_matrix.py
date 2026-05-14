@@ -595,49 +595,124 @@ def _slug_for_root(root: str) -> str:
     return slug or "root"
 
 
-def _copy_fingerprint_indexes(main_conn, shard: Genome, shard_name: str) -> int:
-    """Copy per-document promoter+source rows into main.db ``fingerprint_index``.
+def _build_one_shard(
+    label: str,
+    root: str,
+    shard_db_path: str,
+    skip_dirs: set[str],
+    extra_filename_filters: list,
+    use_batched_splade: bool = True,
+    batch_size: int = 64,
+) -> dict:
+    """Build a single shard ``.db`` for ``root``. Returns the shard's
+    fingerprint payload + stats -- caller writes rows into main.db.
 
-    Without this the ``ShardRouter`` returns no shards and every
-    cross-shard query is empty (see ``shard_router.route``). Schema
-    matches the columns in :mod:`helix_context.shard_schema`.
+    Runs end-to-end in one process: discover files, chunk+tag, batched
+    SPLADE upsert. Used by both the serial sharded build (called from
+    the parent process) and the parallel pool (called inside subprocesses
+    via :func:`_shard_worker_entry`).
     """
-    rows = shard.conn.execute(
-        "SELECT gene_id, source_id, promoter, key_values, is_fragment "
-        "FROM genes"
-    ).fetchall()
-    if not rows:
-        return 0
-    now = time.time()
-    payload = []
-    for r in rows:
-        gid = r["gene_id"]
-        src_id = r["source_id"]
-        promoter_blob = r["promoter"]
-        kv_blob = r["key_values"]
-        is_frag = r["is_fragment"]
-        domains_json = None
-        entities_json = None
-        if promoter_blob:
-            try:
-                p = json.loads(promoter_blob)
-                domains_json = json.dumps(p.get("domains") or [])
-                entities_json = json.dumps(p.get("entities") or [])
-            except Exception:
-                pass
-        payload.append((
-            gid, shard_name, src_id, domains_json, entities_json, kv_blob,
-            0 if is_frag else 1, None, now,
-        ))
-    main_conn.executemany(
-        "INSERT OR REPLACE INTO fingerprint_index "
-        "(gene_id, shard_name, source_id, domains, entities, key_values, "
-        "is_parent, sequence_idx, updated_at) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        payload,
+    p = Path(shard_db_path)
+    if p.exists():
+        p.unlink()
+        for s in (str(p) + "-wal", str(p) + "-shm"):
+            if os.path.exists(s):
+                os.remove(s)
+    p.parent.mkdir(parents=True, exist_ok=True)
+
+    shard = Genome(
+        path=str(p), synonym_map={},
+        splade_enabled=True, entity_graph=True,
     )
-    main_conn.commit()
-    return len(rows)
+    s_stats = {
+        "files": 0, "genes": 0, "skipped": 0, "errors": 0,
+        "missing_roots": [],
+        "t0": time.perf_counter(),
+    }
+    try:
+        if use_batched_splade:
+            files = _iter_ingestable_files(
+                [root], skip_dirs, extra_filename_filters, s_stats,
+            )
+            _init_worker()  # fill module-level chunker/tagger
+            gen = (_chunk_and_tag_file(f) for f in files)
+            _drain_with_batched_splade(
+                gen, shard, s_stats, batch_size=batch_size,
+            )
+        else:
+            tagger = CpuTagger()
+            chunker = CodonChunker()
+            ingest_tree(
+                root=root,
+                genome=shard,
+                tagger=tagger,
+                chunker=chunker,
+                stats=s_stats,
+                skip_dirs=skip_dirs,
+                extra_filename_filters=extra_filename_filters,
+            )
+
+        gene_count = shard.stats().get("total_genes", 0)
+        try:
+            byte_size = p.stat().st_size if p.is_file() else 0
+        except OSError:
+            byte_size = 0
+        elapsed = round(time.perf_counter() - s_stats["t0"], 1)
+
+        # Build fingerprint payload here (with the shard still open) so the
+        # parent process can write to main.db without re-opening the shard.
+        fp_rows = shard.conn.execute(
+            "SELECT gene_id, source_id, promoter, key_values, is_fragment "
+            "FROM genes"
+        ).fetchall()
+        now = time.time()
+        fp_payload = []
+        for r in fp_rows:
+            promoter_blob = r["promoter"]
+            domains_json = None
+            entities_json = None
+            if promoter_blob:
+                try:
+                    pm = json.loads(promoter_blob)
+                    domains_json = json.dumps(pm.get("domains") or [])
+                    entities_json = json.dumps(pm.get("entities") or [])
+                except Exception:
+                    pass
+            fp_payload.append((
+                r["gene_id"], label, r["source_id"],
+                domains_json, entities_json, r["key_values"],
+                0 if r["is_fragment"] else 1, None, now,
+            ))
+
+        return {
+            "label": label,
+            "root": root,
+            "shard_db_path": str(p),
+            "gene_count": gene_count,
+            "byte_size": byte_size,
+            "elapsed_s": elapsed,
+            "files": s_stats["files"],
+            "genes": s_stats["genes"],
+            "skipped": s_stats["skipped"],
+            "errors": s_stats["errors"],
+            "missing_roots": s_stats["missing_roots"],
+            "fingerprint_payload": fp_payload,
+        }
+    finally:
+        shard.close()
+
+
+def _shard_worker_entry(task: dict) -> dict:
+    """``mp.Pool`` entry point -- accepts a task dict, returns shard result."""
+    return _build_one_shard(
+        label=task["label"],
+        root=task["root"],
+        shard_db_path=task["shard_db_path"],
+        skip_dirs=task["skip_dirs"],
+        extra_filename_filters=task["extra_filename_filters"],
+        use_batched_splade=True,
+        batch_size=task.get("batch_size", 64),
+    )
 
 
 def build_profile_sharded(
