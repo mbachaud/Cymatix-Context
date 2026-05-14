@@ -553,12 +553,33 @@ Returns tier-score breakdowns per candidate document (`gene_id`, `score`,
 
 ### 9.4 `POST /consolidate` — session memory consolidation
 
-Handler: [`server.py:2672-2690`](../../helix_context/server.py#L2672).
+Handler:
+[`helix_context/server/routes_ingest.py:134-148`](../../helix_context/server/routes_ingest.py#L134).
 No request body. Distills the session buffer into consolidated
 knowledge documents, extracting only new facts, decisions, and
 discoveries. Returns `{"facts_extracted": int, "gene_ids":
 list[str]}`. On error returns 500 with `{"error": ..., "facts_extracted":
 0, "gene_ids": []}`.
+
+**Why session-scoped (no body).** `/consolidate` operates over the
+active in-process session buffer, not a single document. Any request
+body is silently ignored. This is intentional — consolidation is an
+aggregate-over-the-buffer operation, not a per-gene rewrite. For the
+per-gene rewrite case, the supported path is:
+
+1. Call `POST /context/refresh-plan` (or read `MissBlock.refresh_targets`
+   from a `/context/packet` response) to get the source paths that need
+   to be re-read.
+2. Re-read those sources in the calling agent.
+3. Re-`POST /ingest` the refreshed content.
+
+Targeted per-gene re-consolidation as a server-side endpoint is
+deliberately not implemented. The reserved shape for that
+hypothetical future endpoint is `POST /consolidate/gene/{gene_id}`
+(path-scoped, no body) — recorded in
+[ADR 2026-05-14](../architecture/adr/2026-05-14-spec-vs-code-design-decisions.md#q2-consolidate-ignores-request-body)
+so a later contributor doesn't re-debate adding `{"gene_id": ...}` to
+the body of `/consolidate` itself.
 
 ### 9.5 `POST /sessions/register` — participant registration
 
