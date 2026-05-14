@@ -110,6 +110,75 @@ def test_source_index_metadata_overrides_gene_metadata():
         genome.close()
 
 
+def test_source_index_cross_shard_lookup_picks_freshest_verified():
+    """When the same gene_id has source_index rows in multiple shards
+    (content-addressed gene_id ingested under different source roots),
+    _lookup_source_row must pick the freshest-verified copy
+    deterministically, not whichever fetchone() happens to surface.
+
+    Regression for the source_index cross-shard composite-PK fix: prior
+    to that change, only one row survived. After the fix, the reader
+    selects the one with the highest last_verified_at.
+    """
+    now_ts = 40_000.0
+    genome = Genome(":memory:")
+    main_conn = open_main_db(":memory:")
+    init_main_db(main_conn)
+    register_shard(main_conn, "stale_shard", "reference", ":memory:")
+    register_shard(main_conn, "fresh_shard", "reference", ":memory:")
+
+    try:
+        gene = make_gene("JWT configuration lives here", domains=["jwt", "config"])
+        gene.source_id = "/repo/docs/auth.md"
+        gene.source_kind = "doc"
+        gene.volatility_class = "stable"
+        gene.authority_class = "primary"
+        gene.last_verified_at = now_ts - 60.0
+        gene_id = genome.upsert_gene(gene, apply_gate=False)
+
+        # Stale copy in one shard
+        upsert_source_index(
+            main_conn,
+            gene_id=gene_id,
+            shard_name="stale_shard",
+            source_id="/stale/auth.toml",
+            repo_root="/projects/stale",
+            source_kind="config",
+            volatility_class="hot",
+            authority_class="primary",
+            last_verified_at=now_ts - 10_000.0,
+        )
+        # Fresher copy in another shard
+        upsert_source_index(
+            main_conn,
+            gene_id=gene_id,
+            shard_name="fresh_shard",
+            source_id="/fresh/auth.toml",
+            repo_root="/projects/fresh",
+            source_kind="config",
+            volatility_class="hot",
+            authority_class="primary",
+            last_verified_at=now_ts - 100.0,
+        )
+
+        packet = build_context_packet(
+            "jwt config",
+            task_type="edit",
+            genome=genome,
+            main_conn=main_conn,
+            now_ts=now_ts,
+        )
+
+        # The freshest copy (fresh_shard) wins; stale_shard's
+        # /stale/auth.toml must NOT be the item's source_id.
+        items = packet.verified + packet.stale_risk
+        assert len(items) == 1
+        assert items[0].source_id == "/fresh/auth.toml"
+    finally:
+        main_conn.close()
+        genome.close()
+
+
 def test_file_grain_downgrades_same_folder_wrong_file():
     """File-grain coord signal catches wrong-file-right-folder silent miss.
 

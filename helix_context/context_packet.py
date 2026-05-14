@@ -60,11 +60,24 @@ def _lookup_source_row(
     main_conn: sqlite3.Connection | None,
     gene_id: str,
 ) -> sqlite3.Row | None:
+    """Fetch the most-recently-verified source_index row for this gene_id.
+
+    source_index PK is composite (gene_id, shard_name) — the same
+    content-addressed gene_id can live in multiple shards (identical
+    content under different source roots). For packet-builder purposes
+    we want the freshest provenance copy, so we order by
+    ``last_verified_at`` (then ``updated_at`` as tiebreaker) descending
+    and take the first row. Falls back to ``updated_at`` when the row
+    has never been verified. Returns None if the table is unavailable
+    or no row matches.
+    """
     if main_conn is None:
         return None
     try:
         return main_conn.execute(
-            "SELECT * FROM source_index WHERE gene_id = ?",
+            "SELECT * FROM source_index WHERE gene_id = ? "
+            "ORDER BY COALESCE(last_verified_at, 0) DESC, updated_at DESC "
+            "LIMIT 1",
             (gene_id,),
         ).fetchone()
     except sqlite3.OperationalError:
