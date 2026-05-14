@@ -60,8 +60,10 @@ benchmarks/docs_tidy_*.json
 benchmarks/*error*.json
 benchmarks/snow/results/*error*.json
 # Benchmark run outputs — regenerable, large, per-run timestamps. If a JSON
-# *should* be tracked (curated fixture, etc.) commit it with `git add -f`.
+# *should* be tracked (curated fixture, etc.) commit it with `git add -f`
+# or add an explicit exception below.
 benchmarks/*.json
+!benchmarks/fixtures.json
 benchmarks/results/
 benchmarks/*_report.txt
 benchmarks/*_report_utf8.txt
