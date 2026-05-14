@@ -370,32 +370,44 @@ The `content` field of the response contains the assembled
 `<expressed_context>...</expressed_context>` tags. Three special
 inline tokens may appear:
 
-### 6.1 `<helix:no_match/>` — Stage 6 miss token
+### 6.1 `<helix:no_match/>` — Stage 6 miss token (legacy-compat surface)
 
 Self-closing tag injected by `_no_match_token` at
 [`context_manager.py:221-236`](../../helix_context/context_manager.py#L221).
 Lowercase tag name, attributes in fixed order (`reason` then
 `do_not_answer`), no whitespace inside the tag, `do_not_answer="true"`
-literal:
+literal. **Only four reasons are ever emitted by the inline tag:**
 
 ```
 <helix:no_match reason="abstain"           do_not_answer="true"/>
 <helix:no_match reason="denatured"         do_not_answer="true"/>
 <helix:no_match reason="sparse"            do_not_answer="true"/>
 <helix:no_match reason="no_promoter_match" do_not_answer="true"/>
-<helix:no_match reason="stale"             do_not_answer="true"/>
-<helix:no_match reason="cold"              do_not_answer="true"/>
-<helix:no_match reason="superseded"        do_not_answer="true"/>
 ```
 
-**Implementation note:** the `_no_match_token` helper currently only
-formats the four Stage-6 reasons (abstain, denatured, sparse,
-no_promoter_match); an unknown reason falls back to the abstain form
-(`context_manager.py:233-236`). The Stage-7 reasons (`stale`, `cold`,
-`superseded`) are surfaced via `MissBlock.reason` and
-`agent.recommendation = "refresh"` rather than a distinct
-`expressed_context` byte. Clients should branch on the structured
-`miss.reason` field, not on the `<helix:no_match/>` reason attribute.
+The tag is emitted only on the three "expressed context is empty"
+branches in `context_manager.py` (lines 1153, 2116, 2345); an unknown
+reason falls back to the abstain form (`context_manager.py:233-236`).
+
+**Stage 7 freshness-gate reasons (`stale`, `cold`, `superseded`) are
+NOT emitted as `<helix:no_match/>` tags by design.** They surface
+via:
+
+- `MissBlock.reason` in the structured envelope, with
+  `MissBlock.refresh_targets` populated.
+- `agent.recommendation = "refresh"` at the route layer.
+- A populated `stale_risk` list on `/context/packet` (the expressed
+  context is non-empty in this case — the data is shown, but tagged
+  as needing a refresh).
+
+The inline `<helix:no_match/>` tag is a legacy-compat surface for
+regex-based clients written before Stage 6 / Stage 7. Its
+"empty + do_not_answer" semantics are incompatible with Stage 7's
+"non-empty + stale + refresh" UX, which is why the Stage 7 reasons
+live in the structured envelope. New clients should branch on the
+structured `miss.reason` / `know` fields and treat the inline tag as
+the legacy fallback. Design decision recorded in
+[ADR 2026-05-14](../architecture/adr/2026-05-14-spec-vs-code-design-decisions.md#q3-stage-7-reasons-in-missblockreason-but-not-in-inline-helixno_match).
 
 ### 6.2 `<helix:slate>` — Stage 5 small-MoE answer slate
 

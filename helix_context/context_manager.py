@@ -229,6 +229,18 @@ def _no_match_token(reason: str) -> str:
     reasons are MissBlock.reason values; passing anything else returns
     the abstain form (defensive default — the discriminator never
     feeds an unknown reason here in practice).
+
+    Legacy-compat surface (ADR 2026-05-14, Q3). The four whitelisted
+    reasons are the pre-Stage-7 contract. Stage 7 added
+    ``stale``/``cold``/``superseded`` to ``MissBlock.reason``; those
+    reasons are NOT emitted as inline ``<helix:no_match/>`` tags by
+    design, because Stage 7 demotions ship non-empty expressed context
+    (the data is shown with ``stale_risk`` + ``refresh_targets``),
+    which is semantically incompatible with the tag's
+    ``do_not_answer="true"`` contract. New clients should branch on
+    the structured ``MissBlock.reason`` / ``KnowBlock`` fields rather
+    than scraping this tag. See
+    ``docs/architecture/adr/2026-05-14-spec-vs-code-design-decisions.md``.
     """
     valid = {"abstain", "denatured", "sparse", "no_promoter_match"}
     if reason not in valid:
