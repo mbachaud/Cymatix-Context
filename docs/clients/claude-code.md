@@ -222,6 +222,8 @@ retention_hours = 48
 ```
 
 CLI: `helix-vault {export, status, trace, pin, unpin}`. See
-`docs/superpowers/specs/2026-05-06-obsidian-vault-export-design.md` for the
-full v1 surface, and the `-full-design-v1.1plus.md` sibling for the deferred
-authored-delta-sync work.
+[`docs/ops/OBSIDIAN_VAULT_STATUS.md`](../ops/OBSIDIAN_VAULT_STATUS.md) for the
+current operator status (what works today, what's deferred to v1.1+, and the
+smoke-test path). The original design specs are archived under
+`docs/archive/superpowers/specs/2026-05-06-obsidian-vault-export-design.md`
+and `docs/archive/superpowers/specs/2026-05-06-obsidian-vault-export-full-design-v1.1plus.md`.
