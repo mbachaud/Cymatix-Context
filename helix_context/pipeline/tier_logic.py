@@ -96,6 +96,19 @@ def apply_budget_tiers(
     if len(gated) >= 3:
         candidates = gated
 
+    # -- Stage 3 transitional bypass (spec S9) --
+    # Under RRF, the score scale collapses to ~Sweight/(k+1) ~ 0.3
+    # max -- the absolute TIGHT/FOCUSED floors are calibrated for
+    # the additive scale and would force every query to BROAD.
+    # Stage 4 owns the recalibrated floors. Until then, RRF mode
+    # operates on ratio gates only.
+    #
+    # Issue #115: also gates the ABSTAIN absolute-floor clause below.
+    # ``ShardedGenomeAdapter`` declares ``_fusion_mode = "rrf"`` so the
+    # router's RRF-fused scores (~0.26-0.40) don't trip the BM25-calibrated
+    # 2.5 floor on every sharded query.
+    skip_absolute_floors = (fusion_mode == "rrf")
+
     # -- ABSTAIN gate --------------------------------------------------------
     # When retrieval is weak on BOTH the absolute floor AND the ratio,
     # inject a marker-only ContextWindow so the small model answers from
@@ -110,10 +123,14 @@ def apply_budget_tiers(
     # the hard-coded 2.5. mode='global' (default) preserves the
     # legacy constant byte-for-byte. ``cls_for_floors`` is hoisted
     # above (set from classifier_result so all branches see it).
+    #
+    # Under RRF (skip_absolute_floors=True), the absolute-score clause is
+    # bypassed; ratio<1.8 alone gates abstain. This mirrors the TIGHT /
+    # FOCUSED bypass below — same flag, same rationale.
     FOCUSED_SCORE_FLOOR_FOR_ABSTAIN = cls_floors.abstain_top
     if (
         abstain_enabled
-        and top_score < FOCUSED_SCORE_FLOOR_FOR_ABSTAIN
+        and (skip_absolute_floors or top_score < FOCUSED_SCORE_FLOOR_FOR_ABSTAIN)
         and ratio < 1.8
     ):
         try:
@@ -143,13 +160,7 @@ def apply_budget_tiers(
     # tight_top / focused_top for this query's class.
     TIGHT_SCORE_FLOOR = cls_floors.tight_top
     FOCUSED_SCORE_FLOOR = cls_floors.focused_top
-    # -- Stage 3 transitional bypass (spec S9) --
-    # Under RRF, the score scale collapses to ~Sweight/(k+1) ~ 0.3
-    # max -- the absolute TIGHT/FOCUSED floors are calibrated for
-    # the additive scale and would force every query to BROAD.
-    # Stage 4 owns the recalibrated floors. Until then, RRF mode
-    # operates on ratio gates only.
-    skip_absolute_floors = (fusion_mode == "rrf")
+    # skip_absolute_floors hoisted above the ABSTAIN gate (issue #115).
 
     budget_tier = "broad"
     budget_tokens_est = 15000

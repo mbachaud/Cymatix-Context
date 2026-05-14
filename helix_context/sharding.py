@@ -171,6 +171,15 @@ class ShardedGenomeAdapter:
         ``hasattr(genome, '_sharded_adapter')``.
     """
 
+    # The router unconditionally builds its RRF Fuser at shard_router.py:236
+    # (`Fuser(k=60)` with no mode toggle), so any sharded read is RRF-fused.
+    # Expose this so context_manager._build_signals reads "rrf" via
+    # ``getattr(self.genome, "_fusion_mode", "additive")`` and the abstain
+    # gate / TIGHT-FOCUSED floor bypass in pipeline/tier_logic.py engage.
+    # Without this, sharded RRF scores (~0.26-0.40) trip the 2.5 absolute
+    # floor on 9/10 queries and abstain — see issue #115.
+    _fusion_mode: str = "rrf"
+
     def __init__(self, main_path: str, **genome_kwargs: Any) -> None:
         from .shard_router import ShardRouter
 
