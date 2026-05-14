@@ -79,3 +79,65 @@ def test_sync_splade_index_empty_sparse_dict_clears_existing_rows():
         "SELECT COUNT(*) FROM splade_terms WHERE gene_id = ?", ("g1",)
     ).fetchone()
     assert rows[0] == 0
+
+
+from helix_context.knowledge_store import KnowledgeStore
+from helix_context.schemas import Gene
+
+
+def _make_test_gene(content: str = "hello world parallel ingest") -> Gene:
+    return Gene(
+        gene_id=KnowledgeStore.make_gene_id(content),
+        content=content,
+        complement=f"Summary: {content[:40]}",
+        codons=["chunk_0"],
+        source_id="test://splade-precompute",
+    )
+
+
+def test_upsert_doc_forwards_splade_sparse(tmp_path):
+    """Pre-computed SPLADE sparse dict ends up in the splade_terms table."""
+    db = tmp_path / "g.db"
+    ks = KnowledgeStore(path=str(db), synonym_map={}, splade_enabled=True)
+    gene = _make_test_gene()
+
+    provided = {"semantic": 2.5, "expansion": 1.1}
+    gene_id = ks.upsert_doc(gene, apply_gate=False, splade_sparse=provided)
+
+    rows = [
+        (r["term"], r["weight"])
+        for r in ks.conn.execute(
+            "SELECT term, weight FROM splade_terms WHERE gene_id = ? ORDER BY term",
+            (gene_id,),
+        )
+    ]
+    ks.close()
+
+    assert sorted(rows) == [("expansion", 1.1), ("semantic", 2.5)]
+
+
+def test_upsert_doc_inline_encode_when_sparse_not_provided(tmp_path, monkeypatch):
+    """No splade_sparse -> falls back to splade_backend.encode."""
+    db = tmp_path / "g.db"
+    ks = KnowledgeStore(path=str(db), synonym_map={}, splade_enabled=True)
+
+    sentinel = {"sentinel": 9.99}
+    calls: list[str] = []
+
+    def fake_encode(text, top_k=128, **kw):
+        calls.append(text)
+        return sentinel
+
+    monkeypatch.setattr(splade_backend, "encode", fake_encode)
+    gene_id = ks.upsert_doc(_make_test_gene(), apply_gate=False)
+
+    rows = [
+        (r["term"], r["weight"])
+        for r in ks.conn.execute(
+            "SELECT term, weight FROM splade_terms WHERE gene_id = ?", (gene_id,)
+        )
+    ]
+    ks.close()
+
+    assert calls, "splade_backend.encode should have been called once"
+    assert rows == [("sentinel", 9.99)]

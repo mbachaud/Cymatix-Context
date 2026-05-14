@@ -999,7 +999,12 @@ class KnowledgeStore:
 
     # ── Upsert ──────────────────────────────────────────────────────
 
-    def upsert_doc(self, gene: Gene, apply_gate: bool = True) -> str:
+    def upsert_doc(
+        self,
+        gene: Gene,
+        apply_gate: bool = True,
+        splade_sparse: Optional[Dict[str, float]] = None,
+    ) -> str:
         """
         Insert or replace a document in the knowledge store.
 
@@ -1123,7 +1128,10 @@ class KnowledgeStore:
         sync_entity_graph(cur, gene_id, gene, self._entity_graph_enabled)
         sync_path_key_index(cur, gene_id, gene)
         sync_filename_index(cur, gene_id, gene.source_id)
-        sync_splade_index(cur, gene_id, gene.content, self._splade_enabled)
+        sync_splade_index(
+            cur, gene_id, gene.content, self._splade_enabled,
+            splade_sparse=splade_sparse,
+        )
 
         # Single atomic commit — document + tags + FTS5 + entity graph + SPLADE
         self.conn.commit()
