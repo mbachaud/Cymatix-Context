@@ -123,4 +123,5 @@ markers = [
     "requires_rocm: opt-in test that needs ROCm-capable hardware (gated by HELIX_TEST_ROCM=1)",
     "requires_real_cuda: opt-in test that needs real CUDA hardware (gated by HELIX_TEST_CUDA=1)",
     "requires_mps: test that runs only on macOS with MPS-capable hardware",
+    "slow: end-to-end test that loads SPLADE / spaCy and takes 10+ seconds",
 ]
