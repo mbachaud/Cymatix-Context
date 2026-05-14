@@ -252,6 +252,136 @@ def test_abstain_env_override_beats_config_flag(abstain_manager, monkeypatch):
     assert win.context_health.status != "abstain"
 
 
+# ── Issue #115: RRF fusion bypasses the absolute score floor ─────────────────
+#
+# After PR #106 switched ShardRouter.query_genes to RRF, sharded top-scores
+# compress to ~0.26-0.40. The ABSTAIN gate's absolute floor (2.5, calibrated
+# for BM25/additive) tripped on 9/10 sharded queries — even when the ratio
+# axis indicated a clear winner. The fix gates the absolute-score clause on
+# ``skip_absolute_floors = (fusion_mode == "rrf")``, matching the existing
+# TIGHT/FOCUSED bypass at tier_logic.py:152. Tests call apply_budget_tiers
+# directly with the same fixtures as the higher-level tests above.
+
+
+def _candidates_with_scores(top_score: float, ratio: float, n: int = 8):
+    """Shared helper: build n candidates whose scores yield (top_score, ratio).
+
+    Same math as ``_weak_setup`` but returns (candidates, scores_dict)
+    suitable for passing straight into ``apply_budget_tiers``.
+    """
+    from tests.conftest import make_gene
+    candidates = [
+        make_gene(f"rrf_{i}", gene_id=f"rrf_gene_{i:010d}")
+        for i in range(n)
+    ]
+    mean = top_score / ratio
+    rest = (n * mean - top_score) / (n - 1)
+    scores = {candidates[0].gene_id: top_score}
+    for c in candidates[1:]:
+        scores[c.gene_id] = rest
+    return candidates, scores
+
+
+def test_rrf_low_score_high_ratio_does_not_abstain():
+    """Issue #115: under RRF, low absolute scores + healthy ratio must NOT
+    abstain. RRF score scale is ~0.3 max; the 2.5 BM25 floor is meaningless.
+    """
+    from helix_context.config import AbstainClassFloors
+    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    candidates, scores = _candidates_with_scores(top_score=0.4, ratio=2.0)
+    result = apply_budget_tiers(
+        candidates, scores, AbstainClassFloors(),
+        abstain_enabled=True, fusion_mode="rrf",
+    )
+    assert result.abstain is False, (
+        f"RRF top=0.4 ratio=2.0 should NOT abstain; "
+        f"tier={result.budget_tier} (issue #115)"
+    )
+    # Ratio 2.0 lands in FOCUSED under the bypass.
+    assert result.budget_tier == "focused"
+
+
+def test_rrf_low_score_low_ratio_does_abstain():
+    """Issue #115: under RRF, ratio<1.8 still triggers abstain — the gate
+    is preserved for genuine "no clear winner" cases. Only the absolute
+    score floor is bypassed.
+    """
+    from helix_context.config import AbstainClassFloors
+    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    candidates, scores = _candidates_with_scores(top_score=0.4, ratio=1.2)
+    result = apply_budget_tiers(
+        candidates, scores, AbstainClassFloors(),
+        abstain_enabled=True, fusion_mode="rrf",
+    )
+    assert result.abstain is True, (
+        "RRF top=0.4 ratio=1.2 should abstain (ratio gate still active)"
+    )
+
+
+def test_additive_low_score_still_abstains():
+    """Issue #115 regression guard: additive mode must keep the original
+    behavior — low absolute scores + low ratio abstain. This pins the
+    fix so RRF bypass does not silently leak into the additive path.
+    """
+    from helix_context.config import AbstainClassFloors
+    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    candidates, scores = _candidates_with_scores(top_score=0.4, ratio=1.2)
+    result = apply_budget_tiers(
+        candidates, scores, AbstainClassFloors(),
+        abstain_enabled=True, fusion_mode="additive",
+    )
+    assert result.abstain is True, (
+        "additive top=0.4 ratio=1.2 must still abstain — RRF bypass "
+        "must not affect additive scoring"
+    )
+
+
+def test_rrf_above_abstain_floor_low_ratio_does_abstain():
+    """Issue #115 key differentiator: under RRF, the absolute-score
+    floor is meaningless (RRF scores cap ~0.3). Even if a score
+    happens to exceed 2.5, a tight ratio still indicates retrieval
+    uncertainty — the gate must trip on ratio alone.
+
+    This is the case that pre-fix code mis-handles: ``top=3.0 >= 2.5``
+    passes the score-floor short-circuit, so abstain skips even when
+    ratio says "no clear winner". Post-fix, ``skip_absolute_floors``
+    hoists above the abstain check so RRF mode uses ratio alone.
+
+    Under ``fusion_mode='additive'`` this same case must NOT abstain
+    (preserves legacy: top above floor → fall through to BROAD), which
+    is asserted by the companion test below.
+    """
+    from helix_context.config import AbstainClassFloors
+    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    candidates, scores = _candidates_with_scores(top_score=3.0, ratio=1.5)
+    result = apply_budget_tiers(
+        candidates, scores, AbstainClassFloors(),
+        abstain_enabled=True, fusion_mode="rrf",
+    )
+    assert result.abstain is True, (
+        "RRF top=3.0 ratio=1.5 must abstain — under RRF the absolute "
+        "score is meaningless and ratio<1.8 alone gates abstain"
+    )
+
+
+def test_additive_above_abstain_floor_low_ratio_does_not_abstain():
+    """Companion to the above: under additive, top=3.0 (>= floor)
+    short-circuits the abstain check regardless of ratio. This is
+    the legacy behavior that must NOT regress under the fix.
+    """
+    from helix_context.config import AbstainClassFloors
+    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    candidates, scores = _candidates_with_scores(top_score=3.0, ratio=1.5)
+    result = apply_budget_tiers(
+        candidates, scores, AbstainClassFloors(),
+        abstain_enabled=True, fusion_mode="additive",
+    )
+    assert result.abstain is False, (
+        "additive top=3.0 ratio=1.5 must NOT abstain — score floor "
+        "short-circuits the gate; legacy behavior must be preserved"
+    )
+
+
 def test_telemetry_counter_increments_with_abstain_label(
     abstain_manager, monkeypatch
 ):

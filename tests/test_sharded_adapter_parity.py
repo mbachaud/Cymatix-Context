@@ -260,6 +260,21 @@ def test_adapter_get_doc_and_get_gene_are_same_callable(adapter):
     assert adapter.get_gene("nonexistent") is None
 
 
+def test_adapter_declares_fusion_mode_rrf(adapter):
+    """Issue #115: ShardRouter unconditionally builds an RRF Fuser
+    (``shard_router.py:236``), so the adapter must declare
+    ``_fusion_mode = "rrf"`` for ``context_manager._build_signals`` to
+    read RRF via ``getattr(self.genome, "_fusion_mode", "additive")``.
+    Without this, the abstain absolute-score floor (2.5, BM25-calibrated)
+    trips on every sharded query because RRF scores compress to ~0.3.
+    """
+    assert adapter._fusion_mode == "rrf", (
+        "ShardedGenomeAdapter must declare _fusion_mode='rrf' so the "
+        "TIGHT/FOCUSED and ABSTAIN floor bypass engages for sharded "
+        "reads (issue #115)."
+    )
+
+
 def test_adapter_covers_full_knowledgestore_surface(adapter):
     """Soft drift catcher: warn when KnowledgeStore gains a name the adapter
     doesn't expose, unless explicitly whitelisted.
