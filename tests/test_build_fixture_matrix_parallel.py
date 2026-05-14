@@ -7,6 +7,8 @@ the resulting gene_ids and content hashes are identical.
 
 from __future__ import annotations
 
+from concurrent.futures import ProcessPoolExecutor
+import pickle
 import sys
 import sqlite3
 from pathlib import Path
@@ -102,6 +104,115 @@ def _collect_main_db_summary(main_db_path: Path) -> dict[str, set[tuple]]:
     }
     conn.close()
     return {"shards": shards, "fingerprint_rows": fps}
+
+
+def _nested_pool_probe(_value: int) -> int:
+    import multiprocessing as mp
+
+    with mp.Pool(1) as pool:
+        return pool.map(abs, [-1])[0]
+
+
+def test_process_executor_allows_nested_file_pool():
+    """Outer shard executor workers must be able to spawn inner file pools."""
+    with ProcessPoolExecutor(max_workers=1) as pool:
+        assert pool.submit(_nested_pool_probe, 0).result(timeout=10) == 1
+
+
+def test_inner_file_worker_iter_uses_pool(monkeypatch):
+    """Shard-local file workers run chunk+tag in a CPU-only pool."""
+    import build_fixture_matrix as bfm
+
+    calls = {"workers": None, "chunksize": None, "initialized": 0}
+
+    class FakePool:
+        def __init__(self, workers, initializer=None):
+            calls["workers"] = workers
+            self.initializer = initializer
+
+        def __enter__(self):
+            if self.initializer is not None:
+                self.initializer()
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def imap_unordered(self, func, files, chunksize=1):
+            calls["chunksize"] = chunksize
+            return [func(f) for f in files]
+
+    monkeypatch.setattr(bfm.mp, "Pool", FakePool)
+    monkeypatch.setattr(
+        bfm, "_init_worker",
+        lambda: calls.__setitem__("initialized", calls["initialized"] + 1),
+    )
+    monkeypatch.setattr(
+        bfm, "_chunk_and_tag_file",
+        lambda f: [{"source_id": f[0]}],
+    )
+
+    files = [("a.py", ".py"), ("b.py", ".py")]
+    rows = list(bfm._iter_chunked_file_gene_dicts(
+        files, file_workers=3, chunksize=2,
+    ))
+
+    assert calls == {"workers": 3, "chunksize": 2, "initialized": 1}
+    assert rows == [[{"source_id": "a.py"}], [{"source_id": "b.py"}]]
+
+
+def test_build_profile_sharded_passes_shard_file_workers(tmp_path, monkeypatch):
+    """Programmatic sharded builds include shard-local CPU worker count."""
+    import build_fixture_matrix as bfm
+
+    root = tmp_path / "root"
+    root.mkdir()
+    captured_tasks = []
+
+    monkeypatch.setattr(bfm, "PROFILES", {
+        "tiny95": {
+            "label": "issue #95 shard file workers",
+            "active_roots": 1,
+            "roots": [str(root)],
+            "extra_skip_dirs": set(),
+            "extra_filename_filters": [],
+        }
+    })
+
+    def fake_shard_worker_entry(task):
+        captured_tasks.append(task)
+        return {
+            "label": task["label"],
+            "root": task["root"],
+            "shard_db_path": task["shard_db_path"],
+            "gene_count": 0,
+            "byte_size": 0,
+            "elapsed_s": 0.0,
+            "files": 0,
+            "genes": 0,
+            "skipped": 0,
+            "errors": 0,
+            "missing_roots": [],
+            "fingerprint_payload": [],
+        }
+
+    monkeypatch.setattr(bfm, "_shard_worker_entry", fake_shard_worker_entry)
+
+    stats = bfm.build_profile_sharded(
+        "tiny95", str(tmp_path / "out"),
+        shard_workers=1, shard_file_workers=3, batch_size=8,
+    )
+
+    assert captured_tasks[0]["shard_file_workers"] == 3
+    assert stats["shard_file_workers"] == 3
+
+
+def test_sharded_profile_filters_are_process_picklable():
+    """Shard tasks cross Windows spawn process boundaries."""
+    import build_fixture_matrix as bfm
+
+    for profile in bfm.PROFILES.values():
+        pickle.dumps(profile["extra_filename_filters"])
 
 
 @pytest.mark.slow
