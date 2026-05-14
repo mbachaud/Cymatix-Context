@@ -92,10 +92,15 @@ def _create_fingerprint_index(cur: sqlite3.Cursor) -> None:
     Columns mirror what PUSH_PULL_CONTEXT.md specifies as the eager
     push payload: gene_id, shard location, source_id, domains,
     entities, key_values. No content, no fragments, no embeddings.
+
+    PK is composite (gene_id, shard_name): gene_id is content-addressed
+    (sha256 of content), so the same content under different source roots
+    yields the same gene_id in different shards. Keying on gene_id alone
+    would overwrite cross-shard duplicates and break routing.
     """
     cur.execute("""
     CREATE TABLE IF NOT EXISTS fingerprint_index (
-        gene_id      TEXT PRIMARY KEY,
+        gene_id      TEXT NOT NULL,
         shard_name   TEXT NOT NULL REFERENCES shards(shard_name),
         source_id    TEXT,
         domains      TEXT,     -- JSON list[str]
@@ -103,7 +108,8 @@ def _create_fingerprint_index(cur: sqlite3.Cursor) -> None:
         key_values   TEXT,     -- JSON list[str]
         is_parent    INTEGER NOT NULL DEFAULT 0,
         sequence_idx INTEGER,
-        updated_at   REAL NOT NULL
+        updated_at   REAL NOT NULL,
+        PRIMARY KEY (gene_id, shard_name)
     )
     """)
     cur.execute(
