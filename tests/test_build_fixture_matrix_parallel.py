@@ -85,3 +85,60 @@ def test_parallel_matches_sequential(tmp_path, monkeypatch):
         f"  only in seq: {sorted(seq - par)[:5]}...\n"
         f"  only in par: {sorted(par - seq)[:5]}..."
     )
+
+
+def _collect_main_db_summary(main_db_path: Path) -> dict[str, set[tuple]]:
+    """Return {shards, fingerprint_rows} for parity checks on a main.db."""
+    conn = sqlite3.connect(str(main_db_path))
+    shards = {
+        (row[0], row[1])
+        for row in conn.execute("SELECT shard_name, category FROM shards")
+    }
+    fps = {
+        (row[0], row[1], row[2])
+        for row in conn.execute(
+            "SELECT gene_id, shard_name, source_id FROM fingerprint_index"
+        )
+    }
+    conn.close()
+    return {"shards": shards, "fingerprint_rows": fps}
+
+
+@pytest.mark.slow
+def test_sharded_pool_matches_serial(tmp_path, monkeypatch):
+    """build_profile_sharded(shard_workers=1) and (shard_workers=2) should
+    produce identical main.db fingerprint_index + per-shard gene_ids."""
+    import build_fixture_matrix as bfm
+
+    a = tmp_path / "rootA"
+    b = tmp_path / "rootB"
+    _populate_tree(a, n_files=4)
+    _populate_tree(b, n_files=4)
+
+    monkeypatch.setattr(bfm, "PROFILES", {
+        "shardtest92": {
+            "label": "issue #92 sharded parity",
+            "active_roots": 2,
+            "roots": [str(a), str(b)],
+            "extra_skip_dirs": set(),
+            "extra_filename_filters": [],
+        }
+    })
+
+    out_serial = tmp_path / "ser"
+    out_pool = tmp_path / "pool"
+
+    bfm.build_profile_sharded(
+        "shardtest92", str(out_serial),
+        shard_workers=1, batch_size=8,
+    )
+    bfm.build_profile_sharded(
+        "shardtest92", str(out_pool),
+        shard_workers=2, batch_size=8,
+    )
+
+    ser_summary = _collect_main_db_summary(out_serial / "main.genome.db")
+    pool_summary = _collect_main_db_summary(out_pool / "main.genome.db")
+
+    assert ser_summary["shards"] == pool_summary["shards"]
+    assert ser_summary["fingerprint_rows"] == pool_summary["fingerprint_rows"]
