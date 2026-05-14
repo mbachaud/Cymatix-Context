@@ -105,7 +105,8 @@ class VaultManager:
             "## v1.1 follow-up\n\n"
             "Authored fields (operator_notes, operator_tags, pinned, supersedes...) "
             "are placeholders in v1. v1.1 enables write-back via watcher + validator. "
-            "See `docs/superpowers/specs/2026-05-06-obsidian-vault-export-full-design-v1.1plus.md`.\n"
+            "See `docs/ops/OBSIDIAN_VAULT_STATUS.md` for current operator status and "
+            "the v1.1+ deferred work.\n"
         )
         readme.write_text(content, encoding="utf-8")
 
