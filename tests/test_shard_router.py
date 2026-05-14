@@ -322,6 +322,113 @@ def test_sharded_get_citation_rows_unknown_id(two_shard_setup):
         adapter.close()
 
 
+def test_sharded_get_citation_rows_multi_shard_is_deterministic(tmp_path):
+    """Regression for cross-shard duplicate gene_id determinism.
+
+    PR #103 changed ``fingerprint_index`` PK to composite
+    ``(gene_id, shard_name)``, making same-content cross-shard
+    duplicates legal rows. PR #106's ``ShardedGenomeAdapter
+    .get_citation_rows`` used ``WHERE gene_id IN (...)`` with no
+    ordering, so the row that survived the dict-build loop depended
+    on whatever order SQLite happened to return — non-deterministic
+    across runs (bench-reproducibility hazard).
+
+    Contract: lexicographically minimum ``shard_name`` wins. With
+    seeded shards ``shard_a`` and ``shard_b`` sharing the same
+    gene_id, the citation must always resolve to ``shard_a``'s
+    ``source_id`` no matter how many times we call.
+    """
+    import json
+    from helix_context.shard_schema import (
+        init_main_db,
+        open_main_db,
+        register_shard,
+        upsert_fingerprint,
+    )
+    from helix_context.sharding import ShardedGenomeAdapter
+
+    root = tmp_path
+    main_path = str(root / "main.db")
+    shard_a_path = str(root / "shard_a.db")
+    shard_b_path = str(root / "shard_b.db")
+
+    # Same content => same gene_id in both shards (content-addressed sha256).
+    content = "Cross-shard duplicate doc. Content is byte-identical."
+    ga = Genome(shard_a_path)
+    gene_a = _mk_gene(
+        content,
+        domains=["docs"],
+        entities=["helix"],
+        source="/shard_a/doc.md",
+    )
+    gid_a = ga.upsert_gene(gene_a, apply_gate=False)
+    ga.conn.close()
+    if ga._reader:
+        ga._reader.close()
+
+    gb = Genome(shard_b_path)
+    gene_b = _mk_gene(
+        content,
+        domains=["docs"],
+        entities=["helix"],
+        source="/shard_b/doc.md",
+    )
+    gid_b = gb.upsert_gene(gene_b, apply_gate=False)
+    gb.conn.close()
+    if gb._reader:
+        gb._reader.close()
+
+    # Both shards must produce the same gene_id (content-addressed). If
+    # this ever flips, the underlying assumption is broken and the test
+    # is no longer exercising the cross-shard duplicate path.
+    assert gid_a == gid_b, (
+        "test invariant: same content must produce same gene_id"
+    )
+    gene_id = gid_a
+
+    main = open_main_db(main_path)
+    init_main_db(main)
+    register_shard(main, "shard_a", "reference", shard_a_path, gene_count=1)
+    register_shard(main, "shard_b", "participant", shard_b_path, gene_count=1)
+    # Two fingerprint rows for the same gene_id — distinguishable only
+    # by shard_name and source_id.
+    upsert_fingerprint(
+        main, gene_id=gene_id, shard_name="shard_a",
+        source_id="/shard_a/doc.md",
+        domains_json=json.dumps(["docs"]),
+        entities_json=json.dumps(["helix"]),
+        key_values_json="[]",
+    )
+    upsert_fingerprint(
+        main, gene_id=gene_id, shard_name="shard_b",
+        source_id="/shard_b/doc.md",
+        domains_json=json.dumps(["docs"]),
+        entities_json=json.dumps(["helix"]),
+        key_values_json="[]",
+    )
+    main.close()
+
+    adapter = ShardedGenomeAdapter(main_path=main_path)
+    try:
+        seen_sources: set[str] = set()
+        for _ in range(10):
+            rows = adapter.get_citation_rows([gene_id])
+            assert gene_id in rows
+            seen_sources.add(rows[gene_id]["source_id"])
+
+        # Determinism: source_id never varies across 10 calls.
+        assert len(seen_sources) == 1, (
+            f"non-deterministic source_id across calls: {seen_sources}"
+        )
+        # Contract: lexicographically minimum shard_name wins.
+        # shard_a < shard_b, so /shard_a/doc.md must be the citation.
+        assert seen_sources == {"/shard_a/doc.md"}, (
+            f"expected shard_a source to win, got {seen_sources}"
+        )
+    finally:
+        adapter.close()
+
+
 def test_sharded_get_doc_alias_matches_get_gene(two_shard_setup):
     """`get_doc` and `get_gene` must be polymorphic with Genome so callers
     in routes_context / helpers don't have to branch on adapter type.
