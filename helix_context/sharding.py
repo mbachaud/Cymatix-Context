@@ -304,13 +304,22 @@ class ShardedGenomeAdapter:
             return {}
         import json as _json
         ph = ",".join("?" * len(gene_ids))
+        # PR #103's composite PK (gene_id, shard_name) lets the same
+        # content-addressed id live in multiple shards. ORDER BY
+        # gene_id, shard_name + first-row-wins below picks the
+        # lexicographically smallest shard for each gene so the displayed
+        # source_id stays stable across calls and across runs.
         rows = self._router.main_conn.execute(
             f"SELECT gene_id, source_id, domains, entities "
-            f"FROM fingerprint_index WHERE gene_id IN ({ph})",
+            f"FROM fingerprint_index WHERE gene_id IN ({ph}) "
+            f"ORDER BY gene_id, shard_name",
             gene_ids,
         ).fetchall()
         out: dict = {}
         for r in rows:
+            gid = r["gene_id"]
+            if gid in out:
+                continue
             domains: List = []
             entities: List = []
             if r["domains"]:
@@ -323,7 +332,7 @@ class ShardedGenomeAdapter:
                     entities = list(_json.loads(r["entities"]) or [])
                 except Exception:
                     pass
-            out[r["gene_id"]] = {
+            out[gid] = {
                 "source_id": r["source_id"] or "",
                 "domains": domains,
                 "entities": entities,

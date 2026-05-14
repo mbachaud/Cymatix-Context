@@ -322,6 +322,79 @@ def test_sharded_get_citation_rows_unknown_id(two_shard_setup):
         adapter.close()
 
 
+def test_sharded_get_citation_rows_is_deterministic_across_shards(tmp_path):
+    """Regression for cross-shard non-determinism (follow-up to PR #103).
+
+    PR #103 changed ``fingerprint_index`` PK to composite
+    ``(gene_id, shard_name)``, so the same content-addressed gene_id may
+    legally appear in multiple shards (same byte stream ingested under
+    two source roots). ``get_citation_rows`` then sees N rows for that
+    id and the dict-build loop ``out[gid] = ...`` keeps whichever row
+    SQLite emits last — bench-reproducibility hazard even though the
+    citation content is byte-identical.
+
+    Contract: per gene_id, the row with the lexicographically smallest
+    ``shard_name`` wins. Stable across calls, stable across runs.
+    """
+    from helix_context.shard_schema import (
+        init_main_db,
+        open_main_db,
+        register_shard,
+        upsert_fingerprint,
+    )
+    from helix_context.sharding import ShardedGenomeAdapter
+
+    main_path = str(tmp_path / "main.db")
+    shard_a_path = str(tmp_path / "shard_a.db")
+    shard_b_path = str(tmp_path / "shard_b.db")
+
+    main = open_main_db(main_path)
+    init_main_db(main)
+    register_shard(main, "shard_a", "reference", shard_a_path, gene_count=1)
+    register_shard(main, "shard_b", "participant", shard_b_path, gene_count=1)
+
+    # Same gene_id, both shards, different source_ids — legal under
+    # composite PK. Insert ``shard_a`` first so the lexicographically
+    # smaller name has the *lower* rowid: with no ORDER BY the unfixed
+    # loop overwrites shard_a's row with shard_b's and reports the
+    # wrong (lex-larger) source_id.
+    gid = "d" * 64  # looks like a sha256 hex digest
+    upsert_fingerprint(
+        main, gene_id=gid, shard_name="shard_a",
+        source_id="/path/in/shard_a.md",
+        domains_json=json.dumps(["from_a"]),
+        entities_json=json.dumps(["a_entity"]),
+        key_values_json="[]",
+    )
+    upsert_fingerprint(
+        main, gene_id=gid, shard_name="shard_b",
+        source_id="/path/in/shard_b.md",
+        domains_json=json.dumps(["from_b"]),
+        entities_json=json.dumps(["b_entity"]),
+        key_values_json="[]",
+    )
+    main.close()
+
+    adapter = ShardedGenomeAdapter(main_path=main_path)
+    try:
+        results = [adapter.get_citation_rows([gid]) for _ in range(10)]
+    finally:
+        adapter.close()
+
+    # Stability: all 10 calls return identical maps.
+    first = results[0]
+    for i, r in enumerate(results[1:], start=1):
+        assert r == first, (
+            f"call {i} differs from call 0: "
+            f"{r[gid]['source_id']!r} vs {first[gid]['source_id']!r}"
+        )
+
+    # Determinism rule: smallest shard_name lexicographically wins.
+    assert first[gid]["source_id"] == "/path/in/shard_a.md"
+    assert first[gid]["domains"] == ["from_a"]
+    assert first[gid]["entities"] == ["a_entity"]
+
+
 def test_sharded_get_doc_alias_matches_get_gene(two_shard_setup):
     """`get_doc` and `get_gene` must be polymorphic with Genome so callers
     in routes_context / helpers don't have to branch on adapter type.
