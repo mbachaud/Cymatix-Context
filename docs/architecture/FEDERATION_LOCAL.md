@@ -193,6 +193,39 @@ Order of precedence, each axis:
 3. **OS-derived value** (`getpass.getuser()`, `socket.gethostname()`)
 4. **Sensible default** (`org='local'`, `agent=None`)
 
+### `HELIX_DEVICE` parse rules (overload with the hardware picker)
+
+The same `HELIX_DEVICE` env var is read by two consumers, and they
+parse it differently. The overload is intentional and safe — this
+section documents the parse rules so operators don't have to read
+both consumers' code. Design decision recorded in
+[ADR 2026-05-14](../adr/2026-05-14-spec-vs-code-design-decisions.md#q1-helix_device-overloaded-between-hardware-picker-and-federation-attribution).
+
+| Consumer | Source | Parse rule |
+|---|---|---|
+| Hardware picker | `helix_context/hardware.py::_resolve_requested_device` | Lowercase, then check against the whitelist `{"auto", "cuda", "rocm", "mps", "cpu"}`. Any non-whitelisted value logs `WARNING` and is ignored — the picker continues to `[hardware] device` from `helix.toml`, then to `"auto"`. Never raises, never blocks startup. |
+| Federation attribution | `helix_context/server/helpers.py::_local_attribution_defaults`, `helix_context/identity/registry.py` | Used as a free-form device-handle string. Any non-empty value is accepted as-is. Falls back to `HELIX_PARTY`, then `socket.gethostname()`. |
+
+Concrete behavior matrix:
+
+| `HELIX_DEVICE=` value | HW picker | Federation |
+|---|---|---|
+| `cuda` / `cpu` / `mps` / `rocm` / `auto` | Used as device kind | Used as device handle (literal value) |
+| Any other string (e.g., `my-laptop`, `swift_wing21`) | WARNING logged, ignored; picker falls through to `[hardware] device` / `"auto"` | Used as device handle |
+| Unset | Falls through to `[hardware] device` / `"auto"` | Falls through to `HELIX_PARTY` or `socket.gethostname()` |
+
+**To silence the HW-picker WARNING when you want `HELIX_DEVICE` for
+federation only:** set `[hardware] device = "cpu"` (or your preferred
+device) explicitly in `helix.toml`, and move the federation label to
+`HELIX_PARTY`:
+
+```bash
+export HELIX_PARTY="my-laptop"   # federation device handle
+unset HELIX_DEVICE               # picker uses helix.toml's [hardware] device
+```
+
+This preserves attribution while avoiding the overload entirely.
+
 Tokens are normalized: lowercased, whitespace-stripped, length-capped at
 64 chars. Conservative because these become primary-key components.
 
