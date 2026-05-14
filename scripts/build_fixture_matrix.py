@@ -112,6 +112,57 @@ MAX_FILE_SIZE = 200_000
 MIN_FILE_SIZE = 50
 
 
+# ── File -> gene-dict helper (shared by sequential + parallel paths) ──────
+
+_worker_chunker = None
+_worker_tagger = None
+
+
+def _init_worker():
+    """Per-worker init for mp.Pool -- loads tagger + chunker once."""
+    global _worker_chunker, _worker_tagger
+    from helix_context.codons import CodonChunker
+    from helix_context.tagger import CpuTagger
+    _worker_chunker = CodonChunker()
+    _worker_tagger = CpuTagger()
+
+
+def _chunk_and_tag_file(args: tuple[str, str]) -> list[dict]:
+    """Read a single file, return list of Gene dicts.
+
+    Runs in either the main process (sequential helper path) or in an
+    ``mp.Pool`` worker (parallel path). Workers must have called
+    :func:`_init_worker` first; the main process also initialises the
+    module-level chunker/tagger before calling this helper.
+
+    Returns ``model_dump()`` dicts (not Gene instances) so the mp.Pool
+    can hand results back to the parent process across its IPC boundary.
+    """
+    fpath, ext = args
+    try:
+        with open(fpath, "r", encoding="utf-8", errors="replace") as f:
+            content = f.read()
+    except Exception:
+        return []
+
+    ct = "code" if ext in CODE_EXTS else "text"
+    strands = _worker_chunker.chunk(content, content_type=ct)
+    genes: list[dict] = []
+    for i, strand in enumerate(strands):
+        try:
+            gene = _worker_tagger.pack(
+                strand.content,
+                content_type=ct,
+                source_id=fpath,
+                sequence_index=i,
+            )
+            gene.is_fragment = strand.is_fragment
+            genes.append(gene.model_dump())
+        except Exception:
+            pass
+    return genes
+
+
 # ── Profile definitions ───────────────────────────────────────────────────
 
 PROFILES: dict[str, dict] = {
