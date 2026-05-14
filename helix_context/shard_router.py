@@ -135,7 +135,7 @@ class ShardRouter:
         read_only: bool = False,
         **kwargs,
     ) -> List[Gene]:
-        """Fan query across routed shards, merge by score, top-K.
+        """Fan query across routed shards, merge by Reciprocal Rank Fusion.
 
         Mirrors Genome.query_genes signature so callers can swap
         without branching. Extra kwargs (``use_harmonic``, ``cwola_weight``,
@@ -148,9 +148,19 @@ class ShardRouter:
             self.last_tier_contributions = {}
             return []
 
+        from .retrieval.fusion import Fuser, DEFAULT_RRF_K
+
+        # Materialised candidates by gene_id (last writer wins on
+        # content-hash collisions across shards — same content, same id).
         merged: Dict[str, Gene] = {}
-        merged_scores: Dict[str, float] = {}
+        # Carry per-tier contributions through the merge so downstream
+        # introspection (cwola log, activation profile in /context) still
+        # sees them. Keep the contributions from whichever shard ranked
+        # the doc best.
         merged_tier: Dict[str, Dict[str, float]] = {}
+        merged_tier_source: Dict[str, int] = {}
+
+        fuser = Fuser(k=DEFAULT_RRF_K)
 
         for shard_name in shard_names:
             try:
@@ -190,28 +200,48 @@ class ShardRouter:
                 log.warning("shard %s query failed; skipping", shard_name, exc_info=True)
                 continue
 
-            # Dedupe by gene_id — content-hashed ids should only collide
-            # across shards if the same content was extracted twice
-            # (legitimate in copy-extract phase). Keep the highest-score
-            # copy.
+            # RRF needs (gene_id, intra-shard raw score) pairs. The Fuser
+            # re-sorts internally for stable rank assignment; we don't
+            # need to pre-sort.
+            shard_scores = shard.last_query_scores
+            ranked_for_shard: List[tuple] = []
             for doc in genes:
-                score = shard.last_query_scores.get(doc.gene_id, 0.0)
-                if doc.gene_id not in merged or score > merged_scores.get(doc.gene_id, 0.0):
+                raw_score = float(shard_scores.get(doc.gene_id, 0.0))
+                ranked_for_shard.append((doc.gene_id, raw_score))
+                # Keep the first Gene object we see for each id; cross-shard
+                # collisions imply identical content (content-hashed ids).
+                if doc.gene_id not in merged:
                     merged[doc.gene_id] = doc
-                    merged_scores[doc.gene_id] = score
+                # Stash the tier-contribution map from the shard that gave
+                # this doc its best intra-shard rank. We update on a higher
+                # raw score so the surfaced activation profile reflects the
+                # shard that "owns" the doc strongest.
+                if (
+                    doc.gene_id not in merged_tier_source
+                    or raw_score > merged_tier_source[doc.gene_id]
+                ):
                     merged_tier[doc.gene_id] = dict(
                         shard.last_tier_contributions.get(doc.gene_id, {})
                     )
+                    merged_tier_source[doc.gene_id] = raw_score
 
-        # Rank merged candidates by score, take top-K.
-        ranked_ids = sorted(
-            merged.keys(),
-            key=lambda gid: merged_scores.get(gid, 0.0),
-            reverse=True,
-        )[:max_genes]
+            fuser.add_tier(shard_name, ranked_for_shard, weight=1.0)
 
-        self.last_query_scores = {gid: merged_scores[gid] for gid in ranked_ids}
-        self.last_tier_contributions = {gid: merged_tier[gid] for gid in ranked_ids}
+        # RRF top-K. Cross-shard BM25 isn't calibrated (each shard has its
+        # own corpus statistics), so summing raw scores lets the largest
+        # shard's intra-shard rank-1 stomp the smaller shards' rank-1 in
+        # head-to-head queries. Rank-level fusion sidesteps that — see
+        # issue #104 for the regression evidence and docs/specs/
+        # 2026-05-08-stage-3-rrf-fusion.md for the in-shard precedent.
+        fused = fuser.top_k(max_genes)
+
+        ranked_ids = [gid for gid, _ in fused if gid in merged]
+        rrf_scores = {gid: score for gid, score in fused if gid in merged}
+
+        self.last_query_scores = rrf_scores
+        self.last_tier_contributions = {
+            gid: merged_tier.get(gid, {}) for gid in ranked_ids
+        }
         return [merged[gid] for gid in ranked_ids]
 
     # ── Lifecycle ───────────────────────────────────────────────────

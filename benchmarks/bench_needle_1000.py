@@ -900,6 +900,7 @@ def main():
                 helix_url=HELIX_URL,
                 genome_snapshot_path=GENOME_DB,
                 config=mon_cfg,
+                ask_proxy=ASK_PROXY,
             )
             if not monitor.preflight():
                 print("[bench] Pre-flight failed — aborting benchmark.", flush=True)
