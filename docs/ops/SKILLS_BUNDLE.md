@@ -180,7 +180,12 @@ Retrieval query `"review this PR for security issues"` would:
 1. Match tags `code`, `review`, `security`
 2. Score via cymatics resonance on frequency spectrum
 3. Compress via Headroom Kompress to ~1000 chars
-4. Deliver as `<GENE src="skills/code_review.md">...</GENE>`
+4. Deliver under `response[0].content` with a `[gene=a7f3b2c1 ◆ fired=...]`
+   legibility header, plus a `{"gene_id": "a7f3b2c1...", "source":
+   "skills/code_review.md", "score": ...}` entry in
+   `response[0].agent.citations[]`. (The legacy `<GENE src=...>...</GENE>`
+   inline markup is retained only for historical JSONL inspection -- see
+   `benchmarks/_citations.py`.)
 
 ---
 

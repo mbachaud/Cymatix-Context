@@ -21,18 +21,22 @@ from __future__ import annotations
 
 import json
 import os
-import re
 import sys
 import time
 from pathlib import Path
 from typing import List, Optional
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import httpx  # noqa: E402
 
+import _citations  # noqa: E402
+
 HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
-GENE_SRC_RE = re.compile(r'<GENE src="([^"]+)"')
+# Legacy regex retained for historical JSONL inspection only -- modern
+# /context responses surface sources via ``agent.citations`` (issue #101).
+GENE_SRC_RE = _citations.LEGACY_GENE_SRC_RE
 
 
 # Each needle requires ALL groups to be delivered for full recall.
@@ -119,7 +123,12 @@ def _norm(s: str) -> str:
 
 def fetch_delivered_srcs(client: httpx.Client, query: str,
                          task_type: str = "explain") -> tuple[list[str], dict]:
-    """Issue /context, return (delivered source_ids, context_health)."""
+    """Issue /context, return (delivered source_ids, context_health).
+
+    Sources come from ``agent.citations`` on modern responses; falls back
+    to legacy ``<GENE src=...>`` regex on historical JSONL inputs
+    (issue #101).
+    """
     r = client.post(
         f"{HELIX_URL}/context",
         json={"query": query, "task_type": task_type, "read_only": True},
@@ -127,18 +136,15 @@ def fetch_delivered_srcs(client: httpx.Client, query: str,
     )
     r.raise_for_status()
     payload = r.json()
+    # context_health lives on the first entry of the list-wrapped response.
     if isinstance(payload, list):
-        content = "\n".join(
-            b.get("content", "") for b in payload if isinstance(b, dict)
-        )
-        health = {}
+        first = payload[0] if payload and isinstance(payload[0], dict) else {}
+        health = first.get("context_health") or {}
     elif isinstance(payload, dict):
-        content = payload.get("expressed_context") or payload.get("content") or ""
         health = payload.get("context_health") or {}
     else:
-        content = ""
         health = {}
-    srcs = GENE_SRC_RE.findall(content)
+    srcs = _citations.extract_sources(payload)
     return srcs, health
 
 
