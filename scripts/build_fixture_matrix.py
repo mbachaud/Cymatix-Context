@@ -33,6 +33,21 @@ Usage
     python scripts/build_fixture_matrix.py --profile medium --mode sharded
     python scripts/build_fixture_matrix.py --profile xl --mode sharded
 
+Parallel modes (issue #92)
+--------------------------
+    --parallel              File-level mp.Pool + batched-SPLADE writer
+                            (blob mode only).
+    --workers N             Override worker count for --parallel
+                            (0 = auto via helix_context.parallel.auto_workers).
+    --shard-workers N       Run sharded builds with N concurrent shard
+                            processes. 0 = auto from VRAM + CPU.
+    --batch-size N          SPLADE batch size in the writer (default 64).
+
+Examples:
+    python scripts/build_fixture_matrix.py --profile medium --parallel
+    python scripts/build_fixture_matrix.py --profile xl --parallel --workers 6
+    python scripts/build_fixture_matrix.py --profile xl --mode sharded --shard-workers 3
+
 The script does not talk to the running Helix server -- it builds fresh
 SQLite files directly. Use ``POST /admin/swap-db`` with ``mode="blob"``
 or ``mode="sharded"`` (or the ``helix_swap_db`` MCP tool) to mount one
