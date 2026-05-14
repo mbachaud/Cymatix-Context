@@ -294,6 +294,95 @@ def test_upsert_source_index_writes_and_replaces(main_db):
     assert row["authority_class"] == "derived"
 
 
+def test_source_index_keeps_same_gene_id_across_shards(main_db):
+    """A content-addressed gene_id can live in multiple shards (identical
+    content under different source roots). The source_index PK must be
+    (gene_id, shard_name) so per-shard provenance + freshness metadata is
+    preserved for every copy.
+
+    Same collision pattern as the fingerprint_index regression: with PK on
+    gene_id alone, the second shard's INSERT OR REPLACE silently overwrites
+    the first shard's row. Uses one of the gene_ids called out in PR #103's
+    body for the medium-sharded fixture.
+    """
+    register_shard(main_db, "education", "reference", "/edu.db")
+    register_shard(main_db, "helix-context", "reference", "/hc.db")
+
+    upsert_source_index(
+        main_db,
+        gene_id="63ab90e26082c8ec",
+        shard_name="education",
+        source_id="/edu/audit_baseline.json",
+        repo_root="/edu",
+        source_kind="doc",
+        content_hash="abc123",
+    )
+    upsert_source_index(
+        main_db,
+        gene_id="63ab90e26082c8ec",
+        shard_name="helix-context",
+        source_id="/hc/audit_baseline.json",
+        repo_root="/hc",
+        source_kind="doc",
+        content_hash="abc123",
+    )
+
+    count = main_db.execute(
+        "SELECT COUNT(*) AS n FROM source_index WHERE gene_id = ?",
+        ("63ab90e26082c8ec",),
+    ).fetchone()["n"]
+    assert count == 2, (
+        "Both shards should keep their source_index row; got "
+        f"{count} row(s) instead of 2."
+    )
+
+    rows = main_db.execute(
+        "SELECT shard_name, repo_root FROM source_index WHERE gene_id = ? "
+        "ORDER BY shard_name",
+        ("63ab90e26082c8ec",),
+    ).fetchall()
+    assert [r["shard_name"] for r in rows] == ["education", "helix-context"]
+    assert [r["repo_root"] for r in rows] == ["/edu", "/hc"]
+
+
+def test_source_index_replaces_same_shard_same_gene(main_db):
+    """Re-ingesting the same (gene_id, shard_name) pair must still replace,
+    not duplicate. Guards against the composite-PK change leaking duplicate
+    rows on shard rebuilds.
+    """
+    register_shard(main_db, "education", "reference", "/edu.db")
+
+    upsert_source_index(
+        main_db,
+        gene_id="63ab90e26082c8ec",
+        shard_name="education",
+        source_id="/edu/v1.json",
+        source_kind="doc",
+        volatility_class="stable",
+        authority_class="primary",
+    )
+    upsert_source_index(
+        main_db,
+        gene_id="63ab90e26082c8ec",
+        shard_name="education",
+        source_id="/edu/v2.json",
+        source_kind="config",
+        volatility_class="hot",
+        authority_class="derived",
+    )
+
+    rows = main_db.execute(
+        "SELECT source_id, source_kind, volatility_class, authority_class "
+        "FROM source_index WHERE gene_id = ? AND shard_name = ?",
+        ("63ab90e26082c8ec", "education"),
+    ).fetchall()
+    assert len(rows) == 1
+    assert rows[0]["source_id"] == "/edu/v2.json"
+    assert rows[0]["source_kind"] == "config"
+    assert rows[0]["volatility_class"] == "hot"
+    assert rows[0]["authority_class"] == "derived"
+
+
 def test_shard_categories_constant():
     assert "participant" in SHARD_CATEGORIES
     assert "agent" in SHARD_CATEGORIES
