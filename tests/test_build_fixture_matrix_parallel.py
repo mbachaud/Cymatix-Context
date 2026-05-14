@@ -253,3 +253,181 @@ def test_sharded_pool_matches_serial(tmp_path, monkeypatch):
 
     assert ser_summary["shards"] == pool_summary["shards"]
     assert ser_summary["fingerprint_rows"] == pool_summary["fingerprint_rows"]
+
+
+# ── Pre-ingest sizing + largest-first sort (issue #97 A.1) ────────────────
+
+
+def _make_files(root: Path, count: int, body_size: int, ext: str = ".py") -> None:
+    """Write ``count`` files of approximately ``body_size`` bytes each."""
+    root.mkdir(parents=True, exist_ok=True)
+    body = "x" * body_size
+    for i in range(count):
+        (root / f"f{i}{ext}").write_text(body, encoding="utf-8")
+
+
+def test_estimate_eligible_bytes_counts_only_passing_files(tmp_path):
+    """``_estimate_eligible_bytes`` returns ``(eligible_files, eligible_bytes)``
+    where eligibility matches the actual ingest filters: extension in
+    INGEST_EXTS, size within MIN/MAX bounds, and ``extra_filename_filters``
+    not rejecting the path."""
+    import build_fixture_matrix as bfm
+
+    root = tmp_path / "tree"
+    # 3 python files, each ~1000 bytes (well within MIN/MAX bounds).
+    _make_files(root, count=3, body_size=1000, ext=".py")
+    # A file with a non-ingestable extension — should NOT count.
+    (root / "ignored.bin").write_bytes(b"x" * 1000)
+    # A file smaller than MIN_FILE_SIZE — should NOT count.
+    (root / "tiny.py").write_text("x" * 10, encoding="utf-8")
+
+    files, bytes_ = bfm._estimate_eligible_bytes(
+        str(root), skip_dirs=set(), extra_filename_filters=[],
+    )
+    assert files == 3
+    # Each text-mode write is exactly 1000 bytes on disk for ASCII content.
+    assert bytes_ == 3 * 1000
+
+
+def test_estimate_eligible_bytes_respects_skip_dirs(tmp_path):
+    """``skip_dirs`` prunes directory descent, so files inside aren't counted."""
+    import build_fixture_matrix as bfm
+
+    root = tmp_path / "tree"
+    _make_files(root, count=2, body_size=500, ext=".py")
+    _make_files(root / "node_modules", count=5, body_size=500, ext=".py")
+
+    files, bytes_ = bfm._estimate_eligible_bytes(
+        str(root),
+        skip_dirs={"node_modules"},
+        extra_filename_filters=[],
+    )
+    assert files == 2
+    assert bytes_ == 2 * 500
+
+
+def test_estimate_eligible_bytes_respects_filename_filter(tmp_path):
+    """``extra_filename_filters`` (predicate funcs returning True to skip)
+    are applied per-file, same as the real ingest walker."""
+    import build_fixture_matrix as bfm
+
+    root = tmp_path / "tree"
+    _make_files(root, count=3, body_size=500, ext=".py")
+    (root / "skip_me.py").write_text("x" * 500, encoding="utf-8")
+
+    files, _bytes = bfm._estimate_eligible_bytes(
+        str(root),
+        skip_dirs=set(),
+        extra_filename_filters=[lambda p: "skip_me" in p],
+    )
+    assert files == 3
+
+
+def test_estimate_eligible_bytes_missing_root_returns_zero(tmp_path):
+    """A nonexistent root is treated as zero work, not an error."""
+    import build_fixture_matrix as bfm
+
+    files, bytes_ = bfm._estimate_eligible_bytes(
+        str(tmp_path / "does-not-exist"),
+        skip_dirs=set(),
+        extra_filename_filters=[],
+    )
+    assert (files, bytes_) == (0, 0)
+
+
+def test_build_profile_sharded_sorts_largest_first(tmp_path, monkeypatch):
+    """Default behavior: shard tasks are submitted to the worker pool
+    sorted by eligible_bytes descending so the long pole gets the
+    longest head start (issue #97 A.1)."""
+    import build_fixture_matrix as bfm
+
+    small_root = tmp_path / "small"
+    big_root = tmp_path / "big"
+    mid_root = tmp_path / "mid"
+    _make_files(small_root, count=1, body_size=200, ext=".py")
+    _make_files(mid_root, count=5, body_size=1000, ext=".py")
+    _make_files(big_root, count=20, body_size=1500, ext=".py")
+
+    captured_order: list[str] = []
+
+    def fake_entry(task):
+        captured_order.append(task["label"])
+        return {
+            "label": task["label"], "root": task["root"],
+            "shard_db_path": task["shard_db_path"],
+            "gene_count": 0, "byte_size": 0, "elapsed_s": 0.0,
+            "files": 0, "genes": 0, "skipped": 0, "errors": 0,
+            "missing_roots": [], "fingerprint_payload": [],
+        }
+
+    monkeypatch.setattr(bfm, "_shard_worker_entry", fake_entry)
+    monkeypatch.setattr(bfm, "PROFILES", {
+        "tiny97": {
+            "label": "issue #97 sort test",
+            "active_roots": 3,
+            # Declared smallest -> mid -> biggest; expect dispatch order reversed.
+            "roots": [str(small_root), str(mid_root), str(big_root)],
+            "extra_skip_dirs": set(),
+            "extra_filename_filters": [],
+        }
+    })
+
+    stats = bfm.build_profile_sharded(
+        "tiny97", str(tmp_path / "out"),
+        shard_workers=1, shard_file_workers=1, batch_size=8,
+        sort_largest_first=True,
+    )
+
+    big_slug = bfm._slug_for_root(str(big_root))
+    mid_slug = bfm._slug_for_root(str(mid_root))
+    small_slug = bfm._slug_for_root(str(small_root))
+    assert captured_order == [big_slug, mid_slug, small_slug]
+    assert stats["sort_largest_first"] is True
+    assert "sizing_elapsed_s" in stats
+
+
+def test_build_profile_sharded_preserves_order_when_disabled(tmp_path, monkeypatch):
+    """``sort_largest_first=False`` (the ``--no-shard-sort`` CLI flag)
+    preserves the declared ``profile["roots"]`` order."""
+    import build_fixture_matrix as bfm
+
+    a = tmp_path / "a"
+    b = tmp_path / "b"
+    _make_files(a, count=1, body_size=200, ext=".py")
+    _make_files(b, count=20, body_size=1500, ext=".py")
+
+    captured_order: list[str] = []
+
+    def fake_entry(task):
+        captured_order.append(task["label"])
+        return {
+            "label": task["label"], "root": task["root"],
+            "shard_db_path": task["shard_db_path"],
+            "gene_count": 0, "byte_size": 0, "elapsed_s": 0.0,
+            "files": 0, "genes": 0, "skipped": 0, "errors": 0,
+            "missing_roots": [], "fingerprint_payload": [],
+        }
+
+    monkeypatch.setattr(bfm, "_shard_worker_entry", fake_entry)
+    monkeypatch.setattr(bfm, "PROFILES", {
+        "tiny97b": {
+            "label": "issue #97 no-sort test",
+            "active_roots": 2,
+            "roots": [str(a), str(b)],
+            "extra_skip_dirs": set(),
+            "extra_filename_filters": [],
+        }
+    })
+
+    stats = bfm.build_profile_sharded(
+        "tiny97b", str(tmp_path / "out"),
+        shard_workers=1, shard_file_workers=1, batch_size=8,
+        sort_largest_first=False,
+    )
+
+    a_slug = bfm._slug_for_root(str(a))
+    b_slug = bfm._slug_for_root(str(b))
+    # Declaration order preserved despite a being much smaller than b.
+    assert captured_order == [a_slug, b_slug]
+    assert stats["sort_largest_first"] is False
+

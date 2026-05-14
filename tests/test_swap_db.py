@@ -23,8 +23,19 @@ from helix_context.config import (
     ServerConfig,
 )
 from helix_context.knowledge_store import KnowledgeStore
-from helix_context.schemas import Gene
+from helix_context.schemas import (
+    ChromatinState,
+    EpigeneticMarkers,
+    Gene,
+    PromoterTags,
+)
 from helix_context.server import create_app
+from helix_context.shard_schema import (
+    init_main_db,
+    open_main_db,
+    register_shard,
+    upsert_fingerprint,
+)
 
 
 # -- Helpers ---------------------------------------------------------------
@@ -260,3 +271,173 @@ class TestSwapDbEndpoint:
         assert resp.status_code == 200
         assert resp.json()["read_only"] is False
         assert app.state.helix.genome.read_only is False
+
+
+# -- Sharded round-trip via swap-db ----------------------------------------
+#
+# Issue #98: ``ShardedGenomeAdapter`` was missing several attributes
+# (``path``, ``_dense_embedding_enabled``, ``_entity_graph_retrieval_enabled``,
+# ``_last_query_scores_lock``, ``query_docs``) that callers read directly off
+# ``self.genome``. Most importantly, **every** ``/admin/swap-db`` call
+# against a live sharded store hit ``AttributeError: 'ShardedGenomeAdapter'
+# object has no attribute 'path'`` at line 858 in routes_admin.py.
+#
+# These tests cover the swap-A->B->A round trip with ``HELIX_USE_SHARDS=1``
+# active so each adapter call surface (path, stats, close) actually fires.
+
+
+def _build_sharded_layout(root_dir, gene_content: str, domains: list[str],
+                         entities: list[str]) -> tuple[str, str]:
+    """Create a one-shard sharded layout under ``root_dir``.
+
+    Returns ``(main_path, gene_id)``. ``main_path`` is the
+    ``main.genome.db`` that ``open_read_source`` will route through
+    ``ShardedGenomeAdapter`` when ``HELIX_USE_SHARDS=1`` is set.
+    """
+    main_path = str(root_dir / "main.genome.db")
+    shard_path = str(root_dir / "shard_a.genome.db")
+
+    # Seed the shard with one doc.
+    shard = KnowledgeStore(path=shard_path)
+    gene = Gene(
+        gene_id="",
+        content=gene_content,
+        complement=gene_content[:50],
+        codons=[],
+        promoter=PromoterTags(domains=domains, entities=entities, sequence_index=0),
+        epigenetics=EpigeneticMarkers(),
+        chromatin=ChromatinState.OPEN,
+        is_fragment=False,
+        source_id=f"/{domains[0] if domains else 'unknown'}.md",
+    )
+    gene_id = shard.upsert_doc(gene, apply_gate=False)
+    shard.conn.close()
+    if getattr(shard, "_reader", None):
+        shard._reader.close()
+
+    # Register the shard in main.db.
+    main = open_main_db(main_path)
+    init_main_db(main)
+    register_shard(main, "shard_a", "reference", shard_path, gene_count=1)
+    upsert_fingerprint(
+        main, gene_id=gene_id, shard_name="shard_a",
+        source_id=f"/{domains[0] if domains else 'unknown'}.md",
+        domains_json=json.dumps(domains),
+        entities_json=json.dumps(entities),
+        key_values_json="[]",
+    )
+    main.close()
+
+    return main_path, gene_id
+
+
+class TestSwapDbShardedRoundTrip:
+    """Round-trip swap-db with HELIX_USE_SHARDS=1 active (issue #98).
+
+    Each test enables sharding via monkeypatch so ``open_read_source``
+    returns a ``ShardedGenomeAdapter`` when handed a ``main.genome.db``
+    path.
+    """
+
+    def test_swap_blob_to_sharded(self, tmp_path, monkeypatch):
+        """A -> B where A is blob, B is sharded. After the swap,
+        ``helix.genome`` is a ``ShardedGenomeAdapter`` and ``/stats``
+        reports the shard's gene count."""
+        monkeypatch.setenv("HELIX_USE_SHARDS", "1")
+
+        db_a = str(tmp_path / "blob.db")
+        _make_db(db_a, genes=3).close()
+        sharded_dir = tmp_path / "sharded"
+        sharded_dir.mkdir()
+        main_b, _ = _build_sharded_layout(
+            sharded_dir, "Helix design doc.", domains=["docs"], entities=["helix"],
+        )
+
+        app, client = _make_app_and_client(db_a)
+
+        # Sanity: starts as a blob KnowledgeStore.
+        assert isinstance(app.state.helix.genome, KnowledgeStore)
+        assert app.state.helix.genome.path == db_a
+
+        resp = client.post("/admin/swap-db", json={"path": main_b})
+        assert resp.status_code == 200, resp.json()
+        data = resp.json()
+        assert data["swapped"] is True
+        assert data["new_path"] == main_b
+
+        # Now the active store is the sharded adapter.
+        from helix_context.sharding import ShardedGenomeAdapter
+        assert isinstance(app.state.helix.genome, ShardedGenomeAdapter)
+        # And critically: helix.genome.path is reachable (this was the
+        # AttributeError that blocked every swap-db once sharded was active).
+        assert app.state.helix.genome.path == main_b
+
+    def test_swap_sharded_back_to_blob(self, tmp_path, monkeypatch):
+        """The path that originally crashed in #98: an already-sharded
+        active store reads ``helix.genome.path`` during swap-db logging.
+        With the fix, the swap succeeds and the active store goes back
+        to a blob ``KnowledgeStore``."""
+        monkeypatch.setenv("HELIX_USE_SHARDS", "1")
+
+        sharded_dir = tmp_path / "sharded"
+        sharded_dir.mkdir()
+        main_a, _ = _build_sharded_layout(
+            sharded_dir, "Sharded source content.",
+            domains=["docs"], entities=["helix"],
+        )
+        db_b = str(tmp_path / "after_swap.db")
+        _make_db(db_b, genes=5).close()
+
+        app, client = _make_app_and_client(main_a)
+
+        from helix_context.sharding import ShardedGenomeAdapter
+        assert isinstance(app.state.helix.genome, ShardedGenomeAdapter), (
+            "App should start with a ShardedGenomeAdapter when "
+            "HELIX_USE_SHARDS=1 and genome path ends with main.genome.db"
+        )
+
+        # This call previously threw AttributeError: 'ShardedGenomeAdapter'
+        # object has no attribute 'path' at routes_admin.py:858 before the
+        # fix landed.
+        resp = client.post("/admin/swap-db", json={"path": db_b})
+        assert resp.status_code == 200, resp.json()
+        data = resp.json()
+        assert data["swapped"] is True
+        assert data["old_path"] == main_a
+        assert data["new_path"] == db_b
+        assert data["genes"] == 5
+        # Active store is now a blob KnowledgeStore again.
+        assert isinstance(app.state.helix.genome, KnowledgeStore)
+
+    def test_swap_blob_to_sharded_to_blob(self, tmp_path, monkeypatch):
+        """Full round-trip: A (blob) -> B (sharded) -> A (blob).
+
+        Exercises every adapter surface that fires during swap:
+        ``path``, ``stats``, ``invalidate_sema_cache``,
+        ``_build_sema_cache``, ``close``."""
+        monkeypatch.setenv("HELIX_USE_SHARDS", "1")
+
+        db_a = str(tmp_path / "blob_a.db")
+        _make_db(db_a, genes=2).close()
+
+        sharded_dir = tmp_path / "sharded"
+        sharded_dir.mkdir()
+        main_b, _ = _build_sharded_layout(
+            sharded_dir, "Sharded round-trip content.",
+            domains=["auth"], entities=["jwt"],
+        )
+
+        app, client = _make_app_and_client(db_a)
+
+        # A -> B
+        resp = client.post("/admin/swap-db", json={"path": main_b})
+        assert resp.status_code == 200, resp.json()
+        from helix_context.sharding import ShardedGenomeAdapter
+        assert isinstance(app.state.helix.genome, ShardedGenomeAdapter)
+
+        # B -> A
+        resp = client.post("/admin/swap-db", json={"path": db_a})
+        assert resp.status_code == 200, resp.json()
+        assert resp.json()["genes"] == 2
+        assert isinstance(app.state.helix.genome, KnowledgeStore)
+        assert app.state.helix.genome.path == db_a
