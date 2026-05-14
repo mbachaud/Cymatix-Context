@@ -162,6 +162,33 @@ def _looks_like_literal_value(v: str) -> bool:
     return False
 
 
+def _gold_source_in_citations(citations, gold_source: str) -> bool:
+    """Issue #101 (2026-05): citation-grounded gold delivery check.
+
+    The existing ``retrieved`` metric is a payload-wide word-boundary match
+    on ``content`` — useful as a permissive retrieval-rate proxy but blind
+    to whether the actual gold source document was delivered (vs. a stray
+    value mention in a header, an unrelated document, or metadata).
+
+    This function answers the stricter question: did /context return a
+    citation whose ``source`` path matches the needle's gold source?
+    Reported alongside ``retrieved`` as ``gold_source_delivered`` so
+    cross-run comparability with pre-2026-05 result files is preserved.
+
+    Matching is forward-slash normalized and case-insensitive, and uses
+    substring containment (so ``helix-context/helix.toml`` matches
+    ``F:/Projects/helix-context/helix.toml`` from the citation).
+    """
+    if not citations or not gold_source:
+        return False
+    gold_norm = gold_source.replace("\\", "/").lower()
+    for c in citations:
+        src = str(c.get("source", "") or "").replace("\\", "/").lower()
+        if src and (gold_norm in src or src in gold_norm):
+            return True
+    return False
+
+
 def _word_boundary_match(text: str, value: str) -> bool:
     """Match `value` inside `text` with word boundaries when safe.
 
@@ -467,6 +494,12 @@ def run_needle(client: httpx.Client, needle: dict) -> dict:
     else:
         retrieved = _word_boundary_match(content, needle["value"])
 
+    # Issue #101 (2026-05): citation-grounded gold-source delivery check.
+    # Additive — does not change ``retrieved`` semantics so cross-run
+    # comparability with pre-2026-05 result files is preserved.
+    citations = agent_meta.get("citations", []) or []
+    gold_source_delivered = _gold_source_in_citations(citations, needle.get("source", ""))
+
     # Step 2: downstream model extraction (skipped when ASK_PROXY=0;
     # /chat dispatches the downstream model AND triggers the proxy's
     # background helix.learn replication that MUTATES the genome —
@@ -516,6 +549,8 @@ def run_needle(client: httpx.Client, needle: dict) -> dict:
 
     result.update({
         "retrieved": retrieved,
+        "gold_source_delivered": gold_source_delivered,
+        "n_citations": len(citations),
         "answered": answered,
         "context_latency_s": round(ctx_latency, 3),
         "proxy_latency_s": round(proxy_latency, 3),
@@ -539,14 +574,22 @@ def summarize(results: list[dict]) -> dict:
     retrieved = sum(1 for r in results if r.get("retrieved"))
     answered = sum(1 for r in results if r.get("answered"))
     errors = sum(1 for r in results if r.get("error"))
+    # Issue #101: citation-grounded gold-source delivery. Additive — field
+    # is missing on pre-2026-05 result files (sum collapses to 0 there, which
+    # is the honest representation: that metric wasn't computed).
+    gold_delivered = sum(1 for r in results if r.get("gold_source_delivered"))
 
     # Per-category breakdown
-    by_cat: dict[str, dict] = defaultdict(lambda: {"n": 0, "retrieved": 0, "answered": 0})
+    by_cat: dict[str, dict] = defaultdict(
+        lambda: {"n": 0, "retrieved": 0, "gold_delivered": 0, "answered": 0}
+    )
     for r in results:
         c = r.get("category", "other")
         by_cat[c]["n"] += 1
         if r.get("retrieved"):
             by_cat[c]["retrieved"] += 1
+        if r.get("gold_source_delivered"):
+            by_cat[c]["gold_delivered"] += 1
         if r.get("answered"):
             by_cat[c]["answered"] += 1
 
@@ -555,6 +598,15 @@ def summarize(results: list[dict]) -> dict:
         "retrieval_miss": sum(1 for r in results if not r.get("retrieved")),
         "extraction_miss": sum(1 for r in results if r.get("retrieved") and not r.get("answered")),
         "error": errors,
+        # Issue #101: phantom hit — value substring matched somewhere in the
+        # payload but the gold source document was NOT among the citations.
+        # Signals that ``retrieved=True`` overcounted (header/metadata/unrelated
+        # doc carried the value). Only populated when results have citations.
+        "phantom_hit": sum(
+            1 for r in results
+            if r.get("retrieved") and not r.get("gold_source_delivered")
+            and r.get("n_citations", 0) > 0
+        ),
     }
 
     # Latency percentiles
@@ -595,13 +647,16 @@ def summarize(results: list[dict]) -> dict:
     return {
         "n": n,
         "retrieval_rate": round(retrieved / max(n, 1), 4),
+        "gold_source_delivery_rate": round(gold_delivered / max(n, 1), 4),
         "answer_accuracy_rate": round(answered / max(n, 1), 4),
         "retrieved": retrieved,
+        "gold_source_delivered": gold_delivered,
         "answered": answered,
         "errors": errors,
         "failure_modes": failures,
         "by_category": {k: {**v,
                             "retrieval_rate": round(v["retrieved"] / max(v["n"], 1), 4),
+                            "gold_delivery_rate": round(v["gold_delivered"] / max(v["n"], 1), 4),
                             "answer_rate": round(v["answered"] / max(v["n"], 1), 4)}
                         for k, v in by_cat.items()},
         "latency": {

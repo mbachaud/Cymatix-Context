@@ -1,0 +1,52 @@
+[
+  {
+    "name": "small",
+    "db": "F:/Projects/helix-context/genomes/bench/matrix/small.db",
+    "sharded": false,
+    "read_only": true,
+    "_genes": 1237,
+    "_sha256": "39364a7c4e28de65973019ae68068a98d7b7ac37e7a81d985adcc046ed1e0ad7"
+  },
+  {
+    "name": "medium",
+    "db": "F:/Projects/helix-context/genomes/bench/matrix/medium.db",
+    "sharded": false,
+    "read_only": true,
+    "_genes": 17324,
+    "_sha256": "d004dd66ee7aec3a9380c425696b56f4a645fd142ac467205a096d1b4b5743f2"
+  },
+  {
+    "name": "large",
+    "db": "F:/Projects/helix-context/genomes/bench/matrix/large.db",
+    "sharded": false,
+    "read_only": true,
+    "_genes": 27627,
+    "_sha256": "cc640a5d53c8a8d24135f0a3bdf476ebb6d8a64179254976f142d5e56b4fd692"
+  },
+  {
+    "name": "xl",
+    "db": "F:/Projects/helix-context/genomes/bench/matrix/xl.db",
+    "sharded": false,
+    "read_only": true,
+    "_genes": 46029,
+    "_sha256": "a7a6f8428f0cdae41d628f0c52252ff3c407cc121ced65fd0e392e5ec22d991f"
+  },
+  {
+    "name": "medium-sharded",
+    "db": "F:/Projects/helix-context/genomes/bench/matrix-sharded/medium/main.genome.db",
+    "sharded": true,
+    "read_only": true,
+    "_genes": 17351,
+    "_shard_count": 6,
+    "_sha256": "6170c7ff836fd8500782a00602a7d11d2c696c257105f79dd74bfaaa55be2b8a"
+  },
+  {
+    "name": "xl-sharded",
+    "db": "F:/Projects/helix-context/genomes/bench/matrix-sharded/xl/main.genome.db",
+    "sharded": true,
+    "read_only": true,
+    "_genes": 46060,
+    "_shard_count": 12,
+    "_sha256": "2d0f5ab1688862cc9f6eeebc092bb1ec19d75195c904b157d7d4d8c0e9f40004"
+  }
+]
