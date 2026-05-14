@@ -1,0 +1,701 @@
+"""Build the test genomes per ``docs/benchmarks/GENOME_FIXTURE_MATRIX.md``.
+
+Monolithic profiles (default, ``--mode blob``)
+----------------------------------------------
+small   4 roots — BookKeeper, CosmicTasha, two-brain-audit, MaxExpressKit
+medium  6 roots — small + Education + helix-context (helix-context skips .db sidecars)
+large   1 root  — F:/Projects whole tree, standard denylist
+xl     13 roots — F:/Projects + 12 selected Steam/game installs (code/scripts/configs only)
+
+Output (blob mode):
+    <out-dir>/<profile>.db
+    <out-dir>/manifest.json
+
+Sharded profiles (``--mode sharded``)
+-------------------------------------
+Builds one shard per source root + a ``main.genome.db`` routing DB. The
+matrix doc reserves ``medium-sharded`` and ``xl-sharded``; ``--mode sharded``
+also accepts ``small`` and ``large`` for smoke-testing.
+
+Output (sharded mode):
+    <out-dir>-sharded/<profile>/main.genome.db
+    <out-dir>-sharded/<profile>/<drive>/<mirrored-path>/<label>.genome.db
+    <out-dir>-sharded/manifest.json
+
+By default ``<out-dir> = F:/Projects/helix-context/genomes/bench/matrix``.
+
+Usage
+-----
+    python scripts/build_fixture_matrix.py --profile small
+    python scripts/build_fixture_matrix.py --profile small,medium
+    python scripts/build_fixture_matrix.py --profile all
+    python scripts/build_fixture_matrix.py --profile xl --out-dir F:/tmp/bench
+    python scripts/build_fixture_matrix.py --profile medium --mode sharded
+    python scripts/build_fixture_matrix.py --profile xl --mode sharded
+
+The script does not talk to the running Helix server -- it builds fresh
+SQLite files directly. Use ``POST /admin/swap-db`` with ``mode="blob"``
+or ``mode="sharded"`` (or the ``helix_swap_db`` MCP tool) to mount one
+of the resulting files into a running server without restarting.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import logging
+import os
+import re
+import sys
+import time
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Iterable
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
+from helix_context.tagger import CpuTagger
+from helix_context.genome import Genome
+from helix_context.codons import CodonChunker
+from helix_context.sharding import corpus_shard_db, main_db_path
+from helix_context.shard_schema import (
+    init_main_db,
+    open_main_db,
+    register_shard,
+)
+
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)-7s %(message)s",
+    datefmt="%H:%M:%S",
+)
+log = logging.getLogger("bench.matrix")
+
+
+# ── Extension allow-list ──────────────────────────────────────────────────
+
+TEXT_EXTS = {".txt", ".md", ".cfg", ".ini", ".conf", ".properties", ".vdf", ".acf"}
+CODE_EXTS = {
+    ".lua", ".py", ".cs", ".js", ".json", ".yaml", ".yml", ".toml",
+    ".bat", ".sh", ".html", ".rs", ".go", ".java", ".c", ".cpp", ".h",
+    ".rb", ".ts", ".tsx", ".jsx", ".sql", ".r", ".ps1",
+}
+INGEST_EXTS = TEXT_EXTS | CODE_EXTS
+
+
+# ── Directory denylist (common across all profiles) ───────────────────────
+
+SKIP_DIRS_COMMON = {
+    # Build / cache / dependency
+    "shadercache", "temp", "downloading", "depotcache", "__pycache__",
+    ".git", "node_modules", "Mono", "MonoBleedingEdge", ".venv", "venv",
+    "dist", "build", ".pytest_cache", "target", ".claude", ".serena",
+    ".next", ".turbo", ".cache", ".ruff_cache",
+    # Windows system
+    "$RECYCLE.BIN", "System Volume Information", "WpSystem",
+    "WUDownloadCache", "WindowsApps",
+    # Helix-internal artifacts that should not pollute benches
+    "benchmarks", "cwola_export", "logs", "training",
+    "Helix-backup blobs", "D3D12",
+}
+
+
+# ── Per-profile file-extension exclusions ─────────────────────────────────
+
+# SQLite sidecar suffixes that match by full-name pattern, not just ext.
+SQLITE_SIDECAR_SUFFIXES = (".db", ".sqlite", ".sqlite3", ".db-wal", ".db-shm",
+                           ".sqlite-wal", ".sqlite-shm")
+
+
+MAX_FILE_SIZE = 200_000
+MIN_FILE_SIZE = 50
+
+
+# ── Profile definitions ───────────────────────────────────────────────────
+
+PROFILES: dict[str, dict] = {
+    "small": {
+        "label": "Focused project smoke corpus",
+        "active_roots": 4,
+        "roots": [
+            r"F:\Projects\BookKeeper",
+            r"F:\Projects\CosmicTasha",
+            r"F:\Projects\two-brain-audit",
+            r"F:\Projects\MaxExpressKit",
+        ],
+        # No extra denials beyond common.
+        "extra_skip_dirs": set(),
+        "extra_filename_filters": [],
+    },
+    "medium": {
+        "label": "Broader project corpus",
+        # NOTE: the published matrix doc summary says "6 active roots" — that
+        # count includes Education plus helix-context. The 2026-05-13 doc
+        # body listed only 5 paths; Education was the missing 6th. Authoritative
+        # here.
+        "active_roots": 6,
+        "roots": [
+            r"F:\Projects\BookKeeper",
+            r"F:\Projects\CosmicTasha",
+            r"F:\Projects\two-brain-audit",
+            r"F:\Projects\MaxExpressKit",
+            r"F:\Projects\Education",
+            r"F:\Projects\helix-context",
+        ],
+        "extra_skip_dirs": set(),
+        # Skip any .db / .sqlite sidecars under helix-context. The walker
+        # already filters by extension; this is just an extra safety belt.
+        "extra_filename_filters": [
+            lambda path: any(
+                path.lower().endswith(s) for s in SQLITE_SIDECAR_SUFFIXES
+            ),
+        ],
+    },
+    "large": {
+        "label": "Full projects corpus",
+        "active_roots": 1,
+        "roots": [r"F:\Projects"],
+        "extra_skip_dirs": set(),
+        "extra_filename_filters": [
+            lambda path: any(
+                path.lower().endswith(s) for s in SQLITE_SIDECAR_SUFFIXES
+            ),
+        ],
+    },
+    "xl": {
+        "label": "Projects plus external Steam/game code corpus",
+        "active_roots": 13,
+        "roots": [
+            r"F:\Projects",
+            r"F:\Factorio",
+            r"F:\SteamLibrary\steamapps\common\Universe Sandbox 2",
+            r"F:\SteamLibrary\steamapps\common\Satisfactory Modeler",
+            r"F:\SteamLibrary\steamapps\common\Dyson Sphere Program",
+            r"F:\SteamLibrary\steamapps\common\Cities Skylines II",
+            r"E:\SteamLibrary\steamapps\common\SpaceEngineers2",
+            r"E:\SteamLibrary\steamapps\common\BeamNG.drive",
+            r"D:\SteamLibrary\steamapps\common\Kerbal Space Program",
+            r"D:\SteamLibrary\steamapps\common\Turing Complete",
+            r"C:\Program Files (x86)\Steam\steamapps\common\The Farmer Was Replaced",
+            r"C:\Program Files (x86)\Steam\steamapps\common\Stationeers",
+        ],
+        # Game asset / save / cache directories that may sneak through.
+        "extra_skip_dirs": {
+            "saves", "Saves", "SaveGame", "SaveGames",
+            "screenshots", "Screenshots",
+            "crashdump", "CrashDump", "Crashes",
+            "PlayerData", "Recordings",
+        },
+        "extra_filename_filters": [
+            lambda path: any(
+                path.lower().endswith(s) for s in SQLITE_SIDECAR_SUFFIXES
+            ),
+        ],
+    },
+}
+
+
+# ── Walk + ingest ─────────────────────────────────────────────────────────
+
+
+def ingest_tree(
+    root: str,
+    genome: Genome,
+    tagger: CpuTagger,
+    chunker: CodonChunker,
+    stats: dict,
+    skip_dirs: set[str],
+    extra_filename_filters: list,
+) -> None:
+    """Walk ``root`` and ingest matching files, respecting ``skip_dirs``."""
+    if not os.path.exists(root):
+        log.warning("root %s does not exist, skipping", root)
+        stats["missing_roots"].append(root)
+        return
+
+    log.info("=== Ingesting %s ===", root)
+
+    for dirpath, dirnames, filenames in os.walk(root):
+        dirnames[:] = [d for d in dirnames if d not in skip_dirs]
+
+        for fname in filenames:
+            ext = os.path.splitext(fname)[1].lower()
+            if ext not in INGEST_EXTS:
+                stats["skipped"] += 1
+                continue
+
+            fpath = os.path.join(dirpath, fname)
+
+            # Per-profile filename filters
+            if any(f(fpath) for f in extra_filename_filters):
+                stats["skipped"] += 1
+                continue
+
+            try:
+                size = os.path.getsize(fpath)
+            except OSError:
+                continue
+
+            if size < MIN_FILE_SIZE or size > MAX_FILE_SIZE:
+                stats["skipped"] += 1
+                continue
+
+            try:
+                with open(fpath, "r", encoding="utf-8", errors="replace") as f:
+                    content = f.read()
+            except Exception:
+                stats["errors"] += 1
+                continue
+
+            ct = "code" if ext in CODE_EXTS else "text"
+            strands = chunker.chunk(content, content_type=ct)
+            for i, strand in enumerate(strands):
+                try:
+                    gene = tagger.pack(
+                        strand.content,
+                        content_type=ct,
+                        source_id=fpath,
+                        sequence_index=i,
+                    )
+                    gene.is_fragment = strand.is_fragment
+                    genome.upsert_gene(gene)
+                    stats["genes"] += 1
+                except Exception:
+                    stats["errors"] += 1
+
+            stats["files"] += 1
+
+            if stats["genes"] % 500 == 0 and stats["genes"] > 0:
+                elapsed = time.perf_counter() - stats["t0"]
+                rate = stats["genes"] / max(elapsed, 0.001)
+                log.info(
+                    "[%d files, %d genes] %.1f genes/s | %s",
+                    stats["files"], stats["genes"], rate,
+                    os.path.basename(dirpath)[:60],
+                )
+
+
+# ── Build one profile ─────────────────────────────────────────────────────
+
+
+def build_profile(name: str, db_path: str) -> dict:
+    """Build the profile named ``name`` into a fresh ``.db`` at ``db_path``."""
+    profile = PROFILES[name]
+
+    out_dir = os.path.dirname(os.path.abspath(db_path))
+    os.makedirs(out_dir, exist_ok=True)
+
+    if os.path.exists(db_path):
+        log.info("removing existing %s", db_path)
+        os.remove(db_path)
+        for suffix in ("-wal", "-shm"):
+            sidecar = db_path + suffix
+            if os.path.exists(sidecar):
+                os.remove(sidecar)
+
+    log.info("opening fresh genome at %s", db_path)
+    genome = Genome(
+        path=db_path,
+        synonym_map={},
+        splade_enabled=True,
+        entity_graph=True,
+    )
+    tagger = CpuTagger()
+    chunker = CodonChunker()
+
+    skip_dirs = SKIP_DIRS_COMMON | profile["extra_skip_dirs"]
+    extra_filename_filters = profile["extra_filename_filters"]
+
+    stats = {
+        "profile": name,
+        "label": profile["label"],
+        "active_roots": profile["active_roots"],
+        "roots": profile["roots"],
+        "db_path": db_path,
+        "started_at": datetime.now(timezone.utc).isoformat(),
+        "files": 0,
+        "genes": 0,
+        "skipped": 0,
+        "errors": 0,
+        "missing_roots": [],
+        "t0": time.perf_counter(),
+    }
+
+    for root in profile["roots"]:
+        ingest_tree(
+            root=root,
+            genome=genome,
+            tagger=tagger,
+            chunker=chunker,
+            stats=stats,
+            skip_dirs=skip_dirs,
+            extra_filename_filters=extra_filename_filters,
+        )
+
+    elapsed = time.perf_counter() - stats["t0"]
+    stats["elapsed_s"] = round(elapsed, 1)
+    stats["finished_at"] = datetime.now(timezone.utc).isoformat()
+
+    genome_stats = genome.stats()
+    stats["total_genes"] = genome_stats.get("total_genes", 0)
+    stats["compression_ratio"] = round(genome_stats.get("compression_ratio", 0.0), 4)
+
+    try:
+        hl_row = genome.conn.execute(
+            "SELECT COUNT(*) AS n FROM harmonic_links"
+        ).fetchone()
+        stats["harmonic_links"] = int(hl_row["n"]) if hl_row else 0
+    except Exception:
+        stats["harmonic_links"] = 0
+
+    try:
+        stats["bytes"] = os.path.getsize(db_path)
+    except OSError:
+        stats["bytes"] = -1
+
+    log.info("=" * 60)
+    log.info("DONE %s in %.1fs", name, elapsed)
+    log.info("  files=%d genes=%d skipped=%d errors=%d",
+             stats["files"], stats["genes"], stats["skipped"], stats["errors"])
+    log.info("  total_genes=%d harmonic_links=%d bytes=%d",
+             stats["total_genes"], stats["harmonic_links"], stats["bytes"])
+    if stats["missing_roots"]:
+        log.warning("  missing roots: %s", stats["missing_roots"])
+
+    genome.close()
+
+    # Drop perf_counter t0 before serializing
+    stats.pop("t0", None)
+    return stats
+
+
+# ── Sharded build ─────────────────────────────────────────────────────────
+
+
+_SLUG_RE = re.compile(r"[^a-z0-9]+")
+
+
+def _slug_for_root(root: str) -> str:
+    """Stable lowercase slug for a source root's last path segment."""
+    base = os.path.basename(root.rstrip("/\\")) or root
+    slug = _SLUG_RE.sub("-", base.lower()).strip("-")
+    return slug or "root"
+
+
+def _copy_fingerprint_indexes(main_conn, shard: Genome, shard_name: str) -> int:
+    """Copy per-document promoter+source rows into main.db ``fingerprint_index``.
+
+    Without this the ``ShardRouter`` returns no shards and every
+    cross-shard query is empty (see ``shard_router.route``). Schema
+    matches the columns in :mod:`helix_context.shard_schema`.
+    """
+    rows = shard.conn.execute(
+        "SELECT gene_id, source_id, promoter, key_values, is_fragment "
+        "FROM genes"
+    ).fetchall()
+    if not rows:
+        return 0
+    now = time.time()
+    payload = []
+    for r in rows:
+        gid = r["gene_id"]
+        src_id = r["source_id"]
+        promoter_blob = r["promoter"]
+        kv_blob = r["key_values"]
+        is_frag = r["is_fragment"]
+        domains_json = None
+        entities_json = None
+        if promoter_blob:
+            try:
+                p = json.loads(promoter_blob)
+                domains_json = json.dumps(p.get("domains") or [])
+                entities_json = json.dumps(p.get("entities") or [])
+            except Exception:
+                pass
+        payload.append((
+            gid, shard_name, src_id, domains_json, entities_json, kv_blob,
+            0 if is_frag else 1, None, now,
+        ))
+    main_conn.executemany(
+        "INSERT OR REPLACE INTO fingerprint_index "
+        "(gene_id, shard_name, source_id, domains, entities, key_values, "
+        "is_parent, sequence_idx, updated_at) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        payload,
+    )
+    main_conn.commit()
+    return len(rows)
+
+
+def build_profile_sharded(
+    name: str,
+    profile_out_dir: str,
+    shard_category: str = "reference",
+) -> dict:
+    """Build the profile as a sharded layout under ``profile_out_dir``.
+
+    One per-source-root shard ``.db`` (under filesystem-mirroring layout)
+    plus a ``main.genome.db`` routing DB with the ``fingerprint_index``
+    populated. Shards are registered under ``shard_category`` (default
+    "reference" — appropriate for bench corpora).
+    """
+    profile = PROFILES[name]
+    os.makedirs(profile_out_dir, exist_ok=True)
+
+    main_path = main_db_path(profile_out_dir)
+    if main_path.exists():
+        log.info("removing existing %s", main_path)
+        main_path.unlink()
+        for sidecar in (str(main_path) + "-wal", str(main_path) + "-shm"):
+            if os.path.exists(sidecar):
+                os.remove(sidecar)
+    main_conn = open_main_db(str(main_path))
+    init_main_db(main_conn)
+    log.info("sharded main.db at %s", main_path)
+
+    tagger = CpuTagger()
+    chunker = CodonChunker()
+    skip_dirs = SKIP_DIRS_COMMON | profile["extra_skip_dirs"]
+    extra_filename_filters = profile["extra_filename_filters"]
+
+    totals = {
+        "profile": name,
+        "label": profile["label"],
+        "active_roots": profile["active_roots"],
+        "roots": profile["roots"],
+        "out_dir": profile_out_dir,
+        "main_db": str(main_path),
+        "started_at": datetime.now(timezone.utc).isoformat(),
+        "files": 0,
+        "genes": 0,
+        "skipped": 0,
+        "errors": 0,
+        "missing_roots": [],
+        "shards": [],
+        "t0": time.perf_counter(),
+    }
+
+    for root in profile["roots"]:
+        if not os.path.exists(root):
+            log.warning("root %s does not exist, skipping", root)
+            totals["missing_roots"].append(root)
+            continue
+
+        label = _slug_for_root(root)
+        shard_db = corpus_shard_db(root, label, profile_out_dir)
+        shard_db.parent.mkdir(parents=True, exist_ok=True)
+
+        if shard_db.exists():
+            log.info("removing existing shard %s", shard_db)
+            shard_db.unlink()
+            for sidecar in (str(shard_db) + "-wal", str(shard_db) + "-shm"):
+                if os.path.exists(sidecar):
+                    os.remove(sidecar)
+
+        log.info("=== Shard %s @ %s -> %s ===", label, root, shard_db)
+        shard = Genome(
+            path=str(shard_db), synonym_map={},
+            splade_enabled=True, entity_graph=True,
+        )
+        s_stats = {
+            "files": 0, "genes": 0, "skipped": 0, "errors": 0,
+            "missing_roots": [],
+            "t0": time.perf_counter(),
+        }
+        try:
+            ingest_tree(
+                root=root,
+                genome=shard,
+                tagger=tagger,
+                chunker=chunker,
+                stats=s_stats,
+                skip_dirs=skip_dirs,
+                extra_filename_filters=extra_filename_filters,
+            )
+            gene_count = shard.stats().get("total_genes", 0)
+            byte_size = shard_db.stat().st_size if shard_db.is_file() else 0
+            register_shard(
+                main_conn,
+                shard_name=label,
+                category=shard_category,
+                path=str(shard_db),
+                gene_count=gene_count,
+                byte_size=byte_size,
+            )
+            fp_rows = _copy_fingerprint_indexes(main_conn, shard, label)
+            log.info(
+                "  %s: %d genes, %d fingerprint rows, %.1f MB",
+                label, gene_count, fp_rows, byte_size / 1_048_576,
+            )
+            totals["shards"].append({
+                "name": label,
+                "root": root,
+                "path": str(shard_db),
+                "genes": gene_count,
+                "fingerprint_rows": fp_rows,
+                "bytes": byte_size,
+                "elapsed_s": round(time.perf_counter() - s_stats["t0"], 1),
+            })
+        finally:
+            shard.close()
+        for k in ("files", "genes", "skipped", "errors"):
+            totals[k] += s_stats[k]
+
+    elapsed = time.perf_counter() - totals["t0"]
+    totals["elapsed_s"] = round(elapsed, 1)
+    totals["finished_at"] = datetime.now(timezone.utc).isoformat()
+
+    # Checkpoint + close before sizing so WAL contents land in the main file.
+    try:
+        main_conn.execute("PRAGMA wal_checkpoint(TRUNCATE)")
+    except Exception:
+        log.debug("wal_checkpoint on main.db failed", exc_info=True)
+    main_conn.close()
+
+    try:
+        totals["main_db_bytes"] = os.path.getsize(main_path)
+    except OSError:
+        totals["main_db_bytes"] = -1
+
+    total_shard_bytes = sum(s["bytes"] for s in totals["shards"])
+    totals["total_bytes"] = total_shard_bytes + max(totals["main_db_bytes"], 0)
+    totals["total_genes"] = sum(s["genes"] for s in totals["shards"])
+    totals["shard_count"] = len(totals["shards"])
+
+    log.info("=" * 60)
+    log.info("DONE %s-sharded in %.1fs", name, elapsed)
+    log.info(
+        "  shards=%d genes=%d bytes=%d (main_db=%d)",
+        totals["shard_count"], totals["total_genes"],
+        totals["total_bytes"], totals["main_db_bytes"],
+    )
+    if totals["missing_roots"]:
+        log.warning("  missing roots: %s", totals["missing_roots"])
+
+    totals.pop("t0", None)
+    return totals
+
+
+# ── Manifest IO ───────────────────────────────────────────────────────────
+
+
+def update_manifest(out_dir: str, profile_stats: dict, mode: str) -> None:
+    """Merge ``profile_stats`` into ``<out_dir>/manifest.json`` under ``mode``."""
+    manifest_path = os.path.join(out_dir, "manifest.json")
+
+    if os.path.exists(manifest_path):
+        with open(manifest_path, "r", encoding="utf-8") as f:
+            manifest = json.load(f)
+    else:
+        manifest = {
+            "bench": "fixture_matrix",
+            "spec": "docs/benchmarks/GENOME_FIXTURE_MATRIX.md",
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "targets": {},
+        }
+
+    # Preserve legacy flat layout (mode="blob" historically) while letting
+    # sharded entries live under <profile>-sharded keys for clarity.
+    key = profile_stats["profile"] if mode == "blob" else f"{profile_stats['profile']}-sharded"
+    manifest["targets"][key] = {"mode": mode, **profile_stats}
+    manifest["updated_at"] = datetime.now(timezone.utc).isoformat()
+
+    with open(manifest_path, "w", encoding="utf-8") as f:
+        json.dump(manifest, f, indent=2)
+    log.info("manifest updated: %s (key=%s)", manifest_path, key)
+
+
+# ── CLI ───────────────────────────────────────────────────────────────────
+
+
+def parse_profile_arg(value: str) -> list[str]:
+    if value == "all":
+        return ["small", "medium", "large", "xl"]
+    parts = [p.strip() for p in value.split(",") if p.strip()]
+    unknown = [p for p in parts if p not in PROFILES]
+    if unknown:
+        raise SystemExit(f"unknown profile(s): {unknown}; choose from {list(PROFILES)} or 'all'")
+    return parts
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--profile", default="all",
+        help="Comma-separated subset of {small,medium,large,xl} or 'all'",
+    )
+    parser.add_argument(
+        "--mode", choices=["blob", "sharded"], default="blob",
+        help="Build target: monolithic blob (default) or sharded layout",
+    )
+    parser.add_argument(
+        "--out-dir",
+        default=r"F:\Projects\helix-context\genomes\bench\matrix",
+        help="Base output dir. Blob writes <out-dir>/<profile>.db; "
+             "sharded writes <out-dir>-sharded/<profile>/.",
+    )
+    parser.add_argument(
+        "--shard-category", default="reference",
+        choices=["participant", "agent", "reference", "org", "cold"],
+        help="Shard category recorded in main.db (sharded mode only)",
+    )
+    args = parser.parse_args()
+
+    profiles = parse_profile_arg(args.profile)
+
+    if args.mode == "blob":
+        out_dir = args.out_dir
+        os.makedirs(out_dir, exist_ok=True)
+        log.info("BUILD START mode=blob profiles=%s out_dir=%s", profiles, out_dir)
+
+        results = {}
+        for name in profiles:
+            db_path = os.path.join(out_dir, f"{name}.db")
+            log.info("### Profile: %s (blob) ###", name)
+            stats = build_profile(name, db_path)
+            update_manifest(out_dir, stats, mode="blob")
+            results[name] = stats
+
+        log.info("=" * 60)
+        log.info("SUMMARY (blob)")
+        for name, s in results.items():
+            log.info(
+                "  %-7s genes=%d bytes=%d elapsed=%.1fs (files=%d errors=%d missing=%d)",
+                name, s["total_genes"], s["bytes"], s["elapsed_s"],
+                s["files"], s["errors"], len(s["missing_roots"]),
+            )
+        return 0
+
+    # mode == "sharded"
+    base = args.out_dir.rstrip("/\\")
+    out_dir = f"{base}-sharded" if not base.endswith("-sharded") else base
+    os.makedirs(out_dir, exist_ok=True)
+    log.info("BUILD START mode=sharded profiles=%s out_dir=%s", profiles, out_dir)
+
+    results = {}
+    for name in profiles:
+        profile_dir = os.path.join(out_dir, name)
+        log.info("### Profile: %s (sharded) ###", name)
+        stats = build_profile_sharded(
+            name=name,
+            profile_out_dir=profile_dir,
+            shard_category=args.shard_category,
+        )
+        update_manifest(out_dir, stats, mode="sharded")
+        results[name] = stats
+
+    log.info("=" * 60)
+    log.info("SUMMARY (sharded)")
+    for name, s in results.items():
+        log.info(
+            "  %-7s shards=%d genes=%d total_bytes=%d elapsed=%.1fs",
+            name, s["shard_count"], s["total_genes"], s["total_bytes"],
+            s["elapsed_s"],
+        )
+
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
