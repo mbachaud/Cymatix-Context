@@ -255,3 +255,147 @@ def test_use_shards_flag(monkeypatch):
 
     monkeypatch.setenv("HELIX_USE_SHARDS", "on")
     assert use_shards_enabled() is True
+
+
+# ── Issue #104 — citation lookup must work in sharded mode ───────────────
+
+
+def test_sharded_get_citation_rows_resolves_via_fingerprint_index(two_shard_setup):
+    """Regression for issue #104 Bug 1.
+
+    Before the fix, /context constructed citations with a direct
+    ``SELECT FROM genes WHERE gene_id IN (...)`` against
+    ``helix.genome.read_conn``. In sharded mode that connection points
+    at main.db whose ``genes`` table is empty (rows live in shard .db
+    files), so every citation lookup came back empty and the bench
+    harness fell back to <GENE src=...> regex parsing.
+
+    The adapter must resolve source_id + domains/entities from
+    main.db's fingerprint_index without touching the empty genes table.
+    """
+    from helix_context.sharding import ShardedGenomeAdapter
+
+    adapter = ShardedGenomeAdapter(main_path=two_shard_setup["main_path"])
+    try:
+        rows = adapter.get_citation_rows(
+            [two_shard_setup["gene_a_id"], two_shard_setup["gene_b_id"]]
+        )
+        # Both genes resolved — no silent drop-through.
+        assert set(rows.keys()) == {
+            two_shard_setup["gene_a_id"],
+            two_shard_setup["gene_b_id"],
+        }
+
+        a_row = rows[two_shard_setup["gene_a_id"]]
+        assert a_row["source_id"] == "/docs/intro.md"
+        assert "docs" in a_row["domains"]
+        assert "helix" in a_row["entities"]
+
+        b_row = rows[two_shard_setup["gene_b_id"]]
+        assert b_row["source_id"] == "/code/auth.py"
+        assert "auth" in b_row["domains"]
+        assert "jwt" in b_row["entities"]
+    finally:
+        adapter.close()
+
+
+def test_sharded_get_citation_rows_empty_input(two_shard_setup):
+    """Empty gene_ids list returns empty map without opening shards."""
+    from helix_context.sharding import ShardedGenomeAdapter
+
+    adapter = ShardedGenomeAdapter(main_path=two_shard_setup["main_path"])
+    try:
+        assert adapter.get_citation_rows([]) == {}
+    finally:
+        adapter.close()
+
+
+def test_sharded_get_citation_rows_unknown_id(two_shard_setup):
+    """Missing ids are silently absent rather than mapped to None."""
+    from helix_context.sharding import ShardedGenomeAdapter
+
+    adapter = ShardedGenomeAdapter(main_path=two_shard_setup["main_path"])
+    try:
+        rows = adapter.get_citation_rows(["deadbeef00000000"])
+        assert rows == {}
+    finally:
+        adapter.close()
+
+
+def test_sharded_get_doc_alias_matches_get_gene(two_shard_setup):
+    """`get_doc` and `get_gene` must be polymorphic with Genome so callers
+    in routes_context / helpers don't have to branch on adapter type.
+    """
+    from helix_context.sharding import ShardedGenomeAdapter
+
+    adapter = ShardedGenomeAdapter(main_path=two_shard_setup["main_path"])
+    try:
+        via_gene = adapter.get_gene(two_shard_setup["gene_a_id"])
+        via_doc = adapter.get_doc(two_shard_setup["gene_a_id"])
+        assert via_gene is not None
+        assert via_doc is not None
+        assert via_gene.gene_id == via_doc.gene_id
+        assert via_gene.source_id == "/docs/intro.md"
+    finally:
+        adapter.close()
+
+
+def test_genome_get_citation_rows_blob(tmp_path):
+    """Same polymorphic shape on the blob backend."""
+    blob_path = str(tmp_path / "blob.db")
+    g = Genome(blob_path)
+    gene = _mk_gene(
+        "Hello world. Single-shard ingest.",
+        domains=["docs"],
+        entities=["hello"],
+        source="/notes/hello.md",
+    )
+    gid = g.upsert_gene(gene, apply_gate=False)
+
+    rows = g.get_citation_rows([gid])
+    assert gid in rows
+    assert rows[gid]["source_id"] == "/notes/hello.md"
+    assert "docs" in rows[gid]["domains"]
+    assert "hello" in rows[gid]["entities"]
+
+    # Polymorphic alias also exists on Genome.
+    assert g.get_gene(gid) is not None
+    assert g.get_gene(gid).gene_id == gid
+
+    g.conn.close()
+    if g._reader:
+        g._reader.close()
+
+
+# ── Issue #104 Bug 2 — RRF cross-shard fusion ────────────────────────────
+
+
+def test_query_genes_uses_rrf_not_raw_scores(two_shard_setup):
+    """The router must merge with rank-level fusion (RRF), not raw scores.
+
+    Per-shard BM25 isn't calibrated across corpora; the larger shard's
+    raw score would otherwise dominate even when the smaller shard's
+    top hit is more relevant. Verifying RRF here means
+    ``last_query_scores`` produces RRF magnitudes (small ~1/(60+rank))
+    rather than the shards' raw query scores.
+    """
+    router = ShardRouter(two_shard_setup["main_path"])
+    try:
+        results = router.query_genes(
+            domains=["auth", "docs"],
+            entities=[],
+            max_genes=5,
+        )
+        assert len(results) >= 2
+
+        # RRF score for a rank-1 hit with default k=60 is 1/61 ≈ 0.0164;
+        # never exceeds 1/k+1 = 1/61. Raw BM25 scores in our fixture are
+        # in the +1.0..+10.0 range, so the upper bound is a clean signal
+        # that the merge is rank-based, not score-based.
+        for gid, score in router.last_query_scores.items():
+            assert 0.0 < score <= (1.0 / 61.0) + 1e-9, (
+                f"gene {gid} score={score} looks like a raw shard score, "
+                "not an RRF rank contribution"
+            )
+    finally:
+        router.close()

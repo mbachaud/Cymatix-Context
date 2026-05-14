@@ -270,20 +270,17 @@ def _compute_know_or_miss_block(
     from ..context_packet import _coordinate_confidence
     from ..genome import Gene as _GeneType  # for type discipline below
 
-    # Re-fetch the retrieved documents by id from the knowledge store's read conn so
-    # we can run path-grain coverage. Cheap (documents are 1-row reads).
+    # Re-fetch the retrieved documents by id via the polymorphic citation
+    # lookup so we can run path-grain coverage. Cheap (documents are 1-row
+    # reads). Uses ``get_citation_rows`` so sharded mode resolves through
+    # fingerprint_index instead of the empty main.db genes table — see
+    # issue #104.
     gene_ids = list(window.expressed_gene_ids or [])
     genes: list = []
     top_gene = None
     if gene_ids:
         try:
-            cur = helix.genome.read_conn.cursor()
-            placeholders = ",".join("?" * len(gene_ids))
-            rows = cur.execute(
-                f"SELECT gene_id, source_id FROM genes WHERE gene_id IN ({placeholders})",
-                gene_ids,
-            ).fetchall()
-            row_map = {r["gene_id"]: r for r in rows}
+            row_map = helix.genome.get_citation_rows(gene_ids)
             # Preserve the response order (same as expressed_gene_ids).
             for gid in gene_ids:
                 r = row_map.get(gid)
@@ -296,7 +293,7 @@ def _compute_know_or_miss_block(
                     def __init__(self, gid, sid):
                         self.gene_id = gid
                         self.source_id = sid
-                genes.append(_GeneProxy(gid, r["source_id"] or ""))
+                genes.append(_GeneProxy(gid, r["source_id"]))
             if genes:
                 top_gene = genes[0]
         except Exception:
@@ -326,22 +323,19 @@ def _compute_know_or_miss_block(
                 check_superseded,
                 revalidate_and_mark,
             )
-            from ..schemas import EpigeneticMarkers, Gene as _Gene
 
             top_gid = gene_ids[0]
-            cur = helix.genome.read_conn.cursor()
-            row = cur.execute(
-                "SELECT gene_id, source_id, last_verified_at, "
-                "epigenetics, supersedes "
-                "FROM genes WHERE gene_id = ? LIMIT 1",
-                (top_gid,),
-            ).fetchone()
-            if row is not None:
+            # Polymorphic single-doc fetch so sharded mode opens the
+            # right shard via fingerprint_index instead of reading the
+            # empty main.db genes table (issue #104). Returns a full
+            # Gene; the freshness helpers only read source_id,
+            # last_verified_at, epigenetics, supersedes.
+            top_gene_obj = helix.genome.get_doc(top_gid)
+            if top_gene_obj is not None:
                 # Build a minimal Document-shaped object the freshness
-                # helpers can read. Constructing a full Document blows
-                # up on missing columns; a SimpleNamespace-like proxy
-                # with the four attributes the helpers actually use
-                # is enough.
+                # helpers can read. We forward only the fields they
+                # touch so a bare Gene with extra unset attributes
+                # doesn't drift into the freshness code paths.
                 class _FreshGeneProxy:
                     __slots__ = (
                         "gene_id", "source_id",
@@ -354,31 +348,12 @@ def _compute_know_or_miss_block(
                         self.epigenetics = epi
                         self.supersedes = sup
 
-                # Parse signals blob lazily so we have a
-                # ``source_path`` attr if the JSON carried one.
-                epi_obj = None
-                try:
-                    import json as _json
-                    epi_raw = row["epigenetics"] if "epigenetics" in row.keys() else None
-                    if epi_raw:
-                        # DocumentSignals doesn't carry source_path
-                        # in its model, but the freshness helpers fall
-                        # back to source_id when source_path is absent.
-                        epi_dict = _json.loads(epi_raw)
-                        # Best-effort hydrate; ignore unknown keys.
-                        epi_obj = EpigeneticMarkers.model_validate(
-                            {k: v for k, v in epi_dict.items()
-                             if k in EpigeneticMarkers.model_fields}
-                        )
-                except Exception:
-                    epi_obj = None
-
                 top_proxy = _FreshGeneProxy(
-                    row["gene_id"],
-                    row["source_id"] if "source_id" in row.keys() else None,
-                    row["last_verified_at"] if "last_verified_at" in row.keys() else None,
-                    epi_obj,
-                    row["supersedes"] if "supersedes" in row.keys() else None,
+                    top_gene_obj.gene_id,
+                    getattr(top_gene_obj, "source_id", None),
+                    getattr(top_gene_obj, "last_verified_at", None),
+                    getattr(top_gene_obj, "epigenetics", None),
+                    getattr(top_gene_obj, "supersedes", None),
                 )
 
                 import time as _time

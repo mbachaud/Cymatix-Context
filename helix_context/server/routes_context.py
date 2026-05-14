@@ -316,14 +316,12 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
             gene_ids = window.expressed_gene_ids or []
             citations = []
             if gene_ids:
-                cur = helix.genome.read_conn.cursor()
-                placeholders = ",".join("?" * len(gene_ids))
-                rows = cur.execute(
-                    f"SELECT gene_id, source_id, promoter FROM genes "
-                    f"WHERE gene_id IN ({placeholders})",
-                    gene_ids,
-                ).fetchall()
-                row_map = {r["gene_id"]: r for r in rows}
+                # Polymorphic citation lookup so blob and sharded backends
+                # both work. Sharded mode resolves source_id + tags from
+                # main.db's fingerprint_index (the genes table on main.db is
+                # empty under HELIX_USE_SHARDS=1, so the prior direct SQL
+                # silently returned zero rows — see issue #104).
+                row_map = helix.genome.get_citation_rows(gene_ids)
 
                 # Session registry citation enrichment
                 attribution_map: dict = {}
@@ -338,7 +336,7 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
                         continue
                     citation = {
                         "gene_id": gid,
-                        "source": r["source_id"] or "",
+                        "source": r["source_id"],
                         "score": round(scores.get(gid, 0.0), 3),
                     }
                     attribution = attribution_map.get(gid)
@@ -347,15 +345,10 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
                         if attribution.get("handle"):
                             citation["authored_by_handle"] = attribution["handle"]
                     if verbose:
-                        # Include tags for deeper inspection
-                        try:
-                            from ..accel import parse_promoter
-                            prom = parse_promoter(r["promoter"]) if r["promoter"] else None
-                            if prom:
-                                citation["domains"] = prom.domains[:5]
-                                citation["entities"] = prom.entities[:5]
-                        except Exception:
-                            pass
+                        if r["domains"]:
+                            citation["domains"] = r["domains"][:5]
+                        if r["entities"]:
+                            citation["entities"] = r["entities"][:5]
                     citations.append(citation)
 
             # Actionable recommendation for the agent.

@@ -289,6 +289,47 @@ class ShardedGenomeAdapter:
     # Back-compat alias for callers still using the pre-R3 name.
     get_gene = get_doc
 
+    def get_citation_rows(self, gene_ids: List[str]) -> dict:
+        """Resolve source_id + promoter tags for a batch of gene_ids.
+
+        Polymorphic with ``Genome.get_citation_rows``. Reads from
+        ``fingerprint_index`` only — never opens a shard, so this stays
+        on the main routing connection's read path. Missing ids are
+        absent from the returned map.
+
+        Return shape (per gene_id):
+            ``{"source_id": str, "domains": list[str], "entities": list[str]}``
+        """
+        if not gene_ids:
+            return {}
+        import json as _json
+        ph = ",".join("?" * len(gene_ids))
+        rows = self._router.main_conn.execute(
+            f"SELECT gene_id, source_id, domains, entities "
+            f"FROM fingerprint_index WHERE gene_id IN ({ph})",
+            gene_ids,
+        ).fetchall()
+        out: dict = {}
+        for r in rows:
+            domains: List = []
+            entities: List = []
+            if r["domains"]:
+                try:
+                    domains = list(_json.loads(r["domains"]) or [])
+                except Exception:
+                    pass
+            if r["entities"]:
+                try:
+                    entities = list(_json.loads(r["entities"]) or [])
+                except Exception:
+                    pass
+            out[r["gene_id"]] = {
+                "source_id": r["source_id"] or "",
+                "domains": domains,
+                "entities": entities,
+            }
+        return out
+
     def query_docs_ann(self, *args: Any, **kwargs: Any) -> List:
         """ANN-dense retrieval is per-shard, not adapter-level.
 
