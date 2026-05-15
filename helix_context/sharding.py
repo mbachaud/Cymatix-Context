@@ -228,6 +228,53 @@ class ShardedGenomeAdapter:
         """Cold-tier queries aren't fanned out in V1; return empty."""
         return []
 
+    # ── BM25 IDF aggregation (issue #118) ─────────────────────────────
+    # These methods aggregate per-shard BM25 vocabulary statistics so a
+    # caller that holds a `ShardedGenomeAdapter` (rather than the bare
+    # `ShardRouter`) can answer "what's the global doc count?" /
+    # "what's the per-term DF across all shards?" without reaching
+    # through to `_router._shards` manually. The router itself uses the
+    # per-shard methods directly during `query_genes`; these wrappers
+    # exist for surface-parity with `KnowledgeStore.fts_doc_count` /
+    # `term_doc_frequencies`.
+
+    def fts_doc_count(self) -> int:
+        """Sum of FTS doc counts across all routed shards.
+
+        Lazy-opens shards via the router; safe to call repeatedly.
+        Soft-fails to 0 on per-shard errors so a single broken shard
+        doesn't tank the aggregate.
+        """
+        total = 0
+        for shard_name in self._router.known_shards():
+            try:
+                shard = self._router._open_shard(shard_name)
+                total += int(shard.fts_doc_count())
+            except Exception:
+                continue
+        return total
+
+    def term_doc_frequencies(self, terms: list[str]) -> dict:
+        """Sum of per-term DFs across all routed shards.
+
+        Returns a ``{term: df_global}`` dict. Per-shard probe failures
+        contribute 0 for that shard (soft-fail) so a single broken
+        shard doesn't poison the aggregate.
+        """
+        result: dict = {t: 0 for t in (terms or [])}
+        if not terms:
+            return result
+        for shard_name in self._router.known_shards():
+            try:
+                shard = self._router._open_shard(shard_name)
+                per = shard.term_doc_frequencies(terms)
+                for t, df in per.items():
+                    if t in result:
+                        result[t] += int(df)
+            except Exception:
+                continue
+        return result
+
     def stats(self) -> dict:
         rows = self._router.main_conn.execute(
             "SELECT category, shard_name, gene_count, byte_size "

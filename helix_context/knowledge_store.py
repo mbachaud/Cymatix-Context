@@ -1279,6 +1279,62 @@ class KnowledgeStore:
 
     # ── Core retrieval (Step 2) — hybrid tags + FTS5 ────────────
 
+    def fts_doc_count(self) -> int:
+        """Total document count in this knowledge store's FTS5 index.
+
+        Used by ShardRouter for cross-shard BM25 IDF normalization (#118).
+        Returns 0 if FTS is unavailable.
+        """
+        if not self._fts_available:
+            return 0
+        try:
+            row = self.read_conn.execute(
+                "SELECT COUNT(*) FROM genes_fts"
+            ).fetchone()
+            return int(row[0]) if row else 0
+        except Exception:
+            return 0
+
+    def term_doc_frequencies(self, terms: list[str]) -> Dict[str, int]:
+        """Document frequency in this shard's FTS5 index, per term.
+
+        Returns a dict ``{term: df}``. Missing/unknown terms map to 0.
+
+        Used by ShardRouter to compute global IDFs for cross-shard
+        BM25 normalization (#118). Implements one ``MATCH "term"`` COUNT
+        per requested term — fine at query time since the number of
+        query terms is bounded (typically <20) and SQLite's FTS5
+        ``MATCH`` is fast on a single-token exact phrase.
+        """
+        result: Dict[str, int] = {t: 0 for t in terms}
+        if not self._fts_available or not terms:
+            return result
+        cur = self.read_conn.cursor()
+        try:
+            for term in terms:
+                # Skip terms that are too short to be FTS-indexed (mirrors
+                # the >2 filter used elsewhere in query_docs).
+                if not term or len(term) <= 2:
+                    continue
+                # Quote the term to disable FTS5 syntax interpretation —
+                # treats hyphens, colons, etc. as literal characters.
+                # Double any embedded quotes per FTS5 escape rules.
+                escaped = term.replace('"', '""')
+                try:
+                    row = cur.execute(
+                        'SELECT COUNT(*) FROM genes_fts WHERE genes_fts MATCH ?',
+                        (f'"{escaped}"',),
+                    ).fetchone()
+                    if row:
+                        result[term] = int(row[0])
+                except Exception:
+                    # Single-term FTS errors (e.g., malformed token) shouldn't
+                    # poison the whole batch. df=0 is a safe default.
+                    continue
+        finally:
+            cur.close()
+        return result
+
     def _bm25_candidate_set(self, query_terms: list[str], size: int) -> set[str] | None:
         """Return FTS5 BM25 top-N gene_ids, or None if FTS unavailable/empty. Soft-fails to None."""
         if not self._fts_available:

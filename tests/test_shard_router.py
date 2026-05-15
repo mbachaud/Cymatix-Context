@@ -173,6 +173,12 @@ def test_query_genes_fans_out(two_shard_setup):
 
 
 def test_query_genes_respects_max(two_shard_setup):
+    """``max_genes`` is the post-assembly target; the router returns
+    up to ``max_genes * 2`` candidates to match ``Genome.query_docs``'s
+    contract — the downstream assembler (splice + co-activation +
+    freshness) trims from this expanded pool. See shard_router.py
+    docstring for the rationale.
+    """
     router = ShardRouter(two_shard_setup["main_path"])
     try:
         results = router.query_genes(
@@ -180,7 +186,7 @@ def test_query_genes_respects_max(two_shard_setup):
             entities=[],
             max_genes=1,
         )
-        assert len(results) <= 1
+        assert len(results) <= 2  # max_genes * 2 = 2 with max_genes=1
     finally:
         router.close()
 
@@ -474,17 +480,24 @@ def test_genome_get_citation_rows_blob(tmp_path):
         g._reader.close()
 
 
-# ── Issue #104 Bug 2 — RRF cross-shard fusion ────────────────────────────
+# ── Issue #104 Bug 2 → Issue #118 — cross-shard fusion contract ─────────
 
 
-def test_query_genes_uses_rrf_not_raw_scores(two_shard_setup):
-    """The router must merge with rank-level fusion (RRF), not raw scores.
+def test_query_genes_surfaces_idf_corrected_scores(two_shard_setup):
+    """The router exposes IDF-corrected raw scores in last_query_scores (#118).
 
-    Per-shard BM25 isn't calibrated across corpora; the larger shard's
-    raw score would otherwise dominate even when the smaller shard's
-    top hit is more relevant. Verifying RRF here means
-    ``last_query_scores`` produces RRF magnitudes (small ~1/(60+rank))
-    rather than the shards' raw query scores.
+    Under issue #104 the merge ranked by RRF rank-fusion and surfaced
+    tiny ~1/(60+rank) magnitudes. That worked for cross-shard rank
+    fairness but hid BM25 IDF mismatches: a term rare globally but
+    common locally got a small intra-shard BM25 score that under-ranked
+    the gold source. Per #118 the merge now ranks by IDF-corrected raw
+    score (RRF as tiebreaker) and surfaces those corrected magnitudes.
+
+    Contract:
+        - scores are positive (no candidate has zero score)
+        - scores are in the raw-score range, not RRF-magnitude range —
+          a rank-1 hit with default k=60 RRF would be ~1/61 ≈ 0.0164;
+          IDF-corrected raw BM25 scores are O(0.5 .. 30+).
     """
     router = ShardRouter(two_shard_setup["main_path"])
     try:
@@ -494,15 +507,234 @@ def test_query_genes_uses_rrf_not_raw_scores(two_shard_setup):
             max_genes=5,
         )
         assert len(results) >= 2
-
-        # RRF score for a rank-1 hit with default k=60 is 1/61 ≈ 0.0164;
-        # never exceeds 1/k+1 = 1/61. Raw BM25 scores in our fixture are
-        # in the +1.0..+10.0 range, so the upper bound is a clean signal
-        # that the merge is rank-based, not score-based.
         for gid, score in router.last_query_scores.items():
-            assert 0.0 < score <= (1.0 / 61.0) + 1e-9, (
-                f"gene {gid} score={score} looks like a raw shard score, "
-                "not an RRF rank contribution"
+            # Positive, and well above the RRF-magnitude bound. The
+            # exact upper bound depends on shard scoring weights — a
+            # loose floor "much larger than 1/61" is the discriminator
+            # against accidental RRF regression.
+            assert score > 0.0
+            assert score > (1.0 / 61.0) + 1e-3, (
+                f"gene {gid} score={score} looks like an RRF magnitude, "
+                "not an IDF-corrected raw score (#118)"
             )
     finally:
         router.close()
+
+
+# ── Issue #118 — cross-shard BM25 IDF normalization ─────────────────────
+
+
+def test_compute_shard_idf_correction_single_shard_is_identity():
+    """A single-shard scenario must produce m_shard ≈ 1.0.
+
+    With only one shard, global statistics equal local statistics, so
+    the correction multiplier collapses to the identity transform.
+    Property is critical for blob-mode parity: a router holding one
+    shard must not perturb scores.
+    """
+    from helix_context.shard_router import _compute_shard_idf_correction
+
+    mu = _compute_shard_idf_correction(
+        ["alpha"], {"A": 100}, {"A": {"alpha": 5}},
+    )
+    assert "A" in mu
+    # Exactly 1.0 since local == global statistics.
+    assert abs(mu["A"] - 1.0) < 1e-9
+
+
+def test_compute_shard_idf_correction_equal_shards_yield_near_unity():
+    """Two equal-size shards with equal DFs give multipliers near 1.0.
+
+    Local and global IDFs are not bitwise equal because BM25's
+    ``+0.5`` smoothing differs at the per-shard vs global N (200 vs
+    100), but the multiplier should be close to 1 — within a few
+    percent — and crucially identical between the two symmetric shards.
+    """
+    from helix_context.shard_router import _compute_shard_idf_correction
+
+    mu = _compute_shard_idf_correction(
+        ["alpha"],
+        {"A": 100, "B": 100},
+        {"A": {"alpha": 10}, "B": {"alpha": 10}},
+    )
+    # Both multipliers within 5% of 1.0
+    assert abs(mu["A"] - 1.0) < 0.05
+    assert abs(mu["B"] - 1.0) < 0.05
+    # And identical between the symmetric shards (same N, same df,
+    # same global stats).
+    assert abs(mu["A"] - mu["B"]) < 1e-9
+
+
+def test_compute_shard_idf_correction_demotes_rare_local_shard():
+    """A shard where the query term is RARER LOCALLY than globally
+    has high local IDF (BM25 over-inflates the score) and should be
+    deflated by the correction multiplier (m < 1).
+
+    Conversely, a shard where the term is COMMON LOCALLY has low
+    local IDF (BM25 under-counts) and should be amplified (m > 1).
+
+    This is the core property of cross-shard IDF correction (#118).
+    """
+    from helix_context.shard_router import _compute_shard_idf_correction
+
+    # Shard A: 100 docs, df=2  → rare locally, high local IDF
+    # Shard B: 100 docs, df=80 → common locally, low local IDF
+    # Global: 200 docs, df=82  → moderate global IDF, much less than A,
+    #                            much more than B.
+    mu = _compute_shard_idf_correction(
+        ["x"],
+        {"A": 100, "B": 100},
+        {"A": {"x": 2}, "B": {"x": 80}},
+    )
+    assert mu["A"] < 1.0, f"rare-local shard not deflated: {mu['A']}"
+    assert mu["B"] > 1.0, f"common-local shard not amplified: {mu['B']}"
+
+
+def test_compute_shard_idf_correction_clip_bounds():
+    """Extreme local-IDF skews must clip to the [IDF_CLIP_LO, IDF_CLIP_HI] range.
+
+    Without clipping, a term that hits every doc in a tiny shard yields
+    local IDF → 0 and m_shard → ∞, which would let any random hit in
+    that shard steamroll the cross-shard merge.
+    """
+    from helix_context.shard_router import (
+        _compute_shard_idf_correction,
+        IDF_CLIP_LO,
+        IDF_CLIP_HI,
+    )
+
+    # Shard A: term hits 99/100 docs → near-zero local IDF
+    # Shard B: term hits 1/100 docs   → high local IDF
+    mu = _compute_shard_idf_correction(
+        ["x"],
+        {"A": 100, "B": 100},
+        {"A": {"x": 99}, "B": {"x": 1}},
+    )
+    for sn, m in mu.items():
+        assert IDF_CLIP_LO <= m <= IDF_CLIP_HI, (
+            f"{sn}: m={m} outside clip range [{IDF_CLIP_LO}, {IDF_CLIP_HI}]"
+        )
+
+
+def test_compute_shard_idf_correction_empty_inputs():
+    """Empty query terms or no shard DFs yield identity (no correction)."""
+    from helix_context.shard_router import _compute_shard_idf_correction
+
+    # No terms
+    mu = _compute_shard_idf_correction([], {"A": 100}, {"A": {}})
+    assert mu == {"A": 1.0}
+
+    # All DFs zero → no participating terms → identity
+    mu = _compute_shard_idf_correction(
+        ["a", "b"], {"A": 100, "B": 50}, {"A": {"a": 0, "b": 0}, "B": {"a": 0, "b": 0}},
+    )
+    assert mu == {"A": 1.0, "B": 1.0}
+
+
+def test_compute_shard_idf_correction_weights_by_global_idf():
+    """When two terms disagree on per-shard skew, the rare-globally term
+    should dominate the correction (it's the term BM25 weights most).
+
+    Setup:
+      - term ``rare``: df=1 globally (very rare → high g_idf, dominant
+        BM25 weight)
+      - term ``common``: df=50 globally (moderate g_idf, less weight)
+
+      Shard A: ``rare`` rare locally (df=0 in 100), ``common`` common
+        locally (df=50 in 100).
+      Shard B: ``rare`` common locally (df=1 in 50), ``common`` rare
+        locally (df=0 in 50).
+
+    The router should weight by global IDF — the rare-globally term
+    wins, so shard B (where ``rare`` is over-represented locally) gets
+    amplified.
+    """
+    from helix_context.shard_router import _compute_shard_idf_correction
+
+    mu = _compute_shard_idf_correction(
+        ["rare", "common"],
+        {"A": 100, "B": 50},
+        {"A": {"rare": 0, "common": 50}, "B": {"rare": 1, "common": 0}},
+    )
+    # B has the rare-globally term; rare is what BM25 weights heaviest.
+    # B's correction should be > 1 (amplify under-counted rare-term hits).
+    assert mu["B"] > 1.0
+
+
+def test_shard_router_blob_parity_via_single_shard(two_shard_setup):
+    """When only one shard receives candidates, the router's scores must
+    match the shard's own raw scores byte-for-byte (#118 blob parity).
+
+    Using the existing two-shard fixture, query terms that route to a
+    single shard exercise the single-shard fast path that bypasses
+    IDF correction.
+    """
+    router = ShardRouter(two_shard_setup["main_path"])
+    try:
+        # Query "auth" routes only to shard_b in this fixture.
+        results = router.query_genes(
+            domains=["auth"],
+            entities=[],
+            max_genes=10,
+        )
+        # Single shard hit means m_shard = 1.0; surfaced scores =
+        # whatever Genome.last_query_scores would have produced.
+        assert len(results) >= 1
+        # Open shard B directly and verify identical scores.
+        from helix_context.genome import Genome
+        gb = Genome(two_shard_setup["shard_b_path"], read_only=True)
+        try:
+            direct = gb.query_docs(domains=["auth"], entities=[], max_genes=10)
+            direct_scores = dict(gb.last_query_scores)
+        finally:
+            try:
+                gb.conn.close()
+            except Exception:
+                pass
+            if gb._reader:
+                gb._reader.close()
+
+        # Same gene IDs in same order, and scores match within float epsilon.
+        router_ids = [g.gene_id for g in results]
+        direct_ids = [g.gene_id for g in direct]
+        assert router_ids == direct_ids
+        for gid in router_ids:
+            assert (
+                abs(router.last_query_scores[gid] - direct_scores[gid]) < 1e-9
+            ), f"single-shard router perturbed score for {gid}"
+    finally:
+        router.close()
+
+
+def test_genome_term_doc_frequencies_returns_zero_for_unindexed():
+    """Genome.term_doc_frequencies must return df=0 for terms not in FTS5.
+
+    Soft-fails per term so a malformed token doesn't poison the batch.
+    """
+    import tempfile
+    from helix_context.genome import Genome
+
+    with tempfile.TemporaryDirectory() as td:
+        gpath = str(Path(td) / "g.db")
+        g = Genome(gpath)
+        try:
+            # Empty genome → all terms have df=0.
+            dfs = g.term_doc_frequencies(["foo", "bar"])
+            assert dfs == {"foo": 0, "bar": 0}
+            # Doc count is 0.
+            assert g.fts_doc_count() == 0
+
+            # Add one gene mentioning "foo".
+            gene = _mk_gene(
+                "foo content here", domains=["foo"], entities=[],
+                source="/foo.md",
+            )
+            g.upsert_gene(gene, apply_gate=False)
+            dfs = g.term_doc_frequencies(["foo", "bar"])
+            assert dfs["foo"] >= 1
+            assert dfs["bar"] == 0
+            assert g.fts_doc_count() == 1
+        finally:
+            g.conn.close()
+            if g._reader:
+                g._reader.close()
