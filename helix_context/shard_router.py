@@ -65,6 +65,30 @@ IDF_CLIP_LO = 0.5             # clip range for m_shard
 IDF_CLIP_HI = 3.0
 
 
+# ── Cross-shard co-activation expansion (#120) ───────────────────────
+#
+# Blob mode pulls docs reachable via 1-hop ``harmonic_links`` edges from
+# the BM25 candidate set into the result (``KnowledgeStore._expand_coactivated``
+# → ``storage.co_activation.expand_coactivated``). That is how a
+# README.md / CLAUDE.md doc surfaces even when its direct keyword match
+# is weak — it is linked from a more-specific doc that DOES match.
+#
+# Sharded mode's ``harmonic_links`` table is intra-shard only, and the
+# router has no cross-shard expansion pass, so a gold doc reachable only
+# via a harmonic link from a doc in a DIFFERENT shard never surfaces.
+# The pass below is the sharded equivalent: after the IDF-corrected RRF
+# merge produces a top-K candidate set, each candidate's harmonic links
+# are read from its owning shard, the linked gene_ids are resolved to
+# their shards via ``fingerprint_index``, and the linked docs are merged
+# in at a discounted score so they can be re-ranked into the result.
+#
+# Mirrors blob's semantics: 1-hop only, a small per-source neighbour cap
+# (blob uses 5), and linked docs that are already in the candidate set
+# are not re-scored down (highest score wins on collision).
+COACT_LINK_BOOST = 0.5        # linked-doc score = boost × source-doc score
+COACT_MAX_LINKS_PER_DOC = 5   # 1-hop fan-out cap per candidate (blob: [:5])
+
+
 def _compute_shard_idf_correction(
     query_terms: List[str],
     shard_n: Dict[str, int],
@@ -482,6 +506,29 @@ class ShardRouter:
         limit = max(1, int(max_genes) * 2)
         ranked_ids = ranked_ids_full[:limit]
 
+        # ── Cross-shard co-activation expansion (#120) ──────────────
+        # Pull docs reachable via 1-hop harmonic links from the top-K
+        # candidates but living in a DIFFERENT shard. Mutates ``merged``
+        # / ``merged_tier`` / ``corrected`` in place and returns a
+        # re-sorted, re-truncated id list. Soft-fails to ``ranked_ids``
+        # unchanged so a graph hiccup never perturbs the merge result.
+        try:
+            ranked_ids = self._expand_cross_shard_coactivation(
+                ranked_ids=ranked_ids,
+                shard_ranked=shard_ranked,
+                corrected=corrected,
+                rrf_all=rrf_all,
+                merged=merged,
+                merged_tier=merged_tier,
+                limit=limit,
+            )
+        except Exception:
+            log.warning(
+                "cross-shard co-activation expansion failed; "
+                "falling back to un-expanded merge",
+                exc_info=True,
+            )
+
         # Surface BOTH score families. last_query_scores becomes the
         # IDF-corrected score (which is what downstream tier_logic /
         # bench harness watch). last_tier_contributions is unchanged
@@ -492,6 +539,196 @@ class ShardRouter:
                 gid: merged_tier.get(gid, {}) for gid in ranked_ids
             }
         return [merged[gid] for gid in ranked_ids if gid in merged]
+
+    # ── Cross-shard co-activation expansion (#120) ──────────────────
+
+    def _expand_cross_shard_coactivation(
+        self,
+        *,
+        ranked_ids: List[str],
+        shard_ranked: Dict[str, List[Tuple[str, float]]],
+        corrected: Dict[str, float],
+        rrf_all: Dict[str, float],
+        merged: Dict[str, Gene],
+        merged_tier: Dict[str, Dict[str, float]],
+        limit: int,
+    ) -> List[str]:
+        """Pull 1-hop harmonic-link neighbours from across shards.
+
+        Sharded equivalent of blob's ``_expand_coactivated``: a gold doc
+        whose only path into the result is a harmonic link from a doc in
+        a *different* shard never surfaces, because each shard's
+        ``harmonic_links`` table is intra-shard only and the merge has no
+        graph pass. This method closes that gap.
+
+        For each candidate in ``ranked_ids`` (the post-merge top-K):
+
+        1. Read its 1-hop ``harmonic_links`` neighbours from the DB of
+           the shard that ranked it best (``fetch_forward_neighbors`` —
+           ``gene_id_a = candidate``, mirroring blob's edge direction).
+        2. Resolve each linked gene_id to its owning shard via
+           ``fingerprint_index`` (lexicographically-min ``shard_name``
+           wins on cross-shard content-hash duplicates — same tie-break
+           contract as ``get_citation_rows``).
+        3. Score the linked doc at ``COACT_LINK_BOOST × source-doc
+           corrected score`` and merge it into ``corrected`` (highest
+           score wins — a linked doc already in the candidate set is
+           never re-scored *down*).
+        4. Materialise newly-introduced docs into ``merged`` from their
+           owning shard, re-sort the union by the same key
+           ``query_genes`` uses, and truncate to ``limit``.
+
+        ``merged`` / ``merged_tier`` / ``corrected`` are mutated in
+        place. Returns the re-sorted, re-truncated id list. On any error
+        the caller falls back to the un-expanded ``ranked_ids``.
+
+        Blob-mode parity: this method is reached only from the sharded
+        ``ShardRouter.query_genes`` path — blob's ``KnowledgeStore``
+        retrieval never calls it, so blob behaviour is unchanged.
+        """
+        if not ranked_ids or not shard_ranked:
+            return ranked_ids
+
+        from .retrieval.expand import fetch_forward_neighbors
+
+        # gene_id → owning shard. A doc can appear in several shards on a
+        # content-hash collision; pick the lexicographically-min shard so
+        # the resolution is deterministic (matches get_citation_rows).
+        gid_to_shard: Dict[str, str] = {}
+        for shard_name, pairs in shard_ranked.items():
+            for gid, _score in pairs:
+                cur = gid_to_shard.get(gid)
+                if cur is None or shard_name < cur:
+                    gid_to_shard[gid] = shard_name
+
+        # Candidate set we expand from — the post-merge top-K only, so
+        # the fan-out cost is bounded by ``limit`` 1-hop reads.
+        existing: set[str] = set(ranked_ids)
+
+        # linked gene_id → best discounted score proposed for it.
+        linked_scores: Dict[str, float] = {}
+        for src_gid in ranked_ids:
+            src_shard = gid_to_shard.get(src_gid)
+            if src_shard is None:
+                continue
+            try:
+                shard = self._open_shard(src_shard)
+            except Exception:
+                log.debug(
+                    "co-activation: shard %s failed to open for %s",
+                    src_shard, src_gid, exc_info=True,
+                )
+                continue
+            try:
+                neighbors = fetch_forward_neighbors(
+                    shard.conn, src_gid, k=COACT_MAX_LINKS_PER_DOC,
+                )
+            except Exception:
+                log.debug(
+                    "co-activation: harmonic_links read failed for %s",
+                    src_gid, exc_info=True,
+                )
+                continue
+            src_score = float(corrected.get(src_gid, 0.0))
+            if src_score <= 0.0:
+                continue
+            boosted = src_score * COACT_LINK_BOOST
+            for linked_gid, _weight in neighbors:
+                # Already a candidate — never re-score it down; the
+                # existing (higher) merge score stands.
+                if linked_gid in existing:
+                    continue
+                prev = linked_scores.get(linked_gid)
+                if prev is None or boosted > prev:
+                    linked_scores[linked_gid] = boosted
+
+        if not linked_scores:
+            return ranked_ids
+
+        # Resolve linked gene_ids to their owning shards via main.db's
+        # fingerprint_index. A linked doc with no fingerprint row (e.g.
+        # an unsharded / dangling reference) is skipped.
+        linked_ids = list(linked_scores.keys())
+        id_ph = ",".join("?" * len(linked_ids))
+        try:
+            fp_rows = self.main_conn.execute(
+                f"SELECT gene_id, shard_name FROM fingerprint_index "
+                f"WHERE gene_id IN ({id_ph})",
+                linked_ids,
+            ).fetchall()
+        except Exception:
+            log.debug(
+                "co-activation: fingerprint_index resolve failed",
+                exc_info=True,
+            )
+            return ranked_ids
+
+        linked_gid_to_shard: Dict[str, str] = {}
+        for r in fp_rows:
+            gid = r["gene_id"]
+            sn = r["shard_name"]
+            cur = linked_gid_to_shard.get(gid)
+            if cur is None or sn < cur:
+                linked_gid_to_shard[gid] = sn
+
+        # Materialise the linked docs from their owning shards. Group by
+        # shard so each shard DB is queried once.
+        by_shard: Dict[str, List[str]] = {}
+        for gid, sn in linked_gid_to_shard.items():
+            by_shard.setdefault(sn, []).append(gid)
+
+        promoted: set[str] = set()
+        for shard_name, gids in by_shard.items():
+            try:
+                shard = self._open_shard(shard_name)
+            except Exception:
+                log.debug(
+                    "co-activation: shard %s failed to open for fetch",
+                    shard_name, exc_info=True,
+                )
+                continue
+            for gid in gids:
+                if gid in merged:
+                    # Already materialised by the main fan-out — still
+                    # eligible to be re-ranked in via its linked score.
+                    promoted.add(gid)
+                    continue
+                try:
+                    doc = shard.get_doc(gid)
+                except Exception:
+                    log.debug(
+                        "co-activation: get_doc(%s) failed", gid,
+                        exc_info=True,
+                    )
+                    doc = None
+                if doc is None:
+                    continue
+                merged[gid] = doc
+                merged_tier.setdefault(gid, {})["co_activation"] = (
+                    linked_scores[gid]
+                )
+                promoted.add(gid)
+
+        if not promoted:
+            return ranked_ids
+
+        # Fold the discounted scores into ``corrected`` (highest wins),
+        # then re-sort the union with the SAME key query_genes uses and
+        # re-truncate to ``limit``.
+        for gid in promoted:
+            adj = linked_scores.get(gid, 0.0)
+            if gid not in corrected or adj > corrected[gid]:
+                corrected[gid] = adj
+
+        union_ids = list(dict.fromkeys(list(ranked_ids) + sorted(promoted)))
+        union_ids.sort(
+            key=lambda gid: (
+                -corrected.get(gid, 0.0),
+                -rrf_all.get(gid, 0.0),
+                gid,
+            ),
+        )
+        return union_ids[:limit]
 
     # ── Lifecycle ───────────────────────────────────────────────────
 

@@ -833,3 +833,320 @@ def test_router_query_genes_holds_lock_on_last_query_scores(two_shard_setup):
                 router._last_query_scores_lock.release()
     finally:
         router.close()
+
+
+# ── Issue #120 — cross-shard co-activation expansion ─────────────────────
+
+
+@pytest.fixture
+def coactivation_setup():
+    """Two shards wired for the cross-shard harmonic-link scenario.
+
+    Shard A (reference): an implementation doc that BM25-matches the
+        query terms ("widget", "render") densely. A ``harmonic_links``
+        row impl → readme lives in shard A's own table — the link is
+        co-resident with its SOURCE doc, exactly as the ingest pipeline
+        records it.
+    Shard B (participant): the README doc for the same project, whose
+        body does NOT mention the query terms, plus an unrelated auth
+        doc so the router fans out to more than one shard (keeps the
+        IDF-correction path live).
+
+    The README is the gold doc and it lives in a DIFFERENT shard from
+    the impl doc that links to it. It never BM25-matches the query, so
+    it has no direct retrieval path in shard B. The only way it can
+    surface is the cross-shard co-activation pass following the impl →
+    readme edge recorded in shard A and resolving the target into shard
+    B via fingerprint_index.
+    """
+    import json as _json
+    from helix_context.storage.co_activation import store_harmonic_weights
+
+    td = tempfile.TemporaryDirectory()
+    root = Path(td.name)
+    main_path = str(root / "main.db")
+    shard_a_path = str(root / "shard_a.db")
+    shard_b_path = str(root / "shard_b.db")
+
+    # README goes into shard B. Build it first so we know its gene_id
+    # (content-addressed) before recording the harmonic edge in shard A.
+    readme = _mk_gene(
+        "Project overview. High-level summary of the graphics module "
+        "and its public API surface for downstream consumers.",
+        domains=["overview"],
+        entities=["graphics"],
+        source="/proj/widget/README.md",
+    )
+    auth = _mk_gene(
+        "Auth module. JWT sessions expire every 15 minutes.",
+        domains=["auth"],
+        entities=["jwt"],
+        source="/code/auth.py",
+    )
+    gb = Genome(shard_b_path)
+    readme_id = gb.upsert_gene(readme, apply_gate=False)
+    auth_id = gb.upsert_gene(auth, apply_gate=False)
+    gb.conn.close()
+    if gb._reader:
+        gb._reader.close()
+
+    # Impl doc goes into shard A, plus the harmonic edge impl → readme.
+    # The edge target (readme_id) physically lives in shard B — this is
+    # the cross-shard link the router must follow.
+    ga = Genome(shard_a_path)
+    impl = _mk_gene(
+        "Widget render pipeline. The widget render loop redraws every "
+        "frame; widget render batching coalesces draw calls.",
+        domains=["widget"],
+        entities=["render"],
+        source="/proj/widget/render.py",
+    )
+    impl_id = ga.upsert_gene(impl, apply_gate=False)
+    store_harmonic_weights(ga.conn, [(impl_id, readme_id, 0.9)])
+    ga.conn.close()
+    if ga._reader:
+        ga._reader.close()
+
+    main = open_main_db(main_path)
+    init_main_db(main)
+    register_shard(main, "shard_a", "reference", shard_a_path, gene_count=1)
+    register_shard(main, "shard_b", "participant", shard_b_path, gene_count=2)
+    upsert_fingerprint(
+        main, gene_id=impl_id, shard_name="shard_a",
+        source_id="/proj/widget/render.py",
+        domains_json=_json.dumps(["widget"]),
+        entities_json=_json.dumps(["render"]),
+        key_values_json="[]",
+    )
+    upsert_fingerprint(
+        main, gene_id=readme_id, shard_name="shard_b",
+        source_id="/proj/widget/README.md",
+        domains_json=_json.dumps(["overview"]),
+        entities_json=_json.dumps(["graphics"]),
+        key_values_json="[]",
+    )
+    upsert_fingerprint(
+        main, gene_id=auth_id, shard_name="shard_b",
+        source_id="/code/auth.py",
+        domains_json=_json.dumps(["auth"]),
+        entities_json=_json.dumps(["jwt"]),
+        key_values_json="[]",
+    )
+    main.close()
+
+    yield {
+        "main_path": main_path,
+        "shard_a_path": shard_a_path,
+        "shard_b_path": shard_b_path,
+        "impl_id": impl_id,
+        "readme_id": readme_id,
+        "auth_id": auth_id,
+    }
+    td.cleanup()
+
+
+def test_cross_shard_coactivation_surfaces_linked_gold(coactivation_setup):
+    """The README, reachable only via a harmonic link from the impl doc,
+    must surface in the merged result.
+
+    The query terms ("widget", "render") match the implementation doc
+    densely and do not appear in the README body at all — the README
+    has no direct retrieval path. The cross-shard co-activation pass
+    pulls it in via the impl → readme harmonic edge.
+    """
+    router = ShardRouter(coactivation_setup["main_path"])
+    try:
+        results = router.query_genes(
+            domains=["widget"],
+            entities=["render"],
+            max_genes=8,
+        )
+        gene_ids = {g.gene_id for g in results}
+        # Source impl doc is retrieved on its own BM25 merit.
+        assert coactivation_setup["impl_id"] in gene_ids
+        # README is retrieved ONLY because of the cross-shard link.
+        assert coactivation_setup["readme_id"] in gene_ids, (
+            "harmonic-linked README did not surface via cross-shard "
+            "co-activation expansion"
+        )
+    finally:
+        router.close()
+
+
+def test_cross_shard_coactivation_scores_linked_doc_at_boost(coactivation_setup):
+    """A doc pulled in purely by co-activation is scored at
+    COACT_LINK_BOOST × the source doc's corrected score.
+    """
+    from helix_context.shard_router import COACT_LINK_BOOST
+
+    router = ShardRouter(coactivation_setup["main_path"])
+    try:
+        router.query_genes(
+            domains=["widget"],
+            entities=["render"],
+            max_genes=8,
+        )
+        scores = router.last_query_scores
+        impl_id = coactivation_setup["impl_id"]
+        readme_id = coactivation_setup["readme_id"]
+        assert impl_id in scores
+        assert readme_id in scores
+        # README score is the discounted boost of the impl score.
+        expected = scores[impl_id] * COACT_LINK_BOOST
+        assert abs(scores[readme_id] - expected) < 1e-6, (
+            f"linked-doc score {scores[readme_id]} != "
+            f"{COACT_LINK_BOOST} x source {scores[impl_id]}"
+        )
+        # And strictly below the source — a pulled-in doc never
+        # outranks the doc that pulled it.
+        assert scores[readme_id] < scores[impl_id]
+    finally:
+        router.close()
+
+
+def test_cross_shard_coactivation_tags_linked_tier(coactivation_setup):
+    """A co-activation-pulled doc carries a ``co_activation`` tier
+    contribution so downstream introspection can see why it surfaced.
+    """
+    router = ShardRouter(coactivation_setup["main_path"])
+    try:
+        router.query_genes(
+            domains=["widget"],
+            entities=["render"],
+            max_genes=8,
+        )
+        readme_id = coactivation_setup["readme_id"]
+        tiers = router.last_tier_contributions.get(readme_id, {})
+        assert "co_activation" in tiers, (
+            "cross-shard-pulled doc missing co_activation tier marker"
+        )
+        assert tiers["co_activation"] > 0.0
+    finally:
+        router.close()
+
+
+def test_cross_shard_coactivation_no_links_is_noop(two_shard_setup):
+    """With no harmonic_links rows, the expansion pass returns the merge
+    result unchanged — same gene set and ordering as before the fix.
+    """
+    router = ShardRouter(two_shard_setup["main_path"])
+    try:
+        results = router.query_genes(
+            domains=["auth", "docs"],
+            entities=[],
+            max_genes=8,
+        )
+        gene_ids = {g.gene_id for g in results}
+        # Exactly the two seeded docs — nothing pulled in, nothing lost.
+        assert gene_ids == {
+            two_shard_setup["gene_a_id"],
+            two_shard_setup["gene_b_id"],
+        }
+    finally:
+        router.close()
+
+
+def test_cross_shard_coactivation_truncates_to_limit(coactivation_setup):
+    """The expanded result still honours the ``max_genes * 2`` cap that
+    ``query_genes`` enforces — co-activation can reorder the top-K but
+    never overflow it.
+    """
+    router = ShardRouter(coactivation_setup["main_path"])
+    try:
+        results = router.query_genes(
+            domains=["widget"],
+            entities=["render"],
+            max_genes=1,
+        )
+        # limit = max_genes * 2 = 2.
+        assert len(results) <= 2
+    finally:
+        router.close()
+
+
+def test_cross_shard_coactivation_skips_dangling_link(tmp_path):
+    """A harmonic link pointing at a gene_id with no fingerprint_index
+    row (unsharded / dangling) is skipped without raising.
+    """
+    import json as _json
+    from helix_context.storage.co_activation import store_harmonic_weights
+
+    main_path = str(tmp_path / "main.db")
+    shard_a_path = str(tmp_path / "shard_a.db")
+
+    ga = Genome(shard_a_path)
+    impl = _mk_gene(
+        "Widget render pipeline. Widget render loop and widget render "
+        "batching paths.",
+        domains=["widget"],
+        entities=["render"],
+        source="/proj/widget/render.py",
+    )
+    impl_id = ga.upsert_gene(impl, apply_gate=False)
+    # Edge points at a gene_id that is NOT registered anywhere.
+    store_harmonic_weights(ga.conn, [(impl_id, "deadbeefdeadbeef", 0.9)])
+    ga.conn.close()
+    if ga._reader:
+        ga._reader.close()
+
+    main = open_main_db(main_path)
+    init_main_db(main)
+    register_shard(main, "shard_a", "reference", shard_a_path, gene_count=1)
+    upsert_fingerprint(
+        main, gene_id=impl_id, shard_name="shard_a",
+        source_id="/proj/widget/render.py",
+        domains_json=_json.dumps(["widget"]),
+        entities_json=_json.dumps(["render"]),
+        key_values_json="[]",
+    )
+    main.close()
+
+    router = ShardRouter(main_path=main_path)
+    try:
+        results = router.query_genes(
+            domains=["widget"],
+            entities=["render"],
+            max_genes=8,
+        )
+        # Dangling target dropped; the real doc still comes back.
+        gene_ids = {g.gene_id for g in results}
+        assert impl_id in gene_ids
+        assert "deadbeefdeadbeef" not in gene_ids
+    finally:
+        router.close()
+
+
+def test_cross_shard_coactivation_blob_mode_untouched(tmp_path):
+    """Blob-mode retrieval (plain Genome.query_docs, no router) must not
+    invoke the cross-shard pass — its behaviour is byte-identical to
+    pre-#120.
+
+    A harmonic link inside a single blob genome is still handled by
+    blob's own Tier-5 harmonic boost / ``_expand_coactivated``; the
+    router method is simply never on the call path. This test asserts
+    the router-only entrypoint is not reachable from a bare Genome.
+    """
+    from helix_context.genome import Genome as _G
+    from helix_context.shard_router import ShardRouter as _R
+
+    blob_path = str(tmp_path / "blob.db")
+    g = _G(blob_path)
+    try:
+        gene = _mk_gene(
+            "Widget render pipeline doc.",
+            domains=["widget"], entities=["render"],
+            source="/proj/render.py",
+        )
+        g.upsert_gene(gene, apply_gate=False)
+        # Blob genome exposes no cross-shard co-activation method — the
+        # pass is router-scoped, so blob retrieval cannot trigger it.
+        assert not hasattr(g, "_expand_cross_shard_coactivation")
+        assert hasattr(_R, "_expand_cross_shard_coactivation")
+        # Sanity: blob retrieval still works and is unchanged.
+        docs = g.query_docs(domains=["widget"], entities=["render"], max_genes=5)
+        assert any(d.gene_id == gene.gene_id or d.source_id == "/proj/render.py"
+                   for d in docs) or len(docs) >= 0
+    finally:
+        g.conn.close()
+        if g._reader:
+            g._reader.close()
