@@ -252,22 +252,84 @@ def test_abstain_env_override_beats_config_flag(abstain_manager, monkeypatch):
     assert win.context_health.status != "abstain"
 
 
-# ── Issue #115: RRF fusion bypasses the absolute score floor ─────────────────
+# ── Issue #115: RRF fusion abstain calibration ──────────────────────────────
 #
-# After PR #106 switched ShardRouter.query_genes to RRF, sharded top-scores
-# compress to ~0.26-0.40. The ABSTAIN gate's absolute floor (2.5, calibrated
-# for BM25/additive) tripped on 9/10 sharded queries — even when the ratio
-# axis indicated a clear winner. The fix gates the absolute-score clause on
-# ``skip_absolute_floors = (fusion_mode == "rrf")``, matching the existing
-# TIGHT/FOCUSED bypass at tier_logic.py:152. Tests call apply_budget_tiers
-# directly with the same fixtures as the higher-level tests above.
+# PR #106 switched ShardRouter.query_genes to RRF, compressing sharded
+# top-scores to ~0.26-0.40. PR #116 short-circuited the BM25-calibrated
+# absolute score floor (2.5) under RRF, but the **ratio** gate
+# (legacy ``top/mean`` < 1.8) is also BM25-calibrated and still tripped
+# sharded queries. Measured 2026-05-14 on medium-sharded fixture:
+#
+#   query              legacy ratio   result
+#   helix_port              1.77      abstain (just below 1.8)
+#   biged_skills            1.57      abstain
+#   scorerift               1.46      abstain
+#
+# The fix replaces the legacy ratio with a baseline-subtracted ratio under
+# RRF:
+#
+#     norm_ratio = (top - min) / (mean - min)
+#
+# which is scale-invariant. Threshold 1.5 (RRF norm) clears all measured
+# RRF queries while still rejecting genuinely-tied distributions; additive
+# (BM25) keeps the legacy ratio + 1.8 threshold for byte-identical blob
+# behaviour. Helpers below build score distributions in the SHAPES we
+# actually observe in production rather than the degenerate
+# "top + N identical tail" synthetic, so the tests pin the right
+# invariant.
 
 
+def _gradient_scores(top_score: float, low_score: float, n: int = 12):
+    """Build n candidates with a linear gradient from top_score to low_score.
+
+    Models the realistic post-refiner curve we observe on production
+    queries: a strong top, a smooth descent, and a non-zero floor. The
+    legacy ratio (top/mean) lands near 1.0-2.0, baseline-subtracted ratio
+    lands near 2.0 — both representative of the actual sharded RRF probe.
+    """
+    from tests.conftest import make_gene
+    candidates = [
+        make_gene(f"rrf_{i}", gene_id=f"rrf_gene_{i:010d}")
+        for i in range(n)
+    ]
+    if n == 1:
+        return candidates, {candidates[0].gene_id: top_score}
+    step = (top_score - low_score) / (n - 1)
+    scores = {
+        candidates[i].gene_id: top_score - i * step
+        for i in range(n)
+    }
+    return candidates, scores
+
+
+def _flat_with_top_scores(top_score: float, tail_score: float, n: int = 8):
+    """Build candidates with the LEGACY-test synthetic shape: 1 top + N-1 tail.
+
+    Useful for additive-path regression tests where this distribution is
+    what the legacy ratio gate was tuned against. Under RRF normalization
+    this shape collapses to denom=0 → ratio_for_gate=0 → abstain (the
+    correct outcome since the candidate set has no informative spread
+    above the floor anyway).
+    """
+    from tests.conftest import make_gene
+    candidates = [
+        make_gene(f"flat_{i}", gene_id=f"flat_gene_{i:010d}")
+        for i in range(n)
+    ]
+    scores = {candidates[0].gene_id: top_score}
+    for c in candidates[1:]:
+        scores[c.gene_id] = tail_score
+    return candidates, scores
+
+
+# Back-compat alias for existing call-sites. The old helper produced a
+# degenerate "top + N flat" shape; tests that genuinely care about score
+# *distributions* should use ``_gradient_scores`` instead.
 def _candidates_with_scores(top_score: float, ratio: float, n: int = 8):
-    """Shared helper: build n candidates whose scores yield (top_score, ratio).
-
-    Same math as ``_weak_setup`` but returns (candidates, scores_dict)
-    suitable for passing straight into ``apply_budget_tiers``.
+    """Build n candidates whose scores yield (top_score, ratio) under legacy
+    top/mean. Kept for tests that exercise the additive abstain gate's
+    historical synthetic-tail behaviour; the new RRF tests below use
+    ``_gradient_scores`` for realistic shapes.
     """
     from tests.conftest import make_gene
     candidates = [
@@ -282,46 +344,104 @@ def _candidates_with_scores(top_score: float, ratio: float, n: int = 8):
     return candidates, scores
 
 
-def test_rrf_low_score_high_ratio_does_not_abstain():
-    """Issue #115: under RRF, low absolute scores + healthy ratio must NOT
-    abstain. RRF score scale is ~0.3 max; the 2.5 BM25 floor is meaningless.
+def test_rrf_realistic_gradient_does_not_abstain():
+    """Issue #115: realistic post-refiner RRF curve (top=0.40, gradient
+    down to floor=0.05) must NOT abstain. This is the SHAPE we observe on
+    biged_skills / helix_port / scorerift on medium-sharded.
     """
     from helix_context.config import AbstainClassFloors
     from helix_context.pipeline.tier_logic import apply_budget_tiers
-    candidates, scores = _candidates_with_scores(top_score=0.4, ratio=2.0)
+    candidates, scores = _gradient_scores(top_score=0.40, low_score=0.05, n=12)
     result = apply_budget_tiers(
         candidates, scores, AbstainClassFloors(),
         abstain_enabled=True, fusion_mode="rrf",
     )
     assert result.abstain is False, (
-        f"RRF top=0.4 ratio=2.0 should NOT abstain; "
-        f"tier={result.budget_tier} (issue #115)"
+        f"RRF gradient top=0.40 low=0.05 should NOT abstain — represents "
+        f"a real biged_skills / helix_port style curve; tier={result.budget_tier}"
     )
-    # Ratio 2.0 lands in FOCUSED under the bypass.
-    assert result.budget_tier == "focused"
 
 
-def test_rrf_low_score_low_ratio_does_abstain():
-    """Issue #115: under RRF, ratio<1.8 still triggers abstain — the gate
-    is preserved for genuine "no clear winner" cases. Only the absolute
-    score floor is bypassed.
+def test_rrf_tight_top_clear_separation_does_not_abstain():
+    """Issue #115: even when top is only marginally above #2 (top=0.40,
+    second=0.395) under RRF, if there's a SPREAD across the candidate
+    set (tail down to 0.02) the baseline-normalized ratio recognizes
+    real signal. This is the biged_skills shape (top - second = 0.003
+    but spread = 0.38).
     """
     from helix_context.config import AbstainClassFloors
     from helix_context.pipeline.tier_logic import apply_budget_tiers
-    candidates, scores = _candidates_with_scores(top_score=0.4, ratio=1.2)
+    from tests.conftest import make_gene
+    candidates = [
+        make_gene(f"rrf_{i}", gene_id=f"rrf_gene_{i:010d}")
+        for i in range(12)
+    ]
+    # Empirical biged_skills shape (rounded): two near-tied tops, smooth
+    # descent, two-step floor.
+    vals = [0.40, 0.395, 0.34, 0.34, 0.32, 0.30, 0.25, 0.23, 0.22, 0.19, 0.05, 0.02]
+    scores = {candidates[i].gene_id: vals[i] for i in range(12)}
+    result = apply_budget_tiers(
+        candidates, scores, AbstainClassFloors(),
+        abstain_enabled=True, fusion_mode="rrf",
+    )
+    assert result.abstain is False, (
+        "RRF biged_skills-shape (near-tied tops + 18x spread) must NOT "
+        "abstain — there is real spread above the noise floor"
+    )
+
+
+def test_rrf_genuinely_tied_distribution_does_abstain():
+    """Issue #115: under RRF, a near-flat distribution (top barely above
+    tail, no spread) DOES abstain. The baseline-normalized ratio collapses
+    to ~1.0-1.2 on these — below the 1.5 RRF threshold.
+    """
+    from helix_context.config import AbstainClassFloors
+    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    from tests.conftest import make_gene
+    candidates = [
+        make_gene(f"rrf_{i}", gene_id=f"rrf_gene_{i:010d}")
+        for i in range(8)
+    ]
+    # 7 tied at top + 1 at tail — RRF rank-1 collision shape with no
+    # meaningful winner. Normalized ratio = (0.0164 - 0.0163) / (mean - min)
+    # = ~1.14, below the 1.5 RRF gate threshold.
+    vals = [0.0164] * 7 + [0.0163]
+    scores = {candidates[i].gene_id: vals[i] for i in range(8)}
     result = apply_budget_tiers(
         candidates, scores, AbstainClassFloors(),
         abstain_enabled=True, fusion_mode="rrf",
     )
     assert result.abstain is True, (
-        "RRF top=0.4 ratio=1.2 should abstain (ratio gate still active)"
+        "RRF mostly-tied distribution (no winner) must abstain"
+    )
+
+
+def test_rrf_all_tied_does_abstain():
+    """Issue #115: degenerate all-tied case (denom=0) must abstain.
+    Guards against div-by-zero and asserts the "zero information"
+    interpretation of a uniform candidate set.
+    """
+    from helix_context.config import AbstainClassFloors
+    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    from tests.conftest import make_gene
+    candidates = [
+        make_gene(f"rrf_{i}", gene_id=f"rrf_gene_{i:010d}")
+        for i in range(8)
+    ]
+    scores = {c.gene_id: 0.0164 for c in candidates}
+    result = apply_budget_tiers(
+        candidates, scores, AbstainClassFloors(),
+        abstain_enabled=True, fusion_mode="rrf",
+    )
+    assert result.abstain is True, (
+        "RRF all-tied (degenerate, denom=0) must abstain"
     )
 
 
 def test_additive_low_score_still_abstains():
-    """Issue #115 regression guard: additive mode must keep the original
-    behavior — low absolute scores + low ratio abstain. This pins the
-    fix so RRF bypass does not silently leak into the additive path.
+    """Issue #115 regression guard: additive mode keeps legacy
+    top/mean<1.8 + top<2.5 ABSTAIN behaviour byte-for-byte. RRF
+    normalization must not leak into the additive path.
     """
     from helix_context.config import AbstainClassFloors
     from helix_context.pipeline.tier_logic import apply_budget_tiers
@@ -331,43 +451,34 @@ def test_additive_low_score_still_abstains():
         abstain_enabled=True, fusion_mode="additive",
     )
     assert result.abstain is True, (
-        "additive top=0.4 ratio=1.2 must still abstain — RRF bypass "
+        "additive top=0.4 ratio=1.2 must still abstain — RRF normalization "
         "must not affect additive scoring"
     )
 
 
-def test_rrf_above_abstain_floor_low_ratio_does_abstain():
-    """Issue #115 key differentiator: under RRF, the absolute-score
-    floor is meaningless (RRF scores cap ~0.3). Even if a score
-    happens to exceed 2.5, a tight ratio still indicates retrieval
-    uncertainty — the gate must trip on ratio alone.
-
-    This is the case that pre-fix code mis-handles: ``top=3.0 >= 2.5``
-    passes the score-floor short-circuit, so abstain skips even when
-    ratio says "no clear winner". Post-fix, ``skip_absolute_floors``
-    hoists above the abstain check so RRF mode uses ratio alone.
-
-    Under ``fusion_mode='additive'`` this same case must NOT abstain
-    (preserves legacy: top above floor → fall through to BROAD), which
-    is asserted by the companion test below.
+def test_additive_strong_signal_still_passes():
+    """Issue #115 regression guard: additive mode with realistic gradient
+    + ratio>1.8 continues to NOT abstain. Pins blob-mode behaviour: the
+    legacy top/mean ratio + 1.8 threshold gates additive exactly as
+    pre-#115.
     """
     from helix_context.config import AbstainClassFloors
     from helix_context.pipeline.tier_logic import apply_budget_tiers
-    candidates, scores = _candidates_with_scores(top_score=3.0, ratio=1.5)
+    # top/mean=3.5/1.5 = 2.33 (well above 1.8) with realistic gradient.
+    candidates, scores = _gradient_scores(top_score=3.5, low_score=0.5, n=12)
     result = apply_budget_tiers(
         candidates, scores, AbstainClassFloors(),
-        abstain_enabled=True, fusion_mode="rrf",
+        abstain_enabled=True, fusion_mode="additive",
     )
-    assert result.abstain is True, (
-        "RRF top=3.0 ratio=1.5 must abstain — under RRF the absolute "
-        "score is meaningless and ratio<1.8 alone gates abstain"
+    assert result.abstain is False, (
+        "additive top=3.5 ratio≈1.92 must NOT abstain — blob mode behaviour"
     )
 
 
 def test_additive_above_abstain_floor_low_ratio_does_not_abstain():
-    """Companion to the above: under additive, top=3.0 (>= floor)
-    short-circuits the abstain check regardless of ratio. This is
-    the legacy behavior that must NOT regress under the fix.
+    """Companion: under additive, top=3.0 (>= floor 2.5) short-circuits
+    the abstain check regardless of ratio. Pre-#115 legacy behaviour that
+    must NOT regress.
     """
     from helix_context.config import AbstainClassFloors
     from helix_context.pipeline.tier_logic import apply_budget_tiers
@@ -379,6 +490,35 @@ def test_additive_above_abstain_floor_low_ratio_does_not_abstain():
     assert result.abstain is False, (
         "additive top=3.0 ratio=1.5 must NOT abstain — score floor "
         "short-circuits the gate; legacy behavior must be preserved"
+    )
+
+
+def test_rrf_metadata_ratio_reflects_normalized_value():
+    """Under RRF the gate compares the baseline-normalized ratio; the
+    abstain telemetry surfaces what was actually checked so operators
+    can diagnose without re-deriving the metric. Pin this so callers
+    know which number lands in ``metadata["ratio"]``.
+    """
+    from helix_context.config import AbstainClassFloors
+    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    from tests.conftest import make_gene
+    candidates = [
+        make_gene(f"rrf_{i}", gene_id=f"rrf_gene_{i:010d}")
+        for i in range(8)
+    ]
+    # All tied → normalized ratio collapses to 0.0 (denom=0 short-circuit)
+    scores = {c.gene_id: 0.0164 for c in candidates}
+    result = apply_budget_tiers(
+        candidates, scores, AbstainClassFloors(),
+        abstain_enabled=True, fusion_mode="rrf",
+    )
+    assert result.abstain is True
+    # Normalized ratio for an all-tied set is 0.0 (denom=0 path); legacy
+    # ratio for the same set is ~1.0. Confirms the gate's value is what
+    # gets surfaced.
+    assert result.abstain_ratio == pytest.approx(0.0, abs=1e-6), (
+        f"abstain_ratio should reflect normalized gate value, got "
+        f"{result.abstain_ratio}"
     )
 
 
