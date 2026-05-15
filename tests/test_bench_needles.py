@@ -158,8 +158,16 @@ def test_match_handles_directory_substring_gold():
 def test_matrix_needles_all_have_list_gold_source():
     """bench_claude_matrix.NEEDLES must use the list schema across the
     board -- a regression to single-string would break the ANY-match
-    contract."""
-    assert len(MATRIX_NEEDLES) == 10
+    contract.
+
+    Size assertion is a floor (>= 10), not exact: the N=50 expansion
+    (2026-05-15 PR feat/bench-needles-50) grew the set without changing
+    schema. The floor catches accidental list truncation while still
+    allowing future growth.
+    """
+    assert len(MATRIX_NEEDLES) >= 10, (
+        f"MATRIX_NEEDLES truncated to {len(MATRIX_NEEDLES)} (< 10 floor)"
+    )
     for n in MATRIX_NEEDLES:
         assert isinstance(n["gold_source"], list), (
             f"{n['name']}: gold_source must be a list, got {type(n['gold_source'])}"
@@ -171,7 +179,9 @@ def test_matrix_needles_all_have_list_gold_source():
 
 def test_needle_legacy_needles_all_have_list_gold_source():
     """Same contract for the legacy bench_needle.NEEDLES list."""
-    assert len(NEEDLE_NEEDLES) == 10
+    assert len(NEEDLE_NEEDLES) >= 10, (
+        f"NEEDLE_NEEDLES truncated to {len(NEEDLE_NEEDLES)} (< 10 floor)"
+    )
     for n in NEEDLE_NEEDLES:
         assert isinstance(n["gold_source"], list), (
             f"{n['name']}: gold_source must be a list, got {type(n['gold_source'])}"
