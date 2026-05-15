@@ -179,6 +179,477 @@ NEEDLES = [
             "Education/fleet/fleet.toml",
         ],
     },
+    # ─── 2026-05-15 N=50 expansion (PR feat/bench-needles-50) ────────────
+    # See bench_claude_matrix.py and docs/benchmarks/MULTI_VALID_GOLD.md
+    # for the curation policy. Each fact is verified to live in the
+    # historically-labeled gold source first; other valid sources follow.
+
+    # ─── BookKeeper (6) ───────────────────────────────────────────────
+    {
+        "name": "bookkeeper_dashboard_port",
+        "query": "What port does the BookKeeper web dashboard listen on by default?",
+        "expected": "8080",
+        "accept": ["8080", "port 8080"],
+        "source": "BookKeeper/bookkeeper.toml",
+        "gold_source": [
+            "BookKeeper/bookkeeper.toml",
+            "BookKeeper/README.md",
+            "BookKeeper/docs/TENANCY_QUICKSTART.md",
+        ],
+    },
+    {
+        "name": "bookkeeper_1099_threshold",
+        "query": "What dollar threshold triggers 1099 tracking and W-9 requirement in BookKeeper?",
+        "expected": "600",
+        "accept": ["600", "$600"],
+        "source": "BookKeeper/bookkeeper.toml",
+        "gold_source": [
+            "BookKeeper/bookkeeper.toml",
+            "BookKeeper/README.md",
+            "BookKeeper/bookkeeper/exports/tax_engine.py",
+        ],
+    },
+    {
+        "name": "bookkeeper_ocr_confidence",
+        "query": "What is the OCR confidence threshold below which BookKeeper sends invoices to human review?",
+        "expected": "0.85",
+        "accept": ["0.85", ".85"],
+        "source": "BookKeeper/bookkeeper.toml",
+        "gold_source": [
+            "BookKeeper/bookkeeper.toml",
+            "BookKeeper/README.md",
+        ],
+    },
+    {
+        "name": "bookkeeper_version",
+        "query": "What is the current version of the BookKeeper package?",
+        "expected": "0.13.0",
+        "accept": ["0.13.0", "0.13.0b", "v0.13"],
+        "source": "BookKeeper/pyproject.toml",
+        "gold_source": [
+            "BookKeeper/pyproject.toml",
+            "BookKeeper/bookkeeper/cli.py",
+            "BookKeeper/CLAUDE.md",
+            "BookKeeper/README.md",
+        ],
+    },
+    {
+        "name": "bookkeeper_test_count",
+        "query": "How many tests does the BookKeeper suite have passing?",
+        "expected": "507",
+        "accept": ["507", "507 tests"],
+        "source": "BookKeeper/README.md",
+        "gold_source": [
+            "BookKeeper/README.md",
+        ],
+    },
+    {
+        "name": "bookkeeper_backup_interval",
+        "query": "How often does BookKeeper run automatic backups in seconds?",
+        "expected": "1200",
+        "accept": ["1200", "20 minutes", "20 min", "20-minute"],
+        "source": "BookKeeper/bookkeeper.toml",
+        "gold_source": [
+            "BookKeeper/bookkeeper.toml",
+        ],
+    },
+
+    # ─── CosmicTasha (5) ──────────────────────────────────────────────
+    {
+        "name": "cosmictasha_template_count",
+        "query": "How many SOC 2 compliance document templates does CosmicTasha provide?",
+        "expected": "14",
+        "accept": ["14", "fourteen"],
+        "source": "CosmicTasha/README.md",
+        "gold_source": [
+            "CosmicTasha/README.md",
+            "CosmicTasha/docs/superpowers/plans/2026-04-07-auth-biged-templates.md",
+            "CosmicTasha/web/src/lib/compliance-kb/soc2/templates/index.ts",
+        ],
+    },
+    {
+        "name": "cosmictasha_default_model",
+        "query": "What is the default Ollama model tag used by CosmicTasha?",
+        "expected": "qwen3:8b",
+        "accept": ["qwen3:8b", "qwen3 8b", "qwen3"],
+        "source": "CosmicTasha/README.md",
+        "gold_source": [
+            "CosmicTasha/README.md",
+            "CosmicTasha/.github/workflows/ci.yml",
+        ],
+    },
+    {
+        "name": "cosmictasha_biged_port",
+        "query": "What port does the biged-rs inference service that CosmicTasha talks to listen on?",
+        "expected": "5555",
+        "accept": ["5555", "port 5555", ":5555"],
+        "source": "CosmicTasha/README.md",
+        "gold_source": [
+            "CosmicTasha/README.md",
+            "CosmicTasha/docker-compose.yml",
+            "CosmicTasha/.github/workflows/ci.yml",
+        ],
+    },
+    {
+        "name": "cosmictasha_auth_library",
+        "query": "What authentication library does CosmicTasha use for sessions?",
+        "expected": "Lucia",
+        "accept": ["Lucia", "lucia"],
+        "source": "CosmicTasha/README.md",
+        "gold_source": [
+            "CosmicTasha/README.md",
+            "CosmicTasha/.planning/03-architecture-decisions.md",
+        ],
+    },
+    {
+        "name": "cosmictasha_postgres_version",
+        "query": "What major version of PostgreSQL does CosmicTasha use in production?",
+        "expected": "16",
+        "accept": ["16", "PostgreSQL 16", "postgres 16"],
+        "source": "CosmicTasha/README.md",
+        "gold_source": [
+            "CosmicTasha/README.md",
+            "CosmicTasha/docker-compose.yml",
+            "CosmicTasha/.planning/01-infrastructure-hosting.md",
+        ],
+    },
+
+    # ─── two-brain-audit (3) ──────────────────────────────────────────
+    {
+        "name": "scorerift_defense_layers",
+        "query": "How many defense layers does ScoreRift use to prevent the system from lying?",
+        "expected": "6",
+        "accept": ["6", "six", "Six"],
+        "source": "two-brain-audit/README.md",
+        "gold_source": [
+            "two-brain-audit/README.md",
+        ],
+    },
+    {
+        "name": "scorerift_confidence_floor",
+        "query": "What auto-confidence percentage must be exceeded for ScoreRift to trigger a divergence alert?",
+        "expected": "50%",
+        "accept": ["50%", "50 percent", "0.5", ".5", "50"],
+        "source": "two-brain-audit/README.md",
+        "gold_source": [
+            "two-brain-audit/README.md",
+        ],
+    },
+    {
+        "name": "scorerift_pkg_version",
+        "query": "What is the package version of scorerift in pyproject.toml?",
+        "expected": "2.0.0",
+        "accept": ["2.0.0", "v2.0.0", "2.0"],
+        "source": "two-brain-audit/pyproject.toml",
+        "gold_source": [
+            "two-brain-audit/pyproject.toml",
+        ],
+    },
+
+    # ─── MaxExpressKit (3) ────────────────────────────────────────────
+    {
+        "name": "mek_version",
+        "query": "What is the current version of the MaxExpressKit (MEK) plugin?",
+        "expected": "0.1.3",
+        "accept": ["0.1.3", "v0.1.3"],
+        "source": "MaxExpressKit/package.json",
+        "gold_source": [
+            "MaxExpressKit/package.json",
+            "MaxExpressKit/pyproject.toml",
+            "MaxExpressKit/marketplace.json",
+        ],
+    },
+    {
+        "name": "mek_min_python",
+        "query": "What is the minimum Python version required by MaxExpressKit?",
+        "expected": "3.11",
+        "accept": ["3.11", ">=3.11", "Python 3.11"],
+        "source": "MaxExpressKit/pyproject.toml",
+        "gold_source": [
+            "MaxExpressKit/pyproject.toml",
+        ],
+    },
+    {
+        "name": "mek_source_apps",
+        "query": "MaxExpressKit was distilled from how many source applications?",
+        "expected": "three",
+        "accept": ["three", "3", "three full apps"],
+        "source": "MaxExpressKit/README.md",
+        "gold_source": [
+            "MaxExpressKit/README.md",
+            "MaxExpressKit/docs/superpowers/specs/2026-05-10-mek-design.md",
+        ],
+    },
+
+    # ─── Education / BigEd (13) ───────────────────────────────────────
+    {
+        "name": "biged_dashboard_port",
+        "query": "What port does the BigEd fleet dashboard listen on?",
+        "expected": "5555",
+        "accept": ["5555", "port 5555", ":5555"],
+        "source": "Education/README.md",
+        "gold_source": [
+            "Education/README.md",
+            "Education/DEVELOPMENT.md",
+        ],
+    },
+    {
+        "name": "biged_ram_ceiling",
+        "query": "What RAM ceiling percentage does BigEd target before stopping agent scale-up?",
+        "expected": "97",
+        "accept": ["97", "97%", "97 percent"],
+        "source": "Education/fleet/fleet.toml",
+        "gold_source": [
+            "Education/fleet/fleet.toml",
+            "Education/CLAUDE.md",
+            "Education/FRAMEWORK_BLUEPRINT.md",
+        ],
+    },
+    {
+        "name": "biged_max_workers",
+        "query": "What is the maximum number of fleet workers BigEd boots by default in fleet.toml?",
+        "expected": "14",
+        "accept": ["14"],
+        "source": "Education/fleet/fleet.toml",
+        "gold_source": [
+            "Education/fleet/fleet.toml",
+            "Education/biged-rs/tests/contract_test.rs",
+        ],
+    },
+    {
+        "name": "biged_core_agents",
+        "query": "How many core agents does BigEd boot before demand-based scaling kicks in?",
+        "expected": "4",
+        "accept": ["4", "four"],
+        "source": "Education/README.md",
+        "gold_source": [
+            "Education/README.md",
+            "Education/ROADMAP.md",
+            "Education/docs/flowcharts/boot_sequence.txt",
+        ],
+    },
+    {
+        "name": "biged_audit_dimensions",
+        "query": "How many dimensions does the BigEd audit tracker grade against?",
+        "expected": "12",
+        "accept": ["12", "twelve"],
+        "source": "Education/CLAUDE.md",
+        "gold_source": [
+            "Education/CLAUDE.md",
+            "Education/ROADMAP.md",
+            "Education/docs/superpowers/plans/ray_trace_plan.md",
+        ],
+    },
+    {
+        "name": "biged_db_tables",
+        "query": "How many database tables does the BigEd fleet have?",
+        "expected": "34",
+        "accept": ["34", "34 tables"],
+        "source": "Education/CLAUDE.md",
+        "gold_source": [
+            "Education/CLAUDE.md",
+            "Education/AUDIT_TRACKER.md",
+            "Education/AUDIT_TRACKER_COMPLIANCE_REPORT.md",
+        ],
+    },
+    {
+        "name": "biged_thermal_target",
+        "query": "What is BigEd's CPU thermal cooldown target in Celsius?",
+        "expected": "75",
+        "accept": ["75", "75c", "75 c", "75°c", "75°"],
+        "source": "Education/fleet/fleet.toml",
+        "gold_source": [
+            "Education/fleet/fleet.toml",
+            "Education/FRAMEWORK_BLUEPRINT.md",
+        ],
+    },
+    {
+        "name": "biged_vision_model",
+        "query": "What local vision model does BigEd use for image analysis?",
+        "expected": "llava",
+        "accept": ["llava", "LLaVA"],
+        "source": "Education/fleet/fleet.toml",
+        "gold_source": [
+            "Education/fleet/fleet.toml",
+            "Education/biged-rs/tests/contract_test.rs",
+        ],
+    },
+    {
+        "name": "biged_rust_msrv",
+        "query": "What minimum Rust version does the biged-rs workspace require?",
+        "expected": "1.76",
+        "accept": ["1.76", "1.76+", "Rust 1.76"],
+        "source": "Education/biged-rs/Cargo.toml",
+        "gold_source": [
+            "Education/biged-rs/Cargo.toml",
+            "Education/biged-rs/README.md",
+        ],
+    },
+    {
+        "name": "biged_rust_web_framework",
+        "query": "What Rust web framework does biged-rs use for its REST API?",
+        "expected": "axum",
+        "accept": ["axum"],
+        "source": "Education/biged-rs/Cargo.toml",
+        "gold_source": [
+            "Education/biged-rs/Cargo.toml",
+            "Education/biged-rs/README.md",
+            "Education/biged-rs/DEPLOYMENT.md",
+            "Education/FRAMEWORK_BLUEPRINT.md",
+        ],
+    },
+    {
+        "name": "biged_complex_model",
+        "query": "What model does BigEd use for complex tasks like compliance docs and quality passes?",
+        "expected": "gemma4:31b",
+        "accept": ["gemma4:31b", "gemma4", "gemma 31b"],
+        "source": "Education/fleet/fleet.toml",
+        "gold_source": [
+            "Education/fleet/fleet.toml",
+            "Education/FRAMEWORK_BLUEPRINT.md",
+            "Education/SESSION_HANDOFF.md",
+        ],
+    },
+    {
+        "name": "biged_smoke_tests",
+        "query": "What is BigEd's smoke test pass count out of total?",
+        "expected": "51/52",
+        "accept": ["51/52", "51 of 52", "51 out of 52"],
+        "source": "Education/CLAUDE.md",
+        "gold_source": [
+            "Education/CLAUDE.md",
+            "Education/CONTRIBUTING.md",
+            "Education/CROSS_PLATFORM.md",
+        ],
+    },
+    {
+        "name": "biged_idle_timeout",
+        "query": "What is the idle timeout in seconds before BigEd workers go to sleep?",
+        "expected": "10",
+        "accept": ["10", "10 seconds", "10s"],
+        "source": "Education/fleet/fleet.toml",
+        "gold_source": [
+            "Education/fleet/fleet.toml",
+            "Education/biged-rs/fleet.toml",
+            "Education/biged-rs/crates/biged-core/src/config.rs",
+        ],
+    },
+
+    # ─── helix-context (10) ───────────────────────────────────────────
+    {
+        "name": "helix_expression_budget",
+        "query": "What is the expression_tokens budget set in helix.toml?",
+        "expected": "7000",
+        "accept": ["7000", "7K", "7,000", "~7K"],
+        "source": "helix-context/helix.toml",
+        "gold_source": [
+            "helix-context/helix.toml",
+            "helix-context/overnight_logs/broad_tighten_2026-05-12_1422_report.md",
+        ],
+    },
+    {
+        "name": "helix_max_genes_per_turn",
+        "query": "What is the max_genes_per_turn cap in helix.toml?",
+        "expected": "12",
+        "accept": ["12"],
+        "source": "helix-context/helix.toml",
+        "gold_source": [
+            "helix-context/helix.toml",
+            "helix-context/docs/config-reference.md",
+        ],
+    },
+    {
+        "name": "helix_rrf_k",
+        "query": "What is the RRF k constant used by Helix Reciprocal Rank Fusion?",
+        "expected": "60",
+        "accept": ["60", "k=60", "k = 60"],
+        "source": "helix-context/helix.toml",
+        "gold_source": [
+            "helix-context/helix.toml",
+            "helix-context/docs/config-reference.md",
+            "helix-context/docs/specs/2026-05-08-stage-3-rrf-fusion.md",
+        ],
+    },
+    {
+        "name": "helix_cold_start_threshold",
+        "query": "What is the cold_start_threshold gene count in the Helix knowledge store?",
+        "expected": "10",
+        "accept": ["10", "10 genes"],
+        "source": "helix-context/helix.toml",
+        "gold_source": [
+            "helix-context/helix.toml",
+            "helix-context/docs/config-reference.md",
+            "helix-context/CLAUDE.md",
+        ],
+    },
+    {
+        "name": "helix_session_window",
+        "query": "What is the synthetic_session_window_s in seconds for grouping same-IP requests?",
+        "expected": "300",
+        "accept": ["300", "5 min", "5 minutes", "five minutes"],
+        "source": "helix-context/helix.toml",
+        "gold_source": [
+            "helix-context/helix.toml",
+            "helix-context/docs/config-reference.md",
+            "helix-context/CLAUDE.md",
+        ],
+    },
+    {
+        "name": "helix_headroom_port",
+        "query": "What is the default port for the Headroom proxy that Helix can route through?",
+        "expected": "8787",
+        "accept": ["8787", "port 8787"],
+        "source": "helix-context/helix.toml",
+        "gold_source": [
+            "helix-context/helix.toml",
+            "helix-context/docs/config-reference.md",
+        ],
+    },
+    {
+        "name": "helix_calibration_staleness",
+        "query": "After how many days does Helix flag the know-confidence calibration as stale?",
+        "expected": "30",
+        "accept": ["30", "30 days"],
+        "source": "helix-context/helix.toml",
+        "gold_source": [
+            "helix-context/helix.toml",
+            "helix-context/docs/specs/2026-05-08-stage-6-know-miss-blocks.md",
+        ],
+    },
+    {
+        "name": "helix_dense_encoder",
+        "query": "Which dense embedding model does Helix use for Stage-2 recall?",
+        "expected": "BGE-M3",
+        "accept": ["BGE-M3", "bge-m3", "bge m3"],
+        "source": "helix-context/CLAUDE.md",
+        "gold_source": [
+            "helix-context/CLAUDE.md",
+            "helix-context/README.md",
+            "helix-context/helix.toml",
+        ],
+    },
+    {
+        "name": "helix_filename_anchor",
+        "query": "What is the filename_anchor_weight per-match boost in helix.toml?",
+        "expected": "4.0",
+        "accept": ["4.0", "4"],
+        "source": "helix-context/helix.toml",
+        "gold_source": [
+            "helix-context/helix.toml",
+            "helix-context/docs/config-reference.md",
+        ],
+    },
+    {
+        "name": "helix_subpackages_count",
+        "query": "Into how many sub-packages is helix_context organized after the PR #90 restructure?",
+        "expected": "16",
+        "accept": ["16", "sixteen"],
+        "source": "helix-context/CLAUDE.md",
+        "gold_source": [
+            "helix-context/CLAUDE.md",
+            "helix-context/docs/superpowers/plans/2026-05-13-readme-v3-plan.md",
+        ],
+    },
 ]
 
 

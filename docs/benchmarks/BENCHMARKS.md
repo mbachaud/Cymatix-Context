@@ -55,7 +55,17 @@ Helix should find the same answer as a frontier model with Helix.
 
 ### Needles
 
-Ten hand-crafted questions, each targeting a literal fact in the knowledge store:
+Hand-crafted questions, each targeting a literal fact in the knowledge store.
+The original N=10 set was expanded to **N=50** in PR `feat/bench-needles-50`
+(2026-05-15) to drive down the per-fixture correctness standard error from
+~1.15-stddev (too noisy for single-knob tuning) to ~0.5-stddev. Coverage is
+distributed across the 6 shards of the medium-sharded fixture roughly in
+proportion to corpus size (Education × 16, helix-context × 14, BookKeeper × 7,
+CosmicTasha × 5, two-brain-audit × 5, MaxExpressKit × 3).
+
+Sample of the original N=10 (full list lives in `benchmarks/bench_needle.py`
+and `benchmarks/bench_claude_matrix.py`; per-needle curation rationale is in
+[`MULTI_VALID_GOLD.md`](MULTI_VALID_GOLD.md)):
 
 ```
 What port does the Helix proxy server listen on?           → 11437
@@ -69,6 +79,22 @@ How many dimensions does the Python preset check?          → 8
 How many tokens for the ribosome decoder prompt?           → 3000
 What is the default local model for BigEd conductor?       → qwen3
 ```
+
+Representative N=50 expansion entries (one per shard):
+
+```
+What port does the BookKeeper web dashboard listen on?     → 8080
+What is the default Ollama model tag for CosmicTasha?      → qwen3:8b
+How many defense layers does ScoreRift use?                → 6
+What is the current version of MaxExpressKit?              → 0.1.3
+What RAM ceiling % does BigEd target before scale-up stops?→ 97
+What is the expression_tokens budget in helix.toml?        → 7000
+```
+
+> **Note on the legacy N=10 results table below.** All historical run
+> data through 2026-05-12 used the 10-needle set. The N=50 run grid will
+> re-baseline in the next round; treat the older numbers as a 10-needle
+> reference until that lands.
 
 ### Results (N=10, curated)
 
