@@ -89,6 +89,61 @@ COACT_LINK_BOOST = 0.5        # linked-doc score = boost × source-doc score
 COACT_MAX_LINKS_PER_DOC = 5   # 1-hop fan-out cap per candidate (blob: [:5])
 
 
+# ── Intra-shard doc-type ranking boost (#121) ────────────────────────
+#
+# Sharded retrieval ranks each shard's candidates with that shard's own
+# corpus-local statistics. High-level summary docs (README.md,
+# CLAUDE.md, INDEX.md) state answers in conceptual terms; within a
+# shard they are routinely out-ranked by more-specific files that
+# mention the query terms more densely. The IDF correction (above)
+# fixes cross-shard *scale* mismatch but not this *intra-shard rank*
+# gap — so a README that holds the answer can sit at intra-shard rank
+# ~7 and never clear the cross-shard merge truncation to top-K.
+#
+# ``DOC_TYPE_BOOST`` is a small multiplicative bump applied to the
+# IDF-corrected score of candidates whose source path basename matches
+# one of ``DOC_TYPE_BOOST_BASENAMES``. It is deliberately small: it
+# only re-orders candidates that are already near-tied. A specific
+# implementation file that genuinely out-scores a README by a wide
+# margin keeps its lead — a 15% bump cannot overtake a 2× score gap —
+# so the boost cannot regress queries whose gold IS a deep file (the
+# explicit risk called out in #121's approach (a)).
+#
+# Applied ONLY on the genuine cross-shard merge path (≥2 shards),
+# mirroring the IDF correction's gate. The single-shard fast path stays
+# byte-identical to a bare ``Genome.query_docs`` call, and blob mode
+# never constructs a ShardRouter at all — so blob behavior is unchanged
+# by construction.
+DOC_TYPE_BOOST = 1.15
+DOC_TYPE_BOOST_BASENAMES = frozenset({
+    "readme.md",
+    "claude.md",
+    "index.md",
+})
+
+
+def _doc_type_boost_for(source_id: Optional[str]) -> float:
+    """Return the doc-type score multiplier for a candidate's source path.
+
+    A path whose basename (case-insensitively) is one of
+    ``DOC_TYPE_BOOST_BASENAMES`` gets ``DOC_TYPE_BOOST``; everything
+    else gets ``1.0`` (identity — no change). Handles both ``/`` and
+    ``\\`` separators so Windows-ingested paths match too. A missing
+    or empty ``source_id`` gets the identity multiplier.
+
+    Used by :meth:`ShardRouter.query_genes` on the cross-shard merge
+    path only.
+    """
+    if not source_id:
+        return 1.0
+    # Basename only — split on both separators so a path ingested on
+    # Windows (back-slashes) is treated the same as a POSIX path.
+    basename = source_id.replace("\\", "/").rsplit("/", 1)[-1].strip().lower()
+    if basename in DOC_TYPE_BOOST_BASENAMES:
+        return DOC_TYPE_BOOST
+    return 1.0
+
+
 def _compute_shard_idf_correction(
     query_terms: List[str],
     shard_n: Dict[str, int],
@@ -481,6 +536,25 @@ class ShardRouter:
                 adj = raw * m
                 if gid not in corrected or adj > corrected[gid]:
                     corrected[gid] = adj
+
+        # ── Intra-shard doc-type boost (#121) ───────────────────────
+        # Lift README/CLAUDE/INDEX summary docs by a small multiplier
+        # so a high-level doc that holds the answer but lost the
+        # intra-shard keyword-density race can still clear the merge
+        # truncation. Gated to the genuine cross-shard merge (≥2
+        # shards) so the single-shard fast path stays byte-identical;
+        # see DOC_TYPE_BOOST commentary above. The multiplier is small
+        # enough that it only re-orders near-tied candidates — a deep
+        # implementation file that genuinely out-scores a README keeps
+        # its lead, so no regression on implementation-file queries.
+        if len(shard_ranked) > 1:
+            for gid in corrected:
+                doc = merged.get(gid)
+                if doc is None:
+                    continue
+                boost = _doc_type_boost_for(getattr(doc, "source_id", None))
+                if boost != 1.0:
+                    corrected[gid] *= boost
 
         rrf_all = fuser.all_scores()
 

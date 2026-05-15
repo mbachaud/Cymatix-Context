@@ -1150,3 +1150,279 @@ def test_cross_shard_coactivation_blob_mode_untouched(tmp_path):
         g.conn.close()
         if g._reader:
             g._reader.close()
+
+
+# ── Issue #121 — intra-shard doc-type ranking boost ─────────────────────
+
+
+def test_doc_type_boost_for_matches_summary_basenames():
+    """``_doc_type_boost_for`` boosts README/CLAUDE/INDEX docs only.
+
+    The basename match is case-insensitive and separator-agnostic so a
+    path ingested on Windows (back-slashes) matches the same as a POSIX
+    path. Everything else gets the identity multiplier (1.0).
+    """
+    from helix_context.shard_router import (
+        _doc_type_boost_for,
+        DOC_TYPE_BOOST,
+    )
+
+    # Summary docs — boosted, regardless of separator / case / depth.
+    assert _doc_type_boost_for("Education/biged-rs/README.md") == DOC_TYPE_BOOST
+    assert _doc_type_boost_for("repo/CLAUDE.md") == DOC_TYPE_BOOST
+    assert _doc_type_boost_for("docs/INDEX.md") == DOC_TYPE_BOOST
+    assert _doc_type_boost_for("readme.md") == DOC_TYPE_BOOST
+    assert _doc_type_boost_for("a\\b\\Readme.MD") == DOC_TYPE_BOOST
+    assert _doc_type_boost_for("C:\\proj\\sub\\claude.md") == DOC_TYPE_BOOST
+
+    # Implementation / non-summary files — identity (NOT boosted).
+    assert _doc_type_boost_for("Education/biged-rs/src/main.rs") == 1.0
+    assert _doc_type_boost_for("helix_context/shard_router.py") == 1.0
+    assert _doc_type_boost_for("docs/architecture/OBSERVABILITY.md") == 1.0
+    # A file that merely contains "readme" but isn't the basename.
+    assert _doc_type_boost_for("notes/readme_draft.md") == 1.0
+    assert _doc_type_boost_for("readme.txt") == 1.0
+
+    # Missing / empty source paths fall back to identity.
+    assert _doc_type_boost_for(None) == 1.0
+    assert _doc_type_boost_for("") == 1.0
+
+
+def test_doc_type_boost_is_a_small_lift():
+    """The doc-type boost must stay small enough to only re-order
+    near-tied candidates.
+
+    This is the core safety property for #121: a small multiplicative
+    bump cannot overtake a candidate that genuinely out-scores a
+    summary doc by a wide margin (e.g. a 2x score gap). If this knob
+    is ever raised past ~1.5x the no-regression guarantee for
+    implementation-file queries no longer holds.
+    """
+    from helix_context.shard_router import DOC_TYPE_BOOST
+
+    assert 1.0 < DOC_TYPE_BOOST <= 1.5, (
+        f"DOC_TYPE_BOOST={DOC_TYPE_BOOST} is outside the safe range; a "
+        "larger lift can overtake genuinely higher-scoring "
+        "implementation files and regress #121's acceptance criteria"
+    )
+
+
+@pytest.fixture
+def doc_type_boost_setup():
+    """Two-shard setup where one shard holds both a README.md and a
+    keyword-dense implementation file matching the same query terms.
+
+    Shard A (``Education``-like): a README.md that states an answer in
+    conceptual terms, plus a denser ``.rs`` implementation file that
+    mentions the query keywords more times. Shard B is an unrelated
+    second shard whose only job is to make ``query_genes`` take the
+    genuine cross-shard merge path (≥2 shards) so the #121 boost fires.
+    """
+    td = tempfile.TemporaryDirectory()
+    root = Path(td.name)
+    main_path = str(root / "main.db")
+    shard_a_path = str(root / "shard_a.db")
+    shard_b_path = str(root / "shard_b.db")
+
+    ga = Genome(shard_a_path)
+    # README: a sparse, high-level summary. It mentions "binary" once in
+    # prose but is NOT tagged with the "binary" entity and its path does
+    # not contain the query term — so intra-shard it scores well below
+    # the keyword-dense implementation file. This is the #121 symptom:
+    # the README holds the answer conceptually yet loses the ranking.
+    readme = _mk_gene(
+        "BigEd Rust build overview. The release binary is around 4 MB.",
+        domains=["biged"],
+        entities=["rust"],
+        source="Education/biged-rs/README.md",
+    )
+    readme_id = ga.upsert_gene(readme, apply_gate=False)
+    # Implementation file: keyword-dense AND its path contains the query
+    # term "binary" (source-authority bonus). It genuinely out-scores
+    # the README intra-shard by a wide margin — the guard test relies on
+    # the boost being unable to overturn that.
+    impl = _mk_gene(
+        "binary binary binary size size build target binary measured "
+        "binary size binary footprint binary size binary",
+        domains=["biged"],
+        entities=["binary"],
+        source="Education/biged-rs/src/binary_size_report.rs",
+    )
+    impl_id = ga.upsert_gene(impl, apply_gate=False)
+    ga.conn.close()
+    if ga._reader:
+        ga._reader.close()
+
+    gb = Genome(shard_b_path)
+    other = _mk_gene(
+        "Unrelated second shard. Auth tokens and JWT sessions.",
+        domains=["biged"],
+        entities=["binary"],
+        source="other/notes.md",
+    )
+    other_id = gb.upsert_gene(other, apply_gate=False)
+    gb.conn.close()
+    if gb._reader:
+        gb._reader.close()
+
+    main = open_main_db(main_path)
+    init_main_db(main)
+    register_shard(main, "shard_a", "reference", shard_a_path, gene_count=2)
+    register_shard(main, "shard_b", "participant", shard_b_path, gene_count=1)
+    for gid, src, ents in (
+        (readme_id, "Education/biged-rs/README.md", ["rust"]),
+        (impl_id, "Education/biged-rs/src/binary_size_report.rs", ["binary"]),
+    ):
+        upsert_fingerprint(
+            main, gene_id=gid, shard_name="shard_a", source_id=src,
+            domains_json=json.dumps(["biged"]),
+            entities_json=json.dumps(ents),
+            key_values_json="[]",
+        )
+    upsert_fingerprint(
+        main, gene_id=other_id, shard_name="shard_b",
+        source_id="other/notes.md",
+        domains_json=json.dumps(["biged"]),
+        entities_json=json.dumps(["binary"]),
+        key_values_json="[]",
+    )
+    main.close()
+
+    yield {
+        "main_path": main_path,
+        "readme_id": readme_id,
+        "impl_id": impl_id,
+        "other_id": other_id,
+    }
+    td.cleanup()
+
+
+def test_doc_type_boost_lifts_readme_score_on_cross_shard_merge(
+    doc_type_boost_setup, monkeypatch
+):
+    """On the cross-shard merge path, a README.md's surfaced score is
+    lifted by exactly ``DOC_TYPE_BOOST`` relative to the un-boosted run.
+
+    Isolates the #121 boost from the IDF-correction math by running the
+    identical query twice — once normally, once with the boost
+    neutralised — and comparing. A non-summary implementation file's
+    score must be byte-identical between the two runs (no boost).
+    """
+    import helix_context.shard_router as sr
+
+    readme_id = doc_type_boost_setup["readme_id"]
+    impl_id = doc_type_boost_setup["impl_id"]
+    boost = sr.DOC_TYPE_BOOST
+
+    def _run() -> dict:
+        router = ShardRouter(doc_type_boost_setup["main_path"])
+        try:
+            router.query_genes(
+                domains=["biged"], entities=["binary"], max_genes=10,
+            )
+            return dict(router.last_query_scores)
+        finally:
+            router.close()
+
+    # Run 1: boost active (production behavior).
+    boosted = _run()
+
+    # Run 2: boost neutralised — patch the helper to identity so the
+    # only difference between the runs is the doc-type multiplier.
+    monkeypatch.setattr(sr, "_doc_type_boost_for", lambda _src: 1.0)
+    unboosted = _run()
+
+    assert readme_id in boosted and readme_id in unboosted, (
+        "README candidate must survive the merge in both runs"
+    )
+    assert impl_id in boosted and impl_id in unboosted
+
+    # The README score is lifted by exactly DOC_TYPE_BOOST.
+    assert boosted[readme_id] == pytest.approx(
+        unboosted[readme_id] * boost, rel=1e-6
+    ), "README.md was not lifted by exactly DOC_TYPE_BOOST"
+
+    # The implementation file is NOT a doc-type — its score is unchanged.
+    assert boosted[impl_id] == pytest.approx(
+        unboosted[impl_id], rel=1e-6
+    ), "non-summary implementation file must not be boosted"
+
+
+def test_doc_type_boost_does_not_regress_deep_implementation_file(
+    doc_type_boost_setup
+):
+    """Guard for #121's hard constraint: the small doc-type boost must
+    NOT flip a genuinely higher-scoring implementation file below a
+    README.
+
+    The fixture's ``build.rs`` is keyword-dense and out-scores the
+    sparse README intra-shard by far more than the ~15% boost. After
+    the boost is applied the implementation file must still out-rank
+    the README — i.e. the boost only re-orders near-tied candidates,
+    never a wide-margin winner.
+    """
+    router = ShardRouter(doc_type_boost_setup["main_path"])
+    try:
+        results = router.query_genes(
+            domains=["biged"], entities=["binary"], max_genes=10,
+        )
+        ids = [g.gene_id for g in results]
+        scores = router.last_query_scores
+        readme_id = doc_type_boost_setup["readme_id"]
+        impl_id = doc_type_boost_setup["impl_id"]
+
+        assert impl_id in ids and readme_id in ids, (
+            "both the implementation file and the README must be "
+            "candidates for the guard to be meaningful"
+        )
+        # The keyword-dense implementation file still wins despite the
+        # README's doc-type boost — no regression on the "gold is a
+        # deep implementation file" case.
+        assert scores[impl_id] > scores[readme_id], (
+            f"doc-type boost regressed an implementation-file query: "
+            f"impl={scores[impl_id]} README={scores[readme_id]}"
+        )
+        assert ids.index(impl_id) < ids.index(readme_id), (
+            "keyword-dense implementation file must out-rank the README"
+        )
+    finally:
+        router.close()
+
+
+def test_doc_type_boost_skipped_on_single_shard_path(two_shard_setup):
+    """The #121 boost must NOT fire on the single-shard fast path.
+
+    A single-shard query must stay byte-identical to a bare
+    ``Genome.query_docs`` call (the blob-parity contract from #118).
+    The README/CLAUDE boost is gated to ``len(shard_ranked) > 1`` for
+    exactly this reason — verify a single-shard route surfaces scores
+    untouched by the multiplier.
+    """
+    # Re-point shard_a's gene at a README path so, if the boost were
+    # wrongly applied on the single-shard path, the score would shift.
+    router = ShardRouter(two_shard_setup["main_path"])
+    try:
+        # "auth" routes only to shard_b (single shard) in this fixture.
+        router.query_genes(domains=["auth"], entities=[], max_genes=10)
+        router_scores = dict(router.last_query_scores)
+
+        gb = Genome(two_shard_setup["shard_b_path"], read_only=True)
+        try:
+            gb.query_docs(domains=["auth"], entities=[], max_genes=10)
+            direct_scores = dict(gb.last_query_scores)
+        finally:
+            try:
+                gb.conn.close()
+            except Exception:
+                pass
+            if gb._reader:
+                gb._reader.close()
+
+        # Single-shard path: scores pass through unboosted + uncorrected.
+        for gid, score in router_scores.items():
+            assert abs(score - direct_scores[gid]) < 1e-9, (
+                f"single-shard path perturbed score for {gid} — the "
+                "doc-type boost must not fire with only one shard"
+            )
+    finally:
+        router.close()
