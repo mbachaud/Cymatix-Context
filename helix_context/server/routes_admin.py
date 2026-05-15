@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import os
 from typing import Dict, Optional
 
 from fastapi import FastAPI, HTTPException, Request
@@ -459,6 +460,11 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
         return {
             "status": status,
             "message": message,
+            # OS pid of the process answering this request. Lets callers
+            # (e.g. the bench orchestrator's _wait_healthy) confirm they
+            # are talking to the process they just spawned, not a stale
+            # server that lost a port-bind race. See issue #127.
+            "pid": os.getpid(),
             "ribosome": ribosome_model,
             "ribosome_backend": config.ribosome.effective_backend,
             "ribosome_configured_backend": configured_backend,
