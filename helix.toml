@@ -426,6 +426,16 @@ slate = ["answer_slate", "kv_facts", "front_loaded", "extraction", "moe"]
 decoder = ["decoder_mode", "condensed", "moe", "ribosome_prompt", "instructions"]
 maintenance = ["admin", "vacuum", "refresh", "checkpoint", "compact"]
 
+# Fix #124: unmapped query tokens from sharded-bench misses. Each key is a
+# token produced by extract_query_signals() for a documented miss query that
+# previously had NO synonym entry — so it could only match via raw FTS.
+fleet = ["biged", "biged-rs", "agents", "workers", "supervisor", "skills"]
+ribosome = ["decoder", "ribosome_prompt", "compressor", "splice", "budget", "tokens"]
+expression = ["pipeline", "stages", "steps", "expressed_context", "decoder"]
+agents = ["agent", "fleet", "conductor", "worker", "orchestration", "biged"]
+dashboard = ["port", "ui", "frontend", "server", "fleet"]
+tables = ["database", "db", "sqlite", "schema", "ddl"]
+
 # ── Vault export (Obsidian) — opt-in, off by default ────────────────────
 # Renders the genome as a browsable markdown vault for operators.
 # v1: read-only export + diagnostic /context traces. Curation/inbox in v1.1.
