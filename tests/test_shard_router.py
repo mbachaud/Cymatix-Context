@@ -738,3 +738,98 @@ def test_genome_term_doc_frequencies_returns_zero_for_unindexed():
             g.conn.close()
             if g._reader:
                 g._reader.close()
+
+
+# ── Bench determinism — Tier 1 fixes (race + hash randomization) ─────────
+
+
+def test_route_tiebreak_by_shard_name_ascending(tmp_path):
+    """``route()`` must return shards with equal hit counts in
+    ``shard_name`` ASC order.
+
+    Before the fix, ``ORDER BY hits DESC`` left ties up to whatever
+    SQLite happened to pick — different rebuilds + WAL checkpoints
+    could produce a different fan-out order. The merge in
+    ``query_genes`` is first-shard-wins on ties so a flapping route
+    order is observable downstream.
+    """
+    import json
+    from helix_context.shard_schema import (
+        init_main_db,
+        open_main_db,
+        register_shard,
+        upsert_fingerprint,
+    )
+
+    root = tmp_path
+    main_path = str(root / "main.db")
+
+    # Three shards each with exactly one fingerprint mentioning "auth".
+    # All hit counts will be tied at 1, so the only differentiator is the
+    # ORDER BY tie-breaker.
+    main = open_main_db(main_path)
+    init_main_db(main)
+    for name in ["shard_z", "shard_a", "shard_m"]:
+        path = str(root / f"{name}.db")
+        register_shard(main, name, "reference", path, gene_count=1)
+        upsert_fingerprint(
+            main, gene_id=f"gid_{name}", shard_name=name,
+            source_id=f"/{name}/doc.md",
+            domains_json=json.dumps(["auth"]),
+            entities_json=json.dumps([]),
+            key_values_json="[]",
+        )
+    main.close()
+
+    router = ShardRouter(main_path=main_path)
+    try:
+        # Auth query matches all three shards with hits=1. Result must be
+        # alphabetical, not insertion-order.
+        ordered = router.route(domains=["auth"], entities=[])
+        assert ordered == ["shard_a", "shard_m", "shard_z"], (
+            f"expected ascending shard_name tie-break, got {ordered}"
+        )
+
+        # Repeat 5x — the answer must not flap.
+        for _ in range(5):
+            again = router.route(domains=["auth"], entities=[])
+            assert again == ordered
+    finally:
+        router.close()
+
+
+def test_router_query_genes_holds_lock_on_last_query_scores(two_shard_setup):
+    """``ShardRouter.query_genes`` must publish ``last_query_scores`` and
+    ``last_tier_contributions`` under ``_last_query_scores_lock`` so
+    concurrent /context calls can snapshot a consistent pair.
+    """
+    import threading
+
+    router = ShardRouter(two_shard_setup["main_path"])
+    try:
+        assert hasattr(router, "_last_query_scores_lock"), (
+            "router must own a lock to serialize last_query_scores writes"
+        )
+        assert isinstance(router._last_query_scores_lock, type(threading.Lock())), (
+            "lock attribute must be a threading.Lock"
+        )
+
+        # Drive a real query so the published-state code path actually runs
+        # (matches what the bench observes).
+        results = router.query_genes(
+            domains=["auth"],
+            entities=["jwt"],
+            max_genes=5,
+        )
+        assert len(results) >= 1
+
+        # The lock should be reusable post-call — i.e. it was released
+        # cleanly inside query_genes, not held forever.
+        acquired = router._last_query_scores_lock.acquire(blocking=False)
+        try:
+            assert acquired, "lock not released after query_genes returned"
+        finally:
+            if acquired:
+                router._last_query_scores_lock.release()
+    finally:
+        router.close()
