@@ -50,6 +50,7 @@ import json
 import logging
 import os
 import signal
+import socket
 import subprocess
 import sys
 import time
@@ -69,6 +70,13 @@ DEFAULT_HEALTH_POLL_S = 0.5
 DEFAULT_SHUTDOWN_TIMEOUT_S = 10.0
 DEFAULT_SWAP_TIMEOUT_S = 60.0
 DEFAULT_REQUEST_TIMEOUT_S = 15.0
+# How long to wait for the OS to release the listen port after a stop()
+# before spawning the replacement uvicorn. On Windows the socket can
+# linger (TIME_WAIT, or a child the OS hasn't fully reaped) past
+# proc.wait() returning, so the next bind loses the race with Errno
+# 10048. See issue #127.
+DEFAULT_PORT_FREE_TIMEOUT_S = 15.0
+DEFAULT_PORT_FREE_POLL_S = 0.25
 
 # Windows: prevent console-window flash on subprocess spawn (per CLAUDE.md
 # global "Subprocess Safety (Windows)" rule).
@@ -86,12 +94,19 @@ class Fixture:
 
     ``read_only`` defaults True so a bench run can't accidentally mutate
     the fixture (PR #91 ``read_only`` guard).
+
+    ``expect_nonempty`` defaults True: every fixture in the bench matrix
+    has thousands of genes, so a server reporting ``genes=0`` after a
+    swap/restart is always a harness failure (issue #127 — sharded DB
+    opened in blob mode). Set False only for a deliberately empty
+    fixture.
     """
     name: str
     db: str
     sharded: bool = False
     read_only: bool = True
     extra_env: dict[str, str] = field(default_factory=dict)
+    expect_nonempty: bool = True
 
 
 @dataclass
@@ -177,6 +192,10 @@ class BenchServer(AbstractContextManager["BenchServer"]):
             return self.switch(fixture)
 
         t0 = time.time()
+        # Issue #127: even on a cold start, a leftover uvicorn from a
+        # crashed prior run can still hold the port. Confirm it is free
+        # (or fail loudly) before spawning into a possible bind race.
+        self._wait_port_free()
         self._spawn(fixture)
         self._wait_healthy()
 
@@ -186,6 +205,7 @@ class BenchServer(AbstractContextManager["BenchServer"]):
         swap = self._post_swap(fixture)
         elapsed = time.time() - t0
         self._current = fixture
+        self._guard_genes(fixture, swap)
         return SwapResult(
             fixture=fixture, mechanism="start",
             elapsed_s=round(elapsed, 3),
@@ -210,25 +230,49 @@ class BenchServer(AbstractContextManager["BenchServer"]):
         return self._hot_swap(fixture)
 
     def stop(self) -> None:
-        """Terminate uvicorn. Best-effort; kills if graceful exit fails."""
+        """Terminate uvicorn and confirm the process tree is gone.
+
+        ``proc.terminate()`` only kills the named pid. uvicorn under
+        ``python -m uvicorn`` can spawn child/worker processes; on Windows
+        a surviving child keeps the listen socket bound, so the next
+        ``_spawn()`` loses the bind race (Errno 10048) and the orchestrator
+        ends up talking to a stale server. This kills the whole tree and
+        verifies teardown before returning. See issue #127.
+        """
         if self._proc is None:
             return
         proc, self._proc = self._proc, None
         if proc.poll() is not None:
             self._close_log()
+            self._current = None
             return
         try:
             if os.name == "nt":
-                # CTRL_BREAK won't reach the child without
-                # CREATE_NEW_PROCESS_GROUP at spawn time; terminate() maps
-                # to TerminateProcess which is the right hammer on Windows.
-                proc.terminate()
+                # taskkill /T walks and kills the whole process tree;
+                # /F forces it. terminate() (TerminateProcess) would only
+                # reach the top-level pid and orphan any uvicorn children
+                # that may still hold port %s.
+                self._taskkill_tree(proc.pid)
+                try:
+                    proc.wait(timeout=self.shutdown_timeout_s)
+                except subprocess.TimeoutExpired:
+                    log.warning(
+                        "uvicorn pid=%s still alive after taskkill /T /F; "
+                        "falling back to proc.kill()", proc.pid,
+                    )
+                    proc.kill()
             else:
                 proc.send_signal(signal.SIGINT)
-            proc.wait(timeout=self.shutdown_timeout_s)
-        except subprocess.TimeoutExpired:
-            log.warning("uvicorn did not exit cleanly; killing pid=%s", proc.pid)
-            proc.kill()
+                try:
+                    proc.wait(timeout=self.shutdown_timeout_s)
+                except subprocess.TimeoutExpired:
+                    log.warning(
+                        "uvicorn did not exit on SIGINT; killing pid=%s", proc.pid,
+                    )
+                    proc.kill()
+            # Reap so the OS releases the pid + socket handles. On POSIX
+            # this prevents a zombie holding the descriptor; on Windows it
+            # ensures the handle close completes before we poll the port.
             try:
                 proc.wait(timeout=5.0)
             except subprocess.TimeoutExpired:
@@ -238,6 +282,38 @@ class BenchServer(AbstractContextManager["BenchServer"]):
         finally:
             self._close_log()
             self._current = None
+        # Loud failure beats a silent stale-server attach: if the process
+        # is somehow still alive, callers must not spawn a replacement.
+        if proc.poll() is None:
+            raise BenchServerError(
+                f"failed to terminate uvicorn pid={proc.pid}; "
+                "refusing to spawn a replacement into a live process"
+            )
+
+    @staticmethod
+    def _taskkill_tree(pid: int) -> None:
+        """Windows-only: kill ``pid`` and its whole process tree.
+
+        Uses ``taskkill /T /F``. ``CREATE_NO_WINDOW`` keeps the helper from
+        flashing a console (project Windows subprocess convention).
+        """
+        try:
+            res = subprocess.run(
+                ["taskkill", "/T", "/F", "/PID", str(pid)],
+                capture_output=True, text=True,
+                creationflags=_NO_WINDOW,
+                timeout=15.0,
+            )
+            if res.returncode != 0:
+                # rc 128 == process not found; benign if it already exited.
+                log.warning(
+                    "taskkill /T /F /PID %s exited rc=%s: %s",
+                    pid, res.returncode, (res.stderr or res.stdout or "").strip(),
+                )
+        except subprocess.TimeoutExpired:
+            log.warning("taskkill /T /F /PID %s timed out", pid)
+        except Exception:
+            log.warning("taskkill /T /F /PID %s raised", pid, exc_info=True)
 
     def health(self) -> dict[str, Any]:
         """Fetch ``/health``. Raises if unreachable."""
@@ -283,19 +359,67 @@ class BenchServer(AbstractContextManager["BenchServer"]):
             close_fds=(os.name != "nt"),
         )
 
+    def _wait_port_free(
+        self, timeout_s: float = DEFAULT_PORT_FREE_TIMEOUT_S,
+    ) -> None:
+        """Block until ``(host, port)`` refuses connections, then return.
+
+        ``stop()`` returning does not guarantee the OS has released the
+        listen socket — on Windows it can linger in TIME_WAIT or wait on a
+        not-fully-reaped child. Spawning the replacement uvicorn before the
+        port is free makes it lose the bind race (Errno 10048); the new
+        process dies and ``_wait_healthy`` then talks to the *stale*
+        server. So we poll until ``connect_ex`` no longer returns 0 (0 ==
+        a listener accepted the connection == port still occupied).
+
+        Raises ``BenchServerError`` on timeout rather than letting the
+        caller spawn into a doomed bind. See issue #127.
+        """
+        deadline = time.time() + timeout_s
+        while time.time() < deadline:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+                sock.settimeout(1.0)
+                # connect_ex returns 0 only if something is *listening*.
+                # Anything else (ECONNREFUSED / WSAECONNREFUSED, timeout)
+                # means the port is free for us to bind.
+                if sock.connect_ex((self.host, self.port)) != 0:
+                    return
+            time.sleep(DEFAULT_PORT_FREE_POLL_S)
+        raise BenchServerError(
+            f"port {self.host}:{self.port} still occupied after "
+            f"{timeout_s}s; refusing to spawn uvicorn into a doomed bind "
+            "(a stale server is likely still holding the socket)"
+        )
+
     def _wait_healthy(self) -> None:
         deadline = time.time() + self.health_timeout_s
         last_err: Optional[Exception] = None
+        expected_pid = self._proc.pid if self._proc is not None else None
         while time.time() < deadline:
             if self._proc is not None and self._proc.poll() is not None:
                 rc = self._proc.returncode
                 raise BenchServerError(f"uvicorn exited during startup (rc={rc})")
             try:
-                self.health()
-                return
+                payload = self.health()
             except Exception as exc:
                 last_err = exc
                 time.sleep(DEFAULT_HEALTH_POLL_S)
+                continue
+            # Identity check: a stale uvicorn that won the bind race will
+            # also answer /health. If the responder's pid is not the
+            # process we just spawned, fail loudly — proceeding would run
+            # the whole bench against the wrong (e.g. blob-mode) server
+            # and silently report genes=0. See issue #127.
+            responder_pid = payload.get("pid")
+            if expected_pid is not None and responder_pid is not None:
+                if int(responder_pid) != int(expected_pid):
+                    raise BenchServerError(
+                        f"/health answered by pid={responder_pid}, but the "
+                        f"spawned uvicorn is pid={expected_pid}; a stale "
+                        "server is holding the port. Aborting rather than "
+                        "running the bench against the wrong process."
+                    )
+            return
         raise BenchServerError(
             f"uvicorn did not become healthy within {self.health_timeout_s}s "
             f"(last error: {last_err})"
@@ -305,6 +429,7 @@ class BenchServer(AbstractContextManager["BenchServer"]):
         t0 = time.time()
         result = self._post_swap(fixture)
         self._current = fixture
+        self._guard_genes(fixture, result)
         return SwapResult(
             fixture=fixture, mechanism="hot_swap",
             elapsed_s=round(time.time() - t0, 3),
@@ -319,10 +444,15 @@ class BenchServer(AbstractContextManager["BenchServer"]):
         )
         t0 = time.time()
         self.stop()
+        # Issue #127: do not spawn until the OS has actually released the
+        # listen port. Otherwise the new uvicorn loses the bind race and
+        # _wait_healthy attaches to the stale (wrong-mode) server.
+        self._wait_port_free()
         self._spawn(fixture)
         self._wait_healthy()
         swap = self._post_swap(fixture)
         self._current = fixture
+        self._guard_genes(fixture, swap)
         return SwapResult(
             fixture=fixture, mechanism="restart",
             elapsed_s=round(time.time() - t0, 3),
@@ -341,6 +471,30 @@ class BenchServer(AbstractContextManager["BenchServer"]):
             raise BenchServerError(
                 f"hot-swap to {fixture.name} ({fixture.db}) failed: {exc}"
             ) from exc
+
+    @staticmethod
+    def _guard_genes(fixture: Fixture, swap: dict[str, Any]) -> None:
+        """Fail loudly if a non-empty fixture reports ``genes=0``.
+
+        A ``start``/``restart``/``hot_swap`` that yields zero genes for a
+        fixture the manifest says has content is always a harness failure
+        — the canonical case (issue #127) is a sharded routing DB opened
+        in blob mode because ``HELIX_USE_SHARDS`` did not take effect, so
+        ``stats()`` reads the empty local ``genes`` table. Without this
+        guard the bench silently produces a 0/N result that looks like a
+        retrieval regression.
+        """
+        if not fixture.expect_nonempty:
+            return
+        genes = int(swap.get("genes", 0))
+        if genes == 0:
+            raise BenchServerError(
+                f"fixture {fixture.name} ({fixture.db}) reported genes=0 "
+                "after swap, but the manifest marks it non-empty. This is a "
+                "harness failure (likely a sharded DB opened in blob mode — "
+                "HELIX_USE_SHARDS not in effect, or a stale server answered). "
+                "Refusing to run a bench that would silently score 0/N."
+            )
 
     def _http(
         self,
@@ -391,6 +545,12 @@ def load_manifest(path: Path) -> list[Fixture]:
     Each entry must have ``name`` and ``db``. Optional: ``sharded`` (bool,
     default False), ``read_only`` (bool, default True), ``env`` (dict of
     extra env vars to inject when this fixture is active).
+
+    The optional ``_genes`` metadata key (the matrix manifest records the
+    expected gene count there) drives the ``expect_nonempty`` guard: an
+    entry with ``"_genes": 0`` is treated as a deliberately empty fixture
+    and exempt from the ``genes=0`` failure (issue #127). Any other value
+    — or its absence — keeps the default non-empty expectation.
     """
     with path.open("r", encoding="utf-8") as f:
         raw = json.load(f)
@@ -400,12 +560,16 @@ def load_manifest(path: Path) -> list[Fixture]:
     for i, entry in enumerate(raw):
         if "name" not in entry or "db" not in entry:
             raise ValueError(f"fixture #{i} missing 'name' or 'db'")
+        # Only an explicit "_genes": 0 marks a fixture as legitimately
+        # empty. Absent metadata defaults to expecting content.
+        expect_nonempty = entry.get("_genes", None) != 0
         fixtures.append(Fixture(
             name=str(entry["name"]),
             db=str(entry["db"]),
             sharded=bool(entry.get("sharded", False)),
             read_only=bool(entry.get("read_only", True)),
             extra_env={str(k): str(v) for k, v in (entry.get("env") or {}).items()},
+            expect_nonempty=expect_nonempty,
         ))
     return fixtures
 
