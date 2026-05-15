@@ -80,47 +80,111 @@ CONTEXT_TIMEOUT_S = 30        # /context retrieval-only call
 # ── Needles (copied from benchmarks/bench_needle.py so this script is
 #     standalone and the runner doesn't depend on the bench dir on PYTHONPATH).
 
+#
+# ``gold_source`` is a list of case-insensitive path substrings; a needle
+# counts as ``gold_delivered`` when ANY entry appears (substring match,
+# forward-slash + lowercased) in ``agent.citations[].source``. Multi-valid
+# gold avoids penalizing retrieval for finding an equally valid answer in
+# a non-canonical file (see docs/benchmarks/MULTI_VALID_GOLD.md for the
+# per-needle curation rationale).
+#
+# Audit-trail rule: the historically labeled gold MUST stay first in the
+# list so older JSONL files and analyses remain comparable. Additional
+# valid sources are appended.
+#
+# IMPORTANT: do NOT add ``helix-context/docs/benchmarks/BENCHMARKS.md`` to
+# any needle. That file is the bench answer key — adding it as gold would
+# make retrieval succeed whenever the answer-key doc is retrieved, which
+# is circular and inflates scores.
+
 NEEDLES = [
     {"name": "helix_port",
      "query": "What port does the Helix proxy server listen on?",
      "expected": "11437", "accept": ["11437"],
-     "gold_source": ["helix-context/helix.toml"]},
+     "gold_source": [
+         "helix-context/helix.toml",
+         "helix-context/README.md",
+         "helix-context/CLAUDE.md",
+         "helix-context/docs/SETUP.md",
+         "helix-context/docs/TROUBLESHOOTING.md",
+         "helix-context/docs/api/endpoints.md",
+     ]},
     {"name": "scorerift_threshold",
      "query": "What is the divergence threshold that triggers alerts in ScoreRift?",
      "expected": "0.15", "accept": ["0.15", ".15"],
-     "gold_source": ["two-brain-audit/README.md"]},
+     "gold_source": [
+         "two-brain-audit/README.md",
+         "two-brain-audit/docs/QUICKSTART.md",
+         "two-brain-audit/src/scorerift/reconciler.py",
+         "two-brain-audit/src/scorerift/engine.py",
+     ]},
     {"name": "biged_skills_count",
      "query": "How many skills does the BigEd fleet have?",
      "expected": "125", "accept": ["125", "129"],
-     "gold_source": ["Education/CLAUDE.md"]},
+     "gold_source": [
+         "Education/CLAUDE.md",
+         "Education/FRAMEWORK_BLUEPRINT.md",
+         "Education/ROADMAP.md",
+         "Education/fleet/CLAUDE.md",
+         "Education/fleet/knowledge/wiki/overview.md",
+         "Education/fleet/knowledge/wiki/architecture.md",
+     ]},
     {"name": "bookkeeper_monetary",
      "query": "What type should be used for monetary values in BookKeeper instead of float?",
      "expected": "Decimal", "accept": ["decimal", "Decimal"],
-     "gold_source": ["BookKeeper/CLAUDE.md"]},
+     "gold_source": [
+         "BookKeeper/CLAUDE.md",
+         "BookKeeper/docs/planning/GAPS.md",
+         "BookKeeper/bookkeeper/storage/db.py",
+     ]},
     {"name": "helix_pipeline_steps",
      "query": "How many steps are in the Helix expression pipeline?",
      "expected": "6", "accept": ["6", "six"],
-     "gold_source": ["helix-context/CLAUDE.md", "helix-context/README.md"]},
+     "gold_source": [
+         "helix-context/CLAUDE.md",
+         "helix-context/README.md",
+     ]},
     {"name": "biged_rust_binary_size",
      "query": "What is the binary size of the Rust BigEd build in MB?",
      "expected": "11", "accept": ["11", "11mb", "11 mb"],
-     "gold_source": ["Education/biged-rs/README.md"]},
+     "gold_source": [
+         "Education/biged-rs/README.md",
+         "Education/biged-rs/DEPLOYMENT.md",
+         "Education/fleet/knowledge/wiki/architecture.md",
+     ]},
     {"name": "genome_compression_target",
      "query": "What is the target compression ratio for Helix Context?",
      "expected": "5x", "accept": ["5x", "5:1", "5 to 1"],
-     "gold_source": ["helix-context/README.md", "helix-context/docs"]},
+     "gold_source": [
+         "helix-context/README.md",
+         "helix-context/docs",
+         "helix-context/BENCHMARK_NOTES.md",
+     ]},
     {"name": "scorerift_preset_dimensions",
      "query": "How many dimensions does the Python preset in ScoreRift check?",
      "expected": "8", "accept": ["8", "eight"],
-     "gold_source": ["two-brain-audit/README.md"]},
+     "gold_source": [
+         "two-brain-audit/README.md",
+         "two-brain-audit/docs/ARCHITECTURE.md",
+         "two-brain-audit/src/scorerift/presets/python_project.py",
+     ]},
     {"name": "helix_ribosome_budget",
      "query": "How many tokens are allocated for the ribosome decoder prompt?",
      "expected": "3000", "accept": ["3000", "3k", "3,000"],
-     "gold_source": ["helix-context/helix.toml", "helix-context/README.md"]},
+     "gold_source": [
+         "helix-context/helix.toml",
+         "helix-context/README.md",
+         "helix-context/docs/config-reference.md",
+     ]},
     {"name": "biged_default_model",
      "query": "What is the default local model used by BigEd for conductor tasks?",
      "expected": "qwen3", "accept": ["qwen3", "qwen3:4b", "qwen"],
-     "gold_source": ["Education/CLAUDE.md"]},
+     "gold_source": [
+         "Education/CLAUDE.md",
+         "Education/FRAMEWORK_BLUEPRINT.md",
+         "Education/OPERATIONS.md",
+         "Education/fleet/fleet.toml",
+     ]},
 ]
 
 

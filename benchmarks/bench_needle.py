@@ -41,6 +41,16 @@ HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
 # diagnostics. Waude diagnostic 2026-04-17 showed the old pure-substring
 # check inflated delivery by counting URL port numbers and compression
 # metadata as hits.
+#
+# Multi-valid-gold curation (2026-05-14): `gold_source` is an ANY-match
+# list -- if ANY entry matches a delivered citation, the needle counts
+# as gold-delivered. The historically labeled gold (the file in `source`)
+# is preserved as the first list entry so older JSONL captures remain
+# comparable. Per-needle rationale in docs/benchmarks/MULTI_VALID_GOLD.md.
+#
+# DO NOT add `helix-context/docs/benchmarks/BENCHMARKS.md` (the bench
+# answer-key) to any needle's gold_source -- it would inflate the metric
+# circularly.
 NEEDLES = [
     {
         "name": "helix_port",
@@ -48,7 +58,14 @@ NEEDLES = [
         "expected": "11437",
         "accept": ["11437"],
         "source": "helix-context/helix.toml",
-        "gold_source": ["helix-context/helix.toml"],
+        "gold_source": [
+            "helix-context/helix.toml",
+            "helix-context/README.md",
+            "helix-context/CLAUDE.md",
+            "helix-context/docs/SETUP.md",
+            "helix-context/docs/TROUBLESHOOTING.md",
+            "helix-context/docs/api/endpoints.md",
+        ],
     },
     {
         "name": "scorerift_threshold",
@@ -56,7 +73,12 @@ NEEDLES = [
         "expected": "0.15",
         "accept": ["0.15", ".15"],
         "source": "two-brain-audit/README.md",
-        "gold_source": ["two-brain-audit/README.md"],
+        "gold_source": [
+            "two-brain-audit/README.md",
+            "two-brain-audit/docs/QUICKSTART.md",
+            "two-brain-audit/src/scorerift/reconciler.py",
+            "two-brain-audit/src/scorerift/engine.py",
+        ],
     },
     {
         "name": "biged_skills_count",
@@ -64,7 +86,14 @@ NEEDLES = [
         "expected": "125",
         "accept": ["125", "129"],  # count changes between versions
         "source": "Education/CLAUDE.md",
-        "gold_source": ["Education/CLAUDE.md"],
+        "gold_source": [
+            "Education/CLAUDE.md",
+            "Education/FRAMEWORK_BLUEPRINT.md",
+            "Education/ROADMAP.md",
+            "Education/fleet/CLAUDE.md",
+            "Education/fleet/knowledge/wiki/overview.md",
+            "Education/fleet/knowledge/wiki/architecture.md",
+        ],
     },
     {
         "name": "bookkeeper_monetary",
@@ -72,7 +101,11 @@ NEEDLES = [
         "expected": "Decimal",
         "accept": ["decimal", "Decimal"],
         "source": "BookKeeper/CLAUDE.md",
-        "gold_source": ["BookKeeper/CLAUDE.md"],
+        "gold_source": [
+            "BookKeeper/CLAUDE.md",
+            "BookKeeper/docs/planning/GAPS.md",
+            "BookKeeper/bookkeeper/storage/db.py",
+        ],
     },
     {
         "name": "helix_pipeline_steps",
@@ -80,7 +113,10 @@ NEEDLES = [
         "expected": "6",
         "accept": ["6", "six"],
         "source": "helix-context/README.md",
-        "gold_source": ["helix-context/CLAUDE.md", "helix-context/README.md"],
+        "gold_source": [
+            "helix-context/CLAUDE.md",
+            "helix-context/README.md",
+        ],
     },
     {
         "name": "biged_rust_binary_size",
@@ -88,7 +124,11 @@ NEEDLES = [
         "expected": "11",
         "accept": ["11", "11mb", "11 mb"],
         "source": "Education/biged-rs/README.md",
-        "gold_source": ["Education/biged-rs/README.md"],
+        "gold_source": [
+            "Education/biged-rs/README.md",
+            "Education/biged-rs/DEPLOYMENT.md",
+            "Education/fleet/knowledge/wiki/architecture.md",
+        ],
     },
     {
         "name": "genome_compression_target",
@@ -96,7 +136,11 @@ NEEDLES = [
         "expected": "5x",
         "accept": ["5x", "5:1", "5 to 1"],
         "source": "helix-context design spec",
-        "gold_source": ["helix-context/README.md", "helix-context/docs"],
+        "gold_source": [
+            "helix-context/README.md",
+            "helix-context/docs",
+            "helix-context/BENCHMARK_NOTES.md",
+        ],
     },
     {
         "name": "scorerift_preset_dimensions",
@@ -104,7 +148,11 @@ NEEDLES = [
         "expected": "8",
         "accept": ["8", "eight"],
         "source": "two-brain-audit/README.md",
-        "gold_source": ["two-brain-audit/README.md"],
+        "gold_source": [
+            "two-brain-audit/README.md",
+            "two-brain-audit/docs/ARCHITECTURE.md",
+            "two-brain-audit/src/scorerift/presets/python_project.py",
+        ],
     },
     {
         "name": "helix_ribosome_budget",
@@ -112,7 +160,11 @@ NEEDLES = [
         "expected": "3000",
         "accept": ["3000", "3k", "3,000"],
         "source": "helix-context design spec",
-        "gold_source": ["helix-context/helix.toml", "helix-context/README.md"],
+        "gold_source": [
+            "helix-context/helix.toml",
+            "helix-context/README.md",
+            "helix-context/docs/config-reference.md",
+        ],
     },
     {
         "name": "biged_default_model",
@@ -120,7 +172,12 @@ NEEDLES = [
         "expected": "qwen3",
         "accept": ["qwen3", "qwen3:4b", "qwen"],
         "source": "Education/CLAUDE.md",
-        "gold_source": ["Education/CLAUDE.md"],
+        "gold_source": [
+            "Education/CLAUDE.md",
+            "Education/FRAMEWORK_BLUEPRINT.md",
+            "Education/OPERATIONS.md",
+            "Education/fleet/fleet.toml",
+        ],
     },
 ]
 
