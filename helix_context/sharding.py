@@ -216,8 +216,14 @@ class ShardedGenomeAdapter:
         and renaming the adapter can ship independently.
         """
         genes = self._router.query_genes(*args, **kwargs)
-        self.last_query_scores = dict(self._router.last_query_scores)
-        self.last_tier_contributions = dict(self._router.last_tier_contributions)
+        # Snapshot router state under both locks (router's writes are
+        # held inside ShardRouter.query_genes; ours guards readers on
+        # the adapter itself). Without this, concurrent /context calls
+        # can clobber each other's last_query_scores between the
+        # router-finishes-write and adapter-finishes-copy gap.
+        with self._last_query_scores_lock:
+            self.last_query_scores = dict(self._router.last_query_scores)
+            self.last_tier_contributions = dict(self._router.last_tier_contributions)
         return genes
 
     # Back-compat alias so older callers (and the existing shard-router

@@ -311,7 +311,16 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
 
         # Agent-mode fields: structured metadata for programmatic use
         try:
-            scores = helix.genome.last_query_scores or {}
+            # Snapshot scores under the lock so we don't see a torn view
+            # of last_query_scores while another /context call is
+            # mid-write (the writer holds the same lock; see
+            # ShardRouter.query_genes / ShardedGenomeAdapter.query_docs).
+            _lock = getattr(helix.genome, "_last_query_scores_lock", None)
+            if _lock is not None:
+                with _lock:
+                    scores = dict(helix.genome.last_query_scores or {})
+            else:
+                scores = dict(helix.genome.last_query_scores or {})
             # Fetch source_id for retrieved documents for citation
             gene_ids = window.expressed_gene_ids or []
             citations = []
@@ -751,9 +760,19 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
                 status_code=500,
             )
 
-        base_scores = dict(helix.genome.last_query_scores or {})
+        # Snapshot scores + tier contributions atomically under the
+        # writer lock so the (base_scores, last_tier_contributions) pair
+        # comes from the same /context call.
+        _lock = getattr(helix.genome, "_last_query_scores_lock", None)
+        if _lock is not None:
+            with _lock:
+                base_scores = dict(helix.genome.last_query_scores or {})
+                _tier_contribs = dict(getattr(helix.genome, "last_tier_contributions", {}) or {})
+        else:
+            base_scores = dict(helix.genome.last_query_scores or {})
+            _tier_contribs = dict(getattr(helix.genome, "last_tier_contributions", {}) or {})
         merged_tiers = _merge_tier_contributions(
-            getattr(helix.genome, "last_tier_contributions", {}) or {},
+            _tier_contribs,
             refiner_contrib,
         )
 

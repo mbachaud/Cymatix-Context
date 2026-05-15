@@ -30,6 +30,7 @@ from __future__ import annotations
 import logging
 import math
 import os
+import threading
 from typing import Dict, List, Optional, Tuple
 
 from .genome import Genome
@@ -202,6 +203,12 @@ class ShardRouter:
         # callers can use either interchangeably.
         self.last_query_scores: Dict[str, float] = {}
         self.last_tier_contributions: Dict[str, Dict[str, float]] = {}
+        # Guards last_query_scores / last_tier_contributions writes from
+        # racing concurrent /context calls. KnowledgeStore has the same
+        # lock on the same attributes (see knowledge_store.py:479) — the
+        # router needs to match that contract so the adapter snapshot in
+        # ShardedGenomeAdapter.query_docs sees a consistent pair.
+        self._last_query_scores_lock = threading.Lock()
 
     # ── Shard lifecycle ─────────────────────────────────────────────
 
@@ -255,7 +262,12 @@ class ShardRouter:
             "FROM fingerprint_index "
             f"WHERE {' OR '.join(like_clauses)} "
             "GROUP BY shard_name "
-            "ORDER BY hits DESC"
+            # shard_name ASC tiebreak: without it, two shards with equal
+            # hit counts come back in whatever insertion/index order
+            # SQLite happens to pick, which differs across rebuilds and
+            # WAL checkpoints. Deterministic fan-out order matters because
+            # the merge in query_genes is "first-shard-wins on ties".
+            "ORDER BY hits DESC, shard_name ASC"
         )
         rows = self.main_conn.execute(sql, params).fetchall()
         return [r["shard_name"] for r in rows]
@@ -295,8 +307,9 @@ class ShardRouter:
         """
         shard_names = self.route(domains, entities)
         if not shard_names:
-            self.last_query_scores = {}
-            self.last_tier_contributions = {}
+            with self._last_query_scores_lock:
+                self.last_query_scores = {}
+                self.last_tier_contributions = {}
             return []
 
         from .retrieval.fusion import Fuser, DEFAULT_RRF_K
@@ -473,10 +486,11 @@ class ShardRouter:
         # IDF-corrected score (which is what downstream tier_logic /
         # bench harness watch). last_tier_contributions is unchanged
         # from the source shard's per-tier breakdown.
-        self.last_query_scores = {gid: corrected[gid] for gid in ranked_ids}
-        self.last_tier_contributions = {
-            gid: merged_tier.get(gid, {}) for gid in ranked_ids
-        }
+        with self._last_query_scores_lock:
+            self.last_query_scores = {gid: corrected[gid] for gid in ranked_ids}
+            self.last_tier_contributions = {
+                gid: merged_tier.get(gid, {}) for gid in ranked_ids
+            }
         return [merged[gid] for gid in ranked_ids if gid in merged]
 
     # ── Lifecycle ───────────────────────────────────────────────────

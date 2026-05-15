@@ -1192,7 +1192,12 @@ class KnowledgeStore:
             key = t.lower()
             if key in self.synonym_map:
                 expanded.update(self.synonym_map[key])
-        return list(expanded)
+        # ``sorted`` rather than ``list(set(...))`` so iteration order
+        # is independent of PYTHONHASHSEED. Downstream SQL parameter
+        # ordering and rank tiebreaks become deterministic across
+        # processes (matters when bench replays the same query in a
+        # freshly-spawned uvicorn — see #131).
+        return sorted(expanded)
 
     # ── Authority boosts: distinguish "about X" from "mentions X" ──
 
@@ -2169,10 +2174,13 @@ class KnowledgeStore:
                 log.warning("parent fingerprint aggregation failed", exc_info=True)
 
         # Expose scores + per-tier breakdown for score-gated retrieval in
-        # context_manager + the activation profiler bench.
+        # context_manager + the activation profiler bench. Both writes
+        # need to be under the same lock — concurrent /context calls
+        # would otherwise read a (scores_from_call_A, tiers_from_call_B)
+        # torn pair.
         with self._last_query_scores_lock:
             self.last_query_scores = dict(gene_scores)
-        self.last_tier_contributions = tier_contrib
+            self.last_tier_contributions = tier_contrib
 
         # Emit per-tier contribution telemetry (OTel — no-op when off).
         # One histogram observation per (tier, document) pair; a single

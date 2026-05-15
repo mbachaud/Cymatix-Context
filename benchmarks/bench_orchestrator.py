@@ -260,6 +260,13 @@ class BenchServer(AbstractContextManager["BenchServer"]):
             env["HELIX_USE_SHARDS"] = "1"
         else:
             env.pop("HELIX_USE_SHARDS", None)
+        # Pin PYTHONHASHSEED so set / dict iteration orders stay stable
+        # across uvicorn re-spawns. Belt-and-suspenders defence on top of
+        # the determinism fixes in helix_context (sorted expansion, lock
+        # on last_query_scores, shard-name tiebreak): without it, bench
+        # replays of the same query against the same fixture can drift
+        # purely because the subprocess got a different hash seed.
+        env.setdefault("PYTHONHASHSEED", "0")
         env.update(fixture.extra_env)
 
         if self.log_to:
