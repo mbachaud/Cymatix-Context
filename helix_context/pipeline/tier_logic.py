@@ -109,6 +109,49 @@ def apply_budget_tiers(
     # 2.5 floor on every sharded query.
     skip_absolute_floors = (fusion_mode == "rrf")
 
+    # -- Baseline-normalized ratio for RRF (issue #115 follow-up) --
+    # PR #116 only short-circuited the absolute score floor under RRF; the
+    # ratio gate (legacy ``top/mean``, threshold 1.8) is also BM25-calibrated
+    # and still trips sharded queries. Under RRF the score scale compresses
+    # so the legacy ratio_top/mean collapses to ~1.0-1.8 even on retrieval
+    # with a clearly separated top document (we measured 1.46-1.77 on bench
+    # queries where the blob mode equivalents land in BROAD with content).
+    #
+    # Fix: under RRF, compute a baseline-subtracted ratio
+    #
+    #     norm_ratio = (top - baseline) / (mean - baseline)
+    #
+    # where ``baseline = min(candidate_scores)`` is the noise floor of the
+    # candidate set. This is scale-invariant: multiplying every score by a
+    # constant leaves ``norm_ratio`` unchanged, so the same threshold (1.8)
+    # behaves consistently across additive/RRF. Empirically on
+    # 2026-05-14 medium-sharded probe (post-refiner):
+    #
+    #   query             legacy   norm
+    #   helix_port         1.77    2.02
+    #   biged_skills       1.57    1.61
+    #   scorerift          1.46    2.32
+    #   all-tied           1.00    0.00  (correctly abstains)
+    #   mostly-tied        1.00    1.40  (correctly abstains)
+    #
+    # The norm threshold is held at 1.5 to clear the borderline biged_skills
+    # case (1.61) while still rejecting genuinely-tied score curves
+    # (mostly-tied = 1.40 → abstain). Additive (BM25/blob) keeps the legacy
+    # ratio + 1.8 threshold so blob behavior is byte-identical.
+    ABSTAIN_RATIO_THRESHOLD = 1.8
+    ABSTAIN_RATIO_THRESHOLD_RRF_NORM = 1.5
+    if fusion_mode == "rrf":
+        min_score = min(scores.values())
+        denom = mean_score - min_score
+        if denom > 1e-9:
+            ratio_for_gate = (top_score - min_score) / denom
+        else:
+            ratio_for_gate = 0.0  # degenerate: all candidates tied → abstain
+        ratio_gate_threshold = ABSTAIN_RATIO_THRESHOLD_RRF_NORM
+    else:
+        ratio_for_gate = ratio
+        ratio_gate_threshold = ABSTAIN_RATIO_THRESHOLD
+
     # -- ABSTAIN gate --------------------------------------------------------
     # When retrieval is weak on BOTH the absolute floor AND the ratio,
     # inject a marker-only ContextWindow so the small model answers from
@@ -125,13 +168,13 @@ def apply_budget_tiers(
     # above (set from classifier_result so all branches see it).
     #
     # Under RRF (skip_absolute_floors=True), the absolute-score clause is
-    # bypassed; ratio<1.8 alone gates abstain. This mirrors the TIGHT /
-    # FOCUSED bypass below — same flag, same rationale.
+    # bypassed; the (normalized) ratio gate alone gates abstain. This
+    # mirrors the TIGHT / FOCUSED bypass below — same flag, same rationale.
     FOCUSED_SCORE_FLOOR_FOR_ABSTAIN = cls_floors.abstain_top
     if (
         abstain_enabled
         and (skip_absolute_floors or top_score < FOCUSED_SCORE_FLOOR_FOR_ABSTAIN)
-        and ratio < 1.8
+        and ratio_for_gate < ratio_gate_threshold
     ):
         try:
             from ..telemetry import budget_tier_counter
@@ -140,7 +183,13 @@ def apply_budget_tiers(
             pass
         result.abstain = True
         result.abstain_top_score = top_score
-        result.abstain_ratio = ratio
+        # ``abstain_ratio`` reflects the ratio the gate actually checked
+        # (legacy top/mean under additive, baseline-subtracted under RRF)
+        # so /context telemetry surfaces the right number for diagnosing
+        # which threshold tripped. The legacy ratio is preserved in the
+        # ``ratio`` local for callers that need the byte-identical pre-#115
+        # value via tier debug logs.
+        result.abstain_ratio = ratio_for_gate
         return result
 
     # Confidence tiering (with shadow pool tracking)
