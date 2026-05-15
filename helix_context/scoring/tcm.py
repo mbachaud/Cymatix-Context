@@ -48,6 +48,14 @@ N_DIMS = 20          # Match SEMA dimensionality
 DEFAULT_BETA = 0.5   # Context integration rate
 BONUS_WEIGHT = 0.3   # TCM bonus scaling -- tiebreaker only
 
+# Upper bound on retained item_history entries. The TCM context vector is a
+# running accumulator (see update()), so scoring correctness never depends on
+# history length -- item_history is read only for the first-item check, the
+# `depth` counter (threshold checks: `== 0` in tcm_bonus, `>= 2` in blend.py),
+# and the `item_ids` diagnostic. 64 sits far above every threshold while
+# bounding per-session memory regardless of query count (issue #126).
+ITEM_HISTORY_CAP = 64
+
 _HASH_SEED = b"helix-tcm"  # Deterministic seed for tag->dimension hashing
 
 
@@ -158,6 +166,18 @@ class SessionContext:
         # call in a session -> fall back to raw input (no predecessor).
         self.prev_raw_input: Optional[List[float]] = None
 
+    def _record(self, gene_id: str, t_in: List[float]) -> None:
+        """Append one history entry, bounding the list to ITEM_HISTORY_CAP.
+
+        Slice-on-append keeps item_history a plain ``list`` (callers and
+        tests rely on the list contract, e.g. ``item_history == []`` and
+        ``item_history[-1]`` indexing); a ``deque`` would break both.
+        See issue #126.
+        """
+        self.item_history.append((gene_id, t_in))
+        if len(self.item_history) > ITEM_HISTORY_CAP:
+            self.item_history = self.item_history[-ITEM_HISTORY_CAP:]
+
     def update(self, gene_id: str, input_vector: List[float]) -> None:
         """Integrate a new item into the context vector (TCM evolution).
 
@@ -194,7 +214,7 @@ class SessionContext:
         # First item: context becomes the input directly.
         if not self.item_history:
             self.context_vector = list(t_in)
-            self.item_history.append((gene_id, list(t_in)))
+            self._record(gene_id, list(t_in))
             self.prev_raw_input = raw_input
             return
 
@@ -204,13 +224,13 @@ class SessionContext:
         # Edge: previous context is zero -> seed with t^IN.
         if t_prev_norm < 1e-12:
             self.context_vector = list(t_in)
-            self.item_history.append((gene_id, list(t_in)))
+            self._record(gene_id, list(t_in))
             self.prev_raw_input = raw_input
             return
 
         # Edge: identical successive inputs -> zero velocity, no update.
         if t_in_norm < 1e-12:
-            self.item_history.append((gene_id, list(t_in)))
+            self._record(gene_id, list(t_in))
             self.prev_raw_input = raw_input
             return
 
@@ -226,7 +246,7 @@ class SessionContext:
         # Edge: velocity was parallel to current context -> no new
         # direction to integrate, context is unchanged.
         if t_in_norm < 1e-12:
-            self.item_history.append((gene_id, [0.0] * self.n_dims))
+            self._record(gene_id, [0.0] * self.n_dims)
             self.prev_raw_input = raw_input
             return
 
@@ -244,7 +264,7 @@ class SessionContext:
         if abs(new_norm - 1.0) > 1e-6:
             log.warning("TCM ctx norm drift after orthogonal update: %.9f", new_norm)
         self.context_vector = _normalize(new_ctx)
-        self.item_history.append((gene_id, list(t_in)))
+        self._record(gene_id, list(t_in))
         self.prev_raw_input = raw_input
 
     def update_from_gene(self, gene: Gene) -> None:

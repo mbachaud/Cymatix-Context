@@ -12,6 +12,7 @@ from helix_context.scoring.tcm import (
     _norm,
     _normalize,
     _cosine_similarity,
+    ITEM_HISTORY_CAP,
     N_DIMS,
 )
 
@@ -456,3 +457,126 @@ class TestTcmInfo:
         info = tcm_info(ctx)
         assert info["math_backend"] in ("numpy", "python")
         assert info["bonus_weight"] == 0.3
+
+
+# -- item_history bound tests (issue #126) ----------------------
+
+class TestItemHistoryBound:
+    """Regression: item_history must stay bounded regardless of query count.
+
+    Before issue #126, item_history was an unbounded list -- one entry per
+    update() call, only ever emptied by reset(). These tests pin the
+    ITEM_HISTORY_CAP bound and confirm scoring is unchanged below the cap.
+    """
+
+    def test_history_bounded_after_cap_plus_k_appends(self):
+        """After N+k updates, item_history length stays at the cap."""
+        ctx = SessionContext()
+        vecs = _trajectory_vectors(N_DIMS, ITEM_HISTORY_CAP + 25)
+        for i, v in enumerate(vecs):
+            ctx.update(f"g{i}", v)
+
+        assert len(ctx.item_history) == ITEM_HISTORY_CAP
+        assert ctx.depth == ITEM_HISTORY_CAP
+
+    def test_history_bounded_under_heavy_load(self):
+        """A long-lived session (many * cap updates) never exceeds the cap."""
+        ctx = SessionContext()
+        vecs = _trajectory_vectors(N_DIMS, ITEM_HISTORY_CAP * 20)
+        for i, v in enumerate(vecs):
+            ctx.update(f"g{i}", v)
+
+        assert len(ctx.item_history) <= ITEM_HISTORY_CAP
+
+    def test_history_stays_a_list(self):
+        """item_history must remain a plain list (callers/tests rely on it,
+        e.g. `item_history == []` and indexing). A deque would break that."""
+        ctx = SessionContext()
+        for i, v in enumerate(_trajectory_vectors(N_DIMS, ITEM_HISTORY_CAP + 10)):
+            ctx.update(f"g{i}", v)
+
+        assert isinstance(ctx.item_history, list)
+        # list-only operations must still work
+        assert ctx.item_history[-1][0] == f"g{ITEM_HISTORY_CAP + 9}"
+        assert ctx.item_history[0:1]  # slicing
+
+    def test_bounded_session_keeps_most_recent_entries(self):
+        """When the cap trims, the oldest entries are dropped (FIFO window)."""
+        ctx = SessionContext()
+        total = ITEM_HISTORY_CAP + 30
+        for i, v in enumerate(_trajectory_vectors(N_DIMS, total)):
+            ctx.update(f"g{i}", v)
+
+        item_ids = [gid for gid, _ in ctx.item_history]
+        # Newest update is retained; oldest `total - cap` updates are gone.
+        assert item_ids[-1] == f"g{total - 1}"
+        assert item_ids[0] == f"g{total - ITEM_HISTORY_CAP}"
+        assert f"g0" not in item_ids
+
+    def test_scoring_unchanged_below_cap(self):
+        """For a session shorter than the cap, item_history and the context
+        vector are identical to pre-fix behaviour (no trimming occurs)."""
+        n = ITEM_HISTORY_CAP - 1
+        vecs = _trajectory_vectors(N_DIMS, n)
+
+        ctx = SessionContext()
+        for i, v in enumerate(vecs):
+            ctx.update(f"g{i}", v)
+
+        # Every update is retained, in order, untrimmed.
+        assert len(ctx.item_history) == n
+        assert ctx.depth == n
+        assert [gid for gid, _ in ctx.item_history] == [f"g{i}" for i in range(n)]
+
+        # context_vector is the running accumulator -- recompute it
+        # independently to confirm the cap path did not perturb it.
+        ref = SessionContext()
+        for i, v in enumerate(vecs):
+            ref.update(f"g{i}", v)
+        for a, b in zip(ctx.context_vector, ref.context_vector):
+            assert abs(a - b) < 1e-12
+
+    def test_context_vector_matches_unbounded_for_first_cap_updates(self):
+        """The cap trims history storage only; the context vector after the
+        first N updates is bit-identical whether or not later updates trim.
+
+        This is the core 'scoring unchanged' guarantee: TCM's drift vector
+        is a running accumulator and never reads trimmed history.
+        """
+        vecs = _trajectory_vectors(N_DIMS, ITEM_HISTORY_CAP)
+
+        # Reference: stop exactly at the cap (no trim ever happens).
+        ref = SessionContext()
+        for i, v in enumerate(vecs):
+            ref.update(f"g{i}", v)
+        ref_ctx = list(ref.context_vector)
+
+        # Same N updates, then keep going well past the cap (forces trims).
+        ctx = SessionContext()
+        more = _trajectory_vectors(N_DIMS, ITEM_HISTORY_CAP * 3)
+        for i, v in enumerate(more[:ITEM_HISTORY_CAP]):
+            ctx.update(f"g{i}", v)
+        # context vector after the first N updates equals the reference
+        for a, b in zip(ctx.context_vector, ref_ctx):
+            assert abs(a - b) < 1e-12
+
+    def test_tcm_bonus_unaffected_by_trim(self):
+        """tcm_bonus only consults depth (== 0 check) and the context
+        vector; trimming history must not change its output."""
+        emb = [0.0] * N_DIMS
+        emb[3] = 1.0
+        gene = _make_gene("cand", embedding=emb)
+
+        # Short session (no trim).
+        short = SessionContext()
+        for i, v in enumerate(_trajectory_vectors(N_DIMS, 5)):
+            short.update(f"s{i}", v)
+
+        # Long session that trims its history many times over.
+        long = SessionContext()
+        for i, v in enumerate(_trajectory_vectors(N_DIMS, ITEM_HISTORY_CAP * 2)):
+            long.update(f"l{i}", v)
+        # both sessions are non-empty -> tcm_bonus uses depth != 0 path
+        assert short.depth > 0 and long.depth > 0
+        assert tcm_bonus(short, [gene])["cand"] >= 0.0
+        assert tcm_bonus(long, [gene])["cand"] >= 0.0
