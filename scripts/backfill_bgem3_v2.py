@@ -92,7 +92,10 @@ def main() -> int:
     print(f"[backfill] DB: {db_path}")
     print(f"[backfill] dim={dim} expected_bytes_per_row={expected_bytes}")
 
-    codec = BGEM3Codec(dim=dim)
+    import os
+    device = os.environ.get("BGEM3_DEVICE", "cuda")
+    codec = BGEM3Codec(dim=dim, device=device)
+    print(f"[backfill] device={device}")
     conn = sqlite3.connect(db_path, timeout=30)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL")
