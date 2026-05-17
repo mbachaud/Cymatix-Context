@@ -264,18 +264,83 @@ def test_adapter_get_doc_and_get_gene_are_same_callable(adapter):
     assert adapter.get_gene("nonexistent") is None
 
 
-def test_adapter_declares_fusion_mode_rrf(adapter):
-    """Issue #115: ShardRouter unconditionally builds an RRF Fuser
-    (``shard_router.py:236``), so the adapter must declare
-    ``_fusion_mode = "rrf"`` for ``context_manager._build_signals`` to
-    read RRF via ``getattr(self.genome, "_fusion_mode", "additive")``.
-    Without this, the abstain absolute-score floor (2.5, BM25-calibrated)
-    trips on every sharded query because RRF scores compress to ~0.3.
+def test_adapter_declares_fusion_mode_additive(adapter):
+    """Tier-0 PR-3 (2026-05-16), Decision 2 Option (b): the adapter
+    declares ``_fusion_mode = "additive"`` — the honest label.
+
+    The ShardRouter builds an RRF ``Fuser`` but uses its ``all_scores()``
+    only as a secondary sort tiebreaker; the primary sort key and the
+    published ``last_query_scores`` map are the IDF-corrected
+    *additive*-scale ``corrected`` scores. The router never publishes
+    RRF-scale numbers. The previous ``"rrf"`` label (issue #115) made
+    ``tier_logic`` skip its absolute floors on every sharded query —
+    treating a symptom of the mislabel. With ``"additive"`` the gates
+    interpret the BM25-ish sharded scores on the scale they were
+    calibrated for, so ``skip_absolute_floors`` is False and the
+    absolute floors run.
     """
-    assert adapter._fusion_mode == "rrf", (
-        "ShardedGenomeAdapter must declare _fusion_mode='rrf' so the "
-        "TIGHT/FOCUSED and ABSTAIN floor bypass engages for sharded "
-        "reads (issue #115)."
+    assert adapter._fusion_mode == "additive", (
+        "ShardedGenomeAdapter must declare _fusion_mode='additive' so the "
+        "downstream gates interpret the router's IDF-corrected "
+        "additive-scale scores on the correct scale (Tier-0 PR-3, "
+        "Decision 2 Option (b))."
+    )
+
+
+def test_sharded_fusion_mode_runs_absolute_floors_in_tier_logic(adapter):
+    """Tier-0 PR-3, Decision 2 Option (b) — behavioural check.
+
+    The adapter's ``_fusion_mode`` flows into ``pipeline.tier_logic`` via
+    ``context_manager``'s ``getattr(self.genome, "_fusion_mode",
+    "additive")``. With the honest ``"additive"`` label,
+    ``tier_logic.apply_budget_tiers`` sets ``skip_absolute_floors`` to
+    False (it is ``fusion_mode == "rrf"``), so the absolute
+    TIGHT/FOCUSED/ABSTAIN floors RUN on sharded queries — they were
+    skipped under the pre-PR-3 ``"rrf"`` mislabel.
+
+    Proof: a score distribution (top=0.40, gradient to 0.05) whose
+    legacy ``top/mean`` ratio is ~1.78 (< the 1.8 abstain ratio floor)
+    and whose top is far below the 2.5 absolute abstain floor. Fed the
+    adapter's actual ``_fusion_mode``:
+      - "additive" -> absolute floor active, ratio gate trips -> ABSTAIN
+      - "rrf"      -> absolute floor SKIPPED, baseline-normalized ratio
+                      is 2.0 (>= 1.5) -> NO abstain
+    The outcomes diverge, so this pins that the floors actually run for
+    the sharded path under the corrected label.
+    """
+    from helix_context.config import AbstainClassFloors
+    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    from tests.conftest import make_gene
+
+    n = 12
+    top, low = 0.40, 0.05
+    step = (top - low) / (n - 1)
+    candidates = [
+        make_gene(f"shard_{i}", gene_id=f"shard_gene_{i:010d}")
+        for i in range(n)
+    ]
+    scores = {candidates[i].gene_id: top - i * step for i in range(n)}
+
+    # The adapter declares "additive"; feed exactly that to tier_logic.
+    result_sharded = apply_budget_tiers(
+        candidates, scores, AbstainClassFloors(),
+        abstain_enabled=True, fusion_mode=adapter._fusion_mode,
+    )
+    assert result_sharded.abstain is True, (
+        "with the honest 'additive' label the absolute abstain floor runs "
+        "and this weak distribution abstains"
+    )
+
+    # Counterfactual: the pre-PR-3 "rrf" mislabel would have skipped the
+    # floor and NOT abstained on the identical distribution.
+    result_mislabel = apply_budget_tiers(
+        candidates, scores, AbstainClassFloors(),
+        abstain_enabled=True, fusion_mode="rrf",
+    )
+    assert result_mislabel.abstain is False, (
+        "sanity: the same distribution under the old 'rrf' label skips "
+        "the absolute floor and does not abstain — confirms the relabel "
+        "changes gate behaviour, which is the point of Option (b)"
     )
 
 

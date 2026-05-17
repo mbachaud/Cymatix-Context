@@ -371,6 +371,12 @@ class KnowledgeStore:
         harmonic_weight: float = 1.0,
         entity_graph_weight: float = 0.5,
         dense_weight: float = 1.0,
+        # Tier-0 PR-3 (2026-05-16): additive-mode dense merge weight.
+        # Under fusion_mode == "additive", a dense hit's cosine is
+        # multiplied by this before it enters gene_scores. BM25-comparable
+        # (tag-exact weight is 3.0). Unused under RRF, where dense ranks
+        # are fused, not summed.
+        dense_additive_weight: float = 4.0,
         pki_weight: float = 1.0,
         main_conn: Optional[sqlite3.Connection] = None,
         shard_name: str = "main",
@@ -455,6 +461,8 @@ class KnowledgeStore:
         self._harmonic_weight: float = float(harmonic_weight)
         self._entity_graph_weight: float = float(entity_graph_weight)
         self._dense_weight: float = float(dense_weight)
+        # Tier-0 PR-3: additive-mode dense merge weight (see ctor param).
+        self._dense_additive_weight: float = float(dense_additive_weight)
         self._pki_weight: float = float(pki_weight)
         self._threshold_dim_warned: bool = False
         # Phase 2 claims layer (2026-04-19). Optional hook — when a main.db
@@ -1936,22 +1944,28 @@ class KnowledgeStore:
             except Exception:
                 log.debug("ΣĒMA retrieval failed, continuing without")
 
-        # ── Stage 2/3: dense recall as RRF participant ──────────────
+        # ── Stage 2/3: dense recall — first-class in BOTH modes ─────
         # Stage 2's query_genes_dense_recall returns [(gid, cosine), ...]
-        # already sorted descending. We feed it directly as a tier so
-        # the Fuser can rank-fuse it with the lex tiers under RRF mode.
-        # This also seeds gene_scores in additive mode so the dense
-        # contribution survives the back-compat path — but at the
-        # cosine·dense_weight scale it's roughly noise next to the lex
-        # weights (3.0+), which is why Stage 2 didn't merge it into
-        # query_genes() in the first place. Under RRF, cosine ordering
-        # is what matters and the rank-1 dense hit gets the same
-        # 1/(k+1) weight as the rank-1 FTS hit.
-        # Dense participation runs only under RRF mode. In additive mode
-        # we skip it to keep byte-identical compatibility with pre-Stage-3
-        # ranking — pre-Stage-3 query_genes() never called dense recall
-        # (dense was query_genes_ann's job). Stage 4 may revisit this.
-        if self._dense_embedding_enabled and self._fusion_mode == "rrf":
+        # already sorted descending.
+        #
+        # Tier-0 PR-3 (2026-05-16): dense recall is decoupled from
+        # ``fusion_mode``. The old gate (``and self._fusion_mode ==
+        # "rrf"``) meant dense recall never ran under the default
+        # ``additive`` mode — so the BGE-M3 vectors PR-1 computes at
+        # ingest were dark in the shipped configuration. The gate is now
+        # ``self._dense_embedding_enabled`` alone; the *mode* only
+        # decides HOW dense hits enter the ranking:
+        #   - RRF mode: feed the Fuser as a tier so cosine ordering
+        #     rank-fuses with the lex tiers (the rank-1 dense hit gets
+        #     the same 1/(k+1) weight as the rank-1 FTS hit).
+        #   - additive mode: merge each dense hit into ``gene_scores``
+        #     with ``cosine * self._dense_additive_weight``. The weight
+        #     (default 4.0, BM25-comparable — tag-exact is 3.0) puts the
+        #     dense contribution on the same scale as the lex tiers
+        #     instead of the ``cosine·1.0`` epsilon-noise the old
+        #     comment correctly flagged. The lexical accumulator is
+        #     otherwise byte-identical; dense is purely *added* on top.
+        if self._dense_embedding_enabled:
             try:
                 _dense_t0 = time.monotonic()
                 dense_hits = self.query_docs_dense_recall(
@@ -1960,22 +1974,32 @@ class KnowledgeStore:
                     party_id=party_id,
                     read_only=read_only,
                 )
-                # Stage 3: feed Fuser. raw_score = cosine.
-                fuser.add_tier(
-                    "dense", dense_hits, weight=self._dense_weight,
-                )
-                # Also record in tier_contrib for telemetry (raw cosine,
-                # not multiplied — matches the rule "telemetry observes
-                # raw pre-RRF scores", spec §6).
-                for gid, cosine in dense_hits:
-                    tier_contrib.setdefault(gid, {})["dense"] = float(cosine)
-                    # Ensure dense-only documents appear in gene_scores so
-                    # they survive the eligible_ids gate at the sort.
-                    # Use a tiny epsilon so we don't perturb additive
-                    # ranking (which is unreachable in this branch
-                    # anyway). The actual ordering comes from the Fuser.
-                    if gid not in gene_scores:
-                        gene_scores[gid] = 1e-9
+                if self._fusion_mode == "rrf":
+                    # Stage 3: feed Fuser. raw_score = cosine.
+                    fuser.add_tier(
+                        "dense", dense_hits, weight=self._dense_weight,
+                    )
+                    for gid, cosine in dense_hits:
+                        # Telemetry observes raw cosine, not multiplied
+                        # (spec §6 "raw pre-RRF scores").
+                        tier_contrib.setdefault(gid, {})["dense"] = float(cosine)
+                        # Ensure dense-only documents appear in
+                        # gene_scores so they survive the eligible_ids
+                        # gate at the sort. A tiny epsilon is enough —
+                        # the actual ordering comes from the Fuser.
+                        if gid not in gene_scores:
+                            gene_scores[gid] = 1e-9
+                else:
+                    # Additive mode: merge dense hits into the score
+                    # accumulator at a BM25-comparable weight so a
+                    # semantic-only match can surface alongside lexical
+                    # hits. ``tier_contrib`` records the *weighted*
+                    # contribution so telemetry reflects what actually
+                    # entered the additive sum.
+                    for gid, cosine in dense_hits:
+                        contribution = float(cosine) * self._dense_additive_weight
+                        gene_scores[gid] = gene_scores.get(gid, 0.0) + contribution
+                        tier_contrib.setdefault(gid, {})["dense"] = contribution
                 try:
                     from .telemetry import genome_signal_histogram
                     genome_signal_histogram().record(

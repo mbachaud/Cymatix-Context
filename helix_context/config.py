@@ -284,8 +284,11 @@ class RetrievalConfig:
     # to entity overlap. Dark ship — flip to true for A/B.
     entity_graph_retrieval_enabled: bool = False
     # Step 4 — BGE-M3 dense vectors + ANN threshold-based dynamic document counts
-    # (2026-05-08). Dark ship — all flags off by default.
-    dense_embedding_enabled: bool = False
+    # (2026-05-08). Tier-0 PR-3 (2026-05-16) flipped this default to true:
+    # PR-1 computes embedding_dense_v2 at ingest and PR-3 decoupled dense
+    # recall from fusion_mode, so dense recall is now a shipped retrieval
+    # signal in both additive and RRF mode.
+    dense_embedding_enabled: bool = True
     # Stage 2 (2026-05-08): default dim raised from 256 -> 1024. Full BGE-M3
     # Matryoshka. dim=256 collapsed random-pair cosine to ~0.6, sabotaging
     # threshold semantics. Stage 4 will recalibrate ann_similarity_threshold
@@ -324,6 +327,11 @@ class RetrievalConfig:
     harmonic_weight: float = 1.0            # current per-link weight
     entity_graph_weight: float = 0.5        # current 1.0·0.5 implicit
     dense_weight: float = 1.0               # Stage 2 dense recall, RRF participant
+    # Tier-0 PR-3 (2026-05-16): additive-mode dense merge weight. Under
+    # fusion_mode == "additive" a dense hit's cosine is scaled by this
+    # before entering the gene_scores accumulator. BM25-comparable
+    # (tag_exact_weight is 3.0). Unused under RRF.
+    dense_additive_weight: float = 4.0
     pki_weight: float = 1.0                 # PKI tier, RRF participant
     # Note: filename_anchor_weight, sr_weight reuse their existing knobs above.
 
@@ -734,6 +742,8 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             harmonic_weight=float(r.get("harmonic_weight", cfg.retrieval.harmonic_weight)),
             entity_graph_weight=float(r.get("entity_graph_weight", cfg.retrieval.entity_graph_weight)),
             dense_weight=float(r.get("dense_weight", cfg.retrieval.dense_weight)),
+            # Tier-0 PR-3 (2026-05-16): additive-mode dense merge weight.
+            dense_additive_weight=float(r.get("dense_additive_weight", cfg.retrieval.dense_additive_weight)),
             pki_weight=float(r.get("pki_weight", cfg.retrieval.pki_weight)),
         )
 
