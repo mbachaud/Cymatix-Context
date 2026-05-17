@@ -97,12 +97,34 @@ class TestContextHealth:
         assert health.genes_available == 3
 
     def test_no_match_shows_denatured(self, seeded_health_helix):
-        """Query that matches zero genes despite genome having content."""
+        """Query lexically disjoint from the genome → denatured health.
+
+        Tier-0 PR-3 (2026-05-16) decoupled BGE-M3 dense recall from
+        ``fusion_mode``, so ``query_docs`` now runs dense recall in the
+        default additive mode. ``query_docs_dense_recall`` has no minimum
+        cosine cutoff — it returns the top-k by cosine — so a content-full
+        genome surfaces a few weakly-similar genes for *any* query. The
+        pre-PR-3 ``genes_expressed == 0`` assertion encoded the dense-dark
+        world where the additive path never touched dense vectors; that is
+        no longer reachable for a non-empty genome (true zero-retrieval is
+        covered by ``test_empty_genome_is_sparse``).
+
+        The substantive invariant the health monitor must still uphold:
+        a lexically-disjoint query yields near-zero ``ellipticity`` and a
+        ``denatured`` status — the dense neighbours are weak enough that
+        retrieval quality is correctly flagged as bad.
+        """
         window = seeded_health_helix.build_context("quantum entanglement physics")
         health = window.context_health
-        assert health.genes_expressed == 0
         assert health.genes_available == 3
         assert health.status == "denatured"
+        # Dense recall may surface a few weak semantic neighbours; the
+        # health signal must still classify this retrieval as denatured,
+        # which requires ellipticity below the 0.3 'sparse' threshold.
+        assert health.ellipticity < 0.3, (
+            f"lexically-disjoint query must yield denatured-grade "
+            f"ellipticity; got {health.ellipticity}"
+        )
 
     def test_health_in_metadata(self, seeded_health_helix):
         window = seeded_health_helix.build_context("auth security jwt")

@@ -37,7 +37,6 @@ runs without BGE-M3 weights (mirrors ``tests/test_dense_recall.py``).
 from __future__ import annotations
 
 import hashlib
-import random
 import sqlite3
 from pathlib import Path
 
@@ -56,47 +55,14 @@ from helix_context.schemas import (
     ChromatinState, EpigeneticMarkers, Gene, PromoterTags,
 )
 
+# The deterministic fake BGE-M3 codec is defined once in tests/conftest.py
+# (the `_stub_dense_codec` autouse fixture installs the same class for every
+# non-live test). `_hash_vec` / `_FakeCodec` stay as local aliases so this
+# file's existing call sites are unchanged.
+from tests.conftest import FakeBGEM3Codec as _FakeCodec
+from tests.conftest import hash_vec as _hash_vec
+
 DIM = 1024
-
-
-# ── Test helpers (mirror tests/test_dense_recall.py) ─────────────────
-
-
-def _hash_vec(text: str, dim: int = DIM) -> np.ndarray:
-    """Deterministic L2-normalised fp32 vector seeded from text."""
-    out = np.zeros(dim, dtype=np.float32)
-    seed = hashlib.sha256(text.encode("utf-8")).digest()
-    rng = random.Random(int.from_bytes(seed[:8], "little"))
-    for i in range(dim):
-        out[i] = rng.gauss(0.0, 1.0)
-    n = np.linalg.norm(out)
-    if n > 0:
-        out /= n
-    return out
-
-
-class _FakeCodec:
-    """Test stand-in for BGEM3Codec; same shape contract.
-
-    Exposes both ``encode`` (used by the lazy upsert_doc path) and
-    ``encode_batch`` (used by context_manager.ingest).
-    """
-
-    def __init__(self, dim: int = DIM):
-        self.dim = dim
-        self.encode_calls = 0
-        self.batch_calls = 0
-
-    def encode(self, text: str, task: str = "passage"):
-        self.encode_calls += 1
-        return _hash_vec(text, self.dim).tolist()
-
-    def encode_batch(self, texts, task: str = "passage"):
-        self.batch_calls += 1
-        return [_hash_vec(t, self.dim).tolist() for t in texts]
-
-    def similarity(self, a, b) -> float:
-        return float(np.dot(np.asarray(a), np.asarray(b)))
 
 
 def _make_gene(content: str, *, gene_id: str | None = None) -> Gene:

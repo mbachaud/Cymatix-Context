@@ -171,14 +171,30 @@ class ShardedGenomeAdapter:
         ``hasattr(genome, '_sharded_adapter')``.
     """
 
-    # The router unconditionally builds its RRF Fuser at shard_router.py:236
-    # (`Fuser(k=60)` with no mode toggle), so any sharded read is RRF-fused.
-    # Expose this so context_manager._build_signals reads "rrf" via
-    # ``getattr(self.genome, "_fusion_mode", "additive")`` and the abstain
-    # gate / TIGHT-FOCUSED floor bypass in pipeline/tier_logic.py engage.
-    # Without this, sharded RRF scores (~0.26-0.40) trip the 2.5 absolute
-    # floor on 9/10 queries and abstain — see issue #115.
-    _fusion_mode: str = "rrf"
+    # Score-scale label consumed by the downstream gates via
+    # ``getattr(self.genome, "_fusion_mode", "additive")`` —
+    # ``pipeline/tier_logic.py`` (abstain / TIGHT / FOCUSED floors) and,
+    # transitively, ``scoring/know_calibration.py``.
+    #
+    # Tier-0 PR-3 (2026-05-16) — Decision 2 Option (b): this is now
+    # ``"additive"``, and that is the *honest* label. The ShardRouter
+    # builds an RRF ``Fuser`` (shard_router.py), but it uses the RRF
+    # ``all_scores()`` map *only* as a secondary sort tiebreaker — the
+    # primary sort key and the published ``last_query_scores`` map are the
+    # IDF-corrected *additive*-scale ``corrected`` scores (BM25-ish:
+    # ``additive × IDF[0.5,3.0] × doc-boost[1.0,1.15]``). The router never
+    # publishes RRF-scale numbers.
+    #
+    # The previous ``"rrf"`` label (issue #115) was a misdiagnosis: it made
+    # ``tier_logic`` skip its absolute floors on every sharded query
+    # because RRF-scale scores would have tripped the BM25-calibrated 2.5
+    # floor. But the scores were never RRF-scale — so skipping the floors
+    # treated a symptom. With the correct ``"additive"`` label the gates
+    # interpret the BM25-ish scores on the scale they were calibrated for:
+    # ``skip_absolute_floors`` is False and the absolute floors run, and
+    # ``compute_confidence``'s BM25 betas (``s_ref = 1.0``) match the
+    # input. Fully reversible — one string.
+    _fusion_mode: str = "additive"
 
     def __init__(self, main_path: str, **genome_kwargs: Any) -> None:
         from .shard_router import ShardRouter

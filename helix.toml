@@ -199,7 +199,7 @@ entity_graph = true                     # Phase 5: entity-based co-activation li
 # so every ingested genome is dense-populated without a separate backfill.
 # Set false for latency-sensitive callers to defer encoding to
 # scripts/backfill_bgem3_v2.py. Write path only — retrieval still gates on
-# [retrieval] dense_embedding_enabled (default false).
+# [retrieval] dense_embedding_enabled (default true).
 dense_embed_on_ingest = true            # Tier-0 PR-1 (2026-05-16)
 
 [context]
@@ -278,7 +278,11 @@ entity_graph_retrieval_enabled = false
 # dim=256 truncation collapsed random-pair cosine to ~0.6, sabotaging the
 # threshold. Stage 4 will recalibrate ann_similarity_threshold at 1024-dim.
 # dense_pool_size decouples recall breadth from the final cut (max_genes).
-dense_embedding_enabled = false
+# Tier-0 PR-3 (2026-05-16): flipped to true. PR-1 computes
+# embedding_dense_v2 at ingest and PR-3 decoupled dense recall from
+# fusion_mode (knowledge_store.query_docs), so dense recall now fires as a
+# retrieval signal under the shipped additive default — not only under RRF.
+dense_embedding_enabled = true
 dense_embedding_dim = 1024
 ann_similarity_threshold = 0.35           # legacy / fallback when calibration row missing
 ann_threshold_min_genes = 1
@@ -312,6 +316,12 @@ lex_anchor_weight = 1.5                 # IDF anchor multiplier
 harmonic_weight = 1.0                   # Tier 5 per-link weight
 entity_graph_weight = 0.5               # Tier 5b entity boost
 dense_weight = 1.0                      # Stage 2 dense recall, RRF participant
+# Tier-0 PR-3 (2026-05-16): additive-mode dense merge weight. Under
+# fusion_mode == "additive" (the default below), a dense hit's cosine is
+# scaled by this before it enters the gene_scores accumulator —
+# BM25-comparable (tag_exact_weight is 3.0). Unused under RRF, where dense
+# ranks are fused rather than summed.
+dense_additive_weight = 4.0
 pki_weight = 1.0                        # path-key-index tier, RRF participant
 # Note: filename_anchor_weight (above) and sr_weight (above) are reused.
 

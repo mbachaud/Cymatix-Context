@@ -508,6 +508,8 @@ class HelixContextManager:
             harmonic_weight=config.retrieval.harmonic_weight,
             entity_graph_weight=config.retrieval.entity_graph_weight,
             dense_weight=config.retrieval.dense_weight,
+            # Tier-0 PR-3 (2026-05-16): additive-mode dense merge weight.
+            dense_additive_weight=config.retrieval.dense_additive_weight,
             pki_weight=config.retrieval.pki_weight,
         )
 
