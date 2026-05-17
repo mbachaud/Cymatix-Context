@@ -104,9 +104,12 @@ def apply_budget_tiers(
     # operates on ratio gates only.
     #
     # Issue #115: also gates the ABSTAIN absolute-floor clause below.
-    # ``ShardedGenomeAdapter`` declares ``_fusion_mode = "rrf"`` so the
-    # router's RRF-fused scores (~0.26-0.40) don't trip the BM25-calibrated
-    # 2.5 floor on every sharded query.
+    # ``ShardedGenomeAdapter`` declares ``_fusion_mode = "additive"`` (Tier-0
+    # PR-3, the honest label — the router publishes IDF-corrected additive-
+    # scale scores, never RRF-scale numbers; see ShardedGenomeAdapter), so on
+    # the sharded path ``skip_absolute_floors`` is False and the BM25-
+    # calibrated absolute floors run, interpreting the scores on the scale
+    # they were calibrated for.
     skip_absolute_floors = (fusion_mode == "rrf")
 
     # -- Baseline-normalized ratio for RRF (issue #115 follow-up) --

@@ -377,6 +377,12 @@ class KnowledgeStore:
         # (tag-exact weight is 3.0). Unused under RRF, where dense ranks
         # are fused, not summed.
         dense_additive_weight: float = 4.0,
+        # Tier-0 review fix (2026-05-16): noise floor for the additive-mode
+        # dense merge. A dense hit whose cosine is below this does not
+        # contribute to gene_scores (still kept as a candidate with
+        # negligible weight). Consistent with query_cold_tier's 0.15
+        # min_cosine. Unused under RRF.
+        dense_additive_min_cosine: float = 0.15,
         pki_weight: float = 1.0,
         main_conn: Optional[sqlite3.Connection] = None,
         shard_name: str = "main",
@@ -463,6 +469,8 @@ class KnowledgeStore:
         self._dense_weight: float = float(dense_weight)
         # Tier-0 PR-3: additive-mode dense merge weight (see ctor param).
         self._dense_additive_weight: float = float(dense_additive_weight)
+        # Tier-0 review fix: additive-mode dense merge noise floor (see ctor param).
+        self._dense_additive_min_cosine: float = float(dense_additive_min_cosine)
         self._pki_weight: float = float(pki_weight)
         self._threshold_dim_warned: bool = False
         # Phase 2 claims layer (2026-04-19). Optional hook — when a main.db
@@ -1996,10 +2004,24 @@ class KnowledgeStore:
                     # hits. ``tier_contrib`` records the *weighted*
                     # contribution so telemetry reflects what actually
                     # entered the additive sum.
+                    #
+                    # Tier-0 review fix (2026-05-16): apply a min-cosine
+                    # noise floor, consistent with the cosine cutoffs the
+                    # sibling recall paths (query_cold_tier, query_docs_ann)
+                    # already enforce. A below-floor hit does NOT contribute
+                    # to the score, but is still seeded as a candidate with
+                    # a 1e-9 epsilon (same set-membership treatment the RRF
+                    # branch above gives dense-only genes); its tier_contrib
+                    # is recorded as 0.0 so telemetry stays coherent with
+                    # what entered the sum.
                     for gid, cosine in dense_hits:
-                        contribution = float(cosine) * self._dense_additive_weight
-                        gene_scores[gid] = gene_scores.get(gid, 0.0) + contribution
-                        tier_contrib.setdefault(gid, {})["dense"] = contribution
+                        if float(cosine) >= self._dense_additive_min_cosine:
+                            contribution = float(cosine) * self._dense_additive_weight
+                            gene_scores[gid] = gene_scores.get(gid, 0.0) + contribution
+                            tier_contrib.setdefault(gid, {})["dense"] = contribution
+                        else:
+                            gene_scores.setdefault(gid, 1e-9)
+                            tier_contrib.setdefault(gid, {})["dense"] = 0.0
                 try:
                     from .telemetry import genome_signal_histogram
                     genome_signal_histogram().record(

@@ -322,6 +322,12 @@ dense_weight = 1.0                      # Stage 2 dense recall, RRF participant
 # BM25-comparable (tag_exact_weight is 3.0). Unused under RRF, where dense
 # ranks are fused rather than summed.
 dense_additive_weight = 4.0
+# Tier-0 review fix (2026-05-16): noise floor for the additive-mode dense
+# merge. A dense hit whose cosine is below this does not contribute to the
+# gene_scores accumulator (it is still kept as a candidate with negligible
+# weight). Consistent with the cold tier's 0.15 min_cosine; deliberately
+# gentle so it removes only noise-grade hits, not weak-but-real matches.
+dense_additive_min_cosine = 0.15
 pki_weight = 1.0                        # path-key-index tier, RRF participant
 # Note: filename_anchor_weight (above) and sr_weight (above) are reused.
 

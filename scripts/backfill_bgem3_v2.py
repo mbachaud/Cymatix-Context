@@ -125,95 +125,101 @@ def backfill_dense_db(
     if codec is None:
         codec = BGEM3Codec(dim=dim)
 
+    # Single connection for the whole backfill. Wrapped in try/finally so a
+    # raise anywhere below (most likely ``codec.encode_batch`` when the model
+    # is unavailable) still closes it — a leaked WAL connection holds
+    # ``-wal``/``-shm`` locks on Windows.
     conn = sqlite3.connect(db_path, timeout=30)
-    conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA journal_mode=WAL")
-    conn.execute("PRAGMA busy_timeout=30000")
-    _ensure_v2_schema(conn)
-    cur = conn.cursor()
+    try:
+        conn.row_factory = sqlite3.Row
+        conn.execute("PRAGMA journal_mode=WAL")
+        conn.execute("PRAGMA busy_timeout=30000")
+        _ensure_v2_schema(conn)
+        cur = conn.cursor()
 
-    total = cur.execute("SELECT COUNT(*) AS c FROM genes").fetchone()["c"]
-    populated_before = cur.execute(
-        "SELECT COUNT(*) AS c FROM genes WHERE embedding_dense_v2 IS NOT NULL"
-    ).fetchone()["c"]
-    log_fn(
-        f"[backfill] {db_path}: genes total={total} "
-        f"v2_populated_before={populated_before} dim={dim}"
-    )
-
-    # Idempotency: skip rows that already have a v2 BLOB of the right length.
-    # ``length(blob) != expected_bytes`` guards half-written rows from an
-    # earlier crash or a dim-change re-run, and agrees with the inline-ingest
-    # write path's encoding so a PR-1-built genome selects 0 rows here.
-    sql = (
-        "SELECT gene_id, content FROM genes "
-        "WHERE embedding_dense_v2 IS NULL "
-        "   OR length(embedding_dense_v2) != ?"
-    )
-    params: tuple = (expected_bytes,)
-    if limit is not None:
-        sql += " LIMIT ?"
-        params = (expected_bytes, int(limit))
-    rows = cur.execute(sql, params).fetchall()
-    log_fn(f"[backfill] {db_path}: rows to process: {len(rows)}")
-
-    t0 = time.monotonic()
-    processed = 0
-    skipped = 0
-    for start in range(0, len(rows), max(1, batch)):
-        chunk = rows[start:start + max(1, batch)]
-        encodable = [
-            (r["gene_id"], (r["content"] or ""))
-            for r in chunk
-            if (r["content"] or "").strip()
-        ]
-        skipped += len(chunk) - len(encodable)
-        if not encodable:
-            continue
-        # Match the inline-ingest encode behaviour: bound each passage at
-        # PASSAGE_CHAR_CAP and batch-encode with task="passage". The real
-        # ``BGEM3Codec`` exposes ``encode_batch`` (PR-1) — the preferred,
-        # one-model-call path; fall back to per-text ``encode`` for any
-        # codec that predates it. ``encode_batch`` is byte-identical to a
-        # sequence of ``encode`` calls (see bgem3_codec.encode_batch), so
-        # the fallback does not change the stored vectors.
-        texts = [content[:PASSAGE_CHAR_CAP] for _gid, content in encodable]
-        if hasattr(codec, "encode_batch"):
-            vecs = codec.encode_batch(texts, task="passage")
-        else:
-            vecs = [codec.encode(t, task="passage") for t in texts]
-        updates = []
-        for (gene_id, _content), vec in zip(encodable, vecs):
-            try:
-                blob = vec_to_blob(vec, dim)
-            except ValueError as e:
-                log_fn(f"[backfill] WARN: gene_id={gene_id} dim mismatch: {e}")
-                skipped += 1
-                continue
-            updates.append((sqlite3.Binary(blob), gene_id))
-        if updates:
-            cur.executemany(
-                "UPDATE genes SET embedding_dense_v2 = ? WHERE gene_id = ?",
-                updates,
-            )
-            processed += len(updates)
-        conn.commit()
-        elapsed = time.monotonic() - t0
-        rate = processed / elapsed if elapsed > 0 else 0.0
+        total = cur.execute("SELECT COUNT(*) AS c FROM genes").fetchone()["c"]
+        populated_before = cur.execute(
+            "SELECT COUNT(*) AS c FROM genes WHERE embedding_dense_v2 IS NOT NULL"
+        ).fetchone()["c"]
         log_fn(
-            f"[backfill] {db_path}: {min(start + len(chunk), len(rows))}/{len(rows)} "
-            f"processed={processed} skipped={skipped} rate={rate:.1f} genes/s"
+            f"[backfill] {db_path}: genes total={total} "
+            f"v2_populated_before={populated_before} dim={dim}"
         )
 
-    conn.commit()
-    elapsed = time.monotonic() - t0
+        # Idempotency: skip rows that already have a v2 BLOB of the right length.
+        # ``length(blob) != expected_bytes`` guards half-written rows from an
+        # earlier crash or a dim-change re-run, and agrees with the inline-ingest
+        # write path's encoding so a PR-1-built genome selects 0 rows here.
+        sql = (
+            "SELECT gene_id, content FROM genes "
+            "WHERE embedding_dense_v2 IS NULL "
+            "   OR length(embedding_dense_v2) != ?"
+        )
+        params: tuple = (expected_bytes,)
+        if limit is not None:
+            sql += " LIMIT ?"
+            params = (expected_bytes, int(limit))
+        rows = cur.execute(sql, params).fetchall()
+        log_fn(f"[backfill] {db_path}: rows to process: {len(rows)}")
 
-    populated_after = cur.execute(
-        "SELECT COUNT(*) AS c FROM genes WHERE embedding_dense_v2 IS NOT NULL "
-        "AND length(embedding_dense_v2) = ?",
-        (expected_bytes,),
-    ).fetchone()["c"]
-    conn.close()
+        t0 = time.monotonic()
+        processed = 0
+        skipped = 0
+        for start in range(0, len(rows), max(1, batch)):
+            chunk = rows[start:start + max(1, batch)]
+            encodable = [
+                (r["gene_id"], (r["content"] or ""))
+                for r in chunk
+                if (r["content"] or "").strip()
+            ]
+            skipped += len(chunk) - len(encodable)
+            if not encodable:
+                continue
+            # Match the inline-ingest encode behaviour: bound each passage at
+            # PASSAGE_CHAR_CAP and batch-encode with task="passage". The real
+            # ``BGEM3Codec`` exposes ``encode_batch`` (PR-1) — the preferred,
+            # one-model-call path; fall back to per-text ``encode`` for any
+            # codec that predates it. ``encode_batch`` is byte-identical to a
+            # sequence of ``encode`` calls (see bgem3_codec.encode_batch), so
+            # the fallback does not change the stored vectors.
+            texts = [content[:PASSAGE_CHAR_CAP] for _gid, content in encodable]
+            if hasattr(codec, "encode_batch"):
+                vecs = codec.encode_batch(texts, task="passage")
+            else:
+                vecs = [codec.encode(t, task="passage") for t in texts]
+            updates = []
+            for (gene_id, _content), vec in zip(encodable, vecs):
+                try:
+                    blob = vec_to_blob(vec, dim)
+                except ValueError as e:
+                    log_fn(f"[backfill] WARN: gene_id={gene_id} dim mismatch: {e}")
+                    skipped += 1
+                    continue
+                updates.append((sqlite3.Binary(blob), gene_id))
+            if updates:
+                cur.executemany(
+                    "UPDATE genes SET embedding_dense_v2 = ? WHERE gene_id = ?",
+                    updates,
+                )
+                processed += len(updates)
+            conn.commit()
+            elapsed = time.monotonic() - t0
+            rate = processed / elapsed if elapsed > 0 else 0.0
+            log_fn(
+                f"[backfill] {db_path}: {min(start + len(chunk), len(rows))}/{len(rows)} "
+                f"processed={processed} skipped={skipped} rate={rate:.1f} genes/s"
+            )
+
+        conn.commit()
+        elapsed = time.monotonic() - t0
+
+        populated_after = cur.execute(
+            "SELECT COUNT(*) AS c FROM genes WHERE embedding_dense_v2 IS NOT NULL "
+            "AND length(embedding_dense_v2) = ?",
+            (expected_bytes,),
+        ).fetchone()["c"]
+    finally:
+        conn.close()
 
     coverage = (populated_after / total) if total else 0.0
     log_fn(

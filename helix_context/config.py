@@ -194,7 +194,7 @@ class IngestionConfig:
     # dense-populated without a separate backfill pass. Latency-sensitive
     # callers can set false to defer encoding to scripts/backfill_bgem3_v2.py.
     # This is purely the WRITE path — retrieval still gates on
-    # [retrieval] dense_embedding_enabled (default false).
+    # [retrieval] dense_embedding_enabled (default true).
     dense_embed_on_ingest: bool = True
 
 
@@ -332,6 +332,12 @@ class RetrievalConfig:
     # before entering the gene_scores accumulator. BM25-comparable
     # (tag_exact_weight is 3.0). Unused under RRF.
     dense_additive_weight: float = 4.0
+    # Tier-0 review fix (2026-05-16): noise floor for the additive-mode
+    # dense merge. A dense hit whose cosine is below this does not
+    # contribute to gene_scores (it is still kept as a candidate with
+    # negligible weight). Consistent with the cold tier's 0.15 min_cosine;
+    # deliberately gentle so it removes only noise-grade hits. Unused under RRF.
+    dense_additive_min_cosine: float = 0.15
     pki_weight: float = 1.0                 # PKI tier, RRF participant
     # Note: filename_anchor_weight, sr_weight reuse their existing knobs above.
 
@@ -744,6 +750,8 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             dense_weight=float(r.get("dense_weight", cfg.retrieval.dense_weight)),
             # Tier-0 PR-3 (2026-05-16): additive-mode dense merge weight.
             dense_additive_weight=float(r.get("dense_additive_weight", cfg.retrieval.dense_additive_weight)),
+            # Tier-0 review fix (2026-05-16): additive-mode dense merge noise floor.
+            dense_additive_min_cosine=float(r.get("dense_additive_min_cosine", cfg.retrieval.dense_additive_min_cosine)),
             pki_weight=float(r.get("pki_weight", cfg.retrieval.pki_weight)),
         )
 

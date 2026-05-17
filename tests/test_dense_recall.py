@@ -640,6 +640,109 @@ def test_dense_additive_weight_default_and_plumbing():
         g_custom.close()
 
 
+# ── Tier-0 review fix: additive-mode dense merge min-cosine noise floor ─
+#
+# Review fix (2026-05-16): the additive-mode dense merge had no
+# min-cosine floor, so noise-grade hits (very low cosine) still entered
+# gene_scores — inconsistent with query_cold_tier (floors at 0.15) and
+# query_docs_ann_recall. The floor (`dense_additive_min_cosine`, default
+# 0.15) makes a below-floor hit contribute 0 to the score while still
+# being kept as a candidate via the 1e-9 set-membership epsilon.
+
+
+def test_additive_dense_merge_floors_noise_grade_cosines():
+    """A dense hit whose cosine is BELOW dense_additive_min_cosine (0.15)
+    adds ~0 to gene_scores — only the 1e-9 set-membership epsilon — while
+    an ABOVE-floor hit adds the full cosine * dense_additive_weight.
+
+    The dense hit list is injected directly (monkeypatching
+    query_docs_dense_recall) so cosines can be staged to straddle 0.15
+    precisely; the real codec's hash vectors only yield ~1.0 (query_target
+    match) or ~0 (random pair), which cannot exercise the floor boundary.
+    """
+    weight = 4.0
+    g = _additive_dense_genome(dense_additive_weight=weight)
+    try:
+        # A lexical anchor so query_docs has at least one tag hit and does
+        # not raise PromoterMismatch before the dense merge runs.
+        g.upsert_gene(_make_gene(
+            "alpha lexical anchor body", domains=["alpha"], gene_id="anchor",
+        ))
+        # Four token-disjoint genes reachable ONLY via the dense merge.
+        for gid in ("below-lo", "below-hi", "above-lo", "above-hi"):
+            g.upsert_gene(_make_gene(
+                f"token-disjoint body for {gid}", domains=["needle"],
+                gene_id=gid,
+            ))
+
+        # Cosines straddling the 0.15 floor: two below, two above.
+        staged_hits = [
+            ("above-hi", 0.90),   # well above floor
+            ("above-lo", 0.16),   # just above floor
+            ("below-hi", 0.14),   # just below floor
+            ("below-lo", 0.02),   # noise-grade, well below floor
+        ]
+        g.query_docs_dense_recall = lambda *a, **kw: list(staged_hits)
+        # query_docs_dense_recall is also exposed under the legacy alias.
+        g.query_genes_dense_recall = g.query_docs_dense_recall
+
+        g.query_docs(domains=["alpha"], entities=[], max_genes=12)
+        scores = g.last_query_scores
+        contribs = g.last_tier_contributions
+
+        # The dense merge's effect is isolated in tier_contrib["dense"] —
+        # query_docs also applies a flat per-candidate "authority" boost
+        # that lands in last_query_scores, so we assert the *dense* tier
+        # contribution (what the floor actually governs), exactly as the
+        # sibling additive tests in this file do.
+
+        # Above-floor hits: dense tier contributes cosine * weight.
+        for gid, cosine in (("above-hi", 0.90), ("above-lo", 0.16)):
+            expected = cosine * weight
+            assert contribs[gid]["dense"] == pytest.approx(expected, abs=1e-4), (
+                f"above-floor hit {gid} (cosine={cosine}) dense contribution "
+                f"should be cosine*weight={expected}; got {contribs[gid].get('dense')}"
+            )
+
+        # Below-floor hits: dense tier contributes 0.0 — the cosine is
+        # noise-grade and must not enter the additive sum.
+        for gid in ("below-hi", "below-lo"):
+            assert contribs[gid]["dense"] == 0.0, (
+                f"below-floor hit {gid} dense contribution should be 0.0 "
+                f"(cosine below the {g._dense_additive_min_cosine} floor); "
+                f"got {contribs[gid].get('dense')}"
+            )
+            # ...but the hit is still kept as a candidate: it appears in
+            # gene_scores via the 1e-9 set-membership epsilon. Its score
+            # carries NO weighted dense term — only the epsilon plus the
+            # flat authority boost — so it sits well below even the
+            # smallest above-floor dense contribution (0.16*weight).
+            assert gid in scores, (
+                f"below-floor hit {gid} should still be a candidate "
+                f"(1e-9 set-membership epsilon)"
+            )
+            assert scores[gid] < 0.16 * weight, (
+                f"below-floor hit {gid} must not carry a weighted dense "
+                f"term; got score {scores.get(gid)}"
+            )
+    finally:
+        g.close()
+
+
+def test_dense_additive_min_cosine_default_and_plumbing():
+    """dense_additive_min_cosine defaults to 0.15 on a bare genome and is
+    stored as _dense_additive_min_cosine; an explicit value overrides it.
+    """
+    g_default = Genome(path=":memory:")
+    g_custom = Genome(path=":memory:", dense_additive_min_cosine=0.3)
+    try:
+        assert g_default._dense_additive_min_cosine == pytest.approx(0.15)
+        assert g_custom._dense_additive_min_cosine == pytest.approx(0.3)
+    finally:
+        g_default.close()
+        g_custom.close()
+
+
 # ── 8. live — real BGE-M3 dense recall through query_docs (additive) ─
 
 

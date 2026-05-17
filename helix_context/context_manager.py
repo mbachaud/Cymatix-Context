@@ -510,6 +510,8 @@ class HelixContextManager:
             dense_weight=config.retrieval.dense_weight,
             # Tier-0 PR-3 (2026-05-16): additive-mode dense merge weight.
             dense_additive_weight=config.retrieval.dense_additive_weight,
+            # Tier-0 review fix (2026-05-16): additive-mode dense merge noise floor.
+            dense_additive_min_cosine=config.retrieval.dense_additive_min_cosine,
             pki_weight=config.retrieval.pki_weight,
         )
 
