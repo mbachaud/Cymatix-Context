@@ -75,6 +75,10 @@ from pathlib import Path
 from typing import Iterable
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+# Also put this ``scripts/`` dir on the path so the sibling-module import of
+# ``backfill_bgem3_v2`` resolves whether this file is run directly or
+# imported as a module (e.g. by the test suite). See Tier-0 PR-2.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from helix_context.tagger import CpuTagger
 from helix_context.genome import Genome
@@ -85,6 +89,11 @@ from helix_context.shard_schema import (
     open_main_db,
     register_shard,
 )
+
+# Tier-0 PR-2 (2026-05-16): reuse the operator backfill script's shared
+# encode-and-pack loop so the fixture builder's post-build dense pass and
+# ``scripts/backfill_bgem3_v2.py`` share one implementation and cannot drift.
+from backfill_bgem3_v2 import backfill_dense_db
 
 
 logging.basicConfig(
@@ -538,6 +547,58 @@ def ingest_tree(
 # ── Build one profile ─────────────────────────────────────────────────────
 
 
+def _backfill_dense(db_path: str) -> dict:
+    """Post-build pass: populate ``genes.embedding_dense_v2`` on ``db_path``.
+
+    Tier-0 PR-2 (2026-05-16). The fixture builder's per-gene write path
+    (``Genome.upsert_doc`` via the batched-SPLADE writer) is deliberately
+    kept lean — it does not encode dense vectors inline. Instead, once a
+    profile or shard ``.db`` is fully built and closed, this runs an
+    explicit BGE-M3 dense backfill over it so the bench fixtures exercise
+    the real (dense-populated) retrieval pipeline rather than a
+    dense-dark one.
+
+    Delegates to :func:`backfill_bgem3_v2.backfill_dense_db` — the shared
+    encode-and-pack loop also used by the standalone operator backfill
+    script — so the two paths cannot drift. ``dim`` defaults to
+    ``retrieval.dense_embedding_dim`` from ``helix.toml``.
+
+    Call sites:
+      * blob mode — at the end of :func:`build_profile`, after
+        ``genome.close()``, on ``<profile>.db``.
+      * sharded mode — in :func:`_build_one_shard`, after the shard's
+        ``Genome`` is closed, on each per-shard ``.db``. The cross-shard
+        ``main.genome.db`` routing DB holds no ``genes`` rows and is not
+        backfilled.
+
+    Returns the coverage report dict from :func:`backfill_dense_db`
+    (includes ``dense_coverage`` in ``[0.0, 1.0]``). On any failure the
+    error is logged and a degraded report with ``dense_coverage = 0.0``
+    and an ``error`` key is returned, so a dense-encode failure surfaces
+    in the manifest rather than silently producing a dense-dark fixture.
+    """
+    log.info("dense backfill: %s", db_path)
+    try:
+        report = backfill_dense_db(db_path, log_fn=lambda msg: log.info("%s", msg))
+    except Exception as exc:  # noqa: BLE001 — model load / encode failure
+        log.error("dense backfill FAILED for %s: %s", db_path, exc)
+        return {
+            "db_path": db_path,
+            "dense_coverage": 0.0,
+            "rows_processed": 0,
+            "error": f"{type(exc).__name__}: {exc}",
+        }
+    log.info(
+        "dense backfill done: %s coverage=%.1f%% (%d/%d genes, %d processed)",
+        db_path,
+        100.0 * report["dense_coverage"],
+        report["populated_after"],
+        report["total"],
+        report["rows_processed"],
+    )
+    return report
+
+
 def build_profile(
     name: str,
     db_path: str,
@@ -654,6 +715,15 @@ def build_profile(
         log.warning("  missing roots: %s", stats["missing_roots"])
 
     genome.close()
+
+    # Tier-0 PR-2: post-build dense pass. The builder's per-gene write path
+    # is lean (no inline BGE-M3 encode); populate ``embedding_dense_v2`` here
+    # now that the ``.db`` is fully written and closed.
+    dense_report = _backfill_dense(db_path)
+    stats["dense_coverage"] = dense_report["dense_coverage"]
+    stats["dense_genes_populated"] = dense_report.get("populated_after", 0)
+    if dense_report.get("error"):
+        stats["dense_error"] = dense_report["error"]
 
     # Drop perf_counter t0 before serializing
     stats.pop("t0", None)
@@ -794,7 +864,7 @@ def _build_one_shard(
                 now,   # updated_at
             ))
 
-        return {
+        result = {
             "label": label,
             "root": root,
             "shard_db_path": str(p),
@@ -811,6 +881,18 @@ def _build_one_shard(
         }
     finally:
         shard.close()
+
+    # Tier-0 PR-2: post-build dense pass on this per-shard ``.db`` — run
+    # only after the shard's ``Genome`` has been closed above. The
+    # cross-shard ``main.genome.db`` routing DB is NOT backfilled here: it
+    # carries no ``genes`` rows (only fingerprint_index / source_index), so
+    # per-shard dense recall reads each shard's own ``embedding_dense_v2``.
+    dense_report = _backfill_dense(str(p))
+    result["dense_coverage"] = dense_report["dense_coverage"]
+    result["dense_genes_populated"] = dense_report.get("populated_after", 0)
+    if dense_report.get("error"):
+        result["dense_error"] = dense_report["error"]
+    return result
 
 
 def _shard_worker_entry(task: dict) -> dict:
@@ -990,7 +1072,7 @@ def build_profile_sharded(
             len(si_payload),
             res["byte_size"] / 1_048_576, res["elapsed_s"],
         )
-        totals["shards"].append({
+        shard_entry = {
             "name": res["label"],
             "root": res["root"],
             "path": res["shard_db_path"],
@@ -999,7 +1081,14 @@ def build_profile_sharded(
             "source_index_rows": len(si_payload),
             "bytes": res["byte_size"],
             "elapsed_s": res["elapsed_s"],
-        })
+            # Tier-0 PR-2: per-shard dense coverage from the post-build
+            # backfill that ran inside ``_build_one_shard``.
+            "dense_coverage": res.get("dense_coverage", 0.0),
+            "dense_genes_populated": res.get("dense_genes_populated", 0),
+        }
+        if res.get("dense_error"):
+            shard_entry["dense_error"] = res["dense_error"]
+        totals["shards"].append(shard_entry)
         for k in ("files", "genes", "skipped", "errors"):
             totals[k] += res[k]
         totals["missing_roots"].extend(res["missing_roots"])
@@ -1042,12 +1131,26 @@ def build_profile_sharded(
     totals["total_genes"] = sum(s["genes"] for s in totals["shards"])
     totals["shard_count"] = len(totals["shards"])
 
+    # Tier-0 PR-2: profile-level dense coverage = populated genes across all
+    # per-shard ``.db`` files / total genes across all shards. The cross-shard
+    # ``main.genome.db`` carries no ``genes`` rows and is excluded by
+    # construction (it is never passed to ``_backfill_dense``).
+    dense_populated = sum(
+        s.get("dense_genes_populated", 0) for s in totals["shards"]
+    )
+    totals["dense_genes_populated"] = dense_populated
+    totals["dense_coverage"] = (
+        dense_populated / totals["total_genes"]
+        if totals["total_genes"] else 0.0
+    )
+
     log.info("=" * 60)
     log.info("DONE %s-sharded in %.1fs", name, elapsed)
     log.info(
-        "  shards=%d genes=%d bytes=%d (main_db=%d)",
+        "  shards=%d genes=%d bytes=%d (main_db=%d) dense_coverage=%.1f%%",
         totals["shard_count"], totals["total_genes"],
         totals["total_bytes"], totals["main_db_bytes"],
+        100.0 * totals["dense_coverage"],
     )
     if totals["missing_roots"]:
         log.warning("  missing roots: %s", totals["missing_roots"])
