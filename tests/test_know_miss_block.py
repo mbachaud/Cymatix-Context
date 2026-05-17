@@ -31,6 +31,7 @@ from helix_context.scoring.know_calibration import (
     fit_betas_from_features,
     load_calibration_from_toml,
 )
+from helix_context.scoring import know_decision as know_decision_module
 from helix_context.scoring.know_decision import (
     _agree_from_tier_contributions,
     _gene_id_beacon,
@@ -405,6 +406,54 @@ def test_agree_from_tier_contributions():
     # Empty → False (safe default).
     assert _agree_from_tier_contributions({}, k=3) is False
     assert _agree_from_tier_contributions(None, k=3) is False
+
+
+def test_agree_from_tier_contributions_dense_tier_bucketed():
+    """Regression for the BGE-M3 dense-tier bucket gap (follow-up to
+    PR #135). ``knowledge_store.py`` writes the dense-cosine recall
+    score under the tier name ``"dense"`` (blob path ~L1939), and
+    ``shard_router.py`` re-publishes that map verbatim (~L508/L613), so
+    sharded mode emits the same name. ``_DENSE_TIERS`` must contain
+    ``"dense"`` or ``lexical_dense_agree`` can never fire for a BGE-M3
+    dense retrieval — it could only agree via SPLADE/SEMA.
+    """
+    # g1 tops the lexical ranker (fts5) AND the dense ranker (dense).
+    # The intersection of the per-ranker top-K is non-empty → agree.
+    contribs = {
+        "g1": {"fts5": 1.0, "dense": 0.82},
+        "g2": {"fts5": 0.5},
+        "g3": {"dense": 0.40},
+    }
+    assert _agree_from_tier_contributions(contribs, k=3) is True
+
+    # Pin the failure direction: this same map yields False against the
+    # pre-fix dense-tier set (which omitted "dense"). We simulate the
+    # old set rather than re-import a frozen copy so the assertion
+    # documents exactly which name closed the gap.
+    pre_fix_dense_tiers = frozenset({"splade", "sema_boost", "sema_cold"})
+    lex_tiers = know_decision_module._LEXICAL_TIERS
+
+    def _agree_with(dense_tiers, tier_contributions, k=3):
+        lex_scores, dense_scores = [], []
+        for gid, tier_map in tier_contributions.items():
+            lex = sum(float(tier_map.get(t, 0.0)) for t in lex_tiers)
+            dense = sum(float(tier_map.get(t, 0.0)) for t in dense_tiers)
+            if lex > 0:
+                lex_scores.append((gid, lex))
+            if dense > 0:
+                dense_scores.append((gid, dense))
+        lex_scores.sort(key=lambda kv: kv[1], reverse=True)
+        dense_scores.sort(key=lambda kv: kv[1], reverse=True)
+        lex_top = {gid for gid, _ in lex_scores[:k]}
+        dense_top = {gid for gid, _ in dense_scores[:k]}
+        return bool(lex_top & dense_top)
+
+    # Pre-fix set: "dense" is unrecognized → dense ranker is empty →
+    # no intersection → the signal silently never fires.
+    assert _agree_with(pre_fix_dense_tiers, contribs) is False
+    # Post-fix set (the live one) agrees, confirming the fix is what
+    # closes the gap.
+    assert _agree_with(know_decision_module._DENSE_TIERS, contribs) is True
 
 
 # ─────────────────────────────────────────────────────────────────────
