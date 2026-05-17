@@ -123,7 +123,19 @@ def backfill_dense_db(
     dim = int(dim)
     expected_bytes = dim * 4
     if codec is None:
-        codec = BGEM3Codec(dim=dim)
+        # Auto-detect CUDA so the dense backfill runs on the GPU when one is
+        # present. ``BGEM3Codec`` defaults to ``device="cpu"``; on CPU this
+        # encode-and-pack loop is a half-day job at ~19k genes, vs ~5-15 min
+        # on a GPU (the speeds this script's header advertises). The codec's
+        # sentence-transformers backend forwards ``device`` to the model, so
+        # picking "cuda" here is all that's needed. Falls back to CPU when no
+        # GPU is visible. Tests inject their own ``codec`` and bypass this.
+        try:
+            import torch
+            device = "cuda" if torch.cuda.is_available() else "cpu"
+        except Exception:  # noqa: BLE001 — torch missing → CPU is the only option
+            device = "cpu"
+        codec = BGEM3Codec(dim=dim, device=device)
 
     # Single connection for the whole backfill. Wrapped in try/finally so a
     # raise anywhere below (most likely ``codec.encode_batch`` when the model
