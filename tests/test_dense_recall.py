@@ -21,7 +21,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import random
 import sqlite3
 import struct
 import subprocess
@@ -38,40 +37,12 @@ from helix_context.schemas import (
     ChromatinState, EpigeneticMarkers, Gene, PromoterTags,
 )
 
-
-# ── Test helpers ─────────────────────────────────────────────────────
-
-
-def _hash_vec(text: str, dim: int) -> np.ndarray:
-    """Deterministic L2-normalised fp32 vector seeded from text."""
-    out = np.zeros(dim, dtype=np.float32)
-    seed = hashlib.sha256(text.encode("utf-8")).digest()
-    rng = random.Random(int.from_bytes(seed[:8], "little"))
-    for i in range(dim):
-        out[i] = rng.gauss(0.0, 1.0)
-    n = np.linalg.norm(out)
-    if n > 0:
-        out /= n
-    return out
-
-
-class _FakeCodec:
-    """Test stand-in for BGEM3Codec; same shape contract."""
-
-    def __init__(self, dim: int = 1024, query_target: str | None = None):
-        self.dim = dim
-        # If query_target is set, encode("query") returns the same vector
-        # as encode(query_target, "passage") — this lets tests stage a
-        # deterministic "query matches X" relationship.
-        self._query_target = query_target
-
-    def encode(self, text: str, task: str = "passage"):
-        if task == "query" and self._query_target is not None:
-            return _hash_vec(self._query_target, self.dim).tolist()
-        return _hash_vec(text, self.dim).tolist()
-
-    def similarity(self, a, b) -> float:
-        return float(np.dot(np.asarray(a), np.asarray(b)))
+# The deterministic fake BGE-M3 codec lives in tests/conftest.py — it is the
+# single shared definition (the `_stub_dense_codec` autouse fixture installs
+# the same class for every non-live test). `_hash_vec` / `_FakeCodec` remain
+# as local aliases so this file's many call sites stay unchanged.
+from tests.conftest import FakeBGEM3Codec as _FakeCodec
+from tests.conftest import hash_vec as _hash_vec
 
 
 def _make_gene(content: str, *, domains=None, entities=None, gene_id=None) -> Gene:

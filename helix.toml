@@ -199,7 +199,7 @@ entity_graph = true                     # Phase 5: entity-based co-activation li
 # so every ingested genome is dense-populated without a separate backfill.
 # Set false for latency-sensitive callers to defer encoding to
 # scripts/backfill_bgem3_v2.py. Write path only — retrieval still gates on
-# [retrieval] dense_embedding_enabled (default false).
+# [retrieval] dense_embedding_enabled (default true).
 dense_embed_on_ingest = true            # Tier-0 PR-1 (2026-05-16)
 
 [context]
