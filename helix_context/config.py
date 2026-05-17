@@ -188,6 +188,14 @@ class IngestionConfig:
     rerank_enabled: bool = False    # Phase 3: enable cross-encoder reranking
     colbert_enabled: bool = False   # Phase 4: ColBERT late interaction (optional)
     entity_graph: bool = False      # Phase 5: entity-based co-activation links
+    # Tier-0 PR-1 (2026-05-16): compute BGE-M3 dense vectors
+    # (genes.embedding_dense_v2) inline at ingest. Default true so a genome
+    # built by `helix ingest` / `/ingest` / context_manager.ingest is
+    # dense-populated without a separate backfill pass. Latency-sensitive
+    # callers can set false to defer encoding to scripts/backfill_bgem3_v2.py.
+    # This is purely the WRITE path — retrieval still gates on
+    # [retrieval] dense_embedding_enabled (default false).
+    dense_embed_on_ingest: bool = True
 
 
 @dataclass
@@ -646,6 +654,9 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             rerank_enabled=i.get("rerank_enabled", cfg.ingestion.rerank_enabled),
             colbert_enabled=i.get("colbert_enabled", cfg.ingestion.colbert_enabled),
             entity_graph=i.get("entity_graph", cfg.ingestion.entity_graph),
+            dense_embed_on_ingest=i.get(
+                "dense_embed_on_ingest", cfg.ingestion.dense_embed_on_ingest
+            ),
         )
 
     # Context (cold-tier retrieval knobs — C.2 of B->C, 2026-04-10)

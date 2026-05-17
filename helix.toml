@@ -195,6 +195,12 @@ rerank_model = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 rerank_enabled = false                  # Phase 3: enable pretrained cross-encoder reranking
 colbert_enabled = false                 # Phase 4: ColBERT late interaction (optional)
 entity_graph = true                     # Phase 5: entity-based co-activation links
+# Compute BGE-M3 dense vectors (genes.embedding_dense_v2) inline at ingest
+# so every ingested genome is dense-populated without a separate backfill.
+# Set false for latency-sensitive callers to defer encoding to
+# scripts/backfill_bgem3_v2.py. Write path only — retrieval still gates on
+# [retrieval] dense_embedding_enabled (default false).
+dense_embed_on_ingest = true            # Tier-0 PR-1 (2026-05-16)
 
 [context]
 # Cold-tier retrieval (C.2 of B->C, 2026-04-10)

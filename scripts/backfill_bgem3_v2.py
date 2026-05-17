@@ -27,16 +27,17 @@ from __future__ import annotations
 
 import argparse
 import sqlite3
-import struct
 import sys
 import time
 from pathlib import Path
 
-import numpy as np
-
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from helix_context.backends.bgem3_codec import BGEM3Codec
+from helix_context.backends.bgem3_codec import (
+    PASSAGE_CHAR_CAP,
+    BGEM3Codec,
+    vec_to_blob,
+)
 from helix_context.config import load_config
 
 
@@ -55,12 +56,11 @@ def _ensure_v2_schema(conn: sqlite3.Connection) -> None:
     conn.commit()
 
 
-def _vec_to_blob(vec, dim: int) -> bytes:
-    """Pack a float vector as raw little-endian fp32 of length ``dim*4``."""
-    arr = np.asarray(vec, dtype="<f4")
-    if arr.shape[0] != dim:
-        raise ValueError(f"vector dim {arr.shape[0]} != expected {dim}")
-    return arr.tobytes(order="C")
+# ``_vec_to_blob`` is kept as a thin alias of the canonical
+# ``helix_context.backends.bgem3_codec.vec_to_blob`` so the inline-ingest
+# write path (knowledge_store.upsert_doc) and this offline backfill share one
+# encoding and cannot drift. See PR-1 of the 2026-05-16 Tier-0 plan.
+_vec_to_blob = vec_to_blob
 
 
 def main() -> int:
@@ -131,9 +131,10 @@ def main() -> int:
         if not content.strip():
             skipped += 1
             continue
-        # Match production encode behaviour: bound passage length at 2000
-        # chars (BGE-M3 max_length=512 tokens, ~2k chars is a safe cap).
-        vec = codec.encode(content[:2000], task="passage")
+        # Match production encode behaviour: bound passage length at
+        # PASSAGE_CHAR_CAP (BGE-M3 max_length=512 tokens, ~2k chars is a safe
+        # cap). The inline-ingest path uses the same cap.
+        vec = codec.encode(content[:PASSAGE_CHAR_CAP], task="passage")
         try:
             blob = _vec_to_blob(vec, dim)
         except ValueError as e:

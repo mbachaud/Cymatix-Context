@@ -336,6 +336,11 @@ class KnowledgeStore:
         # Stage 2 (2026-05-08): default dim raised from 256 -> 1024 (full
         # BGE-M3 Matryoshka). dim=256 collapsed random-pair cosine.
         dense_embedding_dim: int = 1024,
+        # Tier-0 PR-1 (2026-05-16): when true, upsert_doc computes and
+        # persists genes.embedding_dense_v2 inline (unless the caller passes
+        # a precomputed vector). This is the WRITE path only and is
+        # independent of dense_embedding_enabled, which gates RETRIEVAL.
+        dense_embed_on_ingest: bool = False,
         ann_similarity_threshold: float = 0.35,
         ann_threshold_min_genes: int = 1,
         ann_threshold_max_genes: int = 12,
@@ -400,6 +405,9 @@ class KnowledgeStore:
         # Step 4 — BGE-M3 dense vectors + ANN threshold (2026-05-08).
         self._dense_embedding_enabled: bool = bool(dense_embedding_enabled)
         self._dense_embedding_dim: int = int(dense_embedding_dim)
+        # Tier-0 PR-1 (2026-05-16): inline dense-vector write at ingest.
+        # Independent of _dense_embedding_enabled (retrieval gate).
+        self._dense_embed_on_ingest: bool = bool(dense_embed_on_ingest)
         self._ann_threshold: float = float(ann_similarity_threshold)
         self._ann_min_genes: int = int(ann_threshold_min_genes)
         self._ann_max_genes: int = int(ann_threshold_max_genes)
@@ -1004,6 +1012,7 @@ class KnowledgeStore:
         gene: Gene,
         apply_gate: bool = True,
         splade_sparse: Optional[Dict[str, float]] = None,
+        embedding_dense_v2: Optional[List[float]] = None,
     ) -> str:
         """
         Insert or replace a document in the knowledge store.
@@ -1014,6 +1023,19 @@ class KnowledgeStore:
         setup scripts, explicit backfill tools, manual `compact_genome`
         re-runs — can pass ``apply_gate=False`` to preserve the incoming
         lifecycle tier as-is.
+
+        ``embedding_dense_v2`` (Tier-0 PR-1, 2026-05-16) is an optional
+        precomputed BGE-M3 dense vector (a ``dense_embedding_dim``-length
+        float list). A batched caller — e.g. ``context_manager.ingest()`` —
+        encodes all strands in one codec call and passes each vector here so
+        per-document encoding is not repeated. When it is *not* supplied and
+        ``dense_embed_on_ingest`` is true on this store, the vector is
+        computed lazily via the store's BGE-M3 codec. When the knob is false
+        and no vector is passed, the ``embedding_dense_v2`` column is left
+        NULL (callers can backfill later via
+        ``scripts/backfill_bgem3_v2.py``). This is purely the *write* path —
+        dense recall during ``query_docs`` is gated separately on
+        ``dense_embedding_enabled``.
 
         Returns the gene_id (content-addressed if not pre-populated).
         """
@@ -1076,14 +1098,22 @@ class KnowledgeStore:
             else (observed_at if observed_at is not None else time.time())
         )
 
+        # Tier-0 PR-1 (2026-05-16): compute the BGE-M3 dense vector inline so
+        # every ingest path populates genes.embedding_dense_v2. Uses the
+        # caller-supplied vector when present (batched ingest), else encodes
+        # lazily iff dense_embed_on_ingest is set; NULL otherwise. Soft-fails.
+        dense_v2_blob = self._encode_dense_v2_blob(
+            gene.content, precomputed=embedding_dense_v2
+        )
+
         cur.execute(
             "INSERT OR REPLACE INTO genes "
             "(gene_id, content, complement, codons, promoter, epigenetics, "
             "chromatin, is_fragment, embedding, source_id, repo_root, source_kind, "
             "observed_at, mtime, content_hash, volatility_class, authority_class, "
             "support_span, last_verified_at, version, supersedes, key_values, "
-            "compression_tier, last_seen) "
-            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            "compression_tier, last_seen, embedding_dense_v2) "
+            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (
                 gene_id,
                 gene.content,
@@ -1109,6 +1139,8 @@ class KnowledgeStore:
                 json_dumps(gene.key_values) if gene.key_values else None,
                 tier,
                 time.time(),  # last_seen: always stamp current epoch on every upsert
+                # Tier-0 PR-1: raw little-endian fp32 BGE-M3 vector, or NULL.
+                sqlite3.Binary(dense_v2_blob) if dense_v2_blob is not None else None,
             ),
         )
         # Invalidate parse cache for this document's promoter/epigenetics
@@ -2383,6 +2415,55 @@ class KnowledgeStore:
                     )
                     self._threshold_dim_warned = True
         return self._dense_codec
+
+    def _encode_dense_v2_blob(
+        self,
+        content: Optional[str],
+        precomputed: Optional[List[float]] = None,
+    ) -> Optional[bytes]:
+        """Return the ``embedding_dense_v2`` BLOB for an ingest row, or None.
+
+        Tier-0 PR-1 (2026-05-16). Resolution order:
+
+        1. If ``precomputed`` is supplied (a batched caller already encoded
+           the vector), pack and return it.
+        2. Otherwise, only if ``self._dense_embed_on_ingest`` is true,
+           lazy-load the BGE-M3 codec and encode ``content`` as a passage.
+        3. Otherwise return ``None`` — the column stays NULL and a later
+           ``scripts/backfill_bgem3_v2.py`` run can populate it.
+
+        Encoding is bounded to ``PASSAGE_CHAR_CAP`` chars and uses
+        ``task="passage"`` — the same contract as the offline backfill, so
+        an inline-ingested genome satisfies the backfill's
+        ``length(blob) == dim*4`` idempotency skip-clause. Packing goes
+        through the shared ``vec_to_blob`` helper so the two write paths
+        cannot drift.
+
+        Encode failures are soft — ingest must never break because the dense
+        model is unavailable; the row is stored with a NULL v2 column and a
+        WARN is logged.
+        """
+        from .backends.bgem3_codec import PASSAGE_CHAR_CAP, vec_to_blob
+
+        dim = self._dense_embedding_dim
+        try:
+            if precomputed is not None:
+                return vec_to_blob(precomputed, dim)
+            if not self._dense_embed_on_ingest:
+                return None
+            text = (content or "").strip()
+            if not text:
+                return None
+            codec = self._get_dense_codec()
+            vec = codec.encode(text[:PASSAGE_CHAR_CAP], task="passage")
+            return vec_to_blob(vec, dim)
+        except Exception:
+            log.warning(
+                "dense v2 encode failed at ingest — storing row with NULL "
+                "embedding_dense_v2 (backfill later)",
+                exc_info=True,
+            )
+            return None
 
     def _invalidate_dense_matrix(self, force: bool = False) -> None:
         """Drop the in-memory dense matrix so it rebuilds on next query.

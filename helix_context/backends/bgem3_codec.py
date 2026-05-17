@@ -23,6 +23,31 @@ _QUERY_PREFIX = "Represent this sentence for searching relevant passages: "
 # tries dim=256 again sees the calibration risk.
 _SANCTIONED_DIMS = frozenset({1024, 768, 512})
 
+# Passage encode length cap. BGE-M3 has max_length=512 tokens; ~2k chars is a
+# safe upper bound. Both the inline ingest path (knowledge_store.upsert_doc /
+# context_manager.ingest) and the offline backfill script bound passages to
+# this so the two encodings stay byte-identical. See PR-1 of the 2026-05-16
+# Tier-0 plan.
+PASSAGE_CHAR_CAP = 2000
+
+
+def vec_to_blob(vec, dim: int) -> bytes:
+    """Pack a float vector as a raw little-endian fp32 BLOB of ``dim*4`` bytes.
+
+    This is the single canonical encoding for the ``genes.embedding_dense_v2``
+    column. Both ``scripts/backfill_bgem3_v2.py`` and
+    ``knowledge_store.upsert_doc`` call it so the inline-ingest write and the
+    offline-backfill write cannot drift — a genome built through the ingest
+    path must satisfy the backfill script's ``length(blob) == dim*4``
+    idempotency skip-clause.
+    """
+    arr = np.asarray(vec, dtype="<f4")
+    if arr.ndim != 1 or arr.shape[0] != dim:
+        raise ValueError(
+            f"vector dim {getattr(arr, 'shape', None)} != expected ({dim},)"
+        )
+    return arr.tobytes(order="C")
+
 
 class BGEM3Codec:
     # Track which non-sanctioned dim values we've already warned for so we
@@ -79,6 +104,41 @@ class BGEM3Codec:
         if norm > 0:
             vec = vec / norm
         return vec.tolist()
+
+    def encode_batch(self, texts: list[str], task: str = "passage") -> list[list[float]]:
+        """Encode many texts in one model call. Same contract as ``encode``.
+
+        Tier-0 PR-1 (2026-05-16): the ingest path encodes every strand of a
+        document in a single batched call rather than one ``encode`` per
+        strand. Each output row is Matryoshka-truncated to ``self.dim`` and
+        L2-renormalised exactly as ``encode`` does, so a vector produced here
+        is byte-identical to one produced by ``encode`` for the same text.
+
+        task='query' prepends the retrieval instruction prefix to every text;
+        task='passage' is bare.
+        """
+        if not texts:
+            return []
+        self._load()
+        prepared = (
+            [_QUERY_PREFIX + t for t in texts] if task == "query" else list(texts)
+        )
+        if self._backend == "flagembedding":
+            raw = self._model.encode(prepared, max_length=512)["dense_vecs"]
+            mat = np.asarray(raw, dtype=np.float32)
+        else:
+            mat = np.asarray(
+                self._model.encode(
+                    prepared, normalize_embeddings=True, show_progress_bar=False,
+                ),
+                dtype=np.float32,
+            )
+        # Matryoshka truncate + per-row L2 renormalise.
+        mat = mat[:, : self.dim]
+        norms = np.linalg.norm(mat, axis=1, keepdims=True)
+        norms[norms == 0.0] = 1.0
+        mat = mat / norms
+        return mat.tolist()
 
     def similarity(self, vec_a: list[float], vec_b: list[float]) -> float:
         a = np.array(vec_a, dtype=np.float32)

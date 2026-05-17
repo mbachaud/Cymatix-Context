@@ -139,6 +139,10 @@ ADAPTER_ONLY_DIFFERENCES_WHITELIST = frozenset({
     # internal tables.
     "rebuild_fts", "rebuild_path_kv_index", "rebuild_entity_graph",
     "rebuild_dense_matrix", "_dense_matrix", "_ensure_dense_matrix",
+    # Tier-0 PR-1 (2026-05-16): inline dense-vector encode at ingest.
+    # Write-path helper on the per-shard Genome only — the adapter's
+    # upsert_doc is a no-op, so it never encodes.
+    "_encode_dense_v2_blob",
 
     # Dense recall — per-shard, no cross-shard fan-out in V1.
     "query_docs_dense_recall", "query_genes_dense_recall",
