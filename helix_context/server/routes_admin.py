@@ -909,6 +909,21 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
             helix.genome = new_store
             helix.genome.last_query_scores = {}
 
+            # Tier-0 fix (2026-05-17): repoint the session Registry at the
+            # new store. The Registry captures a genome reference at app
+            # construction (app.py: Registry(helix.genome)) and uses
+            # genome.conn directly for every read/write — including the
+            # background sweep task. Without this repoint, after a swap the
+            # Registry still holds the OLD store, which old_store.close()
+            # below then closes; the next _background_registry_sweep tick
+            # raises "sqlite3.ProgrammingError: Cannot operate on a closed
+            # database". Must run BEFORE old_store.close() so a sweep that
+            # fires mid-swap never observes a closed connection.
+            try:
+                registry.genome = new_store
+            except Exception:
+                log.warning("swap-db: failed to repoint registry genome", exc_info=True)
+
             # Close old store (best-effort)
             try:
                 old_store.close()

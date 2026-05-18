@@ -272,6 +272,44 @@ class TestSwapDbEndpoint:
         assert resp.json()["read_only"] is False
         assert app.state.helix.genome.read_only is False
 
+    def test_swap_db_repoints_registry_genome(self, tmp_path):
+        """The session Registry is repointed at the new store after a swap.
+
+        Bug B (2026-05-17): the Registry captures a genome reference at
+        app construction and uses ``genome.conn`` directly for every
+        read/write — including the background sweep. Before the fix, a
+        swap left the Registry holding the OLD store, which the swap then
+        closed; the next ``Registry.sweep()`` raised
+        ``sqlite3.ProgrammingError: Cannot operate on a closed database``.
+        """
+        import sqlite3
+
+        db_a = str(tmp_path / "reg_a.db")
+        db_b = str(tmp_path / "reg_b.db")
+        _make_db(db_a, genes=1).close()
+        _make_db(db_b, genes=2).close()
+
+        app, client = _make_app_and_client(db_a)
+        registry = app.state.registry
+
+        # Pre-swap: registry points at the boot store.
+        assert registry.genome is app.state.helix.genome
+
+        resp = client.post("/admin/swap-db", json={"path": db_b})
+        assert resp.status_code == 200
+
+        # Post-swap: registry tracks the new live store, not the closed one.
+        assert registry.genome is app.state.helix.genome
+        assert registry.genome.path == db_b
+
+        # And the sweep — the background task's payload — runs against the
+        # new store without "Cannot operate on a closed database".
+        try:
+            counts = registry.sweep()
+        except sqlite3.ProgrammingError as exc:  # pragma: no cover
+            pytest.fail(f"registry.sweep() hit a closed DB after swap: {exc}")
+        assert isinstance(counts, dict)
+
 
 # -- Sharded round-trip via swap-db ----------------------------------------
 #
