@@ -924,6 +924,19 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
             except Exception:
                 log.warning("swap-db: failed to repoint registry genome", exc_info=True)
 
+            # Tier-0 follow-up #4 (2026-05-17): repoint the VaultManager at
+            # the new store too. Like the Registry above, VaultManager
+            # captures helix.genome at construction (app.py:
+            # VaultManager(genome=helix.genome)); its pruner thread runs
+            # refresh_stale_view(genome=self.genome) on a timer, so without
+            # this repoint a post-swap prune cycle would hit the closed old
+            # store — the same closed-database failure. Vault is opt-in, so
+            # this only bites when vault.enabled=true. Runs BEFORE close().
+            try:
+                request.app.state.vault.genome = new_store
+            except Exception:
+                log.warning("swap-db: failed to repoint vault genome", exc_info=True)
+
             # Close old store (best-effort)
             try:
                 old_store.close()

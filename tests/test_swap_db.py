@@ -21,6 +21,8 @@ from helix_context.config import (
     HelixConfig,
     RibosomeConfig,
     ServerConfig,
+    VaultConfig,
+    VaultTracesConfig,
 )
 from helix_context.knowledge_store import KnowledgeStore
 from helix_context.schemas import (
@@ -309,6 +311,77 @@ class TestSwapDbEndpoint:
         except sqlite3.ProgrammingError as exc:  # pragma: no cover
             pytest.fail(f"registry.sweep() hit a closed DB after swap: {exc}")
         assert isinstance(counts, dict)
+
+    def test_swap_db_repoints_vault_genome(self, tmp_path):
+        """The VaultManager is repointed at the new store after a swap.
+
+        Tier-0 follow-up #4 (2026-05-17): the VaultManager — like the
+        session Registry (Bug B, test above) — captures a genome reference
+        at app construction (app.py: ``VaultManager(genome=helix.genome)``).
+        Its pruner thread calls ``refresh_stale_view(genome=self.genome)``
+        on a timer. Before this fix a swap left the VaultManager holding
+        the OLD store, which the swap then closed; the next prune cycle
+        raised ``sqlite3.ProgrammingError: Cannot operate on a closed
+        database``.
+        """
+        import sqlite3
+
+        db_a = str(tmp_path / "vault_a.db")
+        db_b = str(tmp_path / "vault_b.db")
+        _make_db(db_a, genes=1).close()
+        _make_db(db_b, genes=2).close()
+
+        # Build the app with the vault ENABLED so the pruner payload
+        # actually touches the genome (a disabled vault would no-op).
+        config = HelixConfig(
+            ribosome=RibosomeConfig(model="mock", timeout=5),
+            budget=BudgetConfig(max_genes_per_turn=4),
+            genome=GenomeConfig(path=db_a, cold_start_threshold=5),
+            server=ServerConfig(upstream="http://localhost:11434"),
+        )
+        config.vault = VaultConfig(
+            enabled=True, path=str(tmp_path / "vault"),
+            party_id="", fan_out_threshold=5000,
+            redact_body=False, stale_threshold=0.5,
+            traces=VaultTracesConfig(
+                enabled=True, retention_hours=48,
+                max_retention_hours_hard=720, max_count=10000,
+                rollup_enabled=True, rollup_shard="hour",
+                prune_interval_minutes=60, trigger_only=False,
+            ),
+        )
+        app = create_app(config)
+        app.state.helix.ribosome.backend = _MockBackend()
+        client = TestClient(app)
+
+        # TestClient is not used as a context manager here, so the app
+        # lifespan never runs — start the vault by hand.
+        vault = app.state.vault
+        vault.start()
+        try:
+            assert vault._started is True
+            # Pre-swap: vault points at the boot store.
+            assert vault.genome is app.state.helix.genome
+
+            resp = client.post("/admin/swap-db", json={"path": db_b})
+            assert resp.status_code == 200
+
+            # Post-swap: vault tracks the new live store, not the closed one.
+            assert vault.genome is app.state.helix.genome
+            assert vault.genome.path == db_b
+
+            # The pruner's payload runs against the new store without
+            # "Cannot operate on a closed database".
+            try:
+                results = vault.run_prune_cycle()
+            except sqlite3.ProgrammingError as exc:  # pragma: no cover
+                pytest.fail(
+                    f"vault prune cycle hit a closed DB after swap: {exc}"
+                )
+            assert isinstance(results, dict)
+            assert "stale" in results
+        finally:
+            vault.stop()
 
 
 # -- Sharded round-trip via swap-db ----------------------------------------
