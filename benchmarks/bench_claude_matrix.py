@@ -1,4 +1,8 @@
-r"""Run the 10-needle bench against all 6 frozen fixtures via ``claude -p``.
+r"""Run the 50-needle bench against the frozen fixture matrix via ``claude -p``.
+
+A default run covers the trusted fixtures only; xl-sharded is excluded
+because its `projects` shard fixture is corrupt (see issue #133). Pass
+``--include-untrusted`` to run it anyway.
 
 Per fixture:
   1. POST /admin/swap-db pointing at the fixture's primary .db
@@ -30,14 +34,15 @@ Output (no overwrite — per-run subdir):
     large.jsonl
     xl.jsonl
     medium-sharded.jsonl
-    xl-sharded.jsonl
+    xl-sharded.jsonl     (only with --include-untrusted; see #133)
     run.log
     uvicorn.log         (when managing the server)
 
 Usage:
   python benchmarks/bench_claude_matrix.py
   python benchmarks/bench_claude_matrix.py --only small,medium
-  python benchmarks/bench_claude_matrix.py --skip xl-sharded
+  python benchmarks/bench_claude_matrix.py --skip large
+  python benchmarks/bench_claude_matrix.py --include-untrusted
   python benchmarks/bench_claude_matrix.py --model sonnet --max-usd 0.20
   python benchmarks/bench_claude_matrix.py --external-server
 """
@@ -75,6 +80,16 @@ RESULTS_ROOT = Path(r"F:\Projects\helix-context\benchmarks\results")
 CLAUDE_TIMEOUT_S = 300        # 5 min per question — generous for MCP + reasoning
 SWAP_TIMEOUT_S = 60           # SPLADE rebuild on swap can take a moment
 CONTEXT_TIMEOUT_S = 30        # /context retrieval-only call
+
+# Profiles whose fixture is known-untrustworthy and excluded from a
+# default run. xl-sharded's `projects` shard was built from a polluted
+# source tree — F:\Projects\_worktrees\helix-context\* PR-branch
+# worktrees plus a helix-retrieval-upgrade clone, with no canonical
+# helix-context/ checkout — so the needles' gold_source labels resolve
+# to nothing there and retr_hit / MRR on it are meaningless (correctness
+# decoupled from retrieval). See issue #133. Re-include once the projects
+# shard is rebuilt clean; --include-untrusted forces it in meanwhile.
+UNTRUSTED_PROFILES = frozenset({"xl-sharded"})
 
 
 # ── Needles (copied from benchmarks/bench_needle.py so this script is
@@ -818,6 +833,22 @@ def parse_filter(spec: str | None, all_keys: list[str]) -> set[str]:
     return set(parts)
 
 
+def resolve_profiles(all_keys: list[str], only: set[str], skip: set[str],
+                     include_untrusted: bool = False) -> list[str]:
+    """Ordered list of profiles to run.
+
+    Applies --only / --skip, then drops UNTRUSTED_PROFILES unless
+    ``include_untrusted`` is set or the profile was explicitly named in
+    ``only`` (an explicit by-name request wins). Order follows ``all_keys``.
+    """
+    keys = [k for k in all_keys
+            if (not only or k in only) and k not in skip]
+    if not include_untrusted:
+        keys = [k for k in keys
+                if k not in UNTRUSTED_PROFILES or k in only]
+    return keys
+
+
 def summarize_profile(per_needle: list[dict], n_needles: int) -> dict:
     n_correct = sum(1 for r in per_needle if r["score"] == 1)
     n_abstain = sum(1 for r in per_needle if r["score"] == 0)
@@ -856,6 +887,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--only", help="Comma-separated profiles to run")
     parser.add_argument("--skip", help="Comma-separated profiles to skip")
+    parser.add_argument("--include-untrusted", action="store_true",
+                        help="Include UNTRUSTED_PROFILES (xl-sharded; corrupt "
+                             "fixture, see issue #133). Excluded by default.")
     parser.add_argument("--model", default="haiku",
                         help="claude -p --model arg (haiku/sonnet/opus/full id). "
                              "Default: haiku — cloud speed prioritized over model "
@@ -886,8 +920,7 @@ def main() -> int:
     all_keys = list(manifest["targets"].keys())
     only = parse_filter(args.only, all_keys)
     skip = parse_filter(args.skip, all_keys)
-    keys = [k for k in all_keys
-            if (not only or k in only) and k not in skip]
+    keys = resolve_profiles(all_keys, only, skip, args.include_untrusted)
 
     run_dir = make_run_dir()
     log = setup_logger(run_dir)
@@ -895,6 +928,17 @@ def main() -> int:
     log.info("model=%s max_usd_per_question=%.2f external_server=%s",
              args.model, args.max_usd, args.external_server)
     log.info("profiles in run: %s", keys)
+    for k in all_keys:
+        if k not in UNTRUSTED_PROFILES:
+            continue
+        if k in keys:
+            log.warning("profile %r is UNTRUSTED: fixture corrupt, its "
+                        "retr_hit / MRR are not meaningful (see issue #133)", k)
+        else:
+            log.info("untrusted profile %r excluded from this run "
+                     "(see issue #133; --include-untrusted to force)", k)
+    untrusted_excluded = [k for k in all_keys
+                          if k in UNTRUSTED_PROFILES and k not in keys]
 
     overall: dict = {
         "run_dir": str(run_dir),
@@ -902,6 +946,7 @@ def main() -> int:
         "model": args.model,
         "max_usd_per_question": args.max_usd,
         "external_server": args.external_server,
+        "untrusted_excluded": untrusted_excluded,
         "profiles": {},
     }
 
