@@ -120,3 +120,7 @@ tools/native-otel/.install-complete
 tools/native-otel/configs/*.yaml
 tools/native-otel/configs/*.yml
 !tools/native-otel/configs/.gitkeep
+
+# Deep-review working notes — local analysis artifacts (Tier-0 plan,
+# deep-review notes, PR-5 handoff). Not part of the tracked codebase.
+docs/reviews/2026-05-16-deep-review/
