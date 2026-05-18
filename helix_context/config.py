@@ -188,6 +188,14 @@ class IngestionConfig:
     rerank_enabled: bool = False    # Phase 3: enable cross-encoder reranking
     colbert_enabled: bool = False   # Phase 4: ColBERT late interaction (optional)
     entity_graph: bool = False      # Phase 5: entity-based co-activation links
+    # Tier-0 PR-1 (2026-05-16): compute BGE-M3 dense vectors
+    # (genes.embedding_dense_v2) inline at ingest. Default true so a genome
+    # built by `helix ingest` / `/ingest` / context_manager.ingest is
+    # dense-populated without a separate backfill pass. Latency-sensitive
+    # callers can set false to defer encoding to scripts/backfill_bgem3_v2.py.
+    # This is purely the WRITE path — retrieval still gates on
+    # [retrieval] dense_embedding_enabled (default true).
+    dense_embed_on_ingest: bool = True
 
 
 @dataclass
@@ -276,8 +284,11 @@ class RetrievalConfig:
     # to entity overlap. Dark ship — flip to true for A/B.
     entity_graph_retrieval_enabled: bool = False
     # Step 4 — BGE-M3 dense vectors + ANN threshold-based dynamic document counts
-    # (2026-05-08). Dark ship — all flags off by default.
-    dense_embedding_enabled: bool = False
+    # (2026-05-08). Tier-0 PR-3 (2026-05-16) flipped this default to true:
+    # PR-1 computes embedding_dense_v2 at ingest and PR-3 decoupled dense
+    # recall from fusion_mode, so dense recall is now a shipped retrieval
+    # signal in both additive and RRF mode.
+    dense_embedding_enabled: bool = True
     # Stage 2 (2026-05-08): default dim raised from 256 -> 1024. Full BGE-M3
     # Matryoshka. dim=256 collapsed random-pair cosine to ~0.6, sabotaging
     # threshold semantics. Stage 4 will recalibrate ann_similarity_threshold
@@ -316,6 +327,17 @@ class RetrievalConfig:
     harmonic_weight: float = 1.0            # current per-link weight
     entity_graph_weight: float = 0.5        # current 1.0·0.5 implicit
     dense_weight: float = 1.0               # Stage 2 dense recall, RRF participant
+    # Tier-0 PR-3 (2026-05-16): additive-mode dense merge weight. Under
+    # fusion_mode == "additive" a dense hit's cosine is scaled by this
+    # before entering the gene_scores accumulator. BM25-comparable
+    # (tag_exact_weight is 3.0). Unused under RRF.
+    dense_additive_weight: float = 4.0
+    # Tier-0 review fix (2026-05-16): noise floor for the additive-mode
+    # dense merge. A dense hit whose cosine is below this does not
+    # contribute to gene_scores (it is still kept as a candidate with
+    # negligible weight). Consistent with the cold tier's 0.15 min_cosine;
+    # deliberately gentle so it removes only noise-grade hits. Unused under RRF.
+    dense_additive_min_cosine: float = 0.15
     pki_weight: float = 1.0                 # PKI tier, RRF participant
     # Note: filename_anchor_weight, sr_weight reuse their existing knobs above.
 
@@ -646,6 +668,9 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             rerank_enabled=i.get("rerank_enabled", cfg.ingestion.rerank_enabled),
             colbert_enabled=i.get("colbert_enabled", cfg.ingestion.colbert_enabled),
             entity_graph=i.get("entity_graph", cfg.ingestion.entity_graph),
+            dense_embed_on_ingest=i.get(
+                "dense_embed_on_ingest", cfg.ingestion.dense_embed_on_ingest
+            ),
         )
 
     # Context (cold-tier retrieval knobs — C.2 of B->C, 2026-04-10)
@@ -723,6 +748,10 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             harmonic_weight=float(r.get("harmonic_weight", cfg.retrieval.harmonic_weight)),
             entity_graph_weight=float(r.get("entity_graph_weight", cfg.retrieval.entity_graph_weight)),
             dense_weight=float(r.get("dense_weight", cfg.retrieval.dense_weight)),
+            # Tier-0 PR-3 (2026-05-16): additive-mode dense merge weight.
+            dense_additive_weight=float(r.get("dense_additive_weight", cfg.retrieval.dense_additive_weight)),
+            # Tier-0 review fix (2026-05-16): additive-mode dense merge noise floor.
+            dense_additive_min_cosine=float(r.get("dense_additive_min_cosine", cfg.retrieval.dense_additive_min_cosine)),
             pki_weight=float(r.get("pki_weight", cfg.retrieval.pki_weight)),
         )
 

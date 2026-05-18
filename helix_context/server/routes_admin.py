@@ -878,6 +878,25 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
                 sr_weight=config.retrieval.sr_weight,
                 sr_cap=config.retrieval.sr_cap,
                 seeded_edges_enabled=config.retrieval.seeded_edges_enabled,
+                # Tier-0 fix (2026-05-18): forward the dense / ANN / fusion
+                # retrieval knobs. Without these a hot-swapped fixture reverts
+                # to the KnowledgeStore defaults (dense_embedding_enabled=False)
+                # and dense recall silently goes dark — the boot path
+                # (context_manager.open_read_source) passes them, but this
+                # swap path had drifted out of sync.
+                dense_embedding_enabled=config.retrieval.dense_embedding_enabled,
+                dense_embedding_dim=config.retrieval.dense_embedding_dim,
+                ann_similarity_threshold=config.retrieval.ann_similarity_threshold,
+                ann_threshold_min_genes=config.retrieval.ann_threshold_min_genes,
+                ann_threshold_max_genes=config.retrieval.ann_threshold_max_genes,
+                ann_threshold_mode=config.retrieval.ann_threshold_mode,
+                ann_threshold_sigma_multiplier=config.retrieval.ann_threshold_sigma_multiplier,
+                dense_pool_size=config.retrieval.dense_pool_size,
+                fusion_mode=config.retrieval.fusion_mode,
+                rrf_k=config.retrieval.rrf_k,
+                dense_weight=config.retrieval.dense_weight,
+                dense_additive_weight=config.retrieval.dense_additive_weight,
+                dense_additive_min_cosine=config.retrieval.dense_additive_min_cosine,
             )
             new_store.read_only = read_only
 
@@ -889,6 +908,34 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
             old_store = helix.genome
             helix.genome = new_store
             helix.genome.last_query_scores = {}
+
+            # Tier-0 fix (2026-05-17): repoint the session Registry at the
+            # new store. The Registry captures a genome reference at app
+            # construction (app.py: Registry(helix.genome)) and uses
+            # genome.conn directly for every read/write — including the
+            # background sweep task. Without this repoint, after a swap the
+            # Registry still holds the OLD store, which old_store.close()
+            # below then closes; the next _background_registry_sweep tick
+            # raises "sqlite3.ProgrammingError: Cannot operate on a closed
+            # database". Must run BEFORE old_store.close() so a sweep that
+            # fires mid-swap never observes a closed connection.
+            try:
+                registry.genome = new_store
+            except Exception:
+                log.warning("swap-db: failed to repoint registry genome", exc_info=True)
+
+            # Tier-0 follow-up #4 (2026-05-17): repoint the VaultManager at
+            # the new store too. Like the Registry above, VaultManager
+            # captures helix.genome at construction (app.py:
+            # VaultManager(genome=helix.genome)); its pruner thread runs
+            # refresh_stale_view(genome=self.genome) on a timer, so without
+            # this repoint a post-swap prune cycle would hit the closed old
+            # store — the same closed-database failure. Vault is opt-in, so
+            # this only bites when vault.enabled=true. Runs BEFORE close().
+            try:
+                request.app.state.vault.genome = new_store
+            except Exception:
+                log.warning("swap-db: failed to repoint vault genome", exc_info=True)
 
             # Close old store (best-effort)
             try:

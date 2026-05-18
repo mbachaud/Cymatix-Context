@@ -21,7 +21,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import random
 import sqlite3
 import struct
 import subprocess
@@ -38,40 +37,12 @@ from helix_context.schemas import (
     ChromatinState, EpigeneticMarkers, Gene, PromoterTags,
 )
 
-
-# ── Test helpers ─────────────────────────────────────────────────────
-
-
-def _hash_vec(text: str, dim: int) -> np.ndarray:
-    """Deterministic L2-normalised fp32 vector seeded from text."""
-    out = np.zeros(dim, dtype=np.float32)
-    seed = hashlib.sha256(text.encode("utf-8")).digest()
-    rng = random.Random(int.from_bytes(seed[:8], "little"))
-    for i in range(dim):
-        out[i] = rng.gauss(0.0, 1.0)
-    n = np.linalg.norm(out)
-    if n > 0:
-        out /= n
-    return out
-
-
-class _FakeCodec:
-    """Test stand-in for BGEM3Codec; same shape contract."""
-
-    def __init__(self, dim: int = 1024, query_target: str | None = None):
-        self.dim = dim
-        # If query_target is set, encode("query") returns the same vector
-        # as encode(query_target, "passage") — this lets tests stage a
-        # deterministic "query matches X" relationship.
-        self._query_target = query_target
-
-    def encode(self, text: str, task: str = "passage"):
-        if task == "query" and self._query_target is not None:
-            return _hash_vec(self._query_target, self.dim).tolist()
-        return _hash_vec(text, self.dim).tolist()
-
-    def similarity(self, a, b) -> float:
-        return float(np.dot(np.asarray(a), np.asarray(b)))
+# The deterministic fake BGE-M3 codec lives in tests/conftest.py — it is the
+# single shared definition (the `_stub_dense_codec` autouse fixture installs
+# the same class for every non-live test). `_hash_vec` / `_FakeCodec` remain
+# as local aliases so this file's many call sites stay unchanged.
+from tests.conftest import FakeBGEM3Codec as _FakeCodec
+from tests.conftest import hash_vec as _hash_vec
 
 
 def _make_gene(content: str, *, domains=None, entities=None, gene_id=None) -> Gene:
@@ -215,11 +186,26 @@ def test_query_genes_ann_pool_size_independent_of_max_genes(dense_genome):
         pool_size=500,
     )
 
-    # The union (lex_pool ∪ dense_pool) must have reached at least 100.
+    # ``query_docs_ann`` builds its lex pool with exactly one
+    # ``query_docs`` call.
     assert len(lex_pool_sizes) == 1
-    assert len(dense_pool_sizes) == 1
-    assert lex_pool_sizes[0] + dense_pool_sizes[0] >= 100, (
-        f"union pool too small: lex={lex_pool_sizes[0]} dense={dense_pool_sizes[0]}"
+    # Dense recall now fires at least once. Tier-0 PR-3 (2026-05-16)
+    # decoupled dense recall from ``fusion_mode``, so ``query_docs``
+    # itself runs dense recall internally (it is a hybrid retriever in
+    # both additive and RRF mode). ``query_docs_ann`` therefore triggers
+    # dense recall twice: once nested inside its ``query_docs`` lex-pool
+    # call, and once directly for the union pool. Pre-PR-3 the additive
+    # ``query_docs`` skipped dense recall entirely, so this was exactly
+    # one — that count encoded the now-superseded gated behavior, not
+    # the spec's pool-size contract.
+    assert len(dense_pool_sizes) >= 1
+    # The union (lex_pool ∪ dense_pool) must have reached at least 100.
+    # ``query_docs_ann``'s own dense pool is the LAST recorded call (the
+    # directly-issued one); the lex pool is the single ``query_docs``
+    # call. Both draw on the full 150-gene corpus here.
+    assert lex_pool_sizes[0] + dense_pool_sizes[-1] >= 100, (
+        f"union pool too small: lex={lex_pool_sizes[0]} "
+        f"dense={dense_pool_sizes[-1]}"
     )
     # Final cut respects max_genes.
     assert len(out) <= 12, f"max_genes cap violated: {len(out)}"
@@ -432,3 +418,372 @@ def test_dense_recall_empty_v2_returns_empty_with_warn(dense_genome, caplog):
     assert not any("embedding_dense_v2 coverage" in rec.message for rec in caplog.records), (
         "fallback warn should be one-time"
     )
+
+
+# ── Tier-0 PR-3: dense recall decoupled from fusion_mode ─────────────
+#
+# Plan: docs/reviews/2026-05-16-deep-review/00-tier0-implementation-plan.md
+# §PR-3, Decision 1 = Option B. Pre-PR-3, query_docs only ran dense
+# recall under fusion_mode == "rrf"; the default additive mode never
+# touched the BGE-M3 vectors. PR-3 changes the gate to
+# dense_embedding_enabled alone and merges dense hits into gene_scores
+# in additive mode with a real (cosine * dense_additive_weight) weight,
+# not the 1e-9 epsilon the RRF path uses for set-membership only.
+
+
+def _additive_dense_genome(dense_additive_weight: float = 4.0) -> Genome:
+    """In-memory genome: dense ON, additive fusion (the shipped default)."""
+    g = Genome(
+        path=":memory:",
+        dense_embedding_enabled=True,
+        dense_embedding_dim=1024,
+        dense_pool_size=500,
+        fusion_mode="additive",
+        dense_additive_weight=dense_additive_weight,
+    )
+    _orig = g.upsert_doc
+    def _ungated(gene, apply_gate=False):
+        return _orig(gene, apply_gate=apply_gate)
+    g.upsert_doc = _ungated
+    g.upsert_gene = _ungated
+    return g
+
+
+def test_query_docs_additive_mode_merges_dense_with_real_weight():
+    """PR-3 Decision 1 Option B: in additive mode a dense-surfaced gene
+    lands in gene_scores with contribution == cosine * dense_additive_weight
+    — a real BM25-comparable weight, not the 1e-9 epsilon.
+
+    The needle shares no surface tokens with the query, so its only path
+    into gene_scores is the dense merge; tier_contrib['dense'] therefore
+    equals the merged contribution exactly.
+    """
+    weight = 4.0
+    g = _additive_dense_genome(dense_additive_weight=weight)
+    try:
+        # Distractors share the query's lex token; needle does not.
+        for i in range(8):
+            g.upsert_gene(_make_gene(
+                f"alpha distractor body {i}", domains=["alpha"],
+                gene_id=f"dist-{i:03d}",
+            ))
+        g.upsert_gene(_make_gene(
+            "wholly disjoint surface tokens for the needle body",
+            domains=["needle"], gene_id="needle-add",
+        ))
+        # Needle's v2 vector == what the query encoder will produce.
+        target = "additive dense target vector"
+        _populate_v2(g, "needle-add", _hash_vec(target, 1024))
+        for row in g.conn.execute(
+            "SELECT gene_id FROM genes WHERE gene_id != 'needle-add'"
+        ).fetchall():
+            _populate_v2(g, row[0], _hash_vec(row[0] + "-noise", 1024))
+
+        g._dense_codec = _FakeCodec(dim=1024, query_target=target)
+
+        docs = g.query_docs(domains=["alpha"], entities=[], max_genes=12)
+        ids = {d.gene_id for d in docs}
+        assert "needle-add" in ids, (
+            f"dense-only needle should surface in additive mode; got {sorted(ids)}"
+        )
+
+        # gene_scores carries a real, non-epsilon contribution.
+        scores = g.last_query_scores
+        assert "needle-add" in scores
+        assert scores["needle-add"] > 1e-3, (
+            f"additive dense merge must be a real weight, not epsilon; "
+            f"got {scores['needle-add']}"
+        )
+        # The needle is token-disjoint from the query, so 'dense' is its
+        # only tier; its recorded contribution == cosine * weight, and the
+        # FakeCodec maps query->needle so cosine == 1.0.
+        dense_contrib = g.last_tier_contributions["needle-add"]["dense"]
+        assert dense_contrib == pytest.approx(1.0 * weight, abs=1e-4), (
+            f"dense contribution should be cosine*dense_additive_weight; "
+            f"got {dense_contrib}"
+        )
+    finally:
+        g.close()
+
+
+def test_dense_additive_weight_scales_the_contribution():
+    """PR-3: the dense_additive_weight knob is honoured — a higher weight
+    yields a proportionally larger gene_scores contribution.
+    """
+    target = "weight-scaling dense target"
+
+    def _run(weight: float) -> float:
+        g = _additive_dense_genome(dense_additive_weight=weight)
+        try:
+            g.upsert_gene(_make_gene(
+                "alpha lexical anchor doc", domains=["alpha"], gene_id="anchor",
+            ))
+            g.upsert_gene(_make_gene(
+                "token-disjoint needle body", domains=["needle"],
+                gene_id="needle-w",
+            ))
+            _populate_v2(g, "needle-w", _hash_vec(target, 1024))
+            _populate_v2(g, "anchor", _hash_vec("anchor-noise", 1024))
+            g._dense_codec = _FakeCodec(dim=1024, query_target=target)
+            g.query_docs(domains=["alpha"], entities=[], max_genes=12)
+            return g.last_tier_contributions["needle-w"]["dense"]
+
+        finally:
+            g.close()
+
+    low = _run(2.0)
+    high = _run(8.0)
+    # cosine is identical (FakeCodec query->needle == 1.0) so the only
+    # variable is the weight: 8.0 / 2.0 == 4x.
+    assert high == pytest.approx(low * 4.0, rel=1e-4), (
+        f"dense_additive_weight should scale the contribution linearly; "
+        f"low(w=2)={low} high(w=8)={high}"
+    )
+
+
+def test_query_docs_rrf_mode_dense_still_fuser_tier():
+    """PR-3 Decision 1 Option B: RRF mode keeps the pre-PR-3 behaviour —
+    dense hits enter via the Fuser tier and dense-only genes get the
+    1e-9 set-membership epsilon in gene_scores (ordering comes from the
+    Fuser, not the epsilon).
+    """
+    g = Genome(
+        path=":memory:",
+        dense_embedding_enabled=True,
+        dense_embedding_dim=1024,
+        dense_pool_size=500,
+        fusion_mode="rrf",
+    )
+    _orig = g.upsert_doc
+    g.upsert_doc = g.upsert_gene = lambda gene, apply_gate=False: _orig(
+        gene, apply_gate=apply_gate
+    )
+    try:
+        for i in range(6):
+            g.upsert_gene(_make_gene(
+                f"alpha body {i}", domains=["alpha"], gene_id=f"a-{i}",
+            ))
+        g.upsert_gene(_make_gene(
+            "token-disjoint needle for rrf", domains=["needle"],
+            gene_id="needle-rrf",
+        ))
+        target = "rrf dense target"
+        _populate_v2(g, "needle-rrf", _hash_vec(target, 1024))
+        for row in g.conn.execute(
+            "SELECT gene_id FROM genes WHERE gene_id != 'needle-rrf'"
+        ).fetchall():
+            _populate_v2(g, row[0], _hash_vec(row[0] + "-noise", 1024))
+        g._dense_codec = _FakeCodec(dim=1024, query_target=target)
+
+        docs = g.query_docs(domains=["alpha"], entities=[], max_genes=12)
+        assert any(d.gene_id == "needle-rrf" for d in docs), (
+            "dense-only needle should still surface under RRF fusion"
+        )
+        # Telemetry records the RAW cosine for the dense tier under RRF
+        # (spec §6), NOT a weighted score — this is the additive-vs-RRF
+        # contract difference.
+        dense_contrib = g.last_tier_contributions["needle-rrf"]["dense"]
+        assert dense_contrib == pytest.approx(1.0, abs=1e-4), (
+            f"RRF dense tier_contrib is raw cosine (~1.0); got {dense_contrib}"
+        )
+    finally:
+        g.close()
+
+
+def test_query_docs_additive_dense_null_v2_degrades_to_lexical():
+    """PR-3: with dense ON + additive mode but NULL embedding_dense_v2,
+    query_docs degrades to lexical-only — no crash — and the one-time
+    coverage WARN fires (dense recall returns []).
+    """
+    import logging
+    g = _additive_dense_genome()
+    try:
+        for i in range(5):
+            g.upsert_gene(_make_gene(
+                f"alpha lexical doc {i}", domains=["alpha"], gene_id=f"lex-{i}",
+            ))
+        # Deliberately do NOT populate embedding_dense_v2.
+        g._dense_codec = _FakeCodec(dim=1024)
+
+        caplog_records: list = []
+        handler = logging.Handler()
+        handler.emit = lambda rec: caplog_records.append(rec)
+        ks_log = logging.getLogger("helix_context.knowledge_store")
+        ks_log.addHandler(handler)
+        try:
+            docs = g.query_docs(domains=["alpha"], entities=[], max_genes=12)
+        finally:
+            ks_log.removeHandler(handler)
+
+        # Lexical path still returns the alpha docs.
+        assert len(docs) == 5, f"expected lexical-only fallback, got {len(docs)}"
+        # One-time coverage WARN fired from query_docs_dense_recall.
+        assert any(
+            "embedding_dense_v2 coverage" in rec.getMessage()
+            for rec in caplog_records
+        ), "expected the one-time empty-coverage WARN under additive mode"
+    finally:
+        g.close()
+
+
+def test_dense_additive_weight_default_and_plumbing():
+    """PR-3: dense_additive_weight defaults to 4.0 on a bare genome and
+    is stored as _dense_additive_weight; an explicit value overrides it.
+    """
+    g_default = Genome(path=":memory:")
+    g_custom = Genome(path=":memory:", dense_additive_weight=6.5)
+    try:
+        assert g_default._dense_additive_weight == pytest.approx(4.0)
+        assert g_custom._dense_additive_weight == pytest.approx(6.5)
+    finally:
+        g_default.close()
+        g_custom.close()
+
+
+# ── Tier-0 review fix: additive-mode dense merge min-cosine noise floor ─
+#
+# Review fix (2026-05-16): the additive-mode dense merge had no
+# min-cosine floor, so noise-grade hits (very low cosine) still entered
+# gene_scores — inconsistent with query_cold_tier (floors at 0.15) and
+# query_docs_ann_recall. The floor (`dense_additive_min_cosine`, default
+# 0.15) makes a below-floor hit contribute 0 to the score while still
+# being kept as a candidate via the 1e-9 set-membership epsilon.
+
+
+def test_additive_dense_merge_floors_noise_grade_cosines():
+    """A dense hit whose cosine is BELOW dense_additive_min_cosine (0.15)
+    adds ~0 to gene_scores — only the 1e-9 set-membership epsilon — while
+    an ABOVE-floor hit adds the full cosine * dense_additive_weight.
+
+    The dense hit list is injected directly (monkeypatching
+    query_docs_dense_recall) so cosines can be staged to straddle 0.15
+    precisely; the real codec's hash vectors only yield ~1.0 (query_target
+    match) or ~0 (random pair), which cannot exercise the floor boundary.
+    """
+    weight = 4.0
+    g = _additive_dense_genome(dense_additive_weight=weight)
+    try:
+        # A lexical anchor so query_docs has at least one tag hit and does
+        # not raise PromoterMismatch before the dense merge runs.
+        g.upsert_gene(_make_gene(
+            "alpha lexical anchor body", domains=["alpha"], gene_id="anchor",
+        ))
+        # Four token-disjoint genes reachable ONLY via the dense merge.
+        for gid in ("below-lo", "below-hi", "above-lo", "above-hi"):
+            g.upsert_gene(_make_gene(
+                f"token-disjoint body for {gid}", domains=["needle"],
+                gene_id=gid,
+            ))
+
+        # Cosines straddling the 0.15 floor: two below, two above.
+        staged_hits = [
+            ("above-hi", 0.90),   # well above floor
+            ("above-lo", 0.16),   # just above floor
+            ("below-hi", 0.14),   # just below floor
+            ("below-lo", 0.02),   # noise-grade, well below floor
+        ]
+        g.query_docs_dense_recall = lambda *a, **kw: list(staged_hits)
+        # query_docs_dense_recall is also exposed under the legacy alias.
+        g.query_genes_dense_recall = g.query_docs_dense_recall
+
+        g.query_docs(domains=["alpha"], entities=[], max_genes=12)
+        scores = g.last_query_scores
+        contribs = g.last_tier_contributions
+
+        # The dense merge's effect is isolated in tier_contrib["dense"] —
+        # query_docs also applies a flat per-candidate "authority" boost
+        # that lands in last_query_scores, so we assert the *dense* tier
+        # contribution (what the floor actually governs), exactly as the
+        # sibling additive tests in this file do.
+
+        # Above-floor hits: dense tier contributes cosine * weight.
+        for gid, cosine in (("above-hi", 0.90), ("above-lo", 0.16)):
+            expected = cosine * weight
+            assert contribs[gid]["dense"] == pytest.approx(expected, abs=1e-4), (
+                f"above-floor hit {gid} (cosine={cosine}) dense contribution "
+                f"should be cosine*weight={expected}; got {contribs[gid].get('dense')}"
+            )
+
+        # Below-floor hits: dense tier contributes 0.0 — the cosine is
+        # noise-grade and must not enter the additive sum.
+        for gid in ("below-hi", "below-lo"):
+            assert contribs[gid]["dense"] == 0.0, (
+                f"below-floor hit {gid} dense contribution should be 0.0 "
+                f"(cosine below the {g._dense_additive_min_cosine} floor); "
+                f"got {contribs[gid].get('dense')}"
+            )
+            # ...but the hit is still kept as a candidate: it appears in
+            # gene_scores via the 1e-9 set-membership epsilon. Its score
+            # carries NO weighted dense term — only the epsilon plus the
+            # flat authority boost — so it sits well below even the
+            # smallest above-floor dense contribution (0.16*weight).
+            assert gid in scores, (
+                f"below-floor hit {gid} should still be a candidate "
+                f"(1e-9 set-membership epsilon)"
+            )
+            assert scores[gid] < 0.16 * weight, (
+                f"below-floor hit {gid} must not carry a weighted dense "
+                f"term; got score {scores.get(gid)}"
+            )
+    finally:
+        g.close()
+
+
+def test_dense_additive_min_cosine_default_and_plumbing():
+    """dense_additive_min_cosine defaults to 0.15 on a bare genome and is
+    stored as _dense_additive_min_cosine; an explicit value overrides it.
+    """
+    g_default = Genome(path=":memory:")
+    g_custom = Genome(path=":memory:", dense_additive_min_cosine=0.3)
+    try:
+        assert g_default._dense_additive_min_cosine == pytest.approx(0.15)
+        assert g_custom._dense_additive_min_cosine == pytest.approx(0.3)
+    finally:
+        g_default.close()
+        g_custom.close()
+
+
+# ── 8. live — real BGE-M3 dense recall through query_docs (additive) ─
+
+
+@pytest.mark.live
+def test_live_additive_dense_recall_through_query_docs():
+    """PR-3 live path: with the real BGE-M3 codec, a semantically-related
+    but lexically-disjoint document is surfaced by query_docs in additive
+    mode. Skipped automatically when the model is unavailable.
+    """
+    g = Genome(
+        path=":memory:",
+        dense_embedding_enabled=True,
+        dense_embed_on_ingest=True,
+        dense_embedding_dim=1024,
+        fusion_mode="additive",
+    )
+    try:
+        try:
+            g._get_dense_codec()  # force the real load up front
+        except Exception as exc:  # noqa: BLE001 — model download/import failure
+            pytest.skip(f"BGE-M3 model unavailable: {exc}")
+
+        # Lexical distractors share the query tag; the needle does not —
+        # its only route into the candidate set is real dense similarity.
+        for i in range(6):
+            g.upsert_doc(_make_gene(
+                f"unrelated filler passage number {i}", domains=["topic"],
+                gene_id=f"live-dist-{i}",
+            ), apply_gate=False)
+        g.upsert_doc(_make_gene(
+            "a database stores rows on disk and answers SQL queries",
+            domains=["storage"], gene_id="live-needle",
+        ), apply_gate=False)
+
+        docs = g.query_docs(domains=["topic"], entities=[], max_genes=12)
+        # The needle is token-disjoint from the "topic" tag; if it shows
+        # up, real dense recall merged it into the additive accumulator.
+        assert any(d.gene_id == "live-needle" for d in docs) or \
+            "live-needle" in g.last_query_scores, (
+            "real BGE-M3 dense recall should surface the semantically "
+            "related needle in additive mode"
+        )
+    finally:
+        g.close()

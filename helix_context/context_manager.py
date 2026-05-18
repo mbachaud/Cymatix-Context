@@ -450,6 +450,13 @@ class HelixContextManager:
         except Exception:
             log.warning("ΣĒMA codec failed to load", exc_info=True)
 
+        # BGE-M3 dense codec (Tier-0 PR-1, 2026-05-16). Lazy-loaded on the
+        # first ingest when [ingestion] dense_embed_on_ingest is true, so a
+        # manager that never ingests (or runs with the knob off) pays no
+        # model-load cost. ingest() batch-encodes all strands of a document
+        # through this and passes each vector to genome.upsert_doc.
+        self._dense_codec = None  # type: ignore[var-annotated]
+
         # KnowledgeStore (SQLite storage) — swapped for a ShardedGenomeAdapter when
         # HELIX_USE_SHARDS=1 and the configured path is a routing DB. Writes
         # become no-ops in that mode; suitable for read-heavy serving and
@@ -461,6 +468,8 @@ class HelixContextManager:
             sema_codec=self._sema_codec,
             splade_enabled=config.ingestion.splade_enabled,
             entity_graph=config.ingestion.entity_graph,
+            # Tier-0 PR-1 (2026-05-16): inline BGE-M3 dense write at ingest.
+            dense_embed_on_ingest=config.ingestion.dense_embed_on_ingest,
             sr_enabled=config.retrieval.sr_enabled,
             sr_gamma=config.retrieval.sr_gamma,
             sr_k_steps=config.retrieval.sr_k_steps,
@@ -499,6 +508,10 @@ class HelixContextManager:
             harmonic_weight=config.retrieval.harmonic_weight,
             entity_graph_weight=config.retrieval.entity_graph_weight,
             dense_weight=config.retrieval.dense_weight,
+            # Tier-0 PR-3 (2026-05-16): additive-mode dense merge weight.
+            dense_additive_weight=config.retrieval.dense_additive_weight,
+            # Tier-0 review fix (2026-05-16): additive-mode dense merge noise floor.
+            dense_additive_min_cosine=config.retrieval.dense_additive_min_cosine,
             pki_weight=config.retrieval.pki_weight,
         )
 
@@ -675,6 +688,34 @@ class HelixContextManager:
         # Compaction timer
         self._last_compact = time.time()
 
+    # -- Dense codec lazy-loader (Tier-0 PR-1, 2026-05-16) ----------------------
+
+    def _get_dense_codec(self):
+        """Lazy-load the BGE-M3 dense codec for inline ingest encoding.
+
+        Returns the codec, or ``None`` if dense-on-ingest is disabled or the
+        codec cannot be constructed (e.g. sentence-transformers / FlagEmbedding
+        not installed). ingest() treats ``None`` as "skip dense encoding" and
+        the genome stores rows with a NULL ``embedding_dense_v2`` column.
+        """
+        if not self.config.ingestion.dense_embed_on_ingest:
+            return None
+        if self._dense_codec is None:
+            try:
+                from .backends.bgem3_codec import BGEM3Codec
+                self._dense_codec = BGEM3Codec(
+                    dim=self.config.retrieval.dense_embedding_dim
+                )
+                log.info("BGE-M3 dense codec loaded — dense vectors written at ingest")
+            except Exception:
+                log.warning(
+                    "BGE-M3 dense codec failed to load — ingest will store "
+                    "NULL embedding_dense_v2 (backfill later)",
+                    exc_info=True,
+                )
+                return None
+        return self._dense_codec
+
     # -- Ingest: add new content to the knowledge store -------------------------
 
     def ingest(self, content: str, content_type: str = "text", metadata: Optional[Dict] = None) -> List[str]:
@@ -703,6 +744,31 @@ class HelixContextManager:
                 sema_vectors = self._sema_codec.encode_batch(texts)
             except Exception:
                 log.debug("ΣĒMA batch encoding failed, skipping")
+
+        # Batch-encode BGE-M3 dense vectors (Tier-0 PR-1, 2026-05-16). One
+        # codec call for every strand of the document — far cheaper than the
+        # per-strand encode upsert_doc would otherwise do. Bound each passage
+        # to PASSAGE_CHAR_CAP with task="passage" (the codec contract). Soft-
+        # fails: on any error dense_vectors stays None and upsert_doc stores
+        # NULL embedding_dense_v2. Disabled entirely when the config knob is
+        # off (_get_dense_codec returns None). Write path only — retrieval
+        # still gates on [retrieval] dense_embedding_enabled.
+        dense_vectors = None
+        dense_codec = self._get_dense_codec()
+        if dense_codec is not None:
+            try:
+                from .backends.bgem3_codec import PASSAGE_CHAR_CAP
+                dense_texts = [s.content[:PASSAGE_CHAR_CAP] for s in strands]
+                dense_vectors = dense_codec.encode_batch(
+                    dense_texts, task="passage"
+                )
+            except Exception:
+                log.warning(
+                    "BGE-M3 dense batch encoding failed — strands stored with "
+                    "NULL embedding_dense_v2 (backfill later)",
+                    exc_info=True,
+                )
+                dense_vectors = None
 
         use_cpu = (
             self._cpu_tagger is not None
@@ -753,13 +819,23 @@ class HelixContextManager:
             if sema_vectors is not None and i < len(sema_vectors):
                 gene.embedding = sema_vectors[i]
 
+            # Tier-0 PR-1 (2026-05-16): hand the precomputed BGE-M3 dense
+            # vector to upsert_doc so it persists embedding_dense_v2 without
+            # re-encoding per strand. None when dense-on-ingest is disabled
+            # or the batch encode failed — upsert_doc then stores NULL.
+            dense_vec = (
+                dense_vectors[i]
+                if dense_vectors is not None and i < len(dense_vectors)
+                else None
+            )
+
             # Density gate now lives in genome.upsert_doc() itself so that
             # bulk ingest scripts (ingest_steam.py, ingest_all.py, etc.)
             # that call upsert_gene directly also respect it. The gate
             # reads the final lifecycle tier back onto the document object
             # and sets compression_tier accordingly during the INSERT.
             # See helix_context/genome.py:apply_density_gate for the logic.
-            gid = self.genome.upsert_doc(gene)
+            gid = self.genome.upsert_doc(gene, embedding_dense_v2=dense_vec)
             gene_ids.append(gid)
 
             # If the gate demoted the document to heterochromatin, the content

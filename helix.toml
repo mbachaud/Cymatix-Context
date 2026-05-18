@@ -195,6 +195,12 @@ rerank_model = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 rerank_enabled = false                  # Phase 3: enable pretrained cross-encoder reranking
 colbert_enabled = false                 # Phase 4: ColBERT late interaction (optional)
 entity_graph = true                     # Phase 5: entity-based co-activation links
+# Compute BGE-M3 dense vectors (genes.embedding_dense_v2) inline at ingest
+# so every ingested genome is dense-populated without a separate backfill.
+# Set false for latency-sensitive callers to defer encoding to
+# scripts/backfill_bgem3_v2.py. Write path only — retrieval still gates on
+# [retrieval] dense_embedding_enabled (default true).
+dense_embed_on_ingest = true            # Tier-0 PR-1 (2026-05-16)
 
 [context]
 # Cold-tier retrieval (C.2 of B->C, 2026-04-10)
@@ -272,7 +278,11 @@ entity_graph_retrieval_enabled = false
 # dim=256 truncation collapsed random-pair cosine to ~0.6, sabotaging the
 # threshold. Stage 4 will recalibrate ann_similarity_threshold at 1024-dim.
 # dense_pool_size decouples recall breadth from the final cut (max_genes).
-dense_embedding_enabled = false
+# Tier-0 PR-3 (2026-05-16): flipped to true. PR-1 computes
+# embedding_dense_v2 at ingest and PR-3 decoupled dense recall from
+# fusion_mode (knowledge_store.query_docs), so dense recall now fires as a
+# retrieval signal under the shipped additive default — not only under RRF.
+dense_embedding_enabled = true
 dense_embedding_dim = 1024
 ann_similarity_threshold = 0.35           # legacy / fallback when calibration row missing
 ann_threshold_min_genes = 1
@@ -306,6 +316,18 @@ lex_anchor_weight = 1.5                 # IDF anchor multiplier
 harmonic_weight = 1.0                   # Tier 5 per-link weight
 entity_graph_weight = 0.5               # Tier 5b entity boost
 dense_weight = 1.0                      # Stage 2 dense recall, RRF participant
+# Tier-0 PR-3 (2026-05-16): additive-mode dense merge weight. Under
+# fusion_mode == "additive" (the default below), a dense hit's cosine is
+# scaled by this before it enters the gene_scores accumulator —
+# BM25-comparable (tag_exact_weight is 3.0). Unused under RRF, where dense
+# ranks are fused rather than summed.
+dense_additive_weight = 4.0
+# Tier-0 review fix (2026-05-16): noise floor for the additive-mode dense
+# merge. A dense hit whose cosine is below this does not contribute to the
+# gene_scores accumulator (it is still kept as a candidate with negligible
+# weight). Consistent with the cold tier's 0.15 min_cosine; deliberately
+# gentle so it removes only noise-grade hits, not weak-but-real matches.
+dense_additive_min_cosine = 0.15
 pki_weight = 1.0                        # path-key-index tier, RRF participant
 # Note: filename_anchor_weight (above) and sr_weight (above) are reused.
 

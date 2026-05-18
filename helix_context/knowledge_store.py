@@ -336,6 +336,11 @@ class KnowledgeStore:
         # Stage 2 (2026-05-08): default dim raised from 256 -> 1024 (full
         # BGE-M3 Matryoshka). dim=256 collapsed random-pair cosine.
         dense_embedding_dim: int = 1024,
+        # Tier-0 PR-1 (2026-05-16): when true, upsert_doc computes and
+        # persists genes.embedding_dense_v2 inline (unless the caller passes
+        # a precomputed vector). This is the WRITE path only and is
+        # independent of dense_embedding_enabled, which gates RETRIEVAL.
+        dense_embed_on_ingest: bool = False,
         ann_similarity_threshold: float = 0.35,
         ann_threshold_min_genes: int = 1,
         ann_threshold_max_genes: int = 12,
@@ -366,6 +371,18 @@ class KnowledgeStore:
         harmonic_weight: float = 1.0,
         entity_graph_weight: float = 0.5,
         dense_weight: float = 1.0,
+        # Tier-0 PR-3 (2026-05-16): additive-mode dense merge weight.
+        # Under fusion_mode == "additive", a dense hit's cosine is
+        # multiplied by this before it enters gene_scores. BM25-comparable
+        # (tag-exact weight is 3.0). Unused under RRF, where dense ranks
+        # are fused, not summed.
+        dense_additive_weight: float = 4.0,
+        # Tier-0 review fix (2026-05-16): noise floor for the additive-mode
+        # dense merge. A dense hit whose cosine is below this does not
+        # contribute to gene_scores (still kept as a candidate with
+        # negligible weight). Consistent with query_cold_tier's 0.15
+        # min_cosine. Unused under RRF.
+        dense_additive_min_cosine: float = 0.15,
         pki_weight: float = 1.0,
         main_conn: Optional[sqlite3.Connection] = None,
         shard_name: str = "main",
@@ -400,6 +417,9 @@ class KnowledgeStore:
         # Step 4 — BGE-M3 dense vectors + ANN threshold (2026-05-08).
         self._dense_embedding_enabled: bool = bool(dense_embedding_enabled)
         self._dense_embedding_dim: int = int(dense_embedding_dim)
+        # Tier-0 PR-1 (2026-05-16): inline dense-vector write at ingest.
+        # Independent of _dense_embedding_enabled (retrieval gate).
+        self._dense_embed_on_ingest: bool = bool(dense_embed_on_ingest)
         self._ann_threshold: float = float(ann_similarity_threshold)
         self._ann_min_genes: int = int(ann_threshold_min_genes)
         self._ann_max_genes: int = int(ann_threshold_max_genes)
@@ -447,6 +467,10 @@ class KnowledgeStore:
         self._harmonic_weight: float = float(harmonic_weight)
         self._entity_graph_weight: float = float(entity_graph_weight)
         self._dense_weight: float = float(dense_weight)
+        # Tier-0 PR-3: additive-mode dense merge weight (see ctor param).
+        self._dense_additive_weight: float = float(dense_additive_weight)
+        # Tier-0 review fix: additive-mode dense merge noise floor (see ctor param).
+        self._dense_additive_min_cosine: float = float(dense_additive_min_cosine)
         self._pki_weight: float = float(pki_weight)
         self._threshold_dim_warned: bool = False
         # Phase 2 claims layer (2026-04-19). Optional hook — when a main.db
@@ -1004,6 +1028,7 @@ class KnowledgeStore:
         gene: Gene,
         apply_gate: bool = True,
         splade_sparse: Optional[Dict[str, float]] = None,
+        embedding_dense_v2: Optional[List[float]] = None,
     ) -> str:
         """
         Insert or replace a document in the knowledge store.
@@ -1014,6 +1039,19 @@ class KnowledgeStore:
         setup scripts, explicit backfill tools, manual `compact_genome`
         re-runs — can pass ``apply_gate=False`` to preserve the incoming
         lifecycle tier as-is.
+
+        ``embedding_dense_v2`` (Tier-0 PR-1, 2026-05-16) is an optional
+        precomputed BGE-M3 dense vector (a ``dense_embedding_dim``-length
+        float list). A batched caller — e.g. ``context_manager.ingest()`` —
+        encodes all strands in one codec call and passes each vector here so
+        per-document encoding is not repeated. When it is *not* supplied and
+        ``dense_embed_on_ingest`` is true on this store, the vector is
+        computed lazily via the store's BGE-M3 codec. When the knob is false
+        and no vector is passed, the ``embedding_dense_v2`` column is left
+        NULL (callers can backfill later via
+        ``scripts/backfill_bgem3_v2.py``). This is purely the *write* path —
+        dense recall during ``query_docs`` is gated separately on
+        ``dense_embedding_enabled``.
 
         Returns the gene_id (content-addressed if not pre-populated).
         """
@@ -1076,14 +1114,22 @@ class KnowledgeStore:
             else (observed_at if observed_at is not None else time.time())
         )
 
+        # Tier-0 PR-1 (2026-05-16): compute the BGE-M3 dense vector inline so
+        # every ingest path populates genes.embedding_dense_v2. Uses the
+        # caller-supplied vector when present (batched ingest), else encodes
+        # lazily iff dense_embed_on_ingest is set; NULL otherwise. Soft-fails.
+        dense_v2_blob = self._encode_dense_v2_blob(
+            gene.content, precomputed=embedding_dense_v2
+        )
+
         cur.execute(
             "INSERT OR REPLACE INTO genes "
             "(gene_id, content, complement, codons, promoter, epigenetics, "
             "chromatin, is_fragment, embedding, source_id, repo_root, source_kind, "
             "observed_at, mtime, content_hash, volatility_class, authority_class, "
             "support_span, last_verified_at, version, supersedes, key_values, "
-            "compression_tier, last_seen) "
-            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            "compression_tier, last_seen, embedding_dense_v2) "
+            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
             (
                 gene_id,
                 gene.content,
@@ -1109,6 +1155,8 @@ class KnowledgeStore:
                 json_dumps(gene.key_values) if gene.key_values else None,
                 tier,
                 time.time(),  # last_seen: always stamp current epoch on every upsert
+                # Tier-0 PR-1: raw little-endian fp32 BGE-M3 vector, or NULL.
+                sqlite3.Binary(dense_v2_blob) if dense_v2_blob is not None else None,
             ),
         )
         # Invalidate parse cache for this document's promoter/epigenetics
@@ -1904,22 +1952,28 @@ class KnowledgeStore:
             except Exception:
                 log.debug("ΣĒMA retrieval failed, continuing without")
 
-        # ── Stage 2/3: dense recall as RRF participant ──────────────
+        # ── Stage 2/3: dense recall — first-class in BOTH modes ─────
         # Stage 2's query_genes_dense_recall returns [(gid, cosine), ...]
-        # already sorted descending. We feed it directly as a tier so
-        # the Fuser can rank-fuse it with the lex tiers under RRF mode.
-        # This also seeds gene_scores in additive mode so the dense
-        # contribution survives the back-compat path — but at the
-        # cosine·dense_weight scale it's roughly noise next to the lex
-        # weights (3.0+), which is why Stage 2 didn't merge it into
-        # query_genes() in the first place. Under RRF, cosine ordering
-        # is what matters and the rank-1 dense hit gets the same
-        # 1/(k+1) weight as the rank-1 FTS hit.
-        # Dense participation runs only under RRF mode. In additive mode
-        # we skip it to keep byte-identical compatibility with pre-Stage-3
-        # ranking — pre-Stage-3 query_genes() never called dense recall
-        # (dense was query_genes_ann's job). Stage 4 may revisit this.
-        if self._dense_embedding_enabled and self._fusion_mode == "rrf":
+        # already sorted descending.
+        #
+        # Tier-0 PR-3 (2026-05-16): dense recall is decoupled from
+        # ``fusion_mode``. The old gate (``and self._fusion_mode ==
+        # "rrf"``) meant dense recall never ran under the default
+        # ``additive`` mode — so the BGE-M3 vectors PR-1 computes at
+        # ingest were dark in the shipped configuration. The gate is now
+        # ``self._dense_embedding_enabled`` alone; the *mode* only
+        # decides HOW dense hits enter the ranking:
+        #   - RRF mode: feed the Fuser as a tier so cosine ordering
+        #     rank-fuses with the lex tiers (the rank-1 dense hit gets
+        #     the same 1/(k+1) weight as the rank-1 FTS hit).
+        #   - additive mode: merge each dense hit into ``gene_scores``
+        #     with ``cosine * self._dense_additive_weight``. The weight
+        #     (default 4.0, BM25-comparable — tag-exact is 3.0) puts the
+        #     dense contribution on the same scale as the lex tiers
+        #     instead of the ``cosine·1.0`` epsilon-noise the old
+        #     comment correctly flagged. The lexical accumulator is
+        #     otherwise byte-identical; dense is purely *added* on top.
+        if self._dense_embedding_enabled:
             try:
                 _dense_t0 = time.monotonic()
                 dense_hits = self.query_docs_dense_recall(
@@ -1928,22 +1982,46 @@ class KnowledgeStore:
                     party_id=party_id,
                     read_only=read_only,
                 )
-                # Stage 3: feed Fuser. raw_score = cosine.
-                fuser.add_tier(
-                    "dense", dense_hits, weight=self._dense_weight,
-                )
-                # Also record in tier_contrib for telemetry (raw cosine,
-                # not multiplied — matches the rule "telemetry observes
-                # raw pre-RRF scores", spec §6).
-                for gid, cosine in dense_hits:
-                    tier_contrib.setdefault(gid, {})["dense"] = float(cosine)
-                    # Ensure dense-only documents appear in gene_scores so
-                    # they survive the eligible_ids gate at the sort.
-                    # Use a tiny epsilon so we don't perturb additive
-                    # ranking (which is unreachable in this branch
-                    # anyway). The actual ordering comes from the Fuser.
-                    if gid not in gene_scores:
-                        gene_scores[gid] = 1e-9
+                if self._fusion_mode == "rrf":
+                    # Stage 3: feed Fuser. raw_score = cosine.
+                    fuser.add_tier(
+                        "dense", dense_hits, weight=self._dense_weight,
+                    )
+                    for gid, cosine in dense_hits:
+                        # Telemetry observes raw cosine, not multiplied
+                        # (spec §6 "raw pre-RRF scores").
+                        tier_contrib.setdefault(gid, {})["dense"] = float(cosine)
+                        # Ensure dense-only documents appear in
+                        # gene_scores so they survive the eligible_ids
+                        # gate at the sort. A tiny epsilon is enough —
+                        # the actual ordering comes from the Fuser.
+                        if gid not in gene_scores:
+                            gene_scores[gid] = 1e-9
+                else:
+                    # Additive mode: merge dense hits into the score
+                    # accumulator at a BM25-comparable weight so a
+                    # semantic-only match can surface alongside lexical
+                    # hits. ``tier_contrib`` records the *weighted*
+                    # contribution so telemetry reflects what actually
+                    # entered the additive sum.
+                    #
+                    # Tier-0 review fix (2026-05-16): apply a min-cosine
+                    # noise floor, consistent with the cosine cutoffs the
+                    # sibling recall paths (query_cold_tier, query_docs_ann)
+                    # already enforce. A below-floor hit does NOT contribute
+                    # to the score, but is still seeded as a candidate with
+                    # a 1e-9 epsilon (same set-membership treatment the RRF
+                    # branch above gives dense-only genes); its tier_contrib
+                    # is recorded as 0.0 so telemetry stays coherent with
+                    # what entered the sum.
+                    for gid, cosine in dense_hits:
+                        if float(cosine) >= self._dense_additive_min_cosine:
+                            contribution = float(cosine) * self._dense_additive_weight
+                            gene_scores[gid] = gene_scores.get(gid, 0.0) + contribution
+                            tier_contrib.setdefault(gid, {})["dense"] = contribution
+                        else:
+                            gene_scores.setdefault(gid, 1e-9)
+                            tier_contrib.setdefault(gid, {})["dense"] = 0.0
                 try:
                     from .telemetry import genome_signal_histogram
                     genome_signal_histogram().record(
@@ -2383,6 +2461,55 @@ class KnowledgeStore:
                     )
                     self._threshold_dim_warned = True
         return self._dense_codec
+
+    def _encode_dense_v2_blob(
+        self,
+        content: Optional[str],
+        precomputed: Optional[List[float]] = None,
+    ) -> Optional[bytes]:
+        """Return the ``embedding_dense_v2`` BLOB for an ingest row, or None.
+
+        Tier-0 PR-1 (2026-05-16). Resolution order:
+
+        1. If ``precomputed`` is supplied (a batched caller already encoded
+           the vector), pack and return it.
+        2. Otherwise, only if ``self._dense_embed_on_ingest`` is true,
+           lazy-load the BGE-M3 codec and encode ``content`` as a passage.
+        3. Otherwise return ``None`` — the column stays NULL and a later
+           ``scripts/backfill_bgem3_v2.py`` run can populate it.
+
+        Encoding is bounded to ``PASSAGE_CHAR_CAP`` chars and uses
+        ``task="passage"`` — the same contract as the offline backfill, so
+        an inline-ingested genome satisfies the backfill's
+        ``length(blob) == dim*4`` idempotency skip-clause. Packing goes
+        through the shared ``vec_to_blob`` helper so the two write paths
+        cannot drift.
+
+        Encode failures are soft — ingest must never break because the dense
+        model is unavailable; the row is stored with a NULL v2 column and a
+        WARN is logged.
+        """
+        from .backends.bgem3_codec import PASSAGE_CHAR_CAP, vec_to_blob
+
+        dim = self._dense_embedding_dim
+        try:
+            if precomputed is not None:
+                return vec_to_blob(precomputed, dim)
+            if not self._dense_embed_on_ingest:
+                return None
+            text = (content or "").strip()
+            if not text:
+                return None
+            codec = self._get_dense_codec()
+            vec = codec.encode(text[:PASSAGE_CHAR_CAP], task="passage")
+            return vec_to_blob(vec, dim)
+        except Exception:
+            log.warning(
+                "dense v2 encode failed at ingest — storing row with NULL "
+                "embedding_dense_v2 (backfill later)",
+                exc_info=True,
+            )
+            return None
 
     def _invalidate_dense_matrix(self, force: bool = False) -> None:
         """Drop the in-memory dense matrix so it rebuilds on next query.
