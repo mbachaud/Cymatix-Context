@@ -571,6 +571,32 @@ def swap_db_external(target_path: str, log: logging.Logger) -> dict:
 
 # ── Retrieval-only probe via /context ────────────────────────────────────
 
+def gold_match_rank(delivered_sources: list[str],
+                    gold_sources: list[str]) -> int | None:
+    """1-based rank of the first delivered source matching any gold source.
+
+    ``delivered_sources`` is the ordered list ``/context`` returned
+    (citation rank order). Returns the 1-based position of the earliest
+    entry whose path contains any ``gold_sources`` substring (forward-slash
+    normalized, case-insensitive), or ``None`` when nothing matches.
+
+    Rank-aware generalization of the gold-delivered predicate:
+    ``gold_match_rank(...) is not None`` is exactly the old boolean
+    ``gold_delivered``. Empty/whitespace gold entries are skipped so a
+    malformed needle cannot match every delivery.
+    """
+    gold_norm = [
+        gs.replace("\\", "/").lower()
+        for gs in gold_sources
+        if gs and gs.strip()
+    ]
+    for i, src in enumerate(delivered_sources):
+        norm = str(src or "").replace("\\", "/").lower()
+        if any(g in norm for g in gold_norm):
+            return i + 1
+    return None
+
+
 def retrieval_probe(query: str, gold_sources: list[str],
                     helix_url: str = HELIX_URL) -> dict:
     """Direct /context call to get retrieval signal independent of the model.
@@ -613,12 +639,7 @@ def retrieval_probe(query: str, gold_sources: list[str],
         if delivered_sources:
             sources_via = "regex_fallback"
 
-    gold_hit = False
-    for src in delivered_sources:
-        norm = src.replace("\\", "/").lower()
-        if any(gs.replace("\\", "/").lower() in norm for gs in gold_sources):
-            gold_hit = True
-            break
+    gold_rank = gold_match_rank(delivered_sources, gold_sources)
 
     return {
         "status": "ok",
@@ -626,7 +647,8 @@ def retrieval_probe(query: str, gold_sources: list[str],
         "delivered_count": len(delivered_sources),
         "delivered_sources": delivered_sources[:20],
         "sources_via": sources_via,
-        "gold_delivered": gold_hit,
+        "gold_delivered": gold_rank is not None,
+        "gold_rank": gold_rank,
         "ellipticity": entry.get("context_health", {}).get("ellipticity"),
         "n_citations": len(citations),
     }
@@ -774,9 +796,11 @@ def run_one_needle(needle: dict, profile_key: str, model: str,
     cache_r = tokens.get("cache_read_input_tokens", 0)
     cache_w = tokens.get("cache_creation_input_tokens", 0)
     cost_s = f"${cost_usd:.4f}" if isinstance(cost_usd, (int, float)) else "?"
+    rank = retr.get("gold_rank")
+    retr_str = f"#{rank}" if rank else ("miss" if retr.get("status") == "ok" else "err")
     log.info(
         "  retr=%s score=%+d cost=%s in=%s out=%s cache_r=%s cache_w=%s",
-        retr.get("gold_delivered"), score["score"],
+        retr_str, score["score"],
         cost_s, in_tok, out_tok, cache_r, cache_w,
     )
     return record
@@ -801,6 +825,15 @@ def summarize_profile(per_needle: list[dict], n_needles: int) -> dict:
     n_retr_hit = sum(1 for r in per_needle if r["retrieval"].get("gold_delivered"))
     total_score = sum(r["score"] for r in per_needle)
     total_cost = sum((r["cost_usd"] or 0.0) for r in per_needle)
+    # mrr — rank-sensitive retrieval metric (issue #137). gold_delivered_rate
+    # is blind to *where* the gold doc lands; MRR (mean of 1/gold_rank, misses
+    # counted as 0) resolves a reshuffle the boolean cannot see.
+    reciprocal_ranks = [
+        1.0 / rank
+        for r in per_needle
+        if (rank := r["retrieval"].get("gold_rank"))
+    ]
+    mrr = (sum(reciprocal_ranks) / n_needles) if n_needles else 0
     return {
         "needles_run": len(per_needle),
         "answers": {
@@ -813,6 +846,7 @@ def summarize_profile(per_needle: list[dict], n_needles: int) -> dict:
         "retrieval": {
             "gold_delivered_count": n_retr_hit,
             "gold_delivered_rate": n_retr_hit / n_needles if n_needles else 0,
+            "mrr": round(mrr, 4),
         },
         "total_cost_usd": round(total_cost, 4),
     }
@@ -981,10 +1015,16 @@ def _run_profile(profile_key: str, run_dir: Path, args, helix_url: str,
     total_wrong = sum(1 for r in per_needle if r["score"] == -1)
     total_retr = sum(1 for r in per_needle if r["retrieval"].get("gold_delivered"))
     total_cost = sum((r["cost_usd"] or 0.0) for r in per_needle)
+    reciprocal_ranks = [
+        1.0 / rk for r in per_needle
+        if (rk := r["retrieval"].get("gold_rank"))
+    ]
+    mrr = (sum(reciprocal_ranks) / len(NEEDLES)) if NEEDLES else 0.0
     log.info(
-        "  PROFILE %s: correct=%d abstain=%d wrong=%d retr_hit=%d/%d cost=$%.4f",
+        "  PROFILE %s: correct=%d abstain=%d wrong=%d retr_hit=%d/%d "
+        "mrr=%.3f cost=$%.4f",
         profile_key, total_correct, total_abstain, total_wrong,
-        total_retr, len(NEEDLES), total_cost,
+        total_retr, len(NEEDLES), mrr, total_cost,
     )
     return per_needle
 
