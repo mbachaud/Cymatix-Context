@@ -123,19 +123,28 @@ def backfill_dense_db(
     dim = int(dim)
     expected_bytes = dim * 4
     if codec is None:
-        # Auto-detect CUDA so the dense backfill runs on the GPU when one is
-        # present. ``BGEM3Codec`` defaults to ``device="cpu"``; on CPU this
+        # Backfill codec device, in priority order:
+        #   1. an explicit ``BGEM3_DEVICE`` env var — operator override (#134);
+        #   2. auto-detected CUDA when a GPU is visible (Tier-0 455961c);
+        #   3. CPU otherwise.
+        # ``BGEM3Codec`` defaults to ``device="cpu"``; on CPU this
         # encode-and-pack loop is a half-day job at ~19k genes, vs ~5-15 min
         # on a GPU (the speeds this script's header advertises). The codec's
-        # sentence-transformers backend forwards ``device`` to the model, so
-        # picking "cuda" here is all that's needed. Falls back to CPU when no
-        # GPU is visible. Tests inject their own ``codec`` and bypass this.
-        try:
-            import torch
-            device = "cuda" if torch.cuda.is_available() else "cpu"
-        except Exception:  # noqa: BLE001 — torch missing → CPU is the only option
-            device = "cpu"
+        # sentence-transformers backend forwards ``device`` to the model.
+        # Auto-detect as the default — rather than a hard ``"cuda"`` — lets a
+        # CPU-only host with no env var degrade gracefully instead of failing
+        # to place the model. ``BGEM3_DEVICE`` empty or ``"auto"`` forces the
+        # auto-detect path. Tests inject their own ``codec`` and bypass this.
+        import os
+        device = os.environ.get("BGEM3_DEVICE", "").strip()
+        if not device or device.lower() == "auto":
+            try:
+                import torch
+                device = "cuda" if torch.cuda.is_available() else "cpu"
+            except Exception:  # noqa: BLE001 — torch missing → CPU is the only option
+                device = "cpu"
         codec = BGEM3Codec(dim=dim, device=device)
+        log_fn(f"[backfill] codec device={device}")
 
     # Single connection for the whole backfill. Wrapped in try/finally so a
     # raise anywhere below (most likely ``codec.encode_batch`` when the model

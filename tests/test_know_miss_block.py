@@ -22,7 +22,7 @@ from pydantic import ValidationError
 
 from helix_context import context_manager as cm
 from helix_context.agent_prompt import HELIX_NO_MATCH_FRAGMENT
-from helix_context.context_packet import _attach_know_or_miss
+from helix_context.context_packet import _attach_know_or_miss, build_context_packet
 from helix_context.scoring.know_calibration import (
     DEFAULT_BETAS,
     DEFAULT_EMIT_FLOOR,
@@ -31,6 +31,7 @@ from helix_context.scoring.know_calibration import (
     fit_betas_from_features,
     load_calibration_from_toml,
 )
+from helix_context.scoring import know_decision as know_decision_module
 from helix_context.scoring.know_decision import (
     _agree_from_tier_contributions,
     _gene_id_beacon,
@@ -168,6 +169,24 @@ class _SyntheticGene:
     def __init__(self, gid, sid):
         self.gene_id = gid
         self.source_id = sid
+
+
+def _make_packet_gene(content: str, domain: str, *, gene_id: str | None = None):
+    """A complete Gene for end-to-end build_context_packet tests.
+
+    build_context_packet reads gene-local metadata (content, epigenetics,
+    promoter, source_id) so a slots-only stub like _SyntheticGene is not
+    enough — we reuse conftest.make_gene and pin a source_id so the
+    coordinate signals resolve.
+    """
+    from tests.conftest import make_gene
+
+    gene = make_gene(content, domains=[domain], gene_id=gene_id)
+    gene.source_id = f"F:/Projects/helix-context/helix_context/{domain}.py"
+    gene.source_kind = "code"
+    gene.volatility_class = "stable"
+    gene.authority_class = "primary"
+    return gene
 
 
 def test_gene_id_match_beacon_only_on_exact_filename_match():
@@ -389,6 +408,54 @@ def test_agree_from_tier_contributions():
     assert _agree_from_tier_contributions(None, k=3) is False
 
 
+def test_agree_from_tier_contributions_dense_tier_bucketed():
+    """Regression for the BGE-M3 dense-tier bucket gap (follow-up to
+    PR #135). ``knowledge_store.py`` writes the dense-cosine recall
+    score under the tier name ``"dense"`` (blob path ~L1939), and
+    ``shard_router.py`` re-publishes that map verbatim (~L508/L613), so
+    sharded mode emits the same name. ``_DENSE_TIERS`` must contain
+    ``"dense"`` or ``lexical_dense_agree`` can never fire for a BGE-M3
+    dense retrieval — it could only agree via SPLADE/SEMA.
+    """
+    # g1 tops the lexical ranker (fts5) AND the dense ranker (dense).
+    # The intersection of the per-ranker top-K is non-empty → agree.
+    contribs = {
+        "g1": {"fts5": 1.0, "dense": 0.82},
+        "g2": {"fts5": 0.5},
+        "g3": {"dense": 0.40},
+    }
+    assert _agree_from_tier_contributions(contribs, k=3) is True
+
+    # Pin the failure direction: this same map yields False against the
+    # pre-fix dense-tier set (which omitted "dense"). We simulate the
+    # old set rather than re-import a frozen copy so the assertion
+    # documents exactly which name closed the gap.
+    pre_fix_dense_tiers = frozenset({"splade", "sema_boost", "sema_cold"})
+    lex_tiers = know_decision_module._LEXICAL_TIERS
+
+    def _agree_with(dense_tiers, tier_contributions, k=3):
+        lex_scores, dense_scores = [], []
+        for gid, tier_map in tier_contributions.items():
+            lex = sum(float(tier_map.get(t, 0.0)) for t in lex_tiers)
+            dense = sum(float(tier_map.get(t, 0.0)) for t in dense_tiers)
+            if lex > 0:
+                lex_scores.append((gid, lex))
+            if dense > 0:
+                dense_scores.append((gid, dense))
+        lex_scores.sort(key=lambda kv: kv[1], reverse=True)
+        dense_scores.sort(key=lambda kv: kv[1], reverse=True)
+        lex_top = {gid for gid, _ in lex_scores[:k]}
+        dense_top = {gid for gid, _ in dense_scores[:k]}
+        return bool(lex_top & dense_top)
+
+    # Pre-fix set: "dense" is unrecognized → dense ranker is empty →
+    # no intersection → the signal silently never fires.
+    assert _agree_with(pre_fix_dense_tiers, contribs) is False
+    # Post-fix set (the live one) agrees, confirming the fix is what
+    # closes the gap.
+    assert _agree_with(know_decision_module._DENSE_TIERS, contribs) is True
+
+
 # ─────────────────────────────────────────────────────────────────────
 # Acceptance §13: synthetic round-trip — ALL miss rows have escalate_to,
 # ALL know rows have confidence > 0.7, envelope never raises.
@@ -514,6 +581,180 @@ def test_packet_attach_miss_on_no_genes():
     assert p.know is None
     assert p.miss.reason == "no_promoter_match"
     assert len(p.miss.escalate_to) >= 1
+
+
+# ─────────────────────────────────────────────────────────────────────
+# Packet-side: lexical_dense_agree must reflect the tier contributions
+#
+# Regression for the 2026-05-16 pipeline deep review, finding #3
+# (docs/reviews/2026-05-16-deep-review/pipeline-03-scoring-conflict.md).
+# _attach_know_or_miss used to hard-code ``tier_contrib = {}``, which
+# pinned lexical_dense_agree to False for every /context/packet block.
+# build_context_packet now plumbs genome.last_tier_contributions through
+# the ``tier_contributions`` kwarg; these tests pin both directions.
+# ─────────────────────────────────────────────────────────────────────
+
+def test_packet_attach_lexical_dense_agree_true_on_agreeing_tiers():
+    """Lexical (fts5/tag_exact) + dense (splade/sema_boost) tiers that
+    both rank the same gene_id at the top must yield
+    KnowBlock.lexical_dense_agree=True."""
+    g = _SyntheticGene(
+        "g1", "F:/Projects/helix-context/helix_context/context_manager.py"
+    )
+    # g1 wins both the lexical and the dense ranker -> intersection
+    # non-empty -> lexical_dense_agree must be True.
+    tier_contributions = {
+        "g1": {"fts5": 0.9, "tag_exact": 0.8, "splade": 0.7, "sema_boost": 0.6},
+        "g2": {"fts5": 0.1, "splade": 0.1},
+    }
+    p = ContextPacket(task_type="explain", query="context_manager")
+    _attach_know_or_miss(
+        p,
+        query="context_manager",
+        genes=[g],
+        score_map={"g1": 2.5, "g2": 1.0},
+        coordinate_confidence=0.8,
+        tier_contributions=tier_contributions,
+    )
+    assert p.know is not None
+    assert p.miss is None
+    assert p.know.lexical_dense_agree is True
+
+
+def test_packet_attach_lexical_dense_agree_false_on_disjoint_tiers():
+    """When the lexical ranker tops g1 but the dense ranker tops g2
+    (no top-K intersection), lexical_dense_agree must be False — the
+    safe no-agreement direction. Pins the negative case so the
+    plumbing fix can't regress into a false-positive boost."""
+    g = _SyntheticGene(
+        "g1", "F:/Projects/helix-context/helix_context/context_manager.py"
+    )
+    g2 = _SyntheticGene(
+        "g2", "F:/Projects/helix-context/helix_context/codons.py"
+    )
+    # Lexical tiers favour g1; dense tiers favour g2. Disjoint top-K.
+    tier_contributions = {
+        "g1": {"fts5": 0.9, "tag_exact": 0.8},
+        "g2": {"splade": 0.9, "sema_boost": 0.8},
+    }
+    p = ContextPacket(task_type="explain", query="context_manager")
+    _attach_know_or_miss(
+        p,
+        query="context_manager",
+        genes=[g, g2],
+        score_map={"g1": 2.5, "g2": 1.0},
+        coordinate_confidence=0.8,
+        tier_contributions=tier_contributions,
+    )
+    assert p.know is not None
+    assert p.miss is None
+    assert p.know.lexical_dense_agree is False
+
+
+def test_packet_attach_lexical_dense_agree_false_when_no_tiers_passed():
+    """Back-compat: a caller that passes nothing for tier_contributions
+    still works and lands on the safe False direction (no KeyError, no
+    crash) — guards the older direct-caller path."""
+    g = _SyntheticGene(
+        "g1", "F:/Projects/helix-context/helix_context/context_manager.py"
+    )
+    p = ContextPacket(task_type="explain", query="context_manager")
+    _attach_know_or_miss(
+        p,
+        query="context_manager",
+        genes=[g],
+        score_map={"g1": 2.5, "g2": 1.0},
+        coordinate_confidence=0.8,
+        # tier_contributions intentionally omitted.
+    )
+    assert p.know is not None
+    assert p.know.lexical_dense_agree is False
+
+
+def test_build_context_packet_plumbs_tier_contributions_from_genome():
+    """End-to-end: build_context_packet must lift
+    ``last_tier_contributions`` off the genome handle and feed it into
+    the know/miss block. A genome whose query surfaces agreeing
+    lexical+dense tiers must produce a packet with
+    know.lexical_dense_agree=True. This is the plumbing the
+    2026-05-16 deep review finding #3 was about."""
+
+    class _FakeGenome:
+        """Minimal genome stand-in: query_docs returns one document and
+        publishes the agreeing tier map on ``last_tier_contributions``,
+        exactly as knowledge_store.py / shard_router.py would."""
+
+        def __init__(self):
+            self.last_query_scores: dict = {}
+            self.last_tier_contributions: dict = {}
+
+        def query_docs(self, *, domains, entities, max_genes, read_only):
+            gene = _make_packet_gene(
+                "context manager orchestrates the pipeline",
+                "context_manager",
+            )
+            self.last_query_scores = {gene.gene_id: 2.6}
+            # Lexical and dense rankers agree on this gene_id.
+            self.last_tier_contributions = {
+                gene.gene_id: {
+                    "fts5": 0.9,
+                    "tag_exact": 0.8,
+                    "splade": 0.7,
+                    "sema_boost": 0.6,
+                }
+            }
+            return [gene]
+
+    genome = _FakeGenome()
+    packet = build_context_packet(
+        "context_manager",
+        task_type="explain",
+        genome=genome,
+        now_ts=10_000.0,
+    )
+    assert packet.know is not None
+    assert packet.miss is None
+    assert packet.know.lexical_dense_agree is True
+
+
+def test_build_context_packet_lexical_dense_agree_false_on_disjoint_genome_tiers():
+    """End-to-end negative: a genome whose lexical and dense rankers
+    disagree must yield know.lexical_dense_agree=False (the packet
+    builder must not invent agreement)."""
+
+    class _FakeGenome:
+        def __init__(self):
+            self.last_query_scores: dict = {}
+            self.last_tier_contributions: dict = {}
+
+        def query_docs(self, *, domains, entities, max_genes, read_only):
+            g1 = _make_packet_gene(
+                "context manager orchestrates the pipeline",
+                "context_manager",
+                gene_id="g_ctx",
+            )
+            g2 = _make_packet_gene(
+                "codons chunk and encode fragments",
+                "codons",
+                gene_id="g_cod",
+            )
+            self.last_query_scores = {"g_ctx": 2.6, "g_cod": 1.1}
+            # Lexical tiers favour g_ctx; dense tiers favour g_cod.
+            self.last_tier_contributions = {
+                "g_ctx": {"fts5": 0.9, "tag_exact": 0.8},
+                "g_cod": {"splade": 0.9, "sema_boost": 0.8},
+            }
+            return [g1, g2]
+
+    genome = _FakeGenome()
+    packet = build_context_packet(
+        "context_manager",
+        task_type="explain",
+        genome=genome,
+        now_ts=10_000.0,
+    )
+    assert packet.know is not None
+    assert packet.know.lexical_dense_agree is False
 
 
 # ─────────────────────────────────────────────────────────────────────

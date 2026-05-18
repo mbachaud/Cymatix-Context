@@ -227,10 +227,18 @@ _LEXICAL_TIERS: frozenset[str] = frozenset({
     "pki",
 })
 
+# ``dense`` is the BGE-M3 dense-cosine recall tier — written into the
+# tier-contribution map by knowledge_store.py (blob path, ~L1939:
+# ``tier_contrib[gid]["dense"]``) and copied verbatim by shard_router.py
+# (sharded path, ~L508/L613, which re-publishes each source shard's
+# ``last_tier_contributions`` unchanged). It was missing here, so
+# ``lexical_dense_agree`` never fired for a BGE-M3 dense retrieval.
+# Follow-up to PR #135 (the plumbing fix that surfaced this signal).
 _DENSE_TIERS: frozenset[str] = frozenset({
     "splade",
     "sema_boost",
     "sema_cold",
+    "dense",
 })
 
 

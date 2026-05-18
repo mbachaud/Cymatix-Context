@@ -491,6 +491,17 @@ def build_context_packet(
         max_genes=max_genes,
         read_only=read_only,
     )
+    # Per-tier contribution map for the Stage 6 lexical_dense_agree
+    # signal. _query_genes prefers the router over the genome; mirror
+    # that precedence here so we read the handle that actually ran the
+    # query. ``last_tier_contributions`` is set by knowledge_store.py /
+    # shard_router.py after query_docs(). ``getattr`` default keeps this
+    # graceful when the attribute is absent (same shape as the /context
+    # route at server/helpers.py:265).
+    _retrieval_handle = router if router is not None else genome
+    tier_contributions = (
+        getattr(_retrieval_handle, "last_tier_contributions", {}) or {}
+    )
     packet = ContextPacket(task_type=task_type, query=query)
 
     if effective_main_conn is None:
@@ -573,6 +584,7 @@ def build_context_packet(
             genes=genes,
             score_map=score_map,
             coordinate_confidence=coordinate_confidence,
+            tier_contributions=tier_contributions,
         )
     except Exception:
         import logging
@@ -595,12 +607,20 @@ def _attach_know_or_miss(
     genes: list,
     score_map: dict,
     coordinate_confidence: float,
+    tier_contributions: dict | None = None,
 ) -> None:
     """Compute decide_know_or_miss and stash on packet.know / packet.miss.
 
     Mirror of the /context route logic in server._compute_know_or_miss_block
     but works directly with the locals already accumulated in
     ``build_context_packet`` instead of re-fetching from the knowledge store.
+
+    ``tier_contributions`` is the ``{gene_id: {tier_name: score}}`` map
+    ``build_context_packet`` lifts off the genome/router after the query
+    (``genome.last_tier_contributions``). It drives the
+    ``lexical_dense_agree`` discriminator signal. Defaults to ``None``
+    (treated as empty) so direct callers / older tests keep working —
+    they just get the no-agreement-signal direction, which is safe.
     """
     from .scoring.know_calibration import load_calibration_from_toml
     from .scoring.know_decision import (
@@ -661,18 +681,14 @@ def _attach_know_or_miss(
         metadata={"query": query, "ratio": ratio},
     )
 
-    # Tier contributions for lex/dense agreement. The packet builder
-    # does not currently capture per-tier contribs (it only takes the
-    # post-fusion score_map). Best-effort: pull off the knowledge store if the
-    # caller wired one through. Otherwise treat as no-agreement signal.
-    tier_contrib = {}
-    # documents elements may be Document objects from genome.query_genes, which
-    # don't carry tier-level info. The router/genome's last_tier_-
-    # contributions is the source of truth — we expect the route to
-    # have set it. The packet builder does NOT currently surface the
-    # knowledge store handle past _query_genes; until that's plumbed, we leave
-    # this False, which is the safe direction (no false-positive
-    # confidence boost).
+    # Tier contributions for lex/dense agreement. ``build_context_packet``
+    # surfaces the genome/router's ``last_tier_contributions`` (the
+    # {gene_id: {tier_name: score}} map set by knowledge_store.py /
+    # shard_router.py after the query) and plumbs it through here. This
+    # mirrors the /context route at server/helpers.py:265. When the
+    # caller passes nothing (older direct callers / tests), we fall back
+    # to an empty dict — the safe no-agreement-signal direction.
+    tier_contrib = tier_contributions or {}
     lex_dense_agree = _agree_from_tier_contributions(tier_contrib, k=3)
 
     cal = load_calibration_from_toml()
