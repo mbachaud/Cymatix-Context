@@ -291,10 +291,15 @@ class RetrievalConfig:
     dense_embedding_enabled: bool = True
     # Stage 2 (2026-05-08): default dim raised from 256 -> 1024. Full BGE-M3
     # Matryoshka. dim=256 collapsed random-pair cosine to ~0.6, sabotaging
-    # threshold semantics. Stage 4 will recalibrate ann_similarity_threshold
-    # at the new dim.
+    # threshold semantics.
     dense_embedding_dim: int = 1024
-    ann_similarity_threshold: float = 0.35
+    # Stage 4 / Issue #139 (2026-05-18): recalibrated 0.35 -> 0.58 for dim=1024.
+    # 0.35 was a dim-256 value. Measured over the dim-1024 BGE-M3 v2 vectors in
+    # the bench fixtures (17.5k docs, 200k random unrelated doc pairs):
+    # unrelated-pair cosine mean ~0.50, std ~0.066, p90 ~0.58. So 0.35 sat
+    # below the p1 noise floor (~0.36) and never cut; 0.58 sits just above the
+    # p90 of unrelated pairs.
+    ann_similarity_threshold: float = 0.58
     ann_threshold_min_genes: int = 1
     ann_threshold_max_genes: int = 12
     # Stage 4 (2026-05-08): margin-over-random ANN calibration. Spec
