@@ -878,6 +878,25 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
                 sr_weight=config.retrieval.sr_weight,
                 sr_cap=config.retrieval.sr_cap,
                 seeded_edges_enabled=config.retrieval.seeded_edges_enabled,
+                # Tier-0 fix (2026-05-18): forward the dense / ANN / fusion
+                # retrieval knobs. Without these a hot-swapped fixture reverts
+                # to the KnowledgeStore defaults (dense_embedding_enabled=False)
+                # and dense recall silently goes dark — the boot path
+                # (context_manager.open_read_source) passes them, but this
+                # swap path had drifted out of sync.
+                dense_embedding_enabled=config.retrieval.dense_embedding_enabled,
+                dense_embedding_dim=config.retrieval.dense_embedding_dim,
+                ann_similarity_threshold=config.retrieval.ann_similarity_threshold,
+                ann_threshold_min_genes=config.retrieval.ann_threshold_min_genes,
+                ann_threshold_max_genes=config.retrieval.ann_threshold_max_genes,
+                ann_threshold_mode=config.retrieval.ann_threshold_mode,
+                ann_threshold_sigma_multiplier=config.retrieval.ann_threshold_sigma_multiplier,
+                dense_pool_size=config.retrieval.dense_pool_size,
+                fusion_mode=config.retrieval.fusion_mode,
+                rrf_k=config.retrieval.rrf_k,
+                dense_weight=config.retrieval.dense_weight,
+                dense_additive_weight=config.retrieval.dense_additive_weight,
+                dense_additive_min_cosine=config.retrieval.dense_additive_min_cosine,
             )
             new_store.read_only = read_only
 
