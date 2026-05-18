@@ -1,10 +1,10 @@
-"""Cache hit-rate benchmark — simulates a multi-agent workload where
+"""Cache hit-rate benchmark - simulates a multi-agent workload where
 overlapping queries hit overlapping source_ids.
 
 Design:
     - N "agents" (distinct session_ids) run a shared pool of queries.
     - Queries are drawn with replacement so overlap is explicit.
-    - Each query → Helix packet → DAL fetch for every source_id.
+    - Each query -> Helix packet -> DAL fetch for every source_id.
     - Two runs: cold (fresh cache per call) and warm (shared cache).
     - Reports: per-agent + aggregate hit-rate + latency savings.
 

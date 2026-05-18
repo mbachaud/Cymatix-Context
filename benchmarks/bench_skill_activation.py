@@ -3,11 +3,11 @@ Skill / tool activation profiler.
 
 For a curated set of distinct prompt SHAPES, probe the /context endpoint
 and capture WHICH retrieval signals fire (and how strongly). Output is
-a 2D activation matrix: prompt-shape × retrieval-tier → contribution.
+a 2D activation matrix: prompt-shape x retrieval-tier -> contribution.
 
 This makes the lane graph from docs/PIPELINE_LANES.md MEASURABLE rather
 than asserted. We can verify that the engine actually picks the tools
-we think it picks for each query type — and detect drift if a refactor
+we think it picks for each query type - and detect drift if a refactor
 silently changes the routing.
 
 Requires server-side per-tier breakdown surfaced via /context's
@@ -20,9 +20,9 @@ Usage:
     HELIX_MODEL=qwen3:8b python benchmarks/bench_skill_activation.py
 
 Output:
-    benchmarks/skill_activation_results.json — per-shape activation
+    benchmarks/skill_activation_results.json - per-shape activation
         matrix with raw contributions + heatmap-friendly aggregates
-    Console — ASCII heatmap (10 shapes × N tiers)
+    Console - ASCII heatmap (10 shapes x N tiers)
 
 Companion: benchmarks/bench_dimensional_lock.py (precision curve);
 this bench is the ingredient profile.
@@ -286,7 +286,7 @@ def main() -> int:
         choices=("additive", "rrf"),
         default=os.environ.get("HELIX_FUSION_MODE_LABEL", "additive"),
         help=(
-            "Annotation only — the bench reads server output as-is. "
+            "Annotation only - the bench reads server output as-is. "
             "Restart the helix server with [retrieval] fusion_mode=<this> "
             "before running the bench to actually exercise the path."
         ),

@@ -1,4 +1,4 @@
-"""Headroom E2E latency — measure the compress_text() seam with headroom
+"""Headroom E2E latency - measure the compress_text() seam with headroom
 enabled vs disabled (HELIX_DISABLE_HEADROOM=1 fallback).
 
 Samples real gene content from the running genome across content types
@@ -8,7 +8,7 @@ in each mode, and reports:
     - compression ratio per call (output_chars / input_chars)
     - per-content-type breakdown
 
-Runs in-process via the library — no HTTP, no separate server. The
+Runs in-process via the library - no HTTP, no separate server. The
 headroom_bridge ``_disabled()`` check reads env on every call, so we
 can toggle between trials without restarting anything.
 
@@ -136,7 +136,7 @@ def _format_table(rows: list[dict]) -> str:
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--trials", type=int, default=10,
-                        help="Trials per (sample × budget × mode)")
+                        help="Trials per (sample x budget x mode)")
     parser.add_argument("--samples-per-kind", type=int, default=3)
     parser.add_argument("--out", type=str,
                         default=f"benchmarks/results/headroom_latency_"
