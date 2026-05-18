@@ -276,15 +276,22 @@ entity_graph_retrieval_enabled = false
 # BGE-M3 dense vectors + ANN threshold (Step 4, 2026-05-08).
 # Stage 2 (2026-05-08): dim raised to 1024 (full BGE-M3 Matryoshka). The
 # dim=256 truncation collapsed random-pair cosine to ~0.6, sabotaging the
-# threshold. Stage 4 will recalibrate ann_similarity_threshold at 1024-dim.
-# dense_pool_size decouples recall breadth from the final cut (max_genes).
+# threshold. dense_pool_size decouples recall breadth from the final cut
+# (max_genes).
 # Tier-0 PR-3 (2026-05-16): flipped to true. PR-1 computes
 # embedding_dense_v2 at ingest and PR-3 decoupled dense recall from
 # fusion_mode (knowledge_store.query_docs), so dense recall now fires as a
 # retrieval signal under the shipped additive default — not only under RRF.
 dense_embedding_enabled = true
 dense_embedding_dim = 1024
-ann_similarity_threshold = 0.35           # legacy / fallback when calibration row missing
+# Stage 4 / Issue #139 (2026-05-18): recalibrated 0.35 -> 0.58 for dim=1024.
+# 0.35 was a dim-256 value. Measured over the dim-1024 BGE-M3 v2 vectors in
+# the bench fixtures (17.5k docs, 200k random unrelated doc pairs): unrelated-
+# pair cosine mean ~0.50, std ~0.066, p50 ~0.49, p90 ~0.58, p95 ~0.61. So 0.35
+# sat below the p1 noise floor (~0.36) and never cut. 0.58 sits just above the
+# p90 of unrelated pairs — rejects ~90% of pure-noise pairs while staying
+# conservative enough to keep moderately-related hits.
+ann_similarity_threshold = 0.58           # legacy / fallback when calibration row missing
 ann_threshold_min_genes = 1
 ann_threshold_max_genes = 12
 # Stage 4 (2026-05-08): margin-over-random ANN threshold. Spec

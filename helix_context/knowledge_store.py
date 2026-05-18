@@ -341,7 +341,11 @@ class KnowledgeStore:
         # a precomputed vector). This is the WRITE path only and is
         # independent of dense_embedding_enabled, which gates RETRIEVAL.
         dense_embed_on_ingest: bool = False,
-        ann_similarity_threshold: float = 0.35,
+        # Issue #139 (2026-05-18): default recalibrated 0.35 -> 0.58 for the
+        # dim-1024 BGE-M3 v2 vectors. Callers normally pass the configured
+        # value (config.retrieval.ann_similarity_threshold); this default is
+        # the fallback for direct construction.
+        ann_similarity_threshold: float = 0.58,
         ann_threshold_min_genes: int = 1,
         ann_threshold_max_genes: int = 12,
         # Stage 4 (2026-05-08): margin-over-random ANN calibration. When
@@ -2441,10 +2445,15 @@ class KnowledgeStore:
         if self._dense_codec is None:
             from .backends.bgem3_codec import BGEM3Codec
             self._dense_codec = BGEM3Codec(dim=self._dense_embedding_dim)
-            # One-time threshold-staleness warn: if v2 coverage is non-empty
-            # AND the threshold was calibrated at a different dim, surface it.
-            # Threshold recalibration is Stage 4; we just want it loud.
-            if self._dense_embedding_enabled and not self._threshold_dim_warned:
+            # One-time threshold-staleness warn: ann_similarity_threshold is
+            # calibrated for dim=1024 (Issue #139 / Stage 4, 2026-05-18). If
+            # this knowledge store runs at a different dense_embedding_dim, the
+            # absolute threshold no longer matches the geometry — surface it.
+            if (
+                self._dense_embedding_enabled
+                and not self._threshold_dim_warned
+                and self._dense_embedding_dim != 1024
+            ):
                 try:
                     coverage = self._reader.execute(
                         "SELECT COUNT(*) AS c FROM genes WHERE embedding_dense_v2 IS NOT NULL"
@@ -2454,9 +2463,10 @@ class KnowledgeStore:
                     has_v2 = False
                 if has_v2:
                     log.warning(
-                        "ann_similarity_threshold=%.3f is calibrated for dim=256; "
-                        "v2 vectors are dim=%d. Threshold recalibration is Stage 4. "
-                        "Recall pool is independent of threshold.",
+                        "ann_similarity_threshold=%.3f is calibrated for dim=1024; "
+                        "v2 vectors are dim=%d. The absolute threshold will not "
+                        "transfer — re-measure for this dim. Recall pool is "
+                        "independent of threshold.",
                         self._ann_threshold, self._dense_embedding_dim,
                     )
                     self._threshold_dim_warned = True
@@ -2671,10 +2681,11 @@ class KnowledgeStore:
         4. Body-fetch once via ``_load_genes_by_ids``.
         5. Apply threshold + ``min_genes`` floor; cap at ``max_genes``.
 
-        Stage 2 is **threshold-stale**: ``ann_similarity_threshold`` was
-        calibrated at dim=256; v2 vectors are dim=1024. Stage 4 recalibrates.
-        ``max_genes`` is the hard cap, so blast radius is bounded even if the
-        threshold over-includes.
+        ``ann_similarity_threshold`` was recalibrated for dim=1024 v2 vectors
+        in Issue #139 / Stage 4 (2026-05-18): measured unrelated-pair cosine
+        mean ~0.50 over the bench fixtures, so the default was raised 0.35 ->
+        0.58 (just above the p90 of unrelated pairs). ``max_genes`` remains the
+        hard cap, so blast radius is bounded regardless of the threshold.
 
         Back-compat: callers that pass only positional/keyword args still
         work; ``pool_size`` is keyword-only and optional.
