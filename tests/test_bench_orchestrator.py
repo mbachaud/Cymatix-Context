@@ -231,6 +231,31 @@ def test_wait_healthy_accepts_matching_pid() -> None:
         srv._wait_healthy()  # must not raise
 
 
+def test_wait_healthy_accepts_descendant_pid() -> None:
+    """``python -m uvicorn`` can run uvicorn as a *child* of the spawned
+    process (a venv redirector / interpreter re-exec), so the server pid
+    need not equal the pid we Popen'd. _wait_healthy must accept a
+    /health responder whose pid descends from the spawned pid, not only
+    an exact match."""
+    srv = BenchServer()
+    srv._proc = _fake_proc(pid=5555)
+
+    # /health answered by pid 9999, whose parent chain includes the
+    # spawned pid 5555 — i.e. it is the uvicorn we launched.
+    spawned = MagicMock()
+    spawned.pid = 5555
+    responder = MagicMock()
+    responder.parents.return_value = [spawned]
+    fake_psutil = MagicMock()
+    fake_psutil.Process.return_value = responder
+
+    with patch.object(srv, "health", return_value={"status": "ok", "pid": 9999}), \
+            patch("bench_orchestrator.psutil", fake_psutil):
+        srv._wait_healthy()  # must not raise
+
+    fake_psutil.Process.assert_called_once_with(9999)
+
+
 def test_wait_healthy_rejects_mismatched_pid() -> None:
     """A /health responder with the *wrong* pid (a stale server that won
     the bind race) must cause a loud failure, not silent success."""

@@ -61,6 +61,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Iterable, Optional
 
+import psutil
+
 log = logging.getLogger("bench.orchestrator")
 
 DEFAULT_HOST = "127.0.0.1"
@@ -405,25 +407,47 @@ class BenchServer(AbstractContextManager["BenchServer"]):
                 last_err = exc
                 time.sleep(DEFAULT_HEALTH_POLL_S)
                 continue
-            # Identity check: a stale uvicorn that won the bind race will
-            # also answer /health. If the responder's pid is not the
-            # process we just spawned, fail loudly — proceeding would run
-            # the whole bench against the wrong (e.g. blob-mode) server
-            # and silently report genes=0. See issue #127.
+            # Identity check: a stale uvicorn that won the bind race
+            # would also answer /health. Reject a responder that is
+            # neither the process we spawned nor a descendant of it
+            # (``python -m uvicorn`` can run uvicorn in a child process
+            # via a venv redirector / interpreter re-exec). Proceeding
+            # against the wrong server silently scores genes=0. See #127.
             responder_pid = payload.get("pid")
             if expected_pid is not None and responder_pid is not None:
-                if int(responder_pid) != int(expected_pid):
+                if not self._responder_is_ours(int(responder_pid), int(expected_pid)):
                     raise BenchServerError(
-                        f"/health answered by pid={responder_pid}, but the "
-                        f"spawned uvicorn is pid={expected_pid}; a stale "
-                        "server is holding the port. Aborting rather than "
-                        "running the bench against the wrong process."
+                        f"/health answered by pid={responder_pid}, which is "
+                        f"neither the spawned uvicorn pid={expected_pid} nor a "
+                        "descendant of it; a stale server is holding the port. "
+                        "Aborting rather than running the bench against the "
+                        "wrong process."
                     )
             return
         raise BenchServerError(
             f"uvicorn did not become healthy within {self.health_timeout_s}s "
             f"(last error: {last_err})"
         )
+
+    @staticmethod
+    def _responder_is_ours(responder_pid: int, spawned_pid: int) -> bool:
+        """True if the /health responder is the uvicorn we spawned.
+
+        ``python -m uvicorn`` can run uvicorn in a *child* process (a venv
+        redirector or interpreter re-exec), so the server's pid need not
+        equal the pid we Popen'd. The responder counts as ours when it is
+        the spawned process or any descendant of it; a genuinely unrelated
+        pid (a stale server that won the bind race) is rejected. When the
+        responder's lineage cannot be read, fail safe to rejection rather
+        than risk attaching to a stale server. See issue #127.
+        """
+        if responder_pid == spawned_pid:
+            return True
+        try:
+            ancestors = psutil.Process(responder_pid).parents()
+        except (psutil.Error, OSError):
+            return False
+        return any(parent.pid == spawned_pid for parent in ancestors)
 
     def _hot_swap(self, fixture: Fixture) -> SwapResult:
         t0 = time.time()
