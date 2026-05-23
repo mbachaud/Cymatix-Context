@@ -97,6 +97,7 @@ import json
 import logging
 import os
 import socket
+import threading
 import urllib.error
 import urllib.request
 from typing import Any, Dict, List, Optional
@@ -1093,7 +1094,40 @@ def main() -> None:
     log.info("helix-mcp starting — proxying to %s (timeout=%.1fs)",
              HELIX_URL, TIMEOUT_S)
 
-    _register_with_registry()
+    # Registry handshake runs in a daemon thread so mcp.run() can start
+    # the MCP stdio handshake immediately. Background:
+    #
+    # MCP hosts (Claude Code/-p in particular) close the spawn if the
+    # child takes too long to reach mcp.run() — Windows behavior shows
+    # "Connection closed" at ~4s even when the overall MCP timeout is
+    # 10s. Calling _register_with_registry() inline added 2-5s on top of
+    # the unavoidable Python import time, putting us over that window
+    # whenever the helix HTTP server was slow or unreachable.
+    #
+    # Putting registration in a daemon thread:
+    #   * mcp.run() enters the stdio handshake within ~0.1s of main()
+    #   * registry POST runs concurrently; on success it stashes the
+    #     bridge in _registered_bridge for helix_announce()
+    #   * if it raises, log it but don't kill the MCP server
+    #   * daemon=True so the thread dies when mcp.run() returns
+    #
+    # See 2026-05-20 bench-debug session — every claude -p MCP attempt
+    # was timing out here even after the try/except + shim-dispatch fixes.
+    def _background_register() -> None:
+        try:
+            _register_with_registry()
+        except Exception:
+            log.exception(
+                "Registry handshake (background) failed — continuing "
+                "without registration. Tool calls still proxy to %s.",
+                HELIX_URL,
+            )
+
+    threading.Thread(
+        target=_background_register,
+        name="helix-mcp-registry",
+        daemon=True,
+    ).start()
 
     mcp.run()
 

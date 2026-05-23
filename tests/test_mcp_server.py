@@ -264,3 +264,125 @@ def test_helix_announce_tool_calls_bridge_announce(monkeypatch, mock_bridge):
     call = mock_bridge.announce_calls[-1]
     assert call["model_id"] == "claude-opus-4-7"
     assert call["ide_override"] is None
+
+
+def test_shim_dispatches_to_main_when_invoked_as_module():
+    """``python -m helix_context.mcp_server`` must call main() — otherwise
+    the spawned MCP subprocess imports the real module and exits silently,
+    and the MCP host reports "Connection closed" within ~2s of spawn.
+
+    This was the actual root cause of the 2026-05-20 bench finding that
+    helix-context MCP never loaded via claude -p, masked by a separate
+    register-with-registry crash (covered by the test above). The shim at
+    helix_context/mcp_server.py originally only ran the rebind line, so
+    `python -m helix_context.mcp_server` exited immediately after import.
+
+    We spawn ``python -m helix_context.mcp_server`` as a subprocess with a
+    minimal HELIX_MCP_LOG_LEVEL env var, send EOF on stdin so the server
+    shuts down immediately after entering mcp.run(), and assert the
+    expected "helix-mcp starting" log line appears on stderr. If the shim
+    didn't dispatch to main(), no log line ever fires.
+    """
+    import subprocess
+    import sys
+
+    proc = subprocess.run(
+        [sys.executable, "-m", "helix_context.mcp_server"],
+        input=b"",  # close stdin immediately → mcp.run() exits after init
+        capture_output=True,
+        timeout=15,
+        env={
+            **os.environ,
+            "HELIX_MCP_LOG_LEVEL": "INFO",
+            # Point at unreachable port so registry handshake fails fast;
+            # the wrap-in-try/except fix ensures main() still reaches
+            # mcp.run() which then exits on stdin-EOF.
+            "HELIX_MCP_URL": "http://127.0.0.1:1",
+        },
+    )
+    stderr_text = proc.stderr.decode("utf-8", errors="replace")
+    assert "helix-mcp starting" in stderr_text, (
+        "main() never ran — `python -m helix_context.mcp_server` exited "
+        "without calling the real module's main(). The shim must dispatch "
+        f"to main() under __main__. stderr was:\n{stderr_text[:600]}"
+    )
+
+
+import os  # noqa: E402 — used by the subprocess test above
+
+
+def test_main_reaches_mcp_run_before_register_completes(monkeypatch):
+    """``main()`` must reach ``mcp.run()`` without waiting for
+    ``_register_with_registry()`` to complete. Otherwise the MCP host's
+    stdio-handshake window (claude -p closes spawn at ~4s on Windows
+    even if its overall timeout is 10s) elapses before mcp.run() reads
+    the first initialize message, and the host reports Connection closed.
+
+    Verified by: simulate _register_with_registry() taking 5s; assert
+    mcp.run() entered within 1s of main() being called.
+    """
+    import time
+    from helix_context import mcp_server
+
+    register_called_at = []
+    run_called_at = []
+
+    def _slow_register():
+        register_called_at.append(time.perf_counter())
+        time.sleep(5)  # simulate slow HTTP / connection refused retry
+
+    def _fake_run():
+        run_called_at.append(time.perf_counter())
+
+    monkeypatch.setattr(mcp_server, "_register_with_registry", _slow_register)
+    monkeypatch.setattr(mcp_server.mcp, "run", _fake_run)
+
+    t0 = time.perf_counter()
+    mcp_server.main()
+    elapsed_to_run = run_called_at[0] - t0
+
+    assert elapsed_to_run < 1.0, (
+        f"main() took {elapsed_to_run:.2f}s to reach mcp.run() — should be "
+        "near-instant since registration must run in a background thread. "
+        "MCP hosts close the spawn around 4s on Windows."
+    )
+
+
+def test_main_survives_register_with_registry_crash(monkeypatch):
+    """``main()`` must reach ``mcp.run()`` even if ``_register_with_registry``
+    raises — e.g. when the helix HTTP endpoint is unreachable and the
+    AgentBridge construction or register_participant call raises.
+
+    This is the regression that caused ``claude -p --mcp-config X.json``
+    to fail the MCP stdio handshake with "Connection closed" within ~2s
+    on Windows during the 2026-05-20 bench debugging. ``_register_with_registry``
+    was called bare from ``main()``, so any exception during registration
+    propagated out before ``mcp.run()`` was entered, killing the spawned
+    helix-mcp subprocess before it could complete the MCP handshake.
+
+    Fix: wrap the ``_register_with_registry()`` call in ``main()`` in
+    try/except so registry failure becomes a logged warning and the MCP
+    server still starts.
+    """
+    from helix_context import mcp_server
+
+    mcp_ran = []
+
+    def _exploding_register():
+        raise RuntimeError(
+            "simulated registry crash (e.g. helix unreachable)"
+        )
+
+    def _fake_mcp_run():
+        mcp_ran.append(True)
+
+    monkeypatch.setattr(mcp_server, "_register_with_registry", _exploding_register)
+    monkeypatch.setattr(mcp_server.mcp, "run", _fake_mcp_run)
+
+    # main() must not propagate the RuntimeError from _register_with_registry
+    mcp_server.main()
+    assert mcp_ran == [True], (
+        "main() did not reach mcp.run() after registry crash — the "
+        "subprocess would die before MCP handshake. Wrap "
+        "_register_with_registry() in try/except inside main()."
+    )
