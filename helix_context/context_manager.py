@@ -33,6 +33,7 @@ from .exceptions import PromoterMismatch
 from .genome import Genome
 from .budget_zone import is_enabled as _budget_zone_is_enabled, zone_cap as _budget_zone_cap
 from .encoding.headroom_bridge import compress_text
+from .pipeline.per_gene_budget import compute_uniform_targets
 from .encoding import legibility
 from .identity import session_delivery as _session_delivery
 from .ribosome import DisabledBackend, LiteLLMBackend, Ribosome, OllamaBackend
@@ -1410,6 +1411,34 @@ class HelixContextManager:
 
         # foveated_caps / foveated_active are call-local; see top of build_context.
         foveated_base = self.config.budget.foveated_base_chars
+        # Uniform-path per-gene char targets (used when foveated_caps is None).
+        # "fixed" => [1000]*N (legacy, byte-identical); "dynamic" => floor-then-
+        # greedy fill of expression_tokens headroom up to per_gene_ceiling_chars.
+        _bud = self.config.budget
+        # H10p: optional content-aware surplus. When per_gene_budget_relevance_signal
+        # names a tier (e.g. "fts5"), read each candidate's contribution from
+        # that tier and pass it as a relevance signal to the allocator -- the
+        # surplus then favors high-lex-overlap genes regardless of retrieval
+        # rank. Default "" preserves legacy rank-order surplus.
+        _relevance_scores = None
+        if _bud.per_gene_budget_relevance_signal:
+            _tier = _bud.per_gene_budget_relevance_signal
+            _tier_contribs = getattr(self.genome, "last_tier_contributions", None) or {}
+            _relevance_scores = [
+                float((_tier_contribs.get(g.gene_id) or {}).get(_tier, 0.0))
+                for g in candidates
+            ]
+        _uniform_targets = compute_uniform_targets(
+            [len(g.content or "") for g in candidates],
+            mode=_bud.per_gene_budget,
+            fixed_target=1000,
+            total_budget_chars=max(
+                0, _bud.expression_tokens * 4 - _bud.per_gene_budget_overhead_reserve
+            ),
+            ceiling_chars=_bud.per_gene_ceiling_chars,
+            floor_chars=_bud.per_gene_floor_chars,
+            relevance_scores=_relevance_scores,
+        )
         _splice_t0 = _time.monotonic()
         for idx, g in enumerate(candidates):
             src = g.source_id or ""
@@ -1446,7 +1475,7 @@ class HelixContextManager:
             if foveated_caps is not None:
                 target = max(1, int(foveated_caps[idx] * foveated_base))
             else:
-                target = 1000
+                target = _uniform_targets[idx]
             content = compress_text(
                 g.content,
                 target_chars=target,

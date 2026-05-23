@@ -160,6 +160,38 @@ class BudgetConfig:
     # bench cells (and a future on-by-default ship) tune the top-1 ceiling
     # without touching code.
     foveated_base_chars: int = 1000
+    # Uniform-path (non-foveated) per-gene char budget. "fixed" reproduces the
+    # legacy flat 1000-char target per gene byte-for-byte. "dynamic" runs the
+    # floor-then-greedy allocator (helix_context/pipeline/per_gene_budget.py):
+    # every gene keeps >= 1000, then top-ranked genes breathe into the
+    # expression_tokens headroom up to per_gene_ceiling_chars. Default "dynamic"
+    # as of 2026-05-22: the d1 A/B lifted correctness 4%->43% (H10h), and the
+    # flip-default gates then passed at forced depth 8 on the 16k whole-doc
+    # fixture (n=100): 0 gold-genes dropped, total delivered genes identical
+    # 752==752, /context p95 delta -0.34s despite 2.7x larger bodies, and the
+    # regression suite stays green. NOT tied to foveated_enabled (foveated is
+    # rank cap-shape; this is uniform-path budget allocation). Set "fixed" to
+    # restore the legacy byte-identical flat 1000-char-per-gene target.
+    per_gene_budget: str = "dynamic"             # "fixed" | "dynamic"
+    per_gene_ceiling_chars: int = 12000          # max target any single gene gets (dynamic)
+    per_gene_budget_overhead_reserve: int = 2000 # chars held back from expression_tokens*4 for wrappers/decoder/slate
+    # Floor that every delivered gene gets in dynamic mode (and the conceptual
+    # minimum even at low rank). H10l (2026-05-22) found correct|gold-delivered
+    # is 76.8% at depth 8 vs 97.5% at d1 because the allocator gives surplus to
+    # top-rank genes only, so a gold gene delivered at rank 6-8 stays at this
+    # 1000-char floor and its tail fact is truncated. Raise (e.g. 3000) for
+    # depth runs where multiple genes need to carry substantive content. The
+    # 1000 default is byte-identical to the legacy clamp.
+    per_gene_floor_chars: int = 1000             # min target per gene in dynamic mode
+    # H10p content-aware allocator (2026-05-22). When set to a non-empty tier
+    # name (e.g. "fts5"), the dynamic surplus is distributed in DESCENDING
+    # order of ``genome.last_tier_contributions[gene_id][tier]`` instead of
+    # rank/input order. Empty (default) reproduces legacy rank-order surplus
+    # byte-for-byte. H10n showed that a uniform-floor lift hurts the dominant
+    # gold-at-top case; this knob is the targeted alternative -- boost the
+    # gene whose content most lexically matches the query, regardless of
+    # where the retrieval ranker placed it. Untested at scale; opt-in only.
+    per_gene_budget_relevance_signal: str = ""    # "" | "fts5" | tier name
 
 
 @dataclass
@@ -617,6 +649,11 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             foveated_c_min=float(b.get("foveated_c_min", cfg.budget.foveated_c_min)),
             foveated_base_chars=int(b.get("foveated_base_chars", cfg.budget.foveated_base_chars)),
             slate_char_budget=int(b.get("slate_char_budget", cfg.budget.slate_char_budget)),
+            per_gene_budget=str(b.get("per_gene_budget", cfg.budget.per_gene_budget)),
+            per_gene_ceiling_chars=int(b.get("per_gene_ceiling_chars", cfg.budget.per_gene_ceiling_chars)),
+            per_gene_budget_overhead_reserve=int(b.get("per_gene_budget_overhead_reserve", cfg.budget.per_gene_budget_overhead_reserve)),
+            per_gene_floor_chars=int(b.get("per_gene_floor_chars", cfg.budget.per_gene_floor_chars)),
+            per_gene_budget_relevance_signal=str(b.get("per_gene_budget_relevance_signal", cfg.budget.per_gene_budget_relevance_signal)),
         )
 
     # KnowledgeStore

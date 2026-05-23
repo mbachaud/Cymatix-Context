@@ -70,6 +70,38 @@ low_vram_threshold_gb = 4.0
 [budget]
 ribosome_tokens = 3000                  # fixed decoder prompt
 expression_tokens = 7000                # ~7K expressions cap (BROAD tighten 2026-05-12, bench-gated #73)
+# Uniform-path per-gene char budget (2026-05-22 chunk-granularity experiment).
+# "dynamic" = floor-then-greedy: the top-ranked gene breathes into expression
+# headroom up to per_gene_ceiling_chars instead of the legacy flat 1000-char
+# clamp at context_manager.py:1449 (which sliced off the tail where facts live).
+#
+# A/B RESULT (EnterpriseRAG 16k whole-doc fixture, d1, Haiku, n=100):
+#   fixed   -> 4% onyx-correct, 10% correct|gold-delivered, 2% halluc
+#   dynamic -> 43% onyx-correct, 97.5% correct|gold-delivered, 1% halluc, +17% cost
+# Retrieval was identical (40/100 gold both) -> the gap was pure delivery.
+#
+# Flipped to "dynamic" 2026-05-22: the flip-default gates passed at forced
+# depth 8 (n=100, 16k whole-doc fixture) — 0 gold-genes dropped, delivered
+# genes identical 752==752, /context p95 delta -0.34s despite 2.7x larger
+# bodies, regression suite green. See docs/benchmarks H10i. Set "fixed" to
+# restore the legacy byte-identical flat 1000-char-per-gene delivery.
+per_gene_budget = "dynamic"             # "fixed" | "dynamic"
+per_gene_ceiling_chars = 12000          # per-gene delivery ceiling (aligns with bench MAX_CTX_CHARS)
+per_gene_budget_overhead_reserve = 2000 # held back from expression_tokens*4 for wrappers/decoder/slate
+# Floor every delivered gene gets in dynamic mode. H10l (2026-05-22) showed
+# correct|gold-delivered drops from 97.5% (d1) to 76.8% (d8) because the
+# greedy surplus concentrates on top-rank genes while a gold gene at rank 6-8
+# stays at this floor and its tail fact is truncated. Raise (e.g. 3000) for
+# depth runs to give lower-ranked genes more content. Default 1000 = legacy.
+per_gene_floor_chars = 1000             # min target per gene in dynamic mode
+# H10p content-aware allocator (2026-05-22, opt-in). When set to a non-empty
+# tier name (e.g. "fts5"), the dynamic surplus distributes in DESCENDING order
+# of last_tier_contributions[gene_id][tier] instead of rank order -- boost
+# genes whose content most lexically matches the query, regardless of where
+# the ranker placed them. H10n showed uniform-floor lifts hurt the dominant
+# gold-at-top case; this is the targeted alternative. Empty = legacy rank
+# order (byte-identical). Untested at scale -- opt in deliberately.
+per_gene_budget_relevance_signal = ""   # "" | "fts5" | tier name
 max_genes_per_turn = 12
 max_fingerprints_per_turn = 40          # navigation-first fingerprint payload cap (final returned count, not frontier width)
 splice_aggressiveness = 0.3             # 0=keep all, 1=ruthless trim (lower preserves more literal detail)
