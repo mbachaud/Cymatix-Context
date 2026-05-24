@@ -148,18 +148,17 @@ def helix_context(query: str, gold_paths: list[str], session_id: str,
     for m in re.finditer(r'<GENE\s+src="([^"]+)"', ctx_text):
         delivered_paths.add(m.group(1).replace("\\", "/"))
 
-    # Compare by REL path after the literal "/sources/" marker so a hardlinked
-    # subset (F:/tmp/...) matches the original corpus path (F:/Projects/...).
-    def rel_after_sources(p: str) -> str:
-        n = str(p).replace("\\", "/")
-        if "/sources/" in n:
-            return n.split("/sources/", 1)[1]
-        if n.startswith("sources/"):
-            return n[len("sources/"):]
-        return n
-    delivered_rels = {rel_after_sources(p) for p in delivered_paths}
-    gold_rels = {rel_after_sources(gp) for gp in gold_paths}
-    gold_hit = bool(gold_rels & delivered_rels)
+    # Use the prefix-tolerant matcher to compare delivered paths against
+    # gold paths. Without this, helix's GENE-src rendering bug (~30 % of
+    # confluence paths come back without their ``confluence/`` prefix)
+    # caused 5-7 pp of every arm's ``gold_delivered=False`` rate to be
+    # measurement contamination rather than real misses. Quantified
+    # 2026-05-23; see tests/test_bench_path_match_prefix_stripped.py.
+    gold_index, gold_canonicals = make_gold_index(gold_paths)
+    gold_hit = any(
+        match_delivered_to_gold(p, gold_index, gold_canonicals) is not None
+        for p in delivered_paths
+    )
     return ctx_text, {
         "status": "ok",
         "elapsed_s": elapsed,
@@ -294,6 +293,101 @@ def _rel_after_sources(p: str) -> str:
     return n
 
 
+def make_gold_index(gold_paths):
+    """Build a robust path → canonical-gold-key index for delivered-path
+    matching.
+
+    Returns ``(index, canonicals)`` where:
+
+    - ``canonicals`` is the set of canonical gold keys (post-
+      :func:`_rel_after_sources`), e.g. ``confluence/architecture-and-
+      standards/adr-015.json``.
+    - ``index`` is a dict mapping BOTH the canonical key AND the source-
+      prefix-stripped form to the canonical key. The stripped form lets
+      a delivered path that lost its source prefix (e.g.
+      ``architecture-and-standards/adr-015.json``) still resolve to the
+      gold key (``confluence/architecture-and-standards/adr-015.json``).
+
+    Works around the bench-measurement bug quantified 2026-05-23: helix's
+    ``<GENE src="...">`` tag delivers ~30 % of ``confluence`` paths (and
+    a smaller fraction of other sources) without the source prefix. The
+    canonical-only matcher then reported ``gold_delivered=False`` on
+    successful deliveries, depressing headline gd rates by 5-7 pp on
+    every arm we have run. See
+    ``tests/test_bench_path_match_prefix_stripped.py``.
+    """
+    canonicals: set[str] = set()
+    index: dict[str, str] = {}
+    for p in gold_paths or ():
+        canonical = _rel_after_sources(p)
+        if not canonical:
+            continue
+        canonicals.add(canonical)
+        index[canonical] = canonical
+        first_slash = canonical.find("/")
+        if first_slash > 0:
+            stripped = canonical[first_slash + 1:]
+            # `setdefault` so a later gold that happens to alias an
+            # earlier canonical's stripped form doesn't overwrite it.
+            index.setdefault(stripped, canonical)
+    return index, canonicals
+
+
+def match_delivered_to_gold(delivered_path, gold_index, gold_canonicals):
+    """Given a delivered path (any shape: absolute Windows path,
+    ``sources/``-prefixed, bare relative ``<src>/<rest>``, or source-
+    prefix-stripped ``<sub>/<rest>``) return the canonical gold key if a
+    match is found, else ``None``.
+
+    Lookup is O(1) per call via the index built by :func:`make_gold_index`.
+    """
+    if not delivered_path:
+        return None
+    rel = _rel_after_sources(delivered_path)
+    if not rel:
+        return None
+    if rel in gold_canonicals:
+        return rel
+    if rel in gold_index:
+        return gold_index[rel]
+    return None
+
+
+def make_uuid_reverse_with_stripped(uuid_index):
+    """Build a robust ``path → dsid`` reverse map for
+    :func:`extract_dsids`.
+
+    For each ``(dsid, path)`` in ``uuid_index.json`` (where the path is
+    the canonical ``<src>/<rest>``), the returned dict carries:
+
+    - the canonical key ``<src>/<rest>`` → dsid (primary)
+    - the source-prefix-stripped key ``<rest>`` → dsid (fallback,
+      ``setdefault`` so an existing canonical mapping is never
+      overwritten)
+
+    This is the dsid-extraction counterpart of :func:`make_gold_index`
+    and addresses the same ``<GENE src="...">`` prefix-strip bug:
+    without the stripped-form key, every confluence doc that comes back
+    without its ``confluence/`` prefix produces an empty
+    ``predicted_doc_ids`` and reads as a doc-recall miss in the Onyx
+    scorer.
+    """
+    out: dict[str, str] = {}
+    for dsid, path in (uuid_index or {}).items():
+        canonical = str(path).replace("\\", "/")
+        out[canonical] = dsid
+    # Second pass for stripped forms — done after canonical pass so a
+    # later dsid's stripped form cannot overwrite an earlier dsid's
+    # canonical mapping (the collision-safety pinned by the test).
+    for dsid, path in (uuid_index or {}).items():
+        canonical = str(path).replace("\\", "/")
+        first_slash = canonical.find("/")
+        if first_slash > 0:
+            stripped = canonical[first_slash + 1:]
+            out.setdefault(stripped, dsid)
+    return out
+
+
 def extract_dsids(ctx_text: str, delivered_paths: list[str],
                   uuid_index_reverse: dict[str, str]) -> list[str]:
     """Find dsid_xxx mentions in context + reverse-lookup delivered paths
@@ -370,9 +464,13 @@ def main() -> int:
                          args.helix_url, exc)
             return 2
 
-    # Reverse uuid_index for dsid extraction
+    # Reverse uuid_index for dsid extraction. The robust variant adds a
+    # source-prefix-stripped fallback for each entry so confluence paths
+    # delivered without their ``confluence/`` prefix still resolve to
+    # the right dsid (the bench-measurement bug quantified 2026-05-23,
+    # see tests/test_bench_path_match_prefix_stripped.py).
     uuid_idx = json.loads(UUID_INDEX_PATH.read_text(encoding="utf-8"))
-    uuid_reverse = {v.replace("\\", "/"): k for k, v in uuid_idx.items()}
+    uuid_reverse = make_uuid_reverse_with_stripped(uuid_idx)
     logger.info("uuid_index reverse loaded: %d entries", len(uuid_reverse))
 
     native_path = run_dir / "needles.jsonl"
