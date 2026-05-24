@@ -72,6 +72,9 @@ def _ensure_v2_schema(conn: sqlite3.Connection) -> None:
 _vec_to_blob = vec_to_blob
 
 
+_DEFAULT_CUDA_EMPTY_CACHE_EVERY = 16
+
+
 def backfill_dense_db(
     db_path: str,
     *,
@@ -80,6 +83,7 @@ def backfill_dense_db(
     limit: int | None = None,
     codec=None,
     log_fn=print,
+    cuda_empty_cache_every: int = _DEFAULT_CUDA_EMPTY_CACHE_EVERY,
 ) -> dict:
     """Backfill ``genes.embedding_dense_v2`` on the SQLite DB at ``db_path``.
 
@@ -186,6 +190,13 @@ def backfill_dense_db(
         t0 = time.monotonic()
         processed = 0
         skipped = 0
+        # Track whether we've successfully imported torch and CUDA is
+        # available — once-per-loop check, then per-batch we just check
+        # this flag (avoids re-importing every batch).
+        # Set on first try; subsequent failures (e.g. transient driver
+        # hiccup) gracefully fall back to "no empty_cache" for this run.
+        _cuda_ok: bool | None = None  # None = not probed yet
+        _batches_done = 0
         for start in range(0, len(rows), max(1, batch)):
             chunk = rows[start:start + max(1, batch)]
             encodable = [
@@ -224,6 +235,31 @@ def backfill_dense_db(
                 )
                 processed += len(updates)
             conn.commit()
+
+            # Per-batch GPU-allocator hygiene (#147 follow-up).
+            # PyTorch's caching allocator accumulates freed-but-cached
+            # memory across encode_batch calls. By batch ~60 on a 12 GB
+            # GPU the cache fills to 99 % VRAM and per-call latency
+            # explodes (Factorio shard 2026-05-24: 22 g/s → 1.2 g/s
+            # over ~60 batches). Calling ``torch.cuda.empty_cache()``
+            # every ``cuda_empty_cache_every`` batches returns cached
+            # memory to the global pool, preventing the fragmentation
+            # buildup. No-op on CPU-only / torch-missing hosts.
+            _batches_done += 1
+            if (
+                cuda_empty_cache_every > 0
+                and _batches_done % cuda_empty_cache_every == 0
+                and _cuda_ok is not False
+            ):
+                try:
+                    import torch  # noqa: PLC0415 — lazy, may be missing
+                    if _cuda_ok is None:
+                        _cuda_ok = bool(torch.cuda.is_available())
+                    if _cuda_ok:
+                        torch.cuda.empty_cache()
+                except Exception:  # noqa: BLE001 — torch absent or CUDA error
+                    _cuda_ok = False
+
             elapsed = time.monotonic() - t0
             rate = processed / elapsed if elapsed > 0 else 0.0
             log_fn(
