@@ -96,6 +96,67 @@ from helix_context.shard_schema import (
 from backfill_bgem3_v2 import backfill_dense_db
 
 
+# Module-level codec cache (#147 follow-up, 2026-05-24).
+#
+# Each shard's `_backfill_dense` call used to construct a fresh
+# `BGEM3Codec`, which loaded the BGE-M3 model from scratch onto the GPU.
+# Per-load that's ~2-3 GB of fresh CUDA tensors; over ~5 sequential
+# shards in xl --mode sharded, GPU VRAM saturated (11.9 / 12.0 GB) and
+# the dense backfill rate collapsed to ~0.03 g/s on the 5th shard
+# (dyson-sphere-program, 379 genes). Caching one codec at module level
+# means BGE-M3 is loaded exactly once per build process; the
+# per-batch empty_cache call in `backfill_dense_db` (see #147
+# follow-up in backfill_bgem3_v2.py) handles within-shard hygiene; the
+# `_release_gpu_state` call below handles between-shard hygiene.
+_cached_codec = None
+
+
+def _get_or_create_codec(dim: int, _factory=None):
+    """Lazy module-level codec cache.
+
+    Returns a singleton ``BGEM3Codec(dim=...)`` instance reused across
+    every shard's dense-backfill call. ``_factory`` is a test-only seam
+    that lets the unit test inject a sentinel without loading the real
+    BGE-M3 model.
+    """
+    global _cached_codec
+    if _cached_codec is None or getattr(_cached_codec, "dim", None) != dim:
+        if _factory is not None:
+            _cached_codec = _factory(dim, "cpu")
+            return _cached_codec
+        # Real path: pick device the same way ``backfill_bgem3_v2.main``
+        # does so we stay consistent with the operator script.
+        device = os.environ.get("BGEM3_DEVICE", "").strip()
+        if not device or device.lower() == "auto":
+            try:
+                import torch  # noqa: PLC0415 — optional dep, may be absent
+                device = "cuda" if torch.cuda.is_available() else "cpu"
+            except Exception:  # noqa: BLE001
+                device = "cpu"
+        from helix_context.backends.bgem3_codec import BGEM3Codec  # noqa: PLC0415
+        _cached_codec = BGEM3Codec(dim=dim, device=device)
+        log.info("cached codec loaded (dim=%d, device=%s) for cross-shard reuse", dim, device)
+    return _cached_codec
+
+
+def _release_gpu_state() -> None:
+    """Force-release PyTorch CUDA cached memory + run a GC pass.
+
+    Called between shards so PyTorch's caching allocator doesn't
+    accumulate freed-but-cached memory across the shard boundary. No-op
+    on torch-missing / CPU-only hosts (the import is guarded). See
+    tests/test_backfill_cuda_empty_cache.py for the contract pin.
+    """
+    import gc  # noqa: PLC0415
+    gc.collect()
+    try:
+        import torch  # noqa: PLC0415 — optional dep, may be absent
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+    except Exception:  # noqa: BLE001
+        pass
+
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s %(levelname)-7s %(message)s",
@@ -123,6 +184,15 @@ SKIP_DIRS_COMMON = {
     ".git", "node_modules", "Mono", "MonoBleedingEdge", ".venv", "venv",
     "dist", "build", ".pytest_cache", "target", ".claude", ".serena",
     ".next", ".turbo", ".cache", ".ruff_cache",
+    # Editor / AI tool / vault metadata — never useful for retrieval and
+    # historically polluted xl-sharded (see issue #133 / PR #144).
+    ".vscode", ".codex", ".claude-plugin", ".obsidian",
+    # Git worktree copies — duplicate canonical project content under a
+    # PR-branch path; were the root cause of xl-sharded's gold-label
+    # mismatch (#133 / PR #144). ``_worktrees`` is the top-level
+    # convention; ``.clone`` covers the nested ``.clone/worktrees/...``
+    # variant found under projects like Education on 2026-05-24.
+    "_worktrees", ".clone",
     # Windows system
     "$RECYCLE.BIN", "System Volume Information", "WpSystem",
     "WUDownloadCache", "WindowsApps",
@@ -562,12 +632,20 @@ PROFILES: dict[str, dict] = {
             r"C:\Program Files (x86)\Steam\steamapps\common\The Farmer Was Replaced",
             r"C:\Program Files (x86)\Steam\steamapps\common\Stationeers",
         ],
-        # Game asset / save / cache directories that may sneak through.
+        # Game asset / save / cache directories that may sneak through,
+        # plus the helix-retrieval-upgrade clone (a duplicate of
+        # helix-context that polluted the xl-sharded `projects` shard;
+        # see issue #133 / PR #144), plus EnterpriseRAG-Bench-main
+        # which is the dedicated bench source corpus covered by the
+        # enterprise_rag_{10k,50k,500k} profiles — including it in xl
+        # would double-count and produce a 500K-file long-pole subshard.
         "extra_skip_dirs": {
             "saves", "Saves", "SaveGame", "SaveGames",
             "screenshots", "Screenshots",
             "crashdump", "CrashDump", "Crashes",
             "PlayerData", "Recordings",
+            "helix-retrieval-upgrade",
+            "EnterpriseRAG-Bench-main",
         },
         "extra_filename_filters": [_is_sqlite_sidecar],
     },
@@ -688,8 +766,30 @@ def _backfill_dense(db_path: str) -> dict:
     in the manifest rather than silently producing a dense-dark fixture.
     """
     log.info("dense backfill: %s", db_path)
+    # Cross-shard CUDA-allocator hygiene (#147 follow-up, 2026-05-24):
+    # release any cached GPU memory + Python GC roots from the prior
+    # shard's encode loop before we hand over the cached codec to the
+    # next shard's batch loop. Without this, VRAM creeps up across
+    # ~4-5 shards until the allocator is full and per-call latency
+    # collapses. See tests/test_backfill_cuda_empty_cache.py.
+    _release_gpu_state()
+    # Reuse a single BGE-M3 codec across every shard's backfill instead
+    # of letting backfill_dense_db construct (and load) one per call.
+    # `dim` resolves the same way backfill_dense_db would when codec is
+    # None — through helix.toml's retrieval.dense_embedding_dim — so the
+    # cached-codec path is byte-equivalent.
     try:
-        report = backfill_dense_db(db_path, log_fn=lambda msg: log.info("%s", msg))
+        from helix_context.config import load_config  # noqa: PLC0415
+        dim = int(load_config().retrieval.dense_embedding_dim)
+    except Exception:  # noqa: BLE001
+        dim = 1024
+    codec = _get_or_create_codec(dim=dim)
+    try:
+        report = backfill_dense_db(
+            db_path,
+            codec=codec,
+            log_fn=lambda msg: log.info("%s", msg),
+        )
     except Exception as exc:  # noqa: BLE001 — model load / encode failure
         log.error("dense backfill FAILED for %s: %s", db_path, exc)
         return {
