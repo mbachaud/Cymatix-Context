@@ -1,12 +1,12 @@
-"""Bench orchestrator — manage uvicorn lifecycle + hot-swap across the
+"""Bench orchestrator - manage uvicorn lifecycle + hot-swap across the
 6-fixture matrix (4 monolithic blobs + 2 sharded) without manual server
 restarts between runs.
 
 Two transition shapes:
 
-- **Same-mode (blob→blob, sharded→sharded)**: POST /admin/swap-db.
+- **Same-mode (blob->blob, sharded->sharded)**: POST /admin/swap-db.
   Atomic, ~milliseconds, no process restart. Available since PR #91.
-- **Cross-mode (blob↔sharded)**: full uvicorn restart with the
+- **Cross-mode (blob<->sharded)**: full uvicorn restart with the
   ``HELIX_USE_SHARDS`` env var set/unset. ``open_read_source()`` in
   ``helix_context/sharding.py`` reads that env at store-construction time;
   it can't be flipped mid-process.

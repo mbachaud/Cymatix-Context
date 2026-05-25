@@ -7,13 +7,13 @@ because its `projects` shard fixture is corrupt (see issue #133). Pass
 Per fixture:
   1. POST /admin/swap-db pointing at the fixture's primary .db
      (or restart uvicorn with HELIX_USE_SHARDS=1 when crossing
-     blob<->sharded mode boundaries — handled by BenchServer)
+     blob<->sharded mode boundaries - handled by BenchServer)
   2. For each needle, invoke ``claude -p --output-format json`` so the
      model answers via helix-context MCP (which now hits the swapped db)
   3. Also call /context directly per needle for retrieval-only metrics
      (citation-grounded gold-source check, with legacy <GENE src> regex
      fallback for older response shapes / archived JSONL)
-  4. Score answer ∈ {-1, 0, +1} via word-boundary accept-match
+  4. Score answer in {-1, 0, +1} via word-boundary accept-match
   5. Write per-fixture JSONL into a timestamped results dir
 
 Pre-conditions:
@@ -26,7 +26,7 @@ Pre-conditions:
     ``--external-server`` to use a server you've started manually
     (legacy behavior).
 
-Output (no overwrite — per-run subdir):
+Output (no overwrite - per-run subdir):
   benchmarks/results/claude_matrix_<UTC-timestamp>/
     summary.json
     small.jsonl
@@ -892,7 +892,7 @@ def main() -> int:
                              "fixture, see issue #133). Excluded by default.")
     parser.add_argument("--model", default="haiku",
                         help="claude -p --model arg (haiku/sonnet/opus/full id). "
-                             "Default: haiku — cloud speed prioritized over model "
+                             "Default: haiku - cloud speed prioritized over model "
                              "quality for retrieval-quality bench. See "
                              "memory/bench_default_haiku.md.")
     parser.add_argument("--max-usd", type=float, default=0.30,

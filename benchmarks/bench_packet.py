@@ -1,8 +1,8 @@
-"""Phase 5 packet benchmark — does freshness + coord confidence
+"""Phase 5 packet benchmark - does freshness + coord confidence
 actually change agent behavior on controlled scenarios?
 
 Per ``docs/specs/2026-04-17-agent-context-index-build-spec.md``
-§"Phase 5 — Benchmarks" the question is whether the packet's
+section "Phase 5 - Benchmarks" the question is whether the packet's
 ``verified / stale_risk / needs_refresh`` labeling catches scenarios
 a naive relevance-only retriever would happily return. This bench
 builds N controlled in-memory genomes, runs ``build_context_packet``
@@ -10,22 +10,22 @@ against each, and reports precision/recall against the expected
 status.
 
 Scenario families covered in v1:
-    1. stale_by_age           — verified long ago vs volatility half-life
-    2. invalidated            — ``invalidated_at`` is set
-    3. coordinate_mismatch    — content relevant, path off-target
-    4. task_sensitivity       — same gene, different task_type → different verdict
-    5. clean_verified         — fresh + aligned + high-authority (negative control)
+    1. stale_by_age           - verified long ago vs volatility half-life
+    2. invalidated            - ``invalidated_at`` is set
+    3. coordinate_mismatch    - content relevant, path off-target
+    4. task_sensitivity       - same gene, different task_type -> different verdict
+    5. clean_verified         - fresh + aligned + high-authority (negative control)
 
 Families deferred to later passes:
-    - conflicting_config_values — gated on Phase 2 claims layer
-    - duplicate_fact_across_shards — gated on real multi-shard setup
-    - generated_log_contamination — partially covered by stale_by_age +
+    - conflicting_config_values - gated on Phase 2 claims layer
+    - duplicate_fact_across_shards - gated on real multi-shard setup
+    - generated_log_contamination - partially covered by stale_by_age +
       hot volatility; full version needs ingest-time log-folder rules
 
 Metrics per family:
-    - correct_flag_rate  — of "should flag" cases, how many did flag
-    - false_flag_rate    — of "should verify" cases, how many were flagged
-    - avg_build_ms       — time to produce a labeled packet
+    - correct_flag_rate  - of "should flag" cases, how many did flag
+    - false_flag_rate    - of "should verify" cases, how many were flagged
+    - avg_build_ms       - time to produce a labeled packet
 
 Usage::
 

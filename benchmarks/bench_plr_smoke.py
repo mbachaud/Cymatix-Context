@@ -1,9 +1,9 @@
-"""PLR smoke bench — does [plr] enabled=true add plr_confidence to
+"""PLR smoke bench - does [plr] enabled=true add plr_confidence to
 /context/packet responses without degrading p95 latency?
 
 Hits /context/packet with N harvested-needle queries, captures
 (latency_ms, has_plr_field, plr_confidence_value_if_present). Run
-twice — once at PLR off, once at PLR on — then compare p50/p95 latency
+twice - once at PLR off, once at PLR on - then compare p50/p95 latency
 plus presence rate.
 
 Acceptance gate (#74):

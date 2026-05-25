@@ -10,9 +10,9 @@ problems and ingests them into a scratch corpus, then queries with
 multi-hop questions.
 
 Supported tasks:
-  - task_1  — single supporting fact  (sanity check, same as needle)
-  - task_2  — two supporting facts    (two-hop reasoning)
-  - task_3  — three supporting facts  (three-hop reasoning)
+  - task_1  - single supporting fact  (sanity check, same as needle)
+  - task_2  - two supporting facts    (two-hop reasoning)
+  - task_3  - three supporting facts  (three-hop reasoning)
 
 Each task generates N=10 problems with distractor text padding,
 ingests them as genes, and measures:

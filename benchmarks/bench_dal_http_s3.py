@@ -4,14 +4,14 @@ The companion bench `bench_cache_hitrate.py` measured 41.67% hit rate
 but only 4.5% wall savings because the underlying DAL fetches local
 files (<1ms). For HTTP/S3/remote backends, each miss costs real wall
 time (tens-to-hundreds of ms), and the same 41% hit rate converts into
-10× or more savings.
+10x or more savings.
 
 This bench isolates that relationship: we register a synthetic "slow://"
 scheme with a configurable per-fetch sleep, replay a deterministic
-multi-agent workload, and sweep latency from 1ms → 200ms.
+multi-agent workload, and sweep latency from 1ms -> 200ms.
 
 The point is not to prove the cache works (bench_cache_hitrate does
-that) — it's to show the *per-backend* wall-savings curve so operators
+that) - it's to show the *per-backend* wall-savings curve so operators
 can estimate cache value without deploying it.
 
 Usage:
