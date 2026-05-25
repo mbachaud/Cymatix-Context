@@ -22,33 +22,29 @@ from pathlib import Path
 BENCH_DIR = Path(__file__).resolve().parents[1] / "benchmarks"
 sys.path.insert(0, str(BENCH_DIR))
 
-from bench_claude_matrix import NEEDLES as MATRIX_NEEDLES  # noqa: E402
+from bench_claude_matrix import (  # noqa: E402
+    NEEDLES as MATRIX_NEEDLES,
+    gold_match_rank,
+)
 from bench_needle import NEEDLES as NEEDLE_NEEDLES  # noqa: E402
 
 
-# ─── The match predicate lifted out of bench_claude_matrix.retrieval_probe ──
+# ─── The gold-match predicate ─────────────────────────────────────────
 #
-# Both bench harnesses use the same case-insensitive forward-slash
-# normalized substring check; we replicate it here so the regression
-# tests exercise the predicate directly (independent of the live HTTP
-# code path).
+# bench_claude_matrix exposes the predicate as gold_match_rank (issue
+# #137); "was the gold doc delivered at all" is exactly
+# ``gold_match_rank(...) is not None``. These tests exercise that
+# production function directly rather than a hand-copied predicate.
 
 
 def _gold_delivered(delivered_sources, gold_sources) -> bool:
-    """Return True iff any delivered source matches any gold source.
+    """True iff any delivered source matches any gold source.
 
-    Match rule: forward-slash + lowercase substring containment, with
-    EITHER direction (gold-in-delivered OR delivered-in-gold) counting
-    as a hit. This mirrors the predicate used in
-    bench_claude_matrix.retrieval_probe (line ~240).
+    Thin boolean adapter over bench_claude_matrix.gold_match_rank, so the
+    pre-existing multi-valid-gold regression cases keep their original
+    assertions while exercising the production predicate.
     """
-    for src in delivered_sources:
-        norm = str(src or "").replace("\\", "/").lower()
-        for gs in gold_sources:
-            gs_norm = str(gs or "").replace("\\", "/").lower()
-            if gs_norm and gs_norm in norm:
-                return True
-    return False
+    return gold_match_rank(delivered_sources, gold_sources) is not None
 
 
 # ─── Multi-valid-gold ANY-match behavior ──────────────────────────────
