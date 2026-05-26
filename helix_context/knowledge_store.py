@@ -358,6 +358,20 @@ class KnowledgeStore:
         ann_threshold_sigma_multiplier: float = 3.0,
         # Stage 2: dense recall pool size, decoupled from ann_threshold_max_genes.
         dense_pool_size: int = 500,
+        # Issue #159 Wall-2 lever (2026-05-26): SPLADE pre-filter for dense matmul.
+        # When True, _retrieve passes the post-SPLADE/lex gene_scores.keys() as
+        # candidate_ids to query_docs_dense_recall, scoping the matmul from
+        # O(N_total_genes) to O(|candidates|). Default False — opt-in until
+        # validated end-to-end (see project_helix_109_shard_pressure_test).
+        dense_prefilter_enabled: bool = False,
+        # Escape-valve RESULT budget (not a FLOP budget) for the prefilter.
+        # When >0 and prefilter is enabled, query_docs_dense_recall ALSO scans
+        # the complement of candidate_ids and surfaces up to N additional hits
+        # that SPLADE/lex missed. The complement scan does full matmul on the
+        # uncovered rows — this is a recall-preservation knob, NOT a way to
+        # cap dense FLOPs. Default 0 (strict prefilter, max FLOP savings). Set
+        # to a small fraction of dense_pool_size if recall regresses.
+        dense_prefilter_escape_budget: int = 0,
         # Stage 3 (2026-05-08): Reciprocal Rank Fusion (spec
         # docs/specs/2026-05-08-stage-3-rrf-fusion.md). Default
         # "additive" preserves pre-Stage-3 ranking byte-for-byte; flip
@@ -439,6 +453,9 @@ class KnowledgeStore:
         # Stage 2 (2026-05-08): pool size for dense + lex recall, decoupled
         # from max_genes (the post-ranking final cut).
         self._dense_pool_size: int = int(dense_pool_size)
+        # Issue #159 Wall-2 prefilter knobs (see ctor params).
+        self._dense_prefilter_enabled: bool = bool(dense_prefilter_enabled)
+        self._dense_prefilter_escape_budget: int = int(dense_prefilter_escape_budget)
         self._dense_codec: "BGEM3Codec | None" = None  # lazy-loaded
         # Stage 2: in-memory hot-tier dense matrix cache. Populated lazily by
         # _ensure_dense_matrix() on first dense recall query; invalidated by
@@ -1980,11 +1997,22 @@ class KnowledgeStore:
         if self._dense_embedding_enabled:
             try:
                 _dense_t0 = time.monotonic()
+                # Issue #159 Wall-2 prefilter: scope the dense matmul to the
+                # post-SPLADE/lex candidate set when enabled. Falls back to a
+                # full scan when gene_scores is empty so dense-only needles
+                # still surface in pure-cold-lex queries.
+                prefilter_ids: Optional[set[str]] = None
+                escape_budget = 0
+                if self._dense_prefilter_enabled and gene_scores:
+                    prefilter_ids = set(gene_scores.keys())
+                    escape_budget = self._dense_prefilter_escape_budget
                 dense_hits = self.query_docs_dense_recall(
                     " ".join(query_terms),
                     k=min(self._dense_pool_size, limit * 4),
                     party_id=party_id,
                     read_only=read_only,
+                    candidate_ids=prefilter_ids,
+                    dense_prefilter_escape_budget=escape_budget,
                 )
                 if self._fusion_mode == "rrf":
                     # Stage 3: feed Fuser. raw_score = cosine.
@@ -2599,6 +2627,8 @@ class KnowledgeStore:
         k: int = 500,
         party_id: Optional[str] = None,
         read_only: bool = False,
+        candidate_ids: Optional[set[str]] = None,
+        dense_prefilter_escape_budget: int = 0,
     ) -> List[tuple[str, float]]:
         """Stage 2 first-class dense recall.
 
@@ -2612,6 +2642,33 @@ class KnowledgeStore:
         ``party_id`` and ``read_only`` are accepted for API symmetry with
         ``query_genes_ann``; party-aware sharding is out of scope for Stage 2
         (spec §13 punts it to a later release).
+
+        SPLADE pre-filter (Issue #159 Wall-2 lever, 2026-05-26):
+
+        ``candidate_ids`` (default ``None``) scopes the dense matmul to a
+        caller-supplied subset of gene ids. ``None`` preserves the full-N
+        scan (current behavior). A non-None value drops dense FLOPs from
+        ``O(N_total_genes)`` to ``O(|candidate_ids|)``.
+
+        ``dense_prefilter_escape_budget`` (default ``0``) is a RESULT budget,
+        NOT a FLOP budget. When >0, an extra scan over ``ids \\ candidate_ids``
+        reserves up to N slots for genes SPLADE/lex missed (the "needle outside
+        top-12" case from spec §9). The complement scan is a full matmul on the
+        uncovered rows — this knob preserves recall, it does NOT cap dense
+        FLOPs. Set to 0 for max FLOP savings; set to a small fraction of
+        ``dense_pool_size`` to recover cold-lex needles at the cost of the
+        complement matmul.
+
+        Semantics:
+
+        - ``candidate_ids=None``: full matmul (unchanged).
+        - ``candidate_ids=set()`` with ``dense_prefilter_escape_budget=0``:
+          returns ``[]`` (strict empty prefilter).
+        - ``candidate_ids=set()`` with ``dense_prefilter_escape_budget>0``:
+          degenerates to a top-``dense_prefilter_escape_budget`` unconstrained
+          scan.
+        - ``candidate_ids`` containing ids absent from the matrix: missing
+          ids are silently filtered (no crash).
         """
         del party_id, read_only  # reserved; spec §13 explicitly defers sharding
         if not self._dense_embedding_enabled:
@@ -2642,6 +2699,13 @@ class KnowledgeStore:
 
         # All vectors are L2-normalized at encode/backfill time (codec
         # contract). matmul == cosine.
+
+        if candidate_ids is not None:
+            return self._dense_recall_with_prefilter(
+                matrix, ids, query_vec, int(k),
+                candidate_ids, int(dense_prefilter_escape_budget),
+            )
+
         sims = matrix @ query_vec
         n = sims.shape[0]
         k_eff = min(int(k), n)
@@ -2652,6 +2716,53 @@ class KnowledgeStore:
         # Sort the partition descending by similarity.
         idx_sorted = idx_part[np.argsort(-sims[idx_part])]
         return [(ids[int(i)], float(sims[int(i)])) for i in idx_sorted]
+
+    def _dense_recall_with_prefilter(
+        self,
+        matrix,
+        ids: list[str],
+        query_vec,
+        k: int,
+        candidate_ids: set[str],
+        escape_budget: int,
+    ) -> List[tuple[str, float]]:
+        """SPLADE-pre-filtered dense recall — see ``query_docs_dense_recall``."""
+        import numpy as np
+
+        if not candidate_ids and escape_budget <= 0:
+            return []
+
+        candidate_mask = np.fromiter(
+            (gid in candidate_ids for gid in ids), dtype=bool, count=len(ids),
+        )
+        constrained_rows = np.where(candidate_mask)[0]
+
+        scored: list[tuple[int, float]] = []
+        if constrained_rows.size:
+            constrained_sims = matrix[constrained_rows] @ query_vec
+            scored.extend(
+                (int(constrained_rows[i]), float(constrained_sims[i]))
+                for i in range(constrained_rows.size)
+            )
+
+        if escape_budget > 0:
+            escape_rows = np.where(~candidate_mask)[0]
+            if escape_rows.size:
+                escape_sims = matrix[escape_rows] @ query_vec
+                n_escape = min(escape_budget, escape_sims.shape[0])
+                if n_escape > 0:
+                    escape_part = np.argpartition(-escape_sims, n_escape - 1)[:n_escape]
+                    escape_sorted = escape_part[np.argsort(-escape_sims[escape_part])]
+                    scored.extend(
+                        (int(escape_rows[i]), float(escape_sims[i]))
+                        for i in escape_sorted
+                    )
+
+        if not scored:
+            return []
+        scored.sort(key=lambda x: x[1], reverse=True)
+        k_eff = min(k, len(scored))
+        return [(ids[idx], score) for idx, score in scored[:k_eff]]
 
     def query_docs_ann(
         self,

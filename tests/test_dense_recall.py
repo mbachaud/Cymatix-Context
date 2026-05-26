@@ -787,3 +787,257 @@ def test_live_additive_dense_recall_through_query_docs():
         )
     finally:
         g.close()
+
+
+# ── SPLADE pre-filter: candidate_ids prunes matmul rows ──────────────
+#
+# Issue #159 Wall-2 lever. Threads an optional ``candidate_ids: set[str]``
+# through ``query_docs_dense_recall`` so callers (the hybrid retriever in
+# ``_retrieve``) can scope the dense matmul to the SPLADE/lex hit set.
+# Cuts dense FLOPs from O(N_total_genes) to O(|candidate_ids|).
+# ``dense_prefilter_escape_budget`` is the recall escape valve: a small top-k
+# is ALSO included so terms SPLADE missed (cold lexicon) still surface.
+
+
+def test_dense_recall_candidate_ids_constrains_results(dense_genome):
+    """With candidate_ids set, dense recall returns ONLY genes in that set —
+    even when an out-of-set gene would otherwise rank #1.
+    """
+    g = dense_genome
+
+    for i in range(10):
+        gid = f"g-{i:03d}"
+        g.upsert_gene(_make_gene(f"body {i}", gene_id=gid))
+        _populate_v2(g, gid, _hash_vec(f"vec-{gid}", 1024))
+
+    # Query encoder maps to g-005's vector — unconstrained top hit is g-005.
+    g._dense_codec = _FakeCodec(dim=1024, query_target="vec-g-005")
+
+    baseline = g.query_genes_dense_recall("query", k=3)
+    assert baseline[0][0] == "g-005", (
+        f"sanity: g-005 should top unconstrained baseline; got {baseline}"
+    )
+
+    constrained = g.query_genes_dense_recall(
+        "query", k=3, candidate_ids={"g-002", "g-003"},
+    )
+    ids = {gid for gid, _ in constrained}
+    assert ids.issubset({"g-002", "g-003"}), (
+        f"candidate_ids must constrain matmul output; got {ids}"
+    )
+    assert ids == {"g-002", "g-003"}, (
+        f"both candidates should appear with k=3; got {ids}"
+    )
+
+
+def test_dense_recall_empty_candidate_ids_returns_empty(dense_genome):
+    """Empty set is distinct from None: empty = strict "no candidates allowed"."""
+    g = dense_genome
+    for i in range(3):
+        gid = f"g-{i:03d}"
+        g.upsert_gene(_make_gene(f"body {i}", gene_id=gid))
+        _populate_v2(g, gid, _hash_vec(f"vec-{gid}", 1024))
+    g._dense_codec = _FakeCodec(dim=1024)
+
+    out = g.query_genes_dense_recall("query", k=5, candidate_ids=set())
+    assert out == [], f"empty candidate_ids should yield empty result; got {out}"
+
+
+def test_dense_recall_unknown_candidate_ids_no_crash(dense_genome):
+    """candidate_ids that don't exist in the matrix don't crash — just no rows."""
+    g = dense_genome
+    for i in range(3):
+        gid = f"g-{i:03d}"
+        g.upsert_gene(_make_gene(f"body {i}", gene_id=gid))
+        _populate_v2(g, gid, _hash_vec(f"vec-{gid}", 1024))
+    g._dense_codec = _FakeCodec(dim=1024)
+
+    out = g.query_genes_dense_recall(
+        "query", k=5, candidate_ids={"nonexistent-1", "nonexistent-2"},
+    )
+    assert out == [], (
+        f"unknown candidate_ids should yield empty result, no crash; got {out}"
+    )
+
+    # Mixed known + unknown returns only the known.
+    out2 = g.query_genes_dense_recall(
+        "query", k=5, candidate_ids={"nonexistent-1", "g-001"},
+    )
+    ids = {gid for gid, _ in out2}
+    assert ids == {"g-001"}, f"unknown ids filtered, known kept; got {ids}"
+
+
+def test_dense_recall_escape_budget_recovers_cold_lex_needle(dense_genome):
+    """dense_prefilter_escape_budget reserves N slots for an unconstrained
+    dense scan — preserves needle-finding for terms SPLADE missed (cold lex).
+    Result budget, NOT a FLOP budget.
+    """
+    g = dense_genome
+
+    # 20 distractor genes with random vectors + 1 needle with the query-matched vector.
+    for i in range(20):
+        gid = f"g-{i:03d}"
+        g.upsert_gene(_make_gene(f"body {i}", gene_id=gid))
+        _populate_v2(g, gid, _hash_vec(f"vec-{gid}", 1024))
+    g.upsert_gene(_make_gene("needle body", gene_id="needle"))
+    _populate_v2(g, "needle", _hash_vec("query target", 1024))
+
+    g._dense_codec = _FakeCodec(dim=1024, query_target="query target")
+
+    # candidate_ids covers ONE constrained gene (g-002), NOT the needle.
+    # Without an escape budget, the needle would be invisible to dense.
+    # With dense_prefilter_escape_budget=5, the complement scan must surface it.
+    hits = g.query_genes_dense_recall(
+        "query", k=10,
+        candidate_ids={"g-002"},
+        dense_prefilter_escape_budget=5,
+    )
+    ids = [gid for gid, _ in hits]
+    assert "needle" in ids, (
+        f"escape budget should surface the cold-lex needle outside candidate_ids; "
+        f"got {ids}"
+    )
+    assert "g-002" in ids, (
+        f"the constrained candidate should also appear; got {ids}"
+    )
+    # Needle has cosine=1.0 (query_target match); g-002 has cosine~0.
+    # The cold-lex hit should outrank the constrained hit on score.
+    score_by_id = dict(hits)
+    assert score_by_id["needle"] > score_by_id["g-002"], (
+        f"needle cosine should beat g-002; got needle={score_by_id['needle']} "
+        f"g-002={score_by_id['g-002']}"
+    )
+
+
+def test_dense_recall_candidate_ids_none_preserves_full_scan(dense_genome):
+    """Regression guard: candidate_ids=None (the default) preserves
+    today's behavior — full matmul over all rows.
+    """
+    g = dense_genome
+    for i in range(10):
+        gid = f"g-{i:03d}"
+        g.upsert_gene(_make_gene(f"body {i}", gene_id=gid))
+        _populate_v2(g, gid, _hash_vec(f"vec-{gid}", 1024))
+    g._dense_codec = _FakeCodec(dim=1024, query_target="vec-g-007")
+
+    # Without the new kwarg: existing call shape, behavior unchanged.
+    out_default = g.query_genes_dense_recall("query", k=3)
+    # With candidate_ids=None explicitly: same behavior.
+    out_none = g.query_genes_dense_recall("query", k=3, candidate_ids=None)
+
+    assert out_default == out_none, (
+        "candidate_ids=None must be identical to omitting the kwarg"
+    )
+    assert out_default[0][0] == "g-007", (
+        f"full scan should find g-007 at top; got {out_default}"
+    )
+
+
+# ── End-to-end: prefilter wire-up through query_docs ─────────────────
+
+
+def _prefilter_genome(*, prefilter_enabled: bool, escape_budget: int) -> Genome:
+    g = Genome(
+        path=":memory:",
+        dense_embedding_enabled=True,
+        dense_embedding_dim=1024,
+        dense_pool_size=500,
+        fusion_mode="additive",
+        dense_prefilter_enabled=prefilter_enabled,
+        dense_prefilter_escape_budget=escape_budget,
+    )
+    _orig = g.upsert_doc
+    def _ungated(gene, apply_gate=False):
+        return _orig(gene, apply_gate=apply_gate)
+    g.upsert_doc = _ungated
+    g.upsert_gene = _ungated
+    return g
+
+
+def _seed_anchor_and_dense_only_needle(g: Genome, target: str) -> None:
+    # Lex anchor — populates gene_scores so the prefilter has candidates.
+    g.upsert_gene(_make_gene(
+        "alpha lexical anchor body", domains=["alpha"], gene_id="anchor",
+    ))
+    # Needle — token-disjoint from the query, reachable only via dense.
+    g.upsert_gene(_make_gene(
+        "wholly disjoint surface tokens for the dense-only needle",
+        domains=["needle"], gene_id="needle",
+    ))
+    _populate_v2(g, "anchor", _hash_vec("anchor-noise", 1024))
+    _populate_v2(g, "needle", _hash_vec(target, 1024))
+    g._dense_codec = _FakeCodec(dim=1024, query_target=target)
+
+
+def test_dense_prefilter_off_preserves_needle_recall():
+    """Regression guard: with the prefilter OFF (the default), a dense-only
+    needle still surfaces through query_docs — today's behavior unchanged.
+    """
+    g = _prefilter_genome(prefilter_enabled=False, escape_budget=0)
+    try:
+        _seed_anchor_and_dense_only_needle(g, target="prefilter-off-target")
+        docs = g.query_docs(domains=["alpha"], entities=[], max_genes=12)
+        ids = {d.gene_id for d in docs}
+        assert "needle" in ids, (
+            f"prefilter off: dense should still find the lex-disjoint needle; "
+            f"got {ids}"
+        )
+    finally:
+        g.close()
+
+
+def test_dense_prefilter_on_with_zero_escape_budget_excludes_needle():
+    """Wire-up: with prefilter ON and escape_budget=0, a dense-only needle
+    is excluded — dense matmul is scoped to lex/SPLADE candidates.
+    """
+    g = _prefilter_genome(prefilter_enabled=True, escape_budget=0)
+    try:
+        _seed_anchor_and_dense_only_needle(g, target="prefilter-on-target")
+        docs = g.query_docs(domains=["alpha"], entities=[], max_genes=12)
+        ids = {d.gene_id for d in docs}
+        assert "needle" not in ids, (
+            f"prefilter on + escape_budget=0: lex-disjoint needle must be "
+            f"excluded from dense; got {ids}"
+        )
+        # The lex anchor is unchanged — prefilter does not drop lex hits.
+        assert "anchor" in ids, (
+            f"the lex anchor must still be returned; got {ids}"
+        )
+    finally:
+        g.close()
+
+
+def test_dense_prefilter_on_with_escape_budget_recovers_needle():
+    """Escape valve: with prefilter ON and escape_budget > 0, the needle is
+    recovered via the complement scan (recall preservation knob).
+    """
+    g = _prefilter_genome(prefilter_enabled=True, escape_budget=5)
+    try:
+        _seed_anchor_and_dense_only_needle(g, target="prefilter-escape-target")
+        docs = g.query_docs(domains=["alpha"], entities=[], max_genes=12)
+        ids = {d.gene_id for d in docs}
+        assert "needle" in ids, (
+            f"escape_budget should recover the needle; got {ids}"
+        )
+    finally:
+        g.close()
+
+
+def test_dense_prefilter_config_defaults_and_plumbing():
+    """Constructor defaults: prefilter OFF, escape_budget=0; both are
+    stored on the instance and accept overrides.
+    """
+    g_default = Genome(path=":memory:")
+    g_custom = Genome(
+        path=":memory:",
+        dense_prefilter_enabled=True,
+        dense_prefilter_escape_budget=250,
+    )
+    try:
+        assert g_default._dense_prefilter_enabled is False
+        assert g_default._dense_prefilter_escape_budget == 0
+        assert g_custom._dense_prefilter_enabled is True
+        assert g_custom._dense_prefilter_escape_budget == 250
+    finally:
+        g_default.close()
+        g_custom.close()

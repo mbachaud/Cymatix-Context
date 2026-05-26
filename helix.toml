@@ -336,6 +336,19 @@ ann_threshold_max_genes = 12
 ann_threshold_mode = "absolute"           # "absolute" | "margin_over_random"
 ann_threshold_sigma_multiplier = 3.0      # mu + N*sigma over random pairs
 dense_pool_size = 500
+# Issue #159 Wall-2 lever (2026-05-26): SPLADE pre-filter for dense matmul.
+# When true, _retrieve scopes the dense matmul to the post-SPLADE/lex
+# candidate set — drops dense FLOPs from O(N_total_genes) to O(|candidates|)
+# at 100+ shard scale. Default false; flip after the four-run ablation
+# documented in docs/prds/2026-05-26-splade-prefilter-dense-recall.md.
+dense_prefilter_enabled = false
+# Escape-valve RESULT budget for the prefilter (NOT a FLOP budget). When >0
+# and the prefilter is enabled, dense recall also scans the complement of
+# the candidate set and surfaces up to N additional hits SPLADE/lex missed.
+# The complement scan is a full matmul on uncovered rows — this preserves
+# cold-lex recall at the cost of those FLOPs. Default 0 (strict prefilter,
+# max FLOP savings).
+dense_prefilter_escape_budget = 0
 # Stage 3 (2026-05-08): Reciprocal Rank Fusion. Spec
 # docs/specs/2026-05-08-stage-3-rrf-fusion.md replaces the additive
 # gene_scores += tier_score accumulator with rank-level RRF (Cormack 2009).

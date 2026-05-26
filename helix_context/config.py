@@ -346,6 +346,19 @@ class RetrievalConfig:
     # ann_threshold_max_genes (the final cut). 500 hits ~3% of an 18.9k
     # corpus per spec §4.
     dense_pool_size: int = 500
+    # Issue #159 Wall-2 lever (2026-05-26): SPLADE pre-filter for dense matmul.
+    # When True, _retrieve scopes the dense matmul to post-SPLADE/lex
+    # gene_scores — drops dense FLOPs from O(N_total_genes) to O(|candidates|)
+    # at 100+ shard scale. Default False; flip after the four-run ablation
+    # documented in docs/prds/2026-05-26-splade-prefilter-dense-recall.md.
+    dense_prefilter_enabled: bool = False
+    # Escape-valve RESULT budget for the prefilter (NOT a FLOP budget). When
+    # >0 and the prefilter is enabled, dense recall also scans the complement
+    # of candidate_ids and surfaces up to N additional hits SPLADE/lex missed.
+    # The complement scan is a full matmul on uncovered rows — this preserves
+    # cold-lex recall at the cost of those FLOPs. Default 0 (strict prefilter,
+    # max FLOP savings).
+    dense_prefilter_escape_budget: int = 0
     # Stage 3 (2026-05-08): Reciprocal Rank Fusion accumulator.
     # Spec: docs/specs/2026-05-08-stage-3-rrf-fusion.md.
     # When ``fusion_mode == "additive"`` (default for one release), the
@@ -775,6 +788,14 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             )),
             # Stage 2 (2026-05-08): dense recall pool size, decoupled from final cut.
             dense_pool_size=int(r.get("dense_pool_size", cfg.retrieval.dense_pool_size)),
+            # Issue #159 Wall-2 lever (2026-05-26): SPLADE pre-filter for dense.
+            dense_prefilter_enabled=bool(r.get(
+                "dense_prefilter_enabled", cfg.retrieval.dense_prefilter_enabled,
+            )),
+            dense_prefilter_escape_budget=int(r.get(
+                "dense_prefilter_escape_budget",
+                cfg.retrieval.dense_prefilter_escape_budget,
+            )),
             # Stage 3 (2026-05-08): RRF fusion. Default "additive" preserves
             # pre-Stage-3 behavior byte-for-byte. Flip to "rrf" for the new
             # rank-fusion path. Spec §7 deprecation timeline keeps both

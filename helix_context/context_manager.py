@@ -497,6 +497,9 @@ class HelixContextManager:
             ann_threshold_mode=config.retrieval.ann_threshold_mode,
             ann_threshold_sigma_multiplier=config.retrieval.ann_threshold_sigma_multiplier,
             dense_pool_size=config.retrieval.dense_pool_size,
+            # Issue #159 Wall-2 lever (2026-05-26): SPLADE pre-filter for dense.
+            dense_prefilter_enabled=config.retrieval.dense_prefilter_enabled,
+            dense_prefilter_escape_budget=config.retrieval.dense_prefilter_escape_budget,
             # Stage 3 (2026-05-08): RRF fusion + per-tier weights.
             fusion_mode=config.retrieval.fusion_mode,
             rrf_k=config.retrieval.rrf_k,
