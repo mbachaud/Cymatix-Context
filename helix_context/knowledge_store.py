@@ -1425,6 +1425,7 @@ class KnowledgeStore:
         use_sr: Optional[bool] = None,
         use_entity_graph: Optional[bool] = None,
         read_only: bool = False,
+        precomputed_query_sparse: Optional[Dict[str, float]] = None,
     ) -> List[Gene]:
         """
         Find documents matching the given tags signals.
@@ -1825,8 +1826,19 @@ class KnowledgeStore:
                     "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='splade_terms'"
                 ).fetchone()[0]
                 if has_table:
-                    query_text = " ".join(query_terms)
-                    query_sparse = splade_backend.encode(query_text)
+                    # Use precomputed query_sparse when provided (set by
+                    # ShardRouter so SPLADE.encode runs ONCE per query
+                    # outside the parallel fan-out — PyTorch's c10.dll is
+                    # not thread-safe for concurrent model invocations and
+                    # was crashing the daemon with 8-worker fan-out at
+                    # 105-shard scale). Falls back to local encode for
+                    # callers that don't pass a precomputed vector
+                    # (preserves single-shard / pre-router behavior).
+                    if precomputed_query_sparse is not None:
+                        query_sparse = precomputed_query_sparse
+                    else:
+                        query_text = " ".join(query_terms)
+                        query_sparse = splade_backend.encode(query_text)
                     splade_hits = splade_backend.query_splade(self.read_conn, query_sparse, limit=limit * 2)
                     if _prefilter_set is not None:
                         splade_hits = [(gid, s) for gid, s in splade_hits if gid in _prefilter_set]

@@ -31,11 +31,23 @@ import logging
 import math
 import os
 import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Dict, List, Optional, Tuple
 
 from .genome import Genome
 from .schemas import Gene
 from .shard_schema import list_shards, open_main_db
+
+
+# Federated-fan-out parallelism. On the 105-shard / 850K-gene
+# EnterpriseRAG-Bench-Onyx-full fixture, the serial loop took 5+ minutes
+# per /context call because each shard's query_docs runs sequentially
+# (FTS5 + dense ANN + SPLADE). Each shard query is independent (different
+# KnowledgeStore instances, different SQLite connections), so safe to
+# parallelize. Override via HELIX_SHARD_FANOUT_WORKERS env var.
+_PARALLEL_FANOUT_WORKERS = max(
+    1, int(os.environ.get("HELIX_SHARD_FANOUT_WORKERS", "8"))
+)
 
 log = logging.getLogger(__name__)
 
@@ -428,6 +440,31 @@ class ShardRouter:
 
         fuser = Fuser(k=DEFAULT_RRF_K)
 
+        # Pre-compute SPLADE query embedding ONCE for the whole fan-out
+        # (lift-out fix for c10.dll thread-safety crash). PyTorch model
+        # forward passes are not safe under multi-threaded concurrent
+        # invocation — at 105-shard / 8-worker fan-out, the prior path
+        # (each shard re-encoding the query inside query_docs) tripped
+        # ``c10.dll`` and aborted the daemon. SPLADE.encode is sub-100ms
+        # on this hardware, so a single encode beats N parallel ones even
+        # if PyTorch were thread-safe.
+        precomputed_query_sparse: Optional[Dict[str, float]] = None
+        try:
+            from .backends import splade_backend
+            _query_text_for_splade = " ".join((domains or []) + (entities or []))
+            if _query_text_for_splade.strip():
+                precomputed_query_sparse = splade_backend.encode(_query_text_for_splade)
+        except Exception:
+            # Soft-fail: shards will encode locally as before. The fan-out
+            # may serialize through PyTorch GIL if multiple threads race
+            # into encode at once, but that just costs latency — c10.dll
+            # itself is the hard failure mode the lift-out is preventing.
+            log.warning(
+                "SPLADE pre-encode failed; shards will encode locally",
+                exc_info=True,
+            )
+            precomputed_query_sparse = None
+
         # Per-shard fetch depth: request 2x more from each shard than the
         # caller's ``max_genes``. Genome.query_docs already returns
         # ``max_genes * 2`` candidates internally; doubling the routed
@@ -440,13 +477,29 @@ class ShardRouter:
         # fixture's 6 shards stay well under 1s with this fan-out.
         per_shard_fetch = max(int(max_genes), int(max_genes) * 2)
 
-        for shard_name in shard_names:
+        # Per-shard work: open the shard, run its query_docs, IDF probe,
+        # and snapshot last_query_scores + last_tier_contributions. Returns
+        # a tuple of all per-shard state needed for the serial merge below,
+        # or ``None`` if the shard couldn't be opened/queried (logged and
+        # skipped, mirroring the prior serial behavior).
+        #
+        # Snapshotting last_query_scores INSIDE this function (not in the
+        # merge loop) is load-bearing: each shard's KnowledgeStore stores
+        # the most recent query's scores on the instance, so if a later
+        # thread ran query_docs on the same shard concurrently it would
+        # clobber the dict. We never query the same shard twice in one
+        # ``query_genes`` call (shard_names is deduped by the router's
+        # routing step), but defensive copying keeps the contract clean
+        # under any future re-entrancy.
+        def _run_one_shard(shard_name):
             try:
                 shard = self._open_shard(shard_name)
             except Exception:
-                log.warning("shard %s failed to open; skipping", shard_name, exc_info=True)
-                continue
-
+                log.warning(
+                    "shard %s failed to open; skipping",
+                    shard_name, exc_info=True,
+                )
+                return None
             try:
                 genes = shard.query_docs(
                     domains=domains,
@@ -454,13 +507,16 @@ class ShardRouter:
                     max_genes=per_shard_fetch,
                     party_id=party_id,
                     read_only=read_only,
+                    precomputed_query_sparse=precomputed_query_sparse,
                     **kwargs,
                 )
             except TypeError:
-                # Kwarg mismatch with an older KnowledgeStore schema — fall back to
-                # the minimal signature so a stale shard still contributes.
+                # Kwarg mismatch with an older KnowledgeStore schema —
+                # fall back to the minimal signature so a stale shard
+                # still contributes.
                 log.warning(
-                    "shard %s rejected kwargs %s; falling back to base signature",
+                    "shard %s rejected kwargs %s; falling back to "
+                    "base signature",
                     shard_name, list(kwargs.keys()),
                 )
                 try:
@@ -472,28 +528,60 @@ class ShardRouter:
                         read_only=read_only,
                     )
                 except Exception:
-                    log.warning("shard %s query failed; skipping", shard_name, exc_info=True)
-                    continue
-            except Exception:
-                log.warning("shard %s query failed; skipping", shard_name, exc_info=True)
-                continue
-
-            # IDF probe: cheap COUNT-over-MATCH queries against this
-            # shard's FTS5. Soft-fails to empty dict — that shard then
-            # gets m_shard = 1.0 (identity) so its scores pass through
-            # uncorrected.
-            try:
-                shard_n[shard_name] = int(shard.fts_doc_count())
-                shard_dfs[shard_name] = dict(shard.term_doc_frequencies(idf_terms))
+                    log.warning(
+                        "shard %s query failed; skipping",
+                        shard_name, exc_info=True,
+                    )
+                    return None
             except Exception:
                 log.warning(
-                    "shard %s IDF probe failed; falling back to identity correction",
+                    "shard %s query failed; skipping",
                     shard_name, exc_info=True,
                 )
-                shard_n[shard_name] = 0
-                shard_dfs[shard_name] = {}
+                return None
 
-            shard_scores = shard.last_query_scores
+            # IDF probe (cheap COUNT-over-MATCH queries; soft-fails to
+            # empty so that shard gets m_shard = 1.0 identity correction).
+            try:
+                n = int(shard.fts_doc_count())
+                dfs = dict(shard.term_doc_frequencies(idf_terms))
+            except Exception:
+                log.warning(
+                    "shard %s IDF probe failed; falling back to identity",
+                    shard_name, exc_info=True,
+                )
+                n, dfs = 0, {}
+
+            # Snapshot the mutable state we need from the shard NOW, before
+            # any concurrent caller can clobber it.
+            scores_snapshot = dict(shard.last_query_scores or {})
+            tier_snapshot = dict(shard.last_tier_contributions or {})
+            return (shard_name, genes, n, dfs, scores_snapshot, tier_snapshot)
+
+        # Parallel fan-out across shards. At 105-shard scale the serial
+        # loop took 5+ minutes (each shard ~3s for FTS5+dense+SPLADE).
+        # With ``HELIX_SHARD_FANOUT_WORKERS=8`` the same fan-out completes
+        # in ~30s. ThreadPoolExecutor (not ProcessPoolExecutor) because
+        # each shard's KnowledgeStore is process-resident — threads share
+        # the open SQLite connections, BGE-M3 model, and SPLADE state.
+        workers = max(1, min(_PARALLEL_FANOUT_WORKERS, len(shard_names)))
+        if workers == 1 or len(shard_names) == 1:
+            # Single-shard or worker=1: skip the executor overhead.
+            shard_results = [_run_one_shard(n) for n in shard_names]
+        else:
+            with ThreadPoolExecutor(max_workers=workers) as ex:
+                shard_results = list(ex.map(_run_one_shard, shard_names))
+
+        # Serial merge: applying state to the shared dicts is the
+        # non-thread-safe part of the loop, so do it on the caller thread
+        # after every worker has produced its snapshot.
+        for result in shard_results:
+            if result is None:
+                continue
+            shard_name, genes, n, dfs, shard_scores, shard_tiers = result
+            shard_n[shard_name] = n
+            shard_dfs[shard_name] = dfs
+
             ranked_for_shard: List[Tuple[str, float]] = []
             for doc in genes:
                 raw_score = float(shard_scores.get(doc.gene_id, 0.0))
@@ -505,7 +593,7 @@ class ShardRouter:
                     or raw_score > merged_tier_source[doc.gene_id]
                 ):
                     merged_tier[doc.gene_id] = dict(
-                        shard.last_tier_contributions.get(doc.gene_id, {})
+                        shard_tiers.get(doc.gene_id, {})
                     )
                     merged_tier_source[doc.gene_id] = raw_score
 
