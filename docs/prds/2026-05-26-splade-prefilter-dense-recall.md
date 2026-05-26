@@ -111,9 +111,68 @@ Plus one whitelist entry in `test_sharded_adapter_parity.py` for the new private
 
 ### Validation path
 
-**Step 1.** Land this PR (API + config knobs, all tests green, no behavior change in prod).
+**Step 1.** Land this PR (API + config knobs, all tests green, no behavior change in prod). **DONE — landed as PR #160 on `bench/int-5fixture` at commit 9328111.**
 
-**Step 2 — Pre-flip gate: four-run tier-ablation table on EnterpriseRAG-Bench.**
+**Step 2 — Pre-flip gate: four-run tier-ablation table on EnterpriseRAG-Bench. ✓ COMPLETED 2026-05-26.**
+
+### Results (n=100, k=10, fixture: `enterprise_rag_10k_w16000.db`)
+
+| Variant | R@1 | R@3 | R@5 | R@10 | MRR | p50 ms | p95 ms | p99 ms |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| **T. Today (baseline)** | 49.0% | 57.0% | 59.0% | 60.0% | 0.533 | 1857 | 2337 | 2516 |
+| **A. SPLADE off** | 49.0% | 57.0% | 59.0% | 60.0% | 0.533 | 1208 | **1411** | 1635 |
+| **B. Prefilter on, escape=0** | 49.0% | 57.0% | 59.0% | 60.0% | 0.533 | 1816 | 2348 | 2452 |
+| **C. Prefilter on, escape=250** | 49.0% | 57.0% | 59.0% | 60.0% | 0.533 | 1825 | 2323 | 2459 |
+
+### Decision: FLIP with `dense_prefilter_escape_budget=0`
+
+Both flip criteria pass:
+
+- **T → B recall@10:** +0.0pp (within ±1pp threshold) → max-FLOP-savings config is safe
+- **T → C recall@10:** +0.0pp (within ±1pp threshold)
+
+Per PRD flip criteria, when T → B already passes, ship with `dense_prefilter_escape_budget=0` (cold-lex escape valve is not needed on this corpus).
+
+### Notable diagnostic findings
+
+**1. The prefilter is recall-neutral.** At every K (1/3/5/10) and on MRR, B/C are byte-identical to T. The design hypothesis holds: the post-lex/SPLADE `gene_scores.keys()` is a sufficient candidate set for the dense matmul on this corpus.
+
+**2. On 10K, prefilter latency is noise.** B/C differ from T by ≤25 ms at p95 — within run-to-run variance. The dense matmul on ~10K rows is already cheap (~10M FLOPs). The prefilter's structural FLOP-reduction story is **valid by construction** (unit tests prove the matmul is scoped) and should materialize at 100+ shard scale where cross-shard dense fan-out is ~500K+ rows per query — but this corpus doesn't exercise it.
+
+**3. SPLADE contributes 0pp to recall on this fixture.** `T → A` is +0.0pp at every K, while p95 latency drops 926 ms (~40%). This is "all pain, no gain" for SPLADE on the Onyx 10K basic/semantic/intra_document_reasoning question set. **This is a separate concern** — it does not gate the prefilter flip — but warrants a follow-up investigation:
+
+- Is SPLADE redundant with FTS5 + dense on this corpus?
+- Does it shine on rare-term-expansion question types the bench doesn't include?
+- Is its current tier weight (3.5) over-allocated?
+
+The combined `(SPLADE off + prefilter on)` configuration would deliver the latency win of A with the structural FLOP savings of B — but the SPLADE decision deserves its own PRD and bench coverage (other corpora, additional question types) before flipping it. The prefilter PR ships independently.
+
+### Follow-up: flip PR
+
+The flip PR is a one-line change:
+
+```toml
+# helix.toml [retrieval]
+dense_prefilter_enabled = true
+# dense_prefilter_escape_budget stays at 0 (the default)
+```
+
+That PR should:
+
+1. Update `helix.toml` to flip the flag.
+2. Update the dataclass default in `helix_context/config.py` to match (so downstream callers see the right default).
+3. Reference this PRD's §5 results as the gate.
+4. Note the artifact: `benchmarks/results/ablate_dense_prefilter/ablation_full_1779831899.json`.
+
+### Reproducibility
+
+```bash
+python benchmarks/ablate_dense_prefilter.py \
+  --fixture F:/Projects/helix-context/genomes/bench/matrix/enterprise_rag_10k_w16000.db \
+  --max-questions 100 --label full
+```
+
+The orchestrator (`benchmarks/ablate_dense_prefilter.py`) is committed with this PR. It patches `helix.toml` per variant, spawns a fresh daemon, warms it, runs the recall bench with per-query latency timing, and aggregates the comparison table.
 
 Before flipping `dense_prefilter_enabled=True` as the default, run all four configs on the same fixture (target: the 109-shard onyx_full corpus once Wall-1 is also resolved per Issue #159 Path A; otherwise on the leak-free 10K/50K Onyx corpus). Same query set, same model, same seed.
 
