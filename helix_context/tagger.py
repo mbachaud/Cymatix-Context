@@ -143,9 +143,18 @@ _KV_PATTERNS = [
     (re.compile(r'(?:host|address|bind)\s*[=:]\s*["\']?([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+|localhost)', re.IGNORECASE), "host"),
 ]
 
-# Patterns that extract key=value pairs
+# Patterns that extract key=value pairs.
+#
+# NB: the key group used to be ``(\w+(?:_\w+)*)`` but ``\w`` already includes
+# ``_``, so the inner alternation ``(?:_\w+)*`` was redundant ambiguity that
+# triggered catastrophic backtracking on underscore-heavy content (e.g.
+# EnterpriseRAG-Bench JSON with keys like ``expected_doc_ids``,
+# ``data_source_id``). A single worker spinning on `tagger.py:439`'s
+# ``finditer(content[:5000])`` hung the build for 60+ minutes on one google-
+# drive shared-drives file. ``(\w+)`` is functionally identical (same match
+# set, since ``\w`` includes ``_``) but has no nested quantifier.
 _KV_PAIR_PATTERN = re.compile(
-    r'(\w+(?:_\w+)*)\s*[=:]\s*["\']?(\d+(?:\.\d+)?(?:s|ms|m|h|mb|gb|kb)?|true|false|[a-zA-Z0-9._:/-]+)["\']?',
+    r'(\w+)\s*[=:]\s*["\']?(\d+(?:\.\d+)?(?:s|ms|m|h|mb|gb|kb)?|true|false|[a-zA-Z0-9._:/-]+)["\']?',
     re.IGNORECASE,
 )
 
