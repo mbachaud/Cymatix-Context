@@ -615,6 +615,37 @@ PROFILES: dict[str, dict] = {
         "extra_skip_dirs": set(),
         "extra_filename_filters": [],
     },
+    # Indexes EnterpriseRAG-Bench's official 500K-doc corpus directly from the
+    # upstream repo layout (no prep-copy subset). Roots are scoped to the 9
+    # source-type subdirs under ``generated_data/sources/`` exactly; everything
+    # outside that subtree is EXCLUDED:
+    #   - ``questions.jsonl`` / ``extra_questions.jsonl`` (benchmark Q&A)
+    #   - ``answer_evaluation/`` (eval infrastructure)
+    #   - ``uuid_index.json`` (dsid→file answer-key map; lives in
+    #     ``generated_data/`` ROOT, not under sources/)
+    #   - ``src/`` (benchmark generation code)
+    #   - ``company_overview.md`` / ``employee_directory.yaml`` / etc.
+    #     (top-level metadata, also outside sources/)
+    # Gold-path audit (2026-05-25): all 742 ``expected_doc_ids`` across 500
+    # questions resolve INTO ``sources/`` subdirs — zero outside, zero missing —
+    # so this scope is the canonical Onyx leaderboard-comparable corpus.
+    "enterprise_rag_onyx_full": {
+        "label": "EnterpriseRAG-Bench Onyx official 500K corpus (leaderboard-comparable)",
+        "active_roots": 9,
+        "roots": [
+            r"F:\Projects\EnterpriseRAG-Bench-main\generated_data\sources\confluence",
+            r"F:\Projects\EnterpriseRAG-Bench-main\generated_data\sources\fireflies",
+            r"F:\Projects\EnterpriseRAG-Bench-main\generated_data\sources\github",
+            r"F:\Projects\EnterpriseRAG-Bench-main\generated_data\sources\gmail",
+            r"F:\Projects\EnterpriseRAG-Bench-main\generated_data\sources\google_drive",
+            r"F:\Projects\EnterpriseRAG-Bench-main\generated_data\sources\hubspot",
+            r"F:\Projects\EnterpriseRAG-Bench-main\generated_data\sources\jira",
+            r"F:\Projects\EnterpriseRAG-Bench-main\generated_data\sources\linear",
+            r"F:\Projects\EnterpriseRAG-Bench-main\generated_data\sources\slack",
+        ],
+        "extra_skip_dirs": set(),
+        "extra_filename_filters": [],
+    },
     "xl": {
         "label": "Projects plus external Steam/game code corpus",
         "active_roots": 13,
@@ -1040,6 +1071,130 @@ def _decompose_oversized_root(
     return parts or [(parent_slug, root)]
 
 
+def _try_salvage_complete_shard(
+    p: Path, label: str, root: str,
+) -> Optional[dict]:
+    """Return a result dict for an already-complete shard on disk, or None.
+
+    Used by ``_build_one_shard`` to skip a rebuild when a prior run already
+    produced a fully-ingested + fully-dense-backfilled shard ``.db``. A shard
+    is considered complete iff (a) the file exists with no live WAL sidecar,
+    (b) the ``genes`` table has rows, AND (c) every row has a populated
+    ``embedding_dense_v2`` column (dense_coverage == 100%). Anything else
+    falls back to a full rebuild.
+
+    Returns the same result-dict shape that the build path constructs, so
+    the parent's ``_commit_shard_result`` can register the shard idempotently
+    (main.db uses ``INSERT OR REPLACE`` on both fingerprint_index and
+    source_index — duplicate registrations are safe).
+    """
+    import sqlite3 as _sqlite3
+    # WAL sidecar with non-zero size means an uncommitted transaction; treat
+    # as incomplete and rebuild to avoid resurrecting partial state.
+    wal_path = Path(str(p) + "-wal")
+    if wal_path.exists() and wal_path.stat().st_size > 0:
+        return None
+    try:
+        conn = _sqlite3.connect(f"file:{p}?mode=ro", uri=True)
+        conn.row_factory = _sqlite3.Row
+        try:
+            # Required tables exist + has rows
+            tables = {
+                r[0] for r in conn.execute(
+                    "SELECT name FROM sqlite_master WHERE type='table'"
+                ).fetchall()
+            }
+            if "genes" not in tables:
+                return None
+            cur = conn.execute("SELECT COUNT(*) FROM genes")
+            gene_count = cur.fetchone()[0]
+            if gene_count == 0:
+                return None
+            # Schema check: embedding_dense_v2 column present
+            cols = {
+                r[1] for r in conn.execute(
+                    "PRAGMA table_info(genes)"
+                ).fetchall()
+            }
+            if "embedding_dense_v2" not in cols:
+                return None
+            # 100% dense coverage required
+            populated = conn.execute(
+                "SELECT COUNT(*) FROM genes "
+                "WHERE embedding_dense_v2 IS NOT NULL"
+            ).fetchone()[0]
+            if populated != gene_count:
+                return None
+            # Rebuild the same fingerprint_payload + source_index_payload
+            # that the normal build path produces (lines below mirror the
+            # construction in ``_build_one_shard``).
+            fp_rows = conn.execute(
+                "SELECT gene_id, source_id, repo_root, source_kind, "
+                "observed_at, mtime, content_hash, volatility_class, "
+                "authority_class, support_span, last_verified_at, "
+                "promoter, key_values, is_fragment "
+                "FROM genes"
+            ).fetchall()
+        finally:
+            conn.close()
+    except Exception:
+        return None
+
+    now = time.time()
+    fp_payload = []
+    si_payload = []
+    for r in fp_rows:
+        promoter_blob = r["promoter"]
+        domains_json = None
+        entities_json = None
+        if promoter_blob:
+            try:
+                pm = json.loads(promoter_blob)
+                domains_json = json.dumps(pm.get("domains") or [])
+                entities_json = json.dumps(pm.get("entities") or [])
+            except Exception:
+                pass
+        fp_payload.append((
+            r["gene_id"], label, r["source_id"],
+            domains_json, entities_json, r["key_values"],
+            0 if r["is_fragment"] else 1, None, now,
+        ))
+        observed_at = r["observed_at"] if r["observed_at"] is not None else now
+        last_verified_at = (
+            r["last_verified_at"] if r["last_verified_at"] is not None else now
+        )
+        si_payload.append((
+            r["gene_id"], label, r["source_id"], r["repo_root"],
+            r["source_kind"], observed_at, r["mtime"], r["content_hash"],
+            r["volatility_class"] or "medium",
+            r["authority_class"] or "primary",
+            r["support_span"], last_verified_at,
+            None, now,
+        ))
+    try:
+        byte_size = p.stat().st_size if p.is_file() else 0
+    except OSError:
+        byte_size = 0
+    return {
+        "label": label,
+        "root": root,
+        "shard_db_path": str(p),
+        "gene_count": gene_count,
+        "byte_size": byte_size,
+        "elapsed_s": 0.0,
+        "files": 0,
+        "genes": gene_count,
+        "skipped": 0,
+        "errors": 0,
+        "missing_roots": [],
+        "fingerprint_payload": fp_payload,
+        "source_index_payload": si_payload,
+        "dense_coverage": 100.0,
+        "dense_genes_populated": gene_count,
+        "salvaged": True,
+    }
+
+
 def _build_one_shard(
     label: str,
     root: str,
@@ -1061,7 +1216,14 @@ def _build_one_shard(
     :func:`_shard_worker_entry`).
     """
     p = Path(shard_db_path)
+    # Resume support: if a prior run left a complete shard on disk
+    # (genes ingested + 100% dense coverage), skip rebuild. Returning early
+    # here lets ``_commit_shard_result`` re-register via INSERT OR REPLACE.
     if p.exists():
+        salvaged = _try_salvage_complete_shard(p, label, root)
+        if salvaged is not None:
+            return salvaged
+        # Incomplete: nuke and rebuild.
         p.unlink()
         for s in (str(p) + "-wal", str(p) + "-shm"):
             if os.path.exists(s):
