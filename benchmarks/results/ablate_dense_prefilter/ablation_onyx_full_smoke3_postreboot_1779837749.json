@@ -1,0 +1,227 @@
+{
+  "fixture": "F:\\Projects\\helix-context\\genomes\\bench\\matrix-sharded\\enterprise_rag_onyx_full\\main.genome.db",
+  "max_questions": 5,
+  "types": [
+    "basic",
+    "semantic",
+    "intra_document_reasoning"
+  ],
+  "k": 10,
+  "ts": 1779837749,
+  "results": [
+    {
+      "n_questions": 5,
+      "k": 10,
+      "recall@1": 20.0,
+      "recall@3": 20.0,
+      "recall@5": 40.0,
+      "recall@10": 40.0,
+      "mrr": 0.25,
+      "missed": 3,
+      "latency_ms_p50": 477125.6802999999,
+      "latency_ms_p95": 600014.728,
+      "latency_ms_p99": 600014.728,
+      "latency_ms_mean": 499620.26216000004,
+      "daemon_died_at": null,
+      "rows": [
+        {
+          "id": "qst_0003",
+          "type": "basic",
+          "hit_rank": 0,
+          "latency_ms": 477125.7,
+          "n_returned": 10,
+          "n_gold": 1
+        },
+        {
+          "id": "qst_0004",
+          "type": "basic",
+          "hit_rank": null,
+          "latency_ms": 427238.8,
+          "n_returned": 10,
+          "n_gold": 1
+        },
+        {
+          "id": "qst_0005",
+          "type": "basic",
+          "hit_rank": 3,
+          "latency_ms": 393710.8,
+          "n_returned": 10,
+          "n_gold": 1
+        }
+      ],
+      "variant": "T",
+      "label": "Today (baseline)",
+      "patch": {},
+      "bench_wall_s": 2498.1,
+      "genes_loaded": 850500
+    },
+    {
+      "n_questions": 5,
+      "k": 10,
+      "recall@1": 20.0,
+      "recall@3": 20.0,
+      "recall@5": 40.0,
+      "recall@10": 40.0,
+      "mrr": 0.25,
+      "missed": 3,
+      "latency_ms_p50": 290494.4411000006,
+      "latency_ms_p95": 506417.23860000004,
+      "latency_ms_p99": 506417.23860000004,
+      "latency_ms_mean": 331455.1243400003,
+      "daemon_died_at": null,
+      "rows": [
+        {
+          "id": "qst_0001",
+          "type": "basic",
+          "hit_rank": null,
+          "latency_ms": 506417.2,
+          "n_returned": 10,
+          "n_gold": 1
+        },
+        {
+          "id": "qst_0002",
+          "type": "basic",
+          "hit_rank": null,
+          "latency_ms": 290494.4,
+          "n_returned": 10,
+          "n_gold": 1
+        },
+        {
+          "id": "qst_0003",
+          "type": "basic",
+          "hit_rank": 0,
+          "latency_ms": 288639.1,
+          "n_returned": 10,
+          "n_gold": 1
+        },
+        {
+          "id": "qst_0004",
+          "type": "basic",
+          "hit_rank": null,
+          "latency_ms": 301275.4,
+          "n_returned": 10,
+          "n_gold": 1
+        },
+        {
+          "id": "qst_0005",
+          "type": "basic",
+          "hit_rank": 3,
+          "latency_ms": 270449.5,
+          "n_returned": 10,
+          "n_gold": 1
+        }
+      ],
+      "variant": "A",
+      "label": "SPLADE off",
+      "patch": {
+        "ingestion": {
+          "splade_enabled": false
+        }
+      },
+      "bench_wall_s": 1657.3,
+      "genes_loaded": 850500
+    },
+    {
+      "n_questions": 5,
+      "k": 10,
+      "recall@1": 20.0,
+      "recall@3": 20.0,
+      "recall@5": 40.0,
+      "recall@10": 40.0,
+      "mrr": 0.25,
+      "missed": 3,
+      "latency_ms_p50": 426604.4649000005,
+      "latency_ms_p95": 600003.1622000006,
+      "latency_ms_p99": 600003.1622000006,
+      "latency_ms_mean": 488076.10626000026,
+      "daemon_died_at": null,
+      "rows": [
+        {
+          "id": "qst_0003",
+          "type": "basic",
+          "hit_rank": 0,
+          "latency_ms": 426604.5,
+          "n_returned": 10,
+          "n_gold": 1
+        },
+        {
+          "id": "qst_0004",
+          "type": "basic",
+          "hit_rank": null,
+          "latency_ms": 424827.6,
+          "n_returned": 10,
+          "n_gold": 1
+        },
+        {
+          "id": "qst_0005",
+          "type": "basic",
+          "hit_rank": 3,
+          "latency_ms": 388943.9,
+          "n_returned": 10,
+          "n_gold": 1
+        }
+      ],
+      "variant": "B",
+      "label": "Prefilter on, escape=0",
+      "patch": {
+        "retrieval": {
+          "dense_prefilter_enabled": true,
+          "dense_prefilter_escape_budget": 0
+        }
+      },
+      "bench_wall_s": 2440.4,
+      "genes_loaded": 850500
+    },
+    {
+      "n_questions": 5,
+      "k": 10,
+      "recall@1": 20.0,
+      "recall@3": 20.0,
+      "recall@5": 40.0,
+      "recall@10": 40.0,
+      "mrr": 0.25,
+      "missed": 3,
+      "latency_ms_p50": 433625.9229999996,
+      "latency_ms_p95": 600014.2769000013,
+      "latency_ms_p99": 600014.2769000013,
+      "latency_ms_mean": 491386.85759999976,
+      "daemon_died_at": null,
+      "rows": [
+        {
+          "id": "qst_0003",
+          "type": "basic",
+          "hit_rank": 0,
+          "latency_ms": 433625.9,
+          "n_returned": 10,
+          "n_gold": 1
+        },
+        {
+          "id": "qst_0004",
+          "type": "basic",
+          "hit_rank": null,
+          "latency_ms": 429882.5,
+          "n_returned": 10,
+          "n_gold": 1
+        },
+        {
+          "id": "qst_0005",
+          "type": "basic",
+          "hit_rank": 3,
+          "latency_ms": 393405.3,
+          "n_returned": 10,
+          "n_gold": 1
+        }
+      ],
+      "variant": "C",
+      "label": "Prefilter on, escape=250",
+      "patch": {
+        "retrieval": {
+          "dense_prefilter_enabled": true,
+          "dense_prefilter_escape_budget": 250
+        }
+      },
+      "bench_wall_s": 2457.0,
+      "genes_loaded": 850500
+    }
+  ]
+}

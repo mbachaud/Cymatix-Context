@@ -147,6 +147,71 @@ Per PRD flip criteria, when T → B already passes, ship with `dense_prefilter_e
 
 The combined `(SPLADE off + prefilter on)` configuration would deliver the latency win of A with the structural FLOP savings of B — but the SPLADE decision deserves its own PRD and bench coverage (other corpora, additional question types) before flipping it. The prefilter PR ships independently.
 
+### 105-shard scale-up (2026-05-26 evening)
+
+The 10K results above don't exercise Wall-2 (the cross-shard fan-out latency wall the prefilter was designed for). To get the real measurement, we re-ran the same four variants against the full Onyx EnterpriseRAG fixture: **105 shards, 850,500 genes, 42.6 GB on disk** at `genomes/bench/matrix-sharded/enterprise_rag_onyx_full/`.
+
+This required two operational changes:
+
+1. **Per-query timeout raised to 10 min** to match Onyx-paper precedent for cross-shard searches.
+2. **Pagefile resize: fixed 240 GB on C:** (Samsung 980 Pro NVMe, separate from F: where the data lives). First attempt at the full fixture OOM-killed the daemon during warmup when private commit hit 143 GB on the default 56 GB pagefile. With 240 GB fixed, total commit ceiling is 288 GB and the daemon's worst-case 247 GB private commit fits cleanly. Pre-allocated to avoid Windows' 1-2 GB auto-grow chunks lagging behind the daemon's ~10 GB / 45s allocation rate.
+
+#### Results (n=5, k=10, fixture: `enterprise_rag_onyx_full/main.genome.db`)
+
+Smaller n because per-query wall-clock is 5-10 min at this scale; 5 queries × 4 variants is already a ~3-hour run.
+
+| Variant | R@1 | R@3 | R@5 | R@10 | MRR | p50 (s) | p95 (s) | Δ p95 vs T | timed out at 10 min? |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| **T. Today (baseline)** | 20% | 20% | 40% | 40% | 0.250 | **477** | 600 | — | 1 query |
+| **A. SPLADE off** | 20% | 20% | 40% | 40% | 0.250 | **291** | **506** | **−94 s** | none |
+| **B. Prefilter on, escape=0** | 20% | 20% | 40% | 40% | 0.250 | 427 | 600 | −0.0 s | 1 query |
+| **C. Prefilter on, escape=250** | 20% | 20% | 40% | 40% | 0.250 | 434 | 600 | −0.0 s | 1 query |
+
+#### Diagnostic findings at 105-shard scale
+
+**Recall stays identical across all 4 variants.** The same pattern as 10K — prefilter is recall-neutral, SPLADE contributes 0pp at K=1/3/5/10. Sample is small (n=5, granular at 20pp) but consistent with 10K.
+
+**Prefilter latency savings vanish into pagefile thrashing.** B and C are statistically indistinguishable from T (Δ p95 ≈ 0). On this rig:
+
+- Daemon's working state is 247 GB private commit on 48 GB physical RAM → ~200 GB lives in pagefile
+- Per-query cost decomposes as `(shards_routed × per-shard-page-fault-storm) + dense_matmul`
+- The page-fault storm dominates by an order of magnitude — every dense matrix touched during fan-out is mostly paged out and has to be brought back from NVMe
+- The prefilter scopes the matmul *inside* each touched shard but doesn't change *which* shards are touched, so the page-fault cost is unchanged
+- **Wall-1 (mmap + heap pressure → pagefile I/O) dominates Wall-2 (dense matmul FLOPs)** on a 48 GB RAM box at full-Onyx scale
+
+**SPLADE-off scales linearly.** The 10K result's ~926 ms p95 win for SPLADE-off scales to **~94 s p95 at 105-shard** (about 100×). At full corpus scale this becomes structurally significant. Still 0pp recall change. The "all pain, no gain" finding from 10K is even more pronounced — and warrants its own PRD with broader question-type coverage.
+
+**Escape budget cost is statistically zero** at this scale too. C - B = +7s p50 / 0s p95. The recall-preservation knob is essentially free; the FLOP-savings hypothesis just doesn't pay off here because page-fault cost dominates.
+
+**Daemons survived cleanly.** Zero crashes across all 4 variants with the 240 GB pagefile. Confirms Wall-1 is a *resource-budget* problem, not a runtime-correctness problem.
+
+#### Flip recommendation is unchanged
+
+Still: **`dense_prefilter_enabled=true`, `dense_prefilter_escape_budget=0`**. Reasoning:
+
+- Recall preserved at every K on both corpora (the only hard gate)
+- Latency cost is zero (B ≡ T) at 105-shard; mild noise at 10K
+- On future rigs where Wall-1 is *not* in the way — more physical RAM, or the memory-entry's Path-A "fewer-larger-shards" rebuild — the FLOP-savings story is expected to materialize. The prefilter is correct by construction (unit tests on synthetic data prove the matmul scopes); we just can't measure its benefit on this rig until Wall-1 is also addressed.
+
+#### Side findings worth flagging
+
+1. **Path-A rebuild becomes more urgent.** Until the fixture is re-ingested at ~12 fewer-larger shards (or this dev rig gets more RAM), the 105-shard fixture is a pagefile-thrashing benchmark. The prefilter alone won't fix it.
+2. **`splade_enabled = false` is the cheapest measurable latency win on Onyx** at any scale tested so far. 94 s p95 savings at 105-shard with 0pp recall cost. Deserves a separate PRD — and a broader question set to confirm SPLADE doesn't shine on rare-term-expansion queries the bench doesn't include.
+
+#### Reproducibility (105-shard)
+
+```bash
+python benchmarks/ablate_dense_prefilter.py \
+  --fixture F:/Projects/helix-context/genomes/bench/matrix-sharded/enterprise_rag_onyx_full/main.genome.db \
+  --sharded \
+  --max-questions 5 \
+  --boot-timeout 600 \
+  --query-timeout 600 \
+  --label onyx_full_smoke3_postreboot
+```
+
+Result artifact: `benchmarks/results/ablate_dense_prefilter/ablation_onyx_full_smoke3_postreboot_1779837749.json`.
+
 ### Follow-up: flip PR
 
 The flip PR is a one-line change:
