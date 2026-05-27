@@ -646,6 +646,32 @@ PROFILES: dict[str, dict] = {
         "extra_skip_dirs": set(),
         "extra_filename_filters": [],
     },
+    # Path-A rebuild of the Onyx-full corpus (Issue #159 Wall-1 fix): same 9
+    # source roots, but built WITHOUT the v1 session's
+    # ``--auto-subshard-threshold-files 20000`` override. With the builder's
+    # default 100K threshold the slack/gmail/google_drive sources stay as
+    # single shards instead of being decomposed into ~50 micro-shards each,
+    # yielding ~12 fewer-larger shards (~3-5 GB each) instead of 105.
+    # Target: daemon mmap fits in ~50 GB committed (vs 247 GB on v1's 105
+    # shards), eliminating pagefile-thrashing observed in the 2026-05-26
+    # ablation (see [[project_helix_109_shard_pressure_test]]).
+    "enterprise_rag_onyx_full_2": {
+        "label": "EnterpriseRAG-Bench Onyx 500K corpus, Path-A rebuild (~12 shards)",
+        "active_roots": 9,
+        "roots": [
+            r"F:\Projects\EnterpriseRAG-Bench-main\generated_data\sources\confluence",
+            r"F:\Projects\EnterpriseRAG-Bench-main\generated_data\sources\fireflies",
+            r"F:\Projects\EnterpriseRAG-Bench-main\generated_data\sources\github",
+            r"F:\Projects\EnterpriseRAG-Bench-main\generated_data\sources\gmail",
+            r"F:\Projects\EnterpriseRAG-Bench-main\generated_data\sources\google_drive",
+            r"F:\Projects\EnterpriseRAG-Bench-main\generated_data\sources\hubspot",
+            r"F:\Projects\EnterpriseRAG-Bench-main\generated_data\sources\jira",
+            r"F:\Projects\EnterpriseRAG-Bench-main\generated_data\sources\linear",
+            r"F:\Projects\EnterpriseRAG-Bench-main\generated_data\sources\slack",
+        ],
+        "extra_skip_dirs": set(),
+        "extra_filename_filters": [],
+    },
     "xl": {
         "label": "Projects plus external Steam/game code corpus",
         "active_roots": 13,
