@@ -214,6 +214,76 @@ the second one is the question that matches the architecture.
 
 ---
 
+## Addendum (2026-05-28): how Layer 3 / EnterpriseRAG-Bench answered the rationale's questions
+
+The 2026-05-20 → 2026-05-21 bench investigation rebuilt the matrix harness
+with [EnterpriseRAG-Bench](https://github.com/onyx-dot-app/EnterpriseRAG-Bench)
+(Onyx-dot-app's external corpus) as the test substrate. This was a direct
+response to two of the three NIAH-doesn't-fit-helix problems above, and a
+partial answer to the third:
+
+1. **"There is rarely *one* correct answer"** → EnterpriseRAG-Bench
+   questions ship with explicit `expected_doc_ids` gold-path lists per
+   question. The bench grades a hit when ANY entry in the list appears in
+   the delivered citations (multi-valid-gold — see
+   [`MULTI_VALID_GOLD.md`](MULTI_VALID_GOLD.md)). Telepathy is no longer
+   required to score.
+2. **"Queries are dimensional descriptors, not single vectors"** →
+   EnterpriseRAG-Bench questions are real natural-language enterprise-RAG
+   queries with multiple narrowing signals built in. The single-axis
+   *"What is the value of `port`?"* pathology is gone — questions look
+   like *"What is the deployment process for the new authentication
+   service?"* with project, component, and target-attribute axes all
+   present.
+3. **"Recall@1 ignores the multi-axis index"** → reported metric is
+   recall@K (K=10 is the headline), with the gold path tested against
+   the full delivered citation list. Multi-axis composition is allowed
+   to contribute — though strict recall@1 is still reported alongside
+   for legibility (recall@1 = 4% vs recall@10 = 28% on the v2 850K
+   fixture shows the multi-axis lift directly).
+
+### What this layer adds beyond dimensional-lock
+
+The dimensional-lock 4-variant grid (`bench_dimensional_lock.py`, this
+rationale's companion bench) remains the right diagnostic for *"is the
+multi-axis index composing correctly under controlled axis-count
+gradients?"* — a synthetic question that needs a synthetic harness.
+
+EnterpriseRAG-Bench answers a different question: *"is the system
+working at scale on real-shape queries on a leak-free corpus?"* It
+trades the controlled axis gradient for natural-question variety and
+corpus-size sweep (10K → 850K genes). The two benches are complementary;
+both stay maintained.
+
+### What the leak-free corpus revealed
+
+Three findings that the own-corpus harness couldn't have shown:
+
+- **Corpus-scale recall erosion is real**: 60% recall@10 at 10K genes,
+  28% at 850K genes (same variant, same model, same code). This is the
+  Wall-2 latency-cost-of-recall trade-off that motivated PR #160's
+  SPLADE pre-filter design.
+- **The 4%→43% correctness lift from the per-gene-budget clamp fix**
+  (2026-05-22) was found because retrieval recall@10 on the 10K fixture
+  was 83% but answer correctness was 4%. That gap pointed at delivery,
+  not retrieval — a diagnostic the prior single-snapshot harness
+  couldn't have produced.
+- **SPLADE as corpus-regime feature**: SPLADE-on contributes 0 pp to
+  recall on the EnterpriseRAG question set across 10K / v1 850K / v2 850K
+  fixtures, while costing measurable p95 latency and 21.1% / 9.96 GB of
+  disk. The 3-fixture "all pain, no gain" pattern motivated
+  [Issue #164](https://github.com/mbachaud/helix-context/issues/164)'s
+  hypothesis that SPLADE is useful below ~50K genes and net-negative
+  above ~100K. The dimensional-lock harness couldn't have surfaced this
+  — it doesn't sweep corpus size.
+
+The 850K-gene v2 corpus + variant-A 100q result of **recall@10 = 28%**
+(2026-05-28) is the first leaderboard-grade datapoint from this layer.
+See [`BENCHMARKS.md`](BENCHMARKS.md) §"Layer 3 — EnterpriseRAG-Bench"
+for the full results table.
+
+---
+
 ## Companion docs
 
 - [`MUSIC_OF_RETRIEVAL.md`](MUSIC_OF_RETRIEVAL.md) — the 12-signal +
@@ -222,6 +292,8 @@ the second one is the question that matches the architecture.
   axes (org / device / user / agent / tz)
 - [`PIPELINE_LANES.md`](PIPELINE_LANES.md) — full ingest + query data flow
 - [`BENCHMARKS.md`](BENCHMARKS.md) — practical bench harness reference
+- [`GENOME_FIXTURE_MATRIX.md`](GENOME_FIXTURE_MATRIX.md) — fixture roots,
+  including the EnterpriseRAG-Bench family that backs Layer 3
 
 ## Companion bench
 

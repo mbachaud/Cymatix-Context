@@ -1,13 +1,15 @@
 # Multi-Valid-Gold Needle Matching
 
 **Status:** shipped 2026-05-14 in `feat/bench-multi-valid-gold` (PR forthcoming).
+**Last updated:** 2026-05-28 — added §"EnterpriseRAG-Bench gold-path matching" for the Layer 3 multi-gold pattern.
 **Scope:** `benchmarks/bench_claude_matrix.py` (the 10-needle matrix
 runner) + `benchmarks/bench_needle.py` (the legacy 10-needle bench).
 **Out of scope:** the 1000-needle bench (`bench_needle_1000.py` uses a
 different per-needle schema with a single `source` string), the
 multi-needle group benches (`bench_multi_needle*.py` use
 `gold_source_groups` with stricter all-of semantics), and any retrieval
-code.
+code. **The Layer 3 EnterpriseRAG-Bench harness uses a different multi-gold
+mechanism with the same spirit — see §"EnterpriseRAG-Bench gold-path matching" below.**
 
 ## Why
 
@@ -212,6 +214,102 @@ The 1000-needle bench (`bench_needle_1000.py`) uses a separate per-needle
 schema (`source` as a single string) and is **unaffected** by this
 change. The same is true for the multi-needle group benches.
 
+## EnterpriseRAG-Bench gold-path matching (added 2026-05-28)
+
+Layer 3 of [`BENCHMARKS.md`](BENCHMARKS.md) uses a separate harness
+(`benchmarks/score_enterprise_rag_onyx.py`,
+`benchmarks/ablate_dense_prefilter.py`) with a different per-question
+schema, but the **same "ANY-match against a gold list" spirit** as the
+matrix bench.
+
+### Schema
+
+Each EnterpriseRAG-Bench question (from upstream `questions.jsonl` +
+`uuid_index.json`) ships with:
+
+```jsonc
+{
+  "id": "qst_0001",
+  "question": "What is the deployment process for the new auth service?",
+  "type": "basic",                              // or "semantic" / "intra_document_reasoning"
+  "expected_doc_ids": [                         // gold-path list — ANY-match
+    "9f3c1b...",                                // dsid → resolved to a path under sources/
+    "a4d822..."
+  ]
+}
+```
+
+The dsid → relative-path resolution happens via
+`generated_data/uuid_index.json` (the upstream's dsid → file map). At
+score time, `expected_doc_ids` becomes a list of relative paths under
+`generated_data/sources/`.
+
+### Match rule
+
+The orchestrator computes a hit when ANY entry in `expected_doc_ids`
+matches a delivered citation's source path, using
+`benchmarks/ablate_dense_prefilter._rel_after_sources` to normalize both
+sides before comparison:
+
+```python
+gold_rels = {_rel_after_sources(p) for p in n["gold_paths"]}
+gold_rels = {r for r in gold_rels if r}
+# ...
+for fp in fps:                                      # /fingerprint response
+    rel = _rel_after_sources(fp.get("source", "")) or ""
+    if rel in gold_rels:
+        hit_rank = fp["rank"]
+        break
+```
+
+Same ANY-match short-circuit as the matrix bench, just with **path
+normalization that strips the variable prefix above `sources/`** rather
+than substring containment. This handles the case where Helix delivers a
+citation with an absolute Windows path (`F:\Projects\EnterpriseRAG-Bench-main\generated_data\sources\slack\incidents\msg-123.md`)
+but the gold list ships relative paths (`slack/incidents/msg-123.md`) —
+both normalize to `slack/incidents/msg-123.md` for the match.
+
+### Prefix-tolerant gold matching (PR #148, 2026-05-26)
+
+A subtle gold-match bug was found and fixed in this layer's first pass
+(closes `#137 partial`): when a citation source lacks the `sources/`
+segment in its path (e.g., a synthetic test fixture or a hand-built
+shard), `_rel_after_sources` returned `None` rather than the path
+as-given. Downstream this caused false `gold=False` at delivery time
+even when the file content was correct.
+
+**Fix:** `_rel_after_sources` now falls back to the raw normalized path
+when no `sources/` segment is found, so prefix-mismatched citations
+still get matched against the gold list when the trailing path
+components agree.
+
+Audit verification: d1 untainted, 0 flips on the existing fixtures,
+recall sweep clean after the fix. See PR #148 commit message for the
+exact diff.
+
+### Why the EnterpriseRAG-Bench harness can't reuse the matrix-bench code
+
+Two structural differences:
+
+1. **List-of-dsids vs list-of-substrings.** EnterpriseRAG-Bench gold is
+   a list of opaque document IDs that must be resolved through
+   `uuid_index.json` to relative paths — there's no natural substring
+   match (`gmail/jonas_weber/msg-9024.md` is not a substring of itself
+   under absolute paths). The matrix bench's substring-containment rule
+   wouldn't work without further normalization.
+2. **No author curation on which gold paths are "best".** The
+   matrix-bench curation policy (above) emphasized hand-picking one
+   canonical path per needle. EnterpriseRAG-Bench's gold lists come from
+   the upstream benchmark generator — every listed dsid is by definition
+   a valid answer, and the helix orchestrator treats them as equal.
+
+The end result is the same retrieval-quality signal — *"did the system
+surface a document that actually answers the question?"* — but
+mechanically implemented in different code with different schemas. Tests
+on both harnesses pin the ANY-match contract independently.
+
+---
+
 ## Related tests
 
 * `tests/test_bench_needles.py` — 13 regression tests covering
@@ -221,3 +319,7 @@ change. The same is true for the multi-needle group benches.
 * `tests/test_bench_citations.py` — the citation parser tests (not
   affected by this change, but exercised together as the bench-data
   test suite).
+* `tests/test_bench_path_match_prefix_stripped.py` — added with PR #148;
+  pins the prefix-tolerant `_rel_after_sources` behavior so a citation
+  with a non-`sources/` path still matches a gold entry whose trailing
+  components agree.
