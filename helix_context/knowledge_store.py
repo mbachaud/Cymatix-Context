@@ -308,6 +308,37 @@ _DENSITY_RATE_MIN_HITS = 3      # ≥3 accesses in the window → override
 # every retrieval call.
 _CORPUS_SIZE_TTL = 60.0
 
+# SQLite caps `WHERE col IN (?, ?, ...)` placeholders at
+# SQLITE_LIMIT_VARIABLE_NUMBER. The historical default is 999; modern builds
+# raise it (2000 on the Python 3.12 / SQLite 3.50 ARM64+x86 wheels we ship to,
+# 32766 in some compile defaults). Batch size 500 stays under every cap we
+# care about while keeping the loop overhead negligible for typical retrievals
+# (gene_scores cardinality is usually well below 500 with SPLADE-on; this only
+# loops when callers pass huge candidate sets).
+_IN_BATCH_SIZE = 500
+
+
+def _iter_in_batches(items, batch_size: int = _IN_BATCH_SIZE):
+    """Yield (placeholder_string, batch_list) pairs for an IN-clause query.
+
+    Used by call sites that build `WHERE col IN (?, ?, ...)` from a
+    caller-determined candidate set. Splits the set into chunks small enough
+    that the placeholder count stays under SQLite's
+    `SQLITE_LIMIT_VARIABLE_NUMBER` cap on every supported build.
+
+    Example::
+
+        rows = []
+        for ph, batch in _iter_in_batches(ids):
+            rows.extend(cur.execute(
+                f"SELECT * FROM t WHERE id IN ({ph})", batch,
+            ).fetchall())
+    """
+    items = list(items)
+    for i in range(0, len(items), batch_size):
+        batch = items[i:i + batch_size]
+        yield ",".join("?" * len(batch)), batch
+
 
 class KnowledgeStore:
     """SQLite-backed document storage with tags-tag retrieval."""
@@ -1283,15 +1314,17 @@ class KnowledgeStore:
         recency_window = 48 * 3600  # 48 hours in seconds
 
         gene_ids = list(gene_scores.keys())
-        id_ph = ",".join("?" * len(gene_ids))
         lower_terms = [t.lower() for t in query_terms]
 
-        # Fetch source_id, tags, signals for all candidates in one query
-        rows = cur.execute(
-            f"SELECT gene_id, source_id, promoter, epigenetics "
-            f"FROM genes WHERE gene_id IN ({id_ph})",
-            gene_ids,
-        ).fetchall()
+        # Fetch source_id, tags, signals for all candidates. Batched to stay
+        # under SQLite's IN-clause placeholder cap — see _iter_in_batches.
+        rows = []
+        for _ph, _batch in _iter_in_batches(gene_ids):
+            rows.extend(cur.execute(
+                f"SELECT gene_id, source_id, promoter, epigenetics "
+                f"FROM genes WHERE gene_id IN ({_ph})",
+                _batch,
+            ).fetchall())
 
         for r in rows:
             gid = r["gene_id"]
@@ -1866,12 +1899,14 @@ class KnowledgeStore:
                 _sema_boost_t0 = time.monotonic()
                 if gene_scores and top_score < 20.0:
                     existing_ids = list(gene_scores.keys())
-                    id_ph = ",".join("?" * len(existing_ids))
-                    sema_rows = cur.execute(
-                        f"SELECT gene_id, embedding FROM genes "
-                        f"WHERE gene_id IN ({id_ph}) AND embedding IS NOT NULL",
-                        existing_ids,
-                    ).fetchall()
+                    # Batched IN-clause — see _iter_in_batches.
+                    sema_rows = []
+                    for _ph, _batch in _iter_in_batches(existing_ids):
+                        sema_rows.extend(cur.execute(
+                            f"SELECT gene_id, embedding FROM genes "
+                            f"WHERE gene_id IN ({_ph}) AND embedding IS NOT NULL",
+                            _batch,
+                        ).fetchall())
 
                     if sema_rows:
                         candidates_sema = []
@@ -2203,12 +2238,15 @@ class KnowledgeStore:
         # ── Party attribution bonus (+0.5) ────────────────────────
         if party_id is not None and _party_filter and gene_scores:
             try:
-                attr_ids_ph = ",".join("?" * len(gene_scores))
-                attr_rows = cur.execute(
-                    f"SELECT gene_id FROM gene_attribution "
-                    f"WHERE party_id = ? AND gene_id IN ({attr_ids_ph})",
-                    (party_id, *list(gene_scores.keys())),
-                ).fetchall()
+                # Batched IN-clause — see _iter_in_batches.
+                _attr_ids = list(gene_scores.keys())
+                attr_rows = []
+                for _ph, _batch in _iter_in_batches(_attr_ids):
+                    attr_rows.extend(cur.execute(
+                        f"SELECT gene_id FROM gene_attribution "
+                        f"WHERE party_id = ? AND gene_id IN ({_ph})",
+                        (party_id, *_batch),
+                    ).fetchall())
                 for ar in attr_rows:
                     gid = ar["gene_id"]
                     gene_scores[gid] += 0.5
@@ -2224,12 +2262,14 @@ class KnowledgeStore:
         if gene_scores:
             try:
                 rate_ids = list(gene_scores.keys())
-                rate_ph = ",".join("?" * len(rate_ids))
-                epi_rows = cur.execute(
-                    f"SELECT gene_id, epigenetics FROM genes "
-                    f"WHERE gene_id IN ({rate_ph}) AND epigenetics IS NOT NULL",
-                    rate_ids,
-                ).fetchall()
+                # Batched IN-clause — see _iter_in_batches.
+                epi_rows = []
+                for _ph, _batch in _iter_in_batches(rate_ids):
+                    epi_rows.extend(cur.execute(
+                        f"SELECT gene_id, epigenetics FROM genes "
+                        f"WHERE gene_id IN ({_ph}) AND epigenetics IS NOT NULL",
+                        _batch,
+                    ).fetchall())
                 for er in epi_rows:
                     try:
                         epi = parse_epigenetics(er["epigenetics"])
