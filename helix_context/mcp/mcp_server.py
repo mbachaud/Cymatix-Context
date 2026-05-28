@@ -1093,7 +1093,23 @@ def main() -> None:
     log.info("helix-mcp starting — proxying to %s (timeout=%.1fs)",
              HELIX_URL, TIMEOUT_S)
 
-    _register_with_registry()
+    # Registry handshake is best-effort: if helix is unreachable or the
+    # bridge raises during register_participant() (auto-heartbeat thread
+    # init, etc.), we must NOT propagate the failure — it kills the MCP
+    # subprocess before mcp.run() enters the stdio handshake, which the
+    # MCP host then reports as "Connection closed" after ~2s. See the
+    # 2026-05-20 bench-debug session: every claude -p MCP attempt crashed
+    # this way on Windows even with helix alive, because AgentBridge's
+    # auto-heartbeat startup raised at registration time. Tool calls
+    # themselves still proxy to the HTTP API independently — registry is
+    # only used by helix_announce + dashboards.
+    try:
+        _register_with_registry()
+    except Exception:
+        log.exception(
+            "Registry handshake failed — continuing without registration. "
+            "Tool calls will still proxy to %s.", HELIX_URL,
+        )
 
     mcp.run()
 
