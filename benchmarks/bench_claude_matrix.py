@@ -672,17 +672,37 @@ def retrieval_probe(query: str, gold_sources: list[str],
 # ── Claude -p invocation ─────────────────────────────────────────────────
 
 def run_claude(query: str, model: str, max_usd: float,
-               cwd: str, log: logging.Logger) -> dict:
-    """Run a single ``claude -p`` subprocess and capture structured output."""
-    cmd = [
-        "claude", "-p",
+               cwd: str, log: logging.Logger,
+               *, isolated: bool = False) -> dict:
+    """Run a single ``claude -p`` subprocess and capture structured output.
+
+    When ``isolated=True`` the subprocess is launched with all built-in tools
+    disabled (``--tools ""``) and all global MCP servers blocked
+    (``--strict-mcp-config --mcp-config '{"mcpServers":{}}'``). Combined with
+    a sterile ``cwd`` (e.g. an empty directory), this isolates the LLM from
+    filesystem and external tool access so the bench measures retrieval-driven
+    answer quality and not "can Claude grep the repo".
+    """
+    # Isolation flags go FIRST: ``--tools <tools...>`` is variadic in
+    # commander.js, so it greedily consumes following positional tokens —
+    # including the prompt — unless another flag terminates the list.
+    # Placing the isolation block ahead of ``--output-format`` guarantees the
+    # variadic ends at that flag rather than swallowing ``query``.
+    cmd = ["claude", "-p"]
+    if isolated:
+        cmd.extend([
+            "--strict-mcp-config",
+            "--mcp-config", '{"mcpServers":{}}',
+            "--tools", "",
+        ])
+    cmd.extend([
         "--output-format", "json",
         "--no-session-persistence",
         "--permission-mode", "bypassPermissions",
         "--model", model,
         "--max-budget-usd", str(max_usd),
         query,
-    ]
+    ])
     log.info("  claude -p (model=%s, budget=$%.2f): %s", model, max_usd, query[:60])
     t0 = time.perf_counter()
     try:
@@ -752,10 +772,11 @@ def score_answer(answer_text: str, accept_substrings: list[str]) -> dict:
 
 def run_one_needle(needle: dict, profile_key: str, model: str,
                    max_usd: float, claude_cwd: str, helix_url: str,
-                   log: logging.Logger) -> dict:
+                   log: logging.Logger, *, isolated: bool = False) -> dict:
     log.info("[%s] %s", profile_key, needle["name"])
     retr = retrieval_probe(needle["query"], needle["gold_source"], helix_url=helix_url)
-    claude_r = run_claude(needle["query"], model, max_usd, claude_cwd, log)
+    claude_r = run_claude(needle["query"], model, max_usd, claude_cwd, log,
+                          isolated=isolated)
 
     answer_text = ""
     tokens: dict = {}
@@ -909,6 +930,14 @@ def main() -> int:
                         help="Port for the managed server (ignored with --external-server)")
     parser.add_argument("--health-timeout", default=180.0, type=float,
                         help="Seconds to wait for /health after uvicorn boot")
+    parser.add_argument("--isolated", action="store_true",
+                        help="Launch claude -p with --tools '', "
+                             "--strict-mcp-config, and an empty --mcp-config "
+                             "so the LLM has no built-in tools and no MCP "
+                             "servers. Pair with --cwd <sterile-dir> (e.g. "
+                             "F:/tmp/bench_sandbox) to also block CLAUDE.md "
+                             "auto-discovery. Isolates retrieval-driven answer "
+                             "quality from filesystem-tool access.")
     args = parser.parse_args()
 
     if not MANIFEST.exists():
@@ -947,6 +976,8 @@ def main() -> int:
         "max_usd_per_question": args.max_usd,
         "external_server": args.external_server,
         "untrusted_excluded": untrusted_excluded,
+        "isolated": args.isolated,
+        "claude_cwd": args.cwd,
         "profiles": {},
     }
 
@@ -1050,7 +1081,7 @@ def _run_profile(profile_key: str, run_dir: Path, args, helix_url: str,
             log.info("[%s %d/%d] %s", profile_key, i + 1, len(NEEDLES), n["name"])
             record = run_one_needle(
                 n, profile_key, args.model, args.max_usd, args.cwd,
-                helix_url, log,
+                helix_url, log, isolated=args.isolated,
             )
             f.write(json.dumps(record, ensure_ascii=False) + "\n")
             f.flush()
