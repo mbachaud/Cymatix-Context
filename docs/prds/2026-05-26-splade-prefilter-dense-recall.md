@@ -212,6 +212,54 @@ python benchmarks/ablate_dense_prefilter.py \
 
 Result artifact: `benchmarks/results/ablate_dense_prefilter/ablation_onyx_full_smoke3_postreboot_1779837749.json`.
 
+### v2 100-shard scale-up (2026-05-27)
+
+Following the 105-shard analysis we rebuilt the corpus on the Path-A profile (`enterprise_rag_onyx_full_2`) with the default `--auto-subshard-threshold-files=100000` — expecting ~12 fewer-larger shards. The auto-subsharder still split `slack` and `gmail` into ~50+ per-channel / per-user shards, so the v2 fixture landed at **100 shards, 850,500 genes, 45.16 GB on disk, 18-hour wall-clock build**. Roughly the same shard count as v1, but distinct shard composition (fewer micro-shards from confluence/jira/linear/etc., more from the chatty sources). Daemon private commit on v2 is ~240 GB (vs v1's 247 GB) — still well into pagefile territory on 48 GB RAM, but the per-shard page-fault topology differs.
+
+#### Results (n=5, k=10, fixture: `enterprise_rag_onyx_full_2/main.genome.db`)
+
+| Variant | R@1 | R@3 | R@5 | R@10 | MRR | p50 (s) | p95 (s) | Δ p95 vs T | timed out at 10 min? |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| **T. Today (baseline)** | 20% | 20% | 40% | 40% | 0.250 | 593 | 600 | — | 2 queries (q1, q2) |
+| **A. SPLADE off** | 20% | 20% | 40% | 40% | 0.250 | **306** | **447** | **−153 s** | **none** |
+| **B. Prefilter on, escape=0** | 20% | 20% | 40% | 40% | 0.250 | **289** | 600 | −0.0 s | 2 queries (q1, q2) |
+| **C. Prefilter on, escape=250** | 20% | 20% | 40% | 40% | 0.250 | **276** | 600 | −0.0 s | 1 query (q1) |
+
+#### Diagnostic findings at v2 100-shard scale
+
+**The prefilter's CPU-FLOP win finally surfaces on p50.** Variants B and C both beat T's p50 by ~300 s (~50%). This is the structural FLOP-reduction the prefilter was designed to deliver, visible now that v2's per-shard page-fault topology is less catastrophic than v1's. Variant C edges B by ~13 s at p50 — the 250-row escape budget pays for itself when it actually gets to run.
+
+**But the prefilter doesn't help on the worst-case queries.** B and C both still hit the 600 s cap on q1 (and B also on q2), the same queries where T times out. The prefilter scopes the matmul *inside* shards it does touch, but on these queries those shards are already so paged-out that the constant-factor matmul savings disappear into the page-fault storm. **Same Wall-1-dominates-Wall-2 pattern as v1** — Wall-2 just gets to win on the queries where Wall-1 happens not to dominate.
+
+**SPLADE-off wins p95 by a wider margin than v1.** Variant A is now the **only configuration with zero timeouts** on the 850 K corpus at any sample size we've measured. The p95 win grows from 94 s (v1) to 153 s (v2), and crosses a meaningful operational threshold: under-8-min response on every query at n=5. The "all pain, no gain" pattern for SPLADE on this corpus is now 3-for-3 across fixtures (10 K → v1 105-shard → v2 100-shard).
+
+**Cross-verified architectural finding (2026-05-27).** The dense matmul at `knowledge_store.py:2709` runs as plain NumPy CPU (`sims = matrix @ query_vec` on an `np.stack(...)` heap-resident fp32 array; no `np.memmap`, no torch, no GPU). BGEM3Codec defaults to `device="cpu"`. Live diagnostics on three hosts (Max-Windows + Joe's two DGX Sparks) all show single-threaded CPU pegging with GPU ~16% (SPLADE-only spikes). The prefilter's FLOP savings are **CPU NumPy FLOPs**, not GPU FLOPs — which explains why even on Spark's ARM cores the prefilter's value tracks with the same per-shard page-fault story. Native CUDA BGE-M3 + a torch-on-GPU matmul are queued as future work (post-bench engineering, not gating any PR).
+
+#### Flip recommendation is REVISED
+
+The two-fixture trend (v1 → v2) clarifies the flip story:
+
+1. **Prefilter is still recall-neutral.** Three fixtures, identical recall@K. The hard gate is satisfied at every scale.
+2. **Prefilter delivers measurable p50 latency savings on v2** — first such measurement after the 10 K result. This is the real architectural answer to Wall-2.
+3. **SPLADE-off delivers measurable p95 latency savings on every fixture, every time.** It's the only configuration with zero timeouts on the 850 K corpus, and the win grows with shard count.
+4. **The two levers are independent and stack.** `splade_enabled=false` + `dense_prefilter_enabled=true` would in principle deliver both wins (A's p95 + B/C's p50). v2 smoke didn't include that combined variant — that's the next data point worth gathering.
+
+**Standing flip for THIS PR:** `dense_prefilter_enabled=true, dense_prefilter_escape_budget=0`. Recall-neutral, no latency regression on any fixture, measurable p50 win at 100-shard scale. The SPLADE-off decision is being handled separately under the 2026-05-26-splade-on-by-default-investigation PRD.
+
+#### Reproducibility (v2 100-shard)
+
+```bash
+python benchmarks/ablate_dense_prefilter.py \
+  --fixture F:/Projects/helix-context/genomes/bench/matrix-sharded/enterprise_rag_onyx_full_2/main.genome.db \
+  --sharded \
+  --max-questions 5 \
+  --boot-timeout 300 \
+  --query-timeout 600 \
+  --label v2_smoke
+```
+
+Result artifact: `benchmarks/results/ablate_dense_prefilter/ablation_v2_smoke_1779917068.json`.
+
 ### Follow-up: flip PR
 
 The flip PR is a one-line change:
