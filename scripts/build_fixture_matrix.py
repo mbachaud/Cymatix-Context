@@ -72,7 +72,7 @@ import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Iterable
+from typing import Iterable, Optional
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 # Also put this ``scripts/`` dir on the path so the sibling-module import of
@@ -743,6 +743,124 @@ def _slug_for_root(root: str) -> str:
     return slug or "root"
 
 
+def _try_salvage_complete_shard(
+    p: Path, label: str, root: str,
+) -> Optional[dict]:
+    """Return a result dict for an already-complete shard on disk, or None.
+
+    Used by ``_build_one_shard`` to skip a rebuild when a prior run already
+    produced a fully-ingested + fully-dense-backfilled shard ``.db``. A shard
+    is considered complete iff (a) the file exists with no live WAL sidecar,
+    (b) the ``genes`` table has rows, AND (c) every row has a populated
+    ``embedding_dense_v2`` column (dense_coverage == 100%). Anything else
+    falls back to a full rebuild.
+
+    Returns the same result-dict shape that the build path constructs, so
+    the parent's ``_commit_shard_result`` can register the shard idempotently
+    (main.db uses ``INSERT OR REPLACE`` on both fingerprint_index and
+    source_index — duplicate registrations are safe).
+    """
+    import sqlite3 as _sqlite3
+    # WAL sidecar with non-zero size means an uncommitted transaction; treat
+    # as incomplete and rebuild to avoid resurrecting partial state.
+    wal_path = Path(str(p) + "-wal")
+    if wal_path.exists() and wal_path.stat().st_size > 0:
+        return None
+    try:
+        conn = _sqlite3.connect(f"file:{p}?mode=ro", uri=True)
+        conn.row_factory = _sqlite3.Row
+        try:
+            tables = {
+                r[0] for r in conn.execute(
+                    "SELECT name FROM sqlite_master WHERE type='table'"
+                ).fetchall()
+            }
+            if "genes" not in tables:
+                return None
+            cur = conn.execute("SELECT COUNT(*) FROM genes")
+            gene_count = cur.fetchone()[0]
+            if gene_count == 0:
+                return None
+            cols = {
+                r[1] for r in conn.execute(
+                    "PRAGMA table_info(genes)"
+                ).fetchall()
+            }
+            if "embedding_dense_v2" not in cols:
+                return None
+            populated = conn.execute(
+                "SELECT COUNT(*) FROM genes "
+                "WHERE embedding_dense_v2 IS NOT NULL"
+            ).fetchone()[0]
+            if populated != gene_count:
+                return None
+            fp_rows = conn.execute(
+                "SELECT gene_id, source_id, repo_root, source_kind, "
+                "observed_at, mtime, content_hash, volatility_class, "
+                "authority_class, support_span, last_verified_at, "
+                "promoter, key_values, is_fragment "
+                "FROM genes"
+            ).fetchall()
+        finally:
+            conn.close()
+    except Exception:
+        return None
+
+    now = time.time()
+    fp_payload = []
+    si_payload = []
+    for r in fp_rows:
+        promoter_blob = r["promoter"]
+        domains_json = None
+        entities_json = None
+        if promoter_blob:
+            try:
+                pm = json.loads(promoter_blob)
+                domains_json = json.dumps(pm.get("domains") or [])
+                entities_json = json.dumps(pm.get("entities") or [])
+            except Exception:
+                pass
+        fp_payload.append((
+            r["gene_id"], label, r["source_id"],
+            domains_json, entities_json, r["key_values"],
+            0 if r["is_fragment"] else 1, None, now,
+        ))
+        observed_at = r["observed_at"] if r["observed_at"] is not None else now
+        last_verified_at = (
+            r["last_verified_at"] if r["last_verified_at"] is not None else now
+        )
+        si_payload.append((
+            r["gene_id"], label, r["source_id"], r["repo_root"],
+            r["source_kind"], observed_at, r["mtime"], r["content_hash"],
+            r["volatility_class"] or "medium",
+            r["authority_class"] or "primary",
+            r["support_span"], last_verified_at,
+            None, now,
+        ))
+    try:
+        byte_size = p.stat().st_size if p.is_file() else 0
+    except OSError:
+        byte_size = 0
+    return {
+        "label": label,
+        "root": root,
+        "shard_db_path": str(p),
+        "gene_count": gene_count,
+        "byte_size": byte_size,
+        "elapsed_s": 0.0,
+        "files": 0,
+        "genes": gene_count,
+        "skipped": 0,
+        "errors": 0,
+        "missing_roots": [],
+        "fingerprint_payload": fp_payload,
+        "source_index_payload": si_payload,
+        "dense_coverage": 100.0,
+        "dense_genes_populated": gene_count,
+        "salvaged": True,
+    }
+
+
 def _build_one_shard(
     label: str,
     root: str,
@@ -764,7 +882,14 @@ def _build_one_shard(
     :func:`_shard_worker_entry`).
     """
     p = Path(shard_db_path)
+    # Resume support: if a prior run left a complete shard on disk
+    # (genes ingested + 100% dense coverage), skip rebuild. Returning early
+    # here lets ``_commit_shard_result`` re-register via INSERT OR REPLACE.
     if p.exists():
+        salvaged = _try_salvage_complete_shard(p, label, root)
+        if salvaged is not None:
+            return salvaged
+        # Incomplete: nuke and rebuild.
         p.unlink()
         for s in (str(p) + "-wal", str(p) + "-shm"):
             if os.path.exists(s):
