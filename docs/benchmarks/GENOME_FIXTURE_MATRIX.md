@@ -1,6 +1,6 @@
 # Genome Fixture Matrix
 
-**Status:** working operator matrix, 2026-05-13.
+**Status:** working operator matrix, 2026-05-28 *(EnterpriseRAG-Bench fixtures added; original four-profile matrix unchanged since 2026-05-13)*.
 
 This document records the four current monolithic Helix test-genome size
 profiles. It is intentionally limited to source-root selection: it does not
@@ -130,3 +130,110 @@ shard build didn't observe yet:
 These defaults are conservative on purpose: a bench fixture exercises
 freshness logic without forcing every classifier to run during the build.
 A real ingest path will overwrite the row on its next observation cycle.
+
+---
+
+## EnterpriseRAG-Bench fixtures (added 2026-05-20 onwards)
+
+A separate fixture family that backs Layer 3 of [`BENCHMARKS.md`](BENCHMARKS.md)
+— the leak-free cross-corpus retrieval benchmark. Distinct from the four
+monolithic profiles above in that they index an **external** corpus
+(Onyx-dot-app's [EnterpriseRAG-Bench](https://github.com/onyx-dot-app/EnterpriseRAG-Bench)
+upstream repo) rather than `F:/Projects` — eliminating the own-code +
+CLAUDE.md leak surface that the rebuilt matrix bench's `isolated=True`
+mode also addresses.
+
+### Fixture table
+
+| Profile | Genes | Shards | Disk | Status | Source root |
+|---|---:|---:|---:|---|---|
+| `enterprise_rag_10k` | ~10 K | 1 (monolithic) | ~600 MB | active | `F:/tmp/enterprise_rag_10k/sources/...` (9 source subdirs) |
+| `enterprise_rag_50k` | ~50 K | 1 | ~3 GB | active | `F:/tmp/enterprise_rag_50k/sources/...` |
+| `enterprise_rag_500k` | (subset prep) | 1 | — | deprecated | `F:/tmp/enterprise_rag_500k/sources/...` — replaced by Onyx-full |
+| `enterprise_rag_onyx_full` | ~850 K | 105 (auto-subsharded) | 42.6 GB | superseded by v2 | `F:/Projects/EnterpriseRAG-Bench-main/generated_data/sources/...` |
+| **`enterprise_rag_onyx_full_2`** | **850,501** | **100 (Path-A)** | **47.24 GB** | **canonical** | same upstream as v1; Path-A profile with default `--auto-subshard-threshold-files=100000` |
+
+### Source-root scope (all five fixtures)
+
+All five share the same 9-source-root pattern under the bench's
+`generated_data/sources/` subtree:
+
+```text
+{ERB_ROOT}/generated_data/sources/confluence
+{ERB_ROOT}/generated_data/sources/fireflies
+{ERB_ROOT}/generated_data/sources/github
+{ERB_ROOT}/generated_data/sources/gmail
+{ERB_ROOT}/generated_data/sources/google_drive
+{ERB_ROOT}/generated_data/sources/hubspot
+{ERB_ROOT}/generated_data/sources/jira
+{ERB_ROOT}/generated_data/sources/linear
+{ERB_ROOT}/generated_data/sources/slack
+```
+
+### Excluded from `sources/` ingest
+
+The following live elsewhere in the upstream repo and must NOT be indexed
+(they would either inflate retrieval with bench infrastructure or leak gold
+into the corpus):
+
+- `questions.jsonl` / `extra_questions.jsonl` — benchmark Q&A
+- `answer_evaluation/` — evaluation infrastructure
+- `uuid_index.json` — gold-path map (lives in `generated_data/` ROOT, not under `sources/`)
+- `src/` — benchmark generation code
+- `company_overview.md`, `employee_directory.yaml`, etc. — top-level metadata
+
+A 2026-05-25 gold-path audit confirmed all 742 `expected_doc_ids` across
+500 EnterpriseRAG-Bench questions resolve INTO `sources/` subdirs — zero
+outside, zero missing — so this scope is the canonical Onyx
+leaderboard-comparable corpus.
+
+### Build profile + auto-subsharding behavior
+
+The `enterprise_rag_onyx_full_2` profile is *labelled* as a Path-A
+"fewer-larger-shards" rebuild, but the builder's default
+`--auto-subshard-threshold-files=100000` decomposes `slack` and `gmail`
+into per-channel / per-user subshards. **Both Max-rig (Windows + Ryzen +
+48 GB) and Joe's spark-e92c (Linux + ARM64 + 118 GB) land at 100 shards
+on this profile** — the topology is identical across hosts. Earlier
+documentation that referenced "~12 shards" was wrong (aspirational design,
+not actual partitioning).
+
+To get true Path-A behavior (single shard per root, ~9 shards total) the
+operator must pass `--auto-subshard-threshold-files=0` explicitly.
+
+### Path-portability gotcha (Joe's Spark deploy, 2026-05-28)
+
+The `enterprise_rag_onyx_full_2` profile entry in
+`scripts/build_fixture_matrix.py` currently hardcodes Windows
+`F:\Projects\EnterpriseRAG-Bench-main\generated_data\sources\…` paths in
+its `roots` list, AND the builder checks those paths via raw
+`os.path.exists()` which bypasses pathlib-only monkey-patching. On Linux
+deploys without a shim, the build silently completes with **0 shards
+ingested** because none of the Windows paths exist.
+
+Joe's working shim on spark-e92c also patches
+`os.path.{exists,isdir,isfile}` + `os.walk`/`os.scandir`/`os.listdir` and
+overrides `bfm.PROFILES['enterprise_rag_onyx_full_2']['roots']` to Linux
+paths (mirroring the existing `enterprise_rag_500k` override pattern).
+
+The cleanest upstream fix when the profile folds into master is to make
+roots derive from `os.environ.get("ERB_ROOT", DEFAULT)` so the profile is
+OS-agnostic out of the box. <30 LOC change. Should land BEFORE the
+`bench/int-5fixture` integration branch's eventual master merge, OR as
+part of whatever PR folds in the v2 profile entry. See PR #161's
+close-as-superseded note for the recovery recipe.
+
+### Branch / PR routing
+
+The fixture profiles + their build machinery live across several open or
+recently-closed PRs. As of 2026-05-28:
+
+| Component | Branch / PR | Notes |
+|---|---|---|
+| `enterprise_rag_10k` / `_50k` / `_500k` profiles | `bench/int-5fixture` integration branch | Not yet merged to master |
+| `enterprise_rag_onyx_full` profile (v1) | `bench/int-5fixture` | Superseded; v1 fixture exists on disk but produces Wall-1 OOM at 105-shard scale |
+| `enterprise_rag_onyx_full_2` profile (v2) | originally PR #161 (closed-as-superseded by #162) | Profile entry not on master; only on `feat/onyx-full-v2-build-bundle` |
+| Shard salvage helper | merged to master via [PR #162](https://github.com/mbachaud/helix-context/pull/162) @ `478e893` | Re-registers already-complete shards on rebuild (kill+restart cycle) |
+| Tagger ReDoS fix | merged to master via PR #162 @ `32a74ef` | Critical for ingest — prevents 60+min hangs on underscore-heavy JSON |
+| FTS5 cleanup perf fix | merged to master via PR #162 @ `ec74434` | Daemon /health first-response from "hangs forever" → ms |
+| Batched-IN SQL fix | [PR #163](https://github.com/mbachaud/helix-context/pull/163) | Required to get above n=5 on variant A retrieval — eliminates silent shard skips at 850K-gene scale |

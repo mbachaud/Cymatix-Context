@@ -1,6 +1,6 @@
 # Helix Context Benchmarks
 
-**Last updated:** 2026-04-10
+**Last updated:** 2026-05-28 *(Layer 3 / EnterpriseRAG-Bench added; Layer 1+2 figures unchanged since 2026-04-10)*
 
 Helix solves a specific problem: **agents drowning in RAG search context.** A typical RAG
 pipeline dumps 15-50 kilobytes of candidate chunks into the prompt per turn and hopes the
@@ -509,6 +509,122 @@ OLLAMA_KV_CACHE_TYPE=q4_0    (INT4 KV cache — q8_0 tested, regressed accuracy)
 HELIX_CONFIG=F:/Projects/helix-context/helix.toml
 GENOME_DB=F:/Projects/helix-context/genome-bench-2026-04-10.db
 ```
+
+---
+
+## Layer 3 — EnterpriseRAG-Bench (leak-free retrieval at corpus scale)
+
+**Scripts:** `benchmarks/build_enterprise_rag_batched.py`, `benchmarks/score_enterprise_rag_onyx.py`, `benchmarks/ablate_dense_prefilter.py`
+**Methodology:** Index Onyx-dot-app's [EnterpriseRAG-Bench](https://github.com/onyx-dot-app/EnterpriseRAG-Bench) synthetic enterprise corpus (confluence + fireflies + github + gmail + google_drive + hubspot + jira + linear + slack) as a sharded genome, then run the production retrieval pipeline against the author-supplied questions + gold-path map.
+**Purpose:** Establish helix's behavior on a corpus where (a) the bench owner is not the system owner — no own-code leak surface, (b) each question has explicit gold paths — no telepathy required, and (c) corpus size sweeps across orders of magnitude (10K → 850K genes).
+
+### Why this layer was needed
+
+The Layer 2 KV-Harvest results bottomed at ~16-20% retrieval — a fair noise-floor measurement, but uninformative for "is retrieval working well at scale on real-shape questions?" because:
+
+1. **Source corpus = helix's own dev tree.** Filesystem-grep + CLAUDE.md leaks inflated earlier matrix-bench numbers (the system was finding answers by reading its own developer documentation, not by retrieving through the pipeline). The 2026-05-21 bench investigation report at `docs/benchmarks/2026-05-21_bench_investigation_report.md` lays out the leak audit.
+2. **Synthetic single-axis KV queries** measure the leftmost point on the dimensional-lock curve (see [`BENCHMARK_RATIONALE.md`](BENCHMARK_RATIONALE.md)) and tell you nothing about composition.
+3. **No corpus-scale gradient.** Layer 2 cannot answer "does recall scale with N?" — it's pinned to one 7,313-gene snapshot.
+
+EnterpriseRAG-Bench solves all three: external corpus, multi-token natural-language questions with gold paths, and four built fixture sizes spanning 10K → 850K genes.
+
+### Bench investigation rebuild (2026-05-20 → 2026-05-21)
+
+A wave of investigation work landed in mid-May 2026 that rebuilt the matrix bench with leak-check discipline:
+
+- **Filesystem-grep + CLAUDE.md leak elimination** — `bench_claude_matrix.retrieval_probe` now supports an `isolated=True` mode that launches the downstream sub-agent with `--tools ""` + `--strict-mcp-config` + empty MCP config + sterile CWD. Sub-agents can only see what helix's `/context` endpoint delivers.
+- **3 MCP TDD-fixes shipped** (Windows stdio handshake, identity guard, etc.) that unblocked `claude -p` agent dispatch.
+- **5-fixture grid** (small / medium / medium-sharded / xl / xl-sharded) re-baselined under isolation.
+- Headline measurement: **+32.4 pp helix lift, 65% hallucination reduction** under sterile conditions vs. raw-context baseline.
+- Cross-model finding: **local Gemma 4 e4b ($0, 9.6 GB VRAM) and Claude Haiku 4.5 (API) both landed at exactly 11/250 wrong = 4.4% under M2** — grounding precision is `retrieval × anchor`, not model strength.
+
+Full report: `docs/benchmarks/2026-05-21_bench_investigation_report.md`.
+
+### Cross-corpus results across fixture sizes
+
+| Fixture | Genes | Shards | Disk | Recall@10 | Sonnet-judged correctness | Hallucination |
+|---|---:|---:|---:|---:|---:|---:|
+| `enterprise_rag_10k` (subset) | ~10 K | 1 (monolithic) | ~600 MB | **60%** *(variant A, n=100)* | 19% *(depth-16 d1)* | 1-12% *(depth-dependent)* |
+| `enterprise_rag_50k` (subset) | ~50 K | 1 | ~3 GB | **71%** | 4% *(depth-1)* | 1-2% |
+| `enterprise_rag_onyx_full` (v1) | ~850 K | 105 *(auto-subsharded)* | 42.6 GB | n/a *(Wall-1 dominated; pre PR #163 SQL fix)* | — | — |
+| **`enterprise_rag_onyx_full_2`** (v2) | **850,501** | **100** *(Path-A)* | **47.24 GB** | **28%** *(variant A, n=100, 2026-05-28)* | pending Sonnet judge | pending |
+
+**Corpus-scale recall erosion is real:** 60% @ 10K → 28% @ 850K under SPLADE-off / no-prefilter. This finding is the dominant Wall-2 latency-cost-of-recall input to PR #160's SPLADE pre-filter design and [Issue #164](https://github.com/mbachaud/helix-context/issues/164)'s SPLADE-as-corpus-regime-feature hypothesis.
+
+### The expression-budget clamp fix (2026-05-22)
+
+A separate finding during Layer 3 work that dramatically improved per-gene answer correctness without changing retrieval at all.
+
+The `recall@10 → correctness` gap was being created by a hard-coded per-gene DELIVERY clamp at `context_manager.py:1449` (`target=1000`) — the compression step was head-truncating long genes before they reached the answer model, even when retrieval surfaced them correctly.
+
+**Fix:** `per_gene_budget = "dynamic"` (floor-then-greedy allocator, TDD'd). Effect on 16K-depth-1 fixture:
+
+| Metric | Pre-fix | Post-fix |
+|---|---:|---:|
+| Correctness | 4% | **43%** |
+| Correct given gold-delivered | 10% | **97.5%** |
+| Hallucination | 2% | 1% |
+| Cost | baseline | +17% |
+| Retrieval | 40/100 | **identical 40/100** |
+
+**Default flipped to dynamic on 2026-05-22** after passing flip-gate at depth-8/n=100: 0 gold dropped, 752 = 752 genes preserved, /context p95 −0.34s, 22 tests green.
+
+This finding **reframed the earlier "56 ranker" claim**: retrieval recall@10 on the 10K corpus was actually 83%; only 17 questions were TRUE retrieval misses. The "56 missed" number was a delivery@1 artifact from the clamp, not a ranker deficiency.
+
+### Issue #159 — 850K-gene corpus exposes two scaling walls
+
+Building the 850K-gene `enterprise_rag_onyx_full` fixture (105 shards in v1, 100 in v2) surfaced a clean architectural pressure-test framing for retrieval at scale. See [Issue #159](https://github.com/mbachaud/helix-context/issues/159) and the [SPLADE pre-filter PRD](../prds/2026-05-26-splade-prefilter-dense-recall.md):
+
+- **Wall-1 (memory commit ceiling).** Daemon at 105+ shard scale needs ~247 GB private commit (~50 GB mmap'd shard data × the multi-connection SQLite footprint, plus heap). Default Windows 56 GB pagefile crashes the daemon during warmup at ~143 GB. **Mitigations:** 240 GB fixed pagefile on C: NVMe (288 GB total commit ceiling) AND Path-A rebuild → fewer larger shards.
+- **Wall-2 (brute-force-no-ANN latency wall).** ~870M FLOPs per query for the dense matmul at 850K genes. The pipeline does not use ANN indexes (a design pillar — see `feedback-helix-ribosome-off`); the brute-force matmul IS the cost. Levers within the no-ANN/no-LLM constraint: SPLADE pre-filter ([PR #160](https://github.com/mbachaud/helix-context/pull/160)), inverted term→shard hashmap, cymatics as N-reducer, Matryoshka dim=256.
+
+**Important architectural finding (2026-05-27, cross-verified on three hosts):** the dense matmul at `knowledge_store.py:2709` is **plain NumPy CPU** — `sims = matrix @ query_vec` on an `np.stack(...)` heap-resident fp32 array, no `np.memmap`, no torch, no GPU. BGEM3Codec defaults to `device="cpu"`. Both my x86 + RTX 3080 Ti and Joe's ARM64 Grace + GB10 saw CPU-pegged single-thread + GPU ~16% (SPLADE-only spikes). The prefilter's "FLOP savings" are CPU NumPy FLOPs, not GPU FLOPs. Native CUDA BGE-M3 + a torch-on-GPU matmul are queued as post-bench engineering.
+
+### v2 100q variant-A result (2026-05-28, first leaderboard-grade datapoint)
+
+| Metric | Value |
+|---|---|
+| Fixture | `enterprise_rag_onyx_full_2` (100 shards, 850,501 genes, 47.24 GB) |
+| Variant | A — SPLADE disabled, no prefilter |
+| n | 100 questions (basic type) |
+| recall@1 | 4.0% |
+| recall@3 | 11.0% |
+| recall@5 | 18.0% |
+| **recall@10** | **28.0%** |
+| MRR | 0.100 |
+| p50 latency | 98.4 s |
+| **p95 latency** | **154.5 s** (~2.5 min) |
+| p99 latency | 311.5 s |
+| Timeouts (10-min cap) | **0 / 100** |
+| Wall-clock | 3.08 h |
+| Daemon survived | yes |
+
+**Variants T (baseline), B (prefilter on, escape=0), and C (prefilter on, escape=250)** were swept at the smoke level (n=5) on the same fixture — see PR #160 §5. Cross-variant smoke result: identical 40% recall@10 / MRR 0.25 across all four; only variant A had zero timeouts. Variant A locked as the bench candidate on (recall-tied) + (zero-timeout) + (lowest config complexity).
+
+The 500q variant-A is in flight at the time of writing.
+
+### Engineering fixes that landed during Layer 3
+
+Three master-mergeable PRs were ported off the Layer 3 work:
+
+| PR | Title | Status | Headline impact |
+|---|---|---|---|
+| [#162](https://github.com/mbachaud/helix-context/pull/162) | `fix(tagger,ddl) + feat(build): cherry-pick + port PR #161 fixes onto master` | **merged 2026-05-28** at `478e893` | Tagger ReDoS regex fix (60+min hang → 0.5-2ms on underscore-heavy JSON); FTS5 cleanup O(N²) → O(N log N); shard salvage helper for kill+restart cycle |
+| [#163](https://github.com/mbachaud/helix-context/pull/163) | `fix(knowledge_store): batch IN-clause queries to stay under SQLite cap` | merged 2026-05-28 *(pending CI confirmation at time of writing)* | Eliminates silent shard-skipping on variant-A retrieval; 4 hot sites batched + helper + TDD'd regression test |
+| [#160](https://github.com/mbachaud/helix-context/pull/160) | `feat(retrieval): SPLADE pre-filter for dense matmul (Issue #159 Wall-2)` | open | Recall-neutral by construction; latency win conditional on corpus regime |
+
+**Cross-host validation of the tagger fix:** the same `_KV_PAIR_PATTERN` ReDoS was independently reproduced and fixed by py-spy investigation on x86 Ryzen + RTX 3080 Ti (2026-05-19) and ARM64 Grace + GB10 (2026-05-27), 8 days apart, on different agents. Same line (`tagger.py:439`), same root cause (`(\w+(?:_\w+)*)` nested-quantifier ambiguity on underscore-heavy content), same fix (`(\w+)`). Two independent reproductions on different hardware classes — the strongest possible regression-fix validation footnote.
+
+### Open issues filed from Layer 3 storage audit
+
+- [Issue #164](https://github.com/mbachaud/helix-context/issues/164) — **Storage breakdown of v2 EnterpriseRAG-Onyx corpus**: 17.6× expansion from 2.6 GB raw → 47.24 GB built; SPLADE = 21.1% / 9.96 GB; proposed `splade_enabled = "auto"` with two-threshold size-aware default (`splade_auto_disable_above_genes`, `splade_auto_enable_below_genes`); full scale-curve follow-up (1K, 5K, 25K, 47K, 100K, 850K) defines the SPLADE-as-corpus-regime-feature curve.
+- [Issue #165](https://github.com/mbachaud/helix-context/issues/165) — **Audit fingerprint routing index (path_key_index) storage: 34.1% of v2 corpus** (~19 KB of index per gene); hypothesizes the index was sized for a router design that's currently degenerate (per the 2026-05-26 router discrimination probe finding that broad query terms hit 90-100% of shards). Larger single storage lever than SPLADE; separate workstream.
+
+### Cross-host comparison (in progress)
+
+Joe's spark-e92c completed its v2 build at 16:12Z on 2026-05-28 (15h 6min wall — ~16% faster than the Ryzen baseline on encode + tagger CPU-bound steps). **Topology identical** to the Max-rig build: 100 shards, 850,503 genes, 47.6 GB on disk, 100% dense. The earlier "12-shard" framing was wrong — `enterprise_rag_onyx_full_2` is *labelled* Path-A but auto-subsharding lands at 100 on both hosts.
+
+Cross-host comparison therefore isolates a single variable: hardware. Ryzen + 48 GB + RTX 3080 Ti + 240 GB pagefile (heavy paging) vs ARM64 Grace + 118 GB + GB10 (mmap fits in physical RAM). Recall@K is expected to be near-identical across hosts (same code, data, questions); latency delta will be a pure RAM-headroom / pagefile-pressure story. Joe's variant-A 100q is queued behind a WAL checkpoint + rsync; cross-host writeup pending its completion.
 
 ---
 
