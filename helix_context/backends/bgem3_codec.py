@@ -12,6 +12,9 @@ full-dim recall.
 """
 from __future__ import annotations
 import logging
+import os
+import threading
+
 import numpy as np
 
 log = logging.getLogger("helix.bgem3")
@@ -59,6 +62,11 @@ class BGEM3Codec:
         self.model_name = model_name
         self._device = device
         self._model = None
+        # Guards the lazy model load. When this codec is shared across
+        # concurrent shard-fan-out workers (the A1 singleton), two threads can
+        # hit ``_load`` simultaneously on first use; without the lock both
+        # would build a ~2 GB model. Double-checked locking keeps it to one.
+        self._load_lock = threading.Lock()
         if dim not in _SANCTIONED_DIMS and dim not in BGEM3Codec._UNSANCTIONED_DIM_WARNED:
             log.warning(
                 "BGEM3Codec(dim=%d) is not a sanctioned BGE-M3 Matryoshka breakpoint "
@@ -71,15 +79,24 @@ class BGEM3Codec:
     def _load(self) -> None:
         if self._model is not None:
             return
-        try:
-            from FlagEmbedding import BGEM3FlagModel
-            self._model = BGEM3FlagModel(self.model_name, use_fp16=False)
-            self._backend = "flagembedding"
-        except ImportError:
-            from sentence_transformers import SentenceTransformer
-            self._model = SentenceTransformer(self.model_name, device=self._device)
-            self._backend = "sentence_transformers"
-        log.info("BGE-M3 loaded (%s) dim=%d", self._backend, self.dim)
+        # Double-checked locking: the fast path above is lock-free once loaded;
+        # the slow path serializes concurrent first-loads so a shared codec
+        # (A1 singleton) under fan-out builds the ~2 GB model exactly once.
+        with self._load_lock:
+            if self._model is not None:
+                return
+            try:
+                from FlagEmbedding import BGEM3FlagModel
+                model = BGEM3FlagModel(self.model_name, use_fp16=False)
+                self._backend = "flagembedding"
+            except ImportError:
+                from sentence_transformers import SentenceTransformer
+                model = SentenceTransformer(self.model_name, device=self._device)
+                self._backend = "sentence_transformers"
+            # Publish self._model last so the lock-free fast path never sees a
+            # half-initialized model (self._backend is set before this).
+            self._model = model
+            log.info("BGE-M3 loaded (%s) dim=%d", self._backend, self.dim)
 
     def encode(self, text: str, task: str = "passage") -> list[float]:
         """Encode text to a self.dim-dimensional float list.
@@ -144,3 +161,55 @@ class BGEM3Codec:
         a = np.array(vec_a, dtype=np.float32)
         b = np.array(vec_b, dtype=np.float32)
         return float(np.dot(a, b))
+
+
+# ── A1: process-wide codec singleton ────────────────────────────────────
+#
+# Before this, every shard's KnowledgeStore lazy-built its OWN BGEM3Codec, so a
+# 100-shard query loaded up to ~100 copies of the ~2 GB BGE-M3 model — the
+# dominant driver of the daemon's 47 GB-on-disk → ~120 GB-resident ramp. One
+# shared instance per (model_name, dim, device) loads the weights once and every
+# shard reuses them. Inference (``encode``) is stateless/read-only, so sharing
+# one model across concurrent fan-out workers is safe; the per-instance
+# ``_load_lock`` serializes the one-time lazy load.
+_GLOBAL_CODECS: dict[tuple, "BGEM3Codec"] = {}
+_GLOBAL_CODEC_LOCK = threading.Lock()
+
+
+def shared_dense_codec_enabled() -> bool:
+    """Whether to share one BGE-M3 codec process-wide (the A1 fix).
+
+    Default ON. Set ``HELIX_SHARE_DENSE_CODEC=0`` to reproduce the legacy
+    per-shard-instance behavior (for an A/B on the RAM impact).
+    """
+    return os.environ.get("HELIX_SHARE_DENSE_CODEC", "1").strip().lower() not in (
+        "0", "false", "no", "off",
+    )
+
+
+def get_shared_codec(
+    dim: int = 1024,
+    device: str = "cpu",
+    model_name: str = "BAAI/bge-m3",
+    *,
+    share: bool = True,
+) -> "BGEM3Codec":
+    """Return a process-shared ``BGEM3Codec`` keyed by (model_name, dim, device).
+
+    ``share=False`` bypasses the cache and builds a fresh per-call instance
+    (legacy behavior / A-B testing). The construction lock guards only the
+    cache insert; the ~2 GB model still loads lazily on first ``encode`` and is
+    guarded by the instance's own ``_load_lock``.
+    """
+    if not share:
+        return BGEM3Codec(dim=dim, device=device, model_name=model_name)
+    key = (model_name, dim, device)
+    codec = _GLOBAL_CODECS.get(key)
+    if codec is not None:
+        return codec
+    with _GLOBAL_CODEC_LOCK:
+        codec = _GLOBAL_CODECS.get(key)
+        if codec is None:
+            codec = BGEM3Codec(dim=dim, device=device, model_name=model_name)
+            _GLOBAL_CODECS[key] = codec
+        return codec

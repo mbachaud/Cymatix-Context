@@ -40,6 +40,10 @@ def open_main_db(path: str) -> sqlite3.Connection:
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA busy_timeout=30000")
+    # A4 (RAM): keep SQLite mmap explicitly off on main.db too — guards the
+    # process commit budget against a future SQLite default flip when 100
+    # shard connections plus main are open concurrently under fan-out.
+    conn.execute("PRAGMA mmap_size=0")
     return conn
 
 
