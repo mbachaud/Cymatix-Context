@@ -26,6 +26,7 @@ from helix_context.schemas import (
     Gene,
     PromoterTags,
 )
+from helix_context.hardware import sqlite_memory_budget
 from helix_context.shard_router import ShardRouter, use_shards_enabled
 from helix_context.shard_schema import (
     init_main_db,
@@ -1548,3 +1549,22 @@ def test_close_calls_genome_close_for_checkpoint(two_shard_setup):
     router.close()
     assert closed, "router.close() must call genome.close() on each open shard"
     assert not router._shards, "shard cache must be cleared after close()"
+
+
+def test_router_threads_mem_plan_from_shard_count(two_shard_setup, monkeypatch):
+    """ShardRouter resolves sqlite_memory_budget(n_registered_shards) once and
+    threads it into each lazily-opened shard's KnowledgeStore. The `8gb`
+    profile makes the plan host-independent so the assertion is deterministic.
+    two_shard_setup registers exactly two 'ok' shards -> plan == budget(2)."""
+    monkeypatch.setenv("HELIX_MEM_PROFILE", "8gb")
+    expected = sqlite_memory_budget(2)
+    router = ShardRouter(two_shard_setup["main_path"])
+    try:
+        shard = router._open_shard("shard_a")
+        # SQLite clamps a 2 GiB mmap request to its build max; assert mmap is
+        # ENABLED (non-conservative) and the exactly-round-tripping cache_size
+        # proves the budget(2) plan reached the shard connection.
+        assert shard.conn.execute("PRAGMA mmap_size").fetchone()[0] > 0
+        assert shard.conn.execute("PRAGMA cache_size").fetchone()[0] == expected.writer_cache_size
+    finally:
+        router.close()

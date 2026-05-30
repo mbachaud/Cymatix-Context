@@ -36,6 +36,7 @@ from concurrent.futures import ThreadPoolExecutor
 from typing import Dict, List, Optional, Tuple
 
 from .genome import Genome
+from .hardware import sqlite_memory_budget
 from .schemas import Gene
 from .shard_schema import list_shards, open_main_db
 
@@ -317,6 +318,18 @@ class ShardRouter:
         self._genome_kwargs = genome_kwargs
         self._shards: Dict[str, Genome] = {}
 
+        # RAM-aware SQLite budget (PRD 2026-05-30: dynamic-ram-scaling),
+        # resolved ONCE from the registered shard count and threaded into each
+        # lazily-opened shard. Snapshotting here (before shards open) keeps the
+        # per-shard mmap/cache figure deterministic across the fan-out.
+        try:
+            _n = self.main_conn.execute(
+                "SELECT COUNT(*) FROM shards WHERE health = 'ok'"
+            ).fetchone()[0]
+        except Exception:
+            _n = 1
+        self._mem_plan = sqlite_memory_budget(max(1, int(_n or 1)))
+
         # Retrieval introspection — mirrors KnowledgeStore's interface so
         # callers can use either interchangeably.
         self.last_query_scores: Dict[str, float] = {}
@@ -353,7 +366,9 @@ class ShardRouter:
                     raise ValueError(f"shard not registered: {shard_name}")
                 path = row["path"]
                 log.info("opening shard %s at %s", shard_name, path)
-                self._shards[shard_name] = Genome(path, **self._genome_kwargs)
+                _kwargs = dict(self._genome_kwargs)
+                _kwargs.setdefault("mem_plan", self._mem_plan)
+                self._shards[shard_name] = Genome(path, **_kwargs)
             return self._shards[shard_name]
 
     def known_shards(self, category: Optional[str] = None) -> List[str]:

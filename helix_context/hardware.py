@@ -379,3 +379,122 @@ def recommended_batch_size(model: str) -> int:
     else:
         tier = info.system_ram_gb
     return _lookup_batch_size(info.device_type, tier, model)
+
+
+# ── SQLite memory budget (PRD 2026-05-30: dynamic, RAM-aware scaling) ────────
+# v0.6.1 hard-coded mmap_size=0 + 2/4 MB page caches on every host as a
+# 100-shard fan-out guard. With the BGE-M3 model singleton (the actual
+# 120 GB -> 7 GB fix) in place, that posture over-throttles RAM-rich hosts.
+# This scales per-shard mmap/cache from *available* RAM / shard count; because
+# the budget is (available - reserve), it can never claim more RAM than exists.
+_MEM_GiB = 1024 ** 3
+_MEM_MiB = 1024 ** 2
+
+# `conservative` profile == byte-identical to v0.6.1 (the escape hatch).
+_CONSERVATIVE_MMAP = 0
+_CONSERVATIVE_WRITER_CACHE = -2048   # 2 MB writer page cache
+_CONSERVATIVE_READER_CACHE = -4096   # 4 MB reader page cache
+
+# Scaling profiles: (reserve_frac, mmap_frac, mmap_cap_gib, cache_max_mib).
+#   reserve_frac  fraction of available RAM held back for heap/model/dense matrix
+#   mmap_frac     share of the per-shard budget given to file-backed mmap
+#   mmap_cap_gib  hard per-shard mmap ceiling (SQLite maps lazily <= file size)
+#   cache_max_mib upper bound on the per-shard private page cache
+_MEM_PROFILES: Dict[str, tuple] = {
+    "auto":       (0.25, 0.80, 2.0,  64),
+    "aggressive": (0.15, 0.80, 4.0, 128),
+}
+_CACHE_MIN_MIB = 2  # never drop a page cache below the v0.6.1 writer floor
+
+
+@dataclass(frozen=True)
+class SqliteMemPlan:
+    """Literal PRAGMA values for a SQLite connection. ``mmap_size`` is bytes;
+    the cache sizes use SQLite's negative-KiB convention (-2048 == 2 MB)."""
+
+    mmap_size: int
+    writer_cache_size: int
+    reader_cache_size: int
+
+
+def _conservative_plan() -> "SqliteMemPlan":
+    return SqliteMemPlan(
+        mmap_size=_CONSERVATIVE_MMAP,
+        writer_cache_size=_CONSERVATIVE_WRITER_CACHE,
+        reader_cache_size=_CONSERVATIVE_READER_CACHE,
+    )
+
+
+def _scaled_plan(budget_bytes: int, n_shards: int, mmap_frac: float,
+                 mmap_cap_gib: float, cache_max_mib: int) -> "SqliteMemPlan":
+    """Split a total SQLite budget across shards into mmap + page cache.
+    Falls back to the conservative plan when the budget cannot fund mmap."""
+    if budget_bytes <= 0:
+        return _conservative_plan()
+    per_shard = budget_bytes / max(1, n_shards)
+    mmap = int(min(mmap_cap_gib * _MEM_GiB, mmap_frac * per_shard))
+    if mmap <= 0:
+        return _conservative_plan()
+    cache_bytes = min(cache_max_mib * _MEM_MiB,
+                      max(_CACHE_MIN_MIB * _MEM_MiB, (1.0 - mmap_frac) * per_shard))
+    cache_kib = int(cache_bytes // 1024)
+    return SqliteMemPlan(mmap_size=mmap,
+                         writer_cache_size=-cache_kib,
+                         reader_cache_size=-cache_kib)
+
+
+def _resolve_available_bytes(available_bytes: Optional[int]) -> Optional[int]:
+    if available_bytes is not None:
+        return available_bytes
+    try:
+        import psutil
+        return int(psutil.virtual_memory().available)
+    except Exception:
+        log.warning("psutil.virtual_memory() failed; SQLite mem budget -> "
+                    "conservative", exc_info=True)
+        return None
+
+
+def sqlite_memory_budget(n_shards: int, *,
+                         available_bytes: Optional[int] = None) -> "SqliteMemPlan":
+    """Resolve per-connection SQLite PRAGMA values for the host + shard count.
+
+    Profile via ``HELIX_MEM_PROFILE`` (default ``auto``):
+      auto         dynamic budget = (available - 25% reserve) / n_shards
+      aggressive   same split, leaner 15% reserve + higher caps
+      conservative byte-identical to v0.6.1 (mmap off, 2/4 MB caches)
+      <N>gb        pin the TOTAL SQLite budget to N GiB, host-independent
+
+    Hard overrides (win over the profile):
+      HELIX_SQLITE_MMAP_SIZE   per-conn mmap_size, in bytes
+      HELIX_SQLITE_CACHE_SIZE  raw cache_size pragma value (negative = KiB)
+    """
+    profile = os.environ.get("HELIX_MEM_PROFILE", "auto").strip().lower()
+
+    if profile == "conservative":
+        plan = _conservative_plan()
+    elif profile.endswith("gb") and profile[:-2].strip().replace(".", "", 1).isdigit():
+        budget = int(float(profile[:-2].strip()) * _MEM_GiB)
+        _, mf, cap, cmax = _MEM_PROFILES["auto"]
+        plan = _scaled_plan(budget, n_shards, mf, cap, cmax)
+    else:
+        rf, mf, cap, cmax = _MEM_PROFILES.get(profile, _MEM_PROFILES["auto"])
+        avail = _resolve_available_bytes(available_bytes)
+        if avail is None:
+            plan = _conservative_plan()
+        else:
+            reserve = max(4 * _MEM_GiB, int(rf * avail))
+            plan = _scaled_plan(max(0, avail - reserve), n_shards, mf, cap, cmax)
+
+    # Hard env overrides win over the profile.
+    mmap_env = os.environ.get("HELIX_SQLITE_MMAP_SIZE")
+    cache_env = os.environ.get("HELIX_SQLITE_CACHE_SIZE")
+    if mmap_env or cache_env:
+        mmap_size = int(mmap_env) if mmap_env else plan.mmap_size
+        if cache_env:
+            cs = int(cache_env)
+            plan = SqliteMemPlan(mmap_size, cs, cs)
+        else:
+            plan = SqliteMemPlan(mmap_size, plan.writer_cache_size,
+                                 plan.reader_cache_size)
+    return plan
