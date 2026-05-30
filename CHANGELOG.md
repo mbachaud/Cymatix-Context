@@ -2,6 +2,50 @@
 
 ## Unreleased
 
+## 0.6.1 — 2026-05-30
+
+Performance release: concurrent shard fan-out + a daemon RAM collapse at
+100-shard scale. Both land off the EnterpriseRAG-Bench v2 work (850K genes /
+100 shards) and were verified end-to-end on that fixture (resident RAM
+~120 GB → 7 GB; per-query 125s → 57.6s median at `HELIX_SHARD_WORKERS=8`;
+0 daemon deaths; ranked output byte-identical to the serial path).
+
+- **perf(memory): share ONE BGE-M3 model process-wide (PR #173).**
+  `KnowledgeStore._get_dense_codec()` built its own ~2 GB `BGEM3Codec` per
+  instance, so a query touching ~100 shards loaded up to ~100 copies of the
+  model — the dominant driver of the daemon's 47 GB-on-disk → ~120 GB-resident
+  ramp (legitimate heap is only ~6 GB). `get_shared_codec()` returns one
+  instance per `(model_name, dim, device)`; inference is stateless so sharing
+  across concurrent fan-out workers is safe (double-checked load lock). Default
+  on; `HELIX_SHARE_DENSE_CODEC=0` reverts to per-instance for an A/B.
+
+- **perf(retrieval): concurrent shard fan-out (PR #172).** The 100-shard
+  fan-out in `ShardRouter.query_genes` ran as a serial loop. It now parallelizes
+  the per-shard fetch (open + `query_docs` + IDF probe) via a
+  `ThreadPoolExecutor` — the dense matmul releases the GIL through BLAS, so
+  threads genuinely parallelize, with BLAS pinned to 1 thread (`threadpoolctl`)
+  to avoid oversubscription. Accumulation/merge/sort stays sequential in
+  original shard order, so ranked output is byte-identical to serial. Gated by
+  `HELIX_SHARD_WORKERS` (default 1 = serial). Pair with the BGE-M3 singleton —
+  without it the per-shard model duplication thrashes the pagefile and caps the
+  speedup at ~1.5x.
+
+- **perf(memory): optional fp16 dense matrix (PR #173).**
+  `HELIX_DENSE_MATRIX_DTYPE=float16` halves the resident per-shard dense matrix
+  (~3.3 GB → ~1.65 GB); numpy promotes to fp32 inside the matmul so cosine
+  precision is unchanged. Default `float32` = byte-identical to 0.6.0.
+
+- **perf(memory): bound SQLite memory + guard mmap (PR #173).** Explicit
+  `cache_size` caps on both per-shard connections (−2 MB writer / −4 MB reader;
+  previously the unbounded 2 MB/conn default × 200 connections) and explicit
+  `PRAGMA mmap_size=0` on every connection (writer/reader/main.db) as a process-
+  commit guard for concurrent shard opens under fan-out.
+
+- **fix(retrieval): WAL checkpoint on shard close (PR #172).**
+  `ShardRouter.close()` now calls `genome.close()` (which runs
+  `checkpoint(TRUNCATE)`) instead of closing the connections directly, which
+  skipped the checkpoint and left up to 64 MB of un-truncated WAL per shard.
+
 ## 0.6.0 — 2026-05-28
 
 Substantial release covering corpus-scale retrieval, bench rebuilding,
