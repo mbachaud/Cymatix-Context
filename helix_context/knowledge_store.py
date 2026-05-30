@@ -340,6 +340,20 @@ def _iter_in_batches(items, batch_size: int = _IN_BATCH_SIZE):
         yield ",".join("?" * len(batch)), batch
 
 
+def _dense_matrix_dtype():
+    """Resident dtype for the per-shard dense matrix (A2 RAM lever).
+
+    Default ``float32`` (byte-identical to the historical path). Set
+    ``HELIX_DENSE_MATRIX_DTYPE=float16`` to halve the resident dense-matrix
+    footprint at 100-shard scale (~3.3 GB -> ~1.65 GB); numpy promotes to
+    fp32 inside the matmul so cosine precision is unaffected -- only storage
+    shrinks. OFF by default because it is a real (if tiny) precision change.
+    """
+    import numpy as _np
+    val = os.environ.get("HELIX_DENSE_MATRIX_DTYPE", "float32").strip().lower()
+    return _np.float16 if val in ("float16", "fp16", "half") else _np.float32
+
+
 class KnowledgeStore:
     """SQLite-backed document storage with tags-tag retrieval."""
 
@@ -533,6 +547,13 @@ class KnowledgeStore:
         # Cap WAL file size — without this, SQLite resets (zero-fills) the
         # WAL on truncate but keeps the high-water-mark size on disk.
         self.conn.execute("PRAGMA journal_size_limit=67108864")  # 64 MB
+        # A3/A4 (RAM): cap the per-connection page cache (SQLite default is
+        # -2000 = 2 MB/conn; at 100-shard scale that is 200 conns growing
+        # unbounded under FTS5 scans) and keep SQLite mmap explicitly OFF so a
+        # 100-way parallel shard open can never map the whole corpus into
+        # process commit -- the fan-out safety guard.
+        self.conn.execute("PRAGMA cache_size=-2048")  # 2 MB writer page cache
+        self.conn.execute("PRAGMA mmap_size=0")
         self._upsert_count = 0  # WAL checkpoint cadence counter
         self.last_query_scores: Dict[str, float] = {}  # Retrieval scores from last query
         self._last_query_scores_lock = threading.Lock()
@@ -565,6 +586,11 @@ class KnowledgeStore:
             )
             self._reader.row_factory = sqlite3.Row
             self._reader.execute("PRAGMA busy_timeout=10000")
+            # A3/A4 (RAM): bound the read-path page cache and keep mmap off.
+            # The reader carries the FTS5/dense scan load, so give it a touch
+            # more cache than the writer but still a hard cap.
+            self._reader.execute("PRAGMA cache_size=-4096")  # 4 MB reader page cache
+            self._reader.execute("PRAGMA mmap_size=0")
         else:
             self._reader = None
 
@@ -2483,8 +2509,14 @@ class KnowledgeStore:
         warns if the dim is not a sanctioned breakpoint.
         """
         if self._dense_codec is None:
-            from .backends.bgem3_codec import BGEM3Codec
-            self._dense_codec = BGEM3Codec(dim=self._dense_embedding_dim)
+            from .backends.bgem3_codec import get_shared_codec, shared_dense_codec_enabled
+            # A1: share ONE BGE-M3 model process-wide instead of building a
+            # ~2 GB instance per shard (the dominant 100-shard RAM driver).
+            # Default on; HELIX_SHARE_DENSE_CODEC=0 reverts to per-instance.
+            self._dense_codec = get_shared_codec(
+                dim=self._dense_embedding_dim,
+                share=shared_dense_codec_enabled(),
+            )
             # One-time threshold-staleness warn: ann_similarity_threshold is
             # calibrated for dim=1024 (Issue #139 / Stage 4, 2026-05-18). If
             # this knowledge store runs at a different dense_embedding_dim, the
@@ -2623,7 +2655,14 @@ class KnowledgeStore:
                 vecs.append(vec)
             if not vecs:
                 return None, None
-            matrix = np.stack(vecs).astype(np.float32, copy=False)
+            # A2 (RAM): optionally store the resident dense matrix as fp16,
+            # halving its heap footprint (~3.3 GB -> ~1.65 GB across 100
+            # shards). Default float32 = byte-identical to the prior path; set
+            # HELIX_DENSE_MATRIX_DTYPE=float16 to opt in. Cosine ranking is
+            # robust to fp16, but it is a real precision change so it is OFF by
+            # default. (numpy promotes to fp32 inside the matmul, so the
+            # per-query compute is unaffected; only resident storage shrinks.)
+            matrix = np.stack(vecs).astype(_dense_matrix_dtype(), copy=False)
             self._dense_matrix = matrix
             self._dense_matrix_ids = ids
             log.debug(
@@ -2682,6 +2721,9 @@ class KnowledgeStore:
 
         # All vectors are L2-normalized at encode/backfill time (codec
         # contract). matmul == cosine.
+        # When the matrix is fp16 (A2), numpy promotes this matmul to fp32
+        # internally, so cosine values are computed at full precision and only
+        # the *stored* matrix is halved. ``query_vec`` is small (1024,).
         sims = matrix @ query_vec
         n = sims.shape[0]
         k_eff = min(int(k), n)
