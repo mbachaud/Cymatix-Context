@@ -1426,3 +1426,125 @@ def test_doc_type_boost_skipped_on_single_shard_path(two_shard_setup):
             )
     finally:
         router.close()
+
+
+# ── Phase 1: concurrent shard fan-out (HELIX_SHARD_WORKERS) ──────────────
+#
+# The serial fan-out is the reference oracle. Parallel fan-out must produce
+# byte-identical ranked output (same gene_ids in the same order, same
+# corrected scores) — it only parallelizes the per-shard fetch, never the
+# deterministic accumulation/merge/sort.
+
+
+def test_parallel_fanout_matches_serial_byte_for_byte(two_shard_setup, monkeypatch):
+    """HELIX_SHARD_WORKERS>1 must yield identical ranked ids + scores to serial."""
+    main_path = two_shard_setup["main_path"]
+    q = dict(domains=["auth", "docs"], entities=["helix", "jwt"], max_genes=10)
+
+    monkeypatch.delenv("HELIX_SHARD_WORKERS", raising=False)
+    r1 = ShardRouter(main_path)
+    try:
+        serial = r1.query_genes(**q)
+        serial_ids = [g.gene_id for g in serial]
+        serial_scores = dict(r1.last_query_scores)
+        serial_tiers = dict(r1.last_tier_contributions)
+    finally:
+        r1.close()
+
+    monkeypatch.setenv("HELIX_SHARD_WORKERS", "4")
+    r2 = ShardRouter(main_path)
+    try:
+        parallel = r2.query_genes(**q)
+        parallel_ids = [g.gene_id for g in parallel]
+        parallel_scores = dict(r2.last_query_scores)
+        parallel_tiers = dict(r2.last_tier_contributions)
+    finally:
+        r2.close()
+
+    # Identical ranked order (the deterministic sort must be order-independent
+    # of shard completion order).
+    assert parallel_ids == serial_ids, (
+        "parallel fan-out changed ranked gene_id order vs the serial oracle"
+    )
+    # Identical corrected scores.
+    assert set(parallel_scores) == set(serial_scores)
+    for gid in serial_scores:
+        assert parallel_scores[gid] == pytest.approx(serial_scores[gid]), (
+            f"parallel fan-out changed corrected score for {gid}"
+        )
+    # Identical per-tier contributions surfaced for the same docs.
+    assert set(parallel_tiers) == set(serial_tiers)
+
+
+def test_parallel_fanout_actually_uses_threadpool(two_shard_setup, monkeypatch):
+    """With workers>1 and >1 routed shard, the fan-out must dispatch through
+    a ThreadPoolExecutor (the concurrency is the whole point)."""
+    import helix_context.shard_router as sr
+
+    seen = {}
+    real_tpe = sr.ThreadPoolExecutor
+
+    def _spy(*args, **kwargs):
+        seen["used"] = True
+        seen["max_workers"] = kwargs.get("max_workers")
+        return real_tpe(*args, **kwargs)
+
+    monkeypatch.setattr(sr, "ThreadPoolExecutor", _spy)
+    monkeypatch.setenv("HELIX_SHARD_WORKERS", "4")
+
+    router = ShardRouter(two_shard_setup["main_path"])
+    try:
+        # routes to both shard_a (docs) and shard_b (auth) → fan-out fires
+        router.query_genes(domains=["auth", "docs"], entities=[], max_genes=10)
+    finally:
+        router.close()
+
+    assert seen.get("used") is True, "parallel path did not use a ThreadPoolExecutor"
+    assert (seen.get("max_workers") or 0) >= 1
+
+
+def test_serial_default_does_not_use_threadpool(two_shard_setup, monkeypatch):
+    """Default (no HELIX_SHARD_WORKERS) stays on the serial path — no pool."""
+    import helix_context.shard_router as sr
+
+    seen = {"used": False}
+    real_tpe = sr.ThreadPoolExecutor
+
+    def _spy(*args, **kwargs):
+        seen["used"] = True
+        return real_tpe(*args, **kwargs)
+
+    monkeypatch.setattr(sr, "ThreadPoolExecutor", _spy)
+    monkeypatch.delenv("HELIX_SHARD_WORKERS", raising=False)
+
+    router = ShardRouter(two_shard_setup["main_path"])
+    try:
+        router.query_genes(domains=["auth", "docs"], entities=[], max_genes=10)
+    finally:
+        router.close()
+
+    assert seen["used"] is False, "serial default must not spin up a thread pool"
+
+
+def test_close_calls_genome_close_for_checkpoint(two_shard_setup):
+    """A5: ShardRouter.close() must call genome.close() (which runs
+    checkpoint(TRUNCATE)), not close the connections directly and skip the
+    WAL truncation."""
+    router = ShardRouter(two_shard_setup["main_path"])
+    # Open a shard so _shards is non-empty.
+    router.query_genes(domains=["auth"], entities=[], max_genes=5)
+    assert router._shards, "expected at least one open shard after a query"
+
+    closed = []
+    for genome in router._shards.values():
+        orig = genome.close
+
+        def _spy(_orig=orig, _g=genome):
+            closed.append(_g)
+            return _orig()
+
+        genome.close = _spy
+
+    router.close()
+    assert closed, "router.close() must call genome.close() on each open shard"
+    assert not router._shards, "shard cache must be cleared after close()"

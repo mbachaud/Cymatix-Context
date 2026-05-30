@@ -27,10 +27,12 @@ Not in this task:
 
 from __future__ import annotations
 
+import contextlib
 import logging
 import math
 import os
 import threading
+from concurrent.futures import ThreadPoolExecutor
 from typing import Dict, List, Optional, Tuple
 
 from .genome import Genome
@@ -38,6 +40,43 @@ from .schemas import Gene
 from .shard_schema import list_shards, open_main_db
 
 log = logging.getLogger(__name__)
+
+try:  # optional dependency — pins BLAS threads so N shard workers x M BLAS
+    # threads don't oversubscribe cores during the parallel dense matmul.
+    from threadpoolctl import threadpool_limits as _threadpool_limits
+except Exception:  # pragma: no cover - threadpoolctl absent
+    _threadpool_limits = None
+
+
+def _blas_limit(n: int = 1):
+    """Context manager pinning BLAS thread count during the parallel fan-out.
+
+    Each shard's dense recall runs ``matrix @ query_vec`` which dispatches to
+    BLAS; with W worker threads each spawning BLAS's default (= core count)
+    threads, the machine thrashes. Pin BLAS to ``n`` inside the pool so the
+    parallelism comes from the W shards, not nested BLAS pools. No-op if
+    threadpoolctl is unavailable (worker count is still capped).
+    """
+    if _threadpool_limits is None:
+        return contextlib.nullcontext()
+    return _threadpool_limits(limits=n, user_api="blas")
+
+
+def shard_fanout_workers() -> int:
+    """Worker count for concurrent shard fan-out, from ``HELIX_SHARD_WORKERS``.
+
+    Default ``1`` → serial fan-out, byte-identical to the pre-parallel path.
+    Any value > 1 enables a ThreadPoolExecutor over the routed shards. The
+    serial path remains the reference oracle for the determinism regression
+    test (``tests/test_shard_router.py``).
+    """
+    raw = os.environ.get("HELIX_SHARD_WORKERS", "").strip()
+    if not raw:
+        return 1
+    try:
+        return max(1, int(raw))
+    except ValueError:
+        return 1
 
 
 # ── Cross-shard BM25 IDF normalization (#118) ────────────────────────
@@ -288,22 +327,34 @@ class ShardRouter:
         # router needs to match that contract so the adapter snapshot in
         # ShardedGenomeAdapter.query_docs sees a consistent pair.
         self._last_query_scores_lock = threading.Lock()
+        # Guards the self._shards cache dict against a race when concurrent
+        # fan-out workers first-open distinct shards simultaneously (each
+        # mutates the dict). Held only around the cache check + Genome
+        # construction, never around the heavy query_docs call.
+        self._shards_lock = threading.Lock()
 
     # ── Shard lifecycle ─────────────────────────────────────────────
 
     def _open_shard(self, shard_name: str) -> Genome:
-        """Lazy-open a KnowledgeStore against the shard .db. Cached."""
-        if shard_name not in self._shards:
-            row = self.main_conn.execute(
-                "SELECT path FROM shards WHERE shard_name = ? AND health = 'ok'",
-                (shard_name,),
-            ).fetchone()
-            if row is None:
-                raise ValueError(f"shard not registered: {shard_name}")
-            path = row["path"]
-            log.info("opening shard %s at %s", shard_name, path)
-            self._shards[shard_name] = Genome(path, **self._genome_kwargs)
-        return self._shards[shard_name]
+        """Lazy-open a KnowledgeStore against the shard .db. Cached.
+
+        Thread-safe: the cache check + insert is serialized so concurrent
+        fan-out workers can't double-open or corrupt ``self._shards``. The
+        lock does NOT cover query execution, so heavy per-shard work still
+        runs fully concurrently across distinct shards.
+        """
+        with self._shards_lock:
+            if shard_name not in self._shards:
+                row = self.main_conn.execute(
+                    "SELECT path FROM shards WHERE shard_name = ? AND health = 'ok'",
+                    (shard_name,),
+                ).fetchone()
+                if row is None:
+                    raise ValueError(f"shard not registered: {shard_name}")
+                path = row["path"]
+                log.info("opening shard %s at %s", shard_name, path)
+                self._shards[shard_name] = Genome(path, **self._genome_kwargs)
+            return self._shards[shard_name]
 
     def known_shards(self, category: Optional[str] = None) -> List[str]:
         """Shard names registered in main.db, optionally filtered."""
@@ -440,12 +491,23 @@ class ShardRouter:
         # fixture's 6 shards stay well under 1s with this fan-out.
         per_shard_fetch = max(int(max_genes), int(max_genes) * 2)
 
-        for shard_name in shard_names:
+        def _fetch(shard_name: str):
+            """Open + query one shard + probe IDF, snapshotting its per-query
+            introspection. Returns a payload dict, or ``None`` to skip (open
+            or query failure — same soft-fail contract as the serial loop).
+
+            Safe to run concurrently across distinct shards: each shard is a
+            separate ``Genome``/``KnowledgeStore`` with its own SQLite
+            connection and per-instance dense-matrix cache. The only shared
+            mutation — the ``self._shards`` cache — is lock-guarded inside
+            ``_open_shard``. ``last_query_scores`` / ``last_tier_contributions``
+            are instance state, so we snapshot them here before returning.
+            """
             try:
                 shard = self._open_shard(shard_name)
             except Exception:
                 log.warning("shard %s failed to open; skipping", shard_name, exc_info=True)
-                continue
+                return None
 
             try:
                 genes = shard.query_docs(
@@ -473,29 +535,73 @@ class ShardRouter:
                     )
                 except Exception:
                     log.warning("shard %s query failed; skipping", shard_name, exc_info=True)
-                    continue
+                    return None
             except Exception:
                 log.warning("shard %s query failed; skipping", shard_name, exc_info=True)
-                continue
+                return None
 
             # IDF probe: cheap COUNT-over-MATCH queries against this
             # shard's FTS5. Soft-fails to empty dict — that shard then
             # gets m_shard = 1.0 (identity) so its scores pass through
             # uncorrected.
             try:
-                shard_n[shard_name] = int(shard.fts_doc_count())
-                shard_dfs[shard_name] = dict(shard.term_doc_frequencies(idf_terms))
+                s_n = int(shard.fts_doc_count())
+                s_dfs = dict(shard.term_doc_frequencies(idf_terms))
             except Exception:
                 log.warning(
                     "shard %s IDF probe failed; falling back to identity correction",
                     shard_name, exc_info=True,
                 )
-                shard_n[shard_name] = 0
-                shard_dfs[shard_name] = {}
+                s_n = 0
+                s_dfs = {}
 
-            shard_scores = shard.last_query_scores
+            # Snapshot per-query introspection NOW — it is instance state that
+            # a later query on the same shard would overwrite.
+            scores_snapshot = dict(shard.last_query_scores)
+            tiers_src = shard.last_tier_contributions
+            tiers_snapshot = {
+                doc.gene_id: dict(tiers_src.get(doc.gene_id, {})) for doc in genes
+            }
+            return {
+                "shard_name": shard_name,
+                "genes": genes,
+                "scores": scores_snapshot,
+                "tiers": tiers_snapshot,
+                "shard_n": s_n,
+                "shard_dfs": s_dfs,
+            }
+
+        # Fetch every routed shard. The serial path (workers<=1) is the
+        # reference oracle. The parallel path runs the independent per-shard
+        # fetches concurrently but PRESERVES shard_names order in the result
+        # list (``ThreadPoolExecutor.map`` is order-preserving), so the
+        # deterministic accumulation below is byte-identical either way — only
+        # *when* each fetch runs changes, not the merge order. BLAS is pinned
+        # to 1 thread inside the pool so W shard workers don't oversubscribe
+        # cores via nested BLAS pools on the per-shard dense matmul.
+        _workers = shard_fanout_workers()
+        if _workers > 1 and len(shard_names) > 1:
+            with _blas_limit(1):
+                with ThreadPoolExecutor(
+                    max_workers=min(_workers, len(shard_names)),
+                    thread_name_prefix="helix-shard",
+                ) as _ex:
+                    fetched = list(_ex.map(_fetch, shard_names))
+        else:
+            fetched = [_fetch(sn) for sn in shard_names]
+
+        # Accumulate in deterministic shard_names order (identical semantics
+        # to the original serial loop body).
+        for payload in fetched:
+            if payload is None:
+                continue
+            shard_name = payload["shard_name"]
+            shard_n[shard_name] = payload["shard_n"]
+            shard_dfs[shard_name] = payload["shard_dfs"]
+            shard_scores = payload["scores"]
+            payload_tiers = payload["tiers"]
             ranked_for_shard: List[Tuple[str, float]] = []
-            for doc in genes:
+            for doc in payload["genes"]:
                 raw_score = float(shard_scores.get(doc.gene_id, 0.0))
                 ranked_for_shard.append((doc.gene_id, raw_score))
                 if doc.gene_id not in merged:
@@ -504,9 +610,7 @@ class ShardRouter:
                     doc.gene_id not in merged_tier_source
                     or raw_score > merged_tier_source[doc.gene_id]
                 ):
-                    merged_tier[doc.gene_id] = dict(
-                        shard.last_tier_contributions.get(doc.gene_id, {})
-                    )
+                    merged_tier[doc.gene_id] = dict(payload_tiers.get(doc.gene_id, {}))
                     merged_tier_source[doc.gene_id] = raw_score
 
             shard_ranked[shard_name] = ranked_for_shard
@@ -809,15 +913,14 @@ class ShardRouter:
     def close(self) -> None:
         """Close all lazy-opened shard knowledge stores + main.db."""
         for shard_name, genome in self._shards.items():
+            # A5 (RAM): call genome.close() — it runs checkpoint(TRUNCATE) to
+            # flush + truncate the WAL before closing both connections. The
+            # old path closed conn/_reader directly, skipping the checkpoint,
+            # leaving up to 64 MB of un-truncated WAL per shard on disk.
             try:
-                genome.conn.close()
+                genome.close()
             except Exception:
                 log.warning("failed to close shard %s", shard_name, exc_info=True)
-            try:
-                if getattr(genome, "_reader", None):
-                    genome._reader.close()
-            except Exception:
-                pass
         self._shards.clear()
         try:
             self.main_conn.close()
