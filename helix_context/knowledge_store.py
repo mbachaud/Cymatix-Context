@@ -34,6 +34,7 @@ from .accel import (
     batch_update_epigenetics,
 )
 from .exceptions import PromoterMismatch
+from .hardware import SqliteMemPlan, sqlite_memory_budget
 from .schemas import ChromatinState, EpigeneticMarkers, Gene, PromoterTags
 
 log = logging.getLogger(__name__)
@@ -436,9 +437,13 @@ class KnowledgeStore:
         main_conn: Optional[sqlite3.Connection] = None,
         shard_name: str = "main",
         read_only: bool = False,
+        # RAM-aware SQLite pragmas (PRD 2026-05-30). None -> resolve a
+        # single-DB budget here; ShardRouter passes a shard-count-aware plan.
+        mem_plan: Optional[SqliteMemPlan] = None,
     ):
         self.path = path
         self.read_only = read_only
+        self._mem_plan = mem_plan
         self.synonym_map = synonym_map or {}
         self._sema_codec = sema_codec  # Optional SemaCodec for Tier 4 retrieval
         self._replication_mgr = None  # Set by set_replication_manager()
@@ -547,13 +552,15 @@ class KnowledgeStore:
         # Cap WAL file size — without this, SQLite resets (zero-fills) the
         # WAL on truncate but keeps the high-water-mark size on disk.
         self.conn.execute("PRAGMA journal_size_limit=67108864")  # 64 MB
-        # A3/A4 (RAM): cap the per-connection page cache (SQLite default is
-        # -2000 = 2 MB/conn; at 100-shard scale that is 200 conns growing
-        # unbounded under FTS5 scans) and keep SQLite mmap explicitly OFF so a
-        # 100-way parallel shard open can never map the whole corpus into
-        # process commit -- the fan-out safety guard.
-        self.conn.execute("PRAGMA cache_size=-2048")  # 2 MB writer page cache
-        self.conn.execute("PRAGMA mmap_size=0")
+        # RAM-aware SQLite budget (PRD 2026-05-30: dynamic-ram-scaling). The
+        # plan scales the per-connection page cache + mmap to the host and
+        # shard count; ShardRouter threads a shard-count-aware plan, standalone
+        # KnowledgeStores resolve a single-DB budget. The `conservative`
+        # profile reproduces v0.6.1 exactly (mmap off, 2/4 MB caches) — the
+        # fan-out commit guard, now opt-in rather than the unconditional default.
+        _plan = self._mem_plan if self._mem_plan is not None else sqlite_memory_budget(1)
+        self.conn.execute(f"PRAGMA cache_size={_plan.writer_cache_size}")
+        self.conn.execute(f"PRAGMA mmap_size={_plan.mmap_size}")
         self._upsert_count = 0  # WAL checkpoint cadence counter
         self.last_query_scores: Dict[str, float] = {}  # Retrieval scores from last query
         self._last_query_scores_lock = threading.Lock()
@@ -586,11 +593,12 @@ class KnowledgeStore:
             )
             self._reader.row_factory = sqlite3.Row
             self._reader.execute("PRAGMA busy_timeout=10000")
-            # A3/A4 (RAM): bound the read-path page cache and keep mmap off.
-            # The reader carries the FTS5/dense scan load, so give it a touch
-            # more cache than the writer but still a hard cap.
-            self._reader.execute("PRAGMA cache_size=-4096")  # 4 MB reader page cache
-            self._reader.execute("PRAGMA mmap_size=0")
+            # RAM-aware budget (see writer block). The reader carries the
+            # FTS5/dense scan load, so under `conservative` it keeps the
+            # historical larger 4 MB cap; under auto/aggressive both connections
+            # share the scaled cache figure and the same mmap window.
+            self._reader.execute(f"PRAGMA cache_size={_plan.reader_cache_size}")
+            self._reader.execute(f"PRAGMA mmap_size={_plan.mmap_size}")
         else:
             self._reader = None
 

@@ -3,6 +3,12 @@
 A2 — dense matrix dtype flag (default fp32, opt-in fp16).
 A3 — explicit per-connection SQLite cache_size cap.
 A4 — explicit PRAGMA mmap_size=0 (fan-out commit guard).
+
+The A3/A4 pragma values are no longer the unconditional default — as of the
+dynamic-ram-scaling work (PRD 2026-05-30) they are the ``conservative`` profile,
+the byte-identical-to-v0.6.1 escape hatch. These tests pin that profile through
+the Genome construction path; the auto/aggressive scaling is covered by
+test_mem_budget.py and test_mem_plan_applied.py.
 """
 
 from __future__ import annotations
@@ -38,7 +44,10 @@ def test_dense_matrix_dtype_unknown_falls_back_to_float32(monkeypatch):
 # ── A3/A4: SQLite pragmas ───────────────────────────────────────────────
 
 @pytest.fixture
-def temp_genome():
+def temp_genome(monkeypatch):
+    # The pragma tests below pin the `conservative` profile == the exact
+    # v0.6.1 posture (the escape hatch), now opt-in rather than the default.
+    monkeypatch.setenv("HELIX_MEM_PROFILE", "conservative")
     td = tempfile.TemporaryDirectory()
     g = Genome(str(Path(td.name) / "g.db"))
     yield g

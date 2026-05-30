@@ -20,6 +20,9 @@ import logging
 import sqlite3
 import time
 from pathlib import Path
+from typing import Optional
+
+from .hardware import SqliteMemPlan, sqlite_memory_budget
 
 log = logging.getLogger(__name__)
 
@@ -29,7 +32,8 @@ log = logging.getLogger(__name__)
 SHARD_CATEGORIES = ("participant", "agent", "reference", "org", "cold")
 
 
-def open_main_db(path: str) -> sqlite3.Connection:
+def open_main_db(path: str,
+                 mem_plan: Optional[SqliteMemPlan] = None) -> sqlite3.Connection:
     """Open or create main.db with WAL + busy_timeout, return connection.
 
     Mirrors KnowledgeStore's connection setup so both layers behave identically
@@ -40,10 +44,12 @@ def open_main_db(path: str) -> sqlite3.Connection:
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA busy_timeout=30000")
-    # A4 (RAM): keep SQLite mmap explicitly off on main.db too — guards the
-    # process commit budget against a future SQLite default flip when 100
-    # shard connections plus main are open concurrently under fan-out.
-    conn.execute("PRAGMA mmap_size=0")
+    # RAM-aware SQLite budget on main.db too (PRD 2026-05-30). main.db is a
+    # single connection, so it resolves a single-DB plan unless a caller passes
+    # one. `conservative` keeps the historical mmap-off fan-out guard.
+    plan = mem_plan if mem_plan is not None else sqlite_memory_budget(1)
+    conn.execute(f"PRAGMA cache_size={plan.writer_cache_size}")
+    conn.execute(f"PRAGMA mmap_size={plan.mmap_size}")
     return conn
 
 

@@ -2,6 +2,35 @@
 
 ## Unreleased
 
+## 0.6.2 — 2026-05-30
+
+Make the v0.6.1 SQLite memory posture **host-aware** instead of unconditionally
+conservative. v0.6.1 hard-coded `mmap_size=0` + 2/4 MB page caches on every host
+as a 100-shard fan-out commit guard — but the BGE-M3 model singleton was the
+actual 120 GB → 7 GB fix, so that I/O posture only over-throttled RAM-rich hosts
+(reading 46 GB of shards through a 4 MB cache with mmap off). This scales the
+per-shard `mmap_size` / `cache_size` to the host.
+
+- **perf(memory): RAM-aware SQLite budget, `HELIX_MEM_PROFILE` (default `auto`).**
+  `hardware.sqlite_memory_budget(n_shards)` derives a per-connection
+  `mmap_size` / `cache_size` from *available* RAM: `budget = (available − 25%
+  reserve) / n_shards`, split into file-backed mmap (≤ 2 GiB/shard) + a bounded
+  2–64 MB page cache. Because the budget is a fraction of free RAM, it can never
+  claim more than exists, and it self-throttles when shard count is high or RAM
+  is scarce (the 105-shard / 48 GB stress case falls back toward mmap-off). The
+  plan is resolved once in `ShardRouter` from the registered shard count and
+  threaded into each shard's `KnowledgeStore` + `main.db`; standalone stores
+  resolve a single-DB budget.
+  - `HELIX_MEM_PROFILE`: `auto` (default) · `aggressive` (15% reserve, 4 GiB cap)
+    · `conservative` (**byte-identical to v0.6.1** — the escape hatch) · `<N>gb`
+    (pin the total SQLite budget, host-independent — useful where psutil
+    over-reports inside a constrained container).
+  - Hard overrides: `HELIX_SQLITE_MMAP_SIZE` (bytes) and `HELIX_SQLITE_CACHE_SIZE`
+    (raw pragma value) win over the profile.
+  - PRD: `docs/prds/2026-05-30-dynamic-ram-scaling.md`. Unit-tested (budget
+    contract + plan-application through Genome / ShardRouter / main.db); the
+    end-to-end 100-shard perf delta is validated separately on the bench fixture.
+
 ## 0.6.1 — 2026-05-30
 
 Performance release: concurrent shard fan-out + a daemon RAM collapse at
