@@ -389,7 +389,12 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
 
     @app.get("/health")
     async def health_endpoint():
-        ribosome_disabled = getattr(helix.ribosome.backend, "is_disabled_backend", False)
+        # ``ribosome`` may be the wrapper Ribosome (has ``.backend``) OR a
+        # standalone DeBERTaRibosome (no ``.backend``). Guard the attribute
+        # access so /health doesn't 500 when the deberta backend is active.
+        ribosome_disabled = getattr(
+            getattr(helix.ribosome, "backend", None), "is_disabled_backend", False
+        )
         ribosome_model = "disabled" if ribosome_disabled else "unknown"
         if not ribosome_disabled and hasattr(helix.ribosome, "backend") and hasattr(helix.ribosome.backend, "model"):
             ribosome_model = helix.ribosome.backend.model

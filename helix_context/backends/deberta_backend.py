@@ -77,12 +77,26 @@ class DeBERTaRibosome:
         ).to(self._device)
         self._rerank_model.train(False)
 
-        log.info("Loading DeBERTa splice model from %s", splice_model_path)
-        self._splice_tokenizer = AutoTokenizer.from_pretrained(splice_model_path)
-        self._splice_model = AutoModelForSequenceClassification.from_pretrained(
-            splice_model_path
-        ).to(self._device)
-        self._splice_model.train(False)
+        # Splice model — tolerant load. The cross-encoder rerank path does not
+        # need it, so a missing/uninstalled splice model must NOT prevent the
+        # ribosome from instantiating (otherwise the whole DeBERTa backend
+        # silently disables and rerank never fires). splice() degrades to a
+        # pass-through when the model is absent.
+        self._splice_tokenizer = None
+        self._splice_model = None
+        try:
+            log.info("Loading DeBERTa splice model from %s", splice_model_path)
+            self._splice_tokenizer = AutoTokenizer.from_pretrained(splice_model_path)
+            self._splice_model = AutoModelForSequenceClassification.from_pretrained(
+                splice_model_path
+            ).to(self._device)
+            self._splice_model.train(False)
+        except Exception:
+            log.warning(
+                "DeBERTa splice model unavailable at %s (expected when only the "
+                "cross-encoder rerank is wanted) — splice() will pass through.",
+                splice_model_path,
+            )
 
         self.splice_threshold = splice_threshold
         self.nli_splice_bonus = nli_splice_bonus
@@ -136,7 +150,14 @@ class DeBERTaRibosome:
                 ).to(self._device)
                 outputs = self._rerank_model(**encodings)
                 chunk_scores = outputs.logits.squeeze(-1)
-                chunk_scores = torch.clamp(chunk_scores, 0.0, 1.0).cpu().tolist()
+                # Pretrained cross-encoders (e.g. ms-marco-MiniLM) emit UNBOUNDED
+                # relevance logits (~-11..+11), not [0,1] scores. The previous
+                # ``torch.clamp(0,1)`` collapsed nearly every candidate to 0.0/1.0,
+                # destroying discrimination — the stable sort then just preserved
+                # fusion order (rerank became a near-no-op). sigmoid is monotonic
+                # so it preserves the true ranking while bounding to (0,1) for the
+                # custom-model position-bonus blend below.
+                chunk_scores = torch.sigmoid(chunk_scores).cpu().tolist()
                 if isinstance(chunk_scores, float):
                     chunk_scores = [chunk_scores]
                 scores.extend(chunk_scores)
@@ -162,6 +183,13 @@ class DeBERTaRibosome:
 
         return [g for _, g in scored[:k]]
 
+    # Alias: the retrieval blend gate (scoring/blend.py) checks
+    # ``hasattr(ribosome, "rerank")`` and calls ``ribosome.rerank``. The
+    # wrapper Ribosome exposes both names; DeBERTaRibosome only defined
+    # ``re_rank`` (underscore), so without this alias the cross-encoder was
+    # unreachable from /context and the rerank silently no-opped.
+    rerank = re_rank
+
     # ── Splice ─────────────────────────────────────────────────────────
 
     def splice(
@@ -173,6 +201,10 @@ class DeBERTaRibosome:
         """Classify each fragment as keep/drop using the binary classifier."""
         if not genes:
             return {}
+        if self._splice_model is None:
+            # Splice model not loaded (tolerant-load fallback) — pass through,
+            # keeping each gene's complement/content unchanged.
+            return {g.gene_id: g.complement or g.content[:500] for g in genes}
 
         t0 = time.perf_counter()
         result: Dict[str, str] = {}
