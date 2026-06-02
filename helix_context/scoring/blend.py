@@ -9,7 +9,9 @@ parameters instead of ``self``).
 
 from __future__ import annotations
 
+import json
 import logging
+import os
 from typing import Dict, List, Optional, Tuple, TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -73,6 +75,15 @@ def apply_candidate_refiners(
         except Exception:
             log.debug("Cymatics blend failed", exc_info=True)
 
+    if os.environ.get("HELIX_RERANK_DIAG"):
+        log.warning(
+            "[rerank-diag] pool=%d max_genes=%d allow=%s enabled=%s ribo=%s "
+            "has_rerank=%s POOL_env=%r CAP_env=%r",
+            len(candidates), max_genes, allow_rerank, rerank_enabled,
+            type(ribosome).__name__ if ribosome is not None else None,
+            (hasattr(ribosome, "rerank") if ribosome is not None else False),
+            os.environ.get("HELIX_RERANK_POOL"), os.environ.get("HELIX_RERANK_CAPTURE"),
+        )
     if len(candidates) > max_genes:
         if (
             allow_rerank
@@ -80,11 +91,29 @@ def apply_candidate_refiners(
             and ribosome is not None
             and hasattr(ribosome, "rerank")
         ):
+            # Experiment capture (HELIX_RERANK_CAPTURE=<path>): record the
+            # pre-rerank pool and post-rerank top-k source_ids so the
+            # cross-encoder's reordering effect can be scored offline. Default
+            # off. See docs/prds/2026-06-02-widened-rerank-experiment.md.
+            _cap_path = os.environ.get("HELIX_RERANK_CAPTURE")
+            _pre = (
+                [getattr(g, "source_id", "") or "" for g in candidates]
+                if _cap_path else None
+            )
             try:
                 candidates = ribosome.rerank(query, candidates, k=max_genes)
             except Exception:
                 log.warning("Re-rank failed, falling back to retrieval order", exc_info=True)
                 candidates = candidates[:max_genes]
+            if _cap_path:
+                try:
+                    _post = [getattr(g, "source_id", "") or "" for g in candidates]
+                    with open(_cap_path, "a", encoding="utf-8") as _fh:
+                        _fh.write(json.dumps(
+                            {"query": query, "pre": _pre, "post": _post}
+                        ) + "\n")
+                except Exception:
+                    log.warning("rerank capture write FAILED for path %r", _cap_path, exc_info=True)
         else:
             candidates = candidates[:max_genes]
 

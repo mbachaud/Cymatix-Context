@@ -1140,6 +1140,18 @@ class HelixContextManager:
             )
             max_genes = _zone_cap
 
+        # Experiment knob (HELIX_RERANK_POOL): widen the retrieval budget so the
+        # candidate pool reaching _apply_candidate_refiners (and the cross-encoder
+        # rerank) exceeds the final max_genes cut. ShardRouter returns up to ~2x
+        # its max_genes arg, so the pool reaching rerank is ~2 * _retrieve_budget.
+        # Unset/0 preserves current behavior byte-for-byte. See
+        # docs/prds/2026-06-02-widened-rerank-experiment.md.
+        try:
+            _rerank_pool = int(os.environ.get("HELIX_RERANK_POOL", "0") or "0")
+        except ValueError:
+            _rerank_pool = 0
+        _retrieve_budget = max(max_genes, _rerank_pool) if _rerank_pool > 0 else max_genes
+
         # Step 0b: Sub-query decomposition for broad/multi_hop queries.
         _use_decomposition = (
             classifier_result is not None
@@ -1177,7 +1189,7 @@ class HelixContextManager:
         with _stage_timer("express"):
             if len(_sub_queries) == 1:
                 candidates = self._retrieve(
-                    domains, entities, max_genes,
+                    domains, entities, _retrieve_budget,
                     query_text=_sub_queries[0], include_cold=include_cold,
                     party_id=party_id, read_only=read_only,
                 )
@@ -1187,7 +1199,7 @@ class HelixContextManager:
                 def _run_sub(sq: str):
                     eq, d, e = self._prepare_query_signals(sq, session_context)
                     genes = self._retrieve(
-                        d, e, max_genes,
+                        d, e, _retrieve_budget,
                         query_text=sq, include_cold=include_cold,
                         party_id=party_id, read_only=read_only,
                     )
