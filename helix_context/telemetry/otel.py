@@ -18,6 +18,14 @@ Environment:
     HELIX_OTEL_ENDPOINT      - OTLP gRPC endpoint, default "localhost:4317"
     HELIX_OTEL_INSECURE      - "1" for plain gRPC, default "1" (dev-local)
     HELIX_OTEL_SAMPLER_RATIO - trace sampler 0.0-1.0, default 1.0
+    HELIX_OTEL_SERVICE_NAME  - overrides service.name (default "helix-context").
+                               Set per lane (e.g. "helix-dev" / "helix-bench")
+                               so two daemons emit splittable telemetry instead
+                               of one merged series.
+    HELIX_LANE               - free-form lane tag → helix.lane resource attr
+                               (e.g. "dev" / "bench"). Unset = no attr.
+    HELIX_OTEL_INSTANCE_ID   - service.instance.id; defaults to the bound
+                               host:port passed by the server, else hostname.
     HELIX_OTEL_REDACT_QUERY  - "1" to hash query strings in spans, default "1"
     HELIX_OTEL_LOGS_ENABLED  - "1" to ship Python log records to OTel
                                (collector → Loki), default "1". Set "0"
@@ -214,6 +222,7 @@ def setup_telemetry(
     app: Any = None,
     service_name: str = "helix-context",
     service_version: str = "0.4.0b",
+    service_instance_id: Optional[str] = None,
 ) -> bool:
     """Initialize OTel tracer + meter providers + FastAPI auto-instrumentation.
 
@@ -248,7 +257,9 @@ def setup_telemetry(
         )
         from opentelemetry.sdk._logs import LoggerProvider, LoggingHandler
         from opentelemetry.sdk._logs.export import BatchLogRecordProcessor
-        from opentelemetry.sdk.resources import Resource, SERVICE_NAME, SERVICE_VERSION
+        from opentelemetry.sdk.resources import (
+            Resource, SERVICE_NAME, SERVICE_VERSION, SERVICE_INSTANCE_ID,
+        )
         from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import (
             OTLPSpanExporter,
         )
@@ -273,13 +284,27 @@ def setup_telemetry(
     except ValueError:
         ratio = 1.0
 
-    resource = Resource.create({
+    # ── Per-lane attribution: env overrides the passed defaults so two
+    # daemons (dev :11437, bench :11439) emit distinct, splittable telemetry.
+    # Unset → unchanged except service.instance.id newly populates (additive).
+    service_name = os.environ.get("HELIX_OTEL_SERVICE_NAME", service_name)
+    instance_id = (
+        os.environ.get("HELIX_OTEL_INSTANCE_ID")
+        or service_instance_id
+        or socket.gethostname()
+    )
+    _resource_attrs = {
         SERVICE_NAME: service_name,
         SERVICE_VERSION: service_version,
+        SERVICE_INSTANCE_ID: instance_id,
         # COMPUTERNAME is Windows-only; fall back to socket.gethostname()
         # so POSIX deployments don't tag every span as "unknown".
         "deployment.host": os.environ.get("COMPUTERNAME") or socket.gethostname(),
-    })
+    }
+    _lane = os.environ.get("HELIX_LANE", "").strip()
+    if _lane:
+        _resource_attrs["helix.lane"] = _lane
+    resource = Resource.create(_resource_attrs)
 
     sampler = ParentBased(ALWAYS_ON if ratio >= 1.0 else TraceIdRatioBased(ratio))
     tracer_provider = TracerProvider(resource=resource, sampler=sampler)

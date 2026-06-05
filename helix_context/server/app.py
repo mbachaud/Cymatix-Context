@@ -187,7 +187,11 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
     # OpenTelemetry init (disabled unless HELIX_OTEL_ENABLED=1).
     try:
         from ..telemetry import setup_telemetry
-        setup_telemetry(app, service_name="helix-context")
+        setup_telemetry(
+            app,
+            service_name="helix-context",
+            service_instance_id=f"{config.server.host}:{config.server.port}",
+        )
     except Exception:
         log.debug("OTel setup failed", exc_info=True)
 
