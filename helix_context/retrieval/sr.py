@@ -102,19 +102,27 @@ def sr_boost(
         # Sprint 4 source: harmonic_links table. One SQL round-trip for
         # the entire missing batch — IN (...) with a reasonable cap.
         link_lookup: Dict[str, List[str]] = {g: [] for g in missing}
+        # Batched-IN to stay under SQLITE_LIMIT_VARIABLE_NUMBER. The OR
+        # against two columns means a single batch consumes 2N binds, so a
+        # cap of 400 keeps us under the legacy 999-var limit. (Surfaced by
+        # the 20q stratified smoke 2026-05-28 on v2/850K corpus, same bug
+        # class as PR #163's fix to knowledge_store.py — different module.)
         try:
             cur = genome.read_conn.cursor()
-            placeholders = ",".join("?" * len(missing))
-            rows = cur.execute(
-                f"SELECT gene_id_a, gene_id_b FROM harmonic_links "
-                f"WHERE gene_id_a IN ({placeholders}) OR gene_id_b IN ({placeholders})",
-                (*missing, *missing),
-            ).fetchall()
-            for a, b in rows:
-                if a in link_lookup:
-                    link_lookup[a].append(b)
-                if b in link_lookup:
-                    link_lookup[b].append(a)
+            batch_size = 400
+            for start in range(0, len(missing), batch_size):
+                batch = missing[start:start + batch_size]
+                placeholders = ",".join("?" * len(batch))
+                rows = cur.execute(
+                    f"SELECT gene_id_a, gene_id_b FROM harmonic_links "
+                    f"WHERE gene_id_a IN ({placeholders}) OR gene_id_b IN ({placeholders})",
+                    (*batch, *batch),
+                ).fetchall()
+                for a, b in rows:
+                    if a in link_lookup:
+                        link_lookup[a].append(b)
+                    if b in link_lookup:
+                        link_lookup[b].append(a)
         except Exception:
             log.warning("harmonic_links bulk read failed", exc_info=True)
         # Union + dedupe per document, store in cache.
