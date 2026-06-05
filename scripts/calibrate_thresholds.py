@@ -456,7 +456,11 @@ def _build_parser() -> argparse.ArgumentParser:
         description="Calibrate ANN threshold + per-classifier confidence floors.",
     )
     p.add_argument("--genome", required=True, type=Path)
-    p.add_argument("--bench", required=True, type=Path)
+    p.add_argument("--bench", required=False, type=Path, default=None,
+                   help="Located bench JSON (drives per-classifier floor "
+                        "calibration). Optional: omit to calibrate only the "
+                        "ANN threshold (margin-over-random from "
+                        "embedding_dense_v2 sample), skipping floor calibration.")
     p.add_argument("--output-toml", type=Path, default=None)
     p.add_argument(
         "--output-report",
@@ -548,7 +552,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     if not args.genome.exists():
         log.error("genome path does not exist: %s", args.genome)
         return 2
-    if not args.bench.exists():
+    if args.bench is not None and not args.bench.exists():
         log.error("bench path does not exist: %s", args.bench)
         return 2
 
@@ -565,23 +569,27 @@ def main(argv: Optional[List[str]] = None) -> int:
         ann.mu, ann.sigma, ann.n_pairs, ann.dim, ann.threshold,
     )
 
-    log.info("Calibrating per-classifier floors")
-    floors = calibrate_floors(
-        args.bench,
-        abstain_pct=args.abstain_pct,
-        focused_pct=args.focused_pct,
-        tight_pct=args.tight_pct,
-        default_floors=ClassFloors(
-            abstain_top=2.5, focused_top=2.5, tight_top=5.0,
-        ),
-    )
-    for cls, f in floors.per_class.items():
-        flag = " [DEGENERATE]" if f.degenerate else ""
-        log.info(
-            "  cls=%s n_hits=%d n_misses=%d -> abstain=%.4f focused=%.4f tight=%.4f%s",
-            cls, f.n_hits, f.n_misses,
-            f.abstain_top, f.focused_top, f.tight_top, flag,
+    if args.bench is None:
+        log.info("Skipping per-classifier floor calibration (no --bench supplied)")
+        floors = FloorCalibrationResult(per_class={})
+    else:
+        log.info("Calibrating per-classifier floors")
+        floors = calibrate_floors(
+            args.bench,
+            abstain_pct=args.abstain_pct,
+            focused_pct=args.focused_pct,
+            tight_pct=args.tight_pct,
+            default_floors=ClassFloors(
+                abstain_top=2.5, focused_top=2.5, tight_top=5.0,
+            ),
         )
+        for cls, f in floors.per_class.items():
+            flag = " [DEGENERATE]" if f.degenerate else ""
+            log.info(
+                "  cls=%s n_hits=%d n_misses=%d -> abstain=%.4f focused=%.4f tight=%.4f%s",
+                cls, f.n_hits, f.n_misses,
+                f.abstain_top, f.focused_top, f.tight_top, flag,
+            )
 
     snippet = emit_toml_snippet(ann, floors)
     if args.output_toml is not None:

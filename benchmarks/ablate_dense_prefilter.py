@@ -55,8 +55,17 @@ VARIANTS: list[tuple[str, str, dict]] = [
     ),
     (
         "A",
-        "SPLADE off",
-        {"ingestion": {"splade_enabled": False}},
+        "SPLADE off, calibrated",
+        # ann_threshold_mode flip means the daemon reads per-shard mu+3*sigma
+        # from genome_calibration; falls back to absolute 0.58 with a one-time
+        # WARN for any shard without a calibration row (e.g., tiny gmail/slack
+        # subshards that have <2 genes). Added 2026-05-29 after the
+        # uncalibrated 17.9% recall@10 was found to be running with a
+        # threshold approximately at the mean of random gene-pair similarity.
+        {
+            "ingestion": {"splade_enabled": False},
+            "retrieval": {"ann_threshold_mode": "margin_over_random"},
+        },
     ),
     (
         "B",
@@ -460,6 +469,16 @@ def main() -> int:
     print(f"loaded {len(needles)} needles from EnterpriseRAG-Bench questions.jsonl")
     print(f"types: {types}")
     print(f"fixture: {args.fixture}")
+
+    # Auto-correct any "Nq" token in the label to match actual loaded count so
+    # filenames never lie about sample size (the default --types filter caps
+    # at 340, but operators frequently pass --label v2_500q_* aspirationally).
+    import re as _re
+    actual_n_tok = f"{len(needles)}q"
+    new_label, n_subs = _re.subn(r"\d+q", actual_n_tok, args.label)
+    if n_subs and new_label != args.label:
+        print(f"[label-fix] {args.label!r} -> {new_label!r} (actual n={len(needles)})")
+        args.label = new_label
 
     selected = set(args.variants.split(","))
     chosen = [(c, l, p) for c, l, p in VARIANTS if c in selected]

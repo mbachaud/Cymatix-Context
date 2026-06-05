@@ -55,7 +55,7 @@ HELIX_URL = "http://127.0.0.1:11437"
 OLLAMA_URL = "http://localhost:11434"
 CLAUDE_TIMEOUT_S = 120
 OLLAMA_TIMEOUT_S = 300
-CONTEXT_TIMEOUT_S = 30
+CONTEXT_TIMEOUT_S = int(os.environ.get("BENCH_CONTEXT_TIMEOUT_S", "1200"))
 NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0)
 # Injected-context cap. Context is passed via --append-system-prompt-file (a
 # file, not the arg-line), so this is a soft cap, not an OS limit. Env-override
@@ -79,15 +79,27 @@ SYSTEM_PROMPT_COLD = (
 # ── Needle loading ────────────────────────────────────────────────────
 
 def load_needles(max_questions: int | None = None,
-                 question_types: list[str] | None = None) -> list[dict]:
-    """Load questions.jsonl and resolve gold dsids to corpus paths."""
+                 question_types: list[str] | None = None,
+                 per_type: int | None = None) -> list[dict]:
+    """Load questions.jsonl and resolve gold dsids to corpus paths.
+
+    ``per_type`` overrides ``max_questions`` and takes the first N matching
+    each type — used for stratified smoke runs across all 10 categories,
+    which the file's type-sorted layout otherwise makes painful.
+    """
     uuid_index = json.loads(UUID_INDEX_PATH.read_text(encoding="utf-8"))
     needles = []
+    per_type_counts: dict[str, int] = {}
     with QUESTIONS_PATH.open(encoding="utf-8") as fh:
         for line in fh:
             q = json.loads(line)
-            if question_types and q["question_type"] not in question_types:
+            qtype = q["question_type"]
+            if question_types and qtype not in question_types:
                 continue
+            if per_type is not None:
+                if per_type_counts.get(qtype, 0) >= per_type:
+                    continue
+                per_type_counts[qtype] = per_type_counts.get(qtype, 0) + 1
             gold_paths = []
             for dsid in q.get("expected_doc_ids") or []:
                 rel = uuid_index.get(dsid)
@@ -95,7 +107,7 @@ def load_needles(max_questions: int | None = None,
                     gold_paths.append(str(CORPUS_ROOT / rel))
             needles.append({
                 "id": q["question_id"],
-                "type": q["question_type"],
+                "type": qtype,
                 "question": q["question"],
                 "gold_answer": q.get("gold_answer", ""),
                 "answer_facts": q.get("answer_facts", []),
@@ -103,7 +115,7 @@ def load_needles(max_questions: int | None = None,
                 "expected_doc_ids": q.get("expected_doc_ids", []),
                 "gold_paths": gold_paths,
             })
-    if max_questions is not None:
+    if per_type is None and max_questions is not None:
         needles = needles[:max_questions]
     return needles
 
@@ -111,13 +123,21 @@ def load_needles(max_questions: int | None = None,
 # ── Helix /context ────────────────────────────────────────────────────
 
 def helix_context(query: str, gold_paths: list[str], session_id: str,
-                  log: logging.Logger) -> tuple[str, dict]:
-    """Fetch helix /context for ``query`` and return (text, meta)."""
+                  log: logging.Logger, query_type: str | None = None) -> tuple[str, dict]:
+    """Fetch helix /context for ``query`` and return (text, meta).
+
+    ``query_type`` (semantic-wiring arm) is sent only when provided, so the
+    fixed-pipeline capture can exercise the /context arm (broaden + semantic
+    dense weight). Omitted by the main bench loop -> body byte-identical.
+    """
     body = {
         "query": query,
         "max_genes": int(os.environ.get("BENCH_MAX_GENES", "8")),
         "session_id": session_id,
+        "ignore_delivered": True,  # bench: no session-delivery elision (skews scores)
     }
+    if query_type:
+        body["query_type"] = query_type
     t0 = time.perf_counter()
     try:
         resp = httpx.post(f"{HELIX_URL}/context", json=body,
@@ -410,8 +430,11 @@ def main() -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("--mode", choices=["none", "helix"], required=True)
-    parser.add_argument("--model", choices=["haiku", "gemma"], required=True)
+    parser.add_argument("--model", choices=["haiku", "sonnet", "gemma"], required=True)
     parser.add_argument("--max-questions", type=int, default=None)
+    parser.add_argument("--per-type", type=int, default=None,
+                        help="Take first N per question_type (stratified). "
+                             "Overrides --max-questions when set.")
     parser.add_argument("--types", help="Comma-separated question types")
     parser.add_argument(
         "--helix-url", default=HELIX_URL,
@@ -421,6 +444,11 @@ def main() -> int:
         "--external-helix", action="store_true",
         help="Don't try to start helix; assume it's already running at --helix-url",
     )
+    parser.add_argument(
+        "--resume-dir",
+        help="Resume into an existing run dir: skip question_ids already present "
+             "in its onyx_answers.jsonl and append the remainder in place.",
+    )
     args = parser.parse_args()
 
     types_filter = (
@@ -429,10 +457,31 @@ def main() -> int:
     needles = load_needles(
         max_questions=args.max_questions,
         question_types=types_filter,
+        per_type=args.per_type,
     )
 
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    run_dir = RESULTS_ROOT / f"enterprise_rag_{args.mode}_{args.model}_{stamp}"
+    resuming = bool(args.resume_dir)
+    if resuming:
+        run_dir = Path(args.resume_dir)
+        done_ids: set[str] = set()
+        _onyx_done = run_dir / "onyx_answers.jsonl"
+        if _onyx_done.exists():
+            with _onyx_done.open(encoding="utf-8") as dfh:
+                for line in dfh:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    try:
+                        done_ids.add(json.loads(line)["question_id"])
+                    except Exception:
+                        pass
+        _before = len(needles)
+        needles = [n for n in needles if n["id"] not in done_ids]
+        print(f"resume: {run_dir} has {len(done_ids)} answered; "
+              f"{_before - len(needles)} skipped, {len(needles)} to run")
+    else:
+        run_dir = RESULTS_ROOT / f"enterprise_rag_{args.mode}_{args.model}_{stamp}"
     run_dir.mkdir(parents=True, exist_ok=True)
     log_path = run_dir / "run.log"
 
@@ -450,13 +499,15 @@ def main() -> int:
                 args.mode, args.model, len(needles))
     logger.info("run_dir=%s", run_dir)
 
-    model_id = "haiku" if args.model == "haiku" else "gemma4:e4b"
-    run_fn = run_claude if args.model == "haiku" else run_ollama
+    model_id = {"haiku": "haiku", "sonnet": "sonnet", "gemma": "gemma4:e4b"}[args.model]
+    run_fn = run_ollama if args.model == "gemma" else run_claude
 
     if args.mode == "helix":
         # Validate helix is responsive
         try:
-            h = httpx.get(f"{args.helix_url}/health", timeout=5).json()
+            # /health enumerates per-shard state on sharded fixtures; on v2's
+            # 100-shard topology a single response takes ~6s. 5s was too tight.
+            h = httpx.get(f"{args.helix_url}/health", timeout=30).json()
             logger.info("helix OK: genes=%s pid=%s",
                         h.get("genes"), h.get("pid"))
         except Exception as exc:
@@ -484,8 +535,9 @@ def main() -> int:
         "ok": 0, "err": 0, "gold_delivered": 0,
     }
 
-    with native_path.open("w", encoding="utf-8") as nfh, \
-         onyx_path.open("w", encoding="utf-8") as ofh:
+    _open_mode = "a" if resuming else "w"
+    with native_path.open(_open_mode, encoding="utf-8") as nfh, \
+         onyx_path.open(_open_mode, encoding="utf-8") as ofh:
         for i, needle in enumerate(needles, 1):
             logger.info("[%d/%d %s %s]", i, len(needles),
                         needle["type"], needle["id"])

@@ -44,9 +44,15 @@ def main() -> int:
         gold_rels = {r for r in gold_rels if r}
         try:
             resp = httpx.post(f"{args.helix_url}/fingerprint",
+                              # Semantic-wiring arm (PRD 2026-06-02): always send
+                              # the needle's ground-truth type. It is inert unless
+                              # the daemon has HELIX_SEMANTIC_ARM=1 AND type=="semantic",
+                              # so the SAME harness runs both A/B arms -- only the
+                              # daemon env flag changes between baseline/experiment.
                               json={"query": n["question"],
-                                    "max_results": args.k, "score_floor": 0.0},
-                              timeout=30)
+                                    "max_results": args.k, "score_floor": 0.0,
+                                    "query_type": n.get("type")},
+                              timeout=900)
             fps = resp.json().get("fingerprints", [])
         except Exception as exc:
             print(f"  [{i}] {n['id']} ERROR {exc}")
@@ -60,7 +66,10 @@ def main() -> int:
                 break
         ranks.append(hit_rank)
         rows.append({"id": n["id"], "type": n["type"], "hit_rank": hit_rank,
-                     "n_returned": len(fps), "n_gold": len(gold_rels)})
+                     "n_returned": len(fps), "n_gold": len(gold_rels),
+                     "retrieved": [{"src": fp.get("source", ""),
+                                    "rank": fp.get("rank"),
+                                    "score": fp.get("score")} for fp in fps]})
         if i % 25 == 0:
             print(f"  [{i}/{len(needles)}] ...")
 
