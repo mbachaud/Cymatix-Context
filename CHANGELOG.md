@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.6.3 — 2026-06-05
+
+External-validation snapshot (EnterpriseRAG-Bench / Onyx). Freezes the current retrieval/delivery
+pipeline + config so the 2026-06-05 numbers are independently reproducible. See
+`docs/validation/VALIDATION.md` + `docs/validation/onyx-fixed-pipeline.toml`.
+
+- **feat(retrieval): question-conditioned dense recall (`HELIX_QUESTION_DENSE=1`, env-gated,
+  default-off).** The sharded dense tier encodes the natural-language question instead of the
+  extracted tag-bag; only the dense tier switches (SPLADE/FTS5/tag stay on tag terms).
+- **feat(retrieval): semantic-scoped wiring arm (`HELIX_SEMANTIC_ARM=1`, default-off).**
+  Routing-broaden + dense-weight (`semantic_dense_additive_weight=16`) applied ONLY to
+  `query_type=="semantic"`; factual/lexical retrieval byte-identical to baseline. Net-safe,
+  small-positive (full-500 A/B: semantic recall@10 2.4→4.8, no other type regressed).
+- **feat: `/context` + `/fingerprint` `query_type` thread.** Optional per-call `query_type`,
+  inert unless `"semantic"` + arm on.
+- **feat(telemetry): OTel per-lane attribution** (`HELIX_LANE`, `service.instance.id`).
+- perf/robustness: shared BGE-M3 codec, fp16 dense matrix, SQLite IN-clause batching, tagger
+  catastrophic-backtracking + FTS5 orphan-skip fixes.
+
+**Provenance / known issues (stated plainly):**
+- This is a **sibling of public PyPI 0.6.2, not a descendant** — it does not carry 0.6.2's RAM/mem
+  work (`HELIX_MEM_PROFILE`, shared-codec singleton); those are memory/latency features, irrelevant
+  to recall/correctness. A future public release reconciles both lines.
+- 4 pre-existing `test_observability_docs` failures (the root README lacks observability-sidecar doc
+  sections present on the master line; README-only, not shipped in the wheel, unrelated to
+  retrieval). Full suite otherwise green: 2208 passed / 43 skipped on this commit.
+
 ## Unreleased
 
 - **fix(launcher): `[headroom] route_upstream` is now a separate, default-off
