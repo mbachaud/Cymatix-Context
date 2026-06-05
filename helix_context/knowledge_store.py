@@ -309,6 +309,20 @@ _DENSITY_RATE_MIN_HITS = 3      # ≥3 accesses in the window → override
 _CORPUS_SIZE_TTL = 60.0
 
 
+def _dense_matrix_dtype():
+    """Resident dtype for the per-shard dense matrix (A2 RAM lever).
+
+    Default ``float32`` (byte-identical to the historical path). Set
+    ``HELIX_DENSE_MATRIX_DTYPE=float16`` to halve the resident dense-matrix
+    footprint at 100-shard scale (~3.3 GB -> ~1.65 GB); numpy promotes to
+    fp32 inside the matmul so cosine precision is unaffected — only storage
+    shrinks. OFF by default because it is a real (if tiny) precision change.
+    """
+    import numpy as _np
+    val = os.environ.get("HELIX_DENSE_MATRIX_DTYPE", "float32").strip().lower()
+    return _np.float16 if val in ("float16", "fp16", "half") else _np.float32
+
+
 class KnowledgeStore:
     """SQLite-backed document storage with tags-tag retrieval."""
 
@@ -401,6 +415,12 @@ class KnowledgeStore:
         # negligible weight). Consistent with query_cold_tier's 0.15
         # min_cosine. Unused under RRF.
         dense_additive_min_cosine: float = 0.15,
+        # Semantic-wiring arm (PRD 2026-06-02). semantic_dense_additive_weight
+        # is consulted only when query_type=="semantic" AND HELIX_SEMANTIC_ARM=1.
+        # semantic_broaden_routing is read by ShardRouter; accepted here so the
+        # fanned genome_kwargs don't raise (Genome ignores it).
+        semantic_dense_additive_weight: float = 12.0,
+        semantic_broaden_routing: bool = True,
         pki_weight: float = 1.0,
         main_conn: Optional[sqlite3.Connection] = None,
         shard_name: str = "main",
@@ -492,6 +512,10 @@ class KnowledgeStore:
         self._dense_additive_weight: float = float(dense_additive_weight)
         # Tier-0 review fix: additive-mode dense merge noise floor (see ctor param).
         self._dense_additive_min_cosine: float = float(dense_additive_min_cosine)
+        # Semantic-wiring arm (PRD 2026-06-02): scoped dense weight, gated at
+        # query time by query_type=="semantic" + env HELIX_SEMANTIC_ARM=1.
+        self._semantic_dense_additive_weight: float = float(semantic_dense_additive_weight)
+        self._semantic_broaden_routing: bool = bool(semantic_broaden_routing)
         self._pki_weight: float = float(pki_weight)
         self._threshold_dim_warned: bool = False
         # Phase 2 claims layer (2026-04-19). Optional hook — when a main.db
@@ -519,6 +543,13 @@ class KnowledgeStore:
         # Cap WAL file size — without this, SQLite resets (zero-fills) the
         # WAL on truncate but keeps the high-water-mark size on disk.
         self.conn.execute("PRAGMA journal_size_limit=67108864")  # 64 MB
+        # A3/A4 (RAM): cap the per-connection page cache (SQLite default is
+        # -2000 = 2 MB/conn; at 100-shard scale that is 200 conns growing
+        # unbounded under FTS5 scans) and keep SQLite mmap explicitly OFF so a
+        # 100-way parallel shard open can never map the whole corpus into
+        # process commit — the fan-out safety guard.
+        self.conn.execute("PRAGMA cache_size=-2048")  # 2 MB writer page cache
+        self.conn.execute("PRAGMA mmap_size=0")
         self._upsert_count = 0  # WAL checkpoint cadence counter
         self.last_query_scores: Dict[str, float] = {}  # Retrieval scores from last query
         self._last_query_scores_lock = threading.Lock()
@@ -551,6 +582,11 @@ class KnowledgeStore:
             )
             self._reader.row_factory = sqlite3.Row
             self._reader.execute("PRAGMA busy_timeout=10000")
+            # A3/A4 (RAM): bound the read-path page cache and keep mmap off.
+            # The reader carries the FTS5/dense scan load, so give it a touch
+            # more cache than the writer but still a hard cap.
+            self._reader.execute("PRAGMA cache_size=-4096")  # 4 MB reader page cache
+            self._reader.execute("PRAGMA mmap_size=0")
         else:
             self._reader = None
 
@@ -1300,15 +1336,22 @@ class KnowledgeStore:
         recency_window = 48 * 3600  # 48 hours in seconds
 
         gene_ids = list(gene_scores.keys())
-        id_ph = ",".join("?" * len(gene_ids))
         lower_terms = [t.lower() for t in query_terms]
 
-        # Fetch source_id, tags, signals for all candidates in one query
-        rows = cur.execute(
-            f"SELECT gene_id, source_id, promoter, epigenetics "
-            f"FROM genes WHERE gene_id IN ({id_ph})",
-            gene_ids,
-        ).fetchall()
+        # SQLite caps IN-clause placeholders at 999 by default; batch large
+        # candidate sets to stay under it. Triggered in practice when the
+        # upstream recall path returns >999 candidates per shard (e.g.,
+        # SPLADE-disabled retrieval on large shards).
+        _IN_BATCH = 500
+        rows = []
+        for _i in range(0, len(gene_ids), _IN_BATCH):
+            _batch = gene_ids[_i:_i + _IN_BATCH]
+            _id_ph = ",".join("?" * len(_batch))
+            rows.extend(cur.execute(
+                f"SELECT gene_id, source_id, promoter, epigenetics "
+                f"FROM genes WHERE gene_id IN ({_id_ph})",
+                _batch,
+            ).fetchall())
 
         for r in rows:
             gid = r["gene_id"]
@@ -1442,9 +1485,17 @@ class KnowledgeStore:
         use_sr: Optional[bool] = None,
         use_entity_graph: Optional[bool] = None,
         read_only: bool = False,
+        query_type: Optional[str] = None,
+        question_text: Optional[str] = None,
     ) -> List[Gene]:
         """
         Find documents matching the given tags signals.
+
+        ``query_type`` (semantic-wiring arm, PRD 2026-06-02): when "semantic"
+        AND env HELIX_SEMANTIC_ARM=1, the additive-mode dense term is scaled by
+        ``self._semantic_dense_additive_weight`` instead of the default
+        ``self._dense_additive_weight``. All other tiers are untouched. Any
+        other value (or arm off) is byte-identical to the prior behaviour.
 
         Multi-tier retrieval:
             1. Exact tag match (highest confidence)
@@ -1883,12 +1934,16 @@ class KnowledgeStore:
                 _sema_boost_t0 = time.monotonic()
                 if gene_scores and top_score < 20.0:
                     existing_ids = list(gene_scores.keys())
-                    id_ph = ",".join("?" * len(existing_ids))
-                    sema_rows = cur.execute(
-                        f"SELECT gene_id, embedding FROM genes "
-                        f"WHERE gene_id IN ({id_ph}) AND embedding IS NOT NULL",
-                        existing_ids,
-                    ).fetchall()
+                    # Batch IN-clause to stay under SQLite's 999-param cap.
+                    sema_rows = []
+                    for _i in range(0, len(existing_ids), 500):
+                        _batch = existing_ids[_i:_i + 500]
+                        _id_ph = ",".join("?" * len(_batch))
+                        sema_rows.extend(cur.execute(
+                            f"SELECT gene_id, embedding FROM genes "
+                            f"WHERE gene_id IN ({_id_ph}) AND embedding IS NOT NULL",
+                            _batch,
+                        ).fetchall())
 
                     if sema_rows:
                         candidates_sema = []
@@ -2006,8 +2061,18 @@ class KnowledgeStore:
                 if self._dense_prefilter_enabled and gene_scores:
                     prefilter_ids = set(gene_scores.keys())
                     escape_budget = self._dense_prefilter_escape_budget
+                # Question-dense (PRD 2026-06-02 query-rep fix): when
+                # HELIX_QUESTION_DENSE=1 and the NL question is available, encode
+                # the QUESTION for dense recall instead of the extracted tag-bag
+                # (" ".join(domains+entities)) -- parity with the solo
+                # query_docs_ann path + the offline probe that ranks gold 0-8.
+                # Default-off => tag-bag, byte-identical to prior behaviour. Only
+                # the dense tier switches; SPLADE/FTS5/tag stay on tag terms.
+                _dense_query = " ".join(query_terms)
+                if question_text and os.environ.get("HELIX_QUESTION_DENSE") == "1":
+                    _dense_query = question_text
                 dense_hits = self.query_docs_dense_recall(
-                    " ".join(query_terms),
+                    _dense_query,
                     k=min(self._dense_pool_size, limit * 4),
                     party_id=party_id,
                     read_only=read_only,
@@ -2046,9 +2111,25 @@ class KnowledgeStore:
                     # branch above gives dense-only genes); its tier_contrib
                     # is recorded as 0.0 so telemetry stays coherent with
                     # what entered the sum.
+                    # Semantic-wiring arm (PRD 2026-06-02): scale ONLY the dense
+                    # term by the scoped weight for semantic queries when the arm
+                    # is enabled, so dense cosine ordering clears the lexical
+                    # stack into @10. Computed once; lex/tag/SPLADE are untouched.
+                    _dense_w = self._dense_additive_weight
+                    if query_type == "semantic" and os.environ.get("HELIX_SEMANTIC_ARM") == "1":
+                        _dense_w = self._semantic_dense_additive_weight
+                        # Diagnostic sweep hook (PRD 2026-06-02): override the
+                        # configured semantic weight at launch without a config
+                        # edit, e.g. HELIX_SEMANTIC_DENSE_WEIGHT=20.
+                        _wenv = os.environ.get("HELIX_SEMANTIC_DENSE_WEIGHT")
+                        if _wenv:
+                            try:
+                                _dense_w = float(_wenv)
+                            except ValueError:
+                                pass
                     for gid, cosine in dense_hits:
                         if float(cosine) >= self._dense_additive_min_cosine:
-                            contribution = float(cosine) * self._dense_additive_weight
+                            contribution = float(cosine) * _dense_w
                             gene_scores[gid] = gene_scores.get(gid, 0.0) + contribution
                             tier_contrib.setdefault(gid, {})["dense"] = contribution
                         else:
@@ -2231,12 +2312,17 @@ class KnowledgeStore:
         # ── Party attribution bonus (+0.5) ────────────────────────
         if party_id is not None and _party_filter and gene_scores:
             try:
-                attr_ids_ph = ",".join("?" * len(gene_scores))
-                attr_rows = cur.execute(
-                    f"SELECT gene_id FROM gene_attribution "
-                    f"WHERE party_id = ? AND gene_id IN ({attr_ids_ph})",
-                    (party_id, *list(gene_scores.keys())),
-                ).fetchall()
+                # Batch IN-clause to stay under SQLite's 999-param cap.
+                _attr_ids = list(gene_scores.keys())
+                attr_rows = []
+                for _i in range(0, len(_attr_ids), 500):
+                    _batch = _attr_ids[_i:_i + 500]
+                    _attr_ids_ph = ",".join("?" * len(_batch))
+                    attr_rows.extend(cur.execute(
+                        f"SELECT gene_id FROM gene_attribution "
+                        f"WHERE party_id = ? AND gene_id IN ({_attr_ids_ph})",
+                        (party_id, *_batch),
+                    ).fetchall())
                 for ar in attr_rows:
                     gid = ar["gene_id"]
                     gene_scores[gid] += 0.5
@@ -2252,12 +2338,16 @@ class KnowledgeStore:
         if gene_scores:
             try:
                 rate_ids = list(gene_scores.keys())
-                rate_ph = ",".join("?" * len(rate_ids))
-                epi_rows = cur.execute(
-                    f"SELECT gene_id, epigenetics FROM genes "
-                    f"WHERE gene_id IN ({rate_ph}) AND epigenetics IS NOT NULL",
-                    rate_ids,
-                ).fetchall()
+                # Batch IN-clause to stay under SQLite's 999-param cap.
+                epi_rows = []
+                for _i in range(0, len(rate_ids), 500):
+                    _batch = rate_ids[_i:_i + 500]
+                    _rate_ph = ",".join("?" * len(_batch))
+                    epi_rows.extend(cur.execute(
+                        f"SELECT gene_id, epigenetics FROM genes "
+                        f"WHERE gene_id IN ({_rate_ph}) AND epigenetics IS NOT NULL",
+                        _batch,
+                    ).fetchall())
                 for er in epi_rows:
                     try:
                         epi = parse_epigenetics(er["epigenetics"])
@@ -2471,8 +2561,14 @@ class KnowledgeStore:
         warns if the dim is not a sanctioned breakpoint.
         """
         if self._dense_codec is None:
-            from .backends.bgem3_codec import BGEM3Codec
-            self._dense_codec = BGEM3Codec(dim=self._dense_embedding_dim)
+            from .backends.bgem3_codec import get_shared_codec, shared_dense_codec_enabled
+            # A1: share ONE BGE-M3 model process-wide instead of building a
+            # ~2 GB instance per shard (the dominant 100-shard RAM driver).
+            # Default on; HELIX_SHARE_DENSE_CODEC=0 reverts to per-instance.
+            self._dense_codec = get_shared_codec(
+                dim=self._dense_embedding_dim,
+                share=shared_dense_codec_enabled(),
+            )
             # One-time threshold-staleness warn: ann_similarity_threshold is
             # calibrated for dim=1024 (Issue #139 / Stage 4, 2026-05-18). If
             # this knowledge store runs at a different dense_embedding_dim, the
@@ -2611,7 +2707,14 @@ class KnowledgeStore:
                 vecs.append(vec)
             if not vecs:
                 return None, None
-            matrix = np.stack(vecs).astype(np.float32, copy=False)
+            # A2 (RAM): optionally store the resident dense matrix as fp16,
+            # halving its heap footprint (~3.3 GB -> ~1.65 GB across 100
+            # shards). Default float32 = byte-identical to the prior path; set
+            # HELIX_DENSE_MATRIX_DTYPE=float16 to opt in. Cosine ranking is
+            # robust to fp16, but it is a real precision change so it is OFF by
+            # default. (numpy promotes to fp32 inside the matmul, so the
+            # per-query compute is unaffected; only resident storage shrinks.)
+            matrix = np.stack(vecs).astype(_dense_matrix_dtype(), copy=False)
             self._dense_matrix = matrix
             self._dense_matrix_ids = ids
             log.debug(
@@ -2706,6 +2809,10 @@ class KnowledgeStore:
                 candidate_ids, int(dense_prefilter_escape_budget),
             )
 
+        # When the matrix is fp16 (A2), numpy promotes this matmul to fp32
+        # internally, so cosine values are computed at full precision and only
+        # the *stored* matrix is halved. ``query_vec`` is small (1024,) — its
+        # dtype is irrelevant to the resident footprint.
         sims = matrix @ query_vec
         n = sims.shape[0]
         k_eff = min(int(k), n)
