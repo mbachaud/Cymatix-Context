@@ -1506,11 +1506,32 @@ class HelixContextManager:
             short = ""
             if src and not src.startswith("_"):
                 parts = src.replace("\\", "/").split("/")
-                try:
-                    j = parts.index("Projects")
-                    short = "/".join(parts[j + 1:])
-                except ValueError:
-                    short = "/".join(parts[-3:]) if len(parts) > 3 else src
+                # Canonical ingest layout is `<root>/sources/<source_type>/...`
+                # (e.g. enterprise_rag_*: `F:/tmp/.../sources/confluence/...`,
+                # or `F:/Projects/EnterpriseRAG-Bench-main/generated_data/sources/...`).
+                # Slice from the segment AFTER `sources/` so the source-type
+                # prefix (`confluence/`, `github/`, etc.) is preserved verbatim
+                # in `<GENE src=...>`. Fixes #146 — the prior `parts[-3:]`
+                # fallback dropped the source-type for any path >3 segments
+                # deep below `sources/<type>/`, which was ~30% of confluence
+                # paths in enterprise_rag_* and propagated as truncated
+                # citations into the answerer prompt and downstream lookups.
+                short = ""
+                # Prefer the last `sources` segment so nested fixtures like
+                # `.../sources/confluence/.../sources_attached/...` still
+                # anchor on the canonical ingest boundary.
+                src_idx = -1
+                for _i, _p in enumerate(parts):
+                    if _p == "sources":
+                        src_idx = _i
+                if src_idx >= 0 and src_idx + 1 < len(parts):
+                    short = "/".join(parts[src_idx + 1:])
+                if not short:
+                    try:
+                        j = parts.index("Projects")
+                        short = "/".join(parts[j + 1:])
+                    except ValueError:
+                        short = "/".join(parts[-3:]) if len(parts) > 3 else src
             # Dense XML document format — structured for small model extraction
             kv_attrs = ""
             if g.key_values:
