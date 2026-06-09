@@ -533,6 +533,10 @@ class HelixContextManager:
             synonym_map=config.synonym_map,
             sema_codec=self._sema_codec,
             splade_enabled=config.ingestion.splade_enabled,
+            # Issue #164: size-aware SPLADE auto-toggle thresholds. Both
+            # default 0 (toggle off); see IngestionConfig docstring.
+            splade_auto_enable_below_genes=config.ingestion.splade_auto_enable_below_genes,
+            splade_auto_disable_above_genes=config.ingestion.splade_auto_disable_above_genes,
             entity_graph=config.ingestion.entity_graph,
             # Tier-0 PR-1 (2026-05-16): inline BGE-M3 dense write at ingest.
             dense_embed_on_ingest=config.ingestion.dense_embed_on_ingest,
