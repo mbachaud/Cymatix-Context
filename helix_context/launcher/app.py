@@ -815,6 +815,29 @@ def _configure_logging(verbose: bool) -> None:
         log.warning("launcher.log file handler unavailable: %s", exc)
 
 
+def _ensure_streams(log_file: Optional[str]) -> None:
+    """Give the process usable stdio under pythonw (v0.7.0 hotfix).
+
+    A detached ``pythonw`` start has ``sys.stdout``/``sys.stderr`` set to
+    None; uvicorn's default logging config writes to those streams, so
+    the launcher's own uvicorn thread died before binding the UI port
+    (observed: ":11438 did not bind within 3.0s" with no traceback).
+    Route the streams into the --log-file (or os.devnull) so every
+    print/StreamHandler in the stack stays harmless when headless.
+    """
+    if sys.stdout is not None and sys.stderr is not None:
+        return
+    target = log_file or os.devnull
+    try:
+        sink = open(target, "a", encoding="utf-8", buffering=1)
+    except OSError:
+        sink = open(os.devnull, "a", encoding="utf-8")
+    if sys.stdout is None:
+        sys.stdout = sink
+    if sys.stderr is None:
+        sys.stderr = sink
+
+
 def main(argv: Optional[list] = None) -> int:
     args = _parse_args(argv)
 
@@ -825,6 +848,7 @@ def main(argv: Optional[list] = None) -> int:
         ))
         logging.getLogger().addHandler(_fh)
         logging.getLogger().setLevel(logging.INFO)
+    _ensure_streams(args.log_file)
 
     _configure_logging(verbose=args.verbose)
 

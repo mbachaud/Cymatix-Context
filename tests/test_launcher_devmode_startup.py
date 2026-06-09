@@ -124,3 +124,27 @@ def test_db_modal_hidden_when_not_needed():
         page = c.get("/").text
         assert "data-db-modal" in page and "hidden" in page
         assert c.get("/api/state").json()["needs_db_selection"] is False
+
+
+# -- pythonw headless stdio hotfix --------------------------------------
+
+
+def test_ensure_streams_replaces_none_stdio(tmp_path, monkeypatch):
+    import sys
+    from helix_context.launcher.app import _ensure_streams
+    log = tmp_path / "launcher.log"
+    monkeypatch.setattr(sys, "stdout", None)
+    monkeypatch.setattr(sys, "stderr", None)
+    _ensure_streams(str(log))
+    assert sys.stdout is not None and sys.stderr is not None
+    print("headless print survives")  # must not raise
+    sys.stdout.flush()
+    assert "headless print survives" in log.read_text(encoding="utf-8")
+
+
+def test_ensure_streams_noop_with_console(capsys):
+    from helix_context.launcher.app import _ensure_streams
+    import sys
+    before_out, before_err = sys.stdout, sys.stderr
+    _ensure_streams(None)
+    assert sys.stdout is before_out and sys.stderr is before_err
