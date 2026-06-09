@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- **perf(storage): path_key_index Option-B compaction (#165).** The
+  fingerprint-routing index was 34.1% of the v2 Onyx corpus; probes
+  showed the live Tier-0 lookup never uses `idx_pki_lookup` (covering
+  PK scan), 38% of rows sit in pairs above `PKI_NOISE_CUTOFF` (hard-
+  skipped by the scorer — zero score contribution), and the rowid
+  table + 3-col-PK autoindex stored every row twice. New DBs now create
+  `path_key_index` WITHOUT ROWID and skip the dead index; existing DBs
+  convert via `storage.indexes.compact_path_key_index` /
+  `POST /admin/compact-pki` (transactional, dry-run supported; follow
+  with `/admin/vacuum`). ~21% corpus reduction on the audit fixture,
+  score-invariant (40/40-query ablation). Tier-0 scoring constants
+  (`PKI_BASE/FLOOR/NOISE_CUTOFF`) moved to `storage.indexes` as the
+  canonical home so the scorer and compactor cannot drift.
+
 ## 0.6.4 — 2026-06-09
 
 Three landed PRs since v0.6.2. v0.6.3 remains the frozen Onyx

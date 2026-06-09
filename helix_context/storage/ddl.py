@@ -242,18 +242,24 @@ def _create_entity_graph(cur: sqlite3.Cursor) -> None:
 # ---------------------------------------------------------------------------
 
 def _create_path_key_index(cur: sqlite3.Cursor) -> None:
+    # Issue #165: WITHOUT ROWID — a rowid table with a 3-col PK stores
+    # every row twice (table + sqlite_autoindex); the WITHOUT ROWID form
+    # stores it once in PK order and serves the same covering Tier-0
+    # lookup plan. Existing rowid-table DBs keep working unchanged
+    # (CREATE IF NOT EXISTS no-ops); convert them with
+    # ``storage.indexes.compact_path_key_index`` (/admin/compact-pki).
+    #
+    # idx_pki_lookup is gone: EXPLAIN QUERY PLAN proved the live lookup
+    # never chose it (strict prefix of the PK). idx_pki_gene stays — it
+    # serves the upsert DELETE path.
     cur.execute("""
     CREATE TABLE IF NOT EXISTS path_key_index (
         path_token TEXT NOT NULL,
         kv_key     TEXT NOT NULL,
         gene_id    TEXT NOT NULL,
         PRIMARY KEY (path_token, kv_key, gene_id)
-    )
+    ) WITHOUT ROWID
     """)
-    cur.execute(
-        "CREATE INDEX IF NOT EXISTS idx_pki_lookup "
-        "ON path_key_index(path_token, kv_key)"
-    )
     cur.execute(
         "CREATE INDEX IF NOT EXISTS idx_pki_gene "
         "ON path_key_index(gene_id)"

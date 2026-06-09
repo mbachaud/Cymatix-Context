@@ -1732,10 +1732,12 @@ class KnowledgeStore:
                 #   PKI_FLOOR =  2.0  (caps top-end at +5 for 2-document pairs)
                 # A pair with 100 documents contributes only +0.1 per document —
                 # essentially noise. A pair with 5 documents contributes +2.
-                PKI_BASE = 10.0
-                PKI_FLOOR = 2.0
-                # Hard-skip pairs with cardinality > this — they're noise
-                PKI_NOISE_CUTOFF = 200
+                # Canonical constants live in storage.indexes (issue
+                # #165) so the scorer and compact_path_key_index cannot
+                # drift on the noise cutoff.
+                from .storage.indexes import (
+                    PKI_BASE, PKI_FLOOR, PKI_NOISE_CUTOFF,
+                )
                 _pki_ranked: List[Tuple[str, float]] = []  # Stage 3 RRF
                 for gid, pairs in gene_pairs.items():
                     bonus = 0.0
