@@ -289,6 +289,7 @@ class ObservabilitySupervisor:
             start_new_session=start_new_session,
             close_fds=True,
             bufsize=1,  # line-buffered (best-effort; binaries may override)
+            env=self._service_env(svc),
         )
 
         # Attach to Job Object (Windows only).
@@ -399,6 +400,32 @@ class ObservabilitySupervisor:
         except Exception:
             pass
 
+    @staticmethod
+    def _service_env(svc: str) -> Dict[str, str]:
+        """Per-service environment for the spawned binary.
+
+        Grafana (v0.7.0 dashboard-UX sweep): the sidecar is a local,
+        single-operator surface — the tray/dashboard "open Grafana" links
+        must land on a dashboard, not a login wall. Anonymous auth with
+        org-role Admin is acceptable here because the listener is pinned
+        to 127.0.0.1 (no LAN exposure). Operators who deliberately expose
+        Grafana should configure real auth and may override any of these
+        by exporting the GF_* variable themselves — existing values win.
+        """
+        env = dict(os.environ)
+        if svc == "grafana":
+            for k, v in {
+                "GF_SERVER_HTTP_ADDR": "127.0.0.1",
+                "GF_AUTH_ANONYMOUS_ENABLED": "true",
+                "GF_AUTH_ANONYMOUS_ORG_ROLE": "Admin",
+                "GF_AUTH_ANONYMOUS_ORG_NAME": "Main Org.",
+                "GF_ANALYTICS_REPORTING_ENABLED": "false",
+                "GF_ANALYTICS_CHECK_FOR_UPDATES": "false",
+                "GF_NEWS_NEWS_FEED_ENABLED": "false",
+            }.items():
+                env.setdefault(k, v)
+        return env
+
     def _command_for(self, svc: str) -> List[str]:
         bin_p = str(binary_path(svc))
         cfg = configs_dir()
@@ -410,6 +437,8 @@ class ObservabilitySupervisor:
             return [
                 bin_p,
                 f"--config.file={cfg / 'prometheus.yml'}",
+                # Local sidecar: never expose the TSDB beyond loopback.
+                "--web.listen-address=127.0.0.1:9090",
                 f"--storage.tsdb.path={state}",
                 "--storage.tsdb.retention.time=14d",
                 "--storage.tsdb.retention.size=4GB",

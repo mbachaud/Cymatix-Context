@@ -558,6 +558,22 @@ class KnowledgeStore:
         self._main_conn = main_conn
         self._shard_name = shard_name
 
+        # First-run UX (v0.7.0 QA): a fresh clone/worktree has no
+        # genomes/main/ directory, and sqlite3 cannot create a database
+        # file inside a missing directory — it raises "unable to open
+        # database file" and the backend dies at import time. Create the
+        # parent chain for plain file paths (":memory:" and URI forms
+        # excluded). connect() below still surfaces any real error.
+        _path_str = str(self.path)
+        if _path_str not in ("", ":memory:") and not _path_str.startswith("file:"):
+            try:
+                os.makedirs(
+                    os.path.dirname(os.path.abspath(_path_str)) or ".",
+                    exist_ok=True,
+                )
+            except OSError:
+                log.debug("genome parent mkdir failed", exc_info=True)
+
         # Checkpoint WAL BEFORE opening our long-lived connection
         # so we see the latest state from any external writers.
         # Speculative pre-open optimisation — the subsequent connect() will

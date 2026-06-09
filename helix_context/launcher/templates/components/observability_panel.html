@@ -1,0 +1,36 @@
+{# Observability panel — launcher-side health of the 5 native sidecar
+   services plus direct links into the telemetry web UIs. Renders on the
+   Monitoring tab (and Overview). Hidden entirely when the operator opted
+   out via HELIX_OBSERVABILITY=0. #}
+
+<section class="panel panel--observability">
+  <h2 class="panel-title">Observability</h2>
+
+  {% if state.observability.install_pending %}
+    <div class="diagnostics-warn">
+      <strong>Sidecar not installed.</strong>
+      <span class="muted">
+        Run <code>scripts/install-native-observability.ps1</code>
+        (or <code>scripts/setup-grafana-telem.sh</code>) then restart the tray.
+      </span>
+    </div>
+  {% endif %}
+
+  {% if state.observability.services %}
+    <ul class="obs-grid">
+      {% for svc in state.observability.services %}
+        <li class="obs-service" title="{{ svc.status }}">
+          <span class="obs-dot obs-dot--{{ svc.status }}" aria-hidden="true"></span>
+          <span class="obs-service__name">{{ svc.name }}</span>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <div class="telem-links">
+    {% for d in state.observability.links.dashboards %}
+      <a class="telem-link" href="{{ d.url }}" target="_blank" rel="noopener">{{ d.title }}</a>
+    {% endfor %}
+    <a class="telem-link telem-link--alt" href="{{ state.observability.links.prometheus }}" target="_blank" rel="noopener">Prometheus</a>
+  </div>
+</section>

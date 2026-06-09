@@ -61,6 +61,12 @@
 
 {% endif %}
 
+{# Observability renders whenever the launcher owns (or expects) the
+   sidecar — independent of helix state. #}
+{% if state.observability %}
+  {% include "components/observability_panel.html" %}
+{% endif %}
+
 {# Diagnostics always renders — surfaces errors, orphans, and paths
    regardless of whether helix is up. #}
 {% include "components/diagnostics_panel.html" %}

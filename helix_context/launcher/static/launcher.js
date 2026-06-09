@@ -247,7 +247,56 @@
     const action = actionButton.dataset.action;
     if (action === "start" || action === "stop" || action === "restart") {
       sendControl(action);
+      return;
     }
+    if (action === "genome-select") {
+      const path = actionButton.dataset.genomePath;
+      if (!path) return;
+      if (!window.confirm("Switch the active genome to:\n\n" + path +
+          "\n\nHelix will restart so the new genome can be loaded.")) {
+        return;
+      }
+      postGenome("/api/genome/select", { path: path }, actionButton);
+    }
+  });
+
+  async function postGenome(url, payload, btn) {
+    if (btn) btn.disabled = true;
+    try {
+      const resp = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const body = await resp.json().catch(() => ({}));
+      if (!resp.ok || body.ok === false) {
+        alert("Genome action failed: " + (body.error || resp.statusText));
+      }
+    } catch (err) {
+      alert("Genome action failed: " + err);
+    } finally {
+      if (btn) btn.disabled = false;
+      setTimeout(() => {
+        fetchPanels();
+        refreshControls();
+      }, 750);
+    }
+  }
+
+  document.addEventListener("submit", function (evt) {
+    const form = evt.target;
+    if (!(form instanceof HTMLFormElement)) return;
+    if (!form.matches("[data-genome-create]")) return;
+    evt.preventDefault();
+    const input = form.querySelector('input[name="path"]');
+    const path = input instanceof HTMLInputElement ? input.value.trim() : "";
+    if (!path) return;
+    if (!window.confirm("Create a new genome at:\n\n" + path +
+        "\n\nand switch helix to it?")) {
+      return;
+    }
+    postGenome("/api/genome/create", { path: path },
+               form.querySelector("button"));
   });
 
   document.addEventListener("toggle", function (evt) {

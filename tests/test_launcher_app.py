@@ -99,7 +99,12 @@ class TestApiState:
         fake_collector.collect.return_value = {"helix": {"running": False, "port": 11437}}
         resp = client.get("/api/state")
         assert resp.status_code == 200
-        assert resp.json() == {"helix": {"running": False, "port": 11437}}
+        # v0.7.0: /api/state additionally carries the launcher-side
+        # observability snapshot (None when no sidecar is wired in).
+        assert resp.json() == {
+            "helix": {"running": False, "port": 11437},
+            "observability": None,
+        }
 
 
 class TestLauncherOwnership:

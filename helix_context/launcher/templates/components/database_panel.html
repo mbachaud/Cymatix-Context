@@ -4,8 +4,9 @@
    /admin/genome reply so a drift between "selected" and "running" is
    visible at a glance.
 
-   Switch the active genome from the system-tray "Manage Database"
-   submenu — the dashboard is read-only. #}
+   Genomes can be selected (with a confirm + helix restart) or created
+   directly from this panel — parity with the tray's "Manage Database"
+   submenu (v0.7.0). #}
 
 <section class="panel panel--database">
   <h2 class="panel-title">
@@ -50,6 +51,9 @@
           <strong class="database-entry__name">{{ entry.name }}</strong>
           {% if entry.is_active %}
             <span class="database-entry__tag">active</span>
+          {% else %}
+            <button class="btn btn--mini" data-action="genome-select"
+                    data-genome-path="{{ entry.path }}">Select</button>
           {% endif %}
           <span class="muted database-entry__stats">
             {{ "{:,}".format(entry.total_genes) }} genes · {{ entry.size_mb }} MB
@@ -78,4 +82,11 @@
       <li class="panel-list__item muted">No genomes discovered.</li>
     {% endfor %}
   </ul>
+
+  <form class="db-create" data-genome-create>
+    <input class="db-create__input" type="text" name="path"
+           placeholder="F:\path\to\new.genome.db"
+           aria-label="New genome path" />
+    <button class="btn btn--mini" type="submit">Create + switch</button>
+  </form>
 </section>

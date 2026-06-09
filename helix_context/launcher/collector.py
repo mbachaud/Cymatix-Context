@@ -208,7 +208,8 @@ class StateCollector:
         if not health_seen and endpoint_seen:
             state["helix"]["availability"] = "available"
             state["helix"]["next_action"] = (
-                "Helix is responding. This version does not expose the launcher health endpoint."
+                "Helix is responding; the launcher health endpoint has "
+                "not answered yet (cold start, or an older helix build)."
             )
         elif not health_seen:
             state["helix"]["availability"] = "degraded"
