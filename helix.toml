@@ -202,6 +202,21 @@ entity_graph = true                     # Phase 5: entity-based co-activation li
 # [retrieval] dense_embedding_enabled (default true).
 dense_embed_on_ingest = true            # Tier-0 PR-1 (2026-05-16)
 
+# ── Issue #164: size-aware SPLADE auto-toggle (opt-in) ──────────────────
+# SPLADE's value follows a corpus-regime curve: useful below ~50K genes,
+# likely net-negative above ~200K (disk + p95 + SQL fan-out — see issue
+# body's storage breakdown of the 850K v2 Onyx fixture). Below
+# splade_auto_enable_below_genes the per-upsert resolver forces SPLADE
+# ON even when splade_enabled = false; above
+# splade_auto_disable_above_genes it forces OFF even when
+# splade_enabled = true. Both `0` (the default) disables the toggle
+# entirely — byte-identical to pre-#164 behaviour. Replace with
+# non-zero values to opt in once the scale curve at
+# benchmarks/sweep_splade_scale_curve.py has identified the transition
+# band on your corpus shape.
+splade_auto_enable_below_genes = 0
+splade_auto_disable_above_genes = 0
+
 [context]
 # Cold-tier retrieval (C.2 of B->C, 2026-04-10)
 # Heterochromatin-tier genes are demoted by the density gate but their

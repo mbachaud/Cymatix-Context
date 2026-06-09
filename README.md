@@ -311,6 +311,7 @@ python -m pytest tests/ -m "not live" -v   # ~1950 tests, no external services
 | [Config reference](docs/config-reference.md) | [Session registry](docs/architecture/SESSION_REGISTRY.md) |
 | [Agent SDK fragment](docs/agent-sdk-fragment.md) | [Observability](docs/architecture/OBSERVABILITY.md) |
 | [Operator runbooks](docs/operator-runbooks.md) | [Launcher architecture](docs/architecture/LAUNCHER.md) |
+| [Dense ingest on ≤12 GB VRAM](docs/operations/DENSE_VRAM.md) | |
 
 ## Acknowledgments
 

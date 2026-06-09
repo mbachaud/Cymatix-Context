@@ -196,6 +196,29 @@ class IngestionConfig:
     # This is purely the WRITE path — retrieval still gates on
     # [retrieval] dense_embedding_enabled (default true).
     dense_embed_on_ingest: bool = True
+    # Issue #164 (size-aware SPLADE auto-toggle): SPLADE expansion's value
+    # follows a corpus-regime curve -- the v2 EnterpriseRAG-Onyx storage
+    # breakdown showed SPLADE at 21.1% of disk on the 850K-gene fixture
+    # while contributing 0 pp recall@10 vs SPLADE-off at the same scale
+    # (n=5 + 100q in-flight; see issue body). Below ~50K it's likely useful;
+    # above ~200K it's likely net-negative (disk + p95 + SQL fan-out).
+    # When BOTH thresholds are 0 (default) the toggle is disabled and the
+    # static ``splade_enabled`` value governs every upsert -- byte-identical
+    # to pre-#164 behaviour. Setting either threshold to a positive value
+    # opts the genome in:
+    #   - splade_auto_enable_below_genes > 0: force SPLADE ON when the
+    #     current gene_count is strictly below the threshold, even if
+    #     ``splade_enabled = false``. The "sparse-corpus rescue" arm.
+    #   - splade_auto_disable_above_genes > 0: force SPLADE OFF when the
+    #     current gene_count is strictly above the threshold, even if
+    #     ``splade_enabled = true``. The "enterprise-scale storage cliff"
+    #     arm.
+    # Both default 0 (opt-in) because the scale curve in #164 is not yet
+    # empirically resolved across the 10K-100K transition band; conservative
+    # defaults will land in a follow-up once the per-fixture sweep is wired
+    # to a head-to-head SPLADE-on/off ablation across that range.
+    splade_auto_enable_below_genes: int = 0
+    splade_auto_disable_above_genes: int = 0
 
 
 @dataclass
@@ -336,6 +359,16 @@ class RetrievalConfig:
     # fusion_mode == "additive" a dense hit's cosine is scaled by this
     # before entering the gene_scores accumulator. BM25-comparable
     # (tag_exact_weight is 3.0). Unused under RRF.
+    #
+    # Issue #138 (tracked): the H10q investigation on EnterpriseRAG-Bench
+    # 10K observed gold eviction at the shipped 4.0 weight on
+    # adversarial prose queries (per-query dense tier totals ran 9-28 vs
+    # tag-exact ~3 per doc). The smoke sweep harness at
+    # ``benchmarks/sweep_dense_additive_weight.py`` covers
+    # {0.0, 2.0, 3.0, 4.0, 6.0} including the dense-off arm; ship the
+    # winning value once an enterprise-class question set is wired in.
+    # ``0.0`` flips dense additively-off without disabling the dense
+    # write path or RRF participation.
     dense_additive_weight: float = 4.0
     # Tier-0 review fix (2026-05-16): noise floor for the additive-mode
     # dense merge. A dense hit whose cosine is below this does not
@@ -684,6 +717,15 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             dense_embed_on_ingest=i.get(
                 "dense_embed_on_ingest", cfg.ingestion.dense_embed_on_ingest
             ),
+            # Issue #164: size-aware SPLADE auto-toggle thresholds.
+            splade_auto_enable_below_genes=int(i.get(
+                "splade_auto_enable_below_genes",
+                cfg.ingestion.splade_auto_enable_below_genes,
+            )),
+            splade_auto_disable_above_genes=int(i.get(
+                "splade_auto_disable_above_genes",
+                cfg.ingestion.splade_auto_disable_above_genes,
+            )),
         )
 
     # Context (cold-tier retrieval knobs — C.2 of B->C, 2026-04-10)

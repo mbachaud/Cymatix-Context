@@ -153,6 +153,61 @@ def sync_filename_index(
 # SPLADE sparse index
 # ---------------------------------------------------------------------------
 
+def resolve_splade_enabled(
+    splade_enabled: bool,
+    current_gene_count: int,
+    auto_enable_below: int = 0,
+    auto_disable_above: int = 0,
+) -> bool:
+    """Apply the size-aware SPLADE auto-toggle (issue #164).
+
+    The static ``splade_enabled`` flag is overridden when the corpus
+    crosses one of the two opt-in thresholds:
+
+      - ``auto_enable_below > 0`` and ``current_gene_count <
+        auto_enable_below``: force ON (sparse-corpus rescue arm). Used
+        when the user wants SPLADE only on small corpora where lexical
+        expansion is most likely to rescue a paraphrase mismatch.
+
+      - ``auto_disable_above > 0`` and ``current_gene_count >
+        auto_disable_above``: force OFF (enterprise-scale storage cliff
+        arm). Used when SPLADE's disk + p95 + SQL fan-out cost dominates
+        at the head of the corpus-size distribution and recall doesn't
+        move (see #164 storage breakdown).
+
+    When BOTH thresholds are ``0`` (the default opt-in floor) the static
+    flag is returned unchanged -- byte-identical to pre-#164 behaviour.
+    When the corpus is in the gray band (``auto_enable_below <=
+    current_gene_count <= auto_disable_above``) the static
+    ``splade_enabled`` value also wins; the toggle is only authoritative
+    at the named ends of the size curve.
+
+    Boundary semantics (deliberately strict so the toggle is a hard
+    binary at the bound, not a fuzzy band):
+      - ``current_gene_count == auto_enable_below`` -> NOT auto-enabled
+        (caller is at-or-above the rescue ceiling)
+      - ``current_gene_count == auto_disable_above`` -> NOT auto-disabled
+        (caller is at-or-below the disable floor)
+
+    Caller contract for ``current_gene_count``:
+        ``upsert_doc`` queries ``COUNT(*) FROM genes`` AFTER the row's
+        INSERT (the INSERT runs before the index-population stage), so
+        ``current_gene_count`` includes the gene being upserted. With
+        ``auto_disable_above_genes=N`` the disable arm fires on the
+        ``(N+1)``-th gene to be upserted.
+
+    Return value:
+        The effective ``splade_enabled`` for the current upsert. The
+        caller (typically ``sync_splade_index``) writes nothing when this
+        is ``False``.
+    """
+    if auto_disable_above > 0 and current_gene_count > auto_disable_above:
+        return False
+    if auto_enable_below > 0 and current_gene_count < auto_enable_below:
+        return True
+    return bool(splade_enabled)
+
+
 def sync_splade_index(
     cur: sqlite3.Cursor,
     gene_id: str,

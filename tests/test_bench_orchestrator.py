@@ -1,4 +1,4 @@
-"""Unit tests for bench_orchestrator.py — the issue #127 fixes.
+"""Unit tests for bench_orchestrator.py — the issue #127 + #153 fixes.
 
 Issue #127: a cross-mode bench restart (blob -> sharded) could fail to
 free port 11437 before spawning the replacement uvicorn. The new process
@@ -6,9 +6,15 @@ lost the bind race (Errno 10048), exited, and ``_wait_healthy()`` then
 talked to the *stale* blob-mode server still holding the port. Every
 sharded query returned ``genes=0``.
 
-These tests pin the four hardening fixes — they are pure unit tests:
-the socket / subprocess / HTTP boundaries are mocked, no real uvicorn is
-spawned.
+Issue #153: ``BenchServer._spawn`` set neither ``cwd`` nor ``PYTHONPATH``
+on the uvicorn subprocess, so whichever ``helix_context`` package the
+Python import system resolved first won — including stale sibling
+worktrees with mismatched schemas. The whole bench then logged
+``retr=err`` × 50 from ``OperationalError: no such table: ...``.
+
+These tests pin the hardening fixes — they are pure unit tests:
+the socket / subprocess / HTTP / sqlite boundaries are mocked or
+isolated to ``tmp_path``, no real uvicorn is spawned.
 
   1. ``stop()`` kills the whole process tree and confirms teardown
      (raises if the process is somehow still alive).
@@ -18,11 +24,18 @@ spawned.
      not match the process just spawned.
   4. ``_guard_genes()`` raises when a non-empty fixture reports
      ``genes=0`` after a swap.
+  5. (#153) ``_spawn`` pins ``cwd`` + ``PYTHONPATH`` to the repo root so
+     the spawned uvicorn always loads the orchestrator's own
+     ``helix_context`` checkout.
+  6. (#153) ``_probe_fixture_schema`` aborts on a fixture missing the
+     ``genes`` table — the canonical wrong-helix failure mode — and
+     warns rather than fails on missing aux tables.
 """
 
 from __future__ import annotations
 
 import socket
+import sqlite3
 import subprocess
 import sys
 from pathlib import Path
@@ -40,6 +53,10 @@ from bench_orchestrator import (  # noqa: E402
     BenchServer,
     BenchServerError,
     Fixture,
+    RECOMMENDED_FIXTURE_TABLES,
+    REQUIRED_FIXTURE_TABLES,
+    _probe_fixture_schema,
+    _repo_root,
     load_manifest,
 )
 
@@ -379,3 +396,195 @@ def test_restart_fails_loudly_when_sharded_fixture_yields_zero_genes() -> None:
             patch.object(srv, "_post_swap", return_value={"genes": 0}):
         with pytest.raises(BenchServerError, match="genes=0"):
             srv._restart_for_fixture(sharded, blob)
+
+
+# ── Issue #153: spawn pins cwd + PYTHONPATH, schema probe ─────────────
+
+
+def _make_fixture_db(path: Path, tables: tuple[str, ...]) -> Path:
+    """Create a sqlite DB at ``path`` with one row in sqlite_master per
+    name in ``tables`` (tables with a single ``id INTEGER`` column).
+
+    Helper for the schema-probe tests so each case can declare exactly
+    which tables exist — including the "wrong helix" case where ``genes``
+    is missing.
+    """
+    conn = sqlite3.connect(path)
+    try:
+        for name in tables:
+            conn.execute(f"CREATE TABLE {name} (id INTEGER)")
+        conn.commit()
+    finally:
+        conn.close()
+    return path
+
+
+def test_repo_root_resolves_to_this_checkout() -> None:
+    """``_repo_root`` must find the helix-context repo this orchestrator
+    lives in (the test runs from one of its checkouts)."""
+    root = _repo_root()
+    assert root is not None, "expected to resolve a repo root from __file__"
+    assert (root / "pyproject.toml").exists()
+    assert (root / "helix_context" / "__init__.py").exists()
+
+
+def test_bench_server_defaults_repo_root_to_this_checkout() -> None:
+    """A no-arg BenchServer picks up the orchestrator's own repo root so
+    the spawned uvicorn loads *this* helix_context, not a sibling."""
+    srv = BenchServer()
+    assert srv.repo_root is not None
+    assert (srv.repo_root / "helix_context" / "__init__.py").exists()
+
+
+def test_bench_server_honors_explicit_repo_root(tmp_path: Path) -> None:
+    """An explicit ``repo_root=`` overrides the auto-derived path so a
+    caller can bench against a specific worktree."""
+    srv = BenchServer(repo_root=tmp_path)
+    assert srv.repo_root == tmp_path.resolve()
+
+
+def test_spawn_passes_cwd_and_pythonpath_to_subprocess(tmp_path: Path) -> None:
+    """``_spawn`` must call ``subprocess.Popen`` with ``cwd=<repo_root>``
+    and ``PYTHONPATH`` starting with the repo root. Without this, an
+    editable install / .pth shim in the inherited environment can win the
+    ``helix_context`` import race and load stale schema code (issue #153)."""
+    # Use a stub repo so we don't depend on the real checkout layout for
+    # this assertion — Popen is patched out either way.
+    (tmp_path / "pyproject.toml").write_text("")
+    (tmp_path / "helix_context").mkdir()
+    (tmp_path / "helix_context" / "__init__.py").write_text("")
+
+    srv = BenchServer(repo_root=tmp_path)
+    fx = Fixture(name="small", db=str(tmp_path / "small.db"), sharded=False)
+    _make_fixture_db(tmp_path / "small.db", tables=("genes",))
+
+    captured: dict[str, object] = {}
+
+    def fake_popen(cmd, **kwargs):
+        captured["cmd"] = cmd
+        captured["kwargs"] = kwargs
+        return MagicMock(pid=4242, poll=MagicMock(return_value=None))
+
+    with patch("bench_orchestrator.subprocess.Popen", side_effect=fake_popen):
+        srv._spawn(fx)
+
+    kwargs = captured["kwargs"]
+    assert kwargs["cwd"] == str(tmp_path.resolve()), \
+        "spawn must pin cwd to repo_root so uvicorn resolves the right helix_context"
+    pythonpath = kwargs["env"].get("PYTHONPATH", "")
+    assert pythonpath.startswith(str(tmp_path.resolve())), \
+        f"PYTHONPATH must lead with repo_root, got {pythonpath!r}"
+
+
+def test_spawn_preserves_existing_pythonpath(tmp_path: Path) -> None:
+    """A pre-existing PYTHONPATH must be preserved as a suffix, not
+    clobbered — the operator may legitimately need extra entries (e.g. a
+    sibling tooling repo on the path) and only the *order* matters for
+    fixing the import race."""
+    (tmp_path / "pyproject.toml").write_text("")
+    (tmp_path / "helix_context").mkdir()
+    (tmp_path / "helix_context" / "__init__.py").write_text("")
+    _make_fixture_db(tmp_path / "small.db", tables=("genes",))
+
+    srv = BenchServer(repo_root=tmp_path)
+    fx = Fixture(name="small", db=str(tmp_path / "small.db"), sharded=False)
+
+    captured: dict[str, object] = {}
+
+    def fake_popen(cmd, **kwargs):
+        captured["kwargs"] = kwargs
+        return MagicMock(pid=4242, poll=MagicMock(return_value=None))
+
+    import os as _os
+    with patch.dict(_os.environ, {"PYTHONPATH": "/already/here"}, clear=False), \
+            patch("bench_orchestrator.subprocess.Popen", side_effect=fake_popen):
+        srv._spawn(fx)
+
+    pythonpath = captured["kwargs"]["env"]["PYTHONPATH"]
+    parts = pythonpath.split(_os.pathsep)
+    assert parts[0] == str(tmp_path.resolve())
+    assert "/already/here" in parts, \
+        f"existing PYTHONPATH entries must be preserved, got {parts!r}"
+
+
+def test_spawn_does_not_double_prepend_repo_root(tmp_path: Path) -> None:
+    """On a restart the env already contains repo_root at the head;
+    ``_spawn`` must not stack a duplicate entry every call."""
+    (tmp_path / "pyproject.toml").write_text("")
+    (tmp_path / "helix_context").mkdir()
+    (tmp_path / "helix_context" / "__init__.py").write_text("")
+    _make_fixture_db(tmp_path / "small.db", tables=("genes",))
+
+    srv = BenchServer(repo_root=tmp_path)
+    fx = Fixture(name="small", db=str(tmp_path / "small.db"), sharded=False)
+    root_str = str(tmp_path.resolve())
+
+    captured: dict[str, object] = {}
+
+    def fake_popen(cmd, **kwargs):
+        captured["kwargs"] = kwargs
+        return MagicMock(pid=4242, poll=MagicMock(return_value=None))
+
+    import os as _os
+    seeded = root_str + _os.pathsep + "/already/here"
+    with patch.dict(_os.environ, {"PYTHONPATH": seeded}, clear=False), \
+            patch("bench_orchestrator.subprocess.Popen", side_effect=fake_popen):
+        srv._spawn(fx)
+
+    pythonpath = captured["kwargs"]["env"]["PYTHONPATH"]
+    assert pythonpath == seeded, \
+        f"PYTHONPATH should be unchanged when repo_root is already at head: {pythonpath!r}"
+
+
+def test_probe_fixture_schema_passes_when_required_tables_present(tmp_path: Path) -> None:
+    """A fixture DB with every required+recommended table passes silently."""
+    db = _make_fixture_db(
+        tmp_path / "ok.db",
+        tables=REQUIRED_FIXTURE_TABLES + RECOMMENDED_FIXTURE_TABLES,
+    )
+    _probe_fixture_schema(str(db))  # must not raise
+
+
+def test_probe_fixture_schema_raises_when_required_table_missing(tmp_path: Path) -> None:
+    """The canonical #153 failure: ``genes`` is missing because a stale
+    worktree's schema doesn't include it. Probe must abort with a clear
+    pointer to the wrong-helix root cause."""
+    db = _make_fixture_db(tmp_path / "bad.db", tables=("not_genes",))
+    with pytest.raises(BenchServerError, match=r"missing required table"):
+        _probe_fixture_schema(str(db))
+
+
+def test_probe_fixture_schema_warns_on_missing_recommended(tmp_path: Path, caplog) -> None:
+    """Recommended tables (cwola_log / session_delivery_log) only warn;
+    the bench proceeds because some fixtures legitimately strip them."""
+    db = _make_fixture_db(tmp_path / "partial.db", tables=("genes",))
+    with caplog.at_level("WARNING", logger="bench.orchestrator"):
+        _probe_fixture_schema(str(db))
+    assert any(
+        "missing recommended table" in rec.message
+        for rec in caplog.records
+    ), f"expected warning in caplog, got {[r.message for r in caplog.records]}"
+
+
+def test_probe_fixture_schema_skips_nonfile_path(tmp_path: Path) -> None:
+    """A non-file path (e.g. ``:memory:`` or a missing fixture) is a
+    no-op rather than a crash — the bench launcher should report the
+    real issue downstream, not crash on the probe."""
+    _probe_fixture_schema(str(tmp_path / "does_not_exist.db"))  # must not raise
+
+
+def test_post_swap_aborts_when_fixture_missing_required_table(tmp_path: Path) -> None:
+    """``_post_swap`` runs the schema probe before the HTTP call; a bad
+    fixture must abort before we ever hit /admin/swap-db. Otherwise the
+    bench logs ``retr=err`` × N when the live helix code hits the same
+    OperationalError."""
+    db = _make_fixture_db(tmp_path / "bad.db", tables=("not_genes",))
+    srv = BenchServer()
+    fx = Fixture(name="bad", db=str(db), sharded=False)
+
+    fake_http = MagicMock()
+    with patch.object(srv, "_http", fake_http):
+        with pytest.raises(BenchServerError, match=r"missing required table"):
+            srv._post_swap(fx)
+    fake_http.assert_not_called(), \
+        "the probe must short-circuit before we hit /admin/swap-db"
