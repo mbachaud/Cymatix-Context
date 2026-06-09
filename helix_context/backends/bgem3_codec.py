@@ -52,6 +52,25 @@ def vec_to_blob(vec, dim: int) -> bytes:
     return arr.tobytes(order="C")
 
 
+def _vram_release_interval() -> int:
+    """Release torch's CUDA caching-allocator cache every N batched encodes (0 = never).
+
+    torch's CUDA allocator keeps a separate cached block per distinct input shape,
+    so a long-lived process that batch-encodes many differently-sized passages — the
+    daemon ``/ingest`` route, ``scripts/backfill_bgem3_v2.py``, a 100k+-file genome
+    build — climbs to the card's VRAM ceiling and then spills to shared system memory
+    (measured: ~11.7 GB / 95% of a 12 GB 3080 Ti on a single-worker dense ingest of one
+    mid-size repo, vs a ~6 GB plateau once the cache is released periodically). A
+    periodic ``empty_cache()`` returns only *unused* cached blocks, so emitted vectors
+    are byte-identical and only a cheap ``cudaFree`` is paid every N documents. CPU
+    encoding has no CUDA cache and is unaffected. Tune/disable via the env var.
+    """
+    try:
+        return max(0, int(os.environ.get("HELIX_DENSE_VRAM_RELEASE_EVERY", "256")))
+    except ValueError:
+        return 256
+
+
 class BGEM3Codec:
     # Track which non-sanctioned dim values we've already warned for so we
     # don't spam the log on every re-instantiation in long-running processes.
@@ -62,6 +81,9 @@ class BGEM3Codec:
         self.model_name = model_name
         self._device = device
         self._model = None
+        # Number of batched encodes since construction; drives the periodic CUDA-cache
+        # release that bounds VRAM during long ingest runs (see ``_maybe_release_vram``).
+        self._encode_batch_calls = 0
         # Guards the lazy model load. When this codec is shared across
         # concurrent shard-fan-out workers (the A1 singleton), two threads can
         # hit ``_load`` simultaneously on first use; without the lock both
@@ -155,7 +177,28 @@ class BGEM3Codec:
         norms = np.linalg.norm(mat, axis=1, keepdims=True)
         norms[norms == 0.0] = 1.0
         mat = mat / norms
+        self._encode_batch_calls += 1
+        self._maybe_release_vram()
         return mat.tolist()
+
+    def _maybe_release_vram(self) -> None:
+        """Periodically free torch's CUDA caching-allocator cache during batch ingest.
+
+        See ``_vram_release_interval`` for why this is needed. No-op on CPU (no CUDA
+        cache) or when ``HELIX_DENSE_VRAM_RELEASE_EVERY=0``. Best-effort: a failure to
+        free is logged at debug and never interrupts ingest.
+        """
+        if self._device != "cuda":
+            return
+        every = _vram_release_interval()
+        if not every or (self._encode_batch_calls % every):
+            return
+        try:
+            import torch
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+        except Exception:  # noqa: BLE001
+            log.debug("torch.cuda.empty_cache() failed during dense ingest", exc_info=True)
 
     def similarity(self, vec_a: list[float], vec_b: list[float]) -> float:
         a = np.array(vec_a, dtype=np.float32)
