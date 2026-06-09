@@ -51,6 +51,7 @@ import logging
 import os
 import signal
 import socket
+import sqlite3
 import subprocess
 import sys
 import time
@@ -62,6 +63,135 @@ from pathlib import Path
 from typing import Any, Iterable, Optional
 
 log = logging.getLogger("bench.orchestrator")
+
+
+def _repo_root() -> Optional[Path]:
+    """Return the helix-context repo root, derived from this file's location.
+
+    ``bench_orchestrator.py`` lives at ``<repo>/benchmarks/``, so the repo
+    root is ``parents[1]``. We confirm by checking for ``pyproject.toml``
+    AND ``helix_context/__init__.py`` (both required to call this a
+    helix-context source checkout) — defends against the orchestrator
+    being copied/symlinked into an unrelated tree.
+
+    Returns ``None`` if neither marker is present so callers can fall
+    back to the inherited cwd / sys.path without crashing.
+    """
+    try:
+        candidate = Path(__file__).resolve().parents[1]
+    except (IndexError, OSError):
+        return None
+    if (candidate / "pyproject.toml").exists() and (
+        candidate / "helix_context" / "__init__.py"
+    ).exists():
+        return candidate
+    return None
+
+
+# Tables the spawned helix server must find in the fixture DB before we
+# accept it as "the right helix talking to the right fixture". Issue #153:
+# a stale worktree's code path queried tables the fixture's schema didn't
+# include (``cwola_log``, ``session_delivery_log``, ``genes``) and the
+# whole bench logged ``retr=err`` × 50 instead of failing fast. We probe
+# the fixture DB from the orchestrator side so the mismatch surfaces in
+# milliseconds, before the first /context call.
+#
+# ``genes`` is REQUIRED — every non-empty fixture must have it, the issue
+# trace was triggered by its absence. ``cwola_log`` and
+# ``session_delivery_log`` are RECOMMENDED — we warn rather than fail on
+# their absence, because a deliberately-stripped fixture (e.g. a
+# routing-only sharded DB) may legitimately omit them but the loaded
+# helix code path may still try to write to them. The warning gives the
+# operator a heads-up without aborting valid benches.
+REQUIRED_FIXTURE_TABLES: tuple[str, ...] = ("genes",)
+RECOMMENDED_FIXTURE_TABLES: tuple[str, ...] = (
+    "cwola_log",
+    "session_delivery_log",
+)
+
+
+def _resolve_helix_context_file(repo_root: Optional[Path]) -> str:
+    """Best-effort: report ``helix_context.__file__`` for ``repo_root``.
+
+    Used in the RUN START log line so the operator sees which checkout
+    the spawned uvicorn will load. We don't import from a subprocess (too
+    slow / pollutes our own sys.modules); we just check the on-disk path
+    that PYTHONPATH+cwd will resolve to. If ``repo_root`` is None we fall
+    back to whatever the current process already imported.
+    """
+    if repo_root is not None:
+        candidate = repo_root / "helix_context" / "__init__.py"
+        if candidate.exists():
+            return str(candidate)
+    try:
+        import helix_context  # noqa: PLC0415 — lazy by design
+        return getattr(helix_context, "__file__", "<unknown>") or "<unknown>"
+    except Exception:
+        return "<unresolvable>"
+
+
+def _probe_fixture_schema(
+    db_path: str,
+    *,
+    required: Iterable[str] = REQUIRED_FIXTURE_TABLES,
+    recommended: Iterable[str] = RECOMMENDED_FIXTURE_TABLES,
+) -> None:
+    """Open ``db_path`` read-only and assert the required tables exist.
+
+    Issue #153 surfaced as ``sqlite3.OperationalError: no such table: ...``
+    50 times per bench because a stale-worktree helix_context queried
+    tables the fixture's schema didn't include. Probing from the
+    orchestrator side catches the mismatch in milliseconds — and produces
+    a single clear error pointing at the wrong-helix root cause instead
+    of N "retr=err" log lines.
+
+    Required tables raise ``BenchServerError``. Recommended tables only
+    log a warning — the spawn proceeds because some fixtures legitimately
+    omit them (e.g. a stripped routing DB) and the operator may still
+    want to bench retrieval against them.
+
+    The probe is a no-op for a non-file path (defensive: ``:memory:`` or
+    a remote URI just gets skipped rather than crashing the bench
+    launcher).
+    """
+    p = Path(db_path)
+    if not p.is_file():
+        log.debug("schema probe skipped: %s is not a file", db_path)
+        return
+    uri = f"file:{p.as_posix()}?mode=ro"
+    try:
+        conn = sqlite3.connect(uri, uri=True, timeout=5.0)
+    except sqlite3.Error as exc:
+        raise BenchServerError(
+            f"fixture {db_path} could not be opened for schema probe: {exc}"
+        ) from exc
+    try:
+        names = {
+            row[0]
+            for row in conn.execute(
+                "SELECT name FROM sqlite_master WHERE type='table'"
+            )
+        }
+    finally:
+        conn.close()
+
+    missing_required = [t for t in required if t not in names]
+    if missing_required:
+        raise BenchServerError(
+            f"fixture {db_path} is missing required table(s) "
+            f"{missing_required}: the spawned helix server would raise "
+            "sqlite3.OperationalError on first /context call. Likely "
+            "causes: wrong helix_context source on PYTHONPATH (issue "
+            "#153), or a fixture built with a stripped schema."
+        )
+    missing_recommended = [t for t in recommended if t not in names]
+    if missing_recommended:
+        log.warning(
+            "fixture %s missing recommended table(s) %s — some helix "
+            "code paths will log OperationalError but the bench will "
+            "proceed",
+            db_path, missing_recommended,
+        )
 
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 11437
@@ -155,6 +285,7 @@ class BenchServer(AbstractContextManager["BenchServer"]):
         health_timeout_s: float = DEFAULT_HEALTH_TIMEOUT_S,
         shutdown_timeout_s: float = DEFAULT_SHUTDOWN_TIMEOUT_S,
         log_to: Optional[Path] = None,
+        repo_root: Optional[Path] = None,
     ) -> None:
         self.host = host
         self.port = port
@@ -163,6 +294,13 @@ class BenchServer(AbstractContextManager["BenchServer"]):
         self.health_timeout_s = health_timeout_s
         self.shutdown_timeout_s = shutdown_timeout_s
         self.log_to = Path(log_to) if log_to else None
+        # Issue #153: pin the spawned uvicorn's working directory and
+        # PYTHONPATH to a single helix-context source tree. Default to the
+        # repo this orchestrator lives in; callers can override (e.g. to
+        # bench a different worktree) by passing ``repo_root=``.
+        self.repo_root: Optional[Path] = (
+            Path(repo_root).resolve() if repo_root is not None else _repo_root()
+        )
 
         self._proc: Optional[subprocess.Popen] = None
         self._current: Optional[Fixture] = None
@@ -345,6 +483,28 @@ class BenchServer(AbstractContextManager["BenchServer"]):
         env.setdefault("PYTHONHASHSEED", "0")
         env.update(fixture.extra_env)
 
+        # Issue #153: pin the spawned uvicorn to a single helix-context
+        # source tree, otherwise an editable-install / .pth shim / sibling
+        # worktree can win the import race and answer with stale code that
+        # doesn't match the fixture's schema (the canonical failure: a
+        # vibrant-easley worktree on bench/int-5fixture took the
+        # ``helix_context._asgi:app`` import and raised
+        # ``no such table: cwola_log`` × 50 against the xl-sharded
+        # fixture).  Prepend repo_root to PYTHONPATH (preserving any
+        # caller-supplied value) and run the subprocess from there.
+        spawn_cwd: Optional[str] = None
+        if self.repo_root is not None:
+            root_str = str(self.repo_root)
+            existing = env.get("PYTHONPATH", "")
+            if existing:
+                # Avoid an obvious double-prepend on restart.
+                head = existing.split(os.pathsep, 1)[0]
+                if head != root_str:
+                    env["PYTHONPATH"] = root_str + os.pathsep + existing
+            else:
+                env["PYTHONPATH"] = root_str
+            spawn_cwd = root_str
+
         if self.log_to:
             self.log_to.parent.mkdir(parents=True, exist_ok=True)
             self._log_fh = self.log_to.open("ab")
@@ -352,9 +512,24 @@ class BenchServer(AbstractContextManager["BenchServer"]):
         else:
             stdout = stderr = subprocess.DEVNULL
 
+        # RUN START line: log which helix_context source the spawned
+        # process will resolve, so the operator can confirm the right
+        # checkout is answering instead of debugging "retr=err × 50".
+        log.info(
+            "RUN START fixture=%s sharded=%s db=%s "
+            "repo_root=%s helix_context=%s python=%s",
+            fixture.name,
+            fixture.sharded,
+            fixture.db,
+            self.repo_root,
+            _resolve_helix_context_file(self.repo_root),
+            self.python,
+        )
+
         self._proc = subprocess.Popen(
             cmd, env=env, stdout=stdout, stderr=stderr,
             stdin=subprocess.DEVNULL,
+            cwd=spawn_cwd,
             creationflags=_NO_WINDOW,
             close_fds=(os.name != "nt"),
         )
@@ -461,6 +636,11 @@ class BenchServer(AbstractContextManager["BenchServer"]):
         )
 
     def _post_swap(self, fixture: Fixture) -> dict[str, Any]:
+        # Issue #153: schema probe BEFORE the swap. A missing required
+        # table here means the running helix code will raise
+        # OperationalError on every /context call — better to abort now
+        # than to log retr=err × 50 and produce an unactionable summary.
+        _probe_fixture_schema(fixture.db)
         payload = {"path": fixture.db, "read_only": fixture.read_only}
         try:
             return self._http(
