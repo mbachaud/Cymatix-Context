@@ -151,6 +151,14 @@ replica_sync_interval = 100             # sync replicas every N inserts
 host = "127.0.0.1"
 port = 11437
 upstream = "http://localhost:11434"     # Ollama
+
+# Dev/configuration mode (v0.7.0): second helix on a side port bound to
+# a bench genome - chat stays on the main port/genome while a subagent
+# drives the bench-harness against the bench port. Leave false for
+# final deployments. CLI --bench / env HELIX_BENCH_ENABLED=1 override.
+bench_enabled = false
+bench_port = 11439
+bench_genome_path = "genomes/bench/bench.genome.db"
 # upstream_timeout = 180                # Per-request timeout for proxied calls to Ollama. Default in config.py is 180s. Raise to 240+ for very slow models or large prompts; lower if you want fail-fast.
 
 # ──────────────────────────────────────────────────────────────────────

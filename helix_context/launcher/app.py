@@ -82,6 +82,9 @@ def create_app(
     observability_install_pending: bool = False,
     grafana_url: str = DEFAULT_GRAFANA_URL,
     prometheus_url: str = DEFAULT_PROMETHEUS_URL,
+    bench_supervisor: Optional[HelixSupervisor] = None,
+    bench_genome_path: str = "",
+    needs_db_selection: bool = False,
 ) -> FastAPI:
     """Build the launcher FastAPI app."""
     templates = _get_templates()
@@ -159,10 +162,36 @@ def create_app(
 
     # ── dashboard HTML ─────────────────────────────────────────────
 
+    def _enrich(state: dict) -> dict:
+        state["observability"] = _observability_state()
+        # Startup-UX (v0.7.0): surface "alive but not answering yet" so the
+        # dashboard can render a loading state instead of "stopped".
+        try:
+            # Strict identity: test doubles (MagicMock) must not render
+            # the starting panel by accident.
+            state.setdefault("helix", {})["start_pending"] = (
+                supervisor.last_start_pending is True
+            )
+        except Exception:
+            state.setdefault("helix", {})["start_pending"] = False
+        # First-boot db selection: stays true until a genome is selected
+        # (the select/create endpoints start helix, which flips running).
+        state["needs_db_selection"] = bool(
+            needs_db_selection and not state.get("helix", {}).get("running"),
+        )
+        if bench_supervisor is not None:
+            state["bench"] = {
+                "running": bench_supervisor.is_running(),
+                "port": bench_supervisor.helix_port,
+                "genome": bench_genome_path,
+            }
+        else:
+            state["bench"] = None
+        return state
+
     @app.get("/", response_class=HTMLResponse)
     async def dashboard_root(request: Request) -> HTMLResponse:
-        state = collector.collect()
-        state["observability"] = _observability_state()
+        state = _enrich(collector.collect())
         template = templates.get_template("dashboard.html")
         html = template.render(state=state, launcher_port=_launcher_port(request))
         return HTMLResponse(html)
@@ -172,8 +201,7 @@ def create_app(
         """Server-rendered HTML partial — just the panels, for polling."""
         if request.headers.get("sec-fetch-mode") == "navigate":
             return RedirectResponse("/", status_code=303)
-        state = collector.collect()
-        state["observability"] = _observability_state()
+        state = _enrich(collector.collect())
         template = templates.get_template("components/panels.html")
         html = template.render(state=state)
         return HTMLResponse(html)
@@ -182,9 +210,40 @@ def create_app(
 
     @app.get("/api/state")
     async def api_state():
-        state = collector.collect()
-        state["observability"] = _observability_state()
-        return state
+        return _enrich(collector.collect())
+
+    # ── bench instance controls (dev/configuration mode) ──────────
+
+    @app.post("/api/control/bench/start")
+    async def api_bench_start():
+        if bench_supervisor is None:
+            return JSONResponse(
+                {"ok": False, "error": "bench mode is disabled "
+                 "([server] bench_enabled = false)"},
+                status_code=409,
+            )
+        try:
+            pid = bench_supervisor.start()
+            return {"ok": True, "pid": pid}
+        except AlreadyRunning as exc:
+            return JSONResponse({"ok": False, "error": str(exc)}, status_code=409)
+        except SupervisorError as exc:
+            return JSONResponse({"ok": False, "error": str(exc)}, status_code=500)
+
+    @app.post("/api/control/bench/stop")
+    async def api_bench_stop():
+        if bench_supervisor is None:
+            return JSONResponse(
+                {"ok": False, "error": "bench mode is disabled"},
+                status_code=409,
+            )
+        try:
+            bench_supervisor.stop(reason="manual bench stop from launcher UI")
+            return {"ok": True}
+        except NotRunning as exc:
+            return JSONResponse({"ok": False, "error": str(exc)}, status_code=409)
+        except SupervisorError as exc:
+            return JSONResponse({"ok": False, "error": str(exc)}, status_code=500)
 
     # ── genome management (v0.7.0: dashboard parity with the tray's
     #    "Manage Database" submenu — select or create from the web UI) ──
@@ -401,6 +460,17 @@ def _parse_args(argv: Optional[list] = None) -> argparse.Namespace:
     )
     p.add_argument("--host", default="127.0.0.1", help="Launcher UI bind host (default: 127.0.0.1)")
     p.add_argument("--port", type=int, default=11438, help="Launcher UI port (default: 11438)")
+    p.add_argument(
+        "--bench", action="store_true",
+        help="Dev mode: also supervise a second helix on the bench port "
+             "bound to the bench genome ([server] bench_* in helix.toml; "
+             "overrides bench_enabled=false).",
+    )
+    p.add_argument(
+        "--log-file", type=str, default=None,
+        help="Append launcher logs to this file (enables fully headless "
+             "pythonw starts where stderr has nowhere to go).",
+    )
     p.add_argument("--helix-host", default="127.0.0.1", help="Host for supervised helix (default: 127.0.0.1)")
     p.add_argument("--helix-port", type=int, default=11437, help="Port for supervised helix (default: 11437)")
     p.add_argument("--no-autostart", action="store_true", help="Don't spawn helix on launcher start")
@@ -748,6 +818,14 @@ def _configure_logging(verbose: bool) -> None:
 def main(argv: Optional[list] = None) -> int:
     args = _parse_args(argv)
 
+    if args.log_file:
+        _fh = logging.FileHandler(args.log_file, encoding="utf-8")
+        _fh.setFormatter(logging.Formatter(
+            "[%(asctime)s] %(name)s %(levelname)s: %(message)s",
+        ))
+        logging.getLogger().addHandler(_fh)
+        logging.getLogger().setLevel(logging.INFO)
+
     _configure_logging(verbose=args.verbose)
 
     # Service install/uninstall subcommands — do not start any server.
@@ -806,6 +884,55 @@ def main(argv: Optional[list] = None) -> int:
         helix_host=args.helix_host,
         helix_port=args.helix_port,
     )
+
+    # ── dev/configuration mode: optional second helix on the bench port ──
+    # Chat stays attached to the MAIN genome on the main port; a subagent
+    # can point the bench-harness at the bench port without the two
+    # instances sharing a knowledge store. Final deployments leave
+    # [server] bench_enabled = false (and pass no --bench) and get exactly
+    # one server.
+    bench_supervisor: Optional[HelixSupervisor] = None
+    bench_genome_path = ""
+    try:
+        from ..config import load_config as _load_config
+        _cfg = _load_config()
+        _bench_on = bool(args.bench or _cfg.server.bench_enabled)
+        if _bench_on:
+            bench_genome_path = _cfg.server.bench_genome_path
+            from .state import StateStore as _StateStore
+            _bench_store = _StateStore(
+                path=Path.home() / ".helix" / "launcher" / "bench-state.json",
+            )
+            bench_supervisor = HelixSupervisor(
+                store=_bench_store,
+                helix_host=args.helix_host,
+                helix_port=_cfg.server.bench_port,
+                helix_log_path=(
+                    Path.home() / ".helix" / "launcher" / "helix-bench.log"
+                ),
+                extra_env={
+                    "HELIX_GENOME_PATH": bench_genome_path,
+                    "HELIX_SERVER_PORT": str(_cfg.server.bench_port),
+                },
+            )
+            log.info(
+                "Bench mode: second helix planned on :%d (genome=%s)",
+                _cfg.server.bench_port, bench_genome_path,
+            )
+    except Exception:
+        log.warning("Bench-mode config probe failed; continuing without",
+                    exc_info=True)
+
+    # First-boot db-selection gate: if the active genome file does not
+    # exist yet, do NOT silently autostart onto an empty store — let the
+    # dashboard pop the select-or-create dialog instead.
+    needs_db_selection = False
+    try:
+        from . import genome_registry as _gr
+        needs_db_selection = not _gr.active_genome_path().exists()
+    except Exception:
+        needs_db_selection = False
+
     update_checker = UpdateChecker()
 
     collector = StateCollector(
@@ -846,7 +973,12 @@ def main(argv: Optional[list] = None) -> int:
                 )
 
     # Adopt or start helix before the UI comes up.
-    if not supervisor.adopt() and not args.no_autostart:
+    if needs_db_selection:
+        log.info(
+            "No genome found at the active path — skipping autostart; "
+            "the dashboard will prompt to select or create a database.",
+        )
+    if not supervisor.adopt() and not args.no_autostart and not needs_db_selection:
         try:
             if route_helix_via_headroom:
                 log.info(
@@ -864,6 +996,15 @@ def main(argv: Optional[list] = None) -> int:
             log.error("Failed to start helix: %s", exc)
             log.info("Launcher will continue; use the Start button once the issue is fixed")
 
+    if bench_supervisor is not None and not args.no_autostart:
+        try:
+            if not bench_supervisor.adopt():
+                bench_supervisor.start()
+        except AlreadyRunning:
+            pass
+        except Exception as exc:
+            log.error("Failed to start bench helix: %s", exc)
+
     app = create_app(
         store=store,
         supervisor=supervisor,
@@ -872,6 +1013,9 @@ def main(argv: Optional[list] = None) -> int:
         observability_install_pending=observability_install_pending,
         grafana_url=args.grafana_url,
         prometheus_url=args.prometheus_url,
+        bench_supervisor=bench_supervisor,
+        bench_genome_path=bench_genome_path,
+        needs_db_selection=needs_db_selection,
     )
 
     url = f"http://{args.host}:{args.port}/"
