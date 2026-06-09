@@ -24,6 +24,7 @@ axis and can be layered in later without moving files.
 
 from __future__ import annotations
 
+import hashlib
 import os
 import re
 from pathlib import Path, PurePath
@@ -73,13 +74,51 @@ def corpus_shard_dir(
     return root / rel
 
 
+# Windows' classic MAX_PATH is 260; the mirrored layout can exceed it when a
+# deep source root (e.g. a pytest tmp dir under
+# ``C:/Users/<u>/AppData/Local/Temp/pytest-of-<u>/pytest-NNNN/...``) is
+# mirrored under an already-deep ``genomes_root``. sqlite3's C layer does not
+# reliably honour long-path opt-in, so we cap conservatively and fall back to
+# a compact deterministic location. Overridable for tests / long-path-enabled
+# hosts via ``HELIX_SHARD_PATH_MAX``.
+_SHARD_PATH_MAX_DEFAULT = 240
+
+
+def _shard_path_max() -> int:
+    raw = os.environ.get("HELIX_SHARD_PATH_MAX", "").strip()
+    try:
+        return int(raw) if raw else _SHARD_PATH_MAX_DEFAULT
+    except ValueError:
+        return _SHARD_PATH_MAX_DEFAULT
+
+
 def corpus_shard_db(
     source_root: str,
     label: str,
     genomes_root: os.PathLike[str] | str,
 ) -> Path:
-    """Return ``<corpus_shard_dir>/<label>.genome.db``."""
-    return corpus_shard_dir(source_root, genomes_root) / f"{label}.genome.db"
+    """Return ``<corpus_shard_dir>/<label>.genome.db``.
+
+    MAX_PATH guard: when the mirrored path would exceed
+    ``HELIX_SHARD_PATH_MAX`` (default 240) characters, return
+    ``<genomes_root>/_overflow/<label>-<digest10>.genome.db`` instead, where
+    ``digest10`` is a stable sha1 of the mirrored relative path. The
+    function stays deterministic in ``(source_root, label, genomes_root)``,
+    so resume/salvage paths recompute identically; the full source root is
+    still recoverable from the ``main.genome.db`` registration, which is
+    the routing source of truth (``IngestTargetRouter`` takes explicit
+    pairs and is unaffected). Only the overflow case trades away the
+    self-identifying filename.
+    """
+    mirrored = corpus_shard_dir(source_root, genomes_root) / f"{label}.genome.db"
+    if len(str(mirrored)) <= _shard_path_max():
+        return mirrored
+    drive = drive_prefix(source_root)
+    rel = strip_drive(source_root)
+    digest = hashlib.sha1(
+        f"{drive or ''}/{rel}".encode("utf-8")
+    ).hexdigest()[:10]
+    return Path(genomes_root) / "_overflow" / f"{label}-{digest}.genome.db"
 
 
 def agent_shard_db(
