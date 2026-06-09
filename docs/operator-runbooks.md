@@ -44,7 +44,12 @@ verified against the script's `argparse` definitions in this worktree.
 
 `scripts/backfill_bgem3_v2.py` re-encodes each document's content at the full
 1024-dim BGE-M3 embedding and writes raw little-endian fp32 bytes into a
-new `embedding_dense_v2 BLOB` column on the `genes` table. After Stage 2,
+new `embedding_dense_v2 BLOB` column on the `genes` table.
+
+> **Constrained-VRAM rigs (≤12 GB):** before running this on GPU, read
+> [`docs/operations/DENSE_VRAM.md`](operations/DENSE_VRAM.md). On 12 GB
+> cards the recommended path for batch backfill is CPU, not CUDA — same
+> byte-identical vectors, no shared-mem-spill failure mode. After Stage 2,
 this column is what the dense recall path reads; the legacy
 `embedding_dense TEXT` (256-dim JSON) column stays in the schema for one
 release as a rollback safety net.
