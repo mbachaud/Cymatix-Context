@@ -1,0 +1,36 @@
+{# Switchboard — live snapshot of operationally-interesting pipeline knobs.
+   Sourced from helix_context.config.load_config() in the launcher process;
+   the supervised helix shares the same helix.toml + cwd, so what you see
+   here is what the next /context call will use. #}
+
+<section class="panel panel--switchboard">
+  <h2 class="panel-title">
+    Switchboard
+    {% if state.switchboard.summary %}
+      <span class="panel-count-muted">{{ state.switchboard.summary }}</span>
+    {% endif %}
+  </h2>
+
+  {% if state.switchboard.error %}
+    <div class="diagnostics-warn">
+      <strong>Could not read switchboard config:</strong>
+      <span class="muted">{{ state.switchboard.error }}</span>
+    </div>
+  {% else %}
+    <dl class="panel-kv switchboard-grid">
+      {% for setting in state.switchboard.settings %}
+        <dt>
+          <span class="switchboard-label">{{ setting.label }}</span>
+          {% if setting.description %}
+            <span class="muted switchboard-desc">{{ setting.description }}</span>
+          {% endif %}
+        </dt>
+        <dd>
+          <span class="switchboard-value switchboard-value--{{ setting.value }}">
+            {{ setting.value }}
+          </span>
+        </dd>
+      {% endfor %}
+    </dl>
+  {% endif %}
+</section>

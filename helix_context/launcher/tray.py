@@ -50,6 +50,7 @@ from .supervisor import (
     NotRunning,
     SupervisorError,
 )
+from . import genome_registry
 
 log = logging.getLogger("helix.launcher.tray")
 
@@ -120,6 +121,63 @@ def _should_fire_hardware_fallback_balloon() -> bool:
         return False
     sentinel = _hardware_fallback_sentinel_path(info.requested_device, info.device_type)
     return not sentinel.exists()
+
+
+def _confirm_genome_switch(target: Path) -> bool:
+    """Ask the user to confirm a genome switch via a native dialog.
+
+    Returns True on confirmation, False on decline.
+
+    On Windows the prompt is rendered via the Win32 MessageBoxW API —
+    pystray dispatches menu callbacks on the icon's message-pump thread,
+    and spinning up tkinter from that thread tends to deadlock (Tk wants
+    its own event loop and competes with pystray's Win32 dispatch). The
+    MessageBoxW call is a single Win32 modal that nests cleanly inside
+    the existing pump.
+
+    On non-Windows platforms we fall back to tkinter (cross-platform
+    stdlib). If both backends fail we treat the click as consent —
+    matching the rest of the launcher, where clicking the menu item is
+    already considered an explicit signal.
+    """
+    title = "Helix Launcher — switch database?"
+    body = (
+        f"Switch the active genome to:\n\n    {target}\n\n"
+        "Helix will restart so the new genome can be loaded. "
+        "In-flight /context requests will fail until restart completes."
+    )
+
+    if sys.platform == "win32":
+        try:
+            import ctypes
+            # MB_YESNO=0x4, MB_ICONQUESTION=0x20, MB_TOPMOST=0x40000
+            MB_FLAGS = 0x4 | 0x20 | 0x40000
+            IDYES = 6
+            result = ctypes.windll.user32.MessageBoxW(
+                None, body, title, MB_FLAGS,
+            )
+            return result == IDYES
+        except Exception:
+            log.debug("MessageBoxW failed; falling through to tkinter",
+                      exc_info=True)
+
+    try:
+        import tkinter as _tk
+        from tkinter import messagebox as _mb
+        root = _tk.Tk()
+        root.withdraw()
+        try:
+            answer = _mb.askyesno(title, body, parent=root)
+        finally:
+            try:
+                root.destroy()
+            except Exception:
+                pass
+        return bool(answer)
+    except Exception:
+        log.debug("Confirm dialog unavailable; treating click as consent",
+                  exc_info=True)
+        return True
 
 
 def _fire_hardware_fallback_balloon(tray_icon) -> None:
@@ -216,6 +274,155 @@ class HelixTrayIcon:
             webbrowser.open(self.dashboard_url)
         except Exception:
             log.warning("Tray: failed to open browser", exc_info=True)
+
+    # ── Manage Database handlers ──────────────────────────────────
+
+    def _switch_genome(self, genome_path: Path):
+        """Return a pystray-compatible handler that switches to `genome_path`.
+
+        The restart runs on a background thread so the pystray message
+        pump stays responsive — `supervisor.restart()` can take 30 s
+        (graceful stop + cold-start `/stats` warmup), and freezing the
+        tray icon that whole window looks indistinguishable from "the
+        click did nothing" to the user. We show a balloon immediately
+        on Yes so the operator gets feedback the moment they confirm,
+        and a second balloon (success or failure) when the restart
+        worker finishes.
+
+        Every branch logs at INFO so an operator inspecting
+        `~/.helix/launcher/launcher.log` can see exactly which step
+        ran — no more silent menu clicks.
+        """
+        def _h(icon, item):  # noqa: ARG001 — pystray API
+            log.info("Tray: switch-genome click received for %s", genome_path)
+            try:
+                self._handle_genome_click(Path(genome_path))
+            except Exception:
+                # pystray's menu callback wrapper swallows exceptions —
+                # log them ourselves so the operator can debug a broken
+                # click from launcher.log alone.
+                log.error("Tray: switch-genome handler crashed", exc_info=True)
+        return _h
+
+    def _handle_genome_click(self, target: Path) -> None:
+        """Confirm + immediate balloon + spawn the restart worker."""
+        if not _confirm_genome_switch(target):
+            log.info("Tray: genome switch cancelled by user (%s)", target)
+            return
+        log.info("Tray: genome switch confirmed for %s", target)
+
+        try:
+            resolved = genome_registry.select_genome(target)
+        except FileNotFoundError as exc:
+            log.warning("Tray: genome switch failed: %s", exc)
+            self._safe_notify(str(exc), title="Helix: switch failed")
+            return
+
+        # Active path just moved — drop the registry cache so the rebuilt
+        # submenu reflects the new selection on its next render.
+        genome_registry.clear_cache()
+
+        # Immediate confirmation so the user sees feedback before the
+        # 10-30 s restart cycle completes.
+        self._safe_notify(
+            f"Restarting helix on {resolved.name}…",
+            title="Helix: switching database",
+        )
+
+        worker = threading.Thread(
+            target=self._switch_worker,
+            args=(resolved,),
+            name="helix-genome-switch",
+            daemon=True,
+        )
+        worker.start()
+
+    def _switch_worker(self, resolved: Path) -> None:
+        """Background worker: stop + start helix, then notify + refresh menu.
+
+        Runs off the pystray message-pump thread so the tray icon stays
+        clickable while supervisor.stop / start are blocking on
+        `taskkill /F /T` and the cold-start `/stats` probe.
+        """
+        log.info("Tray: switching genome -> %s (will restart)", resolved)
+        try:
+            if self.supervisor.is_running():
+                self.supervisor.restart(
+                    reason=f"switch genome to {resolved.name}",
+                )
+            else:
+                self.supervisor.start()
+        except Exception as exc:
+            log.error("Tray: helix restart after genome switch failed: %s",
+                      exc, exc_info=True)
+            self._safe_notify(
+                f"Restart failed: {exc}",
+                title="Helix: switch failed",
+            )
+            return
+        self._safe_notify(
+            f"Now serving {resolved.name}",
+            title="Helix: database switched",
+        )
+        # Menu structure depends on which genome is active; rebuild on
+        # the worker thread is safe (pystray reads .menu lazily on next
+        # context-menu open).
+        self._rebuild_menu()
+
+    def _safe_notify(self, message: str, title: str) -> None:
+        """Notify wrapper that never raises and always logs the message.
+
+        pystray's `notify` can no-op on backends that don't implement
+        balloon tips, and on some Windows configurations the call fails
+        with a quiet AccessDenied. Logging the same string at INFO
+        guarantees the operator sees state transitions in launcher.log
+        even when balloons aren't reaching the system tray.
+        """
+        log.info("Tray notify: %s — %s", title, message)
+        if self._icon is None:
+            return
+        try:
+            self._icon.notify(message, title=title)
+        except Exception:
+            log.debug("Tray notify failed", exc_info=True)
+
+    def _rebuild_menu(self) -> None:
+        """Fully rebuild the icon's menu tree — needed when STRUCTURE
+        changes (new genome added/removed) rather than just labels.
+
+        `_refresh_menu` only re-evaluates callable properties on the
+        existing tree; restructuring requires assigning a fresh Menu.
+        """
+        if self._icon is None:
+            return
+        try:
+            self._icon.menu = self._build_menu()
+            self._icon.update_menu()
+        except Exception:
+            log.debug("Tray menu structural rebuild failed", exc_info=True)
+
+    def _open_database_panel(self, icon, item) -> None:  # noqa: ARG002
+        """Open the dashboard's Genome tab where the Database panel lives."""
+        # Strip any existing fragment so a bookmark to "#overview" doesn't
+        # override the intent of this menu click.
+        base = self.dashboard_url.split("#", 1)[0]
+        url = f"{base.rstrip('/')}/#database"
+        log.info("Tray: opening database panel at %s", url)
+        try:
+            webbrowser.open(url)
+        except Exception:
+            log.warning("Tray: failed to open database panel", exc_info=True)
+
+    def _refresh_database_list(self, icon, item) -> None:  # noqa: ARG002
+        """Drop the genome-registry cache so the next menu render
+        re-scans disk. Useful when the user has just built a new
+        genome in another shell."""
+        log.info("Tray: refreshing genome registry cache")
+        try:
+            genome_registry.clear_cache()
+        except Exception:
+            log.debug("Tray: genome cache clear failed", exc_info=True)
+        self._rebuild_menu()
 
     def _open_grafana(self, icon, item) -> None:  # noqa: ARG002
         if not self.grafana_url:
@@ -605,6 +812,105 @@ class HelixTrayIcon:
 
     # ── menu construction ──────────────────────────────────────────
 
+    def _build_manage_database_submenu(self):
+        """Construct the 'Manage Database' submenu describing every
+        discovered genome on disk plus the active/selected indicator.
+
+        Pystray menus are immutable per render — the callable label on
+        each per-genome item picks up active-state changes on each menu
+        refresh, but the set of items only updates when the parent menu
+        is rebuilt. `_refresh_database_list` clears the genome cache
+        AND calls `_refresh_menu` so freshly built genomes appear
+        without a relaunch.
+        """
+        import pystray
+
+        try:
+            entries = genome_registry.discover_genomes()
+            active_path = genome_registry.active_genome_path()
+        except Exception:
+            log.warning("Tray: genome discovery failed", exc_info=True)
+            return pystray.Menu(
+                pystray.MenuItem("(genome discovery failed)", None, enabled=False),
+                pystray.MenuItem("Refresh", self._refresh_database_list),
+            )
+
+        active_name = active_path.name if active_path else "(none)"
+        items = [
+            pystray.MenuItem(f"Active: {active_name}", None, enabled=False),
+            pystray.Menu.SEPARATOR,
+        ]
+
+        if not entries:
+            items.append(pystray.MenuItem("(no genomes discovered)", None, enabled=False))
+        else:
+            for info in entries:
+                items.append(pystray.MenuItem(
+                    self._genome_label_factory(info, active_path),
+                    self._build_genome_subsubmenu(info),
+                ))
+
+        items.extend([
+            pystray.Menu.SEPARATOR,
+            pystray.MenuItem("Open Database panel", self._open_database_panel),
+            pystray.MenuItem("Refresh list", self._refresh_database_list),
+        ])
+        return pystray.Menu(*items)
+
+    def _genome_label_factory(self, info, active_path: Path):
+        """Return a callable label so pystray re-renders the checkmark
+        when active genome changes between menu opens.
+        """
+        target_lower = str(info.path).lower()
+        def _label(item):  # noqa: ARG001 — pystray API
+            try:
+                current = str(genome_registry.active_genome_path()).lower()
+            except Exception:
+                current = str(active_path).lower()
+            marker = "● " if target_lower == current else "  "
+            size = f"{round(info.size_bytes / (1024 * 1024), 1)} MB"
+            return f"{marker}{info.name}  ({info.total_genes} genes, {size})"
+        return _label
+
+    def _build_genome_subsubmenu(self, info):
+        """Per-genome submenu: 'Use this database' action + folder info."""
+        import pystray
+
+        items = [
+            pystray.MenuItem(
+                "Use this database (restart helix)",
+                self._switch_genome(info.path),
+            ),
+            pystray.Menu.SEPARATOR,
+            pystray.MenuItem(f"Path: {info.path}", None, enabled=False),
+        ]
+
+        if info.error:
+            items.append(pystray.MenuItem(f"Error: {info.error}", None, enabled=False))
+        elif info.folders:
+            items.append(pystray.MenuItem(
+                f"Folders ({len(info.folders)})", None, enabled=False,
+            ))
+            for folder in info.folders[:8]:
+                items.append(pystray.MenuItem(
+                    f"  - {folder.prefix} ({folder.document_count})",
+                    None, enabled=False,
+                ))
+            if len(info.folders) > 8:
+                items.append(pystray.MenuItem(
+                    f"  ... +{len(info.folders) - 8} more", None, enabled=False,
+                ))
+        else:
+            items.append(pystray.MenuItem(
+                "(no source folders recorded)", None, enabled=False,
+            ))
+
+        items.extend([
+            pystray.Menu.SEPARATOR,
+            pystray.MenuItem("Open Database panel", self._open_database_panel),
+        ])
+        return pystray.Menu(*items)
+
     def _build_menu(self):
         """Build a fresh pystray.Menu reflecting current helix state.
 
@@ -639,6 +945,11 @@ class HelixTrayIcon:
                 enabled=lambda item: self.headroom.is_running(),  # noqa: ARG005
             ))
         items.extend([
+            pystray.Menu.SEPARATOR,
+            pystray.MenuItem(
+                "Manage Database",
+                self._build_manage_database_submenu(),
+            ),
             pystray.Menu.SEPARATOR,
             pystray.MenuItem(
                 "Start helix",

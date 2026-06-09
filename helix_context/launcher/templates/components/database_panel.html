@@ -1,0 +1,81 @@
+{# Database panel — list of discovered genome (.db) databases on disk.
+   Marks the currently active one, surfaces the top folders contributing
+   to each genome, and (when helix is up) cross-checks against the live
+   /admin/genome reply so a drift between "selected" and "running" is
+   visible at a glance.
+
+   Switch the active genome from the system-tray "Manage Database"
+   submenu — the dashboard is read-only. #}
+
+<section class="panel panel--database">
+  <h2 class="panel-title">
+    Database
+    {% if state.database.count %}
+      <span class="panel-count">{{ state.database.count }}</span>
+    {% endif %}
+  </h2>
+
+  {% if state.database.error %}
+    <div class="diagnostics-warn">
+      <strong>Could not read genome registry:</strong>
+      <span class="muted">{{ state.database.error }}</span>
+    </div>
+  {% endif %}
+
+  {% if state.database.live %}
+    <dl class="panel-kv">
+      <dt>Running</dt>
+      <dd class="path-value">
+        {{ state.database.live.path or "(unknown)" }}
+        {% if state.database.live.total_genes is not none %}
+          <span class="muted">— {{ "{:,}".format(state.database.live.total_genes) }} genes</span>
+        {% endif %}
+      </dd>
+      {% if state.database.live.env_override %}
+        <dt>Env override</dt>
+        <dd class="muted">HELIX_GENOME_PATH = {{ state.database.live.env_override }}</dd>
+      {% endif %}
+      {% if state.database.live.error %}
+        <dt>Error</dt>
+        <dd class="muted">{{ state.database.live.error }}</dd>
+      {% endif %}
+    </dl>
+  {% endif %}
+
+  <ul class="panel-list database-list">
+    {% for entry in state.database.entries %}
+      <li class="panel-list__item database-entry {% if entry.is_active %}database-entry--active{% endif %}">
+        <div class="database-entry__header">
+          <span class="database-dot {% if entry.is_active %}database-dot--on{% endif %}" aria-hidden="true"></span>
+          <strong class="database-entry__name">{{ entry.name }}</strong>
+          {% if entry.is_active %}
+            <span class="database-entry__tag">active</span>
+          {% endif %}
+          <span class="muted database-entry__stats">
+            {{ "{:,}".format(entry.total_genes) }} genes · {{ entry.size_mb }} MB
+          </span>
+        </div>
+        <p class="path-value database-entry__path">{{ entry.path }}</p>
+        {% if entry.error %}
+          <p class="diagnostics-error">{{ entry.error }}</p>
+        {% elif entry.folders %}
+          <details class="database-entry__folders">
+            <summary>Folders ({{ entry.folders|length }})</summary>
+            <ul class="database-folder-list">
+              {% for f in entry.folders %}
+                <li>
+                  <span class="path-value">{{ f.prefix }}</span>
+                  <span class="muted">— {{ "{:,}".format(f.document_count) }}</span>
+                </li>
+              {% endfor %}
+            </ul>
+          </details>
+        {% else %}
+          <p class="muted database-entry__folders-empty">No source folders recorded.</p>
+        {% endif %}
+      </li>
+    {% else %}
+      <li class="panel-list__item muted">No genomes discovered.</li>
+    {% endfor %}
+  </ul>
+</section>

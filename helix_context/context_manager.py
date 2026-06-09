@@ -55,9 +55,62 @@ log = logging.getLogger("helix.context_manager")
 # Wraps each named pipeline stage with a monotonic-clock measurement and
 # records a single OTel histogram entry on exit. Exceptions in telemetry
 # are suppressed so a broken collector never kills the pipeline.
+#
+# In addition to the OTel histogram, each stage entry is appended to a
+# bounded in-process ring (the "pipeline viewer" feed). The ring is
+# scoped per build_context() call via a contextvar holding the request_id
+# so the dashboard can group events back into per-request rows.
 
+import collections as _collections
+import contextvars as _contextvars
 import time as _time
+import uuid as _uuid
 from .telemetry import pipeline_stage_histogram as _pipeline_stage_histogram
+
+
+# Per-request id propagated through the sync pipeline so each _stage_timer
+# event can be attributed back to the originating build_context call. Set
+# at the top of build_context(); reads default to "" when no run is active
+# (e.g. ad-hoc calls from debug endpoints).
+_pipeline_request_id: "_contextvars.ContextVar[str]" = _contextvars.ContextVar(
+    "_pipeline_request_id", default=""
+)
+
+# Bounded ring of recent stage events. Each entry is
+#   {"request_id", "stage", "ms", "ts"}
+# where ts is wall-clock seconds since the epoch. Sized to roughly the
+# last ~6 requests' worth of stage events (5 stages × 6 requests + slack)
+# so the launcher dashboard can render a recent-runs table without
+# unbounded memory growth on busy servers.
+_PIPELINE_RING_MAX = 64
+_pipeline_events: "_collections.deque[dict]" = _collections.deque(
+    maxlen=_PIPELINE_RING_MAX
+)
+
+
+def _pipeline_ring_enabled() -> bool:
+    """The ring is on by default; disable with HELIX_PIPELINE_RING=0."""
+    return os.environ.get("HELIX_PIPELINE_RING", "1").strip().lower() not in (
+        "0", "false", "off", "no",
+    )
+
+
+def get_recent_pipeline_events(limit: int = 32) -> List[dict]:
+    """Return the most recent pipeline stage events (newest last).
+
+    Consumed by the launcher dashboard via /debug/pipeline/recent. Returns
+    a shallow-copy list so the caller cannot mutate the deque.
+    """
+    snapshot = list(_pipeline_events)
+    if limit > 0:
+        snapshot = snapshot[-limit:]
+    return snapshot
+
+
+def get_pipeline_ring_max() -> int:
+    """The deque's maxlen — exposed so the HTTP endpoint and launcher
+    dashboard share a single source of truth for the buffer size."""
+    return _PIPELINE_RING_MAX
 
 
 class _stage_timer:
@@ -74,13 +127,26 @@ class _stage_timer:
         return self
 
     def __exit__(self, *exc):
+        elapsed = _time.monotonic() - self._t0
         try:
             _pipeline_stage_histogram().record(
-                _time.monotonic() - self._t0,
+                elapsed,
                 {"stage": self.stage, **self.labels},
             )
         except Exception:
             pass  # never let telemetry break the pipeline
+        try:
+            if _pipeline_ring_enabled():
+                rid = _pipeline_request_id.get()
+                if rid:
+                    _pipeline_events.append({
+                        "request_id": rid,
+                        "stage": self.stage,
+                        "ms": round(elapsed * 1000.0, 3),
+                        "ts": _time.time(),
+                    })
+        except Exception:
+            pass
 
 # Thread pool for running sync compressor calls from async context
 _executor = ThreadPoolExecutor(max_workers=2, thread_name_prefix="helix-ribosome")
@@ -1053,6 +1119,13 @@ class HelixContextManager:
                 preserves the previous behaviour exactly.
         """
         self._maybe_compact()
+
+        # Pipeline viewer feed (launcher dashboard). Tagging this call with
+        # a short request_id lets _stage_timer attribute every recorded
+        # stage back to the originating /context invocation. The contextvar
+        # is per-thread/per-task so concurrent calls cannot blend events.
+        if _pipeline_ring_enabled():
+            _pipeline_request_id.set(_uuid.uuid4().hex[:12])
 
         # Per-call locals for foveated-splice state (spec §4-5). Local —
         # not instance state — so concurrent build_context calls cannot
