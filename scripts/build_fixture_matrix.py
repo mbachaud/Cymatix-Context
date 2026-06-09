@@ -227,6 +227,21 @@ def _is_sqlite_sidecar(path: str) -> bool:
 _worker_chunker = None
 _worker_tagger = None
 
+# Per-process "logged once" guard for exceptions raised by
+# ``tagger.pack`` inside :func:`_chunk_and_tag_file`. Keys are
+# exception class names. The first failure of each class emits a
+# warning with traceback; subsequent occurrences are suppressed so a
+# 500K-file run doesn't drown the operator in identical lines. The
+# guard is per-process — each ``mp.Pool`` worker has its own.
+#
+# This exists because of the spaCy-missing bug on 2026-05-23: every
+# strand of every file raised ``ModuleNotFoundError`` from
+# ``tagger.pack`` and the previous ``try/except Exception: pass``
+# silently dropped 100% of a corpus to zero genes with no operator
+# signal.
+_logged_pack_errors: set[str] = set()
+_logged_file_errors: set[str] = set()
+
 
 def _init_worker():
     """Per-worker init for mp.Pool -- loads tagger + chunker once."""
@@ -247,12 +262,25 @@ def _chunk_and_tag_file(args: tuple[str, str]) -> list[dict]:
 
     Returns ``model_dump()`` dicts (not Gene instances) so the mp.Pool
     can hand results back to the parent process across its IPC boundary.
+
+    Per-strand failures from ``tagger.pack`` are non-fatal — strands
+    that fail are skipped — but the first occurrence of each exception
+    class is logged at WARNING level on the ``bench.matrix`` logger.
+    See :data:`_logged_pack_errors` for why.
     """
     fpath, ext = args
     try:
         with open(fpath, "r", encoding="utf-8", errors="replace") as f:
             content = f.read()
-    except Exception:
+    except Exception as exc:
+        key = type(exc).__name__
+        if key not in _logged_file_errors:
+            _logged_file_errors.add(key)
+            log.warning(
+                "file read failed (%s) on %s: %s — suppressing further %s warnings in this worker",
+                key, fpath, exc, key,
+                exc_info=True,
+            )
         return []
 
     ct = "code" if ext in CODE_EXTS else "text"
@@ -268,8 +296,16 @@ def _chunk_and_tag_file(args: tuple[str, str]) -> list[dict]:
             )
             gene.is_fragment = strand.is_fragment
             genes.append(gene.model_dump())
-        except Exception:
-            pass
+        except Exception as exc:
+            key = type(exc).__name__
+            if key not in _logged_pack_errors:
+                _logged_pack_errors.add(key)
+                log.warning(
+                    "tagger.pack failed (%s) on %s (sequence %d): %s — "
+                    "suppressing further %s warnings in this worker",
+                    key, fpath, i, exc, key,
+                    exc_info=True,
+                )
     return genes
 
 
@@ -426,11 +462,32 @@ def _drain_with_batched_splade(
     """Drain ``gene_dict_iter`` (yielding lists of gene dicts per file)
     into ``genome``. SPLADE encoding is batched across ``batch_size`` genes
     instead of per-gene. Stats are updated in place.
+
+    Per-row failures during ``Gene(**gd)`` construction or
+    ``genome.upsert_doc(...)`` are non-fatal but the first occurrence of
+    each exception class is logged at WARNING level on the
+    ``bench.matrix`` logger — the same once-per-process posture as
+    :func:`_chunk_and_tag_file` (see :data:`_logged_pack_errors`). This
+    prevents a systematic upsert failure (schema mismatch, disk full,
+    etc.) from being hidden behind a silently-ticking ``stats["errors"]``
+    counter that nobody looks at until the full-run summary lands.
     """
     from helix_context.backends import splade_backend
     from helix_context.schemas import Gene
 
     buf: list = []  # Gene instances buffered before batch flush
+    logged_drain_errors: set[str] = set()
+
+    def _log_once(stage: str, exc: Exception) -> None:
+        key = f"{stage}:{type(exc).__name__}"
+        if key in logged_drain_errors:
+            return
+        logged_drain_errors.add(key)
+        log.warning(
+            "drain %s failed (%s): %s — suppressing further %s warnings in this drain",
+            stage, type(exc).__name__, exc, key,
+            exc_info=True,
+        )
 
     def _flush(batch: list) -> None:
         if not batch:
@@ -442,8 +499,9 @@ def _drain_with_batched_splade(
             try:
                 genome.upsert_doc(g, apply_gate=True, splade_sparse=sp)
                 stats["genes"] += 1
-            except Exception:
+            except Exception as exc:
                 stats["errors"] += 1
+                _log_once("upsert_doc", exc)
         if stats["genes"] % 500 < batch_size and stats["genes"] > 0:
             elapsed = time.perf_counter() - stats["t0"]
             log.info(
@@ -459,8 +517,9 @@ def _drain_with_batched_splade(
         for gd in gene_dicts:
             try:
                 buf.append(Gene(**gd))
-            except Exception:
+            except Exception as exc:
                 stats["errors"] += 1
+                _log_once("Gene", exc)
         stats["files"] += 1
         while len(buf) >= batch_size:
             _flush(buf[:batch_size])
@@ -571,6 +630,23 @@ PROFILES: dict[str, dict] = {
         "roots": [r"F:\Projects"],
         "extra_skip_dirs": set(),
         "extra_filename_filters": [_is_sqlite_sidecar],
+    },
+    "enterprise_rag_500k": {
+        "label": "EnterpriseRAG-Bench subset (500K docs, full gold coverage)",
+        "active_roots": 9,
+        "roots": [
+            r"F:\tmp\enterprise_rag_500k\sources\confluence",
+            r"F:\tmp\enterprise_rag_500k\sources\fireflies",
+            r"F:\tmp\enterprise_rag_500k\sources\github",
+            r"F:\tmp\enterprise_rag_500k\sources\gmail",
+            r"F:\tmp\enterprise_rag_500k\sources\google_drive",
+            r"F:\tmp\enterprise_rag_500k\sources\hubspot",
+            r"F:\tmp\enterprise_rag_500k\sources\jira",
+            r"F:\tmp\enterprise_rag_500k\sources\linear",
+            r"F:\tmp\enterprise_rag_500k\sources\slack",
+        ],
+        "extra_skip_dirs": set(),
+        "extra_filename_filters": [],
     },
     "xl": {
         "label": "Projects plus external Steam/game code corpus",
@@ -998,6 +1074,93 @@ def _try_salvage_complete_shard(
     }
 
 
+# Auto-subshard defaults (issue #147). The 500K EnterpriseRAG-Bench
+# attempt on 2026-05-23/24 surfaced the bottleneck: one shard per
+# profile root produced an 18 GB slack ``.db`` whose dense backfill
+# rate decayed from 27 g/s to 0.12 g/s once it exceeded the OS file-
+# cache budget. Splitting large roots along their top-level subdirs
+# (depth-2 max) keeps each subshard within the cache range so the
+# backfill rate stays at its fresh value throughout. 5 GB / 100K files
+# is a conservative cap matched to a 16 GB-RAM dev host; tune per
+# deployment via the ``--auto-subshard-threshold-{bytes,files}`` CLI
+# args or set both to ``0`` to disable the decomposition pass.
+DEFAULT_AUTO_SUBSHARD_THRESHOLD_BYTES = 5_000_000_000
+DEFAULT_AUTO_SUBSHARD_THRESHOLD_FILES = 100_000
+_AUTO_SUBSHARD_MAX_DEPTH = 2
+
+
+def _decompose_oversized_root(
+    root: str,
+    skip_dirs: set[str],
+    extra_filename_filters: list,
+    *,
+    threshold_bytes: int = DEFAULT_AUTO_SUBSHARD_THRESHOLD_BYTES,
+    threshold_files: int = DEFAULT_AUTO_SUBSHARD_THRESHOLD_FILES,
+    max_depth: int = _AUTO_SUBSHARD_MAX_DEPTH,
+    _depth: int = 0,
+) -> list[tuple[str, str]]:
+    """Return ``[(slug, path), ...]`` for ``root``, decomposing along
+    top-level subdir boundaries when ``root`` exceeds either threshold.
+
+    Returns a single-element list ``[(_slug_for_root(root), root)]`` when:
+      * ``root`` is under both thresholds, or
+      * ``root`` is over threshold but has no decomposable subdirs
+        (flat-layout fallback), or
+      * ``_depth`` has reached ``max_depth`` (recursion guard).
+
+    When a subdir is itself oversized and has its own decomposable
+    subdirs, the function recurses one level further. Labels nest with
+    ``__`` (parent__child); the resulting `shards.shard_name` column
+    stays flat at the main-DB level. See issue #147 for the design and
+    diagnostic that motivated this.
+
+    A non-existent root returns ``[]`` — caller (typically
+    :func:`build_profile_sharded`) tracks the missing entry in
+    ``stats["missing_roots"]`` separately, same as the pre-#147
+    behaviour.
+
+    Setting both thresholds to ``0`` disables decomposition: any
+    non-zero file count will be over the threshold, but no subdirs
+    means the flat-layout fallback returns a single shard. Set to a
+    very large number (e.g. ``sys.maxsize``) to also disable.
+    """
+    if not os.path.exists(root):
+        return []
+    parent_slug = _slug_for_root(root)
+    files, bytes_ = _estimate_eligible_bytes(
+        root, skip_dirs, extra_filename_filters,
+    )
+    over = files >= threshold_files or bytes_ >= threshold_bytes
+    if not over or _depth >= max_depth:
+        return [(parent_slug, root)]
+    try:
+        subdirs = sorted(
+            entry for entry in os.listdir(root)
+            if entry not in skip_dirs
+            and os.path.isdir(os.path.join(root, entry))
+        )
+    except OSError:
+        return [(parent_slug, root)]
+    parts: list[tuple[str, str]] = []
+    for sub_entry in subdirs:
+        sub_root = os.path.join(root, sub_entry)
+        sub_parts = _decompose_oversized_root(
+            sub_root,
+            skip_dirs,
+            extra_filename_filters,
+            threshold_bytes=threshold_bytes,
+            threshold_files=threshold_files,
+            max_depth=max_depth,
+            _depth=_depth + 1,
+        )
+        # Nest the subshard's slug under this root's slug so labels
+        # carry the full path lineage in the main-DB shards table.
+        for sub_slug, sub_path in sub_parts:
+            parts.append((f"{parent_slug}__{sub_slug}", sub_path))
+    # Flat-layout fallback: no subdirs (or all skipped) → single shard.
+    return parts or [(parent_slug, root)]
+
+
 def _build_one_shard(
     label: str,
     root: str,
@@ -1232,6 +1395,8 @@ def build_profile_sharded(
     batch_size: int = 64,
     sort_largest_first: bool = True,
     rebuild: bool = False,
+    auto_subshard_threshold_bytes: int = DEFAULT_AUTO_SUBSHARD_THRESHOLD_BYTES,
+    auto_subshard_threshold_files: int = DEFAULT_AUTO_SUBSHARD_THRESHOLD_FILES,
 ) -> dict:
     """Build the profile as a sharded layout under ``profile_out_dir``.
 
@@ -1248,6 +1413,16 @@ def build_profile_sharded(
     eligible bytes) dispatches first instead of waiting for 11 small
     shards to drain. The pre-scan is a quick metadata walk, dwarfed by
     the actual ingest cost.
+
+    Auto-subshard (issue #147): each profile root is passed through
+    :func:`_decompose_oversized_root`, which splits a root along its
+    top-level subdirectories when the root exceeds either threshold.
+    Default thresholds are 5 GB / 100K files. A root under both
+    thresholds becomes one shard as before; an oversized root with no
+    decomposable subdirs falls back to single-shard (flat-layout
+    fallback). The shard label nests under ``__`` so the slack root
+    decomposes into e.g. ``slack__aditya_rao``, ``slack__eng_sre`` in
+    the main-DB ``shards`` table.
     """
     profile = PROFILES[name]
     if shard_file_workers <= 0:
@@ -1304,26 +1479,47 @@ def build_profile_sharded(
         "t0": time.perf_counter(),
     }
 
-    # Build the task list (filter out missing roots up front).
+    # Build the task list (filter out missing roots up front). Each
+    # profile root is passed through ``_decompose_oversized_root`` so
+    # oversized roots become a list of subshard tasks (issue #147).
     tasks: list[dict] = []
+    decomposed_count = 0
     for root in profile["roots"]:
         if not os.path.exists(root):
             log.warning("root %s does not exist, skipping", root)
             totals["missing_roots"].append(root)
             continue
-        label = _slug_for_root(root)
-        shard_db = corpus_shard_db(root, label, profile_out_dir)
-        tasks.append({
-            "label": label,
-            "root": root,
-            "shard_db_path": str(shard_db),
-            "skip_dirs": skip_dirs,
-            "extra_filename_filters": extra_filename_filters,
-            "batch_size": batch_size,
-            "shard_file_workers": shard_file_workers,
-            "shard_file_chunksize": 4,
-            "rebuild": rebuild,
-        })
+        sub_entries = _decompose_oversized_root(
+            root, skip_dirs, extra_filename_filters,
+            threshold_bytes=auto_subshard_threshold_bytes,
+            threshold_files=auto_subshard_threshold_files,
+        )
+        if len(sub_entries) > 1:
+            decomposed_count += 1
+            log.info(
+                "auto-subshard: root %s exceeded thresholds "
+                "(bytes>=%d or files>=%d), decomposed into %d subshards",
+                root, auto_subshard_threshold_bytes,
+                auto_subshard_threshold_files, len(sub_entries),
+            )
+        for label, sub_root in sub_entries:
+            shard_db = corpus_shard_db(sub_root, label, profile_out_dir)
+            tasks.append({
+                "label": label,
+                "root": sub_root,
+                "shard_db_path": str(shard_db),
+                "skip_dirs": skip_dirs,
+                "extra_filename_filters": extra_filename_filters,
+                "batch_size": batch_size,
+                "shard_file_workers": shard_file_workers,
+                "shard_file_chunksize": 4,
+                "rebuild": rebuild,
+            })
+    if decomposed_count:
+        log.info(
+            "auto-subshard: decomposed %d of %d profile roots into %d total shards",
+            decomposed_count, len(profile["roots"]), len(tasks),
+        )
 
     # Pre-ingest sizing — order shards largest-first so the long pole
     # gets the longest head start on the worker pool (issue #97 A.1).
@@ -1606,6 +1802,29 @@ def main() -> int:
              "(issue #150). Use --rebuild for the 'nuke and start fresh' "
              "case (e.g., schema migration, corrupt shard recovery).",
     )
+    parser.add_argument(
+        "--auto-subshard-threshold-bytes",
+        type=int,
+        default=DEFAULT_AUTO_SUBSHARD_THRESHOLD_BYTES,
+        help=(
+            "Auto-subshard threshold by raw input bytes (sharded mode "
+            "only). When a profile root's eligible-bytes exceeds this, "
+            "the root is decomposed along its top-level subdirectories "
+            "into sub-shards (issue #147). Default ~5 GB. Set to a "
+            "very large number to disable size-based decomposition."
+        ),
+    )
+    parser.add_argument(
+        "--auto-subshard-threshold-files",
+        type=int,
+        default=DEFAULT_AUTO_SUBSHARD_THRESHOLD_FILES,
+        help=(
+            "Auto-subshard threshold by eligible file count (sharded "
+            "mode only). Same semantics as --auto-subshard-threshold-"
+            "bytes; whichever fires first triggers decomposition. "
+            "Default 100K files."
+        ),
+    )
     args = parser.parse_args()
 
     # Install SIGINT pause handler so an operator can Ctrl+C the build
@@ -1687,6 +1906,8 @@ def main() -> int:
             batch_size=args.batch_size,
             sort_largest_first=not args.no_shard_sort,
             rebuild=args.rebuild,
+            auto_subshard_threshold_bytes=args.auto_subshard_threshold_bytes,
+            auto_subshard_threshold_files=args.auto_subshard_threshold_files,
         )
         update_manifest(out_dir, stats, mode="sharded")
         results[name] = stats
