@@ -512,6 +512,12 @@ class HelixContextManager:
             dense_additive_weight=config.retrieval.dense_additive_weight,
             # Tier-0 review fix (2026-05-16): additive-mode dense merge noise floor.
             dense_additive_min_cosine=config.retrieval.dense_additive_min_cosine,
+            # Semantic-wiring arm (2026-06-02): scoped dense weight + broaden
+            # routing for query_type=="semantic" under HELIX_SEMANTIC_ARM.
+            # Fanned to the solo Genome AND every per-shard Genome (open_read_source
+            # -> ShardedGenomeAdapter -> ShardRouter -> Genome). Default-off.
+            semantic_dense_additive_weight=config.retrieval.semantic_dense_additive_weight,
+            semantic_broaden_routing=config.retrieval.semantic_broaden_routing,
             pki_weight=config.retrieval.pki_weight,
         )
 
@@ -1028,6 +1034,7 @@ class HelixContextManager:
         read_only: bool = False,
         decoder_override: Optional[str] = None,
         caller_model_class: str = "generic",
+        query_type: Optional[str] = None,
     ) -> ContextWindow:
         """
         Build the active context window for a query.
@@ -1051,6 +1058,14 @@ class HelixContextManager:
                 "implicit THIS project" signal that real users have but
                 synthetic benches lack. None = no session context, which
                 preserves the previous behaviour exactly.
+            query_type: optional per-call retrieval-intent hint (semantic-wiring
+                arm, PRD 2026-06-02). Forwarded to ``_retrieve`` → sharded
+                ``query_docs`` so that ``"semantic"`` + HELIX_SEMANTIC_ARM=1
+                broadens routing and scopes the dense weight. ``None`` (default)
+                or any other value with the arm off is inert / byte-identical —
+                production /context callers omit it; the bench injects the
+                needle's ground-truth type for A/B. Mirrors the /fingerprint
+                ``query_type`` thread.
         """
         self._maybe_compact()
 
@@ -1176,6 +1191,7 @@ class HelixContextManager:
                     domains, entities, max_genes,
                     query_text=_sub_queries[0], include_cold=include_cold,
                     party_id=party_id, read_only=read_only,
+                    query_type=query_type,
                 )
             else:
                 import concurrent.futures
@@ -1186,6 +1202,7 @@ class HelixContextManager:
                         d, e, max_genes,
                         query_text=sq, include_cold=include_cold,
                         party_id=party_id, read_only=read_only,
+                        query_type=query_type,
                     )
                     with self.genome._last_query_scores_lock:
                         scores = dict(self.genome.last_query_scores or {})
@@ -1587,6 +1604,7 @@ class HelixContextManager:
         read_only: bool = False,
         decoder_override: Optional[str] = None,
         caller_model_class: str = "generic",
+        query_type: Optional[str] = None,
     ) -> ContextWindow:
         """Async wrapper -- runs the sync pipeline in thread pool."""
         loop = asyncio.get_event_loop()
@@ -1604,6 +1622,7 @@ class HelixContextManager:
             read_only,
             decoder_override,
             caller_model_class,
+            query_type,
         )
 
     def reset_session_state(self) -> None:
@@ -2042,8 +2061,15 @@ class HelixContextManager:
         use_harmonic: bool = True,
         use_sr: Optional[bool] = None,
         read_only: bool = False,
+        query_type: Optional[str] = None,
     ) -> List[Gene]:
         """Query knowledge store + pending buffer for matching documents.
+
+        ``query_type`` (semantic-wiring arm, PRD 2026-06-02) is forwarded to the
+        sharded ``query_docs`` path so the router can broaden routing and the
+        per-shard merge can scope the dense weight when it is "semantic" and
+        HELIX_SEMANTIC_ARM=1. Defaults to None (arm inert). The dense-ANN solo
+        branch is intentionally NOT threaded — the arm is sharded-only.
 
         Parameters
         ----------
@@ -2097,6 +2123,7 @@ class HelixContextManager:
                     use_sr=use_sr,
                     use_entity_graph=self.genome._entity_graph_retrieval_enabled,
                     read_only=read_only,
+                    query_type=query_type,
                 )
         except PromoterMismatch:
             pass

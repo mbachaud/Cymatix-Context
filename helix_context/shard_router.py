@@ -330,6 +330,13 @@ class ShardRouter:
             _n = 1
         self._mem_plan = sqlite_memory_budget(max(1, int(_n or 1)))
 
+        # Semantic-wiring arm (PRD 2026-06-02): broaden routing to all healthy
+        # shards for query_type=="semantic" when HELIX_SEMANTIC_ARM=1. Pulled
+        # from the fanned genome_kwargs (config.retrieval.semantic_broaden_routing).
+        self._semantic_broaden_routing: bool = bool(
+            genome_kwargs.get("semantic_broaden_routing", True)
+        )
+
         # Retrieval introspection — mirrors KnowledgeStore's interface so
         # callers can use either interchangeably.
         self.last_query_scores: Dict[str, float] = {}
@@ -377,7 +384,12 @@ class ShardRouter:
 
     # ── Routing ─────────────────────────────────────────────────────
 
-    def route(self, domains: List[str], entities: List[str]) -> List[str]:
+    def route(
+        self,
+        domains: List[str],
+        entities: List[str],
+        query_type: Optional[str] = None,
+    ) -> List[str]:
         """Return shard names likely to contain matches for the query.
 
         V1: LIKE scan against fingerprint_index.domains/entities.
@@ -387,7 +399,20 @@ class ShardRouter:
 
         Empty query → return every healthy shard (preserves the
         fallback path callers rely on for "return something").
+
+        Semantic-wiring arm (PRD 2026-06-02): when ``query_type=="semantic"``
+        AND env ``HELIX_SEMANTIC_ARM=1`` AND ``semantic_broaden_routing``,
+        bypass the LIKE gate and fan out to every healthy shard so dense-top
+        golds whose shard the literal gate would drop still enter the pool.
+        Any other query_type (or arm off) keeps the byte-identical LIKE scan.
         """
+        if (
+            query_type == "semantic"
+            and self._semantic_broaden_routing
+            and os.environ.get("HELIX_SEMANTIC_ARM") == "1"
+        ):
+            return self.known_shards()
+
         terms = [t.lower() for t in (domains + entities) if t]
         if not terms:
             return self.known_shards()
@@ -450,7 +475,14 @@ class ShardRouter:
         correction multiplier collapses to identity and the routing
         behaves as if scores came directly from that shard.
         """
-        shard_names = self.route(domains, entities)
+        # Semantic-wiring arm (PRD 2026-06-02): pop query_type OUT of the
+        # generic kwargs BEFORE fan-out. It must NOT ride in **kwargs — the
+        # per-shard KnowledgeStore.query_docs would TypeError on an unexpected
+        # kwarg and the except-fallback below silently drops ALL kwargs
+        # (use_harmonic, etc.). Pass it explicitly into route() and each
+        # shard.query_docs() instead. None (default / arm off) is inert.
+        query_type = kwargs.pop("query_type", None)
+        shard_names = self.route(domains, entities, query_type)
         if not shard_names:
             with self._last_query_scores_lock:
                 self.last_query_scores = {}
@@ -531,6 +563,7 @@ class ShardRouter:
                     max_genes=per_shard_fetch,
                     party_id=party_id,
                     read_only=read_only,
+                    query_type=query_type,
                     **kwargs,
                 )
             except TypeError:

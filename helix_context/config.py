@@ -343,6 +343,14 @@ class RetrievalConfig:
     # negligible weight). Consistent with the cold tier's 0.15 min_cosine;
     # deliberately gentle so it removes only noise-grade hits. Unused under RRF.
     dense_additive_min_cosine: float = 0.15
+    # Semantic-wiring arm (2026-06-02; PRD docs/prds/2026-06-02-semantic-wiring-arm.md).
+    # When query_type=="semantic" AND env HELIX_SEMANTIC_ARM=1, the per-shard
+    # dense term is scaled by semantic_dense_additive_weight (instead of
+    # dense_additive_weight) AND routing broadens to all healthy shards. The two
+    # fire together or not at all. Default-off (env unset) => byte-identical
+    # baseline; lexical/tag/SPLADE tiers are never touched (additive KEEP-BOTH).
+    semantic_dense_additive_weight: float = 16.0
+    semantic_broaden_routing: bool = True
     pki_weight: float = 1.0                 # PKI tier, RRF participant
     # Note: filename_anchor_weight, sr_weight reuse their existing knobs above.
 
@@ -757,6 +765,9 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             dense_additive_weight=float(r.get("dense_additive_weight", cfg.retrieval.dense_additive_weight)),
             # Tier-0 review fix (2026-05-16): additive-mode dense merge noise floor.
             dense_additive_min_cosine=float(r.get("dense_additive_min_cosine", cfg.retrieval.dense_additive_min_cosine)),
+            # Semantic-wiring arm (2026-06-02).
+            semantic_dense_additive_weight=float(r.get("semantic_dense_additive_weight", cfg.retrieval.semantic_dense_additive_weight)),
+            semantic_broaden_routing=bool(r.get("semantic_broaden_routing", cfg.retrieval.semantic_broaden_routing)),
             pki_weight=float(r.get("pki_weight", cfg.retrieval.pki_weight)),
         )
 

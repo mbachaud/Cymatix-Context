@@ -433,6 +433,12 @@ class KnowledgeStore:
         # negligible weight). Consistent with query_cold_tier's 0.15
         # min_cosine. Unused under RRF.
         dense_additive_min_cosine: float = 0.15,
+        # Semantic-wiring arm (PRD 2026-06-02). semantic_dense_additive_weight
+        # is consulted only when query_type=="semantic" AND HELIX_SEMANTIC_ARM=1.
+        # semantic_broaden_routing is read by ShardRouter; accepted here so the
+        # fanned genome_kwargs don't raise (Genome ignores it).
+        semantic_dense_additive_weight: float = 16.0,
+        semantic_broaden_routing: bool = True,
         pki_weight: float = 1.0,
         main_conn: Optional[sqlite3.Connection] = None,
         shard_name: str = "main",
@@ -525,6 +531,10 @@ class KnowledgeStore:
         self._dense_additive_weight: float = float(dense_additive_weight)
         # Tier-0 review fix: additive-mode dense merge noise floor (see ctor param).
         self._dense_additive_min_cosine: float = float(dense_additive_min_cosine)
+        # Semantic-wiring arm (PRD 2026-06-02): scoped dense weight, gated at
+        # query time by query_type=="semantic" + env HELIX_SEMANTIC_ARM=1.
+        self._semantic_dense_additive_weight: float = float(semantic_dense_additive_weight)
+        self._semantic_broaden_routing: bool = bool(semantic_broaden_routing)
         self._pki_weight: float = float(pki_weight)
         self._threshold_dim_warned: bool = False
         # Phase 2 claims layer (2026-04-19). Optional hook — when a main.db
@@ -1492,9 +1502,16 @@ class KnowledgeStore:
         use_sr: Optional[bool] = None,
         use_entity_graph: Optional[bool] = None,
         read_only: bool = False,
+        query_type: Optional[str] = None,
     ) -> List[Gene]:
         """
         Find documents matching the given tags signals.
+
+        ``query_type`` (semantic-wiring arm, PRD 2026-06-02): when "semantic"
+        AND env HELIX_SEMANTIC_ARM=1, the additive-mode dense term is scaled by
+        ``self._semantic_dense_additive_weight`` instead of the default
+        ``self._dense_additive_weight``. All other tiers are untouched. Any
+        other value (or arm off) is byte-identical to the prior behaviour.
 
         Multi-tier retrieval:
             1. Exact tag match (highest confidence)
@@ -2087,9 +2104,16 @@ class KnowledgeStore:
                     # branch above gives dense-only genes); its tier_contrib
                     # is recorded as 0.0 so telemetry stays coherent with
                     # what entered the sum.
+                    # Semantic-wiring arm (PRD 2026-06-02): scale ONLY the dense
+                    # term by the scoped weight for semantic queries when the arm
+                    # is enabled, so dense cosine ordering clears the lexical
+                    # stack into @10. Computed once; lex/tag/SPLADE are untouched.
+                    _dense_w = self._dense_additive_weight
+                    if query_type == "semantic" and os.environ.get("HELIX_SEMANTIC_ARM") == "1":
+                        _dense_w = self._semantic_dense_additive_weight
                     for gid, cosine in dense_hits:
                         if float(cosine) >= self._dense_additive_min_cosine:
-                            contribution = float(cosine) * self._dense_additive_weight
+                            contribution = float(cosine) * _dense_w
                             gene_scores[gid] = gene_scores.get(gid, 0.0) + contribution
                             tier_contrib.setdefault(gid, {})["dense"] = contribution
                         else:

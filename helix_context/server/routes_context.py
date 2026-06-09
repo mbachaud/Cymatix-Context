@@ -260,6 +260,14 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
         # Sprint 2 session working-set
         _ignore_delivered = bool(data.get("ignore_delivered", False))
 
+        # Semantic-wiring arm (PRD 2026-06-02): optional per-call query_type,
+        # mirroring the /fingerprint thread. The bench injects the needle's
+        # ground-truth type so the fixed pipeline can be A/B'd on /context
+        # (delivery), not just /fingerprint (recall). Production callers omit
+        # it; only "semantic" + HELIX_SEMANTIC_ARM=1 changes retrieval — any
+        # other value (or arm off) is inert / byte-identical.
+        query_type = (str(data.get("query_type", "")).strip().lower() or None)
+
         window = await helix.build_context_async(
             query,
             include_cold=include_cold,
@@ -271,6 +279,7 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
             read_only=read_only,
             decoder_override=_decoder_override,
             caller_model_class=caller_model_class,
+            query_type=query_type,
         )
 
         # Stage 5 section 3: echo caller_model_class on response.metadata
@@ -721,6 +730,13 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
         if party_id is None:
             party_id = config.session.default_party_id
 
+        # Semantic-wiring arm (PRD 2026-06-02): optional per-call query_type.
+        # The bench injects the needle's ground-truth type so the arm can be
+        # A/B'd; production callers omit it (a runtime semantic detector is a
+        # separate track). Only "semantic" + HELIX_SEMANTIC_ARM=1 changes
+        # retrieval; any other value (or arm off) is inert/byte-identical.
+        query_type = (str(data.get("query_type", "")).strip().lower() or None)
+
         expand_query = profile in {"balanced", "quality"}
         use_harmonic = profile == "quality"
         use_sr = profile == "quality"
@@ -743,6 +759,7 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
                 party_id=party_id,
                 use_harmonic=use_harmonic,
                 use_sr=use_sr,
+                query_type=query_type,
             )
             candidates, refiner_contrib = helix._apply_candidate_refiners(
                 query,
