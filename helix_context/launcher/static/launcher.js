@@ -249,6 +249,12 @@
       sendControl(action);
       return;
     }
+    if (action === "bench-start" || action === "bench-stop") {
+      const ep = action === "bench-start"
+        ? "/api/control/bench/start" : "/api/control/bench/stop";
+      postGenome(ep, {}, actionButton);
+      return;
+    }
     if (action === "genome-select") {
       const path = actionButton.dataset.genomePath;
       if (!path) return;
@@ -324,6 +330,62 @@
       startPolling();
     }
   });
+
+  /* ── First-boot db-selection modal (v0.7.0) ────────────────────── */
+
+  const dbModal = document.querySelector("[data-db-modal]");
+
+  async function populateDbModal() {
+    if (!dbModal || dbModal.hidden) return;
+    const list = dbModal.querySelector("[data-db-modal-list]");
+    if (!list) return;
+    try {
+      const resp = await fetch("/api/genomes");
+      const body = await resp.json();
+      list.replaceChildren();
+      (body.genomes || []).forEach((g) => {
+        const li = document.createElement("li");
+        const btn = document.createElement("button");
+        btn.className = "btn btn--mini";
+        btn.textContent = "Select";
+        btn.addEventListener("click", () => {
+          postGenome("/api/genome/select", { path: g.path }, btn);
+        });
+        const label = document.createElement("span");
+        label.className = "path-value";
+        label.textContent = g.path + "  (" + (g.total_genes ?? "?") + " genes)";
+        li.appendChild(btn);
+        li.appendChild(label);
+        list.appendChild(li);
+      });
+      if (!list.children.length) {
+        const li = document.createElement("li");
+        li.className = "muted";
+        li.textContent = "No existing genomes found — create one below.";
+        list.appendChild(li);
+      }
+    } catch (err) {
+      // next poll retries
+    }
+  }
+
+  async function maybeDismissDbModal() {
+    if (!dbModal || dbModal.hidden) return;
+    try {
+      const resp = await fetch("/api/state");
+      const state = await resp.json();
+      if (state?.helix?.running || state?.needs_db_selection === false) {
+        dbModal.hidden = true;
+      }
+    } catch (err) {
+      // keep showing
+    }
+  }
+
+  if (dbModal && !dbModal.hidden) {
+    populateDbModal();
+    setInterval(maybeDismissDbModal, 2000);
+  }
 
   restoreActiveTab();
   restoreAgentOpenState();

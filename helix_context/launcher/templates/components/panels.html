@@ -6,7 +6,16 @@
 </div>
 {% endif %}
 
-{% if state.helix.availability == "unavailable" or not state.helix.running %}
+{% if state.needs_db_selection %}
+  <div class="panel panel--empty">
+    <p>No database selected — choose or create one in the dialog.</p>
+  </div>
+{% elif state.helix.start_pending %}
+  <div class="panel panel--starting">
+    <span class="spinner" aria-hidden="true"></span>
+    <p>Helix is starting — first boot can take a minute while encoders warm up.</p>
+  </div>
+{% elif state.helix.availability == "unavailable" or not state.helix.running %}
   <div class="panel panel--empty">
     <p>Helix is stopped. Click <strong>Start</strong> to launch the server.</p>
   </div>
@@ -59,6 +68,24 @@
     {% include "components/pipeline_panel.html" %}
   {% endif %}
 
+{% endif %}
+
+{% if state.bench %}
+  <section class="panel panel--bench">
+    <h2 class="panel-title">Bench instance <span class="muted panel-title__hint">dev mode</span></h2>
+    <div class="bench-row">
+      <span class="obs-dot {% if state.bench.running %}obs-dot--green{% else %}obs-dot--down{% endif %}"></span>
+      <span>:{{ state.bench.port }}</span>
+      <span class="path-value bench-row__genome">{{ state.bench.genome }}</span>
+      {% if state.bench.running %}
+        <button class="btn btn--mini" data-action="bench-stop">Stop</button>
+      {% else %}
+        <button class="btn btn--mini" data-action="bench-start">Start</button>
+      {% endif %}
+    </div>
+    <p class="muted bench-row__hint">Point a subagent's bench-harness at
+      <code>http://127.0.0.1:{{ state.bench.port }}</code> — primary chat stays on the main port.</p>
+  </section>
 {% endif %}
 
 {# Observability renders whenever the launcher owns (or expects) the

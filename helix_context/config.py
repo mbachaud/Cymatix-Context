@@ -176,6 +176,15 @@ class ServerConfig:
     host: str = "127.0.0.1"
     port: int = 11437
     upstream: str = "http://localhost:11434"
+    # Dev/configuration mode (v0.7.0): run a SECOND helix instance on a
+    # side port bound to a bench genome, so a primary chat stays attached
+    # to the main genome while a subagent drives the bench-harness against
+    # the bench port. Default OFF — a final deployment leaves this off and
+    # gets exactly one server. The launcher reads these at boot; flip in
+    # helix.toml or via --bench / HELIX_BENCH_ENABLED=1.
+    bench_enabled: bool = False
+    bench_port: int = 11439
+    bench_genome_path: str = "genomes/bench/bench.genome.db"
     upstream_timeout: float = 180.0     # Timeout for proxied requests to Ollama. Bumped from 120s on 2026-05-02 — observed Proxy 500s on slow gemma4:e4b GPQA queries at ~125s; 180s gives long-tail generation room without letting truly stuck requests hang. Override per-deployment via [server] in helix.toml.
 
 
@@ -681,6 +690,11 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             port=int(s.get("port", cfg.server.port)),
             upstream=s.get("upstream", cfg.server.upstream),
             upstream_timeout=float(s.get("upstream_timeout", cfg.server.upstream_timeout)),
+            bench_enabled=bool(s.get("bench_enabled", cfg.server.bench_enabled)),
+            bench_port=int(s.get("bench_port", cfg.server.bench_port)),
+            bench_genome_path=s.get(
+                "bench_genome_path", cfg.server.bench_genome_path,
+            ),
         )
 
     # KnowledgeStore path override — lets sharded vs monolithic servers coexist
@@ -692,6 +706,10 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
 
     # Server env overrides — lets launchers/profiles redirect Helix to a
     # different chat upstream without rewriting helix.toml on disk.
+    if os.environ.get("HELIX_BENCH_ENABLED"):
+        cfg.server.bench_enabled = os.environ["HELIX_BENCH_ENABLED"].strip().lower() in (
+            "1", "true", "yes", "on",
+        )
     if os.environ.get("HELIX_SERVER_UPSTREAM"):
         cfg.server.upstream = os.environ["HELIX_SERVER_UPSTREAM"]
     if os.environ.get("HELIX_SERVER_UPSTREAM_TIMEOUT"):
