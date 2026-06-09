@@ -46,7 +46,7 @@ from .observability_paths import (
 
 log = logging.getLogger("helix.launcher.app")
 
-DEFAULT_GRAFANA_URL = "http://127.0.0.1:3000/d/helix-a27094-pipeline-observatory"
+DEFAULT_GRAFANA_URL = "http://127.0.0.1:3000/d/helix-overview/helix-overview"
 DEFAULT_PROMETHEUS_URL = "http://127.0.0.1:9090/graph"
 
 if TYPE_CHECKING:
@@ -78,9 +78,57 @@ def create_app(
     store: StateStore,
     supervisor: HelixSupervisor,
     collector: StateCollector,
+    observability: Optional["ObservabilitySupervisor"] = None,
+    observability_install_pending: bool = False,
+    grafana_url: str = DEFAULT_GRAFANA_URL,
+    prometheus_url: str = DEFAULT_PROMETHEUS_URL,
 ) -> FastAPI:
     """Build the launcher FastAPI app."""
     templates = _get_templates()
+
+    # --grafana-url / --prometheus-url default to None outside tray mode;
+    # normalize so the Monitoring links always have a destination.
+    grafana_url = grafana_url or DEFAULT_GRAFANA_URL
+    prometheus_url = prometheus_url or DEFAULT_PROMETHEUS_URL
+
+    # Known provisioned dashboards (deploy/otel/grafana/dashboards/*.json).
+    # uid -> human title; rendered as direct links on the Monitoring tab.
+    _grafana_base = grafana_url.split("/d/")[0].rstrip("/")
+    _telem_dashboards = [
+        ("helix-overview", "Overview"),
+        ("helix-a27094-pipeline-observatory", "Pipeline Observatory"),
+        ("helix-retrieval-hitl", "Retrieval + HITL"),
+        ("helix-agent-usage", "Agent Usage"),
+        ("helix-genai", "GenAI (gen_ai.*)"),
+        ("helix-internals", "Internals & Research"),
+    ]
+
+    def _observability_state() -> Optional[dict]:
+        """Launcher-side observability snapshot injected into the page
+        state — service health from the supervisor plus the telemetry
+        links the Monitoring tab renders. None when the operator opted
+        out via HELIX_OBSERVABILITY=0 (panel hidden entirely)."""
+        if observability is None and not observability_install_pending:
+            return None
+        statuses = (
+            observability.all_statuses() if observability is not None else {}
+        )
+        return {
+            "install_pending": observability_install_pending,
+            "services": [
+                {"name": name, "status": status}
+                for name, status in sorted(statuses.items())
+            ],
+            "links": {
+                "grafana": grafana_url,
+                "grafana_base": _grafana_base,
+                "prometheus": prometheus_url,
+                "dashboards": [
+                    {"title": title, "url": f"{_grafana_base}/d/{uid}"}
+                    for uid, title in _telem_dashboards
+                ],
+            },
+        }
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
@@ -114,6 +162,7 @@ def create_app(
     @app.get("/", response_class=HTMLResponse)
     async def dashboard_root(request: Request) -> HTMLResponse:
         state = collector.collect()
+        state["observability"] = _observability_state()
         template = templates.get_template("dashboard.html")
         html = template.render(state=state, launcher_port=_launcher_port(request))
         return HTMLResponse(html)
@@ -124,6 +173,7 @@ def create_app(
         if request.headers.get("sec-fetch-mode") == "navigate":
             return RedirectResponse("/", status_code=303)
         state = collector.collect()
+        state["observability"] = _observability_state()
         template = templates.get_template("components/panels.html")
         html = template.render(state=state)
         return HTMLResponse(html)
@@ -132,7 +182,126 @@ def create_app(
 
     @app.get("/api/state")
     async def api_state():
-        return collector.collect()
+        state = collector.collect()
+        state["observability"] = _observability_state()
+        return state
+
+    # ── genome management (v0.7.0: dashboard parity with the tray's
+    #    "Manage Database" submenu — select or create from the web UI) ──
+
+    @app.get("/api/genomes")
+    async def api_genomes():
+        from . import genome_registry
+        try:
+            infos = genome_registry.discover_genomes()
+            return {
+                "ok": True,
+                "active": str(genome_registry.active_genome_path()),
+                "genomes": [i.as_dict() for i in infos],
+            }
+        except Exception as exc:
+            return JSONResponse(
+                {"ok": False, "error": str(exc)}, status_code=500,
+            )
+
+    def _select_and_restart(target: Path) -> JSONResponse:
+        from . import genome_registry
+        try:
+            resolved = genome_registry.select_genome(target)
+        except FileNotFoundError as exc:
+            return JSONResponse({"ok": False, "error": str(exc)}, status_code=404)
+        genome_registry.clear_cache()
+
+        def _worker() -> None:
+            try:
+                if supervisor.is_running():
+                    supervisor.restart(
+                        reason=f"switch genome to {resolved.name} (dashboard)",
+                    )
+                else:
+                    supervisor.start()
+            except Exception:
+                log.error(
+                    "Genome switch restart failed (%s)", resolved, exc_info=True,
+                )
+
+        threading.Thread(
+            target=_worker, name="helix-genome-switch-web", daemon=True,
+        ).start()
+        return JSONResponse(
+            {"ok": True, "selected": str(resolved), "restarting": True},
+            status_code=202,
+        )
+
+    @app.post("/api/genome/select")
+    async def api_genome_select(request: Request):
+        body = await request.json()
+        raw = (body or {}).get("path", "")
+        if not raw:
+            return JSONResponse(
+                {"ok": False, "error": "missing 'path'"}, status_code=400,
+            )
+        return _select_and_restart(Path(raw))
+
+    @app.post("/api/genome/create")
+    async def api_genome_create(request: Request):
+        body = await request.json()
+        raw = (body or {}).get("path", "")
+        if not raw:
+            return JSONResponse(
+                {"ok": False, "error": "missing 'path'"}, status_code=400,
+            )
+        target = Path(raw).expanduser()
+        if target.suffix != ".db":
+            return JSONResponse(
+                {"ok": False, "error": "genome path must end in .db"},
+                status_code=400,
+            )
+        if target.exists():
+            return JSONResponse(
+                {"ok": False, "error": f"already exists: {target}"},
+                status_code=409,
+            )
+        # Schema construction imports the full knowledge-store stack
+        # (hardware probe and friends) — far too heavy for the event
+        # loop. Validate cheaply here, do the build + select + restart in
+        # a worker thread, and answer 202 immediately; the dashboard's
+        # poll shows the switch when it lands. (v0.7.0 review fix: the
+        # first cut blocked every launcher request mid-create.)
+        try:
+            target.parent.mkdir(parents=True, exist_ok=True)
+        except OSError as exc:
+            return JSONResponse(
+                {"ok": False, "error": f"cannot create parent dir: {exc}"},
+                status_code=500,
+            )
+
+        def _create_worker() -> None:
+            from . import genome_registry
+            try:
+                from ..knowledge_store import Genome
+                g = Genome(path=str(target), synonym_map={})
+                g.close()
+                resolved = genome_registry.select_genome(target)
+                genome_registry.clear_cache()
+                if supervisor.is_running():
+                    supervisor.restart(
+                        reason=f"create+switch genome {resolved.name} (dashboard)",
+                    )
+                else:
+                    supervisor.start()
+            except Exception:
+                log.error(
+                    "Genome create+switch failed (%s)", target, exc_info=True,
+                )
+
+        threading.Thread(
+            target=_create_worker, name="helix-genome-create-web", daemon=True,
+        ).start()
+        return JSONResponse(
+            {"ok": True, "creating": str(target), "restarting": True},
+            status_code=202,
+        )
 
     # ── control endpoints ──────────────────────────────────────────
 
@@ -695,7 +864,15 @@ def main(argv: Optional[list] = None) -> int:
             log.error("Failed to start helix: %s", exc)
             log.info("Launcher will continue; use the Start button once the issue is fixed")
 
-    app = create_app(store=store, supervisor=supervisor, collector=collector)
+    app = create_app(
+        store=store,
+        supervisor=supervisor,
+        collector=collector,
+        observability=observability_sup,
+        observability_install_pending=observability_install_pending,
+        grafana_url=args.grafana_url,
+        prometheus_url=args.prometheus_url,
+    )
 
     url = f"http://{args.host}:{args.port}/"
 

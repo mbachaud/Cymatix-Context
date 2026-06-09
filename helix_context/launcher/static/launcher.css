@@ -414,6 +414,7 @@ p {
 .panel--health-warning,
 .panel--switchboard,
 .panel--database,
+.panel--observability,
 .panel--pipeline {
   grid-column: span 12;
 }
@@ -739,6 +740,8 @@ p {
 .panels[data-active-tab="genome"] .panel--models,
 .panels[data-active-tab="genome"] .panel--tools,
 .panels[data-active-tab="genome"] .panel--database,
+.panels[data-active-tab="genome"] .panel--observability,
+.panels[data-active-tab="monitoring"] .panel--observability,
 .panels[data-active-tab="monitoring"] .panel--diagnostics,
 .panels[data-active-tab="monitoring"] .panel--health-warning,
 .panels[data-active-tab="monitoring"] .panel--empty,
@@ -1055,4 +1058,81 @@ p {
   color: rgba(255, 255, 255, 0.4);
   font-size: 11px;
   font-family: ui-monospace, SFMono-Regular, monospace;
+}
+
+
+/* ── Observability panel (v0.7.0 monitoring sweep) ─────────────────── */
+
+.obs-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.1rem;
+  list-style: none;
+  margin: 0 0 0.6rem;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--border, #2a2a2a);
+  border-radius: 6px;
+}
+
+.obs-service {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+}
+
+.obs-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #555;
+}
+
+.obs-dot--green { background: #3fb950; }
+.obs-dot--red { background: #f85149; }
+.obs-dot--down { background: #6e7681; }
+.obs-dot--external { background: #d29922; }
+
+.telem-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.telem-link {
+  font-size: 0.74rem;
+  padding: 0.22rem 0.55rem;
+  border: 1px solid var(--border, #2a2a2a);
+  border-radius: 999px;
+  text-decoration: none;
+  color: inherit;
+  opacity: 0.85;
+}
+
+.telem-link:hover { opacity: 1; border-color: #8b6d3f; }
+.telem-link--alt { border-style: dashed; }
+
+/* ── Database panel actions ────────────────────────────────────────── */
+
+.btn--mini {
+  font-size: 0.7rem;
+  padding: 0.15rem 0.55rem;
+  line-height: 1.4;
+}
+
+.db-create {
+  display: flex;
+  gap: 0.45rem;
+  margin-top: 0.6rem;
+}
+
+.db-create__input {
+  flex: 1;
+  font: inherit;
+  font-size: 0.78rem;
+  padding: 0.25rem 0.5rem;
+  background: transparent;
+  border: 1px solid var(--border, #2a2a2a);
+  border-radius: 5px;
+  color: inherit;
 }

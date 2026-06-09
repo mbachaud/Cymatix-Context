@@ -1,22 +1,39 @@
 {
-  "title": "Helix — Pipeline Observatory",
+  "title": "Helix — Overview",
   "uid": "helix-overview",
   "editable": true,
   "schemaVersion": 39,
-  "time": {"from": "now-1h", "to": "now"},
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
   "refresh": "10s",
-  "tags": ["helix", "retrieval", "agentome"],
+  "tags": [
+    "helix",
+    "retrieval",
+    "agentome"
+  ],
   "panels": [
     {
       "type": "row",
       "title": "Retrieval",
-      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 0}
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      }
     },
     {
       "type": "timeseries",
       "title": "/context latency (seconds) — p50/p95/p99 by health",
       "datasource": "Prometheus",
-      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 1},
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 1
+      },
       "targets": [
         {
           "expr": "histogram_quantile(0.50, sum by (le, health) (rate(helix_context_latency_seconds_bucket[5m])))",
@@ -34,13 +51,22 @@
           "refId": "C"
         }
       ],
-      "fieldConfig": {"defaults": {"unit": "s"}}
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        }
+      }
     },
     {
       "type": "timeseries",
       "title": "Tier activations per minute (which tiers are firing)",
       "datasource": "Prometheus",
-      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 1},
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 1
+      },
       "targets": [
         {
           "expr": "sum by (tier) (rate(helix_tier_fired_total[1m])) * 60",
@@ -48,13 +74,22 @@
           "refId": "A"
         }
       ],
-      "fieldConfig": {"defaults": {"unit": "short"}}
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        }
+      }
     },
     {
       "type": "heatmap",
       "title": "Per-tier contribution histogram (score magnitude × tier)",
       "datasource": "Prometheus",
-      "gridPos": {"h": 10, "w": 24, "x": 0, "y": 9},
+      "gridPos": {
+        "h": 10,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
       "targets": [
         {
           "expr": "sum by (le, tier) (rate(helix_tier_contribution_score_bucket[5m]))",
@@ -65,19 +100,31 @@
       ],
       "options": {
         "calculate": false,
-        "yAxis": {"axisPlacement": "left"}
+        "yAxis": {
+          "axisPlacement": "left"
+        }
       }
     },
     {
       "type": "row",
       "title": "CWoLa Label Clock",
-      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 19}
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 19
+      }
     },
     {
       "type": "timeseries",
       "title": "CWoLa bucket accumulation",
       "datasource": "Prometheus",
-      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 20},
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 20
+      },
       "targets": [
         {
           "expr": "sum by (bucket) (increase(helix_cwola_bucket_total[1h]))",
@@ -85,14 +132,23 @@
           "refId": "A"
         }
       ],
-      "fieldConfig": {"defaults": {"unit": "short"}}
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        }
+      }
     },
     {
       "type": "stat",
       "title": "f_gap_sq — (f_A − f_B)² divergence",
       "description": "CWoLa promotion gate: >= 0.16 unlocks Sprint 3 PLR training. Auto-computed from A/B bucket ratio.",
       "datasource": "Prometheus",
-      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 20},
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 20
+      },
       "targets": [
         {
           "expr": "helix_cwola_f_gap_sq",
@@ -105,9 +161,18 @@
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              {"color": "red",    "value": null},
-              {"color": "yellow", "value": 0.05},
-              {"color": "green",  "value": 0.16}
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 0.05
+              },
+              {
+                "color": "green",
+                "value": 0.16
+              }
             ]
           }
         }
@@ -116,13 +181,23 @@
     {
       "type": "row",
       "title": "Graph & Chromatin",
-      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 28}
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 28
+      }
     },
     {
       "type": "timeseries",
       "title": "harmonic_links edges by provenance",
       "datasource": "Prometheus",
-      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 29},
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 29
+      },
       "targets": [
         {
           "expr": "helix_harmonic_edges_total",
@@ -130,13 +205,22 @@
           "refId": "A"
         }
       ],
-      "fieldConfig": {"defaults": {"unit": "short"}}
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        }
+      }
     },
     {
       "type": "piechart",
       "title": "Chromatin state distribution",
       "datasource": "Prometheus",
-      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 29},
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 29
+      },
       "targets": [
         {
           "expr": "helix_chromatin_state_total",
@@ -150,7 +234,12 @@
       "title": "Hub concentration ratio (top-1% inbound / mean)",
       "description": "Order parameter for preferential-attachment condensation. Healthy ≲ ~10x; rising trend = retrieval flow funneling through fewer hubs than the edge count suggests. Backfill caps inbound at 500 — sustained ratios alongside p99 ≈ 500 mean the cap is binding.",
       "datasource": "Prometheus",
-      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 37},
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 37
+      },
       "targets": [
         {
           "expr": "helix_hub_concentration_ratio",
@@ -163,9 +252,18 @@
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              {"color": "green",  "value": null},
-              {"color": "yellow", "value": 10},
-              {"color": "red",    "value": 25}
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 10
+              },
+              {
+                "color": "red",
+                "value": 25
+              }
             ]
           }
         }
@@ -176,7 +274,12 @@
       "title": "Inbound-degree distribution (max / p99 / p95 / p50 / mean)",
       "description": "harmonic_links inbound-degree summary. Watch p99 vs the backfill cap (500). max / p99 sustained at the cap = the cap is the binding constraint, not organic structure.",
       "datasource": "Prometheus",
-      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 37},
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 37
+      },
       "targets": [
         {
           "expr": "helix_hub_inbound_degree",
@@ -184,19 +287,33 @@
           "refId": "A"
         }
       ],
-      "fieldConfig": {"defaults": {"unit": "short"}}
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        }
+      }
     },
     {
       "type": "row",
       "title": "Operations",
-      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 45}
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 45
+      }
     },
     {
       "type": "stat",
       "title": "Ribosome backend — cost class",
       "description": "Cost classification of the active ribosome backend. local = Ollama / DeBERTa on the operator machine. api+paid = metered remote API (Claude direct, or LiteLLM routed to a paid model). Pair with the startup WARNING log line. Red = paid; the local-first promise is broken until the operator flips backend in helix.toml.",
       "datasource": "Prometheus",
-      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 46},
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 46
+      },
       "targets": [
         {
           "expr": "helix_ribosome_info",
@@ -206,7 +323,13 @@
         }
       ],
       "options": {
-        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
         "textMode": "name",
         "colorMode": "background",
         "graphMode": "none"
@@ -214,12 +337,43 @@
       "fieldConfig": {
         "defaults": {
           "mappings": [
-            {"type": "value", "value": "local",    "options": {"color": "green",  "index": 0}},
-            {"type": "value", "value": "api+free", "options": {"color": "blue",   "index": 1}},
-            {"type": "value", "value": "api+paid", "options": {"color": "red",    "index": 2}}
+            {
+              "type": "value",
+              "value": "local",
+              "options": {
+                "color": "green",
+                "index": 0
+              }
+            },
+            {
+              "type": "value",
+              "value": "api+free",
+              "options": {
+                "color": "blue",
+                "index": 1
+              }
+            },
+            {
+              "type": "value",
+              "value": "api+paid",
+              "options": {
+                "color": "red",
+                "index": 2
+              }
+            }
           ],
-          "color": {"mode": "thresholds"},
-          "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}]}
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
         }
       }
     },
@@ -228,7 +382,12 @@
       "title": "Active ribosome model",
       "description": "Resolved model string for the active backend. ollama -> RibosomeConfig.model; claude -> claude_model; litellm -> litellm_model.",
       "datasource": "Prometheus",
-      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 46},
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 46
+      },
       "targets": [
         {
           "expr": "helix_ribosome_info",
@@ -238,7 +397,13 @@
         }
       ],
       "options": {
-        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
         "textMode": "name",
         "colorMode": "value",
         "graphMode": "none"
