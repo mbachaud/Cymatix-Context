@@ -25,6 +25,34 @@ from .model_labels import model_pretty
 log = logging.getLogger("helix.launcher.collector")
 
 
+def _coerce_value(value: Any) -> str:
+    """Render a config value as a stable string for the dashboard.
+
+    Booleans become "on"/"off", floats keep three decimals, everything
+    else falls back to repr-style stringification.
+    """
+    if isinstance(value, bool):
+        return "on" if value else "off"
+    if isinstance(value, float):
+        return f"{value:.3f}".rstrip("0").rstrip(".") or "0"
+    if value is None:
+        return "—"
+    return str(value)
+
+
+def _switchboard_summary(settings: List[Dict[str, Any]]) -> str:
+    """One-line chip summary for the dashboard: 'rrf · dense:on · rerank:off · ...'."""
+    pick = {s["label"]: s["value"] for s in settings}
+    chips = [
+        pick.get("fusion_mode", "?"),
+        f"dense:{pick.get('dense_embedding_enabled', '?')}",
+        f"splade:{pick.get('splade_enabled', '?')}",
+        f"rerank:{pick.get('rerank_enabled', '?')}",
+        f"decoder:{pick.get('decoder_mode', '?')}",
+    ]
+    return " · ".join(chips)
+
+
 def _build_tooltip(participant: Dict[str, Any]) -> Dict[str, str]:
     """Compose the tooltip field bundle from a participant dict.
 
@@ -84,6 +112,12 @@ class StateCollector:
         state: Dict[str, Any] = {"helix": helix_state}
         if self.update_checker is not None:
             state["update"] = self.update_checker.check().as_dict()
+
+        # The switchboard + database panels are useful even when helix is
+        # stopped — they describe the *next* run's planned configuration.
+        # Pipeline/runs panels need a live helix so they stay gated below.
+        state["switchboard"] = self._switchboard_panel()
+        state["database"] = self._database_panel()
 
         if not helix_state["running"]:
             return state
@@ -149,6 +183,25 @@ class StateCollector:
             if tokens and (tokens.get("session") or tokens.get("lifetime")):
                 endpoint_seen = True
                 state["tokens"] = self._tokens_panel(tokens)
+
+            # Backfill the database panel with live information from the
+            # running helix (the on-disk-discovery path can drift from the
+            # process that's actually open). Adds an `active` block in the
+            # panel so the dashboard can show "selected vs running".
+            live_genome = self._safe_get_json(client, "/admin/genome")
+            if live_genome:
+                endpoint_seen = True
+                state["database"]["live"] = self._live_genome(live_genome)
+
+            # Pipeline viewer events. The ring is only present on a helix
+            # that includes the launcher-companion code; an older helix
+            # answers 404 and we skip the panel quietly.
+            pipeline = self._safe_get_json(
+                client, "/debug/pipeline/recent", params={"limit": 64},
+            )
+            if pipeline and pipeline.get("events") is not None:
+                endpoint_seen = True
+                state["pipeline"] = self._pipeline_panel(pipeline)
         finally:
             client.close()
 
@@ -461,6 +514,152 @@ class StateCollector:
         except Exception:
             log.debug("Ollama /api/ps unreachable", exc_info=True)
             return None
+
+    # ── switchboard ────────────────────────────────────────────────
+
+    def _switchboard_panel(self) -> Dict[str, Any]:
+        """Snapshot the operationally-interesting retrieval/pipeline knobs.
+
+        Reads `helix_context.config.load_config()` directly. Both the
+        launcher and the supervised helix child resolve the same
+        `helix.toml` from the same working directory, so this snapshot
+        matches the live process. On any load failure the panel reports
+        the error so the operator sees the gap.
+        """
+        try:
+            from helix_context.config import load_config
+            cfg = load_config()
+        except Exception as exc:
+            log.warning("Switchboard: load_config failed (%s)", exc)
+            return {"error": str(exc), "settings": []}
+
+        def _entry(label: str, value: Any, group: str, desc: str = "") -> Dict[str, Any]:
+            return {
+                "label": label,
+                "value": _coerce_value(value),
+                "group": group,
+                "description": desc,
+            }
+
+        retrieval = cfg.retrieval
+        budget = cfg.budget
+        ingestion = cfg.ingestion
+        classifier = getattr(cfg, "classifier", None)
+        ribosome = cfg.ribosome
+
+        settings: List[Dict[str, Any]] = [
+            _entry("fusion_mode", retrieval.fusion_mode, "retrieval",
+                   "additive | rrf — how per-tier scores combine"),
+            _entry("dense_embedding_enabled", retrieval.dense_embedding_enabled,
+                   "retrieval", "BGE-M3 dense recall participates in ranking"),
+            _entry("ann_similarity_threshold", retrieval.ann_similarity_threshold,
+                   "retrieval", "Minimum cosine for a dense hit to count"),
+            _entry("splade_enabled", ingestion.splade_enabled, "ingestion",
+                   "SPLADE sparse expansion at index time"),
+            _entry("rerank_enabled", ingestion.rerank_enabled, "ingestion",
+                   "Cross-encoder rerank on candidates"),
+            _entry("decoder_mode", budget.decoder_mode, "budget",
+                   "full | condensed | minimal | none — decoder prompt size"),
+            _entry("expression_tokens", budget.expression_tokens, "budget",
+                   "Retrieved-context token cap per turn"),
+            _entry("max_genes_per_turn", budget.max_genes_per_turn, "budget",
+                   "Hard ceiling on documents returned per query"),
+            _entry("session_delivery_enabled", budget.session_delivery_enabled,
+                   "budget", "Elide already-delivered docs from session"),
+            _entry("classifier_enabled",
+                   getattr(classifier, "enabled", True) if classifier else True,
+                   "classifier",
+                   "Rule-based query classifier picks decoder mode"),
+            _entry("ribosome_backend", ribosome.effective_backend, "ribosome",
+                   "ollama | claude | litellm | disabled"),
+        ]
+
+        return {
+            "settings": settings,
+            "summary": _switchboard_summary(settings),
+        }
+
+    # ── database (genome registry) ─────────────────────────────────
+
+    def _database_panel(self) -> Dict[str, Any]:
+        """Inventory of available genomes + which one is currently selected.
+
+        Reads the on-disk registry. The dashboard pairs this with the
+        live `/admin/genome` response (added in `collect`) to surface
+        any drift between "what's selected" and "what's actually open".
+        """
+        try:
+            from .genome_registry import (
+                active_genome_path,
+                discover_genomes,
+                is_active,
+            )
+        except Exception as exc:
+            log.warning("Database panel: registry import failed (%s)", exc)
+            return {"error": str(exc), "entries": []}
+
+        try:
+            entries = discover_genomes()
+            active = str(active_genome_path()).lower()
+        except Exception as exc:
+            log.warning("Database panel: discovery failed (%s)", exc, exc_info=True)
+            return {"error": str(exc), "entries": []}
+
+        out_entries = []
+        for info in entries:
+            row = info.as_dict()
+            row["is_active"] = is_active(info)
+            out_entries.append(row)
+
+        return {
+            "active_path": active,
+            "entries": out_entries,
+            "count": len(out_entries),
+        }
+
+    def _live_genome(self, payload: Dict[str, Any]) -> Dict[str, Any]:
+        """Project /admin/genome into the database panel's `live` block."""
+        return {
+            "path": payload.get("path"),
+            "configured_path": payload.get("configured_path"),
+            "env_override": payload.get("env_override"),
+            "size_bytes": payload.get("size_bytes"),
+            "total_genes": payload.get("total_genes"),
+            "error": payload.get("error"),
+        }
+
+    # ── pipeline viewer ────────────────────────────────────────────
+
+    def _pipeline_panel(self, payload: Dict[str, Any]) -> Dict[str, Any]:
+        """Group raw stage events into per-request rows for the panel.
+
+        Each row carries the request id, total ms across observed stages,
+        and a per-stage timing breakdown. Sorted newest first.
+        """
+        events = payload.get("events", []) or []
+        grouped: Dict[str, Dict[str, Any]] = {}
+        for ev in events:
+            rid = ev.get("request_id") or "?"
+            stage = ev.get("stage") or "?"
+            ms = float(ev.get("ms") or 0.0)
+            ts = float(ev.get("ts") or 0.0)
+            row = grouped.setdefault(rid, {
+                "request_id": rid,
+                "stages": {},
+                "ts": ts,
+                "total_ms": 0.0,
+            })
+            row["stages"][stage] = round(row["stages"].get(stage, 0.0) + ms, 3)
+            row["total_ms"] = round(row["total_ms"] + ms, 3)
+            if ts > row["ts"]:
+                row["ts"] = ts
+
+        runs = sorted(grouped.values(), key=lambda r: r["ts"], reverse=True)
+        return {
+            "runs": runs[:20],
+            "event_count": len(events),
+            "ring_max": int(payload.get("ring_max") or 0),
+        }
 
     # ── helpers ────────────────────────────────────────────────────
 

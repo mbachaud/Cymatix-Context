@@ -16,6 +16,16 @@
   </div>
 {% endif %}
 
+{# Switchboard + Database render even when helix is stopped — they
+   describe the planned configuration for the next start. #}
+{% if state.switchboard %}
+  {% include "components/switchboard_panel.html" %}
+{% endif %}
+
+{% if state.database %}
+  {% include "components/database_panel.html" %}
+{% endif %}
+
 {% if state.helix.running %}
   {% if state.parties %}
     {% include "components/parties_panel.html" %}
@@ -43,6 +53,10 @@
 
   {% if state.tokens %}
     {% include "components/tokens_panel.html" %}
+  {% endif %}
+
+  {% if state.pipeline %}
+    {% include "components/pipeline_panel.html" %}
   {% endif %}
 
 {% endif %}

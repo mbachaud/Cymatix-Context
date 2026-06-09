@@ -17,6 +17,7 @@
   const tabStorageKey = "helix-dashboard-tab";
   const agentTabStorageKey = "helix-dashboard-agent-tab";
   const agentOpenStorageKey = "helix-dashboard-agent-open";
+  const pipelineDevStorageKey = "helix-pipeline-dev-view";
 
   let pollTimer = null;
   let inFlight = false;
@@ -97,6 +98,39 @@
     panels.dataset.activeTab = activeTab;
     restoreAgentOpenState();
     restoreAgentTab();
+    restorePipelineDevView();
+  }
+
+  /* ── Pipeline panel: dev-view toggle (default ON) ──────────────── */
+
+  function readPipelineDevView() {
+    try {
+      const saved = window.localStorage.getItem(pipelineDevStorageKey);
+      if (saved === "off") return "off";
+    } catch (err) {
+      // Storage optional — fall through to default.
+    }
+    return "on";
+  }
+
+  function applyPipelineDevView(state) {
+    const next = state === "off" ? "off" : "on";
+    document.querySelectorAll("[data-pipeline-panel]").forEach((panel) => {
+      panel.dataset.dev = next;
+      const checkbox = panel.querySelector("[data-pipeline-dev-toggle]");
+      if (checkbox instanceof HTMLInputElement) {
+        checkbox.checked = next === "on";
+      }
+    });
+    try {
+      window.localStorage.setItem(pipelineDevStorageKey, next);
+    } catch (err) {
+      // Ignore storage failures.
+    }
+  }
+
+  function restorePipelineDevView() {
+    applyPipelineDevView(readPipelineDevView());
   }
 
   async function fetchPanels() {
@@ -227,6 +261,13 @@
     }
   }, true);
 
+  document.addEventListener("change", function (evt) {
+    const target = evt.target;
+    if (!(target instanceof HTMLInputElement)) return;
+    if (!target.matches("[data-pipeline-dev-toggle]")) return;
+    applyPipelineDevView(target.checked ? "on" : "off");
+  });
+
   document.addEventListener("visibilitychange", function () {
     if (document.hidden) {
       stopPolling();
@@ -238,5 +279,6 @@
   restoreActiveTab();
   restoreAgentOpenState();
   restoreAgentTab();
+  restorePipelineDevView();
   startPolling();
 })();

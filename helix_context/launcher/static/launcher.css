@@ -411,7 +411,10 @@ p {
 .panel--all-agents,
 .panel--disconnected-agents,
 .panel--empty,
-.panel--health-warning {
+.panel--health-warning,
+.panel--switchboard,
+.panel--database,
+.panel--pipeline {
   grid-column: span 12;
 }
 
@@ -735,10 +738,211 @@ p {
 .panels[data-active-tab="genome"] .panel--tokens,
 .panels[data-active-tab="genome"] .panel--models,
 .panels[data-active-tab="genome"] .panel--tools,
+.panels[data-active-tab="genome"] .panel--database,
 .panels[data-active-tab="monitoring"] .panel--diagnostics,
 .panels[data-active-tab="monitoring"] .panel--health-warning,
-.panels[data-active-tab="monitoring"] .panel--empty {
+.panels[data-active-tab="monitoring"] .panel--empty,
+.panels[data-active-tab="monitoring"] .panel--switchboard,
+.panels[data-active-tab="monitoring"] .panel--pipeline {
   display: grid;
+}
+
+/* ── Switchboard panel ─────────────────────────────────────────── */
+
+.switchboard-grid {
+  grid-template-columns: minmax(220px, auto) 1fr;
+}
+
+.switchboard-label {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.switchboard-desc {
+  display: block;
+  margin-top: 2px;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.switchboard-value {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--color-accent-soft);
+  color: var(--color-accent-strong);
+}
+
+.switchboard-value--on {
+  background: var(--color-success-soft);
+  color: var(--color-success);
+}
+
+.switchboard-value--off {
+  background: color-mix(in srgb, var(--color-muted) 18%, transparent);
+  color: var(--color-muted);
+}
+
+/* ── Database panel ────────────────────────────────────────────── */
+
+.database-list {
+  display: grid;
+  gap: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.database-entry {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--color-elevated) 60%, transparent);
+}
+
+.database-entry--active {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+
+.database-entry__header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.database-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--color-dim);
+  display: inline-block;
+}
+
+.database-dot--on {
+  background: var(--color-success);
+  box-shadow: 0 0 0 3px var(--color-success-soft);
+}
+
+.database-entry__name {
+  color: var(--color-text);
+  font-size: var(--fs-base);
+}
+
+.database-entry__tag {
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--color-accent-soft);
+  color: var(--color-accent-strong);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.database-entry__stats {
+  margin-left: auto;
+  font-family: var(--font-mono);
+}
+
+.database-entry__path {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.database-entry__folders summary {
+  cursor: pointer;
+  font-size: var(--fs-sm);
+  color: var(--color-muted);
+}
+
+.database-folder-list {
+  margin: 6px 0 0 18px;
+  padding: 0;
+  list-style: disc;
+  display: grid;
+  gap: 2px;
+  font-size: 11px;
+}
+
+.database-entry__folders-empty {
+  margin: 0;
+  font-size: var(--fs-sm);
+}
+
+/* ── Pipeline viewer panel ─────────────────────────────────────── */
+
+.pipeline-toggle {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--color-muted);
+  cursor: pointer;
+}
+
+.pipeline-toggle input {
+  accent-color: var(--color-accent);
+}
+
+.pipeline-summary {
+  margin: 0;
+  font-size: var(--fs-sm);
+}
+
+[data-pipeline-panel][data-dev="off"] [data-pipeline-dev-view] {
+  display: none;
+}
+
+.pipeline-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.pipeline-table th,
+.pipeline-table td {
+  padding: 6px 8px;
+  text-align: right;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.pipeline-table th:first-child,
+.pipeline-table td:first-child {
+  text-align: left;
+}
+
+.pipeline-table th {
+  color: var(--color-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 10px;
+}
+
+.pipeline-rid code {
+  color: var(--color-accent-strong);
+  background: var(--color-accent-soft);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+.pipeline-cell {
+  color: var(--color-text);
+}
+
+.pipeline-cell--total strong {
+  color: var(--color-accent-strong);
 }
 
 @media (max-width: 760px) {

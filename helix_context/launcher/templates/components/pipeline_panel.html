@@ -1,0 +1,70 @@
+{# Pipeline viewer — last ~20 build_context calls with per-stage timings.
+   Backed by /debug/pipeline/recent on the helix backend.
+
+   The "Dev view" toggle is dev-only and defaults ON (handled in JS via
+   localStorage key `helix-pipeline-dev-view`). When OFF, only the
+   summary line is shown; when ON, the per-stage table renders. #}
+
+<section
+  class="panel panel--pipeline"
+  data-pipeline-panel="1"
+  data-default-dev="on"
+>
+  <h2 class="panel-title">
+    Pipeline
+    {% if state.pipeline.runs %}
+      <span class="panel-count">{{ state.pipeline.runs|length }}</span>
+    {% endif %}
+    <label class="pipeline-toggle">
+      <input type="checkbox" data-pipeline-dev-toggle checked>
+      <span>Dev view</span>
+    </label>
+  </h2>
+
+  {% if not state.pipeline.runs %}
+    <p class="muted">
+      No pipeline calls observed yet — send a query through
+      <code>/context</code> to populate this view.
+    </p>
+  {% else %}
+    <p class="muted pipeline-summary">
+      Showing last {{ state.pipeline.runs|length }} of up to
+      {{ state.pipeline.ring_max }} buffered events.
+    </p>
+
+    <div data-pipeline-dev-view>
+      <table class="pipeline-table">
+        <thead>
+          <tr>
+            <th scope="col">Request</th>
+            <th scope="col">extract</th>
+            <th scope="col">express</th>
+            <th scope="col">rerank</th>
+            <th scope="col">splice</th>
+            <th scope="col">assemble</th>
+            <th scope="col">total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for run in state.pipeline.runs %}
+            <tr>
+              <td class="pipeline-rid"><code>{{ run.request_id }}</code></td>
+              {% for stage in ["extract", "express", "rerank", "splice", "assemble"] %}
+                <td class="pipeline-cell">
+                  {% if run.stages.get(stage) is not none %}
+                    {{ "%.1f"|format(run.stages.get(stage)) }} ms
+                  {% else %}
+                    <span class="muted">—</span>
+                  {% endif %}
+                </td>
+              {% endfor %}
+              <td class="pipeline-cell pipeline-cell--total">
+                <strong>{{ "%.1f"|format(run.total_ms) }} ms</strong>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endif %}
+</section>

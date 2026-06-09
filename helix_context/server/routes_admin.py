@@ -371,6 +371,68 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
     async def health_history_endpoint(limit: int = 50):
         return helix.genome.health_history(limit=limit)
 
+    # -- Pipeline viewer feed (launcher dashboard) ---
+
+    @app.get("/debug/pipeline/recent")
+    async def pipeline_recent_endpoint(limit: int = 32):
+        """Most recent build_context stage events for the launcher's
+        pipeline-viewer panel. Each event is
+            { request_id, stage, ms, ts }
+        Ordered oldest to newest. Backed by a bounded in-process ring
+        (see helix_context.context_manager.get_recent_pipeline_events).
+        """
+        try:
+            from ..context_manager import (
+                get_recent_pipeline_events,
+                get_pipeline_ring_max,
+            )
+            events = get_recent_pipeline_events(limit=max(1, min(int(limit), 200)))
+            return {"events": events, "ring_max": get_pipeline_ring_max()}
+        except Exception as exc:
+            log.warning("/debug/pipeline/recent failed: %s", exc, exc_info=True)
+            return JSONResponse({"error": str(exc)}, status_code=500)
+
+    # -- Active genome path (launcher dashboard) ---
+
+    @app.get("/admin/genome")
+    async def admin_genome_endpoint():
+        """Describe the genome file the running process actually opened.
+
+        Used by the launcher's Database panel to confirm that the
+        supervised helix is serving from the file the user expects (and
+        to detect divergence when helix was started outside the launcher
+        with a different HELIX_GENOME_PATH override).
+        """
+        from pathlib import Path as _Path
+
+        path_str = str(getattr(config.genome, "path", "")) or "genome.db"
+        resolved = _Path(path_str)
+        try:
+            resolved = resolved.resolve()
+        except OSError:
+            pass
+
+        out = {
+            "path": str(resolved),
+            "configured_path": path_str,
+            "env_override": os.environ.get("HELIX_GENOME_PATH"),
+        }
+        try:
+            if resolved.exists() and resolved.is_file():
+                st = resolved.stat()
+                out["size_bytes"] = st.st_size
+                out["mtime"] = st.st_mtime
+            else:
+                out["error"] = "genome file not found on disk"
+        except OSError as exc:
+            out["error"] = f"stat failed: {exc}"
+
+        try:
+            out["total_genes"] = int(helix.genome.stats().get("total_genes", 0))
+        except Exception:
+            log.debug("/admin/genome stats failed", exc_info=True)
+        return out
+
     # -- Token metrics endpoint ---
 
     @app.get("/metrics/tokens")
