@@ -743,6 +743,53 @@ def test_dense_additive_min_cosine_default_and_plumbing():
         g_custom.close()
 
 
+def test_dense_additive_weight_zero_disables_additive_dense():
+    """Issue #138 (sweep harness): ``dense_additive_weight=0.0`` flips
+    the additive dense merge OFF — a dense-only gene still appears in
+    ``gene_scores`` via the 1e-9 set-membership epsilon (so the candidate
+    pool is identical to weight=4.0) but contributes 0 to the score and
+    cannot evict a lexical hit.
+
+    This is the "dense-off arm" the H10q write-up calls out as the
+    empirical winner on EnterpriseRAG-10K — exposing it as a true 0-floor
+    rather than a fallback lets the sweep at
+    ``benchmarks/sweep_dense_additive_weight.py`` include it as the
+    lower bound of the weight range without a separate "disable dense"
+    code path.
+    """
+    g = _additive_dense_genome(dense_additive_weight=0.0)
+    try:
+        # Token-disjoint needle reachable only via the dense merge.
+        g.upsert_gene(_make_gene(
+            "alpha lexical anchor body", domains=["alpha"], gene_id="anchor",
+        ))
+        g.upsert_gene(_make_gene(
+            "wholly disjoint surface tokens for the needle body",
+            domains=["needle"], gene_id="needle-zero",
+        ))
+        target = "zero-weight dense target"
+        _populate_v2(g, "needle-zero", _hash_vec(target, 1024))
+        _populate_v2(g, "anchor", _hash_vec("anchor-noise", 1024))
+        g._dense_codec = _FakeCodec(dim=1024, query_target=target)
+
+        g.query_docs(domains=["alpha"], entities=[], max_genes=12)
+        contribs = g.last_tier_contributions
+
+        # The needle was surfaced (its cosine ~1.0 cleared the
+        # min_cosine floor) but contributes ZERO to gene_scores because
+        # cosine * 0.0 == 0.0.
+        assert "needle-zero" in contribs, (
+            "dense-only needle should still be a candidate at weight=0.0 "
+            "(the merge runs and records tier_contrib)"
+        )
+        assert contribs["needle-zero"]["dense"] == pytest.approx(0.0, abs=1e-9), (
+            f"weight=0.0 must zero out the dense contribution; "
+            f"got {contribs['needle-zero'].get('dense')}"
+        )
+    finally:
+        g.close()
+
+
 # ── 8. live — real BGE-M3 dense recall through query_docs (additive) ─
 
 

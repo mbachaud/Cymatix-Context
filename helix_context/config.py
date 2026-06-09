@@ -336,6 +336,16 @@ class RetrievalConfig:
     # fusion_mode == "additive" a dense hit's cosine is scaled by this
     # before entering the gene_scores accumulator. BM25-comparable
     # (tag_exact_weight is 3.0). Unused under RRF.
+    #
+    # Issue #138 (tracked): the H10q investigation on EnterpriseRAG-Bench
+    # 10K observed gold eviction at the shipped 4.0 weight on
+    # adversarial prose queries (per-query dense tier totals ran 9-28 vs
+    # tag-exact ~3 per doc). The smoke sweep harness at
+    # ``benchmarks/sweep_dense_additive_weight.py`` covers
+    # {0.0, 2.0, 3.0, 4.0, 6.0} including the dense-off arm; ship the
+    # winning value once an enterprise-class question set is wired in.
+    # ``0.0`` flips dense additively-off without disabling the dense
+    # write path or RRF participation.
     dense_additive_weight: float = 4.0
     # Tier-0 review fix (2026-05-16): noise floor for the additive-mode
     # dense merge. A dense hit whose cosine is below this does not
