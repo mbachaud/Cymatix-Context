@@ -68,6 +68,7 @@ import logging
 import multiprocessing as mp
 import os
 import re
+import signal
 import sys
 import time
 from datetime import datetime, timezone
@@ -102,6 +103,79 @@ logging.basicConfig(
     datefmt="%H:%M:%S",
 )
 log = logging.getLogger("bench.matrix")
+
+
+# ── SIGINT pause-then-resume (issue #151) ────────────────────────────────
+#
+# Module-level pause flag toggled by the SIGINT handler. The drain loop
+# checks ``_PAUSE_REQUESTED`` at every batch boundary; on detection it
+# raises ``_PauseRequested`` which ``_build_one_shard`` catches, writes a
+# checkpoint marker to ``<profile_out_dir>/.paused-at-<shard>-<row>.json``,
+# commits the partial shard, and exits cleanly. A second SIGINT short-
+# circuits to ``os._exit(130)`` for the impatient-operator case.
+
+_PAUSE_REQUESTED = False
+# Set by ``main()`` so ``_build_one_shard`` can write the checkpoint marker
+# to the right profile directory without plumbing the path through every
+# call site. Only meaningful in the parent process; worker subprocesses
+# inherit the value at fork but never set it themselves.
+_PAUSE_CHECKPOINT_DIR: Optional[str] = None
+
+
+class _PauseRequested(Exception):
+    """Raised by the drain loop when ``_PAUSE_REQUESTED`` is set, so the
+    caller (``_build_one_shard``) can commit + write a checkpoint marker
+    before letting the process exit cleanly."""
+
+
+def _install_sigint_handler() -> None:
+    """Register a SIGINT handler that sets ``_PAUSE_REQUESTED`` on first
+    Ctrl+C and ``os._exit(130)`` on the second. Idempotent — calling it
+    twice replaces the previous handler with an equivalent one.
+    """
+    def _handler(signum, frame):
+        global _PAUSE_REQUESTED
+        if _PAUSE_REQUESTED:
+            # Second SIGINT: operator is impatient, drop everything.
+            log.warning(
+                "second SIGINT received -- exiting immediately with 130"
+            )
+            os._exit(130)
+        _PAUSE_REQUESTED = True
+        log.warning(
+            "pause requested, finishing current batch and exiting cleanly "
+            "(send SIGINT again to force-exit)"
+        )
+
+    signal.signal(signal.SIGINT, _handler)
+
+
+def _write_pause_checkpoint(shard: str, row: int) -> Optional[str]:
+    """Write ``<_PAUSE_CHECKPOINT_DIR>/.paused-at-<shard>-<row>.json`` with
+    a small JSON payload. Returns the path written, or None if no
+    checkpoint dir was configured (e.g., called from a worker subprocess
+    or before ``main()`` ran).
+    """
+    if not _PAUSE_CHECKPOINT_DIR:
+        return None
+    try:
+        os.makedirs(_PAUSE_CHECKPOINT_DIR, exist_ok=True)
+        path = os.path.join(
+            _PAUSE_CHECKPOINT_DIR, f".paused-at-{shard}-{row}.json"
+        )
+        payload = {
+            "shard": shard,
+            "row": row,
+            "paused_at": datetime.now(timezone.utc).isoformat(),
+            "pid": os.getpid(),
+        }
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(payload, f, indent=2)
+        log.info("pause checkpoint written: %s", path)
+        return path
+    except Exception:
+        log.warning("failed to write pause checkpoint", exc_info=True)
+        return None
 
 
 # ── Extension allow-list ──────────────────────────────────────────────────
@@ -319,6 +393,63 @@ def _iter_ingestable_files(
     return files
 
 
+def _filter_to_unseen(
+    files: list[tuple[str, str]], shard_db_path: str,
+) -> list[tuple[str, str]]:
+    """Drop files whose ``source_id`` is already in the per-shard ``.db``.
+
+    Used by ``_build_one_shard`` to make restart-after-kill cheap: re-
+    walking + chunking + tagging the files an earlier partial run
+    already ingested is pure waste, since ``Genome.upsert_doc`` is
+    content-hash idempotent anyway. ``source_id`` is the absolute file
+    path the tagger stores on each gene; we collect the distinct set
+    from the existing shard and drop matches from the walk.
+
+    Falls back to returning ``files`` unchanged if the shard ``.db``
+    doesn't exist yet (fresh build), has no ``genes`` table, or the
+    query fails for any other reason — file-level skip is a best-
+    effort optimisation, not a correctness gate. (Issue #150.)
+    """
+    if not os.path.exists(shard_db_path):
+        return files
+    import sqlite3 as _sqlite3
+    try:
+        conn = _sqlite3.connect(
+            f"file:{shard_db_path}?mode=ro", uri=True, timeout=5,
+        )
+    except _sqlite3.Error:
+        return files
+    try:
+        tables = {
+            r[0] for r in conn.execute(
+                "SELECT name FROM sqlite_master WHERE type='table'"
+            ).fetchall()
+        }
+        if "genes" not in tables:
+            return files
+        try:
+            seen = {
+                r[0] for r in conn.execute(
+                    "SELECT DISTINCT source_id FROM genes"
+                ).fetchall()
+                if r[0] is not None
+            }
+        except _sqlite3.Error:
+            return files
+    finally:
+        conn.close()
+    if not seen:
+        return files
+    filtered = [(fp, ext) for (fp, ext) in files if fp not in seen]
+    log.info(
+        "file-level resume: dropped %d/%d already-ingested files "
+        "(shard=%s)",
+        len(files) - len(filtered), len(files),
+        os.path.basename(shard_db_path),
+    )
+    return filtered
+
+
 # ── Batched-SPLADE writer (drains gene dicts -> genome) ──────────────────
 
 
@@ -393,6 +524,12 @@ def _drain_with_batched_splade(
         while len(buf) >= batch_size:
             _flush(buf[:batch_size])
             del buf[:batch_size]
+            # SIGINT batch boundary (issue #151): the previous _flush call
+            # already committed the batch's genes to the shard DB, so this
+            # is a safe checkpoint. Raise so ``_build_one_shard`` can
+            # write the pause marker and the caller can exit cleanly.
+            if _PAUSE_REQUESTED:
+                raise _PauseRequested()
 
     if buf:
         _flush(buf)
@@ -1034,6 +1171,7 @@ def _build_one_shard(
     batch_size: int = 64,
     file_workers: int = 1,
     file_chunksize: int = 4,
+    rebuild: bool = False,
 ) -> dict:
     """Build a single shard ``.db`` for ``root``. Returns the shard's
     fingerprint payload + stats -- caller writes rows into main.db.
@@ -1043,17 +1181,38 @@ def _build_one_shard(
     both the serial sharded build (called from the parent process) and the
     parallel shard executor (called inside subprocesses via
     :func:`_shard_worker_entry`).
+
+    ``rebuild=True`` restores the pre-resume behaviour: any existing
+    shard ``.db`` (plus its WAL/SHM sidecars) is unconditionally unlinked
+    before the build starts. Default ``rebuild=False`` keeps a partial
+    shard on disk so the file-level resume path (:func:`_filter_to_unseen`)
+    can skip already-ingested files (issue #150).
     """
     p = Path(shard_db_path)
-    # Resume support: if a prior run left a complete shard on disk
-    # (genes ingested + 100% dense coverage), skip rebuild. Returning early
-    # here lets ``_commit_shard_result`` re-register via INSERT OR REPLACE.
-    if p.exists():
+    if rebuild:
+        # Operator opted into the legacy "nuke and rebuild" behaviour. Skip
+        # the salvage/resume path entirely so a corrupt shard from a
+        # previous run cannot leak into the fresh build.
+        if p.exists():
+            log.info("--rebuild: unlinking existing shard %s", p)
+            p.unlink()
+            for s in (str(p) + "-wal", str(p) + "-shm"):
+                if os.path.exists(s):
+                    os.remove(s)
+    elif p.exists():
+        # Resume support: if a prior run left a complete shard on disk
+        # (genes ingested + 100% dense coverage), skip rebuild. Returning
+        # early lets ``_commit_shard_result`` re-register via INSERT OR
+        # REPLACE. Incomplete shards are kept on disk so file-level
+        # resume can skip the files they already ingested.
         salvaged = _try_salvage_complete_shard(p, label, root)
         if salvaged is not None:
             return salvaged
-        # Incomplete: nuke and rebuild.
-        p.unlink()
+        # Clear stale WAL/SHM sidecars so the new connection starts clean.
+        # The .db itself is preserved -- ``_filter_to_unseen`` reads its
+        # ingested ``source_id`` set to skip files an earlier partial run
+        # already handled. ``Genome.upsert_doc`` is content-hash idempotent
+        # so even repeat-ingested rows can't duplicate.
         for s in (str(p) + "-wal", str(p) + "-shm"):
             if os.path.exists(s):
                 os.remove(s)
@@ -1068,17 +1227,36 @@ def _build_one_shard(
         "missing_roots": [],
         "t0": time.perf_counter(),
     }
+    paused = False
     try:
         if use_batched_splade:
             files = _iter_ingestable_files(
                 [root], skip_dirs, extra_filename_filters, s_stats,
             )
+            # File-level resume (issue #150): if a previous partial run
+            # left some files already ingested in this shard, skip them.
+            # No-op for ``rebuild=True`` since the shard was unlinked above.
+            if not rebuild:
+                files = _filter_to_unseen(files, str(p))
             gen = _iter_chunked_file_gene_dicts(
                 files, file_workers=file_workers, chunksize=file_chunksize,
             )
-            _drain_with_batched_splade(
-                gen, shard, s_stats, batch_size=batch_size,
-            )
+            try:
+                _drain_with_batched_splade(
+                    gen, shard, s_stats, batch_size=batch_size,
+                )
+            except _PauseRequested:
+                # SIGINT was raised at a batch boundary. The genes in
+                # ``s_stats['genes']`` are already committed to the shard
+                # DB (each batch flushes through ``Genome.upsert_doc``);
+                # write the checkpoint marker and let the caller exit.
+                paused = True
+                _write_pause_checkpoint(label, s_stats["genes"])
+                log.info(
+                    "shard %s paused at row %d (genes committed); "
+                    "restart the same command to resume",
+                    label, s_stats["genes"],
+                )
         else:
             tagger = CpuTagger()
             chunker = CodonChunker()
@@ -1166,9 +1344,18 @@ def _build_one_shard(
             "missing_roots": s_stats["missing_roots"],
             "fingerprint_payload": fp_payload,
             "source_index_payload": si_payload,
+            "paused": paused,
         }
     finally:
         shard.close()
+
+    # Skip the expensive dense backfill if the shard was paused mid-ingest
+    # -- a partial shard will be rebuilt-and-resumed on the next run, and
+    # the next run's ``_backfill_dense`` covers the final set in one pass.
+    if paused:
+        result["dense_coverage"] = 0.0
+        result["dense_genes_populated"] = 0
+        return result
 
     # Tier-0 PR-2: post-build dense pass on this per-shard ``.db`` — run
     # only after the shard's ``Genome`` has been closed above. The
@@ -1195,6 +1382,7 @@ def _shard_worker_entry(task: dict) -> dict:
         batch_size=task.get("batch_size", 64),
         file_workers=task.get("shard_file_workers", 1),
         file_chunksize=task.get("shard_file_chunksize", 4),
+        rebuild=task.get("rebuild", False),
     )
 
 
@@ -1206,6 +1394,7 @@ def build_profile_sharded(
     shard_file_workers: int = 0,
     batch_size: int = 64,
     sort_largest_first: bool = True,
+    rebuild: bool = False,
     auto_subshard_threshold_bytes: int = DEFAULT_AUTO_SUBSHARD_THRESHOLD_BYTES,
     auto_subshard_threshold_files: int = DEFAULT_AUTO_SUBSHARD_THRESHOLD_FILES,
 ) -> dict:
@@ -1244,8 +1433,15 @@ def build_profile_sharded(
     os.makedirs(profile_out_dir, exist_ok=True)
 
     main_path = main_db_path(profile_out_dir)
-    if main_path.exists():
-        log.info("removing existing %s", main_path)
+    # Wipe the routing DB only when the operator opted into ``--rebuild``.
+    # Preserving it on resume keeps the ``shards`` / ``fingerprint_index`` /
+    # ``source_index`` registrations from prior runs so the orchestrator
+    # can decide which shards to skip without re-querying each one. The
+    # per-shard ``_try_salvage_complete_shard`` path then re-registers
+    # via INSERT OR REPLACE, so re-running a completed shard is idempotent
+    # even if main.db was preserved.
+    if rebuild and main_path.exists():
+        log.info("--rebuild: removing existing %s", main_path)
         main_path.unlink()
         for sidecar in (str(main_path) + "-wal", str(main_path) + "-shm"):
             if os.path.exists(sidecar):
@@ -1317,6 +1513,7 @@ def build_profile_sharded(
                 "batch_size": batch_size,
                 "shard_file_workers": shard_file_workers,
                 "shard_file_chunksize": 4,
+                "rebuild": rebuild,
             })
     if decomposed_count:
         log.info(
@@ -1414,13 +1611,22 @@ def build_profile_sharded(
             totals[k] += res[k]
         totals["missing_roots"].extend(res["missing_roots"])
 
+    paused_mid_run = False
     if shard_workers <= 1:
         for task in tasks:
             log.info(
                 "=== Shard %s @ %s -> %s ===",
                 task["label"], task["root"], task["shard_db_path"],
             )
-            _commit_shard_result(_shard_worker_entry(task))
+            res = _shard_worker_entry(task)
+            _commit_shard_result(res)
+            if res.get("paused") or _PAUSE_REQUESTED:
+                paused_mid_run = True
+                log.warning(
+                    "pause acknowledged after shard %s -- skipping "
+                    "remaining shards", task["label"],
+                )
+                break
     else:
         log.info(
             "dispatching %d shards across %d workers (%d file_workers each)",
@@ -1429,7 +1635,11 @@ def build_profile_sharded(
         with ProcessPoolExecutor(max_workers=shard_workers) as pool:
             futures = [pool.submit(_shard_worker_entry, task) for task in tasks]
             for fut in as_completed(futures):
-                _commit_shard_result(fut.result())
+                res = fut.result()
+                _commit_shard_result(res)
+                if res.get("paused"):
+                    paused_mid_run = True
+    totals["paused"] = paused_mid_run
 
     elapsed = time.perf_counter() - totals["t0"]
     totals["elapsed_s"] = round(elapsed, 1)
@@ -1583,6 +1793,16 @@ def main() -> int:
              "original declared order).",
     )
     parser.add_argument(
+        "--rebuild", action="store_true",
+        help="Unconditionally unlink existing per-shard ``.db`` files and "
+             "the routing ``main.genome.db`` before building. Default: "
+             "file-level resume — complete shards are skipped via "
+             "``_try_salvage_complete_shard`` and partial shards' "
+             "already-ingested files are dropped via ``_filter_to_unseen`` "
+             "(issue #150). Use --rebuild for the 'nuke and start fresh' "
+             "case (e.g., schema migration, corrupt shard recovery).",
+    )
+    parser.add_argument(
         "--auto-subshard-threshold-bytes",
         type=int,
         default=DEFAULT_AUTO_SUBSHARD_THRESHOLD_BYTES,
@@ -1606,6 +1826,13 @@ def main() -> int:
         ),
     )
     args = parser.parse_args()
+
+    # Install SIGINT pause handler so an operator can Ctrl+C the build
+    # cleanly at the next batch boundary instead of losing the in-flight
+    # batch. A second SIGINT short-circuits to ``os._exit(130)``. (Issue
+    # #151.) Only relevant for the parent process; shard-worker subprocesses
+    # inherit Python's default SIGINT and are reaped by the executor.
+    _install_sigint_handler()
 
     profiles = parse_profile_arg(args.profile)
 
@@ -1658,9 +1885,14 @@ def main() -> int:
     else:
         shard_file_workers = max(1, args.shard_file_workers)
 
+    global _PAUSE_CHECKPOINT_DIR
     results = {}
     for name in profiles:
         profile_dir = os.path.join(out_dir, name)
+        # Point the SIGINT checkpoint at this profile's output dir so
+        # ``_write_pause_checkpoint`` lands the marker alongside the
+        # partial shard ``.db`` files.
+        _PAUSE_CHECKPOINT_DIR = profile_dir
         log.info(
             "### Profile: %s (sharded, %d shard workers x %d file workers) ###",
             name, shard_workers, shard_file_workers,
@@ -1673,11 +1905,18 @@ def main() -> int:
             shard_file_workers=shard_file_workers,
             batch_size=args.batch_size,
             sort_largest_first=not args.no_shard_sort,
+            rebuild=args.rebuild,
             auto_subshard_threshold_bytes=args.auto_subshard_threshold_bytes,
             auto_subshard_threshold_files=args.auto_subshard_threshold_files,
         )
         update_manifest(out_dir, stats, mode="sharded")
         results[name] = stats
+        if stats.get("paused") or _PAUSE_REQUESTED:
+            log.warning(
+                "build paused mid-profile %s -- exiting cleanly without "
+                "starting remaining profiles", name,
+            )
+            break
 
     log.info("=" * 60)
     log.info("SUMMARY (sharded)")
