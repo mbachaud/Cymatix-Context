@@ -2,6 +2,51 @@
 
 ## Unreleased
 
+## 0.7.0 — 2026-06-09
+
+Dashboard + UX release: the tray-hosted web dashboard graduates from a
+read-only status page to the primary control surface, and the launcher
+grows a dev/configuration dual-port mode. Driven by a live full-stack QA
+session (clean-worktree boot, OTel routing verified end-to-end into
+Prometheus / Tempo / Loki / Grafana).
+
+- **feat(launcher): dev-mode dual main+bench ports (#197).**
+  `[server] bench_enabled / bench_port (11439) / bench_genome_path` — the
+  launcher supervises a second helix pinned to the bench genome via a
+  per-instance env overlay, with its own state file, log, web controls
+  (`/api/control/bench/start|stop`) and a dashboard card. Primary chat
+  stays on the main genome/port; a subagent's bench-harness targets the
+  bench port. Default OFF (`--bench` / `HELIX_BENCH_ENABLED=1`
+  override) — final deployments get exactly one server. Verified live:
+  ingest against :11439 lands only in the bench store.
+
+- **feat(launcher): startup + first-boot UX (#197).** Alive-but-not-
+  ready now renders a loading spinner ("encoders warming up") instead of
+  "stopped"; when no genome exists at the active path the launcher skips
+  autostart and the dashboard pops a select-or-create database dialog
+  that dismisses itself once helix is up. `start-helix-tray.bat` goes
+  headless via `pythonw` + new `--log-file` flag (python /B fallback).
+
+- **feat(launcher): dashboard wiring sweep (#195).** Genome management
+  from the web UI (`GET /api/genomes`, `POST /api/genome/select|create`,
+  Select buttons + Create-and-switch form — heavy work on worker
+  threads, 202 responses); Observability panel with per-service status
+  dots + direct links to all six Grafana dashboards and Prometheus;
+  `/api/state` carries the same snapshots for automation.
+
+- **fix(store): fresh-checkout boot crash (#195).** `KnowledgeStore`
+  mkdirs the genome's parent chain — a clean clone/worktree previously
+  died with `sqlite3.OperationalError: unable to open database file`
+  behind a silent 90s supervisor timeout.
+
+- **feat(obs): grafana sidecar hardening (#195).** Pinned to 127.0.0.1
+  with anonymous Admin for the local single-operator surface (GF_*
+  overrides win) — telemetry links land on dashboards, not a login
+  wall. Prometheus pinned to 127.0.0.1:9090; update/analytics
+  phone-home disabled. The duplicate `helix-overview` dashboard uid is
+  now a real **Helix — Overview** entry point.
+
+
 ## 0.6.5 — 2026-06-09
 
 Eleven PRs landed same-day on top of 0.6.4 — the open-PR backlog merge
