@@ -168,7 +168,17 @@ class TestResetLifetime:
 
 
 class TestThreadSafety:
-    def test_concurrent_adds_are_atomic(self, counter):
+    def test_concurrent_adds_are_atomic(self, counter_path):
+        # NOTE: deliberately NOT the shared ``counter`` fixture. That
+        # fixture sets ``persist_interval_s=0.0`` so persistence tests can
+        # trigger a write on every add — but here 10 threads x 10k adds
+        # would then do 200,000 locked mkstemp+os.replace disk writes
+        # (each one AV-scanned on Windows), turning a <1s atomicity check
+        # into a multi-minute suite-hanger. A long interval keeps every
+        # add in-memory, which is exactly what this test measures.
+        counter = TokenCounter(
+            persist_path=counter_path, persist_interval_s=3600.0,
+        )
         # 10 threads, each adding (1, 1) ten thousand times.
         # Final session total should be exactly 200000.
         N_THREADS = 10

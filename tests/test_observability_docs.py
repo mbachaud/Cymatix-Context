@@ -38,48 +38,63 @@ def _read(rel: str) -> str:
 # ---------------------------------------------------------------------------
 
 
-def test_root_readme_has_native_observability_section():
+# NOTE (post README-v3, commit 97e1ed6): the proof-first restructure moved
+# the deep observability / tray / Docker content out of the root README and
+# into docs/SETUP.md + docs/architecture/OBSERVABILITY.md. These four tests
+# now pin the v3 contract: README keeps a compact "## Observability" section
+# that links out, and the moved content must actually exist at the link
+# targets so the chain README -> SETUP/OBSERVABILITY -> deploy/otel stays
+# unbroken.
+
+
+def test_root_readme_has_observability_section():
     body = _read("README.md")
-    assert "Native observability (default)" in body, (
-        "Root README is missing the 'Native observability (default)' section"
+    assert "## Observability" in body, (
+        "Root README is missing the '## Observability' section"
+    )
+    assert "setup-grafana-telem" in body, (
+        "Root README's Observability section must show the sidecar setup script"
+    )
+    assert "docs/architecture/OBSERVABILITY.md" in body, (
+        "Root README must link to the full observability doc"
     )
 
 
-def test_root_readme_mentions_tray_lifecycle_and_opt_out():
-    body = _read("README.md")
-    # Tray manages the binaries' lifecycle.
-    assert "tray" in body.lower()
-    # Opt-out env var is documented.
-    assert "HELIX_OBSERVABILITY=0" in body, (
-        "Root README must document the HELIX_OBSERVABILITY=0 opt-out"
+def test_setup_doc_carries_tray_lifecycle_and_opt_out():
+    # v3 moved tray lifecycle + opt-out documentation to docs/SETUP.md;
+    # the README must link there and the content must exist.
+    readme = _read("README.md")
+    assert "docs/SETUP.md" in readme, "Root README must link to docs/SETUP.md"
+    setup = _read("docs/SETUP.md")
+    assert "tray" in setup.lower()
+    assert "HELIX_OBSERVABILITY" in setup, (
+        "docs/SETUP.md must document the HELIX_OBSERVABILITY=0 opt-out"
     )
-    # Native binaries directory is referenced.
-    assert "tools/native-otel" in body
+    assert "tools/native-otel" in setup
 
 
-def test_root_readme_demotes_docker_to_advanced_footnote():
-    body = _read("README.md")
-    # The docker-compose mention is now framed as "Advanced — Docker stack",
-    # not as the primary install path.
-    assert "Advanced" in body and "Docker" in body
-    # Footnote points at the new doc.
-    assert "deploy/otel/README.md" in body, (
-        "Root README must link to deploy/otel/README.md"
+def test_setup_doc_keeps_docker_as_alternate_path():
+    # The docker-compose stack stays documented as the alternate (not
+    # primary) path, now from docs/SETUP.md rather than the root README.
+    setup = _read("docs/SETUP.md")
+    assert "deploy/otel" in setup, (
+        "docs/SETUP.md must point at the deploy/otel Docker stack"
     )
+    assert "docker" in setup.lower()
 
 
 def test_root_readme_preserves_canonical_launch_section():
-    """Regression: don't rip out existing Quick Start ▸ Launch content.
+    """Regression: don't rip out the launch/get-started content.
 
-    The original 'Canonical path' marker was reworded by the R2 rename
-    sweep (commit 5c00a21); pin on the section header + the tray entry
-    point, both of which the launch flow can't function without.
+    README v3 renamed 'Quick Start' to 'Get started'; the tray entry point
+    (start-helix-tray.bat) is documented in docs/SETUP.md.
     """
     body = _read("README.md")
-    assert "## Quick Start" in body, (
-        "Root README must keep the '## Quick Start' section"
+    assert "## Get started" in body or "## Quick Start" in body, (
+        "Root README must keep a Get started / Quick Start section"
     )
-    assert "start-helix-tray.bat" in body.lower()
+    setup = _read("docs/SETUP.md")
+    assert "start-helix-tray.bat" in setup.lower()
 
 
 # ---------------------------------------------------------------------------
