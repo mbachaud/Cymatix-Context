@@ -65,12 +65,25 @@ REM only when the configured upstream is non-local. Local Ollama stays
 REM direct; remote providers can benefit from Headroom's proxy layer.
 set "HELIX_HEADROOM_ROUTE_UPSTREAM_AUTO=1"
 
-REM ── Launch the tray ─────────────────────────────────────────────
-start "helix-launcher" /B python -m helix_context.launcher.app ^
-  --tray ^
-  --grafana-url "http://localhost:3000/d/helix-overview/helix-overview" ^
-  --prometheus-url "http://localhost:9090/graph"
+REM ── Launch the tray (headless, v0.7.0) ──────────────────────────
+REM pythonw detaches from the console entirely — no terminal window
+REM stays behind; logs land in %USERPROFILE%\.helix\launcher\launcher.log
+REM via --log-file. If pythonw is unavailable we fall back to python /B
+REM (the legacy visible-console behaviour).
+where pythonw >nul 2>&1
+if %ERRORLEVEL%==0 (
+  start "" pythonw -m helix_context.launcher.app ^
+    --tray ^
+    --log-file "%USERPROFILE%\.helix\launcher\launcher.log" ^
+    --grafana-url "http://localhost:3000/d/helix-overview/helix-overview" ^
+    --prometheus-url "http://localhost:9090/graph"
+) else (
+  start "helix-launcher" /B python -m helix_context.launcher.app ^
+    --tray ^
+    --log-file "%USERPROFILE%\.helix\launcher\launcher.log" ^
+    --grafana-url "http://localhost:3000/d/helix-overview/helix-overview" ^
+    --prometheus-url "http://localhost:9090/graph"
+)
 
-REM /B = no new window. The launcher takes over stdout+stderr; the
-REM tray icon is the persistent surface. Closing this cmd window does
-REM NOT stop helix — only Quit from the tray menu does.
+REM The tray icon is the persistent surface. Closing this cmd window
+REM does NOT stop helix — only Quit from the tray menu does.

@@ -75,10 +75,16 @@ class HelixSupervisor:
         helix_port: int = 11437,
         python_executable: Optional[str] = None,
         helix_log_path: Optional[Path] = None,
+        extra_env: Optional[dict] = None,
     ) -> None:
         self.store = store
         self.helix_host = helix_host
         self.helix_port = helix_port
+        # v0.7.0 dev-mode: per-instance environment overlay (e.g. the
+        # bench supervisor pins HELIX_GENOME_PATH to the bench genome
+        # without touching the launcher process env that the MAIN helix
+        # inherits). None = inherit parent env untouched.
+        self.extra_env = dict(extra_env) if extra_env else None
         self.python_executable = python_executable or sys.executable
         self.helix_log_path = helix_log_path or (
             Path.home() / ".helix" / "launcher" / "helix.log"
@@ -346,6 +352,10 @@ class HelixSupervisor:
 
         # Popen dups the fd internally on both POSIX and Windows, so the
         # parent can close its handle immediately after Popen returns.
+        spawn_env = None
+        if self.extra_env:
+            spawn_env = dict(os.environ)
+            spawn_env.update(self.extra_env)
         with open(self.helix_log_path, "ab") as log_file:
             proc = subprocess.Popen(
                 cmd,
@@ -355,6 +365,7 @@ class HelixSupervisor:
                 creationflags=creationflags,
                 preexec_fn=preexec_fn,
                 close_fds=True,
+                env=spawn_env,
             )
 
         self._proc = proc

@@ -415,6 +415,8 @@ p {
 .panel--switchboard,
 .panel--database,
 .panel--observability,
+.panel--bench,
+.panel--starting,
 .panel--pipeline {
   grid-column: span 12;
 }
@@ -740,6 +742,7 @@ p {
 .panels[data-active-tab="genome"] .panel--models,
 .panels[data-active-tab="genome"] .panel--tools,
 .panels[data-active-tab="genome"] .panel--database,
+.panels[data-active-tab="monitoring"] .panel--bench,
 .panels[data-active-tab="genome"] .panel--observability,
 .panels[data-active-tab="monitoring"] .panel--observability,
 .panels[data-active-tab="monitoring"] .panel--diagnostics,
@@ -1135,4 +1138,72 @@ p {
   border: 1px solid var(--border, #2a2a2a);
   border-radius: 5px;
   color: inherit;
+}
+
+
+/* ── Startup / dev-mode / first-boot UX (v0.7.0) ───────────────────── */
+
+.panel--starting {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-top-color: #d29922;
+  border-radius: 50%;
+  animation: helix-spin 0.9s linear infinite;
+}
+
+@keyframes helix-spin { to { transform: rotate(360deg); } }
+
+.bench-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.8rem;
+}
+
+.bench-row__genome { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+.bench-row__hint { font-size: 0.72rem; margin: 0.45rem 0 0; }
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.modal {
+  width: min(560px, 92vw);
+  background: #161311;
+  border: 1px solid #3a2f24;
+  border-radius: 10px;
+  padding: 1.1rem 1.25rem;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.55);
+}
+
+.modal h2 { margin: 0 0 0.35rem; font-size: 1rem; }
+
+.modal-genomes {
+  list-style: none;
+  margin: 0.7rem 0;
+  padding: 0;
+  max-height: 40vh;
+  overflow-y: auto;
+}
+
+.modal-genomes li {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.3rem 0;
+  font-size: 0.78rem;
 }

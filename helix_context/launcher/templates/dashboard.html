@@ -31,4 +31,25 @@
   >
     {% include "components/panels.html" %}
   </section>
+
+  {# First-boot db-selection dialog (v0.7.0): shown when the launcher
+     found no genome at the active path and skipped autostart. The list
+     is fetched from /api/genomes; Select/Create reuse the genome
+     endpoints and the dialog dismisses once helix reports running. #}
+  <div class="modal-backdrop" data-db-modal {% if not state.needs_db_selection %}hidden{% endif %}>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="db-modal-title">
+      <h2 id="db-modal-title">Select a database</h2>
+      <p class="muted">No genome was found at the active path. Pick an
+        existing knowledge store or create a new one to start Helix.</p>
+      <ul class="modal-genomes" data-db-modal-list>
+        <li class="muted">Scanning for genomes…</li>
+      </ul>
+      <form class="db-create" data-genome-create>
+        <input class="db-create__input" type="text" name="path"
+               placeholder="F:\path\to\new.genome.db"
+               aria-label="New genome path" />
+        <button class="btn btn--mini" type="submit">Create + start</button>
+      </form>
+    </div>
+  </div>
 {% endblock %}

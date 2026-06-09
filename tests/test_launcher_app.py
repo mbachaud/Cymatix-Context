@@ -102,8 +102,14 @@ class TestApiState:
         # v0.7.0: /api/state additionally carries the launcher-side
         # observability snapshot (None when no sidecar is wired in).
         assert resp.json() == {
-            "helix": {"running": False, "port": 11437},
+            "helix": {
+                "running": False,
+                "port": 11437,
+                "start_pending": False,
+            },
             "observability": None,
+            "needs_db_selection": False,
+            "bench": None,
         }
 
 
