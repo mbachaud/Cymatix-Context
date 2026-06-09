@@ -2,7 +2,13 @@
 
 ## Unreleased
 
-- **perf(storage): path_key_index Option-B compaction (#165).** The
+## 0.6.5 — 2026-06-09
+
+Eleven PRs landed same-day on top of 0.6.4 — the open-PR backlog merge
+train (#182–#190), the full-suite QA de-flake that validated it, and the
+two storage fixes that came out of the #165 fingerprint-index audit.
+
+- **perf(storage): path_key_index Option-B compaction (#165, #193).** The
   fingerprint-routing index was 34.1% of the v2 Onyx corpus; probes
   showed the live Tier-0 lookup never uses `idx_pki_lookup` (covering
   PK scan), 38% of rows sit in pairs above `PKI_NOISE_CUTOFF` (hard-
@@ -15,6 +21,63 @@
   score-invariant (40/40-query ablation). Tier-0 scoring constants
   (`PKI_BASE/FLOOR/NOISE_CUTOFF`) moved to `storage.indexes` as the
   canonical home so the scorer and compactor cannot drift.
+
+- **fix(sharding): MAX_PATH overflow guard (#192).** The mirrored
+  corpus-shard layout could exceed Windows' 260-char MAX_PATH when deep
+  source roots mirror under deep `genomes_root`s. `corpus_shard_db` now
+  caps at `HELIX_SHARD_PATH_MAX` (default 240) and falls back to a
+  deterministic `_overflow/<label>-<sha1[:10]>.genome.db`; resume/salvage
+  and routing unaffected.
+
+- **fix(tests): full-suite de-flake (#191).** Two suite-hangers fixed:
+  the sharded-parity test no longer loads SPLADE+BGE-M3 in parent + both
+  spawn workers (three CUDA contexts = the #176 WDDM livelock on <=12 GB
+  rigs) — lean-ingest env kill-switches `HELIX_BFM_SPLADE` /
+  `HELIX_BFM_DENSE_BACKFILL` force the lean path; the metrics atomicity
+  test no longer does 200K locked disk persists. Four
+  `test_observability_docs` contracts re-pinned to the README-v3 layout;
+  WSL-relay `bash.EXE` probed before use (skip when non-functional).
+
+- **feat(ingest): size-aware SPLADE auto-toggle (#164, #189).**
+  `splade_auto_enable_below_genes` / `splade_auto_disable_above_genes`
+  knobs in `[ingestion]` (default 0 = off, byte-identical) +
+  `benchmarks/sweep_splade_scale_curve.py` scaffold.
+
+- **feat(bench): dense_additive_weight sweep harness (#138, #188).**
+  `benchmarks/sweep_dense_additive_weight.py` across {0.0–6.0} with
+  `gold_evicted_vs_baseline`; w=0.0 pinned as a true dense-off floor.
+  Default stays 4.0 pending EnterpriseRAG-class data.
+
+- **feat(bench): auto-subshard large source roots (#147, #186).**
+  `_decompose_oversized_root` splits any single-root shard above
+  ~5 GB / 100K files along top-level subdirs; silent-fail logging
+  guards; `enterprise_rag_500k` profile.
+
+- **fix(packet): preserve source-type prefix in `<GENE src=...>`
+  (#146, #185).** Path shortener now anchors on the last `sources/`
+  segment so `confluence/...`, `gmail/...` prefixes survive verbatim.
+
+- **fix(bench): BenchServer import-source identity guard (#153, #184).**
+  Spawn pins cwd + PYTHONPATH to the repo root, logs the resolved
+  `helix_context` path at RUN START, and probes the fixture schema
+  before swap — wrong-worktree mismatches fail in milliseconds, not as
+  `retr=err` x 50.
+
+- **feat(bench): file-level resume + SIGINT pause-then-resume
+  (#150/#151, #183).** Partial shards resume at the file boundary
+  (`_filter_to_unseen`); Ctrl+C finishes the in-flight batch, writes a
+  `.paused-at-*` checkpoint, exits cleanly; `--rebuild` restores
+  nuke-and-start-fresh.
+
+- **feat(hardware): GB10 / Grace+Blackwell launch-blocking shim
+  (#190).** Opt-in `HELIX_CUDA_LAUNCH_BLOCKING=1` forces synchronous
+  CUDA launches before any torch import to dodge the sm_121
+  async-dispatch livelock; byte-identical embeddings, default-off.
+  Plus `docs/hardware/grace-blackwell.md`. (Contributed by @addiplus.)
+
+- **docs(operations): dense ingest VRAM tuning matrix (#178, #182).**
+  `docs/operations/DENSE_VRAM.md` — the <=12 GB / 16–24 GB / >=48 GB
+  runbook with the confirmed failure modes and env-knob reference.
 
 ## 0.6.4 — 2026-06-09
 
