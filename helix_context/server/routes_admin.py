@@ -623,6 +623,31 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
         )
         return result
 
+    @app.post("/admin/compact-pki")
+    async def admin_compact_pki(dry_run: bool = False, noise_cutoff: int = -1):
+        """Issue #165 Option-B: compact ``path_key_index``.
+
+        Drops the dead ``idx_pki_lookup``, prunes rows in pairs above the
+        Tier-0 noise cutoff (score-invariant — those pairs are hard-skipped
+        by the scorer), and rebuilds the table WITHOUT ROWID. Follow with
+        ``/admin/vacuum`` to reclaim the freed pages. ``dry_run=true``
+        reports what would change without touching the DB.
+        """
+        from ..storage.indexes import (
+            PKI_NOISE_CUTOFF, compact_path_key_index,
+        )
+        cutoff = noise_cutoff if noise_cutoff >= 0 else PKI_NOISE_CUTOFF
+        try:
+            result = compact_path_key_index(
+                helix.genome.conn, noise_cutoff=cutoff, dry_run=dry_run,
+            )
+            return {"ok": True, **result}
+        except Exception as exc:
+            log.warning("compact-pki failed: %s", exc, exc_info=True)
+            return JSONResponse(
+                {"ok": False, "error": str(exc)}, status_code=500,
+            )
+
     @app.post("/admin/checkpoint")
     async def admin_checkpoint(mode: str = "PASSIVE"):
         """Force a WAL checkpoint."""
