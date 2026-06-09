@@ -109,6 +109,19 @@ def test_bash_install_script_parses():
     if bash is None:
         pytest.skip("bash not on PATH")
     creationflags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
+    # Windows ships a WindowsApps ``bash.EXE`` shim that relays into WSL;
+    # when no (working) WSL distro is installed it exits non-zero with
+    # "execvpe(/bin/bash) failed" without parsing anything. Probe it
+    # before trusting it as a syntax checker.
+    probe = subprocess.run(
+        [bash, "-c", "true"],
+        capture_output=True,
+        text=True,
+        timeout=10,
+        creationflags=creationflags,
+    )
+    if probe.returncode != 0:
+        pytest.skip(f"bash present but not functional: {probe.stderr.strip()[:120]}")
     proc = subprocess.run(
         [bash, "-n", str(SH_SCRIPT)],
         capture_output=True,

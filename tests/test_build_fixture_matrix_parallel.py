@@ -51,6 +51,23 @@ def _collect_gene_summary(db_path: Path) -> set[tuple[str, str]]:
     }
 
 
+@pytest.fixture(autouse=True)
+def _lean_builder_env(monkeypatch):
+    """Force the lean ingest path for every test in this module.
+
+    Without these, ``_build_one_shard`` loads SPLADE + BGE-M3 onto the
+    GPU **in every spawn worker AND the parent** — three CUDA contexts on
+    a <=12 GB card is the documented #176 WDDM-spill livelock and hung the
+    whole suite (parent stuck in ``as_completed`` while workers crept at
+    the serialized-VRAM floor). Parity assertions here compare shard
+    routing + fingerprint rows, which are independent of SPLADE/dense.
+    Env vars (unlike monkeypatched module attrs) cross the Windows spawn
+    boundary, so the workers inherit the kill-switches.
+    """
+    monkeypatch.setenv("HELIX_BFM_SPLADE", "0")
+    monkeypatch.setenv("HELIX_BFM_DENSE_BACKFILL", "0")
+
+
 @pytest.mark.slow
 def test_parallel_matches_sequential(tmp_path, monkeypatch):
     """build_profile(parallel=False) and (parallel=True) should produce

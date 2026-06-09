@@ -760,6 +760,21 @@ def ingest_tree(
 # ── Build one profile ─────────────────────────────────────────────────────
 
 
+def _env_flag(name: str, default: str = "1") -> bool:
+    """Read a boolean env toggle. Truthy unless set to 0/false/no/off.
+
+    Used for the test/CI kill-switches ``HELIX_BFM_SPLADE`` and
+    ``HELIX_BFM_DENSE_BACKFILL``. Read at call time (not import time) and
+    inherited by spawn workers via the process environment, so a test can
+    ``monkeypatch.setenv`` in the parent and have the ProcessPoolExecutor
+    children honour it — monkeypatching module attributes does NOT cross
+    the Windows spawn boundary.
+    """
+    return os.environ.get(name, default).strip().lower() not in (
+        "0", "false", "no", "off",
+    )
+
+
 def _backfill_dense(db_path: str) -> dict:
     """Post-build pass: populate ``genes.embedding_dense_v2`` on ``db_path``.
 
@@ -790,6 +805,16 @@ def _backfill_dense(db_path: str) -> dict:
     and an ``error`` key is returned, so a dense-encode failure surfaces
     in the manifest rather than silently producing a dense-dark fixture.
     """
+    if not _env_flag("HELIX_BFM_DENSE_BACKFILL"):
+        log.info(
+            "dense backfill skipped (HELIX_BFM_DENSE_BACKFILL=0): %s", db_path,
+        )
+        return {
+            "db_path": db_path,
+            "dense_coverage": 0.0,
+            "rows_processed": 0,
+            "skipped": True,
+        }
     log.info("dense backfill: %s", db_path)
     try:
         report = backfill_dense_db(db_path, log_fn=lambda msg: log.info("%s", msg))
@@ -843,7 +868,7 @@ def build_profile(
     genome = Genome(
         path=db_path,
         synonym_map={},
-        splade_enabled=True,
+        splade_enabled=_env_flag("HELIX_BFM_SPLADE"),
         entity_graph=True,
     )
 
@@ -1220,7 +1245,7 @@ def _build_one_shard(
 
     shard = Genome(
         path=str(p), synonym_map={},
-        splade_enabled=True, entity_graph=True,
+        splade_enabled=_env_flag("HELIX_BFM_SPLADE"), entity_graph=True,
     )
     s_stats = {
         "files": 0, "genes": 0, "skipped": 0, "errors": 0,
