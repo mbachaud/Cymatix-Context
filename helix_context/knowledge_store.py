@@ -387,6 +387,14 @@ class KnowledgeStore:
         # a precomputed vector). This is the WRITE path only and is
         # independent of dense_embedding_enabled, which gates RETRIEVAL.
         dense_embed_on_ingest: bool = False,
+        # Issue #164: size-aware SPLADE auto-toggle thresholds. Both
+        # default 0 (toggle off; ``splade_enabled`` is authoritative on
+        # every upsert). When non-zero, ``upsert_doc`` consults the
+        # current ``gene_count`` per upsert and routes through
+        # ``storage.indexes.resolve_splade_enabled``. See IngestionConfig
+        # docstring for the regime curve rationale.
+        splade_auto_enable_below_genes: int = 0,
+        splade_auto_disable_above_genes: int = 0,
         # Issue #139 (2026-05-18): default recalibrated 0.35 -> 0.58 for the
         # dim-1024 BGE-M3 v2 vectors. Callers normally pass the configured
         # value (config.retrieval.ann_similarity_threshold); this default is
@@ -454,6 +462,13 @@ class KnowledgeStore:
         self._sema_codec = sema_codec  # Optional SemaCodec for Tier 4 retrieval
         self._replication_mgr = None  # Set by set_replication_manager()
         self._splade_enabled = splade_enabled
+        # Issue #164: per-upsert SPLADE auto-toggle thresholds.
+        self._splade_auto_enable_below: int = int(splade_auto_enable_below_genes or 0)
+        self._splade_auto_disable_above: int = int(splade_auto_disable_above_genes or 0)
+        # Cached gene_count used by the per-upsert auto-toggle resolver.
+        # Refreshed lazily from the DB on each upsert that has the toggle
+        # opted in; avoids hammering COUNT(*) when the toggle is off.
+        self._splade_auto_cached_count: int = 0
         self._entity_graph_enabled = entity_graph
         # Tier 5b: entity graph retrieval boost (Step 3C, 2026-05-08).
         # Separate from _entity_graph_enabled (write-side) — this controls
@@ -612,8 +627,16 @@ class KnowledgeStore:
         else:
             self._reader = None
 
-        # Create SPLADE inverted index if enabled
-        if self._splade_enabled:
+        # Create SPLADE inverted index if enabled, or if the size-aware
+        # auto-toggle (issue #164) could turn it on later. Without this
+        # table the auto-enable arm has nowhere to write and silently
+        # no-ops, so any non-zero ``splade_auto_enable_below_genes`` --
+        # even paired with ``splade_enabled=False`` -- still warrants
+        # the table.
+        _need_splade_table = (
+            self._splade_enabled or self._splade_auto_enable_below > 0
+        )
+        if _need_splade_table:
             try:
                 from .backends import splade_backend
                 splade_backend.create_splade_table(self.conn)
@@ -1249,14 +1272,32 @@ class KnowledgeStore:
             sync_path_key_index,
             sync_filename_index,
             sync_splade_index,
+            resolve_splade_enabled,
         )
         rebuild_promoter_index(cur, gene_id, gene)
         sync_fts5(cur, gene_id, gene, self._fts_available)
         sync_entity_graph(cur, gene_id, gene, self._entity_graph_enabled)
         sync_path_key_index(cur, gene_id, gene)
         sync_filename_index(cur, gene_id, gene.source_id)
+        # Issue #164: size-aware SPLADE auto-toggle. Refresh the cached
+        # gene_count whenever EITHER threshold is opted in; otherwise
+        # the resolver short-circuits to the static flag and the count
+        # is unused.
+        if self._splade_auto_enable_below > 0 or self._splade_auto_disable_above > 0:
+            try:
+                self._splade_auto_cached_count = int(
+                    cur.execute("SELECT COUNT(*) FROM genes").fetchone()[0]
+                )
+            except sqlite3.Error:
+                self._splade_auto_cached_count = 0
+        effective_splade = resolve_splade_enabled(
+            splade_enabled=self._splade_enabled,
+            current_gene_count=self._splade_auto_cached_count,
+            auto_enable_below=self._splade_auto_enable_below,
+            auto_disable_above=self._splade_auto_disable_above,
+        )
         sync_splade_index(
-            cur, gene_id, gene.content, self._splade_enabled,
+            cur, gene_id, gene.content, effective_splade,
             splade_sparse=splade_sparse,
         )
 
