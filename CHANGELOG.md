@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+## 0.7.1 — 2026-06-09
+
+- **fix(launcher): usable stdio under pythonw (#199).** The 0.7.0
+  headless tray (`start-helix-tray.bat` via `pythonw`) failed to bind
+  the dashboard port: detached pythonw has `sys.stdout`/`sys.stderr` =
+  None and uvicorn's default loggers write to them, killing the
+  launcher's server thread before bind (tray icon alive, dashboard
+  dead, no traceback). `_ensure_streams()` now routes the missing
+  streams into `--log-file` (or `os.devnull`) right after arg parsing.
+  Caught during a live v0.7.0 install.
+
 ## 0.7.0 — 2026-06-09
 
 Dashboard + UX release: the tray-hosted web dashboard graduates from a
