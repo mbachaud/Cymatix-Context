@@ -2,6 +2,66 @@
 
 ## Unreleased
 
+## 0.6.4 — 2026-06-09
+
+Three landed PRs since v0.6.2. v0.6.3 remains the frozen Onyx
+external-validation snapshot (tag-only, not on PyPI); 0.6.4 is the
+public sibling that pulls forward the master-bound subset.
+
+- **perf(dense): bound CUDA VRAM during batch ingest via periodic
+  `empty_cache` (#177).** `BGEM3Codec.encode_batch` now releases
+  torch's caching allocator every `HELIX_DENSE_VRAM_RELEASE_EVERY`
+  batches (default 256, set `0` to disable). Holds dense ingest at
+  ~6 GB plateau on a 12 GB 3080 Ti — previously climbed to 11.7 GB
+  and spilled to shared-mem (the slow path that looked like a hang).
+  Vectors are byte-identical (`empty_cache` only frees unused
+  blocks). CUDA-only; CPU path untouched. Pairs well with
+  `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True` for
+  fragmentation. Closes #176.
+
+- **fix(config): wire `semantic_dense_additive_weight` +
+  `semantic_broaden_routing` through retrieval (#180).** Two
+  `RetrievalConfig` fields plus the consumer code that reads them
+  — env-gated by `HELIX_SEMANTIC_ARM=1` AND `query_type ==
+  "semantic"`, default-off so the stock path is byte-identical to
+  v0.6.2. Lets downstreams running the v0.6.3 fixed-pipeline TOML
+  compare arm-on vs arm-off on a master-derived build without the
+  loader silently dropping their config keys. `query_type` is read
+  from POST body on `/context` and `/fingerprint`. Backports JUST
+  the semantic-arm hunks from the v0.6.3 chain — `_dense_w` swap in
+  `knowledge_store`, LIKE-gate bypass in `shard_router.route()`,
+  `query_type` thread through `build_context` /
+  `build_context_async` / `_retrieve`. Explicitly NOT included:
+  question-conditioned dense, fp16 matrix, RAM-cap PRAGMAs,
+  IN-clause batching.
+
+- **feat(launcher): Manage Database tray submenu + dashboard
+  switchboard + pipeline viewer (#179).** Three connected launcher
+  features:
+  - System-tray "Manage Database ▸" submenu discovers genome `.db`
+    files under `genomes/**` / `benchmarks/` / repo root, shows the
+    active marker, per-genome sub-submenu with folder breakdown
+    sampled from `source_id`, and a one-click "Use this database
+    (restart helix)" action that sets `HELIX_GENOME_PATH` and
+    restarts the supervised helix on a background thread so the
+    pystray pump stays responsive. Win32 `MessageBoxW` confirmation
+    on Windows (avoids the tkinter-on-pystray-thread deadlock);
+    tkinter fallback elsewhere.
+  - Dashboard **Switchboard** panel surfaces 11 operationally-
+    interesting retrieval/budget/classifier/ribosome knobs from
+    `load_config()` so an operator can read the live pipeline shape
+    without `cat helix.toml`.
+  - Dashboard **Pipeline viewer** (dev-mode toggle, default on)
+    renders the last ~20 `build_context()` calls with per-stage
+    timings. Backed by a `contextvars`-scoped per-request id and a
+    bounded `_pipeline_events` deque in `context_manager`
+    (`HELIX_PIPELINE_RING=0` disables) + new
+    `GET /debug/pipeline/recent`.
+  - New `GET /admin/genome` reports the `.db` the running helix
+    actually opened; the dashboard cross-checks it against the
+    on-disk registry so drift between "selected" and "running" is
+    visible.
+
 ## 0.6.2 — 2026-05-30
 
 Make the v0.6.1 SQLite memory posture **host-aware** instead of unconditionally
