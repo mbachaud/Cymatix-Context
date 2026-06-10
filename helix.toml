@@ -331,20 +331,24 @@ dense_pool_size = 500
 # docs/specs/2026-05-08-stage-3-rrf-fusion.md replaces the additive
 # gene_scores += tier_score accumulator with rank-level RRF (Cormack 2009).
 # Default "additive" is byte-identical to pre-Stage-3 behavior. Flip to
-# "rrf" to enable the new path. Per-tier weights below are RRF
-# post-multipliers (preserve current implicit weights).
+# "rrf" to enable the new path. Issue #202: the per-tier weights below
+# bind in BOTH fusion modes — under "additive" (the default) they are the
+# tier coefficients/caps themselves (defaults == the old inline literals,
+# so untouched configs keep byte-identical rankings); under "rrf" they
+# are rank post-multipliers.
 # Deprecation timeline: v(N) ships additive default; v(N+1) flips to rrf
 # default; v(N+2) removes the additive code path.
 fusion_mode = "additive"                # "additive" | "rrf"
 rrf_k = 60                              # Cormack 2009 default
-fts5_weight = 3.0                       # current FTS5 cap
-splade_weight = 3.5                     # current SPLADE cap
+fts5_weight = 3.0                       # FTS5 cap-only knob: additive cap = 2.0 × this (6.0)
+splade_weight = 3.5                     # SPLADE leading coeff (== tier cap)
 tag_exact_weight = 3.0                  # Tier 1 weight × match_count
 tag_prefix_weight = 1.5                 # Tier 2 weight × match_count
+sema_boost_weight = 2.0                 # ΣĒMA warm boost (Tier 4 Mode A) — new knob (#202)
 sema_cold_weight = 3.0                  # ΣĒMA cold-start sim multiplier
-lex_anchor_weight = 1.5                 # IDF anchor multiplier
-harmonic_weight = 1.0                   # Tier 5 per-link weight
-entity_graph_weight = 0.5               # Tier 5b entity boost
+lex_anchor_weight = 1.5                 # IDF anchor coeff; cap = 2.0 × this (3.0)
+harmonic_weight = 1.0                   # Tier 5 per-link weight; cap = 3.0 × this (3.0)
+entity_graph_weight = 0.5               # Tier 5b per-row bonus; cap = 4.0 × this (2.0)
 dense_weight = 1.0                      # Stage 2 dense recall, RRF participant
 # Tier-0 PR-3 (2026-05-16): additive-mode dense merge weight. Under
 # fusion_mode == "additive" (the default below), a dense hit's cosine is

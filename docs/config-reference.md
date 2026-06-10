@@ -487,11 +487,14 @@ enabled = true
 
 **Purpose.** The big one. Configures every recall and rerank tier in
 `Genome.query_genes()` and the new Stage-2 / Stage-3 / Stage-4 paths
-(dense recall, RRF fusion, margin-over-random ANN threshold). Every
-RRF tier weight is a post-multiplier applied to `1 / (k + rank)`; the
-weights below preserve the implicit weights baked into the legacy
-additive accumulator so `fusion_mode = "rrf"` is a clean rank-fusion
-swap, not a re-tuning.
+(dense recall, RRF fusion, margin-over-random ANN threshold). Since
+issue #202 the per-tier weights bind in **both** fusion modes: under
+`"additive"` (the default) each weight is the tier's coefficient/cap
+itself (defaults equal the old inline literals, so untouched configs
+keep byte-identical rankings); under `"rrf"` each weight is a
+post-multiplier applied to `1 / (k + rank)`. The defaults preserve the
+implicit weights baked into the legacy additive accumulator so
+`fusion_mode = "rrf"` is a clean rank-fusion swap, not a re-tuning.
 
 The full Stage-3 tier inventory (which tiers participate in RRF and
 which stay additive) lives in
@@ -527,14 +530,15 @@ which stay additive) lives in
 | `dense_pool_size` | int | `500` | **NEW (Stage 2, 2026-05-08).** Dense recall pool width — decoupled from `ann_threshold_max_genes` (the final cut). 500 hits ~3% of an 18.9k-corpus per spec §4. Resolves at the top of `query_genes_ann` via `pool_size = pool_size or self._dense_pool_size` (Stage-2 spec §6). When dense is disabled, falls back to `max_genes` for back-compat. The shipped value (`helix.toml:269`). |
 | `fusion_mode` | str | `"additive"` | **NEW (Stage 3, 2026-05-08).** One of `"additive"` (default for one release — legacy `gene_scores += tier_score` accumulator path) or `"rrf"` (Reciprocal Rank Fusion via `helix_context/fusion.py:Fuser`; final sort uses fused scores). Per-tier weights below are RRF post-multipliers. Spec: `docs/specs/2026-05-08-stage-3-rrf-fusion.md`. The shipped value (`helix.toml:278`). |
 | `rrf_k` | int | `60` | Cormack 2009 default. Used in `score(d) = Σ weight_t · 1/(k + rank_t(d))`. The shipped value (`helix.toml:279`). |
-| `fts5_weight` | float | `3.0` | RRF post-multiplier for the `fts5` tier. Preserves the current FTS5 implicit cap. The shipped value (`helix.toml:280`). |
-| `splade_weight` | float | `3.5` | RRF post-multiplier for the `splade` tier. Preserves the current SPLADE cap. The shipped value (`helix.toml:281`). |
-| `tag_exact_weight` | float | `3.0` | RRF post-multiplier for `tag_exact` (Tier-1 weight × match_count). The shipped value (`helix.toml:282`). |
-| `tag_prefix_weight` | float | `1.5` | RRF post-multiplier for `tag_prefix` (Tier-2 weight × match_count). The shipped value (`helix.toml:283`). |
-| `sema_cold_weight` | float | `3.0` | RRF post-multiplier for `sema_cold` (cold-start `sim · 3.0` multiplier). The shipped value (`helix.toml:284`). |
-| `lex_anchor_weight` | float | `1.5` | RRF post-multiplier for `lex_anchor` (current `idf · 1.5`, capped at 3.0). The shipped value (`helix.toml:285`). |
-| `harmonic_weight` | float | `1.0` | RRF post-multiplier for `harmonic` (per-link weight, cap stays at 3.0). The shipped value (`helix.toml:286`). |
-| `entity_graph_weight` | float | `0.5` | RRF post-multiplier for `entity_graph` (Tier-5b implicit `1.0 · 0.5`). The shipped value (`helix.toml:287`). |
+| `fts5_weight` | float | `3.0` | Binds in both fusion modes (#202). Additive: cap-only knob — the tier adds the raw BM25 magnitude capped at `2.0 × fts5_weight` (default → the legacy 6.0 cap). RRF: post-multiplier for the `fts5` tier. The shipped value (`helix.toml:280`). |
+| `splade_weight` | float | `3.5` | Binds in both fusion modes (#202). Additive: leading coefficient — `min(score, 20) × weight / 20`, so the tier caps at the weight itself. RRF: post-multiplier for the `splade` tier. The shipped value (`helix.toml:281`). |
+| `tag_exact_weight` | float | `3.0` | Binds in both fusion modes (#202). Additive: Tier-1 score = `match_count × weight`. RRF: post-multiplier for `tag_exact`. The shipped value (`helix.toml:282`). |
+| `tag_prefix_weight` | float | `1.5` | Binds in both fusion modes (#202). Additive: Tier-2 score = `match_count × weight`. RRF: post-multiplier for `tag_prefix`. The shipped value (`helix.toml:283`). |
+| `sema_boost_weight` | float | `2.0` | **NEW (#202).** Warm ΣĒMA boost (Tier 4 Mode A): `sim × weight × scale`. Additive-mode coefficient AND the post-fusion re-rank additive under RRF (this tier never rank-fuses). Default equals the old inline `2.0` literal. |
+| `sema_cold_weight` | float | `3.0` | Binds in both fusion modes (#202). Additive: cold-start score = `sim × weight`. RRF: post-multiplier for `sema_cold`. The shipped value (`helix.toml:284`). |
+| `lex_anchor_weight` | float | `1.5` | Binds in both fusion modes (#202). Additive: boost = `min(idf × weight, 2.0 × weight)` (default cap → the legacy 3.0). RRF: post-multiplier for `lex_anchor`. The shipped value (`helix.toml:285`). |
+| `harmonic_weight` | float | `1.0` | Binds in both fusion modes (#202). Additive: `weight` per link, capped at `3.0 × weight` total (default cap → the legacy 3.0). RRF: post-multiplier for `harmonic`. The shipped value (`helix.toml:286`). |
+| `entity_graph_weight` | float | `0.5` | Binds in both fusion modes (#202). Additive: per-row bonus = `min(1.0 × weight, 4.0 × weight)` (default → the legacy 0.5/2.0). RRF: post-multiplier for `entity_graph`. The shipped value (`helix.toml:287`). |
 | `dense_weight` | float | `1.0` | RRF post-multiplier for the Stage-2 `dense` tier. The shipped value (`helix.toml:288`). |
 | `pki_weight` | float | `1.0` | RRF post-multiplier for the path-key-index (`pki`) tier. The shipped value (`helix.toml:289`). |
 
@@ -554,11 +558,11 @@ authoritative?" semantics survive unchanged. The split:
 | `splade` | yes | `splade_weight` |
 | `sema_cold` | yes (only when fires) | `sema_cold_weight` |
 | `lex_anchor` (IDF) | yes | `lex_anchor_weight` |
-| `harmonic` | yes | `harmonic_weight` (cap stays at 3.0) |
+| `harmonic` | yes | `harmonic_weight` (additive cap = 3.0 × weight) |
 | `sr` (Successor Repr.) | yes | `sr_weight` (reused) |
 | `entity_graph` | yes | `entity_graph_weight` |
 | `dense` (Stage 2) | yes | `dense_weight` |
-| `sema_boost` (gate-only re-rank) | **no** — tiebreaker, applied AFTER RRF | n/a |
+| `sema_boost` (gate-only re-rank) | **no** — tiebreaker, applied AFTER RRF | `sema_boost_weight` (#202; additive/re-rank coefficient) |
 | `authority_*` (source/domain/recency) | **no** — flat boost on existing pool | n/a |
 | `party_attr` | **no** — flat additive AFTER RRF | n/a |
 | `access_rate` | **no** — explicit tiebreaker AFTER RRF | n/a |

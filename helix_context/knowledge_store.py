@@ -415,15 +415,22 @@ class KnowledgeStore:
         # Stage 3 (2026-05-08): Reciprocal Rank Fusion (spec
         # docs/specs/2026-05-08-stage-3-rrf-fusion.md). Default
         # "additive" preserves pre-Stage-3 ranking byte-for-byte; flip
-        # to "rrf" to enable rank fusion. Per-tier weights are RRF
-        # post-multipliers; defaults map to the existing implicit
-        # additive weights.
+        # to "rrf" to enable rank fusion. Issue #202: the per-tier
+        # weights bind in BOTH fusion modes -- under "additive" they are
+        # the tier coefficients/caps themselves (defaults == the old
+        # inline literals, so untouched configs are bit-identical);
+        # under "rrf" they are rank post-multipliers.
         fusion_mode: str = "additive",
         rrf_k: int = 60,
         fts5_weight: float = 3.0,
         splade_weight: float = 3.5,
         tag_exact_weight: float = 3.0,
         tag_prefix_weight: float = 1.5,
+        # Issue #202: warm ΣĒMA boost (Tier 4 Mode A) weight. NEW knob --
+        # the tier's additive literal was 2.0 and it had no per-tier
+        # weight at all (under RRF it is a post-fusion additive, so it
+        # never went through fuser.add_tier()). Default == old literal.
+        sema_boost_weight: float = 2.0,
         sema_cold_weight: float = 3.0,
         lex_anchor_weight: float = 1.5,
         harmonic_weight: float = 1.0,
@@ -522,9 +529,12 @@ class KnowledgeStore:
         # ── Stage 3 (2026-05-08): RRF fusion mode + per-tier weights ──
         # Spec: docs/specs/2026-05-08-stage-3-rrf-fusion.md.
         # When "additive", query_genes() uses the legacy gene_scores +=
-        # tier_score accumulator unchanged. When "rrf", each tier ALSO
-        # ranks its output through the Fuser and the final sort uses
-        # fused scores. Per-tier weights below are RRF post-multipliers.
+        # tier_score accumulator. When "rrf", each tier ALSO ranks its
+        # output through the Fuser and the final sort uses fused scores.
+        # Issue #202: the per-tier weights bind in BOTH modes -- additive
+        # consumes them as tier coefficients/caps (defaults == the old
+        # inline literals -> bit-identical when untouched); RRF consumes
+        # them as rank post-multipliers.
         # Validate now so a typo in helix.toml fails fast at construction
         # instead of producing surprising rankings at query time.
         if fusion_mode not in ("additive", "rrf"):
@@ -537,6 +547,7 @@ class KnowledgeStore:
         self._splade_weight: float = float(splade_weight)
         self._tag_exact_weight: float = float(tag_exact_weight)
         self._tag_prefix_weight: float = float(tag_prefix_weight)
+        self._sema_boost_weight: float = float(sema_boost_weight)
         self._sema_cold_weight: float = float(sema_cold_weight)
         self._lex_anchor_weight: float = float(lex_anchor_weight)
         self._harmonic_weight: float = float(harmonic_weight)
@@ -1824,7 +1835,7 @@ class KnowledgeStore:
             except Exception as exc:
                 log.debug("filename_anchor tier skipped: %s", exc)
 
-        # ── Tier 1: exact tag match (weight 3.0) ──────────
+        # ── Tier 1: exact tag match (weight: tag_exact_weight) ────
         _tag_exact_t0 = time.monotonic()
         placeholders = ",".join("?" * len(query_terms))
         rows = cur.execute(
@@ -1843,11 +1854,13 @@ class KnowledgeStore:
 
         _tag_exact_ranked: List[Tuple[str, float]] = []  # Stage 3 RRF
         for r in rows:
-            tag_score = r["match_count"] * 3.0
+            # #202: tag_exact_weight (default 3.0 == legacy literal).
+            tag_score = r["match_count"] * self._tag_exact_weight
             gene_scores[r["gene_id"]] = tag_score
             tier_contrib.setdefault(r["gene_id"], {})["tag_exact"] = tag_score
             _tag_exact_ranked.append((r["gene_id"], tag_score))
-        # Stage 3: count tier — rank by raw score (= match_count × 3.0)
+        # Stage 3: count tier — rank by raw score (= match_count ×
+        # tag_exact_weight)
         # which is monotone in match_count, so the rank order matches
         # the spec's "rank by match_count descending" rule (§4).
         fuser.add_tier("tag_exact", _tag_exact_ranked, weight=self._tag_exact_weight)
@@ -1859,7 +1872,7 @@ class KnowledgeStore:
         except Exception:
             pass
 
-        # ── Tier 2: prefix tag match (weight 1.5) ──────────────────
+        # ── Tier 2: prefix tag match (weight: tag_prefix_weight) ───
         # "server" matches "serverconfig", "server_api", etc.
         _tag_prefix_t0 = time.monotonic()
         prefix_conditions = " OR ".join(
@@ -1883,7 +1896,8 @@ class KnowledgeStore:
         _tag_prefix_ranked: List[Tuple[str, float]] = []  # Stage 3 RRF
         for r in rows:
             gid = r["gene_id"]
-            prefix_score = r["match_count"] * 1.5
+            # #202: tag_prefix_weight (default 1.5 == legacy literal).
+            prefix_score = r["match_count"] * self._tag_prefix_weight
             gene_scores[gid] = gene_scores.get(gid, 0) + prefix_score
             tier_contrib.setdefault(gid, {})["tag_prefix"] = prefix_score
             _tag_prefix_ranked.append((gid, prefix_score))
@@ -1896,7 +1910,7 @@ class KnowledgeStore:
         except Exception:
             pass
 
-        # ── Tier 3: FTS5 content search (weight 3.0) ───────────────
+        # ── Tier 3: FTS5 content search (cap: 2.0 × fts5_weight) ───
         if self._fts_available:
             # Build FTS5 query: OR-join all terms
             _fts5_t0 = time.monotonic()
@@ -1935,9 +1949,13 @@ class KnowledgeStore:
                             if gid not in valid_ids:
                                 continue
                             # FTS5 rank is negative (lower = better match)
-                            # Normalize: -rank gives positive, cap at 6.0
-                            # (was 15*3=45 — drowned out tag matches at 3-9)
-                            fts_score = min(-fts_ranks[gid], 6.0)
+                            # Normalize: -rank gives positive. The additive
+                            # tier has no leading coefficient -- it adds the
+                            # raw BM25 magnitude -- so fts5_weight acts as a
+                            # cap-only knob here (#202): cap = 2.0 ×
+                            # fts5_weight (default 3.0 -> the legacy 6.0 cap;
+                            # was 15*3=45 — drowned out tag matches at 3-9).
+                            fts_score = min(-fts_ranks[gid], 2.0 * self._fts5_weight)
                             gene_scores[gid] = gene_scores.get(gid, 0) + fts_score
                             tier_contrib.setdefault(gid, {})["fts5"] = fts_score
                             # Stage 3: feed Fuser with the RAW
@@ -1958,7 +1976,7 @@ class KnowledgeStore:
                     except Exception:
                         pass
 
-        # ── Tier 3.5: SPLADE sparse retrieval (weight 3.5) ─────────
+        # ── Tier 3.5: SPLADE sparse retrieval (weight: splade_weight) ─
         if self._splade_enabled:
             _splade_t0 = time.monotonic()
             try:
@@ -1975,8 +1993,11 @@ class KnowledgeStore:
                         splade_hits = [(gid, s) for gid, s in splade_hits if gid in _prefilter_set]
                     _splade_ranked: List[Tuple[str, float]] = []  # Stage 3 RRF
                     for gid, score in splade_hits:
-                        # Normalize SPLADE score to be comparable with other tiers
-                        splade_score = min(score, 20.0) * 3.5 / 20.0  # Cap at 3.5
+                        # Normalize SPLADE score to be comparable with
+                        # other tiers. #202: leading coefficient =
+                        # splade_weight (default 3.5 == legacy literal), so
+                        # the tier caps at splade_weight.
+                        splade_score = min(score, 20.0) * self._splade_weight / 20.0
                         gene_scores[gid] = gene_scores.get(gid, 0) + splade_score
                         tier_contrib.setdefault(gid, {})["splade"] = splade_score
                         # Stage 3: feed Fuser with the RAW SPLADE score
@@ -2035,7 +2056,9 @@ class KnowledgeStore:
                             for gid, sim in nearest:
                                 if sim > 0.3:
                                     boost_scale = max(0.5, 1.0 - top_score / 40.0)
-                                    sema_boost = sim * 2.0 * boost_scale
+                                    # #202: sema_boost_weight (default 2.0
+                                    # == legacy literal).
+                                    sema_boost = sim * self._sema_boost_weight * boost_scale
                                     gene_scores[gid] += sema_boost
                                     tier_contrib.setdefault(gid, {})["sema_boost"] = sema_boost
                                     # Stage 3: post-fusion additive (re-rank class).
@@ -2081,11 +2104,13 @@ class KnowledgeStore:
                                     if gid in existing:
                                         continue
                                     if sim > 0.4:
-                                        sema_new = sim * 3.0
+                                        # #202: sema_cold_weight (default
+                                        # 3.0 == legacy literal).
+                                        sema_new = sim * self._sema_cold_weight
                                         gene_scores[gid] = sema_new
                                         tier_contrib.setdefault(gid, {})["sema_cold"] = sema_new
                                         # Stage 3: rank by RAW cosine
-                                        # similarity, not the *3.0
+                                        # similarity, not the weight-
                                         # multiplied score — the
                                         # multiplier is the additive
                                         # weight, but rank comes from
@@ -2212,10 +2237,13 @@ class KnowledgeStore:
             ).fetchone()[0]
             if term_freq == 0:
                 continue
-            # IDF boost: rare terms get up to 3.0, common terms ~0.5
-            # Capped at 3.0 (was 5.0) to reduce tangential rare-term over-boost.
+            # IDF boost: rare terms get up to the cap, common terms ~0.5.
+            # #202: leading coefficient = lex_anchor_weight (default 1.5 ==
+            # legacy literal); the cap scales proportionally at 2.0 × weight
+            # (default 3.0 == the legacy cap, which had been lowered from
+            # 5.0 to reduce tangential rare-term over-boost).
             idf = _math.log(total_genes_est / term_freq) if term_freq > 0 else 0
-            boost = min(idf * 1.5, 3.0)
+            boost = min(idf * self._lex_anchor_weight, 2.0 * self._lex_anchor_weight)
             if boost > 1.0:
                 anchor_genes = cur.execute(
                     f"SELECT pi.gene_id FROM promoter_index pi "
@@ -2255,7 +2283,8 @@ class KnowledgeStore:
         # ── Tier 5: harmonic co-activation boost ──────────────────
         # For each candidate, add a score bonus from documents that are
         # harmonically linked to OTHER candidates (mutual reinforcement).
-        # Weight: 1.0 per link, capped at 3.0 total bonus.
+        # Weight: harmonic_weight per link (default 1.0), capped at a
+        # total bonus of 3.0 × harmonic_weight (default 3.0) — #202.
         if use_harmonic and gene_scores:
             try:
                 _has_harmonic = cur.execute(
@@ -2279,7 +2308,8 @@ class KnowledgeStore:
                     for hr in harmonic_rows:
                         for gid in (hr["gene_id_a"], hr["gene_id_b"]):
                             harmonic_bonus[gid] = min(
-                                harmonic_bonus.get(gid, 0) + 1.0, 3.0,
+                                harmonic_bonus.get(gid, 0) + self._harmonic_weight,
+                                3.0 * self._harmonic_weight,
                             )
                     _harmonic_ranked: List[Tuple[str, float]] = []  # Stage 3 RRF
                     for gid, bonus in harmonic_bonus.items():
@@ -2322,7 +2352,8 @@ class KnowledgeStore:
 
         # ── Tier 5b: entity graph co-occurrence boost ─────────────────────
         # Documents sharing entity nodes with query entities get a score boost.
-        # Additive on top of Tier 5 harmonic; capped at +2.0 per document.
+        # Additive on top of Tier 5 harmonic; +entity_graph_weight per
+        # row, capped at 4.0 × entity_graph_weight (default 2.0) — #202.
         # entity_graph schema: entity (TEXT), gene_id (TEXT) — no weight col.
         _eg_enabled = self._entity_graph_retrieval_enabled if use_entity_graph is None else bool(use_entity_graph)
         if _eg_enabled and entities and gene_scores:
@@ -2338,7 +2369,13 @@ class KnowledgeStore:
                 for row in eg_rows:
                     gid = row["gene_id"]
                     if gid in gene_scores:
-                        bonus = min(1.0 * 0.5, 2.0)  # weight=1.0, cap 2.0
+                        # #202: per-row bonus = 1.0 × entity_graph_weight
+                        # (default 0.5 == the legacy 1.0*0.5); cap scales at
+                        # 4.0 × weight (default 2.0 == legacy cap).
+                        bonus = min(
+                            1.0 * self._entity_graph_weight,
+                            4.0 * self._entity_graph_weight,
+                        )
                         gene_scores[gid] += bonus
                         tier_contrib.setdefault(gid, {})["entity_graph"] = (
                             tier_contrib.get(gid, {}).get("entity_graph", 0.0) + bonus
