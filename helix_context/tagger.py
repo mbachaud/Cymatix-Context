@@ -13,12 +13,19 @@ Performance:
     LLM pack: ~6s/chunk (2x E4B autoregressive calls)
     CpuTagger: ~7ms/chunk (spaCy + regex, single-threaded)
     3,500 chunks: ~1 hour → ~25 seconds
+
+Operator extension:
+    The rule-based vocabulary ships project-neutral. Extend it per
+    deployment via the HELIX_TAGGER_EXTRA_ENTITIES and
+    HELIX_TAGGER_EXTRA_TERMS env vars, read once at module import —
+    see _extend_vocabulary_from_env().
 """
 
 from __future__ import annotations
 
 import hashlib
 import logging
+import os
 import re
 from typing import Dict, List, Optional, Set
 
@@ -65,17 +72,24 @@ def _get_nlp():
 
 
 # ── Project entity vocabulary (rule-based NER) ──────────────────
+#
+# Ships project-neutral: only this repository's own stack plus generic
+# IR/NLP artifacts. Earlier builds bundled the original author's private
+# project names here (BigEd, BookKeeper, CosmicTasha, ModuleHub, FleetDB,
+# SwiftWing21, ...) as EntityRuler patterns — those owner-specific
+# defaults were removed for the public release. Operators add their own
+# vocabulary via HELIX_TAGGER_EXTRA_ENTITIES instead (see
+# _extend_vocabulary_from_env below).
 
 _PROJECT_ENTITIES = {
     "PRODUCT": [
-        "BigEd", "BigEd CC", "Helix Context", "Agentome", "ScoreRift",
-        "BookKeeper", "CosmicTasha", "two-brain", "ModuleHub",
-        "CpuTagger", "SemaCodec", "FleetDB", "Dr. Ders", "DeBERTa",
-        "fleet.toml", "helix.toml", "genome.db",
+        "Helix Context", "Agentome", "ScoreRift",
+        "CpuTagger", "SemaCodec", "DeBERTa",
+        "helix.toml", "genome.db",
         "SPLADE", "FTS5", "MiniLM", "ColBERT", "RaBitQ",
     ],
     "ORG": [
-        "SwiftWing21", "Anthropic", "Naver Labs",
+        "Anthropic", "Naver Labs",
     ],
 }
 
@@ -115,14 +129,59 @@ _TECH_TERMS: Set[str] = {
     "test", "benchmark", "smoke", "unittest", "pytest",
     "security", "audit", "compliance", "soc2", "encryption",
     "deploy", "ci", "cd", "release", "build", "binary",
-    # Project-specific terms (Agentome ecosystem)
-    "biged", "helix", "agentome", "scorerift", "bookkeeper",
-    "cosmictasha", "modulehub", "ribosome", "genome", "chromatin",
+    # Project-specific terms (this repository's own stack). Owner-project
+    # names that used to ship here (biged, bookkeeper, cosmictasha,
+    # modulehub, fleetdb, "dr ders") were removed for the public release —
+    # extend per deployment via HELIX_TAGGER_EXTRA_TERMS instead.
+    "helix", "agentome", "scorerift",
+    "ribosome", "genome", "chromatin",
     "ellipticity", "codon", "promoter", "epigenetics", "sema",
     "splade", "deberta", "colbert", "rabitq", "fts5",
-    "cputagger", "semacodec", "fleetdb", "fleet",
-    "supervisor", "dr ders", "needle", "gene",
+    "cputagger", "semacodec", "fleet",
+    "supervisor", "needle", "gene",
 }
+
+
+# ── Operator vocabulary extension (env-driven) ──────────────────
+
+def _extend_vocabulary_from_env() -> None:
+    """Append operator-supplied vocabulary from the environment.
+
+    Two env vars, read once at module import (importlib.reload re-reads
+    them in long-lived processes; the spaCy EntityRuler is built lazily
+    on first _get_nlp(), so set them before the tagger's first use):
+
+    HELIX_TAGGER_EXTRA_ENTITIES
+        Comma-separated "Label:Text" pairs appended to
+        ``_PROJECT_ENTITIES``, e.g. "PRODUCT:AcmeApp,ORG:AcmeCorp".
+        Malformed pairs (missing label or text) are skipped with a
+        warning.
+    HELIX_TAGGER_EXTRA_TERMS
+        Comma-separated terms, lowercased and added to ``_TECH_TERMS``,
+        e.g. "acmeapp,acmecorp".
+    """
+    for pair in os.environ.get("HELIX_TAGGER_EXTRA_ENTITIES", "").split(","):
+        pair = pair.strip()
+        if not pair:
+            continue
+        label, sep, text = pair.partition(":")
+        label, text = label.strip(), text.strip()
+        if not sep or not label or not text:
+            log.warning(
+                "Skipping malformed HELIX_TAGGER_EXTRA_ENTITIES entry %r "
+                "(expected 'Label:Text')",
+                pair,
+            )
+            continue
+        _PROJECT_ENTITIES.setdefault(label.upper(), []).append(text)
+    for term in os.environ.get("HELIX_TAGGER_EXTRA_TERMS", "").split(","):
+        term = term.strip().lower()
+        if term:
+            _TECH_TERMS.add(term)
+
+
+_extend_vocabulary_from_env()
+
 
 # ── Regex patterns for KV extraction ──────────────────────────────
 

@@ -159,7 +159,7 @@ class AgentBridge:
 
         lines.extend([
             "## How to Use",
-            "- **Query:** POST http://127.0.0.1:11437/context with `{\"query\": \"...\", \"decoder_mode\": \"none\"}`",
+            f"- **Query:** POST {self.helix_base_url}/context with `{{\"query\": \"...\", \"decoder_mode\": \"none\"}}`",
             "- **Ingest:** Drop .md/.txt files into `~/.helix/shared/inbox/`",
             "- **Signal:** Write JSON to `~/.helix/shared/signals/<name>.json`",
             "",
