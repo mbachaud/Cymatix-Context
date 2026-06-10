@@ -142,12 +142,15 @@ def _darwin_replacements(launcher_path: Path) -> dict:
 
 # ── install ──────────────────────────────────────────────────────
 
-def install_service(dry_run: bool = False) -> Tuple[bool, str]:
+def install_service(dry_run: bool = False, port: int = 11438) -> Tuple[bool, str]:
     """Install the service file for the current platform.
 
     Returns (success, message). On Windows, returns (False, instructions)
     because there is no NSSM auto-install path; the message contains the
     recipe.
+
+    ``port`` is the launcher UI port shown in the printed next-step URL
+    (threaded from the CLI's --port flag; default 11438).
     """
     platform = current_platform()
     if platform == "unsupported":
@@ -218,7 +221,7 @@ def install_service(dry_run: bool = False) -> Tuple[bool, str]:
             "Verify:\n\n"
             "    systemctl --user status helix-launcher.service\n"
             "    journalctl --user -u helix-launcher.service -f\n\n"
-            "Open http://127.0.0.1:11438/ in your browser."
+            f"Open http://127.0.0.1:{port}/ in your browser."
         )
     else:  # darwin
         next_steps = (
@@ -228,7 +231,7 @@ def install_service(dry_run: bool = False) -> Tuple[bool, str]:
             "Verify:\n\n"
             "    launchctl list | grep helix-launcher\n"
             "    tail -f ~/Library/Logs/helix-launcher.log\n\n"
-            "Open http://127.0.0.1:11438/ in your browser."
+            f"Open http://127.0.0.1:{port}/ in your browser."
         )
 
     return True, next_steps

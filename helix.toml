@@ -432,12 +432,16 @@ enabled = false                         # Set true + run scripts/run_mem_sync.py
 helix_url = "http://127.0.0.1:11437"
 sync_interval_s = 60                    # Poll cadence; human-speed writes, cheap stat+hash
 agent_kind = "claude-code"              # Stamp on every ingest; identifies writer tool
-watch_dirs = [                          # Expand ~ automatically; add more as needed
-  "~/.claude/projects/f--Projects-Education/memory",
-]
+# Empty by default for the public release — point this at your own
+# memory/notes directories, e.g.:
+#   watch_dirs = ["~/.claude/projects/<your-project>/memory"]
+watch_dirs = []                         # Expands ~ automatically; add as needed
 
 [synonyms]
 # Fix 1: lightweight synonym expansion for promoter queries
+# NOTE (public release): owner-project synonym rows that used to ship
+# here (biged / bookkeeper / cosmictasha / fleet) were removed — add
+# rows for your own project vocabulary instead.
 slow = ["performance", "latency", "bottleneck", "timeout", "lag"]
 fast = ["performance", "speed", "optimization", "cache"]
 cache = ["redis", "ttl", "invalidation", "cdn", "caching", "eviction"]
@@ -446,12 +450,9 @@ protein = ["folding", "amino", "alpha_helix", "beta_sheet", "alphafold", "bioche
 tree = ["btree", "b-tree", "data_structures", "index", "binary_tree"]
 helix = ["genome", "ribosome", "codons", "splice", "chromatin", "promoter", "context compression"]
 pipeline = ["steps", "expression", "workflow", "process", "stages"]
-scoring = ["scorerift", "divergence", "audit", "grades", "ratchet", "dimensions"]
+scoring = ["divergence", "audit", "grades", "ratchet", "dimensions"]
 compress = ["compression", "ratio", "target", "context_compression"]
 ratio = ["compression", "ratio", "target", "factor"]
-biged = ["biged-rs", "rust", "axum", "egui", "pyo3", "supervisor", "fleet"]
-bookkeeper = ["bookkeeping", "financial", "transactions", "xero", "invoices", "tenant"]
-cosmictasha = ["cosmic", "tasha", "novabridge", "biged-rs"]
 error = ["exception", "crash", "failure", "bug", "traceback"]
 port = ["proxy", "server", "configuration", "system_settings", "api"]
 threshold = ["divergence", "scoring", "reconciliation", "configuration"]
@@ -481,10 +482,9 @@ maintenance = ["admin", "vacuum", "refresh", "checkpoint", "compact"]
 # Fix #124: unmapped query tokens from sharded-bench misses. Each key is a
 # token produced by extract_query_signals() for a documented miss query that
 # previously had NO synonym entry — so it could only match via raw FTS.
-fleet = ["biged", "biged-rs", "agents", "workers", "supervisor", "skills"]
 ribosome = ["decoder", "ribosome_prompt", "compressor", "splice", "budget", "tokens"]
 expression = ["pipeline", "stages", "steps", "expressed_context", "decoder"]
-agents = ["agent", "fleet", "conductor", "worker", "orchestration", "biged"]
+agents = ["agent", "fleet", "conductor", "worker", "orchestration"]
 dashboard = ["port", "ui", "frontend", "server", "fleet"]
 tables = ["database", "db", "sqlite", "schema", "ddl"]
 

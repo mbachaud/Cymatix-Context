@@ -4,6 +4,17 @@ Helix should not become plain BM25, but BM25 is an excellent safety net
 for tiny literal needles. This module returns a small ordered list of
 source_ids from ``genes_fts`` so callers can merge them after packet
 sources and before DAL fetch.
+
+Path-bonus scoring contract (``_source_path_bonus``) — generic,
+corpus-neutral heuristics only:
+
+* config-like extension: +1.5 (+1.0 more on config-flavored queries)
+* query-term substring agreement with the path: +0.4 per term (len > 3)
+* a query term (len >= 4) naming a whole path segment or filename stem:
+  +2.0, applied once
+* tests-path penalty: -0.75
+
+No repository- or product-specific path is special-cased.
 """
 
 from __future__ import annotations
@@ -53,6 +64,19 @@ def _fts_match_expr(query: str) -> str:
     return " OR ".join(f'"{term}"' for term in keep)
 
 
+def _path_segments(path: str) -> set[str]:
+    """Split a normalized path into its segments plus extension-less stems."""
+    segments: set[str] = set()
+    for segment in path.split("/"):
+        if not segment:
+            continue
+        segments.add(segment)
+        stem = segment.split(".", 1)[0]
+        if stem:
+            segments.add(stem)
+    return segments
+
+
 def _source_path_bonus(source_id: str, query_terms: set[str]) -> float:
     path = normalize_source_id(source_id)
     score = 0.0
@@ -66,12 +90,16 @@ def _source_path_bonus(source_id: str, query_terms: set[str]) -> float:
     for term in query_terms:
         if len(term) > 3 and term in path:
             score += 0.4
-    if "helix" in query_terms and "helix-context" in path:
+    # Generic path affinity: a sufficiently specific query term (len >= 4)
+    # naming a whole path segment (directory, filename, or filename stem)
+    # is strong evidence the source belongs to the thing being asked about.
+    # Applied once per path. Replaces the pre-public hardwired boosts for
+    # this repository's own paths ("helix-context", "/helix.toml") and the
+    # owner-specific "/_worktrees/" penalty, so rescue scoring stays
+    # corpus-neutral.
+    segments = _path_segments(path)
+    if any(len(term) >= 4 and term in segments for term in query_terms):
         score += 2.0
-    if "helix" in query_terms and path.endswith("/helix.toml"):
-        score += 2.0
-    if "/_worktrees/" in path:
-        score -= 1.0
     if "/tests/" in path or "\\tests\\" in source_id.lower():
         score -= 0.75
     return score

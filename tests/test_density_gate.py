@@ -51,9 +51,9 @@ class TestIsDeniedSource:
         """Real helix-context source files must never be denied."""
         assert is_denied_source("F:/Projects/helix-context/helix_context/genome.py") is False
         assert is_denied_source("helix-context/docs/RESEARCH.md") is False
-        assert is_denied_source("BookKeeper/src/ledger.py") is False
-        assert is_denied_source("Education/fleet/dashboard.py") is False
-        assert is_denied_source("two-brain-audit/scorerift/core.py") is False
+        assert is_denied_source("accounting/src/ledger.py") is False
+        assert is_denied_source("projects/fleet/dashboard.py") is False
+        assert is_denied_source("side-project/audit/core.py") is False
 
     # Steam / game content
     # ─── Steam / game content is SIGNAL, not noise (reframed 2026-04-10) ───
@@ -86,7 +86,7 @@ class TestIsDeniedSource:
 
     # Build artifacts
     def test_next_build_denied(self):
-        assert is_denied_source("F:/CosmicTasha/.next/server/app/page.js") is True
+        assert is_denied_source("F:/webshop/.next/server/app/page.js") is True
 
     def test_node_modules_denied(self):
         assert is_denied_source("project/node_modules/react/index.js") is True
@@ -98,20 +98,20 @@ class TestIsDeniedSource:
         assert is_denied_source("project/dist/bundle.js") is True
 
     def test_target_debug_denied(self):
-        assert is_denied_source("biged-rs/target/debug/deps/libcore.rlib") is True
+        assert is_denied_source("acme-rs/target/debug/deps/libcore.rlib") is True
 
     def test_target_release_denied(self):
-        assert is_denied_source("biged-rs/target/release/biged.exe") is True
+        assert is_denied_source("acme-rs/target/release/acme.exe") is True
 
     # Lockfiles
     def test_package_lock_denied(self):
-        assert is_denied_source("F:/CosmicTasha/package-lock.json") is True
+        assert is_denied_source("F:/webshop/package-lock.json") is True
 
     def test_yarn_lock_denied(self):
         assert is_denied_source("project/yarn.lock") is True
 
     def test_cargo_lock_denied(self):
-        assert is_denied_source("biged-rs/Cargo.lock") is True
+        assert is_denied_source("acme-rs/Cargo.lock") is True
 
     def test_uv_lock_denied(self):
         assert is_denied_source("helix-context/uv.lock") is True
@@ -128,7 +128,7 @@ class TestIsDeniedSource:
 
     # Next.js manifests
     def test_app_paths_manifest_denied(self):
-        assert is_denied_source("F:/CosmicTasha/.next/server/app-paths-manifest.json") is True
+        assert is_denied_source("F:/webshop/.next/server/app-paths-manifest.json") is True
 
     def test_client_reference_manifest_denied(self):
         assert is_denied_source(".next/server/app/client-reference-manifest.js") is True
@@ -156,8 +156,8 @@ class TestIsDeniedSource:
     # CRITICAL: CSVs are NOT in the deny list — business content
     def test_business_csv_not_denied(self):
         """Future business CSVs (customer data, invoices, etc.) must pass."""
-        assert is_denied_source("F:/BookKeeper/customers.csv") is False
-        assert is_denied_source("F:/BigEd/fleet/metrics/daily_report.csv") is False
+        assert is_denied_source("F:/accounting/customers.csv") is False
+        assert is_denied_source("F:/acme/fleet/metrics/daily_report.csv") is False
         assert is_denied_source("project/data/financial_records.csv") is False
 
     def test_case_insensitive(self):

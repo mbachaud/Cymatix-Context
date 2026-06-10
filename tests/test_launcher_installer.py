@@ -196,4 +196,4 @@ class TestCLIIntegration:
         with patch("helix_context.launcher.installer.install_service",
                    return_value=(True, "dry")) as mock_install:
             app_mod.main(["install-service", "--dry-run"])
-        mock_install.assert_called_once_with(dry_run=True)
+        mock_install.assert_called_once_with(dry_run=True, port=11438)

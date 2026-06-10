@@ -74,7 +74,7 @@ def test_multi_gold_miss_when_neither_source_appears():
     gold = ["helix-context/helix.toml", "helix-context/docs/SETUP.md"]
     delivered = [
         "F:/Projects/Education/CLAUDE.md",
-        "F:/Projects/BookKeeper/CLAUDE.md",
+        "F:/Projects/OtherRepo/CLAUDE.md",
     ]
     assert _gold_delivered(delivered, gold) is False
 

@@ -1169,7 +1169,7 @@ def test_doc_type_boost_for_matches_summary_basenames():
     )
 
     # Summary docs — boosted, regardless of separator / case / depth.
-    assert _doc_type_boost_for("Education/biged-rs/README.md") == DOC_TYPE_BOOST
+    assert _doc_type_boost_for("projects/acme-rs/README.md") == DOC_TYPE_BOOST
     assert _doc_type_boost_for("repo/CLAUDE.md") == DOC_TYPE_BOOST
     assert _doc_type_boost_for("docs/INDEX.md") == DOC_TYPE_BOOST
     assert _doc_type_boost_for("readme.md") == DOC_TYPE_BOOST
@@ -1177,7 +1177,7 @@ def test_doc_type_boost_for_matches_summary_basenames():
     assert _doc_type_boost_for("C:\\proj\\sub\\claude.md") == DOC_TYPE_BOOST
 
     # Implementation / non-summary files — identity (NOT boosted).
-    assert _doc_type_boost_for("Education/biged-rs/src/main.rs") == 1.0
+    assert _doc_type_boost_for("projects/acme-rs/src/main.rs") == 1.0
     assert _doc_type_boost_for("helix_context/shard_router.py") == 1.0
     assert _doc_type_boost_for("docs/architecture/OBSERVABILITY.md") == 1.0
     # A file that merely contains "readme" but isn't the basename.
@@ -1232,10 +1232,10 @@ def doc_type_boost_setup():
     # the keyword-dense implementation file. This is the #121 symptom:
     # the README holds the answer conceptually yet loses the ranking.
     readme = _mk_gene(
-        "BigEd Rust build overview. The release binary is around 4 MB.",
-        domains=["biged"],
+        "Acme Rust build overview. The release binary is around 4 MB.",
+        domains=["acme"],
         entities=["rust"],
-        source="Education/biged-rs/README.md",
+        source="projects/acme-rs/README.md",
     )
     readme_id = ga.upsert_gene(readme, apply_gate=False)
     # Implementation file: keyword-dense AND its path contains the query
@@ -1245,9 +1245,9 @@ def doc_type_boost_setup():
     impl = _mk_gene(
         "binary binary binary size size build target binary measured "
         "binary size binary footprint binary size binary",
-        domains=["biged"],
+        domains=["acme"],
         entities=["binary"],
-        source="Education/biged-rs/src/binary_size_report.rs",
+        source="projects/acme-rs/src/binary_size_report.rs",
     )
     impl_id = ga.upsert_gene(impl, apply_gate=False)
     ga.conn.close()
@@ -1257,7 +1257,7 @@ def doc_type_boost_setup():
     gb = Genome(shard_b_path)
     other = _mk_gene(
         "Unrelated second shard. Auth tokens and JWT sessions.",
-        domains=["biged"],
+        domains=["acme"],
         entities=["binary"],
         source="other/notes.md",
     )
@@ -1271,19 +1271,19 @@ def doc_type_boost_setup():
     register_shard(main, "shard_a", "reference", shard_a_path, gene_count=2)
     register_shard(main, "shard_b", "participant", shard_b_path, gene_count=1)
     for gid, src, ents in (
-        (readme_id, "Education/biged-rs/README.md", ["rust"]),
-        (impl_id, "Education/biged-rs/src/binary_size_report.rs", ["binary"]),
+        (readme_id, "projects/acme-rs/README.md", ["rust"]),
+        (impl_id, "projects/acme-rs/src/binary_size_report.rs", ["binary"]),
     ):
         upsert_fingerprint(
             main, gene_id=gid, shard_name="shard_a", source_id=src,
-            domains_json=json.dumps(["biged"]),
+            domains_json=json.dumps(["acme"]),
             entities_json=json.dumps(ents),
             key_values_json="[]",
         )
     upsert_fingerprint(
         main, gene_id=other_id, shard_name="shard_b",
         source_id="other/notes.md",
-        domains_json=json.dumps(["biged"]),
+        domains_json=json.dumps(["acme"]),
         entities_json=json.dumps(["binary"]),
         key_values_json="[]",
     )
@@ -1319,7 +1319,7 @@ def test_doc_type_boost_lifts_readme_score_on_cross_shard_merge(
         router = ShardRouter(doc_type_boost_setup["main_path"])
         try:
             router.query_genes(
-                domains=["biged"], entities=["binary"], max_genes=10,
+                domains=["acme"], entities=["binary"], max_genes=10,
             )
             return dict(router.last_query_scores)
         finally:
@@ -1365,7 +1365,7 @@ def test_doc_type_boost_does_not_regress_deep_implementation_file(
     router = ShardRouter(doc_type_boost_setup["main_path"])
     try:
         results = router.query_genes(
-            domains=["biged"], entities=["binary"], max_genes=10,
+            domains=["acme"], entities=["binary"], max_genes=10,
         )
         ids = [g.gene_id for g in results]
         scores = router.last_query_scores

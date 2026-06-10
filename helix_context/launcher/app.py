@@ -758,7 +758,7 @@ def _maybe_build_observability() -> tuple[
         return None, False
 
 
-def _handle_service_command(command: str, dry_run: bool) -> int:
+def _handle_service_command(command: str, dry_run: bool, port: int = 11438) -> int:
     """Handle install-service / uninstall-service subcommands.
 
     Returns exit code 0 on success, non-zero on failure. Prints the
@@ -766,7 +766,7 @@ def _handle_service_command(command: str, dry_run: bool) -> int:
     """
     from .installer import install_service, uninstall_service
     if command == "install-service":
-        ok, msg = install_service(dry_run=dry_run)
+        ok, msg = install_service(dry_run=dry_run, port=port)
     else:  # uninstall-service
         ok, msg = uninstall_service(dry_run=dry_run)
     print(msg)
@@ -854,7 +854,7 @@ def main(argv: Optional[list] = None) -> int:
 
     # Service install/uninstall subcommands — do not start any server.
     if args.command in ("install-service", "uninstall-service"):
-        return _handle_service_command(args.command, dry_run=args.dry_run)
+        return _handle_service_command(args.command, dry_run=args.dry_run, port=args.port)
 
     # --tray and --native combined is only supported on Windows today.
     #
