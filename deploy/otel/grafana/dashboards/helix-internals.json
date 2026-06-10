@@ -3,10 +3,7 @@
     "list": [
       {
         "builtIn": 1,
-        "datasource": {
-          "type": "grafana",
-          "uid": "-- Grafana --"
-        },
+        "datasource": "-- Grafana --",
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
@@ -15,11 +12,13 @@
       }
     ]
   },
+  "description": "Internals & research surface: the #209 phase-1 tuning-signal instruments (dense cosine calibration, shard-router fan-out/discrimination, know/miss decisions, session-elision savings, splice ratio). Companion to helix-overview.json and helix-pipeline-observatory.json.",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
   "id": null,
   "links": [],
+  "liveNow": false,
   "panels": [
     {
       "collapsed": false,
@@ -30,11 +29,13 @@
         "y": 0
       },
       "id": 100,
-      "title": "Retrieval",
+      "panels": [],
+      "title": "Tuning signals (#209 phase 1)",
       "type": "row"
     },
     {
       "datasource": "Prometheus",
+      "description": "helix_dense_cosine — raw cosine of every dense-tier hit at its computation site. arm=hot is the BGE-M3 dense-recall merge in query_genes (pre-weight, pre-floor); arm=cold is the cold-tier ΣĒMA scan. Calibration data for dense_additive_weight / dense_additive_min_cosine (#203, #209).",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -70,8 +71,7 @@
             "thresholdsStyle": {
               "mode": "off"
             }
-          },
-          "unit": "bytes"
+          }
         },
         "overrides": []
       },
@@ -93,20 +93,26 @@
           "sort": "none"
         }
       },
-      "title": "Knowledge-store size (raw vs compressed bytes)",
+      "title": "Dense cosine distribution (p50 / p95 by arm)",
       "type": "timeseries",
       "targets": [
         {
           "datasource": "Prometheus",
-          "expr": "helix_genome_size_bytes",
-          "legendFormat": "{{kind}}",
+          "expr": "histogram_quantile(0.50, sum by (le, arm) (rate(helix_dense_cosine_bucket[5m])))",
+          "legendFormat": "{{arm}} p50",
           "refId": "A"
+        },
+        {
+          "datasource": "Prometheus",
+          "expr": "histogram_quantile(0.95, sum by (le, arm) (rate(helix_dense_cosine_bucket[5m])))",
+          "legendFormat": "{{arm}} p95",
+          "refId": "B"
         }
-      ],
-      "description": "helix_genome_size_bytes, refreshed on each /stats poll. Legacy bio term: genome size."
+      ]
     },
     {
       "datasource": "Prometheus",
+      "description": "helix_shard_fanout — number of shards ShardRouter consulted per query. Mean and p95 of the per-query distribution; tracks the #165 router-degeneracy finding.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -142,8 +148,7 @@
             "thresholdsStyle": {
               "mode": "off"
             }
-          },
-          "unit": "percent"
+          }
         },
         "overrides": []
       },
@@ -165,104 +170,89 @@
           "sort": "none"
         }
       },
-      "title": "Tier activation share (%)",
+      "title": "Shard fan-out (shards consulted per query)",
       "type": "timeseries",
       "targets": [
         {
           "datasource": "Prometheus",
-          "expr": "100 * sum by (tier) (rate(helix_tier_fired_total[5m])) / ignoring(tier) group_left sum(rate(helix_tier_fired_total[5m]))",
-          "legendFormat": "{{tier}}",
+          "expr": "rate(helix_shard_fanout_sum[5m]) / rate(helix_shard_fanout_count[5m])",
+          "legendFormat": "mean",
           "refId": "A"
+        },
+        {
+          "datasource": "Prometheus",
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(helix_shard_fanout_bucket[5m])))",
+          "legendFormat": "p95",
+          "refId": "B"
         }
-      ],
-      "description": "Share of retrieval tier activations per tier \u2014 100 * rate(helix_tier_fired_total) by tier over the all-tier total."
+      ]
     },
     {
       "datasource": "Prometheus",
+      "description": "helix_shard_discrimination — routed / known healthy shards per query, mean over 5m. 1.0 = the router consults every shard (zero discrimination, #165 degeneracy); lower is a more selective route. Acceptance metric for the AND-mode router.",
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "mode": "thresholds"
           },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "cross magnitude x tier",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "bars",
-            "fillOpacity": 80,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "normal"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 0.7
+              },
+              {
+                "color": "red",
+                "value": 0.95
+              }
+            ]
           },
-          "unit": "s"
+          "unit": "percentunit"
         },
         "overrides": []
       },
       "gridPos": {
         "h": 8,
-        "w": 24,
+        "w": 12,
         "x": 0,
         "y": 9
       },
       "id": 3,
       "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
         },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "none"
-        }
+        "textMode": "auto",
+        "wideLayout": true
       },
-      "title": "Retrieval signal latency p95 (per signal)",
-      "type": "timeseries",
+      "pluginVersion": "11.0.0",
+      "title": "Shard discrimination (fraction of shards hit)",
+      "type": "stat",
       "targets": [
         {
           "datasource": "Prometheus",
-          "expr": "histogram_quantile(0.95, sum by (le, signal) (rate(helix_genome_signal_seconds_bucket[5m])))",
-          "legendFormat": "{{signal}}",
+          "expr": "rate(helix_shard_discrimination_sum[5m]) / rate(helix_shard_discrimination_count[5m])",
+          "legendFormat": "fraction",
           "refId": "A"
         }
-      ],
-      "description": "histogram_quantile over helix_genome_signal_seconds \u2014 per-signal SQLite timing inside query_genes (fts5, splade, dense, tag_*, pki, harmonic, sr)."
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 17
-      },
-      "id": 101,
-      "title": "CWoLa Label Clock",
-      "type": "row"
+      ]
     },
     {
       "datasource": "Prometheus",
+      "description": "helix_know_decision_total — decide_know_or_miss outcomes per hour. Labels: outcome (know | miss | abstain) and reason (none for know; the MissBlock reason otherwise). Calibrates [know] floors/margins; input for miss-reason-driven escalation (SNOW-2 arm E).",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -305,8 +295,8 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 0,
-        "y": 18
+        "x": 12,
+        "y": 9
       },
       "id": 4,
       "options": {
@@ -320,95 +310,26 @@
           "sort": "none"
         }
       },
-      "title": "CWoLa bucket accumulation",
+      "title": "Know / miss / abstain decisions",
       "type": "timeseries",
       "targets": [
         {
           "datasource": "Prometheus",
-          "expr": "sum by (bucket) (increase(helix_cwola_bucket_total[1h]))",
-          "legendFormat": "{{bucket}}",
+          "expr": "sum by (outcome) (increase(helix_know_decision_total[1h]))",
+          "legendFormat": "{{outcome}}",
           "refId": "A"
-        }
-      ],
-      "description": "helix_cwola_bucket_total \u2014 CWoLa log rows by bucket (A/B/pending), 1h increase."
-    },
-    {
-      "datasource": "Prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 0.5
-              },
-              {
-                "color": "red",
-                "value": 1.0
-              }
-            ]
-          },
-          "unit": "s"
         },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 18
-      },
-      "id": 5,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "11.0.0",
-      "title": "p99 /context latency",
-      "type": "stat",
-      "targets": [
         {
           "datasource": "Prometheus",
-          "expr": "histogram_quantile(0.99, sum by (le) (rate(helix_context_latency_seconds_bucket[5m])))",
-          "legendFormat": "p99",
-          "refId": "A"
+          "expr": "sum by (reason) (increase(helix_know_decision_total{outcome!=\"know\"}[1h]))",
+          "legendFormat": "miss: {{reason}}",
+          "refId": "B"
         }
-      ],
-      "description": "histogram_quantile(0.99) over helix_context_latency_seconds \u2014 end-to-end /context build time."
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 26
-      },
-      "id": 102,
-      "title": "Graph & Chromatin",
-      "type": "row"
+      ]
     },
     {
       "datasource": "Prometheus",
+      "description": "helix_session_tokens_saved_total — estimated tokens saved when the session working-set register elides an already-delivered document with a stub (~4 chars/token). Prices the elision arm and the \"~40% tokens on multi-turn\" claim.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -422,14 +343,14 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 10,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
-            "lineInterpolation": "stepAfter",
+            "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
             "scaleDistribution": {
@@ -452,9 +373,9 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 27
+        "y": 17
       },
-      "id": 6,
+      "id": 5,
       "options": {
         "legend": {
           "calcs": [],
@@ -466,138 +387,20 @@
           "sort": "none"
         }
       },
-      "title": "Co-activation edges by provenance",
+      "title": "Session tokens saved by elision (per hour)",
       "type": "timeseries",
       "targets": [
         {
           "datasource": "Prometheus",
-          "expr": "helix_harmonic_edges_total",
-          "legendFormat": "{{source}}",
+          "expr": "increase(helix_session_tokens_saved_total[1h])",
+          "legendFormat": "tokens saved / h",
           "refId": "A"
         }
-      ],
-      "description": "helix_harmonic_edges_total by source (seeded / co_retrieved / cwola_validated). Legacy bio term: harmonic_links."
+      ]
     },
     {
       "datasource": "Prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            }
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 27
-      },
-      "id": 7,
-      "options": {
-        "displayLabels": [],
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "values": []
-        },
-        "pieType": "pie",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "title": "Lifecycle tier distribution",
-      "type": "piechart",
-      "targets": [
-        {
-          "datasource": "Prometheus",
-          "expr": "helix_chromatin_state_total",
-          "legendFormat": "{{state}}",
-          "refId": "A"
-        }
-      ],
-      "description": "helix_chromatin_state_total by state (open / euchromatin / heterochromatin). Legacy bio term: chromatin."
-    },
-    {
-      "datasource": "Prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 5
-              },
-              {
-                "color": "red",
-                "value": 10
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 35
-      },
-      "id": 8,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "11.0.0",
-      "title": "Hub concentration ratio (top 1% mean / mean)",
-      "type": "stat",
-      "targets": [
-        {
-          "datasource": "Prometheus",
-          "expr": "helix_hub_concentration_ratio",
-          "legendFormat": "ratio",
-          "refId": "A"
-        }
-      ],
-      "description": "helix_hub_concentration_ratio \u2014 co-activation inbound-degree top-1% mean over overall mean. Healthy below ~10x."
-    },
-    {
-      "datasource": "Prometheus",
+      "description": "helix_splice_ratio — raw_chars / compressed_chars per assembled context window (the value shipped in ContextWindow.compression_ratio). Balancing signal for splice_aggressiveness: rising ratio with rising abstain rate is a net loss.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -641,9 +444,9 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 35
+        "y": 17
       },
-      "id": 9,
+      "id": 6,
       "options": {
         "legend": {
           "calcs": [],
@@ -655,36 +458,34 @@
           "sort": "none"
         }
       },
-      "title": "Hub inbound-degree distribution",
+      "title": "Splice compression ratio (mean by caller class)",
       "type": "timeseries",
       "targets": [
         {
           "datasource": "Prometheus",
-          "expr": "helix_hub_inbound_degree",
-          "legendFormat": "{{stat}}",
+          "expr": "sum by (caller_model_class) (rate(helix_splice_ratio_sum[5m])) / sum by (caller_model_class) (rate(helix_splice_ratio_count[5m]))",
+          "legendFormat": "{{caller_model_class}}",
           "refId": "A"
         }
-      ],
-      "description": "helix_hub_inbound_degree summary stats (max / p99 / p95 / p50 / mean) over co-activation inbound degree."
+      ]
     }
   ],
-  "refresh": "10s",
+  "refresh": "30s",
   "schemaVersion": 39,
   "tags": [
     "helix",
-    "pipeline",
-    "observatory"
+    "internals",
+    "research",
+    "tuning"
   ],
-  "templating": {
-    "list": []
-  },
   "time": {
-    "from": "now-1h",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Helix - Pipeline Observatory",
-  "uid": "helix-a27094-pipeline-observatory",
-  "version": 1
+  "title": "Helix — Internals & Research",
+  "uid": "helix-internals",
+  "version": 1,
+  "weekStart": ""
 }

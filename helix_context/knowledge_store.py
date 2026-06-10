@@ -958,6 +958,17 @@ class KnowledgeStore:
                 if len(selected_ids) >= k:
                     break
 
+            # #209 phase 1: observe above-floor cold-tier ΣĒMA cosines so
+            # the cold arm shares the helix_dense_cosine calibration
+            # surface. No-op instrument when OTel is off.
+            try:
+                from .telemetry import dense_cosine_histogram
+                _dch = dense_cosine_histogram()
+                for _sim in selected_sims.values():
+                    _dch.record(float(_sim), {"arm": "cold"})
+            except Exception:
+                pass
+
             if not selected_ids:
                 return []
 
@@ -2131,6 +2142,18 @@ class KnowledgeStore:
                     party_id=party_id,
                     read_only=read_only,
                 )
+                # #209 phase 1: observe every raw dense cosine at its
+                # computation site (pre-weight, pre-floor; identical list
+                # feeds both fusion modes) so live traffic calibrates
+                # dense_additive_weight / dense_additive_min_cosine.
+                # No-op instrument when OTel is off.
+                try:
+                    from .telemetry import dense_cosine_histogram
+                    _dch = dense_cosine_histogram()
+                    for _gid, _cos in dense_hits:
+                        _dch.record(float(_cos), {"arm": "hot"})
+                except Exception:
+                    pass
                 if self._fusion_mode == "rrf":
                     # Stage 3: feed Fuser. raw_score = cosine.
                     fuser.add_tier(

@@ -75,16 +75,16 @@ Two surfaces:
    metric names are stable contracts; dashboard panels translate to
    engineering names with inline references — see `docs/ROSETTA.md` for
    the full bidirectional table.
-2. **OTel `gen_ai.*` standard** — `helix_genai_*` metrics added in the
-   May 2026 telemetry rebuild. Follows the upstream OpenTelemetry GenAI
-   semantic conventions for token usage, TTFT, finish reasons, and per-
-   call cost. Lives in `helix_context/genai_telemetry.py`.
+2. **OTel `gen_ai.*` standard** — *planned (#209 phase 2)*. The
+   `helix_context/genai_telemetry.py` module (`helix_genai_*` token
+   usage / TTFT / finish reasons / per-call cost following the upstream
+   GenAI semantic conventions, plus `helix_context_cache_outcome_total`)
+   is **not on master**; this section returns when it lands.
 
 | Metric | Type | Labels | Source |
 |---|---|---|---|
 | `helix_context_latency_seconds` | histogram | `health`, `budget_tier`, `cold_tier_used` | `/context` endpoint |
 | `helix_pipeline_stage_seconds` | histogram | `stage`, `decoder_mode` | per-stage `_stage_timer` + `pipeline_stage_span` |
-| `helix_context_cache_outcome_total` | counter | `outcome` ∈ {hit, miss, partial} | `/context` cache classification |
 | `helix_context_health_status_total` | counter | `status` ∈ {aligned, sparse, stale, denatured} | `/context` health classifier |
 | `helix_context_ellipticity` | histogram | `party` | per-query coverage × density × freshness |
 | `helix_tier_contribution` | histogram | `tier` | `query_genes` accumulation |
@@ -93,7 +93,7 @@ Two surfaces:
 | `helix_cwola_f_gap_sq` | gauge | — | `cwola.sweep_buckets` |
 | `helix_harmonic_edges_total` | gauge | `source` ∈ {seeded, co_retrieved, cwola_validated} | `/stats` snapshot |
 | `helix_chromatin_state_total` | gauge | `state` ∈ {open, euchromatin, heterochromatin} | `/stats` snapshot |
-| `helix_genome_size_genes` | gauge | — | `/stats` snapshot |
+| `helix_genome_size_bytes` | gauge | `kind` ∈ {raw, compressed} | `/stats` snapshot |
 | `helix_genome_wal_size_bytes` | gauge | — | `/stats` snapshot |
 | `helix_genome_signal_seconds` | histogram | `signal` | per-signal SQLite query timing |
 | `helix_genome_checkpoint_blocked_total` | counter | — | WAL checkpoint contention |
@@ -101,10 +101,12 @@ Two surfaces:
 | `helix_hub_inbound_degree` | gauge | `stat` ∈ {max, p99, p95, p50, mean} | `/stats` snapshot |
 | `helix_ribosome_call_seconds` | histogram | `backend`, `model`, `call_kind` | every compressor call |
 | `helix_ribosome_info` | gauge | `backend`, `model`, `cost_class` | active compressor backend |
-| `helix_genai_client_token_usage` | histogram | `gen_ai.token.type`, `gen_ai.provider.name`, `gen_ai.request.model`, `gen_ai.response.model`, `gen_ai.operation.name` | every LLM call |
-| `helix_genai_time_to_first_chunk_seconds` | histogram | `gen_ai.request.model`, `gen_ai.provider.name` | streaming responses |
-| `helix_genai_cost_usd` | histogram | `gen_ai.request.model`, `gen_ai.provider.name` | per-call cost from `PRICE_TABLE` |
-| `helix_genai_finish_reasons_total` | counter | `finish_reason` | every LLM call |
+| `helix_dense_cosine` | histogram | `arm` ∈ {hot, cold} | dense-recall merge + cold-tier scan (#209) |
+| `helix_shard_fanout` | histogram | — | shards consulted per `ShardRouter.query_genes` (#209) |
+| `helix_shard_discrimination` | histogram | — | fraction of healthy shards hit per routed query (#209) |
+| `helix_know_decision_total` | counter | `outcome` ∈ {know, miss, abstain}, `reason` | `decide_know_or_miss` (#209) |
+| `helix_session_tokens_saved_total` | counter | — | session working-set elision savings (#209) |
+| `helix_splice_ratio` | histogram | `caller_model_class` | assembled-window compression ratio (#209) |
 
 `/stats`-sourced gauges are refreshed each time `/stats` is hit.
 Prometheus scrapes every 15s — if nothing polls `/stats`, the gauges go
@@ -122,17 +124,10 @@ auto-instrumentation:
    request-level root. Implemented via
    `helix_context.telemetry.pipeline_stage_span()`. Lets Tempo show the
    per-request waterfall instead of just the request boundary.
-2. **GenAI client spans** — `<operation> <model>` (e.g. `chat
-   qwen3:8b`) for every LLM-touching call site: the `/v1/chat/completions`
-   proxy paths, the compressor backends (Ollama / Anthropic / LiteLLM),
-   and the local embedding/scoring backends (BGE-M3 / SEMA / SPLADE /
-   DeBERTa / NLI). Attributes follow the OTel GenAI spec:
-   `gen_ai.provider.name`, `gen_ai.operation.name`, `gen_ai.request.model`,
-   `gen_ai.usage.input_tokens` / `output_tokens` /
-   `cached_input_tokens` / `reasoning.output_tokens`,
-   `gen_ai.response.finish_reasons`, `gen_ai.response.time_to_first_chunk`.
-   Implemented via `helix_context.genai_telemetry.llm_span()` +
-   `record_response()`.
+2. **GenAI client spans** — *planned (#209 phase 2)*. OTel GenAI
+   semantic-convention spans (`<operation> <model>`) for every
+   LLM-touching call site will ship with
+   `helix_context/genai_telemetry.py`, which is not on master yet.
 
 ### Logs
 
@@ -141,15 +136,11 @@ running under the OTel SDK with a log handler configured, they flow to
 Loki tagged with trace context so you can pivot from a slow span to
 its logs.
 
-The `helix.proxy` logger emits one **structured-JSON line per
-`/v1/chat/completions` request** via
-`helix_context.genai_telemetry.emit_proxy_log_line()`. Fields:
-`request_id`, `trace_id`, `model`, `provider`, `prompt_hash`,
-`tokens.{in,out,cached,reasoning}`, `ttft_ms`, `total_ms`,
-`finish_reason`, `cost_usd_estimate`, `helix.cache_outcome`,
-`helix.context_block` (`know` | `miss` | `none`). Filter in Grafana
-with `{logger="helix.proxy"}`. The `Helix — Operations Overview` and
-`Helix — GenAI` dashboards both surface this stream.
+A structured-JSON `helix.proxy` log line per `/v1/chat/completions`
+request (`emit_proxy_log_line()` — request id, token counts, TTFT,
+cost estimate, cache outcome) is *planned (#209 phase 2)* alongside
+`helix_context/genai_telemetry.py`. Today the `{logger="helix.proxy"}`
+stream carries the proxy's standard log records only.
 
 ## Privacy
 
@@ -167,7 +158,7 @@ Query text is hashed by default — spans carry `query=<first-50-chars>[hash:<12
 
 ## Dashboards
 
-Four dashboards under `deploy/otel/grafana/dashboards/`. All use
+Five dashboards under `deploy/otel/grafana/dashboards/`. All use
 engineering vocabulary in panel titles; bio-domain legacy terms are
 referenced inline in panel descriptions. See `docs/ROSETTA.md` for the
 full bidirectional vocabulary table.
@@ -177,20 +168,24 @@ full bidirectional vocabulary table.
   rate, latency p50/p95/p99 by health, cache hit / miss / partial
   outcome, per-stage pipeline latency, compressor backend cost class
   + active model, knowledge-store size, WAL health, structured proxy
-  log stream. Cross-links to the other three dashboards.
-- **Helix — GenAI** (`helix-genai.json`) — the OTel `gen_ai.*` standard
-  surface added May 2026. LLM call rate by provider + operation, token
-  usage by direction (input / output / cached / reasoning), USD cost
-  per minute + per model, cache hit ratio, TTFT p50/p95/p99 + heatmap,
-  finish-reasons distribution. Companion to the new
-  `helix_context.genai_telemetry` instrumentation.
-- **Helix — Internals & Research** (`helix-internals.json`) — preserved
-  bio/research panels with engineering titles and inline legacy
-  references: tier dynamics (legacy: tier_fired), A/B cluster
-  convergence (legacy: CWoLa Label Clock), co-activation graph
-  (legacy: harmonic_links + chromatin), hub concentration, compressor
-  diagnostics, genome-signal latency. For deep-design work — not
-  day-to-day operations.
+  log stream. Cross-links to the other dashboards.
+- **Helix — Agent Usage** (`helix-agent-usage.json`) — `/context` call
+  mix and latency bucketed by `caller_model_class`
+  (`helix_context_calls_by_class_total`).
+- **Helix — Pipeline Observatory** (`helix-pipeline-observatory.json`)
+  — research panels reconciled to real instrument names in #209
+  phase 1: tier activation share, per-signal retrieval latency, CWoLa
+  bucket accumulation, p99 `/context` latency, co-activation edges by
+  provenance, lifecycle tier distribution, hub concentration +
+  inbound-degree stats, knowledge-store size.
+- **Helix — Internals & Research** (`helix-internals.json`) — the #209
+  phase-1 tuning signals: dense-cosine calibration distribution,
+  shard-router fan-out + discrimination, know / miss / abstain
+  decision mix, session-elision token savings, splice compression
+  ratio by caller class. For deep-design work — not day-to-day
+  operations.
+- **Helix — GenAI** (`helix-genai.json`) — *planned (#209 phase 2)*,
+  ships together with `helix_context/genai_telemetry.py`.
 - **Helix — Retrieval Quality + HITL** (`helix-retrieval-hitl.json`) —
   per-query ellipticity distribution, health-status pie, denatured-rate
   alert stat, budget-tier mix, ellipticity percentiles, HITL pause-event

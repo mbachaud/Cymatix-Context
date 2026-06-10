@@ -483,6 +483,24 @@ class ShardRouter:
         # shard.query_docs() instead. None (default / arm off) is inert.
         query_type = kwargs.pop("query_type", None)
         shard_names = self.route(domains, entities, query_type)
+        # #209 phase 1: shard-router fan-out + discrimination telemetry.
+        # fanout = shards consulted for this query; discrimination =
+        # routed / known healthy shards in [0, 1] (1.0 = router consulted
+        # every shard — the #165 degeneracy case, zero discrimination).
+        # Soft-fails; instruments are no-ops when OTel is off.
+        try:
+            from .telemetry import (
+                shard_discrimination_histogram,
+                shard_fanout_histogram,
+            )
+            shard_fanout_histogram().record(len(shard_names))
+            _known = len(self.known_shards())
+            if _known > 0:
+                shard_discrimination_histogram().record(
+                    len(shard_names) / _known
+                )
+        except Exception:
+            pass
         if not shard_names:
             with self._last_query_scores_lock:
                 self.last_query_scores = {}
