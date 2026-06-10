@@ -309,7 +309,7 @@ def _agree_from_tier_contributions(
 # Discriminator
 # ─────────────────────────────────────────────────────────────────────
 
-def decide_know_or_miss(
+def _decide_know_or_miss_impl(
     window: "ContextWindow",
     *,
     query: str,
@@ -487,6 +487,35 @@ def decide_know_or_miss(
         ),
         soft_stale=soft_stale,
     )
+
+
+def decide_know_or_miss(
+    window: "ContextWindow", **kwargs
+) -> KnowBlock | MissBlock:
+    """Instrumented wrapper around the know/miss discriminator.
+
+    Delegates to :func:`_decide_know_or_miss_impl` (the single source of
+    truth — see its docstring; every parameter besides ``window`` is
+    keyword-only and forwards verbatim), then records one
+    ``helix_know_decision_total`` increment labelled ``{outcome,
+    reason}``: outcome is ``know`` | ``miss`` | ``abstain``; reason is
+    ``"none"`` for know and the ``MissBlock.reason`` (a member of
+    ``schemas.MISS_REASONS``) otherwise. #209 phase 1. The counter is a
+    no-op when OTel is off; a telemetry failure never alters the
+    decision.
+    """
+    block = _decide_know_or_miss_impl(window, **kwargs)
+    try:
+        from ..telemetry import know_decision_counter
+        if isinstance(block, MissBlock):
+            outcome = "abstain" if block.reason == "abstain" else "miss"
+            reason = str(block.reason)
+        else:
+            outcome, reason = "know", "none"
+        know_decision_counter().add(1, {"outcome": outcome, "reason": reason})
+    except Exception:
+        pass
+    return block
 
 
 # Public re-exports the routes consume.

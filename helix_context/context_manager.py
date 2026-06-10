@@ -65,7 +65,11 @@ import collections as _collections
 import contextvars as _contextvars
 import time as _time
 import uuid as _uuid
-from .telemetry import pipeline_stage_histogram as _pipeline_stage_histogram
+from .telemetry import (
+    pipeline_stage_histogram as _pipeline_stage_histogram,
+    session_tokens_saved_counter as _session_tokens_saved_counter,
+    splice_ratio_histogram as _splice_ratio_histogram,
+)
 
 
 # Per-request id propagated through the sync pipeline so each _stage_timer
@@ -2531,6 +2535,17 @@ class HelixContextManager:
                 )
                 parts.append(stub)
                 _delivery_log_map[g.gene_id] = None  # no re-log on elision
+                # #209 phase 1: estimated tokens saved by eliding an
+                # already-delivered document — full spliced text minus the
+                # stub actually shipped (~4 chars/token; conservative, a
+                # fresh delivery would also carry a legibility header).
+                # No-op counter when OTel is off.
+                try:
+                    _saved = estimate_tokens(spliced_text) - estimate_tokens(stub)
+                    if _saved > 0:
+                        _session_tokens_saved_counter().add(_saved)
+                except Exception:
+                    pass
             elif legibility_on:
                 header = legibility.format_gene_header(
                     gene_id=g.gene_id,
@@ -2683,6 +2698,18 @@ class HelixContextManager:
         else:
             query_terms = query.lower().split()
         health = self._compute_health(query_terms, candidates, compressed_chars, relation_graph)
+
+        # #209 phase 1: observe the splice compression ratio actually
+        # shipped (identical to ContextWindow.compression_ratio below).
+        # Balancing signal for splice_aggressiveness sweeps. No-op
+        # instrument when OTel is off.
+        try:
+            _splice_ratio_histogram().record(
+                total_raw / max(compressed_chars, 1),
+                {"caller_model_class": caller_model_class},
+            )
+        except Exception:
+            pass
 
         return ContextWindow(
             ribosome_prompt=decoder_prompt,

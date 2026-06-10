@@ -734,6 +734,111 @@ def genome_checkpoint_blocked_counter():
     return _instruments["genome_checkpoint_blocked"]
 
 
+# ── #209 phase 1: top-5 tuning-signal instruments ────────────────────
+
+
+def dense_cosine_histogram():
+    """Histogram of raw dense-tier cosines at their computation sites.
+
+    Attributes: {arm: str} — "hot" for the BGE-M3 dense-recall merge in
+    query_genes (both rrf and additive fusion observe the same raw
+    cosine, pre-weight), "cold" for the heterochromatin ΣĒMA scan in
+    query_cold_tier (above-floor hits only). Calibration data for
+    dense_additive_weight / dense_additive_min_cosine (#209 / #203).
+    """
+    if "dense_cosine" not in _instruments:
+        _instruments["dense_cosine"] = meter.create_histogram(
+            "helix_dense_cosine",
+            description="Raw cosine of each dense-tier hit, labelled by arm "
+                        "(hot = BGE-M3 dense recall, cold = cold-tier ΣĒMA).",
+        )
+    return _instruments["dense_cosine"]
+
+
+def shard_fanout_histogram():
+    """Histogram of shards consulted per routed query (ShardRouter.query_genes).
+
+    The #165 finding (router degeneracy: 90-100% of shards consulted)
+    becomes a continuously monitored number. No attributes.
+    """
+    if "shard_fanout" not in _instruments:
+        _instruments["shard_fanout"] = meter.create_histogram(
+            "helix_shard_fanout",
+            description="Number of shards consulted per ShardRouter query.",
+        )
+    return _instruments["shard_fanout"]
+
+
+def shard_discrimination_histogram():
+    """Histogram of the fraction of healthy shards hit per routed query.
+
+    routed / known, in [0, 1]. 1.0 = the router consulted every healthy
+    shard (zero discrimination — the #165 degeneracy case); lower is a
+    more selective route. Acceptance metric for the AND-mode router.
+    """
+    if "shard_discrimination" not in _instruments:
+        _instruments["shard_discrimination"] = meter.create_histogram(
+            "helix_shard_discrimination",
+            description="Fraction of healthy shards consulted per ShardRouter "
+                        "query (routed / known, 1.0 = no discrimination).",
+        )
+    return _instruments["shard_discrimination"]
+
+
+def know_decision_counter():
+    """Counter of know/miss discriminator outcomes (decide_know_or_miss).
+
+    Attributes: {outcome: str, reason: str} — outcome is one of
+    know | miss | abstain; reason is "none" for know, the MissBlock
+    reason (a member of schemas.MISS_REASONS) otherwise. Calibrates
+    [know] floors/margins per corpus and feeds miss-reason-driven
+    escalation (SNOW-2 arm E).
+    """
+    if "know_decision" not in _instruments:
+        _instruments["know_decision"] = meter.create_counter(
+            "helix_know_decision_total",
+            description="Know/miss discriminator outcomes, labelled by outcome "
+                        "(know | miss | abstain) and miss reason.",
+        )
+    return _instruments["know_decision"]
+
+
+def session_tokens_saved_counter():
+    """Counter of estimated tokens saved by session-delivery elision.
+
+    Incremented in _assemble when an already-delivered document is
+    replaced by an elision stub; the value is the estimated token delta
+    (full spliced text minus stub, ~4 chars/token). Proves or falsifies
+    the "~40% tokens on multi-turn" claim and prices the elision arm.
+    """
+    if "session_tokens_saved" not in _instruments:
+        _instruments["session_tokens_saved"] = meter.create_counter(
+            "helix_session_tokens_saved_total",
+            description="Estimated tokens saved by session working-set elision "
+                        "of already-delivered documents.",
+        )
+    return _instruments["session_tokens_saved"]
+
+
+def splice_ratio_histogram():
+    """Histogram of the per-window splice compression ratio.
+
+    raw_chars / compressed_chars as computed in _assemble (the same
+    value shipped in ContextWindow.compression_ratio and the legibility
+    headers). Attributes: {caller_model_class: str} — generic |
+    small_moe | frontier. Balancing signal for splice_aggressiveness:
+    watch ratio drift vs abstain-rate drift while sweeping.
+    """
+    if "splice_ratio" not in _instruments:
+        _instruments["splice_ratio"] = meter.create_histogram(
+            "helix_splice_ratio",
+            description="Splice compression ratio (raw_chars / compressed_chars) "
+                        "per assembled context window, labelled by "
+                        "caller_model_class.",
+        )
+    return _instruments["splice_ratio"]
+
+
 def _emit_snapshot_values(
     *,
     chrom_rows: list[tuple[Any, Any]],
