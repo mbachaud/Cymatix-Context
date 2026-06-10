@@ -573,6 +573,8 @@ class HelixContextManager:
             splade_weight=config.retrieval.splade_weight,
             tag_exact_weight=config.retrieval.tag_exact_weight,
             tag_prefix_weight=config.retrieval.tag_prefix_weight,
+            # Issue #202: warm ΣĒMA boost knob (new; additive-mode Tier 4A).
+            sema_boost_weight=config.retrieval.sema_boost_weight,
             sema_cold_weight=config.retrieval.sema_cold_weight,
             lex_anchor_weight=config.retrieval.lex_anchor_weight,
             harmonic_weight=config.retrieval.harmonic_weight,

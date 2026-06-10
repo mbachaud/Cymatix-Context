@@ -352,17 +352,26 @@ class RetrievalConfig:
     # legacy ``gene_scores += tier_score`` accumulator path is unchanged.
     # When ``"rrf"``, each tier writes both raw scores AND ranks the
     # tier output through the Fuser; the final sort uses fused scores.
-    # Per-tier weights below are RRF post-multipliers.
+    # Issue #202: the per-tier weights below bind in BOTH fusion modes.
+    # Under "additive" they are the tier coefficients/caps themselves
+    # (defaults == the old inline literals, so untouched configs keep
+    # byte-identical rankings); under "rrf" they are rank
+    # post-multipliers.
     fusion_mode: str = "additive"           # "additive" | "rrf"
     rrf_k: int = 60                         # Cormack 2009 default
-    fts5_weight: float = 3.0                # current implicit cap (see genome.py FTS tier)
-    splade_weight: float = 3.5              # current implicit cap
+    fts5_weight: float = 3.0                # cap-only in additive: cap = 2.0 × this (6.0)
+    splade_weight: float = 3.5              # leading coeff == tier cap
     tag_exact_weight: float = 3.0           # current weight × match_count
     tag_prefix_weight: float = 1.5          # current weight × match_count
+    # Issue #202: warm ΣĒMA boost (Tier 4 Mode A) weight — NEW knob; the
+    # additive literal was sim·2.0·scale and the tier previously had no
+    # weight knob at all (post-fusion additive under RRF, never fused).
+    # Default == old literal, so untouched configs are bit-identical.
+    sema_boost_weight: float = 2.0
     sema_cold_weight: float = 3.0           # current sim·3.0 multiplier
-    lex_anchor_weight: float = 1.5          # current idf·1.5 (capped at 3.0)
-    harmonic_weight: float = 1.0            # current per-link weight
-    entity_graph_weight: float = 0.5        # current 1.0·0.5 implicit
+    lex_anchor_weight: float = 1.5          # idf coeff; cap = 2.0 × this (3.0)
+    harmonic_weight: float = 1.0            # per-link weight; cap = 3.0 × this (3.0)
+    entity_graph_weight: float = 0.5        # per-row bonus; cap = 4.0 × this (2.0)
     dense_weight: float = 1.0               # Stage 2 dense recall, RRF participant
     # Tier-0 PR-3 (2026-05-16): additive-mode dense merge weight. Under
     # fusion_mode == "additive" a dense hit's cosine is scaled by this
@@ -816,6 +825,8 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             splade_weight=float(r.get("splade_weight", cfg.retrieval.splade_weight)),
             tag_exact_weight=float(r.get("tag_exact_weight", cfg.retrieval.tag_exact_weight)),
             tag_prefix_weight=float(r.get("tag_prefix_weight", cfg.retrieval.tag_prefix_weight)),
+            # Issue #202: warm ΣĒMA boost knob (new).
+            sema_boost_weight=float(r.get("sema_boost_weight", cfg.retrieval.sema_boost_weight)),
             sema_cold_weight=float(r.get("sema_cold_weight", cfg.retrieval.sema_cold_weight)),
             lex_anchor_weight=float(r.get("lex_anchor_weight", cfg.retrieval.lex_anchor_weight)),
             harmonic_weight=float(r.get("harmonic_weight", cfg.retrieval.harmonic_weight)),
