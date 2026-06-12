@@ -96,6 +96,18 @@ from helix_context.shard_schema import (
 # ``scripts/backfill_bgem3_v2.py`` share one implementation and cannot drift.
 from backfill_bgem3_v2 import backfill_dense_db
 
+# Issue #212: crawl watchdog -- throughput-triggered escalation ladder for
+# the dense ingest/backfill paths. The detector is pure (tests drive it
+# with a fake feed); the CUDA helpers are guarded no-ops on CPU-only boxes.
+from crawl_watchdog import (
+    ACTION_DEMOTE,
+    ACTION_EMPTY_CACHE,
+    LOG_PREFIX as CRAWL_LOG_PREFIX,
+    CrawlDetector,
+    cuda_vram_fraction,
+    release_cuda_cache,
+)
+
 
 logging.basicConfig(
     level=logging.INFO,
@@ -458,6 +470,7 @@ def _drain_with_batched_splade(
     genome,
     stats: dict,
     batch_size: int = 64,
+    crawl_detector=None,
 ) -> None:
     """Drain ``gene_dict_iter`` (yielding lists of gene dicts per file)
     into ``genome``. SPLADE encoding is batched across ``batch_size`` genes
@@ -471,11 +484,27 @@ def _drain_with_batched_splade(
     prevents a systematic upsert failure (schema mismatch, disk full,
     etc.) from being hidden behind a silently-ticking ``stats["errors"]``
     counter that nobody looks at until the full-run summary lands.
+
+    Crawl watchdog (issue #212): every flushed batch feeds
+    ``crawl_detector`` (``None`` -> a :class:`crawl_watchdog.CrawlDetector`
+    built from the ``HELIX_BFM_CRAWL_*`` env knobs) with the end-to-end
+    genes/s for that batch plus the dedicated-VRAM fraction. Ladder rung 1
+    releases the CUDA cache and continues; the terminal rung raises the
+    existing :class:`_PauseRequested` at this (already-committed) batch
+    boundary so the shard pauses cleanly and the #183 salvage +
+    file-level-resume machinery restarts it with a fresh CUDA context --
+    the only thing that reliably un-crawls an already-spilled WDDM
+    context (2026-06-11 slack__eng-oncall incident). CPU-only boxes never
+    trip: the VRAM probe returns ``None`` there.
     """
     from helix_context.backends import splade_backend
     from helix_context.schemas import Gene
 
+    if crawl_detector is None:
+        crawl_detector = CrawlDetector.from_env(log_fn=log.warning, name="ingest")
+
     buf: list = []  # Gene instances buffered before batch flush
+    last_feed_t = time.perf_counter()
     logged_drain_errors: set[str] = set()
 
     def _log_once(stage: str, exc: Exception) -> None:
@@ -524,6 +553,35 @@ def _drain_with_batched_splade(
         while len(buf) >= batch_size:
             _flush(buf[:batch_size])
             del buf[:batch_size]
+            # Crawl watchdog (issue #212): one observation per flushed
+            # batch. dt spans producer + encode + upsert time since the
+            # previous flush, i.e. true end-to-end genes/s -- the metric
+            # the 2026-06-10/11 incidents were measured in.
+            now = time.perf_counter()
+            crawl_action = crawl_detector.feed(
+                batch_size, now - last_feed_t, cuda_vram_fraction(),
+            )
+            last_feed_t = now
+            if crawl_action == ACTION_EMPTY_CACHE:
+                released = release_cuda_cache()
+                log.warning(
+                    "%s rung 1 applied: gc.collect + torch.cuda.empty_cache "
+                    "(released=%s)", CRAWL_LOG_PREFIX, released,
+                )
+            elif crawl_action == ACTION_DEMOTE:
+                # Terminal rung for the ingest path: process recycle via
+                # the existing #183 pause machinery. The batch above is
+                # already committed, so this boundary is a safe
+                # checkpoint; ``_build_one_shard`` writes the marker and
+                # the salvage + file-level-resume path picks the shard
+                # back up with a fresh CUDA context on the next run.
+                log.warning(
+                    "%s recycle requested -- raising _PauseRequested at the "
+                    "batch boundary (shard pauses cleanly; restart the same "
+                    "command to resume with a fresh CUDA context)",
+                    CRAWL_LOG_PREFIX,
+                )
+                raise _PauseRequested()
             # SIGINT batch boundary (issue #151): the previous _flush call
             # already committed the batch's genes to the shard DB, so this
             # is a safe checkpoint. Raise so ``_build_one_shard`` can
@@ -1269,6 +1327,10 @@ def _build_one_shard(
             try:
                 _drain_with_batched_splade(
                     gen, shard, s_stats, batch_size=batch_size,
+                    # Issue #212: shard-attributed crawl-watchdog logs.
+                    crawl_detector=CrawlDetector.from_env(
+                        log_fn=log.warning, name=label,
+                    ),
                 )
             except _PauseRequested:
                 # SIGINT was raised at a batch boundary. The genes in

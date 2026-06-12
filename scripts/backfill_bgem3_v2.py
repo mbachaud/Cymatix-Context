@@ -41,7 +41,20 @@ import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+# Sibling-module import (crawl_watchdog) must resolve whether this file is
+# run directly or imported as a module by build_fixture_matrix / the tests.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+# Issue #212: crawl watchdog -- throughput-triggered escalation ladder. The
+# detector is pure; the CUDA helpers are guarded no-ops on CPU-only boxes.
+from crawl_watchdog import (
+    ACTION_DEMOTE,
+    ACTION_EMPTY_CACHE,
+    LOG_PREFIX as CRAWL_LOG_PREFIX,
+    CrawlDetector,
+    cuda_vram_fraction,
+    release_cuda_cache,
+)
 from helix_context.backends.bgem3_codec import (
     PASSAGE_CHAR_CAP,
     BGEM3Codec,
@@ -80,6 +93,7 @@ def backfill_dense_db(
     limit: int | None = None,
     codec=None,
     log_fn=print,
+    crawl_detector=None,
 ) -> dict:
     """Backfill ``genes.embedding_dense_v2`` on the SQLite DB at ``db_path``.
 
@@ -110,6 +124,19 @@ def backfill_dense_db(
             → a fresh :class:`BGEM3Codec` at ``dim``. Tests inject a fake.
         log_fn: callable taking one string for progress lines. Default
             :func:`print`; pass a no-op (``lambda _msg: None``) to silence.
+        crawl_detector: an object exposing ``feed(genes, dt, vram_frac)``
+            (the issue #212 crawl watchdog). ``None`` -> a
+            :class:`crawl_watchdog.CrawlDetector` built from the
+            ``HELIX_BFM_CRAWL_*`` env knobs -- honored HERE so both the
+            standalone operator script and the fixture builder's
+            ``_backfill_dense`` pass get the watchdog. On a sustained
+            crawl (per-batch genes/s EMA below the run's own early-batch
+            baseline / ``HELIX_BFM_CRAWL_FACTOR`` for
+            ``HELIX_BFM_CRAWL_WINDOW`` consecutive batches with dedicated
+            VRAM > 0.92 of capacity) the ladder first releases the CUDA
+            cache, then tears the codec down and reloads it on CPU for
+            the REMAINDER of this DB (``BGEM3_DEVICE=cpu`` semantics,
+            byte-identical vectors). Tests inject a fake.
 
     Returns:
         A coverage report dict with keys: ``db_path``, ``dim``,
@@ -122,6 +149,10 @@ def backfill_dense_db(
         dim = int(load_config().retrieval.dense_embedding_dim)
     dim = int(dim)
     expected_bytes = dim * 4
+    # Issue #212: only a codec WE constructed can be torn down and reloaded
+    # on CPU by the crawl watchdog's terminal rung. A caller-injected codec
+    # (tests, exotic embedders) is left alone -- demote becomes log-only.
+    owns_codec = codec is None
     if codec is None:
         # Backfill codec device, in priority order:
         #   1. an explicit ``BGEM3_DEVICE`` env var — operator override (#134);
@@ -186,6 +217,17 @@ def backfill_dense_db(
         t0 = time.monotonic()
         processed = 0
         skipped = 0
+        # Issue #212 crawl watchdog: one observation per batch, env knobs
+        # (HELIX_BFM_CRAWL_WINDOW / _FACTOR / _ACTION) honored here so the
+        # standalone script and build_fixture_matrix._backfill_dense share
+        # one implementation. CPU-only boxes never trip (vram probe = None).
+        watchdog = (
+            crawl_detector
+            if crawl_detector is not None
+            else CrawlDetector.from_env(log_fn=log_fn, name=Path(db_path).name)
+        )
+        demoted = False
+        last_feed_t = t0
         for start in range(0, len(rows), max(1, batch)):
             chunk = rows[start:start + max(1, batch)]
             encodable = [
@@ -230,6 +272,42 @@ def backfill_dense_db(
                 f"[backfill] {db_path}: {min(start + len(chunk), len(rows))}/{len(rows)} "
                 f"processed={processed} skipped={skipped} rate={rate:.1f} genes/s"
             )
+            # Issue #212: feed the crawl watchdog and apply its escalation
+            # ladder at this batch boundary.
+            now = time.monotonic()
+            crawl_action = watchdog.feed(
+                len(encodable), now - last_feed_t, cuda_vram_fraction(),
+            )
+            last_feed_t = now
+            if crawl_action == ACTION_EMPTY_CACHE:
+                released = release_cuda_cache()
+                log_fn(
+                    f"{CRAWL_LOG_PREFIX} rung 1 applied: gc.collect + "
+                    f"torch.cuda.empty_cache (released={released})"
+                )
+            elif crawl_action == ACTION_DEMOTE and not demoted:
+                demoted = True
+                if owns_codec:
+                    log_fn(
+                        f"{CRAWL_LOG_PREFIX} DEMOTING to CPU: tearing down the "
+                        f"codec and reloading with device=cpu for the remainder "
+                        f"of {db_path} (BGEM3_DEVICE=cpu semantics -- vectors "
+                        f"are byte-identical, no VRAM ceiling; see "
+                        f"docs/operations/DENSE_VRAM.md)"
+                    )
+                    codec = None
+                    release_cuda_cache()
+                    codec = BGEM3Codec(dim=dim, device="cpu")
+                    log_fn(
+                        f"{CRAWL_LOG_PREFIX} codec reloaded on CPU; resuming "
+                        f"backfill of {db_path}"
+                    )
+                else:
+                    log_fn(
+                        f"{CRAWL_LOG_PREFIX} demote requested but the codec was "
+                        f"injected by the caller -- cannot rebuild it on CPU; "
+                        f"continuing as-is"
+                    )
 
         conn.commit()
         elapsed = time.monotonic() - t0
