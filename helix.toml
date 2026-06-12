@@ -69,7 +69,7 @@ low_vram_threshold_gb = 4.0
 
 [budget]
 ribosome_tokens = 3000                  # fixed decoder prompt
-expression_tokens = 7000                # ~7K expressions cap (BROAD tighten 2026-05-12, bench-gated #73)
+expression_tokens = 7000                # ~7K expressions cap (BROAD tighten 2026-05-12, bench-gated #73). Code default matches since the 2026-06-12 default-honesty pass.
 max_genes_per_turn = 12
 max_fingerprints_per_turn = 40          # navigation-first fingerprint payload cap (final returned count, not frontier width)
 splice_aggressiveness = 0.3             # 0=keep all, 1=ruthless trim (lower preserves more literal detail)
@@ -137,6 +137,11 @@ synthetic_session_enabled = true        # Flip to false to restore prior NULL-se
 # New genomes/ folder is the phase-2 sharding root. main/ is v1's only
 # shard; future shards land as genomes/reference/, genomes/agent/, etc.
 path = "genomes/main/genome.db"
+# Sharded stores (HELIX_USE_SHARDS=1 against a routing main.db): cross-shard
+# query fan-out width comes from the HELIX_SHARD_WORKERS env var, not this
+# file. Unset = auto-size when >4 shards are routed (serial measured 5
+# min/query at 829K genes / 100 shards vs ~55s at 8 workers — issue #206,
+# 2026-06-12); HELIX_SHARD_WORKERS=1 forces the serial reference path.
 compact_interval = 3600                 # seconds between source-change checks (hourly)
 cold_start_threshold = 10              # genes needed before history stripping kicks in (Fix 3)
 # Replicas disabled during phase-1 cutover. Will re-enable alongside
@@ -265,7 +270,13 @@ enabled = true
 [retrieval]
 # Tier 5.5 — Successor Representation (Stachenfeld 2017). γ-discounted
 # future-occupancy boost over the co-activation graph. Lazy, on-demand.
-sr_enabled = true                       # Stage-1 bench flip (2026-04-22); research review flagged this as dark-shipped signal-positive
+# 2026-06-12 default-honesty pass: flipped back to false, matching the code
+# default (the inverse of the usual toml-wins rule). The 2026-04-22 Stage-1
+# bench flip turned SR on, but the evidence roadmap subsequently measured SR
+# at ZERO effect on retrieval outcomes — a knob that costs co-activation
+# walks per query and moves nothing defaults off. Re-flip only with fresh
+# bench evidence.
+sr_enabled = false
 sr_gamma = 0.85                         # 5-10 hop horizon (Stachenfeld grid-cell sweet spot)
 sr_k_steps = 4                          # Power-series truncation (cap runaway propagation)
 sr_weight = 1.5                         # Per-gene SR contribution multiplier

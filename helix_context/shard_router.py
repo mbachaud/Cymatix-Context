@@ -63,16 +63,42 @@ def _blas_limit(n: int = 1):
     return _threadpool_limits(limits=n, user_api="blas")
 
 
-def shard_fanout_workers() -> int:
-    """Worker count for concurrent shard fan-out, from ``HELIX_SHARD_WORKERS``.
+def shard_fanout_workers(n_shards: Optional[int] = None) -> int:
+    """Worker count for concurrent shard fan-out.
 
-    Default ``1`` → serial fan-out, byte-identical to the pre-parallel path.
-    Any value > 1 enables a ThreadPoolExecutor over the routed shards. The
-    serial path remains the reference oracle for the determinism regression
-    test (``tests/test_shard_router.py``).
+    Resolution order (issue #206, 2026-06-12):
+
+    1. ``HELIX_SHARD_WORKERS`` set and parseable → that value (explicit env
+       always wins; ``HELIX_SHARD_WORKERS=1`` forces the serial path). An
+       unparseable value keeps the legacy behavior and forces serial.
+    2. Env unset/empty and ``n_shards`` (the routed-shard count for this
+       query) > 4 → :func:`helix_context.parallel.auto_shard_workers`
+       sizes the pool from VRAM/CPU headroom. Evidence: the serial default
+       measured 5 min/query at 829K genes / 100 shards vs ~55s at 8
+       workers (issue #206, 2026-06-12) — an unconfigured large store was
+       paying a 5x-plus latency tax for a knob nobody knew existed.
+    3. Otherwise ``1`` → serial fan-out, byte-identical to the
+       pre-parallel path. Small/monolithic stores (≤4 routed shards) and
+       the determinism regression tests keep the serial reference oracle
+       by default (``tests/test_shard_router.py`` pins workers explicitly
+       via the env var).
+
+    Parallel fan-out only changes *when* each per-shard fetch runs — the
+    accumulation/merge stays in deterministic ``shard_names`` order, so
+    ranked output is byte-identical at any worker count.
     """
     raw = os.environ.get("HELIX_SHARD_WORKERS", "").strip()
     if not raw:
+        if n_shards is not None and n_shards > 4:
+            try:
+                from .parallel import auto_shard_workers
+                return max(1, int(auto_shard_workers()))
+            except Exception:  # pragma: no cover - sizer probe failure
+                log.warning(
+                    "auto shard-worker sizing failed; falling back to serial",
+                    exc_info=True,
+                )
+                return 1
         return 1
     try:
         return max(1, int(raw))
@@ -645,7 +671,7 @@ class ShardRouter:
         # *when* each fetch runs changes, not the merge order. BLAS is pinned
         # to 1 thread inside the pool so W shard workers don't oversubscribe
         # cores via nested BLAS pools on the per-shard dense matmul.
-        _workers = shard_fanout_workers()
+        _workers = shard_fanout_workers(len(shard_names))
         if _workers > 1 and len(shard_names) > 1:
             with _blas_limit(1):
                 with ThreadPoolExecutor(

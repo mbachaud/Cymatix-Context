@@ -27,7 +27,11 @@ from helix_context.schemas import (
     PromoterTags,
 )
 from helix_context.hardware import sqlite_memory_budget
-from helix_context.shard_router import ShardRouter, use_shards_enabled
+from helix_context.shard_router import (
+    ShardRouter,
+    shard_fanout_workers,
+    use_shards_enabled,
+)
 from helix_context.shard_schema import (
     init_main_db,
     open_main_db,
@@ -1438,11 +1442,17 @@ def test_doc_type_boost_skipped_on_single_shard_path(two_shard_setup):
 
 
 def test_parallel_fanout_matches_serial_byte_for_byte(two_shard_setup, monkeypatch):
-    """HELIX_SHARD_WORKERS>1 must yield identical ranked ids + scores to serial."""
+    """HELIX_SHARD_WORKERS>1 must yield identical ranked ids + scores to serial.
+
+    Issue #206 (2026-06-12): the serial reference leg is pinned EXPLICITLY
+    via HELIX_SHARD_WORKERS=1 rather than by deleting the env var — unset
+    now auto-sizes the pool when >4 shards are routed, so "unset" is no
+    longer a guaranteed serial oracle on every fixture shape.
+    """
     main_path = two_shard_setup["main_path"]
     q = dict(domains=["auth", "docs"], entities=["helix", "jwt"], max_genes=10)
 
-    monkeypatch.delenv("HELIX_SHARD_WORKERS", raising=False)
+    monkeypatch.setenv("HELIX_SHARD_WORKERS", "1")
     r1 = ShardRouter(main_path)
     try:
         serial = r1.query_genes(**q)
@@ -1505,7 +1515,12 @@ def test_parallel_fanout_actually_uses_threadpool(two_shard_setup, monkeypatch):
 
 
 def test_serial_default_does_not_use_threadpool(two_shard_setup, monkeypatch):
-    """Default (no HELIX_SHARD_WORKERS) stays on the serial path — no pool."""
+    """Default (no HELIX_SHARD_WORKERS) stays serial for SMALL fan-outs.
+
+    Issue #206 (2026-06-12): unset env auto-sizes only when >4 shards are
+    routed; this fixture routes 2, so the serial reference path must still
+    be taken with no pool spun up.
+    """
     import helix_context.shard_router as sr
 
     seen = {"used": False}
@@ -1525,6 +1540,107 @@ def test_serial_default_does_not_use_threadpool(two_shard_setup, monkeypatch):
         router.close()
 
     assert seen["used"] is False, "serial default must not spin up a thread pool"
+
+
+# ── Issue #206 (2026-06-12): auto shard fan-out sizing ────────────────────
+#
+# Serial-by-default measured 5 min/query at 829K genes / 100 shards vs ~55s
+# at 8 workers. Resolution: HELIX_SHARD_WORKERS unset → auto_shard_workers()
+# when >4 shards are routed, else the serial reference path; an explicit env
+# value always wins; HELIX_SHARD_WORKERS=1 forces serial.
+
+
+def test_workers_unset_small_fanout_stays_serial(monkeypatch):
+    """Unset env + ≤4 routed shards → 1 (serial reference oracle)."""
+    import helix_context.parallel as par
+
+    monkeypatch.delenv("HELIX_SHARD_WORKERS", raising=False)
+    monkeypatch.setattr(
+        par, "auto_shard_workers",
+        lambda *a, **k: pytest.fail("sizer must not be consulted at ≤4 shards"),
+    )
+    assert shard_fanout_workers() == 1            # back-compat: no count given
+    assert shard_fanout_workers(None) == 1
+    assert shard_fanout_workers(2) == 1
+    assert shard_fanout_workers(4) == 1           # boundary: strictly >4 opts in
+
+
+def test_workers_unset_large_fanout_auto_sizes(monkeypatch):
+    """Unset env + >4 routed shards → auto_shard_workers() sizes the pool."""
+    import helix_context.parallel as par
+
+    monkeypatch.delenv("HELIX_SHARD_WORKERS", raising=False)
+    monkeypatch.setattr(par, "auto_shard_workers", lambda *a, **k: 7)
+    assert shard_fanout_workers(5) == 7
+    assert shard_fanout_workers(100) == 7
+
+
+def test_workers_explicit_env_always_wins(monkeypatch):
+    """An explicit HELIX_SHARD_WORKERS beats the auto-sizer at any shard count."""
+    import helix_context.parallel as par
+
+    monkeypatch.setattr(
+        par, "auto_shard_workers",
+        lambda *a, **k: pytest.fail("explicit env must short-circuit the sizer"),
+    )
+    monkeypatch.setenv("HELIX_SHARD_WORKERS", "8")
+    assert shard_fanout_workers(2) == 8
+    assert shard_fanout_workers(100) == 8
+
+
+def test_workers_env_one_forces_serial(monkeypatch):
+    """HELIX_SHARD_WORKERS=1 pins the serial reference path even at 100 shards."""
+    import helix_context.parallel as par
+
+    monkeypatch.setattr(
+        par, "auto_shard_workers",
+        lambda *a, **k: pytest.fail("=1 must force serial without sizing"),
+    )
+    monkeypatch.setenv("HELIX_SHARD_WORKERS", "1")
+    assert shard_fanout_workers(100) == 1
+
+
+def test_workers_unparseable_env_keeps_legacy_serial(monkeypatch):
+    """Garbage env values keep the legacy fail-safe: serial."""
+    monkeypatch.setenv("HELIX_SHARD_WORKERS", "lots")
+    assert shard_fanout_workers(100) == 1
+
+
+def test_workers_sizer_failure_falls_back_serial(monkeypatch):
+    """A sizer probe blow-up degrades to serial instead of raising."""
+    import helix_context.parallel as par
+
+    monkeypatch.delenv("HELIX_SHARD_WORKERS", raising=False)
+
+    def _boom(*a, **k):
+        raise RuntimeError("vram probe exploded")
+
+    monkeypatch.setattr(par, "auto_shard_workers", _boom)
+    assert shard_fanout_workers(100) == 1
+
+
+def test_router_passes_routed_shard_count_to_sizer(two_shard_setup, monkeypatch):
+    """query_genes must hand the per-query ROUTED shard count to
+    shard_fanout_workers — that is the number that decides serial vs auto."""
+    import helix_context.shard_router as sr
+
+    seen = {}
+    real = sr.shard_fanout_workers
+
+    def _spy(n_shards=None):
+        seen["n_shards"] = n_shards
+        return real(n_shards)
+
+    monkeypatch.delenv("HELIX_SHARD_WORKERS", raising=False)
+    monkeypatch.setattr(sr, "shard_fanout_workers", _spy)
+    router = ShardRouter(two_shard_setup["main_path"])
+    try:
+        router.query_genes(domains=["auth", "docs"], entities=[], max_genes=10)
+    finally:
+        router.close()
+    assert seen.get("n_shards") == 2, (
+        "router must pass len(shard_names) so >4-shard stores auto-size"
+    )
 
 
 def test_close_calls_genome_close_for_checkpoint(two_shard_setup):

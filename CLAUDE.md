@@ -78,7 +78,7 @@ All config lives in `helix.toml`. Sections:
 |---------|-------------|
 | `[ribosome]` | model, backend (`"ollama"` / `"claude"` / `"litellm"` / `"none"`), timeout, query_expansion_enabled |
 | `[hardware]` | device auto-detection (CUDA, MPS, ROCm, CPU) |
-| `[budget]` | expression_tokens (default 6k in code, 7k in helix.toml), max_genes_per_turn, splice_aggressiveness, decoder_mode, legibility_enabled, session_delivery_enabled |
+| `[budget]` | expression_tokens (default 7000 — code and helix.toml unified in the 2026-06-12 default-honesty pass), max_genes_per_turn, splice_aggressiveness, decoder_mode, legibility_enabled, session_delivery_enabled |
 | `[session]` | synthetic_session_enabled, synthetic_session_window_s, default_party_id |
 | `[genome]` | path (`genomes/main/genome.db`), compact_interval, cold_start_threshold, replicas |
 | `[server]` | host, port, upstream |
@@ -86,10 +86,10 @@ All config lives in `helix.toml`. Sections:
 | `[ingestion]` | backend (`"cpu"` / `"ollama"` / `"hybrid"`), splade_enabled, rerank_model, entity_graph |
 | `[context]` | cold_tier_enabled, cold_tier_k, cold_tier_min_cosine |
 | `[cymatics]` | enabled, distance_metric (`"cosine"` / `"w1"`), harmonic_links |
-| `[classifier]` | Rule-based query classification thresholds |
+| `[classifier]` | Rule-based query classifier: `enabled` toggle only; per-class caps/decoder hints are code constants pending #205 |
 | `[retrieval]` | fusion_mode (`"additive"` / `"rrf"`), sr_enabled, sr_gamma, ray_trace_theta, seeded_edges_enabled |
 | `[plr]` | Piecewise linear reranker: enabled, model_path |
-| `[know]` | Know/miss calibration: confidence_floor, margin_threshold |
+| `[know]` | KnowBlock confidence logistic: emit_floor, betas, s_ref, g_ref, stale_after_days (+ calibrated_at / calibrated_on_n written by scripts/calibrate_know_confidence.py) |
 | `[mem_sync]` | Auto-memory-to-helix sync: watch_dirs, sync_interval_s |
 | `[synonyms]` | Lightweight query expansion (e.g., "cache" -> ["redis", "ttl", "invalidation"]) |
 | `[abstain]` | Abstention thresholds for low-confidence responses |

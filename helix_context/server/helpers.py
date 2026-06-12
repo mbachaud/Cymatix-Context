@@ -22,7 +22,7 @@ from pydantic import BaseModel
 from ..accel import json_loads
 from ..config import HelixConfig
 from ..context_manager import HelixContextManager
-from ..scoring.know_calibration import load_calibration_from_toml
+from ..scoring.know_calibration import calibration_from_config, load_calibration_from_toml
 from ..scoring.know_decision import (
     _agree_from_tier_contributions,
     decide_know_or_miss,
@@ -301,9 +301,14 @@ def _compute_know_or_miss_block(
 
     coord_conf = _coordinate_confidence(query, genes) if genes else 0.0
 
-    # Calibration -- load fresh helix.toml [know] table per call (cheap;
-    # tomllib parses ~kB in microseconds; falls back to defaults).
-    cal = load_calibration_from_toml()
+    # Calibration -- prefer the manager's already-loaded config ([know] is
+    # a first-class config section since the 2026-06-12 default-honesty
+    # pass); fall back to the disk shim for stub managers without .config.
+    _live_cfg = getattr(helix, "config", None)
+    if _live_cfg is not None and getattr(_live_cfg, "know", None) is not None:
+        cal = calibration_from_config(_live_cfg.know)
+    else:
+        cal = load_calibration_from_toml()
 
     # Stage 7 (spec section 3) -- freshness_min from the rebuilt _compute_health.
     # ``ContextHealth.freshness_min`` is Optional[float]; None falls
