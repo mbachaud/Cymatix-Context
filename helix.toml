@@ -326,6 +326,14 @@ ann_threshold_max_genes = 12
 # ann_similarity_threshold (with one-time WARN) if the row is missing.
 ann_threshold_mode = "absolute"           # "absolute" | "margin_over_random"
 ann_threshold_sigma_multiplier = 3.0      # mu + N*sigma over random pairs
+# Issue #214: dense pool floor. If the (mis-)calibrated ANN threshold leaves
+# fewer than N dense-scored candidates in the pool, the top-N dense hits by
+# cosine are admitted anyway and compete normally in fusion. Two independent
+# measurements showed the random-pair bound can sit ABOVE every real
+# query-doc cosine (calibrated 0.779 vs corpus max ~0.713 -> 0/5000 dense
+# admissions; 70.0% never-surfaced golds on a 480-question ERB run vs an
+# independent 67.2%). 0 = legacy gate-only.
+dense_pool_floor_genes = 8
 dense_pool_size = 500
 # Stage 3 (2026-05-08): Reciprocal Rank Fusion. Spec
 # docs/specs/2026-05-08-stage-3-rrf-fusion.md replaces the additive
