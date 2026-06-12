@@ -805,46 +805,117 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
 
     @app.get("/admin/components")
     async def admin_components():
-        """Return the list of active subsystems with running/idle status."""
+        """Return active subsystems with running/idle status + loaded-ness.
+
+        #219 slice 2: encoders may be armed lazily ([hardware]
+        lazy_encoders, default true), so a configured component is not
+        necessarily resident. This endpoint must NEVER force a lazy
+        component to materialize — loaded-ness is read through
+        non-forcing probes only (``peek()``/``loaded`` on lazy proxies,
+        the spaCy/SPLADE module globals, ``_model`` on the BGE-M3
+        codec). Components that are configured but not yet loaded report
+        ``status = "idle (not loaded)"`` and ``loaded = false``; loaded
+        components keep the running/idle activity semantics.
+        """
         import time as _time
         idle_threshold_s = 60.0
         age = _time.time() - getattr(helix, "_last_activity_ts", 0.0)
         active_status = "running" if age < idle_threshold_s else "idle"
-        ribosome_paused = id(helix.ribosome.backend) in _paused_ribosomes
-        ribosome_disabled = getattr(helix.ribosome.backend, "is_disabled_backend", False)
+
+        def _status(loaded: bool) -> str:
+            return active_status if loaded else "idle (not loaded)"
+
+        # ── ribosome (a LazyRibosome proxy when backend=deberta+lazy) ──
+        # type()-level probe: instance attribute access on the proxy
+        # would materialize the DeBERTa models.
+        rib = helix.ribosome
+        rib_is_lazy = bool(getattr(type(rib), "is_lazy_component", False))
+        rib_real = rib.peek() if rib_is_lazy else rib
+        rib_loaded = rib_real is not None
+        backend_obj = getattr(rib_real, "backend", None) if rib_loaded else None
+        ribosome_paused = backend_obj is not None and id(backend_obj) in _paused_ribosomes
+        ribosome_disabled = bool(getattr(backend_obj, "is_disabled_backend", False))
 
         components = []
 
         if not ribosome_paused and not ribosome_disabled:
-            ribosome_backend = "unknown"
-            if hasattr(helix.ribosome, "backend") and hasattr(helix.ribosome.backend, "model"):
-                ribosome_backend = helix.ribosome.backend.model
+            if rib_is_lazy:
+                ribosome_backend = rib.label or "unknown"
+            elif backend_obj is not None and hasattr(backend_obj, "model"):
+                ribosome_backend = backend_obj.model
+            else:
+                ribosome_backend = "unknown"
             components.append({
                 "name": "ribosome",
                 "kind": "decoder",
-                "status": active_status,
+                "status": _status(rib_loaded),
                 "backend": ribosome_backend,
+                "loaded": rib_loaded,
             })
 
-        if getattr(helix, "_sema_codec", None) is not None:
+        sema = getattr(helix, "_sema_codec", None)
+        if sema is not None:
+            # LazySemaCodec exposes ``loaded`` without touching the model;
+            # a plain (eager) SemaCodec has no such attr -> resident.
+            sema_loaded = bool(getattr(sema, "loaded", True))
             components.append({
                 "name": "sema",
                 "kind": "encoder",
-                "status": active_status,
+                "status": _status(sema_loaded),
+                "loaded": sema_loaded,
             })
 
         if getattr(helix, "_cpu_tagger", None) is not None:
+            # spaCy loads lazily inside tagger._get_nlp(); the module
+            # global reflects whether the pipeline is resident.
+            try:
+                from .. import tagger as _tagger_mod
+                tagger_loaded = getattr(_tagger_mod, "_nlp", None) is not None
+            except Exception:
+                tagger_loaded = False
             components.append({
                 "name": "cpu_tagger",
                 "kind": "encoder",
-                "status": active_status,
+                "status": _status(tagger_loaded),
+                "loaded": tagger_loaded,
             })
 
         if getattr(helix.genome, "_splade_enabled", False):
+            # splade_backend keeps its model in a module global, set on
+            # first encode (already first-use-lazy pre-#219).
+            try:
+                from ..backends import splade_backend as _splade_mod
+                splade_loaded = getattr(_splade_mod, "_model", None) is not None
+            except Exception:
+                splade_loaded = False
             components.append({
                 "name": "splade",
                 "kind": "encoder",
-                "status": active_status,
+                "status": _status(splade_loaded),
+                "loaded": splade_loaded,
+            })
+
+        # BGE-M3 dense codec — surfaced so operators can see whether the
+        # ~2 GB model is resident. Loaded when either holder (manager
+        # ingest-side, store query-side) has a materialized model; the
+        # codec wrapper itself is cheap and loads weights on first encode.
+        dense_enabled = bool(
+            getattr(helix.genome, "_dense_embedding_enabled", False)
+            or getattr(config.ingestion, "dense_embed_on_ingest", False)
+        )
+        if dense_enabled:
+            dense_loaded = any(
+                holder is not None and getattr(holder, "_model", None) is not None
+                for holder in (
+                    getattr(helix, "_dense_codec", None),
+                    getattr(helix.genome, "_dense_codec", None),
+                )
+            )
+            components.append({
+                "name": "dense_bgem3",
+                "kind": "encoder",
+                "status": _status(dense_loaded),
+                "loaded": dense_loaded,
             })
 
         if getattr(helix.genome, "_entity_graph_enabled", False):
@@ -852,6 +923,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
                 "name": "entity_graph",
                 "kind": "encoder",
                 "status": active_status,
+                "loaded": True,
             })
 
         try:
@@ -861,6 +933,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
                     "name": "headroom",
                     "kind": "decoder",
                     "status": active_status,
+                    "loaded": True,
                 })
         except Exception:
             pass

@@ -469,6 +469,87 @@ def _merge_subquery_candidates(
     )
 
 
+class LazyRibosome:
+    """Deferred-construction proxy for a heavy ribosome backend (#219 slice 2).
+
+    Wraps a zero-arg factory (e.g. the DeBERTa hybrid ribosome: two
+    DeBERTa-v3 models) and constructs it on first real use behind a
+    double-checked lock. Until then the serving process pays nothing for
+    it — part of the fix for the 20.3 GB-RSS-at-boot eager stack, where
+    every process (tray backend, bench server, build workers) loaded the
+    full encoder stack whether or not the workload touched it (the
+    #176/#191 3-CUDA-context incident class).
+
+    Any public attribute access (``re_rank``, ``splice``, ``encode``,
+    ``classify_relations``, ``backend``, …) materializes the real object
+    and forwards to it, so behavior after first use is identical to the
+    eager construction. Private/dunder lookups raise AttributeError
+    instead of forcing a load, so stdlib introspection (copy/pickle/repr
+    machinery) can never accidentally pull in a multi-GB model.
+
+    If the factory raises, the failure is logged once and the proxy
+    permanently falls back to ``fallback`` (the disabled ribosome) — the
+    same end state as the old eager try/except at manager init.
+
+    ``loaded`` / ``peek()`` / ``label`` are non-forcing introspection
+    hooks for GET /admin/components.
+    """
+
+    is_lazy_component = True
+
+    def __init__(self, factory, fallback, label: str = ""):
+        self._factory = factory
+        self._fallback = fallback
+        self._obj = None
+        self._lock = threading.Lock()
+        self._label = label
+
+    @property
+    def loaded(self) -> bool:
+        """True once the real ribosome (or its fallback) is resident."""
+        return self._obj is not None
+
+    @property
+    def label(self) -> str:
+        return self._label
+
+    def peek(self):
+        """The materialized ribosome, or None — never triggers a load."""
+        return self._obj
+
+    def warm(self):
+        """Force construction now ([hardware] lazy_encoders = false path)."""
+        return self._materialize()
+
+    def _materialize(self):
+        obj = self._obj
+        if obj is not None:
+            return obj
+        with self._lock:
+            if self._obj is None:
+                try:
+                    self._obj = self._factory()
+                    log.info(
+                        "Lazy %s ribosome materialized on first use",
+                        self._label or "backend",
+                    )
+                except Exception:
+                    log.warning(
+                        "%s backend failed to load, disabling ribosome",
+                        self._label or "lazy", exc_info=True,
+                    )
+                    self._obj = self._fallback
+            return self._obj
+
+    def __getattr__(self, name: str):
+        # Only reached when normal attribute lookup misses. Refuse
+        # private/dunder names so hasattr() probes on internals and
+        # stdlib introspection stay load-free.
+        if name.startswith("_"):
+            raise AttributeError(name)
+        return getattr(self._materialize(), name)
+
+
 class HelixContextManager:
     """
     Main orchestrator. Sits between the client and the upstream LLM.
@@ -509,15 +590,32 @@ class HelixContextManager:
             _metrics_path = _genome_path.parent / "metrics.json"
         self.token_counter: TokenCounter = TokenCounter(persist_path=_metrics_path)
 
-        # ΣĒMA codec (optional — loaded if sentence-transformers available)
+        # ΣĒMA codec (optional — requires sentence-transformers).
+        # #219 slice 2: armed lazily by default ([hardware] lazy_encoders).
+        # A serving process that never touches a semantic path no longer
+        # pays the MiniLM load at boot (part of the 20.3 GB-RSS eager
+        # stack); the first encode constructs the model under a
+        # double-checked lock. lazy_encoders = false restores the
+        # pre-slice eager warmup so first-query latency is paid at boot.
         self._sema_codec = None
+        self._lazy_encoders = bool(getattr(config.hardware, "lazy_encoders", True))
         try:
-            from .backends.sema import SemaCodec
-            self._sema_codec = SemaCodec()
-            log.info("ΣĒMA codec loaded — semantic retrieval enabled")
+            from .backends.sema import LazySemaCodec, sema_available
+            if sema_available():
+                self._sema_codec = LazySemaCodec()
+                if self._lazy_encoders:
+                    log.info(
+                        "ΣĒMA codec armed (lazy) — model loads on first semantic call"
+                    )
+                else:
+                    self._sema_codec.warm()
+                    log.info("ΣĒMA codec loaded — semantic retrieval enabled")
+            else:
+                log.info("sentence-transformers not installed — ΣĒMA disabled")
         except ImportError:
             log.info("sentence-transformers not installed — ΣĒMA disabled")
         except Exception:
+            self._sema_codec = None
             log.warning("ΣĒMA codec failed to load", exc_info=True)
 
         # BGE-M3 dense codec (Tier-0 PR-1, 2026-05-16). Lazy-loaded on the
@@ -646,34 +744,59 @@ class HelixContextManager:
             except Exception:
                 log.warning("LiteLLMBackend failed to load, disabling ribosome", exc_info=True)
         elif effective_backend == "deberta":
-            try:
+            def _build_deberta_ribosome(
+                _config: HelixConfig = config,
+                _encoder: CodonEncoder = self.encoder,
+            ):
+                """Construct the DeBERTa hybrid ribosome (two DeBERTa-v3 loads).
+
+                Construction args are byte-for-byte the old eager ones —
+                only the WHEN moves (#219 slice 2).
+                """
                 from .backends.deberta_backend import DeBERTaRibosome
                 ollama_backend = OllamaBackend(
-                    model=config.ribosome.model,
-                    base_url=config.ribosome.base_url,
-                    timeout=config.ribosome.timeout,
-                    keep_alive=config.ribosome.keep_alive,
-                    warmup=config.ribosome.warmup,
+                    model=_config.ribosome.model,
+                    base_url=_config.ribosome.base_url,
+                    timeout=_config.ribosome.timeout,
+                    keep_alive=_config.ribosome.keep_alive,
+                    warmup=_config.ribosome.warmup,
                 )
                 ollama_ribosome = Ribosome(
                     backend=ollama_backend,
-                    encoder=self.encoder,
-                    splice_aggressiveness=config.budget.splice_aggressiveness,
+                    encoder=_encoder,
+                    splice_aggressiveness=_config.budget.splice_aggressiveness,
                 )
-                self.ribosome = DeBERTaRibosome(
-                    rerank_model_path=config.ribosome.rerank_model_path,
-                    splice_model_path=config.ribosome.splice_model_path,
-                    nli_model_path=config.ribosome.nli_model_path,
+                return DeBERTaRibosome(
+                    rerank_model_path=_config.ribosome.rerank_model_path,
+                    splice_model_path=_config.ribosome.splice_model_path,
+                    nli_model_path=_config.ribosome.nli_model_path,
                     ollama_ribosome=ollama_ribosome,
-                    device=config.ribosome.device,
-                    splice_threshold=config.ribosome.splice_threshold,
-                    nli_splice_bonus=config.ribosome.nli_splice_bonus,
-                    nli_splice_penalty=config.ribosome.nli_splice_penalty,
-                    rerank_pretrained=config.ingestion.rerank_model,
+                    device=_config.ribosome.device,
+                    splice_threshold=_config.ribosome.splice_threshold,
+                    nli_splice_bonus=_config.ribosome.nli_splice_bonus,
+                    nli_splice_penalty=_config.ribosome.nli_splice_penalty,
+                    rerank_pretrained=_config.ingestion.rerank_model,
                 )
-                log.info("Using DeBERTa hybrid ribosome (re_rank + splice accelerated)")
-            except Exception:
-                log.warning("DeBERTa backend failed to load, disabling ribosome", exc_info=True)
+
+            if self._lazy_encoders:
+                # #219 slice 2: defer the two DeBERTa-v3 model loads to the
+                # first re_rank/splice/classify call. On load failure the
+                # proxy falls back to the disabled ribosome — same end state
+                # as the eager except-branch below.
+                self.ribosome = LazyRibosome(
+                    factory=_build_deberta_ribosome,
+                    fallback=self.ribosome,
+                    label="deberta",
+                )
+                log.info(
+                    "DeBERTa hybrid ribosome armed (lazy) — loads on first re_rank/splice"
+                )
+            else:
+                try:
+                    self.ribosome = _build_deberta_ribosome()
+                    log.info("Using DeBERTa hybrid ribosome (re_rank + splice accelerated)")
+                except Exception:
+                    log.warning("DeBERTa backend failed to load, disabling ribosome", exc_info=True)
         else:
             log.info(
                 "Ribosome disabled — only explicit LiteLLM or DeBERTa backends are honored "

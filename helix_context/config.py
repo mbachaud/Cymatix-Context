@@ -635,6 +635,12 @@ class Hardware:
     device: str = "auto"
     batch_sizes: Dict[str, int] = field(default_factory=dict)
     low_vram_threshold_gb: float = 4.0
+    # #219 slice 2: when true (default), heavy encoders (ΣĒMA MiniLM,
+    # DeBERTa rerank/splice) are armed lazily and load on FIRST USE; when
+    # false, restore the pre-slice eager warmup at manager init for
+    # operators who want first-query latency paid at boot. SPLADE /
+    # BGE-M3 / spaCy were already first-use-lazy and ignore this knob.
+    lazy_encoders: bool = True
 
 
 @dataclass
@@ -1123,6 +1129,7 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
         device=str(hardware_device),
         batch_sizes=bs,
         low_vram_threshold_gb=float(hw.get("low_vram_threshold_gb", 4.0)),
+        lazy_encoders=bool(hw.get("lazy_encoders", True)),
     )
 
     # Vault — Obsidian export (opt-in, off by default)

@@ -67,6 +67,16 @@ batch_sizes = "auto"
 # the tray surfaces a one-time balloon. Set to 0 to disable.
 low_vram_threshold_gb = 4.0
 
+# Encoder lazy-loading (#219 slice 2). true (default) defers heavy encoder
+# construction (ΣĒMA MiniLM, DeBERTa rerank/splice) to first use, so an idle
+# serving process stays lean (an 829K-gene server measured 20.3 GB RSS with
+# the fully-eager stack; tray backend + bench server + build workers each
+# paid it — the #176/#191 3-CUDA-context incident class). false restores
+# eager warmup at boot: first-query latency paid up front. SPLADE / BGE-M3 /
+# spaCy load on first use either way. /admin/components shows
+# "idle (not loaded)" vs loaded per component.
+lazy_encoders = true
+
 [budget]
 ribosome_tokens = 3000                  # fixed decoder prompt
 expression_tokens = 7000                # ~7K expressions cap (BROAD tighten 2026-05-12, bench-gated #73). Code default matches since the 2026-06-12 default-honesty pass.

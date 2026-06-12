@@ -368,7 +368,10 @@ class TestAdminComponentsEndpoint:
             assert "kind" in c
             assert c["kind"] in ("encoder", "decoder")
             assert "status" in c
-            assert c["status"] in ("running", "idle")
+            # #219 slice 2: lazily-armed encoders report "idle (not loaded)"
+            # until their first use; "loaded" carries the explicit boolean.
+            assert c["status"] in ("running", "idle", "idle (not loaded)")
+            assert "loaded" in c
 
     def test_components_status_running_after_recent_activity(self, client):
         # /stats does NOT bump activity, but /context does.
