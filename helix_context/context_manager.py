@@ -569,6 +569,10 @@ class HelixContextManager:
             # Stage 4 (2026-05-08): margin-over-random calibration mode.
             ann_threshold_mode=config.retrieval.ann_threshold_mode,
             ann_threshold_sigma_multiplier=config.retrieval.ann_threshold_sigma_multiplier,
+            # Issue #214: dense pool floor — the dense leg can no longer be
+            # threshold-gated to zero during pool construction. Fanned to the
+            # solo Genome AND every per-shard Genome via open_read_source.
+            dense_pool_floor_genes=config.retrieval.dense_pool_floor_genes,
             dense_pool_size=config.retrieval.dense_pool_size,
             # Stage 3 (2026-05-08): RRF fusion + per-tier weights.
             fusion_mode=config.retrieval.fusion_mode,

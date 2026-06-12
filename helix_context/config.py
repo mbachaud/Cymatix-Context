@@ -342,6 +342,23 @@ class RetrievalConfig:
     # ``scripts/calibrate_thresholds.py``).
     ann_threshold_mode: str = "absolute"
     ann_threshold_sigma_multiplier: float = 3.0
+    # Issue #214 (2026-06-12): dense pool floor. The margin-over-random
+    # calibration measures mu + sigma_mult*sigma over RANDOM gene pairs;
+    # embedding anisotropy can push that bound ABOVE every real query-doc
+    # cosine. Measured twice, independently: (a) cc-exchange
+    # embedding-upgrade L1b — calibrated threshold 0.779 vs corpus max
+    # query-doc cosine ~0.713 (golds 0.46-0.68), so 0/5000 pool docs cleared
+    # the gate by dense; (b) a 480-question ERB run with 70.0% never-surfaced
+    # golds (gold absent from top-10), matching an independent 67.2%
+    # measurement. A threshold that admits ZERO dense candidates is
+    # mis-calibration by definition, and pool membership is strictly upstream
+    # of fusion ranking — no re-weighting can recover a candidate the gate
+    # already dropped. When fewer than this many dense-scored candidates
+    # survive the ANN threshold cut (but the dense leg HAD scored
+    # candidates), the top-N dense hits by cosine are admitted into the pool
+    # anyway; they then compete normally in fusion scoring. 0 disables
+    # (legacy gate-only). See knowledge_store.apply_ann_gate.
+    dense_pool_floor_genes: int = 8
     # Stage 2 (2026-05-08): dense recall pool size. Decoupled from
     # ann_threshold_max_genes (the final cut). 500 hits ~3% of an 18.9k
     # corpus per spec §4.
@@ -812,6 +829,12 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             ann_threshold_sigma_multiplier=float(r.get(
                 "ann_threshold_sigma_multiplier",
                 cfg.retrieval.ann_threshold_sigma_multiplier,
+            )),
+            # Issue #214: dense pool floor — graceful degradation when a
+            # mis-calibrated ANN threshold gates the dense leg to zero.
+            dense_pool_floor_genes=int(r.get(
+                "dense_pool_floor_genes",
+                cfg.retrieval.dense_pool_floor_genes,
             )),
             # Stage 2 (2026-05-08): dense recall pool size, decoupled from final cut.
             dense_pool_size=int(r.get("dense_pool_size", cfg.retrieval.dense_pool_size)),

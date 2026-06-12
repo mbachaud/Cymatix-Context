@@ -46,6 +46,14 @@ from typing import Any, Dict, List, Optional, Tuple
 
 log = logging.getLogger("calibrate_thresholds")
 
+# Allow running directly from a source checkout without `pip install -e .`
+# (same convention as benchmarks/). The #214 true-pair guard imports
+# helix_context.backends.bgem3_codec, and the floors path imports
+# helix_context.retrieval.query_classifier.
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
 
 # Classes the rule-based classifier emits (see helix_context.query_classifier).
 # ``default`` is the catch-all + fallback for missing per-class blocks at runtime.
@@ -70,6 +78,18 @@ class AnnCalibrationResult:
     sigma_mult: float
     seed: int
     n_genes: int
+    # Issue #214 true-pair guard. ``threshold`` above is the FINAL value
+    # (min of the two bounds when the guard ran); the fields below record
+    # both bounds and which one won, so the calibration artifact always
+    # carries the full story. Defaults = guard not run (threshold is the
+    # raw random-pair bound); existing keyword-constructors keep working.
+    random_pair_threshold: Optional[float] = None
+    true_pair_p05: Optional[float] = None
+    true_pair_cap: Optional[float] = None
+    true_pair_n: int = 0
+    winning_bound: str = "random_pair"
+    guard_skipped: bool = True
+    guard_skip_reason: Optional[str] = None
 
 
 def _load_dense_vectors(genome_path: Path, dim: int) -> Tuple[List[str], "Any"]:
@@ -186,6 +206,221 @@ def calibrate_ann_threshold(
         sigma_mult=sigma_mult,
         seed=seed,
         n_genes=n_genes,
+        # Issue #214: keep the raw random-pair bound on record even before
+        # (or without) the true-pair guard.
+        random_pair_threshold=threshold,
+    )
+
+
+# ─── Issue #214: true-pair guard ─────────────────────────────────────────
+#
+# The margin-over-random method above computes mu + sigma_mult*sigma over
+# RANDOM gene-pair cosines. Embedding anisotropy can push that bound ABOVE
+# the entire real query-doc cosine range — measured on a 5000-doc corpus:
+# calibrated 0.779 vs max query-doc cosine ~0.713 (golds 0.46-0.68), so the
+# dense leg admitted NOTHING into pool construction; corroborated by 70.0%
+# never-surfaced golds on a 480-question ERB run (independent measurement:
+# 67.2%). The guard samples genes, synthesizes a query per gene from its own
+# content, measures TRUE query-doc cosines with the same codec the runtime
+# uses, and caps the threshold so ~95% of true pairs clear it:
+#
+#     final = min(random_pair_mu_plus_sigma, P05(true_pairs) - 0.02)
+#
+# When the codec/model is unavailable (no GPU, no transformers), the guard
+# is skipped with a WARNING and the legacy random-pair value is emitted —
+# tests never need a model (they exercise cap_threshold_with_true_pairs).
+
+TRUE_PAIR_MARGIN = 0.02
+TRUE_PAIR_PCT = 5.0
+
+
+def _synthesize_query(content: str, n_tokens: int = 12) -> Optional[str]:
+    """Synthesize a stand-in query from a gene's own content.
+
+    Mirrors the auto-synth convention in
+    ``benchmarks/sweep_dense_additive_weight.py`` (query = leading content
+    tokens, gold = the gene itself). That synthesis lives inline in the
+    sweep's ``_load_queries`` and needs a live genome handle, so the token
+    rule is restated here (first ~12 tokens, >= 4 required) rather than
+    imported.
+    """
+    toks = content.split()[:n_tokens]
+    if len(toks) < 4:
+        return None
+    return " ".join(toks)
+
+
+def measure_true_pair_cosines(
+    genome_path: Path,
+    *,
+    dim: int,
+    n_genes: int = 200,
+    seed: int = 42,
+    query_tokens: int = 12,
+) -> Tuple[Optional[List[float]], Optional[str]]:
+    """Sample up to ``n_genes`` genes and measure TRUE query-doc cosines.
+
+    Per sampled gene: synthesize a query from its content, encode it with
+    the same BGE-M3 codec the runtime uses (``task="query"``), and take the
+    cosine against the gene's own stored ``embedding_dense_v2`` vector.
+
+    Returns ``(cosines, None)`` on success or ``(None, reason)`` when the
+    measurement cannot run (no eligible genes, codec/model unavailable).
+    Callers must then skip the guard with a WARNING and emit the legacy
+    random-pair value.
+    """
+    try:
+        import numpy as np
+    except ImportError:  # pragma: no cover - numpy is a hard dep elsewhere
+        return None, "numpy unavailable"
+
+    conn = sqlite3.connect(str(genome_path))
+    conn.row_factory = sqlite3.Row
+    try:
+        rows = conn.execute(
+            "SELECT gene_id, content, embedding_dense_v2 FROM genes "
+            "WHERE embedding_dense_v2 IS NOT NULL AND content IS NOT NULL "
+            "AND length(content) >= 40"
+        ).fetchall()
+    finally:
+        conn.close()
+
+    expected_bytes = dim * 4  # fp32 little-endian
+    candidates: List[Tuple[str, bytes]] = []
+    for r in rows:
+        blob = r["embedding_dense_v2"]
+        if blob is None or len(blob) != expected_bytes:
+            continue
+        q = _synthesize_query(r["content"], n_tokens=query_tokens)
+        if q is None:
+            continue
+        candidates.append((q, blob))
+    if not candidates:
+        return None, "no genes with content + dim-matched embedding_dense_v2"
+
+    rng = random.Random(seed)
+    if len(candidates) > n_genes:
+        candidates = rng.sample(candidates, n_genes)
+
+    # Same codec as the runtime retrieval path. Anything that goes wrong
+    # here (missing transformers, no weights, no GPU, OOM) downgrades the
+    # guard to a WARNING + legacy value — calibration must not hard-require
+    # a model.
+    try:
+        from helix_context.backends.bgem3_codec import get_shared_codec
+        codec = get_shared_codec(dim=dim)
+        cosines: List[float] = []
+        for q, blob in candidates:
+            qv = np.asarray(codec.encode(q, task="query"), dtype=np.float32)
+            dv = np.frombuffer(blob, dtype="<f4").astype(np.float32)
+            qn = float(np.linalg.norm(qv))
+            dn = float(np.linalg.norm(dv))
+            if qn < 1e-12 or dn < 1e-12 or qv.shape != dv.shape:
+                continue
+            cosines.append(float(np.dot(qv / qn, dv / dn)))
+        if not cosines:
+            return None, "codec produced no usable query vectors"
+        return cosines, None
+    except Exception as exc:
+        return None, f"dense codec unavailable: {exc.__class__.__name__}: {exc}"
+
+
+def cap_threshold_with_true_pairs(
+    random_pair_threshold: float,
+    true_pair_cosines: Optional[List[float]],
+    *,
+    margin: float = TRUE_PAIR_MARGIN,
+    pct: float = TRUE_PAIR_PCT,
+) -> Dict[str, Any]:
+    """Issue #214 cap math (pure function — no model, no I/O).
+
+    ``final = min(random_pair_threshold, P05(true_pair_cosines) - margin)``
+
+    Returns a dict carrying the final ``threshold``, BOTH bounds, and
+    ``winning_bound`` ("random_pair" | "true_pair_cap") so the calibration
+    artifact records which bound won. Empty/missing ``true_pair_cosines``
+    -> legacy random-pair value with ``guard_skipped=True``.
+    """
+    if not true_pair_cosines:
+        return {
+            "threshold": float(random_pair_threshold),
+            "random_pair_threshold": float(random_pair_threshold),
+            "true_pair_p05": None,
+            "true_pair_cap": None,
+            "true_pair_n": 0,
+            "winning_bound": "random_pair",
+            "guard_skipped": True,
+        }
+    p05 = _percentile([float(c) for c in true_pair_cosines], pct)
+    cap = p05 - margin
+    if cap < float(random_pair_threshold):
+        final, winner = float(cap), "true_pair_cap"
+    else:
+        final, winner = float(random_pair_threshold), "random_pair"
+    return {
+        "threshold": final,
+        "random_pair_threshold": float(random_pair_threshold),
+        "true_pair_p05": float(p05),
+        "true_pair_cap": float(cap),
+        "true_pair_n": len(true_pair_cosines),
+        "winning_bound": winner,
+        "guard_skipped": False,
+    }
+
+
+def apply_true_pair_guard(
+    ann: AnnCalibrationResult,
+    genome_path: Path,
+    *,
+    dim: int,
+    n_genes: int = 200,
+    seed: int = 42,
+    margin: float = TRUE_PAIR_MARGIN,
+    pct: float = TRUE_PAIR_PCT,
+) -> AnnCalibrationResult:
+    """Apply the Issue #214 true-pair guard to a random-pair calibration.
+
+    Returns a new ``AnnCalibrationResult`` whose ``threshold`` is the capped
+    value and whose guard fields record both bounds + which one won. When
+    the measurement is unavailable, the result keeps the legacy random-pair
+    threshold with ``guard_skipped=True`` and a ``guard_skip_reason``.
+    """
+    import dataclasses
+
+    if n_genes <= 0:
+        return dataclasses.replace(
+            ann,
+            random_pair_threshold=ann.threshold,
+            winning_bound="random_pair",
+            guard_skipped=True,
+            guard_skip_reason="disabled (--true-pairs 0)",
+        )
+
+    cosines, skip_reason = measure_true_pair_cosines(
+        genome_path, dim=dim, n_genes=n_genes, seed=seed,
+    )
+    if skip_reason is not None:
+        return dataclasses.replace(
+            ann,
+            random_pair_threshold=ann.threshold,
+            winning_bound="random_pair",
+            guard_skipped=True,
+            guard_skip_reason=skip_reason,
+        )
+
+    capped = cap_threshold_with_true_pairs(
+        ann.threshold, cosines, margin=margin, pct=pct,
+    )
+    return dataclasses.replace(
+        ann,
+        threshold=capped["threshold"],
+        random_pair_threshold=capped["random_pair_threshold"],
+        true_pair_p05=capped["true_pair_p05"],
+        true_pair_cap=capped["true_pair_cap"],
+        true_pair_n=capped["true_pair_n"],
+        winning_bound=capped["winning_bound"],
+        guard_skipped=False,
+        guard_skip_reason=None,
     )
 
 
@@ -370,6 +605,20 @@ def emit_toml_snippet(
         f"# mu={ann.mu:.4f} sigma={ann.sigma:.4f} N={ann.n_pairs} dim={ann.dim} "
         f"-> {ann.threshold:.4f} (n_genes={ann.n_genes}, seed={ann.seed})"
     )
+    # Issue #214: record both bounds + which one won (or why the guard
+    # was skipped) directly in the operator-facing snippet.
+    if ann.guard_skipped:
+        lines.append(
+            f"# #214 true-pair guard: SKIPPED"
+            f" ({ann.guard_skip_reason or 'not run'});"
+            f" value above is the raw random-pair bound."
+        )
+    else:
+        lines.append(
+            f"# #214 true-pair guard: random_pair={ann.random_pair_threshold:.4f}"
+            f" p05(true)={ann.true_pair_p05:.4f} cap={ann.true_pair_cap:.4f}"
+            f" n={ann.true_pair_n} -> winning bound: {ann.winning_bound}"
+        )
     lines.append("")
     lines.append("[abstain]")
     lines.append('mode = "per_classifier"')
@@ -418,6 +667,20 @@ def emit_report(
             "sigma_mult": ann.sigma_mult,
             "n_pairs": ann.n_pairs,
             "seed": ann.seed,
+            # Issue #214: both bounds + which one won.
+            "random_pair_threshold": (
+                ann.random_pair_threshold
+                if ann.random_pair_threshold is not None
+                else ann.threshold
+            ),
+            "true_pair_guard": {
+                "skipped": ann.guard_skipped,
+                "skip_reason": ann.guard_skip_reason,
+                "p05": ann.true_pair_p05,
+                "cap": ann.true_pair_cap,
+                "n": ann.true_pair_n,
+                "winning_bound": ann.winning_bound,
+            },
         },
         "floors": {
             "abstain_pct": floors.abstain_pct,
@@ -465,6 +728,13 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     p.add_argument("--sigma-mult", type=float, default=3.0)
     p.add_argument("--random-pairs", type=int, default=10000)
+    p.add_argument(
+        "--true-pairs", type=int, default=200,
+        help="Issue #214: genes to sample for the true-pair guard (a query "
+             "is synthesized from each gene's content and encoded with the "
+             "same codec; final threshold = min(random-pair bound, "
+             "P05(true pairs) - 0.02)). 0 disables the guard.",
+    )
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--abstain-pct", type=float, default=85.0)
     p.add_argument("--focused-pct", type=float, default=25.0)
@@ -521,6 +791,21 @@ def _write_calibration_to_db(
             "dim": ann.dim,
             "sigma_mult": ann.sigma_mult,
             "seed": ann.seed,
+            # Issue #214: both bounds + which one won (extra keys are
+            # ignored by KnowledgeStore._get_effective_ann_threshold, which
+            # only requires "value", and surface verbatim through
+            # get_calibration_provenance / /admin diagnostics).
+            "random_pair_threshold": (
+                ann.random_pair_threshold
+                if ann.random_pair_threshold is not None
+                else ann.threshold
+            ),
+            "true_pair_p05": ann.true_pair_p05,
+            "true_pair_cap": ann.true_pair_cap,
+            "true_pair_n": ann.true_pair_n,
+            "winning_bound": ann.winning_bound,
+            "true_pair_guard_skipped": ann.guard_skipped,
+            "true_pair_guard_skip_reason": ann.guard_skip_reason,
         })
         import time
         conn.execute(
@@ -564,6 +849,34 @@ def main(argv: Optional[List[str]] = None) -> int:
         "ann_threshold: mu=%.4f sigma=%.4f N=%d dim=%d -> %.4f",
         ann.mu, ann.sigma, ann.n_pairs, ann.dim, ann.threshold,
     )
+
+    # Issue #214: cap the random-pair bound at P05(true query-doc cosines)
+    # - 0.02 so the threshold can never sit above the real cosine range and
+    # gate the dense leg to zero. Skips (with WARNING) when the codec/model
+    # is unavailable — the legacy value is emitted unchanged.
+    ann = apply_true_pair_guard(
+        ann, args.genome, dim=args.dim, n_genes=args.true_pairs,
+        seed=args.seed,
+    )
+    if ann.guard_skipped:
+        reason = ann.guard_skip_reason or "not run"
+        if reason.startswith("disabled"):
+            log.info("true-pair guard %s; emitting random-pair value %.4f",
+                     reason, ann.threshold)
+        else:
+            log.warning(
+                "true-pair guard SKIPPED (%s); emitting legacy random-pair "
+                "value %.4f — beware: an un-guarded mu+sigma bound can sit "
+                "above the real query-doc cosine range (#214).",
+                reason, ann.threshold,
+            )
+    else:
+        log.info(
+            "true-pair guard: random_pair=%.4f p05(true)=%.4f cap=%.4f "
+            "n=%d -> %.4f (winning bound: %s)",
+            ann.random_pair_threshold, ann.true_pair_p05, ann.true_pair_cap,
+            ann.true_pair_n, ann.threshold, ann.winning_bound,
+        )
 
     log.info("Calibrating per-classifier floors")
     floors = calibrate_floors(

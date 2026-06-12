@@ -981,6 +981,8 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
                 ann_threshold_max_genes=config.retrieval.ann_threshold_max_genes,
                 ann_threshold_mode=config.retrieval.ann_threshold_mode,
                 ann_threshold_sigma_multiplier=config.retrieval.ann_threshold_sigma_multiplier,
+                # Issue #214: dense pool floor (keep the swap path in sync).
+                dense_pool_floor_genes=config.retrieval.dense_pool_floor_genes,
                 dense_pool_size=config.retrieval.dense_pool_size,
                 fusion_mode=config.retrieval.fusion_mode,
                 rrf_k=config.retrieval.rrf_k,

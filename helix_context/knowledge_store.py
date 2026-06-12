@@ -355,6 +355,94 @@ def _dense_matrix_dtype():
     return _np.float16 if val in ("float16", "fp16", "half") else _np.float32
 
 
+def apply_ann_gate(
+    scored: "list[tuple[str, float]]",
+    dense_hits: "list[tuple[str, float]]",
+    *,
+    threshold: float,
+    min_genes: int,
+    max_genes: int,
+    dense_pool_floor_genes: int = 0,
+) -> "list[str]":
+    """ANN pool cut: threshold + ``min_genes`` floor + ``max_genes`` cap,
+    plus the Issue #214 dense pool floor.
+
+    Pure function over ``(gene_id, score)`` pairs so the gate semantics are
+    unit-testable without a KnowledgeStore (``tests/test_dense_pool_floor.py``).
+
+    Parameters
+    ----------
+    scored:
+        Full union pool, sorted descending by score. Lexical-only candidates
+        carry the ``threshold - 0.01`` pin from ``query_docs_ann``;
+        dense-scored candidates carry their real cosine.
+    dense_hits:
+        The dense leg — ``(gene_id, cosine)`` sorted descending by cosine,
+        exactly as ``query_docs_dense_recall`` returns it.
+    dense_pool_floor_genes:
+        Issue #214. The margin-over-random calibration computes
+        ``mu + sigma_mult*sigma`` over RANDOM gene pairs; embedding
+        anisotropy can push that bound ABOVE every real query-doc cosine.
+        Measured twice, independently:
+
+        * cc-exchange embedding-upgrade L1b: calibrated threshold 0.779 sat
+          above the corpus max query-doc cosine ~0.713 (golds 0.46-0.68) —
+          0/5000 pool-doc chunks cleared the gate by dense, so the 200-pool
+          was built almost entirely from lexically-pinned docs;
+        * a 480-question ERB run with 70.0% never-surfaced golds (gold not
+          in top-10), corroborating an independent 67.2% measurement.
+
+        Pool membership is strictly upstream of fusion ranking, so no dense
+        re-weighting can recover candidates the gate already dropped. A
+        threshold that admits ZERO dense candidates is mis-calibration by
+        definition; the floor makes the dense leg degrade gracefully instead
+        of dying. When fewer than N dense-scored candidates survive the
+        legacy cut — but the dense leg HAD scored candidates — the top-N
+        dense hits by cosine are appended to the pool. They then compete
+        normally in downstream fusion scoring; nothing else about them is
+        marked different. ``0`` disables (legacy gate-only behavior).
+
+    Returns the kept ``gene_id`` list: the legacy cut order (score
+    descending, truncated at ``max_genes``) with any floor-rescued dense ids
+    appended in cosine order. When the gate is healthy (>= N dense-scored
+    survivors) the output is byte-identical to the legacy cut.
+
+    Blast-radius note: the floor appends AFTER the ``max_genes`` cap, so the
+    pool exceeds ``max_genes`` only while the threshold is starving the
+    dense leg, and by at most ``dense_pool_floor_genes`` entries.
+    """
+    # Legacy cut (pre-#214, byte-for-byte): admit everything at/above the
+    # threshold; below it, only the min_genes rescue keeps admitting; stop at
+    # the first non-rescued below-threshold candidate; cap at max_genes.
+    kept: list[str] = []
+    for gid, score in scored:
+        if score >= threshold or len(kept) < min_genes:
+            kept.append(gid)
+        else:
+            break
+    kept = kept[:max_genes]
+
+    if dense_pool_floor_genes <= 0 or not dense_hits:
+        return kept
+
+    dense_ids = {gid for gid, _ in dense_hits}
+    admitted = sum(1 for gid in kept if gid in dense_ids)
+    if admitted >= dense_pool_floor_genes:
+        # Gate is healthy — the floor changes nothing.
+        return kept
+
+    kept_set = set(kept)
+    for gid, _cosine in dense_hits:  # already sorted descending by cosine
+        if admitted >= dense_pool_floor_genes:
+            break
+        if gid in kept_set:
+            continue
+        kept.append(gid)
+        kept_set.add(gid)
+        admitted += 1
+    return kept
+
+
 class KnowledgeStore:
     """SQLite-backed document storage with tags-tag retrieval."""
 
@@ -410,6 +498,12 @@ class KnowledgeStore:
         # See docs/specs/2026-05-08-stage-4-threshold-calibration.md §3.
         ann_threshold_mode: str = "absolute",
         ann_threshold_sigma_multiplier: float = 3.0,
+        # Issue #214: minimum dense-leg presence in the query_docs_ann pool
+        # cut. When fewer than this many dense-scored candidates survive the
+        # ANN threshold (but the dense leg had scored candidates), the top-N
+        # dense hits by cosine are admitted anyway. 0 disables (legacy
+        # gate-only). Full rationale + evidence: apply_ann_gate docstring.
+        dense_pool_floor_genes: int = 8,
         # Stage 2: dense recall pool size, decoupled from ann_threshold_max_genes.
         dense_pool_size: int = 500,
         # Stage 3 (2026-05-08): Reciprocal Rank Fusion (spec
@@ -514,6 +608,11 @@ class KnowledgeStore:
         self._ann_threshold_calibrated: Optional[float] = None
         self._ann_threshold_calibration_meta: Optional[Dict[str, Any]] = None
         self._ann_threshold_fallback_warned: bool = False
+        # Issue #214: dense pool floor (0 = legacy gate-only). Applies inside
+        # apply_ann_gate, i.e. per-store — in sharded mode each per-shard
+        # KnowledgeStore receives this via the fanned genome_kwargs, so the
+        # floor holds per shard and the router-level merge dedups as usual.
+        self._dense_pool_floor_genes: int = int(dense_pool_floor_genes)
         # Stage 2 (2026-05-08): pool size for dense + lex recall, decoupled
         # from max_genes (the post-ranking final cut).
         self._dense_pool_size: int = int(dense_pool_size)
@@ -2913,6 +3012,10 @@ class KnowledgeStore:
         3. Union by gene_id, preserving best score per source.
         4. Body-fetch once via ``_load_genes_by_ids``.
         5. Apply threshold + ``min_genes`` floor; cap at ``max_genes``.
+           Issue #214: if fewer than ``dense_pool_floor_genes`` dense-scored
+           candidates survive, admit the top-N dense hits by cosine anyway
+           (see ``apply_ann_gate``) so a mis-calibrated threshold can no
+           longer gate the dense leg out of pool construction entirely.
 
         ``ann_similarity_threshold`` was recalibrated for dim=1024 v2 vectors
         in Issue #139 / Stage 4 (2026-05-18): measured unrelated-pair cosine
@@ -2987,14 +3090,22 @@ class KnowledgeStore:
             scored.append((doc, sim_by_id[gid]))
         scored.sort(key=lambda x: x[1], reverse=True)
 
-        # ── 5. Threshold cut + min_genes floor + max_genes cap. ──────
-        result: list[Gene] = []
-        for doc, sim in scored:
-            if sim >= threshold or len(result) < min_genes:
-                result.append(doc)
-            else:
-                break
-        return result[:max_genes]
+        # ── 5. Threshold cut + min_genes floor + max_genes cap, plus the
+        # Issue #214 dense pool floor. The cut is a module-level pure
+        # function (apply_ann_gate) so the gate semantics are unit-testable
+        # without a store; with the floor disabled — or whenever >= N
+        # dense-scored candidates survive — it reproduces the legacy loop
+        # byte-for-byte.
+        kept_ids = apply_ann_gate(
+            [(doc.gene_id, sim) for doc, sim in scored],
+            dense_hits,
+            threshold=threshold,
+            min_genes=min_genes,
+            max_genes=max_genes,
+            dense_pool_floor_genes=self._dense_pool_floor_genes,
+        )
+        by_id = {doc.gene_id: doc for doc, _ in scored}
+        return [by_id[gid] for gid in kept_ids if gid in by_id]
 
     def _load_genes_by_ids(self, gene_ids: list[str]) -> dict[str, Gene]:
         """Bulk-load Document objects by id. Used by query_genes_ann to fetch
