@@ -24,12 +24,15 @@ except ImportError:
 @dataclass
 class RibosomeConfig:
     enabled: bool = False              # Master switch; false = ignore compressor config/runtime
-    model: str = "auto"
+    # default aligned with shipped helix.toml (2026-06-12 default-honesty pass):
+    # the shipped toml pins the light pack/replicate fallback model instead of
+    # "auto" (compressor auto-detect). Inert while enabled=False.
+    model: str = "gemma4:e2b"
     base_url: str = "http://localhost:11434"
-    timeout: float = 10.0
+    timeout: float = 120.0  # default aligned with shipped helix.toml (2026-06-12 default-honesty pass) — bulk ingestion headroom
     keep_alive: str = "30m"     # How long Ollama keeps the compressor model loaded
-    warmup: bool = True         # Pre-load model on server start
-    backend: str = "ollama"     # legacy placeholder; only "deberta" or "litellm" are honored when enabled
+    warmup: bool = False        # Pre-load model on server start. Default aligned with shipped helix.toml (2026-06-12 default-honesty pass)
+    backend: str = "none"       # disabled-state placeholder; only "deberta" or "litellm" are honored when enabled. Default aligned with shipped helix.toml (2026-06-12 default-honesty pass)
     claude_model: str = "claude-haiku-4-5-20251001"   # Claude model when backend="claude"
     claude_base_url: str = ""   # Proxy URL (e.g. Headroom at http://127.0.0.1:8787); "" = direct
     litellm_model: str = "gemini/gemini-2.5-flash"    # LiteLLM model string when backend="litellm"
@@ -45,7 +48,11 @@ class RibosomeConfig:
     # for a strictly LLM-free /context pipeline — the 12 tiers below still
     # run on raw query text + synonym map. See context_manager
     # _expand_query_intent.
-    query_expansion_enabled: bool = True
+    # default aligned with shipped helix.toml (2026-06-12 default-honesty
+    # pass): false keeps /context strictly LLM-free (the design default —
+    # docs/MISSION.md); flip on for ~2-3pp on ambiguous queries at one
+    # ribosome call per novel query.
+    query_expansion_enabled: bool = False
     # Step 2 sub-query decomposition: decomposes broad queries into 2-4
     # point-fact sub-queries via one LLM call. Only fires for multi_hop/default
     # classifier classes. Dark-shipped (default off).
@@ -120,11 +127,11 @@ class RibosomeConfig:
 @dataclass
 class BudgetConfig:
     ribosome_tokens: int = 3000
-    expression_tokens: int = 6000
-    max_genes_per_turn: int = 8
+    expression_tokens: int = 7000  # default aligned with shipped helix.toml (2026-06-12 default-honesty pass)
+    max_genes_per_turn: int = 12  # default aligned with shipped helix.toml (2026-06-12 default-honesty pass)
     max_fingerprints_per_turn: int = 40
-    splice_aggressiveness: float = 0.5
-    decoder_mode: str = "full"  # "full"|"condensed"|"minimal"|"none"
+    splice_aggressiveness: float = 0.3  # default aligned with shipped helix.toml (2026-06-12 default-honesty pass)
+    decoder_mode: str = "condensed"  # "full"|"condensed"|"minimal"|"none". Default aligned with shipped helix.toml (2026-06-12 default-honesty pass)
     # Sprint 1 legibility pack (AI-consumer roadmap): emit a one-line
     # metadata header per document in expressed_context — fired tiers,
     # confidence marker, short gene_id, compression ratio. See
@@ -139,9 +146,11 @@ class BudgetConfig:
     slate_char_budget: int = 1500
     # Sprint 2 session working-set register: track delivered documents per
     # session, elide repeats with a pointer stub so the consumer doesn't
-    # pay full token cost for content it already holds. Dark on first
-    # ship — flip to true in helix.toml to A/B. See session_delivery.py.
-    session_delivery_enabled: bool = False
+    # pay full token cost for content it already holds. Enabled 2026-04-19
+    # (saves ~40% tokens on multi-turn conversations); only fires when the
+    # caller supplies a session_id. See session_delivery.py.
+    # default aligned with shipped helix.toml (2026-06-12 default-honesty pass)
+    session_delivery_enabled: bool = True
     abstain_enabled: bool = True       # NEW — see docs/specs/2026-05-02-abstain-tier-design.md
     # Foveated-splice (BROAD tier only). Off by default for the measurement
     # period — see docs/specs/2026-05-03-foveated-splice-design.md §6.3 and
@@ -164,7 +173,7 @@ class BudgetConfig:
 
 @dataclass
 class GenomeConfig:
-    path: str = "genome.db"
+    path: str = "genomes/main/genome.db"  # default aligned with shipped helix.toml (2026-06-12 default-honesty pass) — genomes/ is the phase-2 sharding root; CLAUDE.md documents this as THE default
     compact_interval: float = 3600.0    # Seconds between source-change checks
     cold_start_threshold: int = 10      # Fix 3: documents needed before history stripping
     replicas: List[str] = field(default_factory=list)  # Read-only clone paths
@@ -191,12 +200,22 @@ class ServerConfig:
 @dataclass
 class IngestionConfig:
     """Controls which backend encodes raw content into documents."""
-    backend: str = "ollama"         # "ollama" | "cpu" | "hybrid"
-    splade_enabled: bool = False    # Phase 2: SPLADE sparse expansion at index time
-    rerank_model: str = ""          # Phase 3: pretrained cross-encoder HF model ID
+    # default aligned with shipped helix.toml (2026-06-12 default-honesty
+    # pass): "cpu" (spaCy/heuristic CpuTagger). The load_config coherence
+    # guard already auto-flipped "ollama" to "cpu" whenever the ribosome was
+    # disabled (the default), so "cpu" is what installs actually ran.
+    backend: str = "cpu"            # "ollama" | "cpu" | "hybrid"
+    # default aligned with shipped helix.toml (2026-06-12 default-honesty
+    # pass). NOTE #164 measured SPLADE at 0 pp recall@10 / 21.1% of disk on
+    # the 850K fixture, but the curve below ~50K genes is unresolved and the
+    # shipped toml (every bench this month) ran true — so toml wins here;
+    # the size-aware auto-disable knob below covers the enterprise cliff.
+    # Soft-fails to a no-op when torch/transformers are absent.
+    splade_enabled: bool = True     # Phase 2: SPLADE sparse expansion at index time
+    rerank_model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"  # Phase 3: pretrained cross-encoder HF model ID — inert while rerank_enabled=False. Default aligned with shipped helix.toml (2026-06-12 default-honesty pass)
     rerank_enabled: bool = False    # Phase 3: enable cross-encoder reranking
     colbert_enabled: bool = False   # Phase 4: ColBERT late interaction (optional)
-    entity_graph: bool = False      # Phase 5: entity-based co-activation links
+    entity_graph: bool = True       # Phase 5: entity-based co-activation links (ingest-time edges). Default aligned with shipped helix.toml (2026-06-12 default-honesty pass)
     # Tier-0 PR-1 (2026-05-16): compute BGE-M3 dense vectors
     # (genes.embedding_dense_v2) inline at ingest. Default true so a genome
     # built by `helix ingest` / `/ingest` / context_manager.ingest is
@@ -281,7 +300,12 @@ class RetrievalConfig:
     """Tier 5.5 SR + theta ray_trace bias (Sprint 2)."""
     # Successor Representation (Stachenfeld 2017) - lazy on-demand SR rows
     # via truncated power series over co-activation graph.
-    sr_enabled: bool = False            # Dark ship — flip on for A/B
+    # 2026-06-12 default-honesty pass: stays FALSE on both sides. helix.toml
+    # had flipped this true (2026-04-22 Stage-1 bench), but the evidence
+    # roadmap measured SR at zero effect on retrieval outcomes, so the
+    # shipped toml was aligned back to the code default (the inverse of the
+    # usual toml-wins rule: measured-zero features default off).
+    sr_enabled: bool = False
     sr_gamma: float = 0.85              # Discount factor (5-10 hop horizon at 0.9)
     sr_k_steps: int = 4                 # Power-series truncation depth
     sr_weight: float = 1.5              # Per-document contribution multiplier
@@ -299,7 +323,7 @@ class RetrievalConfig:
     # Dewey bench showed filename alone outperforms the full
     # project+module+filename bag by 24pp. Boosts documents whose
     # filename_stem matches a query term.
-    filename_anchor_enabled: bool = False   # Dark ship — flip for A/B
+    filename_anchor_enabled: bool = True    # Stage-1 bench flip 2026-04-22: +12pp Dewey axis-2. Default aligned with shipped helix.toml (2026-06-12 default-honesty pass)
     filename_anchor_weight: float = 4.0     # Per-match boost (higher than Tier 1's 3.0)
     # BM25 shortlist post-filter (2026-04-22, research-review Pareto move 1).
     # When enabled, query_genes restricts its final ranking to documents that
@@ -307,7 +331,7 @@ class RetrievalConfig:
     # but candidates BM25 would never surface are dropped before the sort.
     # Post-filter by design (isolates the ranking-set hypothesis from the
     # candidate-generation optimisation). Dark ship.
-    bm25_shortlist_enabled: bool = False
+    bm25_shortlist_enabled: bool = True     # Keep on (2026-04-22 sprint): +1/8 ans_full, clean attribution. Default aligned with shipped helix.toml (2026-06-12 default-honesty pass)
     bm25_shortlist_size: int = 50           # BM25 top-N kept in the final ranking
     bm25_prefilter_enabled: bool = False
     bm25_prefilter_size: int = 200          # BM25 top-N fed into tier scoring
@@ -487,20 +511,67 @@ class ClassifierConfig:
     enabled: bool = True
 
 
+# Ship-time [know] defaults (Stage 6 spec §3 + Stage 7 b5). These literals
+# MUST stay equal to scoring/know_calibration.py's DEFAULT_* constants —
+# tests/test_config_default_honesty.py cross-checks the two modules so they
+# cannot drift apart again.
+_KNOW_DEFAULT_BETAS: tuple = (-2.0, 2.0, 1.5, 0.7, 1.8, 1.5)
+_KNOW_DEFAULT_S_REF: float = 1.0
+_KNOW_DEFAULT_G_REF: float = 0.5
+_KNOW_DEFAULT_EMIT_FLOOR: float = 0.55
+_KNOW_DEFAULT_STALE_AFTER_DAYS: int = 30
+
+
+@dataclass
+class KnowConfig:
+    """[know] — Stage 6/7 KnowBlock confidence logistic + staleness window.
+
+    Folded into the config system on 2026-06-12 (default-honesty pass):
+    these keys were previously parsed OUT-OF-BAND by
+    ``scoring/know_calibration.py``'s shadow loader, so /health, docs and
+    the loader disagreed about what the real knobs were (CLAUDE.md
+    advertised non-existent ``confidence_floor`` / ``margin_threshold``).
+    Field names/defaults == the shadow loader's ship-time values
+    (spec docs/specs/2026-05-08-stage-6-know-miss-blocks.md §3, §11).
+
+    ``scoring.know_calibration.load_calibration_from_toml`` now delegates
+    here; ``calibration_from_config`` converts this block into the frozen
+    ``KnowCalibration`` bundle the logistic consumes.
+    """
+    # Probability floor below which no KnowBlock is emitted (falls through
+    # to MissBlock(reason="sparse")).
+    emit_floor: float = _KNOW_DEFAULT_EMIT_FLOOR
+    # tanh feature-scale references for top_score / score_gap.
+    s_ref: float = _KNOW_DEFAULT_S_REF
+    g_ref: float = _KNOW_DEFAULT_G_REF
+    # (b0, b1..b5) — intercept + 5 feature coefficients (Stage 7 added b5
+    # for freshness_min). Malformed/odd-length lists soft-fail to defaults
+    # at load time so a bad calibration write can never break retrieval.
+    betas: List[float] = field(default_factory=lambda: list(_KNOW_DEFAULT_BETAS))
+    # Written by scripts/calibrate_know_confidence.py; None = uncalibrated.
+    calibrated_at: Optional[str] = None
+    calibrated_on_n: Optional[int] = None
+    # Stage 4 (spec §9, issue #63): age in days after which the /context
+    # response flags ``calibration_stale``.
+    stale_after_days: int = _KNOW_DEFAULT_STALE_AFTER_DAYS
+
+
 @dataclass
 class PLRConfig:
     """Stacked PLR query-confidence head (STATISTICAL_FUSION.md §C3).
 
     Attaches a `plr_confidence` log-odds signal to /context/packet responses
-    when a trained artifact is on disk. Dark by default — callers that need
-    the router / HITL signal flip `enabled=true`.
+    when a trained artifact is on disk. Bench-gated on 2026-05-12 (#74) and
+    enabled by default since the 2026-06-12 default-honesty pass (aligned
+    with shipped helix.toml); soft-fails to "PLR unavailable" when no
+    artifact exists, so a fresh install pays nothing.
 
     The current artifact is a **query-quality head** (same score for all documents
     in a retrieval) rather than the per-(q,g) ranker the spec originally
     described. See `helix_context/fusion_plr.py` docstring and
     STATISTICAL_FUSION.md §C3 addendum for the trade-off.
     """
-    enabled: bool = False
+    enabled: bool = True  # default aligned with shipped helix.toml (2026-06-12 default-honesty pass) — bench-gated #74; soft-no-op without artifact
     model_path: str = "training/models/stacked_plr.joblib"
     # SHA256 of the artifact — when set, load refuses to proceed unless the
     # file's digest matches. Empty string = trust the sidecar .sha256 next
@@ -528,13 +599,16 @@ class HeadroomConfig:
     ``route_upstream`` controls whether helix's chat upstream is
     rewritten to dial this proxy. Separate concerns: you may want the
     proxy + dashboard running without the chat redirect, or vice versa.
-    Both default off so a fresh install never silently rewrites the
-    upstream to a proxy that isn't actually running. The
+    ``enabled`` defaults on (2026-06-12 default-honesty pass, aligned with
+    shipped helix.toml) — the launcher adopts/spawns the proxy and no-ops
+    when the [codec] extra isn't installed. ``route_upstream`` stays off
+    so a fresh install never silently rewrites the upstream to a proxy
+    that isn't actually running. The
     ``HELIX_HEADROOM_ROUTE_UPSTREAM_AUTO`` env var (truthy → force on,
     falsy → force off, unset → defer to config) continues to work as a
     per-launch override.
     """
-    enabled: bool = False               # Master switch; false = do nothing
+    enabled: bool = True                # Master switch; false = do nothing. Default aligned with shipped helix.toml (2026-06-12 default-honesty pass)
     autostart: bool = True              # When enabled: adopt if running, spawn if not
     host: str = "127.0.0.1"
     port: int = 8787
@@ -606,6 +680,9 @@ class HelixConfig:
     plr: PLRConfig = field(default_factory=PLRConfig)
     headroom: HeadroomConfig = field(default_factory=HeadroomConfig)
     classifier: ClassifierConfig = field(default_factory=ClassifierConfig)
+    # Stage 6 KnowBlock calibration — folded in from the know_calibration
+    # shadow loader (2026-06-12 default-honesty pass).
+    know: KnowConfig = field(default_factory=KnowConfig)
     hardware: Hardware = field(default_factory=Hardware)
     vault: VaultConfig = field(default_factory=VaultConfig)
     synonym_map: Dict[str, List[str]] = field(default_factory=dict)
@@ -949,6 +1026,64 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
         _warn_unknown("classifier", cls_section, ClassifierConfig)
         cfg.classifier = ClassifierConfig(
             enabled=bool(cls_section.get("enabled", cfg.classifier.enabled)),
+        )
+
+    # Know — Stage 6 KnowBlock confidence logistic (2026-06-12: folded in
+    # from the know_calibration shadow loader). Per-field soft-fail mirrors
+    # the old loader exactly: a malformed calibration write must never be
+    # able to break startup or retrieval, so bad betas / stale_after_days
+    # fall back to ship-time defaults with a WARNING instead of raising.
+    if "know" in raw:
+        k = raw["know"]
+        _warn_unknown("know", k, KnowConfig)
+        betas_raw = k.get("betas", list(_KNOW_DEFAULT_BETAS))
+        try:
+            betas = [float(b) for b in betas_raw]
+        except (TypeError, ValueError):
+            log.warning("[know] betas is malformed; using defaults")
+            betas = list(_KNOW_DEFAULT_BETAS)
+        if len(betas) != len(_KNOW_DEFAULT_BETAS):
+            log.warning(
+                "[know] betas length %d != expected %d; using defaults",
+                len(betas), len(_KNOW_DEFAULT_BETAS),
+            )
+            betas = list(_KNOW_DEFAULT_BETAS)
+        try:
+            stale_after_days = int(
+                k.get("stale_after_days", _KNOW_DEFAULT_STALE_AFTER_DAYS)
+            )
+            if stale_after_days < 0:
+                raise ValueError("negative")
+        except (TypeError, ValueError):
+            log.warning(
+                "[know] stale_after_days is malformed; using default %d",
+                _KNOW_DEFAULT_STALE_AFTER_DAYS,
+            )
+            stale_after_days = _KNOW_DEFAULT_STALE_AFTER_DAYS
+
+        def _know_float(key: str, default: float) -> float:
+            try:
+                return float(k.get(key, default))
+            except (TypeError, ValueError):
+                log.warning("[know] %s is malformed; using default %s", key, default)
+                return default
+
+        cfg.know = KnowConfig(
+            emit_floor=_know_float("emit_floor", _KNOW_DEFAULT_EMIT_FLOOR),
+            s_ref=_know_float("s_ref", _KNOW_DEFAULT_S_REF),
+            g_ref=_know_float("g_ref", _KNOW_DEFAULT_G_REF),
+            betas=betas,
+            calibrated_at=(
+                str(k["calibrated_at"])
+                if k.get("calibrated_at") is not None
+                else None
+            ),
+            calibrated_on_n=(
+                int(k["calibrated_on_n"])
+                if k.get("calibrated_on_n") is not None
+                else None
+            ),
+            stale_after_days=stale_after_days,
         )
 
     # Hardware section — see docs/specs/2026-05-04-hardware-detection-design.md.

@@ -24,6 +24,13 @@ Calibration is an operator post-merge action via
 then defaults are the contract; KnowBlock will still emit, but the
 operating point may not be precision-95.
 
+2026-06-12 (default-honesty pass): the [know] table is now parsed by the
+config system proper (``helix_context.config.KnowConfig``) instead of the
+shadow loader this module used to carry. ``load_calibration_from_toml``
+remains as a thin back-compat shim that delegates to ``load_config`` and
+``calibration_from_config``; its soft-fail-to-defaults contract is
+unchanged (now enforced inside config.py's [know] section parsing).
+
 # STAGE-7-EXT: this module ships the 4-feature implementation. Stage 7
 #  extends the logistic to 5 features (adds freshness_min as the fifth
 #  signal with default beta5 = +1.5). Look for `# STAGE-7-EXT` markers
@@ -274,106 +281,66 @@ def compute_confidence(
 
 
 # ─────────────────────────────────────────────────────────────────────
-# helix.toml [know] table loader (pure function; soft-fail to defaults)
+# Config bridge — [know] is owned by helix_context.config since the
+# 2026-06-12 default-honesty pass (this module used to shadow-parse it)
 # ─────────────────────────────────────────────────────────────────────
+
+def calibration_from_config(know_cfg) -> KnowCalibration:
+    """Convert a ``config.KnowConfig`` block into a ``KnowCalibration``.
+
+    The canonical consumption path: callers that already hold a loaded
+    ``HelixConfig`` pass ``cfg.know`` here instead of re-reading
+    helix.toml from disk (see server/helpers.attach_know_or_miss).
+
+    Defensive re-validation of the betas length is kept even though the
+    config loader performs the same check — a hand-built ``KnowConfig``
+    (tests, programmatic callers) must not be able to crash the logistic.
+    """
+    try:
+        betas = tuple(float(b) for b in know_cfg.betas)
+    except (TypeError, ValueError):
+        log.warning("know_calibration: malformed betas in config; using defaults")
+        betas = DEFAULT_BETAS
+    if len(betas) != 1 + N_FEATURES:
+        log.warning(
+            "know_calibration: betas length %d != expected %d; using defaults",
+            len(betas), 1 + N_FEATURES,
+        )
+        betas = DEFAULT_BETAS
+    return KnowCalibration(
+        betas=betas,
+        s_ref=float(know_cfg.s_ref),
+        g_ref=float(know_cfg.g_ref),
+        emit_floor=float(know_cfg.emit_floor),
+        calibrated_at=know_cfg.calibrated_at,
+        calibrated_on_n=know_cfg.calibrated_on_n,
+        stale_after_days=int(know_cfg.stale_after_days),
+    )
+
 
 def load_calibration_from_toml(
     toml_path: Optional[str | Path] = None,
 ) -> KnowCalibration:
-    """Read [know] from helix.toml; fall back to defaults on any failure.
+    """Back-compat shim: load [know] via the config system.
 
-    The table layout (§11):
+    Historical behavior (kept): a missing file, missing [know] table, or
+    malformed entries all soft-fail to defaults with a WARNING — the
+    calibration loader can never blow up retrieval. The parsing itself now
+    lives in ``config.load_config`` ([know] section) so the keys cannot
+    drift from the documented config surface again.
 
-        [know]
-        emit_floor      = 0.55
-        s_ref           = 1.0
-        g_ref           = 0.5
-        betas           = [-2.0, 2.0, 1.5, 0.7, 1.8, 1.5]
-        calibrated_at   = "2026-05-08T..."
-        calibrated_on_n = 800
-
-    A missing file, missing [know] table, or malformed entries all
-    return defaults with a single ``log.warning``. This keeps the
-    calibration loader from ever blowing up retrieval.
+    ``toml_path=None`` resolves like every other config consumer
+    (``HELIX_CONFIG`` env, then ./helix.toml) instead of the old
+    hard-coded cwd lookup.
     """
     try:
-        # Lazy-import tomllib (3.11+); for older Pythons callers can
-        # pip install `tomli` and we'll fall back transparently.
-        try:
-            import tomllib  # type: ignore[import-not-found]
-        except ModuleNotFoundError:  # pragma: no cover - 3.10 fallback
-            import tomli as tomllib  # type: ignore[no-redef]
+        from ..config import load_config
 
         if toml_path is None:
-            # Default search: helix.toml at the repo root (cwd).
-            toml_path = Path("helix.toml")
+            cfg = load_config()
         else:
-            toml_path = Path(toml_path)
-
-        if not toml_path.exists():
-            return KnowCalibration()
-
-        with toml_path.open("rb") as fh:
-            data = tomllib.load(fh)
-
-        table = data.get("know")
-        if not isinstance(table, dict):
-            return KnowCalibration()
-
-        betas_raw = table.get("betas", DEFAULT_BETAS)
-        try:
-            betas = tuple(float(b) for b in betas_raw)
-        except (TypeError, ValueError):
-            log.warning(
-                "know_calibration: malformed betas in %s; using defaults",
-                toml_path,
-            )
-            betas = DEFAULT_BETAS
-
-        if len(betas) != 1 + N_FEATURES:
-            log.warning(
-                "know_calibration: betas length %d != expected %d in %s; "
-                "using defaults",
-                len(betas),
-                1 + N_FEATURES,
-                toml_path,
-            )
-            betas = DEFAULT_BETAS
-
-        # Stage 4 (spec §9, issue #63) — parse stale_after_days with the
-        # same soft-fail discipline as the other numeric fields.
-        try:
-            stale_after_days = int(
-                table.get("stale_after_days", DEFAULT_STALE_AFTER_DAYS)
-            )
-            if stale_after_days < 0:
-                raise ValueError("negative")
-        except (TypeError, ValueError):
-            log.warning(
-                "know_calibration: malformed stale_after_days in %s; "
-                "using default %d",
-                toml_path,
-                DEFAULT_STALE_AFTER_DAYS,
-            )
-            stale_after_days = DEFAULT_STALE_AFTER_DAYS
-
-        return KnowCalibration(
-            betas=betas,
-            s_ref=float(table.get("s_ref", DEFAULT_S_REF)),
-            g_ref=float(table.get("g_ref", DEFAULT_G_REF)),
-            emit_floor=float(table.get("emit_floor", DEFAULT_EMIT_FLOOR)),
-            calibrated_at=(
-                str(table["calibrated_at"])
-                if table.get("calibrated_at") is not None
-                else None
-            ),
-            calibrated_on_n=(
-                int(table["calibrated_on_n"])
-                if table.get("calibrated_on_n") is not None
-                else None
-            ),
-            stale_after_days=stale_after_days,
-        )
+            cfg = load_config(str(toml_path))
+        return calibration_from_config(cfg.know)
     except Exception:
         log.warning(
             "know_calibration: failed to load %s; using defaults",
