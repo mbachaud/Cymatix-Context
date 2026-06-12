@@ -31,6 +31,7 @@ from __future__ import annotations
 
 import logging
 import math
+import threading
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple
 
@@ -256,3 +257,109 @@ class SemaCodec:
     @property
     def embed_dim(self) -> int:
         return self._embed_dim
+
+
+# ── Lazy construction (#219 slice 2) ─────────────────────────────────
+
+
+def sema_available() -> bool:
+    """Cheap availability probe: is sentence-transformers importable?
+
+    Uses ``find_spec`` so the probe itself never imports (or loads) the
+    package — a serving process that never touches a semantic path must
+    not pay the transformer import at boot.
+    """
+    try:
+        import importlib.util
+        return importlib.util.find_spec("sentence_transformers") is not None
+    except Exception:  # pragma: no cover - importlib metadata edge cases
+        return False
+
+
+class LazySemaCodec:
+    """Deferred-construction proxy around :class:`SemaCodec` (#219 slice 2).
+
+    Holds the construction args and builds the real codec — the
+    sentence-transformer model plus the 20-anchor projection — on the
+    first encoding call, behind a double-checked lock so concurrent first
+    users construct exactly once. Pure-math statics (``similarity`` /
+    ``nearest``) pass straight through without forcing a load.
+
+    ``loaded`` / ``peek()`` let GET /admin/components report
+    "idle (not loaded)" vs loaded without materializing the model.
+
+    A construction failure is cached and re-raised on subsequent calls.
+    Every sema call site already guards with try/except, so a broken
+    install degrades to "ΣĒMA disabled" exactly like the old eager path —
+    without re-attempting a model load on every call.
+    """
+
+    is_lazy_component = True
+
+    def __init__(
+        self,
+        model_name: str = "all-MiniLM-L6-v2",
+        device: Optional[str] = None,
+    ):
+        self._model_name = model_name
+        self._device = device
+        self._codec: Optional[SemaCodec] = None
+        self._load_error: Optional[BaseException] = None
+        self._lock = threading.Lock()
+
+    @property
+    def loaded(self) -> bool:
+        """True once the underlying SemaCodec has been constructed."""
+        return self._codec is not None
+
+    def peek(self) -> Optional[SemaCodec]:
+        """The materialized codec, or None — never triggers a load."""
+        return self._codec
+
+    def warm(self) -> SemaCodec:
+        """Force construction now ([hardware] lazy_encoders = false)."""
+        return self._materialize()
+
+    def _materialize(self) -> SemaCodec:
+        codec = self._codec
+        if codec is not None:
+            return codec
+        with self._lock:
+            if self._codec is None:
+                if self._load_error is not None:
+                    raise self._load_error
+                try:
+                    # Module-global name lookup on purpose: tests monkeypatch
+                    # helix_context.backends.sema.SemaCodec with counting
+                    # fakes, and the eager ctor args are preserved verbatim.
+                    self._codec = SemaCodec(
+                        model_name=self._model_name, device=self._device,
+                    )
+                except BaseException as exc:
+                    self._load_error = exc
+                    raise
+            return self._codec
+
+    # Pure numpy — no model involved; never force a load for these.
+    similarity = staticmethod(SemaCodec.similarity)
+    nearest = staticmethod(SemaCodec.nearest)
+
+    def encode(self, text: str) -> List[float]:
+        return self._materialize().encode(text)
+
+    def encode_batch(self, texts: List[str], batch_size: int = 64) -> List[List[float]]:
+        return self._materialize().encode_batch(texts, batch_size=batch_size)
+
+    def signature(self, text: str, top_k: int = 5) -> List[Tuple[str, float]]:
+        return self._materialize().signature(text, top_k=top_k)
+
+    def fingerprint(self, text: str) -> str:
+        return self._materialize().fingerprint(text)
+
+    @property
+    def projection_matrix(self) -> np.ndarray:
+        return self._materialize().projection_matrix
+
+    @property
+    def embed_dim(self) -> int:
+        return self._materialize().embed_dim
