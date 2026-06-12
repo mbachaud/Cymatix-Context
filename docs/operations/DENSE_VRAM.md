@@ -89,10 +89,93 @@ correct.
   in-process fan-out from loading ~100 copies of the ~2 GB model. Does
   **not** help across separate worker *processes* — each process loads
   its own model.
+- `HELIX_BFM_CRAWL_FACTOR` / `HELIX_BFM_CRAWL_WINDOW` /
+  `HELIX_BFM_CRAWL_ACTION` — the crawl watchdog's escalation ladder for
+  the fixture-builder ingest and dense-backfill drivers; see
+  [Crawl watchdog (automatic)](#crawl-watchdog-automatic) below.
 - `OMP_NUM_THREADS=4`, `MKL_NUM_THREADS=4` — CPU dense ingest only.
   Caps each worker's BLAS thread pool so N workers don't oversubscribe.
 - `transformers==4.49.0` — pin. The 5.x line breaks the `PreTrainedModel`
   import path that helix's dense and SPLADE encoders use.
+
+## Crawl watchdog (automatic)
+
+Issue #212. As of v0.7.x the two long-haul dense drivers — the fixture
+builder's ingest loop (`build_fixture_matrix._drain_with_batched_splade`)
+and the shared dense backfill (`backfill_bgem3_v2.backfill_dense_db`,
+which both the standalone script and the builder's post-build pass call)
+— carry a **throughput-triggered escalation ladder** that detects the
+#176 WDDM-spill crawl and recovers without an operator.
+
+### Why empty_cache alone is not enough
+
+Two live incidents during the 2026-06-10/11 ERB 500K rebuild on the
+reference 12 GB rig:
+
+- **confluence shard, 06-10:** throughput decayed **15.3 → 2.3 genes/s**
+  while dedicated VRAM pinned at 11.85/12 GB. It recovered only because
+  the shard happened to finish.
+- **slack__eng-oncall, 06-11:** collapsed to **64 genes in 47 minutes**
+  (~0.02 genes/s, ~66 h projected for the shard) *with the release knobs
+  active* (`HELIX_DENSE_VRAM_RELEASE_EVERY=64` +
+  `expandable_segments:True`). This is the proof that periodic
+  `empty_cache` bounds a healthy context but **does not un-crawl an
+  already-spilled one** — once WDDM has demoted allocations to shared
+  system memory, only a context recycle (fresh process) or CPU demotion
+  fixes the rate. The manual fix that worked: kill + resume (salvage +
+  file-level resume are lossless), then `BGEM3_DEVICE=cpu` for the
+  remainder — GPU dropped 11.9 GB → 884 MiB with byte-identical vectors.
+- **Validation of the recycle action:** the external watchdog performed
+  two live auto-recycles on 06-11 (12:00 and 18:41). The 18:41 one fired
+  at **1.03 genes/s with 11941 MiB VRAM**, recycled the worker, and the
+  build finished **33 minutes later**.
+
+### Trigger (not a wall-clock timer)
+
+A per-shard timer false-positives on legitimately large shards and
+misses crawls on small ones. The watchdog instead trips on the
+unambiguous signature, per batch:
+
+- genes/s **EMA** < the shard's **own early-batch baseline** (median of
+  the first `HELIX_BFM_CRAWL_WINDOW` batches) ÷ `HELIX_BFM_CRAWL_FACTOR`,
+  for `HELIX_BFM_CRAWL_WINDOW` **consecutive** batches (any healthy batch
+  resets the streak), **AND**
+- dedicated VRAM near device capacity
+  (`max(memory_allocated, memory_reserved) / total_memory > 0.92`).
+
+A slow disk alone is therefore not a crawl, and CPU-only boxes can never
+trip (the VRAM probe is try/except-guarded and returns "unknown").
+
+### Ladder
+
+| Rung | Ingest path (`_drain_with_batched_splade`) | Backfill path (`backfill_dense_db`) |
+|---|---|---|
+| 1 | `gc.collect()` + `torch.cuda.empty_cache()`, log, continue | same |
+| 2 (still crawling after another window) | raise the existing `_PauseRequested` at the batch boundary → shard pauses cleanly, salvage + file-level resume restart it with a fresh CUDA context | tear down the codec and reload it with `device=cpu` for the **remainder of the shard** (byte-identical vectors, no VRAM ceiling) |
+
+`HELIX_BFM_CRAWL_ACTION=cpu` jumps straight to rung 2; `off` detects and
+logs only. After the terminal rung the watchdog disarms for that shard.
+
+Every watchdog line carries the stable grep-able prefix
+`[crawl-watchdog]` and includes rate, baseline, VRAM fraction and the
+action taken:
+
+```
+[crawl-watchdog] CRAWL detected name=slack__eng-oncall: rate=1.03 genes/s ema=1.10 genes/s baseline=15.30 genes/s threshold=3.06 genes/s vram_frac=0.971 window=8 action=empty_cache (ladder rung 1/2: gc.collect + torch.cuda.empty_cache)
+```
+
+### Knobs
+
+- `HELIX_BFM_CRAWL_FACTOR` — crawl threshold = baseline / factor.
+  Default `5`.
+- `HELIX_BFM_CRAWL_WINDOW` — batches in the baseline AND in the
+  consecutive-slow streak. Default `8`.
+- `HELIX_BFM_CRAWL_ACTION` — `ladder` (default) | `cpu` (straight to the
+  terminal rung) | `off` (detect + log only).
+
+On ≤12 GB rigs the watchdog is a backstop, not a license to run dense
+backfill on GPU unattended — the config matrix above still says **prefer
+CPU** for offline batch work on those cards.
 
 ## Choosing the dense-backfill path
 
@@ -118,5 +201,13 @@ inline-ingest path.
 - **Code:** `helix_context/backends/bgem3_codec.py`
   (`_vram_release_interval`, `_maybe_release_vram`, `encode_batch`).
 - **Backfill:** `scripts/backfill_bgem3_v2.py`.
+- **Crawl watchdog:** issue #212 → `scripts/crawl_watchdog.py`
+  (detector), wired into `scripts/build_fixture_matrix.py`
+  (`_drain_with_batched_splade`) and
+  `scripts/backfill_bgem3_v2.py` (`backfill_dense_db`). Incident
+  evidence: 2026-06-10/11 ERB 500K rebuild (confluence 15.3 → 2.3
+  genes/s; slack__eng-oncall 64 genes/47 min with release knobs active;
+  two live auto-recycles on 06-11, the 18:41 one at 1.03 genes/s /
+  11941 MiB finishing the build 33 min after recycle).
 - **Source of measurements:** ContextBench code-retrieval track, frozen
   v0.6.3 wheel, 2026-06-07.
