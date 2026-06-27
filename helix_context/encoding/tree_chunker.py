@@ -271,7 +271,13 @@ def chunk_code_ast_with_meta(
     root = tree.root_node
     boundary_types = set(_BOUNDARY_NODES[language])
 
-    Piece = Tuple[str, bool, Optional[dict]]
+    # A Span is a half-open byte range [start, end) plus is_fragment + meta.
+    # Spans tile the file contiguously (no bytes dropped), so a merged chunk is
+    # always an exact code_bytes[start:end] slice — i.e. a verbatim substring of
+    # the source. (The earlier draft reassembled decoded piece text and dropped
+    # whitespace-only gaps, which broke any consumer that line-maps a chunk by
+    # verbatim match — e.g. ContextBench's recover_lines — collapsing recall.)
+    Span = Tuple[int, int, bool, Optional[dict]]
 
     def text_of(start: int, end: int) -> str:
         return code_bytes[start:end].decode("utf-8", errors="replace")
@@ -294,65 +300,73 @@ def chunk_code_ast_with_meta(
             "language": language,
         }
 
-    def char_cut(start: int, end: int) -> List[Piece]:
+    def char_cut(start: int, end: int) -> List[Span]:
         """Last-resort hard cut of an atomic oversized span at char boundaries."""
-        out: List[Piece] = []
+        out: List[Span] = []
         s = start
         while end - s > max_chars:
-            out.append((text_of(s, s + max_chars), True, None))
+            out.append((s, s + max_chars, True, None))
             s += max_chars
         if end > s:
-            out.append((text_of(s, end), False, None))
+            out.append((s, end, False, None))
         return out
 
-    def emit_gap(start: int, end: int, pieces: List[Piece]) -> None:
-        """Interstitial text between AST children (imports, comments, blanks)."""
-        if start >= end:
-            return
-        if not text_of(start, end).strip():
-            return
-        if end - start > max_chars:
-            pieces.extend(char_cut(start, end))
-        else:
-            pieces.append((text_of(start, end), False, None))
-
-    def split(node) -> List[Piece]:
+    def split(node) -> List[Span]:
         if node.end_byte - node.start_byte <= max_chars:
-            return [(text_of(node.start_byte, node.end_byte), False, meta_for(node))]
+            return [(node.start_byte, node.end_byte, False, meta_for(node))]
         kids = list(node.children)
         if not kids:
             return char_cut(node.start_byte, node.end_byte)
-        pieces: List[Piece] = []
+        spans: List[Span] = []
         cursor = node.start_byte
         for c in kids:
-            emit_gap(cursor, c.start_byte, pieces)
-            pieces.extend(split(c))
+            # Interstitial gap before this child (decorators, blanks, comments) —
+            # kept as a span so the tiling stays contiguous / byte-exact.
+            if c.start_byte > cursor:
+                if c.start_byte - cursor > max_chars:
+                    spans.extend(char_cut(cursor, c.start_byte))
+                else:
+                    spans.append((cursor, c.start_byte, False, None))
+            spans.extend(split(c))
             cursor = c.end_byte
-        emit_gap(cursor, node.end_byte, pieces)
-        return pieces
+        if node.end_byte > cursor:
+            spans.append((cursor, node.end_byte, False, None))
+        return spans
 
-    pieces = split(root)
-    if not pieces:
+    spans = split(root)
+    if not spans:
         return [(code, False, None)]
 
-    # Greedy merge: combine adjacent pieces up to max_chars. A merged chunk
-    # inherits the metadata of its first definition-bearing piece, and is a
-    # fragment if any constituent was hard-cut.
-    merged: List[Piece] = []
-    cur_text = ""
-    cur_frag = False
-    cur_meta: Optional[dict] = None
-    for text, frag, meta in pieces:
-        if cur_text and len(cur_text) + len(text) > max_chars:
-            if cur_text.strip():
-                merged.append((cur_text.strip(), cur_frag, cur_meta))
-            cur_text, cur_frag, cur_meta = "", False, None
-        cur_text += text
-        cur_frag = cur_frag or frag
-        if cur_meta is None and meta is not None:
-            cur_meta = meta
-    if cur_text.strip():
-        merged.append((cur_text.strip(), cur_frag, cur_meta))
+    # Greedy merge of adjacent spans up to max_chars. A merged chunk spans
+    # [group_start, group_end); its text is the exact byte slice (so any
+    # interstitial gap between merged units is preserved verbatim). It inherits
+    # the metadata of its first definition-bearing span and is a fragment if any
+    # constituent was hard-cut.
+    merged: List[Tuple[str, bool, Optional[dict]]] = []
+    gs: Optional[int] = None
+    ge = 0
+    gfrag = False
+    gmeta: Optional[dict] = None
+
+    def flush() -> None:
+        if gs is None:
+            return
+        body = text_of(gs, ge)            # exact byte slice => verbatim substring
+        if body.strip():                  # skip whitespace-only groups
+            merged.append((body, gfrag, gmeta))
+
+    for s, e, frag, meta in spans:
+        if gs is not None and (e - gs) > max_chars:
+            flush()
+            gs = None
+        if gs is None:
+            gs, ge, gfrag, gmeta = s, e, frag, meta
+        else:
+            ge = e
+            gfrag = gfrag or frag
+            if gmeta is None and meta is not None:
+                gmeta = meta
+    flush()
     return merged
 
 
