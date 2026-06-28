@@ -416,3 +416,157 @@ def is_available() -> bool:
         return True
     except ImportError:
         return False
+
+
+# ── Symbol def/ref extraction (WS2 — symbol graph) ───────────────────
+#
+# For each chunk, collect the symbols it DEFINES (function/class/method names)
+# and the symbols it REFERENCES (call targets, base classes). The symbol graph
+# (WS2) resolves a chunk's references to the chunks that define them and emits
+# SYMBOL_REF edges, so retrieval can pull in the definition of what a hit calls.
+#
+# Reference extraction is the one genuinely-new parse pass; it is intentionally
+# scoped to high-signal references (calls + base classes) rather than every
+# identifier, to keep the resulting edges precise (naive name-matching links
+# every `process()` to every other). Tier-1 language: python. Other languages
+# return definitions only (empty refs) until their ref grammar is added — a
+# safe degrade to WS1-only behaviour.
+
+_PY_REF_LANGS = frozenset({"python"})
+
+
+def _def_target(node):
+    """Unwrap a decorated_definition to the inner def/class node for naming."""
+    if node.type == "decorated_definition":
+        for c in node.children:
+            if c.type in ("function_definition", "class_definition"):
+                return c
+    return node
+
+
+def _py_callee_name(call_node) -> Optional[str]:
+    """Name of a python call target: `foo(...)` -> 'foo', `a.b.foo(...)` -> 'foo'."""
+    try:
+        fn = call_node.child_by_field_name("function")
+    except Exception:  # noqa: BLE001
+        fn = None
+    if fn is None:
+        return None
+    if fn.type == "identifier":
+        return fn.text.decode("utf-8", errors="replace")
+    if fn.type == "attribute":
+        attr = fn.child_by_field_name("attribute")
+        if attr is not None:
+            return attr.text.decode("utf-8", errors="replace")
+    return None
+
+
+def _collect_symbols(root, language: str):
+    """Return (defs, refs): lists of (name, start_byte) over the whole tree.
+
+    defs = definition sites (function/class/method names).
+    refs = high-signal reference sites (call targets, base-class names).
+    """
+    boundary = set(_BOUNDARY_NODES.get(language, ()))
+    defs = []
+    refs = []
+    stack = list(root.children)
+    while stack:
+        n = stack.pop()
+        if n.type in boundary:
+            name = _symbol_name(_def_target(n))
+            if name:
+                defs.append((name, n.start_byte))
+        if language in _PY_REF_LANGS:
+            if n.type == "call":
+                name = _py_callee_name(n)
+                if name:
+                    refs.append((name, n.start_byte))
+            elif n.type == "class_definition":
+                supers = None
+                try:
+                    supers = n.child_by_field_name("superclasses")
+                except Exception:  # noqa: BLE001
+                    supers = None
+                if supers is not None:
+                    for c in supers.children:
+                        if c.type == "identifier":
+                            refs.append((c.text.decode("utf-8", errors="replace"),
+                                         c.start_byte))
+        stack.extend(n.children)
+    return defs, refs
+
+
+def chunk_code_with_symbols(
+    code: str,
+    max_chars: int = 4000,
+    language: Optional[str] = None,
+    source_id: Optional[str] = None,
+) -> List[dict]:
+    """
+    cAST chunks annotated with the symbols each chunk defines / references.
+
+    Returns a list of dicts, one per chunk, in source order::
+
+        {"text", "is_fragment", "start_byte", "end_byte",
+         "defs": [symbol, ...], "refs": [symbol, ...]}
+
+    ``defs`` are the definitions inside the chunk; ``refs`` are the call targets
+    and base classes it references (python tier-1; other languages -> []). The
+    symbol graph (WS2) resolves each chunk's ``refs`` against every chunk's
+    ``defs`` to emit referencing-chunk -> defining-chunk edges. Reference and
+    definition sites are bucketed into chunks by byte offset; because cAST chunks
+    are exact byte slices, chunk spans are recovered by verbatim search.
+    """
+    if language is None:
+        language = detect_language(source_id)
+    if language is None or language not in _BOUNDARY_NODES:
+        raise ValueError(
+            f"Unsupported or undetected language for tree-sitter chunking "
+            f"(source={source_id!r}, language={language!r})"
+        )
+
+    parser = _get_parser(language)
+    code_bytes = code.encode("utf-8")
+    root = parser.parse(code_bytes).root_node
+
+    chunks = chunk_code_ast_with_meta(code, max_chars, language, source_id)
+    defs, refs = _collect_symbols(root, language)
+
+    out: List[dict] = []
+    spans: List[Tuple[int, int]] = []
+    cursor = 0
+    for text, frag, _meta in chunks:
+        tb = text.encode("utf-8")
+        idx = code_bytes.find(tb, cursor)
+        if idx < 0:
+            idx = code_bytes.find(tb)
+        start = idx if idx >= 0 else cursor
+        end = start + len(tb)
+        spans.append((start, end))
+        cursor = end if end > cursor else cursor
+        out.append({
+            "text": text, "is_fragment": frag,
+            "start_byte": start, "end_byte": end,
+            "defs": set(), "refs": set(),
+        })
+
+    def bucket(offset: int) -> Optional[int]:
+        for i, (s, e) in enumerate(spans):
+            if s <= offset < e:
+                return i
+        return None
+
+    for name, off in defs:
+        i = bucket(off)
+        if i is not None:
+            out[i]["defs"].add(name)
+    for name, off in refs:
+        i = bucket(off)
+        if i is not None:
+            out[i]["refs"].add(name)
+
+    for c in out:
+        c["defs"] = sorted(c["defs"])
+        c["refs"] = sorted(c["refs"])
+    return out
