@@ -3879,6 +3879,26 @@ class KnowledgeStore:
         from .storage.co_activation import get_relations
         return get_relations(self.conn, gene_id)
 
+    # ── Symbol graph (WS2) ───────────────────────────────────────────
+
+    def store_symbol_defs(self, rows: list) -> None:
+        """Index symbol definitions. Each item: (symbol, gene_id, kind)."""
+        if not rows:
+            return
+        self.conn.executemany(
+            "INSERT OR IGNORE INTO symbol_defs (symbol, gene_id, kind) VALUES (?, ?, ?)",
+            rows,
+        )
+        self.conn.commit()
+
+    def resolve_symbol(self, symbol: str) -> list:
+        """gene_ids of chunks that define ``symbol`` (for symbol-aware expansion)."""
+        return [
+            r[0] for r in self.conn.execute(
+                "SELECT gene_id FROM symbol_defs WHERE symbol = ?", (symbol,)
+            ).fetchall()
+        ]
+
     # ── Layered fingerprints: query-time parent aggregation ──────────
 
     def _aggregate_parent_fingerprints(

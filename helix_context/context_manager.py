@@ -1240,6 +1240,9 @@ class HelixContextManager:
             and self.config.ingestion.backend in ("cpu", "hybrid")
         )
 
+        # WS2: (gene_id, defs, refs) per code chunk, for symbol-graph emission.
+        chunk_syms: List[tuple] = []
+
         for i, strand in enumerate(strands):
             if use_cpu:
                 gene = self._cpu_tagger.pack(
@@ -1307,6 +1310,12 @@ class HelixContextManager:
             gid = self.genome.upsert_doc(gene, embedding_dense_v2=dense_vec)
             gene_ids.append(gid)
 
+            # WS2: stash this chunk's symbols (set on the strand metadata by the
+            # symbol-aware code chunker) keyed by gene id, for emission below.
+            _sm = getattr(strand, "metadata", None) or {}
+            if _sm.get("defs") or _sm.get("refs"):
+                chunk_syms.append((gid, _sm.get("defs", []), _sm.get("refs", [])))
+
             # If the gate demoted the document to heterochromatin, the content
             # column is still populated — compress_to_heterochromatin()
             # drops it and strips SPLADE/FTS indices. Run this post-insert
@@ -1333,6 +1342,19 @@ class HelixContextManager:
             except Exception:
                 log.warning("Parent gene creation failed for %s — chunks still ingested",
                             source_path, exc_info=True)
+
+        # WS2: build the symbol graph from this file's chunks — index symbol
+        # definitions and emit referencing-chunk -> defining-chunk edges
+        # (intra-file resolution; high precision). Best-effort: never break ingest.
+        if (content_type == "code" and chunk_syms
+                and getattr(self.config.ingestion, "symbol_graph", True)):
+            try:
+                self._emit_symbol_graph(chunk_syms)
+            except Exception:
+                log.warning(
+                    "symbol-graph emission failed for %s — chunks still ingested",
+                    source_path, exc_info=True,
+                )
 
         log.info("Ingested %d strands from %s content (%d chars)",
                  len(gene_ids), content_type, len(content))
@@ -1398,6 +1420,46 @@ class HelixContextManager:
         ]
         self.genome.store_relations_batch(edges)
         return parent_gid
+
+    def _emit_symbol_graph(self, chunk_syms: List[tuple]) -> None:
+        """Index symbol definitions and emit SYMBOL_REF edges for one file (WS2).
+
+        ``chunk_syms`` is a list of ``(gene_id, defs, refs)``. Resolution is
+        **intra-file**: a chunk's reference resolves to a sibling chunk in the
+        same file that defines that symbol. This keeps edges high-precision (it
+        sidesteps the "every ``process()`` links to every ``process()``" blow-up
+        of naive cross-file name matching); cross-file resolution is a query-time
+        concern handled via the global ``symbol_defs`` index.
+        """
+        store_defs = getattr(self.genome, "store_symbol_defs", None)
+        store_edges = getattr(self.genome, "store_relations_batch", None)
+        if not callable(store_defs) or not callable(store_edges):
+            return  # e.g. sharded read adapter — writes are no-ops
+
+        # 1) index definitions + build the intra-file symbol -> [gene_id] map
+        def_rows: List[tuple] = []
+        local: Dict[str, List[str]] = {}
+        for gid, defs, _refs in chunk_syms:
+            for sym in defs:
+                def_rows.append((sym, gid, "def"))
+                local.setdefault(sym, []).append(gid)
+        store_defs(def_rows)
+
+        # 2) resolve each chunk's references to sibling definers -> SYMBOL_REF edges
+        edges: List[tuple] = []
+        seen = set()
+        for gid, _defs, refs in chunk_syms:
+            for sym in refs:
+                for dgid in local.get(sym, ()):
+                    if dgid == gid:
+                        continue  # a chunk referencing its own definition is not an edge
+                    key = (gid, dgid)
+                    if key in seen:
+                        continue
+                    seen.add(key)
+                    edges.append((gid, dgid, int(StructuralRelation.SYMBOL_REF), 1.0))
+        if edges:
+            store_edges(edges)
 
     async def ingest_async(self, content: str, content_type: str = "text", metadata: Optional[Dict] = None) -> List[str]:
         """Async wrapper for ingest -- runs compressor calls in thread pool."""

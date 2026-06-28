@@ -143,19 +143,26 @@ class CodonChunker:
         try:
             from . import tree_chunker
             if tree_chunker.is_available():
-                ast_blocks = tree_chunker.chunk_code_ast(
+                # WS2: symbol-aware chunking — each chunk carries the symbols it
+                # defines/references so the ingest path can build the symbol graph.
+                sym_chunks = tree_chunker.chunk_code_with_symbols(
                     code,
                     max_chars=self.max_chars,
                     source_id=source_id,
                 )
                 strands: List[RawStrand] = []
-                for seq, (block_text, is_fragment) in enumerate(ast_blocks):
+                for seq, ch in enumerate(sym_chunks):
+                    smeta = dict(metadata)
+                    if ch["defs"]:
+                        smeta["defs"] = ch["defs"]
+                    if ch["refs"]:
+                        smeta["refs"] = ch["refs"]
                     strands.append(RawStrand(
-                        content=block_text.strip(),
+                        content=ch["text"].strip(),
                         sequence_index=seq,
-                        is_fragment=is_fragment,
+                        is_fragment=ch["is_fragment"],
                         content_type="code",
-                        metadata=metadata,
+                        metadata=smeta,
                     ))
                 if strands:
                     # Phase-0 observability (2026-07-01): prove the AST path

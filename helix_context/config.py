@@ -289,6 +289,10 @@ class IngestionConfig:
     # ingest always materialized the lazy SEMA codec (#220), loading MiniLM per
     # worker and OOMing parallel bench runs even with dense/cymatics disabled.
     sema_embed_on_ingest: bool = True
+    # WS2 (symbol graph): at ingest, index symbol definitions and emit
+    # referencing-chunk -> defining-chunk SYMBOL_REF edges (code only). Default
+    # True; resolution is intra-file (high precision). Off = WS1-only chunking.
+    symbol_graph: bool = True
     # Issue #164 (size-aware SPLADE auto-toggle): SPLADE expansion's value
     # follows a corpus-regime curve -- the v2 EnterpriseRAG-Onyx storage
     # breakdown showed SPLADE at 21.1% of disk on the 850K-gene fixture
@@ -1248,6 +1252,7 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             sema_embed_on_ingest=i.get(
                 "sema_embed_on_ingest", cfg.ingestion.sema_embed_on_ingest
             ),
+            symbol_graph=i.get("symbol_graph", cfg.ingestion.symbol_graph),
             # Issue #164: size-aware SPLADE auto-toggle thresholds.
             splade_auto_enable_below_genes=int(i.get(
                 "splade_auto_enable_below_genes",

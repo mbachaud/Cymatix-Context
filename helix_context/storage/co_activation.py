@@ -156,6 +156,27 @@ def expand_coactivated(
         except Exception:
             log.debug("Entity graph expansion failed", exc_info=True)
 
+    # WS2: pull in the definitions that retrieved code chunks reference. A
+    # SYMBOL_REF edge points from a referencing chunk to the chunk that defines
+    # the called symbol, so a hit on the caller surfaces the definition it needs
+    # (the cross-file/cross-chunk case lexical term-overlap misses). Data-gated:
+    # no SYMBOL_REF edges (prose genomes) -> no-op.
+    try:
+        from ..schemas import StructuralRelation
+        cand_ids = [g.gene_id for g in genes]
+        if cand_ids:
+            ph = ",".join("?" * len(cand_ids))
+            sref = cur.execute(
+                f"SELECT DISTINCT gene_id_b FROM gene_relations "
+                f"WHERE relation = ? AND gene_id_a IN ({ph})",
+                (int(StructuralRelation.SYMBOL_REF), *cand_ids),
+            ).fetchall()
+            additional_ids.update(
+                row[0] for row in sref if row[0] not in existing_ids
+            )
+    except Exception:
+        log.debug("Symbol-graph (SYMBOL_REF) expansion failed", exc_info=True)
+
     if not additional_ids:
         return genes
 
