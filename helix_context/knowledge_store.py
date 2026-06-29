@@ -3706,6 +3706,7 @@ class KnowledgeStore:
         from .storage.co_activation import expand_coactivated
         return expand_coactivated(
             genes, limit, self.conn, self._entity_graph_enabled,
+            symbol_expansion_cap=getattr(self, "_symbol_expansion_cap", 8),
         )
 
     # ── Row → Document ──────────────────────────────────────────────────

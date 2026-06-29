@@ -945,6 +945,14 @@ class HelixContextManager:
             doc_type_boost_mode=config.retrieval.doc_type_boost_mode,
         )
 
+        # WS3: hand the symbol-expansion cap to the genome's co-activation
+        # expansion (top-K referenced defs by centrality). Best-effort —
+        # sharded read adapters that don't expose the attribute simply ignore it.
+        try:
+            self.genome._symbol_expansion_cap = config.retrieval.symbol_expansion_cap
+        except Exception:
+            pass
+
         # Persistence manager (distributed knowledge store clones)
         self._replication_mgr = None
         if config.genome.replicas:
