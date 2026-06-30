@@ -210,6 +210,11 @@ class CodonChunker:
         except ValueError:
             # unsupported/undetected language
             _fallback_reason = "unsupported_language"
+        except RecursionError:
+            # pathologically/adversarially deeply-nested code blowing the
+            # recursive split() — degrade to regex, don't abort the
+            # document's ingest (council fix).
+            _fallback_reason = "recursion_limit"
         else:
             # is_available() False, or AST produced zero strands
             _fallback_reason = "ast_unavailable_or_empty"

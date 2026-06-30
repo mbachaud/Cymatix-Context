@@ -44,12 +44,12 @@ def build_adjacency(
     graph stays candidate-local. With ``nodes=None`` the node set is inferred
     from the edges.
     """
+    edges = list(edges)  # materialize once — safe for generator arguments
     node_set = set(nodes) if nodes is not None else set()
     if nodes is None:
         for a, b in edges:
             node_set.add(a)
             node_set.add(b)
-        edges = list(edges) if not isinstance(edges, list) else edges
     out: Dict[str, List[str]] = {n: [] for n in node_set}
     for a, b in edges:
         if a in node_set and b in node_set and a != b:
