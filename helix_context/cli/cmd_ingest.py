@@ -11,6 +11,27 @@ from helix_context.api import open_session
 
 _DEFAULT_EXTENSIONS = (".txt", ".md", ".rst", ".py", ".ts", ".js", ".json", ".toml", ".yml", ".yaml")
 
+# Extensions whose contents should be chunked as CODE (AST/structure-aware via
+# the tree-sitter chunker) rather than prose paragraphs. Issue #224: the ingest
+# CLI previously never set content_type, so code was chunked as prose and the
+# AST/code chunker (encoding/tree_chunker.py + CodonChunker._chunk_code) was
+# never reached. Inferring content_type from the file extension activates it.
+_CODE_EXTENSIONS = frozenset({
+    ".py", ".ts", ".tsx", ".js", ".jsx", ".rs", ".go", ".java", ".c", ".h",
+    ".cc", ".cpp", ".hpp", ".hh", ".cs", ".rb", ".php", ".lua", ".scala",
+    ".kt", ".kts", ".swift", ".sh", ".bash", ".sql", ".m", ".mm",
+})
+
+
+def _content_type_for(path: Path) -> str:
+    """Infer ingest content_type from a file's extension (#224).
+
+    Code extensions route to the code chunker (function/class units via
+    tree-sitter when available, regex fallback otherwise); everything else
+    is chunked as text. Markup like .md/.rst/.json stays text on purpose.
+    """
+    return "code" if path.suffix.lower() in _CODE_EXTENSIONS else "text"
+
 
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
@@ -105,7 +126,13 @@ def run(argv: list[str]) -> int:
         # to propagate so Ctrl-C still works.
         try:
             content = f.read_text(encoding="utf-8", errors="replace")
-            result = sess.ingest(content)
+            # #224: infer content_type from extension (code vs text) and record
+            # the source path so retrieval can attribute + match gold by file.
+            result = sess.ingest(
+                content,
+                content_type=_content_type_for(f),
+                metadata={"path": str(f), "source_id": str(f)},
+            )
             all_gene_ids.extend(result.gene_ids)
             total_bytes += result.bytes_written
             files_processed += 1
