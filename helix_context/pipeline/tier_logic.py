@@ -180,8 +180,15 @@ def apply_budget_tiers(
         and ratio_for_gate < ratio_gate_threshold
     ):
         try:
-            from ..telemetry import budget_tier_counter
+            from ..telemetry import abstain_counter, budget_tier_counter
             budget_tier_counter().add(1, attributes={"tier": "abstain"})
+            # Dedicated abstain series with trigger attribution (roadmap
+            # §3b-4): under RRF only the ratio gate runs; under additive
+            # both the absolute floor AND the ratio tripped.
+            abstain_counter().add(1, attributes={
+                "gate": "ratio_only" if skip_absolute_floors else "floor_and_ratio",
+                "fusion_mode": str(fusion_mode),
+            })
         except Exception:  # pragma: no cover
             pass
         result.abstain = True

@@ -839,6 +839,129 @@ def splice_ratio_histogram():
     return _instruments["splice_ratio"]
 
 
+def know_confidence_histogram():
+    """Histogram of KnowBlock.confidence (know outcomes only).
+
+    #209 phase 2: pairs with helix_know_decision_total — the confidence
+    distribution calibrates [know] emit_floor per corpus, and judged eval
+    runs map it to P(correct) (goal-gates spec 2026-07-01).
+    """
+    if "know_confidence" not in _instruments:
+        _instruments["know_confidence"] = meter.create_histogram(
+            "helix_know_confidence",
+            unit="1",
+            description="KnowBlock confidence distribution, know outcomes only.",
+        )
+    return _instruments["know_confidence"]
+
+
+def abstain_counter():
+    """Counter of ABSTAIN gate fires with trigger attribution.
+
+    #209 phase 2: gate is floor_and_ratio (additive: both the absolute
+    floor and the ratio tripped) or ratio_only (RRF: absolute floors
+    bypassed). Balancing partner of helix_splice_ratio — tuning that
+    raises compression but spikes abstains is a net loss.
+    """
+    if "abstain" not in _instruments:
+        _instruments["abstain"] = meter.create_counter(
+            "helix_abstain_total",
+            description="ABSTAIN gate fires, labelled by gate "
+                        "(floor_and_ratio | ratio_only) and fusion_mode.",
+        )
+    return _instruments["abstain"]
+
+
+def freshness_demotion_counter():
+    """Counter of demotion-relevant freshness verdicts.
+
+    #209 phase 2: status ∈ {stale, missing, unknown, superseded};
+    "fresh" is the common case and is not emitted (volume). The
+    stale-answer-suppression activity behind MissBlock stale/superseded.
+    """
+    if "freshness_demotion" not in _instruments:
+        _instruments["freshness_demotion"] = meter.create_counter(
+            "helix_freshness_demotion_total",
+            description="Freshness demotion-relevant events, labelled by "
+                        "status (stale | missing | unknown | superseded).",
+        )
+    return _instruments["freshness_demotion"]
+
+
+def session_elided_counter():
+    """Counter of documents replaced by an elision stub.
+
+    #209 phase 2: the event-count companion of
+    helix_session_tokens_saved_total (docs elided vs tokens saved).
+    """
+    if "session_elided" not in _instruments:
+        _instruments["session_elided"] = meter.create_counter(
+            "helix_session_elided_total",
+            description="Documents elided by the session working-set register.",
+        )
+    return _instruments["session_elided"]
+
+
+def pki_candidates_histogram():
+    """Histogram of documents hit by >=1 path_key_index pair per query.
+
+    #209 phase 2 / roadmap §3b-1: input to the R@1 AND-route program's
+    collision census.
+    """
+    if "pki_candidates" not in _instruments:
+        _instruments["pki_candidates"] = meter.create_histogram(
+            "helix_pki_candidates",
+            unit="genes",
+            description="Documents hit by >=1 path_key_index pair per query.",
+        )
+    return _instruments["pki_candidates"]
+
+
+def pki_pairs_skipped_counter():
+    """Counter of PKI pairs skipped by the noise cutoff.
+
+    #209 phase 2: unique (path_token, kv_key) pairs with cardinality >
+    PKI_NOISE_CUTOFF per query. High values = the index doing inventory,
+    not pruning (the #165 lesson).
+    """
+    if "pki_pairs_skipped" not in _instruments:
+        _instruments["pki_pairs_skipped"] = meter.create_counter(
+            "helix_pki_pairs_skipped_total",
+            description="path_key_index pairs skipped by the noise cutoff.",
+        )
+    return _instruments["pki_pairs_skipped"]
+
+
+def fingerprint_filtered_counter():
+    """Counter of /fingerprint candidates dropped, labelled by cause.
+
+    #209 phase 2 / roadmap §3b-10: cause ∈ {floor, cap} — calibrates
+    score_floor / max_results for agentic navigation (SNOW-2 arms C/E).
+    """
+    if "fingerprint_filtered" not in _instruments:
+        _instruments["fingerprint_filtered"] = meter.create_counter(
+            "helix_fingerprint_filtered_total",
+            description="/fingerprint candidates dropped, labelled by cause "
+                        "(floor | cap).",
+        )
+    return _instruments["fingerprint_filtered"]
+
+
+def ingest_vram_gauge():
+    """Gauge of CUDA memory sampled once per dense ingest batch.
+
+    #209 phase 2 / roadmap §3b-9: tracks the #176/#177 OOM class live
+    instead of post-mortem. No-op without torch/CUDA.
+    """
+    if "ingest_vram" not in _instruments:
+        _instruments["ingest_vram"] = meter.create_gauge(
+            "helix_ingest_vram_bytes",
+            unit="By",
+            description="torch.cuda.memory_allocated per dense ingest batch.",
+        )
+    return _instruments["ingest_vram"]
+
+
 def _emit_snapshot_values(
     *,
     chrom_rows: list[tuple[Any, Any]],

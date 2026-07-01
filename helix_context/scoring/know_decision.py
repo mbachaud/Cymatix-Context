@@ -500,18 +500,20 @@ def decide_know_or_miss(
     ``helix_know_decision_total`` increment labelled ``{outcome,
     reason}``: outcome is ``know`` | ``miss`` | ``abstain``; reason is
     ``"none"`` for know and the ``MissBlock.reason`` (a member of
-    ``schemas.MISS_REASONS``) otherwise. #209 phase 1. The counter is a
-    no-op when OTel is off; a telemetry failure never alters the
-    decision.
+    ``schemas.MISS_REASONS``) otherwise. #209 phase 1. Know outcomes
+    additionally record ``helix_know_confidence`` for [know] floor
+    calibration (#209 phase 2). Instruments are no-ops when OTel is
+    off; a telemetry failure never alters the decision.
     """
     block = _decide_know_or_miss_impl(window, **kwargs)
     try:
-        from ..telemetry import know_decision_counter
+        from ..telemetry import know_confidence_histogram, know_decision_counter
         if isinstance(block, MissBlock):
             outcome = "abstain" if block.reason == "abstain" else "miss"
             reason = str(block.reason)
         else:
             outcome, reason = "know", "none"
+            know_confidence_histogram().record(float(block.confidence))
         know_decision_counter().add(1, {"outcome": outcome, "reason": reason})
     except Exception:
         pass

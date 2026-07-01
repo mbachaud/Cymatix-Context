@@ -172,6 +172,16 @@ class BGEM3Codec:
                 ),
                 dtype=np.float32,
             )
+        # #209 phase 2 / roadmap §3b-9: sample VRAM once per ingest batch
+        # so dense-ingest memory pressure (the #176/#177 OOM class) is a
+        # Grafana series, not a post-mortem. No-op without torch/CUDA.
+        try:
+            from ..telemetry import ingest_vram_gauge
+            import torch  # type: ignore[import-not-found]
+            if torch.cuda.is_available():
+                ingest_vram_gauge().set(float(torch.cuda.memory_allocated()))
+        except Exception:  # pragma: no cover
+            pass
         # Matryoshka truncate + per-row L2 renormalise.
         mat = mat[:, : self.dim]
         norms = np.linalg.norm(mat, axis=1, keepdims=True)

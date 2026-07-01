@@ -96,21 +96,27 @@ def _row_to_features(
       lexical_dense_agree   bool/int
       coordinate_confidence float in [0, 1]
       label                 0/1 (1 = ground-truth retrieval-success)
+      freshness_min         float in [0, 1], optional (Stage 7, feature 4)
 
-    # STAGE-7-EXT: also reads ``freshness_min`` when present and
-    # appends it to the feature vector.
+    Stage 7: the feature vector is always N_FEATURES (5) long. A missing
+    ``freshness_min`` contributes 0.0 — byte-matching
+    ``compute_confidence``'s None branch (no contribution to z), so
+    training rows and inference agree on legacy data.
     """
     top_score = float(row.get("top_score", 0.0))
     score_gap = float(row.get("score_gap", 0.0))
     agree = bool(row.get("lexical_dense_agree", False))
     coord = float(row.get("coordinate_confidence", 0.0))
     label = int(bool(row.get("label", 0)))
+    fresh_raw = row.get("freshness_min")
+    fresh = 0.0 if fresh_raw is None else max(0.0, min(1.0, float(fresh_raw)))
 
     feat = [
         math.tanh(top_score / s_ref),
         math.tanh(score_gap / g_ref),
         1.0 if agree else 0.0,
         max(0.0, min(1.0, coord)),
+        fresh,
     ]
     return feat, label
 
@@ -302,7 +308,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if args.smoke:
         # Synthesize a separable-by-design fixture. The two clusters
         # are linearly separable so any reasonable fitter recovers
-        # positive coefficients on all four features.
+        # positive coefficients on all N_FEATURES (5) features —
+        # Stage 7 added freshness_min as feature index 4.
         rows: list[dict] = []
         for i in range(40):
             rows.append({
@@ -310,6 +317,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                 "score_gap": 0.8 + (i % 4) * 0.05,
                 "lexical_dense_agree": True,
                 "coordinate_confidence": 0.7 + (i % 3) * 0.05,
+                "freshness_min": 0.85 + (i % 3) * 0.05,
                 "label": 1,
             })
         for i in range(40):
@@ -318,6 +326,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                 "score_gap": 0.005,
                 "lexical_dense_agree": False,
                 "coordinate_confidence": 0.0,
+                "freshness_min": 0.05,
                 "label": 0,
             })
         log.info("smoke: %d synthetic rows", len(rows))

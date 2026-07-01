@@ -804,6 +804,21 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
         returned = len(truncated)
         filtered_by_floor = evaluated_total - above_floor_total
         truncated_by_cap = above_floor_total - returned
+        # #209 phase 2 / roadmap §3b-10: floor/cap outcomes as counters so
+        # score_floor / max_results tuning has a live distribution, not
+        # just the response_hint string.
+        try:
+            from ..telemetry import fingerprint_filtered_counter
+            if filtered_by_floor > 0:
+                fingerprint_filtered_counter().add(
+                    filtered_by_floor, {"cause": "floor"},
+                )
+            if truncated_by_cap > 0:
+                fingerprint_filtered_counter().add(
+                    truncated_by_cap, {"cause": "cap"},
+                )
+        except Exception:  # pragma: no cover
+            pass
 
         attribution_map: dict = {}
         if truncated:
