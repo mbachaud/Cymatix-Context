@@ -599,9 +599,16 @@ class HelixContextManager:
         # pre-slice eager warmup so first-query latency is paid at boot.
         self._sema_codec = None
         self._lazy_encoders = bool(getattr(config.hardware, "lazy_encoders", True))
+        # Issue #227: gate ingest-time SEMA on an explicit knob (default True).
+        # When false, the SEMA codec is never constructed, so MiniLM is not
+        # loaded (no per-worker OOM in lexical / multi-worker bench runs);
+        # gene.embedding stays unset and TCM uses its text-derived fallback.
+        self._sema_embed_on_ingest = bool(
+            getattr(config.ingestion, "sema_embed_on_ingest", True)
+        )
         try:
             from .backends.sema import LazySemaCodec, sema_available
-            if sema_available():
+            if self._sema_embed_on_ingest and sema_available():
                 self._sema_codec = LazySemaCodec()
                 if self._lazy_encoders:
                     log.info(
@@ -610,6 +617,8 @@ class HelixContextManager:
                 else:
                     self._sema_codec.warm()
                     log.info("ΣĒMA codec loaded — semantic retrieval enabled")
+            elif not self._sema_embed_on_ingest:
+                log.info("SEMA off — [ingestion] sema_embed_on_ingest=false (#227)")
             else:
                 log.info("sentence-transformers not installed — ΣĒMA disabled")
         except ImportError:

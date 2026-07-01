@@ -224,6 +224,14 @@ class IngestionConfig:
     # This is purely the WRITE path — retrieval still gates on
     # [retrieval] dense_embedding_enabled (default true).
     dense_embed_on_ingest: bool = True
+    # Issue #227: compute the 20D ΣĒMA embedding at ingest (feeds TCM / cymatics
+    # via gene.embedding). Default True preserves current behaviour. Set False to
+    # skip the ingest-time SEMA encode entirely — the MiniLM model is then never
+    # materialized (TCM falls back to its text-derived path, cymatics off), which
+    # is what a lexical-only config or a multi-worker bench wants. Without this,
+    # ingest always materialized the lazy SEMA codec (#220), loading MiniLM per
+    # worker and OOMing parallel bench runs even with dense/cymatics disabled.
+    sema_embed_on_ingest: bool = True
     # Issue #164 (size-aware SPLADE auto-toggle): SPLADE expansion's value
     # follows a corpus-regime curve -- the v2 EnterpriseRAG-Onyx storage
     # breakdown showed SPLADE at 21.1% of disk on the 850K-gene fixture
@@ -843,6 +851,9 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             entity_graph=i.get("entity_graph", cfg.ingestion.entity_graph),
             dense_embed_on_ingest=i.get(
                 "dense_embed_on_ingest", cfg.ingestion.dense_embed_on_ingest
+            ),
+            sema_embed_on_ingest=i.get(
+                "sema_embed_on_ingest", cfg.ingestion.sema_embed_on_ingest
             ),
             # Issue #164: size-aware SPLADE auto-toggle thresholds.
             splade_auto_enable_below_genes=int(i.get(
