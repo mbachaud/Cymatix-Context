@@ -17,8 +17,11 @@ Bio analogue (legacy term: codon):
 from __future__ import annotations
 
 import hashlib
+import logging
 from dataclasses import dataclass, field
 from typing import List, Dict, Any, Optional
+
+log = logging.getLogger(__name__)
 
 from ..accel import (
     RE_PARAGRAPH_SPLIT,
@@ -152,11 +155,45 @@ class CodonChunker:
                         metadata=metadata,
                     ))
                 if strands:
+                    # Phase-0 observability (2026-07-01): prove the AST path
+                    # fired. Bench assertion on code corpora:
+                    # chunk_ast > 0 and chunk_regex == 0.
+                    try:
+                        from ..telemetry import tier_fired_counter
+                        tier_fired_counter().add(1, {"tier": "chunk_ast"})
+                    except Exception:
+                        pass
+                    log.debug("chunking path: ast for %s", source_id)
                     return strands
-        except (ImportError, ValueError):
-            # ImportError: tree-sitter not installed
-            # ValueError: unsupported/undetected language
-            pass  # Fall through to regex path
+        except ImportError:
+            # tree-sitter not installed
+            _fallback_reason = "tree_sitter_unavailable"
+        except ValueError:
+            # unsupported/undetected language
+            _fallback_reason = "unsupported_language"
+        else:
+            # is_available() False, or AST produced zero strands
+            _fallback_reason = "ast_unavailable_or_empty"
+
+        # Phase-0 observability (2026-07-01): the regex fallback is no
+        # longer silent — PRD leak-guard 5 / council finding #10 minimum
+        # bar. Counter rides the existing helix_tier_fired_total series;
+        # the log line is greppable with OTel off.
+        try:
+            from ..telemetry import tier_fired_counter
+            tier_fired_counter().add(1, {"tier": "chunk_regex"})
+        except Exception:
+            pass
+        if _fallback_reason == "tree_sitter_unavailable":
+            log.warning(
+                "code chunking fell back to regex for %s: tree-sitter not "
+                "installed — `pip install helix-context[ast]` for "
+                "structure-aware chunks", source_id,
+            )
+        else:
+            log.info(
+                "chunking path: regex (%s) for %s", _fallback_reason, source_id,
+            )
 
         # Regex fallback — splits on top-level def/class keywords
         blocks = RE_CODE_BOUNDARY.split(code)
