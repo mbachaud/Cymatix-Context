@@ -183,11 +183,23 @@ def expand_coactivated(
             # (those many hits point at) survive and peripheral ones drop.
             cap = symbol_expansion_cap if symbol_expansion_cap > 0 else len(uniq)
             if len(uniq) > cap:
-                from ..scoring import symbol_pagerank as spr
-                cent = spr.symbol_centrality(
-                    uniq, [(a, b) for (a, b) in sref], query_symbol_nodes=cand_ids,
-                )
-                uniq = sorted(uniq, key=lambda d: cent.get(d, 0.0), reverse=True)[:cap]
+                # Ranking method for the top-cap selection. Default = personalized
+                # PageRank centrality. HELIX_EXPANSION_RANK=indegree selects the
+                # simpler raw in-degree (count of candidate referencers per def) —
+                # the council's ablation lever: if in-degree matches PageRank on
+                # the bench, the PageRank module isn't earning its place.
+                import os
+                if os.environ.get("HELIX_EXPANSION_RANK", "").strip().lower() == "indegree":
+                    from collections import Counter
+                    keep = set(uniq)
+                    indeg = Counter(b for (a, b) in sref if b in keep)
+                    uniq = sorted(uniq, key=lambda d: indeg.get(d, 0), reverse=True)[:cap]
+                else:
+                    from ..scoring import symbol_pagerank as spr
+                    cent = spr.symbol_centrality(
+                        uniq, [(a, b) for (a, b) in sref], query_symbol_nodes=cand_ids,
+                    )
+                    uniq = sorted(uniq, key=lambda d: cent.get(d, 0.0), reverse=True)[:cap]
             additional_ids.update(uniq)
     except Exception:
         log.debug("Symbol-graph (SYMBOL_REF) expansion failed", exc_info=True)

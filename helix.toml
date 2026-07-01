@@ -287,10 +287,11 @@ sema_embed_on_ingest = true
 
 # WS2 (symbol graph, code only): at ingest, index symbol definitions and emit
 # referencing-chunk -> defining-chunk SYMBOL_REF edges (intra-file, high
-# precision). Default true; false = WS1-only chunking, no symbol edges.
-# NOTE: requires the tree-sitter extra (`pip install helix-context[ast]`);
-# without it, code ingest silently falls back to regex chunking and this no-ops.
-symbol_graph = true
+# precision). DARK-SHIPPED default false after the 2026-06-28 held-out eval
+# (gain small + corpus-sensitive; see docs/benchmarks/code-track-regression-log.md).
+# Opt in with true. Requires the tree-sitter extra (`pip install helix-context[ast]`);
+# without it, code ingest falls back to regex chunking and this no-ops anyway.
+symbol_graph = false
 
 [context]
 # Cold-tier retrieval (C.2 of B->C, 2026-04-10)
