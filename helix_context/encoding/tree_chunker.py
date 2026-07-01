@@ -202,6 +202,174 @@ _BOUNDARY_NODES: Dict[str, Tuple[str, ...]] = {
 
 # ── AST-aware chunking ───────────────────────────────────────────
 
+def _symbol_name(node) -> Optional[str]:
+    """Best-effort symbol name for a definition node (its `name` child)."""
+    try:
+        named = node.child_by_field_name("name")
+        if named is not None:
+            return named.text.decode("utf-8", errors="replace")
+    except Exception:  # noqa: BLE001 — field-name API varies by grammar
+        pass
+    for c in getattr(node, "children", []):
+        if c.type in ("identifier", "name", "type_identifier",
+                      "field_identifier", "property_identifier", "constant"):
+            try:
+                return c.text.decode("utf-8", errors="replace")
+            except Exception:  # noqa: BLE001
+                return None
+    return None
+
+
+def chunk_code_ast_with_meta(
+    code: str,
+    max_chars: int = 4000,
+    language: Optional[str] = None,
+    source_id: Optional[str] = None,
+) -> List[Tuple[str, bool, Optional[dict]]]:
+    """
+    cAST recursive split-then-merge chunking, with per-chunk metadata.
+
+    Algorithm (cAST, arXiv 2506.15655 — split-then-merge over the AST):
+      - A node whose text fits within ``max_chars`` is emitted whole.
+      - An oversized node is split by **recursing into its children** — a huge
+        class becomes its methods, a huge function becomes its statements —
+        instead of being hard-cut mid-symbol. Interstitial text between
+        children (decorators, blank lines, comments) is preserved in order.
+      - Only a *childless* node that still exceeds ``max_chars`` (a giant string
+        or dict literal, a minified line) is hard-cut at a raw character
+        boundary, as a last resort.
+      - A final greedy pass re-merges adjacent small pieces up to ``max_chars``
+        so we never emit needless tiny fragments.
+
+    This replaces the previous top-level-only greedy merge, which hard-cut any
+    top-level node ≥ max_chars at a character boundary (slicing a class through
+    the middle of a method). Recursing first is the change that earns cAST's
+    +4.3 Recall@5 / +2.67 Pass@1.
+
+    Returns:
+        List of ``(chunk_content, is_fragment, meta)``. ``is_fragment`` is True
+        for a hard-cut last-resort piece. ``meta`` (when not None) carries
+        ``{"symbol", "type", "start_byte", "end_byte", "language"}`` for the
+        primary definition the chunk represents — consumed by the symbol graph
+        (WS2). Chunks of interstitial / non-definition text have ``meta=None``.
+
+    Raises:
+        ImportError: if tree-sitter isn't installed
+        ValueError: if language is unknown/unsupported
+    """
+    if language is None:
+        language = detect_language(source_id)
+    if language is None or language not in _BOUNDARY_NODES:
+        raise ValueError(
+            f"Unsupported or undetected language for tree-sitter chunking "
+            f"(source={source_id!r}, language={language!r})"
+        )
+
+    parser = _get_parser(language)
+    code_bytes = code.encode("utf-8")
+    tree = parser.parse(code_bytes)
+    root = tree.root_node
+    boundary_types = set(_BOUNDARY_NODES[language])
+
+    # A Span is a half-open byte range [start, end) plus is_fragment + meta.
+    # Spans tile the file contiguously (no bytes dropped), so a merged chunk is
+    # always an exact code_bytes[start:end] slice — i.e. a verbatim substring of
+    # the source. (The earlier draft reassembled decoded piece text and dropped
+    # whitespace-only gaps, which broke any consumer that line-maps a chunk by
+    # verbatim match — e.g. ContextBench's recover_lines — collapsing recall.)
+    Span = Tuple[int, int, bool, Optional[dict]]
+
+    def text_of(start: int, end: int) -> str:
+        return code_bytes[start:end].decode("utf-8", errors="replace")
+
+    def meta_for(node) -> Optional[dict]:
+        """Metadata for a definition node, else None. Unwraps decorators."""
+        if node.type not in boundary_types:
+            return None
+        target = node
+        if node.type == "decorated_definition":
+            for c in node.children:
+                if c.type in boundary_types and c.type != "decorated_definition":
+                    target = c
+                    break
+        return {
+            "symbol": _symbol_name(target),
+            "type": target.type,
+            "start_byte": node.start_byte,
+            "end_byte": node.end_byte,
+            "language": language,
+        }
+
+    def char_cut(start: int, end: int) -> List[Span]:
+        """Last-resort hard cut of an atomic oversized span at char boundaries."""
+        out: List[Span] = []
+        s = start
+        while end - s > max_chars:
+            out.append((s, s + max_chars, True, None))
+            s += max_chars
+        if end > s:
+            out.append((s, end, False, None))
+        return out
+
+    def split(node) -> List[Span]:
+        if node.end_byte - node.start_byte <= max_chars:
+            return [(node.start_byte, node.end_byte, False, meta_for(node))]
+        kids = list(node.children)
+        if not kids:
+            return char_cut(node.start_byte, node.end_byte)
+        spans: List[Span] = []
+        cursor = node.start_byte
+        for c in kids:
+            # Interstitial gap before this child (decorators, blanks, comments) —
+            # kept as a span so the tiling stays contiguous / byte-exact.
+            if c.start_byte > cursor:
+                if c.start_byte - cursor > max_chars:
+                    spans.extend(char_cut(cursor, c.start_byte))
+                else:
+                    spans.append((cursor, c.start_byte, False, None))
+            spans.extend(split(c))
+            cursor = c.end_byte
+        if node.end_byte > cursor:
+            spans.append((cursor, node.end_byte, False, None))
+        return spans
+
+    spans = split(root)
+    if not spans:
+        return [(code, False, None)]
+
+    # Greedy merge of adjacent spans up to max_chars. A merged chunk spans
+    # [group_start, group_end); its text is the exact byte slice (so any
+    # interstitial gap between merged units is preserved verbatim). It inherits
+    # the metadata of its first definition-bearing span and is a fragment if any
+    # constituent was hard-cut.
+    merged: List[Tuple[str, bool, Optional[dict]]] = []
+    gs: Optional[int] = None
+    ge = 0
+    gfrag = False
+    gmeta: Optional[dict] = None
+
+    def flush() -> None:
+        if gs is None:
+            return
+        body = text_of(gs, ge)            # exact byte slice => verbatim substring
+        if body.strip():                  # skip whitespace-only groups
+            merged.append((body, gfrag, gmeta))
+
+    for s, e, frag, meta in spans:
+        if gs is not None and (e - gs) > max_chars:
+            flush()
+            gs = None
+        if gs is None:
+            gs, ge, gfrag, gmeta = s, e, frag, meta
+        else:
+            ge = e
+            gfrag = gfrag or frag
+            if gmeta is None and meta is not None:
+                gmeta = meta
+    flush()
+    return merged
+
+
 def chunk_code_ast(
     code: str,
     max_chars: int = 4000,
@@ -209,103 +377,21 @@ def chunk_code_ast(
     source_id: Optional[str] = None,
 ) -> List[Tuple[str, bool]]:
     """
-    Split code along AST boundaries, respecting max_chars size limit.
+    Backward-compatible 2-tuple wrapper over the cAST recursive chunker.
 
-    Args:
-        code: Source code as string
-        max_chars: Target max size per chunk (soft limit — respects AST)
-        language: Tree-sitter language name (e.g., "python")
-        source_id: File path for language auto-detection (if language=None)
-
-    Returns:
-        List of (chunk_content, is_fragment) tuples. is_fragment=True
-        means the chunk had to be hard-cut because a single AST node
-        exceeded max_chars (e.g., a huge function).
+    Returns ``(chunk_content, is_fragment)`` pairs (is_fragment=True for a
+    hard-cut piece). Callers that need symbol/span metadata (the symbol graph,
+    WS2) should call :func:`chunk_code_ast_with_meta` instead.
 
     Raises:
         ImportError: if tree-sitter isn't installed
         ValueError: if language is unknown/unsupported
     """
-    # Language resolution
-    if language is None:
-        language = detect_language(source_id)
-    if language is None or language not in _BOUNDARY_NODES:
-        # Unknown language — cannot AST-chunk safely, caller should fall back
-        raise ValueError(
-            f"Unsupported or undetected language for tree-sitter chunking "
-            f"(source={source_id!r}, language={language!r})"
-        )
-
-    parser = _get_parser(language)
-    tree = parser.parse(code.encode("utf-8"))
-    root = tree.root_node
-
-    boundary_types = set(_BOUNDARY_NODES[language])
-
-    # Collect top-level boundary nodes (functions, classes, etc.)
-    # Along with interstitial content (imports, module-level statements).
-    blocks: List[Tuple[str, bool]] = []
-    code_bytes = code.encode("utf-8")
-
-    def node_text(node) -> str:
-        """Extract UTF-8 text for an AST node."""
-        return code_bytes[node.start_byte:node.end_byte].decode("utf-8", errors="replace")
-
-    # Walk direct children of the root, collecting boundary blocks
-    # in source order. Non-boundary siblings (imports, module-level code)
-    # get grouped into a "prelude" or "interstitial" block.
-    prelude_end = 0
-    for child in root.children:
-        if child.type in boundary_types:
-            # Flush any prelude content before this boundary
-            if child.start_byte > prelude_end:
-                prelude_text = code_bytes[prelude_end:child.start_byte].decode(
-                    "utf-8", errors="replace"
-                )
-                if prelude_text.strip():
-                    blocks.append((prelude_text, False))
-            # Add the boundary block itself
-            block_text = node_text(child)
-            blocks.append((block_text, False))
-            prelude_end = child.end_byte
-        # Non-boundary children accumulate into the next prelude flush
-
-    # Trailing content after the last boundary
-    if prelude_end < len(code_bytes):
-        tail = code_bytes[prelude_end:].decode("utf-8", errors="replace")
-        if tail.strip():
-            blocks.append((tail, False))
-
-    # If no boundaries found at all, return the whole file as one block
-    if not blocks:
-        blocks = [(code, False)]
-
-    # Merge small adjacent blocks to hit max_chars, hard-cut huge ones
-    merged: List[Tuple[str, bool]] = []
-    current = ""
-
-    for block, _ in blocks:
-        if len(current) + len(block) < max_chars:
-            current += block
-        else:
-            if current:
-                merged.append((current.strip(), False))
-                current = ""
-
-            if len(block) >= max_chars:
-                # Block itself is too big — hard cut at max_chars
-                remaining = block
-                while len(remaining) >= max_chars:
-                    merged.append((remaining[:max_chars], True))
-                    remaining = remaining[max_chars:]
-                current = remaining
-            else:
-                current = block
-
-    if current.strip():
-        merged.append((current.strip(), False))
-
-    return merged
+    return [
+        (text, frag)
+        for (text, frag, _meta)
+        in chunk_code_ast_with_meta(code, max_chars, language, source_id)
+    ]
 
 
 def is_available() -> bool:
