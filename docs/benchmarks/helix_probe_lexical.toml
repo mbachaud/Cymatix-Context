@@ -1,0 +1,71 @@
+# helix_probe_lexical.toml
+# -------------------------------------------------------------------------
+# Lexical-probe profile for RepoBench-R (and other retrieval benchmarks).
+# All neural/GPU paths are OFF. Pipeline is pure FTS5 + tag lookup +
+# synonym expansion + BM25 shortlist. LLM-free, GPU-free.
+#
+# This file is the default config consumed by:
+#   benchmarks/repobench_r_helix.py
+#   benchmarks/repobench_r_helix_global.py
+# when no --helix-config / HELIX_CONFIG is supplied.
+# -------------------------------------------------------------------------
+
+[ribosome]
+enabled = false
+backend = "none"
+query_expansion_enabled = false
+query_decomposition_enabled = false
+
+[hardware]
+device = "cpu"
+
+[budget]
+expression_tokens = 7000
+max_genes_per_turn = 12
+decoder_mode = "none"
+legibility_enabled = false
+session_delivery_enabled = false
+
+[session]
+synthetic_session_enabled = false
+
+[genome]
+path = "genomes/probe/genome.db"
+compact_interval = 0
+
+[server]
+host = "127.0.0.1"
+port = 11437
+upstream = "http://localhost:11434"
+
+[ingestion]
+backend = "cpu"
+splade_enabled = false
+dense_embed_on_ingest = false
+rerank_enabled = false
+entity_graph = false
+
+[retrieval]
+dense_embedding_enabled = false
+sr_enabled = false
+ray_trace_theta = false
+seeded_edges_enabled = false
+filename_anchor_enabled = true
+filename_anchor_weight = 4.0
+bm25_shortlist_enabled = true
+bm25_shortlist_size = 50
+bm25_prefilter_enabled = false
+entity_graph_retrieval_enabled = false
+fusion_mode = "additive"
+
+[context]
+cold_tier_enabled = false
+
+[cymatics]
+enabled = false
+
+[know]
+confidence_floor = 0.0
+
+[abstain]
+enabled = false
