@@ -1,0 +1,248 @@
+{
+  "title": "Helix — Know/Miss (Hallucination Visibility)",
+  "uid": "helix-know-miss",
+  "description": "G1 visibility gate (docs/specs/2026-07-01-goal-gates-hallucination-visibility.md). Miss/abstain stream = the observable slice of the 10% hallucination budget; scored benches calibrate confidence→P(correct).",
+  "editable": true,
+  "schemaVersion": 39,
+  "time": {"from": "now-3h", "to": "now"},
+  "refresh": "10s",
+  "tags": ["helix", "know-miss", "hallucination", "telemetry"],
+  "panels": [
+    {
+      "type": "row",
+      "title": "Know / Miss — the visible budget",
+      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 0}
+    },
+    {
+      "type": "stat",
+      "title": "Non-know share of turns (miss + abstain, 15m)",
+      "description": "G2 budget: sustained > 10% means the budget is being spent on visible misses/abstains — retrieval, not honesty, is the bottleneck. Abstains are counted here as coverage loss, not hallucination.",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 6, "x": 0, "y": 1},
+      "targets": [
+        {
+          "expr": "sum(rate(helix_know_decision_total{outcome=~\"miss|abstain\"}[15m])) / sum(rate(helix_know_decision_total[15m]))",
+          "legendFormat": "non-know share",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"color": "green", "value": null},
+              {"color": "yellow", "value": 0.05},
+              {"color": "red", "value": 0.1}
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Miss rate by reason",
+      "description": "abstain | denatured | no_promoter_match | superseded | stale | cold | sparse — each reason has a different fix (see MissBlock escalate_to).",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 9, "x": 6, "y": 1},
+      "targets": [
+        {
+          "expr": "sum by (reason) (rate(helix_know_decision_total{outcome=~\"miss|abstain\"}[5m]))",
+          "legendFormat": "{{reason}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Know confidence — p10/p50/p90",
+      "description": "Know outcomes only. Mass hovering just above emit_floor (default 0.55) = borderline knows; recalibrate via scripts/calibrate_know_confidence.py.",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 9, "x": 15, "y": 1},
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.10, sum by (le) (rate(helix_know_confidence_bucket[15m])))",
+          "legendFormat": "p10",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.50, sum by (le) (rate(helix_know_confidence_bucket[15m])))",
+          "legendFormat": "p50",
+          "refId": "B"
+        },
+        {
+          "expr": "histogram_quantile(0.90, sum by (le) (rate(helix_know_confidence_bucket[15m])))",
+          "legendFormat": "p90",
+          "refId": "C"
+        }
+      ],
+      "fieldConfig": {"defaults": {"unit": "none", "min": 0, "max": 1}}
+    },
+    {
+      "type": "row",
+      "title": "Honesty mechanisms",
+      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 9}
+    },
+    {
+      "type": "timeseries",
+      "title": "Abstain fires by gate",
+      "description": "floor_and_ratio (additive) vs ratio_only (RRF). Abstains are not hallucinations — they buy the budget.",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 8, "x": 0, "y": 10},
+      "targets": [
+        {
+          "expr": "sum by (gate, fusion_mode) (rate(helix_abstain_total[15m]))",
+          "legendFormat": "{{gate}} ({{fusion_mode}})",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Freshness demotions by status",
+      "description": "stale | missing | unknown | superseded — stale-answer suppression activity (Stage 7 gate). fresh is not emitted.",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 8, "x": 8, "y": 10},
+      "targets": [
+        {
+          "expr": "sum by (status) (rate(helix_freshness_demotion_total[15m]))",
+          "legendFormat": "{{status}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Balancing pair: splice ratio p50 vs abstain rate",
+      "description": "Roadmap §3c-5: tuning that raises compression but spikes abstains is a net loss. Watch these together while sweeping splice_aggressiveness.",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 8, "x": 16, "y": 10},
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum by (le, caller_model_class) (rate(helix_splice_ratio_bucket[15m])))",
+          "legendFormat": "splice ratio p50 {{caller_model_class}}",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(rate(helix_abstain_total[15m]))",
+          "legendFormat": "abstain rate",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "type": "row",
+      "title": "Retrieval calibration",
+      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 18}
+    },
+    {
+      "type": "timeseries",
+      "title": "Dense cosine — p10/p50/p90 by arm",
+      "description": "Calibration data for dense_additive_weight / dense_additive_min_cosine (hot floor 0.15) and cold_tier_min_cosine. Roadmap §3c-1.",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 8, "x": 0, "y": 19},
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.10, sum by (le, arm) (rate(helix_dense_cosine_bucket[15m])))",
+          "legendFormat": "p10 {{arm}}",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.50, sum by (le, arm) (rate(helix_dense_cosine_bucket[15m])))",
+          "legendFormat": "p50 {{arm}}",
+          "refId": "B"
+        },
+        {
+          "expr": "histogram_quantile(0.90, sum by (le, arm) (rate(helix_dense_cosine_bucket[15m])))",
+          "legendFormat": "p90 {{arm}}",
+          "refId": "C"
+        }
+      ],
+      "fieldConfig": {"defaults": {"unit": "none", "min": 0, "max": 1}}
+    },
+    {
+      "type": "timeseries",
+      "title": "Shard fan-out + discrimination",
+      "description": "#165 router degeneracy, continuously monitored. Discrimination = routed/known healthy shards in [0,1]; 1.0 = router consulted everything (zero discrimination).",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 8, "x": 8, "y": 19},
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum by (le, path) (rate(helix_shard_fanout_bucket[15m])))",
+          "legendFormat": "fanout p50 {{path}}",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum by (le, path) (rate(helix_shard_fanout_bucket[15m])))",
+          "legendFormat": "fanout p95 {{path}}",
+          "refId": "B"
+        },
+        {
+          "expr": "histogram_quantile(0.50, sum by (le) (rate(helix_shard_candidates_bucket[15m])))",
+          "legendFormat": "candidates p50",
+          "refId": "C"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Session elision savings",
+      "description": "Prices the ~40% multi-turn token-saving claim (CLAUDE.md). Decides whether session_delivery_enabled stays default-on.",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 8, "x": 16, "y": 19},
+      "targets": [
+        {
+          "expr": "sum(rate(helix_session_elided_total[15m]))",
+          "legendFormat": "docs elided /s",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(rate(helix_session_tokens_saved_total[15m]))",
+          "legendFormat": "tokens saved /s",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "type": "row",
+      "title": "Latency — annotate rig load before comparing days",
+      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 27}
+    },
+    {
+      "type": "timeseries",
+      "title": "/context latency p50/p95",
+      "description": "Compare within a day, not across days, unless the rig-load annotation matches (see code-track-regression-log.md method notes, e.g. 2026-07-01 multi-tasking baseline). Do not decide latency-sensitive knobs on loaded-rig numbers.",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 28},
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum by (le) (rate(helix_context_latency_seconds_bucket[15m])))",
+          "legendFormat": "p50",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(helix_context_latency_seconds_bucket[15m])))",
+          "legendFormat": "p95",
+          "refId": "B"
+        }
+      ],
+      "fieldConfig": {"defaults": {"unit": "s"}}
+    },
+    {
+      "type": "timeseries",
+      "title": "Pipeline stage p95 by stage",
+      "description": "helix_pipeline_stage_seconds — first panel anywhere for this instrument (roadmap §3a flagged it panel-less). Splice/assemble are the tuning targets.",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 28},
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum by (le, stage) (rate(helix_pipeline_stage_seconds_bucket[15m])))",
+          "legendFormat": "p95 {{stage}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {"defaults": {"unit": "s"}}
+    }
+  ]
+}

@@ -2662,6 +2662,13 @@ class HelixContextManager:
                 )
                 parts.append(stub)
                 _delivery_log_map[g.gene_id] = None  # no re-log on elision
+                # #209 phase 2: event-count companion of the tokens-saved
+                # counter below (docs elided vs tokens saved).
+                try:
+                    from .telemetry import session_elided_counter
+                    session_elided_counter().add(1)
+                except Exception:
+                    pass
                 # #209 phase 1: estimated tokens saved by eliding an
                 # already-delivered document — full spliced text minus the
                 # stub actually shipped (~4 chars/token; conservative, a

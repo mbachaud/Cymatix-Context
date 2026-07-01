@@ -107,6 +107,17 @@ Two surfaces:
 | `helix_know_decision_total` | counter | `outcome` ∈ {know, miss, abstain}, `reason` | `decide_know_or_miss` (#209) |
 | `helix_session_tokens_saved_total` | counter | — | session working-set elision savings (#209) |
 | `helix_splice_ratio` | histogram | `caller_model_class` | assembled-window compression ratio (#209) |
+| `helix_know_confidence` | histogram | — | KnowBlock confidence, know outcomes only (#209 ph2) |
+| `helix_abstain_total` | counter | `gate` ∈ {floor_and_ratio, ratio_only}, `fusion_mode` | ABSTAIN gate in `pipeline/tier_logic.py` (#209 ph2) |
+| `helix_freshness_demotion_total` | counter | `status` ∈ {stale, missing, unknown, superseded} | freshness revalidation + supersession (#209 ph2) |
+| `helix_session_elided_total` | counter | — | elision-stub event count (#209 ph2) |
+| `helix_pki_candidates` | histogram | — | docs hit by ≥1 path_key_index pair per query (#209 ph2) |
+| `helix_pki_pairs_skipped_total` | counter | — | PKI pairs over the noise cutoff (#209 ph2) |
+| `helix_fingerprint_filtered_total` | counter | `cause` ∈ {floor, cap} | /fingerprint floor/cap outcomes (#209 ph2) |
+| `helix_ingest_vram_bytes` | gauge | — | CUDA memory per dense ingest batch (#209 ph2) |
+
+The #209 ph2 rows are the hallucination-visibility completion set — gates
+and alert queries in `docs/specs/2026-07-01-goal-gates-hallucination-visibility.md`.
 
 `/stats`-sourced gauges are refreshed each time `/stats` is hit.
 Prometheus scrapes every 15s — if nothing polls `/stats`, the gauges go
@@ -158,7 +169,7 @@ Query text is hashed by default — spans carry `query=<first-50-chars>[hash:<12
 
 ## Dashboards
 
-Five dashboards under `deploy/otel/grafana/dashboards/`. All use
+Six dashboards under `deploy/otel/grafana/dashboards/`. All use
 engineering vocabulary in panel titles; bio-domain legacy terms are
 referenced inline in panel descriptions. See `docs/ROSETTA.md` for the
 full bidirectional vocabulary table.
@@ -192,6 +203,15 @@ full bidirectional vocabulary table.
   signals (alignment, override, escalation) with party-id breakdown.
   Uses technical-term vocabulary (ellipticity, denatured) that is on
   ROSETTA's "STAYS" list.
+- **Helix — Know/Miss (Hallucination Visibility)** (`helix-know-miss.json`,
+  #209 phase 2) — the G1 visibility-gate view: non-know share vs the 10%
+  budget, miss rate by reason, know-confidence percentiles vs emit_floor,
+  abstain fires by gate, freshness demotions, splice-ratio/abstain
+  balancing pair, dense-cosine by arm, shard fan-out + discrimination,
+  session-elision savings, latency row with load-annotation discipline.
+  Overlaps helix-internals on the phase-1 series by design: internals is
+  the tuning view, this is the goal-gates view. Companion spec:
+  `docs/specs/2026-07-01-goal-gates-hallucination-visibility.md`.
 
 The native install (`tools/native-otel/`) auto-syncs dashboards from
 `deploy/otel/grafana/dashboards/` via

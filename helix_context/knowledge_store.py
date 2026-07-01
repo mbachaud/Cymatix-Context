@@ -1891,6 +1891,23 @@ class KnowledgeStore:
                         gene_scores[gid] = gene_scores.get(gid, 0) + capped
                         tier_contrib.setdefault(gid, {})["pki"] = capped
                         _pki_ranked.append((gid, capped))
+                # #209 phase 2 / roadmap §3b-1: PKI tier visibility —
+                # candidate count per query + noise-cutoff skips. Feeds
+                # the R@1 collision census (§4-E1). No-op when OTel off.
+                try:
+                    from .telemetry import (
+                        pki_candidates_histogram,
+                        pki_pairs_skipped_counter,
+                    )
+                    pki_candidates_histogram().record(len(gene_pairs))
+                    _n_skipped = sum(
+                        1 for _card in pair_count.values()
+                        if _card > PKI_NOISE_CUTOFF
+                    )
+                    if _n_skipped:
+                        pki_pairs_skipped_counter().add(_n_skipped)
+                except Exception:  # pragma: no cover
+                    pass
                 # Stage 3: feed PKI ranks into the Fuser regardless of
                 # fusion_mode — the Fuser is queried only when "rrf",
                 # so additive mode pays a tiny add_tier cost (~1µs per

@@ -197,6 +197,14 @@ def revalidate_and_mark(
                 gene.gene_id,
                 exc_info=True,
             )
+    if status != "fresh":
+        # Roadmap §3b-7: demotion-relevant freshness verdicts, visible in
+        # Grafana. "fresh" is the common case and is not emitted (volume).
+        try:
+            from ..telemetry import freshness_demotion_counter
+            freshness_demotion_counter().add(1, {"status": str(status)})
+        except Exception:  # pragma: no cover
+            pass
     return status
 
 
@@ -251,6 +259,11 @@ def check_superseded(genome, gene: "Gene") -> Optional[str]:
 
     if not successor_source_id:
         return None
+    try:
+        from ..telemetry import freshness_demotion_counter
+        freshness_demotion_counter().add(1, {"status": "superseded"})
+    except Exception:  # pragma: no cover
+        pass
     return str(successor_source_id)
 
 
