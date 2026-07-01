@@ -124,3 +124,15 @@ tools/native-otel/configs/*.yml
 # Deep-review working notes — local analysis artifacts (Tier-0 plan,
 # deep-review notes, PR-5 handoff). Not part of the tracked codebase.
 docs/reviews/2026-05-16-deep-review/
+
+# Local data / tool caches (2026-07-01 housekeeping)
+.serena/
+.tmp.driveupload/
+.worktrees/
+runs/
+s2b_*/
+benchmarks/aider_polyglot/
+benchmarks/contextbench/
+*.db-wal
+*.db-shm
+google_doc.*

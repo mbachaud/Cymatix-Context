@@ -144,6 +144,13 @@ ADAPTER_ONLY_DIFFERENCES_WHITELIST = frozenset({
     # upsert_doc is a no-op, so it never encodes.
     "_encode_dense_v2_blob",
 
+    # #182 cross-shard global-IDF lexical re-score. Per-shard helpers the
+    # ShardRouter calls DIRECTLY on each Genome (not through the adapter):
+    # the router aggregates global N/df across shards, then asks each shard
+    # to recompute its candidates' BM25 lexical sub-score with the injected
+    # global IDF. No adapter fan-out — they operate on one .db's FTS index.
+    "rescore_lexical_global_idf", "_ensure_fts_vocab",
+
     # Dense recall — per-shard, no cross-shard fan-out in V1.
     "query_docs_dense_recall", "query_genes_dense_recall",
 
