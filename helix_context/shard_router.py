@@ -320,6 +320,103 @@ def _compute_shard_idf_correction(
     return multipliers
 
 
+def _global_idf_enabled() -> bool:
+    """True iff HELIX_SHARD_GLOBAL_IDF is set to a truthy value.
+
+    Truthy (case-insensitive): '1', 'true', 'yes', 'on'. Anything else
+    (including unset) is False. Gates the per-doc global-IDF lexical
+    re-score in :meth:`ShardRouter.query_genes` (#182). OFF by default —
+    when off, the router uses the legacy per-shard scalar ``m_shard``
+    correction and behaviour is byte-identical to the pre-#182 build.
+    """
+    v = os.environ.get("HELIX_SHARD_GLOBAL_IDF")
+    if v is None:
+        return False
+    return v.strip().lower() in ("1", "true", "yes", "on")
+
+
+def _compute_global_idf_map(
+    query_terms: List[str],
+    shard_n: Dict[str, int],
+    shard_dfs: Dict[str, Dict[str, int]],
+) -> Dict[str, float]:
+    """Per-term TRUE GLOBAL IDF from aggregated cross-shard N and df.
+
+    Uses the RAW (unsmoothed) Robertson-Sparck-Jones IDF that SQLite
+    FTS5's ``bm25()`` uses internally — NOT the ``+1.0``-smoothed variant
+    that :func:`_compute_shard_idf_correction` uses for its scalar
+    multiplier::
+
+        global_idf(t) = ln((ΣN - Σdf(t) + 0.5) / (Σdf(t) + 0.5))
+
+    This is deliberately different from the scalar path. The scalar
+    ``m_shard`` only ever forms a RATIO of two IDFs, so the constant
+    ``+1.0`` smoothing cancels and keeps the multiplier strictly positive
+    and well-conditioned. The per-doc lexical re-score, by contrast, must
+    reproduce ``bm25()``'s ABSOLUTE scale so its output can be SPLICED
+    (``raw − old_local_lex + new_global_lex``) against the genome's
+    ``-rank`` lexical sub-score. The genome's ``-rank`` is exactly the raw
+    (unsmoothed) FTS5 BM25 sum; using the smoothed always-positive IDF here
+    would put the global lexical term on a different (always-larger,
+    never-negative) scale, and the splice would corrupt ranking — the
+    HELIX_SHARD_GLOBAL_IDF recall regression (0.347 → 0.168) traced to
+    exactly this scale mismatch (#182).
+
+    Returns ``{}`` when there's no corpus.
+    """
+    if not query_terms or not shard_n:
+        return {}
+    total_n = sum(shard_n.values())
+    if total_n <= 0:
+        return {}
+    global_df: Dict[str, int] = {t: 0 for t in query_terms}
+    for _shard_name, dfs in shard_dfs.items():
+        for t, df in dfs.items():
+            if t in global_df:
+                global_df[t] += int(df)
+    out: Dict[str, float] = {}
+    for t in query_terms:
+        df_g = global_df[t]
+        # RAW FTS5 IDF, with FTS5's exact negative-IDF clamp. SQLite's
+        # fts5 bm25() computes idf = ln((N - n + 0.5) / (n + 0.5)) and then
+        # forces ``if (idf <= 0.0) idf = 1e-6;`` — a term in > half the
+        # corpus does NOT subtract from the score, it contributes ~nothing.
+        # We reproduce that clamp here so the injected global IDF is
+        # bit-exact with bm25(). Without the clamp a globally-ubiquitous
+        # query term would inject a large NEGATIVE lexical sub-score that
+        # the engine never produced, re-corrupting the splice in the
+        # opposite direction from the original #182 bug.
+        idf = math.log((total_n - df_g + 0.5) / (df_g + 0.5))
+        out[t] = idf if idf > 0.0 else FTS5_IDF_FLOOR
+    return out
+
+
+# Lexical score cap — mirrors KnowledgeStore.query_docs Tier-3, which
+# adds ``min(-rank, 6.0)`` into the fused score. The global-IDF rescore
+# replaces that same capped lexical sub-score per doc.
+FTS5_LEXICAL_CAP = 6.0
+
+# SQLite FTS5's bm25() clamps a non-positive IDF to this tiny floor
+# (``if (idf <= 0.0) idf = 1e-6;`` in fts5_aux.c). Reproduced in the
+# global-IDF rescore so a globally-ubiquitous term contributes ~0 (never a
+# large negative) — matching the engine exactly. See _compute_global_idf_map.
+FTS5_IDF_FLOOR = 1e-6
+
+
+def _score_debug_enabled() -> bool:
+    """True iff HELIX_SHARD_SCORE_DEBUG is set to a truthy value.
+
+    Truthy (case-insensitive): '1', 'true', 'yes', 'on'. Anything else
+    (including unset) is False. Gates the score-path instrumentation in
+    :meth:`ShardRouter.query_genes` (#181) so the hot path is untouched
+    when off.
+    """
+    v = os.environ.get("HELIX_SHARD_SCORE_DEBUG")
+    if v is None:
+        return False
+    return v.strip().lower() in ("1", "true", "yes", "on")
+
+
 class ShardRouter:
     """Routes queries across category shard .db files.
 
@@ -367,6 +464,16 @@ class ShardRouter:
         # callers can use either interchangeably.
         self.last_query_scores: Dict[str, float] = {}
         self.last_tier_contributions: Dict[str, Dict[str, float]] = {}
+        # Cross-shard score-path introspection (issue #181 -- gold score
+        # depression). Populated ONLY when HELIX_SHARD_SCORE_DEBUG is
+        # truthy; stays {} otherwise so the hot path has zero overhead
+        # and behaviour is byte-identical. See query_genes.
+        #   last_score_breakdown: gene_id -> {shard, raw, m_shard,
+        #       doc_type_boost, corrected, rrf} for EVERY merged
+        #       candidate (not just the returned top-`limit`).
+        #   last_shard_multipliers: shard_name -> m_shard.
+        self.last_score_breakdown: Dict[str, dict] = {}
+        self.last_shard_multipliers: Dict[str, float] = {}
         # Guards last_query_scores / last_tier_contributions writes from
         # racing concurrent /context calls. KnowledgeStore has the same
         # lock on the same attributes (see knowledge_store.py:479) — the
@@ -722,14 +829,81 @@ class ShardRouter:
                 idf_terms, shard_n, shard_dfs,
             )
 
+        # ── Per-doc GLOBAL-IDF lexical re-score (#182, flag-gated) ──
+        # The scalar ``m_shard`` rescales every doc in a shard equally, so
+        # it cannot change the WITHIN-shard order of two docs — that order
+        # is set by each shard's corpus-LOCAL BM25 IDF. A gold whose
+        # distinguishing term is globally-rare-but-locally-common is buried
+        # under a same-shard incumbent, and no scalar can rescue it.
+        #
+        # When HELIX_SHARD_GLOBAL_IDF is truthy AND ≥2 shards participated,
+        # we recompute each candidate's BM25 LEXICAL sub-score per-doc with
+        # TRUE GLOBAL IDF (from the aggregated global N / df already probed
+        # for the scalar path) and SPLICE it back into that doc's fused
+        # raw score, replacing only the lexical portion. The dense/tier
+        # parts of raw are left untouched. When the flag is off, this whole
+        # block is skipped and the legacy scalar path runs unchanged
+        # (behaviour-preserving).
+        use_global_idf = (
+            _global_idf_enabled()
+            and len(shard_ranked) > 1
+            and bool(idf_terms)
+        )
+        # {shard_name: {gene_id: new_global_lexical_score}} — populated only
+        # under the flag. Empty dict ⇒ scalar path (flag off / 1 shard).
+        global_lex: Dict[str, Dict[str, float]] = {}
+        if use_global_idf:
+            global_idf_map = _compute_global_idf_map(
+                idf_terms, shard_n, shard_dfs,
+            )
+            if global_idf_map:
+                for shard_name, pairs in shard_ranked.items():
+                    cand_ids = [gid for gid, _raw in pairs]
+                    if not cand_ids:
+                        continue
+                    try:
+                        shard = self._shards.get(shard_name)
+                        if shard is None:
+                            continue
+                        global_lex[shard_name] = shard.rescore_lexical_global_idf(
+                            cand_ids, idf_terms, global_idf_map,
+                        )
+                    except Exception:
+                        log.warning(
+                            "shard %s global-idf rescore failed; "
+                            "falling back to scalar for this shard",
+                            shard_name, exc_info=True,
+                        )
+                        global_lex[shard_name] = {}
+            else:
+                # No global signal — nothing to rescore; fall back to scalar.
+                use_global_idf = False
+
         # Apply correction. A doc that appears in multiple shards (rare —
         # would require content-hash collision across shards) keeps its
         # highest corrected score so cross-shard duplication can't penalize.
+        #
+        # Under the global-IDF flag, ``m_shard`` is REPLACED by the per-doc
+        # lexical splice: corrected = (raw − old_local_lexical) +
+        # min(new_global_lexical, cap). When the flag is off (or a shard's
+        # rescore produced no entry for a doc), we use the legacy scalar
+        # ``raw * m_shard`` for that doc.
         corrected: Dict[str, float] = {}
         for shard_name, pairs in shard_ranked.items():
             m = float(multipliers.get(shard_name, 1.0))
+            shard_lex = global_lex.get(shard_name, {}) if use_global_idf else {}
             for gid, raw in pairs:
-                adj = raw * m
+                if use_global_idf and gid in shard_lex:
+                    # Per-doc global-IDF splice. The old local lexical
+                    # sub-score is the per-doc ``fts5`` tier contribution
+                    # the genome recorded (already capped at the cap), and
+                    # the new lexical sub-score is the global-IDF BM25
+                    # value capped to the same ceiling.
+                    old_lex = float(merged_tier.get(gid, {}).get("fts5", 0.0))
+                    new_lex = min(float(shard_lex[gid]), FTS5_LEXICAL_CAP)
+                    adj = raw - old_lex + new_lex
+                else:
+                    adj = raw * m
                 if gid not in corrected or adj > corrected[gid]:
                     corrected[gid] = adj
 
@@ -753,6 +927,63 @@ class ShardRouter:
                     corrected[gid] *= boost
 
         rrf_all = fuser.all_scores()
+
+        # -- Score-path introspection (issue #181) ------------------
+        # Behaviour-preserving: ONLY runs when HELIX_SHARD_SCORE_DEBUG is
+        # truthy. Populates last_score_breakdown for EVERY merged
+        # candidate (including golds that fall below the `limit` cut, so
+        # the diag harness can see the depression) plus
+        # last_shard_multipliers. Reads only -- never touches `corrected`,
+        # `ranked_ids`, or the return value.
+        if _score_debug_enabled():
+            # Re-derive the shard/raw/m that produced each gid's WINNING
+            # adjusted (pre-boost) score -- mirrors the max-over-shards
+            # rule in the corrected-building loop above so the attributed
+            # (shard, raw, m_shard) matches the value that drove the sort.
+            best_pre_boost: Dict[str, Tuple[str, float, float]] = {}
+            for shard_name, pairs in shard_ranked.items():
+                m = float(multipliers.get(shard_name, 1.0))
+                for gid, raw in pairs:
+                    adj = raw * m
+                    prev = best_pre_boost.get(gid)
+                    prev_adj = (prev[1] * prev[2]) if prev is not None else None
+                    if prev_adj is None or adj > prev_adj:
+                        best_pre_boost[gid] = (shard_name, float(raw), m)
+            breakdown: Dict[str, dict] = {}
+            for gid in corrected:
+                shard_name, raw, m = best_pre_boost.get(gid, ("", 0.0, 1.0))
+                doc = merged.get(gid)
+                boost = (
+                    _doc_type_boost_for(getattr(doc, "source_id", None))
+                    if (doc is not None and len(shard_ranked) > 1)
+                    else 1.0
+                )
+                row = {
+                    "shard": shard_name,
+                    "raw": raw,
+                    "m_shard": m,
+                    "doc_type_boost": boost,
+                    "corrected": float(corrected.get(gid, 0.0)),
+                    "rrf": rrf_all.get(gid),
+                }
+                # #182: ONLY when the global-IDF flag is active do we add
+                # the ``global_lex`` field (the per-doc global-IDF BM25
+                # lexical sub-score that REPLACED ``raw * m_shard``). On
+                # the scalar (flag-off) path the breakdown shape stays
+                # byte-identical to the pre-#182 build, so the
+                # ``corrected == raw * m_shard * doc_type_boost`` identity
+                # the #181 diag harness asserts still holds exactly.
+                if use_global_idf:
+                    gl = global_lex.get(shard_name, {})
+                    row["global_lex"] = (
+                        min(float(gl[gid]), FTS5_LEXICAL_CAP)
+                        if gid in gl else None
+                    )
+                breakdown[gid] = row
+            self.last_score_breakdown = breakdown
+            self.last_shard_multipliers = {
+                sn: float(multipliers.get(sn, 1.0)) for sn in shard_ranked
+            }
 
         # Primary sort key: corrected score desc.
         # Secondary tiebreaker: RRF score desc (stable for ties in

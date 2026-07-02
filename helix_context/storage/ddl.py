@@ -331,6 +331,25 @@ def _create_fts5(cur: sqlite3.Cursor, conn: sqlite3.Connection) -> bool:
         )
         """)
 
+        # fts5vocab "instance" shadow over genes_fts — one row per
+        # (term, doc, col, offset) occurrence. Used by
+        # KnowledgeStore.rescore_lexical_global_idf (#182) to read per-doc
+        # term frequency + doc length for the cross-shard global-IDF
+        # BM25 re-score. Zero storage (a view over the FTS index); created
+        # here so the read-time rescore never has to write. Idempotent.
+        try:
+            cur.execute(
+                "CREATE VIRTUAL TABLE IF NOT EXISTS genes_fts_vocab "
+                "USING fts5vocab(genes_fts, instance)"
+            )
+        except Exception:
+            # fts5vocab unavailable on this SQLite build — the rescore
+            # soft-fails to the scalar path, so this is non-fatal.
+            log.warning(
+                "fts5vocab unavailable — global-IDF rescore will fall back",
+                exc_info=True,
+            )
+
         # Incremental FTS5 sync -- only add missing documents, don't rebuild
         gene_count = cur.execute("SELECT COUNT(*) FROM genes").fetchone()[0]
         fts_count = cur.execute("SELECT COUNT(*) FROM genes_fts").fetchone()[0]
