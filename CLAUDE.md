@@ -83,7 +83,7 @@ All config lives in `helix.toml`. Sections:
 | `[genome]` | path (`genomes/main/genome.db`), compact_interval, cold_start_threshold, replicas |
 | `[server]` | host, port, upstream |
 | `[headroom]` | route_upstream toggle for Headroom proxy integration |
-| `[ingestion]` | backend (`"cpu"` / `"ollama"` / `"hybrid"`), splade_enabled, rerank_model, entity_graph |
+| `[ingestion]` | backend (`"cpu"` / `"ollama"` / `"hybrid"`), splade_enabled, rerank_model, entity_graph, sema_embed_on_ingest (#227: false = no MiniLM load at ingest; TCM falls back to text) |
 | `[context]` | cold_tier_enabled, cold_tier_k, cold_tier_min_cosine |
 | `[cymatics]` | enabled, distance_metric (`"cosine"` / `"w1"`), harmonic_links |
 | `[classifier]` | Rule-based query classifier: `enabled` toggle only; per-class caps/decoder hints are code constants pending #205 |
