@@ -136,3 +136,9 @@ benchmarks/contextbench/
 *.db-wal
 *.db-shm
 google_doc.*
+
+# Personal/scratch (2026-07-01, supersedes #226)
+.obsidian/
+overnight_logs/
+GEMINI.md
+scripts/.ingest_progress
