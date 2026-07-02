@@ -1647,6 +1647,239 @@ class KnowledgeStore:
             cur.close()
         return result
 
+    def _ensure_fts_vocab(self) -> None:
+        """Best-effort create of the ``genes_fts_vocab`` shadow table.
+
+        Created at DB init (storage.ddl) for new stores; this covers
+        LEGACY shard .db files that predate the #182 change. Uses the
+        WRITABLE connection (the read connection is read-only and a
+        ``CREATE VIRTUAL TABLE`` against it raises). Idempotent and
+        soft-failing — on any error the rescore probe falls back to the
+        scalar path.
+        """
+        if not self._fts_available:
+            return
+        try:
+            self.conn.execute(
+                "CREATE VIRTUAL TABLE IF NOT EXISTS genes_fts_vocab "
+                "USING fts5vocab(genes_fts, instance)"
+            )
+            self.conn.commit()
+        except Exception:
+            # Read-only-DB or fts5vocab-unavailable build — non-fatal.
+            log.debug(
+                "global-idf rescore: could not ensure genes_fts_vocab",
+                exc_info=True,
+            )
+
+    def rescore_lexical_global_idf(
+        self,
+        candidate_ids: list[str],
+        query_terms: list[str],
+        global_idf_map: Dict[str, float],
+        *,
+        k1: float = 1.2,
+        b: float = 0.75,
+    ) -> Dict[str, float]:
+        """Recompute each candidate's BM25 LEXICAL score with injected global IDF.
+
+        Cross-shard global-IDF re-score (HELIX_SHARD_GLOBAL_IDF, #182).
+
+        SQLite FTS5's built-in ``bm25()`` (the ``rank`` column used in
+        :meth:`query_docs`'s Tier-3 FTS5 block) computes IDF over THIS
+        shard's corpus only. On sharded retrieval that corpus-LOCAL IDF
+        sets the *within-shard* order of two docs, and a per-shard scalar
+        (``m_shard``) cannot reorder docs inside one shard. This method
+        recomputes the Okapi-BM25 lexical score per candidate doc using:
+
+            * per-doc term frequency ``tf(t,d)`` and doc length ``dl(d)``
+              read from the ``fts5vocab(..., instance)`` shadow table of
+              this shard's ``genes_fts`` (the SAME content this shard's
+              ``bm25()`` scored), and
+            * the INJECTED ``global_idf_map`` (computed by the router from
+              the aggregated global N and global df over all shards) in
+              place of the local IDF.
+
+        Formula (BIT-EXACT with SQLite FTS5's ``bm25()``, k1=1.2, b=0.75)::
+
+            dl(d)    = total instance rows for d over ALL FTS columns
+            avgdl    = (Σ_d dl(d)) / N_local
+            tf(t,d)  = total occurrences of t in d over ALL FTS columns
+            score(d) = Σ_t  idf_global(t) ·
+                            tf(t,d)·(k1+1) /
+                            (tf(t,d) + k1·(1 - b + b·dl(d)/avgdl))
+
+        where ``idf_global(t)`` is the RAW (unsmoothed) FTS5 IDF
+        ``ln((N - n + 0.5) / (n + 0.5))`` injected via ``global_idf_map``
+        with FTS5's non-positive clamp already applied. dl/tf/avgdl are
+        counted over EVERY indexed column (gene_id, content, complement),
+        because FTS5's bm25() treats the row as one bag-of-tokens spanning
+        all columns with unit weights — the same columns the bare
+        ``genes_fts MATCH ?`` in :meth:`query_docs` searches. Empirically
+        verified bit-exact (|Δ| ≈ 1e-15) against ``SELECT bm25(genes_fts)``
+        on real shards; see ``benchmarks/diag_global_idf_counterfactual.py``.
+
+        The returned magnitude is on the SAME signed "bigger = better"
+        scale as the ``-rank`` value the genome feeds into
+        ``last_query_scores`` (the genome caps it at 6.0; the router
+        applies the cap when it splices this back into the fused score, so
+        this raw value is uncapped).
+
+        Returns:
+            ``{gene_id: global_idf_bm25_lexical_score}`` for every
+            candidate that appears in this shard's FTS index. Candidates
+            with no scored-term match get 0.0. Returns ``{}`` if FTS is
+            unavailable or no usable terms/candidates were supplied.
+        """
+        if not self._fts_available or not candidate_ids or not query_terms:
+            return {}
+        # Score only terms long enough to be FTS-relevant AND that have a
+        # global IDF (router only injects IDF for the terms it probed).
+        scored_terms = [
+            t.lower() for t in query_terms
+            if t and len(t) > 2 and t.lower() in global_idf_map
+        ]
+        if not scored_terms:
+            return {}
+
+        cand_set = set(candidate_ids)
+        # The fts5vocab "instance" shadow table (``genes_fts_vocab``) is
+        # created at DB init alongside ``genes_fts`` (storage.ddl). It is a
+        # zero-storage view: "instance" yields one row per
+        # (term, doc, col, offset) occurrence — counting rows per
+        # (doc, term) gives per-doc term frequency, and counting all
+        # rows per doc gives that doc's length in tokens.
+        self._ensure_fts_vocab()
+        cur = self.read_conn.cursor()
+        try:
+            # Probe that the vocab table is queryable; if a legacy DB
+            # predates it and we couldn't create it (read-only), soft-fail
+            # to the scalar path.
+            try:
+                cur.execute("SELECT term FROM genes_fts_vocab LIMIT 1")
+            except Exception:
+                log.warning(
+                    "global-idf rescore: genes_fts_vocab unavailable; "
+                    "falling back to scalar path",
+                    exc_info=True,
+                )
+                return {}
+
+            # Map this shard's FTS rowid -> gene_id for the candidate set.
+            # fts5vocab reports the integer 'doc' (= rowid), so we resolve
+            # candidate gene_ids to rowids and back.
+            id_ph = ",".join("?" * len(cand_set))
+            rowid_rows = cur.execute(
+                f"SELECT rowid, gene_id FROM genes_fts "
+                f"WHERE gene_id IN ({id_ph})",
+                tuple(cand_set),
+            ).fetchall()
+            rowid_to_gid: Dict[int, str] = {
+                int(r["rowid"]): r["gene_id"] for r in rowid_rows
+            }
+            if not rowid_to_gid:
+                return {gid: 0.0 for gid in candidate_ids}
+            cand_rowids = set(rowid_to_gid)
+
+            # Doc length per candidate doc = count of instance rows for
+            # that doc across ALL FTS columns. SQLite FTS5's bm25()
+            # measures D (doc length) as the total token count over every
+            # indexed column (here: gene_id, content, complement), with a
+            # single corpus-wide avgdl = (Σ all-column tokens) / N. Counting
+            # only ``col='content'`` understates both D and avgdl and breaks
+            # bit-exact parity with the engine's bm25() — see the parity
+            # probe in benchmarks/diag_global_idf_counterfactual.py.
+            n_local = self.fts_doc_count() or 0
+            avgdl = 0.0
+            try:
+                tot = cur.execute(
+                    "SELECT COUNT(*) FROM genes_fts_vocab"
+                ).fetchone()
+                total_tokens = int(tot[0]) if tot else 0
+                if n_local > 0:
+                    avgdl = total_tokens / float(n_local)
+            except Exception:
+                avgdl = 0.0
+            if avgdl <= 0.0:
+                avgdl = 1.0  # degenerate corpus; avoid divide-by-zero
+
+            # Per-candidate doc length (ALL columns — matches FTS5's D).
+            doc_len: Dict[int, int] = {rid: 0 for rid in cand_rowids}
+            try:
+                dl_rows = cur.execute(
+                    "SELECT doc, COUNT(*) AS dl FROM genes_fts_vocab "
+                    "GROUP BY doc"
+                ).fetchall()
+                for r in dl_rows:
+                    rid = int(r["doc"])
+                    if rid in doc_len:
+                        doc_len[rid] = int(r["dl"])
+            except Exception:
+                log.warning(
+                    "global-idf rescore: doc-length probe failed",
+                    exc_info=True,
+                )
+                return {}
+
+            # Per (term, candidate-doc) term frequency: count instance rows
+            # across ALL columns (FTS5's tf is the total occurrence count
+            # over every indexed column). One small query per scored term
+            # (bounded by the query length).
+            #
+            # NOTE on the injected ``g_idf`` scale: the router computes it
+            # with SQLite FTS5's RAW Robertson-Sparck-Jones IDF
+            # ``ln((N - n + 0.5) / (n + 0.5))`` AND FTS5's own non-positive
+            # clamp (``idf <= 0 -> 1e-6``), so a globally-ubiquitous term
+            # contributes ~nothing rather than a large negative — exactly
+            # what the engine's bm25() does. We do NOT re-gate on
+            # ``g_idf > 0`` here: the value already carries the engine's
+            # clamp, and the OLD code's combination of the SMOOTHED
+            # always-positive IDF + a local ``g_idf > 0`` gate is precisely
+            # what put the lexical sub-score on the wrong scale and drove
+            # the #182 recall regression (0.347 -> 0.168).
+            scores: Dict[str, float] = {
+                rowid_to_gid[rid]: 0.0 for rid in cand_rowids
+            }
+            for term in scored_terms:
+                if term not in global_idf_map:
+                    continue
+                g_idf = float(global_idf_map[term])
+                escaped_doc_ph = ",".join("?" * len(cand_rowids))
+                try:
+                    tf_rows = cur.execute(
+                        f"SELECT doc, COUNT(*) AS tf FROM genes_fts_vocab "
+                        f"WHERE term = ? "
+                        f"AND doc IN ({escaped_doc_ph}) "
+                        f"GROUP BY doc",
+                        (term, *cand_rowids),
+                    ).fetchall()
+                except Exception:
+                    continue
+                for r in tf_rows:
+                    rid = int(r["doc"])
+                    tf = float(r["tf"])
+                    if tf <= 0.0 or rid not in rowid_to_gid:
+                        continue
+                    dl = float(doc_len.get(rid, 0)) or 1.0
+                    denom = tf + k1 * (1.0 - b + b * (dl / avgdl))
+                    if denom <= 0.0:
+                        continue
+                    contrib = g_idf * (tf * (k1 + 1.0)) / denom
+                    scores[rowid_to_gid[rid]] += contrib
+
+            # Candidates absent from the FTS index keep an implicit 0.0.
+            for gid in candidate_ids:
+                scores.setdefault(gid, 0.0)
+            return scores
+        except Exception:
+            log.warning(
+                "global-idf rescore failed; router falls back to scalar path",
+                exc_info=True,
+            )
+            return {}
+        finally:
+            cur.close()
+
     def _bm25_candidate_set(self, query_terms: list[str], size: int) -> set[str] | None:
         """Return FTS5 BM25 top-N gene_ids, or None if FTS unavailable/empty. Soft-fails to None."""
         if not self._fts_available:
