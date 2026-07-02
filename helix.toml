@@ -278,12 +278,6 @@ dense_embed_on_ingest = true            # Tier-0 PR-1 (2026-05-16)
 splade_auto_enable_below_genes = 0
 splade_auto_disable_above_genes = 0
 
-# Issue #227: compute the 20D ΣĒMA embedding at ingest (feeds TCM/cymatics).
-# Default true preserves behaviour. Set false to skip the ingest-time SEMA
-# encode entirely (MiniLM never loads) — what a lexical-only / multi-worker
-# bench wants. Without it, ingest materialized the lazy SEMA codec per worker
-# and OOMed parallel runs even with dense/cymatics off.
-sema_embed_on_ingest = true
 
 # WS2 (symbol graph, code only): at ingest, index symbol definitions and emit
 # referencing-chunk -> defining-chunk SYMBOL_REF edges (intra-file, high
