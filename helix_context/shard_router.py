@@ -403,6 +403,95 @@ FTS5_LEXICAL_CAP = 6.0
 FTS5_IDF_FLOOR = 1e-6
 
 
+def _shard_fetch_factor() -> int:
+    """Per-shard fetch-depth factor (issue #222). Default 2 = legacy.
+
+    The router fetches ``max_genes * factor`` candidates from each shard
+    BEFORE the cross-shard merge. The flat legacy ``2`` is provably too
+    shallow whenever post-fetch rescaling (``m_shard`` ∈ [0.5, 3.0],
+    doc-type boost, global-IDF splice) can promote a doc past shallower
+    entries from other shards: promotion happens AFTER the per-shard cut,
+    so a mid-shard gold never reaches the merge. Raise via
+    ``HELIX_SHARD_FETCH_FACTOR`` (e.g. 4–6 on many-shard corpora); the
+    price is per-shard query cost. Unparseable/invalid values keep the
+    legacy 2 so behaviour never silently degrades.
+    """
+    raw = os.environ.get("HELIX_SHARD_FETCH_FACTOR", "").strip()
+    if not raw:
+        return 2
+    try:
+        return max(1, int(raw))
+    except ValueError:
+        return 2
+
+
+def _coact_reserve_slots() -> int:
+    """Reserved result slots for co-activation-promoted docs (issue #223).
+
+    Default 0 = legacy (no reservation: linked docs enter the final sort
+    at ``COACT_LINK_BOOST × source score`` and are truncated like any
+    other candidate — which is exactly how graph-surfaced golds get
+    displaced). Set ``HELIX_SHARD_COACT_RESERVE=N`` to guarantee up to N
+    of the final ``limit`` slots go to the best promoted linked docs.
+    """
+    raw = os.environ.get("HELIX_SHARD_COACT_RESERVE", "").strip()
+    if not raw:
+        return 0
+    try:
+        return max(0, int(raw))
+    except ValueError:
+        return 0
+
+
+def _apply_coact_reserve(
+    union_ids: List[str],
+    promoted: set,
+    corrected: Dict[str, float],
+    rrf_all: Dict[str, float],
+    limit: int,
+    reserve: int,
+) -> List[str]:
+    """Reserve up to ``reserve`` of the top-``limit`` slots for promoted docs.
+
+    Pure function (issue #223). Given the already-sorted ``union_ids``:
+    if fewer than ``reserve`` promoted docs survive the ``[:limit]`` cut,
+    the weakest NON-promoted entries in the cut are swapped for the best
+    promoted docs below it, then the cut is re-sorted by the same
+    (corrected desc, rrf desc, gid asc) key so ordering semantics are
+    unchanged. ``reserve=0`` returns the plain truncation (legacy,
+    byte-identical). Never grows the result past ``limit`` and never
+    drops a promoted doc that already made the cut.
+    """
+    cut = list(union_ids[:limit])
+    if reserve <= 0 or not promoted:
+        return cut
+    in_cut = sum(1 for g in cut if g in promoted)
+    missing = reserve - in_cut
+    if missing <= 0:
+        return cut
+    overflow = [g for g in union_ids[limit:] if g in promoted][:missing]
+    if not overflow:
+        return cut
+    # Drop the weakest non-promoted tail entries to make room.
+    drop_budget = len(overflow)
+    keep: List[str] = []
+    for g in reversed(cut):
+        if drop_budget > 0 and g not in promoted:
+            drop_budget -= 1
+            continue
+        keep.append(g)
+    keep.reverse()
+    out = keep + overflow
+    out.sort(
+        key=lambda gid: (
+            -corrected.get(gid, 0.0),
+            -rrf_all.get(gid, 0.0),
+            gid,
+        ),
+    )
+    return out
+
+
 def _score_debug_enabled() -> bool:
     """True iff HELIX_SHARD_SCORE_DEBUG is set to a truthy value.
 
@@ -687,7 +776,16 @@ class ShardRouter:
         # gold doc that's intra-shard rank 25+ never enters the merge.
         # The price is per-shard query cost; in benchmarks the medium
         # fixture's 6 shards stay well under 1s with this fan-out.
-        per_shard_fetch = max(int(max_genes), int(max_genes) * 2)
+        #
+        # Issue #222: the factor is env-tunable (HELIX_SHARD_FETCH_FACTOR,
+        # default 2 = legacy byte-identical). The flat 2x is too shallow
+        # whenever post-fetch rescaling (m_shard, doc-type boost,
+        # global-IDF splice) would promote a mid-shard doc past other
+        # shards' entries — the promotion happens AFTER this cut, so the
+        # doc never reaches the merge. Raise to 4–6 on many-shard corpora.
+        per_shard_fetch = max(
+            int(max_genes), int(max_genes) * _shard_fetch_factor(),
+        )
 
         def _fetch(shard_name: str):
             """Open + query one shard + probe IDF, snapshotting its per-query
@@ -1229,7 +1327,14 @@ class ShardRouter:
                 gid,
             ),
         )
-        return union_ids[:limit]
+        # Issue #223: optionally reserve slots for promoted linked docs so
+        # the 0.5x-discounted graph-surfaced candidates aren't displaced
+        # by the flat truncation. Reserve=0 (default) is byte-identical
+        # to the legacy plain [:limit] cut.
+        return _apply_coact_reserve(
+            union_ids, promoted, corrected, rrf_all,
+            limit, _coact_reserve_slots(),
+        )
 
     # ── Lifecycle ───────────────────────────────────────────────────
 
