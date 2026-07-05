@@ -19,6 +19,11 @@ from tests.conftest import make_gene, make_helix_config, MockCompressorBackend
 def health_helix():
     config = make_helix_config(synonym_map={"auth": ["jwt", "login", "security"]})
     mgr = HelixContextManager(config)
+    # MockCompressorBackend's splice branch returns codon indices for
+    # "Gene <id>" prompts, so these tests exercise codons-kept assembly
+    # (the old local mock returned {} -> complement fallback; that path
+    # keeps dedicated coverage in test_ribosome.py). Assertions here are
+    # threshold-based and hold under either assembly mode.
     mgr.ribosome.backend = MockCompressorBackend()
     yield mgr
     mgr.close()
