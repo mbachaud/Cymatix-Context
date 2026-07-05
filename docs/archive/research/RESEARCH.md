@@ -261,7 +261,7 @@ maintain exhaustive context documents. The genome can.
 **2. The Hallucination Tell.** All three blind Claude models independently hallucinated "5.6x"
 for the Helix compression target. That number exists nowhere in the codebase — it's the
 measured ratio (2.7x) multiplied by a plausible factor. With Helix retrieval, all three found
-the literal "5x" from BENCHMARK_NOTES.md. **Retrieval doesn't just add facts; it prevents
+the literal "5x" from docs/benchmarks/BENCHMARK_NOTES.md. **Retrieval doesn't just add facts; it prevents
 confident fabrication.**
 
 **3. Retrieval / Parameter correlation ≈ 0.** Standard RAG systems show strong positive

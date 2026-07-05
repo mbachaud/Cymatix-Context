@@ -1,6 +1,6 @@
 # Helix Context
 
-Knowledge-store-based context compression for local LLMs. v0.5.0.
+Knowledge-store-based context compression for local LLMs. v0.7.1.
 
 ## Quick Start
 
@@ -34,7 +34,7 @@ A transparent OpenAI-compatible proxy that intercepts LLM requests and injects c
 
 0. **Classify** — rule-based query classifier picks decoder mode + assembly cap (no model call)
 1. **Extract** — heuristic keyword extraction from query (no model call)
-2. **Retrieve** — FTS5 lexical + tag lookup + synonym expansion + co-activation + cymatics 256-bin spectrum scoring (all default-on, no neural inference at query time); optional BGE-M3 dense recall (`[retrieval] dense_embedding_enabled`, default off) and SPLADE sparse expansion (`[ingestion] splade_enabled`, default off) add transformer query-encoding when enabled; ranks via Reciprocal Rank Fusion when `[retrieval] fusion_mode = "rrf"` (default: `"additive"`)
+2. **Retrieve** — FTS5 lexical + tag lookup + synonym expansion + co-activation + cymatics 256-bin spectrum scoring (all algorithmic, no model inference); BGE-M3 dense recall (`[retrieval] dense_embedding_enabled`, **default on**) and SPLADE sparse expansion (`[ingestion] splade_enabled`, **default on**) add transformer query-encoding — they ship **enabled**, so the default path is *not* neural-free (flip both off for the algorithmic-only profile; see `docs/design/2026-07-05-efficiency-cost-reduction.md`); ranks via Reciprocal Rank Fusion when `[retrieval] fusion_mode = "rrf"` (default: `"additive"`)
 3. **Re-rank** — CPU model scores candidates by relevance (optional, off by default)
 4. **Splice** — CPU model compresses each candidate, keeping high-value fragments (batched)
 5. **Assemble** — join spliced parts, enforce token budget, attach per-document legibility headers (fired tiers, confidence marker, compression ratio), elide already-delivered documents via session working-set register
@@ -46,7 +46,7 @@ The pipeline emits a **know/miss agent contract** on `/context/packet`: every re
 
 ## Package Structure (post-PR #90)
 
-After the repo restructure, `helix_context/` is organized into 16 sub-packages plus a handful of top-level orchestration modules:
+After the repo restructure, `helix_context/` is organized into 15 sub-packages plus a handful of top-level orchestration modules:
 
 | Package | Purpose |
 |---------|---------|
@@ -140,7 +140,7 @@ GET  /vault/status         — Obsidian vault export state
 ## Testing
 
 ```bash
-# ~1950 tests, no external services needed
+# ~2,750 tests, no external services needed
 python -m pytest tests/ -m "not live" -v
 
 # Live tests (requires Ollama running)

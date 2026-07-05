@@ -14,6 +14,14 @@
 - **Open PRs:** #230 (WS2 symbol graph), #231 (WS3 PageRank, stacked on #230). Both CI-green/clean but **gated on the bench results** per the external-bench run plan's council rules.
 - **Open issues:** 12 — triaged below; 2 are closable now (#203, #206), the rest are scheduled or bench-gated.
 
+### Update 2026-07-05 (merge + roadmap session)
+
+- **Merged:** #237 (bench harness fix: `body_has_answer` parser + `upstream_timeout=600` + `bench_chain`) → master `cb34284`. This unblocks valid future bench runs.
+- **Opened:** #238 (test-suite consolidation, 6 commits, **green on all 3 platforms**, awaiting human review — the agent that authored it is not permitted to self-merge).
+- **#230/#231:** status-commented, still **gated but not failed** — the 1556 run's arm-C probe referenced `symbol_graph`/`symbol_expansion_cap` keys absent from master (gap A3), so arm C was never validly measured. Blocked on #221 Run 1→3 + a fail-fast capability assert + a recorded review.
+- **New issue #239:** know-confidence is **anti-signal** on every bed (hit-mean < miss-mean, AUC 0.35–0.44) — recalibrate + AUC>0.7 gate before agents trust the know contract (gap A5).
+- **Docs honesty + root-tidy:** on branch `chore/root-tidy` (see docs-refresh boxes below) + a new efficiency/cost-reduction design memo (`docs/design/2026-07-05-efficiency-cost-reduction.md`) answering the binary-storage / algorithm-vs-model / MCP-token-cost questions.
+
 ## The bench gate (everything sequences around this)
 
 Currently running: **S2 SIKE 50-needle bed-sweep** (#221), third attempt, launched 15:56 by the
@@ -66,19 +74,20 @@ Full forensic inventory (branch↔PR SHA matching) done 2026-07-03; summary:
 - [ ] **Branches — review 4 before deciding:** `perf/dense-prefilter-via-splade-candidates` (#160 closed; Onyx v0.6.3 validation kit + codex runner not on master), `feat/onyx-full-v2-build-bundle` (`enterprise_rag_onyx_full_2` bench profile may still be needed for Onyx 500q), `bench/int-5fixture` (verify 977924b claude-p stdio fix landed elsewhere), `fix/dense-fusion-composite-sort` (tip says "do not merge"; salvage H10 investigation docs first).
 - [ ] **Worktrees — remove 13 stale** (incl. `F:/Projects/helix-retrieval-upgrade`, `F:/tmp/helix-release-064`, codex scratch, 2 locked agent worktrees on merged branches — unlock then remove), then `git worktree prune`. **Keep:** `.worktrees/ws2-symbol-graph`, `.worktrees/ws3-pagerank` until PRs resolve.
 - [ ] **Stashes — drop all 8** (0-6 superseded by merged PRs; glance at stash@{7}'s 90-line token-count helper first).
-- [ ] **Remote:** `git push origin --delete docs/external-review-gemini` (merged as #236).
-- [ ] **Quarantine invalid bench results** (07-02_1252 + 07-03_0104 sike_bedsweep JSONs).
+- [x] **Remote:** `git push origin --delete docs/external-review-gemini` (merged as #236). ✅ already gone (verified 2026-07-05).
+- [x] **Quarantine invalid bench results** (07-02_1252 + 07-03_0104 sike_bedsweep JSONs). ✅ 2026-07-05 → moved to `benchmarks/results/_quarantine_invalid/` with a DO-NOT-QUOTE README.
 - [ ] **Root runtime clutter** (git-ignored): root-level `genome.db{,-shm,-wal}` (canonical store is `genomes/main/` — verify nothing points at the root copy), `metrics.json`, `logs/`, `overnight_logs/`, `cwola_export/`, `dist/`, caches.
-- [ ] **Commit the bench harness** (`scripts/bench_chain/`, probe toml, sweep diff) — see merge queue item 3.
+- [x] **Commit the bench harness** (`scripts/bench_chain/`, probe toml, sweep diff) — see merge queue item 3. ✅ merged via #237 (2026-07-05).
+- Note (2026-07-05): **branch/worktree/stash deletion NOT auto-executed** — `git branch --merged origin/master` returns 0 (the 61 "merged" branches were *squash*-merged, undetectable by `--merged`). Deleting off the 2-day-old forensic list without squash-aware verification risks nuking live work; deferred to a verified pass. Root runtime clutter is all gitignored (`!!`), so it's local-disk tidiness, not a repo concern; only the stale `dist/` (0.5.0) was removed.
 
 ## Docs refresh (the "fresh baseline" pass — do together with the new bench numbers)
 
-- [ ] `CLAUDE.md:3` — v0.5.0 → v0.7.1 (or drop the hardcoded version).
-- [ ] `CLAUDE.md` Stage-2 text — `dense_embedding_enabled` and `splade_enabled` are **default ON** (config.py:355/:214), not off; drop the "no neural inference at query time" claim for the default path.
-- [ ] `README.md:138` — phantom `[know]` keys `confidence_floor, margin_threshold` → real keys `emit_floor, betas, s_ref, g_ref, stale_after_days`.
-- [ ] Test count in 3 places (README badge + Testing section, CLAUDE.md): "~1950" → ~2,650 (2,643 `def test_` across 184 files; get exact collected count post-bench).
-- [ ] `[ribosome]` backend lists (README:125 + CLAUDE.md): honored values are only `litellm`/`deberta`; drop `claude`/`ollama` or mark legacy.
-- [ ] Package count "16" → 15 (README:191 + CLAUDE.md).
+- [x] `CLAUDE.md:3` — v0.5.0 → v0.7.1. ✅ 2026-07-05.
+- [x] `CLAUDE.md` Stage-2 text — `dense_embedding_enabled` and `splade_enabled` are **default ON** (config.py:355/:214), not off; drop the "no neural inference at query time" claim for the default path. ✅ 2026-07-05 (rewritten + links the algorithmic-profile memo).
+- [x] `README.md:138` — phantom `[know]` keys `confidence_floor, margin_threshold` → real keys `emit_floor, betas, s_ref, g_ref, stale_after_days`. ✅ 2026-07-05.
+- [x] Test count in 3 places (README badge + Testing section, CLAUDE.md): "~1950" → **~2,750** (measured 2,756 collected under `-m "not live"`). ✅ 2026-07-05.
+- [ ] `[ribosome]` backend lists (README:125 + CLAUDE.md): honored values are only `litellm`/`deberta`; drop `claude`/`ollama` or mark legacy. *(not done — needs a code check of honored backend values first)*
+- [x] Package count "16" → 15 (README:191 + CLAUDE.md). ✅ 2026-07-05 (table already listed 15; summary + CLAUDE corrected).
 - [ ] README "Proof (30 seconds)" table + `docs/benchmarks/BENCHMARKS.md` (last updated 2026-05-28) — refresh from the #221 re-baseline once valid. **License caveat:** ContextBench/CodeRAG numbers stay internal until cleared.
 - [ ] Commit/reconstruct `helix_probe_nosema.toml` (referenced by code-track-regression-log.md, absent from tree).
 - [ ] Minor: README `[ingestion]` add `hybrid`; note `[mem_sync]` is consumed out-of-band; document `[vault]`/`[hardware]`.
