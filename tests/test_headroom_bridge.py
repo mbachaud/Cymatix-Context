@@ -25,62 +25,51 @@ from helix_context.encoding.headroom_bridge import (
 # ── Pure dispatch logic (no dependency on headroom being installed) ────
 
 class TestPickSpecialist:
-    def test_empty_domains_defaults_to_kompress(self):
-        assert _pick_specialist([]) == "kompress"
+    """Routing table: which specialist `_pick_specialist` picks for a given
+    domain-tag list, including precedence when multiple tags are present and
+    case-insensitivity of the tag match."""
 
-    def test_unknown_domain_defaults_to_kompress(self):
-        assert _pick_specialist(["markdown", "docs"]) == "kompress"
-
-    def test_python_routes_to_kompress(self):
-        # CodeCompressor disabled (40% invalid syntax — see 2f518dc).
-        assert _pick_specialist(["python"]) == "kompress"
-
-    def test_rust_routes_to_kompress(self):
-        assert _pick_specialist(["rust", "cargo"]) == "kompress"
-
-    def test_typescript_routes_to_kompress(self):
-        assert _pick_specialist(["typescript"]) == "kompress"
-
-    def test_log_routes_to_log(self):
-        assert _pick_specialist(["log"]) == "log"
-
-    def test_pytest_routes_to_log(self):
-        assert _pick_specialist(["pytest"]) == "log"
-
-    def test_diff_routes_to_diff(self):
-        assert _pick_specialist(["diff"]) == "diff"
-
-    def test_patch_routes_to_diff(self):
-        assert _pick_specialist(["patch"]) == "diff"
-
-    def test_diff_wins_over_code_when_both_present(self):
-        # diff is checked first in _pick_specialist
-        assert _pick_specialist(["diff", "python"]) == "diff"
-
-    def test_log_wins_over_code_when_both_present(self):
-        # log is checked before code
-        assert _pick_specialist(["pytest", "python"]) == "log"
-
-    def test_case_insensitive(self):
-        assert _pick_specialist(["PYTHON"]) == "kompress"
-        assert _pick_specialist(["Log"]) == "log"
+    @pytest.mark.parametrize(
+        ("domains", "expected_specialist"),
+        [
+            pytest.param([], "kompress", id="empty_domains_defaults_to_kompress"),
+            pytest.param(["markdown", "docs"], "kompress", id="unknown_domain_defaults_to_kompress"),
+            # CodeCompressor disabled (40% invalid syntax — see 2f518dc).
+            pytest.param(["python"], "kompress", id="python_routes_to_kompress"),
+            pytest.param(["rust", "cargo"], "kompress", id="rust_routes_to_kompress"),
+            pytest.param(["typescript"], "kompress", id="typescript_routes_to_kompress"),
+            pytest.param(["log"], "log", id="log_routes_to_log"),
+            pytest.param(["pytest"], "log", id="pytest_routes_to_log"),
+            pytest.param(["diff"], "diff", id="diff_routes_to_diff"),
+            pytest.param(["patch"], "diff", id="patch_routes_to_diff"),
+            # diff is checked first in _pick_specialist
+            pytest.param(["diff", "python"], "diff", id="diff_wins_over_code_when_both_present"),
+            # log is checked before code
+            pytest.param(["pytest", "python"], "log", id="log_wins_over_code_when_both_present"),
+            pytest.param(["PYTHON"], "kompress", id="case_insensitive_python"),
+            pytest.param(["Log"], "log", id="case_insensitive_log"),
+        ],
+    )
+    def test_pick_specialist(self, domains, expected_specialist):
+        assert _pick_specialist(domains) == expected_specialist
 
 
 class TestDetectLanguage:
-    def test_python_detected(self):
-        assert _detect_language(["python", "code"]) == "python"
+    """Routing table: which language `_detect_language` infers from a
+    domain-tag list, including shortform aliases and the no-match case."""
 
-    def test_rust_detected(self):
-        assert _detect_language(["rust"]) == "rust"
-
-    def test_py_shortform(self):
-        assert _detect_language(["py"]) == "python"
-
-    def test_no_language_returns_none(self):
-        assert _detect_language(["markdown", "docs"]) is None
-
-    def test_empty_returns_none(self):
-        assert _detect_language([]) is None
+    @pytest.mark.parametrize(
+        ("domains", "expected_language"),
+        [
+            pytest.param(["python", "code"], "python", id="python_detected"),
+            pytest.param(["rust"], "rust", id="rust_detected"),
+            pytest.param(["py"], "python", id="py_shortform"),
+            pytest.param(["markdown", "docs"], None, id="no_language_returns_none"),
+            pytest.param([], None, id="empty_returns_none"),
+        ],
+    )
+    def test_detect_language(self, domains, expected_language):
+        assert _detect_language(domains) == expected_language
 
 
 # ── Shortcut behaviors (work regardless of headroom availability) ──────

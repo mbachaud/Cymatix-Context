@@ -50,26 +50,19 @@ from coderag_bench_helix import (  # noqa: E402
 # ===========================================================================
 
 class TestNdcgAt:
-    def test_rank_1_ndcg10_is_one(self):
-        """Gold at rank 1 (pos0=0) -> NDCG = 1/log2(2) = 1.0."""
-        assert math.isclose(ndcg_at(0, 10), 1.0)
-
-    def test_rank_2(self):
-        expected = 1.0 / math.log2(3)  # pos0=1 -> rank=2 -> 1/log2(3)
-        assert math.isclose(ndcg_at(1, 10), expected)
-
-    def test_rank_10_boundary(self):
-        """pos0=9 is rank 10 -- just inside @10."""
-        val = ndcg_at(9, 10)
-        assert val > 0.0
-        assert math.isclose(val, 1.0 / math.log2(11))
-
-    def test_rank_11_outside_k10(self):
-        """pos0=10 is rank 11 -- outside @10."""
-        assert ndcg_at(10, 10) == 0.0
-
-    def test_very_low_rank_is_zero(self):
-        assert ndcg_at(999, 10) == 0.0
+    @pytest.mark.parametrize(
+        ("pos0", "k", "expected"),
+        [
+            pytest.param(0, 10, 1.0, id="rank_1_ndcg10_is_one"),
+            pytest.param(1, 10, 1.0 / math.log2(3), id="rank_2"),
+            pytest.param(9, 10, 1.0 / math.log2(11), id="rank_10_boundary"),
+            pytest.param(10, 10, 0.0, id="rank_11_outside_k10"),
+            pytest.param(999, 10, 0.0, id="very_low_rank_is_zero"),
+        ],
+    )
+    def test_ndcg_at_values(self, pos0, k, expected):
+        """ndcg_at(pos0, k) boundary and mid-range values."""
+        assert math.isclose(ndcg_at(pos0, k), expected)
 
     def test_ndcg_decreases_with_rank(self):
         vals = [ndcg_at(i, 10) for i in range(10)]
@@ -82,23 +75,26 @@ class TestNdcgAt:
 # ===========================================================================
 
 class TestRecallAt:
-    def test_hit_at_k(self):
-        assert recall_at(0, 1) == 1.0
-        assert recall_at(4, 5) == 1.0
-        assert recall_at(9, 10) == 1.0
-
-    def test_miss_at_k(self):
-        assert recall_at(1, 1) == 0.0
-        assert recall_at(5, 5) == 0.0
-        assert recall_at(10, 10) == 0.0
-
-    def test_all_ks_on_rank_1(self):
-        for k in KS:
-            assert recall_at(0, k) == 1.0
-
-    def test_rank_beyond_ks(self):
-        for k in KS:
-            assert recall_at(999, k) == 0.0
+    @pytest.mark.parametrize(
+        ("pos0", "k", "expected"),
+        [
+            # test_hit_at_k: gold within top-k -> recall = 1.0
+            pytest.param(0, 1, 1.0, id="hit_at_k1"),
+            pytest.param(4, 5, 1.0, id="hit_at_k5"),
+            pytest.param(9, 10, 1.0, id="hit_at_k10"),
+            # test_miss_at_k: gold just outside top-k -> recall = 0.0
+            pytest.param(1, 1, 0.0, id="miss_at_k1"),
+            pytest.param(5, 5, 0.0, id="miss_at_k5"),
+            pytest.param(10, 10, 0.0, id="miss_at_k10"),
+            # test_all_ks_on_rank_1: gold at rank 1 hits every k in KS
+            *[pytest.param(0, k, 1.0, id=f"rank1_hits_k{k}") for k in KS],
+            # test_rank_beyond_ks: gold far beyond every k in KS -> always a miss
+            *[pytest.param(999, k, 0.0, id=f"beyond_ks_k{k}") for k in KS],
+        ],
+    )
+    def test_recall_at_values(self, pos0, k, expected):
+        """recall_at(pos0, k) hit/miss boundary, including every k in KS."""
+        assert recall_at(pos0, k) == expected
 
 
 # ===========================================================================
@@ -106,21 +102,22 @@ class TestRecallAt:
 # ===========================================================================
 
 class TestPrecisionAt:
-    def test_hit_is_one_over_k(self):
-        assert math.isclose(precision_at(0, 1), 1.0)
-        assert math.isclose(precision_at(0, 5), 0.2)
-        assert math.isclose(precision_at(0, 10), 0.1)
-
-    def test_miss_is_zero(self):
-        assert precision_at(5, 5) == 0.0
-        assert precision_at(10, 10) == 0.0
-
-    def test_gold_at_last_position_in_k(self):
-        # pos0=k-1 is rank k -> hit
-        assert math.isclose(precision_at(9, 10), 0.1)
-
-    def test_gold_just_outside_k(self):
-        assert precision_at(10, 10) == 0.0
+    @pytest.mark.parametrize(
+        ("pos0", "k", "expected"),
+        [
+            pytest.param(0, 1, 1.0, id="hit_k1"),
+            pytest.param(0, 5, 0.2, id="hit_k5"),
+            pytest.param(0, 10, 0.1, id="hit_k10"),
+            pytest.param(5, 5, 0.0, id="miss_k5"),
+            pytest.param(10, 10, 0.0, id="miss_k10"),
+            # pos0=k-1 is rank k -> hit
+            pytest.param(9, 10, 0.1, id="gold_at_last_position_in_k"),
+            pytest.param(10, 10, 0.0, id="gold_just_outside_k"),
+        ],
+    )
+    def test_precision_at_values(self, pos0, k, expected):
+        """precision_at(pos0, k): hit = 1/k, miss = 0.0."""
+        assert math.isclose(precision_at(pos0, k), expected)
 
 
 # ===========================================================================
@@ -219,40 +216,38 @@ class TestBM25:
 # ===========================================================================
 
 class TestTokenEstimate:
-    def test_single_doc_one_word(self):
-        # 1 word * 1.3 = 1.3 -> rounded 1
-        assert token_estimate(["hello"]) == 1
-
-    def test_proportional_to_words(self):
-        # 10 words -> round(10 * 1.3) = 13
-        text = " ".join(["word"] * 10)
-        assert token_estimate([text]) == 13
-
-    def test_empty(self):
-        assert token_estimate([]) == 0
-
-    def test_multiple_docs_sum(self):
-        docs = ["a b c", "d e"]  # 5 words -> round(5*1.3) = 7 (actually 6.5->7)
-        est = token_estimate(docs)
-        assert est == round(5 * 1.3)
+    @pytest.mark.parametrize(
+        ("texts", "expected"),
+        [
+            # 1 word * 1.3 = 1.3 -> rounded 1
+            pytest.param(["hello"], 1, id="single_doc_one_word"),
+            # 10 words -> round(10 * 1.3) = 13
+            pytest.param([" ".join(["word"] * 10)], 13, id="proportional_to_words"),
+            pytest.param([], 0, id="empty"),
+            # 5 words -> round(5*1.3) = 7 (actually 6.5->7)
+            pytest.param(["a b c", "d e"], round(5 * 1.3), id="multiple_docs_sum"),
+        ],
+    )
+    def test_token_estimate_values(self, texts, expected):
+        """token_estimate: whitespace word count * 1.3, rounded."""
+        assert token_estimate(texts) == expected
 
 
 class TestPercentile:
-    def test_median_of_odd(self):
-        assert _percentile([1, 2, 3, 4, 5], 50) == 3.0
-
-    def test_p90_of_ten(self):
-        vals = list(range(1, 11))  # 1..10
-        # p90 of [1..10] = 9.1 (linear interp)
-        result = _percentile(vals, 90)
-        assert 9.0 <= result <= 10.0
-
-    def test_empty(self):
-        assert _percentile([], 50) == 0.0
-
-    def test_single(self):
-        assert _percentile([42.0], 50) == 42.0
-        assert _percentile([42.0], 90) == 42.0
+    @pytest.mark.parametrize(
+        ("values", "pct", "low", "high"),
+        [
+            pytest.param([1, 2, 3, 4, 5], 50, 3.0, 3.0, id="median_of_odd"),
+            # p90 of [1..10] = 9.1 (linear interp)
+            pytest.param(list(range(1, 11)), 90, 9.0, 10.0, id="p90_of_ten"),
+            pytest.param([], 50, 0.0, 0.0, id="empty"),
+            pytest.param([42.0], 50, 42.0, 42.0, id="single_p50"),
+            pytest.param([42.0], 90, 42.0, 42.0, id="single_p90"),
+        ],
+    )
+    def test_percentile_values(self, values, pct, low, high):
+        """_percentile: exact for median/single-value cases, interpolation range for p90_of_ten."""
+        assert low <= _percentile(values, pct) <= high
 
 
 class TestEfficiencyStats:
@@ -275,29 +270,22 @@ class TestEfficiencyStats:
 # ===========================================================================
 
 class TestParseDocIdx:
-    def test_normal(self):
-        assert parse_doc_idx("doc_42") == 42
-
-    def test_zero(self):
-        assert parse_doc_idx("doc_0") == 0
-
-    def test_large(self):
-        assert parse_doc_idx("doc_9999") == 9999
-
-    def test_none(self):
-        assert parse_doc_idx(None) is None
-
-    def test_empty(self):
-        assert parse_doc_idx("") is None
-
-    def test_wrong_prefix(self):
-        assert parse_doc_idx("cand_3") is None
-
-    def test_partial_match_rejected(self):
-        assert parse_doc_idx("doc_42_extra") is None
-
-    def test_non_numeric(self):
-        assert parse_doc_idx("doc_abc") is None
+    @pytest.mark.parametrize(
+        ("source", "expected"),
+        [
+            pytest.param("doc_42", 42, id="normal"),
+            pytest.param("doc_0", 0, id="zero"),
+            pytest.param("doc_9999", 9999, id="large"),
+            pytest.param(None, None, id="none"),
+            pytest.param("", None, id="empty"),
+            pytest.param("cand_3", None, id="wrong_prefix"),
+            pytest.param("doc_42_extra", None, id="partial_match_rejected"),
+            pytest.param("doc_abc", None, id="non_numeric"),
+        ],
+    )
+    def test_parse_doc_idx_values(self, source, expected):
+        """parse_doc_idx: doc_{idx} -> int, else None."""
+        assert parse_doc_idx(source) == expected
 
 
 # ===========================================================================
@@ -305,18 +293,19 @@ class TestParseDocIdx:
 # ===========================================================================
 
 class TestPreviewTokenEstimate:
-    def test_empty(self):
-        assert preview_token_estimate([]) == 0
-
-    def test_single_word(self):
-        assert preview_token_estimate(["hello"]) == 1
-
-    def test_proportional(self):
-        previews = ["a b c d e"] * 2  # 10 words -> round(13) = 13
-        assert preview_token_estimate(previews) == 13
-
-    def test_none_safe(self):
-        assert preview_token_estimate([None, None]) == 0  # type: ignore[list-item]
+    @pytest.mark.parametrize(
+        ("previews", "expected"),
+        [
+            pytest.param([], 0, id="empty"),
+            pytest.param(["hello"], 1, id="single_word"),
+            # 10 words -> round(13) = 13
+            pytest.param(["a b c d e"] * 2, 13, id="proportional"),
+            pytest.param([None, None], 0, id="none_safe"),  # type: ignore[list-item]
+        ],
+    )
+    def test_preview_token_estimate_values(self, previews, expected):
+        """preview_token_estimate: whitespace word count * 1.3, rounded, None-safe."""
+        assert preview_token_estimate(previews) == expected
 
 
 # ===========================================================================

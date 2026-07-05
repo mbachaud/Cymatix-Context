@@ -315,133 +315,126 @@ def default_run():
     return capture()
 
 
-def test_tag_exact_weight_scales_tier(default_run):
-    _, _, base = default_run
-    _, contrib = _contrib_for({"tag_exact_weight": 6.0})
-    assert contrib["gA"]["tag_exact"] == 2 * base["gA"]["tag_exact"]
-    assert contrib["gC"]["tag_exact"] == 2 * base["gC"]["tag_exact"]
-
-
-def test_tag_prefix_weight_scales_tier(default_run):
-    _, _, base = default_run
-    _, contrib = _contrib_for({"tag_prefix_weight": 3.0})
-    assert contrib["gB"]["tag_prefix"] == 2 * base["gB"]["tag_prefix"]
-
-
 def test_fts5_weight_scales_cap(default_run):
     """Additive fts5 has no leading coefficient — the knob owns the cap
     (cap = 2.0 × fts5_weight; 2.0 × default 3.0 == legacy literal 6.0).
     gA's raw BM25 magnitude exceeds 0.5, so a 0.25 weight must clamp the
-    contribution to exactly 0.5."""
+    contribution to exactly 0.5.
+
+    Kept standalone: every other knob below is exercised by *doubling*
+    the default weight and asserting the contribution doubles; fts5 is
+    exercised by *shrinking* the weight to prove the cap clamps, so it
+    does not fit the shared 2x table in ``test_weight_scales_tier``.
+    """
     _, _, base = default_run
     assert base["gA"]["fts5"] > 0.5  # fixture guard: raw above the test cap
     _, contrib = _contrib_for({"fts5_weight": 0.25})
     assert contrib["gA"]["fts5"] == 0.5
 
 
-def test_splade_weight_scales_tier(default_run):
+@pytest.mark.parametrize(
+    ("tier", "weight_kwarg", "new_weight", "gene_ids", "exact", "base_exact"),
+    [
+        pytest.param(
+            "tag_exact", "tag_exact_weight", 6.0, ("gA", "gC"), {}, {},
+            id="tag_exact",
+        ),
+        pytest.param(
+            "tag_prefix", "tag_prefix_weight", 3.0, ("gB",), {}, {},
+            id="tag_prefix",
+        ),
+        pytest.param(
+            # gA saturates the 20.0 normalization: min(30,20) * 7/20 == 7.0
+            "splade", "splade_weight", 7.0, ("gA", "gD"), {"gA": 7.0}, {},
+            id="splade",
+        ),
+        pytest.param(
+            "sema_boost", "sema_boost_weight", 4.0, ("gA",), {}, {},
+            id="sema_boost",
+        ),
+        pytest.param(
+            "sema_cold", "sema_cold_weight", 6.0, ("gE", "gF"), {}, {},
+            id="sema_cold",
+        ),
+        pytest.param(
+            # Cap scales with the knob too (cap = 2.0 × weight; 2.0 ×
+            # default 1.5 == legacy literal 3.0), so gA's capped
+            # contribution (pinned via base_exact) still obeys the
+            # plain 2x rule: new cap 6.0 == 2 * 3.0.
+            "lex_anchor", "lex_anchor_weight", 3.0, ("gA", "gC"), {},
+            {"gA": 3.0}, id="lex_anchor",
+        ),
+        pytest.param(
+            # Cap scales with the knob (cap = 3.0 × weight; 3.0 ×
+            # default 1.0 == legacy literal 3.0).
+            "harmonic", "harmonic_weight", 2.0, ("gA", "gB"), {}, {},
+            id="harmonic",
+        ),
+        pytest.param(
+            # Cap scales with the knob (cap = 4.0 × weight; 4.0 ×
+            # default 0.5 == legacy literal 2.0).
+            "entity_graph", "entity_graph_weight", 1.0, ("gA", "gB"), {}, {},
+            id="entity_graph",
+        ),
+    ],
+)
+def test_weight_scales_tier(
+    default_run, tier, weight_kwarg, new_weight, gene_ids, exact, base_exact,
+):
+    """Doubling a tier's weight scales exactly that tier's contribution
+    for every doc where it fires, checked against a same-process default
+    run (no embedded golden floats). fts5 is excluded — see
+    ``test_fts5_weight_scales_cap`` above, which covers its cap-clamp
+    shape instead of the plain 2x rule used here.
+    """
     _, _, base = default_run
-    _, contrib = _contrib_for({"splade_weight": 7.0})
-    # gA saturates the 20.0 normalization: min(30,20) * 7/20 == 7.0
-    assert contrib["gA"]["splade"] == 2 * base["gA"]["splade"] == 7.0
-    assert contrib["gD"]["splade"] == 2 * base["gD"]["splade"]
-
-
-def test_sema_boost_weight_scales_tier(default_run):
-    _, _, base = default_run
-    _, contrib = _contrib_for({"sema_boost_weight": 4.0})
-    assert contrib["gA"]["sema_boost"] == 2 * base["gA"]["sema_boost"]
-
-
-def test_sema_cold_weight_scales_tier(default_run):
-    _, _, base = default_run
-    _, contrib = _contrib_for({"sema_cold_weight": 6.0})
-    assert contrib["gE"]["sema_cold"] == 2 * base["gE"]["sema_cold"]
-    assert contrib["gF"]["sema_cold"] == 2 * base["gF"]["sema_cold"]
-
-
-def test_lex_anchor_weight_scales_tier(default_run):
-    """Cap scales with the knob (cap = 2.0 × weight; 2.0 × default 1.5
-    == legacy literal 3.0), so a capped contribution doubles too."""
-    _, _, base = default_run
-    assert base["gA"]["lex_anchor"] == 3.0  # capped at default
-    _, contrib = _contrib_for({"lex_anchor_weight": 3.0})
-    assert contrib["gA"]["lex_anchor"] == 6.0
-    assert contrib["gC"]["lex_anchor"] == 2 * base["gC"]["lex_anchor"]
-
-
-def test_harmonic_weight_scales_tier(default_run):
-    """Cap scales with the knob (cap = 3.0 × weight; 3.0 × default 1.0
-    == legacy literal 3.0)."""
-    _, _, base = default_run
-    _, contrib = _contrib_for({"harmonic_weight": 2.0})
-    assert contrib["gA"]["harmonic"] == 2 * base["gA"]["harmonic"]
-    assert contrib["gB"]["harmonic"] == 2 * base["gB"]["harmonic"]
-
-
-def test_entity_graph_weight_scales_tier(default_run):
-    """Cap scales with the knob (cap = 4.0 × weight; 4.0 × default 0.5
-    == legacy literal 2.0)."""
-    _, _, base = default_run
-    _, contrib = _contrib_for({"entity_graph_weight": 1.0})
-    assert contrib["gA"]["entity_graph"] == 2 * base["gA"]["entity_graph"]
-    assert contrib["gB"]["entity_graph"] == 2 * base["gB"]["entity_graph"]
+    for gid, expected_base in base_exact.items():
+        assert base[gid][tier] == expected_base
+    _, contrib = _contrib_for({weight_kwarg: new_weight})
+    for gid in gene_ids:
+        assert contrib[gid][tier] == 2 * base[gid][tier]
+        if gid in exact:
+            assert contrib[gid][tier] == exact[gid]
 
 
 # ─── 3. zero weight kills the tier ────────────────────────────────────
 
 
-def test_zero_tag_exact_weight_kills_tier():
-    _, contrib = _contrib_for({"tag_exact_weight": 0.0})
-    assert contrib["gA"].get("tag_exact", 0.0) == 0.0
-    assert contrib["gC"].get("tag_exact", 0.0) == 0.0
-
-
-def test_zero_tag_prefix_weight_kills_tier():
-    _, contrib = _contrib_for({"tag_prefix_weight": 0.0})
-    assert contrib["gB"].get("tag_prefix", 0.0) == 0.0
-
-
-def test_zero_fts5_weight_kills_tier():
-    _, contrib = _contrib_for({"fts5_weight": 0.0})
-    assert contrib["gA"].get("fts5", 0.0) == 0.0
-    assert contrib["gC"].get("fts5", 0.0) == 0.0
-
-
-def test_zero_splade_weight_kills_tier():
-    _, contrib = _contrib_for({"splade_weight": 0.0})
-    assert contrib["gA"].get("splade", 0.0) == 0.0
-    assert contrib["gD"].get("splade", 0.0) == 0.0
-
-
-def test_zero_sema_boost_weight_kills_tier():
-    _, contrib = _contrib_for({"sema_boost_weight": 0.0})
-    assert contrib["gA"].get("sema_boost", 0.0) == 0.0
-
-
-def test_zero_sema_cold_weight_kills_tier():
-    _, contrib = _contrib_for({"sema_cold_weight": 0.0})
-    assert contrib.get("gE", {}).get("sema_cold", 0.0) == 0.0
-    assert contrib.get("gF", {}).get("sema_cold", 0.0) == 0.0
-
-
 def test_zero_lex_anchor_weight_kills_tier():
+    """Kept standalone: the boost gate (> 1.0) never opens at weight 0,
+    so the tier is absent from ``contrib`` entirely rather than present
+    at a 0.0 contribution — it does not fit the shared
+    ``.get(tier, 0.0) == 0.0`` table in ``test_zero_weight_kills_tier``.
+    """
     _, contrib = _contrib_for({"lex_anchor_weight": 0.0})
     # boost gate (> 1.0) never opens at weight 0 — tier never fires.
     assert "lex_anchor" not in contrib.get("gA", {})
     assert "lex_anchor" not in contrib.get("gC", {})
 
 
-def test_zero_harmonic_weight_kills_tier():
-    _, contrib = _contrib_for({"harmonic_weight": 0.0})
-    assert contrib["gA"].get("harmonic", 0.0) == 0.0
-    assert contrib["gB"].get("harmonic", 0.0) == 0.0
-
-
-def test_zero_entity_graph_weight_kills_tier():
-    _, contrib = _contrib_for({"entity_graph_weight": 0.0})
-    assert contrib["gA"].get("entity_graph", 0.0) == 0.0
-    assert contrib["gB"].get("entity_graph", 0.0) == 0.0
+@pytest.mark.parametrize(
+    ("tier", "weight_kwarg", "gene_ids"),
+    [
+        pytest.param("tag_exact", "tag_exact_weight", ("gA", "gC"), id="tag_exact"),
+        pytest.param("tag_prefix", "tag_prefix_weight", ("gB",), id="tag_prefix"),
+        pytest.param("fts5", "fts5_weight", ("gA", "gC"), id="fts5"),
+        pytest.param("splade", "splade_weight", ("gA", "gD"), id="splade"),
+        pytest.param("sema_boost", "sema_boost_weight", ("gA",), id="sema_boost"),
+        pytest.param("sema_cold", "sema_cold_weight", ("gE", "gF"), id="sema_cold"),
+        pytest.param("harmonic", "harmonic_weight", ("gA", "gB"), id="harmonic"),
+        pytest.param(
+            "entity_graph", "entity_graph_weight", ("gA", "gB"), id="entity_graph",
+        ),
+    ],
+)
+def test_zero_weight_kills_tier(tier, weight_kwarg, gene_ids):
+    """Zeroing a tier's weight drops its contribution to 0.0 for every
+    doc where it fires. lex_anchor is excluded — see
+    ``test_zero_lex_anchor_weight_kills_tier`` above.
+    """
+    _, contrib = _contrib_for({weight_kwarg: 0.0})
+    for gid in gene_ids:
+        assert contrib.get(gid, {}).get(tier, 0.0) == 0.0
 
 
 # ─── config plumbing: TOML → RetrievalConfig → Genome kwargs ─────────

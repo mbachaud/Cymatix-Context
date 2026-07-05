@@ -95,22 +95,44 @@ class TestSchemaMigration:
         assert "idx_hitl_participant_time" in indexes
         assert "idx_hitl_pause_type" in indexes
 
-    def test_hitl_events_schema_has_expected_columns(self, genome):
-        """Guard against accidental column renames — the chat-channel
-        signal columns are load-bearing per the M1 finding."""
+    @pytest.mark.parametrize(
+        ("table", "expected_columns"),
+        [
+            pytest.param(
+                "hitl_events",
+                {
+                    "event_id", "party_id", "participant_id", "ts",
+                    "pause_type", "task_context", "resolved_without_operator",
+                    "operator_tone_uncertainty", "operator_risk_keywords",
+                    "time_since_last_risk_event", "recoverability_signal",
+                    "genome_total_genes", "genome_hetero_count",
+                    "cold_cache_size", "metadata",
+                },
+                id="hitl-events-chat-signal-columns",
+            ),
+            pytest.param(
+                "participants",
+                {"agent_kind", "mcp_host"},
+                id="participants-vendor-host-columns",
+            ),
+            pytest.param(
+                "participants",
+                {"ide_detected", "ide_detection_via", "model_id"},
+                id="participants-announce-columns",
+            ),
+        ],
+    )
+    def test_table_has_expected_columns(self, genome, table, expected_columns):
+        """Column-presence table — guards against accidental renames.
+        hitl_events chat-channel signal columns are load-bearing per the
+        M1 finding; participants vendor-host (agent_kind/mcp_host) and
+        announce (ide_detected/ide_detection_via/model_id) columns are
+        added by the idempotent schema migration."""
         cur = genome.conn.cursor()
-        rows = cur.execute("PRAGMA table_info(hitl_events)").fetchall()
+        rows = cur.execute(f"PRAGMA table_info({table})").fetchall()
         columns = {row[1] for row in rows}  # row[1] is the column name
-        expected = {
-            "event_id", "party_id", "participant_id", "ts",
-            "pause_type", "task_context", "resolved_without_operator",
-            "operator_tone_uncertainty", "operator_risk_keywords",
-            "time_since_last_risk_event", "recoverability_signal",
-            "genome_total_genes", "genome_hetero_count", "cold_cache_size",
-            "metadata",
-        }
-        missing = expected - columns
-        assert not missing, f"hitl_events missing columns: {missing}"
+        missing = expected_columns - columns
+        assert not missing, f"{table} missing columns: {missing}"
 
     def test_migration_is_idempotent(self, genome):
         """Running the migration twice should not raise."""
@@ -119,27 +141,12 @@ class TestSchemaMigration:
         genome._ensure_registry_schema(cur)
         genome.conn.commit()
 
-    def test_participants_table_has_agent_kind_and_mcp_host_columns(self, genome):
-        """Schema migration adds agent_kind and mcp_host columns idempotently."""
-        cur = genome.conn.cursor()
-        cols = {r[1] for r in cur.execute("PRAGMA table_info(participants)").fetchall()}
-        assert "agent_kind" in cols, f"agent_kind missing; got {cols}"
-        assert "mcp_host" in cols, f"mcp_host missing; got {cols}"
-
     def test_schema_migration_is_idempotent(self, genome):
         """Re-running _ensure_registry_schema does not raise on existing columns."""
         cur = genome.conn.cursor()
         # Should not raise even though columns already exist.
         genome._ensure_registry_schema(cur)
         genome.conn.commit()
-
-    def test_participants_table_has_announce_columns(self, genome):
-        """Schema migration adds ide_detected, ide_detection_via, model_id columns."""
-        cur = genome.conn.cursor()
-        cols = {r[1] for r in cur.execute("PRAGMA table_info(participants)").fetchall()}
-        assert "ide_detected" in cols, f"ide_detected missing; got {cols}"
-        assert "ide_detection_via" in cols, f"ide_detection_via missing; got {cols}"
-        assert "model_id" in cols, f"model_id missing; got {cols}"
 
 
 class TestRegisterParticipant:
@@ -331,25 +338,22 @@ class TestListParticipants:
 
 
 class TestStatusFromHeartbeat:
-    def test_fresh_is_active(self):
+    @pytest.mark.parametrize(
+        ("age_s", "expected"),
+        [
+            pytest.param(0, "active", id="fresh-is-active"),
+            pytest.param(DEFAULT_TTL_S - 1, "active", id="within-ttl-is-active"),
+            pytest.param(DEFAULT_TTL_S + 1, "idle", id="past-ttl-is-idle"),
+            pytest.param(IDLE_TTL_S + 1, "stale", id="past-idle-is-stale"),
+            pytest.param(STALE_TTL_S + 1, "gone", id="past-stale-is-gone"),
+        ],
+    )
+    def test_status_boundaries(self, age_s, expected):
+        """Boundary table for _status_from_last_heartbeat: fresh / within
+        DEFAULT_TTL → active, past DEFAULT_TTL → idle, past IDLE_TTL →
+        stale, past STALE_TTL → gone."""
         now = time.time()
-        assert _status_from_last_heartbeat(now, now) == "active"
-
-    def test_within_ttl_is_active(self):
-        now = time.time()
-        assert _status_from_last_heartbeat(now - DEFAULT_TTL_S + 1, now) == "active"
-
-    def test_past_ttl_is_idle(self):
-        now = time.time()
-        assert _status_from_last_heartbeat(now - DEFAULT_TTL_S - 1, now) == "idle"
-
-    def test_past_idle_is_stale(self):
-        now = time.time()
-        assert _status_from_last_heartbeat(now - IDLE_TTL_S - 1, now) == "stale"
-
-    def test_past_stale_is_gone(self):
-        now = time.time()
-        assert _status_from_last_heartbeat(now - STALE_TTL_S - 1, now) == "gone"
+        assert _status_from_last_heartbeat(now - age_s, now) == expected
 
 
 class TestAttribution:
@@ -1096,20 +1100,88 @@ class TestRecentEndpoint:
         assert data["count"] == 0
 
 
-def test_participant_model_accepts_vendor_host_fields():
+# ═══ Optional-field plumbing: vendor_host + announce field groups ═════
+#
+# Two optional participant field groups follow the same seven-step
+# plumbing sequence (Participant model accepts → ParticipantInfo accepts
+# → ParticipantInfo defaults to None → register persists to SQL →
+# omitting register stores NULL → list_participants projects →
+# get_participant projects):
+#   - vendor_host: agent_kind, mcp_host
+#   - announce:    ide_detected, ide_detection_via, model_id
+# Each descriptor below carries the exact per-step literal sample values
+# the original per-group test functions used. "unset_after_register"
+# marks fields expected NULL right after registration (model_id is only
+# set later by update_announcement — "not yet announced").
+
+VENDOR_HOST_GROUP = {
+    "all_fields": ("agent_kind", "mcp_host"),
+    "model_fields": {"agent_kind": "claude-code", "mcp_host": "vscode"},
+    "info_fields": {"agent_kind": "codex", "mcp_host": "cursor"},
+    "register_fields": {"agent_kind": "claude-code", "mcp_host": "vscode"},
+    "register_party": "party_x",
+    "unset_after_register": (),
+    "omit_party": "party_y",
+    "list_fields": {"agent_kind": "codex", "mcp_host": "cursor"},
+    "list_party": "party_z",
+    "get_fields": {"agent_kind": "gemini", "mcp_host": "antigravity"},
+    "get_party": "party_w",
+}
+
+ANNOUNCE_GROUP = {
+    "all_fields": ("ide_detected", "ide_detection_via", "model_id"),
+    "model_fields": {
+        "ide_detected": "vscode",
+        "ide_detection_via": "env:VSCODE_PID",
+        "model_id": "claude-opus-4-7",
+    },
+    "info_fields": {
+        "ide_detected": "cursor",
+        "ide_detection_via": "env:CURSOR_TRACE_ID",
+        "model_id": "gpt-5",
+    },
+    "register_fields": {
+        "ide_detected": "vscode",
+        "ide_detection_via": "env:VSCODE_PID",
+    },
+    "register_party": "party_a",
+    "unset_after_register": ("model_id",),  # not yet announced
+    "omit_party": "party_b",
+    "list_fields": {
+        "ide_detected": "cursor",
+        "ide_detection_via": "env:CURSOR_TRACE_ID",
+    },
+    "list_party": "party_c",
+    "get_fields": {
+        "ide_detected": "vscode",
+        "ide_detection_via": "env:VSCODE_PID",
+    },
+    "get_party": "party_d",
+}
+
+FIELD_GROUPS = [
+    pytest.param(VENDOR_HOST_GROUP, id="vendor-host"),
+    pytest.param(ANNOUNCE_GROUP, id="announce"),
+]
+
+
+@pytest.mark.parametrize("group", FIELD_GROUPS)
+def test_participant_model_accepts_group_fields(group):
+    """Participant schema accepts each optional field group."""
     from helix_context.schemas import Participant
     p = Participant(
         participant_id="abc",
         party_id="party",
         handle="laude",
-        agent_kind="claude-code",
-        mcp_host="vscode",
+        **group["model_fields"],
     )
-    assert p.agent_kind == "claude-code"
-    assert p.mcp_host == "vscode"
+    for field, value in group["model_fields"].items():
+        assert getattr(p, field) == value
 
 
-def test_participant_info_accepts_vendor_host_fields():
+@pytest.mark.parametrize("group", FIELD_GROUPS)
+def test_participant_info_accepts_group_fields(group):
+    """ParticipantInfo schema accepts each optional field group."""
     from helix_context.schemas import ParticipantInfo
     p = ParticipantInfo(
         participant_id="abc",
@@ -1118,14 +1190,15 @@ def test_participant_info_accepts_vendor_host_fields():
         status="active",
         last_seen_s_ago=0.0,
         started_at=0.0,
-        agent_kind="codex",
-        mcp_host="cursor",
+        **group["info_fields"],
     )
-    assert p.agent_kind == "codex"
-    assert p.mcp_host == "cursor"
+    for field, value in group["info_fields"].items():
+        assert getattr(p, field) == value
 
 
-def test_participant_info_defaults_vendor_host_to_none():
+@pytest.mark.parametrize("group", FIELD_GROUPS)
+def test_participant_info_defaults_group_fields_to_none(group):
+    """ParticipantInfo defaults every field in each group to None."""
     from helix_context.schemas import ParticipantInfo
     p = ParticipantInfo(
         participant_id="abc",
@@ -1135,165 +1208,79 @@ def test_participant_info_defaults_vendor_host_to_none():
         last_seen_s_ago=0.0,
         started_at=0.0,
     )
-    assert p.agent_kind is None
-    assert p.mcp_host is None
+    for field in group["all_fields"]:
+        assert getattr(p, field) is None
 
 
-def test_register_participant_persists_vendor_host(registry, genome):
-    """register_participant stores agent_kind and mcp_host on the row."""
+@pytest.mark.parametrize("group", FIELD_GROUPS)
+def test_register_participant_persists_group_fields(group, registry, genome):
+    """register_participant stores the group's fields on the row (raw SQL
+    check) and projects them on the returned Participant; fields not set
+    at registration (model_id) stay NULL."""
     p = registry.register_participant(
-        party_id="party_x",
+        party_id=group["register_party"],
         handle="laude",
-        agent_kind="claude-code",
-        mcp_host="vscode",
+        **group["register_fields"],
     )
-    assert p.agent_kind == "claude-code"
-    assert p.mcp_host == "vscode"
+    for field, value in group["register_fields"].items():
+        assert getattr(p, field) == value
+    for field in group["unset_after_register"]:
+        assert getattr(p, field) is None
 
+    columns = list(group["register_fields"]) + list(group["unset_after_register"])
     cur = genome.conn.cursor()
     row = cur.execute(
-        "SELECT agent_kind, mcp_host FROM participants WHERE participant_id = ?",
+        f"SELECT {', '.join(columns)} FROM participants WHERE participant_id = ?",
         (p.participant_id,),
     ).fetchone()
-    assert row[0] == "claude-code"
-    assert row[1] == "vscode"
+    for i, field in enumerate(columns):
+        assert row[i] == group["register_fields"].get(field)
 
 
-def test_register_participant_omitting_vendor_host_stores_null(registry, genome):
+@pytest.mark.parametrize("group", FIELD_GROUPS)
+def test_register_participant_omitting_group_fields_stores_null(group, registry):
     """Backwards-compat: callers that don't pass the new fields get NULL."""
-    p = registry.register_participant(party_id="party_y", handle="taude")
-    assert p.agent_kind is None
-    assert p.mcp_host is None
+    p = registry.register_participant(party_id=group["omit_party"], handle="taude")
+    for field in group["all_fields"]:
+        assert getattr(p, field) is None
 
 
-def test_list_participants_projects_vendor_host(registry):
+@pytest.mark.parametrize("group", FIELD_GROUPS)
+def test_list_participants_projects_group_fields(group, registry):
+    """list_participants projects the group's fields; fields never set
+    (model_id) project as None."""
     registry.register_participant(
-        party_id="party_z",
+        party_id=group["list_party"],
         handle="laude",
-        agent_kind="codex",
-        mcp_host="cursor",
+        **group["list_fields"],
     )
-    rows = registry.list_participants(party_id="party_z", status_filter="all")
+    rows = registry.list_participants(
+        party_id=group["list_party"], status_filter="all"
+    )
     assert len(rows) == 1
-    assert rows[0].agent_kind == "codex"
-    assert rows[0].mcp_host == "cursor"
+    for field, value in group["list_fields"].items():
+        assert getattr(rows[0], field) == value
+    for field in group["all_fields"]:
+        if field not in group["list_fields"]:
+            assert getattr(rows[0], field) is None
 
 
-def test_get_participant_projects_vendor_host(registry):
+@pytest.mark.parametrize("group", FIELD_GROUPS)
+def test_get_participant_projects_group_fields(group, registry):
+    """get_participant projects the group's fields; fields never set
+    (model_id) project as None."""
     p = registry.register_participant(
-        party_id="party_w",
+        party_id=group["get_party"],
         handle="laude",
-        agent_kind="gemini",
-        mcp_host="antigravity",
+        **group["get_fields"],
     )
     fetched = registry.get_participant(p.participant_id)
     assert fetched is not None
-    assert fetched.agent_kind == "gemini"
-    assert fetched.mcp_host == "antigravity"
-
-
-def test_participant_model_accepts_announce_fields():
-    from helix_context.schemas import Participant
-    p = Participant(
-        participant_id="abc",
-        party_id="party",
-        handle="laude",
-        ide_detected="vscode",
-        ide_detection_via="env:VSCODE_PID",
-        model_id="claude-opus-4-7",
-    )
-    assert p.ide_detected == "vscode"
-    assert p.ide_detection_via == "env:VSCODE_PID"
-    assert p.model_id == "claude-opus-4-7"
-
-
-def test_participant_info_accepts_announce_fields():
-    from helix_context.schemas import ParticipantInfo
-    p = ParticipantInfo(
-        participant_id="abc",
-        party_id="party",
-        handle="laude",
-        status="active",
-        last_seen_s_ago=0.0,
-        started_at=0.0,
-        ide_detected="cursor",
-        ide_detection_via="env:CURSOR_TRACE_ID",
-        model_id="gpt-5",
-    )
-    assert p.ide_detected == "cursor"
-    assert p.ide_detection_via == "env:CURSOR_TRACE_ID"
-    assert p.model_id == "gpt-5"
-
-
-def test_participant_info_defaults_announce_fields_to_none():
-    from helix_context.schemas import ParticipantInfo
-    p = ParticipantInfo(
-        participant_id="abc",
-        party_id="party",
-        handle="laude",
-        status="active",
-        last_seen_s_ago=0.0,
-        started_at=0.0,
-    )
-    assert p.ide_detected is None
-    assert p.ide_detection_via is None
-    assert p.model_id is None
-
-
-def test_register_participant_persists_announce_fields(registry, genome):
-    p = registry.register_participant(
-        party_id="party_a",
-        handle="laude",
-        ide_detected="vscode",
-        ide_detection_via="env:VSCODE_PID",
-    )
-    assert p.ide_detected == "vscode"
-    assert p.ide_detection_via == "env:VSCODE_PID"
-    assert p.model_id is None  # not yet announced
-
-    cur = genome.conn.cursor()
-    row = cur.execute(
-        "SELECT ide_detected, ide_detection_via, model_id "
-        "FROM participants WHERE participant_id = ?",
-        (p.participant_id,),
-    ).fetchone()
-    assert row[0] == "vscode"
-    assert row[1] == "env:VSCODE_PID"
-    assert row[2] is None
-
-
-def test_register_participant_omitting_announce_fields_stores_null(registry):
-    p = registry.register_participant(party_id="party_b", handle="taude")
-    assert p.ide_detected is None
-    assert p.ide_detection_via is None
-    assert p.model_id is None
-
-
-def test_list_participants_projects_announce_fields(registry):
-    registry.register_participant(
-        party_id="party_c",
-        handle="laude",
-        ide_detected="cursor",
-        ide_detection_via="env:CURSOR_TRACE_ID",
-    )
-    rows = registry.list_participants(party_id="party_c", status_filter="all")
-    assert len(rows) == 1
-    assert rows[0].ide_detected == "cursor"
-    assert rows[0].ide_detection_via == "env:CURSOR_TRACE_ID"
-    assert rows[0].model_id is None
-
-
-def test_get_participant_projects_announce_fields(registry):
-    p = registry.register_participant(
-        party_id="party_d",
-        handle="laude",
-        ide_detected="vscode",
-        ide_detection_via="env:VSCODE_PID",
-    )
-    fetched = registry.get_participant(p.participant_id)
-    assert fetched is not None
-    assert fetched.ide_detected == "vscode"
-    assert fetched.model_id is None
+    for field, value in group["get_fields"].items():
+        assert getattr(fetched, field) == value
+    for field in group["all_fields"]:
+        if field not in group["get_fields"]:
+            assert getattr(fetched, field) is None
 
 
 def test_update_announcement_sets_model_id(registry):

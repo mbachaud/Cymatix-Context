@@ -41,34 +41,26 @@ from repobench_r_helix_global import BM25  # noqa: E402
 # ================================================================================
 
 class TestAccAt:
-    def test_gold_at_position_0_acc1(self):
-        assert acc_at([2, 0, 1], gold=2, k=1) == 1.0
+    """acc_at: the core scoring function, across gold position / k boundaries."""
 
-    def test_gold_not_in_top1(self):
-        assert acc_at([0, 1, 2], gold=2, k=1) == 0.0
-
-    def test_gold_in_top3(self):
-        assert acc_at([0, 1, 2], gold=2, k=3) == 1.0
-
-    def test_gold_at_position_2_acc3_boundary(self):
-        # index 2 is the third element (0-based) -- within top-3
-        assert acc_at([0, 1, 2, 3, 4], gold=2, k=3) == 1.0
-
-    def test_gold_at_position_3_not_in_top3(self):
-        assert acc_at([0, 1, 2, 3, 4], gold=3, k=3) == 0.0
-
-    def test_gold_in_top5(self):
-        assert acc_at([0, 1, 2, 3, 4], gold=4, k=5) == 1.0
-
-    def test_gold_not_in_top5(self):
-        assert acc_at([0, 1, 2, 3, 4], gold=5, k=5) == 0.0
-
-    def test_empty_order_miss(self):
-        assert acc_at([], gold=0, k=1) == 0.0
-
-    def test_k_larger_than_list(self):
-        # k=10 but only 3 items; gold present -> hit
-        assert acc_at([0, 1, 2], gold=1, k=10) == 1.0
+    @pytest.mark.parametrize(
+        ("order", "gold", "k", "expected"),
+        [
+            pytest.param([2, 0, 1], 2, 1, 1.0, id="gold-at-position-0-acc1"),
+            pytest.param([0, 1, 2], 2, 1, 0.0, id="gold-not-in-top1"),
+            pytest.param([0, 1, 2], 2, 3, 1.0, id="gold-in-top3"),
+            # index 2 is the third element (0-based) -- within top-3
+            pytest.param([0, 1, 2, 3, 4], 2, 3, 1.0, id="gold-at-position-2-acc3-boundary"),
+            pytest.param([0, 1, 2, 3, 4], 3, 3, 0.0, id="gold-at-position-3-not-in-top3"),
+            pytest.param([0, 1, 2, 3, 4], 4, 5, 1.0, id="gold-in-top5"),
+            pytest.param([0, 1, 2, 3, 4], 5, 5, 0.0, id="gold-not-in-top5"),
+            pytest.param([], 0, 1, 0.0, id="empty-order-miss"),
+            # k=10 but only 3 items; gold present -> hit
+            pytest.param([0, 1, 2], 1, 10, 1.0, id="k-larger-than-list"),
+        ],
+    )
+    def test_acc_at(self, order, gold, k, expected):
+        assert acc_at(order, gold=gold, k=k) == expected
 
 
 # ================================================================================
@@ -76,15 +68,19 @@ class TestAccAt:
 # ================================================================================
 
 class TestKsForLevel:
-    def test_easy_returns_1_3(self):
-        assert _ks_for_level("easy") == [1, 3]
+    """_ks_for_level: k values per difficulty level."""
 
-    def test_hard_returns_1_3_5(self):
-        assert _ks_for_level("hard") == [1, 3, 5]
-
-    def test_unknown_level_treated_as_easy(self):
-        # Any non-"hard" level -> [1, 3]
-        assert _ks_for_level("medium") == [1, 3]
+    @pytest.mark.parametrize(
+        ("level", "expected"),
+        [
+            pytest.param("easy", [1, 3], id="easy-returns-1-3"),
+            pytest.param("hard", [1, 3, 5], id="hard-returns-1-3-5"),
+            # Any non-"hard" level -> [1, 3]
+            pytest.param("medium", [1, 3], id="unknown-level-treated-as-easy"),
+        ],
+    )
+    def test_ks_for_level(self, level, expected):
+        assert _ks_for_level(level) == expected
 
 
 # ================================================================================
@@ -92,26 +88,24 @@ class TestKsForLevel:
 # ================================================================================
 
 class TestTok:
-    def test_splits_on_non_identifier_chars(self):
-        assert tok("foo.bar(baz)") == ["foo", "bar", "baz"]
+    """tok: identifier tokenizer."""
 
-    def test_ignores_leading_digits(self):
-        # The regex finds identifier-shaped substrings anywhere in the string.
-        # "123abc" contains the suffix "abc" starting after the digits, so tok
-        # correctly extracts it -- the tokenizer is substring-based, not word-boundary.
-        result = tok("123abc def")
-        assert "def" in result
-        assert "abc" in result   # correct: regex finds it as suffix of 123abc
-        assert "123" not in result  # purely numeric tokens are never matched
-
-    def test_underscore_prefix(self):
-        assert "_private" in tok("_private = 1")
-
-    def test_empty_string(self):
-        assert tok("") == []
-
-    def test_none_safe(self):
-        assert tok(None) == []
+    @pytest.mark.parametrize(
+        ("s", "expected"),
+        [
+            pytest.param("foo.bar(baz)", ["foo", "bar", "baz"], id="splits-on-non-identifier-chars"),
+            # The regex finds identifier-shaped substrings anywhere in the string.
+            # "123abc" contains the suffix "abc" starting after the digits, so tok
+            # correctly extracts it -- the tokenizer is substring-based, not
+            # word-boundary. Purely numeric tokens ("123") are never matched.
+            pytest.param("123abc def", ["abc", "def"], id="ignores-leading-digits-substring-match"),
+            pytest.param("_private = 1", ["_private"], id="underscore-prefix"),
+            pytest.param("", [], id="empty-string"),
+            pytest.param(None, [], id="none-safe"),
+        ],
+    )
+    def test_tok(self, s, expected):
+        assert tok(s) == expected
 
 
 # ================================================================================
@@ -203,18 +197,26 @@ class TestRankBM25:
 # ================================================================================
 
 class TestRankRandom:
-    def test_deterministic_same_key(self):
-        cands = ["a", "b", "c", "d", "e"]
-        o1 = rank_random(cands, ("easy", 42))
-        o2 = rank_random(cands, ("easy", 42))
-        assert o1 == o2
+    """rank_random: deterministic seeded permutation."""
 
-    def test_different_keys_give_different_orders(self):
-        cands = list(range(20))
-        o1 = rank_random(cands, ("easy", 0))
-        o2 = rank_random(cands, ("easy", 1))
-        # With 20 elements it would be astronomically unlikely to match.
-        assert o1 != o2
+    @pytest.mark.parametrize(
+        ("cands", "key1", "key2", "expect_equal"),
+        [
+            pytest.param(
+                ["a", "b", "c", "d", "e"], ("easy", 42), ("easy", 42), True,
+                id="deterministic-same-key",
+            ),
+            # With 20 elements it would be astronomically unlikely to match.
+            pytest.param(
+                list(range(20)), ("easy", 0), ("easy", 1), False,
+                id="different-keys-give-different-orders",
+            ),
+        ],
+    )
+    def test_rank_random_key_sensitivity(self, cands, key1, key2, expect_equal):
+        o1 = rank_random(cands, key1)
+        o2 = rank_random(cands, key2)
+        assert (o1 == o2) is expect_equal
 
     def test_returns_all_indices(self):
         cands = ["a", "b", "c"]
