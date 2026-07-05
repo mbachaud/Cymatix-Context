@@ -1,7 +1,7 @@
 """Unit tests for the two genome tools.
 
   * benchmarks/build_gold_from_genome.py -- needle generation from a blob genome
-  * tools/shard_to_blob.py               -- sharded -> blob merge, dense preserved
+  * scripts/shard_to_blob.py             -- sharded -> blob merge, dense preserved
 
 Pure-Python, no GPU / server / network. Uses tiny temp SQLite fixtures.
 
@@ -34,7 +34,7 @@ def _load(mod_name: str, rel_path: str):
     return mod
 
 build_gold = _load("build_gold_from_genome", "benchmarks/build_gold_from_genome.py")
-shard_to_blob = _load("shard_to_blob", "tools/shard_to_blob.py")
+shard_to_blob = _load("shard_to_blob", "scripts/shard_to_blob.py")
 
 
 # ---------------------------------------------------------------------------
