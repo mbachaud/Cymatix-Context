@@ -235,3 +235,298 @@ def test_legacy_block_bodies_fallback():
 def test_empty_block_bodies_no_crash():
     assert cit.extract_block_bodies([]) == []
     assert cit.extract_block_bodies({}) == []
+
+
+# ─── Realistic live shapes: <expressed_context> wrapper (2026-07-04) ────
+#
+# The live renderer ships ``window.expressed_context`` == the WRAPPED
+# string (context_manager.py builds ``<expressed_context>\n...\n
+# </expressed_context>``). The fixtures above omit the wrapper, which is
+# why the old tests stayed green while every real /context response
+# failed body pairing: the wrapper glues to the first block, the header
+# regex (anchored via .match) misses it, the first body is dropped, and
+# every citation→body pairing shifts by one. Observed as
+# body_has_answer_rate ∈ {0.0, 0.02} across ALL sike_bedsweep runs.
+
+
+def _wrapped_response(with_headers: bool = True) -> list[dict]:
+    """The live /context response shape: wrapper + optional headers.
+
+    ``with_headers=False`` mirrors bench configs that set
+    ``legibility_enabled = false`` (e.g. docs/benchmarks/
+    helix_probe_lexical.toml): parts are bare spliced text.
+    """
+    if with_headers:
+        content = (
+            "<expressed_context>\n"
+            "[gene=aaaa11112222 ◆ fired=harmonic:2.3,lex_anchor:1.1 1200→320c]\n"
+            "The helix proxy listens on port 11437.\n"
+            "---\n"
+            "[gene=bbbb33334444 ◇ fired=sema_boost:1.8 180c]\n"
+            "Six-step expression pipeline.\n"
+            "</expressed_context>"
+        )
+    else:
+        content = (
+            "<expressed_context>\n"
+            "The helix proxy listens on port 11437.\n"
+            "---\n"
+            "Six-step expression pipeline.\n"
+            "</expressed_context>"
+        )
+    return [{
+        "name": "Helix Genome Context",
+        "content": content,
+        "agent": {
+            "citations": [
+                {"gene_id": "aaaa11112222aaaa", "source": "helix-context/helix.toml"},
+                {"gene_id": "bbbb33334444bbbb", "source": "helix-context/README.md"},
+            ],
+        },
+    }]
+
+
+def test_wrapped_content_first_block_body_not_lost():
+    """Regression: the <expressed_context> wrapper must not swallow the
+    first block. Before the fix, blocks[0] body was '' and pairing
+    shifted by one."""
+    blocks = cit.extract_block_bodies(_wrapped_response())
+    assert len(blocks) == 2
+    assert blocks[0][0] == "helix-context/helix.toml"
+    assert "port 11437" in blocks[0][2]
+    assert blocks[1][0] == "helix-context/README.md"
+    assert "Six-step" in blocks[1][2]
+
+
+def test_wrapped_content_close_tag_not_in_last_body():
+    blocks = cit.extract_block_bodies(_wrapped_response())
+    for _, _, body in blocks:
+        assert "</expressed_context>" not in body
+
+
+def test_headerless_content_pairs_positionally():
+    """legibility_enabled=false configs emit no [gene=...] headers.
+    Bodies must still pair positionally (citations are written in
+    delivery order, 1:1 with content blocks) instead of all-empty."""
+    blocks = cit.extract_block_bodies(_wrapped_response(with_headers=False))
+    assert len(blocks) == 2
+    assert "port 11437" in blocks[0][2]
+    assert "Six-step" in blocks[1][2]
+
+
+def test_dropped_citation_does_not_shift_pairing():
+    """routes_context skips a citation when its row lookup fails
+    (``continue`` at the row_map miss), so citations can be FEWER than
+    content blocks. Header short-ids (gene_id[:12]) are prefixes of the
+    full citation gene_id — pairing must join on that, not position."""
+    payload = [{
+        "content": (
+            "<expressed_context>\n"
+            "[gene=aaaa11112222 ◆ fired=lex:1.0 100c]\n"
+            "body of gene A\n"
+            "---\n"
+            "[gene=bbbb33334444 ◇ fired=lex:0.9 90c]\n"
+            "body of gene B (citation row was dropped)\n"
+            "---\n"
+            "[gene=cccc55556666 ⬦ fired=lex:0.8 80c]\n"
+            "body of gene C\n"
+            "</expressed_context>"
+        ),
+        "agent": {
+            "citations": [
+                {"gene_id": "aaaa11112222aaaa", "source": "a.py"},
+                # gene bbbb... citation dropped by the server
+                {"gene_id": "cccc55556666cccc", "source": "c.py"},
+            ],
+        },
+    }]
+    blocks = cit.extract_block_bodies(payload)
+    assert len(blocks) == 2
+    assert blocks[0][0] == "a.py"
+    assert "body of gene A" in blocks[0][2]
+    assert blocks[1][0] == "c.py"
+    assert "body of gene C" in blocks[1][2]
+
+
+def test_elision_stub_body_is_empty():
+    """Session-delivery elision stubs share the [gene={id[:12]} ...]
+    shape and must pair with their citation — but their body must be ''
+    so accept-matching can never fire on stub text. (Review 2026-07-05:
+    'delivered 16 queries ago' word-boundary matches numeric accepts
+    like '16'; '1' matches the age string '1.2h'.)"""
+    payload = [{
+        "content": (
+            "<expressed_context>\n"
+            "[gene=aaaa11112222 ↻ delivered 3 queries ago / 45s — see earlier response]\n"
+            "---\n"
+            "[gene=bbbb33334444 ◆ fired=lex:1.2 200→90c]\n"
+            "fresh body text\n"
+            "</expressed_context>"
+        ),
+        "agent": {
+            "citations": [
+                {"gene_id": "aaaa11112222aaaa", "source": "elided.py"},
+                {"gene_id": "bbbb33334444bbbb", "source": "fresh.py"},
+            ],
+        },
+    }]
+    blocks = cit.extract_block_bodies(payload)
+    assert blocks[0][0] == "elided.py"
+    assert blocks[0][2] == ""
+    assert blocks[1][0] == "fresh.py"
+    assert "fresh body text" in blocks[1][2]
+
+
+def test_elision_stub_numeric_accept_does_not_inflate_metrics():
+    """The real collision: helix_subpackages_count accepts '16', and a
+    stub reading 'delivered 16 queries ago' must NOT count as
+    body_has_answer/gold_has_answer."""
+    import bench_needle
+
+    payload = [{
+        "content": (
+            "<expressed_context>\n"
+            "[gene=aaaa11112222 ↻ delivered 16 queries ago / 1.2h — see earlier response]\n"
+            "</expressed_context>"
+        ),
+        "agent": {
+            "citations": [
+                {"gene_id": "aaaa11112222aaaa", "source": "helix-context/CLAUDE.md"},
+            ],
+        },
+    }]
+    gold = bench_needle.check_gold_delivery(
+        "", ["helix-context/CLAUDE.md"], ["16", "1"], response=payload,
+    )
+    assert gold["gold_delivered"] is True   # citation still counts
+    assert gold["gold_has_answer"] is False
+    assert gold["body_has_answer"] is False
+
+
+def test_headerless_count_mismatch_fails_closed():
+    """Headerless (legibility off) pairing is positional and only safe
+    when blocks and citations are 1:1. A dropped citation (server
+    row-lookup miss) must yield empty bodies, not shifted ones."""
+    payload = [{
+        "content": (
+            "<expressed_context>\n"
+            "body of gene X\n"
+            "---\n"
+            "body of gene Y\n"
+            "</expressed_context>"
+        ),
+        "agent": {
+            # X's citation was dropped by the server; naive positional
+            # pairing would hand Y gene X's body.
+            "citations": [{"gene_id": "yyyy77778888yyyy", "source": "y.py"}],
+        },
+    }]
+    blocks = cit.extract_block_bodies(payload)
+    assert len(blocks) == 1
+    assert blocks[0][0] == "y.py"
+    assert blocks[0][2] == ""  # fail closed, never X's body
+
+
+def test_headerless_markdown_hr_inflation_fails_closed():
+    """A headerless body containing a Markdown horizontal rule splits
+    into extra blocks (2,318/46,777 xl genes contain '\\n---\\n').
+    Count mismatch must fail closed rather than shift pairings."""
+    payload = [{
+        "content": (
+            "<expressed_context>\n"
+            "intro text\n"
+            "---\n"
+            "conclusion of doc one\n"
+            "---\n"
+            "body of doc two\n"
+            "</expressed_context>"
+        ),
+        "agent": {
+            "citations": [
+                {"gene_id": "aaaa11112222aaaa", "source": "one.md"},
+                {"gene_id": "bbbb33334444bbbb", "source": "two.md"},
+            ],
+        },
+    }]
+    blocks = cit.extract_block_bodies(payload)
+    assert len(blocks) == 2
+    # 3 raw blocks vs 2 citations: pairing is ambiguous — bodies empty.
+    assert blocks[0][2] == ""
+    assert blocks[1][2] == ""
+
+
+def test_mixed_mode_headerless_fallback_requires_count_match():
+    """When SOME blocks id-matched (e.g. an elision stub) the remaining
+    headerless blocks are handed out positionally ONLY if their count
+    equals the unmatched-citation count."""
+    base_citations = [
+        {"gene_id": "aaaa11112222aaaa", "source": "stub.py"},
+        {"gene_id": "bbbb33334444bbbb", "source": "b.py"},
+        {"gene_id": "cccc55556666cccc", "source": "c.py"},
+    ]
+    content_3blocks = (
+        "<expressed_context>\n"
+        "[gene=aaaa11112222 ↻ delivered 2 queries ago / 30s — see earlier response]\n"
+        "---\n"
+        "headerless body B\n"
+        "---\n"
+        "headerless body C\n"
+        "</expressed_context>"
+    )
+    # Counts align (2 unmatched citations, 2 headerless blocks) → pair.
+    ok = cit.extract_block_bodies([{
+        "content": content_3blocks,
+        "agent": {"citations": base_citations},
+    }])
+    assert ok[1][2] == "headerless body B"
+    assert ok[2][2] == "headerless body C"
+
+    # Drop citation B: 1 unmatched citation vs 2 headerless blocks →
+    # ambiguous → fail closed.
+    dropped = cit.extract_block_bodies([{
+        "content": content_3blocks,
+        "agent": {"citations": [base_citations[0], base_citations[2]]},
+    }])
+    assert dropped[0][0] == "stub.py"
+    assert dropped[1][0] == "c.py"
+    assert dropped[1][2] == ""
+
+
+def test_non_hex_bracket_prefix_treated_as_headerless():
+    """A block that merely STARTS with bracketed text that is not a
+    hex gene-id header (e.g. a quoted doc example like '[gene=WHAT ...]')
+    must be treated as headerless, not stripped/misparsed."""
+    payload = [{
+        "content": (
+            "<expressed_context>\n"
+            "[gene=EXAMPLE-NOT-HEX ◆ fired=doc:1.0 10c] is the header shape\n"
+            "and this line documents it.\n"
+            "</expressed_context>"
+        ),
+        "agent": {
+            "citations": [
+                {"gene_id": "aaaa11112222aaaa", "source": "docs/api.md"},
+            ],
+        },
+    }]
+    blocks = cit.extract_block_bodies(payload)
+    assert len(blocks) == 1
+    # 1 headerless block, 1 citation → positional pairing keeps the
+    # FULL text including the bracketed example.
+    assert "[gene=EXAMPLE-NOT-HEX" in blocks[0][2]
+    assert "documents it" in blocks[0][2]
+
+
+def test_check_gold_delivery_body_has_answer_on_live_shape():
+    """End-to-end regression for the dead body_has_answer metric: a
+    realistic wrapped+headered response whose gold block contains the
+    accept token must score body_has_answer=True."""
+    import bench_needle
+
+    gold = bench_needle.check_gold_delivery(
+        "", ["helix-context/helix.toml"], ["11437"],
+        response=_wrapped_response(),
+    )
+    assert gold["gold_delivered"] is True
+    assert gold["gold_has_answer"] is True
+    assert gold["body_has_answer"] is True

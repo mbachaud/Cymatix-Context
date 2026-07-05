@@ -758,11 +758,16 @@ def find_needle(client, needle):
     """Try to find a specific needle in the genome."""
     t0 = time.time()
 
-    # Step 1: Context query
+    # Step 1: Context query. ignore_delivered opts out of the session
+    # working-set register: production defaults keep session delivery +
+    # synthetic sessions ON (300s same-IP window), so a 50-needle battery
+    # would otherwise get elision stubs instead of gold bodies for any
+    # document retrieved twice (CLAUDE.md bench guidance; review 2026-07-05).
     try:
         resp = client.post(f"{HELIX_URL}/context", json={
             "query": needle["query"],
             "decoder_mode": "none",
+            "ignore_delivered": True,
         })
     except Exception:
         return {
@@ -822,24 +827,33 @@ def find_needle(client, needle):
         n_gold_blocks = 0
         n_delivered_blocks = len(parse_delivered_genes_from_response(data))
 
-    # Step 2: Full proxy query for answer accuracy
+    # Step 2: Full proxy query for answer accuracy. Guarded: an
+    # answer-step failure (e.g. a slow local model outliving the
+    # caller's client timeout) must NOT destroy the Step-1 retrieval
+    # fields — callers aggregate gold_delivered over returned rows, so
+    # a raised exception here silently shrinks that denominator
+    # (review 2026-07-05).
     t1 = time.time()
     model = os.environ.get("HELIX_MODEL", "qwen3:8b")
-    proxy_resp = client.post(f"{HELIX_URL}/v1/chat/completions", json={
-        "model": model,
-        "messages": [{"role": "user", "content": needle["query"]}],
-        "stream": False,
-        "options": {"temperature": 0, "num_predict": 256},
-    })
-    proxy_latency = time.time() - t1
-
     answer_correct = False
     answer_text = ""
-    if proxy_resp.status_code == 200:
-        choices = proxy_resp.json().get("choices", [])
-        if choices:
-            answer_text = choices[0].get("message", {}).get("content", "")
-            answer_correct = any(a.lower() in answer_text.lower() for a in accept)
+    try:
+        proxy_resp = client.post(f"{HELIX_URL}/v1/chat/completions", json={
+            "model": model,
+            "messages": [{"role": "user", "content": needle["query"]}],
+            "stream": False,
+            "options": {"temperature": 0, "num_predict": 256},
+        })
+        if proxy_resp.status_code == 200:
+            choices = proxy_resp.json().get("choices", [])
+            if choices:
+                answer_text = choices[0].get("message", {}).get("content", "")
+                answer_correct = any(
+                    a.lower() in answer_text.lower() for a in accept
+                )
+    except Exception:
+        answer_text = ""
+    proxy_latency = time.time() - t1
 
     return {
         "name": needle["name"],

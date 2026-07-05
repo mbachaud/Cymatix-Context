@@ -137,21 +137,69 @@ def parse_legacy_gene_blocks(content: str) -> list[tuple[str, str]]:
 
 
 # Modern legibility header (see helix_context/encoding/legibility.py):
-#   [gene=abc12345... ◆ fired=harmonic:2.3,lex_anchor:1.1 1200→320c]
-# The trailing chars in the gene_id may include any non-bracket chars; the
-# id field stops at the first space (legibility writes ``[gene={short} {symbol}``).
+#   [gene=abc12345abc1 ◆ fired=harmonic:2.3,lex_anchor:1.1 1200→320c]
+# The captured id is ``gene_id[:12]`` — a plain prefix of the full
+# citation gene_id (id_width=12 in both format_gene_header and the
+# session-delivery elision stub). The id field stops at the first space.
 LEGIBILITY_HEADER_RE = re.compile(r"\[gene=([^\s\]]+)[^\]]*\]", re.DOTALL)
+
+# Gene ids are sha256 hexdigest[:16] (knowledge_store.py), so a real
+# header short-id is 8-16 lowercase hex chars. Doc prose quoting the
+# header shape (e.g. "[gene=... ◆ fired=...]" examples in api docs) must
+# not be misparsed as a header — a bogus short-id would strip the
+# block's first line and poison the id join (review 2026-07-05).
+_HEX_SHORT_ID_RE = re.compile(r"[0-9a-f]{8,16}", re.IGNORECASE)
+
+# Session-delivery elision stubs are all-header lines:
+#   [gene=abc12345abc1 ↻ delivered 3 queries ago / 45s — see earlier response]
+# Their text must never be used as a body: bare integers in the stub
+# word-boundary-match numeric accepts ("delivered 16 queries ago" vs
+# accept "16"), silently inflating body_has_answer (review 2026-07-05).
+_ELISION_STUB_MARKER = "see earlier response"
+
+# Wrapper emitted by context_manager around the assembled blocks. The
+# live /context ``content`` is ALWAYS the wrapped string — splitting on
+# the block separator leaves the open tag glued to the FIRST block, so
+# it must be stripped before header matching (2026-07-04: unstripped, it
+# made the first block unpairable and shifted every citation→body pair
+# by one, flat-lining body_has_answer across all sike_bedsweep runs).
+_EXPRESSED_OPEN = "<expressed_context>"
+_EXPRESSED_CLOSE = "</expressed_context>"
+
+
+def _strip_expressed_wrapper(content: str) -> str:
+    text = (content or "").strip()
+    if text.startswith(_EXPRESSED_OPEN):
+        text = text[len(_EXPRESSED_OPEN):]
+    if text.endswith(_EXPRESSED_CLOSE):
+        text = text[: -len(_EXPRESSED_CLOSE)]
+    return text.strip("\n")
 
 
 def extract_block_bodies(payload: Any) -> list[tuple[str, str, str]]:
     """Return (source, gene_id, body) tuples for every delivered document.
 
     For modern responses, the content blob is the assembled splice
-    output -- one legibility header line followed by spliced text, blocks
-    separated by ``\\n---\\n``. We split on ``---``, strip the header
-    from each block, and pair each body with the matching
-    ``agent.citations`` entry (by order, which is the contract: the
-    renderer writes citations in delivery order).
+    output wrapped in ``<expressed_context>`` tags -- one legibility
+    header line followed by spliced text, blocks separated by
+    ``\\n---\\n``. Pairing strategy, in order of trust:
+
+    1. Id join: a block's ``[gene={id[:12]} ...]`` header (8-16 hex
+       chars) is a prefix of exactly one citation's full gene_id.
+       Survives citations dropped by the server's row-lookup miss
+       (routes_context ``continue``s on a missing row, so citations can
+       be FEWER than blocks).
+    2. Positional, count-guarded: headerless blocks (e.g. a bench
+       config with ``legibility_enabled = false``) pair by index ONLY
+       when their count equals the count of citations left unmatched by
+       the id join. On any mismatch (dropped citation, a Markdown
+       horizontal rule ``\\n---\\n`` inside a body inflating the block
+       count) pairing is ambiguous and the affected bodies are returned
+       as ``""`` — fail closed rather than silently mispair.
+
+    Elision stubs (session working-set) pair by id like any block but
+    always yield ``body=""``: their text ("delivered 16 queries ago")
+    would otherwise word-boundary-match numeric accept strings.
 
     For legacy responses, falls back to ``<GENE src=...>...</GENE>``
     block extraction with empty gene_ids.
@@ -164,29 +212,74 @@ def extract_block_bodies(payload: Any) -> list[tuple[str, str, str]]:
     entry = _coerce_top_entry(payload)
     content = _extract_content(entry)
 
-    if citations:
-        # Split content on the per-block separator. Some prefix material
-        # (e.g. an outer ``<expressed_context>`` wrapper) may precede the
-        # first block; ignore blocks whose body doesn't start with a
-        # legibility header, since they cannot be confidently paired.
-        raw_blocks = (content or "").split("\n---\n")
-        paired: list[tuple[str, str, str]] = []
-        body_iter = iter(raw_blocks)
-        for cit_obj in citations:
-            source = str(cit_obj.get("source") or "")
-            gene_id = str(cit_obj.get("gene_id") or "")
-            body = ""
-            for raw in body_iter:
-                stripped = raw.lstrip()
-                if LEGIBILITY_HEADER_RE.match(stripped):
-                    # Remove the header line from the body.
-                    body = LEGIBILITY_HEADER_RE.sub("", stripped, count=1).lstrip("\n")
-                    break
-            paired.append((source, gene_id, body))
-        return paired
+    if not citations:
+        # Legacy fallback: gene_id was never in the markup.
+        return [(src, "", body) for src, body in parse_legacy_gene_blocks(content)]
 
-    # Legacy fallback: gene_id was never in the markup.
-    return [(src, "", body) for src, body in parse_legacy_gene_blocks(content)]
+    inner = _strip_expressed_wrapper(content)
+    raw_blocks = inner.split("\n---\n") if inner else []
+
+    # Parse blocks into (header_short_id | None, body). A header is only
+    # trusted when its captured id is hex-shaped; otherwise the block is
+    # treated as headerless with its FULL text (a doc example like
+    # "[gene=... ◆ ...]" quoted at line start must not be stripped).
+    parsed: list[tuple[str | None, str]] = []
+    for raw in raw_blocks:
+        stripped = raw.strip()
+        m = LEGIBILITY_HEADER_RE.match(stripped)
+        if m and _HEX_SHORT_ID_RE.fullmatch(m.group(1)):
+            if _ELISION_STUB_MARKER in m.group(0) or "↻" in m.group(0):
+                # Elision stub: pairs by id, but never contributes body
+                # text (numeric accept collision — see marker comment).
+                parsed.append((m.group(1), ""))
+            else:
+                body = LEGIBILITY_HEADER_RE.sub("", stripped, count=1).lstrip("\n")
+                parsed.append((m.group(1), body))
+        else:
+            parsed.append((None, stripped))
+
+    # Pass 1 — id join: header short-id is a prefix of the citation's
+    # full gene_id. Each block is claimed at most once.
+    assigned: dict[int, int] = {}  # citation index -> block index
+    unclaimed = list(range(len(parsed)))
+    for ci, cit_obj in enumerate(citations):
+        gid = str(cit_obj.get("gene_id") or "")
+        if not gid:
+            continue
+        for bi in unclaimed:
+            short = parsed[bi][0]
+            if short and gid.startswith(short):
+                assigned[ci] = bi
+                unclaimed.remove(bi)
+                break
+
+    # Pass 2 — positional fallback, count-guarded. Positional pairing
+    # assumes blocks:citations are 1:1 in delivery order; that breaks
+    # when the server drops a citation (row-lookup miss) or a headerless
+    # body contains "\n---\n" (Markdown hr) and inflates the block
+    # count. Only pair when the counts line up exactly; otherwise leave
+    # bodies empty — an empty body is a visible measurement gap, a
+    # mispaired body is a silent lie. Never hand out an unmatched
+    # HEADERED block positionally: it belongs to a different document.
+    unmatched = [ci for ci in range(len(citations)) if ci not in assigned]
+    if assigned:
+        candidates = [bi for bi in unclaimed if parsed[bi][0] is None]
+    else:
+        candidates = unclaimed
+    fallback_blocks = candidates if len(candidates) == len(unmatched) else []
+    fallback_iter = iter(fallback_blocks)
+
+    paired: list[tuple[str, str, str]] = []
+    for ci, cit_obj in enumerate(citations):
+        source = str(cit_obj.get("source") or "")
+        gene_id = str(cit_obj.get("gene_id") or "")
+        if ci in assigned:
+            body = parsed[assigned[ci]][1]
+        else:
+            bi = next(fallback_iter, None)
+            body = parsed[bi][1] if bi is not None else ""
+        paired.append((source, gene_id, body))
+    return paired
 
 
 def normalize_sources(sources: Iterable[str]) -> list[str]:

@@ -427,15 +427,17 @@ class RetrievalConfig:
     # before entering the gene_scores accumulator. BM25-comparable
     # (tag_exact_weight is 3.0). Unused under RRF.
     #
-    # Issue #138 (tracked): the H10q investigation on EnterpriseRAG-Bench
-    # 10K observed gold eviction at the shipped 4.0 weight on
-    # adversarial prose queries (per-query dense tier totals ran 9-28 vs
-    # tag-exact ~3 per doc). The smoke sweep harness at
-    # ``benchmarks/sweep_dense_additive_weight.py`` covers
-    # {0.0, 2.0, 3.0, 4.0, 6.0} including the dense-off arm; ship the
-    # winning value once an enterprise-class question set is wired in.
-    # ``0.0`` flips dense additively-off without disabling the dense
-    # write path or RRF participation.
+    # Issue #203 (closed 2026-07-03): the real-query sweep
+    # (``benchmarks/sweep_dense_additive_weight.py``, n=100 ERB queries
+    # per bed) found recall@10 monotone INCREASING in this weight —
+    # erb10k 0.58 (w=0) → 0.64 (w=6), erb50k 0.47 → 0.56, medium 0.23 →
+    # 0.40 — with zero gold evictions at any weight. The #138 H10q
+    # gold-eviction fear did not reproduce on enterprise-class queries.
+    # 4.0 stands; the raise-to-6.0 decision is deferred to the #205
+    # per-class retrieval profiles (w=6 may become the semantic-class
+    # value rather than a global default). ``0.0`` flips dense
+    # additively-off without disabling the dense write path or RRF
+    # participation.
     dense_additive_weight: float = 4.0
     # Tier-0 review fix (2026-05-16): noise floor for the additive-mode
     # dense merge. A dense hit whose cosine is below this does not

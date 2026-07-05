@@ -94,7 +94,9 @@ def _eval_arm(genome, queries: list[dict], topk: int) -> dict:
     per_query = []
     t0 = time.monotonic()
 
-    for q in queries:
+    for _qi, q in enumerate(queries):
+        if _qi and _qi % 25 == 0:
+            print(f"[sweep]   ..{_qi}/{n} queries", flush=True)
         query_text = q["query"]
         gold = set(q["gold_ids"])
         # Use query_docs through the high-level path (same path /context uses).

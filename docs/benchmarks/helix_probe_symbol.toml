@@ -1,0 +1,75 @@
+# helix_probe_symbol.toml
+# -------------------------------------------------------------------------
+# Symbol-graph probe profile (external-bench arm C: WS2 #230 + WS3 #231).
+# Identical to helix_probe_lexical.toml except the symbol graph is ON
+# ([ingestion] symbol_graph = true, [retrieval] symbol_expansion_cap).
+# All other neural/GPU paths remain OFF: pure FTS5 + tag lookup +
+# synonym expansion + BM25 shortlist + symbol-edge expansion.
+# LLM-free, GPU-free.
+#
+# Pass explicitly via --helix-config / HELIX_CONFIG when serving the
+# arm-C comparison; the lexical probe stays the default for
+# benchmarks/repobench_r_helix.py and repobench_r_helix_global.py.
+# -------------------------------------------------------------------------
+
+[ribosome]
+enabled = false
+backend = "none"
+query_expansion_enabled = false
+query_decomposition_enabled = false
+
+[hardware]
+device = "cpu"
+
+[budget]
+expression_tokens = 7000
+max_genes_per_turn = 12
+decoder_mode = "none"
+legibility_enabled = false
+session_delivery_enabled = false
+
+[session]
+synthetic_session_enabled = false
+
+[genome]
+path = "genomes/probe/genome.db"
+compact_interval = 0
+
+[server]
+host = "127.0.0.1"
+port = 11437
+upstream = "http://localhost:11434"
+
+[ingestion]
+symbol_graph = true
+backend = "cpu"
+splade_enabled = false
+dense_embed_on_ingest = false
+rerank_enabled = false
+entity_graph = false
+
+[retrieval]
+symbol_expansion_cap = 8
+dense_embedding_enabled = false
+sr_enabled = false
+ray_trace_theta = false
+seeded_edges_enabled = false
+filename_anchor_enabled = true
+filename_anchor_weight = 4.0
+bm25_shortlist_enabled = true
+bm25_shortlist_size = 50
+bm25_prefilter_enabled = false
+entity_graph_retrieval_enabled = false
+fusion_mode = "additive"
+
+[context]
+cold_tier_enabled = false
+
+[cymatics]
+enabled = false
+
+[know]
+confidence_floor = 0.0
+
+[abstain]
+enabled = false
