@@ -3,7 +3,7 @@
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![PyPI version](https://img.shields.io/pypi/v/helix-context.svg)](https://pypi.org/project/helix-context/)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![Tests: 1950+](https://img.shields.io/badge/tests-1950%2B-brightgreen.svg)](tests/)
+[![Tests: 2750+](https://img.shields.io/badge/tests-2750%2B-brightgreen.svg)](tests/)
 [![LLM-free pipeline](https://img.shields.io/badge/pipeline-LLM--free-brightgreen.svg)](docs/architecture/PIPELINE_LANES.md)
 [![Paper: Agentome](https://img.shields.io/badge/paper-Agentome-purple.svg)](https://mbachaud.substack.com/p/agentome)
 
@@ -135,7 +135,7 @@ Seven stages per turn, all LLM-free except optional splice:
 | `[classifier]` | Rule-based query classification thresholds |
 | `[retrieval]` | `fusion_mode` (`"additive"` / `"rrf"`), SR, ray_trace_theta, seeded_edges |
 | `[plr]` | Piecewise linear reranker model |
-| `[know]` | Know/miss calibration: confidence_floor, margin_threshold |
+| `[know]` | Know/miss calibration: emit_floor, betas, s_ref, g_ref, stale_after_days |
 | `[mem_sync]` | Auto-memory → helix sync: watch_dirs, interval |
 | `[synonyms]` | Query expansion map (e.g., "cache" → ["redis", "ttl"]) |
 | `[abstain]` | Low-confidence abstention thresholds |
@@ -188,7 +188,7 @@ Full schema: [docs/api/endpoints.md](docs/api/endpoints.md).
 </details>
 
 <details>
-<summary><strong>Package structure (16 packages, post-PR #90)</strong></summary>
+<summary><strong>Package structure (15 packages, post-PR #90)</strong></summary>
 
 | Package | Purpose |
 |---------|---------|
@@ -298,7 +298,7 @@ Full surface: [docs/architecture/OBSERVABILITY.md](docs/architecture/OBSERVABILI
 ## Testing
 
 ```bash
-python -m pytest tests/ -m "not live" -v   # ~1950 tests, no external services
+python -m pytest tests/ -m "not live" -v   # ~2,750 tests, no external services
 ```
 
 ## Documentation
