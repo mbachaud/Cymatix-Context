@@ -41,10 +41,8 @@ _DEVICE_PARAMS = (
 
 
 @pytest.fixture(autouse=True)
-def _reset_hardware_cache():
-    hardware.reset_for_test()
+def _reset(reset_hardware_cache):
     yield
-    hardware.reset_for_test()
 
 
 @pytest.mark.parametrize("device", _DEVICE_PARAMS)

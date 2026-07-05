@@ -38,6 +38,8 @@ from helix_context.config import (
 )
 from helix_context.context_manager import HelixContextManager, LazyRibosome
 
+from tests.conftest import make_helix_config
+
 
 # ── fakes ────────────────────────────────────────────────────────────
 
@@ -116,7 +118,11 @@ def fake_deberta(monkeypatch):
 
 
 def _config(tmp_path, **hardware_kwargs) -> HelixConfig:
-    return HelixConfig(
+    # Shares conftest's HelixConfig shape (genome/server sections); this
+    # file's own genome path (a real tmp file, not ":memory:") and the
+    # [hardware] override are passed explicitly since the lazy-encoder
+    # suite needs per-test hardware knobs make_helix_config doesn't cover.
+    return make_helix_config(
         genome=GenomeConfig(path=str(tmp_path / "genome.db"), cold_start_threshold=5),
         server=ServerConfig(upstream="http://localhost:11434"),
         hardware=Hardware(**hardware_kwargs),
@@ -124,7 +130,7 @@ def _config(tmp_path, **hardware_kwargs) -> HelixConfig:
 
 
 def _deberta_config(tmp_path, lazy: bool = True) -> HelixConfig:
-    return HelixConfig(
+    return make_helix_config(
         genome=GenomeConfig(path=str(tmp_path / "genome.db"), cold_start_threshold=5),
         server=ServerConfig(upstream="http://localhost:11434"),
         ribosome=RibosomeConfig(

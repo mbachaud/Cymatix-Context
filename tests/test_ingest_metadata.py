@@ -14,37 +14,9 @@ Also keeps the 2026-04-19 binary-content rejection guards in place.
 
 from __future__ import annotations
 
-import json
-
 import pytest
-from fastapi.testclient import TestClient
 
-from helix_context.config import (
-    BudgetConfig,
-    GenomeConfig,
-    HelixConfig,
-    RibosomeConfig,
-    ServerConfig,
-)
-from helix_context.server import create_app
-
-
-class _MockBackend:
-    """Minimal ribosome mock that returns plausible JSON for any prompt."""
-
-    def complete(self, prompt: str, system: str = "", temperature: float = 0.0) -> str:
-        if "compression engine" in system:
-            return json.dumps({
-                "codons": [{"meaning": "test_codon", "weight": 0.8, "is_exon": True}],
-                "complement": "compressed.",
-                "promoter": {
-                    "domains": ["test"],
-                    "entities": ["TestEntity"],
-                    "intent": "test",
-                    "summary": "summary",
-                },
-            })
-        return "{}"
+from tests.conftest import make_client
 
 
 def _all_genes(client):
@@ -84,15 +56,7 @@ def _genes_by_ids(client, gene_ids):
 
 @pytest.fixture
 def client():
-    config = HelixConfig(
-        ribosome=RibosomeConfig(model="mock", timeout=5),
-        budget=BudgetConfig(max_genes_per_turn=4),
-        genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
-        server=ServerConfig(upstream="http://localhost:11434"),
-    )
-    app = create_app(config)
-    app.state.helix.ribosome.backend = _MockBackend()
-    return TestClient(app)
+    return make_client()
 
 
 class TestMetadataAlias:

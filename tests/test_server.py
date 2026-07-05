@@ -13,55 +13,27 @@ import pytest
 from fastapi.testclient import TestClient
 
 import helix_context.server as server_mod
-from helix_context.config import HelixConfig, BudgetConfig, GenomeConfig, RibosomeConfig, ServerConfig
+from helix_context.config import HelixConfig, GenomeConfig, RibosomeConfig, ServerConfig
 from helix_context.server import create_app
+
+from tests.conftest import make_client
 
 
 # -- Helpers -----------------------------------------------------------
-
-class ServerMockBackend:
-    """Returns plausible JSON for all ribosome operations."""
-
-    def complete(self, prompt: str, system: str = "", temperature: float = 0.0) -> str:
-        if "compression engine" in system:
-            return json.dumps({
-                "codons": [{"meaning": "test_codon", "weight": 0.8, "is_exon": True}],
-                "complement": "Compressed test content.",
-                "promoter": {
-                    "domains": ["test"],
-                    "entities": ["TestEntity"],
-                    "intent": "test",
-                    "summary": "Test content for server tests",
-                },
-            })
-        elif "expression scorer" in system:
-            return json.dumps({})
-        elif "context splicer" in system:
-            return json.dumps({})
-        elif "replication engine" in system:
-            return json.dumps({
-                "codons": [{"meaning": "exchange", "weight": 1.0, "is_exon": True}],
-                "complement": "Test exchange.",
-                "promoter": {"domains": ["test"], "entities": [], "intent": "test", "summary": "test"},
-            })
-        return "{}"
+#
+# The mock ribosome backend and standard test config previously defined
+# here (``ServerMockBackend`` / inline ``HelixConfig(...)``) are now the
+# canonical ``MockCompressorBackend`` / ``make_helix_config`` in
+# tests/conftest.py — this file's variant was the one the canonical
+# version was derived from. The few tests below that build their own
+# ``HelixConfig(...)`` with REAL (non-mock) ribosome/budget defaults are
+# intentionally left local — they exercise the disabled/real-backend
+# path, not the shared mock shape.
 
 
 @pytest.fixture
 def client():
-    config = HelixConfig(
-        ribosome=RibosomeConfig(model="mock", timeout=5),
-        budget=BudgetConfig(max_genes_per_turn=4),
-        genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
-        server=ServerConfig(upstream="http://localhost:11434"),
-    )
-    app = create_app(config)
-
-    # Inject mock backend into the HelixContextManager
-    app.state.helix.ribosome.backend = ServerMockBackend()
-
-    test_client = TestClient(app)
-    yield test_client
+    return make_client()
 
 
 # -- Endpoint shape tests (no upstream needed) -------------------------

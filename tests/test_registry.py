@@ -14,11 +14,9 @@ is live.
 """
 
 import asyncio
-import json
 import time
 
 import pytest
-from fastapi.testclient import TestClient
 
 try:
     import pytest_asyncio  # noqa: F401
@@ -49,13 +47,6 @@ async def await_until(condition, timeout: float = 2.0, interval: float = 0.02) -
         result = await result
     return bool(result)
 
-from helix_context.config import (
-    BudgetConfig,
-    GenomeConfig,
-    HelixConfig,
-    RibosomeConfig,
-    ServerConfig,
-)
 from helix_context.identity.registry import (
     DEFAULT_TTL_S,
     IDLE_TTL_S,
@@ -63,9 +54,8 @@ from helix_context.identity.registry import (
     Registry,
     _status_from_last_heartbeat,
 )
-from helix_context.server import create_app
 
-from tests.conftest import make_gene
+from tests.conftest import make_client, make_gene
 
 
 # ═══ DAL unit tests ═══════════════════════════════════════════════════
@@ -979,35 +969,9 @@ class TestHITLEvents:
 # ═══ Endpoint integration tests ═══════════════════════════════════════
 
 
-class _ServerMockBackend:
-    """Minimal ribosome mock matching the test_server.py pattern."""
-
-    def complete(self, prompt: str, system: str = "", temperature: float = 0.0) -> str:
-        if "compression engine" in system:
-            return json.dumps({
-                "codons": [{"meaning": "test_codon", "weight": 0.8, "is_exon": True}],
-                "complement": "Compressed test content.",
-                "promoter": {
-                    "domains": ["test"],
-                    "entities": ["TestEntity"],
-                    "intent": "test",
-                    "summary": "Test content for registry tests",
-                },
-            })
-        return "{}"
-
-
 @pytest.fixture
 def client():
-    config = HelixConfig(
-        ribosome=RibosomeConfig(model="mock", timeout=5),
-        budget=BudgetConfig(max_genes_per_turn=4),
-        genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
-        server=ServerConfig(upstream="http://localhost:11434"),
-    )
-    app = create_app(config)
-    app.state.helix.ribosome.backend = _ServerMockBackend()
-    with TestClient(app) as c:
+    with make_client() as c:
         yield c
 
 

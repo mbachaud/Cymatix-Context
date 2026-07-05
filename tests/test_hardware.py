@@ -13,11 +13,9 @@ from helix_context import hardware
 
 
 @pytest.fixture(autouse=True)
-def _reset_hardware_cache():
-    """Every test starts with a clean singleton."""
-    hardware.reset_for_test()
+def _reset(reset_hardware_cache):
+    """Every test starts with a clean singleton (see tests/conftest.py)."""
     yield
-    hardware.reset_for_test()
 
 
 def test_hardware_info_is_frozen():

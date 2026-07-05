@@ -20,21 +20,11 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-from fastapi.testclient import TestClient
 
 from helix_context import server as server_mod
-from helix_context.config import (
-    BudgetConfig,
-    ClassifierConfig,
-    GenomeConfig,
-    HelixConfig,
-    RibosomeConfig,
-    ServerConfig,
-)
+from helix_context.config import BudgetConfig, ClassifierConfig
 from helix_context.context_manager import HelixContextManager
-from helix_context.server import create_app
-from tests.conftest import make_gene
-from tests.test_pipeline import PipelineMockBackend
+from tests.conftest import MockCompressorBackend, make_client, make_gene, make_helix_config
 
 
 # ---------------------------------------------------------------------------
@@ -46,15 +36,13 @@ def _seeded_manager() -> HelixContextManager:
     """In-memory genome with a handful of seeded genes so build_context
     has candidates to express + can exercise the touch / coactivate /
     relations-batch tail of the pipeline."""
-    cfg = HelixConfig(
-        ribosome=RibosomeConfig(model="mock", timeout=5),
+    cfg = make_helix_config(
         budget=BudgetConfig(max_genes_per_turn=4, splice_aggressiveness=0.5),
-        genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
         classifier=ClassifierConfig(enabled=True),
         synonym_map={"port": ["upstream", "endpoint", "url"]},
     )
     mgr = HelixContextManager(cfg)
-    mgr.ribosome.backend = PipelineMockBackend()
+    mgr.ribosome.backend = MockCompressorBackend()
 
     seed_data = [
         ("upstream_port = 11434  # Ollama default", ["network"], ["port", "upstream"]),
@@ -161,14 +149,8 @@ def test_clean_true_does_not_mutate_genome():
 
 @pytest.fixture
 def http_client():
-    config = HelixConfig(
-        ribosome=RibosomeConfig(model="mock", timeout=5),
-        budget=BudgetConfig(max_genes_per_turn=4),
-        genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
-        server=ServerConfig(upstream="http://localhost:11434"),
-    )
-    app = create_app(config)
-    app.state.helix.ribosome.backend = PipelineMockBackend()
+    client = make_client(backend=MockCompressorBackend())
+    app = client.app
     # Seed so build_context has something to express.
     for i, (content, doms, ents) in enumerate([
         ("upstream_port = 11434", ["network"], ["port"]),
@@ -180,7 +162,7 @@ def http_client():
                 gene_id=f"http_seed_{i:010d}",
             ),
         )
-    with TestClient(app) as client:
+    with client:
         yield client, app
 
 

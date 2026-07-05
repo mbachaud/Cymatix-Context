@@ -15,7 +15,7 @@ from helix_context.config import (
     RibosomeConfig,
 )
 from helix_context.context_manager import HelixContextManager
-from tests.test_pipeline import PipelineMockBackend
+from tests.conftest import MockCompressorBackend
 
 
 def test_abstain_marker_constant_is_exported():
@@ -66,7 +66,7 @@ def abstain_manager():
         classifier=ClassifierConfig(enabled=False),
     )
     mgr = HelixContextManager(cfg)
-    mgr.ribosome.backend = PipelineMockBackend()
+    mgr.ribosome.backend = MockCompressorBackend()
     yield mgr
     mgr.close()
 

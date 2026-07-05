@@ -14,13 +14,7 @@ from helix_context.schemas import (
     Gene,
     PromoterTags,
 )
-
-
-def _run(argv):
-    out, err = io.StringIO(), io.StringIO()
-    with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
-        rc = main(argv)
-    return rc, out.getvalue(), err.getvalue()
+from tests.conftest import run_cli as _run
 
 
 def _make_gene(gene_id="gene-001", content="The splice step trims low-value fragments. " * 20):

@@ -308,21 +308,19 @@ def test_format_elision_stub_is_one_line():
 
 # ── Integration: _assemble uses session working-set register ──────────
 
-from helix_context.config import HelixConfig, BudgetConfig, GenomeConfig, RibosomeConfig
+from helix_context.config import BudgetConfig
 from helix_context.context_manager import HelixContextManager
-from tests.conftest import make_gene
+from tests.conftest import make_gene, make_helix_config, make_client, MockCompressorBackend
 
 
 def _make_manager(session_delivery_enabled: bool = True) -> HelixContextManager:
-    cfg = HelixConfig(
-        ribosome=RibosomeConfig(model="mock", timeout=5),
+    cfg = make_helix_config(
         budget=BudgetConfig(
             max_genes_per_turn=4,
             splice_aggressiveness=0.5,
             legibility_enabled=True,
             session_delivery_enabled=session_delivery_enabled,
         ),
-        genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
         synonym_map={},
     )
     return HelixContextManager(cfg)
@@ -517,33 +515,21 @@ def test_assemble_sessions_dont_cross_contaminate():
 
 # ── HTTP endpoint: /session/{id}/manifest ─────────────────────────────
 
-from fastapi.testclient import TestClient
-from helix_context.config import ServerConfig
-from helix_context.server import create_app
-
 
 @pytest.fixture
 def http_client():
     """TestClient against an app with session_delivery enabled."""
-    config = HelixConfig(
-        ribosome=RibosomeConfig(model="mock", timeout=5),
-        budget=BudgetConfig(
-            max_genes_per_turn=4,
-            session_delivery_enabled=True,
+    client = make_client(
+        config=make_helix_config(
+            budget=BudgetConfig(
+                max_genes_per_turn=4,
+                session_delivery_enabled=True,
+            ),
         ),
-        genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
-        server=ServerConfig(upstream="http://localhost:11434"),
+        # Minimal mock — returns "{}" for everything, ribosome stays quiet.
+        backend=MockCompressorBackend(response="{}"),
     )
-    app = create_app(config)
-    # Mock ribosome backend so no Ollama is required
-    app.state.helix.ribosome.backend = _MockBackend()
-    yield TestClient(app)
-
-
-class _MockBackend:
-    """Minimal mock — returns '{}' for everything. Ribosome stays quiet."""
-    def complete(self, prompt: str, system: str = "", temperature: float = 0.0) -> str:
-        return "{}"
+    yield client
 
 
 def test_session_manifest_empty_session_returns_empty_list(http_client):

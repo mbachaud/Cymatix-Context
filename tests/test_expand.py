@@ -14,32 +14,17 @@ See docs/FUTURE/AI_CONSUMER_ROADMAP_2026-04-14.md Sprint 3.
 from __future__ import annotations
 
 import pytest
-from fastapi.testclient import TestClient
 
 from helix_context.retrieval import expand
 from helix_context.identity import session_delivery
-from helix_context.config import (
-    BudgetConfig,
-    GenomeConfig,
-    HelixConfig,
-    RibosomeConfig,
-    ServerConfig,
-)
 from helix_context.context_manager import HelixContextManager
-from helix_context.server import create_app
-from tests.conftest import make_gene
+from tests.conftest import make_gene, make_client, make_helix_config
 
 
 # ── Helper fixtures ───────────────────────────────────────────────────
 
 def _make_manager() -> HelixContextManager:
-    cfg = HelixConfig(
-        ribosome=RibosomeConfig(model="mock", timeout=5),
-        budget=BudgetConfig(max_genes_per_turn=4),
-        genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
-        synonym_map={},
-    )
-    return HelixContextManager(cfg)
+    return HelixContextManager(make_helix_config())
 
 
 def _seed_harmonic_link(conn, a, b, weight, source="co_retrieved"):
@@ -252,14 +237,7 @@ def test_expand_neighbors_skips_unknown_gene_rows():
 
 @pytest.fixture
 def http_client():
-    cfg = HelixConfig(
-        ribosome=RibosomeConfig(model="mock", timeout=5),
-        budget=BudgetConfig(max_genes_per_turn=4),
-        genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
-        server=ServerConfig(upstream="http://localhost:11434"),
-    )
-    app = create_app(cfg)
-    yield TestClient(app)
+    yield make_client()
 
 
 def test_endpoint_rejects_invalid_direction(http_client):

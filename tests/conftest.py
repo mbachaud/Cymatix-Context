@@ -1,8 +1,12 @@
 """Shared fixtures for Helix Context tests."""
 
+import contextlib
 import hashlib
+import io
+import json
 import os
 import random
+import re
 import pytest
 from pathlib import Path
 
@@ -12,6 +16,13 @@ from pathlib import Path
 # import helix_context.server without a real DB file on disk.
 os.environ.setdefault("HELIX_GENOME_PATH", ":memory:")
 
+from helix_context.config import (
+    BudgetConfig,
+    GenomeConfig,
+    HelixConfig,
+    RibosomeConfig,
+    ServerConfig,
+)
 from helix_context.genome import Genome
 from helix_context.schemas import Gene, PromoterTags, EpigeneticMarkers, ChromatinState
 
@@ -254,3 +265,213 @@ def make_gene(
         chromatin=chromatin,
         is_fragment=is_fragment,
     )
+
+
+# ── Canonical mock compressor backend (shared test stand-in) ─────────
+#
+# Before the 2026-07-05 test-suite consolidation, ~10 test files each
+# carried a private copy of a "mock ribosome backend" — a class with a
+# single ``complete(prompt, system, temperature) -> str`` method that
+# sniffs the system prompt and returns plausible JSON for whichever
+# pipeline stage is calling (pack / re-rank / splice / replicate). The
+# copies drifted (different promoter tags, some returned "{}" for
+# everything, one returned pack JSON unconditionally). This is the one
+# canonical definition; test files import it from here instead of each
+# keeping a private variant.
+
+
+class MockCompressorBackend:
+    """Canonical mock compressor (ribosome) backend for tests.
+
+    Derived from ``tests/test_server.py``'s ``ServerMockBackend`` (the
+    system-prompt-sniffing variant), widened to the superset of the
+    per-file copies it replaces:
+
+    - ``"compression engine" in system``  → pack JSON: one codon
+      (``test_codon``, weight 0.8, exon), complement
+      ``"Compressed test content."``, promoter ``domains=["test"]``,
+      ``entities=["TestEntity"]``.
+    - ``"expression scorer" in system``   → re-rank JSON: scores every
+      16-char gene_id found in the prompt (``0.9, 0.8, ...`` descending,
+      prompt order). Degenerates to ``{}`` when the prompt contains no
+      gene ids — i.e. exactly the old test_server/test_health behavior,
+      which returned ``{}`` unconditionally.
+    - ``"context splicer" in system``     → splice JSON: keeps codons
+      ``[0, 1]`` for every ``Gene <id>`` found in the prompt (again
+      ``{}`` when none — the old test_server behavior).
+    - ``"replication engine" in system``  → exchange pack JSON.
+    - anything else                       → ``"{}"``.
+
+    ``response``: when given, ``complete()`` returns that exact string
+    for every call, skipping all sniffing — this is the controllable
+    canned-response contract of ``tests/test_ribosome.py``'s
+    ``MockBackend``. NOTE the default differs: test_ribosome's local
+    class defaulted to ``response="{}"``; a bare
+    ``MockCompressorBackend()`` sniffs instead. Migrations of
+    default-constructed test_ribosome usages must pass
+    ``response="{}"`` explicitly.
+
+    ``calls``: every ``complete()`` appends ``{"prompt": ..., "system":
+    ...}`` (exactly those two keys, matching test_ribosome's call-log
+    contract) so invocation-shape assertions keep working.
+
+    Known divergent local variants (documented so migrators can decide
+    revert-vs-adopt per Task 12's hard rule):
+
+    - ``tests/test_health.py``: pack promoter used ``domains=["auth",
+      "security"], entities=["jwt"]`` — tests relying on mock-derived
+      auth tags need a canned ``response=`` or explicit seeded genes.
+    - ``tests/test_pipeline.py`` / ``tests/test_gene_src_prefix.py``:
+      pack returned TWO codons (``mock_concept``/``mock_detail``) and
+      ``domains=["testing", "mock"]`` — codon-count-sensitive tests
+      diverge from the canonical single-codon pack.
+    - ``tests/test_swap_db.py``: returned pack JSON unconditionally for
+      every call (no sniffing) — equivalent to passing the pack payload
+      as ``response=``.
+    - ``tests/test_session_delivery.py``: returned ``"{}"`` for every
+      call — equivalent to ``MockCompressorBackend(response="{}")``.
+    """
+
+    def __init__(self, response: str | None = None):
+        self.response = response
+        self.calls: list[dict] = []
+
+    def complete(self, prompt: str, system: str = "", temperature: float = 0.0) -> str:
+        self.calls.append({"prompt": prompt, "system": system})
+        if self.response is not None:
+            return self.response
+        if "compression engine" in system:
+            return json.dumps({
+                "codons": [{"meaning": "test_codon", "weight": 0.8, "is_exon": True}],
+                "complement": "Compressed test content.",
+                "promoter": {
+                    "domains": ["test"],
+                    "entities": ["TestEntity"],
+                    "intent": "test",
+                    "summary": "Test content for server tests",
+                },
+            })
+        if "expression scorer" in system:
+            gene_ids = re.findall(r"(\w{16}):", prompt)
+            return json.dumps(
+                {gid: round(0.9 - i * 0.1, 1) for i, gid in enumerate(gene_ids)}
+            )
+        if "context splicer" in system:
+            gene_ids = re.findall(r"Gene (\w+)", prompt)
+            return json.dumps({gid: [0, 1] for gid in gene_ids})
+        if "replication engine" in system:
+            return json.dumps({
+                "codons": [{"meaning": "exchange", "weight": 1.0, "is_exon": True}],
+                "complement": "Test exchange.",
+                "promoter": {"domains": ["test"], "entities": [], "intent": "test", "summary": "test"},
+            })
+        return "{}"
+
+
+# ── Shared config / client / CLI helpers ─────────────────────────────
+#
+# The same four-section ``HelixConfig(...)`` literal (mock ribosome,
+# small budget, in-memory genome, localhost upstream) was repeated in
+# ~22 test files, and the same 5-line stdout/stderr-capturing CLI
+# runner in all 12 ``tests/test_cli_*.py`` files. One definition each.
+
+
+def make_helix_config(**overrides) -> HelixConfig:
+    """Standard in-memory test config; ``**overrides`` replace whole sections.
+
+    Returns the config shape shared by the server/pipeline test files::
+
+        HelixConfig(
+            ribosome=RibosomeConfig(model="mock", timeout=5),   # backend stays "none"
+            budget=BudgetConfig(max_genes_per_turn=4),
+            genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
+            server=ServerConfig(upstream="http://localhost:11434"),
+        )
+
+    Each keyword must be a ``HelixConfig`` field name; the value replaces
+    that section wholesale (no deep merge). Examples::
+
+        make_helix_config(budget=BudgetConfig(max_genes_per_turn=4,
+                                              session_delivery_enabled=True))
+        make_helix_config(synonym_map={"auth": ["jwt", "login"]})
+    """
+    defaults: dict = {
+        "ribosome": RibosomeConfig(model="mock", timeout=5),
+        "budget": BudgetConfig(max_genes_per_turn=4),
+        "genome": GenomeConfig(path=":memory:", cold_start_threshold=5),
+        "server": ServerConfig(upstream="http://localhost:11434"),
+    }
+    defaults.update(overrides)
+    return HelixConfig(**defaults)
+
+
+def make_client(config=None, backend=None) -> "TestClient":
+    """FastAPI ``TestClient`` over ``create_app`` with a mock compressor.
+
+    Builds the app the way ``tests/test_server.py``'s ``client`` fixture
+    does: ``create_app(config)``, then injects ``backend`` into
+    ``app.state.helix.ribosome.backend`` so no Ollama/upstream is needed.
+
+    - ``config``  defaults to ``make_helix_config()``.
+    - ``backend`` defaults to a fresh ``MockCompressorBackend()``.
+
+    Returns the ``TestClient`` un-entered — use it directly (test_server
+    style) or as a context manager (``with make_client() as c:`` —
+    test_registry style, which additionally runs app lifespan events).
+    The underlying app is reachable as ``client.app`` for genome pokes.
+
+    ``create_app``/``TestClient`` are imported lazily here so importing
+    conftest stays cheap for the many tests that never touch the server.
+    """
+    from fastapi.testclient import TestClient
+    from helix_context.server import create_app
+
+    app = create_app(config if config is not None else make_helix_config())
+    app.state.helix.ribosome.backend = (
+        backend if backend is not None else MockCompressorBackend()
+    )
+    return TestClient(app)
+
+
+def run_cli(argv: list[str]) -> tuple[int, str, str]:
+    """Run the ``helix`` CLI in-process; return ``(exit_code, stdout, stderr)``.
+
+    The exact helper duplicated as ``_run`` in all 12
+    ``tests/test_cli_*.py`` files: captures stdout/stderr via
+    ``io.StringIO`` + ``contextlib.redirect_stdout/stderr`` around
+    ``helix_context.cli.main(argv)`` and returns the exit code plus both
+    captured streams as strings.
+
+    ``helix_context.cli`` is imported lazily (and ``main`` resolved at
+    call time) so conftest import stays flat and per-test monkeypatching
+    of CLI module attributes keeps working.
+    """
+    from helix_context import cli as _cli
+
+    out, err = io.StringIO(), io.StringIO()
+    with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+        rc = _cli.main(argv)
+    return rc, out.getvalue(), err.getvalue()
+
+
+@pytest.fixture
+def reset_hardware_cache():
+    """Reset the hardware-detection singleton before AND after a test.
+
+    The body copy-pasted as an autouse ``_reset_hardware_cache`` fixture
+    in tests/test_hardware.py, tests/test_deberta_backend.py and
+    tests/test_nli_backend.py. Deliberately NOT autouse here — most of
+    the suite never touches the hardware singleton. Files that need it
+    on every test opt in with a one-line autouse wrapper::
+
+        @pytest.fixture(autouse=True)
+        def _reset(reset_hardware_cache):
+            yield
+
+    or request ``reset_hardware_cache`` directly per test.
+    """
+    from helix_context import hardware
+
+    hardware.reset_for_test()
+    yield
+    hardware.reset_for_test()

@@ -23,16 +23,8 @@ import struct
 
 import numpy as np
 import pytest
-from fastapi.testclient import TestClient
 
-from helix_context.config import (
-    BudgetConfig,
-    GenomeConfig,
-    HelixConfig,
-    RetrievalConfig,
-    RibosomeConfig,
-    ServerConfig,
-)
+from helix_context.config import GenomeConfig, RetrievalConfig
 from helix_context.genome import Genome
 from helix_context.schemas import (
     ChromatinState,
@@ -40,7 +32,8 @@ from helix_context.schemas import (
     Gene,
     PromoterTags,
 )
-from helix_context.server import create_app
+
+from tests.conftest import make_client, make_helix_config
 
 
 def _hash_vec(text: str, dim: int) -> np.ndarray:
@@ -87,18 +80,14 @@ def dense_client(tmp_path):
     ``Genome.refresh()`` exercises the real reopen-on-bad-state branch.
     """
     db_path = tmp_path / "admin-refresh.db"
-    config = HelixConfig(
-        ribosome=RibosomeConfig(model="mock", timeout=5),
-        budget=BudgetConfig(max_genes_per_turn=4),
+    config = make_helix_config(
         genome=GenomeConfig(path=str(db_path), cold_start_threshold=5),
-        server=ServerConfig(upstream="http://localhost:11434"),
         retrieval=RetrievalConfig(
             dense_embedding_enabled=True,
             dense_embedding_dim=1024,
         ),
     )
-    app = create_app(config)
-    with TestClient(app) as client:
+    with make_client(config=config) as client:
         yield client
 
 

@@ -7,50 +7,19 @@ import pytest
 import tempfile
 import os
 
-from helix_context.config import HelixConfig, BudgetConfig, GenomeConfig, RibosomeConfig
 from helix_context.context_manager import HelixContextManager
 from helix_context.genome import Genome
 from helix_context.hgt import export_genome, import_genome, genome_diff
 from helix_context.schemas import ContextHealth
 
-from tests.conftest import make_gene
-
-
-# -- Helpers -----------------------------------------------------------
-
-class HealthMockBackend:
-    def complete(self, prompt, system="", temperature=0.0):
-        import json as j
-        if "compression engine" in system:
-            return j.dumps({
-                "codons": [{"meaning": "test", "weight": 0.8, "is_exon": True}],
-                "complement": "Mock compressed.",
-                "promoter": {"domains": ["auth", "security"], "entities": ["jwt"],
-                             "intent": "test", "summary": "test gene"},
-            })
-        elif "expression scorer" in system:
-            return j.dumps({})
-        elif "context splicer" in system:
-            return j.dumps({})
-        elif "replication engine" in system:
-            return j.dumps({
-                "codons": [{"meaning": "ex", "weight": 1.0, "is_exon": True}],
-                "complement": "Exchange.",
-                "promoter": {"domains": ["test"], "entities": [], "intent": "test", "summary": "test"},
-            })
-        return "{}"
+from tests.conftest import make_gene, make_helix_config, MockCompressorBackend
 
 
 @pytest.fixture
 def health_helix():
-    config = HelixConfig(
-        ribosome=RibosomeConfig(model="mock", timeout=5),
-        budget=BudgetConfig(max_genes_per_turn=4),
-        genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
-        synonym_map={"auth": ["jwt", "login", "security"]},
-    )
+    config = make_helix_config(synonym_map={"auth": ["jwt", "login", "security"]})
     mgr = HelixContextManager(config)
-    mgr.ribosome.backend = HealthMockBackend()
+    mgr.ribosome.backend = MockCompressorBackend()
     yield mgr
     mgr.close()
 
