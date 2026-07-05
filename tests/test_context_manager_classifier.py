@@ -11,7 +11,7 @@ from helix_context.config import (
 )
 from helix_context.context_manager import HelixContextManager
 from tests.conftest import make_gene
-from tests.test_pipeline import PipelineMockBackend
+from tests.conftest import MockCompressorBackend
 
 
 @pytest.fixture
@@ -25,7 +25,7 @@ def manager():
         classifier=ClassifierConfig(enabled=True),
     )
     mgr = HelixContextManager(cfg)
-    mgr.ribosome.backend = PipelineMockBackend()
+    mgr.ribosome.backend = MockCompressorBackend()
     # Seed a handful of genes so the empty-candidate early-return path
     # in build_context() is not taken; the classifier metadata block
     # lives below that early-return.

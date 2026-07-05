@@ -13,14 +13,8 @@ import tempfile
 
 import pytest
 
-from fastapi.testclient import TestClient
-
 from helix_context.config import (
-    BudgetConfig,
     GenomeConfig,
-    HelixConfig,
-    RibosomeConfig,
-    ServerConfig,
     VaultConfig,
     VaultTracesConfig,
 )
@@ -31,7 +25,6 @@ from helix_context.schemas import (
     Gene,
     PromoterTags,
 )
-from helix_context.server import create_app
 from helix_context.shard_schema import (
     init_main_db,
     open_main_db,
@@ -39,24 +32,25 @@ from helix_context.shard_schema import (
     upsert_fingerprint,
 )
 
+from tests.conftest import MockCompressorBackend, make_client, make_helix_config
+
 
 # -- Helpers ---------------------------------------------------------------
 
-
-class _MockBackend:
-    """Minimal ribosome backend — returns valid JSON for all calls."""
-
-    def complete(self, prompt: str, system: str = "", temperature: float = 0.0) -> str:
-        return json.dumps({
-            "codons": [{"meaning": "test", "weight": 1.0, "is_exon": True}],
-            "complement": "compressed",
-            "promoter": {
-                "domains": ["test"],
-                "entities": [],
-                "intent": "test",
-                "summary": "test",
-            },
-        })
+# This file's original local mock backend returned pack JSON
+# unconditionally for every call (no system-prompt sniffing) — per
+# MockCompressorBackend's docstring, that is equivalent to passing this
+# payload as ``response=``.
+_MOCK_BACKEND_RESPONSE = json.dumps({
+    "codons": [{"meaning": "test", "weight": 1.0, "is_exon": True}],
+    "complement": "compressed",
+    "promoter": {
+        "domains": ["test"],
+        "entities": [],
+        "intent": "test",
+        "summary": "test",
+    },
+})
 
 
 def _make_gene(content: str = "hello world") -> Gene:
@@ -172,15 +166,14 @@ class TestReadOnlyFlag:
 
 def _make_app_and_client(genome_path: str):
     """Build a FastAPI app + TestClient with a real KnowledgeStore at *genome_path*."""
-    config = HelixConfig(
-        ribosome=RibosomeConfig(model="mock", timeout=5),
-        budget=BudgetConfig(max_genes_per_turn=4),
+    config = make_helix_config(
         genome=GenomeConfig(path=genome_path, cold_start_threshold=5),
-        server=ServerConfig(upstream="http://localhost:11434"),
     )
-    app = create_app(config)
-    app.state.helix.ribosome.backend = _MockBackend()
-    return app, TestClient(app)
+    client = make_client(
+        config=config,
+        backend=MockCompressorBackend(response=_MOCK_BACKEND_RESPONSE),
+    )
+    return client.app, client
 
 
 class TestSwapDbEndpoint:
@@ -333,11 +326,8 @@ class TestSwapDbEndpoint:
 
         # Build the app with the vault ENABLED so the pruner payload
         # actually touches the genome (a disabled vault would no-op).
-        config = HelixConfig(
-            ribosome=RibosomeConfig(model="mock", timeout=5),
-            budget=BudgetConfig(max_genes_per_turn=4),
+        config = make_helix_config(
             genome=GenomeConfig(path=db_a, cold_start_threshold=5),
-            server=ServerConfig(upstream="http://localhost:11434"),
         )
         config.vault = VaultConfig(
             enabled=True, path=str(tmp_path / "vault"),
@@ -350,9 +340,11 @@ class TestSwapDbEndpoint:
                 prune_interval_minutes=60, trigger_only=False,
             ),
         )
-        app = create_app(config)
-        app.state.helix.ribosome.backend = _MockBackend()
-        client = TestClient(app)
+        client = make_client(
+            config=config,
+            backend=MockCompressorBackend(response=_MOCK_BACKEND_RESPONSE),
+        )
+        app = client.app
 
         # TestClient is not used as a context manager here, so the app
         # lifespan never runs — start the vault by hand.

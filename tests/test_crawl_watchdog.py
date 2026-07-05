@@ -4,7 +4,7 @@ ladder for the dense ingest/backfill paths.
 NO GPU anywhere in this file. The detector is a pure class (callers
 inject ``vram_frac``), so these tests drive it with a fake feed; the
 wire-level tests stub the heavy collaborators the same way
-``test_build_fixture_matrix_resume.py`` does. On a CPU-only box the
+``test_build_fixture_matrix.py::TestResume`` does. On a CPU-only box the
 production probe ``cuda_vram_fraction()`` returns ``None``, which the
 detector treats as "cannot trip".
 """
@@ -257,7 +257,7 @@ class _StubGenome:
 
 def _install_drain_stubs(monkeypatch):
     """Patch the late imports inside ``_drain_with_batched_splade`` (same
-    technique as test_build_fixture_matrix_resume.py) and make sure the
+    technique as test_build_fixture_matrix.py::TestResume) and make sure the
     SIGINT flag can't be the thing that raises."""
     import build_fixture_matrix as bfm
     fake_backends = types.ModuleType("helix_context.backends")

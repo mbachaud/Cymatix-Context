@@ -80,15 +80,33 @@ class TestMenuActions:
         tray_icon._start_helix(None, None)
         fake_supervisor.start.assert_called_once()
 
-    def test_start_handles_already_running(self, tray_icon, fake_supervisor):
-        fake_supervisor.start.side_effect = AlreadyRunning("already up")
+    @pytest.mark.parametrize(
+        ("supervisor_method", "handler_method", "exception"),
+        [
+            pytest.param(
+                "start", "_start_helix", AlreadyRunning("already up"),
+                id="start-already-running",
+            ),
+            pytest.param(
+                "start", "_start_helix", SupervisorError("port in use"),
+                id="start-supervisor-error",
+            ),
+            pytest.param(
+                "stop", "_stop_helix", NotRunning("not running"),
+                id="stop-not-running",
+            ),
+        ],
+    )
+    def test_menu_action_swallows_supervisor_error(
+        self, tray_icon, fake_supervisor, supervisor_method, handler_method, exception
+    ):
+        """Menu action handlers must swallow supervisor errors raised from
+        the underlying supervisor call rather than propagating them into
+        pystray's callback dispatch."""
+        getattr(fake_supervisor, supervisor_method).side_effect = exception
+        handler = getattr(tray_icon, handler_method)
         # Should not raise
-        tray_icon._start_helix(None, None)
-
-    def test_start_handles_supervisor_error(self, tray_icon, fake_supervisor):
-        fake_supervisor.start.side_effect = SupervisorError("port in use")
-        # Should not raise
-        tray_icon._start_helix(None, None)
+        handler(None, None)
 
     def test_restart_calls_supervisor_restart(self, tray_icon, fake_supervisor):
         tray_icon._restart_helix(None, None)
@@ -97,11 +115,6 @@ class TestMenuActions:
     def test_stop_calls_supervisor_stop(self, tray_icon, fake_supervisor):
         tray_icon._stop_helix(None, None)
         fake_supervisor.stop.assert_called_once()
-
-    def test_stop_handles_not_running(self, tray_icon, fake_supervisor):
-        fake_supervisor.stop.side_effect = NotRunning("not running")
-        # Should not raise
-        tray_icon._stop_helix(None, None)
 
     def test_notify_update_available_is_one_shot(self, fake_supervisor):
         checker = MagicMock()
@@ -532,6 +545,41 @@ def _build_pulsing_tray(tmp_path):
     return icon
 
 
+# ── Pulse-stop triggers (Task 18b) ──────────────────────────────────────
+#
+# Each observability submenu action is a distinct acknowledgment path with
+# its own setup (direct call / stubbed service handler / platform-gated
+# file-explorer stub). Collected as functions so
+# ``test_pulse_action_acknowledges_and_stops_pulse`` can parametrize over
+# "the action" per the plan, rather than a scalar table.
+
+
+def _trigger_dismiss(icon, monkeypatch):
+    icon._dismiss_install_pulse(None, None)
+
+
+def _trigger_restart_obs_service(icon, monkeypatch):
+    # Stub the observability supervisor's restart_service so we don't
+    # actually try to restart anything during the test.
+    icon.observability.restart_service = MagicMock()
+    handler = icon._restart_obs_service("collector")
+    handler(None, None)
+
+
+def _trigger_open_obs_log_dir(icon, monkeypatch):
+    # Stub the file-explorer side effect.
+    if sys.platform == "win32":
+        monkeypatch.setattr("helix_context.launcher.tray.os.startfile",
+                            lambda _p: None, raising=False)
+    else:
+        monkeypatch.setattr(
+            "helix_context.launcher.tray.subprocess.Popen",
+            lambda *a, **k: None,
+            raising=False,
+        )
+    icon._open_obs_log_dir(None, None)
+
+
 class TestInstallPulse:
     def test_pulse_inactive_by_default(self, tmp_path):
         icon = _build_pulsing_tray(tmp_path)
@@ -632,40 +680,22 @@ class TestInstallPulse:
         finally:
             icon.stop_install_pulse()
 
-    def test_dismiss_handler_stops_pulse(self, tmp_path):
+    @pytest.mark.parametrize(
+        "trigger",
+        [
+            pytest.param(_trigger_dismiss, id="dismiss"),
+            pytest.param(_trigger_restart_obs_service, id="restart-obs-service"),
+            pytest.param(_trigger_open_obs_log_dir, id="open-obs-log-dir"),
+        ],
+    )
+    def test_pulse_action_acknowledges_and_stops_pulse(self, tmp_path, monkeypatch, trigger):
+        """Spec §11.4: clicking any observability submenu action (dismiss,
+        restart-service, open-log-dir) is treated as acknowledgment and
+        stops the install pulse."""
         icon = _build_pulsing_tray(tmp_path)
         icon.start_install_pulse()
         assert icon._install_pulse_active is True
-        icon._dismiss_install_pulse(None, None)
-        assert icon._install_pulse_active is False
-
-    def test_restart_obs_service_acknowledges_and_stops_pulse(self, tmp_path):
-        """Spec §11.4: clicking any observability submenu item is treated
-        as acknowledgment and stops the pulse."""
-        icon = _build_pulsing_tray(tmp_path)
-        icon.start_install_pulse()
-        assert icon._install_pulse_active is True
-        # Stub the observability supervisor's restart_service so we don't
-        # actually try to restart anything during the test.
-        icon.observability.restart_service = MagicMock()
-        handler = icon._restart_obs_service("collector")
-        handler(None, None)
-        assert icon._install_pulse_active is False
-
-    def test_open_obs_log_dir_acknowledges_and_stops_pulse(self, tmp_path, monkeypatch):
-        icon = _build_pulsing_tray(tmp_path)
-        icon.start_install_pulse()
-        # Stub the file-explorer side effect.
-        if sys.platform == "win32":
-            monkeypatch.setattr("helix_context.launcher.tray.os.startfile",
-                                lambda _p: None, raising=False)
-        else:
-            monkeypatch.setattr(
-                "helix_context.launcher.tray.subprocess.Popen",
-                lambda *a, **k: None,
-                raising=False,
-            )
-        icon._open_obs_log_dir(None, None)
+        trigger(icon, monkeypatch)
         assert icon._install_pulse_active is False
 
     def test_pulse_dismiss_persists_within_process(self, tmp_path):
@@ -923,84 +953,70 @@ class TestRepoRootHelper:
 # ── Hardware-fallback balloon (Task 13 — feat/hardware-detection) ─────
 
 
+def _make_hardware_info(*, device_type, requested_device, fallback_reason):
+    """Build a HardwareInfo populated with the three fields
+    ``_should_fire_hardware_fallback_balloon`` actually reads
+    (device_type, requested_device, fallback_reason); the remaining
+    fields are representative constants the gate never consults."""
+    from helix_context import hardware
+    return hardware.HardwareInfo(
+        device=device_type, device_type=device_type, device_name="CPU",
+        vram_total_gb=None, vram_free_gb=None,
+        cpu_arch="x86_64", cpu_brand="CPU",
+        system_ram_gb=16.0, requested_device=requested_device,
+        fallback_reason=fallback_reason,
+        batch_size_overrides={},
+    )
+
+
 class TestHardwareFallbackBalloon:
     """Spec §6 third surface: tray balloon when the active device differs
     from the requested device. Sentinel encodes (requested, active) so a
     state-change re-fires; same-state re-launches stay quiet."""
 
-    def test_hardware_fallback_balloon_fires_first_launch(self, tmp_path, monkeypatch):
-        """Balloon fires once when fallback_active=True and no sentinel exists."""
-        from helix_context import hardware
-
+    @pytest.mark.parametrize(
+        ("requested", "active", "fallback_reason", "sentinel", "expected"),
+        [
+            pytest.param(
+                "cuda", "cpu", "cuda not available", None, True,
+                id="fires-first-launch-no-sentinel",
+            ),
+            pytest.param(
+                "cuda", "cpu", "cuda not available", ("cuda", "cpu"), False,
+                id="dedups-via-matching-sentinel",
+            ),
+            pytest.param(
+                "mps", "cpu", "mps not available", ("cuda", "cpu"), True,
+                id="refires-on-different-requested-active-pair",
+            ),
+            pytest.param(
+                "auto", "cuda", None, None, False,
+                id="skipped-when-no-fallback-reason",
+            ),
+        ],
+    )
+    def test_hardware_fallback_balloon(
+        self, tmp_path, monkeypatch, requested, active, fallback_reason, sentinel, expected
+    ):
+        """(requested, active, fallback_reason, sentinel, expected) table:
+        the balloon fires iff a fallback is active AND no sentinel exists
+        for the current (requested, active) pair — a sentinel for a
+        different pair does not suppress it."""
         monkeypatch.setattr("helix_context.launcher.observability_paths.state_dir",
                             lambda create=False: tmp_path)
+        if sentinel is not None:
+            sentinel_requested, sentinel_active = sentinel
+            (tmp_path / f".hardware-fallback-acknowledged-{sentinel_requested}-{sentinel_active}").touch()
+
+        from helix_context import hardware
         hardware.reset_for_test()
-        fake = hardware.HardwareInfo(
-            device="cpu", device_type="cpu", device_name="CPU",
-            vram_total_gb=None, vram_free_gb=None,
-            cpu_arch="x86_64", cpu_brand="CPU",
-            system_ram_gb=16.0, requested_device="cuda",
-            fallback_reason="cuda not available",
-            batch_size_overrides={},
+        monkeypatch.setattr(
+            hardware, "_detect",
+            lambda: _make_hardware_info(
+                device_type=active, requested_device=requested,
+                fallback_reason=fallback_reason,
+            ),
         )
-        monkeypatch.setattr(hardware, "_detect", lambda: fake)
 
         from helix_context.launcher.tray import _should_fire_hardware_fallback_balloon
-        assert _should_fire_hardware_fallback_balloon() is True
-
-    def test_hardware_fallback_balloon_dedups_via_sentinel(self, tmp_path, monkeypatch):
-        """Sentinel exists -> balloon suppressed."""
-        monkeypatch.setattr("helix_context.launcher.observability_paths.state_dir",
-                            lambda create=False: tmp_path)
-        sentinel = tmp_path / ".hardware-fallback-acknowledged-cuda-cpu"
-        sentinel.touch()
-
-        from helix_context import hardware
-        hardware.reset_for_test()
-        monkeypatch.setattr(hardware, "_detect", lambda: hardware.HardwareInfo(
-            device="cpu", device_type="cpu", device_name="CPU",
-            vram_total_gb=None, vram_free_gb=None,
-            cpu_arch="x86_64", cpu_brand="CPU", system_ram_gb=16.0,
-            requested_device="cuda", fallback_reason="cuda not available",
-            batch_size_overrides={},
-        ))
-
-        from helix_context.launcher.tray import _should_fire_hardware_fallback_balloon
-        assert _should_fire_hardware_fallback_balloon() is False
-
-    def test_hardware_fallback_balloon_refires_on_different_state(self, tmp_path, monkeypatch):
-        """Different requested/active combo => different sentinel => balloon fires."""
-        monkeypatch.setattr("helix_context.launcher.observability_paths.state_dir",
-                            lambda create=False: tmp_path)
-        (tmp_path / ".hardware-fallback-acknowledged-cuda-cpu").touch()
-
-        from helix_context import hardware
-        hardware.reset_for_test()
-        monkeypatch.setattr(hardware, "_detect", lambda: hardware.HardwareInfo(
-            device="cpu", device_type="cpu", device_name="CPU",
-            vram_total_gb=None, vram_free_gb=None,
-            cpu_arch="x86_64", cpu_brand="CPU", system_ram_gb=16.0,
-            requested_device="mps", fallback_reason="mps not available",
-            batch_size_overrides={},
-        ))
-
-        from helix_context.launcher.tray import _should_fire_hardware_fallback_balloon
-        # Sentinel is for cuda->cpu; current state is mps->cpu.
-        assert _should_fire_hardware_fallback_balloon() is True
-
-    def test_hardware_fallback_balloon_skipped_when_no_fallback(self, tmp_path, monkeypatch):
-        """fallback_reason is None => no balloon ever."""
-        monkeypatch.setattr("helix_context.launcher.observability_paths.state_dir",
-                            lambda create=False: tmp_path)
-        from helix_context import hardware
-        hardware.reset_for_test()
-        monkeypatch.setattr(hardware, "_detect", lambda: hardware.HardwareInfo(
-            device="cuda:0", device_type="cuda", device_name="RTX 4090",
-            vram_total_gb=24.0, vram_free_gb=22.0,
-            cpu_arch="x86_64", cpu_brand="CPU", system_ram_gb=64.0,
-            requested_device="auto", fallback_reason=None,
-            batch_size_overrides={},
-        ))
-
-        from helix_context.launcher.tray import _should_fire_hardware_fallback_balloon
-        assert _should_fire_hardware_fallback_balloon() is False
+        assert _should_fire_hardware_fallback_balloon() is expected

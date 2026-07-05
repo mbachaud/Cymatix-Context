@@ -57,7 +57,7 @@ from helix_context.config import (
 )
 from helix_context.context_manager import HelixContextManager
 from tests.conftest import make_gene
-from tests.test_pipeline import PipelineMockBackend
+from tests.conftest import MockCompressorBackend
 
 
 # ── Synthetic corpus — hand-curated so the golden is reproducible without
@@ -238,7 +238,7 @@ def _build_manager() -> HelixContextManager:
         classifier=ClassifierConfig(enabled=True),
     )
     mgr = HelixContextManager(cfg)
-    mgr.ribosome.backend = PipelineMockBackend()
+    mgr.ribosome.backend = MockCompressorBackend()
     for i, spec in enumerate(_SEED_GENES):
         mgr.genome.upsert_gene(make_gene(
             spec["content"],

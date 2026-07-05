@@ -35,7 +35,7 @@ jobs:
       # server.py for lazy init is out of scope for PR2; tracked as a
       # follow-up enhancement.
       - name: Run hardware test suite
-        run: pytest tests/test_hardware.py tests/test_hardware_rocm.py tests/test_hardware_cuda_real.py tests/test_hardware_mps_smoke.py -v
+        run: pytest tests/test_hardware.py tests/test_hardware_real_device.py tests/test_hardware_mps_smoke.py -v
 
   test-macos-mps:
     runs-on: macos-14
@@ -62,7 +62,7 @@ jobs:
       - name: Run hardware test suite (MPS smoke test runs only on this job)
         env:
           PYTORCH_MPS_HIGH_WATERMARK_RATIO: "0.0"
-        run: pytest tests/test_hardware.py tests/test_hardware_rocm.py tests/test_hardware_cuda_real.py tests/test_hardware_mps_smoke.py -v
+        run: pytest tests/test_hardware.py tests/test_hardware_real_device.py tests/test_hardware_mps_smoke.py -v
 
   test-windows:
     runs-on: windows-latest
@@ -86,4 +86,4 @@ jobs:
       # server.py for lazy init is out of scope for PR2; tracked as a
       # follow-up enhancement.
       - name: Run hardware test suite
-        run: pytest tests/test_hardware.py tests/test_hardware_rocm.py tests/test_hardware_cuda_real.py tests/test_hardware_mps_smoke.py -v
+        run: pytest tests/test_hardware.py tests/test_hardware_real_device.py tests/test_hardware_mps_smoke.py -v

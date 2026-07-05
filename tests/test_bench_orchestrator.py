@@ -536,6 +536,67 @@ def test_spawn_does_not_double_prepend_repo_root(tmp_path: Path) -> None:
         f"PYTHONPATH should be unchanged when repo_root is already at head: {pythonpath!r}"
 
 
+def test_spawn_defaults_pythonhashseed_to_zero(tmp_path: Path) -> None:
+    """``_spawn`` must pin ``PYTHONHASHSEED=0`` in the uvicorn child env
+    so set/dict iteration order stays stable across bench re-spawns —
+    without it, replays of the same query against the same fixture can
+    drift purely because the subprocess got a different hash seed (see
+    tests/test_bench_determinism.py's module docstring, fix #3)."""
+    (tmp_path / "pyproject.toml").write_text("")
+    (tmp_path / "helix_context").mkdir()
+    (tmp_path / "helix_context" / "__init__.py").write_text("")
+    _make_fixture_db(tmp_path / "small.db", tables=("genes",))
+
+    srv = BenchServer(repo_root=tmp_path)
+    fx = Fixture(name="small", db=str(tmp_path / "small.db"), sharded=False)
+
+    captured: dict[str, object] = {}
+
+    def fake_popen(cmd, **kwargs):
+        captured["kwargs"] = kwargs
+        return MagicMock(pid=4242, poll=MagicMock(return_value=None))
+
+    with patch("bench_orchestrator.subprocess.Popen", side_effect=fake_popen):
+        srv._spawn(fx)
+
+    env = captured["kwargs"]["env"]
+    assert env.get("PYTHONHASHSEED") == "0", (
+        f"bench orchestrator must pin PYTHONHASHSEED=0 in uvicorn env; "
+        f"got {env.get('PYTHONHASHSEED')!r}"
+    )
+
+
+def test_spawn_respects_explicit_pythonhashseed_override(tmp_path: Path) -> None:
+    """If a fixture passes ``PYTHONHASHSEED`` via ``extra_env`` (e.g. for
+    a targeted random-seed bench), that wins over the orchestrator
+    default. ``env.setdefault`` then ``env.update(extra_env)`` should
+    produce the override behavior."""
+    (tmp_path / "pyproject.toml").write_text("")
+    (tmp_path / "helix_context").mkdir()
+    (tmp_path / "helix_context" / "__init__.py").write_text("")
+    _make_fixture_db(tmp_path / "small.db", tables=("genes",))
+
+    srv = BenchServer(repo_root=tmp_path)
+    fx = Fixture(
+        name="small",
+        db=str(tmp_path / "small.db"),
+        sharded=False,
+        extra_env={"PYTHONHASHSEED": "42"},
+    )
+
+    captured: dict[str, object] = {}
+
+    def fake_popen(cmd, **kwargs):
+        captured["kwargs"] = kwargs
+        return MagicMock(pid=4242, poll=MagicMock(return_value=None))
+
+    with patch("bench_orchestrator.subprocess.Popen", side_effect=fake_popen):
+        srv._spawn(fx)
+
+    # extra_env override wins.
+    assert captured["kwargs"]["env"].get("PYTHONHASHSEED") == "42"
+
+
 def test_probe_fixture_schema_passes_when_required_tables_present(tmp_path: Path) -> None:
     """A fixture DB with every required+recommended table passes silently."""
     db = _make_fixture_db(

@@ -16,17 +16,9 @@ from pathlib import Path
 from typing import List, Tuple
 
 import pytest
-from fastapi.testclient import TestClient
 
 from helix_context import context_manager as _cm
-from helix_context.config import (
-    BudgetConfig,
-    ClassifierConfig,
-    GenomeConfig,
-    HelixConfig,
-    RibosomeConfig,
-    ServerConfig,
-)
+from helix_context.config import BudgetConfig, ClassifierConfig
 from helix_context.context_manager import HelixContextManager
 from helix_context.retrieval.query_classifier import (
     DECODER_MODE_TABLE,
@@ -36,9 +28,7 @@ from helix_context.schemas import (
     CALLER_MODEL_CLASS_DEFAULT,
     CallerModelClass,
 )
-from helix_context.server import create_app
-from tests.conftest import make_gene
-from tests.test_pipeline import PipelineMockBackend
+from tests.conftest import MockCompressorBackend, make_client, make_gene, make_helix_config
 
 
 # ── Test fixtures ────────────────────────────────────────────────────────
@@ -46,14 +36,12 @@ from tests.test_pipeline import PipelineMockBackend
 
 def _make_manager_with_kvs() -> HelixContextManager:
     """Manager with mock backend + genes that carry KVs (for slate tests)."""
-    cfg = HelixConfig(
-        ribosome=RibosomeConfig(model="mock", timeout=5),
+    cfg = make_helix_config(
         budget=BudgetConfig(max_genes_per_turn=4, splice_aggressiveness=0.5),
-        genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
         classifier=ClassifierConfig(enabled=True),
     )
     mgr = HelixContextManager(cfg)
-    mgr.ribosome.backend = PipelineMockBackend()
+    mgr.ribosome.backend = MockCompressorBackend()
     # Seed genes with key_values so slate population has material.
     seeds: List[Tuple[str, List[str], List[str], List[str]]] = [
         ("Auth middleware uses JWT validation",
@@ -82,22 +70,16 @@ def _make_manager_with_kvs() -> HelixContextManager:
 
 @pytest.fixture
 def http_client():
-    cfg = HelixConfig(
-        ribosome=RibosomeConfig(model="mock", timeout=5),
-        budget=BudgetConfig(max_genes_per_turn=4),
-        genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
-        server=ServerConfig(upstream="http://localhost:11434"),
-        classifier=ClassifierConfig(enabled=True),
-    )
-    app = create_app(cfg)
-    app.state.helix.ribosome.backend = PipelineMockBackend()
+    cfg = make_helix_config(classifier=ClassifierConfig(enabled=True))
+    client = make_client(config=cfg, backend=MockCompressorBackend())
+    app = client.app
     # Seed at least one gene so the build_context path runs.
     g = make_gene("Authentication middleware with JWT validation",
                   domains=["auth"], entities=["jwt"],
                   gene_id="http_seed_00001")
     g.key_values = ["jwt_expiry=15m"]
     app.state.helix.genome.upsert_gene(g)
-    with TestClient(app) as c:
+    with client as c:
         yield c
 
 

@@ -41,21 +41,10 @@ from tests.conftest import make_gene
 
 
 class TestIsDeniedSource:
-    def test_none_not_denied(self):
-        assert is_denied_source(None) is False
+    """Structural path-pattern coverage for is_denied_source, split into
+    an allow-list table and a deny-list table (one row per original
+    one-off test method's literal input)."""
 
-    def test_empty_string_not_denied(self):
-        assert is_denied_source("") is False
-
-    def test_signal_paths_not_denied(self):
-        """Real helix-context source files must never be denied."""
-        assert is_denied_source("F:/Projects/helix-context/helix_context/genome.py") is False
-        assert is_denied_source("helix-context/docs/RESEARCH.md") is False
-        assert is_denied_source("accounting/src/ledger.py") is False
-        assert is_denied_source("projects/fleet/dashboard.py") is False
-        assert is_denied_source("side-project/audit/core.py") is False
-
-    # Steam / game content
     # ─── Steam / game content is SIGNAL, not noise (reframed 2026-04-10) ───
     # Game files (configs, enums, item IDs, localization, code) are content-
     # dense with unambiguous literal values. Empirically 86% of correct
@@ -63,108 +52,80 @@ class TestIsDeniedSource:
     # structural path is not a categorical reject; individual low-density
     # game genes still get caught by the score gate.
 
-    def test_steam_library_not_denied(self):
-        assert is_denied_source("F:/SteamLibrary/steamapps/common/BeamNG.drive/lua/lib/x.lua") is False
+    @pytest.mark.parametrize(
+        "path",
+        [
+            pytest.param(None, id="none"),
+            pytest.param("", id="empty_string"),
+            # Real helix-context source files must never be denied.
+            pytest.param("F:/Projects/helix-context/helix_context/genome.py", id="helix_context_genome_py"),
+            pytest.param("helix-context/docs/RESEARCH.md", id="helix_context_research_md"),
+            pytest.param("accounting/src/ledger.py", id="accounting_ledger"),
+            pytest.param("projects/fleet/dashboard.py", id="fleet_dashboard"),
+            pytest.param("side-project/audit/core.py", id="side_project_audit_core"),
+            # Steam / game content — signal, not noise.
+            pytest.param("F:/SteamLibrary/steamapps/common/BeamNG.drive/lua/lib/x.lua", id="steam_library_beamng_lua"),
+            pytest.param("/steamapps/common/Hades/some_file.txt", id="steamapps_common_hades"),
+            pytest.param("C:/BeamNG.drive/missions/Gridmap/quicktarget.json", id="beamng_drive_missions"),
+            pytest.param("F:/SteamLibrary/Hades/Content/Subtitles/en/Zagreus.csv", id="hades_subtitles"),
+            pytest.param("F:/SteamLibrary/Hades/Content/Maps/Orpheus.csv", id="hades_maps"),
+            pytest.param("/Hades/Content/Audio/zagreus_intro.ogg", id="hades_audio"),
+            pytest.param("F:/Factorio/data/base/campaigns/level-01.cfg", id="factorio_base_data"),
+            pytest.param("F:/SteamLibrary/Dyson Sphere Program/data.json", id="dyson_sphere_program"),
+            # Locale handling — English is preserved as primary user base.
+            pytest.param("project/locale/en/messages.po", id="english_locale"),
+            # CRITICAL: CSVs are NOT in the deny list — business content.
+            pytest.param("F:/accounting/customers.csv", id="business_csv_customers"),
+            pytest.param("F:/acme/fleet/metrics/daily_report.csv", id="business_csv_daily_report"),
+            pytest.param("project/data/financial_records.csv", id="business_csv_financial_records"),
+        ],
+    )
+    def test_allowed_paths(self, path):
+        """Paths that must NEVER be deny-listed: signal source, Steam/game
+        content, English locale, and business CSVs."""
+        assert is_denied_source(path) is False
 
-    def test_steamapps_common_not_denied(self):
-        assert is_denied_source("/steamapps/common/Hades/some_file.txt") is False
-
-    def test_beamng_drive_not_denied(self):
-        assert is_denied_source("C:/BeamNG.drive/missions/Gridmap/quicktarget.json") is False
-
-    def test_hades_content_not_denied(self):
-        """Hades subtitles, maps, audio — all signal, none deny-listed."""
-        assert is_denied_source("F:/SteamLibrary/Hades/Content/Subtitles/en/Zagreus.csv") is False
-        assert is_denied_source("F:/SteamLibrary/Hades/Content/Maps/Orpheus.csv") is False
-        assert is_denied_source("/Hades/Content/Audio/zagreus_intro.ogg") is False
-
-    def test_factorio_base_data_not_denied(self):
-        assert is_denied_source("F:/Factorio/data/base/campaigns/level-01.cfg") is False
-
-    def test_dyson_sphere_not_denied(self):
-        assert is_denied_source("F:/SteamLibrary/Dyson Sphere Program/data.json") is False
-
-    # Build artifacts
-    def test_next_build_denied(self):
-        assert is_denied_source("F:/webshop/.next/server/app/page.js") is True
-
-    def test_node_modules_denied(self):
-        assert is_denied_source("project/node_modules/react/index.js") is True
-
-    def test_pycache_denied(self):
-        assert is_denied_source("helix_context/__pycache__/genome.cpython-314.pyc") is True
-
-    def test_dist_denied(self):
-        assert is_denied_source("project/dist/bundle.js") is True
-
-    def test_target_debug_denied(self):
-        assert is_denied_source("acme-rs/target/debug/deps/libcore.rlib") is True
-
-    def test_target_release_denied(self):
-        assert is_denied_source("acme-rs/target/release/acme.exe") is True
-
-    # Lockfiles
-    def test_package_lock_denied(self):
-        assert is_denied_source("F:/webshop/package-lock.json") is True
-
-    def test_yarn_lock_denied(self):
-        assert is_denied_source("project/yarn.lock") is True
-
-    def test_cargo_lock_denied(self):
-        assert is_denied_source("acme-rs/Cargo.lock") is True
-
-    def test_uv_lock_denied(self):
-        assert is_denied_source("helix-context/uv.lock") is True
-
-    # Minified and source maps
-    def test_min_js_denied(self):
-        assert is_denied_source("static/bundle.min.js") is True
-
-    def test_min_css_denied(self):
-        assert is_denied_source("static/theme.min.css") is True
-
-    def test_source_map_denied(self):
-        assert is_denied_source("static/bundle.js.map") is True
-
-    # Next.js manifests
-    def test_app_paths_manifest_denied(self):
-        assert is_denied_source("F:/webshop/.next/server/app-paths-manifest.json") is True
-
-    def test_client_reference_manifest_denied(self):
-        assert is_denied_source(".next/server/app/client-reference-manifest.js") is True
-
-    # Binary / compiled
-    def test_pyc_denied(self):
-        assert is_denied_source("__pycache__/module.cpython-312.pyc") is True
-
-    def test_wasm_denied(self):
-        assert is_denied_source("dist/module.wasm") is True
-
-    def test_exe_denied(self):
-        assert is_denied_source("target/release/tool.exe") is True
-
-    # Locale handling
-    def test_non_english_locale_denied(self):
-        """Non-English locale directories are treated as noise by default."""
-        assert is_denied_source("project/locale/de/messages.po") is True
-        assert is_denied_source("project/locale/ja/messages.po") is True
-
-    def test_english_locale_not_denied(self):
-        """English locale is preserved as primary user base."""
-        assert is_denied_source("project/locale/en/messages.po") is False
-
-    # CRITICAL: CSVs are NOT in the deny list — business content
-    def test_business_csv_not_denied(self):
-        """Future business CSVs (customer data, invoices, etc.) must pass."""
-        assert is_denied_source("F:/accounting/customers.csv") is False
-        assert is_denied_source("F:/acme/fleet/metrics/daily_report.csv") is False
-        assert is_denied_source("project/data/financial_records.csv") is False
-
-    def test_case_insensitive(self):
-        """Case-insensitive matching applies to all kept deny patterns."""
-        assert is_denied_source("F:/project/NODE_MODULES/react/index.js") is True
-        assert is_denied_source("F:/project/Node_Modules/react/index.js") is True
-        assert is_denied_source("F:/project/.NEXT/server/page.js") is True
+    @pytest.mark.parametrize(
+        "path",
+        [
+            # Build artifacts.
+            pytest.param("F:/webshop/.next/server/app/page.js", id="next_build"),
+            pytest.param("project/node_modules/react/index.js", id="node_modules"),
+            pytest.param("helix_context/__pycache__/genome.cpython-314.pyc", id="pycache_dir"),
+            pytest.param("project/dist/bundle.js", id="dist_bundle"),
+            pytest.param("acme-rs/target/debug/deps/libcore.rlib", id="target_debug"),
+            pytest.param("acme-rs/target/release/acme.exe", id="target_release"),
+            # Lockfiles.
+            pytest.param("F:/webshop/package-lock.json", id="package_lock"),
+            pytest.param("project/yarn.lock", id="yarn_lock"),
+            pytest.param("acme-rs/Cargo.lock", id="cargo_lock"),
+            pytest.param("helix-context/uv.lock", id="uv_lock"),
+            # Minified and source maps.
+            pytest.param("static/bundle.min.js", id="min_js"),
+            pytest.param("static/theme.min.css", id="min_css"),
+            pytest.param("static/bundle.js.map", id="source_map"),
+            # Next.js manifests.
+            pytest.param("F:/webshop/.next/server/app-paths-manifest.json", id="app_paths_manifest"),
+            pytest.param(".next/server/app/client-reference-manifest.js", id="client_reference_manifest"),
+            # Binary / compiled.
+            pytest.param("__pycache__/module.cpython-312.pyc", id="pyc_file"),
+            pytest.param("dist/module.wasm", id="wasm_file"),
+            pytest.param("target/release/tool.exe", id="exe_file"),
+            # Locale handling — non-English locale directories are noise by default.
+            pytest.param("project/locale/de/messages.po", id="locale_de"),
+            pytest.param("project/locale/ja/messages.po", id="locale_ja"),
+            # Case-insensitive matching applies to all kept deny patterns.
+            pytest.param("F:/project/NODE_MODULES/react/index.js", id="case_insensitive_upper"),
+            pytest.param("F:/project/Node_Modules/react/index.js", id="case_insensitive_mixed"),
+            pytest.param("F:/project/.NEXT/server/page.js", id="case_insensitive_next_upper"),
+        ],
+    )
+    def test_denied_paths(self, path):
+        """Paths that must be deny-listed: build artifacts, lockfiles,
+        minified/source-map files, Next.js manifests, binary/compiled
+        files, non-English locales, and case-insensitive variants of
+        the above."""
+        assert is_denied_source(path) is True
 
 
 # ── apply_density_gate — decision logic ────────────────────────────────

@@ -1,22 +1,13 @@
 """Tests for `helix refresh-targets`."""
 from __future__ import annotations
 
-import contextlib
-import io
 import json
 from unittest.mock import MagicMock, patch
 
 import pytest
 
-from helix_context.cli import main
 from helix_context.schemas import RefreshTarget
-
-
-def _run(argv):
-    out, err = io.StringIO(), io.StringIO()
-    with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
-        rc = main(argv)
-    return rc, out.getvalue(), err.getvalue()
+from tests.conftest import run_cli as _run
 
 
 @pytest.fixture

@@ -21,64 +21,11 @@ preserved verbatim in `<GENE src=...>`.
 
 from __future__ import annotations
 
-import json
-
 import pytest
 
-from helix_context.config import (
-    BudgetConfig,
-    GenomeConfig,
-    HelixConfig,
-    RibosomeConfig,
-)
+from helix_context.config import BudgetConfig
 from helix_context.context_manager import HelixContextManager
-from tests.conftest import make_gene
-
-
-class _MockRibosomeBackend:
-    """Stand-in ribosome backend. Inlined (not imported from
-    ``tests.test_pipeline``) because that module has a top-level
-    ``pytest.importorskip("sentence_transformers")`` that would skip this
-    file on import in environments without sentence-transformers.
-
-    Returns plausible JSON shapes for each of the four prompt families
-    the ribosome dispatches: ``pack`` (compression engine), ``re-rank``
-    (expression scorer), ``splice`` (context splicer), and ``replicate``
-    (replication engine). Any other system prompt gets an empty object.
-    """
-
-    def complete(self, prompt: str, system: str = "", temperature: float = 0.0) -> str:
-        if "compression engine" in system:
-            return json.dumps({
-                "codons": [
-                    {"meaning": "mock_concept", "weight": 0.9, "is_exon": True},
-                    {"meaning": "mock_detail", "weight": 0.5, "is_exon": True},
-                ],
-                "complement": "Mock compressed summary.",
-                "promoter": {
-                    "domains": ["testing"],
-                    "entities": [],
-                    "intent": "test",
-                    "summary": "Mock gene",
-                },
-            })
-        if "expression scorer" in system:
-            import re
-            gene_ids = re.findall(r"(\w{16}):", prompt)
-            return json.dumps({gid: round(0.9 - i * 0.1, 1)
-                               for i, gid in enumerate(gene_ids)})
-        if "context splicer" in system:
-            import re
-            gene_ids = re.findall(r"Gene (\w+)", prompt)
-            return json.dumps({gid: [0, 1] for gid in gene_ids})
-        if "replication engine" in system:
-            return json.dumps({
-                "codons": [{"meaning": "x", "weight": 1.0, "is_exon": True}],
-                "complement": "Mock replicated.",
-                "promoter": {"domains": [], "entities": [],
-                             "intent": "conversation", "summary": "x"},
-            })
-        return "{}"
+from tests.conftest import MockCompressorBackend, make_gene, make_helix_config
 
 
 @pytest.fixture
@@ -89,13 +36,11 @@ def manager():
     real LLM; the path-shortening branch we exercise sits in the splice
     loop, which runs unconditionally once candidates are selected.
     """
-    cfg = HelixConfig(
-        ribosome=RibosomeConfig(model="mock", timeout=5),
+    cfg = make_helix_config(
         budget=BudgetConfig(max_genes_per_turn=4, splice_aggressiveness=0.5),
-        genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
     )
     mgr = HelixContextManager(cfg)
-    mgr.ribosome.backend = _MockRibosomeBackend()
+    mgr.ribosome.backend = MockCompressorBackend()
     yield mgr
     mgr.close()
 

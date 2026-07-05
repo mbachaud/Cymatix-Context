@@ -13,11 +13,9 @@ from helix_context import hardware
 
 
 @pytest.fixture(autouse=True)
-def _reset_hardware_cache():
-    """Every test starts with a clean singleton."""
-    hardware.reset_for_test()
+def _reset(reset_hardware_cache):
+    """Every test starts with a clean singleton (see tests/conftest.py)."""
     yield
-    hardware.reset_for_test()
 
 
 def test_hardware_info_is_frozen():
@@ -58,32 +56,38 @@ def test_reset_for_test_clears_cached_singleton(monkeypatch):
     assert info3.device_name == "Other"
 
 
-def test_cpu_brand_from_py_cpuinfo(monkeypatch):
-    """When py-cpuinfo is installed and returns brand_raw, use it."""
-    fake_cpuinfo = {"brand_raw": "AMD Ryzen 9 7900X 12-Core Processor"}
+@pytest.mark.parametrize(
+    ("cpuinfo_result", "platform_processor", "expected_brand"),
+    [
+        pytest.param(
+            {"brand_raw": "AMD Ryzen 9 7900X 12-Core Processor"},
+            "should not be used",
+            "AMD Ryzen 9 7900X 12-Core Processor",
+            id="py-cpuinfo-brand-raw",
+        ),
+        pytest.param(
+            None,
+            "Intel64 Family 6 Model 158",
+            "Intel64 Family 6 Model 158",
+            id="platform-processor-fallback",
+        ),
+        pytest.param(
+            None,
+            "",
+            "unknown CPU",
+            id="terminal-fallback-unknown-cpu",
+        ),
+    ],
+)
+def test_cpu_brand_source_precedence(monkeypatch, cpuinfo_result, platform_processor, expected_brand):
+    """cpu_brand source precedence: py-cpuinfo brand_raw > platform.processor() > 'unknown CPU'."""
     monkeypatch.setattr(
         "helix_context.hardware._cpuinfo_get_info",
-        lambda: fake_cpuinfo,
+        lambda: cpuinfo_result,
     )
-    monkeypatch.setattr("platform.processor", lambda: "should not be used")
+    monkeypatch.setattr("platform.processor", lambda: platform_processor)
     info = hardware._detect_cpu()
-    assert info["cpu_brand"] == "AMD Ryzen 9 7900X 12-Core Processor"
-
-
-def test_cpu_brand_falls_back_to_platform_processor(monkeypatch):
-    """When py-cpuinfo is absent, fall back to platform.processor()."""
-    monkeypatch.setattr("helix_context.hardware._cpuinfo_get_info", lambda: None)
-    monkeypatch.setattr("platform.processor", lambda: "Intel64 Family 6 Model 158")
-    info = hardware._detect_cpu()
-    assert info["cpu_brand"] == "Intel64 Family 6 Model 158"
-
-
-def test_cpu_brand_terminal_fallback(monkeypatch):
-    """When both sources fail, return 'unknown CPU' (no crash)."""
-    monkeypatch.setattr("helix_context.hardware._cpuinfo_get_info", lambda: None)
-    monkeypatch.setattr("platform.processor", lambda: "")
-    info = hardware._detect_cpu()
-    assert info["cpu_brand"] == "unknown CPU"
+    assert info["cpu_brand"] == expected_brand
 
 
 def test_cpu_arch_uses_platform_machine(monkeypatch):
@@ -183,44 +187,84 @@ def mock_torch(monkeypatch):
     return state
 
 
-def test_auto_picks_cuda_when_available(mock_torch):
-    mock_torch["cuda_available"] = True
-    mock_torch["cuda_device_count"] = 1
-    mock_torch["cuda_device_names"] = ["NVIDIA GeForce RTX 4090"]
-    mock_torch["cuda_mem"] = [(22.4, 24.0)]
+@pytest.mark.parametrize(
+    (
+        "overrides",
+        "expected_type",
+        "expected_device",
+        "expected_name_substring",
+        "expected_vram_total_gb",
+    ),
+    [
+        pytest.param(
+            {
+                "cuda_available": True,
+                "cuda_device_count": 1,
+                "cuda_device_names": ["NVIDIA GeForce RTX 4090"],
+                "cuda_mem": [(22.4, 24.0)],
+            },
+            "cuda",
+            "cuda:0",
+            "NVIDIA GeForce RTX 4090",
+            pytest.approx(24.0, rel=1e-3),
+            id="cuda-available",
+        ),
+        pytest.param(
+            {},
+            "cpu",
+            "cpu",
+            None,
+            None,
+            id="nothing-available",
+        ),
+        pytest.param(
+            # ROCm builds set torch.version.hip; cuda.is_available() also
+            # returns True on a ROCm build (HIP devices surface through the
+            # cuda API).
+            {
+                "cuda_available": True,
+                "cuda_device_count": 1,
+                "cuda_device_names": ["AMD Radeon RX 7900 XTX"],
+                "cuda_mem": [(20.0, 24.0)],
+                "hip_version": "5.7.0",
+            },
+            "rocm",
+            "rocm:0",
+            "Radeon",
+            None,
+            id="rocm-hip-advertised",
+        ),
+        pytest.param(
+            {"mps_available": True, "mps_built": True},
+            "mps",
+            "mps",
+            None,
+            None,
+            id="mps-only-available",
+        ),
+    ],
+)
+def test_auto_picks_device(
+    mock_torch,
+    overrides,
+    expected_type,
+    expected_device,
+    expected_name_substring,
+    expected_vram_total_gb,
+):
+    """Auto-mode device selection across cuda/cpu/rocm/mps backend flags."""
+    for key, value in overrides.items():
+        if key == "hip_version":
+            mock_torch["set_hip"](value)
+        else:
+            mock_torch[key] = value
     info = hardware._detect()
-    assert info.device_type == "cuda"
-    assert info.device == "cuda:0"
-    assert info.device_name == "NVIDIA GeForce RTX 4090"
-    assert info.vram_total_gb == pytest.approx(24.0, rel=1e-3)
-
-
-def test_auto_picks_cpu_when_nothing_available(mock_torch):
-    info = hardware._detect()
-    assert info.device_type == "cpu"
-    assert info.device == "cpu"
-
-
-def test_auto_picks_rocm_when_hip_advertised(mock_torch):
-    """ROCm builds set torch.version.hip; cuda.is_available() also returns
-    True on a ROCm build (HIP devices surface through the cuda API)."""
-    mock_torch["cuda_available"] = True
-    mock_torch["cuda_device_count"] = 1
-    mock_torch["cuda_device_names"] = ["AMD Radeon RX 7900 XTX"]
-    mock_torch["cuda_mem"] = [(20.0, 24.0)]
-    mock_torch["set_hip"]("5.7.0")
-    info = hardware._detect()
-    assert info.device_type == "rocm"
-    assert info.device == "rocm:0"
-    assert "Radeon" in info.device_name
-
-
-def test_auto_picks_mps_when_only_mps_available(mock_torch):
-    mock_torch["mps_available"] = True
-    mock_torch["mps_built"] = True
-    info = hardware._detect()
-    assert info.device_type == "mps"
-    assert info.device == "mps"
+    assert info.device_type == expected_type
+    assert info.device == expected_device
+    if expected_name_substring is not None:
+        assert expected_name_substring in info.device_name
+    if expected_vram_total_gb is not None:
+        assert info.vram_total_gb == expected_vram_total_gb
 
 
 def test_auto_falls_through_when_cuda_probe_fails(mock_torch):
@@ -401,34 +445,38 @@ def test_explicit_mps_on_non_mps_host_falls_back_to_cpu(mock_torch, monkeypatch)
     assert "mps" in info.fallback_reason.lower()
 
 
-def test_batch_size_24gb_cuda_tier(mock_torch):
+@pytest.mark.parametrize(
+    ("device_names", "cuda_mem", "expected_batch_sizes"),
+    [
+        pytest.param(
+            ["RTX 4090"],
+            (22.0, 24.0),
+            {"rerank": 64, "splice": 128, "splade": 32, "nli": 32},
+            id="24gb-cuda-tier",
+        ),
+        pytest.param(
+            ["GTX 1650"],
+            (3.5, 4.0),
+            {"rerank": 8},
+            id="4gb-cuda-tier",
+        ),
+        pytest.param(
+            ["MX150"],
+            (1.5, 2.0),
+            {"rerank": 4},
+            id="under-4gb-cuda-tier",
+        ),
+    ],
+)
+def test_batch_size_cuda_tiers(mock_torch, device_names, cuda_mem, expected_batch_sizes):
+    """recommended_batch_size() picks the VRAM-tier table for cuda GPUs of various sizes."""
     mock_torch["cuda_available"] = True
     mock_torch["cuda_device_count"] = 1
-    mock_torch["cuda_device_names"] = ["RTX 4090"]
-    mock_torch["cuda_mem"] = [(22.0, 24.0)]
+    mock_torch["cuda_device_names"] = device_names
+    mock_torch["cuda_mem"] = [cuda_mem]
     hardware.reset_for_test()
-    assert hardware.recommended_batch_size("rerank") == 64
-    assert hardware.recommended_batch_size("splice") == 128
-    assert hardware.recommended_batch_size("splade") == 32
-    assert hardware.recommended_batch_size("nli") == 32
-
-
-def test_batch_size_4gb_cuda_tier(mock_torch):
-    mock_torch["cuda_available"] = True
-    mock_torch["cuda_device_count"] = 1
-    mock_torch["cuda_device_names"] = ["GTX 1650"]
-    mock_torch["cuda_mem"] = [(3.5, 4.0)]
-    hardware.reset_for_test()
-    assert hardware.recommended_batch_size("rerank") == 8
-
-
-def test_batch_size_under_4gb_cuda_tier(mock_torch):
-    mock_torch["cuda_available"] = True
-    mock_torch["cuda_device_count"] = 1
-    mock_torch["cuda_device_names"] = ["MX150"]
-    mock_torch["cuda_mem"] = [(1.5, 2.0)]
-    hardware.reset_for_test()
-    assert hardware.recommended_batch_size("rerank") == 4
+    for model, expected in expected_batch_sizes.items():
+        assert hardware.recommended_batch_size(model) == expected
 
 
 def test_batch_size_cpu_tier_uses_system_ram(monkeypatch, mock_torch):

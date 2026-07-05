@@ -250,20 +250,33 @@ def test_not_superseded_no_emit(fakes):
 
 # ── getter registration smoke ────────────────────────────────────────
 
-def test_all_new_getters_resolve():
-    """Every new lazy getter returns an instrument (noop or real) and is
-    re-exported through helix_context.telemetry."""
+# Union of the getter lists formerly smoke-tested in three places:
+# this file (14 hallucination-visibility getters), test_telemetry_phase1
+# (6-getter #209 subset, all already here), and test_telemetry_pipeline
+# (3 per-stage pipeline getters).
+_GETTER_NAMES = (
+    "know_decision_counter", "know_confidence_histogram",
+    "abstain_counter", "freshness_demotion_counter",
+    "session_elided_counter", "session_tokens_saved_counter",
+    "splice_ratio_histogram", "dense_cosine_histogram",
+    "shard_fanout_histogram", "shard_discrimination_histogram",
+    "pki_candidates_histogram", "pki_pairs_skipped_counter",
+    "fingerprint_filtered_counter", "ingest_vram_gauge",
+    # per-stage pipeline telemetry (feat/per-stage-telemetry)
+    "pipeline_stage_histogram", "ribosome_call_histogram",
+    "genome_signal_histogram",
+)
+
+
+@pytest.mark.parametrize("name", _GETTER_NAMES)
+def test_all_new_getters_resolve(name):
+    """Consolidated getter-registry smoke over _GETTER_NAMES: every lazy
+    getter is re-exported through helix_context.telemetry, returns an
+    instrument (noop or real), and caches it — repeated calls return the
+    same object."""
     import helix_context.telemetry as tel
 
-    for name in (
-        "know_decision_counter", "know_confidence_histogram",
-        "abstain_counter", "freshness_demotion_counter",
-        "session_elided_counter", "session_tokens_saved_counter",
-        "splice_ratio_histogram", "dense_cosine_histogram",
-        "shard_fanout_histogram", "shard_discrimination_histogram",
-        "pki_candidates_histogram", "pki_pairs_skipped_counter",
-        "fingerprint_filtered_counter", "ingest_vram_gauge",
-    ):
-        getter = getattr(tel, name)
-        inst = getter()
-        assert hasattr(inst, "add") or hasattr(inst, "record"), name
+    getter = getattr(tel, name)
+    inst = getter()
+    assert hasattr(inst, "add") or hasattr(inst, "record"), name
+    assert getter() is inst, f"{name} not cached"

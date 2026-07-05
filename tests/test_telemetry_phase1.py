@@ -3,10 +3,10 @@
 Two contracts:
 
 1. **No-op safety** — with OTel disabled (the default test environment),
-   the six new instrument getters return cached no-op instruments and
    every new record path (dense cosine, shard fan-out/discrimination,
    know decision, session-elision savings, splice ratio) executes
-   without raising.
+   without raising. (Getter resolution + caching identity is covered by
+   the consolidated registry smoke in test_telemetry_wiring.py.)
 
 2. **No phantom dashboard metrics** — every ``helix_*`` metric name
    referenced by any shipped Grafana dashboard JSON must correspond to
@@ -38,15 +38,6 @@ DASHBOARD_DIRS = (
 # Metric names emitted at runtime outside the lazy-getter registry
 # (none today). Add here ONLY for dynamically-constructed names.
 RUNTIME_EMITTED_WHITELIST: frozenset[str] = frozenset()
-
-NEW_GETTERS = (
-    "dense_cosine_histogram",
-    "shard_fanout_histogram",
-    "shard_discrimination_histogram",
-    "know_decision_counter",
-    "session_tokens_saved_counter",
-    "splice_ratio_histogram",
-)
 
 NEW_METRIC_NAMES = (
     "helix_dense_cosine",
@@ -160,13 +151,6 @@ def _dashboard_metric_refs():
 # ---------------------------------------------------------------------------
 
 
-def test_new_getters_return_cached_noop_instruments():
-    for getter_name in NEW_GETTERS:
-        getter = getattr(otel, getter_name)
-        first = getter()
-        assert getter() is first, f"{getter_name} not cached"
-
-
 def test_new_record_paths_do_not_raise_when_otel_disabled():
     otel.dense_cosine_histogram().record(0.42, {"arm": "hot"})
     otel.dense_cosine_histogram().record(0.17, {"arm": "cold"})
@@ -207,41 +191,6 @@ def _window(status="aligned", genes_expressed=1):
         expressed_context="ctx",
         context_health=ContextHealth(status=status, genes_expressed=genes_expressed),
     )
-
-
-def test_know_decision_counter_labels(monkeypatch):
-    from helix_context.scoring.know_decision import decide_know_or_miss
-    from helix_context.schemas import KnowBlock, MissBlock
-
-    rec = _CounterRecorder()
-    monkeypatch.setattr(
-        "helix_context.telemetry.know_decision_counter", lambda: rec
-    )
-
-    common = dict(
-        query="what port does helix use",
-        top_score=1.0,
-        score_gap=0.5,
-        lexical_dense_agree=True,
-        coordinate_confidence=1.0,
-    )
-
-    block = decide_know_or_miss(_window("aligned"), **common)
-    assert isinstance(block, KnowBlock)
-
-    block = decide_know_or_miss(_window("abstain"), **common)
-    assert isinstance(block, MissBlock) and block.reason == "abstain"
-
-    block = decide_know_or_miss(
-        _window("aligned", genes_expressed=0), **common
-    )
-    assert isinstance(block, MissBlock) and block.reason == "no_promoter_match"
-
-    assert rec.calls == [
-        (1, {"outcome": "know", "reason": "none"}),
-        (1, {"outcome": "abstain", "reason": "abstain"}),
-        (1, {"outcome": "miss", "reason": "no_promoter_match"}),
-    ]
 
 
 def test_know_decision_survives_broken_telemetry(monkeypatch):

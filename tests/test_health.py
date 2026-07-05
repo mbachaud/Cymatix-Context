@@ -7,50 +7,24 @@ import pytest
 import tempfile
 import os
 
-from helix_context.config import HelixConfig, BudgetConfig, GenomeConfig, RibosomeConfig
 from helix_context.context_manager import HelixContextManager
 from helix_context.genome import Genome
 from helix_context.hgt import export_genome, import_genome, genome_diff
 from helix_context.schemas import ContextHealth
 
-from tests.conftest import make_gene
-
-
-# -- Helpers -----------------------------------------------------------
-
-class HealthMockBackend:
-    def complete(self, prompt, system="", temperature=0.0):
-        import json as j
-        if "compression engine" in system:
-            return j.dumps({
-                "codons": [{"meaning": "test", "weight": 0.8, "is_exon": True}],
-                "complement": "Mock compressed.",
-                "promoter": {"domains": ["auth", "security"], "entities": ["jwt"],
-                             "intent": "test", "summary": "test gene"},
-            })
-        elif "expression scorer" in system:
-            return j.dumps({})
-        elif "context splicer" in system:
-            return j.dumps({})
-        elif "replication engine" in system:
-            return j.dumps({
-                "codons": [{"meaning": "ex", "weight": 1.0, "is_exon": True}],
-                "complement": "Exchange.",
-                "promoter": {"domains": ["test"], "entities": [], "intent": "test", "summary": "test"},
-            })
-        return "{}"
+from tests.conftest import make_gene, make_helix_config, MockCompressorBackend
 
 
 @pytest.fixture
 def health_helix():
-    config = HelixConfig(
-        ribosome=RibosomeConfig(model="mock", timeout=5),
-        budget=BudgetConfig(max_genes_per_turn=4),
-        genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
-        synonym_map={"auth": ["jwt", "login", "security"]},
-    )
+    config = make_helix_config(synonym_map={"auth": ["jwt", "login", "security"]})
     mgr = HelixContextManager(config)
-    mgr.ribosome.backend = HealthMockBackend()
+    # MockCompressorBackend's splice branch returns codon indices for
+    # "Gene <id>" prompts, so these tests exercise codons-kept assembly
+    # (the old local mock returned {} -> complement fallback; that path
+    # keeps dedicated coverage in test_ribosome.py). Assertions here are
+    # threshold-based and hold under either assembly mode.
+    mgr.ribosome.backend = MockCompressorBackend()
     yield mgr
     mgr.close()
 
@@ -229,70 +203,6 @@ class TestHGTImport:
 
             assert target.get_gene(gid_a) is not None
             assert target.get_gene(gid_b) is not None
-            target.close()
-        finally:
-            os.unlink(path)
-
-    @pytest.mark.xfail(
-        reason=(
-            "Pre-content-address test semantics: asserts 'same gene_id, different content' "
-            "skip behavior. Under content-addressing (hgt.import_genome tamper check) that "
-            "state is impossible — same content always produces same id. Needs a semantic "
-            "rewrite where merge_strategy is tested via metadata (authority, chromatin, "
-            "epigenetics) rather than content."
-        )
-    )
-    def test_import_skip_existing(self):
-        source = Genome(":memory:")
-        source.upsert_gene(make_gene("original", domains=["test"], gene_id="gene_x"))
-
-        with tempfile.NamedTemporaryFile(suffix=".helix", delete=False) as f:
-            path = f.name
-
-        try:
-            export_genome(source, path)
-            source.close()
-
-            target = Genome(":memory:")
-            target.upsert_gene(make_gene("already here", domains=["test"], gene_id="gene_x"))
-
-            result = import_genome(target, path, merge_strategy="skip_existing")
-            assert result["imported"] == 0
-            assert result["skipped"] == 1
-
-            # Original content preserved
-            assert target.get_gene("gene_x").content == "already here"
-            target.close()
-        finally:
-            os.unlink(path)
-
-    @pytest.mark.xfail(
-        reason=(
-            "Pre-content-address test semantics: 'overwrite replaces content on same gene_id'. "
-            "Under content-addressing, identical id implies identical content; the observable "
-            "overwrite axis is metadata, not content. Needs a semantic rewrite."
-        )
-    )
-    def test_import_overwrite(self):
-        source = Genome(":memory:")
-        source.upsert_gene(make_gene("new version", domains=["test"], gene_id="gene_x"))
-
-        with tempfile.NamedTemporaryFile(suffix=".helix", delete=False) as f:
-            path = f.name
-
-        try:
-            export_genome(source, path)
-            source.close()
-
-            target = Genome(":memory:")
-            target.upsert_gene(make_gene("old version", domains=["test"], gene_id="gene_x"))
-
-            result = import_genome(target, path, merge_strategy="overwrite")
-            assert result["imported"] == 0  # 0 new imports
-            assert result["overwritten"] == 1
-
-            # Content was replaced
-            assert target.get_gene("gene_x").content == "new version"
             target.close()
         finally:
             os.unlink(path)

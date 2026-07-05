@@ -6,74 +6,25 @@ Validates the expression pipeline, pending buffer, history munging,
 cold-start bootstrap (Fix 3), and build_context assembly.
 """
 
-import json
 import pytest
 
-from helix_context.config import HelixConfig, BudgetConfig, GenomeConfig, RibosomeConfig
+from helix_context.config import BudgetConfig
 from helix_context.context_manager import HelixContextManager, RIBOSOME_DECODER
 from helix_context.ribosome import Ribosome
 from helix_context.genome import Genome
 from helix_context.schemas import Gene, PromoterTags, EpigeneticMarkers
 from helix_context.server import _munge_messages
 
-from tests.conftest import make_gene
+from tests.conftest import MockCompressorBackend, make_gene, make_helix_config
 
 
 # -- Helpers -----------------------------------------------------------
 
-class PipelineMockBackend:
-    """Mock backend that returns plausible JSON for all ribosome operations."""
-
-    def complete(self, prompt: str, system: str = "", temperature: float = 0.0) -> str:
-        # Detect which operation by checking the system prompt
-        if "compression engine" in system:
-            # Pack
-            return json.dumps({
-                "codons": [
-                    {"meaning": "mock_concept", "weight": 0.9, "is_exon": True},
-                    {"meaning": "mock_detail", "weight": 0.5, "is_exon": True},
-                ],
-                "complement": "Mock compressed summary of the content.",
-                "promoter": {
-                    "domains": ["testing", "mock"],
-                    "entities": ["MockEntity"],
-                    "intent": "test content",
-                    "summary": "A mock gene for pipeline testing",
-                },
-            })
-        elif "expression scorer" in system:
-            # Re-rank: score all genes mentioned
-            import re
-            gene_ids = re.findall(r"(\w{16}):", prompt)
-            scores = {gid: round(0.9 - i * 0.1, 1) for i, gid in enumerate(gene_ids)}
-            return json.dumps(scores)
-        elif "context splicer" in system:
-            # Splice: keep first 2 codons for each gene
-            import re
-            gene_ids = re.findall(r"Gene (\w+)", prompt)
-            result = {gid: [0, 1] for gid in gene_ids}
-            return json.dumps(result)
-        elif "replication engine" in system:
-            # Replicate
-            return json.dumps({
-                "codons": [{"meaning": "exchange", "weight": 1.0, "is_exon": True}],
-                "complement": "Mock replicated exchange.",
-                "promoter": {
-                    "domains": ["exchange"],
-                    "entities": [],
-                    "intent": "conversation",
-                    "summary": "Mock exchange",
-                },
-            })
-        return "{}"
-
 
 @pytest.fixture
 def pipeline_config():
-    return HelixConfig(
-        ribosome=RibosomeConfig(model="mock", timeout=5),
+    return make_helix_config(
         budget=BudgetConfig(max_genes_per_turn=4, splice_aggressiveness=0.5),
-        genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
         synonym_map={
             "slow": ["performance", "latency"],
             "auth": ["jwt", "login", "security"],
@@ -86,7 +37,7 @@ def helix(pipeline_config):
     """HelixContextManager with mock backend and in-memory genome."""
     mgr = HelixContextManager(pipeline_config)
     # Replace the ribosome backend with our mock
-    mgr.ribosome.backend = PipelineMockBackend()
+    mgr.ribosome.backend = MockCompressorBackend()
     yield mgr
     mgr.close()
 
@@ -352,7 +303,7 @@ class TestColdTierWiring:
         pipeline_config.context.cold_tier_min_cosine = 0.05  # very permissive
 
         mgr = HelixContextManager(pipeline_config)
-        mgr.ribosome.backend = PipelineMockBackend()
+        mgr.ribosome.backend = MockCompressorBackend()
         # Attach the codec so query_cold_tier can encode queries
         mgr.genome._sema_codec = codec
         yield mgr

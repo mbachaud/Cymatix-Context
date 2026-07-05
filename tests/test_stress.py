@@ -202,40 +202,47 @@ class TestGenomeStress:
         assert stats["total_genes"] == len(ALL_FIXTURES)
 
     def test_cross_domain_query_caching(self, loaded_genome):
+        # Kept standalone: asserts on promoter.intent text, not just a
+        # result-count threshold, so it doesn't fit the shared
+        # (domains, entities, min_results) table shape below.
         results = loaded_genome.query_genes(domains=["caching"], entities=[])
         names = {r.promoter.intent for r in results}
         assert any("caching" in n for n in names)
 
-    def test_cross_domain_query_data_structures(self, loaded_genome):
-        results = loaded_genome.query_genes(domains=["data_structures"], entities=[])
-        assert len(results) >= 2  # linked_list + btree
+    @pytest.mark.parametrize(
+        ("domains", "entities", "min_results"),
+        [
+            pytest.param(["data_structures"], [], 2, id="data_structures"),  # linked_list + btree
+            pytest.param(["protein"], [], 1, id="biology"),
+            pytest.param(["fluid"], [], 1, id="fluid"),
+        ],
+    )
+    def test_cross_domain_query(self, loaded_genome, domains, entities, min_results):
+        """Cross-domain tag queries return at least the expected fixture count."""
+        results = loaded_genome.query_genes(domains=domains, entities=entities)
+        assert len(results) >= min_results
 
-    def test_cross_domain_query_biology(self, loaded_genome):
-        results = loaded_genome.query_genes(domains=["protein"], entities=[])
-        assert len(results) >= 1
-
-    def test_cross_domain_query_fluid(self, loaded_genome):
-        results = loaded_genome.query_genes(domains=["fluid"], entities=[])
-        assert len(results) >= 1
-
-    def test_synonym_query_slow(self, loaded_genome):
-        """'slow' should expand to match 'performance', 'latency', etc."""
-        results = loaded_genome.query_genes(domains=["slow"], entities=[])
-        # Should find: poem_latency (latency), essay_caching (performance)
-        assert len(results) >= 1
-
-    def test_synonym_query_web(self, loaded_genome):
-        """'web' should expand to match 'http', 'router', 'api'."""
-        results = loaded_genome.query_genes(domains=["web"], entities=[])
-        assert len(results) >= 1
+    @pytest.mark.parametrize(
+        ("domains", "entities", "min_results"),
+        [
+            # 'slow' should expand to match 'performance', 'latency', etc.
+            # Should find: poem_latency (latency), essay_caching (performance)
+            pytest.param(["slow"], [], 1, id="synonym_slow"),
+            # 'web' should expand to match 'http', 'router', 'api'.
+            pytest.param(["web"], [], 1, id="synonym_web"),
+            pytest.param([], ["Raft"], 1, id="entity_raft"),
+        ],
+    )
+    def test_synonym_and_entity_query(self, loaded_genome, domains, entities, min_results):
+        """Synonym-expanded domain queries and direct entity queries both hit >=1 gene."""
+        results = loaded_genome.query_genes(domains=domains, entities=entities)
+        assert len(results) >= min_results
 
     def test_entity_query_alphafold(self, loaded_genome):
+        # Kept standalone: asserts an exact count (== 1), not the >=1
+        # "at least" shape shared by test_synonym_and_entity_query above.
         results = loaded_genome.query_genes(domains=[], entities=["AlphaFold"])
         assert len(results) == 1
-
-    def test_entity_query_raft(self, loaded_genome):
-        results = loaded_genome.query_genes(domains=[], entities=["Raft"])
-        assert len(results) >= 1
 
     def test_no_match_still_raises(self, loaded_genome):
         with pytest.raises(PromoterMismatch):

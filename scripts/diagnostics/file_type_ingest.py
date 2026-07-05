@@ -29,7 +29,7 @@ Per-type expectations (BEFORE running):
     | .svg (xml)     | accepts as doc; useful? markup noise              |
 
 Usage:
-    python tests/diagnostics/test_file_type_ingest.py
+    python scripts/diagnostics/file_type_ingest.py
 """
 
 from __future__ import annotations
@@ -245,7 +245,7 @@ def run_case(client: httpx.Client, case: IngestCase) -> CaseResult:
         return res
     res.payload_bytes = len(content.encode("utf-8", errors="replace"))
 
-    source_id = f"F:/Projects/helix-context/tests/diagnostics/fixtures/{case.name}{case.source_ext}"
+    source_id = f"F:/Projects/helix-context/scripts/diagnostics/fixtures/{case.name}{case.source_ext}"
     # NOTE: Helix only honors metadata["path"] (not metadata["source_id"]).
     # See context_manager.py:389 — metadata.source_id is silently dropped.
     # We populate BOTH here so when the bug is fixed the test doesn't silently
@@ -358,7 +358,7 @@ def main():
     except Exception:
         pass
 
-    out_path = REPO_ROOT / "tests" / "diagnostics" / f"file_type_ingest_{time.strftime('%Y-%m-%d')}.json"
+    out_path = REPO_ROOT / "scripts" / "diagnostics" / f"file_type_ingest_{time.strftime('%Y-%m-%d')}.json"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps({
         "helix_url": HELIX_URL,

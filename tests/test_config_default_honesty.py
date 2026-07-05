@@ -101,21 +101,6 @@ def test_shipped_toml_matches_code_defaults(monkeypatch):
     assert not stale, f"stale INTENTIONAL_DIVERGENCES entries (no longer drift): {sorted(stale)}"
 
 
-def test_budget_defaults_are_shipped_values():
-    """Pins the 2026-06-12 resolution of the audit's headline budget drift.
-
-    The OLD code defaults (6000 / 8 / 0.5 / "full") were the drifted,
-    never-benched side; the shipped toml values below are what every bench
-    this month actually ran. Do not "fix" these back without re-running
-    the bench grid.
-    """
-    cfg = HelixConfig()
-    assert cfg.budget.expression_tokens == 7000
-    assert cfg.budget.max_genes_per_turn == 12
-    assert cfg.budget.splice_aggressiveness == 0.3
-    assert cfg.budget.decoder_mode == "condensed"
-
-
 def test_sr_enabled_defaults_false_on_both_sides(monkeypatch):
     """sr_enabled is the measured-zero inverse case: BOTH sides false.
 

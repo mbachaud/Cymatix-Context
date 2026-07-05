@@ -1,19 +1,10 @@
 """Tests for `helix status`."""
 from __future__ import annotations
 
-import io
 import json
-import contextlib
 import sqlite3
 
-from helix_context.cli import main
-
-
-def _run(argv):
-    out, err = io.StringIO(), io.StringIO()
-    with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
-        rc = main(argv)
-    return rc, out.getvalue(), err.getvalue()
+from tests.conftest import run_cli as _run
 
 
 def _make_genome_file(path):

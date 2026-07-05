@@ -5,21 +5,12 @@ wiring bugs the per-subcommand unit tests can't.
 """
 from __future__ import annotations
 
-import io
 import json
-import contextlib
 import os
 
 import pytest
 
-from helix_context.cli import main
-
-
-def _run(argv):
-    out, err = io.StringIO(), io.StringIO()
-    with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
-        rc = main(argv)
-    return rc, out.getvalue(), err.getvalue()
+from tests.conftest import run_cli as _run
 
 
 @pytest.fixture(autouse=True)

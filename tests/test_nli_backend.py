@@ -17,10 +17,8 @@ from helix_context.schemas import NLRelation
 
 
 @pytest.fixture(autouse=True)
-def _reset_hardware_cache():
-    hardware.reset_for_test()
+def _reset(reset_hardware_cache):
     yield
-    hardware.reset_for_test()
 
 
 def _override_hardware(monkeypatch, *, nli_batch=None):

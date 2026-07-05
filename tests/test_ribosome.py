@@ -18,22 +18,16 @@ from helix_context.ribosome import Ribosome, OllamaBackend, _parse_json
 from helix_context.schemas import Gene, PromoterTags, EpigeneticMarkers
 from helix_context.exceptions import FoldingError, TranscriptionError
 
-from tests.conftest import make_gene
+from tests.conftest import make_gene, MockCompressorBackend
 
 
 # ── Helpers ─────────────────────────────────────────────────────────
-
-
-class MockBackend:
-    """Controllable backend for deterministic testing."""
-
-    def __init__(self, response: str = "{}"):
-        self.response = response
-        self.calls: list[dict] = []
-
-    def complete(self, prompt: str, system: str = "", temperature: float = 0.0) -> str:
-        self.calls.append({"prompt": prompt, "system": system})
-        return self.response
+#
+# The local canned-response mock backend is gone: every usage in this file
+# passes an explicit `response=` (never relies on system-prompt sniffing),
+# so the canonical MockCompressorBackend (tests/conftest.py) is a drop-in
+# — it returns `response` verbatim for every call and logs {"prompt",
+# "system"} per call, same as the old local class.
 
 
 class TimeoutBackend:
@@ -134,7 +128,7 @@ class TestPackMock:
             },
         })
 
-        ribosome = Ribosome(backend=MockBackend(mock_response))
+        ribosome = Ribosome(backend=MockCompressorBackend(mock_response))
         gene = ribosome.pack("The genome of memory...", content_type="text")
 
         assert isinstance(gene, Gene)
@@ -155,7 +149,7 @@ class TestPackMock:
             },
         })
 
-        ribosome = Ribosome(backend=MockBackend(mock_response))
+        ribosome = Ribosome(backend=MockCompressorBackend(mock_response))
         gene = ribosome.pack("class Calculator:\n    def add(self, a, b):\n        return a + b", content_type="code")
 
         assert "calculator" in gene.promoter.domains
@@ -188,7 +182,7 @@ class TestReRankMock:
             make_gene("content c", domains=["test"], gene_id="gene_c"),
         ]
 
-        ribosome = Ribosome(backend=MockBackend(mock_response))
+        ribosome = Ribosome(backend=MockCompressorBackend(mock_response))
         ranked = ribosome.re_rank("test query", genes, k=2)
 
         assert len(ranked) == 2
@@ -198,7 +192,7 @@ class TestReRankMock:
     def test_rerank_fewer_than_k_returns_all(self):
         """If candidates <= k, skip the model call entirely."""
         genes = [make_gene("only one", domains=["test"], gene_id="only")]
-        ribosome = Ribosome(backend=MockBackend("should not be called"))
+        ribosome = Ribosome(backend=MockCompressorBackend("should not be called"))
 
         ranked = ribosome.re_rank("query", genes, k=5)
         assert len(ranked) == 1
@@ -216,7 +210,7 @@ class TestReRankMock:
             make_gene("d", gene_id="gene_d", domains=["test"]),
         ]
 
-        ribosome = Ribosome(backend=MockBackend(mock_response))
+        ribosome = Ribosome(backend=MockCompressorBackend(mock_response))
         ranked = ribosome.re_rank("query", genes, k=3)
 
         # Should have gene_a plus padded genes
@@ -255,7 +249,7 @@ class TestSpliceMock:
         ]
         # Both have codons ["chunk_0", "chunk_1", "chunk_2"] from make_gene
 
-        ribosome = Ribosome(backend=MockBackend(mock_response))
+        ribosome = Ribosome(backend=MockCompressorBackend(mock_response))
         result = ribosome.splice("test query", genes)
 
         assert "gene_a" in result
@@ -271,7 +265,7 @@ class TestSpliceMock:
         })
 
         gene = make_gene("important", gene_id="gene_a", domains=["test"])
-        ribosome = Ribosome(backend=MockBackend(mock_response), splice_aggressiveness=0.5)
+        ribosome = Ribosome(backend=MockCompressorBackend(mock_response), splice_aggressiveness=0.5)
         result = ribosome.splice("query", [gene], min_codons_kept=2)
 
         # Should have kept first 2 codons as safety net
@@ -291,7 +285,7 @@ class TestSpliceMock:
             make_gene("b content here", gene_id="gene_b", domains=["test"]),
         ]
 
-        ribosome = Ribosome(backend=MockBackend(mock_response))
+        ribosome = Ribosome(backend=MockCompressorBackend(mock_response))
         result = ribosome.splice("query", genes)
 
         assert "gene_b" in result
@@ -322,7 +316,7 @@ class TestSpliceMock:
         assert "Summary of:" in result["gene_a"]
 
     def test_splice_empty_genes_list(self):
-        ribosome = Ribosome(backend=MockBackend("{}"))
+        ribosome = Ribosome(backend=MockCompressorBackend("{}"))
         assert ribosome.splice("query", []) == {}
 
 
@@ -342,7 +336,7 @@ class TestReplicateMock:
             },
         })
 
-        ribosome = Ribosome(backend=MockBackend(mock_response))
+        ribosome = Ribosome(backend=MockCompressorBackend(mock_response))
         gene = ribosome.replicate("How should I handle auth?", "Use JWT middleware.")
 
         assert isinstance(gene, Gene)

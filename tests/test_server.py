@@ -13,55 +13,27 @@ import pytest
 from fastapi.testclient import TestClient
 
 import helix_context.server as server_mod
-from helix_context.config import HelixConfig, BudgetConfig, GenomeConfig, RibosomeConfig, ServerConfig
+from helix_context.config import HelixConfig, GenomeConfig, RibosomeConfig, ServerConfig
 from helix_context.server import create_app
+
+from tests.conftest import make_client
 
 
 # -- Helpers -----------------------------------------------------------
-
-class ServerMockBackend:
-    """Returns plausible JSON for all ribosome operations."""
-
-    def complete(self, prompt: str, system: str = "", temperature: float = 0.0) -> str:
-        if "compression engine" in system:
-            return json.dumps({
-                "codons": [{"meaning": "test_codon", "weight": 0.8, "is_exon": True}],
-                "complement": "Compressed test content.",
-                "promoter": {
-                    "domains": ["test"],
-                    "entities": ["TestEntity"],
-                    "intent": "test",
-                    "summary": "Test content for server tests",
-                },
-            })
-        elif "expression scorer" in system:
-            return json.dumps({})
-        elif "context splicer" in system:
-            return json.dumps({})
-        elif "replication engine" in system:
-            return json.dumps({
-                "codons": [{"meaning": "exchange", "weight": 1.0, "is_exon": True}],
-                "complement": "Test exchange.",
-                "promoter": {"domains": ["test"], "entities": [], "intent": "test", "summary": "test"},
-            })
-        return "{}"
+#
+# The mock ribosome backend and standard test config previously defined
+# here (``ServerMockBackend`` / inline ``HelixConfig(...)``) are now the
+# canonical ``MockCompressorBackend`` / ``make_helix_config`` in
+# tests/conftest.py — this file's variant was the one the canonical
+# version was derived from. The few tests below that build their own
+# ``HelixConfig(...)`` with REAL (non-mock) ribosome/budget defaults are
+# intentionally left local — they exercise the disabled/real-backend
+# path, not the shared mock shape.
 
 
 @pytest.fixture
 def client():
-    config = HelixConfig(
-        ribosome=RibosomeConfig(model="mock", timeout=5),
-        budget=BudgetConfig(max_genes_per_turn=4),
-        genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
-        server=ServerConfig(upstream="http://localhost:11434"),
-    )
-    app = create_app(config)
-
-    # Inject mock backend into the HelixContextManager
-    app.state.helix.ribosome.backend = ServerMockBackend()
-
-    test_client = TestClient(app)
-    yield test_client
+    return make_client()
 
 
 # -- Endpoint shape tests (no upstream needed) -------------------------
@@ -565,43 +537,6 @@ class TestResolveCallerAgent:
         monkeypatch.delenv("HELIX_AGENT", raising=False)
         req = self._make_request()
         assert _resolve_caller_agent(req, {"agent": "  Laude  "}) == "laude"
-
-
-class TestContextPacketEndpointFreshness:
-    """Freshness-label assertions for /context/packet.
-
-    Narrower than TestContextPacketEndpoint below — specifically verifies
-    that items inside the `verified` list carry a ``status == "verified"``
-    field, which the broader shape tests don't check.
-    """
-
-    def test_packet_returns_freshness_labeled_groups(self, client):
-        client.post("/ingest", json={
-            "content": "Authentication config controls JWT session settings.",
-            "content_type": "text",
-            "metadata": {"path": "config/auth.toml"},
-        })
-
-        resp = client.post("/context/packet", json={
-            "query": "authentication config",
-            "task_type": "edit",
-        })
-        assert resp.status_code == 200
-        data = resp.json()
-        assert data["task_type"] == "edit"
-        assert data["query"] == "authentication config"
-        assert "verified" in data
-        assert "stale_risk" in data
-        assert "refresh_targets" in data
-        assert data["response_mode"] == "packet"
-        assert isinstance(data["verified"], list)
-        assert isinstance(data["stale_risk"], list)
-        if data["verified"]:
-            assert data["verified"][0]["status"] == "verified"
-
-    def test_packet_empty_query_rejected(self, client):
-        resp = client.post("/context/packet", json={"query": ""})
-        assert resp.status_code == 400
 
 
 class TestProxyEndpoint:
@@ -1221,6 +1156,25 @@ class TestContextPacketEndpoint:
         })
         assert resp2.status_code == 200
 
+    def test_packet_verified_items_carry_verified_status(self, client):
+        """Items inside the `verified` list carry ``status == "verified"``
+        — the shape tests above don't check the per-item freshness label.
+        (Merged from the former TestContextPacketEndpointFreshness class.)
+        """
+        client.post("/ingest", json={
+            "content": "Authentication config controls JWT session settings.",
+            "content_type": "text",
+            "metadata": {"path": "config/auth.toml"},
+        })
+        resp = client.post("/context/packet", json={
+            "query": "authentication config",
+            "task_type": "edit",
+        })
+        assert resp.status_code == 200
+        data = resp.json()
+        if data["verified"]:
+            assert data["verified"][0]["status"] == "verified"
+
 
 class TestSessionsRegister:
     """Tests for /sessions/register endpoint — optional vendor fields."""
@@ -1291,10 +1245,22 @@ def test_sessions_register_accepts_announce_fields(client):
 
 
 def test_announce_endpoint_sets_model_id(client):
-    """POST /sessions/{participant_id}/announce updates model_id."""
+    """POST /sessions/{participant_id}/announce updates model_id.
+
+    Registers with IDE + vendor fields so the same round trip also
+    verifies announce (without ide_override) leaves them untouched at
+    the HTTP layer — folded from the retired
+    test_helix_announce_plumbing.py end-to-end test.
+    """
     reg = client.post(
         "/sessions/register",
-        json={"party_id": "party_announce", "handle": "laude"},
+        json={
+            "party_id": "party_announce",
+            "handle": "laude",
+            "ide_detected": "vscode",
+            "ide_detection_via": "env:VSCODE_PID",
+            "agent_kind": "claude-code",
+        },
     )
     pid = reg.json()["participant_id"]
 
@@ -1308,6 +1274,10 @@ def test_announce_endpoint_sets_model_id(client):
     rows = listing if isinstance(listing, list) else listing.get("participants", [])
     matching = [r for r in rows if r.get("participant_id") == pid]
     assert matching[0]["model_id"] == "claude-opus-4-7"
+    # Announce without ide_override must not clobber register-time fields.
+    assert matching[0]["ide_detected"] == "vscode"
+    assert matching[0]["ide_detection_via"] == "env:VSCODE_PID"
+    assert matching[0]["agent_kind"] == "claude-code"
 
 
 def test_announce_endpoint_with_ide_override_sets_agent_override_via(client):

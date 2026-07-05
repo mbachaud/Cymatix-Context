@@ -1,19 +1,10 @@
 """Tests for the top-level `helix` CLI dispatcher (no subcommand work yet)."""
 from __future__ import annotations
 
-import io
-import contextlib
-
 import pytest
 
 from helix_context.cli import main
-
-
-def _run(argv):
-    out, err = io.StringIO(), io.StringIO()
-    with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
-        rc = main(argv)
-    return rc, out.getvalue(), err.getvalue()
+from tests.conftest import run_cli as _run
 
 
 def test_no_args_prints_help_and_returns_nonzero():
