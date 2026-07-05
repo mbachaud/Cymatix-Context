@@ -216,3 +216,86 @@ def test_bench_answer_key_doc_never_in_gold_source():
                 f"{n['name']}: gold_source contains the bench answer-key "
                 f"file {gs!r}; remove it (see docs/benchmarks/MULTI_VALID_GOLD.md)"
             )
+
+
+# ─── find_needle robustness (review 2026-07-05) ───────────────────────
+#
+# Pass-1 of the sike bedsweep runs find_needle with a 300s-class client
+# while the answer step (Step 2, /v1/chat/completions) can legitimately
+# run up to the server's upstream timeout. A Step-2 exception must NOT
+# destroy the Step-1 retrieval fields — dropping the row silently
+# shrinks the gold_delivered_rate denominator.
+
+
+class _FakeResponse:
+    def __init__(self, status_code=200, payload=None):
+        self.status_code = status_code
+        self._payload = payload if payload is not None else [{}]
+
+    def json(self):
+        return self._payload
+
+
+class _FakeClient:
+    """Captures /context POST bodies; raises on the answer step."""
+
+    def __init__(self):
+        self.posts = []
+
+    def post(self, url, json=None, **kwargs):
+        self.posts.append((url, json))
+        if url.endswith("/context"):
+            return _FakeResponse(200, [{
+                "content": (
+                    "<expressed_context>\n"
+                    "[gene=aaaa11112222 ◆ fired=lex:1.0 100c]\n"
+                    "The helix proxy listens on port 11437.\n"
+                    "</expressed_context>"
+                ),
+                "context_health": {"status": "aligned", "ellipticity": 0.1},
+                "agent": {"citations": [
+                    {"gene_id": "aaaa11112222aaaa",
+                     "source": "helix-context/helix.toml"},
+                ]},
+            }])
+        raise TimeoutError("simulated answer-step ReadTimeout")
+
+
+def test_find_needle_survives_answer_step_failure():
+    """A Step-2 (answer accuracy) exception must not lose Step-1
+    retrieval results: gold_delivered stays True, answer_correct is
+    False, and no exception escapes."""
+    import bench_needle
+
+    client = _FakeClient()
+    needle = {
+        "name": "helix_port",
+        "query": "what port does the helix proxy listen on",
+        "expected": "11437",
+        "accept": ["11437"],
+        "gold_source": ["helix-context/helix.toml"],
+    }
+    r = bench_needle.find_needle(client, needle)
+    assert r["gold_delivered"] is True
+    assert r["found_in_context"] is True
+    assert r["answer_correct"] is False
+
+
+def test_find_needle_passes_ignore_delivered():
+    """Bench queries must set ignore_delivered so session-delivery
+    elision (default-on in production configs) can't replace gold
+    bodies with stubs mid-battery (CLAUDE.md bench guidance)."""
+    import bench_needle
+
+    client = _FakeClient()
+    needle = {
+        "name": "helix_port",
+        "query": "what port does the helix proxy listen on",
+        "expected": "11437",
+        "accept": ["11437"],
+        "gold_source": ["helix-context/helix.toml"],
+    }
+    bench_needle.find_needle(client, needle)
+    ctx_posts = [j for (u, j) in client.posts if u.endswith("/context")]
+    assert ctx_posts, "find_needle must POST /context"
+    assert ctx_posts[0].get("ignore_delivered") is True
