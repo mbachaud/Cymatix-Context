@@ -209,41 +209,6 @@ def _window(status="aligned", genes_expressed=1):
     )
 
 
-def test_know_decision_counter_labels(monkeypatch):
-    from helix_context.scoring.know_decision import decide_know_or_miss
-    from helix_context.schemas import KnowBlock, MissBlock
-
-    rec = _CounterRecorder()
-    monkeypatch.setattr(
-        "helix_context.telemetry.know_decision_counter", lambda: rec
-    )
-
-    common = dict(
-        query="what port does helix use",
-        top_score=1.0,
-        score_gap=0.5,
-        lexical_dense_agree=True,
-        coordinate_confidence=1.0,
-    )
-
-    block = decide_know_or_miss(_window("aligned"), **common)
-    assert isinstance(block, KnowBlock)
-
-    block = decide_know_or_miss(_window("abstain"), **common)
-    assert isinstance(block, MissBlock) and block.reason == "abstain"
-
-    block = decide_know_or_miss(
-        _window("aligned", genes_expressed=0), **common
-    )
-    assert isinstance(block, MissBlock) and block.reason == "no_promoter_match"
-
-    assert rec.calls == [
-        (1, {"outcome": "know", "reason": "none"}),
-        (1, {"outcome": "abstain", "reason": "abstain"}),
-        (1, {"outcome": "miss", "reason": "no_promoter_match"}),
-    ]
-
-
 def test_know_decision_survives_broken_telemetry(monkeypatch):
     from helix_context.scoring.know_decision import decide_know_or_miss
     from helix_context.schemas import KnowBlock

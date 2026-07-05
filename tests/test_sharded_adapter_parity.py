@@ -5,17 +5,24 @@ The adapter is hand-maintained and historically lagged ``KnowledgeStore``
 additions, which surfaced as HTTP 500s during the bench when the
 ``HELIX_USE_SHARDS=1`` read path was first driven end-to-end (issue #98).
 
-Two checks here:
+One merged surface check here (2026-07-05 test-suite consolidation, Task 9
+folded the former two overlapping tests into a single
+``test_adapter_covers_full_knowledgestore_surface``):
 
-1. ``test_adapter_covers_known_caller_surface`` — a hard-coded list of every
-   attribute/method that ``context_manager`` and the FastAPI routes actually
-   read off ``self.genome`` / ``helix.genome`` today. This is the contract
-   the adapter MUST satisfy or callers crash at runtime.
+``test_adapter_covers_full_knowledgestore_surface`` asserts the union of:
 
-2. ``test_adapter_covers_full_knowledgestore_surface`` — a softer drift
-   catcher. Diffs the adapter's attributes against ``KnowledgeStore``'s
-   public + sentinel-private surface, with a whitelist for genuinely
-   adapter-only-irrelevant items (FTS reindex helpers, etc.).
+1. A hard-coded list (``REQUIRED_CALLER_SURFACE``) of every
+   attribute/method that ``context_manager`` and the FastAPI routes
+   actually read off ``self.genome`` / ``helix.genome`` today. This is
+   the contract the adapter MUST satisfy or callers crash at runtime.
+   Several of these (``conn``, ``path``, ``last_query_scores``, ...) are
+   instance-only attributes on ``KnowledgeStore`` that never show up in
+   ``dir(KnowledgeStore)`` (the class) — the union keeps this hard
+   contract even though check 2 alone would miss them.
+
+2. A softer drift catcher: every other name on ``KnowledgeStore`` (public
+   + sentinel-private, via ``dir(KnowledgeStore)``), with a whitelist for
+   genuinely adapter-only-irrelevant items (FTS reindex helpers, etc.).
 
 If you add a new attribute/method on ``KnowledgeStore`` that callers read
 via ``self.genome``, either (a) mirror it on the adapter, or (b) add it
@@ -199,21 +206,6 @@ def adapter(empty_main_db):
 # ── Tests ─────────────────────────────────────────────────────────────────
 
 
-def test_adapter_covers_known_caller_surface(adapter):
-    """Every name the codebase reads off ``self.genome`` exists on the adapter.
-
-    This is the regression net for issue #98 — any of these missing
-    causes ``AttributeError`` at runtime when a sharded knowledge store is active.
-    """
-    missing = sorted(name for name in REQUIRED_CALLER_SURFACE if not hasattr(adapter, name))
-    assert missing == [], (
-        f"ShardedGenomeAdapter is missing {len(missing)} attribute(s) that "
-        f"context_manager / routes_*.py read off self.genome: {missing}. "
-        f"Either add a (possibly no-op) shim on the adapter, or remove "
-        f"the read from the caller."
-    )
-
-
 def test_adapter_path_property_returns_main_path(adapter, empty_main_db):
     """``/admin/swap-db`` reads ``helix.genome.path`` to log the previous DB."""
     assert adapter.path == empty_main_db
@@ -352,29 +344,48 @@ def test_sharded_fusion_mode_runs_absolute_floors_in_tier_logic(adapter):
 
 
 def test_adapter_covers_full_knowledgestore_surface(adapter):
-    """Soft drift catcher: warn when KnowledgeStore gains a name the adapter
-    doesn't expose, unless explicitly whitelisted.
+    """Full surface check: union of the hard caller contract and the
+    softer KnowledgeStore drift catcher (merged 2026-07-05, Task 9 — see
+    module docstring).
 
-    This test passing today does not guarantee correctness — a method
-    on KnowledgeStore might be present on the adapter but with the wrong
-    signature. It catches missing-name drift, which is the most common
-    failure mode (and the one #98 was about).
+    1. Hard contract: every name in ``REQUIRED_CALLER_SURFACE`` (what
+       ``context_manager`` / the FastAPI routes actually read off
+       ``self.genome`` today) must exist on the adapter — miss it and
+       callers hit ``AttributeError`` at runtime (issue #98).
+    2. Soft drift catcher: every other name on ``KnowledgeStore`` (public
+       + sentinel-private, via ``dir(KnowledgeStore)``) must also exist
+       on the adapter unless whitelisted. This test passing today does
+       not guarantee correctness — a method on KnowledgeStore might be
+       present on the adapter but with the wrong signature — but it
+       catches missing-name drift, the most common failure mode.
+
+    ``REQUIRED_CALLER_SURFACE`` is unioned in explicitly because it
+    includes instance-only attributes (``conn``, ``path``,
+    ``last_query_scores``, ...) that never show up in
+    ``dir(KnowledgeStore)`` (the class) — check 2 alone would miss them.
     """
     ks_surface = {
         name for name in dir(KnowledgeStore)
         if not name.startswith("__")
     }
+    full_surface = ks_surface | REQUIRED_CALLER_SURFACE
     adapter_surface = {
         name for name in dir(adapter)
         if not name.startswith("__")
     }
+    # Scope the whitelist so it can never exempt a hard-contract name:
+    # REQUIRED_CALLER_SURFACE entries stay unconditionally required even if
+    # someone later adds one to ADAPTER_ONLY_DIFFERENCES_WHITELIST.
+    exemptable = ADAPTER_ONLY_DIFFERENCES_WHITELIST - REQUIRED_CALLER_SURFACE
     missing = sorted(
-        (ks_surface - adapter_surface) - ADAPTER_ONLY_DIFFERENCES_WHITELIST
+        (full_surface - adapter_surface) - exemptable
     )
     assert missing == [], (
-        f"ShardedGenomeAdapter is drifting behind KnowledgeStore. "
-        f"Names present on KnowledgeStore but missing on the adapter "
-        f"(and not whitelisted): {missing}\n"
-        f"Either mirror the name on the adapter, or add it to "
-        f"ADAPTER_ONLY_DIFFERENCES_WHITELIST with a one-line reason."
+        f"ShardedGenomeAdapter is missing {len(missing)} attribute(s) from "
+        f"the required caller surface and/or drifting behind KnowledgeStore. "
+        f"Names required but missing on the adapter (and not whitelisted): "
+        f"{missing}\n"
+        f"Either mirror the name on the adapter (with a possibly no-op "
+        f"shim), or add it to ADAPTER_ONLY_DIFFERENCES_WHITELIST with a "
+        f"one-line reason."
     )

@@ -25,6 +25,12 @@ Cases covered:
 7. ``test_pr1_genome_satisfies_backfill_skip_clause`` — a PR-1-built
    genome makes the backfill script's
    ``length(blob) != expected_bytes`` skip-clause select 0 rows.
+7b. ``test_backfill_v2_idempotent`` — running
+    ``scripts/backfill_bgem3_v2.py`` twice against a fixture DB is a
+    no-op the second time. Moved here from ``tests/test_dense_recall.py``
+    (2026-07-05 test-suite consolidation, Task 9): case 7 above only
+    checks the SQL skip-clause *shape* against a PR-1-built genome, it
+    never actually re-runs the script, so this is a distinct assertion.
 8. ``test_vec_to_blob_shared_helper_*`` — the shared fp32 packer.
 9. ``test_encode_batch_matches_encode`` — codec batch path equals the
    single-encode path.
@@ -38,7 +44,9 @@ from __future__ import annotations
 
 import hashlib
 import sqlite3
+import sys
 from pathlib import Path
+from unittest.mock import patch
 
 import numpy as np
 import pytest
@@ -363,6 +371,81 @@ def test_pr1_genome_satisfies_backfill_skip_clause(tmp_path):
         f"backfill would re-process {to_process}/{total} rows — PR-1 encoding "
         f"does not satisfy the length(blob)==dim*4 skip-clause"
     )
+
+
+# ── 7b. backfill script is idempotent (real run, twice) ──────────────
+
+
+def test_backfill_v2_idempotent(tmp_path):
+    """Run ``scripts/backfill_bgem3_v2.py`` twice; second pass is a no-op.
+
+    Moved from ``tests/test_dense_recall.py`` (2026-07-05 test-suite
+    consolidation, Task 9) — unlike
+    ``test_pr1_genome_satisfies_backfill_skip_clause`` above, this
+    actually re-invokes the script's ``main()`` twice against a tiny
+    fixture DB (never the production genome.db) and diffs the BLOBs
+    before/after. We patch BGEM3Codec to a fake so we don't pull BGE-M3.
+    """
+    db_path = tmp_path / "fixture.db"
+    g = Genome(path=str(db_path), dense_embedding_enabled=True, dense_embedding_dim=1024)
+    for i in range(5):
+        gene = _make_gene(f"idempotent fixture gene {i}", gene_id=f"idemp-{i}")
+        g.upsert_gene(gene, apply_gate=False)
+    g.close()
+
+    # Patch the codec import inside the backfill script so it returns a fake.
+    fake = _FakeCodec(dim=1024)
+    with patch("helix_context.backends.bgem3_codec.BGEM3Codec", lambda dim, **kw: fake):
+        # Run twice with --limit so the script doesn't try to phone home.
+        repo_root = Path(__file__).resolve().parents[1]
+        script = repo_root / "scripts" / "backfill_bgem3_v2.py"
+        # Run via the script's main() directly to share the patch.
+        sys.path.insert(0, str(repo_root / "scripts"))
+        try:
+            import importlib.util
+            spec = importlib.util.spec_from_file_location("backfill_bgem3_v2", script)
+            mod = importlib.util.module_from_spec(spec)
+            # First run — populates everything. Pin --dim 1024 so the test
+            # is independent of whatever the local helix.toml says.
+            sys.argv = ["backfill_bgem3_v2.py", str(db_path), "--dim", "1024"]
+            spec.loader.exec_module(mod)
+            mod.main()
+        finally:
+            sys.path.pop(0)
+
+    # Capture the BLOBs after the first run.
+    conn = sqlite3.connect(str(db_path))
+    conn.row_factory = sqlite3.Row
+    rows_before = {
+        r["gene_id"]: bytes(r["embedding_dense_v2"]) if r["embedding_dense_v2"] else None
+        for r in conn.execute("SELECT gene_id, embedding_dense_v2 FROM genes").fetchall()
+    }
+    conn.close()
+    populated_after_first = sum(1 for v in rows_before.values() if v is not None)
+    assert populated_after_first == 5, f"first run populated {populated_after_first}/5"
+
+    # Second run — should skip everyone.
+    with patch("helix_context.backends.bgem3_codec.BGEM3Codec", lambda dim, **kw: fake):
+        sys.path.insert(0, str(repo_root / "scripts"))
+        try:
+            import importlib.util
+            spec2 = importlib.util.spec_from_file_location("backfill_bgem3_v2_2", script)
+            mod2 = importlib.util.module_from_spec(spec2)
+            sys.argv = ["backfill_bgem3_v2.py", str(db_path), "--dim", "1024"]
+            spec2.loader.exec_module(mod2)
+            mod2.main()
+        finally:
+            sys.path.pop(0)
+
+    conn = sqlite3.connect(str(db_path))
+    conn.row_factory = sqlite3.Row
+    rows_after = {
+        r["gene_id"]: bytes(r["embedding_dense_v2"]) if r["embedding_dense_v2"] else None
+        for r in conn.execute("SELECT gene_id, embedding_dense_v2 FROM genes").fetchall()
+    }
+    conn.close()
+
+    assert rows_before == rows_after, "second backfill run modified rows"
 
 
 # ── 8. shared fp32 packing helper ────────────────────────────────────

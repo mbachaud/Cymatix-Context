@@ -2,16 +2,28 @@
 
 Spec: ``docs/specs/2026-05-08-stage-2-dense-recall.md`` §9 test plan.
 
-These tests cover the six cases in the spec:
+These tests cover four of the six original cases in the spec (cases 4 and 5
+moved out — see note below):
 
 1. ``test_dense_recall_finds_needle_outside_top12_lexical`` — recall pulls a
    needle that lex misses.
 2. ``test_query_genes_ann_pool_size_independent_of_max_genes`` — pool >> cut.
 3. ``test_codec_full_1024_dim_on_encode`` — full-dim, norm≈1, random-pair
    cosine guard against dim=256 collapse.
-4. ``test_v2_blob_roundtrip_matches_json`` — fp32 BLOB ↔ JSON list round-trip.
-5. ``test_backfill_v2_idempotent`` — second run is a no-op.
 6. ``test_dense_matrix_invalidation_after_insert`` — cache invalidates.
+
+Cases 4 and 5 were removed here (2026-07-05 test-suite consolidation, Task
+9): case 4 (``test_v2_blob_roundtrip_matches_json``, fp32 BLOB ↔ JSON
+round-trip) duplicated ``test_ingest_dense_v2.py::
+test_vec_to_blob_shared_helper_length_and_roundtrip`` — that test exercises
+the actual production ``vec_to_blob`` helper and is a strictly stronger
+round-trip check, so the recall-side copy (which round-tripped a
+hand-rolled JSON/struct pack instead of calling any production code) was
+deleted outright. Case 5 (``test_backfill_v2_idempotent`` — running
+``scripts/backfill_bgem3_v2.py`` twice is a no-op) asserted something the
+ingest-side suite did not cover (only the SQL skip-clause shape, not an
+actual second run of the script), so it moved verbatim to
+``test_ingest_dense_v2.py``.
 
 The codec is mocked with deterministic hash-based vectors so the suite
 runs without BGE-M3 weights. ``test_codec_full_1024_dim_on_encode`` mocks
@@ -20,13 +32,8 @@ the underlying sentence-transformers model.
 from __future__ import annotations
 
 import hashlib
-import json
 import sqlite3
-import struct
-import subprocess
-import sys
-from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import numpy as np
 import pytest
@@ -263,100 +270,6 @@ def test_codec_full_1024_dim_on_encode():
     assert mean_sim < 0.10, (
         f"random-pair cosine mean {mean_sim:.4f} is the dim=256 collapse signature"
     )
-
-
-# ── 4. v2 BLOB ↔ JSON round-trip ─────────────────────────────────────
-
-
-def test_v2_blob_roundtrip_matches_json():
-    """Spec §9 case 4: encode same passage, write JSON via legacy path AND
-    BLOB via v2 path, decode both, assert numpy.allclose within fp32 epsilon.
-    """
-    vec = _hash_vec("round-trip-passage", 1024)
-
-    # Legacy JSON path: list[float] -> json.dumps -> json.loads -> np.array.
-    json_text = json.dumps(vec.tolist())
-    decoded_json = np.asarray(json.loads(json_text), dtype=np.float32)
-
-    # v2 BLOB path: fp32 little-endian bytes -> np.frombuffer.
-    blob = vec.astype("<f4").tobytes()
-    decoded_blob = np.frombuffer(blob, dtype="<f4").astype(np.float32, copy=True)
-
-    assert decoded_json.shape == decoded_blob.shape == (1024,)
-    assert np.allclose(decoded_json, decoded_blob, atol=1e-7), (
-        "JSON and BLOB round-trips diverged beyond fp32 epsilon"
-    )
-
-
-# ── 5. backfill is idempotent ────────────────────────────────────────
-
-
-def test_backfill_v2_idempotent(tmp_path):
-    """Spec §9 case 5: run backfill twice; second pass is a no-op.
-
-    Smoke test against a tiny fixture DB — never against the production
-    genome.db. We patch BGEM3Codec to a fake so we don't pull BGE-M3.
-    """
-    db_path = tmp_path / "fixture.db"
-    g = Genome(path=str(db_path), dense_embedding_enabled=True, dense_embedding_dim=1024)
-    for i in range(5):
-        gene = _make_gene(f"idempotent fixture gene {i}", gene_id=f"idemp-{i}")
-        g.upsert_gene(gene, apply_gate=False)
-    g.close()
-
-    # Patch the codec import inside the backfill script so it returns a fake.
-    fake = _FakeCodec(dim=1024)
-    with patch("helix_context.backends.bgem3_codec.BGEM3Codec", lambda dim, **kw: fake):
-        # Run twice with --limit so the script doesn't try to phone home.
-        repo_root = Path(__file__).resolve().parents[1]
-        script = repo_root / "scripts" / "backfill_bgem3_v2.py"
-        # Run via the script's main() directly to share the patch.
-        sys.path.insert(0, str(repo_root / "scripts"))
-        try:
-            import importlib.util
-            spec = importlib.util.spec_from_file_location("backfill_bgem3_v2", script)
-            mod = importlib.util.module_from_spec(spec)
-            # First run — populates everything. Pin --dim 1024 so the test
-            # is independent of whatever the local helix.toml says.
-            sys.argv = ["backfill_bgem3_v2.py", str(db_path), "--dim", "1024"]
-            spec.loader.exec_module(mod)
-            mod.main()
-        finally:
-            sys.path.pop(0)
-
-    # Capture the BLOBs after the first run.
-    conn = sqlite3.connect(str(db_path))
-    conn.row_factory = sqlite3.Row
-    rows_before = {
-        r["gene_id"]: bytes(r["embedding_dense_v2"]) if r["embedding_dense_v2"] else None
-        for r in conn.execute("SELECT gene_id, embedding_dense_v2 FROM genes").fetchall()
-    }
-    conn.close()
-    populated_after_first = sum(1 for v in rows_before.values() if v is not None)
-    assert populated_after_first == 5, f"first run populated {populated_after_first}/5"
-
-    # Second run — should skip everyone.
-    with patch("helix_context.backends.bgem3_codec.BGEM3Codec", lambda dim, **kw: fake):
-        sys.path.insert(0, str(repo_root / "scripts"))
-        try:
-            import importlib.util
-            spec2 = importlib.util.spec_from_file_location("backfill_bgem3_v2_2", script)
-            mod2 = importlib.util.module_from_spec(spec2)
-            sys.argv = ["backfill_bgem3_v2.py", str(db_path), "--dim", "1024"]
-            spec2.loader.exec_module(mod2)
-            mod2.main()
-        finally:
-            sys.path.pop(0)
-
-    conn = sqlite3.connect(str(db_path))
-    conn.row_factory = sqlite3.Row
-    rows_after = {
-        r["gene_id"]: bytes(r["embedding_dense_v2"]) if r["embedding_dense_v2"] else None
-        for r in conn.execute("SELECT gene_id, embedding_dense_v2 FROM genes").fetchall()
-    }
-    conn.close()
-
-    assert rows_before == rows_after, "second backfill run modified rows"
 
 
 # ── 6. matrix invalidation after insert ─────────────────────────────

@@ -20,7 +20,8 @@ the fixes:
 3. **Bench orchestrator subprocess env.** ``_spawn`` must set
    ``PYTHONHASHSEED=0`` in the uvicorn child env so set/dict iteration
    stays stable across replays. Pinned in
-   ``test_bench_orchestrator_sets_pythonhashseed_zero``.
+   ``tests/test_bench_orchestrator.py::test_spawn_defaults_pythonhashseed_to_zero``
+   (mocked-Popen unit test, no subprocess spawn).
 
 4. **Shard route tie-break.** Covered in
    ``tests/test_shard_router.py::test_route_tiebreak_by_shard_name_ascending``.
@@ -29,12 +30,8 @@ the fixes:
 from __future__ import annotations
 
 import os
-import subprocess
-import sys
 import threading
 import time
-from pathlib import Path
-from unittest.mock import patch
 
 import pytest
 
@@ -249,129 +246,3 @@ def test_knowledge_store_publishes_scores_and_tiers_under_lock():
         assert events.count("enter") == events.count("exit")
     finally:
         mgr.close()
-
-
-# ── Fix 4: bench orchestrator pins PYTHONHASHSEED ───────────────────────
-
-
-def test_bench_orchestrator_sets_pythonhashseed_zero(tmp_path):
-    """``BenchServer._spawn`` must include ``PYTHONHASHSEED=0`` in the
-    child uvicorn environment (unless already set explicitly), so
-    set/dict iteration order is stable across replays.
-
-    We don't actually want to spawn uvicorn here — instead, intercept
-    ``subprocess.Popen`` and inspect the env passed to it.
-    """
-    # benchmarks/ isn't installed as a package; add to sys.path the same
-    # way test_benchmark_monitor_preflight does.
-    bench_dir = Path(__file__).resolve().parents[1] / "benchmarks"
-    sys.path.insert(0, str(bench_dir))
-    try:
-        from bench_orchestrator import BenchServer, Fixture  # noqa: E402
-
-        fixture = Fixture(
-            name="dummy",
-            db=str(tmp_path / "dummy.db"),
-            sharded=False,
-            extra_env={},
-        )
-
-        captured_env: dict[str, str] = {}
-
-        class _FakeProc:
-            def __init__(self):
-                self.returncode = None
-                self.pid = -1
-
-            def poll(self):
-                return None
-
-            def terminate(self):
-                pass
-
-            def kill(self):
-                pass
-
-            def wait(self, timeout=None):
-                return 0
-
-        def _fake_popen(cmd, env=None, **kwargs):
-            captured_env.update(env or {})
-            return _FakeProc()
-
-        srv = BenchServer(
-            host="127.0.0.1",
-            port=11437,
-            python=sys.executable,
-            app="helix_context._asgi:app",
-        )
-        # bench_orchestrator does ``import subprocess`` and calls
-        # ``subprocess.Popen(...)`` so the global subprocess.Popen patch
-        # intercepts the call.
-        with patch("subprocess.Popen", side_effect=_fake_popen):
-            srv._spawn(fixture)
-
-        assert captured_env.get("PYTHONHASHSEED") == "0", (
-            f"bench orchestrator must pin PYTHONHASHSEED=0 in uvicorn env; "
-            f"got {captured_env.get('PYTHONHASHSEED')!r}"
-        )
-    finally:
-        # Clean up sys.path so other tests don't see the bench dir.
-        if str(bench_dir) in sys.path:
-            sys.path.remove(str(bench_dir))
-
-
-def test_bench_orchestrator_respects_explicit_pythonhashseed_override(tmp_path):
-    """If a fixture passes ``PYTHONHASHSEED`` via ``extra_env`` (e.g. for
-    a targeted random-seed bench), that wins over the orchestrator
-    default. ``env.setdefault`` then ``env.update(extra_env)`` should
-    produce the override behavior.
-    """
-    bench_dir = Path(__file__).resolve().parents[1] / "benchmarks"
-    sys.path.insert(0, str(bench_dir))
-    try:
-        from bench_orchestrator import BenchServer, Fixture  # noqa: E402
-
-        fixture = Fixture(
-            name="dummy",
-            db=str(tmp_path / "dummy.db"),
-            sharded=False,
-            extra_env={"PYTHONHASHSEED": "42"},
-        )
-
-        captured_env: dict[str, str] = {}
-
-        class _FakeProc:
-            returncode = None
-            pid = -1
-
-            def poll(self):
-                return None
-
-            def terminate(self):
-                pass
-
-            def kill(self):
-                pass
-
-            def wait(self, timeout=None):
-                return 0
-
-        def _fake_popen(cmd, env=None, **kwargs):
-            captured_env.update(env or {})
-            return _FakeProc()
-
-        srv = BenchServer(
-            host="127.0.0.1",
-            port=11437,
-            python=sys.executable,
-            app="helix_context._asgi:app",
-        )
-        with patch("subprocess.Popen", side_effect=_fake_popen):
-            srv._spawn(fixture)
-
-        # extra_env override wins.
-        assert captured_env.get("PYTHONHASHSEED") == "42"
-    finally:
-        if str(bench_dir) in sys.path:
-            sys.path.remove(str(bench_dir))

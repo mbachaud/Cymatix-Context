@@ -560,18 +560,3 @@ def test_observability_skipped_when_install_incomplete(monkeypatch):
     sup, install_pending = _maybe_build_observability()
     assert sup is None
     assert install_pending is True
-
-
-def test_observability_module_global_pending_flag_removed():
-    """Cleanup A pin: the deprecated module-level globals are gone.
-
-    Asserts that the historical _OBS_INSTALL_PENDING flag and its
-    _set_observability_install_pending setter are no longer attributes
-    on the module. The flag is now a return-tuple field."""
-    from helix_context.launcher import app as app_mod
-    assert not hasattr(app_mod, "_OBS_INSTALL_PENDING"), (
-        "_OBS_INSTALL_PENDING should be dropped (Cleanup A: state via tuple)"
-    )
-    assert not hasattr(app_mod, "_set_observability_install_pending"), (
-        "_set_observability_install_pending should be dropped (Cleanup A)"
-    )

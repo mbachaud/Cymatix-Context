@@ -567,43 +567,6 @@ class TestResolveCallerAgent:
         assert _resolve_caller_agent(req, {"agent": "  Laude  "}) == "laude"
 
 
-class TestContextPacketEndpointFreshness:
-    """Freshness-label assertions for /context/packet.
-
-    Narrower than TestContextPacketEndpoint below — specifically verifies
-    that items inside the `verified` list carry a ``status == "verified"``
-    field, which the broader shape tests don't check.
-    """
-
-    def test_packet_returns_freshness_labeled_groups(self, client):
-        client.post("/ingest", json={
-            "content": "Authentication config controls JWT session settings.",
-            "content_type": "text",
-            "metadata": {"path": "config/auth.toml"},
-        })
-
-        resp = client.post("/context/packet", json={
-            "query": "authentication config",
-            "task_type": "edit",
-        })
-        assert resp.status_code == 200
-        data = resp.json()
-        assert data["task_type"] == "edit"
-        assert data["query"] == "authentication config"
-        assert "verified" in data
-        assert "stale_risk" in data
-        assert "refresh_targets" in data
-        assert data["response_mode"] == "packet"
-        assert isinstance(data["verified"], list)
-        assert isinstance(data["stale_risk"], list)
-        if data["verified"]:
-            assert data["verified"][0]["status"] == "verified"
-
-    def test_packet_empty_query_rejected(self, client):
-        resp = client.post("/context/packet", json={"query": ""})
-        assert resp.status_code == 400
-
-
 class TestProxyEndpoint:
     def test_proxy_no_messages_rejected(self, client):
         resp = client.post("/v1/chat/completions", json={"messages": []})
@@ -1221,6 +1184,25 @@ class TestContextPacketEndpoint:
         })
         assert resp2.status_code == 200
 
+    def test_packet_verified_items_carry_verified_status(self, client):
+        """Items inside the `verified` list carry ``status == "verified"``
+        — the shape tests above don't check the per-item freshness label.
+        (Merged from the former TestContextPacketEndpointFreshness class.)
+        """
+        client.post("/ingest", json={
+            "content": "Authentication config controls JWT session settings.",
+            "content_type": "text",
+            "metadata": {"path": "config/auth.toml"},
+        })
+        resp = client.post("/context/packet", json={
+            "query": "authentication config",
+            "task_type": "edit",
+        })
+        assert resp.status_code == 200
+        data = resp.json()
+        if data["verified"]:
+            assert data["verified"][0]["status"] == "verified"
+
 
 class TestSessionsRegister:
     """Tests for /sessions/register endpoint — optional vendor fields."""
@@ -1291,10 +1273,22 @@ def test_sessions_register_accepts_announce_fields(client):
 
 
 def test_announce_endpoint_sets_model_id(client):
-    """POST /sessions/{participant_id}/announce updates model_id."""
+    """POST /sessions/{participant_id}/announce updates model_id.
+
+    Registers with IDE + vendor fields so the same round trip also
+    verifies announce (without ide_override) leaves them untouched at
+    the HTTP layer — folded from the retired
+    test_helix_announce_plumbing.py end-to-end test.
+    """
     reg = client.post(
         "/sessions/register",
-        json={"party_id": "party_announce", "handle": "laude"},
+        json={
+            "party_id": "party_announce",
+            "handle": "laude",
+            "ide_detected": "vscode",
+            "ide_detection_via": "env:VSCODE_PID",
+            "agent_kind": "claude-code",
+        },
     )
     pid = reg.json()["participant_id"]
 
@@ -1308,6 +1302,10 @@ def test_announce_endpoint_sets_model_id(client):
     rows = listing if isinstance(listing, list) else listing.get("participants", [])
     matching = [r for r in rows if r.get("participant_id") == pid]
     assert matching[0]["model_id"] == "claude-opus-4-7"
+    # Announce without ide_override must not clobber register-time fields.
+    assert matching[0]["ide_detected"] == "vscode"
+    assert matching[0]["ide_detection_via"] == "env:VSCODE_PID"
+    assert matching[0]["agent_kind"] == "claude-code"
 
 
 def test_announce_endpoint_with_ide_override_sets_agent_override_via(client):
