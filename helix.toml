@@ -128,6 +128,17 @@ foveated_c_min = 0.15
 # Default 1000 matches current uniform Step 4 behavior at c_i = 1.0.
 foveated_base_chars = 1000
 
+# Splice-floor fix (J-space council kill-switch #1, 2026-07-06). Per-gene
+# char target for the Step-4 splice loop (non-foveated path). 0 (default)
+# = budget-proportional auto: int(expression_tokens * 4 * 0.9) //
+# n_candidates, floored at the legacy 1000 — the old query-agnostic
+# 1000-char literal both under-used the expression budget (12 genes x
+# 1000 chars ~ 3000 tokens vs the 7000 budget) and truncated any answer
+# past char 1000 (6/50 SIKE xl needles). Any positive value pins a fixed
+# target; 1000 restores the exact legacy floor. Truncation now keeps
+# query-term lines in both modes (headroom_bridge._query_aware_trim).
+splice_target_chars = 0
+
 [session]
 # CWoLa session / party fallback. Prior to 2026-04-13 the /context endpoint
 # passed NULL to cwola.log_query when clients didn't supply session_id or
