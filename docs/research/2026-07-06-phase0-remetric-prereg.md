@@ -24,12 +24,11 @@ different experiment feeding #239 and stays manual.)
 Phase 1a (`benchmarks/ab_whitening_dense.py`, artifact
 `ab_whitening_dense_xl_clean.json`) decides the incumbent:
 
-- If whitened BGE-M3 beats raw cosine on retrieval@1/MRR **and**
-  gold-vs-random AUC → the probe's control arm is **whitened** BGE-M3.
-- Otherwise the control arm is **raw cosine** BGE-M3 (the n=50 smoke
-  already leans this way: whitening achieved isotropy — random-pair
-  mean → 0.00 — but LOST ranking signal, retrieval@1 −6pp, AUC
-  0.877 → 0.809; the full-n run supersedes this note).
+- **RESOLVED (2026-07-06, n=1000):** whitening lost on every rank
+  metric (retrieval@1 −0.7pp, @10 −3.3pp, MRR −0.016, AUC
+  0.912 → 0.868) and won only μ+3σ threshold clearance — see
+  `2026-07-06-phase1a-whitening-ab-results.md`. The control arm is
+  **raw cosine** BGE-M3.
 
 Either way the comparison is **measured on the same labels**, not
 assumed from the Anthropic paper or any Deep-Research synthesis
