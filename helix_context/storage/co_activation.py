@@ -17,6 +17,7 @@ from typing import Dict, List, Optional, Tuple
 
 from ..accel import parse_epigenetics
 from ..schemas import ChromatinState, Gene
+from ..backends.sema_codec import decode_embedding
 
 log = logging.getLogger(__name__)
 
@@ -224,7 +225,7 @@ def _row_to_gene_inline(row: sqlite3.Row) -> Gene:
         epigenetics=epigenetics,
         chromatin=chromatin,
         is_fragment=bool(row["is_fragment"]) if row["is_fragment"] is not None else False,
-        embedding=json_loads(row["embedding"]) if row["embedding"] else None,
+        embedding=decode_embedding(row["embedding"]),
         source_id=row["source_id"],
         repo_root=_opt("repo_root"),
         source_kind=_opt("source_kind"),

@@ -18,6 +18,7 @@ from .helpers import (
     _merge_tier_contributions,
     _paused_ribosomes,
 )
+from ..backends.sema_codec import decode_embedding
 
 log = logging.getLogger("helix.server")
 
@@ -62,7 +63,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
                 scored = []
                 for r in rows:
                     try:
-                        vec = _json.loads(r["embedding"])
+                        vec = decode_embedding(r["embedding"])
                     except Exception:
                         continue
                     sim = codec.similarity(q_sema, vec)
@@ -191,7 +192,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
             scored: list = []
             for r in rows:
                 try:
-                    vec = _json.loads(r["embedding"])
+                    vec = decode_embedding(r["embedding"])
                 except Exception:
                     continue
                 sim = codec.similarity(q_sema, vec)

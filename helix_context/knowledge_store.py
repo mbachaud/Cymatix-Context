@@ -36,6 +36,7 @@ from .accel import (
 from .exceptions import PromoterMismatch
 from .hardware import SqliteMemPlan, sqlite_memory_budget
 from .schemas import ChromatinState, EpigeneticMarkers, Gene, PromoterTags
+from .backends.sema_codec import decode_embedding, sema_vec_to_blob
 
 log = logging.getLogger(__name__)
 
@@ -846,7 +847,7 @@ class KnowledgeStore:
         vectors = []
         for r in rows:
             try:
-                vec = json_loads(r["embedding"])
+                vec = decode_embedding(r["embedding"])
                 if isinstance(vec, list) and len(vec) == 20:
                     gene_ids.append(r["gene_id"])
                     vectors.append(vec)
@@ -915,7 +916,7 @@ class KnowledgeStore:
         vectors = []
         for r in rows:
             try:
-                vec = json_loads(r["embedding"])
+                vec = decode_embedding(r["embedding"])
                 if isinstance(vec, list) and len(vec) == 20:
                     gene_ids.append(r["gene_id"])
                     vectors.append(vec)
@@ -1378,7 +1379,7 @@ class KnowledgeStore:
                 gene.epigenetics.model_dump_json(),
                 int(gene.chromatin),
                 int(gene.is_fragment),
-                json_dumps(gene.embedding) if gene.embedding else None,
+                sema_vec_to_blob(gene.embedding) if gene.embedding else None,
                 gene.source_id,
                 gene.repo_root,
                 gene.source_kind,
@@ -2403,7 +2404,7 @@ class KnowledgeStore:
                         candidates_sema = []
                         for r in sema_rows:
                             try:
-                                vec = json_loads(r["embedding"])
+                                vec = decode_embedding(r["embedding"])
                                 if isinstance(vec, list) and len(vec) == 20:
                                     candidates_sema.append((r["gene_id"], vec))
                             except Exception:
@@ -3439,7 +3440,7 @@ class KnowledgeStore:
             epigenetics=epigenetics,
             chromatin=chromatin,
             is_fragment=bool(row["is_fragment"]) if row["is_fragment"] is not None else False,
-            embedding=json_loads(row["embedding"]) if row["embedding"] else None,
+            embedding=decode_embedding(row["embedding"]),
             source_id=row["source_id"],
             repo_root=_opt("repo_root"),
             source_kind=_opt("source_kind"),
@@ -4484,7 +4485,7 @@ class KnowledgeStore:
                 promoter=parse_promoter(row["promoter"]),
                 epigenetics=parse_epigenetics(row["epigenetics"]),
                 chromatin=ChromatinState(row["chromatin"]),
-                embedding=json_loads(row["embedding"]) if row["embedding"] else None,
+                embedding=decode_embedding(row["embedding"]),
                 source_id=row["source_id"],
                 repo_root=_opt("repo_root"),
                 source_kind=_opt("source_kind"),
