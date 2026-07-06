@@ -239,6 +239,9 @@ foreach ($bed in $beds) {
     # ladder is appended only when models were discovered; if none, the run
     # proceeds with the Claude rung alone.
     if ($ollamaModels) { $claudeArgs += @('--ollama-models', $ollamaModels) }
+    # SIKE_SKIP_CLAUDE=1 drops the Sonnet rung (e.g. a second host running only
+    # the heavy local models; the Sonnet sample is produced once elsewhere).
+    if ($env:SIKE_SKIP_CLAUDE) { $claudeArgs += '--skip-claude' }
 
     python @claudeArgs *> $runLog
     $runExit = $LASTEXITCODE
