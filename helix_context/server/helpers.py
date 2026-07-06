@@ -32,6 +32,25 @@ from ..schemas import KnowBlock, MissBlock
 
 log = logging.getLogger("helix.server")
 
+_LEARN_DISABLED_TRUTHY = frozenset({"1", "true", "yes", "on"})
+
+
+def _learn_disabled() -> bool:
+    """True when Stage-6 persistence is turned off for this serve.
+
+    Set ``HELIX_DISABLE_LEARN=1`` for read-only / ephemeral serving —
+    benchmarks, evaluation harnesses, air-gapped read-only deploys — so that
+    answering a query never mutates the knowledge store. By default every
+    ``/v1/chat/completions`` call fires ``helix.learn`` -> ``genome.upsert_doc``
+    in the background, persisting the query+response exchange as a new gene;
+    during a bench that self-contaminates the served corpus with
+    ``"User query: …"`` echo genes that later rank as perfect-lexical
+    distractors (see docs/benchmarks/2026-07-05-sike-bedsweep-issue-resolutions.md,
+    gap A2).
+    """
+    return os.environ.get("HELIX_DISABLE_LEARN", "").strip().lower() in _LEARN_DISABLED_TRUTHY
+
+
 _CHECKPOINT_INTERVAL = 60  # seconds between background WAL checkpoints
 _REGISTRY_SWEEP_INTERVAL = 60  # seconds between session registry status sweeps
 _WAL_GAUGE_INTERVAL = 30  # seconds between WAL-size gauge emissions
@@ -759,7 +778,7 @@ async def _stream_and_tee(
 
     # Stream is complete -- fire background persistence
     full_response = "".join(accumulated)
-    if full_response:
+    if full_response and not _learn_disabled():
         background_tasks.add_task(helix.learn, user_query, full_response)
 
     # Token accounting -- prefer authoritative usage if upstream provided it,
@@ -810,7 +829,7 @@ async def _forward_and_replicate(
     content = ""
     if choices:
         content = choices[0].get("message", {}).get("content", "")
-        if content:
+        if content and not _learn_disabled():
             background_tasks.add_task(helix.learn, user_query, content)
 
     # Token accounting -- exact if usage was provided, else estimated.
