@@ -2,6 +2,31 @@
 
 ## Unreleased
 
+## 0.7.2b1 — 2026-07-06 (beta)
+
+Efficiency + bench-validity wave. Beta cut for cross-host bench validation
+(Max's box runs the trimmed local ladder; Joe's DGX Spark runs the heavy gemma4
+rungs). Merge order: this bump lands **after** #241 (merged), #242, #243.
+
+- **feat: fp32-BLOB SEMA embeddings + lean MCP surface (#241).** `genes.embedding`
+  (20-d ΣĒMA) now packs as a little-endian fp32 BLOB in the same TEXT-affinity
+  column — ~5x on that column, **no schema migration**, dual-decode keeps legacy
+  JSON rows readable. MCP defaults to a lean 5-tool surface
+  (`helix_context`/`_packet`/`_ingest`/`_health`/`_sessions_list`); set
+  `HELIX_MCP_FULL=1` for the full 24 (~4–5K schema tokens/turn saved).
+- **feat(server): `HELIX_DISABLE_LEARN` read-only serving (#243).** Skips Stage-6
+  persist so answering a query never mutates the store — read-only / ephemeral /
+  eval serving. Keystone fix for bench self-contamination (echo genes).
+- **feat(bench): SIKE Run-1 validity + per-rung checkpoint/resume/pause (#243).**
+  Decontaminated beds, probe A3 fixes, `SIKE_OLLAMA_MODELS` / `SIKE_SKIP_CLAUDE`
+  ladder split, `sike_ctl.ps1` control, and a runner that checkpoints after every
+  rung (a stop loses at most the in-flight rung).
+- **fix(config): repair mojibake `helix.toml` (#242).** A UTF-8 BOM + double-encoded
+  comments made the TOML parser fall back to code defaults; repaired to clean
+  UTF-8 (config values unchanged).
+- **docs:** efficiency/cost-reduction design memo (binary storage · algorithm-vs-model
+  · MCP token cost), honesty baseline (encoder defaults are ON), root-tidy.
+
 ## 0.7.1 — 2026-06-09
 
 - **fix(launcher): usable stdio under pythonw (#199).** The 0.7.0
