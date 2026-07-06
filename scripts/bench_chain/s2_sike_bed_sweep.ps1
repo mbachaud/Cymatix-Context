@@ -81,6 +81,11 @@ function Start-HelixOnBed {
     # coverage to 0.66-0.78. 600s gives slow local generations room; the
     # runner's client timeout is 660s so the server side still decides.
     $env:HELIX_SERVER_UPSTREAM_TIMEOUT = '600'
+    # 2026-07-05 fix (gap A2): serve read-only so answering a needle never
+    # persists a "User query: ..." echo gene back into the bed. Without this
+    # the 1556 run self-contaminated its own corpus with 260-285 echoes that
+    # ranked as perfect-lexical distractors. Gated in server/helpers.py.
+    $env:HELIX_DISABLE_LEARN = '1'
     Remove-Item Env:\HELIX_USE_SHARDS -ErrorAction SilentlyContinue
     if (-not (Wait-PortFree -p $port -timeoutSec 20)) {
         "  port $port still occupied; cannot start server" | Add-Content $srvLog
@@ -141,7 +146,7 @@ if (-not $ollamaModels) {
 # ---- Bed table (source -> copy) --------------------------------------------
 
 $beds = @(
-    @{ name = 'xl';           src = "$repo\genomes\bench\matrix\xl.db" },
+    @{ name = 'xl';           src = "$repo\genomes\bench\matrix\xl_clean.db" },  # 2026-07-05: decontaminated (4676 worktree-dupe genes purged, gap A2)
     @{ name = 'enterprise_rag_10k'; src = "$repo\genomes\bench\matrix\enterprise_rag_10k_batched.db" },
     @{ name = 'enterprise_rag_50k'; src = "$repo\genomes\bench\matrix\enterprise_rag_50k_batched.db" }
 )
