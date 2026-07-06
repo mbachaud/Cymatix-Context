@@ -135,6 +135,15 @@ if (Wait-Job $job -Timeout 30) {
     Stop-Job $job -ErrorAction SilentlyContinue
 }
 Remove-Job $job -Force -ErrorAction SilentlyContinue
+# Ladder override: set SIKE_OLLAMA_MODELS (comma-separated) to pin the local
+# rungs instead of auto-discovering every installed model. Used to run a
+# trimmed local baseline (e.g. just gemma4:e4b) and hand the heavy 26b/31b
+# rungs to another host. Empty string = local ladder off (Claude rung only).
+if ($null -ne $env:SIKE_OLLAMA_MODELS) {
+    $ollamaModels = $env:SIKE_OLLAMA_MODELS
+    "ollama ladder OVERRIDDEN via SIKE_OLLAMA_MODELS: '$ollamaModels'" |
+        Add-Content "$logs\s2_summary_$ts.log"
+}
 if ($ollamaModels) {
     "ollama models discovered: $ollamaModels" | Add-Content "$logs\s2_summary_$ts.log"
 } else {
