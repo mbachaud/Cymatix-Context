@@ -12,6 +12,9 @@ $repo = 'F:\Projects\helix-context'
 $logs = "$repo\benchmarks\logs"
 $results = "$repo\benchmarks\results"
 $bedsDir = "$repo\genomes\bench\sike_beds"
+# Pause flag: create it (e.g. via sike_ctl.ps1 pause) to stop the sweep between
+# needles/rungs with a checkpoint saved; delete it and relaunch to resume.
+$pauseFlag = "$logs\sike_pause.flag"
 $ts = Get-Date -Format 'yyyy-MM-dd_HHmm'
 New-Item -ItemType Directory -Force -Path $logs | Out-Null
 New-Item -ItemType Directory -Force -Path $results | Out-Null
@@ -210,13 +213,18 @@ foreach ($bed in $beds) {
     "  server pid=$($proc.Id) serving $copy" | Add-Content "$logs\s2_summary_$ts.log"
 
     # 4. Run the needle battery across the ollama ladder + Claude Sonnet rung.
-    $outJson = "$results\sike_bedsweep_${name}_$ts.json"
+    # STABLE out name (no $ts) so --resume finds the per-rung checkpoint on a
+    # relaunch; the run timestamp lives inside the JSON. --pause-file lets a
+    # pause stop cleanly between needles (runner exit 42).
+    $outJson = "$results\sike_bedsweep_${name}.json"
     $runLog = "$logs\s2_${name}_run_$ts.log"
     $claudeArgs = @('scripts\bench_chain\s2_sike_bedsweep_run.py',
                     '--bed', $name,
                     '--helix-url', $helixUrl,
                     '--claude-model', 'sonnet',
                     '--claude-max-usd', '0.15',
+                    '--resume',
+                    '--pause-file', $pauseFlag,
                     '--out', $outJson)
     # The Claude Sonnet rung always runs (cost-capped). The local ollama
     # ladder is appended only when models were discovered; if none, the run
@@ -226,6 +234,16 @@ foreach ($bed in $beds) {
     python @claudeArgs *> $runLog
     $runExit = $LASTEXITCODE
     "  run exit=$runExit out=$outJson (log: $runLog)" | Add-Content "$logs\s2_summary_$ts.log"
+
+    # Runner exit 42 == paused (checkpoint saved). Stop the whole sweep here;
+    # deleting the pause flag and relaunching resumes from this bed's rungs.
+    if ($runExit -eq 42) {
+        "  bed $name PAUSED (exit 42). Delete $pauseFlag and relaunch to resume." |
+            Add-Content "$logs\s2_summary_$ts.log"
+        Stop-HelixTree -proc $proc
+        Set-Status 's2_sike_beds' "PAUSED:$name"
+        break
+    }
 
     # 5. Tear down the server before the next bed.
     Stop-HelixTree -proc $proc

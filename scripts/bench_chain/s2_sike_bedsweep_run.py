@@ -263,6 +263,16 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--out", required=True, help="Output JSON path.")
     ap.add_argument("--limit", type=int, default=0,
                     help="Cap needles (0 = all; smoke only).")
+    ap.add_argument("--resume", action="store_true",
+                    help="Resume from an existing --out checkpoint: keep the "
+                         "consumer rungs already recorded and run only the rest. "
+                         "Pass 1 (cheap) re-runs and refreshes retrieval.")
+    ap.add_argument("--pause-file",
+                    default=os.environ.get("SIKE_PAUSE_FILE",
+                                           "benchmarks/logs/sike_pause.flag"),
+                    help="If this path exists, checkpoint and exit cleanly "
+                         "(code 42) between needles/rungs. Delete it and rerun "
+                         "with --resume to continue where it left off.")
     args = ap.parse_args(argv)
 
     ollama_models = [m.strip() for m in args.ollama_models.split(",") if m.strip()]
@@ -284,6 +294,33 @@ def main(argv: list[str] | None = None) -> int:
         "per_consumer": {},
         "errors": [],
     }
+
+    # Resume: reload a prior checkpoint and keep its completed consumer rungs;
+    # the loop below skips any rung already present. Pass 1 re-runs (cheap) and
+    # refreshes retrieval, so only the expensive model rungs are ever reused.
+    if args.resume and Path(args.out).exists():
+        try:
+            prev = json.loads(Path(args.out).read_text(encoding="utf-8"))
+            if prev.get("bed") == args.bed:
+                prev.setdefault("per_consumer", {})
+                prev.setdefault("errors", [])
+                result = prev
+                print("resume: {} -> skipping {} completed rung(s): {}".format(
+                    args.out, len(result["per_consumer"]),
+                    list(result["per_consumer"].keys())))
+            else:
+                print("resume: bed mismatch ({} != {}); starting fresh".format(
+                    prev.get("bed"), args.bed))
+        except Exception as exc:  # corrupt/partial checkpoint -> start fresh
+            print("resume: could not read checkpoint ({}); starting fresh".format(exc))
+
+    # Paused before we even start: exit now (don't burn Pass 1). Between-rung
+    # and between-needle checks below handle a pause raised mid-flight.
+    if _paused(args.pause_file):
+        print("PAUSED at startup (flag {}); exit {}".format(
+            args.pause_file, PAUSE_EXIT))
+        _checkpoint(result, args.out)
+        return PAUSE_EXIT
 
     # Server sanity + gene count.
     bench_needle.HELIX_URL = args.helix_url  # so find_needle hits this server
@@ -356,6 +393,7 @@ def main(argv: list[str] | None = None) -> int:
     for k in ks:
         result["retrieval"][f"recall@{k}_rate"] = round(
             recall_counts[f"recall@{k}"] / n, 4)
+    _checkpoint(result, args.out)  # retrieval banked before the long rungs
 
     # ------------------------------------------------------------------
     # Pass 2: per-consumer correctness. Each consumer re-answers every
@@ -369,6 +407,10 @@ def main(argv: list[str] | None = None) -> int:
         consecutive_errors = 0
         rung_aborted = False
         for nd in needles:
+            if _paused(args.pause_file):
+                # Pause takes effect between needles; the partial rung is
+                # discarded (not recorded) so resume re-runs it cleanly whole.
+                raise _Paused()
             accept = nd.get("accept", [nd.get("expected", "")])
             q = nd["query"]
             if kind == "ollama":
@@ -442,21 +484,46 @@ def main(argv: list[str] | None = None) -> int:
             summary["rung_aborted_after"] = len(rows)
         return summary
 
+    def _pause_exit(where: str) -> int:
+        print("PAUSED {} (flag {}); checkpoint saved, exit {}".format(
+            where, args.pause_file, PAUSE_EXIT))
+        client.close()
+        _checkpoint(result, args.out)
+        return PAUSE_EXIT
+
     for m in ollama_models:
+        key = f"ollama:{m}"
+        if key in result["per_consumer"]:
+            print("resume: {} already done, skipping".format(key))
+            continue
+        if _paused(args.pause_file):
+            return _pause_exit("before " + key)
         try:
-            result["per_consumer"][f"ollama:{m}"] = _run_consumer("ollama", m)
+            result["per_consumer"][key] = _run_consumer("ollama", m)
+        except _Paused:
+            return _pause_exit("mid-rung " + key)
         except Exception as exc:
             result["errors"].append(f"ollama consumer {m} failed: {exc}")
+        _checkpoint(result, args.out)  # bank this rung before the next
 
-    if not args.skip_claude:
+    claude_key = f"claude:{args.claude_model}"
+    if not args.skip_claude and claude_key not in result["per_consumer"]:
+        if _paused(args.pause_file):
+            return _pause_exit("before " + claude_key)
         try:
-            result["per_consumer"][f"claude:{args.claude_model}"] = _run_consumer(
+            result["per_consumer"][claude_key] = _run_consumer(
                 "claude", args.claude_model)
+        except _Paused:
+            return _pause_exit("mid-rung " + claude_key)
         except Exception as exc:
             result["errors"].append(f"claude consumer failed: {exc}")
+        _checkpoint(result, args.out)
+    elif claude_key in result["per_consumer"]:
+        print("resume: {} already done, skipping".format(claude_key))
 
+    result["complete"] = True  # every rung ran; orchestrator can skip this bed
     client.close()
-    _write(result, args.out)
+    _checkpoint(result, args.out)
     print("bed={} genes={} gold_delivered_rate={} consumers={}".format(
         args.bed, result.get("genome_genes"),
         result["retrieval"].get("gold_delivered_rate"),
@@ -469,6 +536,35 @@ def _write(result: dict, out_path: str) -> None:
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(json.dumps(result, indent=2), encoding="utf-8")
     print("-> {}".format(p))
+
+
+# Clean-exit code when a run is paused via the pause flag. Distinct from 0
+# (complete) and 2 (server unreachable) so the orchestrator can tell a pause
+# from a finish. Resume with --resume after deleting the flag.
+PAUSE_EXIT = 42
+
+
+class _Paused(Exception):
+    """Raised between needles when the pause flag appears mid-rung."""
+
+
+def _paused(pause_file: str) -> bool:
+    return bool(pause_file) and Path(pause_file).exists()
+
+
+def _checkpoint(result: dict, out_path: str) -> None:
+    """Write the accumulating result as a resumable checkpoint.
+
+    Called after Pass 1 and after every consumer rung, so a kill or a pause
+    loses at most the single in-flight rung. `progress.rungs_done` is what
+    `--resume` reads back to skip completed rungs.
+    """
+    result["progress"] = {
+        "retrieval_done": bool(result.get("retrieval", {}).get("per_needle")),
+        "rungs_done": list(result.get("per_consumer", {}).keys()),
+        "updated_at": datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ"),
+    }
+    _write(result, out_path)
 
 
 if __name__ == "__main__":
