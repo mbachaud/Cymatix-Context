@@ -397,16 +397,21 @@ class RetrievalConfig:
     dense_pool_size: int = 500
     # Stage 3 (2026-05-08): Reciprocal Rank Fusion accumulator.
     # Spec: docs/specs/2026-05-08-stage-3-rrf-fusion.md.
-    # When ``fusion_mode == "additive"`` (default for one release), the
-    # legacy ``gene_scores += tier_score`` accumulator path is unchanged.
-    # When ``"rrf"``, each tier writes both raw scores AND ranks the
-    # tier output through the Fuser; the final sort uses fused scores.
+    # v(N+1) flip (2026-07-06, J-space roadmap council): default is now
+    # "rrf" — each tier writes both raw scores AND ranks the tier output
+    # through the Fuser; the final sort uses fused scores. SIKE Run-2
+    # measured rrf > additive +12pp gold_delivered on xl (0.74 vs 0.62;
+    # docs/benchmarks/2026-07-06-sike-run2-fts-depth-fusion.md) — the
+    # additive path mis-scales dense (×16 semantic arm) against the FTS
+    # bm25 cap (6.0). Set "additive" to restore the legacy
+    # ``gene_scores += tier_score`` accumulator until v(N+2) removes it.
     # Issue #202: the per-tier weights below bind in BOTH fusion modes.
     # Under "additive" they are the tier coefficients/caps themselves
-    # (defaults == the old inline literals, so untouched configs keep
-    # byte-identical rankings); under "rrf" they are rank
-    # post-multipliers.
-    fusion_mode: str = "additive"           # "additive" | "rrf"
+    # (defaults == the old inline literals); under "rrf" they are rank
+    # post-multipliers. Under "rrf" the abstain gates run ratio-only
+    # (pipeline/tier_logic.py skip_absolute_floors) because the absolute
+    # floors were calibrated on additive scores.
+    fusion_mode: str = "rrf"                # "rrf" | "additive" (legacy)
     rrf_k: int = 60                         # Cormack 2009 default
     fts5_weight: float = 3.0                # cap-only in additive: cap = 2.0 × this (6.0)
     splade_weight: float = 3.5              # leading coeff == tier cap
