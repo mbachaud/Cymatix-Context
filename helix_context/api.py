@@ -61,6 +61,7 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
 from .config import HelixConfig
+from .backends.sema_codec import decode_embedding
 from .schemas import (
     ContextItem,
     ContextPacket,
@@ -450,7 +451,7 @@ class HelixSession:
         scored: List[tuple] = []
         for r in rows:
             try:
-                vec = _json.loads(r["embedding"])
+                vec = decode_embedding(r["embedding"])
             except (TypeError, ValueError, _json.JSONDecodeError):
                 # Skip rows whose embedding column is malformed; never
                 # silent — log once at warning so the operator can

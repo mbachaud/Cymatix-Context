@@ -34,6 +34,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import httpx  # noqa: E402
 
+from helix_context.backends.sema_codec import decode_embedding  # noqa: E402
 from helix_context.adapters.retriever import (  # noqa: E402
     HelixNarrowedRetriever, RetrievedDoc, Retriever,
 )
@@ -122,7 +123,7 @@ class SemaEmbeddingRetriever:
             conn.close()
         for gene_id, src, content, emb_blob in rows:
             try:
-                emb = json.loads(emb_blob)
+                emb = decode_embedding(emb_blob)
                 self._vectors.append((gene_id, src, content or "", emb))
             except Exception:
                 continue

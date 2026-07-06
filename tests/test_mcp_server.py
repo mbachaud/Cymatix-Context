@@ -264,3 +264,61 @@ def test_helix_announce_tool_calls_bridge_announce(monkeypatch, mock_bridge):
     call = mock_bridge.announce_calls[-1]
     assert call["model_id"] == "claude-opus-4-7"
     assert call["ide_override"] is None
+
+
+# ── Lean MCP surface profile (issue #219 Slice 3) ────────────────────
+
+
+def _reload_mcp(monkeypatch, *, full: bool):
+    """Reimport the MCP module under the given HELIX_MCP_FULL setting."""
+    import importlib
+
+    if full:
+        monkeypatch.setenv("HELIX_MCP_FULL", "1")
+    else:
+        monkeypatch.delenv("HELIX_MCP_FULL", raising=False)
+    import helix_context.mcp.mcp_server as m
+
+    return importlib.reload(m)
+
+
+@pytest.fixture
+def restore_mcp_profile():
+    """Restore the module to its production default (lean) after the test."""
+    yield
+    import importlib
+    import os
+
+    os.environ.pop("HELIX_MCP_FULL", None)
+    import helix_context.mcp.mcp_server as m
+
+    importlib.reload(m)
+
+
+def test_lean_mcp_profile_is_default(monkeypatch, restore_mcp_profile):
+    """Unset HELIX_MCP_FULL → only the 5 core tools are registered."""
+    m = _reload_mcp(monkeypatch, full=False)
+    names = set(m.mcp._tool_manager._tools.keys())
+    assert names == set(m._MCP_CORE_TOOLS)
+    assert len(names) == 5
+
+
+def test_full_mcp_surface_is_opt_in(monkeypatch, restore_mcp_profile):
+    """HELIX_MCP_FULL=1 → the whole surface is exposed, core included."""
+    m = _reload_mcp(monkeypatch, full=True)
+    names = set(m.mcp._tool_manager._tools.keys())
+    assert set(m._MCP_CORE_TOOLS) <= names
+    # Non-core admin/diagnostic/alias tools return only under the full flag.
+    assert {"helix_stats", "helix_swap_db", "helix_document_query"} <= names
+    assert len(names) > len(m._MCP_CORE_TOOLS)
+
+
+def test_apply_mcp_profile_never_prunes_core(monkeypatch, restore_mcp_profile):
+    """The prune reports only non-core removals and leaves core intact."""
+    m = _reload_mcp(monkeypatch, full=True)  # start from the full surface
+    monkeypatch.delenv("HELIX_MCP_FULL", raising=False)
+    removed = m._apply_mcp_profile()
+    assert set(removed).isdisjoint(m._MCP_CORE_TOOLS)
+    assert set(m.mcp._tool_manager._tools.keys()) == set(m._MCP_CORE_TOOLS)
+    # Idempotent: a second application removes nothing.
+    assert m._apply_mcp_profile() == []

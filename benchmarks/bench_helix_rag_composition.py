@@ -53,6 +53,7 @@ from typing import Optional
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import httpx  # noqa: E402
+from helix_context.backends.sema_codec import decode_embedding  # noqa: E402
 from helix_context.lexical_rescue import (  # noqa: E402
     lexical_rescue_sources,
     merge_source_ids,
@@ -262,7 +263,7 @@ def cell_pure_rag_embedding(needle: dict, top_k: int = 12) -> dict:
     scored = []
     for gene_id, src, content, emb_blob in rows:
         try:
-            emb = json.loads(emb_blob)
+            emb = decode_embedding(emb_blob)
         except Exception:
             continue
         scored.append((_cosine(query_vec, emb), src, content))

@@ -75,6 +75,12 @@ Env:
     HELIX_AGENT          - ingest attribution AI agent handle
     HELIX_AGENT_KIND     - optional ingest attribution agent kind
                            (defaults to HELIX_MCP_HOST when omitted)
+    HELIX_MCP_FULL       - expose the full 24-tool surface. Default (unset)
+                           serves the lean 5-tool core (helix_context,
+                           helix_context_packet, helix_ingest, helix_health,
+                           helix_sessions_list) to cut ~4-5K schema tokens per
+                           agent session. Set 1/true/yes/on for the full
+                           admin/diagnostic/debug/alias surface.
 
 Composition hook: Headroom already ships `codebase-memory-mcp` (manual
 install, off-by-default as of 2026-04-14 per Tejas on Discord). Its
@@ -995,6 +1001,66 @@ def helix_document_fingerprint(
 # term win: helix document scoring gains structural signal. Both deferred
 # until codebase-memory-mcp stabilizes (currently off-by-default). Hook
 # points: this file for A, helix_context/context_manager.py for B.
+
+
+# ── MCP surface profile (per-turn token cost) ────────────────────────
+# Every registered tool's name + description + JSON input schema is injected
+# into the host's context on EVERY turn. The full 24-tool surface costs
+# ~4-5K tokens per agent session before any retrieval runs. Default to a lean
+# core set (the agent loop: retrieve, agent-safe packet, ingest, health,
+# sibling-agent awareness); expose the full admin / diagnostic / debug / alias
+# surface only when the operator opts in with HELIX_MCP_FULL=1. This is issue
+# #219 Slice 3; see docs/design/2026-07-05-efficiency-cost-reduction.md.
+_MCP_CORE_TOOLS = frozenset({
+    "helix_context",         # primary retrieval — the big one
+    "helix_context_packet",  # agent-safe bundle (know/miss + refresh plan)
+    "helix_ingest",          # contribute to the knowledge store
+    "helix_health",          # readiness probe
+    "helix_sessions_list",   # sibling-agent awareness (identity contract)
+})
+
+_TRUTHY = frozenset({"1", "true", "yes", "on"})
+
+
+def _mcp_full_surface() -> bool:
+    """True when the operator opts into the full tool surface (HELIX_MCP_FULL)."""
+    return os.environ.get("HELIX_MCP_FULL", "").strip().lower() in _TRUTHY
+
+
+def _apply_mcp_profile(server: FastMCP = mcp) -> List[str]:
+    """Prune non-core tools from ``server`` unless the full surface is requested.
+
+    Returns the names removed (empty list when the full surface is active).
+    Uses FastMCP's public ``remove_tool``; any failure is non-fatal and falls
+    back to leaving the full surface exposed (correctness over token savings).
+    """
+    if _mcp_full_surface():
+        return []
+    try:
+        names = list(server._tool_manager._tools.keys())
+    except Exception:  # pragma: no cover - FastMCP internal shape changed
+        log.warning("could not enumerate MCP tools; exposing full surface")
+        return []
+    removed: List[str] = []
+    for name in names:
+        if name in _MCP_CORE_TOOLS:
+            continue
+        try:
+            server.remove_tool(name)
+            removed.append(name)
+        except Exception:  # pragma: no cover - remove_tool contract changed
+            log.warning("could not prune MCP tool %s; leaving it exposed", name)
+    if removed:
+        log.info(
+            "lean MCP profile: %d core tools exposed, %d hidden "
+            "(set HELIX_MCP_FULL=1 for the full surface)",
+            len(_MCP_CORE_TOOLS), len(removed),
+        )
+    return removed
+
+
+# Applied at import so the host's tool-list handshake sees the lean surface.
+_apply_mcp_profile()
 
 
 def _register_with_registry() -> None:
