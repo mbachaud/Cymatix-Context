@@ -192,15 +192,21 @@ def _score_needle(client: httpx.Client, url: str, needle: dict) -> dict:
         n_gold = gold["n_gold_blocks"]
         n_deliv = gold["n_delivered_blocks"]
         body_has = gold["body_has_answer"]
+        content_has = gold["content_has_answer"]
     else:  # find_needle's substring fallback for gold_source-less needles
         gold_delivered = any(a.lower() in content.lower() for a in accept)
         n_gold = 0
         n_deliv = len(bench_needle.parse_delivered_genes_from_response(data))
         body_has = gold_delivered
+        content_has = gold_delivered
     return {
         "name": needle["name"], "status": "ok",
         "gold_delivered": bool(gold_delivered),
         "body_has_answer": bool(body_has),
+        # content_has_answer: honest deliverability — answer present in the
+        # full assembled context the model reads (body_has_answer undercounts
+        # under the legibility-off probe; see bench_needle.check_gold_delivery).
+        "content_has_answer": bool(content_has),
         "n_gold_blocks": n_gold, "n_delivered_blocks": n_deliv,
         "latency_s": latency,
     }
@@ -211,6 +217,7 @@ def _run_cell(url: str, needles: list[dict]) -> dict:
     rows = []
     gold = 0
     body = 0
+    content = 0
     try:
         for nd in needles:
             r = _score_needle(client, url, nd)
@@ -219,6 +226,8 @@ def _run_cell(url: str, needles: list[dict]) -> dict:
                 gold += 1
             if r.get("body_has_answer"):
                 body += 1
+            if r.get("content_has_answer"):
+                content += 1
     finally:
         client.close()
     n = max(len(rows), 1)
@@ -228,6 +237,8 @@ def _run_cell(url: str, needles: list[dict]) -> dict:
         "gold_delivered_rate": round(gold / n, 4),
         "body_has_answer": body,
         "body_has_answer_rate": round(body / n, 4),
+        "content_has_answer": content,
+        "content_has_answer_rate": round(content / n, 4),
         "per_needle": rows,
     }
 
