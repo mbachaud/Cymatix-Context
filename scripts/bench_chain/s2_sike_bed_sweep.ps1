@@ -12,6 +12,9 @@ $repo = 'F:\Projects\helix-context'
 $logs = "$repo\benchmarks\logs"
 $results = "$repo\benchmarks\results"
 $bedsDir = "$repo\genomes\bench\sike_beds"
+# Pause flag: create it (e.g. via sike_ctl.ps1 pause) to stop the sweep between
+# needles/rungs with a checkpoint saved; delete it and relaunch to resume.
+$pauseFlag = "$logs\sike_pause.flag"
 $ts = Get-Date -Format 'yyyy-MM-dd_HHmm'
 New-Item -ItemType Directory -Force -Path $logs | Out-Null
 New-Item -ItemType Directory -Force -Path $results | Out-Null
@@ -81,6 +84,11 @@ function Start-HelixOnBed {
     # coverage to 0.66-0.78. 600s gives slow local generations room; the
     # runner's client timeout is 660s so the server side still decides.
     $env:HELIX_SERVER_UPSTREAM_TIMEOUT = '600'
+    # 2026-07-05 fix (gap A2): serve read-only so answering a needle never
+    # persists a "User query: ..." echo gene back into the bed. Without this
+    # the 1556 run self-contaminated its own corpus with 260-285 echoes that
+    # ranked as perfect-lexical distractors. Gated in server/helpers.py.
+    $env:HELIX_DISABLE_LEARN = '1'
     Remove-Item Env:\HELIX_USE_SHARDS -ErrorAction SilentlyContinue
     if (-not (Wait-PortFree -p $port -timeoutSec 20)) {
         "  port $port still occupied; cannot start server" | Add-Content $srvLog
@@ -127,6 +135,15 @@ if (Wait-Job $job -Timeout 30) {
     Stop-Job $job -ErrorAction SilentlyContinue
 }
 Remove-Job $job -Force -ErrorAction SilentlyContinue
+# Ladder override: set SIKE_OLLAMA_MODELS (comma-separated) to pin the local
+# rungs instead of auto-discovering every installed model. Used to run a
+# trimmed local baseline (e.g. just gemma4:e4b) and hand the heavy 26b/31b
+# rungs to another host. Empty string = local ladder off (Claude rung only).
+if ($null -ne $env:SIKE_OLLAMA_MODELS) {
+    $ollamaModels = $env:SIKE_OLLAMA_MODELS
+    "ollama ladder OVERRIDDEN via SIKE_OLLAMA_MODELS: '$ollamaModels'" |
+        Add-Content "$logs\s2_summary_$ts.log"
+}
 if ($ollamaModels) {
     "ollama models discovered: $ollamaModels" | Add-Content "$logs\s2_summary_$ts.log"
 } else {
@@ -141,7 +158,7 @@ if (-not $ollamaModels) {
 # ---- Bed table (source -> copy) --------------------------------------------
 
 $beds = @(
-    @{ name = 'xl';           src = "$repo\genomes\bench\matrix\xl.db" },
+    @{ name = 'xl';           src = "$repo\genomes\bench\matrix\xl_clean.db" },  # 2026-07-05: decontaminated (4676 worktree-dupe genes purged, gap A2)
     @{ name = 'enterprise_rag_10k'; src = "$repo\genomes\bench\matrix\enterprise_rag_10k_batched.db" },
     @{ name = 'enterprise_rag_50k'; src = "$repo\genomes\bench\matrix\enterprise_rag_50k_batched.db" }
 )
@@ -205,22 +222,40 @@ foreach ($bed in $beds) {
     "  server pid=$($proc.Id) serving $copy" | Add-Content "$logs\s2_summary_$ts.log"
 
     # 4. Run the needle battery across the ollama ladder + Claude Sonnet rung.
-    $outJson = "$results\sike_bedsweep_${name}_$ts.json"
+    # STABLE out name (no $ts) so --resume finds the per-rung checkpoint on a
+    # relaunch; the run timestamp lives inside the JSON. --pause-file lets a
+    # pause stop cleanly between needles (runner exit 42).
+    $outJson = "$results\sike_bedsweep_${name}.json"
     $runLog = "$logs\s2_${name}_run_$ts.log"
     $claudeArgs = @('scripts\bench_chain\s2_sike_bedsweep_run.py',
                     '--bed', $name,
                     '--helix-url', $helixUrl,
                     '--claude-model', 'sonnet',
                     '--claude-max-usd', '0.15',
+                    '--resume',
+                    '--pause-file', $pauseFlag,
                     '--out', $outJson)
     # The Claude Sonnet rung always runs (cost-capped). The local ollama
     # ladder is appended only when models were discovered; if none, the run
     # proceeds with the Claude rung alone.
     if ($ollamaModels) { $claudeArgs += @('--ollama-models', $ollamaModels) }
+    # SIKE_SKIP_CLAUDE=1 drops the Sonnet rung (e.g. a second host running only
+    # the heavy local models; the Sonnet sample is produced once elsewhere).
+    if ($env:SIKE_SKIP_CLAUDE) { $claudeArgs += '--skip-claude' }
 
     python @claudeArgs *> $runLog
     $runExit = $LASTEXITCODE
     "  run exit=$runExit out=$outJson (log: $runLog)" | Add-Content "$logs\s2_summary_$ts.log"
+
+    # Runner exit 42 == paused (checkpoint saved). Stop the whole sweep here;
+    # deleting the pause flag and relaunching resumes from this bed's rungs.
+    if ($runExit -eq 42) {
+        "  bed $name PAUSED (exit 42). Delete $pauseFlag and relaunch to resume." |
+            Add-Content "$logs\s2_summary_$ts.log"
+        Stop-HelixTree -proc $proc
+        Set-Status 's2_sike_beds' "PAUSED:$name"
+        break
+    }
 
     # 5. Tear down the server before the next bed.
     Stop-HelixTree -proc $proc
