@@ -667,6 +667,7 @@ class HelixContextManager:
             bm25_shortlist_size=config.retrieval.bm25_shortlist_size,
             bm25_prefilter_enabled=config.retrieval.bm25_prefilter_enabled,
             bm25_prefilter_size=config.retrieval.bm25_prefilter_size,
+            fts5_candidate_depth=config.retrieval.fts5_candidate_depth,
             entity_graph_retrieval_enabled=config.retrieval.entity_graph_retrieval_enabled,
             dense_embedding_enabled=config.retrieval.dense_embedding_enabled,
             dense_embedding_dim=config.retrieval.dense_embedding_dim,

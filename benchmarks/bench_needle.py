@@ -740,6 +740,20 @@ def check_gold_delivery(content: str, gold_sources, accept, *, response=None):
         _body_contains_accept(body, accept) for _, body in blocks
     )
 
+    # ``content_has_answer``: word-boundary accept match over the FULL
+    # assembled context the model actually reads, NOT the per-block bodies.
+    # This is the honest deliverability signal. ``body_has_answer`` relies on
+    # citation->body pairing (``_citations.extract_block_bodies``), which fails
+    # CLOSED to empty bodies whenever the citation:block counts don't line up
+    # — systematically under the legibility-disabled bench probe profile, where
+    # blocks carry no ``[gene=...]`` header to id-join on (root-caused
+    # 2026-07-06: 17 of 23 xl "gold delivered but body missing" needles had the
+    # answer present in ``content`` all along). Word-boundary (not substring)
+    # keeps the 11434-vs-11437 guard. When legibility is ON in production the
+    # content also carries fact headers, so body_has_answer remains the
+    # stricter "in a readable body" metric; both are reported.
+    content_has_answer = _body_contains_accept(content or "", accept)
+
     old_substring_hit = any(a.lower() in (content or "").lower() for a in accept)
     false_positive = old_substring_hit and not body_has_answer
 
@@ -747,6 +761,7 @@ def check_gold_delivery(content: str, gold_sources, accept, *, response=None):
         "gold_delivered": gold_delivered,
         "gold_has_answer": gold_has_answer,
         "body_has_answer": body_has_answer,
+        "content_has_answer": content_has_answer,
         "old_substring_hit": old_substring_hit,
         "false_positive_substring": false_positive,
         "n_gold_blocks": len(gold_blocks),
@@ -816,6 +831,7 @@ def find_needle(client, needle):
         found_in_context = gold["body_has_answer"]
         gold_delivered = gold["gold_delivered"]
         gold_has_answer = gold["gold_has_answer"]
+        content_has_answer = gold["content_has_answer"]
         false_positive = gold["false_positive_substring"]
         n_gold_blocks = gold["n_gold_blocks"]
         n_delivered_blocks = gold["n_delivered_blocks"]
@@ -823,6 +839,7 @@ def find_needle(client, needle):
         found_in_context = any(a.lower() in content.lower() for a in accept)
         gold_delivered = found_in_context
         gold_has_answer = found_in_context
+        content_has_answer = found_in_context
         false_positive = False
         n_gold_blocks = 0
         n_delivered_blocks = len(parse_delivered_genes_from_response(data))
@@ -863,6 +880,7 @@ def find_needle(client, needle):
         "answer_correct": answer_correct,
         "gold_delivered": gold_delivered,
         "gold_has_answer": gold_has_answer,
+        "content_has_answer": content_has_answer,
         "false_positive_substring": false_positive,
         "n_gold_blocks": n_gold_blocks,
         "n_delivered_blocks": n_delivered_blocks,
