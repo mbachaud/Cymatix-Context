@@ -41,6 +41,18 @@ INTENTIONAL_DIVERGENCES: dict[str, str] = {
     # dataclass default must stay {} so embedded/library callers start with
     # a neutral expansion map instead of another project's vocabulary.
     "synonym_map": "starter vocabulary data, not a behavioral default",
+    # [know] is DESIGNED to diverge once calibrated: the dataclass carries
+    # the uncalibrated ship-time coefficients; the shipped toml carries the
+    # fitted ones written by scripts/calibrate_know_confidence.py
+    # (calibrated_at / calibrated_on_n are the provenance). First real fit
+    # 2026-07-06 on located_n1000 union (n=1617) — see
+    # docs/benchmarks/2026-07-06-know-logistic-calibration.md.
+    "know.betas": "fitted by calibrate_know_confidence.py (2026-07-06)",
+    "know.s_ref": "fitted (median rrf-scale top_score of calibration set)",
+    "know.g_ref": "fitted (median score_gap of calibration set)",
+    "know.emit_floor": "operator-set operating point (precision 0.826 @ cov 1.4%)",
+    "know.calibrated_at": "calibration provenance — None until first fit by design",
+    "know.calibrated_on_n": "calibration provenance — None until first fit by design",
 }
 
 # Env vars load_config consults; the comparator must neutralize them so a

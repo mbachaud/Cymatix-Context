@@ -551,7 +551,7 @@ def test_helix_no_match_fragment_constant():
 # Packet-side integration: _attach_know_or_miss
 # ─────────────────────────────────────────────────────────────────────
 
-def test_packet_attach_know_on_strong_signal():
+def test_packet_attach_know_on_strong_signal(default_calibration):
     g = _SyntheticGene(
         "g1", "F:/Projects/helix-context/helix_context/context_manager.py"
     )
@@ -594,7 +594,9 @@ def test_packet_attach_miss_on_no_genes():
 # the ``tier_contributions`` kwarg; these tests pin both directions.
 # ─────────────────────────────────────────────────────────────────────
 
-def test_packet_attach_lexical_dense_agree_true_on_agreeing_tiers():
+def test_packet_attach_lexical_dense_agree_true_on_agreeing_tiers(
+    default_calibration,
+):
     """Lexical (fts5/tag_exact) + dense (splade/sema_boost) tiers that
     both rank the same gene_id at the top must yield
     KnowBlock.lexical_dense_agree=True."""
@@ -621,7 +623,27 @@ def test_packet_attach_lexical_dense_agree_true_on_agreeing_tiers():
     assert p.know.lexical_dense_agree is True
 
 
-def test_packet_attach_lexical_dense_agree_false_on_disjoint_tiers():
+@pytest.fixture
+def default_calibration(monkeypatch):
+    """Pin decide_know_or_miss to the DEFAULT calibration for tests that
+    assert lexical_dense_agree PLUMBING via the know-block shape. Since
+    the 2026-07-06 first real fit, helix.toml [know] carries fitted
+    betas + a deliberately conservative emit_floor under which these
+    synthetic agree=False scenarios correctly land below the floor
+    (MissBlock instead of KnowBlock). The plumbing contract under test
+    is calibration-independent, so pin defaults rather than track
+    whatever the shipped calibration currently is.
+    """
+    from helix_context.scoring import know_calibration as kc
+
+    monkeypatch.setattr(
+        kc, "load_calibration_from_toml", lambda *a, **k: kc.KnowCalibration()
+    )
+
+
+def test_packet_attach_lexical_dense_agree_false_on_disjoint_tiers(
+    default_calibration,
+):
     """When the lexical ranker tops g1 but the dense ranker tops g2
     (no top-K intersection), lexical_dense_agree must be False — the
     safe no-agreement direction. Pins the negative case so the
@@ -651,7 +673,9 @@ def test_packet_attach_lexical_dense_agree_false_on_disjoint_tiers():
     assert p.know.lexical_dense_agree is False
 
 
-def test_packet_attach_lexical_dense_agree_false_when_no_tiers_passed():
+def test_packet_attach_lexical_dense_agree_false_when_no_tiers_passed(
+    default_calibration,
+):
     """Back-compat: a caller that passes nothing for tier_contributions
     still works and lands on the safe False direction (no KeyError, no
     crash) — guards the older direct-caller path."""
@@ -671,7 +695,9 @@ def test_packet_attach_lexical_dense_agree_false_when_no_tiers_passed():
     assert p.know.lexical_dense_agree is False
 
 
-def test_build_context_packet_plumbs_tier_contributions_from_genome():
+def test_build_context_packet_plumbs_tier_contributions_from_genome(
+    default_calibration,
+):
     """End-to-end: build_context_packet must lift
     ``last_tier_contributions`` off the genome handle and feed it into
     the know/miss block. A genome whose query surfaces agreeing
@@ -717,7 +743,9 @@ def test_build_context_packet_plumbs_tier_contributions_from_genome():
     assert packet.know.lexical_dense_agree is True
 
 
-def test_build_context_packet_lexical_dense_agree_false_on_disjoint_genome_tiers():
+def test_build_context_packet_lexical_dense_agree_false_on_disjoint_genome_tiers(
+    default_calibration,
+):
     """End-to-end negative: a genome whose lexical and dense rankers
     disagree must yield know.lexical_dense_agree=False (the packet
     builder must not invent agreement)."""
