@@ -12,6 +12,7 @@ from helix_context.config import (
     ClassifierConfig,
     GenomeConfig,
     HelixConfig,
+    RetrievalConfig,
     RibosomeConfig,
 )
 from helix_context.context_manager import HelixContextManager
@@ -58,12 +59,21 @@ def test_env_truthy_unset_is_false(monkeypatch):
 
 @pytest.fixture
 def abstain_manager():
-    """Manager with mock backend + in-memory genome + abstain on."""
+    """Manager with mock backend + in-memory genome + abstain on.
+
+    Pinned to fusion_mode="additive": the tests built on this fixture
+    assert the additive-scale gate contract (absolute 2.5 floor, legacy
+    top/mean ratio with the 1.8 threshold, strict-< boundaries). Since
+    the 2026-07-06 rrf default flip the shipped gate is ratio-only with
+    the #115 baseline-normalized ratio — that path has its own explicit
+    fusion_mode="rrf" coverage further down this file.
+    """
     cfg = HelixConfig(
         ribosome=RibosomeConfig(model="mock", timeout=5),
         budget=BudgetConfig(max_genes_per_turn=12, abstain_enabled=True),
         genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
         classifier=ClassifierConfig(enabled=False),
+        retrieval=RetrievalConfig(fusion_mode="additive"),
     )
     mgr = HelixContextManager(cfg)
     mgr.ribosome.backend = MockCompressorBackend()
