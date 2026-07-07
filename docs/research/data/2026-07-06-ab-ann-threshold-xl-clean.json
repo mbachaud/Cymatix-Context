@@ -1,0 +1,1552 @@
+{
+  "benchmark": "ab_ann_threshold",
+  "bed_db": "F:\\Projects\\helix-context\\genomes\\bench\\matrix\\xl_clean.db",
+  "bed_label": "xl_clean",
+  "n_needles": 50,
+  "fusion_mode": "rrf",
+  "cells": [
+    {
+      "n_needles": 50,
+      "gold_delivered": 21,
+      "gold_delivered_rate": 0.42,
+      "body_has_answer": 20,
+      "body_has_answer_rate": 0.4,
+      "content_has_answer": 38,
+      "content_has_answer_rate": 0.76,
+      "per_needle": [
+        {
+          "name": "helix_port",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 19.636
+        },
+        {
+          "name": "scorerift_threshold",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 2,
+          "n_delivered_blocks": 5,
+          "latency_s": 2.77
+        },
+        {
+          "name": "biged_skills_count",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 2,
+          "n_delivered_blocks": 12,
+          "latency_s": 5.243
+        },
+        {
+          "name": "bookkeeper_monetary",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 4.086
+        },
+        {
+          "name": "helix_pipeline_steps",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 6,
+          "latency_s": 3.301
+        },
+        {
+          "name": "biged_rust_binary_size",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 2,
+          "n_delivered_blocks": 5,
+          "latency_s": 4.661
+        },
+        {
+          "name": "genome_compression_target",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 2.944
+        },
+        {
+          "name": "scorerift_preset_dimensions",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 2,
+          "n_delivered_blocks": 12,
+          "latency_s": 3.62
+        },
+        {
+          "name": "helix_ribosome_budget",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 2.525
+        },
+        {
+          "name": "biged_default_model",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 2,
+          "n_delivered_blocks": 5,
+          "latency_s": 9.188
+        },
+        {
+          "name": "bookkeeper_dashboard_port",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 5,
+          "latency_s": 13.97
+        },
+        {
+          "name": "bookkeeper_1099_threshold",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 2,
+          "n_delivered_blocks": 5,
+          "latency_s": 2.951
+        },
+        {
+          "name": "bookkeeper_ocr_confidence",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 2,
+          "n_delivered_blocks": 5,
+          "latency_s": 3.679
+        },
+        {
+          "name": "bookkeeper_version",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 2,
+          "n_delivered_blocks": 5,
+          "latency_s": 3.201
+        },
+        {
+          "name": "bookkeeper_test_count",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 12,
+          "latency_s": 8.019
+        },
+        {
+          "name": "bookkeeper_backup_interval",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 12,
+          "latency_s": 3.624
+        },
+        {
+          "name": "cosmictasha_template_count",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 12,
+          "latency_s": 4.448
+        },
+        {
+          "name": "cosmictasha_default_model",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 5.921
+        },
+        {
+          "name": "cosmictasha_biged_port",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 2,
+          "n_delivered_blocks": 5,
+          "latency_s": 14.041
+        },
+        {
+          "name": "cosmictasha_auth_library",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 5,
+          "latency_s": 4.24
+        },
+        {
+          "name": "cosmictasha_postgres_version",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 4.665
+        },
+        {
+          "name": "scorerift_defense_layers",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 6,
+          "latency_s": 4.815
+        },
+        {
+          "name": "scorerift_confidence_floor",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 5.423
+        },
+        {
+          "name": "scorerift_pkg_version",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 4.04
+        },
+        {
+          "name": "mek_version",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 3.215
+        },
+        {
+          "name": "mek_min_python",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 5,
+          "latency_s": 3.362
+        },
+        {
+          "name": "mek_source_apps",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 12,
+          "latency_s": 2.422
+        },
+        {
+          "name": "biged_dashboard_port",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 15.53
+        },
+        {
+          "name": "biged_ram_ceiling",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 3.754
+        },
+        {
+          "name": "biged_max_workers",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 5,
+          "latency_s": 4.796
+        },
+        {
+          "name": "biged_core_agents",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 12,
+          "latency_s": 3.92
+        },
+        {
+          "name": "biged_audit_dimensions",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 12,
+          "latency_s": 2.92
+        },
+        {
+          "name": "biged_db_tables",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 12,
+          "latency_s": 4.725
+        },
+        {
+          "name": "biged_thermal_target",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 2.564
+        },
+        {
+          "name": "biged_vision_model",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 6.746
+        },
+        {
+          "name": "biged_rust_msrv",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 2,
+          "n_delivered_blocks": 5,
+          "latency_s": 2.97
+        },
+        {
+          "name": "biged_rust_web_framework",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 5,
+          "latency_s": 4.473
+        },
+        {
+          "name": "biged_complex_model",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 8.122
+        },
+        {
+          "name": "biged_smoke_tests",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 7.627
+        },
+        {
+          "name": "biged_idle_timeout",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 5,
+          "latency_s": 3.068
+        },
+        {
+          "name": "helix_expression_budget",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 5.177
+        },
+        {
+          "name": "helix_max_genes_per_turn",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 3.902
+        },
+        {
+          "name": "helix_rrf_k",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 2.983
+        },
+        {
+          "name": "helix_cold_start_threshold",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 5.506
+        },
+        {
+          "name": "helix_session_window",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 3.119
+        },
+        {
+          "name": "helix_headroom_port",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 13.799
+        },
+        {
+          "name": "helix_calibration_staleness",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 12,
+          "latency_s": 2.849
+        },
+        {
+          "name": "helix_dense_encoder",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 6.144
+        },
+        {
+          "name": "helix_filename_anchor",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 2.871
+        },
+        {
+          "name": "helix_subpackages_count",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 12,
+          "latency_s": 2.577
+        }
+      ],
+      "label": "dense_off",
+      "dense_on": false,
+      "threshold": 0.58
+    },
+    {
+      "n_needles": 50,
+      "gold_delivered": 17,
+      "gold_delivered_rate": 0.34,
+      "body_has_answer": 14,
+      "body_has_answer_rate": 0.28,
+      "content_has_answer": 36,
+      "content_has_answer_rate": 0.72,
+      "per_needle": [
+        {
+          "name": "helix_port",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 24.875
+        },
+        {
+          "name": "scorerift_threshold",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 4.068
+        },
+        {
+          "name": "biged_skills_count",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 3,
+          "latency_s": 5.901
+        },
+        {
+          "name": "bookkeeper_monetary",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 5,
+          "latency_s": 6.422
+        },
+        {
+          "name": "helix_pipeline_steps",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 3.854
+        },
+        {
+          "name": "biged_rust_binary_size",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 2,
+          "n_delivered_blocks": 5,
+          "latency_s": 5.532
+        },
+        {
+          "name": "genome_compression_target",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 4,
+          "latency_s": 4.091
+        },
+        {
+          "name": "scorerift_preset_dimensions",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 2,
+          "n_delivered_blocks": 5,
+          "latency_s": 4.643
+        },
+        {
+          "name": "helix_ribosome_budget",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 4.013
+        },
+        {
+          "name": "biged_default_model",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 10.121
+        },
+        {
+          "name": "bookkeeper_dashboard_port",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 3,
+          "latency_s": 14.916
+        },
+        {
+          "name": "bookkeeper_1099_threshold",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 4.421
+        },
+        {
+          "name": "bookkeeper_ocr_confidence",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 2,
+          "n_delivered_blocks": 5,
+          "latency_s": 4.074
+        },
+        {
+          "name": "bookkeeper_version",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 5,
+          "latency_s": 3.518
+        },
+        {
+          "name": "bookkeeper_test_count",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 7.189
+        },
+        {
+          "name": "bookkeeper_backup_interval",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 3,
+          "latency_s": 3.86
+        },
+        {
+          "name": "cosmictasha_template_count",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 7,
+          "latency_s": 4.122
+        },
+        {
+          "name": "cosmictasha_default_model",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 5.774
+        },
+        {
+          "name": "cosmictasha_biged_port",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 5,
+          "latency_s": 12.517
+        },
+        {
+          "name": "cosmictasha_auth_library",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 3,
+          "latency_s": 5.069
+        },
+        {
+          "name": "cosmictasha_postgres_version",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 5,
+          "latency_s": 5.268
+        },
+        {
+          "name": "scorerift_defense_layers",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 5.839
+        },
+        {
+          "name": "scorerift_confidence_floor",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 6.001
+        },
+        {
+          "name": "scorerift_pkg_version",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 4,
+          "latency_s": 3.304
+        },
+        {
+          "name": "mek_version",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 3.637
+        },
+        {
+          "name": "mek_min_python",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 5,
+          "latency_s": 3.999
+        },
+        {
+          "name": "mek_source_apps",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 7,
+          "latency_s": 3.444
+        },
+        {
+          "name": "biged_dashboard_port",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 15.742
+        },
+        {
+          "name": "biged_ram_ceiling",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 4.729
+        },
+        {
+          "name": "biged_max_workers",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 4,
+          "latency_s": 5.261
+        },
+        {
+          "name": "biged_core_agents",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 4.757
+        },
+        {
+          "name": "biged_audit_dimensions",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 3.788
+        },
+        {
+          "name": "biged_db_tables",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 4,
+          "latency_s": 5.133
+        },
+        {
+          "name": "biged_thermal_target",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 3.494
+        },
+        {
+          "name": "biged_vision_model",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 7.523
+        },
+        {
+          "name": "biged_rust_msrv",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 5,
+          "latency_s": 4.075
+        },
+        {
+          "name": "biged_rust_web_framework",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 5.562
+        },
+        {
+          "name": "biged_complex_model",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 9.227
+        },
+        {
+          "name": "biged_smoke_tests",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 4,
+          "latency_s": 7.684
+        },
+        {
+          "name": "biged_idle_timeout",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 4,
+          "latency_s": 3.564
+        },
+        {
+          "name": "helix_expression_budget",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 5.031
+        },
+        {
+          "name": "helix_max_genes_per_turn",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 3.975
+        },
+        {
+          "name": "helix_rrf_k",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 3.601
+        },
+        {
+          "name": "helix_cold_start_threshold",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 4,
+          "latency_s": 4.744
+        },
+        {
+          "name": "helix_session_window",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 4.006
+        },
+        {
+          "name": "helix_headroom_port",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 12.725
+        },
+        {
+          "name": "helix_calibration_staleness",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 6,
+          "latency_s": 3.778
+        },
+        {
+          "name": "helix_dense_encoder",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 4,
+          "latency_s": 7.252
+        },
+        {
+          "name": "helix_filename_anchor",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 3.809
+        },
+        {
+          "name": "helix_subpackages_count",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 6,
+          "latency_s": 3.646
+        }
+      ],
+      "label": "dense_on@0.58",
+      "dense_on": true,
+      "threshold": 0.58
+    },
+    {
+      "n_needles": 50,
+      "gold_delivered": 18,
+      "gold_delivered_rate": 0.36,
+      "body_has_answer": 15,
+      "body_has_answer_rate": 0.3,
+      "content_has_answer": 35,
+      "content_has_answer_rate": 0.7,
+      "per_needle": [
+        {
+          "name": "helix_port",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 4,
+          "latency_s": 24.037
+        },
+        {
+          "name": "scorerift_threshold",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 4.002
+        },
+        {
+          "name": "biged_skills_count",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 2,
+          "n_delivered_blocks": 5,
+          "latency_s": 5.707
+        },
+        {
+          "name": "bookkeeper_monetary",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 5,
+          "latency_s": 5.316
+        },
+        {
+          "name": "helix_pipeline_steps",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 3.839
+        },
+        {
+          "name": "biged_rust_binary_size",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 2,
+          "n_delivered_blocks": 5,
+          "latency_s": 5.255
+        },
+        {
+          "name": "genome_compression_target",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 3.947
+        },
+        {
+          "name": "scorerift_preset_dimensions",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 2,
+          "n_delivered_blocks": 5,
+          "latency_s": 4.502
+        },
+        {
+          "name": "helix_ribosome_budget",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 3.675
+        },
+        {
+          "name": "biged_default_model",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 4,
+          "latency_s": 9.713
+        },
+        {
+          "name": "bookkeeper_dashboard_port",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 4,
+          "latency_s": 14.602
+        },
+        {
+          "name": "bookkeeper_1099_threshold",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 4,
+          "latency_s": 4.049
+        },
+        {
+          "name": "bookkeeper_ocr_confidence",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 2,
+          "n_delivered_blocks": 5,
+          "latency_s": 3.883
+        },
+        {
+          "name": "bookkeeper_version",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 5,
+          "latency_s": 3.355
+        },
+        {
+          "name": "bookkeeper_test_count",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 4,
+          "latency_s": 7.048
+        },
+        {
+          "name": "bookkeeper_backup_interval",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 4,
+          "latency_s": 3.761
+        },
+        {
+          "name": "cosmictasha_template_count",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 7,
+          "latency_s": 3.989
+        },
+        {
+          "name": "cosmictasha_default_model",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 5.6
+        },
+        {
+          "name": "cosmictasha_biged_port",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 5,
+          "latency_s": 12.067
+        },
+        {
+          "name": "cosmictasha_auth_library",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 5,
+          "latency_s": 4.827
+        },
+        {
+          "name": "cosmictasha_postgres_version",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 5,
+          "latency_s": 5.129
+        },
+        {
+          "name": "scorerift_defense_layers",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 5.459
+        },
+        {
+          "name": "scorerift_confidence_floor",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 6.164
+        },
+        {
+          "name": "scorerift_pkg_version",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 5,
+          "latency_s": 3.281
+        },
+        {
+          "name": "mek_version",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 3.569
+        },
+        {
+          "name": "mek_min_python",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 5,
+          "latency_s": 3.911
+        },
+        {
+          "name": "mek_source_apps",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 2,
+          "n_delivered_blocks": 8,
+          "latency_s": 3.691
+        },
+        {
+          "name": "biged_dashboard_port",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 15.871
+        },
+        {
+          "name": "biged_ram_ceiling",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 4.713
+        },
+        {
+          "name": "biged_max_workers",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 4,
+          "latency_s": 5.306
+        },
+        {
+          "name": "biged_core_agents",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 4.643
+        },
+        {
+          "name": "biged_audit_dimensions",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 4,
+          "latency_s": 3.819
+        },
+        {
+          "name": "biged_db_tables",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 4,
+          "latency_s": 5.109
+        },
+        {
+          "name": "biged_thermal_target",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 4,
+          "latency_s": 3.483
+        },
+        {
+          "name": "biged_vision_model",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 7.65
+        },
+        {
+          "name": "biged_rust_msrv",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 5,
+          "latency_s": 3.991
+        },
+        {
+          "name": "biged_rust_web_framework",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 3,
+          "latency_s": 5.504
+        },
+        {
+          "name": "biged_complex_model",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 8.993
+        },
+        {
+          "name": "biged_smoke_tests",
+          "status": "ok",
+          "gold_delivered": true,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 1,
+          "n_delivered_blocks": 4,
+          "latency_s": 7.993
+        },
+        {
+          "name": "biged_idle_timeout",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 4,
+          "latency_s": 3.498
+        },
+        {
+          "name": "helix_expression_budget",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 5.084
+        },
+        {
+          "name": "helix_max_genes_per_turn",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 3.949
+        },
+        {
+          "name": "helix_rrf_k",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 3.817
+        },
+        {
+          "name": "helix_cold_start_threshold",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 4.844
+        },
+        {
+          "name": "helix_session_window",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 3.948
+        },
+        {
+          "name": "helix_headroom_port",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": true,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 5,
+          "latency_s": 13.123
+        },
+        {
+          "name": "helix_calibration_staleness",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 4,
+          "latency_s": 4.02
+        },
+        {
+          "name": "helix_dense_encoder",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": true,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 4,
+          "latency_s": 7.266
+        },
+        {
+          "name": "helix_filename_anchor",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 3,
+          "latency_s": 3.852
+        },
+        {
+          "name": "helix_subpackages_count",
+          "status": "ok",
+          "gold_delivered": false,
+          "body_has_answer": false,
+          "content_has_answer": false,
+          "n_gold_blocks": 0,
+          "n_delivered_blocks": 7,
+          "latency_s": 3.804
+        }
+      ],
+      "label": "dense_on@0.47",
+      "dense_on": true,
+      "threshold": 0.47
+    }
+  ],
+  "errors": []
+}

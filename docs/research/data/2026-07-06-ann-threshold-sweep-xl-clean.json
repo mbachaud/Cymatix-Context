@@ -1,0 +1,134 @@
+{
+  "benchmark": "ann_dense_threshold_sweep",
+  "phase": "1a follow-up (J-space council)",
+  "bed_db": "genomes/bench/matrix/xl_clean.db",
+  "labels": "docs/benchmarks/data/2026-07-06-located-n1000-xl-clean-full-rrf.jsonl",
+  "n_docs": 41803,
+  "n_queries": 1000,
+  "geometry": "query-doc (BGE-M3 task=query vs passage)",
+  "random_mean": 0.3606,
+  "random_std": 0.049,
+  "gold_mean": 0.4763,
+  "gold_p10": 0.3858,
+  "shipped_absolute_threshold": 0.58,
+  "shipped_sigma_multiplier": 3.0,
+  "absolute_thresholds": {
+    "0.58": {
+      "threshold": 0.58,
+      "gold_admit": 0.072,
+      "random_fpr": 4e-05,
+      "avg_false_admits": 1
+    },
+    "0.52": {
+      "threshold": 0.52,
+      "gold_admit": 0.267,
+      "random_fpr": 0.00091,
+      "avg_false_admits": 37
+    },
+    "0.50": {
+      "threshold": 0.5,
+      "gold_admit": 0.37,
+      "random_fpr": 0.00253,
+      "avg_false_admits": 105
+    },
+    "0.47": {
+      "threshold": 0.47,
+      "gold_admit": 0.543,
+      "random_fpr": 0.01182,
+      "avg_false_admits": 494
+    },
+    "0.44": {
+      "threshold": 0.44,
+      "gold_admit": 0.695,
+      "random_fpr": 0.04855,
+      "avg_false_admits": 2029
+    },
+    "0.42": {
+      "threshold": 0.42,
+      "gold_admit": 0.78,
+      "random_fpr": 0.10787,
+      "avg_false_admits": 4509
+    },
+    "0.40": {
+      "threshold": 0.4,
+      "gold_admit": 0.853,
+      "random_fpr": 0.20855,
+      "avg_false_admits": 8717
+    }
+  },
+  "sigma_multipliers": {
+    "k=3.0": {
+      "threshold": 0.5076,
+      "gold_admit": 0.332,
+      "random_fpr": 0.00168,
+      "avg_false_admits": 70,
+      "k": 3.0
+    },
+    "k=2.5": {
+      "threshold": 0.4831,
+      "gold_admit": 0.476,
+      "random_fpr": 0.00608,
+      "avg_false_admits": 254,
+      "k": 2.5
+    },
+    "k=2.3": {
+      "threshold": 0.4733,
+      "gold_admit": 0.522,
+      "random_fpr": 0.00989,
+      "avg_false_admits": 413,
+      "k": 2.3
+    },
+    "k=2.2": {
+      "threshold": 0.4684,
+      "gold_admit": 0.548,
+      "random_fpr": 0.01274,
+      "avg_false_admits": 532,
+      "k": 2.2
+    },
+    "k=2.0": {
+      "threshold": 0.4586,
+      "gold_admit": 0.617,
+      "random_fpr": 0.02051,
+      "avg_false_admits": 857,
+      "k": 2.0
+    },
+    "k=1.8": {
+      "threshold": 0.4488,
+      "gold_admit": 0.657,
+      "random_fpr": 0.03282,
+      "avg_false_admits": 1372,
+      "k": 1.8
+    }
+  },
+  "random_percentiles": {
+    "p95.0": {
+      "threshold": 0.4393,
+      "gold_admit": 0.698,
+      "random_fpr": 0.05,
+      "avg_false_admits": 2090,
+      "random_percentile": 95.0
+    },
+    "p99.0": {
+      "threshold": 0.4731,
+      "gold_admit": 0.522,
+      "random_fpr": 0.01,
+      "avg_false_admits": 418,
+      "random_percentile": 99.0
+    },
+    "p99.5": {
+      "threshold": 0.4869,
+      "gold_admit": 0.459,
+      "random_fpr": 0.005,
+      "avg_false_admits": 209,
+      "random_percentile": 99.5
+    },
+    "p99.9": {
+      "threshold": 0.5185,
+      "gold_admit": 0.276,
+      "random_fpr": 0.001,
+      "avg_false_admits": 41,
+      "random_percentile": 99.9
+    }
+  },
+  "note": "offline gold-admission only; live-A/B before changing a default"
+}
