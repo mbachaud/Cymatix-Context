@@ -359,6 +359,42 @@ def _compute_foveated_caps(
     return [max(c_min, c_max * ((i + 1) ** -alpha)) for i in range(n)]
 
 
+# Splice-floor fix (J-space council kill-switch #1, 2026-07-06). The
+# estimate_tokens heuristic averages ~4 chars/token on mixed content; the
+# 0.9 headroom absorbs the per-document overhead the splice loop cannot
+# see (legibility headers, <GENE> wrappers, separators, decoder prompt)
+# so assembly's whole-document eviction loop does not fire on overflow.
+_SPLICE_CHARS_PER_TOKEN = 4.0
+_SPLICE_BUDGET_SAFETY = 0.9
+_SPLICE_LEGACY_FLOOR = 1000
+
+
+def _compute_splice_target(
+    override: int,
+    expression_tokens: int,
+    n_candidates: int,
+) -> int:
+    """Per-document char target for the Step-4 splice loop.
+
+    ``override > 0`` pins a fixed target (``1000`` == the exact legacy
+    floor). ``override == 0`` (the default) distributes the expression
+    char budget across the candidate set —
+    ``int(expression_tokens · 4 · 0.9) // n`` — floored at the legacy
+    1000 so no document ever gets *less* room than the old uniform cap.
+    The old cap under-used the budget whenever
+    ``n_candidates · 1000 chars`` fell short of ``expression_tokens``
+    (12 × 1000 chars ≈ 3000 tokens vs the default 7000) and truncated
+    any answer past char 1000 regardless of the query.
+    """
+    if override and override > 0:
+        return int(override)
+    budget_chars = int(
+        float(expression_tokens) * _SPLICE_CHARS_PER_TOKEN * _SPLICE_BUDGET_SAFETY
+    )
+    per_doc = budget_chars // max(1, int(n_candidates))
+    return max(_SPLICE_LEGACY_FLOOR, per_doc)
+
+
 # Stage 5 (2026-05-08) §5: small_moe slate render — JSON-shaped, char-bounded,
 # greedy-fill ordered by per-KV score (best-first; caller sorts upstream).
 # See docs/specs/2026-05-08-stage-5-caller-model-class.md §5.
@@ -1647,6 +1683,19 @@ class HelixContextManager:
 
         # foveated_caps / foveated_active are call-local; see top of build_context.
         foveated_base = self.config.budget.foveated_base_chars
+        # Splice-floor fix (J-space council kill-switch #1): the uniform
+        # per-document target is budget-proportional by default instead of
+        # the query-agnostic 1000-char literal, and the truncation keeps
+        # query-term lines (see encoding/headroom_bridge._query_aware_trim).
+        # domains + entities are the Stage-1 keyword extraction for this
+        # query (stopword-filtered, morphology-expanded) — the same signals
+        # assembly receives as query_signals.
+        _splice_target = _compute_splice_target(
+            getattr(self.config.budget, "splice_target_chars", 0),
+            self.config.budget.expression_tokens,
+            len(candidates),
+        )
+        _splice_terms = list(dict.fromkeys([*domains, *entities]))
         _splice_t0 = _time.monotonic()
         for idx, g in enumerate(candidates):
             src = g.source_id or ""
@@ -1696,19 +1745,23 @@ class HelixContextManager:
             # Dispatches by tags domain: log→LogCompressor,
             # diff→DiffCompressor, else→Kompress (ModernBERT).
             # CodeCompressor disabled (40% invalid syntax — see 2f518dc).
-            # Falls back to content[:1000].strip() when headroom is unavailable.
+            # Falls back to a query-aware trim when headroom is unavailable
+            # (the shipped path — headroom_ai is not installed).
             #
-            # Foveated path overrides the uniform 1000-char target with a
+            # Foveated path overrides the uniform target with a
             # rank-proportional cap per document. When foveated_caps is None
-            # (default / non-BROAD / disabled), preserve current behavior.
+            # (default / non-BROAD / disabled), the uniform budget-
+            # proportional target applies (splice-floor fix; was a
+            # query-agnostic 1000-char literal).
             if foveated_caps is not None:
                 target = max(1, int(foveated_caps[idx] * foveated_base))
             else:
-                target = 1000
+                target = _splice_target
             content = compress_text(
                 g.content,
                 target_chars=target,
                 content_type=g.promoter.domains,
+                query_terms=_splice_terms,
             )
             spliced_map[g.gene_id] = f"<GENE{src_attr}{kv_attrs}>\n{content}\n</GENE>"
 

@@ -169,6 +169,18 @@ class BudgetConfig:
     # bench cells (and a future on-by-default ship) tune the top-1 ceiling
     # without touching code.
     foveated_base_chars: int = 1000
+    # Splice-floor fix (J-space council kill-switch #1, 2026-07-06).
+    # Per-document char target for the Step-4 splice loop (non-foveated
+    # path). 0 (default) = budget-proportional auto:
+    # int(expression_tokens · 4 chars/token · 0.9) // n_candidates,
+    # floored at the legacy 1000 — so no document ever gets less room
+    # than the old uniform cap, and the expression budget is actually
+    # used (12 × 1000 chars ≈ 3000 tokens vs the default 7000). Any
+    # positive value pins a fixed target; 1000 restores the exact
+    # legacy query-agnostic floor. See context_manager.
+    # _compute_splice_target and encoding/headroom_bridge.
+    # _query_aware_trim (truncation keeps query-term lines either way).
+    splice_target_chars: int = 0
 
 
 @dataclass
@@ -799,6 +811,7 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             foveated_c_min=float(b.get("foveated_c_min", cfg.budget.foveated_c_min)),
             foveated_base_chars=int(b.get("foveated_base_chars", cfg.budget.foveated_base_chars)),
             slate_char_budget=int(b.get("slate_char_budget", cfg.budget.slate_char_budget)),
+            splice_target_chars=int(b.get("splice_target_chars", cfg.budget.splice_target_chars)),
         )
 
     # KnowledgeStore
