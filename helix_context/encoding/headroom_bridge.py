@@ -188,10 +188,70 @@ def _detect_language(domains: Iterable[str]) -> Optional[str]:
 
 # ── Public API ──────────────────────────────────────────────────────────
 
+# Fraction of ``target_chars`` reserved for query-term lines rescued from
+# beyond the prefix cut (J-space council kill-switch #1). The head keeps
+# the remaining ≥60% so document framing survives.
+_TRIM_TAIL_FRACTION = 0.4
+_TRIM_SEPARATOR = "\n[...]\n"
+
+
+def _query_aware_trim(
+    content: str,
+    target_chars: int,
+    query_terms: Iterable[str],
+) -> str:
+    """Prefix cut that refuses to silently lose query-term lines.
+
+    The legacy fallback ``content[:target_chars].strip()`` was
+    query-agnostic: any answer past the cut was dropped — 6/50 SIKE xl
+    needles had gold delivered with the answer truncated away. When
+    ``query_terms`` are supplied and at least one is absent from the
+    kept prefix but present on a line past the cut, that line is
+    rescued into a tail block (document order, up to
+    ``_TRIM_TAIL_FRACTION`` of the budget) and the head shrinks to keep
+    the total within ``target_chars``. With no terms, or all terms
+    already in the prefix, the output is byte-identical to the legacy
+    cut.
+    """
+    prefix = content[:target_chars]
+    terms = [t.lower() for t in (query_terms or []) if t and len(t) >= 3]
+    if not terms:
+        return prefix.strip()
+    prefix_lower = prefix.lower()
+    missing = [t for t in terms if t not in prefix_lower]
+    if not missing:
+        return prefix.strip()
+
+    tail_budget = max(0, int(target_chars * _TRIM_TAIL_FRACTION) - len(_TRIM_SEPARATOR))
+    kept: list = []
+    used = 0
+    pos = 0
+    for line in content.splitlines(keepends=True):
+        end = pos + len(line)
+        # Only lines that would be clipped or lost by the prefix cut.
+        if end > target_chars:
+            line_lower = line.lower()
+            if any(t in line_lower for t in missing):
+                stripped = line.strip()
+                if stripped:
+                    cost = len(stripped) + 1  # newline joiner
+                    if used + cost <= tail_budget:
+                        kept.append(stripped)
+                        used += cost
+        pos = end
+    if not kept:
+        return prefix.strip()
+    tail_block = "\n".join(kept)
+    head_budget = target_chars - len(_TRIM_SEPARATOR) - len(tail_block)
+    head = content[: max(0, head_budget)]
+    return (head.rstrip() + _TRIM_SEPARATOR + tail_block).strip()
+
+
 def compress_text(
     content: str,
     target_chars: int = 1000,
     content_type: Optional[Iterable[str]] = None,
+    query_terms: Optional[Iterable[str]] = None,
 ) -> str:
     """Compress ``content`` to approximately ``target_chars`` characters.
 
@@ -206,13 +266,18 @@ def compress_text(
         Hints about the content's nature, typically ``gene.promoter.domains``
         (e.g. ``["python", "code"]`` or ``["log", "pytest"]``). Determines
         which specialist is invoked. If None, falls through to Kompress.
+    query_terms : iterable of str, optional
+        Lowercase query keywords. When a truncation is required, lines
+        containing these terms are retained (see ``_query_aware_trim``)
+        instead of being lost to a blind prefix cut. ``None`` preserves
+        the legacy query-agnostic behavior byte-for-byte.
 
     Returns
     -------
     str
         Compressed content. Guaranteed to be non-empty if ``content`` was
         non-empty; guaranteed to be shorter than or equal to ``content`` in
-        the happy path, and falls back to ``content[:target_chars]`` on any
+        the happy path, and falls back to a (query-aware) truncation on any
         error or if headroom is unavailable.
     """
     if not content:
@@ -224,7 +289,7 @@ def compress_text(
 
     # Fallback path: headroom not installed
     if not is_headroom_available():
-        return content[:target_chars].strip()
+        return _query_aware_trim(content, target_chars, query_terms or [])
 
     domains = list(content_type) if content_type else []
     specialist = _pick_specialist(domains)
@@ -252,10 +317,10 @@ def compress_text(
             specialist,
             exc_info=True,
         )
-        return content[:target_chars].strip()
+        return _query_aware_trim(content, target_chars, query_terms or [])
 
     if not compressed:
-        return content[:target_chars].strip()
+        return _query_aware_trim(content, target_chars, query_terms or [])
 
     # Soft-cap: if the specialist returned more than target_chars, truncate
     # the compressed output. Still much better than raw truncation because

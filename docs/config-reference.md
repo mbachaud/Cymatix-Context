@@ -528,7 +528,7 @@ which stay additive) lives in
 | `ann_threshold_mode` | str | `"absolute"` | **NEW (Stage 4, 2026-05-08).** One of `"absolute"` (default — keeps Stage-3 behavior byte-for-byte: `query_genes_ann` uses `ann_similarity_threshold`) or `"margin_over_random"` (reads the persisted threshold from the `genome_calibration` table populated by `scripts/calibrate_thresholds.py`; falls back to `ann_similarity_threshold` with a one-time WARN when the row is missing). The shipped value (`helix.toml:267`). Spec: `docs/specs/2026-05-08-stage-4-threshold-calibration.md` §3 + §6. |
 | `ann_threshold_sigma_multiplier` | float | `3.0` | **NEW (Stage 4).** `μ + N·σ` over random pairs. Only consulted when `ann_threshold_mode = "margin_over_random"`. The shipped value (`helix.toml:268`). |
 | `dense_pool_size` | int | `500` | **NEW (Stage 2, 2026-05-08).** Dense recall pool width — decoupled from `ann_threshold_max_genes` (the final cut). 500 hits ~3% of an 18.9k-corpus per spec §4. Resolves at the top of `query_genes_ann` via `pool_size = pool_size or self._dense_pool_size` (Stage-2 spec §6). When dense is disabled, falls back to `max_genes` for back-compat. The shipped value (`helix.toml:269`). |
-| `fusion_mode` | str | `"additive"` | **NEW (Stage 3, 2026-05-08).** One of `"additive"` (default for one release — legacy `gene_scores += tier_score` accumulator path) or `"rrf"` (Reciprocal Rank Fusion via `helix_context/fusion.py:Fuser`; final sort uses fused scores). Per-tier weights below are RRF post-multipliers. Spec: `docs/specs/2026-05-08-stage-3-rrf-fusion.md`. The shipped value (`helix.toml:278`). |
+| `fusion_mode` | str | `"rrf"` | **NEW (Stage 3, 2026-05-08); default flipped `"additive"` → `"rrf"` 2026-07-06 (v(N+1) of the spec §7 timeline).** One of `"rrf"` (Reciprocal Rank Fusion via `helix_context/fusion.py:Fuser`; final sort uses fused scores; SIKE Run-2 measured +12pp gold_delivered over additive on xl — `docs/benchmarks/2026-07-06-sike-run2-fts-depth-fusion.md`) or `"additive"` (legacy `gene_scores += tier_score` accumulator path, removed in v(N+2)). Per-tier weights below are RRF post-multipliers. Spec: `docs/specs/2026-05-08-stage-3-rrf-fusion.md`. The shipped value (`helix.toml`). |
 | `rrf_k` | int | `60` | Cormack 2009 default. Used in `score(d) = Σ weight_t · 1/(k + rank_t(d))`. The shipped value (`helix.toml:279`). |
 | `fts5_weight` | float | `3.0` | Binds in both fusion modes (#202). Additive: cap-only knob — the tier adds the raw BM25 magnitude capped at `2.0 × fts5_weight` (default → the legacy 6.0 cap). RRF: post-multiplier for the `fts5` tier. The shipped value (`helix.toml:280`). |
 | `splade_weight` | float | `3.5` | Binds in both fusion modes (#202). Additive: leading coefficient — `min(score, 20) × weight / 20`, so the tier caps at the weight itself. RRF: post-multiplier for the `splade` tier. The shipped value (`helix.toml:281`). |
@@ -603,8 +603,8 @@ ann_threshold_max_genes = 12
 ann_threshold_mode = "absolute"
 ann_threshold_sigma_multiplier = 3.0
 dense_pool_size = 500
-# Stage 3 RRF fusion
-fusion_mode = "additive"
+# Stage 3 RRF fusion (default "rrf" since 2026-07-06; "additive" = legacy)
+fusion_mode = "rrf"
 rrf_k = 60
 fts5_weight = 3.0
 splade_weight = 3.5
@@ -620,15 +620,17 @@ pki_weight = 1.0
 
 **Migration notes.**
 
-- `fusion_mode` stays `"additive"` for one release. Per
-  `docs/specs/2026-05-08-stage-3-rrf-fusion.md` §7 deprecation
-  timeline: `v(N)` ships additive default; `v(N+1)` flips to `"rrf"`
-  default; `v(N+2)` removes the additive code path.
-- Flipping `fusion_mode` to `"rrf"` requires `[abstain].mode =
-  "per_classifier"` for the floor-driven gates to take effect under
-  RRF score scales. See Stage-3 spec §9 (transitional bypass) — the
-  global hard-coded floors (`5.0` / `2.5`) were calibrated against
-  additive scores and become unreachable post-RRF.
+- `fusion_mode` default flipped `"additive"` → `"rrf"` on 2026-07-06
+  (this is `v(N+1)` of the `docs/specs/2026-05-08-stage-3-rrf-fusion.md`
+  §7 deprecation timeline; `v(N+2)` removes the additive code path).
+  Set `fusion_mode = "additive"` explicitly to restore the legacy
+  accumulator until then.
+- Under `"rrf"` the abstain/TIGHT/FOCUSED gates run **ratio-only**
+  (`pipeline/tier_logic.py` `skip_absolute_floors`) — the Stage-3 spec
+  §9 transitional bypass — because the global hard-coded floors
+  (`5.0` / `2.5`) were calibrated against additive scores and become
+  unreachable post-RRF. For floor-driven gates under RRF score scales,
+  use `[abstain].mode = "per_classifier"` with RRF-calibrated floors.
 - `dense_embedding_dim` raised from 256 → 1024 in Stage 2. Existing
   256-d embeddings on disk continue to load via the codec guard
   (`bgem3_codec.py:53-54`), but new ingest writes 1024-d vectors. Stage 4
@@ -1370,12 +1372,12 @@ dense_pool_size = 500
 # Stage 3 (2026-05-08): Reciprocal Rank Fusion. Spec
 # docs/specs/2026-05-08-stage-3-rrf-fusion.md replaces the additive
 # gene_scores += tier_score accumulator with rank-level RRF (Cormack 2009).
-# Default "additive" is byte-identical to pre-Stage-3 behavior. Flip to
-# "rrf" to enable the new path. Per-tier weights below are RRF
+# Default "rrf" since 2026-07-06 (v(N+1)). "additive" restores the legacy
+# pre-Stage-3 byte-identical path. Per-tier weights below are RRF
 # post-multipliers (preserve current implicit weights).
-# Deprecation timeline: v(N) ships additive default; v(N+1) flips to rrf
-# default; v(N+2) removes the additive code path.
-fusion_mode = "additive"                # "additive" | "rrf"
+# Deprecation timeline: v(N) shipped additive default; v(N+1) flips to rrf
+# default (this release); v(N+2) removes the additive code path.
+fusion_mode = "rrf"                     # "rrf" | "additive" (legacy)
 rrf_k = 60                              # Cormack 2009 default
 fts5_weight = 3.0                       # current FTS5 cap
 splade_weight = 3.5                     # current SPLADE cap

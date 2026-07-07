@@ -87,7 +87,7 @@ All config lives in `helix.toml`. Sections:
 | `[context]` | cold_tier_enabled, cold_tier_k, cold_tier_min_cosine |
 | `[cymatics]` | enabled, distance_metric (`"cosine"` / `"w1"`), harmonic_links |
 | `[classifier]` | Rule-based query classifier: `enabled` toggle only; per-class caps/decoder hints are code constants pending #205 |
-| `[retrieval]` | fusion_mode (`"additive"` / `"rrf"`), sr_enabled, sr_gamma, ray_trace_theta, seeded_edges_enabled |
+| `[retrieval]` | fusion_mode (`"rrf"` default / `"additive"` legacy), sr_enabled, sr_gamma, ray_trace_theta, seeded_edges_enabled, fts5_candidate_depth (#205: FTS content-tier fetch depth; 0 = auto = max_genes*4) |
 | `[plr]` | Piecewise linear reranker: enabled, model_path |
 | `[know]` | KnowBlock confidence logistic: emit_floor, betas, s_ref, g_ref, stale_after_days (+ calibrated_at / calibrated_on_n written by scripts/calibrate_know_confidence.py) |
 | `[mem_sync]` | Auto-memory-to-helix sync: watch_dirs, sync_interval_s |
@@ -171,7 +171,7 @@ See [`docs/architecture/OBSERVABILITY.md`](docs/architecture/OBSERVABILITY.md) f
 - **Knowledge store path:** Default is `genomes/main/genome.db` (not project root). Delete to start fresh; auto-creates on first use.
 - **Synonym map is critical:** If queries return "no relevant context", check that query keywords map to the tags assigned at ingest. Add synonyms in `[synonyms]`.
 - **Stage 2 backfill:** BGE-M3 dense vectors (`embedding_dense_v2`) are NULL until you run `scripts/backfill_bgem3_v2.py`. Low retrieval rate without them.
-- **Fusion mode:** Default is `"additive"` (pre-Stage-3 behavior). Flip to `"rrf"` in `[retrieval]` for Reciprocal Rank Fusion. RRF will become default in a future version.
+- **Fusion mode:** Default is `"rrf"` (Reciprocal Rank Fusion) since 2026-07-06 — SIKE Run-2 measured +12pp gold_delivered over additive on xl. Set `fusion_mode = "additive"` in `[retrieval]` to restore the legacy pre-Stage-3 accumulator (scheduled for removal in v(N+2)). Under RRF the abstain gates run ratio-only (absolute floors were additive-calibrated).
 - **Session delivery:** `session_delivery_enabled = true` tracks what documents each session has already received and elides repeats. Saves ~40% tokens on multi-turn conversations. Flip to false or pass `ignore_delivered: true` in /context body for benchmarks.
 - **Continue IDE:** Use Chat mode, not Agent mode. The proxy doesn't handle tool routing.
 - **Naming lexicon:** Biology terms (gene, genome, ribosome, chromatin, splice) have canonical software equivalents (document, knowledge store, compressor, etc.). See `docs/ROSETTA.md` for the full mapping. Both vocabularies work in code (back-compat shims); new code should use the software terms.

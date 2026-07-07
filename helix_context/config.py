@@ -169,6 +169,18 @@ class BudgetConfig:
     # bench cells (and a future on-by-default ship) tune the top-1 ceiling
     # without touching code.
     foveated_base_chars: int = 1000
+    # Splice-floor fix (J-space council kill-switch #1, 2026-07-06).
+    # Per-document char target for the Step-4 splice loop (non-foveated
+    # path). 0 (default) = budget-proportional auto:
+    # int(expression_tokens · 4 chars/token · 0.9) // n_candidates,
+    # floored at the legacy 1000 — so no document ever gets less room
+    # than the old uniform cap, and the expression budget is actually
+    # used (12 × 1000 chars ≈ 3000 tokens vs the default 7000). Any
+    # positive value pins a fixed target; 1000 restores the exact
+    # legacy query-agnostic floor. See context_manager.
+    # _compute_splice_target and encoding/headroom_bridge.
+    # _query_aware_trim (truncation keeps query-term lines either way).
+    splice_target_chars: int = 0
 
 
 @dataclass
@@ -343,6 +355,14 @@ class RetrievalConfig:
     bm25_shortlist_size: int = 50           # BM25 top-N kept in the final ranking
     bm25_prefilter_enabled: bool = False
     bm25_prefilter_size: int = 200          # BM25 top-N fed into tier scoring
+    # A4 / #205 candidate-pool-depth knob (2026-07-06). Overrides the Tier-3
+    # FTS5 content-search fetch depth (legacy default: max_genes*4 = 48 at the
+    # shipped max_genes=12). 0 = auto (legacy behavior). Widens ONLY the raw
+    # candidate pool fed into tier scoring — the returned pool (max_genes*2)
+    # and the delivery cap (max_genes) are unchanged, so a deeper pool cannot
+    # trivially inflate gold_delivered. Lets the SIKE bedsweep isolate FTS
+    # pool starvation (A4) from rank squeeze (B2) on the xl bed.
+    fts5_candidate_depth: int = 0
     # Tier 5b: entity graph co-occurrence boost (Step 3C, 2026-05-08).
     # Documents sharing entity nodes with query terms get a score boost proportional
     # to entity overlap. Dark ship — flip to true for A/B.
@@ -397,16 +417,21 @@ class RetrievalConfig:
     dense_pool_size: int = 500
     # Stage 3 (2026-05-08): Reciprocal Rank Fusion accumulator.
     # Spec: docs/specs/2026-05-08-stage-3-rrf-fusion.md.
-    # When ``fusion_mode == "additive"`` (default for one release), the
-    # legacy ``gene_scores += tier_score`` accumulator path is unchanged.
-    # When ``"rrf"``, each tier writes both raw scores AND ranks the
-    # tier output through the Fuser; the final sort uses fused scores.
+    # v(N+1) flip (2026-07-06, J-space roadmap council): default is now
+    # "rrf" — each tier writes both raw scores AND ranks the tier output
+    # through the Fuser; the final sort uses fused scores. SIKE Run-2
+    # measured rrf > additive +12pp gold_delivered on xl (0.74 vs 0.62;
+    # docs/benchmarks/2026-07-06-sike-run2-fts-depth-fusion.md) — the
+    # additive path mis-scales dense (×16 semantic arm) against the FTS
+    # bm25 cap (6.0). Set "additive" to restore the legacy
+    # ``gene_scores += tier_score`` accumulator until v(N+2) removes it.
     # Issue #202: the per-tier weights below bind in BOTH fusion modes.
     # Under "additive" they are the tier coefficients/caps themselves
-    # (defaults == the old inline literals, so untouched configs keep
-    # byte-identical rankings); under "rrf" they are rank
-    # post-multipliers.
-    fusion_mode: str = "additive"           # "additive" | "rrf"
+    # (defaults == the old inline literals); under "rrf" they are rank
+    # post-multipliers. Under "rrf" the abstain gates run ratio-only
+    # (pipeline/tier_logic.py skip_absolute_floors) because the absolute
+    # floors were calibrated on additive scores.
+    fusion_mode: str = "rrf"                # "rrf" | "additive" (legacy)
     rrf_k: int = 60                         # Cormack 2009 default
     fts5_weight: float = 3.0                # cap-only in additive: cap = 2.0 × this (6.0)
     splade_weight: float = 3.5              # leading coeff == tier cap
@@ -786,6 +811,7 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             foveated_c_min=float(b.get("foveated_c_min", cfg.budget.foveated_c_min)),
             foveated_base_chars=int(b.get("foveated_base_chars", cfg.budget.foveated_base_chars)),
             slate_char_budget=int(b.get("slate_char_budget", cfg.budget.slate_char_budget)),
+            splice_target_chars=int(b.get("splice_target_chars", cfg.budget.splice_target_chars)),
         )
 
     # KnowledgeStore
@@ -914,6 +940,7 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             bm25_shortlist_size=int(r.get("bm25_shortlist_size", cfg.retrieval.bm25_shortlist_size)),
             bm25_prefilter_enabled=bool(r.get("bm25_prefilter_enabled", cfg.retrieval.bm25_prefilter_enabled)),
             bm25_prefilter_size=int(r.get("bm25_prefilter_size", cfg.retrieval.bm25_prefilter_size)),
+            fts5_candidate_depth=int(r.get("fts5_candidate_depth", cfg.retrieval.fts5_candidate_depth)),
             entity_graph_retrieval_enabled=bool(r.get("entity_graph_retrieval_enabled", cfg.retrieval.entity_graph_retrieval_enabled)),
             dense_embedding_enabled=bool(r.get("dense_embedding_enabled", cfg.retrieval.dense_embedding_enabled)),
             dense_embedding_dim=int(r.get("dense_embedding_dim", cfg.retrieval.dense_embedding_dim)),

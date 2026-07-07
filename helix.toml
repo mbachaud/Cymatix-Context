@@ -128,6 +128,17 @@ foveated_c_min = 0.15
 # Default 1000 matches current uniform Step 4 behavior at c_i = 1.0.
 foveated_base_chars = 1000
 
+# Splice-floor fix (J-space council kill-switch #1, 2026-07-06). Per-gene
+# char target for the Step-4 splice loop (non-foveated path). 0 (default)
+# = budget-proportional auto: int(expression_tokens * 4 * 0.9) //
+# n_candidates, floored at the legacy 1000 — the old query-agnostic
+# 1000-char literal both under-used the expression budget (12 genes x
+# 1000 chars ~ 3000 tokens vs the 7000 budget) and truncated any answer
+# past char 1000 (6/50 SIKE xl needles). Any positive value pins a fixed
+# target; 1000 restores the exact legacy floor. Truncation now keeps
+# query-term lines in both modes (headroom_bridge._query_aware_trim).
+splice_target_chars = 0
+
 [session]
 # CWoLa session / party fallback. Prior to 2026-04-13 the /context endpoint
 # passed NULL to cwola.log_query when clients didn't supply session_id or
@@ -360,15 +371,18 @@ dense_pool_size = 500
 # Stage 3 (2026-05-08): Reciprocal Rank Fusion. Spec
 # docs/specs/2026-05-08-stage-3-rrf-fusion.md replaces the additive
 # gene_scores += tier_score accumulator with rank-level RRF (Cormack 2009).
-# Default "additive" is byte-identical to pre-Stage-3 behavior. Flip to
-# "rrf" to enable the new path. Issue #202: the per-tier weights below
-# bind in BOTH fusion modes — under "additive" (the default) they are the
-# tier coefficients/caps themselves (defaults == the old inline literals,
-# so untouched configs keep byte-identical rankings); under "rrf" they
-# are rank post-multipliers.
-# Deprecation timeline: v(N) ships additive default; v(N+1) flips to rrf
-# default; v(N+2) removes the additive code path.
-fusion_mode = "additive"                # "additive" | "rrf"
+# v(N+1) flip (2026-07-06, J-space roadmap council): default is now "rrf".
+# SIKE Run-2 measured rrf > additive +12pp gold_delivered on xl (0.74 vs
+# 0.62; docs/benchmarks/2026-07-06-sike-run2-fts-depth-fusion.md) — the
+# additive path mis-scales dense vs the FTS bm25 cap. Set "additive" to
+# restore pre-Stage-3 byte-identical behavior until v(N+2) removes it.
+# Issue #202: the per-tier weights below bind in BOTH fusion modes —
+# under "additive" they are the tier coefficients/caps themselves
+# (defaults == the old inline literals); under "rrf" they are rank
+# post-multipliers.
+# Deprecation timeline: v(N) shipped additive default; v(N+1) (this
+# release) flips to rrf default; v(N+2) removes the additive code path.
+fusion_mode = "rrf"                     # "rrf" | "additive" (legacy)
 rrf_k = 60                              # Cormack 2009 default
 fts5_weight = 3.0                       # FTS5 cap-only knob: additive cap = 2.0 × this (6.0)
 splade_weight = 3.5                     # SPLADE leading coeff (== tier cap)
@@ -381,10 +395,11 @@ harmonic_weight = 1.0                   # Tier 5 per-link weight; cap = 3.0 × t
 entity_graph_weight = 0.5               # Tier 5b per-row bonus; cap = 4.0 × this (2.0)
 dense_weight = 1.0                      # Stage 2 dense recall, RRF participant
 # Tier-0 PR-3 (2026-05-16): additive-mode dense merge weight. Under
-# fusion_mode == "additive" (the default below), a dense hit's cosine is
-# scaled by this before it enters the gene_scores accumulator —
-# BM25-comparable (tag_exact_weight is 3.0). Unused under RRF, where dense
-# ranks are fused rather than summed.
+# fusion_mode == "additive" (legacy; the default was "additive" until the
+# 2026-07-06 rrf flip above), a dense hit's cosine is scaled by this
+# before it enters the gene_scores accumulator — BM25-comparable
+# (tag_exact_weight is 3.0). Unused under RRF, where dense ranks are
+# fused rather than summed.
 dense_additive_weight = 4.0
 # Tier-0 review fix (2026-05-16): noise floor for the additive-mode dense
 # merge. A dense hit whose cosine is below this does not contribute to the

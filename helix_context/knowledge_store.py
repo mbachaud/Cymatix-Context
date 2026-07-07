@@ -466,6 +466,7 @@ class KnowledgeStore:
         bm25_shortlist_size: int = 50,
         bm25_prefilter_enabled: bool = False,
         bm25_prefilter_size: int = 200,
+        fts5_candidate_depth: int = 0,
         entity_graph_retrieval_enabled: bool = False,
         dense_embedding_enabled: bool = False,
         # Stage 2 (2026-05-08): default dim raised from 256 -> 1024 (full
@@ -591,6 +592,8 @@ class KnowledgeStore:
         self._bm25_shortlist_size = int(bm25_shortlist_size) if bm25_shortlist_size else 50
         self._bm25_prefilter_enabled = bool(bm25_prefilter_enabled)
         self._bm25_prefilter_size = int(bm25_prefilter_size)
+        # A4 / #205: Tier-3 FTS content fetch depth override (0 = auto = limit*2).
+        self._fts5_candidate_depth = int(fts5_candidate_depth) if fts5_candidate_depth else 0
         # Step 4 — BGE-M3 dense vectors + ANN threshold (2026-05-08).
         self._dense_embedding_enabled: bool = bool(dense_embedding_enabled)
         self._dense_embedding_dim: int = int(dense_embedding_dim)
@@ -1956,6 +1959,13 @@ class KnowledgeStore:
         self._refresh_snapshot()  # See latest WAL state (external thinning, deletes)
         cur = self.read_conn.cursor()  # Read path — avoids WAL lock contention
         limit = max_genes * 2
+        # A4 / #205: Tier-3 FTS content-search fetch depth. Override (config
+        # [retrieval] fts5_candidate_depth) widens ONLY the raw candidate pool
+        # pulled into tier scoring; the returned pool and delivery cap below
+        # are untouched, so a deeper fetch cannot inflate gold_delivered on its
+        # own — only lets a starved gold document ENTER scoring where the tiers
+        # can float it into the delivered top-K.
+        _fts_fetch_depth = getattr(self, "_fts5_candidate_depth", 0) or (limit * 2)
 
         # ── BM25 pre-filter (tier-0, 2026-05-08 upgrade) ──────────────
         _prefilter_set: set[str] | None = None
@@ -2289,7 +2299,7 @@ class KnowledgeStore:
                         ORDER BY rank
                         LIMIT ?
                         """,
-                        (fts_query, *_prefilter_params, limit * 2),
+                        (fts_query, *_prefilter_params, _fts_fetch_depth),
                     ).fetchall()
 
                     # Filter by lifecycle tier (batch lookup)
