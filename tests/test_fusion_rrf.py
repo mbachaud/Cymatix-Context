@@ -476,3 +476,42 @@ def test_fuser_len_and_contains():
     assert len(f) == 2
     assert "x" in f
     assert "z" not in f
+
+
+# ─── v(N+1) default flip: config-level default is RRF (2026-07-06) ────
+
+
+def test_retrieval_config_default_fusion_mode_is_rrf():
+    """Stage-3 deprecation timeline v(N+1) (spec §7): the config-level
+    default flipped "additive" -> "rrf" per the 2026-07-06 J-space
+    roadmap council. The bare-Genome kwarg default stays "additive" —
+    it is a score-scale label for legacy/low-level construction (the
+    additive snapshot test above depends on it); the shipped pipeline
+    always passes config.retrieval.fusion_mode explicitly.
+    """
+    from helix_context.config import RetrievalConfig
+
+    assert RetrievalConfig().fusion_mode == "rrf"
+
+
+def test_toml_loader_defaults_fusion_mode_rrf(tmp_path):
+    """A helix.toml without [retrieval].fusion_mode inherits the flipped
+    default; an explicit "additive" still wins until v(N+2) removes it."""
+    from helix_context.config import load_config
+
+    bare = tmp_path / "bare.toml"
+    bare.write_text("[retrieval]\nrrf_k = 60\n")
+    assert load_config(str(bare)).retrieval.fusion_mode == "rrf"
+
+    legacy = tmp_path / "legacy.toml"
+    legacy.write_text('[retrieval]\nfusion_mode = "additive"\n')
+    assert load_config(str(legacy)).retrieval.fusion_mode == "additive"
+
+
+def test_shipped_helix_toml_fusion_mode_is_rrf():
+    """The repo-root helix.toml ships the new default explicitly."""
+    from helix_context.config import load_config
+
+    repo_toml = Path(__file__).resolve().parents[1] / "helix.toml"
+    cfg = load_config(str(repo_toml))
+    assert cfg.retrieval.fusion_mode == "rrf"

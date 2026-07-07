@@ -262,14 +262,19 @@ def helix_manager_focused():
 
 @pytest.fixture
 def helix_manager_abstain():
-    """8 genes whose scores trigger ABSTAIN: top<2.5 AND ratio<1.8.
+    """8 genes whose scores trigger ABSTAIN under BOTH fusion modes.
 
-    top=1.5, others=1.2 → mean≈1.24, ratio≈1.21. ABSTAIN gate fires
-    before BROAD/TIGHT/FOCUSED resolution.
+    All-tied scores (1.2 each). Additive gate: top 1.2 < 2.5 AND
+    legacy ratio 1.0 < 1.8. RRF gate (the default since 2026-07-06):
+    baseline-normalized ratio degenerates to 0.0 < 1.5 (all candidates
+    tied → no separation). The previous shape (top=1.5 over a flat 1.2
+    floor) reads as *confident* under the RRF norm-ratio — norm 8.0 —
+    which is exactly what the #115 baseline-subtraction was built to
+    detect, so it no longer abstains on the shipped default.
     """
     mgr = _make_manager_with_n_genes(
         8,
-        lambda i: 1.5 if i == 0 else 1.2,
+        lambda i: 1.2,
     )
     yield mgr
     mgr.close()

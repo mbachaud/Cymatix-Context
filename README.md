@@ -133,7 +133,7 @@ Seven stages per turn, all LLM-free except optional splice:
 | `[context]` | Cold-tier retrieval: enabled, k, min_cosine |
 | `[cymatics]` | Frequency-domain scoring, harmonic_links, distance_metric |
 | `[classifier]` | Rule-based query classification thresholds |
-| `[retrieval]` | `fusion_mode` (`"additive"` / `"rrf"`), SR, ray_trace_theta, seeded_edges |
+| `[retrieval]` | `fusion_mode` (`"rrf"` default / `"additive"` legacy), SR, ray_trace_theta, seeded_edges |
 | `[plr]` | Piecewise linear reranker model |
 | `[know]` | Know/miss calibration: emit_floor, betas, s_ref, g_ref, stale_after_days |
 | `[mem_sync]` | Auto-memory → helix sync: watch_dirs, interval |
