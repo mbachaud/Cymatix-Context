@@ -1,9 +1,10 @@
 # Faithfulness of injected context — a Circuit-Tracer instrument for the #239 know/miss contract
 
-**Date:** 2026-07-07
-**Status:** instrument validated; ideal-context calibration done; real-helix
-retrieval-preservation measured (6/6); real-helix *faithfulness* measurement
-pending (Neuronpedia anonymous quota — needs API key or reset).
+**Date:** 2026-07-07 (real-helix faithfulness completed via self-hosted graph-gen)
+**Status:** COMPLETE. Instrument validated; ideal-context calibration done;
+real-helix retrieval-preservation 6/6 AND real-helix *faithfulness* 6/6
+causal-use — measured locally (self-hosted circuit-tracer, no rate limit, no
+egress) after the hosted Neuronpedia quota blocked the batch.
 **Feeds:** #239 (KnowBlock confidence logistic / know-miss agent contract).
 
 ## Motivation
@@ -102,15 +103,64 @@ failure modes the know/miss contract conflates:
   (`fired=fts5:6.0,lex_anchor:6.0,splade:3.5`), the answer token preserved
   verbatim in the `<GENE>` body, wrapped in real legibility headers
   (`[gene=… ◆ fired=… 73→126c]`). `expressed_context` ≈ 1.3 kB.
-- **Faithfulness** (the model's job): **pending** — all 6 attribution graphs
-  returned HTTP 429 (anonymous Neuronpedia quota exhausted after ~30 calls this
-  session). Method is proven end-to-end on the ideal-context run above; this is
-  a quota wall, not a design gap. Re-runs with `NEURONPEDIA_API_KEY` set.
+- **Faithfulness** (the model's job): **6/6 causal-use** — measured locally
+  (self-hosted circuit-tracer; the hosted Neuronpedia quota 429'd the batch).
+  Every needle: answer-token is the answer logit's **#1 causal driver** (top
+  attribution) AND the injected context drives a large behavioral shift.
 
-The legibility headers make the real-helix faithfulness question sharper than
-the ideal-context one: injected context now carries `fired=…` metadata, so the
-retargeted attribution will tell us whether the model reads the *answer token in
-the GENE body* or is distracted by header noise.
+| needle | answer | pA | pB | lift | faith | top-driver=answer | causal |
+|---|---|---|---|---|---|---|---|
+| beacon | otter | 0.00 | 0.945 | 0.945 | 0.337 | ✓ | ✓ |
+| harbor | cobalt | 0.00 | 0.918 | 0.918 | 0.341 | ✓ | ✓ |
+| atlas | teal | 0.00 | 0.941 | 0.941 | 0.300 | ✓ | ✓ |
+| prism | mango | 0.00 | 0.840 | 0.840 | 0.288 | ✓ | ✓ |
+| cascade | raven | 0.00 | 0.762 | 0.762 | 0.286 | ✓ | ✓ |
+| sentinel | platinum | 0.00 | 0.598 | 0.598 | 0.235 | ✓ | ✓ |
+
+**mean lift 0.834 · mean faith 0.298 · causal 6/6.**
+
+**Key finding — richer real context overrides prior competition.** In the
+ideal-context pilot the two strong-prior needles were *non-causal*: the bare
+one-sentence fact could not overcome gemma-2-2b's defaults (**atlas/teal pB
+0.057**, **sentinel/platinum pB 0.246**). Injecting helix's *actual*
+`expressed_context` — the retrieved document in its `<GENE>` wrapper with
+legibility headers — flips both to strongly causal (**teal 0.057→0.941**,
+**platinum 0.246→0.598**), and lifts the whole set (mean lift 0.53→0.83). So
+helix's *delivery format*, not merely the raw fact, is what causally drives the
+answer. The legibility headers do **not** distract the model: the answer token
+in the `<GENE>` body remains the #1 driver in all 6. Attribution-faithfulness is
+slightly lower (0.298 vs 0.335) only because the fraction is diluted across a
+longer context — the answer is still rank-1.
+
+### Self-hosted graph generation (unblocks batch + scale, no egress)
+
+The hosted `/api/graph/generate` anonymous quota caps ~15–20 calls/window, which
+429'd the real-helix batch. Neuronpedia is now open-source; its graph server is
+built on the `circuit-tracer` library (safety-research/circuit-tracer), which
+runs standalone. We generate graphs **locally** on a 12 GB RTX 3080 Ti:
+
+```python
+from circuit_tracer import ReplacementModel, attribute
+from circuit_tracer.utils import create_graph_files
+m = ReplacementModel.from_pretrained("google/gemma-2-2b", "gemma",
+                                     dtype=torch.bfloat16, device="cuda",
+                                     lazy_encoder=True)
+g = attribute(prompt, m, offload="cpu", batch_size=48, max_feature_nodes=4096)
+create_graph_files(g, slug, output_path)   # emits the SAME JSON schema
+```
+
+`create_graph_files` writes the identical `{metadata, nodes, links}` schema the
+hosted API returns, so the faithfulness metric code is reused verbatim — the
+local graphs reproduce the hosted pilot to ~1% (beacon pB 0.664→0.672, faith
+0.333→0.339). Fit notes: bf16 + `lazy_encoder` + `offload='cpu'` keeps the model
+in ~6.6 GB dedicated (Gemmascope transcoders, 7.4 GB, live in system RAM);
+short-needle attribution peaks 8.4 GB, long ~350-tok `expressed_context` prompts
+spill into shared memory (slow, ~6–16 min/graph, but complete). Windows note:
+pin `pandas==2.2.3 numpy==2.1.3 pyarrow==21` (pandas 3.0 / numpy 2.5 heap-corrupt
+on import), run with `-X utf8` (the `◆` in legibility headers breaks cp1252
+JSON writes). Model choice: gemma-2-2b (Gemmascope) and Qwen3-4B
+(`mwhanna/qwen3-4b-transcoders`) have released transcoders; gemma-3n/gemma-4 do
+not, so they cannot be graphed.
 
 ## Interpretation for #239
 
@@ -133,8 +183,9 @@ found/not-found turns — where it converges with the ERB semantic retrieval wor
   faithfulness numbers are model-relative, not a universal constant.
 - **Synthetic single-token needles, N=6.** Establishes the instrument, not a
   population estimate.
-- **Anonymous rate limit** (~15–20 calls / rolling window) caps batch size;
-  keyed runs remove this.
+- ~~Anonymous rate limit caps batch size~~ — **resolved** by self-hosting
+  circuit-tracer locally (unlimited, no egress). Long prompts are slow on 12 GB
+  (shared-memory spill) but complete.
 - Attribution-graph faithfulness is a *mechanistic proxy*, not a causal
   intervention (no activation patching). Directionally trustworthy; not a proof.
 
@@ -147,16 +198,20 @@ benchmarks/faithfulness/needle_faithfulness_experiment.py # ideal-context 6-need
 benchmarks/faithfulness/real_helix_faithfulness.py        # real build_context() run
 ```
 
+Local self-hosted graph-gen (the real-helix run): isolated venv on
+`F:/Projects/np-graph/` — `faith_local.py` (local `gen_graph` monkeypatched into
+the validated scoring), `faith_local_realhelix.py` (stage 2), and
+`dump_expressed.py` (stage 1, helix env → `expressed_context` JSON). Two envs
+because circuit-tracer and the helix model stack pin conflicting deps.
+
 Egress: synthetic content only (public repo facts + fictional "Redwood
-Inference" ERB facts). Anonymous graphs save to a public S3 bucket; set
-`NEURONPEDIA_API_KEY` (env var, never in source) for private/higher-limit runs.
+Inference" ERB facts). Self-hosting keeps everything local (no S3, no key).
 
 ## Next
 
-1. **Complete real-helix faithfulness** — re-run action 3 with the API key (or
-   after quota reset). Report causal-use | survived.
+1. ~~Complete real-helix faithfulness~~ — **DONE** (6/6 causal, local).
 2. **Scale N** and add non-arbitrary needles (facts the model *could* half-know)
-   to map the faithfulness/prior boundary.
+   to map the faithfulness/prior boundary — now unlimited via self-hosting.
 3. **Know-confidence correlation** — the #239 calibration payoff; needs the
    bigger ERB bed for confidence variance.
 4. Once landed, this becomes the **yardstick** the retrieval work (complement /
