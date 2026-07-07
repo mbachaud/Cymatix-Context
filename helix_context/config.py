@@ -343,6 +343,14 @@ class RetrievalConfig:
     bm25_shortlist_size: int = 50           # BM25 top-N kept in the final ranking
     bm25_prefilter_enabled: bool = False
     bm25_prefilter_size: int = 200          # BM25 top-N fed into tier scoring
+    # A4 / #205 candidate-pool-depth knob (2026-07-06). Overrides the Tier-3
+    # FTS5 content-search fetch depth (legacy default: max_genes*4 = 48 at the
+    # shipped max_genes=12). 0 = auto (legacy behavior). Widens ONLY the raw
+    # candidate pool fed into tier scoring — the returned pool (max_genes*2)
+    # and the delivery cap (max_genes) are unchanged, so a deeper pool cannot
+    # trivially inflate gold_delivered. Lets the SIKE bedsweep isolate FTS
+    # pool starvation (A4) from rank squeeze (B2) on the xl bed.
+    fts5_candidate_depth: int = 0
     # Tier 5b: entity graph co-occurrence boost (Step 3C, 2026-05-08).
     # Documents sharing entity nodes with query terms get a score boost proportional
     # to entity overlap. Dark ship — flip to true for A/B.
@@ -919,6 +927,7 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             bm25_shortlist_size=int(r.get("bm25_shortlist_size", cfg.retrieval.bm25_shortlist_size)),
             bm25_prefilter_enabled=bool(r.get("bm25_prefilter_enabled", cfg.retrieval.bm25_prefilter_enabled)),
             bm25_prefilter_size=int(r.get("bm25_prefilter_size", cfg.retrieval.bm25_prefilter_size)),
+            fts5_candidate_depth=int(r.get("fts5_candidate_depth", cfg.retrieval.fts5_candidate_depth)),
             entity_graph_retrieval_enabled=bool(r.get("entity_graph_retrieval_enabled", cfg.retrieval.entity_graph_retrieval_enabled)),
             dense_embedding_enabled=bool(r.get("dense_embedding_enabled", cfg.retrieval.dense_embedding_enabled)),
             dense_embedding_dim=int(r.get("dense_embedding_dim", cfg.retrieval.dense_embedding_dim)),

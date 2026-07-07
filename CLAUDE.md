@@ -87,7 +87,7 @@ All config lives in `helix.toml`. Sections:
 | `[context]` | cold_tier_enabled, cold_tier_k, cold_tier_min_cosine |
 | `[cymatics]` | enabled, distance_metric (`"cosine"` / `"w1"`), harmonic_links |
 | `[classifier]` | Rule-based query classifier: `enabled` toggle only; per-class caps/decoder hints are code constants pending #205 |
-| `[retrieval]` | fusion_mode (`"rrf"` default / `"additive"` legacy), sr_enabled, sr_gamma, ray_trace_theta, seeded_edges_enabled |
+| `[retrieval]` | fusion_mode (`"rrf"` default / `"additive"` legacy), sr_enabled, sr_gamma, ray_trace_theta, seeded_edges_enabled, fts5_candidate_depth (#205: FTS content-tier fetch depth; 0 = auto = max_genes*4) |
 | `[plr]` | Piecewise linear reranker: enabled, model_path |
 | `[know]` | KnowBlock confidence logistic: emit_floor, betas, s_ref, g_ref, stale_after_days (+ calibrated_at / calibrated_on_n written by scripts/calibrate_know_confidence.py) |
 | `[mem_sync]` | Auto-memory-to-helix sync: watch_dirs, sync_interval_s |

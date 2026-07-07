@@ -299,3 +299,51 @@ def test_find_needle_passes_ignore_delivered():
     ctx_posts = [j for (u, j) in client.posts if u.endswith("/context")]
     assert ctx_posts, "find_needle must POST /context"
     assert ctx_posts[0].get("ignore_delivered") is True
+
+
+# ─── content_has_answer: honest deliverability (2026-07-06) ───────────
+#
+# body_has_answer relies on citation->body pairing, which fails closed to
+# empty bodies under the legibility-off probe (root-caused 2026-07-06:
+# 17/23 xl "gold delivered but body missing" needles had the answer in the
+# assembled content all along). content_has_answer word-boundary-matches the
+# FULL content the model actually reads, so it recovers those hits.
+
+
+def test_content_has_answer_recovers_answer_outside_block_bodies():
+    """The undercount case: the answer is in the assembled content but NOT in
+    any parsed <GENE> body -> body_has_answer=False, content_has_answer=True."""
+    import bench_needle
+    content = (
+        "<expressed_context>\n"
+        "note: the proxy listens on 11437 by default\n"
+        '<GENE src="helix-context/helix.toml">unrelated config body</GENE>\n'
+        "</expressed_context>"
+    )
+    r = bench_needle.check_gold_delivery(
+        content, ["helix-context/helix.toml"], ["11437"])
+    assert r["gold_delivered"] is True       # gold source delivered
+    assert r["body_has_answer"] is False     # not in the gold block's body
+    assert r["content_has_answer"] is True   # but in the content the model reads
+
+
+def test_content_has_answer_word_boundary_guard():
+    """content_has_answer must not count 11434 as an 11437 hit (the
+    localhost:11434 false-positive the word-boundary rule exists to kill)."""
+    import bench_needle
+    content = "<expressed_context>\nupstream is http://localhost:11434\n</expressed_context>"
+    r = bench_needle.check_gold_delivery(
+        content, ["helix-context/helix.toml"], ["11437"])
+    assert r["content_has_answer"] is False
+
+
+def test_content_has_answer_true_when_body_also_has_it():
+    """When the answer IS in a delivered body, both metrics agree."""
+    import bench_needle
+    content = (
+        '<GENE src="helix-context/helix.toml">port = 11437  # proxy</GENE>'
+    )
+    r = bench_needle.check_gold_delivery(
+        content, ["helix-context/helix.toml"], ["11437"])
+    assert r["body_has_answer"] is True
+    assert r["content_has_answer"] is True
