@@ -83,6 +83,43 @@ DEFAULT_STALE_AFTER_DAYS: int = 30
 # Stage 7: bumped to 5 — added freshness_min as feature index 4.
 N_FEATURES: int = 5
 
+# Feature names in beta order (b1..b5), for diagnostics. Every feature is
+# oriented so a *larger* value means *stronger* retrieval evidence.
+FEATURE_NAMES: tuple[str, ...] = (
+    "top_score",
+    "score_gap",
+    "lexical_dense_agree",
+    "coordinate_confidence",
+    "freshness_min",
+)
+
+
+def monotonicity_violations(betas: Sequence[float]) -> list[str]:
+    """Feature names whose calibration coefficient is negative.
+
+    Every know-feature is oriented so that a larger value means stronger
+    retrieval evidence (higher ``top_score``, wider ``score_gap``, tiers
+    agree, coordinate-aligned, fresher). Because ``tanh`` and the
+    identity/clamp transforms in :func:`compute_confidence` are all
+    monotone non-decreasing, the confidence logistic is non-decreasing in
+    each feature **iff** that feature's coefficient is ``>= 0``. A negative
+    coefficient inverts the feature — e.g. #239's b1 = -1.14 made *better*
+    retrieval *lower* confidence, the mechanism behind the ~0.42 ceiling
+    that sits below ``emit_floor`` (structural zero recall).
+
+    The intercept (``betas[0]``) is unconstrained. Returns the offending
+    feature names in beta order; an empty list means the vector is
+    monotone. Tolerant of short (freshness-less) vectors — only the
+    coefficients actually present are checked.
+
+    See docs/research/2026-07-08-b1-operating-point-coupling.md.
+    """
+    violations: list[str] = []
+    for i, name in enumerate(FEATURE_NAMES, start=1):
+        if i < len(betas) and float(betas[i]) < 0.0:
+            violations.append(name)
+    return violations
+
 
 # ─────────────────────────────────────────────────────────────────────
 # Data class — bundles betas + scale refs + floor; loaded from helix.toml
@@ -307,6 +344,15 @@ def calibration_from_config(know_cfg) -> KnowCalibration:
             len(betas), 1 + N_FEATURES,
         )
         betas = DEFAULT_BETAS
+    violations = monotonicity_violations(betas)
+    if violations:
+        log.warning(
+            "know_calibration: non-monotonic betas — coefficient(s) for %s "
+            "are negative, so stronger retrieval *lowers* confidence "
+            "(#239 B1). The gate cannot be trusted until re-fit with a "
+            "monotone-constrained calibration on a delivery-balanced bench.",
+            ", ".join(violations),
+        )
     return KnowCalibration(
         betas=betas,
         s_ref=float(know_cfg.s_ref),
