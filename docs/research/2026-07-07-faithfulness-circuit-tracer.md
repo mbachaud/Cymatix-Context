@@ -232,18 +232,85 @@ bench that actually contains delivered-but-unused turns.
 >    rows to "delivered **and** used" but add no non-causal negative.
 > 4. Single template, single model (Qwen3-4B), pA≈0 assumed (not measured here).
 
+### 4. The delivery-balanced bench — and why recalibration is not the fix (#239)
+
+The §3 conclusion said a production refit needs a *delivery-balanced* bench with
+graph-measured non-causal deliveries. We built one: 72 needles in three cells —
+**answerable** (gold + distractors → causal=1), **held-out** (distractors only,
+gold *not* ingested → causal=0), and **competition** (gold + a wrong-answer
+sibling, both delivered → graph-decides which the model uses). To label what
+retrieval *finds* we had to disable the abstain ratio-gate (below); 24 needles
+were graph-measured on Qwen3-4B and the rest imputed by cell.
+
+**What the graphs establish (robust):**
+
+- The answerable⇒causal / held-out⇒not-causal proxy validated cleanly: **7/7**
+  graphed answerable are causal, **0/5** graphed held-out are (imputation licensed).
+- **The shipped logistic emits 0/72 KnowBlocks even on a balanced bed** — max
+  confidence 0.419 < emit_floor 0.45. Zero recall is a property of the operating
+  point, needs no labels, and reproduces §3.
+- The **competition cell is the graph-measured "delivered-but-not-used" evidence
+  §3 lacked**: the gold was delivered in all 12, yet the model used it in only
+  **5/12**. Of the 7 misses, **4 used the competitor** (mis-attribution to the
+  wrong delivered fact) and 3 used neither. So `found=true ≠ used` is now proven
+  on genuinely ambiguous deliveries, not inferred.
+
+**What does *not* survive scrutiny (an adversarial re-derivation caught it):**
+A refit against the full labels *appears* to help — AUC 0.616→0.675 (LOOCV),
+`coordinate_confidence` up-weighted β 0.30→**1.87**, ECE 0.220→0.087. **This is
+a circularity artifact.** 48/72 labels are *imputed from cell identity*, and
+coord separates the cells by construction (answerable mean 0.562 vs held-out
+0.289 — answerable delivers a gold file whose path-grain matches the query;
+held-out doesn't). The logistic simply re-learns the imputation rule:
+
+| metric | on 48 imputed rows | on 24 graph-measured rows |
+|---|---|---|
+| coord single-feature AUC → causal | 0.809 | **0.462** (below chance) |
+| refit coord β | +1.87 | **−0.06** |
+| shipped-conf AUC → causal | — | 0.535 |
+| competition-cell coord AUC (n=12, non-circular) | — | **0.529** (chance) |
+
+On every genuinely-measured, non-constructed subset, **neither coord nor the
+shipped confidence beats chance.** The ECE "improvement" is likewise a base-rate
+artifact (a constant-0.5 predictor scores ECE 0.014 on this balanced bed).
+
+**Conclusion for #239 (stronger than a refit would have been):** the shipped
+five know-features (top_score, score_gap, agree, coordinate_confidence,
+freshness) carry **no measurable causal-use signal on ambiguous deliveries**, so
+**recalibrating them cannot fix the know/miss confidence.** The fix requires (a)
+a genuine *answer-presence / answer-use* feature — an answerability or NLI check
+on the delivered span, not a retrieval-strength proxy — and (b) the
+operating-point repair (the confidence ceiling ~0.42 sits below floor 0.45, so
+recall is structurally zero regardless of ranking).
+
+**Secondary finding — the abstain ratio-gate.** Under RRF the abstain tier fires
+on `top_score/mean < 1.8` and returns `<helix:no_match>`, suppressing *all*
+context. On this clean bed it is rare (4/72 needles, 3 with the gold at rank-1)
+but it is 100% of the observed delivery failures — a second, ratio-based path
+(distinct from the logistic) by which under-separated retrieval withholds correct
+rank-1 content. Worth folding into the same answer-presence rework.
+
 ## Interpretation for #239
 
 `found=true` is a *delivery* claim; **causal use is what it should predict.** The
-instrument now supplies that per-turn mechanistic label, and the §3 bed turns it
-into a concrete verdict on the shipped logistic: at its operating point it says
-"I don't know" about facts it has both retrieved and demonstrably used. The
-actionable outputs for #239 are (a) **fix the β1 sign** (top_score should raise,
-not lower, confidence), (b) **revisit the intercept/floor** so the confidence
-ceiling clears the emit floor, and (c) **retrain against causal-use, not the
-retrieval-top1 proxy** that mislabels rank-2 delivered facts — but on a
-**delivery-balanced** bench, since the §3 bed (94% positive) proves the
-*direction and magnitude* of the correction, not a production beta vector.
+instrument supplies that per-turn mechanistic label, and two beds turn it into a
+verdict on the shipped logistic: at its operating point it says "I don't know"
+about facts it has both retrieved and demonstrably used (§3), and — the sharper
+result — its features carry **no measurable causal-use signal on ambiguous
+deliveries** (§4). The §3 direction (fix the β1 sign, clear the intercept/floor)
+still holds as an *operating-point* repair, but §4 shows it is **not sufficient**:
+a causal-use refit only *appears* to help through a cell-imputation circularity,
+and on genuinely-measured deliveries no current feature beats chance.
+
+So the actionable path for #239 is: (a) **repair the operating point** — the
+confidence ceiling (~0.42) sits below emit_floor (0.45), so recall is
+structurally zero; lower the floor / raise the intercept and un-invert β1 so the
+gate *can* fire; and (b) **add an answer-presence signal** — an answerability or
+NLI check on the delivered span — because the retrieval-strength features cannot
+tell a causally-used delivery from an ignored one. Recalibrating the existing
+five features is a dead end for the *discrimination* half of the problem. The
+same answer-presence signal should also gate the abstain tier (§4), which today
+suppresses correct rank-1 context on a bare ratio.
 
 ## Limitations
 
@@ -253,9 +320,12 @@ retrieval-top1 proxy** that mislabels rank-2 delivered facts — but on a
 - **Synthetic single-token needles** (§1–2 N=6, §3 N=48, one template).
   Establishes the instrument + a calibration verdict, not a population estimate.
 - **The §3 bed has no negatives to discriminate.** `causal_use` ≡
-  `answer_survived` (delivered ⇒ used, 20/20); there are zero graph-measured
-  delivered-but-unused turns, so it measures the *recall* arm of the miscalibration
-  only — it cannot say whether the floor correctly *suppresses* bad deliveries.
+  `answer_survived` (delivered ⇒ used, 20/20); zero graph-measured
+  delivered-but-unused turns, so it measures the *recall* arm only. §4 adds the
+  negatives (the competition cell) but is itself **2/3 imputed** (48/72 labels by
+  cell); every affirmative feature claim there collapses on the 24 graph-measured
+  rows, and the competition AUC (n=12) is too small to be reliable — read §4 as a
+  *negative* result (no causal-use signal found), not a measured feature ranking.
 - ~~Anonymous rate limit caps batch size~~ — **resolved** by self-hosting
   circuit-tracer locally (unlimited, no egress). Long prompts are slow on 12 GB
   (shared-memory spill) but complete.
@@ -284,6 +354,13 @@ features/confidence JSON), `np-graph/faith_239.py` (Qwen3-4B causal-use graphs,
 comparison). Data artifacts: `np-graph/needles_239_stage1.json`,
 `needles_239_faith.json`.
 
+§4 delivery-balanced pipeline: `np-graph/needles_239b.py` (72-needle 3-cell bed
+spec), `scratchpad/build_bed_239b.py` (helix env; `--abstain` toggles the ratio-
+gate), `np-graph/faith_239b.py` (competition-aware graphs — scores gold *and*
+competitor), `scratchpad/refit_239b.py`. Data: `needles_239b_stage1.json`,
+`needles_239b_faith.json`. The circularity check (imputed-vs-measured coord AUC)
+is the load-bearing analysis — recompute it before trusting any refit number.
+
 Egress: synthetic content only (public repo facts + fictional "Redwood
 Inference" ERB facts). Self-hosting keeps everything local (no S3, no key).
 
@@ -292,13 +369,17 @@ Inference" ERB facts). Self-hosting keeps everything local (no S3, no key).
 1. ~~Complete real-helix faithfulness~~ — **DONE** (6/6 causal, local).
 2. ~~Know-confidence vs causal-use~~ — **DONE** (§3: 48-needle bed, 20/20 causal,
    the ≈0-recall verdict + the β1-sign / intercept / training-label diagnosis).
-3. **A delivery-balanced bench** is the missing piece for a *production* refit:
-   the §3 bed has no delivered-but-unused turns, so it fixes the correction's
-   direction but not its coefficients. Build a harder bed (vaguer queries or
-   relation-word distractors) where a real fraction of golds is dropped or
-   ignored, graph both arms, and refit the logistic on genuine ±causal labels.
-4. **Scale N / non-arbitrary needles** (facts the model could half-know) to map
-   the faithfulness/prior boundary, and **confirm on the helix serving model**.
-5. This stays the **yardstick** for the retrieval work (complement / DNA-pair
+3. ~~Delivery-balanced bench + production refit~~ — **DONE** (§4). Result: a
+   recalibration is *not* the fix — the five features carry no causal-use signal
+   on measured/ambiguous deliveries (the apparent refit win was a cell-imputation
+   circularity). The competition cell supplies the delivered-but-unused negatives.
+4. **Prototype an answer-presence feature** (the actual #239 lever): an
+   answerability / NLI score on the delivered span vs the query, added as a sixth
+   know-feature. Re-run the §4 bench (its competition cell + measured labels are
+   the honest test set) and see if *this* feature clears chance where coord/
+   top_score do not. Pair with the operating-point repair (floor/intercept/β1).
+5. **Scale N / non-arbitrary needles** and **confirm on the helix serving model**
+   (Qwen3-4B is the instrument, not the deployment target).
+6. This stays the **yardstick** for the retrieval work (complement / DNA-pair
    dense re-embedding, ANN threshold): prove the model *causally uses*
    newly-retrieved content, not merely that helix delivered it.
