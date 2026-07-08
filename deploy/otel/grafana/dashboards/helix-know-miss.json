@@ -163,25 +163,20 @@
     },
     {
       "type": "timeseries",
-      "title": "Shard fan-out + discrimination",
-      "description": "#165 router degeneracy, continuously monitored. Discrimination = routed/known healthy shards in [0,1]; 1.0 = router consulted everything (zero discrimination).",
+      "title": "Shard fan-out",
+      "description": "#165 router degeneracy, continuously monitored: shards consulted per ShardRouter.query_genes call. The helix_shard_fanout instrument carries no attributes, so both lines aggregate all traffic.",
       "datasource": "Prometheus",
       "gridPos": {"h": 8, "w": 8, "x": 8, "y": 19},
       "targets": [
         {
-          "expr": "histogram_quantile(0.50, sum by (le, path) (rate(helix_shard_fanout_bucket[15m])))",
-          "legendFormat": "fanout p50 {{path}}",
+          "expr": "histogram_quantile(0.50, sum by (le) (rate(helix_shard_fanout_bucket[15m])))",
+          "legendFormat": "fanout p50",
           "refId": "A"
         },
         {
-          "expr": "histogram_quantile(0.95, sum by (le, path) (rate(helix_shard_fanout_bucket[15m])))",
-          "legendFormat": "fanout p95 {{path}}",
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(helix_shard_fanout_bucket[15m])))",
+          "legendFormat": "fanout p95",
           "refId": "B"
-        },
-        {
-          "expr": "histogram_quantile(0.50, sum by (le) (rate(helix_shard_candidates_bucket[15m])))",
-          "legendFormat": "candidates p50",
-          "refId": "C"
         }
       ]
     },

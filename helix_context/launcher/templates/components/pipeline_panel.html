@@ -37,6 +37,7 @@
         <thead>
           <tr>
             <th scope="col">Request</th>
+            <th scope="col">classify</th>
             <th scope="col">extract</th>
             <th scope="col">express</th>
             <th scope="col">rerank</th>
@@ -49,7 +50,7 @@
           {% for run in state.pipeline.runs %}
             <tr>
               <td class="pipeline-rid"><code>{{ run.request_id }}</code></td>
-              {% for stage in ["extract", "express", "rerank", "splice", "assemble"] %}
+              {% for stage in ["classify", "extract", "express", "rerank", "splice", "assemble"] %}
                 <td class="pipeline-cell">
                   {% if run.stages.get(stage) is not none %}
                     {{ "%.1f"|format(run.stages.get(stage)) }} ms

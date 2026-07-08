@@ -2940,14 +2940,18 @@ class KnowledgeStore:
             # what context_manager reads for ratio gates.
             with self._last_query_scores_lock:
                 self.last_query_scores = dict(final_scores)
-            # Optional new telemetry: rrf_fused_score_histogram (spec §6).
+            # RRF-distribution telemetry (spec §6). Attribute-less by
+            # design: a per-gene_id label would mint one Prometheus series
+            # set per document (unbounded on large genomes), and the
+            # distribution panel aggregates across documents anyway.
+            # No-op instrument when OTel is off.
             try:
                 from .telemetry import rrf_fused_score_histogram
                 hist = rrf_fused_score_histogram()
-                for gid, score in final_scores.items():
-                    hist.record(float(score), {"gene_id": gid})
+                for score in final_scores.values():
+                    hist.record(float(score))
             except Exception:
-                pass  # New histogram is optional — telemetry module may not declare it yet.
+                pass
         else:
             # Additive mode — pre-Stage-3 behavior, byte-identical.
             ranked_ids = sorted(gene_scores, key=gene_scores.get, reverse=True)[:limit]
