@@ -84,11 +84,12 @@ Two surfaces:
 | Metric | Type | Labels | Source |
 |---|---|---|---|
 | `helix_context_latency_seconds` | histogram | `health`, `budget_tier`, `cold_tier_used` | `/context` endpoint |
-| `helix_pipeline_stage_seconds` | histogram | `stage`, `decoder_mode` | per-stage `_stage_timer` + `pipeline_stage_span` |
+| `helix_pipeline_stage_seconds` | histogram | `stage` | `_stage_timer` in `context_manager.py` records the histogram; `pipeline_stage_span` emits spans only — both cover all 7 stages |
 | `helix_context_health_status_total` | counter | `status` ∈ {aligned, sparse, stale, denatured} | `/context` health classifier |
 | `helix_context_ellipticity` | histogram | `party` | per-query coverage × density × freshness |
 | `helix_tier_contribution` | histogram | `tier` | `query_genes` accumulation |
 | `helix_tier_fired_total` | counter | `tier` | `query_genes` accumulation |
+| `helix_rrf_fused_score` | histogram | — | RRF fused-score distribution, recorded per query per fused document (`query_genes`, default `fusion_mode = "rrf"` path); attribute-less by design — a per-document label would explode series cardinality |
 | `helix_cwola_bucket_total` | counter | `bucket` ∈ {A, B, pending} | `cwola.log_query` + `sweep_buckets` |
 | `helix_cwola_f_gap_sq` | gauge | — | `cwola.sweep_buckets` |
 | `helix_harmonic_edges_total` | gauge | `source` ∈ {seeded, co_retrieved, cwola_validated} | `/stats` snapshot |
@@ -126,15 +127,23 @@ fresh.
 
 ### Spans
 
-The May 2026 instrumentation adds two span families on top of FastAPI
-auto-instrumentation:
+Two span families sit on top of FastAPI auto-instrumentation:
 
 1. **Pipeline stage spans** — `helix.pipeline.<stage>` for each of
-   the 6 retrieval stages (classify / extract / express / rerank /
-   splice / assemble), plus `helix.pipeline.build_context` as the
-   request-level root. Implemented via
-   `helix_context.telemetry.pipeline_stage_span()`. Lets Tempo show the
-   per-request waterfall instead of just the request boundary.
+   the 7 pipeline stages (classify / extract / express / rerank /
+   splice / assemble / persist), plus `helix.pipeline.build_context`
+   as the request-level root wrapping `build_context`. Implemented via
+   `helix_context.telemetry.pipeline_stage_span()`, which emits the
+   span only; the matching `helix_pipeline_stage_seconds` histogram
+   point comes from the `_stage_timer` context manager in
+   `context_manager.py`. Both mechanisms cover all seven stages. The
+   persist span is emitted from the background `learn()` task after
+   the response ships, so it is **not** a child of the
+   `helix.pipeline.build_context` root (which closed with the
+   request) — on the server path it attaches to the enclosing HTTP
+   request span, outside the build_context waterfall. Lets Tempo
+   show the per-request waterfall instead of just the request
+   boundary.
 2. **GenAI client spans** — *planned (#209 phase 2)*. OTel GenAI
    semantic-convention spans (`<operation> <model>`) for every
    LLM-touching call site will ship with

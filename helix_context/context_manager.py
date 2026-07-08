@@ -67,6 +67,7 @@ import time as _time
 import uuid as _uuid
 from .telemetry import (
     pipeline_stage_histogram as _pipeline_stage_histogram,
+    pipeline_stage_span as _pipeline_stage_span,
     session_tokens_saved_counter as _session_tokens_saved_counter,
     splice_ratio_histogram as _splice_ratio_histogram,
 )
@@ -83,9 +84,10 @@ _pipeline_request_id: "_contextvars.ContextVar[str]" = _contextvars.ContextVar(
 # Bounded ring of recent stage events. Each entry is
 #   {"request_id", "stage", "ms", "ts"}
 # where ts is wall-clock seconds since the epoch. Sized to roughly the
-# last ~6 requests' worth of stage events (5 stages × 6 requests + slack)
-# so the launcher dashboard can render a recent-runs table without
-# unbounded memory growth on busy servers.
+# last ~10 requests' worth of stage events (6 in-request stages × 10
+# requests + slack; the persist stage runs as a background task with no
+# request_id, so it never rings) so the launcher dashboard can render a
+# recent-runs table without unbounded memory growth on busy servers.
 _PIPELINE_RING_MAX = 64
 _pipeline_events: "_collections.deque[dict]" = _collections.deque(
     maxlen=_PIPELINE_RING_MAX
@@ -1316,6 +1318,45 @@ class HelixContextManager:
                 needle's ground-truth type for A/B. Mirrors the /fingerprint
                 ``query_type`` thread.
         """
+        # Root span for the per-turn pipeline: every helix.pipeline.<stage>
+        # span opened inside the impl nests under
+        # helix.pipeline.build_context (the Tempo waterfall root promised
+        # by docs/architecture/OBSERVABILITY.md). The impl split keeps the
+        # span open across every return path (normal, empty-genome,
+        # abstain). Span-only — stage durations are recorded exactly once,
+        # by _stage_timer.
+        with _pipeline_stage_span("build_context"):
+            return self._build_context_impl(
+                query,
+                downstream_model=downstream_model,
+                include_cold=include_cold,
+                session_context=session_context,
+                party_id=party_id,
+                prompt_tokens_hint=prompt_tokens_hint,
+                session_id=session_id,
+                ignore_delivered=ignore_delivered,
+                read_only=read_only,
+                decoder_override=decoder_override,
+                caller_model_class=caller_model_class,
+                query_type=query_type,
+            )
+
+    def _build_context_impl(
+        self,
+        query: str,
+        downstream_model: Optional[str] = None,
+        include_cold: Optional[bool] = None,
+        session_context: Optional[Dict] = None,
+        party_id: Optional[str] = None,
+        prompt_tokens_hint: Optional[int] = None,
+        session_id: Optional[str] = None,
+        ignore_delivered: bool = False,
+        read_only: bool = False,
+        decoder_override: Optional[str] = None,
+        caller_model_class: str = "generic",
+        query_type: Optional[str] = None,
+    ) -> ContextWindow:
+        """``build_context`` body — see ``build_context`` for the contract."""
         self._maybe_compact()
 
         # Pipeline viewer feed (launcher dashboard). Tagging this call with
@@ -1342,8 +1383,9 @@ class HelixContextManager:
             getattr(self.config, "classifier", None), "enabled", True,
         )
         classifier_result: Optional[ClassifierResult] = None
-        if classifier_enabled:
-            classifier_result = classify_query(query)
+        with _pipeline_stage_span("classify"), _stage_timer("classify"):
+            if classifier_enabled:
+                classifier_result = classify_query(query)
 
         # Defensive defaults — referenced later by the classifier metadata
         # block; must be defined on every code path that reaches the bottom.
@@ -1424,7 +1466,7 @@ class HelixContextManager:
         # Restates the query with expanded keywords BEFORE tags lookup.
         # This sharpens the initial frequency so retrieval falls into the
         # right gravity well instead of optimizing the wrong one.
-        with _stage_timer("extract"):
+        with _pipeline_stage_span("extract"), _stage_timer("extract"):
             if len(_sub_queries) == 1:
                 expanded_query, domains, entities = self._prepare_query_signals(
                     _sub_queries[0],
@@ -1441,7 +1483,7 @@ class HelixContextManager:
                 )
 
         # Step 2: Retrieve (knowledge store query + pending buffer + optional cold tier)
-        with _stage_timer("express"):
+        with _pipeline_stage_span("express"), _stage_timer("express"):
             if len(_sub_queries) == 1:
                 candidates = self._retrieve(
                     domains, entities, max_genes,
@@ -1522,7 +1564,7 @@ class HelixContextManager:
                 },
             )
 
-        with _stage_timer("rerank"):
+        with _pipeline_stage_span("rerank"), _stage_timer("rerank"):
             candidates, _ = self._apply_candidate_refiners(
                 query,
                 candidates,
@@ -1696,88 +1738,84 @@ class HelixContextManager:
             len(candidates),
         )
         _splice_terms = list(dict.fromkeys([*domains, *entities]))
-        _splice_t0 = _time.monotonic()
-        for idx, g in enumerate(candidates):
-            src = g.source_id or ""
-            short = ""
-            if src and not src.startswith("_"):
-                parts = src.replace("\\", "/").split("/")
-                # Canonical ingest layout is `<root>/sources/<source_type>/...`
-                # (e.g. enterprise_rag_*: `F:/tmp/.../sources/confluence/...`,
-                # or `F:/Projects/EnterpriseRAG-Bench-main/generated_data/sources/...`).
-                # Slice from the segment AFTER `sources/` so the source-type
-                # prefix (`confluence/`, `github/`, etc.) is preserved verbatim
-                # in `<GENE src=...>`. Fixes #146 — the prior `parts[-3:]`
-                # fallback dropped the source-type for any path >3 segments
-                # deep below `sources/<type>/`, which was ~30% of confluence
-                # paths in enterprise_rag_* and propagated as truncated
-                # citations into the answerer prompt and downstream lookups.
+        # Splice stage (covers the compress_text loop over all documents):
+        # _stage_timer records the helix_pipeline_stage_seconds point
+        # (replacing the former manual _splice_t0 record — exactly one
+        # duration per stage), the span feeds the Tempo waterfall.
+        with _pipeline_stage_span("splice"), _stage_timer("splice"):
+            for idx, g in enumerate(candidates):
+                src = g.source_id or ""
                 short = ""
-                # Prefer the last `sources` segment so nested fixtures like
-                # `.../sources/confluence/.../sources_attached/...` still
-                # anchor on the canonical ingest boundary.
-                src_idx = -1
-                for _i, _p in enumerate(parts):
-                    if _p == "sources":
-                        src_idx = _i
-                if src_idx >= 0 and src_idx + 1 < len(parts):
-                    short = "/".join(parts[src_idx + 1:])
-                if not short:
-                    try:
-                        j = parts.index("Projects")
-                        short = "/".join(parts[j + 1:])
-                    except ValueError:
-                        short = "/".join(parts[-3:]) if len(parts) > 3 else src
-            # Dense XML document format — structured for small model extraction
-            kv_attrs = ""
-            if g.key_values:
-                # Top 5 KVs as XML attributes for instant scanning
-                kv_pairs = " ".join(g.key_values[:5])
-                kv_attrs = f' facts="{kv_pairs}"'
-                # Collect KVs for MoE answer slate (generic branch only —
-                # small_moe pre-pass above already populated the slate in
-                # best-first order per spec §5).
-                if caller_model_class != "small_moe":
-                    for kv in g.key_values[:5]:
-                        answer_slate_lines.append(kv)
-            src_attr = f' src="{short}"' if short else ""
-            # Semantic compression via Headroom (by Tejas Chopra, Apache-2.0).
-            # Dispatches by tags domain: log→LogCompressor,
-            # diff→DiffCompressor, else→Kompress (ModernBERT).
-            # CodeCompressor disabled (40% invalid syntax — see 2f518dc).
-            # Falls back to a query-aware trim when headroom is unavailable
-            # (the shipped path — headroom_ai is not installed).
-            #
-            # Foveated path overrides the uniform target with a
-            # rank-proportional cap per document. When foveated_caps is None
-            # (default / non-BROAD / disabled), the uniform budget-
-            # proportional target applies (splice-floor fix; was a
-            # query-agnostic 1000-char literal).
-            if foveated_caps is not None:
-                target = max(1, int(foveated_caps[idx] * foveated_base))
-            else:
-                target = _splice_target
-            content = compress_text(
-                g.content,
-                target_chars=target,
-                content_type=g.promoter.domains,
-                query_terms=_splice_terms,
-            )
-            spliced_map[g.gene_id] = f"<GENE{src_attr}{kv_attrs}>\n{content}\n</GENE>"
-
-        # Record splice-stage timing (covers compress_text loop over all documents)
-        try:
-            _pipeline_stage_histogram().record(
-                _time.monotonic() - _splice_t0, {"stage": "splice"},
-            )
-        except Exception:
-            pass
+                if src and not src.startswith("_"):
+                    parts = src.replace("\\", "/").split("/")
+                    # Canonical ingest layout is `<root>/sources/<source_type>/...`
+                    # (e.g. enterprise_rag_*: `F:/tmp/.../sources/confluence/...`,
+                    # or `F:/Projects/EnterpriseRAG-Bench-main/generated_data/sources/...`).
+                    # Slice from the segment AFTER `sources/` so the source-type
+                    # prefix (`confluence/`, `github/`, etc.) is preserved verbatim
+                    # in `<GENE src=...>`. Fixes #146 — the prior `parts[-3:]`
+                    # fallback dropped the source-type for any path >3 segments
+                    # deep below `sources/<type>/`, which was ~30% of confluence
+                    # paths in enterprise_rag_* and propagated as truncated
+                    # citations into the answerer prompt and downstream lookups.
+                    short = ""
+                    # Prefer the last `sources` segment so nested fixtures like
+                    # `.../sources/confluence/.../sources_attached/...` still
+                    # anchor on the canonical ingest boundary.
+                    src_idx = -1
+                    for _i, _p in enumerate(parts):
+                        if _p == "sources":
+                            src_idx = _i
+                    if src_idx >= 0 and src_idx + 1 < len(parts):
+                        short = "/".join(parts[src_idx + 1:])
+                    if not short:
+                        try:
+                            j = parts.index("Projects")
+                            short = "/".join(parts[j + 1:])
+                        except ValueError:
+                            short = "/".join(parts[-3:]) if len(parts) > 3 else src
+                # Dense XML document format — structured for small model extraction
+                kv_attrs = ""
+                if g.key_values:
+                    # Top 5 KVs as XML attributes for instant scanning
+                    kv_pairs = " ".join(g.key_values[:5])
+                    kv_attrs = f' facts="{kv_pairs}"'
+                    # Collect KVs for MoE answer slate (generic branch only —
+                    # small_moe pre-pass above already populated the slate in
+                    # best-first order per spec §5).
+                    if caller_model_class != "small_moe":
+                        for kv in g.key_values[:5]:
+                            answer_slate_lines.append(kv)
+                src_attr = f' src="{short}"' if short else ""
+                # Semantic compression via Headroom (by Tejas Chopra, Apache-2.0).
+                # Dispatches by tags domain: log→LogCompressor,
+                # diff→DiffCompressor, else→Kompress (ModernBERT).
+                # CodeCompressor disabled (40% invalid syntax — see 2f518dc).
+                # Falls back to a query-aware trim when headroom is unavailable
+                # (the shipped path — headroom_ai is not installed).
+                #
+                # Foveated path overrides the uniform target with a
+                # rank-proportional cap per document. When foveated_caps is None
+                # (default / non-BROAD / disabled), the uniform budget-
+                # proportional target applies (splice-floor fix; was a
+                # query-agnostic 1000-char literal).
+                if foveated_caps is not None:
+                    target = max(1, int(foveated_caps[idx] * foveated_base))
+                else:
+                    target = _splice_target
+                content = compress_text(
+                    g.content,
+                    target_chars=target,
+                    content_type=g.promoter.domains,
+                    query_terms=_splice_terms,
+                )
+                spliced_map[g.gene_id] = f"<GENE{src_attr}{kv_attrs}>\n{content}\n</GENE>"
 
         # Step 5: Assemble (MoE/small-model aware)
         # Stage 5 §4: caller_model_class refines slate emission (small_moe
         # always-on, frontier always-off, generic preserves legacy).
         use_slate = self._should_use_slate(downstream_model, caller_model_class)
-        with _stage_timer("assemble"):
+        with _pipeline_stage_span("assemble"), _stage_timer("assemble"):
             window = self._assemble(
                 query, candidates, spliced_map, relation_graph,
                 query_signals=(domains, entities),
@@ -1980,6 +2018,24 @@ class HelixContextManager:
 
         Returns gene_id or None on failure.
         """
+        # Persist stage (Step 6). learn() runs as a background task after
+        # the response ships, so its helix.pipeline.persist span is NOT a
+        # child of the helix.pipeline.build_context root span (the root
+        # closed with the request); _stage_timer still feeds the persist
+        # bucket of helix_pipeline_stage_seconds.
+        #
+        # In the embedded sync flow learn() runs on the caller's thread,
+        # where _pipeline_request_id still holds the previous
+        # build_context's id — clear it so persist never rings (the
+        # launcher pipeline panel charts in-request stages only).
+        _pipeline_request_id.set("")
+        with _pipeline_stage_span("persist"), _stage_timer("persist"):
+            return self._learn_impl(query, response, timeout_s)
+
+    def _learn_impl(
+        self, query: str, response: str, timeout_s: float,
+    ) -> Optional[str]:
+        """``learn`` body — see ``learn`` for the contract."""
         # Buffer the exchange for consolidation
         with self._session_buffer_lock:
             self._session_buffer.append((query, response))

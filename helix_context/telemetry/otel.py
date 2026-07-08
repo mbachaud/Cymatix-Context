@@ -595,9 +595,11 @@ def vault_file_count_gauge():
 def pipeline_stage_histogram():
     """Histogram for per-stage /context pipeline latency.
 
-    Attributes: {stage: str}  — e.g. "classify", "retrieve", "refine",
-    "assemble". Optionally decorated with {decoder_mode: str} by the
-    caller when the label is cheap to produce.
+    Attributes: {stage: str}  — one of "classify", "extract", "express",
+    "rerank", "splice", "assemble", "persist" (the seven build_context
+    stages timed by ``_stage_timer`` in context_manager.py). The labels
+    dict accepts extra keys (e.g. decoder_mode) but no current call
+    site passes any.
     """
     if "pipeline_stage" not in _instruments:
         _instruments["pipeline_stage"] = meter.create_histogram(
@@ -753,6 +755,27 @@ def dense_cosine_histogram():
                         "(hot = BGE-M3 dense recall, cold = cold-tier ΣĒMA).",
         )
     return _instruments["dense_cosine"]
+
+
+def rrf_fused_score_histogram():
+    """Histogram of post-fusion RRF scores per ranked document (query_genes).
+
+    Recorded once per document in the final RRF ranking when
+    ``fusion_mode == "rrf"`` (the default since PR #245): the fused
+    Σ 1/(rrf_k + rank) across tiers plus the re-rank-class additives
+    (sema_boost, authority, party_attr, access_rate). Values are small
+    floats — a single-tier rank-1 hit at rrf_k=60 contributes ~0.016.
+    No attributes — a per-gene_id label would create unbounded series
+    cardinality on large genomes. Spec: docs/specs/2026-05-08-stage-3-
+    rrf-fusion.md §6 ("RRF distribution" panel).
+    """
+    if "rrf_fused_score" not in _instruments:
+        _instruments["rrf_fused_score"] = meter.create_histogram(
+            "helix_rrf_fused_score",
+            description="Post-fusion RRF score (fused reciprocal ranks + "
+                        "re-rank additives) of each ranked document.",
+        )
+    return _instruments["rrf_fused_score"]
 
 
 def shard_fanout_histogram():
