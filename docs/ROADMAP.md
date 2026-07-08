@@ -20,6 +20,7 @@
 - **Opened:** #238 (test-suite consolidation, 6 commits, **green on all 3 platforms**, awaiting human review — the agent that authored it is not permitted to self-merge).
 - **#230/#231:** status-commented, still **gated but not failed** — the 1556 run's arm-C probe referenced `symbol_graph`/`symbol_expansion_cap` keys absent from master (gap A3), so arm C was never validly measured. Blocked on #221 Run 1→3 + a fail-fast capability assert + a recorded review.
 - **New issue #239:** know-confidence is **anti-signal** on every bed (hit-mean < miss-mean, AUC 0.35–0.44) — recalibrate + AUC>0.7 gate before agents trust the know contract (gap A5).
+  - **Update 2026-07-07 (circuit-tracer §3–§4 — supersedes "recalibrate"):** recalibrating the 5 retrieval features is **REFUTED** — they carry no causal-use signal on ambiguous deliveries, and the logistic emits **0/72 KnowBlocks even on a balanced bed** (ceiling ~0.42 < `emit_floor` 0.45 = *structural* zero recall). The "coord is the lever / refit→0.72" win was a cell-imputation circularity (coord AUC 0.809 imputed → 0.462 measured). Fix = (a) **operating-point repair** (un-invert β1, lower floor/raise intercept so the gate can fire) + (b) a **new answer-presence feature** (answerability/NLI on the delivered span), the latter **gated on a validation spike** (see Phase 1b). Detail: [2026-07-07 faithfulness](research/2026-07-07-faithfulness-circuit-tracer.md) §3–§4 + issue #239. This also **re-points the J-space council's "fit the incumbent" prerequisite (kill-switch #4)** at the cheap operating-point repair, which unblocks the density/Bet-B track without waiting on the spike.
 - **Docs honesty + root-tidy:** on branch `chore/root-tidy` (see docs-refresh boxes below) + a new efficiency/cost-reduction design memo (`docs/design/2026-07-05-efficiency-cost-reduction.md`) answering the binary-storage / algorithm-vs-model / MCP-token-cost questions.
 
 ## The bench gate (everything sequences around this)
@@ -40,6 +41,15 @@ Corpus verified correct this time (46,517 genes on xl; the 07-02 and 07-03_0104 
 1. **Arm B (master-cAST) vs BM25 foil:** if B ≤ BM25 → halt all code-track merges (including #230/#231).
 2. **Arm C (ws2+ws3 symbol graph) vs +1pp threshold:** C ≥ +1pp on either external bench → merge #230 then #231 with default-on; C regresses on both → WS2/WS3 stays dark permanently (flip `symbol_graph` default to False or park the PRs).
 3. PageRank-vs-in-degree ablation decides whether `symbol_pagerank.py` survives or simplifies (council flagged personalization as inert in the live path).
+
+### Retrieval yardstick (added 2026-07-07)
+
+Retrieval levers must show **causal-use lift** (does the model *causally use* the newly-retrieved content),
+not merely delivery — measured by the self-hosted circuit-tracer faithfulness instrument
+(`benchmarks/faithfulness/`; see [2026-07-07 faithfulness](research/2026-07-07-faithfulness-circuit-tracer.md)).
+Under this yardstick the **complement / DNA-pair dense re-embedding and the ANN-threshold recalibration
+were REFUTED** 2026-07-07 ([2026-07-07 semantic-ceiling](research/2026-07-07-semantic-ceiling-complement-refutation.md));
+the surviving lever is **rerank over dense top-200**.
 
 ## Merge queue (in order, post-bench)
 
@@ -117,8 +127,11 @@ no-op keys incl. `[abstain] enabled` and the arm-C `symbol_graph` keys that
 don't exist on master). **Hold README re-admission of #221 numbers until Run 1
 (clean baseline) reproduces them on decontaminated beds.** Sequence: Run 1
 (harness+bed validity) → Run 2 (fts5_candidate_depth × additive/RRF A/B on xl)
-→ Run 3 (know recalibration + production-profile arm; arm-C only after its
-fail-fast capability assert).
+→ Run 3 (**#239, re-scoped 2026-07-07 — recalibration of the 5 features is REFUTED, §4**):
+**(3a) operating-point repair** (un-invert β1 / lower floor so the gate fires at all) on a
+delivery-balanced bench — independent, ships recall regardless; **(3b) spike-then-conditionally-integrate**
+a new answer-presence feature (a validation spike gates the ~9-file integration). Production-profile arm +
+arm-C only after its fail-fast capability assert.
 
 **Phase 2 — fresh baseline (same week):**
 
