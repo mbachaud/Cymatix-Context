@@ -162,27 +162,100 @@ JSON writes). Model choice: gemma-2-2b (Gemmascope) and Qwen3-4B
 (`mwhanna/qwen3-4b-transcoders`) have released transcoders; gemma-3n/gemma-4 do
 not, so they cannot be graphed.
 
+### 3. Calibration gap on a causal-use-labeled bed (#239)
+
+To get confidence *variance* (the 6-fact bed saturates), we built a **48-needle
+graded-distractor bed**: fictional "Redwood Inference" facts, each with a unique
+single-token answer (verified single-token in Qwen3-4B so a multi-token answer
+can't become a false negative), plus per-family same-entity distractors graded
+0–16 so retrieval quality varies. Every fact is written to a **real file** and
+ingested with `source_id=abspath`, so `freshness_min=1.0` for all 48 (this kills
+the earlier synthetic-`stale` haircut). Stage 1 dumps the five know-features +
+the continuous confidence at budget `max_genes=2`; stage 2 graphs the **20
+stratified-hardest survivors** (14 rank-2, 11 `lexical_dense_agree=False`,
+confidence 0.128–0.44) on Qwen3-4B via the local circuit-tracer, and imputes
+`causal_use=1` for the easier survivors (licensed below). *Every number here was
+re-derived by an independent 6-agent adversarial pass, which corrected three
+first-draft overclaims — the caveats box is not decorative.*
+
+| quantity | value |
+|---|---|
+| golds delivered into `expressed_context` (`answer_survived`) | **45 / 48** |
+| gold rank distribution | rank-1: 26, rank-2: 19, rank-3: 3 |
+| graph-measured survivors **causally used** | **20 / 20** (0 exceptions) |
+| — mean faithfulness / all answer-is-top-driver | 0.717 (0.58–0.81) / yes |
+| KnowBlocks emitted @ shipped budget `max_genes=2` | **0 / 48** (max conf 0.4397 < floor 0.45) |
+| KnowBlocks across budgets {1, 2, 3, 6} | 3, 0, 0, 0 (**≤ 3/48 at any budget**) |
+
+**Core finding — the know-logistic has ≈0 recall against known-good deliveries.**
+On a bed where 45/48 turns deliver the correct unique gold token and 20/20
+graph-measured deliveries are *causally used* (the injected token is the answer
+logit's top input driver, mean faith 0.72), the shipped logistic emits **zero**
+KnowBlocks at the shipped operating point. This is not a surprising bug so much
+as a *quantification of a documented design choice*: the `helix.toml [know]`
+comment already notes calibrated confidence tops out ~0.465 and the floor (0.45)
+was set so KnowBlocks "rarely fire." The measurement here is that "rarely" ≈
+**never — even on facts the model provably retrieved and used.** The
+precision-first operating point trades away essentially all recall.
+
+**Mechanism.** β1(top_score) = **−1.1442** (perverse negative): stronger
+retrieval *lowers* confidence. Flipping only that sign rescues a flawless-K=0
+needle (`beacon`: 0.4397 → 0.8226, MISS → KNOW). β1 is the largest non-intercept
+coefficient, though the intercept (−2.12) contributes more raw negative logit,
+and `beacon` is a *marginal* miss (0.010 below floor) — so the low intercept +
+the ~0.46 confidence ceiling matter alongside the β1 sign.
+
+**Why the training was wrong.** PR #249 fit against the retrieval-top1 proxy
+(`gold_rank==1`). On this bed that label marks only 26/48 positive and
+**mislabels 19 rank-2 golds as negative** (14 graph-measured causally-used, 5
+imputed; FN=19, FP=0) — the delivered-and-used facts the logistic should trust.
+
+**Refit is direction-only.** Refitting against causal-use flips β1 to **+0.20**
+and lifts the intercept to **+0.49** — the correct *direction*. But this bed is
+94% positive (45/3) with **zero graph-measured non-causal deliveries**, so the
+features cannot *discriminate* (in-sample AUC 0.504 = chance; LOOCV degenerate).
+No AUC/ECE improvement may be claimed and these betas are **not a drop-in
+production vector**; a production recalibration needs a harder, delivery-balanced
+bench that actually contains delivered-but-unused turns.
+
+> **Verified caveats (do not drop):**
+> 1. **"0/48" is budget-specific.** Confidence is *not* pre-budget: `top_score`/
+>    `score_gap` come from `query_docs(max_genes)` and `coordinate_confidence`/
+>    `freshness_min` are computed over the post-budget expressed docs. The
+>    budget-robust statement is "≤ 3/48 at any budget, 0 at the shipped one."
+> 2. **Not "anti-calibrated."** AUC 0.407 rests on 3 negatives (bootstrap 95% CI
+>    [0.15, 0.78]); the point-biserial is *positive* (+0.03). The robust framing
+>    is **uncorrelated + systematically under-confident** — ECE 0.685 equals
+>    base-rate 0.9375 − mean-confidence 0.2523 (pure under-confidence).
+> 3. **`causal_use` ≡ `answer_survived`** on all 48 rows: the miscalibration
+>    stands on *delivery* (measured retrieval success); the graphs upgrade 20
+>    rows to "delivered **and** used" but add no non-causal negative.
+> 4. Single template, single model (Qwen3-4B), pA≈0 assumed (not measured here).
+
 ## Interpretation for #239
 
-`found=true` is a *delivery* claim. **Causal use is what it should predict.**
-The instrument gives, for the first time, a per-turn mechanistic label
-("did the model read the delivered answer?") to calibrate the KnowBlock logistic
-against — a ground truth the confidence fit (PR #249, β1<0 anti-signal, ECE
-0.74→0.04) never had.
-
-The direct lever: pair helix's own `_compute_know_or_miss_block(…).confidence`
-with the measured faithfulness per turn and ask **does high know-confidence
-predict high causal use?** On the 6-fact bed confidence is saturated (retrieval
-is trivial → no variance), so this needs a bigger, noisier corpus with a mix of
-found/not-found turns — where it converges with the ERB semantic retrieval work.
+`found=true` is a *delivery* claim; **causal use is what it should predict.** The
+instrument now supplies that per-turn mechanistic label, and the §3 bed turns it
+into a concrete verdict on the shipped logistic: at its operating point it says
+"I don't know" about facts it has both retrieved and demonstrably used. The
+actionable outputs for #239 are (a) **fix the β1 sign** (top_score should raise,
+not lower, confidence), (b) **revisit the intercept/floor** so the confidence
+ceiling clears the emit floor, and (c) **retrain against causal-use, not the
+retrieval-top1 proxy** that mislabels rank-2 delivered facts — but on a
+**delivery-balanced** bench, since the §3 bed (94% positive) proves the
+*direction and magnitude* of the correction, not a production beta vector.
 
 ## Limitations
 
 - **gemma-2-2b** is the only model with an open attribution-graph API. It is
   small (strong priors compete with context) and not the helix serving model —
   faithfulness numbers are model-relative, not a universal constant.
-- **Synthetic single-token needles, N=6.** Establishes the instrument, not a
-  population estimate.
+- **Synthetic single-token needles** (§1–2 N=6, §3 N=48, one template).
+  Establishes the instrument + a calibration verdict, not a population estimate.
+- **The §3 bed has no negatives to discriminate.** `causal_use` ≡
+  `answer_survived` (delivered ⇒ used, 20/20); there are zero graph-measured
+  delivered-but-unused turns, so it measures the *recall* arm of the miscalibration
+  only — it cannot say whether the floor correctly *suppresses* bad deliveries.
 - ~~Anonymous rate limit caps batch size~~ — **resolved** by self-hosting
   circuit-tracer locally (unlimited, no egress). Long prompts are slow on 12 GB
   (shared-memory spill) but complete.
@@ -204,16 +277,28 @@ the validated scoring), `faith_local_realhelix.py` (stage 2), and
 `dump_expressed.py` (stage 1, helix env → `expressed_context` JSON). Two envs
 because circuit-tracer and the helix model stack pin conflicting deps.
 
+§3 #239 pipeline: `np-graph/needles_239.py` (48-needle graded-distractor bed
+spec), `scratchpad/build_bed_239.py` (helix env → real-file ingest + stage-1
+features/confidence JSON), `np-graph/faith_239.py` (Qwen3-4B causal-use graphs,
+`--ids` subset + resume), `scratchpad/refit_239.py` (helix env → shipped-vs-refit
+comparison). Data artifacts: `np-graph/needles_239_stage1.json`,
+`needles_239_faith.json`.
+
 Egress: synthetic content only (public repo facts + fictional "Redwood
 Inference" ERB facts). Self-hosting keeps everything local (no S3, no key).
 
 ## Next
 
 1. ~~Complete real-helix faithfulness~~ — **DONE** (6/6 causal, local).
-2. **Scale N** and add non-arbitrary needles (facts the model *could* half-know)
-   to map the faithfulness/prior boundary — now unlimited via self-hosting.
-3. **Know-confidence correlation** — the #239 calibration payoff; needs the
-   bigger ERB bed for confidence variance.
-4. Once landed, this becomes the **yardstick** the retrieval work (complement /
-   DNA-pair dense re-embedding, ANN threshold) is measured by: prove the model
-   *causally uses* newly-retrieved content, not merely that helix delivered it.
+2. ~~Know-confidence vs causal-use~~ — **DONE** (§3: 48-needle bed, 20/20 causal,
+   the ≈0-recall verdict + the β1-sign / intercept / training-label diagnosis).
+3. **A delivery-balanced bench** is the missing piece for a *production* refit:
+   the §3 bed has no delivered-but-unused turns, so it fixes the correction's
+   direction but not its coefficients. Build a harder bed (vaguer queries or
+   relation-word distractors) where a real fraction of golds is dropped or
+   ignored, graph both arms, and refit the logistic on genuine ±causal labels.
+4. **Scale N / non-arbitrary needles** (facts the model could half-know) to map
+   the faithfulness/prior boundary, and **confirm on the helix serving model**.
+5. This stays the **yardstick** for the retrieval work (complement / DNA-pair
+   dense re-embedding, ANN threshold): prove the model *causally uses*
+   newly-retrieved content, not merely that helix delivered it.
