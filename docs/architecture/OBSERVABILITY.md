@@ -1,6 +1,6 @@
 # Observability — OTel → Grafana stack
 
-Helix emits OpenTelemetry traces + metrics when `HELIX_OTEL_ENABLED=1`. Everything upstream of the LLM answer boundary becomes visible on one dashboard.
+Helix emits OpenTelemetry traces + metrics when telemetry is enabled — via `HELIX_OTEL_ENABLED=1`, `[telemetry] enabled = true` in helix.toml, or automatically under the tray launcher once the local stack is up. Everything upstream of the LLM answer boundary becomes visible on one dashboard.
 
 ## Quick start
 
@@ -43,13 +43,38 @@ That launches:
 pip install "helix-context[otel]"
 ```
 
-**Enable on the helix server:**
+**Enable on the helix server** — either via env vars:
 
 ```bash
 export HELIX_OTEL_ENABLED=1
 export HELIX_OTEL_ENDPOINT=localhost:4317   # default
 python -m uvicorn helix_context._asgi:app --port 11437
 ```
+
+or via the `[telemetry]` section in `helix.toml`:
+
+```toml
+[telemetry]
+enabled = true
+endpoint = "localhost:4317"
+```
+
+Precedence per knob: `HELIX_OTEL_*` env var > `[telemetry]` toml >
+code default. Env wins in both directions — an explicit
+`HELIX_OTEL_ENABLED=0` silences a toml `enabled = true`.
+
+**Tray launcher:** no configuration needed. When the launcher starts
+(or adopts) the native observability stack — and the collector's OTLP
+port `:4317` is actually accepting connections — it exports
+`HELIX_OTEL_ENABLED=1` into the helix child's environment, so the
+default tray boot ships data to Grafana out of the box. Set
+`HELIX_OTEL_ENABLED=0` yourself to keep the stack up with a silent
+backend. If the stack fails to start, or a service spawns but never
+becomes ready (red status), the collector-port probe fails and the
+export is skipped — a backend dialing a dead collector would wedge its
+gRPC channel. The endpoint itself is not exported; it resolves via the
+normal env > toml > default chain, so an explicit `[telemetry]
+endpoint` in helix.toml is respected.
 
 Open <http://localhost:3000/d/helix-overview>. Retrieval latency, tier contributions, CWoLa f_gap, chromatin distribution, harmonic-edges-by-source — all live.
 
@@ -168,13 +193,27 @@ Query text is hashed by default — spans carry `query=<first-50-chars>[hash:<12
 
 ## Configuration
 
-| Env var | Default | Purpose |
-|---|---|---|
-| `HELIX_OTEL_ENABLED` | `0` | master switch |
-| `HELIX_OTEL_ENDPOINT` | `localhost:4317` | OTLP gRPC endpoint |
-| `HELIX_OTEL_INSECURE` | `1` | plain gRPC (local dev) |
-| `HELIX_OTEL_SAMPLER_RATIO` | `1.0` | trace sampler 0.0–1.0 |
-| `HELIX_OTEL_REDACT_QUERY` | `1` | hash query strings |
+Every knob is settable two ways — an env var or its `[telemetry]` key
+in `helix.toml`. Resolution per knob: **env var > toml > default**
+(`helix_context.telemetry.otel.resolve_telemetry_settings`). An env var
+set to the empty string counts as unset.
+
+| Env var | `[telemetry]` key | Default | Purpose |
+|---|---|---|---|
+| `HELIX_OTEL_ENABLED` | `enabled` | off | master switch (env: `1` = on) |
+| `HELIX_OTEL_ENDPOINT` | `endpoint` | `localhost:4317` | OTLP gRPC endpoint |
+| `HELIX_OTEL_INSECURE` | `insecure` | on | plain gRPC (local dev) |
+| `HELIX_OTEL_SAMPLER_RATIO` | `sampler_ratio` | `1.0` | trace sampler 0.0–1.0 |
+| `HELIX_OTEL_REDACT_QUERY` | `redact_query` | on | hash query strings (env: `0` = raw) |
+| `HELIX_OTEL_LOGS_ENABLED` | `logs_enabled` | on | ship Python logs → collector → Loki |
+| `HELIX_OTEL_LOGS_LEVEL` | `logs_level` | `INFO` | min log level forwarded |
+
+The tray launcher exports `HELIX_OTEL_ENABLED=1` into the helix child's
+environment after the observability stack is up and the collector's
+OTLP port answers — that export is an env-layer value, so it beats the
+shipped `[telemetry] enabled = false` default but never overrides an
+explicit user `HELIX_OTEL_ENABLED`, and it does not touch
+`HELIX_OTEL_ENDPOINT`.
 
 ## Dashboards
 
@@ -254,7 +293,7 @@ If the final `curl` returns `data.result[0].value`, metrics are flowing end-to-e
 
 ## Troubleshooting
 
-- **"OTel disabled" in logs** — set `HELIX_OTEL_ENABLED=1` in the helix server's env.
+- **"OTel disabled" in logs** — set `HELIX_OTEL_ENABLED=1` in the helix server's env or `[telemetry] enabled = true` in helix.toml. If the server runs under the tray launcher this is exported automatically once the stack starts — check the launcher log for "Observability stack up" and make sure no stray `HELIX_OTEL_ENABLED=0` is set in the launcher's shell.
 - **"OTel packages not installed"** — `pip install "helix-context[otel]"`.
 - **Grafana shows no data** — check `http://localhost:9090/targets`; the `otel-collector` target should be `UP`. If it isn't, `docker compose logs otel-collector`.
 - **Trace spans appear but metrics don't** — Prometheus remote-write endpoint needs `--web.enable-remote-write-receiver` (included in the provided `docker-compose.yml`). If running Prometheus outside the compose stack, add the flag.

@@ -187,6 +187,32 @@ bench_port = 11439
 bench_genome_path = "genomes/bench/bench.genome.db"
 # upstream_timeout = 180                # Per-request timeout for proxied calls to Ollama. Default in config.py is 180s. Raise to 240+ for very slow models or large prompts; lower if you want fail-fast.
 
+# ----------------------------------------------------------------------
+# [telemetry] - OPENTELEMETRY EXPORT (backend).
+#
+# TOML defaults for the HELIX_OTEL_* env vars. Precedence, per knob:
+#     HELIX_OTEL_* env var  >  this section  >  code default
+# Env always wins, in BOTH directions: HELIX_OTEL_ENABLED=0 silences a
+# toml enabled=true, and the launcher's auto-export (below) beats a toml
+# enabled=false.
+#
+# enabled stays false here because a bare backend (no launcher, no
+# collector) must not dial a dead endpoint. The tray launcher closes the
+# out-of-the-box gap itself: when it starts (or adopts) the native
+# observability stack it exports HELIX_OTEL_ENABLED=1 into the helix
+# child's environment, so the default tray boot ships data to Grafana
+# with no config edits. Set HELIX_OTEL_ENABLED=0 to keep the stack up
+# but the backend silent.
+# ----------------------------------------------------------------------
+[telemetry]
+enabled = false                         # Master switch (HELIX_OTEL_ENABLED). Launcher exports =1 once the local stack's collector port is up.
+endpoint = "localhost:4317"             # OTLP gRPC collector intake (HELIX_OTEL_ENDPOINT)
+insecure = true                         # Plain gRPC, dev-local (HELIX_OTEL_INSECURE)
+sampler_ratio = 1.0                     # Trace sampler 0.0-1.0; drop to 0.1 at high QPS (HELIX_OTEL_SAMPLER_RATIO)
+redact_query = true                     # Hash query strings in spans; false = raw queries, dev only (HELIX_OTEL_REDACT_QUERY)
+logs_enabled = true                     # Ship Python logs to the collector -> Loki (HELIX_OTEL_LOGS_ENABLED)
+logs_level = "INFO"                     # Min level forwarded: DEBUG/INFO/WARNING/ERROR/CRITICAL (HELIX_OTEL_LOGS_LEVEL)
+
 # ──────────────────────────────────────────────────────────────────────
 # [headroom] — OPTIONAL PROXY LIFECYCLE (launcher only).
 #

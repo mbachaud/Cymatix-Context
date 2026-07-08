@@ -82,6 +82,7 @@ All config lives in `helix.toml`. Sections:
 | `[session]` | synthetic_session_enabled, synthetic_session_window_s, default_party_id |
 | `[genome]` | path (`genomes/main/genome.db`), compact_interval, cold_start_threshold, replicas |
 | `[server]` | host, port, upstream |
+| `[telemetry]` | OTel export defaults: enabled (default false), endpoint (`"localhost:4317"`), insecure, sampler_ratio, redact_query, logs_enabled, logs_level. Precedence: `HELIX_OTEL_*` env > toml > default (env wins both directions); the tray launcher auto-exports `HELIX_OTEL_ENABLED=1` once the observability stack's collector port is up |
 | `[headroom]` | route_upstream toggle for Headroom proxy integration |
 | `[ingestion]` | backend (`"cpu"` / `"ollama"` / `"hybrid"`), splade_enabled, rerank_model, entity_graph, sema_embed_on_ingest (#227: false = no MiniLM load at ingest; TCM falls back to text) |
 | `[context]` | cold_tier_enabled, cold_tier_k, cold_tier_min_cosine |
