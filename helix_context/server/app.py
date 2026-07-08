@@ -184,10 +184,11 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
     app.state.registry = registry  # Expose for testing
     app.state.vault = vault
 
-    # OpenTelemetry init (disabled unless HELIX_OTEL_ENABLED=1).
+    # OpenTelemetry init (off unless HELIX_OTEL_ENABLED=1 or [telemetry]
+    # enabled=true; env wins over toml — see otel.resolve_telemetry_settings).
     try:
         from ..telemetry import setup_telemetry
-        setup_telemetry(app, service_name="helix-context")
+        setup_telemetry(app, service_name="helix-context", config=config.telemetry)
     except Exception:
         log.debug("OTel setup failed", exc_info=True)
 

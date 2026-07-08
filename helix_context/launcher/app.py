@@ -758,6 +758,82 @@ def _maybe_build_observability() -> tuple[
         return None, False
 
 
+def _export_otel_env_for_backend() -> None:
+    """Point the helix child's OTel exporter at the observability stack.
+
+    Called after ObservabilitySupervisor.start_all() returns without
+    raising (services spawned or adopted as external). Without this, the
+    default boot ran a full Grafana/Tempo/Loki/Prometheus stack while the
+    backend emitted nothing — HELIX_OTEL_ENABLED defaults off — so a
+    fresh install got an empty helix-overview dashboard.
+
+    Mutates the launcher's own os.environ BEFORE the helix child spawns;
+    HelixSupervisor.start() passes the environment through (env=None
+    inherits, extra_env copies os.environ first), so main + bench children
+    both pick it up, as do tray-menu restarts.
+
+    Guards:
+    - An EXPLICIT user HELIX_OTEL_ENABLED — on or off — is never
+      overridden. (Env-over-toml precedence is otherwise intentional:
+      the export must beat the shipped ``[telemetry] enabled=false``
+      default.)
+    - The collector's OTLP port must actually accept connections.
+      start_all() returning is NOT proof of that — a service that spawns
+      but never becomes ready is logged STATUS_RED and start_all returns
+      normally, and ``_maybe_external`` can be satisfied by a squatter on
+      any collector port (e.g. :8889 alone). A backend dialing a dead
+      :4317 wedges its gRPC channel and drops metrics even after the
+      collector later binds, so no reachable port -> no export.
+
+    The endpoint is deliberately NOT exported: the backend's own
+    resolution chain (env > [telemetry] toml > default) already lands on
+    localhost:4317, and a synthesized env endpoint would override an
+    explicit user [telemetry] endpoint in helix.toml.
+    """
+    if os.environ.get("HELIX_OTEL_ENABLED", "").strip():
+        return
+    from .observability_health import SERVICE_PORTS, is_port_bound
+    otlp_port = SERVICE_PORTS["collector"][0]
+    if not is_port_bound("127.0.0.1", otlp_port):
+        log.warning(
+            "Observability start reported success but the collector OTLP "
+            "port :%d is not accepting connections — NOT exporting "
+            "HELIX_OTEL_ENABLED for the helix child (a backend dialing a "
+            "dead collector wedges its gRPC channel)",
+            otlp_port,
+        )
+        return
+    os.environ["HELIX_OTEL_ENABLED"] = "1"
+    log.info(
+        "Observability stack up — exported HELIX_OTEL_ENABLED=1 for helix "
+        "children spawned by this launcher (collector :%d)",
+        otlp_port,
+    )
+
+
+def _start_observability_stack(
+    observability_sup: Optional["ObservabilitySupervisor"],
+) -> None:
+    """start_all() + on success export the OTel env for the helix child.
+
+    A failed start deliberately skips the export — pointing the backend
+    at a dead collector wedges its gRPC channel (see the start-order
+    comment at the call site).
+    """
+    if observability_sup is None:
+        return
+    try:
+        observability_sup.start_all()
+    except Exception:
+        log.warning(
+            "ObservabilitySupervisor.start_all failed; tray will "
+            "indicate via per-service red status",
+            exc_info=True,
+        )
+    else:
+        _export_otel_env_for_backend()
+
+
 def _handle_service_command(command: str, dry_run: bool, port: int = 11438) -> int:
     """Handle install-service / uninstall-service subcommands.
 
@@ -986,15 +1062,10 @@ def main(argv: Optional[list] = None) -> int:
         observability_sup, observability_install_pending = (
             _maybe_build_observability()
         )
-        if observability_sup is not None:
-            try:
-                observability_sup.start_all()
-            except Exception:
-                log.warning(
-                    "ObservabilitySupervisor.start_all failed; tray will "
-                    "indicate via per-service red status",
-                    exc_info=True,
-                )
+        # On success this also exports HELIX_OTEL_ENABLED=1 (+ endpoint)
+        # into our env so the helix child spawned below actually emits
+        # into the stack we just started. Explicit user env wins.
+        _start_observability_stack(observability_sup)
 
     # Adopt or start helix before the UI comes up.
     if needs_db_selection:

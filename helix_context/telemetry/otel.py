@@ -13,6 +13,16 @@ Usage:
     h = meter.create_histogram("helix_tier_contribution", unit="score")
     h.record(5.3, attributes={"tier": "pki", "shape": "project_key"})
 
+Configuration (precedence: env var > [telemetry] in helix.toml > default):
+    Every knob below has a matching key in the ``[telemetry]`` helix.toml
+    section (config.TelemetryConfig) — ``enabled``, ``endpoint``,
+    ``insecure``, ``sampler_ratio``, ``redact_query``, ``logs_enabled``,
+    ``logs_level``. Pass ``config=cfg.telemetry`` to ``setup_telemetry``
+    to activate the toml layer; the env vars always win over it, in both
+    directions (an explicit HELIX_OTEL_ENABLED=0 silences a toml
+    ``enabled = true``). An env var set to the empty string counts as
+    unset. Resolution lives in ``resolve_telemetry_settings()``.
+
 Environment:
     HELIX_OTEL_ENABLED       - "1" to turn on, default "0"
     HELIX_OTEL_ENDPOINT      - OTLP gRPC endpoint, default "localhost:4317"
@@ -77,14 +87,92 @@ meter: Any = _NoopMeter()
 _initialised = False
 
 
+# Hardcoded defaults for every telemetry knob — the bottom layer of the
+# env > [telemetry] toml > default precedence chain. Keys and values MUST
+# stay equal to config.TelemetryConfig's field defaults (import avoided so
+# otel.py keeps zero config-module coupling; tests cross-check the two).
+_TELEMETRY_DEFAULTS: dict = {
+    "enabled": False,
+    "endpoint": "localhost:4317",
+    "insecure": True,
+    "sampler_ratio": 1.0,
+    "redact_query": True,
+    "logs_enabled": True,
+    "logs_level": "INFO",
+}
+
+# Effective settings for the runtime readers (_redact_query, the logs
+# handler) that historically consulted env per call. setup_telemetry()
+# overwrites this with the resolved env>toml>default values; before that
+# (or when called without config=) it equals the pure defaults, which
+# preserves the pre-[telemetry] behavior bit-for-bit.
+_settings: dict = dict(_TELEMETRY_DEFAULTS)
+
+
+def _env_raw(name: str) -> Optional[str]:
+    """Env var value, with empty/blank strings normalized to unset."""
+    val = os.environ.get(name)
+    if val is None or not val.strip():
+        return None
+    return val
+
+
+def resolve_telemetry_settings(config: Any = None) -> dict:
+    """Resolve the effective telemetry settings: env > toml > default.
+
+    ``config`` duck-types ``helix_context.config.TelemetryConfig`` (or
+    ``None`` when no toml layer applies). Env parse semantics are the
+    historical per-var ones: ENABLED / INSECURE / LOGS_ENABLED are on iff
+    the value is "1"; REDACT_QUERY is on unless "0"; a non-float
+    SAMPLER_RATIO falls through to the next layer.
+    """
+    def _layer(attr: str) -> Any:
+        return getattr(config, attr) if config is not None else _TELEMETRY_DEFAULTS[attr]
+
+    enabled_env = _env_raw("HELIX_OTEL_ENABLED")
+    insecure_env = _env_raw("HELIX_OTEL_INSECURE")
+    redact_env = _env_raw("HELIX_OTEL_REDACT_QUERY")
+    logs_enabled_env = _env_raw("HELIX_OTEL_LOGS_ENABLED")
+
+    ratio_env = _env_raw("HELIX_OTEL_SAMPLER_RATIO")
+    ratio: float = float(_layer("sampler_ratio"))
+    if ratio_env is not None:
+        try:
+            ratio = float(ratio_env)
+        except ValueError:
+            log.warning(
+                "HELIX_OTEL_SAMPLER_RATIO=%r is not a float — using %s",
+                ratio_env, ratio,
+            )
+
+    return {
+        "enabled": (enabled_env == "1") if enabled_env is not None
+                   else bool(_layer("enabled")),
+        "endpoint": _env_raw("HELIX_OTEL_ENDPOINT") or str(_layer("endpoint")),
+        "insecure": (insecure_env == "1") if insecure_env is not None
+                    else bool(_layer("insecure")),
+        "sampler_ratio": ratio,
+        "redact_query": (redact_env != "0") if redact_env is not None
+                        else bool(_layer("redact_query")),
+        "logs_enabled": (logs_enabled_env == "1") if logs_enabled_env is not None
+                        else bool(_layer("logs_enabled")),
+        "logs_level": _env_raw("HELIX_OTEL_LOGS_LEVEL") or str(_layer("logs_level")),
+    }
+
+
 def _redact_query(q: str) -> str:
-    """Hash query text + keep first 50 chars — default privacy mode."""
+    """Hash query text + keep first 50 chars — default privacy mode.
+
+    Env is still consulted per call (live override, matching the historical
+    behavior); the [telemetry] toml value applies via ``_settings`` when
+    the env var is unset.
+    """
     if not q:
         return ""
     digest = hashlib.sha256(q.encode("utf-8", errors="replace")).hexdigest()[:12]
-    return f"{q[:50]}[hash:{digest}]" if os.environ.get(
-        "HELIX_OTEL_REDACT_QUERY", "1"
-    ) != "0" else q
+    redact_env = _env_raw("HELIX_OTEL_REDACT_QUERY")
+    redact = (redact_env != "0") if redact_env is not None else _settings["redact_query"]
+    return f"{q[:50]}[hash:{digest}]" if redact else q
 
 
 def _instrument_fastapi(app: Any) -> None:
@@ -160,18 +248,26 @@ def _attach_otlp_logging_handler(
     Re-uses the same OTLP endpoint as the trace/metric exporters so a
     single collector receiver handles all three signals.
 
-    Honors two env vars:
+    Honors two knobs (env var first, then the [telemetry] toml values
+    captured in ``_settings``):
 
-    - ``HELIX_OTEL_LOGS_ENABLED`` (default ``"1"``): set ``"0"`` to skip
-      log shipping entirely while keeping traces + metrics enabled.
-    - ``HELIX_OTEL_LOGS_LEVEL`` (default ``"INFO"``): minimum level
-      forwarded to OTel. DEBUG / INFO / WARNING / ERROR / CRITICAL.
+    - ``HELIX_OTEL_LOGS_ENABLED`` / ``logs_enabled`` (default on): set
+      ``"0"`` to skip log shipping entirely while keeping traces +
+      metrics enabled.
+    - ``HELIX_OTEL_LOGS_LEVEL`` / ``logs_level`` (default ``"INFO"``):
+      minimum level forwarded to OTel. DEBUG / INFO / WARNING / ERROR /
+      CRITICAL.
     """
-    if os.environ.get("HELIX_OTEL_LOGS_ENABLED", "1") != "1":
+    logs_enabled_env = _env_raw("HELIX_OTEL_LOGS_ENABLED")
+    logs_enabled = (
+        (logs_enabled_env == "1") if logs_enabled_env is not None
+        else _settings["logs_enabled"]
+    )
+    if not logs_enabled:
         log.info(
             "OTel log shipping disabled "
-            "(HELIX_OTEL_LOGS_ENABLED=0) — traces + metrics still on, "
-            "Loki Logs panel will stay empty",
+            "(HELIX_OTEL_LOGS_ENABLED=0 / [telemetry] logs_enabled=false) — "
+            "traces + metrics still on, Loki Logs panel will stay empty",
         )
         return
     # Idempotency: bail BEFORE constructing a new LoggerProvider so a
@@ -180,7 +276,9 @@ def _attach_otlp_logging_handler(
     root = logging.getLogger()
     if any(isinstance(h, LoggingHandler) for h in root.handlers):
         return
-    level = _resolve_logs_level(os.environ.get("HELIX_OTEL_LOGS_LEVEL"))
+    level = _resolve_logs_level(
+        _env_raw("HELIX_OTEL_LOGS_LEVEL") or str(_settings["logs_level"])
+    )
     try:
         # Resource hint: tells Loki's OTLP ingest to promote `logger`
         # (and `service.name`, which Loki promotes by default but we
@@ -214,8 +312,14 @@ def setup_telemetry(
     app: Any = None,
     service_name: str = "helix-context",
     service_version: str = "0.4.0b",
+    config: Any = None,
 ) -> bool:
     """Initialize OTel tracer + meter providers + FastAPI auto-instrumentation.
+
+    ``config`` is an optional ``config.TelemetryConfig`` — the [telemetry]
+    helix.toml layer. Every knob resolves env > config > default (see
+    ``resolve_telemetry_settings``); omitting it preserves the legacy
+    env-only behavior.
 
     Returns True if telemetry was turned on, False if it was skipped (not
     enabled, or the opentelemetry packages are missing). Safe to call
@@ -223,13 +327,24 @@ def setup_telemetry(
     auto-instrumentation is applied to every app passed in.
     """
     global tracer, meter, _initialised
+    settings = resolve_telemetry_settings(config)
+    # Publish the resolved values for the runtime readers (_redact_query,
+    # logs handler) on EVERY call — before the _initialised early-return
+    # and even when disabled — so the most recent caller's [telemetry]
+    # layer governs the redaction/log knobs. Otherwise a create_app(config)
+    # following an earlier env-only init would silently drop the operator's
+    # toml redact_query / logs settings.
+    _settings.update(settings)
     if _initialised:
         # SDK already set up — but each new app still needs instrumentation,
         # otherwise routes added after the first call are never auto-traced.
         _instrument_fastapi(app)
         return True
-    if os.environ.get("HELIX_OTEL_ENABLED", "0") != "1":
-        log.info("OTel disabled (set HELIX_OTEL_ENABLED=1 to turn on)")
+    if not settings["enabled"]:
+        log.info(
+            "OTel disabled (set HELIX_OTEL_ENABLED=1 or [telemetry] "
+            "enabled=true in helix.toml to turn on)"
+        )
         return False
     try:
         from opentelemetry import trace, metrics
@@ -266,12 +381,9 @@ def setup_telemetry(
         )
         return False
 
-    endpoint = os.environ.get("HELIX_OTEL_ENDPOINT", "localhost:4317")
-    insecure = os.environ.get("HELIX_OTEL_INSECURE", "1") == "1"
-    try:
-        ratio = float(os.environ.get("HELIX_OTEL_SAMPLER_RATIO", "1.0"))
-    except ValueError:
-        ratio = 1.0
+    endpoint = settings["endpoint"]
+    insecure = settings["insecure"]
+    ratio = settings["sampler_ratio"]
 
     resource = Resource.create({
         SERVICE_NAME: service_name,

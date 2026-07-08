@@ -470,8 +470,11 @@ Look for the `observability.exporter` field. Expected values:
 - `"otlp_grpc"` — `[otel]` installed and OTLP exporter built.
 - `"noop"` — `HELIX_OTEL_ENABLED=1` but `[otel]` not installed.
   Grafana will be empty until you add the extra.
-- absent / `null` — `HELIX_OTEL_ENABLED` is not set or is `0`. This is
-  the intended state for the proxy-only flow.
+- absent / `null` — telemetry is off: `HELIX_OTEL_ENABLED` is unset or
+  `0` AND `[telemetry] enabled` in helix.toml is false (the shipped
+  default), and the tray launcher has not exported the enable (it does
+  so once the local stack's collector port is up). This is the intended
+  state for the proxy-only flow.
 
 If the field shows `"noop"` and you want telemetry, run
 `pip install -e ".[otel]"` and restart the tray.

@@ -210,6 +210,33 @@ class ServerConfig:
 
 
 @dataclass
+class TelemetryConfig:
+    """[telemetry] — OpenTelemetry export defaults for the backend.
+
+    Mirrors the HELIX_OTEL_* env vars read by ``telemetry/otel.py``.
+    Precedence at setup time is env > this section > dataclass default —
+    the resolution happens in ``otel.resolve_telemetry_settings()``, NOT
+    here, so ``load_config`` stays env-free for telemetry and the
+    default-honesty comparator (tests/test_config_default_honesty.py)
+    never sees env-dependent values.
+
+    ``enabled`` defaults false: a bare backend (no launcher, no stack)
+    must not dial a dead collector. The launcher closes the out-of-the-
+    box gap the other way — when it starts (or adopts) the observability
+    stack it exports HELIX_OTEL_ENABLED=1 into the helix child's env
+    (launcher/app.py ``_export_otel_env_for_backend``), which wins over
+    this default by design.
+    """
+    enabled: bool = False               # Master switch (HELIX_OTEL_ENABLED)
+    endpoint: str = "localhost:4317"    # OTLP gRPC (HELIX_OTEL_ENDPOINT)
+    insecure: bool = True               # Plain gRPC, dev-local (HELIX_OTEL_INSECURE)
+    sampler_ratio: float = 1.0          # Trace sampler 0.0-1.0 (HELIX_OTEL_SAMPLER_RATIO)
+    redact_query: bool = True           # Hash query strings in spans (HELIX_OTEL_REDACT_QUERY)
+    logs_enabled: bool = True           # Ship Python logs to OTel/Loki (HELIX_OTEL_LOGS_ENABLED)
+    logs_level: str = "INFO"            # Min level forwarded (HELIX_OTEL_LOGS_LEVEL)
+
+
+@dataclass
 class IngestionConfig:
     """Controls which backend encodes raw content into documents."""
     # default aligned with shipped helix.toml (2026-06-12 default-honesty
@@ -711,6 +738,7 @@ class HelixConfig:
     budget: BudgetConfig = field(default_factory=BudgetConfig)
     genome: GenomeConfig = field(default_factory=GenomeConfig)
     server: ServerConfig = field(default_factory=ServerConfig)
+    telemetry: TelemetryConfig = field(default_factory=TelemetryConfig)
     ingestion: IngestionConfig = field(default_factory=IngestionConfig)
     context: ContextConfig = field(default_factory=ContextConfig)
     cymatics: CymaticsConfig = field(default_factory=CymaticsConfig)
@@ -865,6 +893,22 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
                 "HELIX_SERVER_UPSTREAM_TIMEOUT=%r is not a float — ignoring override",
                 os.environ["HELIX_SERVER_UPSTREAM_TIMEOUT"],
             )
+
+    # Telemetry — toml defaults for the HELIX_OTEL_* knobs. Deliberately NO
+    # env handling here (see TelemetryConfig docstring): otel.py resolves
+    # env > toml > default at setup_telemetry time.
+    if "telemetry" in raw:
+        t = raw["telemetry"]
+        _warn_unknown("telemetry", t, TelemetryConfig)
+        cfg.telemetry = TelemetryConfig(
+            enabled=bool(t.get("enabled", cfg.telemetry.enabled)),
+            endpoint=str(t.get("endpoint", cfg.telemetry.endpoint)),
+            insecure=bool(t.get("insecure", cfg.telemetry.insecure)),
+            sampler_ratio=float(t.get("sampler_ratio", cfg.telemetry.sampler_ratio)),
+            redact_query=bool(t.get("redact_query", cfg.telemetry.redact_query)),
+            logs_enabled=bool(t.get("logs_enabled", cfg.telemetry.logs_enabled)),
+            logs_level=str(t.get("logs_level", cfg.telemetry.logs_level)),
+        )
 
     # Ingestion
     if "ingestion" in raw:
