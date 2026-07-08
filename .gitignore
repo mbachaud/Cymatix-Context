@@ -64,7 +64,8 @@ benchmarks/snow/results/*error*.json
 # or add an explicit exception below.
 benchmarks/*.json
 !benchmarks/fixtures.json
-benchmarks/results/
+benchmarks/results/*
+!benchmarks/results/faithfulness/
 benchmarks/*_report.txt
 benchmarks/*_report_utf8.txt
 

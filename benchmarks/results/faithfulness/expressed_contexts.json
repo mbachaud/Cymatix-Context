@@ -1,0 +1,50 @@
+[
+  {
+    "id": "beacon_mascot",
+    "q": "According to Redwood Inference, the Beacon module team mascot is the",
+    "ans": "otter",
+    "expressed_context": "<expressed_context>\n[gene=6cf85e94727b \u25c6 fired=fts5:6.0,lex_anchor:6.0,splade:3.5 73\u2192126c]\n<GENE src=\"beacon_mascot\" facts=\"entry=the\">\nRedwood Inference wiki entry: the Beacon module team mascot is the otter.\n</GENE>\n---\n[gene=803f66ed2790 \u2b26 fired=splade:2.0,tag_prefix:1.5,sema_boost:1.1 79\u2192133c]\n<GENE src=\"prism_codename\" facts=\"notes=the\">\nRedwood Inference release notes: the Prism analytics engine is codenamed mango.\n</GENE>\n---\n[gene=708c90d0c057 \u2b26 fired=splade:1.9,tag_prefix:1.5,sema_boost:1.1 79\u2192129c]\n<GENE src=\"atlas_color\" facts=\"note=the\">\nRedwood Inference ops note: the Atlas service status dashboard is colored teal.\n</GENE>\n---\n[gene=6f6458ec404a \u2b26 fired=splade:2.7,fts5:1.7,tag_prefix:1.5 75\u2192133c]\n<GENE src=\"cascade_codename\" facts=\"runbook=the\">\nRedwood Inference runbook: the Cascade ingestion module is codenamed raven.\n</GENE>\n---\n[gene=0c76f119c045 \u2b26 fired=splade:1.8,tag_prefix:1.5,sema_boost:1.0 93\u2192142c]\n<GENE src=\"harbor_zone\" facts=\"map=the\">\nRedwood Inference network map: the Harbor gateway sits in the availability zone named cobalt.\n</GENE>\n---\n[gene=aba735eaccd0 \u2b26 fired=splade:2.1,sema_boost:1.0,authority:0.5 82\u2192133c]\n<GENE src=\"sentinel_tier\" facts=\"doc=the\">\nRedwood Inference SLA doc: the Sentinel service runs on the platinum support tier.\n</GENE>\n</expressed_context>",
+    "expressed_len": 1311,
+    "answer_survived": true
+  },
+  {
+    "id": "prism_codename",
+    "q": "In Redwood Inference, the Prism analytics engine is codenamed",
+    "ans": "mango",
+    "expressed_context": "<expressed_context>\n[gene=803f66ed2790 \u25c6 fired=fts5:6.0,splade:3.5,authority:2.5 79\u2192133c]\n<GENE src=\"prism_codename\" facts=\"notes=the\">\nRedwood Inference release notes: the Prism analytics engine is codenamed mango.\n</GENE>\n---\n[gene=6f6458ec404a \u2b26 fired=splade:2.9,tag_prefix:1.5,sema_boost:1.4 75\u2192133c]\n<GENE src=\"cascade_codename\" facts=\"runbook=the\">\nRedwood Inference runbook: the Cascade ingestion module is codenamed raven.\n</GENE>\n---\n[gene=708c90d0c057 \u2b26 fired=splade:2.2,tag_prefix:1.5,sema_boost:1.3 79\u2192129c]\n<GENE src=\"atlas_color\" facts=\"note=the\">\nRedwood Inference ops note: the Atlas service status dashboard is colored teal.\n</GENE>\n---\n[gene=aba735eaccd0 \u2b26 fired=splade:2.0,sema_boost:1.3,dense:0.5 82\u2192133c]\n<GENE src=\"sentinel_tier\" facts=\"doc=the\">\nRedwood Inference SLA doc: the Sentinel service runs on the platinum support tier.\n</GENE>\n---\n[gene=6cf85e94727b \u2b26 fired=splade:1.8,tag_prefix:1.5,sema_boost:1.2 73\u2192126c]\n<GENE src=\"beacon_mascot\" facts=\"entry=the\">\nRedwood Inference wiki entry: the Beacon module team mascot is the otter.\n</GENE>\n---\n[gene=0c76f119c045 \u2b26 fired=splade:1.9,tag_prefix:1.5,sema_boost:1.1 93\u2192142c]\n<GENE src=\"harbor_zone\" facts=\"map=the\">\nRedwood Inference network map: the Harbor gateway sits in the availability zone named cobalt.\n</GENE>\n</expressed_context>",
+    "expressed_len": 1312,
+    "answer_survived": true
+  },
+  {
+    "id": "sentinel_tier",
+    "q": "At Redwood Inference, the Sentinel service runs on the support tier called",
+    "ans": "platinum",
+    "expressed_context": "<expressed_context>\n[gene=aba735eaccd0 \u25c6 fired=fts5:6.0,lex_anchor:6.0,splade:3.5 82\u2192133c]\n<GENE src=\"sentinel_tier\" facts=\"doc=the\">\nRedwood Inference SLA doc: the Sentinel service runs on the platinum support tier.\n</GENE>\n---\n[gene=0c76f119c045 \u2b26 fired=splade:2.4,tag_prefix:1.5,sema_boost:1.1 93\u2192142c]\n<GENE src=\"harbor_zone\" facts=\"map=the\">\nRedwood Inference network map: the Harbor gateway sits in the availability zone named cobalt.\n</GENE>\n---\n[gene=708c90d0c057 \u2b26 fired=splade:2.8,fts5:1.6,tag_prefix:1.5 79\u2192129c]\n<GENE src=\"atlas_color\" facts=\"note=the\">\nRedwood Inference ops note: the Atlas service status dashboard is colored teal.\n</GENE>\n---\n[gene=803f66ed2790 \u2b26 fired=splade:2.6,tag_prefix:1.5,sema_boost:1.2 79\u2192133c]\n<GENE src=\"prism_codename\" facts=\"notes=the\">\nRedwood Inference release notes: the Prism analytics engine is codenamed mango.\n</GENE>\n---\n[gene=6f6458ec404a \u2b26 fired=splade:2.8,tag_prefix:1.5,sema_boost:1.1 75\u2192133c]\n<GENE src=\"cascade_codename\" facts=\"runbook=the\">\nRedwood Inference runbook: the Cascade ingestion module is codenamed raven.\n</GENE>\n---\n[gene=6cf85e94727b \u2b26 fired=splade:2.1,tag_prefix:1.5,sema_boost:1.1 73\u2192126c]\n<GENE src=\"beacon_mascot\" facts=\"entry=the\">\nRedwood Inference wiki entry: the Beacon module team mascot is the otter.\n</GENE>\n</expressed_context>",
+    "expressed_len": 1312,
+    "answer_survived": true
+  },
+  {
+    "id": "cascade_codename",
+    "q": "In the Redwood Inference runbook, the Cascade ingestion module is codenamed",
+    "ans": "raven",
+    "expressed_context": "<expressed_context>\n[gene=6f6458ec404a \u25c6 fired=fts5:6.0,lex_anchor:6.0,pki:5.0 75\u2192133c]\n<GENE src=\"cascade_codename\" facts=\"runbook=the\">\nRedwood Inference runbook: the Cascade ingestion module is codenamed raven.\n</GENE>\n---\n[gene=6cf85e94727b \u2b26 fired=splade:2.5,tag_prefix:1.5,sema_boost:1.1 73\u2192126c]\n<GENE src=\"beacon_mascot\" facts=\"entry=the\">\nRedwood Inference wiki entry: the Beacon module team mascot is the otter.\n</GENE>\n---\n[gene=803f66ed2790 \u2b26 fired=splade:2.7,tag_prefix:1.5,sema_boost:1.1 79\u2192133c]\n<GENE src=\"prism_codename\" facts=\"notes=the\">\nRedwood Inference release notes: the Prism analytics engine is codenamed mango.\n</GENE>\n---\n[gene=708c90d0c057 \u2b26 fired=splade:1.9,tag_prefix:1.5,sema_boost:1.0 79\u2192129c]\n<GENE src=\"atlas_color\" facts=\"note=the\">\nRedwood Inference ops note: the Atlas service status dashboard is colored teal.\n</GENE>\n---\n[gene=aba735eaccd0 \u2b26 fired=splade:2.1,sema_boost:1.1,authority:0.5 82\u2192133c]\n<GENE src=\"sentinel_tier\" facts=\"doc=the\">\nRedwood Inference SLA doc: the Sentinel service runs on the platinum support tier.\n</GENE>\n---\n[gene=0c76f119c045 \u2b26 fired=splade:1.8,tag_prefix:1.5,sema_boost:1.0 93\u2192142c]\n<GENE src=\"harbor_zone\" facts=\"map=the\">\nRedwood Inference network map: the Harbor gateway sits in the availability zone named cobalt.\n</GENE>\n</expressed_context>",
+    "expressed_len": 1314,
+    "answer_survived": true
+  },
+  {
+    "id": "harbor_zone",
+    "q": "At Redwood Inference, the Harbor gateway sits in the availability zone named",
+    "ans": "cobalt",
+    "expressed_context": "<expressed_context>\n[gene=0c76f119c045 \u25c6 fired=fts5:6.0,lex_anchor:6.0,authority:4.0 93\u2192142c]\n<GENE src=\"harbor_zone\" facts=\"map=the\">\nRedwood Inference network map: the Harbor gateway sits in the availability zone named cobalt.\n</GENE>\n---\n[gene=aba735eaccd0 \u2b26 fired=splade:1.7,sema_boost:1.1,authority:0.5 82\u2192133c]\n<GENE src=\"sentinel_tier\" facts=\"doc=the\">\nRedwood Inference SLA doc: the Sentinel service runs on the platinum support tier.\n</GENE>\n---\n[gene=708c90d0c057 \u2b26 fired=splade:1.7,tag_prefix:1.5,sema_boost:1.0 79\u2192129c]\n<GENE src=\"atlas_color\" facts=\"note=the\">\nRedwood Inference ops note: the Atlas service status dashboard is colored teal.\n</GENE>\n---\n[gene=6f6458ec404a \u2b26 fired=splade:2.1,tag_prefix:1.5,sema_boost:1.0 75\u2192133c]\n<GENE src=\"cascade_codename\" facts=\"runbook=the\">\nRedwood Inference runbook: the Cascade ingestion module is codenamed raven.\n</GENE>\n---\n[gene=803f66ed2790 \u2b26 fired=splade:2.1,tag_prefix:1.5,sema_boost:0.9 79\u2192133c]\n<GENE src=\"prism_codename\" facts=\"notes=the\">\nRedwood Inference release notes: the Prism analytics engine is codenamed mango.\n</GENE>\n---\n[gene=6cf85e94727b \u2b26 fired=splade:1.7,tag_prefix:1.5,sema_boost:0.8 73\u2192126c]\n<GENE src=\"beacon_mascot\" facts=\"entry=the\">\nRedwood Inference wiki entry: the Beacon module team mascot is the otter.\n</GENE>\n</expressed_context>",
+    "expressed_len": 1320,
+    "answer_survived": true
+  },
+  {
+    "id": "atlas_color",
+    "q": "In Redwood Inference, the Atlas service status dashboard is colored",
+    "ans": "teal",
+    "expressed_context": "<expressed_context>\n[gene=708c90d0c057 \u25c6 fired=fts5:6.0,lex_anchor:6.0,splade:3.5 79\u2192129c]\n<GENE src=\"atlas_color\" facts=\"note=the\">\nRedwood Inference ops note: the Atlas service status dashboard is colored teal.\n</GENE>\n---\n[gene=aba735eaccd0 \u2b26 fired=splade:2.8,fts5:1.6,sema_boost:1.1 82\u2192133c]\n<GENE src=\"sentinel_tier\" facts=\"doc=the\">\nRedwood Inference SLA doc: the Sentinel service runs on the platinum support tier.\n</GENE>\n---\n[gene=0c76f119c045 \u2b26 fired=splade:2.2,tag_prefix:1.5,sema_boost:1.1 93\u2192142c]\n<GENE src=\"harbor_zone\" facts=\"map=the\">\nRedwood Inference network map: the Harbor gateway sits in the availability zone named cobalt.\n</GENE>\n---\n[gene=803f66ed2790 \u2b26 fired=splade:2.3,tag_prefix:1.5,sema_boost:1.0 79\u2192133c]\n<GENE src=\"prism_codename\" facts=\"notes=the\">\nRedwood Inference release notes: the Prism analytics engine is codenamed mango.\n</GENE>\n---\n[gene=6cf85e94727b \u2b26 fired=splade:2.0,tag_prefix:1.5,sema_boost:1.0 73\u2192126c]\n<GENE src=\"beacon_mascot\" facts=\"entry=the\">\nRedwood Inference wiki entry: the Beacon module team mascot is the otter.\n</GENE>\n---\n[gene=6f6458ec404a \u2b26 fired=splade:2.1,tag_prefix:1.5,sema_boost:0.9 75\u2192133c]\n<GENE src=\"cascade_codename\" facts=\"runbook=the\">\nRedwood Inference runbook: the Cascade ingestion module is codenamed raven.\n</GENE>\n</expressed_context>",
+    "expressed_len": 1312,
+    "answer_survived": true
+  }
+]

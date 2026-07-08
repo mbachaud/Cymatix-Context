@@ -378,8 +378,13 @@ Inference" ERB facts). Self-hosting keeps everything local (no S3, no key).
    know-feature. Re-run the §4 bench (its competition cell + measured labels are
    the honest test set) and see if *this* feature clears chance where coord/
    top_score do not. Pair with the operating-point repair (floor/intercept/β1).
-5. **Scale N / non-arbitrary needles** and **confirm on the helix serving model**
-   (Qwen3-4B is the instrument, not the deployment target).
+5. ~~Scale N / non-arbitrary needles~~ — **DONE 2026-07-08** (N=24, 5 semantic
+   families, answers tokenizer-verified in both models, **23/24 causal-use** on
+   Qwen3-4B, mean faith 0.585 / lift 0.754; the one miss is behavioral
+   prior-suppression, not mechanistic — see
+   [2026-07-08-scale-n-faithfulness-239.md](2026-07-08-scale-n-faithfulness-239.md)).
+   Still open: **confirm on the helix serving model** (Qwen3-4B is the
+   instrument, not the deployment target).
 6. This stays the **yardstick** for the retrieval work (complement / DNA-pair
    dense re-embedding, ANN threshold): prove the model *causally uses*
    newly-retrieved content, not merely that helix delivered it.

@@ -1,0 +1,1010 @@
+[
+  {
+    "id": "beacon",
+    "gold": "tiger",
+    "pA": 0.0,
+    "pB": 0.7578,
+    "lift": 0.7578,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "answer_ctx_span": [
+      15
+    ],
+    "faith": 0.6194,
+    "answer_is_top_driver": true,
+    "causal_use": true,
+    "b_top_drivers": [
+      [
+        15,
+        " tiger",
+        0.619
+      ],
+      [
+        7,
+        ":",
+        0.05
+      ],
+      [
+        14,
+        " the",
+        0.046
+      ],
+      [
+        13,
+        " nicknamed",
+        0.043
+      ],
+      [
+        12,
+        " is",
+        0.042
+      ]
+    ]
+  },
+  {
+    "id": "cascade",
+    "gold": "eagle",
+    "pA": 0.0,
+    "pB": 0.9375,
+    "lift": 0.9375,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "answer_ctx_span": [
+      15
+    ],
+    "faith": 0.6144,
+    "answer_is_top_driver": true,
+    "causal_use": true,
+    "b_top_drivers": [
+      [
+        15,
+        " eagle",
+        0.614
+      ],
+      [
+        7,
+        ":",
+        0.055
+      ],
+      [
+        14,
+        " the",
+        0.054
+      ],
+      [
+        12,
+        " is",
+        0.051
+      ],
+      [
+        13,
+        " nicknamed",
+        0.037
+      ]
+    ]
+  },
+  {
+    "id": "atlas",
+    "gold": "shark",
+    "pA": 0.0,
+    "pB": 0.8359,
+    "lift": 0.8359,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "answer_ctx_span": [
+      14
+    ],
+    "faith": 0.595,
+    "answer_is_top_driver": true,
+    "causal_use": true,
+    "b_top_drivers": [
+      [
+        14,
+        " shark",
+        0.595
+      ],
+      [
+        7,
+        ":",
+        0.054
+      ],
+      [
+        10,
+        " watchdog",
+        0.043
+      ],
+      [
+        13,
+        " the",
+        0.041
+      ],
+      [
+        11,
+        " is",
+        0.039
+      ]
+    ]
+  },
+  {
+    "id": "sentinel",
+    "gold": "wolf",
+    "pA": 0.0,
+    "pB": 0.5156,
+    "lift": 0.5156,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "answer_ctx_span": [
+      14
+    ],
+    "faith": 0.627,
+    "answer_is_top_driver": true,
+    "causal_use": true,
+    "b_top_drivers": [
+      [
+        14,
+        " wolf",
+        0.627
+      ],
+      [
+        7,
+        ":",
+        0.051
+      ],
+      [
+        13,
+        " the",
+        0.05
+      ],
+      [
+        11,
+        " is",
+        0.042
+      ],
+      [
+        12,
+        " nicknamed",
+        0.039
+      ]
+    ]
+  },
+  {
+    "id": "vault",
+    "gold": "quartz",
+    "pA": 0.0,
+    "pB": 0.9102,
+    "lift": 0.9102,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "answer_ctx_span": [
+      14
+    ],
+    "faith": 0.6973,
+    "answer_is_top_driver": true,
+    "causal_use": true,
+    "b_top_drivers": [
+      [
+        14,
+        " quartz",
+        0.697
+      ],
+      [
+        6,
+        ":",
+        0.042
+      ],
+      [
+        11,
+        " is",
+        0.031
+      ],
+      [
+        12,
+        " built",
+        0.03
+      ],
+      [
+        8,
+        " Vault",
+        0.028
+      ]
+    ]
+  },
+  {
+    "id": "relay",
+    "gold": "granite",
+    "pA": 0.0,
+    "pB": 0.7383,
+    "lift": 0.7383,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "answer_ctx_span": [
+      14
+    ],
+    "faith": 0.622,
+    "answer_is_top_driver": true,
+    "causal_use": true,
+    "b_top_drivers": [
+      [
+        14,
+        " granite",
+        0.622
+      ],
+      [
+        6,
+        ":",
+        0.054
+      ],
+      [
+        11,
+        " is",
+        0.046
+      ],
+      [
+        13,
+        " on",
+        0.044
+      ],
+      [
+        12,
+        " built",
+        0.04
+      ]
+    ]
+  },
+  {
+    "id": "forge",
+    "gold": "copper",
+    "pA": 0.0,
+    "pB": 0.9336,
+    "lift": 0.9336,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "answer_ctx_span": [
+      14
+    ],
+    "faith": 0.5957,
+    "answer_is_top_driver": true,
+    "causal_use": true,
+    "b_top_drivers": [
+      [
+        14,
+        " copper",
+        0.596
+      ],
+      [
+        11,
+        " is",
+        0.051
+      ],
+      [
+        6,
+        ":",
+        0.047
+      ],
+      [
+        12,
+        " built",
+        0.047
+      ],
+      [
+        13,
+        " on",
+        0.042
+      ]
+    ]
+  },
+  {
+    "id": "nova",
+    "gold": "marble",
+    "pA": 0.0,
+    "pB": 0.8203,
+    "lift": 0.8203,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "answer_ctx_span": [
+      14
+    ],
+    "faith": 0.5695,
+    "answer_is_top_driver": true,
+    "causal_use": true,
+    "b_top_drivers": [
+      [
+        14,
+        " marble",
+        0.57
+      ],
+      [
+        6,
+        ":",
+        0.054
+      ],
+      [
+        13,
+        " on",
+        0.046
+      ],
+      [
+        11,
+        " is",
+        0.045
+      ],
+      [
+        0,
+        "<|im_end|>",
+        0.036
+      ]
+    ]
+  },
+  {
+    "id": "delta",
+    "gold": "bronze",
+    "pA": 0.0,
+    "pB": 0.6406,
+    "lift": 0.6406,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "answer_ctx_span": [
+      14
+    ],
+    "faith": 0.5828,
+    "answer_is_top_driver": true,
+    "causal_use": true,
+    "b_top_drivers": [
+      [
+        14,
+        " bronze",
+        0.583
+      ],
+      [
+        13,
+        " on",
+        0.057
+      ],
+      [
+        6,
+        ":",
+        0.047
+      ],
+      [
+        12,
+        " built",
+        0.04
+      ],
+      [
+        11,
+        " is",
+        0.039
+      ]
+    ]
+  },
+  {
+    "id": "echo",
+    "gold": "slate",
+    "pA": 0.0,
+    "pB": 0.8359,
+    "lift": 0.8359,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "answer_ctx_span": [
+      14
+    ],
+    "faith": 0.5657,
+    "answer_is_top_driver": true,
+    "causal_use": true,
+    "b_top_drivers": [
+      [
+        14,
+        " slate",
+        0.566
+      ],
+      [
+        13,
+        " on",
+        0.056
+      ],
+      [
+        6,
+        ":",
+        0.045
+      ],
+      [
+        12,
+        " built",
+        0.042
+      ],
+      [
+        10,
+        " buffer",
+        0.037
+      ]
+    ]
+  },
+  {
+    "id": "pillar",
+    "gold": "violet",
+    "pA": 0.0,
+    "pB": 0.9102,
+    "lift": 0.9102,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "answer_ctx_span": [
+      14
+    ],
+    "faith": 0.544,
+    "answer_is_top_driver": true,
+    "causal_use": true,
+    "b_top_drivers": [
+      [
+        14,
+        " violet",
+        0.544
+      ],
+      [
+        12,
+        " accent",
+        0.067
+      ],
+      [
+        13,
+        " is",
+        0.065
+      ],
+      [
+        7,
+        ":",
+        0.062
+      ],
+      [
+        0,
+        "<|im_end|>",
+        0.039
+      ]
+    ]
+  },
+  {
+    "id": "mesh",
+    "gold": "turquoise",
+    "pA": 0.0,
+    "pB": 0.9688,
+    "lift": 0.9688,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "answer_ctx_span": [
+      13
+    ],
+    "faith": 0.5509,
+    "answer_is_top_driver": true,
+    "causal_use": true,
+    "b_top_drivers": [
+      [
+        13,
+        " turquoise",
+        0.551
+      ],
+      [
+        7,
+        ":",
+        0.07
+      ],
+      [
+        11,
+        " accent",
+        0.057
+      ],
+      [
+        12,
+        " is",
+        0.053
+      ],
+      [
+        8,
+        " the",
+        0.039
+      ]
+    ]
+  },
+  {
+    "id": "pulse",
+    "gold": "amber",
+    "pA": 0.0,
+    "pB": 0.9648,
+    "lift": 0.9648,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "answer_ctx_span": [
+      13
+    ],
+    "faith": 0.6024,
+    "answer_is_top_driver": true,
+    "causal_use": true,
+    "b_top_drivers": [
+      [
+        13,
+        " amber",
+        0.602
+      ],
+      [
+        12,
+        " is",
+        0.057
+      ],
+      [
+        7,
+        ":",
+        0.056
+      ],
+      [
+        11,
+        " accent",
+        0.055
+      ],
+      [
+        8,
+        " the",
+        0.038
+      ]
+    ]
+  },
+  {
+    "id": "grove",
+    "gold": "crimson",
+    "pA": 0.0,
+    "pB": 0.9492,
+    "lift": 0.9492,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "answer_ctx_span": [
+      13
+    ],
+    "faith": 0.4926,
+    "answer_is_top_driver": true,
+    "causal_use": true,
+    "b_top_drivers": [
+      [
+        13,
+        " crimson",
+        0.493
+      ],
+      [
+        7,
+        ":",
+        0.078
+      ],
+      [
+        12,
+        " is",
+        0.066
+      ],
+      [
+        11,
+        " accent",
+        0.064
+      ],
+      [
+        8,
+        " the",
+        0.042
+      ]
+    ]
+  },
+  {
+    "id": "ember",
+    "gold": "olive",
+    "pA": 0.0,
+    "pB": 0.9727,
+    "lift": 0.9727,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "answer_ctx_span": [
+      13
+    ],
+    "faith": 0.6164,
+    "answer_is_top_driver": true,
+    "causal_use": true,
+    "b_top_drivers": [
+      [
+        13,
+        " olive",
+        0.616
+      ],
+      [
+        7,
+        ":",
+        0.075
+      ],
+      [
+        12,
+        " is",
+        0.068
+      ],
+      [
+        11,
+        " accent",
+        0.05
+      ],
+      [
+        8,
+        " the",
+        0.049
+      ]
+    ]
+  },
+  {
+    "id": "fern",
+    "gold": "azure",
+    "pA": 0.0,
+    "pB": 0.7461,
+    "lift": 0.7461,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "answer_ctx_span": [
+      13
+    ],
+    "faith": 0.534,
+    "answer_is_top_driver": true,
+    "causal_use": true,
+    "b_top_drivers": [
+      [
+        13,
+        " azure",
+        0.534
+      ],
+      [
+        11,
+        " accent",
+        0.089
+      ],
+      [
+        7,
+        ":",
+        0.074
+      ],
+      [
+        12,
+        " is",
+        0.065
+      ],
+      [
+        8,
+        " the",
+        0.042
+      ]
+    ]
+  },
+  {
+    "id": "prism",
+    "gold": "mango",
+    "pA": 0.0,
+    "pB": 0.6133,
+    "lift": 0.6133,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "answer_ctx_span": [
+      16
+    ],
+    "faith": 0.6039,
+    "answer_is_top_driver": true,
+    "causal_use": true,
+    "b_top_drivers": [
+      [
+        16,
+        " mango",
+        0.604
+      ],
+      [
+        7,
+        ":",
+        0.053
+      ],
+      [
+        15,
+        "amed",
+        0.048
+      ],
+      [
+        14,
+        "en",
+        0.041
+      ],
+      [
+        12,
+        " is",
+        0.038
+      ]
+    ]
+  },
+  {
+    "id": "orbit",
+    "gold": "peach",
+    "pA": 0.0,
+    "pB": 0.4043,
+    "lift": 0.4043,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "answer_ctx_span": [
+      16
+    ],
+    "faith": 0.5572,
+    "answer_is_top_driver": true,
+    "causal_use": true,
+    "b_top_drivers": [
+      [
+        16,
+        " peach",
+        0.557
+      ],
+      [
+        7,
+        ":",
+        0.057
+      ],
+      [
+        12,
+        " is",
+        0.05
+      ],
+      [
+        15,
+        "amed",
+        0.043
+      ],
+      [
+        14,
+        "en",
+        0.04
+      ]
+    ]
+  },
+  {
+    "id": "halo",
+    "gold": "cherry",
+    "pA": 0.0,
+    "pB": 0.3516,
+    "lift": 0.3516,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "answer_ctx_span": [
+      16
+    ],
+    "faith": 0.5852,
+    "answer_is_top_driver": true,
+    "causal_use": true,
+    "b_top_drivers": [
+      [
+        16,
+        " cherry",
+        0.585
+      ],
+      [
+        7,
+        ":",
+        0.048
+      ],
+      [
+        15,
+        "amed",
+        0.046
+      ],
+      [
+        12,
+        " is",
+        0.044
+      ],
+      [
+        14,
+        "en",
+        0.037
+      ]
+    ]
+  },
+  {
+    "id": "comet",
+    "gold": "lemon",
+    "pA": 0.0,
+    "pB": 0.5898,
+    "lift": 0.5898,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "answer_ctx_span": [
+      16
+    ],
+    "faith": 0.5666,
+    "answer_is_top_driver": true,
+    "causal_use": true,
+    "b_top_drivers": [
+      [
+        16,
+        " lemon",
+        0.567
+      ],
+      [
+        7,
+        ":",
+        0.061
+      ],
+      [
+        12,
+        " is",
+        0.057
+      ],
+      [
+        15,
+        "amed",
+        0.049
+      ],
+      [
+        14,
+        "en",
+        0.04
+      ]
+    ]
+  },
+  {
+    "id": "ridge",
+    "gold": "grape",
+    "pA": 0.0,
+    "pB": 0.6016,
+    "lift": 0.6016,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "answer_ctx_span": [
+      16
+    ],
+    "faith": 0.5775,
+    "answer_is_top_driver": true,
+    "causal_use": true,
+    "b_top_drivers": [
+      [
+        16,
+        " grape",
+        0.578
+      ],
+      [
+        7,
+        ":",
+        0.059
+      ],
+      [
+        12,
+        " is",
+        0.05
+      ],
+      [
+        15,
+        "amed",
+        0.047
+      ],
+      [
+        14,
+        "en",
+        0.041
+      ]
+    ]
+  },
+  {
+    "id": "spire",
+    "gold": "plum",
+    "pA": 0.0,
+    "pB": 0.252,
+    "lift": 0.252,
+    "b_argmax_answer": false,
+    "in_graph": true,
+    "answer_ctx_span": [
+      17
+    ],
+    "faith": 0.5435,
+    "answer_is_top_driver": true,
+    "causal_use": false,
+    "b_top_drivers": [
+      [
+        17,
+        " plum",
+        0.544
+      ],
+      [
+        16,
+        "amed",
+        0.056
+      ],
+      [
+        7,
+        ":",
+        0.055
+      ],
+      [
+        13,
+        " is",
+        0.049
+      ],
+      [
+        15,
+        "en",
+        0.044
+      ]
+    ]
+  },
+  {
+    "id": "zephyr",
+    "gold": "neon",
+    "pA": 0.0,
+    "pB": 0.9023,
+    "lift": 0.9023,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "answer_ctx_span": [
+      17
+    ],
+    "faith": 0.5958,
+    "answer_is_top_driver": true,
+    "causal_use": true,
+    "b_top_drivers": [
+      [
+        17,
+        " neon",
+        0.596
+      ],
+      [
+        16,
+        " by",
+        0.051
+      ],
+      [
+        14,
+        " is",
+        0.047
+      ],
+      [
+        7,
+        ":",
+        0.043
+      ],
+      [
+        0,
+        "<|im_end|>",
+        0.036
+      ]
+    ]
+  },
+  {
+    "id": "onyx",
+    "gold": "helium",
+    "pA": 0.0,
+    "pB": 0.9492,
+    "lift": 0.9492,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "answer_ctx_span": [
+      16
+    ],
+    "faith": 0.5715,
+    "answer_is_top_driver": true,
+    "causal_use": true,
+    "b_top_drivers": [
+      [
+        16,
+        " helium",
+        0.572
+      ],
+      [
+        7,
+        ":",
+        0.047
+      ],
+      [
+        14,
+        " powered",
+        0.044
+      ],
+      [
+        12,
+        " array",
+        0.043
+      ],
+      [
+        15,
+        " by",
+        0.041
+      ]
+    ]
+  }
+]
