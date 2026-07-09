@@ -223,6 +223,64 @@ documents and chunks on retrieval.
 
 ---
 
+## Ingesting OKF knowledge bundles
+
+If your corpus already lives in an
+[OKF](https://github.com/GoogleCloudPlatform/knowledge-catalog) v0.1
+knowledge bundle — a plain directory of markdown files with YAML
+frontmatter — Helix ingests it directly. No conversion step, no
+replay loop like the one above: OKF bundle → compressed agent
+context, with no LLM on the retrieval path.
+
+```bash
+helix ingest --okf path/to/bundle/
+```
+
+The adapter targets the OKF v0.1 spec pinned at upstream commit
+`ee67a5ca` (a snapshot is vendored alongside the conformance tests).
+What happens to each part of a concept document:
+
+- **Frontmatter** (`type`, `title`, `description`, `tags`, plus any
+  producer-defined keys) is parsed and **merged with** Helix's own
+  CPU tagger output — merge, not bypass. The tagger still runs on
+  the body; frontmatter values join its domains / entities /
+  key-values in the retrieval indexes. The raw `type` value and the
+  concept ID are preserved in document metadata for a lossless
+  round-trip.
+- **Body** is stripped of frontmatter, then chunked and indexed like
+  any other ingested document.
+- **Cross-links** (`[customers](/tables/customers.md)`-style) are
+  captured into a dedicated `okf_links` table. In Phase 1 this table
+  is **inert** — it has zero readers in any retrieval tier, so
+  ingesting a heavily-linked bundle changes what is stored, never
+  how candidates are scored. Graduating those links into retrieval
+  priors is a separate, reviewed design.
+
+### Determinism — the canonical digest
+
+Ingestion determinism is guaranteed at the level of a **canonical
+digest**: for a fixed adapter version, pinned spaCy model version,
+and OKF spec version, ingesting the same bundle yields a
+byte-identical canonical digest, across runs and platforms. The
+digest is sha256 over a canonical JSON serialization of each
+concept's identity fields (gene_id, content_hash, type mapping,
+title, description, sorted tags / entities / key-values) plus the
+bundle's cross-link edge set as a sorted list of
+(source_concept_id, target_concept_id) pairs. Embeddings, SPLADE
+term weights, wall-clock timestamps, and any REAL-valued score are
+excluded from the digest by construction.
+
+If you want a knowledge store with no float tensors at all, use the
+documented **deterministic-ingest profile** — `helix ingest --okf
+--deterministic`, equivalent to `sema_embed_on_ingest = false`,
+`dense_embed_on_ingest = false`, `splade_enabled = false` in
+`helix.toml`: embeddings are backfilled per host afterward, as
+per-host artifacts never covered by the interop claim.
+
+The integration is ingest-only: Helix reads OKF bundles.
+
+---
+
 ## Authority + volatility — advanced tuning
 
 The freshness math has two knobs you can adjust per document:
