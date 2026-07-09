@@ -500,6 +500,19 @@ def _drain_with_batched_splade(
     from helix_context.backends import splade_backend
     from helix_context.schemas import Gene
 
+    # SPLADE kill-switch, honoured at drain time. ``HELIX_BFM_SPLADE=0`` (set
+    # by the lean/CI builder env and the parity tests) must skip the batched
+    # sparse encode entirely -- otherwise this drain loads the real SPLADE
+    # model into the ``splade_backend`` process globals even when the caller
+    # deliberately built a splade-dark genome (``build_profile`` passes the
+    # same flag to ``Genome(splade_enabled=...)`` at construction). Read at
+    # call time via the same ``_env_flag`` idiom so spawn workers inherit it
+    # through the process environment. When present, a genome that was itself
+    # built with SPLADE disabled (``_splade_enabled``) also forces the skip.
+    splade_on = _env_flag("HELIX_BFM_SPLADE") and getattr(
+        genome, "_splade_enabled", True
+    )
+
     if crawl_detector is None:
         crawl_detector = CrawlDetector.from_env(log_fn=log.warning, name="ingest")
 
@@ -521,9 +534,17 @@ def _drain_with_batched_splade(
     def _flush(batch: list) -> None:
         if not batch:
             return
-        sparses = splade_backend.encode_batch(
-            [g.content[:1000] for g in batch]
-        )
+        if splade_on:
+            sparses = splade_backend.encode_batch(
+                [g.content[:1000] for g in batch]
+            )
+        else:
+            # SPLADE disabled: skip the batched sparse encode (do NOT touch
+            # ``splade_backend`` -- keeps its process-lifetime singletons
+            # unloaded) but still persist every gene so the lean/CI path
+            # builds a complete, splade-dark corpus. ``splade_sparse=None``
+            # is exactly a gene with no sparse expansion.
+            sparses = [None] * len(batch)
         for g, sp in zip(batch, sparses):
             try:
                 genome.upsert_doc(g, apply_gate=True, splade_sparse=sp)

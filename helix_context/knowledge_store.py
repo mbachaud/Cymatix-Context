@@ -2362,6 +2362,27 @@ class KnowledgeStore:
                     splade_hits = splade_backend.query_splade(self.read_conn, query_sparse, limit=limit * 2)
                     if _prefilter_set is not None:
                         splade_hits = [(gid, s) for gid, s in splade_hits if gid in _prefilter_set]
+                    # Chromatin filter (batch lookup) — mirror the FTS5 tier so
+                    # cold-demoted genes don't leak back into hot results via
+                    # SPLADE. compress_to_heterochromatin is now non-destructive
+                    # (it keeps SPLADE terms so the cold tier can reactivate a
+                    # gene), so demoted genes still match here and must be
+                    # dropped by chromatin < HETEROCHROMATIN. Filter the list
+                    # ONCE, before the scoring loop, so both the additive
+                    # gene_scores accumulator and the fuser.add_tier("splade")
+                    # path receive the filtered set.
+                    if splade_hits:
+                        _splade_ids = [gid for gid, _ in splade_hits]
+                        _splade_id_ph = ",".join("?" * len(_splade_ids))
+                        _splade_valid = cur.execute(
+                            f"SELECT gene_id FROM genes g "
+                            f"WHERE g.gene_id IN ({_splade_id_ph}) AND g.chromatin < ?",
+                            (*_splade_ids, int(ChromatinState.HETEROCHROMATIN)),
+                        ).fetchall()
+                        _splade_valid_ids = {r["gene_id"] for r in _splade_valid}
+                        splade_hits = [
+                            (gid, s) for gid, s in splade_hits if gid in _splade_valid_ids
+                        ]
                     _splade_ranked: List[Tuple[str, float]] = []  # Stage 3 RRF
                     for gid, score in splade_hits:
                         # Normalize SPLADE score to be comparable with

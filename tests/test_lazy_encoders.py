@@ -41,6 +41,39 @@ from helix_context.context_manager import HelixContextManager, LazyRibosome
 from tests.conftest import make_helix_config
 
 
+# ── test isolation: pristine view of the process-lifetime singletons ──
+#
+# The encoder caches these tests assert on (spaCy in ``tagger._nlp``, the
+# SPLADE model/tokenizer/device in ``splade_backend``) are DELIBERATE
+# process-lifetime singletons — first use loads them once and every later
+# caller in the process reuses them. That is correct production behaviour
+# and must NOT change.
+#
+# But it makes these init-state tests order-dependent: any earlier test in
+# the full suite that exercises the real encoders (e.g.
+# ``tests/test_build_fixture_matrix.py::TestParallel`` tags real files and
+# drains genes) leaves those module globals populated, so
+# ``test_manager_init_constructs_no_encoders`` /
+# ``test_admin_components_reports_unloaded_without_loading`` then observe a
+# loaded encoder and fail — while passing in isolation.
+#
+# This autouse fixture snapshots-and-nulls those globals via monkeypatch so
+# every test in this file starts from a pristine (unloaded) view, and
+# monkeypatch auto-restores the originals on teardown so a real polluter's
+# singletons — and real users' process-lifetime caching — are untouched.
+# None of the tests here load the real models (they inject counting/raising
+# fakes), so the unloaded baseline is exactly what they already assume.
+@pytest.fixture(autouse=True)
+def _pristine_encoder_singletons(monkeypatch):
+    import helix_context.tagger as tagger_mod
+    from helix_context.backends import splade_backend
+
+    monkeypatch.setattr(tagger_mod, "_nlp", None, raising=False)
+    monkeypatch.setattr(splade_backend, "_model", None, raising=False)
+    monkeypatch.setattr(splade_backend, "_tokenizer", None, raising=False)
+    monkeypatch.setattr(splade_backend, "_device", None, raising=False)
+
+
 # ── fakes ────────────────────────────────────────────────────────────
 
 
