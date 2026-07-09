@@ -28,6 +28,11 @@ dependencies = [
     "httpx>=0.27",
     "pydantic>=2.6",
     "filelock>=3.12",
+    # Frontmatter parsing for the OKF adapter (helix_context/okf/). Also
+    # fixes a latent packaging bug: vault/writer.py and vault/pruner.py
+    # have imported yaml unconditionally since the vault shipped, but no
+    # dependency list declared it.
+    "pyyaml>=6.0",
 ]
 
 [project.urls]

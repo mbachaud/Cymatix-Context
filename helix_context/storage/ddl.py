@@ -38,6 +38,7 @@ def init_db(conn: sqlite3.Connection) -> bool:
     _create_entity_graph(cur)
     _create_path_key_index(cur)
     _create_filename_index(cur)
+    _create_okf_links(cur)
     _auto_repair(cur, conn)
     fts_available = _create_fts5(cur, conn)
 
@@ -279,6 +280,35 @@ def _create_filename_index(cur: sqlite3.Cursor) -> None:
             "filename_index schema init failed -- filename-anchor tier disabled",
             exc_info=True,
         )
+
+
+# ---------------------------------------------------------------------------
+# okf_links (OKF Phase 1 — inert by design)
+# ---------------------------------------------------------------------------
+
+def _create_okf_links(cur: sqlite3.Cursor) -> None:
+    # OKF bundle cross-link capture (docs/research/2026-07-08-okf-council.md,
+    # Amendment 1). This table is INERT: it has zero readers in any retrieval
+    # tier, on purpose. harmonic_links carries a flat Tier-5 per-edge boost
+    # and gene_relations feeds tie-breaking, so writing OKF links to either
+    # would ship an ungated scoring change. Graduation into live edges only
+    # happens via the Phase-2 reviewed design ('asserted' provenance class).
+    # resolved_target_gene_id is NULL for dangling links (spec §5.3: broken
+    # links are not malformed — they may be not-yet-written knowledge).
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS okf_links (
+        bundle_id               TEXT NOT NULL,
+        source_concept_id       TEXT NOT NULL,
+        target_concept_id       TEXT NOT NULL,
+        resolved_source_gene_id TEXT NOT NULL,
+        resolved_target_gene_id TEXT,
+        link_text               TEXT
+    )
+    """)
+    cur.execute(
+        "CREATE INDEX IF NOT EXISTS idx_okf_links_bundle "
+        "ON okf_links(bundle_id)"
+    )
 
 
 # ---------------------------------------------------------------------------
