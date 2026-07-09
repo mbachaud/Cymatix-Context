@@ -1,0 +1,863 @@
+[
+ {
+  "specialty": "Mechanistic interpretability",
+  "stance": "pro",
+  "verdict_one_line": "Proceed \u2014 but the strongest honest case rests on one under-argued mech-interp fact: the workspace's ~25-dim, \u226410%-variance geometry is precisely the enabling condition that makes Phase 4's coverage objective non-degenerate, while the weak form's fp16-offline + text-injection design makes the loudly-flagged quantization risk a Phase-5-only problem.",
+  "points": [
+   {
+    "title": "The ~25-vector / \u226410%-variance workspace is what makes Phase 4 coverage NON-degenerate",
+    "claim": "The paper's median-~25-active-vectors, \u226410%-of-activation-variance 'Workspace Band' is not just a caution (as the triad table frames it) \u2014 it is the affirmative reason to believe Phase 4's facility-location/coverage objective beats relevance top-k. In high-dim BGE-M3 space (1024-d) points are near-orthogonal, so max-coverage collapses to max-sum-relevance and the submodular objective buys nothing; coverage vs relevance only DIVERGE when the target region is low-dimensional and points genuinely overlap in their span. A ~25-dim bounded workspace is exactly that regime. So the review's own 'coverage in J-directions, not PCA directions' note has a sharper implication it doesn't state: the low workspace dimensionality is a prerequisite for Phase 4 to pay at all, and the paper's 'same J-lens vector serves many downstream computations' (broadcast) is literally the set-cover structure Phase 4 assumes.",
+    "evidence": "Review subspace-triad row 2 (~25 J-lens vectors, \u226410% variance, broadcast); Phase 4 roadmap (submodular greedy coverage). Geometric near-orthogonality of high-dim vectors is standard. Repo: assembler is per-document relevance+budget today (context_manager.py:1701-1712).",
+    "targets": "Phase 4 (bet A payoff); decision point on 'coverage over Jacobian directions'",
+    "confidence": "medium"
+   },
+   {
+    "title": "Quantization drift (Open Q#1) is central to Phase 5 ONLY, not the weak form",
+    "claim": "The review elevates GGUF/quantization drift to 'the central risk' for bet A wholesale. That over-weights it. Phases 0-4 never touch the quantized model's internals: Phase 0 calibrates on fp16/bf16 under HF transformers, Phase 2 exists precisely to buy query-time no-internals, and Phases 3-4 fit splats offline and inject TEXT. What matters for the weak form is not 'does the Q4 model's workspace equal its fp16 parent's' but 'does text selected to cover the fp16 workspace still make the Q4 model answer better' \u2014 an end-to-end question, and the WORST case is a clean null (the jspace tier tunes to ~0 weight under RRF, which is Phase 3's own declared fallback). The same context-robustness the roadmap lists as Phase 4's downside risk ('decoders robust to context composition') is what PROTECTS Phases 0-4 from quantization drift. Drift is only catastrophic in Phase 5, where a soft prefix computed against fp16 is garbage for Q4 \u2014 and Phase 5 is already stack-gated (llama.cpp/Ollama can't inject anyway) and legibility-capped. Net: the risk register should move quantization drift from 'primary bet-A risk' to 'primary Phase-5 risk.'",
+    "evidence": "Roadmap Phase 0 method ('NOT Ollama... requires fp16/bf16'); Phase 2 goal (no query-time internals); Phase 3 risk/fallback ('RRF drives weight to ~0 = clean negative'); Phase 4 risk ('decoders robust to context composition'); Phase 5 constraints (Ollama/llama.cpp = no). Review \u00a7'New risks' #elevate-Open-Q#1.",
+    "targets": "Open Q#1; Phase 5 vs Phases 0-4; council decision points #3 and #5",
+    "confidence": "medium"
+   },
+   {
+    "title": "Linear probe BGE-M3\u2192J-lens is the cheapest path to bet A on the default stack, and mech-interp predicts it partly works",
+    "claim": "Phase 2 fallback (b) \u2014 'if a linear probe from BGE-M3 works, J-space becomes a learned re-metric, a d\u00d7r matrix, no new encoder' \u2014 is treated by both roadmap and review as merely a 'philosophically deflationary' consolation. It is actually the highest-EV Phase 2 experiment and should run FIRST. Mechanistic reason: the J-lens is E[\u2202h_final/\u2202h_\u2113] \u2014 the Jacobian of the state the unembedding then reads out, i.e. 'what the model is poised to verbalize.' Composed with the unembedding it is vocabulary/semantics-aligned BY CONSTRUCTION \u2014 the same next-token-semantic geometry a retrieval encoder like BGE-M3 is trained to approximate. So nonzero linear recoverability from BGE-M3 is the mechanistically-EXPECTED outcome, not a lucky one. If it lands, the entire query-time internals problem on the default Ollama stack collapses to a stored d\u00d7r matrix \u2014 and the schema ALREADY has the slot: spaces(... basis BLOB ...). The upside is real and the plumbing is prepaid.",
+    "evidence": "Roadmap Phase 2 fallback (b) + Open Q#2; review triad row 2 (J-lens = coordinate-corrected Jacobian of output logit). Schema slot verified: roadmap Phase 1 spaces table 'basis BLOB'. J-lens\u2192unembedding\u2192logit composition per Anthropic paper (verified read, review \u00a7'What the paper establishes').",
+    "targets": "Phase 2 (fallback b \u2192 promote to first experiment); council decision point #2",
+    "confidence": "medium"
+   },
+   {
+    "title": "Bet B / Phase 1 is verified greenfield-but-clean; the density-feature extension is a 4th application of a proven slot",
+    "claim": "'Lead with bet B' is even cheaper than the review argues, and I can ground it in the repo. (1) There is NO Mahalanobis / whitening / Ledoit-Wolf / covariance code anywhere in helix_context \u2014 bet B is net-new but conflict-free. (2) splats and spaces tables are absent from the DDL, and adding them follows the EXISTING side-table pattern (genome_calibration, harmonic_links are precedent scoring/calibration side-tables, not columns on genes \u2014 exactly what the roadmap specifies). (3) The 'ship density as a 6th logistic feature before any pure density gate' step is the FOURTH time this exact extension is applied: DEFAULT_BETAS in know_calibration.py already grew from a 4-feature to 5-feature to 6-tuple logistic (Stage 6\u21927 added freshness as beta5, the code literally carries STAGE-7-EXT markers). Adding density as the next beta + recalibrating via the existing scripts/calibrate_know_confidence.py is a worn groove, not new risk. This is the concrete engineering evidence behind recommendation #1.",
+    "evidence": "Grep: no mahalanobis|whiten|ledoit|covariance in helix_context. ddl.py has genes:59, genome_calibration:712, harmonic_links:689 \u2014 no splats/spaces. know_calibration.py:64 DEFAULT_BETAS is a 6-tuple; docstring \u00a7'STAGE-7-EXT' documents the 4\u21925\u21926 growth; scripts/calibrate_know_confidence.py exists (referenced CLAUDE.md).",
+    "targets": "Phase 1 (know path); council recommendation #1 (lead with bet B)",
+    "confidence": "high"
+   },
+   {
+    "title": "Phase 4's mechanism is ~80% prepaid in embedding space \u2014 but the cheap dry-run tests machinery, not the hypothesis",
+    "claim": "Phase 4 does not start from scratch. The variable-per-document budget the coverage objective needs already ships: _compute_foveated_caps (context_manager.py:341) computes rank-proportional per-document char caps and the splice loop already honors them (target = foveated_caps[idx]*foveated_base, else 1000). The per-fragment keep/drop hook the roadmap says Phase 4 should 'mirror' \u2014 interference_trim (cymatics.py:526) \u2014 already exists AND already has the complement-fallback the answer-loss bug needs (result[gene_id] = doc.complement or doc.content[:500]). So a coverage-greedy selector can be prototyped by swapping only the cap/keep DECISION, and it can be measured end-to-end in BGE-M3 space BEFORE any J-space exists \u2014 cheaper than the roadmap's 0\u21921\u21922\u21923\u21924 ordering. HONEST CONCESSION (ties to point 1): coverage in 1024-d is near-degenerate, so an embedding-space dry-run validates the plumbing but CANNOT falsify J-coverage \u2014 a null there is uninformative about the bet. Use it to de-risk engineering, not the hypothesis.",
+    "evidence": "Verified: context_manager.py:341 _compute_foveated_caps, :1701-1706 foveated vs 1000-char path; cymatics.py:526 interference_trim with complement fallback at :556/:579/:584; headroom_bridge.py:227 content[:target_chars] fallback (the query-agnostic cut). Fuser.add_tier zero-weight no-op (fusion.py:104-108) makes jspace tier insertion clean.",
+    "targets": "Phase 4 (engineering ordering); Phase 3 (fusion.py add_tier integration)",
+    "confidence": "high"
+   },
+   {
+    "title": "The eval-harness CODE is real, but the review's grounding NUMBERS are uncommitted \u2014 pre-register against committed data",
+    "claim": "The review calls the eval harness 'half-built' and it is right that the code skeleton exists and is load-bearing: bench_needle.py carries the NEEDLES list + check_gold_delivery/find_needle scorer, and s2_sike_bedsweep_run.py drives it server-per-config. That genuinely front-loads Phase 0's 'single highest-leverage engineering item.' BUT the two documents the review leans on for its quantitative claims \u2014 docs/benchmarks/2026-07-06-sike-run2-fts-depth-fusion.md (source of 'RRF 0.72 vs additive 0.58') and 2026-07-06-faithfulness-experiment-runbook.md (the 'cheap version of Open Q#3') \u2014 are NOT in the repo (latest benchmark doc is 2026-07-05). Before Phase 0 pre-registers its \u22655-point success bar 'vs the full RRF stack,' commit those runbooks so the baseline is a committed artifact, not a quoted-but-unlanded number. This also directly grounds the vocabulary-ceiling caution: the needles ARE multi-token identifiers (accept-lists 'PostgreSQL 16', '51/52'), so bet A's vocab-bounded J-lens is structurally weakest exactly on Helix's current gaps \u2014 scope bet A to conceptual retrieval and leave identifier lookup to FTS5.",
+    "evidence": "Verified present: benchmarks/bench_needle.py NEEDLES:54, PostgreSQL-16 accept:306-308, 51/52 expected/accept:516-517; scripts/bench_chain/s2_sike_bedsweep_run.py imports bench_needle. Verified ABSENT: glob docs/benchmarks/*.md returns no 2026-07-06 file (newest is 2026-07-05-sike-bedsweep-issue-resolutions.md); no faithfulness or sike-run2 file anywhere.",
+    "targets": "Phase 0 (pre-registration integrity); bet A scoping (vocabulary ceiling)",
+    "confidence": "high"
+   }
+  ]
+ },
+ {
+  "specialty": "Mechanistic interpretability (J-space / Jacobian-lens, activation geometry, quantization transfer)",
+  "stance": "con",
+  "verdict_one_line": "Bet A is mis-scoped at its only real test \u2014 a J-lens is a coordinate-corrected backward-pass Jacobian, not the forward-pass activation capture Phase 0 budgets \u2014 and it aims an output-verbalization basis at Helix's input-side identifier-retrieval gap; lead with and cap at bet B's Mahalanobis whitening, which needs neither J-space nor the decoder.",
+  "points": [
+   {
+    "title": "Phase 0's Jacobian probe is a backward-pass object mis-budgeted as a forward pass \u2014 the only probe that tests the output-shaping hypothesis is off by an order of magnitude",
+    "claim": "The review's own triad defines the workspace as the coordinate-corrected Jacobian E[dh_final/dh_l], but Phase 0's Method step 1 captures 'mean-pooled residual activations' via output_hidden_states \u2014 a forward pass. Those are different computations: the J-lens needs per-token vector-Jacobian products (backward passes) with the coordinate-correction that subtracts the frozen-attention path, not activations. The review patched Phase 0 to add 'a small actual Jacobian J-lens computation on one fp16 model' but left the S-M effort tag and the output_hidden_states method intact. There is no decoder-under-HF infrastructure to build this on: torch/transformers are optional encoder-only extras used solely by the BGE-M3/SPLADE/DeBERTa/NLI backends. So the activation-PCA half (which the review says is >=90% disjoint from the workspace) is cheap and buildable, and the Jacobian half \u2014 the ONLY half that bears on Bet A's output-shaping thesis \u2014 is an unbudgeted mechanistic-interp research project.",
+    "evidence": "roadmap Phase 0 Method step 1 (mean-pooled activations, output_hidden_states, lines 72-76); review triad row 21 (J-space = coordinate-corrected Jacobian of logit w.r.t. hidden state) and line 24 (PCA finds the activation-variance subspace, >=90% disjoint from J-space); pyproject.toml:54,96-97 (torch/transformers are nli/full extras); helix_context uses them only in backends/{bgem3_codec,splade_backend,deberta_backend,nli_backend}.py \u2014 no decoder hidden-state path exists",
+    "targets": "Phase 0 (kill-shot) + Decision point #1 (accept subspace split) / #5 (which fp16 model)",
+    "confidence": "high"
+   },
+   {
+    "title": "The ~25-vector workspace is a contextual, per-token managed quantity \u2014 a static per-gene J-coordinate captured offline measures the wrong conditional distribution",
+    "claim": "The paper's 'median ~25 active vectors' and the whole workspace story are properties of a forward pass on a specific prompt: the paper shows directed modulation and that 'information can be pulled in when the task requires it.' The roadmap's premise (Phase 2: 'genes are static; batch a forward pass over the corpus') computes each gene's J-coordinates in isolation, with no query and no task. A gene's workspace occupancy when embedded alone is not the same as its occupancy as one of 7000 injected tokens answering a specific query \u2014 the workspace is actively managed by context. So the offline per-gene J-coordinate is not a stable function of the gene text; it is a function of gene-plus-context. This undercuts the calibration premise that makes Phase 2's query-projection head necessary in the first place.",
+    "evidence": "review lines 28-29 (median ~25 active vectors, directed modulation, 'information can be pulled in when the task requires it', model actively manages the workspace); roadmap Phase 2 goal lines 142-146 ('genes are static; batch a forward pass over the corpus'); contrast with know_decision.py coordinate_confidence being context-derived",
+    "targets": "Phase 2 (query-side J-projection, tau>=0.8 bar) + Phase 3 offline gene-splat fit",
+    "confidence": "high"
+   },
+   {
+    "title": "Phase 4 optimizes input-context coverage over an output-verbalization basis, and defers testing that this is even coherent until after the machinery is built",
+    "claim": "The J-lens is 'what the model is poised to verbalize' \u2014 a next-token, vocabulary-bounded output object. Helix retrieves documents to inject as INPUT context, not to predict as output (context_manager splice/assemble). Selecting input fragments to 'cover the J-directions the query needs to broadcast' presumes the input->residual map is invertible/controllable enough that input-side coverage steers output-side workspace occupancy \u2014 which is exactly Open Q#3. Phase 4 builds the greedy facility-location selector first and relegates that foundational check to a SECONDARY measurement read out afterward. The roadmap's own risk line concedes the likely outcome ('decoders are robust to context composition; shaping doesn't matter once the right facts are present'), and the vocabulary ceiling means J-targeting is weakest precisely on the multi-token identifier needles (claude-haiku-4-5-20251001, PostgreSQL 16) that are Helix's actual measured gap.",
+    "evidence": "roadmap Phase 4 lines 211-224 (coverage objective) and 238-242 (secondary measurement is a post-build readout); roadmap Phase 4 Risk lines 244-248; review risk #2 (J-lens vocabulary ceiling, lines 47,64) and Open Q#3 (lines 319-324); Helix's needles are multi-token identifiers per review line 47",
+    "targets": "Phase 4 (coverage-shaped assembly) + Open Q#3 (text->residual controllability)",
+    "confidence": "medium"
+   },
+   {
+    "title": "Quantization drift is not generic drift \u2014 the <=10%-variance workspace is where Q4 rounding error lands proportionally hardest, and Helix's default stack is GGUF",
+    "claim": "The review reports the workspace is <=10% of activation variance \u2014 a low-variance causal bottleneck \u2014 while the high-variance directions are task-agnostic (the anisotropy that motivates Mahalanobis). Quantization noise (Q4_K_M) is roughly uniform per-weight; a low-variance subspace has the worst signal-to-quantization-noise ratio, so the workspace is mechanistically the MOST fragile part of the representation under GGUF quantization. Helix's default upstream is Ollama on :11434 (GGUF), and the bench drives an 'Ollama rung.' Calibrating J-space on an fp16 parent and serving Q4 is therefore not a mild offset \u2014 there is a prior that drift concentrates in the exact subspace being calibrated. The roadmap treats the fp16-vs-Q4 comparison as a 'bonus probe at small cost' inside Phase 0; the review elevates it to primary but phase ordering does not enforce that as a gate.",
+    "evidence": "review line 28 (J-space <=10% of activation variance, limited-capacity bottleneck) and line 35 (high-variance directions are task-agnostic); roadmap Open Q#1 lines 303-309 ('bonus probe... at small cost'); review line 79 (elevate quantization drift to primary); config.py:187 upstream=http://localhost:11434 (Ollama/GGUF); s2_sike_bedsweep_run.py:203 'Ollama rung'",
+    "targets": "Open Q#1 (quantization stability) + Phase 3 profile-vs-per-artifact management + Decision point #5",
+    "confidence": "medium"
+   },
+   {
+    "title": "Bet B's density gate re-derives, in a weaker geometry-only form, signals the know-logistic and freshness gate already carry \u2014 its independent lift is likely near-collinear",
+    "claim": "The know path is already a 5-feature logistic whose features include coordinate_confidence (folder+file-grain match) and freshness_min (Stage-7 decay across the retrieved top-K), and a freshness gate module already demotes stale/superseded docs. Mahalanobis log-density measures typicality on the BGE-M3 semantic manifold, which is trained for similarity, not correctness or recency: a semantically-typical stale-or-wrong document scores low-anomaly = high-density = passes the gate. The review flags the adversarial-poisoning version of this; the sharper point is the NORMAL stale-doc case the freshness gate exists to catch. So density likely enters as a near-collinear 6th feature with small independent beta, not a dominating signal. The mechanistically-honest scope is exactly the roadmap's own fallback \u2014 density as a 6th logistic feature, measure delta-ECE \u2014 and the pure-density-gate ambition should be dropped up front rather than after a head-to-head.",
+    "evidence": "know_calibration.py:265-278 (5-feature logistic: top_score, score_gap, lexical_dense_agree, coordinate_confidence, freshness_min); know_decision.py:318-347 (feature signatures); retrieval/freshness.py exists (Stage 7 demotion); review risk #1 lines 63 (density gate blind to poisoning); roadmap Phase 1 fallback lines 118-122 (ship density as 6th logistic feature first)",
+    "targets": "Phase 1 (density know/go, 'density dominates risk-coverage' bar) + Decision point #2 (lead with bet B)",
+    "confidence": "medium"
+   },
+   {
+    "title": "A distributional per-gene representation with a per-fragment scoring hook already exists (cymatics) \u2014 Phase 1/4 risk building a second, parallel one without an integration story",
+    "claim": "Phase 1 frames genes as currently point-estimates to be replaced by a 'soft distribution (mean + covariance).' But cymatics already superposes each gene's terms into a 256-bin Gaussian spectrum (a distributional, non-point representation) with cosine/W1 scoring, and already owns interference_trim \u2014 the exact per-fragment hook Phase 4 says it will 'mirror.' Meanwhile the on-ingest gene embedding is a 20-d SEMA vector and the dense path is BGE-M3 1024-d; a splat mu+Sigma fit in either space is still not a decoder residual stream. The roadmap never reconciles the new splat distribution with the existing cymatics spectrum, so the realistic outcome is two parallel distributional gene representations competing in the fuser \u2014 added surface area and maintenance, not a clean replacement. This is the 'wasted effort' failure mode independent of whether J-space works.",
+    "evidence": "cymatics.py:104-167 (build_spectrum: 256-bin Gaussian superposition per gene) and cymatics.py:526 interference_trim; roadmap Phase 4 line 227 names interference_trim as the hook to mirror; roadmap Phase 1 lines 96-100 ('replace the point-estimate gene'); sema_codec.py:1 (20-d SEMA vector); knowledge_store.py:471-473 (BGE-M3 1024-d)",
+    "targets": "Phase 1 (splat genes) + Phase 4 (coverage selector reusing the cymatics fragment hook)",
+    "confidence": "medium"
+   }
+  ]
+ },
+ {
+  "specialty": "Mechanistic interpretability (J-space validity, Jacobian-lens vs activation-PCA, workspace-band occupancy, vocabulary ceiling, quantization transfer)",
+  "stance": "neutral",
+  "verdict_one_line": "Bet B is mechanistically sound and code-ready; bet A's J-space half is measuring the wrong quantity with the wrong instrument at three separate phases, and its payoff test is validated on exactly the content the mechanism cannot represent.",
+  "points": [
+   {
+    "title": "Phase 0's stated instrument (output_hidden_states) cannot compute the workspace at all",
+    "claim": "The review flags Phase 0 as 'PCA finds activation-variance, not the J-lens' but understates it: the roadmap's Method (line 69-76) specifies capture 'under HF transformers with output_hidden_states', which yields FORWARD activations only. The J-lens is E[\u2202h_final/\u2202h_\u2113] \u2014 a Jacobian expectation requiring BACKWARD VJPs to the final layer per token (functorch/autograd), a categorically different and much costlier capture. So the roadmap's own proposed instrumentation is forward-only; you literally cannot get the workspace, even as the review's suggested 'small Jacobian bonus probe', without rewriting the capture. Any Phase 0 that keeps output_hidden_states is testing the activation-variance re-metric (bet-B-adjacent), never bet A.",
+    "evidence": "roadmap lines 69-82 (Method: output_hidden_states, then SVD/PCA); review triad line 21-24 (J-space 'not found by activation PCA'); Anthropic J-lens = E[\u2202h_final/\u2202h_\u2113]",
+    "targets": "Phase 0 (bet A); decision-point #1 (re-scope Phase 0) and #2 (verify who computes the Jacobian)",
+    "confidence": "high"
+   },
+   {
+    "title": "The workspace is a query-conditional decoding transient \u2014 breaks Phase 3's 'genes are static, batch offline' premise",
+    "claim": "Phase 3 (lines 283-289) and Open Q#2 assume gene J-coordinates are precomputable offline because 'genes are static; batch a forward pass over the corpus'. But the paper's own findings \u2014 directed modulation PULLS concepts into the workspace task-dependently, occupancy plateaus at ~25 mid-band and COLLAPSES at output \u2014 mean a gene has no stable, query-independent J-footprint; its active vectors depend on the decoding context it is read under. This also makes Phase 0's mean-pooling risk worse than the roadmap admits (line 89-92): the review's fix (windowed pooling over a CAZ) addresses DEPTH (layers) but not POSITION (tokens) \u2014 mean-pooling a gene still averages over token positions that each carry a DIFFERENT sparse 25-vector code. A precomputed offline gene splat in J-space is fitting a distribution to a quantity that only exists at query time.",
+    "evidence": "roadmap lines 142-143, 283-289 (offline gene J-coords), 89-92 (mean-pooling risk); review line 28-29 (directed modulation, pull-in, ~25 median occupancy, collapse at output), line 36 (CAZ depth-extension)",
+    "targets": "Phase 3 (offline splat fit in J-space) and Phase 0 pooling; Open Q#2",
+    "confidence": "high"
+   },
+   {
+    "title": "'~25 vectors', '~16 directions', and covariance-rank-k are three different numbers \u2014 Phase 3's LOD validation is a category error",
+    "claim": "Even after the review's weight/activation/J-space triad, a fourth conflation survives INSIDE the J-space column. '~25 active vectors' is median OCCUPANCY per token \u2014 a sparse code over a large overcomplete J-lens dictionary \u2014 NOT the dimensionality of J-space. UWSH's ~16-32 is a WEIGHT-spectral rank. Phase 1's splat k\u22488-16 is a per-gene chunk-SCATTER covariance rank. Phase 3 (lines 199-203) proposes: 'if quality at r=4 \u2248 r=16, the 16-direction budget story is confirmed in-store' \u2014 but r there is the covariance truncation rank; confirming a gene's chunk scatter is low-rank says nothing about workspace occupancy or weight rank. The LOD device-budget mapping (mean/r=4/r=16, line 194) is picking a covariance rank with no principled tie to either the 25 or the 16.",
+    "evidence": "roadmap lines 194 (LOD r\u2192device), 199-203 (r=4\u2248r=16 'confirms 16-direction'), 114-123 (splat k\u22488-16); review triad lines 20-22 (~16-32 weight vs ~25 J-lens), line 28 (median ~25 ACTIVE)",
+    "targets": "Phase 3 LOD validation; Phase 1 splat rank; decision-point #1",
+    "confidence": "high"
+   },
+   {
+    "title": "The vocabulary ceiling is adversarially aligned with the Phase 4 validation set \u2014 bet A is validated on its worst case",
+    "claim": "The J-lens is the Jacobian of a SINGLE next-token logit w.r.t. hidden state \u2014 inherently a single-vocab-token projection. Multi-BPE identifiers (SIKE needles like claude-haiku-4-5-20251001, PostgreSQL 16) have no single J-lens direction; they are emitted autoregressively, each token's J-vector conditioned on the prior. So Phase 4's secondary measurement and Open Q#3 ('does the answer concept enter J-space?', lines 240-242, 320-324) are not well-posed for identifier needles. Phase 4's pre-registered payoff bar (\u22655% relative EM, line 238) therefore tests bet A end-to-end on precisely the answer class the mechanism cannot represent. This is stronger than the review's 'weakest on identifiers' (line 47): the chosen eval is adversarial to the mechanism, so a Phase 4 null result would be uninformative about bet A's real value on conceptual retrieval.",
+    "evidence": "roadmap lines 236-242 (Phase 4 EM bar + J-space secondary measurement), 320-324 (Open Q#3); review lines 47, 64 (vocabulary ceiling, multi-token needles)",
+    "targets": "Phase 4 (payoff phase, bet A weak form); Open Q#3",
+    "confidence": "high"
+   },
+   {
+    "title": "Open Q#1's quantization probe measures activations when the risk lives in the Jacobian",
+    "claim": "Open Q#1 elevates quant drift to the primary risk (correct \u2014 the default stack is GGUF/Ollama) and proposes the cheap probe: 'compare fp16 vs quantized HIDDEN STATES on one model via a llama.cpp debug build' (lines 303-309). But the J-lens is a Jacobian, \u2202h_final/\u2202h_\u2113; Q4 quantization perturbs WEIGHTS, which changes the local linear map directly, even when forward activations stay cosine-close (activations are empirically robust to Q4; the down-projection maps the workspace reads from are less so). Comparing forward hidden states systematically UNDER-measures J-lens drift. The correct probe compares the VJP/Jacobian directions themselves under fp16 vs Q4, not the activations. As written, the cheap measurement for the roadmap's #1 risk is confounded toward a falsely optimistic 'drift is small' answer.",
+    "evidence": "roadmap lines 303-309 (Open Q#1 probe = compare hidden states); review line 79 (elevate quant drift to primary)",
+    "targets": "Open Q#1 / Phase 0 quant sub-probe; decision-point #5 (which fp16 model)",
+    "confidence": "medium"
+   },
+   {
+    "title": "Concede the real upside: bet B is mechanistically correct and the integration seams are code-verified \u2014 but the review's empirical baseline is not in-repo",
+    "claim": "Bet B is well-founded and needs no workspace: the residual stream's anisotropy (a few high-variance outlier/massive-activation dimensions dominate) genuinely mis-metricizes cosine-on-BGE-M3, so Mahalanobis + Ledoit-Wolf whitening is the correct fix, with no query-time internals. The 'bounded, prepaid downside' claim also holds at the code level: fusion.py:104 makes a jspace tier zero-weight-disable cleanly (Phase 3 plugs in honestly); know_calibration.py:64 already ships a 5-feature logistic (DEFAULT_BETAS is 6-long = intercept+5), so Phase 1's 'density as the 6th feature' is exact; interference_trim at cymatics.py:526 is a real Phase-4 hook; and the splice floor bug is real (context_manager.py:1707 target=1000 \u2192 headroom_bridge.py:227 content[:1000].strip() on the default no-headroom stack). Caveat for calibration: the review's empirical grounding leans on docs/benchmarks/2026-07-06-sike-run2-fts-depth-fusion.md and the faithfulness runbook, but those filenames appear ONLY inside the review itself \u2014 not committed anywhere in the repo \u2014 so the 'RRF 0.72 vs additive 0.58' baseline that Phase 0/3 must beat is not independently reproducible from repo state (the harness scaffolding, scripts/bench_chain/s3_fts_depth_sweep.py, does exist).",
+    "evidence": "fusion.py:76,104; know_calibration.py:64 (DEFAULT_BETAS 6-long); cymatics.py:526 interference_trim; context_manager.py:1707 + headroom_bridge.py:222-227; grep: the two cited 2026-07-06 benchmark docs resolve only inside the review file; scripts/bench_chain/s3_fts_depth_sweep present",
+    "targets": "Phase 1 / bet B (lead recommendation); Phase 3 fusion integration; decision-point #2 (lead with bet B) and #4 (verify LatentAudit/UWSH before load-bearing)",
+    "confidence": "high"
+   }
+  ]
+ },
+ {
+  "specialty": "Retrieval / IR engineering",
+  "stance": "pro",
+  "verdict_one_line": "Worth pursuing \u2014 the cheapest wins (RRF-as-default, Mahalanobis whitening of BGE-M3, density-as-6th-know-feature) are bet-independent, already 80% prepaid in shipped plumbing, and the expensive J-space bet is cheaply falsifiable at a correctly-scoped Phase 0; lead with those and the downside is bounded.",
+  "points": [
+   {
+    "title": "Phase 3's jspace tier is a one-liner into already-shipped, scale-safe fusion",
+    "claim": "The roadmap's Phase 3 integration `fuser.add_tier(\"jspace\", ranked, weight=cfg.retrieval.jspace_weight)` is API-accurate against the shipped `Fuser` \u2014 a pure, SQL-free, rank-scale-invariant data structure where `weight==0.0` is a silent no-op disable. Because RRF ranks are scale-invariant (Cormack k=60), a new geometry tier cannot destabilize the fused score the way a mis-scaled additive tier can; you A/B it by tuning one weight up from zero, and it degrades to current behavior at weight 0. This is the strongest structural reason the roadmap's ordering is honest: the production plumbing for the retrieval half of bet A already exists and is tested.",
+    "evidence": "helix_context/retrieval/fusion.py: add_tier(tier_name, ranked_ids, weight) signature + zero-weight short-circuit (lines 104-108); knowledge_store.py branches on _fusion_mode, Fuser queried only when 'rrf' (line ~2146)",
+    "targets": "Phase 3; Decision point 2 (lead-with-B / cheap integration)",
+    "confidence": "high"
+   },
+   {
+    "title": "Density-as-6th-feature (Phase 1) reuses a proven extension mechanism, not a hope",
+    "claim": "know_calibration.py is a 5-feature logistic (N_FEATURES=5, DEFAULT_BETAS is a 6-tuple = intercept+5) and Stage 7 already demonstrated the exact incremental-feature-add the roadmap wants: freshness_min was bolted on as the 5th feature behind a `len(betas) >= 6` guard with a documented STAGE-7-EXT migration and a hand-rolled `fit_betas_from_features`. So Phase 1's 'ship density as a 6th logistic feature before any pure density gate' plugs into a working, extensible calibration surface that is already the target of live work (#239). Leading with bet B is de-risked by this.",
+    "evidence": "helix_context/scoring/know_calibration.py: N_FEATURES=5 (line 84), freshness guard `if freshness_min is not None and len(betas) >= 6` (lines 277-278), STAGE-7-EXT markers (lines 34-39), fit_betas_from_features (lines 354-400)",
+    "targets": "Bet B / Phase 1; Decision point 2 (lead with bet B)",
+    "confidence": "high"
+   },
+   {
+    "title": "The Phase-0 gold set is ~80% prepaid, and its miss-decomposition bounds bet A's addressable ceiling",
+    "claim": "The roadmap says 'Helix has no gold retrieval set'; in fact the SIKE resolutions doc already carries 50 needles x 3 beds = 150 (query, gold_source) labels with per-needle gold FTS ranks and hit/miss booleans, plus computed know-confidence AUC. Crucially for IR: xl's 18 misses split into 7 pool-starvation (gold never enters retrieval \u2014 FTS ranks 63-158 or absent because 'helix' matches ~36k genes) and 11 in-pool rank-squeeze (gold at rank 7-42, evicted by echoes/dupes). A better *metric* (residual geometry / Mahalanobis) can only rescue the ~11 in-pool cases; the 7 out-of-pool ones need candidate depth, not geometry. So Phase 0's addressable ceiling on this bench is ~11/50 and its bar must be measured at fixed candidate depth \u2014 which the roadmap correctly specifies ('beats the full RRF stack at equal candidate depth'). This makes the kill criterion concrete in a way the review leaves abstract.",
+    "evidence": "docs/benchmarks/2026-07-05-sike-bedsweep-issue-resolutions.md \u00a75 A4 (pool starvation, FTS ranks), B2 (11/18 rank 7-42 squeeze-outs), A5 (hit/miss AUC xl 0.352); roadmap Phase 0 'equal candidate depth' bar",
+    "targets": "Phase 0 (eval harness + pre-registered bar)",
+    "confidence": "medium"
+   },
+   {
+    "title": "Additive doesn't just weaken the baseline \u2014 it mis-scales BGE-M3 itself, so 'beat RRF' is the honest bar and RRF-default is a free prerequisite win",
+    "claim": "knowledge_store.py defaults fusion_mode='additive' with semantic_dense_additive_weight=16.0 while FTS bm25 is capped at 6.0. Under additive, dense cosine in [-1,1] scaled by 16 can swamp a 6.0-capped lexical head \u2014 the fusion is scale-broken in both directions (dense over-weight AND lexical head-flattening). RRF (rank-invariant) removes both pathologies, which is the mechanistic backing for the review's Run-2 claim (RRF 0.72 vs additive 0.58). The council should treat 'flip fusion_mode default to rrf' as the cheapest bet-independent IR win and the correct Phase-0 baseline \u2014 comparing residual geometry against additive would flatter it against a strawman that handicaps BGE-M3.",
+    "evidence": "knowledge_store.py:518 fusion_mode='additive', :550 semantic_dense_additive_weight=16.0, :1725 'genome caps it at 6.0'; SIKE doc \u00a75 B2 'FTS5 additive cap 6.0 flattens the head while tag_exact is uncapped -> A/B additive vs RRF'",
+    "targets": "RRF vs additive baseline; Decision point 2/3",
+    "confidence": "medium"
+   },
+   {
+    "title": "Phase 4's splice-seam plumbing already exists (foveated_caps) \u2014 cheaper than the 'M-L' estimate once the 1000-char cut is fixed",
+    "claim": "context_manager.py:1706 is the query-agnostic `target = 1000` cut the review flags, but lines 1703-1704 already override it with `foveated_caps[idx] * foveated_base` \u2014 a per-document, rank-proportional cap array built by `_compute_foveated_caps` (line 341) and threaded through _assemble via foveated_active. A J-coverage objective (Phase 4) is precisely a function that populates that per-idx cap array from splat-mixture coverage instead of rank. So the per-document budget-allocation plumbing the roadmap wants at the Stage-4/5 seam is already call-local and wired; Phase 4 swaps the cap-computation policy rather than building new threading. Honest caveat: it's gated behind the BROAD tier today and compress_text still truncates, so the review's 'fix the splice bug first' stands.",
+    "evidence": "helix_context/context_manager.py:1701-1706 (foveated_caps override vs target=1000), :341 _compute_foveated_caps, :1727-1734 foveated_caps/foveated_active threaded into _assemble",
+    "targets": "Phase 4 (coverage-shaped assembly)",
+    "confidence": "medium"
+   },
+   {
+    "title": "Cosine->Mahalanobis whitening of BGE-M3 is the single cheapest real upside \u2014 zero model internals, valid even on a total J-space kill",
+    "claim": "The most defensible IR win in the whole plan needs no residual stream at all: BGE-M3 cosine on embedding_dense_v2 assumes isotropy, but dense embedding spaces are empirically anisotropic (a few high-variance directions dominate), a documented retrieval pathology fixed by whitening (BERT-whitening/flow line of work). A corpus covariance over the existing embedding_dense_v2 column + Ledoit-Wolf shrinkage yields a whitened Mahalanobis re-metric offline \u2014 the same covariance Phase 1's splat fit computes anyway. This is the review's rec #1 and the honest steelman: it isolates 'is anisotropy hurting retrieval?' from 'does the decoder's geometry help?', it's the natural first experiment, and it survives a full J-space bet failure. Caveat the council should log: the specific Run-2 numbers (RRF 0.72/additive 0.58) and the faithfulness runbook the review leans on are NOT committed on this branch (2026-07-06-sike-run2-*.md absent) \u2014 the mechanism is verifiable in code, the exact figures are not yet reproducible here.",
+    "evidence": "knowledge_store.py stores embedding_dense_v2 (dense BGE-M3 cosine tier); review rec #1 (cosine->Mahalanobis whitening, bet-A-independent) + Phase 1 Ledoit-Wolf shrinkage; verified absence: docs/benchmarks/ has no 2026-07-06-sike-run2 or faithfulness-runbook file on this branch",
+    "targets": "Bet B / Phase 1 (bet-A-independent whitening); Decision point 2",
+    "confidence": "medium"
+   }
+  ]
+ },
+ {
+  "specialty": "Retrieval / IR engineering",
+  "stance": "con",
+  "verdict_one_line": "The binding constraint on our own bed is a query-agnostic Stage-4 splice cut, not retrieval geometry \u2014 so J-space Phase 0 optimizes the wrong stage and its kill-switch fires on a corpus/metric that hasn't earned the right to pre-register an nDCG bar.",
+  "points": [
+   {
+    "title": "The 28-point content\u2192body gap is splice, not geometry \u2014 Phase 0 mis-targets the stage",
+    "claim": "On the decontaminated Run-1 xl bed, RRF already gets the answer INTO the retrieved gene 72% of the time (content_has_answer=0.72) but it survives to the emitted body only 44% (body_has_answer=0.44). A better retrieval metric (J-space/Mahalanobis) can only lift the already-retrieved 0.72 ceiling; it does nothing for the 28-point loss between retrieval and emission. The whole point of bet A is upstream of where the answers are actually dying.",
+    "evidence": "benchmarks/results/sike_fts_depth_sweep_xl.json cells: rrf content_has_answer_rate=0.72 vs body_has_answer_rate=0.44 (all depths). Root cause is a fixed query-agnostic cut: context_manager.py:1706 `target = 1000` feeding compress_text, with `complement` never emitted (roadmap review \u00a772, B3 delivered-but-unanswerable cluster: 13 needles \u22642/30).",
+    "targets": "Phase 0 (premise), Phase 4 (assembly) \u2014 kill-switch: fix splice first; if the 0.72\u21920.44 gap closes, residual retrieval-metric headroom is <28 pts and likely <10.",
+    "confidence": "high"
+   },
+   {
+    "title": "Run-2 proves candidate depth is not binding \u2014 a re-ranking metric fights a saturated pool",
+    "claim": "Deepening the FTS pool 48\u2192500 leaves RRF content_has_answer FLAT at 0.72 and DEGRADES gold_delivered 0.74\u21920.72\u21920.70. So the missing golds aren't a pooling problem a better metric reorders \u2014 the worst misses are lexically absent from the top-200 entirely. J-space/Mahalanobis re-ranks in-pool candidates; it does not recall what FTS never surfaces. The addressable slice (in-pool rank-7\u201342 squeeze) is exactly what RRF already rescues via rank-fusion, immune to the additive 6.0 cap.",
+    "evidence": "sike_fts_depth_sweep_xl.json curve: rrf 0.74/0.72/0.70 across depth 48/200/500, additive flat 0.62. FTS depth hard-coupled `LIMIT limit*2` at knowledge_store.py:2292. A4: helix_expression_budget/pipeline_steps absent from top-200 ('helix' matches ~36k genes). Fuser rank-fusion in retrieval/fusion.py:76.",
+    "targets": "Phase 0 (baseline choice), Phase 3 (jspace tier weight) \u2014 the honest bar is 'beat RRF 0.72', not 'beat BGE-M3 cosine 0.58'; Run-2 shows RRF's ceiling here is splice-bound, not metric-bound.",
+    "confidence": "high"
+   },
+   {
+    "title": "Phase 0's pre-registered nDCG@10 kill-switch is uncomputable on the eval set that exists",
+    "claim": "Phase 0 pre-registers 'beats BGE-M3 by \u22655 points Recall@10 / nDCG@10.' But the SIKE 50-needle harness is binary any-of source-id substring matching with no graded relevance judgments \u2014 nDCG needs graded labels the corpus doesn't have, and 4/63 gold paths are stale. The bar can't fire honestly as written. Worse, the review's own grounding docs are dangling: the cited 2026-07-06-sike-run2-fts-depth-fusion.md and faithfulness-experiment-runbook.md do not exist in the repo; the Run-2 numbers live only in a raw JSON whose `curve` field reports gold_delivered while `cells` reports content_has_answer \u2014 two different metrics, never reconciled in a writeup.",
+    "evidence": "ls confirms neither benchmark doc exists (only the two design .md and the raw sike_fts_depth_sweep_xl.json). B4: 4/63 gold_source paths stale, ANY-of matching. A1: 6/4/3 false-negative + 7/14/15 false-positive needles per bed pre-fix.",
+    "targets": "Phase 0 (eval-harness gap) \u2014 kill-switch: the bar must be re-specified to Recall@k/MRR and the labels graded/validated (B1 write-time validity gate) before eval_retrieval.py can adjudicate anything.",
+    "confidence": "high"
+   },
+   {
+    "title": "Phase 4 J-coverage duplicates an existing resonance selector and inherits the splice confound",
+    "claim": "The coverage-shaped selector Phase 4 proposes to build in the Stage-4/5 seam already exists as interference_trim: a query-resonance fragment selector over the 256-bin cymatics spectrum with a splice_aggressiveness threshold and min_codons_kept floor. Swapping its resonance metric for J-coverage doesn't change that its downstream compress step still caps each fragment at 1000 query-agnostic chars. Phase 4's kill-switch ('no end-to-end QA gain at fixed budget') WILL fire \u2014 but as a false-negative on the coverage hypothesis, confounded by the splice bug it sits on top of.",
+    "evidence": "scoring/cymatics.py:526 interference_trim(query, docs, splice_aggressiveness, ..., min_codons_kept=2) \u2014 roadmap Phase 4 itself names it as the hook to mirror (roadmap L226-228). Downstream cap context_manager.py:1706. Delivered-but-unanswerable cluster B3.",
+    "targets": "Phase 4 (bet A payoff) \u2014 ordering error: Phase 4 must sequence AFTER the splice fix, else M\u2013L effort mislearns 'coverage doesn't help' when the cause is a 1-line truncation.",
+    "confidence": "medium"
+   },
+   {
+    "title": "Bet B density know/go is fit on an anti-correlated signal and is structurally blind to our actual failure",
+    "claim": "The current know-confidence is worse than random (misses score HIGHER than hits, AUC 0.352). Adding a 6th Mahalanobis-density logistic feature does not fix a sign-inverted signal. And Mahalanobis density measures adherence to the corpus distribution \u2014 so the 260 echo genes (verbatim prior query/response, source_id NULL, top-8 FTS for helix_headroom_port) are maximally in-distribution and score LOW anomaly / HIGH confidence, actively reinforcing the anti-signal. Phase 1's 'density dominates the risk-coverage curve' validation cannot be trusted until know-AUC>0.7 (Run-3 gate) passes AND provenance/anti-poisoning is paired in.",
+    "evidence": "Bedsweep A5: xl hit-mean 0.327 < miss-mean 0.421, AUC 0.352; biged_complex_model rc=0.74 with 0/30 correct. Echo contamination A2 (260 xl / 285 erb50k). Review new-risk #1 (density blind to poisoning). scripts/calibrate_know_confidence.py exists but the >0.7 gate is unmet.",
+    "targets": "Phase 1 / Bet B \u2014 'ship early, best-supported' is premature relative to its own decontamination + recalibration dependencies; density and provenance are jointly necessary, neither sufficient.",
+    "confidence": "high"
+   },
+   {
+    "title": "Conceded upside \u2014 Mahalanobis whitening \u2014 is real but gated on backfill + shrinkage + condition number",
+    "claim": "The one honest bet-A-independent win is cosine\u2192Mahalanobis whitening of BGE-M3: anisotropy is real and whitening is cheap (d\u00d7d Cholesky, ~1M flops/query at d=1024). But it is under-priced: (a) embedding_dense_v2 is NULL until backfill runs, so the corpus covariance can't even be estimated yet; (b) a 1024\u00d71024 covariance needs n\u226b1024 non-null vectors + Ledoit-Wolf, or whitening amplifies low-variance noise directions and can HURT ranking; (c) it only re-ranks in-pool candidates, so it inherits the depth-invariant ceiling from point 2. Upside is bounded above by the splice gap.",
+    "evidence": "knowledge_store.py comments L917/931/986 'NULL embedding_dense_v2 (backfill later)'; scripts/backfill_bgem3_v2.py exists but must run first. dense_additive_min_cosine knob at context_manager.py:701 confirms cosine metric today. Same Ledoit-Wolf singularity the roadmap flags for Phase 1 (L106-109).",
+    "targets": "Review rec #1 / Bet B first-experiment \u2014 concede it's the right first move, but its ceiling is the retrieved-not-emitted gap, and it is not free of Phase 1's covariance-estimation risk.",
+    "confidence": "medium"
+   }
+  ]
+ },
+ {
+  "specialty": "Retrieval / IR engineering (fusion, eval harness, splice/assemble)",
+  "stance": "neutral",
+  "verdict_one_line": "Proceed, but the roadmap's own baseline is undefined in the tree: the deployed default is additive (not RRF), the headline \"RRF 0.72 vs additive 0.58\" metric doesn't exist in the harness, and the splice stage throws answers away query-blind \u2014 fix those three before any J-space nDCG bar means anything end-to-end.",
+  "points": [
+   {
+    "title": "The deployed default is additive, so Phase 3's jspace tier is inert out-of-the-box and the cheapest win is un-named",
+    "claim": "config.py:409 sets fusion_mode='additive' by default, and knowledge_store.py:1988-1993 confirms the Fuser is *built but never queried* under additive (top_k(fused) only fires at :2532 `if self._fusion_mode == 'rrf'`). So Phase 3's `fuser.add_tier('jspace', ...)` adds a tier that contributes nothing until fusion_mode flips to 'rrf'. If the review's own Run-2 number (RRF beats additive by ~14 pts on xl) is real, flipping fusion_mode default to 'rrf' is a zero-research, one-line retrieval win that dominates the entire J-space program in cost/benefit \u2014 yet it is not the roadmap's lead action. Phase 0's 'beat the full RRF stack' bar also picks a baseline that isn't the shipped default.",
+    "evidence": "helix_context/config.py:409 (fusion_mode='additive'); knowledge_store.py:1993 comment 'In additive mode, the Fuser is built but never queried'; :2532 rrf-only fused sort; fusion.py:104 zero-weight tier disable",
+    "targets": "Phase 3 (jspace tier), Phase 0 (baseline), Decision-point 2 (lead with bet B)",
+    "confidence": "high"
+   },
+   {
+    "title": "Phase 0's 'single highest-leverage item' is less built than the review claims, and the existing harness structurally can't produce nDCG@k",
+    "claim": "The review's headline metric `content_has_answer` appears NOWHERE in code \u2014 the SIKE harness measures `found_in_context`/`body_has_answer` (bench_needle.py). The cited Run-2 doc (2026-07-06-sike-run2-fts-depth-fusion.md) and the `s3_fts_depth_sweep.py` driver are absent from the tree (only a stale .pyc remains). So the numbers grounding 'RRF is the baseline to beat' are not reproducible from repo state. Worse for Phase 0: the runner's own note (s2_sike_bedsweep_run.py:383-385) says recall@k collapses to 'gold_source_in_delivered_topK' because find_needle exposes no per-rank position. Phase 0's pre-registered Recall@10/nDCG@10 bars require a graded-rank harness that does not yet exist \u2014 the 'skeleton of eval_retrieval.py' is missing the ranking spine those metrics need.",
+    "evidence": "grep content_has_answer \u2192 only docs/design/2026-07-06-jspace-roadmap-review.md; bench_needle.py fields found_in_context/gold_delivered; s2_sike_bedsweep_run.py:383-390 'find_needle does not expose per-rank position'; scripts/bench_chain/s3_fts_depth_sweep.py not in tree",
+    "targets": "Phase 0 (eval harness), Decision-point 4 (who verifies)",
+    "confidence": "high"
+   },
+   {
+    "title": "Splice truncation is confirmed query-blind at the code level, which decouples Phase 0 (retrieval) from Phase 4 (QA)",
+    "claim": "context_manager.py:1706 sets `target = 1000` on the default (non-foveated) path and headroom_bridge.py:227 returns `content[:target_chars].strip()` when headroom is absent; even the Kompress path (:246) is whole-document ratio compression with zero query conditioning. The foveated override (:1703) is BROAD-mode-only and rank-proportional, still not query-span-aware. IR consequence the review understates: a Phase 0 nDCG win cannot move end-to-end QA while assembly cuts position-0 regardless of the query \u2014 retrieval and answer-survival are different failure surfaces. The instrument to see this already exists: bench_needle separates gold_delivered (retrieval) from found_in_context (answer survives splice). That two-axis split should BE the Phase 0 dashboard, and the splice cut must go query-aware before Phase 4's coverage assembly sits on top of it.",
+    "evidence": "context_manager.py:1706 target=1000; headroom_bridge.py:227 content[:target_chars]; :246 ratio-based Kompress; bench_needle.py dual fields gold_delivered vs found_in_context",
+    "targets": "Phase 4 (coverage assembly), Phase 0 (retrieval metric vs QA), Open-Q#3",
+    "confidence": "high"
+   },
+   {
+    "title": "Bet B / Mahalanobis is a real calibration win but is mistargeted if sold as a recall win on our current benchmark",
+    "claim": "The current dense tier is plain cosine on embedding_dense_v2 scaled by dense_weight=1.0 additive (config.py:424); whitening it (Ledoit-Wolf Mahalanobis) is the honest anisotropy fix and directly upgrades the 5-feature know logistic (know_calibration.py N_FEATURES=5) as a 6th feature \u2014 that integration is correctly specified. BUT the SIKE gaps are multi-token identifiers (claude-haiku-4-5-20251001, PostgreSQL 16, 51/52) retrieved by FTS5 + tag-exact, where the dense tier contributes least. So Phase 1 should be scoped as a *selective-prediction / fewer-wrong-'know's* win (upgrades #239), NOT expected to move gold_delivered_rate on the current needle set. Same vocabulary/identifier ceiling the review flags for J-lens applies to whitened dense.",
+    "evidence": "config.py:424 dense_weight=1.0; know_calibration.py:84 N_FEATURES=5 (density=6th feature, roadmap Phase 1 correct); bench_needle NEEDLES are identifier-shaped; review \u00a7Bet-A vocabulary ceiling",
+    "targets": "Phase 1 / Bet B, #239 know-miss recalibration, Decision-point 2",
+    "confidence": "high"
+   },
+   {
+    "title": "Phase 4 must ablate against the existing cymatics redundancy trim, not against naive relevance+budget",
+    "claim": "Redundancy elision already ships: interference_trim (scoring/cymatics.py:526, aliased interference_splice:590) plus 256-bin spectrum scoring is the incumbent per-fragment redundancy heuristic \u2014 and the roadmap correctly names it as the 'hook to mirror' (Phase 4). But its validation (relevance-assembly vs jcoverage-assembly) omits interference_trim as a baseline arm, so a measured gain would be confounded between 'coverage objective' and 'better redundancy than cymatics'. Submodular facility-location is genuinely better-founded than the cymatics heuristic for the 'cover an otherwise-empty query direction' case \u2014 that's real upside \u2014 but the ablation must be relevance / relevance+interference_trim / jcoverage to attribute it.",
+    "evidence": "scoring/cymatics.py:526 interference_trim, :590 interference_splice alias; roadmap Phase 4 line 226 names interference_trim; validation section lists only relevance-vs-jcoverage",
+    "targets": "Phase 4 (coverage-shaped assembly), validation design",
+    "confidence": "medium"
+   },
+   {
+    "title": "Where the roadmap is right: the Fuser is genuinely tier-agnostic, so bet B's plumbing risk is low and flags-off degradation is real",
+    "claim": "Concede the architecture claim: Fuser.add_tier accepts any named tier and weight==0.0 short-circuits to a no-op (fusion.py:104), so Phase 3's 'add jspace tier' and 'zero-weight disables' is accurate low-risk engineering, and the splats/spaces schema is additive (new tables, not columns on genes). The roadmap's 'flags-off = current behavior' honesty commitment is structurally achievable here. The catch is only the coupling in point 1 \u2014 the tier is real plumbing but dead weight until RRF is the default. Net: bet B (splats + density) is the defensible, mostly-prepaid core; bet A's payoff is gated on a splice fix and an nDCG-capable harness that don't exist yet.",
+    "evidence": "fusion.py:104 (weight==0.0 no-op), :76-129 add_tier arbitrary tier; roadmap Phase 1 schema (splats/spaces new tables); knowledge_store.py:2002 Fuser instantiation",
+    "targets": "Phase 3 (plumbing), Bet B decoupling, Decision-point 1 (three-subspace split)",
+    "confidence": "high"
+   }
+  ]
+ },
+ {
+  "specialty": "Density modeling / applied statistics (Gaussian-splat genes, Mahalanobis under anisotropy, Ledoit-Wolf shrinkage, density know/go calibration)",
+  "stance": "pro",
+  "verdict_one_line": "Bet B (splat genes + density know/go) is the roadmap's best-supported and cheapest-to-cash bet \u2014 but the cheapest slice is ONE global shrunk-\u03a3 whitening, not per-gene splats, and Phase 1 must refit the (currently unfit) logistic as its real baseline or it books a false-positive density win.",
+  "points": [
+   {
+    "title": "Bank the anisotropy win with ONE global \u03a3 before building any per-gene splats",
+    "claim": "The highest-certainty, cheapest slice of Bet B is a single corpus-level Ledoit-Wolf-shrunk whitening transform W fit offline over the already-existing genes.embedding_dense_v2 column and applied to BOTH query and gene vectors at query time \u2014 turning cosine into a global Mahalanobis re-metric with zero per-gene degeneracy risk. It captures most of the anisotropy correction the review credits to Bet B while entirely side-stepping the sample-starvation failure mode, and de-risks Phase 1 by answering 'does whitening alone move retrieval?' before the splats table exists. Ship it as Phase 1 step 0, storing W in the proposed spaces.basis/center \u2014 one offline pass, no new schema beyond a single spaces row.",
+    "evidence": "cymatics.py:353 flux_score_w1 is a 1-D circular-Wasserstein on the 256-bin spectrum histogram (CDF-diff L1), NOT embedding-space Mahalanobis; grep found zero whitening/covariance code in scoring/blend.py; knowledge_store.py:1362/1368 shows embedding_dense_v2 is the per-gene dense-recall vector already persisted. So the review's 'Mahalanobis whitening available now' is genuinely ~50 lines of new offline code \u2014 cheap, but not existing.",
+    "targets": "Phase 1 (Bet B); review Recommendation #1 / Decision-point #2 (lead with Mahalanobis whitening)",
+    "confidence": "high"
+   },
+   {
+    "title": "Phase 1's 'better-calibrated-than-the-logistic' bar is softer than stated \u2014 the logistic was never fit",
+    "claim": "Phase 1's kill criterion ('density no better calibrated than the current logistic') races an UNCALIBRATED baseline. The density gate isn't beating a tuned model \u2014 both share the same missing prerequisite: a labeled (query, relevant-gene) reliability set. Correct sequencing: build the Phase-0/SIKE-derived eval harness, REFIT the logistic as the real baseline, THEN compare density on risk-coverage/ECE. Comparing density against the shipped hand-set defaults is an unfair-easy win that will not survive a properly-fit logistic; flag it so Phase 1 doesn't book a false positive that later reverses.",
+    "evidence": "helix.toml:449 [know] betas = [-2.0,2.0,1.5,0.7,1.8,1.5] (identical to know_calibration.py:64 DEFAULT_BETAS) with no calibrated_at/calibrated_on_n set; scripts/calibrate_know_confidence.py docstring requires benchmarks/located_n1000.py which Glob confirms does NOT exist in the repo. The betas are priors, never regressed on data.",
+    "targets": "Phase 1 validation methodology; Phase 0 eval harness as shared prerequisite; #239 know/miss recalibration",
+    "confidence": "high"
+   },
+   {
+    "title": "Sample starvation is the COMMON case, not a tail risk \u2014 make rank adaptive to n_obs, don't pin rank=16",
+    "claim": "Per-gene \u03a3 must be pooled from a parent gene's child-fragment embeddings (linked via the codons list), and n_obs = chunk_count. For the many small docs in a code/notes corpus that is 1-3 chunks -> a rank-<=2 scatter in 1024-d. At the proposed [splat] rank=16, effective factor rank is min(16, n_obs-1), so those genes collapse to mu + diagonal ~= scaled cosine \u2014 the roadmap's own 'covariances collapse to the prior' failure, but as the majority case. Fix that keeps the upside: make k adaptive (k_eff=min(rank, n_obs-1)) and let Ledoit-Wolf shrinkage intensity lambda->1 carry low-n genes to the global prior. Pre-register: MEASURE the chunk_count distribution over genome.db before fixing rank \u2014 the config default should follow the data, not precede it. A static rank=16 is in tension with the shrinkage='ledoit_wolf' the same config names.",
+    "evidence": "knowledge_store.py:3651 reassemble() reads parent.codons (ordered child gene_ids; is_parent=true marker); each child is its own gene row carrying embedding_dense_v2; roadmap Phase 1 config '[splat] rank=16, shrinkage=ledoit_wolf, min_chunks=2' plus its own Risk block 'covariances collapse toward the shared prior'.",
+    "targets": "Phase 1 covariance fit + [splat] config defaults; roadmap Phase 1 risk register",
+    "confidence": "high"
+   },
+   {
+    "title": "Mixture log-density over top-K is the fragile feature \u2014 normalize with a shared \u03a3, keep only \u03bc per-gene",
+    "claim": "The roadmap adds 'mixture log-density over top-K' as a know feature. In 1024-d a Gaussian log-density's log-det(\u03a3) term swings enormously when \u03a3 is estimated from 2-3 samples: a near-singular per-gene \u03a3 makes the density dominated by its normalization constant, not the query's proximity \u2014 so the mixture-density feature is MORE exposed to sample starvation than a plain Mahalanobis-to-top1. Robust cheapest design: use the SHARED shrunk global \u03a3 for the density normalization (log-det constant across genes, cancels in cross-gene comparison) and let only \u03bc be per-gene. That '\u03bc-per-gene + global-\u03a3' splat is well-conditioned by construction, O(dk) via one Woodbury factorization, and is exactly the limit low-n genes fall into anyway \u2014 so make it the DEFAULT and promote to a full per-gene \u03a3 only where n_obs and MEASURED inter-gene covariance divergence justify it (invert the roadmap's detect-then-fallback into detect-then-upgrade).",
+    "evidence": "roadmap Phase 1 'add per-candidate log-density and mixture log-density over top-K as features' and its 'Woodbury identity makes Mahalanobis O(dk)' claim; roadmap Phase 1 Risk 'covariances collapse... Detect by measuring inter-gene covariance divergence'.",
+    "targets": "Phase 1 know-feature integration; Phase 1 risk/fallback design",
+    "confidence": "high"
+   },
+   {
+    "title": "Density's real contribution is an ABSOLUTE novelty signal the all-relative logistic structurally cannot express \u2014 and it complements, not replaces, poisoning defense",
+    "claim": "Every feature in the current logistic is RELATIVE: tanh(top_score/s_ref), score_gap (top1-top2), lexical_dense_agree, coordinate_confidence, freshness_min. None is an absolute anchor, so the logistic cannot detect a confident retrieval of an OOD query \u2014 a query far from ALL gene modes can still have high top_score AND a large top1-top2 gap. Mahalanobis distance to the top gene's splat IS that absolute anchor (the LatentAudit 'know-vs-go' signal), so density earns nonzero beta as an orthogonal OOD/novelty dimension even if it doesn't dominate ranking. Concede the review's Risk #1 precisely: Mahalanobis catches OOD queries but is blind to in-distribution POISON (a fluent false doc sits at high density), so density and provenance/CWoLa are complementary \u2014 density closes the OOD hole, provenance closes the poison hole. Ship density as the '+1 logistic feature first' path, keep the anti-poisoning orthogonal.",
+    "evidence": "know_calibration.py:267-278 compute_confidence \u2014 all five z-terms are relative/agreement signals, no absolute-distance term; review New-Risk #1 'density gate is blind to corpus poisoning... must be paired with provenance/anti-poisoning'; roadmap Phase 1 'first ship density as a 6th logistic feature... only replace with a pure density threshold if it wins head-to-head'.",
+    "targets": "Phase 1 know-feature integration; review New-Risk #1; #239",
+    "confidence": "high"
+   }
+  ]
+ },
+ {
+  "specialty": "Density modeling / applied statistics (Gaussian-splat genes, Mahalanobis vs cosine under anisotropy, Ledoit-Wolf shrinkage, density know/go calibration)",
+  "stance": "con",
+  "verdict_one_line": "Bet B's Gaussian-splat density gate is sample-starved by construction and largely re-expresses signals the current logistic already carries; its first kill-switch (covariance collapse to the shared prior) fires on nearly every real corpus \u2014 and the honest cheap win it's being credited for is just calibrating the incumbent logistic, which has never been calibrated at all.",
+  "points": [
+   {
+    "title": "Per-gene covariance is sample-starved by construction \u2014 the Phase-1 kill-switch is the expected case, not a tail risk",
+    "claim": "Phase 1's own named failure ('covariances collapse toward the shared prior, Mahalanobis becomes scaled cosine') is not a risk to monitor, it is the default outcome. A gene's Sigma is fit from its chunk/fragment embeddings (n_obs), and no document yields anywhere near d=1024 chunks; for n_obs << d, Ledoit-Wolf's optimal shrinkage intensity delta* drives toward 1, so every gene's Sigma approximates the single corpus prior. A shared Sigma across genes is one global whitening \u2014 literally 'scaled cosine.' The per-gene anisotropy that justifies the entire splats table then carries ~0 information, and the roadmap's own detector ('measure inter-gene covariance divergence; if low, drop the density gate') triggers on almost any corpus. Concession: Ledoit-Wolf + corpus prior is the correct standard fix and the roadmap named it right \u2014 but that fix is exactly what guarantees near-degenerate per-gene Sigmas here.",
+    "evidence": "knowledge_store.py:1361 stores one gene-level embedding_dense_v2 (BGE-M3, 1024-d) per gene; roadmap Phase 1 rank=16 means F is 1024x16=16,384 params + 1024 diag fit from n_obs chunks; SIKE beds are 46,517 / 15,889 / 80,363 genes of short needles (docs/benchmarks/2026-07-05-sike-bedsweep-issue-resolutions.md sec.1).",
+    "targets": "Phase 1 (bet B) \u2014 kill-switch 'covariance collapse to shared prior'; this is the FIRST kill-switch that fires for bet B.",
+    "confidence": "high"
+   },
+   {
+    "title": "'Fit Sigma from already-computed chunk embeddings' is false \u2014 chunk vectors are discarded, so Phase 1 hides a full re-embedding backfill",
+    "claim": "Phase 1 asserts mu and Sigma are 'fitted from the gene's chunk/fragment embeddings (already computed).' The schema persists only ONE gene-level dense vector, pooled from gene.content; individual chunk embeddings are thrown away at ingest. Fitting Sigma therefore requires re-embedding every chunk of every gene \u2014 a full BGE-M3 pass over 46k-80k genes per bed, the same cost class as the existing backfill_bgem3_v2.py, not a free by-product. The 'M effort / known-how' label understates the work and the GPU time.",
+    "evidence": "knowledge_store.py:1361-1363 computes _encode_dense_v2_blob(gene.content, ...) \u2014 a single vector from content; no chunk-embedding table exists (grep for splat/chunk_embed returns nothing); CLAUDE.md gotcha confirms even the gene-level vector needs scripts/backfill_bgem3_v2.py.",
+    "targets": "Phase 1 schema/backfill (splats table, backfill_splats.py) and its effort estimate.",
+    "confidence": "high"
+   },
+   {
+    "title": "Whitening BGE-M3 is a category error \u2014 the review's 'win available now' imports anisotropy from raw residual streams into a cosine-trained sphere",
+    "claim": "The review's flagship bet-B-independent win \u2014 'cosine->Mahalanobis whitening of BGE-M3 similarity, available now' \u2014 borrows the anisotropy argument from RAW transformer residual streams (LatentAudit on Llama-3-8B hidden states). BGE-M3 is a contrastively-trained, L2-normalized retrieval embedding explicitly optimized (InfoNCE/temperature) so that cosine is the correct metric on the unit sphere. The high-variance task-agnostic directions that make cosine wrong for residual streams are precisely what contrastive normalization trains out. Whitening such a space is as likely to amplify low-variance noise directions as to help; this is the least-grounded of the 'safe' wins. Concession: BERT-style embeddings have shown whitening gains, so it is worth a one-hour ablation \u2014 but it should not be pre-registered as a near-certain win.",
+    "evidence": "review lines 35/52/77 (Mahalanobis import + Recommendation 1); BGE-M3 dense is 1024-d normalized (CLAUDE.md); helix.toml:272 already defaults cymatics distance_metric to 'cosine'.",
+    "targets": "Review Recommendation 1 / Decision point 2 ('lead with bet B + Mahalanobis whitening').",
+    "confidence": "medium"
+   },
+   {
+    "title": "The density feature is collinear with score_gap \u2014 the 'logistic can't express between-mode ambiguity' claim is largely false",
+    "claim": "Phase 1's headline justification is a failure 'the scalar logistic can't express: queries landing between two gene modes (high top_score, high ambiguity) should now abstain.' But the logistic's second feature IS score_gap = top1-top2 with beta=1.5 \u2014 already a high-top-score-yet-ambiguous detector. The per-candidate/mixture log-density feature is therefore substantially collinear with an existing feature; adding it as a 6th->7th beta to a logistic fit on ~1000 labels inflates coefficient variance (identifiability), not calibration quality. The kill-switch 'density no better calibrated than logistic' fires \u2014 for a collinearity/statistical-power reason, not because the density math is wrong, so the phase 'fails' without teaching you anything. Concession: a query landing between two modes of a single MULTIMODAL gene's chunk distribution is a genuine geometry score_gap does not capture \u2014 but point 1 shows that within-gene multimodality is exactly what shrinkage erases.",
+    "evidence": "know_calibration.py:64 DEFAULT_BETAS and :268-269 (tanh(score_gap/g_ref) as feature 2, beta2=1.5); roadmap Phase 1 validation lines 130-132.",
+    "targets": "Phase 1 validation / 'ship density as a 6th logistic feature' path.",
+    "confidence": "high"
+   },
+   {
+    "title": "Mahalanobis measures typicality, not truth \u2014 it green-lights self-consistent poison and optimizes against the wrong SIKE target",
+    "claim": "Density know/go scores a query by how typical it is w.r.t. the retrieved gene's own scatter. Echo-contaminated genes (Helix's SIKE poisoning failure) have internally self-consistent chunks, so they yield LOW Mahalanobis distance -> HIGH density confidence \u2014 inverting the desired signal. The valid SIKE run already logs 7/14/15 false-positive needles per bed (marked delivered, yet 0/10 consumers correct); a density gate would raise, not lower, confidence on precisely these. The deeper statistical point (beyond the review's generic poisoning note): density AUROC is trained against adherence/typicality, which is orthogonal to retrieval correctness, so the blueprint's cited 0.942 AUROC (a hallucination/adherence task) does not transfer to the know/go target Phase 1 validates on.",
+    "evidence": "docs/benchmarks/2026-07-05-sike-bedsweep-issue-resolutions.md sec.1 (7/14/15 false-positive needles; echo contamination fixed via HELIX_DISABLE_LEARN); review lines 35 and 63.",
+    "targets": "Phase 1 success metric (risk-coverage/ECE) + risk register (poisoning-blind density).",
+    "confidence": "high"
+   },
+   {
+    "title": "The incumbent baseline is uncalibrated \u2014 fix that (cheap, #239) before betting on density; and density pulls numpy/scipy into a pure-math hot path",
+    "claim": "Phase 1 measures density against 'the current logistic,' but helix.toml ships the spec DEFAULT betas and the fit target the calibration script names, benchmarks/located_n1000.py, does not exist (only a shell wrapper _run_n1000_located.sh). The incumbent has NEVER been calibrated on Helix's retriever. So the honest experiment must calibrate BOTH variants on the same missing ~500-1000 labels \u2014 and simply calibrating the existing 5-feature logistic first (the actual #239 live work) is the cheap, high-probability win that density is being pre-credited for. Separately, the know path is pure-Python (imports only math); Mahalanobis/Woodbury/Ledoit-Wolf/eigendecomposition drag numpy (optional/dev extra, not core) plus scipy/sklearn (not dependencies at all) into the request hot path \u2014 against the 'algorithmic, no inference at query time' ethos.",
+    "evidence": "helix.toml:449 betas=[-2.0,2.0,1.5,0.7,1.8,1.5] (= DEFAULT_BETAS, know_calibration.py:64) with no calibrated_at set; scripts/calibrate_know_confidence.py names benchmarks/located_n1000.py which is absent; pyproject.toml:44/86/92 list numpy only as embeddings/dev extras; know_calibration.py imports math only.",
+    "targets": "Phase 1 baseline definition, #239 (know/miss recalibration), Decision point 2.",
+    "confidence": "high"
+   }
+  ]
+ },
+ {
+  "specialty": "Density modeling / applied statistics (Gaussian-splat genes, Mahalanobis vs cosine under anisotropy, covariance shrinkage & singularity, density know/go calibration)",
+  "stance": "neutral",
+  "verdict_one_line": "Bet B's genuinely-prepaid win is a single corpus-level whitening transform (the repo already has hard evidence it's needed), but Phase 1 as specced builds per-gene Gaussian densities on unit-sphere data with 3-16 samples in 1024-d \u2014 a mis-specified, unidentifiable estimator \u2014 and grades itself against a logistic that was never actually calibrated.",
+  "points": [
+   {
+    "title": "Phase 1 fits a Gaussian density on the unit sphere \u2014 log_density is mis-specified",
+    "claim": "Every stored embedding_dense_v2 is L2-normalized, so all chunk embeddings live on S^1023. Fitting mu + Sigma=FF^T+D as a full-space Gaussian and emitting a KnowBlock 'log_density' / 'mixture log-density over top-K' (Phase 1 schema) is a model mismatch: the data has zero radial extent, so Sigma is intrinsically rank-deficient in the mean direction and the Gaussian normalizing constant is meaningless. Mahalanobis-as-whitened-cosine is a valid *metric*; a calibrated *density* on this data needs a von Mises-Fisher mixture or a tangent-space Gaussian at mu. Recommend dropping the literal log_density feature or replacing it with a vMF concentration / tangent-space score.",
+    "evidence": "bgem3_codec.py:141-144 and :185-189 (per-row L2 renormalize on both encode and encode_batch); roadmap Phase 1 lines 99-122 (Sigma=FF^T+D, log_density/mahalanobis_top1 KnowBlock fields)",
+    "targets": "Bet B / Phase 1 (schema: log_density, mahalanobis_top1 fields; validation: 'mixture log-density over top-K')",
+    "confidence": "high"
+   },
+   {
+    "title": "Per-gene covariance is unidentifiable by parameter-counting, not a risk to 'detect'",
+    "claim": "The roadmap treats 'covariances collapse toward the shared prior' as a post-hoc risk to measure via inter-gene divergence. It is deterministic: F is d x k = 1024 x 16 = 16,384 free parameters, and the per-gene sample scatter from N chunks has rank <= N-1. The roadmap itself concedes a 3-chunk gene gives a rank-2 scatter. At the ~2000-char passage cap, the majority of code/doc genes have N < 16 chunks, so the k=16 factor block is unidentifiable and F is 100% shrinkage prior for those genes \u2014 Mahalanobis is exactly scaled global-whitened cosine there, carrying zero per-gene information at full ~80KB/gene storage. Fix: set adaptive rank k_g = min(rank, N_obs-1), store diagonal-only for starved genes, and raise the min_chunks default well above the proposed 2 (a 2-chunk gene has a rank-1 covariance).",
+    "evidence": "roadmap line 123 ([splat] rank=16, min_chunks=2), lines 105-110 & 134-138 (the collapse 'risk'), line 184 (~80KB/gene estimate); bgem3_codec.py:34 (PASSAGE_CHAR_CAP=2000); context_manager.py:1010,1044-1056 (chunks stored as separate is_fragment gene rows)",
+    "targets": "Bet B / Phase 1 ([splat] rank + min_chunks defaults; Risk/fallback paragraph)",
+    "confidence": "high"
+   },
+   {
+    "title": "The review conflates two statistically opposite Mahalanobis objects; only the global one is the prepaid win",
+    "claim": "The review says 'Mirror the LatentAudit recipe' for Phase 1 and calls cosine->Mahalanobis whitening 'a bet-A-independent win available now' \u2014 but LatentAudit-style gating uses a SINGLE corpus-level Sigma (Ledoit-Wolf over the whole calibration set, N>>d, well-conditioned). That is global whitening and it is sound and cheap. Phase 1's schema builds PER-GENE Sigma (N<<d, ill-conditioned \u2014 see prior point). Opposite sample regimes, different estimators. Split Phase 1: 1a = global mean-centering + whitening of BGE-M3 similarity (do now, ~1 day, stored once in the proposed spaces.center/basis), gated on nothing; 1b = per-gene splats, gated on identifiability.",
+    "evidence": "review lines 52 & 57 (LatentAudit 'near-drop-in', whitening 'available now'); roadmap line 115 (spaces table has center/basis BLOBs already); knowledge_store.py:383-404 documents the exact anisotropy pathology that global whitening fixes",
+    "targets": "Decision-point 2 & Recommendation 1 (lead with bet B + Mahalanobis whitening); Phase 1 scoping",
+    "confidence": "high"
+   },
+   {
+    "title": "The repo already has hard anisotropy evidence that makes global whitening a measured need, not a hypothesis",
+    "claim": "Global whitening isn't speculative here. knowledge_store.py documents that the margin-over-random calibrated dense-gate threshold (0.779) sat ABOVE the entire corpus's max query-doc cosine (~0.713), so 0/5000 pool chunks cleared the gate by dense score and a 480-question ERB run had 70% never-surfaced golds. That is the textbook signature of embedding anisotropy crushing all cosines into a narrow high band \u2014 the mean-centering step of whitening directly de-biases it. This is the single strongest empirical argument in the whole roadmap for the bet-B whitening move, and neither design doc cites it.",
+    "evidence": "knowledge_store.py:383-404 (dense_pool_floor_genes docstring: threshold 0.779 > max cosine 0.713, 0/5000, 70% never-surfaced golds); mirrored anisotropy note at config.py:379",
+    "targets": "Bet B / Phase 1a (global whitening) and Recommendation 1",
+    "confidence": "high"
+   },
+   {
+    "title": "Phase 1's kill-criterion grades density against a logistic that was never calibrated, with no ECE harness in tree",
+    "claim": "Phase 1's stated kill is 'density no better calibrated than the logistic.' But the shipped logistic has never been fit: helix.toml betas are byte-identical to DEFAULT_BETAS, no calibrated_at is set, and benchmarks/located_n1000.py (the calibration-data generator both the script and helix.toml reference) does not exist. No ECE / risk-coverage code exists anywhere (grep hits only docs). So the baseline is a hand-picked prior and the risk-coverage/ECE curves Phase 1 promises must be built from scratch first. Cheapest honest first step, before any splat schema: build the labeled set + ECE harness, actually fit the existing 5-feature logistic, and measure how much of the gap a *fit* logistic closes \u2014 it is the shared prerequisite for evaluating density anyway.",
+    "evidence": "helix.toml:449 betas=[-2.0,2.0,1.5,0.7,1.8,1.5] == know_calibration.py:64 DEFAULT_BETAS, no calibrated_at value present; calibrate_know_confidence.py:12-20 references missing benchmarks/located_n1000.py; grep ECE -> docs only",
+    "targets": "Phase 1 validation & kill-criterion; the 'eval harness is highest-leverage' claim (roadmap lines 60-67)",
+    "confidence": "high"
+   },
+   {
+    "title": "Density typicality and poison-resistance are orthogonal by construction \u2014 AND them, never OR",
+    "claim": "Sharpening the review's risk #1: Mahalanobis/density measures typicality under the fitted corpus distribution, so a fluent poisoned document that matches corpus style scores as HIGH-density / LOW-anomaly precisely because it conforms \u2014 anomaly detection rewards conformity, and no better covariance estimator changes that. For the SIKE echo-contamination case (fixed via HELIX_DISABLE_LEARN), the echoed wrong answers would have RAISED local density around the wrong mode, making a density gate *more* confident on the poisoned corpus. Therefore any Phase-1 path where density raises KnowBlock.confidence must be conjoined (AND) with a provenance/CWoLa signal, never disjoined (OR). Also worth a nested-LRT check: density may be collinear with the existing score_gap feature, which already partly expresses the 'between two modes' abstain case the roadmap wants density to fix.",
+    "evidence": "review line 63 (risk #1) + roadmap line 132 ('between two gene modes... should abstain'); know_calibration.py:268-271 (score_gap and lexical_dense_agree already in the logistic); commit 39685b7 (HELIX_DISABLE_LEARN echo-contamination fix)",
+    "targets": "New-risk register (risk #1) and Phase 1 feature-integration ('6th logistic feature first')",
+    "confidence": "high"
+   }
+  ]
+ },
+ {
+  "specialty": "ML systems / serving (offline hidden-state capture, quantization drift, soft-prefix serving)",
+  "stance": "pro",
+  "verdict_one_line": "Bet A survives on the default Ollama stack only if Phase 2 lands as a stored linear re-metric (not a new encoder) and Phase 4 is preceded by the cheap query-aware-splice experiment; the offline-capture and fusion plumbing are ~60% prepaid, but Phase 0's decoder-in-fp16 regime and Phase 5's proxy-to-server category change are the real, honest costs.",
+  "points": [
+   {
+    "title": "Phase 2's 'deflationary' linear-probe outcome is actually the win \u2014 pre-register it as primary",
+    "claim": "The review treats 'a linear probe from BGE-M3 predicts J-coords \u21d2 J-space \u2248 relabeled semantics' as philosophically deflationary. From a serving standpoint it is the single best outcome: it collapses the entire query-time-internals problem (Open Q#2) into a stored d\u00d7r matrix in spaces.basis \u2014 no ONNX export, no new encoder, no <10ms budget risk \u2014 and it runs on the default Ollama/CPU stack that the roadmap otherwise says J-space 'permanently excludes'. Helix ALREADY computes the BGE-M3 query embedding on the request path via the process-shared codec (backends/bgem3_codec.py get_shared_codec at ~line 246), so Phase 2 in the linear case is a 1024\u00d716 matmul (~16K FLOPs, nanoseconds) appended to work already done. Phase 2 should pre-register the linear probe as the primary hypothesis and the 2-layer MLP as fallback, inverting the roadmap's framing \u2014 the linear path is the ONLY thing that keeps the default stack in bet A. Honest concession: this only pays if J-coords are a near-linear image of BGE-M3 space, and if Ledoit-Wolf whitening (bet B) already absorbs the anisotropy, the marginal lift of a learned re-metric over plain whitening may be near zero.",
+    "evidence": "backends/bgem3_codec.py (get_shared_codec, process-shared BGE-M3 already on query path); roadmap Phase 2 fallback (b) 'a d\u00d7r matrix stored in spaces.basis, no new encoder'; review Open Q#2 / decision point #2",
+    "targets": "Bet A / Phase 2 / Open Q#2 / decision point #2",
+    "confidence": "medium"
+   },
+   {
+    "title": "Offline-capture infra is ~60% prepaid, but Phase 0 needs the DECODER in fp16 \u2014 a memory regime nothing in the fleet loads today",
+    "claim": "The roadmap flags 'HF fp16 + GPU, once per model profile' as acceptable; the good news it undersells is that the loading scaffolding already exists \u2014 Helix ships torch+transformers+sentence-transformers and a centralized device singleton (backends/deberta_backend.py resolves via helix_context.hardware.get_hardware().device \u2192 torch.device), so benchmarks/eval_retrieval.py can reuse real patterns, not greenfield. The sharp caveat my specialty adds: everything loaded today is an ENCODER (BGE-M3 XLM-R, DeBERTa cross-encoder) at device='cpu' default, ~2GB. Phase 0 needs the GENERATION decoder in fp16 with output_hidden_states \u2014 grep confirms output_hidden_states/hidden_states appears NOWHERE in helix_context/ \u2014 a 7-14B model = 14-28GB VRAM, a regime the default (device='cpu') stack never assumes. Worse, the decoder whose J-space matters is the proxied UPSTREAM, which Helix never loads \u2014 it forwards it over HTTP (config.py ribosome model default is only the small compressor gemma4:e2b). So decision point #5 is load-bearing: Phase 0 must pick a model Helix can both proxy for generation AND load in fp16, and they must be the same artifact.",
+    "evidence": "grep: zero output_hidden_states/hidden_states in helix_context/; backends/deberta_backend.py imports torch + get_hardware().device; backends/bgem3_codec.py device='cpu' default; config.py:30 ribosome model='gemma4:e2b' (compressor, not the generation decoder)",
+    "targets": "Phase 0 / decision point #5 / Open Q#1",
+    "confidence": "high"
+   },
+   {
+    "title": "Phase 4's payoff has a near-free first draft: make splice query-aware BEFORE building J-coverage \u2014 the compressor is currently query-blind",
+    "claim": "Both splice call sites \u2014 context_manager.py:1707 and :2649 \u2014 call compress_text(g.content, target_chars=target, content_type=g.promoter.domains). Verified: the query is NEVER passed; Kompress/ModernBERT compresses to a ratio with zero query signal. So Helix's current 'output shape' is query-agnostic ratio compression. That means Phase 4's entire thesis ('does selection-side shaping matter', Open Q#3) has a much cheaper first experiment than a J-space coverage/facility-location objective: pass the query embedding into fragment selection at Stage 4, on the default stack, no hidden states, no new model. If query-aware splice captures the QA gain at fixed 7000-token budget, the exotic J-coverage half of Phase 4 is unnecessary; if it doesn't, that's direct evidence decoders are composition-robust and Phase 5 is the only lever. Either way it decisively de-risks Phases 4-5 for the cost of one Stage-4 change. Honest concession: query-aware splice still inherits the floor bug \u2014 Kompress's ratio compression can drop the answer, and the discarded remainder is only surfaced via g.complement fallback at :2649 (not at the :1707 primary path), so the budget-proportional-cap / emit-complement fix must land first regardless.",
+    "evidence": "context_manager.py:1707 and :2649 both call compress_text with content+domains only, no query arg; headroom_bridge.py:191 compress_text signature has no query parameter; :2649 shows 'g.complement or compress_text(...)' fallback",
+    "targets": "Phase 4 / Open Q#3 (text\u2192residual controllability)",
+    "confidence": "high"
+   },
+   {
+    "title": "Phase 5 is a proxy\u2192server category change, but vLLM Automatic Prefix Caching makes the review's cost model too pessimistic",
+    "claim": "The roadmap gates Phase 5 as an 'opt-in backend profile'; the serving-specific truth is sharper \u2014 Helix is a transparent HTTP proxy in front of someone else's decoder (POST /v1/chat/completions pass-through, [server] upstream). Soft-prefix via vLLM prompt_embeds requires Helix to BE the inference engine (own the KV cache), not proxy one. That is an architectural category change, and it forfeits the legible/attributable know-miss contract that is Helix's product thesis (review risk #4). The one thing the review's validation ('count prefix vectors at their KV cost') gets wrong in Phase 5's favor: vLLM's Automatic Prefix Caching means a stable rendered splat-prefix becomes cached KV, so a repeated prefix across turns amortizes to ~zero \u2014 and that is exactly Helix's regime, since session_delivery_enabled already elides repeats across a multi-turn session. So IF Phase 5 ever runs, the amortized cost is better than 'per-turn KV cost' implies. Honest concession: this remains a model-/finetune-specific research POC that abandons the proxy thesis and the legibility contract for that profile \u2014 I'd keep it as a research escape hatch, not a product direction (decision point #3).",
+    "evidence": "CLAUDE.md HTTP endpoints (POST /v1/chat/completions OpenAI-compatible proxy; [server] upstream); roadmap Phase 5 flagged constraints (vLLM prompt-embeds yes, Ollama no); review risk #4 legibility; session_delivery_enabled repeat-elision (CLAUDE.md [budget])",
+    "targets": "Phase 5 / decision point #3",
+    "confidence": "medium"
+   },
+   {
+    "title": "Quantization drift (Open Q#1) is only HALF cheaply answerable \u2014 final-layer embeddings exist without a fork, mid-layer Workspace Band does not",
+    "claim": "The roadmap proposes measuring fp16-vs-Q4 drift 'via a llama.cpp debug build' (a fork). Cheaper existing surface my specialty flags: Ollama /api/embeddings and llama.cpp --embedding already expose the FINAL-layer residual of the served Q4 artifact with no fork \u2014 enough to test whether the deployed GGUF's final-layer geometry tracks its fp16 parent, the cheapest possible 'is per-model actually per-artifact' probe. BUT the Anthropic Workspace Band the review anchors on is MID-layer (median ~25 active J-lens vectors plateauing in mid layers), and neither Ollama nor stock llama.cpp exposes mid-layer states. So the deployed artifact's mid-layer drift \u2014 the layers that actually carry the J-lens \u2014 stays unmeasured without the fork, and Phase 0's Jacobian probe genuinely requires HF fp16. Net: Open Q#1 splits cleanly \u2014 final-layer drift is measurable now for near-zero cost and worth doing first as a go/no-go smoke test; mid-layer drift (the load-bearing half) is fork-gated, which raises the true cost of treating drift as 'measurable in Phase 0 at small cost'. This determines whether Phase 3 profile management is a one-off or a per-artifact treadmill.",
+    "evidence": "grep: no /api/embeddings or --embedding reference in helix_context/ (surface is unused today, so this is net-new but cheap); review 'J-space is mid-layer Workspace Band, median ~25 vectors'; roadmap Open Q#1 + cross-phase 'GGUF-quantized with no fp16 counterpart cannot get a J-space profile without a llama.cpp fork'",
+    "targets": "Open Q#1 (quant drift) / Phase 0 / Phase 3 profile management / decision point #5",
+    "confidence": "medium"
+   }
+  ]
+ },
+ {
+  "specialty": "ML systems / serving (offline hidden-state capture, fp16-vs-Q4 quantization drift, GGUF/Ollama hidden-state constraint, soft-prefix / prompt_embeds serving)",
+  "stance": "con",
+  "verdict_one_line": "Phases 2 and 5 are the roadmap's weakest bets: Phase 2's only winning branch produces the same d\u00d7r re-metric the review already recommends getting cheaply from bet B, and Phase 5 calibrates soft prefixes on an fp16 model the default GGUF/Ollama stack never runs \u2014 both should be cut or hard-gated behind bet B, not sequenced as a research program.",
+  "points": [
+   {
+    "title": "Phase 2 is dominated in both branches \u2014 its winning case proves it was unnecessary",
+    "claim": "Phase 2's premise is 'map the BGE-M3 query embedding to J-coords with a CPU-cheap probe.' If a LINEAR probe hits the \u03c4\u22650.8 bar, the roadmap's own fallback (b) admits J-space is 'a learned re-metric on the existing embedding \u2014 a d\u00d7r matrix in spaces.basis, no new encoder' \u2014 which is functionally identical to the cosine\u2192Mahalanobis/Ledoit-Wolf whitening the review recommends leading with (a d\u00d7r whitening matrix on BGE-M3, query-time-cheap, requiring NO fp16 decoder capture). If the probe must be NONLINEAR to work, it is exactly the case the roadmap says 'collapses OOD' and fails its own bar. So Phase 2 either reduces to bet B's whitening (already available now, no Phase 0 GPU capture) or fails the OOD kill-switch. It is a research detour whose success condition is 'we didn't need it.' Cut Phase 2; ship the whitening in Phase 1.",
+    "evidence": "roadmap L140-171 (Phase 2 goal + fallback b: 'd\u00d7r matrix stored in spaces.basis'); Open Q#2 L313-317 ('if yes via a linear probe... J-space \u2248 relabeled semantics'); review L52 + L77 ('cosine\u2192Mahalanobis whitening of BGE-M3 is a bet-A-independent win available now'). knowledge_store.py+config.py confirm BGE-M3 query embedding already computed at query time; no jproj/onnx artifact exists in repo.",
+    "targets": "Phase 2 (bet A); decision-point #2 (lead with bet B + Mahalanobis whitening)",
+    "confidence": "medium"
+   },
+   {
+    "title": "Phase 5 kill-switch fires at fp16-vs-Q4 drift: you cannot calibrate on one model and serve on another",
+    "claim": "Offline capture runs on fp16/bf16 HF weights on GPU (roadmap is explicit: 'NOT Ollama... requires fp16/bf16 weights and a GPU'), but the deployed decoder on Helix's default stack is Q4 GGUF via Ollama. A soft prefix is a continuous residual-stream vector whose attention dot-products depend on exactly the per-channel activation scales that Q4 quantization perturbs \u2014 it is the single most quantization-fragile artifact you can ship. A prefix tuned on the fp16 parent is out-of-distribution for the Q4 child, and Ollama/llama.cpp cannot ingest embedding-level input at all ('no without a fork'). The stack that accepts soft prefixes (vLLM/HF fp16) is not the stack Helix fronts (Ollama Q4), and there is no bridge. The roadmap treats this (Open Q#1) as 'measurable in Phase 0 at small cost'; it is not a cost item, it is the coherence question for the entire phase, and the honest expected answer on the default stack is 'incoherent.'",
+    "evidence": "roadmap L69-71 (fp16/GPU capture, not Ollama), L257-264 (stack gate: llama.cpp/Ollama 'no'; 'soft prompts are model- and even finetune-specific; every upstream swap invalidates the renderer'), L283-289 + Open Q#1 L303-309. config.py:66 _LOCAL_BACKENDS=('ollama','deberta'); CLAUDE.md default upstream = Ollama. Grep: output_hidden_states / prompt_embeds / inputs_embeds occur in ZERO code files (only the two design docs).",
+    "targets": "Phase 5 (strong form, bet A); Open Q#1; decision-point #5 (which single fp16 model)",
+    "confidence": "high"
+   },
+   {
+    "title": "Phase 5 has no serving-cost headroom \u2014 its own 'matched effective budget' rule is the proof, and prompt_embeds break prefix caching",
+    "claim": "The Phase 5 validation counts 'prefix vectors at their KV cost.' That accounting is fair and it is fatal: N prefix embedding vectors produce N KV-cache entries at the same attention FLOPs as N text tokens, so soft-prefix only wins if it packs many text tokens into far fewer vectors \u2014 but the review's own cited literature (attention collapse, prompt waywardness, PrefixMemory-Tuning) caps how long a coherent soft prefix can be, so you cannot scale the compression ratio up. Worse for serving: vLLM Automatic Prefix Caching \u2014 the review's cited efficiency lever \u2014 hashes token-ID blocks; prompt_embeds bypass tokenization and generally cannot be reused by APC, so you forfeit prefix caching precisely on the injected-context prefix. Add per-finetune renderer invalidation on every upstream swap and Phase 5's serving TCO is worse than text injection, not better, on the exact stack (vLLM) that could run it.",
+    "evidence": "roadmap L273-275 ('matched effective budget (count prefix vectors at their KV cost)'), L261-264 (per-finetune invalidation). review L37 (PrefixMemory-Tuning to 'dodge attention collapse', 'vLLM prompt_embeds + Automatic Prefix Caching'), L59 (prompt waywardness, un-decodable manifold). No KV/serving cost model exists in repo (telemetry/otel.py instruments encoder stages only).",
+    "targets": "Phase 5; decision-point #3 (is Phase 5 off the table)",
+    "confidence": "medium"
+   },
+   {
+    "title": "The offline decoder-capture pipeline that Phases 0/2/3/5 all assume does not exist and the hardware layer is mis-sized for it",
+    "claim": "Every torch model in helix_context is an ENCODER used for embedding/rerank/NLI (bgem3_codec, splade_backend, deberta_backend, nli_backend, sema, tagger) \u2014 grep confirms zero occurrences of output_hidden_states on the decoder being proxied anywhere in code. Phases 0/2/3/5 require a net-new, genome-scale forward-pass-and-dump pipeline over an fp16 decoder, and the hardware batch-size table tops out at 24GB-VRAM tiers sized for small encoders (rerank/splice/splade/nli, batch 32-128) with no row for a 7B+ fp16 decoder (~14GB weights) plus per-layer activation capture across a {25/50/75%} sweep over 46k-80k genes. This capture is the hidden mass behind the cross-phase 'offline only, acceptable' hand-wave, and if quantization drift is real it re-pays per model ARTIFACT (fp16 parent \u2260 Q4 child \u2260 next finetune), turning 'once per profile' into a treadmill. The roadmap even concedes GGUF-only models 'cannot get a J-space profile without a llama.cpp fork.'",
+    "evidence": "Grep output_hidden_states \u2192 only the roadmap doc, 0 code files. hardware.py:332-352 _BATCH_TABLE (encoder models only, VRAM caps at 24GB tier). roadmap L283-289 + L307-309 (per-artifact profiles / llama.cpp-fork caveat). SIKE corpus sizes 46,517 / 80,363 genes per docs/benchmarks/2026-07-05-sike-bedsweep-issue-resolutions.md \u00a71.",
+    "targets": "Phases 0/2/3/5 prerequisite capture; decision-point #5",
+    "confidence": "high"
+   },
+   {
+    "title": "Bet B's success actively strands Phases 2-5 by re-baselining Phase 0 upward",
+    "claim": "Concession: Phase 1 (embedding-space splats + Ledoit-Wolf/Mahalanobis density know/go) is the genuinely strong bet \u2014 it needs no decoder internals, has a published blueprint, and upgrades live know/miss work; the cosine\u2192Mahalanobis whitening is a real win available now. But that is precisely the CON case against the expensive J-space phases: Phase 0's pre-registered bar is 'beat BGE-M3 COSINE by \u22655 Recall@10.' Once Phase 1 ships whitened/Mahalanobis BGE-M3, the correct baseline becomes 'beat WHITENED BGE-M3,' which absorbs the same residual-stream anisotropy the J-space probe is chasing \u2014 cheaply, in embedding space, with no capture. The \u22655-point margin is set against a baseline the roadmap itself is about to obsolete. Re-baseline Phase 0 against the Phase-1 whitening and the headroom for Phases 2-5 most likely evaporates \u2014 especially on the multi-token identifier needles (claude-haiku-4-5-20251001, PostgreSQL 16) where the review already flags the J-lens vocabulary ceiling as weakest.",
+    "evidence": "roadmap L85-87 (Phase 0 bar vs 'BGE-M3 cosine'). review L47 (J-lens vocabulary-bounded, weak on multi-token identifiers \u2014 our actual gaps), L50-52 (Mahalanobis blueprint, anisotropy, whitening now), L77 (lead with bet B). scoring/know_calibration.py 5-feature logistic is the incumbent Phase 1 upgrades.",
+    "targets": "Phase 0 success bar; bet B vs bet A sequencing; decision-point #2",
+    "confidence": "medium"
+   },
+   {
+    "title": "The empirical grounding the review uses to say 'we're further along' is not in the tree \u2014 Phase 0's prerequisite is closer to not-started than half-built",
+    "claim": "The review argues Phase 0's 'single highest-leverage engineering item' (a gold eval harness) is 'half-built' from SIKE Run-2 + a content_has_answer metric fix + s3_fts_depth_sweep.py, citing RRF 0.72 vs additive 0.58. In the actual repo: benchmarks/eval_retrieval.py does not exist; content_has_answer appears ONLY in the two design docs (zero occurrences in any bench code or results file); the cited docs/benchmarks/2026-07-06-sike-run2-fts-depth-fusion.md and -faithfulness-experiment-runbook.md are absent; and s3_fts_depth_sweep.py exists only as a stale .pyc in __pycache__ with no source. The one bench-validity doc that IS in the tree (2026-07-05) states the body/content-has-answer metric has been a 'dead metric... never produced signal' across every run. So the harness that gates Phases 2/5 reachability this cycle is nearer to 'not started,' which pushes the whole J-space program's real start date and cost right and further undercuts sequencing 2/5 now.",
+    "evidence": "Glob: benchmarks/eval_retrieval.py = no file; scripts/bench_chain/s3_fts_depth_sweep.py = no .py (only __pycache__/s3_fts_depth_sweep.cpython-314.pyc). Grep content_has_answer \u2192 2 design docs only. Absent: docs/benchmarks/2026-07-06-* (only 2026-07-01 and 2026-07-05 exist). docs/benchmarks/2026-07-05-sike-bedsweep-issue-resolutions.md \u00a71-2: body_has_answer_rate 'dead metric... never produced signal.' review L70-73 makes the 'half-built' and RRF-0.72 claims.",
+    "targets": "Phase 0 prerequisite (gates reachability of Phases 2/5); decision-point #2",
+    "confidence": "high"
+   }
+  ]
+ },
+ {
+  "specialty": "ML systems / serving (offline hidden-state capture, quantization drift, soft-prefix serving)",
+  "stance": "neutral",
+  "verdict_one_line": "Phases 0-4 are honestly de-risked, but Phase 5 is mis-sized as a \"backend plugin\" when it is really a proxy-to-server inversion, and the whole bet's true central risk is that the default deployment (Ollama/GGUF, helix.toml:168) exposes no hidden states and much of its catalog has no fp16 parent to calibrate against.",
+  "points": [
+   {
+    "title": "Phase 2's latency worry is inverted \u2014 the expensive forward pass is already paid",
+    "claim": "Phase 2 frames the hard problem as 'the query arrives on a stack (Ollama) that exposes no hidden states' and sets a '<10ms CPU projection head' budget, but the default stack ALREADY runs a full BGE-M3 query forward pass at request time. A projection head is negligible marginal cost on top of an encode that already happens. The real Phase 2 question is not latency or query-time internals; it is whether the roadmap's own fallback (b) \u2014 a LINEAR probe from the in-process BGE-M3 vector to J-coords \u2014 hits tau>=0.8. If it does, Phases 2+3 collapse to 'store one d x r matrix in spaces.basis and whiten,' with no new encoder. Neutral read: make the linear-probe-on-BGE-M3 the PRIMARY hypothesis, not the fallback, because the input vector is free and already computed in-process.",
+    "evidence": "context_manager.py:2342 calls query_docs_ann with query_text at request time gated on _dense_embedding_enabled; helix.toml:330 dense_embedding_enabled=true (default); BGEM3Codec defaults device='cpu', use_fp16=False (bgem3_codec.py:79,112). Roadmap Phase 2 fallback (b) and Open Q#2 already name the linear-probe outcome.",
+    "targets": "Phase 2 (query-side J-projection); decision-point Open Q#2",
+    "confidence": "high"
+   },
+   {
+    "title": "Phase 5 'new backend in backends/' understates the lift: it is a proxy-to-server inversion",
+    "claim": "Phase 5's schema line ('New backend in backends/ implementing an embedding-injection client; [ribosome] backend = hf_softprefix') conflates two different model seams. The [ribosome] backend is the CPU COMPRESSION model (compressor/deberta). The decoder Helix shapes context FOR is the UPSTREAM, reached purely by HTTP proxy \u2014 Helix never loads decoder weights. Soft-prefix injection requires Helix to STOP proxying and OWN the decoder in-process (load HF/vLLM weights, manage its KV cache). That is an architectural inversion from 'transparent proxy' to 'serving stack,' not a backend plugin. Effort XL is right, but the schema-change description hides that nothing in the codebase serves a decoder today.",
+    "evidence": "helix.toml:168 upstream='http://localhost:11434' (Ollama), reached via server/routes_context.py proxy; grep for vllm|prompt_embeds|output_hidden_states|inputs_embeds|AutoModelForCausalLM across all *.py returns zero matches; backends/ contains only CPU encoders/compressors (compressor, deberta, nli, splade, bgem3, sema).",
+    "targets": "Phase 5 (activation-level injection)",
+    "confidence": "high"
+   },
+   {
+    "title": "vLLM prompt_embeds and Automatic Prefix Caching are in tension \u2014 the KV-reuse story may not hold",
+    "claim": "The review cites 'vLLM prompt_embeds + Automatic Prefix Caching' as a Phase 5 enabler, but from a serving standpoint they fight: APC keys cached KV blocks on a hash of the TOKEN-ID prefix, while prompt_embeds bypasses tokenization and feeds raw vectors with no stable token-id to hash, so injected splat prefixes generally will NOT be APC-dedup'd \u2014 every request recomputes the prefix KV. That inverts the cost model: a shared TEXT preamble IS prefix-cacheable, so soft-prefix genes can be MORE expensive to serve than the text they replace. Phase 5's 'count prefix vectors at their KV cost' is the right instinct but must also count the LOST prefix-cache reuse the text path gets for free.",
+    "evidence": "Roadmap Phase 5 validation ('matched effective budget (count prefix vectors at their KV cost)') and review line 37 (prompt_embeds + APC). vLLM APC hashes token-id blocks; prompt_embeds has no token ids \u2014 verify against the pinned vLLM version before this is load-bearing.",
+    "targets": "Phase 5 (soft-prefix serving cost model)",
+    "confidence": "medium"
+   },
+   {
+    "title": "Phase 5 inherits the quantization-drift risk in its worst form \u2014 no downstream safety net",
+    "claim": "Open Q#1 (quant drift) is scoped to Phase 0/3 OFFLINE calibration, with mitigation 'spaces row absent -> jspace tier silently off.' But a Phase 5 soft prefix is rendered against fp16 hidden-state geometry and then injected at INFERENCE into whatever the server actually runs. Unlike retrieval (Phase 3, which has re-ranking downstream), an off-manifold prefix directly steers generation with no correction stage. And you cannot measure the drift on the DEFAULT deployed artifact at all, because Ollama serves quantized GGUF with no exposed hidden states. So Phase 5 is only coherent on a non-default fp16 serving stack that Helix must own anyway (see prior point) \u2014 meaning Phase 5 and the default Ollama deployment are mutually exclusive, not 'an opt-in profile on the same box.' The roadmap should state plainly that entering Phase 5 = abandoning the proxy thesis for that deployment.",
+    "evidence": "helix.toml:168 default upstream Ollama (GGUF); roadmap Open Q#1 confines drift to offline calibration; Phase 5 'Soft prompts are model- and even finetune-specific' already concedes fragility but not the no-measurement-on-deployed-artifact consequence.",
+    "targets": "Phase 5; decision-point Open Q#1 (quant drift), review decision #3",
+    "confidence": "high"
+   },
+   {
+    "title": "Phase 0 measurement under-specifies the deployed target: 'a llama.cpp debug build' is not the Ollama artifact",
+    "claim": "Open Q#1's plan ('compare fp16 vs quantized hidden states on one model via a llama.cpp debug build') measures the wrong artifact. The default decoder is served by OLLAMA, which wraps llama.cpp with its own quant defaults (typically Q4_K_M per tag), prompt templating, and rope/KV settings. To get drift for the DEPLOYED artifact you must reproduce Ollama's exact GGUF quant + build flags, not a generic debug build. Decision-point #5 ('which single fp16 model \u2014 must have a real fp16 parent') is the actual gate: a large share of Ollama's catalog is community GGUF-only with no fp16 parent, so the calibratable set is a strict SUBSET of what users run. Pin the exact Ollama tag/quant, not just 'a Qwen or Llama variant,' before Phase 0, or the knee/drift numbers will not transfer to production.",
+    "evidence": "helix.toml:168 upstream=Ollama; helix.toml:35 model='gemma4:e2b' (an Ollama tag); roadmap cross-phase note already concedes 'GGUF-quantized with no fp16 counterpart cannot get a J-space profile'; review decision-point #5.",
+    "targets": "Phase 0 (measurement design); decision-points Open Q#1 and review #5",
+    "confidence": "high"
+   },
+   {
+    "title": "The splice floor is a query-blind positional cut \u2014 output-shape work is built on sand until it is fixed",
+    "claim": "Grounding the review's splice-truncation flag precisely: the default splice target is a uniform, query-agnostic 1000-char cap, and when Headroom is unavailable the compressor degrades to a raw HEAD slice content[:target_chars].strip(). The rank-proportional foveated cap exists but is OFF by default (foveated_caps None -> target=1000). For Phases 4/5 this is load-bearing: 'injection-shape targeting' assumes control over what text reaches the decoder, yet the default last stage truncates by POSITION, not by where the answer or J-coverage lives \u2014 so any J-coverage-optimal selection upstream can still be silently head-cut here. This is the cheap, bet-independent prerequisite (query-aware / budget-proportional cap, or emit complement), not a nicety, and it should land before any coverage-shaped assembly.",
+    "evidence": "context_manager.py:1706 'target = 1000' (uniform branch); :1703-1704 foveated per-rank cap only when foveated_caps is not None; headroom_bridge.py:227 fallback 'return content[:target_chars].strip()'. Review lines 71-72 flag this at the floor; the off-by-default foveated nuance is added here.",
+    "targets": "Phase 4 (coverage-shaped assembly), prerequisite; also gates Phase 5 realism",
+    "confidence": "high"
+   }
+  ]
+ },
+ {
+  "specialty": "Product / architecture strategy",
+  "stance": "pro",
+  "verdict_one_line": "Ship bet B first and stop calling it a hedge: the density know/go is the only phase that compounds Helix's actual moat (the legible know/miss contract), and both it and the J-space tier plug into extension seams the codebase already built for exactly this \u2014 the bet's activation energy is far lower than the roadmap prices it.",
+  "points": [
+   {
+    "title": "Phase 4 isn't greenfield \u2014 the foveated splice path is coverage-shaping v0, already shipped and flag-gated",
+    "claim": "The roadmap treats Phase 4 (coverage-shaped assembly) as the risky payoff and the review treats the splice fix as a chore to clear 'before' it \u2014 but Helix already ships a per-document non-uniform splice-cap vector (foveated_caps) that the assembler consumes today. Phase 4 is a swap of the function producing that cap vector (relevance-proportional \u2192 J-coverage), not a new pipeline stage. That is the plan's strongest 'earns its complexity' argument: the seam exists, it's just default-off.",
+    "evidence": "context_manager.py:1703-1706 overrides the uniform target=1000 with foveated_caps[idx]*foveated_base per document; config.py:159 foveated_enabled=False, :162 foveated_alpha; assembler already accepts respect_caller_order/foveated provenance (context_manager.py:1734-1746).",
+    "targets": "Bet A Phase 4 (payoff phase); rebuts the 'build splice fix first, J-space on top' framing",
+    "confidence": "high"
+   },
+   {
+    "title": "Both integration seams (know-logistic, Fuser) were built for additive extension \u2014 bet B/Phase 3 cannot regress the default path",
+    "claim": "The biggest product-risk objection ('it complicates the hot path') is empirically false. The know logistic is a config-driven feature vector where adding density is one N_FEATURES bump + one beta + one term; the Fuser treats a zero-weight tier as a silent no-op, so a jspace tier is strictly additive, ships disabled, and cannot move the default ranking. That is why leading with bet B is not just best-supported \u2014 it is structurally free to try.",
+    "evidence": "know_calibration.py:84 N_FEATURES=5, :64 DEFAULT_BETAS is a 6-tuple, :277-278 the freshness term is the exact one-line pattern a 6th density feature copies; calibrate_know_confidence.py is the wired recalibration path. fusion.py:104 `if weight == 0.0: return` matches the roadmap's Phase 3 add_tier('jspace', ranked, weight=cfg...) claim verbatim.",
+    "targets": "Bet B Phase 1 (6th logistic feature) + Bet A Phase 3 (jspace Fuser tier); Decision-point #2 (lead with bet B)",
+    "confidence": "high"
+   },
+   {
+    "title": "Density know/go is the ONLY phase that compounds Helix's moat \u2014 so kill Phase 5 now, don't merely 'gate' it",
+    "claim": "Helix's defensibility vs vanilla RAG is the legible, calibrated, agent-auditable know/miss contract. Bet B strengthens it \u2014 density lets the contract express the failure the scalar logistic cannot ('query landed between two gene modes \u2192 abstain with a reason'), directly agent-facing trust calibration. Phase 5 (soft prefix) forfeits exactly this: an agent cannot audit or re-derive an un-decodable prefix. Given 'AI agents are the first-class user,' an illegible-context mode is a category error; strike Phase 5 from the roadmap rather than keep an escape hatch that invites drift toward the one direction contradicting the product thesis.",
+    "evidence": "KnowBlock already carries optional log_density/mahalanobis_top1/space_id fields (roadmap Phase 1); contract emitted from context_packet.py / the /context/packet route (CLAUDE.md HTTP surface). Review \u00a7Phase-5 concedes soft prompts occupy a 'non-natural-language, un-decodable manifold' (prompt waywardness).",
+    "targets": "Bet B Phase 1 vs Bet A Phase 5; Decision-point #3 (is Phase 5 off the table)",
+    "confidence": "medium"
+   },
+   {
+    "title": "The splice-truncation 'discovery' was already documented (2026-07-05) and is a strict Phase-4 prerequisite",
+    "claim": "The cheap fix isn't a fresh find of the review \u2014 the same Stage-4 splice-compresses-out-the-answer failure was root-caused one day earlier in the committed SIKE bedsweep doc. Sequencing consequence: Phase 4's secondary measurement ('does jcoverage move the decoder's residual closer to target?') is uninterpretable while the final splice stage still discards the answer via a query-agnostic cut. Fix splice first is correct \u2014 and cheaper than implied, because foveated caps + the un-emitted Headroom complement already sit in the tree.",
+    "evidence": "docs/benchmarks/2026-07-05-sike-bedsweep-issue-resolutions.md:149 'genome_compression_target 0/30 \u2192 Stage-4 splice compressing out the answer' plus B3 'Dead needles / splice suspects'. headroom_bridge.py:227 query-agnostic fallback `content[:target_chars].strip()`; compress_text returns only compressed text, never the complement (headroom_bridge.py:229-258).",
+    "targets": "Review's 'where empirical work plugs in' / splice-before-Phase-4 sequencing; Phase 4 secondary-measurement validity",
+    "confidence": "high"
+   },
+   {
+    "title": "The 'prepaid' claim is wrong in specifics but understated in reality \u2014 the eval harness is ~70% built, lowering the bet's floor",
+    "claim": "Honest correction that cuts in the bet's favor: several artifacts the review leans on are not in this branch (content_has_answer appears only in the review doc; s3_fts_depth_sweep.py survives only as a .pyc; the 2026-07-06 sike-run2 and faithfulness-runbook docs are absent). But the committed harness is more mature than the roadmap's 'Helix has no gold retrieval set' premise: a multi-valid-gold needle scorer, a 50-needle set, and a gold-set builder all exist. Phase 0's self-declared highest-leverage item (eval_retrieval.py) is mostly consolidation of shipped code, so the bet's worst-case floor \u2014 'what survives a total J-space kill' \u2014 is even more prepaid than credited.",
+    "evidence": "grep content_has_answer \u2192 only docs/design/2026-07-06-jspace-roadmap-review.md; s3_fts_depth_sweep.py absent (only __pycache__/*.pyc); docs/benchmarks has nothing dated 2026-07-06 (latest 2026-07-05). Maturity counter-evidence: benchmarks/bench_needle.py:816-825 uses found_in_context/body_has_answer, benchmarks/bench_multi_needle_50.py, benchmarks/build_gold_from_genome.py, docs/benchmarks/MULTI_VALID_GOLD.md all present.",
+    "targets": "Bet A Phase 0 (eval harness) + Cross-phase 'what survives a total J-space kill'; Decision-point #4 (verify before load-bearing)",
+    "confidence": "high"
+   },
+   {
+    "title": "Density-gate \u00d7 provenance is a real differentiator against the SIKE poisoning failure \u2014 and the scaffolding is already merged",
+    "claim": "The review files 'density gate blind to poisoning' as risk #1; reframe as the product upside. Helix already shipped the anti-poisoning half (HELIX_DISABLE_LEARN, CWoLa/provenance/claims) and the SIKE echo-contamination harness that exposed the failure. Pairing Phase-1 density know/go with the existing provenance flag yields a story neither vanilla RAG nor a pure embedding store can tell \u2014 'calibrated confidence AND tamper-evidence' \u2014 testable on a poisoning set that already exists, at the cost of one logistic feature. That combination, not J-space output-shaping, is the sharpest near-term reason an agent would pick Helix.",
+    "evidence": "git log 39685b7 'HELIX_DISABLE_LEARN gate'; identity/ package (CWoLa/provenance/claims per CLAUDE.md); poisoning harness present: scripts/bench_chain/sike_bed_ingest.py + s2_sike_bedsweep_run.py. Caveat: sound only if the density feature is calibrated on non-poisoned labels \u2014 the eval-set curation still in flight.",
+    "targets": "Bet B Phase 1 \u00d7 review New-Risk #1 (density blind to poisoning); Decision-point #2 (first-experiment scope)",
+    "confidence": "medium"
+   }
+  ]
+ },
+ {
+  "specialty": "Product / architecture strategy",
+  "stance": "con",
+  "verdict_one_line": "Fix the char-1000 splice cut and ship Mahalanobis whitening \u2014 both sitting outside these six phases \u2014 before committing S-to-XL effort to a J-space bet whose \"half-built\" eval harness and grounding numbers are not actually in the repo, and whose payoff regime is orthogonal to Helix's own needle benchmark.",
+  "points": [
+   {
+    "title": "Phase 0's harness is greenfield, not half-built, and its grounding numbers aren't in the tree",
+    "claim": "The review's 'we are further along' case for Phase 0 rests on artifacts that don't exist in the repo, so the go-decision is being made on un-reproducible evidence. Kill-switch: if the eval harness must be built from scratch AND the prior RRF/additive numbers can't be reproduced, Phase 0 is a full research build with no committed baseline to beat, not an S-M probe.",
+    "evidence": "benchmarks/eval_retrieval.py does not exist (Glob: no file). scripts/bench_chain/s3_fts_depth_sweep.py source is gone \u2014 only a .pyc survives in __pycache__. The two docs the review grounds itself on (docs/benchmarks/2026-07-06-sike-run2-fts-depth-fusion.md, 2026-07-06-faithfulness-experiment-runbook.md) are not in docs/ \u2014 a grep for 'sike-run2|faithfulness-experiment|content_has_answer|fts-depth-fusion' across docs/ matches ONLY the review file itself, so the 'RRF 0.72 vs additive 0.58' number is prose-only.",
+    "targets": "Phase 0; review decision point #1/#5 (evidence base)",
+    "confidence": "high"
+   },
+   {
+    "title": "The char-1000 splice cut isn't just 'fix first' \u2014 it makes Phase 4's validation uninterpretable",
+    "claim": "Phase 4 pre-registers a >=5% end-to-end EM gain from J-space coverage-shaped selection, but the stage AFTER selection throws the answer away for reasons unrelated to selection, so you cannot attribute any QA delta to coverage-shaping until the splice floor is fixed. The cheap fix is a confound-remover, not merely a cheaper win \u2014 it is a hard prerequisite for Phase 4 even being measurable.",
+    "evidence": "context_manager.py:1706 sets target=1000; headroom_bridge.py:227 returns content[:target_chars].strip() query-agnostically when headroom (a runtime import probe, is_headroom_available at :55) is absent. The primary splice loop at context_manager.py:1707 compresses g.content and never emits g.complement (the 'dense enough to reconstruct the gist' paragraph, compressor.py:390); complement is only used in the fingerprint/packet path (context_packet.py:239-241) and a secondary branch (:2649), never the main window.",
+    "targets": "Phase 4; 'where our empirical work plugs in' (splice-truncation)",
+    "confidence": "high"
+   },
+   {
+    "title": "Phase 5 is architecturally incompatible with the know/miss contract \u2014 strike it, don't gate it",
+    "claim": "A positive Phase 5 result would force Helix to ship a mode that breaks its own product thesis. Soft-prefix renders context as un-decodable residual vectors: there is no text to hang a legibility header on, no gene_id for a downstream agent to cite, no know{found,confidence,gene_id_match}/miss{reason} expressible over a KV-cache tensor. This is not a 'clean cap'; entering Phase 5 means maintaining two mutually-exclusive product models (legible-text vs illegible-vector) permanently. Kill-switch fires at roadmap-acceptance, not after Phase 4.",
+    "evidence": "CLAUDE.md defines the know/miss contract on /context/packet and per-document legibility headers as the pipeline's identity; MEMORY.md records 'AI is the first-class user' (agents consume the attributable contract). The review itself flags Phase 5 as a legibility/prompt-waywardness conflict (review lines 59, 66) but still keeps it as a 'research escape hatch'.",
+    "targets": "Phase 5; review decision point #3",
+    "confidence": "medium"
+   },
+   {
+    "title": "The complexity/value ratio is inverted \u2014 the cheap wins live outside the phases, the surface-area cost concentrates inside them",
+    "claim": "The two confirmed, live, bet-independent wins (cosine->Mahalanobis whitening of BGE-M3 for #239, and the splice fix) need zero new tables and zero new config sections. The roadmap's phases are where all the durable surface area lands, and every knob shipping 'off by default' is the tell: capability the product can't yet trust as default is capability it doesn't yet need.",
+    "evidence": "CLAUDE.md already enumerates ~20 [config] sections and a 15-subpackage layout. The roadmap adds 2 SQLite tables (splats, spaces) + fragment-level splat rows, 2 config sections ([splat], [jspace]) + [retrieval] jspace_weight, an ONNX projection-head artifact + training/export path, a new Fuser tier (fusion.py:76 add_tier is the real hook), a LOD path in encoding/, and a soft-prefix backend \u2014 plus Open Q#1's quantization drift turning per-model 'spaces' rows into a per-artifact treadmill.",
+    "targets": "Phases 1/3; 'does this bet earn its complexity'",
+    "confidence": "high"
+   },
+   {
+    "title": "Bet A is weakest exactly where Helix's only in-house eval measures \u2014 identifier recall",
+    "claim": "The J-lens is vocabulary-bounded (can't represent multi-token/non-contiguous spans), so bet A pays most for conceptual retrieval and least for identifier lookup \u2014 but Helix's entire proof harness scores multi-token identifiers. So Phase 0-4 either validates on a benchmark it's structurally mismatched to (jspace_weight tunes toward 0, which is Phase 3's own kill condition) or someone must first build a conceptual-retrieval gold set the review admits doesn't exist. The payoff regime and the proof harness don't intersect.",
+    "evidence": "Review lines 47/64: J-lens vocabulary ceiling, needles are multi-token (claude-haiku-4-5-20251001, PostgreSQL 16, 51/52). benchmarks/bench_needle.py is the scorer; scripts/bench_chain/s2_sike_bedsweep_run.py imports bench_needle and scores retrieval via find_needle/check_gold_delivery with 'word-boundary accept-matching' on identifier needles (its own docstring, lines 6-33). Phase 3 kill condition is 'tier weight tunes to ~0' (roadmap TL;DR).",
+    "targets": "Phases 0/3/4; review decision point #5 (eval set)",
+    "confidence": "medium"
+   },
+   {
+    "title": "Bet B's density know/go re-opens the poisoning hole Helix just shipped a fix for",
+    "claim": "Concede bet B is the best-supported strand and the whitening win is real \u2014 but 'density know/go' as a confidence upgrade to #239 is not safe standalone. Mahalanobis anomaly measures adherence to the retrieved context, so a faithful generation of self-consistent poisoned context scores LOW anomaly and passes \u2014 raising confidence exactly when the store is contaminated. Gating it behind CWoLa/provenance/claims is real extra integration the S-M Phase 1 estimate doesn't budget.",
+    "evidence": "Review risk #1 (line 63): density gate blind to corpus poisoning = the SIKE echo-contamination failure. Git log shows the just-merged mitigation: '39685b7 feat(server): HELIX_DISABLE_LEARN gate \u2014 read-only / ephemeral serving'. Know path is a 4-feature logistic extensible to 5-6 (know_calibration.py:17 betas 5-tuple, :277 the >=6 freshness feature); Phase 1 adds density as the 6th beta.",
+    "targets": "Phase 1; review risk-register #1",
+    "confidence": "medium"
+   }
+  ]
+ },
+ {
+  "specialty": "Product / architecture strategy",
+  "stance": "neutral",
+  "verdict_one_line": "The roadmap is unusually disciplined (falsifiable phases, bounded downside) and its epistemics beat the review's, but the council is being asked to reorder it on the review's evidence \u2014 which is not under version control \u2014 while the one verified, highest-ROI item (the query-agnostic splice cut) is both un-sequenced and already half-built in the tree.",
+  "points": [
+   {
+    "title": "The splice floor-fix has no phase \u2014 and half of it already ships behind a flag",
+    "claim": "The review is right that Phase 4 would build J-space coverage-shaped assembly on a splice stage that discards the answer, but neither doc notes that the 'budget-proportional cap' half of the fix already exists: `_compute_foveated_caps` computes rank-proportional per-document caps that override the uniform 1000 \u2014 so the fix is partly prepaid, yet the roadmap lists no 'Phase -1' for it. Do the floor fix (query-aware cap + emit `complement`, generalize the foveated path off BROAD-only) and re-measure `body_has_answer` before funding any J-space phase.",
+    "evidence": "Verified: context_manager.py:1706 hardcodes `target = 1000` (query-agnostic); headroom_bridge.py:227 falls back to `content[:target_chars].strip()`. The rank-aware machinery already exists: `_compute_foveated_caps` (context_manager.py:341) + the `foveated_caps` override (1703-1704), gated by `[budget] foveated_enabled` and limited to the BROAD tier. `complement` is never emitted in the generic splice branch (spliced_map gets only `compress_text` output at 1712).",
+    "targets": "Sequencing / Phase 4 / decision-point 2 (lead with bet B)",
+    "confidence": "high"
+   },
+   {
+    "title": "The review's empirical grounding is not in the repo \u2014 do not reorder the roadmap on it yet",
+    "claim": "The review's 'where our empirical work plugs in' section \u2014 the load-bearing basis for 'lead with bet B' and 'RRF is the baseline to beat' \u2014 cites artifacts that aren't committed. The council should treat these numbers as uncommitted until the artifacts land; decision-point 4 ('who verifies UWSH/LatentAudit') must extend to 'commit the SIKE Run-2 docs, the driver, and the metric under its real name before they anchor a reprioritization.'",
+    "evidence": "Verified absent: `docs/benchmarks/2026-07-06-sike-run2-fts-depth-fusion.md` and `...faithfulness-experiment-runbook.md` do not exist (latest is 2026-07-05-sike-bedsweep-issue-resolutions.md). The metric `content_has_answer` (and the 0.72-vs-0.58 figures) appears ONLY in the review doc; the committed metric is `body_has_answer` (benchmarks/bench_needle.py, revived in commit cb34284). `s3_fts_depth_sweep.py` survives only as `scripts/bench_chain/__pycache__/*.pyc`. The direction is real \u2014 the 07-05 doc describes 'Run 2 \u2026 fusion A/B' and states 'RRF outperforms additive on the 11 rank-7-42 squeeze-outs' \u2014 but the numbers are not reproducible in-tree.",
+    "targets": "Decision-points 2 & 4 / review's grounding section",
+    "confidence": "high"
+   },
+   {
+    "title": "Keep the roadmap's epistemics; don't let LatentAudit's 0.942 become a Phase-1 anchor",
+    "claim": "The roadmap's stance ('treat as hypotheses we re-measure on our own models') is more defensible than the review's Deep-Research citation wall, which the review itself flags as suspicious (future-dated arXiv IDs, unverified systems) \u2014 yet the review's Phase-1 recommendation is 'mirror the LatentAudit recipe.' Concede the review's real point (anisotropy \u2192 Mahalanobis-beats-cosine is textbook-solid, and the cosine\u2192whitening win is bet-A-independent), but keep Phase 1's design driven by our own CWoLa/faithfulness labels, not a possibly-fictional AUROC.",
+    "evidence": "Roadmap lines 8-14 pre-register the 're-measure' stance. Review line 40 self-admits the Deep Research is 'hypothesis-generating scaffolding, not verified truth' with '2605/2606 arXiv IDs \u2026 none independently verified'; review line 57 nonetheless says 'Mirror the LatentAudit recipe.' know_calibration.py is a real 5-feature logistic (betas = (-2.0, 2.0, 1.5, 0.7, 1.8), N_FEATURES=5) that the density feature can extend without importing an unverified blueprint.",
+    "targets": "Phase 1 / bet B / decision-point 4",
+    "confidence": "high"
+   },
+   {
+    "title": "Legibility is the moat, and the conflict is broader than Phase 5",
+    "claim": "The review flags Phase 5 soft-prefix as illegible, but misses that Phase 1's option to 'replace the logistic with a pure density threshold' is the same conflict in miniature: a Mahalanobis scalar is less auditable than a logistic whose betas map to named signals a downstream agent can inspect. Make 'density is a feature of the legible logistic, never a replacing gate' a standing council constraint \u2014 which is also the roadmap's own conservative fallback \u2014 rather than a Phase-1 A/B that could quietly retire the contract's explainability.",
+    "evidence": "Roadmap line 122 explicitly contemplates replacing the logistic with a pure density threshold. KnowBlock exposes named auditable fields \u2014 exactly-one `know`/`miss`, a `reason` vocabulary, `confidence`, `coordinate_confidence` (schemas.py:281-514). CLAUDE.md's /context/packet contract and MEMORY ('AI is first-class user') make the agent the consumer that reasons over these named signals \u2014 a scalar density gate degrades that.",
+    "targets": "Phase 1 / Phase 5 / decision-point 3",
+    "confidence": "high"
+   },
+   {
+    "title": "Splat storage grows the store in the same month the team shipped an efficiency-cut design",
+    "claim": "'Does the bet earn its complexity' is partly a storage-coherence question the roadmap raises but never reconciles. Phase 3 admits ~80 KB/gene per space (d=1024, k=16 fp32); if quantization drift (Open Q#1) forces per-artifact profiles, that cost is multiplicative per (gene \u00d7 model-artifact) \u2014 directly against the repo's current lean direction. The council should require Phase 3 to draw its net-storage story against the efficiency doc, not just name fp16/k=8 mitigations.",
+    "evidence": "docs/design/2026-07-05-efficiency-cost-reduction.md and commit f140e9f drive per-column storage DOWN (fp32/fp16 BLOB packing, '~5\u00d7/~10\u00d7' on the SEMA/embedding columns). Roadmap Phase 3 (lines 182-186) states the ~80 KB/gene per-space cost and Open Q#1 (lines 303-309) frames quantization drift as 'one-off cost or a treadmill.' The two docs are one day apart and pull opposite directions on storage.",
+    "targets": "Phase 3 / bet B / 'earns its complexity'",
+    "confidence": "medium"
+   },
+   {
+    "title": "'Helix is for AI agents' makes Phase 5 user-model-mismatched, not just stack-gated",
+    "claim": "The review argues against Phase 5 on capability grounds (J-lens is vocabulary-bounded, weak on our multi-token identifier needles). The stronger product argument: the first-class consumer is an agent hitting /context/packet that calibrates on the know/miss contract and cannot audit or benefit from residual-stream-optimal soft prefixes \u2014 those are illegible to it by construction. So Phase 5 is off-thesis for the stated primary user, while a better-calibrated `know{confidence}` (Phase 1's density feature) is exactly what that user consumes. This is the strongest case for 'cap at the weak form.'",
+    "evidence": "Review line 47 makes the vocabulary-ceiling (capability) argument; review line 59 flags Phase-5 illegibility but scopes it as a stack/values gate. CLAUDE.md documents the /context/packet know/miss contract as the agent-facing trust surface; MEMORY design_ai_first_class_user establishes agents as the primary consumer. Phase 5 (roadmap lines 257-264) requires HF/vLLM and produces un-decodable vectors \u2014 unusable by an agent that reasons over legible claims.",
+    "targets": "Phase 5 / bet A strong form / decision-points 2 & 3",
+    "confidence": "medium"
+   }
+  ]
+ },
+ {
+  "specialty": "Epistemics / adversary",
+  "stance": "pro",
+  "verdict_one_line": "Proceed and lead with bet B: the roadmap's cheapest wins are already prepaid in the schema and the calibration code, and its refusal to trust the shaky evidence is exactly what bounds the downside \u2014 the weakest epistemic joint here is the review, not the plan.",
+  "points": [
+   {
+    "title": "Phase 3's jspace tier is zero-risk-when-off by construction, not by promise",
+    "claim": "The roadmap rates Phase 3 'mostly ENGINEERING' and says the jspace tier's zero-weight disables it 'consistent with existing knobs' \u2014 that is literally true in the code, so the production-integration phase has a safe-by-construction seam already in place. Fuser is a pure data structure with no SQL/KnowledgeStore/telemetry coupling, and add_tier() short-circuits and doesn't even record the tier when weight==0.0. Adding and A/B- backing-out the jspace tier is a genuinely additive, fully reversible change \u2014 the plug-in point the review discusses only conceptually is verified to exist and to be free.",
+    "evidence": "helix_context/retrieval/fusion.py:104-108 (weight==0.0 early return, skips _tiers_seen); module docstring lines 24-28 ('pure data structure... no SQL, no KnowledgeStore coupling, no telemetry side effects'); roadmap line 189 matches the real add_tier signature.",
+    "targets": "Phase 3; decision-point 2 (lead with bet B) \u2014 de-risks the 'production plumbing' phase",
+    "confidence": "high"
+   },
+   {
+    "title": "Phase 1's density-as-6th-feature is a transition the team has already shipped once",
+    "claim": "The strongest reason to 'lead with bet B' is not the review's unverified LatentAudit blueprint (arXiv:2604.05358, flagged unverifiable) \u2014 it's that Phase 1's exact proposed integration is a proven in-repo pattern. The know logistic already went 4\u21925 features once (the Stage-7 freshness_min addition), with the config-owned betas, the fit helper, and the N_FEATURES guard all in place. 'Add density as one more beta in [know], recalibrate via calibrate_know_confidence.py' is therefore a low-variance engineering move, not a research gamble. The review under-sells this by anchoring bet B to an external citation it can't confirm.",
+    "evidence": "helix_context/scoring/know_calibration.py:34-40 (STAGE-7-EXT markers), :57-84 (DEFAULT_BETAS is a 6-tuple, N_FEATURES=5), :277-278 (freshness feature appended), fit_betas_from_features at :354; roadmap lines 118-123.",
+    "targets": "Phase 1 / bet B; decision-point 2",
+    "confidence": "high"
+   },
+   {
+    "title": "Bet B's marginal cost is a fit + one backfill, because the embeddings already exist",
+    "claim": "The roadmap's 'prepaid downside' claim for bet B is real at the schema level: \u03bc and \u03a3 can be fit from chunk vectors Helix already persists, so Phase 1 adds no new inference \u2014 just two net-new tables and a backfill script following an existing pattern. embedding_dense_v2 is already a BLOB column on genes; splats/spaces are genuinely net-new (absent from the DDL); and cwola_log \u2014 the weak-label source the validation section names \u2014 already exists. This is the cheapest path to a calibration/LOD upgrade that stands even on a total J-space kill.",
+    "evidence": "helix_context/storage/ddl.py:113 (embedding_dense_v2 BLOB on genes), :634 (cwola_log table); splats/spaces absent from the full table list in ddl.py; roadmap lines 113-117 (new tables) and 117 (backfill mirrors backfill_bgem3_v2.py).",
+    "targets": "Phase 1 / bet B; cross-phase 'what survives a total kill' (roadmap line 292)",
+    "confidence": "high"
+   },
+   {
+    "title": "The prepaid splice fix is a verified, bet-independent floor win \u2014 but scope it to the truncation path, not the review's 'complement' mechanism",
+    "claim": "The roadmap's coverage-based redundancy elision and the review's splice-fix converge on a cheap win that pays regardless of J-space, and the underlying floor bug is real: the last splice stage compresses with a query-agnostic char cap and, whenever headroom is unavailable or errors, falls back to a raw content[:target_chars] truncation. Fixing this before building coverage-shaped assembly on top is correct. Honest caveat that strengthens the case rather than weakens it: the review's specific mechanism claim \u2014 'the answer often lives only in complement, which is never emitted' \u2014 is not grounded where it points; 'complement' does not appear in headroom_bridge.py. So the fix should be pre-registered against the verified truncation path, or the complement claim gets falsified mid-implementation and stalls the prepaid work.",
+    "evidence": "helix_context/context_manager.py:1707 (compress_text, target=1000 or foveated_caps); helix_context/encoding/headroom_bridge.py:227, :255, :258 (content[:target_chars].strip() fallbacks); grep for 'complement' in headroom_bridge.py returns no matches; review lines 72.",
+    "targets": "Phase 4 + 'prepaid splice fix' (review recs 1 & 5)",
+    "confidence": "high"
+   },
+   {
+    "title": "The roadmap's epistemic discipline is the real asset \u2014 and the review, not the plan, is where the slippage lives",
+    "claim": "The strongest pro-roadmap point is meta: the plan wins precisely because it refuses to downgrade 'unconfirmed' to 'true' and budgets Phase 0's eval harness as 'the single highest-leverage engineering item' to BUILD. The review argues that harness is already 'half-built' and leans on it to compress Phase 0 \u2014 but on inspection its own grounding is thinner than the Deep Research it (rightly) distrusts: two of the docs it cites as empirical grounding are not in the repo, the 'just-fixed content_has_answer metric' appears in zero code files (the real scorer is bench_needle.find_needle / body_has_answer), and s3_fts_depth_sweep.py's source is gone (only a .pyc survives). The verified skeleton that DOES exist (bench_needle + the s2 recall pass) is real but partial \u2014 which vindicates the roadmap's instinct to construct the harness and pre-register bars rather than assume it. Do not let the review's over-confidence shrink Phase 0's engineering budget.",
+    "evidence": "docs/benchmarks/ contains only 2026-07-05-sike-bedsweep-issue-resolutions.md (the review's cited 2026-07-06-sike-run2-fts-depth-fusion.md and 2026-07-06-faithfulness-experiment-runbook.md are absent); 'content_has_answer' grep hits only the review doc; real scorer at scripts/bench_chain/s2_sike_bedsweep_run.py:352 (body_has_answer via bench_needle.find_needle); s3_fts_depth_sweep.py exists only as __pycache__/*.pyc; roadmap lines 63-67.",
+    "targets": "Phase 0; decision-points 4 (who verifies) & 2 \u2014 protects Phase 0's build budget",
+    "confidence": "high"
+   },
+   {
+    "title": "The poisoning-pairing the review demands for bet B is already cheap in-repo \u2014 so risk #1 is not a blocker",
+    "claim": "The review adds a sharp new risk \u2014 the Mahalanobis density gate is blind to a faithful generation of poisoned context (the SIKE echo-contamination failure) \u2014 and concludes density must be paired with anti-poisoning. That pairing is cheaply available: HELIX_DISABLE_LEARN is already wired end-to-end (helper, test, and the SIKE bench sweep uses it), and the cwola/provenance/claims scaffolding both docs name exists. So the mitigation is a config-composition problem, not new research; it does not gate shipping bet B. This tightens the case for leading with bet B rather than treating the poisoning risk as a reason to wait.",
+    "evidence": "helix_context/server/helpers.py:35-39 (_learn_disabled / HELIX_DISABLE_LEARN), tests/test_learn_disabled.py, scripts/bench_chain/s2_sike_bed_sweep.ps1 (uses HELIX_DISABLE_LEARN); ddl.py:634 (cwola_log); review risk #1 (lines 63).",
+    "targets": "Bet B risk register (review risk #1); decision-point 2",
+    "confidence": "high"
+   }
+  ]
+ },
+ {
+  "specialty": "Epistemics / adversary",
+  "stance": "con",
+  "verdict_one_line": "The roadmap's kill-switch discipline is genuinely sound, but the review that upgrades it leans on an empirical spine that isn't on the decision branch and on unverified future-labeled citations \u2014 verify those before reordering the plan, and fix the floor splice bug that silently moves the baseline every phase must beat.",
+  "points": [
+   {
+    "title": "The review's empirical spine is not on the branch under review",
+    "claim": "The review's entire value-add over the roadmap is 'we are further along \u2014 the eval harness is half-built' (its recommendation to lead with bet B rests on this). But every artifact it cites for that claim is absent from HEAD. A council member who checks out this branch cannot reproduce the 0.72-vs-0.58 RRF number, cannot run content_has_answer, and cannot read either 'grounding' runbook. The re-scope recommendation (decision-points #1/#2) is grounded on evidence that isn't in the tree it is grounding.",
+    "evidence": "HEAD = docs/jspace-roadmap-council @ de9c92c. `git merge-base --is-ancestor` shows commit 5749247 (content_has_answer, #205/#221) and df9c3ae (faithfulness runbook, #239) are NOT ancestors of HEAD \u2014 they live only on feat/fts5-candidate-depth-sweep. `git grep content_has_answer HEAD -- '*.py'` is empty (symbol absent from this branch's Python). `git cat-file -e HEAD:docs/benchmarks/2026-07-06-sike-run2-fts-depth-fusion.md` and the faithfulness-runbook path both return ABSENT. s3_fts_depth_sweep.py exists only as a stray .pyc, not tracked source. The RRF 0.72 / additive 0.58 numbers appear in no file except the review itself.",
+    "targets": "Review credibility as council evidence base; decision-points #1 (three-subspace split) and #2 (lead with bet B); Phase 0 'harness is half-built' claim",
+    "confidence": "high"
+   },
+   {
+    "title": "Phase 1 density gate: the named anti-poisoning kill-switch is orthogonal to the threat, and density amplifies it",
+    "claim": "The review lists corpus-poisoning as New Risk #1 but frames it as solvable with 'existing scaffolding (CWoLa, provenance, claims) \u2014 Helix already has it.' It doesn't. HELIX_DISABLE_LEARN only gates Stage-6 write-back \u2014 it stops the model's own echoed answers from being re-learned (the SIKE echo case), and does nothing about content poisoned at INGEST from source docs. Provenance records where a doc came from, not whether its claim is true. Worse, Mahalanobis density structurally rewards ingest poison: a poisoned cluster is a dense mode, so it scores LOW anomaly = HIGH know-confidence. Pairing 'density + provenance' pairs a poison-amplifier with a source-labeler; neither measures truth, so the pairing does not close the hole the review says it closes.",
+    "evidence": "server/helpers.py:38-51 \u2014 `_learn_disabled()` docstring: 'Stage-6 persistence is turned off\u2026 persisting the query+response exchange as a new gene'; it gates write-back only. splats/spaces tables do not exist yet (schema grep returns zero). identity/provenance.py tracks source attribution, not veracity. Density = Mahalanobis distance to the retrieved distribution, which a poisoned corpus shifts to include the poison.",
+    "targets": "Phase 1 / bet B (density know/go); review New-Risk #1",
+    "confidence": "high"
+   },
+   {
+    "title": "Phase 1's 'near-drop-in blueprint' is an unverifiable citation that the review makes load-bearing while deferring its own verify-gate",
+    "claim": "The review correctly flags the Deep-Research anchors as shaky, then builds on them anyway. Phase 1's concrete recommendation is 'Mirror the LatentAudit recipe' with a specific '0.942 AUROC on Llama-3-8B', and the roadmap's '~16 directions' motivation is sourced to UWSH. Both are cited by future-labeled arXiv IDs the review admits 'none independently verified here', and decision-point #4 asks 'who verifies UWSH + LatentAudit before either becomes load-bearing' \u2014 but the Phase 1 recipe already treats LatentAudit as the blueprint. The verify-gate sits downstream of the reliance. This is the exact confirmation-bias failure the review warns against: an 'unconfirmed' claim upgraded to 'cited, therefore actionable' inside the same document.",
+    "evidence": "Review line 35 (LatentAudit, claimed arXiv:2604.05358, 0.942 AUROC), line 38 (UWSH, claimed arXiv:2512.05117, '1,100+ models'), line 40 ('none independently verified here\u2026 do not downgrade the re-measure stance to cited-therefore-true'), line 57 ('Mirror the LatentAudit recipe'), decision-point #4. No web access in this environment; the IDs are unverifiable from the repo, so from a council's standpoint they must be treated as zero-evidence, not as a blueprint.",
+    "targets": "Phase 1 recipe; decision-point #4 (verification owner); roadmap 'universal ~16 directions' motivation",
+    "confidence": "high"
+   },
+   {
+    "title": "The floor splice bug is the kill-switch that fires before Phase 0 \u2014 fixing it moves the baseline bet A must beat",
+    "claim": "The review notes the splice-truncation bug but files it as prep work. The sharper consequence: Phase 0 pre-registers 'J-subspace beats BGE-M3 by >=5 Recall@10, ties are a kill', and Phase 4 measures end-to-end QA \u2014 both against TODAY's assembly, which on the default path truncates content to a query-agnostic 1000-char prefix and drops the answer. Fix that mundane bug (query-aware / budget-proportional cap / emit complement) and the retrieval-and-assembly baseline gets stronger, so bet A's >=5-point bar gets harder precisely because the honest control was under-measured. Measuring an exotic bet against a crippled baseline inflates its apparent headroom. Order of operations: fix floor, re-measure, THEN decide if J-space still has a gap to chase.",
+    "evidence": "context_manager.py:1707 \u2014 `compress_text(..., target_chars=1000)` in the non-foveated branch (foveated_caps is None \u2192 target=1000 by default). headroom_bridge.py:222-227 \u2014 when `is_headroom_available()` is False it returns `content[:target_chars].strip()`, a blind prefix cut. The foveated rank-proportional path exists but is off by default, so the truncation is live on the default path. Review line 72 identifies the bug but sequences the whole roadmap on top of it.",
+    "targets": "Phase 0 pre-registered bar; Phase 4 end-to-end measurement; overall sequencing",
+    "confidence": "high"
+   },
+   {
+    "title": "Phase 4 fragment-splat storage is priced per-gene but incurred per-fragment (YAGNI / cost under-disclosure)",
+    "claim": "Phase 3 prices the splat store at '~80 KB/gene at d=1024, k=16 fp32' per space and offers fp16/k=8 as the mitigation. Phase 4 then quietly switches the unit: it fits splats on `is_fragment` genes (chunk-level, many per document). The roadmap never prices the fragment multiplier \u2014 per-fragment covariance factors can multiply the store several-fold over the per-gene headline, in the plain embedding space alone, before any J-space rows are added. For a plan whose selling point is 'maximum downside is bounded and mostly prepaid', an unbounded per-fragment storage term in the payoff phase is exactly the cost that should be stated up front, not discovered at backfill time.",
+    "evidence": "Roadmap Phase 3 storage line ('~80 KB/gene at d=1024, k=16 fp32'); Phase 4 schema line ('Fragment-level splat rows (is_fragment genes) in `splats`'). is_fragment is a real first-class concept: 28 references across 10 modules including storage/ddl.py, encoding/fragments.py, encoding/tree_chunker.py. No fragment-count-aware storage estimate appears anywhere in the roadmap.",
+    "targets": "Phase 4 (fragment_splats=true); Phase 3 storage-cost accounting; roadmap 'bounded downside' claim",
+    "confidence": "medium"
+   }
+  ]
+ },
+ {
+  "specialty": "Epistemics / adversarial verification",
+  "stance": "neutral",
+  "verdict_one_line": "The roadmap's own \"re-measure, don't trust the citation\" stance is the best epistemics in this bundle \u2014 and the review plus its sibling lineage doc are quietly eroding it, while the review's own empirical grounding is partly phantom (missing bench docs, a metric that exists nowhere in the tree).",
+  "points": [
+   {
+    "title": "The review's empirical grounding is partly phantom \u2014 verify before it becomes load-bearing",
+    "claim": "The review's 'Where our 2026-07-06 empirical work plugs in' section \u2014 the basis for 'the eval harness is half-built, we're further along than the roadmap assumes' \u2014 rests on artifacts not in the repo. Both cited benchmark docs (2026-07-06-sike-run2-fts-depth-fusion.md, 2026-07-06-faithfulness-experiment-runbook.md) do not exist. The load-bearing metric `content_has_answer` and the 'RRF 0.72 vs additive 0.58' numbers appear NOWHERE in code or bench scripts \u2014 only inside the review doc itself. The `s3_fts_depth_sweep.py` 'server-per-config driver' it calls the skeleton of eval_retrieval.py has no source (only an orphan .pyc in __pycache__). So the review commits a milder version of the sin it pins on the Deep Research: citing sources that can't be verified. Phase 0's central engineering claim ('single highest-leverage item') is NOT prepaid.",
+    "evidence": "Glob docs/benchmarks/2026-07-06-* \u2192 none; Grep content_has_answer (case-insensitive, repo-wide) \u2192 only docs/design/2026-07-06-jspace-roadmap-review.md; scripts/bench_chain/*.py has 4 files, no s3_fts_depth_sweep.py; git ls-files shows none tracked/untracked",
+    "targets": "Decision-point #2 (lead with bet B) and Phase 0's 'harness half-built' premise",
+    "confidence": "high"
+   },
+   {
+    "title": "Asymmetric epistemic standard: the Anthropic paper is exempted from the review's own 'verify before load-bearing' rule",
+    "claim": "The review correctly demands 'treat the Deep Research as hypothesis-generating scaffolding, not verified truth' and 'do not downgrade the re-measure stance to cited-therefore-true' \u2014 then does exactly that for the Anthropic Global Workspace paper, tagging it 'verified read' and letting its 'Bottom line' hinge on 'It now exists, is published, and is causal.' But both inputs share the same provenance chain (operator-pasted, unfetchable), and the paper (Feb 2026) is unverifiable from here. The sibling lineage doc drops the hedge entirely \u2014 'core premise was just externally validated,' 'the paper validates the mechanism.' The roadmap author's scrupulous 'treat both as hypotheses we re-measure' is epistemically superior and is being eroded across the council docs.",
+    "evidence": "review lines 12/26/40 (verified read vs Deep-Research caution asymmetry); docs/councils/2026-07-06-roadmap-lineage.md:8-9,25 ('externally validated', 'the paper validates the mechanism'); paper date Feb-2026 is past assistant knowledge cutoff, no local copy or quote-checkable excerpt in repo",
+    "targets": "Review Bottom line; Phase 0 kill-bar; Decision-point #4 (who verifies)",
+    "confidence": "high"
+   },
+   {
+    "title": "Phase 1's success metric is coupled to the corpus-poisoning blind spot it's supposed to be independent of",
+    "claim": "The review's new risk #1 (density gate blind to poisoning) understates the coupling: Phase 1 defines success as 'density variant dominates the risk-coverage curve \u2014 fewer wrong knows' scored against CWoLa-derived labels harvested from the SAME corpus the system was allowed to learn from. A tightly-clustered poisoned region (the SIKE echo-contamination HELIX_DISABLE_LEARN exists to stop) produces LOW Mahalanobis anomaly = HIGH density AND self-consistent CWoLa labels, so it validates as high-confidence 'know.' The density gate would raise confidence on exactly the contaminated cluster. Concrete gap: the roadmap's Phase 1 validation never says to run under HELIX_DISABLE_LEARN or on a held-out clean corpus \u2014 without that, the metric can't distinguish 'well-calibrated' from 'confidently echoing poison.'",
+    "evidence": "roadmap Phase 1 validation lines 127-132; HELIX_DISABLE_LEARN real at helix_context/server/helpers.py:35-40 + tests/test_learn_disabled.py; review risk #1 (lines 63) names the failure but not the metric coupling",
+    "targets": "Phase 1 (bet B) validation design",
+    "confidence": "high"
+   },
+   {
+    "title": "Phase 0 \u2014 the self-described 'kill-shot' \u2014 is defeasible by fallback proliferation and has no multiple-comparisons control",
+    "claim": "Phase 0 pre-registers the BAR (+5 Recall@10) but not the config BUDGET. The sweep is {layers \u22653} x {ranks 4/8/16/32/64} x {pooling: mean/last-token/per-chunk} x {cosine/Mahalanobis} = 100+ configs against a 200-500-pair eval set; with a 5-point bar, something clears +5 by chance. Worse, the within-phase fallback ladder ('try last-token, then per-chunk before concluding') plus the review's ADDED windowed/Delta-PCA fallback are new researcher degrees of freedom that WIDEN the escape hatch \u2014 making the kill harder to fire, not easier ('we didn't beat BGE-M3, but we haven't tried windowed pooling yet'). A kill-switch that can always find one more pooling scheme does not kill. Fix: pre-register the full grid + a held-out confirmation split; a win must replicate out-of-sample, not merely appear in the sweep.",
+    "evidence": "roadmap Phase 0 method lines 74-92 (rank/layer sweep + pooling fallback ladder, bar '\u22655 points Recall@10 at some (layer,rank)'); review lines 36/56 adds windowed pooling as a further fallback",
+    "targets": "Phase 0 (kill-shot) pre-registration",
+    "confidence": "high"
+   },
+   {
+    "title": "The 'future-dated arXiv IDs' heuristic is arithmetically miscalibrated \u2014 fetchability is the real axis, and it puts the Anthropic anchor in the same bucket",
+    "claim": "The review flags 'future-dated 2605/2606 arXiv IDs' as suspicious, but relative to the doc's own 2026-07-06 date, 2605/2606 = May/June 2026 are PAST, not future \u2014 the heuristic's arithmetic is off. It also flags UWSH (2512.05117 = Dec 2025, the most date-plausible ID) as unverified while accepting the Feb-2026 Anthropic paper as verified. The correct verification axis is independent fetchability, not the YYMM stamp \u2014 and by that axis the Anthropic paper is in the SAME unverified bucket as the IDs being flagged. Decision-point #4's verification list should therefore ADD the Anthropic paper, not treat it as the trusted anchor the others are checked against.",
+    "evidence": "review lines 40 (\u2018future-dated 2605/2606\u2019) and 20/38 (UWSH 2512.05117 flagged unverified) vs 21/26 (Anthropic \u2018verified read\u2019); arXiv YYMM convention: 2605=2026-05 < doc date 2026-07",
+    "targets": "Decision-point #4 (verification ownership) and the review's citation-triage",
+    "confidence": "medium"
+   },
+   {
+    "title": "YAGNI: Phase 1's multi-space `spaces` schema pre-builds for a Phase 3 that Phase 0 is allowed to kill",
+    "claim": "Phase 1 is sold as 'bet B decoupled from bet A \u2014 stands on its own on a Phase-0 kill,' yet its schema introduces BOTH a `splats` table with a composite (gene_id, space_id) PK AND a `spaces` table carrying a kind='embedding'|'jspace' enum, basis/center BLOBs, and per-layer rows \u2014 of which Phase 1 registers exactly one (embedding/BGE-M3/1024). All the multi-space generality exists only to serve Phase 3, which Phase 0 has a real probability of killing (roadmap says Phases 2-5 die on a Phase-0 negative). The honest decoupled-B table is single-space: splats(gene_id PK, mean, cov_factors, cov_logdiag, ...) with no `spaces` table. Adding space_id later is a cheap migration; the roadmap's own honesty principle ('degrade to current behavior, minimal surface') argues for not shipping J-space's schema future inside a bet that's supposed to survive J-space's death.",
+    "evidence": "roadmap Phase 1 schema lines 112-115 (spaces table + composite PK, 'Phase 1 registers one row... Phase 3 adds J-space rows'); Phase 0 kill criterion lines 51-57/90-93 (kill Phases 2-5)",
+    "targets": "Phase 1 (bet B) schema decision",
+    "confidence": "medium"
+   }
+  ]
+ }
+]
