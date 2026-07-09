@@ -1,4 +1,4 @@
-"""bench_shard_recall.py -- Shard × dense recall A/B harness.
+"""bench_shard_recall.py -- Shard x dense recall A/B harness.
 
 Reads gold needles from build_shard_gold.py, issues POST /fingerprint per
 query, finds the first gold-path hit in the ranked list, and computes:
@@ -299,7 +299,7 @@ def _print_table(label: str, summary: dict) -> None:
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(
         description=(
-            "Shard × dense recall A/B harness. "
+            "Shard x dense recall A/B harness. "
             "Issues POST /fingerprint per needle, computes recall@k + MRR "
             "broken out by type (within / cross), writes results JSON."
         )

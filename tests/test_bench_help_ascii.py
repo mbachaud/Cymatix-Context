@@ -7,10 +7,11 @@ console encoding. On a Windows cp1252 console a non-cp1252 character
 UnicodeEncodeError before help is shown. Keeping that text pure ASCII
 keeps ``--help`` working on every locale.
 
-Scope is exactly what argparse encodes: the module docstring and
-``add_argument(help=...)`` strings of bench scripts that use argparse.
-Comments, function docstrings, and runtime output (e.g. heatmap glyphs)
-are intentionally out of scope -- argparse never encodes them.
+Scope is exactly what argparse encodes: the module docstring, the parser
+``description=``/``epilog=`` strings, and every ``add_argument(help=...)``
+string of bench scripts that use argparse. Comments, function docstrings,
+and runtime output (e.g. heatmap glyphs) are intentionally out of scope --
+argparse never encodes them.
 """
 
 from __future__ import annotations
@@ -29,16 +30,23 @@ def _argparse_bench_files() -> list[Path]:
     ]
 
 
-def _help_strings(tree: ast.Module) -> list[str]:
-    """Every constant `help=` string passed to an add_argument-style call."""
-    out: list[str] = []
+# argparse encodes these keyword-arg strings to the console encoding when
+# `--help` runs: `help=` (per add_argument), plus `description=` and
+# `epilog=` (per ArgumentParser). All three must be ASCII.
+_HELP_KWARGS = ("help", "description", "epilog")
+
+
+def _help_strings(tree: ast.Module) -> list[tuple[str, str]]:
+    """Every constant `help=`/`description=`/`epilog=` string passed to an
+    argparse-style call, as ``(kwarg_name, value)`` pairs."""
+    out: list[tuple[str, str]] = []
     for node in ast.walk(tree):
         if isinstance(node, ast.Call):
             for kw in node.keywords:
-                if (kw.arg == "help"
+                if (kw.arg in _HELP_KWARGS
                         and isinstance(kw.value, ast.Constant)
                         and isinstance(kw.value.value, str)):
-                    out.append(kw.value.value)
+                    out.append((kw.arg, kw.value.value))
     return out
 
 
@@ -63,10 +71,10 @@ def test_argparse_help_text_is_ascii():
         doc_bad = _non_ascii(ast.get_docstring(tree) or "")
         if doc_bad:
             offenders.append(f"{path.name}: docstring -> {doc_bad}")
-        for help_text in _help_strings(tree):
+        for kwarg, help_text in _help_strings(tree):
             help_bad = _non_ascii(help_text)
             if help_bad:
-                offenders.append(f"{path.name}: help= -> {help_bad}")
+                offenders.append(f"{path.name}: {kwarg}= -> {help_bad}")
     assert not offenders, (
         "non-ASCII in argparse --help text (crashes --help on cp1252):\n  "
         + "\n  ".join(offenders)
