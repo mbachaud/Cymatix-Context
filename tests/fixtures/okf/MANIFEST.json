@@ -1,0 +1,54 @@
+{
+  "crypto_bitcoin": {
+    "file_count": 9,
+    "files": [
+      "datasets/crypto_bitcoin.md",
+      "datasets/index.md",
+      "index.md",
+      "tables/blocks.md",
+      "tables/index.md",
+      "tables/inputs.md",
+      "tables/outputs.md",
+      "tables/transactions.md",
+      "viz.html"
+    ]
+  },
+  "ga4": {
+    "file_count": 18,
+    "files": [
+      "datasets/ga4_obfuscated_sample_ecommerce.md",
+      "datasets/index.md",
+      "index.md",
+      "references/index.md",
+      "references/joins/events___ads_clickstats.md",
+      "references/joins/index.md",
+      "references/metrics/avg_pageviews.md",
+      "references/metrics/avg_spend_per_purchase_session_by_user.md",
+      "references/metrics/avg_transactions_per_purchaser.md",
+      "references/metrics/day_count.md",
+      "references/metrics/event_count.md",
+      "references/metrics/index.md",
+      "references/metrics/new_user_count.md",
+      "references/metrics/overall_avg_spend_per_purchase_session.md",
+      "references/metrics/user_count.md",
+      "tables/events_.md",
+      "tables/index.md",
+      "viz.html"
+    ]
+  },
+  "type_only": {
+    "file_count": 1,
+    "files": [
+      "note.md"
+    ]
+  },
+  "degraded": {
+    "file_count": 4,
+    "files": [
+      "bad_yaml.md",
+      "dangling.md",
+      "empty_type.md",
+      "no_frontmatter.md"
+    ]
+  }
+}

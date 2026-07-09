@@ -588,6 +588,58 @@ class LazyRibosome:
         return getattr(self._materialize(), name)
 
 
+# Metadata keys the ingest seam recognizes as caller-supplied tag lists.
+# Structured sources (OKF frontmatter, future adapters) pass these through
+# `ingest(metadata=...)` and they merge additively with tagger output — the
+# resulting rows in promoter_index / genes_fts / path_key_index are
+# indistinguishable from tagger-produced tags.
+_CALLER_TAG_KEYS = ("domains", "entities", "key_values")
+
+
+def _merge_caller_tags(gene: Gene, metadata: Optional[Dict]) -> None:
+    """Merge caller-supplied tag lists from ingest metadata into *gene*.
+
+    Merge, don't bypass: the tagger has already run; caller values are
+    prepended (so they survive any downstream cap, mirroring the tagger's
+    own filename-domain prepend) and deduplicated against tagger output —
+    case-insensitively for domains/entities (promoter_index lowercases on
+    insert), exactly for key_values (values may be case-significant).
+
+    Provable no-op when none of ``_CALLER_TAG_KEYS`` is present in
+    ``metadata`` — the bench beds and every existing ingest caller are
+    untouched.
+    """
+    if not metadata or not any(metadata.get(k) for k in _CALLER_TAG_KEYS):
+        return
+
+    def _prepend(supplied, existing, casefold: bool) -> List[str]:
+        merged: List[str] = []
+        seen = set()
+        for value in list(supplied or []) + list(existing):
+            text = str(value).strip()
+            if not text:
+                continue
+            key = text.lower() if casefold else text
+            if key in seen:
+                continue
+            seen.add(key)
+            merged.append(text)
+        return merged
+
+    if metadata.get("domains"):
+        gene.promoter.domains = _prepend(
+            metadata["domains"], gene.promoter.domains, casefold=True
+        )
+    if metadata.get("entities"):
+        gene.promoter.entities = _prepend(
+            metadata["entities"], gene.promoter.entities, casefold=True
+        )
+    if metadata.get("key_values"):
+        gene.key_values = _prepend(
+            metadata["key_values"], gene.key_values, casefold=False
+        )
+
+
 class HelixContextManager:
     """
     Main orchestrator. Sits between the client and the upstream LLM.
@@ -1053,6 +1105,10 @@ class HelixContextManager:
                 content_type=content_type,
                 total_strands=total_strands,
             )
+            # Structured-source seam: caller-supplied domains/entities/
+            # key_values merge additively with tagger output before the
+            # document reaches upsert_doc and its index builders.
+            _merge_caller_tags(gene, metadata)
             # Store source file path for change-based decay
             if source_path:
                 gene.source_id = source_path

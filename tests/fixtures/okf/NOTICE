@@ -1,0 +1,57 @@
+NOTICE — Vendored OKF sample bundles
+====================================
+
+The bundle directories in this folder (crypto_bitcoin/, ga4/) are vendored,
+unmodified, from the upstream Open Knowledge Format (OKF) reference
+implementation:
+
+  Upstream repository: https://github.com/GoogleCloudPlatform/knowledge-catalog
+  Upstream paths:      okf/bundles/crypto_bitcoin/  ->  crypto_bitcoin/
+                       okf/bundles/ga4/             ->  ga4/
+  Pinned commit:       ee67a5ca27044ebe7c38385f5b6cffc2305a9c1a
+  Date fetched:        2026-07-08
+
+All vendored files are byte-exact copies of the git blobs at the pinned
+commit (verified against the upstream tree object's blob SHAs).
+
+License
+-------
+The upstream project is licensed under the Apache License, Version 2.0.
+This was verified against both LICENSE.md (repository root) and
+okf/LICENSE.md at the pinned commit ee67a5ca27044ebe7c38385f5b6cffc2305a9c1a.
+
+The upstream LICENSE.md retains the standard Apache-2.0 appendix
+boilerplate ("Copyright [yyyy] [name of copyright owner]") without a
+filled-in copyright line; the repository is published under the
+GoogleCloudPlatform GitHub organization.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use these files except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+Vendored bundles
+----------------
+  crypto_bitcoin/  (9 files)  — BigQuery public dataset: crypto_bitcoin
+  ga4/             (18 files) — BigQuery public dataset:
+                                ga4_obfuscated_sample_ecommerce
+                                (GA4 Merchandise Store sample)
+
+Excluded bundle
+---------------
+The upstream stackoverflow bundle (okf/bundles/stackoverflow/) was
+deliberately NOT vendored. A license scan on 2026-07-08 found that several
+of its references/*.md files reproduce, near-verbatim, enumeration text
+from the community-authored answer at
+https://meta.stackexchange.com/questions/2677 ("Database schema
+documentation for the public data dump and SEDE"), which is user
+contributed Stack Exchange content licensed under CC BY-SA — a license
+incompatible with plain Apache-2.0 redistribution without additional
+attribution obligations. See README.md in this directory for details.

@@ -34,7 +34,9 @@ def load_all_fixtures():
     """Load all fixtures with their content type and content."""
     fixtures = {}
     for f in sorted(FIXTURES.iterdir()):
-        if f.name.startswith("."):
+        # Skip subdirectories (e.g. fixtures/okf/ bundles) — this loader
+        # feeds the stress corpus from flat text/code fixture files only.
+        if f.name.startswith(".") or not f.is_file():
             continue
         content = f.read_text(encoding="utf-8")
         if f.suffix == ".py":
