@@ -54,6 +54,25 @@ def _build_parser() -> argparse.ArgumentParser:
         help="File extension to include (e.g. --ext .txt). Repeatable. "
              "Default: " + ", ".join(_DEFAULT_EXTENSIONS),
     )
+    parser.add_argument(
+        "--okf", action="store_true",
+        help="Treat path as an OKF v0.1 knowledge bundle directory "
+             "(markdown + YAML frontmatter). Walks every non-reserved "
+             ".md file itself; --recursive/--ext do not apply.",
+    )
+    parser.add_argument(
+        "--bundle-id", default=None,
+        help="Override the OKF bundle id (default: bundle directory name). "
+             "Only with --okf.",
+    )
+    parser.add_argument(
+        "--deterministic", action="store_true",
+        help="Deterministic-ingest profile: disable SEMA/dense/SPLADE "
+             "encodes at ingest so the store contains no float tensors. "
+             "Embeddings are backfilled per host afterwards "
+             "(scripts/backfill_bgem3_v2.py) as per-host artifacts — they "
+             "are never covered by the OKF interop claim. Only with --okf.",
+    )
     return parser
 
 
@@ -70,9 +89,95 @@ def _collect_files(root: Path, recursive: bool, exts: Iterable[str]) -> List[Pat
     return sorted(p for p in iterator if p.is_file() and p.suffix.lower() in ext_set)
 
 
+def _run_okf(args) -> int:
+    """`helix ingest --okf <bundle_dir>` — ingest an OKF v0.1 bundle."""
+    root = Path(args.path)
+    if not root.is_dir():
+        err = {"ok": False, "error": f"--okf requires a bundle directory: {root}"}
+        if args.json:
+            output.print_json(err)
+        else:
+            output.eprint(err["error"])
+        return output.EXIT_ERROR
+
+    # Default = standard config: the public determinism claim is scoped to
+    # the canonical digest, not to stored bytes. --deterministic opts into
+    # the float-free profile (embeddings backfilled per host afterwards).
+    config = None
+    if args.deterministic:
+        from helix_context.config import load_config
+
+        config = load_config()
+        config.ingestion.sema_embed_on_ingest = False
+        config.ingestion.dense_embed_on_ingest = False
+        config.ingestion.splade_enabled = False
+
+    try:
+        sess = open_session(config=config)
+        from helix_context.okf import ingest_bundle
+
+        result = ingest_bundle(sess._manager, root, bundle_id=args.bundle_id)
+    except Exception as exc:
+        err = {"ok": False, "error": f"{type(exc).__name__}: {exc}"}
+        if args.json:
+            output.print_json(err)
+        else:
+            output.eprint(err["error"])
+        return output.EXIT_ERROR
+
+    payload = {
+        "ok": True,
+        "bundle_id": result.bundle_id,
+        "okf_version": result.okf_version,
+        "digest": result.digest,
+        "concepts_total": result.concepts_total,
+        "concepts_ingested": result.concepts_ingested,
+        "gene_ids": result.gene_ids,
+        "links": {
+            "captured": result.links_captured,
+            "resolved": result.links_resolved,
+            "dangling": result.links_dangling,
+        },
+        "deterministic_profile": bool(args.deterministic),
+        "warnings": result.warnings,
+        "skipped_files": result.skipped_files,
+    }
+    if args.json:
+        output.print_json(payload)
+    else:
+        lines = [
+            f"ingested OKF bundle '{result.bundle_id}'"
+            + (f" (okf_version {result.okf_version})" if result.okf_version else ""),
+            f"  concepts: {result.concepts_ingested}/{result.concepts_total}",
+            f"  genes:    {len(result.gene_ids)}",
+            f"  links:    {result.links_captured} "
+            f"({result.links_resolved} resolved, {result.links_dangling} dangling)",
+            f"  digest:   {result.digest}",
+        ]
+        if args.deterministic:
+            lines.append("  profile:  deterministic-ingest (no float tensors; "
+                         "backfill embeddings per host)")
+        for w in result.warnings:
+            lines.append(f"  warning:  {w}")
+        for s in result.skipped_files:
+            lines.append(f"  skipped:  {s}")
+        output.print_lines(lines)
+    return output.EXIT_OK
+
+
 def run(argv: list[str]) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
+
+    if args.okf:
+        return _run_okf(args)
+    if args.bundle_id or args.deterministic:
+        err = {"ok": False, "error": "--bundle-id/--deterministic require --okf"}
+        if args.json:
+            output.print_json(err)
+        else:
+            output.eprint(err["error"])
+        return output.EXIT_ERROR
 
     root = Path(args.path)
     if not root.exists():
