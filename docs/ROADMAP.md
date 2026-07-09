@@ -47,6 +47,7 @@ Corpus verified correct this time (46,517 genes on xl; the 07-02 and 07-03_0104 
 2. **PR #231** (WS3 PageRank, stacked on #230) — after #230 squash-merges: rebase onto master, retarget to master (**this triggers CI for the first time** — the 5 ws3-only commits have zero CI coverage because ci.yml only runs on PRs targeting master), then merge per the same gate. Branch already dark-ships `symbol_graph=false` (17f275d) with an in-degree ablation knob.
 3. **Bench harness commit:** untracked `scripts/bench_chain/` (incl. the 07-03 13:10 fixes), `docs/benchmarks/helix_probe_symbol.toml` (fix its stale header comment saying `helix_probe_lexical.toml`), and the 3-line progress-print diff in `benchmarks/sweep_dense_additive_weight.py`.
 4. Neither PR has a recorded review — get one on record before merging (ingest-path changes are load-bearing).
+5. **Scoring-invariance lane** (`audit/scoring-invariance`, 2026-07-09, not bench-gated — docs + tests only, zero scoring edits): symmetry audit of every dimensionful constant in the scoring path (`docs/research/2026-07-08-scoring-invariance-audit.md`) + metamorphic invariance tests (`tests/test_fusion_invariance.py`, `tests/test_retrieval_invariance.py`) pinning current behavior. Adopts the #250 diagnosis-only follow-ups; provides the regression net for the additive-path removal scheduled in v(N+2). Filed #255 (RRF rerank-additive scale mismatch) + #256 (fusion_mode layer-default disagreement) — both fixes stay bench-gated.
 
 ## Issue board (triaged 2026-07-03)
 
@@ -64,6 +65,8 @@ Corpus verified correct this time (46,517 genes on xl; the 07-02 and 07-03_0104 
 | #204 | SPLADE scale curve | outstanding (deferred by consensus) | Comment: reuse #221 beds as the "on" twins; schedule twin builds + sweep next rig-free window after the external wave. |
 | #207 | De-hardcoding wave 2 | partially-done (item 8 only) | Update body: check item 8; next slice = items 1-3 (model-ID knobs, citation root-stripping, truncation caps) — they block air-gap deploys. |
 | #208 | SNOW-2 nav benchmark re-spec | blocked (on #205 ← #203/#204) | Spec done and reaffirmed 07-01; comment status, re-date after #205 lands. No respec. |
+| #255 | RRF rerank-additive scale mismatch | open (2026-07-09, documented + pinned) | DEFECT-1 of the scoring-invariance audit. Fix is a scoring change → bench-gated; characterization test `test_defect1_authority_bonus_dominates_rrf_ordering` must be consciously flipped by the fix PR. |
+| #256 | fusion_mode layer-default disagreement | open (2026-07-09, documented + pinned) | DEFECT-2 of the scoring-invariance audit. Constructor default "additive" vs config default "rrf"; most direct-construction tests silently run additive. Pinned by `test_defect2_layer_default_disagreement`. |
 
 ## Housekeeping checklist (ALL post-`COMPLETE-FINAL` — nothing while the bench runs)
 
