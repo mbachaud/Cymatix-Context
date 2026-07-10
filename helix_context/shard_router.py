@@ -403,44 +403,136 @@ FTS5_LEXICAL_CAP = 6.0
 FTS5_IDF_FLOOR = 1e-6
 
 
-def _shard_fetch_factor() -> int:
-    """Per-shard fetch-depth factor (issue #222). Default 2 = legacy.
+# ── Per-shard fetch-depth scaling (#222) ─────────────────────────────
+#
+# The router fetches ``max_genes * multiplier`` candidates from each shard
+# BEFORE the cross-shard merge. The flat legacy ``2×`` is provably too
+# shallow whenever post-fetch rescaling (``m_shard`` ∈ [0.5, 3.0], doc-type
+# boost, global-IDF splice) can promote a doc past shallower entries from
+# other shards: promotion happens AFTER the per-shard cut, so a mid-shard
+# gold never reaches the merge. Two config knobs (config.retrieval, threaded
+# through the router — see ShardRouter.__init__):
+#
+#   shard_fetch_multiplier        (float, default 2.0)  — flat oversample.
+#   shard_fetch_scale_with_shards (bool,  default off)  — when on, amplify
+#       the multiplier by sqrt(n_shards) so a many-shard corpus oversamples
+#       each shard MORE deeply (a mid-shard gold in a populous shard must
+#       clear a deeper per-shard cut to reach the merge), capped so the
+#       per-shard query cost stays bounded on high-shard-count corpora.
+#
+# The scaled path is clamped to SHARD_FETCH_SCALE_CAP × max_genes. sqrt(n)
+# growth is gentle, but a 100-shard corpus would still request
+# 2·sqrt(100)=20× without a ceiling; 10× keeps per-shard query cost bounded
+# while still giving deep-enough oversampling for the merge. The GLOBAL
+# OUTPUT cut stays 2×max_genes regardless (query_genes ``limit``) — only the
+# per-shard FETCH grows.
+SHARD_FETCH_SCALE_CAP = 10   # × max_genes ceiling for the scaled fetch path
 
-    The router fetches ``max_genes * factor`` candidates from each shard
-    BEFORE the cross-shard merge. The flat legacy ``2`` is provably too
-    shallow whenever post-fetch rescaling (``m_shard`` ∈ [0.5, 3.0],
-    doc-type boost, global-IDF splice) can promote a doc past shallower
-    entries from other shards: promotion happens AFTER the per-shard cut,
-    so a mid-shard gold never reaches the merge. Raise via
-    ``HELIX_SHARD_FETCH_FACTOR`` (e.g. 4–6 on many-shard corpora); the
-    price is per-shard query cost. Unparseable/invalid values keep the
-    legacy 2 so behaviour never silently degrades.
+# Env overrides (dark-shipped in #235, still honored, env > toml > default):
+#   HELIX_SHARD_FETCH_FACTOR   (int) overrides shard_fetch_multiplier.
+#   HELIX_SHARD_COACT_RESERVE  (int) overrides coact_reserved_slots.
+
+
+def _env_int(name: str) -> Optional[int]:
+    """Parse an int env var. Returns None when unset/empty/unparseable.
+
+    Shared by the legacy env-knob helpers and the router's env-over-config
+    resolution so the ``HELIX_SHARD_*`` var names are parsed one way only.
     """
-    raw = os.environ.get("HELIX_SHARD_FETCH_FACTOR", "").strip()
+    raw = os.environ.get(name, "").strip()
     if not raw:
-        return 2
+        return None
     try:
-        return max(1, int(raw))
+        return int(raw)
     except ValueError:
-        return 2
+        return None
+
+
+def _shard_fetch_factor() -> int:
+    """Legacy per-shard fetch-depth factor (issue #222). Default 2 = legacy.
+
+    Reads ``HELIX_SHARD_FETCH_FACTOR`` only; retained for the standalone
+    dark-ship contract (env override, clamped to ≥1, unparseable keeps the
+    legacy 2). The router now resolves the effective multiplier from
+    config with this env as an override — see
+    :meth:`ShardRouter._resolved_fetch_multiplier`.
+    """
+    v = _env_int("HELIX_SHARD_FETCH_FACTOR")
+    return max(1, v) if v is not None else 2
 
 
 def _coact_reserve_slots() -> int:
-    """Reserved result slots for co-activation-promoted docs (issue #223).
+    """Legacy reserved-slot count for co-activation docs (issue #223).
 
-    Default 0 = legacy (no reservation: linked docs enter the final sort
-    at ``COACT_LINK_BOOST × source score`` and are truncated like any
-    other candidate — which is exactly how graph-surfaced golds get
-    displaced). Set ``HELIX_SHARD_COACT_RESERVE=N`` to guarantee up to N
-    of the final ``limit`` slots go to the best promoted linked docs.
+    Reads ``HELIX_SHARD_COACT_RESERVE`` only. Default 0 = legacy (no
+    reservation: linked docs enter the final sort at the link discount and
+    are truncated like any other candidate — exactly how graph-surfaced
+    golds get displaced). Retained for the standalone dark-ship contract;
+    the router resolves the effective value from config with this env as an
+    override — see :meth:`ShardRouter._resolved_coact_reserve`.
     """
-    raw = os.environ.get("HELIX_SHARD_COACT_RESERVE", "").strip()
-    if not raw:
-        return 0
-    try:
-        return max(0, int(raw))
-    except ValueError:
-        return 0
+    v = _env_int("HELIX_SHARD_COACT_RESERVE")
+    return max(0, v) if v is not None else 0
+
+
+def compute_per_shard_fetch(
+    max_genes: int,
+    multiplier: float,
+    scale_with_shards: bool,
+    n_shards: int,
+    cap_mult: int = SHARD_FETCH_SCALE_CAP,
+) -> int:
+    """Per-shard fetch depth before the cross-shard merge (issue #222).
+
+    Legacy defaults (``multiplier=2.0``, ``scale_with_shards=False``) return
+    ``2 * max_genes`` — byte-identical to the pre-knob flat cut.
+
+    When ``scale_with_shards`` is on and more than one shard is routed, the
+    multiplier is amplified by ``sqrt(n_shards)`` and the result is clamped
+    to ``cap_mult * max_genes`` (see SHARD_FETCH_SCALE_CAP). The floor keeps
+    the fetch at ≥ ``max_genes`` even for sub-1.0 multipliers, so a shard is
+    never asked for fewer candidates than the caller's own cut.
+
+    Raises ``ValueError`` on a negative ``multiplier`` (nonsensical).
+    """
+    if multiplier < 0:
+        raise ValueError(f"shard_fetch_multiplier must be >= 0, got {multiplier}")
+    mg = max(1, int(max_genes))
+    eff = float(multiplier)
+    if scale_with_shards and int(n_shards) > 1:
+        eff *= math.sqrt(float(n_shards))
+        depth = int(round(mg * eff))
+        # Ceiling only on the scaled path — an explicit flat multiplier is
+        # the operator's own bounded choice and is honored as given.
+        depth = min(depth, int(cap_mult) * mg)
+    else:
+        depth = int(round(mg * eff))
+    return max(mg, depth)
+
+
+def _validate_shard_knobs(
+    multiplier: float,
+    reserved_slots: int,
+    link_boost: float,
+) -> None:
+    """Guard the #222/#223 router knobs at construction (negative = raise).
+
+    A negative fetch multiplier, reserved-slot count, or link discount has
+    no meaning; raise ``ValueError`` rather than silently clamp so a
+    fat-fingered ``helix.toml`` fails loud when the router is built.
+    """
+    if multiplier < 0:
+        raise ValueError(
+            f"shard_fetch_multiplier must be >= 0, got {multiplier}"
+        )
+    if reserved_slots < 0:
+        raise ValueError(
+            f"coact_reserved_slots must be >= 0, got {reserved_slots}"
+        )
+    if link_boost < 0:
+        raise ValueError(
+            f"coact_link_boost must be >= 0, got {link_boost}"
+        )
 
 
 def _apply_coact_reserve(
@@ -526,6 +618,37 @@ class ShardRouter:
         identical tiers.
         """
         self.main_path = main_path
+
+        # Sharded fetch-depth (#222) + co-activation budget (#223) knobs.
+        # Threaded from config.retrieval via the fanned genome_kwargs (mirrors
+        # semantic_broaden_routing below, and fusion_mode's threading). These
+        # are ROUTER-only — a solo Genome accepts them (so the fan-out doesn't
+        # raise) but ignores them. Defaults reproduce the dark-shipped env-knob
+        # behaviour byte-for-byte: 2.0× flat fetch, no shard-count scaling,
+        # zero reserved co-activation slots, 0.5 link discount. The env vars
+        # HELIX_SHARD_FETCH_FACTOR / HELIX_SHARD_COACT_RESERVE still override
+        # these at query time (env > toml > default), resolved per-call.
+        # Resolved + validated FIRST, before any resource (the main.db
+        # connection) is acquired, so a fat-fingered helix.toml fails loud
+        # without leaking an open SQLite handle.
+        self._shard_fetch_multiplier: float = float(
+            genome_kwargs.get("shard_fetch_multiplier", 2.0)
+        )
+        self._shard_fetch_scale_with_shards: bool = bool(
+            genome_kwargs.get("shard_fetch_scale_with_shards", False)
+        )
+        self._coact_reserved_slots: int = int(
+            genome_kwargs.get("coact_reserved_slots", 0)
+        )
+        self._coact_link_boost: float = float(
+            genome_kwargs.get("coact_link_boost", COACT_LINK_BOOST)
+        )
+        _validate_shard_knobs(
+            self._shard_fetch_multiplier,
+            self._coact_reserved_slots,
+            self._coact_link_boost,
+        )
+
         self.main_conn = open_main_db(main_path)
         self._genome_kwargs = genome_kwargs
         self._shards: Dict[str, Genome] = {}
@@ -574,6 +697,33 @@ class ShardRouter:
         # mutates the dict). Held only around the cache check + Genome
         # construction, never around the heavy query_docs call.
         self._shards_lock = threading.Lock()
+
+    # ── Knob resolution (env > toml > default) ──────────────────────
+
+    def _resolved_fetch_multiplier(self) -> float:
+        """Effective per-shard fetch multiplier (issue #222).
+
+        ``HELIX_SHARD_FETCH_FACTOR`` (int, dark-ship override) wins when set
+        and parseable; otherwise the config-threaded
+        ``shard_fetch_multiplier`` (default 2.0). Clamped to ≥1 on the env
+        path to preserve the legacy env contract.
+        """
+        v = _env_int("HELIX_SHARD_FETCH_FACTOR")
+        if v is not None:
+            return float(max(1, v))
+        return float(self._shard_fetch_multiplier)
+
+    def _resolved_coact_reserve(self) -> int:
+        """Effective reserved co-activation slot count (issue #223).
+
+        ``HELIX_SHARD_COACT_RESERVE`` (int, dark-ship override) wins when set
+        and parseable; otherwise the config-threaded ``coact_reserved_slots``
+        (default 0). Clamped to ≥0.
+        """
+        v = _env_int("HELIX_SHARD_COACT_RESERVE")
+        if v is not None:
+            return max(0, v)
+        return max(0, int(self._coact_reserved_slots))
 
     # ── Shard lifecycle ─────────────────────────────────────────────
 
@@ -777,14 +927,21 @@ class ShardRouter:
         # The price is per-shard query cost; in benchmarks the medium
         # fixture's 6 shards stay well under 1s with this fan-out.
         #
-        # Issue #222: the factor is env-tunable (HELIX_SHARD_FETCH_FACTOR,
-        # default 2 = legacy byte-identical). The flat 2x is too shallow
-        # whenever post-fetch rescaling (m_shard, doc-type boost,
-        # global-IDF splice) would promote a mid-shard doc past other
-        # shards' entries — the promotion happens AFTER this cut, so the
-        # doc never reaches the merge. Raise to 4–6 on many-shard corpora.
-        per_shard_fetch = max(
-            int(max_genes), int(max_genes) * _shard_fetch_factor(),
+        # Issue #222: the depth is config-tunable (shard_fetch_multiplier /
+        # shard_fetch_scale_with_shards, threaded through the router;
+        # HELIX_SHARD_FETCH_FACTOR still overrides). Defaults (2.0×, scale
+        # off) are byte-identical to the legacy flat 2×max_genes cut. The
+        # flat 2× is too shallow whenever post-fetch rescaling (m_shard,
+        # doc-type boost, global-IDF splice) would promote a mid-shard doc
+        # past other shards' entries — the promotion happens AFTER this cut,
+        # so the doc never reaches the merge. Scaling by sqrt(n_shards)
+        # oversamples populous many-shard corpora more deeply; the global
+        # OUTPUT cut below stays 2×max_genes regardless.
+        per_shard_fetch = compute_per_shard_fetch(
+            max_genes=int(max_genes),
+            multiplier=self._resolved_fetch_multiplier(),
+            scale_with_shards=self._shard_fetch_scale_with_shards,
+            n_shards=len(shard_names),
         )
 
         def _fetch(shard_name: str):
@@ -1231,7 +1388,7 @@ class ShardRouter:
             src_score = float(corrected.get(src_gid, 0.0))
             if src_score <= 0.0:
                 continue
-            boosted = src_score * COACT_LINK_BOOST
+            boosted = src_score * self._coact_link_boost
             for linked_gid, _weight in neighbors:
                 # Already a candidate — never re-score it down; the
                 # existing (higher) merge score stands.
@@ -1328,12 +1485,14 @@ class ShardRouter:
             ),
         )
         # Issue #223: optionally reserve slots for promoted linked docs so
-        # the 0.5x-discounted graph-surfaced candidates aren't displaced
-        # by the flat truncation. Reserve=0 (default) is byte-identical
-        # to the legacy plain [:limit] cut.
+        # the link-discounted graph-surfaced candidates aren't displaced by
+        # the flat truncation. The reserve count is config-threaded
+        # (coact_reserved_slots; HELIX_SHARD_COACT_RESERVE overrides).
+        # Reserve=0 (default) is byte-identical to the legacy plain [:limit]
+        # cut.
         return _apply_coact_reserve(
             union_ids, promoted, corrected, rrf_all,
-            limit, _coact_reserve_slots(),
+            limit, self._resolved_coact_reserve(),
         )
 
     # ── Lifecycle ───────────────────────────────────────────────────

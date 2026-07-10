@@ -558,6 +558,30 @@ class RetrievalConfig:
     pki_weight: float = 1.0                 # PKI tier, RRF participant
     # Note: filename_anchor_weight, sr_weight reuse their existing knobs above.
 
+    # ── Sharded-retrieval fetch depth + co-activation budget (#222/#223) ──
+    # These bind ONLY on the sharded read path (ShardRouter); blob mode never
+    # constructs a router, so they are inert there. Threaded to the router via
+    # open_read_source -> ShardedGenomeAdapter -> ShardRouter (mirrors
+    # semantic_broaden_routing). Defaults reproduce the dark-shipped env-knob
+    # behaviour byte-for-byte and keep the sharded merge identical to today.
+    #
+    # #222 per-shard fetch depth: the router fetches max_genes * multiplier
+    #   candidates per shard before the cross-shard merge. multiplier=2.0 is
+    #   the legacy flat 2× cut. scale_with_shards amplifies the multiplier by
+    #   sqrt(n_shards) (clamped to 10×max_genes) so populous many-shard
+    #   corpora oversample each shard deeply enough that a mid-shard gold
+    #   survives to the merge. HELIX_SHARD_FETCH_FACTOR (int) overrides.
+    shard_fetch_multiplier: float = 2.0
+    shard_fetch_scale_with_shards: bool = False
+    # #223 co-activation reserved budget: reserve up to N of the final
+    #   2×max_genes output slots for newly graph-promoted (co-activated) docs
+    #   so a link-discounted gold isn't truncated by lexical incumbents.
+    #   0 = legacy (no reservation). HELIX_SHARD_COACT_RESERVE (int) overrides.
+    #   coact_link_boost is the discount a linked doc enters at (× its source
+    #   doc's corrected score); 0.5 == the shipped constant.
+    coact_reserved_slots: int = 0
+    coact_link_boost: float = 0.5
+
 
 @dataclass
 class AbstainClassFloors:
@@ -1099,6 +1123,13 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             semantic_dense_additive_weight=float(r.get("semantic_dense_additive_weight", cfg.retrieval.semantic_dense_additive_weight)),
             semantic_broaden_routing=bool(r.get("semantic_broaden_routing", cfg.retrieval.semantic_broaden_routing)),
             pki_weight=float(r.get("pki_weight", cfg.retrieval.pki_weight)),
+            # Issues #222/#223: sharded per-shard fetch depth + co-activation
+            # reserved budget. Router-only knobs (blob mode ignores them);
+            # defaults reproduce the dark-shipped env-knob behaviour.
+            shard_fetch_multiplier=float(r.get("shard_fetch_multiplier", cfg.retrieval.shard_fetch_multiplier)),
+            shard_fetch_scale_with_shards=bool(r.get("shard_fetch_scale_with_shards", cfg.retrieval.shard_fetch_scale_with_shards)),
+            coact_reserved_slots=int(r.get("coact_reserved_slots", cfg.retrieval.coact_reserved_slots)),
+            coact_link_boost=float(r.get("coact_link_boost", cfg.retrieval.coact_link_boost)),
         )
 
     # Stage 4 (2026-05-08) abstain config — global vs per_classifier mode.

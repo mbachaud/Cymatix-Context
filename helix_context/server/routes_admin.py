@@ -1067,6 +1067,12 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
                 dense_weight=config.retrieval.dense_weight,
                 dense_additive_weight=config.retrieval.dense_additive_weight,
                 dense_additive_min_cosine=config.retrieval.dense_additive_min_cosine,
+                # Issues #222/#223: keep the swap path in sync with the boot
+                # path — sharded fetch depth + co-activation reserved budget.
+                shard_fetch_multiplier=config.retrieval.shard_fetch_multiplier,
+                shard_fetch_scale_with_shards=config.retrieval.shard_fetch_scale_with_shards,
+                coact_reserved_slots=config.retrieval.coact_reserved_slots,
+                coact_link_boost=config.retrieval.coact_link_boost,
             )
             new_store.read_only = read_only
 

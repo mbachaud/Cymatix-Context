@@ -834,6 +834,15 @@ class HelixContextManager:
             semantic_dense_additive_weight=config.retrieval.semantic_dense_additive_weight,
             semantic_broaden_routing=config.retrieval.semantic_broaden_routing,
             pki_weight=config.retrieval.pki_weight,
+            # Issues #222/#223: sharded per-shard fetch depth + co-activation
+            # reserved budget. Router-only knobs — fanned to ShardRouter via
+            # open_read_source -> ShardedGenomeAdapter; also passed to each
+            # per-shard Genome (ignored there). Defaults reproduce the
+            # dark-shipped env-knob behaviour byte-for-byte.
+            shard_fetch_multiplier=config.retrieval.shard_fetch_multiplier,
+            shard_fetch_scale_with_shards=config.retrieval.shard_fetch_scale_with_shards,
+            coact_reserved_slots=config.retrieval.coact_reserved_slots,
+            coact_link_boost=config.retrieval.coact_link_boost,
         )
 
         # Persistence manager (distributed knowledge store clones)

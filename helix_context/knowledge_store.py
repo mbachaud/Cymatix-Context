@@ -567,6 +567,13 @@ class KnowledgeStore:
         # fanned genome_kwargs don't raise (Genome ignores it).
         semantic_dense_additive_weight: float = 16.0,
         semantic_broaden_routing: bool = True,
+        # Sharded-retrieval router knobs (#222/#223): read by ShardRouter;
+        # accepted here so the fanned genome_kwargs don't raise (a solo
+        # Genome ignores them — they only bind on the cross-shard merge path).
+        shard_fetch_multiplier: float = 2.0,
+        shard_fetch_scale_with_shards: bool = False,
+        coact_reserved_slots: int = 0,
+        coact_link_boost: float = 0.5,
         pki_weight: float = 1.0,
         main_conn: Optional[sqlite3.Connection] = None,
         shard_name: str = "main",
