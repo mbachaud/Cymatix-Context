@@ -1,10 +1,81 @@
 """
 Scoring blend: apply cymatics + harmonic bin + TCM as post-retrieve refiners.
 
-Extracted from ``context_manager.py`` (Sprint refactor, 2026-05).
-The logic is byte-identical to the inline ``_apply_candidate_refiners``
-method it replaces -- only the calling convention changed (explicit
-parameters instead of ``self``).
+Extracted from ``context_manager.py`` (Sprint refactor, 2026-05). The
+``blend_mode="legacy"`` path is byte-identical to the inline
+``_apply_candidate_refiners`` method it replaces -- only the calling
+convention changed (explicit parameters instead of ``self``).
+
+Blend-mode knob (Issue #255 / audit §4 item 5, 2026-07-10)
+----------------------------------------------------------
+The blend layer runs three post-fusion refiners over the candidate set:
+
+* **cymatics** — spectral flux score, scaled by an absolute ``0.5``
+  (``blend.py`` cymatics block; the ``* 0.5`` literal). Adds to
+  ``genome.last_query_scores`` and re-sorts candidates.
+* **harmonic_bin** — overtone-series boost, already normalized to ``[0, 1.5]``
+  by ``ray_trace.harmonic_bin_boost`` (the ``w * 1.5`` at ``ray_trace.py:485``).
+  Adds to ``genome.last_query_scores`` and re-sorts candidates.
+* **TCM** — temporal-context bonus, ``max(0, 0.3 * sim)`` (``tcm.BONUS_WEIGHT``
+  ``= 0.3``, bound here as ``weight=0.3``). Does NOT mutate
+  ``last_query_scores``; it only re-sorts candidates by ``score + tcm_bonus``.
+
+Every one of these is a *post-fusion mutation on an unspecified score scale*
+(audit §2d, class d): ``0.5`` is a mild nudge on the legacy additive scale
+(O(3-45)) but an overwrite on the RRF scale (O(0.05-0.5)). They also
+contaminate the ``[know]`` logistic, which reads ``top_score``/``score_gap``
+straight off the mutated ``last_query_scores`` map. This module exposes the
+three modes below; ``"legacy"`` is the shipped default and ships INERT.
+
+``legacy``
+    Absolute additive blend. ``score[g] += bonus`` for cymatics/harmonic;
+    TCM sorts by ``score[g] + tcm_bonus[g]``. Byte-identical to the pre-knob
+    inline block, so untouched configs are bit-for-bit unchanged.
+
+``scale_relative``
+    Convert each absolute additive bonus ``b`` into a **bounded multiplier**
+    of the candidate's own score. For a signal with absolute cap ``C``
+    (cymatics ``0.5``, harmonic ``1.5``, TCM ``0.3``) and a reference additive
+    score ``S_REF`` (``_BLEND_SCALE_REF``)::
+
+        signal_norm = clamp(b / C, 0, 1)          # ∈ [0, 1], scale-free
+        w           = C / S_REF                    # preserves the signal's
+                                                   #   relative magnitude at a
+                                                   #   typical additive score
+        score[g]   *= (1 + w * signal_norm)        # == 1 + clamp(b, 0, C)/S_REF
+
+    The ``C`` cancels for in-range ``b``, so the mapping reduces to the clean
+    form ``score[g] *= (1 + b / S_REF)``: an absolute bonus ``b`` scales the
+    candidate's own score by the fraction ``b / S_REF`` it *would* have
+    represented on a typical additive score, instead of adding a fixed amount.
+    Because every bonus is independent of the input score magnitudes and the
+    map is multiplicative, the emitted order is **invariant under uniform
+    rescale of the input scores** (multiplying every score by ``c > 0`` scales
+    every product by the same ``c`` — order preserved). That is the invariance
+    the additive form breaks: a fixed ``+0.5`` flips rankings as the score
+    scale shifts (the very defect audit §2d flags). The relative magnitudes of
+    the three signals are preserved: with ``S_REF = 10.0`` the per-signal max
+    boosts are cymatics ``×1.05``, harmonic ``×1.15``, TCM ``×1.03`` — the same
+    ``0.5 : 1.5 : 0.3`` ratio as the additive constants, now bounded.
+    ``S_REF = 10.0`` is a representative mid-band additive score (audit §2d
+    cites additive tier scores as O(3-45); 10.0 sits inside that band). It is
+    a documented module constant, not a per-signal hand-tuned exchange rate.
+
+``off``
+    Skip the blend mutations of ``last_query_scores`` entirely: none of the
+    three refiners run their scoring/sort step, so ``last_query_scores`` is
+    left exactly as fusion produced it and candidates keep their pure-fused
+    order. The refiners' one **non-scoring** side effect — the rerank/model
+    truncation of the candidate list to ``max_genes`` — still runs. This
+    clears the desk-test off-cell exact-inversion floor
+    (``docs/research/2026-07-10-rerank-combinator-desktest.md`` §5): that floor
+    is exactly this blend layer mutating order under the lexical probe.
+
+Note on ``[know]`` (audit item 7): the ``[know]`` confidence logistic reads
+``top_score``/``score_gap`` off ``last_query_scores`` (``context_packet.py``).
+``blend_mode="off"``/``"scale_relative"`` therefore change what ``[know]``
+sees; this knob does NOT touch ``[know]`` behavior, and the s_ref/g_ref re-fit
+is sequenced BEHIND this knob's graduation (audit §4 item 7).
 """
 
 from __future__ import annotations
@@ -18,6 +89,44 @@ if TYPE_CHECKING:
     from ..schemas import Gene
 
 log = logging.getLogger(__name__)
+
+__all__ = ["apply_candidate_refiners", "VALID_BLEND_MODES"]
+
+# The three valid blend modes. ``HelixContextManager.__init__`` validates the
+# configured value against this same set so a typo in helix.toml fails fast at
+# construction.
+VALID_BLEND_MODES: Tuple[str, ...] = ("legacy", "scale_relative", "off")
+
+# scale_relative reference additive score. A max-cap bonus C becomes a
+# multiplier boost of C / _BLEND_SCALE_REF (cymatics ×1.05, harmonic ×1.15,
+# TCM ×1.03). 10.0 is a representative mid-band additive tier score (audit §2d
+# cites O(3-45)); see the module docstring for the full derivation.
+_BLEND_SCALE_REF: float = 10.0
+
+# Per-signal absolute caps — the additive-scale magnitudes audit §2d lists.
+# Used only by scale_relative to normalize each bonus into signal_norm ∈ [0,1].
+_CYMATICS_ABS: float = 0.5
+_HARMONIC_ABS: float = 1.5
+_TCM_ABS: float = 0.3
+
+
+def _scale_relative_multiplier(bonus: float, abs_cap: float) -> float:
+    """Bounded multiplier for an absolute additive blend bonus.
+
+    ``signal_norm = clamp(bonus / abs_cap, 0, 1)``; ``w = abs_cap / S_REF``;
+    returns ``1 + w * signal_norm`` (== ``1 + clamp(bonus, 0, abs_cap)/S_REF``).
+    Non-positive bonuses map to a no-op ``1.0`` multiplier (the rerank signals
+    here are non-negative in practice — cymatics flux ≥ 0, harmonic ∈ [0, 1.5],
+    TCM ``max(0, ...)``). See the module docstring for the invariance argument.
+    """
+    if abs_cap <= 0.0:
+        return 1.0
+    signal_norm = bonus / abs_cap
+    if signal_norm <= 0.0:
+        return 1.0
+    if signal_norm > 1.0:
+        signal_norm = 1.0
+    return 1.0 + (abs_cap / _BLEND_SCALE_REF) * signal_norm
 
 
 def apply_candidate_refiners(
@@ -39,15 +148,33 @@ def apply_candidate_refiners(
     tcm_session: Optional[TCMSession] = None,
     ray_trace_theta: bool = False,
     theta_weight: float = 1.0,
+    blend_mode: str = "legacy",
 ) -> Tuple[List[Gene], Dict[str, Dict[str, float]]]:
     """Apply post-retrieve candidate refiners before assembly or fingerprinting.
 
     Returns ``(candidates, refiner_contrib)`` where *refiner_contrib* maps
     gene_id -> {refiner_name: bonus}.
+
+    *blend_mode* selects how the three refiners combine with the fused scores;
+    see the module docstring. ``"legacy"`` (default) is byte-identical to the
+    pre-knob inline block.
+
+    Raises:
+        ValueError: on an unknown *blend_mode* (defensive — the manager
+            validates at construction, so this only trips on a direct
+            mis-call).
     """
+    if blend_mode not in VALID_BLEND_MODES:
+        raise ValueError(
+            "blend_mode must be one of "
+            f"{VALID_BLEND_MODES}; got {blend_mode!r}"
+        )
+    _off = blend_mode == "off"
+    _scale = blend_mode == "scale_relative"
+
     refiner_contrib: Dict[str, Dict[str, float]] = {}
 
-    if use_cymatics and cymatics_enabled and len(candidates) > 1:
+    if use_cymatics and cymatics_enabled and len(candidates) > 1 and not _off:
         try:
             from .cymatics import (
                 query_spectrum, cached_doc_spectrum,
@@ -67,7 +194,10 @@ def apply_candidate_refiners(
                 bonus = flux_score_dispatch(q_spec, g_spec, weights, cymatics_distance_metric) * 0.5
                 if bonus:
                     refiner_contrib.setdefault(doc.gene_id, {})["cymatics"] = bonus
-                scores[doc.gene_id] = scores.get(doc.gene_id, 0) + bonus
+                if _scale:
+                    scores[doc.gene_id] = scores.get(doc.gene_id, 0) * _scale_relative_multiplier(bonus, _CYMATICS_ABS)
+                else:
+                    scores[doc.gene_id] = scores.get(doc.gene_id, 0) + bonus
             genome.last_query_scores = scores
             candidates.sort(key=lambda g: scores.get(g.gene_id, 0), reverse=True)
         except Exception:
@@ -88,7 +218,7 @@ def apply_candidate_refiners(
         else:
             candidates = candidates[:max_genes]
 
-    if use_harmonic_bin and len(candidates) >= 3:
+    if use_harmonic_bin and len(candidates) >= 3 and not _off:
         try:
             from .ray_trace import harmonic_bin_boost
             seed_ids = [g.gene_id for g in candidates[:3]]
@@ -115,13 +245,16 @@ def apply_candidate_refiners(
                     if doc.gene_id in overtones:
                         bonus = overtones[doc.gene_id]
                         refiner_contrib.setdefault(doc.gene_id, {})["harmonic_bin"] = bonus
-                        scores[doc.gene_id] = scores.get(doc.gene_id, 0) + bonus
+                        if _scale:
+                            scores[doc.gene_id] = scores.get(doc.gene_id, 0) * _scale_relative_multiplier(bonus, _HARMONIC_ABS)
+                        else:
+                            scores[doc.gene_id] = scores.get(doc.gene_id, 0) + bonus
                 genome.last_query_scores = scores
                 candidates.sort(key=lambda g: scores.get(g.gene_id, 0), reverse=True)
         except Exception:
             log.debug("Harmonic bin boost failed", exc_info=True)
 
-    if use_tcm and tcm_session is not None and tcm_session.depth > 0:
+    if use_tcm and tcm_session is not None and tcm_session.depth > 0 and not _off:
         try:
             from .tcm import tcm_bonus
             bonuses = tcm_bonus(tcm_session, candidates, weight=0.3)
@@ -129,10 +262,16 @@ def apply_candidate_refiners(
                 if bonus:
                     refiner_contrib.setdefault(gid, {})["tcm"] = bonus
             scores = genome.last_query_scores or {}
-            candidates.sort(
-                key=lambda g: scores.get(g.gene_id, 0) + bonuses.get(g.gene_id, 0),
-                reverse=True,
-            )
+            if _scale:
+                candidates.sort(
+                    key=lambda g: scores.get(g.gene_id, 0) * _scale_relative_multiplier(bonuses.get(g.gene_id, 0.0), _TCM_ABS),
+                    reverse=True,
+                )
+            else:
+                candidates.sort(
+                    key=lambda g: scores.get(g.gene_id, 0) + bonuses.get(g.gene_id, 0),
+                    reverse=True,
+                )
         except Exception:
             pass
 

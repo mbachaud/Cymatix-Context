@@ -685,6 +685,18 @@ class HelixContextManager:
     def __init__(self, config: HelixConfig):
         self.config = config
 
+        # Blend-layer mode (Issue #255 / audit §4 item 5). "legacy" is
+        # byte-identical to the shipped additive blend. Validated first so a
+        # typo in helix.toml fails fast — before any genome construction —
+        # mirroring the store's rerank_combinator guard.
+        from .scoring.blend import VALID_BLEND_MODES as _VALID_BLEND_MODES
+        self._blend_mode = config.retrieval.blend_mode
+        if self._blend_mode not in _VALID_BLEND_MODES:
+            raise ValueError(
+                "[retrieval] blend_mode must be one of "
+                f"{_VALID_BLEND_MODES}; got {self._blend_mode!r}"
+            )
+
         # Activity tracking for GET /admin/components.
         # Bumped on every /context and /ingest call by server.py. Used to
         # derive running/idle status for the launcher's tools panel.
@@ -2697,6 +2709,7 @@ class HelixContextManager:
             tcm_session=self._tcm_session,
             ray_trace_theta=getattr(self.config.retrieval, "ray_trace_theta", False),
             theta_weight=self.config.retrieval.theta_weight,
+            blend_mode=self._blend_mode,
         )
 
     # -- Internal: Step 5 (assemble) -----------------------------------

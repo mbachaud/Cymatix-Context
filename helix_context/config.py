@@ -510,6 +510,25 @@ class RetrievalConfig:
     # fused_tier uniform per-class rank post-multiplier (single weight — a
     # per-class weight would re-introduce hand-picked exchange rates).
     rerank_tier_weight: float = 1.0
+    # Issue #255 / audit §4 item 5 (2026-07-10): post-fusion BLEND layer mode.
+    # The blend layer (cymatics 0.5 / harmonic_bin 1.5 / TCM 0.3) mutates
+    # ``genome.last_query_scores`` AFTER fusion, on whatever scale the map
+    # carries (DEFECT class 2d, audit §2d) — a mild nudge on additive scores,
+    # an overwrite on RRF scores — and it also contaminates the ``[know]``
+    # logistic inputs, which read the mutated map. This knob is the graduation
+    # instrument for audit item 5; it is bench-gated and ships INERT.
+    # Design + exact scale_relative mapping: helix_context/scoring/blend.py.
+    #   "legacy"         — absolute additive blend (current behavior; BYTE-
+    #                      IDENTICAL default, so untouched configs are unchanged).
+    #   "scale_relative" — each absolute blend bonus b becomes a bounded
+    #                      multiplier (1 + b/S_REF, S_REF a documented module
+    #                      constant in blend.py) of the candidate's own score
+    #                      (order-preserving under uniform rescale).
+    #   "off"            — skip the blend mutations of last_query_scores entirely
+    #                      (pure fused ranking; the rerank/truncation side effect
+    #                      still runs). Clears the desk-test off-cell inversion
+    #                      floor (docs/research/2026-07-10-rerank-combinator-desktest.md §5).
+    blend_mode: str = "legacy"              # legacy | scale_relative | off
     fts5_weight: float = 3.0                # cap-only in additive: cap = 2.0 × this (6.0)
     splade_weight: float = 3.5              # leading coeff == tier cap
     tag_exact_weight: float = 3.0           # current weight × match_count
@@ -1080,6 +1099,9 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             rerank_combinator=str(r.get("rerank_combinator", cfg.retrieval.rerank_combinator)),
             rerank_band_delta=float(r.get("rerank_band_delta", cfg.retrieval.rerank_band_delta)),
             rerank_tier_weight=float(r.get("rerank_tier_weight", cfg.retrieval.rerank_tier_weight)),
+            # Issue #255 / audit §4 item 5: post-fusion blend layer mode.
+            # Default "legacy" is byte-identical to the shipped additive blend.
+            blend_mode=str(r.get("blend_mode", cfg.retrieval.blend_mode)),
             fts5_weight=float(r.get("fts5_weight", cfg.retrieval.fts5_weight)),
             splade_weight=float(r.get("splade_weight", cfg.retrieval.splade_weight)),
             tag_exact_weight=float(r.get("tag_exact_weight", cfg.retrieval.tag_exact_weight)),
