@@ -436,6 +436,29 @@ dense_additive_min_cosine = 0.15
 pki_weight = 1.0                        # path-key-index tier, RRF participant
 # Note: filename_anchor_weight (above) and sr_weight (above) are reused.
 
+# ── Sharded-retrieval fetch depth + co-activation budget (#222/#223) ──
+# Bind ONLY on the sharded read path (HELIX_USE_SHARDS=1 / ShardRouter); blob
+# mode never builds a router, so these are inert there. Defaults below are
+# byte-identical to the pre-knob (and dark-shipped env-knob) sharded merge.
+# Env overrides still win: HELIX_SHARD_FETCH_FACTOR (int) > shard_fetch_multiplier,
+# HELIX_SHARD_COACT_RESERVE (int) > coact_reserved_slots.
+#
+# #222 — per-shard fetch depth. The router fetches max_genes * multiplier
+# candidates from each shard before the cross-shard merge. The flat 2× equals
+# the global output cut (zero oversampling); a mid-shard gold at intra-shard
+# rank > 2×max_genes never reaches the merge. Turn scale_with_shards on to
+# amplify the multiplier by sqrt(n_shards) (clamped to 10×max_genes) so
+# populous many-shard corpora oversample deeply enough.
+shard_fetch_multiplier = 2.0            # 2.0 == legacy flat 2×max_genes fetch
+shard_fetch_scale_with_shards = false   # true => × sqrt(n_shards), cap 10×max_genes
+# #223 — co-activation reserved budget. Reserve up to N of the final
+# 2×max_genes output slots for newly graph-promoted (co-activated) docs so a
+# link-discounted gold isn't truncated by lexical incumbents. 0 == legacy
+# (no reservation). coact_link_boost is the discount a linked doc enters at
+# (× its source doc's corrected score); 0.5 == the shipped constant.
+coact_reserved_slots = 0                # 0 == legacy (no reserved slice)
+coact_link_boost = 0.5                  # linked-doc score = boost × source score
+
 [plr]
 # Stacked PLR query-confidence head (STATISTICAL_FUSION.md §C3).
 #
