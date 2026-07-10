@@ -27,6 +27,21 @@ but do not abort startup.
 The order of sections below mirrors the file's top-to-bottom order so
 operators reading along can follow each block in place.
 
+Each section's **Keys** table lives between a
+"BEGIN GENERATED: config-tables:&lt;name&gt;" /
+"END GENERATED" HTML-comment marker pair and is produced by
+[`scripts/gen_config_reference.py`](../scripts/gen_config_reference.py)
+directly from the `helix_context/config.py` dataclasses (field name,
+type annotation, default value, and — where a comment sits next to the
+field in the source — a harvested description). **Do not hand-edit the
+rows inside a marked region**: edit the field / comment in
+`helix_context/config.py` and re-run
+`python scripts/gen_config_reference.py` instead. Everything outside
+the markers (this intro, each section's **Purpose**, **Example**,
+**Migration notes**, and **Cross-refs** prose) stays hand-authored.
+`tests/test_config_reference_sync.py` fails if a generated region ever
+drifts from a fresh run of the script (issue #219 slice 4).
+
 ---
 
 ## `[ribosome]`
@@ -43,34 +58,41 @@ even when other knobs in this section are populated. See
 
 **Keys.**
 
-| Key | Type | Default | Effect |
+<!-- BEGIN GENERATED: config-tables:ribosome -->
+| Key | Type | Default | Description |
 |---|---|---|---|
-| `enabled` | bool | `false` | Master opt-in. When `false`, every other key in this section is ignored at runtime; `RibosomeConfig.effective_backend` returns `"disabled"`. The shipped value (`helix.toml:21`). |
-| `backend` | str | `"ollama"` | Legacy/default placeholder. Only `"litellm"` and `"deberta"` are honored when `enabled = true` (see `RibosomeConfig.effective_backend` in `helix_context/config.py:69-80`). `"ollama"` and `"claude"` resolve to `"disabled"` at runtime even when `enabled = true`. The shipped value (`helix.toml:22`). |
-| `model` | str | `"gemma4:e2b"` | Ollama model name for `pack()` and `replicate()` when the compressor runs against Ollama. ~2GB VRAM footprint. The shipped value (`helix.toml:23`). |
-| `base_url` | str | `"http://localhost:11434"` | Ollama API endpoint. The shipped value (`helix.toml:24`). |
-| `timeout` | float | `120.0` | Per-request timeout in seconds for compressor calls. Bumped from the 10s code default to 120s for bulk ingestion. The shipped value (`helix.toml:25`). |
-| `keep_alive` | str | `"30m"` | Ollama `keep_alive` directive that pins the compressor model in VRAM between calls. Critical when the same Ollama instance also serves the chat upstream (model swap latency dominates). The shipped value (`helix.toml:26`). |
-| `warmup` | bool | `false` | Pre-load the compressor model on server start. Disabled in the shipped file because long-running benches keep the larger generation model resident. The shipped value (`helix.toml:27`). |
-| `query_expansion_enabled` | bool | `false` | Step 0 LLM query-intent expansion (one compressor call per novel query, LRU-cached). `false` = strictly LLM-free `/context`; the 12 retrieval tiers run on raw query text plus the `[synonyms]` map. Flipping on adds 2-3pp on ambiguous queries at the cost of one compressor call per request. The shipped value (`helix.toml:28`). |
-| `query_decomposition_enabled` | bool | `false` | Sub-query decomposition (Step 2). Decomposes broad queries into 2-4 point-fact sub-queries via one LLM call. Only fires for `multi_hop` and `default` classifier classes. Requires `query_expansion_enabled = true`. The shipped value (`helix.toml:31`). |
-| `claude_model` | str | `"claude-haiku-4-5-20251001"` | Claude model used when `backend = "claude"`. Code default in `helix_context/config.py:33`. Commented in `helix.toml:38`. |
-| `claude_base_url` | str | `""` | Empty = direct Anthropic API. Set to a proxy URL (e.g., `http://127.0.0.1:8787` for Headroom) to route through a gateway. Code default in `helix_context/config.py:34`. Commented in `helix.toml:39`. |
-| `litellm_model` | str | `"gemini/gemini-2.5-flash"` | LiteLLM model string used when `backend = "litellm"`. Code default in `helix_context/config.py:35`. The commented example `"ollama/gemma4:e2b"` in `helix.toml:40` shows local routing. |
-| `rerank_model_path` | str | `"training/models/rerank"` | DeBERTa rerank head artifact path. Code default only (`helix_context/config.py:36`). |
-| `splice_model_path` | str | `"training/models/splice"` | DeBERTa splice head artifact path. Code default only (`helix_context/config.py:37`). |
-| `splice_threshold` | float | `0.5` | Probability cutoff for the splice head. Code default only (`helix_context/config.py:38`). |
-| `nli_model_path` | str | `"training/models/nli"` | NLI head artifact path. Code default only (`helix_context/config.py:39`). |
-| `nli_splice_bonus` | float | `0.15` | Probability bonus for entailment-linked fragments. Code default only (`helix_context/config.py:40`). |
-| `nli_splice_penalty` | float | `0.15` | Probability penalty for alternation-linked fragments. Code default only (`helix_context/config.py:41`). |
-| `device` | str | `"auto"` | **DEPRECATED.** Legacy device hint kept for one release. The loader emits a `WARNING` whenever this key is set, urging the operator to move to `[hardware] device`. When both keys are present, `[hardware] device` wins (`helix_context/config.py:817-834`). |
+| `enabled` | `bool` | `false` | Master switch; false = ignore compressor config/runtime |
+| `model` | `str` | `"gemma4:e2b"` | default aligned with shipped helix.toml (2026-06-12 default-honesty pass): the shipped toml pins the light pack/replicate fallback model instead of "auto" (compressor auto-detect). Inert while enabled=False. |
+| `base_url` | `str` | `"http://localhost:11434"` |  |
+| `timeout` | `float` | `120.0` | default aligned with shipped helix.toml (2026-06-12 default-honesty pass) — bulk ingestion headroom |
+| `keep_alive` | `str` | `"30m"` | How long Ollama keeps the compressor model loaded |
+| `warmup` | `bool` | `false` | Pre-load model on server start. Default aligned with shipped helix.toml (2026-06-12 default-honesty pass) |
+| `backend` | `str` | `"none"` | disabled-state placeholder; only "deberta" or "litellm" are honored when enabled. Default aligned with shipped helix.toml (2026-06-12 default-honesty pass) |
+| `claude_model` | `str` | `"claude-haiku-4-5-20251001"` | Claude model when backend="claude" |
+| `claude_base_url` | `str` | `""` | Proxy URL (e.g. Headroom at http://127.0.0.1:8787); "" = direct |
+| `litellm_model` | `str` | `"gemini/gemini-2.5-flash"` | LiteLLM model string when backend="litellm" |
+| `rerank_model_path` | `str` | `"training/models/rerank"` |  |
+| `splice_model_path` | `str` | `"training/models/splice"` |  |
+| `splice_threshold` | `float` | `0.5` |  |
+| `nli_model_path` | `str` | `"training/models/nli"` |  |
+| `nli_splice_bonus` | `float` | `0.15` | Prob bonus for entailment-linked fragments |
+| `nli_splice_penalty` | `float` | `0.15` | Prob penalty for alternation-linked fragments |
+| `device` | `str` | `"auto"` | "auto", "cpu", "cuda" |
+| `query_expansion_enabled` | `bool` | `false` | Step 0 query-intent expansion fires ONE LLM call per novel query (LRU-cached) upstream of the 12-tone retrieval stack. Flip to false for a strictly LLM-free /context pipeline — the 12 tiers below still run on raw query text + synonym map. See context_manager _expand_query_intent. default aligned with shipped helix.toml (2026-06-12 default-honesty pass): false keeps /context strictly LLM-free (the design default — docs/MISSION.md); flip on for ~2-3pp on ambiguous queries at one ribosome call per novel query. |
+| `query_decomposition_enabled` | `bool` | `false` | Step 2 sub-query decomposition: decomposes broad queries into 2-4 point-fact sub-queries via one LLM call. Only fires for multi_hop/default classifier classes. Dark-shipped (default off). |
+<!-- END GENERATED -->
+
+`device` is **DEPRECATED**: a legacy device hint kept for one release.
+The loader emits a `WARNING` whenever this key is set, urging the
+operator to move to `[hardware] device`. When both keys are present,
+`[hardware] device` wins (`helix_context/config.py:1267-1279`).
 
 **Example.**
 
 ```toml
 [ribosome]
 enabled = false                       # design pillar — leave false for LLM-free /context
-backend = "ollama"                    # placeholder; only "litellm"/"deberta" honored when enabled
+backend = "none"                      # disabled-state placeholder; only "litellm"/"deberta" honored when enabled
 model = "gemma4:e2b"
 base_url = "http://localhost:11434"
 timeout = 120
@@ -105,11 +127,20 @@ from `hardware.init_from_config()` at server startup.
 
 **Keys.**
 
-| Key | Type | Default | Effect |
+<!-- BEGIN GENERATED: config-tables:hardware -->
+| Key | Type | Default | Description |
 |---|---|---|---|
-| `device` | str | `"auto"` | Device picker. Accepts `"auto"`, `"cuda"`, `"rocm"`, `"mps"`, `"cpu"`. `"auto"` walks the priority list `cuda -> rocm -> mps -> cpu` and falls back loudly to CPU on probe failure (state surfaced via `/health`). One-shot override via `HELIX_DEVICE=cpu` env var. The shipped value (`helix.toml:47`). |
-| `batch_sizes` | inline-table or str `"auto"` | `{}` (auto) | Per-model batch-size overrides applied on top of the auto-detected VRAM/RAM-aware table in `helix_context/hardware.py`. Empty dict (or the literal string `"auto"`) means "use the table". When provided as a TOML inline table, every key is cast to `int`. The shipped value uses the `"auto"` string sentinel (`helix.toml:52`). Loader normalisation lives in `helix_context/config.py:809-814`. |
-| `low_vram_threshold_gb` | float | `4.0` | Soft warning threshold (GB). VRAM under this tier surfaces a `low_vram` hint via `/health` and a one-time tray balloon. Set `0.0` to disable. The shipped value (`helix.toml:56`). Surfaced for downstream consumers — not consulted by the picker itself. |
+| `device` | `str` | `"auto"` |  |
+| `batch_sizes` | `Dict[str, int]` | `{}` |  |
+| `low_vram_threshold_gb` | `float` | `4.0` |  |
+| `lazy_encoders` | `bool` | `true` | #219 slice 2: when true (default), heavy encoders (ΣĒMA MiniLM, DeBERTa rerank/splice) are armed lazily and load on FIRST USE; when false, restore the pre-slice eager warmup at manager init for operators who want first-query latency paid at boot. SPLADE / BGE-M3 / spaCy were already first-use-lazy and ignore this knob. |
+<!-- END GENERATED -->
+
+`batch_sizes`'s generated default of `{}` is the runtime-equivalent of
+the shipped TOML string sentinel `"auto"` — both mean "use the
+auto-detected VRAM/RAM-aware table in `helix_context/hardware.py`".
+When provided as a TOML inline table, every key is cast to `int`
+(loader normalisation in `helix_context/config.py`).
 
 **Example.**
 
@@ -147,41 +178,49 @@ calibration adds a per-classifier override path for `foveated_alpha`
 
 **Keys.**
 
-| Key | Type | Default | Effect |
+<!-- BEGIN GENERATED: config-tables:budget -->
+| Key | Type | Default | Description |
 |---|---|---|---|
-| `ribosome_tokens` | int | `3000` | Fixed decoder prompt budget for the compressor path. Reserves headroom for the `<helix:slate>` decoder block. The shipped value (`helix.toml:59`). |
-| `expression_tokens` | int | `12000` | Total context budget delivered to the chat upstream. Sized for a 1:10 ratio at 128K context = ~12.8K-token window. The shipped value (`helix.toml:60`). |
-| `max_genes_per_turn` | int | `12` | Hard cap on assembled document count after refinement. Distinct from the dense recall pool (`[retrieval] dense_pool_size`). The shipped value (`helix.toml:61`). |
-| `max_fingerprints_per_turn` | int | `40` | Cap on fingerprints returned by `POST /fingerprint`. Navigation-first payload, not a frontier width — wider candidate pools still feed the ranker upstream of this cap. The shipped value (`helix.toml:62`). |
-| `splice_aggressiveness` | float | `0.3` | `0.0` = keep all, `1.0` = ruthless trim. Lower preserves more literal detail. Maps onto the cymatics splice resonance threshold via `[cymatics] splice_threshold_scale`. The shipped value (`helix.toml:63`). |
-| `decoder_mode` | str | `"condensed"` | One of `"full"` \| `"condensed"` \| `"minimal"` \| `"none"`. `"none"` saves ~750 tokens for API models that already follow the document-tag contract. The shipped value (`helix.toml:64`). |
-| `legibility_enabled` | bool | `true` | Sprint-1 legibility pack — emits a one-line metadata header per document in `expressed_context` (fired tiers, confidence marker, short `gene_id`, raw → compressed char count). Flip to `false` to restore the pre-Sprint-1 plain-dividers format for bench A/B. The shipped value (`helix.toml:70`). |
-| `session_delivery_enabled` | bool | `true` | Sprint-2 working-set register. Tracks delivered documents per session in `session_delivery_log`; re-retrievals replace document bodies with a pointer stub, eliding token cost on repeats. Synthetic `session_id` fallback (see `[session]`) covers callers that don't supply one. Flip to `false` to restore pre-MVP dark behavior. The shipped value (`helix.toml:77`). |
-| `abstain_enabled` | bool | `true` | Confidence-gated context attachment (ABSTAIN tier). When `true`, `build_context` returns a marker-only `ContextWindow` when post-refinement retrieval is weak on **both** absolute score (`top_score < 2.5`) **and** ratio (`top_score / mean < 1.8`). Skips the 12K-token BROAD fallback so the chat model answers from weights instead of digesting irrelevant noise. `HELIX_ABSTAIN_DISABLE=1` env var forces off without redeploy. Stage-4 (`[abstain].mode = "per_classifier"`) replaces the hard-coded floors with per-class values. The shipped value (`helix.toml:87`). |
-| `foveated_enabled` | bool | `false` | Foveated-splice schedule for the BROAD branch. When `true`, the BROAD branch replaces uniform per-document compression with a rank-scaled power-law schedule and reverses assembly order so the top-ranked document lands immediately before the user query. Off by default through the Phase-2 measurement window. The shipped value (`helix.toml:94`). |
-| `foveated_alpha` | float | `1.0` | Power-law exponent for `c_i = max(c_min, c_max · i^(-α))`. `α = 0.5` = gentle decay, `α = 1.0` = harmonic-ish (default), `α = 2.0` = aggressive top-bias. **Stage 4 override:** when `[abstain].mode = "per_classifier"`, this knob is bypassed in favour of `[abstain.<cls>].foveated_alpha` via `HelixContextManager._alpha_for_cls(cls)` (Stage-4 spec §7). Window metadata records `foveated_alpha_source: "per_classifier:<cls>"` for telemetry. The shipped value (`helix.toml:99`). |
-| `foveated_c_min` | float | `0.15` | Rank-N (bottom of BROAD) compression floor. Each document's effective char cap is `max(foveated_c_min · base, c_i · base)` where `c_i = c_max · i^(-α)`. The shipped value (`helix.toml:103`). |
-| `foveated_base_chars` | int | `1000` | Per-document char-budget multiplier. `target_chars per gene = int(c_i · foveated_base_chars)`. Default 1000 matches current uniform Step-4 behavior at `c_i = 1.0`. The shipped value (`helix.toml:107`). |
-| `slate_char_budget` | int | `1500` | Stage-5 (2026-05-08) char budget for the `small_moe` JSON answer slate. Counts the rendered string the model actually sees, including the `<helix:slate>...</helix:slate>` wrapper, JSON braces, quotes, commas, and per-KV separators. Generic and frontier branches do not consult this knob. Code default in `helix_context/config.py:139`. |
-| `mode` | str | `"token"` (Headroom only) | **NOTE:** despite appearing in the task spec, `mode` is **not** a `[budget]` key. The token-vs-cache mode lives under `[headroom] mode` (`helix.toml:168`). Documented under `[headroom]` below. |
+| `ribosome_tokens` | `int` | `3000` |  |
+| `expression_tokens` | `int` | `7000` | default aligned with shipped helix.toml (2026-06-12 default-honesty pass) |
+| `max_genes_per_turn` | `int` | `12` | default aligned with shipped helix.toml (2026-06-12 default-honesty pass) |
+| `max_fingerprints_per_turn` | `int` | `40` |  |
+| `splice_aggressiveness` | `float` | `0.3` | default aligned with shipped helix.toml (2026-06-12 default-honesty pass) |
+| `decoder_mode` | `str` | `"condensed"` | "full"\|"condensed"\|"minimal"\|"none". Default aligned with shipped helix.toml (2026-06-12 default-honesty pass) |
+| `legibility_enabled` | `bool` | `true` | Sprint 1 legibility pack (AI-consumer roadmap): emit a one-line metadata header per document in expressed_context — fired tiers, confidence marker, short gene_id, compression ratio. See helix_context/legibility.py. Default on; flip off to restore the pre-Sprint-1 plain-dividers format (useful for bench A/B). |
+| `slate_char_budget` | `int` | `1500` | Stage 5 (2026-05-08): char-budget for the small_moe JSON answer slate. Counts the rendered string the model actually sees, INCLUDING the <helix:slate>...</helix:slate> wrapper, JSON braces, quotes, commas, and per-KV separators. Spec §5 default is 1500. Generic and frontier branches do not consult this knob. |
+| `session_delivery_enabled` | `bool` | `true` | Sprint 2 session working-set register: track delivered documents per session, elide repeats with a pointer stub so the consumer doesn't pay full token cost for content it already holds. Enabled 2026-04-19 (saves ~40% tokens on multi-turn conversations); only fires when the caller supplies a session_id. See session_delivery.py. default aligned with shipped helix.toml (2026-06-12 default-honesty pass) |
+| `abstain_enabled` | `bool` | `true` | NEW — see docs/specs/2026-05-02-abstain-tier-design.md |
+| `foveated_enabled` | `bool` | `false` | Foveated-splice (BROAD tier only). Off by default for the measurement period — see docs/specs/2026-05-03-foveated-splice-design.md §6.3 and docs/plans/2026-05-05-foveated-splice.md. Flip to True only after the phased α-sweep bench (§9) identifies a winning configuration. |
+| `foveated_alpha` | `float` | `1.0` | Power-law exponent for c_i = max(c_min, c_max · i^(-α)). α=0.5 = gentle decay, α=1.0 = harmonic-ish, α=2.0 = aggressive top-bias. |
+| `foveated_c_min` | `float` | `0.15` | Rank-N floor compression ratio. Pinned at 0.15 by spec §4.1. |
+| `foveated_base_chars` | `int` | `1000` | Per-document char-budget multiplier. Each document's target_chars = int(c_i · foveated_base_chars). Default 1000 matches the current uniform behavior at c_i = 1.0. The Step 4 compression loop in context_manager.py uses 1000 today; keeping this configurable lets bench cells (and a future on-by-default ship) tune the top-1 ceiling without touching code. |
+| `splice_target_chars` | `int` | `0` | Splice-floor fix (J-space council kill-switch #1, 2026-07-06). Per-document char target for the Step-4 splice loop (non-foveated path). 0 (default) = budget-proportional auto: int(expression_tokens · 4 chars/token · 0.9) // n_candidates, floored at the legacy 1000 — so no document ever gets less room than the old uniform cap, and the expression budget is actually used (12 × 1000 chars ≈ 3000 tokens vs the default 7000). Any positive value pins a fixed target; 1000 restores the exact legacy query-agnostic floor. See context_manager. _compute_splice_target and encoding/headroom_bridge. _query_aware_trim (truncation keeps query-term lines either way). |
+<!-- END GENERATED -->
+
+**Note:** despite sometimes appearing alongside these keys in prose,
+`mode` is **not** a `[budget]` key. The token-vs-cache mode lives under
+`[headroom] mode`; see that section below.
 
 **Example.**
 
 ```toml
 [budget]
 ribosome_tokens = 3000
-expression_tokens = 12000
+expression_tokens = 7000
 max_genes_per_turn = 12
 max_fingerprints_per_turn = 40
 splice_aggressiveness = 0.3
 decoder_mode = "condensed"
 legibility_enabled = true
+slate_char_budget = 1500
 session_delivery_enabled = true
 abstain_enabled = true
 foveated_enabled = false
 foveated_alpha = 1.0
 foveated_c_min = 0.15
 foveated_base_chars = 1000
+splice_target_chars = 0
 ```
 
 **Migration notes.** `foveated_*` keys are dark on first ship; flip on
@@ -217,11 +256,13 @@ Fixed 2026-04-13. See `cwola.py` and
 
 **Keys.**
 
-| Key | Type | Default | Effect |
+<!-- BEGIN GENERATED: config-tables:session -->
+| Key | Type | Default | Description |
 |---|---|---|---|
-| `default_party_id` | str | `"default"` | Attribution fallback when the request omits `party_id` and no `HELIX_PARTY_ID` env var or header is set. The shipped value (`helix.toml:117`). |
-| `synthetic_session_window_s` | int | `300` | Time window (seconds) over which same-IP requests are grouped into one synthetic session. 5 minutes by default. The shipped value (`helix.toml:118`). |
-| `synthetic_session_enabled` | bool | `true` | Master switch for synthetic-session attribution. Flip to `false` to restore the prior NULL-session behavior (not recommended — re-introduces the always-Bucket-A bug). The shipped value (`helix.toml:119`). |
+| `default_party_id` | `str` | `"default"` | Used when the request omits party_id |
+| `synthetic_session_window_s` | `int` | `300` | 5 min — close-in-time same-IP requests become one session |
+| `synthetic_session_enabled` | `bool` | `true` | Flip to false to preserve prior "NULL = all A" behavior |
+<!-- END GENERATED -->
 
 **Example.**
 
@@ -248,13 +289,21 @@ shard router.
 
 **Keys.**
 
-| Key | Type | Default | Effect |
+<!-- BEGIN GENERATED: config-tables:genome -->
+| Key | Type | Default | Description |
 |---|---|---|---|
-| `path` | str | `"genome.db"` (code default) / `"genomes/main/genome.db"` (shipped) | SQLite database path for the primary (master) knowledge store. Override via `HELIX_GENOME_PATH` env var (loader honors this even when the section is absent — `helix_context/config.py:611-612`). The shipped value (`helix.toml:127`). |
-| `compact_interval` | float | `3600.0` | Seconds between source-change checks. Hourly default. Compaction only detects source-file changes (mtime vs `last_accessed`); irrelevant data is handled by splice (intron / exon) at retrieval time. The shipped value (`helix.toml:128`). |
-| `cold_start_threshold` | int | `10` | Documents needed before history stripping kicks in (Fix 3). Below this count, the system retains all retrieval history to avoid pathological cold-start behavior. The shipped value (`helix.toml:129`). |
-| `replicas` | array<str> | `[]` | Read-only clone paths for the replica fan-out. Empty during phase-1 cutover; will re-enable alongside the shard router in phase 2 (sharding changes the persistence shape). The shipped value (`helix.toml:132`). |
-| `replica_sync_interval` | int | `100` | Sync replicas every N inserts. The shipped value (`helix.toml:133`). |
+| `path` | `str` | `"genomes/main/genome.db"` | default aligned with shipped helix.toml (2026-06-12 default-honesty pass) — genomes/ is the phase-2 sharding root; CLAUDE.md documents this as THE default |
+| `compact_interval` | `float` | `3600.0` | Seconds between source-change checks |
+| `cold_start_threshold` | `int` | `10` | Fix 3: documents needed before history stripping |
+| `replicas` | `List[str]` | `[]` | Read-only clone paths |
+| `replica_sync_interval` | `int` | `100` | Sync replicas every N inserts |
+<!-- END GENERATED -->
+
+`path`'s generated default (`genome.db`, the bare code-default) differs
+from the **shipped** `helix.toml` value (`genomes/main/genome.db`,
+CLAUDE.md's documented default) — see the Migration notes below.
+Override via the `HELIX_GENOME_PATH` env var, honored even when the
+`[genome]` section is absent from `helix.toml`.
 
 **Example.**
 
@@ -287,12 +336,24 @@ OpenAI-compatible upstream) at `127.0.0.1:11437` by default.
 
 **Keys.**
 
-| Key | Type | Default | Effect |
+<!-- BEGIN GENERATED: config-tables:server -->
+| Key | Type | Default | Description |
 |---|---|---|---|
-| `host` | str | `"127.0.0.1"` | HTTP bind address. The shipped value (`helix.toml:139`). |
-| `port` | int | `11437` | HTTP listen port. The shipped value (`helix.toml:140`). |
-| `upstream` | str | `"http://localhost:11434"` | Chat upstream URL (OpenAI-compatible). Default points at Ollama. Override via `HELIX_SERVER_UPSTREAM` env var (`helix_context/config.py:616-617`). The shipped value (`helix.toml:141`). |
-| `upstream_timeout` | float | `180.0` | Per-request timeout (seconds) for proxied requests to the chat upstream. Bumped from 120s on 2026-05-02 — observed Proxy-500s on slow `gemma4:e4b` GPQA queries at ~125s; 180s gives long-tail generation room without letting truly stuck requests hang. Override via `HELIX_SERVER_UPSTREAM_TIMEOUT` env var. Code default in `helix_context/config.py:179`. Commented in `helix.toml:142`. |
+| `host` | `str` | `"127.0.0.1"` |  |
+| `port` | `int` | `11437` |  |
+| `upstream` | `str` | `"http://localhost:11434"` |  |
+| `bench_enabled` | `bool` | `false` | Dev/configuration mode (v0.7.0): run a SECOND helix instance on a side port bound to a bench genome, so a primary chat stays attached to the main genome while a subagent drives the bench-harness against the bench port. Default OFF — a final deployment leaves this off and gets exactly one server. The launcher reads these at boot; flip in helix.toml or via --bench / HELIX_BENCH_ENABLED=1. |
+| `bench_port` | `int` | `11439` |  |
+| `bench_genome_path` | `str` | `"genomes/bench/bench.genome.db"` |  |
+| `upstream_timeout` | `float` | `180.0` | Timeout for proxied requests to Ollama. Bumped from 120s on 2026-05-02 — observed Proxy 500s on slow gemma4:e4b GPQA queries at ~125s; 180s gives long-tail generation room without letting truly stuck requests hang. Override per-deployment via [server] in helix.toml. |
+<!-- END GENERATED -->
+
+`bench_enabled` / `bench_port` / `bench_genome_path` are the v0.7.0
+dev/configuration mode: a second helix instance on a side port bound to
+a bench genome, so a primary chat session stays attached to the main
+genome while a subagent drives the bench harness against the bench
+port. Default off; flip via `helix.toml`, `--bench`, or
+`HELIX_BENCH_ENABLED=1`.
 
 **Example.**
 
@@ -304,8 +365,61 @@ upstream = "http://localhost:11434"
 # upstream_timeout = 180
 ```
 
-**Cross-refs.** `helix_context/config.py:174-179` (`ServerConfig`),
-env overrides at `helix_context/config.py:614-625`.
+**Cross-refs.** `helix_context/config.py` (`ServerConfig`), env
+overrides in `load_config()`.
+
+---
+
+## `[telemetry]`
+
+**Purpose.** OpenTelemetry export defaults for the backend — traces,
+metrics, and (optionally) forwarded Python logs to the native OTel
+sidecar (collector + Prometheus + Tempo + Loki + Grafana; see
+`docs/architecture/OBSERVABILITY.md`). Mirrors the `HELIX_OTEL_*` env
+vars read by `telemetry/otel.py`. Precedence at setup time is
+**env > toml > default** — resolved in `otel.resolve_telemetry_settings()`,
+not in `load_config()`, so the default-honesty comparator
+(`tests/test_config_default_honesty.py`) never sees env-dependent
+values.
+
+`enabled` defaults `false`: a bare backend (no launcher, no stack) must
+not dial a dead collector. The tray launcher closes the out-of-the-box
+gap the other way — once it starts (or adopts) the observability stack
+it exports `HELIX_OTEL_ENABLED=1` into the helix child's env
+(`launcher/app.py` `_export_otel_env_for_backend`), which wins over
+this default by design.
+
+**Keys.**
+
+<!-- BEGIN GENERATED: config-tables:telemetry -->
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `enabled` | `bool` | `false` | Master switch (HELIX_OTEL_ENABLED) |
+| `endpoint` | `str` | `"localhost:4317"` | OTLP gRPC (HELIX_OTEL_ENDPOINT) |
+| `insecure` | `bool` | `true` | Plain gRPC, dev-local (HELIX_OTEL_INSECURE) |
+| `sampler_ratio` | `float` | `1.0` | Trace sampler 0.0-1.0 (HELIX_OTEL_SAMPLER_RATIO) |
+| `redact_query` | `bool` | `true` | Hash query strings in spans (HELIX_OTEL_REDACT_QUERY) |
+| `logs_enabled` | `bool` | `true` | Ship Python logs to OTel/Loki (HELIX_OTEL_LOGS_ENABLED) |
+| `logs_level` | `str` | `"INFO"` | Min level forwarded (HELIX_OTEL_LOGS_LEVEL) |
+<!-- END GENERATED -->
+
+**Example.**
+
+```toml
+[telemetry]
+enabled = false
+endpoint = "localhost:4317"
+insecure = true
+sampler_ratio = 1.0
+redact_query = true
+logs_enabled = true
+logs_level = "INFO"
+```
+
+**Cross-refs.** `helix_context/config.py` (`TelemetryConfig`),
+`helix_context/telemetry/otel.py` (`resolve_telemetry_settings`, env >
+toml > default resolution), `helix_context/launcher/app.py`
+(`_export_otel_env_for_backend`), `docs/architecture/OBSERVABILITY.md`.
 
 ---
 
@@ -325,14 +439,26 @@ Requires `pip install "helix-context[codec]"` (pulls
 
 **Keys.**
 
-| Key | Type | Default | Effect |
+<!-- BEGIN GENERATED: config-tables:headroom -->
+| Key | Type | Default | Description |
 |---|---|---|---|
-| `enabled` | bool | `false` (code) / `true` (shipped) | Master switch. `false` = launcher does nothing. The shipped value (`helix.toml:164`). |
-| `autostart` | bool | `true` | When `enabled`: adopt if running, spawn if not. Set `false` for menu-only mode. The shipped value (`helix.toml:165`). |
-| `host` | str | `"127.0.0.1"` | Headroom bind address. The shipped value (`helix.toml:166`). |
-| `port` | int | `8787` | Headroom proxy port. The shipped value (`helix.toml:167`). |
-| `mode` | str | `"token"` | One of `"token"` (compression-first) or `"cache"` (prefix-cache-stable). Passed through as `--mode` to the Headroom child. The shipped value (`helix.toml:168`). |
-| `dashboard_path` | str | `"/dashboard"` | URL path appended to `http://{host}:{port}` for the tray-menu link. The shipped value (`helix.toml:169`). |
+| `enabled` | `bool` | `true` | Master switch; false = do nothing. Default aligned with shipped helix.toml (2026-06-12 default-honesty pass) |
+| `autostart` | `bool` | `true` | When enabled: adopt if running, spawn if not |
+| `host` | `str` | `"127.0.0.1"` |  |
+| `port` | `int` | `8787` |  |
+| `mode` | `str` | `"token"` | "token" \| "cache" (passed to --mode) |
+| `dashboard_path` | `str` | `"/dashboard"` | Appended to http://{host}:{port} |
+| `route_upstream` | `bool` | `false` | When true: launcher points helix's chat upstream at this proxy |
+<!-- END GENERATED -->
+
+`route_upstream` controls whether helix's chat upstream is rewritten to
+dial this proxy — separate from `enabled` (proxy lifecycle: start /
+adopt the process). You may want the proxy + dashboard running without
+the chat redirect, or vice versa. Off by default so a fresh install
+never silently rewrites the upstream to a proxy that isn't actually
+running. The `HELIX_HEADROOM_ROUTE_UPSTREAM_AUTO` env var (truthy →
+force on, falsy → force off, unset → defer to config) is a per-launch
+override.
 
 **Example.**
 
@@ -344,9 +470,10 @@ host = "127.0.0.1"
 port = 8787
 mode = "token"
 dashboard_path = "/dashboard"
+route_upstream = false
 ```
 
-**Cross-refs.** `helix_context/config.py:413-429` (`HeadroomConfig`).
+**Cross-refs.** `helix_context/config.py` (`HeadroomConfig`).
 
 ---
 
@@ -359,15 +486,39 @@ is governed by per-feature flags in this section.
 
 **Keys.**
 
-| Key | Type | Default | Effect |
+<!-- BEGIN GENERATED: config-tables:ingestion -->
+| Key | Type | Default | Description |
 |---|---|---|---|
-| `backend` | str | `"ollama"` (code) / `"cpu"` (shipped) | Encoder backend. One of `"ollama"` (LLM, slow), `"cpu"` (spaCy + regex, fast), `"hybrid"`. The shipped value (`helix.toml:172`). |
-| `splade_enabled` | bool | `false` (code) / `true` (shipped) | Phase-2 SPLADE sparse expansion at index time. Adds expanded sparse vectors that feed Tier-FTS5 / SPLADE retrieval at query time. The shipped value (`helix.toml:173`). |
-| `rerank_model` | str | `""` (code) / `"cross-encoder/ms-marco-MiniLM-L-6-v2"` (shipped) | Phase-3 pretrained cross-encoder HF model ID. The shipped value (`helix.toml:174`). |
-| `rerank_enabled` | bool | `false` | Phase-3 cross-encoder reranking on the post-shortlist candidate set. The shipped value (`helix.toml:175`). |
-| `colbert_enabled` | bool | `false` | Phase-4 ColBERT late-interaction tier (optional). The shipped value (`helix.toml:176`). |
-| `entity_graph` | bool | `false` (code) / `true` (shipped) | Phase-5 entity-based co-activation links. Index-time flag — gates the construction of the `entity_co_activation` table consumed by `[retrieval] entity_graph_retrieval_enabled` at query time. The shipped value (`helix.toml:177`). |
-| `dense_passage_char_cap` | int | `2000` | **NEW (#207 dense fast-follow, 2026-07-10).** Char cap applied to a passage before BGE-M3 encoding. MUST stay identical across the three encode paths that read it — inline ingest (`context_manager.ingest`), query-side store encode (`KnowledgeStore._encode_dense_v2_blob`), and offline backfill (`scripts/backfill_bgem3_v2.py`) — or the `embedding_dense_v2` vectors written by each path silently diverge for long passages. Default reproduces the prior hardwired `backends/bgem3_codec.PASSAGE_CHAR_CAP` literal byte-for-byte. See also `[retrieval] dense_model` above. |
+| `backend` | `str` | `"cpu"` | "ollama" \| "cpu" \| "hybrid" |
+| `splade_enabled` | `bool` | `true` | Phase 2: SPLADE sparse expansion at index time |
+| `rerank_model` | `str` | `"cross-encoder/ms-marco-MiniLM-L-6-v2"` | Phase 3: pretrained cross-encoder HF model ID — inert while rerank_enabled=False. Default aligned with shipped helix.toml (2026-06-12 default-honesty pass) |
+| `rerank_enabled` | `bool` | `false` | Phase 3: enable cross-encoder reranking |
+| `colbert_enabled` | `bool` | `false` | Phase 4: ColBERT late interaction (optional) |
+| `entity_graph` | `bool` | `true` | Phase 5: entity-based co-activation links (ingest-time edges). Default aligned with shipped helix.toml (2026-06-12 default-honesty pass) |
+| `dense_embed_on_ingest` | `bool` | `true` | Tier-0 PR-1 (2026-05-16): compute BGE-M3 dense vectors (genes.embedding_dense_v2) inline at ingest. Default true so a genome built by `helix ingest` / `/ingest` / context_manager.ingest is dense-populated without a separate backfill pass. Latency-sensitive callers can set false to defer encoding to scripts/backfill_bgem3_v2.py. This is purely the WRITE path — retrieval still gates on [retrieval] dense_embedding_enabled (default true). |
+| `sema_embed_on_ingest` | `bool` | `true` | Issue #227: compute the 20D ΣĒMA embedding at ingest (feeds TCM / cymatics via gene.embedding). Default True preserves current behaviour. Set False to skip the ingest-time SEMA encode entirely — the MiniLM model is then never materialized (TCM falls back to its text-derived path, cymatics off), which is what a lexical-only config or a multi-worker bench wants. Without this, ingest always materialized the lazy SEMA codec (#220), loading MiniLM per worker and OOMing parallel bench runs even with dense/cymatics disabled. |
+| `splade_auto_enable_below_genes` | `int` | `0` | Issue #164 (size-aware SPLADE auto-toggle): SPLADE expansion's value follows a corpus-regime curve -- the v2 EnterpriseRAG-Onyx storage breakdown showed SPLADE at 21.1% of disk on the 850K-gene fixture while contributing 0 pp recall@10 vs SPLADE-off at the same scale (n=5 + 100q in-flight; see issue body). Below ~50K it's likely useful; above ~200K it's likely net-negative (disk + p95 + SQL fan-out). When BOTH thresholds are 0 (default) the toggle is disabled and the static ``splade_enabled`` value governs every upsert -- byte-identical to pre-#164 behaviour. Setting either threshold to a positive value opts the genome in: - splade_auto_enable_below_genes > 0: force SPLADE ON when the current gene_count is strictly below the threshold, even if ``splade_enabled = false``. The "sparse-corpus rescue" arm. - splade_auto_disable_above_genes > 0: force SPLADE OFF when the current gene_count is strictly above the threshold, even if ``splade_enabled = true``. The "enterprise-scale storage cliff" arm. Both default 0 (opt-in) because the scale curve in #164 is not yet empirically resolved across the 10K-100K transition band; conservative defaults will land in a follow-up once the per-fixture sweep is wired to a head-to-head SPLADE-on/off ablation across that range. |
+| `splade_auto_disable_above_genes` | `int` | `0` |  |
+| `splade_model` | `str` | `"naver/splade-cocondenser-ensembledistil"` | Issue #207 (de-hardcoding wave 2, items 1-3). Defaults reproduce the prior hardwired literals byte-for-byte; air-gap / mirror deployments repoint the model IDs at a local mirror, and recall-ceiling tuning raises the caps. item 1 — model IDs (were hardwired in splade_backend/sema). Dense (BAAI/bge-m3) is deferred to a fast-follow: its codec is a process-wide shared singleton (get_shared_codec) + the passage cap must stay byte-identical between inline ingest and scripts/backfill_bgem3_v2.py. |
+| `sema_model` | `str` | `"all-MiniLM-L6-v2"` |  |
+| `splade_content_cap` | `int` | `1000` | chars SPLADE-encoded at ingest (storage/indexes.sync_splade_index) |
+| `dense_passage_char_cap` | `int` | `2000` | chars BGE-M3-encoded per passage |
+| `citation_path_anchors` | `List[str]` | `["sources", "Projects"]` | item 2 — citation shortener anchors (were literal 'sources'/'Projects' in context_manager): last occurrence of each, in list order, is the strip point. Add your ingest roots here for correct <GENE src=...> shortening. |
+<!-- END GENERATED -->
+
+`splade_auto_enable_below_genes` / `splade_auto_disable_above_genes`
+are the issue #164 size-aware SPLADE auto-toggle: both default `0`
+(disabled — the static `splade_enabled` value governs every upsert,
+byte-identical to pre-#164 behavior). `splade_model` / `sema_model` /
+`splade_content_cap` / `dense_passage_char_cap` are the issue #207
+de-hardcoding wave — defaults reproduce the prior hardwired literals
+byte-for-byte; air-gap / mirror deployments repoint the model IDs at a
+local mirror. `dense_passage_char_cap` in particular MUST stay
+identical across the three BGE-M3 encode paths that read it — inline
+ingest (`context_manager.ingest`), query-side store encode
+(`KnowledgeStore._encode_dense_v2_blob`), and offline backfill
+(`scripts/backfill_bgem3_v2.py`) — or the `embedding_dense_v2` vectors
+written by each path silently diverge for long passages.
 
 **Example.**
 
@@ -379,10 +530,15 @@ rerank_model = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 rerank_enabled = false
 colbert_enabled = false
 entity_graph = true
+sema_embed_on_ingest = true
+dense_embed_on_ingest = true
+splade_model = "naver/splade-cocondenser-ensembledistil"
+sema_model = "all-MiniLM-L6-v2"
+splade_content_cap = 1000
 dense_passage_char_cap = 2000
 ```
 
-**Cross-refs.** `helix_context/config.py:182-190`
+**Cross-refs.** `helix_context/config.py`
 (`IngestionConfig`).
 
 ---
@@ -398,13 +554,15 @@ non-destructive).
 
 **Keys.**
 
-| Key | Type | Default | Effect |
+<!-- BEGIN GENERATED: config-tables:context -->
+| Key | Type | Default | Description |
 |---|---|---|---|
-| `cold_tier_enabled` | bool | `false` | Master opt-in for cold-tier fallthrough. The shipped value (`helix.toml:195`). |
-| `cold_tier_min_hot_genes` | int | `0` | Fall through to cold-tier when hot returns at most this many documents. `0` = only on empty hot results. The shipped value (`helix.toml:196`). |
-| `cold_tier_k` | int | `3` | Maximum cold-tier documents to retrieve per query. The shipped value (`helix.toml:197`). |
-| `cold_tier_min_cosine` | float | `0.15` | SEMA cosine floor (sparse 20-dim — see `Genome.query_cold_tier`). Tuning matters: too high (e.g., `0.25`) means cold-tier returns nothing on real NIAH queries. `0.15` is calibrated to surface matches in the noise floor. The shipped value (`helix.toml:198`). |
-| `fingerprint_mode_profile` | str | `"balanced"` | One of `"fast"` \| `"balanced"` \| `"quality"` for `POST /fingerprint` and `POST /debug/preview`. The shipped value (`helix.toml:199`). Lower-cased by the loader (`helix_context/config.py:649`). |
+| `cold_tier_enabled` | `bool` | `false` | Master opt-in for cold-tier fallthrough |
+| `cold_tier_min_hot_genes` | `int` | `0` | Fall through when hot returns <= this many documents (0 = only on empty) |
+| `cold_tier_k` | `int` | `3` | Max cold-tier documents to retrieve per query |
+| `cold_tier_min_cosine` | `float` | `0.15` | SEMA cosine floor (sparse 20-dim — see Genome.query_cold_tier) |
+| `fingerprint_mode_profile` | `str` | `"balanced"` | "fast" \| "balanced" \| "quality" |
+<!-- END GENERATED -->
 
 **Example.**
 
@@ -417,7 +575,7 @@ cold_tier_min_cosine = 0.15
 fingerprint_mode_profile = "balanced"
 ```
 
-**Cross-refs.** `helix_context/config.py:193-206`
+**Cross-refs.** `helix_context/config.py`
 (`ContextConfig`), `Genome.query_cold_tier` (consumer).
 
 ---
@@ -431,15 +589,17 @@ ranker.
 
 **Keys.**
 
-| Key | Type | Default | Effect |
+<!-- BEGIN GENERATED: config-tables:cymatics -->
+| Key | Type | Default | Description |
 |---|---|---|---|
-| `enabled` | bool | `true` | Master switch. The shipped value (`helix.toml:202`). |
-| `n_bins` | int | `256` | Spectrum resolution (256 bins = <2KB per spectrum). The shipped value (`helix.toml:203`). |
-| `peak_width` | float | `3.0` | Gaussian peak width. Overridden at runtime by Q-factor derived from `[budget] splice_aggressiveness`. The shipped value (`helix.toml:204`). |
-| `splice_threshold_scale` | float | `0.7` | Maps `[budget] splice_aggressiveness` (0-1) to the spectral resonance threshold. Code default only (`helix_context/config.py:215`). |
-| `use_embeddings` | bool | `false` | Use `Gene.embedding` when populated (requires `sentence-transformers`). The shipped value (`helix.toml:205`). |
-| `harmonic_links` | bool | `true` | Compute weighted co-activation edges between retrieved documents (feeds Tier-5 harmonic boost). The shipped value (`helix.toml:206`). |
-| `distance_metric` | str | `"cosine"` | One of `"cosine"` (weighted dot) or `"w1"` (Werman 1986 circular Wasserstein-1; Singh 2020 CMD). Lower-cased by the loader (`helix_context/config.py:663`). The shipped value (`helix.toml:207`). |
+| `enabled` | `bool` | `true` | Master switch |
+| `n_bins` | `int` | `256` | Spectrum resolution (<2KB per spectrum) |
+| `peak_width` | `float` | `3.0` | Gaussian peak width (overridden by Q-factor) |
+| `splice_threshold_scale` | `float` | `0.7` | Maps splice_aggressiveness to resonance threshold |
+| `use_embeddings` | `bool` | `false` | Use Gene.embedding when available |
+| `harmonic_links` | `bool` | `true` | Compute weighted co-activation edges |
+| `distance_metric` | `str` | `"cosine"` | "cosine" (weighted dot) \| "w1" (Werman 1986 circular Wasserstein-1) |
+<!-- END GENERATED -->
 
 **Example.**
 
@@ -453,7 +613,7 @@ harmonic_links = true
 distance_metric = "cosine"
 ```
 
-**Cross-refs.** `helix_context/config.py:209-218`
+**Cross-refs.** `helix_context/config.py`
 (`CymaticsConfig`).
 
 ---
@@ -467,9 +627,11 @@ abstain-floor lookup when `[abstain].mode = "per_classifier"`.
 
 **Keys.**
 
-| Key | Type | Default | Effect |
+<!-- BEGIN GENERATED: config-tables:classifier -->
+| Key | Type | Default | Description |
 |---|---|---|---|
-| `enabled` | bool | `true` | Master switch. When `false`, the classifier path is bypassed and `build_context` falls back to the global `[budget]` knobs. The shipped value (`helix.toml:214`). |
+| `enabled` | `bool` | `true` |  |
+<!-- END GENERATED -->
 
 **Example.**
 
@@ -478,7 +640,7 @@ abstain-floor lookup when `[abstain].mode = "per_classifier"`.
 enabled = true
 ```
 
-**Cross-refs.** `helix_context/config.py:376-384`
+**Cross-refs.** `helix_context/config.py`
 (`ClassifierConfig`),
 `docs/archive/specs/2026-04-29-query-classifier-injection-router-design.md`,
 `[abstain]` (per-classifier floors keyed by classifier output).
@@ -491,12 +653,13 @@ enabled = true
 `Genome.query_genes()` and the new Stage-2 / Stage-3 / Stage-4 paths
 (dense recall, RRF fusion, margin-over-random ANN threshold). Since
 issue #202 the per-tier weights bind in **both** fusion modes: under
-`"additive"` (the default) each weight is the tier's coefficient/cap
-itself (defaults equal the old inline literals, so untouched configs
-keep byte-identical rankings); under `"rrf"` each weight is a
-post-multiplier applied to `1 / (k + rank)`. The defaults preserve the
-implicit weights baked into the legacy additive accumulator so
-`fusion_mode = "rrf"` is a clean rank-fusion swap, not a re-tuning.
+`"additive"` (the legacy pre-Stage-3 path) each weight is the tier's
+coefficient/cap itself (defaults equal the old inline literals, so
+untouched configs keep byte-identical rankings); under `"rrf"` (the
+default since 2026-07-06) each weight is a post-multiplier applied to
+`1 / (k + rank)`. The defaults preserve the implicit weights baked into
+the legacy additive accumulator so `fusion_mode = "rrf"` is a clean
+rank-fusion swap, not a re-tuning.
 
 The full Stage-3 tier inventory (which tiers participate in RRF and
 which stay additive) lives in
@@ -504,46 +667,75 @@ which stay additive) lives in
 
 **Keys.**
 
-| Key | Type | Default | Effect |
+<!-- BEGIN GENERATED: config-tables:retrieval -->
+| Key | Type | Default | Description |
 |---|---|---|---|
-| `sr_enabled` | bool | `false` (code) / `true` (shipped) | Tier-5.5 Successor Representation (Stachenfeld 2017). γ-discounted future-occupancy boost over the co-activation graph. Lazy on-demand SR rows via truncated power series. The shipped value (`helix.toml:219`). |
-| `sr_gamma` | float | `0.85` | Discount factor (5-10 hop horizon at 0.9). The shipped value (`helix.toml:220`). |
-| `sr_k_steps` | int | `4` | Power-series truncation depth (caps runaway propagation). The shipped value (`helix.toml:221`). |
-| `sr_weight` | float | `1.5` | Per-document SR contribution multiplier. Reused as the Stage-3 RRF post-multiplier for the `sr` tier. The shipped value (`helix.toml:222`). |
-| `sr_cap` | float | `3.0` | Maximum per-document SR boost (matches harmonic cap). The shipped value (`helix.toml:223`). |
-| `ray_trace_theta` | bool | `false` | Theta alternation (Wang/Foster/Pfeiffer 2020). Fore/aft ray-trace sampling biased by the current TCM velocity vector. Dark ship — requires TCM velocity input (Sprint-3 item). The shipped value (`helix.toml:226`). |
-| `theta_weight` | float | `1.0` | Softmax temperature on `v · gene_input_vector`. The shipped value (`helix.toml:227`). |
-| `seeded_edges_enabled` | bool | `false` | Sprint-4 seeded co-activation edges with Hebbian evidence decay. Three-class edge provenance (`seeded` / `co_retrieved` / `cwola_validated`) with Laplace-smoothed `co_count` vs `miss_count` per edge. Dark ship — flip to start evidence accumulation. The shipped value (`helix.toml:229`). |
-| `seeded_edge_weight` | float | `1.0` | Base weight stamped at seed insertion. The shipped value (`helix.toml:230`). |
-| `filename_anchor_enabled` | bool | `false` (code) / `true` (shipped) | Tier-0.5 filename-anchor (2026-04-15 Dewey-pivot spike). Boosts documents whose `filename_stem` matches a query term. Dewey bench showed filename alone outperforms the full project + module + filename bag by 24pp. Override: `HELIX_FILENAME_ANCHOR_ENABLED=1`. The shipped value (`helix.toml:235`). |
-| `filename_anchor_weight` | float | `4.0` | Per-match boost. Tier-1 exact-tag is `3.0` for reference; this tier intentionally outranks it. Reused as the Stage-3 RRF post-multiplier. The shipped value (`helix.toml:236`). |
-| `bm25_shortlist_enabled` | bool | `false` (code) / `true` (shipped) | BM25 shortlist post-filter (2026-04-22, research-review Pareto move 1). When enabled, `query_genes` restricts its final ranking to documents that cleared a BM25 / FTS5 top-N pass — other tiers still accumulate scores, but candidates BM25 would never surface are dropped before the sort. Post-filter by design (isolates the ranking-set hypothesis from the candidate-generation optimisation). The shipped value (`helix.toml:240`). |
-| `bm25_shortlist_size` | int | `50` | BM25 top-N kept in the final ranking. The shipped value (`helix.toml:241`). |
-| `bm25_prefilter_enabled` | bool | `false` | BM25 pre-filter — fires **before** tier scoring (vs the post-filter shortlist). Enable for A/B against `bm25_shortlist`; disable shortlist when using this. The shipped value (`helix.toml:244`). |
-| `bm25_prefilter_size` | int | `200` | BM25 top-N fed into tier scoring. The shipped value (`helix.toml:245`). |
-| `entity_graph_retrieval_enabled` | bool | `false` | Tier-5b entity graph co-occurrence boost (Step 3C, 2026-05-08). Documents sharing entity nodes with query terms get a score boost proportional to entity overlap. Requires `[ingestion] entity_graph = true` at index time. The shipped value (`helix.toml:249`). |
-| `dense_embedding_enabled` | bool | `false` | Step-4 BGE-M3 dense vectors (2026-05-08). Master switch for the Stage-2 dense recall path. The shipped value (`helix.toml:255`). |
-| `dense_embedding_dim` | int | `1024` | BGE-M3 Matryoshka dim. **Stage 2 (2026-05-08): default raised from 256 → 1024.** `dim = 256` collapsed random-pair cosine to ~0.6, sabotaging absolute-threshold semantics. Stage 4 will recalibrate `ann_similarity_threshold` at 1024-d. Codec emits a one-time WARN when `dim not in (1024, 768, 512)`. The shipped value (`helix.toml:256`). |
-| `dense_model` | str | `"BAAI/bge-m3"` | **NEW (#207 dense fast-follow, 2026-07-10).** BGE-M3 model ID / local path passed to `BGEM3Codec`. Air-gap / mirror deployments repoint this at a local mirror. Threaded through three seams that must not drift: inline ingest (`context_manager._get_dense_codec`), query-side store encode (`KnowledgeStore._get_dense_codec` → `get_shared_codec`), and offline backfill (`scripts/backfill_bgem3_v2.py`). `get_shared_codec`'s process-wide cache key is `(model_name, dim, device)`, so a repointed model gets its own singleton rather than colliding with the default. Default reproduces the prior hardwired literal byte-for-byte. |
-| `ann_similarity_threshold` | float | `0.35` | Legacy / fallback ANN cosine threshold. Used when `ann_threshold_mode = "absolute"` (default), and as the fallback when `mode = "margin_over_random"` and the calibration row is missing (one-time WARN). The shipped value (`helix.toml:257`). |
-| `ann_threshold_min_genes` | int | `1` | Floor on the ANN dynamic-cut count (always return at least this many). The shipped value (`helix.toml:258`). |
-| `ann_threshold_max_genes` | int | `12` | Ceiling on the ANN dynamic-cut count (the final cut, not the recall pool — see `dense_pool_size`). The shipped value (`helix.toml:259`). |
-| `ann_threshold_mode` | str | `"absolute"` | **NEW (Stage 4, 2026-05-08).** One of `"absolute"` (default — keeps Stage-3 behavior byte-for-byte: `query_genes_ann` uses `ann_similarity_threshold`) or `"margin_over_random"` (reads the persisted threshold from the `genome_calibration` table populated by `scripts/calibrate_thresholds.py`; falls back to `ann_similarity_threshold` with a one-time WARN when the row is missing). The shipped value (`helix.toml:267`). Spec: `docs/specs/2026-05-08-stage-4-threshold-calibration.md` §3 + §6. |
-| `ann_threshold_sigma_multiplier` | float | `3.0` | **NEW (Stage 4).** `μ + N·σ` over random pairs. Only consulted when `ann_threshold_mode = "margin_over_random"`. The shipped value (`helix.toml:268`). |
-| `dense_pool_size` | int | `500` | **NEW (Stage 2, 2026-05-08).** Dense recall pool width — decoupled from `ann_threshold_max_genes` (the final cut). 500 hits ~3% of an 18.9k-corpus per spec §4. Resolves at the top of `query_genes_ann` via `pool_size = pool_size or self._dense_pool_size` (Stage-2 spec §6). When dense is disabled, falls back to `max_genes` for back-compat. The shipped value (`helix.toml:269`). |
-| `fusion_mode` | str | `"rrf"` | **NEW (Stage 3, 2026-05-08); default flipped `"additive"` → `"rrf"` 2026-07-06 (v(N+1) of the spec §7 timeline).** One of `"rrf"` (Reciprocal Rank Fusion via `helix_context/fusion.py:Fuser`; final sort uses fused scores; SIKE Run-2 measured +12pp gold_delivered over additive on xl — `docs/benchmarks/2026-07-06-sike-run2-fts-depth-fusion.md`) or `"additive"` (legacy `gene_scores += tier_score` accumulator path, removed in v(N+2)). Per-tier weights below are RRF post-multipliers. Spec: `docs/specs/2026-05-08-stage-3-rrf-fusion.md`. The shipped value (`helix.toml`). |
-| `rrf_k` | int | `60` | Cormack 2009 default. Used in `score(d) = Σ weight_t · 1/(k + rank_t(d))`. The shipped value (`helix.toml:279`). |
-| `fts5_weight` | float | `3.0` | Binds in both fusion modes (#202). Additive: cap-only knob — the tier adds the raw BM25 magnitude capped at `2.0 × fts5_weight` (default → the legacy 6.0 cap). RRF: post-multiplier for the `fts5` tier. The shipped value (`helix.toml:280`). |
-| `splade_weight` | float | `3.5` | Binds in both fusion modes (#202). Additive: leading coefficient — `min(score, 20) × weight / 20`, so the tier caps at the weight itself. RRF: post-multiplier for the `splade` tier. The shipped value (`helix.toml:281`). |
-| `tag_exact_weight` | float | `3.0` | Binds in both fusion modes (#202). Additive: Tier-1 score = `match_count × weight`. RRF: post-multiplier for `tag_exact`. The shipped value (`helix.toml:282`). |
-| `tag_prefix_weight` | float | `1.5` | Binds in both fusion modes (#202). Additive: Tier-2 score = `match_count × weight`. RRF: post-multiplier for `tag_prefix`. The shipped value (`helix.toml:283`). |
-| `sema_boost_weight` | float | `2.0` | **NEW (#202).** Warm ΣĒMA boost (Tier 4 Mode A): `sim × weight × scale`. Additive-mode coefficient AND the post-fusion re-rank additive under RRF (this tier never rank-fuses). Default equals the old inline `2.0` literal. |
-| `sema_cold_weight` | float | `3.0` | Binds in both fusion modes (#202). Additive: cold-start score = `sim × weight`. RRF: post-multiplier for `sema_cold`. The shipped value (`helix.toml:284`). |
-| `lex_anchor_weight` | float | `1.5` | Binds in both fusion modes (#202). Additive: boost = `min(idf × weight, 2.0 × weight)` (default cap → the legacy 3.0). RRF: post-multiplier for `lex_anchor`. The shipped value (`helix.toml:285`). |
-| `harmonic_weight` | float | `1.0` | Binds in both fusion modes (#202). Additive: `weight` per link, capped at `3.0 × weight` total (default cap → the legacy 3.0). RRF: post-multiplier for `harmonic`. The shipped value (`helix.toml:286`). |
-| `entity_graph_weight` | float | `0.5` | Binds in both fusion modes (#202). Additive: per-row bonus = `min(1.0 × weight, 4.0 × weight)` (default → the legacy 0.5/2.0). RRF: post-multiplier for `entity_graph`. The shipped value (`helix.toml:287`). |
-| `dense_weight` | float | `1.0` | RRF post-multiplier for the Stage-2 `dense` tier. The shipped value (`helix.toml:288`). |
-| `pki_weight` | float | `1.0` | RRF post-multiplier for the path-key-index (`pki`) tier. The shipped value (`helix.toml:289`). |
+| `sr_enabled` | `bool` | `false` | Successor Representation (Stachenfeld 2017) - lazy on-demand SR rows via truncated power series over co-activation graph. 2026-06-12 default-honesty pass: stays FALSE on both sides. helix.toml had flipped this true (2026-04-22 Stage-1 bench), but the evidence roadmap measured SR at zero effect on retrieval outcomes, so the shipped toml was aligned back to the code default (the inverse of the usual toml-wins rule: measured-zero features default off). |
+| `sr_gamma` | `float` | `0.85` | Discount factor (5-10 hop horizon at 0.9) |
+| `sr_k_steps` | `int` | `4` | Power-series truncation depth |
+| `sr_weight` | `float` | `1.5` | Per-document contribution multiplier |
+| `sr_cap` | `float` | `3.0` | Max per-document SR boost (matches harmonic cap) |
+| `ray_trace_theta` | `bool` | `false` | Dark ship |
+| `theta_weight` | `float` | `1.0` | Softmax temperature on v·document dot product |
+| `seeded_edges_enabled` | `bool` | `false` | Dark ship — flip to start evidence accumulation |
+| `seeded_edge_weight` | `float` | `1.0` | Base weight written on seed insertion |
+| `filename_anchor_enabled` | `bool` | `true` | Stage-1 bench flip 2026-04-22: +12pp Dewey axis-2. Default aligned with shipped helix.toml (2026-06-12 default-honesty pass) |
+| `filename_anchor_weight` | `float` | `4.0` | Per-match boost (higher than Tier 1's 3.0) |
+| `bm25_shortlist_enabled` | `bool` | `true` | Keep on (2026-04-22 sprint): +1/8 ans_full, clean attribution. Default aligned with shipped helix.toml (2026-06-12 default-honesty pass) |
+| `bm25_shortlist_size` | `int` | `50` | BM25 top-N kept in the final ranking |
+| `bm25_prefilter_enabled` | `bool` | `false` |  |
+| `bm25_prefilter_size` | `int` | `200` | BM25 top-N fed into tier scoring |
+| `fts5_candidate_depth` | `int` | `0` | A4 / #205 candidate-pool-depth knob (2026-07-06). Overrides the Tier-3 FTS5 content-search fetch depth (legacy default: max_genes*4 = 48 at the shipped max_genes=12). 0 = auto (legacy behavior). Widens ONLY the raw candidate pool fed into tier scoring — the returned pool (max_genes*2) and the delivery cap (max_genes) are unchanged, so a deeper pool cannot trivially inflate gold_delivered. Lets the SIKE bedsweep isolate FTS pool starvation (A4) from rank squeeze (B2) on the xl bed. |
+| `entity_graph_retrieval_enabled` | `bool` | `false` | Tier 5b: entity graph co-occurrence boost (Step 3C, 2026-05-08). Documents sharing entity nodes with query terms get a score boost proportional to entity overlap. Dark ship — flip to true for A/B. |
+| `dense_embedding_enabled` | `bool` | `true` | Step 4 — BGE-M3 dense vectors + ANN threshold-based dynamic document counts (2026-05-08). Tier-0 PR-3 (2026-05-16) flipped this default to true: PR-1 computes embedding_dense_v2 at ingest and PR-3 decoupled dense recall from fusion_mode, so dense recall is now a shipped retrieval signal in both additive and RRF mode. |
+| `dense_embedding_dim` | `int` | `1024` | Stage 2 (2026-05-08): default dim raised from 256 -> 1024. Full BGE-M3 Matryoshka. dim=256 collapsed random-pair cosine to ~0.6, sabotaging threshold semantics. |
+| `dense_model` | `str` | `"BAAI/bge-m3"` | #207 dense fast-follow (item 1, deferred from wave 2): the BGE-M3 model ID was hardwired across three encode paths — inline ingest (context_manager._get_dense_codec), query-side store encode (KnowledgeStore._encode_dense_v2_blob via get_shared_codec), and offline backfill (scripts/backfill_bgem3_v2.py). Default reproduces the prior literal byte-for-byte; air-gap / mirror deployments repoint at a local mirror. get_shared_codec's cache key is (model_name, dim, device), so a repointed model_name still gets its own cached singleton. |
+| `ann_similarity_threshold` | `float` | `0.58` | Stage 4 / Issue #139 (2026-05-18): recalibrated 0.35 -> 0.58 for dim=1024. 0.35 was a dim-256 value. Measured over the dim-1024 BGE-M3 v2 vectors in the bench fixtures (17.5k docs, 200k random unrelated doc pairs): unrelated-pair cosine mean ~0.50, std ~0.066, p90 ~0.58. So 0.35 sat below the p1 noise floor (~0.36) and never cut; 0.58 sits just above the p90 of unrelated pairs. |
+| `ann_threshold_min_genes` | `int` | `1` |  |
+| `ann_threshold_max_genes` | `int` | `12` |  |
+| `ann_threshold_mode` | `str` | `"absolute"` | Stage 4 (2026-05-08): margin-over-random ANN calibration. Spec docs/specs/2026-05-08-stage-4-threshold-calibration.md §3-§6. ``"absolute"`` (default) keeps Stage-3 behavior byte-for-byte; ``"margin_over_random"`` reads the persisted threshold from the ``genome_calibration`` table (populated by ``scripts/calibrate_thresholds.py``). |
+| `ann_threshold_sigma_multiplier` | `float` | `3.0` |  |
+| `dense_pool_floor_genes` | `int` | `8` | Issue #214 (2026-06-12): dense pool floor. The margin-over-random calibration measures mu + sigma_mult*sigma over RANDOM gene pairs; embedding anisotropy can push that bound ABOVE every real query-doc cosine. Measured twice, independently: (a) cc-exchange embedding-upgrade L1b — calibrated threshold 0.779 vs corpus max query-doc cosine ~0.713 (golds 0.46-0.68), so 0/5000 pool docs cleared the gate by dense; (b) a 480-question ERB run with 70.0% never-surfaced golds (gold absent from top-10), matching an independent 67.2% measurement. A threshold that admits ZERO dense candidates is mis-calibration by definition, and pool membership is strictly upstream of fusion ranking — no re-weighting can recover a candidate the gate already dropped. When fewer than this many dense-scored candidates survive the ANN threshold cut (but the dense leg HAD scored candidates), the top-N dense hits by cosine are admitted into the pool anyway; they then compete normally in fusion scoring. 0 disables (legacy gate-only). See knowledge_store.apply_ann_gate. |
+| `dense_pool_size` | `int` | `500` | Stage 2 (2026-05-08): dense recall pool size. Decoupled from ann_threshold_max_genes (the final cut). 500 hits ~3% of an 18.9k corpus per spec §4. |
+| `fusion_mode` | `str` | `"rrf"` | "rrf" \| "additive" (legacy) |
+| `rrf_k` | `int` | `60` | Cormack 2009 default |
+| `rerank_combinator` | `str` | `"additive"` | additive \| fused_tier \| eps_band \| off |
+| `rerank_band_delta` | `float` | `0.05` | eps_band relative tie-band width δ (ratio of the leader's fused score). |
+| `rerank_tier_weight` | `float` | `1.0` | fused_tier uniform per-class rank post-multiplier (single weight — a per-class weight would re-introduce hand-picked exchange rates). |
+| `fts5_weight` | `float` | `3.0` | cap-only in additive: cap = 2.0 × this (6.0) |
+| `splade_weight` | `float` | `3.5` | leading coeff == tier cap |
+| `tag_exact_weight` | `float` | `3.0` | current weight × match_count |
+| `tag_prefix_weight` | `float` | `1.5` | current weight × match_count |
+| `sema_boost_weight` | `float` | `2.0` | Issue #202: warm ΣĒMA boost (Tier 4 Mode A) weight — NEW knob; the additive literal was sim·2.0·scale and the tier previously had no weight knob at all (post-fusion additive under RRF, never fused). Default == old literal, so untouched configs are bit-identical. |
+| `sema_cold_weight` | `float` | `3.0` | current sim·3.0 multiplier |
+| `lex_anchor_weight` | `float` | `1.5` | idf coeff; cap = 2.0 × this (3.0) |
+| `harmonic_weight` | `float` | `1.0` | per-link weight; cap = 3.0 × this (3.0) |
+| `entity_graph_weight` | `float` | `0.5` | per-row bonus; cap = 4.0 × this (2.0) |
+| `dense_weight` | `float` | `1.0` | Stage 2 dense recall, RRF participant |
+| `dense_additive_weight` | `float` | `4.0` | Tier-0 PR-3 (2026-05-16): additive-mode dense merge weight. Under fusion_mode == "additive" a dense hit's cosine is scaled by this before entering the gene_scores accumulator. BM25-comparable (tag_exact_weight is 3.0). Unused under RRF. Issue #203 (closed 2026-07-03): the real-query sweep (``benchmarks/sweep_dense_additive_weight.py``, n=100 ERB queries per bed) found recall@10 monotone INCREASING in this weight — erb10k 0.58 (w=0) → 0.64 (w=6), erb50k 0.47 → 0.56, medium 0.23 → 0.40 — with zero gold evictions at any weight. The #138 H10q gold-eviction fear did not reproduce on enterprise-class queries. 4.0 stands; the raise-to-6.0 decision is deferred to the #205 per-class retrieval profiles (w=6 may become the semantic-class value rather than a global default). ``0.0`` flips dense additively-off without disabling the dense write path or RRF participation. |
+| `dense_additive_min_cosine` | `float` | `0.15` | Tier-0 review fix (2026-05-16): noise floor for the additive-mode dense merge. A dense hit whose cosine is below this does not contribute to gene_scores (it is still kept as a candidate with negligible weight). Consistent with the cold tier's 0.15 min_cosine; deliberately gentle so it removes only noise-grade hits. Unused under RRF. |
+| `semantic_dense_additive_weight` | `float` | `16.0` | Semantic-wiring arm (2026-06-02; PRD docs/prds/2026-06-02-semantic-wiring-arm.md). When query_type=="semantic" AND env HELIX_SEMANTIC_ARM=1, the per-shard dense term is scaled by semantic_dense_additive_weight (instead of dense_additive_weight) AND routing broadens to all healthy shards. The two fire together or not at all. Default-off (env unset) => byte-identical baseline; lexical/tag/SPLADE tiers are never touched (additive KEEP-BOTH). |
+| `semantic_broaden_routing` | `bool` | `true` |  |
+| `pki_weight` | `float` | `1.0` | PKI tier, RRF participant |
+<!-- END GENERATED -->
+
+`rerank_combinator` / `rerank_band_delta` / `rerank_tier_weight` are
+the issue #255 post-fusion rerank combinator (PR-2, 2026-07-10): under
+`fusion_mode == "rrf"` the four rerank classes (authority / sema_boost
+/ party_attr / access_rate) combine with the fused RRF score via this
+operator. Default `"additive"` is byte-identical to the shipped
+fused+rerank_additive block so this knob ships inert; the alternatives
+(`"fused_tier"`, `"eps_band"`, `"off"`) are bench-gated on the
+50-needle beds — see
+`docs/research/2026-07-09-scoring-combinator-exploration.md`.
+`semantic_dense_additive_weight` / `semantic_broaden_routing` are the
+2026-06-02 semantic-wiring arm (env-gated, `HELIX_SEMANTIC_ARM=1`) —
+see `docs/prds/2026-06-02-semantic-wiring-arm.md`.
+`dense_pool_floor_genes` (issue #214) is a graceful-degradation floor:
+when the ANN threshold gate admits zero dense candidates due to
+embedding-anisotropy mis-calibration, the top-N dense hits by cosine
+are admitted into the pool anyway rather than starving the dense leg
+entirely.
 
 **Stage-3 RRF tier inventory (additive vs RRF participants).** Per
 `docs/specs/2026-05-08-stage-3-rrf-fusion.md` §3, recall/discovery
@@ -574,8 +766,8 @@ authoritative?" semantics survive unchanged. The split:
 
 ```toml
 [retrieval]
-# Tier 5.5 Successor Representation
-sr_enabled = true
+# Tier 5.5 Successor Representation — measured zero effect; stays off
+sr_enabled = false
 sr_gamma = 0.85
 sr_k_steps = 4
 sr_weight = 1.5
@@ -594,31 +786,44 @@ bm25_shortlist_enabled = true
 bm25_shortlist_size = 50
 bm25_prefilter_enabled = false
 bm25_prefilter_size = 200
+# #205 candidate-pool-depth (0 = auto = max_genes*4)
+fts5_candidate_depth = 0
 # Tier 5b entity graph (dark)
 entity_graph_retrieval_enabled = false
-# Stage 2 dense recall (dark master)
-dense_embedding_enabled = false
+# Stage 2 dense recall — shipped on since Tier-0 PR-3 (2026-05-16)
+dense_embedding_enabled = true
 dense_embedding_dim = 1024
 dense_model = "BAAI/bge-m3"           # #207 dense fast-follow (2026-07-10)
-ann_similarity_threshold = 0.35
+ann_similarity_threshold = 0.58       # recalibrated for dim=1024 (issue #139)
 ann_threshold_min_genes = 1
 ann_threshold_max_genes = 12
 # Stage 4 threshold mode
 ann_threshold_mode = "absolute"
 ann_threshold_sigma_multiplier = 3.0
+dense_pool_floor_genes = 8             # issue #214 graceful-degradation floor
 dense_pool_size = 500
 # Stage 3 RRF fusion (default "rrf" since 2026-07-06; "additive" = legacy)
 fusion_mode = "rrf"
 rrf_k = 60
+# issue #255 post-fusion rerank combinator — default inert (byte-identical)
+rerank_combinator = "additive"
+rerank_band_delta = 0.05
+rerank_tier_weight = 1.0
 fts5_weight = 3.0
 splade_weight = 3.5
 tag_exact_weight = 3.0
 tag_prefix_weight = 1.5
+sema_boost_weight = 2.0
 sema_cold_weight = 3.0
 lex_anchor_weight = 1.5
 harmonic_weight = 1.0
 entity_graph_weight = 0.5
 dense_weight = 1.0
+dense_additive_weight = 4.0            # additive-mode only; unused under rrf
+dense_additive_min_cosine = 0.15       # additive-mode only; unused under rrf
+# Semantic-wiring arm (env-gated HELIX_SEMANTIC_ARM=1)
+semantic_dense_additive_weight = 16.0
+semantic_broaden_routing = true
 pki_weight = 1.0
 ```
 
@@ -673,12 +878,14 @@ for the scope trade-off.
 
 **Keys.**
 
-| Key | Type | Default | Effect |
+<!-- BEGIN GENERATED: config-tables:plr -->
+| Key | Type | Default | Description |
 |---|---|---|---|
-| `enabled` | bool | `false` | Master switch. Dark by default; bench before flipping. The shipped value (`helix.toml:308`). |
-| `model_path` | str | `"training/models/stacked_plr.joblib"` | Path to the trained artifact. The shipped value (`helix.toml:309`). |
-| `expected_sha256` | str | `""` | Empty = trust the `.sha256` sidecar next to the artifact (written by the trainer). Set a pinned hex digest in `helix.toml` for explicit operator-level pinning; load refuses to proceed unless the artifact's digest matches. The shipped value (`helix.toml:310`). |
-| `high_risk_threshold` | float | `0.5` | Symmetric default. The fuser's `prob_B` is compared against this to emit a coarse "likely-to-re-query" boolean alongside the log-odds. Tune only with bench evidence. The shipped value (`helix.toml:311`). |
+| `enabled` | `bool` | `true` | default aligned with shipped helix.toml (2026-06-12 default-honesty pass) — bench-gated #74; soft-no-op without artifact |
+| `model_path` | `str` | `"training/models/stacked_plr.joblib"` |  |
+| `expected_sha256` | `str` | `""` | SHA256 of the artifact — when set, load refuses to proceed unless the file's digest matches. Empty string = trust the sidecar .sha256 next to the artifact (written by the trainer). Set a pinned hex digest in helix.toml if you want explicit operator-level pinning. |
+| `high_risk_threshold` | `float` | `0.5` | Threshold the fuser's `prob_B` is compared against to emit a coarse "likely-to-re-query" boolean alongside the log-odds. 0.5 is the symmetric default; tune only with bench evidence. |
+<!-- END GENERATED -->
 
 **Example.**
 
@@ -737,27 +944,26 @@ produces the bench JSONL.
 
 **Keys.**
 
-| Key | Type | Default | Effect |
+<!-- BEGIN GENERATED: config-tables:know -->
+| Key | Type | Default | Description |
 |---|---|---|---|
-| `emit_floor` | float | `0.55` | Probability floor below which a KnowBlock is not emitted; falls through to `MissBlock(reason="sparse")`. The shipped value (`helix.toml:340`). |
-| `s_ref` | float | `1.0` | Feature-scale reference for `tanh(top_score / s_ref)`. Pick `s_ref = median(top_score)` from the calibration set so `tanh(...)` saturates around the typical scale (Stage-6 spec §11). The shipped value (`helix.toml:341`). |
-| `g_ref` | float | `0.5` | Feature-scale reference for `tanh(score_gap / g_ref)`. Pick `g_ref = median(score_gap)` from the calibration set. The shipped value (`helix.toml:342`). |
-| `betas` | array<float> | `[-2.0, 2.0, 1.5, 0.7, 1.8, 1.5]` (code default; 6 coefficients with Stage-7 β5) | Logistic coefficients. Order: `[b0_intercept, b1_top, b2_gap, b3_agree, b4_coord, b5_freshness]`. The shipped `helix.toml:343` value `[-2.0, 2.0, 1.5, 0.7, 1.8]` has only 5 entries (pre-Stage-7 length); the loader emits a `WARNING` and falls back to the 6-element default when length mismatches `1 + N_FEATURES = 6` (`helix_context/know_calibration.py:152-160`). **Operators running Stage 7 must add the 6th coefficient (`+1.5`) or flip to defaults**. Stage 7 added β5 (freshness_min coefficient); calibration script auto-detects the feature count. |
-| `calibrated_at` | str (ISO-8601) | `None` (optional) | Timestamp written by `scripts/calibrate_know_confidence.py` after a fresh calibration run. Optional; `None` means the betas are SHIP-TIME defaults. Not in the shipped `helix.toml`. |
-| `calibrated_on_n` | int | `None` (optional) | Sample count from the calibration set. Written by `scripts/calibrate_know_confidence.py`. Not in the shipped `helix.toml`. |
-| `stale_after_days` | int | `30` | Age (days) after which a calibration is considered stale. Drives both the `/context` `agent.calibration_stale` flag (Stage 4 spec §9) and, since issue #239, the `know_calibration.stale` field on `GET /health` (see below). |
+| `emit_floor` | `float` | `0.55` | Probability floor below which no KnowBlock is emitted (falls through to MissBlock(reason="sparse")). |
+| `s_ref` | `float` | `1.0` | tanh feature-scale references for top_score / score_gap. |
+| `g_ref` | `float` | `0.5` |  |
+| `betas` | `List[float]` | `[-2.0, 2.0, 1.5, 0.7, 1.8, 1.5]` | (b0, b1..b5) — intercept + 5 feature coefficients (Stage 7 added b5 for freshness_min). Malformed/odd-length lists soft-fail to defaults at load time so a bad calibration write can never break retrieval. |
+| `calibrated_at` | `Optional[str]` | `None` | Written by scripts/calibrate_know_confidence.py; None = uncalibrated. |
+| `calibrated_on_n` | `Optional[int]` | `None` |  |
+| `stale_after_days` | `int` | `30` | Stage 4 (spec §9, issue #63): age in days after which the /context response flags ``calibration_stale``. |
+<!-- END GENERATED -->
 
-**Issue #239: `GET /health` staleness surfacing.** `/health` includes a
-`know_calibration` block — `{calibrated_at, calibrated_on_n, stale}` —
-read straight from this config section
-(`helix_context/server/routes_admin.py`, health endpoint). `stale` is
-`true` when `calibrated_at` is absent (never calibrated) **or** its age
-exceeds `stale_after_days`, so agents/operators can tell at a glance
-whether the KnowBlock confidence contract has ever been trued-up
-against a clean bed — without parsing `helix.toml` by hand. Also see
-`scripts/calibrate_know_confidence.py`'s AUC trust gate (Runbook 3 in
-`docs/operator-runbooks.md`), which refuses to write these fields at
-all unless the fit clears a held-out hit/miss AUC of 0.7.
+`stale_after_days` (Stage 7, spec §9 / issue #63) is the age in days
+after which the `/context` response flags `calibration_stale`.
+`calibrated_at` / `calibrated_on_n` are written by
+`scripts/calibrate_know_confidence.py` after a fresh calibration run —
+`None` means the betas are still the SHIP-TIME defaults. The shipped
+`helix.toml` today carries the 2026-07-06 real calibration fit (ECE
+0.74 → 0.04 vs the code defaults above); see
+`docs/benchmarks/2026-07-06-know-logistic-calibration.md`.
 
 **Example (post-Stage-7 calibration).**
 
@@ -771,12 +977,15 @@ calibrated_at = "2026-05-08T18:30:00Z"
 calibrated_on_n = 800
 ```
 
-**Migration notes.** The shipped `helix.toml:343` value
-`[-2.0, 2.0, 1.5, 0.7, 1.8]` is 5-element (pre-Stage-7 length).
-After Stage 7, the loader expects 6 entries
-(`1 + N_FEATURES = 1 + 5`). Operators should either re-run the
-calibration script to refresh `[know]` or manually append the Stage-7
-default `+1.5` to the array.
+**Migration notes.** Pre-Stage-7 `[know]` blocks carry a 5-element
+`betas` array (missing the freshness coefficient). The loader expects
+6 entries (`1 + N_FEATURES = 1 + 5`) post-Stage-7; a mismatched length
+logs a `WARNING` and falls back to the 6-element code default.
+Operators upgrading from a pre-Stage-7 `helix.toml` should either
+re-run `scripts/calibrate_know_confidence.py` to refresh `[know]`, or
+manually append the Stage-7 default coefficient (`+1.5`) to the array.
+The shipped `helix.toml` has carried a real 6-element calibration fit
+since the 2026-07-06 rrf-default sweep.
 
 **Cross-refs.** `helix_context/know_calibration.py` (pure-function
 loader; soft-fails to defaults), `helix_context/context_packet.py`
@@ -802,7 +1011,7 @@ directory becomes a document; persona / agent attribution comes from
 | `helix_url` | str | `"http://127.0.0.1:11437"` | Helix server URL — must match `[server] host:port` for the local case. The shipped value (`helix.toml:350`). |
 | `sync_interval_s` | int | `60` | Poll cadence in seconds. Human-speed writes; cheap stat+hash check per file. The shipped value (`helix.toml:351`). |
 | `agent_kind` | str | `"claude-code"` | Stamp written on every ingest; identifies the writer tool for downstream attribution. The shipped value (`helix.toml:352`). |
-| `watch_dirs` | array<str> | `["~/.claude/projects/f--Projects-Education/memory"]` | Directories to watch. `~` is expanded automatically. Add more as needed. The shipped value (`helix.toml:353-355`). |
+| `watch_dirs` | array<str> | `[]` | Directories to watch. `~` is expanded automatically. Empty by default for the public release — point this at your own memory/notes directories. |
 
 **Example.**
 
@@ -812,9 +1021,8 @@ enabled = false
 helix_url = "http://127.0.0.1:11437"
 sync_interval_s = 60
 agent_kind = "claude-code"
-watch_dirs = [
-    "~/.claude/projects/f--Projects-Education/memory",
-]
+# watch_dirs = ["~/.claude/projects/<your-project>/memory"]
+watch_dirs = []
 ```
 
 **Note.** This section is **not** parsed by
@@ -884,21 +1092,25 @@ Other classes may be omitted; runtime falls back to
 
 **Top-level keys.**
 
-| Key | Type | Default | Effect |
+<!-- BEGIN GENERATED: config-tables:abstain -->
+| Key | Type | Default | Description |
 |---|---|---|---|
-| `mode` | str | `"global"` | One of `"global"` (legacy hard-coded floors) or `"per_classifier"` (consult sub-tables). Invalid values fall back to `"global"` with a `WARNING` (`helix_context/config.py:726-730`). The shipped value (`helix.toml:432`). |
+| `mode` | `str` | `"global"` |  |
+<!-- END GENERATED -->
 
 **Sub-tables.** `[abstain.factual]`, `[abstain.multi_hop]`,
 `[abstain.arithmetic]`, `[abstain.procedural]`, `[abstain.default]`.
 Each takes the same four keys (calibrated from `located_n1000.json`
 score distributions per Stage-4 spec §4):
 
-| Sub-table key | Type | Default | Effect |
+<!-- BEGIN GENERATED: config-tables:abstain.subtable -->
+| Key | Type | Default | Description |
 |---|---|---|---|
-| `abstain_top` | float | `2.5` | p85 of MISS scores per class — `top_score < abstain_top` triggers the ABSTAIN tier. The cheap-to-be-wrong floor (re-engages BROAD on false-abstain). |
-| `focused_top` | float | `2.5` | p25 of HIT scores per class — `top_score >= focused_top` enters the FOCUSED tier (with ratio gate). |
-| `tight_top` | float | `5.0` | p60 of HIT scores per class — `top_score >= tight_top` enters the TIGHT tier (with ratio gate). The expensive-to-be-wrong floor (drops 9 candidates on false-tighten). |
-| `foveated_alpha` | float | `1.0` | Per-class power-law exponent. Replaces `[budget] foveated_alpha` when `[abstain].mode = "per_classifier"` via `HelixContextManager._alpha_for_cls(cls)` (Stage-4 spec §7). Window metadata records `foveated_alpha_source: "per_classifier:<cls>"` for telemetry. |
+| `abstain_top` | `float` | `2.5` | p85 of MISS scores — anything strictly below this is abstain. |
+| `focused_top` | `float` | `2.5` | p25 of HIT scores — at-or-above this enters FOCUSED tier (with ratio gate). |
+| `tight_top` | `float` | `5.0` | p60 of HIT scores — at-or-above this enters TIGHT tier (with ratio gate). |
+| `foveated_alpha` | `float` | `1.0` | Per-class foveated splice power-law exponent. Replaces ``budget.foveated_alpha`` when ``[abstain].mode = "per_classifier"``. |
+<!-- END GENERATED -->
 
 **Example (calibrated, post-`scripts/calibrate_thresholds.py`).**
 
@@ -971,27 +1183,31 @@ the shipped `helix.toml`.
 
 **Keys.**
 
-| Key | Type | Default | Effect |
+<!-- BEGIN GENERATED: config-tables:vault -->
+| Key | Type | Default | Description |
 |---|---|---|---|
-| `enabled` | bool | `false` | Master switch. |
-| `path` | str | `"~/.helix/vault"` | Vault root. `~` is expanded automatically. |
-| `party_id` | str | `""` | Empty = use the server's primary party. |
-| `fan_out_threshold` | int | `5000` | Split domain folders above this document count. |
-| `redact_body` | bool | `false` | Replace document body with `sha + excerpt`. Recommended for cloud-synced setups. |
-| `stale_threshold` | float | `0.5` | Documents with `live_truth_score < this` go to `_stale/`. |
+| `enabled` | `bool` | `false` |  |
+| `path` | `str` | `"~/.helix/vault"` |  |
+| `party_id` | `str` | `""` | empty = use server's primary party |
+| `fan_out_threshold` | `int` | `5000` |  |
+| `redact_body` | `bool` | `false` |  |
+| `stale_threshold` | `float` | `0.5` |  |
+<!-- END GENERATED -->
 
 **`[vault.traces]` sub-table.**
 
-| Key | Type | Default | Effect |
+<!-- BEGIN GENERATED: config-tables:vault.traces -->
+| Key | Type | Default | Description |
 |---|---|---|---|
-| `enabled` | bool | `true` | Auto-export every `/context` call. |
-| `retention_hours` | int | `48` | Default retention. Set ≥720 for 30-day audit. |
-| `max_retention_hours_hard` | int | `720` | Force-deletes pinned past this. `0` disables. |
-| `max_count` | int | `10000` | Safety cap on burst floods (v1.1: not yet enforced). |
-| `rollup_enabled` | bool | `true` | Roll up traces by shard. |
-| `rollup_shard` | str | `"hour"` | One of `"hour"` \| `"daily"`. |
-| `prune_interval_minutes` | int | `60` | Prune cadence. |
-| `trigger_only` | bool | `false` | Emit only on threshold (v1.1: not yet enforced). |
+| `enabled` | `bool` | `true` |  |
+| `retention_hours` | `int` | `48` |  |
+| `max_retention_hours_hard` | `int` | `720` | 30 days; 0 disables |
+| `max_count` | `int` | `10000` | v1.1: not yet enforced |
+| `rollup_enabled` | `bool` | `true` |  |
+| `rollup_shard` | `str` | `"hour"` | "hour" \| "daily" |
+| `prune_interval_minutes` | `int` | `60` |  |
+| `trigger_only` | `bool` | `false` | v1.1: not yet enforced |
+<!-- END GENERATED -->
 
 **Example (uncomment to enable).**
 
