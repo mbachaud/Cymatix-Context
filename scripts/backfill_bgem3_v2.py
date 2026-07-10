@@ -89,6 +89,8 @@ def backfill_dense_db(
     db_path: str,
     *,
     dim: int | None = None,
+    model_name: str | None = None,
+    char_cap: int | None = None,
     batch: int = 64,
     limit: int | None = None,
     codec=None,
@@ -106,10 +108,11 @@ def backfill_dense_db(
 
     The loop reuses PR-1's canonical helpers from
     ``helix_context.backends.bgem3_codec``: :data:`PASSAGE_CHAR_CAP` (the
-    passage input char cap), :meth:`BGEM3Codec.encode_batch` (the batch
-    encoder) and :func:`vec_to_blob` (the fp32 packer). A genome backfilled
-    here therefore satisfies the same ``length(blob) == dim*4`` idempotency
-    skip-clause as one written by the inline-ingest path.
+    passage input char cap, now the byte-identical default anchor for
+    ``char_cap`` below — #207 dense fast-follow), :meth:`BGEM3Codec.encode_batch`
+    (the batch encoder) and :func:`vec_to_blob` (the fp32 packer). A genome
+    backfilled here therefore satisfies the same ``length(blob) == dim*4``
+    idempotency skip-clause as one written by the inline-ingest path.
 
     Idempotent: rows that already carry a v2 BLOB of exactly ``dim*4`` bytes
     are not re-encoded, so a re-run reports ``rows_processed == 0``.
@@ -118,6 +121,17 @@ def backfill_dense_db(
         db_path: path to the genome ``.db`` to backfill in place.
         dim: dense vector dimension. ``None`` → ``retrieval.dense_embedding_dim``
             from ``helix.toml``.
+        model_name: BGE-M3 model ID passed to ``BGEM3Codec``. ``None`` →
+            ``retrieval.dense_model`` from ``helix.toml`` (#207 dense
+            fast-follow; default ``"BAAI/bge-m3"``, byte-identical to the
+            prior hardwired literal).
+        char_cap: passage char cap applied before encoding — MUST stay
+            identical to the inline-ingest slice
+            (``context_manager.ingest``) and the query-side slice
+            (``KnowledgeStore._encode_dense_v2_blob``) so the three encode
+            paths cannot drift. ``None`` → ``ingestion.dense_passage_char_cap``
+            from ``helix.toml``, falling back to the module constant
+            :data:`PASSAGE_CHAR_CAP` if a stale config object lacks the key.
         batch: encode + commit batch size. Default 64.
         limit: optional cap on rows to process (smoke tests).
         codec: an object exposing ``encode_batch(texts, task=...)``. ``None``
@@ -145,9 +159,21 @@ def backfill_dense_db(
         ``rows_processed``, ``rows_skipped``, ``dense_coverage`` (float in
         ``[0.0, 1.0]`` = ``populated_after / total``) and ``elapsed_s``.
     """
-    if dim is None:
-        dim = int(load_config().retrieval.dense_embedding_dim)
+    if dim is None or model_name is None or char_cap is None:
+        # #207 dense fast-follow: resolve all three from the SAME loaded
+        # config so an operator run and a caller-supplied override cannot
+        # partially mix stale/fresh values.
+        _cfg = load_config()
+        if dim is None:
+            dim = int(_cfg.retrieval.dense_embedding_dim)
+        if model_name is None:
+            model_name = str(_cfg.retrieval.dense_model)
+        if char_cap is None:
+            char_cap = int(getattr(
+                _cfg.ingestion, "dense_passage_char_cap", PASSAGE_CHAR_CAP
+            ))
     dim = int(dim)
+    char_cap = int(char_cap)
     expected_bytes = dim * 4
     # Issue #212: only a codec WE constructed can be torn down and reloaded
     # on CPU by the crawl watchdog's terminal rung. A caller-injected codec
@@ -174,8 +200,8 @@ def backfill_dense_db(
                 device = "cuda" if torch.cuda.is_available() else "cpu"
             except Exception:  # noqa: BLE001 — torch missing → CPU is the only option
                 device = "cpu"
-        codec = BGEM3Codec(dim=dim, device=device)
-        log_fn(f"[backfill] codec device={device}")
+        codec = BGEM3Codec(dim=dim, device=device, model_name=model_name)
+        log_fn(f"[backfill] codec device={device} model={model_name}")
 
     # Single connection for the whole backfill. Wrapped in try/finally so a
     # raise anywhere below (most likely ``codec.encode_batch`` when the model
@@ -239,13 +265,15 @@ def backfill_dense_db(
             if not encodable:
                 continue
             # Match the inline-ingest encode behaviour: bound each passage at
-            # PASSAGE_CHAR_CAP and batch-encode with task="passage". The real
-            # ``BGEM3Codec`` exposes ``encode_batch`` (PR-1) — the preferred,
-            # one-model-call path; fall back to per-text ``encode`` for any
-            # codec that predates it. ``encode_batch`` is byte-identical to a
-            # sequence of ``encode`` calls (see bgem3_codec.encode_batch), so
-            # the fallback does not change the stored vectors.
-            texts = [content[:PASSAGE_CHAR_CAP] for _gid, content in encodable]
+            # char_cap (#207 dense fast-follow — config-resolved, default
+            # byte-identical to PASSAGE_CHAR_CAP) and batch-encode with
+            # task="passage". The real ``BGEM3Codec`` exposes ``encode_batch``
+            # (PR-1) — the preferred, one-model-call path; fall back to
+            # per-text ``encode`` for any codec that predates it.
+            # ``encode_batch`` is byte-identical to a sequence of ``encode``
+            # calls (see bgem3_codec.encode_batch), so the fallback does not
+            # change the stored vectors.
+            texts = [content[:char_cap] for _gid, content in encodable]
             if hasattr(codec, "encode_batch"):
                 vecs = codec.encode_batch(texts, task="passage")
             else:
@@ -297,7 +325,7 @@ def backfill_dense_db(
                     )
                     codec = None
                     release_cuda_cache()
-                    codec = BGEM3Codec(dim=dim, device="cpu")
+                    codec = BGEM3Codec(dim=dim, device="cpu", model_name=model_name)
                     log_fn(
                         f"{CRAWL_LOG_PREFIX} codec reloaded on CPU; resuming "
                         f"backfill of {db_path}"
@@ -364,15 +392,24 @@ def main() -> int:
     cfg = load_config()
     db_path = args.db_path or str(repo_root / cfg.genome.path)
     dim = int(args.dim if args.dim is not None else cfg.retrieval.dense_embedding_dim)
+    # #207 dense fast-follow: model ID + passage cap, resolved from the same
+    # loaded config as dim above.
+    model_name = str(cfg.retrieval.dense_model)
+    char_cap = int(getattr(cfg.ingestion, "dense_passage_char_cap", PASSAGE_CHAR_CAP))
 
     print(f"[backfill] DB: {db_path}")
-    print(f"[backfill] dim={dim} expected_bytes_per_row={dim * 4}")
+    print(
+        f"[backfill] dim={dim} expected_bytes_per_row={dim * 4} "
+        f"model={model_name} char_cap={char_cap}"
+    )
 
     # Delegate to the shared backfill loop so this operator script and the
     # fixture builder (build_fixture_matrix.py, Tier-0 PR-2) cannot drift.
     backfill_dense_db(
         db_path,
         dim=dim,
+        model_name=model_name,
+        char_cap=char_cap,
         batch=args.batch,
         limit=args.limit,
         log_fn=print,

@@ -305,6 +305,11 @@ class IngestionConfig:
     sema_model: str = "all-MiniLM-L6-v2"
     #   item 3 — silent recall ceiling (SPLADE was hardwired content[:1000]):
     splade_content_cap: int = 1000   # chars SPLADE-encoded at ingest (storage/indexes.sync_splade_index)
+    # #207 dense fast-follow: the passage cap deferred above. Was hardwired
+    # PASSAGE_CHAR_CAP=2000 in backends/bgem3_codec.py; must stay byte-identical
+    # across all three encode paths (inline ingest, query-side store encode,
+    # scripts/backfill_bgem3_v2.py) — see BGEM3Codec module docstring.
+    dense_passage_char_cap: int = 2000   # chars BGE-M3-encoded per passage
     #   item 2 — citation shortener anchors (were literal 'sources'/'Projects' in
     #   context_manager): last occurrence of each, in list order, is the strip
     #   point. Add your ingest roots here for correct <GENE src=...> shortening.
@@ -421,6 +426,15 @@ class RetrievalConfig:
     # Matryoshka. dim=256 collapsed random-pair cosine to ~0.6, sabotaging
     # threshold semantics.
     dense_embedding_dim: int = 1024
+    # #207 dense fast-follow (item 1, deferred from wave 2): the BGE-M3 model
+    # ID was hardwired across three encode paths — inline ingest
+    # (context_manager._get_dense_codec), query-side store encode
+    # (KnowledgeStore._encode_dense_v2_blob via get_shared_codec), and offline
+    # backfill (scripts/backfill_bgem3_v2.py). Default reproduces the prior
+    # literal byte-for-byte; air-gap / mirror deployments repoint at a local
+    # mirror. get_shared_codec's cache key is (model_name, dim, device), so a
+    # repointed model_name still gets its own cached singleton.
+    dense_model: str = "BAAI/bge-m3"
     # Stage 4 / Issue #139 (2026-05-18): recalibrated 0.35 -> 0.58 for dim=1024.
     # 0.35 was a dim-256 value. Measured over the dim-1024 BGE-M3 v2 vectors in
     # the bench fixtures (17.5k docs, 200k random unrelated doc pairs):
@@ -960,6 +974,10 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
                 "splade_content_cap", cfg.ingestion.splade_content_cap)),
             citation_path_anchors=list(i.get(
                 "citation_path_anchors", cfg.ingestion.citation_path_anchors)),
+            # #207 dense fast-follow: passage cap shared across all three
+            # BGE-M3 encode paths.
+            dense_passage_char_cap=int(i.get(
+                "dense_passage_char_cap", cfg.ingestion.dense_passage_char_cap)),
         )
 
     # Context (cold-tier retrieval knobs — C.2 of B->C, 2026-04-10)
@@ -1012,6 +1030,8 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             entity_graph_retrieval_enabled=bool(r.get("entity_graph_retrieval_enabled", cfg.retrieval.entity_graph_retrieval_enabled)),
             dense_embedding_enabled=bool(r.get("dense_embedding_enabled", cfg.retrieval.dense_embedding_enabled)),
             dense_embedding_dim=int(r.get("dense_embedding_dim", cfg.retrieval.dense_embedding_dim)),
+            # #207 dense fast-follow: BGE-M3 model ID.
+            dense_model=str(r.get("dense_model", cfg.retrieval.dense_model)),
             ann_similarity_threshold=float(r.get("ann_similarity_threshold", cfg.retrieval.ann_similarity_threshold)),
             ann_threshold_min_genes=int(r.get("ann_threshold_min_genes", cfg.retrieval.ann_threshold_min_genes)),
             ann_threshold_max_genes=int(r.get("ann_threshold_max_genes", cfg.retrieval.ann_threshold_max_genes)),
