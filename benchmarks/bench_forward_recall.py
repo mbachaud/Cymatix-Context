@@ -193,6 +193,9 @@ def run_probe(n: int, weight: float, seed: int) -> Dict:
             "seed": seed,
             "n": n,
             "weight": weight,
+            # #256: direct construction now runs the shipped fusion default;
+            # stamp it so cross-run comparisons are self-labeling.
+            "fusion_mode": genome._fusion_mode,
             "tcm_fai": tcm_fai,
             "tier1_fai": tier1_fai,
             "last_gene_tcm_rank": last_gene_tcm_rank,

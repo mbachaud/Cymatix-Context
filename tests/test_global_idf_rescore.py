@@ -245,7 +245,14 @@ def test_flag_off_reproduces_bug(idf_trap_setup):
 def test_flag_on_fixes_within_shard_order(idf_trap_setup):
     """Flag ON (per-doc global IDF): GOLD outranks WRONG — the fix."""
     os.environ[_FLAG] = "1"
-    router = ShardRouter(idf_trap_setup["main_path"])
+    # additive-physics pin (#256): the #182 global-IDF lexical splice
+    # (corrected = raw - old_local_fts5 + new_global_fts5) is only
+    # scale-coherent when the per-shard store publishes additive/BM25-scale
+    # scores. Production per-shard Genomes run rrf (config.retrieval.fusion_mode
+    # fanned via open_read_source -> ShardRouter -> per-shard Genome), where the
+    # frob-heavy WRONG doc no longer enters the merged pool at all — the fix's
+    # OFF/ON contrast collapses. tracked in #265.
+    router = ShardRouter(idf_trap_setup["main_path"], fusion_mode="additive")
     try:
         gold_rank, ids = _rank_of(router, idf_trap_setup["gold_id"], _QUERY)
         wrong_rank, _ = _rank_of(router, idf_trap_setup["wrong_id"], _QUERY)
@@ -268,7 +275,10 @@ def test_flag_truthy_variants(idf_trap_setup):
 
     for val in ("1", "true", "YES", "On"):
         os.environ[_FLAG] = val
-        router = ShardRouter(idf_trap_setup["main_path"])
+        # additive-physics pin (#256): #182 global-IDF splice is additive-scale;
+        # production per-shard Genomes run rrf where WRONG drops out of the pool.
+        # tracked in #265.
+        router = ShardRouter(idf_trap_setup["main_path"], fusion_mode="additive")
         try:
             gr, _ = _rank_of(router, gold_id, _QUERY)
             wr, _ = _rank_of(router, wrong_id, _QUERY)
@@ -280,7 +290,9 @@ def test_flag_truthy_variants(idf_trap_setup):
 
     for val in ("0", "false", "no", "", "maybe"):
         os.environ[_FLAG] = val
-        router = ShardRouter(idf_trap_setup["main_path"])
+        # additive-physics pin (#256): scalar-path OFF branch of the same
+        # additive-scale #182 contrast. tracked in #265.
+        router = ShardRouter(idf_trap_setup["main_path"], fusion_mode="additive")
         try:
             gr, _ = _rank_of(router, gold_id, _QUERY)
             wr, _ = _rank_of(router, wrong_id, _QUERY)

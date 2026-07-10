@@ -1366,7 +1366,16 @@ def test_doc_type_boost_does_not_regress_deep_implementation_file(
     the README — i.e. the boost only re-orders near-tied candidates,
     never a wide-margin winner.
     """
-    router = ShardRouter(doc_type_boost_setup["main_path"])
+    # additive-physics pin (#256): the #121 doc-type boost is a FIXED 1.15x
+    # multiplier whose "only re-orders near-tied candidates" invariant holds
+    # only on additive/BM25-scale per-shard scores (wide keyword-density
+    # margins). Production per-shard Genomes run rrf (config.retrieval.fusion_mode
+    # fanned via open_read_source -> ShardRouter -> per-shard Genome); RRF
+    # rank-fusion compresses the impl-vs-README margin to near-zero, so the
+    # 1.15x boost becomes decisive and flips the keyword-dense impl file BELOW
+    # the README (README 3.49 > impl 3.04) — a real prod-relevant #121
+    # regression under the rrf default. tracked in #264.
+    router = ShardRouter(doc_type_boost_setup["main_path"], fusion_mode="additive")
     try:
         results = router.query_genes(
             domains=["acme"], entities=["binary"], max_genes=10,

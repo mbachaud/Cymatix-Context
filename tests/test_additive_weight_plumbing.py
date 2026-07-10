@@ -247,7 +247,12 @@ _GOLDEN_CONTRIB = {'gA': {'tag_exact': 3.0, 'tag_prefix': 1.5, 'fts5': 2.7103432
 
 
 def test_additive_default_scores_byte_identical_to_prefix_golden():
-    ranked, scores, contrib = capture()
+    # additive-physics pin (#256): tests the legacy accumulator, removed v(N+2)
+    g = make_genome(fusion_mode="additive")
+    try:
+        ranked, scores, contrib = run_query(g)
+    finally:
+        g.close()
     assert ranked == _GOLDEN_RANKED, (
         f"ranking diverged from pre-#202 additive literals:\n"
         f"  expected {_GOLDEN_RANKED}\n  got      {ranked}"
@@ -279,6 +284,8 @@ def test_every_plumbed_tier_fired_in_golden_corpus():
 def test_explicit_default_weights_byte_identical():
     """Passing the documented defaults explicitly == passing nothing."""
     g = make_genome(
+        # additive-physics pin (#256): tests the legacy accumulator, removed v(N+2)
+        fusion_mode="additive",
         fts5_weight=3.0,
         splade_weight=3.5,
         tag_exact_weight=3.0,
