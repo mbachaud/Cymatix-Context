@@ -1032,6 +1032,8 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
                 synonym_map=config.synonym_map,
                 sema_codec=getattr(helix, "_sema_codec", None),
                 splade_enabled=config.ingestion.splade_enabled,
+                splade_model=config.ingestion.splade_model,  # #207 item 1
+                splade_content_cap=config.ingestion.splade_content_cap,  # #207 item 3
                 # Issue #164: size-aware SPLADE auto-toggle thresholds.
                 splade_auto_enable_below_genes=config.ingestion.splade_auto_enable_below_genes,
                 splade_auto_disable_above_genes=config.ingestion.splade_auto_disable_above_genes,

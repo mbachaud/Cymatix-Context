@@ -453,6 +453,8 @@ class KnowledgeStore:
         synonym_map: Optional[Dict[str, List[str]]] = None,
         sema_codec=None,
         splade_enabled: bool = False,
+        splade_model: str = "naver/splade-cocondenser-ensembledistil",  # #207
+        splade_content_cap: int = 1000,  # #207: chars SPLADE-encoded at ingest
         entity_graph: bool = False,
         sr_enabled: bool = False,
         sr_gamma: float = 0.85,
@@ -565,6 +567,8 @@ class KnowledgeStore:
         self._sema_codec = sema_codec  # Optional SemaCodec for Tier 4 retrieval
         self._replication_mgr = None  # Set by set_replication_manager()
         self._splade_enabled = splade_enabled
+        self._splade_model = splade_model  # #207 item 1
+        self._splade_content_cap = splade_content_cap  # #207 item 3
         # Issue #164: per-upsert SPLADE auto-toggle thresholds.
         self._splade_auto_enable_below: int = int(splade_auto_enable_below_genes or 0)
         self._splade_auto_disable_above: int = int(splade_auto_disable_above_genes or 0)
@@ -1440,6 +1444,8 @@ class KnowledgeStore:
         sync_splade_index(
             cur, gene_id, gene.content, effective_splade,
             splade_sparse=splade_sparse,
+            content_cap=self._splade_content_cap,
+            model_name=self._splade_model,
         )
 
         # Single atomic commit — document + tags + FTS5 + entity graph + SPLADE
