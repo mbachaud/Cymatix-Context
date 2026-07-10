@@ -73,7 +73,15 @@ log = logging.getLogger(__name__)
 #
 # Patterns are anchored to directory boundaries to avoid false positives
 # on legitimate files that happen to contain the substring.
-_DENY_PATTERNS = [
+#
+# Issue #207 item 5: this is the documented built-in deny list. Deployments
+# that need extra structural exclusions add regex fragments via
+# ``[ingestion] deny_list_extra`` (config.py IngestionConfig) instead of
+# editing this module — they're ORed onto DENY_PATTERNS + LOCALE_DENY_PATTERN
+# (below) at KnowledgeStore construction time. This constant itself is
+# unchanged by that knob; it stays the canonical "what ships out of the box"
+# reference.
+DENY_PATTERNS = [
     # Build artifacts
     r"[\\/]\.next[\\/]",
     r"[\\/]node_modules[\\/]",
@@ -102,25 +110,62 @@ _DENY_PATTERNS = [
     r"server-reference-manifest\.(js|json)$",
     # Binary / compiled artifacts
     r"\.(pyc|pyo|so|dll|dylib|exe|wasm|bin|pack|idx)$",
-    # Non-English software locale directories (English is kept as the
-    # primary user base; other locales are high-volume low-signal for
-    # typical retrieval workloads). Game subtitles are NOT in this list —
-    # they're reframed as signal along with the rest of the game content.
-    r"[\\/]locale[\\/](?!en[\\/])[a-z]{2,3}[\\/]",
 ]
 
+# Non-English software locale directories (English is kept as the primary
+# user base; other locales are high-volume low-signal for typical retrieval
+# workloads). Game subtitles are NOT covered by this pattern — they're
+# reframed as signal along with the rest of the game content.
+#
+# Issue #207 item 5: split out of DENY_PATTERNS into its own named constant
+# so it can be toggled independently via ``[ingestion]
+# locale_demotion_enabled`` (default True — byte-identical to the prior
+# always-on behavior) for deployments that DO want non-English locale/
+# directories ingested.
+LOCALE_DENY_PATTERN = r"[\\/]locale[\\/](?!en[\\/])[a-z]{2,3}[\\/]"
+
+# Back-compat aliases for the pre-#207 private names (this module's own
+# code and any external callers that imported the "private" name).
+_DENY_PATTERNS = DENY_PATTERNS + [LOCALE_DENY_PATTERN]
 _DENY_RE = re.compile("|".join(_DENY_PATTERNS), re.IGNORECASE)
 
 
-def is_denied_source(source_id: Optional[str]) -> bool:
+def build_deny_regex(
+    extra_patterns: Optional[List[str]] = None,
+    locale_demotion_enabled: bool = True,
+) -> "re.Pattern[str]":
+    """Compile the structural deny-list regex for one KnowledgeStore.
+
+    Issue #207 item 5: ``extra_patterns`` (``[ingestion] deny_list_extra``)
+    are regex fragments ORed onto the built-in ``DENY_PATTERNS``, same
+    ``re.IGNORECASE`` semantics. ``locale_demotion_enabled=False`` drops
+    ``LOCALE_DENY_PATTERN`` so non-English ``locale/`` directories are no
+    longer structurally excluded. Defaults reproduce the prior hardwired
+    behavior byte-for-byte.
+    """
+    patterns = list(DENY_PATTERNS)
+    if locale_demotion_enabled:
+        patterns.append(LOCALE_DENY_PATTERN)
+    patterns.extend(extra_patterns or ())
+    return re.compile("|".join(patterns), re.IGNORECASE)
+
+
+def is_denied_source(
+    source_id: Optional[str],
+    deny_re: "Optional[re.Pattern[str]]" = None,
+) -> bool:
     """Return True iff source_id matches the structural noise deny list.
 
     Exposed as a module-level function so tests and scripts can reuse it
-    without constructing a full KnowledgeStore instance.
+    without constructing a full KnowledgeStore instance. ``deny_re``
+    defaults to the module-level ``_DENY_RE`` (built-in patterns, locale
+    demotion on) — pass a ``build_deny_regex(...)`` result to honor a
+    KnowledgeStore's configured ``deny_list_extra`` /
+    ``locale_demotion_enabled`` (Issue #207 item 5).
     """
     if not source_id:
         return False
-    return bool(_DENY_RE.search(source_id))
+    return bool((deny_re or _DENY_RE).search(source_id))
 
 
 # ── Path tokenization for the path_key_index retrieval layer ────────────
@@ -460,6 +505,12 @@ class KnowledgeStore:
         # reproduce the prior hardwired literals byte-for-byte.
         dense_model: str = "BAAI/bge-m3",
         dense_passage_char_cap: int = 2000,
+        # Issue #207 item 5: structural deny-list extensibility. Extra regex
+        # fragments ORed onto DENY_PATTERNS, and an on/off switch for the
+        # LOCALE_DENY_PATTERN non-English demotion. Defaults reproduce the
+        # prior hardwired behavior byte-for-byte.
+        deny_list_extra: Optional[List[str]] = None,
+        locale_demotion_enabled: bool = True,
         entity_graph: bool = False,
         sr_enabled: bool = False,
         sr_gamma: float = 0.85,
@@ -593,6 +644,14 @@ class KnowledgeStore:
         self._splade_content_cap = splade_content_cap  # #207 item 3
         self._dense_model = dense_model  # #207 dense fast-follow
         self._dense_passage_char_cap = dense_passage_char_cap  # #207 dense fast-follow
+        # #207 item 5: deny-list extensibility. Compiled once at construction
+        # (extra patterns / locale toggle don't change over a store's life).
+        self._deny_list_extra = list(deny_list_extra or [])
+        self._locale_demotion_enabled = locale_demotion_enabled
+        self._deny_re = build_deny_regex(
+            extra_patterns=self._deny_list_extra,
+            locale_demotion_enabled=self._locale_demotion_enabled,
+        )
         # Issue #164: per-upsert SPLADE auto-toggle thresholds.
         self._splade_auto_enable_below: int = int(splade_auto_enable_below_genes or 0)
         self._splade_auto_disable_above: int = int(splade_auto_disable_above_genes or 0)
@@ -4376,8 +4435,9 @@ class KnowledgeStore:
         buffers and need the monotonic counter to remain a valid signal
         until they're touched again under the slice 2 wiring.
         """
-        # Stage 1: structural deny list
-        if is_denied_source(gene.source_id):
+        # Stage 1: structural deny list (#207 item 5: honors this store's
+        # configured deny_list_extra / locale_demotion_enabled)
+        if is_denied_source(gene.source_id, deny_re=self._deny_re):
             return ChromatinState.HETEROCHROMATIN, "deny_list"
 
         # Stage 2a: windowed access-rate override (preferred)
