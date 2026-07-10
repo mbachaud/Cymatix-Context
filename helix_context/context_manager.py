@@ -119,6 +119,32 @@ def get_pipeline_ring_max() -> int:
     return _PIPELINE_RING_MAX
 
 
+def _shorten_source_path(src: str, anchors) -> str:
+    """Shorten an absolute ingest path to a source-type-relative citation.
+
+    Strips everything up to and including the LAST occurrence of the first
+    matching anchor in ``anchors`` (default ``['sources', 'Projects']``),
+    preserving the source-type prefix (``confluence/``, ``github/``, ...) in
+    ``<GENE src=...>`` and anchoring on nested
+    ``.../sources/.../sources_attached/...`` layouts; falls back to the last
+    three path segments (fixes #146's over-truncation). Issue #207 item 2 —
+    anchors come from ``[ingestion] citation_path_anchors`` so non-owner /
+    air-gap deployments don't leak owner path segments into citations. Returns
+    ``""`` for empty or ``_``-prefixed synthetic sources.
+    """
+    if not src or src.startswith("_"):
+        return ""
+    parts = src.replace("\\", "/").split("/")
+    for anchor in anchors or ():
+        idx = -1
+        for i, p in enumerate(parts):
+            if p == anchor:
+                idx = i
+        if idx >= 0 and idx + 1 < len(parts):
+            return "/".join(parts[idx + 1:])
+    return "/".join(parts[-3:]) if len(parts) > 3 else src
+
+
 class _stage_timer:
     """Context manager that records helix_pipeline_stage_seconds on exit."""
 
@@ -699,7 +725,8 @@ class HelixContextManager:
         try:
             from .backends.sema import LazySemaCodec, sema_available
             if self._sema_embed_on_ingest and sema_available():
-                self._sema_codec = LazySemaCodec()
+                self._sema_codec = LazySemaCodec(
+                    model_name=self.config.ingestion.sema_model)  # #207 item 1
                 if self._lazy_encoders:
                     log.info(
                         "ΣĒMA codec armed (lazy) — model loads on first semantic call"
@@ -734,6 +761,8 @@ class HelixContextManager:
             synonym_map=config.synonym_map,
             sema_codec=self._sema_codec,
             splade_enabled=config.ingestion.splade_enabled,
+            splade_model=config.ingestion.splade_model,  # #207 item 1
+            splade_content_cap=config.ingestion.splade_content_cap,  # #207 item 3
             # Issue #164: size-aware SPLADE auto-toggle thresholds. Both
             # default 0 (toggle off); see IngestionConfig docstring.
             splade_auto_enable_below_genes=config.ingestion.splade_auto_enable_below_genes,
@@ -1801,35 +1830,8 @@ class HelixContextManager:
         with _pipeline_stage_span("splice"), _stage_timer("splice"):
             for idx, g in enumerate(candidates):
                 src = g.source_id or ""
-                short = ""
-                if src and not src.startswith("_"):
-                    parts = src.replace("\\", "/").split("/")
-                    # Canonical ingest layout is `<root>/sources/<source_type>/...`
-                    # (e.g. enterprise_rag_*: `F:/tmp/.../sources/confluence/...`,
-                    # or `F:/Projects/EnterpriseRAG-Bench-main/generated_data/sources/...`).
-                    # Slice from the segment AFTER `sources/` so the source-type
-                    # prefix (`confluence/`, `github/`, etc.) is preserved verbatim
-                    # in `<GENE src=...>`. Fixes #146 — the prior `parts[-3:]`
-                    # fallback dropped the source-type for any path >3 segments
-                    # deep below `sources/<type>/`, which was ~30% of confluence
-                    # paths in enterprise_rag_* and propagated as truncated
-                    # citations into the answerer prompt and downstream lookups.
-                    short = ""
-                    # Prefer the last `sources` segment so nested fixtures like
-                    # `.../sources/confluence/.../sources_attached/...` still
-                    # anchor on the canonical ingest boundary.
-                    src_idx = -1
-                    for _i, _p in enumerate(parts):
-                        if _p == "sources":
-                            src_idx = _i
-                    if src_idx >= 0 and src_idx + 1 < len(parts):
-                        short = "/".join(parts[src_idx + 1:])
-                    if not short:
-                        try:
-                            j = parts.index("Projects")
-                            short = "/".join(parts[j + 1:])
-                        except ValueError:
-                            short = "/".join(parts[-3:]) if len(parts) > 3 else src
+                short = _shorten_source_path(
+                    src, self.config.ingestion.citation_path_anchors)
                 # Dense XML document format — structured for small model extraction
                 kv_attrs = ""
                 if g.key_values:

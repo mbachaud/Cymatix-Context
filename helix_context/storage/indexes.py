@@ -361,6 +361,8 @@ def sync_splade_index(
     content: str,
     splade_enabled: bool,
     splade_sparse: Optional[Dict[str, float]] = None,
+    content_cap: int = 1000,
+    model_name: str = "naver/splade-cocondenser-ensembledistil",
 ) -> None:
     """Populate the SPLADE sparse-term index.  No-op when disabled.
 
@@ -375,7 +377,8 @@ def sync_splade_index(
     try:
         if splade_sparse is None:
             from ..backends import splade_backend
-            splade_sparse = splade_backend.encode(content[:1000])
+            splade_sparse = splade_backend.encode(
+                content[:content_cap], model_name=model_name)
         cur.execute("DELETE FROM splade_terms WHERE gene_id = ?", (gene_id,))
         if splade_sparse:
             cur.executemany(

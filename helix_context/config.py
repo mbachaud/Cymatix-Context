@@ -294,6 +294,23 @@ class IngestionConfig:
     # to a head-to-head SPLADE-on/off ablation across that range.
     splade_auto_enable_below_genes: int = 0
     splade_auto_disable_above_genes: int = 0
+    # Issue #207 (de-hardcoding wave 2, items 1-3). Defaults reproduce the prior
+    # hardwired literals byte-for-byte; air-gap / mirror deployments repoint the
+    # model IDs at a local mirror, and recall-ceiling tuning raises the caps.
+    #   item 1 — model IDs (were hardwired in splade_backend/sema). Dense
+    #   (BAAI/bge-m3) is deferred to a fast-follow: its codec is a process-wide
+    #   shared singleton (get_shared_codec) + the passage cap must stay
+    #   byte-identical between inline ingest and scripts/backfill_bgem3_v2.py.
+    splade_model: str = "naver/splade-cocondenser-ensembledistil"
+    sema_model: str = "all-MiniLM-L6-v2"
+    #   item 3 — silent recall ceiling (SPLADE was hardwired content[:1000]):
+    splade_content_cap: int = 1000   # chars SPLADE-encoded at ingest (storage/indexes.sync_splade_index)
+    #   item 2 — citation shortener anchors (were literal 'sources'/'Projects' in
+    #   context_manager): last occurrence of each, in list order, is the strip
+    #   point. Add your ingest roots here for correct <GENE src=...> shortening.
+    citation_path_anchors: List[str] = field(
+        default_factory=lambda: ["sources", "Projects"]
+    )
 
 
 @dataclass
@@ -936,6 +953,13 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
                 "splade_auto_disable_above_genes",
                 cfg.ingestion.splade_auto_disable_above_genes,
             )),
+            # Issue #207: de-hardcoded model IDs + SPLADE cap + citation anchors.
+            splade_model=i.get("splade_model", cfg.ingestion.splade_model),
+            sema_model=i.get("sema_model", cfg.ingestion.sema_model),
+            splade_content_cap=int(i.get(
+                "splade_content_cap", cfg.ingestion.splade_content_cap)),
+            citation_path_anchors=list(i.get(
+                "citation_path_anchors", cfg.ingestion.citation_path_anchors)),
         )
 
     # Context (cold-tier retrieval knobs — C.2 of B->C, 2026-04-10)
