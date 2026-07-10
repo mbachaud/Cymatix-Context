@@ -13,10 +13,10 @@ import pytest
 from fastapi.testclient import TestClient
 
 import helix_context.server as server_mod
-from helix_context.config import HelixConfig, GenomeConfig, RibosomeConfig, ServerConfig
+from helix_context.config import HelixConfig, GenomeConfig, KnowConfig, RibosomeConfig, ServerConfig
 from helix_context.server import create_app
 
-from tests.conftest import make_client
+from tests.conftest import make_client, make_helix_config
 
 
 # -- Helpers -----------------------------------------------------------
@@ -161,6 +161,84 @@ class TestHealthEndpoint:
         assert hw["vram_total_gb"] is None
         assert hw["system_ram_gb"] == 64.0
         assert hw["low_vram_warning"] is False
+
+    # -- Issue #239: know/miss calibration staleness surfacing ---------
+
+    def test_health_know_calibration_uncalibrated_is_stale(self, monkeypatch):
+        """A fresh install (calibrated_at never set) must read as stale —
+        not merely 'age unknown' — so agents don't silently trust the
+        ship-time default betas as if they were bench-validated."""
+        monkeypatch.setattr(
+            server_mod,
+            "_probe_upstream",
+            lambda _url, timeout_s=1.0: {"reachable": True, "probe": "/api/tags", "status_code": 200},
+        )
+        client = make_client(make_helix_config(know=KnowConfig()))
+        resp = client.get("/health")
+        assert resp.status_code == 200
+        body = resp.json()
+        assert "know_calibration" in body
+        know = body["know_calibration"]
+        assert know["calibrated_at"] is None
+        assert know["calibrated_on_n"] is None
+        assert know["stale"] is True
+
+    def test_health_know_calibration_fresh_is_not_stale(self, monkeypatch):
+        monkeypatch.setattr(
+            server_mod,
+            "_probe_upstream",
+            lambda _url, timeout_s=1.0: {"reachable": True, "probe": "/api/tags", "status_code": 200},
+        )
+        import datetime as _dt
+        now_iso = _dt.datetime.now(_dt.timezone.utc).replace(microsecond=0).isoformat()
+        client = make_client(make_helix_config(
+            know=KnowConfig(calibrated_at=now_iso, calibrated_on_n=842, stale_after_days=30),
+        ))
+        resp = client.get("/health")
+        assert resp.status_code == 200
+        know = resp.json()["know_calibration"]
+        assert know["calibrated_at"] == now_iso
+        assert know["calibrated_on_n"] == 842
+        assert know["stale"] is False
+
+    def test_health_know_calibration_old_calibration_is_stale(self, monkeypatch):
+        monkeypatch.setattr(
+            server_mod,
+            "_probe_upstream",
+            lambda _url, timeout_s=1.0: {"reachable": True, "probe": "/api/tags", "status_code": 200},
+        )
+        import datetime as _dt
+        old_iso = (
+            _dt.datetime.now(_dt.timezone.utc) - _dt.timedelta(days=60)
+        ).replace(microsecond=0).isoformat()
+        client = make_client(make_helix_config(
+            know=KnowConfig(calibrated_at=old_iso, calibrated_on_n=500, stale_after_days=30),
+        ))
+        resp = client.get("/health")
+        assert resp.status_code == 200
+        know = resp.json()["know_calibration"]
+        assert know["calibrated_at"] == old_iso
+        assert know["stale"] is True
+
+    def test_health_know_calibration_respects_custom_stale_after_days(self, monkeypatch):
+        """A calibration 10 days old is fresh under stale_after_days=30
+        but stale under stale_after_days=5 — the threshold is read from
+        config, not hardcoded."""
+        monkeypatch.setattr(
+            server_mod,
+            "_probe_upstream",
+            lambda _url, timeout_s=1.0: {"reachable": True, "probe": "/api/tags", "status_code": 200},
+        )
+        import datetime as _dt
+        ten_days_ago = (
+            _dt.datetime.now(_dt.timezone.utc) - _dt.timedelta(days=10)
+        ).replace(microsecond=0).isoformat()
+        client = make_client(make_helix_config(
+            know=KnowConfig(calibrated_at=ten_days_ago, calibrated_on_n=100, stale_after_days=5),
+        ))
+        resp = client.get("/health")
+        know = resp.json()["know_calibration"]
+        assert know["stale"] is True
 
 
 class TestStatsEndpoint:
