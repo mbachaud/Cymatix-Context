@@ -1057,6 +1057,8 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
                 splade_content_cap=config.ingestion.splade_content_cap,  # #207 item 3
                 dense_model=config.retrieval.dense_model,  # #207 dense fast-follow
                 dense_passage_char_cap=config.ingestion.dense_passage_char_cap,  # #207 dense fast-follow
+                deny_list_extra=config.ingestion.deny_list_extra,  # #207 item 5
+                locale_demotion_enabled=config.ingestion.locale_demotion_enabled,  # #207 item 5
                 # Issue #164: size-aware SPLADE auto-toggle thresholds.
                 splade_auto_enable_below_genes=config.ingestion.splade_auto_enable_below_genes,
                 splade_auto_disable_above_genes=config.ingestion.splade_auto_disable_above_genes,

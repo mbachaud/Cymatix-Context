@@ -21,6 +21,7 @@ import asyncio
 import hashlib
 import logging
 import os
+import re
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -261,6 +262,82 @@ SMALL_MODEL_PATTERNS = {
     "llama3.2:3b": 3.0, "llama3.2:1b": 1.0,
     "phi-3.5:mini": 3.2, "gemma2:2b": 2.0,
 }
+
+# Issue #207 item 6: the exact-string table above requires an exact
+# "family:tag" match, so it silently misses every model NOT explicitly
+# listed — including whole families (mistral, deepseek, granite) that
+# follow the same ":NNb" Ollama tag convention. This regex is the generic
+# fallback: it parses a trailing ":<digits[.digits]>b" parameter-size tag
+# (e.g. "mistral:7b" -> 7.0, "deepseek-r1:8b" -> 8.0, "granite3:2b" -> 2.0,
+# "qwen3:0.6b" -> 0.6, "llama3.1:70b" -> 70.0) so any correctly-tagged model
+# gets a size-based bucket instead of the pre-#207 always-"large" default.
+_MODEL_PARAM_SIZE_RE = re.compile(r":(\d+(?:\.\d+)?)b\b", re.IGNORECASE)
+
+
+def _parse_model_param_size_b(model_name: str) -> Optional[float]:
+    """Parse a trailing ``:NNb`` parameter-size tag from a model name.
+
+    Returns the size in billions of parameters, or ``None`` if the model
+    name doesn't carry a recognizable ``:NNb`` suffix (Issue #207 item 6).
+    """
+    m = _MODEL_PARAM_SIZE_RE.search(model_name)
+    if not m:
+        return None
+    try:
+        return float(m.group(1))
+    except ValueError:
+        return None
+
+
+def resolve_model_capability_class(
+    model_name: str,
+    overrides: Optional[Dict[str, str]] = None,
+) -> str:
+    """Classify a compressor/ribosome model into a decoder capability class.
+
+    Returns one of ``"moe"`` (sliding-window attention, needs a front-loaded
+    answer slate), ``"small"`` (limited param capacity, same slate
+    treatment), or ``"large"`` (no front-loading needed).
+
+    Issue #207 item 6: the pre-existing ``MOE_MODEL_FAMILIES`` /
+    ``SMALL_MODEL_PATTERNS`` tables require an exact model-string match and
+    silently classified everything else as ``"large"`` — missing whole
+    families (mistral, deepseek, granite) that use the same ``:NNb`` Ollama
+    tag convention as the models already in the table. Resolution order:
+
+      1. ``overrides`` (``[budget] decoder_mode_overrides``) — operator
+         escape hatch, checked first. The first key that is a case-
+         insensitive substring of ``model_name`` wins (dict iteration
+         order == declaration order). Values are ``"moe"`` / ``"small"`` /
+         ``"large"``. Not the same thing as the unrelated per-request
+         ``DECODER_MODES`` prompt-template table (``resolve_decoder_mode``
+         in ``retrieval/query_classifier.py``) — this overrides only the
+         local compressor-model capability class.
+      2. ``MOE_MODEL_FAMILIES`` prefix match -> ``"moe"``.
+      3. ``SMALL_MODEL_PATTERNS`` exact match -> ``"small"``/``"large"`` by
+         the hand-calibrated param count. Kept ahead of the generic parse
+         because these values are measured, not inferred.
+      4. Generic ``:NNb`` parameter-size parse (``_parse_model_param_size_b``)
+         compared against ``SMALL_MODEL_THRESHOLD_B`` -- the new fallback.
+      5. Unparseable / unknown -> ``"large"`` (matches the pre-#207 default
+         for anything not in the table).
+
+    Defaults (``overrides={}``) reproduce the prior behavior byte-for-byte
+    for every model currently listed in the two tables.
+    """
+    name = (model_name or "").lower()
+    for substr, mode in (overrides or {}).items():
+        if substr.lower() in name:
+            return mode
+    if any(name.startswith(fam) for fam in MOE_MODEL_FAMILIES):
+        return "moe"
+    if name in SMALL_MODEL_PATTERNS:
+        return "small" if SMALL_MODEL_PATTERNS[name] <= SMALL_MODEL_THRESHOLD_B else "large"
+    parsed = _parse_model_param_size_b(name)
+    if parsed is not None and parsed <= SMALL_MODEL_THRESHOLD_B:
+        return "small"
+    return "large"
+
 
 # Stage 5 (2026-05-08): two new decoder modes for the small_moe class.
 # See docs/specs/2026-05-08-stage-5-caller-model-class.md §6.
@@ -777,6 +854,8 @@ class HelixContextManager:
             splade_content_cap=config.ingestion.splade_content_cap,  # #207 item 3
             dense_model=config.retrieval.dense_model,  # #207 dense fast-follow
             dense_passage_char_cap=config.ingestion.dense_passage_char_cap,  # #207 dense fast-follow
+            deny_list_extra=config.ingestion.deny_list_extra,  # #207 item 5
+            locale_demotion_enabled=config.ingestion.locale_demotion_enabled,  # #207 item 5
             # Issue #164: size-aware SPLADE auto-toggle thresholds. Both
             # default 0 (toggle off); see IngestionConfig docstring.
             splade_auto_enable_below_genes=config.ingestion.splade_auto_enable_below_genes,
@@ -984,9 +1063,15 @@ class HelixContextManager:
         # with long-range extraction. Applies to:
         #   1. MoE models (gemma4) — sliding-window attention misses distant tokens
         #   2. Sub-4B models — limited capacity can't attend across 15K tokens
+        # Issue #207 item 6: classification (incl. the generic ":NNb" parse
+        # fallback + [budget] decoder_mode_overrides) lives in
+        # resolve_model_capability_class.
         model_name = config.ribosome.active_model.lower()
-        is_moe = any(model_name.startswith(fam) for fam in MOE_MODEL_FAMILIES)
-        is_small = SMALL_MODEL_PATTERNS.get(model_name, 999) <= SMALL_MODEL_THRESHOLD_B
+        _capability_class = resolve_model_capability_class(
+            model_name, overrides=config.budget.decoder_mode_overrides,
+        )
+        is_moe = _capability_class == "moe"
+        is_small = _capability_class == "small"
         self._is_moe = is_moe or is_small
         if self._is_moe:
             log.info(

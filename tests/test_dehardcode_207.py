@@ -13,6 +13,19 @@ deferral: config defaults/overrides, KnowledgeStore forwarding, and a
 cross-path byte-identity check -- the #1 review risk the deferral flagged
 is the cap silently drifting between the inline-ingest and offline-backfill
 slices.
+
+Wave 2 items 5-6 (2026-07-10 lite follow-up, #207):
+  item 5 -- deny-list extensibility. knowledge_store.DENY_PATTERNS is now a
+  documented public constant; ``[ingestion] deny_list_extra`` ORs extra
+  regex fragments onto it and ``locale_demotion_enabled`` toggles the
+  non-English ``locale/`` demotion pattern independently.
+  item 6 -- the small-model/MoE decoder-capability table
+  (SMALL_MODEL_PATTERNS) required an exact model-string match and silently
+  missed whole families (mistral, deepseek, granite) that use the same
+  ":NNb" Ollama tag convention. ``resolve_model_capability_class`` adds a
+  generic ":NNb" parse fallback plus a ``[budget] decoder_mode_overrides``
+  operator escape hatch, with the hand-calibrated tables kept ahead of both
+  in priority.
 """
 import sqlite3
 import sys
@@ -21,11 +34,30 @@ from pathlib import Path
 
 import pytest
 
-from helix_context.config import HelixConfig, IngestionConfig, RetrievalConfig, load_config
-from helix_context.context_manager import _shorten_source_path
-from helix_context.knowledge_store import KnowledgeStore
+from helix_context.config import (
+    BudgetConfig,
+    HelixConfig,
+    IngestionConfig,
+    RetrievalConfig,
+    load_config,
+)
+from helix_context.context_manager import (
+    MOE_MODEL_FAMILIES,
+    SMALL_MODEL_PATTERNS,
+    SMALL_MODEL_THRESHOLD_B,
+    _parse_model_param_size_b,
+    _shorten_source_path,
+    resolve_model_capability_class,
+)
+from helix_context.knowledge_store import (
+    DENY_PATTERNS,
+    LOCALE_DENY_PATTERN,
+    KnowledgeStore,
+    build_deny_regex,
+    is_denied_source,
+)
 from helix_context.storage.indexes import sync_splade_index
-from tests.conftest import FakeBGEM3Codec
+from tests.conftest import FakeBGEM3Codec, make_gene
 
 
 def test_ingestion_knob_defaults_match_prior_literals():
@@ -291,3 +323,208 @@ def test_dense_cap_byte_identical_across_ingest_and_backfill(tmp_path):
         "ingest-path and backfill blobs differ for identical content+cap -- "
         "the passage cap has drifted between the two encode paths"
     )
+
+
+# ── Item 5 (2026-07-10 lite follow-up): deny-list extensibility ──────────
+
+
+def test_deny_list_knob_defaults_match_prior_literals():
+    ing = HelixConfig().ingestion
+    assert ing.deny_list_extra == []
+    assert ing.locale_demotion_enabled is True
+
+
+def test_deny_list_knobs_load_from_toml(tmp_path):
+    toml = tmp_path / "helix.toml"
+    toml.write_text(textwrap.dedent("""
+        [ingestion]
+        deny_list_extra = ["internal_only", "mycorp_scratch"]
+        locale_demotion_enabled = false
+    """), encoding="utf-8")
+    ing = load_config(str(toml)).ingestion
+    assert ing.deny_list_extra == ["internal_only", "mycorp_scratch"]
+    assert ing.locale_demotion_enabled is False
+
+
+def test_deny_patterns_is_the_documented_builtin_list():
+    """DENY_PATTERNS is public (no leading underscore) and does NOT include
+    the locale pattern -- that lives in the separately-toggleable
+    LOCALE_DENY_PATTERN (Issue #207 item 5)."""
+    assert not any(p is LOCALE_DENY_PATTERN for p in DENY_PATTERNS)
+    assert "node_modules" in "".join(DENY_PATTERNS)
+
+
+def test_build_deny_regex_defaults_are_byte_identical_to_module_level():
+    """build_deny_regex() with no args must match every path the prior
+    hardwired module-level regex matched."""
+    default_re = build_deny_regex()
+    assert default_re.search("project/node_modules/react/index.js")
+    assert default_re.search("project/locale/de/messages.po")
+    assert not default_re.search("project/locale/en/messages.po")
+    assert not default_re.search("F:/Projects/helix-context/helix_context/genome.py")
+
+
+def test_build_deny_regex_extra_patterns_are_ored_in():
+    deny_re = build_deny_regex(extra_patterns=[r"[\\/]internal_only[\\/]"])
+    assert deny_re.search("F:/corp/internal_only/secrets.md")
+    # built-ins still active
+    assert deny_re.search("project/node_modules/react/index.js")
+
+
+def test_build_deny_regex_locale_demotion_disabled():
+    deny_re = build_deny_regex(locale_demotion_enabled=False)
+    assert not deny_re.search("project/locale/de/messages.po")
+    # everything else in the built-in list is unaffected
+    assert deny_re.search("project/node_modules/react/index.js")
+
+
+def test_is_denied_source_accepts_a_precompiled_deny_re():
+    custom_re = build_deny_regex(extra_patterns=[r"[\\/]mycorp_noise[\\/]"])
+    assert is_denied_source("F:/x/mycorp_noise/y.txt", deny_re=custom_re) is True
+    # default (module-level) regex doesn't know about the custom pattern
+    assert is_denied_source("F:/x/mycorp_noise/y.txt") is False
+
+
+def test_knowledge_store_deny_ctor_defaults_match_prior_literals():
+    store = KnowledgeStore(":memory:")
+    try:
+        assert store._deny_list_extra == []
+        assert store._locale_demotion_enabled is True
+        assert store._deny_re.search("project/locale/de/messages.po")
+    finally:
+        store.close()
+
+
+def test_knowledge_store_deny_ctor_forwards_overrides():
+    store = KnowledgeStore(
+        ":memory:",
+        deny_list_extra=[r"[\\/]mycorp_noise[\\/]"],
+        locale_demotion_enabled=False,
+    )
+    try:
+        assert store._deny_list_extra == [r"[\\/]mycorp_noise[\\/]"]
+        assert store._locale_demotion_enabled is False
+        assert store._deny_re.search("F:/x/mycorp_noise/y.txt")
+        assert not store._deny_re.search("project/locale/de/messages.po")
+    finally:
+        store.close()
+
+
+def test_apply_density_gate_honors_deny_list_extra():
+    """A custom deny_list_extra pattern demotes a gene that the built-in
+    list alone would NOT catch."""
+    store = KnowledgeStore(":memory:", deny_list_extra=[r"[\\/]mycorp_noise[\\/]"])
+    try:
+        g = make_gene(content="x" * 2000, domains=["code"] * 10)
+        g.source_id = "F:/corp/mycorp_noise/report.txt"
+        state, reason = store.apply_density_gate(g)
+        assert reason == "deny_list"
+        from helix_context.schemas import ChromatinState
+        assert state == ChromatinState.HETEROCHROMATIN
+    finally:
+        store.close()
+
+
+def test_apply_density_gate_locale_demotion_disabled_admits_non_english():
+    """With locale_demotion_enabled=False, a non-English locale/ path no
+    longer forces deny_list -- it falls through to the score gate like any
+    other document."""
+    store = KnowledgeStore(":memory:", locale_demotion_enabled=False)
+    try:
+        g = make_gene(
+            content="x" * 2000,
+            domains=["code", "js", "lib"] * 10,
+        )
+        g.key_values = ["k1=v1", "k2=v2", "k3=v3"] * 5
+        g.source_id = "project/locale/de/messages.po"
+        state, reason = store.apply_density_gate(g)
+        assert reason != "deny_list"
+    finally:
+        store.close()
+
+
+# ── Item 6 (2026-07-10 lite follow-up): small-model/MoE decoder table ────
+
+
+@pytest.mark.parametrize("model_name,expected", [
+    ("mistral:7b", 7.0),
+    ("deepseek-r1:8b", 8.0),
+    ("granite3:2b", 2.0),
+    ("qwen3:0.6b", 0.6),
+    ("llama3.1:70b", 70.0),
+    ("some-model:latest", None),   # no :NNb suffix at all
+    ("bare-name", None),           # no colon
+    ("weird:b", None),             # no digits before the 'b'
+])
+def test_parse_model_param_size_b(model_name, expected):
+    assert _parse_model_param_size_b(model_name) == expected
+
+
+def test_resolve_model_capability_class_generic_parse_catches_missed_families():
+    """The families the issue calls out by name (mistral, deepseek,
+    granite) are NOT in SMALL_MODEL_PATTERNS -- they must now resolve via
+    the generic ':NNb' fallback instead of silently defaulting to 'large'."""
+    assert resolve_model_capability_class("mistral:7b") == "small"
+    assert resolve_model_capability_class("deepseek-r1:8b") == "small"
+    assert resolve_model_capability_class("granite3:2b") == "small"
+    # A large-parameter model correctly stays "large" via the same parser.
+    assert resolve_model_capability_class("llama3.1:70b") == "large"
+
+
+def test_resolve_model_capability_class_unparseable_defaults_large():
+    assert resolve_model_capability_class("some-frontier-model:latest") == "large"
+
+
+def test_resolve_model_capability_class_existing_table_entries_unchanged():
+    """Defaults byte-identical for every currently-listed model: table
+    lookups (and the gemma4 MoE-family prefix) take priority over the
+    generic parse."""
+    for name in SMALL_MODEL_PATTERNS:
+        expected = "small" if SMALL_MODEL_PATTERNS[name] <= SMALL_MODEL_THRESHOLD_B else "large"
+        if any(name.startswith(fam) for fam in MOE_MODEL_FAMILIES):
+            expected = "moe"
+        assert resolve_model_capability_class(name) == expected, name
+
+
+def test_resolve_model_capability_class_table_beats_generic_parse(monkeypatch):
+    """Issue #207 item 6: 'existing table entries keep priority.' Force a
+    table entry whose calibrated value disagrees with what the generic
+    ':NNb' parse would infer, and confirm the table wins."""
+    monkeypatch.setitem(SMALL_MODEL_PATTERNS, "calibrated-outlier:5b", 999.0)
+    # Naive ':NNb' parsing would call this "small" (5.0 <= 10.0), but the
+    # hand-calibrated table says otherwise -- the table must win.
+    assert resolve_model_capability_class("calibrated-outlier:5b") == "large"
+
+
+def test_decoder_mode_overrides_default_is_empty():
+    assert BudgetConfig().decoder_mode_overrides == {}
+
+
+def test_decoder_mode_overrides_loads_from_toml(tmp_path):
+    toml = tmp_path / "helix.toml"
+    toml.write_text(textwrap.dedent("""
+        [budget]
+        decoder_mode_overrides = { mistral = "large" }
+    """), encoding="utf-8")
+    cfg = load_config(str(toml))
+    assert cfg.budget.decoder_mode_overrides == {"mistral": "large"}
+
+
+def test_decoder_mode_overrides_take_precedence_over_everything():
+    """The override is an operator escape hatch -- it wins even over an
+    exact SMALL_MODEL_PATTERNS hit and even over a MOE_MODEL_FAMILIES
+    prefix match."""
+    # Without an override, gemma4:e2b is "moe" (MOE_MODEL_FAMILIES prefix).
+    assert resolve_model_capability_class("gemma4:e2b") == "moe"
+    assert resolve_model_capability_class(
+        "gemma4:e2b", overrides={"gemma4": "large"}
+    ) == "large"
+    # Substring match, case-insensitive.
+    assert resolve_model_capability_class(
+        "Mistral:7B", overrides={"mistral": "small"}
+    ) == "small"
+
+
+def test_decoder_mode_overrides_first_matching_key_wins():
+    overrides = {"mistral": "large", "mistral:7b": "small"}
+    assert resolve_model_capability_class("mistral:7b", overrides=overrides) == "large"

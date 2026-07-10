@@ -132,6 +132,14 @@ class BudgetConfig:
     max_fingerprints_per_turn: int = 40
     splice_aggressiveness: float = 0.3  # default aligned with shipped helix.toml (2026-06-12 default-honesty pass)
     decoder_mode: str = "condensed"  # "full"|"condensed"|"minimal"|"none". Default aligned with shipped helix.toml (2026-06-12 default-honesty pass)
+    # Issue #207 item 6: operator override for the compressor/ribosome-model
+    # capability classification (context_manager.resolve_model_capability_class)
+    # -- NOT the same table as decoder_mode above. Maps a model-name substring
+    # (case-insensitive) to one of "moe" / "small" / "large"; checked before
+    # the hand-calibrated MOE_MODEL_FAMILIES / SMALL_MODEL_PATTERNS tables and
+    # the generic ":NNb" parameter-size fallback those tables now have. Empty
+    # by default: byte-identical to pre-#207 behavior.
+    decoder_mode_overrides: Dict[str, str] = field(default_factory=dict)
     # Sprint 1 legibility pack (AI-consumer roadmap): emit a one-line
     # metadata header per document in expressed_context — fired tiers,
     # confidence marker, short gene_id, compression ratio. See
@@ -316,6 +324,21 @@ class IngestionConfig:
     citation_path_anchors: List[str] = field(
         default_factory=lambda: ["sources", "Projects"]
     )
+    # Issue #207 item 5: deny-list extensibility. The built-in structural
+    # deny list is the documented constant knowledge_store.DENY_PATTERNS
+    # (+ LOCALE_DENY_PATTERN for non-English locale/ demotion, gated by
+    # locale_demotion_enabled below). deny_list_extra entries are regex
+    # fragments ORed onto the built-in list at KnowledgeStore construction
+    # (same re.IGNORECASE, directory-boundary-anchored semantics — e.g.
+    # r"[\\/]internal_only[\\/]"). Empty by default: byte-identical to the
+    # prior hardwired behavior.
+    deny_list_extra: List[str] = field(default_factory=list)
+    # Non-English software locale/ directories (locale/de/, locale/ja/, ...)
+    # are demoted to HETEROCHROMATIN at ingest by default (high-volume,
+    # low-signal for typical English-primary retrieval workloads). Flip to
+    # False for deployments that DO want non-English locale content ingested
+    # at full tier. Default True reproduces the prior always-on behavior.
+    locale_demotion_enabled: bool = True
 
 
 @dataclass
@@ -924,6 +947,8 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             max_fingerprints_per_turn=b.get("max_fingerprints_per_turn", cfg.budget.max_fingerprints_per_turn),
             splice_aggressiveness=float(b.get("splice_aggressiveness", cfg.budget.splice_aggressiveness)),
             decoder_mode=b.get("decoder_mode", cfg.budget.decoder_mode),
+            decoder_mode_overrides=dict(b.get(
+                "decoder_mode_overrides", cfg.budget.decoder_mode_overrides)),
             legibility_enabled=bool(b.get("legibility_enabled", cfg.budget.legibility_enabled)),
             session_delivery_enabled=bool(b.get("session_delivery_enabled", cfg.budget.session_delivery_enabled)),
             abstain_enabled=bool(b.get("abstain_enabled", cfg.budget.abstain_enabled)),
@@ -1040,6 +1065,11 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             # BGE-M3 encode paths.
             dense_passage_char_cap=int(i.get(
                 "dense_passage_char_cap", cfg.ingestion.dense_passage_char_cap)),
+            # Issue #207 item 5: deny-list extensibility.
+            deny_list_extra=list(i.get(
+                "deny_list_extra", cfg.ingestion.deny_list_extra)),
+            locale_demotion_enabled=bool(i.get(
+                "locale_demotion_enabled", cfg.ingestion.locale_demotion_enabled)),
         )
 
     # Context (cold-tier retrieval knobs — C.2 of B->C, 2026-04-10)
