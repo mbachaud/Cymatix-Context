@@ -516,14 +516,15 @@ class KnowledgeStore:
         # Stage 2: dense recall pool size, decoupled from ann_threshold_max_genes.
         dense_pool_size: int = 500,
         # Stage 3 (2026-05-08): Reciprocal Rank Fusion (spec
-        # docs/specs/2026-05-08-stage-3-rrf-fusion.md). Default
-        # "additive" preserves pre-Stage-3 ranking byte-for-byte; flip
-        # to "rrf" to enable rank fusion. Issue #202: the per-tier
-        # weights bind in BOTH fusion modes -- under "additive" they are
-        # the tier coefficients/caps themselves (defaults == the old
-        # inline literals, so untouched configs are bit-identical);
+        # docs/specs/2026-05-08-stage-3-rrf-fusion.md). Default "rrf"
+        # matches RetrievalConfig.fusion_mode (#256 harmonized the layer
+        # defaults; the config default flipped in #247 with SIKE Run-2
+        # receipts). Pass "additive" explicitly for the legacy
+        # pre-Stage-3 accumulator (scheduled for removal in v(N+2)).
+        # Issue #202: the per-tier weights bind in BOTH fusion modes --
+        # under "additive" they are the tier coefficients/caps themselves,
         # under "rrf" they are rank post-multipliers.
-        fusion_mode: str = "additive",
+        fusion_mode: str = "rrf",
         rrf_k: int = 60,
         # Issue #255 (PR-2, 2026-07-10): post-fusion rerank combinator. Only
         # consulted under fusion_mode == "rrf" (the additive branch never

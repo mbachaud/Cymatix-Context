@@ -369,6 +369,9 @@ def run_scenario(s: Scenario) -> dict:
         "name": s.name,
         "query": s.query,
         "task_type": s.task_type,
+        # #256: direct construction now runs the shipped fusion default;
+        # stamp it so cross-run comparisons are self-labeling.
+        "fusion_mode": g._fusion_mode,
         "expected_status": s.expected_status,
         "actual_status": actual_status,
         "status_ok": status_ok,

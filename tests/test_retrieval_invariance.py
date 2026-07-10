@@ -15,12 +15,12 @@ DEFECT-1  Under ``fusion_mode="rrf"`` (the config default), the final
           <=0.25 and the warm sema_boost.  One authority hit is ~40x the
           fused signal — the bonuses effectively BECOME the ranking.
 
-DEFECT-2  ``KnowledgeStore.__init__`` defaults ``fusion_mode="additive"``
-          (knowledge_store.py:519) while ``RetrievalConfig`` defaults
-          ``"rrf"`` (config.py:461) — config-built servers and
-          directly-constructed stores run different fusion physics.
-          NOTE: every store constructed directly in this file therefore
-          passes ``fusion_mode=...`` EXPLICITLY.
+DEFECT-2  FIXED in #256: ``KnowledgeStore.__init__`` now defaults
+          ``fusion_mode="rrf"``, agreeing with ``RetrievalConfig``
+          (config.py:461); ``test_layer_defaults_agree`` guards the
+          equality permanently.
+          NOTE: every store constructed directly in this file still
+          passes ``fusion_mode=...`` EXPLICITLY (self-documenting).
 
 Companion unit-level tests: tests/test_fusion_invariance.py.
 Audit doc: docs/research/2026-07-08-scoring-invariance-audit.md.
@@ -348,25 +348,26 @@ def test_defect1_authority_bonus_dominates_rrf_ordering():
     )
 
 
-def test_defect2_layer_default_disagreement():
-    # Pins DEFECT-2 (KnowledgeStore.__init__ defaults fusion_mode="additive"
-    # at knowledge_store.py:519 while RetrievalConfig defaults "rrf" at
-    # config.py:461 — two layers, two fusion physics) — see
-    # docs/research/2026-07-08-scoring-invariance-audit.md; a fix PR must
-    # consciously flip this.
+def test_layer_defaults_agree():
+    # DEFECT-2 fixed in #256: KnowledgeStore.__init__ and RetrievalConfig
+    # now share one fusion default. This is the permanent single-source
+    # guard — assert EQUALITY with the config layer, not a literal, so
+    # any future default move must touch both layers in the same PR.
+    config_default = RetrievalConfig().fusion_mode
+
     sig_default = inspect.signature(
         KnowledgeStore.__init__
     ).parameters["fusion_mode"].default
-    assert sig_default == "additive"
+    assert sig_default == config_default
 
     ks = KnowledgeStore(path=":memory:")
     try:
-        assert ks._fusion_mode == "additive"
+        assert ks._fusion_mode == config_default
     finally:
         ks.close()
 
-    # Config-built servers meanwhile run RRF by default.
-    assert RetrievalConfig().fusion_mode == "rrf"
+    # And the shipped default is RRF (the #247 flip, SIKE Run-2 receipts).
+    assert config_default == "rrf"
 
 
 def test_additive_mode_not_rescale_invariant():

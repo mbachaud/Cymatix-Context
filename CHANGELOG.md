@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **fix(retrieval): harmonize `fusion_mode` layer defaults (#256).**
+  `KnowledgeStore`/`Genome` direct construction now defaults
+  `fusion_mode="rrf"`, matching `RetrievalConfig` (the #247 default flip).
+  Config-built servers are unaffected (they always passed the config value
+  explicitly); directly-constructed stores — including most test fixtures
+  and micro-bench scripts — previously ran the legacy additive accumulator
+  silently. Pass `fusion_mode="additive"` explicitly for legacy physics
+  (scheduled for removal in v(N+2)). `test_layer_defaults_agree` now guards
+  the two layers' equality permanently.
+
 ## 0.7.2b1 — 2026-07-06 (beta)
 
 Efficiency + bench-validity wave. Beta cut for cross-host bench validation

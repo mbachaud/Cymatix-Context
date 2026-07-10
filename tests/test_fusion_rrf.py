@@ -207,7 +207,8 @@ def test_fusion_mode_additive_unchanged():
     )
     snapshot = json.loads(snapshot_path.read_text())
 
-    g = Genome(path=":memory:")  # default: fusion_mode="additive"
+    # additive-physics pin (#256): tests the legacy accumulator, removed v(N+2)
+    g = Genome(path=":memory:", fusion_mode="additive")
     _build_snapshot_corpus(g)
 
     queries = _snapshot_queries_from_keys(snapshot)
@@ -319,7 +320,8 @@ def test_rrf_skips_absolute_floors_in_context_manager():
     # the bypass is a one-liner that reads genome._fusion_mode.
     # Verify the attribute is plumbed through and the conditional
     # in context_manager.py uses it.
-    g_additive = Genome(path=":memory:")
+    # additive-physics pin (#256): tests the legacy accumulator, removed v(N+2)
+    g_additive = Genome(path=":memory:", fusion_mode="additive")
     g_rrf = Genome(path=":memory:", fusion_mode="rrf")
     assert g_additive._fusion_mode == "additive"
     assert g_rrf._fusion_mode == "rrf"
@@ -484,10 +486,10 @@ def test_fuser_len_and_contains():
 def test_retrieval_config_default_fusion_mode_is_rrf():
     """Stage-3 deprecation timeline v(N+1) (spec §7): the config-level
     default flipped "additive" -> "rrf" per the 2026-07-06 J-space
-    roadmap council. The bare-Genome kwarg default stays "additive" —
-    it is a score-scale label for legacy/low-level construction (the
-    additive snapshot test above depends on it); the shipped pipeline
-    always passes config.retrieval.fusion_mode explicitly.
+    roadmap council. As of #256 the bare-Genome kwarg default agrees
+    ("rrf" at both layers — test_layer_defaults_agree pins the
+    equality); legacy additive physics now requires an explicit
+    fusion_mode="additive" at construction.
     """
     from helix_context.config import RetrievalConfig
 
