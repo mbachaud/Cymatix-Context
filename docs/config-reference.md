@@ -702,6 +702,7 @@ which stay additive) lives in
 | `rerank_combinator` | `str` | `"additive"` | additive \| fused_tier \| eps_band \| off |
 | `rerank_band_delta` | `float` | `0.05` | eps_band relative tie-band width δ (ratio of the leader's fused score). |
 | `rerank_tier_weight` | `float` | `1.0` | fused_tier uniform per-class rank post-multiplier (single weight — a per-class weight would re-introduce hand-picked exchange rates). |
+| `blend_mode` | `str` | `"legacy"` | legacy \| scale_relative \| off |
 | `fts5_weight` | `float` | `3.0` | cap-only in additive: cap = 2.0 × this (6.0) |
 | `splade_weight` | `float` | `3.5` | leading coeff == tier cap |
 | `tag_exact_weight` | `float` | `3.0` | current weight × match_count |
@@ -717,6 +718,10 @@ which stay additive) lives in
 | `semantic_dense_additive_weight` | `float` | `16.0` | Semantic-wiring arm (2026-06-02; PRD docs/prds/2026-06-02-semantic-wiring-arm.md). When query_type=="semantic" AND env HELIX_SEMANTIC_ARM=1, the per-shard dense term is scaled by semantic_dense_additive_weight (instead of dense_additive_weight) AND routing broadens to all healthy shards. The two fire together or not at all. Default-off (env unset) => byte-identical baseline; lexical/tag/SPLADE tiers are never touched (additive KEEP-BOTH). |
 | `semantic_broaden_routing` | `bool` | `true` |  |
 | `pki_weight` | `float` | `1.0` | PKI tier, RRF participant |
+| `shard_fetch_multiplier` | `float` | `2.0` | ── Sharded-retrieval fetch depth + co-activation budget (#222/#223) ── These bind ONLY on the sharded read path (ShardRouter); blob mode never constructs a router, so they are inert there. Threaded to the router via open_read_source -> ShardedGenomeAdapter -> ShardRouter (mirrors semantic_broaden_routing). Defaults reproduce the dark-shipped env-knob behaviour byte-for-byte and keep the sharded merge identical to today. #222 per-shard fetch depth: the router fetches max_genes * multiplier candidates per shard before the cross-shard merge. multiplier=2.0 is the legacy flat 2× cut. scale_with_shards amplifies the multiplier by sqrt(n_shards) (clamped to 10×max_genes) so populous many-shard corpora oversample each shard deeply enough that a mid-shard gold survives to the merge. HELIX_SHARD_FETCH_FACTOR (int) overrides. |
+| `shard_fetch_scale_with_shards` | `bool` | `false` |  |
+| `coact_reserved_slots` | `int` | `0` | #223 co-activation reserved budget: reserve up to N of the final 2×max_genes output slots for newly graph-promoted (co-activated) docs so a link-discounted gold isn't truncated by lexical incumbents. 0 = legacy (no reservation). HELIX_SHARD_COACT_RESERVE (int) overrides. coact_link_boost is the discount a linked doc enters at (× its source doc's corrected score); 0.5 == the shipped constant. |
+| `coact_link_boost` | `float` | `0.5` |  |
 <!-- END GENERATED -->
 
 `rerank_combinator` / `rerank_band_delta` / `rerank_tier_weight` are
