@@ -455,6 +455,11 @@ class KnowledgeStore:
         splade_enabled: bool = False,
         splade_model: str = "naver/splade-cocondenser-ensembledistil",  # #207
         splade_content_cap: int = 1000,  # #207: chars SPLADE-encoded at ingest
+        # #207 dense fast-follow: BGE-M3 model ID + passage char cap, threaded
+        # through to get_shared_codec / _encode_dense_v2_blob. Defaults
+        # reproduce the prior hardwired literals byte-for-byte.
+        dense_model: str = "BAAI/bge-m3",
+        dense_passage_char_cap: int = 2000,
         entity_graph: bool = False,
         sr_enabled: bool = False,
         sr_gamma: float = 0.85,
@@ -569,6 +574,8 @@ class KnowledgeStore:
         self._splade_enabled = splade_enabled
         self._splade_model = splade_model  # #207 item 1
         self._splade_content_cap = splade_content_cap  # #207 item 3
+        self._dense_model = dense_model  # #207 dense fast-follow
+        self._dense_passage_char_cap = dense_passage_char_cap  # #207 dense fast-follow
         # Issue #164: per-upsert SPLADE auto-toggle thresholds.
         self._splade_auto_enable_below: int = int(splade_auto_enable_below_genes or 0)
         self._splade_auto_disable_above: int = int(splade_auto_disable_above_genes or 0)
@@ -3057,6 +3064,7 @@ class KnowledgeStore:
             # Default on; HELIX_SHARE_DENSE_CODEC=0 reverts to per-instance.
             self._dense_codec = get_shared_codec(
                 dim=self._dense_embedding_dim,
+                model_name=self._dense_model,  # #207 dense fast-follow
                 share=shared_dense_codec_enabled(),
             )
             # One-time threshold-staleness warn: ann_similarity_threshold is
@@ -3102,18 +3110,20 @@ class KnowledgeStore:
         3. Otherwise return ``None`` — the column stays NULL and a later
            ``scripts/backfill_bgem3_v2.py`` run can populate it.
 
-        Encoding is bounded to ``PASSAGE_CHAR_CAP`` chars and uses
-        ``task="passage"`` — the same contract as the offline backfill, so
-        an inline-ingested genome satisfies the backfill's
-        ``length(blob) == dim*4`` idempotency skip-clause. Packing goes
-        through the shared ``vec_to_blob`` helper so the two write paths
-        cannot drift.
+        Encoding is bounded to ``self._dense_passage_char_cap`` chars (#207
+        dense fast-follow — configurable via ``[ingestion]
+        dense_passage_char_cap``, default 2000, byte-identical to the prior
+        ``PASSAGE_CHAR_CAP`` literal) and uses ``task="passage"`` — the same
+        contract as the offline backfill, so an inline-ingested genome
+        satisfies the backfill's ``length(blob) == dim*4`` idempotency
+        skip-clause. Packing goes through the shared ``vec_to_blob`` helper so
+        the two write paths cannot drift.
 
         Encode failures are soft — ingest must never break because the dense
         model is unavailable; the row is stored with a NULL v2 column and a
         WARN is logged.
         """
-        from .backends.bgem3_codec import PASSAGE_CHAR_CAP, vec_to_blob
+        from .backends.bgem3_codec import vec_to_blob
 
         dim = self._dense_embedding_dim
         try:
@@ -3125,7 +3135,7 @@ class KnowledgeStore:
             if not text:
                 return None
             codec = self._get_dense_codec()
-            vec = codec.encode(text[:PASSAGE_CHAR_CAP], task="passage")
+            vec = codec.encode(text[:self._dense_passage_char_cap], task="passage")
             return vec_to_blob(vec, dim)
         except Exception:
             log.warning(

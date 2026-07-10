@@ -31,6 +31,14 @@ _SANCTIONED_DIMS = frozenset({1024, 768, 512})
 # context_manager.ingest) and the offline backfill script bound passages to
 # this so the two encodings stay byte-identical. See PR-1 of the 2026-05-16
 # Tier-0 plan.
+#
+# #207 dense fast-follow (2026-07-10): configurable via
+# ``[ingestion] dense_passage_char_cap`` (default 2000, byte-identical to this
+# module constant). This constant remains the default anchor when a caller has
+# no loaded config (e.g. a bare ``BGEM3Codec`` used outside the pipeline);
+# every in-pipeline caller (context_manager, knowledge_store,
+# scripts/backfill_bgem3_v2.py) threads the config value instead of reading
+# this constant directly.
 PASSAGE_CHAR_CAP = 2000
 
 

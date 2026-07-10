@@ -763,6 +763,8 @@ class HelixContextManager:
             splade_enabled=config.ingestion.splade_enabled,
             splade_model=config.ingestion.splade_model,  # #207 item 1
             splade_content_cap=config.ingestion.splade_content_cap,  # #207 item 3
+            dense_model=config.retrieval.dense_model,  # #207 dense fast-follow
+            dense_passage_char_cap=config.ingestion.dense_passage_char_cap,  # #207 dense fast-follow
             # Issue #164: size-aware SPLADE auto-toggle thresholds. Both
             # default 0 (toggle off); see IngestionConfig docstring.
             splade_auto_enable_below_genes=config.ingestion.splade_auto_enable_below_genes,
@@ -1042,7 +1044,8 @@ class HelixContextManager:
             try:
                 from .backends.bgem3_codec import BGEM3Codec
                 self._dense_codec = BGEM3Codec(
-                    dim=self.config.retrieval.dense_embedding_dim
+                    dim=self.config.retrieval.dense_embedding_dim,
+                    model_name=self.config.retrieval.dense_model,  # #207
                 )
                 log.info("BGE-M3 dense codec loaded — dense vectors written at ingest")
             except Exception:
@@ -1086,17 +1089,20 @@ class HelixContextManager:
         # Batch-encode BGE-M3 dense vectors (Tier-0 PR-1, 2026-05-16). One
         # codec call for every strand of the document — far cheaper than the
         # per-strand encode upsert_doc would otherwise do. Bound each passage
-        # to PASSAGE_CHAR_CAP with task="passage" (the codec contract). Soft-
-        # fails: on any error dense_vectors stays None and upsert_doc stores
-        # NULL embedding_dense_v2. Disabled entirely when the config knob is
-        # off (_get_dense_codec returns None). Write path only — retrieval
-        # still gates on [retrieval] dense_embedding_enabled.
+        # to [ingestion] dense_passage_char_cap (#207 — default 2000, byte-
+        # identical to the prior PASSAGE_CHAR_CAP literal; must stay identical
+        # to the query-side and backfill slices) with task="passage" (the
+        # codec contract). Soft-fails: on any error dense_vectors stays None
+        # and upsert_doc stores NULL embedding_dense_v2. Disabled entirely
+        # when the config knob is off (_get_dense_codec returns None). Write
+        # path only — retrieval still gates on [retrieval]
+        # dense_embedding_enabled.
         dense_vectors = None
         dense_codec = self._get_dense_codec()
         if dense_codec is not None:
             try:
-                from .backends.bgem3_codec import PASSAGE_CHAR_CAP
-                dense_texts = [s.content[:PASSAGE_CHAR_CAP] for s in strands]
+                cap = self.config.ingestion.dense_passage_char_cap
+                dense_texts = [s.content[:cap] for s in strands]
                 dense_vectors = dense_codec.encode_batch(
                     dense_texts, task="passage"
                 )

@@ -367,6 +367,7 @@ is governed by per-feature flags in this section.
 | `rerank_enabled` | bool | `false` | Phase-3 cross-encoder reranking on the post-shortlist candidate set. The shipped value (`helix.toml:175`). |
 | `colbert_enabled` | bool | `false` | Phase-4 ColBERT late-interaction tier (optional). The shipped value (`helix.toml:176`). |
 | `entity_graph` | bool | `false` (code) / `true` (shipped) | Phase-5 entity-based co-activation links. Index-time flag — gates the construction of the `entity_co_activation` table consumed by `[retrieval] entity_graph_retrieval_enabled` at query time. The shipped value (`helix.toml:177`). |
+| `dense_passage_char_cap` | int | `2000` | **NEW (#207 dense fast-follow, 2026-07-10).** Char cap applied to a passage before BGE-M3 encoding. MUST stay identical across the three encode paths that read it — inline ingest (`context_manager.ingest`), query-side store encode (`KnowledgeStore._encode_dense_v2_blob`), and offline backfill (`scripts/backfill_bgem3_v2.py`) — or the `embedding_dense_v2` vectors written by each path silently diverge for long passages. Default reproduces the prior hardwired `backends/bgem3_codec.PASSAGE_CHAR_CAP` literal byte-for-byte. See also `[retrieval] dense_model` above. |
 
 **Example.**
 
@@ -378,6 +379,7 @@ rerank_model = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 rerank_enabled = false
 colbert_enabled = false
 entity_graph = true
+dense_passage_char_cap = 2000
 ```
 
 **Cross-refs.** `helix_context/config.py:182-190`
@@ -522,6 +524,7 @@ which stay additive) lives in
 | `entity_graph_retrieval_enabled` | bool | `false` | Tier-5b entity graph co-occurrence boost (Step 3C, 2026-05-08). Documents sharing entity nodes with query terms get a score boost proportional to entity overlap. Requires `[ingestion] entity_graph = true` at index time. The shipped value (`helix.toml:249`). |
 | `dense_embedding_enabled` | bool | `false` | Step-4 BGE-M3 dense vectors (2026-05-08). Master switch for the Stage-2 dense recall path. The shipped value (`helix.toml:255`). |
 | `dense_embedding_dim` | int | `1024` | BGE-M3 Matryoshka dim. **Stage 2 (2026-05-08): default raised from 256 → 1024.** `dim = 256` collapsed random-pair cosine to ~0.6, sabotaging absolute-threshold semantics. Stage 4 will recalibrate `ann_similarity_threshold` at 1024-d. Codec emits a one-time WARN when `dim not in (1024, 768, 512)`. The shipped value (`helix.toml:256`). |
+| `dense_model` | str | `"BAAI/bge-m3"` | **NEW (#207 dense fast-follow, 2026-07-10).** BGE-M3 model ID / local path passed to `BGEM3Codec`. Air-gap / mirror deployments repoint this at a local mirror. Threaded through three seams that must not drift: inline ingest (`context_manager._get_dense_codec`), query-side store encode (`KnowledgeStore._get_dense_codec` → `get_shared_codec`), and offline backfill (`scripts/backfill_bgem3_v2.py`). `get_shared_codec`'s process-wide cache key is `(model_name, dim, device)`, so a repointed model gets its own singleton rather than colliding with the default. Default reproduces the prior hardwired literal byte-for-byte. |
 | `ann_similarity_threshold` | float | `0.35` | Legacy / fallback ANN cosine threshold. Used when `ann_threshold_mode = "absolute"` (default), and as the fallback when `mode = "margin_over_random"` and the calibration row is missing (one-time WARN). The shipped value (`helix.toml:257`). |
 | `ann_threshold_min_genes` | int | `1` | Floor on the ANN dynamic-cut count (always return at least this many). The shipped value (`helix.toml:258`). |
 | `ann_threshold_max_genes` | int | `12` | Ceiling on the ANN dynamic-cut count (the final cut, not the recall pool — see `dense_pool_size`). The shipped value (`helix.toml:259`). |
@@ -596,6 +599,7 @@ entity_graph_retrieval_enabled = false
 # Stage 2 dense recall (dark master)
 dense_embedding_enabled = false
 dense_embedding_dim = 1024
+dense_model = "BAAI/bge-m3"           # #207 dense fast-follow (2026-07-10)
 ann_similarity_threshold = 0.35
 ann_threshold_min_genes = 1
 ann_threshold_max_genes = 12
@@ -1283,6 +1287,7 @@ rerank_model = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 rerank_enabled = false                  # Phase 3: enable pretrained cross-encoder reranking
 colbert_enabled = false                 # Phase 4: ColBERT late interaction (optional)
 entity_graph = true                     # Phase 5: entity-based co-activation links
+dense_passage_char_cap = 2000           # #207 dense fast-follow (2026-07-10): BGE-M3 passage char cap; must match [retrieval] dense_model's codec on all 3 encode paths
 
 [context]
 # Cold-tier retrieval (C.2 of B->C, 2026-04-10)
@@ -1356,6 +1361,7 @@ entity_graph_retrieval_enabled = false
 # breadth from the final cut (max_genes).
 dense_embedding_enabled = false
 dense_embedding_dim = 1024
+dense_model = "BAAI/bge-m3"               # #207 dense fast-follow (2026-07-10): BGE-M3 model ID / local mirror path
 ann_similarity_threshold = 0.35           # legacy / fallback when calibration row missing
 ann_threshold_min_genes = 1
 ann_threshold_max_genes = 12

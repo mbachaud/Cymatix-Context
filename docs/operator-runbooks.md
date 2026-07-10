@@ -133,11 +133,16 @@ The main loop (`scripts/backfill_bgem3_v2.py:126-156`):
 3. Selects rows where `embedding_dense_v2 IS NULL OR
    length(embedding_dense_v2) != dim*4` — the length check guards
    half-written rows from a crashed previous run.
-4. For each row: `BGEM3Codec(dim=dim).encode(content[:2000],
+4. For each row: `BGEM3Codec(dim=dim, model_name=model_name).encode(content[:char_cap],
    task="passage")` packed via `np.asarray(vec,
    dtype="<f4").tobytes(order="C")` into a `dim*4`-byte little-endian
    fp32 BLOB (`scripts/backfill_bgem3_v2.py:58-63, 136-145`), then
-   UPDATEd into the row.
+   UPDATEd into the row. `model_name` / `char_cap` resolve from
+   `[retrieval] dense_model` (default `"BAAI/bge-m3"`) and `[ingestion]
+   dense_passage_char_cap` (default `2000`) — #207 dense fast-follow
+   (2026-07-10). The cap MUST match the value used by the inline-ingest
+   and query-side store-encode paths, or `embedding_dense_v2` vectors
+   silently diverge for passages longer than the smaller of the two caps.
 5. Commit + progress log every `--batch` rows. Empty content rows are
    skipped.
 6. Post-flight: re-counts and prints `coverage=NN.NN% elapsed=S.s`
