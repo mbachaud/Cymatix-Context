@@ -20,7 +20,7 @@ Workflow:
     3. Confirm helix.toml [know] table updated; redeploy.
 
 The script is intentionally light on dependencies. sklearn is used
-when available (faster convergence + AUC; pip install scikit-learn);
+when available (faster convergence; pip install scikit-learn);
 without it, the pure-Python gradient descent in
 ``helix_context.know_calibration.fit_betas_from_features`` is used.
 
@@ -28,6 +28,19 @@ without it, the pure-Python gradient descent in
 # JSONL row gets a fifth column; the ``--n-features`` flag below picks
 # it up automatically. Stage 7 ships a default beta5; the operator
 # re-runs this script to re-fit on stale-needle-augmented bench data.
+
+## Issue #239: hit/miss AUC trust gate
+
+The 2026-07-05 SIKE bedsweep review found the KnowBlock confidence
+*inverted* on every bed (misses scored higher than hits — AUC < 0.5,
+worse than a coin flip). Because the know/miss contract is what
+downstream agents branch on, this script now computes the held-out
+hit/miss AUC of the fitted logistic (rank-based Mann-Whitney U
+formulation — no sklearn/numpy dependency, see ``compute_auc()``
+below) and **refuses to write ``[know]`` betas when that AUC is below
+``--auc-floor`` (default 0.7)**. Pass ``--force`` to override (loud
+WARNING logged; use only when you have already root-caused why the
+signal is weak — e.g. a known-contaminated bench).
 """
 
 from __future__ import annotations
@@ -55,6 +68,12 @@ from helix_context.scoring.know_calibration import (  # noqa: E402
 )
 
 log = logging.getLogger("helix.calibrate_know_confidence")
+
+# Issue #239: minimum acceptable held-out hit/miss AUC before the script
+# will write ``[know]`` betas. Below this, a downstream agent trusting
+# the KnowBlock confidence would be misled worse than a coin flip in
+# the worst observed case (AUC ~0.35-0.44 on the contaminated beds).
+DEFAULT_AUC_FLOOR: float = 0.7
 
 
 def _try_sklearn():
@@ -254,6 +273,119 @@ def _write_helix_toml(
     out_path.write_text("\n".join(out_lines) + "\n", encoding="utf-8")
 
 
+class AUCGateError(RuntimeError):
+    """Raised when the held-out hit/miss AUC fails issue #239's trust gate.
+
+    Raised by ``gate_auc_or_raise`` / ``write_calibration_gated`` when
+    ``force=False``. The CLI ``main()`` catches this at the boundary and
+    turns it into a printed stderr message + non-zero exit code; tests
+    exercise the gate directly with ``pytest.raises(AUCGateError)``.
+    """
+
+
+def compute_auc(
+    scores: Sequence[float],
+    labels: Sequence[int],
+) -> Optional[float]:
+    """Hit/miss AUC via the rank-based Mann-Whitney U formulation.
+
+    AUC = P(score(random hit) > score(random miss)), estimated as::
+
+        U   = sum_of_ranks(positive-class scores) - n_pos*(n_pos+1)/2
+        AUC = U / (n_pos * n_neg)
+
+    Ranks are 1-indexed and tied scores share the average rank of their
+    block (the standard mid-rank tie-break), which is what makes this
+    exactly equal to sklearn's ``roc_auc_score`` for the binary case —
+    no sklearn or numpy import required, so the gate has zero additional
+    runtime dependencies beyond what the calibration script already
+    needs.
+
+    Returns ``None`` when the sample has only one class present (no
+    positives or no negatives) — AUC is undefined in that case, not 0.5;
+    callers must treat ``None`` as "cannot vouch for this fit", not as
+    a passing score.
+    """
+    n = len(scores)
+    if n != len(labels):
+        raise ValueError("scores and labels length mismatch")
+    n_pos = sum(1 for y in labels if int(y) == 1)
+    n_neg = n - n_pos
+    if n_pos == 0 or n_neg == 0:
+        return None
+
+    order = sorted(range(n), key=lambda i: scores[i])
+    ranks = [0.0] * n
+    i = 0
+    while i < n:
+        j = i
+        while j + 1 < n and scores[order[j + 1]] == scores[order[i]]:
+            j += 1
+        # 1-indexed average rank across the tied block [i, j].
+        avg_rank = (i + 1 + j + 1) / 2.0
+        for k in range(i, j + 1):
+            ranks[order[k]] = avg_rank
+        i = j + 1
+
+    rank_sum_pos = sum(ranks[i] for i in range(n) if int(labels[i]) == 1)
+    u_stat = rank_sum_pos - (n_pos * (n_pos + 1)) / 2.0
+    return u_stat / (n_pos * n_neg)
+
+
+def gate_auc_or_raise(
+    auc: Optional[float],
+    *,
+    floor: float = DEFAULT_AUC_FLOOR,
+    force: bool = False,
+) -> None:
+    """Enforce issue #239's hit/miss AUC trust gate.
+
+    ``auc is None`` (undefined — a single-class held-out split) is
+    treated as a failure: there is no basis to trust an undefined
+    number. Raises ``AUCGateError`` unless ``force=True``, in which case
+    a loud WARNING is logged and the function returns normally so the
+    caller proceeds to write the (untrusted) betas anyway.
+    """
+    if auc is not None and auc >= floor:
+        log.info("AUC gate PASSED: held-out hit/miss AUC=%.4f >= floor=%.2f", auc, floor)
+        return
+
+    auc_repr = f"{auc:.4f}" if auc is not None else "undefined (single-class held-out split)"
+    msg = (
+        f"AUC gate FAILED: held-out hit/miss AUC={auc_repr} is below the "
+        f"trust floor {floor:.2f}. Refusing to write [know] betas — an "
+        f"agent that trusts a KnowBlock confidence this poorly separated "
+        f"(or undefined) could be actively misled (issue #239). Re-run "
+        f"with --force to override only if you have already root-caused "
+        f"why the signal is weak (e.g. a known-contaminated bench)."
+    )
+    if force:
+        log.warning("AUC gate OVERRIDDEN via --force. %s", msg)
+        return
+    log.error(msg)
+    raise AUCGateError(msg)
+
+
+def write_calibration_gated(
+    out_path: Path,
+    cal: KnowCalibration,
+    *,
+    auc: Optional[float],
+    floor: float = DEFAULT_AUC_FLOOR,
+    force: bool = False,
+) -> None:
+    """Gate on hit/miss AUC, then write the ``[know]`` table if it clears.
+
+    Thin wrapper around ``_write_helix_toml`` so tests can exercise the
+    refuse/accept decision with synthetic ``auc``/``cal`` values —
+    without running a real logistic fit. Raises ``AUCGateError`` (and
+    does NOT touch ``out_path``) when the gate fails and ``force`` is
+    False.
+    """
+    gate_auc_or_raise(auc, floor=floor, force=force)
+    _write_helix_toml(out_path, cal)
+
+
 def main(argv: Optional[Sequence[str]] = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -296,6 +428,24 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         help=(
             "Number of features (default 4 for Stage 6; Stage 7 will "
             "make this 5 by adding freshness_min)."
+        ),
+    )
+    parser.add_argument(
+        "--auc-floor",
+        type=float,
+        default=DEFAULT_AUC_FLOOR,
+        help=(
+            "Minimum held-out hit/miss AUC (issue #239) required before "
+            f"[know] betas are written (default: {DEFAULT_AUC_FLOOR})."
+        ),
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help=(
+            "Override the AUC gate and write [know] betas even when the "
+            "held-out AUC is below --auc-floor. Logs a loud WARNING. Only "
+            "use once you have root-caused why the signal is weak."
         ),
     )
     args = parser.parse_args(argv)
@@ -396,6 +546,15 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         emit_floor,
     )
 
+    # Issue #239: held-out hit/miss AUC — the trust gate that decides
+    # whether these betas are allowed to reach helix.toml at all.
+    auc = compute_auc(test_probs, l_test)
+    log.info(
+        "held-out hit/miss AUC: %s (floor=%.2f)",
+        f"{auc:.4f}" if auc is not None else "undefined (single-class holdout)",
+        args.auc_floor,
+    )
+
     # Bundle the result.
     import datetime as _dt
     cal = KnowCalibration(
@@ -423,9 +582,16 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                      min(pos_probs), max(neg_probs))
         return 0
 
-    _write_helix_toml(args.out, cal)
+    try:
+        write_calibration_gated(
+            args.out, cal, auc=auc, floor=args.auc_floor, force=args.force,
+        )
+    except AUCGateError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 3
+
     log.info("wrote [know] table to %s", args.out)
-    log.info("betas=%s emit_floor=%s", cal.betas, cal.emit_floor)
+    log.info("betas=%s emit_floor=%s auc=%s", cal.betas, cal.emit_floor, auc)
     return 0
 
 

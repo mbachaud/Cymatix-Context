@@ -475,7 +475,7 @@ sets and faster convergence on larger ones.
 
 ### Know-calibration command
 
-The CLI is at `scripts/calibrate_know_confidence.py:251-295`:
+The CLI is at `scripts/calibrate_know_confidence.py:389-451`:
 
 ```bash
 python scripts/calibrate_know_confidence.py
@@ -485,30 +485,40 @@ python scripts/calibrate_know_confidence.py
        [--seed INT]
        [--smoke]
        [--n-features INT]
+       [--auc-floor FLOAT]
+       [--force]
 ```
 
-Flags (verified at lines 252-294):
+Flags (verified at lines 391-450):
 
 - `--input PATH` (required) — `located_n1000.jsonl`. JSONL (one object
   per line), not the JSON list Runbook 2 takes. Each row needs:
   `top_score`, `score_gap`, `lexical_dense_agree`,
   `coordinate_confidence`, `label`, and optionally `freshness_min`
-  (5th feature). Schema at `scripts/calibrate_know_confidence.py:85-115`.
+  (5th feature). Schema at `scripts/calibrate_know_confidence.py:104-140`.
 - `--out PATH` — default `Path("helix.toml")`. The writer at
-  `scripts/calibrate_know_confidence.py:187-248` reads the existing
+  `scripts/calibrate_know_confidence.py:212-273` reads the existing
   file, replaces the `[know]` section (or appends if absent). Hand-rolled
   because `tomllib` is parse-only.
 - `--target-precision FLOAT` — default `0.95`. Operating-point precision
   for picking `emit_floor` from the held-out test set
-  (`scripts/calibrate_know_confidence.py:268-270`).
+  (`scripts/calibrate_know_confidence.py:539-546`).
 - `--seed INT` — default `42`. Seeds the train/test split.
 - `--smoke` — synthetic separable fixture instead of `--input`. Does NOT
-  touch `helix.toml`.
+  touch `helix.toml` (and is not subject to the AUC gate below, since it
+  never writes).
 - `--n-features INT` — default `N_FEATURES = 5` (Stage 7,
-  `helix_context/know_calibration.py:69`). Stage 6 era was 4; the
+  `helix_context/scoring/know_calibration.py:84`). Stage 6 era was 4; the
   pure-Python fitter still works against a Stage 6 era JSONL because
   `_row_to_features` only emits 4 features when `freshness_min` is
   absent.
+- `--auc-floor FLOAT` — default `0.7` (issue #239). Minimum held-out
+  hit/miss AUC required before the script will write `[know]` betas.
+  See "AUC trust gate" below.
+- `--force` — override the AUC gate and write anyway. Logs a loud
+  WARNING (`AUC gate OVERRIDDEN via --force: ...`). Only use once you
+  have root-caused why the signal is weak (e.g. a known-contaminated
+  bench) — this is an escape hatch, not a default workflow step.
 
 Typical invocation:
 
@@ -518,31 +528,55 @@ python scripts/calibrate_know_confidence.py \
     --out helix.toml
 ```
 
+### AUC trust gate (issue #239)
+
+The 2026-07-05 SIKE bedsweep review found the KnowBlock confidence
+*inverted* on every bed (misses scoring higher than hits — AUC as low
+as 0.35, worse than a coin flip). Because `/context/packet`'s know/miss
+contract is what downstream agents branch on, the script now computes
+the held-out hit/miss AUC of the fitted logistic
+(`compute_auc()`, `scripts/calibrate_know_confidence.py:286-332` — a
+dependency-free rank-based Mann-Whitney U formulation, exactly equal to
+`sklearn.metrics.roc_auc_score` for the binary case) and **refuses to
+write `[know]` betas when that AUC is below `--auc-floor`**
+(`gate_auc_or_raise()` / `write_calibration_gated()`,
+`scripts/calibrate_know_confidence.py:335-386`). A refusal prints
+`ERROR: AUC gate FAILED: ...` to stderr and exits non-zero (3);
+`helix.toml` is left untouched. An undefined AUC (single-class held-out
+split) is treated as a failure too — there's no basis to trust it.
+
+Re-running with `--force` writes anyway and logs
+`AUC gate OVERRIDDEN via --force: ...` at WARNING level — use this only
+as a deliberate, documented exception, not to unblock a routine run.
+
 ### What it fits
 
 Per Stage 6 spec §11 and Stage 7 spec §10:
 
-- Reads JSONL rows (`scripts/calibrate_know_confidence.py:68-82`); picks
+- Reads JSONL rows (`scripts/calibrate_know_confidence.py:87-101`); picks
   `s_ref = median(top_score)`, `g_ref = median(score_gap)` so `tanh(...)`
   saturates at the typical retriever scale
-  (`scripts/calibrate_know_confidence.py:332-337`).
+  (`scripts/calibrate_know_confidence.py:494-496`).
 - Feature vector: `[tanh(top/s_ref), tanh(gap/g_ref), agree,
   clip(coord, 0, 1)]`, plus `freshness_min` as feature 5 when present
-  (`scripts/calibrate_know_confidence.py:109-115`).
+  (`scripts/calibrate_know_confidence.py:133-139`).
 - 80/20 train/test split with the seed
-  (`scripts/calibrate_know_confidence.py:129-150`).
+  (`scripts/calibrate_know_confidence.py:154-175`).
 - Fits sklearn `LogisticRegression(penalty="l2", C=1.0,
   max_iter=1000, solver="lbfgs")` if available, else
   `fit_betas_from_features(lr=0.1, epochs=500, l2=1e-4)`.
 - Sweeps held-out test probabilities; picks the lowest threshold where
   precision ≥ `--target-precision` as `emit_floor`. Falls back to
   `DEFAULT_EMIT_FLOOR = 0.55` on small/imbalanced sets
-  (`scripts/calibrate_know_confidence.py:166-184`).
+  (`scripts/calibrate_know_confidence.py:191-209`).
+- Computes the held-out hit/miss AUC and runs it through the trust gate
+  above before writing anything.
 
 ### Output
 
 The script writes (or replaces) the `[know]` block in `helix.toml`
-(`scripts/calibrate_know_confidence.py:198-214`):
+(`scripts/calibrate_know_confidence.py:223-239`), gated on AUC as
+described above:
 
 ```toml
 [know]

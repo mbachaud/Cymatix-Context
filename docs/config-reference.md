@@ -745,6 +745,19 @@ produces the bench JSONL.
 | `betas` | array<float> | `[-2.0, 2.0, 1.5, 0.7, 1.8, 1.5]` (code default; 6 coefficients with Stage-7 β5) | Logistic coefficients. Order: `[b0_intercept, b1_top, b2_gap, b3_agree, b4_coord, b5_freshness]`. The shipped `helix.toml:343` value `[-2.0, 2.0, 1.5, 0.7, 1.8]` has only 5 entries (pre-Stage-7 length); the loader emits a `WARNING` and falls back to the 6-element default when length mismatches `1 + N_FEATURES = 6` (`helix_context/know_calibration.py:152-160`). **Operators running Stage 7 must add the 6th coefficient (`+1.5`) or flip to defaults**. Stage 7 added β5 (freshness_min coefficient); calibration script auto-detects the feature count. |
 | `calibrated_at` | str (ISO-8601) | `None` (optional) | Timestamp written by `scripts/calibrate_know_confidence.py` after a fresh calibration run. Optional; `None` means the betas are SHIP-TIME defaults. Not in the shipped `helix.toml`. |
 | `calibrated_on_n` | int | `None` (optional) | Sample count from the calibration set. Written by `scripts/calibrate_know_confidence.py`. Not in the shipped `helix.toml`. |
+| `stale_after_days` | int | `30` | Age (days) after which a calibration is considered stale. Drives both the `/context` `agent.calibration_stale` flag (Stage 4 spec §9) and, since issue #239, the `know_calibration.stale` field on `GET /health` (see below). |
+
+**Issue #239: `GET /health` staleness surfacing.** `/health` includes a
+`know_calibration` block — `{calibrated_at, calibrated_on_n, stale}` —
+read straight from this config section
+(`helix_context/server/routes_admin.py`, health endpoint). `stale` is
+`true` when `calibrated_at` is absent (never calibrated) **or** its age
+exceeds `stale_after_days`, so agents/operators can tell at a glance
+whether the KnowBlock confidence contract has ever been trued-up
+against a clean bed — without parsing `helix.toml` by hand. Also see
+`scripts/calibrate_know_confidence.py`'s AUC trust gate (Runbook 3 in
+`docs/operator-runbooks.md`), which refuses to write these fields at
+all unless the fit clears a held-out hit/miss AUC of 0.7.
 
 **Example (post-Stage-7 calibration).**
 

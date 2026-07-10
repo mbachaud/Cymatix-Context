@@ -517,6 +517,26 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
         if ann_meta is not None:
             calibration_block["ann_threshold"] = ann_meta
 
+        # Issue #239: surface KnowBlock confidence-logistic staleness so
+        # agents can tell when the know/miss contract was last trued-up
+        # against a clean bed (scripts/calibrate_know_confidence.py writes
+        # calibrated_at/calibrated_on_n; see helix_context.scoring.know_calibration).
+        from ..scoring.know_calibration import calibration_age_days, is_calibration_stale
+        know_cfg = config.know
+        know_calibrated_at = know_cfg.calibrated_at
+        know_age_days = calibration_age_days(know_calibrated_at)
+        # Uncalibrated (never run) counts as stale outright — not just
+        # "age unknown" — so a fresh install doesn't silently read as
+        # trustworthy in this block.
+        know_stale = know_calibrated_at is None or is_calibration_stale(
+            know_age_days, know_cfg.stale_after_days
+        )
+        know_calibration_block = {
+            "calibrated_at": know_calibrated_at,
+            "calibrated_on_n": know_cfg.calibrated_on_n,
+            "stale": know_stale,
+        }
+
         configured_backend = (
             config.ribosome.normalized_backend if config.ribosome.enabled else None
         )
@@ -537,6 +557,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
             "upstream_reachable": upstream_reachable,
             "hardware": hardware_block,
             "calibration": calibration_block,
+            "know_calibration": know_calibration_block,
             "checks": {
                 "genome_ready": genome_ready,
                 "upstream_ready": upstream_reachable,
