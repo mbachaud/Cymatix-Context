@@ -525,6 +525,15 @@ class KnowledgeStore:
         # under "rrf" they are rank post-multipliers.
         fusion_mode: str = "additive",
         rrf_k: int = 60,
+        # Issue #255 (PR-2, 2026-07-10): post-fusion rerank combinator. Only
+        # consulted under fusion_mode == "rrf" (the additive branch never
+        # touches rerank_additive). Default "additive" reproduces the shipped
+        # fused + rerank_additive finalization byte-for-byte; the alternatives
+        # (fused_tier / eps_band / off) are bench-gated. See
+        # docs/research/2026-07-09-scoring-combinator-exploration.md.
+        rerank_combinator: str = "additive",
+        rerank_band_delta: float = 0.05,   # eps_band relative tie width δ
+        rerank_tier_weight: float = 1.0,   # fused_tier per-class rank multiplier
         fts5_weight: float = 3.0,
         splade_weight: float = 3.5,
         tag_exact_weight: float = 3.0,
@@ -657,6 +666,19 @@ class KnowledgeStore:
             )
         self._fusion_mode: str = fusion_mode
         self._rrf_k: int = int(rrf_k)
+        # Issue #255 (PR-2): validate the rerank combinator now so a typo in
+        # helix.toml fails fast at construction, mirroring the fusion_mode
+        # guard above. The four names are the only valid operators (see
+        # retrieval/rerank_combinators.py).
+        if rerank_combinator not in ("additive", "fused_tier", "eps_band", "off"):
+            raise ValueError(
+                "rerank_combinator must be one of "
+                "'additive'|'fused_tier'|'eps_band'|'off', "
+                f"got {rerank_combinator!r}"
+            )
+        self._rerank_combinator: str = rerank_combinator
+        self._rerank_band_delta: float = float(rerank_band_delta)
+        self._rerank_tier_weight: float = float(rerank_tier_weight)
         self._fts5_weight: float = float(fts5_weight)
         self._splade_weight: float = float(splade_weight)
         self._tag_exact_weight: float = float(tag_exact_weight)
@@ -730,6 +752,13 @@ class KnowledgeStore:
         self._upsert_count = 0  # WAL checkpoint cadence counter
         self.last_query_scores: Dict[str, float] = {}  # Retrieval scores from last query
         self._last_query_scores_lock = threading.Lock()
+        # Issue #255 (PR-2) debug hooks: the eligible-restricted pre-combination
+        # maps from the last RRF query, set under _last_query_scores_lock. Lets
+        # the ab_rerank_combinator desk-test recover the exact fused-vs-final
+        # inversion signature without re-deriving anything. Empty under
+        # fusion_mode == "additive" (that branch never populates them).
+        self.last_fused_scores: Dict[str, float] = {}
+        self.last_rerank_additive: Dict[str, float] = {}
         # Per-tier score breakdown for the last query: {gene_id: {tier_name: score}}.
         # Populated alongside last_query_scores in query_genes(). Lets the bench /
         # profiler see which retrieval signals fired (and how strongly) for each
@@ -1530,6 +1559,7 @@ class KnowledgeStore:
         query_terms: List[str],
         rerank_additive: Optional[Dict[str, float]] = None,
         tier_contrib: Optional[Dict[str, Dict[str, float]]] = None,
+        rerank_by_class: Optional[Dict[str, Dict[str, float]]] = None,
     ) -> None:
         """
         Post-rank boosts that distinguish authoritative documents from tangential ones.
@@ -1601,6 +1631,12 @@ class KnowledgeStore:
                 # score (per spec §3 / §99: re-rank class).
                 if rerank_additive is not None:
                     rerank_additive[gid] = rerank_additive.get(gid, 0.0) + boost
+                # Issue #255 (PR-2): mirror into the per-class map under the
+                # "authority" key (matches the tier_contrib label below) so
+                # the fused_tier combinator can rank authority independently.
+                if rerank_by_class is not None:
+                    _auth = rerank_by_class.setdefault("authority", {})
+                    _auth[gid] = _auth.get(gid, 0.0) + boost
                 if tier_contrib is not None:
                     tier_contrib.setdefault(gid, {})["authority"] = (
                         tier_contrib.get(gid, {}).get("authority", 0.0) + boost
@@ -2034,6 +2070,13 @@ class KnowledgeStore:
         # path) and to rerank_additive (RRF mode path) so the sort can
         # trivially compose fused + rerank without re-deriving anything.
         rerank_additive: Dict[str, float] = {}
+        # Issue #255 (PR-2): per-class breakdown of the same additives, keyed
+        # by rerank class ("authority" / "sema_boost" / "party_attr" /
+        # "access_rate" — matching the tier_contrib labels). rerank_additive
+        # stays the flat sum (the "additive" combinator reads it); the
+        # per-class map lets the fused_tier combinator rank each class
+        # independently. Both are dual-written at every rerank writer site.
+        rerank_by_class: Dict[str, Dict[str, float]] = {}
 
         # ── party_id filter clause (reused across Tiers 1-3) ──────
         # Semantics: when party_id is provided, return documents that are
@@ -2468,6 +2511,9 @@ class KnowledgeStore:
                                     tier_contrib.setdefault(gid, {})["sema_boost"] = sema_boost
                                     # Stage 3: post-fusion additive (re-rank class).
                                     rerank_additive[gid] = rerank_additive.get(gid, 0.0) + sema_boost
+                                    # Issue #255 (PR-2): mirror into per-class map.
+                                    _sema_cls = rerank_by_class.setdefault("sema_boost", {})
+                                    _sema_cls[gid] = _sema_cls.get(gid, 0.0) + sema_boost
                 try:
                     from .telemetry import genome_signal_histogram
                     genome_signal_histogram().record(
@@ -2695,6 +2741,7 @@ class KnowledgeStore:
             cur, gene_scores, query_terms,
             rerank_additive=rerank_additive,
             tier_contrib=tier_contrib,
+            rerank_by_class=rerank_by_class,
         )
 
         # ── Tier 5: harmonic co-activation boost ──────────────────
@@ -2824,6 +2871,9 @@ class KnowledgeStore:
                     tier_contrib.setdefault(gid, {})["party_attr"] = 0.5
                     # Stage 3: post-fusion additive (re-rank class).
                     rerank_additive[gid] = rerank_additive.get(gid, 0.0) + 0.5
+                    # Issue #255 (PR-2): mirror into per-class map.
+                    _party_cls = rerank_by_class.setdefault("party_attr", {})
+                    _party_cls[gid] = _party_cls.get(gid, 0.0) + 0.5
             except Exception:
                 log.debug("Party attribution bonus failed", exc_info=True)
 
@@ -2852,6 +2902,9 @@ class KnowledgeStore:
                             tier_contrib.setdefault(gid, {})["access_rate"] = bonus
                             # Stage 3: post-fusion additive (tiebreaker class).
                             rerank_additive[gid] = rerank_additive.get(gid, 0.0) + bonus
+                            # Issue #255 (PR-2): mirror into per-class map.
+                            _acc_cls = rerank_by_class.setdefault("access_rate", {})
+                            _acc_cls[gid] = _acc_cls.get(gid, 0.0) + bonus
                     except Exception:
                         continue
             except Exception:
@@ -2957,23 +3010,40 @@ class KnowledgeStore:
             # bm25_shortlist dropped should not resurface in the fused
             # output.
             eligible_ids = set(gene_scores.keys())
-            final_scores: Dict[str, float] = {}
-            for gid in eligible_ids:
-                final_scores[gid] = (
-                    fused_scores.get(gid, 0.0)
-                    + rerank_additive.get(gid, 0.0)
-                )
-            # Sort: primary key = final fused+additive score desc,
-            # secondary = gene_id asc (matches Fuser's tie-break).
-            ranked_ids = sorted(
-                final_scores,
-                key=lambda gid: (-final_scores[gid], gid),
-            )[:limit]
-            # last_query_scores semantics under RRF: the fused+additive
-            # final score, NOT the raw additive accumulator. This is
-            # what context_manager reads for ratio gates.
+            # Restrict all three combinator inputs to the eligible set BEFORE
+            # combining (issue #255, PR-2). fused / rr are the flat maps;
+            # rr_by_class is the per-class breakdown the fused_tier combinator
+            # ranks independently.
+            fused = {gid: fused_scores.get(gid, 0.0) for gid in eligible_ids}
+            rr = {gid: rerank_additive.get(gid, 0.0) for gid in eligible_ids}
+            rr_by_class = {
+                cls: {g: v for g, v in members.items() if g in eligible_ids}
+                for cls, members in rerank_by_class.items()
+            }
+            # Combine fused + rerank via the selected operator. Default
+            # "additive" reproduces the shipped fused + rerank_additive block
+            # byte-for-byte; fused_tier / eps_band / off are bench-gated.
+            from .retrieval.rerank_combinators import combine_rerank
+            final_scores, ranked_ids = combine_rerank(
+                self._rerank_combinator,
+                fused,
+                rr,
+                rr_by_class,
+                self._rrf_k,
+                self._rerank_tier_weight,
+                self._rerank_band_delta,
+                limit,
+            )
+            # last_query_scores semantics under RRF: the combined final
+            # score, NOT the raw additive accumulator. This is what
+            # context_manager reads for ratio gates. Also stash the
+            # eligible-restricted pre-combination maps (issue #255 PR-2 debug
+            # hooks) under the same lock so the desk-test can recover the
+            # exact fused-vs-final inversion signature.
             with self._last_query_scores_lock:
                 self.last_query_scores = dict(final_scores)
+                self.last_fused_scores = dict(fused)
+                self.last_rerank_additive = dict(rr)
             # RRF-distribution telemetry (spec §6). Attribute-less by
             # design: a per-gene_id label would mint one Prometheus series
             # set per document (unbounded on large genomes), and the
