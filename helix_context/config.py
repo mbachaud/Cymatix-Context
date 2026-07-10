@@ -477,6 +477,25 @@ class RetrievalConfig:
     # floors were calibrated on additive scores.
     fusion_mode: str = "rrf"                # "rrf" | "additive" (legacy)
     rrf_k: int = 60                         # Cormack 2009 default
+    # Issue #255 (PR-2, 2026-07-10): post-fusion rerank combinator. Under
+    # fusion_mode=="rrf" the four rerank classes (authority / sema_boost /
+    # party_attr / access_rate) combine with the fused RRF score via this
+    # operator. Default "additive" is byte-identical to the shipped
+    # fused+rerank_additive block (DEFECT-1 carrier, audit §3) so this knob
+    # ships inert; the alternatives are bench-gated on the 50-needle beds.
+    # Design: docs/research/2026-07-09-scoring-combinator-exploration.md.
+    #   "additive"   — final = fused + rerank (current behavior).
+    #   "fused_tier" — each rerank class becomes a rank contribution
+    #                  (tier_weight/(k+rank)); no exchange rate to hand-pick.
+    #   "eps_band"   — rerank breaks ties only inside a relative fused-score
+    #                  band of width rerank_band_delta (a ratio, scale-free).
+    #   "off"        — pure fused ranking (rerank ignored; floor arm).
+    rerank_combinator: str = "additive"     # additive | fused_tier | eps_band | off
+    # eps_band relative tie-band width δ (ratio of the leader's fused score).
+    rerank_band_delta: float = 0.05
+    # fused_tier uniform per-class rank post-multiplier (single weight — a
+    # per-class weight would re-introduce hand-picked exchange rates).
+    rerank_tier_weight: float = 1.0
     fts5_weight: float = 3.0                # cap-only in additive: cap = 2.0 × this (6.0)
     splade_weight: float = 3.5              # leading coeff == tier cap
     tag_exact_weight: float = 3.0           # current weight × match_count
@@ -1035,6 +1054,12 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             # implementations alive for one release.
             fusion_mode=str(r.get("fusion_mode", cfg.retrieval.fusion_mode)),
             rrf_k=int(r.get("rrf_k", cfg.retrieval.rrf_k)),
+            # Issue #255 (PR-2): post-fusion rerank combinator + its two
+            # scale-free knobs. Default "additive" is byte-identical to the
+            # shipped fused+rerank_additive finalization.
+            rerank_combinator=str(r.get("rerank_combinator", cfg.retrieval.rerank_combinator)),
+            rerank_band_delta=float(r.get("rerank_band_delta", cfg.retrieval.rerank_band_delta)),
+            rerank_tier_weight=float(r.get("rerank_tier_weight", cfg.retrieval.rerank_tier_weight)),
             fts5_weight=float(r.get("fts5_weight", cfg.retrieval.fts5_weight)),
             splade_weight=float(r.get("splade_weight", cfg.retrieval.splade_weight)),
             tag_exact_weight=float(r.get("tag_exact_weight", cfg.retrieval.tag_exact_weight)),

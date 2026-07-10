@@ -804,6 +804,12 @@ class HelixContextManager:
             # Stage 3 (2026-05-08): RRF fusion + per-tier weights.
             fusion_mode=config.retrieval.fusion_mode,
             rrf_k=config.retrieval.rrf_k,
+            # Issue #255 (PR-2): post-fusion rerank combinator + its scale-free
+            # knobs. Fanned to the solo Genome AND every per-shard Genome via
+            # open_read_source. Default "additive" == shipped behavior.
+            rerank_combinator=config.retrieval.rerank_combinator,
+            rerank_band_delta=config.retrieval.rerank_band_delta,
+            rerank_tier_weight=config.retrieval.rerank_tier_weight,
             fts5_weight=config.retrieval.fts5_weight,
             splade_weight=config.retrieval.splade_weight,
             tag_exact_weight=config.retrieval.tag_exact_weight,
