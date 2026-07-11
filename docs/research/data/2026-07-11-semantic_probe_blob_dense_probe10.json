@@ -1,0 +1,158 @@
+{
+  "config": {
+    "bed": "F:\\tmp\\erb_blob.db",
+    "questions_path": "F:/Projects/helix-context/benchmarks/results/erb_sweep_queries_blob.json",
+    "types_jsonl": "F:/Projects/helix-context/benchmarks/results/erb500k_blob_additive_scored.jsonl",
+    "base_config": "docs/benchmarks/helix_probe_lexical.toml",
+    "types_filter": [
+      "semantic"
+    ],
+    "n_questions": 10,
+    "type_hist": {
+      "semantic": 10
+    },
+    "cells": [
+      "dense"
+    ]
+  },
+  "cells": {
+    "dense": {
+      "arm": "dense",
+      "combinator": null,
+      "overall": {
+        "n": 10,
+        "gold_delivered_id_rate": 0.1,
+        "pool_present_rate": 0.9,
+        "gold_delivered_text_rate": 0.2,
+        "n_ranked": 9,
+        "mean_best_gold_rank": 43803.77777777778,
+        "median_best_gold_rank": 27400,
+        "mean_gold_answer_overlap": 0.5337901337792642
+      },
+      "per_type": {
+        "semantic": {
+          "n": 10,
+          "gold_delivered_id_rate": 0.1,
+          "pool_present_rate": 0.9,
+          "gold_delivered_text_rate": 0.2,
+          "n_ranked": 9,
+          "mean_best_gold_rank": 43803.77777777778,
+          "median_best_gold_rank": 27400,
+          "mean_gold_answer_overlap": 0.5337901337792642
+        }
+      },
+      "records": [
+        {
+          "n_gold_ids": 1,
+          "pool_size": 71430,
+          "n_expressed": 5,
+          "gold_delivered_id": true,
+          "pool_present": true,
+          "best_gold_rank": 15,
+          "gold_answer_overlap": 0.9285714285714286,
+          "gold_delivered_text": true,
+          "type": "semantic"
+        },
+        {
+          "n_gold_ids": 2,
+          "pool_size": 106355,
+          "n_expressed": 6,
+          "gold_delivered_id": false,
+          "pool_present": true,
+          "best_gold_rank": 15929,
+          "gold_answer_overlap": 0.68,
+          "gold_delivered_text": true,
+          "type": "semantic"
+        },
+        {
+          "n_gold_ids": 2,
+          "pool_size": 94469,
+          "n_expressed": 3,
+          "gold_delivered_id": false,
+          "pool_present": true,
+          "best_gold_rank": 59533,
+          "gold_answer_overlap": 0.4666666666666667,
+          "gold_delivered_text": false,
+          "type": "semantic"
+        },
+        {
+          "n_gold_ids": 2,
+          "pool_size": 211783,
+          "n_expressed": 8,
+          "gold_delivered_id": false,
+          "pool_present": true,
+          "best_gold_rank": 27400,
+          "gold_answer_overlap": 0.41025641025641024,
+          "gold_delivered_text": false,
+          "type": "semantic"
+        },
+        {
+          "n_gold_ids": 2,
+          "pool_size": 174793,
+          "n_expressed": 5,
+          "gold_delivered_id": false,
+          "pool_present": true,
+          "best_gold_rank": 2989,
+          "gold_answer_overlap": 0.4375,
+          "gold_delivered_text": false,
+          "type": "semantic"
+        },
+        {
+          "n_gold_ids": 2,
+          "pool_size": 182327,
+          "n_expressed": 6,
+          "gold_delivered_id": false,
+          "pool_present": true,
+          "best_gold_rank": 53739,
+          "gold_answer_overlap": 0.4782608695652174,
+          "gold_delivered_text": false,
+          "type": "semantic"
+        },
+        {
+          "n_gold_ids": 2,
+          "pool_size": 79508,
+          "n_expressed": 5,
+          "gold_delivered_id": false,
+          "pool_present": true,
+          "best_gold_rank": 69698,
+          "gold_answer_overlap": 0.5714285714285714,
+          "gold_delivered_text": false,
+          "type": "semantic"
+        },
+        {
+          "n_gold_ids": 2,
+          "pool_size": 208643,
+          "n_expressed": 6,
+          "gold_delivered_id": false,
+          "pool_present": true,
+          "best_gold_rank": 158007,
+          "gold_answer_overlap": 0.3333333333333333,
+          "gold_delivered_text": false,
+          "type": "semantic"
+        },
+        {
+          "n_gold_ids": 2,
+          "pool_size": 113339,
+          "n_expressed": 6,
+          "gold_delivered_id": false,
+          "pool_present": false,
+          "best_gold_rank": null,
+          "gold_answer_overlap": 0.4666666666666667,
+          "gold_delivered_text": false,
+          "type": "semantic"
+        },
+        {
+          "n_gold_ids": 2,
+          "pool_size": 61028,
+          "n_expressed": 5,
+          "gold_delivered_id": false,
+          "pool_present": true,
+          "best_gold_rank": 6924,
+          "gold_answer_overlap": 0.5652173913043478,
+          "gold_delivered_text": false,
+          "type": "semantic"
+        }
+      ]
+    }
+  }
+}
