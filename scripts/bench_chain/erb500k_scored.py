@@ -170,7 +170,8 @@ def match_delivered(delivered_path, gold_index, gold_canonicals):
 # /context/packet -- record know/miss verbatim + assemble injectable context
 # ---------------------------------------------------------------------------
 
-def fetch_packet(helix_url, query, max_genes, timeout_s=40.0):
+def fetch_packet(helix_url, query, max_genes, timeout_s=40.0,
+                 context_char_cap=12000):
     """POST /context/packet. Returns the full packet dict (know/miss verbatim)
     plus a derived {context_text, delivered_paths} for answer injection.
 
@@ -225,7 +226,7 @@ def fetch_packet(helix_url, query, max_genes, timeout_s=40.0):
                     if body:
                         pieces.append("[{}]\n{}".format(src, body))
         out["delivered_paths"] = paths
-        out["context_text"] = "\n\n".join(pieces)[:12000]
+        out["context_text"] = "\n\n".join(pieces)[:context_char_cap]
 
     # Fallback: if the packet gave us no usable context body, pull /context.
     if not out["context_text"]:
@@ -238,7 +239,7 @@ def fetch_packet(helix_url, query, max_genes, timeout_s=40.0):
                 d = raw[0] if isinstance(raw, list) and raw else (
                     raw if isinstance(raw, dict) else {})
                 ctx = d.get("content", "") or ""
-                out["context_text"] = ctx[:12000]
+                out["context_text"] = ctx[:context_char_cap]
                 for m in re.finditer(r'<GENE\s+src="([^"]+)"', ctx):
                     out["delivered_paths"].append(m.group(1).replace("\\", "/"))
         except Exception:
@@ -428,6 +429,12 @@ def main(argv=None):
     ap.add_argument("--audit-max-usd", type=float, default=0.40)
     ap.add_argument("--audit-fraction", type=float, default=0.10)
     ap.add_argument("--max-genes", type=int, default=8)
+    ap.add_argument("--context-char-cap", type=int, default=12000,
+                    help="Char cap on the context blob injected into the "
+                         "answer prompt. The default 12000 truncated mid-pool "
+                         "gold and caused the first #93 run to all-abstain; "
+                         "the scored 2026-07-09 run used 64000 (see the "
+                         "reproduction doc).")
     ap.add_argument("--max-questions", type=int, default=None,
                     help="Cap questions (smoke). Default: all 500.")
     ap.add_argument("--types", default="",
@@ -491,7 +498,8 @@ def main(argv=None):
                 continue
 
             # (a) packet + verbatim know/miss
-            packet = fetch_packet(args.helix_url, nd["question"], args.max_genes)
+            packet = fetch_packet(args.helix_url, nd["question"], args.max_genes,
+                      context_char_cap=args.context_char_cap)
             gold_index, gold_canon = make_gold_index(nd["gold_paths"])
             gold_delivered = any(
                 match_delivered(p, gold_index, gold_canon) is not None
