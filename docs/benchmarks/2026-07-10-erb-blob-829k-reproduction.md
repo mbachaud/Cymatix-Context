@@ -311,8 +311,12 @@ python scripts\bench_chain\erb500k_scored.py `
     --audit-model  opus `
     --answer-max-usd 0.20 --judge-max-usd 0.10 --audit-max-usd 0.40 `
     --audit-fraction 0.10 `
-    --max-genes 8
+    --max-genes 8 `
+    --context-char-cap 64000
 ```
+
+(`--context-char-cap 64000` reproduces the reported run; the flag's default `12000` is the historical
+value that truncated gold and caused the first run's all-abstain — see the repro-fidelity note below.)
 
 **API-cost expectation (honest):** 500 questions × (1 answer + 1 judge Sonnet call) + ~50 Opus audits.
 Per-call caps are `--answer-max-usd 0.20 / --judge-max-usd 0.10 / --audit-max-usd 0.40`, so the worst-case
@@ -320,14 +324,14 @@ ceiling is roughly `500×(0.20+0.10) + 50×0.40 ≈ $170`; typical spend is well
 verdicts). The `.ps1` also runs a **claude-auth preflight** — the first S4 attempt burned 74 minutes
 producing 500 `judge_error` rows because every `claude -p` hit 401.
 
-⚠ **REPRO-FIDELITY — the 64K cap is NOT in committed code.** `erb500k_scored.py` caps the injected context
-at **`[:12000]` characters** (lines 228 and 241). The historical #93 run raised this to **64K** — that was
-the fix for the *first aborted run*, where the 12K cap truncated gold and produced all-abstain (verdict
-caveat #2). The 64K change lived on the `290cc35` worktree and **was not committed to master**. A repro on
-current master will hit the original 12K abort condition. To reproduce the reported numbers, patch both
-`[:12000]` sites to `[:64000]` (or your chosen cap). The committed `--max-genes 8` combined with the
-packet's multi-list evidence (verified / stale_risk / contradictions) yields the "~16 items / ~56K chars"
-the verdict describes — which only flows through under a ≥56K cap.
+⚠ **REPRO-FIDELITY — the context cap.** The historical #93 run raised the injected-context cap from the
+default 12K characters to **64K** — that was the fix for the *first aborted run*, where the 12K cap
+truncated gold and produced all-abstain (verdict caveat #2). At the time the 64K change lived only on the
+`290cc35` worktree; as of the PR that ships this doc, the cap is a first-class flag:
+**`--context-char-cap`** (default `12000` — the historical default; **pass `--context-char-cap 64000` to
+reproduce the reported numbers**). The committed `--max-genes 8` combined with the packet's multi-list
+evidence (verified / stale_risk / contradictions) yields the "~16 items / ~56K chars" the verdict
+describes — which only flows through under a ≥56K cap.
 
 ### Step 6 — The $0 retrieval-only path (no LLM, no API cost)
 
@@ -424,7 +428,7 @@ settings were applied on top of committed code and must be re-applied:
 
 | # | Setting | Committed code | Historical run | Action to reproduce |
 |---|---|---|---|---|
-| 1 | Injected-context cap | `erb500k_scored.py` `[:12000]` (×2) | **64K** | Patch both sites to `[:64000]`. **Not committed; exact value ("64K") is from the verdict — no `64000` constant exists in the tree (TODO: confirm exact value).** |
+| 1 | Injected-context cap | `--context-char-cap` flag, default `12000` (flag added by the PR shipping this doc; previously two hardcoded `[:12000]` sites) | **64K** | Pass `--context-char-cap 64000`. (The "64K" figure is from the verdict; the historical change lived on the `290cc35` worktree, so the exact literal could not be re-read from committed history.) |
 | 2 | Fusion mode | `helix.toml` default `rrf` | **additive** | Set `[retrieval] fusion_mode = "additive"`, or run RRF and state it (≈neutral: 75 vs 72 on first-40). |
 | 3 | Read-only serve | `s4` ps1 does not set it | `HELIX_DISABLE_LEARN=1` | Export `HELIX_DISABLE_LEARN=1` before serving. |
 
