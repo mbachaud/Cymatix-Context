@@ -462,3 +462,7 @@ All artifacts under docs/research/data/2026-07-11-*.json on branch bench/overnig
 6. Investigate Claude abstain-vs-corpus-size on SIKE packets (P10 conditional-correctness table) - candidate tie-in to [know] emit_floor calibration.
 7. Schedule the blob full all-types lexical+fused night with corrected budget (measured: dense ~143 s/q incl startup, lexical+fused 125q in 8h20m).
 8. Also noted: ShardedGenomeAdapter hard-wires dense off (sharding.py:251) - tonight's +31pp shard gap conflates sharding with dense-off; add a dense-off unsharded reference cell to the next receipt.
+
+### Provenance note
+
+Branch history contains a duplicate P4 artifact: 0c9537d (09:07 local, not this orchestrator) added docs/research/data/2026-07-11-semantic-probe-50k-full.json - byte-identical (sha256 dfba6be1759c7418...) to this run's 2026-07-11-semantic_probe_50k_full.json from 8e1d176. Likely a concurrent session in the contended checkout re-checkpointing P4. Left in place (additive, no force-push); ignore the hyphenated copy.
