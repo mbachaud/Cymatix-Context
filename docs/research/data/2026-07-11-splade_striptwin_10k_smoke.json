@@ -1,0 +1,30 @@
+{
+  "label": "erag10k_striptwin",
+  "on": {
+    "n_queries": 30,
+    "recall_at_k": 0.3,
+    "mrr": 0.25,
+    "p95_s": 4.0602,
+    "mean_s": 1.0431,
+    "total_genes": 15598,
+    "splade_rows": 1896100,
+    "splade_present": true,
+    "disk_bytes_per_gene": 55686.745
+  },
+  "off": {
+    "n_queries": 30,
+    "recall_at_k": 0.3,
+    "mrr": 0.25,
+    "p95_s": 4.0841,
+    "mean_s": 1.048,
+    "total_genes": 15598,
+    "splade_rows": 0,
+    "splade_present": false,
+    "disk_bytes_per_gene": 41801.101
+  },
+  "splade_value_signal": {
+    "recall_at_k_delta": 0.0,
+    "p95_s_delta": -0.0239,
+    "disk_bytes_per_gene_delta": 13885.644
+  }
+}
