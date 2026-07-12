@@ -1,0 +1,704 @@
+{
+  "benchmark": "shard_recall",
+  "label": "medium_sharded_f2_c2",
+  "timestamp": "20260712T002924Z",
+  "helix_url": "http://127.0.0.1:11438",
+  "needles_file": "F:\\Projects\\helix-context\\benchmarks\\results\\shard_gold_medium.jsonl",
+  "n_needles": 150,
+  "max_results": 10,
+  "metrics": "recall@{1,3,5,10}, MRR -- by type (within / cross / all)",
+  "gold_match_rule": "bidirectional case-insensitive forward-slash substring: norm(gold) in norm(source) OR norm(source) in norm(gold)",
+  "summary": {
+    "all": {
+      "n": 150,
+      "err": 0,
+      "mrr": 0.1685,
+      "latency": {
+        "median_ms": 1218.3,
+        "p90_ms": 2241.6
+      },
+      "recall@1": 0.08,
+      "recall@3": 0.2067,
+      "recall@5": 0.3067,
+      "recall@10": 0.4133
+    },
+    "cross": {
+      "n": 30,
+      "err": 0,
+      "mrr": 0.1825,
+      "latency": {
+        "median_ms": 1192.6,
+        "p90_ms": 2365.2
+      },
+      "recall@1": 0.1,
+      "recall@3": 0.2333,
+      "recall@5": 0.3,
+      "recall@10": 0.3667
+    },
+    "within": {
+      "n": 120,
+      "err": 0,
+      "mrr": 0.165,
+      "latency": {
+        "median_ms": 1228.0,
+        "p90_ms": 2173.5
+      },
+      "recall@1": 0.075,
+      "recall@3": 0.2,
+      "recall@5": 0.3083,
+      "recall@10": 0.425
+    }
+  },
+  "per_needle_sample": [
+    {
+      "id": "789e5fadfe054eb994dbbb2c978e7d90",
+      "project": "Education",
+      "type": "cross",
+      "file_type": "doc",
+      "question": "- Timestamp Drift Vulnerability: indexing relies on file timestamps/hashes (e.",
+      "gold_paths": [
+        "Education/fleet/knowledge/code_discussion/code_index_AST_scanning_\u2014_incremental_in_round1.md"
+      ],
+      "rank": null,
+      "latency_ms": 12149.8,
+      "n_returned": 10
+    },
+    {
+      "id": "05ae1f5358fc4e269962be073d170c05",
+      "project": "BookKeeper",
+      "type": "within",
+      "file_type": "doc",
+      "question": "Not handled by XeroClient \u2014 use Xero's OAuth2 redirect to obtain:",
+      "gold_paths": [
+        "BookKeeper/bookkeeper/ingestion/sync/README.md"
+      ],
+      "rank": 1,
+      "latency_ms": 1015.1,
+      "n_returned": 10
+    },
+    {
+      "id": "e0ac6ac7f22b4cd5ad73a330d6859001",
+      "project": "helix_context",
+      "type": "within",
+      "file_type": "code",
+      "question": "Return the volatility_class for the given source_kind.",
+      "gold_paths": [
+        "helix_context/identity/provenance.py"
+      ],
+      "rank": 5,
+      "latency_ms": 986.4,
+      "n_returned": 10
+    },
+    {
+      "id": "9273ffbe58924918a3d83c63034bfebe",
+      "project": "helix_context",
+      "type": "within",
+      "file_type": "code",
+      "question": "Return the path for the given platform, or None if missing.",
+      "gold_paths": [
+        "helix_context/launcher/installer.py"
+      ],
+      "rank": null,
+      "latency_ms": 1303.0,
+      "n_returned": 10
+    },
+    {
+      "id": "987904c03e804fc6938d866427b8b6e6",
+      "project": "BookKeeper",
+      "type": "within",
+      "file_type": "doc",
+      "question": "| Account Range | Increase | Decrease |\n|---------------|----------|----------|\n| AR (1200) | decrease | increase |\n| AP",
+      "gold_paths": [
+        "BookKeeper/docs/BALANCE_SHEET_CASH_FLOW.md"
+      ],
+      "rank": null,
+      "latency_ms": 1002.6,
+      "n_returned": 10
+    },
+    {
+      "id": "789e5fadfe054eb994dbbb2c978e7d90",
+      "project": "Education",
+      "type": "within",
+      "file_type": "doc",
+      "question": "- Timestamp Drift Vulnerability: indexing relies on file timestamps/hashes (e.",
+      "gold_paths": [
+        "Education/fleet/knowledge/code_discussion/code_index_AST_scanning_\u2014_incremental_in_round1.md"
+      ],
+      "rank": null,
+      "latency_ms": 1354.3,
+      "n_returned": 10
+    },
+    {
+      "id": "a074de060e5b4a74b7be3ff5276ff200",
+      "project": "two-brain-audit",
+      "type": "within",
+      "file_type": "doc",
+      "question": "prevent silent regression: once you declare \"testing should be at least A\", a drop below that floor is flagged.",
+      "gold_paths": [
+        "two-brain-audit/docs/ARCHITECTURE.md"
+      ],
+      "rank": null,
+      "latency_ms": 1282.7,
+      "n_returned": 10
+    },
+    {
+      "id": "ebbec81509584cefb04dc46940de6aca",
+      "project": "helix_context",
+      "type": "within",
+      "file_type": "code",
+      "question": "Per- submenu: 'Use this database' action + folder info.",
+      "gold_paths": [
+        "helix_context/launcher/tray.py"
+      ],
+      "rank": null,
+      "latency_ms": 1281.1,
+      "n_returned": 10
+    },
+    {
+      "id": "d7bb6f0901a04d848a6279ae9189c4c7",
+      "project": "helix_context",
+      "type": "cross",
+      "file_type": "code",
+      "question": "Poll until the uvicorn server binds the , or timeout.",
+      "gold_paths": [
+        "helix_context/launcher/app.py"
+      ],
+      "rank": null,
+      "latency_ms": 941.9,
+      "n_returned": 10
+    },
+    {
+      "id": "ec790449bcf54b14afecc4ca77b58536",
+      "project": "MaxExpressKit",
+      "type": "within",
+      "file_type": "doc",
+      "question": "- Create .\n- Create \u2014 , , , , , , .\n- Create \u2014 returns a typed config object with defaults applied.\n- Create \u2014 , , .\n- C",
+      "gold_paths": [
+        "MaxExpressKit/docs/superpowers/plans/2026-05-10-mek-v0.1.0.md"
+      ],
+      "rank": 5,
+      "latency_ms": 2733.5,
+      "n_returned": 10
+    },
+    {
+      "id": "7c969850e53c4595872628d49b6faf99",
+      "project": "helix_context",
+      "type": "within",
+      "file_type": "code",
+      "question": "an intentional server to other sessions.",
+      "gold_paths": [
+        "helix_context/bridge.py"
+      ],
+      "rank": null,
+      "latency_ms": 591.7,
+      "n_returned": 10
+    },
+    {
+      "id": "92c153e5a9f54c5eb132f44d29813cba",
+      "project": "CosmicTasha",
+      "type": "cross",
+      "file_type": "doc",
+      "question": "- Boolean only: \n- No raw API responses stored\n- Historical retained for drift timeline visualization\n- stored in tenant",
+      "gold_paths": [
+        "CosmicTasha/.planning/15-phase2-integration-monitoring.md"
+      ],
+      "rank": 7,
+      "latency_ms": 1696.8,
+      "n_returned": 10
+    },
+    {
+      "id": "19b6c48120f34dcab8086762b1bdc147",
+      "project": "CosmicTasha",
+      "type": "within",
+      "file_type": "code",
+      "question": "this \"use \" for a timespan defined by the \"weeks\" profile.",
+      "gold_paths": [
+        "CosmicTasha/web/.next/types/cache-life.d.ts"
+      ],
+      "rank": null,
+      "latency_ms": 832.9,
+      "n_returned": 10
+    },
+    {
+      "id": "0509cc60ba484148b1ba8e6b89351b3e",
+      "project": "BookKeeper",
+      "type": "within",
+      "file_type": "code",
+      "question": "Convert a sqlite3. (or tuple) to a WITHOUT password_hash.",
+      "gold_paths": [
+        "BookKeeper/bookkeeper/tenancy/auth.py"
+      ],
+      "rank": 1,
+      "latency_ms": 1247.0,
+      "n_returned": 10
+    },
+    {
+      "id": "942dca9ef44d4945b18c77acabc316da",
+      "project": "Education",
+      "type": "within",
+      "file_type": "doc",
+      "question": "Event: fleet_start\nCompleted: Event: fleet_start, Time: -03-26 :29\nNext: Continue operations\n---",
+      "gold_paths": [
+        "Education/fleet/knowledge/marathon/fleet.md"
+      ],
+      "rank": null,
+      "latency_ms": 1499.3,
+      "n_returned": 10
+    },
+    {
+      "id": "cbd11bde625a499ba11e7bfaecd62cc5",
+      "project": "CosmicTasha",
+      "type": "within",
+      "file_type": "doc",
+      "question": "The web app reads these from (see [](web/.",
+      "gold_paths": [
+        "CosmicTasha/README.md"
+      ],
+      "rank": 5,
+      "latency_ms": 977.2,
+      "n_returned": 10
+    },
+    {
+      "id": "8d07eb8216224fcba17dca43e17278a4",
+      "project": "Education",
+      "type": "within",
+      "file_type": "doc",
+      "question": "Event: fleet_start\nCompleted: Event: fleet_start, Time: -03-26 :08\nNext: Continue operations\n---",
+      "gold_paths": [
+        "Education/fleet/knowledge/marathon/fleet.md"
+      ],
+      "rank": null,
+      "latency_ms": 1490.8,
+      "n_returned": 10
+    },
+    {
+      "id": "214d846cd7b841588ff8b97e02ed01ab",
+      "project": "Education",
+      "type": "within",
+      "file_type": "doc",
+      "question": "- Experiment framework: Unit tests for lifecycle, GPU lock, autonomy config, rollback\n- ds_rag: RAG eval benchmark with ",
+      "gold_paths": [
+        "Education/docs/superpowers/specs/2026-03-23-ml-data-scientists-design.md"
+      ],
+      "rank": 1,
+      "latency_ms": 3250.6,
+      "n_returned": 10
+    },
+    {
+      "id": "7106047a190440c9a90a745002366c33",
+      "project": "BookKeeper",
+      "type": "within",
+      "file_type": "doc",
+      "question": "#### 1. \u2014 Context\nThread-safe identification for all operations.",
+      "gold_paths": [
+        "BookKeeper/docs/MULTI_TENANT_GUIDE.md"
+      ],
+      "rank": null,
+      "latency_ms": 1186.4,
+      "n_returned": 10
+    },
+    {
+      "id": "409b190c1003490b8586bf988c066903",
+      "project": "BookKeeper",
+      "type": "within",
+      "file_type": "doc",
+      "question": "- (): Double-entry accounting equation (A = L + E) with sections for current/fixed assets, current/long-term liabilities",
+      "gold_paths": [
+        "BookKeeper/docs/BALANCE_SHEET_CASH_FLOW.md"
+      ],
+      "rank": 8,
+      "latency_ms": 3616.4,
+      "n_returned": 10
+    },
+    {
+      "id": "822548f639a24ab2936606ba2b667800",
+      "project": "BookKeeper",
+      "type": "within",
+      "file_type": "doc",
+      "question": "Position: Pure Python. is a data pipeline with a web UI \u2014 Python owns this space. The financial library ecosystem has ze",
+      "gold_paths": [
+        "BookKeeper/docs/BookKeeper_Language_Consensus.md"
+      ],
+      "rank": 10,
+      "latency_ms": 1892.6,
+      "n_returned": 10
+    },
+    {
+      "id": "ec9c3bce77114d3bac03bac719274bce",
+      "project": "BookKeeper",
+      "type": "within",
+      "file_type": "doc",
+      "question": "- OFX test files: \u2014 Generate synthetic OFX/QFX files stored in\n .",
+      "gold_paths": [
+        "BookKeeper/docs/planning/MVP_SCOPE.md"
+      ],
+      "rank": null,
+      "latency_ms": 1314.2,
+      "n_returned": 10
+    },
+    {
+      "id": "020a328da2b246cdb7d8d6d6dbfb0deb",
+      "project": "MaxExpressKit",
+      "type": "cross",
+      "file_type": "doc",
+      "question": "runs on for /. It scans the diff for float literals next to money-shaped identifiers and emits a WARN-level reminder. Ne",
+      "gold_paths": [
+        "MaxExpressKit/docs/superpowers/plans/2026-05-10-mek-v0.1.0.md"
+      ],
+      "rank": 3,
+      "latency_ms": 2351.4,
+      "n_returned": 10
+    },
+    {
+      "id": "6b755b51415b4b4f9385aa30464ac8ef",
+      "project": "Education",
+      "type": "within",
+      "file_type": "doc",
+      "question": "- [LOW] (line 160) \u2014 format_audit_report() has nesting depth 4 \u2014 consider early returns or extraction\n- [LOW] (line 270)",
+      "gold_paths": [
+        "Education/fleet/knowledge/quality/reviews/quality_review_20260329_1908.md"
+      ],
+      "rank": null,
+      "latency_ms": 2308.7,
+      "n_returned": 10
+    },
+    {
+      "id": "92c153e5a9f54c5eb132f44d29813cba",
+      "project": "CosmicTasha",
+      "type": "within",
+      "file_type": "doc",
+      "question": "- Boolean only: \n- No raw API responses stored\n- Historical retained for drift timeline visualization\n- stored in tenant",
+      "gold_paths": [
+        "CosmicTasha/.planning/15-phase2-integration-monitoring.md"
+      ],
+      "rank": 7,
+      "latency_ms": 1656.5,
+      "n_returned": 10
+    },
+    {
+      "id": "16bdab3cc94c471e83ec421424016432",
+      "project": "two-brain-audit",
+      "type": "cross",
+      "file_type": "doc",
+      "question": "ScoreRift doesn't replace tooling. It sits on top of it.",
+      "gold_paths": [
+        "two-brain-audit/README.md"
+      ],
+      "rank": 1,
+      "latency_ms": 1016.0,
+      "n_returned": 10
+    },
+    {
+      "id": "214d846cd7b841588ff8b97e02ed01ab",
+      "project": "Education",
+      "type": "cross",
+      "file_type": "doc",
+      "question": "- Experiment framework: Unit tests for lifecycle, GPU lock, autonomy config, rollback\n- ds_rag: RAG eval benchmark with ",
+      "gold_paths": [
+        "Education/docs/superpowers/specs/2026-03-23-ml-data-scientists-design.md"
+      ],
+      "rank": 1,
+      "latency_ms": 3268.9,
+      "n_returned": 10
+    },
+    {
+      "id": "b250cbfe989847dfab74be9452c8a3eb",
+      "project": "two-brain-audit",
+      "type": "within",
+      "file_type": "code",
+      "question": "When a tier should be triggered automatically.",
+      "gold_paths": [
+        "two-brain-audit/src/scorerift/tiers.py"
+      ],
+      "rank": 3,
+      "latency_ms": 824.6,
+      "n_returned": 10
+    },
+    {
+      "id": "b4c6fee920604e7b9134ba5660e67421",
+      "project": "two-brain-audit",
+      "type": "within",
+      "file_type": "doc",
+      "question": "LLM reviewer system \u2014 the \"right brain on demand\":",
+      "gold_paths": [
+        "two-brain-audit/CHANGELOG.md"
+      ],
+      "rank": 3,
+      "latency_ms": 978.9,
+      "n_returned": 10
+    },
+    {
+      "id": "4a692d34e3b7470e9e8083d11e367d0a",
+      "project": "two-brain-audit",
+      "type": "cross",
+      "file_type": "doc",
+      "question": "The DORA four key are not yet formally scored but are on the roadmap:",
+      "gold_paths": [
+        "two-brain-audit/docs/STANDARDS.md"
+      ],
+      "rank": 2,
+      "latency_ms": 986.1,
+      "n_returned": 10
+    },
+    {
+      "id": "e810c927b61a428eae843619a16365c5",
+      "project": "helix_context",
+      "type": "cross",
+      "file_type": "code",
+      "question": "Lightweight projection \u2014 `HelixSession.`.",
+      "gold_paths": [
+        "helix_context/api.py"
+      ],
+      "rank": 1,
+      "latency_ms": 341.3,
+      "n_returned": 10
+    },
+    {
+      "id": "cdf3aee83dce45929632430b965c516e",
+      "project": "two-brain-audit",
+      "type": "within",
+      "file_type": "doc",
+      "question": "def pylint_score():\n result = subprocess.run([\"pylint\", \"src/\", \"--output-format=json\"],\n capture_output=True, text=True",
+      "gold_paths": [
+        "two-brain-audit/README.md"
+      ],
+      "rank": null,
+      "latency_ms": 2399.2,
+      "n_returned": 10
+    },
+    {
+      "id": "ed6214befd76403ba8064e39e3e5ddcf",
+      "project": "helix_context",
+      "type": "within",
+      "file_type": "code",
+      "question": "Scan , emit to claim_edges. Returns a summary.",
+      "gold_paths": [
+        "helix_context/identity/claims_analyze.py"
+      ],
+      "rank": 6,
+      "latency_ms": 1141.1,
+      "n_returned": 10
+    },
+    {
+      "id": "5ad9d47fad894145952d208a8d4a78df",
+      "project": "two-brain-audit",
+      "type": "within",
+      "file_type": "code",
+      "question": "Audit depth \u2014 higher include everything from lower .",
+      "gold_paths": [
+        "two-brain-audit/src/scorerift/tiers.py"
+      ],
+      "rank": 4,
+      "latency_ms": 1139.0,
+      "n_returned": 10
+    },
+    {
+      "id": "c5c48d9d86f24eb1b9fb9960715010ca",
+      "project": "BookKeeper",
+      "type": "within",
+      "file_type": "doc",
+      "question": "The implementation includes 24 comprehensive tests (in ):",
+      "gold_paths": [
+        "BookKeeper/docs/BALANCE_SHEET_CASH_FLOW.md"
+      ],
+      "rank": null,
+      "latency_ms": 1059.5,
+      "n_returned": 10
+    },
+    {
+      "id": "37fd803f48c04fd992229d606c4ad98a",
+      "project": "Education",
+      "type": "within",
+      "file_type": "doc",
+      "question": "Reviewer: coder_3 (performance optimizer)\nProject: C:[REDACTED]\\Projects\\\\\\\\\\",
+      "gold_paths": [
+        "Education/fleet/knowledge/code_writes/reviews/workspace_review_20260321_173458_coder_3.md"
+      ],
+      "rank": null,
+      "latency_ms": 993.6,
+      "n_returned": 10
+    },
+    {
+      "id": "001c1e4bf81e4f3bbae4c2ee8a580a6e",
+      "project": "BookKeeper",
+      "type": "within",
+      "file_type": "doc",
+      "question": "> Last sweep: 2026-03-24 \u2014 Full gap review for professional services + mixed/general business.",
+      "gold_paths": [
+        "BookKeeper/docs/planning/GAPS.md"
+      ],
+      "rank": null,
+      "latency_ms": 1607.9,
+      "n_returned": 10
+    },
+    {
+      "id": "65219bb37547459b8086db677c5e00f2",
+      "project": "helix_context",
+      "type": "within",
+      "file_type": "code",
+      "question": "Per-spec lookup with `default` fallback.",
+      "gold_paths": [
+        "helix_context/config.py"
+      ],
+      "rank": null,
+      "latency_ms": 1099.7,
+      "n_returned": 10
+    },
+    {
+      "id": "6a9e5841f73c42b1a34b770b011aa049",
+      "project": "Education",
+      "type": "within",
+      "file_type": "doc",
+      "question": "coordinator = (\n model=\"amazon.nova\",\n =[\n researcher_agent.as_tool(),\n coder_agent.as_tool(),\n security_agent.as_tool()",
+      "gold_paths": [
+        "Education/BigEd/research/agent_swarming_and_collaboration.md"
+      ],
+      "rank": 1,
+      "latency_ms": 2110.7,
+      "n_returned": 10
+    },
+    {
+      "id": "67f45a8fa835423ab0e92b4a70420511",
+      "project": "helix_context",
+      "type": "within",
+      "file_type": "code",
+      "question": "Build/load the hot-tier (lifecycle tier < 2) .",
+      "gold_paths": [
+        "helix_context/knowledge_store.py"
+      ],
+      "rank": null,
+      "latency_ms": 1236.4,
+      "n_returned": 10
+    },
+    {
+      "id": "102599d53bfa4fcb89389a6bcacd0759",
+      "project": "Education",
+      "type": "within",
+      "file_type": "doc",
+      "question": "Autonomous agents share a common architectural pattern: plan-execute-reflect loops where an LLM decomposes a high-level ",
+      "gold_paths": [
+        "Education/BigEd/research/agent_evolution_and_autoresearch.md"
+      ],
+      "rank": 10,
+      "latency_ms": 2464.4,
+      "n_returned": 10
+    },
+    {
+      "id": "0567bf4221ea4d8098faedb7669ddbcd",
+      "project": "helix_context",
+      "type": "within",
+      "file_type": "code",
+      "question": "Imperative \u2014 VaultManager.status() updates it on each call.",
+      "gold_paths": [
+        "helix_context/telemetry/otel.py"
+      ],
+      "rank": 4,
+      "latency_ms": 1164.9,
+      "n_returned": 10
+    },
+    {
+      "id": "84bd46aa1a1340fcabc113d49ef149a0",
+      "project": "CosmicTasha",
+      "type": "within",
+      "file_type": "doc",
+      "question": "Compliance Profile is designed to prove is real \u2014 it analyzed your company, found actual issues, and knows what it's tal",
+      "gold_paths": [
+        "CosmicTasha/.planning/02-pricing-monetization.md"
+      ],
+      "rank": 2,
+      "latency_ms": 2137.6,
+      "n_returned": 10
+    },
+    {
+      "id": "28e5875de6f14451bf4e17845610a6eb",
+      "project": "Education",
+      "type": "within",
+      "file_type": "doc",
+      "question": "import webview\nimport threading\nfrom fleet_bridge import start_fleet_if_needed",
+      "gold_paths": [
+        "Education/docs/superpowers/specs/2026-03-31-pywebview-migration.md"
+      ],
+      "rank": null,
+      "latency_ms": 1412.9,
+      "n_returned": 10
+    },
+    {
+      "id": "88e07fe3292d4088ac4c6fba71bd0ddb",
+      "project": "BookKeeper",
+      "type": "within",
+      "file_type": "doc",
+      "question": "Xero API: 60 requests per minute (enforced locally with deque timestamp tracking).",
+      "gold_paths": [
+        "BookKeeper/bookkeeper/ingestion/sync/README.md"
+      ],
+      "rank": 3,
+      "latency_ms": 1373.7,
+      "n_returned": 10
+    },
+    {
+      "id": "ef299229bebd4e8991777432306bb2cd",
+      "project": "BookKeeper",
+      "type": "within",
+      "file_type": "doc",
+      "question": "#### Enhanced (~150 new lines)\nNew command group with 6 subcommands:\n- \u2014 List all tenants with status\n- \u2014 Create new ten",
+      "gold_paths": [
+        "BookKeeper/docs/TENANCY_IMPLEMENTATION_SUMMARY.md"
+      ],
+      "rank": null,
+      "latency_ms": 2235.4,
+      "n_returned": 10
+    },
+    {
+      "id": "1c6700336c1d4d64be00766e33fc4d02",
+      "project": "MaxExpressKit",
+      "type": "cross",
+      "file_type": "doc",
+      "question": "1. \u2014 seed the baseline.\n2. Open the baseline; fill in (letter grade) for the dimensions you care about.\n3. Work normally",
+      "gold_paths": [
+        "MaxExpressKit/docs/drift.md"
+      ],
+      "rank": null,
+      "latency_ms": 2148.6,
+      "n_returned": 10
+    },
+    {
+      "id": "90aab8b825ff4521afde5d0bbe408b02",
+      "project": "MaxExpressKit",
+      "type": "within",
+      "file_type": "doc",
+      "question": "- Three distilled guardrails: , , .\n- Three named subagents matching each guardrail.\n- entry skill.\n- Slash commands: , ",
+      "gold_paths": [
+        "MaxExpressKit/docs/superpowers/plans/2026-05-10-mek-v0.1.0.md"
+      ],
+      "rank": 5,
+      "latency_ms": 3339.4,
+      "n_returned": 10
+    },
+    {
+      "id": "b3a97d3a8168430c9e85c166b4442b13",
+      "project": "CosmicTasha",
+      "type": "within",
+      "file_type": "doc",
+      "question": "All four incumbents are integration-monitoring platforms.",
+      "gold_paths": [
+        "CosmicTasha/.planning/02-pricing-monetization.md"
+      ],
+      "rank": null,
+      "latency_ms": 1176.1,
+      "n_returned": 10
+    },
+    {
+      "id": "f35e4508bacf4d53b73ed88a73ba49e4",
+      "project": "helix_context",
+      "type": "within",
+      "file_type": "code",
+      "question": "Routing-DB . Mirrors `KnowledgeStore.` so\n `/admin/swap-db and other callers reading genome.` work\n on a sharded knowled",
+      "gold_paths": [
+        "helix_context/sharding.py"
+      ],
+      "rank": 6,
+      "latency_ms": 1657.1,
+      "n_returned": 10
+    }
+  ]
+}

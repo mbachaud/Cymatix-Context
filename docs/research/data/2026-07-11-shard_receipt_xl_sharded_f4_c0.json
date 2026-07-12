@@ -1,0 +1,704 @@
+{
+  "benchmark": "shard_recall",
+  "label": "xl_sharded_f4_c0",
+  "timestamp": "20260712T005321Z",
+  "helix_url": "http://127.0.0.1:11438",
+  "needles_file": "F:\\Projects\\helix-context\\benchmarks\\results\\shard_gold_xl.jsonl",
+  "n_needles": 379,
+  "max_results": 10,
+  "metrics": "recall@{1,3,5,10}, MRR -- by type (within / cross / all)",
+  "gold_match_rule": "bidirectional case-insensitive forward-slash substring: norm(gold) in norm(source) OR norm(source) in norm(gold)",
+  "summary": {
+    "all": {
+      "n": 379,
+      "err": 0,
+      "mrr": 0.0936,
+      "latency": {
+        "median_ms": 2032.3,
+        "p90_ms": 3639.2
+      },
+      "recall@1": 0.0449,
+      "recall@3": 0.124,
+      "recall@5": 0.1451,
+      "recall@10": 0.2216
+    },
+    "cross": {
+      "n": 76,
+      "err": 0,
+      "mrr": 0.106,
+      "latency": {
+        "median_ms": 2023.0,
+        "p90_ms": 3612.1
+      },
+      "recall@1": 0.0526,
+      "recall@3": 0.1579,
+      "recall@5": 0.1579,
+      "recall@10": 0.2237
+    },
+    "within": {
+      "n": 303,
+      "err": 0,
+      "mrr": 0.0905,
+      "latency": {
+        "median_ms": 2044.3,
+        "p90_ms": 3633.9
+      },
+      "recall@1": 0.0429,
+      "recall@3": 0.1155,
+      "recall@5": 0.1419,
+      "recall@10": 0.2211
+    }
+  },
+  "per_needle_sample": [
+    {
+      "id": "ebf0edb4b96046919eabd5e6436666c1",
+      "project": "alerting",
+      "type": "within",
+      "file_type": "doc",
+      "question": "Group multiple alert instances into one email",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\alerting\\configure-notifications\\template-notifications\\create-notification-templates.md"
+      ],
+      "rank": null,
+      "latency_ms": 13032.0,
+      "n_returned": 10
+    },
+    {
+      "id": "f441b39687974ed184c0b4ec5e827bb4",
+      "project": "Program Files (x86)",
+      "type": "within",
+      "file_type": "doc",
+      "question": "Une de est la vitesse du drone sans aucune am\u00e9lioration de vitesse.",
+      "gold_paths": [
+        "C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Farmer Was Replaced\\TheFarmerWasReplaced_Data\\StreamingAssets\\Languages\\FR\\Strings\\code_tooltips.txt"
+      ],
+      "rank": 2,
+      "latency_ms": 1024.5,
+      "n_returned": 10
+    },
+    {
+      "id": "2016fa907d464bc8b551541d13345ded",
+      "project": "SteamLibrary",
+      "type": "within",
+      "file_type": "doc",
+      "question": "build:** remove __RUNTIME_COMPILE__ flag (206640a), closes #817",
+      "gold_paths": [
+        "E:\\SteamLibrary\\steamapps\\common\\BeamNG.drive\\ui\\lib\\ext\\vue3\\CHANGELOG.md"
+      ],
+      "rank": null,
+      "latency_ms": 2777.9,
+      "n_returned": 10
+    },
+    {
+      "id": "8c16e7bfe72a46d99048815e5d3f1c3e",
+      "project": "Factorio",
+      "type": "within",
+      "file_type": "code",
+      "question": "- Prototype Docs | | Forums | Wiki | Mod Portal | API Docs Prototype | Runtime | Auxiliary Prototype Docs Version 2.0.76",
+      "gold_paths": [
+        "F:\\Factorio\\doc-html\\types\\CircuitConnectorSecondaryDrawOrder.html"
+      ],
+      "rank": null,
+      "latency_ms": 3757.8,
+      "n_returned": 10
+    },
+    {
+      "id": "10638036d4b8409ab465f4cc54d3b65e",
+      "project": "SteamLibrary",
+      "type": "within",
+      "file_type": "code",
+      "question": "Now to Stop Control...\" } } }, \"\":5 }, { \"metadata\":{ \"chill\":true, \"static\":true, \"system\":true, \"weight\":0.1 }, \"name\"",
+      "gold_paths": [
+        "E:\\SteamLibrary\\steamapps\\common\\BeamNG.drive\\gameplay\\missions\\small_island\\rallyStage\\001-mixed2\\rally\\notebooks\\primary.notebook.json"
+      ],
+      "rank": null,
+      "latency_ms": 3442.0,
+      "n_returned": 10
+    },
+    {
+      "id": "a9895bf6f7bb4275b87f134d5befb070",
+      "project": "explore",
+      "type": "within",
+      "file_type": "doc",
+      "question": "{{ }} ## Node graph You can also expand the node graph for a displayed .",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\explore\\trace-integration.md"
+      ],
+      "rank": null,
+      "latency_ms": 1710.5,
+      "n_returned": 10
+    },
+    {
+      "id": "e1024847034441078e29f47f1437f709",
+      "project": "datasources",
+      "type": "within",
+      "file_type": "doc",
+      "question": "Application Insights and Insights Analytics (removed)",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\datasources\\azure-monitor\\_index.md"
+      ],
+      "rank": null,
+      "latency_ms": 1136.5,
+      "n_returned": 10
+    },
+    {
+      "id": "770bddc579144d4e961cf88c5f9f4c12",
+      "project": "developers",
+      "type": "within",
+      "file_type": "doc",
+      "question": "Since version 8.4, API details are specified using OpenAPI v2.",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\developers\\http_api\\_index.md"
+      ],
+      "rank": null,
+      "latency_ms": 2028.8,
+      "n_returned": 10
+    },
+    {
+      "id": "deba30c504fa4306bbc65ae6bdcd30ad",
+      "project": "Program Files (x86)",
+      "type": "within",
+      "file_type": "doc",
+      "question": "# \u041f\u043e\u043a\u0440\u0430\u0449\u0435\u043d\u043d\u044f \u0448\u0432\u0438\u0434\u043a\u043e\u0441\u0442\u0456 \u0428\u0432\u0438\u0434\u043a\u0456\u0441\u0442\u044c \u0432\u0438\u043a\u043e\u043d\u0430\u043d\u043d\u044f \u0431\u0443\u043b\u0430 \u043f\u043e\u0434\u0432\u043e\u0454\u043d\u0430.",
+      "gold_paths": [
+        "C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Farmer Was Replaced\\TheFarmerWasReplaced_Data\\StreamingAssets\\Languages\\UA\\docs\\unlocks\\speed.md"
+      ],
+      "rank": null,
+      "latency_ms": 60.6,
+      "n_returned": 0
+    },
+    {
+      "id": "81fa229d68014b879b80ab35062cf28e",
+      "project": "release-notes",
+      "type": "within",
+      "file_type": "doc",
+      "question": "- API: Migrate CSRF to service and support additional options.",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\release-notes\\release-notes-9-1-0-beta1.md"
+      ],
+      "rank": null,
+      "latency_ms": 2044.3,
+      "n_returned": 10
+    },
+    {
+      "id": "99c36dc5642048b180957535bebf6e64",
+      "project": "alerting",
+      "type": "within",
+      "file_type": "doc",
+      "question": "The Alertmanager can only receive managed alerts",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\alerting\\set-up\\performance-limitations\\index.md"
+      ],
+      "rank": null,
+      "latency_ms": 972.3,
+      "n_returned": 10
+    },
+    {
+      "id": "772daf3ad3c04ac0afb42fc30704f93b",
+      "project": "getting-started",
+      "type": "within",
+      "file_type": "doc",
+      "question": "--- aliases: - guides/what-is-/ description: Learn how build your first dashboard after you have installed .",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\getting-started\\_index.md"
+      ],
+      "rank": null,
+      "latency_ms": 2872.3,
+      "n_returned": 10
+    },
+    {
+      "id": "7ecc91054c1f42f4b659040465c63755",
+      "project": "Factorio",
+      "type": "within",
+      "file_type": "code",
+      "question": "description=\u10d0\u10db \u10e3\u10ea\u10ee\u10dd \u10e1\u10d0\u10db\u10e7\u10d0\u10e0\u10dd\u10d6\u10d4 \u10d0\u10d5\u10d0\u10e0\u10d8\u10e3\u10da\u10d8 \u10d3\u10d0\u10ef\u10d3\u10dd\u10db\u10d8\u10e1 \u10e8\u10d4\u10db\u10d3\u10d4\u10d2, \u10d7\u10e5\u10d5\u10d4\u10dc \u10e3\u10dc\u10d3\u10d0 \u10d2\u10d0\u10db\u10dd\u10d8\u10d9\u10d5\u10da\u10d8\u10dd\u10d7 \u10e2\u10d4\u10e0\u10d8\u10e2\u10dd\u10e0\u10d8\u10d0, \u10db\u10dd\u10d0\u10d2\u10e0\u10dd\u10d5\u10dd\u10d7 \u10d0\u10d3\u10d2\u10d8\u10da\u10dd\u10d1\u10e0\u10d8\u10d5\u10d8 \u10e0\u10d4\u10e1\u10e3\u10e0\u10e1\u10d4\u10d1",
+      "gold_paths": [
+        "F:\\Factorio\\data\\base\\campaigns\\tutorial\\locale\\ka\\tutorial.cfg"
+      ],
+      "rank": null,
+      "latency_ms": 700.7,
+      "n_returned": 10
+    },
+    {
+      "id": "bdf405557d10494b8b0ed1dd32b27f36",
+      "project": "datasources",
+      "type": "within",
+      "file_type": "doc",
+      "question": "The `` property is required for current user authentication to function.",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\datasources\\azure-monitor\\_index.md"
+      ],
+      "rank": null,
+      "latency_ms": 1697.6,
+      "n_returned": 10
+    },
+    {
+      "id": "4531f5650ddc4dfaa9315a6f1e0bfb3e",
+      "project": "administration",
+      "type": "within",
+      "file_type": "doc",
+      "question": "--- aliases: - ../../enterprise// - ../../enterprise//about-rbac/ - ../../enterprise/// description: Role-based (RBAC) p",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\administration\\roles-and-permissions\\access-control\\_index.md"
+      ],
+      "rank": 7,
+      "latency_ms": 3338.9,
+      "n_returned": 10
+    },
+    {
+      "id": "7140d31fc8ab4700912b5c7cbd5b61e2",
+      "project": "datasources",
+      "type": "within",
+      "file_type": "doc",
+      "question": "| Name | Description | | --------------------- | -----------------------------------------------------------------------",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\datasources\\influxdb\\_index.md"
+      ],
+      "rank": null,
+      "latency_ms": 3655.7,
+      "n_returned": 10
+    },
+    {
+      "id": "375daf535d5342e48aac1ef406ea8211",
+      "project": "alerting",
+      "type": "cross",
+      "file_type": "doc",
+      "question": "Scroll to the Data source- section and click +New .",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\alerting\\alerting-rules\\create-mimir-loki-managed-recording-rule.md"
+      ],
+      "rank": null,
+      "latency_ms": 2307.2,
+      "n_returned": 10
+    },
+    {
+      "id": "22c382244be34087a7a386ee548d82fd",
+      "project": "explore",
+      "type": "cross",
+      "file_type": "doc",
+      "question": "--- keywords: - - labels: products: - cloud - enterprise - oss title: Traces in weight: 40 --- # Traces in You can use t",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\explore\\trace-integration.md"
+      ],
+      "rank": 3,
+      "latency_ms": 3407.3,
+      "n_returned": 10
+    },
+    {
+      "id": "13360ec9a7a14901985aa952654eb5c5",
+      "project": "breaking-changes",
+      "type": "cross",
+      "file_type": "doc",
+      "question": "Deprecated logs-related functions and variables have been removed from the \"@/data\" and \"@/ui\" packages",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\breaking-changes\\breaking-changes-v10-0.md"
+      ],
+      "rank": null,
+      "latency_ms": 2955.3,
+      "n_returned": 10
+    },
+    {
+      "id": "b9bb48e7baff4efc8f7f9808708c7a5b",
+      "project": "panels-visualizations",
+      "type": "within",
+      "file_type": "doc",
+      "question": "In a , each field or series is rendered as a horizontal row, with multiple boxes showing the different statuses.",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\panels-visualizations\\visualizations\\status-history\\index.md"
+      ],
+      "rank": null,
+      "latency_ms": 1807.7,
+      "n_returned": 10
+    },
+    {
+      "id": "b132a213a87c41769ca67c37787573dd",
+      "project": "upgrade-guide",
+      "type": "within",
+      "file_type": "doc",
+      "question": "--- description: to v9.3 keywords: - - configuration - documentation - labels: products: - enterprise - oss menutitle: t",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\upgrade-guide\\upgrade-v9.3\\index.md"
+      ],
+      "rank": null,
+      "latency_ms": 3641.2,
+      "n_returned": 10
+    },
+    {
+      "id": "bf7d34f1aada4e5ebab55e53c0b48bc6",
+      "project": "dashboards",
+      "type": "within",
+      "file_type": "doc",
+      "question": "Use this option to enable or disable the reporting feature. When disabled, no are generated, and the UI is hidden. By de",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\dashboards\\create-reports\\index.md"
+      ],
+      "rank": null,
+      "latency_ms": 2508.3,
+      "n_returned": 10
+    },
+    {
+      "id": "c72a41759bde4fe98638214cc1740243",
+      "project": "tutorials",
+      "type": "within",
+      "file_type": "doc",
+      "question": "In Folder, click + New folder and enter a name.",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\tutorials\\create-alerts-with-logs\\index.md"
+      ],
+      "rank": null,
+      "latency_ms": 1439.0,
+      "n_returned": 10
+    },
+    {
+      "id": "b6aa1abcab9d438b9375b92143b615ec",
+      "project": "SteamLibrary",
+      "type": "within",
+      "file_type": "doc",
+      "question": "/ object-assign (c) Sindre Sorhus @ MIT / /*!",
+      "gold_paths": [
+        "E:\\SteamLibrary\\steamapps\\common\\SpaceEngineers2\\Game2\\inspector\\static\\js\\bundle.js.LICENSE.txt"
+      ],
+      "rank": 1,
+      "latency_ms": 1827.8,
+      "n_returned": 10
+    },
+    {
+      "id": "9100860bd7b94e2ebac4fddc76483c1b",
+      "project": "panels-visualizations",
+      "type": "within",
+      "file_type": "doc",
+      "question": "This can be used to add contextual information and descriptions or embed complex HTML.",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\panels-visualizations\\visualizations\\text\\index.md"
+      ],
+      "rank": 2,
+      "latency_ms": 2187.6,
+      "n_returned": 10
+    },
+    {
+      "id": "41433034b05940099672eab1747e730d",
+      "project": "explore",
+      "type": "within",
+      "file_type": "doc",
+      "question": "Shortened links have two options: relative time (., from two hours ago to now) or absolute time (., from 8am to 10am).",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\explore\\get-started-with-explore.md"
+      ],
+      "rank": null,
+      "latency_ms": 1829.0,
+      "n_returned": 10
+    },
+    {
+      "id": "3b9de59d5f0d4bf9a83968586fd478ab",
+      "project": "Program Files (x86)",
+      "type": "within",
+      "file_type": "doc",
+      "question": "# Liste Le liste sono un modo semplice per memorizzare pi\u00f9 valori in una singola variabile.",
+      "gold_paths": [
+        "C:\\Program Files (x86)\\Steam\\steamapps\\common\\The Farmer Was Replaced\\TheFarmerWasReplaced_Data\\StreamingAssets\\Languages\\IT\\docs\\scripting\\lists.md"
+      ],
+      "rank": 3,
+      "latency_ms": 897.6,
+      "n_returned": 10
+    },
+    {
+      "id": "cf51ee35c58d4c91831ba6f9b42ad6b1",
+      "project": "SteamLibrary",
+      "type": "cross",
+      "file_type": "code",
+      "question": "\"ce952135-e8b4-4b5b-98c2-a26b6f427a4e\": {",
+      "gold_paths": [
+        "E:\\SteamLibrary\\steamapps\\common\\SpaceEngineers2\\GameData\\Vanilla\\Worlds\\Contracts\\PlanetBased\\Hauling\\Mission_SupplyBase\\snapshots.bak.json"
+      ],
+      "rank": null,
+      "latency_ms": 475.1,
+      "n_returned": 0
+    },
+    {
+      "id": "2eef323b6343434e841845651cbe79bc",
+      "project": "fundamentals",
+      "type": "within",
+      "file_type": "doc",
+      "question": "The first section of this document introduced the as Data concept and how the data model and metrics are organized.",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\fundamentals\\intro-to-prometheus\\index.md"
+      ],
+      "rank": null,
+      "latency_ms": 2614.0,
+      "n_returned": 10
+    },
+    {
+      "id": "dc9efdab52ce42b4bab35524d789275b",
+      "project": "alerting",
+      "type": "within",
+      "file_type": "doc",
+      "question": "Using label matchers, alert instances are routed to .",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\alerting\\fundamentals\\notifications\\notification-policies.md"
+      ],
+      "rank": null,
+      "latency_ms": 1570.8,
+      "n_returned": 10
+    },
+    {
+      "id": "c5c617fd36c84e43a84c90e9f252e45f",
+      "project": "release-notes",
+      "type": "within",
+      "file_type": "doc",
+      "question": "- Alerting: Add labels to name when converting data frame to series.",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\release-notes\\release-notes-7-3-0.md"
+      ],
+      "rank": null,
+      "latency_ms": 2870.6,
+      "n_returned": 10
+    },
+    {
+      "id": "3189f4540e1747469ddd47b2c2481371",
+      "project": "tutorials",
+      "type": "within",
+      "file_type": "doc",
+      "question": "Website only shows text with no images or css",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\tutorials\\iis\\index.md"
+      ],
+      "rank": null,
+      "latency_ms": 1576.9,
+      "n_returned": 10
+    },
+    {
+      "id": "e45776d8a87544f9999857ad3e47862a",
+      "project": "alerting",
+      "type": "within",
+      "file_type": "doc",
+      "question": "## Before you begin To set up PagerDuty for integration with , you need to create a PagerDuty account.",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\alerting\\configure-notifications\\manage-contact-points\\integrations\\pager-duty.md"
+      ],
+      "rank": 1,
+      "latency_ms": 1602.3,
+      "n_returned": 10
+    },
+    {
+      "id": "f5dae9e4860042ba91a2495876a8a3e6",
+      "project": "developers",
+      "type": "within",
+      "file_type": "doc",
+      "question": "- from/to \u2013 Specifies the time range for the queries.",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\developers\\http_api\\data_source.md"
+      ],
+      "rank": null,
+      "latency_ms": 1434.6,
+      "n_returned": 10
+    },
+    {
+      "id": "15a05ea34e8a493fbb4811040422a4b7",
+      "project": "explore",
+      "type": "cross",
+      "file_type": "doc",
+      "question": "Within the Log details view, you have the ability to filter the displayed fields in two ways: a positive filter, which f",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\explore\\logs-integration.md"
+      ],
+      "rank": 6,
+      "latency_ms": 1985.6,
+      "n_returned": 10
+    },
+    {
+      "id": "6a9bac1a730b43e3a39f843400ccdccc",
+      "project": "setup-grafana",
+      "type": "cross",
+      "file_type": "doc",
+      "question": "In the file, mount the persistent volume into as follows.",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\setup-grafana\\installation\\kubernetes\\index.md"
+      ],
+      "rank": null,
+      "latency_ms": 1350.4,
+      "n_returned": 10
+    },
+    {
+      "id": "74cbe469515c4746bc74d211468d077f",
+      "project": "setup-grafana",
+      "type": "within",
+      "file_type": "doc",
+      "question": "User synchronization between and identity providers",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\setup-grafana\\configure-security\\planning-iam-strategy\\index.md"
+      ],
+      "rank": null,
+      "latency_ms": 1042.7,
+      "n_returned": 10
+    },
+    {
+      "id": "bba6cd76adb1476ba0ee868b965304e4",
+      "project": "fundamentals",
+      "type": "within",
+      "file_type": "doc",
+      "question": "How you choose to aggregate your time series data is an important decision and depends on the story you want to tell wit",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\fundamentals\\timeseries\\index.md"
+      ],
+      "rank": null,
+      "latency_ms": 2864.1,
+      "n_returned": 10
+    },
+    {
+      "id": "e2e93dee1c6347ff857de0461b4abb62",
+      "project": "alerting",
+      "type": "within",
+      "file_type": "doc",
+      "question": "{{ }} Labels are a fundamental component of : - The complete set of labels for an is what uniquely identifies an instanc",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\alerting\\fundamentals\\alert-rules\\annotation-label.md"
+      ],
+      "rank": 8,
+      "latency_ms": 1513.8,
+      "n_returned": 10
+    },
+    {
+      "id": "20b7d4771a624ce58b8aa37c6b612462",
+      "project": "developers",
+      "type": "within",
+      "file_type": "doc",
+      "question": "with are the default for users with the Viewer and Editor roles.",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\developers\\http_api\\folder_permissions.md"
+      ],
+      "rank": null,
+      "latency_ms": 1876.3,
+      "n_returned": 10
+    },
+    {
+      "id": "01f9637c4b88434eb32706d5e2869c09",
+      "project": "tutorials",
+      "type": "within",
+      "file_type": "doc",
+      "question": "You will explore metrics and logs, build and annotate dashboards, and set up alert rules.",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\tutorials\\grafana-fundamentals\\index.md"
+      ],
+      "rank": null,
+      "latency_ms": 2323.6,
+      "n_returned": 10
+    },
+    {
+      "id": "c2a8bf88b36a48209c8b8d372641e027",
+      "project": "administration",
+      "type": "within",
+      "file_type": "doc",
+      "question": "--- aliases: - ../../manage-users-and-permissions/manage--users// description: Describes how to and administrator from a",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\administration\\user-management\\server-user-management\\assign-remove-server-admin-privileges\\index.md"
+      ],
+      "rank": null,
+      "latency_ms": 1840.3,
+      "n_returned": 10
+    },
+    {
+      "id": "56635eba2c52458ba13d61fa98cddb7c",
+      "project": "Factorio",
+      "type": "cross",
+      "file_type": "code",
+      "question": "chain-blue-go=Modr\u00fd \u0159et\u011bzov\u00fd sign\u00e1l znamen\u00e1, \u017ee pouze n\u011bkter\u00e9 z \u00fasek\u016f jsou voln\u00e9, to znamen\u00e1, \u017ee vlak zde m\u016f\u017ee zastavit,",
+      "gold_paths": [
+        "F:\\Factorio\\data\\base\\tutorials\\trains-advanced-signals\\locale\\cs\\trains-advanced-signals.cfg"
+      ],
+      "rank": null,
+      "latency_ms": 2365.6,
+      "n_returned": 10
+    },
+    {
+      "id": "55a6023eab2842e0aa94d511f938993a",
+      "project": "dashboards",
+      "type": "within",
+      "file_type": "doc",
+      "question": "Update access to an external dashboard link",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\dashboards\\share-dashboards-panels\\shared-dashboards\\index.md"
+      ],
+      "rank": 5,
+      "latency_ms": 1600.5,
+      "n_returned": 10
+    },
+    {
+      "id": "f974c29f3b634a0480b13169fd12f142",
+      "project": "explore",
+      "type": "cross",
+      "file_type": "doc",
+      "question": "--- description: in keywords: - - labels: products: - cloud - enterprise - oss title: in weight: 25 --- # in is a powerf",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\explore\\logs-integration.md"
+      ],
+      "rank": null,
+      "latency_ms": 2725.3,
+      "n_returned": 10
+    },
+    {
+      "id": "9c12064244694144abfd04f9a7faf029",
+      "project": "getting-started",
+      "type": "within",
+      "file_type": "doc",
+      "question": "The following topics are of interest to server admin users:",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\getting-started\\build-first-dashboard.md"
+      ],
+      "rank": null,
+      "latency_ms": 1505.9,
+      "n_returned": 10
+    },
+    {
+      "id": "bf5d611e5e434e988bcdad55b2665967",
+      "project": "upgrade-guide",
+      "type": "within",
+      "file_type": "doc",
+      "question": "--- description: for upgrading to .1 keywords: - - configuration - documentation - - '11.1' title: to .1 : to .1 weight:",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\upgrade-guide\\upgrade-v11.1\\index.md"
+      ],
+      "rank": null,
+      "latency_ms": 2449.2,
+      "n_returned": 10
+    },
+    {
+      "id": "1c4983eca6884d10a7646f433c95e0cd",
+      "project": "release-notes",
+      "type": "within",
+      "file_type": "doc",
+      "question": "--- _build: list: false labels: products: - cloud - enterprise - oss title: for 7.5.11 --- # for 7.5.11 ### Bug fixes - ",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\release-notes\\release-notes-7-5-11.md"
+      ],
+      "rank": null,
+      "latency_ms": 3536.3,
+      "n_returned": 10
+    },
+    {
+      "id": "8d76dc9572a3471aa2da33675a84454f",
+      "project": "administration",
+      "type": "cross",
+      "file_type": "doc",
+      "question": "Data sources that work with query caching",
+      "gold_paths": [
+        "F:\\Projects\\helix-context\\tools\\native-otel\\grafana\\docs\\sources\\administration\\data-source-management\\_index.md"
+      ],
+      "rank": 3,
+      "latency_ms": 2162.0,
+      "n_returned": 10
+    },
+    {
+      "id": "a460c5d338004dd693e676b821de6ccd",
+      "project": "Factorio",
+      "type": "cross",
+      "file_type": "code",
+      "question": "ctrl=__CONTROL_KEY_CTRL__ ctrl-click-empty-=Otvorte \u017eelezn\u00fa truhlu a vlo\u017ete do nej v\u0161etky va\u0161e predmety.",
+      "gold_paths": [
+        "F:\\Factorio\\data\\base\\tutorials\\stack-transfers\\locale\\sk\\stack-transfers.cfg"
+      ],
+      "rank": null,
+      "latency_ms": 2264.8,
+      "n_returned": 10
+    }
+  ]
+}
