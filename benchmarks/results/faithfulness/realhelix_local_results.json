@@ -1,0 +1,80 @@
+[
+  {
+    "id": "beacon_mascot",
+    "gold": "otter",
+    "expressed_len": 1311,
+    "pA": 0.0,
+    "pB": 0.9453,
+    "lift": 0.9453,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "faith": 0.3371,
+    "answer_is_top_driver": true,
+    "causal_use": true
+  },
+  {
+    "id": "prism_codename",
+    "gold": "mango",
+    "expressed_len": 1312,
+    "pA": 0.0,
+    "pB": 0.8398,
+    "lift": 0.8398,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "faith": 0.2878,
+    "answer_is_top_driver": true,
+    "causal_use": true
+  },
+  {
+    "id": "sentinel_tier",
+    "gold": "platinum",
+    "expressed_len": 1312,
+    "pA": 0.0,
+    "pB": 0.5977,
+    "lift": 0.5977,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "faith": 0.2349,
+    "answer_is_top_driver": true,
+    "causal_use": true
+  },
+  {
+    "id": "cascade_codename",
+    "gold": "raven",
+    "expressed_len": 1314,
+    "pA": 0.0,
+    "pB": 0.7617,
+    "lift": 0.7617,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "faith": 0.2859,
+    "answer_is_top_driver": true,
+    "causal_use": true
+  },
+  {
+    "id": "harbor_zone",
+    "gold": "cobalt",
+    "expressed_len": 1320,
+    "pA": 0.0,
+    "pB": 0.918,
+    "lift": 0.918,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "faith": 0.3407,
+    "answer_is_top_driver": true,
+    "causal_use": true
+  },
+  {
+    "id": "atlas_color",
+    "gold": "teal",
+    "expressed_len": 1312,
+    "pA": 0.0,
+    "pB": 0.9414,
+    "lift": 0.9414,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "faith": 0.3003,
+    "answer_is_top_driver": true,
+    "causal_use": true
+  }
+]

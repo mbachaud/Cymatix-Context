@@ -1,0 +1,51 @@
+loading Qwen/Qwen3-4B + mwhanna/qwen3-4b-transcoders (bf16)...
+Fetching 36 files:   0%|          | 0/36 [00:00<?, ?it/s]Fetching 36 files: 100%|██████████| 36/36 [00:00<00:00, 9868.95it/s]
+WARNING:root:Loading model Qwen/Qwen3-4B requires setting trust_remote_code=True
+WARNING:root:Loading model Qwen/Qwen3-4B state dict requires setting trust_remote_code=True
+Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 3/3 [00:00<00:00, 36.74it/s]
+Loaded pretrained model Qwen/Qwen3-4B into HookedTransformer
+  loaded in 42s | free 1.94GB
+<sys>:0: UserWarning: Full backward hook is firing when gradients are computed with respect to module outputs since no inputs require gradients. See https://docs.pytorch.org/docs/main/generated/torch.nn.Module.html#torch.nn.Module.register_full_backward_hook for more details.
+[1/24 beacon] pA=0.0 pB=0.7578 lift=0.7578 argmax=True in_graph=True faith=0.6194 top=True CAUSAL=True (72s)
+[2/24 cascade] pA=0.0 pB=0.9375 lift=0.9375 argmax=True in_graph=True faith=0.6144 top=True CAUSAL=True (66s)
+[3/24 atlas] pA=0.0 pB=0.8359 lift=0.8359 argmax=True in_graph=True faith=0.595 top=True CAUSAL=True (64s)
+[4/24 sentinel] pA=0.0 pB=0.5156 lift=0.5156 argmax=True in_graph=True faith=0.627 top=True CAUSAL=True (64s)
+[5/24 vault] pA=0.0 pB=0.9102 lift=0.9102 argmax=True in_graph=True faith=0.6973 top=True CAUSAL=True (65s)
+[6/24 relay] pA=0.0 pB=0.7383 lift=0.7383 argmax=True in_graph=True faith=0.622 top=True CAUSAL=True (64s)
+[7/24 forge] pA=0.0 pB=0.9336 lift=0.9336 argmax=True in_graph=True faith=0.5957 top=True CAUSAL=True (64s)
+[8/24 nova] pA=0.0 pB=0.8203 lift=0.8203 argmax=True in_graph=True faith=0.5695 top=True CAUSAL=True (64s)
+[9/24 delta] pA=0.0 pB=0.6406 lift=0.6406 argmax=True in_graph=True faith=0.5828 top=True CAUSAL=True (65s)
+[10/24 echo] pA=0.0 pB=0.8359 lift=0.8359 argmax=True in_graph=True faith=0.5657 top=True CAUSAL=True (65s)
+[11/24 pillar] pA=0.0 pB=0.9102 lift=0.9102 argmax=True in_graph=True faith=0.544 top=True CAUSAL=True (65s)
+[12/24 mesh] pA=0.0 pB=0.9688 lift=0.9688 argmax=True in_graph=True faith=0.5509 top=True CAUSAL=True (65s)
+[13/24 pulse] pA=0.0 pB=0.9648 lift=0.9648 argmax=True in_graph=True faith=0.6024 top=True CAUSAL=True (64s)
+[14/24 grove] pA=0.0 pB=0.9492 lift=0.9492 argmax=True in_graph=True faith=0.4926 top=True CAUSAL=True (65s)
+[15/24 ember] pA=0.0 pB=0.9727 lift=0.9727 argmax=True in_graph=True faith=0.6164 top=True CAUSAL=True (65s)
+[16/24 fern] pA=0.0 pB=0.7461 lift=0.7461 argmax=True in_graph=True faith=0.534 top=True CAUSAL=True (64s)
+[17/24 prism] pA=0.0 pB=0.6133 lift=0.6133 argmax=True in_graph=True faith=0.6039 top=True CAUSAL=True (65s)
+[18/24 orbit] pA=0.0 pB=0.4043 lift=0.4043 argmax=True in_graph=True faith=0.5572 top=True CAUSAL=True (66s)
+[19/24 halo] pA=0.0 pB=0.3516 lift=0.3516 argmax=True in_graph=True faith=0.5852 top=True CAUSAL=True (65s)
+[20/24 comet] pA=0.0 pB=0.5898 lift=0.5898 argmax=True in_graph=True faith=0.5666 top=True CAUSAL=True (66s)
+[21/24 ridge] pA=0.0 pB=0.6016 lift=0.6016 argmax=True in_graph=True faith=0.5775 top=True CAUSAL=True (67s)
+[22/24 spire] pA=0.0 pB=0.252 lift=0.252 argmax=False in_graph=True faith=0.5435 top=True CAUSAL=False (68s)
+[23/24 zephyr] pA=0.0 pB=0.9023 lift=0.9023 argmax=True in_graph=True faith=0.5958 top=True CAUSAL=True (70s)
+[24/24 onyx] pA=0.0 pB=0.9492 lift=0.9492 argmax=True in_graph=True faith=0.5715 top=True CAUSAL=True (82s)
+
+=== SCALED SUMMARY [Qwen/Qwen3-4B] (qwen3_4b) ===
+needles                : 24/24
+answer in-graph         : 24/24
+informative (pA<0.2)    : 24/24
+answer-is-top-driver    : 24/24
+causal-use rate         : 23/24 = 0.96
+mean P-lift (in-graph)  : 0.754
+mean faith  (in-graph)  : 0.585
+-> F:\Projects\np-graph\scaled_results_qwen3_4b.json
+Exception ignored in: <function TransformerLensReplacementModel.__del__ at 0x000002AB362165C0>
+Traceback (most recent call last):
+  File "F:\Projects\np-graph\venv\Lib\site-packages\circuit_tracer\replacement_model\replacement_model_transformerlens.py", line 884, in __del__
+  File "F:\Projects\np-graph\venv\Lib\site-packages\transformer_lens\hook_points.py", line 452, in reset_hooks
+  File "F:\Projects\np-graph\venv\Lib\site-packages\transformer_lens\hook_points.py", line 442, in clear_contexts
+  File "F:\Projects\np-graph\venv\Lib\site-packages\transformer_lens\hook_points.py", line 349, in clear_context
+  File "F:\Projects\np-graph\venv\Lib\site-packages\torch\nn\modules\module.py", line 1981, in __setattr__
+  File "F:\Projects\np-graph\venv\Lib\site-packages\torch\nn\parameter.py", line 23, in __instancecheck__
+TypeError: isinstance() arg 2 must be a type, a tuple of types, or a union

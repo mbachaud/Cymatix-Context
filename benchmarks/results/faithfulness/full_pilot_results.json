@@ -1,0 +1,254 @@
+[
+  {
+    "id": "beacon_mascot",
+    "gold": "otter",
+    "pA": 0.0,
+    "pB": 0.6719,
+    "lift": 0.6719,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "answer_ctx_span": [
+      14
+    ],
+    "faith": 0.3394,
+    "answer_is_top_driver": true,
+    "causal_use": true,
+    "b_top_drivers": [
+      [
+        14,
+        " otter",
+        0.339
+      ],
+      [
+        11,
+        " mascot",
+        0.073
+      ],
+      [
+        4,
+        " wiki",
+        0.058
+      ],
+      [
+        3,
+        " Inference",
+        0.054
+      ],
+      [
+        9,
+        " module",
+        0.054
+      ]
+    ]
+  },
+  {
+    "id": "prism_codename",
+    "gold": "mango",
+    "pA": 0.0,
+    "pB": 0.5938,
+    "lift": 0.5938,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "answer_ctx_span": [
+      15
+    ],
+    "faith": 0.3608,
+    "answer_is_top_driver": true,
+    "causal_use": true,
+    "b_top_drivers": [
+      [
+        15,
+        " mango",
+        0.361
+      ],
+      [
+        4,
+        " release",
+        0.072
+      ],
+      [
+        5,
+        " notes",
+        0.051
+      ],
+      [
+        1,
+        "Red",
+        0.045
+      ],
+      [
+        28,
+        "d",
+        0.045
+      ]
+    ]
+  },
+  {
+    "id": "sentinel_tier",
+    "gold": "platinum",
+    "pA": 0.0,
+    "pB": 0.2461,
+    "lift": 0.2461,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "answer_ctx_span": [
+      13
+    ],
+    "faith": 0.2731,
+    "answer_is_top_driver": true,
+    "causal_use": false,
+    "b_top_drivers": [
+      [
+        13,
+        " platinum",
+        0.273
+      ],
+      [
+        3,
+        " Inference",
+        0.083
+      ],
+      [
+        4,
+        " SLA",
+        0.076
+      ],
+      [
+        29,
+        " called",
+        0.056
+      ],
+      [
+        14,
+        " support",
+        0.05
+      ]
+    ]
+  },
+  {
+    "id": "cascade_codename",
+    "gold": "raven",
+    "pA": 0.0,
+    "pB": 0.7188,
+    "lift": 0.7188,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "answer_ctx_span": [
+      15
+    ],
+    "faith": 0.318,
+    "answer_is_top_driver": true,
+    "causal_use": true,
+    "b_top_drivers": [
+      [
+        15,
+        " raven",
+        0.318
+      ],
+      [
+        4,
+        " run",
+        0.074
+      ],
+      [
+        5,
+        "book",
+        0.068
+      ],
+      [
+        3,
+        " Inference",
+        0.048
+      ],
+      [
+        31,
+        "d",
+        0.047
+      ]
+    ]
+  },
+  {
+    "id": "harbor_zone",
+    "gold": "cobalt",
+    "pA": 0.0,
+    "pB": 0.8633,
+    "lift": 0.8633,
+    "b_argmax_answer": true,
+    "in_graph": true,
+    "answer_ctx_span": [
+      16
+    ],
+    "faith": 0.4025,
+    "answer_is_top_driver": true,
+    "causal_use": true,
+    "b_top_drivers": [
+      [
+        16,
+        " cobalt",
+        0.403
+      ],
+      [
+        13,
+        " availability",
+        0.062
+      ],
+      [
+        14,
+        " zone",
+        0.06
+      ],
+      [
+        4,
+        " network",
+        0.052
+      ],
+      [
+        15,
+        " named",
+        0.047
+      ]
+    ]
+  },
+  {
+    "id": "atlas_color",
+    "gold": "teal",
+    "pA": 0.0,
+    "pB": 0.0569,
+    "lift": 0.0569,
+    "b_argmax_answer": false,
+    "in_graph": true,
+    "answer_ctx_span": [
+      14
+    ],
+    "faith": 0.2712,
+    "answer_is_top_driver": true,
+    "causal_use": false,
+    "b_top_drivers": [
+      [
+        14,
+        " teal",
+        0.271
+      ],
+      [
+        13,
+        " colored",
+        0.147
+      ],
+      [
+        26,
+        " colored",
+        0.105
+      ],
+      [
+        10,
+        " status",
+        0.057
+      ],
+      [
+        5,
+        " note",
+        0.05
+      ]
+    ]
+  }
+]
