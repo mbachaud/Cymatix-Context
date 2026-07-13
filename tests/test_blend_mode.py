@@ -310,6 +310,28 @@ def test_unknown_blend_mode_raises_in_pure_function():
         )
 
 
+def test_legacy_blend_mode_emits_deprecation_warning(caplog):
+    """``blend_mode="legacy"`` is DEPRECATED-FOR-REMOVAL (2026-07-13 council
+    3/3 CONCUR, follow-up to the PR #282 serving-profile default flip to
+    scale_relative). Explicit selection warns once at construction
+    (``RetrievalConfig.__post_init__`` — the config-load seam; mirrors the
+    ``[ribosome] device`` shim pattern in
+    ``tests/test_config.py::test_ribosome_device_deprecation_warning``).
+    The shipped default (``scale_relative``) stays silent.
+    """
+    with caplog.at_level("WARNING", logger="helix_context.config"):
+        RetrievalConfig(blend_mode="legacy")
+    assert any(
+        "blend_mode" in rec.message.lower() and "deprecated" in rec.message.lower()
+        for rec in caplog.records
+    )
+
+    caplog.clear()
+    with caplog.at_level("WARNING", logger="helix_context.config"):
+        RetrievalConfig()  # default: scale_relative
+    assert not any("blend_mode" in rec.message.lower() for rec in caplog.records)
+
+
 def test_unknown_blend_mode_raises_at_manager_construction(tmp_path):
     """The manager validates at __init__ (fail-fast, mirrors the store's
     rerank_combinator guard) — a bad blend_mode never reaches a query."""

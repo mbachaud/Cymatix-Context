@@ -585,6 +585,12 @@ class RetrievalConfig:
     #   "legacy"         — absolute additive blend (pre-graduation default;
     #                      BYTE-IDENTICAL to the original inline block. Set
     #                      explicitly to restore the old behavior).
+    #                      DEPRECATED-FOR-REMOVAL (2026-07-13 council 3/3
+    #                      CONCUR): condition-gated, not calendar-gated —
+    #                      see helix_context/scoring/blend.py module
+    #                      docstring for the four removal conditions.
+    #                      Explicit selection now logs a one-time warning
+    #                      (__post_init__ below).
     #   "scale_relative" — each absolute blend bonus b becomes a bounded
     #                      multiplier (1 + b/S_REF, S_REF a documented module
     #                      constant in blend.py) of the candidate's own score
@@ -596,7 +602,7 @@ class RetrievalConfig:
     #                      floor (docs/research/2026-07-10-rerank-combinator-desktest.md §5)
     #                      but REJECTED for serving: delivery inverts on all 6
     #                      serving cells (see the receipt doc above).
-    blend_mode: str = "scale_relative"      # legacy | scale_relative (default) | off
+    blend_mode: str = "scale_relative"      # legacy (DEPRECATED-FOR-REMOVAL) | scale_relative (default) | off
     fts5_weight: float = 3.0                # cap-only in additive: cap = 2.0 × this (6.0)
     splade_weight: float = 3.5              # leading coeff == tier cap
     tag_exact_weight: float = 3.0           # current weight × match_count
@@ -690,6 +696,23 @@ class RetrievalConfig:
                         f"{_cls!r}] = {_comb!r}: unknown combinator "
                         f"(expected one of {VALID_COMBINATORS})"
                     )
+
+        # blend_mode="legacy" deprecation (2026-07-13 council 3/3 CONCUR,
+        # follow-up to PR #282's default flip legacy -> scale_relative on
+        # the serving-profile receipt,
+        # docs/research/2026-07-12-blend-serving-receipt.md). scale_relative
+        # is the shipped default, so the only way to land on "legacy" here
+        # is an explicit [retrieval] blend_mode = "legacy" in TOML or a
+        # direct kwarg. Warn ONCE at this config-load seam — this runs once
+        # per RetrievalConfig construction, not per query. Removal
+        # conditions: helix_context/scoring/blend.py module docstring.
+        if self.blend_mode == "legacy":
+            log.warning(
+                "blend_mode='legacy' is deprecated (strictly dominated in "
+                "desk/overnight/serving receipts, 2026-07-12 serving-profile "
+                "A/B) and scheduled for removal; use 'scale_relative' "
+                "(default) or 'off' (lexical-only profiles)."
+            )
 
 
 @dataclass
