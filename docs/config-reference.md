@@ -702,6 +702,9 @@ which stay additive) lives in
 | `dense_pool_size` | `int` | `500` | Stage 2 (2026-05-08): dense recall pool size. Decoupled from ann_threshold_max_genes (the final cut). 500 hits ~3% of an 18.9k corpus per spec §4. |
 | `fusion_mode` | `str` | `"rrf"` | "rrf" \| "additive" (legacy) |
 | `rrf_k` | `int` | `60` | Cormack 2009 default |
+| `rrf_gate_enabled` | `bool` | `false` | master switch; False == byte-identical legacy RRF |
+| `rrf_gate_top_m` | `int` | `0` | 0 = ungated; else a tier contributes RRF mass only for its top-M ranks |
+| `rrf_gate_min_score` | `float` | `0.0` | 0.0 = ungated; else a tier's entry contributes only when its raw arm score >= this. NOTE: raw scores are non-commensurate across arms (FTS negative-bm25 vs BGE cosine vs tag {0,3}), so a single global float is only honest when the operator knows the arm mix — prefer rrf_gate_top_m on a mixed-arm store (issue #260 v1; a per-arm dict floor is deferred). |
 | `rerank_combinator` | `str` | `"additive"` | additive \| fused_tier \| eps_band \| off |
 | `rerank_band_delta` | `float` | `0.05` | eps_band relative tie-band width δ (ratio of the leader's fused score). |
 | `rerank_tier_weight` | `float` | `1.0` | fused_tier uniform per-class rank post-multiplier (single weight — a per-class weight would re-introduce hand-picked exchange rates). |

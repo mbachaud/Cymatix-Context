@@ -140,6 +140,10 @@ ADAPTER_ONLY_DIFFERENCES_WHITELIST = frozenset({
     "_auto_link_by_entity", "_bm25_candidate_set", "_compact_row_to_gene",
     "_expand_by_entity_graph", "_expand_coactivated", "_expand_terms",
     "_get_dense_codec", "_get_effective_ann_threshold",
+    # Issue #260: per-shard RRF gate resolver. Called on `self` inside each
+    # per-shard KnowledgeStore.query_genes; the adapter's read path fuses via
+    # the ShardRouter's own (ungated) Fuser, so it never resolves this.
+    "_rrf_gate_params",
     "_init_db", "_refresh_snapshot", "_row_to_gene",
 
     # FTS / KV / indexing helpers that operate on a single .db file's

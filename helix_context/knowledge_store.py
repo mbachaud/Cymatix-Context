@@ -577,6 +577,15 @@ class KnowledgeStore:
         # under "rrf" they are rank post-multipliers.
         fusion_mode: str = "rrf",
         rrf_k: int = 60,
+        # Issue #260 (2026-07-12): rank/confidence-gated RRF. Default-inert —
+        # rrf_gate_enabled=False makes the per-store Fuser byte-identical to
+        # today. When enabled, a recall arm contributes RRF mass only for its
+        # top-M ranks (rrf_gate_top_m) and/or entries whose raw score clears
+        # rrf_gate_min_score. Fanned to the solo Genome AND every per-shard
+        # Genome via open_read_source, same as the other retrieval knobs.
+        rrf_gate_enabled: bool = False,
+        rrf_gate_top_m: int = 0,
+        rrf_gate_min_score: float = 0.0,
         # Issue #255 (PR-2, 2026-07-10): post-fusion rerank combinator. Only
         # consulted under fusion_mode == "rrf" (the additive branch never
         # touches rerank_additive). Default "additive" reproduces the shipped
@@ -733,6 +742,19 @@ class KnowledgeStore:
             )
         self._fusion_mode: str = fusion_mode
         self._rrf_k: int = int(rrf_k)
+        # Issue #260: rank/confidence-gated RRF. Validate now so a bad
+        # rrf_gate_top_m in helix.toml fails fast at construction, mirroring the
+        # fusion_mode / rerank_combinator guards. gate_min_score accepts any
+        # float (a negative floor is legitimate for negated-bm25 arms), so it is
+        # only coerced. enabled=False keeps the store byte-identical regardless
+        # of the two thresholds — see _rrf_gate_params().
+        self._rrf_gate_enabled: bool = bool(rrf_gate_enabled)
+        if int(rrf_gate_top_m) < 0:
+            raise ValueError(
+                f"rrf_gate_top_m must be >= 0 (0 = ungated), got {rrf_gate_top_m!r}"
+            )
+        self._rrf_gate_top_m: int = int(rrf_gate_top_m)
+        self._rrf_gate_min_score: float = float(rrf_gate_min_score)
         # Issue #255 (PR-2): validate the rerank combinator now so a typo in
         # helix.toml fails fast at construction, mirroring the fusion_mode
         # guard above. The four names are the only valid operators (see
@@ -884,6 +906,19 @@ class KnowledgeStore:
             except Exception:
                 log.warning("SPLADE table creation failed", exc_info=True)
                 self._splade_enabled = False
+
+    def _rrf_gate_params(self) -> Tuple[int, float]:
+        """Effective (gate_top_m, gate_min_score) for the per-store Fuser (#260).
+
+        Returns the ungated sentinels ``(0, 0.0)`` whenever ``rrf_gate_enabled``
+        is False, so a disabled gate is byte-identical to the pre-gate path no
+        matter what the two thresholds are set to. When enabled, returns the
+        configured values verbatim (either or both may still be a 0 sentinel,
+        in which case that sub-lever is individually off).
+        """
+        if not self._rrf_gate_enabled:
+            return (0, 0.0)
+        return (self._rrf_gate_top_m, self._rrf_gate_min_score)
 
     def _init_db(self) -> None:
         from .storage.ddl import init_db
@@ -2136,7 +2171,16 @@ class KnowledgeStore:
         # signal RRF retrieves; "is this document authoritative?" is a
         # different question that survives unchanged.
         from .retrieval.fusion import Fuser as _Fuser
-        fuser = _Fuser(k=self._rrf_k)
+        # Issue #260: resolve the effective rank/score gate. rrf_gate_enabled ==
+        # False forces the ungated sentinels (0 / 0.0), so the Fuser accumulates
+        # bit-for-bit as before — the master switch is what makes this knob
+        # default-inert regardless of the two threshold values.
+        _gate_top_m, _gate_min_score = self._rrf_gate_params()
+        fuser = _Fuser(
+            k=self._rrf_k,
+            gate_top_m=_gate_top_m,
+            gate_min_score=_gate_min_score,
+        )
 
         # ── Stage 3: re-rank-class additive collector ──────────────
         # The post-fusion additives — sema_boost (gate-only re-rank

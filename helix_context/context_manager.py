@@ -897,6 +897,11 @@ class HelixContextManager:
             # Stage 3 (2026-05-08): RRF fusion + per-tier weights.
             fusion_mode=config.retrieval.fusion_mode,
             rrf_k=config.retrieval.rrf_k,
+            # Issue #260: rank/confidence-gated RRF. Fanned to the solo Genome
+            # AND every per-shard Genome via open_read_source. Default-inert.
+            rrf_gate_enabled=config.retrieval.rrf_gate_enabled,
+            rrf_gate_top_m=config.retrieval.rrf_gate_top_m,
+            rrf_gate_min_score=config.retrieval.rrf_gate_min_score,
             # Issue #255 (PR-2): post-fusion rerank combinator + its scale-free
             # knobs. Fanned to the solo Genome AND every per-shard Genome via
             # open_read_source. Default "additive" == shipped behavior.
