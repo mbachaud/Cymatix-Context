@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- **fix(bench): seed sharded-fixture `harmonic_links` so cross-shard co-activation is reachable (#223).**
+  `scripts/build_fixture_matrix.py --mode sharded` shipped every fixture
+  with zero `harmonic_links` rows — `seed_edges()` existed but was
+  test-only, leaving `ShardRouter._expand_cross_shard_coactivation` (#120)
+  and the `coact_reserved_slots`/`coact_link_boost` knobs (#270)
+  permanently unreachable in any sharded receipt. Now seeds intra-shard
+  edges per shard (`seed_edges`) and cross-shard edges once across all
+  shards (new `seed_cross_shard_edges`, bucketed by shared domain/entity
+  token, bidirectional writes), both `ON CONFLICT DO NOTHING` and
+  default-on (`HELIX_BFM_SEED_EDGES=0` to disable). `scripts/reseed_sharded_fixture.py`
+  backfills an already-built fixture without a re-ingest. Re-run of the
+  #223 A/B on a seeded medium fixture confirms `_apply_coact_reserve`
+  now fires (previously unreachable); see issue #223 for the receipt.
+
 - **fix(retrieval): harmonize `fusion_mode` layer defaults (#256).**
   `KnowledgeStore`/`Genome` direct construction now defaults
   `fusion_mode="rrf"`, matching `RetrievalConfig` (the #247 default flip).

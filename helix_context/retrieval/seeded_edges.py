@@ -44,7 +44,7 @@ from __future__ import annotations
 
 import logging
 import sqlite3
-from typing import Dict, Iterable, List, Optional, TYPE_CHECKING
+from typing import Dict, Iterable, List, Optional, Tuple, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .genome import Genome
@@ -68,6 +68,27 @@ PRUNE_FLOOR = 0.05            # effective-weight floor below which edge is delet
 SEEDING_CAP = 200             # max documents per seed_edges call — O(n²) pair loop
                               # blows up beyond this; matches FRONTIER_CAP pattern
                               # in sr.py. Caller gets a warning + truncation.
+
+# ── Cross-shard seeding (issue #223 fixture gap) ─────────────────────────
+#
+# seed_edges() below only ever sees ONE Genome connection, so every edge it
+# writes is intra-shard by construction. Sharded bench fixtures
+# (scripts/build_fixture_matrix.py) historically shipped ZERO harmonic_links
+# rows at all -- neither intra- nor cross-shard -- which left
+# ShardRouter._expand_cross_shard_coactivation (shard_router.py #120/#223)
+# permanently unreachable in every sharded receipt. seed_cross_shard_edges()
+# is the cross-connection sibling: same 2-of-4 multi-signal gate, bucketed
+# by shared domain/entity token so the comparison stays sub-quadratic.
+CROSS_SHARD_SEEDING_CAP = 400          # total cross-shard edges per pass
+CROSS_SHARD_PER_SHARD_SAMPLE = 2000    # genes sampled per shard for bucketing
+CROSS_SHARD_BUCKET_CAP = 40            # skip buckets larger than this (too
+                                       # generic a token to be a real signal --
+                                       # empirically, a single overly-generic
+                                       # domain token (e.g. "completion") can
+                                       # otherwise monopolize the entire cap
+                                       # against one repeatedly-hit doc; 40
+                                       # was picked by surveying a real medium
+                                       # fixture's actual token-bucket sizes)
 
 
 def _laplace_ratio(co: int, miss: float) -> float:
@@ -170,6 +191,53 @@ def seed_edges(
     return written
 
 
+def _extract_signals(
+    promoter_json: Optional[str],
+    key_values_json: Optional[str],
+    chromatin: Optional[int],
+) -> Dict[str, object]:
+    """Parse one ``genes`` row's tag columns into the comparison sets used
+    by the 2-of-4 multi-signal gate.
+
+    Shared by :func:`multi_signal_overlap` (single-connection, exactly 2
+    rows) and :func:`seed_cross_shard_edges` (many connections, bucketed)
+    so the two can never drift on what counts as "overlap".
+    """
+    import json
+    try:
+        p = json.loads(promoter_json) if promoter_json else {}
+    except Exception:
+        p = {}
+    try:
+        kv = json.loads(key_values_json) if key_values_json else []
+    except Exception:
+        kv = []
+    return {
+        "domains": set(p.get("domains") or []),
+        "entities": set(p.get("entities") or []),
+        "kv_keys": {pair.split("=", 1)[0] for pair in kv if "=" in pair},
+        "is_open": chromatin == 0,
+    }
+
+
+def _signal_overlap_count(sig_a: Dict[str, object], sig_b: Dict[str, object]) -> int:
+    """Count of the 4 agreement signals two :func:`_extract_signals` dicts
+    share: shared domain tag, shared entity tag, shared KV key (ignores
+    value), both OPEN lifecycle tier. Same-directory proximity alone is
+    NOT a signal - the gate's whole purpose is to avoid file-system
+    coincidence edges."""
+    signals = 0
+    if sig_a["domains"] & sig_b["domains"]:
+        signals += 1
+    if sig_a["entities"] & sig_b["entities"]:
+        signals += 1
+    if sig_a["kv_keys"] & sig_b["kv_keys"]:
+        signals += 1
+    if sig_a["is_open"] and sig_b["is_open"]:
+        signals += 1
+    return signals
+
+
 def multi_signal_overlap(genome: "Genome", gene_id_a: str, gene_id_b: str) -> bool:
     """Two-of-N signal agreement gate for ingest-batch seeding.
 
@@ -189,43 +257,144 @@ def multi_signal_overlap(genome: "Genome", gene_id_a: str, gene_id_b: str) -> bo
     if len(rows) != 2:
         return False
 
-    import json
-    signals = 0
-    proms = []
-    kvs = []
-    chroms = []
-    for r in rows:
+    sig_a = _extract_signals(rows[0]["promoter"], rows[0]["key_values"], rows[0]["chromatin"])
+    sig_b = _extract_signals(rows[1]["promoter"], rows[1]["key_values"], rows[1]["chromatin"])
+    return _signal_overlap_count(sig_a, sig_b) >= 2
+
+
+def seed_cross_shard_edges(
+    shard_conns: Dict[str, sqlite3.Connection],
+    *,
+    weight: float = 1.0,
+    cap: int = CROSS_SHARD_SEEDING_CAP,
+    per_shard_sample: int = CROSS_SHARD_PER_SHARD_SAMPLE,
+    bucket_cap: int = CROSS_SHARD_BUCKET_CAP,
+) -> int:
+    """Seed CROSS-shard ``harmonic_links`` edges (issue #223 fixture gap).
+
+    :func:`seed_edges` only ever sees one ``Genome`` connection, so every
+    edge it writes is intra-shard. ``ShardRouter._expand_cross_shard_coactivation``
+    (helix_context/shard_router.py) needs at least some edges whose
+    ``gene_id_b`` endpoint lives in a DIFFERENT shard's ``genes`` table to
+    have anything to promote across a shard boundary. ``harmonic_links``
+    carries no FOREIGN KEY on ``gene_id_b`` (storage/ddl.py) so a dangling
+    cross-shard reference is schema-legal - the router already expects it,
+    resolving the far endpoint via main.db's ``fingerprint_index``.
+
+    Every sharded fixture ``scripts/build_fixture_matrix.py`` built before
+    this fix shipped ZERO ``harmonic_links`` rows at all, which left the
+    cross-shard co-activation path permanently unreachable in every
+    sharded receipt (#223 re-scope).
+
+    Uses the SAME 2-of-4 multi-signal gate as :func:`seed_edges`
+    (:func:`_signal_overlap_count`), bucketed by shared domain/entity
+    token so the comparison stays sub-quadratic in total gene count: only
+    genes that already share a domain or entity token are ever compared
+    pairwise. Buckets larger than ``bucket_cap`` are skipped outright (a
+    token that generic isn't a meaningful signal, e.g. a domain tag
+    shared by half the corpus).
+
+    Each qualifying cross-shard pair (``a`` in shard X, ``b`` in shard Y,
+    X != Y) gets edges written in BOTH directions (``gene_id_a=a`` in X
+    AND ``gene_id_a=b`` in Y) since ``fetch_forward_neighbors`` only reads
+    the ``gene_id_a`` direction - a one-directional edge would only be
+    exploitable when that specific endpoint is the one a query ranks
+    highly.
+
+    Returns the total number of edge rows written (both directions
+    counted), capped at ``cap``. Read failures on an individual shard are
+    logged and that shard is skipped; insert failures on an individual
+    pair are logged and that pair is skipped - neither is fatal to the
+    overall pass.
+    """
+    import time as _time
+    now = _time.time()
+
+    tagged: List[Tuple[str, str, Dict[str, object]]] = []
+    for shard_name, conn in shard_conns.items():
         try:
-            p = json.loads(r["promoter"]) if r["promoter"] else {}
+            rows = conn.execute(
+                "SELECT gene_id, promoter, key_values, chromatin "
+                "FROM genes ORDER BY gene_id LIMIT ?",
+                (per_shard_sample,),
+            ).fetchall()
         except Exception:
-            p = {}
+            log.warning(
+                "seed_cross_shard_edges: genes read failed for shard %s",
+                shard_name, exc_info=True,
+            )
+            continue
+        for r in rows:
+            gene_id, promoter, kv, chromatin = r[0], r[1], r[2], r[3]
+            sig = _extract_signals(promoter, kv, chromatin)
+            if sig["domains"] or sig["entities"]:
+                tagged.append((shard_name, gene_id, sig))
+
+    buckets: Dict[str, List[int]] = {}
+    for idx, (_shard, _gid, sig) in enumerate(tagged):
+        for tok in sig["domains"]:
+            buckets.setdefault(f"d:{tok}", []).append(idx)
+        for tok in sig["entities"]:
+            buckets.setdefault(f"e:{tok}", []).append(idx)
+
+    written = 0
+    seen_pairs: set = set()
+    # Smallest buckets first: when the cap binds, this spends the budget
+    # across many distinct, specific tokens (diverse pairs) rather than
+    # exhausting it on whichever merely-under-``bucket_cap`` generic token
+    # happens to be processed first (dict order == first-seen order).
+    for idxs in sorted(buckets.values(), key=len):
+        if written >= cap:
+            break
+        if len(idxs) > bucket_cap:
+            continue  # too generic a token to be a meaningful signal
+        for i_pos in range(len(idxs)):
+            if written >= cap:
+                break
+            i = idxs[i_pos]
+            shard_i, gid_i, sig_i = tagged[i]
+            for j_pos in range(i_pos + 1, len(idxs)):
+                if written >= cap:
+                    break
+                j = idxs[j_pos]
+                shard_j, gid_j, sig_j = tagged[j]
+                if shard_i == shard_j:
+                    continue  # intra-shard -- seed_edges()'s job, not ours
+                pair_key = tuple(sorted(((shard_i, gid_i), (shard_j, gid_j))))
+                if pair_key in seen_pairs:
+                    continue
+                seen_pairs.add(pair_key)
+                if _signal_overlap_count(sig_i, sig_j) < 2:
+                    continue
+                for (s_from, g_from), (_s_to, g_to) in (
+                    ((shard_i, gid_i), (shard_j, gid_j)),
+                    ((shard_j, gid_j), (shard_i, gid_i)),
+                ):
+                    if written >= cap:
+                        break
+                    try:
+                        cur = shard_conns[s_from].cursor()
+                        cur.execute(
+                            """INSERT INTO harmonic_links
+                               (gene_id_a, gene_id_b, weight, updated_at,
+                                source, co_count, miss_count, created_at)
+                               VALUES (?, ?, ?, ?, 'seeded', 0, 0.0, ?)
+                               ON CONFLICT(gene_id_a, gene_id_b) DO NOTHING""",
+                            (g_from, g_to, weight, now, now),
+                        )
+                        if cur.rowcount:
+                            written += 1
+                    except Exception:
+                        log.warning(
+                            "seed_cross_shard_edges insert failed for (%s,%s)",
+                            g_from, g_to, exc_info=True,
+                        )
+    for conn in shard_conns.values():
         try:
-            kv = json.loads(r["key_values"]) if r["key_values"] else []
+            conn.commit()
         except Exception:
-            kv = []
-        proms.append(p)
-        kvs.append(kv)
-        chroms.append(r["chromatin"])
-
-    d_a = set((proms[0].get("domains") or []))
-    d_b = set((proms[1].get("domains") or []))
-    if d_a & d_b:
-        signals += 1
-
-    e_a = set((proms[0].get("entities") or []))
-    e_b = set((proms[1].get("entities") or []))
-    if e_a & e_b:
-        signals += 1
-
-    k_a = {pair.split("=", 1)[0] for pair in kvs[0] if "=" in pair}
-    k_b = {pair.split("=", 1)[0] for pair in kvs[1] if "=" in pair}
-    if k_a & k_b:
-        signals += 1
-
-    if chroms[0] == 0 and chroms[1] == 0:  # both OPEN
-        signals += 1
-
-    return signals >= 2
+            log.debug("seed_cross_shard_edges commit failed", exc_info=True)
+    return written
 
 
 def update_edge_evidence(

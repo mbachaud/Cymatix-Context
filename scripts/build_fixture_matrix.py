@@ -90,6 +90,10 @@ from helix_context.shard_schema import (
     open_main_db,
     register_shard,
 )
+from helix_context.retrieval.seeded_edges import (
+    seed_edges,
+    seed_cross_shard_edges,
+)
 
 # Tier-0 PR-2 (2026-05-16): reuse the operator backfill script's shared
 # encode-and-pack loop so the fixture builder's post-build dense pass and
@@ -1493,6 +1497,29 @@ def _build_one_shard(
             "support_span, last_verified_at, promoter, key_values, is_fragment "
             "FROM genes"
         ).fetchall()
+
+        # Issue #223 fixture gap: sharded fixtures shipped ZERO harmonic_links
+        # rows (seed_edges() was referenced only by tests), which left
+        # ShardRouter._expand_cross_shard_coactivation permanently unreachable
+        # in every sharded receipt. Seed INTRA-shard edges here while the
+        # shard's Genome is still open; the parent process seeds CROSS-shard
+        # edges once all shards are built (build_profile_sharded, below).
+        harmonic_links_seeded = 0
+        if not paused and _env_flag("HELIX_BFM_SEED_EDGES"):
+            try:
+                harmonic_links_seeded = seed_edges(
+                    shard, [r["gene_id"] for r in fp_rows],
+                )
+                log.info(
+                    "shard %s: seeded %d intra-shard harmonic_links edges",
+                    label, harmonic_links_seeded,
+                )
+            except Exception:
+                log.warning(
+                    "shard %s: seed_edges failed", label, exc_info=True,
+                )
+                harmonic_links_seeded = 0
+
         now = time.time()
         fp_payload = []
         si_payload = []
@@ -1549,6 +1576,7 @@ def _build_one_shard(
             "fingerprint_payload": fp_payload,
             "source_index_payload": si_payload,
             "paused": paused,
+            "harmonic_links_seeded": harmonic_links_seeded,
         }
     finally:
         shard.close()
@@ -1768,6 +1796,8 @@ def build_profile_sharded(
         "shards": [],
         "shard_workers": shard_workers,
         "shard_file_workers": shard_file_workers,
+        "harmonic_links_intra_shard": 0,
+        "harmonic_links_cross_shard": 0,
         "t0": time.perf_counter(),
     }
 
@@ -1923,10 +1953,12 @@ def build_profile_sharded(
         }
         if res.get("dense_error"):
             shard_entry["dense_error"] = res["dense_error"]
+        shard_entry["harmonic_links_seeded"] = res.get("harmonic_links_seeded", 0)
         totals["shards"].append(shard_entry)
         for k in ("files", "genes", "skipped", "errors"):
             totals[k] += res[k]
         totals["missing_roots"].extend(res["missing_roots"])
+        totals["harmonic_links_intra_shard"] += res.get("harmonic_links_seeded", 0)
 
     paused_mid_run = False
     if shard_workers <= 1:
@@ -1957,6 +1989,37 @@ def build_profile_sharded(
                 if res.get("paused"):
                     paused_mid_run = True
     totals["paused"] = paused_mid_run
+
+    # Issue #223 fixture gap, cross-shard half: intra-shard seeding happens
+    # per-shard inside _build_one_shard (above); CROSS-shard edges need
+    # visibility across every shard's genes table at once, so that pass
+    # runs here, once, after all shards are built and committed. Reopens
+    # each shard .db directly (the per-shard Genome instances were already
+    # closed inside _build_one_shard) -- skipped entirely on a paused
+    # (partial) run since the shard set isn't final yet.
+    if not paused_mid_run and _env_flag("HELIX_BFM_SEED_EDGES") and totals["shards"]:
+        import sqlite3 as _sqlite3
+        shard_conns: dict = {}
+        try:
+            for shard_entry in totals["shards"]:
+                shard_conns[shard_entry["name"]] = _sqlite3.connect(
+                    shard_entry["path"]
+                )
+            totals["harmonic_links_cross_shard"] = seed_cross_shard_edges(
+                shard_conns
+            )
+            log.info(
+                "seeded %d cross-shard harmonic_links edges across %d shards",
+                totals["harmonic_links_cross_shard"], len(shard_conns),
+            )
+        except Exception:
+            log.warning("seed_cross_shard_edges failed", exc_info=True)
+        finally:
+            for conn in shard_conns.values():
+                try:
+                    conn.close()
+                except Exception:
+                    log.debug("shard conn close failed post-seed", exc_info=True)
 
     elapsed = time.perf_counter() - totals["t0"]
     totals["elapsed_s"] = round(elapsed, 1)

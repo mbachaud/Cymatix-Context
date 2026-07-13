@@ -1,0 +1,704 @@
+{
+  "benchmark": "shard_recall",
+  "label": "medium_sharded_seeded_c0",
+  "timestamp": "20260713T072003Z",
+  "helix_url": "http://127.0.0.1:11439",
+  "needles_file": "benchmarks\\results\\shard_gold_medium.jsonl",
+  "n_needles": 150,
+  "max_results": 10,
+  "metrics": "recall@{1,3,5,10}, MRR -- by type (within / cross / all)",
+  "gold_match_rule": "bidirectional case-insensitive forward-slash substring: norm(gold) in norm(source) OR norm(source) in norm(gold)",
+  "summary": {
+    "all": {
+      "n": 150,
+      "err": 0,
+      "mrr": 0.0398,
+      "latency": {
+        "median_ms": 1843.5,
+        "p90_ms": 3003.3
+      },
+      "recall@1": 0.02,
+      "recall@3": 0.04,
+      "recall@5": 0.0733,
+      "recall@10": 0.1067
+    },
+    "cross": {
+      "n": 30,
+      "err": 0,
+      "mrr": 0.04,
+      "latency": {
+        "median_ms": 1848.5,
+        "p90_ms": 3146.4
+      },
+      "recall@1": 0.0333,
+      "recall@3": 0.0333,
+      "recall@5": 0.0667,
+      "recall@10": 0.0667
+    },
+    "within": {
+      "n": 120,
+      "err": 0,
+      "mrr": 0.0397,
+      "latency": {
+        "median_ms": 1840.1,
+        "p90_ms": 2957.2
+      },
+      "recall@1": 0.0167,
+      "recall@3": 0.0417,
+      "recall@5": 0.075,
+      "recall@10": 0.1167
+    }
+  },
+  "per_needle_sample": [
+    {
+      "id": "d96a33ef8bf14f8dba6f44517b6409f5",
+      "project": "two-brain-audit",
+      "type": "cross",
+      "file_type": "code",
+      "question": "No-op \u2014 returns empty list. Default when no LLM is configured.",
+      "gold_paths": [
+        "two-brain-audit/src/scorerift/feedback.py"
+      ],
+      "rank": null,
+      "latency_ms": 1854.9,
+      "n_returned": 10
+    },
+    {
+      "id": "8b42d8683bd345499c2471474868fd7d",
+      "project": "Education",
+      "type": "within",
+      "file_type": "doc",
+      "question": "Event: fleet_start\nCompleted: Event: fleet_start, Time: -03-21 :03\nNext: Continue operations\n---",
+      "gold_paths": [
+        "Education/fleet/knowledge/marathon/fleet.md"
+      ],
+      "rank": null,
+      "latency_ms": 2080.7,
+      "n_returned": 10
+    },
+    {
+      "id": "f3a2d03ae9a540e0896e3beea4a567df",
+      "project": "helix-context",
+      "type": "within",
+      "file_type": "code",
+      "question": "Build main..db + two content shards; return (counts, dense_counts).",
+      "gold_paths": [
+        "helix-context/.claude/worktrees/okf-ingest/tests/test_genome_tools.py"
+      ],
+      "rank": null,
+      "latency_ms": 1991.6,
+      "n_returned": 10
+    },
+    {
+      "id": "34eca676e90e4e7f87eaaced96adada3",
+      "project": "helix-context",
+      "type": "within",
+      "file_type": "doc",
+      "question": "Retrieve and compress for a query. Equivalent to .",
+      "gold_paths": [
+        "helix-context/.claude/worktrees/okf-ingest/docs/api/mcp-tools.md"
+      ],
+      "rank": null,
+      "latency_ms": 1724.1,
+      "n_returned": 10
+    },
+    {
+      "id": "d96a33ef8bf14f8dba6f44517b6409f5",
+      "project": "two-brain-audit",
+      "type": "within",
+      "file_type": "code",
+      "question": "No-op \u2014 returns empty list. Default when no LLM is configured.",
+      "gold_paths": [
+        "two-brain-audit/src/scorerift/feedback.py"
+      ],
+      "rank": null,
+      "latency_ms": 1827.9,
+      "n_returned": 10
+    },
+    {
+      "id": "43ccfc2af6ed4866b1d52265eeb707bd",
+      "project": "helix-context",
+      "type": "within",
+      "file_type": "code",
+      "question": "Deterministic L2-normalised fp32 vector (mirrors test_dense_recall).",
+      "gold_paths": [
+        "helix-context/.claude/worktrees/combinator/tests/test_admin_refresh.py"
+      ],
+      "rank": null,
+      "latency_ms": 2423.6,
+      "n_returned": 10
+    },
+    {
+      "id": "9051fb76b2b84d6baf9fa6ed9290299d",
+      "project": "BookKeeper",
+      "type": "within",
+      "file_type": "doc",
+      "question": "1. PostgreSQL Support \u2014 Schema isolation mode\n2. Multi-Tenant Metrics \u2014 Per-tenant billing/usage\n3. Audit Logging \u2014 Cros",
+      "gold_paths": [
+        "BookKeeper/docs/TENANCY_IMPLEMENTATION_SUMMARY.md"
+      ],
+      "rank": null,
+      "latency_ms": 3509.9,
+      "n_returned": 10
+    },
+    {
+      "id": "0bbe5167bc8d48e9815499b13d5f5586",
+      "project": "Education",
+      "type": "within",
+      "file_type": "code",
+      "question": "Entry point \u2014 load config, start API thread, run loop.",
+      "gold_paths": [
+        "Education/fleet/factorio/bridge.py"
+      ],
+      "rank": null,
+      "latency_ms": 2091.5,
+      "n_returned": 10
+    },
+    {
+      "id": "be2c551481f84b4e80a972888a73a774",
+      "project": "helix-context",
+      "type": "within",
+      "file_type": "doc",
+      "question": "When you hover your cursor over the visualization, can display tooltips. Choose how tooltips behave.",
+      "gold_paths": [
+        "helix-context/tools/native-otel/grafana/docs/sources/shared/visualizations/tooltip-options-1.md"
+      ],
+      "rank": 5,
+      "latency_ms": 1462.6,
+      "n_returned": 10
+    },
+    {
+      "id": "60c28d78096040f6876dbdde7641a76e",
+      "project": "two-brain-audit",
+      "type": "within",
+      "file_type": "code",
+      "question": "Compare one auto claim vs one manual claim on the same file+dimension.",
+      "gold_paths": [
+        "two-brain-audit/src/scorerift/claims.py"
+      ],
+      "rank": 1,
+      "latency_ms": 1585.4,
+      "n_returned": 10
+    },
+    {
+      "id": "87ca6369f39345c8b17f8467ce2132d1",
+      "project": "two-brain-audit",
+      "type": "cross",
+      "file_type": "doc",
+      "question": "engine.record_feedback(score=0.8, text=\"Dashboard feels snappy today\")",
+      "gold_paths": [
+        "two-brain-audit/docs/QUICKSTART.md"
+      ],
+      "rank": null,
+      "latency_ms": 2092.6,
+      "n_returned": 10
+    },
+    {
+      "id": "6e31d3fba66940c39af014dd30c28123",
+      "project": "BookKeeper",
+      "type": "within",
+      "file_type": "doc",
+      "question": "curl -H \"X-Tenant-ID: xyz-\" \\\n -F \"file=@bank.",
+      "gold_paths": [
+        "BookKeeper/docs/TENANCY_QUICKSTART.md"
+      ],
+      "rank": null,
+      "latency_ms": 1588.8,
+      "n_returned": 10
+    },
+    {
+      "id": "e8ce8e9a687f4f2980eabda1f474992a",
+      "project": "helix-context",
+      "type": "within",
+      "file_type": "doc",
+      "question": "Collapse: (9, ~43-71), (5, ~94-114), (3, ~78-87), (3) \u2192 one parametrized test each.",
+      "gold_paths": [
+        "helix-context/.claude/worktrees/invariance-audit/docs/superpowers/plans/2026-07-05-test-suite-consolidation.md"
+      ],
+      "rank": null,
+      "latency_ms": 2112.6,
+      "n_returned": 10
+    },
+    {
+      "id": "e3ab4b8dfe8e49019025370813b51b6e",
+      "project": "two-brain-audit",
+      "type": "cross",
+      "file_type": "doc",
+      "question": "result = engine.review_dimension(\"security\", context=source_code, mode=\"\")",
+      "gold_paths": [
+        "two-brain-audit/README.md"
+      ],
+      "rank": null,
+      "latency_ms": 2236.3,
+      "n_returned": 10
+    },
+    {
+      "id": "e3bd1268bdb74fccb024a10d7b6f26c4",
+      "project": "CosmicTasha",
+      "type": "within",
+      "file_type": "doc",
+      "question": "| Scope | What It Checks | What It Can't See |\n|---|---|---|\n| | MFA enrollment status | Email, files, activity |\n| | Do",
+      "gold_paths": [
+        "CosmicTasha/.planning/15-phase2-integration-monitoring.md"
+      ],
+      "rank": null,
+      "latency_ms": 2644.1,
+      "n_returned": 10
+    },
+    {
+      "id": "4ba75024dce84dd2b5bcedd6709e7bff",
+      "project": "Education",
+      "type": "within",
+      "file_type": "doc",
+      "question": "Event: fleet_start\nCompleted: Event: fleet_start, Time: -03-25 :10\nNext: Continue operations\n---",
+      "gold_paths": [
+        "Education/fleet/knowledge/marathon/fleet.md"
+      ],
+      "rank": null,
+      "latency_ms": 1967.9,
+      "n_returned": 10
+    },
+    {
+      "id": "95e0dc90955b4dba96ec0883544b9cc7",
+      "project": "helix-context",
+      "type": "within",
+      "file_type": "code",
+      "question": "Return a freshness-labeled for the given query.",
+      "gold_paths": [
+        "helix-context/.claude/worktrees/agent-abb177b6d8ac23bb3/helix_context/context_packet.py"
+      ],
+      "rank": null,
+      "latency_ms": 1643.9,
+      "n_returned": 10
+    },
+    {
+      "id": "60c28d78096040f6876dbdde7641a76e",
+      "project": "two-brain-audit",
+      "type": "cross",
+      "file_type": "code",
+      "question": "Compare one auto claim vs one manual claim on the same file+dimension.",
+      "gold_paths": [
+        "two-brain-audit/src/scorerift/claims.py"
+      ],
+      "rank": 1,
+      "latency_ms": 1710.8,
+      "n_returned": 10
+    },
+    {
+      "id": "2f14fdad5d12476db8012718e1920de6",
+      "project": "two-brain-audit",
+      "type": "within",
+      "file_type": "code",
+      "question": "Quick summary for CI/smoke test integration.",
+      "gold_paths": [
+        "two-brain-audit/src/scorerift/engine.py"
+      ],
+      "rank": null,
+      "latency_ms": 1891.6,
+      "n_returned": 10
+    },
+    {
+      "id": "fa371fb52df34f4989b8d1f504be6de3",
+      "project": "CosmicTasha",
+      "type": "cross",
+      "file_type": "doc",
+      "question": "DA5: Worst case: a customer's data is breached.",
+      "gold_paths": [
+        "CosmicTasha/.planning/16-full-plan-council-review.md"
+      ],
+      "rank": null,
+      "latency_ms": 1805.7,
+      "n_returned": 10
+    },
+    {
+      "id": "b8dda45cb8b44888876cbb239c623594",
+      "project": "MaxExpressKit",
+      "type": "within",
+      "file_type": "doc",
+      "question": "The format is based on Keep a ,\nand this project adheres to Semantic Versioning.",
+      "gold_paths": [
+        "MaxExpressKit/CHANGELOG.md"
+      ],
+      "rank": null,
+      "latency_ms": 1642.3,
+      "n_returned": 10
+    },
+    {
+      "id": "a2f26dde386e4787a9177fb686f82451",
+      "project": "helix-context",
+      "type": "within",
+      "file_type": "doc",
+      "question": "| | Type | Purpose |\n|---|---|---|\n| gemma4:e2b | Local MoE, ~2B active | Fingerprint floor (smallest that can triage) |",
+      "gold_paths": [
+        "helix-context/.claude/worktrees/agent-abb177b6d8ac23bb3/docs/archive/specs/2026-04-16-snow-benchmark-design.md"
+      ],
+      "rank": null,
+      "latency_ms": 3179.8,
+      "n_returned": 10
+    },
+    {
+      "id": "1ff7a269c09645fb81eb5b2d72da5557",
+      "project": "two-brain-audit",
+      "type": "within",
+      "file_type": "doc",
+      "question": "def test_register_persists_config(self, tmp_path):\n import json\n db = str(tmp_path / \"test.",
+      "gold_paths": [
+        "two-brain-audit/docs/superpowers/plans/2026-04-02-tbr-v1-plan.md"
+      ],
+      "rank": null,
+      "latency_ms": 2531.1,
+      "n_returned": 10
+    },
+    {
+      "id": "af0b16c212af485b848fe4ef4856b281",
+      "project": "two-brain-audit",
+      "type": "cross",
+      "file_type": "code",
+      "question": "for order violations and unused imports via ruff.",
+      "gold_paths": [
+        "two-brain-audit/src/scorerift/presets/python_project.py"
+      ],
+      "rank": null,
+      "latency_ms": 1710.0,
+      "n_returned": 10
+    },
+    {
+      "id": "0bf2e6d1cabe4363a9fec74fbf005ce9",
+      "project": "Education",
+      "type": "within",
+      "file_type": "doc",
+      "question": "Project: | Date: 2026-03-26 05:38\nOverall: B+ (81.",
+      "gold_paths": [
+        "Education/fleet/knowledge/flywheel/audit_20260326_053859.md"
+      ],
+      "rank": null,
+      "latency_ms": 1746.6,
+      "n_returned": 10
+    },
+    {
+      "id": "d454c91bfdcc405e8a1ff6c04f6d0103",
+      "project": "MaxExpressKit",
+      "type": "within",
+      "file_type": "doc",
+      "question": "This of is adapted from the [Contributor Covenant][homepage],\nversion 2.",
+      "gold_paths": [
+        "MaxExpressKit/CODE_OF_CONDUCT.md"
+      ],
+      "rank": null,
+      "latency_ms": 1072.0,
+      "n_returned": 10
+    },
+    {
+      "id": "2d38f77bedd9457ab8585f68783c782f",
+      "project": "two-brain-audit",
+      "type": "within",
+      "file_type": "doc",
+      "question": "scorerift register --preset ml_pipeline\npython\nfrom scorerift import AuditEngine, Dimension, Tier",
+      "gold_paths": [
+        "two-brain-audit/docs/QUICKSTART.md"
+      ],
+      "rank": 3,
+      "latency_ms": 2298.8,
+      "n_returned": 10
+    },
+    {
+      "id": "db59455c20d04e5783f9018ca1318ea7",
+      "project": "BookKeeper",
+      "type": "cross",
+      "file_type": "doc",
+      "question": "#### 1. \u2014 Context\nThread-safe identification for all operations.",
+      "gold_paths": [
+        "BookKeeper/docs/MULTI_TENANT_GUIDE.md"
+      ],
+      "rank": null,
+      "latency_ms": 1395.1,
+      "n_returned": 10
+    },
+    {
+      "id": "8e3c0a851b294957aeeffac2720c1165",
+      "project": "BookKeeper",
+      "type": "within",
+      "file_type": "doc",
+      "question": "`python\nfrom ..context import set_tenant, get_tenant, get_tenant_or_none, require_tenant",
+      "gold_paths": [
+        "BookKeeper/docs/TENANCY_API_REFERENCE.md"
+      ],
+      "rank": null,
+      "latency_ms": 1934.4,
+      "n_returned": 10
+    },
+    {
+      "id": "5c07196a2cdc4117b0476533b76783b2",
+      "project": "BookKeeper",
+      "type": "within",
+      "file_type": "doc",
+      "question": "- \u2014 Source modules\n- \u2014 Comprehensive test suite\n- \u2014 Configuration reference",
+      "gold_paths": [
+        "BookKeeper/docs/MULTI_TENANT_GUIDE.md"
+      ],
+      "rank": null,
+      "latency_ms": 2006.1,
+      "n_returned": 10
+    },
+    {
+      "id": "f8c95f69509b42ce9ccf39fbcf37bb2d",
+      "project": "CosmicTasha",
+      "type": "within",
+      "file_type": "doc",
+      "question": "Real mapped to real work \u2014 not fake percentages.",
+      "gold_paths": [
+        "CosmicTasha/.planning/18-scoring-resilience-architecture.md"
+      ],
+      "rank": null,
+      "latency_ms": 1267.5,
+      "n_returned": 10
+    },
+    {
+      "id": "29b189afede94ec3ab7d3af41014b123",
+      "project": "Education",
+      "type": "within",
+      "file_type": "doc",
+      "question": "Event: fleet_start\nCompleted: Event: fleet_start, Time: -03-26 :31\nNext: Continue operations\n---",
+      "gold_paths": [
+        "Education/fleet/knowledge/marathon/fleet.md"
+      ],
+      "rank": null,
+      "latency_ms": 1969.4,
+      "n_returned": 10
+    },
+    {
+      "id": "ca89d25b7ab64ff28d2bffdcfccab099",
+      "project": "MaxExpressKit",
+      "type": "within",
+      "file_type": "doc",
+      "question": "A v0.1.0 publishable plugin () on a public GitHub repo,\ninstallable via the Claude Code plugin marketplace, providing:",
+      "gold_paths": [
+        "MaxExpressKit/docs/superpowers/specs/2026-05-10-mek-design.md"
+      ],
+      "rank": null,
+      "latency_ms": 2726.0,
+      "n_returned": 10
+    },
+    {
+      "id": "4be0cea095b64af485334054842048a1",
+      "project": "MaxExpressKit",
+      "type": "cross",
+      "file_type": "doc",
+      "question": "By default is gated as \u2014 the operator is reminded but can proceed.",
+      "gold_paths": [
+        "MaxExpressKit/docs/compliance.md"
+      ],
+      "rank": null,
+      "latency_ms": 1514.0,
+      "n_returned": 10
+    },
+    {
+      "id": "69b29d0f5c3647019f6b1513c2acf65a",
+      "project": "BookKeeper",
+      "type": "within",
+      "file_type": "doc",
+      "question": "> Last sweep: 2026-03-24 \u2014 Full gap review for professional services + mixed/general business.",
+      "gold_paths": [
+        "BookKeeper/docs/planning/GAPS.md"
+      ],
+      "rank": null,
+      "latency_ms": 2016.9,
+      "n_returned": 10
+    },
+    {
+      "id": "4c52448cf4274319b12cbe2e91325c76",
+      "project": "Education",
+      "type": "within",
+      "file_type": "doc",
+      "question": "\"\"\"Zone system \u2014 rectangular area reservations for organization.",
+      "gold_paths": [
+        "Education/docs/superpowers/plans/2026-03-31-deterministic-factory-building.md"
+      ],
+      "rank": null,
+      "latency_ms": 1188.1,
+      "n_returned": 10
+    },
+    {
+      "id": "af0b16c212af485b848fe4ef4856b281",
+      "project": "two-brain-audit",
+      "type": "within",
+      "file_type": "code",
+      "question": "for order violations and unused imports via ruff.",
+      "gold_paths": [
+        "two-brain-audit/src/scorerift/presets/python_project.py"
+      ],
+      "rank": null,
+      "latency_ms": 1389.5,
+      "n_returned": 10
+    },
+    {
+      "id": "e29ed53753b64d42aba093d299a6d243",
+      "project": "helix-context",
+      "type": "within",
+      "file_type": "doc",
+      "question": "- Native observability sidecar \u2014 pattern source for tray balloon + capable-but-unverified disclaimer\n- PyTorch device do",
+      "gold_paths": [
+        "helix-context/.claude/worktrees/vibrant-easley-73d68a/docs/archive/specs/2026-05-04-hardware-detection-design.md"
+      ],
+      "rank": null,
+      "latency_ms": 2953.7,
+      "n_returned": 10
+    },
+    {
+      "id": "b1c17dee3c3043d1a863dc26cd535d7f",
+      "project": "MaxExpressKit",
+      "type": "within",
+      "file_type": "doc",
+      "question": "1. Verify exists; if not, tell the user to run .\n2. Run .\n3. Merge with the existing baseline.\n4. Call .\n5. Return a mar",
+      "gold_paths": [
+        "MaxExpressKit/agents/drift.md"
+      ],
+      "rank": null,
+      "latency_ms": 2843.8,
+      "n_returned": 10
+    },
+    {
+      "id": "fdce4489d18248ba8909780da527f3a3",
+      "project": "MaxExpressKit",
+      "type": "within",
+      "file_type": "code",
+      "question": "Return percent% of total, quantized. Floats raise TypeError.",
+      "gold_paths": [
+        "MaxExpressKit/lib/decimal_math.py"
+      ],
+      "rank": 1,
+      "latency_ms": 1388.5,
+      "n_returned": 10
+    },
+    {
+      "id": "e82f33fc6bc24593a88708dd02086d15",
+      "project": "Education",
+      "type": "within",
+      "file_type": "doc",
+      "question": "Event: fleet_start\nCompleted: Event: fleet_start, Time: -03-26 :35\nNext: Continue operations\n---",
+      "gold_paths": [
+        "Education/fleet/knowledge/marathon/fleet.md"
+      ],
+      "rank": null,
+      "latency_ms": 2191.2,
+      "n_returned": 10
+    },
+    {
+      "id": "516fd8d1c97e41c985821f8268de1173",
+      "project": "MaxExpressKit",
+      "type": "within",
+      "file_type": "doc",
+      "question": "- now refuses non-http/https URLs (bandit B310).",
+      "gold_paths": [
+        "MaxExpressKit/CHANGELOG.md"
+      ],
+      "rank": 8,
+      "latency_ms": 1472.9,
+      "n_returned": 10
+    },
+    {
+      "id": "1ff123424cd94288923b6f31bf48c932",
+      "project": "BookKeeper",
+      "type": "within",
+      "file_type": "code",
+      "question": "Build swimlane : transaction lifecycle by status.",
+      "gold_paths": [
+        "BookKeeper/bookkeeper/dashboard/analytics.py"
+      ],
+      "rank": null,
+      "latency_ms": 1363.8,
+      "n_returned": 10
+    },
+    {
+      "id": "85dcdc6679984058b35219519feaa839",
+      "project": "two-brain-audit",
+      "type": "within",
+      "file_type": "code",
+      "question": "Apply path sanitization to plain (CSV / Markdown output).",
+      "gold_paths": [
+        "two-brain-audit/src/scorerift/sanitizer.py"
+      ],
+      "rank": null,
+      "latency_ms": 1425.7,
+      "n_returned": 10
+    },
+    {
+      "id": "a5667affe87a4e868f42fd1257e0ed6e",
+      "project": "CosmicTasha",
+      "type": "cross",
+      "file_type": "doc",
+      "question": "Position: The number is wrong. The experience can still feel fast. It's a UX problem, not a clock problem.",
+      "gold_paths": [
+        "CosmicTasha/.planning/14-devils-advocate-deep-dive.md"
+      ],
+      "rank": null,
+      "latency_ms": 1509.8,
+      "n_returned": 10
+    },
+    {
+      "id": "8b42d8683bd345499c2471474868fd7d",
+      "project": "Education",
+      "type": "cross",
+      "file_type": "doc",
+      "question": "Event: fleet_start\nCompleted: Event: fleet_start, Time: -03-21 :03\nNext: Continue operations\n---",
+      "gold_paths": [
+        "Education/fleet/knowledge/marathon/fleet.md"
+      ],
+      "rank": null,
+      "latency_ms": 1667.5,
+      "n_returned": 10
+    },
+    {
+      "id": "75156f8b77b8484e9a51b1c3cc3f9562",
+      "project": "BookKeeper",
+      "type": "within",
+      "file_type": "code",
+      "question": "Summarize vendor payments >= $600 for reporting.",
+      "gold_paths": [
+        "BookKeeper/bookkeeper/exports/tax_engine.py"
+      ],
+      "rank": null,
+      "latency_ms": 1452.8,
+      "n_returned": 10
+    },
+    {
+      "id": "43233d0963ea44d3973df48a052d2ac4",
+      "project": "MaxExpressKit",
+      "type": "within",
+      "file_type": "doc",
+      "question": "if str(PLUGIN_ROOT) not in sys.path:\n sys.path.insert(0, str(PLUGIN_ROOT))",
+      "gold_paths": [
+        "MaxExpressKit/docs/superpowers/plans/2026-05-10-mek-v0.1.0.md"
+      ],
+      "rank": 4,
+      "latency_ms": 1544.8,
+      "n_returned": 10
+    },
+    {
+      "id": "7567aa1d539d45e6afa8cccb4ffc07b5",
+      "project": "Education",
+      "type": "cross",
+      "file_type": "doc",
+      "question": "Reviewer: coder_2 ( critic / reviewer)\nProject: C:\\Users\\max\\Projects\\\\\\\\\\",
+      "gold_paths": [
+        "Education/fleet/knowledge/code_writes/reviews/workspace_review_20260328_162238_coder_2.md"
+      ],
+      "rank": null,
+      "latency_ms": 1953.8,
+      "n_returned": 10
+    },
+    {
+      "id": "1378451d41f9478db8d246c30ec01f8c",
+      "project": "two-brain-audit",
+      "type": "within",
+      "file_type": "doc",
+      "question": "The product isn't the scoring. It's watching the gap.",
+      "gold_paths": [
+        "two-brain-audit/README.md"
+      ],
+      "rank": null,
+      "latency_ms": 1418.2,
+      "n_returned": 10
+    }
+  ]
+}

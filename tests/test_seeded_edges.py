@@ -17,6 +17,7 @@ from helix_context.retrieval.seeded_edges import (
     dense_rank,
     miss_weight,
     seed_edges,
+    seed_cross_shard_edges,
     multi_signal_overlap,
     update_edge_evidence,
 )
@@ -292,6 +293,155 @@ class TestSeedEdges:
         # Second call with same pair returns 0 - ON CONFLICT DO NOTHING
         written = seed_edges(g, ["a", "b"], overlap_fn=lambda *_: True)
         assert written == 0
+
+
+class TestSeedCrossShardEdges:
+    """seed_cross_shard_edges (issue #223 fixture gap) - cross-connection
+    sibling of seed_edges. Every sharded bench fixture shipped ZERO
+    harmonic_links rows before this; these pin the bucketed multi-signal
+    gate against a small multi-shard genes fixture."""
+
+    def _mk_shard(self, genes: list[dict]):
+        """genes: list of {gene_id, domains, entities, kv_keys, is_open}."""
+        import json
+        import sqlite3
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        conn.execute("""
+            CREATE TABLE genes (
+                gene_id TEXT PRIMARY KEY,
+                promoter TEXT,
+                key_values TEXT,
+                chromatin INTEGER
+            )
+        """)
+        conn.execute("""
+            CREATE TABLE harmonic_links (
+                gene_id_a TEXT NOT NULL,
+                gene_id_b TEXT NOT NULL,
+                weight REAL NOT NULL,
+                updated_at REAL NOT NULL,
+                source TEXT NOT NULL DEFAULT 'seeded',
+                co_count INTEGER NOT NULL DEFAULT 0,
+                miss_count REAL NOT NULL DEFAULT 0.0,
+                created_at REAL,
+                PRIMARY KEY (gene_id_a, gene_id_b)
+            )
+        """)
+        for g in genes:
+            promoter = json.dumps({
+                "domains": g.get("domains", []),
+                "entities": g.get("entities", []),
+            })
+            kv = json.dumps([f"{k}=v" for k in g.get("kv_keys", [])])
+            chromatin = 0 if g.get("is_open", True) else 1
+            conn.execute(
+                "INSERT INTO genes (gene_id, promoter, key_values, chromatin) "
+                "VALUES (?, ?, ?, ?)",
+                (g["gene_id"], promoter, kv, chromatin),
+            )
+        conn.commit()
+        return conn
+
+    def _links(self, conn):
+        return {
+            (r["gene_id_a"], r["gene_id_b"])
+            for r in conn.execute(
+                "SELECT gene_id_a, gene_id_b FROM harmonic_links"
+            ).fetchall()
+        }
+
+    def test_no_edge_when_only_one_signal(self):
+        # Shared domain only (1 signal) -- both OPEN would make 2, so make
+        # shard_b's gene CLOSED to keep it at exactly 1 signal.
+        shard_a = self._mk_shard([
+            {"gene_id": "a1", "domains": ["docs"], "is_open": True},
+        ])
+        shard_b = self._mk_shard([
+            {"gene_id": "b1", "domains": ["docs"], "is_open": False},
+        ])
+        written = seed_cross_shard_edges({"A": shard_a, "B": shard_b})
+        assert written == 0
+        assert self._links(shard_a) == set()
+        assert self._links(shard_b) == set()
+
+    def test_cross_shard_pair_written_bidirectionally(self):
+        # Shared domain + both OPEN = 2 signals -> qualifies.
+        shard_a = self._mk_shard([
+            {"gene_id": "a1", "domains": ["docs"], "is_open": True},
+        ])
+        shard_b = self._mk_shard([
+            {"gene_id": "b1", "domains": ["docs"], "is_open": True},
+        ])
+        written = seed_cross_shard_edges({"A": shard_a, "B": shard_b})
+        assert written == 2  # both directions
+        assert self._links(shard_a) == {("a1", "b1")}
+        assert self._links(shard_b) == {("b1", "a1")}
+
+    def test_same_shard_pair_not_written(self):
+        # Two genes sharing a domain in the SAME shard -- seed_edges()'s
+        # job, not seed_cross_shard_edges()'s; must be skipped here.
+        shard_a = self._mk_shard([
+            {"gene_id": "a1", "domains": ["docs"], "is_open": True},
+            {"gene_id": "a2", "domains": ["docs"], "is_open": True},
+        ])
+        written = seed_cross_shard_edges({"A": shard_a})
+        assert written == 0
+        assert self._links(shard_a) == set()
+
+    def test_entity_signal_also_qualifies(self):
+        shard_a = self._mk_shard([
+            {"gene_id": "a1", "entities": ["OpenTelemetry"], "is_open": True},
+        ])
+        shard_b = self._mk_shard([
+            {"gene_id": "b1", "entities": ["OpenTelemetry"], "is_open": True},
+        ])
+        written = seed_cross_shard_edges({"A": shard_a, "B": shard_b})
+        assert written == 2
+        assert ("a1", "b1") in self._links(shard_a)
+
+    def test_bucket_cap_skips_oversized_bucket(self):
+        # 5 genes per shard sharing one domain token -- set bucket_cap=8
+        # (< the 10 total cross-shard-eligible members) so the bucket is
+        # skipped outright, same as a real overly-generic tag.
+        shard_a = self._mk_shard([
+            {"gene_id": f"a{i}", "domains": ["generic"], "is_open": True}
+            for i in range(5)
+        ])
+        shard_b = self._mk_shard([
+            {"gene_id": f"b{i}", "domains": ["generic"], "is_open": True}
+            for i in range(5)
+        ])
+        written = seed_cross_shard_edges(
+            {"A": shard_a, "B": shard_b}, bucket_cap=8,
+        )
+        assert written == 0
+
+    def test_cap_bounds_total_written(self):
+        shard_a = self._mk_shard([
+            {"gene_id": f"a{i}", "domains": [f"tag{i}"], "is_open": True}
+            for i in range(6)
+        ])
+        shard_b = self._mk_shard([
+            {"gene_id": f"b{i}", "domains": [f"tag{i}"], "is_open": True}
+            for i in range(6)
+        ])
+        written = seed_cross_shard_edges(
+            {"A": shard_a, "B": shard_b}, cap=4,
+        )
+        assert written == 4
+
+    def test_idempotent_on_rerun(self):
+        shard_a = self._mk_shard([
+            {"gene_id": "a1", "domains": ["docs"], "is_open": True},
+        ])
+        shard_b = self._mk_shard([
+            {"gene_id": "b1", "domains": ["docs"], "is_open": True},
+        ])
+        first = seed_cross_shard_edges({"A": shard_a, "B": shard_b})
+        second = seed_cross_shard_edges({"A": shard_a, "B": shard_b})
+        assert first == 2
+        assert second == 0
 
 
 class TestQueryGenesHebbianIntegration:
