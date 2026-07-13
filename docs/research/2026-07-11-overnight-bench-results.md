@@ -466,3 +466,160 @@ All artifacts under docs/research/data/2026-07-11-*.json on branch bench/overnig
 ### Provenance note
 
 Branch history contains a duplicate P4 artifact: 0c9537d (09:07 local, not this orchestrator) added docs/research/data/2026-07-11-semantic-probe-50k-full.json - byte-identical (sha256 dfba6be1759c7418...) to this run's 2026-07-11-semantic_probe_50k_full.json from 8e1d176. Likely a concurrent session in the contended checkout re-checkpointing P4. Left in place (additive, no force-push); ignore the hyphenated copy.
+
+### Blob full sweep — APPROVED extension (user, 21:47 07-11) — plan
+
+Corrected budget from measured rates (lexical+fused = 240 s/q both-arms): full 470q = ~31h. Semantic n=125 lexical+fused is ALREADY banked (P7', deterministic driver), so running the remaining 345 non-semantic questions ~= 23h, split for checkpoint safety:
+- Part 1: --types basic (175 q, ~11.7h) -> semantic_probe_blob_lexfused_basic.json
+- Part 2: --types intra_document_reasoning,project_related,constrained,conflicting_info,completeness,miscellaneous,unknown (170 q, ~11.3h) -> semantic_probe_blob_lexfused_smalltypes.json
+('unknown' included so text-join failures are not silently dropped.) Dense arm NOT re-run (blob dense already characterized by P6; adds ~11h for a known answer). After both: merged 470q all-types blob table vs 10k/50k in RESULTS.
+
+### Blob full sweep part 1 — basic type (n=174, lexical+fused) — DONE (fused's fused-below-lexical inversion is NOT semantic-specific -- it already starts at 50k on basic and persists to 829K; lexical's own pool holds up far better on basic (-12.7pp at 829K) than on semantic (-27.2pp); RRF still demotes gold conditional on pool presence at both 50k and 829K)
+
+Source: `.claude/worktrees/overnight/benchmarks/results/semantic_probe_blob_lexfused_basic.json`, driver `benchmarks/ab_semantic_probe.py`, bed `F:/tmp/erb_blob.db` (829K genes), `--types basic --arms lexical,fused`. Config reports `n_questions=174` (not the planned 175 -- see anomalies). Every recomputed record-level statistic (gd_id/gd_text/pool_present rates, n_ranked, mean/median best_gold_rank, mean_gold_answer_overlap) matches the file's precomputed `overall`/`per_type.basic` aggregates exactly; zero `error` fields, zero `n_gold_ids==0` rows, zero pool_present/gold_delivered_id inconsistencies across both arms x 174 = 348 records.
+
+#### Per-arm detail (lexical, fused; basic, n=174, 829K blob)
+
+| metric | lexical | fused |
+|---|---|---|
+| n | 174 | 174 |
+| gold_delivered_id (rate / count) | 0.494 (86/174) | 0.443 (77/174) |
+| gold_delivered_text (rate / count) | 0.678 (118/174) | 0.500 (87/174) |
+| pool_present (rate / count) | 0.793 (138/174) | 0.810 (141/174) |
+| n_ranked | 138 | 141 |
+| median_best_gold_rank (pool_present) | 6 | 5 |
+| mean_best_gold_rank (pool_present) | 9.27 | 9.43 |
+| mean_gold_answer_overlap | 0.677 | 0.598 |
+| gold_delivered_id given pool_present (n_gd_id / n_pool) | 0.623 (86/138) | 0.546 (77/141) |
+
+#### Basic-type scale table (10k / 50k / 829K, same question family; 10k/50k from P2/P4 tables above, n=175; 829K this run, n=174)
+
+| bed | n_genes | arm | n | gold_delivered_id | pool_present | median_best_gold_rank |
+|---|---|---|---:|---:|---:|---:|
+| 10k | 10,000 | lexical | 175 | 0.703 | 0.943 | 3 (n=165) |
+| 10k | 10,000 | fused | 175 | 0.749 | 0.949 | 3 (n=166) |
+| 50k | 50,000 | lexical | 175 | 0.663 | 0.920 | 4 |
+| 50k | 50,000 | fused | 175 | 0.623 | 0.937 | 4 |
+| 829K (blob) | 829,000 | lexical | 174 | 0.494 | 0.793 | 6 (n=138) |
+| 829K (blob) | 829,000 | fused | 174 | 0.443 | 0.810 | 5 (n=141) |
+
+#### Deltas and fused-minus-lexical edge across scale (basic)
+
+| step | lexical Δ gd_id | fused Δ gd_id | lexical Δ pool | fused Δ pool | fused-lexical gd_id edge |
+|---|---:|---:|---:|---:|---:|
+| 10k (base) | -- | -- | -- | -- | +0.046 |
+| 10k→50k | -0.040 | -0.126 | -0.023 | -0.012 | -0.040 |
+| 50k→829K | -0.169 | -0.180 | -0.127 | -0.127 | -0.051 |
+| 10k→829K (full range) | -0.209 (-29.7% rel) | -0.306 (-40.9% rel) | -0.150 (-15.9% rel) | -0.139 (-14.6% rel) | -- |
+
+For comparison, semantic's fused-minus-lexical gd_id edge (from P2/P4/P7' above): 10k +0.064, 50k +0.056, 829K -0.088 -- semantic does not invert until the 50k→829K step, one scale point later than basic.
+
+#### Conditional-on-pool delivery (gold_delivered_id given pool_present), basic
+
+| bed | lexical | fused | fused-lexical |
+|---|---:|---:|---:|
+| 10k | 0.745 (123/165) | 0.789 (131/166) | +0.044 |
+| 50k | 0.720 (116/161) | 0.665 (109/164) | -0.055 |
+| 829K | 0.623 (86/138) | 0.546 (77/141) | -0.077 |
+
+(10k/50k conditional counts back-derived from the P2/P4 rate tables at n=175; 829K counts are exact from this run's raw records.)
+
+**Interpretation:**
+1. **(a) Lexical's pool does NOT collapse on basic like it did on semantic.** Basic pool_present drops 0.920→0.793 (-12.7pp) from 50k to 829K, versus semantic's 0.776→0.504 (-27.2pp) over the same step -- less than half the damage. Lexically-anchored basic questions are measurably more scale-robust for lexical recall than semantic questions, though the ~13pp drop is still real, not negligible.
+2. **(b) The fused-below-lexical inversion is not semantic-specific -- it starts earlier on basic.** Basic's fused-minus-lexical gd_id edge flips sign between 10k and 50k (+0.046 → -0.040), a full scale point before semantic's flip (which holds positive through 50k and only inverts at 829K, +0.056 → -0.088 per P7'). Basic's inversion is milder at 829K (-0.051 vs semantic's -0.088) but has been running longer -- this contradicts a semantic-only reading of the phenomenon and argues the RRF demotion mechanism is general, not tied to dense's specific semantic-query weakness.
+3. **(c) RRF still demotes gold conditional on pool presence, on basic too.** gd_id-given-pool flips from fused-favorable at 10k (+0.044) to lexical-favorable at 50k (-0.055) and deepens further at 829K (-0.077) -- fused's pool_present is at or slightly above lexical's at every scale (+0.006/+0.017/+0.017), so fused is not failing to find gold; it is failing to rank it as high as lexical alone would, exactly the demotion signature P7' found on semantic.
+4. Net basic-vs-semantic contrast: basic is the "healthier" arm on every absolute metric (gd_id 0.494 vs 0.168, pool 0.793 vs 0.504 at 829K) but shares both failure *mechanisms* with semantic (lexical depth-cutoff recall loss, RRF rank-demotion) -- just at a shallower magnitude and, for the RRF demotion specifically, an earlier onset.
+5. **For #260 lever ranking**: this strengthens the case for lever (b) (rank-/confidence-gated RRF) over lever (a) (fts5 depth widen) as the higher-priority fix -- the RRF demotion shows up on basic starting at 50k, well before lexical's own pool collapse becomes severe (basic pool is still 0.92 at 50k), meaning gating RRF's dense contribution would help sooner and on more query types than depth-widening alone; depth-widening remains necessary for the later, more severe pool collapse (both basic -12.7pp and semantic -27.2pp at 829K) but does not address the earlier, type-general demotion problem this basic run newly confirms.
+
+**Anomalies / data-quality notes:**
+- `n_questions=174` in this run's config, not the planned 175 (matches P2/P4's basic n=175 exactly) -- both arms (lexical, fused) report the same n=174 internally consistently, so this is a single question dropped upstream (likely a query/gold join failure specific to the blob's larger `erb500k_blob_additive_scored.jsonl`), not an arm-specific defect. Consistent with the Part-2 plan's note about including an `unknown` type "so text-join failures are not silently dropped" -- this is very likely that same class of drop, just for the `basic` filter.
+- Zero `error` fields, zero `n_gold_ids==0` records, zero gold_delivered_id/pool_present inconsistencies across 2 arms x 174 = 348 records; every recomputed aggregate matches the file's precomputed `overall` and `per_type.basic` values exactly (bit-for-bit on the float fields checked).
+- `combinator` field is `null` for both arms in this file, consistent with the same null-field pattern already noted in P2/P3 (unpopulated in this script version, not a config problem).
+
+
+### Blob full sweep part 2 -- small types + unknown (lexical+fused) -- DONE (small-type strength does NOT survive 829K -- every type's gd_id drops 15-35pp off its 10k/50k range; zero 'unknown'-type text-join failures (170/170 delivered on-type); the fused-vs-lexical inversion is type-heterogeneous, not universal)
+
+Source: `.claude/worktrees/overnight/benchmarks/results/semantic_probe_blob_lexfused_smalltypes.json`, driver `benchmarks/ab_semantic_probe.py`, bed `F:/tmp/erb_blob.db` (829K genes), `--types intra_document_reasoning,project_related,constrained,conflicting_info,completeness,miscellaneous,unknown --arms lexical,fused`. Config reports `n_questions=170`, `type_hist` = intra_document_reasoning 40 / project_related 40 / constrained 30 / conflicting_info 20 / completeness 20 / miscellaneous 20 -- summing to exactly 170, with no `unknown` key at all (0 count). Every recomputed record-level statistic (gd_id/pool_present rates, n_ranked, mean/median best_gold_rank, mean_gold_answer_overlap, all 6 per_type cells + overall, both arms) matches the file's precomputed aggregates exactly; zero `error` fields, zero `n_gold_ids==0` rows, zero pool_present/best_gold_rank inconsistencies across both arms x 170 = 340 records; `combinator` is `null` for both arms (same unpopulated-field pattern as every prior file).
+
+#### Type x arm (small types, 829K blob, n=170 total)
+
+| type | arm | n | gold_delivered_id | pool_present | median_best_gold_rank (n_ranked) | gd_id given pool_present |
+|---|---|---:|---:|---:|---|---:|
+| intra_document_reasoning | lexical | 40 | 0.575 | 0.900 | 5.5 (n=36) | 0.639 |
+| intra_document_reasoning | fused | 40 | 0.550 | 0.925 | 4 (n=37) | 0.595 |
+| project_related | lexical | 40 | 0.750 | 1.000 | 2.5 (n=40) | 0.750 |
+| project_related | fused | 40 | 0.775 | 1.000 | 3.0 (n=40) | 0.775 |
+| constrained | lexical | 30 | 0.600 | 0.967 | 2 (n=29) | 0.621 |
+| constrained | fused | 30 | 0.633 | 0.967 | 3 (n=29) | 0.655 |
+| conflicting_info | lexical | 20 | 0.750 | 0.950 | 3 (n=19) | 0.789 |
+| conflicting_info | fused | 20 | 0.550 | 0.950 | 2 (n=19) | 0.579 |
+| completeness | lexical | 20 | 0.650 | 0.850 | 1 (n=17) | 0.765 |
+| completeness | fused | 20 | 0.700 | 0.850 | 1 (n=17) | 0.824 |
+| miscellaneous | lexical | 20 | 0.850 | 1.000 | 2.5 (n=20) | 0.850 |
+| miscellaneous | fused | 20 | 0.550 | 1.000 | 2.5 (n=20) | 0.550 |
+| **ALL (small types)** | lexical | 170 | 0.682 | 0.947 | 2 (n=161) | 0.720 |
+| **ALL (small types)** | fused | 170 | 0.635 | 0.953 | 3.0 (n=162) | 0.667 |
+
+#### Small-type strength vs 10k/50k (gd_id, arm-by-arm; 10k/50k from P2/P4 tables above)
+
+| type | arm | 10k gd_id | 50k gd_id | 829K gd_id | 10k->829K delta | fused-lex edge 10k | edge 50k | edge 829K |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| intra_document_reasoning | lexical | 0.850 | 0.750 | 0.575 | -0.275 | +0.075 | +0.025 | -0.025 |
+| intra_document_reasoning | fused | 0.925 | 0.775 | 0.550 | -0.375 | | | |
+| project_related | lexical | 0.925 | 0.975 | 0.750 | -0.175 | +0.025 | +0.000 | +0.025 |
+| project_related | fused | 0.950 | 0.975 | 0.775 | -0.175 | | | |
+| constrained | lexical | 0.667 | 0.733 | 0.600 | -0.067 | +0.266 | +0.200 | +0.033 |
+| constrained | fused | 0.933 | 0.933 | 0.633 | -0.300 | | | |
+| conflicting_info | lexical | 0.950 | 0.850 | 0.750 | -0.200 | -0.050 | -0.150 | -0.200 |
+| conflicting_info | fused | 0.900 | 0.700 | 0.550 | -0.350 | | | |
+| completeness | lexical | 0.900 | 0.850 | 0.650 | -0.250 | -0.150 | -0.150 | +0.050 |
+| completeness | fused | 0.750 | 0.700 | 0.700 | -0.050 | | | |
+| miscellaneous | lexical | 0.900 | 0.800 | 0.850 | -0.050 | +0.050 | +0.100 | -0.300 |
+| miscellaneous | fused | 0.950 | 0.900 | 0.550 | -0.400 | | | |
+
+**Interpretation:**
+1. **Unknown-type disposition**: zero `unknown`-type questions appeared in either arm (0/170, confirmed both by the config's `type_hist` -- which has no `unknown` key at all -- and by a direct scan of all 340 records' `type` fields). Unlike Part 1 (`basic`, which silently dropped 175->174 questions to a text-join failure), this small-types slice had no drops: 40+40+30+20+20+20 = 170 = the full config `n_questions`. The `unknown` type filter was included defensively per the sweep plan but did not need to catch anything here.
+2. **Small-type strength does NOT survive to 829K on either arm.** Every one of the 6 types drops well below its 10k/50k gd_id_id range: intra_document_reasoning falls from 0.750-0.925 (10k/50k) to 0.550-0.575; conflicting_info from 0.700-0.950 to 0.550-0.750; completeness from 0.700-0.900 to 0.650-0.700 (with pool_present also breaking below 1.000 for the first time, to 0.850); constrained from 0.667-0.933 to 0.600-0.633; miscellaneous holds relatively on lexical (0.850, close to its 0.800-0.900 range) but collapses to 0.550 on fused (was 0.900-0.950); project_related is the mildest hit (0.925-0.975 -> 0.750-0.775) but still a clear double-digit-point drop. No type reaches gd_id >= 0.85 on both arms at 829K -- the "mostly >=0.90 gd_id, rank 1" character these types had at 10k/50k is gone at blob scale.
+3. **The fused-vs-lexical inversion is type-heterogeneous, not a uniform flip.** Three distinct patterns appear across the six small types at the 50k->829K step: (a) **clean inversion** -- intra_document_reasoning (+0.025 -> -0.025) and miscellaneous (+0.100 -> -0.300, the sharpest swing in the whole small-type set) flip from fused-favoring to lexical-favoring, matching the basic/semantic pattern; (b) **already lexical-favoring, deepening** -- conflicting_info never favored fused at any scale (-0.050 at 10k, -0.200 at 829K), a monotonic lexical lead that simply grows; (c) **stays fused-favoring or reverses the other way** -- constrained shrinks from a large fused edge (+0.266 at 10k) toward near-parity (+0.033) but never crosses zero, project_related stays flat-to-slightly-fused-favoring throughout (+0.025 / +0.000 / +0.025), and completeness is the outlier that inverts **in reverse**: lexical-favoring at 10k/50k (-0.150 both) but fused-favoring at 829K (+0.050). No single per-type rule (e.g. "small well-anchored types keep favoring fused") holds across all six.
+4. **ALL-small-types aggregate still shows the RRF-demotion signature**: lexical 0.682/0.947/rank2 vs fused 0.635/0.953/rank3, and gd_id-given-pool 0.720 (lexical) vs 0.667 (fused) -- fused's pool_present is at or slightly above lexical's (as in Part 1/P7'), but conditional delivery given pool presence is worse, the same RRF-demotes-gold-in-pool mechanism found on basic and semantic.
+5. Net read: the small-type gd_id floor these questions enjoyed at 10k/50k (driven by tight, well-matched lexical anchors) erodes substantially by 829K just like basic and semantic did, but the fused-vs-lexical *direction* of the inversion is genuinely per-type -- roughly half these types behave like basic/semantic (invert to lexical-favoring) and half do not, which argues against treating "semantic vs basic vs small-type" as the relevant axis for #260's RRF-gating fix; the relevant axis looks more like per-query-type candidate-density / gold-anchor-sharpness than a coarse type-family split.
+
+**Anomalies / data-quality notes:**
+- None beyond the expected: zero `error` fields, zero `n_gold_ids==0`, zero pool_present/best_gold_rank inconsistencies across 340 records; every recomputed per-type and overall aggregate matches the file's precomputed values exactly (bit-for-bit on the float fields checked); `n_questions=170` in config matches the sum of `type_hist` and the actual record count exactly (no silent drops, unlike Part 1's basic run).
+
+### Blob full sweep -- MERGED all-types verdict (829K, lexical+fused) -- DONE (n=469 merged basic+small-types+semantic; ALL-types fused-minus-lexical gd_id edge flips +0.054 (10k) / +0.006 (50k) -> **-0.060 (829K)**, confirming the RRF-demotion mechanism is corpus-wide and not an artifact of any single question family; lexical's own pool_present collapses 0.940 -> 0.772 (-16.8pp) over the same span; this merged cut has no dense arm)
+
+Merged from `semantic_probe_blob_lexfused_basic.json` (n=174, `basic`), `semantic_probe_blob_lexfused_smalltypes.json` (n=170, the 6 small types), and `semantic_probe_blob_lexfused_semantic.json` (n=125, `semantic`, previously reported as P7') -- all three sharing driver `benchmarks/ab_semantic_probe.py` and bed `F:/tmp/erb_blob.db` (829K genes). Merged n = 174+170+125 = 469 per arm (matches the plan's "n=469-470" estimate; short of the full 470-question family by the same single `basic`-type text-join drop already documented in Part 1). All 469x2 = 938 merged records recomputed directly with zero `error` fields, zero `n_gold_ids==0`, zero pool_present/rank inconsistencies.
+
+**No dense arm in this merged ALL-types row.** Dense was only run full-n on the `semantic` type at blob scale (P6, `semantic_probe_blob_dense_semantic.json`, `--types semantic --arms dense`, n=125) -- there is no blob-scale dense run for `basic` or the small types, so a merged all-types dense row cannot be constructed from banked data. This is a genuine scope gap in the blob sweep (by design -- P6's own numbers already showed dense's ranking collapse badly enough that the plan skipped re-running dense on the remaining ~11h of non-semantic types), not a silent omission.
+
+#### Merged ALL-types (829K blob, n=469, lexical+fused only)
+
+| arm | n | gold_delivered_id | pool_present | median_best_gold_rank (n_ranked) | gd_id given pool_present |
+|---|---:|---:|---:|---|---:|
+| lexical | 469 | 0.475 (223/469) | 0.772 (362/469) | 5.0 (n=362) | 0.616 (223/362) |
+| fused | 469 | 0.416 (195/469) | 0.783 (367/469) | 5 (n=367) | 0.531 (195/367) |
+
+Contributing files (overall per source, for reference): basic lexical 0.494/0.793/6, basic fused 0.443/0.810/5; small-types lexical 0.682/0.947/2, small-types fused 0.635/0.953/3; semantic lexical 0.168/0.504/15, semantic fused 0.080/0.512/16.5 (semantic numbers restate P7' above).
+
+#### 3-scale ALL-types comparison (10k / 50k / 829K merged)
+
+| bed | n_genes | arm | n | gold_delivered_id | pool_present | median_best_gold_rank | fused-lexical gd_id edge |
+|---|---|---|---:|---:|---:|---:|---:|
+| 10k | 10,000 | lexical | 470 | 0.655 | 0.940 | 3 | +0.054 |
+| 10k | 10,000 | fused | 470 | 0.709 | 0.943 | 3 | |
+| 50k | 50,000 | lexical | 470 | 0.598 | 0.906 | 4 | +0.006 |
+| 50k | 50,000 | fused | 470 | 0.604 | 0.915 | 3 | |
+| 829K (blob) | 829,000 | lexical | 469 | 0.475 | 0.772 | 5.0 | -0.060 |
+| 829K (blob) | 829,000 | fused | 469 | 0.416 | 0.783 | 5 | |
+
+10k and 50k gd_id-given-pool are not shown here: those two source JSONs are outside this task's scope (only the four blob-run files listed were read), and the rendered P2/P4 markdown tables above do not carry a gd_id-given-pool column to derive it from without re-reading raw per-question records -- so it is reported only for 829K, where it was computed directly from this task's raw records.
+
+**Closing interpretation (6 lines):**
+1. **Which types survive 829K**: none cleanly. Every type family (basic, semantic, and all 6 small types) loses double-digit-point gd_id off its 10k/50k range; the closest to "surviving" are project_related (mildest small-type drop, -17.5pp) and basic's lexical arm (largest absolute gd_id remaining at 0.494) -- semantic is the worst-hit family in both absolute terms (0.168/0.080) and pool_present collapse (0.504/0.512).
+2. **Where the inversion lives (per-type map)**: basic and semantic both invert cleanly at the 50k->829K step (basic starts inverting one step earlier, at 10k->50k); among small types, intra_document_reasoning and miscellaneous invert the same way, conflicting_info is lexical-favoring at every scale (no flip needed), constrained and project_related stay fused-favoring/flat throughout, and completeness inverts in the *opposite* direction (lexical-favoring -> fused-favoring). The inversion is real and corpus-wide in aggregate (ALL-types edge +0.054 -> +0.006 -> -0.060) but is not a uniform per-type mechanism -- it is a population-weighted outcome of a genuinely mixed per-type picture.
+3. **#260 lever ranking, final, with evidence line each**:
+   - **#1 rank-/confidence-gated RRF** (demote or reweight an arm's contribution when its own candidate rank is far outside a sane band before fusing) -- evidence: gd_id-given-pool is lexical > fused at 829K on both the merged ALL cut (0.616 vs 0.531) and 4 of 6 small types, i.e. fused is actively worse than lexical *even when gold is already in both pools* -- a fusion-mechanism defect, not a recall defect, and the mechanism (P7') traces directly to dense's near-random rank (median 50,357 in a ~178K pool) dragging RRF's blended order down.
+   - **#2 fts5_candidate_depth widening** (#205) -- evidence: lexical's own pool_present falls 0.940 -> 0.772 (merged ALL, -16.8pp) and semantic's alone falls to 0.504 (-27.2pp) -- a real, severe, and growing recall ceiling that no amount of RRF gating can fix once gold isn't in lexical's top-k at all.
+   - **#3 dense rerank/threshold work** -- evidence: lowest priority of the three; dense's pool_present holds near 1.000 at every scale (P6: 0.976 at 829K) so it is not a recall problem, but its median rank (50,357 at 829K, worse than a coin flip inside its own pool) means no realistic rerank-depth or threshold tweak recovers useful ranking without a structurally different approach (dedicated rerank stage or pre-filtered candidate set) -- P6 already concluded this is not worth tuning at the margins.
+4. **Bottom line for the ERB blob program**: helix's retrieval stack degrades gracefully in absolute terms but not in relative-mechanism terms at 829K-document scale -- RRF fusion, which was a clear net win at 10k/50k, becomes a net *cost* on the merged all-types cut (-0.060 gd_id edge) because it keeps blending in dense's now near-random signal, so the highest-leverage, lowest-risk #260 fix is to make RRF confidence-aware (gate or down-weight arms whose own rank is statistically indistinguishable from noise) before spending further effort on fetch-depth widening or dense-side rerank work, both of which are real but secondary and more expensive to land.
