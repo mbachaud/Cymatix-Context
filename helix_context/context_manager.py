@@ -1685,6 +1685,18 @@ class HelixContextManager:
                     expand_query=True,
                 )
 
+        # Issue #255 (classifier-gated combinator): resolve a per-query rerank
+        # combinator override from the stage-0 classifier class. Empty map (the
+        # default) or a disabled classifier (classifier_result is None) => None
+        # => the store keeps its global rerank_combinator, so the default path
+        # is byte-identical. Resolved once for the whole turn from the primary
+        # query's class and threaded to every sub-query's retrieval below.
+        from .retrieval.rerank_combinators import resolve_class_combinator
+        _combinator_override = resolve_class_combinator(
+            self.config.retrieval.rerank_combinator_by_class,
+            classifier_result.cls if classifier_result is not None else None,
+        )
+
         # Step 2: Retrieve (knowledge store query + pending buffer + optional cold tier)
         with _pipeline_stage_span("express"), _stage_timer("express"):
             if len(_sub_queries) == 1:
@@ -1693,6 +1705,7 @@ class HelixContextManager:
                     query_text=_sub_queries[0], include_cold=include_cold,
                     party_id=party_id, read_only=read_only,
                     query_type=query_type,
+                    rerank_combinator=_combinator_override,
                 )
             else:
                 import concurrent.futures
@@ -1704,6 +1717,7 @@ class HelixContextManager:
                         query_text=sq, include_cold=include_cold,
                         party_id=party_id, read_only=read_only,
                         query_type=query_type,
+                        rerank_combinator=_combinator_override,
                     )
                     with self.genome._last_query_scores_lock:
                         scores = dict(self.genome.last_query_scores or {})
@@ -2588,8 +2602,18 @@ class HelixContextManager:
         use_sr: Optional[bool] = None,
         read_only: bool = False,
         query_type: Optional[str] = None,
+        rerank_combinator: Optional[str] = None,
     ) -> List[Gene]:
         """Query knowledge store + pending buffer for matching documents.
+
+        ``rerank_combinator`` (issue #255, classifier-gated combinator): the
+        per-query combinator override resolved from the stage-0 query
+        classifier's class. ``None`` (classifier disabled, empty map, or a class
+        not in the map) leaves the store on its global ``rerank_combinator`` —
+        the byte-identical default. Forwarded to BOTH the dense-ANN branch (the
+        dense-on default path) and the plain ``query_docs`` branch; on the
+        sharded ``query_docs`` path it rides through to each shard's own
+        combinator via the router's verbatim ``**kwargs`` fan-out.
 
         ``query_type`` (semantic-wiring arm, PRD 2026-06-02) is forwarded to the
         sharded ``query_docs`` path so the router can broaden routing and the
@@ -2638,6 +2662,7 @@ class HelixContextManager:
                     use_sr=use_sr,
                     use_entity_graph=self.genome._entity_graph_retrieval_enabled,
                     read_only=read_only,
+                    rerank_combinator=rerank_combinator,
                 )
             else:
                 candidates = self.genome.query_docs(
@@ -2650,6 +2675,7 @@ class HelixContextManager:
                     use_entity_graph=self.genome._entity_graph_retrieval_enabled,
                     read_only=read_only,
                     query_type=query_type,
+                    rerank_combinator=rerank_combinator,
                 )
         except PromoterMismatch:
             pass

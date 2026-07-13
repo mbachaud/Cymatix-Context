@@ -42,11 +42,11 @@ this module never re-derives eligibility.
 """
 from __future__ import annotations
 
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 from .fusion import rank_by_score
 
-__all__ = ["combine_rerank", "VALID_COMBINATORS"]
+__all__ = ["combine_rerank", "resolve_class_combinator", "VALID_COMBINATORS"]
 
 # The only valid operators. ``KnowledgeStore.__init__`` validates against this
 # same set so a typo in helix.toml fails fast at construction.
@@ -117,6 +117,26 @@ def combine_rerank(
         "unknown rerank combinator "
         f"{combinator!r}; expected one of {VALID_COMBINATORS}"
     )
+
+
+def resolve_class_combinator(
+    mapping: Dict[str, str], cls: Optional[str]
+) -> Optional[str]:
+    """Resolve the per-query rerank combinator for a query-classifier class.
+
+    Issue #255 (classifier-gated combinator, default-inert). The stage-0
+    rule-based query classifier assigns each query a ``cls``; this maps it to a
+    combinator name via the ``[retrieval] rerank_combinator_by_class`` config
+    map. Returns the mapped combinator, or ``None`` to mean "fall back to the
+    store's global ``rerank_combinator``". Both an empty/absent ``mapping`` and
+    a ``None`` ``cls`` (classifier disabled, or no class assigned) resolve to
+    ``None`` — the byte-identical default path. Any non-``None`` value returned
+    here is already a member of ``VALID_COMBINATORS`` because the map is
+    validated at config load (``RetrievalConfig.__post_init__``).
+    """
+    if not mapping or cls is None:
+        return None
+    return mapping.get(cls)
 
 
 def _sort_by_score(scores: Dict[str, float], limit: int) -> List[str]:

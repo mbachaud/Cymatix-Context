@@ -533,6 +533,23 @@ class RetrievalConfig:
     # fused_tier uniform per-class rank post-multiplier (single weight — a
     # per-class weight would re-introduce hand-picked exchange rates).
     rerank_tier_weight: float = 1.0
+    # Issue #255 (classifier-gated combinator, 2026-07-12): per-query-class
+    # rerank combinator override map {classifier_class: combinator_name}. The
+    # stage-0 rule-based query classifier assigns each query a class
+    # (arithmetic / factual / procedural / multi_hop / default); a populated
+    # entry makes THAT class use its mapped combinator instead of the global
+    # rerank_combinator above. Empty (default) => every query uses the global
+    # combinator, so this ships BYTE-IDENTICAL. The design is default-inert
+    # because the winning combinator is CORPUS-DEPENDENT: the desk test found
+    # rerank additives are load-bearing on literal beds while eps_band/off win
+    # the semantic 10k ERB bed (docs/research/2026-07-10-rerank-combinator-
+    # desktest.md + the 2026-07-11 semantic-arm re-run) — so no global flip,
+    # per-class selection instead. Keys are validated against the classifier
+    # class set and values against VALID_COMBINATORS at load
+    # (RetrievalConfig.__post_init__); an unknown key or value is a hard config
+    # error (fail loud at load, not silently at query time). Classifier disabled
+    # => map ignored, global combinator used.
+    rerank_combinator_by_class: Dict[str, str] = field(default_factory=dict)
     # Issue #255 / audit §4 item 5 (2026-07-10): post-fusion BLEND layer mode.
     # The blend layer (cymatics 0.5 / harmonic_bin 1.5 / TCM 0.3) mutates
     # ``genome.last_query_scores`` AFTER fusion, on whatever scale the map
@@ -623,6 +640,28 @@ class RetrievalConfig:
     #   doc's corrected score); 0.5 == the shipped constant.
     coact_reserved_slots: int = 0
     coact_link_boost: float = 0.5
+
+    def __post_init__(self) -> None:
+        # Issue #255 (classifier-gated combinator): fail loud at config load on
+        # a typo'd class key or combinator name in rerank_combinator_by_class,
+        # rather than silently at query time. Empty map (the default) is a
+        # no-op, so untouched configs never enter this branch. Lazy imports
+        # avoid an import cycle (config is imported very early).
+        if self.rerank_combinator_by_class:
+            from .retrieval.query_classifier import VALID_QUERY_CLASSES
+            from .retrieval.rerank_combinators import VALID_COMBINATORS
+            for _cls, _comb in self.rerank_combinator_by_class.items():
+                if _cls not in VALID_QUERY_CLASSES:
+                    raise ValueError(
+                        "[retrieval] rerank_combinator_by_class: unknown query "
+                        f"class {_cls!r} (expected one of {VALID_QUERY_CLASSES})"
+                    )
+                if _comb not in VALID_COMBINATORS:
+                    raise ValueError(
+                        "[retrieval] rerank_combinator_by_class["
+                        f"{_cls!r}] = {_comb!r}: unknown combinator "
+                        f"(expected one of {VALID_COMBINATORS})"
+                    )
 
 
 @dataclass
@@ -1153,6 +1192,16 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             rerank_combinator=str(r.get("rerank_combinator", cfg.retrieval.rerank_combinator)),
             rerank_band_delta=float(r.get("rerank_band_delta", cfg.retrieval.rerank_band_delta)),
             rerank_tier_weight=float(r.get("rerank_tier_weight", cfg.retrieval.rerank_tier_weight)),
+            # Issue #255 (classifier-gated combinator): per-query-class combinator
+            # override map. Empty default => global combinator for every class
+            # (byte-identical). Validated in RetrievalConfig.__post_init__.
+            rerank_combinator_by_class=dict(
+                r.get(
+                    "rerank_combinator_by_class",
+                    cfg.retrieval.rerank_combinator_by_class,
+                )
+                or {}
+            ),
             # Issue #255 / audit §4 item 5: post-fusion blend layer mode.
             # Default "legacy" is byte-identical to the shipped additive blend.
             blend_mode=str(r.get("blend_mode", cfg.retrieval.blend_mode)),

@@ -2034,9 +2034,19 @@ class KnowledgeStore:
         use_entity_graph: Optional[bool] = None,
         read_only: bool = False,
         query_type: Optional[str] = None,
+        rerank_combinator: Optional[str] = None,
     ) -> List[Gene]:
         """
         Find documents matching the given tags signals.
+
+        ``rerank_combinator`` (issue #255, classifier-gated combinator): a
+        per-query override selecting the post-fusion rerank combinator for THIS
+        call only (fusion_mode=="rrf"). ``None`` (default) falls back to the
+        store's configured global ``self._rerank_combinator``, so the default
+        path is byte-identical. context_manager derives it from the stage-0
+        query classifier's class via the ``[retrieval] rerank_combinator_by_class``
+        map; on the sharded path it rides ``**kwargs`` to each shard's
+        ``query_docs``. Values are validated at config load.
 
         ``query_type`` (semantic-wiring arm, PRD 2026-06-02): when "semantic"
         AND env HELIX_SEMANTIC_ARM=1, the additive-mode dense term is scaled by
@@ -3090,9 +3100,16 @@ class KnowledgeStore:
             # Combine fused + rerank via the selected operator. Default
             # "additive" reproduces the shipped fused + rerank_additive block
             # byte-for-byte; fused_tier / eps_band / off are bench-gated.
+            # Issue #255 (classifier-gated combinator): a per-query override
+            # (from the stage-0 query classifier, threaded through
+            # context_manager) selects the combinator for THIS call; None falls
+            # back to the store's configured global. The map is validated at
+            # config load, so a non-None override is a VALID_COMBINATORS member
+            # (combine_rerank still raises defensively on a direct mis-call).
+            _effective_combinator = rerank_combinator or self._rerank_combinator
             from .retrieval.rerank_combinators import combine_rerank
             final_scores, ranked_ids = combine_rerank(
-                self._rerank_combinator,
+                _effective_combinator,
                 fused,
                 rr,
                 rr_by_class,
@@ -3439,6 +3456,7 @@ class KnowledgeStore:
         read_only: bool = False,
         *,
         pool_size: int | None = None,
+        rerank_combinator: Optional[str] = None,
     ) -> List[Gene]:
         """Stage 2 retrieval: parallel lex + dense recall, union, threshold cut.
 
@@ -3485,6 +3503,10 @@ class KnowledgeStore:
             use_sr=use_sr,
             use_entity_graph=use_entity_graph,
             read_only=read_only,
+            # Issue #255: forward the per-query combinator override so the
+            # dense-ANN path (dense-on default) honors the classifier gate too;
+            # the combinator runs inside this internal query_docs call.
+            rerank_combinator=rerank_combinator,
         )
 
         # Dense disabled -> degrade to legacy lex-only flow, capped at max_genes.

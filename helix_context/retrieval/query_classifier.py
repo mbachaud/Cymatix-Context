@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 
 # Hard cap to bound work on pasted code/logs.
@@ -128,6 +128,20 @@ DECODER_MODE_TABLE: dict[str, dict[str, Optional[str]]] = {
     "multi_hop":  {"generic": "full",      "small_moe": "condensed_with_slate", "frontier": "full"},
     "default":    {"generic": None,        "small_moe": "condensed_with_slate", "frontier": None},
 }
+
+
+# Issue #255 (classifier-gated combinator, 2026-07-12): the canonical set of
+# classifier class labels — every ``ClassifierResult.cls`` value that
+# ``classify_query`` can return, including the ``default`` no-op. Single source
+# of truth for validating the ``[retrieval] rerank_combinator_by_class`` map
+# keys at config load. Kept in lockstep with ``DECODER_MODE_TABLE`` (every
+# routed class also owns a decoder row) by the assertion below.
+VALID_QUERY_CLASSES: Tuple[str, ...] = (
+    "arithmetic", "factual", "procedural", "multi_hop", "default",
+)
+assert set(VALID_QUERY_CLASSES) == set(DECODER_MODE_TABLE), (
+    "VALID_QUERY_CLASSES drifted from DECODER_MODE_TABLE"
+)
 
 
 def resolve_decoder_mode(cls: str, caller_model_class: str) -> Optional[str]:
