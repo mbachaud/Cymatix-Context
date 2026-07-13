@@ -1,4 +1,4 @@
-"""Scaffold for the issue #164 SPLADE-value scale curve.
+"""Issue #164 / #204 SPLADE-value scale curve.
 
 Builds a SPLADE-on / SPLADE-off recall comparison across the configured
 genome sizes (1K -> 850K) and reports recall@10, MRR, p95 latency, and
@@ -6,26 +6,48 @@ disk-bytes-per-gene. Output is the curve the issue body asks for so the
 two ``splade_auto_*_genes`` thresholds can be set from data rather than
 from the regime table.
 
-Status: scaffold. The runner is wired and tested against existing matrix
-fixtures (``small`` / ``medium`` / ``large`` / ``xl``, all with
-SPLADE-on at build time). To produce SPLADE-on vs SPLADE-off pairs at
-each size you currently have to either:
-  (a) build a SPLADE-off twin per scale point with
-      ``scripts/build_fixture_matrix.py`` (multi-hour each at 50K+), or
-  (b) drop ``splade_terms`` from a SPLADE-on twin (cheap, but does not
-      simulate the genuine disk-cost arm at ingest).
+Status: live harness (2026-07-13, #204). Two critical fixes over the
+original scaffold:
 
-Either approach is gated on a build budget the dev box has but the CI
-loop does not, so this script ships as a measurement harness; the
-default thresholds in ``IngestionConfig`` stay at 0 (disabled) until
-the scale curve actually lands.
+1. **The on-arm now actually runs SPLADE at query time.** Every earlier
+   version constructed ``Genome(path=..., dense_embedding_enabled=False)``
+   without threading ``splade_enabled`` -- and the ``KnowledgeStore``
+   constructor default is ``splade_enabled=False`` (the #256-family
+   layer-default disagreement: config default True, constructor default
+   False). Tier 3.5 is gated on ``self._splade_enabled``
+   (knowledge_store.py), so the "on" arm was byte-identical to the "off"
+   arm at query time, and every zero-delta this script ever reported
+   (including the 2026-07-11 overnight P9 smoke) was an A/A receipt, not
+   a SPLADE ablation. The on-arm is now constructed with
+   ``splade_enabled=True`` and each arm's metrics carry a **firing
+   receipt** (``splade_fire``: encode / query_splade call counts + total
+   hits) so the artifact self-certifies that the mechanism engaged.
+
+2. **``--query-shape raw|extracted``.** ``raw`` (default, back-compat)
+   splits the full query text into ``domains`` terms -- stopwords and
+   all, a query shape the serving pipeline never produces (absolute
+   recall levels from raw runs are NOT serving-representative). And
+   serving SPLADE encodes ``" ".join(query_terms)`` -- the *extracted*
+   keyword bag -- not the raw question. ``extracted`` maps each query
+   through the stage-1 extractor (``accel.extract_query_signals``) into
+   ``(domains, entities)`` exactly as ``context_manager`` does: the
+   serving-faithful shape for the lexical tiers AND the SPLADE query
+   encoder. Use ``extracted`` for anything you intend to compare against
+   pipeline-level numbers.
+
+SPLADE-off twins are cheap: ``benchmarks/build_striptwins.py`` (copy bed
+-> DROP TABLE splade_terms -> VACUUM, ~1 min per scale point; receipt in
+``docs/research/2026-07-11-overnight-bench-results.md`` P9). The on-arm
+warms the SPLADE encoder once before the timing loop so one-time model
+load does not pollute the first query's latency (serving keeps the
+encoder resident).
 
 Usage:
     # Walk one size, compare on/off twins by db path
     python benchmarks/sweep_splade_scale_curve.py \\
-        --on-genome genomes/bench/matrix/medium.db \\
-        --off-genome genomes/bench/matrix/medium_no_splade.db \\
-        --label medium \\
+        --on-genome F:/tmp/splade204/erag10k_on.db \\
+        --off-genome F:/tmp/splade204/erag10k_off.db \\
+        --label erag10k --query-shape extracted \\
         --queries benchmarks/_splade_curve_queries.json
 
     # Full curve (writes one JSON per size to --out-dir)
@@ -85,13 +107,63 @@ def _disk_bytes_per_gene(db_path: str, gene_count: int) -> float:
     return round(total / gene_count, 3)
 
 
-def _eval_genome(db_path: str, queries: list[dict], topk: int) -> dict:
+def _eval_genome(db_path: str, queries: list[dict], topk: int,
+                 splade_query_enabled: bool = False,
+                 query_shape: str = "raw") -> dict:
     """Run ``queries`` against the genome and return aggregate metrics
     plus per-query latencies for p95.
+
+    ``splade_query_enabled`` threads into ``Genome(splade_enabled=...)``
+    so tier 3.5 (query-side SPLADE) actually runs on the on-arm. When
+    true, ``splade_backend.encode`` / ``query_splade`` are wrapped with
+    counters for the firing receipt (``splade_fire`` in the returned
+    metrics) -- an on-arm result with ``query_splade_calls == 0`` is an
+    A/A run, not a SPLADE ablation, and must not be read as one.
+
+    ``query_shape``: "raw" passes ``query_text.split()`` as domains
+    (legacy behaviour); "extracted" passes the stage-1 extractor's
+    ``(domains, entities)`` -- the serving shape.
     """
     from helix_context.genome import Genome
 
-    g = Genome(path=db_path, dense_embedding_enabled=False)
+    fire = {"encode_calls": 0, "query_splade_calls": 0, "hits_total": 0}
+    _patched = False
+    _orig_encode = _orig_query = None
+    if splade_query_enabled:
+        try:
+            from helix_context.backends import splade_backend
+
+            _orig_encode = splade_backend.encode
+            _orig_query = splade_backend.query_splade
+
+            def _counting_encode(text, *a, **kw):
+                fire["encode_calls"] += 1
+                return _orig_encode(text, *a, **kw)
+
+            def _counting_query(conn, sparse, *a, **kw):
+                out = _orig_query(conn, sparse, *a, **kw)
+                fire["query_splade_calls"] += 1
+                fire["hits_total"] += len(out or [])
+                return out
+
+            splade_backend.encode = _counting_encode
+            splade_backend.query_splade = _counting_query
+            _patched = True
+            # Warm the encoder outside the timing loop: one-time model
+            # load (~5-10s CPU) would otherwise land on query 0's latency.
+            try:
+                _orig_encode("warmup")
+            except Exception:
+                pass
+        except Exception:
+            pass
+
+    extract_signals = None
+    if query_shape == "extracted":
+        from helix_context.accel import extract_query_signals as extract_signals
+
+    g = Genome(path=db_path, dense_embedding_enabled=False,
+               splade_enabled=splade_query_enabled)
     try:
         n = len(queries)
         hits_at_k = 0
@@ -114,11 +186,15 @@ def _eval_genome(db_path: str, queries: list[dict], topk: int) -> dict:
         for q in queries:
             query_text = q["query"]
             gold = set(q["gold_ids"])
+            if extract_signals is not None:
+                domains, entities = extract_signals(query_text)
+            else:
+                domains, entities = query_text.split(), []
             t0 = time.monotonic()
             try:
                 docs = g.query_docs(
-                    domains=query_text.split(),
-                    entities=[],
+                    domains=domains,
+                    entities=entities,
                     max_genes=max(topk, 20),
                 )
             except Exception:
@@ -147,20 +223,41 @@ def _eval_genome(db_path: str, queries: list[dict], topk: int) -> dict:
             "splade_rows": splade_rows,
             "splade_present": bool(has_splade_table) and splade_rows > 0,
             "disk_bytes_per_gene": _disk_bytes_per_gene(db_path, total_genes),
+            "query_shape": query_shape,
+            # Post-construction truth: Genome soft-fails splade_enabled to
+            # False when the backend can't load, so read it back rather
+            # than echoing the requested value.
+            "splade_query_enabled": bool(getattr(g, "_splade_enabled", False)),
+            "splade_fire": dict(fire),
         }
     finally:
         g.close()
+        if _patched:
+            from helix_context.backends import splade_backend
+            splade_backend.encode = _orig_encode
+            splade_backend.query_splade = _orig_query
 
 
 def _evaluate_pair(label: str, on_db: str, off_db: str,
-                   queries: list[dict], topk: int) -> dict:
-    """Return the per-scale-point row the curve plot needs."""
+                   queries: list[dict], topk: int,
+                   query_shape: str = "raw") -> dict:
+    """Return the per-scale-point row the curve plot needs.
+
+    The on-arm runs with ``splade_enabled=True`` (query-side tier 3.5
+    live); the off-arm with ``splade_enabled=False`` against the
+    stripped twin -- a full SPLADE ablation on both the storage and the
+    query side.
+    """
     arms = {}
     for arm_name, db in (("on", on_db), ("off", off_db)):
         if not os.path.exists(db):
             arms[arm_name] = {"missing": db}
             continue
-        arms[arm_name] = _eval_genome(db, queries, topk)
+        arms[arm_name] = _eval_genome(
+            db, queries, topk,
+            splade_query_enabled=(arm_name == "on"),
+            query_shape=query_shape,
+        )
 
     on_arm = arms.get("on") or {}
     off_arm = arms.get("off") or {}
@@ -181,6 +278,7 @@ def _evaluate_pair(label: str, on_db: str, off_db: str,
 
     return {
         "label": label,
+        "query_shape": query_shape,
         "on": on_arm,
         "off": off_arm,
         "splade_value_signal": delta,
@@ -228,6 +326,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--auto-query-count", type=int, default=30,
                         help="Auto-synthesized query count when --queries omitted")
     parser.add_argument("--topk", type=int, default=10)
+    parser.add_argument("--query-shape", default="raw",
+                        choices=("raw", "extracted"),
+                        help="'raw' = query_text.split() as domains (legacy; "
+                             "NOT serving-representative). 'extracted' = "
+                             "stage-1 extract_query_signals (serving shape)")
     parser.add_argument("--out", default=None,
                         help="JSON output path (stdout if omitted)")
     parser.add_argument("--curve", action="store_true",
@@ -252,7 +355,7 @@ def main(argv: list[str] | None = None) -> int:
                 queries = _auto_queries(pt["on_db"], args.auto_query_count)
             row = _evaluate_pair(
                 pt["label"], pt["on_db"], pt["off_db"],
-                queries, args.topk,
+                queries, args.topk, query_shape=args.query_shape,
             )
             row["approx_genes"] = pt["approx_genes"]
             rows.append(row)
@@ -277,6 +380,7 @@ def main(argv: list[str] | None = None) -> int:
         queries = _auto_queries(args.on_genome, args.auto_query_count)
     row = _evaluate_pair(
         args.label, args.on_genome, args.off_genome, queries, args.topk,
+        query_shape=args.query_shape,
     )
     out_text = json.dumps(row, indent=2, default=str)
     if args.out:
