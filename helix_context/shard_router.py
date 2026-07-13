@@ -564,6 +564,18 @@ def _apply_coact_reserve(
     overflow = [g for g in union_ids[limit:] if g in promoted][:missing]
     if not overflow:
         return cut
+    if _score_debug_enabled():
+        # #223 receipt validity check: this is the ONLY place a reserved
+        # slot actually changes the result (reserve > 0, a promoted doc
+        # survived the cross-shard co-activation pull but was sitting
+        # beyond the plain [:limit] cut, and got swapped in here). Gated
+        # behind the existing HELIX_SHARD_SCORE_DEBUG introspection flag
+        # (issue #181) rather than a new one.
+        log.info(
+            "coact_reserve FIRED: reserve=%d in_cut=%d/%d promoting %d doc(s) "
+            "from beyond limit=%d: %s",
+            reserve, in_cut, len(promoted), len(overflow), limit, overflow,
+        )
     # Drop the weakest non-promoted tail entries to make room.
     drop_budget = len(overflow)
     keep: List[str] = []

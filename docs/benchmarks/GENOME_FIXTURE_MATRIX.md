@@ -131,6 +131,39 @@ These defaults are conservative on purpose: a bench fixture exercises
 freshness logic without forcing every classifier to run during the build.
 A real ingest path will overwrite the row on its next observation cycle.
 
+## Sharded `harmonic_links` seeding (issue #223)
+
+Before this fix, every sharded fixture this builder produced shipped
+**zero** `harmonic_links` rows — `seed_edges()` (`helix_context/retrieval/seeded_edges.py`)
+existed but was only ever called from tests, and co-activation writes are
+no-ops on the read-heavy sharded adapter (`helix_context/sharding.py`,
+`ShardedGenomeAdapter.upsert_doc`). That left
+`ShardRouter._expand_cross_shard_coactivation` (#120) — and the
+`coact_reserved_slots` / `coact_link_boost` knobs gated behind it (#223,
+PR #270) — permanently unreachable in any sharded receipt: a null result
+from that path was a fixture artifact, not a measurement.
+
+`build_profile_sharded` now seeds two edge classes automatically
+(`HELIX_BFM_SEED_EDGES=0` to disable, default on):
+
+- **Intra-shard** — inside `_build_one_shard`, right after a shard's
+  ingest completes, `seed_edges()` runs over that shard's own gene_ids
+  (capped at `SEEDING_CAP=200` genes, same O(n²) pairwise multi-signal
+  gate as production).
+- **Cross-shard** — once, after every shard is built and registered,
+  `seed_cross_shard_edges()` buckets genes across ALL shards by shared
+  domain/entity token and applies the same 2-of-4 signal gate to
+  cross-shard pairs only, writing edges bidirectionally into each
+  endpoint's owning shard (capped at `CROSS_SHARD_SEEDING_CAP=400`
+  total; buckets bigger than `CROSS_SHARD_BUCKET_CAP=40` are skipped as
+  too generic a token to be a meaningful signal — e.g. a single common
+  domain word shared by half the corpus).
+
+An already-built fixture can be backfilled without a full re-ingest via
+`python scripts/reseed_sharded_fixture.py --profile-dir <profile dir>`
+(reopens the registered shard `.db` files directly; both passes are
+`ON CONFLICT DO NOTHING`, so it's idempotent).
+
 ---
 
 ## EnterpriseRAG-Bench fixtures (added 2026-05-20 onwards)
