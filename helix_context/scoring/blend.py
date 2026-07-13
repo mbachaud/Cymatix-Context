@@ -36,6 +36,19 @@ it explicitly.
     TCM sorts by ``score[g] + tcm_bonus[g]``. Byte-identical to the pre-knob
     inline block, so untouched configs are bit-for-bit unchanged.
 
+    DEPRECATED-FOR-REMOVAL (2026-07-13, 3-member council CONCUR 3/3 on the
+    serving-profile receipt above): explicit selection (TOML or kwarg) now
+    logs a one-time deprecation warning at config load
+    (``RetrievalConfig.__post_init__``). Removal is condition-gated, not
+    calendar-gated: (a) a validated k-seed-hardened [know] re-fit under
+    scale_relative merged to master (#239 — shipped betas were fit under
+    legacy, so legacy remains the rollback path for the confidence contract
+    until then); (b) the last legacy-capable release is tagged for
+    historical bench repro (all pre-2026-07 receipts are legacy-blend);
+    (c) the IBM baseline is banked on scale_relative with no know/abstain
+    anomaly; (d) the removal PR makes explicit legacy selection fail fast
+    with a migration hint. Target v(N+2) at earliest.
+
 ``scale_relative``
     Convert each absolute additive bonus ``b`` into a **bounded multiplier**
     of the candidate's own score. For a signal with absolute cap ``C``
