@@ -1,0 +1,17 @@
+{
+  "_meta": {
+    "issue": "#204",
+    "date": "2026-07-13",
+    "source": [
+      "benchmarks/results/erb500k_blob_additive_scored.jsonl (ERB question `type` labels, the #93 scored run)",
+      "benchmarks/results/erb_sweep_queries_erb10k.json (gold_ids pre-resolved to gene_id against enterprise_rag_10k_batched.db by scripts/bench_chain/erb_to_sweep_queries.py)"
+    ],
+    "selection_rule": "Join type onto the 470 bed-resolved sweep queries via normalize_text(question) (same join key as benchmarks/ab_semantic_probe.py::attach_types). Sample 45 of 125 type=='semantic' (paraphrastic ERB questions -- the #204 target, since SPLADE's term-expansion should matter most where surface tokens don't literally overlap gold) plus 10 of 175 type=='basic' for contrast, via random.Random(204).sample() (seed = issue number, deterministic/reproducible from source).",
+    "cross_bed_validity": "gold_ids verified byte-identical between erb_sweep_queries_erb10k.json and erb_sweep_queries_erb50k.json for all 470 common questions (gene_id is content/path-hash derived, not a sequential row id; the 50k bed is a superset of the 10k corpus) -- so this single file is valid against BOTH enterprise_rag_10k_batched.db and enterprise_rag_50k_batched.db. Re-verified per-gold_id membership directly against both beds' `genes` table at authoring time (see script that produced this file).",
+    "n_semantic": 45,
+    "n_basic": 10,
+    "n_total": 55,
+    "consumed_by": "benchmarks/sweep_splade_scale_curve.py --queries benchmarks/_splade_curve_queries.json",
+    "note": "This provenance lives in a sidecar, not inside _splade_curve_queries.json itself, because sweep_splade_scale_curve.py's loader is a bare `json.load()` expecting a flat list of {query, gold_ids} -- a `_meta` key in that file would be iterated as a query and crash (`q[\"query\"]` on a string). See docs/research/2026-07-13-splade-scale-curve.md."
+  }
+}

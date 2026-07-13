@@ -64,6 +64,10 @@ benchmarks/snow/results/*error*.json
 # or add an explicit exception below.
 benchmarks/*.json
 !benchmarks/fixtures.json
+# #204 SPLADE scale curve: curated paraphrase gold-query fixture + its
+# provenance sidecar (authored, not a regenerable run output).
+!benchmarks/_splade_curve_queries.json
+!benchmarks/_splade_curve_queries.meta.json
 benchmarks/results/*
 !benchmarks/results/faithfulness/
 benchmarks/*_report.txt

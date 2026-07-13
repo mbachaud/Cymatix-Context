@@ -1,0 +1,386 @@
+[
+  {
+    "query": "In our GPU inference service that merges many request streams, what change was made to cut worst case latency spikes that happened when the attention memory footprint abruptly shifted during batch formation, while keeping median latency nearly flat?",
+    "gold_ids": [
+      "5f95dcb0ec5c753c",
+      "6ad4ba7dd181e5f7"
+    ]
+  },
+  {
+    "query": "What was the recommended way to split a year long commitment for about eight high end inference accelerators across North America, Europe, and Southeast Asia while keeping a small extra pool for short spikes?",
+    "gold_ids": [
+      "7233f10175b9cb26",
+      "cec2af1e4633d986"
+    ]
+  },
+  {
+    "query": "During a multi region switchover, what is causing some customers to get bursty too many requests and occasional service unavailable responses because different parts of the traffic gatekeeper disagree briefly on the time boundary used for quota calculations?",
+    "gold_ids": [
+      "70e991a537fdfd92",
+      "9b56b5282e138c3b"
+    ]
+  },
+  {
+    "query": "Where are the small on-node files stored that capture the GPU communication tuning fingerprints, and what should ops do with them during cluster upgrades?",
+    "gold_ids": [
+      "59473efcb3bdb752",
+      "c2d52b23778d13f3"
+    ]
+  },
+  {
+    "query": "In the internal workshop where we deliberately sabotage a client library via a local proxy to test resiliency, what exact fields are required in the saved run trace file format (the per-span identifiers, timestamps, and the single flattened attributes string) so our baseline and failure runs are comparable?",
+    "gold_ids": [
+      "391989efd2e65f2f",
+      "8cfd19bf5d3f7468"
+    ]
+  },
+  {
+    "query": "For the healthcare chat rollout that ramps from a few thousand to about fifteen thousand monthly active users by month three, what was the projected total monthly language model token consumption at steady state based on the stated session and prompt/response length assumptions?",
+    "gold_ids": [
+      "be682f774c5b82f4",
+      "c73815b4ff4d876c"
+    ]
+  },
+  {
+    "query": "For a EU-hosted dedicated banking tenant facing a regulator check in late March 2026, how can we produce a tamper-evident 7-day audit activity export that includes per-event masking justification plus the GDPR lawful-ground and any consent time, with a signed checksum manifest and a trusted timestamp?",
+    "gold_ids": [
+      "1ffcb1ce2ea4ef84",
+      "ea285341bca61d33"
+    ]
+  },
+  {
+    "query": "In our cross team outage process, what is the expected update rhythm for the shared incident channel from the first message through containment, including when the interval should be shortened?",
+    "gold_ids": [
+      "b53730f6eeeffdb6",
+      "c9b0cd90b61eb474"
+    ]
+  },
+  {
+    "query": "In our offline installer release process, how do we expose per-component supply chain provenance so an operator can see which build system and commit produced each piece and optionally enforce that missing or bad attestations fail the index step?",
+    "gold_ids": [
+      "971e8d571b5e5873",
+      "9d30f4c5eab25613"
+    ]
+  },
+  {
+    "query": "Why did our telemetry collectors in the dedicated production clusters stop being able to mint short lived credentials for a customer cloud identity when going through the AWS to GCP federation bridge, after an IAM policy tightening with conditional rules, causing missing metrics and traces for about a day in US East and EU West?",
+    "gold_ids": [
+      "62cc3d8ff8afa833",
+      "ecc726fe700982c4"
+    ]
+  },
+  {
+    "query": "How should we handle a short term external engineering team working out of our London site so they can get into the lab and then send two sensitive prototype boards back to the US with proper custody tracking and customs clearance after the week ends?",
+    "gold_ids": [
+      "5d0c0e85fe1a34a8",
+      "6977798c8432c91d"
+    ]
+  },
+  {
+    "query": "During the 10:00 UTC partial rollout that caused structured function-invocation outputs to sometimes drop or swap argument fields, what small hotfix was added in the batching/serving path to prevent argument-buffer interleaving?",
+    "gold_ids": [
+      "426811ddd3a5efcf",
+      "f6c9f01c40ad3130"
+    ]
+  },
+  {
+    "query": "In the rollout plan for the internal service that only hands out application secrets to verified runtime hosts using short lived machine health proofs and hardware backed key unwrapping, what is the default hot and cold retention period for the tamper resistant audit trail?",
+    "gold_ids": [
+      "9e70a973d56d7203",
+      "ba14517517d6558a"
+    ]
+  },
+  {
+    "query": "In the email thread about an AI service pilot for a payments company, what were the four main categories of changes their procurement and counsel asked for in the first contract markup?",
+    "gold_ids": [
+      "0b002481748f2786",
+      "631f329e495b89b3"
+    ]
+  },
+  {
+    "query": "For a small B2B SaaS embedding a live chat helper inside their product that needs partial replies immediately while it fetches recent user-event context, what first-response-time target and concurrent-load threshold were set as the pass criteria for their short trial?",
+    "gold_ids": [
+      "9ef7ffd56126a4a4",
+      "bc1fdac43b703a6a"
+    ]
+  },
+  {
+    "query": "How should we automate the creation and teardown of short-lived experiment workspaces so that a request ticket spins up the needed tracking/docs/chat area, requires an approver before access is enabled, expires on a default one month timer with a simple extension, and writes an encrypted audit bundle to object storage when it shuts down?",
+    "gold_ids": [
+      "755961d8ddd5a165",
+      "9fe493803e3b6c52"
+    ]
+  },
+  {
+    "query": "When someone new starts at Redwood Inference, what is the target turnaround time for getting them fully set up with accounts and tools in North America versus Europe/Asia-Pacific?",
+    "gold_ids": [
+      "0d596db040bb5aec",
+      "86dda2394d11a805"
+    ]
+  },
+  {
+    "query": "During a major production outage, what is the prescribed sequence of actions for the first 60 to 90 minutes, from opening the live coordination call through confirming the service is healthy again?",
+    "gold_ids": [
+      "a940d1ae4f2674d4",
+      "ba9bbf59138c6755"
+    ]
+  },
+  {
+    "query": "In our internal admin UI, what are the requirements for a small collapsible tenant sidebar that summarizes inter-region service connectivity and recent liveness, highlights the three most important issues, and includes guarded remediation actions plus an estimated failover cost impact?",
+    "gold_ids": [
+      "7c88c7b50832e7c8",
+      "db70cf062c2f2f27"
+    ]
+  },
+  {
+    "query": "During a late morning April 2025 incident, why did an interactive response feed start arriving in long bursts with 15 to 30 second silences for many users, and what immediate workaround was recommended to keep conversations responsive?",
+    "gold_ids": [
+      "250bac9e27b3b52d",
+      "975e883da24d7412"
+    ]
+  },
+  {
+    "query": "In our model serving runtime, what is the new approach that chooses between two attention implementations at execution time to cut tail latency on mixed prompt lengths and avoid costly cache page swapping on very long contexts?",
+    "gold_ids": [
+      "2594d3dd2229101c",
+      "c871530feea2265a"
+    ]
+  },
+  {
+    "query": "In the recent change that made low bit math safer for inference, what is the default pass rate used to decide when a machine is allowed to step down from the safest numeric mode?",
+    "gold_ids": [
+      "2db5b87f2f5c38f6",
+      "b495ce5c37d861f6"
+    ]
+  },
+  {
+    "query": "In the GPU inference runtime that mixes tiny chat requests with very long prompt processing, what is the target reduction for worst case per token latency on the latency sensitive traffic while keeping overall throughput loss under about ten percent?",
+    "gold_ids": [
+      "80ce347c092e3f39",
+      "faf88321e539dc1c"
+    ]
+  },
+  {
+    "query": "Im looking for the doc about building a fast system to store and query model performance run histories and a simple UI to compare two runs plus an oncall workflow for investigating detected slowdowns, including how it groups repeated issues and how long detailed vs rolled up data is kept",
+    "gold_ids": [
+      "9f5cb57b15338d16",
+      "fe30b60b558aae98"
+    ]
+  },
+  {
+    "query": "For a mid sized subscription software company adding AI powered lookup across internal docs and support chats, what are the performance targets for the overnight vectorization run and the interactive top ten results response time that were discussed in the pre sales notes?",
+    "gold_ids": [
+      "d11eb49758c69bd7"
+    ]
+  },
+  {
+    "query": "For the fintech prospect doing merchant reconciliation and dispute handling, what are the specific compliance items their ops and security teams said must be in place before moving past the pilot phase?",
+    "gold_ids": [
+      "74a4188955f5f91e",
+      "a81b2e62d3cc7a68"
+    ]
+  },
+  {
+    "query": "For the mid sized software company building outbound sales chat reps that trigger actions in email, calendar, and a CRM, what latency targets did they set for live token streaming and for the full message to action acknowledgement flow during their planned short evaluation?",
+    "gold_ids": [
+      "cb4e20bb4d9b7b62",
+      "ed3df04d5a46a958"
+    ]
+  },
+  {
+    "query": "From the internal sandbox microbench in the EU West lab around May 2029, what was the estimated dollars per one million tokens for the biggest model on a single 40GB GPU when using the no-batching low-latency mode on the long output workload (about 300 tokens per response)?",
+    "gold_ids": [
+      "0c1d7213454b72ec",
+      "30664e909e7fb4f2"
+    ]
+  },
+  {
+    "query": "For the outsourced customer support company planning an isolated always-on deployment for AI agent guidance and end-of-chat ticket writeups, what peak simultaneous staff load and response-time target did they specify for real-time streaming suggestions?",
+    "gold_ids": [
+      "139c17178a2059c9",
+      "8478d871aacd2f05"
+    ]
+  },
+  {
+    "query": "Where can I find the internal one stop reference page that summarizes how our company handles approvals and SLAs for access requests, production changes, data retention, purchasing thresholds, vendor onboarding, and business travel, including links to the standard request templates?",
+    "gold_ids": [
+      "582419f83b303193",
+      "a70ac7f0f7af5207"
+    ]
+  },
+  {
+    "query": "For a small mobile game studio adding realtime global chat and match lobby messaging, what latency goal did they set for typical short messages so players dont notice added delay?",
+    "gold_ids": [
+      "34ca852f254f9e87",
+      "d48128fe059ae0a2"
+    ]
+  },
+  {
+    "query": "How does the proposed multi-region traffic controller proactively avoid tail-latency blowups by warming likely failover locations ahead of time and using a three-level degrade/shed mechanism before hard failures occur?",
+    "gold_ids": [
+      "473ca0cb7c181538",
+      "802e004edd755258"
+    ]
+  },
+  {
+    "query": "In our long conversation serving experiments, what mitigation is suggested for the tendency to start making up references right after a retrieval step when older context has been aggressively shrunk to save memory?",
+    "gold_ids": [
+      "375a3e51ea6a897c",
+      "c03443853bd5fcac"
+    ]
+  },
+  {
+    "query": "In our GPU inference runtime, what change was introduced to cut the worst-case temporary device-memory spike when short and long requests are interleaved, especially for attention-heavy ops that used to grab per-op temp buffers?",
+    "gold_ids": [
+      "1a9324d0c09579ac",
+      "c3aed0bc45f5b296"
+    ]
+  },
+  {
+    "query": "On managed iPhones on corporate Wi-Fi, why do long-lived server push text streams sometimes reconnect after the app is backgrounded and then end with a few seconds of silence and a cut-off final JSON fragment instead of a clean end marker?",
+    "gold_ids": [
+      "c2fb04f2e27ae004",
+      "e692f3635e900507"
+    ]
+  },
+  {
+    "query": "What phone number did the recruiter provide for the frontend engineering candidate so the interviewers could reach her quickly if she was running late?",
+    "gold_ids": [
+      "444919d73a9e77b1",
+      "e46ac8116afff59d"
+    ]
+  },
+  {
+    "query": "For the tiny production experiment that tweaks how the model serving layer keeps and evicts attention memory, what are the concrete pass or fail thresholds for error rate and tail latency during the first hour?",
+    "gold_ids": [
+      "1a1317bfb84448f7",
+      "b4ea6ce5ebe1f115"
+    ]
+  },
+  {
+    "query": "For a chat style server sent events stream that must survive mobile disconnects without re running tool side effects, what mechanism was introduced to let a client reconnect from a safe checkpoint using a server issued marker plus an explicit receipt from the client, while keeping compatibility with existing OpenAI like streaming clients?",
+    "gold_ids": [
+      "aa9307a1a3f28390",
+      "c51dcce0a59403f0"
+    ]
+  },
+  {
+    "query": "In our agent runtime, parallel tool responses sometimes stomp each other and the final structured payload varies run to run; where is the proposal that adds a deterministic way to combine overlapping JSON outputs plus per-invocation jittered exponential retry limits to prevent retry storms?",
+    "gold_ids": [
+      "17c622500c5e78fa",
+      "ee182592f0e1c23c"
+    ]
+  },
+  {
+    "query": "In the February 2026 update to our inference tuning product, what change caused older route configuration payloads to start getting rejected with a 400 error, and what field needs to be removed to fix it?",
+    "gold_ids": [
+      "39d88864e9c24332",
+      "5c19bd738d7c5235"
+    ]
+  },
+  {
+    "query": "In the mid March 2026 incident where a regional dedicated serving cluster briefly ran out of spare capacity and the automatic scaler couldnt add nodes due to provider limit type errors, what exact build version did on call revert to in order to restore capacity?",
+    "gold_ids": [
+      "2d62740e4206b125",
+      "afca4c58e8d1dc65"
+    ]
+  },
+  {
+    "query": "Before an external audit rehearsal happening in about three weeks, what are the due dates and owners for the main evidence gaps around deployment rollback proof, contractor access end date confirmation, encryption key rotation documentation placement, and two overdue third party security questionnaires?",
+    "gold_ids": [
+      "19246aeaa5dbb5e4",
+      "261b6a3dabb2d364"
+    ]
+  },
+  {
+    "query": "Which fintech support-chat prospect dropped us after their lawyers rejected non-audited compliance proof and chose a rival that could deliver a private install with formal audit paperwork?",
+    "gold_ids": [
+      "41cdd6aedf984768",
+      "a56d3f525b409c19"
+    ]
+  },
+  {
+    "query": "What were the final concession terms approved for the retail partner purchase through the major cloud providers marketplace, specifically the first year price reduction and the referral payout schedule after launch?",
+    "gold_ids": [
+      "0b59c83f95b2e233",
+      "5684e81b0a9f6f9c"
+    ]
+  },
+  {
+    "query": "In the dedicated GPU hosting plan with prepaid overage credits, what is the default time window after a demand spike during which any additional spikes are treated as part of the same billable overage event?",
+    "gold_ids": [
+      "932992fe66e9cb40",
+      "a6b3298d16a1f646"
+    ]
+  },
+  {
+    "query": "What is the planned cutoff date when the old model capability format may stop being accepted for new writes?",
+    "gold_ids": [
+      "1cc2280cbdfbf3e7",
+      "37f88d4506717ab0"
+    ]
+  },
+  {
+    "query": "What is the corrective journal number created to move a supplier credit amount from the DEV cost center to the OPS cost center after it was posted incorrectly during the March close?",
+    "gold_ids": [
+      "295dcdfff9d3f36a",
+      "3e8a2c86b8220835"
+    ]
+  },
+  {
+    "query": "What configuration option was added to let repositories explicitly allow Docker-in-Docker during the staged rollout of the new GitHub composite action CI setup?",
+    "gold_ids": [
+      "5fc577670ce6ee58",
+      "dcabc85fbbcfc396"
+    ]
+  },
+  {
+    "query": "What service credit percentages were proposed in the tiered uptime SLA counteroffer for the maritime logistics SaaS customer using dedicated GPU capacity?",
+    "gold_ids": [
+      "d5229e13ab8ad628",
+      "d5c7368951776655"
+    ]
+  },
+  {
+    "query": "In a production incident during a staggered canary rollout in us-east-1, what ordering change was made to the autoscaler prewarm handshake to stop some tenant-pinned traffic from getting routed to an older model variant?",
+    "gold_ids": [
+      "11a838a33c64a1d5",
+      "75a93953b182c77a"
+    ]
+  },
+  {
+    "query": "What is the phased rollout plan for the change that smooths dedicated autoscaling signals and adds an advisory gateway-to-controller backpressure mechanism?",
+    "gold_ids": [
+      "ca4f980fc9e3f1b5",
+      "f196095e9bcd280e"
+    ]
+  },
+  {
+    "query": "What is the phased rollout schedule for removing the legacy compatibility proxy and migrating old persisted flag configs to a single newer schema?",
+    "gold_ids": [
+      "4a2529ac5e1c04ad",
+      "996105fcc00e3bcf"
+    ]
+  },
+  {
+    "query": "What are the three request quality and cost tiers proposed in the lightweight interaction tiering model for user facing features?",
+    "gold_ids": [
+      "2b742638e4730e5b",
+      "7a433444b320acb1"
+    ]
+  },
+  {
+    "query": "In the eng-platform standup about staging 401 spikes on the generate endpoint, what header value caused the requests to miss both the primary and fallback route predicates and hit the fallthrough route?",
+    "gold_ids": [
+      "5229d1e274f2b748",
+      "85f47ccbe72aaae3"
+    ]
+  },
+  {
+    "query": "What is the recommended liability cap language in the procurement legal triage SOP for vendor contracts (including the key exceptions and how the cap amount is determined)?",
+    "gold_ids": [
+      "70ce6780a1fec1c1",
+      "bdaea76de047ba20"
+    ]
+  }
+]
