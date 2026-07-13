@@ -25,7 +25,11 @@ Every one of these is a *post-fusion mutation on an unspecified score scale*
 (O(3-45)) but an overwrite on the RRF scale (O(0.05-0.5)). They also
 contaminate the ``[know]`` logistic, which reads ``top_score``/``score_gap``
 straight off the mutated ``last_query_scores`` map. This module exposes the
-three modes below; ``"legacy"`` is the shipped default and ships INERT.
+three modes below. GRADUATED 2026-07-13: ``"scale_relative"`` is now the
+shipped default (serving-profile receipt,
+``docs/research/2026-07-12-blend-serving-receipt.md``); ``"legacy"`` remains
+available and byte-identical to the pre-knob inline block for anyone who sets
+it explicitly.
 
 ``legacy``
     Absolute additive blend. ``score[g] += bonus`` for cymatics/harmonic;
@@ -74,8 +78,11 @@ three modes below; ``"legacy"`` is the shipped default and ships INERT.
 Note on ``[know]`` (audit item 7): the ``[know]`` confidence logistic reads
 ``top_score``/``score_gap`` off ``last_query_scores`` (``context_packet.py``).
 ``blend_mode="off"``/``"scale_relative"`` therefore change what ``[know]``
-sees; this knob does NOT touch ``[know]`` behavior, and the s_ref/g_ref re-fit
-is sequenced BEHIND this knob's graduation (audit §4 item 7).
+sees; this knob does NOT touch ``[know]`` behavior itself. Graduation landed
+2026-07-13 (serving-profile receipt,
+``docs/research/2026-07-12-blend-serving-receipt.md``), so the s_ref/g_ref
+re-fit that was sequenced BEHIND this knob (audit §4 item 7) is now unblocked
+— tracked on #239, and must run under the new ``scale_relative`` default.
 """
 
 from __future__ import annotations
@@ -148,7 +155,7 @@ def apply_candidate_refiners(
     tcm_session: Optional[TCMSession] = None,
     ray_trace_theta: bool = False,
     theta_weight: float = 1.0,
-    blend_mode: str = "legacy",
+    blend_mode: str = "scale_relative",
 ) -> Tuple[List[Gene], Dict[str, Dict[str, float]]]:
     """Apply post-retrieve candidate refiners before assembly or fingerprinting.
 
@@ -156,8 +163,10 @@ def apply_candidate_refiners(
     gene_id -> {refiner_name: bonus}.
 
     *blend_mode* selects how the three refiners combine with the fused scores;
-    see the module docstring. ``"legacy"`` (default) is byte-identical to the
-    pre-knob inline block.
+    see the module docstring. Default agrees with ``RetrievalConfig.blend_mode``
+    (``"scale_relative"`` since the 2026-07-13 graduation; #256 lesson — layer
+    defaults must agree). ``"legacy"`` is still available and byte-identical to
+    the pre-knob inline block for callers that set it explicitly.
 
     Raises:
         ValueError: on an unknown *blend_mode* (defensive — the manager

@@ -5,7 +5,10 @@ refiners — cymatics (``* 0.5``), harmonic_bin (``* 1.5``), TCM
 (``BONUS_WEIGHT = 0.3``) — that mutate ``genome.last_query_scores`` on an
 unspecified score scale (audit §2d, class d) and contaminate the ``[know]``
 logistic that reads the mutated map. ``[retrieval] blend_mode`` exposes three
-modes; ``"legacy"`` (default) is BYTE-IDENTICAL to the shipped additive blend.
+modes. GRADUATED 2026-07-13 (serving-profile receipt,
+``docs/research/2026-07-12-blend-serving-receipt.md``): the default is now
+``"scale_relative"``. ``"legacy"`` remains available and BYTE-IDENTICAL to the
+pre-knob additive blend for anyone who sets it explicitly.
 
 Test families:
   1. ``_scale_relative_multiplier`` unit correctness (the exact mapping),
@@ -26,6 +29,7 @@ docs/research/2026-07-10-rerank-combinator-desktest.md §5 (the off-cell floor).
 """
 from __future__ import annotations
 
+import inspect
 import textwrap
 
 import pytest
@@ -151,10 +155,15 @@ def test_legacy_is_byte_identical_additive_blend(monkeypatch):
         assert contrib[g]["cymatics"] == pytest.approx(flux_map[g] * 0.5)
 
 
-def test_default_blend_mode_is_legacy_on_missing_kwarg(monkeypatch):
-    """Omitting blend_mode entirely == legacy (the shipped default path)."""
+def test_default_blend_mode_is_scale_relative_on_missing_kwarg(monkeypatch):
+    """Omitting blend_mode entirely == scale_relative, the shipped default
+    path since the 2026-07-13 graduation (serving-profile receipt,
+    docs/research/2026-07-12-blend-serving-receipt.md). Pass
+    blend_mode="legacy" explicitly to get the pre-graduation additive
+    behavior back (see test_legacy_is_byte_identical_additive_blend above).
+    """
     base = {"a": 5.0, "b": 5.0}
-    flux_map = {"a": 1.0, "b": 0.0}
+    flux_map = {"a": 1.0, "b": 0.0}          # bonus a=0.5 -> multiplier 1.05
     _patch_cymatics(monkeypatch, flux_map)
 
     genome = _FakeGenome(base)
@@ -163,8 +172,9 @@ def test_default_blend_mode_is_legacy_on_missing_kwarg(monkeypatch):
         "q", cands, 32, genome=genome,
         cymatics_enabled=True, use_cymatics=True,
         use_harmonic_bin=False, use_tcm=False, tcm_session=None,
-    )  # no blend_mode kwarg -> default "legacy"
-    assert genome.last_query_scores == {"a": 5.5, "b": 5.0}
+    )  # no blend_mode kwarg -> default "scale_relative"
+    assert genome.last_query_scores["a"] == pytest.approx(5.0 * (1.0 + 0.5 / _BLEND_SCALE_REF))
+    assert genome.last_query_scores["b"] == pytest.approx(5.0)   # zero signal -> unchanged
 
 
 # ═══ 3. off — no blend mutation, pure fused, side effects still run ════
@@ -245,9 +255,39 @@ def test_scale_relative_multiplies_rather_than_adds(monkeypatch):
 # ═══ 5. config threading + validation ════════════════════════════════
 
 
-def test_config_default_blend_mode_is_legacy():
-    assert RetrievalConfig().blend_mode == "legacy"
+def test_config_default_blend_mode_is_scale_relative():
+    """Graduated 2026-07-13 on the serving-profile receipt
+    (docs/research/2026-07-12-blend-serving-receipt.md): scale_relative
+    replicated flat-to-positive on 5/6 serving cells (and was best on 10k
+    semantic), so it is now the default. ``off`` was REJECTED for serving —
+    delivery inverts on all 6 serving cells despite zeroing inversions.
+    """
+    assert RetrievalConfig().blend_mode == "scale_relative"
     assert VALID_BLEND_MODES == ("legacy", "scale_relative", "off")
+
+
+def test_blend_mode_layer_defaults_agree():
+    """#256-style permanent single-source guard, extended to blend_mode:
+    ``apply_candidate_refiners``'s own ``blend_mode`` kwarg default (the
+    layer that's live when something calls the free function directly,
+    bypassing ``HelixContextManager``) must agree with
+    ``RetrievalConfig.blend_mode`` -- the same shape as
+    ``tests/test_retrieval_invariance.py::test_layer_defaults_agree`` pins
+    ``KnowledgeStore.__init__``'s ``fusion_mode`` default against
+    ``RetrievalConfig``. Assert EQUALITY with the config layer, not a
+    literal, so any future default move must touch both layers in the same
+    PR.
+    """
+    config_default = RetrievalConfig().blend_mode
+
+    sig_default = inspect.signature(
+        apply_candidate_refiners
+    ).parameters["blend_mode"].default
+    assert sig_default == config_default
+
+    # And the shipped default is scale_relative (the 2026-07-13 graduation,
+    # serving-profile receipt).
+    assert config_default == "scale_relative"
 
 
 def test_config_threads_blend_mode_from_toml(tmp_path):
