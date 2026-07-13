@@ -35,9 +35,23 @@ from tests.conftest import MockCompressorBackend, make_client, make_gene, make_h
 def _seeded_manager() -> HelixContextManager:
     """In-memory genome with a handful of seeded genes so build_context
     has candidates to express + can exercise the touch / coactivate /
-    relations-batch tail of the pipeline."""
+    relations-batch tail of the pipeline.
+
+    ``abstain_enabled=False``: this fixture's 4-gene corpus sits on a knife
+    edge of the RRF-normalized abstain ratio gate (``tier_logic.py``,
+    threshold 1.5) -- under ``blend_mode="legacy"`` the mis-scaled additive
+    bonuses happened to inflate the ratio just over the line (~1.52), but
+    under the graduated ``"scale_relative"`` default (2026-07-13, serving-
+    profile receipt) the same corpus computes ~1.36 and abstains, so
+    read_only=False touches nothing and this isolation test false-fails.
+    This test is about the read_only mutation contract, not retrieval
+    confidence, so abstain is disabled to decouple the two concerns rather
+    than hand-tuning the corpus to dodge one gate's threshold.
+    """
     cfg = make_helix_config(
-        budget=BudgetConfig(max_genes_per_turn=4, splice_aggressiveness=0.5),
+        budget=BudgetConfig(
+            max_genes_per_turn=4, splice_aggressiveness=0.5, abstain_enabled=False,
+        ),
         classifier=ClassifierConfig(enabled=True),
         synonym_map={"port": ["upstream", "endpoint", "url"]},
     )

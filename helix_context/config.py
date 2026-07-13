@@ -555,20 +555,27 @@ class RetrievalConfig:
     # ``genome.last_query_scores`` AFTER fusion, on whatever scale the map
     # carries (DEFECT class 2d, audit §2d) — a mild nudge on additive scores,
     # an overwrite on RRF scores — and it also contaminates the ``[know]``
-    # logistic inputs, which read the mutated map. This knob is the graduation
-    # instrument for audit item 5; it is bench-gated and ships INERT.
+    # logistic inputs, which read the mutated map. GRADUATED 2026-07-13 on the
+    # serving-profile receipt (docs/research/2026-07-12-blend-serving-receipt.md):
+    # scale_relative replicated flat-to-positive on 5/6 serving cells and best-
+    # on-10k-semantic, so it is now the default; off was REJECTED for serving
+    # (delivery inverts on all 6 serving cells despite zeroing inversions).
     # Design + exact scale_relative mapping: helix_context/scoring/blend.py.
-    #   "legacy"         — absolute additive blend (current behavior; BYTE-
-    #                      IDENTICAL default, so untouched configs are unchanged).
+    #   "legacy"         — absolute additive blend (pre-graduation default;
+    #                      BYTE-IDENTICAL to the original inline block. Set
+    #                      explicitly to restore the old behavior).
     #   "scale_relative" — each absolute blend bonus b becomes a bounded
     #                      multiplier (1 + b/S_REF, S_REF a documented module
     #                      constant in blend.py) of the candidate's own score
-    #                      (order-preserving under uniform rescale).
+    #                      (order-preserving under uniform rescale). DEFAULT
+    #                      since 2026-07-13 — see the receipt doc above.
     #   "off"            — skip the blend mutations of last_query_scores entirely
     #                      (pure fused ranking; the rerank/truncation side effect
     #                      still runs). Clears the desk-test off-cell inversion
-    #                      floor (docs/research/2026-07-10-rerank-combinator-desktest.md §5).
-    blend_mode: str = "legacy"              # legacy | scale_relative | off
+    #                      floor (docs/research/2026-07-10-rerank-combinator-desktest.md §5)
+    #                      but REJECTED for serving: delivery inverts on all 6
+    #                      serving cells (see the receipt doc above).
+    blend_mode: str = "scale_relative"      # legacy | scale_relative (default) | off
     fts5_weight: float = 3.0                # cap-only in additive: cap = 2.0 × this (6.0)
     splade_weight: float = 3.5              # leading coeff == tier cap
     tag_exact_weight: float = 3.0           # current weight × match_count
@@ -1203,7 +1210,8 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
                 or {}
             ),
             # Issue #255 / audit §4 item 5: post-fusion blend layer mode.
-            # Default "legacy" is byte-identical to the shipped additive blend.
+            # Graduated 2026-07-13 to "scale_relative" (serving-profile
+            # receipt); see the field docstring above for the full record.
             blend_mode=str(r.get("blend_mode", cfg.retrieval.blend_mode)),
             fts5_weight=float(r.get("fts5_weight", cfg.retrieval.fts5_weight)),
             splade_weight=float(r.get("splade_weight", cfg.retrieval.splade_weight)),
