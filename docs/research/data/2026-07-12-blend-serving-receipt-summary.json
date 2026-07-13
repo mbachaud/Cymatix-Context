@@ -1,0 +1,148 @@
+{
+  "cell1": {
+    "xl": {
+      "legacy": {
+        "additive": {
+          "n": 50,
+          "exact_inversions": 768,
+          "gold_delivered_text_rate": 0.32,
+          "gold_delivered_id_rate": 0.4,
+          "answerability": 0.72,
+          "mean_best_gold_rank": 6.543478260869565
+        },
+        "off": {
+          "n": 50,
+          "exact_inversions": 1199,
+          "gold_delivered_text_rate": 0.38,
+          "gold_delivered_id_rate": 0.48,
+          "answerability": 0.8,
+          "mean_best_gold_rank": 7.130434782608695
+        }
+      },
+      "off": {
+        "additive": {
+          "n": 50,
+          "exact_inversions": 617,
+          "gold_delivered_text_rate": 0.22,
+          "gold_delivered_id_rate": 0.3,
+          "answerability": 0.54,
+          "mean_best_gold_rank": 5.545454545454546
+        },
+        "off": {
+          "n": 50,
+          "exact_inversions": 0,
+          "gold_delivered_text_rate": 0.34,
+          "gold_delivered_id_rate": 0.44,
+          "answerability": 0.66,
+          "mean_best_gold_rank": 5.9772727272727275
+        }
+      },
+      "scale_relative": {
+        "additive": {
+          "n": 50,
+          "exact_inversions": 740,
+          "gold_delivered_text_rate": 0.32,
+          "gold_delivered_id_rate": 0.42,
+          "answerability": 0.76,
+          "mean_best_gold_rank": 6.391304347826087
+        },
+        "off": {
+          "n": 50,
+          "exact_inversions": 52,
+          "gold_delivered_text_rate": 0.38,
+          "gold_delivered_id_rate": 0.5,
+          "answerability": 0.8,
+          "mean_best_gold_rank": 6.717391304347826
+        }
+      }
+    },
+    "xl_clean": {
+      "legacy": {
+        "additive": {
+          "n": 50,
+          "exact_inversions": 752,
+          "gold_delivered_text_rate": 0.34,
+          "gold_delivered_id_rate": 0.36,
+          "answerability": 0.72,
+          "mean_best_gold_rank": 10.0
+        },
+        "off": {
+          "n": 50,
+          "exact_inversions": 1275,
+          "gold_delivered_text_rate": 0.44,
+          "gold_delivered_id_rate": 0.48,
+          "answerability": 0.8,
+          "mean_best_gold_rank": 9.977777777777778
+        }
+      },
+      "off": {
+        "additive": {
+          "n": 50,
+          "exact_inversions": 543,
+          "gold_delivered_text_rate": 0.26,
+          "gold_delivered_id_rate": 0.28,
+          "answerability": 0.54,
+          "mean_best_gold_rank": 9.644444444444444
+        },
+        "off": {
+          "n": 50,
+          "exact_inversions": 0,
+          "gold_delivered_text_rate": 0.36,
+          "gold_delivered_id_rate": 0.4,
+          "answerability": 0.64,
+          "mean_best_gold_rank": 8.2
+        }
+      },
+      "scale_relative": {
+        "additive": {
+          "n": 50,
+          "exact_inversions": 714,
+          "gold_delivered_text_rate": 0.34,
+          "gold_delivered_id_rate": 0.36,
+          "answerability": 0.8,
+          "mean_best_gold_rank": 9.911111111111111
+        },
+        "off": {
+          "n": 50,
+          "exact_inversions": 97,
+          "gold_delivered_text_rate": 0.38,
+          "gold_delivered_id_rate": 0.42,
+          "answerability": 0.8,
+          "mean_best_gold_rank": 8.155555555555555
+        }
+      }
+    }
+  },
+  "cell2": {
+    "legacy": {
+      "n": 125,
+      "gold_delivered_id_rate": 0.36,
+      "pool_present_rate": 0.856,
+      "gold_delivered_text_rate": 0.376,
+      "n_ranked": 107,
+      "mean_best_gold_rank": 16.373831775700936,
+      "median_best_gold_rank": 10,
+      "mean_gold_answer_overlap": 0.5389690750653039
+    },
+    "off": {
+      "n": 125,
+      "gold_delivered_id_rate": 0.248,
+      "pool_present_rate": 0.856,
+      "gold_delivered_text_rate": 0.304,
+      "n_ranked": 107,
+      "mean_best_gold_rank": 14.476635514018692,
+      "median_best_gold_rank": 11,
+      "mean_gold_answer_overlap": 0.34630408558177606
+    },
+    "scale_relative": {
+      "n": 125,
+      "gold_delivered_id_rate": 0.392,
+      "pool_present_rate": 0.856,
+      "gold_delivered_text_rate": 0.424,
+      "n_ranked": 107,
+      "mean_best_gold_rank": 14.074766355140186,
+      "median_best_gold_rank": 10,
+      "mean_gold_answer_overlap": 0.5384833772043287
+    }
+  }
+}
