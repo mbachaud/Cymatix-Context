@@ -1087,6 +1087,11 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
                 dense_pool_size=config.retrieval.dense_pool_size,
                 fusion_mode=config.retrieval.fusion_mode,
                 rrf_k=config.retrieval.rrf_k,
+                # Issue #260: keep the hot-swap path in sync with the boot path
+                # so an enabled RRF gate survives a fixture swap. Default-inert.
+                rrf_gate_enabled=config.retrieval.rrf_gate_enabled,
+                rrf_gate_top_m=config.retrieval.rrf_gate_top_m,
+                rrf_gate_min_score=config.retrieval.rrf_gate_min_score,
                 dense_weight=config.retrieval.dense_weight,
                 dense_additive_weight=config.retrieval.dense_additive_weight,
                 dense_additive_min_cosine=config.retrieval.dense_additive_min_cosine,

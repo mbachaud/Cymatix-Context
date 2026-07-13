@@ -514,6 +514,27 @@ class RetrievalConfig:
     # floors were calibrated on additive scores.
     fusion_mode: str = "rrf"                # "rrf" | "additive" (legacy)
     rrf_k: int = 60                         # Cormack 2009 default
+    # Issue #260 (2026-07-12): rank/confidence-gated RRF. At true corpus scale
+    # (829K ERB blob) unconditional RRF let the dense arm's near-random deep-rank
+    # signal (median gold rank 50,357 in a ~178K pool) demote a gold that lexical
+    # ranked well — fused gd_id-given-pooled 0.156 (10/64) INVERTED below lexical
+    # 0.333 (21/63) (docs/research/2026-07-11-overnight-bench-results.md P7').
+    # The gate makes an arm's RRF contribution count only where its own evidence
+    # is trustworthy: gate_top_m keeps only a tier's top-M ranks (scale-free,
+    # honest across every arm); gate_min_score keeps only entries with raw arm
+    # score >= floor. Ships INERT — with rrf_gate_enabled=False (or both sub-
+    # levers at their 0 sentinels) fused scores are byte-identical to today. A
+    # default flip is gated on a bench receipt (next window). Only bites arms
+    # with a deep candidate pool (dense ~178K); lexical/tag pools (~50) are
+    # naturally shallower than any sane M, so a uniform top_m leaves them intact.
+    rrf_gate_enabled: bool = False          # master switch; False == byte-identical legacy RRF
+    rrf_gate_top_m: int = 0                 # 0 = ungated; else a tier contributes RRF mass only for its top-M ranks
+    # 0.0 = ungated; else a tier's entry contributes only when its raw arm score
+    # >= this. NOTE: raw scores are non-commensurate across arms (FTS negative-bm25
+    # vs BGE cosine vs tag {0,3}), so a single global float is only honest when the
+    # operator knows the arm mix — prefer rrf_gate_top_m on a mixed-arm store
+    # (issue #260 v1; a per-arm dict floor is deferred).
+    rrf_gate_min_score: float = 0.0
     # Issue #255 (PR-2, 2026-07-10): post-fusion rerank combinator. Under
     # fusion_mode=="rrf" the four rerank classes (authority / sema_boost /
     # party_attr / access_rate) combine with the fused RRF score via this
@@ -1193,6 +1214,11 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             # implementations alive for one release.
             fusion_mode=str(r.get("fusion_mode", cfg.retrieval.fusion_mode)),
             rrf_k=int(r.get("rrf_k", cfg.retrieval.rrf_k)),
+            # Issue #260: rank/confidence-gated RRF. Default-inert (enabled=False,
+            # 0 / 0.0 sentinels) => byte-identical fused scores.
+            rrf_gate_enabled=bool(r.get("rrf_gate_enabled", cfg.retrieval.rrf_gate_enabled)),
+            rrf_gate_top_m=int(r.get("rrf_gate_top_m", cfg.retrieval.rrf_gate_top_m)),
+            rrf_gate_min_score=float(r.get("rrf_gate_min_score", cfg.retrieval.rrf_gate_min_score)),
             # Issue #255 (PR-2): post-fusion rerank combinator + its two
             # scale-free knobs. Default "additive" is byte-identical to the
             # shipped fused+rerank_additive finalization.

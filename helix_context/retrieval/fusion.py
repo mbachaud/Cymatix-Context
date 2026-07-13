@@ -61,9 +61,38 @@ class Fuser:
 
     A tier with ``weight == 0.0`` is silently a no-op — useful for the
     ``test_rrf_with_zero_weights_disables_tier`` case in §10.
+
+    **Rank/score gate (issue #260).** ``gate_top_m`` and ``gate_min_score``
+    restrict *which* of a tier's ranked entries are allowed to contribute RRF
+    mass, per-arm and independently:
+
+    * ``gate_top_m > 0`` — a tier contributes only for its top-``M`` ranks; its
+      rank-(M+1)-and-deeper entries are dropped. This is scale-free (it acts on
+      ranks, not raw scores) so a single value is honest across every arm.
+    * ``gate_min_score != 0.0`` — a tier's entry contributes only when its raw
+      arm score is ``>= gate_min_score``. Raw scores are **non-commensurate
+      across arms** (FTS negative-bm25 vs BGE cosine vs tag {0,3}), so a single
+      float floor is only meaningful when the operator knows the arm mix; prefer
+      ``gate_top_m`` for a mixed-arm store (see issue #260 / the PR).
+
+    Both default to the ungated sentinel (``0`` / ``0.0``), which reproduces the
+    pre-gate accumulation **bit-for-bit** — the gate only ever removes deep /
+    low-confidence contributions, never reorders or reweights kept ones. The
+    motivating failure (829K ERB blob, `docs/research/2026-07-11-overnight-bench-results.md`
+    P7'): unconditional RRF let the dense arm's near-random deep-rank signal
+    (median gold rank 50,357 in a ~178K pool) demote a gold that lexical ranked
+    well — fused gd_id-given-pooled 0.156 (10/64) vs lexical 0.333 (21/63), a
+    sign flip below lexical. Gating the dense arm to its trustworthy top ranks
+    lets it help when confident and fall back to lexical when it is noise.
     """
 
     k: int = DEFAULT_RRF_K
+
+    # Issue #260 rank/score gate. Sentinels 0 / 0.0 == ungated (byte-identical
+    # to the pre-gate Fuser). See the class docstring for the arm-scale caveat
+    # on gate_min_score.
+    gate_top_m: int = 0
+    gate_min_score: float = 0.0
 
     # gene_id -> accumulated fused score
     _scores: Dict[str, float] = field(default_factory=dict)
@@ -100,6 +129,14 @@ class Fuser:
         which is the contract for ``test_rrf_with_zero_weights_disables_tier``.
 
         ``ranked_ids`` may be empty (tier didn't fire); this is a no-op.
+
+        Issue #260 gate: when ``gate_top_m > 0`` this tier contributes only for
+        its top-``M`` ranks; when ``gate_min_score != 0.0`` it contributes only
+        for entries whose raw score is ``>= gate_min_score``. Both gates keep a
+        *prefix* of the ``(score desc, gene_id asc)`` order (ranks ascend, scores
+        are non-increasing), so a single ``break`` is exact for either. With the
+        sentinels (``0`` / ``0.0``) neither branch fires and every entry
+        contributes exactly as before.
         """
         if weight == 0.0:
             # Per §7: zero-weight is the operator's "disable this tier"
@@ -120,7 +157,18 @@ class Fuser:
         )
 
         k = self.k
+        # Issue #260 gate thresholds. 0 / 0.0 are the ungated sentinels — the
+        # ``if top_m``/``if min_score`` truthiness checks then never fire, so the
+        # kept set and every contribution are bit-identical to the pre-gate path.
+        top_m = self.gate_top_m
+        min_score = self.gate_min_score
         for rank, (gid, _score) in enumerate(sorted_pairs, start=1):
+            # sorted_pairs is rank-ascending / score-non-increasing, so once a
+            # gate trips no later entry can qualify — break, don't continue.
+            if top_m and rank > top_m:
+                break
+            if min_score and float(_score) < min_score:
+                break
             # 1-based rank per Cormack 2009. RRF score contribution for
             # this document from this tier:
             contribution = weight / (k + rank)
