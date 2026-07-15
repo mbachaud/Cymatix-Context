@@ -227,6 +227,34 @@ self-contained `load_needles`. If your ERB checkout ships only `all_documents.zi
 produce the `generated_data/{uuid_index.json, sources/}` tree yourself (TODO: the exact generator is not in
 this repo).
 
+#### Worked example — gene → document_id → ERB dsid (illustrative; full-corpus re-ingest pending August)
+
+The blob run's answers did not persist per-answer delivered document IDs (a harness export gap, not a
+pipeline property), so this pass carries **Correctness + Completeness only** — Document Recall / Invalid-Extra-Docs
+could not be scored. The pipeline itself *does* carry document-identity end to end; the branch
+`feat/gene-document-id` makes it explicit. Retrieval now emits a stable per-gene `document_id` on each
+`ContextItem` (v1 = the gene's `source_id`, route-invariant across the blob and sharded paths), and a
+bench-side adapter (`scripts/bench_chain/erb_dsid_adapter.py`) maps that to ERB's `dsid` via the same
+`/sources/`-relative normalization gold resolution already uses. One example, **verified live against the
+existing 829K blob (read-only) and the real 511,958-entry `uuid_index.json`**:
+
+```
+gene_id      : 0ce4a7bd3b68aaa1
+  → document_id (= source_id):
+                 …/sources/confluence/applied-ml-and-evals/eval-harness/adaptive-eval-mixer-scheduling-2026.json
+  → rel-under-sources (erb_dsid_adapter, reusing _rel_after_sources):
+                 confluence/applied-ml-and-evals/eval-harness/adaptive-eval-mixer-scheduling-2026.json
+  → dsid (inverted uuid_index.json lookup):
+                 dsid_57f5a3b6e4424f7cac7b7ee37baa1750   ✓ present in the ERB index
+```
+
+Note the blob's absolute ingest prefix (`F:\tmp\enterprise_rag_500k\sources`) differs from ERB's
+`generated_data/sources`, yet both normalize to the identical rel — which is why the prefix-tolerant
+normalization is the correct reuse. This is a **single illustrative trace**, not a full-protocol Document-Recall
+number: producing the recall column for the submitted answer set requires re-capturing the delivered
+gene_ids per question (a ~15h retrieval pass on the blob) and feeding them through the adapter, or the
+planned **August fresh re-ingest** which produces doc-ID provenance natively.
+
 ### Step 2 — Build the corpus (sharded 500K fixture)
 
 `scripts/build_fixture_matrix.py` has a dedicated `enterprise_rag_500k` profile (9 roots, one per source
