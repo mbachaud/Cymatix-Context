@@ -972,6 +972,15 @@ def main(argv: Optional[list] = None) -> int:
     store = StateStore()
     store.set_launcher(pid=_current_pid())
 
+    # Re-apply a durable tray genome selection (issue #286) BEFORE the
+    # supervisor spawns helix, so the child inherits HELIX_GENOME_PATH.
+    # An explicit env var (bench wrapper, dev shell) still wins.
+    try:
+        from . import genome_registry as _gr_boot
+        _gr_boot.apply_persisted_selection()
+    except Exception:
+        log.warning("Failed to apply persisted genome selection", exc_info=True)
+
     from helix_context.config import load_config
     runtime_cfg = load_config()
     route_helix_via_headroom = _configure_helix_upstream_routing(
