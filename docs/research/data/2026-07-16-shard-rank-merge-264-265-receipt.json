@@ -1,0 +1,92 @@
+{
+  "defect_264": {
+    "rrf/additive": {
+      "impl_rank": 1,
+      "readme_rank": 0,
+      "impl_score": 3.0376,
+      "readme_score": 3.4913,
+      "flip_impl_below_readme": true,
+      "readme_recall@10": 1.0,
+      "readme_mrr": 1.0
+    },
+    "rrf/off": {
+      "impl_rank": 0,
+      "readme_rank": 1,
+      "impl_score": 3.0376,
+      "readme_score": 3.0359,
+      "flip_impl_below_readme": false,
+      "readme_recall@10": 1.0,
+      "readme_mrr": 0.5
+    },
+    "rrf/rank": {
+      "impl_rank": 1,
+      "readme_rank": 0,
+      "impl_score": 3.0376,
+      "readme_score": 3.0359,
+      "flip_impl_below_readme": true,
+      "readme_recall@10": 1.0,
+      "readme_mrr": 1.0
+    },
+    "additive/additive": {
+      "impl_rank": 0,
+      "readme_rank": 1,
+      "impl_score": 13.9155,
+      "readme_score": 9.6859,
+      "flip_impl_below_readme": false,
+      "readme_recall@10": 1.0,
+      "readme_mrr": 0.5
+    },
+    "additive/off": {
+      "impl_rank": 0,
+      "readme_rank": 2,
+      "impl_score": 13.9155,
+      "readme_score": 8.4225,
+      "flip_impl_below_readme": false,
+      "readme_recall@10": 1.0,
+      "readme_mrr": 0.3333
+    },
+    "additive/rank": {
+      "impl_rank": 1,
+      "readme_rank": 0,
+      "impl_score": 13.9155,
+      "readme_score": 8.4225,
+      "flip_impl_below_readme": true,
+      "readme_recall@10": 1.0,
+      "readme_mrr": 1.0
+    }
+  },
+  "defect_265": {
+    "rrf/gidf=0": {
+      "gold_rank": 5,
+      "wrong_rank": 2,
+      "gold_above_wrong": false,
+      "gold_recall@10": 1.0,
+      "gold_mrr": 0.1667
+    },
+    "rrf/gidf=1": {
+      "gold_rank": 5,
+      "wrong_rank": 2,
+      "gold_above_wrong": false,
+      "gold_recall@10": 1.0,
+      "gold_mrr": 0.1667
+    },
+    "additive/gidf=0": {
+      "gold_rank": 1,
+      "wrong_rank": 0,
+      "gold_above_wrong": false,
+      "gold_recall@10": 1.0,
+      "gold_mrr": 0.5
+    },
+    "additive/gidf=1": {
+      "gold_rank": 0,
+      "wrong_rank": 1,
+      "gold_above_wrong": true,
+      "gold_recall@10": 1.0,
+      "gold_mrr": 1.0
+    }
+  },
+  "notes": [
+    "#264: rrf/additive(default) FLIPS the keyword-dense impl below the README (defect reproduced). rrf/off satisfies #121's hard constraint. rrf/rank reorders in rank space (recall-oriented) and does NOT preserve the density winner on this adversarial fixture, because per-shard RRF has already compressed the density margin to a single rank.",
+    "#265: rrf/gidf=1 == rrf/gidf=0 (guard makes the splice a byte-identical no-op under per-shard RRF). additive/gidf=1 lifts gold above wrong (the #182 splice is only defined on the additive/BM25 scale)."
+  ]
+}

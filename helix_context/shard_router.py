@@ -187,6 +187,17 @@ DOC_TYPE_BOOST_BASENAMES = frozenset({
     "index.md",
 })
 
+# Valid modes for the #264 doc-type boost knob. See _apply_doc_type_boost.
+DOC_TYPE_BOOST_MODES = ("additive", "rank", "off")
+
+# #264 "rank" mode: the doc-type lift becomes an extra rank-domain tier fed
+# into the cross-shard Fuser (rather than a magnitude multiply on the
+# IDF-corrected score). weight == the shard tiers' unit weight so an eligible
+# summary doc contributes exactly one rank hit at its corrected-rank — enough
+# to reorder genuine rank near-ties (the RRF regime #121 was meant to help),
+# never enough to leapfrog a doc that already dominates the per-shard ranks.
+DOC_TYPE_RANK_TIER_WEIGHT = 1.0
+
 
 def _doc_type_boost_for(source_id: Optional[str]) -> float:
     """Return the doc-type score multiplier for a candidate's source path.
@@ -333,6 +344,28 @@ def _global_idf_enabled() -> bool:
     if v is None:
         return False
     return v.strip().lower() in ("1", "true", "yes", "on")
+
+
+# #265: process-once suppression notice. The global-IDF splice is undefined on
+# the additive/BM25 magnitude scale when the per-shard stores score in RRF, so
+# the router falls back to the scalar m_shard path even though the flag is set.
+# Warn once (not per query) so a mis-set flag is visible without log spam.
+_GLOBAL_IDF_RRF_WARNED = False
+
+
+def _warn_global_idf_rrf_suppressed() -> None:
+    """Log once that HELIX_SHARD_GLOBAL_IDF is inert under per-shard RRF (#265)."""
+    global _GLOBAL_IDF_RRF_WARNED
+    if _GLOBAL_IDF_RRF_WARNED:
+        return
+    _GLOBAL_IDF_RRF_WARNED = True
+    log.warning(
+        "HELIX_SHARD_GLOBAL_IDF is set but the per-shard Genomes score in "
+        "RRF; the global-IDF lexical splice (raw - old_local_lex + "
+        "new_global_lex) is undefined on the BM25 magnitude scale under RRF "
+        "(#265) and is suppressed. The scalar m_shard IDF correction runs "
+        "instead. Pin fusion_mode='additive' to use the splice."
+    )
 
 
 def _compute_global_idf_map(
@@ -661,6 +694,18 @@ class ShardRouter:
             self._coact_link_boost,
         )
 
+        # #264 doc-type boost mode (default-inert "additive"). Validated here
+        # so a direct ShardRouter(..., doc_type_boost_mode=...) fails fast the
+        # same way a typo in helix.toml does (RetrievalConfig.__post_init__).
+        self._doc_type_boost_mode: str = str(
+            genome_kwargs.get("doc_type_boost_mode", "additive")
+        )
+        if self._doc_type_boost_mode not in DOC_TYPE_BOOST_MODES:
+            raise ValueError(
+                "doc_type_boost_mode must be one of "
+                f"{DOC_TYPE_BOOST_MODES}, got {self._doc_type_boost_mode!r}"
+            )
+
         self.main_conn = open_main_db(main_path)
         self._genome_kwargs = genome_kwargs
         self._shards: Dict[str, Genome] = {}
@@ -736,6 +781,22 @@ class ShardRouter:
         if v is not None:
             return max(0, v)
         return max(0, int(self._coact_reserved_slots))
+
+    def _per_shard_fusion_mode(self) -> str:
+        """Effective ``fusion_mode`` of every per-shard Genome.
+
+        The router forwards ``genome_kwargs`` verbatim to each lazily-opened
+        shard ``Genome`` (see ``_open_shard``), so a single lookup answers
+        "what score-scale do the per-shard ``last_query_scores`` live on?".
+        Absent an explicit kwarg the per-shard Genome falls back to
+        ``KnowledgeStore``'s own default, which is ``"rrf"`` — so production
+        sharded serving runs the shards in RRF unless the operator pins
+        ``fusion_mode="additive"``. This is the honest signal the #264
+        doc-type boost and #265 global-IDF splice both gate on: their
+        additive-scale arithmetic is only well-defined when this is
+        ``"additive"``.
+        """
+        return str(self._genome_kwargs.get("fusion_mode", "rrf"))
 
     # ── Shard lifecycle ─────────────────────────────────────────────
 
@@ -1111,8 +1172,28 @@ class ShardRouter:
         # parts of raw are left untouched. When the flag is off, this whole
         # block is skipped and the legacy scalar path runs unchanged
         # (behaviour-preserving).
+        #
+        # #265 SCALE GUARD (capability guard, not a knob): the splice
+        # ``corrected = raw − old_local_lex + new_global_lex`` mixes lexical
+        # sub-scores on the FTS5 bm25() magnitude scale (0–6, FTS5_LEXICAL_CAP)
+        # into ``raw``. That is only scale-coherent when ``raw`` is itself on
+        # the additive/BM25 magnitude scale. Production per-shard Genomes now
+        # score in RRF (``raw`` ≈ Σ 1/(k+rank) ≈ 0.0x), where subtracting a
+        # BM25-scale ``old_lex`` and adding a BM25-scale ``new_lex`` swamps the
+        # ~100× smaller RRF ``raw`` — the dense/tier signal in ``raw`` is
+        # obliterated and the result lives on a nonsensical mixed scale. The
+        # global-IDF splice is therefore UNDEFINED under per-shard RRF, so we
+        # hard-gate it to additive-mode shards. When the flag is truthy but the
+        # shards run RRF the router silently keeps the scalar ``m_shard`` path
+        # (honest no-op) and logs once. Define rrf-native global-IDF semantics
+        # (global IDF as a rank input to the per-shard fusion) to lift this.
+        _flag_on = _global_idf_enabled()
+        _per_shard_additive = self._per_shard_fusion_mode() == "additive"
+        if _flag_on and not _per_shard_additive and len(shard_ranked) > 1:
+            _warn_global_idf_rrf_suppressed()
         use_global_idf = (
-            _global_idf_enabled()
+            _flag_on
+            and _per_shard_additive
             and len(shard_ranked) > 1
             and bool(idf_terms)
         )
@@ -1174,17 +1255,34 @@ class ShardRouter:
                 if gid not in corrected or adj > corrected[gid]:
                     corrected[gid] = adj
 
-        # ── Intra-shard doc-type boost (#121) ───────────────────────
-        # Lift README/CLAUDE/INDEX summary docs by a small multiplier
-        # so a high-level doc that holds the answer but lost the
-        # intra-shard keyword-density race can still clear the merge
-        # truncation. Gated to the genuine cross-shard merge (≥2
-        # shards) so the single-shard fast path stays byte-identical;
-        # see DOC_TYPE_BOOST commentary above. The multiplier is small
-        # enough that it only re-orders near-tied candidates — a deep
-        # implementation file that genuinely out-scores a README keeps
-        # its lead, so no regression on implementation-file queries.
-        if len(shard_ranked) > 1:
+        # ── Intra-shard doc-type boost (#121, mode-gated #264) ──────
+        # Lift README/CLAUDE/INDEX summary docs so a high-level doc that
+        # holds the answer but lost the intra-shard keyword-density race
+        # can still clear the merge truncation. Gated to the genuine
+        # cross-shard merge (≥2 shards) so the single-shard fast path
+        # stays byte-identical; see DOC_TYPE_BOOST commentary above.
+        #
+        # #264: HOW the lift is applied is now selectable via
+        # ``doc_type_boost_mode`` (default-inert "additive"):
+        #   "additive" — the shipped fixed ×DOC_TYPE_BOOST magnitude
+        #       multiply on the IDF-corrected score. Calibrated on
+        #       additive/BM25-scale margins where it only re-orders
+        #       near-ties. Under per-shard RRF the margins compress to
+        #       ~1.6% so the multiply becomes decisive on nearly every
+        #       pair (the #264 defect) — but this is the byte-identical
+        #       default, so nothing changes until an operator flips.
+        #   "off" — no lift (the RRF-honest escape; the flip case
+        #       resolves because the unboosted impl file already leads).
+        #   "rank" — feed the eligible docs into the cross-shard Fuser
+        #       as an extra rank-domain tier (below, before all_scores)
+        #       instead of multiplying ``corrected``; the final sort then
+        #       keys primarily on the rank-fused score. Scale-free: a
+        #       summary doc can only reorder genuine RANK near-ties, never
+        #       leapfrog a doc that dominates the per-shard ranks.
+        rank_mode_active = (
+            self._doc_type_boost_mode == "rank" and len(shard_ranked) > 1
+        )
+        if self._doc_type_boost_mode == "additive" and len(shard_ranked) > 1:
             for gid in corrected:
                 doc = merged.get(gid)
                 if doc is None:
@@ -1192,6 +1290,26 @@ class ShardRouter:
                 boost = _doc_type_boost_for(getattr(doc, "source_id", None))
                 if boost != 1.0:
                     corrected[gid] *= boost
+        elif rank_mode_active:
+            # Rank-domain lift: register a synthetic "doc_type" tier of the
+            # boost-eligible candidates, ranked by their (unboosted) corrected
+            # score, into the SAME Fuser that already carries every per-shard
+            # tier. Its RRF mass (1/(k+rank)) is bounded by construction, so it
+            # can promote a near-rank-tied summary doc but not overturn a
+            # decisive per-shard-rank lead. ``corrected`` is left UNtouched so
+            # the published additive-scale scores stay honest.
+            eligible = [
+                (gid, corrected[gid])
+                for gid in corrected
+                if _doc_type_boost_for(
+                    getattr(merged.get(gid), "source_id", None)
+                ) != 1.0
+            ]
+            if eligible:
+                fuser.add_tier(
+                    "doc_type", eligible, weight=DOC_TYPE_RANK_TIER_WEIGHT,
+                )
+        # "off" — no lift applied.
 
         rrf_all = fuser.all_scores()
 
@@ -1220,9 +1338,19 @@ class ShardRouter:
             for gid in corrected:
                 shard_name, raw, m = best_pre_boost.get(gid, ("", 0.0, 1.0))
                 doc = merged.get(gid)
+                # #264: the reported multiplier is only folded into ``corrected``
+                # under the default "additive" mode. In "rank" mode the lift is a
+                # Fuser tier (reflected in ``rrf`` below, not ``corrected``); in
+                # "off" mode there is no lift. Report 1.0 in those modes so the
+                # ``corrected == raw * m_shard * doc_type_boost`` identity the
+                # #181 diag harness asserts stays exact and honest.
                 boost = (
                     _doc_type_boost_for(getattr(doc, "source_id", None))
-                    if (doc is not None and len(shard_ranked) > 1)
+                    if (
+                        doc is not None
+                        and len(shard_ranked) > 1
+                        and self._doc_type_boost_mode == "additive"
+                    )
                     else 1.0
                 )
                 row = {
@@ -1256,14 +1384,32 @@ class ShardRouter:
         # Secondary tiebreaker: RRF score desc (stable for ties in
         # the corrected score, e.g., 6 shards' rank-1 hitting the cap).
         # Tertiary: gene_id asc (deterministic).
-        ranked_ids_full = sorted(
-            corrected,
-            key=lambda gid: (
-                -corrected.get(gid, 0.0),
-                -rrf_all.get(gid, 0.0),
-                gid,
-            ),
-        )
+        #
+        # #264 "rank" mode inverts the primary/secondary keys: the rank-fused
+        # score (now carrying the doc_type tier mass) leads, with the
+        # additive-scale ``corrected`` as the tiebreaker. This is the whole
+        # point of rank mode — deciding the merge in rank space so the
+        # doc-type lift acts on ranks, not compressed RRF magnitudes. The
+        # default ("additive") and "off" modes keep the shipped corrected-led
+        # ordering byte-for-byte.
+        if rank_mode_active:
+            ranked_ids_full = sorted(
+                corrected,
+                key=lambda gid: (
+                    -rrf_all.get(gid, 0.0),
+                    -corrected.get(gid, 0.0),
+                    gid,
+                ),
+            )
+        else:
+            ranked_ids_full = sorted(
+                corrected,
+                key=lambda gid: (
+                    -corrected.get(gid, 0.0),
+                    -rrf_all.get(gid, 0.0),
+                    gid,
+                ),
+            )
         # Match Genome.query_docs contract: return up to ``max_genes * 2``
         # candidates so the downstream assembler (splice + co-activation +
         # freshness gate) has the same depth to work with as a blob-mode

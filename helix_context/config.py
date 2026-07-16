@@ -674,8 +674,38 @@ class RetrievalConfig:
     #   doc's corrected score); 0.5 == the shipped constant.
     coact_reserved_slots: int = 0
     coact_link_boost: float = 0.5
+    # ── #121 doc-type boost mode (#264) ───────────────────────────────
+    # Router-only. Controls how the README/CLAUDE/INDEX summary-doc lift
+    # (#121) is applied on the cross-shard merge. DEFAULT-INERT: "additive"
+    # reproduces the shipped fixed ×DOC_TYPE_BOOST (1.15) post-multiply on
+    # the IDF-corrected score, byte-for-byte. The 1.15× multiplier was
+    # calibrated on additive/BM25-scale per-shard margins; production
+    # per-shard Genomes now score in RRF (fusion_mode="rrf"), which
+    # compresses intra-shard margins to ~1.6% so the fixed multiplier
+    # becomes decisive on nearly every candidate pair (#264). Two honest
+    # RRF-native alternatives, both bench-gated behind this knob:
+    #   "off"  — skip the boost entirely (the flip case resolves because
+    #            the unboosted impl file already out-ranks the README).
+    #   "rank" — apply the boost as a rank-domain tier input to the
+    #            cross-shard Fuser (#264 candidate b) instead of a
+    #            magnitude multiply; final merge sorts primarily by the
+    #            rank-fused score so a summary doc can only reorder genuine
+    #            rank near-ties, never leapfrog a doc that dominates the
+    #            shard ranks. Scale-free under both fusion modes.
+    # Inert on blob/single-shard paths (no ShardRouter constructed).
+    doc_type_boost_mode: str = "additive"
 
     def __post_init__(self) -> None:
+        # #264: validate the doc-type boost mode now so a typo in
+        # [retrieval] doc_type_boost_mode fails fast at config load rather
+        # than silently at merge time. The ShardRouter re-validates the
+        # fanned kwarg for the direct-construction path.
+        if self.doc_type_boost_mode not in ("additive", "rank", "off"):
+            raise ValueError(
+                "[retrieval] doc_type_boost_mode must be 'additive', 'rank' "
+                f"or 'off', got {self.doc_type_boost_mode!r}"
+            )
+
         # Issue #255 (classifier-gated combinator): fail loud at config load on
         # a typo'd class key or combinator name in rerank_combinator_by_class,
         # rather than silently at query time. Empty map (the default) is a
@@ -1288,6 +1318,8 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             shard_fetch_scale_with_shards=bool(r.get("shard_fetch_scale_with_shards", cfg.retrieval.shard_fetch_scale_with_shards)),
             coact_reserved_slots=int(r.get("coact_reserved_slots", cfg.retrieval.coact_reserved_slots)),
             coact_link_boost=float(r.get("coact_link_boost", cfg.retrieval.coact_link_boost)),
+            # #264: doc-type boost mode (default-inert "additive").
+            doc_type_boost_mode=str(r.get("doc_type_boost_mode", cfg.retrieval.doc_type_boost_mode)),
         )
 
     # Stage 4 (2026-05-08) abstain config — global vs per_classifier mode.
