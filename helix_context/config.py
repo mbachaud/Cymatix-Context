@@ -189,6 +189,16 @@ class BudgetConfig:
     # _compute_splice_target and encoding/headroom_bridge.
     # _query_aware_trim (truncation keeps query-term lines either way).
     splice_target_chars: int = 0
+    # -- Issue #207 item 4: budget-tier constants -> knobs (default-inert). -
+    # The four fields below expose the hard-coded tier constants in
+    # pipeline/tier_logic.py. Defaults reproduce the prior literals
+    # byte-for-byte. All were calibrated on owner-corpus probes at the
+    # additive/BM25 score scale; exposing them does NOT recalibrate them
+    # (recalibration rides the #287 abstain-calibration work).
+    tier_tight_ratio: float = 3.0  # Issue #207 item 4: top/mean ratio at-or-above which retrieval enters TIGHT tier (top 3 docs). Prior literal 3.0 in pipeline/tier_logic.py.
+    tier_focused_ratio: float = 1.8  # Issue #207 item 4: top/mean ratio at-or-above which retrieval enters FOCUSED tier (top 6 docs). Prior literal 1.8 in pipeline/tier_logic.py.
+    tier_hard_floor_frac: float = 0.15  # Issue #207 item 4: score-gate hard floor — drop candidates scoring below this fraction of the top score (they move to the shadow pool at 0.5x weight). Prior literal 0.15 in pipeline/tier_logic.py.
+    tier_lagrange_frac: float = 0.7  # Issue #207 item 4: Lagrange pull-back threshold — a shadow-pool doc needs standalone score >= this fraction of the winners' floor (plus <20% co-activation overlap) to be pulled back. Prior literal 0.7 in pipeline/tier_logic.py.
 
 
 @dataclass
@@ -747,8 +757,18 @@ class AbstainConfig:
       - ``"per_classifier"`` consults ``per_class[cls]`` (with ``default``
         fallback). Loader RAISES ``ConfigError`` if any required block is
         missing.
+
+    Issue #207 item 4 (default-inert): ``ratio_threshold`` /
+    ``ratio_threshold_rrf_norm`` expose the previously hard-coded ABSTAIN
+    ratio gates in ``pipeline/tier_logic.py``. NOTE: the abstain *absolute*
+    floors (``AbstainClassFloors``) were additive-calibrated and are bypassed
+    under RRF fusion — the ratio gate runs alone there (issue #115). Exposing
+    these thresholds as knobs does NOT recalibrate them; recalibration is
+    #287's scope.
     """
     mode: str = "global"
+    ratio_threshold: float = 1.8  # Issue #207 item 4: ABSTAIN ratio gate under additive fusion (legacy top/mean ratio). Prior literal ABSTAIN_RATIO_THRESHOLD=1.8 in pipeline/tier_logic.py. Additive-calibrated; exposing it does not recalibrate it (#287).
+    ratio_threshold_rrf_norm: float = 1.5  # Issue #207 item 4: ABSTAIN ratio gate under RRF fusion (baseline-subtracted norm ratio, issue #115). Prior literal ABSTAIN_RATIO_THRESHOLD_RRF_NORM=1.5 in pipeline/tier_logic.py. Under RRF the absolute floors are bypassed and this gate runs alone.
     per_class: Dict[str, AbstainClassFloors] = field(default_factory=dict)
 
     def floors_for(self, cls: Optional[str]) -> AbstainClassFloors:
@@ -978,6 +998,36 @@ def _warn_unknown(section: str, raw_section: Dict[str, Any], dataclass_type: typ
         log.warning("Unknown-key check failed for [%s]", section, exc_info=True)
 
 
+def _positive_float(
+    section: str, key: str, raw_section: Dict[str, Any], default: float
+) -> float:
+    """Read a float knob that must be strictly positive; warn + fall back.
+
+    Issue #207 item 4: the tier/abstain ratio-and-fraction knobs would
+    silently break tiering at 0 or below (every query TIGHT, or the whole
+    candidate set floor-gated), so a bad value falls back to the shipped
+    default instead of propagating — mirroring the ``[abstain].mode``
+    warn-and-fallback style.
+    """
+    if key not in raw_section:
+        return default
+    value = raw_section[key]
+    try:
+        v = float(value)
+    except (TypeError, ValueError):
+        log.warning(
+            "[%s].%s=%r is not a number; using default %s",
+            section, key, value, default,
+        )
+        return default
+    if v <= 0:
+        log.warning(
+            "[%s].%s=%s must be > 0; using default %s", section, key, v, default,
+        )
+        return default
+    return v
+
+
 def load_config(path: Optional[str] = None) -> HelixConfig:
     """
     Load helix.toml from the given path, or auto-discover from cwd / env.
@@ -1048,6 +1098,15 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             foveated_base_chars=int(b.get("foveated_base_chars", cfg.budget.foveated_base_chars)),
             slate_char_budget=int(b.get("slate_char_budget", cfg.budget.slate_char_budget)),
             splice_target_chars=int(b.get("splice_target_chars", cfg.budget.splice_target_chars)),
+            # Issue #207 item 4: tier knobs (default-inert; must be > 0).
+            tier_tight_ratio=_positive_float(
+                "budget", "tier_tight_ratio", b, cfg.budget.tier_tight_ratio),
+            tier_focused_ratio=_positive_float(
+                "budget", "tier_focused_ratio", b, cfg.budget.tier_focused_ratio),
+            tier_hard_floor_frac=_positive_float(
+                "budget", "tier_hard_floor_frac", b, cfg.budget.tier_hard_floor_frac),
+            tier_lagrange_frac=_positive_float(
+                "budget", "tier_lagrange_frac", b, cfg.budget.tier_lagrange_frac),
         )
 
     # KnowledgeStore
@@ -1303,6 +1362,14 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
                     "[abstain].mode=%r is invalid; falling back to 'global'", mode
                 )
                 mode = "global"
+            # Issue #207 item 4: ABSTAIN ratio-gate knobs (default-inert;
+            # must be > 0). Scalar keys — never mistaken for class
+            # sub-tables by the discovery loop below (dict check).
+            ratio_threshold = _positive_float(
+                "abstain", "ratio_threshold", a, AbstainConfig.ratio_threshold)
+            ratio_threshold_rrf_norm = _positive_float(
+                "abstain", "ratio_threshold_rrf_norm", a,
+                AbstainConfig.ratio_threshold_rrf_norm)
             per_class: Dict[str, AbstainClassFloors] = {}
             # Discover sub-tables — any [abstain.<cls>] block.
             for cls, block in a.items():
@@ -1329,7 +1396,12 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
                         "[abstain].mode='per_classifier' requires an "
                         "[abstain.default] block (loader §6); none found."
                     )
-            cfg.abstain = AbstainConfig(mode=mode, per_class=per_class)
+            cfg.abstain = AbstainConfig(
+                mode=mode,
+                ratio_threshold=ratio_threshold,
+                ratio_threshold_rrf_norm=ratio_threshold_rrf_norm,
+                per_class=per_class,
+            )
 
     # Session (CWoLa session/party fallback — 2026-04-13 fix for always-A bucket bug)
     if "session" in raw:

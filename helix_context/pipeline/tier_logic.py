@@ -46,6 +46,12 @@ def apply_budget_tiers(
     *,
     abstain_enabled: bool = True,
     fusion_mode: str = "additive",
+    tight_ratio: float = 3.0,
+    focused_ratio: float = 1.8,
+    hard_floor_frac: float = 0.15,
+    lagrange_frac: float = 0.7,
+    abstain_ratio_threshold: float = 1.8,
+    abstain_ratio_threshold_rrf_norm: float = 1.5,
 ) -> TierResult:
     """Apply TIGHT / FOCUSED / BROAD tiering + score floor + shadow pool.
 
@@ -63,6 +69,19 @@ def apply_budget_tiers(
       - BROAD   (ratio < 1.8):  top max_genes     -- ~15K total tokens
 
     Score-gate floor: always drop documents scoring < 15% of top score.
+
+    Issue #207 item 4 (default-inert knobs): the tier constants above are
+    keyword parameters whose defaults reproduce the prior hard-coded
+    literals byte-for-byte — ``tight_ratio`` (3.0), ``focused_ratio``
+    (1.8), ``hard_floor_frac`` (0.15), ``lagrange_frac`` (0.7),
+    ``abstain_ratio_threshold`` (1.8) and
+    ``abstain_ratio_threshold_rrf_norm`` (1.5). They thread from
+    ``[budget]`` / ``[abstain]`` in helix.toml via the context_manager
+    call site. All were calibrated on owner-corpus probes at the
+    additive/BM25 score scale; under RRF the abstain *absolute* floors
+    are bypassed and the (normalized) ratio gate runs alone (issue
+    #115). Exposing these as knobs does NOT recalibrate them —
+    recalibration is #287's scope.
 
     Returns a :class:`TierResult` with the trimmed candidates, tier name,
     budget estimate, and shadow pool + scores. When the ABSTAIN gate fires,
@@ -86,11 +105,11 @@ def apply_budget_tiers(
     mean_score = sum(scores.values()) / len(scores) if scores else 1.0
     ratio = top_score / max(mean_score, 0.01)
 
-    # Hard floor: drop anything below 15% of top
+    # Hard floor: drop anything below hard_floor_frac (default 15%) of top
     # Shadow scores: preserve cut documents' scores with 0.5x weight
     # so Lagrange check and harmonic binning can pull them back
     # if the landscape changes downstream.
-    floor = top_score * 0.15
+    floor = top_score * hard_floor_frac
     gated = [g for g in candidates if scores.get(g.gene_id, 0) >= floor]
     shadow_pool: List[Gene] = [g for g in candidates if scores.get(g.gene_id, 0) < floor]
     if len(gated) >= 3:
@@ -141,8 +160,13 @@ def apply_budget_tiers(
     # case (1.61) while still rejecting genuinely-tied score curves
     # (mostly-tied = 1.40 → abstain). Additive (BM25/blob) keeps the legacy
     # ratio + 1.8 threshold so blob behavior is byte-identical.
-    ABSTAIN_RATIO_THRESHOLD = 1.8
-    ABSTAIN_RATIO_THRESHOLD_RRF_NORM = 1.5
+    #
+    # Issue #207 item 4: both thresholds are now the
+    # ``abstain_ratio_threshold`` / ``abstain_ratio_threshold_rrf_norm``
+    # keyword parameters ([abstain] ratio_threshold /
+    # ratio_threshold_rrf_norm); defaults 1.8 / 1.5 == the prior literals.
+    ABSTAIN_RATIO_THRESHOLD = abstain_ratio_threshold
+    ABSTAIN_RATIO_THRESHOLD_RRF_NORM = abstain_ratio_threshold_rrf_norm
     if fusion_mode == "rrf":
         min_score = min(scores.values())
         denom = mean_score - min_score
@@ -225,7 +249,7 @@ def apply_budget_tiers(
     budget_tokens_est = 15000
 
     if (
-        ratio >= 3.0
+        ratio >= tight_ratio
         and (skip_absolute_floors or top_score >= TIGHT_SCORE_FLOOR)
         and len(candidates) >= 3
     ):
@@ -235,7 +259,7 @@ def apply_budget_tiers(
         budget_tier = "tight"
         budget_tokens_est = 6000
     elif (
-        ratio >= 1.8
+        ratio >= focused_ratio
         and (skip_absolute_floors or top_score >= FOCUSED_SCORE_FLOOR)
         and len(candidates) >= 6
     ):
@@ -278,7 +302,7 @@ def apply_budget_tiers(
             for g in candidates:
                 winner_coact.update(g.epigenetics.co_activated_with or [])
             winner_floor = min(scores.get(g.gene_id, 0) for g in candidates)
-            lagrange_threshold = winner_floor * 0.7
+            lagrange_threshold = winner_floor * lagrange_frac
 
             # Rank shadow pool by standalone score
             shadow_ranked = sorted(
