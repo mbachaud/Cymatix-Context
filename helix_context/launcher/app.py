@@ -30,6 +30,7 @@ from .supervisor import (
     NotRunning,
     ShutdownTimeout,
     SupervisorError,
+    stop_on_quit,
 )
 from .update_check import UpdateChecker
 from .headroom_supervisor import (
@@ -1335,11 +1336,9 @@ def _run_tray_native_combined(
         log.info("Tray Quit — destroying window")
         quitting.set()
 
-        try:
-            if supervisor.is_running():
-                supervisor.stop(reason="launcher quit from tray menu (native)")
-        except Exception:
-            log.warning("Helix stop during quit failed", exc_info=True)
+        # Only stop a helix this launcher spawned — adopted instances
+        # (started outside the launcher) survive Quit.
+        stop_on_quit(supervisor, reason="launcher quit from tray menu (native)")
 
         w = window_holder[0]
         if w is not None:

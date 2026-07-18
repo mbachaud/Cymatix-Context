@@ -2,10 +2,12 @@
 Auto-memory → helix sync.
 
 Watches Claude Code auto-memory directories and ingests each `.md` file
-as a document. Persona/agent attribution is automatic via helix's existing
-4-layer federation (HELIX_USER / HELIX_AGENT / HELIX_DEVICE / HELIX_ORG)
-— whichever env vars are set in the syncer's process become the document's
-provenance tags at ingest time.
+as a document. Persona/agent attribution uses helix's existing 4-layer
+federation (HELIX_USER / HELIX_AGENT / HELIX_DEVICE / HELIX_ORG) — the
+syncer forwards whichever of those env vars are set in ITS process on
+every /ingest call. (The server is a separate process and resolves any
+missing fields from its own env, so without forwarding, provenance would
+silently fall back to the server's identity.)
 
 Why: before mem_sync, nothing from live sessions reached the knowledge store.
 Every conversation summary and feedback note was trapped in file-based
@@ -18,7 +20,11 @@ Sync model:
     - Poll each watched dir every `sync_interval_s` seconds
     - Hash each .md file; compare against last-known hash
     - Ingest new / changed → POST to /ingest with source_id = "mem://{path}"
-    - Deleted files → mark document lifecycle tier=2 (tombstone, excluded from retrieval)
+    - Deleted files → POST /admin/genes/tombstone (lifecycle tier=2,
+      excluded from hot-tier retrieval). Deletion detection is scoped to
+      the watch dirs actually scanned this pass — the state file is shared
+      by every syncer on the machine, so entries belonging to another
+      agent's watch-set must survive untouched.
     - MEMORY.md itself is skipped (index only, churn heavy)
 
 Opt-out: any memory file with `private: true` in frontmatter is skipped.
@@ -132,9 +138,6 @@ def _ingest_file(
         "mem_description": fields.get("description", ""),
         "ingested_at": int(time.time()),
     }
-    # Pass agent_kind explicitly; other federation tags (HELIX_AGENT /
-    # HELIX_USER / HELIX_DEVICE / HELIX_ORG) are read server-side from
-    # the syncer process's env.
     payload: Dict = {
         "content": content,
         "content_type": _infer_content_type(path, fields),
@@ -142,6 +145,20 @@ def _ingest_file(
     }
     if agent_kind:
         payload["agent_kind"] = agent_kind
+
+    # Forward the syncer's 4-layer identity explicitly. The server resolves
+    # missing fields from its OWN process env — the syncer runs as a
+    # separate process, so without forwarding, provenance would fall back
+    # to the server's identity instead of the agent that wrote the memory.
+    identity = {
+        "participant_handle": os.environ.get("HELIX_USER"),
+        "agent_handle": os.environ.get("HELIX_AGENT"),
+        "party_id": os.environ.get("HELIX_DEVICE") or os.environ.get("HELIX_PARTY"),
+        "org_id": os.environ.get("HELIX_ORG"),
+    }
+    for field, value in identity.items():
+        if value:
+            payload[field] = value
 
     data = json.dumps(payload).encode("utf-8")
     req = urllib.request.Request(
@@ -162,27 +179,41 @@ def _ingest_file(
     return None
 
 
-def _tombstone_file(helix_url: str, path: Path) -> None:
-    """Mark a removed memory's document as heterochromatin (retrieval-excluded).
+def _tombstone_file(helix_url: str, path: Path) -> bool:
+    """Mark a removed memory's documents as heterochromatin (retrieval-excluded).
 
-    Uses /admin/genes/tombstone if available; else just removes from
-    local state (document stays live but won't be re-synced). Non-fatal.
+    POSTs /admin/genes/tombstone with each source_id the file may have
+    been ingested under: the absolute path first (``metadata["path"]``
+    wins over ``metadata["source_id"]`` at ingest, so that is what the
+    gene actually stored), then the legacy ``mem://{name}`` alias.
+    Non-fatal — returns True iff any genes were demoted.
     """
-    source_id = f"mem://{path.name}"
-    try:
-        req = urllib.request.Request(
-            f"{helix_url.rstrip('/')}/admin/genes/tombstone",
-            data=json.dumps({"source_id": source_id}).encode("utf-8"),
-            headers={"Content-Type": "application/json"},
-            method="POST",
-        )
-        with urllib.request.urlopen(req, timeout=10):
-            pass
-    except Exception:
-        # Endpoint may not exist yet — drop from local state so we stop
-        # tracking it, but leave the document alone server-side.
-        log.info("mem_sync tombstone skipped for %s (endpoint missing or down)",
-                 path.name)
+    candidates = [str(path), f"mem://{path.name}"]
+    for source_id in candidates:
+        try:
+            req = urllib.request.Request(
+                f"{helix_url.rstrip('/')}/admin/genes/tombstone",
+                data=json.dumps({"source_id": source_id}).encode("utf-8"),
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                body = json.loads(resp.read().decode("utf-8"))
+            if body.get("tombstoned", 0) > 0:
+                log.info("mem_sync tombstoned %d gene(s) for %s (source_id=%s)",
+                         body["tombstoned"], path.name, source_id)
+                return True
+        except urllib.error.HTTPError as exc:
+            # Pre-tombstone-route server — drop from local state so we
+            # stop tracking it, but leave the documents alone server-side.
+            log.warning("mem_sync tombstone HTTP %s for %s (source_id=%s) — "
+                        "documents stay live server-side",
+                        exc.code, path.name, source_id)
+        except Exception:
+            log.warning("mem_sync tombstone failed for %s", path.name,
+                        exc_info=True)
+    log.info("mem_sync tombstone: no genes matched for %s", path.name)
+    return False
 
 
 # ── Scanner ──────────────────────────────────────────────────────────
@@ -211,14 +242,17 @@ def sync_once(
                 "deleted": 0, "errors": 0}
 
     live_paths: set[str] = set()
+    scanned_roots: List[Path] = []
 
     for d in watch_dirs:
         dp = Path(d)
         if not dp.exists():
             log.warning("mem_sync watch dir missing: %s", d)
             continue
+        scanned_roots.append(dp.resolve())
         for md in sorted(dp.glob("*.md")):
-            key = str(md.resolve())
+            md = md.resolve()
+            key = str(md)
             live_paths.add(key)
             try:
                 text = md.read_text(encoding="utf-8")
@@ -253,13 +287,21 @@ def sync_once(
                 log.info("mem_sync CHANGED %s → %d gene(s)",
                          md.name, len(gene_ids))
 
-    # Detect deletes: anything in state not seen this pass
+    # Detect deletes: entries under a dir we scanned THIS pass that are
+    # gone. The state file is shared by every syncer on the machine, so
+    # entries belonging to another watch-set (a different agent's dirs,
+    # or a dir that is temporarily missing) are out of scope and must
+    # survive untouched.
     for key in list(state.keys()):
-        if key not in live_paths:
-            counters["deleted"] += 1
-            _tombstone_file(helix_url, Path(key))
-            del state[key]
-            log.info("mem_sync DELETED %s", Path(key).name)
+        if key in live_paths:
+            continue
+        parent = Path(key).parent
+        if not any(parent == root for root in scanned_roots):
+            continue
+        counters["deleted"] += 1
+        _tombstone_file(helix_url, Path(key))
+        del state[key]
+        log.info("mem_sync DELETED %s", Path(key).name)
 
     _save_state(state)
     return counters
