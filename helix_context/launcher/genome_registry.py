@@ -21,6 +21,7 @@ menu open. Results are cheap to recompute when a genome actually changes.
 
 from __future__ import annotations
 
+import json
 import logging
 import os
 import sqlite3
@@ -259,20 +260,123 @@ def _read_genome_info(path: Path) -> GenomeInfo:
     return info
 
 
+# ── durable selection state (issue #286) ──────────────────────────────
+#
+# `select_genome` used to set HELIX_GENOME_PATH in the launcher process env
+# ONLY, so a Quit + relaunch (desktop icon, new shell) silently reverted to
+# the helix.toml genome. We now also write the choice to a tiny JSON file
+# co-located with the launcher state (~/.helix/launcher/selected_genome.json)
+# and consult it in `active_genome_path`, so the tray's genome choice sticks.
+
+_SELECTION_FILENAME = "selected_genome.json"
+
+
+def _selection_state_path() -> Path:
+    """Path to the durable genome-selection record.
+
+    Co-located with the launcher state at ``~/.helix/launcher/``. Honors
+    ``HELIX_LAUNCHER_STATE_DIR`` so tests (and unusual deployments) can
+    redirect it without monkeypatching.
+    """
+    override = os.environ.get("HELIX_LAUNCHER_STATE_DIR")
+    base = Path(override) if override else (Path.home() / ".helix" / "launcher")
+    return base / _SELECTION_FILENAME
+
+
+def _read_selected_genome() -> Optional[Path]:
+    """Return the durably-persisted genome selection, or None.
+
+    Returns None (rather than a stale path) if the file is missing,
+    unreadable, or points at a genome that no longer exists on disk.
+    """
+    path = _selection_state_path()
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        return None
+    except Exception:
+        log.debug("Failed to read genome selection state %s", path, exc_info=True)
+        return None
+    candidate = raw.get("genome_path") if isinstance(raw, dict) else None
+    if not candidate:
+        return None
+    resolved = Path(candidate)
+    if resolved.exists() and resolved.is_file():
+        return resolved
+    log.debug("Persisted genome %s no longer exists; ignoring", resolved)
+    return None
+
+
+def _write_selected_genome(path: Path) -> None:
+    """Atomically persist `path` as the durable genome selection."""
+    dest = _selection_state_path()
+    try:
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        tmp = dest.with_name(dest.name + ".tmp")
+        tmp.write_text(
+            json.dumps({"genome_path": str(path)}, indent=2),
+            encoding="utf-8",
+        )
+        os.replace(tmp, dest)
+    except Exception:
+        # Persistence is best-effort — the in-process env var (set by
+        # select_genome) still drives the current session even if the
+        # durable write fails.
+        log.warning("Failed to persist genome selection to %s", dest, exc_info=True)
+
+
+def clear_selection() -> None:
+    """Remove the durable genome-selection record (used by tests / reset)."""
+    try:
+        _selection_state_path().unlink()
+    except FileNotFoundError:
+        pass
+    except Exception:
+        log.debug("Failed to clear genome selection state", exc_info=True)
+
+
+def apply_persisted_selection() -> Optional[Path]:
+    """Seed HELIX_GENOME_PATH from the durable selection at launcher start.
+
+    Called once early in launcher startup (before the supervisor spawns
+    helix) so the spawned helix subprocess inherits the persisted genome
+    via its environment. An explicit HELIX_GENOME_PATH already in the
+    environment always wins — a bench wrapper .bat or a developer's shell
+    export must not be overridden by a stale tray selection.
+
+    Returns the applied path, or None if nothing was applied.
+    """
+    if os.environ.get("HELIX_GENOME_PATH"):
+        return None
+    selected = _read_selected_genome()
+    if selected is None:
+        return None
+    resolved = str(selected.resolve())
+    os.environ["HELIX_GENOME_PATH"] = resolved
+    log.info("Applied persisted genome selection: %s", resolved)
+    return selected.resolve()
+
+
 # ── public API ────────────────────────────────────────────────────────
 
 
 def active_genome_path() -> Path:
     """Resolve the genome path the supervised helix will load on next start.
 
-    Resolution order matches `helix_context.config.load_config`:
-      1. HELIX_GENOME_PATH env var
-      2. [genome] path in helix.toml
-      3. Default "genome.db" relative to the helix repo root
+    Resolution order:
+      1. HELIX_GENOME_PATH env var (explicit override — matches
+         `helix_context.config.load_config`)
+      2. Durable tray selection (~/.helix/launcher/selected_genome.json,
+         issue #286) — survives Quit + relaunch
+      3. [genome] path in helix.toml
+      4. Default "genome.db" relative to the helix repo root
     """
     env = os.environ.get("HELIX_GENOME_PATH")
     if env:
         return Path(env).resolve()
+    persisted = _read_selected_genome()
+    if persisted is not None:
+        return persisted.resolve()
     try:
         from helix_context.config import load_config
         cfg = load_config()
@@ -318,14 +422,17 @@ def select_genome(path: Path) -> Path:
     """Mark `path` as the genome to use on the next helix start.
 
     Sets `HELIX_GENOME_PATH` in the current process so the supervisor's
-    next subprocess.Popen inherits it. Does NOT restart helix — callers
-    that want a hot swap must invoke `supervisor.restart()` separately.
-    Returns the resolved absolute path that was written.
+    next subprocess.Popen inherits it, AND writes a durable selection
+    record (issue #286) so the choice survives a launcher Quit + relaunch.
+    Does NOT restart helix — callers that want a hot swap must invoke
+    `supervisor.restart()` separately. Returns the resolved absolute path
+    that was written.
     """
     resolved = Path(path).resolve()
     if not resolved.exists() or not resolved.is_file():
         raise FileNotFoundError(f"Genome not found: {resolved}")
     os.environ["HELIX_GENOME_PATH"] = str(resolved)
+    _write_selected_genome(resolved)
     log.info("Selected genome: %s", resolved)
     return resolved
 

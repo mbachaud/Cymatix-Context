@@ -128,17 +128,21 @@ def _confirm_genome_switch(target: Path) -> bool:
 
     Returns True on confirmation, False on decline.
 
-    On Windows the prompt is rendered via the Win32 MessageBoxW API —
-    pystray dispatches menu callbacks on the icon's message-pump thread,
-    and spinning up tkinter from that thread tends to deadlock (Tk wants
-    its own event loop and competes with pystray's Win32 dispatch). The
-    MessageBoxW call is a single Win32 modal that nests cleanly inside
-    the existing pump.
+    MUST be called OFF the pystray message-pump thread (issue #286). The
+    Win32 MessageBoxW modal runs its own message loop on the calling
+    thread; when that thread is pystray's icon pump, the two loops
+    contend and button clicks are never dispatched — the dialog appears
+    wedged and the whole tray goes dead. Callers spawn a dedicated
+    worker thread (see `HelixTrayIcon._genome_switch_flow`) so the modal
+    gets a thread of its own.
 
-    On non-Windows platforms we fall back to tkinter (cross-platform
-    stdlib). If both backends fail we treat the click as consent —
-    matching the rest of the launcher, where clicking the menu item is
-    already considered an explicit signal.
+    On Windows the prompt is a Win32 MessageBoxW with MB_SETFOREGROUND |
+    MB_TOPMOST so it surfaces in front even under `pythonw` (no console,
+    no owning HWND). On non-Windows platforms we fall back to tkinter
+    (cross-platform stdlib).
+
+    If both backends fail we default to DECLINE (False). This action
+    restarts the server; a dialog we couldn't render is not consent.
     """
     title = "Helix Launcher — switch database?"
     body = (
@@ -150,13 +154,20 @@ def _confirm_genome_switch(target: Path) -> bool:
     if sys.platform == "win32":
         try:
             import ctypes
-            # MB_YESNO=0x4, MB_ICONQUESTION=0x20, MB_TOPMOST=0x40000
-            MB_FLAGS = 0x4 | 0x20 | 0x40000
+            # MB_YESNO=0x4, MB_ICONQUESTION=0x20,
+            # MB_SETFOREGROUND=0x10000, MB_TOPMOST=0x40000. SETFOREGROUND
+            # forces the modal to the front even without an owner HWND.
+            MB_FLAGS = 0x4 | 0x20 | 0x10000 | 0x40000
             IDYES = 6
             result = ctypes.windll.user32.MessageBoxW(
                 None, body, title, MB_FLAGS,
             )
-            return result == IDYES
+            if result == 0:
+                # 0 == the call failed (e.g. no interactive window station).
+                # Fall through to tkinter rather than silently declining.
+                log.debug("MessageBoxW returned 0; falling through to tkinter")
+            else:
+                return result == IDYES
         except Exception:
             log.debug("MessageBoxW failed; falling through to tkinter",
                       exc_info=True)
@@ -175,9 +186,11 @@ def _confirm_genome_switch(target: Path) -> bool:
                 pass
         return bool(answer)
     except Exception:
-        log.debug("Confirm dialog unavailable; treating click as consent",
-                  exc_info=True)
-        return True
+        # No usable dialog backend. This restarts the server, so a failed
+        # confirmation must NOT be treated as consent (issue #286).
+        log.warning("Confirm dialog unavailable; declining genome switch",
+                    exc_info=True)
+        return False
 
 
 def _fire_hardware_fallback_balloon(tray_icon) -> None:
@@ -280,33 +293,46 @@ class HelixTrayIcon:
     def _switch_genome(self, genome_path: Path):
         """Return a pystray-compatible handler that switches to `genome_path`.
 
-        The restart runs on a background thread so the pystray message
-        pump stays responsive — `supervisor.restart()` can take 30 s
-        (graceful stop + cold-start `/stats` warmup), and freezing the
-        tray icon that whole window looks indistinguishable from "the
-        click did nothing" to the user. We show a balloon immediately
-        on Yes so the operator gets feedback the moment they confirm,
-        and a second balloon (success or failure) when the restart
-        worker finishes.
+        CRITICAL (issue #286): the handler must NOT block the pystray
+        message pump. The confirmation dialog (Win32 MessageBoxW) runs its
+        own modal message loop; on the pump thread it contends with
+        pystray's Win32 dispatch and button clicks are never processed —
+        the dialog wedges and the whole tray goes dead. So the handler
+        spawns a dedicated daemon thread for the ENTIRE confirm → select →
+        restart flow and returns immediately, keeping the icon live.
 
-        Every branch logs at INFO so an operator inspecting
-        `~/.helix/launcher/launcher.log` can see exactly which step
-        ran — no more silent menu clicks.
+        We show a balloon on Yes so the operator gets feedback the moment
+        they confirm, and a second balloon (success or failure) when the
+        restart worker finishes. Every branch logs at INFO so an operator
+        inspecting `~/.helix/launcher/launcher.log` can see exactly which
+        step ran — no more silent menu clicks.
         """
         def _h(icon, item):  # noqa: ARG001 — pystray API
             log.info("Tray: switch-genome click received for %s", genome_path)
-            try:
-                self._handle_genome_click(Path(genome_path))
-            except Exception:
-                # pystray's menu callback wrapper swallows exceptions —
-                # log them ourselves so the operator can debug a broken
-                # click from launcher.log alone.
-                log.error("Tray: switch-genome handler crashed", exc_info=True)
+            worker = threading.Thread(
+                target=self._genome_switch_flow,
+                args=(Path(genome_path),),
+                name="helix-genome-switch",
+                daemon=True,
+            )
+            worker.start()
         return _h
 
-    def _handle_genome_click(self, target: Path) -> None:
-        """Confirm + immediate balloon + spawn the restart worker."""
-        if not _confirm_genome_switch(target):
+    def _genome_switch_flow(self, target: Path) -> None:
+        """Off-pump worker: confirm, persist selection, then restart helix.
+
+        Runs on a dedicated daemon thread (never the pystray pump, issue
+        #286) so the blocking confirm dialog AND the 10-30 s supervisor
+        restart cannot freeze the tray icon.
+        """
+        try:
+            confirmed = _confirm_genome_switch(target)
+        except Exception:
+            # pystray's callback wrapper is gone (we're off-pump), so log
+            # the crash ourselves — the operator debugs from launcher.log.
+            log.error("Tray: genome-switch confirm crashed", exc_info=True)
+            return
+        if not confirmed:
             log.info("Tray: genome switch cancelled by user (%s)", target)
             return
         log.info("Tray: genome switch confirmed for %s", target)
@@ -328,14 +354,7 @@ class HelixTrayIcon:
             f"Restarting helix on {resolved.name}…",
             title="Helix: switching database",
         )
-
-        worker = threading.Thread(
-            target=self._switch_worker,
-            args=(resolved,),
-            name="helix-genome-switch",
-            daemon=True,
-        )
-        worker.start()
+        self._switch_worker(resolved)
 
     def _switch_worker(self, resolved: Path) -> None:
         """Background worker: stop + start helix, then notify + refresh menu.
