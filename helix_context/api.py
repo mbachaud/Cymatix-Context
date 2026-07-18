@@ -264,6 +264,7 @@ class HelixSession:
             read_only=not learn,
             decoder_override=decoder_mode,
             caller_model_class=caller_model_class,
+            max_genes=k,
         )
         # ContextWindow.metadata carries know/miss when populated by
         # the route layer. The api boundary surfaces them as first-

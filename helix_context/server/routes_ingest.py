@@ -28,7 +28,18 @@ def setup_ingest_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
         import time as _time
         helix._last_activity_ts = _time.time()
 
-        data = await request.json()
+        try:
+            data = await request.json()
+        except Exception:
+            return JSONResponse(
+                {"error": "Request body must be valid JSON"},
+                status_code=400,
+            )
+        if not isinstance(data, dict):
+            return JSONResponse(
+                {"error": "Request body must be a JSON object"},
+                status_code=400,
+            )
         content = data.get("content", "")
         content_type = data.get("content_type", "text")
         metadata = data.get("metadata")
@@ -43,6 +54,11 @@ def setup_ingest_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
         authored_tz = data.get("authored_tz") or _local_timezone()
 
         # Validate content BEFORE federation writes.
+        if not isinstance(content, str):
+            return JSONResponse(
+                {"error": "content must be a string"},
+                status_code=400,
+            )
         if not content or not content.strip():
             return JSONResponse(
                 {"error": "No content provided"},
