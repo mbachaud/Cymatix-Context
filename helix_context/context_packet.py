@@ -691,6 +691,22 @@ def _attach_know_or_miss(
         metadata={"query": query, "ratio": ratio},
     )
 
+    # Freshness verdict → trust decision (2026-07-18 bugbash). The packet
+    # already labeled every item verified / stale_risk / needs_refresh
+    # above, but the know gate never saw that verdict — a packet whose
+    # ONLY evidence was needs_refresh still shipped know=true at high
+    # confidence. Surgical (issue #287 HOLD — no gate redesign, no beta
+    # refit): an all-needs_refresh packet threads the existing Stage-7
+    # ``freshness_status="stale"`` branch (demotes to
+    # MissBlock(reason="stale") with the top source as refresh target);
+    # a no-verified packet that still yields a KnowBlock is flagged
+    # soft_stale and confidence-capped at emit_floor below.
+    _items = list(packet.verified) + list(packet.stale_risk)
+    _has_verified = bool(packet.verified)
+    _all_needs_refresh = bool(_items) and all(
+        item.status == "needs_refresh" for item in _items
+    )
+
     # Tier contributions for lex/dense agreement. ``build_context_packet``
     # surfaces the genome/router's ``last_tier_contributions`` (the
     # {gene_id: {tier_name: score}} map set by knowledge_store.py /
@@ -713,7 +729,19 @@ def _attach_know_or_miss(
         top_gene=top_gene,
         ratio=ratio,
         calibration=cal,
+        freshness_status="stale" if _all_needs_refresh else None,
     )
+    if isinstance(block, KnowBlock) and _items and not _has_verified:
+        # Unverified-fresh evidence only (stale_risk / needs_refresh with
+        # no source_id to demote on): keep the pointer but flag it and
+        # cap confidence at the emission floor so it cannot read as a
+        # high-confidence know=true.
+        block = block.model_copy(
+            update={
+                "soft_stale": True,
+                "confidence": min(float(block.confidence), float(cal.emit_floor)),
+            }
+        )
     if isinstance(block, KnowBlock):
         packet.know = block
         packet.miss = None
