@@ -1,0 +1,135 @@
+{
+  "title": "Helix — GenAI (OTel gen_ai.* standard)",
+  "uid": "helix-genai",
+  "editable": true,
+  "schemaVersion": 39,
+  "time": {"from": "now-1h", "to": "now"},
+  "refresh": "10s",
+  "tags": ["helix", "genai", "otel"],
+  "description": "OpenTelemetry GenAI semantic-convention surface for every LLM-touching call site in helix-context: the /v1/chat/completions proxy, the compressor backends (Ollama / Anthropic / LiteLLM), and the local embedding/scoring backends (BGE-M3 / SEMA / SPLADE / DeBERTa / NLI). Metrics: helix_genai_client_token_usage, helix_genai_time_to_first_chunk_seconds, helix_genai_cost_usd, helix_genai_finish_reasons_total, helix_context_cache_outcome_total. Span attributes follow https://opentelemetry.io/docs/specs/semconv/gen-ai/.",
+  "links": [
+    {"title": "Helix — Operations Overview", "type": "dashboards", "tags": ["helix", "overview"],   "asDropdown": false, "icon": "external link"},
+    {"title": "Helix — Internals",          "type": "dashboards", "tags": ["helix", "internals"], "asDropdown": false, "icon": "external link"}
+  ],
+  "panels": [
+    {"type": "row", "title": "LLM Traffic", "gridPos": {"h": 1, "w": 24, "x": 0, "y": 0}},
+    {
+      "type": "timeseries",
+      "title": "Calls/s by provider (gen_ai.provider.name)",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 1},
+      "targets": [{"expr": "sum by (gen_ai_provider_name) (rate(helix_genai_client_token_usage_count{gen_ai_token_type=\"input\"}[5m]))", "legendFormat": "{{gen_ai_provider_name}}", "refId": "A"}],
+      "fieldConfig": {"defaults": {"unit": "reqps"}}
+    },
+    {
+      "type": "timeseries",
+      "title": "Calls/s by operation (gen_ai.operation.name)",
+      "description": "chat | text_generation | embeddings | rerank | classify",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 1},
+      "targets": [{"expr": "sum by (gen_ai_operation_name) (rate(helix_genai_client_token_usage_count{gen_ai_token_type=\"input\"}[5m]))", "legendFormat": "{{gen_ai_operation_name}}", "refId": "A"}],
+      "fieldConfig": {"defaults": {"unit": "reqps"}}
+    },
+    {
+      "type": "table",
+      "title": "Top 10 models by call rate",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 9},
+      "targets": [{"expr": "topk(10, sum by (gen_ai_request_model) (rate(helix_genai_client_token_usage_count{gen_ai_token_type=\"input\"}[5m])))", "instant": true, "format": "table", "refId": "A"}],
+      "fieldConfig": {"defaults": {"unit": "reqps"}}
+    },
+    {
+      "type": "timeseries",
+      "title": "Errors by provider",
+      "description": "From OTel span error.type attribute, surfaced via the genai_finish_reasons counter where finish_reason=\"error\".",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 9},
+      "targets": [{"expr": "sum by (finish_reason) (rate(helix_genai_finish_reasons_total{finish_reason=\"error\"}[5m]))", "legendFormat": "errors {{finish_reason}}", "refId": "A"}],
+      "fieldConfig": {"defaults": {"unit": "ops"}}
+    },
+    {"type": "row", "title": "Tokens & Cost", "gridPos": {"h": 1, "w": 24, "x": 0, "y": 17}},
+    {
+      "type": "timeseries",
+      "title": "Tokens/min by direction (input | output | cached | reasoning)",
+      "description": "OTel gen_ai.client.token.usage histogram, summed by token type. cached = prompt-cache hit; reasoning = chain-of-thought tokens billed but not user-visible (o-series, certain Claude tiers).",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 9, "w": 12, "x": 0, "y": 18},
+      "targets": [{"expr": "60 * sum by (gen_ai_token_type) (rate(helix_genai_client_token_usage_sum[5m]))", "legendFormat": "{{gen_ai_token_type}}", "refId": "A"}],
+      "fieldConfig": {"defaults": {"unit": "short", "custom": {"stacking": {"mode": "normal"}}}}
+    },
+    {
+      "type": "timeseries",
+      "title": "Cost USD/min (sum)",
+      "description": "Estimated USD spend rate from helix_genai_cost_usd histogram. Local models contribute 0; cloud models priced via helix_context.genai_telemetry.PRICE_TABLE.",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 9, "w": 12, "x": 12, "y": 18},
+      "targets": [{"expr": "60 * sum(rate(helix_genai_cost_usd_sum[5m]))", "legendFormat": "USD/min", "refId": "A"}],
+      "fieldConfig": {"defaults": {"unit": "currencyUSD"}}
+    },
+    {
+      "type": "table",
+      "title": "Cost by model (last 1h, USD)",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 9, "w": 12, "x": 0, "y": 27},
+      "targets": [{"expr": "topk(10, sum by (gen_ai_request_model) (increase(helix_genai_cost_usd_sum[1h])))", "instant": true, "format": "table", "refId": "A"}],
+      "fieldConfig": {"defaults": {"unit": "currencyUSD"}}
+    },
+    {
+      "type": "timeseries",
+      "title": "Cache hit ratio = cached / (input + cached)",
+      "description": "Fraction of input tokens served from the prompt cache. Higher is better; >50% on stable workloads is achievable on Anthropic / OpenAI cached prefixes.",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 9, "w": 12, "x": 12, "y": 27},
+      "targets": [{"expr": "sum(rate(helix_genai_client_token_usage_sum{gen_ai_token_type=\"cached\"}[5m])) / clamp_min(sum(rate(helix_genai_client_token_usage_sum{gen_ai_token_type=~\"input|cached\"}[5m])), 1)", "legendFormat": "hit ratio", "refId": "A"}],
+      "fieldConfig": {"defaults": {"unit": "percentunit", "min": 0, "max": 1}}
+    },
+    {"type": "row", "title": "Latency (TTFT + Total)", "gridPos": {"h": 1, "w": 24, "x": 0, "y": 36}},
+    {
+      "type": "timeseries",
+      "title": "TTFT p50 / p95 / p99 by model",
+      "description": "Time-to-first-chunk for streaming responses (gen_ai.response.time_to_first_chunk). The user-perceived latency — distinct from total wall time which is the cost metric.",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 9, "w": 12, "x": 0, "y": 37},
+      "targets": [
+        {"expr": "histogram_quantile(0.50, sum by (le, gen_ai_request_model) (rate(helix_genai_time_to_first_chunk_seconds_bucket[5m])))", "legendFormat": "p50 {{gen_ai_request_model}}", "refId": "A"},
+        {"expr": "histogram_quantile(0.95, sum by (le, gen_ai_request_model) (rate(helix_genai_time_to_first_chunk_seconds_bucket[5m])))", "legendFormat": "p95 {{gen_ai_request_model}}", "refId": "B"},
+        {"expr": "histogram_quantile(0.99, sum by (le, gen_ai_request_model) (rate(helix_genai_time_to_first_chunk_seconds_bucket[5m])))", "legendFormat": "p99 {{gen_ai_request_model}}", "refId": "C"}
+      ],
+      "fieldConfig": {"defaults": {"unit": "s"}}
+    },
+    {
+      "type": "heatmap",
+      "title": "TTFT distribution (heatmap)",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 9, "w": 12, "x": 12, "y": 37},
+      "targets": [{"expr": "sum by (le) (rate(helix_genai_time_to_first_chunk_seconds_bucket[5m]))", "format": "heatmap", "legendFormat": "{{le}}", "refId": "A"}],
+      "options": {"calculate": false, "yAxis": {"axisPlacement": "left", "unit": "s"}, "color": {"scheme": "Spectral", "mode": "scheme"}}
+    },
+    {"type": "row", "title": "Outcomes", "gridPos": {"h": 1, "w": 24, "x": 0, "y": 46}},
+    {
+      "type": "timeseries",
+      "title": "Finish reasons",
+      "description": "stop = model stopped naturally; length = hit max_tokens; tool_calls = model emitted a tool call; content_filter = safety refusal; error = upstream error.",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 47},
+      "targets": [{"expr": "sum by (finish_reason) (rate(helix_genai_finish_reasons_total[5m]))", "legendFormat": "{{finish_reason}}", "refId": "A"}],
+      "fieldConfig": {"defaults": {"unit": "ops", "custom": {"stacking": {"mode": "normal"}}}}
+    },
+    {
+      "type": "piechart",
+      "title": "Cache outcome distribution (last 1h)",
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 6, "x": 12, "y": 47},
+      "targets": [{"expr": "sum by (outcome) (increase(helix_context_cache_outcome_total[1h]))", "legendFormat": "{{outcome}}", "refId": "A"}],
+      "options": {"pieType": "donut", "reduceOptions": {"calcs": ["lastNotNull"]}, "legend": {"displayMode": "list", "placement": "right", "values": ["percent", "value"]}}
+    },
+    {
+      "type": "logs",
+      "title": "Proxy call log (helix.proxy) — follow trace_id from a slow span here",
+      "datasource": "Loki",
+      "gridPos": {"h": 8, "w": 6, "x": 18, "y": 47},
+      "targets": [{"expr": "{logger=\"helix.proxy\"} |= \"proxy.call\"", "refId": "A"}],
+      "options": {"showTime": true, "wrapLogMessage": true, "sortOrder": "Descending"}
+    }
+  ]
+}

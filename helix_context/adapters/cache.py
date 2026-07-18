@@ -43,6 +43,18 @@ from .dal import DAL, FetchResult
 log = logging.getLogger("helix.adapters.cache")
 
 
+def _record_cache_outcome_safe(outcome: str) -> None:
+    """Best-effort bump of ``helix_context_cache_outcome_total`` (#209).
+
+    No-op instrument when telemetry is off; never raises into fetch().
+    """
+    try:
+        from ..telemetry.genai_telemetry import record_cache_outcome
+        record_cache_outcome(outcome)
+    except Exception:
+        log.debug("cache outcome telemetry failed", exc_info=True)
+
+
 # Default TTLs per volatility_class (seconds). Mirror the values in
 # helix_context/context_packet.py's freshness scoring.
 DEFAULT_TTLS_S = {
@@ -116,6 +128,7 @@ class CachedDAL:
         """
         ttl = self._resolve_ttl(ttl_s, volatility_class)
         now = time.time()
+        _had_stale_entry = False
 
         if not bypass_cache:
             with self._lock:
@@ -125,6 +138,7 @@ class CachedDAL:
                         # LRU — move to end
                         self._store.move_to_end(source_id)
                         self._hits += 1
+                        _record_cache_outcome_safe("hit")
                         meta = dict(entry.result.meta)
                         meta["cache_hit"] = True
                         meta["cached_at"] = entry.cached_at
@@ -133,11 +147,17 @@ class CachedDAL:
                     else:
                         # Stale — drop and fall through to refetch
                         del self._store[source_id]
+                        _had_stale_entry = True
 
         # Miss or bypass — delegate to underlying DAL
         result = self._dal.fetch(source_id, **kwargs)
         if not bypass_cache:
             self._misses += 1
+            # OTel counter (#209): a stale-then-refetched entry reports
+            # "partial" (the cache had the key but not fresh bytes);
+            # deliberate bypasses are not an effectiveness signal and
+            # are not recorded.
+            _record_cache_outcome_safe("partial" if _had_stale_entry else "miss")
         # Only cache successful fetches; errors shouldn't poison.
         if result.ok:
             self._put(source_id, result, ttl, now)

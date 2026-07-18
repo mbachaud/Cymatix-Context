@@ -86,17 +86,23 @@ class _RecordingMeter:
 
 def _registered_instruments(monkeypatch):
     """Call every lazy getter against a recording meter."""
+    from helix_context.telemetry import genai_telemetry
+
     rec = _RecordingMeter()
     monkeypatch.setattr(otel, "meter", rec)
     monkeypatch.setattr(otel, "_instruments", {})
-    for name in dir(otel):
-        if name.startswith("_"):
-            continue
-        if not name.endswith(("_histogram", "_counter", "_gauge")):
-            continue
-        getter = getattr(otel, name)
-        if callable(getter):
-            getter()
+    # genai_telemetry (#209) keeps its own lazy-getter cache but resolves
+    # otel.meter at creation time, so the same recorder captures it.
+    monkeypatch.setattr(genai_telemetry, "_instruments", {})
+    for mod in (otel, genai_telemetry):
+        for name in dir(mod):
+            if name.startswith("_"):
+                continue
+            if not name.endswith(("_histogram", "_counter", "_gauge")):
+                continue
+            getter = getattr(mod, name)
+            if callable(getter):
+                getter()
     assert rec.created, "no instruments registered — getter scan broke"
     return rec.created
 
