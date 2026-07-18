@@ -1707,6 +1707,16 @@ class HelixContextManager:
         )
 
         # Step 2: Retrieve (knowledge store query + pending buffer + optional cold tier)
+        #
+        # 2026-07-18 bugbash (score/result atomicity): ``genome.
+        # last_query_scores`` / ``last_tier_contributions`` are instance-
+        # global and republished by EVERY retrieval, so a concurrent
+        # request could swap query B's scores under query A's candidates
+        # between stages. Snapshot both under the store lock immediately
+        # after THIS request's retrieval; ``query_scores`` /
+        # ``tier_contribs`` are then threaded through the refiners,
+        # tiering, assembly, and health instead of re-reading the shared
+        # attribute.
         with _pipeline_stage_span("express"), _stage_timer("express"):
             if len(_sub_queries) == 1:
                 candidates = self._retrieve(
@@ -1716,6 +1726,14 @@ class HelixContextManager:
                     query_type=query_type,
                     rerank_combinator=_combinator_override,
                 )
+                with self.genome._last_query_scores_lock:
+                    query_scores: Dict[str, float] = dict(
+                        self.genome.last_query_scores or {}
+                    )
+                    tier_contribs: Dict = dict(
+                        getattr(self.genome, "last_tier_contributions", None)
+                        or {}
+                    )
             else:
                 import concurrent.futures
 
@@ -1730,20 +1748,28 @@ class HelixContextManager:
                     )
                     with self.genome._last_query_scores_lock:
                         scores = dict(self.genome.last_query_scores or {})
-                    return genes, scores
+                        contribs = dict(
+                            getattr(
+                                self.genome, "last_tier_contributions", None,
+                            ) or {}
+                        )
+                    return genes, scores, contribs
 
                 with concurrent.futures.ThreadPoolExecutor(
                     max_workers=len(_sub_queries)
                 ) as pool:
-                    pairs = list(pool.map(_run_sub, _sub_queries))
+                    triples = list(pool.map(_run_sub, _sub_queries))
 
-                sub_results = [genes for genes, _ in pairs]
+                sub_results = [genes for genes, _, _ in triples]
                 base_scores: dict = {}
-                for _, scores in pairs:
+                tier_contribs = {}
+                for _, scores, contribs in triples:
                     base_scores.update(scores)
+                    tier_contribs.update(contribs)
 
                 candidates = _merge_subquery_candidates(sub_results, base_scores)
                 candidates = candidates[: max_genes * 2]
+                query_scores = base_scores
 
         # Stage 4 (2026-05-08): hoist classifier-derived `cls` so per-classifier
         # floor and alpha lookups work regardless of which downstream branch
@@ -1799,6 +1825,7 @@ class HelixContextManager:
                 use_harmonic_bin=True,
                 use_tcm=True,
                 allow_rerank=True,
+                query_scores=query_scores,
             )
 
         # Dynamic budget tiers — delegates to pipeline.tier_logic.
@@ -1812,7 +1839,7 @@ class HelixContextManager:
         _abstain_cfg = getattr(self.config, "abstain", None) or AbstainConfig()
         _tier = _apply_tiers(
             candidates,
-            self.genome.last_query_scores,
+            query_scores,
             _cls_floors,
             abstain_enabled=abstain_enabled,
             fusion_mode=getattr(self.genome, "_fusion_mode", "additive"),
@@ -1950,7 +1977,7 @@ class HelixContextManager:
         # branch keeps the original "collect during candidate loop" approach
         # for byte-identity with pre-Stage-5 output.
         if caller_model_class == "small_moe":
-            _slate_scores = self.genome.last_query_scores or {}
+            _slate_scores = query_scores or {}
             _best_first = sorted(
                 candidates,
                 key=lambda _g: _slate_scores.get(_g.gene_id, 0),
@@ -2036,6 +2063,8 @@ class HelixContextManager:
                 decoder_prompt_override=effective_decoder_prompt,
                 respect_caller_order=foveated_active,
                 caller_model_class=caller_model_class,
+                query_scores=query_scores,
+                tier_contributions=tier_contribs,
             )
 
         # Annotate window with dynamic budget tier (for telemetry/benchmarks)
@@ -2826,10 +2855,16 @@ class HelixContextManager:
         use_harmonic_bin: bool = True,
         use_tcm: bool = True,
         allow_rerank: bool = True,
+        query_scores: Optional[Dict[str, float]] = None,
     ) -> Tuple[List[Gene], Dict[str, Dict[str, float]]]:
         """Apply post-retrieve candidate refiners before assembly or fingerprinting.
 
         Delegates to :func:`scoring.blend.apply_candidate_refiners`.
+
+        ``query_scores`` is the request-scoped score snapshot (2026-07-18
+        bugbash, score/result atomicity): when provided, the blend layer
+        reads/mutates it instead of the shared ``genome.last_query_scores``
+        so a concurrent request cannot cross-wire scores mid-turn.
         """
         from .scoring.blend import apply_candidate_refiners as _blend
         return _blend(
@@ -2851,6 +2886,7 @@ class HelixContextManager:
             ray_trace_theta=getattr(self.config.retrieval, "ray_trace_theta", False),
             theta_weight=self.config.retrieval.theta_weight,
             blend_mode=self._blend_mode,
+            query_scores=query_scores,
         )
 
     # -- Internal: Step 5 (assemble) -----------------------------------
@@ -2866,9 +2902,20 @@ class HelixContextManager:
         decoder_prompt_override: Optional[str] = None,
         respect_caller_order: bool = False,
         caller_model_class: str = "generic",
+        query_scores: Optional[Dict[str, float]] = None,
+        tier_contributions: Optional[Dict[str, Dict[str, float]]] = None,
     ) -> ContextWindow:
         """
         Sort spliced parts, join with dividers, wrap in expressed_context tags.
+
+        ``query_scores`` / ``tier_contributions`` (2026-07-18 bugbash,
+        score/result atomicity): the caller's request-scoped snapshots of
+        ``genome.last_query_scores`` / ``last_tier_contributions``. When
+        provided, ordering, legibility, budget trim, and health all read
+        these instead of the shared genome attributes, so a concurrent
+        request's retrieval cannot swap the maps mid-assembly. ``None``
+        (legacy direct callers / tests) falls back to the live genome
+        state.
 
         MoE mode: sorts documents by retrieval score (highest first) instead of
         sequence_index, so the best match lands in position 0 — inside every
@@ -2892,6 +2939,12 @@ class HelixContextManager:
                         attention.
         """
         use_slate = answer_slate is not None
+        # Request-scoped score map with legacy fallback (see docstring).
+        _req_scores = (
+            query_scores
+            if query_scores is not None
+            else (self.genome.last_query_scores or {})
+        )
         if respect_caller_order:
             # Foveated-splice path (spec §5): the caller has already arranged
             # candidates in the desired emission order (e.g., reverse-rank
@@ -2902,7 +2955,7 @@ class HelixContextManager:
             # Stage 5 §4: frontier callers want forward rank-1-first ordering
             # (long-context attention prefers narrative coherence with the
             # top evidence at the front of the prompt).
-            scores = self.genome.last_query_scores or {}
+            scores = _req_scores
             sorted_genes = sorted(
                 candidates,
                 key=lambda g: scores.get(g.gene_id, 0),
@@ -2911,7 +2964,7 @@ class HelixContextManager:
         elif use_slate:
             # MoE/small-model: relevance-first ordering — best document at position 0
             # so it's within every sliding-window attention layer
-            scores = self.genome.last_query_scores or {}
+            scores = _req_scores
             sorted_genes = sorted(
                 candidates,
                 key=lambda g: scores.get(g.gene_id, 0),
@@ -2933,8 +2986,12 @@ class HelixContextManager:
             and caller_model_class != "small_moe"
         )
         if legibility_on:
-            _leg_scores = self.genome.last_query_scores or {}
-            _leg_tiers = getattr(self.genome, "last_tier_contributions", None) or {}
+            _leg_scores = _req_scores
+            _leg_tiers = (
+                tier_contributions
+                if tier_contributions is not None
+                else (getattr(self.genome, "last_tier_contributions", None) or {})
+            )
             _expressed_scores = {
                 g.gene_id: _leg_scores.get(g.gene_id, 0.0) for g in sorted_genes
             }
@@ -3110,8 +3167,8 @@ class HelixContextManager:
             # ordering (the default for narrative coherence on factual /
             # multi_hop queries), parts[-1] is whichever document came last
             # by source coordinate — often the highest-scored document if
-            # it sits near the end of a file. Score-aware lookup via
-            # genome.last_query_scores ensures the actual lowest-ranked
+            # it sits near the end of a file. Score-aware lookup via the
+            # request-scoped score map ensures the actual lowest-ranked
             # candidate is dropped first.
             #
             # Foveated reverse-rank path (respect_caller_order=True, spec §5):
@@ -3127,7 +3184,7 @@ class HelixContextManager:
             # sorted_genes is kept aligned with parts so the post-trim
             # delivered_ids / expressed_gene_ids slices stay correct under
             # both directions.
-            trim_scores = self.genome.last_query_scores or {}
+            trim_scores = _req_scores
             while est_tokens > budget and len(parts) > 1:
                 if respect_caller_order:
                     parts.pop(0)
@@ -3174,7 +3231,20 @@ class HelixContextManager:
             query_terms = [t.lower() for t in query_signals[0] + query_signals[1]]
         else:
             query_terms = query.lower().split()
-        health = self._compute_health(query_terms, candidates, compressed_chars, relation_graph)
+        # 2026-07-18 bugbash: health must describe the post-trim,
+        # actually-returned set — not the pre-trim candidate pool. Filter
+        # ``candidates`` (which arrives in score-desc order; the
+        # freshness_top1 contract) down to the documents that survived
+        # the budget trim, preserving that order.
+        _delivered_ids = {g.gene_id for g in sorted_genes[:len(parts)]}
+        if len(_delivered_ids) < len(candidates):
+            health_genes = [g for g in candidates if g.gene_id in _delivered_ids]
+        else:
+            health_genes = candidates
+        health = self._compute_health(
+            query_terms, health_genes, compressed_chars, relation_graph,
+            query_scores=_req_scores,
+        )
 
         # #209 phase 1: observe the splice compression ratio actually
         # shipped (identical to ContextWindow.compression_ratio below).
@@ -3212,9 +3282,15 @@ class HelixContextManager:
         candidates: List[Gene],
         compressed_chars: int,
         relation_graph: Optional[Dict] = None,
+        query_scores: Optional[Dict[str, float]] = None,
     ) -> ContextHealth:
         """
         Compute the delta-epsilon context health signal.
+
+        ``query_scores`` (2026-07-18 bugbash, score/result atomicity): the
+        caller's request-scoped score snapshot. ``None`` (legacy direct
+        callers / tests) falls back to the live
+        ``genome.last_query_scores``.
 
         Measures four dimensions:
             coverage  — fraction of query terms that matched knowledge store tags
@@ -3237,6 +3313,12 @@ class HelixContextManager:
         genome_stats = self.genome.stats()
         total_genes = genome_stats.get("total_genes", 0)
         genes_expressed = len(candidates)
+        # Request-scoped score map with legacy fallback (see docstring).
+        _scores_map = (
+            query_scores
+            if query_scores is not None
+            else (getattr(self.genome, "last_query_scores", None) or {})
+        )
 
         # Coverage: what fraction of query terms were found in the knowledge store?
         # Checks tags, FTS5 content matches, and key-value extracts.
@@ -3293,9 +3375,7 @@ class HelixContextManager:
             # candidates are passed in score-desc order; freshness_top1
             # is the head of that list (NOT min, NOT mean).
             freshness_top1 = decays[0]
-            scores_for_weight = (
-                getattr(self.genome, "last_query_scores", None) or {}
-            )
+            scores_for_weight = _scores_map
             raw_scores = [
                 max(float(scores_for_weight.get(g.gene_id, 0.0) or 0.0), 0.0)
                 for g in candidates
@@ -3377,7 +3457,7 @@ class HelixContextManager:
         top_dominance = 0.0
         path_token_coverage = 0.0
         try:
-            scores_map = getattr(self.genome, "last_query_scores", None) or {}
+            scores_map = _scores_map
             if candidates and scores_map:
                 all_scored = sorted(scores_map.values(), reverse=True)
                 ordered = sorted(

@@ -169,11 +169,21 @@ def apply_candidate_refiners(
     ray_trace_theta: bool = False,
     theta_weight: float = 1.0,
     blend_mode: str = "scale_relative",
+    query_scores: Optional[Dict[str, float]] = None,
 ) -> Tuple[List[Gene], Dict[str, Dict[str, float]]]:
     """Apply post-retrieve candidate refiners before assembly or fingerprinting.
 
     Returns ``(candidates, refiner_contrib)`` where *refiner_contrib* maps
     gene_id -> {refiner_name: bonus}.
+
+    *query_scores* is the caller's request-scoped score map (2026-07-18
+    bugbash: score/result atomicity). When provided, the refiners read and
+    mutate THIS dict instead of whatever ``genome.last_query_scores``
+    currently holds — a concurrent request republishing the shared map
+    between retrieval and refinement can no longer cross-wire scores.
+    The mutated map is still published to ``genome.last_query_scores``
+    for legacy readers. ``None`` (default) preserves the old
+    read-from-genome behavior for direct callers.
 
     *blend_mode* selects how the three refiners combine with the fused scores;
     see the module docstring. Default agrees with ``RetrievalConfig.blend_mode``
@@ -194,6 +204,11 @@ def apply_candidate_refiners(
     _off = blend_mode == "off"
     _scale = blend_mode == "scale_relative"
 
+    def _working_scores() -> Dict[str, float]:
+        if query_scores is not None:
+            return query_scores
+        return genome.last_query_scores or {}
+
     refiner_contrib: Dict[str, Dict[str, float]] = {}
 
     if use_cymatics and cymatics_enabled and len(candidates) > 1 and not _off:
@@ -210,7 +225,7 @@ def apply_candidate_refiners(
                 query, synonym_map=synonym_map,
                 peak_width=cymatics_peak_width,
             )
-            scores = genome.last_query_scores or {}
+            scores = _working_scores()
             for doc in candidates:
                 g_spec = cached_doc_spectrum(doc, peak_width=cymatics_peak_width)
                 bonus = flux_score_dispatch(q_spec, g_spec, weights, cymatics_distance_metric) * 0.5
@@ -262,7 +277,7 @@ def apply_candidate_refiners(
                 theta_weight=theta_w,
             )
             if overtones:
-                scores = genome.last_query_scores or {}
+                scores = _working_scores()
                 for doc in candidates:
                     if doc.gene_id in overtones:
                         bonus = overtones[doc.gene_id]
@@ -283,7 +298,7 @@ def apply_candidate_refiners(
             for gid, bonus in bonuses.items():
                 if bonus:
                     refiner_contrib.setdefault(gid, {})["tcm"] = bonus
-            scores = genome.last_query_scores or {}
+            scores = _working_scores()
             if _scale:
                 candidates.sort(
                     key=lambda g: scores.get(g.gene_id, 0) * _scale_relative_multiplier(bonuses.get(g.gene_id, 0.0), _TCM_ABS),
