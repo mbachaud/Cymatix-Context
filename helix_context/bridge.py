@@ -178,6 +178,22 @@ class AgentBridge:
 
     # ── Signals: lightweight coordination ─────────────────────────
 
+    def _signal_path(self, name: str) -> Path:
+        """Resolve *name* to ``signals/<name>.json``, enforcing containment.
+
+        Signal names arrive from request bodies (POST /bridge/signal), so
+        ``../`` sequences, absolute paths, and Windows drive/backslash
+        forms must never address files outside the signals directory.
+        Raises ``ValueError`` on any name that escapes (the route maps
+        this to HTTP 400).
+        """
+        if not isinstance(name, str) or not name.strip():
+            raise ValueError("signal name must be a non-empty string")
+        candidate = (self.signals / f"{name}.json").resolve()
+        if candidate.parent != self.signals.resolve():
+            raise ValueError(f"signal name escapes signals directory: {name!r}")
+        return candidate
+
     def write_signal(self, name: str, data: Dict) -> Path:
         """
         Write a signal for other assistants to read.
@@ -185,10 +201,13 @@ class AgentBridge:
         Atomic via write-to-temp + os.replace — readers never see a
         partially-written file. Works on both POSIX and Windows (NT
         kernel provides atomic rename semantics).
+
+        Raises ``ValueError`` when *name* would resolve outside the
+        signals directory (see ``_signal_path``).
         """
         data["timestamp"] = time.time()
         data["timestamp_human"] = time.strftime("%Y-%m-%d %H:%M:%S")
-        path = self.signals / f"{name}.json"
+        path = self._signal_path(name)
         tmp = path.with_suffix(".json.tmp")
         tmp.write_text(json.dumps(data, indent=2), encoding="utf-8")
         os.replace(tmp, path)  # atomic rename
@@ -196,7 +215,10 @@ class AgentBridge:
 
     def read_signal(self, name: str) -> Optional[Dict]:
         """Read a signal from another assistant."""
-        path = self.signals / f"{name}.json"
+        try:
+            path = self._signal_path(name)
+        except ValueError:
+            return None
         if not path.exists():
             return None
         try:
@@ -206,7 +228,10 @@ class AgentBridge:
 
     def clear_signal(self, name: str) -> None:
         """Clear a signal."""
-        path = self.signals / f"{name}.json"
+        try:
+            path = self._signal_path(name)
+        except ValueError:
+            return
         if path.exists():
             path.unlink()
 

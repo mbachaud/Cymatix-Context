@@ -1498,6 +1498,7 @@ class HelixContextManager:
         decoder_override: Optional[str] = None,
         caller_model_class: str = "generic",
         query_type: Optional[str] = None,
+        max_genes: Optional[int] = None,
     ) -> ContextWindow:
         """
         Build the active context window for a query.
@@ -1529,6 +1530,12 @@ class HelixContextManager:
                 production /context callers omit it; the bench injects the
                 needle's ground-truth type for A/B. Mirrors the /fingerprint
                 ``query_type`` thread.
+            max_genes: optional per-call cap on assembled documents.
+                ``None`` (default) honors the static ``[budget]
+                max_genes_per_turn`` config. Plumbed from
+                ``HelixSession.query(k=...)`` / ``helix query --k``.
+                Clamped to >= 1; downstream caps (budget-zone, classifier,
+                caller_model_class) can still lower it further.
         """
         # Root span for the per-turn pipeline: every helix.pipeline.<stage>
         # span opened inside the impl nests under
@@ -1551,6 +1558,7 @@ class HelixContextManager:
                 decoder_override=decoder_override,
                 caller_model_class=caller_model_class,
                 query_type=query_type,
+                max_genes=max_genes,
             )
 
     def _build_context_impl(
@@ -1567,6 +1575,7 @@ class HelixContextManager:
         decoder_override: Optional[str] = None,
         caller_model_class: str = "generic",
         query_type: Optional[str] = None,
+        max_genes: Optional[int] = None,
     ) -> ContextWindow:
         """``build_context`` body — see ``build_context`` for the contract."""
         self._maybe_compact()
@@ -1640,7 +1649,12 @@ class HelixContextManager:
         # previous query's refresh_targets cannot bleed into this one.
         self._last_cold_peek_targets = []
 
-        max_genes = self.config.budget.max_genes_per_turn
+        if max_genes is None:
+            max_genes = self.config.budget.max_genes_per_turn
+        else:
+            # Explicit caller cap (HelixSession.query(k=...)) overrides the
+            # static [budget] max_genes_per_turn for this call only.
+            max_genes = max(1, int(max_genes))
 
         # ABSTAIN gate enable-state: config flag AND no env override.
         # Resolved per-call so HELIX_ABSTAIN_DISABLE flips without restart.
@@ -2148,6 +2162,7 @@ class HelixContextManager:
         decoder_override: Optional[str] = None,
         caller_model_class: str = "generic",
         query_type: Optional[str] = None,
+        max_genes: Optional[int] = None,
     ) -> ContextWindow:
         """Async wrapper -- runs the sync pipeline in thread pool."""
         loop = asyncio.get_event_loop()
@@ -2166,6 +2181,7 @@ class HelixContextManager:
             decoder_override,
             caller_model_class,
             query_type,
+            max_genes,
         )
 
     def reset_session_state(self) -> None:

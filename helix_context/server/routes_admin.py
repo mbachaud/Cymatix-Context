@@ -1214,5 +1214,13 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
         body = await request.json()
         name = body.get("name", "unnamed")
         data = body.get("data", {})
-        bridge.write_signal(name, data)
+        if not isinstance(data, dict):
+            return JSONResponse(
+                {"error": "data must be a JSON object"}, status_code=400,
+            )
+        try:
+            bridge.write_signal(name, data)
+        except ValueError as exc:
+            # Containment violation — traversal / absolute signal name.
+            return JSONResponse({"error": str(exc)}, status_code=400)
         return {"ok": True, "signal": name}

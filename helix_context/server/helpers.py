@@ -1087,9 +1087,14 @@ def _register_vault_routes(app: "FastAPI") -> None:
         body = await request.json()
         full = bool(body.get("full", False))
         vault = request.app.state.vault
+        # Exports walk the whole genome and write files synchronously —
+        # run them in a worker thread so the event loop (health checks,
+        # shutdown) stays responsive on large corpora. Safe to thread:
+        # the writers serialize on VaultLock and the vault pruner thread
+        # already calls the same writer module off-loop.
         if full:
-            return vault.full_export()
-        return vault.incremental_export()
+            return await asyncio.to_thread(vault.full_export)
+        return await asyncio.to_thread(vault.incremental_export)
 
     @app.get("/vault/status")
     async def get_vault_status(request: Request):
@@ -1098,6 +1103,8 @@ def _register_vault_routes(app: "FastAPI") -> None:
     @app.post("/vault/trace")
     async def post_vault_trace(body: _TraceBody, request: Request):
         vault = request.app.state.vault
+        if not vault._started:
+            return {"ok": False, "error": "vault disabled"}
         path = vault.trace_export(**body.model_dump())
         return {"path": str(path), "request_id": body.request_id}
 
