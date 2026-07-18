@@ -91,6 +91,31 @@ def test_two_tuple_wrapper_matches_meta_variant():
     assert a == [(t, f) for t, f, _m in b]
 
 
+def test_char_cut_never_splits_multibyte_cjk():
+    # A giant atomic string of 3-byte CJK chars: a byte-offset hard cut lands
+    # mid-codepoint and each piece decodes with U+FFFD unless the cut point is
+    # snapped to a UTF-8 character boundary. max_chars=1000 (≢ 0 mod 3)
+    # guarantees misaligned cuts regardless of the node's start offset.
+    code = 'BIG = "' + ("日" * 3000) + '"\n'
+    chunks = tc.chunk_code_ast(code, max_chars=1000, language="python")
+    joined = "".join(t for t, _f in chunks)
+    assert "�" not in joined, "hard cut split a multibyte character"
+    assert joined.count("日") == 3000  # no codepoint lost at a cut
+    # every piece still respects the (byte) budget
+    assert all(len(t.encode("utf-8")) <= 1000 for t, _f in chunks)
+
+
+def test_char_cut_never_splits_emoji():
+    # 4-byte emoji straddling the cut; max_chars=1001 (≢ 0 mod 4) forces at
+    # least one misaligned byte cut.
+    code = 'E = "' + ("\U0001f680" * 2000) + '"\n'
+    chunks = tc.chunk_code_ast(code, max_chars=1001, language="python")
+    joined = "".join(t for t, _f in chunks)
+    assert "�" not in joined, "hard cut split an emoji codepoint"
+    assert joined.count("\U0001f680") == 2000
+    assert all(len(t.encode("utf-8")) <= 1001 for t, _f in chunks)
+
+
 def test_unknown_language_raises():
     with pytest.raises(ValueError):
         tc.chunk_code_ast("x = 1", max_chars=100, language="cobol")
