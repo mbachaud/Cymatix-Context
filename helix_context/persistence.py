@@ -67,6 +67,10 @@ class ReplicationManager:
         self._lock = threading.Lock()
         self._last_sync = 0.0
         self._sync_in_progress = False
+        # Set when the write threshold is crossed while a sync is already
+        # in flight — those writes may post-date the backup snapshot, so
+        # _do_sync re-queues a follow-up sync on completion.
+        self._sync_pending = False
         # Cached read-only connections per replica path (see get_reader/close).
         self._reader_cache: dict = {}
         self._reader_lock = threading.Lock()
@@ -97,8 +101,16 @@ class ReplicationManager:
             self._write_count += 1
             if self._write_count >= self.sync_interval:
                 self._write_count = 0
-                # Sync in background thread to avoid blocking writes
-                if not self._sync_in_progress:
+                if self._sync_in_progress:
+                    # A sync is copying pages right now; these writes may
+                    # have landed after its snapshot. Mark the manager
+                    # dirty so _do_sync re-queues a follow-up sync on
+                    # completion — otherwise the writes are counted as
+                    # flushed but never replicated, leaving replicas
+                    # stale until a further full interval of writes.
+                    self._sync_pending = True
+                else:
+                    # Sync in background thread to avoid blocking writes
                     self._sync_in_progress = True
                     t = threading.Thread(target=self._do_sync, daemon=True)
                     t.start()
@@ -149,6 +161,15 @@ class ReplicationManager:
             # duplicate thread).
             with self._lock:
                 self._sync_in_progress = False
+                if self._sync_pending:
+                    # Writes crossed the threshold while this sync was
+                    # running — their pages may post-date the backup
+                    # snapshot. Re-queue a follow-up sync so replicas
+                    # don't sit stale indefinitely.
+                    self._sync_pending = False
+                    self._sync_in_progress = True
+                    t = threading.Thread(target=self._do_sync, daemon=True)
+                    t.start()
 
     def _backup_to(self, src: sqlite3.Connection, replica: str) -> None:
         """Delta-copy using SQLite backup API (only changed pages)."""
