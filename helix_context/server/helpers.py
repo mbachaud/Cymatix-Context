@@ -12,6 +12,7 @@ import getpass
 import logging
 import os
 import socket
+import time
 from typing import Dict, Optional
 
 import httpx
@@ -706,6 +707,119 @@ def _munge_messages(
     return result
 
 
+def _emit_genai_proxy_telemetry(
+    *,
+    body: dict,
+    config: HelixConfig,
+    user_query: str,
+    usage: Optional[dict],
+    response_id: Optional[str] = None,
+    response_model: Optional[str] = None,
+    finish_reason: Optional[str] = None,
+    ttft_s: Optional[float] = None,
+    total_s: float = 0.0,
+    streamed: bool = False,
+    error: Optional[str] = None,
+) -> None:
+    """Emit OTel GenAI telemetry for one /v1/chat/completions proxy call.
+
+    One GenAI client span (``chat <model>``), the ``helix_genai_*``
+    metrics (token usage, TTFT, cost, finish reasons), and the
+    structured-JSON ``helix.proxy`` log line — see
+    ``helix_context/telemetry/genai_telemetry.py`` (#209).
+
+    Called *after* the upstream exchange completes. On the streaming
+    path the response has already been forwarded chunk-by-chunk, so the
+    span wraps only this emission (its duration is NOT the upstream
+    latency — that lives in ``total_ms`` on the log line and in the
+    TTFT histogram); on the non-streaming paths the caller measures
+    ``total_s`` around the actual upstream call for the same reason.
+    Best-effort: never raises into the proxy path.
+
+    Gated on ``setup_telemetry()`` having initialised the OTel SDK
+    ([telemetry] enabled / HELIX_OTEL_ENABLED=1): spans and metrics
+    would be no-ops anyway, and the structured ``helix.proxy`` log
+    line must not start appearing on stdout for deployments that never
+    opted into telemetry — default behavior stays byte-identical.
+    """
+    try:
+        from ..telemetry import otel as _otel
+
+        if not getattr(_otel, "_initialised", False):
+            return
+
+        from ..telemetry.genai_telemetry import (
+            emit_proxy_log_line,
+            estimate_cost_usd,
+            extract_openai_usage,
+            infer_provider,
+            llm_span,
+            prompt_hash,
+            record_response,
+        )
+
+        model = str(body.get("model") or "unknown")
+        provider = infer_provider(config.server.upstream)
+        tokens = extract_openai_usage(usage)
+        trace_id = None
+        with llm_span(
+            operation="chat",
+            provider=provider,
+            model=model,
+            request_attributes={
+                "temperature": body.get("temperature"),
+                "max_tokens": body.get("max_tokens"),
+                "stream": streamed,
+            },
+            helix_attributes={"helix.pipeline.stage": "proxy"},
+        ) as span:
+            record_response(
+                span,
+                response_model=response_model or model,
+                response_id=response_id,
+                finish_reasons=[finish_reason] if finish_reason else (
+                    ["error"] if error else None
+                ),
+                input_tokens=tokens["input_tokens"],
+                output_tokens=tokens["output_tokens"],
+                cached_input_tokens=tokens["cached_input_tokens"],
+                reasoning_output_tokens=tokens["reasoning_output_tokens"],
+                time_to_first_chunk_s=ttft_s,
+                provider=provider,
+                request_model=model,
+                operation="chat",
+            )
+            ctx = getattr(span, "get_span_context", lambda: None)()
+            if ctx is not None and getattr(ctx, "trace_id", 0):
+                trace_id = f"{ctx.trace_id:032x}"
+
+        emit_proxy_log_line(
+            request_id=str(response_id or ""),
+            trace_id=trace_id,
+            model=model,
+            provider=provider,
+            prompt_hash_value=prompt_hash(user_query),
+            tokens_in=tokens["input_tokens"],
+            tokens_out=tokens["output_tokens"],
+            tokens_cached=tokens["cached_input_tokens"],
+            tokens_reasoning=tokens["reasoning_output_tokens"],
+            ttft_ms=ttft_s * 1000.0 if ttft_s is not None else None,
+            total_ms=round(total_s * 1000.0, 3),
+            finish_reason=finish_reason,
+            cost_usd_estimate=estimate_cost_usd(
+                provider=provider,
+                model=model,
+                input_tokens=tokens["input_tokens"],
+                output_tokens=tokens["output_tokens"],
+                cached_input_tokens=tokens["cached_input_tokens"],
+                reasoning_output_tokens=tokens["reasoning_output_tokens"],
+            ),
+            error=error,
+        )
+    except Exception:
+        log.debug("GenAI proxy telemetry emission failed", exc_info=True)
+
+
 async def _stream_and_tee(
     body: dict,
     config: HelixConfig,
@@ -724,6 +838,12 @@ async def _stream_and_tee(
     """
     accumulated: list[str] = []
     captured_usage: Optional[dict] = None
+    # GenAI telemetry capture (#209) — timing + response identity.
+    _t0 = time.monotonic()
+    _ttft_s: Optional[float] = None
+    _resp_id: Optional[str] = None
+    _resp_model: Optional[str] = None
+    _finish_reason: Optional[str] = None
 
     async with httpx.AsyncClient(timeout=config.server.upstream_timeout) as client:
         async with client.stream(
@@ -768,6 +888,15 @@ async def _stream_and_tee(
                             content = delta.get("content", "")
                             if content:
                                 accumulated.append(content)
+                                if _ttft_s is None:
+                                    _ttft_s = time.monotonic() - _t0
+                            fr = choices[0].get("finish_reason")
+                            if fr:
+                                _finish_reason = str(fr)
+                        if _resp_id is None and chunk.get("id"):
+                            _resp_id = str(chunk["id"])
+                        if _resp_model is None and chunk.get("model"):
+                            _resp_model = str(chunk["model"])
                         # Capture usage from any chunk that includes it
                         # (modern Ollama / OpenAI with stream_options.include_usage=true).
                         chunk_usage = chunk.get("usage")
@@ -794,6 +923,19 @@ async def _stream_and_tee(
     except Exception:
         log.debug("Token counter update failed (stream)", exc_info=True)
 
+    _emit_genai_proxy_telemetry(
+        body=body,
+        config=config,
+        user_query=user_query,
+        usage=captured_usage,
+        response_id=_resp_id,
+        response_model=_resp_model,
+        finish_reason=_finish_reason,
+        ttft_s=_ttft_s,
+        total_s=time.monotonic() - _t0,
+        streamed=True,
+    )
+
 
 async def _forward_and_replicate(
     body: dict,
@@ -803,6 +945,7 @@ async def _forward_and_replicate(
     background_tasks,
 ):
     """Forward non-streaming request, then persist."""
+    _t0 = time.monotonic()
     async with httpx.AsyncClient(timeout=config.server.upstream_timeout) as client:
         resp = await client.post(
             f"{config.server.upstream}/v1/chat/completions",
@@ -844,11 +987,23 @@ async def _forward_and_replicate(
     except Exception:
         log.debug("Token counter update failed (non-stream)", exc_info=True)
 
+    _emit_genai_proxy_telemetry(
+        body=body,
+        config=config,
+        user_query=user_query,
+        usage=data.get("usage"),
+        response_id=data.get("id"),
+        response_model=data.get("model"),
+        finish_reason=(choices[0].get("finish_reason") if choices else None),
+        total_s=time.monotonic() - _t0,
+    )
+
     return JSONResponse(data)
 
 
 async def _forward_raw(body: dict, config: HelixConfig, helix: Optional[HelixContextManager] = None):
     """Pass request through to upstream without context injection."""
+    _t0 = time.monotonic()
     try:
         async with httpx.AsyncClient(timeout=config.server.upstream_timeout) as client:
             resp = await client.post(
@@ -898,6 +1053,23 @@ async def _forward_raw(body: dict, config: HelixConfig, helix: Optional[HelixCon
             helix.token_counter.add_from_usage(data.get("usage"))
         except Exception:
             log.debug("Token counter update failed (raw)", exc_info=True)
+
+    _raw_query = ""
+    for _msg in reversed(body.get("messages", []) or []):
+        if isinstance(_msg, dict) and _msg.get("role") == "user":
+            _raw_query = str(_msg.get("content", "") or "")
+            break
+    _choices = data.get("choices", [])
+    _emit_genai_proxy_telemetry(
+        body=body,
+        config=config,
+        user_query=_raw_query,
+        usage=data.get("usage"),
+        response_id=data.get("id"),
+        response_model=data.get("model"),
+        finish_reason=(_choices[0].get("finish_reason") if _choices else None),
+        total_s=time.monotonic() - _t0,
+    )
 
     return JSONResponse(data)
 

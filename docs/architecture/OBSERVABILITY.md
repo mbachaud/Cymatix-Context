@@ -100,11 +100,25 @@ Two surfaces:
    metric names are stable contracts; dashboard panels translate to
    engineering names with inline references — see `docs/ROSETTA.md` for
    the full bidirectional table.
-2. **OTel `gen_ai.*` standard** — *planned (#209 phase 2)*. The
-   `helix_context/genai_telemetry.py` module (`helix_genai_*` token
-   usage / TTFT / finish reasons / per-call cost following the upstream
-   GenAI semantic conventions, plus `helix_context_cache_outcome_total`)
-   is **not on master**; this section returns when it lands.
+2. **OTel `gen_ai.*` standard** — `helix_context/telemetry/genai_telemetry.py`
+   (#209). `helix_genai_*` token usage / TTFT / finish reasons /
+   per-call cost following the upstream GenAI semantic conventions,
+   plus `helix_context_cache_outcome_total`. Metric names carry the
+   `helix_` namespace prefix; the spec name (`gen_ai.client.token.usage`,
+   …) lives in each instrument's description. Emitting call sites today:
+   the three `/v1/chat/completions` proxy forward paths (streaming,
+   non-streaming, raw passthrough) and `CachedDAL.fetch` for the cache
+   counter. Compressor/embedding backends are not yet instrumented —
+   `llm_span` / `record_response` are the ready-made helpers when they
+   are.
+
+   | Metric | Type | Labels | Source |
+   |---|---|---|---|
+   | `helix_genai_client_token_usage` | histogram | `gen_ai.provider.name`, `gen_ai.request.model`, `gen_ai.response.model`, `gen_ai.operation.name`, `gen_ai.token.type` ∈ {input, output, cached, reasoning} | proxy forward paths |
+   | `helix_genai_time_to_first_chunk_seconds` | histogram | same minus token.type | streaming proxy path |
+   | `helix_genai_cost_usd` | histogram | same minus token.type | `estimate_cost_usd` over the module's `PRICE_TABLE`; 0.0 for local/unpriced models |
+   | `helix_genai_finish_reasons_total` | counter | `finish_reason` | proxy forward paths |
+   | `helix_context_cache_outcome_total` | counter | `outcome` ∈ {hit, miss, partial} | `CachedDAL.fetch` (partial = stale-then-refetched; not on the retrieval hot path yet) |
 
 | Metric | Type | Labels | Source |
 |---|---|---|---|
@@ -169,10 +183,18 @@ Two span families sit on top of FastAPI auto-instrumentation:
    request span, outside the build_context waterfall. Lets Tempo
    show the per-request waterfall instead of just the request
    boundary.
-2. **GenAI client spans** — *planned (#209 phase 2)*. OTel GenAI
-   semantic-convention spans (`<operation> <model>`) for every
-   LLM-touching call site will ship with
-   `helix_context/genai_telemetry.py`, which is not on master yet.
+2. **GenAI client spans** — OTel GenAI semantic-convention spans
+   (`<operation> <model>`, e.g. `chat qwen3:8b`) via
+   `genai_telemetry.llm_span()` (#209). Attributes:
+   `gen_ai.provider.name`, `gen_ai.operation.name`,
+   `gen_ai.request.*`, and `gen_ai.response.*` /
+   `gen_ai.usage.*` populated by `record_response()`. Emitted today
+   on the `/v1/chat/completions` proxy forward paths; note the
+   streaming path opens its span *after* the stream completes (the
+   response was already forwarded chunk-by-chunk), so that span's
+   duration is not the upstream latency — use the `total_ms` field
+   on the `helix.proxy` log line or the TTFT histogram for timing.
+   Compressor/embedding call sites are not yet wrapped.
 
 ### Logs
 
@@ -181,11 +203,13 @@ running under the OTel SDK with a log handler configured, they flow to
 Loki tagged with trace context so you can pivot from a slow span to
 its logs.
 
-A structured-JSON `helix.proxy` log line per `/v1/chat/completions`
-request (`emit_proxy_log_line()` — request id, token counts, TTFT,
-cost estimate, cache outcome) is *planned (#209 phase 2)* alongside
-`helix_context/genai_telemetry.py`. Today the `{logger="helix.proxy"}`
-stream carries the proxy's standard log records only.
+Every `/v1/chat/completions` request additionally emits one
+structured-JSON `helix.proxy` log line (`genai_telemetry.
+emit_proxy_log_line()`, #209): request id, trace id, model + provider,
+token counts split four ways (in/out/cached/reasoning), TTFT and total
+latency, finish reason, cost estimate, and the prompt's SHA256-prefix
+hash (never the prompt text). Filter in Loki with
+`{logger="helix.proxy"} |= "proxy.call"`.
 
 ## Privacy
 
@@ -243,8 +267,13 @@ full bidirectional vocabulary table.
   decision mix, session-elision token savings, splice compression
   ratio by caller class. For deep-design work — not day-to-day
   operations.
-- **Helix — GenAI** (`helix-genai.json`) — *planned (#209 phase 2)*,
-  ships together with `helix_context/genai_telemetry.py`.
+- **Helix — GenAI** (`helix-genai.json`) — OTel `gen_ai.*` standard
+  surface (#209): token throughput by type, TTFT quantiles per model,
+  finish-reason mix, cost/hour + top spend by model, cache-outcome
+  pie, and the `helix.proxy` structured log stream. Populated by
+  `helix_context/telemetry/genai_telemetry.py`; a contract test
+  (`tests/test_genai_telemetry.py::test_genai_dashboard_queries_are_covered`)
+  keeps every panel query backed by an emitted metric.
 - **Helix — Retrieval Quality + HITL** (`helix-retrieval-hitl.json`) —
   per-query ellipticity distribution, health-status pie, denatured-rate
   alert stat, budget-tier mix, ellipticity percentiles, HITL pause-event
