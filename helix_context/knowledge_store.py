@@ -634,6 +634,11 @@ class KnowledgeStore:
         shard_fetch_scale_with_shards: bool = False,
         coact_reserved_slots: int = 0,
         coact_link_boost: float = 0.5,
+        # #264: doc-type boost mode. Read by ShardRouter on the cross-shard
+        # merge; accepted here so the fanned genome_kwargs don't raise (a
+        # solo / per-shard Genome ignores it — the boost only binds on the
+        # cross-shard merge path).
+        doc_type_boost_mode: str = "additive",
         pki_weight: float = 1.0,
         main_conn: Optional[sqlite3.Connection] = None,
         shard_name: str = "main",

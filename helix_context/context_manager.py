@@ -939,6 +939,10 @@ class HelixContextManager:
             shard_fetch_scale_with_shards=config.retrieval.shard_fetch_scale_with_shards,
             coact_reserved_slots=config.retrieval.coact_reserved_slots,
             coact_link_boost=config.retrieval.coact_link_boost,
+            # #264: doc-type boost mode. Router-only (ignored by the solo
+            # Genome and every per-shard Genome); binds on the cross-shard
+            # merge. Default-inert "additive" == the shipped ×1.15 multiply.
+            doc_type_boost_mode=config.retrieval.doc_type_boost_mode,
         )
 
         # Persistence manager (distributed knowledge store clones)
