@@ -75,6 +75,14 @@ def export_genome(
         for r in index_rows if r[0] in gene_ids
     ]
 
+    # Per-record transit checksums, computed over the content exactly as
+    # written. The importer recomputes the same digest and compares —
+    # symmetric by construction, so records whose gene_id is NOT a
+    # content address (stable IDs like ``presence:<participant>``,
+    # euchromatin-compressed genes whose content was rewritten in place)
+    # round-trip cleanly instead of being rejected as tampered.
+    gene_checksums = {g.gene_id: Genome.make_gene_id(g.content) for g in genes}
+
     # Build export
     export = {
         "helix_format_version": HELIX_FORMAT_VERSION,
@@ -87,6 +95,7 @@ def export_genome(
             "include_heterochromatin": include_heterochromatin,
         },
         "genes": [g.model_dump() for g in genes],
+        "gene_checksums": gene_checksums,
         "promoter_index": promoter_index,
     }
 
@@ -132,6 +141,11 @@ def import_genome(
 
     genes_data = data.get("genes", [])
     header = data.get("header", {})
+    # Transit checksums written by export_genome (same digest recomputed
+    # here — symmetric with export). Older .helix files predate the map;
+    # for those, fall back to the legacy content-address check, which is
+    # only valid when the gene_id actually is a content address.
+    gene_checksums = data.get("gene_checksums")
 
     imported = 0
     skipped = 0
@@ -141,14 +155,19 @@ def import_genome(
     for gene_dict in genes_data:
         gene = Gene.model_validate(gene_dict)
 
-        # Content-address verification: .helix files may have been
-        # edited in transit. Recompute the expected gene_id from
-        # content and skip the row if it doesn't match.
-        expected_id = Genome.make_gene_id(gene.content)
-        if expected_id != gene.gene_id:
+        # Integrity verification: .helix files may have been edited in
+        # transit. Recompute the content digest and skip the row if it
+        # doesn't match what the exporter recorded.
+        actual = Genome.make_gene_id(gene.content)
+        expected = (
+            gene_checksums.get(gene.gene_id)
+            if gene_checksums is not None
+            else gene.gene_id  # legacy files: gene_id is the content address
+        )
+        if expected != actual:
             log.warning(
-                "Skipping tampered gene: id=%s expected=%s",
-                gene.gene_id, expected_id,
+                "Skipping tampered gene: id=%s expected=%s actual=%s",
+                gene.gene_id, expected, actual,
             )
             tampered += 1
             continue
@@ -165,10 +184,14 @@ def import_genome(
                     continue
             # overwrite or newest-wins: fall through to upsert
             overwritten += 1
-            genome.upsert_doc(gene)
+            genome.upsert_doc(gene, apply_gate=False)
             continue
 
-        genome.upsert_doc(gene)
+        # apply_gate=False: the density gate belongs to original ingest —
+        # the exported lifecycle tier is preserved as-is on import (see
+        # upsert_doc's docstring, which names cross-store imports as an
+        # apply_gate=False caller).
+        genome.upsert_doc(gene, apply_gate=False)
         imported += 1
 
     log.info(
