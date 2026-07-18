@@ -1,0 +1,45 @@
+{
+  "label": "erag10k",
+  "query_shape": "extracted",
+  "on": {
+    "n_queries": 55,
+    "recall_at_k": 0.09090909090909091,
+    "mrr": 0.07636363636363637,
+    "p95_s": 6.0958,
+    "mean_s": 2.9819,
+    "total_genes": 15598,
+    "splade_rows": 1896100,
+    "splade_present": true,
+    "disk_bytes_per_gene": 55693.048,
+    "query_shape": "extracted",
+    "splade_query_enabled": true,
+    "splade_fire": {
+      "encode_calls": 55,
+      "query_splade_calls": 55,
+      "hits_total": 4400
+    }
+  },
+  "off": {
+    "n_queries": 55,
+    "recall_at_k": 0.09090909090909091,
+    "mrr": 0.05227272727272727,
+    "p95_s": 5.6664,
+    "mean_s": 2.763,
+    "total_genes": 15598,
+    "splade_rows": 0,
+    "splade_present": false,
+    "disk_bytes_per_gene": 41807.403,
+    "query_shape": "extracted",
+    "splade_query_enabled": false,
+    "splade_fire": {
+      "encode_calls": 0,
+      "query_splade_calls": 0,
+      "hits_total": 0
+    }
+  },
+  "splade_value_signal": {
+    "recall_at_k_delta": 0.0,
+    "p95_s_delta": 0.4294,
+    "disk_bytes_per_gene_delta": 13885.645
+  }
+}

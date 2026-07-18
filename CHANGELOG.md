@@ -2,6 +2,26 @@
 
 ## Unreleased
 
+- **fix(bench): `sweep_splade_scale_curve.py` on-arm never ran query-side
+  SPLADE (#204).** The harness constructed `Genome(path=...,
+  dense_embedding_enabled=False)` without threading `splade_enabled`, and
+  the `KnowledgeStore` constructor default is `False` (config default is
+  `True` — the #256-family layer-default disagreement biting a bench
+  script). Tier 3.5 is gated on `self._splade_enabled`, so every
+  "SPLADE-on vs off" delta this script ever reported — including the
+  2026-07-11 overnight P9 smoke — was an A/A comparison, not a SPLADE
+  ablation. The on-arm now constructs with `splade_enabled=True` and each
+  arm's metrics embed a firing receipt (`splade_fire`: encode /
+  query_splade call counts + hit totals) so artifacts self-certify that
+  the tier engaged. Also adds `--query-shape raw|extracted` (`extracted` =
+  stage-1 `extract_query_signals`, the serving shape — serving SPLADE
+  encodes the extracted keyword bag, not the raw question; `raw` absolute
+  levels are not serving-representative), plus
+  `benchmarks/build_striptwins.py` (copy bed → `DROP TABLE splade_terms` →
+  `VACUUM`, ~1 min/scale point) and the curated paraphrase gold-query
+  fixture `benchmarks/_splade_curve_queries.json` (+ provenance sidecar).
+  Curve results: `docs/research/2026-07-13-splade-scale-curve.md`.
+
 - **fix(bench): seed sharded-fixture `harmonic_links` so cross-shard co-activation is reachable (#223).**
   `scripts/build_fixture_matrix.py --mode sharded` shipped every fixture
   with zero `harmonic_links` rows — `seed_edges()` existed but was
