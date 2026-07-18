@@ -844,6 +844,12 @@ class KnowledgeStore:
         self.conn.execute(f"PRAGMA cache_size={_plan.writer_cache_size}")
         self.conn.execute(f"PRAGMA mmap_size={_plan.mmap_size}")
         self._upsert_count = 0  # WAL checkpoint cadence counter
+        # Bug bash 2026-07-18: the write connection is shared across threads
+        # (check_same_thread=False). Serialize multi-statement upsert
+        # transactions so a concurrent caller's commit can never publish
+        # another request's half-written gene. RLock so a locked caller can
+        # re-enter upsert paths without deadlocking.
+        self._write_lock = threading.RLock()
         self.last_query_scores: Dict[str, float] = {}  # Retrieval scores from last query
         self._last_query_scores_lock = threading.Lock()
         # Issue #255 (PR-2) debug hooks: the eligible-restricted pre-combination
@@ -1481,7 +1487,6 @@ class KnowledgeStore:
         elif gene.chromatin == ChromatinState.HETEROCHROMATIN:
             tier = 2
 
-        cur = self.conn.cursor()
         observed_at = (
             gene.observed_at
             if gene.observed_at is not None
@@ -1508,91 +1513,136 @@ class KnowledgeStore:
         # every ingest path populates genes.embedding_dense_v2. Uses the
         # caller-supplied vector when present (batched ingest), else encodes
         # lazily iff dense_embed_on_ingest is set; NULL otherwise. Soft-fails.
+        # Computed BEFORE the write lock so codec encoding (potentially a
+        # model call) never serializes other writers.
         dense_v2_blob = self._encode_dense_v2_blob(
             gene.content, precomputed=embedding_dense_v2
         )
 
-        cur.execute(
-            "INSERT OR REPLACE INTO genes "
-            "(gene_id, content, complement, codons, promoter, epigenetics, "
-            "chromatin, is_fragment, embedding, source_id, repo_root, source_kind, "
-            "observed_at, mtime, content_hash, volatility_class, authority_class, "
-            "support_span, last_verified_at, version, supersedes, key_values, "
-            "compression_tier, last_seen, embedding_dense_v2) "
-            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-            (
-                gene_id,
-                gene.content,
-                gene.complement,
-                json_dumps(gene.codons),
-                gene.promoter.model_dump_json(),
-                gene.epigenetics.model_dump_json(),
-                int(gene.chromatin),
-                int(gene.is_fragment),
-                sema_vec_to_blob(gene.embedding) if gene.embedding else None,
-                gene.source_id,
-                gene.repo_root,
-                gene.source_kind,
-                observed_at,
-                gene.mtime,
-                content_hash,
-                gene.volatility_class,
-                gene.authority_class,
-                gene.support_span,
-                last_verified_at,
-                gene.version,
-                gene.supersedes,
-                json_dumps(gene.key_values) if gene.key_values else None,
-                tier,
-                time.time(),  # last_seen: always stamp current epoch on every upsert
-                # Tier-0 PR-1: raw little-endian fp32 BGE-M3 vector, or NULL.
-                sqlite3.Binary(dense_v2_blob) if dense_v2_blob is not None else None,
-            ),
-        )
-        # Invalidate parse cache for this document's promoter/epigenetics
-        clear_parse_caches()
-
-        # ── Index population (delegated to storage.indexes) ──────────
-        from .storage.indexes import (
-            rebuild_promoter_index,
-            sync_fts5,
-            sync_entity_graph,
-            sync_path_key_index,
-            sync_filename_index,
-            sync_splade_index,
-            resolve_splade_enabled,
-        )
-        rebuild_promoter_index(cur, gene_id, gene)
-        sync_fts5(cur, gene_id, gene, self._fts_available)
-        sync_entity_graph(cur, gene_id, gene, self._entity_graph_enabled)
-        sync_path_key_index(cur, gene_id, gene)
-        sync_filename_index(cur, gene_id, gene.source_id)
-        # Issue #164: size-aware SPLADE auto-toggle. Refresh the cached
-        # gene_count whenever EITHER threshold is opted in; otherwise
-        # the resolver short-circuits to the static flag and the count
-        # is unused.
-        if self._splade_auto_enable_below > 0 or self._splade_auto_disable_above > 0:
+        # Bug bash 2026-07-18: the write connection is shared across threads
+        # (check_same_thread=False, one implicit transaction per connection).
+        # Hold the write lock for the whole multi-statement upsert so a
+        # concurrent caller's commit can never publish this gene's
+        # half-written state — and roll back on failure so a partial row is
+        # not silently swept into the next caller's commit.
+        with self._write_lock:
+            cur = self.conn.cursor()
             try:
-                self._splade_auto_cached_count = int(
-                    cur.execute("SELECT COUNT(*) FROM genes").fetchone()[0]
-                )
-            except sqlite3.Error:
-                self._splade_auto_cached_count = 0
-        effective_splade = resolve_splade_enabled(
-            splade_enabled=self._splade_enabled,
-            current_gene_count=self._splade_auto_cached_count,
-            auto_enable_below=self._splade_auto_enable_below,
-            auto_disable_above=self._splade_auto_disable_above,
-        )
-        sync_splade_index(
-            cur, gene_id, gene.content, effective_splade,
-            splade_sparse=splade_sparse,
-            content_cap=self._splade_content_cap,
-            model_name=self._splade_model,
-        )
+                # Probe the existing row once: feeds the FTS5 delete-first
+                # guard below (fresh inserts skip the unindexed FTS scan) and
+                # makes cross-source content-hash collisions loud. Gene IDs
+                # are content-addressed (see make_gene_id), so identical
+                # content from two sources dedups to ONE row by design — but
+                # the earlier source's provenance (source_id, and with it the
+                # PR #288 document_id attribution) is replaced, which must
+                # not happen silently.
+                prior = cur.execute(
+                    "SELECT source_id FROM genes WHERE gene_id = ?",
+                    (gene_id,),
+                ).fetchone()
+                if (
+                    prior is not None
+                    and prior["source_id"]
+                    and gene.source_id
+                    and prior["source_id"] != gene.source_id
+                ):
+                    log.warning(
+                        "gene %s: content-hash collision across sources — "
+                        "provenance overwrite %r -> %r (identical content "
+                        "dedups to one row; earlier source's attribution "
+                        "and freshness are replaced)",
+                        gene_id, prior["source_id"], gene.source_id,
+                    )
 
-        # Single atomic commit — document + tags + FTS5 + entity graph + SPLADE
-        self.conn.commit()
+                cur.execute(
+                    "INSERT OR REPLACE INTO genes "
+                    "(gene_id, content, complement, codons, promoter, epigenetics, "
+                    "chromatin, is_fragment, embedding, source_id, repo_root, source_kind, "
+                    "observed_at, mtime, content_hash, volatility_class, authority_class, "
+                    "support_span, last_verified_at, version, supersedes, key_values, "
+                    "compression_tier, last_seen, embedding_dense_v2) "
+                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                    (
+                        gene_id,
+                        gene.content,
+                        gene.complement,
+                        json_dumps(gene.codons),
+                        gene.promoter.model_dump_json(),
+                        gene.epigenetics.model_dump_json(),
+                        int(gene.chromatin),
+                        int(gene.is_fragment),
+                        sema_vec_to_blob(gene.embedding) if gene.embedding else None,
+                        gene.source_id,
+                        gene.repo_root,
+                        gene.source_kind,
+                        observed_at,
+                        gene.mtime,
+                        content_hash,
+                        gene.volatility_class,
+                        gene.authority_class,
+                        gene.support_span,
+                        last_verified_at,
+                        gene.version,
+                        gene.supersedes,
+                        json_dumps(gene.key_values) if gene.key_values else None,
+                        tier,
+                        time.time(),  # last_seen: always stamp current epoch on every upsert
+                        # Tier-0 PR-1: raw little-endian fp32 BGE-M3 vector, or NULL.
+                        sqlite3.Binary(dense_v2_blob) if dense_v2_blob is not None else None,
+                    ),
+                )
+                # Invalidate parse cache for this document's promoter/epigenetics
+                clear_parse_caches()
+
+                # ── Index population (delegated to storage.indexes) ──────────
+                from .storage.indexes import (
+                    rebuild_promoter_index,
+                    sync_fts5,
+                    sync_entity_graph,
+                    sync_path_key_index,
+                    sync_filename_index,
+                    sync_splade_index,
+                    resolve_splade_enabled,
+                )
+                rebuild_promoter_index(cur, gene_id, gene)
+                sync_fts5(
+                    cur, gene_id, gene, self._fts_available,
+                    delete_first=prior is not None,
+                )
+                sync_entity_graph(cur, gene_id, gene, self._entity_graph_enabled)
+                sync_path_key_index(cur, gene_id, gene)
+                sync_filename_index(cur, gene_id, gene.source_id)
+                # Issue #164: size-aware SPLADE auto-toggle. Refresh the cached
+                # gene_count whenever EITHER threshold is opted in; otherwise
+                # the resolver short-circuits to the static flag and the count
+                # is unused.
+                if self._splade_auto_enable_below > 0 or self._splade_auto_disable_above > 0:
+                    try:
+                        self._splade_auto_cached_count = int(
+                            cur.execute("SELECT COUNT(*) FROM genes").fetchone()[0]
+                        )
+                    except sqlite3.Error:
+                        self._splade_auto_cached_count = 0
+                effective_splade = resolve_splade_enabled(
+                    splade_enabled=self._splade_enabled,
+                    current_gene_count=self._splade_auto_cached_count,
+                    auto_enable_below=self._splade_auto_enable_below,
+                    auto_disable_above=self._splade_auto_disable_above,
+                )
+                sync_splade_index(
+                    cur, gene_id, gene.content, effective_splade,
+                    splade_sparse=splade_sparse,
+                    content_cap=self._splade_content_cap,
+                    model_name=self._splade_model,
+                )
+
+                # Single atomic commit — document + tags + FTS5 + entity graph + SPLADE
+                self.conn.commit()
+            except Exception:
+                # Discard the partial transaction so it cannot ride along
+                # with the next caller's commit (bug bash 2026-07-18).
+                self.conn.rollback()
+                raise
 
         # Periodic WAL checkpoint to prevent data loss on crash
         # PASSIVE every 50 documents (~non-blocking), TRUNCATE every 500 (resets WAL)
