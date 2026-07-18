@@ -110,6 +110,23 @@ class TestCastEvidenceRays:
 
         assert result_hw.get("Y", 0) < result_no_hw.get("Y", 0)
 
+    def test_adjacency_depth_honors_max_bounces(self, genome):
+        """Adjacency used to be built for only 2 hops regardless of
+        max_bounces (bugbash BUG-5): on a chain A -> B -> C -> D -> E with
+        max_bounces=4, rays dead-ended at C because C's neighbors were
+        never loaded. E must be reachable (0.7^4 energy > absorption)."""
+        _make_gene(genome, "A", co_activated=["B"])
+        _make_gene(genome, "B", co_activated=["C"])
+        _make_gene(genome, "C", co_activated=["D"])
+        _make_gene(genome, "D", co_activated=["E"])
+        _make_gene(genome, "E")
+
+        result = cast_evidence_rays(
+            ["A"], genome, k_rays=50, max_bounces=4, seed=42,
+        )
+        assert "E" in result, f"rays never reached E: {result}"
+        assert result["E"] > 0
+
     def test_deterministic_with_seed(self, genome):
         """Same seed produces same result."""
         _make_gene(genome, "A", co_activated=["B", "C"])
@@ -223,6 +240,20 @@ class TestOvertoneSeries:
         # B is reached on first bounce — should be fundamental or first harmonic
         assert "B" in overtones
         assert overtones["B"] >= 0.25  # at least second harmonic
+
+    def test_overtone_depth_honors_max_bounces(self, genome):
+        """read_overtone_series shares the adjacency builder — a linear
+        chain with max_bounces=3 must visit the hop-3 node in every ray."""
+        _make_gene(genome, "A", co_activated=["B"])
+        _make_gene(genome, "B", co_activated=["C"])
+        _make_gene(genome, "C", co_activated=["D"])
+        _make_gene(genome, "D")
+
+        overtones = read_overtone_series(
+            ["A"], genome, k_rays=100, max_bounces=3, seed=42,
+        )
+        # Deterministic chain: every ray visits D -> fundamental.
+        assert overtones.get("D") == pytest.approx(1.0)
 
     def test_noise_excluded(self, genome):
         """Genes visited in <20% of rays are filtered as noise."""

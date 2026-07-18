@@ -248,6 +248,42 @@ def test_narrowed_no_fallback_returns_empty_when_helix_empty():
     assert docs == []
 
 
+def test_narrowed_empty_intersection_never_widens_past_caller_filter():
+    """Helix shortlist ∩ caller filter = ∅ must NOT fall back unscoped —
+    the caller's filter_paths is a repository/tenant boundary."""
+    inner = MagicMock(spec=Retriever)
+    inner.retrieve.return_value = [RetrievedDoc(source_id="/tenant/a.py")]
+    narrowed = HelixNarrowedRetriever(inner, fallback_unscoped=True)
+    fake_resp = MagicMock()
+    fake_resp.json.return_value = _mock_packet(["/other/x.py", "/other/y.py"])
+    fake_resp.raise_for_status = MagicMock()
+    with patch("httpx.post", return_value=fake_resp):
+        narrowed.retrieve("q", filter_paths=["/tenant/a.py"])
+    # Every inner call must stay inside the caller's boundary.
+    for call in inner.retrieve.call_args_list:
+        assert call.kwargs.get("filter_paths") == {"/tenant/a.py"}, (
+            f"inner.retrieve escaped the caller filter: {call}"
+        )
+
+
+def test_narrowed_caller_scoped_miss_does_not_fall_back_unscoped():
+    """Caller-scoped retrieve returning nothing must stay empty rather
+    than widening to an unscoped retrieve outside the caller's filter."""
+    inner = MagicMock(spec=Retriever)
+    inner.retrieve.return_value = []
+    narrowed = HelixNarrowedRetriever(inner, fallback_unscoped=True)
+    fake_resp = MagicMock()
+    fake_resp.json.return_value = _mock_packet([])
+    fake_resp.raise_for_status = MagicMock()
+    with patch("httpx.post", return_value=fake_resp):
+        docs = narrowed.retrieve("q", filter_paths=["/tenant/a.py"])
+    assert docs == []
+    for call in inner.retrieve.call_args_list:
+        assert call.kwargs.get("filter_paths") == {"/tenant/a.py"}, (
+            f"inner.retrieve escaped the caller filter: {call}"
+        )
+
+
 def test_narrowed_forwards_read_only_flag_to_packet_request():
     inner = MagicMock(spec=Retriever)
     inner.retrieve.return_value = []

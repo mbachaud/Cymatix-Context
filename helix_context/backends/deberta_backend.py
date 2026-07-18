@@ -136,7 +136,12 @@ class DeBERTaRibosome:
                 ).to(self._device)
                 outputs = self._rerank_model(**encodings)
                 chunk_scores = outputs.logits.squeeze(-1)
-                chunk_scores = torch.clamp(chunk_scores, 0.0, 1.0).cpu().tolist()
+                # Sigmoid, not clamp: cross-encoder logits are routinely
+                # negative or > 1 (e.g. MS MARCO models); clamping to [0, 1]
+                # collapsed them into ties and destroyed ordering. Sigmoid is
+                # monotone (ordering preserved) and keeps scores in [0, 1]
+                # for the position-bonus blend below.
+                chunk_scores = torch.sigmoid(chunk_scores).cpu().tolist()
                 if isinstance(chunk_scores, float):
                     chunk_scores = [chunk_scores]
                 scores.extend(chunk_scores)

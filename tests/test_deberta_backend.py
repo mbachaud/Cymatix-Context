@@ -153,6 +153,41 @@ def test_deberta_splice_chunks_in_recommended_batch_size(monkeypatch):
     assert chunk_log == [16, 16, 16, 2]
 
 
+def test_deberta_rerank_preserves_ordering_of_negative_logits(monkeypatch):
+    """Cross-encoder logits are commonly negative (or > 1). Squashing must
+    be monotone — the old clamp to [0, 1] collapsed all negatives to 0.0,
+    destroying ordering among them (bugbash BUG-3)."""
+    _override_hardware(monkeypatch, rerank_batch=16)
+
+    from helix_context.backends.deberta_backend import DeBERTaRibosome
+
+    rib = DeBERTaRibosome.__new__(DeBERTaRibosome)  # bypass __init__
+    rib._device = torch.device("cpu")
+    rib._rerank_pretrained = True  # pure score-sorted path, no position bonus
+
+    chunk_log: list[int] = []
+    rib._rerank_tokenizer = _make_tokenizer_mock(chunk_log)
+
+    # MS MARCO-style raw logits: g2 most relevant, then g1, then g0.
+    fixed_logits = torch.tensor([-4.0, -1.0, 3.0])
+    model = MagicMock()
+
+    def _call(**kwargs):
+        out = MagicMock()
+        out.logits = fixed_logits.clone()
+        return out
+
+    model.side_effect = _call
+    rib._rerank_model = model
+
+    candidates = [_make_gene("g0"), _make_gene("g1"), _make_gene("g2")]
+    top = rib.re_rank("query", candidates, k=2)
+
+    assert [g.gene_id for g in top] == ["g2", "g1"], (
+        "negative logits collapsed — ordering not preserved"
+    )
+
+
 def test_deberta_init_consults_get_hardware_when_device_none(monkeypatch):
     """Passing device=None must defer to hardware.get_hardware().device.
 

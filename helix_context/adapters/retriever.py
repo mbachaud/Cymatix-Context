@@ -182,10 +182,13 @@ class HelixNarrowedRetriever:
         2. Pass the shortlist to the underlying retriever as
            ``filter_paths``.
         3. If the shortlist is empty OR the retriever returned nothing,
-           fall back to an unscoped retrieve so we never starve the agent.
+           fall back to a wider retrieve so we never starve the agent —
+           but never wider than a caller-supplied ``filter_paths``
+           (that's a repository/tenant boundary).
 
     The ``filter_paths`` parameter is still honored if the caller
-    supplies their own filter — it intersects with the Helix shortlist.
+    supplies their own filter — it intersects with the Helix shortlist,
+    and every fallback stays inside it.
     """
 
     def __init__(
@@ -250,7 +253,10 @@ class HelixNarrowedRetriever:
         caller_set = set(filter_paths) if filter_paths else None
 
         if helix_set and caller_set:
-            effective = helix_set & caller_set
+            # Empty intersection: Helix's shortlist has nothing inside the
+            # caller's boundary. Never widen past the caller's filter —
+            # fall back to the caller's own scope, not unscoped.
+            effective = (helix_set & caller_set) or caller_set
         else:
             effective = helix_set or caller_set
 
@@ -261,9 +267,20 @@ class HelixNarrowedRetriever:
         else:
             docs = []
 
-        # Fallback: nothing back from scoped retrieve → run unscoped
+        # Fallback: nothing back from scoped retrieve → widen, but never
+        # outside a caller-supplied filter (repository/tenant boundary).
         if not docs and self._fallback_unscoped:
-            log.debug("Helix-scoped retrieve returned 0; falling back unscoped")
-            docs = self._inner.retrieve(query, top_k=top_k)
+            if caller_set is None:
+                log.debug("Helix-scoped retrieve returned 0; falling back unscoped")
+                docs = self._inner.retrieve(query, top_k=top_k)
+            elif effective != caller_set:
+                log.debug(
+                    "Helix-narrowed retrieve returned 0; retrying with the "
+                    "caller's full filter",
+                )
+                docs = self._inner.retrieve(
+                    query, filter_paths=caller_set, top_k=top_k,
+                )
+            # else: the caller's own scope already came up empty — honor it.
 
         return docs
