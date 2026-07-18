@@ -1,8 +1,11 @@
 """Tests for `helix status`."""
 from __future__ import annotations
 
+import importlib
 import json
 import sqlite3
+import tomllib
+from pathlib import Path
 
 from tests.conftest import run_cli as _run
 
@@ -98,6 +101,79 @@ def test_status_json_remains_valid_when_load_config_raises(monkeypatch, tmp_path
     # fallback when load_config raised, so --json consumers can tell the
     # path isn't authoritative.
     assert payload["genome"]["path_source"] == "fallback_default"
+
+
+# ── bugbash BUG-3: entry point + roll-up honesty ─────────────────────
+
+
+def test_helix_status_console_script_targets_importable_module():
+    """pyproject's helix-status entry must resolve to a real module:attr.
+
+    Regression: it pointed at top-level ``helix_status:main``, but that
+    module only ever lived at scripts/ops/helix_status.py and was never
+    packaged, so the installed console script crashed on import.
+    """
+    pyproject = Path(__file__).resolve().parents[1] / "pyproject.toml"
+    scripts = tomllib.loads(pyproject.read_text(encoding="utf-8"))["project"]["scripts"]
+    module_name, _, attr = scripts["helix-status"].partition(":")
+    mod = importlib.import_module(module_name)
+    assert callable(getattr(mod, attr))
+
+
+def _fake_net(server_up: bool, launcher_up: bool):
+    def _collect_status():
+        return {
+            "server": {"reachable": server_up, "url": "http://127.0.0.1:11437"},
+            "launcher": {"reachable": launcher_up, "url": "http://127.0.0.1:11438"},
+        }
+    return _collect_status
+
+
+def test_status_not_healthy_when_network_probes_down(monkeypatch, tmp_path):
+    """Server/launcher down must not roll up to 'Healthy'.
+
+    Documented exit-code contract (docs/clients/cli.md) stays 0 — only
+    genome/config failures exit 3 — but the summary must say the probed
+    components are down instead of declaring the system healthy.
+    """
+    genome = tmp_path / "genome.db"
+    _make_genome_file(genome)
+    cfg = tmp_path / "helix.toml"
+    cfg.write_text(f"[genome]\npath = \"{genome.as_posix()}\"\n", encoding="utf-8")
+    monkeypatch.setenv("HELIX_CONFIG", str(cfg))
+    monkeypatch.delenv("HELIX_GENOME_PATH", raising=False)
+    monkeypatch.setattr(
+        "helix_context.cli.helix_status.collect_status",
+        _fake_net(server_up=False, launcher_up=False),
+    )
+
+    rc, out, err = _run(["status", "--json"])
+    assert rc == 0, err
+    payload = json.loads(out)
+    assert payload["server"]["reachable"] is False
+    assert payload["launcher"]["reachable"] is False
+    assert "Healthy" not in payload["next_action"]
+    assert "down" in payload["next_action"]
+
+
+def test_status_healthy_when_network_probes_up(monkeypatch, tmp_path):
+    """All probes up -> the 'Healthy' summary is preserved."""
+    genome = tmp_path / "genome.db"
+    _make_genome_file(genome)
+    cfg = tmp_path / "helix.toml"
+    cfg.write_text(f"[genome]\npath = \"{genome.as_posix()}\"\n", encoding="utf-8")
+    monkeypatch.setenv("HELIX_CONFIG", str(cfg))
+    monkeypatch.delenv("HELIX_GENOME_PATH", raising=False)
+    monkeypatch.setattr(
+        "helix_context.cli.helix_status.collect_status",
+        _fake_net(server_up=True, launcher_up=True),
+    )
+
+    rc, out, err = _run(["status", "--json"])
+    assert rc == 0, err
+    payload = json.loads(out)
+    assert payload["server"]["reachable"] is True
+    assert "Healthy" in payload["next_action"]
 
 
 def test_status_probes_genome_on_absolute_windows_path(monkeypatch, tmp_path):
