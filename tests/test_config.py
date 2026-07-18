@@ -186,6 +186,50 @@ def test_budget_foveated_defaults_off_with_alpha_one():
     assert cfg.budget.foveated_base_chars == 1000
 
 
+# ── Env overrides on failed-load paths (bugbash BUG-1) ───────────────
+# Documented precedence is env > toml > default. The pre-fix loader
+# returned bare defaults from the missing-file and malformed-TOML early
+# exits, silently dropping HELIX_GENOME_PATH / HELIX_SERVER_UPSTREAM.
+
+
+def test_env_overrides_apply_when_config_file_missing(tmp_path, monkeypatch):
+    """HELIX_* env overrides must win even when helix.toml does not exist."""
+    from helix_context.config import load_config
+    monkeypatch.setenv("HELIX_GENOME_PATH", "genomes/env-override.db")
+    monkeypatch.setenv("HELIX_SERVER_UPSTREAM", "http://127.0.0.1:9999")
+    cfg = load_config(str(tmp_path / "does-not-exist.toml"))
+    assert cfg.genome.path == "genomes/env-override.db"
+    assert cfg.server.upstream == "http://127.0.0.1:9999"
+
+
+def test_env_overrides_apply_when_toml_malformed(tmp_path, monkeypatch):
+    """HELIX_* env overrides must win even when helix.toml fails to parse."""
+    from helix_context.config import load_config
+    p = tmp_path / "helix.toml"
+    p.write_text("[genome\npath = broken", encoding="utf-8")
+    monkeypatch.setenv("HELIX_GENOME_PATH", "genomes/env-override.db")
+    monkeypatch.setenv("HELIX_SERVER_UPSTREAM", "http://127.0.0.1:9999")
+    cfg = load_config(str(p))
+    assert cfg.genome.path == "genomes/env-override.db"
+    assert cfg.server.upstream == "http://127.0.0.1:9999"
+
+
+def test_env_overrides_still_beat_toml_on_success_path(tmp_path, monkeypatch):
+    """Sanity pin: env > toml on the normal (parsed) load path too."""
+    from helix_context.config import load_config
+    p = tmp_path / "helix.toml"
+    p.write_text(
+        "[genome]\npath = \"genomes/from-toml.db\"\n"
+        "[server]\nupstream = \"http://toml-upstream:1\"\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("HELIX_GENOME_PATH", "genomes/env-override.db")
+    monkeypatch.setenv("HELIX_SERVER_UPSTREAM", "http://127.0.0.1:9999")
+    cfg = load_config(str(p))
+    assert cfg.genome.path == "genomes/env-override.db"
+    assert cfg.server.upstream == "http://127.0.0.1:9999"
+
+
 def test_budget_foveated_toml_override(tmp_path):
     """Regression: helix.toml [budget] foveated_* keys are honored."""
     from helix_context.config import load_config
