@@ -559,18 +559,29 @@ class RetrievalConfig:
     # stage-0 rule-based query classifier assigns each query a class
     # (arithmetic / factual / procedural / multi_hop / default); a populated
     # entry makes THAT class use its mapped combinator instead of the global
-    # rerank_combinator above. Empty (default) => every query uses the global
-    # combinator, so this ships BYTE-IDENTICAL. The design is default-inert
-    # because the winning combinator is CORPUS-DEPENDENT: the desk test found
-    # rerank additives are load-bearing on literal beds while eps_band/off win
-    # the semantic 10k ERB bed (docs/research/2026-07-10-rerank-combinator-
-    # desktest.md + the 2026-07-11 semantic-arm re-run) — so no global flip,
-    # per-class selection instead. Keys are validated against the classifier
-    # class set and values against VALID_COMBINATORS at load
-    # (RetrievalConfig.__post_init__); an unknown key or value is a hard config
-    # error (fail loud at load, not silently at query time). Classifier disabled
-    # => map ignored, global combinator used.
-    rerank_combinator_by_class: Dict[str, str] = field(default_factory=dict)
+    # rerank_combinator above. An empty map => every query uses the global
+    # combinator (byte-identical fallback). The design is per-class (not a
+    # global flip) because the winning combinator is CORPUS-DEPENDENT: the
+    # desk test found rerank additives are load-bearing on literal beds while
+    # eps_band/off win the semantic 10k ERB bed (docs/research/2026-07-10-
+    # rerank-combinator-desktest.md + the 2026-07-11 semantic-arm re-run).
+    # GRADUATED 2026-07-16 on the knob-graduation receipt (PR #293,
+    # docs/research/2026-07-16-knob-graduation-receipts.md /
+    # issues/255#issuecomment-5005983077): {multi_hop: eps_band,
+    # default: eps_band} vs the empty-map control replicated flat delivery
+    # (gold_delivered byte-identical) with the median gold rank halved on
+    # both semantic beds (10k 10→5, 50k 12→6); lift was confined to the
+    # mapped classes and unmapped rows (xl literal, 37/50 needles) came back
+    # byte-identical, so this is now the shipped default. Keys are validated
+    # against the classifier class set and values against VALID_COMBINATORS
+    # at load (RetrievalConfig.__post_init__); an unknown key or value is a
+    # hard config error (fail loud at load, not silently at query time).
+    # Classifier disabled => map ignored, global combinator used. Pass an
+    # explicit empty dict ({}) in TOML to restore the pre-graduation
+    # byte-identical global-combinator behavior.
+    rerank_combinator_by_class: Dict[str, str] = field(
+        default_factory=lambda: {"multi_hop": "eps_band", "default": "eps_band"}
+    )
     # Issue #255 / audit §4 item 5 (2026-07-10): post-fusion BLEND layer mode.
     # The blend layer (cymatics 0.5 / harmonic_bin 1.5 / TCM 0.3) mutates
     # ``genome.last_query_scores`` AFTER fusion, on whatever scale the map
@@ -1249,8 +1260,11 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             rerank_band_delta=float(r.get("rerank_band_delta", cfg.retrieval.rerank_band_delta)),
             rerank_tier_weight=float(r.get("rerank_tier_weight", cfg.retrieval.rerank_tier_weight)),
             # Issue #255 (classifier-gated combinator): per-query-class combinator
-            # override map. Empty default => global combinator for every class
-            # (byte-identical). Validated in RetrievalConfig.__post_init__.
+            # override map. Default GRADUATED 2026-07-16 (PR #293 receipt) to
+            # {multi_hop: eps_band, default: eps_band}; an explicit empty map
+            # in TOML still falls back to the global combinator for every
+            # class (byte-identical pre-graduation behavior). Validated in
+            # RetrievalConfig.__post_init__.
             rerank_combinator_by_class=dict(
                 r.get(
                     "rerank_combinator_by_class",

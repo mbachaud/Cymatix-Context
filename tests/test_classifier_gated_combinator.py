@@ -1,4 +1,4 @@
-"""Issue #255: classifier-gated rerank combinator — default-inert per-class map.
+"""Issue #255: classifier-gated rerank combinator — per-class map.
 
 The desk test (docs/research/2026-07-10-rerank-combinator-desktest.md) plus the
 2026-07-11 semantic-arm re-run found the winning combinator is
@@ -6,11 +6,22 @@ CORPUS-DEPENDENT: the rerank additives are load-bearing on literal beds
 (xl gd_id 0.62; eps_band costs −0.10), while eps_band/off win the semantic 10k
 ERB bed (gd_id 0.384 vs 0.376, median gold rank 10→6). So there is NO global
 default flip — the supported design is a *per-query-class* combinator map,
-selected by the stage-0 rule-based query classifier, and it ships INERT (empty
-map == today, byte-for-byte).
+selected by the stage-0 rule-based query classifier. It shipped INERT (empty
+map == the global-combinator path, byte-for-byte) and GRADUATED 2026-07-16 on
+the knob-graduation receipt (PR #293,
+docs/research/2026-07-16-knob-graduation-receipts.md /
+issues/255#issuecomment-5005983077): the proposed map
+``{multi_hop: eps_band, default: eps_band}`` replicated flat delivery
+(gold_delivered byte-identical) with the median gold rank halved on both
+semantic beds (10k 10→5, 50k 12→6), lift confined to the mapped classes, and
+byte-identical unmapped (xl literal) rows — so it is now the shipped default.
+An explicit empty map (``{}``) in TOML still restores the pre-graduation
+byte-identical global-combinator behavior.
 
 Test families:
-  1. config default byte-identity (empty map == the global-combinator path),
+  1. config default: the shipped default routes multi_hop/default -> eps_band
+     (the graduation); an EXPLICIT empty map is still byte-identical to the
+     global-combinator path (the pre-graduation escape hatch),
   2. resolver: fake classifier class -> combinator (+ not-in-map / empty /
      disabled-classifier fallbacks all resolve to "use the global"),
   3. load-time validation: unknown class key OR unknown combinator value is a
@@ -21,13 +32,14 @@ Test families:
      own query_docs),
   6. end-to-end wiring through HelixContextManager.build_context (the classifier
      class actually selects the store's per-query combinator; disabled
-     classifier and not-in-map classes fall back to the global).
+     classifier and not-in-map classes fall back to the global; the shipped
+     default map routes multi_hop/default queries to eps_band).
 
 Every store constructed here passes ``fusion_mode="rrf"`` EXPLICITLY — the
 combinator only runs on the RRF finalization path.
 
 Design record: docs/research/2026-07-09-scoring-combinator-exploration.md +
-the #255 desk-test / semantic-arm verdicts.
+the #255 desk-test / semantic-arm verdicts + the 2026-07-16 graduation receipt.
 """
 from __future__ import annotations
 
@@ -71,11 +83,28 @@ from tests.test_rerank_combinators import _defect1_corpus
 from tests.test_retrieval_invariance import _new_store
 
 
-# ═══ 1. config default byte-identity ══════════════════════════════════
+# ═══ 1. config default ═════════════════════════════════════════════════
 
 
-def test_config_default_map_is_empty_and_inert():
+def test_shipped_default_routes_multi_hop_and_default_to_eps_band():
+    """GRADUATED 2026-07-16 (PR #293 receipt, issues/255#issuecomment-5005983077):
+    the shipped default now maps multi_hop and default -> eps_band; the other
+    three classes (arithmetic, factual, procedural) are still unmapped and
+    fall back to the global combinator."""
     rc = RetrievalConfig()
+    assert rc.rerank_combinator_by_class == {
+        "multi_hop": "eps_band", "default": "eps_band",
+    }
+    assert resolve_class_combinator(rc.rerank_combinator_by_class, "multi_hop") == "eps_band"
+    assert resolve_class_combinator(rc.rerank_combinator_by_class, "default") == "eps_band"
+    for cls in ("arithmetic", "factual", "procedural"):
+        assert resolve_class_combinator(rc.rerank_combinator_by_class, cls) is None
+
+
+def test_explicit_empty_map_is_still_byte_identical_and_inert():
+    """The pre-graduation escape hatch: an EXPLICIT empty map (e.g. ``{}`` in
+    TOML) still disables per-class routing entirely, for every class."""
+    rc = RetrievalConfig(rerank_combinator_by_class={})
     assert rc.rerank_combinator_by_class == {}
     # Empty map + any class => None => the store keeps its global combinator.
     for cls in VALID_QUERY_CLASSES:
@@ -430,9 +459,9 @@ def test_build_context_classifier_disabled_falls_back_to_global(monkeypatch):
     assert all(v is None for v in seen), seen
 
 
-def test_build_context_empty_map_is_byte_identical_global(monkeypatch):
-    """The shipped default (empty map) never overrides: the store always sees
-    None regardless of the classifier class."""
+def test_build_context_explicit_empty_map_is_byte_identical_global(monkeypatch):
+    """The pre-graduation escape hatch (an EXPLICIT empty map) never overrides:
+    the store always sees None regardless of the classifier class."""
     mgr = _seeded_manager({})
     seen = _spy_combinator(monkeypatch, mgr)
     try:
@@ -442,3 +471,23 @@ def test_build_context_empty_map_is_byte_identical_global(monkeypatch):
         mgr.close()
     assert seen, "retrieval never called query_docs"
     assert all(v is None for v in seen), seen
+
+
+def test_build_context_shipped_default_routes_multi_hop_and_default_to_eps_band(monkeypatch):
+    """GRADUATED 2026-07-16 (PR #293 receipt): the shipped default map routes
+    multi_hop and default classes to eps_band end-to-end through
+    build_context. ``auth middleware compare server routes`` classes
+    multi_hop (the ``compare`` connective, no leading wh-word); ``hello
+    there`` classes default (matches no other class)."""
+    default_map = RetrievalConfig().rerank_combinator_by_class
+    mgr = _seeded_manager(default_map)
+    seen = _spy_combinator(monkeypatch, mgr)
+    try:
+        result = classify_query("auth middleware compare server routes")
+        assert result.cls == "multi_hop"  # guards the fixture assumption
+        mgr.build_context("auth middleware compare server routes")
+        mgr.build_context("hello there")
+    finally:
+        mgr.close()
+    assert seen, "retrieval never called query_docs"
+    assert all(v == "eps_band" for v in seen), seen
