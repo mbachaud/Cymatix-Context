@@ -247,6 +247,7 @@ class ContextItem(BaseModel):
     live_truth_score: float = 0.0
     source_id: Optional[str] = None
     source_kind: Optional[str] = None
+    document_id: Optional[str] = None   # stable portable document identity (source-derived; v1 = raw source_id)
     volatility_class: Optional[str] = None
     authority_class: Optional[str] = None
     last_verified_at: Optional[float] = None

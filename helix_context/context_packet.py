@@ -251,6 +251,15 @@ def _item_citations(gene: Gene, meta: dict) -> list[str]:
     return citations
 
 
+def document_identity(gene, meta=None):
+    """Stable per-gene document identity. Route-invariant: reads gene.source_id
+    (set identically by knowledge_store._row_to_gene on both blob and sharded
+    routes), NOT meta/source_row (which diverges between routes at L101).
+    Corpus-agnostic: returns the raw source_id; does not know about ERB/dsid."""
+    sid = getattr(gene, "source_id", None)
+    return sid if sid else None
+
+
 def _coordinate_signals(query: str, genes: list[Gene]) -> tuple[float, float]:
     """Folder-grain + file-grain path overlap between query and delivered documents.
 
@@ -384,6 +393,7 @@ def _build_item(
         last_verified_at=meta.get("last_verified_at"),
         status=status,
         citations=_item_citations(gene, meta),
+        document_id=document_identity(gene, meta),
     )
     return item, status
 
