@@ -57,8 +57,19 @@ def sync_fts5(
     gene_id: str,
     gene: Gene,
     fts_available: bool,
+    delete_first: bool = True,
 ) -> None:
-    """Sync one document into the FTS5 index.  No-op if FTS5 is unavailable."""
+    """Sync one document into the FTS5 index.  No-op if FTS5 is unavailable.
+
+    ``genes_fts`` is a plain FTS5 virtual table — FTS5 has no UNIQUE
+    constraints, so ``INSERT OR REPLACE`` silently *appends* a second row
+    on re-upsert: stale terms stay searchable and BM25 doc counts inflate
+    (bug bash 2026-07-18). Delete any prior row(s) for this gene_id first;
+    both statements run inside the caller's upsert transaction so the swap
+    stays atomic. ``delete_first=False`` lets the caller skip the delete
+    (an unindexed full scan on FTS5) when it knows the gene is new — the
+    bulk-ingest fast path.
+    """
     if not fts_available:
         return
     try:
@@ -67,8 +78,12 @@ def sync_fts5(
             + [e.lower() for e in gene.promoter.entities]
         )
         fts_content = f"{gene.source_id or ''} {tag_text} {gene.content}"
+        if delete_first:
+            cur.execute(
+                "DELETE FROM genes_fts WHERE gene_id = ?", (gene_id,)
+            )
         cur.execute(
-            "INSERT OR REPLACE INTO genes_fts(gene_id, content, complement) "
+            "INSERT INTO genes_fts(gene_id, content, complement) "
             "VALUES (?, ?, ?)",
             (gene_id, fts_content, gene.complement or ""),
         )

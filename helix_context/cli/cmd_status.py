@@ -158,7 +158,7 @@ def run(argv: list[str]) -> int:
         # into one except, an ImportError would leave report["launcher"]
         # unset and --json consumers would silently lose the key.
         try:
-            from helix_status import collect_status
+            from helix_context.cli.helix_status import collect_status
         except ImportError as exc:
             err = f"helix_status import failed: {type(exc).__name__}: {exc}"
             report["server"] = {"reachable": False, "error": err}
@@ -187,7 +187,22 @@ def run(argv: list[str]) -> int:
         report["next_action"] = config_report.get("next_action", "Fix helix.toml.")
         rc = output.EXIT_STATUS_FAIL
     else:
-        report["next_action"] = "Healthy — try `helix query \"...\"`."
+        # Genome + config are the core contract (exit code 3 gates on
+        # them only — docs/clients/cli.md). But if network probes ran and
+        # a component is down, saying "Healthy" would contradict the
+        # failure we just printed — surface the degraded state instead.
+        down = [
+            name for name in ("server", "launcher")
+            if name in report and not report[name].get("reachable")
+        ]
+        if down:
+            report["next_action"] = (
+                f"Genome + config OK, but {' and '.join(down)} down — "
+                "start with `helix-server` / `helix-launcher`, or pass "
+                "--no-network for an offline check."
+            )
+        else:
+            report["next_action"] = "Healthy — try `helix query \"...\"`."
         rc = output.EXIT_OK
 
     if args.json:

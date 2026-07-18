@@ -49,6 +49,7 @@ from .supervisor import (
     HelixSupervisor,
     NotRunning,
     SupervisorError,
+    stop_on_quit,
 )
 from . import genome_registry
 
@@ -776,15 +777,13 @@ class HelixTrayIcon:
 
         After icon.stop(), pystray's run() returns, main() exits, and
         the process terminates. The uvicorn daemon thread dies with the
-        process. If the supervisor is still holding helix, try to stop
-        it cleanly first — best-effort, never blocks the quit path.
+        process. If the supervisor is still holding a helix WE spawned,
+        try to stop it cleanly first — best-effort, never blocks the
+        quit path. Adopted helix instances (started outside the
+        launcher) are left running, mirroring the Headroom policy below.
         """
         log.info("Tray: quit")
-        try:
-            if self.supervisor.is_running():
-                self.supervisor.stop(reason="launcher quit from tray menu")
-        except Exception:
-            log.warning("Tray quit: helix stop failed (continuing)", exc_info=True)
+        stop_on_quit(self.supervisor, reason="launcher quit from tray menu")
 
         # Headroom Quit policy: only stop if we spawned it. Adopted
         # headroom stays alive — the user (or another tool) launched it

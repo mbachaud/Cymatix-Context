@@ -30,7 +30,8 @@ Origin story (2026-04-11):
   rabbit hole for another night.
 
 Design decisions:
-  - Adjacency built from 2-hop neighbourhood of seeds (keeps graph local)
+  - Adjacency built from the max_bounces-hop neighbourhood of seeds,
+    capped at MAX_ADJACENCY_HOPS (keeps graph local)
   - harmonic_links weight multiplied when available; else neutral (1.0)
   - Boost normalised to [0, 2.0] for safe addition to query_genes() scores
   - Reproducible via ``random.Random(seed)``
@@ -64,6 +65,10 @@ DEFAULT_K_RAYS = 200
 DEFAULT_MAX_BOUNCES = 3
 DEFAULT_DECAY = 0.7
 BOOST_CAP = 2.0
+# Hard cap on adjacency BFS depth — with DEFAULT_DECAY 0.7, ray energy
+# falls below ABSORPTION_THRESHOLD by ~bounce 12, so hops past this are
+# unreachable anyway and would only balloon the neighbourhood fetch.
+MAX_ADJACENCY_HOPS = 8
 
 
 # ── Helpers ─────────────────────────────────────────────────────────────
@@ -87,15 +92,23 @@ def _load_co_activated(genome: "Genome", gene_id: str) -> List[str]:
 def _build_adjacency(
     genome: "Genome",
     seed_gene_ids: List[str],
+    hops: int = DEFAULT_MAX_BOUNCES,
 ) -> Dict[str, List[str]]:
-    """Build adjacency dict from co_activated_with, 2 hops from seeds."""
+    """Build adjacency dict from co_activated_with, ``hops`` hops from seeds.
+
+    ``hops`` must match the caller's max_bounces: a ray taking bounce k
+    needs the adjacency of the node reached at hop k-1, so a fixed 2-hop
+    build silently dead-ended every ray after its second bounce.
+    Clamped to [1, MAX_ADJACENCY_HOPS] to keep the neighbourhood local.
+    """
+    hops = max(1, min(int(hops), MAX_ADJACENCY_HOPS))
     adjacency: Dict[str, List[str]] = {}
     visited: set = set()
 
     # Hop 0: seeds themselves
     frontier = list(seed_gene_ids)
 
-    for _hop in range(2):
+    for _hop in range(hops):
         next_frontier: List[str] = []
         for gid in frontier:
             if gid in visited:
@@ -247,8 +260,8 @@ def cast_evidence_rays(
 
     rng = random.Random(seed)
 
-    # Build local graph (2 hops from seeds)
-    adjacency = _build_adjacency(genome, seed_gene_ids)
+    # Build local graph (max_bounces hops from seeds, capped)
+    adjacency = _build_adjacency(genome, seed_gene_ids, hops=max_bounces)
 
     # Collect all gene_ids in the neighbourhood for harmonic weight lookup
     all_gene_ids: set = set()
@@ -402,7 +415,7 @@ def read_overtone_series(
         return {}
 
     rng = random.Random(seed)
-    adjacency = _build_adjacency(genome, seed_gene_ids)
+    adjacency = _build_adjacency(genome, seed_gene_ids, hops=max_bounces)
 
     # Theta-alternation prep — same pattern as cast_evidence_rays.
     all_gene_ids: set = set()

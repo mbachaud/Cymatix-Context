@@ -2,16 +2,11 @@
 
 from __future__ import annotations
 
-import importlib.util
 import json
-import os
 
-_status_path = os.path.join(
-    os.path.dirname(__file__), os.pardir, "scripts", "ops", "helix_status.py"
-)
-_spec = importlib.util.spec_from_file_location("helix_status", _status_path)
-status_mod = importlib.util.module_from_spec(_spec)
-_spec.loader.exec_module(status_mod)
+# Packaged module (bugbash BUG-3) — was file-path-loaded from
+# scripts/ops/helix_status.py before the move into helix_context.cli.
+from helix_context.cli import helix_status as status_mod
 
 
 class TestCheckMcpConfig:

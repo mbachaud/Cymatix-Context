@@ -234,6 +234,28 @@ class TestUpdateEdgeEvidence:
         assert row["co_count"] == 3
         assert row["source"] == SOURCE_CO_RETRIEVED
 
+    def test_pruning_uses_stored_edge_weight(self):
+        """Pruning must factor in the STORED weight column, not assume a
+        raw weight of 1.0 (bugbash BUG-4). weight=0.1, seeded, miss=2.0:
+        after one more miss (rank 2, max_genes=1 -> mw=0.5), ratio =
+        1/(2.5+2) ~= 0.222; effective = 0.1 * 0.3 * 0.222 ~= 0.0067 <
+        PRUNE_FLOOR (0.05) -> delete. With raw 1.0 the edge would
+        (wrongly) survive at ~0.067."""
+        g, conn = self._setup()
+        conn.execute(
+            """INSERT INTO harmonic_links
+               (gene_id_a, gene_id_b, weight, updated_at, source, co_count, miss_count, created_at)
+               VALUES (?, ?, 0.1, 0.0, ?, 0, 2.0, 0.0)""",
+            ("a", "b", SOURCE_SEEDED),
+        )
+        conn.commit()
+        gene_scores = {"a": 5.0, "b": 0.01}
+        update_edge_evidence(g, gene_scores, ["a"], max_genes=1)
+        remaining = conn.execute(
+            "SELECT COUNT(*) FROM harmonic_links"
+        ).fetchone()[0]
+        assert remaining == 0
+
     def test_pruning_deletes_low_weight_edges(self):
         g, conn = self._setup()
         # Seed with lots of misses -> effective weight < prune floor

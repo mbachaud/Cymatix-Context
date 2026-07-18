@@ -427,7 +427,7 @@ def update_edge_evidence(
     placeholders = ",".join("?" * len(expressed_ids))
     try:
         edges = cur.execute(
-            f"""SELECT gene_id_a, gene_id_b, co_count, miss_count, source
+            f"""SELECT gene_id_a, gene_id_b, weight, co_count, miss_count, source
                 FROM harmonic_links
                 WHERE (gene_id_a IN ({placeholders}) OR gene_id_b IN ({placeholders}))
                   AND source IN ('seeded', 'co_retrieved')""",
@@ -476,7 +476,7 @@ def update_edge_evidence(
             continue
         new_miss = row["miss_count"] + mw
         new_co = row["co_count"]
-        eff = effective_weight(1.0, row["source"], new_co, new_miss)
+        eff = effective_weight(row["weight"], row["source"], new_co, new_miss)
         if eff < PRUNE_FLOOR:
             cur.execute(
                 "DELETE FROM harmonic_links WHERE gene_id_a=? AND gene_id_b=?",

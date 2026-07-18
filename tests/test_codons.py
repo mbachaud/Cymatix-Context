@@ -42,6 +42,19 @@ class TestTextChunking:
         assert strands[0].is_fragment is True
         assert len(strands[0].content) == 4000
 
+    def test_hard_cut_loops_until_every_piece_fits(self):
+        """A paragraph many times max_chars must be re-cut until every emitted
+        strand respects the budget — not cut once with an oversized remainder."""
+        giant = "x" * 2600
+        chunker = CodonChunker(max_chars_per_strand=500)
+        strands = chunker.chunk(giant, content_type="text")
+
+        assert all(len(s.content) <= 500 for s in strands), (
+            f"oversized strand emitted: {[len(s.content) for s in strands]}"
+        )
+        # No content lost across the repeated cuts
+        assert "".join(s.content for s in strands) == giant
+
     def test_small_input_no_fragment(self):
         """Content under max_chars should produce a single non-fragment strand."""
         text = "Hello world. This is a short paragraph."
@@ -95,6 +108,17 @@ class TestCodeChunking:
 
         fragments = [s for s in strands if s.is_fragment]
         assert len(fragments) >= 1
+
+    def test_code_hard_cut_loops_until_every_piece_fits(self):
+        """An oversized code block must be re-cut until every emitted strand
+        respects the budget — not cut once with an oversized remainder."""
+        giant_func = "def huge():\n" + "    x = 1\n" * 2000
+        chunker = CodonChunker(max_chars_per_strand=1000)
+        strands = chunker.chunk(giant_func, content_type="code")
+
+        assert all(len(s.content) <= 1000 for s in strands), (
+            f"oversized strand emitted: {[len(s.content) for s in strands]}"
+        )
 
     def test_sequence_order_preserved(self, calculator_code):
         chunker = CodonChunker(max_chars_per_strand=2000)

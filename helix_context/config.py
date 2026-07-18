@@ -1069,6 +1069,40 @@ def _positive_float(
     return v
 
 
+def _apply_env_overrides(cfg: HelixConfig) -> HelixConfig:
+    """Apply HELIX_* env overrides to *cfg* in place and return it.
+
+    Documented precedence is env > toml > default, so this must run on
+    EVERY load path — success, missing file, and malformed TOML alike
+    (the fallback paths used to return bare defaults, silently dropping
+    HELIX_GENOME_PATH / HELIX_SERVER_UPSTREAM).
+    """
+    # KnowledgeStore path override — lets sharded vs monolithic servers coexist
+    # on different ports without duplicating helix.toml. Typical use:
+    # ``HELIX_GENOME_PATH=genomes/main.genome.db HELIX_USE_SHARDS=1`` for a
+    # sharded bench server on a side port; defaults still serve monolithic.
+    if os.environ.get("HELIX_GENOME_PATH"):
+        cfg.genome.path = os.environ["HELIX_GENOME_PATH"]
+
+    # Server env overrides — lets launchers/profiles redirect Helix to a
+    # different chat upstream without rewriting helix.toml on disk.
+    if os.environ.get("HELIX_BENCH_ENABLED"):
+        cfg.server.bench_enabled = os.environ["HELIX_BENCH_ENABLED"].strip().lower() in (
+            "1", "true", "yes", "on",
+        )
+    if os.environ.get("HELIX_SERVER_UPSTREAM"):
+        cfg.server.upstream = os.environ["HELIX_SERVER_UPSTREAM"]
+    if os.environ.get("HELIX_SERVER_UPSTREAM_TIMEOUT"):
+        try:
+            cfg.server.upstream_timeout = float(os.environ["HELIX_SERVER_UPSTREAM_TIMEOUT"])
+        except ValueError:
+            log.warning(
+                "HELIX_SERVER_UPSTREAM_TIMEOUT=%r is not a float — ignoring override",
+                os.environ["HELIX_SERVER_UPSTREAM_TIMEOUT"],
+            )
+    return cfg
+
+
 def load_config(path: Optional[str] = None) -> HelixConfig:
     """
     Load helix.toml from the given path, or auto-discover from cwd / env.
@@ -1080,14 +1114,14 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
     config_path = Path(path)
     if not config_path.exists():
         log.info("No config file at %s, using defaults", path)
-        return HelixConfig()
+        return _apply_env_overrides(HelixConfig())
 
     with open(config_path, "rb") as f:
         try:
             raw = tomllib.load(f)
         except tomllib.TOMLDecodeError as exc:
             log.error("helix.toml is malformed (%s) — using defaults", exc)
-            return HelixConfig()
+            return _apply_env_overrides(HelixConfig())
 
     cfg = HelixConfig()
 
@@ -1178,29 +1212,8 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             ),
         )
 
-    # KnowledgeStore path override — lets sharded vs monolithic servers coexist
-    # on different ports without duplicating helix.toml. Typical use:
-    # ``HELIX_GENOME_PATH=genomes/main.genome.db HELIX_USE_SHARDS=1`` for a
-    # sharded bench server on a side port; defaults still serve monolithic.
-    if os.environ.get("HELIX_GENOME_PATH"):
-        cfg.genome.path = os.environ["HELIX_GENOME_PATH"]
-
-    # Server env overrides — lets launchers/profiles redirect Helix to a
-    # different chat upstream without rewriting helix.toml on disk.
-    if os.environ.get("HELIX_BENCH_ENABLED"):
-        cfg.server.bench_enabled = os.environ["HELIX_BENCH_ENABLED"].strip().lower() in (
-            "1", "true", "yes", "on",
-        )
-    if os.environ.get("HELIX_SERVER_UPSTREAM"):
-        cfg.server.upstream = os.environ["HELIX_SERVER_UPSTREAM"]
-    if os.environ.get("HELIX_SERVER_UPSTREAM_TIMEOUT"):
-        try:
-            cfg.server.upstream_timeout = float(os.environ["HELIX_SERVER_UPSTREAM_TIMEOUT"])
-        except ValueError:
-            log.warning(
-                "HELIX_SERVER_UPSTREAM_TIMEOUT=%r is not a float — ignoring override",
-                os.environ["HELIX_SERVER_UPSTREAM_TIMEOUT"],
-            )
+    # HELIX_GENOME_PATH / HELIX_SERVER_* overrides (env > toml > default).
+    _apply_env_overrides(cfg)
 
     # Telemetry — toml defaults for the HELIX_OTEL_* knobs. Deliberately NO
     # env handling here (see TelemetryConfig docstring): otel.py resolves
