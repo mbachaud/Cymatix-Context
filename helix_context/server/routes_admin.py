@@ -587,6 +587,42 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
         new_count = helix.genome.stats()["total_genes"]
         return {"refreshed": True, "genes": new_count}
 
+    @app.post("/admin/genes/tombstone")
+    async def admin_genes_tombstone(request: Request):
+        """Demote every gene matching ``source_id`` to HETEROCHROMATIN.
+
+        Non-destructive lifecycle tombstone for callers that track content
+        by provenance — mem_sync calls this when a watched memory file is
+        deleted so the documents drop out of hot-tier retrieval. Content is
+        preserved (``compress_to_heterochromatin`` only flips the tier
+        flags), so the documents stay reachable via cold-tier retrieval.
+        """
+        data = await request.json()
+        source_id = data.get("source_id")
+        if not source_id or not isinstance(source_id, str):
+            return JSONResponse(
+                {"error": "source_id required"},
+                status_code=400,
+            )
+        cur = helix.genome.conn.cursor()
+        rows = cur.execute(
+            "SELECT gene_id FROM genes WHERE source_id = ? AND chromatin < 2",
+            (source_id,),
+        ).fetchall()
+        tombstoned = []
+        for row in rows:
+            try:
+                if helix.genome.compress_to_heterochromatin(row["gene_id"]):
+                    tombstoned.append(row["gene_id"])
+            except Exception:
+                log.warning("Tombstone failed for gene %s",
+                            row["gene_id"], exc_info=True)
+        return {
+            "source_id": source_id,
+            "tombstoned": len(tombstoned),
+            "gene_ids": tombstoned,
+        }
+
     @app.post("/admin/vacuum")
     async def admin_vacuum():
         """Reclaim free pages from the knowledge store database."""

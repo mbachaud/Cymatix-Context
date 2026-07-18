@@ -182,6 +182,63 @@ class TestQuitAction:
         assert tray._quit_event.is_set()
 
 
+class TestQuitOwnership:
+    """BUG-3: Quit must only stop a helix this launcher spawned. Adopted
+    instances (started outside the launcher) survive Quit — same policy
+    the Headroom supervisor and the FastAPI lifespan shutdown already
+    enforce via ``owns_process()``."""
+
+    def test_quit_stops_owned_helix(self, tray_icon, fake_supervisor):
+        fake_supervisor.is_running.return_value = True
+        fake_supervisor.owns_process.return_value = True
+        tray_icon._icon = MagicMock()
+        with patch("helix_context.launcher.tray.os.kill"):
+            tray_icon._quit(None, None)
+        fake_supervisor.stop.assert_called_once()
+
+    def test_quit_leaves_adopted_helix_running(self, tray_icon, fake_supervisor):
+        fake_supervisor.is_running.return_value = True
+        fake_supervisor.owns_process.return_value = False
+        tray_icon._icon = MagicMock()
+        with patch("helix_context.launcher.tray.os.kill"):
+            tray_icon._quit(None, None)
+        fake_supervisor.stop.assert_not_called()
+        tray_icon._icon.stop.assert_called_once()
+        assert tray_icon._quit_event.is_set()
+
+    def test_stop_on_quit_owned(self, fake_supervisor):
+        from helix_context.launcher.supervisor import stop_on_quit
+
+        fake_supervisor.is_running.return_value = True
+        fake_supervisor.owns_process.return_value = True
+        assert stop_on_quit(fake_supervisor, reason="test quit") is True
+        fake_supervisor.stop.assert_called_once()
+
+    def test_stop_on_quit_adopted(self, fake_supervisor):
+        from helix_context.launcher.supervisor import stop_on_quit
+
+        fake_supervisor.is_running.return_value = True
+        fake_supervisor.owns_process.return_value = False
+        assert stop_on_quit(fake_supervisor, reason="test quit") is False
+        fake_supervisor.stop.assert_not_called()
+
+    def test_stop_on_quit_not_running(self, fake_supervisor):
+        from helix_context.launcher.supervisor import stop_on_quit
+
+        fake_supervisor.is_running.return_value = False
+        assert stop_on_quit(fake_supervisor, reason="test quit") is False
+        fake_supervisor.stop.assert_not_called()
+
+    def test_stop_on_quit_swallows_stop_failure(self, fake_supervisor):
+        from helix_context.launcher.supervisor import stop_on_quit
+
+        fake_supervisor.is_running.return_value = True
+        fake_supervisor.owns_process.return_value = True
+        fake_supervisor.stop.side_effect = SupervisorError("port stuck")
+        # Should not raise — quit paths must never block on a failed stop.
+        assert stop_on_quit(fake_supervisor, reason="test quit") is False
+
+
 class TestCLIIntegration:
     def test_tray_and_native_rejected_on_non_windows(self, monkeypatch):
         """--tray --native combined returns exit 2 on non-Windows platforms."""

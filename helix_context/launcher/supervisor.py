@@ -55,6 +55,35 @@ def _is_windows() -> bool:
     return sys.platform == "win32"
 
 
+def stop_on_quit(supervisor: "HelixSupervisor", reason: str) -> bool:
+    """Launcher-quit stop policy: stop helix ONLY if this launcher spawned it.
+
+    Adopted instances (started outside the launcher — a dev shell, a
+    service, another launcher) survive Quit; we log what is left running
+    instead of surprise-killing it. Same convention the Headroom
+    supervisor and the FastAPI lifespan shutdown already enforce via
+    ``owns_process()``.
+
+    Returns True iff a stop was issued. Never raises — quit paths must
+    not block on a failed stop.
+    """
+    try:
+        if not supervisor.is_running():
+            return False
+        if not supervisor.owns_process():
+            log.info(
+                "Quit: leaving adopted helix running on port %s (pid=%s — "
+                "it was started outside the launcher)",
+                supervisor.helix_port, supervisor.get_pid(),
+            )
+            return False
+        supervisor.stop(reason=reason)
+        return True
+    except Exception:
+        log.warning("Quit: helix stop failed (continuing)", exc_info=True)
+        return False
+
+
 def _port_is_free(host: str, port: int) -> bool:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.settimeout(0.5)
