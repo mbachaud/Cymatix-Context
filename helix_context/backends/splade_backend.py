@@ -206,49 +206,26 @@ def query_splade(
     if not query_sparse:
         return []
 
-    # Build SQL: sum(query_weight * doc_weight) per document
-    terms = list(query_sparse.keys())
-    placeholders = ",".join("?" * len(terms))
+    # Single SQL computing the query-weighted dot product per document:
+    # join the inverted index against the query vector (VALUES CTE) so
+    # LIMIT and min_score apply to the TRUE score. The previous two-pass
+    # version pre-filtered candidates by unweighted SUM(weight) term mass,
+    # which could discard a high-weighted-score document in favor of one
+    # with more raw mass but near-zero query overlap.
+    values_clause = ",".join("(?, ?)" for _ in query_sparse)
+    params: List[object] = []
+    for term, qw in query_sparse.items():
+        params.extend((term, qw))
 
-    # Candidate document ids (pre-filtered by raw-weight sum so we don't pull the
-    # full inverted list for rare terms).
-    candidate_rows = conn.execute(
-        f"SELECT gene_id, SUM(weight) as raw_score "
-        f"FROM splade_terms "
-        f"WHERE term IN ({placeholders}) "
-        f"GROUP BY gene_id "
-        f"HAVING raw_score > ? "
-        f"ORDER BY raw_score DESC "
+    rows = conn.execute(
+        f"WITH q(term, qw) AS (VALUES {values_clause}) "
+        f"SELECT st.gene_id, SUM(st.weight * q.qw) AS score "
+        f"FROM splade_terms st JOIN q ON st.term = q.term "
+        f"GROUP BY st.gene_id "
+        f"HAVING score > ? "
+        f"ORDER BY score DESC "
         f"LIMIT ?",
-        terms + [min_score, limit],
+        params + [min_score, limit],
     ).fetchall()
 
-    if not candidate_rows:
-        return []
-
-    candidate_ids = [gid for gid, _ in candidate_rows]
-
-    # Single SQL to pull (gene_id, term, weight) for every (candidate, query-term)
-    # pair — replaces the per-document N+1 SELECT. Ordering by gene_id lets us
-    # aggregate rows into the query-weighted dot product without needing a
-    # GROUP BY that recomputes Python-side anyway.
-    gene_placeholders = ",".join("?" * len(candidate_ids))
-    pair_rows = conn.execute(
-        f"SELECT gene_id, term, weight FROM splade_terms "
-        f"WHERE gene_id IN ({gene_placeholders}) "
-        f"AND term IN ({placeholders})",
-        list(candidate_ids) + terms,
-    ).fetchall()
-
-    # Query-weighted dot product per document.
-    dot_by_gene: Dict[str, float] = {gid: 0.0 for gid in candidate_ids}
-    for gene_id, term, weight in pair_rows:
-        dot_by_gene[gene_id] = dot_by_gene.get(gene_id, 0.0) + (
-            query_sparse.get(term, 0) * weight
-        )
-
-    scored: List[Tuple[str, float]] = [
-        (gid, dot_by_gene[gid]) for gid in candidate_ids
-    ]
-    scored.sort(key=lambda x: x[1], reverse=True)
-    return scored[:limit]
+    return [(gene_id, score) for gene_id, score in rows]
