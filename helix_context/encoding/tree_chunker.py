@@ -300,13 +300,27 @@ def chunk_code_ast_with_meta(
             "language": language,
         }
 
+    def snap_to_char(pos: int) -> int:
+        """Snap a byte offset back onto a UTF-8 character boundary.
+
+        A UTF-8 continuation byte is 0b10xxxxxx; walking backwards past them
+        lands on the codepoint's lead byte, so no cut ever splits a
+        multibyte character (which would decode to U+FFFD on both sides).
+        """
+        while pos > 0 and (code_bytes[pos] & 0xC0) == 0x80:
+            pos -= 1
+        return pos
+
     def char_cut(start: int, end: int) -> List[Span]:
         """Last-resort hard cut of an atomic oversized span at char boundaries."""
         out: List[Span] = []
         s = start
         while end - s > max_chars:
-            out.append((s, s + max_chars, True, None))
-            s += max_chars
+            cut = snap_to_char(s + max_chars)
+            if cut <= s:  # degenerate budget smaller than one codepoint
+                cut = s + max_chars
+            out.append((s, cut, True, None))
+            s = cut
         if end > s:
             out.append((s, end, False, None))
         return out

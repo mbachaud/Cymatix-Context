@@ -107,16 +107,19 @@ class CodonChunker:
                     seq += 1
 
                 if len(p) >= self.max_chars:
-                    # Hard cut — polyadenylation trigger
-                    strands.append(RawStrand(
-                        content=p[: self.max_chars],
-                        sequence_index=seq,
-                        is_fragment=True,
-                        content_type="text",
-                        metadata=metadata,
-                    ))
-                    seq += 1
-                    current = p[self.max_chars :] + "\n\n"
+                    # Hard cut — polyadenylation trigger. Loop so the
+                    # remainder is re-cut until every piece fits the budget.
+                    while len(p) >= self.max_chars:
+                        strands.append(RawStrand(
+                            content=p[: self.max_chars],
+                            sequence_index=seq,
+                            is_fragment=True,
+                            content_type="text",
+                            metadata=metadata,
+                        ))
+                        seq += 1
+                        p = p[self.max_chars :]
+                    current = p + "\n\n"
                 else:
                     current = p + "\n\n"
 
@@ -229,15 +232,19 @@ class CodonChunker:
                     seq += 1
 
                 if len(block) >= self.max_chars:
-                    strands.append(RawStrand(
-                        content=block[: self.max_chars],
-                        sequence_index=seq,
-                        is_fragment=True,
-                        content_type="code",
-                        metadata=metadata,
-                    ))
-                    seq += 1
-                    current = block[self.max_chars :]
+                    # Loop so the remainder is re-cut until every piece
+                    # fits the budget (mirrors the text hard-cut path).
+                    while len(block) >= self.max_chars:
+                        strands.append(RawStrand(
+                            content=block[: self.max_chars],
+                            sequence_index=seq,
+                            is_fragment=True,
+                            content_type="code",
+                            metadata=metadata,
+                        ))
+                        seq += 1
+                        block = block[self.max_chars :]
+                    current = block
                 else:
                     current = block
 
