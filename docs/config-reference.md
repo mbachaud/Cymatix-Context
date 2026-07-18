@@ -197,6 +197,10 @@ calibration adds a per-classifier override path for `foveated_alpha`
 | `foveated_c_min` | `float` | `0.15` | Rank-N floor compression ratio. Pinned at 0.15 by spec §4.1. |
 | `foveated_base_chars` | `int` | `1000` | Per-document char-budget multiplier. Each document's target_chars = int(c_i · foveated_base_chars). Default 1000 matches the current uniform behavior at c_i = 1.0. The Step 4 compression loop in context_manager.py uses 1000 today; keeping this configurable lets bench cells (and a future on-by-default ship) tune the top-1 ceiling without touching code. |
 | `splice_target_chars` | `int` | `0` | Splice-floor fix (J-space council kill-switch #1, 2026-07-06). Per-document char target for the Step-4 splice loop (non-foveated path). 0 (default) = budget-proportional auto: int(expression_tokens · 4 chars/token · 0.9) // n_candidates, floored at the legacy 1000 — so no document ever gets less room than the old uniform cap, and the expression budget is actually used (12 × 1000 chars ≈ 3000 tokens vs the default 7000). Any positive value pins a fixed target; 1000 restores the exact legacy query-agnostic floor. See context_manager. _compute_splice_target and encoding/headroom_bridge. _query_aware_trim (truncation keeps query-term lines either way). |
+| `tier_tight_ratio` | `float` | `3.0` | Issue #207 item 4: top/mean ratio at-or-above which retrieval enters TIGHT tier (top 3 docs). Prior literal 3.0 in pipeline/tier_logic.py. |
+| `tier_focused_ratio` | `float` | `1.8` | Issue #207 item 4: top/mean ratio at-or-above which retrieval enters FOCUSED tier (top 6 docs). Prior literal 1.8 in pipeline/tier_logic.py. |
+| `tier_hard_floor_frac` | `float` | `0.15` | Issue #207 item 4: score-gate hard floor — drop candidates scoring below this fraction of the top score (they move to the shadow pool at 0.5x weight). Prior literal 0.15 in pipeline/tier_logic.py. |
+| `tier_lagrange_frac` | `float` | `0.7` | Issue #207 item 4: Lagrange pull-back threshold — a shadow-pool doc needs standalone score >= this fraction of the winners' floor (plus <20% co-activation overlap) to be pulled back. Prior literal 0.7 in pipeline/tier_logic.py. |
 <!-- END GENERATED -->
 
 **Note:** despite sometimes appearing alongside these keys in prose,
@@ -1108,6 +1112,8 @@ Other classes may be omitted; runtime falls back to
 | Key | Type | Default | Description |
 |---|---|---|---|
 | `mode` | `str` | `"global"` |  |
+| `ratio_threshold` | `float` | `1.8` | Issue #207 item 4: ABSTAIN ratio gate under additive fusion (legacy top/mean ratio). Prior literal ABSTAIN_RATIO_THRESHOLD=1.8 in pipeline/tier_logic.py. Additive-calibrated; exposing it does not recalibrate it (#287). |
+| `ratio_threshold_rrf_norm` | `float` | `1.5` | Issue #207 item 4: ABSTAIN ratio gate under RRF fusion (baseline-subtracted norm ratio, issue #115). Prior literal ABSTAIN_RATIO_THRESHOLD_RRF_NORM=1.5 in pipeline/tier_logic.py. Under RRF the absolute floors are bypassed and this gate runs alone. |
 <!-- END GENERATED -->
 
 **Sub-tables.** `[abstain.factual]`, `[abstain.multi_hop]`,

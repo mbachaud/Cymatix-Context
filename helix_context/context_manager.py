@@ -1798,14 +1798,26 @@ class HelixContextManager:
             )
 
         # Dynamic budget tiers — delegates to pipeline.tier_logic.
+        # Issue #207 item 4: the tier/abstain constants thread from
+        # [budget] tier_* + [abstain] ratio_threshold* config knobs;
+        # defaults reproduce the prior hard-coded literals byte-for-byte.
+        from .config import AbstainConfig
         from .pipeline.tier_logic import apply_budget_tiers as _apply_tiers
         _cls_floors = self._floors_for(cls_for_floors)
+        _budget_cfg = self.config.budget
+        _abstain_cfg = getattr(self.config, "abstain", None) or AbstainConfig()
         _tier = _apply_tiers(
             candidates,
             self.genome.last_query_scores,
             _cls_floors,
             abstain_enabled=abstain_enabled,
             fusion_mode=getattr(self.genome, "_fusion_mode", "additive"),
+            tight_ratio=_budget_cfg.tier_tight_ratio,
+            focused_ratio=_budget_cfg.tier_focused_ratio,
+            hard_floor_frac=_budget_cfg.tier_hard_floor_frac,
+            lagrange_frac=_budget_cfg.tier_lagrange_frac,
+            abstain_ratio_threshold=_abstain_cfg.ratio_threshold,
+            abstain_ratio_threshold_rrf_norm=_abstain_cfg.ratio_threshold_rrf_norm,
         )
         if _tier.abstain:
             return self._build_abstain_window(

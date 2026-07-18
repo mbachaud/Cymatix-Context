@@ -35,6 +35,8 @@ from pathlib import Path
 import pytest
 
 from helix_context.config import (
+    AbstainClassFloors,
+    AbstainConfig,
     BudgetConfig,
     HelixConfig,
     IngestionConfig,
@@ -528,3 +530,274 @@ def test_decoder_mode_overrides_take_precedence_over_everything():
 def test_decoder_mode_overrides_first_matching_key_wins():
     overrides = {"mistral": "large", "mistral:7b": "small"}
     assert resolve_model_capability_class("mistral:7b", overrides=overrides) == "large"
+
+
+# ── Item 4 (2026-07-16): budget-tier + abstain constants -> knobs ────────
+#
+# pipeline/tier_logic.py's hard-coded tier constants (tight/focused ratio
+# gates 3.0/1.8, the 0.15 hard score-gate floor, the 0.7 Lagrange
+# pull-back multiplier) and ABSTAIN ratio thresholds (1.8 additive / 1.5
+# RRF-norm) become [budget] tier_* / [abstain] ratio_threshold* knobs.
+# Defaults MUST reproduce the prior literals byte-for-byte. NOTE: these
+# were additive-calibrated on owner-corpus probes and the abstain gates
+# run ratio-only under RRF — exposing them does NOT recalibrate them
+# (that is #287's scope).
+
+
+def _tier_case(vals, **co_activated):
+    """Build (candidates, scores) with descending ``vals``; candidates
+    arrive pre-sorted by score exactly like the pipeline call site.
+    ``co_activated`` maps index (as ``i<N>``) -> co_activated_with list.
+    """
+    candidates = [
+        make_gene(
+            f"item4_{i}",
+            gene_id=f"item4_gene_{i:08d}",
+            co_activated_with=co_activated.get(f"i{i}"),
+        )
+        for i in range(len(vals))
+    ]
+    scores = {candidates[i].gene_id: vals[i] for i in range(len(vals))}
+    return candidates, scores
+
+
+def _tier_fingerprint(result):
+    """Everything a tier decision consists of, for byte-identity compares."""
+    return (
+        result.budget_tier,
+        result.budget_tokens_est,
+        [g.gene_id for g in result.candidates],
+        sorted(g.gene_id for g in result.shadow_pool),
+        dict(result.shadow_scores),
+        result.abstain,
+        result.abstain_top_score,
+        result.abstain_ratio,
+    )
+
+
+def test_tier_abstain_knob_defaults_match_prior_literals():
+    b = BudgetConfig()
+    assert b.tier_tight_ratio == 3.0
+    assert b.tier_focused_ratio == 1.8
+    assert b.tier_hard_floor_frac == 0.15
+    assert b.tier_lagrange_frac == 0.7
+    a = AbstainConfig()
+    assert a.ratio_threshold == 1.8
+    assert a.ratio_threshold_rrf_norm == 1.5
+
+
+def test_tier_abstain_knobs_load_from_toml(tmp_path):
+    toml = tmp_path / "helix.toml"
+    toml.write_text(textwrap.dedent("""
+        [budget]
+        tier_tight_ratio = 4.0
+        tier_focused_ratio = 2.2
+        tier_hard_floor_frac = 0.25
+        tier_lagrange_frac = 0.55
+
+        [abstain]
+        ratio_threshold = 2.1
+        ratio_threshold_rrf_norm = 1.7
+    """), encoding="utf-8")
+    cfg = load_config(str(toml))
+    assert cfg.budget.tier_tight_ratio == 4.0
+    assert cfg.budget.tier_focused_ratio == 2.2
+    assert cfg.budget.tier_hard_floor_frac == 0.25
+    assert cfg.budget.tier_lagrange_frac == 0.55
+    assert cfg.abstain.ratio_threshold == 2.1
+    assert cfg.abstain.ratio_threshold_rrf_norm == 1.7
+
+
+def test_tier_abstain_knob_validation_falls_back_to_defaults(tmp_path):
+    """Non-positive or non-numeric values warn and keep the shipped
+    default instead of propagating (a 0 tight ratio would make EVERY
+    query TIGHT); valid keys in the same tables still apply."""
+    toml = tmp_path / "helix.toml"
+    toml.write_text(textwrap.dedent("""
+        [budget]
+        tier_tight_ratio = -1.0
+        tier_hard_floor_frac = 0.0
+        tier_lagrange_frac = "high"
+        tier_focused_ratio = 2.2
+
+        [abstain]
+        ratio_threshold = -2
+        ratio_threshold_rrf_norm = 1.7
+    """), encoding="utf-8")
+    cfg = load_config(str(toml))
+    assert cfg.budget.tier_tight_ratio == 3.0      # fell back
+    assert cfg.budget.tier_hard_floor_frac == 0.15  # fell back
+    assert cfg.budget.tier_lagrange_frac == 0.7     # fell back
+    assert cfg.budget.tier_focused_ratio == 2.2     # valid override kept
+    assert cfg.abstain.ratio_threshold == 1.8       # fell back
+    assert cfg.abstain.ratio_threshold_rrf_norm == 1.7
+
+
+def test_abstain_scalar_knobs_coexist_with_per_class_subtables(tmp_path):
+    """The [abstain] loader discovers class sub-tables by dict-ness; the
+    new scalar keys must not be mistaken for classes (and vice versa)."""
+    toml = tmp_path / "helix.toml"
+    toml.write_text(textwrap.dedent("""
+        [abstain]
+        mode = "per_classifier"
+        ratio_threshold = 2.1
+
+        [abstain.default]
+        abstain_top = 1.0
+        focused_top = 2.0
+        tight_top = 4.0
+    """), encoding="utf-8")
+    cfg = load_config(str(toml))
+    assert cfg.abstain.mode == "per_classifier"
+    assert cfg.abstain.ratio_threshold == 2.1
+    assert set(cfg.abstain.per_class) == {"default"}
+    assert cfg.abstain.per_class["default"].tight_top == 4.0
+
+
+# Golden tier decisions with default knobs. Each scenario pins the
+# behavior the prior literals produced (additive mode unless noted).
+_GOLDEN_TIER_CASES = [
+    # (vals, fusion_mode, expected_tier, expected_n_candidates, expected_abstain)
+    # ratio 3.13 >= 3.0, top 9 >= tight floor 5.0 -> TIGHT top-3
+    ([9.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0], "additive", "tight", 3, False),
+    # ratio 1.825 >= 1.8, top 6 >= focused floor 2.5 -> FOCUSED top-6
+    ([6.0, 2.9, 2.9, 2.9, 2.9, 2.9, 2.9, 2.9], "additive", "focused", 6, False),
+    # ratio 1.28 < 1.8 but top 4.0 >= abstain floor 2.5 -> BROAD keeps all
+    ([4.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0], "additive", "broad", 8, False),
+    # top 2.0 < 2.5 AND ratio 1.356 < 1.8 -> ABSTAIN
+    ([2.0, 1.4, 1.4, 1.4, 1.4, 1.4, 1.4, 1.4], "additive", "broad", 8, True),
+    # RRF: norm ratio (0.40-0.05)/(0.15-0.05) = 3.5 >= 1.5 -> no abstain;
+    # hard floor 0.40*0.15=0.06 cuts the 0.05 tail (4 left), legacy ratio
+    # 0.40/0.15=2.67 < 3.0 and only 4 candidates -> BROAD with 4.
+    ([0.40, 0.30, 0.20, 0.10, 0.05, 0.05, 0.05, 0.05], "rrf", "broad", 4, False),
+]
+
+
+@pytest.mark.parametrize("vals,fusion,tier,n,abstain", _GOLDEN_TIER_CASES)
+def test_tier_golden_decisions_at_defaults(vals, fusion, tier, n, abstain):
+    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    candidates, scores = _tier_case(vals)
+    result = apply_budget_tiers(
+        candidates, scores, AbstainClassFloors(), fusion_mode=fusion,
+    )
+    assert result.abstain is abstain
+    if not abstain:
+        assert result.budget_tier == tier
+        assert len(result.candidates) == n
+
+
+@pytest.mark.parametrize("vals,fusion,tier,n,abstain", _GOLDEN_TIER_CASES)
+def test_tier_defaults_byte_identical_to_config_defaults(vals, fusion, tier, n, abstain):
+    """Byte-identity proof: calling apply_budget_tiers with NO knob kwargs
+    (the former literals, now parameter defaults) and calling it with the
+    knob values a default BudgetConfig()/AbstainConfig() threads through
+    the context_manager call site must produce identical TierResults."""
+    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    b, a = BudgetConfig(), AbstainConfig()
+    candidates, scores = _tier_case(vals)
+    literal = apply_budget_tiers(
+        list(candidates), dict(scores), AbstainClassFloors(), fusion_mode=fusion,
+    )
+    candidates2, scores2 = _tier_case(vals)
+    threaded = apply_budget_tiers(
+        list(candidates2), dict(scores2), AbstainClassFloors(), fusion_mode=fusion,
+        tight_ratio=b.tier_tight_ratio,
+        focused_ratio=b.tier_focused_ratio,
+        hard_floor_frac=b.tier_hard_floor_frac,
+        lagrange_frac=b.tier_lagrange_frac,
+        abstain_ratio_threshold=a.ratio_threshold,
+        abstain_ratio_threshold_rrf_norm=a.ratio_threshold_rrf_norm,
+    )
+    assert _tier_fingerprint(literal) == _tier_fingerprint(threaded)
+
+
+def test_tier_tight_ratio_override_changes_decision():
+    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    vals = [9.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0]  # ratio 3.13
+    candidates, scores = _tier_case(vals)
+    default = apply_budget_tiers(candidates, scores, AbstainClassFloors())
+    assert default.budget_tier == "tight"
+    candidates, scores = _tier_case(vals)
+    raised = apply_budget_tiers(
+        candidates, scores, AbstainClassFloors(), tight_ratio=3.5,
+    )
+    assert raised.budget_tier == "focused"  # 3.13 < 3.5, falls to focused
+
+
+def test_tier_focused_ratio_override_changes_decision():
+    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    vals = [6.0, 2.9, 2.9, 2.9, 2.9, 2.9, 2.9, 2.9]  # ratio 1.825
+    candidates, scores = _tier_case(vals)
+    raised = apply_budget_tiers(
+        candidates, scores, AbstainClassFloors(), focused_ratio=2.0,
+    )
+    assert raised.budget_tier == "broad"  # 1.825 < 2.0
+
+
+def test_abstain_ratio_threshold_override_changes_decision():
+    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    vals = [2.0, 1.4, 1.4, 1.4, 1.4, 1.4, 1.4, 1.4]  # ratio 1.356, top < 2.5
+    candidates, scores = _tier_case(vals)
+    lowered = apply_budget_tiers(
+        candidates, scores, AbstainClassFloors(), abstain_ratio_threshold=1.2,
+    )
+    assert lowered.abstain is False  # 1.356 >= 1.2 now clears the gate
+
+
+def test_abstain_rrf_norm_threshold_override_changes_decision():
+    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    vals = [0.40, 0.30, 0.20, 0.10, 0.05, 0.05, 0.05, 0.05]  # norm ratio 3.5
+    candidates, scores = _tier_case(vals)
+    default = apply_budget_tiers(
+        candidates, scores, AbstainClassFloors(), fusion_mode="rrf",
+    )
+    assert default.abstain is False
+    candidates, scores = _tier_case(vals)
+    raised = apply_budget_tiers(
+        candidates, scores, AbstainClassFloors(), fusion_mode="rrf",
+        abstain_ratio_threshold_rrf_norm=4.0,
+    )
+    assert raised.abstain is True  # 3.5 < 4.0 trips the raised gate
+
+
+def test_tier_hard_floor_frac_override_changes_gating():
+    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    # floor = 10*0.15 = 1.5 cuts the five 1.0-docs -> 3 candidates, BROAD
+    vals = [10.0, 9.0, 8.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+    candidates, scores = _tier_case(vals)
+    default = apply_budget_tiers(candidates, scores, AbstainClassFloors())
+    assert default.budget_tier == "broad"
+    assert len(default.candidates) == 3
+    assert len(default.shadow_pool) == 5
+    # shadow scores preserved at 0.5x weight (existing behavior, unchanged)
+    assert all(v == 0.5 for v in default.shadow_scores.values())
+    # floor = 10*0.05 = 0.5 keeps all 8 -> FOCUSED trims to 6 instead
+    candidates, scores = _tier_case(vals)
+    loose = apply_budget_tiers(
+        candidates, scores, AbstainClassFloors(), hard_floor_frac=0.05,
+    )
+    assert loose.budget_tier == "focused"
+    assert len(loose.candidates) == 6
+    assert len(loose.shadow_pool) == 2
+
+
+def test_tier_lagrange_frac_override_changes_pullback():
+    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    # FOCUSED landscape (ratio 1.87): winners = first 6 (winner floor 5.0);
+    # the 4.0-doc survives the 1.35 hard floor but lands in the shadow
+    # pool via the FOCUSED trim. Its standalone 4.0 >= winner_floor*0.7 =
+    # 3.5 and it shares no co-activation with the winners -> the default
+    # Lagrange pull-back replaces the weakest winner with it.
+    vals = [9.0, 5.0, 5.0, 5.0, 5.0, 5.0, 4.0, 0.5]
+    pulled_id = "item4_gene_00000006"
+    candidates, scores = _tier_case(vals, i6=["totally_unrelated_gene"])
+    default = apply_budget_tiers(candidates, scores, AbstainClassFloors())
+    assert default.budget_tier == "focused"
+    assert pulled_id in {g.gene_id for g in default.candidates}
+    # lagrange_frac=0.9 -> threshold 4.5 > 4.0: no pull-back
+    candidates, scores = _tier_case(vals, i6=["totally_unrelated_gene"])
+    strict = apply_budget_tiers(
+        candidates, scores, AbstainClassFloors(), lagrange_frac=0.9,
+    )
+    assert strict.budget_tier == "focused"
+    assert pulled_id not in {g.gene_id for g in strict.candidates}
