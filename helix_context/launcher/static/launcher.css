@@ -1182,12 +1182,19 @@ p {
 }
 
 .modal {
+  position: relative;
   width: min(560px, 92vw);
   background: #161311;
   border: 1px solid #3a2f24;
   border-radius: 10px;
   padding: 1.1rem 1.25rem;
   box-shadow: 0 18px 60px rgba(0, 0, 0, 0.55);
+}
+
+.modal .modal-close {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.7rem;
 }
 
 .modal h2 { margin: 0 0 0.35rem; font-size: 1rem; }
