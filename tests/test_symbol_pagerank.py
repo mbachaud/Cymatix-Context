@@ -53,3 +53,35 @@ def test_session_weight_dominates_query_weight():
     nodes = ["s", "q", "n"]
     w = spr.build_personalization(nodes, query_symbol_nodes={"q"}, session_nodes={"s"})
     assert w["s"] > w["q"] > w["n"]
+
+
+# ── WS3 review P3: cap hand-off must never fail silently ──────────────────
+
+
+def test_symbol_expansion_cap_applied_to_capable_store():
+    from helix_context.context_manager import _apply_symbol_expansion_cap
+
+    class _Store:
+        pass
+
+    s = _Store()
+    _apply_symbol_expansion_cap(s, 4)
+    assert s._symbol_expansion_cap == 4
+
+
+def test_symbol_expansion_cap_incapable_store_warns_no_crash(caplog):
+    import logging
+
+    from helix_context.context_manager import _apply_symbol_expansion_cap
+
+    class _SlottedAdapter:
+        """Read adapter that rejects ad-hoc attributes (no __dict__)."""
+
+        __slots__ = ()
+
+    with caplog.at_level(logging.WARNING, logger="helix.context_manager"):
+        _apply_symbol_expansion_cap(_SlottedAdapter(), 4)  # must not raise
+    assert any(
+        "symbol_expansion_cap" in rec.getMessage() and rec.levelno == logging.WARNING
+        for rec in caplog.records
+    )
