@@ -37,6 +37,40 @@ jobs:
       - name: Run hardware test suite
         run: pytest tests/test_hardware.py tests/test_hardware_real_device.py tests/test_hardware_mps_smoke.py -v
 
+  # WS2 review FIX-4: targeted suites for the symbol-graph feature. The full
+  # unit suite is still blocked in CI by server import-time side effects (see
+  # the scope comments below) — this job scopes to the WS2 surface instead:
+  # extraction, pipeline, lifecycle cleanup, flag-off routing, write-lock
+  # integrity, and the config/reference-sync contract. The [ast] extra
+  # installs tree-sitter (+ grammars) so the skipif-marked symbol tests
+  # actually run rather than degrade to skips.
+  test-symbol-graph:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install CPU-only torch
+        run: pip install --index-url https://download.pytorch.org/whl/cpu torch
+
+      - name: Install package + test deps + tree-sitter extra
+        run: pip install -e ".[dev,ast]" psutil platformdirs py-cpuinfo numpy joblib scikit-learn
+
+      - name: Run symbol-graph test suites
+        run: >
+          pytest
+          tests/test_symbol_extraction.py
+          tests/test_symbol_graph_pipeline.py
+          tests/test_symbol_graph_lifecycle.py
+          tests/test_symbol_graph_flag_off.py
+          tests/test_config.py
+          tests/test_config_reference_sync.py
+          tests/test_store_write_integrity.py
+          -v
+
   test-macos-mps:
     runs-on: macos-14
     steps:
