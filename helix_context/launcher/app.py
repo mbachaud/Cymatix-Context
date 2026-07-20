@@ -190,15 +190,21 @@ def create_app(
             state["bench"] = None
         return state
 
+    # Handlers below are sync `def` on purpose (issue #305): they call
+    # collector.collect() / genome scans / supervisor waits, all of which
+    # block for seconds. Sync handlers run in Starlette's threadpool, so
+    # the event loop keeps answering /api/state while one is in flight —
+    # the db-select modal's auto-dismiss depends on that.
+
     @app.get("/", response_class=HTMLResponse)
-    async def dashboard_root(request: Request) -> HTMLResponse:
+    def dashboard_root(request: Request) -> HTMLResponse:
         state = _enrich(collector.collect())
         template = templates.get_template("dashboard.html")
         html = template.render(state=state, launcher_port=_launcher_port(request))
         return HTMLResponse(html)
 
     @app.get("/api/state/panels", response_class=HTMLResponse)
-    async def panels_partial(request: Request):
+    def panels_partial(request: Request):
         """Server-rendered HTML partial — just the panels, for polling."""
         if request.headers.get("sec-fetch-mode") == "navigate":
             return RedirectResponse("/", status_code=303)
@@ -210,13 +216,13 @@ def create_app(
     # ── JSON state API ─────────────────────────────────────────────
 
     @app.get("/api/state")
-    async def api_state():
+    def api_state():
         return _enrich(collector.collect())
 
     # ── bench instance controls (dev/configuration mode) ──────────
 
     @app.post("/api/control/bench/start")
-    async def api_bench_start():
+    def api_bench_start():
         if bench_supervisor is None:
             return JSONResponse(
                 {"ok": False, "error": "bench mode is disabled "
@@ -232,7 +238,7 @@ def create_app(
             return JSONResponse({"ok": False, "error": str(exc)}, status_code=500)
 
     @app.post("/api/control/bench/stop")
-    async def api_bench_stop():
+    def api_bench_stop():
         if bench_supervisor is None:
             return JSONResponse(
                 {"ok": False, "error": "bench mode is disabled"},
@@ -250,7 +256,7 @@ def create_app(
     #    "Manage Database" submenu — select or create from the web UI) ──
 
     @app.get("/api/genomes")
-    async def api_genomes():
+    def api_genomes():
         from . import genome_registry
         try:
             infos = genome_registry.discover_genomes()
@@ -366,7 +372,7 @@ def create_app(
     # ── control endpoints ──────────────────────────────────────────
 
     @app.post("/api/control/start")
-    async def api_control_start():
+    def api_control_start():
         try:
             pid = supervisor.start()
         except AlreadyRunning as exc:
@@ -397,7 +403,7 @@ def create_app(
         return {"ok": True, "pid": pid, "started_pending": False}
 
     @app.post("/api/control/stop")
-    async def api_control_stop():
+    def api_control_stop():
         try:
             supervisor.stop(reason="manual stop from launcher UI")
             return {"ok": True}
@@ -409,7 +415,7 @@ def create_app(
             return JSONResponse({"error": str(exc)}, status_code=500)
 
     @app.post("/api/control/restart")
-    async def api_control_restart():
+    def api_control_restart():
         try:
             pid = supervisor.restart(reason="manual restart from launcher UI")
         except (ShutdownTimeout, SupervisorError) as exc:
