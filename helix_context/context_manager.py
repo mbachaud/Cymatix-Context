@@ -956,8 +956,13 @@ class HelixContextManager:
             )
             self.genome.set_replication_manager(self._replication_mgr)
 
-        # Chunker (deterministic text splitting)
-        self.chunker = CodonChunker(max_chars_per_strand=4000)
+        # Chunker (deterministic text splitting). symbol_graph threads the
+        # [ingestion] flag down so flag-off ingest skips symbol extraction
+        # entirely (WS2 review FIX-3), not just emission.
+        self.chunker = CodonChunker(
+            max_chars_per_strand=4000,
+            symbol_graph=bool(getattr(config.ingestion, "symbol_graph", False)),
+        )
         self.encoder = CodonEncoder()
 
         # Compressor (small model codec) — explicit opt-in only. Legacy/default
