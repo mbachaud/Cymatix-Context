@@ -38,6 +38,8 @@
      endpoints and the dialog dismisses once helix reports running. #}
   <div class="modal-backdrop" data-db-modal {% if not state.needs_db_selection %}hidden{% endif %}>
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="db-modal-title">
+      <button class="btn btn--mini modal-close" data-db-modal-close
+              type="button" aria-label="Dismiss dialog">&#10005;</button>
       <h2 id="db-modal-title">Select a database</h2>
       <p class="muted">No genome was found at the active path. Pick an
         existing knowledge store or create a new one to start Helix.</p>

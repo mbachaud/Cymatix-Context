@@ -339,6 +339,10 @@
     if (!dbModal || dbModal.hidden) return;
     const list = dbModal.querySelector("[data-db-modal-list]");
     if (!list) return;
+    // Already showing real entries — don't re-render under the user's
+    // cursor; the placeholder has no buttons, so this only skips
+    // repopulation once a fetch has succeeded (#308).
+    if (list.querySelector("button")) return;
     try {
       const resp = await fetch("/api/genomes");
       const body = await resp.json();
@@ -365,7 +369,7 @@
         list.appendChild(li);
       }
     } catch (err) {
-      // next poll retries
+      // pollDbModal retries on the next tick
     }
   }
 
@@ -382,9 +386,24 @@
     }
   }
 
-  if (dbModal && !dbModal.hidden) {
+  function pollDbModal() {
+    maybeDismissDbModal();
+    // #308: population used to run only once at page load — a single
+    // failed /api/genomes fetch left a dead "Scanning…" placeholder
+    // with no Select buttons. Retry until entries render or the modal
+    // dismisses.
     populateDbModal();
-    setInterval(maybeDismissDbModal, 2000);
+  }
+
+  if (dbModal && !dbModal.hidden) {
+    const closeBtn = dbModal.querySelector("[data-db-modal-close]");
+    if (closeBtn) {
+      closeBtn.addEventListener("click", () => {
+        dbModal.hidden = true;
+      });
+    }
+    populateDbModal();
+    setInterval(pollDbModal, 2000);
   }
 
   restoreActiveTab();

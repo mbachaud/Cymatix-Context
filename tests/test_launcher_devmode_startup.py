@@ -119,6 +119,25 @@ def test_needs_db_selection_modal_and_clearing():
         assert "No database selected" in c.get("/api/state/panels").text
 
 
+def test_db_modal_has_manual_dismiss():
+    # #308: the modal previously had no exit path at all.
+    with _client(needs_db_selection=True) as c:
+        page = c.get("/").text
+        assert "data-db-modal-close" in page
+
+
+def test_db_modal_js_retries_and_wires_dismiss():
+    # #308: populateDbModal ran once at page load; a single failed
+    # /api/genomes fetch left a dead "Scanning…" placeholder with no
+    # Select buttons. No JS harness exists, so smoke the wiring: the
+    # poll callback must re-run population, and the dismiss control
+    # must be wired.
+    from helix_context.launcher.app import STATIC_DIR
+    js = (STATIC_DIR / "launcher.js").read_text(encoding="utf-8")
+    assert "data-db-modal-close" in js
+    assert "pollDbModal" in js
+
+
 def test_db_modal_hidden_when_not_needed():
     with _client(needs_db_selection=False) as c:
         page = c.get("/").text
