@@ -312,7 +312,13 @@ def chunk_code_ast_with_meta(
         return pos
 
     def char_cut(start: int, end: int) -> List[Span]:
-        """Last-resort hard cut of an atomic oversized span at char boundaries."""
+        """Last-resort hard cut of an atomic oversized span.
+
+        Cuts are walked back to a UTF-8 leading-byte boundary so a multibyte
+        codepoint is never split — otherwise ``text_of`` would emit U+FFFD and
+        the chunk would no longer be a verbatim ``code_bytes[start:end]`` slice
+        (the byte-exact invariant WS2 span recovery relies on).
+        """
         out: List[Span] = []
         s = start
         while end - s > max_chars:
@@ -541,10 +547,23 @@ def chunk_code_with_symbols(
         idx = code_bytes.find(tb, cursor)
         if idx < 0:
             idx = code_bytes.find(tb)
-        start = idx if idx >= 0 else cursor
+        if idx < 0:
+            # Chunks from chunk_code_ast_with_meta are byte-exact slices, so this
+            # should never happen. Be defensive: record a sentinel span and DON'T
+            # advance the cursor or fabricate offsets — fabricating start=cursor
+            # would shift every later chunk's bucket window and misattribute every
+            # downstream symbol. Symbols simply don't bucket into a sentinel.
+            spans.append((-1, -1))
+            out.append({
+                "text": text, "is_fragment": frag,
+                "start_byte": -1, "end_byte": -1,
+                "defs": set(), "refs": set(),
+            })
+            continue
+        start = idx
         end = start + len(tb)
         spans.append((start, end))
-        cursor = end if end > cursor else cursor
+        cursor = end
         out.append({
             "text": text, "is_fragment": frag,
             "start_byte": start, "end_byte": end,

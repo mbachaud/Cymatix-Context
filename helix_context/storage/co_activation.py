@@ -114,6 +114,7 @@ def expand_coactivated(
     limit: int,
     conn: sqlite3.Connection,
     entity_graph_enabled: bool,
+    symbol_expansion_cap: int = 8,
 ) -> List[Gene]:
     """Expand retrieved gene list with co-activated neighbours.
 
@@ -164,16 +165,42 @@ def expand_coactivated(
     try:
         from ..schemas import StructuralRelation
         cand_ids = [g.gene_id for g in genes]
-        if cand_ids:
+        if cand_ids and symbol_expansion_cap != 0:
             ph = ",".join("?" * len(cand_ids))
             sref = cur.execute(
-                f"SELECT DISTINCT gene_id_b FROM gene_relations "
+                f"SELECT gene_id_a, gene_id_b FROM gene_relations "
                 f"WHERE relation = ? AND gene_id_a IN ({ph})",
                 (int(StructuralRelation.SYMBOL_REF), *cand_ids),
             ).fetchall()
-            additional_ids.update(
-                row[0] for row in sref if row[0] not in existing_ids
-            )
+            ref_defs = [b for (a, b) in sref if b not in existing_ids]
+            uniq = list(dict.fromkeys(ref_defs))
+            # WS3 Phase 2a: bound the expansion. Unbounded, dumping every
+            # referenced definition into a large token budget displaces gold
+            # (the fingerprint@27k -14pp regression). Keep the top-`cap`
+            # definitions ranked by structural centrality — personalized
+            # PageRank over the candidate->definition SYMBOL_REF subgraph, biased
+            # toward the retrieved candidates — so the *central* definitions
+            # (those many hits point at) survive and peripheral ones drop.
+            cap = symbol_expansion_cap if symbol_expansion_cap > 0 else len(uniq)
+            if len(uniq) > cap:
+                # Ranking method for the top-cap selection. Default = personalized
+                # PageRank centrality. HELIX_EXPANSION_RANK=indegree selects the
+                # simpler raw in-degree (count of candidate referencers per def) —
+                # the council's ablation lever: if in-degree matches PageRank on
+                # the bench, the PageRank module isn't earning its place.
+                import os
+                if os.environ.get("HELIX_EXPANSION_RANK", "").strip().lower() == "indegree":
+                    from collections import Counter
+                    keep = set(uniq)
+                    indeg = Counter(b for (a, b) in sref if b in keep)
+                    uniq = sorted(uniq, key=lambda d: indeg.get(d, 0), reverse=True)[:cap]
+                else:
+                    from ..scoring import symbol_pagerank as spr
+                    cent = spr.symbol_centrality(
+                        uniq, [(a, b) for (a, b) in sref], query_symbol_nodes=cand_ids,
+                    )
+                    uniq = sorted(uniq, key=lambda d: cent.get(d, 0.0), reverse=True)[:cap]
+            additional_ids.update(uniq)
     except Exception:
         log.debug("Symbol-graph (SYMBOL_REF) expansion failed", exc_info=True)
 

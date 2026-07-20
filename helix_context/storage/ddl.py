@@ -215,6 +215,14 @@ def _create_gene_relations(cur: sqlite3.Cursor) -> None:
         PRIMARY KEY (gene_id_a, gene_id_b)
     )
     """)
+    # WS2/WS3 query-time SYMBOL_REF edge fetch filters `WHERE relation = ? AND
+    # gene_id_a IN (...)`. The PK only covers gene_id_a as a prefix and leaves
+    # `relation` a post-filter; this index makes the typed-edge lookup
+    # index-covered on large genomes.
+    cur.execute(
+        "CREATE INDEX IF NOT EXISTS idx_gene_relations_rel_a "
+        "ON gene_relations(relation, gene_id_a)"
+    )
 
 
 # ---------------------------------------------------------------------------

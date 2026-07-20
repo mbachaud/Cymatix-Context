@@ -436,6 +436,12 @@ class RetrievalConfig:
     # with Laplace-smoothed co_count vs miss_count per edge.
     seeded_edges_enabled: bool = False  # Dark ship — flip to start evidence accumulation
     seeded_edge_weight: float = 1.0     # Base weight written on seed insertion
+    # WS3: cap on referenced definitions pulled in by symbol-graph expansion
+    # (SYMBOL_REF). When more than `cap` candidates reference distinct defs, keep
+    # the top-`cap` by structural-centrality PageRank. 0 disables symbol
+    # expansion; <0 keeps all (unbounded — regresses budget-fill arms). Default
+    # 8 recovers the WS2 fingerprint regression while preserving the packet gain.
+    symbol_expansion_cap: int = 8
     # Tier 0.5 filename-anchor (2026-04-15 Dewey-pivot spike).
     # Dewey bench showed filename alone outperforms the full
     # project+module+filename bag by 24pp. Boosts documents whose
@@ -1339,6 +1345,7 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             bm25_prefilter_size=int(r.get("bm25_prefilter_size", cfg.retrieval.bm25_prefilter_size)),
             fts5_candidate_depth=int(r.get("fts5_candidate_depth", cfg.retrieval.fts5_candidate_depth)),
             entity_graph_retrieval_enabled=bool(r.get("entity_graph_retrieval_enabled", cfg.retrieval.entity_graph_retrieval_enabled)),
+            symbol_expansion_cap=int(r.get("symbol_expansion_cap", cfg.retrieval.symbol_expansion_cap)),
             dense_embedding_enabled=bool(r.get("dense_embedding_enabled", cfg.retrieval.dense_embedding_enabled)),
             dense_embedding_dim=int(r.get("dense_embedding_dim", cfg.retrieval.dense_embedding_dim)),
             # #207 dense fast-follow: BGE-M3 model ID.

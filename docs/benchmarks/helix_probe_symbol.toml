@@ -1,11 +1,13 @@
 # helix_probe_symbol.toml
 # -------------------------------------------------------------------------
 # Symbol-graph probe profile (external-bench arm C: WS2 #230 + WS3 #231).
-# Identical to helix_probe_lexical.toml except the symbol graph is ON
-# ([ingestion] symbol_graph = true, [retrieval] symbol_expansion_cap).
-# All other neural/GPU paths remain OFF: pure FTS5 + tag lookup +
-# synonym expansion + BM25 shortlist + symbol-edge expansion.
-# LLM-free, GPU-free.
+# Generated from helix_probe_lexical.toml via tomllib read + tomli_w write
+# (no hand edits, no key drift -- gap A3 fix) plus exactly two overrides:
+#   [ingestion] symbol_graph = true
+#   [retrieval] symbol_expansion_cap = 8
+# Everything else is byte-equal in VALUE to the lexical probe: all
+# neural/GPU paths OFF (pure FTS5 + tag lookup + synonym expansion +
+# BM25 shortlist + symbol-edge expansion). LLM-free, GPU-free.
 #
 # Pass explicitly via --helix-config / HELIX_CONFIG when serving the
 # arm-C comparison; the lexical probe stays the default for
@@ -27,6 +29,7 @@ max_genes_per_turn = 12
 decoder_mode = "none"
 legibility_enabled = false
 session_delivery_enabled = false
+abstain_enabled = false
 
 [session]
 synthetic_session_enabled = false
@@ -41,15 +44,14 @@ port = 11437
 upstream = "http://localhost:11434"
 
 [ingestion]
-symbol_graph = true
 backend = "cpu"
 splade_enabled = false
 dense_embed_on_ingest = false
 rerank_enabled = false
 entity_graph = false
+symbol_graph = true
 
 [retrieval]
-symbol_expansion_cap = 8
 dense_embedding_enabled = false
 sr_enabled = false
 ray_trace_theta = false
@@ -61,6 +63,7 @@ bm25_shortlist_size = 50
 bm25_prefilter_enabled = false
 entity_graph_retrieval_enabled = false
 fusion_mode = "additive"
+symbol_expansion_cap = 8
 
 [context]
 cold_tier_enabled = false
@@ -69,7 +72,244 @@ cold_tier_enabled = false
 enabled = false
 
 [know]
-confidence_floor = 0.0
+emit_floor = 0.0
 
-[abstain]
-enabled = false
+[synonyms]
+slow = [
+    "performance",
+    "latency",
+    "bottleneck",
+    "timeout",
+    "lag",
+]
+fast = [
+    "performance",
+    "speed",
+    "optimization",
+    "cache",
+]
+cache = [
+    "redis",
+    "ttl",
+    "invalidation",
+    "cdn",
+    "caching",
+    "eviction",
+]
+auth = [
+    "jwt",
+    "login",
+    "security",
+    "token",
+    "session",
+    "oauth",
+]
+protein = [
+    "folding",
+    "amino",
+    "alpha_helix",
+    "beta_sheet",
+    "alphafold",
+    "biochemistry",
+]
+tree = [
+    "btree",
+    "b-tree",
+    "data_structures",
+    "index",
+    "binary_tree",
+]
+helix = [
+    "genome",
+    "ribosome",
+    "codons",
+    "splice",
+    "chromatin",
+    "promoter",
+    "context compression",
+]
+pipeline = [
+    "steps",
+    "expression",
+    "workflow",
+    "process",
+    "stages",
+]
+scoring = [
+    "divergence",
+    "audit",
+    "grades",
+    "ratchet",
+    "dimensions",
+]
+compress = [
+    "compression",
+    "ratio",
+    "target",
+    "context_compression",
+]
+ratio = [
+    "compression",
+    "ratio",
+    "target",
+    "factor",
+]
+error = [
+    "exception",
+    "crash",
+    "failure",
+    "bug",
+    "traceback",
+]
+port = [
+    "proxy",
+    "server",
+    "configuration",
+    "system_settings",
+    "api",
+]
+threshold = [
+    "divergence",
+    "scoring",
+    "reconciliation",
+    "configuration",
+]
+model = [
+    "ollama",
+    "llm",
+    "configuration",
+    "deployment",
+    "agent_frameworks",
+]
+skills = [
+    "fleet",
+    "agent",
+    "worker",
+    "llm_systems",
+    "systems_architecture",
+]
+monetary = [
+    "decimal",
+    "financial",
+    "data_processing",
+    "bookkeeping",
+]
+budget = [
+    "tokens",
+    "configuration",
+    "ribosome",
+    "expression",
+]
+dimensions = [
+    "audit",
+    "scoring",
+    "preset",
+    "ci_cd",
+]
+binary = [
+    "rust",
+    "deployment",
+    "packaging",
+    "compatibility",
+]
+default = [
+    "configuration",
+    "system_settings",
+    "deployment",
+]
+db = [
+    "database",
+    "sqlite",
+    "postgres",
+    "sql",
+    "query",
+    "schema",
+]
+api = [
+    "endpoint",
+    "route",
+    "rest",
+    "http",
+    "request",
+    "response",
+]
+ui = [
+    "frontend",
+    "component",
+    "render",
+    "layout",
+    "css",
+    "style",
+]
+test = [
+    "pytest",
+    "unittest",
+    "mock",
+    "assert",
+    "coverage",
+]
+deploy = [
+    "docker",
+    "kubernetes",
+    "ci",
+    "cd",
+    "pipeline",
+    "helm",
+]
+config = [
+    "settings",
+    "toml",
+    "env",
+    "environment",
+    "dotenv",
+]
+conductor = [
+    "llm",
+    "agent",
+    "orchestration",
+    "model",
+    "fleet",
+]
+vacuum = [
+    "reclaim",
+    "sqlite",
+    "pages",
+    "compact",
+    "shrink",
+    "admin",
+]
+sike = [
+    "scale_invariant",
+    "benchmark",
+    "retrieval",
+    "sike_score",
+]
+moe = [
+    "mixture_of_experts",
+    "sliding_window",
+    "swa",
+    "gemma4",
+    "tissue",
+    "answer_slate",
+]
+slate = [
+    "answer_slate",
+    "kv_facts",
+    "front_loaded",
+    "extraction",
+    "moe",
+]
+decoder = [
+    "decoder_mode",
+    "condensed",
+    "moe",
+    "ribosome_prompt",
+    "instructions",
+]
+maintenance = [
+    "admin",
+    "vacuum",
+    "refresh",
+    "checkpoint",
+    "compact",
+]

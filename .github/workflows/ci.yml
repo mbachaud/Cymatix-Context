@@ -66,6 +66,7 @@ jobs:
         run: >
           pytest
           tests/test_symbol_extraction.py
+          tests/test_symbol_pagerank.py
           tests/test_symbol_graph_pipeline.py
           tests/test_symbol_graph_lifecycle.py
           tests/test_symbol_graph_flag_off.py

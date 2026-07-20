@@ -687,6 +687,7 @@ which stay additive) lives in
 | `theta_weight` | `float` | `1.0` | Softmax temperature on v·document dot product |
 | `seeded_edges_enabled` | `bool` | `false` | Dark ship — flip to start evidence accumulation |
 | `seeded_edge_weight` | `float` | `1.0` | Base weight written on seed insertion |
+| `symbol_expansion_cap` | `int` | `8` | WS3: cap on referenced definitions pulled in by symbol-graph expansion (SYMBOL_REF). When more than `cap` candidates reference distinct defs, keep the top-`cap` by structural-centrality PageRank. 0 disables symbol expansion; <0 keeps all (unbounded — regresses budget-fill arms). Default 8 recovers the WS2 fingerprint regression while preserving the packet gain. |
 | `filename_anchor_enabled` | `bool` | `true` | Stage-1 bench flip 2026-04-22: +12pp Dewey axis-2. Default aligned with shipped helix.toml (2026-06-12 default-honesty pass) |
 | `filename_anchor_weight` | `float` | `4.0` | Per-match boost (higher than Tier 1's 3.0) |
 | `bm25_shortlist_enabled` | `bool` | `true` | Keep on (2026-04-22 sprint): +1/8 ans_full, clean attribution. Default aligned with shipped helix.toml (2026-06-12 default-honesty pass) |

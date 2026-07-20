@@ -95,6 +95,29 @@ _pipeline_events: "_collections.deque[dict]" = _collections.deque(
 )
 
 
+def _apply_symbol_expansion_cap(genome, cap: int) -> None:
+    """Hand the [retrieval] symbol_expansion_cap to the store's co-activation
+    expansion (top-K referenced definitions by centrality — WS3).
+
+    Best-effort by design: a read adapter that does not accept ad-hoc
+    attributes (e.g. a slotted/frozen sharded adapter) keeps its built-in
+    default cap. But never silent (WS3 review P3) — an explicitly configured
+    cap that cannot bind would otherwise no-op invisibly, so the failure is
+    logged at warning with the store type and the cap that was dropped.
+    """
+    try:
+        genome._symbol_expansion_cap = cap
+    except Exception as exc:
+        log.warning(
+            "symbol_expansion_cap=%s could not be applied to store %s (%s: %s); "
+            "co-activation symbol expansion keeps its built-in default cap",
+            cap,
+            type(genome).__name__,
+            type(exc).__name__,
+            exc,
+        )
+
+
 def _pipeline_ring_enabled() -> bool:
     """The ring is on by default; disable with HELIX_PIPELINE_RING=0."""
     return os.environ.get("HELIX_PIPELINE_RING", "1").strip().lower() not in (
@@ -943,6 +966,12 @@ class HelixContextManager:
             # Genome and every per-shard Genome); binds on the cross-shard
             # merge. Default-inert "additive" == the shipped ×1.15 multiply.
             doc_type_boost_mode=config.retrieval.doc_type_boost_mode,
+        )
+
+        # WS3: hand the symbol-expansion cap to the genome's co-activation
+        # expansion (top-K referenced defs by centrality).
+        _apply_symbol_expansion_cap(
+            self.genome, config.retrieval.symbol_expansion_cap
         )
 
         # Persistence manager (distributed knowledge store clones)

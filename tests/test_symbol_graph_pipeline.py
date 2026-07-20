@@ -68,3 +68,72 @@ def test_symbol_graph_end_to_end(tmp_path, monkeypatch):
     expanded = {g.gene_id for g in expand_coactivated(
         [caller], limit=10, conn=conn, entity_graph_enabled=False)}
     assert ct & expanded, "expansion did not surface the referenced definition"
+
+
+def _symdefs(conn):
+    out = {}
+    for sym, gid in conn.execute("SELECT symbol, gene_id FROM symbol_defs"):
+        out.setdefault(sym, []).append(gid)
+    return out
+
+
+def test_expansion_is_append_only_lexical_first(tmp_path, monkeypatch):
+    """Lexical-first guard: expansion only APPENDS referenced defs — it never
+    reorders or displaces the lexical candidates (PRD §4)."""
+    import sqlite3
+    from helix_context.storage.co_activation import expand_coactivated, _row_to_gene_inline
+
+    mgr = _manager(tmp_path, monkeypatch)
+    mgr.ingest(_CODE, content_type="code",
+               metadata={"path": "billing.py", "source_id": "billing.py"})
+    conn = mgr.genome.conn
+    sdefs = _symdefs(conn)
+    it_gid = sdefs["invoice_total"][0]
+    ct_gids = set(sdefs["compute_tax"])
+
+    conn.row_factory = sqlite3.Row
+    row = conn.execute("SELECT * FROM genes WHERE gene_id = ?", (it_gid,)).fetchone()
+    caller = _row_to_gene_inline(row)
+    expanded = expand_coactivated([caller], limit=20, conn=conn,
+                                  entity_graph_enabled=False, symbol_expansion_cap=8)
+    # the lexical candidate stays at rank 0; referenced defs only appear after it
+    assert expanded[0].gene_id == it_gid, "expansion displaced the lexical hit from rank 0"
+    assert ct_gids & {g.gene_id for g in expanded[1:]}, "referenced def not appended"
+
+
+def test_symbol_expansion_cap_bounds_top_k(tmp_path, monkeypatch):
+    """The cap actually bounds the expansion to top-K (WS3 Phase 2a core)."""
+    import sqlite3
+    from helix_context.schemas import StructuralRelation
+    from helix_context.storage.co_activation import expand_coactivated, _row_to_gene_inline
+
+    mgr = _manager(tmp_path, monkeypatch)
+    # 15 large helpers (each its own chunk) + one driver that calls all of them.
+    body = "\n".join(f"    a{j} = {j} * 2" for j in range(150))  # ~2.5k chars -> own chunk
+    helpers = "\n\n\n".join(f"def helper_{i}(x):\n{body}\n    return x" for i in range(15))
+    driver = ("def driver(items):\n    return ["
+              + " + ".join(f"helper_{i}(items)" for i in range(15)) + "]\n")
+    mgr.ingest(helpers + "\n\n\n" + driver, content_type="code",
+               metadata={"path": "m.py", "source_id": "m.py"})
+    conn = mgr.genome.conn
+    sdefs = _symdefs(conn)
+    assert "driver" in sdefs
+    driver_gid = sdefs["driver"][0]
+    n_edges = conn.execute(
+        "SELECT COUNT(*) FROM gene_relations WHERE relation = ? AND gene_id_a = ?",
+        (int(StructuralRelation.SYMBOL_REF), driver_gid),
+    ).fetchone()[0]
+    assert n_edges > 8, f"need >8 referenced defs to exercise the cap (got {n_edges})"
+
+    conn.row_factory = sqlite3.Row
+    row = conn.execute("SELECT * FROM genes WHERE gene_id = ?", (driver_gid,)).fetchone()
+    caller = _row_to_gene_inline(row)
+
+    capped = expand_coactivated([caller], limit=50, conn=conn,
+                                entity_graph_enabled=False, symbol_expansion_cap=8)
+    added = [g for g in capped if g.gene_id != driver_gid]
+    assert len(added) <= 8, f"cap=8 not respected: {len(added)} defs added"
+
+    disabled = expand_coactivated([caller], limit=50, conn=conn,
+                                  entity_graph_enabled=False, symbol_expansion_cap=0)
+    assert all(g.gene_id == driver_gid for g in disabled), "cap=0 should disable expansion"
