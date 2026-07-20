@@ -46,6 +46,12 @@ Corpus verified correct this time (46,517 genes on xl; the 07-02 and 07-03_0104 
 2. **Arm C (ws2+ws3 symbol graph) vs +1pp threshold:** C ≥ +1pp on either external bench → merge #230 then #231 with default-on; C regresses on both → WS2/WS3 stays dark permanently (flip `symbol_graph` default to False or park the PRs).
 3. PageRank-vs-in-degree ablation decides whether `symbol_pagerank.py` survives or simplifies (council flagged personalization as inert in the live path).
 
+#### WS2/WS3 gate outcome (recorded 2026-07-20)
+
+- **Gate cleared.** The arm-C ContextBench **held-out** re-run cleared rule 2's +1pp threshold: **packet +2.8pp (line) / +3.8pp (sym)** — see [2026-07-20 armc-contextbench-heldout](benchmarks/2026-07-20-armc-contextbench-heldout.md). This supersedes the 2026-06-28 sympy held-out read ("small/corpus-sensitive"); the regression log carries a dated addendum.
+- **Dark-ship chosen intentionally** — a deliberate deviation from rule 2's "merge default-on". SIKE 2026-07-19 showed a **prose-bed regression with the current code-query gating**, so `[ingestion] symbol_graph` stays default **False** in #230 (flipped on the branch 2026-07-20; the feature is fully available opt-in).
+- **Follow-up (owns the default flip, #231 lane):** `symbol_expansion_cap` sweep **{4, 16}** + code-gated default-on revisit once the gating validation clears the prose beds.
+
 ### Retrieval yardstick (added 2026-07-07)
 
 Retrieval levers must show **causal-use lift** (does the model *causally use* the newly-retrieved content),

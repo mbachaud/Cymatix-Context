@@ -290,9 +290,20 @@ class IngestionConfig:
     # worker and OOMing parallel bench runs even with dense/cymatics disabled.
     sema_embed_on_ingest: bool = True
     # WS2 (symbol graph): at ingest, index symbol definitions and emit
-    # referencing-chunk -> defining-chunk SYMBOL_REF edges (code only). Default
-    # True; resolution is intra-file (high precision). Off = WS1-only chunking.
-    symbol_graph: bool = True
+    # referencing-chunk -> defining-chunk SYMBOL_REF edges (code only).
+    # Resolution is intra-file (high precision). Off = WS1-only chunking, at
+    # zero extraction cost (the flag gates the symbol parse itself, not just
+    # emission — WS2 review FIX-3).
+    #
+    # Default False — INTENTIONAL DARK-SHIP (2026-07-20). The ContextBench
+    # held-out re-run cleared the merge gate (packet +2.8pp line / +3.8pp
+    # sym; docs/benchmarks/2026-07-20-armc-contextbench-heldout.md), so this
+    # deviates deliberately from decision rule 2's "merge default-on":
+    # SIKE 2026-07-19 showed a prose-bed regression with the current
+    # code-query gating, so default-on waits on the symbol_expansion_cap
+    # sweep {4,16} + code-gating validation. Flipping the default is #231's
+    # follow-up, not this PR's.
+    symbol_graph: bool = False
     # Issue #164 (size-aware SPLADE auto-toggle): SPLADE expansion's value
     # follows a corpus-regime curve -- the v2 EnterpriseRAG-Onyx storage
     # breakdown showed SPLADE at 21.1% of disk on the 850K-gene fixture

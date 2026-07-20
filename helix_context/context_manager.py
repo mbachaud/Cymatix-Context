@@ -1352,7 +1352,7 @@ class HelixContextManager:
         # definitions and emit referencing-chunk -> defining-chunk edges
         # (intra-file resolution; high precision). Best-effort: never break ingest.
         if (content_type == "code" and chunk_syms
-                and getattr(self.config.ingestion, "symbol_graph", True)):
+                and getattr(self.config.ingestion, "symbol_graph", False)):
             try:
                 self._emit_symbol_graph(chunk_syms)
             except Exception:

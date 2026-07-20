@@ -27,6 +27,21 @@ class Widget:
 '''
 
 
+def test_symbol_graph_default_is_dark_shipped():
+    """WS2 review FIX-5: [ingestion] symbol_graph ships default-False (dark).
+
+    The 2026-07-20 ContextBench held-out result cleared the gate (packet
+    +2.8pp line / +3.8pp sym), but dark-ship is the intentional decision
+    pending the cap sweep + code-gating validation — see
+    docs/benchmarks/2026-07-20-armc-contextbench-heldout.md and
+    docs/ROADMAP.md. Flipping this default belongs to #231's follow-up,
+    not a drive-by.
+    """
+    from helix_context.config import IngestionConfig
+
+    assert IngestionConfig().symbol_graph is False
+
+
 class TestChunkerFlagOff:
     def test_flag_off_never_invokes_symbol_extractor(self, monkeypatch):
         """With the flag off, chunk_code_with_symbols must not be called at
