@@ -66,9 +66,18 @@ class CodonChunker:
     via sequence_index and flags forced cuts via is_fragment.
     """
 
-    def __init__(self, max_chars_per_strand: int = 4000):
+    def __init__(self, max_chars_per_strand: int = 4000,
+                 symbol_graph: bool = False):
         # ~4000 chars ≈ ~1000 tokens, safe for a small compressor model
         self.max_chars = max_chars_per_strand
+        # WS2 review FIX-3: symbol def/ref extraction is opt-in. The flag
+        # gates EXTRACTION here (second parse + symbol walk in
+        # chunk_code_with_symbols), not just emission downstream — flag-off
+        # code chunking routes through the plain cAST chunker at zero extra
+        # cost and attaches no defs/refs metadata. Threaded from
+        # [ingestion] symbol_graph by the context manager; default mirrors
+        # the config default (dark-shipped, False).
+        self.symbol_graph = symbol_graph
 
     def chunk(
         self,
@@ -143,20 +152,47 @@ class CodonChunker:
         try:
             from . import tree_chunker
             if tree_chunker.is_available():
-                ast_blocks = tree_chunker.chunk_code_ast(
-                    code,
-                    max_chars=self.max_chars,
-                    source_id=source_id,
-                )
                 strands: List[RawStrand] = []
-                for seq, (block_text, is_fragment) in enumerate(ast_blocks):
-                    strands.append(RawStrand(
-                        content=block_text.strip(),
-                        sequence_index=seq,
-                        is_fragment=is_fragment,
-                        content_type="code",
-                        metadata=metadata,
-                    ))
+                if self.symbol_graph:
+                    # WS2: symbol-aware chunking — each chunk carries the
+                    # symbols it defines/references so the ingest path can
+                    # build the symbol graph.
+                    sym_chunks = tree_chunker.chunk_code_with_symbols(
+                        code,
+                        max_chars=self.max_chars,
+                        source_id=source_id,
+                    )
+                    for seq, ch in enumerate(sym_chunks):
+                        smeta = dict(metadata)
+                        if ch["defs"]:
+                            smeta["defs"] = ch["defs"]
+                        if ch["refs"]:
+                            smeta["refs"] = ch["refs"]
+                        strands.append(RawStrand(
+                            content=ch["text"].strip(),
+                            sequence_index=seq,
+                            is_fragment=ch["is_fragment"],
+                            content_type="code",
+                            metadata=smeta,
+                        ))
+                else:
+                    # WS2 review FIX-3: flag off — plain cAST chunking, no
+                    # symbol extraction pass, no defs/refs metadata. Chunk
+                    # texts are identical either way (chunk_code_with_symbols
+                    # wraps this same chunker).
+                    ast_blocks = tree_chunker.chunk_code_ast(
+                        code,
+                        max_chars=self.max_chars,
+                        source_id=source_id,
+                    )
+                    for seq, (block_text, is_fragment) in enumerate(ast_blocks):
+                        strands.append(RawStrand(
+                            content=block_text.strip(),
+                            sequence_index=seq,
+                            is_fragment=is_fragment,
+                            content_type="code",
+                            metadata=metadata,
+                        ))
                 if strands:
                     # Phase-0 observability (2026-07-01): prove the AST path
                     # fired. Bench assertion on code corpora:

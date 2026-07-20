@@ -3870,14 +3870,56 @@ class KnowledgeStore:
     def store_relations_batch(
         self, relations: list,
     ) -> None:
-        """Delegate to storage.co_activation.store_relations_batch."""
+        """Delegate to storage.co_activation.store_relations_batch.
+
+        WS2 review FIX-1: the delegate executes + commits on the shared
+        write connection. Hold the write lock for the whole operation
+        (mirrors upsert_doc, bug bash 2026-07-18) so this commit can never
+        publish another thread's half-written upsert — and roll back on
+        failure so a partial batch is not swept into the next commit.
+        """
         from .storage.co_activation import store_relations_batch
-        store_relations_batch(self.conn, relations)
+        with self._write_lock:
+            try:
+                store_relations_batch(self.conn, relations)
+            except Exception:
+                self.conn.rollback()
+                raise
 
     def get_relations(self, gene_id: str) -> list:
         """Delegate to storage.co_activation.get_relations."""
         from .storage.co_activation import get_relations
         return get_relations(self.conn, gene_id)
+
+    # ── Symbol graph (WS2) ───────────────────────────────────────────
+
+    def store_symbol_defs(self, rows: list) -> None:
+        """Index symbol definitions. Each item: (symbol, gene_id, kind).
+
+        WS2 review FIX-1: executes + commits on the shared write connection,
+        so it must hold the write lock for the whole operation (mirrors
+        upsert_doc, bug bash 2026-07-18) and roll back on failure.
+        """
+        if not rows:
+            return
+        with self._write_lock:
+            try:
+                self.conn.executemany(
+                    "INSERT OR IGNORE INTO symbol_defs (symbol, gene_id, kind) VALUES (?, ?, ?)",
+                    rows,
+                )
+                self.conn.commit()
+            except Exception:
+                self.conn.rollback()
+                raise
+
+    def resolve_symbol(self, symbol: str) -> list:
+        """gene_ids of chunks that define ``symbol`` (for symbol-aware expansion)."""
+        return [
+            r[0] for r in self.conn.execute(
+                "SELECT gene_id FROM symbol_defs WHERE symbol = ?", (symbol,)
+            ).fetchall()
+        ]
 
     # ── Layered fingerprints: query-time parent aggregation ──────────
 
@@ -4104,6 +4146,10 @@ class KnowledgeStore:
                     "UPDATE genes SET epigenetics = ?, chromatin = ? WHERE gene_id = ?",
                     (epi.model_dump_json(), new_chromatin, row["gene_id"]),
                 )
+
+        # WS2 review FIX-2: orphaned symbol rows (genes removed out-of-band)
+        # are swept as part of the same compaction commit.
+        self._sweep_symbol_orphans()
 
         self.conn.commit()
         if change_detected:
@@ -4658,6 +4704,111 @@ class KnowledgeStore:
         log.debug("Moved gene %s to HETEROCHROMATIN (non-destructive)", gene_id)
         return True
 
+    def delete_gene(self, gene_id: str) -> bool:
+        """Hard-delete a document and every row that references it.
+
+        The reclaim-disk-space counterpart to the non-destructive
+        ``compress_to_heterochromatin()`` (whose docstring has promised this
+        API since 2026-04-10). Removes, in one locked transaction:
+
+          - the ``genes`` row itself
+          - per-gene index rows: FTS5, promoter_index, entity_graph,
+            path_key_index, filename_index, splade_terms
+          - ``symbol_defs`` rows (WS2 review FIX-2 — symbol rows must not
+            outlive their gene)
+          - ``gene_relations`` edges touching the gene in EITHER direction
+            (SYMBOL_REF, CHUNK_OF, and typed relations alike — any edge
+            touching a dead gene is an orphan edge)
+          - ``harmonic_links`` edges in either direction
+
+        Returns True if a genes row was deleted, False if the id was unknown
+        (index cleanup still runs, so calling this on an already-deleted
+        gene sweeps any leftover rows).
+        """
+        # Optional tables (old schemas / disabled features) — guarded so a
+        # missing table degrades to a no-op instead of aborting the delete.
+        optional_tables = (
+            "promoter_index", "entity_graph", "path_key_index",
+            "filename_index", "splade_terms", "symbol_defs",
+        )
+        with self._write_lock:
+            cur = self.conn.cursor()
+            try:
+                if self._fts_available:
+                    cur.execute(
+                        "DELETE FROM genes_fts WHERE gene_id = ?", (gene_id,)
+                    )
+                for table in optional_tables:
+                    try:
+                        cur.execute(
+                            f"DELETE FROM {table} WHERE gene_id = ?", (gene_id,)
+                        )
+                    except sqlite3.OperationalError:
+                        pass  # table absent on this schema
+                cur.execute(
+                    "DELETE FROM gene_relations "
+                    "WHERE gene_id_a = ? OR gene_id_b = ?",
+                    (gene_id, gene_id),
+                )
+                try:
+                    cur.execute(
+                        "DELETE FROM harmonic_links "
+                        "WHERE gene_id_a = ? OR gene_id_b = ?",
+                        (gene_id, gene_id),
+                    )
+                except sqlite3.OperationalError:
+                    pass
+                res = cur.execute(
+                    "DELETE FROM genes WHERE gene_id = ?", (gene_id,)
+                )
+                deleted = bool(res.rowcount)
+                self.conn.commit()
+            except Exception:
+                # Mirror upsert_doc: discard the partial transaction so it
+                # cannot ride along with the next caller's commit.
+                self.conn.rollback()
+                raise
+
+        if deleted:
+            # Tier caches and the dense matrix indexed the dead gene.
+            if self._sema_cache is not None:
+                self._sema_cache = None
+            if self._cold_sema_cache is not None:
+                self._cold_sema_cache = None
+            self._invalidate_dense_matrix()
+            log.debug("Deleted gene %s (+ index, symbol, and edge rows)", gene_id)
+        return deleted
+
+    def _sweep_symbol_orphans(self) -> int:
+        """Delete symbol rows whose gene no longer exists (WS2 review FIX-2).
+
+        Genes removed out-of-band (external cleanup scripts, raw SQL) leave
+        ``symbol_defs`` rows and SYMBOL_REF ``gene_relations`` edges behind;
+        this sweep runs from both compaction passes (``compact()`` /
+        ``compact_genome()``, i.e. the /admin/compact path). Caller owns the
+        commit. Returns rows deleted.
+        """
+        from .schemas import StructuralRelation as _SR
+
+        cur = self.conn.cursor()
+        swept = 0
+        try:
+            swept += cur.execute(
+                "DELETE FROM symbol_defs "
+                "WHERE gene_id NOT IN (SELECT gene_id FROM genes)"
+            ).rowcount or 0
+        except sqlite3.OperationalError:
+            pass  # symbol_defs absent on this schema
+        swept += cur.execute(
+            "DELETE FROM gene_relations WHERE relation = ? AND ("
+            "  gene_id_a NOT IN (SELECT gene_id FROM genes)"
+            "  OR gene_id_b NOT IN (SELECT gene_id FROM genes))",
+            (int(_SR.SYMBOL_REF),),
+        ).rowcount or 0
+        if swept:
+            log.info("Compaction: swept %d orphaned symbol rows", swept)
+        return swept
+
     def compact_genome(self, dry_run: bool = False) -> Dict:
         """
         Run a compaction sweep: apply the density gate to every currently-OPEN
@@ -4758,6 +4909,10 @@ class KnowledgeStore:
                 stats["to_heterochromatin"] += 1
 
         if not dry_run:
+            # WS2 review FIX-2: sweep orphaned symbol rows (genes removed
+            # out-of-band) whenever the /admin/compact sweep runs for real.
+            self._sweep_symbol_orphans()
+            self.conn.commit()
             self.checkpoint("PASSIVE")
 
         log.info(

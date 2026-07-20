@@ -36,6 +36,7 @@ def init_db(conn: sqlite3.Connection) -> bool:
     _create_health_log(cur)
     _create_gene_relations(cur)
     _create_entity_graph(cur)
+    _create_symbol_defs(cur)
     _create_path_key_index(cur)
     _create_filename_index(cur)
     _create_okf_links(cur)
@@ -235,6 +236,35 @@ def _create_entity_graph(cur: sqlite3.Cursor) -> None:
     cur.execute(
         "CREATE INDEX IF NOT EXISTS idx_entity_graph_gene "
         "ON entity_graph(gene_id)"
+    )
+
+
+# ---------------------------------------------------------------------------
+# symbol_defs (WS2 — symbol graph)
+# ---------------------------------------------------------------------------
+
+def _create_symbol_defs(cur: sqlite3.Cursor) -> None:
+    """Symbol-definition index: which gene (code chunk) defines a symbol.
+
+    Mirrors entity_graph's shape. Resolves "who defines `foo`" at ingest (to
+    emit SYMBOL_REF edges) and at query time (symbol-aware expansion). ``kind``
+    distinguishes definition flavours (function/class/method) for future use.
+    """
+    cur.execute("""
+    CREATE TABLE IF NOT EXISTS symbol_defs (
+        symbol   TEXT NOT NULL,
+        gene_id  TEXT NOT NULL,
+        kind     TEXT,
+        PRIMARY KEY (symbol, gene_id)
+    )
+    """)
+    cur.execute(
+        "CREATE INDEX IF NOT EXISTS idx_symbol_defs_symbol "
+        "ON symbol_defs(symbol)"
+    )
+    cur.execute(
+        "CREATE INDEX IF NOT EXISTS idx_symbol_defs_gene "
+        "ON symbol_defs(gene_id)"
     )
 
 

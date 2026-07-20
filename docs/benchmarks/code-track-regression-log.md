@@ -49,6 +49,8 @@ Key transitions:
 
 **Decision:** **dark-ship WS2/WS3** — `[ingestion] symbol_graph` default flipped to **false**. The feature stays fully available (opt-in) but is not an always-on production default, because the gain is marginal + inconsistent across corpora. cAST (WS1) + #227 remain default-on (cAST's +15pp is robust and corpus-independent). Revisit default-on only after a broader held-out sweep.
 
+> **Addendum (2026-07-20):** the broader held-out sweep happened and **reverses the held-out read above**. The arm-C ContextBench held-out re-run cleared the merge gate: **packet +2.8pp (line) / +3.8pp (sym)** — see [2026-07-20 armc-contextbench-heldout](2026-07-20-armc-contextbench-heldout.md). The 2026-06-28 "small / corpus-sensitive / does not robustly survive held-out" conclusion is superseded for the packet metric. **Dark-ship nonetheless remains the intentional decision** (deliberate deviation from decision rule 2's "merge default-on"): SIKE 2026-07-19 showed a prose-bed regression with the current code-query gating. Default-on is revisited after the `symbol_expansion_cap` sweep {4, 16} + code-gating validation (#231 lane); the flip belongs there, not to #230.
+
 ## Scope & caveats (council review, 2026-06-28)
 - **Blob-mode only.** WS2/WS3 are not wired into the sharded router (`shard_router.py` walks only `harmonic_links`); `_emit_symbol_graph` no-ops on the sharded write adapter. All numbers here are single-genome/blob; sharded corpora get the cAST chunking gain but **no** symbol-graph gain.
 - **Python-only symbol refs.** cAST chunking covers 8 languages, but reference extraction (`_PY_REF_LANGS`) is python-only — JS/TS/Go/Java/Rust/C++ get definitions indexed but **zero SYMBOL_REF edges**, so WS2/WS3 are inert there.

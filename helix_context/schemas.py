@@ -33,6 +33,7 @@ class StructuralRelation(IntEnum):
     0-6 are NL semantic links, 100+ are structural hierarchy edges.
     """
     CHUNK_OF = 100          # gene_id_a is a chunk of gene_id_b (parent file document)
+    SYMBOL_REF = 101        # gene_id_a (chunk) references a symbol defined in gene_id_b (chunk) [WS2]
 
 
 class LifecycleTier(IntEnum):
