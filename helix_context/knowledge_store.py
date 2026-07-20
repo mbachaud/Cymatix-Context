@@ -3870,9 +3870,21 @@ class KnowledgeStore:
     def store_relations_batch(
         self, relations: list,
     ) -> None:
-        """Delegate to storage.co_activation.store_relations_batch."""
+        """Delegate to storage.co_activation.store_relations_batch.
+
+        WS2 review FIX-1: the delegate executes + commits on the shared
+        write connection. Hold the write lock for the whole operation
+        (mirrors upsert_doc, bug bash 2026-07-18) so this commit can never
+        publish another thread's half-written upsert — and roll back on
+        failure so a partial batch is not swept into the next commit.
+        """
         from .storage.co_activation import store_relations_batch
-        store_relations_batch(self.conn, relations)
+        with self._write_lock:
+            try:
+                store_relations_batch(self.conn, relations)
+            except Exception:
+                self.conn.rollback()
+                raise
 
     def get_relations(self, gene_id: str) -> list:
         """Delegate to storage.co_activation.get_relations."""
@@ -3882,14 +3894,24 @@ class KnowledgeStore:
     # ── Symbol graph (WS2) ───────────────────────────────────────────
 
     def store_symbol_defs(self, rows: list) -> None:
-        """Index symbol definitions. Each item: (symbol, gene_id, kind)."""
+        """Index symbol definitions. Each item: (symbol, gene_id, kind).
+
+        WS2 review FIX-1: executes + commits on the shared write connection,
+        so it must hold the write lock for the whole operation (mirrors
+        upsert_doc, bug bash 2026-07-18) and roll back on failure.
+        """
         if not rows:
             return
-        self.conn.executemany(
-            "INSERT OR IGNORE INTO symbol_defs (symbol, gene_id, kind) VALUES (?, ?, ?)",
-            rows,
-        )
-        self.conn.commit()
+        with self._write_lock:
+            try:
+                self.conn.executemany(
+                    "INSERT OR IGNORE INTO symbol_defs (symbol, gene_id, kind) VALUES (?, ?, ?)",
+                    rows,
+                )
+                self.conn.commit()
+            except Exception:
+                self.conn.rollback()
+                raise
 
     def resolve_symbol(self, symbol: str) -> list:
         """gene_ids of chunks that define ``symbol`` (for symbol-aware expansion)."""

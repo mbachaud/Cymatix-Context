@@ -191,6 +191,163 @@ class TestUpsertTransactionDiscipline:
 
 
 # ---------------------------------------------------------------------------
+# WS2 review FIX-1: symbol-graph writes must honor the shared write lock
+#
+# store_symbol_defs / store_relations_batch execute + COMMIT on the same
+# shared connection as upsert_gene. Outside _write_lock, their commit can
+# publish another request's partially built upsert transaction (the same
+# failure class BUG-1 above fixed for upsert_gene itself).
+# ---------------------------------------------------------------------------
+
+
+class _StalledUpsert:
+    """Context helper: run upsert_gene(gene) in a thread, stalled between its
+    genes INSERT and its index sync (the partial-transaction window)."""
+
+    def __init__(self, genome, gene, monkeypatch):
+        import helix_context.storage.indexes as idx
+
+        self.genome = genome
+        self.gene = gene
+        self.inside = threading.Event()
+        self.release = threading.Event()
+        self.errors: list[Exception] = []
+        real_rebuild = idx.rebuild_promoter_index
+
+        def hooked(cur, gene_id, g):
+            if gene_id == gene.gene_id:
+                self.inside.set()
+                self.release.wait(timeout=10)
+            real_rebuild(cur, gene_id, g)
+
+        monkeypatch.setattr(idx, "rebuild_promoter_index", hooked)
+        self.thread = threading.Thread(target=self._run)
+
+    def _run(self):
+        try:
+            self.genome.upsert_gene(self.gene)
+        except Exception as exc:  # pragma: no cover - diagnostic
+            self.errors.append(exc)
+
+    def __enter__(self):
+        self.thread.start()
+        assert self.inside.wait(timeout=10), "upsert thread never reached index sync"
+        return self
+
+    def __exit__(self, *exc_info):
+        self.release.set()
+        self.thread.join(timeout=10)
+        return False
+
+
+class TestSymbolWritesHonorWriteLock:
+    def _assert_no_partial_publish(self, db: str, gene) -> None:
+        reader = sqlite3.connect(db)
+        try:
+            committed = reader.execute(
+                "SELECT 1 FROM genes WHERE gene_id = ?", (gene.gene_id,)
+            ).fetchone()
+            if committed is not None:
+                n_tags = reader.execute(
+                    "SELECT COUNT(*) FROM promoter_index WHERE gene_id = ?",
+                    (gene.gene_id,),
+                ).fetchone()[0]
+                assert n_tags > 0, (
+                    "a symbol-graph write's commit published another thread's "
+                    "half-written upsert (genes row without index rows)"
+                )
+        finally:
+            reader.close()
+
+    def test_store_symbol_defs_does_not_publish_partial_upsert(
+        self, tmp_path: Path, monkeypatch
+    ):
+        db = str(tmp_path / "genome.db")
+        g = Genome(path=db, synonym_map={})
+        try:
+            gene_a = make_gene(
+                "symbol lock alpha payload", domains=["alpha"], entities=["A"]
+            )
+            with _StalledUpsert(g, gene_a, monkeypatch) as stall:
+                tb = threading.Thread(
+                    target=lambda: g.store_symbol_defs(
+                        [("locked_symbol", "someid0000000001", "def")]
+                    )
+                )
+                tb.start()
+                # Unserialized, the symbol write commits inside this window —
+                # sweeping in A's partial genes row. Serialized, it blocks.
+                tb.join(timeout=2.0)
+                self._assert_no_partial_publish(db, gene_a)
+            tb.join(timeout=10)
+            assert not stall.errors, f"upsert thread raised: {stall.errors}"
+        finally:
+            g.close()
+
+    def test_store_relations_batch_does_not_publish_partial_upsert(
+        self, tmp_path: Path, monkeypatch
+    ):
+        db = str(tmp_path / "genome.db")
+        g = Genome(path=db, synonym_map={})
+        try:
+            gene_a = make_gene(
+                "relation lock alpha payload", domains=["alpha"], entities=["A"]
+            )
+            with _StalledUpsert(g, gene_a, monkeypatch) as stall:
+                tb = threading.Thread(
+                    target=lambda: g.store_relations_batch(
+                        [("someid0000000001", "someid0000000002", 101, 1.0)]
+                    )
+                )
+                tb.start()
+                tb.join(timeout=2.0)
+                self._assert_no_partial_publish(db, gene_a)
+            tb.join(timeout=10)
+            assert not stall.errors, f"upsert thread raised: {stall.errors}"
+        finally:
+            g.close()
+
+    def test_failed_symbol_write_rolls_back(self, monkeypatch):
+        """A failed symbol-defs write must not leave partial statements in the
+        open transaction for the next caller's commit to sweep in."""
+        g = Genome(path=":memory:", synonym_map={})
+        try:
+            calls = {"n": 0}
+            real_conn = g.conn
+
+            class FaultyConn:
+                """Delegates to the real connection; executemany runs the
+                statement, then fails before the commit — the partial write
+                is now sitting in the open transaction."""
+
+                def __getattr__(self, name):
+                    return getattr(real_conn, name)
+
+                def executemany(self, sql, rows):
+                    calls["n"] += 1
+                    real_conn.executemany(sql, rows)
+                    raise sqlite3.OperationalError("disk I/O error (simulated)")
+
+            with monkeypatch.context() as m:
+                m.setattr(g, "conn", FaultyConn())
+                with pytest.raises(sqlite3.OperationalError):
+                    g.store_symbol_defs([("doomed_sym", "deadid0000000001", "def")])
+            assert calls["n"] == 1
+
+            # A subsequent healthy commit must not sweep the doomed row in.
+            g.upsert_gene(make_gene("healthy payload after symbol failure"))
+            row = g.conn.execute(
+                "SELECT 1 FROM symbol_defs WHERE symbol = 'doomed_sym'"
+            ).fetchone()
+            assert row is None, (
+                "partial symbol_defs write from a FAILED call was committed "
+                "by the next successful commit (missing rollback)"
+            )
+        finally:
+            g.close()
+
+
+# ---------------------------------------------------------------------------
 # BUG-3: content-hash collision across sources must not be silent
 # ---------------------------------------------------------------------------
 
