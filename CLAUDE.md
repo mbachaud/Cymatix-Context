@@ -1,27 +1,27 @@
-# Helix Context
+# Cymatix Context
 
-Knowledge-store-based context compression for local LLMs. v0.7.1.
+Knowledge-store-based context compression for local LLMs. v0.8.0 (renamed from helix-context in July 2026 — old CLI/env/import names still work).
 
 ## Quick Start
 
 ```bash
 # Install
-pip install helix-context
+pip install cymatix-context
 
 # Ingest content
-helix ingest path/to/your/docs/ --recursive
+cymatix ingest path/to/your/docs/ --recursive
 
 # Query the store
-helix query "what does the splice step do?"
+cymatix query "what does the splice step do?"
 
 # Inspect corpus state
-helix diag corpus
-helix status
+cymatix diag corpus
+cymatix status
 
 # Start the FastAPI proxy (IDE integrations, MCP hosts)
-helix-server
+cymatix-server
 # or
-python -m uvicorn helix_context._asgi:app --host 127.0.0.1 --port 11437
+python -m uvicorn cymatix_context._asgi:app --host 127.0.0.1 --port 11437
 ```
 
 Full CLI reference: `docs/clients/cli.md`.
@@ -46,7 +46,7 @@ The pipeline emits a **know/miss agent contract** on `/context/packet`: every re
 
 ## Package Structure (post-PR #90)
 
-After the repo restructure, `helix_context/` is organized into 15 sub-packages plus a handful of top-level orchestration modules:
+After the repo restructure, `cymatix_context/` is organized into 15 sub-packages plus a handful of top-level orchestration modules. `helix_context` remains as an alias shim package.
 
 | Package | Purpose |
 |---------|---------|
@@ -68,11 +68,11 @@ After the repo restructure, `helix_context/` is organized into 15 sub-packages p
 
 Top-level modules: `context_manager.py` (pipeline orchestrator), `config.py` (TOML loader), `schemas.py` (Pydantic models), `knowledge_store.py` (SQLite DDL + retrieval), `codons.py` (chunker + encoder), `tagger.py` (CPU ingest tagger).
 
-**Back-compat shims:** `genome.py`, `ribosome.py`, `replication.py`, `hgt.py`, `server.py`, `mcp_server.py` re-export from their new locations. Old import paths still work. See `docs/ROSETTA.md` for the full biology-to-software lexicon.
+**Back-compat shims:** `genome.py`, `ribosome.py`, `replication.py`, `hgt.py`, `server.py`, `mcp_server.py` re-export from their new locations. Old import paths still work. See `docs/ROSETTA.md` for the full biology-to-software lexicon. The whole helix_context package name is itself now a shim for cymatix_context.
 
 ## Configuration
 
-All config lives in `helix.toml`. Sections:
+All config lives in `cymatix.toml` (`helix.toml` still honored as fallback). Sections:
 
 | Section | Key settings |
 |---------|-------------|
@@ -82,7 +82,7 @@ All config lives in `helix.toml`. Sections:
 | `[session]` | synthetic_session_enabled, synthetic_session_window_s, default_party_id |
 | `[genome]` | path (`genomes/main/genome.db`), compact_interval, cold_start_threshold, replicas |
 | `[server]` | host, port, upstream |
-| `[telemetry]` | OTel export defaults: enabled (default false), endpoint (`"localhost:4317"`), insecure, sampler_ratio, redact_query, logs_enabled, logs_level. Precedence: `HELIX_OTEL_*` env > toml > default (env wins both directions); the tray launcher auto-exports `HELIX_OTEL_ENABLED=1` once the observability stack's collector port is up |
+| `[telemetry]` | OTel export defaults: enabled (default false), endpoint (`"localhost:4317"`), insecure, sampler_ratio, redact_query, logs_enabled, logs_level. Precedence: `CYMATIX_OTEL_* (HELIX_OTEL_* honored)` env > toml > default (env wins both directions); the tray launcher auto-exports `HELIX_OTEL_ENABLED=1` once the observability stack's collector port is up |
 | `[headroom]` | route_upstream toggle for Headroom proxy integration |
 | `[ingestion]` | backend (`"cpu"` / `"ollama"` / `"hybrid"`), splade_enabled, rerank_model, entity_graph, sema_embed_on_ingest (#227: false = no MiniLM load at ingest; TCM falls back to text) |
 | `[context]` | cold_tier_enabled, cold_tier_k, cold_tier_min_cosine |
