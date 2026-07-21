@@ -152,10 +152,10 @@ python scripts/ingest_all.py --roots skills/ --ext .md
 from cymatix_context.hgt import export_genome, import_genome
 
 # Export skills from source genome
-export_genome("source_genome.db", "skills_export.cymatix")
+export_genome("source_genome.db", "skills_export.helix")
 
 # Import into target genome (skip duplicates)
-import_genome("target_genome.db", "skills_export.cymatix", strategy="skip_existing")
+import_genome("target_genome.db", "skills_export.helix", strategy="skip_existing")
 ```
 
 ---

@@ -699,7 +699,7 @@ What it does (by platform):
 | Platform | Action |
 |---|---|
 | Linux | Writes `~/.config/systemd/user/cymatix-launcher.service` with `ExecStart` substituted to the actual `cymatix-launcher` binary path. Prints the `systemctl --user daemon-reload && systemctl --user enable --now` next steps. |
-| macOS | Writes `~/Library/LaunchAgents/com.swiftwing21.cymatix-launcher.plist` with `ProgramArguments` and `StandardOutPath` substituted. Prints the `launchctl load` next step. |
+| macOS | Writes `~/Library/LaunchAgents/com.swiftwing21.helix-launcher.plist` with `ProgramArguments` and `StandardOutPath` substituted. Prints the `launchctl load` next step. |
 | Windows | Prints the NSSM recipe. Does NOT install NSSM (licensing + download), does NOT register the service. User follows the printed steps. |
 
 The installer deliberately **never runs** `systemctl enable`,
