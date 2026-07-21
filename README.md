@@ -69,7 +69,7 @@ additive accumulator on the hardest internal bed (0.74 vs 0.62).
 don't answer from the knowledge store). Stale results downgrade to
 `miss(reason="stale"|"cold"|"superseded")` via the freshness gate.
 
-## Install
+## Get started
 
 Requires Python 3.11+. Core install is dependency-light (FastAPI + SQLite,
 no torch):

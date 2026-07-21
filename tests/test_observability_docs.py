@@ -67,8 +67,8 @@ def test_setup_doc_carries_tray_lifecycle_and_opt_out():
     assert "docs/SETUP.md" in readme, "Root README must link to docs/SETUP.md"
     setup = _read("docs/SETUP.md")
     assert "tray" in setup.lower()
-    assert "HELIX_OBSERVABILITY" in setup, (
-        "docs/SETUP.md must document the HELIX_OBSERVABILITY=0 opt-out"
+    assert "CYMATIX_OBSERVABILITY" in setup, (
+        "docs/SETUP.md must document the CYMATIX_OBSERVABILITY=0 opt-out"
     )
     assert "tools/native-otel" in setup
 
