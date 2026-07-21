@@ -1,6 +1,6 @@
-# Helix Session Registry — Parties, Participants, and Authored Documents
+# Cymatix Session Registry — Parties, Participants, and Authored Documents
 
-A presence and attribution layer for multi-session Helix usage. Lets sibling
+A presence and attribution layer for multi-session Cymatix usage. Lets sibling
 Claude/Gemini sessions see each other, tag what they ingest, and retrieve each
 other's recent work without relying on BM25 to surface short broadcasts.
 
@@ -8,7 +8,7 @@ other's recent work without relying on BM25 to surface short broadcasts.
 2026-04-11 → 2026-04-14). See "Status — what shipped" below for the
 commit-level trail. Remaining work is post-landing refinement, not
 core implementation.
-**Target version:** `helix-context v0.4.0b1`.
+**Target version:** `cymatix-context v0.4.0b1`.
 **Depends on:** nothing — purely additive to v0.3.0b5.
 **Related:** [`RESTART_PROTOCOL.md`](RESTART_PROTOCOL.md) (complementary — restart
 protocol announces outages, session registry announces presence).
@@ -28,12 +28,12 @@ protocol announces outages, session registry announces presence).
 Known gaps (tracked as follow-up work, not blockers):
 
 - **MCP host participant registration — CLOSED 2026-04-14.**
-  `helix_context/mcp_server.py` now calls
+  `cymatix_context/mcp_server.py` now calls
   `AgentBridge.register_participant(..., start_auto_heartbeat=True)` on
-  startup. Handle reads from `HELIX_MCP_HANDLE` (default `mcp-<pid>`),
-  party_id derived from (in order): `HELIX_PARTY_ID` env var →
-  `HELIX_DEVICE` env var → `HELIX_PARTY` env var → `socket.gethostname()`
-  → `"unknown-host"` fallback. Host-tag from `HELIX_MCP_HOST` (e.g.
+  startup. Handle reads from `CYMATIX_MCP_HANDLE` (default `mcp-<pid>`),
+  party_id derived from (in order): `CYMATIX_PARTY_ID` env var →
+  `CYMATIX_DEVICE` env var → `CYMATIX_PARTY` env var → `socket.gethostname()`
+  → `"unknown-host"` fallback. Host-tag from `CYMATIX_MCP_HOST` (e.g.
   `claude-code`, `antigravity`, `cursor`).
   Registration failure is non-fatal — tool calls still proxy. Each
   MCP-host spawn gets its own `participant_id`; stale participants
@@ -51,7 +51,7 @@ should be resolved by the code.
 
 ## Motivation
 
-Today, multiple Claude sessions can share one Helix server (via the bridge) but
+Today, multiple Claude sessions can share one Cymatix server (via the bridge) but
 they cannot:
 
 1. **See each other.** There is no presence/liveness layer. If Laude wants to
@@ -160,13 +160,13 @@ MCP host identity first-class in the registry:
 - `ide_detected`       — adapter env-var fingerprint at register time
                          ("vscode", "cursor", or NULL on no_match) — added 2026-05-06
 - `ide_detection_via`  — how IDE was determined ("env:VSCODE_PID",
-                         "explicit:HELIX_MCP_HOST", "agent_override",
+                         "explicit:CYMATIX_MCP_HOST", "agent_override",
                          "no_match") — added 2026-05-06
 - `model_id`           — agent self-reported via helix_announce
                          (free-form, NULL until announced) — added 2026-05-06
 
 Both are nullable. Pre-2026-05-05 rows read as `NULL`. These fields are sourced from the
-`HELIX_AGENT_KIND` and `HELIX_MCP_HOST` environment variables respectively and persist on
+`CYMATIX_AGENT_KIND` and `CYMATIX_MCP_HOST` environment variables respectively and persist on
 the participant row so dashboard panels can render vendor and IDE labels without consulting
 the capabilities JSON.
 
@@ -254,9 +254,9 @@ Request body:
 | `pid` | int | no | OS process id of the runtime. |
 | `capabilities` | list[str] | no | What this participant can do. Free-form for now. |
 | `metadata` | object | no | Arbitrary JSON for future extension. |
-| `agent_kind` | string | no | Vendor family — `"claude-code"`, `"codex"`, `"gemini"`. Sourced from `HELIX_AGENT_KIND`. Added 2026-05-05. |
-| `mcp_host` | string | no | Host capability tag — `"antigravity"`, `"vscode"`, `"cursor"`. Sourced from `HELIX_MCP_HOST`. The literal `"unknown"` is normalized to NULL at the wire. Added 2026-05-05. |
-| `ide_detected` | string | no | Adapter env-var fingerprint result. Sourced from `helix_context.launcher.ide_fingerprint.detect_ide()`. Added 2026-05-06. |
+| `agent_kind` | string | no | Vendor family — `"claude-code"`, `"codex"`, `"gemini"`. Sourced from `CYMATIX_AGENT_KIND`. Added 2026-05-05. |
+| `mcp_host` | string | no | Host capability tag — `"antigravity"`, `"vscode"`, `"cursor"`. Sourced from `CYMATIX_MCP_HOST`. The literal `"unknown"` is normalized to NULL at the wire. Added 2026-05-05. |
+| `ide_detected` | string | no | Adapter env-var fingerprint result. Sourced from `cymatix_context.launcher.ide_fingerprint.detect_ide()`. Added 2026-05-06. |
 | `ide_detection_via` | string | no | The evidence behind `ide_detected`. Added 2026-05-06. |
 | `model_id` | string | no | Optional at register time — typically supplied later via the announce endpoint. Added 2026-05-06. |
 
@@ -481,14 +481,14 @@ on registration (trust-on-first-use). A malicious client on the local machine
 could register as any `party_id` it wants and tag documents accordingly.
 
 For the current use case — single user running multiple Claude panels against
-a local Helix server on `localhost:11437` — this is acceptable. The threat
+a local Cymatix server on `localhost:11437` — this is acceptable. The threat
 model is "my own panels, on my own machine." No untrusted code is calling the
 registry.
 
 **Before any of the following work picks up, auth must be designed:**
 
-- Multi-tenant SaaS Helix
-- Federated Helix (cross-instance party identities)
+- Multi-tenant SaaS Cymatix
+- Federated Cymatix (cross-instance party identities)
 - Any SSS threshold work that relies on party identity being non-forgeable
 - Exposing the FastAPI server beyond `localhost`
 
@@ -540,7 +540,7 @@ policies) live on the collective where the trust decision is actually made.
 A thin helper lives on the existing `AgentBridge` class:
 
 ```python
-from helix_context.bridge import AgentBridge
+from cymatix_context.bridge import AgentBridge
 
 bridge = AgentBridge()
 
@@ -613,7 +613,7 @@ identity, the participant is the ephemeral actor.
 Explicitly out of scope, to keep the first slice shippable:
 
 - **Auth.** See [Trust model](#trust-model-deferred).
-- **Inter-instance federation.** Registry is local to one Helix server. Cross-server
+- **Inter-instance federation.** Registry is local to one Cymatix server. Cross-server
   coordination needs a transport layer and federation protocol that do not yet
   exist.
 - **Collectives.** See [Forward compatibility](#forward-compatibility-collectives).
@@ -622,7 +622,7 @@ Explicitly out of scope, to keep the first slice shippable:
   deliberate — autonomous peer-triggered execution crosses the Usage Policy
   line for agent orchestration.
 - **Cryptographic operations.** Shamir split/combine is orthogonal and lives
-  in a future `helix_context/sss.py`.
+  in a future `cymatix_context/sss.py`.
 - **Harness integration.** Each client decides when to register and
   heartbeat. A future doc can describe `SessionStart` hook patterns for
   Claude Code, Gemini CLI, etc.
@@ -643,7 +643,7 @@ testable unit.
 6. **Context enrichment.** `context_endpoint` citation objects gain
    `authored_by_party` / `authored_by_handle` when present.
 7. **Sweep task.** Add to the lifespan startup block, respecting
-   `helix.toml [registry]` config (interval, ttl_s).
+   `cymatix.toml [registry]` config (interval, ttl_s).
 8. **Python client.** Methods on `AgentBridge`.
 9. **Tests.** Unit tests for DAL + schema migration; integration tests for
    the four endpoints + ingest tagging + context citation enrichment.
@@ -655,7 +655,7 @@ testable unit.
 - [`RESTART_PROTOCOL.md`](RESTART_PROTOCOL.md) — how multiple sessions handle
   server restarts. Complementary: restart protocol is about absence, session
   registry is about presence.
-- [Discussion #5 — Shamir Secret Sharing exploration](https://github.com/SwiftWing21/helix-context/discussions/5)
+- [Discussion #5 — Shamir Secret Sharing exploration](https://github.com/SwiftWing21/cymatix-context/discussions/5)
   — where the party layering decision comes from.
-- `helix_context/bridge.py` — the existing `AgentBridge` abstraction that this
+- `cymatix_context/bridge.py` — the existing `AgentBridge` abstraction that this
   spec extends.

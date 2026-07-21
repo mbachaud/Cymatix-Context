@@ -1,7 +1,7 @@
 # Troubleshooting
 
 This guide collects the failure modes that recur across user reports
-and git history for `helix-context`. Each section follows a fixed
+and git history for `cymatix-context`. Each section follows a fixed
 shape: **Symptom**, **Cause**, **Fix**, **Verify**, **Prevention**.
 
 Sections are ordered by observed frequency in the issue tracker. If
@@ -12,27 +12,27 @@ land on the right section in a single hop.
 > Windows use the equivalent `PowerShell` form (`$env:VAR=...` for
 > env vars, `Get-Process` for `lsof`, etc.). Paths are written with
 > forward slashes. The default proxy port is `11437`; the default
-> launcher UI port is `11438`. Both are configurable in `helix.toml`
+> launcher UI port is `11438`. Both are configurable in `cymatix.toml`
 > under `[server]` and via `--port` on the launcher CLI.
 
 ---
 
 ## Server will not start: port 11437 is already in use
 
-**Symptom.** `python -m uvicorn helix_context.server:app --port 11437`
+**Symptom.** `python -m uvicorn cymatix_context.server:app --port 11437`
 exits with `OSError: [Errno 98] Address already in use` (POSIX) or
 `OSError: [WinError 10048] Only one usage of each socket address ...`
 (Windows). The launcher variant raises:
 
 ```
 SupervisorError: Port 127.0.0.1:11437 is already in use by a
-non-helix process. Free the port or change --helix-port.
+non-cymatix process. Free the port or change --cymatix-port.
 ```
 
 **Cause.** Another process is already bound to `127.0.0.1:11437`. The
-launcher's supervisor (`helix_context/launcher/supervisor.py:281-319`)
-will quietly *adopt* an orphan helix on that port if it can identify
-its command line, but a non-helix listener (an old Ollama instance, a
+launcher's supervisor (`cymatix_context/launcher/supervisor.py:281-319`)
+will quietly *adopt* an orphan cymatix on that port if it can identify
+its command line, but a non-cymatix listener (an old Ollama instance, a
 dev script, a different Python venv) can only be cleared manually.
 
 **Fix.**
@@ -49,27 +49,27 @@ dev script, a different Python venv) can only be cleared manually.
      Get-Process -Id <pid>
      ```
 
-2. If it is a stray helix process from a prior session:
+2. If it is a stray cymatix process from a prior session:
    ```bash
    kill <pid>          # POSIX
    taskkill /F /PID <pid>   # Windows
    ```
    Confirm the port frees up before retrying.
 
-3. If you cannot free port 11437, change the helix port. Edit
-   `helix.toml`:
+3. If you cannot free port 11437, change the cymatix port. Edit
+   `cymatix.toml`:
    ```toml
    [server]
    port = 11537
    ```
    Then update every client (Continue config `apiBase`, the MCP
-   server `HELIX_MCP_URL`, `helix_context.adapters.retriever` callers
-   — see `helix_context/config.py:175-179` for the default and the
+   server `CYMATIX_MCP_URL`, `cymatix_context.adapters.retriever` callers
+   — see `cymatix_context/config.py:175-179` for the default and the
    list of touched modules).
 
-4. Restart helix:
+4. Restart cymatix:
    ```bash
-   python -m uvicorn helix_context.server:app --host 127.0.0.1 --port 11537
+   python -m uvicorn cymatix_context.server:app --host 127.0.0.1 --port 11537
    ```
 
 **Verify.** From a second shell:
@@ -81,27 +81,27 @@ Expected: a JSON object with `"genome_genes": <int>` and
 means the server did not bind; re-check step 1.
 
 **Prevention.** Use the launcher (`start-helix-tray.bat` /
-`python -m helix_context.launcher.app`) instead of bare `uvicorn`. The
-launcher auto-adopts an orphan helix on the same port instead of
-crashing — see `helix_context/launcher/supervisor.py:288-312`. If you
+`python -m cymatix_context.launcher.app`) instead of bare `uvicorn`. The
+launcher auto-adopts an orphan cymatix on the same port instead of
+crashing — see `cymatix_context/launcher/supervisor.py:288-312`. If you
 do drive uvicorn directly, always Ctrl+C cleanly so the lifespan
-shutdown at `helix_context/server.py:679-743` runs.
+shutdown at `cymatix_context/server.py:679-743` runs.
 
 ---
 
 ## Server will not start: missing extras
 
 **Symptom.** `pip install -e .` succeeds but `python -m uvicorn
-helix_context.server:app` fails on import with one of:
+cymatix_context.server:app` fails on import with one of:
 
 ```
 ImportError: No module named 'sentence_transformers'
 ImportError: No module named 'spacy'
 ImportError: No module named 'tree_sitter'
-ImportError: cannot import name 'CpuTagger' from 'helix_context'
+ImportError: cannot import name 'CpuTagger' from 'cymatix_context'
 ```
 
-**Cause.** The base `helix-context` wheel ships only the proxy spine
+**Cause.** The base `cymatix-context` wheel ships only the proxy spine
 (`fastapi`, `uvicorn`, `httpx`, `pydantic`, `filelock`). All
 encoders, taggers, the launcher, and the codec live behind optional
 extras declared in `pyproject.toml` lines 38-97. The package
@@ -125,7 +125,7 @@ proxy itself, however, requires `embeddings` for the SEMA cache.
    ```
 
 2. Download the spaCy model used by the CPU tagger
-   (`helix_context/tagger.py:56-57`):
+   (`cymatix_context/tagger.py:56-57`):
    ```bash
    python -m spacy download en_core_web_sm
    ```
@@ -134,9 +134,9 @@ proxy itself, however, requires `embeddings` for the SEMA cache.
 
 **Verify.**
 ```bash
-python -c "import helix_context; print(helix_context.CpuTagger)"
+python -c "import cymatix_context; print(cymatix_context.CpuTagger)"
 ```
-Expected: `<class 'helix_context.tagger.CpuTagger'>`. A `None` means
+Expected: `<class 'cymatix_context.tagger.CpuTagger'>`. A `None` means
 the `spacy` extra is missing or `en_core_web_sm` is not installed.
 
 **Prevention.** Use the one-click installers — `setup-helix.bat` on
@@ -146,11 +146,11 @@ in your project's lockfile so CI matches production.
 
 ---
 
-## Server will not start: helix.toml is malformed
+## Server will not start: cymatix.toml is malformed
 
 **Symptom.** Server logs:
 ```
-helix.toml is malformed (Expected '=' after a key in a key/value pair (at line 47, column 12)) — using defaults
+cymatix.toml is malformed (Expected '=' after a key in a key/value pair (at line 47, column 12)) — using defaults
 ```
 or, for the per-classifier abstain block:
 ```
@@ -158,22 +158,22 @@ ConfigError: [abstain].mode='per_classifier' requires an
 [abstain.default] block (loader §6); none found.
 ```
 
-**Cause.** The TOML loader at `helix_context/config.py:528-533` falls
+**Cause.** The TOML loader at `cymatix_context/config.py:528-533` falls
 back to `HelixConfig()` defaults on a `tomllib.TOMLDecodeError` and
 emits a single `log.error` line. Defaults bind to port 11437 with
 `genome.path = "genome.db"` (relative to cwd) and Ollama at
 `http://localhost:11434` — which is rarely what an operator tuning
-`helix.toml` expects. The Stage 4 `ConfigError` at
-`helix_context/config.py:751-756` is harder: the loader raises and the
+`cymatix.toml` expects. The Stage 4 `ConfigError` at
+`cymatix_context/config.py:751-756` is harder: the loader raises and the
 server refuses to start because the per-classifier abstain mode has
 no default block to fall back to. See
-`helix_context/exceptions.py:37-43`.
+`cymatix_context/exceptions.py:37-43`.
 
 **Fix.**
 
 1. Validate the TOML manually:
    ```bash
-   python -c "import tomllib; tomllib.load(open('helix.toml','rb'))"
+   python -c "import tomllib; tomllib.load(open('cymatix.toml','rb'))"
    ```
    Any traceback points at the first malformed line.
 
@@ -185,12 +185,12 @@ no default block to fall back to. See
      after the last `[abstain]` table key, not interleaved with
      `[server]`.
    - **`[ribosome] device` is deprecated.** The loader at
-     `helix_context/config.py:822-834` warns "deprecated" + "override"
+     `cymatix_context/config.py:822-834` warns "deprecated" + "override"
      when both `[ribosome] device` and `[hardware] device` are set.
      Move the value to `[hardware]`.
 
 3. If using `[abstain].mode = "per_classifier"`, add the required
-   default block (see `helix.toml:459-463` for an example):
+   default block (see `cymatix.toml:459-463` for an example):
    ```toml
    [abstain.default]
    abstain_top = 0.40
@@ -203,16 +203,16 @@ no default block to fall back to. See
 
 **Verify.**
 ```bash
-python -c "from helix_context.config import load_config; \
+python -c "from cymatix_context.config import load_config; \
   cfg = load_config(); \
   print(cfg.server.host, cfg.server.port, cfg.genome.path)"
 ```
-Expected: the values from `helix.toml`, not the
+Expected: the values from `cymatix.toml`, not the
 `(127.0.0.1, 11437, genome.db)` defaults.
 
-**Prevention.** Keep `helix.toml` under version control and run the
+**Prevention.** Keep `cymatix.toml` under version control and run the
 one-line validator above as a pre-commit check. The repo's
-`helix.toml` doubles as a worked example with inline comments — diff
+`cymatix.toml` doubles as a worked example with inline comments — diff
 against it after every upgrade.
 
 ---
@@ -226,16 +226,16 @@ The server log shows:
 ```
 TranscriptionError: Ribosome model call failed entirely
 ```
-when the compressor is enabled (`helix_context/exceptions.py:29-30`).
+when the compressor is enabled (`cymatix_context/exceptions.py:29-30`).
 
 **Cause.** The proxy's upstream probe at
-`helix_context/server.py:492-532` tries `/api/tags`, `/v1/models`, and
+`cymatix_context/server.py:492-532` tries `/api/tags`, `/v1/models`, and
 `/health` in order; if all three fail it returns
 `{"reachable": false, "detail": <last_error>}`. Any of three things
 break it:
 
 1. Ollama is not running.
-2. `[server] upstream` (or the `HELIX_SERVER_UPSTREAM` env override at
+2. `[server] upstream` (or the `CYMATIX_SERVER_UPSTREAM` env override at
    `config.py:616-617`) points to the wrong host/port.
 3. The compressor model in `[ribosome] model` is configured but has not
    been pulled, so Ollama 404s on the first generation call.
@@ -249,30 +249,30 @@ break it:
    The response must be JSON. A connection-refused means Ollama is
    not running — start it with `ollama serve`.
 
-2. Confirm the upstream URL helix is using:
+2. Confirm the upstream URL cymatix is using:
    ```bash
    curl -s http://127.0.0.1:11437/health | python -c \
      "import sys, json; d=json.load(sys.stdin); \
       print(d['upstream_url'], d.get('upstream_reachable'))"
    ```
 
-3. If the URL is wrong, fix `helix.toml`:
+3. If the URL is wrong, fix `cymatix.toml`:
    ```toml
    [server]
    upstream = "http://localhost:11434"
    ```
    Or set the env override:
    ```bash
-   export HELIX_SERVER_UPSTREAM="http://localhost:11434"
+   export CYMATIX_SERVER_UPSTREAM="http://localhost:11434"
    ```
 
 4. Pull the compressor model and the chat model:
    ```bash
-   ollama pull gemma4:e2b      # ribosome (helix.toml [ribosome] model)
+   ollama pull gemma4:e2b      # ribosome (cymatix.toml [ribosome] model)
    ollama pull gemma4:e4b      # chat
    ```
 
-5. Restart helix.
+5. Restart cymatix.
 
 **Verify.**
 ```bash
@@ -282,9 +282,9 @@ Expected: `"upstream_reachable": true` with a `probe` field naming the
 endpoint that succeeded (typically `/api/tags`).
 
 **Prevention.** Pin `keep_alive = "30m"` in `[ribosome]` (already the
-default in `helix.toml:26`) so the model stays resident. If your
+default in `cymatix.toml:26`) so the model stays resident. If your
 launcher routes the chat upstream through Headroom, note that
-`helix_context/launcher/app.py:287-338` rewrites `HELIX_SERVER_UPSTREAM`
+`cymatix_context/launcher/app.py:287-338` rewrites `CYMATIX_SERVER_UPSTREAM`
 to the Headroom port automatically; check `/health` after toggling
 `[headroom] enabled` to confirm the URL you expect.
 
@@ -293,10 +293,10 @@ to the Headroom port automatically; check `/health` after toggling
 ## Tray icon is missing on Linux or macOS
 
 **Symptom.** `start-helix-tray.bat` (or the equivalent `python -m
-helix_context.launcher.app --tray` invocation) exits with:
+cymatix_context.launcher.app --tray` invocation) exits with:
 ```
 --tray requires pystray + Pillow. Install with:
-pip install helix-context[launcher-tray]
+pip install cymatix-context[launcher-tray]
 ```
 or, on Linux specifically: the launcher starts, the dashboard works,
 but no system-tray icon appears in the panel.
@@ -304,11 +304,11 @@ but no system-tray icon appears in the panel.
 **Cause.** Two layered reasons:
 
 1. **License-driven exclusion.** `pystray` is LGPL-3, so the
-   `helix-context` core wheel does not bundle it (see
-   `helix_context/launcher/tray.py:19-25`). It only installs when you
+   `cymatix-context` core wheel does not bundle it (see
+   `cymatix_context/launcher/tray.py:19-25`). It only installs when you
    opt in via the `launcher-tray` extra, declared in
    `pyproject.toml:70-77`. The fail-fast at
-   `helix_context/launcher/app.py:530-535` triggers when `pystray` or
+   `cymatix_context/launcher/app.py:530-535` triggers when `pystray` or
    `Pillow` is missing.
 
 2. **Linux desktop compatibility.** `pystray` uses `AppIndicator3` on
@@ -323,7 +323,7 @@ but no system-tray icon appears in the panel.
 
 1. Install the extra:
    ```bash
-   pip install "helix-context[launcher-tray]"
+   pip install "cymatix-context[launcher-tray]"
    ```
 
 2. On GNOME (Ubuntu 22.04+, Fedora 38+):
@@ -342,12 +342,12 @@ but no system-tray icon appears in the panel.
 
 4. Re-run with the tray flag:
    ```bash
-   python -m helix_context.launcher.app --tray
+   python -m cymatix_context.launcher.app --tray
    ```
 
 **Verify.**
 ```bash
-python -c "from helix_context.launcher.tray import is_tray_available; \
+python -c "from cymatix_context.launcher.tray import is_tray_available; \
   print(is_tray_available())"
 ```
 Expected: `True`. A `False` means `pystray` or `PIL` is still not
@@ -366,17 +366,17 @@ launcher in dashboard-only mode.
 ```
 sqlite3.OperationalError: database is locked
 ```
-Often correlated with multiple helix processes pointed at the same
+Often correlated with multiple cymatix processes pointed at the same
 `genome.db`, or with a long-running write script (`scripts/ingest_*.py`,
 the backfill scripts) running while the server is up.
 
 **Cause.** `genome.db` is opened in WAL mode at
-`helix_context/genome.py:468-475`. WAL allows concurrent readers, but
+`cymatix_context/genome.py:468-475`. WAL allows concurrent readers, but
 SQLite still serializes writers. A 30-second `busy_timeout` is set
 (`genome.py:471`), so genuine contention only surfaces above that
 threshold. The most common triggers in practice:
 
-1. Two helix uvicorn processes binding the same `genome.path` — only
+1. Two cymatix uvicorn processes binding the same `genome.path` — only
    the first one's write lock survives; the second times out.
 2. A backfill script (`scripts/backfill_*.py`) writing while the
    server still holds a long-lived read connection. The reader at
@@ -387,15 +387,15 @@ threshold. The most common triggers in practice:
 
 **Fix.**
 
-1. Stop every helix process pointing at the same DB:
+1. Stop every cymatix process pointing at the same DB:
    ```bash
-   ps aux | grep "helix_context._asgi"     # POSIX
+   ps aux | grep "cymatix_context._asgi"     # POSIX
    tasklist | findstr python                # Windows
    ```
    Kill all but one.
 
 2. Force a WAL checkpoint via the admin endpoint
-   (`helix_context/server.py:2876-2880`):
+   (`cymatix_context/server.py:2876-2880`):
    ```bash
    curl -X POST "http://127.0.0.1:11437/admin/checkpoint?mode=TRUNCATE"
    ```
@@ -417,8 +417,8 @@ Expected: `wal` followed by an integer document count. If the `SELECT`
 hangs, another writer is still holding the lock.
 
 **Prevention.** One server per `genome.db`. If you need a side
-deployment, set `HELIX_GENOME_PATH=genomes/side/genome.db` (see
-`helix_context/config.py:611-612`) so the side server uses a separate
+deployment, set `CYMATIX_GENOME_PATH=genomes/side/genome.db` (see
+`cymatix_context/config.py:611-612`) so the side server uses a separate
 file. The lifespan shutdown at `server.py:717` runs
 `checkpoint("TRUNCATE")` automatically, so always Ctrl+C cleanly.
 
@@ -432,7 +432,7 @@ response with `miss { do_not_answer_from_genome: true }` and a
 answers from training prior anyway.
 
 **Cause.** The agent's system prompt does not import the
-helix-context know/miss contract fragment. Without explicit rules
+cymatix-context know/miss contract fragment. Without explicit rules
 teaching the model to honor the `do_not_answer_from_genome` flag and
 call an escalate tool, it falls back to its training prior to
 fabricate an answer. The contract is load-bearing only when the agent
@@ -440,22 +440,22 @@ prompt teaches it.
 
 The Stage 6 spec (`docs/specs/2026-05-08-stage-6-know-miss-blocks.md`
 §12) is explicit about this: the runtime envelope validator in
-`helix_context/schemas.py:521-600` rejects malformed `MissBlock`s
+`cymatix_context/schemas.py:521-600` rejects malformed `MissBlock`s
 server-side, but the prompt-level contract that turns
 `do_not_answer_from_genome=True` into actual escalation is the
 caller's responsibility. The compiled fragment lives at
-`helix_context/agent_prompt.py:25-92`.
+`cymatix_context/agent_prompt.py:25-92`.
 
 **Fix.**
 
 1. In your agent SDK setup, prepend
-   `helix_context.agent_prompt.HELIX_NO_MATCH_FRAGMENT` (or the
+   `cymatix_context.agent_prompt.CYMATIX_NO_MATCH_FRAGMENT` (or the
    combined `full_fragment()`) to the system prompt:
 
    ```python
-   from helix_context.agent_prompt import (
-       HELIX_NO_MATCH_FRAGMENT,
-       HELIX_REFRESH_FRAGMENT,
+   from cymatix_context.agent_prompt import (
+       CYMATIX_NO_MATCH_FRAGMENT,
+       CYMATIX_REFRESH_FRAGMENT,
        full_fragment,
    )
 
@@ -463,10 +463,10 @@ caller's responsibility. The compiled fragment lives at
    ```
 
 2. Register escalation tools (`grep` / `rag` / `web` / `ask_human`)
-   so the model has somewhere to route to. Helix only signals which
+   so the model has somewhere to route to. Cymatix only signals which
    CLASS of tool to invoke; you implement the tool itself. The
    permitted set is enforced at
-   `helix_context/schemas.py:564-569` (`ESCALATE_TARGETS`).
+   `cymatix_context/schemas.py:564-569` (`ESCALATE_TARGETS`).
 
 3. Ensure your agent has a tool-call-before-answer loop: when `miss`
    is present (or the `<helix:no_match/>` tag appears in
@@ -475,7 +475,7 @@ caller's responsibility. The compiled fragment lives at
 
 4. Distinguish `recommendation = "escalate"` from
    `recommendation = "refresh"` — the Stage 7 fragment at
-   `helix_context/agent_prompt.py:59-82` covers refresh semantics.
+   `cymatix_context/agent_prompt.py:59-82` covers refresh semantics.
    Refresh means "the answer is here, just out of date — fetch and
    retry"; escalate means "the answer is NOT here — go ask
    elsewhere". Conflating them defeats the contract.
@@ -507,7 +507,7 @@ backfilled.
 
 **Cause.** Stage 2's backfill was not run after pulling the 7-stage
 merge. The `embedding_dense_v2 BLOB` column is empty; the in-memory
-dense matrix loader at `helix_context/genome.py` returns `[]` and
+dense matrix loader at `cymatix_context/genome.py` returns `[]` and
 emits a one-time WARN. Stage 2 promoted dense from a 12-candidate
 re-ranker to a parallel first-class recall source returning top-K=500
 over the full corpus (spec
@@ -516,7 +516,7 @@ column populated, dense recall silently degrades to lexical-only.
 
 **Fix.**
 
-1. Stop helix:
+1. Stop cymatix:
    ```bash
    _stop_bench_helix.bat       # Windows bench helper
    # Or Ctrl+C the uvicorn process
@@ -545,7 +545,7 @@ column populated, dense recall silently degrades to lexical-only.
    mv genomes/main/genome.db.backfill-working genomes/main/genome.db
    ```
 
-6. Restart helix.
+6. Restart cymatix.
 
 **Verify.**
 ```bash
@@ -556,7 +556,7 @@ sqlite3 genomes/main/genome.db "SELECT COUNT(*) FROM genes;"
 Expected: both counts are equal. A delta means the backfill is
 incomplete — re-run step 3.
 
-**Prevention.** After every helix-context upgrade, check the
+**Prevention.** After every cymatix-context upgrade, check the
 changelog for new backfill operator actions. The post-merge runbook
 lives in `docs/operator-runbooks.md`; new backfills are also called
 out in the corresponding stage spec under `docs/specs/`.
@@ -565,12 +565,12 @@ out in the corresponding stage spec under `docs/specs/`.
 
 ## SQLite FTS5 missing on macOS
 
-**Symptom.** First helix start (or the first `/ingest` call) raises:
+**Symptom.** First cymatix start (or the first `/ingest` call) raises:
 ```
 sqlite3.OperationalError: no such module: fts5
 ```
 The server log records "FTS5 not available — content search disabled"
-at `helix_context/genome.py:803`. Tier 3 (full-text content match)
+at `cymatix_context/genome.py:803`. Tier 3 (full-text content match)
 silently drops out of the 9-tier fusion ranker.
 
 **Cause.** Apple's bundled CPython on Big Sur and later links against
@@ -597,14 +597,14 @@ recent SQLite with FTS5 enabled.
    pyenv shell 3.12.7
    ```
 
-3. Re-create the venv and reinstall helix:
+3. Re-create the venv and reinstall cymatix:
    ```bash
    python -m venv .venv
    source .venv/bin/activate
    pip install -e ".[embeddings,cpu]"
    ```
 
-4. Restart helix.
+4. Restart cymatix.
 
 **Verify.**
 ```bash
@@ -617,7 +617,7 @@ Expected: `ok`. Anything else means FTS5 is still not linked. See
 `docs/SETUP.md:33-56` for the same recipe with extra context.
 
 **Prevention.** On macOS, never use the system Python (`/usr/bin/python3`)
-for helix. Use pyenv, conda, or Homebrew Python — all of them link
+for cymatix. Use pyenv, conda, or Homebrew Python — all of them link
 against a current SQLite with FTS5. Pin the Python version in your
 project README so contributors do not regress.
 
@@ -657,7 +657,7 @@ classifier list (lines 21-23) only certifies 3.11-3.13. See
    .venv-313\Scripts\activate.bat    # Windows
    ```
 
-3. Reinstall helix-context:
+3. Reinstall cymatix-context:
    ```bash
    pip install -e ".[all]"
    ```
@@ -697,7 +697,7 @@ entity-heavy queries falls. The server log shows a single
 `OSError: [E050] Can't find model 'en_core_web_sm'` at first ingest
 and then nothing further.
 
-**Cause.** `helix_context/tagger.py:52-64` lazy-loads
+**Cause.** `cymatix_context/tagger.py:52-64` lazy-loads
 `en_core_web_sm` on first use. The package `__init__.py:24-28`
 soft-imports `CpuTagger` so an `ImportError` at module load does not
 crash the server, but a missing *model* is a runtime error inside
@@ -715,7 +715,7 @@ noun-chunk enrichment, dropping its tag count.
    This pulls ~12 MB and writes into the active venv's
    `site-packages/en_core_web_sm/`.
 
-2. Restart helix. The tagger's `_nlp` cache is process-local; in-flight
+2. Restart cymatix. The tagger's `_nlp` cache is process-local; in-flight
    workers will not pick up a freshly downloaded model.
 
 3. Re-ingest any documents that were ingested while the model was
@@ -730,7 +730,7 @@ noun-chunk enrichment, dropping its tag count.
 ```bash
 python -c "import spacy; \
   nlp = spacy.load('en_core_web_sm'); \
-  doc = nlp('helix-context fronts Ollama at localhost:11434.'); \
+  doc = nlp('cymatix-context fronts Ollama at localhost:11434.'); \
   print([(e.text, e.label_) for e in doc.ents])"
 ```
 Expected: a non-empty list of entities (at minimum a `PRODUCT` /
@@ -741,7 +741,7 @@ from this venv.
 For pip-only installs, append the download line to your project's
 post-install step:
 ```bash
-pip install "helix-context[cpu]" && python -m spacy download en_core_web_sm
+pip install "cymatix-context[cpu]" && python -m spacy download en_core_web_sm
 ```
 Production deployments should bake the model into the container
 image so cold starts do not race the network.
@@ -750,7 +750,7 @@ image so cold starts do not race the network.
 
 ## Calibration drift — per_classifier mode with stale floors
 
-**Symptom.** The Stage 4 calibrated floors in `helix.toml`
+**Symptom.** The Stage 4 calibrated floors in `cymatix.toml`
 (`[abstain.factual]`, `[abstain.multi_hop]`, etc.) were generated
 weeks ago against a different knowledge store snapshot. `/context` now
 abstains on queries it used to answer (or vice versa). Bench
@@ -763,7 +763,7 @@ gates. Those floors are calibrated empirically by
 queries — if the knowledge store has grown (or shifted in topic mix) since
 the calibration run, the score distribution shifts too, and the old
 floors no longer reflect reality. The loader at
-`helix_context/config.py:718-757` accepts the stale values without
+`cymatix_context/config.py:718-757` accepts the stale values without
 warning; only the bench tells you they are wrong. There is no
 auto-recalibration.
 
@@ -782,19 +782,19 @@ auto-recalibration.
    python scripts/calibrate_thresholds.py \
      --input results/located_n1000.jsonl \
      --genome genomes/main/genome.db \
-     --output-toml helix.toml.calibrated
+     --output-toml cymatix.toml.calibrated
    ```
 
 3. Diff the new floors against the live ones:
    ```bash
-   diff helix.toml helix.toml.calibrated
+   diff cymatix.toml cymatix.toml.calibrated
    ```
    Review every `abstain_top` / `focused_top` / `tight_top` change —
    floors that drift by >0.10 are suspicious; check the bench's hit /
    miss distribution for the affected classifier class.
 
-4. Replace the `[abstain.*]` blocks in the live `helix.toml` with the
-   recalibrated values. Restart helix.
+4. Replace the `[abstain.*]` blocks in the live `cymatix.toml` with the
+   recalibrated values. Restart cymatix.
 
 5. If you want to fall back to the global mode while you investigate:
    ```toml
@@ -804,7 +804,7 @@ auto-recalibration.
    This restores the legacy hard-coded floors
    (`TIGHT_SCORE_FLOOR=5.0`, `FOCUSED_SCORE_FLOOR=2.5`, abstain at
    `2.5`) — pre-Stage-4 behavior byte-for-byte (see comment at
-   `helix.toml:421-432`).
+   `cymatix.toml:421-432`).
 
 **Verify.** Compare retrieval rate before and after on the same
 bench:
@@ -829,6 +829,6 @@ reviewers can see what data the threshold was fit against.
 
 If your symptom does not match any section above and `/health`
 reports `genome_genes > 0` and `upstream_reachable = true`, file an
-issue: <https://github.com/SwiftWing21/helix-context/issues>. Include
-`/health`, `/stats`, the relevant log lines, and your `helix.toml`
+issue: <https://github.com/SwiftWing21/cymatix-context/issues>. Include
+`/health`, `/stats`, the relevant log lines, and your `cymatix.toml`
 with secrets redacted.

@@ -5,10 +5,10 @@
 > reading data."*
 > — Max, 2026-04-12
 
-This is the actual mission statement for helix-context. Not "a context
+This is the actual mission statement for cymatix-context. Not "a context
 compression system." Not "a RAG alternative." Not "a retrieval engine."
 
-**Helix-context is an attempt to digitally represent the way biology has
+**Cymatix-context is an attempt to digitally represent the way biology has
 been encoding and reading data for ~3.5 billion years, using whatever
 off-the-shelf tools fit the math.**
 
@@ -20,7 +20,7 @@ same underlying problem: selective retrieval of stored information under
 contextual signals.
 
 ```
-Biology                    helix-context
+Biology                    cymatix-context
 ─────────────────────────────────────────────────────────
 DNA                    →   genome.db (content-addressable, immutable rows)
 codons                 →   256-bin frequency spectra (MD5-hashed terms)
@@ -79,7 +79,7 @@ not the parts.
 ## Built in a cave
 
 - One dev machine (Ryzen 7 5800X + RTX 3080 Ti, 48 GB RAM)
-- 8 git repos, ~509K LOC committed in 30 days (helix + adjacent work)
+- 8 git repos, ~509K LOC committed in 30 days (cymatix + adjacent work)
 - Zero team, zero funding, zero marketing deck
 - 250 sessions, 6.5B tokens of conversational reasoning
 - 4-agent research teams dispatched from a single CLI
@@ -89,7 +89,7 @@ the session transcripts.
 
 ## What success looks like
 
-Success is not "helix beats RAG on benchmark X." Success is:
+Success is not "cymatix beats RAG on benchmark X." Success is:
 
 1. The biological metaphors hold under load — when you throw edge cases
    at the pipeline, the math keeps making the same prediction as biology

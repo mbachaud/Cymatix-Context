@@ -2,7 +2,7 @@
 
 Obsidian vault export is shipped as **v1** (read-only export + diagnostic traces).
 
-**Since:** helix-context v0.5.0 (PR #37, merged 2026-05-07)
+**Since:** cymatix-context v0.5.0 (PR #37, merged 2026-05-07)
 
 ## v1 capabilities (current)
 
@@ -14,9 +14,9 @@ What works today:
   (default 48h, hard cap configurable).
 - **Pin / unpin** traces — pinned traces live in `_traces-pinned/` and are immune
   to TTL prune (still subject to `vault.traces.max_retention_hours_hard`).
-- **`/vault/status`** HTTP endpoint and `helix-vault status` CLI — file counts per
+- **`/vault/status`** HTTP endpoint and `cymatix-vault status` CLI — file counts per
   folder, disk bytes, last export timestamps.
-- **`/export/obsidian`** HTTP endpoint and `helix-vault export {--full,--incremental}`
+- **`/export/obsidian`** HTTP endpoint and `cymatix-vault export {--full,--incremental}`
   CLI for on-demand exports.
 - **`/vault/trace`** HTTP endpoint to capture a single-request diagnostic trace
   on demand.
@@ -41,7 +41,7 @@ Tracking design lives in
 
 ## Smoke-test path
 
-1. Enable in `helix.toml`:
+1. Enable in `cymatix.toml`:
 
    ```toml
    [vault]
@@ -55,13 +55,13 @@ Tracking design lives in
    # max_retention_hours_hard = 720
    ```
 
-2. Start the helix server (`helix-server` or `python -m uvicorn helix_context._asgi:app --port 11437`).
+2. Start the cymatix server (`cymatix-server` or `python -m uvicorn cymatix_context._asgi:app --port 11437`).
 
 3. Run a full export and check status:
 
    ```bash
-   helix-vault export --full
-   helix-vault status
+   cymatix-vault export --full
+   cymatix-vault status
    ```
 
 4. Run a `/context` query to generate a trace, then pin and unpin it:
@@ -72,13 +72,13 @@ Tracking design lives in
         -d '{"query": "what does the splice step do?"}'
 
    # Find the latest trace file in ~/.helix/vault/_traces/
-   helix-vault trace --list | head
-   helix-vault pin <trace-filename>
-   helix-vault status     # _traces-pinned count goes up by 1
-   helix-vault unpin <trace-filename>
+   cymatix-vault trace --list | head
+   cymatix-vault pin <trace-filename>
+   cymatix-vault status     # _traces-pinned count goes up by 1
+   cymatix-vault unpin <trace-filename>
    ```
 
-If `helix-vault status` reports `enabled: true` and trace pin/unpin round-trip
+If `cymatix-vault status` reports `enabled: true` and trace pin/unpin round-trip
 the file between `_traces/` and `_traces-pinned/`, v1 is healthy.
 
 ## History

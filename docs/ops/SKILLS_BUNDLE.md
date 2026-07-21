@@ -1,7 +1,7 @@
-# Helix + Headroom Skills Bundle
+# Cymatix + Headroom Skills Bundle
 
 > How a `skills.md` file becomes queryable, compressed context
-> through the helix-context + Headroom stack.
+> through the cymatix-context + Headroom stack.
 
 ## The Simple Version
 
@@ -98,7 +98,7 @@ There is no special "skills runtime." The knowledge store IS the skills database
 
 ## What Each Layer Does
 
-### Helix (storage + retrieval)
+### Cymatix (storage + retrieval)
 
 | Component | Role | CPU/LLM |
 |---|---|---|
@@ -122,12 +122,12 @@ There is no special "skills runtime." The knowledge store IS the skills database
 
 ### The Bundle
 
-helix + Headroom together = **fully CPU-based context pipeline.** No LLM calls
+cymatix + Headroom together = **fully CPU-based context pipeline.** No LLM calls
 required at any step from ingest through retrieval. The downstream model is the
 first and only LLM in the chain.
 
 ```
-skills.md → [helix: chunk, tag, embed, store] → [helix: retrieve, score]
+skills.md → [cymatix: chunk, tag, embed, store] → [cymatix: retrieve, score]
           → [headroom: compress] → downstream model
 ```
 
@@ -147,15 +147,15 @@ curl -X POST http://localhost:11437/ingest \
 python scripts/ingest_all.py --roots skills/ --ext .md
 ```
 
-### From another helix instance (cross-store import)
+### From another cymatix instance (cross-store import)
 ```python
-from helix_context.hgt import export_genome, import_genome
+from cymatix_context.hgt import export_genome, import_genome
 
 # Export skills from source genome
-export_genome("source_genome.db", "skills_export.helix")
+export_genome("source_genome.db", "skills_export.cymatix")
 
 # Import into target genome (skip duplicates)
-import_genome("target_genome.db", "skills_export.helix", strategy="skip_existing")
+import_genome("target_genome.db", "skills_export.cymatix", strategy="skip_existing")
 ```
 
 ---

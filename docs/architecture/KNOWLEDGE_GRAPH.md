@@ -1,7 +1,7 @@
-# Helix Knowledge Graph
+# Cymatix Knowledge Graph
 
 > How documents, dimensions, and connections form a queryable knowledge graph
-> in the helix-context + Headroom stack.
+> in the cymatix-context + Headroom stack.
 
 ## Graph Structure
 
@@ -53,7 +53,7 @@
 
 ### Document (primary node)
 
-The fundamental unit. Every piece of knowledge in helix is a document.
+The fundamental unit. Every piece of knowledge in cymatix is a document.
 
 ```
 ┌─────────────────────────────────────────────┐
@@ -134,7 +134,7 @@ Each dimension acts as a filter or scoring function over the graph:
 │                      "does this gene CONTAIN relevant terms?"│
 │                                                             │
 │  D2  Promoter    ─── domain + entity tag intersection       │
-│                      + synonym expansion (helix.toml)       │
+│                      + synonym expansion (cymatix.toml)       │
 │                      "is this gene ABOUT the right topic?"  │
 │                                                             │
 │  D3  Source      ─── deny-list filter + authority bonus     │
@@ -206,7 +206,7 @@ Step 5 — Assembly
 
 Per-document metadata (gene_id, source path, score, optional attribution)
 lives in `agent.citations[]`. The inline `[gene=...]` headers are the
-legibility-header format defined in `helix_context/encoding/legibility.py`.
+legibility-header format defined in `cymatix_context/encoding/legibility.py`.
 
 > The pre-2026-05 renderer emitted `<GENE src="..." score="..." facts="...">BODY</GENE>`
 > blocks inline. That markup is gone from live `/context` responses;
@@ -263,14 +263,14 @@ genome.db (SQLite)
 
 ---
 
-## Helix + Headroom Bundle Summary
+## Cymatix + Headroom Bundle Summary
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                     HELIX + HEADROOM                        │
+│                     CYMATIX + HEADROOM                      │
 │                                                             │
 │  ┌───────────────────────────────────────────────────────┐  │
-│  │                    HELIX                               │  │
+│  │                    CYMATIX                             │  │
 │  │                                                       │  │
 │  │  Ingest ─── Chunk + Tag + Embed + Gate ──► genome.db  │  │
 │  │                                                       │  │
@@ -304,6 +304,6 @@ genome.db (SQLite)
 
 **Zero LLM calls from ingest to retrieval.** The first LLM in the chain is
 the downstream model that receives the compressed context. This is the core
-value proposition: helix + Headroom turn raw files into query-ready, compressed,
+value proposition: cymatix + Headroom turn raw files into query-ready, compressed,
 scored context using only CPU, making it model-agnostic and cost-free at
 retrieval time.

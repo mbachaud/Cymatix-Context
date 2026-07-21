@@ -1,6 +1,14 @@
 # Rosetta Stone — biology lexicon ↔ software lexicon
 
-Helix's original vocabulary borrowed from molecular biology (gene, genome,
+> **July 2026:** the project itself was renamed **helix-context → cymatix-context**
+> (package `helix_context` → `cymatix_context`, env `HELIX_*` → `CYMATIX_*`,
+> config `helix.toml` → `cymatix.toml`, CLI `helix` → `cymatix`). Old names
+> remain as working aliases for a deprecation window. Historical docs
+> (benchmarks, council verdicts, dated plans) intentionally keep the helix
+> vocabulary — they are point-in-time records. This table's biology↔software
+> mapping is unchanged by the rename.
+
+Cymatix's original vocabulary borrowed from molecular biology (gene, genome,
 ribosome, chromatin, splice, codon, promoter, epigenetics, transcription,
 expression, replication). The metaphor is evocative and shaped a lot of
 the original architecture, but it imposes a real cognitive tax: every
@@ -8,7 +16,7 @@ reader — human or LLM — has to hold two mental models in parallel.
 
 The **canonical lexicon is now standard software terminology.** This
 document is the bidirectional mapping. Legacy biology terms remain valid
-references (the Python aliases live in `helix_context/aliases.py`), so
+references (the Python aliases live in `cymatix_context/aliases.py`), so
 older handoffs, papers, and commit messages stay readable without
 modification. New code, new docs, and new tool surfaces should use the
 software vocabulary.
@@ -20,7 +28,7 @@ terms surface in the codebase, add them here.
 
 ## Identity vocabulary
 
-The biology rename is not the only translation Helix needs. The identity
+The biology rename is not the only translation Cymatix needs. The identity
 layer also has a few near-synonyms in active use across design notes,
 code comments, and handoffs. The canonical schema terms stay:
 
@@ -78,29 +86,29 @@ work.
 | `harmonic_bin_boost` | `random_walk_boost` | The Monte Carlo neighbour-expansion tier. |
 | `gene_attribution` | `document_attribution` | The party/participant authorship metadata on each document. |
 | `GeneAttribution` | `DocumentAttribution` | |
-| `HGT` (horizontal gene transfer) | `cross_store_import` | Importing documents from another helix instance. **Forward-pointer:** no code under either name today; `cross_store_import` is the name the feature will ship under when it lands. The legacy `HGT` acronym remains the term-of-art in design docs until then. |
+| `HGT` (horizontal gene transfer) | `cross_store_import` | Importing documents from another cymatix instance. **Forward-pointer:** no code under either name today; `cross_store_import` is the name the feature will ship under when it lands. The legacy `HGT` acronym remains the term-of-art in design docs until then. |
 
 ---
 
 ## Response & routing types (STAYS — no biology twin)
 
-These types travel on the wire between helix and its callers (HTTP
+These types travel on the wire between cymatix and its callers (HTTP
 clients, MCP hosts, the CLI). They are the *response envelope*
 vocabulary, not the storage vocabulary. No biology metaphor applies;
 they keep their engineering names everywhere.
 
 | Type | Purpose | Where it surfaces |
 |---|---|---|
-| `ContextWindow` | Full pipeline output — the bytes the agent reads. Carries `expressed_context`, `expressed_gene_ids`, `total_estimated_tokens`, plus the `metadata` dict that pipes `know`/`miss` upward. | `helix_context.schemas.ContextWindow`; returned from `HelixContextManager.build_context()`. |
-| `QueryResult` | Agent-facing projection of `ContextWindow`. Adds `verdict` / `next_action` / `decision_reason`. The shape `helix query --json` emits via `to_agent_json()`. | `helix_context.api.QueryResult`. |
-| `ContextPacket` | Freshness-labeled agent-safe bundle for high-risk actions. Holds `verified[]`, `stale_risk[]`, `refresh_targets[]`, plus `coordinate_confidence` and `file_coverage`. | `helix_context.schemas.ContextPacket`; built by `build_context_packet()`; emitted by `/context/packet`, `helix packet`, and the `helix_context_packet` MCP tool. |
-| `ContextItem` | One evidence row inside a packet — `gene_id` / `title` / `content` / `relevance_score` / `live_truth_score` / `status` (`"verified"` / `"stale"` / `"missing"`). | `helix_context.schemas.ContextItem`. |
-| `RefreshTarget` | One reread directive in a packet — `target_kind` / `source_id` / `reason` / `priority`. | `helix_context.schemas.RefreshTarget`; emitted by `helix refresh-targets`. |
-| `KnowBlock` | Top-level "you may answer from this evidence" verdict. Fields: `found`, `confidence`, `gene_id_match`, `soft_stale`, etc. Mutually exclusive with `MissBlock` on a single response. | `helix_context.schemas.KnowBlock`; populated by `know_decision.decide_know_or_miss()`. |
-| `MissBlock` | Top-level "do **not** answer from the knowledge store" verdict. Carries `reason` (`"miss"` / `"stale"` / `"cold"` / `"superseded"`), `escalate_to[]`, `refresh_targets[]`, `do_not_answer_from_genome:true`. | `helix_context.schemas.MissBlock`; populated by `know_decision.decide_know_or_miss()`. |
-| `ContextHealth` | "Check-engine light" for a single retrieval — `ellipticity`, `coverage`, `density`, freshness signals, `coordinate_crispness`, `status` ∈ {`aligned`, `sparse`, `stale`, `denatured`}. | `helix_context.schemas.ContextHealth`; logged to the `health_log` table; not on the wire. |
-| `IngestResult` | One-shot ingest projection — `gene_ids[]`, `chunks`, `bytes_written`. | `helix_context.api.IngestResult`. |
-| `StatsResult` | One-shot stats projection used by `helix diag corpus`. | `helix_context.api.StatsResult`. |
+| `ContextWindow` | Full pipeline output — the bytes the agent reads. Carries `expressed_context`, `expressed_gene_ids`, `total_estimated_tokens`, plus the `metadata` dict that pipes `know`/`miss` upward. | `cymatix_context.schemas.ContextWindow`; returned from `HelixContextManager.build_context()`. |
+| `QueryResult` | Agent-facing projection of `ContextWindow`. Adds `verdict` / `next_action` / `decision_reason`. The shape `cymatix query --json` emits via `to_agent_json()`. | `cymatix_context.api.QueryResult`. |
+| `ContextPacket` | Freshness-labeled agent-safe bundle for high-risk actions. Holds `verified[]`, `stale_risk[]`, `refresh_targets[]`, plus `coordinate_confidence` and `file_coverage`. | `cymatix_context.schemas.ContextPacket`; built by `build_context_packet()`; emitted by `/context/packet`, `cymatix packet`, and the `helix_context_packet` MCP tool. |
+| `ContextItem` | One evidence row inside a packet — `gene_id` / `title` / `content` / `relevance_score` / `live_truth_score` / `status` (`"verified"` / `"stale"` / `"missing"`). | `cymatix_context.schemas.ContextItem`. |
+| `RefreshTarget` | One reread directive in a packet — `target_kind` / `source_id` / `reason` / `priority`. | `cymatix_context.schemas.RefreshTarget`; emitted by `cymatix refresh-targets`. |
+| `KnowBlock` | Top-level "you may answer from this evidence" verdict. Fields: `found`, `confidence`, `gene_id_match`, `soft_stale`, etc. Mutually exclusive with `MissBlock` on a single response. | `cymatix_context.schemas.KnowBlock`; populated by `know_decision.decide_know_or_miss()`. |
+| `MissBlock` | Top-level "do **not** answer from the knowledge store" verdict. Carries `reason` (`"miss"` / `"stale"` / `"cold"` / `"superseded"`), `escalate_to[]`, `refresh_targets[]`, `do_not_answer_from_genome:true`. | `cymatix_context.schemas.MissBlock`; populated by `know_decision.decide_know_or_miss()`. |
+| `ContextHealth` | "Check-engine light" for a single retrieval — `ellipticity`, `coverage`, `density`, freshness signals, `coordinate_crispness`, `status` ∈ {`aligned`, `sparse`, `stale`, `denatured`}. | `cymatix_context.schemas.ContextHealth`; logged to the `health_log` table; not on the wire. |
+| `IngestResult` | One-shot ingest projection — `gene_ids[]`, `chunks`, `bytes_written`. | `cymatix_context.api.IngestResult`. |
+| `StatsResult` | One-shot stats projection used by `cymatix diag corpus`. | `cymatix_context.api.StatsResult`. |
 
 Note: `ellipticity` and `denatured` are CD-spectroscopy / physics terms,
 not biology. They remain on the [Terms that STAY](#terms-that-stay-not-biology-not-tax)
@@ -114,7 +122,7 @@ Prometheus metric names and label values are a **contract** for anyone
 querying them — Grafana panels, alert rules, ad-hoc PromQL. The same
 "don't rename what's already a contract" logic that protects the SQL
 schema applies here. The translation table below is therefore a
-*reading* aid; helix does not rename metrics. Dashboard panel titles
+*reading* aid; cymatix does not rename metrics. Dashboard panel titles
 *do* use the engineering vocabulary (and reference the legacy term
 inline so navigation stays one-step).
 
@@ -141,7 +149,7 @@ inline so navigation stays one-step).
 | `helix_pipeline_stage_seconds` (span) | — | also emits a `helix.pipeline.<stage>` span via `pipeline_stage_span()` |
 | `helix_genai_client_token_usage` | n/a — new OTel surface | OTel `gen_ai.client.token.usage`, by `gen_ai.token.type` ∈ {input, output, cached, reasoning} |
 | `helix_genai_time_to_first_chunk_seconds` | n/a — new OTel surface | OTel `gen_ai.response.time_to_first_chunk` (TTFT, streaming) |
-| `helix_genai_cost_usd` | n/a — new surface | per-call USD cost from `helix_context.genai_telemetry.PRICE_TABLE` |
+| `helix_genai_cost_usd` | n/a — new surface | per-call USD cost from `cymatix_context.genai_telemetry.PRICE_TABLE` |
 | `helix_genai_finish_reasons_total` | n/a — new OTel surface | OTel `gen_ai.response.finish_reasons` distribution |
 
 **The standardized labels on the new `helix_genai_*` metrics follow the
@@ -206,7 +214,7 @@ These are domain-specific technical terms with established meaning
 outside biology. Renaming them would lose precision or trade a
 small cognitive cost for a bigger one.
 
-- **`SEMA`** — semantic embedding alignment. Helix-coined but not biological;
+- **`SEMA`** — semantic embedding alignment. Cymatix-coined but not biological;
   stays.
 - **`TCM`** — Temporal Context Model (Howard & Kahana, 2002). Established
   psych-literature acronym; stays.
@@ -218,7 +226,7 @@ small cognitive cost for a bigger one.
   supervised-learning acronym.
 - **`ScoreRift`** — proper noun for the audit subsystem.
 - **`PWPC`** — proper noun for the joint experiment with Todd's Celestia.
-- **`helix`** itself — established product name. Renaming the package
+- **`cymatix`** itself — established product name. Renaming the package
   would be too disruptive for the cognitive-tax payoff.
 
 ---
@@ -242,7 +250,7 @@ The rename ships in waves so back-compat stays solid throughout.
 
 - **No SQL schema rename.** Tables (`genes`, `gene_attribution`,
   `harmonic_links`, etc.) and columns stay. Renaming would force a
-  migration on every existing helix instance; the cognitive tax at
+  migration on every existing cymatix instance; the cognitive tax at
   the SQL layer is paid by ~rare readers.
 - **No removal of legacy class or tool names.** Only additions and
   docstring nudges. A future major-version cleanup may remove the
@@ -251,7 +259,7 @@ The rename ships in waves so back-compat stays solid throughout.
 - **No rename of dated handoffs, papers, commit messages, or git
   history.** These are immutable historical artifacts; this Rosetta
   Stone makes them readable without modification.
-- **No rename of the `helix-context` package itself.**
+- **No rename of the `cymatix-context` package itself.**
 
 ---
 
@@ -267,12 +275,12 @@ isn't listed yet, add a row.
 
 ```python
 # After R1 ships:
-from helix_context.aliases import Document, KnowledgeStore, Compressor
-from helix_context.aliases import DocumentTags, DocumentSignals, LifecycleTier
-from helix_context.aliases import DocumentAttribution
+from cymatix_context.aliases import Document, KnowledgeStore, Compressor
+from cymatix_context.aliases import DocumentTags, DocumentSignals, LifecycleTier
+from cymatix_context.aliases import DocumentAttribution
 
 # These are pure aliases for the legacy names. Identity holds:
-from helix_context.schemas import Gene, PromoterTags
+from cymatix_context.schemas import Gene, PromoterTags
 assert Document is Gene
 assert DocumentTags is PromoterTags
 ```

@@ -1,8 +1,8 @@
-# Helix Context — MCP Tools
+# Cymatix Context — MCP Tools
 
-Tools exposed when helix runs as an MCP server (`python -m helix_context.mcp_server`).
+Tools exposed when cymatix runs as an MCP server (`python -m cymatix_context.mcp_server`).
 
-## helix_context
+## cymatix_context
 
 Retrieve and compress context for a query. Equivalent to `POST /context`.
 
@@ -49,12 +49,12 @@ Navigation-first retrieval — returns scores and source pointers without assemb
 ```json
 {
   "mcpServers": {
-    "helix-context": {
+    "cymatix-context": {
       "command": "python",
-      "args": ["-m", "helix_context.mcp_server"],
+      "args": ["-m", "cymatix_context.mcp_server"],
       "cwd": "/absolute/path/to/your/project",
       "env": {
-        "HELIX_MCP_URL": "http://127.0.0.1:11437"
+        "CYMATIX_MCP_URL": "http://127.0.0.1:11437"
       }
     }
   }

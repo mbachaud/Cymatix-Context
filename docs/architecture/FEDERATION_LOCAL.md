@@ -149,9 +149,9 @@ What changes across federation tiers is **the source of those IDs**:
 
 | Tier | org_id | party_id | participant_id | agent_id |
 |---|---|---|---|---|
-| **Solo / single-persona (today)** | `'local'` trust root | hostname / device | OS user UUID | NULL or `HELIX_AGENT` |
-| **Multi-persona dev box** | `HELIX_ORG` env | hostname / device | OS user UUID | `HELIX_AGENT` per session |
-| **Small team** | `HELIX_ORG` env | `HELIX_DEVICE` env | `HELIX_USER` env | `HELIX_AGENT` env |
+| **Solo / single-persona (today)** | `'local'` trust root | hostname / device | OS user UUID | NULL or `CYMATIX_AGENT` |
+| **Multi-persona dev box** | `CYMATIX_ORG` env | hostname / device | OS user UUID | `CYMATIX_AGENT` per session |
+| **Small team** | `CYMATIX_ORG` env | `CYMATIX_DEVICE` env | `CYMATIX_USER` env | `CYMATIX_AGENT` env |
 | **Enterprise SSO** | OAuth org claim / tenant root | hostname / SaaS gateway | OAuth user claim | request header / agent token |
 
 Because the schema is invariant, every document attributed at the local tier
@@ -161,41 +161,41 @@ the resolver; the rest of the pipeline (`query_genes(party_id=...)`, the
 
 ## How it resolves IDs today (4-axis + tz)
 
-`helix_context/server.py::_local_attribution_defaults()` returns the
+`cymatix_context/server.py::_local_attribution_defaults()` returns the
 4-tuple `(user_handle, device, org, agent_handle)`:
 
 ```python
-org           = os.environ.get("HELIX_ORG")    or "local"
-device        = os.environ.get("HELIX_DEVICE") or os.environ.get("HELIX_PARTY") or socket.gethostname()
-user_handle   = os.environ.get("HELIX_USER")   or getpass.getuser()
-agent_handle  = os.environ.get("HELIX_AGENT")  or None   # None = manual ingest
+org           = os.environ.get("CYMATIX_ORG")    or "local"
+device        = os.environ.get("CYMATIX_DEVICE") or os.environ.get("CYMATIX_PARTY") or socket.gethostname()
+user_handle   = os.environ.get("CYMATIX_USER")   or getpass.getuser()
+agent_handle  = os.environ.get("CYMATIX_AGENT")  or None   # None = manual ingest
 ```
 
 And `_local_timezone()` resolves the IANA timezone name independently:
 
 ```python
-1. HELIX_TZ env var                         # "America/Los_Angeles" — best
+1. CYMATIX_TZ env var                         # "America/Los_Angeles" — best
 2. tzlocal.get_localzone_name() if installed # IANA, cross-platform
 3. datetime.now().astimezone().tzname()     # display name on Win, abbrev on *nix
 4. time.tzname[time.daylight]               # last-ditch
 5. "UTC"                                    # always-resolves fallback
 ```
 
-Why `HELIX_TZ` is prioritized: on Windows, `datetime.tzname()` returns
+Why `CYMATIX_TZ` is prioritized: on Windows, `datetime.tzname()` returns
 display names like "Pacific Standard Time" rather than IANA names. The
 explicit env var is the only way to guarantee a clean IANA value
 without adding `tzlocal` as a hard dependency.
 
 Order of precedence, each axis:
-1. **Explicit env var** (e.g., `HELIX_AGENT=laude`)
-2. **Legacy env var** (e.g., `HELIX_PARTY` for back-compat with the
+1. **Explicit env var** (e.g., `CYMATIX_AGENT=laude`)
+2. **Legacy env var** (e.g., `CYMATIX_PARTY` for back-compat with the
    2-layer commit)
 3. **OS-derived value** (`getpass.getuser()`, `socket.gethostname()`)
 4. **Sensible default** (`org='local'`, `agent=None`)
 
-### `HELIX_DEVICE` parse rules (overload with the hardware picker)
+### `CYMATIX_DEVICE` parse rules (overload with the hardware picker)
 
-The same `HELIX_DEVICE` env var is read by two consumers, and they
+The same `CYMATIX_DEVICE` env var is read by two consumers, and they
 parse it differently. The overload is intentional and safe — this
 section documents the parse rules so operators don't have to read
 both consumers' code. Design decision recorded in
@@ -203,25 +203,25 @@ both consumers' code. Design decision recorded in
 
 | Consumer | Source | Parse rule |
 |---|---|---|
-| Hardware picker | `helix_context/hardware.py::_resolve_requested_device` | Lowercase, then check against the whitelist `{"auto", "cuda", "rocm", "mps", "cpu"}`. Any non-whitelisted value logs `WARNING` and is ignored — the picker continues to `[hardware] device` from `helix.toml`, then to `"auto"`. Never raises, never blocks startup. |
-| Federation attribution | `helix_context/server/helpers.py::_local_attribution_defaults`, `helix_context/identity/registry.py` | Used as a free-form device-handle string. Any non-empty value is accepted as-is. Falls back to `HELIX_PARTY`, then `socket.gethostname()`. |
+| Hardware picker | `cymatix_context/hardware.py::_resolve_requested_device` | Lowercase, then check against the whitelist `{"auto", "cuda", "rocm", "mps", "cpu"}`. Any non-whitelisted value logs `WARNING` and is ignored — the picker continues to `[hardware] device` from `cymatix.toml`, then to `"auto"`. Never raises, never blocks startup. |
+| Federation attribution | `cymatix_context/server/helpers.py::_local_attribution_defaults`, `cymatix_context/identity/registry.py` | Used as a free-form device-handle string. Any non-empty value is accepted as-is. Falls back to `CYMATIX_PARTY`, then `socket.gethostname()`. |
 
 Concrete behavior matrix:
 
-| `HELIX_DEVICE=` value | HW picker | Federation |
+| `CYMATIX_DEVICE=` value | HW picker | Federation |
 |---|---|---|
 | `cuda` / `cpu` / `mps` / `rocm` / `auto` | Used as device kind | Used as device handle (literal value) |
 | Any other string (e.g., `my-laptop`, `swift_wing21`) | WARNING logged, ignored; picker falls through to `[hardware] device` / `"auto"` | Used as device handle |
-| Unset | Falls through to `[hardware] device` / `"auto"` | Falls through to `HELIX_PARTY` or `socket.gethostname()` |
+| Unset | Falls through to `[hardware] device` / `"auto"` | Falls through to `CYMATIX_PARTY` or `socket.gethostname()` |
 
-**To silence the HW-picker WARNING when you want `HELIX_DEVICE` for
+**To silence the HW-picker WARNING when you want `CYMATIX_DEVICE` for
 federation only:** set `[hardware] device = "cpu"` (or your preferred
-device) explicitly in `helix.toml`, and move the federation label to
-`HELIX_PARTY`:
+device) explicitly in `cymatix.toml`, and move the federation label to
+`CYMATIX_PARTY`:
 
 ```bash
-export HELIX_PARTY="my-laptop"   # federation device handle
-unset HELIX_DEVICE               # picker uses helix.toml's [hardware] device
+export CYMATIX_PARTY="my-laptop"   # federation device handle
+unset CYMATIX_DEVICE               # picker uses cymatix.toml's [hardware] device
 ```
 
 This preserves attribution while avoiding the overload entirely.
@@ -229,8 +229,8 @@ This preserves attribution while avoiding the overload entirely.
 Tokens are normalized: lowercased, whitespace-stripped, length-capped at
 64 chars. Conservative because these become primary-key components.
 
-Empirical verification (running server, `HELIX_ORG=swiftwing
-HELIX_AGENT=conductor`):
+Empirical verification (running server, `CYMATIX_ORG=swiftwing
+CYMATIX_AGENT=conductor`):
 
 ```
 gene_attribution:
@@ -264,7 +264,7 @@ if local_federation and not participant_id:
         if not party_id:
             party_id = effective_party
 
-    # Layer 4: agent (optional — only if HELIX_AGENT is set)
+    # Layer 4: agent (optional — only if CYMATIX_AGENT is set)
     if agent_handle and participant_id and not agent_id:
         agent_id = registry.local_agent(
             handle=agent_handle, participant_id=participant_id, kind=agent_kind,
@@ -281,25 +281,25 @@ IDs explicitly).
 ## Multi-persona setup (Laude / Taude / Raude / Conductor pattern)
 
 Each persona's IDE plugin / session launches with its own
-`HELIX_AGENT` env var. The user (`HELIX_USER` or OS user) and device
+`CYMATIX_AGENT` env var. The user (`CYMATIX_USER` or OS user) and device
 (hostname) stay the same — only the agent layer changes per session:
 
 ```bash
 # Laude's VSCode plugin profile
-export HELIX_ORG=swiftwing
-export HELIX_AGENT=laude
+export CYMATIX_ORG=swiftwing
+export CYMATIX_AGENT=laude
 
 # Taude's
-export HELIX_ORG=swiftwing
-export HELIX_AGENT=taude
+export CYMATIX_ORG=swiftwing
+export CYMATIX_AGENT=taude
 
 # Raude's
-export HELIX_ORG=swiftwing
-export HELIX_AGENT=raude
+export CYMATIX_ORG=swiftwing
+export CYMATIX_AGENT=raude
 
 # Conductor (main session, no specific persona)
-export HELIX_ORG=swiftwing
-export HELIX_AGENT=conductor
+export CYMATIX_ORG=swiftwing
+export CYMATIX_AGENT=conductor
 ```
 
 All four agents end up as distinct rows in the `agents` table under the
@@ -344,7 +344,7 @@ SELECT party_id, COUNT(*) FROM gene_attribution
 
 ## What this does NOT give you (yet)
 
-1. **Authentication** — anyone with API access can spoof `HELIX_AGENT`.
+1. **Authentication** — anyone with API access can spoof `CYMATIX_AGENT`.
    Local trust model assumes the machine itself is trusted (typical for
    solo-dev boxes; not OK for multi-tenant production).
 2. **Authorization** — there's no role-based access control over which
@@ -380,9 +380,9 @@ is the gift that keeps giving.
 ## How this connects to the conductor/librarian pattern
 
 Per the brainstorm in this session: a conductor-orchestrated architecture
-where helix is queried as a tool and sub-agents do the heavy lifting
+where cymatix is queried as a tool and sub-agents do the heavy lifting
 benefits from per-call attribution. When a sub-agent ingests, its
-`HELIX_AGENT=researcher-3` env var auto-attributes everything it learned.
+`CYMATIX_AGENT=researcher-3` env var auto-attributes everything it learned.
 The conductor can then ask "show me what researcher-3 found about X"
 without any additional plumbing.
 
@@ -415,7 +415,7 @@ It's the substrate that makes multi-agent introspection cheap.
 
 Total: ~160 LOC across 3 files + 2 new tables + 2 new columns. Zero
 new external dependencies. Zero auth infrastructure. Trust model: the
-OS account is who you are; HELIX_ORG / HELIX_AGENT env vars override.
+OS account is who you are; CYMATIX_ORG / CYMATIX_AGENT env vars override.
 
 ## A note on timezone backfill quality
 

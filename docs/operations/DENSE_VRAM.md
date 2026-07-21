@@ -5,7 +5,7 @@ GPUs with **≤12 GB VRAM** without the slow-path failure mode rediscovered
 during the ContextBench code-retrieval track (2026-06-07).
 
 Companion to PR #177 / issue #176, which added the bounding mechanism
-(`HELIX_DENSE_VRAM_RELEASE_EVERY`, see the v0.6.4 CHANGELOG entry); this
+(`CYMATIX_DENSE_VRAM_RELEASE_EVERY`, see the v0.6.4 CHANGELOG entry); this
 doc is the operator-facing matrix for *using* it.
 
 ## Failure mode in one paragraph
@@ -21,7 +21,7 @@ fraction-of-a-percent throughput and looks like a hang. Measured on a
 12 GB 3080 Ti: a single-worker dense ingest of one mid-size repo climbed
 to ~11.7 GB / 95% utilization, then sawtoothed there for hours. The
 periodic `empty_cache()` added in #177 (`encode_batch` releases torch's
-caching allocator every `HELIX_DENSE_VRAM_RELEASE_EVERY` batches) holds
+caching allocator every `CYMATIX_DENSE_VRAM_RELEASE_EVERY` batches) holds
 the same workload at a ~6 GB plateau. Vectors are byte-identical;
 `empty_cache` only frees *unused* cached blocks.
 
@@ -40,7 +40,7 @@ GPU; there is no VRAM ceiling; ingest is RAM-bound and parallelizable at
 | Path | Device | Workers | Required env | Notes |
 |---|---|---|---|---|
 | Offline batch / benchmark | **CPU** | N ≈ cores | `OMP_NUM_THREADS=4`, `MKL_NUM_THREADS=4` | The 4-thread cap per worker keeps BLAS from oversubscribing across N processes. |
-| Interactive / daemon GPU | CUDA | **1 only** | `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True`, `HELIX_DENSE_VRAM_RELEASE_EVERY=64` | BGE-M3 ≈ 5–6 GB per worker → only one fits in 12 GB. Lower the release-every for big-file repos (sympy / sklearn-scale) where occasional very large single-file `encode_batch` calls spike VRAM mid-task. |
+| Interactive / daemon GPU | CUDA | **1 only** | `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True`, `CYMATIX_DENSE_VRAM_RELEASE_EVERY=64` | BGE-M3 ≈ 5–6 GB per worker → only one fits in 12 GB. Lower the release-every for big-file repos (sympy / sklearn-scale) where occasional very large single-file `encode_batch` calls spike VRAM mid-task. |
 | Mixed (SPLADE on GPU, dense on CPU) | dense = CPU, SPLADE = CUDA | N | `OMP_NUM_THREADS=4`, `MKL_NUM_THREADS=4` | SPLADE is small (~0.5 GB per worker); safe to keep on GPU while the heavy dense path runs on CPU. |
 
 **Confirmed failure modes — do not repeat:**
@@ -61,7 +61,7 @@ is appropriate.
 
 | Path | Device | Workers | Required env | Notes |
 |---|---|---|---|---|
-| Daemon / batch dense ingest | CUDA | **1–2** | `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True`, `HELIX_DENSE_VRAM_RELEASE_EVERY=256` (default) | Two workers ≈ 10–12 GB steady state; leave headroom for the daemon's other CUDA consumers. |
+| Daemon / batch dense ingest | CUDA | **1–2** | `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True`, `CYMATIX_DENSE_VRAM_RELEASE_EVERY=256` (default) | Two workers ≈ 10–12 GB steady state; leave headroom for the daemon's other CUDA consumers. |
 | SPLADE alongside dense | CUDA | shared | as above | SPLADE adds ~0.5 GB per worker; well within budget. |
 
 ### ≥48 GB VRAM (e.g. A6000 / L40 / H100 / dual-card rigs)
@@ -71,32 +71,32 @@ correct.
 
 | Path | Device | Workers | Required env | Notes |
 |---|---|---|---|---|
-| Daemon / batch dense ingest | CUDA | N ≈ cards × 2 | `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True` (optional), `HELIX_DENSE_VRAM_RELEASE_EVERY=256` (default) | The bounding mechanism is still cheap (one `cudaFree` per N batched encodes) and worth leaving on. Disable with `=0` only if you can prove a measurable regression. |
+| Daemon / batch dense ingest | CUDA | N ≈ cards × 2 | `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True` (optional), `CYMATIX_DENSE_VRAM_RELEASE_EVERY=256` (default) | The bounding mechanism is still cheap (one `cudaFree` per N batched encodes) and worth leaving on. Disable with `=0` only if you can prove a measurable regression. |
 
 ## Env knobs (single place)
 
-- `HELIX_DENSE_VRAM_RELEASE_EVERY` — release torch's CUDA caching
+- `CYMATIX_DENSE_VRAM_RELEASE_EVERY` — release torch's CUDA caching
   allocator every N batched `encode_batch` calls inside
   `BGEM3Codec.encode_batch`. Default `256`; set `0` to disable. CPU
   path is a no-op (no CUDA cache). See PR #177 and
-  `helix_context/backends/bgem3_codec.py:_vram_release_interval`.
+  `cymatix_context/backends/bgem3_codec.py:_vram_release_interval`.
 - `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True` — kills allocator
   fragmentation. On the reference 12 GB 3080 Ti this dropped the
   *starting* peak from 11.7 GB → 7.7 GB even before the periodic
   release kicked in. Cheap; recommend leaving on across all VRAM tiers.
-- `HELIX_SHARE_DENSE_CODEC=1` (default) — one shared BGE-M3 codec per
+- `CYMATIX_SHARE_DENSE_CODEC=1` (default) — one shared BGE-M3 codec per
   process (the A1 singleton in `bgem3_codec.py`). Keeps a multi-shard
   in-process fan-out from loading ~100 copies of the ~2 GB model. Does
   **not** help across separate worker *processes* — each process loads
   its own model.
-- `HELIX_BFM_CRAWL_FACTOR` / `HELIX_BFM_CRAWL_WINDOW` /
-  `HELIX_BFM_CRAWL_ACTION` — the crawl watchdog's escalation ladder for
+- `CYMATIX_BFM_CRAWL_FACTOR` / `CYMATIX_BFM_CRAWL_WINDOW` /
+  `CYMATIX_BFM_CRAWL_ACTION` — the crawl watchdog's escalation ladder for
   the fixture-builder ingest and dense-backfill drivers; see
   [Crawl watchdog (automatic)](#crawl-watchdog-automatic) below.
 - `OMP_NUM_THREADS=4`, `MKL_NUM_THREADS=4` — CPU dense ingest only.
   Caps each worker's BLAS thread pool so N workers don't oversubscribe.
 - `transformers==4.49.0` — pin. The 5.x line breaks the `PreTrainedModel`
-  import path that helix's dense and SPLADE encoders use.
+  import path that cymatix's dense and SPLADE encoders use.
 
 ## Crawl watchdog (automatic)
 
@@ -117,7 +117,7 @@ reference 12 GB rig:
   the shard happened to finish.
 - **slack__eng-oncall, 06-11:** collapsed to **64 genes in 47 minutes**
   (~0.02 genes/s, ~66 h projected for the shard) *with the release knobs
-  active* (`HELIX_DENSE_VRAM_RELEASE_EVERY=64` +
+  active* (`CYMATIX_DENSE_VRAM_RELEASE_EVERY=64` +
   `expandable_segments:True`). This is the proof that periodic
   `empty_cache` bounds a healthy context but **does not un-crawl an
   already-spilled one** — once WDDM has demoted allocations to shared
@@ -137,8 +137,8 @@ misses crawls on small ones. The watchdog instead trips on the
 unambiguous signature, per batch:
 
 - genes/s **EMA** < the shard's **own early-batch baseline** (median of
-  the first `HELIX_BFM_CRAWL_WINDOW` batches) ÷ `HELIX_BFM_CRAWL_FACTOR`,
-  for `HELIX_BFM_CRAWL_WINDOW` **consecutive** batches (any healthy batch
+  the first `CYMATIX_BFM_CRAWL_WINDOW` batches) ÷ `CYMATIX_BFM_CRAWL_FACTOR`,
+  for `CYMATIX_BFM_CRAWL_WINDOW` **consecutive** batches (any healthy batch
   resets the streak), **AND**
 - dedicated VRAM near device capacity
   (`max(memory_allocated, memory_reserved) / total_memory > 0.92`).
@@ -153,7 +153,7 @@ trip (the VRAM probe is try/except-guarded and returns "unknown").
 | 1 | `gc.collect()` + `torch.cuda.empty_cache()`, log, continue | same |
 | 2 (still crawling after another window) | raise the existing `_PauseRequested` at the batch boundary → shard pauses cleanly, salvage + file-level resume restart it with a fresh CUDA context | tear down the codec and reload it with `device=cpu` for the **remainder of the shard** (byte-identical vectors, no VRAM ceiling) |
 
-`HELIX_BFM_CRAWL_ACTION=cpu` jumps straight to rung 2; `off` detects and
+`CYMATIX_BFM_CRAWL_ACTION=cpu` jumps straight to rung 2; `off` detects and
 logs only. After the terminal rung the watchdog disarms for that shard.
 
 Every watchdog line carries the stable grep-able prefix
@@ -166,11 +166,11 @@ action taken:
 
 ### Knobs
 
-- `HELIX_BFM_CRAWL_FACTOR` — crawl threshold = baseline / factor.
+- `CYMATIX_BFM_CRAWL_FACTOR` — crawl threshold = baseline / factor.
   Default `5`.
-- `HELIX_BFM_CRAWL_WINDOW` — batches in the baseline AND in the
+- `CYMATIX_BFM_CRAWL_WINDOW` — batches in the baseline AND in the
   consecutive-slow streak. Default `8`.
-- `HELIX_BFM_CRAWL_ACTION` — `ladder` (default) | `cpu` (straight to the
+- `CYMATIX_BFM_CRAWL_ACTION` — `ladder` (default) | `cpu` (straight to the
   terminal rung) | `off` (detect + log only).
 
 On ≤12 GB rigs the watchdog is a backstop, not a license to run dense
@@ -198,7 +198,7 @@ inline-ingest path.
   `empty_cache` mechanism). v0.6.4 CHANGELOG entry for the shipping
   details.
 - **This runbook:** issue #178.
-- **Code:** `helix_context/backends/bgem3_codec.py`
+- **Code:** `cymatix_context/backends/bgem3_codec.py`
   (`_vram_release_interval`, `_maybe_release_vram`, `encode_batch`).
 - **Backfill:** `scripts/backfill_bgem3_v2.py`.
 - **Crawl watchdog:** issue #212 → `scripts/crawl_watchdog.py`

@@ -1,4 +1,4 @@
-# Helix know/miss — frontier-agent prompt fragment
+# Cymatix know/miss — frontier-agent prompt fragment
 
 This fragment teaches a frontier model how to honor the Stage 6
 machine-tagged retrieval contract emitted by `/context` and
@@ -9,13 +9,13 @@ highest-leverage line.
 
 Prepend (or otherwise inject) this block into the agent's system
 prompt. The same text is exported from
-`helix_context.agent_prompt.HELIX_NO_MATCH_FRAGMENT` for programmatic
+`cymatix_context.agent_prompt.CYMATIX_NO_MATCH_FRAGMENT` for programmatic
 inclusion.
 
 ---
 
 ```
-HELIX KNOW/MISS retrieval returns one of two top-level blocks at every
+CYMATIX KNOW/MISS retrieval returns one of two top-level blocks at every
 /context call:
 
   know { found, confidence, gene_id_match, ... }
@@ -37,7 +37,7 @@ HELIX KNOW/MISS retrieval returns one of two top-level blocks at every
            - "rag"       call the project RAG retriever
            - "web"       fetch from the open web
            - "ask_human" surface the question to the operator
-      4. Pick the FIRST tool in the list. Helix orders them by
+      4. Pick the FIRST tool in the list. Cymatix orders them by
          expected information-yield for the query shape.
 
 `miss.reason` tells you WHY the genome failed:
@@ -72,7 +72,7 @@ for the design rationale.
 ---
 
 # STAGE-7-EXT
-Stage 7 will append a `HELIX_REFRESH_FRAGMENT` that teaches the agent
+Stage 7 will append a `CYMATIX_REFRESH_FRAGMENT` that teaches the agent
 to distinguish "answer is here, just stale" (`refresh`) from "answer
 is NOT here" (`escalate`). The fragments concatenate cleanly; nothing
 in the Stage 6 text contradicts the Stage 7 addendum.

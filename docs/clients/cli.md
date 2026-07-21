@@ -1,48 +1,48 @@
-# Helix CLI — operator reference
+# Cymatix CLI — operator reference
 
-`helix` is the cold-start command-line surface for the Helix Context
+`cymatix` is the cold-start command-line surface for the Cymatix Context
 genome. Every invocation is a fresh Python process: it opens the
 SQLite genome (read-only by default), runs the requested operation,
 and exits. No daemon, no long-lived state. The daemon design (see
-`docs/architecture/HELIX_DAEMON_DESIGN.md`) is parked until walk-bench
+`docs/architecture/CYMATIX_DAEMON_DESIGN.md`) is parked until walk-bench
 numbers come in.
 
 ## Install
 
 ```bash
-pip install helix-context
-helix --help
+pip install cymatix-context
+cymatix --help
 ```
 
-The legacy FastAPI launcher is still available as `helix-server` (or
-`python -m uvicorn helix_context._asgi:app`).
+The legacy FastAPI launcher is still available as `cymatix-server` (or
+`python -m uvicorn cymatix_context._asgi:app`).
 
-### If `helix` says "no such command" or points at a deleted path
+### If `cymatix` says "no such command" or points at a deleted path
 
-The pip console script (`helix`, `helix-server`, `helix-status`,
-`helix-vault`, `helix-launcher`) is generated at install time and
+The pip console script (`cymatix`, `cymatix-server`, `cymatix-status`,
+`cymatix-vault`, `cymatix-launcher`) is generated at install time and
 hardcodes the absolute path of the Python interpreter and the
-`helix_context` package. Two recovery cases:
+`cymatix_context` package. Two recovery cases:
 
-1. **`helix` is on PATH but resolves to a deleted editable-install
+1. **`cymatix` is on PATH but resolves to a deleted editable-install
    path** (you moved or removed the source tree). Re-install:
    ```bash
-   pip install --force-reinstall --no-deps helix-context
+   pip install --force-reinstall --no-deps cymatix-context
    ```
    `--no-deps` keeps the long dependency chain from re-resolving;
    `--force-reinstall` rewrites the console scripts against the
    currently-active Python.
 
-2. **`helix` is not on PATH at all.** The console scripts land in
+2. **`cymatix` is not on PATH at all.** The console scripts land in
    `<python-prefix>/Scripts` on Windows or `<python-prefix>/bin` on
    POSIX. Either add that directory to PATH or invoke the entry point
    directly:
    ```bash
-   python -m helix_context.cli --help              # always works
-   python -c "from helix_context.cli import main; main()" status
+   python -m cymatix_context.cli --help              # always works
+   python -c "from cymatix_context.cli import main; main()" status
    ```
 
-The module-direct form (`python -m helix_context.cli`) bypasses the
+The module-direct form (`python -m cymatix_context.cli`) bypasses the
 console script entirely and is the most reliable fallback when an
 agent or operator is debugging a broken install.
 
@@ -50,20 +50,20 @@ agent or operator is debugging a broken install.
 
 | Use case | Reach for |
 |---|---|
-| Agent: "what does X mean in this codebase?" | `helix query` |
-| Agent about to edit a file: "is what I know fresh?" | `helix packet --task-type edit` |
-| Agent before a destructive op: "what should I reread first?" | `helix refresh-targets` |
-| Agent: "show me document gene-abc123" | `helix gene get` / `helix gene preview` |
-| Agent: "what else is semantically near my query?" | `helix neighbors` |
-| Operator: "is the genome healthy?" | `helix status`, `helix diag corpus` |
-| Operator: "what config is actually loaded?" | `helix config show` |
-| Operator: "add a file to the genome" | `helix ingest` |
-| Operator (legacy): "run the FastAPI proxy" | `helix-server` (separate entry point) |
+| Agent: "what does X mean in this codebase?" | `cymatix query` |
+| Agent about to edit a file: "is what I know fresh?" | `cymatix packet --task-type edit` |
+| Agent before a destructive op: "what should I reread first?" | `cymatix refresh-targets` |
+| Agent: "show me document gene-abc123" | `cymatix gene get` / `cymatix gene preview` |
+| Agent: "what else is semantically near my query?" | `cymatix neighbors` |
+| Operator: "is the genome healthy?" | `cymatix status`, `cymatix diag corpus` |
+| Operator: "what config is actually loaded?" | `cymatix config show` |
+| Operator: "add a file to the genome" | `cymatix ingest` |
+| Operator (legacy): "run the FastAPI proxy" | `cymatix-server` (separate entry point) |
 
 ## Agent-driven walk surface (v1.x)
 
 The four commands below are the **agent-facing** retrieval surface —
-the same operations the MCP tools `helix_context`, `helix_context_packet`,
+the same operations the MCP tools `cymatix_context`, `helix_context_packet`,
 `helix_refresh_targets`, `helix_gene_get`, and `helix_neighbors` expose,
 but reachable from the CLI without an MCP host or a running HTTP server.
 An agent can drive a full retrieval-and-walk loop (query → packet → drill
@@ -72,12 +72,12 @@ entirely through subprocess calls. All four default to JSON when `--json`
 is passed; the shape is identical to the matching MCP / HTTP surfaces so
 callers can swap freely.
 
-### `helix query "<text>" [--k N] [--json] [--tier focused] [--learn]`
+### `cymatix query "<text>" [--k N] [--json] [--tier focused] [--learn]`
 
 Run the retrieval pipeline once and print the result.
 
 - `--k N` — cap on returned documents. Default: honor the static
-  config (`[budget] max_genes_per_turn` in helix.toml).
+  config (`[budget] max_genes_per_turn` in cymatix.toml).
 - `--json` — emit `to_agent_json()` shape (verdict / evidence /
   expressed_context / estimated_tokens / decision_reason / next_action).
   This is the format the walk-bench harness expects.
@@ -92,10 +92,10 @@ Run the retrieval pipeline once and print the result.
 
 Exit codes: `0` success, `1` pipeline error.
 
-### `helix packet "<text>" [--task-type T] [--max-genes N] [--include-raw] [--json]`
+### `cymatix packet "<text>" [--task-type T] [--max-genes N] [--include-raw] [--json]`
 
 Build a freshness-labeled agent-safe evidence bundle. Use this instead
-of `helix query` when an agent is about to take a high-risk action (edit,
+of `cymatix query` when an agent is about to take a high-risk action (edit,
 ops, debug) — the packet returns evidence labeled `verified` / `stale_risk`
 plus an explicit `refresh_targets` reread plan, rather than raw bytes that
 may be stale.
@@ -114,7 +114,7 @@ may be stale.
 
 Exit codes: `0` success, `1` builder error.
 
-### `helix refresh-targets "<text>" [--task-type T] [--max-genes N] [--json]`
+### `cymatix refresh-targets "<text>" [--task-type T] [--max-genes N] [--json]`
 
 Return only the reread plan (no evidence items). Cheaper than a full
 packet when the caller already has content cached and just wants to know
@@ -127,7 +127,7 @@ which sources are stale enough to require a reread before acting.
 
 Exit codes: `0` success, `1` builder error.
 
-### `helix gene get <id> [--json]` / `helix gene preview <id> [--chars N] [--json]`
+### `cymatix gene get <id> [--json]` / `cymatix gene preview <id> [--chars N] [--json]`
 
 Inspect a single document by ID. `get` returns the full `Gene` model
 (content, tags, signals, fragments, lifecycle tier, embedding). `preview`
@@ -145,7 +145,7 @@ The canonical engineering alias is `helix_document_get` per
 [`docs/ROSETTA.md`](../ROSETTA.md); both names will continue to resolve
 to the same document model.
 
-### `helix neighbors "<text>" [--k N] [--json]`
+### `cymatix neighbors "<text>" [--k N] [--json]`
 
 Top-k SEMA neighbors for a query — a semantic-space graph walk. Read-only
 and cheap. Used by agents that want to "look around" a result before
@@ -158,24 +158,24 @@ acting.
 
 Returns `count: 0` with no error when the SEMA codec is unavailable
 (e.g. the `embeddings` extra is not installed or no embeddings populated
-yet). Use `helix status` or `helix diag corpus` to distinguish those
+yet). Use `cymatix status` or `cymatix diag corpus` to distinguish those
 cases.
 
 Exit codes: `0` success, `1` codec / read error.
 
 ## Operational subcommands
 
-### `helix ingest <path> [--recursive] [--ext .EXT] [--json]`
+### `cymatix ingest <path> [--recursive] [--ext .EXT] [--json]`
 
 Add a file or directory to the genome. Top-level only by default; pass
 `--recursive` to walk subdirectories. The default extension filter is:
 `.txt .md .rst .py .ts .js .json .toml .yml .yaml`. Repeat `--ext`
 to add more. Single-file inputs are also filtered by extension —
-`helix ingest binary.exe` errors instead of silently ingesting garbage.
+`cymatix ingest binary.exe` errors instead of silently ingesting garbage.
 
 Exit codes: `0` success, `1` file error or write failure.
 
-### `helix status [--json] [--no-network] [--config PATH]`
+### `cymatix status [--json] [--no-network] [--config PATH]`
 
 Three checks: (1) genome reachable and gene_count >= 0, (2) config
 valid, (3) optional HTTP server / launcher probe (skipped if
@@ -183,7 +183,7 @@ valid, (3) optional HTTP server / launcher probe (skipped if
 
 Exit codes: `0` healthy, `3` genome or config check failed.
 
-### `helix diag corpus [--json]`
+### `cymatix diag corpus [--json]`
 
 Reports corpus shape: total_genes, total_codons, tier_distribution
 (open / euchromatin / heterochromatin), compression_ratio, and
@@ -191,23 +191,23 @@ best-effort staleness from the genome health summary.
 
 Exit codes: `0` success, `1` stats call failed.
 
-### `helix config show [--text] [--config PATH]`
+### `cymatix config show [--text] [--config PATH]`
 
-Print the effective configuration (helix.toml merged with env
+Print the effective configuration (cymatix.toml merged with env
 overrides). JSON by default; `--text` for flat `dotted.key = value`
 lines with json-encoded values.
 
 Exit codes: `0` success.
 
-### `helix serve` (DEFERRED)
+### `cymatix serve` (DEFERRED)
 
-Prints a pointer at `helix-server` and exits 4. Daemon design lives
-in `docs/architecture/HELIX_DAEMON_DESIGN.md`.
+Prints a pointer at `cymatix-server` and exits 4. Daemon design lives
+in `docs/architecture/CYMATIX_DAEMON_DESIGN.md`.
 
 ## Environment variables
 
-- `HELIX_CONFIG` — path to `helix.toml`. Default: `./helix.toml`.
-- `HELIX_GENOME_PATH` — overrides `[genome] path` (use `:memory:` for
+- `CYMATIX_CONFIG` — path to `cymatix.toml`. Default: `./cymatix.toml`.
+- `CYMATIX_GENOME_PATH` — overrides `[genome] path` (use `:memory:` for
   tests and ephemeral runs).
 
 ## Exit code table
@@ -217,5 +217,5 @@ in `docs/architecture/HELIX_DAEMON_DESIGN.md`.
 | 0 | Success |
 | 1 | Operation failed |
 | 2 | Bad CLI arguments (argparse default) |
-| 3 | Status check failed (`helix status` only) |
+| 3 | Status check failed (`cymatix status` only) |
 | 4 | Subcommand deferred / not implemented |
