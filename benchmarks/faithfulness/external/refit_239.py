@@ -59,7 +59,8 @@ def main():
     ap.add_argument("--faith", default=FAITH)
     args = ap.parse_args()
 
-    cfg = load_config(str(_REPO / "helix.toml"))
+    _cfg_path = _REPO / "cymatix.toml" if (_REPO / "cymatix.toml").exists() else _REPO / "helix.toml"
+    cfg = load_config(str(_cfg_path))
     cal = calibration_from_config(cfg.know)
     s_ref, g_ref = cal.s_ref, cal.g_ref
     floor = args.emit_floor if args.emit_floor is not None else cal.emit_floor

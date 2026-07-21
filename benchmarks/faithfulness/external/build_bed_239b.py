@@ -40,7 +40,8 @@ def main():
     if CORPUS.exists():
         shutil.rmtree(CORPUS)
     CORPUS.mkdir(parents=True, exist_ok=True)
-    cfg = load_config(str(_REPO / "helix.toml"))
+    _cfg_path = _REPO / "cymatix.toml" if (_REPO / "cymatix.toml").exists() else _REPO / "helix.toml"
+    cfg = load_config(str(_cfg_path))
     cfg.genome.path = BED
     cfg.budget.max_genes_per_turn = args.max_genes
     cfg.budget.expression_tokens = args.expr_tokens

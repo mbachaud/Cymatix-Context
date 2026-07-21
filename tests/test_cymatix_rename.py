@@ -80,3 +80,24 @@ def test_env_mirror_never_overrides_explicit_helix_value(monkeypatch):
     from cymatix_context import _mirror_env
     _mirror_env()
     assert os.environ["HELIX_RENAME_TEST_ABC"] == "old"
+
+
+def test_config_prefers_cymatix_toml(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.delenv("HELIX_CONFIG", raising=False)
+    monkeypatch.delenv("CYMATIX_CONFIG", raising=False)
+    (tmp_path / "cymatix.toml").write_text("[server]\nport = 12345\n", encoding="utf-8")
+    (tmp_path / "helix.toml").write_text("[server]\nport = 54321\n", encoding="utf-8")
+    from cymatix_context.config import load_config
+    cfg = load_config()
+    assert cfg.server.port == 12345
+
+
+def test_config_falls_back_to_helix_toml(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.delenv("HELIX_CONFIG", raising=False)
+    monkeypatch.delenv("CYMATIX_CONFIG", raising=False)
+    (tmp_path / "helix.toml").write_text("[server]\nport = 54321\n", encoding="utf-8")
+    from cymatix_context.config import load_config
+    cfg = load_config()
+    assert cfg.server.port == 54321

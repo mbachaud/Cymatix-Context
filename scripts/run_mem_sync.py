@@ -45,7 +45,10 @@ def _load_toml_config() -> dict:
             import tomli as tomllib  # type: ignore
         except ImportError:
             return {}
-    toml_path = Path(__file__).resolve().parent.parent / "helix.toml"
+    _repo_root = Path(__file__).resolve().parent.parent
+    toml_path = _repo_root / "cymatix.toml"
+    if not toml_path.exists():
+        toml_path = _repo_root / "helix.toml"
     if not toml_path.exists():
         return {}
     try:

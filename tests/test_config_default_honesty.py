@@ -31,7 +31,11 @@ import pytest
 from cymatix_context.config import HelixConfig, KnowConfig, load_config
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-SHIPPED_TOML = REPO_ROOT / "helix.toml"
+SHIPPED_TOML = (
+    REPO_ROOT / "cymatix.toml"
+    if (REPO_ROOT / "cymatix.toml").exists()
+    else REPO_ROOT / "helix.toml"
+)
 
 # Fields where the shipped helix.toml and the code defaults are ALLOWED to
 # differ. Keep this empty or tiny — every entry needs a reason.

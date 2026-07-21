@@ -24,7 +24,8 @@ OUT = "f:/Projects/np-graph/expressed_contexts.json"
 def main():
     if os.path.exists(BED):
         os.remove(BED)
-    cfg = load_config(str(_REPO / "helix.toml"))
+    _cfg_path = _REPO / "cymatix.toml" if (_REPO / "cymatix.toml").exists() else _REPO / "helix.toml"
+    cfg = load_config(str(_cfg_path))
     cfg.genome.path = BED
     mgr = HelixContextManager(cfg)
     print(f"ingesting {len(NEEDLES)} facts...", flush=True)

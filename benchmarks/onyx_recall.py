@@ -134,7 +134,8 @@ def main():
     gene_src = load_gene_source_map(args.bed_db)
     print(f"  gene->source: {len(gene_src)} genes", file=sys.stderr)
 
-    cfg = load_config(str(_REPO / "helix.toml"))
+    _cfg_path = _REPO / "cymatix.toml" if (_REPO / "cymatix.toml").exists() else _REPO / "helix.toml"
+    cfg = load_config(str(_cfg_path))
     cfg.genome.path = args.bed_db
     _apply_overrides(cfg, args.overrides)
     manager = HelixContextManager(cfg)

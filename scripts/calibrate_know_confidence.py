@@ -397,8 +397,9 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     parser.add_argument(
         "--out",
         type=Path,
-        default=Path("helix.toml"),
-        help="Path to the helix.toml file to update (default: helix.toml).",
+        default=Path("cymatix.toml") if Path("cymatix.toml").exists() else Path("helix.toml"),
+        help="Path to the cymatix.toml file to update (default: cymatix.toml, "
+        "falling back to helix.toml).",
     )
     parser.add_argument(
         "--target-precision",

@@ -1130,7 +1130,9 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
     Returns defaults if no config file is found.
     """
     if path is None:
-        path = os.environ.get("HELIX_CONFIG", "helix.toml")
+        path = os.environ.get("HELIX_CONFIG")  # CYMATIX_CONFIG lands here via _mirror_env
+        if path is None:
+            path = "cymatix.toml" if Path("cymatix.toml").exists() else "helix.toml"
 
     config_path = Path(path)
     if not config_path.exists():

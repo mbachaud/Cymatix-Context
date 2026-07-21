@@ -272,7 +272,10 @@ def main() -> int:
     # Shared args
     def _common(p):
         p.add_argument("--db", default="genome.db")
-        p.add_argument("--config", default="helix.toml")
+        p.add_argument(
+            "--config",
+            default="cymatix.toml" if os.path.exists("cymatix.toml") else "helix.toml",
+        )
         p.add_argument("--manifest", required=True)
 
     p_submit = sub.add_parser("submit")

@@ -50,7 +50,8 @@ def build_bed():
     """Fresh bed with only the 6 synthetic facts -> short expressed_context."""
     if os.path.exists(BED):
         os.remove(BED)
-    cfg = load_config(str(_REPO / "helix.toml"))
+    _cfg_path = _REPO / "cymatix.toml" if (_REPO / "cymatix.toml").exists() else _REPO / "helix.toml"
+    cfg = load_config(str(_cfg_path))
     cfg.genome.path = BED
     mgr = HelixContextManager(cfg)
     for nd in NEEDLES:

@@ -90,7 +90,10 @@ def walk_core(roots: list[str]) -> list[tuple[str, str]]:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--db", default="genome.db")
-    parser.add_argument("--config", default="helix.toml")
+    parser.add_argument(
+        "--config",
+        default="cymatix.toml" if os.path.exists("cymatix.toml") else "helix.toml",
+    )
     parser.add_argument("--roots", nargs="+", default=DEFAULT_ROOTS)
     parser.add_argument("--model", default=None, help="Override helix.toml claude_model")
     parser.add_argument("--dry-run", action="store_true", help="Count files, no API calls")

@@ -200,7 +200,10 @@ class TestLexicalRescuePathAffinity:
 class TestHelixTomlShipsNeutral:
     @pytest.fixture()
     def cfg(self):
-        with open(REPO_ROOT / "helix.toml", "rb") as fh:
+        _shipped = REPO_ROOT / "cymatix.toml"
+        if not _shipped.exists():
+            _shipped = REPO_ROOT / "helix.toml"
+        with open(_shipped, "rb") as fh:
             return tomllib.load(fh)
 
     def test_synonyms_have_no_owner_rows(self, cfg):

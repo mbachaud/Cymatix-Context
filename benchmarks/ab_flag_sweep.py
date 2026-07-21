@@ -21,7 +21,7 @@ from pathlib import Path
 import httpx
 
 REPO = Path(__file__).resolve().parent.parent
-BASE_TOML = REPO / "helix.toml"
+BASE_TOML = REPO / "cymatix.toml" if (REPO / "cymatix.toml").exists() else REPO / "helix.toml"
 BENCH_PORT = 11438
 BENCH_URL = f"http://127.0.0.1:{BENCH_PORT}"
 

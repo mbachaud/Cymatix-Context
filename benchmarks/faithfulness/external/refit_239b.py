@@ -52,7 +52,8 @@ def main():
     ap.add_argument("--stage1", default=STAGE1)
     ap.add_argument("--faith", default=FAITH)
     args = ap.parse_args()
-    cfg = load_config(str(_REPO / "helix.toml"))
+    _cfg_path = _REPO / "cymatix.toml" if (_REPO / "cymatix.toml").exists() else _REPO / "helix.toml"
+    cfg = load_config(str(_cfg_path))
     cal = calibration_from_config(cfg.know)
     s, g, floor = cal.s_ref, cal.g_ref, cal.emit_floor
     print(f"shipped betas={list(cal.betas)} s_ref={s} g_ref={g} floor={floor}")
