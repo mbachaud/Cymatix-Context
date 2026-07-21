@@ -114,7 +114,7 @@ else
     echo
     echo "[grafana-telem] Step 1/3: skipped (binaries assumed present)"
     echo "[grafana-telem]   rendering configs explicitly..."
-    if ! $PYTHON -m helix_context.launcher.observability_render render-all; then
+    if ! $PYTHON -m cymatix_context.launcher.observability_render render-all; then
         echo "[grafana-telem] Config render failed" >&2
         exit 3
     fi
@@ -123,7 +123,7 @@ fi
 if [ "$SERVER_ONLY" -eq 1 ]; then
     echo
     echo "[grafana-telem] Step 2/3: rendering configs..."
-    if ! $PYTHON -m helix_context.launcher.observability_render render-all; then
+    if ! $PYTHON -m cymatix_context.launcher.observability_render render-all; then
         echo "[grafana-telem] Config render failed" >&2
         exit 3
     fi

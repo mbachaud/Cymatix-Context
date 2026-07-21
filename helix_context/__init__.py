@@ -27,11 +27,13 @@ warnings.warn(
 
 
 class _AliasLoader(importlib.abc.Loader):
-    def __init__(self):
+    def __init__(self, real_name, real_spec):
+        self._real_name = real_name
+        self._real_spec = real_spec
         self._saved = None
 
     def create_module(self, spec):
-        real = importlib.import_module(_NEW + spec.name[len(_OLD):])
+        real = importlib.import_module(self._real_name)
         # module_from_spec will stamp the alias spec onto this shared
         # object; stash the canonical identity so exec_module can restore it.
         self._saved = (
@@ -50,11 +52,25 @@ class _AliasLoader(importlib.abc.Loader):
         module.__package__ = package
         module.__loader__ = loader
 
+    def get_code(self, fullname):
+        # Lets runpy (``python -m helix_context.submodule``) execute the
+        # real module's code under the old dotted name.
+        return self._real_spec.loader.get_code(self._real_name)
+
 
 class _AliasFinder(importlib.abc.MetaPathFinder):
     def find_spec(self, fullname, path=None, target=None):
         if fullname.startswith(_OLD + ".") and fullname not in _REAL_FILES:
-            return importlib.util.spec_from_loader(fullname, _AliasLoader())
+            real_name = _NEW + fullname[len(_OLD):]
+            real_spec = importlib.util.find_spec(real_name)
+            if real_spec is None:
+                return None
+            loader = _AliasLoader(real_name, real_spec)
+            return importlib.util.spec_from_loader(
+                fullname,
+                loader,
+                is_package=real_spec.submodule_search_locations is not None,
+            )
         return None
 
 

@@ -117,3 +117,21 @@ def test_new_and_old_console_scripts_registered():
 def test_mcp_server_identifies_as_cymatix():
     from cymatix_context.mcp.mcp_server import mcp
     assert mcp.name == "cymatix"
+
+
+def test_dash_m_generic_submodule_runs_via_old_path():
+    proc = subprocess.run(
+        [sys.executable, "-m", "helix_context.cli", "--help"],
+        capture_output=True, text=True, timeout=120,
+    )
+    assert proc.returncode == 0, proc.stderr
+
+
+def test_missing_aliased_submodule_raises_old_name():
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", DeprecationWarning)
+        try:
+            import helix_context.definitely_not_a_module  # noqa: F401
+            raise AssertionError("import should have failed")
+        except ModuleNotFoundError as e:
+            assert "helix_context.definitely_not_a_module" in str(e)

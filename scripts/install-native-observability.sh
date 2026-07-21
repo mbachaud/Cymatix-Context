@@ -72,15 +72,15 @@ while IFS=":" read -r svc relpath; do
     # writes to stderr, which trips PowerShell 5.1 ErrorActionPreference=Stop
     # on the .ps1 sibling — keep both shells using the same predicate for
     # parity.
-    if $PYTHON -m helix_context.launcher._install_helpers should-skip "$abspath" "$expected"; then
+    if $PYTHON -m cymatix_context.launcher._install_helpers should-skip "$abspath" "$expected"; then
         echo "[install][$svc] up-to-date - skipping"
         continue
     fi
 
     echo "[install][$svc] downloading $url"
     tmp="$(mktemp -t helix-native-otel.XXXXXX)"
-    $PYTHON -m helix_context.launcher._install_helpers download "$url" "$tmp" --timeout 120
-    $PYTHON -m helix_context.launcher._install_helpers verify-hash "$tmp" "$expected"
+    $PYTHON -m cymatix_context.launcher._install_helpers download "$url" "$tmp" --timeout 120
+    $PYTHON -m cymatix_context.launcher._install_helpers verify-hash "$tmp" "$expected"
 
     mkdir -p "$svcdir"
     staging="$(mktemp -d -t helix-native-otel-extract.XXXXXX)"
@@ -110,8 +110,8 @@ while IFS=":" read -r svc relpath; do
 done < <(read_binaries)
 
 echo "[install] Rendering runtime configs ..."
-$PYTHON -m helix_context.launcher.observability_render render-all || {
-    echo "[install] render step failed (helix_context.launcher.observability_render — landed by a later task)" >&2
+$PYTHON -m cymatix_context.launcher.observability_render render-all || {
+    echo "[install] render step failed (cymatix_context.launcher.observability_render — landed by a later task)" >&2
     exit 6
 }
 echo "[install] Native observability install complete."

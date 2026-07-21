@@ -1,5 +1,5 @@
 """
-Helix Context — KnowledgeStore-based context compression for local LLMs.
+Cymatix Context — KnowledgeStore-based context compression for local LLMs.
 
 Makes 9k tokens of context window feel like 600k by treating
 context like a knowledge store instead of a flat text buffer.

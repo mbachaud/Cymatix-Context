@@ -155,7 +155,7 @@ if (-not $SkipDownload -and -not $ServerOnly) {
     # its run; when we skip it we must still render explicitly so the
     # supervisor has fresh configs/datasources.yml to read.
     Write-Host "[grafana-telem]   rendering configs explicitly..." -ForegroundColor Cyan
-    & $python -m helix_context.launcher.observability_render render-all
+    & $python -m cymatix_context.launcher.observability_render render-all
     if ($LASTEXITCODE -ne 0) {
         Write-Host "[grafana-telem] Config render failed" -ForegroundColor Red
         exit 3
@@ -168,7 +168,7 @@ if (-not $SkipDownload -and -not $ServerOnly) {
 # already ran above, since that script renders as its final step.
 if ($ServerOnly) {
     Write-Host "`n[grafana-telem] Step 2/3: rendering configs..." -ForegroundColor Cyan
-    & $python -m helix_context.launcher.observability_render render-all
+    & $python -m cymatix_context.launcher.observability_render render-all
     if ($LASTEXITCODE -ne 0) {
         Write-Host "[grafana-telem] Config render failed" -ForegroundColor Red
         exit 3
