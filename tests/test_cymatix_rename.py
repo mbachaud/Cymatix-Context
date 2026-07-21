@@ -101,3 +101,14 @@ def test_config_falls_back_to_helix_toml(tmp_path, monkeypatch):
     from cymatix_context.config import load_config
     cfg = load_config()
     assert cfg.server.port == 54321
+
+
+def test_new_and_old_console_scripts_registered():
+    from importlib.metadata import entry_points
+    names = {ep.name for ep in entry_points(group="console_scripts")}
+    expected = {
+        "cymatix", "cymatix-server", "cymatix-launcher", "cymatix-status", "cymatix-vault",
+        "helix", "helix-server", "helix-launcher", "helix-status", "helix-vault",
+    }
+    missing = expected - names
+    assert not missing, f"missing console scripts: {missing}"
