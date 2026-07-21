@@ -87,6 +87,19 @@ class TestIsRunning:
         supervisor._psutil = fake
         assert supervisor.is_running() is True
 
+    def test_true_when_pid_alive_and_matching_old_asgi_marker(self, supervisor, store):
+        """A still-running server launched with the pre-rename target
+        (helix_context._asgi:app) must still be recognized as our process,
+        not treated as dead and cleared/double-spawned (P1 finding)."""
+        store.set_helix(pid=12345, command=["python"], port=11999)
+        fake = _FakePsutil(
+            alive_pids={12345},
+            cmdlines={12345: ["python", "-m", "uvicorn", "helix_context._asgi:app"]},
+        )
+        supervisor._psutil = fake
+        assert supervisor.is_running() is True
+        assert store.state.helix_pid == 12345
+
 
 class TestStart:
     def test_refuses_if_already_running(self, supervisor, store):
@@ -304,6 +317,26 @@ class TestFindOrphanHelix:
             processes={100: worker},
         )
         assert supervisor.find_orphan_helix() == 100
+
+    def test_helix_worker_with_old_asgi_marker_still_matches(self, supervisor):
+        """Pre-rename orphan (helix_context._asgi:app) must still be
+        recognized so it is adopted rather than double-spawned (P1 finding)."""
+        parent = _make_fake_process([
+            "python", "-m", "uvicorn", "helix_context._asgi:app", "--host", "127.0.0.1", "--port", "11999",
+        ])
+        worker = _make_fake_process(
+            [
+                "python", "-m", "uvicorn", "helix_context._asgi:app",
+                "--host", "127.0.0.1", "--port", "11999",
+            ],
+            parent=parent,
+        )
+        parent.pid = 200
+        supervisor._psutil = _FakePsutilForOrphans(
+            connections=[_FakeConn(pid=100, laddr_port=11999)],
+            processes={100: worker, 200: parent},
+        )
+        assert supervisor.find_orphan_helix() == 200
 
 
 class TestAdoptOrphan:

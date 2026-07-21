@@ -189,8 +189,8 @@ class HelixSupervisor:
             self.store.clear_helix()
             self._owns_helix_process = False
             return False
-        expected_marker = "cymatix_context._asgi:app"
-        if not any(expected_marker in part for part in cmdline):
+        expected_markers = ("cymatix_context._asgi:app", "helix_context._asgi:app")
+        if not any(m in part for part in cmdline for m in expected_markers):
             log.warning(
                 "PID %d exists but command line doesn't match helix uvicorn; clearing state",
                 pid,
@@ -301,8 +301,8 @@ class HelixSupervisor:
         except (psutil.NoSuchProcess, psutil.AccessDenied):
             return None
 
-        expected_marker = "cymatix_context._asgi:app"
-        if not any(expected_marker in part for part in listener_cmdline):
+        expected_markers = ("cymatix_context._asgi:app", "helix_context._asgi:app")
+        if not any(m in part for part in listener_cmdline for m in expected_markers):
             log.debug(
                 "Orphan scan: PID %d listens on %d but is not helix (%r)",
                 listener_pid, self.helix_port, listener_cmdline[:3],
@@ -317,7 +317,7 @@ class HelixSupervisor:
             parent = listener_proc.parent()
             if parent is not None:
                 parent_cmdline = parent.cmdline()
-                if any(expected_marker in part for part in parent_cmdline):
+                if any(m in part for part in parent_cmdline for m in expected_markers):
                     return parent.pid
         except (psutil.NoSuchProcess, psutil.AccessDenied):
             pass
