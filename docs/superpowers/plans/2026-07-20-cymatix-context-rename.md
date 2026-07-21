@@ -657,7 +657,7 @@ Expected: `yaml ok`. (Full end-to-end validation happens on the first `workflow_
 
 ```bash
 git add .github/workflows/
-git commit -m "rename: align publish workflow with PyPI trusted publisher (publish.yaml, OIDC)"
+git commit -m "rename: publish workflow to OIDC trusted publishing (publish.yml binding kept)"
 ```
 
 ---
