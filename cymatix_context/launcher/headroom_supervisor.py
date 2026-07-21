@@ -126,7 +126,7 @@ class HeadroomSupervisor:
             except ImportError as e:
                 raise HeadroomSupervisorError(
                     "psutil is required. Install with: "
-                    "pip install helix-context[launcher]"
+                    "pip install cymatix-context[launcher]"
                 ) from e
         return self._psutil
 

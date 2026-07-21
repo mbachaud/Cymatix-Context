@@ -203,7 +203,7 @@ def collect_status(
             next_action = "Open the launcher UI and click Start or Restart to bring Helix up."
         else:
             availability = "unavailable"
-            next_action = "Run `helix-launcher` to start the canonical supervisor."
+            next_action = "Run `cymatix-launcher` to start the canonical supervisor."
     else:
         availability = "available"
         if mcp_status.get("next_action"):

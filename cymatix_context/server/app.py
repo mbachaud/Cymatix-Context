@@ -178,7 +178,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
 
         log.info("Shutdown: final WAL checkpoint completed")
 
-    app = FastAPI(title="Helix Context Proxy", version="0.1.0", lifespan=lifespan)
+    app = FastAPI(title="Cymatix Context Proxy", version="0.1.0", lifespan=lifespan)
     app.state.helix = helix  # Expose for testing
     app.state.bridge = bridge  # Expose for testing
     app.state.registry = registry  # Expose for testing
@@ -188,7 +188,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
     # enabled=true; env wins over toml — see otel.resolve_telemetry_settings).
     try:
         from ..telemetry import setup_telemetry
-        setup_telemetry(app, service_name="helix-context", config=config.telemetry)
+        setup_telemetry(app, service_name="cymatix-context", config=config.telemetry)
     except Exception:
         log.debug("OTel setup failed", exc_info=True)
 

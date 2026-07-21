@@ -194,7 +194,7 @@ def _http(method: str, path: str, body: Optional[Dict] = None) -> Dict[str, Any]
             "_error": "helix unreachable",
             "_detail": f"{exc.reason} at {url}",
             "_hint": (
-                "Start `helix-launcher` (recommended) or run `helix` manually. "
+                "Start `cymatix-launcher` (recommended) or run `helix` manually. "
                 "If Helix is already running elsewhere, check HELIX_MCP_URL."
             ),
         }
@@ -239,7 +239,7 @@ def _normalize_health_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
         normalized.update({
             "availability": "unavailable",
             "next_action": (
-                "Run `helix-launcher` to start the canonical supervisor. "
+                "Run `cymatix-launcher` to start the canonical supervisor. "
                 "If you intentionally run Helix elsewhere, update HELIX_MCP_URL."
             ),
             "message": payload.get("_detail", "Helix is unreachable."),
@@ -251,7 +251,7 @@ def _normalize_health_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
             "availability": "degraded",
             "next_action": (
                 "Inspect the server error details, then restart Helix with "
-                "`helix-launcher` if the issue persists."
+                "`cymatix-launcher` if the issue persists."
             ),
             "message": payload.get("_detail") or payload.get("_error"),
         })
@@ -277,7 +277,7 @@ def _normalize_health_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
             "availability": payload.get("status"),
             "next_action": (
                 payload.get("message")
-                or "Inspect the Helix health payload, then restart with `helix-launcher` if needed."
+                or "Inspect the Helix health payload, then restart with `cymatix-launcher` if needed."
             ),
             "message": payload.get("message", "Helix reported a degraded health state."),
         })
@@ -287,7 +287,7 @@ def _normalize_health_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
         "availability": "degraded",
         "next_action": (
             "Helix responded, but the health payload was unexpected. "
-            "Check `/health`, then restart with `helix-launcher` if needed."
+            "Check `/health`, then restart with `cymatix-launcher` if needed."
         ),
         "message": "Unexpected /health payload.",
     })

@@ -17,7 +17,7 @@ _MESSAGE = """\
 For the FastAPI proxy + retrieval HTTP surface, use the legacy entry
 point or uvicorn directly:
 
-  helix-server
+  cymatix-server
   # or
   python -m uvicorn cymatix_context._asgi:app --host 127.0.0.1 --port 11437
 

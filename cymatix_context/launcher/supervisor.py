@@ -142,7 +142,7 @@ class HelixSupervisor:
                 self._psutil = psutil
             except ImportError as e:
                 raise SupervisorError(
-                    "psutil is required. Install with: pip install helix-context[launcher]"
+                    "psutil is required. Install with: pip install cymatix-context[launcher]"
                 ) from e
         return self._psutil
 

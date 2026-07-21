@@ -201,7 +201,7 @@ def _fire_hardware_fallback_balloon(tray_icon) -> None:
     info = get_hardware()
     if info.fallback_reason is None:
         return
-    title = "Helix: device fallback active"
+    title = "Cymatix: device fallback active"
     msg = (
         f"Requested {info.requested_device!r}, using {info.device_type!r}. "
         f"Reason: {info.fallback_reason}"
@@ -231,7 +231,7 @@ class HelixTrayIcon:
         supervisor: HelixSupervisor,
         dashboard_url: str,
         name: str = "helix-launcher",
-        tooltip: str = "Helix Launcher",
+        tooltip: str = "Cymatix Launcher",
         on_quit: Optional[Callable[[], None]] = None,
         grafana_url: Optional[str] = None,
         prometheus_url: Optional[str] = None,
@@ -342,7 +342,7 @@ class HelixTrayIcon:
             resolved = genome_registry.select_genome(target)
         except FileNotFoundError as exc:
             log.warning("Tray: genome switch failed: %s", exc)
-            self._safe_notify(str(exc), title="Helix: switch failed")
+            self._safe_notify(str(exc), title="Cymatix: switch failed")
             return
 
         # Active path just moved — drop the registry cache so the rebuilt
@@ -353,7 +353,7 @@ class HelixTrayIcon:
         # 10-30 s restart cycle completes.
         self._safe_notify(
             f"Restarting helix on {resolved.name}…",
-            title="Helix: switching database",
+            title="Cymatix: switching database",
         )
         self._switch_worker(resolved)
 
@@ -377,12 +377,12 @@ class HelixTrayIcon:
                       exc, exc_info=True)
             self._safe_notify(
                 f"Restart failed: {exc}",
-                title="Helix: switch failed",
+                title="Cymatix: switch failed",
             )
             return
         self._safe_notify(
             f"Now serving {resolved.name}",
-            title="Helix: database switched",
+            title="Cymatix: database switched",
         )
         # Menu structure depends on which genome is active; rebuild on
         # the worker thread is safe (pystray reads .menu lazily on next
@@ -666,7 +666,7 @@ class HelixTrayIcon:
                         self._icon.notify(
                             "Native observability installed — "
                             "restarting helix launcher...",
-                            title="Helix Launcher",
+                            title="Cymatix Launcher",
                         )
                     except Exception:
                         log.debug("Tray: notify on install complete failed",
@@ -1098,7 +1098,7 @@ class HelixTrayIcon:
                 "Native observability not installed — "
                 "right-click the tray icon, choose Observability ▸ "
                 "Install, or run scripts/install-native-observability.ps1",
-                title="Helix Launcher",
+                title="Cymatix Launcher",
             )
         except Exception:
             log.warning("notify_install_needed failed", exc_info=True)
@@ -1129,9 +1129,9 @@ class HelixTrayIcon:
             return
         try:
             self._icon.notify(
-                f"Helix Context {info.latest_version} is available "
+                f"Cymatix Context {info.latest_version} is available "
                 f"(installed {info.current_version}).",
-                title="Helix Launcher",
+                title="Cymatix Launcher",
             )
             self._update_notified = True
         except Exception:

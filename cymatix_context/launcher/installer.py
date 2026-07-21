@@ -186,7 +186,7 @@ def install_service(dry_run: bool = False, port: int = 11438) -> Tuple[bool, str
         return False, (
             "Could not locate the `helix-launcher` executable on PATH. "
             "Install the launcher extras first:\n\n"
-            "    pip install helix-context[launcher]"
+            "    pip install cymatix-context[launcher]"
         )
 
     target = target_path(platform)

@@ -65,7 +65,7 @@ def _user_data_dir() -> Path:
     except ImportError as exc:
         raise RuntimeError(
             "platformdirs is required. "
-            "Install with: pip install helix-context[launcher]"
+            "Install with: pip install cymatix-context[launcher]"
         ) from exc
     # appauthor=False on Windows omits the appauthor folder; without it,
     # platformdirs reuses appname for both, producing a doubled

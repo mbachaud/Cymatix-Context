@@ -74,7 +74,7 @@ class TestDashboardHTML:
         assert resp.status_code == 200
         assert resp.headers["content-type"].startswith("text/html")
         # Page must contain the brand and the empty-state message
-        assert "Helix Launcher" in resp.text
+        assert "Cymatix Launcher" in resp.text
         assert "Helix is stopped" in resp.text
 
     def test_root_renders_running_state(self, client, fake_supervisor, fake_collector):

@@ -231,7 +231,7 @@ class CodonChunker:
         if _fallback_reason == "tree_sitter_unavailable":
             log.warning(
                 "code chunking fell back to regex for %s: tree-sitter not "
-                "installed — `pip install helix-context[ast]` for "
+                "installed — `pip install cymatix-context[ast]` for "
                 "structure-aware chunks", source_id,
             )
         else:

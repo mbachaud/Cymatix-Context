@@ -40,7 +40,7 @@ def is_newer_version(latest: str, current: str) -> bool:
     return latest_padded > current_padded
 
 
-def installed_version(package_name: str = "helix-context") -> str:
+def installed_version(package_name: str = "cymatix-context") -> str:
     try:
         return metadata.version(package_name)
     except metadata.PackageNotFoundError:
@@ -70,7 +70,7 @@ class UpdateChecker:
 
     def __init__(
         self,
-        package_name: str = "helix-context",
+        package_name: str = "cymatix-context",
         *,
         ttl_s: float = 6 * 60 * 60,
         timeout_s: float = 3.0,

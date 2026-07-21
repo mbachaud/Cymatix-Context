@@ -85,7 +85,7 @@ class TestCollectStatus:
         )
         assert result["availability"] == "unavailable"
         assert result["integration_ready"] is False
-        assert "helix-launcher" in result["next_action"]
+        assert "cymatix-launcher" in result["next_action"]
 
     def test_collect_status_available_but_not_integration_ready_without_skill(self, tmp_path, monkeypatch):
         cfg = tmp_path / ".mcp.json"

@@ -77,7 +77,7 @@ def is_headroom_available() -> bool:
         except ImportError:
             log.info(
                 "headroom-ai not installed — falling back to truncation. "
-                "Install with: pip install helix-context[codec]"
+                "Install with: pip install cymatix-context[codec]"
             )
             _HEADROOM_AVAILABLE = False
     return _HEADROOM_AVAILABLE

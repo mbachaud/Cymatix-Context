@@ -45,7 +45,7 @@ class TestNormalizeHealthPayload:
         }
         result = _normalize_health_payload(payload)
         assert result["availability"] == "unavailable"
-        assert "helix-launcher" in result["next_action"]
+        assert "cymatix-launcher" in result["next_action"]
         assert result["server"] == payload
 
     def test_ok_payload_becomes_available(self):

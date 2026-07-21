@@ -198,7 +198,7 @@ def run(argv: list[str]) -> int:
         if down:
             report["next_action"] = (
                 f"Genome + config OK, but {' and '.join(down)} down — "
-                "start with `helix-server` / `helix-launcher`, or pass "
+                "start with `cymatix-server` / `cymatix-launcher`, or pass "
                 "--no-network for an offline check."
             )
         else:

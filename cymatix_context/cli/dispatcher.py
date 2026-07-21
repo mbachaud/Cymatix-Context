@@ -20,7 +20,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="helix",
         description=(
-            "Helix Context CLI — cold-start retrieval over a local genome. "
+            "Cymatix Context CLI — cold-start retrieval over a local genome. "
             "See `helix <subcommand> --help` for details."
         ),
     )

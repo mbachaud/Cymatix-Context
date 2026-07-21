@@ -145,7 +145,7 @@ class TestFallbackPath:
 _headroom_installed = is_headroom_available()
 requires_headroom = pytest.mark.skipif(
     not _headroom_installed,
-    reason="headroom-ai not installed; install with pip install helix-context[codec]",
+    reason="headroom-ai not installed; install with pip install cymatix-context[codec]",
 )
 
 

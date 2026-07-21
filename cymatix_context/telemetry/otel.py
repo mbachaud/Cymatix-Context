@@ -310,7 +310,7 @@ def _attach_otlp_logging_handler(
 
 def setup_telemetry(
     app: Any = None,
-    service_name: str = "helix-context",
+    service_name: str = "cymatix-context",
     service_version: str = "0.4.0b",
     config: Any = None,
 ) -> bool:

@@ -115,7 +115,7 @@ def _create_kill_on_close_job():
     except ImportError as exc:
         raise RuntimeError(
             "pywin32 required for Job Object cleanup. "
-            "Install with: pip install helix-context[launcher-tray]"
+            "Install with: pip install cymatix-context[launcher-tray]"
         ) from exc
     job = win32job.CreateJobObject(None, "")
     info = win32job.QueryInformationJobObject(

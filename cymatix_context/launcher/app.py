@@ -64,7 +64,7 @@ def _get_templates():
         from jinja2 import Environment, FileSystemLoader, select_autoescape
     except ImportError as e:
         raise SupervisorError(
-            "jinja2 is required. Install with: pip install helix-context[launcher]"
+            "jinja2 is required. Install with: pip install cymatix-context[launcher]"
         ) from e
     env = Environment(
         loader=FileSystemLoader(str(TEMPLATES_DIR)),
@@ -153,7 +153,7 @@ def create_app(
         elif supervisor.is_running():
             log.info("Launcher shutting down — leaving adopted helix running")
 
-    app = FastAPI(title="Helix Launcher", version="0.1.0", lifespan=lifespan)
+    app = FastAPI(title="Cymatix Launcher", version="0.1.0", lifespan=lifespan)
     app.state.store = store
     app.state.supervisor = supervisor
     app.state.collector = collector
@@ -529,7 +529,7 @@ def _check_tray_available() -> bool:
     return is_tray_available()
 
 
-def _open_ui(url: str, native: bool, window_title: str = "Helix Launcher") -> None:
+def _open_ui(url: str, native: bool, window_title: str = "Cymatix Launcher") -> None:
     """Open the dashboard — browser tab (default) or native webview window.
 
     This is a blocking call when native=True (webview owns the main thread
@@ -759,7 +759,7 @@ def _maybe_build_observability() -> tuple[
     except ImportError:
         log.warning(
             "Observability deps missing — install with "
-            "pip install helix-context[launcher-tray]",
+            "pip install cymatix-context[launcher-tray]",
             exc_info=True,
         )
         return None, False
@@ -964,7 +964,7 @@ def main(argv: Optional[list] = None) -> int:
     if args.native and not _check_native_available():
         log.error(
             "--native requires pywebview. Install with: "
-            "pip install helix-context[launcher-native]"
+            "pip install cymatix-context[launcher-native]"
         )
         return 1
 
@@ -972,7 +972,7 @@ def main(argv: Optional[list] = None) -> int:
     if args.tray and not _check_tray_available():
         log.error(
             "--tray requires pystray + Pillow. Install with: "
-            "pip install helix-context[launcher-tray]"
+            "pip install cymatix-context[launcher-tray]"
         )
         return 1
 
@@ -1407,7 +1407,7 @@ def _run_tray_native_combined(
     tray_icon = pystray.Icon(
         name="helix-launcher",
         icon=_build_icon_image(),
-        title="Helix Launcher",
+        title="Cymatix Launcher",
         menu=tray_menu,
     )
     tray_holder[0] = tray_icon
@@ -1422,7 +1422,7 @@ def _run_tray_native_combined(
 
     # ── create the pywebview window on main thread ────────────────
     window = webview.create_window(
-        "Helix Launcher",
+        "Cymatix Launcher",
         url,
         width=1000,
         height=720,

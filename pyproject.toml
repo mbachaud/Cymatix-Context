@@ -45,7 +45,7 @@ Issues = "https://github.com/mbachaud/Cymatix-Context/issues"
 
 [project.optional-dependencies]
 # Every extra below is gated on a feature helix exposes at runtime. Core
-# (`pip install helix-context`) gives a working HTTP server + /context
+# (`pip install cymatix-context`) gives a working HTTP server + /context
 # + /context/packet with genome-local retrieval. Add extras as you turn
 # on specific features.
 accel = ["orjson>=3.9"]
@@ -73,7 +73,7 @@ launcher-native = [
     "pywebview>=5.0",
 ]
 # pystray is LGPL-3. It is a runtime-only optional dep that the user
-# installs explicitly; the helix-context wheel itself does not bundle
+# installs explicitly; the cymatix-context wheel itself does not bundle
 # pystray, so the core package stays Apache-2.0-clean.
 launcher-tray = [
     "jinja2>=3.1", "psutil>=5.9", "platformdirs>=4.0", "py-cpuinfo>=9.0",
