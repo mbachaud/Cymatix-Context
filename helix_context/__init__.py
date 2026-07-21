@@ -1,8 +1,10 @@
 """Backward-compat namespace: ``helix_context`` -> ``cymatix_context``.
 
-The project was renamed to cymatix-context (July 2026). Every
-``helix_context[.sub]`` import resolves to the *identical*
-``cymatix_context`` module object — no copies — so isinstance checks and
+The project was renamed to cymatix-context (July 2026). ``import
+helix_context`` yields the *identical* ``cymatix_context`` module object
+(``helix_context is cymatix_context``), and every ``helix_context.sub``
+import resolves through the meta-path finder below to the identical
+``cymatix_context.sub`` module — no copies — so isinstance checks and
 module singletons keep working across old and new import paths. This
 package will be removed after a deprecation window.
 """
@@ -77,12 +79,14 @@ class _AliasFinder(importlib.abc.MetaPathFinder):
 if not any(type(f).__name__ == "_AliasFinder" for f in sys.meta_path):
     sys.meta_path.insert(0, _AliasFinder())
 
+# Make the root package itself an identical alias, not just its submodules:
+# ``import helix_context`` and ``import cymatix_context`` return the same
+# module object. This works because Python's import machinery re-reads
+# sys.modules[spec.name] after exec_module() finishes — a module is allowed
+# to replace itself during its own import. Subsequent ``helix_context.X``
+# imports resolve through the meta-path finder above to the identical
+# ``cymatix_context.X`` objects, and ``python -m helix_context.mcp_server``
+# still works because it walks the parent's ``__path__`` (now cymatix's
+# package dir, which contains ``cymatix_context/mcp_server.py``).
 _pkg = importlib.import_module(_NEW)
-
-
-def __getattr__(name):
-    return getattr(_pkg, name)
-
-
-def __dir__():
-    return dir(_pkg)
+sys.modules[_OLD] = _pkg

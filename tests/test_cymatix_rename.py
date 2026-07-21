@@ -18,6 +18,15 @@ def test_old_package_import_warns():
     assert any(issubclass(w.category, DeprecationWarning) for w in caught)
 
 
+def test_root_package_is_identical_alias():
+    _purge_old_modules()
+    import cymatix_context as new_pkg
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", DeprecationWarning)
+        import helix_context as old_pkg
+    assert old_pkg is new_pkg
+
+
 def test_old_import_is_same_module_object():
     import cymatix_context.config as new_cfg
     with warnings.catch_warnings():
