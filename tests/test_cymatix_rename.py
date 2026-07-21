@@ -1,4 +1,5 @@
 """Rename back-compat contract: old helix_context paths alias, not copy."""
+import os
 import subprocess
 import sys
 import warnings
@@ -63,3 +64,19 @@ def test_alias_preserves_canonical_metadata():
     assert new_mod.__spec__ is not None
     assert new_mod.__spec__.name == "cymatix_context.retrieval.expand"
     assert new_mod.__package__ == "cymatix_context.retrieval"
+
+
+def test_env_mirror_copies_cymatix_to_helix(monkeypatch):
+    monkeypatch.setenv("CYMATIX_RENAME_TEST_XYZ", "1")
+    monkeypatch.delenv("HELIX_RENAME_TEST_XYZ", raising=False)
+    from cymatix_context import _mirror_env
+    _mirror_env()
+    assert os.environ["HELIX_RENAME_TEST_XYZ"] == "1"
+
+
+def test_env_mirror_never_overrides_explicit_helix_value(monkeypatch):
+    monkeypatch.setenv("CYMATIX_RENAME_TEST_ABC", "new")
+    monkeypatch.setenv("HELIX_RENAME_TEST_ABC", "old")
+    from cymatix_context import _mirror_env
+    _mirror_env()
+    assert os.environ["HELIX_RENAME_TEST_ABC"] == "old"
