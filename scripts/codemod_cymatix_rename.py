@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-OLD_PKG, NEW_PKG = "cymatix_context", "cymatix_context"
+OLD_PKG, NEW_PKG = "helix_context", "cymatix_context"
 # NEW_PKG first: after the move, rewrites target the new tree. The
 # back-compat shim dir (a later re-created cymatix_context/) is deliberately
 # NOT listed — its references to the old name are intentional.
@@ -36,7 +36,9 @@ def rewrite_imports() -> int:
         if not base.is_dir():
             continue
         for py in base.rglob("*.py"):
-            if SKIP_PARTS & set(py.parts):
+            if SKIP_PARTS & set(py.relative_to(ROOT).parts):
+                continue
+            if py.resolve() == Path(__file__).resolve():
                 continue
             text = py.read_text(encoding="utf-8")
             new = pat.sub(NEW_PKG, text)

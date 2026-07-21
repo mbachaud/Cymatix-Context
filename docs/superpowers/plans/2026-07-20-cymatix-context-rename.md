@@ -106,7 +106,9 @@ def rewrite_imports() -> int:
         if not base.is_dir():
             continue
         for py in base.rglob("*.py"):
-            if SKIP_PARTS & set(py.parts):
+            if SKIP_PARTS & set(py.relative_to(ROOT).parts):
+                continue
+            if py.resolve() == Path(__file__).resolve():
                 continue
             text = py.read_text(encoding="utf-8")
             new = pat.sub(NEW_PKG, text)
