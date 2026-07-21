@@ -88,6 +88,9 @@ OLD_PKG, NEW_PKG = "helix_context", "cymatix_context"
 # NOT listed — its references to the old name are intentional.
 CODE_DIRS = [NEW_PKG, "tests", "scripts", "benchmarks", "deploy"]
 SKIP_PARTS = {".claude", "tools", "node_modules", ".venv", "__pycache__", ".git", "genomes"}
+# Files whose helix_context references are intentional (the shim's own
+# regression tests) — never rewrite them on replay.
+KEEP_OLD_TOKEN = {Path("tests") / "test_cymatix_rename.py"}
 
 
 def move_package() -> None:
@@ -109,6 +112,8 @@ def rewrite_imports() -> int:
             if SKIP_PARTS & set(py.relative_to(ROOT).parts):
                 continue
             if py.resolve() == Path(__file__).resolve():
+                continue
+            if py.relative_to(ROOT) in KEEP_OLD_TOKEN:
                 continue
             text = py.read_text(encoding="utf-8")
             new = pat.sub(NEW_PKG, text)

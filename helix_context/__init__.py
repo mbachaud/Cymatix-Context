@@ -27,13 +27,28 @@ warnings.warn(
 
 
 class _AliasLoader(importlib.abc.Loader):
+    def __init__(self):
+        self._saved = None
+
     def create_module(self, spec):
         real = importlib.import_module(_NEW + spec.name[len(_OLD):])
+        # module_from_spec will stamp the alias spec onto this shared
+        # object; stash the canonical identity so exec_module can restore it.
+        self._saved = (
+            real.__name__,
+            real.__spec__,
+            real.__package__,
+            getattr(real, "__loader__", None),
+        )
         sys.modules[spec.name] = real
         return real
 
-    def exec_module(self, module):  # real module already executed
-        pass
+    def exec_module(self, module):
+        name, spec, package, loader = self._saved
+        module.__name__ = name
+        module.__spec__ = spec
+        module.__package__ = package
+        module.__loader__ = loader
 
 
 class _AliasFinder(importlib.abc.MetaPathFinder):

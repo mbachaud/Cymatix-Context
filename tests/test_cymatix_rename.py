@@ -51,3 +51,15 @@ def test_mcp_dash_m_entry_importable_via_old_path():
         capture_output=True, text=True, timeout=120,
     )
     assert proc.returncode == 0, proc.stderr
+
+
+def test_alias_preserves_canonical_metadata():
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", DeprecationWarning)
+        import helix_context.retrieval.expand as old_mod
+    import cymatix_context.retrieval.expand as new_mod
+    assert old_mod is new_mod
+    assert new_mod.__name__ == "cymatix_context.retrieval.expand"
+    assert new_mod.__spec__ is not None
+    assert new_mod.__spec__.name == "cymatix_context.retrieval.expand"
+    assert new_mod.__package__ == "cymatix_context.retrieval"
