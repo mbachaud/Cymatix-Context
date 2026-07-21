@@ -80,11 +80,30 @@ def _find_mcp_config(
     return None
 
 
+# The MCP entry key candidates, checked in this order. "cymatix-context" is
+# the documented canonical key; "helix-context" is the pre-rename key, kept
+# working (still resolves to the same server) so existing setups aren't
+# nagged. The suffix-less "cymatix"/"helix" forms are accepted but flagged
+# noncanonical.
+_MCP_NAME_CANDIDATES = ("cymatix-context", "cymatix", "helix-context", "helix")
+_MCP_NAMES_CANONICAL = ("cymatix-context", "helix-context")
+_MCP_NAMES_NONCANONICAL = ("cymatix", "helix")
+
+# Both module paths resolve to the same server: cymatix_context.mcp_server
+# is canonical, helix_context.mcp_server is the back-compat shim (see
+# helix_context/__init__.py) that aliases to it.
+_MCP_MODULE_CANONICAL = "cymatix_context.mcp_server"
+_MCP_MODULE_LEGACY_SHIM = "helix_context.mcp_server"
+_MCP_MODULES_ACCEPTED = (_MCP_MODULE_CANONICAL, _MCP_MODULE_LEGACY_SHIM)
+
+_MCP_ENV_VARS = ("CYMATIX_MCP_URL", "HELIX_MCP_URL")
+
+
 def _check_mcp_config(path: Optional[Path]) -> Dict[str, Any]:
     if path is None:
         return {
             "status": "missing",
-            "next_action": "Create a `.mcp.json` that points at `cymatix_context.mcp_server`.",
+            "next_action": "Add a `cymatix-context` MCP entry that points at the canonical server.",
         }
 
     try:
@@ -100,7 +119,7 @@ def _check_mcp_config(path: Optional[Path]) -> Dict[str, Any]:
     servers = data.get("mcpServers") or {}
     server_name = None
     server = None
-    for candidate in ("helix-context", "helix"):
+    for candidate in _MCP_NAME_CANDIDATES:
         if isinstance(servers.get(candidate), dict):
             server_name = candidate
             server = servers[candidate]
@@ -110,34 +129,37 @@ def _check_mcp_config(path: Optional[Path]) -> Dict[str, Any]:
         return {
             "status": "missing",
             "path": str(path),
-            "next_action": "Add a `helix-context` MCP entry that points at the canonical server.",
+            "next_action": "Add a `cymatix-context` MCP entry that points at the canonical server.",
         }
 
     args = server.get("args") or []
     env = server.get("env") or {}
     module = args[1] if len(args) >= 2 and args[0] == "-m" else None
+    env_var = next((k for k in _MCP_ENV_VARS if k in env), None)
 
-    if (
-        module == "cymatix_context.mcp_server"
-        and "HELIX_MCP_URL" in env
-        and server_name == "helix-context"
-    ):
-        return {
+    if module in _MCP_MODULES_ACCEPTED and env_var and server_name in _MCP_NAMES_CANONICAL:
+        result: Dict[str, Any] = {
             "status": "canonical",
             "path": str(path),
             "server_name": server_name,
             "module": module,
-            "env_var": "HELIX_MCP_URL",
+            "env_var": env_var,
         }
+        if module == _MCP_MODULE_LEGACY_SHIM:
+            result["note"] = (
+                "`helix_context.mcp_server` is a compatibility shim that aliases to "
+                "`cymatix_context.mcp_server`; no change needed."
+            )
+        return result
 
-    if module == "cymatix_context.mcp_server" and "HELIX_MCP_URL" in env:
+    if module in _MCP_MODULES_ACCEPTED and env_var and server_name in _MCP_NAMES_NONCANONICAL:
         return {
             "status": "noncanonical",
             "path": str(path),
             "server_name": server_name,
             "module": module,
-            "env_var": "HELIX_MCP_URL",
-            "next_action": "Rename the MCP server entry to `helix-context` to match the shared docs and status checks.",
+            "env_var": env_var,
+            "next_action": "Rename the MCP server entry to `cymatix-context` to match the docs and status checks.",
         }
 
     if module == "cymatix_context.mcp.server":
@@ -147,7 +169,7 @@ def _check_mcp_config(path: Optional[Path]) -> Dict[str, Any]:
             "server_name": server_name,
             "module": module,
             "env_var": "HELIX_URL" if "HELIX_URL" in env else None,
-            "next_action": "Switch to `cymatix_context.mcp_server` and `HELIX_MCP_URL`.",
+            "next_action": "Switch to `cymatix_context.mcp_server` and `CYMATIX_MCP_URL`.",
         }
 
     return {
@@ -156,7 +178,7 @@ def _check_mcp_config(path: Optional[Path]) -> Dict[str, Any]:
         "server_name": server_name,
         "module": module,
         "env_keys": sorted(env.keys()),
-        "next_action": "Point the Helix MCP entry at `cymatix_context.mcp_server` with `HELIX_MCP_URL`.",
+        "next_action": "Point the Helix MCP entry at `cymatix_context.mcp_server` with `CYMATIX_MCP_URL`.",
     }
 
 
