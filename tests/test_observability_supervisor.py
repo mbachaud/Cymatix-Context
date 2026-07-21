@@ -37,7 +37,7 @@ SERVICES = ("collector", "prometheus", "tempo", "loki", "grafana")
 @pytest.fixture
 def fake_paths(tmp_path, monkeypatch):
     """Redirect state + configs into tmp_path; pretend binaries + configs exist."""
-    from helix_context.launcher import observability_paths as ops
+    from cymatix_context.launcher import observability_paths as ops
 
     monkeypatch.setattr(ops, "_user_data_dir", lambda: tmp_path / "appdata")
     monkeypatch.setattr(
@@ -67,7 +67,7 @@ def fake_paths(tmp_path, monkeypatch):
 
 
 def _supervisor(fake_paths):
-    from helix_context.launcher.observability_supervisor import (
+    from cymatix_context.launcher.observability_supervisor import (
         ObservabilitySupervisor,
     )
     return ObservabilitySupervisor()
@@ -76,8 +76,8 @@ def _supervisor(fake_paths):
 # ── refusal-without-rendered-config ─────────────────────────────────
 
 def test_refuses_to_spawn_when_rendered_config_missing(fake_paths):
-    from helix_context.launcher import observability_paths as ops
-    from helix_context.launcher.observability_supervisor import (
+    from cymatix_context.launcher import observability_paths as ops
+    from cymatix_context.launcher.observability_supervisor import (
         ConfigsMissing,
         ObservabilitySupervisor,
     )
@@ -92,7 +92,7 @@ def test_refuses_to_spawn_when_rendered_config_missing(fake_paths):
 # ── port pre-flight ─────────────────────────────────────────────────
 
 def test_port_already_bound_skips_spawn_and_marks_external(fake_paths):
-    from helix_context.launcher.observability_supervisor import (
+    from cymatix_context.launcher.observability_supervisor import (
         ObservabilitySupervisor,
     )
 
@@ -100,13 +100,13 @@ def test_port_already_bound_skips_spawn_and_marks_external(fake_paths):
         return _empty_stdout_proc(pid=22000)
 
     with patch(
-        "helix_context.launcher.observability_supervisor.is_port_bound",
+        "cymatix_context.launcher.observability_supervisor.is_port_bound",
         side_effect=lambda host, port: port == 9090,
     ), patch(
-        "helix_context.launcher.observability_supervisor.subprocess.Popen",
+        "cymatix_context.launcher.observability_supervisor.subprocess.Popen",
         side_effect=_make_proc,
     ) as popen, patch(
-        "helix_context.launcher.observability_supervisor.wait_for_port",
+        "cymatix_context.launcher.observability_supervisor.wait_for_port",
         return_value=True,
     ):
         sup = ObservabilitySupervisor()
@@ -127,7 +127,7 @@ def test_port_already_bound_skips_spawn_and_marks_external(fake_paths):
 def test_spawn_order_phase1_then_collector_then_grafana(fake_paths):
     """Phase 1: prom+tempo+loki spawn first; collector after they're ready;
     grafana last. We assert by recording the order of Popen calls."""
-    from helix_context.launcher.observability_supervisor import (
+    from cymatix_context.launcher.observability_supervisor import (
         ObservabilitySupervisor,
     )
 
@@ -141,13 +141,13 @@ def test_spawn_order_phase1_then_collector_then_grafana(fake_paths):
         return _empty_stdout_proc(pid=12345)
 
     with patch(
-        "helix_context.launcher.observability_supervisor.is_port_bound",
+        "cymatix_context.launcher.observability_supervisor.is_port_bound",
         return_value=False,
     ), patch(
-        "helix_context.launcher.observability_supervisor.subprocess.Popen",
+        "cymatix_context.launcher.observability_supervisor.subprocess.Popen",
         side_effect=_record,
     ), patch(
-        "helix_context.launcher.observability_supervisor.wait_for_port",
+        "cymatix_context.launcher.observability_supervisor.wait_for_port",
         return_value=True,
     ):
         sup = ObservabilitySupervisor()
@@ -167,7 +167,7 @@ def test_spawn_order_phase1_then_collector_then_grafana(fake_paths):
 # ── shutdown cascade ────────────────────────────────────────────────
 
 def test_shutdown_terminates_all_children(fake_paths):
-    from helix_context.launcher.observability_supervisor import (
+    from cymatix_context.launcher.observability_supervisor import (
         ObservabilitySupervisor,
     )
     procs = []
@@ -177,13 +177,13 @@ def test_shutdown_terminates_all_children(fake_paths):
         return m
 
     with patch(
-        "helix_context.launcher.observability_supervisor.is_port_bound",
+        "cymatix_context.launcher.observability_supervisor.is_port_bound",
         return_value=False,
     ), patch(
-        "helix_context.launcher.observability_supervisor.subprocess.Popen",
+        "cymatix_context.launcher.observability_supervisor.subprocess.Popen",
         side_effect=_make,
     ), patch(
-        "helix_context.launcher.observability_supervisor.wait_for_port",
+        "cymatix_context.launcher.observability_supervisor.wait_for_port",
         return_value=True,
     ):
         sup = ObservabilitySupervisor()
@@ -203,7 +203,7 @@ def test_job_object_created_on_windows(fake_paths):
     """When the supervisor starts, it should construct a Job Object with
     JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE so child PIDs auto-terminate when
     the parent process dies (clean OR force-killed)."""
-    from helix_context.launcher import observability_supervisor as os_mod
+    from cymatix_context.launcher import observability_supervisor as os_mod
 
     fake_job = MagicMock()
     fake_job.handle = 0xCAFE
@@ -213,19 +213,19 @@ def test_job_object_created_on_windows(fake_paths):
         "_create_kill_on_close_job",
         return_value=fake_job,
     ) as create_job, patch(
-        "helix_context.launcher.observability_supervisor.is_port_bound",
+        "cymatix_context.launcher.observability_supervisor.is_port_bound",
         return_value=False,
     ), patch(
-        "helix_context.launcher.observability_supervisor.subprocess.Popen",
+        "cymatix_context.launcher.observability_supervisor.subprocess.Popen",
     ) as popen, patch(
-        "helix_context.launcher.observability_supervisor._assign_to_job",
+        "cymatix_context.launcher.observability_supervisor._assign_to_job",
     ) as assign, patch(
-        "helix_context.launcher.observability_supervisor.wait_for_port",
+        "cymatix_context.launcher.observability_supervisor.wait_for_port",
         return_value=True,
     ):
         popen.return_value = _empty_stdout_proc(pid=9999)
 
-        from helix_context.launcher.observability_supervisor import (
+        from cymatix_context.launcher.observability_supervisor import (
             ObservabilitySupervisor,
         )
         sup = ObservabilitySupervisor()
@@ -240,7 +240,7 @@ def test_job_object_created_on_windows(fake_paths):
 
 @pytest.mark.skipif(sys.platform == "win32", reason="POSIX-only")
 def test_posix_uses_start_new_session(fake_paths):
-    from helix_context.launcher.observability_supervisor import (
+    from cymatix_context.launcher.observability_supervisor import (
         ObservabilitySupervisor,
     )
     captured_kwargs = []
@@ -249,13 +249,13 @@ def test_posix_uses_start_new_session(fake_paths):
         return _empty_stdout_proc(pid=7777)
 
     with patch(
-        "helix_context.launcher.observability_supervisor.is_port_bound",
+        "cymatix_context.launcher.observability_supervisor.is_port_bound",
         return_value=False,
     ), patch(
-        "helix_context.launcher.observability_supervisor.subprocess.Popen",
+        "cymatix_context.launcher.observability_supervisor.subprocess.Popen",
         side_effect=_capture,
     ), patch(
-        "helix_context.launcher.observability_supervisor.wait_for_port",
+        "cymatix_context.launcher.observability_supervisor.wait_for_port",
         return_value=True,
     ):
         sup = ObservabilitySupervisor()
@@ -268,7 +268,7 @@ def test_posix_uses_start_new_session(fake_paths):
 # ── per-service restart ─────────────────────────────────────────────
 
 def test_restart_service_kills_then_respawns(fake_paths):
-    from helix_context.launcher.observability_supervisor import (
+    from cymatix_context.launcher.observability_supervisor import (
         ObservabilitySupervisor,
     )
 
@@ -279,13 +279,13 @@ def test_restart_service_kills_then_respawns(fake_paths):
         return m
 
     with patch(
-        "helix_context.launcher.observability_supervisor.is_port_bound",
+        "cymatix_context.launcher.observability_supervisor.is_port_bound",
         return_value=False,
     ), patch(
-        "helix_context.launcher.observability_supervisor.subprocess.Popen",
+        "cymatix_context.launcher.observability_supervisor.subprocess.Popen",
         side_effect=_make,
     ), patch(
-        "helix_context.launcher.observability_supervisor.wait_for_port",
+        "cymatix_context.launcher.observability_supervisor.wait_for_port",
         return_value=True,
     ):
         sup = ObservabilitySupervisor()
@@ -313,8 +313,8 @@ def test_log_rotation_triggers_at_size_threshold(fake_paths, tmp_path):
     import io
     import time
 
-    from helix_context.launcher import observability_paths as ops
-    from helix_context.launcher.observability_supervisor import (
+    from cymatix_context.launcher import observability_paths as ops
+    from cymatix_context.launcher.observability_supervisor import (
         ObservabilitySupervisor,
     )
 
@@ -354,8 +354,8 @@ def test_keeps_only_three_backups(fake_paths, tmp_path):
     (RotatingFileHandler with backupCount=3 must drop the oldest)."""
     import io
 
-    from helix_context.launcher import observability_paths as ops
-    from helix_context.launcher.observability_supervisor import (
+    from cymatix_context.launcher import observability_paths as ops
+    from cymatix_context.launcher.observability_supervisor import (
         ObservabilitySupervisor,
     )
 
@@ -391,7 +391,7 @@ def test_log_drainer_handles_child_exit(fake_paths):
     exit cleanly (no infinite loop, no exception bubbling out)."""
     import io
 
-    from helix_context.launcher.observability_supervisor import (
+    from cymatix_context.launcher.observability_supervisor import (
         ObservabilitySupervisor,
     )
 

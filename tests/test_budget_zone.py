@@ -6,7 +6,7 @@ import os
 
 import pytest
 
-from helix_context.budget_zone import (
+from cymatix_context.budget_zone import (
     DEFAULT_WINDOW_TOKENS,
     is_enabled,
     zone_cap,

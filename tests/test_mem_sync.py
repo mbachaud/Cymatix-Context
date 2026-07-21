@@ -1,5 +1,5 @@
 """
-Tests for helix_context.mem_sync — bugbash regressions.
+Tests for cymatix_context.mem_sync — bugbash regressions.
 
 BUG-1a: all syncers share one global state file (~/.helix/mem_sync_state.json)
         but deletion detection considered only the *current invocation's*
@@ -23,7 +23,7 @@ from pathlib import Path
 
 import pytest
 
-import helix_context.mem_sync as mem_sync
+import cymatix_context.mem_sync as mem_sync
 
 
 @pytest.fixture(autouse=True)
@@ -212,7 +212,7 @@ class TestTombstoneRoute:
 
     @staticmethod
     def _seed_gene(genome, gene_id: str, source_id: str):
-        from helix_context.schemas import (
+        from cymatix_context.schemas import (
             ChromatinState,
             EpigeneticMarkers,
             Gene,

@@ -12,8 +12,8 @@ import sqlite3
 
 import pytest
 
-from helix_context.backends import splade_backend
-from helix_context.storage.indexes import sync_splade_index
+from cymatix_context.backends import splade_backend
+from cymatix_context.storage.indexes import sync_splade_index
 
 
 def _fresh_splade_db() -> sqlite3.Connection:
@@ -81,8 +81,8 @@ def test_sync_splade_index_empty_sparse_dict_clears_existing_rows():
     assert rows[0] == 0
 
 
-from helix_context.knowledge_store import KnowledgeStore
-from helix_context.schemas import Gene
+from cymatix_context.knowledge_store import KnowledgeStore
+from cymatix_context.schemas import Gene
 
 
 def _make_test_gene(content: str = "hello world parallel ingest") -> Gene:

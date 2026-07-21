@@ -4,7 +4,7 @@ Default True preserves prior behaviour; setting it False lets a lexical-only /
 multi-worker bench skip the MiniLM load entirely (the manager then never
 constructs the SEMA codec, so there is no per-worker OOM).
 """
-from helix_context.config import IngestionConfig, load_config
+from cymatix_context.config import IngestionConfig, load_config
 
 
 def test_default_is_true():

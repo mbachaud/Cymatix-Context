@@ -17,14 +17,14 @@ from typing import List, Tuple
 
 import pytest
 
-from helix_context import context_manager as _cm
-from helix_context.config import BudgetConfig, ClassifierConfig
-from helix_context.context_manager import HelixContextManager
-from helix_context.retrieval.query_classifier import (
+from cymatix_context import context_manager as _cm
+from cymatix_context.config import BudgetConfig, ClassifierConfig
+from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.retrieval.query_classifier import (
     DECODER_MODE_TABLE,
     resolve_decoder_mode,
 )
-from helix_context.schemas import (
+from cymatix_context.schemas import (
     CALLER_MODEL_CLASS_DEFAULT,
     CallerModelClass,
 )

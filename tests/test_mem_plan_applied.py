@@ -12,9 +12,9 @@ from pathlib import Path
 
 import pytest
 
-from helix_context.hardware import SqliteMemPlan, sqlite_memory_budget
-from helix_context.knowledge_store import KnowledgeStore
-from helix_context.shard_schema import open_main_db
+from cymatix_context.hardware import SqliteMemPlan, sqlite_memory_budget
+from cymatix_context.knowledge_store import KnowledgeStore
+from cymatix_context.shard_schema import open_main_db
 
 MiB = 1024 ** 2
 

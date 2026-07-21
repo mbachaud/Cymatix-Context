@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from helix_context.vault.state import VaultState
+from cymatix_context.vault.state import VaultState
 
 
 @pytest.fixture

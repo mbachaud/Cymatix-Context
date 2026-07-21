@@ -1,4 +1,4 @@
-"""Tests for the DAL reference adapter (helix_context.adapters.dal)."""
+"""Tests for the DAL reference adapter (cymatix_context.adapters.dal)."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from helix_context.adapters.dal import (
+from cymatix_context.adapters.dal import (
     DAL,
     FetchResult,
     _detect_scheme,

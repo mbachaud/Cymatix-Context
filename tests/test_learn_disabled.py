@@ -7,7 +7,7 @@ docs/benchmarks/2026-07-05-sike-bedsweep-issue-resolutions.md.
 
 import pytest
 
-from helix_context.server.helpers import _learn_disabled
+from cymatix_context.server.helpers import _learn_disabled
 
 
 @pytest.mark.parametrize("value", ["1", "true", "TRUE", "Yes", "on", " on "])

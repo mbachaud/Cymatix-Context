@@ -16,10 +16,10 @@ sys.path.insert(0, "f:/Projects/np-graph")
 
 from needles_239b import NEEDLES_239B
 from located_n1000 import features_for_query
-from helix_context.config import load_config
-from helix_context.context_manager import HelixContextManager
-from helix_context.server.helpers import _compute_know_or_miss_block
-from helix_context.scoring.know_calibration import compute_confidence, calibration_from_config
+from cymatix_context.config import load_config
+from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.server.helpers import _compute_know_or_miss_block
+from cymatix_context.scoring.know_calibration import compute_confidence, calibration_from_config
 
 CORPUS = Path(tempfile.gettempdir()) / "bed_239b_corpus"
 BED = str(Path(tempfile.gettempdir()) / "bed_239b.db")

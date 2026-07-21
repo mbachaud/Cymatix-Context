@@ -36,7 +36,7 @@ def _norm(p):
 
 
 def main():
-    from helix_context.backends.bgem3_codec import BGEM3Codec
+    from cymatix_context.backends.bgem3_codec import BGEM3Codec
 
     dsid_map = json.load(open(DSID_MAP, encoding="utf-8"))  # _norm(path)->dsid
 

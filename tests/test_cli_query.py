@@ -1,4 +1,4 @@
-"""Tests for `helix query`. Mocks helix_context.api.open_session so the
+"""Tests for `helix query`. Mocks cymatix_context.api.open_session so the
 CLI surface is tested in isolation from the retrieval stack."""
 from __future__ import annotations
 
@@ -9,8 +9,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from helix_context.api import QueryResult
-from helix_context.cli import main
+from cymatix_context.api import QueryResult
+from cymatix_context.cli import main
 from tests.conftest import run_cli as _run
 
 
@@ -31,14 +31,14 @@ def fake_session():
 
 
 def test_query_text_mode_prints_expressed_context(fake_session):
-    with patch("helix_context.cli.cmd_query.open_session", return_value=fake_session):
+    with patch("cymatix_context.cli.cmd_query.open_session", return_value=fake_session):
         rc, out, err = _run(["query", "hello world"])
     assert rc == 0, err
     assert "<helix>example bytes</helix>" in out
 
 
 def test_query_json_emits_agent_payload(fake_session):
-    with patch("helix_context.cli.cmd_query.open_session", return_value=fake_session):
+    with patch("cymatix_context.cli.cmd_query.open_session", return_value=fake_session):
         rc, out, err = _run(["query", "hello world", "--json"])
     assert rc == 0, err
     payload = json.loads(out)
@@ -50,7 +50,7 @@ def test_query_json_emits_agent_payload(fake_session):
 
 
 def test_query_passes_k_through(fake_session):
-    with patch("helix_context.cli.cmd_query.open_session", return_value=fake_session):
+    with patch("cymatix_context.cli.cmd_query.open_session", return_value=fake_session):
         rc, out, err = _run(["query", "test", "--k", "8"])
     assert rc == 0
     _, kwargs = fake_session.query.call_args
@@ -67,7 +67,7 @@ def test_query_tier_broad_is_rejected_by_argparse(fake_session):
     rather than relying on the dispatcher's normal return path.
     """
     out, err = io.StringIO(), io.StringIO()
-    with patch("helix_context.cli.cmd_query.open_session", return_value=fake_session):
+    with patch("cymatix_context.cli.cmd_query.open_session", return_value=fake_session):
         with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
             with pytest.raises(SystemExit) as exc:
                 main(["query", "test", "--tier", "broad"])
@@ -78,7 +78,7 @@ def test_query_tier_broad_is_rejected_by_argparse(fake_session):
 
 
 def test_query_tier_focused_maps_to_condensed_decoder(fake_session):
-    with patch("helix_context.cli.cmd_query.open_session", return_value=fake_session):
+    with patch("cymatix_context.cli.cmd_query.open_session", return_value=fake_session):
         rc, _, _ = _run(["query", "test", "--tier", "focused"])
     assert rc == 0
     _, kwargs = fake_session.query.call_args
@@ -86,7 +86,7 @@ def test_query_tier_focused_maps_to_condensed_decoder(fake_session):
 
 
 def test_query_learn_flag_passes_through(fake_session):
-    with patch("helix_context.cli.cmd_query.open_session", return_value=fake_session):
+    with patch("cymatix_context.cli.cmd_query.open_session", return_value=fake_session):
         rc, _, _ = _run(["query", "test", "--learn"])
     assert rc == 0
     _, kwargs = fake_session.query.call_args
@@ -96,7 +96,7 @@ def test_query_learn_flag_passes_through(fake_session):
 def test_query_returns_one_when_session_raises():
     sess = MagicMock()
     sess.query.side_effect = RuntimeError("genome unreachable")
-    with patch("helix_context.cli.cmd_query.open_session", return_value=sess):
+    with patch("cymatix_context.cli.cmd_query.open_session", return_value=sess):
         rc, out, err = _run(["query", "test", "--json"])
     assert rc == 1
     payload = json.loads(out)
@@ -106,7 +106,7 @@ def test_query_returns_one_when_session_raises():
 
 def test_query_text_mode_includes_verdict(fake_session):
     """Text mode must surface the verdict from to_agent_json()."""
-    with patch("helix_context.cli.cmd_query.open_session", return_value=fake_session):
+    with patch("cymatix_context.cli.cmd_query.open_session", return_value=fake_session):
         rc, out, err = _run(["query", "hello world"])
     assert rc == 0
     assert "verdict:" in out
@@ -117,7 +117,7 @@ def test_query_text_mode_error_goes_to_stderr():
     and returns EXIT_ERROR."""
     sess = MagicMock()
     sess.query.side_effect = RuntimeError("genome unreachable")
-    with patch("helix_context.cli.cmd_query.open_session", return_value=sess):
+    with patch("cymatix_context.cli.cmd_query.open_session", return_value=sess):
         rc, out, err = _run(["query", "test"])  # no --json
     assert rc == 1
     assert "genome unreachable" in err

@@ -33,8 +33,8 @@ if str(_REPO_ROOT) not in sys.path:
 sys.path.insert(0, str(_REPO_ROOT / "benchmarks"))
 
 import bench_needle  # noqa: E402
-from helix_context.config import load_config  # noqa: E402
-from helix_context.context_manager import HelixContextManager  # noqa: E402
+from cymatix_context.config import load_config  # noqa: E402
+from cymatix_context.context_manager import HelixContextManager  # noqa: E402
 
 
 def _answer_genes(conn, needle):

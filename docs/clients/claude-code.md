@@ -27,7 +27,7 @@ travels with each call, and where the agent-side skill lives.
 Two hops. Claude Code spawns the MCP adapter as a stdio subprocess and
 talks JSON-RPC. The adapter proxies every tool call over HTTP to the
 helix server. The adapter is a thin shim — it does no retrieval logic
-of its own. See [`helix_context/mcp_server.py`](../../helix_context/mcp_server.py)
+of its own. See [`helix_context/mcp_server.py`](../../cymatix_context/mcp_server.py)
 for the full tool list.
 
 ## .mcp.json wiring
@@ -62,7 +62,7 @@ if `python` isn't directly resolvable in the host's spawn environment.
 
 The eight identity vars are not optional in spirit. Anything you omit
 falls back to a default that erodes attribution. Defaults are documented
-in [`mcp_server.py`](../../helix_context/mcp_server.py) — the registry
+in [`mcp_server.py`](../../cymatix_context/mcp_server.py) — the registry
 will still accept the registration, but the badges in the dashboard and
 the `authored_by_*` columns in the knowledge store will read as `unknown` or
 `mcp-<pid>` instead of `laude` / `claude-code`.

@@ -11,9 +11,9 @@ from pathlib import Path
 
 import pytest
 
-from helix_context.config import HelixConfig, VaultConfig, VaultTracesConfig
-from helix_context.genome import Genome
-from helix_context.vault import VaultManager
+from cymatix_context.config import HelixConfig, VaultConfig, VaultTracesConfig
+from cymatix_context.genome import Genome
+from cymatix_context.vault import VaultManager
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -23,7 +23,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 #   `docs/foo/bar.md`
 #   `docs/foo/bar.py`
 # Stop at the closing backtick.
-_BACKTICK_LOCAL_PATH = re.compile(r"`((?:docs|helix_context|scripts|tests)/[^\s`]+\.(?:md|py|toml))`")
+_BACKTICK_LOCAL_PATH = re.compile(r"`((?:docs|cymatix_context|scripts|tests)/[^\s`]+\.(?:md|py|toml))`")
 
 # Match markdown link targets that point at local files (skip http/https/mailto).
 _MD_LINK_TARGET = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
@@ -100,7 +100,7 @@ def test_generated_readme_local_doc_paths_resolve(vault_manager):
     ]
     assert not missing, (
         f"vault README references local docs that do not exist on disk: {missing}. "
-        f"Update helix_context/vault/__init__.py._write_readme or restore the "
+        f"Update cymatix_context/vault/__init__.py._write_readme or restore the "
         f"missing file."
     )
 

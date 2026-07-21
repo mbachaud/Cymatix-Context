@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from helix_context.vault.locking import VaultLock
+from cymatix_context.vault.locking import VaultLock
 
 
 def test_lock_acquires_and_releases(tmp_path: Path):

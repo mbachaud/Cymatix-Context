@@ -4,7 +4,7 @@ from __future__ import annotations
 import time
 from pathlib import Path
 
-from helix_context.genome import Genome
+from cymatix_context.genome import Genome
 
 
 def test_idx_genes_last_seen_present(tmp_path: Path):

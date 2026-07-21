@@ -32,8 +32,8 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from helix_context.adapters.cache import CachedDAL  # noqa: E402
-from helix_context.adapters.dal import DAL, FetchResult  # noqa: E402
+from cymatix_context.adapters.cache import CachedDAL  # noqa: E402
+from cymatix_context.adapters.dal import DAL, FetchResult  # noqa: E402
 
 
 def build_slow_fetcher(latency_s: float):

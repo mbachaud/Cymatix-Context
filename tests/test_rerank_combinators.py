@@ -4,7 +4,7 @@ The RRF finalization used to be a single inline ``fused + rerank_additive``
 add (DEFECT-1: an authority bonus of +2.0 is ~40x the fused RRF budget, so
 the bonus becomes the ranking — ``docs/research/2026-07-08-scoring-invariance-audit.md``
 §3). PR-2 factors the combination into a pure module
-(``helix_context/retrieval/rerank_combinators.py``) behind a knob whose default
+(``cymatix_context/retrieval/rerank_combinators.py``) behind a knob whose default
 (``"additive"``) is BYTE-IDENTICAL to the shipped block, plus three bench-gated
 alternatives (``fused_tier`` / ``eps_band`` / ``off``).
 
@@ -32,10 +32,10 @@ import textwrap
 
 import pytest
 
-from helix_context.config import RetrievalConfig, load_config
-from helix_context.knowledge_store import KnowledgeStore
-from helix_context.retrieval.fusion import DEFAULT_RRF_K, Fuser
-from helix_context.retrieval.rerank_combinators import (
+from cymatix_context.config import RetrievalConfig, load_config
+from cymatix_context.knowledge_store import KnowledgeStore
+from cymatix_context.retrieval.fusion import DEFAULT_RRF_K, Fuser
+from cymatix_context.retrieval.rerank_combinators import (
     VALID_COMBINATORS,
     combine_rerank,
 )
@@ -297,7 +297,7 @@ def test_config_threads_toml_to_store_attrs(tmp_path):
 
     # Thread through the same seam production uses (open_read_source fans to
     # shards; a :memory: path resolves to a solo Genome).
-    from helix_context.sharding import open_read_source
+    from cymatix_context.sharding import open_read_source
 
     store = open_read_source(
         genome_path=":memory:",

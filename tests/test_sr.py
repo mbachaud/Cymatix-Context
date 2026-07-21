@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from helix_context.retrieval.sr import sr_boost, DEFAULT_GAMMA, DEFAULT_K_STEPS
+from cymatix_context.retrieval.sr import sr_boost, DEFAULT_GAMMA, DEFAULT_K_STEPS
 
 
 class _FakeGenome:
@@ -18,7 +18,7 @@ class _FakeGenome:
 @pytest.fixture(autouse=True)
 def _patch_loader(monkeypatch):
     """Redirect _load_co_activated to the fake graph so we don't need a DB."""
-    from helix_context.scoring import ray_trace
+    from cymatix_context.scoring import ray_trace
 
     def fake_load(genome, gene_id):
         return genome._graph.get(gene_id, [])

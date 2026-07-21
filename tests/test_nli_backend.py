@@ -1,4 +1,4 @@
-"""Unit tests for helix_context.nli_backend (mocked tokenizer + model).
+"""Unit tests for cymatix_context.nli_backend (mocked tokenizer + model).
 
 Parallel to tests/test_deberta_backend.py — the chunked-batch test pins that
 NLIClassifier.classify_batch consumes recommended_batch_size('nli') from the
@@ -12,8 +12,8 @@ from unittest.mock import MagicMock
 import pytest
 import torch
 
-from helix_context import hardware
-from helix_context.schemas import NLRelation
+from cymatix_context import hardware
+from cymatix_context.schemas import NLRelation
 
 
 @pytest.fixture(autouse=True)
@@ -88,7 +88,7 @@ def test_nli_classify_batch_chunks_in_recommended_batch_size(monkeypatch):
     tokenizer calls (16 + 16 + 16 + 2)."""
     _override_hardware(monkeypatch, nli_batch=16)
 
-    from helix_context.backends.nli_backend import NLIClassifier
+    from cymatix_context.backends.nli_backend import NLIClassifier
 
     clf = NLIClassifier.__new__(NLIClassifier)  # bypass __init__
     clf._device = torch.device("cpu")
@@ -113,7 +113,7 @@ def test_nli_classify_batch_empty_returns_empty(monkeypatch):
     """Empty input must short-circuit before consulting hardware."""
     _override_hardware(monkeypatch, nli_batch=16)
 
-    from helix_context.backends.nli_backend import NLIClassifier
+    from cymatix_context.backends.nli_backend import NLIClassifier
 
     clf = NLIClassifier.__new__(NLIClassifier)
     clf._device = torch.device("cpu")
@@ -136,7 +136,7 @@ def test_nli_init_consults_get_hardware_when_device_none(monkeypatch):
 
     _override_hardware(monkeypatch, nli_batch=8)
 
-    import helix_context.backends.nli_backend as nb
+    import cymatix_context.backends.nli_backend as nb
 
     monkeypatch.setattr(
         "transformers.AutoTokenizer.from_pretrained",

@@ -24,7 +24,7 @@ import time
 from pathlib import Path
 from typing import Iterator
 
-# Repo root on sys.path so helix_context imports resolve.
+# Repo root on sys.path so cymatix_context imports resolve.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 try:
@@ -32,8 +32,8 @@ try:
 except Exception:
     pass
 
-from helix_context.context_manager import HelixContextManager  # noqa: E402
-from helix_context.config import HelixConfig, load_config  # noqa: E402
+from cymatix_context.context_manager import HelixContextManager  # noqa: E402
+from cymatix_context.config import HelixConfig, load_config  # noqa: E402
 
 
 # ── Defaults (override via CLI or edit in place) ─────────────────────

@@ -8,8 +8,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from helix_context.cli import main
-from helix_context.schemas import (
+from cymatix_context.cli import main
+from cymatix_context.schemas import (
     ChromatinState,
     Gene,
     PromoterTags,
@@ -28,7 +28,7 @@ def _make_gene(gene_id="gene-001", content="The splice step trims low-value frag
             entities=["splice"],
             intent="explain",
             summary="splice step",
-            metadata={"path": "helix_context/splice.py"},
+            metadata={"path": "cymatix_context/splice.py"},
         ),
         chromatin=ChromatinState.OPEN,
     )
@@ -42,7 +42,7 @@ def fake_session():
 
 
 def test_gene_get_json_dumps_full_model(fake_session):
-    with patch("helix_context.cli.cmd_gene.open_session", return_value=fake_session):
+    with patch("cymatix_context.cli.cmd_gene.open_session", return_value=fake_session):
         rc, out, err = _run(["gene", "get", "gene-001", "--json"])
     assert rc == 0, err
     payload = json.loads(out)
@@ -52,19 +52,19 @@ def test_gene_get_json_dumps_full_model(fake_session):
 
 
 def test_gene_preview_truncates_to_chars(fake_session):
-    with patch("helix_context.cli.cmd_gene.open_session", return_value=fake_session):
+    with patch("cymatix_context.cli.cmd_gene.open_session", return_value=fake_session):
         rc, out, err = _run(["gene", "preview", "gene-001", "--chars", "40", "--json"])
     assert rc == 0, err
     payload = json.loads(out)
     assert len(payload["preview"]) == 40
     assert payload["truncated"] is True
-    assert payload["path"] == "helix_context/splice.py"
+    assert payload["path"] == "cymatix_context/splice.py"
 
 
 def test_gene_get_unknown_id_returns_one():
     sess = MagicMock()
     sess.gene_get.return_value = None
-    with patch("helix_context.cli.cmd_gene.open_session", return_value=sess):
+    with patch("cymatix_context.cli.cmd_gene.open_session", return_value=sess):
         rc, out, err = _run(["gene", "get", "gene-nope", "--json"])
     assert rc == 1
     payload = json.loads(out)
@@ -81,7 +81,7 @@ def test_gene_requires_action():
 
 
 def test_gene_preview_text_mode_shows_truncation_marker(fake_session):
-    with patch("helix_context.cli.cmd_gene.open_session", return_value=fake_session):
+    with patch("cymatix_context.cli.cmd_gene.open_session", return_value=fake_session):
         rc, out, err = _run(["gene", "preview", "gene-001", "--chars", "20"])
     assert rc == 0, err
     assert "truncated" in out

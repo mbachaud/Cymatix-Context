@@ -35,24 +35,24 @@ from unittest.mock import MagicMock
 import pytest
 from pydantic import ValidationError
 
-from helix_context.agent_prompt import (
+from cymatix_context.agent_prompt import (
     HELIX_NO_MATCH_FRAGMENT,
     HELIX_REFRESH_FRAGMENT,
     full_fragment,
 )
-from helix_context.context_manager import HelixContextManager
-from helix_context.retrieval.freshness import (
+from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.retrieval.freshness import (
     DEFAULT_CACHE_TTL_S,
     check_superseded,
     revalidate_and_mark,
     revalidate_source,
 )
-from helix_context.scoring.know_calibration import (
+from cymatix_context.scoring.know_calibration import (
     KnowCalibration,
     compute_confidence,
 )
-from helix_context.scoring.know_decision import decide_know_or_miss
-from helix_context.schemas import (
+from cymatix_context.scoring.know_decision import decide_know_or_miss
+from cymatix_context.schemas import (
     ContextHealth,
     ContextWindow,
     EpigeneticMarkers,
@@ -398,7 +398,7 @@ def test_read_only_does_not_write_last_verified_at(tmp_path):
 
 def test_genome_mark_verified_noop_under_read_only(tmp_path):
     """``Genome.mark_verified(read_only=True)`` is a silent no-op."""
-    from helix_context.genome import Genome
+    from cymatix_context.genome import Genome
     g = Genome(str(tmp_path / "test.db"))
     try:
         # No rows to update, but the call must not raise and must
@@ -614,7 +614,7 @@ def test_miss_reasons_extended():
 def test_idx_genes_supersedes_exists(tmp_path):
     """Stage 7 (spec §2 + §7): partial index on genes(supersedes)
     must be created on genome init."""
-    from helix_context.genome import Genome
+    from cymatix_context.genome import Genome
     g = Genome(str(tmp_path / "test.db"))
     try:
         rows = g.conn.execute(

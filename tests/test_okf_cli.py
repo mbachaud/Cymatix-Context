@@ -17,14 +17,14 @@ OKF_FIXTURES = Path(__file__).parent / "fixtures" / "okf"
 @pytest.fixture
 def real_session():
     """A session-shaped object over a real in-memory manager."""
-    from helix_context.context_manager import HelixContextManager
+    from cymatix_context.context_manager import HelixContextManager
 
     return SimpleNamespace(_manager=HelixContextManager(make_helix_config()))
 
 
 def test_okf_ingest_happy_path(real_session):
     with patch(
-        "helix_context.cli.cmd_ingest.open_session", return_value=real_session
+        "cymatix_context.cli.cmd_ingest.open_session", return_value=real_session
     ):
         rc, out, err = _run(
             ["ingest", str(OKF_FIXTURES / "type_only"), "--okf", "--json"]
@@ -41,7 +41,7 @@ def test_okf_ingest_happy_path(real_session):
 
 def test_okf_reports_warnings_and_links(real_session):
     with patch(
-        "helix_context.cli.cmd_ingest.open_session", return_value=real_session
+        "cymatix_context.cli.cmd_ingest.open_session", return_value=real_session
     ):
         rc, out, err = _run(
             ["ingest", str(OKF_FIXTURES / "degraded"), "--okf", "--json"]
@@ -56,7 +56,7 @@ def test_okf_reports_warnings_and_links(real_session):
 
 def test_okf_bundle_id_override(real_session):
     with patch(
-        "helix_context.cli.cmd_ingest.open_session", return_value=real_session
+        "cymatix_context.cli.cmd_ingest.open_session", return_value=real_session
     ):
         rc, out, err = _run(
             [
@@ -93,9 +93,9 @@ def test_okf_deterministic_profile_flips_ingest_flags(real_session):
         return real_session
 
     with patch(
-        "helix_context.cli.cmd_ingest.open_session", side_effect=fake_open_session
+        "cymatix_context.cli.cmd_ingest.open_session", side_effect=fake_open_session
     ), patch(
-        "helix_context.config.load_config", return_value=make_helix_config()
+        "cymatix_context.config.load_config", return_value=make_helix_config()
     ):
         rc, out, err = _run(
             [
@@ -122,7 +122,7 @@ def test_okf_standard_config_is_default(real_session):
         return real_session
 
     with patch(
-        "helix_context.cli.cmd_ingest.open_session", side_effect=fake_open_session
+        "cymatix_context.cli.cmd_ingest.open_session", side_effect=fake_open_session
     ):
         rc, _out, err = _run(
             ["ingest", str(OKF_FIXTURES / "type_only"), "--okf", "--json"]

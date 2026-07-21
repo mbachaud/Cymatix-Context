@@ -1,4 +1,4 @@
-"""Smoke tests for helix_context.genai_telemetry.
+"""Smoke tests for cymatix_context.genai_telemetry.
 
 All tests run without an active OTel SDK — the module must be no-op safe.
 Run from repo root: ``python -m pytest tests/test_genai_telemetry.py -v``
@@ -9,7 +9,7 @@ import logging
 
 import pytest
 
-from helix_context.telemetry.genai_telemetry import (
+from cymatix_context.telemetry.genai_telemetry import (
     PRICE_TABLE,
     emit_proxy_log_line,
     estimate_cost_usd,
@@ -280,8 +280,8 @@ class _RecordingMeter:
 @pytest.fixture
 def recording_meter(monkeypatch):
     """Swap otel.meter for a recorder and clear the instrument cache."""
-    from helix_context.telemetry import genai_telemetry as gt
-    from helix_context.telemetry import otel
+    from cymatix_context.telemetry import genai_telemetry as gt
+    from cymatix_context.telemetry import otel
 
     meter = _RecordingMeter()
     monkeypatch.setattr(otel, "meter", meter)
@@ -381,8 +381,8 @@ def _proxy_config():
 
 
 def test_emit_genai_proxy_telemetry_logs_proxy_line(recording_meter, caplog, monkeypatch):
-    from helix_context.server.helpers import _emit_genai_proxy_telemetry
-    from helix_context.telemetry import otel
+    from cymatix_context.server.helpers import _emit_genai_proxy_telemetry
+    from cymatix_context.telemetry import otel
 
     # The proxy emission is gated on setup_telemetry() having run.
     monkeypatch.setattr(otel, "_initialised", True)
@@ -407,8 +407,8 @@ def test_emit_genai_proxy_telemetry_logs_proxy_line(recording_meter, caplog, mon
 
 def test_emit_genai_proxy_telemetry_never_raises(recording_meter, monkeypatch):
     """Malformed inputs must not propagate into the proxy path."""
-    from helix_context.server.helpers import _emit_genai_proxy_telemetry
-    from helix_context.telemetry import otel
+    from cymatix_context.server.helpers import _emit_genai_proxy_telemetry
+    from cymatix_context.telemetry import otel
 
     monkeypatch.setattr(otel, "_initialised", True)
     _emit_genai_proxy_telemetry(
@@ -423,8 +423,8 @@ def test_emit_genai_proxy_telemetry_never_raises(recording_meter, monkeypatch):
 def test_emit_genai_proxy_telemetry_silent_when_telemetry_off(recording_meter, caplog, monkeypatch):
     """Default behavior (telemetry off) must stay byte-identical: no
     proxy.call log line, no instruments created."""
-    from helix_context.server.helpers import _emit_genai_proxy_telemetry
-    from helix_context.telemetry import otel
+    from cymatix_context.server.helpers import _emit_genai_proxy_telemetry
+    from cymatix_context.telemetry import otel
 
     monkeypatch.setattr(otel, "_initialised", False)
     with caplog.at_level(logging.DEBUG, logger="helix.proxy"):
@@ -442,8 +442,8 @@ def test_emit_genai_proxy_telemetry_silent_when_telemetry_off(recording_meter, c
 # ── Cache wiring: CachedDAL bumps the outcome counter ────────────────
 
 def test_cached_dal_records_hit_and_miss(recording_meter, tmp_path):
-    from helix_context.adapters.cache import CachedDAL
-    from helix_context.adapters.dal import DAL
+    from cymatix_context.adapters.cache import CachedDAL
+    from cymatix_context.adapters.dal import DAL
 
     p = tmp_path / "a.txt"
     p.write_text("hello", encoding="utf-8")
@@ -456,8 +456,8 @@ def test_cached_dal_records_hit_and_miss(recording_meter, tmp_path):
 
 
 def test_cached_dal_bypass_not_recorded(recording_meter, tmp_path):
-    from helix_context.adapters.cache import CachedDAL
-    from helix_context.adapters.dal import DAL
+    from cymatix_context.adapters.cache import CachedDAL
+    from cymatix_context.adapters.dal import DAL
 
     p = tmp_path / "b.txt"
     p.write_text("hello", encoding="utf-8")

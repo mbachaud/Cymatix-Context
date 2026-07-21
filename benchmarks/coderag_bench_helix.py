@@ -380,7 +380,7 @@ def main():
     except Exception as exc:
         print(
             "ERROR: cannot reach Helix server at {}: {}\n"
-            "  Start it: python -m uvicorn helix_context._asgi:app --port 11439".format(
+            "  Start it: python -m uvicorn cymatix_context._asgi:app --port 11439".format(
                 args.helix_url, exc),
             file=sys.stderr,
         )

@@ -1,4 +1,4 @@
-"""Tests for retriever adapters (helix_context.adapters.retriever)."""
+"""Tests for retriever adapters (cymatix_context.adapters.retriever)."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from helix_context.adapters.retriever import (
+from cymatix_context.adapters.retriever import (
     HelixNarrowedRetriever,
     LangChainRetriever,
     LlamaIndexRetriever,

@@ -20,11 +20,11 @@ from pathlib import Path
 
 
 def _import_helix():
-    """Import helix_context modules — ensures SQLite schema has new columns."""
+    """Import cymatix_context modules — ensures SQLite schema has new columns."""
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-    from helix_context import genome as _genome  # noqa: F401
-    from helix_context.sema import SemaCodec
-    from helix_context.genome import Genome
+    from cymatix_context import genome as _genome  # noqa: F401
+    from cymatix_context.sema import SemaCodec
+    from cymatix_context.genome import Genome
     return Genome, SemaCodec
 
 

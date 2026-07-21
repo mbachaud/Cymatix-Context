@@ -180,7 +180,7 @@ def main(argv: list[str] | None = None) -> int:
     if not os.path.exists(args.genome):
         raise SystemExit(f"genome not found: {args.genome}")
 
-    from helix_context.genome import Genome
+    from cymatix_context.genome import Genome
 
     # Build queries once against the first genome instance.
     bootstrap_g = Genome(path=args.genome, dense_embedding_enabled=False)

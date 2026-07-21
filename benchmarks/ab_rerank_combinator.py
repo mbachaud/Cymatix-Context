@@ -47,9 +47,9 @@ if str(_REPO_ROOT) not in sys.path:
 sys.path.insert(0, str(_REPO_ROOT / "benchmarks"))
 
 import bench_needle  # noqa: E402
-from helix_context.config import load_config  # noqa: E402
-from helix_context.context_manager import HelixContextManager  # noqa: E402
-from helix_context.retrieval.rerank_combinators import combine_rerank  # noqa: E402
+from cymatix_context.config import load_config  # noqa: E402
+from cymatix_context.context_manager import HelixContextManager  # noqa: E402
+from cymatix_context.retrieval.rerank_combinators import combine_rerank  # noqa: E402
 
 # The four post-fusion rerank classes — excluded from the fused-tier vector
 # used by the strict-dominance diagnostic.

@@ -28,8 +28,8 @@ import os
 
 import pytest
 
-from helix_context.launcher import observability_health
-from helix_context.launcher.app import (
+from cymatix_context.launcher import observability_health
+from cymatix_context.launcher.app import (
     _export_otel_env_for_backend,
     _start_observability_stack,
 )

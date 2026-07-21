@@ -19,8 +19,8 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from helix_context.genome import Genome
-from helix_context.knowledge_store import _dense_matrix_dtype
+from cymatix_context.genome import Genome
+from cymatix_context.knowledge_store import _dense_matrix_dtype
 
 
 # ── A2: dense matrix dtype ──────────────────────────────────────────────

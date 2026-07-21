@@ -120,7 +120,7 @@ def _make_genes_db(
 ) -> str:
     """Build a minimal ``genes`` SQLite DB by hand.
 
-    The schema is the subset of ``helix_context.storage.ddl`` columns the
+    The schema is the subset of ``cymatix_context.storage.ddl`` columns the
     backfill loop touches (``gene_id``, ``content``, ``embedding_dense_v2``)
     plus ``chromatin`` — the partial index ``_ensure_v2_schema`` creates
     references ``chromatin``, so the column must exist.

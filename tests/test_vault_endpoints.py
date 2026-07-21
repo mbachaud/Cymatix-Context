@@ -6,8 +6,8 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-from helix_context.config import HelixConfig, VaultConfig, VaultTracesConfig
-from helix_context.server import create_app
+from cymatix_context.config import HelixConfig, VaultConfig, VaultTracesConfig
+from cymatix_context.server import create_app
 
 
 @pytest.fixture

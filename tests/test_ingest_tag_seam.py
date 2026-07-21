@@ -15,11 +15,11 @@ import json
 
 import pytest
 
-from helix_context.context_manager import (
+from cymatix_context.context_manager import (
     HelixContextManager,
     _merge_caller_tags,
 )
-from helix_context.schemas import Gene, PromoterTags
+from cymatix_context.schemas import Gene, PromoterTags
 
 from tests.conftest import make_gene, make_helix_config
 
@@ -143,7 +143,7 @@ class TestBenchNeutrality:
             _CONTENT, content_type="text", metadata={"path": _SOURCE}
         )
 
-        from helix_context import context_manager as cm
+        from cymatix_context import context_manager as cm
 
         monkeypatch.setattr(cm, "_merge_caller_tags", lambda gene, metadata: None)
         mgr_off = _fresh_manager()

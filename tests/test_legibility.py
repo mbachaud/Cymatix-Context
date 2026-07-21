@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import pytest
 
-from helix_context.encoding.legibility import (
+from cymatix_context.encoding.legibility import (
     _confidence_symbol,
     _format_fired_tiers,
     _z_normalize,
@@ -278,8 +278,8 @@ def test_format_gene_header_includes_all_three_sprint1_fields():
 
 # ── Integration: _assemble emits headers when flag on ─────────────────
 
-from helix_context.config import HelixConfig, BudgetConfig, GenomeConfig, RibosomeConfig
-from helix_context.context_manager import HelixContextManager
+from cymatix_context.config import HelixConfig, BudgetConfig, GenomeConfig, RibosomeConfig
+from cymatix_context.context_manager import HelixContextManager
 from tests.conftest import make_gene
 
 

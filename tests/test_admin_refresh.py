@@ -24,9 +24,9 @@ import struct
 import numpy as np
 import pytest
 
-from helix_context.config import GenomeConfig, RetrievalConfig
-from helix_context.genome import Genome
-from helix_context.schemas import (
+from cymatix_context.config import GenomeConfig, RetrievalConfig
+from cymatix_context.genome import Genome
+from cymatix_context.schemas import (
     ChromatinState,
     EpigeneticMarkers,
     Gene,

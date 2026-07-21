@@ -16,7 +16,7 @@ This helper reads the canonical needle list straight out of
 set of project roots (default ``F:\Projects``), and ingests those files into
 the target bed copy with ``source_id`` set to the on-disk path -- exactly the
 provenance shape ``helix ingest`` uses (``metadata={"path":..,
-"source_id":..}``, see helix_context/cli/cmd_ingest.py) so bench_needle's
+"source_id":..}``, see cymatix_context/cli/cmd_ingest.py) so bench_needle's
 bidirectional-substring gold match fires.
 
 Ingest goes through a read-write ``KnowledgeStore`` opened directly on the bed
@@ -192,9 +192,9 @@ def main(argv: list[str] | None = None) -> int:
 
     # 3. Open the bed copy read-write and ingest each gold file.
     try:
-        from helix_context.knowledge_store import KnowledgeStore
-        from helix_context.codons import CodonChunker
-        from helix_context.tagger import CpuTagger
+        from cymatix_context.knowledge_store import KnowledgeStore
+        from cymatix_context.codons import CodonChunker
+        from cymatix_context.tagger import CpuTagger
     except Exception as exc:
         summary["errors"].append(
             f"repo import failed: {type(exc).__name__}: {exc}"

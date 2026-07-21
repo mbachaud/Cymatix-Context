@@ -1,5 +1,5 @@
 """
-Tests for helix_context.launcher.collector — state aggregation with
+Tests for cymatix_context.launcher.collector — state aggregation with
 mocked supervisor + mocked HTTP responses.
 
 Also covers host_label/tooltip wiring on the agent panel builders
@@ -16,7 +16,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from helix_context.launcher.collector import StateCollector
+from cymatix_context.launcher.collector import StateCollector
 
 
 @pytest.fixture

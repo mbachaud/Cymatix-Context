@@ -3,7 +3,7 @@
 Spec: docs/specs/2026-05-08-stage-6-know-miss-blocks.md §3, §11.
 
 This script is OPERATOR-RUN, not auto-run. The Stage 6 PR ships with
-default coefficients (see ``helix_context.know_calibration``); the
+default coefficients (see ``cymatix_context.know_calibration``); the
 calibration step is a one-time post-merge action against
 ``located_n1000`` once Stage 1 has landed and the bench data exists.
 
@@ -22,7 +22,7 @@ Workflow:
 The script is intentionally light on dependencies. sklearn is used
 when available (faster convergence; pip install scikit-learn);
 without it, the pure-Python gradient descent in
-``helix_context.know_calibration.fit_betas_from_features`` is used.
+``cymatix_context.know_calibration.fit_betas_from_features`` is used.
 
 # STAGE-7-EXT: Stage 7 adds freshness_min as a fifth feature. The
 # JSONL row gets a fifth column; the ``--n-features`` flag below picks
@@ -57,7 +57,7 @@ from typing import List, Optional, Sequence, Tuple
 _SCRIPT_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(_SCRIPT_DIR.parent))
 
-from helix_context.scoring.know_calibration import (  # noqa: E402
+from cymatix_context.scoring.know_calibration import (  # noqa: E402
     DEFAULT_EMIT_FLOOR,
     DEFAULT_G_REF,
     DEFAULT_S_REF,

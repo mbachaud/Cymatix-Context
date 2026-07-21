@@ -22,9 +22,9 @@ from __future__ import annotations
 
 import pytest
 
-from helix_context.config import BudgetConfig, load_config
-from helix_context.context_manager import _compute_splice_target
-from helix_context.encoding.headroom_bridge import (
+from cymatix_context.config import BudgetConfig, load_config
+from cymatix_context.context_manager import _compute_splice_target
+from cymatix_context.encoding.headroom_bridge import (
     _query_aware_trim,
     compress_text,
 )
@@ -147,14 +147,14 @@ def _stub_express(manager, *, candidates, scores):
 
 
 def _make_manager(gene_contents, scores, budget_kwargs=None):
-    from helix_context.config import (
+    from cymatix_context.config import (
         BudgetConfig,
         ClassifierConfig,
         GenomeConfig,
         HelixConfig,
         RibosomeConfig,
     )
-    from helix_context.context_manager import HelixContextManager
+    from cymatix_context.context_manager import HelixContextManager
     from tests.conftest import make_gene
 
     cfg = HelixConfig(

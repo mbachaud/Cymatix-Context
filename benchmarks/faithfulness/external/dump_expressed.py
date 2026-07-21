@@ -14,8 +14,8 @@ sys.path.insert(0, str(_REPO / "benchmarks" / "faithfulness"))
 sys.path.insert(0, str(_REPO))
 
 from needle_faithfulness_experiment import NEEDLES
-from helix_context.config import load_config
-from helix_context.context_manager import HelixContextManager
+from cymatix_context.config import load_config
+from cymatix_context.context_manager import HelixContextManager
 
 BED = str(Path(tempfile.gettempdir()) / "faith_needle_bed.db")
 OUT = "f:/Projects/np-graph/expressed_contexts.json"

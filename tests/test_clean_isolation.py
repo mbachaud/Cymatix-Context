@@ -21,9 +21,9 @@ from unittest.mock import patch
 
 import pytest
 
-from helix_context import server as server_mod
-from helix_context.config import BudgetConfig, ClassifierConfig
-from helix_context.context_manager import HelixContextManager
+from cymatix_context import server as server_mod
+from cymatix_context.config import BudgetConfig, ClassifierConfig
+from cymatix_context.context_manager import HelixContextManager
 from tests.conftest import MockCompressorBackend, make_client, make_gene, make_helix_config
 
 
@@ -264,12 +264,12 @@ def test_located_axis_query_format():
         "key": "cold_start_threshold",
         "value": "5",
         "category": "helix",
-        "source": "F:/Projects/helix-context/helix_context/config.py",
+        "source": "F:/Projects/helix-context/cymatix_context/config.py",
     }
     out = bench.build_query_located(needle)
     assert (
         out
-        == "What is the cold start threshold value in helix-context/helix_context/config?"
+        == "What is the cold start threshold value in helix-context/cymatix_context/config?"
     ), f"located output mismatch: {out!r}"
 
 
@@ -287,7 +287,7 @@ def test_blind_axis_preserves_legacy_format():
         "key": "cold_start_threshold",
         "value": "5",
         "category": "helix",
-        "source": "F:/Projects/helix-context/helix_context/config.py",
+        "source": "F:/Projects/helix-context/cymatix_context/config.py",
     }
     out = bench.build_query_blind(needle)
     # v2 default-branch wording (`bench_needle_1000.py:341` pre-Stage-1):

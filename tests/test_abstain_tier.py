@@ -6,8 +6,8 @@ docs/plans/2026-05-02-abstain-tier.md.
 
 import pytest
 
-from helix_context import context_manager as cm
-from helix_context.config import (
+from cymatix_context import context_manager as cm
+from cymatix_context.config import (
     BudgetConfig,
     ClassifierConfig,
     GenomeConfig,
@@ -15,7 +15,7 @@ from helix_context.config import (
     RetrievalConfig,
     RibosomeConfig,
 )
-from helix_context.context_manager import HelixContextManager
+from cymatix_context.context_manager import HelixContextManager
 from tests.conftest import MockCompressorBackend
 
 
@@ -181,7 +181,7 @@ def test_focused_score_floor_constants_in_sync():
     - per_classifier mode falls back to AbstainClassFloors defaults
       when a class lacks an explicit block.
     """
-    from helix_context.config import AbstainClassFloors
+    from cymatix_context.config import AbstainClassFloors
 
     assert (
         cm.HelixContextManager._GLOBAL_FOCUSED_FLOOR
@@ -359,8 +359,8 @@ def test_rrf_realistic_gradient_does_not_abstain():
     down to floor=0.05) must NOT abstain. This is the SHAPE we observe on
     biged_skills / helix_port / scorerift on medium-sharded.
     """
-    from helix_context.config import AbstainClassFloors
-    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    from cymatix_context.config import AbstainClassFloors
+    from cymatix_context.pipeline.tier_logic import apply_budget_tiers
     candidates, scores = _gradient_scores(top_score=0.40, low_score=0.05, n=12)
     result = apply_budget_tiers(
         candidates, scores, AbstainClassFloors(),
@@ -379,8 +379,8 @@ def test_rrf_tight_top_clear_separation_does_not_abstain():
     real signal. This is the biged_skills shape (top - second = 0.003
     but spread = 0.38).
     """
-    from helix_context.config import AbstainClassFloors
-    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    from cymatix_context.config import AbstainClassFloors
+    from cymatix_context.pipeline.tier_logic import apply_budget_tiers
     from tests.conftest import make_gene
     candidates = [
         make_gene(f"rrf_{i}", gene_id=f"rrf_gene_{i:010d}")
@@ -405,8 +405,8 @@ def test_rrf_genuinely_tied_distribution_does_abstain():
     tail, no spread) DOES abstain. The baseline-normalized ratio collapses
     to ~1.0-1.2 on these — below the 1.5 RRF threshold.
     """
-    from helix_context.config import AbstainClassFloors
-    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    from cymatix_context.config import AbstainClassFloors
+    from cymatix_context.pipeline.tier_logic import apply_budget_tiers
     from tests.conftest import make_gene
     candidates = [
         make_gene(f"rrf_{i}", gene_id=f"rrf_gene_{i:010d}")
@@ -431,8 +431,8 @@ def test_rrf_all_tied_does_abstain():
     Guards against div-by-zero and asserts the "zero information"
     interpretation of a uniform candidate set.
     """
-    from helix_context.config import AbstainClassFloors
-    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    from cymatix_context.config import AbstainClassFloors
+    from cymatix_context.pipeline.tier_logic import apply_budget_tiers
     from tests.conftest import make_gene
     candidates = [
         make_gene(f"rrf_{i}", gene_id=f"rrf_gene_{i:010d}")
@@ -453,8 +453,8 @@ def test_additive_low_score_still_abstains():
     top/mean<1.8 + top<2.5 ABSTAIN behaviour byte-for-byte. RRF
     normalization must not leak into the additive path.
     """
-    from helix_context.config import AbstainClassFloors
-    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    from cymatix_context.config import AbstainClassFloors
+    from cymatix_context.pipeline.tier_logic import apply_budget_tiers
     candidates, scores = _candidates_with_scores(top_score=0.4, ratio=1.2)
     result = apply_budget_tiers(
         candidates, scores, AbstainClassFloors(),
@@ -472,8 +472,8 @@ def test_additive_strong_signal_still_passes():
     legacy top/mean ratio + 1.8 threshold gates additive exactly as
     pre-#115.
     """
-    from helix_context.config import AbstainClassFloors
-    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    from cymatix_context.config import AbstainClassFloors
+    from cymatix_context.pipeline.tier_logic import apply_budget_tiers
     # top/mean=3.5/1.5 = 2.33 (well above 1.8) with realistic gradient.
     candidates, scores = _gradient_scores(top_score=3.5, low_score=0.5, n=12)
     result = apply_budget_tiers(
@@ -490,8 +490,8 @@ def test_additive_above_abstain_floor_low_ratio_does_not_abstain():
     the abstain check regardless of ratio. Pre-#115 legacy behaviour that
     must NOT regress.
     """
-    from helix_context.config import AbstainClassFloors
-    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    from cymatix_context.config import AbstainClassFloors
+    from cymatix_context.pipeline.tier_logic import apply_budget_tiers
     candidates, scores = _candidates_with_scores(top_score=3.0, ratio=1.5)
     result = apply_budget_tiers(
         candidates, scores, AbstainClassFloors(),
@@ -509,8 +509,8 @@ def test_rrf_metadata_ratio_reflects_normalized_value():
     can diagnose without re-deriving the metric. Pin this so callers
     know which number lands in ``metadata["ratio"]``.
     """
-    from helix_context.config import AbstainClassFloors
-    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    from cymatix_context.config import AbstainClassFloors
+    from cymatix_context.pipeline.tier_logic import apply_budget_tiers
     from tests.conftest import make_gene
     candidates = [
         make_gene(f"rrf_{i}", gene_id=f"rrf_gene_{i:010d}")
@@ -543,7 +543,7 @@ def test_telemetry_counter_increments_with_abstain_label(
             calls.append({"value": value, "attributes": dict(attributes or {})})
 
     monkeypatch.setattr(
-        "helix_context.telemetry.budget_tier_counter",
+        "cymatix_context.telemetry.budget_tier_counter",
         lambda: _Recorder(),
     )
     candidates, scores = _weak_setup(abstain_manager, top_score=1.5, ratio=1.2)

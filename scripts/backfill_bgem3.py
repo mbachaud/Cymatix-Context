@@ -9,8 +9,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from helix_context.backends.bgem3_codec import BGEM3Codec
-from helix_context.config import load_config
+from cymatix_context.backends.bgem3_codec import BGEM3Codec
+from cymatix_context.config import load_config
 
 # Read genome path from helix.toml; CLI arg overrides if provided
 _repo_root = Path(__file__).resolve().parents[1]

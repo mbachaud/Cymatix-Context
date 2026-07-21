@@ -30,10 +30,10 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from helix_context.genome import Genome
-from helix_context.shard_schema import list_shards, open_main_db
-from helix_context.sharding import main_db_path
-from helix_context.retrieval.seeded_edges import (
+from cymatix_context.genome import Genome
+from cymatix_context.shard_schema import list_shards, open_main_db
+from cymatix_context.sharding import main_db_path
+from cymatix_context.retrieval.seeded_edges import (
     seed_edges,
     seed_cross_shard_edges,
     SEEDING_CAP,

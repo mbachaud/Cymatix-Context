@@ -12,7 +12,7 @@ import sqlite3
 
 import pytest
 
-from helix_context.storage.indexes import (
+from cymatix_context.storage.indexes import (
     PKI_NOISE_CUTOFF,
     compact_path_key_index,
 )
@@ -185,7 +185,7 @@ def test_compaction_no_table_is_graceful(tmp_path):
 
 
 def test_new_ddl_is_without_rowid_and_lookup_free(tmp_path):
-    from helix_context.storage.ddl import _create_path_key_index
+    from cymatix_context.storage.ddl import _create_path_key_index
     conn = sqlite3.connect(str(tmp_path / "new.db"))
     _create_path_key_index(conn.cursor())
     conn.commit()
@@ -206,7 +206,7 @@ def test_scorer_and_compactor_share_cutoff():
     """Guard against drift: the Tier-0 scorer must import the canonical
     constants from storage.indexes (the compactor's defaults)."""
     import inspect
-    from helix_context import knowledge_store
+    from cymatix_context import knowledge_store
     src = inspect.getsource(knowledge_store)
     assert "from .storage.indexes import" in src
     assert "PKI_NOISE_CUTOFF = 200" not in src  # no local shadow

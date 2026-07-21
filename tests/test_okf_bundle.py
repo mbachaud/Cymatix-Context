@@ -4,7 +4,7 @@ Conformance is enforced against the vendored spec snapshot
 (tests/fixtures/okf/SPEC-ee67a5ca.md), NOT the upstream reference
 implementation: exactly ONE required frontmatter field (`type`).
 The degradation policy tested here is helix's own (see
-helix_context/okf/bundle.py module docstring) — spec §9 does not
+cymatix_context/okf/bundle.py module docstring) — spec §9 does not
 cover missing frontmatter or empty `type`.
 """
 
@@ -12,8 +12,8 @@ from pathlib import Path
 
 import pytest
 
-from helix_context.okf import read_bundle
-from helix_context.okf.bundle import (
+from cymatix_context.okf import read_bundle
+from cymatix_context.okf.bundle import (
     extract_links,
     normalize_link_target,
     split_frontmatter,

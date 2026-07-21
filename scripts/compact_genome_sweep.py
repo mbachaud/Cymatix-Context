@@ -49,11 +49,11 @@ from collections import Counter
 def _open_genome(db_path: str):
     """Open a Genome pointed at the given path. Imports lazily so the
     script can print --help without pulling in the full helix stack."""
-    # Force the helix-context root onto sys.path so "from helix_context ..." works
+    # Force the helix-context root onto sys.path so "from cymatix_context ..." works
     root = Path(__file__).resolve().parent.parent
     if str(root) not in sys.path:
         sys.path.insert(0, str(root))
-    from helix_context.genome import Genome
+    from cymatix_context.genome import Genome
     return Genome(path=db_path)
 
 
@@ -64,7 +64,7 @@ def _source_bucket(src: str | None) -> str:
         return "steam"
     if "\\.next\\" in s or "/.next/" in s or "node_modules" in s or "__pycache__" in s:
         return "build_artifacts"
-    if "helix-context" in s or "helix_context" in s:
+    if "helix-context" in s or "cymatix_context" in s:
         return "helix"
     if "cosmictasha" in s or "novabridge" in s:
         return "cosmic"

@@ -12,7 +12,7 @@ import pytest
 pytest.importorskip("jinja2", reason="launcher extra not installed")
 from fastapi.testclient import TestClient
 
-from helix_context.launcher.app import create_app
+from cymatix_context.launcher.app import create_app
 
 
 class FakeSupervisor:
@@ -198,7 +198,7 @@ def test_api_genomes_shape(client):
 
 
 def test_knowledge_store_creates_missing_parent_dirs(tmp_path):
-    from helix_context.knowledge_store import Genome
+    from cymatix_context.knowledge_store import Genome
     target = tmp_path / "no" / "such" / "dirs" / "genome.db"
     g = Genome(path=str(target), synonym_map={})
     g.close()
@@ -209,7 +209,7 @@ def test_knowledge_store_creates_missing_parent_dirs(tmp_path):
 
 
 def test_grafana_service_env_defaults(monkeypatch):
-    from helix_context.launcher.observability_supervisor import (
+    from cymatix_context.launcher.observability_supervisor import (
         ObservabilitySupervisor,
     )
     monkeypatch.delenv("GF_AUTH_ANONYMOUS_ENABLED", raising=False)

@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import threading
 
-from helix_context.backends.bgem3_codec import (
+from cymatix_context.backends.bgem3_codec import (
     BGEM3Codec,
     get_shared_codec,
     _GLOBAL_CODECS,

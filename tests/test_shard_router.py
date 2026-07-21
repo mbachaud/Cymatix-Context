@@ -19,20 +19,20 @@ from pathlib import Path
 
 import pytest
 
-from helix_context.genome import Genome
-from helix_context.schemas import (
+from cymatix_context.genome import Genome
+from cymatix_context.schemas import (
     ChromatinState,
     EpigeneticMarkers,
     Gene,
     PromoterTags,
 )
-from helix_context.hardware import sqlite_memory_budget
-from helix_context.shard_router import (
+from cymatix_context.hardware import sqlite_memory_budget
+from cymatix_context.shard_router import (
     ShardRouter,
     shard_fanout_workers,
     use_shards_enabled,
 )
-from helix_context.shard_schema import (
+from cymatix_context.shard_schema import (
     init_main_db,
     open_main_db,
     register_shard,
@@ -284,7 +284,7 @@ def test_sharded_get_citation_rows_resolves_via_fingerprint_index(two_shard_setu
     The adapter must resolve source_id + domains/entities from
     main.db's fingerprint_index without touching the empty genes table.
     """
-    from helix_context.sharding import ShardedGenomeAdapter
+    from cymatix_context.sharding import ShardedGenomeAdapter
 
     adapter = ShardedGenomeAdapter(main_path=two_shard_setup["main_path"])
     try:
@@ -312,7 +312,7 @@ def test_sharded_get_citation_rows_resolves_via_fingerprint_index(two_shard_setu
 
 def test_sharded_get_citation_rows_empty_input(two_shard_setup):
     """Empty gene_ids list returns empty map without opening shards."""
-    from helix_context.sharding import ShardedGenomeAdapter
+    from cymatix_context.sharding import ShardedGenomeAdapter
 
     adapter = ShardedGenomeAdapter(main_path=two_shard_setup["main_path"])
     try:
@@ -323,7 +323,7 @@ def test_sharded_get_citation_rows_empty_input(two_shard_setup):
 
 def test_sharded_get_citation_rows_unknown_id(two_shard_setup):
     """Missing ids are silently absent rather than mapped to None."""
-    from helix_context.sharding import ShardedGenomeAdapter
+    from cymatix_context.sharding import ShardedGenomeAdapter
 
     adapter = ShardedGenomeAdapter(main_path=two_shard_setup["main_path"])
     try:
@@ -350,13 +350,13 @@ def test_sharded_get_citation_rows_multi_shard_is_deterministic(tmp_path):
     ``source_id`` no matter how many times we call.
     """
     import json
-    from helix_context.shard_schema import (
+    from cymatix_context.shard_schema import (
         init_main_db,
         open_main_db,
         register_shard,
         upsert_fingerprint,
     )
-    from helix_context.sharding import ShardedGenomeAdapter
+    from cymatix_context.sharding import ShardedGenomeAdapter
 
     root = tmp_path
     main_path = str(root / "main.db")
@@ -444,7 +444,7 @@ def test_sharded_get_doc_alias_matches_get_gene(two_shard_setup):
     """`get_doc` and `get_gene` must be polymorphic with Genome so callers
     in routes_context / helpers don't have to branch on adapter type.
     """
-    from helix_context.sharding import ShardedGenomeAdapter
+    from cymatix_context.sharding import ShardedGenomeAdapter
 
     adapter = ShardedGenomeAdapter(main_path=two_shard_setup["main_path"])
     try:
@@ -537,7 +537,7 @@ def test_compute_shard_idf_correction_single_shard_is_identity():
     Property is critical for blob-mode parity: a router holding one
     shard must not perturb scores.
     """
-    from helix_context.shard_router import _compute_shard_idf_correction
+    from cymatix_context.shard_router import _compute_shard_idf_correction
 
     mu = _compute_shard_idf_correction(
         ["alpha"], {"A": 100}, {"A": {"alpha": 5}},
@@ -555,7 +555,7 @@ def test_compute_shard_idf_correction_equal_shards_yield_near_unity():
     100), but the multiplier should be close to 1 — within a few
     percent — and crucially identical between the two symmetric shards.
     """
-    from helix_context.shard_router import _compute_shard_idf_correction
+    from cymatix_context.shard_router import _compute_shard_idf_correction
 
     mu = _compute_shard_idf_correction(
         ["alpha"],
@@ -580,7 +580,7 @@ def test_compute_shard_idf_correction_demotes_rare_local_shard():
 
     This is the core property of cross-shard IDF correction (#118).
     """
-    from helix_context.shard_router import _compute_shard_idf_correction
+    from cymatix_context.shard_router import _compute_shard_idf_correction
 
     # Shard A: 100 docs, df=2  → rare locally, high local IDF
     # Shard B: 100 docs, df=80 → common locally, low local IDF
@@ -602,7 +602,7 @@ def test_compute_shard_idf_correction_clip_bounds():
     local IDF → 0 and m_shard → ∞, which would let any random hit in
     that shard steamroll the cross-shard merge.
     """
-    from helix_context.shard_router import (
+    from cymatix_context.shard_router import (
         _compute_shard_idf_correction,
         IDF_CLIP_LO,
         IDF_CLIP_HI,
@@ -623,7 +623,7 @@ def test_compute_shard_idf_correction_clip_bounds():
 
 def test_compute_shard_idf_correction_empty_inputs():
     """Empty query terms or no shard DFs yield identity (no correction)."""
-    from helix_context.shard_router import _compute_shard_idf_correction
+    from cymatix_context.shard_router import _compute_shard_idf_correction
 
     # No terms
     mu = _compute_shard_idf_correction([], {"A": 100}, {"A": {}})
@@ -654,7 +654,7 @@ def test_compute_shard_idf_correction_weights_by_global_idf():
     wins, so shard B (where ``rare`` is over-represented locally) gets
     amplified.
     """
-    from helix_context.shard_router import _compute_shard_idf_correction
+    from cymatix_context.shard_router import _compute_shard_idf_correction
 
     mu = _compute_shard_idf_correction(
         ["rare", "common"],
@@ -686,7 +686,7 @@ def test_shard_router_blob_parity_via_single_shard(two_shard_setup):
         # whatever Genome.last_query_scores would have produced.
         assert len(results) >= 1
         # Open shard B directly and verify identical scores.
-        from helix_context.genome import Genome
+        from cymatix_context.genome import Genome
         gb = Genome(two_shard_setup["shard_b_path"], read_only=True)
         try:
             direct = gb.query_docs(domains=["auth"], entities=[], max_genes=10)
@@ -717,7 +717,7 @@ def test_genome_term_doc_frequencies_returns_zero_for_unindexed():
     Soft-fails per term so a malformed token doesn't poison the batch.
     """
     import tempfile
-    from helix_context.genome import Genome
+    from cymatix_context.genome import Genome
 
     with tempfile.TemporaryDirectory() as td:
         gpath = str(Path(td) / "g.db")
@@ -759,7 +759,7 @@ def test_route_tiebreak_by_shard_name_ascending(tmp_path):
     order is observable downstream.
     """
     import json
-    from helix_context.shard_schema import (
+    from cymatix_context.shard_schema import (
         init_main_db,
         open_main_db,
         register_shard,
@@ -865,7 +865,7 @@ def coactivation_setup():
     B via fingerprint_index.
     """
     import json as _json
-    from helix_context.storage.co_activation import store_harmonic_weights
+    from cymatix_context.storage.co_activation import store_harmonic_weights
 
     td = tempfile.TemporaryDirectory()
     root = Path(td.name)
@@ -982,7 +982,7 @@ def test_cross_shard_coactivation_scores_linked_doc_at_boost(coactivation_setup)
     """A doc pulled in purely by co-activation is scored at
     COACT_LINK_BOOST × the source doc's corrected score.
     """
-    from helix_context.shard_router import COACT_LINK_BOOST
+    from cymatix_context.shard_router import COACT_LINK_BOOST
 
     router = ShardRouter(coactivation_setup["main_path"])
     try:
@@ -1074,7 +1074,7 @@ def test_cross_shard_coactivation_skips_dangling_link(tmp_path):
     row (unsharded / dangling) is skipped without raising.
     """
     import json as _json
-    from helix_context.storage.co_activation import store_harmonic_weights
+    from cymatix_context.storage.co_activation import store_harmonic_weights
 
     main_path = str(tmp_path / "main.db")
     shard_a_path = str(tmp_path / "shard_a.db")
@@ -1131,8 +1131,8 @@ def test_cross_shard_coactivation_blob_mode_untouched(tmp_path):
     router method is simply never on the call path. This test asserts
     the router-only entrypoint is not reachable from a bare Genome.
     """
-    from helix_context.genome import Genome as _G
-    from helix_context.shard_router import ShardRouter as _R
+    from cymatix_context.genome import Genome as _G
+    from cymatix_context.shard_router import ShardRouter as _R
 
     blob_path = str(tmp_path / "blob.db")
     g = _G(blob_path)
@@ -1167,7 +1167,7 @@ def test_doc_type_boost_for_matches_summary_basenames():
     path ingested on Windows (back-slashes) matches the same as a POSIX
     path. Everything else gets the identity multiplier (1.0).
     """
-    from helix_context.shard_router import (
+    from cymatix_context.shard_router import (
         _doc_type_boost_for,
         DOC_TYPE_BOOST,
     )
@@ -1182,7 +1182,7 @@ def test_doc_type_boost_for_matches_summary_basenames():
 
     # Implementation / non-summary files — identity (NOT boosted).
     assert _doc_type_boost_for("projects/acme-rs/src/main.rs") == 1.0
-    assert _doc_type_boost_for("helix_context/shard_router.py") == 1.0
+    assert _doc_type_boost_for("cymatix_context/shard_router.py") == 1.0
     assert _doc_type_boost_for("docs/architecture/OBSERVABILITY.md") == 1.0
     # A file that merely contains "readme" but isn't the basename.
     assert _doc_type_boost_for("notes/readme_draft.md") == 1.0
@@ -1203,7 +1203,7 @@ def test_doc_type_boost_is_a_small_lift():
     is ever raised past ~1.5x the no-regression guarantee for
     implementation-file queries no longer holds.
     """
-    from helix_context.shard_router import DOC_TYPE_BOOST
+    from cymatix_context.shard_router import DOC_TYPE_BOOST
 
     assert 1.0 < DOC_TYPE_BOOST <= 1.5, (
         f"DOC_TYPE_BOOST={DOC_TYPE_BOOST} is outside the safe range; a "
@@ -1313,7 +1313,7 @@ def test_doc_type_boost_lifts_readme_score_on_cross_shard_merge(
     neutralised — and comparing. A non-summary implementation file's
     score must be byte-identical between the two runs (no boost).
     """
-    import helix_context.shard_router as sr
+    import cymatix_context.shard_router as sr
 
     readme_id = doc_type_boost_setup["readme_id"]
     impl_id = doc_type_boost_setup["impl_id"]
@@ -1499,7 +1499,7 @@ def test_parallel_fanout_matches_serial_byte_for_byte(two_shard_setup, monkeypat
 def test_parallel_fanout_actually_uses_threadpool(two_shard_setup, monkeypatch):
     """With workers>1 and >1 routed shard, the fan-out must dispatch through
     a ThreadPoolExecutor (the concurrency is the whole point)."""
-    import helix_context.shard_router as sr
+    import cymatix_context.shard_router as sr
 
     seen = {}
     real_tpe = sr.ThreadPoolExecutor
@@ -1530,7 +1530,7 @@ def test_serial_default_does_not_use_threadpool(two_shard_setup, monkeypatch):
     routed; this fixture routes 2, so the serial reference path must still
     be taken with no pool spun up.
     """
-    import helix_context.shard_router as sr
+    import cymatix_context.shard_router as sr
 
     seen = {"used": False}
     real_tpe = sr.ThreadPoolExecutor
@@ -1561,7 +1561,7 @@ def test_serial_default_does_not_use_threadpool(two_shard_setup, monkeypatch):
 
 def test_workers_unset_small_fanout_stays_serial(monkeypatch):
     """Unset env + ≤4 routed shards → 1 (serial reference oracle)."""
-    import helix_context.parallel as par
+    import cymatix_context.parallel as par
 
     monkeypatch.delenv("HELIX_SHARD_WORKERS", raising=False)
     monkeypatch.setattr(
@@ -1576,7 +1576,7 @@ def test_workers_unset_small_fanout_stays_serial(monkeypatch):
 
 def test_workers_unset_large_fanout_auto_sizes(monkeypatch):
     """Unset env + >4 routed shards → auto_shard_workers() sizes the pool."""
-    import helix_context.parallel as par
+    import cymatix_context.parallel as par
 
     monkeypatch.delenv("HELIX_SHARD_WORKERS", raising=False)
     monkeypatch.setattr(par, "auto_shard_workers", lambda *a, **k: 7)
@@ -1586,7 +1586,7 @@ def test_workers_unset_large_fanout_auto_sizes(monkeypatch):
 
 def test_workers_explicit_env_always_wins(monkeypatch):
     """An explicit HELIX_SHARD_WORKERS beats the auto-sizer at any shard count."""
-    import helix_context.parallel as par
+    import cymatix_context.parallel as par
 
     monkeypatch.setattr(
         par, "auto_shard_workers",
@@ -1599,7 +1599,7 @@ def test_workers_explicit_env_always_wins(monkeypatch):
 
 def test_workers_env_one_forces_serial(monkeypatch):
     """HELIX_SHARD_WORKERS=1 pins the serial reference path even at 100 shards."""
-    import helix_context.parallel as par
+    import cymatix_context.parallel as par
 
     monkeypatch.setattr(
         par, "auto_shard_workers",
@@ -1617,7 +1617,7 @@ def test_workers_unparseable_env_keeps_legacy_serial(monkeypatch):
 
 def test_workers_sizer_failure_falls_back_serial(monkeypatch):
     """A sizer probe blow-up degrades to serial instead of raising."""
-    import helix_context.parallel as par
+    import cymatix_context.parallel as par
 
     monkeypatch.delenv("HELIX_SHARD_WORKERS", raising=False)
 
@@ -1631,7 +1631,7 @@ def test_workers_sizer_failure_falls_back_serial(monkeypatch):
 def test_router_passes_routed_shard_count_to_sizer(two_shard_setup, monkeypatch):
     """query_genes must hand the per-query ROUTED shard count to
     shard_fanout_workers — that is the number that decides serial vs auto."""
-    import helix_context.shard_router as sr
+    import cymatix_context.shard_router as sr
 
     seen = {}
     real = sr.shard_fanout_workers

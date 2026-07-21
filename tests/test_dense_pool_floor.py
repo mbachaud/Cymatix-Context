@@ -29,10 +29,10 @@ _REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
-from helix_context.config import HelixConfig, load_config
-from helix_context.genome import Genome
-from helix_context.knowledge_store import apply_ann_gate
-from helix_context.schemas import (
+from cymatix_context.config import HelixConfig, load_config
+from cymatix_context.genome import Genome
+from cymatix_context.knowledge_store import apply_ann_gate
+from cymatix_context.schemas import (
     ChromatinState, EpigeneticMarkers, Gene, PromoterTags,
 )
 from tests.conftest import FakeBGEM3Codec, hash_vec

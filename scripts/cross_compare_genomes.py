@@ -178,10 +178,10 @@ def run_query(genome_path: str, query: str, max_genes: int = 5) -> Dict:
     Uses HelixContextManager directly so the live :11437 server stays
     undisturbed. Just the retrieval step — no splice, no ribosome calls.
     """
-    from helix_context.config import (
+    from cymatix_context.config import (
         HelixConfig, BudgetConfig, GenomeConfig, RibosomeConfig,
     )
-    from helix_context.context_manager import HelixContextManager
+    from cymatix_context.context_manager import HelixContextManager
 
     cfg = HelixConfig(
         ribosome=RibosomeConfig(model="mock", timeout=5),
@@ -194,7 +194,7 @@ def run_query(genome_path: str, query: str, max_genes: int = 5) -> Dict:
         t0 = time.perf_counter()
         # Just call _express (Step 2) directly — returns ranked candidates
         # without incurring the ribosome splice cost.
-        from helix_context.accel import extract_query_signals
+        from cymatix_context.accel import extract_query_signals
         domains, entities = extract_query_signals(query)
         candidates = mgr._express(
             domains=domains,

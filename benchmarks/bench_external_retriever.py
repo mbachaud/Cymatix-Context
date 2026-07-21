@@ -34,8 +34,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import httpx  # noqa: E402
 
-from helix_context.backends.sema_codec import decode_embedding  # noqa: E402
-from helix_context.adapters.retriever import (  # noqa: E402
+from cymatix_context.backends.sema_codec import decode_embedding  # noqa: E402
+from cymatix_context.adapters.retriever import (  # noqa: E402
     HelixNarrowedRetriever, RetrievedDoc, Retriever,
 )
 
@@ -85,7 +85,7 @@ _SEMA_CODEC = None
 def _get_codec():
     global _SEMA_CODEC
     if _SEMA_CODEC is None:
-        from helix_context.sema import SemaCodec
+        from cymatix_context.sema import SemaCodec
         _SEMA_CODEC = SemaCodec()
     return _SEMA_CODEC
 

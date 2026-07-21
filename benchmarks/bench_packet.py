@@ -56,9 +56,9 @@ try:
 except Exception:
     pass
 
-from helix_context.context_packet import build_context_packet
-from helix_context.genome import Genome
-from helix_context.schemas import ChromatinState, EpigeneticMarkers, Gene, PromoterTags
+from cymatix_context.context_packet import build_context_packet
+from cymatix_context.genome import Genome
+from cymatix_context.schemas import ChromatinState, EpigeneticMarkers, Gene, PromoterTags
 
 
 # ── Synthetic gene builder ────────────────────────────────────────────
@@ -308,7 +308,7 @@ SCENARIOS: list[Scenario] = [
         name="fresh_aligned_code_edit",
         setup=_setup_single(
             "def apply_gate(gene): return gene.chromatin for helix genome",
-            "/repo/helix_context/helix/genome.py",
+            "/repo/cymatix_context/helix/genome.py",
             domains=["helix", "genome"],
             source_kind="code",
             volatility_class="stable",

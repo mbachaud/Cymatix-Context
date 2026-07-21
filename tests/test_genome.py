@@ -3,9 +3,9 @@
 import pytest
 import time
 
-from helix_context.genome import Genome
-from helix_context.schemas import Gene, ChromatinState, PromoterTags, EpigeneticMarkers
-from helix_context.exceptions import PromoterMismatch
+from cymatix_context.genome import Genome
+from cymatix_context.schemas import Gene, ChromatinState, PromoterTags, EpigeneticMarkers
+from cymatix_context.exceptions import PromoterMismatch
 
 from tests.conftest import make_gene
 
@@ -501,7 +501,7 @@ class TestFileTokens:
     """file_tokens() isolates basename; path_tokens() includes folders."""
 
     def test_file_tokens_basename_only(self):
-        from helix_context.genome import file_tokens, path_tokens
+        from cymatix_context.genome import file_tokens, path_tokens
         sid = "F:/Projects/helix-context/docs/architecture/PIPELINE_LANES.md"
         assert file_tokens(sid) == {"pipeline", "lanes"}
         # path_tokens keeps folder tokens too
@@ -510,23 +510,23 @@ class TestFileTokens:
         assert "architecture" not in file_tokens(sid)
 
     def test_file_tokens_empty_on_none(self):
-        from helix_context.genome import file_tokens
+        from cymatix_context.genome import file_tokens
         assert file_tokens(None) == set()
         assert file_tokens("") == set()
 
     def test_file_tokens_handles_both_separators(self):
-        from helix_context.genome import file_tokens
-        assert file_tokens("/repo/helix_context/retrieval.py") == {"retrieval"}
-        assert file_tokens("C:\\repo\\helix_context\\retrieval.py") == {"retrieval"}
+        from cymatix_context.genome import file_tokens
+        assert file_tokens("/repo/cymatix_context/retrieval.py") == {"retrieval"}
+        assert file_tokens("C:\\repo\\cymatix_context\\retrieval.py") == {"retrieval"}
 
     def test_file_tokens_drops_extension_noise(self):
-        from helix_context.genome import file_tokens
+        from cymatix_context.genome import file_tokens
         # "py" is in _PATH_NOISE_TOKENS, "md" too — only content tokens survive
         assert file_tokens("/a/b/genome.py") == {"genome"}
         assert file_tokens("/a/b/README.md") == set()
 
     def test_file_tokens_splits_hyphen_underscore(self):
-        from helix_context.genome import file_tokens
+        from cymatix_context.genome import file_tokens
         # Primary split covers hyphens/underscores — result is just parts.
         toks = file_tokens("/a/b/context_manager.py")
         assert toks == {"context", "manager"}

@@ -4,7 +4,7 @@ Covers the roadmap §3 instruments that make the know/miss + abstain +
 freshness-demotion surfaces visible (the sub-10% hallucination target's
 observability layer).
 
-Seam: pre-seed ``helix_context.telemetry.otel._instruments`` with fakes —
+Seam: pre-seed ``cymatix_context.telemetry.otel._instruments`` with fakes —
 the lazy getters return the seeded instrument instead of creating one, so
 emissions are captured without an OTel SDK or collector.
 """
@@ -15,7 +15,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from helix_context.telemetry import otel
+from cymatix_context.telemetry import otel
 
 
 class FakeInstrument:
@@ -58,7 +58,7 @@ def _window(status="abstain", genes=0):
 # ── know/miss discriminator ──────────────────────────────────────────
 
 def test_miss_abstain_emits_counter(fakes):
-    from helix_context.scoring.know_decision import decide_know_or_miss
+    from cymatix_context.scoring.know_decision import decide_know_or_miss
 
     out = decide_know_or_miss(
         _window("abstain"),
@@ -78,7 +78,7 @@ def test_miss_abstain_emits_counter(fakes):
 
 
 def test_no_promoter_match_emits_reason(fakes):
-    from helix_context.scoring.know_decision import decide_know_or_miss
+    from cymatix_context.scoring.know_decision import decide_know_or_miss
 
     out = decide_know_or_miss(
         _window("healthy", genes=0),
@@ -95,7 +95,7 @@ def test_no_promoter_match_emits_reason(fakes):
 
 
 def test_know_emits_confidence_histogram(fakes):
-    from helix_context.scoring.know_decision import (
+    from cymatix_context.scoring.know_decision import (
         KnowCalibration,
         decide_know_or_miss,
     )
@@ -123,8 +123,8 @@ def test_know_emits_confidence_histogram(fakes):
 # ── ABSTAIN gate trigger attribution ─────────────────────────────────
 
 def test_abstain_gate_additive_floor_and_ratio(fakes):
-    from helix_context.config import AbstainClassFloors
-    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    from cymatix_context.config import AbstainClassFloors
+    from cymatix_context.pipeline.tier_logic import apply_budget_tiers
 
     genes = [SimpleNamespace(gene_id=f"g{i}") for i in range(6)]
     scores = {f"g{i}": 1.0 for i in range(6)}  # flat + weak → abstain
@@ -141,8 +141,8 @@ def test_abstain_gate_additive_floor_and_ratio(fakes):
 
 
 def test_abstain_gate_rrf_ratio_only(fakes):
-    from helix_context.config import AbstainClassFloors
-    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    from cymatix_context.config import AbstainClassFloors
+    from cymatix_context.pipeline.tier_logic import apply_budget_tiers
 
     genes = [SimpleNamespace(gene_id=f"g{i}") for i in range(6)]
     scores = {f"g{i}": 0.25 for i in range(6)}  # all tied → norm ratio 0
@@ -157,8 +157,8 @@ def test_abstain_gate_rrf_ratio_only(fakes):
 
 
 def test_no_abstain_no_emit(fakes):
-    from helix_context.config import AbstainClassFloors
-    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    from cymatix_context.config import AbstainClassFloors
+    from cymatix_context.pipeline.tier_logic import apply_budget_tiers
 
     genes = [SimpleNamespace(gene_id=f"g{i}") for i in range(6)]
     # Strong, separated top → no abstain.
@@ -174,7 +174,7 @@ def test_no_abstain_no_emit(fakes):
 # ── freshness demotions ──────────────────────────────────────────────
 
 def test_freshness_missing_emits(fakes, tmp_path):
-    from helix_context.retrieval.freshness import revalidate_and_mark
+    from cymatix_context.retrieval.freshness import revalidate_and_mark
 
     gene = SimpleNamespace(
         gene_id="g1",
@@ -192,7 +192,7 @@ def test_freshness_missing_emits(fakes, tmp_path):
 
 
 def test_freshness_fresh_not_emitted(fakes, tmp_path):
-    from helix_context.retrieval.freshness import revalidate_and_mark
+    from cymatix_context.retrieval.freshness import revalidate_and_mark
 
     src = tmp_path / "src.md"
     src.write_text("content")
@@ -229,7 +229,7 @@ class _Conn:
 
 
 def test_superseded_emits(fakes):
-    from helix_context.retrieval.freshness import check_superseded
+    from cymatix_context.retrieval.freshness import check_superseded
 
     genome = SimpleNamespace(read_conn=_Conn(("g2", "src-2")))
     out = check_superseded(genome, SimpleNamespace(gene_id="g1"))
@@ -240,7 +240,7 @@ def test_superseded_emits(fakes):
 
 
 def test_not_superseded_no_emit(fakes):
-    from helix_context.retrieval.freshness import check_superseded
+    from cymatix_context.retrieval.freshness import check_superseded
 
     genome = SimpleNamespace(read_conn=_Conn(None))
     out = check_superseded(genome, SimpleNamespace(gene_id="g1"))
@@ -271,10 +271,10 @@ _GETTER_NAMES = (
 @pytest.mark.parametrize("name", _GETTER_NAMES)
 def test_all_new_getters_resolve(name):
     """Consolidated getter-registry smoke over _GETTER_NAMES: every lazy
-    getter is re-exported through helix_context.telemetry, returns an
+    getter is re-exported through cymatix_context.telemetry, returns an
     instrument (noop or real), and caches it — repeated calls return the
     same object."""
-    import helix_context.telemetry as tel
+    import cymatix_context.telemetry as tel
 
     getter = getattr(tel, name)
     inst = getter()

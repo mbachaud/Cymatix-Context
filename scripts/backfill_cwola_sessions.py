@@ -11,7 +11,7 @@ Server-side fix (commit pending):
     server.py now falls back to a synthetic session_id from
     sha1(client_ip + time_window_bucket) and a default party_id from
     helix.toml `[session]`. See the cwola_session_id block in
-    helix_context/server.py (~line 500).
+    cymatix_context/server.py (~line 500).
 
 This script:
     Applies the same synthetic pattern retroactively to rows with NULL
@@ -198,7 +198,7 @@ def do_sweep(conn: sqlite3.Connection) -> int:
     # Now import and run sweep_buckets
     repo_root = Path(__file__).resolve().parent.parent
     sys.path.insert(0, str(repo_root))
-    from helix_context import cwola
+    from cymatix_context import cwola
     updates = cwola.sweep_buckets(conn)
     log.info("sweep_buckets assigned %d new bucket labels", updates)
     return updates

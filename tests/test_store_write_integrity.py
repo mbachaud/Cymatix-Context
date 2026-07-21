@@ -23,7 +23,7 @@ from pathlib import Path
 
 import pytest
 
-from helix_context.genome import Genome
+from cymatix_context.genome import Genome
 from tests.conftest import make_gene
 
 
@@ -83,7 +83,7 @@ class TestUpsertTransactionDiscipline:
     def test_failed_upsert_is_rolled_back(self, monkeypatch):
         """A mid-upsert failure must not leave the partial row for the next
         commit to sweep in."""
-        import helix_context.storage.indexes as idx
+        import cymatix_context.storage.indexes as idx
 
         g = Genome(path=":memory:", synonym_map={})
         try:
@@ -116,7 +116,7 @@ class TestUpsertTransactionDiscipline:
     ):
         """Thread B's commit must not publish thread A's half-written gene
         (genes row present, index rows absent)."""
-        import helix_context.storage.indexes as idx
+        import cymatix_context.storage.indexes as idx
 
         db = str(tmp_path / "genome.db")
         g = Genome(path=db, synonym_map={})
@@ -205,7 +205,7 @@ class _StalledUpsert:
     genes INSERT and its index sync (the partial-transaction window)."""
 
     def __init__(self, genome, gene, monkeypatch):
-        import helix_context.storage.indexes as idx
+        import cymatix_context.storage.indexes as idx
 
         self.genome = genome
         self.gene = gene
@@ -364,7 +364,7 @@ class TestContentCollisionProvenance:
 
             g.upsert_gene(first)
             with caplog.at_level(
-                logging.WARNING, logger="helix_context.knowledge_store"
+                logging.WARNING, logger="cymatix_context.knowledge_store"
             ):
                 g.upsert_gene(second)
             assert any(
@@ -389,7 +389,7 @@ class TestContentCollisionProvenance:
             gene.source_id = "docs/a.md"
             g.upsert_gene(gene)
             with caplog.at_level(
-                logging.WARNING, logger="helix_context.knowledge_store"
+                logging.WARNING, logger="cymatix_context.knowledge_store"
             ):
                 g.upsert_gene(gene)
             assert not any(

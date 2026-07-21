@@ -2,14 +2,14 @@
 
 import pytest
 
-from helix_context.config import (
+from cymatix_context.config import (
     BudgetConfig,
     ClassifierConfig,
     GenomeConfig,
     HelixConfig,
     RibosomeConfig,
 )
-from helix_context.context_manager import HelixContextManager
+from cymatix_context.context_manager import HelixContextManager
 from tests.conftest import make_gene
 from tests.conftest import MockCompressorBackend
 

@@ -1,6 +1,6 @@
 """Tests for the pipeline span wiring (telemetry blind-spot audit 2026-07-08).
 
-``pipeline_stage_span`` existed in ``helix_context.telemetry.otel`` with zero
+``pipeline_stage_span`` existed in ``cymatix_context.telemetry.otel`` with zero
 callers; ``rrf_fused_score_histogram`` was imported by ``knowledge_store`` but
 never defined. This file pins the fixes:
 
@@ -28,10 +28,10 @@ from contextlib import nullcontext
 
 import pytest
 
-import helix_context.context_manager as cm_mod
-from helix_context.config import BudgetConfig
-from helix_context.context_manager import HelixContextManager
-from helix_context.telemetry import otel
+import cymatix_context.context_manager as cm_mod
+from cymatix_context.config import BudgetConfig
+from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.telemetry import otel
 
 from tests.conftest import MockCompressorBackend, make_gene, make_helix_config
 
@@ -247,7 +247,7 @@ class _RecordingMeter:
 
 
 def test_rrf_fused_score_histogram_importable_and_named(monkeypatch):
-    from helix_context.telemetry import rrf_fused_score_histogram
+    from cymatix_context.telemetry import rrf_fused_score_histogram
 
     rec = _RecordingMeter()
     monkeypatch.setattr(otel, "meter", rec)
@@ -261,7 +261,7 @@ def test_rrf_fused_score_histogram_importable_and_named(monkeypatch):
 
 def test_rrf_fused_score_recorded_at_query_genes_call_site(tmp_path, monkeypatch):
     """query_genes under fusion_mode=rrf records one point per ranked doc."""
-    from helix_context.genome import Genome
+    from cymatix_context.genome import Genome
 
     genome = Genome(str(tmp_path / "genome.db"), fusion_mode="rrf")
     try:
@@ -270,7 +270,7 @@ def test_rrf_fused_score_recorded_at_query_genes_call_site(tmp_path, monkeypatch
 
         rec = _RecordingInstrument()
         monkeypatch.setattr(
-            "helix_context.telemetry.rrf_fused_score_histogram", lambda: rec
+            "cymatix_context.telemetry.rrf_fused_score_histogram", lambda: rec
         )
 
         genome.query_docs(domains=["auth"], entities=[])

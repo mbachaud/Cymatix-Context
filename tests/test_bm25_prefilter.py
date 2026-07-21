@@ -1,8 +1,8 @@
 """BM25 pre-filter tier-0 tests (2026-05-08 retrieval stack upgrade, Step 1)."""
 
 import pytest
-from helix_context.genome import Genome
-from helix_context.schemas import Gene, PromoterTags, EpigeneticMarkers
+from cymatix_context.genome import Genome
+from cymatix_context.schemas import Gene, PromoterTags, EpigeneticMarkers
 
 
 def _make_gene(content, domains, entities=None, source_id=None):

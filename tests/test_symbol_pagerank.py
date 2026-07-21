@@ -1,5 +1,5 @@
 """WS3: symbol-graph personalized PageRank (candidate-local, pure CPU)."""
-from helix_context.scoring import symbol_pagerank as spr
+from cymatix_context.scoring import symbol_pagerank as spr
 
 
 def test_widely_referenced_definition_is_central():
@@ -59,7 +59,7 @@ def test_session_weight_dominates_query_weight():
 
 
 def test_symbol_expansion_cap_applied_to_capable_store():
-    from helix_context.context_manager import _apply_symbol_expansion_cap
+    from cymatix_context.context_manager import _apply_symbol_expansion_cap
 
     class _Store:
         pass
@@ -72,7 +72,7 @@ def test_symbol_expansion_cap_applied_to_capable_store():
 def test_symbol_expansion_cap_incapable_store_warns_no_crash(caplog):
     import logging
 
-    from helix_context.context_manager import _apply_symbol_expansion_cap
+    from cymatix_context.context_manager import _apply_symbol_expansion_cap
 
     class _SlottedAdapter:
         """Read adapter that rejects ad-hoc attributes (no __dict__)."""

@@ -19,7 +19,7 @@ import sqlite3
 
 import pytest
 
-from helix_context.identity import session_delivery
+from cymatix_context.identity import session_delivery
 
 
 @pytest.fixture
@@ -308,8 +308,8 @@ def test_format_elision_stub_is_one_line():
 
 # ── Integration: _assemble uses session working-set register ──────────
 
-from helix_context.config import BudgetConfig
-from helix_context.context_manager import HelixContextManager
+from cymatix_context.config import BudgetConfig
+from cymatix_context.context_manager import HelixContextManager
 from tests.conftest import make_gene, make_helix_config, make_client, MockCompressorBackend
 
 

@@ -42,11 +42,11 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from helix_context.claims_graph import (  # noqa: E402
+from cymatix_context.claims_graph import (  # noqa: E402
     contradiction_clusters,
     resolve,
 )
-from helix_context.shard_schema import (  # noqa: E402
+from cymatix_context.shard_schema import (  # noqa: E402
     init_main_db,
     open_main_db,
     query_claims,

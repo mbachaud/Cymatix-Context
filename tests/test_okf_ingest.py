@@ -15,8 +15,8 @@ from pathlib import Path
 
 import pytest
 
-from helix_context.context_manager import HelixContextManager
-from helix_context.okf import ingest_bundle, read_bundle
+from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.okf import ingest_bundle, read_bundle
 
 from tests.conftest import make_helix_config
 
@@ -218,9 +218,9 @@ class TestInertness:
         Only the okf package (writer), storage DDL, and the CLI surface
         may mention the table outside tests.
         """
-        import helix_context
+        import cymatix_context
 
-        pkg_root = Path(helix_context.__file__).parent
+        pkg_root = Path(cymatix_context.__file__).parent
         offenders = []
         for py in pkg_root.rglob("*.py"):
             rel = py.relative_to(pkg_root).as_posix()

@@ -5,7 +5,7 @@ drifting context vector preferentially surfaces later-encoded items over
 earlier-encoded ones when queried. This is the decision gate for Phase 4
 of the 2026-04-11 8D dimensional roadmap.
 
-The shipped mechanism (helix_context/tcm.py):
+The shipped mechanism (cymatix_context/tcm.py):
     - SessionContext.update() integrates each accessed gene's input vector
       via Howard 2005 Eq. 16 velocity input + Gram-Schmidt orthogonalization.
     - tcm_bonus() returns a per-gene cosine-similarity bonus (weight * cos
@@ -69,14 +69,14 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
-from helix_context.genome import Genome
-from helix_context.schemas import (
+from cymatix_context.genome import Genome
+from cymatix_context.schemas import (
     ChromatinState,
     EpigeneticMarkers,
     Gene,
     PromoterTags,
 )
-from helix_context.scoring.tcm import SessionContext, tcm_bonus
+from cymatix_context.scoring.tcm import SessionContext, tcm_bonus
 
 
 SHARED_DOMAIN = "ephemeron"

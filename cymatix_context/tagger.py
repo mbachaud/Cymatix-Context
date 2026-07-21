@@ -1,0 +1,704 @@
+"""
+CpuTagger — CPU-native document encoding without LLM inference.
+
+Replaces the two Ollama calls in ribosome.pack() and _extract_key_values()
+with spaCy NER, regex patterns, and extractive summarization.
+
+Bio analogue (legacy term: ribosome):
+    The ribosome translates mRNA into protein using physical chemistry.
+    The CpuTagger does the same translation using statistical NLP —
+    no autoregressive generation, just pattern matching and classification.
+
+Performance:
+    LLM pack: ~6s/chunk (2x E4B autoregressive calls)
+    CpuTagger: ~7ms/chunk (spaCy + regex, single-threaded)
+    3,500 chunks: ~1 hour → ~25 seconds
+
+Operator extension:
+    The rule-based vocabulary ships project-neutral. Extend it per
+    deployment via the HELIX_TAGGER_EXTRA_ENTITIES and
+    HELIX_TAGGER_EXTRA_TERMS env vars, read once at module import —
+    see _extend_vocabulary_from_env().
+"""
+
+from __future__ import annotations
+
+import hashlib
+import logging
+import os
+import re
+from typing import Dict, List, Optional, Set
+
+from .codons import CodonEncoder
+from .schemas import EpigeneticMarkers, Gene, PromoterTags
+
+log = logging.getLogger("helix.tagger")
+
+
+# ── Minimal stop words for fragment filtering ────────────────────────
+#
+# Defined at module top because the CpuTagger class below references
+# it at method-call time — if loaded later in the file, any caller
+# invoking the referencing method before the module finishes loading
+# (rare, but possible under partial-import edge cases) would hit a
+# NameError. Keeping it here also surfaces the constant for anyone
+# reading top-down.
+
+STOP_WORDS_SMALL = frozenset({
+    "the", "a", "an", "is", "are", "was", "were", "this", "that",
+    "these", "those", "it", "its", "and", "or", "but", "not",
+    "all", "some", "any", "each", "every", "no", "more", "most",
+})
+
+
+# ── Lazy spaCy loading (avoid import-time model download check) ────
+
+_nlp = None
+
+
+def _get_nlp():
+    """Load spaCy model on first use. Cached for process lifetime."""
+    global _nlp
+    if _nlp is None:
+        import spacy
+        _nlp = spacy.load("en_core_web_sm", disable=["lemmatizer"])
+        # Increase max_length for large code files
+        _nlp.max_length = 200_000
+
+        # EntityRuler for project-specific terms that statistical NER misses
+        ruler = _nlp.add_pipe("entity_ruler", before="ner")
+        ruler.add_patterns(_build_project_patterns())
+    return _nlp
+
+
+# ── Project entity vocabulary (rule-based NER) ──────────────────
+#
+# Ships project-neutral: only this repository's own stack plus generic
+# IR/NLP artifacts. Earlier builds bundled the original author's private
+# project names here (BigEd, BookKeeper, CosmicTasha, ModuleHub, FleetDB,
+# SwiftWing21, ...) as EntityRuler patterns — those owner-specific
+# defaults were removed for the public release. Operators add their own
+# vocabulary via HELIX_TAGGER_EXTRA_ENTITIES instead (see
+# _extend_vocabulary_from_env below).
+
+_PROJECT_ENTITIES = {
+    "PRODUCT": [
+        "Helix Context", "Agentome", "ScoreRift",
+        "CpuTagger", "SemaCodec", "DeBERTa",
+        "helix.toml", "genome.db",
+        "SPLADE", "FTS5", "MiniLM", "ColBERT", "RaBitQ",
+    ],
+    "ORG": [
+        "Anthropic", "Naver Labs",
+    ],
+}
+
+
+def _build_project_patterns() -> List[Dict]:
+    """Build spaCy EntityRuler patterns from project vocabulary."""
+    patterns = []
+    for label, terms in _PROJECT_ENTITIES.items():
+        for term in terms:
+            patterns.append({"label": label, "pattern": term})
+            # Also add lowercase variant for case-insensitive matching
+            lower = term.lower()
+            if lower != term:
+                patterns.append({"label": label, "pattern": lower})
+    return patterns
+
+
+# ── Tech dictionary for domain classification ─────────────────────
+
+_TECH_TERMS: Set[str] = {
+    # Languages
+    "python", "rust", "javascript", "typescript", "go", "java", "ruby",
+    "swift", "kotlin", "lua", "sql", "html", "css", "toml", "yaml", "json",
+    # Frameworks & tools
+    "flask", "django", "fastapi", "react", "vue", "angular", "svelte",
+    "pytorch", "tensorflow", "numpy", "pandas", "spacy", "transformers",
+    "ollama", "docker", "kubernetes", "redis", "sqlite", "postgresql",
+    "nginx", "git", "github", "npm", "pip", "cargo", "axum", "egui",
+    # Concepts
+    "api", "rest", "graphql", "websocket", "grpc", "mqtt", "sse",
+    "auth", "jwt", "oauth", "rbac", "tls", "ssl", "cors",
+    "database", "cache", "queue", "pipeline", "proxy", "gateway",
+    "embedding", "vector", "tokenizer", "llm", "rag", "fts5", "bm25",
+    "gpu", "cuda", "vram", "cpu", "memory", "latency", "throughput",
+    "agent", "worker", "supervisor", "scheduler", "orchestrator",
+    "config", "toml", "yaml", "env", "endpoint", "blueprint",
+    "test", "benchmark", "smoke", "unittest", "pytest",
+    "security", "audit", "compliance", "soc2", "encryption",
+    "deploy", "ci", "cd", "release", "build", "binary",
+    # Project-specific terms (this repository's own stack). Owner-project
+    # names that used to ship here (biged, bookkeeper, cosmictasha,
+    # modulehub, fleetdb, "dr ders") were removed for the public release —
+    # extend per deployment via HELIX_TAGGER_EXTRA_TERMS instead.
+    "helix", "agentome", "scorerift",
+    "ribosome", "genome", "chromatin",
+    "ellipticity", "codon", "promoter", "epigenetics", "sema",
+    "splade", "deberta", "colbert", "rabitq", "fts5",
+    "cputagger", "semacodec", "fleet",
+    "supervisor", "needle", "gene",
+}
+
+
+# ── Operator vocabulary extension (env-driven) ──────────────────
+
+def _extend_vocabulary_from_env() -> None:
+    """Append operator-supplied vocabulary from the environment.
+
+    Two env vars, read once at module import (importlib.reload re-reads
+    them in long-lived processes; the spaCy EntityRuler is built lazily
+    on first _get_nlp(), so set them before the tagger's first use):
+
+    HELIX_TAGGER_EXTRA_ENTITIES
+        Comma-separated "Label:Text" pairs appended to
+        ``_PROJECT_ENTITIES``, e.g. "PRODUCT:AcmeApp,ORG:AcmeCorp".
+        Malformed pairs (missing label or text) are skipped with a
+        warning.
+    HELIX_TAGGER_EXTRA_TERMS
+        Comma-separated terms, lowercased and added to ``_TECH_TERMS``,
+        e.g. "acmeapp,acmecorp".
+    """
+    for pair in os.environ.get("HELIX_TAGGER_EXTRA_ENTITIES", "").split(","):
+        pair = pair.strip()
+        if not pair:
+            continue
+        label, sep, text = pair.partition(":")
+        label, text = label.strip(), text.strip()
+        if not sep or not label or not text:
+            log.warning(
+                "Skipping malformed HELIX_TAGGER_EXTRA_ENTITIES entry %r "
+                "(expected 'Label:Text')",
+                pair,
+            )
+            continue
+        _PROJECT_ENTITIES.setdefault(label.upper(), []).append(text)
+    for term in os.environ.get("HELIX_TAGGER_EXTRA_TERMS", "").split(","):
+        term = term.strip().lower()
+        if term:
+            _TECH_TERMS.add(term)
+
+
+_extend_vocabulary_from_env()
+
+
+# ── Regex patterns for KV extraction ──────────────────────────────
+
+_KV_PATTERNS = [
+    # port = 11437  or  port: 11437  (named key-value, high confidence)
+    (re.compile(r'(?:port|PORT|listen)\s*[=:]\s*(\d{2,5})', re.IGNORECASE), "port"),
+    # model = "gemma4:e4b"  or  model: qwen3:8b  (greedy match to capture full model spec)
+    (re.compile(r'(?:model|MODEL|model_name|default_model)\s*[=:]\s*["\']?([a-zA-Z][a-zA-Z0-9._:/-]+)', re.IGNORECASE), "model"),
+    # URLs
+    (re.compile(r'(https?://[^\s"\'<>,;)\]]+)'), "url"),
+    # version = "0.1.0b1"  or  v0.400.00b
+    (re.compile(r'(?:version|VERSION|__version__)\s*[=:]\s*["\']?(v?[\d]+\.[\d]+(?:\.[\d]+)?(?:[ab]\d+)?)', re.IGNORECASE), "version"),
+    # file paths (Unix or Windows)
+    (re.compile(r'(?:path|file|dir(?:ectory)?)\s*[=:]\s*["\']?([A-Za-z]:[/\\][\w./ \\-]+|/[\w./-]+)', re.IGNORECASE), "path"),
+    # timeout = 30  or  threshold = 0.5
+    (re.compile(r'(timeout|threshold|interval|limit|budget|max_\w+|min_\w+)\s*[=:]\s*(\d+(?:\.\d+)?)', re.IGNORECASE), None),
+    # host/address
+    (re.compile(r'(?:host|address|bind)\s*[=:]\s*["\']?([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+|localhost)', re.IGNORECASE), "host"),
+]
+
+# Patterns that extract key=value pairs.
+#
+# NB: the key group used to be ``(\w+(?:_\w+)*)`` but ``\w`` already includes
+# ``_``, so the inner alternation ``(?:_\w+)*`` was redundant ambiguity that
+# triggered catastrophic backtracking on underscore-heavy content (e.g.
+# EnterpriseRAG-Bench JSON with keys like ``expected_doc_ids``,
+# ``data_source_id``). A single worker spinning on `tagger.py:439`'s
+# ``finditer(content[:5000])`` hung the build for 60+ minutes on one google-
+# drive shared-drives file. ``(\w+)`` is functionally identical (same match
+# set, since ``\w`` includes ``_``) but has no nested quantifier.
+_KV_PAIR_PATTERN = re.compile(
+    r'(\w+)\s*[=:]\s*["\']?(\d+(?:\.\d+)?(?:s|ms|m|h|mb|gb|kb)?|true|false|[a-zA-Z0-9._:/-]+)["\']?',
+    re.IGNORECASE,
+)
+
+# Skip generic/noisy keys
+_KV_SKIP_KEYS = frozenset({
+    "if", "for", "in", "or", "and", "not", "is", "as", "from", "import",
+    "return", "def", "class", "self", "none", "true", "false",
+    "type", "name", "value", "data", "item", "key", "str", "int", "float",
+    "the", "this", "that", "with", "have", "been",
+    # Code patterns that look like key=value but aren't config
+    "app", "req", "res", "ctx", "err", "msg", "buf", "src", "dst",
+    "status", "result", "output", "input", "content", "text", "body",
+    "architecture", "description", "label", "title", "role",
+})
+
+# Python type-annotation names. These leak through the regex matcher on
+# annotated assignments like `port: int = 8080` — the naive pair matcher
+# sees `port: int` first (key=port, val=int) AND `int = 8080` as an inner
+# overlap (key=int, val=8080). Both are wrong. We skip both when either
+# side is a bare type name, so only the real literal value survives
+# (via the named patterns or a clean `port = 8080` assignment).
+_KV_TYPE_ANNOTATION_NAMES = frozenset({
+    "int", "str", "float", "bool", "bytes", "bytearray",
+    "list", "dict", "tuple", "set", "frozenset", "deque",
+    "optional", "any", "none", "type", "object",
+    "callable", "iterator", "iterable", "generator", "awaitable",
+    "coroutine", "mapping", "sequence", "union", "literal",
+    "path", "uuid", "datetime", "timedelta",
+})
+
+
+# ── CpuTagger ─────────────────────────────────────────────────────
+
+class CpuTagger:
+    """
+    CPU-native document encoder. Drop-in replacement for ribosome.pack()
+    that produces the same Document schema without any LLM calls.
+
+    Encoding pipeline per chunk:
+        1. spaCy NER → entities (PERSON, ORG, PRODUCT, GPE, etc.)
+        2. Tech dictionary scan → domains (language, framework, tool terms)
+        3. Regex patterns → key_values ("port=11437", "model=gemma4:e4b")
+        4. spaCy noun chunks → fragment meaning labels
+        5. Sentence info-density ranking → complement (extractive summary)
+        6. First sentence heuristic → intent
+    """
+
+    def __init__(self, synonym_map: Optional[Dict[str, List[str]]] = None):
+        self.synonym_map = synonym_map or {}
+        self._encoder = CodonEncoder()
+        # Reverse synonym map for domain enrichment:
+        # "redis" → also tag with "cache"
+        self._reverse_synonyms: Dict[str, str] = {}
+        for key, values in self.synonym_map.items():
+            for v in values:
+                self._reverse_synonyms[v.lower()] = key.lower()
+
+    def pack(
+        self,
+        content: str,
+        content_type: str = "text",
+        source_id: Optional[str] = None,
+        sequence_index: Optional[int] = None,
+    ) -> Gene:
+        """
+        Encode raw content into a Document. Same output contract as ribosome.pack().
+
+        Returns a Document with: gene_id, content, complement, fragments, tags,
+        signals, key_values, source_id, is_fragment.
+        """
+        from .genome import Genome
+
+        nlp = _get_nlp()
+
+        # Truncate for spaCy processing (large files overwhelm the pipeline)
+        truncated = content[:50_000]
+        doc = nlp(truncated)
+
+        # 1. Extract entities via NER
+        entities = self._extract_entities(doc, content)
+
+        # 2. Extract domains via tech dictionary + content scanning
+        domains = self._extract_domains(doc, content, entities)
+
+        # 2b. Prepend filename-derived tokens so the tagger sees the file's
+        # own name as a primary domain signal (e.g. claims.py → "claims").
+        # Prepend so filename tokens survive the [:10] cap even on content-rich files.
+        filename_domains = self._extract_filename_domains(source_id)
+        if filename_domains:
+            seen = set(domains)
+            prepend = [t for t in filename_domains if t not in seen]
+            domains = prepend + domains
+
+        # 3. Extract key-value facts via regex
+        key_values = self._extract_key_values(content)
+
+        # 4. Generate fragment meaning labels
+        codons = self._extract_codons(doc, content, content_type)
+
+        # 5. Generate complement (extractive summary)
+        complement = self._extract_complement(doc, content)
+
+        # 6. Generate intent (first sentence heuristic)
+        intent = self._extract_intent(doc, content, content_type)
+        intent_class = self._classify_intent(intent)
+
+        # 7. Generate summary
+        summary = self._extract_summary(doc, content)
+
+        gene_id = Genome.make_gene_id(content)
+
+        gene = Gene(
+            gene_id=gene_id,
+            content=content,
+            complement=complement,
+            codons=codons,
+            promoter=PromoterTags(
+                domains=domains[:10],
+                entities=entities[:15],
+                intent=intent,
+                intent_class=intent_class,
+                summary=summary,
+                sequence_index=sequence_index,
+            ),
+            epigenetics=EpigeneticMarkers(),
+            key_values=key_values,
+            source_id=source_id,
+        )
+
+        return gene
+
+    # ── Entity extraction (spaCy NER) ─────────────────────────────
+
+    def _extract_entities(self, doc, content: str) -> List[str]:
+        """Extract named entities from spaCy doc, deduplicated."""
+        seen: Set[str] = set()
+        entities: List[str] = []
+
+        for ent in doc.ents:
+            # Keep useful entity types
+            if ent.label_ in (
+                "PERSON", "ORG", "PRODUCT", "GPE", "FAC",
+                "WORK_OF_ART", "LAW", "EVENT", "LANGUAGE",
+            ):
+                text = ent.text.strip()
+                lower = text.lower()
+                if lower not in seen and len(text) > 1:
+                    seen.add(lower)
+                    entities.append(text)
+
+        # Also scan for CamelCase identifiers (common in code)
+        for match in re.finditer(r'\b([A-Z][a-z]+(?:[A-Z][a-z]+)+)\b', content[:10_000]):
+            word = match.group(1)
+            lower = word.lower()
+            if lower not in seen:
+                seen.add(lower)
+                entities.append(word)
+
+        return entities
+
+    # ── Domain extraction (tech terms + synonym map) ──────────────
+
+    def _extract_domains(
+        self, doc, content: str, entities: List[str]
+    ) -> List[str]:
+        """Extract topic domains from content using tech dictionary and synonyms."""
+        seen: Set[str] = set()
+        domains: List[str] = []
+        lower_content = content[:20_000].lower()
+
+        # Scan for tech terms in content
+        words = set(re.findall(r'\b[a-z_][a-z0-9_]+\b', lower_content))
+        for word in words:
+            if word in _TECH_TERMS and word not in seen:
+                seen.add(word)
+                domains.append(word)
+                # Also add reverse synonym parent
+                if word in self._reverse_synonyms:
+                    parent = self._reverse_synonyms[word]
+                    if parent not in seen:
+                        seen.add(parent)
+                        domains.append(parent)
+
+        # Add domains from entity names (lowercase)
+        for ent in entities[:10]:
+            lower = ent.lower()
+            if lower in _TECH_TERMS and lower not in seen:
+                seen.add(lower)
+                domains.append(lower)
+
+        # Add spaCy noun chunks that overlap with tech terms
+        for chunk in doc.noun_chunks:
+            lower_chunk = chunk.root.text.lower()
+            if lower_chunk in _TECH_TERMS and lower_chunk not in seen:
+                seen.add(lower_chunk)
+                domains.append(lower_chunk)
+
+        # Sort by frequency in content (most mentioned first)
+        freq = {d: lower_content.count(d) for d in domains}
+        domains.sort(key=lambda d: freq.get(d, 0), reverse=True)
+
+        return domains
+
+    def _extract_filename_domains(self, source_id: Optional[str]) -> List[str]:
+        """Return domain tokens derived from the file path.
+
+        Extracts the filename stem and parent directory name, then splits
+        on underscores and dashes to surface sub-tokens (e.g.
+        'claim_types_handler' → ['claim_types_handler', 'claim', 'types',
+        'handler']).  The full stem always comes first so it scores highest
+        when the cap truncates the list.
+
+        Noise stems from filename_anchor._NOISE_STEMS are skipped, and
+        tokens of 2 chars or fewer are dropped.
+        """
+        if not source_id:
+            return []
+
+        from cymatix_context.filename_anchor import filename_stem, _NOISE_STEMS
+
+        stem = filename_stem(source_id)  # None for noise / no-extension / short
+        tokens: list[str] = []
+        seen: set[str] = set()
+
+        def _push(tok: str) -> None:
+            t = tok.lower()
+            if len(t) > 2 and t not in _NOISE_STEMS and t not in seen:
+                seen.add(t)
+                tokens.append(t)
+
+        # ── filename stem (full, then sub-tokens) ──────────────────
+        if stem:
+            _push(stem)
+            for part in re.split(r"[_\-]+", stem):
+                _push(part)
+
+        # ── parent directory name (single level) ────────────────────
+        parts = source_id.replace("\\", "/").rstrip("/").split("/")
+        if len(parts) >= 2:
+            parent = parts[-2]
+            _push(parent)
+            for part in re.split(r"[_\-]+", parent):
+                _push(part)
+
+        return tokens
+
+    # ── KV extraction (regex patterns) ────────────────────────────
+
+    def _extract_key_values(self, content: str) -> List[str]:
+        """
+        Extract key=value facts from content using regex patterns.
+
+        Replaces the LLM-based _extract_key_values() in ribosome.py.
+        Returns list of strings like ["port=11437", "model=gemma4:e4b"].
+        """
+        kvs: List[str] = []
+        seen: Set[str] = set()
+
+        # Named patterns first (high confidence)
+        for pattern, key_hint in _KV_PATTERNS:
+            for match in pattern.finditer(content[:5000]):
+                groups = match.groups()
+                if len(groups) == 1:
+                    val = groups[0].rstrip(".,;:)'\"")
+                    # Skip bare Python type annotations (e.g. `model: str` → "str")
+                    if val.lower() in _KV_TYPE_ANNOTATION_NAMES:
+                        continue
+                    if key_hint:
+                        kv = f"{key_hint}={val}"
+                    else:
+                        kv = val
+                elif len(groups) == 2:
+                    key = groups[0].lower().strip()
+                    val = groups[1].rstrip(".,;:)'\"")
+                    if key in _KV_SKIP_KEYS or len(key) < 2:
+                        continue
+                    # Skip `int = 8080` where the key is itself a type name
+                    if key in _KV_TYPE_ANNOTATION_NAMES:
+                        continue
+                    if val.lower() in _KV_TYPE_ANNOTATION_NAMES:
+                        continue
+                    kv = f"{key}={val}"
+                else:
+                    continue
+
+                if kv not in seen and len(kv) < 200:
+                    seen.add(kv)
+                    kvs.append(kv)
+
+        # Generic key=value pairs from config-like content (lower confidence)
+        for match in _KV_PAIR_PATTERN.finditer(content[:5000]):
+            key = match.group(1).lower()
+            val = match.group(2).rstrip(".,;:)'\"")
+            if key in _KV_SKIP_KEYS or len(key) < 3 or len(val) < 1:
+                continue
+            # Skip Python type annotations on both sides:
+            #   `port: int`   → key=port, val=int       (drop: val is a type)
+            #   `int = 8080`  → key=int,  val=8080      (drop: key is a type)
+            # This removes the type-annotation leak without affecting real
+            # `key = value` assignments or YAML/TOML scalar pairs.
+            if key in _KV_TYPE_ANNOTATION_NAMES:
+                continue
+            if val.lower() in _KV_TYPE_ANNOTATION_NAMES:
+                continue
+            kv = f"{key}={val}"
+            if kv not in seen and len(kv) < 200:
+                seen.add(kv)
+                kvs.append(kv)
+
+        return kvs[:15]
+
+    # ── Fragment extraction (noun chunks as meaning labels) ──────────
+
+    def _extract_codons(
+        self, doc, content: str, content_type: str
+    ) -> List[str]:
+        """
+        Generate fragment meaning labels from content.
+
+        For text: most distinctive noun phrase per sentence group.
+        For code: function/class names + key identifiers.
+        """
+        codons: List[str] = []
+
+        if content_type == "code":
+            # Extract function/class definitions as fragments
+            for match in re.finditer(
+                r'(?:def|class|async def|function|const|export)\s+(\w+)',
+                content[:20_000],
+            ):
+                name = match.group(1)
+                if name not in ("self", "__init__", "main") and len(name) > 2:
+                    codons.append(name)
+
+            # Add key identifiers from assignments
+            for match in re.finditer(
+                r'^(\w+)\s*[=:]\s*', content[:10_000], re.MULTILINE
+            ):
+                name = match.group(1)
+                lower = name.lower()
+                if (
+                    lower not in _KV_SKIP_KEYS
+                    and name not in codons
+                    and len(name) > 2
+                    and not name.startswith("_")
+                ):
+                    codons.append(name)
+        else:
+            # For text: use spaCy noun chunks
+            seen: Set[str] = set()
+            for chunk in doc.noun_chunks:
+                text = chunk.text.strip()
+                lower = text.lower()
+                if (
+                    lower not in seen
+                    and len(text) > 3
+                    and lower not in STOP_WORDS_SMALL
+                ):
+                    seen.add(lower)
+                    codons.append(text)
+
+        # Deduplicate and limit
+        unique: List[str] = []
+        seen_lower: Set[str] = set()
+        for c in codons:
+            lower = c.lower()
+            if lower not in seen_lower:
+                seen_lower.add(lower)
+                unique.append(c)
+
+        return unique[:30]
+
+    # ── Complement extraction (extractive summary) ────────────────
+
+    def _extract_complement(self, doc, content: str) -> str:
+        """
+        Generate a dense complement (summary) using extractive selection.
+
+        Picks the top-3 most information-dense sentences, measured by
+        entity count + numeric literal count.
+        """
+        sentences = list(doc.sents)
+        if not sentences:
+            return content[:500]
+
+        # Score each sentence by information density
+        scored = []
+        for sent in sentences:
+            text = sent.text.strip()
+            if len(text) < 15:
+                continue
+            # Count entities in this sentence span
+            ent_count = sum(
+                1 for ent in doc.ents
+                if ent.start >= sent.start and ent.end <= sent.end
+            )
+            # Count numbers
+            num_count = len(re.findall(r'\d+(?:\.\d+)?', text))
+            # Count code identifiers (bonus for technical content)
+            code_count = len(re.findall(r'\b[A-Z][a-z]+[A-Z]\w*\b', text))
+            score = ent_count * 2.0 + num_count * 1.5 + code_count * 1.0
+            # Bonus for longer, substantive sentences
+            if len(text) > 50:
+                score += 0.5
+            scored.append((score, text))
+
+        # Sort by score descending, take top 3
+        scored.sort(key=lambda x: x[0], reverse=True)
+        top = [text for _, text in scored[:3]]
+
+        if not top:
+            # Fallback: first 500 chars
+            return content[:500]
+
+        return " ".join(top)
+
+    # ── Intent extraction (first sentence / docstring) ────────────
+
+    def _extract_intent(self, doc, content: str, content_type: str) -> str:
+        """Extract a one-line intent from the content."""
+        if content_type == "code":
+            # Try docstring first
+            match = re.search(
+                r'"""(.+?)"""| \'\'\'(.+?)\'\'\'',
+                content[:2000],
+                re.DOTALL,
+            )
+            if match:
+                docstring = (match.group(1) or match.group(2) or "").strip()
+                first_line = docstring.split("\n")[0].strip()
+                if len(first_line) > 10:
+                    return first_line[:200]
+
+        # Fall back to first sentence
+        sentences = list(doc.sents)
+        if sentences:
+            first = sentences[0].text.strip()
+            if len(first) > 10:
+                return first[:200]
+
+        return content[:100].strip()
+
+    # ── Intent classification ─────────────────────────────────────
+
+    def _classify_intent(self, text: str) -> "IntentClass":
+        """Classify intent text into the IntentClass taxonomy. Pure heuristic, no model."""
+        from .schemas import IntentClass
+        import re
+        t = text.lower()
+        if re.search(r'\b\w+\s*[=:]\s*(true|false|\d[\d.]*|"[^"]*")', text, re.IGNORECASE) or any(
+            kw in t for kw in ("threshold", "timeout", "limit", "enabled", "config", "setting", "flag", "default")
+        ):
+            return IntentClass.CONFIG_KNOB
+        if re.search(r'\bcreate\s+table\b|\bschema\b|\bcolumn\b|\bindex\b', t):
+            return IntentClass.DATA_STRUCTURE
+        if any(kw in t for kw in ("when ", "if ", "trigger", "gate condition", "condition", "fires when")):
+            return IntentClass.TRIGGER_CONDITION
+        if any(kw in t for kw in ("step ", "pipeline", "then ", "followed by", "sequence")):
+            return IntentClass.PROCESS_STEP
+        if any(kw in t for kw in ("how ", "computes", "calculates", "works by", "operates")):
+            return IntentClass.MECHANISM
+        if re.search(r'\b\d+\b', text) and any(kw in t for kw in (" is ", " are ", " has ", "= ")):
+            return IntentClass.FACT
+        if any(kw in t for kw in ("depends on", "calls ", "implements", "inherits", "extends", "wraps", "delegates to")):
+            return IntentClass.RELATIONSHIP
+        return IntentClass.UNKNOWN
+
+    # ── Summary extraction ────────────────────────────────────────
+
+    def _extract_summary(self, doc, content: str) -> str:
+        """Generate a one-line summary from the most distinctive sentence."""
+        sentences = list(doc.sents)
+        if not sentences:
+            return content[:100].strip()
+
+        # Pick the sentence with the most named entities
+        best = max(
+            sentences,
+            key=lambda s: sum(
+                1 for ent in doc.ents
+                if ent.start >= s.start and ent.end <= s.end
+            ),
+        )
+        text = best.text.strip()
+        if len(text) > 10:
+            return text[:200]
+
+        return sentences[0].text.strip()[:200]

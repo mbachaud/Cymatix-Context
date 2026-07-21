@@ -12,7 +12,7 @@ then decide whether to run the bulk pass via claude_batch_ingest.py.
 
 Usage:
     python scripts/claude_core_ingest.py
-    python scripts/claude_core_ingest.py --roots F:/Projects/helix-context/helix_context
+    python scripts/claude_core_ingest.py --roots F:/Projects/helix-context/cymatix_context
     python scripts/claude_core_ingest.py --model claude-sonnet-4-6
     python scripts/claude_core_ingest.py --dry-run   # count files, no API calls
 
@@ -31,10 +31,10 @@ import time
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from helix_context.codons import CodonChunker, CodonEncoder
-from helix_context.config import load_config
-from helix_context.genome import Genome
-from helix_context.ribosome import ClaudeBackend, LiteLLMBackend, Ribosome
+from cymatix_context.codons import CodonChunker, CodonEncoder
+from cymatix_context.config import load_config
+from cymatix_context.genome import Genome
+from cymatix_context.ribosome import ClaudeBackend, LiteLLMBackend, Ribosome
 
 logging.basicConfig(
     level=logging.INFO,
@@ -45,7 +45,7 @@ log = logging.getLogger("ingest.claude_core")
 
 # Default core roots — high-value, moderate size
 DEFAULT_ROOTS = [
-    "F:/Projects/helix-context/helix_context",
+    "F:/Projects/helix-context/cymatix_context",
     "F:/Projects/Education/fleet",
     "F:/Projects/Education/autoresearch",
 ]

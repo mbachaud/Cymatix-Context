@@ -7,7 +7,7 @@ talked to the *stale* blob-mode server still holding the port. Every
 sharded query returned ``genes=0``.
 
 Issue #153: ``BenchServer._spawn`` set neither ``cwd`` nor ``PYTHONPATH``
-on the uvicorn subprocess, so whichever ``helix_context`` package the
+on the uvicorn subprocess, so whichever ``cymatix_context`` package the
 Python import system resolved first won — including stale sibling
 worktrees with mismatched schemas. The whole bench then logged
 ``retr=err`` × 50 from ``OperationalError: no such table: ...``.
@@ -26,7 +26,7 @@ isolated to ``tmp_path``, no real uvicorn is spawned.
      ``genes=0`` after a swap.
   5. (#153) ``_spawn`` pins ``cwd`` + ``PYTHONPATH`` to the repo root so
      the spawned uvicorn always loads the orchestrator's own
-     ``helix_context`` checkout.
+     ``cymatix_context`` checkout.
   6. (#153) ``_probe_fixture_schema`` aborts on a fixture missing the
      ``genes`` table — the canonical wrong-helix failure mode — and
      warns rather than fails on missing aux tables.
@@ -425,15 +425,15 @@ def test_repo_root_resolves_to_this_checkout() -> None:
     root = _repo_root()
     assert root is not None, "expected to resolve a repo root from __file__"
     assert (root / "pyproject.toml").exists()
-    assert (root / "helix_context" / "__init__.py").exists()
+    assert (root / "cymatix_context" / "__init__.py").exists()
 
 
 def test_bench_server_defaults_repo_root_to_this_checkout() -> None:
     """A no-arg BenchServer picks up the orchestrator's own repo root so
-    the spawned uvicorn loads *this* helix_context, not a sibling."""
+    the spawned uvicorn loads *this* cymatix_context, not a sibling."""
     srv = BenchServer()
     assert srv.repo_root is not None
-    assert (srv.repo_root / "helix_context" / "__init__.py").exists()
+    assert (srv.repo_root / "cymatix_context" / "__init__.py").exists()
 
 
 def test_bench_server_honors_explicit_repo_root(tmp_path: Path) -> None:
@@ -447,12 +447,12 @@ def test_spawn_passes_cwd_and_pythonpath_to_subprocess(tmp_path: Path) -> None:
     """``_spawn`` must call ``subprocess.Popen`` with ``cwd=<repo_root>``
     and ``PYTHONPATH`` starting with the repo root. Without this, an
     editable install / .pth shim in the inherited environment can win the
-    ``helix_context`` import race and load stale schema code (issue #153)."""
+    ``cymatix_context`` import race and load stale schema code (issue #153)."""
     # Use a stub repo so we don't depend on the real checkout layout for
     # this assertion — Popen is patched out either way.
     (tmp_path / "pyproject.toml").write_text("")
-    (tmp_path / "helix_context").mkdir()
-    (tmp_path / "helix_context" / "__init__.py").write_text("")
+    (tmp_path / "cymatix_context").mkdir()
+    (tmp_path / "cymatix_context" / "__init__.py").write_text("")
 
     srv = BenchServer(repo_root=tmp_path)
     fx = Fixture(name="small", db=str(tmp_path / "small.db"), sharded=False)
@@ -470,7 +470,7 @@ def test_spawn_passes_cwd_and_pythonpath_to_subprocess(tmp_path: Path) -> None:
 
     kwargs = captured["kwargs"]
     assert kwargs["cwd"] == str(tmp_path.resolve()), \
-        "spawn must pin cwd to repo_root so uvicorn resolves the right helix_context"
+        "spawn must pin cwd to repo_root so uvicorn resolves the right cymatix_context"
     pythonpath = kwargs["env"].get("PYTHONPATH", "")
     assert pythonpath.startswith(str(tmp_path.resolve())), \
         f"PYTHONPATH must lead with repo_root, got {pythonpath!r}"
@@ -482,8 +482,8 @@ def test_spawn_preserves_existing_pythonpath(tmp_path: Path) -> None:
     sibling tooling repo on the path) and only the *order* matters for
     fixing the import race."""
     (tmp_path / "pyproject.toml").write_text("")
-    (tmp_path / "helix_context").mkdir()
-    (tmp_path / "helix_context" / "__init__.py").write_text("")
+    (tmp_path / "cymatix_context").mkdir()
+    (tmp_path / "cymatix_context" / "__init__.py").write_text("")
     _make_fixture_db(tmp_path / "small.db", tables=("genes",))
 
     srv = BenchServer(repo_root=tmp_path)
@@ -511,8 +511,8 @@ def test_spawn_does_not_double_prepend_repo_root(tmp_path: Path) -> None:
     """On a restart the env already contains repo_root at the head;
     ``_spawn`` must not stack a duplicate entry every call."""
     (tmp_path / "pyproject.toml").write_text("")
-    (tmp_path / "helix_context").mkdir()
-    (tmp_path / "helix_context" / "__init__.py").write_text("")
+    (tmp_path / "cymatix_context").mkdir()
+    (tmp_path / "cymatix_context" / "__init__.py").write_text("")
     _make_fixture_db(tmp_path / "small.db", tables=("genes",))
 
     srv = BenchServer(repo_root=tmp_path)
@@ -543,8 +543,8 @@ def test_spawn_defaults_pythonhashseed_to_zero(tmp_path: Path) -> None:
     drift purely because the subprocess got a different hash seed (see
     tests/test_bench_determinism.py's module docstring, fix #3)."""
     (tmp_path / "pyproject.toml").write_text("")
-    (tmp_path / "helix_context").mkdir()
-    (tmp_path / "helix_context" / "__init__.py").write_text("")
+    (tmp_path / "cymatix_context").mkdir()
+    (tmp_path / "cymatix_context" / "__init__.py").write_text("")
     _make_fixture_db(tmp_path / "small.db", tables=("genes",))
 
     srv = BenchServer(repo_root=tmp_path)
@@ -572,8 +572,8 @@ def test_spawn_respects_explicit_pythonhashseed_override(tmp_path: Path) -> None
     default. ``env.setdefault`` then ``env.update(extra_env)`` should
     produce the override behavior."""
     (tmp_path / "pyproject.toml").write_text("")
-    (tmp_path / "helix_context").mkdir()
-    (tmp_path / "helix_context" / "__init__.py").write_text("")
+    (tmp_path / "cymatix_context").mkdir()
+    (tmp_path / "cymatix_context" / "__init__.py").write_text("")
     _make_fixture_db(tmp_path / "small.db", tables=("genes",))
 
     srv = BenchServer(repo_root=tmp_path)

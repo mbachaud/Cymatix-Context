@@ -18,10 +18,10 @@ import time
 
 import pytest
 
-from helix_context.cross_store_import import export_genome, import_genome
-from helix_context.knowledge_store import KnowledgeStore as Genome
-from helix_context.persistence import ReplicationManager
-from helix_context.schemas import ChromatinState
+from cymatix_context.cross_store_import import export_genome, import_genome
+from cymatix_context.knowledge_store import KnowledgeStore as Genome
+from cymatix_context.persistence import ReplicationManager
+from cymatix_context.schemas import ChromatinState
 
 from tests.conftest import make_gene
 

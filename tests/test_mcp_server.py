@@ -1,8 +1,8 @@
-"""Tests for helix_context.mcp_server helper behavior."""
+"""Tests for cymatix_context.mcp_server helper behavior."""
 
 import pytest
 
-from helix_context.mcp_server import (
+from cymatix_context.mcp_server import (
     _default_ingest_identity,
     _normalize_health_payload,
     _unwrap_context_list,
@@ -31,7 +31,7 @@ def mock_bridge(monkeypatch):
             })
             return True
 
-    monkeypatch.setattr("helix_context.bridge.AgentBridge", _MockBridge)
+    monkeypatch.setattr("cymatix_context.bridge.AgentBridge", _MockBridge)
     _MockBridge.register_participant_calls = []  # reset between tests
     _MockBridge.announce_calls = []
     yield _MockBridge
@@ -56,7 +56,7 @@ class TestNormalizeHealthPayload:
         }
         result = _normalize_health_payload(payload)
         assert result["availability"] == "available"
-        assert "helix_context" in result["next_action"]
+        assert "cymatix_context" in result["next_action"]
 
     def test_empty_genome_changes_next_action(self):
         payload = {
@@ -136,7 +136,7 @@ class TestRegisterWithRegistry:
         monkeypatch.setenv("HELIX_AGENT_KIND", "claude-code")
         monkeypatch.setenv("HELIX_MCP_HOST", "vscode")
 
-        from helix_context import mcp_server
+        from cymatix_context import mcp_server
         mcp_server._register_with_registry()
 
         call = mock_bridge.register_participant_calls[-1]
@@ -151,7 +151,7 @@ class TestRegisterWithRegistry:
         monkeypatch.setenv("HELIX_MCP_HANDLE", "raude")
         monkeypatch.setenv("HELIX_PARTY_ID", "party_test")
 
-        from helix_context import mcp_server
+        from cymatix_context import mcp_server
         mcp_server._register_with_registry()
 
         call = mock_bridge.register_participant_calls[-1]
@@ -166,7 +166,7 @@ def test_register_with_registry_calls_detect_ide(monkeypatch, mock_bridge):
     monkeypatch.delenv("HELIX_MCP_HOST", raising=False)
     monkeypatch.setenv("VSCODE_PID", "9999")
 
-    from helix_context import mcp_server
+    from cymatix_context import mcp_server
     mcp_server._register_with_registry()
 
     call = mock_bridge.register_participant_calls[-1]
@@ -182,7 +182,7 @@ def test_register_with_registry_no_match_sends_none(monkeypatch, mock_bridge):
     monkeypatch.delenv("VSCODE_PID", raising=False)
     monkeypatch.delenv("CURSOR_TRACE_ID", raising=False)
 
-    from helix_context import mcp_server
+    from cymatix_context import mcp_server
     mcp_server._register_with_registry()
 
     call = mock_bridge.register_participant_calls[-1]
@@ -191,7 +191,7 @@ def test_register_with_registry_no_match_sends_none(monkeypatch, mock_bridge):
 
 
 class TestUnwrapContextList:
-    """The MCP ``helix_context`` tool declares ``Dict[str, Any]`` but
+    """The MCP ``cymatix_context`` tool declares ``Dict[str, Any]`` but
     ``POST /context`` returns the Continue HTTP context-provider list
     shape. _unwrap_context_list bridges the two without breaking the
     HTTP layer for Continue IDE."""
@@ -224,10 +224,10 @@ class TestUnwrapContextList:
 
 
 def test_helix_context_unwraps_continue_list_shape(monkeypatch):
-    """End-to-end: helix_context tool returns a flat dict even though
+    """End-to-end: cymatix_context tool returns a flat dict even though
     /context responds with the Continue list shape. This is the failure
     the AI-user feedback hit on origin/master@93deaf2."""
-    from helix_context import mcp_server
+    from cymatix_context import mcp_server
 
     captured: dict = {}
 
@@ -242,7 +242,7 @@ def test_helix_context_unwraps_continue_list_shape(monkeypatch):
         }]
 
     monkeypatch.setattr(mcp_server, "_http", _fake_http)
-    out = mcp_server.helix_context("what does the splice step do?")
+    out = mcp_server.cymatix_context("what does the splice step do?")
     assert isinstance(out, dict), f"expected dict, got {type(out).__name__}: {out!r}"
     assert out["content"] == "<helix>example</helix>"
     # Verify the call was made with the expected shape so we don't
@@ -254,7 +254,7 @@ def test_helix_context_unwraps_continue_list_shape(monkeypatch):
 
 def test_helix_announce_tool_calls_bridge_announce(monkeypatch, mock_bridge):
     """The helix_announce MCP tool delegates to AgentBridge.announce()."""
-    from helix_context import mcp_server
+    from cymatix_context import mcp_server
     # Force the module to think it's registered so helix_announce proceeds
     mcp_server._registered_bridge = mock_bridge
     result = mcp_server.helix_announce(
@@ -277,7 +277,7 @@ def _reload_mcp(monkeypatch, *, full: bool):
         monkeypatch.setenv("HELIX_MCP_FULL", "1")
     else:
         monkeypatch.delenv("HELIX_MCP_FULL", raising=False)
-    import helix_context.mcp.mcp_server as m
+    import cymatix_context.mcp.mcp_server as m
 
     return importlib.reload(m)
 
@@ -290,7 +290,7 @@ def restore_mcp_profile():
     import os
 
     os.environ.pop("HELIX_MCP_FULL", None)
-    import helix_context.mcp.mcp_server as m
+    import cymatix_context.mcp.mcp_server as m
 
     importlib.reload(m)
 

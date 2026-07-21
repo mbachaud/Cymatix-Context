@@ -24,7 +24,7 @@ _REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
-from helix_context.scoring.know_calibration import KnowCalibration
+from cymatix_context.scoring.know_calibration import KnowCalibration
 from scripts.calibrate_know_confidence import (
     DEFAULT_AUC_FLOOR,
     AUCGateError,

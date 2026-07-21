@@ -25,8 +25,8 @@ from typing import Iterable
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from helix_context.genome import Genome
-from helix_context.shard_router import ShardRouter
+from cymatix_context.genome import Genome
+from cymatix_context.shard_router import ShardRouter
 
 log = logging.getLogger("validate_shard")
 logging.basicConfig(

@@ -1,7 +1,7 @@
 """Tests for bounded BM25 lexical rescue."""
 
-from helix_context.genome import Genome
-from helix_context.retrieval.lexical_rescue import (
+from cymatix_context.genome import Genome
+from cymatix_context.retrieval.lexical_rescue import (
     lexical_rescue_sources,
     merge_source_ids,
 )
@@ -27,7 +27,7 @@ def test_lexical_rescue_finds_claims_for_singular_query(tmp_path):
             "CLAIM_TYPES allowed values include path_value and config_value.",
             domains=["claims"],
         )
-        gene.source_id = "F:/Projects/helix-context/helix_context/schemas.py"
+        gene.source_id = "F:/Projects/helix-context/cymatix_context/schemas.py"
         genome.upsert_gene(gene, apply_gate=False)
     finally:
         genome.close()
@@ -38,7 +38,7 @@ def test_lexical_rescue_finds_claims_for_singular_query(tmp_path):
         limit=4,
     )
 
-    assert sources == ["F:/Projects/helix-context/helix_context/schemas.py"]
+    assert sources == ["F:/Projects/helix-context/cymatix_context/schemas.py"]
 
 
 def test_lexical_rescue_excludes_existing_packet_sources(tmp_path):
@@ -50,7 +50,7 @@ def test_lexical_rescue_excludes_existing_packet_sources(tmp_path):
         genome.upsert_gene(first, apply_gate=False)
 
         second = make_gene("headroom supervisor default port is 8787", domains=["headroom"])
-        second.source_id = "F:/Projects/helix-context/helix_context/launcher/headroom_supervisor.py"
+        second.source_id = "F:/Projects/helix-context/cymatix_context/launcher/headroom_supervisor.py"
         genome.upsert_gene(second, apply_gate=False)
     finally:
         genome.close()
@@ -63,7 +63,7 @@ def test_lexical_rescue_excludes_existing_packet_sources(tmp_path):
     )
 
     assert sources == [
-        "F:/Projects/helix-context/helix_context/launcher/headroom_supervisor.py"
+        "F:/Projects/helix-context/cymatix_context/launcher/headroom_supervisor.py"
     ]
 
 

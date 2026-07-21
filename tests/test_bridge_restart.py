@@ -9,7 +9,7 @@ import time
 
 import pytest
 
-from helix_context.bridge import AgentBridge
+from cymatix_context.bridge import AgentBridge
 
 
 def test_announce_restart_writes_signal(tmp_path):

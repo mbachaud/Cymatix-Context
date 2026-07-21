@@ -4,7 +4,7 @@ from __future__ import annotations
 import textwrap
 from pathlib import Path
 
-from helix_context.config import HelixConfig, load_config
+from cymatix_context.config import HelixConfig, load_config
 
 
 def test_vault_defaults_when_section_absent(tmp_path: Path):

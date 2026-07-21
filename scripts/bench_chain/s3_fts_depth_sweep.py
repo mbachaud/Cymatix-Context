@@ -129,7 +129,7 @@ def _start_server(bed_db: Path, cell_config: Path, port: int,
     env["HELIX_CONFIG"] = str(cell_config)
     env["HELIX_DISABLE_LEARN"] = "1"          # read-only serve (gap A2)
     env.pop("HELIX_USE_SHARDS", None)         # single-file bed, not sharded
-    args = [sys.executable, "-m", "uvicorn", "helix_context._asgi:app",
+    args = [sys.executable, "-m", "uvicorn", "cymatix_context._asgi:app",
             "--host", "127.0.0.1", "--port", str(port)]
     log_fh = log_path.open("w", encoding="utf-8")
     return subprocess.Popen(

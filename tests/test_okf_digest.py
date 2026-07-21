@@ -22,8 +22,8 @@ from unittest.mock import patch
 
 import pytest
 
-from helix_context.okf import compute_bundle_digest, read_bundle
-from helix_context.okf.digest import ADAPTER_VERSION, bundle_digest_payload
+from cymatix_context.okf import compute_bundle_digest, read_bundle
+from cymatix_context.okf.digest import ADAPTER_VERSION, bundle_digest_payload
 
 OKF_FIXTURES = Path(__file__).parent / "fixtures" / "okf"
 
@@ -33,11 +33,11 @@ OKF_FIXTURES = Path(__file__).parent / "fixtures" / "okf"
 # report the digest plus a wall-clock column sample.
 _INGEST_SCRIPT = """
 import json, sys
-from helix_context.config import (
+from cymatix_context.config import (
     BudgetConfig, GenomeConfig, HelixConfig, RibosomeConfig,
 )
-from helix_context.context_manager import HelixContextManager
-from helix_context.okf import ingest_bundle
+from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.okf import ingest_bundle
 
 cfg = HelixConfig(
     ribosome=RibosomeConfig(model="mock", timeout=5),
@@ -63,7 +63,7 @@ print(json.dumps({
 
 _READ_SCRIPT = """
 import json, sys
-from helix_context.okf import compute_bundle_digest, read_bundle
+from cymatix_context.okf import compute_bundle_digest, read_bundle
 print(json.dumps({"digest": compute_bundle_digest(read_bundle(sys.argv[1]))}))
 """
 
@@ -126,8 +126,8 @@ class TestClockIndependence:
 class TestFloatExclusion:
     def test_embeddings_vary_with_config_but_digest_does_not(self):
         pytest.importorskip("spacy")
-        from helix_context.context_manager import HelixContextManager
-        from helix_context.okf import ingest_bundle
+        from cymatix_context.context_manager import HelixContextManager
+        from cymatix_context.okf import ingest_bundle
         from tests.conftest import make_helix_config
 
         path = OKF_FIXTURES / "type_only"

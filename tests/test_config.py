@@ -6,7 +6,7 @@ def test_upstream_timeout_default_is_180s():
     2026-05-01 overnight report). 180s is the shipping default; 120s
     is a regression.
     """
-    from helix_context.config import HelixConfig
+    from cymatix_context.config import HelixConfig
     cfg = HelixConfig()
     assert cfg.server.upstream_timeout == 180.0
 
@@ -20,14 +20,14 @@ def test_budget_abstain_enabled_default_is_true():
     inject behavior. Bumping this default to false would silently undo the
     GPQA Diamond p95 fix.
     """
-    from helix_context.config import HelixConfig
+    from cymatix_context.config import HelixConfig
     cfg = HelixConfig()
     assert cfg.budget.abstain_enabled is True
 
 
 def test_budget_abstain_enabled_toml_override(tmp_path):
     """Regression: helix.toml [budget] abstain_enabled = false is honored."""
-    from helix_context.config import load_config
+    from cymatix_context.config import load_config
     toml = tmp_path / "helix.toml"
     toml.write_text(
         "[budget]\nabstain_enabled = false\n",
@@ -48,14 +48,14 @@ def test_budget_abstain_enabled_toml_override(tmp_path):
 def test_ingestion_falls_back_to_cpu_when_ribosome_disabled(tmp_path, caplog):
     """Default-disabled ribosome + ollama ingest → auto-flip to cpu."""
     import logging
-    from helix_context.config import load_config
+    from cymatix_context.config import load_config
 
     toml = tmp_path / "helix.toml"
     toml.write_text(
         "[ribosome]\nenabled = false\n[ingestion]\nbackend = \"ollama\"\n",
         encoding="utf-8",
     )
-    with caplog.at_level(logging.WARNING, logger="helix_context.config"):
+    with caplog.at_level(logging.WARNING, logger="cymatix_context.config"):
         cfg = load_config(str(toml))
     assert cfg.ingestion.backend == "cpu"
     assert any("auto-falling-back" in r.message for r in caplog.records), (
@@ -66,7 +66,7 @@ def test_ingestion_falls_back_to_cpu_when_ribosome_disabled(tmp_path, caplog):
 
 def test_ingestion_left_alone_when_ribosome_enabled(tmp_path):
     """Operators who enable ribosome + ollama get exactly what they asked for."""
-    from helix_context.config import load_config
+    from cymatix_context.config import load_config
     toml = tmp_path / "helix.toml"
     toml.write_text(
         "[ribosome]\nenabled = true\n[ingestion]\nbackend = \"ollama\"\n",
@@ -78,7 +78,7 @@ def test_ingestion_left_alone_when_ribosome_enabled(tmp_path):
 
 def test_ingestion_left_alone_when_explicitly_cpu(tmp_path):
     """Explicit cpu / hybrid backends stay put even with ribosome off."""
-    from helix_context.config import load_config
+    from cymatix_context.config import load_config
     toml = tmp_path / "helix.toml"
     toml.write_text(
         "[ribosome]\nenabled = false\n[ingestion]\nbackend = \"hybrid\"\n",
@@ -93,7 +93,7 @@ def test_ingestion_left_alone_when_explicitly_cpu(tmp_path):
 # warning emitted for legacy [ribosome] device usage. See
 # docs/specs/2026-05-04-hardware-detection-design.md for the contract.
 
-from helix_context.config import load_config
+from cymatix_context.config import load_config
 
 
 def test_hardware_section_parses(tmp_path):
@@ -132,7 +132,7 @@ device = "cuda"
 """
     p = tmp_path / "helix.toml"
     p.write_text(cfg_text)
-    with caplog.at_level("WARNING", logger="helix_context.config"):
+    with caplog.at_level("WARNING", logger="cymatix_context.config"):
         cfg = load_config(str(p))
     assert cfg.hardware.device == "cuda"
     assert any(
@@ -152,7 +152,7 @@ device = "cuda"
 """
     p = tmp_path / "helix.toml"
     p.write_text(cfg_text)
-    with caplog.at_level("WARNING", logger="helix_context.config"):
+    with caplog.at_level("WARNING", logger="cymatix_context.config"):
         cfg = load_config(str(p))
     assert cfg.hardware.device == "cuda"
     assert any(
@@ -178,7 +178,7 @@ def test_budget_foveated_defaults_off_with_alpha_one():
     here without bench evidence would silently change BROAD-tier
     compression on every install.
     """
-    from helix_context.config import HelixConfig
+    from cymatix_context.config import HelixConfig
     cfg = HelixConfig()
     assert cfg.budget.foveated_enabled is False
     assert cfg.budget.foveated_alpha == 1.0
@@ -194,7 +194,7 @@ def test_budget_foveated_defaults_off_with_alpha_one():
 
 def test_env_overrides_apply_when_config_file_missing(tmp_path, monkeypatch):
     """HELIX_* env overrides must win even when helix.toml does not exist."""
-    from helix_context.config import load_config
+    from cymatix_context.config import load_config
     monkeypatch.setenv("HELIX_GENOME_PATH", "genomes/env-override.db")
     monkeypatch.setenv("HELIX_SERVER_UPSTREAM", "http://127.0.0.1:9999")
     cfg = load_config(str(tmp_path / "does-not-exist.toml"))
@@ -204,7 +204,7 @@ def test_env_overrides_apply_when_config_file_missing(tmp_path, monkeypatch):
 
 def test_env_overrides_apply_when_toml_malformed(tmp_path, monkeypatch):
     """HELIX_* env overrides must win even when helix.toml fails to parse."""
-    from helix_context.config import load_config
+    from cymatix_context.config import load_config
     p = tmp_path / "helix.toml"
     p.write_text("[genome\npath = broken", encoding="utf-8")
     monkeypatch.setenv("HELIX_GENOME_PATH", "genomes/env-override.db")
@@ -216,7 +216,7 @@ def test_env_overrides_apply_when_toml_malformed(tmp_path, monkeypatch):
 
 def test_env_overrides_still_beat_toml_on_success_path(tmp_path, monkeypatch):
     """Sanity pin: env > toml on the normal (parsed) load path too."""
-    from helix_context.config import load_config
+    from cymatix_context.config import load_config
     p = tmp_path / "helix.toml"
     p.write_text(
         "[genome]\npath = \"genomes/from-toml.db\"\n"
@@ -232,7 +232,7 @@ def test_env_overrides_still_beat_toml_on_success_path(tmp_path, monkeypatch):
 
 def test_budget_foveated_toml_override(tmp_path):
     """Regression: helix.toml [budget] foveated_* keys are honored."""
-    from helix_context.config import load_config
+    from cymatix_context.config import load_config
     p = tmp_path / "helix.toml"
     p.write_text(
         "[budget]\nfoveated_enabled = true\nfoveated_alpha = 2.0\nfoveated_c_min = 0.20\nfoveated_base_chars = 1500\n",

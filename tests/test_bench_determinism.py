@@ -35,14 +35,14 @@ import time
 
 import pytest
 
-from helix_context.config import (
+from cymatix_context.config import (
     BudgetConfig,
     GenomeConfig,
     HelixConfig,
     RibosomeConfig,
 )
-from helix_context.context_manager import HelixContextManager
-from helix_context.knowledge_store import KnowledgeStore
+from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.knowledge_store import KnowledgeStore
 
 
 # ── Fix 2: ``_expand_terms`` returns sorted output ──────────────────────
@@ -189,7 +189,7 @@ def test_knowledge_store_publishes_scores_and_tiers_under_lock():
     lock could observe scores from call A and tier contributions from
     call B.
     """
-    from helix_context.schemas import (
+    from cymatix_context.schemas import (
         ChromatinState,
         EpigeneticMarkers,
         Gene,

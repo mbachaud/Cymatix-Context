@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from helix_context.identity.claims_graph import (
+from cymatix_context.identity.claims_graph import (
     contradiction_clusters,
     latest_in_chain,
     resolve,
@@ -12,7 +12,7 @@ from helix_context.identity.claims_graph import (
     supersedes_chain,
     topologically_sorted,
 )
-from helix_context.shard_schema import (
+from cymatix_context.shard_schema import (
     init_main_db,
     open_main_db,
     register_shard,

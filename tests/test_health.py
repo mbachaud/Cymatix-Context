@@ -7,10 +7,10 @@ import pytest
 import tempfile
 import os
 
-from helix_context.context_manager import HelixContextManager
-from helix_context.genome import Genome
-from helix_context.hgt import export_genome, import_genome, genome_diff
-from helix_context.schemas import ContextHealth
+from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.genome import Genome
+from cymatix_context.hgt import export_genome, import_genome, genome_diff
+from cymatix_context.schemas import ContextHealth
 
 from tests.conftest import make_gene, make_helix_config, MockCompressorBackend
 
@@ -157,7 +157,7 @@ class TestHGTExport:
 
     def test_export_excludes_heterochromatin_by_default(self):
         genome = Genome(":memory:")
-        from helix_context.schemas import ChromatinState
+        from cymatix_context.schemas import ChromatinState
         genome.upsert_gene(make_gene("active", domains=["test"], gene_id="active_1"))
         genome.upsert_gene(make_gene("stale", domains=["test"], gene_id="stale_1",
                                      chromatin=ChromatinState.HETEROCHROMATIN))

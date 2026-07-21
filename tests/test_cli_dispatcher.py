@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import pytest
 
-from helix_context.cli import main
+from cymatix_context.cli import main
 from tests.conftest import run_cli as _run
 
 

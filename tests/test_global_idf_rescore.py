@@ -46,15 +46,15 @@ from pathlib import Path
 
 import pytest
 
-from helix_context.genome import Genome
-from helix_context.schemas import (
+from cymatix_context.genome import Genome
+from cymatix_context.schemas import (
     ChromatinState,
     EpigeneticMarkers,
     Gene,
     PromoterTags,
 )
-from helix_context.shard_router import ShardRouter
-from helix_context.shard_schema import (
+from cymatix_context.shard_router import ShardRouter
+from cymatix_context.shard_schema import (
     init_main_db,
     open_main_db,
     register_shard,

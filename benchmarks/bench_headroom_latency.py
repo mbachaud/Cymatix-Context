@@ -30,9 +30,9 @@ from typing import List
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from helix_context.config import load_config  # noqa: E402
-from helix_context.genome import Genome        # noqa: E402
-from helix_context.headroom_bridge import compress_text  # noqa: E402
+from cymatix_context.config import load_config  # noqa: E402
+from cymatix_context.genome import Genome        # noqa: E402
+from cymatix_context.headroom_bridge import compress_text  # noqa: E402
 
 
 # Target budgets mimic the hot path in context_manager when genes are

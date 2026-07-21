@@ -14,7 +14,7 @@ import sqlite3
 
 import pytest
 
-from helix_context.backends import splade_backend
+from cymatix_context.backends import splade_backend
 
 
 def _fresh_splade_db() -> sqlite3.Connection:

@@ -12,9 +12,9 @@ import pytest
 
 from fastapi.testclient import TestClient
 
-import helix_context.server as server_mod
-from helix_context.config import HelixConfig, GenomeConfig, KnowConfig, RibosomeConfig, ServerConfig
-from helix_context.server import create_app
+import cymatix_context.server as server_mod
+from cymatix_context.config import HelixConfig, GenomeConfig, KnowConfig, RibosomeConfig, ServerConfig
+from cymatix_context.server import create_app
 
 from tests.conftest import make_client, make_helix_config
 
@@ -136,7 +136,7 @@ class TestHealthEndpoint:
             "_probe_upstream",
             lambda _url, timeout_s=1.0: {"reachable": True, "probe": "/api/tags", "status_code": 200},
         )
-        from helix_context import hardware
+        from cymatix_context import hardware
         hardware.reset_for_test()
         fake = hardware.HardwareInfo(
             device="cpu", device_type="cpu", device_name="AMD Ryzen 9 7900X",
@@ -571,24 +571,24 @@ class TestResolveCallerAgent:
         return SimpleNamespace(headers=headers or {})
 
     def test_body_agent_takes_precedence(self, monkeypatch):
-        from helix_context.server import _resolve_caller_agent
+        from cymatix_context.server import _resolve_caller_agent
         monkeypatch.setenv("HELIX_AGENT", "raude")
         req = self._make_request({"x-helix-agent": "taude"})
         assert _resolve_caller_agent(req, {"agent": "laude"}) == "laude"
 
     def test_header_when_body_missing(self, monkeypatch):
-        from helix_context.server import _resolve_caller_agent
+        from cymatix_context.server import _resolve_caller_agent
         monkeypatch.setenv("HELIX_AGENT", "raude")
         req = self._make_request({"x-helix-agent": "taude"})
         assert _resolve_caller_agent(req, {}) == "taude"
 
     def test_env_when_body_and_header_missing(self, monkeypatch):
-        from helix_context.server import _resolve_caller_agent
+        from cymatix_context.server import _resolve_caller_agent
         monkeypatch.setenv("HELIX_AGENT", "gemini")
         assert _resolve_caller_agent(self._make_request(), {}) == "gemini"
 
     def test_unknown_when_no_source_supplies(self, monkeypatch):
-        from helix_context.server import _resolve_caller_agent
+        from cymatix_context.server import _resolve_caller_agent
         monkeypatch.delenv("HELIX_AGENT", raising=False)
         assert _resolve_caller_agent(self._make_request(), {}) == "unknown"
 
@@ -596,13 +596,13 @@ class TestResolveCallerAgent:
         """Cardinality cap: any handle not in the allowlist (or
         HELIX_AGENT_ALLOW extension) becomes "other", protecting
         Prometheus from per-pid / per-tab handles."""
-        from helix_context.server import _resolve_caller_agent
+        from cymatix_context.server import _resolve_caller_agent
         monkeypatch.delenv("HELIX_AGENT_ALLOW", raising=False)
         req = self._make_request()
         assert _resolve_caller_agent(req, {"agent": "weird-tab-37"}) == "other"
 
     def test_helix_agent_allow_extends_allowlist(self, monkeypatch):
-        from helix_context.server import _resolve_caller_agent
+        from cymatix_context.server import _resolve_caller_agent
         monkeypatch.setenv("HELIX_AGENT_ALLOW", "qaude, vaude")
         req = self._make_request()
         assert _resolve_caller_agent(req, {"agent": "qaude"}) == "qaude"
@@ -611,7 +611,7 @@ class TestResolveCallerAgent:
         assert _resolve_caller_agent(req, {"agent": "rogue"}) == "other"
 
     def test_normalizes_case_and_whitespace(self, monkeypatch):
-        from helix_context.server import _resolve_caller_agent
+        from cymatix_context.server import _resolve_caller_agent
         monkeypatch.delenv("HELIX_AGENT", raising=False)
         req = self._make_request()
         assert _resolve_caller_agent(req, {"agent": "  Laude  "}) == "laude"
@@ -878,7 +878,7 @@ class TestDebugIntrospectionEndpoints:
 
     def _inject_fake_preview_candidates(self, client, monkeypatch, scored):
         """Same pattern as fingerprint helper — mock _express + refiners."""
-        from helix_context.schemas import Gene, PromoterTags
+        from cymatix_context.schemas import Gene, PromoterTags
 
         genes = [
             Gene(
@@ -1015,7 +1015,7 @@ class TestDebugIntrospectionEndpoints:
         objects with matching base scores and a no-op refiner pass so the
         final score equals the base score.
         """
-        from helix_context.schemas import Gene, PromoterTags
+        from cymatix_context.schemas import Gene, PromoterTags
 
         genes = [
             Gene(

@@ -8,12 +8,12 @@ cold-start bootstrap (Fix 3), and build_context assembly.
 
 import pytest
 
-from helix_context.config import BudgetConfig
-from helix_context.context_manager import HelixContextManager, RIBOSOME_DECODER
-from helix_context.ribosome import Ribosome
-from helix_context.genome import Genome
-from helix_context.schemas import Gene, PromoterTags, EpigeneticMarkers
-from helix_context.server import _munge_messages
+from cymatix_context.config import BudgetConfig
+from cymatix_context.context_manager import HelixContextManager, RIBOSOME_DECODER
+from cymatix_context.ribosome import Ribosome
+from cymatix_context.genome import Genome
+from cymatix_context.schemas import Gene, PromoterTags, EpigeneticMarkers
+from cymatix_context.server import _munge_messages
 
 from tests.conftest import MockCompressorBackend, make_gene, make_helix_config
 
@@ -289,13 +289,13 @@ class TestColdTierWiring:
 
     @pytest.fixture(scope="class")
     def codec(self):
-        from helix_context.backends.sema import SemaCodec
+        from cymatix_context.backends.sema import SemaCodec
         return SemaCodec()
 
     @pytest.fixture
     def cold_helix(self, pipeline_config, codec):
         """HelixContextManager with a SemaCodec attached + a single cold gene."""
-        from helix_context.context_manager import HelixContextManager
+        from cymatix_context.context_manager import HelixContextManager
         # Enable cold-tier in the config so wiring fires by default
         pipeline_config.context.cold_tier_enabled = True
         pipeline_config.context.cold_tier_min_hot_genes = 0

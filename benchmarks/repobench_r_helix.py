@@ -73,8 +73,8 @@ def build_helix(genome_dir, config_path):
     os.environ["HELIX_GENOME_PATH"] = os.path.join(genome_dir, "genome.db")
     os.makedirs(genome_dir, exist_ok=True)
 
-    from helix_context.config import load_config
-    from helix_context.context_manager import HelixContextManager
+    from cymatix_context.config import load_config
+    from cymatix_context.context_manager import HelixContextManager
 
     return HelixContextManager(load_config())
 

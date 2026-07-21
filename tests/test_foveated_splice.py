@@ -5,7 +5,7 @@ Plan: docs/plans/2026-05-05-foveated-splice.md
 """
 import pytest
 
-from helix_context.context_manager import _compute_foveated_caps
+from cymatix_context.context_manager import _compute_foveated_caps
 
 
 @pytest.fixture
@@ -13,20 +13,20 @@ def helix_manager_with_three_genes(tmp_path):
     """Minimal HelixContextManager with three genes of distinct scores.
 
     Avoids the tests.test_pipeline import (broken at collection time
-    due to module-level helix_context.server.create_app() failure).
+    due to module-level cymatix_context.server.create_app() failure).
     Constructs the manager directly with model='mock' (no real backend
     load) and an in-memory genome, then seeds last_query_scores so the
     slate-path sort has something to sort by.
     """
-    from helix_context.config import (
+    from cymatix_context.config import (
         BudgetConfig,
         ClassifierConfig,
         GenomeConfig,
         HelixConfig,
         RibosomeConfig,
     )
-    from helix_context.context_manager import HelixContextManager
-    from helix_context.schemas import Gene, PromoterTags
+    from cymatix_context.context_manager import HelixContextManager
+    from cymatix_context.schemas import Gene, PromoterTags
 
     cfg = HelixConfig(
         ribosome=RibosomeConfig(model="mock", timeout=5),
@@ -160,7 +160,7 @@ class TestAssembleRespectsCallerOrder:
 # We replicate _stub_express inline (rather than importing from
 # tests.test_abstain_tier) because that module transitively imports
 # tests.test_pipeline, which fails at collection time due to a
-# module-level helix_context.server.create_app() call without a real
+# module-level cymatix_context.server.create_app() call without a real
 # genome DB. Inline replication keeps this file collectable in
 # isolation. See plan §"Step 1: Write the failing tests" notes.
 # ---------------------------------------------------------------------------
@@ -189,11 +189,11 @@ def _make_manager_with_n_genes(n, scores_fn):
     scores_fn maps position to score. Caller picks scores to land the
     tier resolution at the desired bucket.
     """
-    from helix_context.config import (
+    from cymatix_context.config import (
         BudgetConfig, ClassifierConfig, GenomeConfig, HelixConfig,
         RibosomeConfig,
     )
-    from helix_context.context_manager import HelixContextManager
+    from cymatix_context.context_manager import HelixContextManager
     from tests.conftest import make_gene
 
     cfg = HelixConfig(
@@ -404,11 +404,11 @@ def _make_manager_with_n_genes_classifier_enabled(n, scores_fn):
     Used by TestFoveatedClassifierInteraction to exercise the C1 invariant
     (foveated must run AFTER classifier cap, not before).
     """
-    from helix_context.config import (
+    from cymatix_context.config import (
         BudgetConfig, ClassifierConfig, GenomeConfig, HelixConfig,
         RibosomeConfig,
     )
-    from helix_context.context_manager import HelixContextManager
+    from cymatix_context.context_manager import HelixContextManager
     from tests.conftest import make_gene
 
     cfg = HelixConfig(

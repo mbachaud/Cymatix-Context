@@ -21,7 +21,7 @@ import pytest
 # letting individual tests fail with confusing degenerate=True results.
 pytest.importorskip("numpy")
 
-from helix_context.identity import cwola
+from cymatix_context.identity import cwola
 
 
 @pytest.fixture

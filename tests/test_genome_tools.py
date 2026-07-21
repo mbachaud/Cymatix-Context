@@ -100,7 +100,7 @@ def _make_genome(path: Path, rows: list[dict], with_promoter: bool = True) -> No
 def test_source_prefix_peels_drive_and_sources_container():
     p = build_gold.source_prefix
     assert p(r"F:\tmp\enterprise_rag_500k\sources\github\pr-1.json") == "github"
-    assert p("F:/Projects/helix-context/helix_context/config.py") == "Projects"
+    assert p("F:/Projects/helix-context/cymatix_context/config.py") == "Projects"
     assert p("C:/tmp/erb/sources/gmail/alex/m.txt") == "gmail"
     assert p("") == "_unknown"
 

@@ -1,5 +1,5 @@
 """
-Tests for helix_context.metrics — TokenCounter atomicity, persistence,
+Tests for cymatix_context.metrics — TokenCounter atomicity, persistence,
 session vs lifetime semantics, exact vs estimated buckets, and the
 estimate_tokens helper.
 """
@@ -12,7 +12,7 @@ import time
 
 import pytest
 
-from helix_context.telemetry.metrics import (
+from cymatix_context.telemetry.metrics import (
     CHARS_PER_TOKEN_ESTIMATE,
     TokenCounter,
     estimate_tokens,

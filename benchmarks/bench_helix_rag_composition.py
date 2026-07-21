@@ -53,13 +53,13 @@ from typing import Optional
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import httpx  # noqa: E402
-from helix_context.backends.sema_codec import decode_embedding  # noqa: E402
-from helix_context.lexical_rescue import (  # noqa: E402
+from cymatix_context.backends.sema_codec import decode_embedding  # noqa: E402
+from cymatix_context.lexical_rescue import (  # noqa: E402
     lexical_rescue_sources,
     merge_source_ids,
 )
-from helix_context.chunk_fetch import fetch_relevant_chunks  # noqa: E402
-from helix_context.relevance_window import (  # noqa: E402
+from cymatix_context.chunk_fetch import fetch_relevant_chunks  # noqa: E402
+from cymatix_context.relevance_window import (  # noqa: E402
     annotate_window,
     best_relevance_window,
 )
@@ -132,8 +132,8 @@ NEEDLES = [
         "query": "claim_type allowed values helix claims layer specification",
         "expected": ["path_value", "agent-context-index"],
         "gold_source_groups": [
-            ["helix-context/helix_context/schemas.py",
-             "helix-context/helix_context/claims.py"],
+            ["helix-context/cymatix_context/schemas.py",
+             "helix-context/cymatix_context/claims.py"],
             ["helix-context/docs/specs/2026-04-17-agent-context-index-build-spec.md"],
         ],
     },
@@ -144,7 +144,7 @@ NEEDLES = [
         "gold_source_groups": [
             ["helix-context/helix.toml", "helix-context/README.md"],
             ["helix-context/helix.toml",
-             "helix-context/helix_context/launcher/headroom_supervisor.py"],
+             "helix-context/cymatix_context/launcher/headroom_supervisor.py"],
         ],
     },
     {
@@ -154,10 +154,10 @@ NEEDLES = [
         "gold_source_groups": [
             ["helix-context/README.md",
              "helix-context/docs/specs/2026-04-17-agent-context-index-build-spec.md",
-             "helix-context/helix_context/context_packet.py"],
+             "helix-context/cymatix_context/context_packet.py"],
             ["helix-context/README.md",
              "helix-context/docs/specs/2026-04-17-agent-context-index-build-spec.md",
-             "helix-context/helix_context/context_packet.py"],
+             "helix-context/cymatix_context/context_packet.py"],
         ],
     },
     {
@@ -165,8 +165,8 @@ NEEDLES = [
         "query": "coordinate confidence floor file-grain coverage floor",
         "expected": ["0.30", "0.15"],
         "gold_source_groups": [
-            ["helix-context/helix_context/context_packet.py"],
-            ["helix-context/helix_context/context_packet.py"],
+            ["helix-context/cymatix_context/context_packet.py"],
+            ["helix-context/cymatix_context/context_packet.py"],
         ],
     },
     {
@@ -228,7 +228,7 @@ def _get_sema_codec():
     """Lazy-load the SemaCodec. First call may download MiniLM weights."""
     global _SEMA_CODEC
     if _SEMA_CODEC is None:
-        from helix_context.sema import SemaCodec
+        from cymatix_context.sema import SemaCodec
         _SEMA_CODEC = SemaCodec()
     return _SEMA_CODEC
 
@@ -460,8 +460,8 @@ def cell_helix_full_stack(client: httpx.Client, needle: dict,
     # DAG: resolve claims for every gene the packet touched
     resolved_claims: list[dict] = []
     try:
-        from helix_context.claims_graph import resolve_from_packet
-        from helix_context.shard_schema import open_main_db
+        from cymatix_context.claims_graph import resolve_from_packet
+        from cymatix_context.shard_schema import open_main_db
         main_db = open_main_db(MAIN_DB_PATH)
         try:
             resolved = resolve_from_packet(main_db, packet)
@@ -503,8 +503,8 @@ def cell_helix_full_stack(client: httpx.Client, needle: dict,
 
     # DAL (cached): fetch packet sources plus bounded lexical rescues.
     try:
-        from helix_context.adapters.cache import CachedDAL
-        from helix_context.adapters.dal import DAL
+        from cymatix_context.adapters.cache import CachedDAL
+        from cymatix_context.adapters.dal import DAL
         cache = CachedDAL(DAL(max_bytes=max(chars_per_file * 8, 50000)))
         fetched = [(sid, cache.fetch(sid)) for sid in source_ids]
     except Exception as exc:

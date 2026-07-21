@@ -15,8 +15,8 @@ import numpy as np
 
 _REPO = Path("f:/Projects/helix-context")
 sys.path.insert(0, str(_REPO))
-from helix_context.config import load_config
-from helix_context.scoring.know_calibration import calibration_from_config
+from cymatix_context.config import load_config
+from cymatix_context.scoring.know_calibration import calibration_from_config
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import LeaveOneOut, cross_val_predict, StratifiedKFold
 from sklearn.metrics import roc_auc_score

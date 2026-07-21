@@ -3,7 +3,7 @@ files are routed to the code chunker (AST/regex) rather than the prose-text
 chunker. Regression guard for the 'code ingested as prose' bug."""
 from pathlib import Path
 
-from helix_context.cli.cmd_ingest import _content_type_for, _CODE_EXTENSIONS
+from cymatix_context.cli.cmd_ingest import _content_type_for, _CODE_EXTENSIONS
 
 
 def test_code_extensions_route_to_code():

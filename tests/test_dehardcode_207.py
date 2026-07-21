@@ -34,7 +34,7 @@ from pathlib import Path
 
 import pytest
 
-from helix_context.config import (
+from cymatix_context.config import (
     AbstainClassFloors,
     AbstainConfig,
     BudgetConfig,
@@ -43,7 +43,7 @@ from helix_context.config import (
     RetrievalConfig,
     load_config,
 )
-from helix_context.context_manager import (
+from cymatix_context.context_manager import (
     MOE_MODEL_FAMILIES,
     SMALL_MODEL_PATTERNS,
     SMALL_MODEL_THRESHOLD_B,
@@ -51,14 +51,14 @@ from helix_context.context_manager import (
     _shorten_source_path,
     resolve_model_capability_class,
 )
-from helix_context.knowledge_store import (
+from cymatix_context.knowledge_store import (
     DENY_PATTERNS,
     LOCALE_DENY_PATTERN,
     KnowledgeStore,
     build_deny_regex,
     is_denied_source,
 )
-from helix_context.storage.indexes import sync_splade_index
+from cymatix_context.storage.indexes import sync_splade_index
 from tests.conftest import FakeBGEM3Codec, make_gene
 
 
@@ -122,7 +122,7 @@ def test_sync_splade_index_honours_cap_and_model(monkeypatch):
         captured["model_name"] = model_name
         return {"tok": 1.0}
 
-    import helix_context.backends.splade_backend as sb
+    import cymatix_context.backends.splade_backend as sb
     monkeypatch.setattr(sb, "encode", fake_encode)
 
     con = sqlite3.connect(":memory:")
@@ -143,7 +143,7 @@ def test_sync_splade_index_defaults_are_byte_identical(monkeypatch):
         captured["model_name"] = model_name
         return {}
 
-    import helix_context.backends.splade_backend as sb
+    import cymatix_context.backends.splade_backend as sb
     monkeypatch.setattr(sb, "encode", fake_encode)
     con = sqlite3.connect(":memory:")
     con.execute("CREATE TABLE splade_terms (gene_id TEXT, term TEXT, weight REAL)")
@@ -211,7 +211,7 @@ def test_get_dense_codec_passes_configured_model_name(monkeypatch):
     """
     monkeypatch.undo()  # restore the real KnowledgeStore._get_dense_codec
 
-    import helix_context.backends.bgem3_codec as bgem3_codec
+    import cymatix_context.backends.bgem3_codec as bgem3_codec
 
     captured = {}
 
@@ -363,7 +363,7 @@ def test_build_deny_regex_defaults_are_byte_identical_to_module_level():
     assert default_re.search("project/node_modules/react/index.js")
     assert default_re.search("project/locale/de/messages.po")
     assert not default_re.search("project/locale/en/messages.po")
-    assert not default_re.search("F:/Projects/helix-context/helix_context/genome.py")
+    assert not default_re.search("F:/Projects/helix-context/cymatix_context/genome.py")
 
 
 def test_build_deny_regex_extra_patterns_are_ored_in():
@@ -421,7 +421,7 @@ def test_apply_density_gate_honors_deny_list_extra():
         g.source_id = "F:/corp/mycorp_noise/report.txt"
         state, reason = store.apply_density_gate(g)
         assert reason == "deny_list"
-        from helix_context.schemas import ChromatinState
+        from cymatix_context.schemas import ChromatinState
         assert state == ChromatinState.HETEROCHROMATIN
     finally:
         store.close()
@@ -675,7 +675,7 @@ _GOLDEN_TIER_CASES = [
 
 @pytest.mark.parametrize("vals,fusion,tier,n,abstain", _GOLDEN_TIER_CASES)
 def test_tier_golden_decisions_at_defaults(vals, fusion, tier, n, abstain):
-    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    from cymatix_context.pipeline.tier_logic import apply_budget_tiers
     candidates, scores = _tier_case(vals)
     result = apply_budget_tiers(
         candidates, scores, AbstainClassFloors(), fusion_mode=fusion,
@@ -692,7 +692,7 @@ def test_tier_defaults_byte_identical_to_config_defaults(vals, fusion, tier, n, 
     (the former literals, now parameter defaults) and calling it with the
     knob values a default BudgetConfig()/AbstainConfig() threads through
     the context_manager call site must produce identical TierResults."""
-    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    from cymatix_context.pipeline.tier_logic import apply_budget_tiers
     b, a = BudgetConfig(), AbstainConfig()
     candidates, scores = _tier_case(vals)
     literal = apply_budget_tiers(
@@ -712,7 +712,7 @@ def test_tier_defaults_byte_identical_to_config_defaults(vals, fusion, tier, n, 
 
 
 def test_tier_tight_ratio_override_changes_decision():
-    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    from cymatix_context.pipeline.tier_logic import apply_budget_tiers
     vals = [9.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0]  # ratio 3.13
     candidates, scores = _tier_case(vals)
     default = apply_budget_tiers(candidates, scores, AbstainClassFloors())
@@ -725,7 +725,7 @@ def test_tier_tight_ratio_override_changes_decision():
 
 
 def test_tier_focused_ratio_override_changes_decision():
-    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    from cymatix_context.pipeline.tier_logic import apply_budget_tiers
     vals = [6.0, 2.9, 2.9, 2.9, 2.9, 2.9, 2.9, 2.9]  # ratio 1.825
     candidates, scores = _tier_case(vals)
     raised = apply_budget_tiers(
@@ -735,7 +735,7 @@ def test_tier_focused_ratio_override_changes_decision():
 
 
 def test_abstain_ratio_threshold_override_changes_decision():
-    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    from cymatix_context.pipeline.tier_logic import apply_budget_tiers
     vals = [2.0, 1.4, 1.4, 1.4, 1.4, 1.4, 1.4, 1.4]  # ratio 1.356, top < 2.5
     candidates, scores = _tier_case(vals)
     lowered = apply_budget_tiers(
@@ -745,7 +745,7 @@ def test_abstain_ratio_threshold_override_changes_decision():
 
 
 def test_abstain_rrf_norm_threshold_override_changes_decision():
-    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    from cymatix_context.pipeline.tier_logic import apply_budget_tiers
     vals = [0.40, 0.30, 0.20, 0.10, 0.05, 0.05, 0.05, 0.05]  # norm ratio 3.5
     candidates, scores = _tier_case(vals)
     default = apply_budget_tiers(
@@ -761,7 +761,7 @@ def test_abstain_rrf_norm_threshold_override_changes_decision():
 
 
 def test_tier_hard_floor_frac_override_changes_gating():
-    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    from cymatix_context.pipeline.tier_logic import apply_budget_tiers
     # floor = 10*0.15 = 1.5 cuts the five 1.0-docs -> 3 candidates, BROAD
     vals = [10.0, 9.0, 8.0, 1.0, 1.0, 1.0, 1.0, 1.0]
     candidates, scores = _tier_case(vals)
@@ -782,7 +782,7 @@ def test_tier_hard_floor_frac_override_changes_gating():
 
 
 def test_tier_lagrange_frac_override_changes_pullback():
-    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    from cymatix_context.pipeline.tier_logic import apply_budget_tiers
     # FOCUSED landscape (ratio 1.87): winners = first 6 (winner floor 5.0);
     # the 4.0-doc survives the 1.35 hard floor but lands in the shadow
     # pool via the FOCUSED trim. Its standalone 4.0 >= winner_floor*0.7 =

@@ -27,11 +27,11 @@ import time
 from collections import defaultdict
 from pathlib import Path
 
-# Make helix_context importable when run from repo root.
+# Make cymatix_context importable when run from repo root.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from helix_context.context_manager import HelixContextManager  # noqa: E402
-from helix_context.schemas import StructuralRelation  # noqa: E402
+from cymatix_context.context_manager import HelixContextManager  # noqa: E402
+from cymatix_context.schemas import StructuralRelation  # noqa: E402
 
 try:
     sys.stdout.reconfigure(encoding="utf-8")  # Windows CP1252 guard

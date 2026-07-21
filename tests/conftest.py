@@ -13,18 +13,18 @@ from pathlib import Path
 # Guard: the module-level `app = create_app()` in server.py (used by uvicorn
 # --reload) runs at import time. Without a real genome path it raises
 # sqlite3.OperationalError during collection. Set :memory: so tests can
-# import helix_context.server without a real DB file on disk.
+# import cymatix_context.server without a real DB file on disk.
 os.environ.setdefault("HELIX_GENOME_PATH", ":memory:")
 
-from helix_context.config import (
+from cymatix_context.config import (
     BudgetConfig,
     GenomeConfig,
     HelixConfig,
     RibosomeConfig,
     ServerConfig,
 )
-from helix_context.genome import Genome
-from helix_context.schemas import Gene, PromoterTags, EpigeneticMarkers, ChromatinState
+from cymatix_context.genome import Genome
+from cymatix_context.schemas import Gene, PromoterTags, EpigeneticMarkers, ChromatinState
 
 
 FIXTURES_DIR = Path(__file__).parent / "fixtures"
@@ -148,8 +148,8 @@ def _stub_dense_codec(request, monkeypatch):
         # Real-model integration tests: do not stub.
         return
 
-    from helix_context import context_manager as _cm
-    from helix_context import knowledge_store as _ks
+    from cymatix_context import context_manager as _cm
+    from cymatix_context import knowledge_store as _ks
 
     def _fake_store_codec(self):
         # Mirrors KnowledgeStore._get_dense_codec: lazy-build + cache,
@@ -424,7 +424,7 @@ def make_client(config=None, backend=None) -> "TestClient":
     conftest stays cheap for the many tests that never touch the server.
     """
     from fastapi.testclient import TestClient
-    from helix_context.server import create_app
+    from cymatix_context.server import create_app
 
     app = create_app(config if config is not None else make_helix_config())
     app.state.helix.ribosome.backend = (
@@ -439,14 +439,14 @@ def run_cli(argv: list[str]) -> tuple[int, str, str]:
     The exact helper duplicated as ``_run`` in all 12
     ``tests/test_cli_*.py`` files: captures stdout/stderr via
     ``io.StringIO`` + ``contextlib.redirect_stdout/stderr`` around
-    ``helix_context.cli.main(argv)`` and returns the exit code plus both
+    ``cymatix_context.cli.main(argv)`` and returns the exit code plus both
     captured streams as strings.
 
-    ``helix_context.cli`` is imported lazily (and ``main`` resolved at
+    ``cymatix_context.cli`` is imported lazily (and ``main`` resolved at
     call time) so conftest import stays flat and per-test monkeypatching
     of CLI module attributes keeps working.
     """
-    from helix_context import cli as _cli
+    from cymatix_context import cli as _cli
 
     out, err = io.StringIO(), io.StringIO()
     with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
@@ -470,7 +470,7 @@ def reset_hardware_cache():
 
     or request ``reset_hardware_cache`` directly per test.
     """
-    from helix_context import hardware
+    from cymatix_context import hardware
 
     hardware.reset_for_test()
     yield

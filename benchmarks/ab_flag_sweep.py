@@ -114,7 +114,7 @@ def run_config(name: str, flags: dict) -> dict:
     log_f = log_path.open("w", encoding="utf-8", errors="replace")
     print(f"[{name}] starting server on :{BENCH_PORT} ...", flush=True)
     proc = subprocess.Popen(
-        [sys.executable, "-m", "uvicorn", "helix_context.server:app",
+        [sys.executable, "-m", "uvicorn", "cymatix_context.server:app",
          "--host", "127.0.0.1", "--port", str(BENCH_PORT)],
         env=env, stdout=log_f, stderr=subprocess.STDOUT,
         creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),

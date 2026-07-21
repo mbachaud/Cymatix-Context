@@ -25,7 +25,7 @@ def _real_sha256(p: Path) -> str:
 
 
 def test_verify_hash_accepts_match(tmp_path):
-    from helix_context.launcher._install_helpers import verify_hash
+    from cymatix_context.launcher._install_helpers import verify_hash
     f = tmp_path / "binary.bin"
     f.write_bytes(b"hello world")
     expected = _real_sha256(f)
@@ -34,7 +34,7 @@ def test_verify_hash_accepts_match(tmp_path):
 
 
 def test_verify_hash_raises_on_mismatch(tmp_path):
-    from helix_context.launcher._install_helpers import (
+    from cymatix_context.launcher._install_helpers import (
         HashMismatch,
         verify_hash,
     )
@@ -51,7 +51,7 @@ def test_verify_hash_rejects_placeholder(tmp_path):
     placeholder, so a Linux user running this on day 1 (before §11.6 work
     lands) gets a clean error instead of an unverified binary.
     """
-    from helix_context.launcher._install_helpers import (
+    from cymatix_context.launcher._install_helpers import (
         HashPlaceholder,
         verify_hash,
     )
@@ -64,7 +64,7 @@ def test_verify_hash_rejects_placeholder(tmp_path):
 def test_should_skip_when_existing_binary_matches(tmp_path):
     """Idempotency: present-and-correct binary returns True from
     should_skip; download is not re-run."""
-    from helix_context.launcher._install_helpers import should_skip
+    from cymatix_context.launcher._install_helpers import should_skip
     f = tmp_path / "binary.bin"
     f.write_bytes(b"present and correct")
     expected = _real_sha256(f)
@@ -72,13 +72,13 @@ def test_should_skip_when_existing_binary_matches(tmp_path):
 
 
 def test_should_skip_false_when_binary_absent(tmp_path):
-    from helix_context.launcher._install_helpers import should_skip
+    from cymatix_context.launcher._install_helpers import should_skip
     assert should_skip(tmp_path / "nope.bin", "0" * 64) is False
 
 
 def test_should_skip_false_when_hash_drifts(tmp_path):
     """Version bump → hash drift → re-download triggers."""
-    from helix_context.launcher._install_helpers import should_skip
+    from cymatix_context.launcher._install_helpers import should_skip
     f = tmp_path / "binary.bin"
     f.write_bytes(b"old version")
     assert should_skip(f, "0" * 64) is False
@@ -277,7 +277,7 @@ def test_install_helpers_cli_verify_hash_returns_zero_on_match(tmp_path):
     expected = _real_sha256(f)
     creationflags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
     proc = subprocess.run(
-        [sys.executable, "-m", "helix_context.launcher._install_helpers",
+        [sys.executable, "-m", "cymatix_context.launcher._install_helpers",
          "verify-hash", str(f), expected],
         capture_output=True,
         text=True,
@@ -292,7 +292,7 @@ def test_install_helpers_cli_verify_hash_returns_nonzero_on_mismatch(tmp_path):
     f.write_bytes(b"cli mismatch")
     creationflags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
     proc = subprocess.run(
-        [sys.executable, "-m", "helix_context.launcher._install_helpers",
+        [sys.executable, "-m", "cymatix_context.launcher._install_helpers",
          "verify-hash", str(f), "0" * 64],
         capture_output=True,
         text=True,
@@ -311,7 +311,7 @@ def test_install_helpers_cli_should_skip_returns_zero_on_match(tmp_path):
     expected = _real_sha256(f)
     creationflags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
     proc = subprocess.run(
-        [sys.executable, "-m", "helix_context.launcher._install_helpers",
+        [sys.executable, "-m", "cymatix_context.launcher._install_helpers",
          "should-skip", str(f), expected],
         capture_output=True,
         text=True,
@@ -332,7 +332,7 @@ def test_install_helpers_cli_should_skip_silent_on_missing_file(tmp_path):
     missing = tmp_path / "does-not-exist.bin"
     creationflags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
     proc = subprocess.run(
-        [sys.executable, "-m", "helix_context.launcher._install_helpers",
+        [sys.executable, "-m", "cymatix_context.launcher._install_helpers",
          "should-skip", str(missing), "0" * 64],
         capture_output=True,
         text=True,
@@ -353,7 +353,7 @@ def test_install_helpers_cli_should_skip_silent_on_hash_drift(tmp_path):
     f.write_bytes(b"cli drift")
     creationflags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
     proc = subprocess.run(
-        [sys.executable, "-m", "helix_context.launcher._install_helpers",
+        [sys.executable, "-m", "cymatix_context.launcher._install_helpers",
          "should-skip", str(f), "0" * 64],
         capture_output=True,
         text=True,

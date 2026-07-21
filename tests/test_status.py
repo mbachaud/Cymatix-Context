@@ -5,8 +5,8 @@ from __future__ import annotations
 import json
 
 # Packaged module (bugbash BUG-3) — was file-path-loaded from
-# scripts/ops/helix_status.py before the move into helix_context.cli.
-from helix_context.cli import helix_status as status_mod
+# scripts/ops/helix_status.py before the move into cymatix_context.cli.
+from cymatix_context.cli import helix_status as status_mod
 
 
 class TestCheckMcpConfig:
@@ -15,7 +15,7 @@ class TestCheckMcpConfig:
         cfg.write_text(json.dumps({
             "mcpServers": {
                 "helix-context": {
-                    "args": ["-m", "helix_context.mcp_server"],
+                    "args": ["-m", "cymatix_context.mcp_server"],
                     "env": {"HELIX_MCP_URL": "http://127.0.0.1:11437"},
                 }
             }
@@ -29,7 +29,7 @@ class TestCheckMcpConfig:
         cfg.write_text(json.dumps({
             "mcpServers": {
                 "helix-context": {
-                    "args": ["-m", "helix_context.mcp.server"],
+                    "args": ["-m", "cymatix_context.mcp.server"],
                     "env": {"HELIX_URL": "http://127.0.0.1:11437"},
                 }
             }
@@ -49,7 +49,7 @@ class TestCollectStatus:
         cfg.write_text(json.dumps({
             "mcpServers": {
                 "helix-context": {
-                    "args": ["-m", "helix_context.mcp_server"],
+                    "args": ["-m", "cymatix_context.mcp_server"],
                     "env": {"HELIX_MCP_URL": "http://127.0.0.1:11437"},
                 }
             }
@@ -92,7 +92,7 @@ class TestCollectStatus:
         cfg.write_text(json.dumps({
             "mcpServers": {
                 "helix-context": {
-                    "args": ["-m", "helix_context.mcp_server"],
+                    "args": ["-m", "cymatix_context.mcp_server"],
                     "env": {"HELIX_MCP_URL": "http://127.0.0.1:11437"},
                 }
             }

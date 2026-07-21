@@ -10,7 +10,7 @@ Two contracts:
 
 2. **No phantom dashboard metrics** — every ``helix_*`` metric name
    referenced by any shipped Grafana dashboard JSON must correspond to
-   an instrument actually created in ``helix_context/telemetry``,
+   an instrument actually created in ``cymatix_context/telemetry``,
    after applying the OTel-collector Prometheus name translation
    (unit suffix appended unless already present, ``_total`` appended
    to counters, ``_bucket``/``_sum``/``_count`` series for
@@ -27,7 +27,7 @@ from pathlib import Path
 
 import pytest
 
-from helix_context.telemetry import otel
+from cymatix_context.telemetry import otel
 
 REPO = Path(__file__).resolve().parent.parent
 DASHBOARD_DIRS = (
@@ -86,7 +86,7 @@ class _RecordingMeter:
 
 def _registered_instruments(monkeypatch):
     """Call every lazy getter against a recording meter."""
-    from helix_context.telemetry import genai_telemetry
+    from cymatix_context.telemetry import genai_telemetry
 
     rec = _RecordingMeter()
     monkeypatch.setattr(otel, "meter", rec)
@@ -168,10 +168,10 @@ def test_new_record_paths_do_not_raise_when_otel_disabled():
 
 
 def test_instrumented_modules_import_cleanly():
-    import helix_context.context_manager  # noqa: F401
-    import helix_context.knowledge_store  # noqa: F401
-    import helix_context.scoring.know_decision  # noqa: F401
-    import helix_context.shard_router  # noqa: F401
+    import cymatix_context.context_manager  # noqa: F401
+    import cymatix_context.knowledge_store  # noqa: F401
+    import cymatix_context.scoring.know_decision  # noqa: F401
+    import cymatix_context.shard_router  # noqa: F401
 
 
 # ---------------------------------------------------------------------------
@@ -191,7 +191,7 @@ class _CounterRecorder:
 
 
 def _window(status="aligned", genes_expressed=1):
-    from helix_context.schemas import ContextHealth, ContextWindow
+    from cymatix_context.schemas import ContextHealth, ContextWindow
     return ContextWindow(
         ribosome_prompt="",
         expressed_context="ctx",
@@ -200,13 +200,13 @@ def _window(status="aligned", genes_expressed=1):
 
 
 def test_know_decision_survives_broken_telemetry(monkeypatch):
-    from helix_context.scoring.know_decision import decide_know_or_miss
-    from helix_context.schemas import KnowBlock
+    from cymatix_context.scoring.know_decision import decide_know_or_miss
+    from cymatix_context.schemas import KnowBlock
 
     def boom():
         raise RuntimeError("telemetry down")
 
-    monkeypatch.setattr("helix_context.telemetry.know_decision_counter", boom)
+    monkeypatch.setattr("cymatix_context.telemetry.know_decision_counter", boom)
     block = decide_know_or_miss(
         _window("aligned"),
         query="q",
@@ -219,9 +219,9 @@ def test_know_decision_survives_broken_telemetry(monkeypatch):
 
 
 def test_shard_router_records_fanout_and_discrimination(tmp_path, monkeypatch):
-    from helix_context.genome import Genome
-    from helix_context.shard_schema import init_main_db, open_main_db, register_shard
-    from helix_context.sharding import ShardedGenomeAdapter
+    from cymatix_context.genome import Genome
+    from cymatix_context.shard_schema import init_main_db, open_main_db, register_shard
+    from cymatix_context.sharding import ShardedGenomeAdapter
     from tests.conftest import make_gene
 
     main_path = tmp_path / "main.genome.db"
@@ -248,10 +248,10 @@ def test_shard_router_records_fanout_and_discrimination(tmp_path, monkeypatch):
     fanout = _CounterRecorder()
     discrimination = _CounterRecorder()
     monkeypatch.setattr(
-        "helix_context.telemetry.shard_fanout_histogram", lambda: fanout
+        "cymatix_context.telemetry.shard_fanout_histogram", lambda: fanout
     )
     monkeypatch.setattr(
-        "helix_context.telemetry.shard_discrimination_histogram",
+        "cymatix_context.telemetry.shard_discrimination_histogram",
         lambda: discrimination,
     )
 
@@ -271,7 +271,7 @@ def test_shard_router_records_fanout_and_discrimination(tmp_path, monkeypatch):
 
 
 def test_dense_cosine_recorded_on_hot_merge(tmp_path, monkeypatch):
-    from helix_context.genome import Genome
+    from cymatix_context.genome import Genome
     from tests.conftest import make_gene
 
     genome = Genome(str(tmp_path / "genome.db"))
@@ -281,7 +281,7 @@ def test_dense_cosine_recorded_on_hot_merge(tmp_path, monkeypatch):
 
         rec = _CounterRecorder()
         monkeypatch.setattr(
-            "helix_context.telemetry.dense_cosine_histogram", lambda: rec
+            "cymatix_context.telemetry.dense_cosine_histogram", lambda: rec
         )
         monkeypatch.setattr(genome, "_dense_embedding_enabled", True)
         monkeypatch.setattr(
@@ -318,7 +318,7 @@ def test_dashboards_reference_only_real_instruments(monkeypatch):
     phantoms = {f: n for f, n in phantoms.items() if n}
     assert not phantoms, (
         "Dashboard(s) chart metric names with no creating instrument in "
-        f"helix_context/telemetry: {phantoms}. Either add the instrument "
+        f"cymatix_context/telemetry: {phantoms}. Either add the instrument "
         "or repoint the panel at a real metric (#209)."
     )
 

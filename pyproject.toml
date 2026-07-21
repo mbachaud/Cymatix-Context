@@ -2,6 +2,9 @@
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.hatch.build.targets.wheel]
+packages = ["cymatix_context"]
+
 [project]
 name = "helix-context"
 version = "0.7.2b1"
@@ -115,11 +118,11 @@ all = [
 ]
 
 [project.scripts]
-helix = "helix_context.cli:main"
-helix-server = "helix_context.server:main"
-helix-launcher = "helix_context.launcher.app:main"
-helix-status = "helix_context.cli.helix_status:main"
-helix-vault = "helix_context.vault.cli:main"
+helix = "cymatix_context.cli:main"
+helix-server = "cymatix_context.server:main"
+helix-launcher = "cymatix_context.launcher.app:main"
+helix-status = "cymatix_context.cli.helix_status:main"
+helix-vault = "cymatix_context.vault.cli:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

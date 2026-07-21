@@ -107,7 +107,7 @@ STRATIFICATION = {
 SOURCE_BUCKETS = {
     "steam": ["SteamLibrary", "steamapps", "Hades/", "BeamNG", "Factorio", "Dyson Sphere"],
     "education_public": ["biged-rs", "BigEd/", "fleet/", "Education"],
-    "helix": ["helix-context", "helix_context"],
+    "helix": ["helix-context", "cymatix_context"],
     "cosmic": ["CosmicTasha", "cosmictasha", "novabridge"],
     "tally": ["BookKeeper"],
     "scorerift": ["two-brain-audit", "scorerift"],

@@ -45,7 +45,7 @@ import time
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from helix_context.tagger import CpuTagger, _KV_TYPE_ANNOTATION_NAMES
+from cymatix_context.tagger import CpuTagger, _KV_TYPE_ANNOTATION_NAMES
 
 logging.basicConfig(
     level=logging.INFO,

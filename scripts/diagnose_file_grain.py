@@ -25,8 +25,8 @@ import httpx  # noqa: E402
 import _citations  # noqa: E402
 
 from benchmarks.bench_needle import NEEDLES  # noqa: E402
-from helix_context.accel import extract_query_signals  # noqa: E402
-from helix_context.genome import file_tokens, path_tokens  # noqa: E402
+from cymatix_context.accel import extract_query_signals  # noqa: E402
+from cymatix_context.genome import file_tokens, path_tokens  # noqa: E402
 
 HELIX_URL = "http://localhost:11437"
 

@@ -7,7 +7,7 @@ Tests correctness of all accel primitives and verifies the Rust-backed
 import time
 import pytest
 
-from helix_context.accel import (
+from cymatix_context.accel import (
     JSON_BACKEND,
     json_loads,
     json_dumps,

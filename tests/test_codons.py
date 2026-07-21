@@ -2,7 +2,7 @@
 
 import pytest
 
-from helix_context.codons import CodonChunker, CodonEncoder, RawStrand, Codon
+from cymatix_context.codons import CodonChunker, CodonEncoder, RawStrand, Codon
 
 
 # ── CodonChunker: text ──────────────────────────────────────────────

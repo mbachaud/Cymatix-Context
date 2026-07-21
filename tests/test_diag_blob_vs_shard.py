@@ -112,7 +112,7 @@ def _needle(
     return {
         "id": nid,
         "question": question,
-        "gold_paths": gold_paths or ["helix_context/pipeline/stages.py"],
+        "gold_paths": gold_paths or ["cymatix_context/pipeline/stages.py"],
         "type": ntype,
     }
 
@@ -168,39 +168,39 @@ class TestNormAndGoldHit:
         assert _norm("foo\\bar\\baz.py") == "foo/bar/baz.py"
 
     def test_norm_lowercase(self):
-        assert _norm("Helix_Context/Pipeline/STAGES.PY") == \
-               "helix_context/pipeline/stages.py"
+        assert _norm("Cymatix_Context/Pipeline/STAGES.PY") == \
+               "cymatix_context/pipeline/stages.py"
 
     def test_gold_hit_substring_forward(self):
         """gold path is substring of source."""
         assert _gold_hit(
-            "F:/Projects/helix_context/pipeline/stages.py",
-            ["helix_context/pipeline/stages.py"],
+            "F:/Projects/cymatix_context/pipeline/stages.py",
+            ["cymatix_context/pipeline/stages.py"],
         ) is True
 
     def test_gold_hit_substring_reverse(self):
         """source is substring of gold path (reverse direction)."""
         assert _gold_hit(
             "pipeline/stages.py",
-            ["helix_context/pipeline/stages.py"],
+            ["cymatix_context/pipeline/stages.py"],
         ) is True
 
     def test_gold_hit_no_match(self):
         assert _gold_hit(
-            "helix_context/pipeline/other.py",
-            ["helix_context/pipeline/stages.py"],
+            "cymatix_context/pipeline/other.py",
+            ["cymatix_context/pipeline/stages.py"],
         ) is False
 
     def test_gold_hit_empty_source(self):
-        assert _gold_hit("", ["helix_context/pipeline/stages.py"]) is False
+        assert _gold_hit("", ["cymatix_context/pipeline/stages.py"]) is False
 
     def test_gold_hit_multiple_golds(self):
         """Matches the second gold_path in the list."""
         assert _gold_hit(
-            "F:/Projects/helix_context/identity/provenance.py",
+            "F:/Projects/cymatix_context/identity/provenance.py",
             [
-                "helix_context/pipeline/stages.py",
-                "helix_context/identity/provenance.py",
+                "cymatix_context/pipeline/stages.py",
+                "cymatix_context/identity/provenance.py",
             ],
         ) is True
 
@@ -213,12 +213,12 @@ class TestFindGold:
 
     def test_gold_found_at_rank0(self):
         fps = [
-            _make_fp(rank=0, source="F:/helix_context/pipeline/stages.py",
+            _make_fp(rank=0, source="F:/cymatix_context/pipeline/stages.py",
                      score=9.5, tiers={"fts5": 6.0, "dense": 0.9}),
-            _make_fp(rank=1, source="F:/helix_context/other.py",
+            _make_fp(rank=1, source="F:/cymatix_context/other.py",
                      score=5.0, tiers={"fts5": 3.0}, gene_id="g1"),
         ]
-        result = _find_gold(fps, ["helix_context/pipeline/stages.py"])
+        result = _find_gold(fps, ["cymatix_context/pipeline/stages.py"])
         assert result["in_pool"] is True
         assert result["rank"] == 1          # 0-based 0 -> 1-based 1
         assert result["score"] == pytest.approx(9.5)
@@ -231,11 +231,11 @@ class TestFindGold:
                      tiers={"fts5": 6.0}, gene_id="g0"),
             _make_fp(rank=1, source="other_b.py", score=8.0,
                      tiers={"fts5": 5.0}, gene_id="g1"),
-            _make_fp(rank=2, source="F:/helix_context/pipeline/stages.py",
+            _make_fp(rank=2, source="F:/cymatix_context/pipeline/stages.py",
                      score=4.0, tiers={"fts5": 2.0, "co_activation": 0.3},
                      gene_id="g2"),
         ]
-        result = _find_gold(fps, ["helix_context/pipeline/stages.py"])
+        result = _find_gold(fps, ["cymatix_context/pipeline/stages.py"])
         assert result["in_pool"] is True
         assert result["rank"] == 3          # 0-based 2 -> 1-based 3
         assert result["tiers"]["co_activation"] == pytest.approx(0.3)
@@ -245,21 +245,21 @@ class TestFindGold:
             _make_fp(rank=0, source="other_a.py", score=9.0,
                      tiers={"fts5": 6.0}),
         ]
-        result = _find_gold(fps, ["helix_context/pipeline/stages.py"])
+        result = _find_gold(fps, ["cymatix_context/pipeline/stages.py"])
         assert result["in_pool"] is False
         assert result["rank"] is None
         assert result["score"] is None
         assert result["tiers"] == {}
 
     def test_empty_pool(self):
-        result = _find_gold([], ["helix_context/pipeline/stages.py"])
+        result = _find_gold([], ["cymatix_context/pipeline/stages.py"])
         assert result["in_pool"] is False
 
     def test_tiers_empty_dict_when_missing(self):
         """If tier_contributions key is absent, tiers defaults to {}."""
-        fps = [{"rank": 0, "source": "helix_context/pipeline/stages.py",
+        fps = [{"rank": 0, "source": "cymatix_context/pipeline/stages.py",
                 "score": 5.0}]  # no tier_contributions key
-        result = _find_gold(fps, ["helix_context/pipeline/stages.py"])
+        result = _find_gold(fps, ["cymatix_context/pipeline/stages.py"])
         assert result["in_pool"] is True
         assert result["tiers"] == {}
 
@@ -271,15 +271,15 @@ class TestFindGold:
 class TestAnalyseNeedle:
 
     def test_both_in_pool(self):
-        nd = _needle(gold_paths=["helix_context/pipeline/stages.py"])
+        nd = _needle(gold_paths=["cymatix_context/pipeline/stages.py"])
         blob_fps = [
-            _make_fp(rank=0, source="F:/helix_context/pipeline/stages.py",
+            _make_fp(rank=0, source="F:/cymatix_context/pipeline/stages.py",
                      score=9.0, tiers={"fts5": 6.0, "dense": 0.8}),
         ]
         shard_fps = [
             _make_fp(rank=0, source="other.py", score=10.0,
                      tiers={"fts5": 7.0}, gene_id="g1"),
-            _make_fp(rank=1, source="F:/helix_context/pipeline/stages.py",
+            _make_fp(rank=1, source="F:/cymatix_context/pipeline/stages.py",
                      score=6.0, tiers={"fts5": 4.0}, gene_id="g2"),
         ]
         row = _analyse_needle(nd, blob_fps, shard_fps)
@@ -290,9 +290,9 @@ class TestAnalyseNeedle:
 
     def test_gold_in_blob_not_in_shard(self):
         """Core case: gold surfaces in blob (dense) but absent in sharded pool."""
-        nd = _needle(gold_paths=["helix_context/pipeline/stages.py"])
+        nd = _needle(gold_paths=["cymatix_context/pipeline/stages.py"])
         blob_fps = [
-            _make_fp(rank=0, source="F:/helix_context/pipeline/stages.py",
+            _make_fp(rank=0, source="F:/cymatix_context/pipeline/stages.py",
                      score=8.5, tiers={"fts5": 4.0, "dense": 0.85}),
         ]
         shard_fps = [
@@ -610,8 +610,8 @@ class TestRunMocked:
         run() must classify as candidate_gen_loss and name 'dense' as the
         differentiating tier in tier_cand_gen_summary.
         """
-        gold_source = "F:/Projects/helix_context/pipeline/stages.py"
-        gold_path   = "helix_context/pipeline/stages.py"
+        gold_source = "F:/Projects/cymatix_context/pipeline/stages.py"
+        gold_path   = "cymatix_context/pipeline/stages.py"
 
         blob_fps = [
             _make_fp(rank=0, source=gold_source, score=8.5,
@@ -656,8 +656,8 @@ class TestRunMocked:
         sharded has none.  run() must classify as ranking_loss and name
         'co_activation' as the differentiating tier.
         """
-        gold_source = "F:/Projects/helix_context/identity/provenance.py"
-        gold_path   = "helix_context/identity/provenance.py"
+        gold_source = "F:/Projects/cymatix_context/identity/provenance.py"
+        gold_path   = "cymatix_context/identity/provenance.py"
 
         blob_fps = [
             _make_fp(rank=0, source=gold_source, score=9.0,
@@ -705,8 +705,8 @@ class TestRunMocked:
     def test_multiple_needles_mixed(self):
         """Two needles: one cand-gen-loss (dense), one ranking-loss (dense).
         Both are correctly classified and dense tops both tier summaries."""
-        gold_a = "helix_context/pipeline/stages.py"
-        gold_b = "helix_context/identity/provenance.py"
+        gold_a = "cymatix_context/pipeline/stages.py"
+        gold_b = "cymatix_context/identity/provenance.py"
 
         src_a = f"F:/Projects/{gold_a}"
         src_b = f"F:/Projects/{gold_b}"
@@ -773,7 +773,7 @@ class TestRunMocked:
     def test_error_on_one_arm_does_not_crash(self):
         """If sharded server raises, the needle is recorded with shard_error
         and pool counts/aggregates degrade gracefully (no exception raised)."""
-        gold_source = "F:/Projects/helix_context/pipeline/stages.py"
+        gold_source = "F:/Projects/cymatix_context/pipeline/stages.py"
         blob_fps = [
             _make_fp(rank=0, source=gold_source, score=8.0,
                      tiers={"fts5": 5.0, "dense": 0.8}),
@@ -788,7 +788,7 @@ class TestRunMocked:
             # second call (sharded) raises
             raise urllib.error.URLError("connection refused")
 
-        needles = [_needle(gold_paths=["helix_context/pipeline/stages.py"])]
+        needles = [_needle(gold_paths=["cymatix_context/pipeline/stages.py"])]
         with patch.object(urllib.request, "urlopen", _urlopen):
             per_needle, agg = run(
                 needles=needles,

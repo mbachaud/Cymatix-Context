@@ -43,9 +43,9 @@ from pathlib import Path
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-import helix_context.shard_router as sr
-from helix_context.accel import extract_query_signals
-from helix_context.sharding import ShardedGenomeAdapter
+import cymatix_context.shard_router as sr
+from cymatix_context.accel import extract_query_signals
+from cymatix_context.sharding import ShardedGenomeAdapter
 
 
 def main(argv: list[str] | None = None) -> int:

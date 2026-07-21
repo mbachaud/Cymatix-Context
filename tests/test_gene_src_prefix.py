@@ -23,8 +23,8 @@ from __future__ import annotations
 
 import pytest
 
-from helix_context.config import BudgetConfig
-from helix_context.context_manager import HelixContextManager
+from cymatix_context.config import BudgetConfig
+from cymatix_context.context_manager import HelixContextManager
 from tests.conftest import MockCompressorBackend, make_gene, make_helix_config
 
 
@@ -138,9 +138,9 @@ def test_projects_path_still_short_circuits_to_projects_index(manager):
     """``F:/Projects/<repo>/<sub>/<file>`` is the dev-laptop layout.
     Without a ``sources`` segment the shortener still slices after the
     ``Projects`` segment exactly as before."""
-    src = r"F:\Projects\helix-context\helix_context\context_manager.py"
+    src = r"F:\Projects\helix-context\cymatix_context\context_manager.py"
     out = _render_src_for(manager, src)
-    assert out == "helix-context/helix_context/context_manager.py", out
+    assert out == "helix-context/cymatix_context/context_manager.py", out
 
 
 def test_projects_with_nested_sources_prefers_sources_anchor(manager):

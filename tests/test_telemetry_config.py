@@ -26,9 +26,9 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from helix_context.config import TelemetryConfig, load_config
-from helix_context.telemetry import otel as otel_mod
-from helix_context.telemetry.otel import (
+from cymatix_context.config import TelemetryConfig, load_config
+from cymatix_context.telemetry import otel as otel_mod
+from cymatix_context.telemetry.otel import (
     _TELEMETRY_DEFAULTS,
     resolve_telemetry_settings,
     setup_telemetry,
@@ -101,7 +101,7 @@ def test_load_config_without_telemetry_section_uses_defaults(tmp_path):
 def test_load_config_warns_on_unknown_telemetry_keys(tmp_path, caplog):
     cfg_file = tmp_path / "helix.toml"
     cfg_file.write_text("[telemetry]\nenabledd = true\n", encoding="utf-8")
-    with caplog.at_level(logging.WARNING, logger="helix_context.config"):
+    with caplog.at_level(logging.WARNING, logger="cymatix_context.config"):
         load_config(str(cfg_file))
     assert "Unknown keys in [telemetry]" in caplog.text
 

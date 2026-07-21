@@ -105,8 +105,8 @@ _worker_chunker = None
 def _init_worker():
     """Called once per worker process — loads spaCy model."""
     global _worker_tagger, _worker_chunker
-    from helix_context.tagger import CpuTagger
-    from helix_context.codons import CodonChunker
+    from cymatix_context.tagger import CpuTagger
+    from cymatix_context.codons import CodonChunker
     _worker_tagger = CpuTagger()
     _worker_chunker = CodonChunker()
 
@@ -175,8 +175,8 @@ def main() -> int:
     log.info("Starting %d workers (chunksize=%d)", n_workers, args.chunksize)
 
     # Writer setup (main process)
-    from helix_context.genome import Genome
-    from helix_context.schemas import Gene
+    from cymatix_context.genome import Genome
+    from cymatix_context.schemas import Gene
     genome = Genome(path=args.db, synonym_map={}, splade_enabled=True, entity_graph=True)
 
     stats = {"files": 0, "genes": 0, "errors": 0}

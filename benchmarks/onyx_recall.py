@@ -41,8 +41,8 @@ os.environ.setdefault("HELIX_DISABLE_LEARN", "1")
 _REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_REPO))
 
-from helix_context.config import load_config  # noqa: E402
-from helix_context.context_manager import HelixContextManager  # noqa: E402
+from cymatix_context.config import load_config  # noqa: E402
+from cymatix_context.context_manager import HelixContextManager  # noqa: E402
 
 
 def _norm(p: str) -> str:

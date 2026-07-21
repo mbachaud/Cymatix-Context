@@ -732,7 +732,7 @@ class TestParallel:
         """Sharded build must write rows to ``main.genome.db:source_index``.
 
         Prior to this regression test the build path only populated
-        ``fingerprint_index``. ``helix_context/context_packet.py::_lookup_source_row``
+        ``fingerprint_index``. ``cymatix_context/context_packet.py::_lookup_source_row``
         (added in PR #113) reads from ``source_index`` for packet freshness +
         authority, so bench fixtures with an empty ``source_index`` silently
         skipped that path.
@@ -840,7 +840,7 @@ class TestParallel:
         surfaced -- empty ``source_index`` makes the lookup return None for
         every gene_id in a matrix-built fixture."""
         import build_fixture_matrix as bfm
-        from helix_context.context_packet import _lookup_source_row
+        from cymatix_context.context_packet import _lookup_source_row
 
         root = tmp_path / "root"
         root.mkdir()
@@ -1091,16 +1091,16 @@ class TestResume:
                 pass
 
         # Patch the late imports inside ``_drain_with_batched_splade``. The
-        # function does ``from helix_context.backends import splade_backend``
-        # and ``from helix_context.schemas import Gene`` at call time -- we
+        # function does ``from cymatix_context.backends import splade_backend``
+        # and ``from cymatix_context.schemas import Gene`` at call time -- we
         # inject the stubs through ``sys.modules``.
         import types
-        fake_backends = types.ModuleType("helix_context.backends")
+        fake_backends = types.ModuleType("cymatix_context.backends")
         fake_backends.splade_backend = _StubSplade
-        fake_schemas = types.ModuleType("helix_context.schemas")
+        fake_schemas = types.ModuleType("cymatix_context.schemas")
         fake_schemas.Gene = _StubGene
-        monkeypatch.setitem(sys.modules, "helix_context.backends", fake_backends)
-        monkeypatch.setitem(sys.modules, "helix_context.schemas", fake_schemas)
+        monkeypatch.setitem(sys.modules, "cymatix_context.backends", fake_backends)
+        monkeypatch.setitem(sys.modules, "cymatix_context.schemas", fake_schemas)
 
         # One gene dict per file, batch_size=1 so the boundary is reached on
         # the first iteration.

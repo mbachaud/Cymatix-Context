@@ -165,7 +165,7 @@ class BenchmarkMonitor:
         try:
             # Lazy import — avoids pulling in ΣĒMA/transformers at module load time
             sys.path.insert(0, str(Path(__file__).parent.parent))
-            from helix_context.config import load_config
+            from cymatix_context.config import load_config
             cfg = load_config(config_path) if config_path else load_config()
             return cfg.genome.path
         except Exception as e:

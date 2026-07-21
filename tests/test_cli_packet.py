@@ -1,4 +1,4 @@
-"""Tests for `helix packet`. Mocks ``helix_context.api.open_session`` so
+"""Tests for `helix packet`. Mocks ``cymatix_context.api.open_session`` so
 the CLI surface is tested without standing up the retrieval stack."""
 from __future__ import annotations
 
@@ -9,8 +9,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from helix_context.cli import main
-from helix_context.schemas import (
+from cymatix_context.cli import main
+from cymatix_context.schemas import (
     ContextItem,
     ContextPacket,
     RefreshTarget,
@@ -40,7 +40,7 @@ def fake_session():
         refresh_targets=[
             RefreshTarget(
                 target_kind="file",
-                source_id="helix_context/splice.py",
+                source_id="cymatix_context/splice.py",
                 reason="last_seen_outside_freshness_window",
                 priority=0.5,
             ),
@@ -53,7 +53,7 @@ def fake_session():
 
 
 def test_packet_json_emits_full_packet(fake_session):
-    with patch("helix_context.cli.cmd_packet.open_session", return_value=fake_session):
+    with patch("cymatix_context.cli.cmd_packet.open_session", return_value=fake_session):
         rc, out, err = _run(["packet", "what does the splice step do?", "--json"])
     assert rc == 0, err
     payload = json.loads(out)
@@ -62,11 +62,11 @@ def test_packet_json_emits_full_packet(fake_session):
     assert len(payload["verified"]) == 1
     assert payload["verified"][0]["gene_id"] == "gene-001"
     assert len(payload["refresh_targets"]) == 1
-    assert payload["refresh_targets"][0]["source_id"] == "helix_context/splice.py"
+    assert payload["refresh_targets"][0]["source_id"] == "cymatix_context/splice.py"
 
 
 def test_packet_text_mode_surfaces_counts(fake_session):
-    with patch("helix_context.cli.cmd_packet.open_session", return_value=fake_session):
+    with patch("cymatix_context.cli.cmd_packet.open_session", return_value=fake_session):
         rc, out, err = _run(["packet", "test"])
     assert rc == 0, err
     assert "verified: 1" in out
@@ -75,7 +75,7 @@ def test_packet_text_mode_surfaces_counts(fake_session):
 
 
 def test_packet_passes_task_type_through(fake_session):
-    with patch("helix_context.cli.cmd_packet.open_session", return_value=fake_session):
+    with patch("cymatix_context.cli.cmd_packet.open_session", return_value=fake_session):
         rc, _, _ = _run(["packet", "test", "--task-type", "edit"])
     assert rc == 0
     _, kwargs = fake_session.packet.call_args
@@ -84,7 +84,7 @@ def test_packet_passes_task_type_through(fake_session):
 
 def test_packet_rejects_unknown_task_type(fake_session):
     out, err = io.StringIO(), io.StringIO()
-    with patch("helix_context.cli.cmd_packet.open_session", return_value=fake_session):
+    with patch("cymatix_context.cli.cmd_packet.open_session", return_value=fake_session):
         with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
             with pytest.raises(SystemExit) as exc:
                 main(["packet", "test", "--task-type", "bogus"])
@@ -94,7 +94,7 @@ def test_packet_rejects_unknown_task_type(fake_session):
 
 
 def test_packet_include_raw_passes_through(fake_session):
-    with patch("helix_context.cli.cmd_packet.open_session", return_value=fake_session):
+    with patch("cymatix_context.cli.cmd_packet.open_session", return_value=fake_session):
         rc, _, _ = _run(["packet", "test", "--include-raw"])
     assert rc == 0
     _, kwargs = fake_session.packet.call_args
@@ -104,7 +104,7 @@ def test_packet_include_raw_passes_through(fake_session):
 def test_packet_error_path_returns_one():
     sess = MagicMock()
     sess.packet.side_effect = RuntimeError("genome unreachable")
-    with patch("helix_context.cli.cmd_packet.open_session", return_value=sess):
+    with patch("cymatix_context.cli.cmd_packet.open_session", return_value=sess):
         rc, out, err = _run(["packet", "test", "--json"])
     assert rc == 1
     payload = json.loads(out)

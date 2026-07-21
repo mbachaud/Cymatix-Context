@@ -1,4 +1,4 @@
-"""Tests for the walk-aware methods on ``helix_context.api.HelixSession``.
+"""Tests for the walk-aware methods on ``cymatix_context.api.HelixSession``.
 
 These methods (``gene_get``, ``packet``, ``refresh_targets``,
 ``neighbors``) were added 2026-05-12 to back the CLI agent surface. The
@@ -16,8 +16,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from helix_context.api import HelixSession
-from helix_context.schemas import (
+from cymatix_context.api import HelixSession
+from cymatix_context.schemas import (
     ChromatinState,
     ContextItem,
     ContextPacket,
@@ -41,7 +41,7 @@ def _make_gene(gene_id="gene-001", content="splice trims fragments"):
         content=content,
         complement=content[:40],
         codons=["splice"],
-        promoter=PromoterTags(metadata={"path": "helix_context/splice.py"}),
+        promoter=PromoterTags(metadata={"path": "cymatix_context/splice.py"}),
         chromatin=ChromatinState.OPEN,
     )
 
@@ -80,7 +80,7 @@ def test_packet_calls_builder_with_genome_and_read_only_true():
         refresh_targets=[],
     )
     with patch(
-        "helix_context.context_packet.build_context_packet",
+        "cymatix_context.context_packet.build_context_packet",
         return_value=expected,
     ) as builder:
         sess = _make_session(mgr)
@@ -97,7 +97,7 @@ def test_packet_calls_builder_with_genome_and_read_only_true():
 def test_packet_include_raw_passes_through():
     mgr = MagicMock()
     with patch(
-        "helix_context.context_packet.build_context_packet",
+        "cymatix_context.context_packet.build_context_packet",
         return_value=ContextPacket(task_type="edit", query="x"),
     ) as builder:
         sess = _make_session(mgr)
@@ -126,7 +126,7 @@ def test_refresh_targets_returns_only_the_reread_plan():
         ],
     )
     with patch(
-        "helix_context.context_packet.build_context_packet",
+        "cymatix_context.context_packet.build_context_packet",
         return_value=packet,
     ):
         sess = _make_session(mgr)
@@ -138,7 +138,7 @@ def test_refresh_targets_default_task_type_is_edit():
     """High-risk default — the CLI subcommand mirrors this."""
     mgr = MagicMock()
     with patch(
-        "helix_context.context_packet.build_context_packet",
+        "cymatix_context.context_packet.build_context_packet",
         return_value=ContextPacket(task_type="edit", query="x"),
     ) as builder:
         sess = _make_session(mgr)
@@ -198,7 +198,7 @@ def test_neighbors_sorts_by_similarity_desc():
     out = sess.neighbors("query", k=2)
     assert [n["gene_id"] for n in out] == ["gene-B", "gene-C"]
     assert out[0]["sema_cos_sim"] == pytest.approx(0.9)
-    assert out[0]["path"] == "helix_context/splice.py"
+    assert out[0]["path"] == "cymatix_context/splice.py"
 
 
 def test_open_session_honors_helix_config_env(monkeypatch, tmp_path):
@@ -208,7 +208,7 @@ def test_open_session_honors_helix_config_env(monkeypatch, tmp_path):
     ``HelixConfig()`` default and silently fell back to ``./genome.db``
     regardless of operator config — making ``helix status`` and
     ``helix query`` look at different genomes."""
-    import helix_context.api as api
+    import cymatix_context.api as api
 
     # Reset the cached manager so the test exercises the cold-start path.
     api._DEFAULT_MANAGER = None
@@ -232,7 +232,7 @@ def test_open_session_honors_helix_config_env(monkeypatch, tmp_path):
             seen["config"] = config
 
     monkeypatch.setattr(
-        "helix_context.context_manager.HelixContextManager", _FakeMgr,
+        "cymatix_context.context_manager.HelixContextManager", _FakeMgr,
     )
 
     api.open_session()

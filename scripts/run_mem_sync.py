@@ -29,11 +29,11 @@ import os
 import sys
 from pathlib import Path
 
-# Add project root to path so `helix_context.mem_sync` resolves when
+# Add project root to path so `cymatix_context.mem_sync` resolves when
 # running as a loose script.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from helix_context.mem_sync import run_daemon  # noqa: E402
+from cymatix_context.mem_sync import run_daemon  # noqa: E402
 
 
 def _load_toml_config() -> dict:

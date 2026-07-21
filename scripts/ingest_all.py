@@ -24,16 +24,16 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from pathlib import Path
 
-from helix_context.tagger import CpuTagger
-from helix_context.genome import Genome
-from helix_context.codons import CodonChunker
-from helix_context.provenance import apply_metadata_hints, apply_provenance
-from helix_context.sharding import (
+from cymatix_context.tagger import CpuTagger
+from cymatix_context.genome import Genome
+from cymatix_context.codons import CodonChunker
+from cymatix_context.provenance import apply_metadata_hints, apply_provenance
+from cymatix_context.sharding import (
     corpus_shard_db,
     agent_shard_db,
     main_db_path as _main_db_path,
 )
-from helix_context.shard_schema import (
+from cymatix_context.shard_schema import (
     open_main_db,
     init_main_db,
     register_shard,

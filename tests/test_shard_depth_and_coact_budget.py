@@ -10,7 +10,7 @@ import os
 
 import pytest
 
-from helix_context.shard_router import (
+from cymatix_context.shard_router import (
     _apply_coact_reserve,
     _coact_reserve_slots,
     _shard_fetch_factor,

@@ -1,9 +1,9 @@
-"""`python -m helix_context.mcp_server` must actually start the MCP server.
+"""`python -m cymatix_context.mcp_server` must actually start the MCP server.
 
 Regression for bugbash BUG-2: the back-compat shim at
-helix_context/mcp_server.py aliased the real module
-(helix_context.mcp.mcp_server) into sys.modules but never dispatched to
-``main()``, so the documented ``python -m helix_context.mcp_server``
+cymatix_context/mcp_server.py aliased the real module
+(cymatix_context.mcp.mcp_server) into sys.modules but never dispatched to
+``main()``, so the documented ``python -m cymatix_context.mcp_server``
 invocation exited 0 after ~1.6s without ever entering the stdio loop.
 """
 from __future__ import annotations
@@ -28,7 +28,7 @@ def test_python_m_mcp_server_blocks_instead_of_exiting():
     env["HELIX_MCP_URL"] = "http://127.0.0.1:1"
     env["HELIX_MCP_LOG_LEVEL"] = "WARNING"
     proc = subprocess.Popen(
-        [sys.executable, "-m", "helix_context.mcp_server"],
+        [sys.executable, "-m", "cymatix_context.mcp_server"],
         cwd=str(_REPO_ROOT),
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
@@ -44,7 +44,7 @@ def test_python_m_mcp_server_blocks_instead_of_exiting():
             return
         stderr = proc.stderr.read().decode("utf-8", errors="replace")
         pytest.fail(
-            f"python -m helix_context.mcp_server exited rc={rc} instead of "
+            f"python -m cymatix_context.mcp_server exited rc={rc} instead of "
             f"serving MCP stdio. stderr:\n{stderr[:2000]}"
         )
     finally:

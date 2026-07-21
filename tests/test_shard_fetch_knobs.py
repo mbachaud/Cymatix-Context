@@ -25,15 +25,15 @@ from pathlib import Path
 
 import pytest
 
-from helix_context.config import RetrievalConfig, load_config
-from helix_context.genome import Genome
-from helix_context.schemas import (
+from cymatix_context.config import RetrievalConfig, load_config
+from cymatix_context.genome import Genome
+from cymatix_context.schemas import (
     ChromatinState,
     EpigeneticMarkers,
     Gene,
     PromoterTags,
 )
-from helix_context.shard_router import (
+from cymatix_context.shard_router import (
     SHARD_FETCH_SCALE_CAP,
     ShardRouter,
     _apply_coact_reserve,
@@ -41,7 +41,7 @@ from helix_context.shard_router import (
     _validate_shard_knobs,
     compute_per_shard_fetch,
 )
-from helix_context.shard_schema import (
+from cymatix_context.shard_schema import (
     init_main_db,
     open_main_db,
     register_shard,
