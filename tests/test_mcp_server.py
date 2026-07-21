@@ -198,10 +198,10 @@ class TestUnwrapContextList:
 
     def test_single_entry_list_unwraps_to_dict(self):
         out = _unwrap_context_list(
-            [{"name": "helix", "description": "...", "content": "x"}]
+            [{"name": "cymatix", "description": "...", "content": "x"}]
         )
         assert isinstance(out, dict)
-        assert out["name"] == "helix"
+        assert out["name"] == "cymatix"
 
     def test_error_envelope_dict_passes_through(self):
         envelope = {"_error": "helix unreachable", "_detail": "connection refused"}

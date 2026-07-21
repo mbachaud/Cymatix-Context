@@ -112,3 +112,8 @@ def test_new_and_old_console_scripts_registered():
     }
     missing = expected - names
     assert not missing, f"missing console scripts: {missing}"
+
+
+def test_mcp_server_identifies_as_cymatix():
+    from cymatix_context.mcp.mcp_server import mcp
+    assert mcp.name == "cymatix"

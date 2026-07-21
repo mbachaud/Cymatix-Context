@@ -157,7 +157,7 @@ def _default_party_id() -> str:
         return "unknown-host"
 
 
-mcp = FastMCP("helix")
+mcp = FastMCP("cymatix")
 
 
 # ── HTTP helper ──────────────────────────────────────────────────────
