@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Idempotent codemod: cymatix_context -> cymatix_context.
+"""Idempotent codemod: helix_context -> cymatix_context.
 
 Committed to the repo on purpose: the rename PR is rebased over inflight
 work by re-running this script (see the Rebase Runbook in
@@ -14,7 +14,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OLD_PKG, NEW_PKG = "helix_context", "cymatix_context"
 # NEW_PKG first: after the move, rewrites target the new tree. The
-# back-compat shim dir (a later re-created cymatix_context/) is deliberately
+# back-compat shim dir (a later re-created helix_context/) is deliberately
 # NOT listed — its references to the old name are intentional.
 CODE_DIRS = [NEW_PKG, "tests", "scripts", "benchmarks", "deploy"]
 SKIP_PARTS = {".claude", "tools", "node_modules", ".venv", "__pycache__", ".git", "genomes"}

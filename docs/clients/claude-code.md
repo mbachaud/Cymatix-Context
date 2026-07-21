@@ -27,7 +27,7 @@ travels with each call, and where the agent-side skill lives.
 Two hops. Claude Code spawns the MCP adapter as a stdio subprocess and
 talks JSON-RPC. The adapter proxies every tool call over HTTP to the
 helix server. The adapter is a thin shim — it does no retrieval logic
-of its own. See [`helix_context/mcp_server.py`](../../cymatix_context/mcp_server.py)
+of its own. See [`cymatix_context/mcp_server.py`](../../cymatix_context/mcp_server.py)
 for the full tool list.
 
 ## .mcp.json wiring
