@@ -11,17 +11,22 @@ from __future__ import annotations
 
 import argparse
 import sys
+from pathlib import Path
 from typing import Callable, Optional
 
 from . import output
 
 
 def _build_parser() -> argparse.ArgumentParser:
+    # Derive prog from the invoked script name so each console-script alias
+    # (`cymatix`, `helix`) shows itself in --help / usage / error output
+    # instead of always claiming to be "helix".
+    prog = Path(sys.argv[0]).stem if sys.argv and sys.argv[0] else "cymatix"
     parser = argparse.ArgumentParser(
-        prog="helix",
+        prog=prog,
         description=(
             "Cymatix Context CLI — cold-start retrieval over a local genome. "
-            "See `helix <subcommand> --help` for details."
+            "See `cymatix <subcommand> --help` for details."
         ),
     )
     sub = parser.add_subparsers(dest="subcommand", metavar="<subcommand>")

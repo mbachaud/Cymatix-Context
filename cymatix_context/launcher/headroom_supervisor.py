@@ -81,7 +81,7 @@ def _port_is_free(host: str, port: int) -> bool:
 
 
 def is_headroom_installed() -> bool:
-    """Cheap probe: is `helix-context[codec]` actually installed?"""
+    """Cheap probe: is `cymatix-context[codec]` actually installed?"""
     return importlib.util.find_spec("headroom") is not None
 
 
@@ -340,7 +340,7 @@ class HeadroomSupervisor:
         if not is_headroom_installed():
             raise HeadroomNotInstalled(
                 "headroom is not installed. "
-                "Install with: pip install 'helix-context[codec]'"
+                "Install with: pip install 'cymatix-context[codec]'"
             )
 
         if self.is_running():
