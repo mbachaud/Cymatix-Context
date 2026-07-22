@@ -14,7 +14,7 @@ that table. Sections 5 and 6 cover silent-failure modes and the post-2026-05-10
 operator actions required for the 7-stage retrieval-fix.
 
 If you only want a one-line install, the README's Quick Start
-(`pip install "cymatix-context[all]"` then `start-helix-tray.bat`) is correct
+(`pip install "cymatix-context[all]"` then `start-cymatix-tray.bat`) is correct
 but skips every nuance — every operator who has hit a `/context` empty-result
 problem ended up reading this file.
 
@@ -77,8 +77,8 @@ block, lines 39–113.
 | `cpu` ([`pyproject.toml:45`](../pyproject.toml)) | `spacy>=3.7` for ingest-time NER. | `[ingestion] backend = "cpu"` — this is the **default** ingest backend. If you are doing any ingestion at all, install this extra. |
 | `mcp` ([`pyproject.toml:49`](../pyproject.toml)) | `mcp>=1.0` Python SDK for the MCP shim. Required for `python -m cymatix_context.mcp_server`. | You are integrating with Claude Code, Cursor, Continue, Claude Desktop, or any other MCP host. |
 | `nli` ([`pyproject.toml:54`](../pyproject.toml)) | `torch>=2.0` + `transformers>=4.30` standalone — the path used when `[ribosome] backend = "deberta"` for cross-encoder rerank or relation-graph NLI. | You explicitly flipped `[ribosome] backend = "deberta"` in `cymatix.toml`. If you have `embeddings` already, sentence-transformers transitively pulls torch — you only need this extra for the standalone deberta-only path. |
-| `otel` ([`pyproject.toml:57`](../pyproject.toml)) | OpenTelemetry SDK + OTLP gRPC exporter + FastAPI instrumentation. Emits metrics, traces, and logs to the OTel collector at `localhost:4317`. | **Silently required by `start-helix-tray.bat`**, which sets `CYMATIX_OTEL_ENABLED=1` unconditionally. Without this extra the cymatix server starts and serves `/context`, but emits no telemetry — Grafana dashboards will be empty. See section 5. |
-| `launcher` ([`pyproject.toml:62`](../pyproject.toml)) | `jinja2`, `psutil`, `platformdirs`, `py-cpuinfo`. The `cymatix-launcher` and `cymatix-status` console scripts. | Tray / supervisor flow — required by every flow that uses `start-helix-tray.bat`, `setup-helix.bat`, `backend-with-otel.bat`, or `launcher-with-otel.bat`. |
+| `otel` ([`pyproject.toml:57`](../pyproject.toml)) | OpenTelemetry SDK + OTLP gRPC exporter + FastAPI instrumentation. Emits metrics, traces, and logs to the OTel collector at `localhost:4317`. | **Silently required by `start-cymatix-tray.bat`**, which sets `CYMATIX_OTEL_ENABLED=1` unconditionally. Without this extra the cymatix server starts and serves `/context`, but emits no telemetry — Grafana dashboards will be empty. See section 5. |
+| `launcher` ([`pyproject.toml:62`](../pyproject.toml)) | `jinja2`, `psutil`, `platformdirs`, `py-cpuinfo`. The `cymatix-launcher` and `cymatix-status` console scripts. | Tray / supervisor flow — required by every flow that uses `start-cymatix-tray.bat`, `setup-cymatix.bat`, `backend-with-otel.bat`, or `launcher-with-otel.bat`. |
 | `launcher-native` ([`pyproject.toml:63`](../pyproject.toml)) | Everything in `launcher` plus `pywebview`. Adds the native-window dashboard (`cymatix-launcher --native`) instead of opening the dashboard in a browser tab. | You want a native desktop window UI but cannot or will not install LGPL dependencies. |
 | `launcher-tray` ([`pyproject.toml:70`](../pyproject.toml)) | Everything in `launcher` plus `pystray>=0.19` + `Pillow>=10` + `pywin32` (Windows only). Enables the system-tray icon with start/stop/restart, "Open Grafana", and "Open Prometheus" menu items. | **Canonical daily-driver flow.** Note: `pystray` is **LGPL-3** licensed. Cymatix itself stays Apache-2.0-clean because `launcher-tray` is a runtime-only optional dep — the cymatix-context wheel does not bundle pystray. If LGPL is a license concern for your distribution, install `launcher-native` instead. |
 | `ast` ([`pyproject.toml:75`](../pyproject.toml)) | `tree-sitter` core + parsers for Python, Rust, JavaScript, TypeScript. Used by the code-aware ingest path to extract function/class boundaries for tag-based indexing. | You ingest source code (not just docs / markdown / conversations). |
@@ -89,7 +89,7 @@ block, lines 39–113.
 
 A few notes on the matrix that have bitten operators:
 
-- `[all]` does **not** include `[launcher-tray]`. If you `pip install "cymatix-context[all]"` then run `start-helix-tray.bat`, the tray icon will not appear and the launcher falls back to the native window or browser. Add `,launcher-tray` explicitly if you want the tray.
+- `[all]` does **not** include `[launcher-tray]`. If you `pip install "cymatix-context[all]"` then run `start-cymatix-tray.bat`, the tray icon will not appear and the launcher falls back to the native window or browser. Add `,launcher-tray` explicitly if you want the tray.
 - `[all]` does **not** include `[scorerift]`. ScoreRift is a separate companion package and stays opt-in.
 - `[embeddings]` transitively pulls `torch`. If you do not need semantic retrieval, you do not need torch — skip this extra and accept that Tier 7 (ΣĒMA cosine) and Stage 2 dense recall will be no-ops.
 - `[codec]` pulls `headroom-ai` which itself has nontrivial dependencies. Only install if you want the Headroom proxy lifecycle.
@@ -115,17 +115,17 @@ Then run the one-time setup (creates desktop / start-menu shortcuts and
 optionally brings up the observability stack):
 
 ```cmd
-setup-helix.bat
+setup-cymatix.bat
 ```
 
-`setup-helix.bat` is a thin wrapper that delegates to
-`deploy\windows\setup-helix.ps1`. Useful flags from the wrapper:
+`setup-cymatix.bat` is a thin wrapper that delegates to
+`deploy\windows\setup-cymatix.ps1`. Useful flags from the wrapper:
 
-- `setup-helix.bat -WithObservability` — also docker-compose up the
+- `setup-cymatix.bat -WithObservability` — also docker-compose up the
   Grafana + Prometheus + OTel stack (advanced; the default native sidecar
   path already covers this).
-- `setup-helix.bat -NoShortcuts` — headless install, no `.lnk` creation.
-- `setup-helix.bat -SkipPipInstall` — refresh shortcuts without
+- `setup-cymatix.bat -NoShortcuts` — headless install, no `.lnk` creation.
+- `setup-cymatix.bat -SkipPipInstall` — refresh shortcuts without
   reinstalling the package.
 
 If you specifically want the **Grafana telemetry stack without the tray**
@@ -162,18 +162,18 @@ Useful flags: `--skip-download` (binaries already on disk),
 (render configs only — for CI).
 
 The script does NOT start the supervisor itself — running it once is a
-one-time on-disk-state prep, after which `start-helix-tray.bat` (or
+one-time on-disk-state prep, after which `start-cymatix-tray.bat` (or
 `cymatix-launcher --tray`) spawns the five binaries. Re-runs are
 idempotent.
 
 Then daily-launch via:
 
 ```cmd
-start-helix-tray.bat
+start-cymatix-tray.bat
 ```
 
 What that batch file does (from
-[`start-helix-tray.bat`](../start-helix-tray.bat)):
+[`start-cymatix-tray.bat`](../start-cymatix-tray.bat)):
 
 - Sets `CYMATIX_OTEL_ENABLED=1`, `CYMATIX_OTEL_ENDPOINT=localhost:4317`,
   `CYMATIX_OTEL_INSECURE=1`, `CYMATIX_OTEL_SAMPLER_RATIO=1.0`.
@@ -199,7 +199,7 @@ The tray icon's right-click menu surfaces Start / Stop / Restart, "Open
 Grafana", "Open Prometheus", and (when Headroom is installed and
 enabled) "Open Headroom Dashboard" + Start / Restart / Stop Headroom.
 
-**Linux / macOS variant.** No `start-helix-tray.sh` exists yet
+**Linux / macOS variant.** No `start-cymatix-tray.sh` exists yet
 (non-docs follow-up tracked in issue #59). For now, on Linux/macOS, run
 the launcher directly:
 
@@ -241,12 +241,12 @@ python -m uvicorn cymatix_context._asgi:app --host 127.0.0.1 --port 11437
 ```
 
 > **Note.** The internal ASGI module is `cymatix_context._asgi`. The
-> `start-helix-tray.bat` flow goes through the launcher's
+> `start-cymatix-tray.bat` flow goes through the launcher's
 > `HelixSupervisor` which spawns its own uvicorn — this direct command
 > is for headless servers and CI where the supervisor adds no value.
 > An equivalent, also-supported entry-point is
 > `python -m uvicorn cymatix_context.server:app` — that path exists in
-> [`backend-with-otel.bat`](../backend-with-otel.bat) line 10.
+> [`backend-with-otel.bat`](../backend-with-otel.bat) line 12.
 
 Verify it's up:
 
@@ -312,10 +312,10 @@ For Claude Code / MCP, register the cymatix MCP shim in
 For an Open WebUI or other OpenAPI host that wraps MCP via mcpo:
 
 ```cmd
-start-helix-mcpo.bat
+start-cymatix-mcpo.bat
 ```
 
-That file (see [`start-helix-mcpo.bat`](../start-helix-mcpo.bat)) waits
+That file (see [`start-cymatix-mcpo.bat`](../start-cymatix-mcpo.bat)) waits
 for the cymatix backend to answer `/health`, then runs
 `mcpo --port 8788 -- python -m cymatix_context.mcp_server`. Requires
 `pip install mcpo` in the same env. The default port is `8788`,
@@ -436,7 +436,7 @@ ollama pull gemma4:e2b       # small, fast; ~2 GB — good for ribosome backend 
 ### Headroom first-run model download
 
 If `[codec]` is installed and `CYMATIX_HEADROOM_ENABLED=1` (which
-`start-helix-tray.bat` sets unconditionally on line 60), the headroom
+`start-cymatix-tray.bat` sets unconditionally on line 65), the headroom
 proxy downloads its ModernBERT ONNX model on the **first**
 `/v1/chat/completions` call. The download is roughly 200 MB and adds
 20–60 seconds of cold-start latency to that first request, which the
@@ -453,7 +453,7 @@ near-instant.
 
 ### OTel exporter
 
-`start-helix-tray.bat` line 17 sets `CYMATIX_OTEL_ENABLED=1`. The cymatix
+`start-cymatix-tray.bat` line 21 sets `CYMATIX_OTEL_ENABLED=1`. The cymatix
 server reads that env var at boot and tries to construct an OTLP
 exporter. If the `[otel]` extra is **not** installed, the server logs a
 single WARN line on boot and continues serving — but emits no metrics,
@@ -651,7 +651,7 @@ documentation belongs in `.env.example` (cross-link below).
 |---|---|
 | `CYMATIX_ORG` | Organization tag for 4-layer federation attribution. |
 | `CYMATIX_DEVICE` | Machine identifier for CWoLa + session registry. |
-| `CYMATIX_USER` | Operator handle. Defaults to `"max"` in `start-helix-tray.bat` if unset. |
+| `CYMATIX_USER` | Operator handle. Defaults to `"max"` in `start-cymatix-tray.bat` if unset. |
 | `CYMATIX_AGENT` | Persona writing documents (e.g., `laude`, `raude`, `taude`, `gemini`). If unset, ingests tag as "manual". |
 | `CYMATIX_AGENT_KIND` | Tool-kind stamp (e.g., `claude-code`, `ollama-chat`). |
 | `CYMATIX_PARTY_ID` | Multi-tenant party tag. Falls back to `[session] default_party_id` in `cymatix.toml`. |
@@ -663,7 +663,7 @@ documentation belongs in `.env.example` (cross-link below).
 | `CYMATIX_USE_SHARDS` | Enable phase-2 shard router. |
 | `CYMATIX_SERVER_UPSTREAM` | Override `[server] upstream`. Set automatically by the launcher when Headroom auto-routing is in effect. |
 | `CYMATIX_SERVER_UPSTREAM_TIMEOUT` | Per-request timeout (float, seconds) for proxied calls to the upstream model server. |
-| `CYMATIX_OTEL_ENABLED` | Set to `1` to enable OpenTelemetry. Set unconditionally by `start-helix-tray.bat`. Requires the `[otel]` extra. |
+| `CYMATIX_OTEL_ENABLED` | Set to `1` to enable OpenTelemetry. Set unconditionally by `start-cymatix-tray.bat`. Requires the `[otel]` extra. |
 | `CYMATIX_OTEL_ENDPOINT` | OTLP gRPC endpoint. Default `localhost:4317`. |
 | `CYMATIX_OTEL_INSECURE` | `1` for plaintext gRPC (default for local sidecar). |
 | `CYMATIX_OTEL_SAMPLER_RATIO` | Trace sampling ratio (0.0–1.0). Default `1.0` in the tray flow. |
@@ -675,7 +675,7 @@ documentation belongs in `.env.example` (cross-link below).
 | `CYMATIX_HEADROOM_AUTOSTART` | `1` to spawn a fresh headroom child if no existing proxy is found on the configured port. |
 | `CYMATIX_HEADROOM_ROUTE_UPSTREAM_AUTO` | `1` to auto-route non-local upstreams through Headroom. |
 | `CYMATIX_DISABLE_HEADROOM` | Hard kill switch. Overrides every other Headroom toggle. |
-| `CYMATIX_BUDGET_ZONE` | `1` to enable the budget-zone document-cap clamp (clamps `max_genes` based on caller's prompt-token-zone). Set by `start-helix-tray.bat`. |
+| `CYMATIX_BUDGET_ZONE` | `1` to enable the budget-zone document-cap clamp (clamps `max_genes` based on caller's prompt-token-zone). Set by `start-cymatix-tray.bat`. |
 | `CYMATIX_DEVICE` | Device picker for hardware-aware codec/rerank: `auto \| cuda \| rocm \| mps \| cpu`. Default `auto`. |
 | `CYMATIX_FILENAME_ANCHOR_ENABLED` | Override `[retrieval] filename_anchor_enabled`. |
 | `CYMATIX_ABSTAIN_DISABLE` | `1` forces `[budget] abstain_enabled = false` without redeploy. |
@@ -761,7 +761,7 @@ exact path.)
 
 ### 5. Native observability sidecar binaries (optional)
 
-If you used `start-helix-tray.bat` and let it install the native OTel
+If you used `start-cymatix-tray.bat` and let it install the native OTel
 binaries:
 
 ```bash

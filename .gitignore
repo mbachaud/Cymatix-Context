@@ -107,6 +107,10 @@ helix-code-bundle*.tar.gz
 temp_*.md
 *.bench-backup
 
+# Per-machine launcher overrides (start-cymatix-tray.local.bat etc. —
+# the checked-in .bat files tell users to copy-and-edit these).
+*.local.bat
+
 # OS
 Thumbs.db
 .DS_Store

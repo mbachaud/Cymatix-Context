@@ -216,7 +216,7 @@ def _resolve_caller_agent(request, data: dict) -> str:
       1. body ``agent`` field -- explicit caller-provided handle
       2. header ``X-Helix-Agent`` -- for callers that can't shape the body
       3. env ``HELIX_AGENT`` -- per-process default set by the host bat /
-         shim (start-helix-tray.bat, MCP shim, etc.)
+         shim (start-cymatix-tray.bat, MCP shim, etc.)
       4. ``"unknown"`` -- last-resort label so the metric always carries
          a value (avoiding NULL-style gaps that confuse stacked-area
          dashboards).

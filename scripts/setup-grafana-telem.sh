@@ -12,7 +12,7 @@
 #      is already running.
 #
 # This script does NOT start the supervisor — it only prepares state.
-# Run `helix-launcher --tray` (or start-helix-tray.bat on Windows) to
+# Run `helix-launcher --tray` (or start-cymatix-tray.bat on Windows) to
 # spawn the five binaries; configs are reused across helix sessions.
 #
 # Spec: docs/specs/2026-05-04-native-observability-sidecar-design.md
@@ -146,7 +146,7 @@ Defaults: admin / admin (set at first Grafana boot; rotate via UI).
 
 To start the full stack (collector + Prom + Tempo + Loki + Grafana):
   helix-launcher --tray              # cross-platform
-  start-helix-tray.bat               # Windows daily-driver wrapper
+  start-cymatix-tray.bat               # Windows daily-driver wrapper
 
 To enable telemetry on a headless backend:
   export HELIX_OTEL_ENABLED=1
