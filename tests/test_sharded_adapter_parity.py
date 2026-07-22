@@ -347,6 +347,28 @@ def test_sharded_fusion_mode_runs_absolute_floors_in_tier_logic(adapter):
     )
 
 
+def test_adapter_resolve_symbol_empty_route_returns_empty(adapter):
+    """``resolve_symbol`` is a read — it must fan out across shards (like
+    ``term_doc_frequencies``), and with no shards registered it returns []."""
+    assert adapter.resolve_symbol("AnySymbol") == []
+
+
+def test_adapter_symbol_write_surface_is_noop(adapter):
+    """WS2 symbol-graph writes are per-shard ingest-path work; on the V1
+    read-only adapter they are silent no-ops (same contract as
+    ``store_relations_batch``)."""
+    adapter.store_symbol_defs([("sym", "gene1", "function")])  # must not raise
+    assert adapter.resolve_symbol("sym") == []  # nothing persisted
+    assert adapter._sweep_symbol_orphans() == 0
+
+
+def test_adapter_delete_gene_is_noop_returning_false(adapter):
+    """``delete_gene`` is a write — V1 no-op. Returns False (the
+    KnowledgeStore contract's 'id unknown / nothing deleted' value) so
+    admin callers don't believe a hard-delete happened."""
+    assert adapter.delete_gene("abc123def456") is False
+
+
 def test_adapter_covers_full_knowledgestore_surface(adapter):
     """Full surface check: union of the hard caller contract and the
     softer KnowledgeStore drift catcher (merged 2026-07-05, Task 9 — see

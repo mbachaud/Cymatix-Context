@@ -336,6 +336,24 @@ class ShardedGenomeAdapter:
                 continue
         return result
 
+    def resolve_symbol(self, symbol: str) -> list:
+        """gene_ids of chunks defining ``symbol``, across all routed shards.
+
+        Mirrors ``KnowledgeStore.resolve_symbol`` (symbol-aware expansion,
+        WS2). Same soft-fail contract as ``term_doc_frequencies``: a broken
+        shard contributes nothing rather than poisoning the aggregate.
+        Dedups while preserving shard iteration order.
+        """
+        seen: dict = {}
+        for shard_name in self._router.known_shards():
+            try:
+                shard = self._router._open_shard(shard_name)
+                for gid in shard.resolve_symbol(symbol):
+                    seen.setdefault(gid, None)
+            except Exception:
+                continue
+        return list(seen)
+
     def stats(self) -> dict:
         rows = self._router.main_conn.execute(
             "SELECT category, shard_name, gene_count, byte_size "
@@ -497,6 +515,15 @@ class ShardedGenomeAdapter:
     # Back-compat alias for callers still using the pre-R3 name.
     upsert_gene = upsert_doc
 
+    def delete_gene(self, gene_id: str, **_kw) -> bool:
+        """V1 no-op — per-shard hard-delete is ingest-time-sharding work.
+        Returns False (KnowledgeStore's 'nothing deleted' value) so admin
+        callers don't believe a hard-delete happened."""
+        log.debug("sharded-adapter: delete_gene no-op for %s", gene_id)
+        return False
+
+    def store_symbol_defs(self, *_a, **_kw) -> None: pass
+    def _sweep_symbol_orphans(self, *_a, **_kw) -> int: return 0
     def touch_genes(self, *_a, **_kw) -> None: pass
     def link_coactivated(self, *_a, **_kw) -> None: pass
     def store_harmonic_weights(self, *_a, **_kw) -> None: pass
