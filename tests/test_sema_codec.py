@@ -12,7 +12,7 @@ import struct
 
 import pytest
 
-from helix_context.backends.sema_codec import decode_embedding, sema_vec_to_blob
+from cymatix_context.backends.sema_codec import decode_embedding, sema_vec_to_blob
 
 
 def test_blob_roundtrip_exact_for_fp32_representable():

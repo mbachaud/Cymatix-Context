@@ -1,21 +1,21 @@
 # `/context` endpoint reference
 
 This document is the schema-level reference for the `/context` family of
-endpoints exposed by `helix-context`. It supersedes the two-paragraph
+endpoints exposed by `cymatix-context`. It supersedes the two-paragraph
 treatment in [`docs/api/endpoints.md`](endpoints.md) and is the canonical
 contract for frontier-agent and small-MoE callers integrating against the
 post-2026-05-10 7-stage retrieval-fix surface.
 
-All file references link to the helix-context repository. Pydantic models
-are at [`helix_context/schemas.py`](../../helix_context/schemas.py); route
-handlers are at [`helix_context/server.py`](../../helix_context/server.py).
+All file references link to the cymatix-context repository. Pydantic models
+are at [`cymatix_context/schemas.py`](../../cymatix_context/schemas.py); route
+handlers are at [`cymatix_context/server.py`](../../cymatix_context/server.py).
 
 ---
 
 ## 1. Overview
 
 `POST /context` is the primary read endpoint for an LLM agent. The agent
-sends a query string; helix-context runs its retrieval pipeline against the
+sends a query string; cymatix-context runs its retrieval pipeline against the
 local knowledge store (SQLite) and returns a structured envelope containing either
 (a) a `know` block with grounded `expressed_context` bytes the agent may
 answer from, or (b) a `miss` block whose `reason` field tells the agent how
@@ -24,14 +24,14 @@ to recover (escalate to a tool, refresh a stale source, ask a human).
 The contract is the **know-vs-go** split: every response has exactly one of
 the two top-level keys non-null. There is no third "maybe" branch — the
 discriminator at
-[`helix_context/know_decision.py:304`](../../helix_context/know_decision.py#L304)
+[`cymatix_context/know_decision.py:304`](../../cymatix_context/know_decision.py#L304)
 collapses every retrieval outcome onto one of the two blocks. Frontier
 agents are expected to branch on the structured tag instead of parsing
 prose out of `expressed_context`.
 
 Callers:
 
-- **MCP hosts** (Claude Code, Cursor, Continue) using `mcp__helix-context__helix_context`.
+- **MCP hosts** (Claude Code, Cursor, Continue) using `mcp__cymatix-context__cymatix_context`.
 - **Frontier-agent SDKs** (Claude Opus, GPT-5, Gemini 3 Pro) that want
   retrieval-augmented context with a load-bearing refusal contract.
 - **Small-MoE proxies** (qwen3:4b, gemma4:e4b) that need a JSON answer slate
@@ -49,16 +49,16 @@ SQL-and-numpy code from the post-fusion score map.
 
 `POST /context` accepts a JSON object. All fields are optional except
 `query`. Fields marked **(verified)** are read by
-[`server.py:1010-1170`](../../helix_context/server.py#L1010);
+[`server.py:1010-1170`](../../cymatix_context/server.py#L1010);
 fields documented from `_request_read_only` are at
-[`server.py:1000-1008`](../../helix_context/server.py#L1000).
+[`server.py:1000-1008`](../../cymatix_context/server.py#L1000).
 
 | Field | Type | Default | Semantics |
 |---|---|---|---|
 | `query` | `str` | — | **Required.** Natural-language query or locator. Empty/whitespace-only string returns 400 (`server.py:1082`). |
 | `session_id` | `str \| null` | synthesized | Session attribution for CWoLa logging. When `null` and `synthetic_session_enabled` is on, the server synthesizes `"syn_<sha1(client_ip:bucket_ts)>[:12]"` (`server.py:1056-1067`). |
 | `party_id` | `str \| null` | `config.session.default_party_id` | Trust identity. Defaults to the configured party when `null`. |
-| `caller_model_class` | `"generic" \| "small_moe" \| "frontier"` | `"generic"` | **Stage 5.** Render-branch selector. Unknown values return 400 (`server.py:1135-1142`). The `generic` branch is regression-locked byte-identical to pre-Stage-5 output. See §7 for the behavior matrix. Wire enum at [`schemas.py:692-696`](../../helix_context/schemas.py#L692). |
+| `caller_model_class` | `"generic" \| "small_moe" \| "frontier"` | `"generic"` | **Stage 5.** Render-branch selector. Unknown values return 400 (`server.py:1135-1142`). The `generic` branch is regression-locked byte-identical to pre-Stage-5 output. See §7 for the behavior matrix. Wire enum at [`schemas.py:692-696`](../../cymatix_context/schemas.py#L692). |
 | `clean` | `bool` | `false` | **Stage 1.** When true: (a) implies `read_only=true` (`server.py:1008`); (b) calls `helix.reset_session_state()` to clear per-session caches before the request runs (`server.py:1075-1079`). Used by synthetic benches to isolate from prior state. |
 | `read_only` | `bool \| null` | `null` | Explicit override. When non-null, takes precedence over `clean`'s implicit value (`_request_read_only` at `server.py:1000`). When true: no knowledge store learning, no `touch_genes`, no `link_coactivated`, no harmonic/relation writes. Mtime cache may still update (in-memory; not a knowledge store write). |
 | `response_mode` | `"continue" \| "packet"` | `"continue"` | When `"packet"`, the route delegates to `build_context_packet` and returns a `ContextPacket`-shaped payload instead of the Continue-compatible envelope (`server.py:1090-1111`). Other values return 400. |
@@ -76,15 +76,15 @@ fields documented from `_request_read_only` are at
 
 ```json
 {
-  "query": "What is the cold_start_threshold value in helix-context/helix_context/config.py?",
+  "query": "What is the cold_start_threshold value in cymatix-context/cymatix_context/config.py?",
   "caller_model_class": "frontier",
   "session_id": "taude-2026-05-10-001",
   "party_id": "max@local",
   "clean": false,
   "prompt_tokens": 18000,
   "session_context": {
-    "active_project": "helix-context",
-    "active_files": ["helix_context/config.py", "helix.toml"]
+    "active_project": "cymatix-context",
+    "active_files": ["cymatix_context/config.py", "cymatix.toml"]
   }
 }
 ```
@@ -108,12 +108,12 @@ When the discriminator returns a `KnowBlock`, the response top-level is:
 
 `miss` is **not** present in this branch (it is omitted, not `null`). The
 envelope validator at
-[`schemas.py:665-674`](../../helix_context/schemas.py#L665) raises
+[`schemas.py:665-674`](../../cymatix_context/schemas.py#L665) raises
 `ValueError` if both keys are set or both omitted.
 
 ### 3.1 `know: KnowBlock`
 
-Defined at [`schemas.py:490-518`](../../helix_context/schemas.py#L490).
+Defined at [`schemas.py:490-518`](../../cymatix_context/schemas.py#L490).
 `extra="forbid"` — additional keys are a hard error.
 
 | Field | Type | Constraint | Source |
@@ -122,7 +122,7 @@ Defined at [`schemas.py:490-518`](../../helix_context/schemas.py#L490).
 | `confidence` | `float` | `[0.0, 1.0]` | 5-feature logistic, see §3.1.1 |
 | `top_score` | `float` | unconstrained | rank-1 fused retrieval score |
 | `score_gap` | `float` | unconstrained | `top1 - top2` (raw subtraction, NOT ratio) |
-| `lexical_dense_agree` | `bool` | — | `True` if lexical-cluster top-K and dense-cluster top-K share at least one gene_id (k=3); see [`know_decision.py:237-297`](../../helix_context/know_decision.py#L237) |
+| `lexical_dense_agree` | `bool` | — | `True` if lexical-cluster top-K and dense-cluster top-K share at least one gene_id (k=3); see [`know_decision.py:237-297`](../../cymatix_context/know_decision.py#L237) |
 | `gene_id_match` | `str \| null` | — | Beacon: query token that exactly (case-insensitive) matches a top-1 file or path token. `null` when no match. See §3.1.2. |
 | `coordinate_confidence` | `float` | `[0.0, 1.0]` | Blend of folder + file-grain query/source agreement; computed by `context_packet._coordinate_confidence` |
 | `soft_stale` | `bool` | default `false` | **Stage 7.** `True` when top-1 is fresh enough to act on, but `freshness_min < 0.5` indicates lower-ranked supporting documents are stale. Drives `agent.recommendation = "refresh"` even though the agent may answer from the knowledge store. |
@@ -130,9 +130,9 @@ Defined at [`schemas.py:490-518`](../../helix_context/schemas.py#L490).
 #### 3.1.1 Confidence formula (Stage 6 + Stage 7)
 
 The 5-feature logistic at
-[`know_calibration.py`](../../helix_context/know_calibration.py)
+[`know_calibration.py`](../../cymatix_context/know_calibration.py)
 (plumbed from `decide_know_or_miss` at
-[`know_decision.py:433`](../../helix_context/know_decision.py#L433)):
+[`know_decision.py:433`](../../cymatix_context/know_decision.py#L433)):
 
 ```
 z = β0
@@ -156,7 +156,7 @@ is treated as neutral (β5 contribution zero).
 #### 3.1.2 `gene_id_match` beacon rules
 
 Implemented at
-[`know_decision.py:157-211`](../../helix_context/know_decision.py#L157).
+[`know_decision.py:157-211`](../../cymatix_context/know_decision.py#L157).
 Filename match wins over path match. Path-token match requires the
 matched token's length `>= 4` AND it must not be in the
 `{"src","lib","app","bin","var","tmp","out"}` blocklist. Equality is
@@ -201,7 +201,7 @@ When the discriminator returns a `MissBlock`, the response top-level is:
 
 ### 4.1 `miss: MissBlock`
 
-Defined at [`schemas.py:521-642`](../../helix_context/schemas.py#L521).
+Defined at [`schemas.py:521-642`](../../cymatix_context/schemas.py#L521).
 `extra="forbid"`.
 
 | Field | Type | Constraint | Source |
@@ -217,7 +217,7 @@ Defined at [`schemas.py:521-642`](../../helix_context/schemas.py#L521).
 ### 4.2 Reason vocabulary
 
 `MISS_REASONS` is a `tuple[str, ...]` at
-[`schemas.py:457-466`](../../helix_context/schemas.py#L457).
+[`schemas.py:457-466`](../../cymatix_context/schemas.py#L457).
 Order matters for clients that index into the tuple:
 
 ```python
@@ -233,14 +233,14 @@ MISS_REASONS = (
 ```
 
 `ESCALATE_TARGETS` is a `tuple[str, ...]` at
-[`schemas.py:478-483`](../../helix_context/schemas.py#L478):
+[`schemas.py:478-483`](../../cymatix_context/schemas.py#L478):
 
 ```python
 ESCALATE_TARGETS = ("grep", "rag", "web", "ask_human")
 ```
 
 The model validator at
-[`schemas.py:557-601`](../../helix_context/schemas.py#L557) enforces:
+[`schemas.py:557-601`](../../cymatix_context/schemas.py#L557) enforces:
 
 - `reason in {"stale","cold","superseded"}` ⇒
   `len(refresh_targets) >= 1` AND `escalate_to == []`.
@@ -265,7 +265,7 @@ pydantic-validate time.
 ### 4.4 `escalate_to` ordering rules
 
 `_pick_escalation` at
-[`know_decision.py:96-139`](../../helix_context/know_decision.py#L96).
+[`know_decision.py:96-139`](../../cymatix_context/know_decision.py#L96).
 First matching rule wins; results deduped while preserving order:
 
 1. **Code-shaped query** (matches `[A-Za-z_][A-Za-z0-9_]*\.[A-Za-z_]` OR
@@ -309,7 +309,7 @@ Refresh-class (stale top-1):
     "top_score": 0.83,
     "ratio": 1.42,
     "escalate_to": [],
-    "refresh_targets": ["F:/Projects/helix-context/helix_context/config.py"],
+    "refresh_targets": ["F:/Projects/cymatix-context/cymatix_context/config.py"],
     "do_not_answer_from_genome": true
   }
 }
@@ -326,7 +326,7 @@ Refresh-class (cold-tier fallback):
     "ratio": 1.0,
     "escalate_to": [],
     "refresh_targets": [
-      "F:/Projects/helix-context/helix_context/freshness.py"
+      "F:/Projects/cymatix-context/cymatix_context/freshness.py"
     ],
     "do_not_answer_from_genome": true
   }
@@ -340,7 +340,7 @@ Refresh-class (cold-tier fallback):
 Exactly one of `know` and `miss` is non-null on every well-formed
 response. The invariant is enforced by the
 `ContextResponseEnvelope._exactly_one` model validator at
-[`schemas.py:665-674`](../../helix_context/schemas.py#L665):
+[`schemas.py:665-674`](../../cymatix_context/schemas.py#L665):
 
 ```python
 @model_validator(mode="after")
@@ -373,7 +373,7 @@ inline tokens may appear:
 ### 6.1 `<helix:no_match/>` — Stage 6 miss token (legacy-compat surface)
 
 Self-closing tag injected by `_no_match_token` at
-[`context_manager.py:221-236`](../../helix_context/context_manager.py#L221).
+[`context_manager.py:221-236`](../../cymatix_context/context_manager.py#L221).
 Lowercase tag name, attributes in fixed order (`reason` then
 `do_not_answer`), no whitespace inside the tag, `do_not_answer="true"`
 literal. **Only four reasons are ever emitted by the inline tag:**
@@ -412,7 +412,7 @@ the legacy fallback. Design decision recorded in
 ### 6.2 `<helix:slate>` — Stage 5 small-MoE answer slate
 
 Injected by `_render_small_moe_slate` at
-[`context_manager.py:288-342`](../../helix_context/context_manager.py#L288).
+[`context_manager.py:288-342`](../../cymatix_context/context_manager.py#L288).
 Char-bounded JSON KV pack, default budget 1500 chars (config key
 `budget.slate_char_budget`). Compact JSON (`separators=(",", ":")`,
 `ensure_ascii=False`); keys deduped first-write-wins:
@@ -439,13 +439,13 @@ procedural / multi_hop / default), the rendered prompt template
 substitutes `{answer_slate}` with the rendered `<helix:slate>` string
 and emits the result — there is no distinct `<helix:answer_slate>` tag.
 Templates at
-[`context_manager.py:176-192`](../../helix_context/context_manager.py#L176).
+[`context_manager.py:176-192`](../../cymatix_context/context_manager.py#L176).
 
 ### 6.4 Per-document legibility headers
 
 When legibility headers are enabled, each delivered document is preceded by
 a single bracketed line emitted by `format_gene_header` at
-[`legibility.py:122-157`](../../helix_context/legibility.py#L122):
+[`legibility.py:122-157`](../../cymatix_context/legibility.py#L122):
 
 ```
 [gene=<short_id> <symbol> fired=<tier1>:<score1>,... <chars→compressed>]
@@ -508,7 +508,7 @@ column.
 | `default` | `None` (falls back to `self._decoder_prompt`) | **`condensed_with_slate`** | `None` (falls back, same as `generic`) |
 
 Mode definitions (templates at
-[`context_manager.py:176-202`](../../helix_context/context_manager.py#L176)):
+[`context_manager.py:176-202`](../../cymatix_context/context_manager.py#L176)):
 
 - `minimal`, `condensed`, `full`, `none`, `moe`: existing pre-Stage-5
   templates.
@@ -527,14 +527,14 @@ schemas, follow the route handler line numbers.
 
 ### 9.1 `POST /context/packet` — agent-safe evidence packet
 
-Handler: [`server.py:1461-1544`](../../helix_context/server.py#L1461).
+Handler: [`server.py:1461-1544`](../../cymatix_context/server.py#L1461).
 Request fields: `query` (required), `task_type` (default `"explain"`),
 `max_genes` (default 8, clamped to `[1, 32]`), `clean`, `read_only`,
 `include_raw` (default `false` — when true, item content is the full
 document body instead of the 280-char compressor-compressed thumbnail),
 `max_item_chars` (per-item cap when `include_raw`).
 Response is a `ContextPacket` dict (see
-[`schemas.py:245-272`](../../helix_context/schemas.py#L245)) with
+[`schemas.py:245-272`](../../cymatix_context/schemas.py#L245)) with
 `know` / `miss` lifted to the top of the dict, plus
 `response_mode: "packet"`. Includes `verified`, `stale_risk`,
 `contradictions`, `refresh_targets` (as `RefreshTarget` rows),
@@ -542,7 +542,7 @@ Response is a `ContextPacket` dict (see
 
 ### 9.2 `POST /context/refresh-plan` — refresh-only convenience
 
-Handler: [`server.py:1546-1593`](../../helix_context/server.py#L1546).
+Handler: [`server.py:1546-1593`](../../cymatix_context/server.py#L1546).
 Thin wrapper over `get_refresh_targets`; returns
 `{"query", "task_type", "refresh_targets": [RefreshTarget...],
 "response_mode": "refresh_plan"}`. Useful when the caller already has
@@ -551,7 +551,7 @@ Honors `clean` / `read_only` identically to `/context`.
 
 ### 9.3 `POST /fingerprint` — navigation-first payload
 
-Handler: [`server.py:1595-1825`](../../helix_context/server.py#L1595).
+Handler: [`server.py:1595-1825`](../../cymatix_context/server.py#L1595).
 Request fields: `query` (required), `profile`
 (`"fast" | "balanced" | "quality"`, default from
 `config.context.fingerprint_mode_profile`), `include_cold`,
@@ -566,7 +566,7 @@ Returns tier-score breakdowns per candidate document (`gene_id`, `score`,
 ### 9.4 `POST /consolidate` — session memory consolidation
 
 Handler:
-[`helix_context/server/routes_ingest.py:134-148`](../../helix_context/server/routes_ingest.py#L134).
+[`cymatix_context/server/routes_ingest.py:134-148`](../../cymatix_context/server/routes_ingest.py#L134).
 No request body. Distills the session buffer into consolidated
 knowledge documents, extracting only new facts, decisions, and
 discoveries. Returns `{"facts_extracted": int, "gene_ids":
@@ -595,7 +595,7 @@ the body of `/consolidate` itself.
 
 ### 9.5 `POST /sessions/register` — participant registration
 
-Handler: [`server.py:2239-2320`](../../helix_context/server.py#L2239).
+Handler: [`server.py:2239-2320`](../../cymatix_context/server.py#L2239).
 Required body fields: `party_id`, `handle` (both must be non-null
 strings, ≥3 chars, no NULL bytes). Optional: `workspace`, `pid`,
 `capabilities`, `metadata`, `display_name`, `agent_kind`, `mcp_host`,
@@ -605,14 +605,14 @@ for `party_id`. Returns `{"participant_id", "party_id",
 
 ### 9.6 `POST /admin/refresh` — reopen knowledge store connection
 
-Handler: [`server.py:2805-2810`](../../helix_context/server.py#L2805).
+Handler: [`server.py:2805-2810`](../../cymatix_context/server.py#L2805).
 No body. Reopens the knowledge store connection so external changes
 (deletions, thinning) become visible. Returns
 `{"refreshed": true, "genes": <new_count>}`.
 
 ### 9.7 `POST /admin/vacuum` — reclaim SQLite pages
 
-Handler: [`server.py:2812-2828`](../../helix_context/server.py#L2812).
+Handler: [`server.py:2812-2828`](../../cymatix_context/server.py#L2812).
 No body. Runs SQLite `VACUUM` to compact the knowledge store file after
 thinning, compaction, or large-scale deletions. Blocks all writers
 during the operation — run during maintenance windows. Returns
@@ -621,7 +621,7 @@ with `{"ok": false, "error": str}`.
 
 ### 9.8 `GET /health` — readiness + provenance
 
-Handler: [`server.py:2694-2788`](../../helix_context/server.py#L2694).
+Handler: [`server.py:2694-2788`](../../cymatix_context/server.py#L2694).
 Returns `status` (`"ok" | "degraded"`), `message`, `ribosome` model,
 `ribosome_backend`, `ribosome_configured_backend`, `ribosome_cost_class`,
 `genes` (total count), `upstream` URL, `upstream_reachable`, a
@@ -631,7 +631,7 @@ Returns `status` (`"ok" | "degraded"`), `message`, `ribosome` model,
 
 ### 9.9 `GET /stats` — knowledge store metrics
 
-Handler: [`server.py:1829-1838`](../../helix_context/server.py#L1829).
+Handler: [`server.py:1829-1838`](../../cymatix_context/server.py#L1829).
 Returns `helix.stats()` — knowledge store metrics, compression ratio, per-tier
 counters. Cheap synchronous DB read; safe to poll.
 
@@ -643,11 +643,11 @@ counters. Cheap synchronous DB read; safe to poll.
 
 ```python
 import httpx
-from helix_context.agent_prompt import full_fragment
+from cymatix_context.agent_prompt import full_fragment
 
 SYSTEM_PROMPT = full_fragment() + "\n\nYou are a coding assistant ..."
 
-def ask_with_helix(user_query: str) -> str:
+def ask_with_cymatix(user_query: str) -> str:
     with httpx.Client(timeout=30.0) as client:
         r = client.post(
             "http://127.0.0.1:11437/context",
@@ -686,17 +686,17 @@ def ask_with_helix(user_query: str) -> str:
         if miss["reason"] in ("stale", "cold", "superseded"):
             for path in miss["refresh_targets"]:
                 refresh_source(path)              # re-read from disk
-            return ask_with_helix(user_query)     # retry once after refresh
+            return ask_with_cymatix(user_query)     # retry once after refresh
         # Escalate-class — pick the first tool from escalate_to.
         first_tool = miss["escalate_to"][0]
         return route_to_tool(first_tool, user_query)
 
-    raise RuntimeError("Helix returned neither know nor miss — server bug")
+    raise RuntimeError("Cymatix returned neither know nor miss — server bug")
 ```
 
-The system prompt MUST include the `HELIX_NO_MATCH_FRAGMENT` /
-`HELIX_REFRESH_FRAGMENT` text from
-[`helix_context/agent_prompt.py`](../../helix_context/agent_prompt.py)
+The system prompt MUST include the `CYMATIX_NO_MATCH_FRAGMENT` /
+`CYMATIX_REFRESH_FRAGMENT` text from
+[`cymatix_context/agent_prompt.py`](../../cymatix_context/agent_prompt.py)
 (or equivalently, the markdown at
 [`docs/agent-sdk-fragment.md`](../agent-sdk-fragment.md)) — without it,
 a frontier model will paper over `do_not_answer_from_genome=true` by
@@ -749,21 +749,21 @@ Decoder mode is selected by the cross-product of classifier output and
 `caller_model_class`; a `factual` query with `caller_model_class=
 "small_moe"` resolves to `answer_slate_only` (§8). The 1500-char slate
 budget is the contract surface — `slate_char_budget` is configurable
-via `[budget]` in `helix.toml`.
+via `[budget]` in `cymatix.toml`.
 
 ### 10.3 MCP host (Claude Code, Cursor, Continue)
 
-When configured as an MCP server, helix-context exposes
-`mcp__helix-context__helix_context` directly to the host. The default
+When configured as an MCP server, cymatix-context exposes
+`mcp__cymatix-context__cymatix_context` directly to the host. The default
 `caller_model_class` is `"generic"`, which is byte-identical to
 pre-Stage-5 behavior:
 
 ```jsonc
 // Tool call from inside a Claude Code session:
 {
-  "tool": "mcp__helix-context__helix_context",
+  "tool": "mcp__cymatix-context__cymatix_context",
   "arguments": {
-    "query": "cold_start_threshold helix.toml",
+    "query": "cold_start_threshold cymatix.toml",
     "session_id": "taude-2026-05-10",
     "party_id": "max@local"
   }
@@ -771,10 +771,10 @@ pre-Stage-5 behavior:
 ```
 
 The MCP adapter at
-[`helix_context/mcp_server.py`](../../helix_context/mcp_server.py)
+[`cymatix_context/mcp_server.py`](../../cymatix_context/mcp_server.py)
 forwards the request to `/context` with `caller_model_class` defaulting
 to `"generic"`. Claude Code and Cursor pass the `know` / `miss` blocks
-through verbatim — the host's UI surfaces a "Used: helix-context" tile
+through verbatim — the host's UI surfaces a "Used: cymatix-context" tile
 when `know.confidence > 0.7`.
 
 ---
@@ -784,7 +784,7 @@ when `know.confidence > 0.7`.
 The 5-feature confidence logistic (§3.1.1) ships with cold-start
 defaults but is calibrated against bench data via
 `scripts/calibrate_know_confidence.py` (Stage 6 spec §11). Calibrated
-parameters live in `[know]` of `helix.toml`:
+parameters live in `[know]` of `cymatix.toml`:
 
 ```toml
 [know]
@@ -805,10 +805,10 @@ The `agent` block in every `/context` response carries
 `ann_threshold_mode` and `abstain_mode` so the agent can see WHICH
 calibration set the response was produced under without an extra
 `/health` roundtrip
-([`server.py:1349-1350`](../../helix_context/server.py#L1349)).
+([`server.py:1349-1350`](../../cymatix_context/server.py#L1349)).
 
 **Freshness signals.** Three fields on `ContextHealth`
-([`schemas.py:182-184`](../../helix_context/schemas.py#L182)) replace
+([`schemas.py:182-184`](../../cymatix_context/schemas.py#L182)) replace
 the single `mean(decay)` value from pre-Stage-7:
 
 - `freshness_min` — min decay across retrieved candidates.
@@ -826,13 +826,13 @@ but `freshness_min < 0.5`, `know.soft_stale = true` and
 `agent.recommendation = "refresh"`. The agent MAY answer from the
 knowledge store (top-1 is fresh) AND should plan a refresh of lower-ranked
 supporting documents on its own schedule
-([`server.py:1310-1319`](../../helix_context/server.py#L1310)).
+([`server.py:1310-1319`](../../cymatix_context/server.py#L1310)).
 
 **Refresh tool layer.** `MissBlock.refresh_targets` is the contract
 surface for the agent's refresh tool layer. Each entry is an absolute
 file path or a fully-qualified URL; the adapter
 `MissBlock.to_refresh_targets()` at
-[`schemas.py:608-642`](../../helix_context/schemas.py#L608) converts
+[`schemas.py:608-642`](../../cymatix_context/schemas.py#L608) converts
 the list to `RefreshTarget` rows for callers that want the wider
 schema (`target_kind`, `priority`, mapped reason). The agent's
 expected loop:
@@ -842,8 +842,8 @@ expected loop:
 3. Re-call `/context` with the same query — the next response will
    reflect the refreshed state.
 
-The `HELIX_REFRESH_FRAGMENT` at
-[`agent_prompt.py:59-82`](../../helix_context/agent_prompt.py#L59)
+The `CYMATIX_REFRESH_FRAGMENT` at
+[`agent_prompt.py:59-82`](../../cymatix_context/agent_prompt.py#L59)
 codifies the rule "refresh means the answer is here, just out of date —
 fetch and retry; escalate means the answer is NOT here — go ask
 elsewhere." The two are distinct branches and the agent must not

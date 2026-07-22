@@ -6,7 +6,7 @@
 
 **Established:** 2026-04-15 (helix day 9).
 **Authors:** Max + Laude, after a full-day session where the feedback loop
-driving helix decisions was explicitly "ask Laude / Raude / Taude what hurts."
+driving cymatix decisions was explicitly "ask Laude / Raude / Taude what hurts."
 Raude's Dewey filename-anchor pivot (+12pp), Laude's PWPC Phase 1 shipment
 and lockstep-test correction, and the presence-document substrate all came out of
 that methodology.
@@ -29,7 +29,7 @@ Until this point, most design decisions could be read either way:
 
 These fork in different directions depending on who the query originator is.
 Until today the ambiguity was harmless. With three LLM agents (Laude, Raude,
-Taude) as the actual daily users of helix, the ambiguity starts costing
+Taude) as the actual daily users of cymatix, the ambiguity starts costing
 decisions — and it's already silently shaping trade-offs like how /context
 renders document content and what "good retrieval" means in benchmarks.
 
@@ -54,7 +54,7 @@ High compression with noise is worse than low compression with signal. SIKE
 
 CLI tools, dashboards, launchers — these are for the human operator debugging
 the system. `POST /context`, `GET /genes/{id}`, `POST /sessions/*/heartbeat`
-are how consumers actually consume helix. Therefore:
+are how consumers actually consume cymatix. Therefore:
 
 - API schemas must be stable, versioned, typed.
 - Error responses must be structured (code + hint), not prose.
@@ -67,7 +67,7 @@ are how consumers actually consume helix. Therefore:
 ### 3. Introspection is a feature, not a debug aid
 
 A human reading a compressed summary can often eyeball "is this the right
-context?" An LLM cannot — and when helix is wrong in ways that look confident,
+context?" An LLM cannot — and when cymatix is wrong in ways that look confident,
 LLMs propagate the error. So the response must carry *why* each document was
 surfaced:
 
@@ -79,7 +79,7 @@ surfaced:
 
 ### 4. Trust-calibration signals are load-bearing
 
-The single most valuable thing helix can tell a consuming LLM is
+The single most valuable thing cymatix can tell a consuming LLM is
 *"don't trust me on this one, go read the raw file."* PWPC's K signal, the
 precision field, and the `ContextHealth` status all serve this purpose. An LLM
 with calibrated mistrust will do better end-to-end work than one with
@@ -111,11 +111,11 @@ distinctive to multi-agent deployments and should be optimised accordingly.
 
 ### 6. Naming is a form of introspection
 
-Observed empirically (2026-04-15): LLMs encountering helix's github produce
+Observed empirically (2026-04-15): LLMs encountering cymatix's github produce
 disproportionately "trying to contribute" responses compared to comparable
 retrieval libraries. The cause is naming.
 
-**The biology metaphor is not cosmetic.** Every identifier in helix carries
+**The biology metaphor is not cosmetic.** Every identifier in cymatix carries
 why-information. `ChromatinState.HETEROCHROMATIN` isn't just "cold storage" —
 the word encodes *why* it's cold (compaction for irrelevance, not size),
 *when* it applies (access-rate decay, not time decay), *what* it enables
@@ -124,7 +124,7 @@ enum would carry none of that.
 
 **Three effects this has on LLM consumers reading the source:**
 
-1. **LLMs can't skim helix.** Standard retrieval libraries are pattern-matchable
+1. **LLMs can't skim cymatix.** Standard retrieval libraries are pattern-matchable
    — "another vector DB with metadata." Biology naming breaks that pattern-match.
    Every symbol is a small prompt: "what does this biological concept map to in
    information retrieval?" The LLM engages because it can't tune out.
@@ -135,7 +135,7 @@ enum would carry none of that.
 3. **The metaphor is generative.** When an LLM encounters `ribosome`, it can
    infer `spliceosome` (context assembly), `codon_table` (symbol mapping),
    `transcription` (compression). Some exist; some would fit if built. The
-   metaphor tells the LLM where the conceptual gaps are. That's why helix
+   metaphor tells the LLM where the conceptual gaps are. That's why cymatix
    *invites* contribution — it leaves interpretable gap-shapes.
 
 **The canonical / biology bilingual layer serves different LLM phases:**
@@ -152,7 +152,7 @@ deliberately bilingual, not a migration.
 
 **This extends the "introspection is a feature" principle (§3).** Runtime
 introspection surfaces *why* each document was retrieved. Naming-time introspection
-surfaces *why* each concept exists in the architecture. Both are how helix tells
+surfaces *why* each concept exists in the architecture. Both are how cymatix tells
 its consumer "here is the reasoning I'm running on." Symbol-level introspection
 is invisible in a response schema but it's where LLMs first engage.
 
@@ -178,7 +178,7 @@ When a design decision has two reasonable answers, ask:
    Deterministic wins when the consumer knows the referent.
 5. **Does this move a signal from debug-only to primary response?**
    That's usually the right direction.
-6. **Would a new LLM agent with zero helix history understand the response?**
+6. **Would a new LLM agent with zero cymatix history understand the response?**
    If no, the response carries too much implicit context.
 7. **Does the name you're choosing carry why-information, or just what-information?**
    Names that encode rationale win over names that only classify (see §6).
@@ -191,7 +191,7 @@ When a design decision has two reasonable answers, ask:
 
 Humans are still:
 
-- **Operators** — Max, Todd, Tejas, Raude-as-architect when debugging helix
+- **Operators** — Max, Todd, Tejas, Raude-as-architect when debugging cymatix
   itself, future devs reading the code.
 - **Stakeholders** — who owns constraints, trust boundaries, privacy, compliance,
   enterprise requirements (see JD's list in docs/collab/comms/ scope).
@@ -217,7 +217,7 @@ the LLM consumer wins; when there's no trade-off, keep the human-legible form.
 
 ### Not eternally true
 
-This is a current-phase stance. If helix's primary deployment shifts to
+This is a current-phase stance. If cymatix's primary deployment shifts to
 direct human use (unlikely but possible), revisit. If the ecosystem shifts
 to a stable agent-API standard (MCP convergence, OpenAI / Google equivalents),
 this doc should be updated to match.

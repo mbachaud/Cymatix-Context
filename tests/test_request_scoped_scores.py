@@ -21,15 +21,15 @@ from __future__ import annotations
 
 import pytest
 
-from helix_context.config import (
+from cymatix_context.config import (
     BudgetConfig,
     ClassifierConfig,
     GenomeConfig,
     HelixConfig,
     RibosomeConfig,
 )
-from helix_context.context_manager import HelixContextManager
-from helix_context.schemas import Gene, PromoterTags
+from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.schemas import Gene, PromoterTags
 
 from tests.conftest import MockCompressorBackend, make_gene, make_helix_config
 

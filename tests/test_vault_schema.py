@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from helix_context.vault.schema import (
+from cymatix_context.vault.schema import (
     AUTHORED_FIELDS,
     COMPUTED_FIELDS,
     authored_placeholders,
@@ -53,7 +53,7 @@ class TestAuthoredPlaceholders:
 class TestDeriveFilename:
     def test_simple_python_path(self):
         # gene_id "abc123def456" → short_id "abc123"
-        assert derive_gene_filename("helix_context/auth/middleware.py", "abc123def456") \
+        assert derive_gene_filename("cymatix_context/auth/middleware.py", "abc123def456") \
             == "middleware-abc123.md"
 
     def test_strips_extension(self):
@@ -71,7 +71,7 @@ class TestDeriveRelpath:
     def test_with_domain(self):
         assert derive_gene_relpath(
             domain="auth",
-            source_id="helix_context/auth/middleware.py",
+            source_id="cymatix_context/auth/middleware.py",
             gene_id="abc123def456",
         ) == "genes/auth/middleware-abc123.md"
 

@@ -46,7 +46,7 @@ if str(REPO_ROOT) not in sys.path:
 import chromadb  # noqa: E402
 import httpx  # noqa: E402
 
-from helix_context.adapters.retriever import (  # noqa: E402
+from cymatix_context.adapters.retriever import (  # noqa: E402
     HelixNarrowedRetriever,
     RetrievedDoc,
     Retriever,

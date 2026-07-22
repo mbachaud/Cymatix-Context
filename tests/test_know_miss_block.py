@@ -3,7 +3,7 @@
 Spec: docs/specs/2026-05-08-stage-6-know-miss-blocks.md §10, §13.
 
 All tests are mock-only — no Ollama, no sklearn fit. The discriminator
-uses default coefficients from helix_context.know_calibration; the
+uses default coefficients from cymatix_context.know_calibration; the
 calibration script has its own smoke test in test_calibration_script.
 
 # STAGE-7-EXT: this file pre-declares the freshness-related test
@@ -20,10 +20,10 @@ from pathlib import Path
 import pytest
 from pydantic import ValidationError
 
-from helix_context import context_manager as cm
-from helix_context.agent_prompt import HELIX_NO_MATCH_FRAGMENT
-from helix_context.context_packet import _attach_know_or_miss, build_context_packet
-from helix_context.scoring.know_calibration import (
+from cymatix_context import context_manager as cm
+from cymatix_context.agent_prompt import HELIX_NO_MATCH_FRAGMENT
+from cymatix_context.context_packet import _attach_know_or_miss, build_context_packet
+from cymatix_context.scoring.know_calibration import (
     DEFAULT_BETAS,
     DEFAULT_EMIT_FLOOR,
     KnowCalibration,
@@ -31,15 +31,15 @@ from helix_context.scoring.know_calibration import (
     fit_betas_from_features,
     load_calibration_from_toml,
 )
-from helix_context.scoring import know_decision as know_decision_module
-from helix_context.scoring.know_decision import (
+from cymatix_context.scoring import know_decision as know_decision_module
+from cymatix_context.scoring.know_decision import (
     _agree_from_tier_contributions,
     _gene_id_beacon,
     _is_code_shaped,
     _pick_escalation,
     decide_know_or_miss,
 )
-from helix_context.schemas import (
+from cymatix_context.schemas import (
     ContextHealth,
     ContextPacket,
     ContextResponseEnvelope,
@@ -69,7 +69,7 @@ def fake_gene():
         codons=[],
         promoter=PromoterTags(),
         epigenetics=EpigeneticMarkers(created_at=0.0),
-        source_id="F:/Projects/helix-context/helix_context/context_manager.py",
+        source_id="F:/Projects/helix-context/cymatix_context/context_manager.py",
     )
 
 
@@ -182,7 +182,7 @@ def _make_packet_gene(content: str, domain: str, *, gene_id: str | None = None):
     from tests.conftest import make_gene
 
     gene = make_gene(content, domains=[domain], gene_id=gene_id)
-    gene.source_id = f"F:/Projects/helix-context/helix_context/{domain}.py"
+    gene.source_id = f"F:/Projects/helix-context/cymatix_context/{domain}.py"
     gene.source_kind = "code"
     gene.volatility_class = "stable"
     gene.authority_class = "primary"
@@ -191,7 +191,7 @@ def _make_packet_gene(content: str, domain: str, *, gene_id: str | None = None):
 
 def test_gene_id_match_beacon_only_on_exact_filename_match():
     g = _SyntheticGene(
-        "g1", "F:/Projects/helix-context/helix_context/context_manager.py"
+        "g1", "F:/Projects/helix-context/cymatix_context/context_manager.py"
     )
     # Filename match — wins.
     assert _gene_id_beacon("context_manager", g) in ("context", "manager", "context_manager")
@@ -239,7 +239,7 @@ def test_expressed_context_has_no_match_tag_on_miss():
 def test_agent_recommendation_escalate_on_code_shaped_miss():
     # Code-shaped queries pick (grep, rag) regardless of reason.
     assert _pick_escalation("def parse_promoter()", "sparse") == ["grep", "rag"]
-    assert _pick_escalation("helix_context.config.HelixConfig", "no_promoter_match") == ["grep", "rag"]
+    assert _pick_escalation("cymatix_context.config.HelixConfig", "no_promoter_match") == ["grep", "rag"]
     # Code shape detection itself
     assert _is_code_shaped("def foo(): pass")
     assert _is_code_shaped("module.submodule.fn")
@@ -553,7 +553,7 @@ def test_helix_no_match_fragment_constant():
 
 def test_packet_attach_know_on_strong_signal(default_calibration):
     g = _SyntheticGene(
-        "g1", "F:/Projects/helix-context/helix_context/context_manager.py"
+        "g1", "F:/Projects/helix-context/cymatix_context/context_manager.py"
     )
     p = ContextPacket(task_type="explain", query="context_manager")
     _attach_know_or_miss(
@@ -601,7 +601,7 @@ def test_packet_attach_lexical_dense_agree_true_on_agreeing_tiers(
     both rank the same gene_id at the top must yield
     KnowBlock.lexical_dense_agree=True."""
     g = _SyntheticGene(
-        "g1", "F:/Projects/helix-context/helix_context/context_manager.py"
+        "g1", "F:/Projects/helix-context/cymatix_context/context_manager.py"
     )
     # g1 wins both the lexical and the dense ranker -> intersection
     # non-empty -> lexical_dense_agree must be True.
@@ -634,7 +634,7 @@ def default_calibration(monkeypatch):
     is calibration-independent, so pin defaults rather than track
     whatever the shipped calibration currently is.
     """
-    from helix_context.scoring import know_calibration as kc
+    from cymatix_context.scoring import know_calibration as kc
 
     monkeypatch.setattr(
         kc, "load_calibration_from_toml", lambda *a, **k: kc.KnowCalibration()
@@ -649,10 +649,10 @@ def test_packet_attach_lexical_dense_agree_false_on_disjoint_tiers(
     safe no-agreement direction. Pins the negative case so the
     plumbing fix can't regress into a false-positive boost."""
     g = _SyntheticGene(
-        "g1", "F:/Projects/helix-context/helix_context/context_manager.py"
+        "g1", "F:/Projects/helix-context/cymatix_context/context_manager.py"
     )
     g2 = _SyntheticGene(
-        "g2", "F:/Projects/helix-context/helix_context/codons.py"
+        "g2", "F:/Projects/helix-context/cymatix_context/codons.py"
     )
     # Lexical tiers favour g1; dense tiers favour g2. Disjoint top-K.
     tier_contributions = {
@@ -680,7 +680,7 @@ def test_packet_attach_lexical_dense_agree_false_when_no_tiers_passed(
     still works and lands on the safe False direction (no KeyError, no
     crash) — guards the older direct-caller path."""
     g = _SyntheticGene(
-        "g1", "F:/Projects/helix-context/helix_context/context_manager.py"
+        "g1", "F:/Projects/helix-context/cymatix_context/context_manager.py"
     )
     p = ContextPacket(task_type="explain", query="context_manager")
     _attach_know_or_miss(

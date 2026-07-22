@@ -1,6 +1,6 @@
 """Scoring-invariance audit (2026-07-08): metamorphic tests for the Fuser.
 
-``helix_context/retrieval/fusion.py`` (module docstring lines 10-12, 23)
+``cymatix_context/retrieval/fusion.py`` (module docstring lines 10-12, 23)
 claims RRF "operates on ranks, which are scale-invariant" and that the
 tie-break "makes the test plan §10 deterministic" — but no test asserted
 either property until now.
@@ -24,7 +24,7 @@ from typing import Callable, Dict, List, Sequence, Tuple
 
 import pytest
 
-from helix_context.retrieval.fusion import DEFAULT_RRF_K, Fuser, rank_by_score
+from cymatix_context.retrieval.fusion import DEFAULT_RRF_K, Fuser, rank_by_score
 
 
 # ─── Fixture: multi-tier score table ──────────────────────────────────

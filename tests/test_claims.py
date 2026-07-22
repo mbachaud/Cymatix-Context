@@ -1,17 +1,17 @@
-"""Tests for Phase 2 claim extraction (helix_context/claims.py)."""
+"""Tests for Phase 2 claim extraction (cymatix_context/claims.py)."""
 
 from __future__ import annotations
 
 import pytest
 
-from helix_context.identity.claims import (
+from cymatix_context.identity.claims import (
     claim_id_for,
     extract_entity_keys,
     extract_literal_claims,
     persist_claims,
 )
-from helix_context.schemas import Gene
-from helix_context.shard_schema import (
+from cymatix_context.schemas import Gene
+from cymatix_context.shard_schema import (
     init_main_db,
     open_main_db,
     query_claims,
@@ -243,7 +243,7 @@ def test_ingest_hook_auto_populates_claims(tmp_path):
     First-milestone verification for Phase 2: "Helix can answer structured
     fact questions without reopening bulk content."
     """
-    from helix_context.genome import Genome
+    from cymatix_context.genome import Genome
     main_db_path = tmp_path / "main.db"
     main_db = open_main_db(main_db_path)
     init_main_db(main_db)
@@ -283,7 +283,7 @@ def test_ingest_hook_auto_populates_claims(tmp_path):
 
 def test_ingest_without_main_conn_is_noop(tmp_path):
     """Default Genome (no main_conn) ingests fine without writing claims."""
-    from helix_context.genome import Genome
+    from cymatix_context.genome import Genome
     genome = Genome(str(tmp_path / "primary.db"))
     try:
         gene = _gene(

@@ -124,14 +124,14 @@ def _eval_genome(db_path: str, queries: list[dict], topk: int,
     (legacy behaviour); "extracted" passes the stage-1 extractor's
     ``(domains, entities)`` -- the serving shape.
     """
-    from helix_context.genome import Genome
+    from cymatix_context.genome import Genome
 
     fire = {"encode_calls": 0, "query_splade_calls": 0, "hits_total": 0}
     _patched = False
     _orig_encode = _orig_query = None
     if splade_query_enabled:
         try:
-            from helix_context.backends import splade_backend
+            from cymatix_context.backends import splade_backend
 
             _orig_encode = splade_backend.encode
             _orig_query = splade_backend.query_splade
@@ -160,7 +160,7 @@ def _eval_genome(db_path: str, queries: list[dict], topk: int,
 
     extract_signals = None
     if query_shape == "extracted":
-        from helix_context.accel import extract_query_signals as extract_signals
+        from cymatix_context.accel import extract_query_signals as extract_signals
 
     g = Genome(path=db_path, dense_embedding_enabled=False,
                splade_enabled=splade_query_enabled)
@@ -233,7 +233,7 @@ def _eval_genome(db_path: str, queries: list[dict], topk: int,
     finally:
         g.close()
         if _patched:
-            from helix_context.backends import splade_backend
+            from cymatix_context.backends import splade_backend
             splade_backend.encode = _orig_encode
             splade_backend.query_splade = _orig_query
 
@@ -292,7 +292,7 @@ def _auto_queries(db_path: str, n: int) -> list[dict]:
     auto-synth is a smoke-only fallback so the harness runs end-to-end
     without a pre-built fixture pack.
     """
-    from helix_context.genome import Genome
+    from cymatix_context.genome import Genome
     g = Genome(path=db_path, dense_embedding_enabled=False)
     try:
         rows = g.conn.execute(

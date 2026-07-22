@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import pytest
 
-from helix_context.hardware import SqliteMemPlan, sqlite_memory_budget
+from cymatix_context.hardware import SqliteMemPlan, sqlite_memory_budget
 
 GiB = 1024 ** 3
 MiB = 1024 ** 2

@@ -39,8 +39,8 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from helix_context.genome import Genome
-from helix_context.schemas import (
+from cymatix_context.genome import Genome
+from cymatix_context.schemas import (
     ChromatinState, EpigeneticMarkers, Gene, PromoterTags,
 )
 

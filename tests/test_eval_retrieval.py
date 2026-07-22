@@ -97,7 +97,7 @@ def test_mrr_and_retrieval_at():
 
 
 def test_load_calibration_default_matches_module_defaults():
-    from helix_context.scoring.know_calibration import (
+    from cymatix_context.scoring.know_calibration import (
         DEFAULT_BETAS,
         DEFAULT_EMIT_FLOOR,
     )
@@ -156,14 +156,14 @@ def test_build_report_shape():
 
 
 def _stub_manager(scores: dict, expressed_ids: list):
-    from helix_context.config import (
+    from cymatix_context.config import (
         BudgetConfig,
         ClassifierConfig,
         GenomeConfig,
         HelixConfig,
         RibosomeConfig,
     )
-    from helix_context.context_manager import HelixContextManager
+    from cymatix_context.context_manager import HelixContextManager
     from tests.conftest import make_gene
 
     cfg = HelixConfig(

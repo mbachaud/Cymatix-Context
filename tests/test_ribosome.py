@@ -14,9 +14,9 @@ import json
 import pytest
 import httpx
 
-from helix_context.ribosome import Ribosome, OllamaBackend, _parse_json
-from helix_context.schemas import Gene, PromoterTags, EpigeneticMarkers
-from helix_context.exceptions import FoldingError, TranscriptionError
+from cymatix_context.ribosome import Ribosome, OllamaBackend, _parse_json
+from cymatix_context.schemas import Gene, PromoterTags, EpigeneticMarkers
+from cymatix_context.exceptions import FoldingError, TranscriptionError
 
 from tests.conftest import make_gene, MockCompressorBackend
 

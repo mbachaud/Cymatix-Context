@@ -11,8 +11,8 @@ we think it picks for each query type - and detect drift if a refactor
 silently changes the routing.
 
 Requires server-side per-tier breakdown surfaced via /context's
-agent.tier_totals (verbose=true). See helix_context/genome.py
-last_tier_contributions and helix_context/server.py /context endpoint
+agent.tier_totals (verbose=true). See cymatix_context/genome.py
+last_tier_contributions and cymatix_context/server.py /context endpoint
 for the wiring.
 
 Usage:
@@ -91,7 +91,7 @@ PROMPT_SHAPES = [
     {
         "id": "path_lookup",
         "label": "path lookup",
-        "query": "helix_context genome.py",
+        "query": "cymatix_context genome.py",
         "expected_strong": ["pki", "tag_prefix", "fts5"],
         "rationale": "file path tokens — PKI loves these",
     },

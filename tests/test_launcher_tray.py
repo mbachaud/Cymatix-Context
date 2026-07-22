@@ -1,5 +1,5 @@
 """
-Tests for helix_context.launcher.tray — tray menu action handlers and
+Tests for cymatix_context.launcher.tray — tray menu action handlers and
 CLI integration. pystray is fully mocked so tests run headless.
 """
 
@@ -10,10 +10,10 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from helix_context.launcher import tray as tray_mod
-from helix_context.launcher.tray import HelixTrayIcon, _build_icon_image, is_tray_available
-from helix_context.launcher.update_check import UpdateInfo
-from helix_context.launcher.supervisor import (
+from cymatix_context.launcher import tray as tray_mod
+from cymatix_context.launcher.tray import HelixTrayIcon, _build_icon_image, is_tray_available
+from cymatix_context.launcher.update_check import UpdateInfo
+from cymatix_context.launcher.supervisor import (
     AlreadyRunning,
     NotRunning,
     SupervisorError,
@@ -63,13 +63,13 @@ class TestBuildIconImage:
 
 class TestMenuActions:
     def test_open_dashboard_calls_webbrowser(self, tray_icon):
-        with patch("helix_context.launcher.tray.webbrowser.open") as mock_open:
+        with patch("cymatix_context.launcher.tray.webbrowser.open") as mock_open:
             tray_icon._open_dashboard(None, None)
             mock_open.assert_called_once_with("http://127.0.0.1:11438/")
 
     def test_open_dashboard_swallows_errors(self, tray_icon):
         with patch(
-            "helix_context.launcher.tray.webbrowser.open",
+            "cymatix_context.launcher.tray.webbrowser.open",
             side_effect=Exception("no browser"),
         ):
             # Should not raise
@@ -140,7 +140,7 @@ class TestQuitAction:
     def test_quit_stops_helix_when_running(self, tray_icon, fake_supervisor):
         fake_supervisor.is_running.return_value = True
         tray_icon._icon = MagicMock()
-        with patch("helix_context.launcher.tray.os.kill"):
+        with patch("cymatix_context.launcher.tray.os.kill"):
             tray_icon._quit(None, None)
         fake_supervisor.stop.assert_called_once()
         tray_icon._icon.stop.assert_called_once()
@@ -149,7 +149,7 @@ class TestQuitAction:
     def test_quit_skips_helix_stop_when_already_stopped(self, tray_icon, fake_supervisor):
         fake_supervisor.is_running.return_value = False
         tray_icon._icon = MagicMock()
-        with patch("helix_context.launcher.tray.os.kill"):
+        with patch("cymatix_context.launcher.tray.os.kill"):
             tray_icon._quit(None, None)
         fake_supervisor.stop.assert_not_called()
         tray_icon._icon.stop.assert_called_once()
@@ -163,7 +163,7 @@ class TestQuitAction:
         )
         tray._icon = MagicMock()
         fake_supervisor.is_running.return_value = False
-        with patch("helix_context.launcher.tray.os.kill"):
+        with patch("cymatix_context.launcher.tray.os.kill"):
             tray._quit(None, None)
         on_quit_mock.assert_called_once()
 
@@ -176,7 +176,7 @@ class TestQuitAction:
         )
         tray._icon = MagicMock()
         fake_supervisor.is_running.return_value = False
-        with patch("helix_context.launcher.tray.os.kill"):
+        with patch("cymatix_context.launcher.tray.os.kill"):
             # Should not raise
             tray._quit(None, None)
         assert tray._quit_event.is_set()
@@ -192,7 +192,7 @@ class TestQuitOwnership:
         fake_supervisor.is_running.return_value = True
         fake_supervisor.owns_process.return_value = True
         tray_icon._icon = MagicMock()
-        with patch("helix_context.launcher.tray.os.kill"):
+        with patch("cymatix_context.launcher.tray.os.kill"):
             tray_icon._quit(None, None)
         fake_supervisor.stop.assert_called_once()
 
@@ -200,14 +200,14 @@ class TestQuitOwnership:
         fake_supervisor.is_running.return_value = True
         fake_supervisor.owns_process.return_value = False
         tray_icon._icon = MagicMock()
-        with patch("helix_context.launcher.tray.os.kill"):
+        with patch("cymatix_context.launcher.tray.os.kill"):
             tray_icon._quit(None, None)
         fake_supervisor.stop.assert_not_called()
         tray_icon._icon.stop.assert_called_once()
         assert tray_icon._quit_event.is_set()
 
     def test_stop_on_quit_owned(self, fake_supervisor):
-        from helix_context.launcher.supervisor import stop_on_quit
+        from cymatix_context.launcher.supervisor import stop_on_quit
 
         fake_supervisor.is_running.return_value = True
         fake_supervisor.owns_process.return_value = True
@@ -215,7 +215,7 @@ class TestQuitOwnership:
         fake_supervisor.stop.assert_called_once()
 
     def test_stop_on_quit_adopted(self, fake_supervisor):
-        from helix_context.launcher.supervisor import stop_on_quit
+        from cymatix_context.launcher.supervisor import stop_on_quit
 
         fake_supervisor.is_running.return_value = True
         fake_supervisor.owns_process.return_value = False
@@ -223,14 +223,14 @@ class TestQuitOwnership:
         fake_supervisor.stop.assert_not_called()
 
     def test_stop_on_quit_not_running(self, fake_supervisor):
-        from helix_context.launcher.supervisor import stop_on_quit
+        from cymatix_context.launcher.supervisor import stop_on_quit
 
         fake_supervisor.is_running.return_value = False
         assert stop_on_quit(fake_supervisor, reason="test quit") is False
         fake_supervisor.stop.assert_not_called()
 
     def test_stop_on_quit_swallows_stop_failure(self, fake_supervisor):
-        from helix_context.launcher.supervisor import stop_on_quit
+        from cymatix_context.launcher.supervisor import stop_on_quit
 
         fake_supervisor.is_running.return_value = True
         fake_supervisor.owns_process.return_value = True
@@ -242,26 +242,26 @@ class TestQuitOwnership:
 class TestCLIIntegration:
     def test_tray_and_native_rejected_on_non_windows(self, monkeypatch):
         """--tray --native combined returns exit 2 on non-Windows platforms."""
-        from helix_context.launcher import app as app_mod
+        from cymatix_context.launcher import app as app_mod
         monkeypatch.setattr(app_mod.sys, "platform", "darwin")
         rc = app_mod.main(["--tray", "--native", "--no-browser", "--no-autostart"])
         assert rc == 2
 
     def test_tray_and_native_rejected_on_linux(self, monkeypatch):
-        from helix_context.launcher import app as app_mod
+        from cymatix_context.launcher import app as app_mod
         monkeypatch.setattr(app_mod.sys, "platform", "linux"),
         rc = app_mod.main(["--tray", "--native", "--no-browser", "--no-autostart"])
         assert rc == 2
 
     def test_tray_without_extras_fails_fast(self, monkeypatch):
         """--tray with pystray unavailable returns exit code 1, not silent exit."""
-        from helix_context.launcher import app as app_mod
+        from cymatix_context.launcher import app as app_mod
         monkeypatch.setattr(app_mod, "_check_tray_available", lambda: False)
         rc = app_mod.main(["--tray", "--no-autostart"])
         assert rc == 1
 
     def test_check_tray_available_returns_bool(self):
-        from helix_context.launcher.app import _check_tray_available
+        from cymatix_context.launcher.app import _check_tray_available
         assert isinstance(_check_tray_available(), bool)
 
 
@@ -286,12 +286,12 @@ def test_tray_observability_submenu_built_when_supervisor_present(tmp_path):
     """When an ObservabilitySupervisor is wired, the tray menu gains an
     Observability submenu with per-service status entries."""
     pytest.importorskip("pystray")  # only meaningful if [launcher-tray] installed
-    from helix_context.launcher.tray import HelixTrayIcon
-    from helix_context.launcher.observability_supervisor import (
+    from cymatix_context.launcher.tray import HelixTrayIcon
+    from cymatix_context.launcher.observability_supervisor import (
         ObservabilitySupervisor,
     )
-    from helix_context.launcher.state import StateStore
-    from helix_context.launcher.supervisor import HelixSupervisor
+    from cymatix_context.launcher.state import StateStore
+    from cymatix_context.launcher.supervisor import HelixSupervisor
 
     store = StateStore(path=tmp_path / "state.json")
     helix_sup = HelixSupervisor(
@@ -314,9 +314,9 @@ def test_tray_observability_submenu_omitted_without_supervisor(tmp_path):
     """No supervisor wired AND install not pending → no Observability submenu
     (clean menu for users who opted out via HELIX_OBSERVABILITY=0)."""
     pytest.importorskip("pystray")
-    from helix_context.launcher.tray import HelixTrayIcon
-    from helix_context.launcher.state import StateStore
-    from helix_context.launcher.supervisor import HelixSupervisor
+    from cymatix_context.launcher.tray import HelixTrayIcon
+    from cymatix_context.launcher.state import StateStore
+    from cymatix_context.launcher.supervisor import HelixSupervisor
 
     store = StateStore(path=tmp_path / "state.json")
     helix_sup = HelixSupervisor(
@@ -345,8 +345,8 @@ def _build_install_pending_tray(tmp_path):
     submenu with an Install action.
     """
     pytest.importorskip("pystray")
-    from helix_context.launcher.state import StateStore
-    from helix_context.launcher.supervisor import HelixSupervisor
+    from cymatix_context.launcher.state import StateStore
+    from cymatix_context.launcher.supervisor import HelixSupervisor
 
     store = StateStore(path=tmp_path / "state.json")
     helix_sup = HelixSupervisor(
@@ -418,9 +418,9 @@ class TestInstallPendingSubmenu:
         .wait/.communicate)."""
         icon = _build_install_pending_tray(tmp_path)
         with patch(
-            "helix_context.launcher.tray.subprocess.Popen"
+            "cymatix_context.launcher.tray.subprocess.Popen"
         ) as mock_popen, patch(
-            "helix_context.launcher.tray.threading.Thread"
+            "cymatix_context.launcher.tray.threading.Thread"
         ):
             mock_popen.return_value = MagicMock()
             icon._run_install_observability(None, None)
@@ -452,9 +452,9 @@ class TestInstallPendingSubmenu:
         tray.py module location (not cwd-dependent)."""
         icon = _build_install_pending_tray(tmp_path)
         with patch(
-            "helix_context.launcher.tray.subprocess.Popen"
+            "cymatix_context.launcher.tray.subprocess.Popen"
         ) as mock_popen, patch(
-            "helix_context.launcher.tray.threading.Thread"
+            "cymatix_context.launcher.tray.threading.Thread"
         ):
             mock_popen.return_value = MagicMock()
             icon._run_install_observability(None, None)
@@ -477,9 +477,9 @@ class TestInstallPendingSubmenu:
         icon = _build_install_pending_tray(tmp_path)
         proc_mock = MagicMock()
         with patch(
-            "helix_context.launcher.tray.subprocess.Popen",
+            "cymatix_context.launcher.tray.subprocess.Popen",
             return_value=proc_mock,
-        ), patch("helix_context.launcher.tray.threading.Thread"):
+        ), patch("cymatix_context.launcher.tray.threading.Thread"):
             icon._run_install_observability(None, None)
         proc_mock.wait.assert_not_called()
         proc_mock.communicate.assert_not_called()
@@ -492,7 +492,7 @@ class TestInstallPendingSubmenu:
         is started by notify_install_needed, which controls Dismiss
         visibility — so we activate the pulse before sampling."""
         icon = _build_install_pending_tray(tmp_path)
-        with patch("helix_context.launcher.tray.threading.Timer"):
+        with patch("cymatix_context.launcher.tray.threading.Timer"):
             icon.start_install_pulse()
         try:
             sub_titles = _submenu_items_for_observability(icon._build_menu())
@@ -509,7 +509,7 @@ class TestInstallPendingSubmenu:
         pulse only depends on _install_pulse_active, not on supervisor
         presence (Task 8.5 contract)."""
         icon = _build_install_pending_tray(tmp_path)
-        with patch("helix_context.launcher.tray.threading.Timer"):
+        with patch("cymatix_context.launcher.tray.threading.Timer"):
             icon.start_install_pulse()
         try:
             menu = icon._build_menu()
@@ -547,9 +547,9 @@ class TestInstallPendingSubmenu:
         per the global error-handling rule."""
         icon = _build_install_pending_tray(tmp_path)
         with patch(
-            "helix_context.launcher.tray.subprocess.Popen",
+            "cymatix_context.launcher.tray.subprocess.Popen",
             side_effect=OSError("powershell missing"),
-        ), patch("helix_context.launcher.tray.threading.Thread"):
+        ), patch("cymatix_context.launcher.tray.threading.Thread"):
             # Should not raise
             icon._run_install_observability(None, None)
 
@@ -581,11 +581,11 @@ def _find_observability_item(menu):
 
 def _build_pulsing_tray(tmp_path):
     pytest.importorskip("pystray")
-    from helix_context.launcher.observability_supervisor import (
+    from cymatix_context.launcher.observability_supervisor import (
         ObservabilitySupervisor,
     )
-    from helix_context.launcher.state import StateStore
-    from helix_context.launcher.supervisor import HelixSupervisor
+    from cymatix_context.launcher.state import StateStore
+    from cymatix_context.launcher.supervisor import HelixSupervisor
 
     store = StateStore(path=tmp_path / "state.json")
     helix_sup = HelixSupervisor(
@@ -626,11 +626,11 @@ def _trigger_restart_obs_service(icon, monkeypatch):
 def _trigger_open_obs_log_dir(icon, monkeypatch):
     # Stub the file-explorer side effect.
     if sys.platform == "win32":
-        monkeypatch.setattr("helix_context.launcher.tray.os.startfile",
+        monkeypatch.setattr("cymatix_context.launcher.tray.os.startfile",
                             lambda _p: None, raising=False)
     else:
         monkeypatch.setattr(
-            "helix_context.launcher.tray.subprocess.Popen",
+            "cymatix_context.launcher.tray.subprocess.Popen",
             lambda *a, **k: None,
             raising=False,
         )
@@ -647,7 +647,7 @@ class TestInstallPulse:
         icon = _build_pulsing_tray(tmp_path)
         # Patch threading.Timer so the timer never actually schedules a
         # callback during the test (we check the start path, not the loop).
-        with patch("helix_context.launcher.tray.threading.Timer") as mock_timer:
+        with patch("cymatix_context.launcher.tray.threading.Timer") as mock_timer:
             mock_timer.return_value = MagicMock()
             icon.notify_install_needed()
         assert icon._install_pulse_active is True
@@ -763,14 +763,14 @@ class TestInstallPulse:
         icon._dismiss_install_pulse(None, None)
         assert icon._install_pulse_dismissed is True
         # Subsequent notify_install_needed should NOT restart the pulse.
-        with patch("helix_context.launcher.tray.threading.Timer"):
+        with patch("cymatix_context.launcher.tray.threading.Timer"):
             icon.notify_install_needed()
         assert icon._install_pulse_active is False
 
     def test_tick_pulse_toggles_state_and_refreshes(self, tmp_path):
         icon = _build_pulsing_tray(tmp_path)
         # Bypass the actual timer scheduling by patching threading.Timer.
-        with patch("helix_context.launcher.tray.threading.Timer") as mock_timer:
+        with patch("cymatix_context.launcher.tray.threading.Timer") as mock_timer:
             mock_timer.return_value = MagicMock()
             icon.start_install_pulse()
             initial = icon._install_pulse_state
@@ -794,9 +794,9 @@ class TestInstallCompletionWatcher:
         """_run_install_observability must spawn a watcher daemon thread."""
         icon = _build_install_pending_tray(tmp_path)
         with patch(
-            "helix_context.launcher.tray.subprocess.Popen"
+            "cymatix_context.launcher.tray.subprocess.Popen"
         ), patch(
-            "helix_context.launcher.tray.threading.Thread"
+            "cymatix_context.launcher.tray.threading.Thread"
         ) as mock_thread:
             mock_thread.return_value = MagicMock()
             icon._run_install_observability(None, None)
@@ -813,10 +813,10 @@ class TestInstallCompletionWatcher:
         scheduled — there's no install to wait for."""
         icon = _build_install_pending_tray(tmp_path)
         with patch(
-            "helix_context.launcher.tray.subprocess.Popen",
+            "cymatix_context.launcher.tray.subprocess.Popen",
             side_effect=OSError("missing"),
         ), patch(
-            "helix_context.launcher.tray.threading.Thread"
+            "cymatix_context.launcher.tray.threading.Thread"
         ) as mock_thread:
             icon._run_install_observability(None, None)
         mock_thread.assert_not_called()
@@ -834,7 +834,7 @@ class TestInstallCompletionWatcher:
         icon._repo_root = lambda: repo_root  # type: ignore[method-assign]
         icon._auto_restart_launcher = MagicMock()  # type: ignore[method-assign]
         # Patch sleep so the loop returns immediately.
-        with patch("helix_context.launcher.tray.time.sleep"):
+        with patch("cymatix_context.launcher.tray.time.sleep"):
             icon._install_completion_watcher()
         icon._auto_restart_launcher.assert_called_once()
         assert not sentinel.exists(), (
@@ -852,7 +852,7 @@ class TestInstallCompletionWatcher:
         icon._repo_root = lambda: repo_root  # type: ignore[method-assign]
         icon._auto_restart_launcher = MagicMock()  # type: ignore[method-assign]
         icon._install_pulse_dismissed = True
-        with patch("helix_context.launcher.tray.time.sleep"):
+        with patch("cymatix_context.launcher.tray.time.sleep"):
             icon._install_completion_watcher()
         icon._auto_restart_launcher.assert_not_called()
 
@@ -873,7 +873,7 @@ class TestInstallCompletionWatcher:
                 raise RuntimeError("Watcher did not cap — would loop forever")
 
         with patch(
-            "helix_context.launcher.tray.time.sleep", side_effect=fake_sleep
+            "cymatix_context.launcher.tray.time.sleep", side_effect=fake_sleep
         ):
             icon._install_completion_watcher()
         icon._auto_restart_launcher.assert_not_called()
@@ -902,7 +902,7 @@ class TestInstallCompletionWatcher:
             return False
 
         with patch("pathlib.Path.exists", new=fake_exists), patch(
-            "helix_context.launcher.tray.time.sleep"
+            "cymatix_context.launcher.tray.time.sleep"
         ):
             # Should not raise.
             icon._install_completion_watcher()
@@ -926,7 +926,7 @@ class TestAutoRestart:
         icon._repo_root = lambda: repo_root  # type: ignore[method-assign]
 
         with patch(
-            "helix_context.launcher.tray.subprocess.Popen"
+            "cymatix_context.launcher.tray.subprocess.Popen"
         ) as mock_popen:
             icon._auto_restart_launcher()
         mock_popen.assert_called_once()
@@ -963,7 +963,7 @@ class TestAutoRestart:
         icon._repo_root = lambda: repo_root  # type: ignore[method-assign]
 
         with patch(
-            "helix_context.launcher.tray.subprocess.Popen"
+            "cymatix_context.launcher.tray.subprocess.Popen"
         ) as mock_popen:
             icon._auto_restart_launcher()
         mock_popen.assert_not_called()
@@ -980,7 +980,7 @@ class TestAutoRestart:
         icon._repo_root = lambda: repo_root  # type: ignore[method-assign]
 
         with patch(
-            "helix_context.launcher.tray.subprocess.Popen",
+            "cymatix_context.launcher.tray.subprocess.Popen",
             side_effect=OSError("spawn failed"),
         ):
             # Should not raise.
@@ -992,7 +992,7 @@ class TestAutoRestart:
 
 class TestRepoRootHelper:
     def test_repo_root_resolves_from_module_path(self, tmp_path, fake_supervisor):
-        """_repo_root() returns the repo containing helix_context/, computed
+        """_repo_root() returns the repo containing cymatix_context/, computed
         from the tray.py module location (not cwd-dependent)."""
         icon = HelixTrayIcon(
             supervisor=fake_supervisor,
@@ -1001,8 +1001,8 @@ class TestRepoRootHelper:
         repo = icon._repo_root()
         from pathlib import Path
         assert isinstance(repo, Path)
-        # The resolved repo must contain helix_context/ as a subdirectory.
-        assert (repo / "helix_context").is_dir()
+        # The resolved repo must contain cymatix_context/ as a subdirectory.
+        assert (repo / "cymatix_context").is_dir()
         # And scripts/install-native-observability.ps1 must live under it.
         assert (repo / "scripts" / "install-native-observability.ps1").exists()
 
@@ -1015,7 +1015,7 @@ def _make_hardware_info(*, device_type, requested_device, fallback_reason):
     ``_should_fire_hardware_fallback_balloon`` actually reads
     (device_type, requested_device, fallback_reason); the remaining
     fields are representative constants the gate never consults."""
-    from helix_context import hardware
+    from cymatix_context import hardware
     return hardware.HardwareInfo(
         device=device_type, device_type=device_type, device_name="CPU",
         vram_total_gb=None, vram_free_gb=None,
@@ -1059,13 +1059,13 @@ class TestHardwareFallbackBalloon:
         the balloon fires iff a fallback is active AND no sentinel exists
         for the current (requested, active) pair — a sentinel for a
         different pair does not suppress it."""
-        monkeypatch.setattr("helix_context.launcher.observability_paths.state_dir",
+        monkeypatch.setattr("cymatix_context.launcher.observability_paths.state_dir",
                             lambda create=False: tmp_path)
         if sentinel is not None:
             sentinel_requested, sentinel_active = sentinel
             (tmp_path / f".hardware-fallback-acknowledged-{sentinel_requested}-{sentinel_active}").touch()
 
-        from helix_context import hardware
+        from cymatix_context import hardware
         hardware.reset_for_test()
         monkeypatch.setattr(
             hardware, "_detect",
@@ -1075,5 +1075,5 @@ class TestHardwareFallbackBalloon:
             ),
         )
 
-        from helix_context.launcher.tray import _should_fire_hardware_fallback_balloon
+        from cymatix_context.launcher.tray import _should_fire_hardware_fallback_balloon
         assert _should_fire_hardware_fallback_balloon() is expected

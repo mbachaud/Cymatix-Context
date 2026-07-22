@@ -143,7 +143,7 @@ def test_status_not_healthy_when_network_probes_down(monkeypatch, tmp_path):
     monkeypatch.setenv("HELIX_CONFIG", str(cfg))
     monkeypatch.delenv("HELIX_GENOME_PATH", raising=False)
     monkeypatch.setattr(
-        "helix_context.cli.helix_status.collect_status",
+        "cymatix_context.cli.helix_status.collect_status",
         _fake_net(server_up=False, launcher_up=False),
     )
 
@@ -165,7 +165,7 @@ def test_status_healthy_when_network_probes_up(monkeypatch, tmp_path):
     monkeypatch.setenv("HELIX_CONFIG", str(cfg))
     monkeypatch.delenv("HELIX_GENOME_PATH", raising=False)
     monkeypatch.setattr(
-        "helix_context.cli.helix_status.collect_status",
+        "cymatix_context.cli.helix_status.collect_status",
         _fake_net(server_up=True, launcher_up=True),
     )
 

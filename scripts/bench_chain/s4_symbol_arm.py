@@ -97,7 +97,7 @@ def _assert_config_capability() -> dict:
     imported from the served tree; if the loader silently drops the keys
     (pre-WS2 build), the loaded values fall back to defaults and this fails.
     """
-    from helix_context import config as served_config  # served tree (sys.path[0])
+    from cymatix_context import config as served_config  # served tree (sys.path[0])
     probe = {
         "ingestion": {"symbol_graph": True},        # default is False
         "retrieval": {"symbol_expansion_cap": 3},   # default is 8
@@ -127,7 +127,7 @@ def _assert_config_capability() -> dict:
 
 def _assert_bed_capability(bed_db: Path) -> dict:
     """(b) The bed must actually contain a symbol graph (read-only open)."""
-    from helix_context.schemas import StructuralRelation
+    from cymatix_context.schemas import StructuralRelation
     conn = sqlite3.connect(f"file:{bed_db.as_posix()}?mode=ro", uri=True)
     try:
         cur = conn.cursor()
@@ -201,7 +201,7 @@ def _start_server(bed_db: Path, cell_config: Path, port: int,
     env["HELIX_DISABLE_LEARN"] = "1"          # read-only serve (gap A2)
     env.pop("HELIX_USE_SHARDS", None)         # single-file bed, not sharded
     env.pop("HELIX_EXPANSION_RANK", None)     # default = WS3 PageRank ranking
-    args = [sys.executable, "-m", "uvicorn", "helix_context._asgi:app",
+    args = [sys.executable, "-m", "uvicorn", "cymatix_context._asgi:app",
             "--host", "127.0.0.1", "--port", str(port)]
     log_fh = log_path.open("w", encoding="utf-8")
     # cwd = the WS3 WORKTREE: the served code must be the symbol-capable build.

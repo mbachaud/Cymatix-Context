@@ -38,7 +38,7 @@ Parallel modes (issue #92)
     --parallel              File-level mp.Pool + batched-SPLADE writer
                             (blob mode only).
     --workers N             Override worker count for --parallel
-                            (0 = auto via helix_context.parallel.auto_workers).
+                            (0 = auto via cymatix_context.parallel.auto_workers).
     --shard-workers N       Run sharded builds with N concurrent shard
                             processes. 0 = auto from VRAM + CPU.
     --shard-file-workers N  CPU-only chunk/tag workers inside each shard
@@ -81,16 +81,16 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 # imported as a module (e.g. by the test suite). See Tier-0 PR-2.
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from helix_context.tagger import CpuTagger
-from helix_context.genome import Genome
-from helix_context.codons import CodonChunker
-from helix_context.sharding import corpus_shard_db, main_db_path
-from helix_context.shard_schema import (
+from cymatix_context.tagger import CpuTagger
+from cymatix_context.genome import Genome
+from cymatix_context.codons import CodonChunker
+from cymatix_context.sharding import corpus_shard_db, main_db_path
+from cymatix_context.shard_schema import (
     init_main_db,
     open_main_db,
     register_shard,
 )
-from helix_context.retrieval.seeded_edges import (
+from cymatix_context.retrieval.seeded_edges import (
     seed_edges,
     seed_cross_shard_edges,
 )
@@ -262,8 +262,8 @@ _logged_file_errors: set[str] = set()
 def _init_worker():
     """Per-worker init for mp.Pool -- loads tagger + chunker once."""
     global _worker_chunker, _worker_tagger
-    from helix_context.codons import CodonChunker
-    from helix_context.tagger import CpuTagger
+    from cymatix_context.codons import CodonChunker
+    from cymatix_context.tagger import CpuTagger
     _worker_chunker = CodonChunker()
     _worker_tagger = CpuTagger()
 
@@ -501,8 +501,8 @@ def _drain_with_batched_splade(
     context (2026-06-11 slack__eng-oncall incident). CPU-only boxes never
     trip: the VRAM probe returns ``None`` there.
     """
-    from helix_context.backends import splade_backend
-    from helix_context.schemas import Gene
+    from cymatix_context.backends import splade_backend
+    from cymatix_context.schemas import Gene
 
     # SPLADE kill-switch, honoured at drain time. ``HELIX_BFM_SPLADE=0`` (set
     # by the lean/CI builder env and the parity tests) must skip the batched
@@ -975,7 +975,7 @@ def build_profile(
     }
 
     if parallel:
-        from helix_context.parallel import auto_workers
+        from cymatix_context.parallel import auto_workers
         if n_workers <= 0:
             n_workers = auto_workers()
         files = _iter_ingestable_files(
@@ -1746,7 +1746,7 @@ def build_profile_sharded(
     """
     profile = PROFILES[name]
     if shard_file_workers <= 0:
-        from helix_context.parallel import auto_shard_file_workers
+        from cymatix_context.parallel import auto_shard_file_workers
         shard_file_workers = auto_shard_file_workers(shard_workers)
     else:
         shard_file_workers = max(1, int(shard_file_workers))
@@ -2141,7 +2141,7 @@ def main() -> int:
     parser.add_argument(
         "--workers", type=int, default=0,
         help="Worker count for --parallel (0 = auto via "
-             "helix_context.parallel.auto_workers).",
+             "cymatix_context.parallel.auto_workers).",
     )
     parser.add_argument(
         "--batch-size", type=int, default=64,
@@ -2154,14 +2154,14 @@ def main() -> int:
     parser.add_argument(
         "--shard-workers", type=int, default=0,
         help="Number of parallel shard-builders (sharded mode only). "
-             "0 = auto via helix_context.parallel.auto_shard_workers; "
+             "0 = auto via cymatix_context.parallel.auto_shard_workers; "
              "1 = serial.",
     )
     parser.add_argument(
         "--shard-file-workers", type=int, default=0,
         help="CPU-only file workers inside each shard-builder "
              "(sharded mode only). 0 = auto via "
-             "helix_context.parallel.auto_shard_file_workers; 1 = serial.",
+             "cymatix_context.parallel.auto_shard_file_workers; 1 = serial.",
     )
     parser.add_argument(
         "--no-shard-sort", action="store_true",
@@ -2254,9 +2254,9 @@ def main() -> int:
     os.makedirs(out_dir, exist_ok=True)
     log.info("BUILD START mode=sharded profiles=%s out_dir=%s", profiles, out_dir)
 
-    from helix_context.parallel import auto_shard_file_workers
+    from cymatix_context.parallel import auto_shard_file_workers
     if args.shard_workers <= 0:
-        from helix_context.parallel import auto_shard_workers
+        from cymatix_context.parallel import auto_shard_workers
         shard_workers = auto_shard_workers()
     else:
         shard_workers = args.shard_workers

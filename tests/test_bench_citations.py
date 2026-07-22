@@ -26,7 +26,7 @@ import _citations as cit  # noqa: E402
 def _modern_response() -> list[dict]:
     """Approximation of the live /context response shape.
 
-    Source: helix_context/server/routes_context.py builds ``response``
+    Source: cymatix_context/server/routes_context.py builds ``response``
     as a dict and returns ``[response]`` at line 533. The ``agent.citations``
     payload is populated from genes table rows (see lines 317-359).
     """

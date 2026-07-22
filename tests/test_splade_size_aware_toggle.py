@@ -13,9 +13,9 @@ from __future__ import annotations
 
 import pytest
 
-from helix_context.knowledge_store import KnowledgeStore
-from helix_context.schemas import Gene
-from helix_context.storage.indexes import resolve_splade_enabled
+from cymatix_context.knowledge_store import KnowledgeStore
+from cymatix_context.schemas import Gene
+from cymatix_context.storage.indexes import resolve_splade_enabled
 
 
 # ── 1. resolve_splade_enabled — pure resolver ────────────────────────────
@@ -263,13 +263,13 @@ class TestConfigPlumbing:
     """The two thresholds round-trip through the dataclass + TOML loader."""
 
     def test_defaults_are_off(self):
-        from helix_context.config import IngestionConfig
+        from cymatix_context.config import IngestionConfig
         cfg = IngestionConfig()
         assert cfg.splade_auto_enable_below_genes == 0
         assert cfg.splade_auto_disable_above_genes == 0
 
     def test_loader_reads_overrides(self, tmp_path):
-        from helix_context.config import load_config
+        from cymatix_context.config import load_config
 
         path = tmp_path / "helix.toml"
         path.write_text(

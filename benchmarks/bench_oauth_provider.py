@@ -197,7 +197,7 @@ def _build_prompt(task: dict[str, str], context: str) -> str:
     if context:
         return (
             "Answer using only the provided Helix context. Be concise.\n\n"
-            f"<helix_context>\n{context}\n</helix_context>\n\n"
+            f"<cymatix_context>\n{context}\n</cymatix_context>\n\n"
             f"Question: {task['query']}"
         )
     return f"Answer concisely.\n\nQuestion: {task['query']}"

@@ -14,7 +14,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from helix_context.bridge import AgentBridge
+from cymatix_context.bridge import AgentBridge
 
 
 def _wait_until(predicate, timeout: float = 2.0, interval: float = 0.02) -> bool:

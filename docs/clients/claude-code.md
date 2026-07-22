@@ -1,10 +1,10 @@
-# Claude Code → Helix Routing
+# Claude Code → Cymatix Routing
 
-How a Claude Code session reaches the Helix server, what env identity
+How a Claude Code session reaches the Cymatix server, what env identity
 travels with each call, and where the agent-side skill lives.
 
 **See also:**
-- [`skills/helix/SKILL.md`](../../skills/helix/SKILL.md) — the agent-side skill (identity contract + tool-use rules)
+- [`skills/cymatix/SKILL.md`](../../skills/cymatix/SKILL.md) — the agent-side skill (identity contract + tool-use rules)
 - [`docs/architecture/SESSION_REGISTRY.md`](../architecture/SESSION_REGISTRY.md) — server-side presence + attribution model
 - [`docs/ops/SKILLS_BUNDLE.md`](../ops/SKILLS_BUNDLE.md) — how a skills.md file becomes retrievable documents (a different lifecycle — content ingest, not connection routing)
 
@@ -12,22 +12,22 @@ travels with each call, and where the agent-side skill lives.
 
 ```
 ┌─────────────────────────┐    stdio JSON-RPC    ┌─────────────────────────┐
-│   Claude Code (host)    │ ───────────────────► │  helix_context.mcp      │
+│   Claude Code (host)    │ ───────────────────► │  cymatix_context.mcp    │
 │   spawns subprocess     │                       │  (MCP adapter)          │
 │   per .mcp.json entry   │ ◄─── tool results ── │                          │
 └─────────────────────────┘                       └────────────┬────────────┘
                                                                 │ HTTP
-                                                                ▼ (HELIX_MCP_URL)
+                                                                ▼ (CYMATIX_MCP_URL)
                                                   ┌─────────────────────────┐
-                                                  │  helix-context server   │
+                                                  │  cymatix-context server │
                                                   │  http://127.0.0.1:11437 │
                                                   └─────────────────────────┘
 ```
 
 Two hops. Claude Code spawns the MCP adapter as a stdio subprocess and
 talks JSON-RPC. The adapter proxies every tool call over HTTP to the
-helix server. The adapter is a thin shim — it does no retrieval logic
-of its own. See [`helix_context/mcp_server.py`](../../helix_context/mcp_server.py)
+cymatix server. The adapter is a thin shim — it does no retrieval logic
+of its own. See [`cymatix_context/mcp_server.py`](../../cymatix_context/mcp_server.py)
 for the full tool list.
 
 ## .mcp.json wiring
@@ -38,19 +38,19 @@ Drop this into your Claude Code MCP config (project-level
 ```json
 {
   "mcpServers": {
-    "helix-context": {
+    "cymatix-context": {
       "command": "python",
-      "args": ["-m", "helix_context.mcp_server"],
+      "args": ["-m", "cymatix_context.mcp_server"],
       "env": {
-        "HELIX_MCP_URL": "http://127.0.0.1:11437",
-        "HELIX_ORG":         "swiftwing",
-        "HELIX_PARTY_ID":    "swift_wing21",
-        "HELIX_DEVICE":      "swift_wing21",
-        "HELIX_USER":        "max",
-        "HELIX_AGENT":       "laude",
-        "HELIX_AGENT_KIND":  "claude-code",
-        "HELIX_MCP_HANDLE":  "laude",
-        "HELIX_MCP_HOST":    "claude-code"
+        "CYMATIX_MCP_URL": "http://127.0.0.1:11437",
+        "CYMATIX_ORG":         "swiftwing",
+        "CYMATIX_PARTY_ID":    "swift_wing21",
+        "CYMATIX_DEVICE":      "swift_wing21",
+        "CYMATIX_USER":        "max",
+        "CYMATIX_AGENT":       "laude",
+        "CYMATIX_AGENT_KIND":  "claude-code",
+        "CYMATIX_MCP_HANDLE":  "laude",
+        "CYMATIX_MCP_HOST":    "claude-code"
       }
     }
   }
@@ -62,18 +62,18 @@ if `python` isn't directly resolvable in the host's spawn environment.
 
 The eight identity vars are not optional in spirit. Anything you omit
 falls back to a default that erodes attribution. Defaults are documented
-in [`mcp_server.py`](../../helix_context/mcp_server.py) — the registry
+in [`mcp_server.py`](../../cymatix_context/mcp_server.py) — the registry
 will still accept the registration, but the badges in the dashboard and
 the `authored_by_*` columns in the knowledge store will read as `unknown` or
 `mcp-<pid>` instead of `laude` / `claude-code`.
 
 ## Per-host variants
 
-Same env contract, different `HELIX_AGENT` and `HELIX_MCP_HOST`
-combinations. The `HELIX_MCP_HOST` value is what the dashboard's
+Same env contract, different `CYMATIX_AGENT` and `CYMATIX_MCP_HOST`
+combinations. The `CYMATIX_MCP_HOST` value is what the dashboard's
 session pill uses to tag which IDE spawned a given participant.
 
-| Host                  | `HELIX_MCP_HOST`  | Typical `HELIX_AGENT` |
+| Host                  | `CYMATIX_MCP_HOST`  | Typical `CYMATIX_AGENT` |
 |-----------------------|-------------------|------------------------|
 | Claude Code (CLI)     | `claude-code`     | `laude`                |
 | Claude Desktop        | `claude-desktop`  | `laude`                |
@@ -81,12 +81,12 @@ session pill uses to tag which IDE spawned a given participant.
 | Cursor                | `cursor`          | `taude`                |
 | VS Code Continue      | `vscode-continue` | `laude` or per-user    |
 
-`HELIX_AGENT_KIND` is the vendor/family axis (`claude-code`, `gemini`,
+`CYMATIX_AGENT_KIND` is the vendor/family axis (`claude-code`, `gemini`,
 `codex`) — orthogonal to host. The skill's
-[Identity Contract](../../skills/helix/SKILL.md#identity-contract)
+[Identity Contract](../../skills/cymatix/SKILL.md#identity-contract)
 defines both.
 
-As of 2026-05-05, `HELIX_AGENT_KIND` and `HELIX_MCP_HOST` are
+As of 2026-05-05, `CYMATIX_AGENT_KIND` and `CYMATIX_MCP_HOST` are
 persisted as first-class columns on the `participants` row (not
 only smuggled in via `capabilities`). The dashboard's Agents and
 Identities panels render a "Claude Code + VS Code" pretty-label
@@ -100,10 +100,10 @@ MCP tool. Together they populate three new columns on the
 — and the dashboard renders the full identity in a tooltip on the
 agent host chip. See
 [`SESSION_REGISTRY.md`](../architecture/SESSION_REGISTRY.md#announce-endpoint)
-for the API and [`skills/helix/SKILL.md`](../../skills/helix/SKILL.md#workflow)
+for the API and [`skills/cymatix/SKILL.md`](../../skills/cymatix/SKILL.md#workflow)
 for the agent contract.
 
-The legacy `HELIX_MCP_HOST` env var is now optional — the adapter
+The legacy `CYMATIX_MCP_HOST` env var is now optional — the adapter
 will detect the IDE without it. Set it only when you want to override
 the auto-detection (e.g., running Claude Code from a non-VS-Code
 terminal but want the chip to say `"vscode"` anyway).
@@ -112,24 +112,24 @@ terminal but want the chip to say `"vscode"` anyway).
 
 **On MCP subprocess start** — `mcp_server.py:_register_with_registry()`:
 
-1. Reads `HELIX_MCP_HANDLE`, `HELIX_PARTY_ID` (or `HELIX_DEVICE` / `HELIX_PARTY` /
-   hostname), `HELIX_MCP_HOST`, and the workspace cwd.
+1. Reads `CYMATIX_MCP_HANDLE`, `CYMATIX_PARTY_ID` (or `CYMATIX_DEVICE` / `CYMATIX_PARTY` /
+   hostname), `CYMATIX_MCP_HOST`, and the workspace cwd.
 2. Calls `AgentBridge.register_participant(...)` over HTTP — that posts
    to `/sessions/register` and starts a heartbeat.
-3. Capability tags `["mcp_tools", "host:<HELIX_MCP_HOST>"]` are attached
+3. Capability tags `["mcp_tools", "host:<CYMATIX_MCP_HOST>"]` are attached
    to the participant row so dashboards can filter by host/IDE.
 4. Registration failure is **non-fatal**. Tool calls still proxy. A
    warning is logged.
 
-**On every tool call** (e.g., `helix_context`, `helix_ingest`):
+**On every tool call** (e.g., `cymatix_context`, `helix_ingest`):
 
 1. Claude Code emits a JSON-RPC `tools/call` over stdio.
 2. The MCP adapter wraps the args into an HTTP request and posts to
-   the helix server (`HELIX_MCP_URL`).
+   the cymatix server (`CYMATIX_MCP_URL`).
 3. For ingest paths, the adapter attaches the four identity layers
    (`org`, `party`, `participant`, `agent`) so authored documents carry
    attribution. See the contract in
-   [SKILL.md "Attribution Expectations"](../../skills/helix/SKILL.md#attribution-expectations).
+   [SKILL.md "Attribution Expectations"](../../skills/cymatix/SKILL.md#attribution-expectations).
 4. The HTTP server returns the result; the adapter forwards it back
    over stdio.
 
@@ -139,23 +139,23 @@ the host process and the participant TTLs out naturally.
 
 ## Installing the agent-side skill
 
-The skill at [`skills/helix/SKILL.md`](../../skills/helix/SKILL.md) is
-the contract Claude follows when it calls Helix tools. Two install
+The skill at [`skills/cymatix/SKILL.md`](../../skills/cymatix/SKILL.md) is
+the contract Claude follows when it calls Cymatix tools. Two install
 choices:
 
 **Project-scoped** — copy or symlink into the project's
 `.claude/skills/`:
 
 ```bash
-mkdir -p .claude/skills/helix
-cp <repo>/skills/helix/SKILL.md .claude/skills/helix/SKILL.md
+mkdir -p .claude/skills/cymatix
+cp <repo>/skills/cymatix/SKILL.md .claude/skills/cymatix/SKILL.md
 ```
 
 **User-global** — install once, applies to every project:
 
 ```bash
-mkdir -p ~/.claude/skills/helix
-cp <repo>/skills/helix/SKILL.md ~/.claude/skills/helix/SKILL.md
+mkdir -p ~/.claude/skills/cymatix
+cp <repo>/skills/cymatix/SKILL.md ~/.claude/skills/cymatix/SKILL.md
 ```
 
 Either way, Claude Code's skill loader picks up `SKILL.md` and exposes
@@ -168,26 +168,26 @@ After wiring `.mcp.json` and starting Claude Code, ask Claude to call
 `helix_health`. Then check the dashboard at
 `http://127.0.0.1:11437/launcher` (or the launcher tray):
 
-1. **Parties** panel should show your `HELIX_PARTY_ID`.
-2. **Identities** panel should show a row for your `HELIX_USER`
+1. **Parties** panel should show your `CYMATIX_PARTY_ID`.
+2. **Identities** panel should show a row for your `CYMATIX_USER`
    workspace.
 3. **Agents** panel should show a participant whose handle matches
-   `HELIX_MCP_HANDLE`, with capability tag `host:<HELIX_MCP_HOST>`.
+   `CYMATIX_MCP_HANDLE`, with capability tag `host:<CYMATIX_MCP_HOST>`.
 
 If the host tag is `host:unknown`, your MCP env didn't carry
-`HELIX_MCP_HOST`. If the agent appears as `mcp-<pid>` instead of your
-chosen handle, `HELIX_MCP_HANDLE` didn't carry. In both cases, fix the
+`CYMATIX_MCP_HOST`. If the agent appears as `mcp-<pid>` instead of your
+chosen handle, `CYMATIX_MCP_HANDLE` didn't carry. In both cases, fix the
 `.mcp.json` env block — the server is doing what the env said.
 
 ## Troubleshooting
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
-| MCP tool calls return network errors | `HELIX_MCP_URL` unreachable; server not running | Start `python -m uvicorn helix_context.server:app --host 127.0.0.1 --port 11437` |
+| MCP tool calls return network errors | `CYMATIX_MCP_URL` unreachable; server not running | Start `python -m uvicorn cymatix_context.server:app --host 127.0.0.1 --port 11437` |
 | Tool calls work but participant never appears in dashboard | Registration silently failed | Check the MCP adapter's stderr for the warning from `_register_with_registry` |
-| Authored documents show `agent=unknown` | `HELIX_AGENT` (or fallback chain) unset in MCP env | Set `HELIX_AGENT` in `.mcp.json` |
-| Two Claude panels collide on one handle | Both panels share `HELIX_MCP_HANDLE` | Give each panel a distinct handle, or omit it (`mcp-<pid>` is unique per process) |
-| `helix_sessions_list` empty | Helix bridge import failed at adapter startup | Check the adapter's startup log; likely a missing dep in the spawn env |
+| Authored documents show `agent=unknown` | `CYMATIX_AGENT` (or fallback chain) unset in MCP env | Set `CYMATIX_AGENT` in `.mcp.json` |
+| Two Claude panels collide on one handle | Both panels share `CYMATIX_MCP_HANDLE` | Give each panel a distinct handle, or omit it (`mcp-<pid>` is unique per process) |
+| `helix_sessions_list` empty | Cymatix bridge import failed at adapter startup | Check the adapter's startup log; likely a missing dep in the spawn env |
 
 ## What's not covered here
 
@@ -198,16 +198,16 @@ chosen handle, `HELIX_MCP_HANDLE` didn't carry. In both cases, fix the
 - Antigravity / Gemini-as-Raude persona — see
   [`docs/architecture/raude_antigravity_persona.md`](../architecture/raude_antigravity_persona.md).
   This doc covers Claude Code specifically; per-host variants follow the
-  same env contract with different `HELIX_MCP_HOST` / `HELIX_AGENT` values.
+  same env contract with different `CYMATIX_MCP_HOST` / `CYMATIX_AGENT` values.
 
 ## Obsidian vault export (v1, opt-in)
 
-As of 2026-05-06, helix can export the knowledge store to a configurable directory as
+As of 2026-05-06, cymatix can export the knowledge store to a configurable directory as
 an Obsidian-compatible markdown vault. v1 is read-only — operator edits in
 Obsidian are not synced back. Diagnostic traces of every `/context` call are
 auto-exported and TTL-pruned (default 48h).
 
-Enable in `helix.toml`:
+Enable in `cymatix.toml`:
 
 ```toml
 [vault]
@@ -221,7 +221,7 @@ retention_hours = 48
 # max_retention_hours_hard = 720    # hard cap for compliance retention
 ```
 
-CLI: `helix-vault {export, status, trace, pin, unpin}`. See
+CLI: `cymatix-vault {export, status, trace, pin, unpin}`. See
 [`docs/ops/OBSIDIAN_VAULT_STATUS.md`](../ops/OBSIDIAN_VAULT_STATUS.md) for the
 current operator status (what works today, what's deferred to v1.1+, and the
 smoke-test path). The original design specs are archived under

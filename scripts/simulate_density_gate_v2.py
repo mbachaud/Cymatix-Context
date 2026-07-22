@@ -120,7 +120,7 @@ def main():
         s = (src or "").lower()
         if any(m in s for m in ("steamlibrary", "steamapps", "beamng.drive")): return "steam"
         if "\\.next\\" in s or "/.next/" in s or "node_modules" in s: return "build_artifacts"
-        if "helix-context" in s or "helix_context" in s: return "helix"
+        if "helix-context" in s or "cymatix_context" in s: return "helix"
         if "cosmictasha" in s: return "cosmic"
         if "bookkeeper" in s: return "bookkeeper"
         if "education" in s or "biged" in s or "fleet/" in s: return "education"

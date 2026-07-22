@@ -36,7 +36,7 @@ import sqlite3
 
 import pytest
 
-from helix_context.knowledge_store import KnowledgeStore
+from cymatix_context.knowledge_store import KnowledgeStore
 
 
 # ── Fixture: a KnowledgeStore on a fresh tmp DB ──────────────────────

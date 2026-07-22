@@ -1,6 +1,6 @@
 """Tests for query-aware source window selection."""
 
-from helix_context.retrieval.relevance_window import best_relevance_window
+from cymatix_context.retrieval.relevance_window import best_relevance_window
 
 
 def test_best_relevance_window_finds_relevant_late_section():

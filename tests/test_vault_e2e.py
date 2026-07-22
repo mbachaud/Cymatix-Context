@@ -7,10 +7,10 @@ from pathlib import Path
 import pytest
 import yaml
 
-from helix_context.config import HelixConfig, VaultConfig, VaultTracesConfig
-from helix_context.genome import Genome
-from helix_context.schemas import ChromatinState
-from helix_context.vault import VaultManager
+from cymatix_context.config import HelixConfig, VaultConfig, VaultTracesConfig
+from cymatix_context.genome import Genome
+from cymatix_context.schemas import ChromatinState
+from cymatix_context.vault import VaultManager
 from tests.conftest import make_gene
 
 

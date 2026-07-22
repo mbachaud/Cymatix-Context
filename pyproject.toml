@@ -2,17 +2,20 @@
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.hatch.build.targets.wheel]
+packages = ["cymatix_context", "helix_context"]
+
 [project]
-name = "helix-context"
-version = "0.7.2b1"
-description = "Coordinate index layer for LLM context — Helix weighs, doesn't retrieve"
+name = "cymatix-context"
+version = "0.8.0"
+description = "Coordinate index layer for LLM context — Cymatix weighs, doesn't retrieve"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "Apache-2.0"
 authors = [
     { name = "Michael Bachaud", email = "swiftwing21@users.noreply.github.com" },
 ]
-keywords = ["llm", "context", "compression", "ollama", "genome", "rag"]
+keywords = ["llm", "context", "compression", "retrieval", "cymatics", "rag", "mcp"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -36,13 +39,13 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/SwiftWing21/helix-context"
-Repository = "https://github.com/SwiftWing21/helix-context"
-Issues = "https://github.com/SwiftWing21/helix-context/issues"
+Homepage = "https://github.com/mbachaud/Cymatix-Context"
+Repository = "https://github.com/mbachaud/Cymatix-Context"
+Issues = "https://github.com/mbachaud/Cymatix-Context/issues"
 
 [project.optional-dependencies]
 # Every extra below is gated on a feature helix exposes at runtime. Core
-# (`pip install helix-context`) gives a working HTTP server + /context
+# (`pip install cymatix-context`) gives a working HTTP server + /context
 # + /context/packet with genome-local retrieval. Add extras as you turn
 # on specific features.
 accel = ["orjson>=3.9"]
@@ -70,7 +73,7 @@ launcher-native = [
     "pywebview>=5.0",
 ]
 # pystray is LGPL-3. It is a runtime-only optional dep that the user
-# installs explicitly; the helix-context wheel itself does not bundle
+# installs explicitly; the cymatix-context wheel itself does not bundle
 # pystray, so the core package stays Apache-2.0-clean.
 launcher-tray = [
     "jinja2>=3.1", "psutil>=5.9", "platformdirs>=4.0", "py-cpuinfo>=9.0",
@@ -115,11 +118,18 @@ all = [
 ]
 
 [project.scripts]
-helix = "helix_context.cli:main"
-helix-server = "helix_context.server:main"
-helix-launcher = "helix_context.launcher.app:main"
-helix-status = "helix_context.cli.helix_status:main"
-helix-vault = "helix_context.vault.cli:main"
+cymatix = "cymatix_context.cli:main"
+cymatix-server = "cymatix_context.server:main"
+cymatix-launcher = "cymatix_context.launcher.app:main"
+cymatix-status = "cymatix_context.cli.helix_status:main"
+cymatix-vault = "cymatix_context.vault.cli:main"
+# Deprecated aliases from the helix-context era — identical targets, kept
+# for one deprecation window.
+helix = "cymatix_context.cli:main"
+helix-server = "cymatix_context.server:main"
+helix-launcher = "cymatix_context.launcher.app:main"
+helix-status = "cymatix_context.cli.helix_status:main"
+helix-vault = "cymatix_context.vault.cli:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

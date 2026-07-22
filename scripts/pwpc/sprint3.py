@@ -6,7 +6,7 @@ Pipeline:
   2. Re-derive the next-query cosine intent-delta (cos(q_t, q_{t+1}) within
      the same session, delta ≤ 60s).
   3. Produce four label sets:
-        loose  — original bucket from helix_context.cwola.sweep_buckets
+        loose  — original bucket from cymatix_context.cwola.sweep_buckets
         t04    — loose B restricted to cos(q_t, q_{t+1}) > 0.4  (spec default)
         t05    — same with threshold 0.5
         t07    — same with threshold 0.7 (unambiguous reformulation)

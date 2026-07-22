@@ -23,10 +23,10 @@ import time
 # Add project root to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from helix_context.config import load_config
-from helix_context.tagger import CpuTagger
-from helix_context.genome import Genome
-from helix_context.codons import CodonChunker
+from cymatix_context.config import load_config
+from cymatix_context.tagger import CpuTagger
+from cymatix_context.genome import Genome
+from cymatix_context.codons import CodonChunker
 
 logging.basicConfig(
     level=logging.INFO,
@@ -125,7 +125,7 @@ def main():
             emb_raw = row["embedding"]
             if emb_raw:
                 try:
-                    from helix_context.accel import json_loads
+                    from cymatix_context.accel import json_loads
                     gene.embedding = json_loads(emb_raw)
                 except Exception:
                     pass

@@ -5,8 +5,8 @@ from __future__ import annotations
 import time
 from typing import Any
 
-from helix_context.knowledge_store import KnowledgeStore
-from helix_context.schemas import EpigeneticMarkers, Gene, PromoterTags
+from cymatix_context.knowledge_store import KnowledgeStore
+from cymatix_context.schemas import EpigeneticMarkers, Gene, PromoterTags
 
 OAUTH_REQUIRED_FIXTURES: dict[str, str] = {
     "oauth_attr_01_claim_to_gene": (

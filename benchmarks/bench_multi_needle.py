@@ -73,7 +73,7 @@ NEEDLES_MULTI = [
         "name": "claim_types_and_spec_source",
         "query": "what are the allowed claim_type values and where is the claims layer specified",
         "gold_source_groups": [
-            ["helix-context/helix_context/schemas.py", "helix-context/helix_context/claims.py"],
+            ["helix-context/cymatix_context/schemas.py", "helix-context/cymatix_context/claims.py"],
             ["helix-context/docs/specs/2026-04-17-agent-context-index-build-spec.md"],
         ],
     },
@@ -91,7 +91,7 @@ NEEDLES_MULTI = [
         "query": "what port does the headroom dashboard serve on and what is the default compression mode",
         "gold_source_groups": [
             ["helix-context/helix.toml", "helix-context/README.md"],  # 8787
-            ["helix-context/helix.toml", "helix-context/helix_context/launcher/headroom_supervisor.py"],  # token mode
+            ["helix-context/helix.toml", "helix-context/cymatix_context/launcher/headroom_supervisor.py"],  # token mode
         ],
     },
     {
@@ -100,18 +100,18 @@ NEEDLES_MULTI = [
         "gold_source_groups": [
             ["helix-context/README.md",
              "helix-context/docs/specs/2026-04-17-agent-context-index-build-spec.md",
-             "helix-context/helix_context/context_packet.py"],                   # stable=7d
+             "helix-context/cymatix_context/context_packet.py"],                   # stable=7d
             ["helix-context/README.md",
              "helix-context/docs/specs/2026-04-17-agent-context-index-build-spec.md",
-             "helix-context/helix_context/context_packet.py"],                   # hot=15min
+             "helix-context/cymatix_context/context_packet.py"],                   # hot=15min
         ],
     },
     {
         "name": "coord_confidence_floor_and_file_grain_floor",
         "query": "what is the coordinate confidence floor and the file-grain coverage floor",
         "gold_source_groups": [
-            ["helix-context/helix_context/context_packet.py"],   # 0.30 floor
-            ["helix-context/helix_context/context_packet.py"],   # 0.15 floor (file-grain)
+            ["helix-context/cymatix_context/context_packet.py"],   # 0.30 floor
+            ["helix-context/cymatix_context/context_packet.py"],   # 0.15 floor (file-grain)
         ],
     },
 ]

@@ -31,7 +31,7 @@ import sys
 from pathlib import Path
 
 try:  # single source of truth when run from the repo
-    from helix_context.cli.cmd_ingest import _CODE_EXTENSIONS as CODE_EXTS
+    from cymatix_context.cli.cmd_ingest import _CODE_EXTENSIONS as CODE_EXTS
 except Exception:  # fallback copy (#224 list)
     CODE_EXTS = frozenset({
         ".py", ".ts", ".tsx", ".js", ".jsx", ".rs", ".go", ".java", ".c",

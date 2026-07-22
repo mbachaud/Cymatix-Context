@@ -47,7 +47,7 @@ async def await_until(condition, timeout: float = 2.0, interval: float = 0.02) -
         result = await result
     return bool(result)
 
-from helix_context.identity.registry import (
+from cymatix_context.identity.registry import (
     DEFAULT_TTL_S,
     IDLE_TTL_S,
     STALE_TTL_S,
@@ -283,7 +283,7 @@ class TestPresenceGene:
         """Presence genes must always land OPEN — a stale-at-birth presence
         gene is useless, and the density gate's monotonic access_count logic
         is orthogonal to presence semantics."""
-        from helix_context.schemas import ChromatinState
+        from cymatix_context.schemas import ChromatinState
         p = registry.register_participant(party_id="swift_wing21", handle="laude")
         gene_id = registry.upsert_presence_gene(p.participant_id, handle="laude")
         gene = genome.get_gene(gene_id)
@@ -526,7 +526,7 @@ class TestBackgroundSweepTask:
     @pytest.mark.asyncio
     async def test_sweep_called_at_least_once_within_interval(self, registry, monkeypatch):
         import asyncio
-        from helix_context import server as server_mod
+        from cymatix_context import server as server_mod
 
         # Shrink the interval so the test runs in <1s
         monkeypatch.setattr(server_mod, "_REGISTRY_SWEEP_INTERVAL", 0.05)
@@ -558,7 +558,7 @@ class TestBackgroundSweepTask:
     @pytest.mark.asyncio
     async def test_sweep_loop_survives_sweep_exception(self, registry, monkeypatch):
         import asyncio
-        from helix_context import server as server_mod
+        from cymatix_context import server as server_mod
 
         monkeypatch.setattr(server_mod, "_REGISTRY_SWEEP_INTERVAL", 0.05)
 
@@ -912,7 +912,7 @@ class TestHITLEvents:
         # three events land at distinct, known timestamps. Previous version
         # used ``time.sleep(0.02)`` which is flaky on slow CI runners and
         # slows the suite for no reason.
-        from helix_context.identity import registry as registry_mod
+        from cymatix_context.identity import registry as registry_mod
         # Each emit_hitl_event() call consumes two ticks: one for the event
         # timestamp (now = time.time()) and one inside touch_heartbeat().
         # Provide 6 ticks — event ticks at 100.0 / 100.05 / 100.10 interleaved
@@ -951,7 +951,7 @@ class TestHITLEvents:
         assert eid is not None
 
         # Force participant into gone state past hard-delete cutoff
-        from helix_context.identity.registry import HARD_DELETE_AFTER_S
+        from cymatix_context.identity.registry import HARD_DELETE_AFTER_S
         registry.genome.conn.execute(
             "UPDATE participants SET last_heartbeat = ?, status = 'gone' "
             "WHERE participant_id = ?",
@@ -1168,7 +1168,7 @@ FIELD_GROUPS = [
 @pytest.mark.parametrize("group", FIELD_GROUPS)
 def test_participant_model_accepts_group_fields(group):
     """Participant schema accepts each optional field group."""
-    from helix_context.schemas import Participant
+    from cymatix_context.schemas import Participant
     p = Participant(
         participant_id="abc",
         party_id="party",
@@ -1182,7 +1182,7 @@ def test_participant_model_accepts_group_fields(group):
 @pytest.mark.parametrize("group", FIELD_GROUPS)
 def test_participant_info_accepts_group_fields(group):
     """ParticipantInfo schema accepts each optional field group."""
-    from helix_context.schemas import ParticipantInfo
+    from cymatix_context.schemas import ParticipantInfo
     p = ParticipantInfo(
         participant_id="abc",
         party_id="party",
@@ -1199,7 +1199,7 @@ def test_participant_info_accepts_group_fields(group):
 @pytest.mark.parametrize("group", FIELD_GROUPS)
 def test_participant_info_defaults_group_fields_to_none(group):
     """ParticipantInfo defaults every field in each group to None."""
-    from helix_context.schemas import ParticipantInfo
+    from cymatix_context.schemas import ParticipantInfo
     p = ParticipantInfo(
         participant_id="abc",
         party_id="party",

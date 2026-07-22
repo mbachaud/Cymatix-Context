@@ -69,10 +69,10 @@ from bench_needle_1000 import (  # noqa: E402
     harvest_needles,
 )
 
-from helix_context.config import load_config  # noqa: E402
-from helix_context.context_manager import HelixContextManager  # noqa: E402
-from helix_context.context_packet import _coordinate_confidence  # noqa: E402
-from helix_context.scoring.know_decision import (  # noqa: E402
+from cymatix_context.config import load_config  # noqa: E402
+from cymatix_context.context_manager import HelixContextManager  # noqa: E402
+from cymatix_context.context_packet import _coordinate_confidence  # noqa: E402
+from cymatix_context.scoring.know_decision import (  # noqa: E402
     _agree_from_tier_contributions,
 )
 

@@ -6,8 +6,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from helix_context.api import StatsResult
-from helix_context.cli import main
+from cymatix_context.api import StatsResult
+from cymatix_context.cli import main
 from tests.conftest import run_cli as _run
 
 
@@ -27,7 +27,7 @@ def fake_session():
 
 
 def test_diag_corpus_json(fake_session):
-    with patch("helix_context.cli.cmd_diag.open_session", return_value=fake_session):
+    with patch("cymatix_context.cli.cmd_diag.open_session", return_value=fake_session):
         rc, out, err = _run(["diag", "corpus", "--json"])
     assert rc == 0, err
     payload = json.loads(out)
@@ -40,7 +40,7 @@ def test_diag_corpus_json(fake_session):
 
 
 def test_diag_corpus_text(fake_session):
-    with patch("helix_context.cli.cmd_diag.open_session", return_value=fake_session):
+    with patch("cymatix_context.cli.cmd_diag.open_session", return_value=fake_session):
         rc, out, err = _run(["diag", "corpus"])
     assert rc == 0, err
     assert "total_genes: 125" in out
@@ -62,8 +62,8 @@ def test_diag_corpus_json_remains_valid_when_session_raises(monkeypatch):
     if either raises, the error payload must still serialize as valid JSON
     so machine consumers (CI, MCP bridges) don't choke.
     """
-    from helix_context.cli import cmd_diag
-    from helix_context.cli.output import EXIT_ERROR
+    from cymatix_context.cli import cmd_diag
+    from cymatix_context.cli.output import EXIT_ERROR
 
     def _boom(*_a, **_kw):
         raise RuntimeError("boom")

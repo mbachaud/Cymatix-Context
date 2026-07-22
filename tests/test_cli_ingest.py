@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from helix_context.api import IngestResult
+from cymatix_context.api import IngestResult
 from tests.conftest import run_cli as _run
 
 
@@ -23,7 +23,7 @@ def test_ingest_single_file(fake_session, tmp_path):
     src = tmp_path / "doc.txt"
     src.write_text("hello helix\n", encoding="utf-8")
 
-    with patch("helix_context.cli.cmd_ingest.open_session", return_value=fake_session):
+    with patch("cymatix_context.cli.cmd_ingest.open_session", return_value=fake_session):
         rc, out, err = _run(["ingest", str(src), "--json"])
     assert rc == 0, err
     payload = json.loads(out)
@@ -43,7 +43,7 @@ def test_ingest_directory_walks_top_level_files(fake_session, tmp_path):
     (tmp_path / "sub").mkdir()
     (tmp_path / "sub" / "c.txt").write_text("c", encoding="utf-8")
 
-    with patch("helix_context.cli.cmd_ingest.open_session", return_value=fake_session):
+    with patch("cymatix_context.cli.cmd_ingest.open_session", return_value=fake_session):
         rc, out, err = _run(["ingest", str(tmp_path), "--json"])
     assert rc == 0, err
     payload = json.loads(out)
@@ -63,7 +63,7 @@ def test_ingest_recursive_flag_walks_subdirs(fake_session, tmp_path):
     (tmp_path / "sub").mkdir()
     (tmp_path / "sub" / "c.txt").write_text("c", encoding="utf-8")
 
-    with patch("helix_context.cli.cmd_ingest.open_session", return_value=fake_session):
+    with patch("cymatix_context.cli.cmd_ingest.open_session", return_value=fake_session):
         rc, out, err = _run(["ingest", str(tmp_path), "--recursive", "--json"])
     assert rc == 0, err
     payload = json.loads(out)

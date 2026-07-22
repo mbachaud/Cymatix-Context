@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from helix_context.retrieval.seeded_edges import (
+from cymatix_context.retrieval.seeded_edges import (
     SOURCE_SEEDED,
     SOURCE_CO_RETRIEVED,
     SOURCE_CWOLA,
@@ -472,8 +472,8 @@ class TestQueryGenesHebbianIntegration:
     against :memory: + hand-inserted seeded edge."""
 
     def test_query_genes_increments_co_count(self):
-        from helix_context.genome import Genome
-        from helix_context.schemas import (
+        from cymatix_context.genome import Genome
+        from cymatix_context.schemas import (
             Gene, PromoterTags, EpigeneticMarkers, ChromatinState,
         )
 
@@ -509,8 +509,8 @@ class TestQueryGenesHebbianIntegration:
         g.close()
 
     def test_query_genes_read_only_skips_hebbian_writeback(self):
-        from helix_context.genome import Genome
-        from helix_context.schemas import (
+        from cymatix_context.genome import Genome
+        from cymatix_context.schemas import (
             Gene, PromoterTags, EpigeneticMarkers, ChromatinState,
         )
 

@@ -28,10 +28,14 @@ from pathlib import Path
 
 import pytest
 
-from helix_context.config import HelixConfig, KnowConfig, load_config
+from cymatix_context.config import HelixConfig, KnowConfig, load_config
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-SHIPPED_TOML = REPO_ROOT / "helix.toml"
+SHIPPED_TOML = (
+    REPO_ROOT / "cymatix.toml"
+    if (REPO_ROOT / "cymatix.toml").exists()
+    else REPO_ROOT / "helix.toml"
+)
 
 # Fields where the shipped helix.toml and the code defaults are ALLOWED to
 # differ. Keep this empty or tiny — every entry needs a reason.
@@ -134,7 +138,7 @@ def test_know_config_defaults_match_know_calibration_constants():
     scoring/know_calibration.py — the two modules carry the same ship-time
     defaults on purpose (config.py stays import-light, so the values are
     duplicated and this test is the lock between them)."""
-    from helix_context.scoring import know_calibration as kc
+    from cymatix_context.scoring import know_calibration as kc
 
     k = KnowConfig()
     assert tuple(k.betas) == kc.DEFAULT_BETAS
@@ -176,7 +180,7 @@ def test_know_section_malformed_betas_soft_fail(tmp_path, caplog):
 
     toml = tmp_path / "helix.toml"
     toml.write_text('[know]\nbetas = ["nope"]\nstale_after_days = -3\n', encoding="utf-8")
-    with caplog.at_level(logging.WARNING, logger="helix_context.config"):
+    with caplog.at_level(logging.WARNING, logger="cymatix_context.config"):
         cfg = load_config(str(toml))
     assert cfg.know.betas == list(KnowConfig().betas)
     assert cfg.know.stale_after_days == KnowConfig().stale_after_days
@@ -193,7 +197,7 @@ def test_know_section_wrong_length_betas_soft_fail(tmp_path):
 def test_load_calibration_from_toml_back_compat_delegates_to_config(tmp_path):
     """The legacy entry point must keep working for direct callers, now
     routed through load_config + calibration_from_config."""
-    from helix_context.scoring.know_calibration import (
+    from cymatix_context.scoring.know_calibration import (
         KnowCalibration,
         calibration_from_config,
         load_calibration_from_toml,
@@ -218,7 +222,7 @@ def test_load_calibration_from_toml_no_args_self_loads(tmp_path, monkeypatch):
     """Callers that pass nothing still self-load via the config system
     (HELIX_CONFIG / ./helix.toml discovery) and default cleanly when no
     file exists."""
-    from helix_context.scoring.know_calibration import (
+    from cymatix_context.scoring.know_calibration import (
         KnowCalibration,
         load_calibration_from_toml,
     )

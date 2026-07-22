@@ -3,10 +3,10 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from helix_context.genome import Genome
-from helix_context.shard_schema import init_main_db, open_main_db, register_shard
-from helix_context.sharding import ShardedGenomeAdapter
-from helix_context.telemetry import (
+from cymatix_context.genome import Genome
+from cymatix_context.shard_schema import init_main_db, open_main_db, register_shard
+from cymatix_context.sharding import ShardedGenomeAdapter
+from cymatix_context.telemetry import (
     _attach_otlp_logging_handler,
     _resolve_logs_level,
     emit_gauges_snapshot,
@@ -62,11 +62,11 @@ def test_emit_gauges_snapshot_reads_registered_shards_without_warning(
         hub = _GaugeRecorder()
         degree = _GaugeRecorder()
 
-        monkeypatch.setattr("helix_context.telemetry.otel.chromatin_state_counter", lambda: chrom)
-        monkeypatch.setattr("helix_context.telemetry.otel.harmonic_edges_counter", lambda: edges)
-        monkeypatch.setattr("helix_context.telemetry.otel.genome_size_gauge", lambda: size)
-        monkeypatch.setattr("helix_context.telemetry.otel.hub_concentration_gauge", lambda: hub)
-        monkeypatch.setattr("helix_context.telemetry.otel.hub_inbound_degree_gauge", lambda: degree)
+        monkeypatch.setattr("cymatix_context.telemetry.otel.chromatin_state_counter", lambda: chrom)
+        monkeypatch.setattr("cymatix_context.telemetry.otel.harmonic_edges_counter", lambda: edges)
+        monkeypatch.setattr("cymatix_context.telemetry.otel.genome_size_gauge", lambda: size)
+        monkeypatch.setattr("cymatix_context.telemetry.otel.hub_concentration_gauge", lambda: hub)
+        monkeypatch.setattr("cymatix_context.telemetry.otel.hub_inbound_degree_gauge", lambda: degree)
 
         adapter = ShardedGenomeAdapter(str(main_path))
         try:

@@ -2,7 +2,7 @@
 
 > *"Where do tags get added? What tools fire when? Who writes to what?"*
 
-A swim-lane reference for the helix-context pipeline. Four flows
+A swim-lane reference for the cymatix-context pipeline. Four flows
 (ingest, context, packet, fingerprint), each broken down by which
 component does what, what tools fire, and what gets written / read.
 
@@ -56,7 +56,7 @@ emits the reply.
 > `/context` can invoke `_expand_query_intent()` once per *novel* query
 > string (LRU-cached, ~100 tokens out, falls back to the raw query on
 > any failure). Controlled by `[ribosome] query_expansion_enabled` in
-> `helix.toml`. Set to `false` for a strictly LLM-free `/context`
+> `cymatix.toml`. Set to `false` for a strictly LLM-free `/context`
 > pipeline. `/context/packet` does **not** invoke this step —
 > the agent-safe surface is LLM-free end-to-end.
 
@@ -88,13 +88,13 @@ CLIENT  ────►  SERVER  ────►  TAGGER  ────►  ENCOD
 Lanes:
 
 - **CLIENT** — IDE plugin / proxy / curl / MCP host / your code
-- **SERVER** — `helix_context/server.py` FastAPI endpoints
-- **TAGGER** — `helix_context/tagger.py` CpuTagger (no LLM, default)
-- **RIBOSOME** — `helix_context/ribosome.py` answer-generation only
+- **SERVER** — `cymatix_context/server.py` FastAPI endpoints
+- **TAGGER** — `cymatix_context/tagger.py` CpuTagger (no LLM, default)
+- **RIBOSOME** — `cymatix_context/ribosome.py` answer-generation only
   (Claude Haiku via `[ribosome] backend = "claude"`); **not on the
   ingest path** since 2026-04-09 CPU pipeline commit
 - **ENCODERS** — SPLADE / SEMA / cymatics (numerical, deterministic)
-- **PACKET BUILDER** — `helix_context/context_packet.py` — weighing
+- **PACKET BUILDER** — `cymatix_context/context_packet.py` — weighing
   layer that labels retrieval results by freshness + coord confidence
 - **GENOME** — SQLite tables: `genes`, `promoter_index`, `genes_fts`,
   `entity_graph`, `path_key_index`
@@ -113,7 +113,7 @@ single source of truth).
 
 ### Provenance fields (auto-populated since 3c6ead6)
 
-Computed at ingest via `helix_context/provenance.apply_provenance()`
+Computed at ingest via `cymatix_context/provenance.apply_provenance()`
 from the source path + ingestion timestamp:
 
 | Field | Source | Default |
@@ -165,7 +165,7 @@ client POST /ingest
 
 ## `/context` flow (decoder path — unchanged from v1)
 
-The decoder surface: Helix owns the whole pipeline, returns assembled
+The decoder surface: Cymatix owns the whole pipeline, returns assembled
 context ready for a downstream LLM. Full retrieval + compression.
 
 ```
@@ -342,7 +342,7 @@ client POST /fingerprint (query, profile, max_results, score_floor)
 ```
 
 **Accounting contract:** counts are defined over the *evaluated*
-candidate set only. Helix cannot honestly claim how many whole-corpus
+candidate set only. Cymatix cannot honestly claim how many whole-corpus
 items fell below the floor without evaluating the whole corpus, so the
 API does not pretend otherwise.
 
@@ -380,7 +380,7 @@ The status label encodes the composition:
 - `needs_refresh` — freshness or coord is bad enough that action
   should pause for a reread
 
-This is the SIKE pathway-layer identity ("Helix weighs, doesn't
+This is the SIKE pathway-layer identity ("Cymatix weighs, doesn't
 retrieve") implemented. See
 [`docs/specs/2026-04-17-agent-context-index-build-spec.md`](../specs/2026-04-17-agent-context-index-build-spec.md)
 for the authoritative design.

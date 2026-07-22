@@ -15,8 +15,8 @@ import numpy as np
 
 _REPO = Path("f:/Projects/helix-context")
 sys.path.insert(0, str(_REPO))
-from helix_context.config import load_config
-from helix_context.scoring.know_calibration import calibration_from_config
+from cymatix_context.config import load_config
+from cymatix_context.scoring.know_calibration import calibration_from_config
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import LeaveOneOut, cross_val_predict, StratifiedKFold
 from sklearn.metrics import roc_auc_score
@@ -52,7 +52,8 @@ def main():
     ap.add_argument("--stage1", default=STAGE1)
     ap.add_argument("--faith", default=FAITH)
     args = ap.parse_args()
-    cfg = load_config(str(_REPO / "helix.toml"))
+    _cfg_path = _REPO / "cymatix.toml" if (_REPO / "cymatix.toml").exists() else _REPO / "helix.toml"
+    cfg = load_config(str(_cfg_path))
     cal = calibration_from_config(cfg.know)
     s, g, floor = cal.s_ref, cal.g_ref, cal.emit_floor
     print(f"shipped betas={list(cal.betas)} s_ref={s} g_ref={g} floor={floor}")

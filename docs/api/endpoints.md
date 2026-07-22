@@ -1,6 +1,6 @@
-# Helix Context — HTTP Endpoints
+# Cymatix Context — HTTP Endpoints
 
-Full reference for all HTTP endpoints exposed by the helix server at `http://localhost:11437`.
+Full reference for all HTTP endpoints exposed by the cymatix server at `http://localhost:11437`.
 
 ## Retrieval
 
@@ -55,9 +55,9 @@ and an agent-mode `know`/`miss` block.
 Per-document metadata lives in `agent.citations[]` (gene_id, source,
 score, optional `authored_by_party`/`authored_by_handle`). The inline
 `[gene=...]` headers in `content` are the legibility-header format
-described in `helix_context/encoding/legibility.py`.
+described in `cymatix_context/encoding/legibility.py`.
 
-> **Note (legacy format).** Helix used to embed each delivered document
+> **Note (legacy format).** Cymatix used to embed each delivered document
 > as `<GENE src="...">BODY</GENE>` inside `expressed_context`. The live
 > renderer no longer emits that markup; parsers should consume
 > `agent.citations` instead. The `<GENE src=...>` form survives only in
@@ -140,13 +140,13 @@ Liveness check. Returns `{"status": "ok"}`.
 
 ### POST /admin/refresh
 
-Hot-reload helix.toml config without restarting the server.
+Hot-reload cymatix.toml config without restarting the server.
 
 ## OpenAI-compatible proxy
 
 ### POST /v1/chat/completions
 
-Drop-in replacement for the OpenAI chat completions endpoint. Helix intercepts the messages, runs `/context` to build the context window, injects it into the system message, then forwards to the configured downstream model.
+Drop-in replacement for the OpenAI chat completions endpoint. Cymatix intercepts the messages, runs `/context` to build the context window, injects it into the system message, then forwards to the configured downstream model.
 
 ```bash
 ANTHROPIC_BASE_URL=http://localhost:11437 claude

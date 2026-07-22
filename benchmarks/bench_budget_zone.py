@@ -8,7 +8,7 @@ gene count affects retrieval recall, gene count, and token footprint.
 Usage:
 
     # 1. Start the server with the flag ON:
-    HELIX_BUDGET_ZONE=1 python -m uvicorn helix_context.server:app \
+    HELIX_BUDGET_ZONE=1 python -m uvicorn cymatix_context.server:app \
         --host 127.0.0.1 --port 11437
 
     # 2. Run the bench:

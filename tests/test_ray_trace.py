@@ -3,7 +3,7 @@
 import json
 import pytest
 
-from helix_context.scoring.ray_trace import (
+from cymatix_context.scoring.ray_trace import (
     cast_evidence_rays,
     ray_trace_boost,
     ray_trace_info,
@@ -11,7 +11,7 @@ from helix_context.scoring.ray_trace import (
     harmonic_bin_boost,
     BOOST_CAP,
 )
-from helix_context.schemas import Gene, PromoterTags, EpigeneticMarkers
+from cymatix_context.schemas import Gene, PromoterTags, EpigeneticMarkers
 
 
 # ── Helpers ─────────────────────────────────────────────────────────────

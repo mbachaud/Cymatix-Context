@@ -1,5 +1,5 @@
 """
-Tests for helix_context.headroom_bridge.
+Tests for cymatix_context.headroom_bridge.
 
 Covers the pure-Python dispatcher logic, the fallback path when headroom is
 unavailable, and a live round-trip per specialist when it IS available.
@@ -13,8 +13,8 @@ from __future__ import annotations
 
 import pytest
 
-from helix_context.encoding import headroom_bridge
-from helix_context.encoding.headroom_bridge import (
+from cymatix_context.encoding import headroom_bridge
+from cymatix_context.encoding.headroom_bridge import (
     _detect_language,
     _pick_specialist,
     compress_text,
@@ -145,7 +145,7 @@ class TestFallbackPath:
 _headroom_installed = is_headroom_available()
 requires_headroom = pytest.mark.skipif(
     not _headroom_installed,
-    reason="headroom-ai not installed; install with pip install helix-context[codec]",
+    reason="headroom-ai not installed; install with pip install cymatix-context[codec]",
 )
 
 
@@ -194,7 +194,7 @@ class ContextHealth:
 2026-04-10 10:15:27 [WARNING] Ribosome warmup disabled per config
 2026-04-10 10:15:28 [ERROR] Failed to connect to Ollama at localhost:11434
 Traceback (most recent call last):
-  File "helix_context/ribosome.py", line 318, in pack
+  File "cymatix_context/ribosome.py", line 318, in pack
     result = self.backend.complete(prompt)
 ConnectionRefusedError: [Errno 61] Connection refused
 """ * 10
@@ -204,10 +204,10 @@ ConnectionRefusedError: [Errno 61] Connection refused
 
     def test_diff_specialist(self):
         diff_content = """
-diff --git a/helix_context/context_manager.py b/helix_context/context_manager.py
+diff --git a/cymatix_context/context_manager.py b/cymatix_context/context_manager.py
 index abc123..def456 100644
---- a/helix_context/context_manager.py
-+++ b/helix_context/context_manager.py
+--- a/cymatix_context/context_manager.py
++++ b/cymatix_context/context_manager.py
 @@ -492,7 +492,11 @@ class HelixContextManager:
              src_attr = f' src="{short}"' if short else ""
 -            content = g.content[:1000].strip()

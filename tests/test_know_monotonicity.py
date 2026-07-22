@@ -20,7 +20,7 @@ from __future__ import annotations
 
 import logging
 
-from helix_context.scoring.know_calibration import (
+from cymatix_context.scoring.know_calibration import (
     DEFAULT_BETAS,
     FEATURE_NAMES,
     KnowCalibration,

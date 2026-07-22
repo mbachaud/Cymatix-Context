@@ -18,7 +18,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-from helix_context.genome import Genome
+from cymatix_context.genome import Genome
 from tests.conftest import make_gene
 
 
@@ -61,7 +61,7 @@ class TestBackfillFilenameDomainsScript:
         genome = Genome(db)
         try:
             gene = make_gene("pass", domains=[])
-            gene.source_id = "/repo/helix_context/claims.py"
+            gene.source_id = "/repo/cymatix_context/claims.py"
             gene_id = genome.upsert_gene(gene, apply_gate=False)
 
             # Pre-condition: 'claims' not yet in promoter_index
@@ -86,7 +86,7 @@ class TestBackfillFilenameDomainsScript:
         genome = Genome(db)
         try:
             gene = make_gene("pass", domains=[])
-            gene.source_id = "/repo/helix_context/claim_types_handler.py"
+            gene.source_id = "/repo/cymatix_context/claim_types_handler.py"
             gene_id = genome.upsert_gene(gene, apply_gate=False)
             _run_backfill(db)
             conn = sqlite3.connect(db)
@@ -129,7 +129,7 @@ class TestBackfillFilenameDomainsScript:
         genome = Genome(db)
         try:
             gene = make_gene("pass", domains=[])
-            gene.source_id = "/repo/helix_context/claims.py"
+            gene.source_id = "/repo/cymatix_context/claims.py"
             gene_id = genome.upsert_gene(gene, apply_gate=False)
             _run_backfill(db)
             _run_backfill(db)
@@ -151,7 +151,7 @@ class TestBackfillFilenameDomainsScript:
         genome = Genome(db)
         try:
             gene = make_gene("pass", domains=[])
-            gene.source_id = "/repo/helix_context/claims.py"
+            gene.source_id = "/repo/cymatix_context/claims.py"
             gene_id = genome.upsert_gene(gene, apply_gate=False)
 
             conn = sqlite3.connect(db)

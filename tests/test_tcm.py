@@ -1,10 +1,10 @@
-"""Tests for helix_context.tcm -- Temporal Context Model."""
+"""Tests for cymatix_context.tcm -- Temporal Context Model."""
 
 import math
 import pytest
 
-from helix_context.schemas import Gene, PromoterTags
-from helix_context.scoring.tcm import (
+from cymatix_context.schemas import Gene, PromoterTags
+from cymatix_context.scoring.tcm import (
     SessionContext,
     gene_input_vector,
     tcm_bonus,

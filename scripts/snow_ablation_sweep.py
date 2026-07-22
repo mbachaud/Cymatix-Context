@@ -47,7 +47,7 @@ except Exception:
     pass
 
 REPO = Path(__file__).resolve().parent.parent
-DEFAULT_CONFIG = REPO / "helix.toml"
+DEFAULT_CONFIG = REPO / "cymatix.toml" if (REPO / "cymatix.toml").exists() else REPO / "helix.toml"
 DEFAULT_GENOME = "F:/Projects/helix-context/genomes/main/genome.db"
 RESULTS_DIR = REPO / "benchmarks" / "snow" / "results"
 

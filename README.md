@@ -1,9 +1,9 @@
 # Cymatix Context
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![PyPI version](https://img.shields.io/pypi/v/helix-context.svg)](https://pypi.org/project/helix-context/)
+[![PyPI version](https://img.shields.io/pypi/v/cymatix-context.svg)](https://pypi.org/project/cymatix-context/)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![Tests: 2750+](https://img.shields.io/badge/tests-2750%2B-brightgreen.svg)](tests/)
+[![Tests: 2900+](https://img.shields.io/badge/tests-2900%2B-brightgreen.svg)](tests/)
 [![LLM-free pipeline](https://img.shields.io/badge/pipeline-LLM--free-brightgreen.svg)](docs/architecture/PIPELINE_LANES.md)
 [![Paper: Agentome](https://img.shields.io/badge/paper-Agentome-purple.svg)](https://mbachaud.substack.com/p/agentome)
 
@@ -11,11 +11,21 @@
 > your codebase into a context window — without a single LLM call on the
 > retrieval path.
 
+A [Brick Wall Studio](https://brickwallstudio.com) project. **Formerly
+`helix-context`** — renamed July 2026; every old surface (imports, CLI names,
+`HELIX_*` env vars, `helix.toml`) still works. See [Migrating from
+helix-context](#migrating-from-helix-context).
+
+The name comes from the engine's cymatics stage: retrieval candidates are
+scored against a 256-bin frequency-domain fingerprint of the query, the same
+way cymatics renders sound as standing-wave geometry. The `/fingerprint`
+endpoint exposes that spectrum directly.
+
 ---
 
 ## Proof (30 seconds)
 
-**WIP benchmark numbers** — compressor disabled (default LLM-free config), N=15 query shapes, May 2026:
+**Token economics** — compressor disabled (default LLM-free config), N=15 query shapes, May 2026:
 
 | metric | tokens | vs standard RAG (top-5 @ 1500) |
 |--------|--------|-------------------------------|
@@ -23,51 +33,123 @@
 | best (focused query) | 1,410 | **5.7×** |
 | worst (broad 12-doc) | 3,755 | **2.1×** |
 
-With the optional compressor enabled (Claude Haiku splice), median improves to ~5×.
-In multi-turn sessions, the session delivery register elides already-seen documents — observed **37× reduction** on repeated retrievals within a conversation.
+In multi-turn sessions, the session delivery register elides already-seen
+documents — observed **37× reduction** on repeated retrievals within a
+conversation (~40% token savings on typical multi-turn work).
 
-Reproducer: `python benchmarks/bench_rag_vs_sike_tokens.py` against your own genome.
+Reproducer: `python benchmarks/bench_rag_vs_sike_tokens.py` against your own knowledge store.
 
-**Agent contract**: every `/context` response carries `know { found, confidence }` (grounded — you may answer) or `miss { reason, escalate_to }` (not found — don't answer from genome). Stale results downgrade to `miss(reason="stale"|"cold"|"superseded")` via the freshness gate.
+**External benchmark** — [EnterpriseRAG-Bench](https://github.com/onyx-dot-app/EnterpriseRAG-Bench)
+(Onyx, 500 questions over a ~500K-document enterprise corpus), July 2026,
+scored under ERB's official judge protocol and submitted to the leaderboard:
 
-## Get started (60 seconds)
+| ERB official metric | score |
+|---|---|
+| Correctness | **41.6%** (208/500) |
+| Completeness | **42.8%** |
+| Overall | **33.57** |
+
+Context for those numbers: the corpus was ingested as **829,131 fragments on
+a single consumer desktop**, and retrieval ran with **zero LLM calls on the
+retrieval path**. The claim is that operating point — local, LLM-free, at
+scale — not a leaderboard win. Quote the delivery and correctness numbers as
+a pair: gold-document delivery was 55% at 829K-fragment scale (82% at 50K)
+and delivery is *not* a graded pass — end-to-end correctness is the 41.6%
+above. When the gold document *was* delivered, the answer was correct 79% of
+the time, so retrieval breadth at extreme scale, not answer synthesis, is
+the current ceiling. Full methodology + repro:
+[docs/benchmarks/2026-07-10-erb-blob-829k-reproduction.md](docs/benchmarks/2026-07-10-erb-blob-829k-reproduction.md).
+
+**Fusion**: Reciprocal Rank Fusion has been the default ranker since
+2026-07-06 — measured **+12pp gold-document delivery** over the legacy
+additive accumulator on the hardest internal bed (0.74 vs 0.62).
+
+**Agent contract**: every `/context` response carries `know { found, confidence }`
+(grounded — you may answer) or `miss { reason, escalate_to }` (not found —
+don't answer from the knowledge store). Stale results downgrade to
+`miss(reason="stale"|"cold"|"superseded")` via the freshness gate.
+
+## Get started
+
+Requires Python 3.11+. Core install is dependency-light (FastAPI + SQLite,
+no torch):
 
 ```bash
-# 1. Install
-pip install helix-context
-python -m spacy download en_core_web_sm
-
-# 2. Ingest your codebase
-helix ingest path/to/your/project/ --recursive
-
-# 3. Query it
-helix query "how does the splice step work?"
-
-# 4. Or start the proxy for IDE integration
-helix-server   # binds to 127.0.0.1:11437
+pip install cymatix-context
+python -m spacy download en_core_web_sm     # ingest tagger model (with the cpu extra)
 ```
 
-For extras matrix, BGE-M3 backfill, and tray setup: [docs/SETUP.md](docs/SETUP.md).
+Pick extras for the features you turn on:
 
-## Agent surfaces
+| Extra | Enables | Pull |
+|---|---|---|
+| *(core)* | HTTP server, `/context`, `/context/packet`, FTS5 retrieval | light |
+| `embeddings` | BGE-M3 dense recall (default-on retrieval stage) | torch via sentence-transformers |
+| `cpu` | spaCy NER ingest tagging | spacy |
+| `mcp` | `python -m cymatix_context.mcp_server` (Claude Code / Cursor / Desktop) | mcp SDK |
+| `otel` | Grafana/Tempo/Loki observability | opentelemetry |
+| `launcher-tray` | System-tray supervisor (Windows) | pystray (LGPL, opt-in) |
+| `ast` | Tree-sitter code chunking | tree-sitter grammars |
+| `all` | Everything above except dev + tray | heavy |
 
-Three ways to drive Helix — same retrieval primitives, same JSON shapes:
+```bash
+pip install "cymatix-context[embeddings,cpu,mcp]"   # recommended working set
+```
+
+Then:
+
+```bash
+# 1. Ingest your project
+cymatix ingest path/to/your/project/ --recursive
+
+# 2. One-time dense backfill (BGE-M3 vectors; retrieval is weak without it)
+python scripts/backfill_bgem3_v2.py genomes/main/genome.db
+
+# 3. Query from the CLI — no server needed
+cymatix query "how does the splice step work?"
+
+# 4. Or start the proxy for IDE / agent integration
+cymatix-server            # binds to 127.0.0.1:11437
+curl -s http://127.0.0.1:11437/health
+```
+
+Full setup (extras matrix, GPU detection, tray): [docs/SETUP.md](docs/SETUP.md).
+
+## Usage
+
+Three surfaces, same retrieval primitives, same JSON shapes:
 
 | Surface | Best for | Example |
 |---------|----------|---------|
-| **CLI** | Scripts, CI, cold-start agents | `helix query "..." --json` |
-| **MCP** | Claude Code, Cursor, Claude Desktop | Add to `settings.json` |
+| **CLI** | Scripts, CI, cold-start agents | `cymatix query "..." --json` |
+| **MCP** | Claude Code, Cursor, Claude Desktop | see below |
 | **HTTP proxy** | Continue IDE, `OPENAI_BASE_URL` redirect | `POST /context` |
 
 ```bash
 # CLI — no server, no daemon, subprocess-drivable
-helix query    "what does the splice step do?" --json
-helix packet   "edit the splice step" --task-type edit --json
-helix gene get abc123 --json
-helix neighbors "splice step" --k 10 --json
-helix refresh-targets "edit the splice step" --json
-helix status
-helix diag corpus
+cymatix query    "what does the splice step do?" --json
+cymatix packet   "edit the splice step" --task-type edit --json
+cymatix gene get abc123 --json
+cymatix neighbors "splice step" --k 10 --json
+cymatix refresh-targets "edit the splice step" --json
+cymatix status
+cymatix diag corpus
+```
+
+```bash
+# HTTP — agent-safe packet with verified / stale_risk / refresh_targets
+curl -s http://127.0.0.1:11437/context/packet \
+  -H "content-type: application/json" \
+  -d '{"query": "how does the freshness gate demote stale docs?"}'
+```
+
+Configuration lives in `cymatix.toml` (`helix.toml` still honored). Env vars
+use the `CYMATIX_*` prefix (`HELIX_*` still honored — explicit `HELIX_*`
+settings win over mirrored values):
+
+```bash
+CYMATIX_GENOME_PATH=genomes/dogfood/genome.db cymatix-server
+CYMATIX_OTEL_ENABLED=1 CYMATIX_OTEL_ENDPOINT=localhost:4317 cymatix-server
 ```
 
 Full CLI reference: [`docs/clients/cli.md`](docs/clients/cli.md).
@@ -91,7 +173,8 @@ Seven stages per turn, all LLM-free except optional splice:
        ▼
 ┌──────────────┐  FTS5 BM25 + BGE-M3 dense (1024-dim) + tags
 │ 2. Retrieve  │  + synonym expansion + co-activation + SR
-│              │  ranked via RRF or additive fusion
+│              │  + cymatics 256-bin spectrum scoring
+│              │  ranked via RRF (default) or additive fusion
 └──────┬───────┘
        ▼
 ┌──────────────┐
@@ -114,11 +197,11 @@ Seven stages per turn, all LLM-free except optional splice:
    know { } or miss { }
 ```
 
-- **know/miss contract**: `know` means the context is grounded, agent may answer. `miss` means don't answer from genome — escalate via `escalate_to` tools or refetch from `refresh_targets`.
+- **know/miss contract**: `know` means the context is grounded, agent may answer. `miss` means don't answer from the knowledge store — escalate via `escalate_to` tools or refetch from `refresh_targets`.
 - **Caller model class**: `/context` accepts `caller_model_class: "generic" | "small_moe" | "frontier"` to select render branch (ordering, assembly cap, decoder mode). See [docs/api/context-endpoint.md §7](docs/api/context-endpoint.md).
 
 <details>
-<summary><strong>Configuration (17 sections in helix.toml)</strong></summary>
+<summary><strong>Configuration (17 sections in cymatix.toml)</strong></summary>
 
 | Section | Key settings |
 |---------|-------------|
@@ -136,7 +219,7 @@ Seven stages per turn, all LLM-free except optional splice:
 | `[retrieval]` | `fusion_mode` (`"rrf"` default / `"additive"` legacy), SR, ray_trace_theta, seeded_edges |
 | `[plr]` | Piecewise linear reranker model |
 | `[know]` | Know/miss calibration: emit_floor, betas, s_ref, g_ref, stale_after_days |
-| `[mem_sync]` | Auto-memory → helix sync: watch_dirs, interval |
+| `[mem_sync]` | Auto-memory → knowledge-store sync: watch_dirs, interval |
 | `[synonyms]` | Query expansion map (e.g., "cache" → ["redis", "ttl"]) |
 | `[abstain]` | Low-confidence abstention thresholds |
 
@@ -188,13 +271,13 @@ Full schema: [docs/api/endpoints.md](docs/api/endpoints.md).
 </details>
 
 <details>
-<summary><strong>Package structure (15 packages, post-PR #90)</strong></summary>
+<summary><strong>Package structure (15 packages)</strong></summary>
 
 | Package | Purpose |
 |---------|---------|
 | `adapters/` | Cache, DAL, external retriever protocol |
 | `backends/` | Compressor, BGE-M3 codec, DeBERTa, NLI, SEMA, SPLADE |
-| `cli/` | `helix` CLI: query, packet, gene, neighbors, ingest, diag, config, status |
+| `cli/` | `cymatix` CLI: query, packet, gene, neighbors, ingest, diag, config, status |
 | `encoding/` | Chunking, fragments, legibility headers, Headroom bridge |
 | `identity/` | CWoLa logger, session delivery, registry, provenance, claims |
 | `pipeline/` | Tier logic, stage helpers |
@@ -208,7 +291,10 @@ Full schema: [docs/api/endpoints.md](docs/api/endpoints.md).
 | `mcp/` | MCP tool surface for Claude Code / Desktop |
 | `integrations/` | ScoreRift bridge |
 
-Back-compat shims: `genome.py`, `ribosome.py`, `server.py`, `replication.py`, `hgt.py` re-export from new locations. Lexicon: [docs/ROSETTA.md](docs/ROSETTA.md).
+Canonical import package is `cymatix_context`; `helix_context` remains as an
+alias shim (identical module objects). Module-level shims `genome.py`,
+`ribosome.py`, `server.py`, `replication.py`, `hgt.py` also persist.
+Lexicon: [docs/ROSETTA.md](docs/ROSETTA.md).
 
 </details>
 
@@ -220,15 +306,19 @@ Back-compat shims: `genome.py`, `ribosome.py`, `server.py`, `replication.py`, `h
 ```json
 {
   "mcpServers": {
-    "helix-context": {
+    "cymatix-context": {
       "command": "python",
-      "args": ["-m", "helix_context.mcp_server"],
+      "args": ["-m", "cymatix_context.mcp_server"],
       "cwd": "/absolute/path/to/your/project",
-      "env": { "HELIX_MCP_URL": "http://127.0.0.1:11437" }
+      "env": { "CYMATIX_MCP_URL": "http://127.0.0.1:11437" }
     }
   }
 }
 ```
+
+The server self-identifies as `cymatix`, so client tools appear as
+`mcp__cymatix__*`. Configs written for the helix era keep working if you
+leave `-m helix_context.mcp_server` and `HELIX_MCP_URL` in place.
 
 </details>
 
@@ -237,7 +327,7 @@ Back-compat shims: `genome.py`, `ribosome.py`, `server.py`, `replication.py`, `h
 
 ```yaml
 models:
-  - name: Helix (Local)
+  - name: Cymatix (Local)
     provider: openai
     model: gemma3:e4b
     apiBase: http://127.0.0.1:11437/v1
@@ -247,6 +337,8 @@ models:
       contextLength: 128000
       maxTokens: 4096
 ```
+
+Use Chat mode, not Agent mode — the proxy doesn't handle tool routing.
 
 </details>
 
@@ -263,7 +355,7 @@ OPENAI_BASE_URL=http://localhost:11437/v1 your-app
 
 ```toml
 [genome]
-path = "genomes/main/genome.db"   # relative to helix run directory
+path = "genomes/main/genome.db"   # relative to the cymatix run directory
 ```
 
 Backup (safe while running — WAL mode):
@@ -286,19 +378,36 @@ scripts/setup-grafana-telem.sh      # Linux / macOS
 Dashboard: <http://localhost:3000/d/helix-overview>.
 Full surface: [docs/architecture/OBSERVABILITY.md](docs/architecture/OBSERVABILITY.md).
 
+## Migrating from helix-context
+
+Everything old keeps working for a deprecation window; new names are canonical.
+
+| Surface | Old (still works) | New (canonical) |
+|---|---|---|
+| Install | `helix-context` (final PyPI release points here) | `pip install cymatix-context` |
+| Import | `import helix_context` (DeprecationWarning, same module objects) | `import cymatix_context` |
+| CLI | `helix`, `helix-server`, `helix-launcher`, `helix-status`, `helix-vault` | `cymatix`, `cymatix-server`, `cymatix-launcher`, `cymatix-status`, `cymatix-vault` |
+| Config file | `helix.toml` | `cymatix.toml` |
+| Env vars | `HELIX_*` (explicit settings win) | `CYMATIX_*` |
+| MCP `-m` entry | `python -m helix_context.mcp_server` | `python -m cymatix_context.mcp_server` |
+| ASGI target | `helix_context._asgi:app` | `cymatix_context._asgi:app` |
+
+The knowledge-store file format is unchanged — existing `genome.db` files
+work as-is, no re-ingest needed.
+
 ## Gotchas
 
 - **Knowledge store path** is `genomes/main/genome.db` (not project root). Delete to start fresh.
 - **BGE-M3 backfill** is one-time post-install — `embedding_dense_v2 IS NULL` until you run `scripts/backfill_bgem3_v2.py`. Low retrieval rate without it.
-- **Fusion mode** defaults to `"additive"` (back-compat). Flip to `"rrf"` in `[retrieval]` after running `scripts/calibrate_thresholds.py`.
+- **Fusion mode** defaults to `"rrf"` (since 2026-07-06; +12pp gold delivery vs additive on the hardest bed). `"additive"` remains as the legacy accumulator, scheduled for condition-gated removal. Under RRF the abstain gates run ratio-only.
 - **Session delivery** (`session_delivery_enabled = true`) tracks delivered docs per session, elides repeats. ~40% token savings on multi-turn. Pass `ignore_delivered: true` in `/context` body for benchmarks.
-- **know/miss contract** requires the agent prompt fragment to be honored — without it, frontier models confabulate. Import `helix_context.agent_prompt.full_fragment()`.
+- **know/miss contract** requires the agent prompt fragment to be honored — without it, frontier models confabulate. Import `cymatix_context.agent_prompt.full_fragment()`.
 - **Naming lexicon**: biology terms (gene, genome, ribosome) have canonical software equivalents (document, knowledge store, compressor). Both work in code; new code uses software terms. See [docs/ROSETTA.md](docs/ROSETTA.md).
 
 ## Testing
 
 ```bash
-python -m pytest tests/ -m "not live" -v   # ~2,750 tests, no external services
+python -m pytest tests/ -m "not live" -v   # ~2,900 tests, no external services
 ```
 
 ## Documentation
@@ -320,3 +429,4 @@ Built on: [spaCy](https://spacy.io/) NER · [Howard 2005](https://doi.org/10.103
 ## License
 
 [Apache-2.0](LICENSE). See [NOTICE](NOTICE) for third-party attributions.
+Cymatix Context is a [Brick Wall Studio](https://brickwallstudio.com) project by Michael Bachaud.

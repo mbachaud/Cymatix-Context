@@ -1,4 +1,4 @@
-"""Tests for helix_context.launcher.observability_health."""
+"""Tests for cymatix_context.launcher.observability_health."""
 
 from __future__ import annotations
 
@@ -64,7 +64,7 @@ def http_server():
 # ── port-bind poll ────────────────────────────────────────────────────
 
 def test_wait_for_port_returns_true_when_bound():
-    from helix_context.launcher.observability_health import wait_for_port
+    from cymatix_context.launcher.observability_health import wait_for_port
     port = _free_port()
     release = _bind_port_in_thread(port)
     try:
@@ -74,7 +74,7 @@ def test_wait_for_port_returns_true_when_bound():
 
 
 def test_wait_for_port_returns_false_on_timeout():
-    from helix_context.launcher.observability_health import wait_for_port
+    from cymatix_context.launcher.observability_health import wait_for_port
     port = _free_port()  # nothing bound
     t0 = time.monotonic()
     assert wait_for_port("127.0.0.1", port, timeout=0.4) is False
@@ -86,21 +86,21 @@ def test_wait_for_port_returns_false_on_timeout():
 # ── HTTP poll ─────────────────────────────────────────────────────────
 
 def test_wait_for_http_ok_returns_true_on_200(http_server):
-    from helix_context.launcher.observability_health import wait_for_http_ok
+    from cymatix_context.launcher.observability_health import wait_for_http_ok
     assert wait_for_http_ok(
         f"http://127.0.0.1:{http_server}/ok", timeout=3.0
     ) is True
 
 
 def test_wait_for_http_ok_returns_false_on_404(http_server):
-    from helix_context.launcher.observability_health import wait_for_http_ok
+    from cymatix_context.launcher.observability_health import wait_for_http_ok
     assert wait_for_http_ok(
         f"http://127.0.0.1:{http_server}/missing", timeout=0.4
     ) is False
 
 
 def test_wait_for_http_ok_returns_false_on_unreachable():
-    from helix_context.launcher.observability_health import wait_for_http_ok
+    from cymatix_context.launcher.observability_health import wait_for_http_ok
     port = _free_port()  # nobody bound
     t0 = time.monotonic()
     assert wait_for_http_ok(

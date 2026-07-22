@@ -13,7 +13,7 @@ test_telemetry_wiring.py::test_all_new_getters_resolve.
 
 from __future__ import annotations
 
-import helix_context.telemetry as telemetry_mod
+import cymatix_context.telemetry as telemetry_mod
 
 
 # ── Helpers ──────────────────────────────────────────────────────────
@@ -41,8 +41,8 @@ class _RaisingInstrument:
 
 def test_stage_timer_records_one_observation(monkeypatch):
     """_stage_timer.__exit__ records exactly one entry with the right stage."""
-    from helix_context.context_manager import _stage_timer
-    import helix_context.context_manager as cm_mod
+    from cymatix_context.context_manager import _stage_timer
+    import cymatix_context.context_manager as cm_mod
 
     recorder = _RecordingInstrument()
     # _stage_timer calls the module-level _pipeline_stage_histogram name.
@@ -59,10 +59,10 @@ def test_stage_timer_records_one_observation(monkeypatch):
 
 def test_stage_timer_records_extra_labels(monkeypatch):
     """_stage_timer passes additional labels through to the histogram."""
-    from helix_context.context_manager import _stage_timer
+    from cymatix_context.context_manager import _stage_timer
 
     recorder = _RecordingInstrument()
-    import helix_context.context_manager as cm_mod
+    import cymatix_context.context_manager as cm_mod
     monkeypatch.setattr(cm_mod, "_pipeline_stage_histogram", lambda: recorder)
 
     with _stage_timer("rerank", {"decoder_mode": "condensed"}):
@@ -76,9 +76,9 @@ def test_stage_timer_records_extra_labels(monkeypatch):
 
 def test_stage_timer_swallows_telemetry_errors(monkeypatch):
     """_stage_timer must NOT raise if the histogram itself raises."""
-    from helix_context.context_manager import _stage_timer
+    from cymatix_context.context_manager import _stage_timer
 
-    import helix_context.context_manager as cm_mod
+    import cymatix_context.context_manager as cm_mod
     monkeypatch.setattr(cm_mod, "_pipeline_stage_histogram",
                         lambda: _RaisingInstrument())
 

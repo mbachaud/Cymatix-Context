@@ -8,7 +8,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from helix_context.integrations.scorerift import (
+from cymatix_context.integrations.scorerift import (
     CDSignal,
     GenomeHealthProbe,
     cd_signal,

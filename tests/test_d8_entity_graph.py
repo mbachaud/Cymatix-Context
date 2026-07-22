@@ -2,8 +2,8 @@
 import json
 import sqlite3
 import pytest
-from helix_context.schemas import Gene, PromoterTags, EpigeneticMarkers
-from helix_context.genome import Genome
+from cymatix_context.schemas import Gene, PromoterTags, EpigeneticMarkers
+from cymatix_context.genome import Genome
 
 
 def _make(content, domains=None, entities=None, source=None):

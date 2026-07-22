@@ -1,17 +1,17 @@
-"""Tests for the claim-edge detector (helix_context/claims_analyze.py)."""
+"""Tests for the claim-edge detector (cymatix_context/claims_analyze.py)."""
 
 from __future__ import annotations
 
 import pytest
 
-from helix_context.identity.claims_analyze import (
+from cymatix_context.identity.claims_analyze import (
     _NOISE_ENTITY_KEYS,
     _jaccard,
     _tokenize,
     detect_and_persist_edges,
     detect_edges_for_group,
 )
-from helix_context.shard_schema import (
+from cymatix_context.shard_schema import (
     init_main_db,
     open_main_db,
     register_shard,

@@ -1,6 +1,6 @@
 """Ratchets for issue #219 slice 4 ("knob-docs single source of truth").
 
-``docs/config-reference.md`` drifted from ``helix_context/config.py`` more
+``docs/config-reference.md`` drifted from ``cymatix_context/config.py`` more
 than once (PRs #261 / #262 both had to hand-patch stale knob tables after
 adding fields to the config dataclasses). This module is the guard rail:
 
@@ -8,7 +8,7 @@ adding fields to the config dataclasses). This module is the guard rail:
    ``test_doc_is_byte_identical_to_a_fresh_regenerate`` regenerate every
    ``<!-- BEGIN GENERATED: config-tables:NAME -->`` region in
    ``docs/config-reference.md`` in-memory from the *current*
-   ``helix_context/config.py`` (via ``scripts/gen_config_reference.py``)
+   ``cymatix_context/config.py`` (via ``scripts/gen_config_reference.py``)
    and assert the committed file already reflects that output. A config.py
    field add/remove/rename/re-comment that isn't followed by
    ``python scripts/gen_config_reference.py`` fails here.
@@ -79,7 +79,7 @@ def test_generated_regions_are_in_sync_with_config_py():
         name for name, fresh in fresh_tables.items() if on_disk_regions[name] != fresh
     )
     assert not stale, (
-        "docs/config-reference.md is stale relative to helix_context/config.py "
+        "docs/config-reference.md is stale relative to cymatix_context/config.py "
         f"in generated region(s): {stale}\n"
         "Run `python scripts/gen_config_reference.py` and commit the result."
     )
@@ -256,5 +256,5 @@ def test_claude_md_config_table_keys_exist():
         "CLAUDE.md's `[section] | Key settings` config table mentions "
         f"key(s) that don't exist on the matching config.py dataclass: "
         f"{failures}. Fix the key name in CLAUDE.md, or add the field to "
-        "helix_context/config.py if this is genuinely a new knob."
+        "cymatix_context/config.py if this is genuinely a new knob."
     )

@@ -16,7 +16,7 @@ Per question:
 
 Grounding (all read on the rig, file:line in the chain report):
   * ERB question schema + gold resolution + prefix-tolerant delivered-path
-    matching: benchmarks/bench_enterprise_rag.py load_needles / helix_context /
+    matching: benchmarks/bench_enterprise_rag.py load_needles / cymatix_context /
     make_gold_index / match_delivered_to_gold (worktree copy; fields:
     q["question"], q.get("gold_answer"), q.get("expected_doc_ids"), mapped via
     generated_data/uuid_index.json -> generated_data/sources/<rel>).
@@ -24,14 +24,14 @@ Grounding (all read on the rig, file:line in the chain report):
     --max-budget-usd cap, short model aliases sonnet/opus) and
     bench_enterprise_rag.run_claude (--append-system-prompt-file to dodge the
     32K arg-line limit + an empty --mcp-config).
-  * /context/packet contract: helix_context/server/routes_context.py:546 --
+  * /context/packet contract: cymatix_context/server/routes_context.py:546 --
     body {query, task_type, max_genes}; top-level "know" {found, confidence,
     gene_id_match, ...} XOR "miss" {reason, escalate_to|refresh_targets, ...}.
     Evidence lists are verified / stale_risk / contradictions of ContextItem
     (schemas.py:239-275; item body is `content`, path is `source_id`).
   * Sharded fixture is served by the caller (.ps1) with HELIX_USE_SHARDS=1 and
     HELIX_GENOME_PATH pointing at .../enterprise_rag_500k/main.genome.db
-    (helix_context/sharding.open_read_source detects the basename).
+    (cymatix_context/sharding.open_read_source detects the basename).
 
 RESUMABLE: the output JSONL is append-only, one line per finished question,
 keyed by question id. On restart, ids already present are skipped. 500 questions

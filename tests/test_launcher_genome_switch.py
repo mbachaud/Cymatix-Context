@@ -22,9 +22,9 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from helix_context.launcher import genome_registry as gr
-from helix_context.launcher import tray as tray_mod
-from helix_context.launcher.tray import HelixTrayIcon
+from cymatix_context.launcher import genome_registry as gr
+from cymatix_context.launcher import tray as tray_mod
+from cymatix_context.launcher.tray import HelixTrayIcon
 
 
 @pytest.fixture(autouse=True)

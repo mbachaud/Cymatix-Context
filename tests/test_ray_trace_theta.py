@@ -18,7 +18,7 @@ pytest.importorskip("numpy", reason="theta-bias tests use numpy for vector math"
 
 import numpy as np  # noqa: E402
 
-from helix_context.scoring.ray_trace import (  # noqa: E402
+from cymatix_context.scoring.ray_trace import (  # noqa: E402
     _theta_choice,
     cast_evidence_rays,
 )

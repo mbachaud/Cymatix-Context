@@ -21,7 +21,7 @@ would provide on inputs alone.
 Usage:
     # Submit a batch (returns batch_id, writes manifest)
     python scripts/claude_batch_ingest.py submit \
-        --roots F:/Projects/helix-context/helix_context \
+        --roots F:/Projects/helix-context/cymatix_context \
         --manifest .batch-helix-core.json
 
     # Check batch status
@@ -32,7 +32,7 @@ Usage:
 
     # One-shot: submit + block until done + ingest
     python scripts/claude_batch_ingest.py run \
-        --roots F:/Projects/helix-context/helix_context \
+        --roots F:/Projects/helix-context/cymatix_context \
         --manifest .batch-helix-core.json
 
 Requires:
@@ -53,11 +53,11 @@ from typing import Any
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from helix_context.codons import CodonChunker, CodonEncoder
-from helix_context.config import load_config
-from helix_context.genome import Genome
-from helix_context.ribosome import _PACK_SYSTEM  # reuse the stable system prompt
-from helix_context.schemas import EpigeneticMarkers, Gene, PromoterTags
+from cymatix_context.codons import CodonChunker, CodonEncoder
+from cymatix_context.config import load_config
+from cymatix_context.genome import Genome
+from cymatix_context.ribosome import _PACK_SYSTEM  # reuse the stable system prompt
+from cymatix_context.schemas import EpigeneticMarkers, Gene, PromoterTags
 
 logging.basicConfig(
     level=logging.INFO,
@@ -197,7 +197,7 @@ def cmd_ingest(args) -> int:
     with open(args.manifest, "r", encoding="utf-8") as f:
         manifest = json.load(f)
 
-    from helix_context.genome import Genome as _Genome
+    from cymatix_context.genome import Genome as _Genome
     client = _make_client()
 
     # Poll until done if asked, otherwise fail fast if not done
@@ -272,7 +272,10 @@ def main() -> int:
     # Shared args
     def _common(p):
         p.add_argument("--db", default="genome.db")
-        p.add_argument("--config", default="helix.toml")
+        p.add_argument(
+            "--config",
+            default="cymatix.toml" if os.path.exists("cymatix.toml") else "helix.toml",
+        )
         p.add_argument("--manifest", required=True)
 
     p_submit = sub.add_parser("submit")

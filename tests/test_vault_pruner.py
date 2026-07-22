@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from helix_context.vault.pruner import prune_traces, refresh_stale_view, migrate_fan_out_if_needed
+from cymatix_context.vault.pruner import prune_traces, refresh_stale_view, migrate_fan_out_if_needed
 
 
 @pytest.fixture
@@ -208,8 +208,8 @@ class TestRollupAppend:
 
 class TestRefreshStaleView:
     def test_creates_pointer_for_stale_gene(self, tmp_path: Path):
-        from helix_context.genome import Genome
-        from helix_context.schemas import ChromatinState
+        from cymatix_context.genome import Genome
+        from cymatix_context.schemas import ChromatinState
         from tests.conftest import make_gene
 
         vault = tmp_path / "vault"
@@ -240,8 +240,8 @@ class TestRefreshStaleView:
             g.close()
 
     def test_removes_obsolete_stale_pointer(self, tmp_path: Path):
-        from helix_context.genome import Genome
-        from helix_context.schemas import ChromatinState
+        from cymatix_context.genome import Genome
+        from cymatix_context.schemas import ChromatinState
         from tests.conftest import make_gene
 
         vault = tmp_path / "vault"
@@ -275,7 +275,7 @@ class TestRefreshStaleView:
 
 class TestFanOutMigration:
     def test_migrates_when_threshold_crossed(self, tmp_path: Path):
-        from helix_context.vault.state import VaultState
+        from cymatix_context.vault.state import VaultState
 
         vault = tmp_path / "vault"
         vault.mkdir(mode=0o700)
@@ -313,7 +313,7 @@ class TestFanOutMigration:
             state.close()
 
     def test_no_migration_below_threshold(self, tmp_path: Path):
-        from helix_context.vault.state import VaultState
+        from cymatix_context.vault.state import VaultState
 
         vault = tmp_path / "vault"
         vault.mkdir(mode=0o700)

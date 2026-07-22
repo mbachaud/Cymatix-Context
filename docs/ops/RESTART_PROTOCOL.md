@@ -1,10 +1,10 @@
-# Helix Cross-Session Restart Protocol
+# Cymatix Cross-Session Restart Protocol
 
-When multiple Claude sessions share a single Helix server, one session can
+When multiple Claude sessions share a single Cymatix server, one session can
 announce an intentional restart so that observing sessions don't misread the
 outage as a crash.
 
-**Since:** helix-context v0.3.0b4
+**Since:** cymatix-context v0.3.0b4
 
 ## Signal location
 
@@ -31,7 +31,7 @@ One canonical file, single-slot, always overwritten:
 
 ## If you're restarting the server
 
-Before killing the Helix process, POST to the announce endpoint, sleep ~750ms,
+Before killing the Cymatix process, POST to the announce endpoint, sleep ~750ms,
 then trigger your restart:
 
 ```bash
@@ -43,13 +43,13 @@ curl -X POST http://127.0.0.1:11437/admin/announce_restart \
        "expected_downtime_s": 30
      }'
 sleep 0.75
-# ... now kill and restart Helix ...
+# ... now kill and restart Cymatix ...
 ```
 
 Or from Python:
 
 ```python
-from helix_context.bridge import AgentBridge
+from cymatix_context.bridge import AgentBridge
 import time
 
 bridge = AgentBridge()
@@ -67,7 +67,7 @@ clearing the restart announcement.
 
 ## If you're observing the server
 
-When you get `ConnectionRefused` / `background command failed` from Helix,
+When you get `ConnectionRefused` / `background command failed` from Cymatix,
 read the signal file directly — **no HTTP needed**, the server is down:
 
 ```bash
@@ -91,7 +91,7 @@ means the announced restart never completed. Fall back to normal crash handling.
 From Python:
 
 ```python
-from helix_context.bridge import AgentBridge
+from cymatix_context.bridge import AgentBridge
 import time
 
 bridge = AgentBridge()
@@ -141,9 +141,9 @@ else:
 |---------|----------|
 | Agent crashes mid-announcement | Atomic rename → readers see old signal or new, never partial |
 | Agent announces but doesn't restart | TTL → observer ignores stale `restarting` after `expected_downtime_s + 15` |
-| Server restarts but startup hook fails | Observer's successful Helix call is an implicit "running" regardless of signal |
+| Server restarts but startup hook fails | Observer's successful Cymatix call is an implicit "running" regardless of signal |
 | Two agents restart simultaneously | Last writer wins. Both wanted a restart; both see it happen |
-| Fresh observer session | Reads signal file on first Helix failure — no prior context needed |
+| Fresh observer session | Reads signal file on first Cymatix failure — no prior context needed |
 | `kill -9` | Agent's pre-kill signal is already on disk; new process stamps `running` on boot |
 
 ## Related

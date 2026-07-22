@@ -111,7 +111,7 @@ foreach ($svc in $binaries.Keys) {
     # turns ANY native-command stderr into a script-terminating error,
     # which defeats `2>$null` redirection. should-skip writes nothing to
     # stderr in the normal "please download" path.
-    & $python -m helix_context.launcher._install_helpers should-skip $absPath $expected
+    & $python -m cymatix_context.launcher._install_helpers should-skip $absPath $expected
     if ($LASTEXITCODE -eq 0) {
         Write-Host "[install][$svc] up-to-date (sha256 ok) - skipping"
         continue
@@ -132,7 +132,7 @@ foreach ($svc in $binaries.Keys) {
                   elseif ($url.EndsWith(".tgz")) { ".tgz" }
                   else { ".tmp" }
     $tmpArchive = Join-Path $env:TEMP "helix-native-otel-$svc$archiveExt"
-    & $python -m helix_context.launcher._install_helpers download $url $tmpArchive --timeout 120
+    & $python -m cymatix_context.launcher._install_helpers download $url $tmpArchive --timeout 120
     if ($LASTEXITCODE -ne 0) {
         Write-Error "[install][$svc] download failed"
         exit 3
@@ -140,7 +140,7 @@ foreach ($svc in $binaries.Keys) {
 
     # Verify archive against the pinned hash (each project's release page
     # publishes the archive sha; that's what we pin and what we verify).
-    & $python -m helix_context.launcher._install_helpers verify-hash $tmpArchive $expected
+    & $python -m cymatix_context.launcher._install_helpers verify-hash $tmpArchive $expected
     if ($LASTEXITCODE -ne 0) {
         Write-Error "[install][$svc] hash check failed"
         exit 4
@@ -205,9 +205,9 @@ foreach ($svc in $binaries.Keys) {
 # Render runtime configs. The render module lands in a later task in
 # the native-observability-sidecar plan; this call will fail until then.
 Write-Host "[install] Rendering runtime configs to tools/native-otel/configs/ ..."
-& $python -m helix_context.launcher.observability_render render-all
+& $python -m cymatix_context.launcher.observability_render render-all
 if ($LASTEXITCODE -ne 0) {
-    Write-Error "[install] render step failed (helix_context.launcher.observability_render -- landed by a later task in the native-observability-sidecar plan)"
+    Write-Error "[install] render step failed (cymatix_context.launcher.observability_render -- landed by a later task in the native-observability-sidecar plan)"
     exit 6
 }
 

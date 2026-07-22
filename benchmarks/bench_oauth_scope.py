@@ -12,7 +12,7 @@ import httpx
 
 from benchmarks.oauth_fixtures import seed_oauth_fixtures
 from benchmarks.oauth_task_set import OAUTH_TASKS
-from helix_context.knowledge_store import KnowledgeStore
+from cymatix_context.knowledge_store import KnowledgeStore
 
 HELIX_URL = "http://127.0.0.1:11437"
 

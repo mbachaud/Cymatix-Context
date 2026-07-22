@@ -1,7 +1,7 @@
 """Tests for chunk-level retrieval helpers."""
 
-from helix_context.encoding.chunk_fetch import fetch_relevant_chunks
-from helix_context.genome import Genome
+from cymatix_context.encoding.chunk_fetch import fetch_relevant_chunks
+from cymatix_context.genome import Genome
 
 from tests.conftest import make_gene
 
@@ -14,7 +14,7 @@ def test_fetch_relevant_chunks_uses_promoter_tags(tmp_path):
             "Claim types include path_value and config_value.",
             domains=["claims"],
         )
-        claim.source_id = "F:/Projects/helix-context/helix_context/schemas.py"
+        claim.source_id = "F:/Projects/helix-context/cymatix_context/schemas.py"
         genome.upsert_gene(claim, apply_gate=False)
 
         other = make_gene("Unrelated prose", domains=["notes"])
@@ -30,7 +30,7 @@ def test_fetch_relevant_chunks_uses_promoter_tags(tmp_path):
     )
 
     assert hits
-    assert hits[0].source_id == "F:/Projects/helix-context/helix_context/schemas.py"
+    assert hits[0].source_id == "F:/Projects/helix-context/cymatix_context/schemas.py"
     assert "path_value" in hits[0].content
 
 

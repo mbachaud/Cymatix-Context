@@ -31,7 +31,7 @@ cd "$REPO_ROOT"
 TS=$(date +%Y-%m-%d_%H%M)
 RESULT_JSON="benchmarks/needle_50_v2_slice3_gate_${TS}.json"
 RESULT_LOG="benchmarks/needle_50_v2_slice3_gate_${TS}.log"
-HELIX_TOML="helix.toml"
+HELIX_TOML="cymatix.toml"
 BACKUP_TOML="helix.toml.slice3_gate_backup"
 
 # ── Safety: capture original state ─────────────────────────────────

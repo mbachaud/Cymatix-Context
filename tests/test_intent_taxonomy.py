@@ -1,7 +1,7 @@
 """Intent taxonomy tests (Step 3B, 2026-05-08)."""
 import pytest
-from helix_context.schemas import PromoterTags, IntentClass
-from helix_context.retrieval.intent_router import sub_queries_for
+from cymatix_context.schemas import PromoterTags, IntentClass
+from cymatix_context.retrieval.intent_router import sub_queries_for
 
 
 def test_promoter_tags_has_intent_class():
@@ -24,21 +24,21 @@ def test_promoter_tags_existing_fields_unchanged():
 
 
 def test_classify_intent_config_knob():
-    from helix_context.tagger import CpuTagger
+    from cymatix_context.tagger import CpuTagger
     t = CpuTagger.__new__(CpuTagger)
     cls = t._classify_intent("bm25_shortlist_size = 50")
     assert cls == IntentClass.CONFIG_KNOB
 
 
 def test_classify_intent_mechanism():
-    from helix_context.tagger import CpuTagger
+    from cymatix_context.tagger import CpuTagger
     t = CpuTagger.__new__(CpuTagger)
     cls = t._classify_intent("How the density gate computes and assigns chromatin state.")
     assert cls == IntentClass.MECHANISM
 
 
 def test_classify_intent_data_structure():
-    from helix_context.tagger import CpuTagger
+    from cymatix_context.tagger import CpuTagger
     t = CpuTagger.__new__(CpuTagger)
     cls = t._classify_intent("CREATE TABLE genes (gene_id TEXT, content TEXT)")
     assert cls == IntentClass.DATA_STRUCTURE

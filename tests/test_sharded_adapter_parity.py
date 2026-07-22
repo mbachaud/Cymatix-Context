@@ -35,16 +35,16 @@ import tempfile
 
 import pytest
 
-from helix_context.knowledge_store import KnowledgeStore
-from helix_context.shard_schema import init_main_db, open_main_db
-from helix_context.sharding import ShardedGenomeAdapter
+from cymatix_context.knowledge_store import KnowledgeStore
+from cymatix_context.shard_schema import init_main_db, open_main_db
+from cymatix_context.sharding import ShardedGenomeAdapter
 
 
 # ── Hard contract: every name read from genome in the current codebase ───
 #
 # Derived from:
-#   grep -oE "self\.genome\.[a-zA-Z_]+"  helix_context/context_manager.py
-#   grep -oE "helix\.genome\.[a-zA-Z_]+" helix_context/server/routes_*.py
+#   grep -oE "self\.genome\.[a-zA-Z_]+"  cymatix_context/context_manager.py
+#   grep -oE "helix\.genome\.[a-zA-Z_]+" cymatix_context/server/routes_*.py
 #
 # When a caller adds a new read, add it here. Failure means the adapter
 # will AttributeError at runtime for that caller's path.
@@ -248,7 +248,7 @@ def test_adapter_query_docs_and_query_genes_are_same_callable(adapter):
 
 def test_adapter_upsert_doc_and_upsert_gene_are_same_callable(adapter):
     """``upsert_gene`` is a back-compat alias for ``upsert_doc``."""
-    from helix_context.schemas import Gene, PromoterTags
+    from cymatix_context.schemas import Gene, PromoterTags
     g = Gene(
         gene_id="abc123def456",
         content="x", complement="x", codons=[],
@@ -311,8 +311,8 @@ def test_sharded_fusion_mode_runs_absolute_floors_in_tier_logic(adapter):
     The outcomes diverge, so this pins that the floors actually run for
     the sharded path under the corrected label.
     """
-    from helix_context.config import AbstainClassFloors
-    from helix_context.pipeline.tier_logic import apply_budget_tiers
+    from cymatix_context.config import AbstainClassFloors
+    from cymatix_context.pipeline.tier_logic import apply_budget_tiers
     from tests.conftest import make_gene
 
     n = 12

@@ -50,7 +50,7 @@ try:
 except Exception:
     pass
 
-from helix_context.provenance import infer_source_kind, infer_volatility
+from cymatix_context.provenance import infer_source_kind, infer_volatility
 
 DEFAULT_GENOME = "F:/Projects/helix-context/genomes/main/genome.db"
 

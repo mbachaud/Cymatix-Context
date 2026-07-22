@@ -1,6 +1,6 @@
-"""Unit tests for helix_context.query_classifier."""
+"""Unit tests for cymatix_context.query_classifier."""
 
-from helix_context.retrieval.query_classifier import (
+from cymatix_context.retrieval.query_classifier import (
     ClassifierResult,
     classify_query,
 )
@@ -177,7 +177,7 @@ def test_classifier_never_raises_on_pathological_input():
 
 
 def test_classifier_config_defaults_to_enabled(tmp_path):
-    from helix_context.config import load_config
+    from cymatix_context.config import load_config
     cfg_path = tmp_path / "helix.toml"
     cfg_path.write_text("[classifier]\nenabled = true\n", encoding="utf-8")
     cfg = load_config(str(cfg_path))
@@ -185,7 +185,7 @@ def test_classifier_config_defaults_to_enabled(tmp_path):
 
 
 def test_classifier_config_can_be_disabled(tmp_path):
-    from helix_context.config import load_config
+    from cymatix_context.config import load_config
     cfg_path = tmp_path / "helix.toml"
     cfg_path.write_text("[classifier]\nenabled = false\n", encoding="utf-8")
     cfg = load_config(str(cfg_path))
@@ -193,7 +193,7 @@ def test_classifier_config_can_be_disabled(tmp_path):
 
 
 def test_classifier_config_default_when_section_absent(tmp_path):
-    from helix_context.config import load_config
+    from cymatix_context.config import load_config
     cfg_path = tmp_path / "helix.toml"
     cfg_path.write_text("", encoding="utf-8")
     cfg = load_config(str(cfg_path))

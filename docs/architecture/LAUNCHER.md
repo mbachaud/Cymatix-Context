@@ -1,9 +1,9 @@
-# Helix Launcher — Supervisor Process + Control UI
+# Cymatix Launcher — Supervisor Process + Control UI
 
-A standalone supervisor + dashboard that solves the "who starts helix"
+A standalone supervisor + dashboard that solves the "who starts cymatix"
 problem and gives a live view of what's actually running.
 
-**Status:** Implemented in the repo and shipped as `helix-launcher`.
+**Status:** Implemented in the repo and shipped as `cymatix-launcher`.
 **Maturity:** Beta; this document is now the architecture/reference doc for the shipped launcher.
 **Depends on:** session registry (for party/participant counts on the dashboard).
 **Related:** [`SESSION_REGISTRY.md`](SESSION_REGISTRY.md), [`RESTART_PROTOCOL.md`](RESTART_PROTOCOL.md).
@@ -12,22 +12,22 @@ problem and gives a live view of what's actually running.
 
 ## Motivation
 
-Without the launcher, running a helix-context server means typing
-`python -m uvicorn helix_context.server:app --host 127.0.0.1 --port 11437`
+Without the launcher, running a cymatix-context server means typing
+`python -m uvicorn cymatix_context.server:app --host 127.0.0.1 --port 11437`
 into a terminal and hoping nothing kills the shell. The gaps:
 
-1. **No supervisor.** If the helix process dies — OOM, crash, deliberate
+1. **No supervisor.** If the cymatix process dies — OOM, crash, deliberate
    kill — nothing brings it back. Empirically confirmed 2026-04-10:
    the live server at `:11437` was a backgrounded bash subprocess
    started by one Claude Code session, and would have died with that
    session's shell.
-2. **No lifecycle controls.** Restarting helix (for code changes, model
+2. **No lifecycle controls.** Restarting cymatix (for code changes, model
    swaps, config reloads) requires manual process management.
 3. **No live status surface.** `GET /stats` and `GET /health` exist, but
    you have to curl them. There is no at-a-glance view of what's loaded,
    who's connected, and what tools are active.
 4. **Non-Claude users are left without a story.** Anyone using
-   helix-context without a Claude Code agent to orchestrate the process
+   cymatix-context without a Claude Code agent to orchestrate the process
    has no straightforward "launch the thing" experience.
 
 The launcher solves all four with one small supervisor process.
@@ -42,9 +42,9 @@ The launcher solves all four with one small supervisor process.
 - Not an admin console. Admin actions like vacuum, consolidate, and
   compressor pause stay on the existing `/admin/*` endpoints and are not
   exposed through the launcher UI.
-- Not a config editor. `helix.toml` stays file-edited; launcher only
+- Not a config editor. `cymatix.toml` stays file-edited; launcher only
   reads it.
-- Not a multi-helix manager. The launcher manages exactly one helix
+- Not a multi-cymatix manager. The launcher manages exactly one cymatix
   child process. Federation / multi-instance management is out of scope.
 
 ## Architecture
@@ -53,30 +53,30 @@ Two processes, two ports:
 
 ```
 ┌─────────────────────────────────────┐
-│  helix-launcher      :11438         │  ← supervisor + UI (long-lived)
+│  cymatix-launcher      :11438       │  ← supervisor + UI (long-lived)
 │  - FastAPI + Jinja templates        │
 │  - HTMX polling                     │
-│  - subprocess.Popen for helix       │
+│  - subprocess.Popen for cymatix     │
 │  - psutil for liveness / cleanup    │
 └────────────┬────────────────────────┘
              │
              │ spawns / monitors
              ▼
 ┌─────────────────────────────────────┐
-│  helix-context      :11437          │  ← the actual server (restartable)
+│  cymatix-context      :11437        │  ← the actual server (restartable)
 │  - unchanged                         │
 └─────────────────────────────────────┘
 ```
 
 The launcher is a separate process with its own lifecycle. When you
-close the launcher, helix stops cleanly. When you click **Restart**, the
+close the launcher, cymatix stops cleanly. When you click **Restart**, the
 launcher announces the restart via `POST /admin/announce_restart`, waits
 750ms, terminates the child, and spawns a fresh one.
 
-The launcher NEVER imports `helix_context.server` directly. It talks to
-helix exclusively over HTTP at `http://127.0.0.1:11437`. This keeps the
+The launcher NEVER imports `cymatix_context.server` directly. It talks to
+cymatix exclusively over HTTP at `http://127.0.0.1:11437`. This keeps the
 launcher's own process memory light (no knowledge store load, no model) and means
-the launcher keeps working when helix is stopped.
+the launcher keeps working when cymatix is stopped.
 
 ## Tech stack
 
@@ -100,8 +100,8 @@ launcher = ["jinja2>=3.1", "psutil>=5.9"]
 launcher-native = ["jinja2>=3.1", "psutil>=5.9", "pywebview>=5.0"]
 ```
 
-Users run `pip install helix-context[launcher]` for browser-based UI, or
-`pip install helix-context[launcher-native]` for a native window.
+Users run `pip install cymatix-context[launcher]` for browser-based UI, or
+`pip install cymatix-context[launcher-native]` for a native window.
 
 ## No hardcoded UI — what this means in practice
 
@@ -127,11 +127,11 @@ Python, they are doing it wrong.
 ## Project layout
 
 ```
-helix_context/
+cymatix_context/
   launcher/
     __init__.py
     app.py              # FastAPI app factory + CLI entry point (main())
-    supervisor.py       # helix subprocess lifecycle (Start/Restart/Stop)
+    supervisor.py       # cymatix subprocess lifecycle (Start/Restart/Stop)
     state.py            # ~/.helix/launcher/state.json read/write + adoption
     models.py           # Pydantic models for launcher state + API responses
     templates/
@@ -157,39 +157,39 @@ New console script in `pyproject.toml`:
 
 ```toml
 [project.scripts]
-helix = "helix_context.server:main"            # unchanged
-helix-launcher = "helix_context.launcher.app:main"   # NEW
+cymatix = "cymatix_context.server:main"            # unchanged
+cymatix-launcher = "cymatix_context.launcher.app:main"   # NEW
 ```
 
 Usage:
 
 ```bash
 # Browser mode (default)
-helix-launcher
+cymatix-launcher
 
 # System tray icon — persistent, "close to tray" experience
 # (requires [launcher-tray] extra)
-helix-launcher --tray
+cymatix-launcher --tray
 
 # Close-to-tray with native window (Windows only — see platform notes)
-helix-launcher --tray --native
+cymatix-launcher --tray --native
 
 # Native window (requires [launcher-native] extra)
-helix-launcher --native
+cymatix-launcher --native
 
 # Install as a system service (systemd / launchd / NSSM recipe)
-helix-launcher install-service
-helix-launcher uninstall-service
-helix-launcher install-service --dry-run
+cymatix-launcher install-service
+cymatix-launcher uninstall-service
+cymatix-launcher install-service --dry-run
 
-# Don't auto-start helix; just show the UI with a Start button
-helix-launcher --no-autostart
+# Don't auto-start cymatix; just show the UI with a Start button
+cymatix-launcher --no-autostart
 
-# Use a non-default helix port
-helix-launcher --helix-port 11439
+# Use a non-default cymatix port
+cymatix-launcher --cymatix-port 11439
 
 # Use a non-default launcher port
-helix-launcher --port 11438
+cymatix-launcher --port 11438
 ```
 
 ## Launcher REST API (on :11438)
@@ -212,7 +212,7 @@ Response:
 
 ```json
 {
-  "helix": {
+  "cymatix": {
     "running": true,
     "pid": 56792,
     "port": 11437,
@@ -260,24 +260,24 @@ dashboard then conditionally renders them.
 
 ### `POST /api/control/start`
 
-Start the helix child if not running. Returns 200 with new state on
+Start the cymatix child if not running. Returns 200 with new state on
 success, 409 if already running.
 
 ### `POST /api/control/stop`
 
-Announce via helix `/admin/announce_restart`, wait 750ms, terminate the
+Announce via cymatix `/admin/announce_restart`, wait 750ms, terminate the
 process tree, wait for port 11437 to be free. Returns 200 when the
 process is fully down, 408 if port never releases within 10s.
 
 ### `POST /api/control/restart`
 
 Combined stop + start in sequence. Announces with `reason="manual
-restart from launcher"`. Returns 200 when new helix answers `GET /stats`.
+restart from launcher"`. Returns 200 when new cymatix answers `GET /stats`.
 
 ## Data sources (how the launcher populates `/api/state`)
 
 Every field comes from an existing endpoint (or a trivial extension of
-one). No new endpoints on the helix side are strictly required for the
+one). No new endpoints on the cymatix side are strictly required for the
 first launcher slice, with two exceptions flagged below.
 
 | State field | Source |
@@ -286,21 +286,21 @@ first launcher slice, with two exceptions flagged below.
 | `helix.pid` | launcher state file |
 | `helix.port` | launcher config |
 | `helix.uptime_s` | stored `start_time` subtracted from `now()` |
-| `helix.version` | read from `helix_context.__version__` in child's env (or GET /stats if a version field is added — see note below) |
+| `helix.version` | read from `cymatix_context.__version__` in child's env (or GET /stats if a version field is added — see note below) |
 | `parties.count` | derived — count unique `party_id` values in `GET /sessions?status=all` |
 | `parties.party_ids` | same query, projected to unique set |
 | `participants.count` | `GET /sessions?status=active`, count |
 | `participants.handles` | same, projected to handle list |
-| `models.loaded` | Ollama `GET /api/ps` (from helix.toml `[ribosome] base_url`) + helix `/health` for non-Ollama backends |
-| `tools` | **NEW endpoint on helix side** — `GET /admin/components` returns the running subsystem list. See below. |
+| `models.loaded` | Ollama `GET /api/ps` (from cymatix.toml `[ribosome] base_url`) + cymatix `/health` for non-Ollama backends |
+| `tools` | **NEW endpoint on cymatix side** — `GET /admin/components` returns the running subsystem list. See below. |
 | `genes.raw_chars` | `GET /stats` → `total_chars_raw` |
 | `genes.compressed_chars` | `GET /stats` → `total_chars_compressed` |
 | `genes.compression_ratio` | `GET /stats` → `compression_ratio` |
 | `genes.total` | `GET /stats` → `total_genes` |
-| `tokens.session` | **NEW endpoint on helix side** — session counter (see below) |
-| `tokens.lifetime` | **NEW endpoint on helix side** — persisted counter (see below) |
+| `tokens.session` | **NEW endpoint on cymatix side** — session counter (see below) |
+| `tokens.lifetime` | **NEW endpoint on cymatix side** — persisted counter (see below) |
 
-### Two small helix-side additions
+### Two small cymatix-side additions
 
 **`GET /admin/components`** — new endpoint. Returns the list of running
 subsystems with their current status:
@@ -324,9 +324,9 @@ active/online" policy).
 **Token tracking** — flagged in the original ask as "questionable but
 maybe do it anyway." Treating it as optional Phase 2:
 
-- `helix_context.metrics` module accumulates `tokens_in` and
+- `cymatix_context.metrics` module accumulates `tokens_in` and
   `tokens_out` counters on every `/v1/chat/completions` call.
-- Session counter: in-memory, reset on helix process restart.
+- Session counter: in-memory, reset on cymatix process restart.
 - Lifetime counter: persisted to a tiny `metrics.json` next to
   `genome.db`, updated every N seconds.
 - New endpoint: `GET /metrics/tokens` returns both counters.
@@ -344,7 +344,7 @@ in CSS variables; no pixel values in Python.
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  Helix Launcher       [Status: running, pid 56792, 6m42s]  │
+│  Cymatix Launcher      [Status: running, pid 56792, 6m42s]  │
 │  [▶ Start]  [↻ Restart]  [■ Stop]                          │
 ├─────────────────────────────────────────────────────────────┤
 │  Parties connected: 1                                       │
@@ -375,11 +375,11 @@ in CSS variables; no pixel values in Python.
 Panels hide themselves conditionally:
 
 - No participants registered → participants panel omitted
-- No models reported by helix → models panel omitted
+- No models reported by cymatix → models panel omitted
 - `tools` list empty → tools panel omitted
 - Token tracking not yet shipped → tokens panel omitted
-- helix not running → everything below the controls is replaced with a
-  single "helix is stopped" banner
+- cymatix not running → everything below the controls is replaced with a
+  single "cymatix is stopped" banner
 
 This matches the user's explicit rule: "any data not active/online
 doesn't need to be displayed."
@@ -404,47 +404,47 @@ endpoint) that runs the same state gathering logic and produces the
 `/api/state` remains for programmatic consumers and debugging.
 
 Poll interval is configurable via a CSS-free `--launcher-poll-interval`
-(default `2s`). Users can set `helix-launcher --poll-interval 5` to
+(default `2s`). Users can set `cymatix-launcher --poll-interval 5` to
 reduce chatter.
 
 ## Orphan adoption
 
-The launcher adopts already-running helix processes in two situations:
+The launcher adopts already-running cymatix processes in two situations:
 
 **1. On launcher startup** — `supervisor.adopt()` runs a two-stage check:
 
    1. **State file**: if `~/.helix/launcher/state.json` has a `helix_pid`,
       verify the process is alive and the command line still matches
-      `helix_context.server:app`. If yes → adopted, no further scan.
+      `cymatix_context.server:app`. If yes → adopted, no further scan.
    2. **Orphan scan**: use `psutil.net_connections()` to find the PID
       listening on `helix_host:helix_port`. Verify its command line
-      matches helix uvicorn. Walk up to the uvicorn parent process (the
+      matches cymatix uvicorn. Walk up to the uvicorn parent process (the
       one `subprocess.Popen` would hand us). Write its PID + command
       line to the state file.
 
-   This means: **the launcher adopts any helix running outside of it,
+   This means: **the launcher adopts any cymatix running outside of it,
    as long as the port matches**. No coordination required between
-   externally-started helix processes and the launcher.
+   externally-started cymatix processes and the launcher.
 
 **2. On Start button click** — `supervisor.start()` checks port
 availability. If the port is busy:
 
-   - If the occupying process IS a helix uvicorn → adopt it (same
+   - If the occupying process IS a cymatix uvicorn → adopt it (same
      behavior as the startup orphan scan), return its PID, no spawn
    - If the occupying process is something else (another dev server,
      unrelated Python script) → raise `SupervisorError` and record it
      as a `last_error` for the diagnostics panel
 
 This fixes the common UX trap where the launcher and a developer's
-`python -m uvicorn helix_context.server:app` race on port 11437 and
+`python -m uvicorn cymatix_context.server:app` race on port 11437 and
 the Start button returns a 500. Instead the launcher quietly adopts
-the external helix and the dashboard shows it as running.
+the external cymatix and the dashboard shows it as running.
 
 ### Why we adopt without confirming
 
-A user asking "Start this" when a helix is already running on the
+A user asking "Start this" when a cymatix is already running on the
 target port almost always means "make the launcher aware of the
-existing helix," not "start a second helix" (which would fail anyway
+existing cymatix," not "start a second cymatix" (which would fail anyway
 since both can't bind the same port). Silent adoption matches the
 user's intent; a confirmation prompt would be friction for the
 common case.
@@ -455,7 +455,7 @@ the orphan first, then click Start.
 ## Diagnostics panel
 
 A footer panel on the dashboard that always renders, regardless of
-helix state. Surfaces three kinds of information:
+cymatix state. Surfaces three kinds of information:
 
 **Last error:** if any `start`/`stop`/`restart` operation failed since
 the launcher started, its error message is displayed in a red-bordered
@@ -463,13 +463,13 @@ strip. Cleared when the next operation succeeds. Fed by
 `supervisor.get_last_error()`.
 
 **Orphan warning:** when `supervisor.is_running()` is False but an
-unmanaged helix is detected on the port (e.g. started from a terminal
+unmanaged cymatix is detected on the port (e.g. started from a terminal
 outside the launcher), a yellow-bordered strip says:
 
-> **Orphan helix detected** — PID X is listening on port 11437 but
+> **Orphan cymatix detected** — PID X is listening on port 11437 but
 > is not managed by this launcher. Click *Start* to adopt it.
 
-**Paths:** the state file location and the helix log location are
+**Paths:** the state file location and the cymatix log location are
 always displayed so you can tail the log or inspect the state file
 without hunting for them.
 
@@ -482,7 +482,7 @@ without hunting for them.
   "helix_pid": 56792,
   "helix_port": 11437,
   "helix_start_time": 1775881217.9,
-  "helix_command": ["python", "-m", "uvicorn", "helix_context.server:app", "--host", "127.0.0.1", "--port", "11437"],
+  "helix_command": ["python", "-m", "uvicorn", "cymatix_context.server:app", "--host", "127.0.0.1", "--port", "11437"],
   "launcher_pid": 48213,
   "launcher_start_time": 1775881200.0,
   "last_restart_reason": "session registry DAL fix",
@@ -500,8 +500,8 @@ On launcher startup:
    spawn fresh.
 5. If not alive, clear and spawn fresh (unless `--no-autostart`).
 
-This means you can restart the launcher without killing helix. The
-launcher reattaches to the already-running helix on next start. Nice
+This means you can restart the launcher without killing cymatix. The
+launcher reattaches to the already-running cymatix on next start. Nice
 UX property.
 
 ## Supervisor lifecycle
@@ -566,24 +566,24 @@ Both paths are encapsulated in `_kill_tree(pid)`.
 
 All `subprocess.Popen` calls MUST include `creationflags=getattr(
 subprocess, "CREATE_NO_WINDOW", 0)` to prevent the console window from
-flashing when spawning helix on Windows (matches the user's global
+flashing when spawning cymatix on Windows (matches the user's global
 CLAUDE.md rule and the existing project pattern).
 
 ## Failure modes
 
 | Failure | Behavior |
 |---|---|
-| Launcher starts, helix PID in state file is dead | Clear state, spawn fresh helix (or stay idle if `--no-autostart`) |
-| Launcher starts, helix PID in state file is alive but wrong command | Clear state, log warning, spawn fresh helix on different port if old one holds :11437 |
-| helix refuses to start (port in use, import error, bad config) | Surface error in dashboard status banner; keep Start button enabled for retry |
-| helix crashes while launcher is running | `is_running()` returns False on next poll → UI shows "stopped" → user clicks Start |
-| Launcher itself crashes | helix keeps running (orphaned). Next launcher start adopts it from state file. |
-| helix `/admin/announce_restart` fails during Stop | Log warning, proceed with kill anyway (announce is best-effort) |
-| psutil not installed | Launcher refuses to start with a clear error pointing at `pip install helix-context[launcher]` |
+| Launcher starts, cymatix PID in state file is dead | Clear state, spawn fresh cymatix (or stay idle if `--no-autostart`) |
+| Launcher starts, cymatix PID in state file is alive but wrong command | Clear state, log warning, spawn fresh cymatix on different port if old one holds :11437 |
+| cymatix refuses to start (port in use, import error, bad config) | Surface error in dashboard status banner; keep Start button enabled for retry |
+| cymatix crashes while launcher is running | `is_running()` returns False on next poll → UI shows "stopped" → user clicks Start |
+| Launcher itself crashes | cymatix keeps running (orphaned). Next launcher start adopts it from state file. |
+| cymatix `/admin/announce_restart` fails during Stop | Log warning, proceed with kill anyway (announce is best-effort) |
+| psutil not installed | Launcher refuses to start with a clear error pointing at `pip install cymatix-context[launcher]` |
 | Port 11438 already in use | Launcher exits with error, suggests `--port` flag |
-| Poll interval to `/api/state` exceeds helix response time | Dashboard shows stale data with a faded style; new poll supersedes |
-| User closes browser tab but launcher keeps running | helix keeps running; reopen browser to resume. Launcher does not self-terminate on tab close. |
-| User Ctrl+C's the launcher | Launcher stops helix cleanly via the same announce + kill path, then exits. |
+| Poll interval to `/api/state` exceeds cymatix response time | Dashboard shows stale data with a faded style; new poll supersedes |
+| User closes browser tab but launcher keeps running | cymatix keeps running; reopen browser to resume. Launcher does not self-terminate on tab close. |
+| User Ctrl+C's the launcher | Launcher stops cymatix cleanly via the same announce + kill path, then exits. |
 
 ## Native window mode
 
@@ -598,7 +598,7 @@ if args.native:
     import webview
     thread = start_fastapi_in_thread()
     webview.create_window(
-        "Helix Launcher",
+        "Cymatix Launcher",
         f"http://127.0.0.1:{args.port}",
         width=1000, height=720,
         resizable=True,
@@ -614,12 +614,12 @@ the user's default browser at the launcher URL.
 
 Opt-in via `--tray`. Requires the `launcher-tray` extras (pystray +
 Pillow). Puts a persistent icon in the system notification area with
-a menu for controlling helix. Uvicorn runs in a daemon thread; pystray
+a menu for controlling cymatix. Uvicorn runs in a daemon thread; pystray
 owns the main thread for its message pump.
 
 ```bash
-pip install helix-context[launcher-tray]
-helix-launcher --tray
+pip install cymatix-context[launcher-tray]
+cymatix-launcher --tray
 ```
 
 Tray menu:
@@ -628,22 +628,22 @@ Tray menu:
 ┌──────────────────┐
 │ Open Dashboard   │  ← default action (left-click on icon)
 │──────────────────│
-│ Start helix      │  (disabled when running)
-│ Restart helix    │  (disabled when stopped)
-│ Stop helix       │  (disabled when stopped)
+│ Start cymatix    │  (disabled when running)
+│ Restart cymatix  │  (disabled when stopped)
+│ Stop cymatix     │  (disabled when stopped)
 │──────────────────│
-│ Quit             │  (stops helix + exits launcher)
+│ Quit             │  (stops cymatix + exits launcher)
 └──────────────────┘
 ```
 
 In tray mode the **tray icon is the persistent surface**. You can
 open and close the browser tab freely — the launcher keeps running
 because the icon is alive. Only clicking **Quit** from the tray menu
-actually stops the launcher (and helix via the normal announce-then-
+actually stops the launcher (and cymatix via the normal announce-then-
 kill path).
 
 **License note:** pystray is LGPL-3. It is installed as an optional
-runtime dep by the user — the helix-context wheel itself does not
+runtime dep by the user — the cymatix-context wheel itself does not
 bundle pystray, so the core package stays Apache-2.0-clean. See
 `pyproject.toml` for the `launcher-tray` extras definition.
 
@@ -685,20 +685,20 @@ Close-to-tray flow:
 On these platforms, passing `--tray --native` returns exit code 2
 with a clear error message. Pick one or the other.
 
-## Service install — `helix-launcher install-service`
+## Service install — `cymatix-launcher install-service`
 
 Once the deploy templates are validated for your platform, the
 launcher can install them for you in one command:
 
 ```bash
-helix-launcher install-service
+cymatix-launcher install-service
 ```
 
 What it does (by platform):
 
 | Platform | Action |
 |---|---|
-| Linux | Writes `~/.config/systemd/user/helix-launcher.service` with `ExecStart` substituted to the actual `helix-launcher` binary path. Prints the `systemctl --user daemon-reload && systemctl --user enable --now` next steps. |
+| Linux | Writes `~/.config/systemd/user/cymatix-launcher.service` with `ExecStart` substituted to the actual `cymatix-launcher` binary path. Prints the `systemctl --user daemon-reload && systemctl --user enable --now` next steps. |
 | macOS | Writes `~/Library/LaunchAgents/com.swiftwing21.helix-launcher.plist` with `ProgramArguments` and `StandardOutPath` substituted. Prints the `launchctl load` next step. |
 | Windows | Prints the NSSM recipe. Does NOT install NSSM (licensing + download), does NOT register the service. User follows the printed steps. |
 
@@ -709,20 +709,20 @@ deserve explicit user consent, and it makes the installer reversible.
 Dry-run mode shows what would happen without writing anything:
 
 ```bash
-helix-launcher install-service --dry-run
+cymatix-launcher install-service --dry-run
 ```
 
 Uninstall removes the file and prints the disable command (again,
 doesn't run it):
 
 ```bash
-helix-launcher uninstall-service
+cymatix-launcher uninstall-service
 ```
 
 Windows users: see [`deploy/windows/README.md`](../deploy/windows/README.md)
 for the NSSM walkthrough.
 
-## Helix-side endpoint: `POST /admin/shutdown`
+## Cymatix-side endpoint: `POST /admin/shutdown`
 
 Complements `POST /admin/announce_restart`. Where announce_restart
 signals an *intentional restart*, shutdown signals a clean
@@ -738,7 +738,7 @@ Behavior:
 
 1. Stamps `server_state.json` with `state=stopped`
 2. Logs the shutdown reason
-3. Fires `SIGINT` on the helix process
+3. Fires `SIGINT` on the cymatix process
 4. Uvicorn catches SIGINT and runs its graceful-shutdown path,
    invoking the lifespan cleanup (WAL checkpoint, token metrics flush,
    background tasks cancelled)
@@ -754,9 +754,9 @@ This is the endpoint whose 404 prompted "someone was trying
 
 Rough ordering for the first PR. Each is independently testable.
 
-1. **Package scaffold.** `helix_context/launcher/` directory, empty
+1. **Package scaffold.** `cymatix_context/launcher/` directory, empty
    modules, add `[launcher]` + `[launcher-native]` extras to
-   `pyproject.toml`, add `helix-launcher` script entry.
+   `pyproject.toml`, add `cymatix-launcher` script entry.
 2. **State module.** `state.py` with atomic read/write/clear of
    `~/.helix/launcher/state.json`.
 3. **Supervisor module.** `supervisor.py` with Start / Stop / Restart
@@ -768,10 +768,10 @@ Rough ordering for the first PR. Each is independently testable.
    components. One CSS file. HTMX vendored to `static/htmx.min.js`.
 6. **Dashboard HTMX wiring.** `/api/state/panels` server-rendered
    partial endpoint, 2s polling, conditional panel rendering.
-7. **Helix data integration.** Launcher's state collector hits
+7. **Cymatix data integration.** Launcher's state collector hits
    `GET /stats`, `GET /sessions`, `GET /health`, and Ollama
    `GET /api/ps`. All with timeouts.
-8. **New helix endpoint: `GET /admin/components`.** Component
+8. **New cymatix endpoint: `GET /admin/components`.** Component
    introspection — small addition to `server.py`.
 9. **Tests.** Unit tests for supervisor + state + adoption. Integration
    test with `TestClient` + a mocked subprocess.
@@ -780,7 +780,7 @@ Rough ordering for the first PR. Each is independently testable.
 
 **Phase 2 (follow-up, not first slice):**
 
-- Token metrics (`helix_context/metrics.py` + `GET /metrics/tokens`)
+- Token metrics (`cymatix_context/metrics.py` + `GET /metrics/tokens`)
 - Native window via `pywebview`
 - Service/daemon install (systemd unit, Windows service, launchd plist)
 
@@ -791,5 +791,5 @@ Rough ordering for the first PR. Each is independently testable.
 - [`RESTART_PROTOCOL.md`](RESTART_PROTOCOL.md) — the launcher uses
   `POST /admin/announce_restart` before every Stop/Restart so observer
   sessions (Claude panels, external agents) don't misread the outage.
-- `helix_context/server.py::main` — existing thin entry point; stays
+- `cymatix_context/server.py::main` — existing thin entry point; stays
   unchanged. The launcher is additive.

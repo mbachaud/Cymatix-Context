@@ -1,6 +1,6 @@
 from unittest.mock import MagicMock, patch
 
-from helix_context.launcher.update_check import UpdateChecker, is_newer_version
+from cymatix_context.launcher.update_check import UpdateChecker, is_newer_version
 
 
 def test_is_newer_version_compares_numeric_prefixes():
@@ -11,12 +11,12 @@ def test_is_newer_version_compares_numeric_prefixes():
 
 def test_update_checker_reports_new_pypi_version(monkeypatch):
     monkeypatch.setattr(
-        "helix_context.launcher.update_check.installed_version",
+        "cymatix_context.launcher.update_check.installed_version",
         lambda package_name="helix-context": "0.13.4",
     )
     resp = MagicMock()
     resp.json.return_value = {"info": {"version": "0.14.0"}}
-    with patch("helix_context.launcher.update_check.httpx.get", return_value=resp):
+    with patch("cymatix_context.launcher.update_check.httpx.get", return_value=resp):
         info = UpdateChecker(ttl_s=60).check()
     assert info.current_version == "0.13.4"
     assert info.latest_version == "0.14.0"

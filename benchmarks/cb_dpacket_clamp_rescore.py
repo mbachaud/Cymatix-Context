@@ -161,8 +161,8 @@ def build_helix(genome_dir, helix_config):
     os.environ["HELIX_CONFIG"] = helix_config
     os.environ["HELIX_GENOME_PATH"] = genome_dir + "/genome.db"
     os.makedirs(genome_dir, exist_ok=True)
-    from helix_context.config import load_config
-    from helix_context.context_manager import HelixContextManager
+    from cymatix_context.config import load_config
+    from cymatix_context.context_manager import HelixContextManager
     cfg = load_config()
     return HelixContextManager(cfg)
 
@@ -195,7 +195,7 @@ def gene_src(g):
 
 def run_packet(helix, query, max_genes=32, max_item_chars=100_000):
     """Call build_context_packet exactly like the original cb_helix_pred.py did."""
-    from helix_context.context_packet import build_context_packet
+    from cymatix_context.context_packet import build_context_packet
     packet = build_context_packet(
         query,
         task_type="explain",

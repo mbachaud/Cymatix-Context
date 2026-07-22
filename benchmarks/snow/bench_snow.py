@@ -94,7 +94,7 @@ class OllamaModel:
 
 def default_helix_url() -> str:
     """Resolve the default Helix base URL from local config."""
-    from helix_context import load_config  # noqa: WPS433
+    from cymatix_context import load_config  # noqa: WPS433
 
     cfg = load_config()
     host = cfg.server.host or "127.0.0.1"

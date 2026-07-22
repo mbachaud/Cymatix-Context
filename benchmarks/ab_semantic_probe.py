@@ -25,7 +25,7 @@ probe base so no decoder / model-splice runs):
             ``tag_prefix_weight`` / ``filename_anchor_weight`` /
             ``lex_anchor_weight`` = 0, ``bm25_shortlist_enabled = False``)
             -> a BGE-M3-dominated ranking. A tier with ``weight == 0`` is a
-            no-op under RRF (see ``helix_context.retrieval.fusion.Fuser``).
+            no-op under RRF (see ``cymatix_context.retrieval.fusion.Fuser``).
   fused   : ``dense_embedding_enabled = True``, ``splade_enabled = True`` at
             shipped weights -> the full retrieval stack (dense + SPLADE + FTS +
             tag + filename anchor), i.e. shipped RETRIEVAL defaults minus the
@@ -64,8 +64,8 @@ _REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
-from helix_context.config import load_config  # noqa: E402
-from helix_context.context_manager import HelixContextManager  # noqa: E402
+from cymatix_context.config import load_config  # noqa: E402
+from cymatix_context.context_manager import HelixContextManager  # noqa: E402
 
 
 DEFAULT_TYPES_JSONL = "benchmarks/results/erb500k_blob_additive_scored.jsonl"

@@ -2,7 +2,7 @@
 
 Slice 4 of epic #219 ("knob-docs single source of truth"). PRs #261/#262
 both had to hand-patch stale tables in docs/config-reference.md after
-adding fields to helix_context/config.py — this script is the fix: it
+adding fields to cymatix_context/config.py — this script is the fix: it
 introspects the config dataclasses (via ``dataclasses.fields()``, the
 same reflection ``load_config()`` itself relies on for ``_warn_unknown``)
 and regenerates the "Key / Type / Default / Description" table for each
@@ -10,7 +10,7 @@ and regenerates the "Key / Type / Default / Description" table for each
 again.
 
 Descriptions are harvested from the comments living in
-``helix_context/config.py`` next to each field:
+``cymatix_context/config.py`` next to each field:
 
 1. A trailing ``# ...`` comment on the field's own line (or its last
    physical line, for multi-line ``field(...)`` defaults) wins first.
@@ -51,7 +51,7 @@ from types import ModuleType
 from typing import Any, Dict, List, Optional, Tuple
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-CONFIG_PY_PATH = REPO_ROOT / "helix_context" / "config.py"
+CONFIG_PY_PATH = REPO_ROOT / "cymatix_context" / "config.py"
 DOC_PATH = REPO_ROOT / "docs" / "config-reference.md"
 
 MARKER_PREFIX = "config-tables:"
@@ -99,7 +99,7 @@ TABLE_HEADER = "| Key | Type | Default | Description |\n|---|---|---|---|"
 
 
 def load_config_module() -> ModuleType:
-    """Load helix_context/config.py as a standalone module (no package deps)."""
+    """Load cymatix_context/config.py as a standalone module (no package deps)."""
     spec = importlib.util.spec_from_file_location(
         "_gen_config_reference_config_module", CONFIG_PY_PATH
     )
@@ -395,7 +395,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     if args.check:
         if new_text != current_text:
             print(
-                f"{DOC_PATH} is stale relative to helix_context/config.py — "
+                f"{DOC_PATH} is stale relative to cymatix_context/config.py — "
                 f"run `python scripts/gen_config_reference.py` to refresh.",
                 file=sys.stderr,
             )

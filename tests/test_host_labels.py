@@ -12,12 +12,12 @@ below) — `model_labels.py` is a sibling pure-function module that follows
 map to canonical display form, unknown IDs echo verbatim, None/empty
 returns None.
 """
-from helix_context.launcher.host_labels import (
+from cymatix_context.launcher.host_labels import (
     vendor_pretty,
     host_pretty,
     compose_label,
 )
-from helix_context.launcher.model_labels import model_pretty
+from cymatix_context.launcher.model_labels import model_pretty
 
 
 def test_vendor_pretty_known():

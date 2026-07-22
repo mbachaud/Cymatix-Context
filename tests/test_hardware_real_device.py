@@ -20,7 +20,7 @@ import os
 
 import pytest
 
-from helix_context import hardware
+from cymatix_context import hardware
 
 requires_real_cuda = pytest.mark.skipif(
     os.environ.get("HELIX_TEST_CUDA") != "1",

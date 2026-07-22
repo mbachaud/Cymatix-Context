@@ -14,7 +14,7 @@ import pytest
 
 pytest.importorskip("spacy", reason="CpuTagger imports spacy at runtime via _get_nlp()")
 
-from helix_context.tagger import CpuTagger
+from cymatix_context.tagger import CpuTagger
 
 _TAGGER = None
 
@@ -39,7 +39,7 @@ class TestFilenameDomainsInjected:
         gene = _tagger().pack(
             _BLANK_CONTENT,
             content_type="code",
-            source_id="/repo/helix_context/claims.py",
+            source_id="/repo/cymatix_context/claims.py",
         )
         assert "claims" in gene.promoter.domains, (
             f"Expected 'claims' in domains; got {gene.promoter.domains}"
@@ -50,7 +50,7 @@ class TestFilenameDomainsInjected:
         gene = _tagger().pack(
             _BLANK_CONTENT,
             content_type="code",
-            source_id="/repo/helix_context/claim_types_handler.py",
+            source_id="/repo/cymatix_context/claim_types_handler.py",
         )
         domains = gene.promoter.domains
         assert "claim" in domains, f"'claim' missing from {domains}"
@@ -62,7 +62,7 @@ class TestFilenameDomainsInjected:
         gene = _tagger().pack(
             _BLANK_CONTENT,
             content_type="code",
-            source_id="/repo/helix_context/claim_types_handler.py",
+            source_id="/repo/cymatix_context/claim_types_handler.py",
         )
         assert "claim_types_handler" in gene.promoter.domains, (
             f"Full stem missing from {gene.promoter.domains}"
@@ -73,7 +73,7 @@ class TestFilenameDomainsInjected:
         gene = _tagger().pack(
             _BLANK_CONTENT,
             content_type="code",
-            source_id="/repo/helix_context/__init__.py",
+            source_id="/repo/cymatix_context/__init__.py",
         )
         assert "__init__" not in gene.promoter.domains
         assert "init" not in gene.promoter.domains
@@ -83,10 +83,10 @@ class TestFilenameDomainsInjected:
         gene = _tagger().pack(
             _BLANK_CONTENT,
             content_type="code",
-            source_id="/repo/helix_context/claims.py",
+            source_id="/repo/cymatix_context/claims.py",
         )
-        assert "helix_context" in gene.promoter.domains, (
-            f"Parent dir 'helix_context' missing from {gene.promoter.domains}"
+        assert "cymatix_context" in gene.promoter.domains, (
+            f"Parent dir 'cymatix_context' missing from {gene.promoter.domains}"
         )
 
     def test_no_source_id_does_not_crash(self):
@@ -99,7 +99,7 @@ class TestFilenameDomainsInjected:
         gene = _tagger().pack(
             "import redis\nclient = redis.Redis()",
             content_type="code",
-            source_id="/repo/helix_context/claims.py",
+            source_id="/repo/cymatix_context/claims.py",
         )
         assert "redis" in gene.promoter.domains, (
             f"Content-derived 'redis' missing from {gene.promoter.domains}"

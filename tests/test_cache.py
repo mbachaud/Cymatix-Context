@@ -1,4 +1,4 @@
-"""Tests for CachedDAL (helix_context.adapters.cache)."""
+"""Tests for CachedDAL (cymatix_context.adapters.cache)."""
 
 from __future__ import annotations
 
@@ -7,12 +7,12 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from helix_context.adapters.cache import (
+from cymatix_context.adapters.cache import (
     DEFAULT_TTLS_S,
     CachedDAL,
     fetch_packet_sources_cached,
 )
-from helix_context.adapters.dal import DAL, FetchResult
+from cymatix_context.adapters.dal import DAL, FetchResult
 
 
 # ── Basic fetch / hit / miss ─────────────────────────────────────────

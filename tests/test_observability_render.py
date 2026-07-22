@@ -19,8 +19,8 @@ DEPLOY = REPO / "deploy" / "otel"
 @pytest.fixture
 def rendered(tmp_path, monkeypatch):
     """Render every source YAML into tmp_path and return the dir."""
-    from helix_context.launcher import observability_paths as ops
-    from helix_context.launcher import observability_render as rnd
+    from cymatix_context.launcher import observability_paths as ops
+    from cymatix_context.launcher import observability_render as rnd
 
     # Redirect state_dir AND configs_dir into tmp_path so the test
     # doesn't write to the real repo or AppData.
@@ -52,7 +52,7 @@ def test_all_configs_rendered(rendered):
 
 
 def test_collector_hostnames_rewritten_to_localhost(rendered):
-    from helix_context.launcher.observability_render import TEMPO_OTLP_PORT
+    from cymatix_context.launcher.observability_render import TEMPO_OTLP_PORT
 
     text = (rendered / "otel-collector-config.yaml").read_text()
     spec = yaml.safe_load(text)
@@ -76,7 +76,7 @@ def test_tempo_otlp_receiver_remapped_off_collector_port(rendered):
     `StatusCode.UNIMPLEMENTED` because tempo (which only accepts traces)
     was answering on 4317.
     """
-    from helix_context.launcher.observability_render import TEMPO_OTLP_PORT
+    from cymatix_context.launcher.observability_render import TEMPO_OTLP_PORT
 
     spec = yaml.safe_load((rendered / "tempo.yaml").read_text())
     otlp_grpc = spec["distributor"]["receivers"]["otlp"]["protocols"]["grpc"]

@@ -125,7 +125,7 @@ def run_cleanup(genome_path, dry_run=False):
         # Pass B: chunk-level hash matching
         try:
             import hashlib
-            from helix_context.codons import CodonChunker
+            from cymatix_context.codons import CodonChunker
             chunker = CodonChunker(max_chars_per_strand=4000)
 
             for path in paths:

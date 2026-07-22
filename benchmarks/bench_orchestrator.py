@@ -8,7 +8,7 @@ Two transition shapes:
   Atomic, ~milliseconds, no process restart. Available since PR #91.
 - **Cross-mode (blob<->sharded)**: full uvicorn restart with the
   ``HELIX_USE_SHARDS`` env var set/unset. ``open_read_source()`` in
-  ``helix_context/sharding.py`` reads that env at store-construction time;
+  ``cymatix_context/sharding.py`` reads that env at store-construction time;
   it can't be flipped mid-process.
 
 The orchestrator hides this distinction from the bench code: callers just
@@ -70,7 +70,7 @@ def _repo_root() -> Optional[Path]:
 
     ``bench_orchestrator.py`` lives at ``<repo>/benchmarks/``, so the repo
     root is ``parents[1]``. We confirm by checking for ``pyproject.toml``
-    AND ``helix_context/__init__.py`` (both required to call this a
+    AND ``cymatix_context/__init__.py`` (both required to call this a
     helix-context source checkout) — defends against the orchestrator
     being copied/symlinked into an unrelated tree.
 
@@ -82,7 +82,7 @@ def _repo_root() -> Optional[Path]:
     except (IndexError, OSError):
         return None
     if (candidate / "pyproject.toml").exists() and (
-        candidate / "helix_context" / "__init__.py"
+        candidate / "cymatix_context" / "__init__.py"
     ).exists():
         return candidate
     return None
@@ -111,7 +111,7 @@ RECOMMENDED_FIXTURE_TABLES: tuple[str, ...] = (
 
 
 def _resolve_helix_context_file(repo_root: Optional[Path]) -> str:
-    """Best-effort: report ``helix_context.__file__`` for ``repo_root``.
+    """Best-effort: report ``cymatix_context.__file__`` for ``repo_root``.
 
     Used in the RUN START log line so the operator sees which checkout
     the spawned uvicorn will load. We don't import from a subprocess (too
@@ -120,12 +120,12 @@ def _resolve_helix_context_file(repo_root: Optional[Path]) -> str:
     back to whatever the current process already imported.
     """
     if repo_root is not None:
-        candidate = repo_root / "helix_context" / "__init__.py"
+        candidate = repo_root / "cymatix_context" / "__init__.py"
         if candidate.exists():
             return str(candidate)
     try:
-        import helix_context  # noqa: PLC0415 — lazy by design
-        return getattr(helix_context, "__file__", "<unknown>") or "<unknown>"
+        import cymatix_context  # noqa: PLC0415 — lazy by design
+        return getattr(cymatix_context, "__file__", "<unknown>") or "<unknown>"
     except Exception:
         return "<unresolvable>"
 
@@ -139,7 +139,7 @@ def _probe_fixture_schema(
     """Open ``db_path`` read-only and assert the required tables exist.
 
     Issue #153 surfaced as ``sqlite3.OperationalError: no such table: ...``
-    50 times per bench because a stale-worktree helix_context queried
+    50 times per bench because a stale-worktree cymatix_context queried
     tables the fixture's schema didn't include. Probing from the
     orchestrator side catches the mismatch in milliseconds — and produces
     a single clear error pointing at the wrong-helix root cause instead
@@ -181,7 +181,7 @@ def _probe_fixture_schema(
             f"fixture {db_path} is missing required table(s) "
             f"{missing_required}: the spawned helix server would raise "
             "sqlite3.OperationalError on first /context call. Likely "
-            "causes: wrong helix_context source on PYTHONPATH (issue "
+            "causes: wrong cymatix_context source on PYTHONPATH (issue "
             "#153), or a fixture built with a stripped schema."
         )
     missing_recommended = [t for t in recommended if t not in names]
@@ -219,7 +219,7 @@ class Fixture:
 
     ``db`` is the SQLite path to swap in. For sharded fixtures, this is the
     routing DB path (``.../main.genome.db``); ``open_read_source`` in
-    ``helix_context/sharding.py`` detects the basename and dispatches to
+    ``cymatix_context/sharding.py`` detects the basename and dispatches to
     ``ShardedGenomeAdapter`` when ``HELIX_USE_SHARDS=1``.
 
     ``read_only`` defaults True so a bench run can't accidentally mutate
@@ -281,7 +281,7 @@ class BenchServer(AbstractContextManager["BenchServer"]):
         port: int = DEFAULT_PORT,
         *,
         python: Optional[str] = None,
-        app: str = "helix_context._asgi:app",
+        app: str = "cymatix_context._asgi:app",
         health_timeout_s: float = DEFAULT_HEALTH_TIMEOUT_S,
         shutdown_timeout_s: float = DEFAULT_SHUTDOWN_TIMEOUT_S,
         log_to: Optional[Path] = None,
@@ -476,7 +476,7 @@ class BenchServer(AbstractContextManager["BenchServer"]):
             env.pop("HELIX_USE_SHARDS", None)
         # Pin PYTHONHASHSEED so set / dict iteration orders stay stable
         # across uvicorn re-spawns. Belt-and-suspenders defence on top of
-        # the determinism fixes in helix_context (sorted expansion, lock
+        # the determinism fixes in cymatix_context (sorted expansion, lock
         # on last_query_scores, shard-name tiebreak): without it, bench
         # replays of the same query against the same fixture can drift
         # purely because the subprocess got a different hash seed.
@@ -488,7 +488,7 @@ class BenchServer(AbstractContextManager["BenchServer"]):
         # worktree can win the import race and answer with stale code that
         # doesn't match the fixture's schema (the canonical failure: a
         # vibrant-easley worktree on bench/int-5fixture took the
-        # ``helix_context._asgi:app`` import and raised
+        # ``cymatix_context._asgi:app`` import and raised
         # ``no such table: cwola_log`` × 50 against the xl-sharded
         # fixture).  Prepend repo_root to PYTHONPATH (preserving any
         # caller-supplied value) and run the subprocess from there.
@@ -512,12 +512,12 @@ class BenchServer(AbstractContextManager["BenchServer"]):
         else:
             stdout = stderr = subprocess.DEVNULL
 
-        # RUN START line: log which helix_context source the spawned
+        # RUN START line: log which cymatix_context source the spawned
         # process will resolve, so the operator can confirm the right
         # checkout is answering instead of debugging "retr=err × 50".
         log.info(
             "RUN START fixture=%s sharded=%s db=%s "
-            "repo_root=%s helix_context=%s python=%s",
+            "repo_root=%s cymatix_context=%s python=%s",
             fixture.name,
             fixture.sharded,
             fixture.db,

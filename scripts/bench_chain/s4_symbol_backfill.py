@@ -156,11 +156,11 @@ def main(argv: list[str] | None = None) -> int:
         _copy_bed(src, dst)
 
     # Branch imports (worktree root is sys.path[0]): the served capability.
-    from helix_context.cli.cmd_ingest import _CODE_EXTENSIONS  # #224 mapping
-    from helix_context.context_manager import HelixContextManager
-    from helix_context.encoding import tree_chunker
-    from helix_context.knowledge_store import KnowledgeStore
-    from helix_context.schemas import StructuralRelation
+    from cymatix_context.cli.cmd_ingest import _CODE_EXTENSIONS  # #224 mapping
+    from cymatix_context.context_manager import HelixContextManager
+    from cymatix_context.encoding import tree_chunker
+    from cymatix_context.knowledge_store import KnowledgeStore
+    from cymatix_context.schemas import StructuralRelation
 
     # Open read-write with the branch store: DDL creates symbol_defs on open.
     store = KnowledgeStore(str(dst))

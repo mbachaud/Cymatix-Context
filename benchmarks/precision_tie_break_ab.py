@@ -38,8 +38,8 @@ try:
 except Exception:
     pass
 
-from helix_context import HelixContextManager, load_config  # noqa: E402
-from helix_context import tie_break  # noqa: E402
+from cymatix_context import HelixContextManager, load_config  # noqa: E402
+from cymatix_context import tie_break  # noqa: E402
 
 
 GENOME_DB = "genome-bench-2026-04-14.db"

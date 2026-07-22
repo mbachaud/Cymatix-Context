@@ -17,11 +17,11 @@ import time
 import pytest
 from pathlib import Path
 
-from helix_context.codons import CodonChunker, CodonEncoder
-from helix_context.genome import Genome
-from helix_context.ribosome import Ribosome, OllamaBackend
-from helix_context.schemas import Gene, PromoterTags, EpigeneticMarkers, ChromatinState
-from helix_context.exceptions import PromoterMismatch
+from cymatix_context.codons import CodonChunker, CodonEncoder
+from cymatix_context.genome import Genome
+from cymatix_context.ribosome import Ribosome, OllamaBackend
+from cymatix_context.schemas import Gene, PromoterTags, EpigeneticMarkers, ChromatinState
+from cymatix_context.exceptions import PromoterMismatch
 
 import httpx
 

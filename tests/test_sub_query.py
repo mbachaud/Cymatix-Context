@@ -1,8 +1,8 @@
 """Sub-query decomposition tests (2026-05-08 retrieval stack upgrade, Step 2)."""
 import pytest
 from unittest.mock import patch, MagicMock
-from helix_context.context_manager import HelixContextManager, _merge_subquery_candidates
-from helix_context.config import (
+from cymatix_context.context_manager import HelixContextManager, _merge_subquery_candidates
+from cymatix_context.config import (
     BudgetConfig,
     GenomeConfig,
     HelixConfig,
@@ -29,8 +29,8 @@ def ctx_manager():
 
 def test_merge_subquery_candidates_cross_query_boost():
     """Gene appearing in 2/3 sub-results should rank above one with higher base score but 1/3."""
-    from helix_context.schemas import Gene, PromoterTags, EpigeneticMarkers
-    from helix_context.genome import Genome as _G
+    from cymatix_context.schemas import Gene, PromoterTags, EpigeneticMarkers
+    from cymatix_context.genome import Genome as _G
 
     def _g(txt):
         return Gene(gene_id=_G.make_gene_id(txt), content=txt, complement="",
@@ -51,8 +51,8 @@ def test_merge_subquery_candidates_cross_query_boost():
 
 def test_merge_subquery_candidates_deduplicates():
     """Same gene in multiple sub-results must appear only once in merged output."""
-    from helix_context.schemas import Gene, PromoterTags, EpigeneticMarkers
-    from helix_context.genome import Genome as _G
+    from cymatix_context.schemas import Gene, PromoterTags, EpigeneticMarkers
+    from cymatix_context.genome import Genome as _G
 
     g = Gene(gene_id=_G.make_gene_id("dup"), content="dup", complement="",
              codons=[], promoter=PromoterTags(), epigenetics=EpigeneticMarkers())

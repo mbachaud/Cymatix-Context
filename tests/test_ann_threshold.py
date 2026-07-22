@@ -3,8 +3,8 @@ import json
 import numpy as np
 import pytest
 from unittest.mock import patch
-from helix_context.schemas import Gene, PromoterTags, EpigeneticMarkers
-from helix_context.genome import Genome
+from cymatix_context.schemas import Gene, PromoterTags, EpigeneticMarkers
+from cymatix_context.genome import Genome
 
 
 def _make(content, domains=None, source=None):

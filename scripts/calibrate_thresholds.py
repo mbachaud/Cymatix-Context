@@ -48,14 +48,14 @@ log = logging.getLogger("calibrate_thresholds")
 
 # Allow running directly from a source checkout without `pip install -e .`
 # (same convention as benchmarks/). The #214 true-pair guard imports
-# helix_context.backends.bgem3_codec, and the floors path imports
-# helix_context.retrieval.query_classifier.
+# cymatix_context.backends.bgem3_codec, and the floors path imports
+# cymatix_context.retrieval.query_classifier.
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
 
-# Classes the rule-based classifier emits (see helix_context.query_classifier).
+# Classes the rule-based classifier emits (see cymatix_context.query_classifier).
 # ``default`` is the catch-all + fallback for missing per-class blocks at runtime.
 KNOWN_CLASSES = ("factual", "multi_hop", "arithmetic", "procedural", "default")
 
@@ -307,7 +307,7 @@ def measure_true_pair_cosines(
     # guard to a WARNING + legacy value — calibration must not hard-require
     # a model.
     try:
-        from helix_context.backends.bgem3_codec import get_shared_codec
+        from cymatix_context.backends.bgem3_codec import get_shared_codec
         codec = get_shared_codec(dim=dim)
         cosines: List[float] = []
         for q, blob in candidates:
@@ -471,7 +471,7 @@ def _percentile(values: List[float], pct: float) -> float:
 
 def _classify_bench_row(query: str) -> str:
     """Re-run the rule-based classifier against the bench query."""
-    from helix_context.retrieval.query_classifier import classify_query
+    from cymatix_context.retrieval.query_classifier import classify_query
     result = classify_query(query)
     return result.cls
 

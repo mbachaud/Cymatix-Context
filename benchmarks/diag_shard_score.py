@@ -137,7 +137,7 @@ def _open_router_source(genome_path: str, config: Any):
     """
     os.environ["HELIX_USE_SHARDS"] = "1"
     os.environ["HELIX_SHARD_SCORE_DEBUG"] = "1"
-    from helix_context.sharding import open_read_source
+    from cymatix_context.sharding import open_read_source
 
     kwargs = _genome_kwargs_from_config(config)
     return open_read_source(genome_path=genome_path, **kwargs)
@@ -160,7 +160,7 @@ def _run_needle(
     max_genes: int,
 ) -> Dict[str, Any]:
     """Run one query; extract gold rank + score-depression breakdown."""
-    from helix_context.accel import extract_query_signals
+    from cymatix_context.accel import extract_query_signals
 
     domains, entities = extract_query_signals(question)
 
@@ -239,7 +239,7 @@ def _run_needle(
 # ---------------------------------------------------------------------------
 
 def _aggregate(per_needle: List[Dict[str, Any]]) -> Dict[str, Any]:
-    from helix_context.shard_router import IDF_CLIP_LO, IDF_CLIP_HI
+    from cymatix_context.shard_router import IDF_CLIP_LO, IDF_CLIP_HI
 
     gold_ms: List[float] = []
     floor_hits = 0
@@ -339,7 +339,7 @@ def main(argv: Optional[List[str]] = None) -> int:
                     help="cap needles processed (0 = all).")
     args = ap.parse_args(argv)
 
-    from helix_context.config import load_config
+    from cymatix_context.config import load_config
     config = load_config(args.helix_config)
 
     source = _open_router_source(args.genome, config)

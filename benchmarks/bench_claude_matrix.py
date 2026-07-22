@@ -508,7 +508,7 @@ NEEDLES = [
          "helix-context/docs/config-reference.md",
      ]},
     {"name": "helix_subpackages_count",
-     "query": "Into how many sub-packages is helix_context organized after the PR #90 restructure?",
+     "query": "Into how many sub-packages is cymatix_context organized after the PR #90 restructure?",
      "expected": "16", "accept": ["16", "sixteen"],
      "gold_source": [
          "helix-context/CLAUDE.md",

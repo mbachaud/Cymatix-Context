@@ -19,8 +19,8 @@ import numpy as np
 
 _REPO = Path("f:/Projects/helix-context")
 sys.path.insert(0, str(_REPO))
-from helix_context.config import load_config
-from helix_context.scoring.know_calibration import calibration_from_config
+from cymatix_context.config import load_config
+from cymatix_context.scoring.know_calibration import calibration_from_config
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import LeaveOneOut, cross_val_predict
@@ -59,7 +59,8 @@ def main():
     ap.add_argument("--faith", default=FAITH)
     args = ap.parse_args()
 
-    cfg = load_config(str(_REPO / "helix.toml"))
+    _cfg_path = _REPO / "cymatix.toml" if (_REPO / "cymatix.toml").exists() else _REPO / "helix.toml"
+    cfg = load_config(str(_cfg_path))
     cal = calibration_from_config(cfg.know)
     s_ref, g_ref = cal.s_ref, cal.g_ref
     floor = args.emit_floor if args.emit_floor is not None else cal.emit_floor

@@ -10,7 +10,7 @@ the 50 rows preceding it (same session, pre-ts). Adds two keys:
 This is the format batman's PWPC manifold port expects for the agreement
 head training input. See:
   docs/collab/comms/LOCKSTEP_MATRIX_FINDINGS_2026-04-14.md
-  helix_context/cwola.py  (sliding_window_features)
+  cymatix_context/cwola.py  (sliding_window_features)
 
 Usage:
     python scripts/pwpc/export_with_window_features.py \
@@ -27,7 +27,7 @@ import sqlite3
 import time
 from pathlib import Path
 
-from helix_context import cwola
+from cymatix_context import cwola
 
 
 def main() -> None:

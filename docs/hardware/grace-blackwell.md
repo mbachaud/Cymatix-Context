@@ -1,8 +1,8 @@
-# NVIDIA Grace + Blackwell (GB10 / DGX Spark / aarch64) — running helix-context
+# NVIDIA Grace + Blackwell (GB10 / DGX Spark / aarch64) — running cymatix-context
 
 > Proposed landing path in the repo: `docs/hardware/grace-blackwell.md`
 
-This page records what we hit running helix-context's dense embed/re-embed path on an
+This page records what we hit running cymatix-context's dense embed/re-embed path on an
 **NVIDIA DGX Spark (GB10 superchip, aarch64/Grace CPU + Blackwell GPU, compute capability
 sm_121)** with a CUDA-13 PyTorch nightly, and the one-line, opt-in fix that makes it land —
 so the next person doesn't burn 10 hours rediscovering a livelock.
@@ -47,7 +47,7 @@ The dense PASSAGE embedding/backfill pass hangs on its **very first `encode_batc
 
 ### Root cause (what it is, and what it is NOT)
 
-This is a **platform/driver async-dispatch instability on sm_121**, not a bug in helix-context's
+This is a **platform/driver async-dispatch instability on sm_121**, not a bug in cymatix-context's
 encode path. We proved it by diffing the faulthandler frame with and without our unrelated codec
 changes — identical — so the application diff is exonerated. It lines up with reports of
 async-launch instability on Blackwell-class sm_121 under CUDA-13 nightlies (cf. vLLM issue #37431).
@@ -99,21 +99,21 @@ Grace+Blackwell / GB10 operators enable it.
 
 ### Proposed env handshake (so it's not tribal knowledge)
 
-Default-off; helix only sets `CUDA_LAUNCH_BLOCKING` when the operator opts in, and never overrides a
+Default-off; cymatix only sets `CUDA_LAUNCH_BLOCKING` when the operator opts in, and never overrides a
 value the operator already exported:
 
 ```python
-# helix-context platform handshake (default-OFF; byte-identical for everyone who leaves it unset)
+# cymatix-context platform handshake (default-OFF; byte-identical for everyone who leaves it unset)
 import os
-if os.environ.get("HELIX_CUDA_LAUNCH_BLOCKING", "0") == "1":
+if os.environ.get("CYMATIX_CUDA_LAUNCH_BLOCKING", "0") == "1":
     os.environ.setdefault("CUDA_LAUNCH_BLOCKING", "1")
 ```
 
-Operators on GB10 then run with `HELIX_CUDA_LAUNCH_BLOCKING=1`. Optionally, ship a
-`helix-context[gb10]` extra whose docs point here and whose import path sets the same default — see
-OPEN_QUESTIONS for the exact env-var name / extra-name decision (placeholder `HELIX_CUDA_LAUNCH_BLOCKING`).
+Operators on GB10 then run with `CYMATIX_CUDA_LAUNCH_BLOCKING=1`. Optionally, ship a
+`cymatix-context[gb10]` extra whose docs point here and whose import path sets the same default — see
+OPEN_QUESTIONS for the exact env-var name / extra-name decision (placeholder `CYMATIX_CUDA_LAUNCH_BLOCKING`).
 
-x86_64 behavior is unchanged: with the var unset, helix imports torch exactly as before.
+x86_64 behavior is unchanged: with the var unset, cymatix imports torch exactly as before.
 
 ---
 
@@ -135,7 +135,7 @@ aarch64 / Grace box:
   error was a red herring, since the build died at the preprocessor step before ever linking. The
   real missing piece was the Python dev headers.
 
-- **flash-attention-2 is unavailable on sm_121** (won't build). helix-context already defaults the
+- **flash-attention-2 is unavailable on sm_121** (won't build). cymatix-context already defaults the
   dense codec to `attn_implementation="sdpa"` on all platforms, so no action is required — just don't
   try to force `flash_attention_2` on GB10.
 
@@ -145,7 +145,7 @@ aarch64 / Grace box:
 
 1. `sudo apt-get install -y python3.12-dev` (version-matched).
 2. Leave the dense codec on SDPA (the default) — do not force flash-attention-2.
-3. For dense embed / re-embed runs, opt into launch-blocking: `HELIX_CUDA_LAUNCH_BLOCKING=1`
+3. For dense embed / re-embed runs, opt into launch-blocking: `CYMATIX_CUDA_LAUNCH_BLOCKING=1`
    (or `CUDA_LAUNCH_BLOCKING=1`), set **before** torch import.
 4. Expect serialized throughput (lower W, longer wall-clock) — embeddings are unaffected and
    byte-identical to a non-blocking run.

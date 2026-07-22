@@ -27,8 +27,8 @@ import types
 
 import pytest
 
-from helix_context.backends import sema as sema_mod
-from helix_context.config import (
+from cymatix_context.backends import sema as sema_mod
+from cymatix_context.config import (
     GenomeConfig,
     Hardware,
     HelixConfig,
@@ -36,7 +36,7 @@ from helix_context.config import (
     ServerConfig,
     load_config,
 )
-from helix_context.context_manager import HelixContextManager, LazyRibosome
+from cymatix_context.context_manager import HelixContextManager, LazyRibosome
 
 from tests.conftest import make_helix_config
 
@@ -65,8 +65,8 @@ from tests.conftest import make_helix_config
 # fakes), so the unloaded baseline is exactly what they already assume.
 @pytest.fixture(autouse=True)
 def _pristine_encoder_singletons(monkeypatch):
-    import helix_context.tagger as tagger_mod
-    from helix_context.backends import splade_backend
+    import cymatix_context.tagger as tagger_mod
+    from cymatix_context.backends import splade_backend
 
     monkeypatch.setattr(tagger_mod, "_nlp", None, raising=False)
     monkeypatch.setattr(splade_backend, "_model", None, raising=False)
@@ -128,7 +128,7 @@ def fake_sema(monkeypatch):
 def fake_deberta(monkeypatch):
     """Inject a fake deberta_backend module (real one imports torch)."""
 
-    mod = types.ModuleType("helix_context.backends.deberta_backend")
+    mod = types.ModuleType("cymatix_context.backends.deberta_backend")
 
     class FakeDeBERTaRibosome:
         constructions = 0
@@ -145,7 +145,7 @@ def fake_deberta(monkeypatch):
 
     mod.DeBERTaRibosome = FakeDeBERTaRibosome
     monkeypatch.setitem(
-        sys.modules, "helix_context.backends.deberta_backend", mod
+        sys.modules, "cymatix_context.backends.deberta_backend", mod
     )
     return FakeDeBERTaRibosome
 
@@ -186,8 +186,8 @@ def test_manager_init_constructs_no_encoders(tmp_path, fake_sema, monkeypatch):
     fake_spacy.load = _no_load
     monkeypatch.setitem(sys.modules, "spacy", fake_spacy)
 
-    import helix_context.tagger as tagger_mod
-    from helix_context.backends import splade_backend
+    import cymatix_context.tagger as tagger_mod
+    from cymatix_context.backends import splade_backend
 
     mgr = HelixContextManager(_config(tmp_path))
 
@@ -338,7 +338,7 @@ def test_deberta_eager_when_knob_off(tmp_path, fake_deberta):
 
 
 def test_deberta_load_failure_falls_back_to_disabled(tmp_path, monkeypatch):
-    mod = types.ModuleType("helix_context.backends.deberta_backend")
+    mod = types.ModuleType("cymatix_context.backends.deberta_backend")
 
     class _Boom:
         def __init__(self, **kwargs):
@@ -346,7 +346,7 @@ def test_deberta_load_failure_falls_back_to_disabled(tmp_path, monkeypatch):
 
     mod.DeBERTaRibosome = _Boom
     monkeypatch.setitem(
-        sys.modules, "helix_context.backends.deberta_backend", mod
+        sys.modules, "cymatix_context.backends.deberta_backend", mod
     )
     mgr = HelixContextManager(_deberta_config(tmp_path))
     rib = mgr.ribosome
@@ -374,7 +374,7 @@ def test_lazy_ribosome_private_lookup_never_loads(tmp_path, fake_deberta):
 def test_admin_components_reports_unloaded_without_loading(tmp_path, fake_sema):
     from fastapi.testclient import TestClient
 
-    from helix_context.server import create_app
+    from cymatix_context.server import create_app
 
     app = create_app(_config(tmp_path))
     client = TestClient(app)
@@ -411,7 +411,7 @@ def test_admin_components_reports_unloaded_without_loading(tmp_path, fake_sema):
 def test_admin_components_lazy_deberta_listed_unloaded(tmp_path, fake_deberta, fake_sema):
     from fastapi.testclient import TestClient
 
-    from helix_context.server import create_app
+    from cymatix_context.server import create_app
 
     app = create_app(_deberta_config(tmp_path))
     client = TestClient(app)

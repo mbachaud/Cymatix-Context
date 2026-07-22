@@ -38,8 +38,8 @@ from needle_faithfulness_experiment import (  # noqa: E402
     NEEDLES, find_answer_ctx, retargeted_input_attr,
 )
 
-from helix_context.config import load_config  # noqa: E402
-from helix_context.context_manager import HelixContextManager  # noqa: E402
+from cymatix_context.config import load_config  # noqa: E402
+from cymatix_context.context_manager import HelixContextManager  # noqa: E402
 
 OUT = str(_REPO / "benchmarks" / "results" / "real_helix_faith_results.json")
 import tempfile
@@ -50,7 +50,8 @@ def build_bed():
     """Fresh bed with only the 6 synthetic facts -> short expressed_context."""
     if os.path.exists(BED):
         os.remove(BED)
-    cfg = load_config(str(_REPO / "helix.toml"))
+    _cfg_path = _REPO / "cymatix.toml" if (_REPO / "cymatix.toml").exists() else _REPO / "helix.toml"
+    cfg = load_config(str(_cfg_path))
     cfg.genome.path = BED
     mgr = HelixContextManager(cfg)
     for nd in NEEDLES:

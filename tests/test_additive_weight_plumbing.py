@@ -40,8 +40,8 @@ import math
 
 import pytest
 
-from helix_context.genome import Genome
-from helix_context.schemas import (
+from cymatix_context.genome import Genome
+from cymatix_context.schemas import (
     ChromatinState, EpigeneticMarkers, Gene, PromoterTags,
 )
 
@@ -113,7 +113,7 @@ def patched_splade():
     sparse dict; ``query_splade`` returns two raw scores chosen so one
     saturates the 20.0 normalization cap (gA) and one does not (gD).
     """
-    from helix_context.backends import splade_backend
+    from cymatix_context.backends import splade_backend
 
     old_encode = splade_backend.encode
     old_query = splade_backend.query_splade
@@ -450,7 +450,7 @@ def test_zero_weight_kills_tier(tier, weight_kwarg, gene_ids):
 def test_retrieval_config_defaults_match_additive_literals():
     """The dataclass defaults ARE the legacy additive literals (the
     leading coefficients), so untouched configs stay bit-identical."""
-    from helix_context.config import RetrievalConfig
+    from cymatix_context.config import RetrievalConfig
     cfg = RetrievalConfig()
     assert cfg.fts5_weight == 3.0          # additive cap = 2.0 × 3.0 = 6.0
     assert cfg.splade_weight == 3.5
@@ -468,7 +468,7 @@ def test_toml_loader_plumbs_sema_boost_weight(tmp_path):
     cfg_file.write_text(
         "[retrieval]\nsema_boost_weight = 9.0\ntag_exact_weight = 4.5\n"
     )
-    from helix_context.config import load_config
+    from cymatix_context.config import load_config
     cfg = load_config(str(cfg_file))
     assert cfg.retrieval.sema_boost_weight == 9.0
     assert cfg.retrieval.tag_exact_weight == 4.5

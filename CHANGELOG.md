@@ -46,6 +46,24 @@
   (scheduled for removal in v(N+2)). `test_layer_defaults_agree` now guards
   the two layers' equality permanently.
 
+## 0.8.0 — 2026-07-21
+
+- **rename: helix-context → cymatix-context.** Canonical package is now
+  `cymatix_context`; the old `helix_context` package is a live alias —
+  every submodule import resolves to the identical `cymatix_context`
+  module object (no copies, isinstance-safe) and emits a
+  `DeprecationWarning`. CLI entry points are now `cymatix`/`cymatix-server`/
+  `cymatix-launcher`/`cymatix-status`/`cymatix-vault`, with the old
+  `helix*` names kept as console-script aliases. Env vars: `CYMATIX_*` is
+  canonical and mirrored to `HELIX_*` unless an explicit `HELIX_*` value
+  is already set (old deployments untouched). Config: `cymatix.toml` is
+  canonical, `helix.toml` still loads as a fallback. MCP server identifies
+  as `cymatix` (was `helix`) — a client-visible tool-namespace change.
+  OTel `service.name` is now `cymatix-context`; metric names, logger
+  names, and dashboard UIDs are deliberately unchanged. The wheel ships
+  both packages. Knowledge-store format is unchanged — no re-ingest
+  needed.
+
 ## 0.7.2b1 — 2026-07-06 (beta)
 
 Efficiency + bench-validity wave. Beta cut for cross-host bench validation

@@ -27,7 +27,7 @@ where normalise(x) = x.replace("\\\\", "/").lower().strip()
 
 This is the same bidirectional substring rule used by the existing needle
 harnesses.  It means gold_paths are project-relative substrings like
-"helix-context/helix_context/pipeline/stages.py".
+"helix-context/cymatix_context/pipeline/stages.py".
 
 CLI
 ---
@@ -383,7 +383,7 @@ def main(argv: list[str] | None = None) -> int:
     except Exception as exc:
         print(
             "ERROR: cannot reach Helix at {}: {}\n"
-            "  Start: python -m uvicorn helix_context._asgi:app --port 11437".format(
+            "  Start: python -m uvicorn cymatix_context._asgi:app --port 11437".format(
                 args.helix_url, exc
             ),
             file=sys.stderr,

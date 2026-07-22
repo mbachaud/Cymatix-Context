@@ -17,13 +17,13 @@ def fake_session():
             "gene_id": "gene-001",
             "sema_cos_sim": 0.91,
             "preview": "splice trims fragments",
-            "path": "helix_context/splice.py",
+            "path": "cymatix_context/splice.py",
         },
         {
             "gene_id": "gene-002",
             "sema_cos_sim": 0.84,
             "preview": "codon chunker splits text",
-            "path": "helix_context/codons.py",
+            "path": "cymatix_context/codons.py",
         },
     ]
     return sess
@@ -31,7 +31,7 @@ def fake_session():
 
 def test_neighbors_json_shape(fake_session):
     with patch(
-        "helix_context.cli.cmd_neighbors.open_session", return_value=fake_session
+        "cymatix_context.cli.cmd_neighbors.open_session", return_value=fake_session
     ):
         rc, out, err = _run(["neighbors", "splice step", "--json"])
     assert rc == 0, err
@@ -43,7 +43,7 @@ def test_neighbors_json_shape(fake_session):
 
 def test_neighbors_passes_k(fake_session):
     with patch(
-        "helix_context.cli.cmd_neighbors.open_session", return_value=fake_session
+        "cymatix_context.cli.cmd_neighbors.open_session", return_value=fake_session
     ):
         rc, _, _ = _run(["neighbors", "test", "--k", "5"])
     assert rc == 0
@@ -54,7 +54,7 @@ def test_neighbors_passes_k(fake_session):
 def test_neighbors_empty_text_mode_explains_why():
     sess = MagicMock()
     sess.neighbors.return_value = []
-    with patch("helix_context.cli.cmd_neighbors.open_session", return_value=sess):
+    with patch("cymatix_context.cli.cmd_neighbors.open_session", return_value=sess):
         rc, out, _ = _run(["neighbors", "test"])
     assert rc == 0
     assert "SEMA codec missing" in out or "no embeddings" in out

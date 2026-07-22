@@ -1,6 +1,6 @@
 # Observability — OTel → Grafana stack
 
-Helix emits OpenTelemetry traces + metrics when telemetry is enabled — via `HELIX_OTEL_ENABLED=1`, `[telemetry] enabled = true` in helix.toml, or automatically under the tray launcher once the local stack is up. Everything upstream of the LLM answer boundary becomes visible on one dashboard.
+Cymatix emits OpenTelemetry traces + metrics when telemetry is enabled — via `CYMATIX_OTEL_ENABLED=1`, `[telemetry] enabled = true` in cymatix.toml, or automatically under the tray launcher once the local stack is up. Everything upstream of the LLM answer boundary becomes visible on one dashboard.
 
 ## Quick start
 
@@ -23,15 +23,15 @@ idempotent — re-runs skip already-installed binaries and only refresh
 configs. Then start the supervisor:
 
 ```bash
-helix-launcher --tray              # daily-driver flow (tray icon + helix)
-helix-launcher --no-autostart      # observability only, no helix backend
+cymatix-launcher --tray              # daily-driver flow (tray icon + cymatix)
+cymatix-launcher --no-autostart      # observability only, no cymatix backend
 ```
 
 That launches:
 
 | Service | Port | Purpose |
 |---|---|---|
-| OTel Collector | 4317 (gRPC), 4318 (HTTP) | receives OTLP from helix |
+| OTel Collector | 4317 (gRPC), 4318 (HTTP) | receives OTLP from cymatix |
 | Prometheus | 9090 | metrics storage |
 | Tempo | 3200 | trace storage |
 | Loki | 3100 | log storage |
@@ -40,18 +40,18 @@ That launches:
 **Install OTel client packages:**
 
 ```bash
-pip install "helix-context[otel]"
+pip install "cymatix-context[otel]"
 ```
 
-**Enable on the helix server** — either via env vars:
+**Enable on the cymatix server** — either via env vars:
 
 ```bash
-export HELIX_OTEL_ENABLED=1
-export HELIX_OTEL_ENDPOINT=localhost:4317   # default
-python -m uvicorn helix_context._asgi:app --port 11437
+export CYMATIX_OTEL_ENABLED=1
+export CYMATIX_OTEL_ENDPOINT=localhost:4317   # default
+python -m uvicorn cymatix_context._asgi:app --port 11437
 ```
 
-or via the `[telemetry]` section in `helix.toml`:
+or via the `[telemetry]` section in `cymatix.toml`:
 
 ```toml
 [telemetry]
@@ -59,22 +59,22 @@ enabled = true
 endpoint = "localhost:4317"
 ```
 
-Precedence per knob: `HELIX_OTEL_*` env var > `[telemetry]` toml >
+Precedence per knob: `CYMATIX_OTEL_*` env var > `[telemetry]` toml >
 code default. Env wins in both directions — an explicit
-`HELIX_OTEL_ENABLED=0` silences a toml `enabled = true`.
+`CYMATIX_OTEL_ENABLED=0` silences a toml `enabled = true`.
 
 **Tray launcher:** no configuration needed. When the launcher starts
 (or adopts) the native observability stack — and the collector's OTLP
 port `:4317` is actually accepting connections — it exports
-`HELIX_OTEL_ENABLED=1` into the helix child's environment, so the
+`CYMATIX_OTEL_ENABLED=1` into the cymatix child's environment, so the
 default tray boot ships data to Grafana out of the box. Set
-`HELIX_OTEL_ENABLED=0` yourself to keep the stack up with a silent
+`CYMATIX_OTEL_ENABLED=0` yourself to keep the stack up with a silent
 backend. If the stack fails to start, or a service spawns but never
 becomes ready (red status), the collector-port probe fails and the
 export is skipped — a backend dialing a dead collector would wedge its
 gRPC channel. The endpoint itself is not exported; it resolves via the
 normal env > toml > default chain, so an explicit `[telemetry]
-endpoint` in helix.toml is respected.
+endpoint` in cymatix.toml is respected.
 
 Open <http://localhost:3000/d/helix-overview>. Retrieval latency, tier contributions, CWoLa f_gap, chromatin distribution, harmonic-edges-by-source — all live.
 
@@ -87,20 +87,20 @@ datasource UIDs, only the receiver runtime differs.
 
 ### Traces (`/context` span tree)
 
-Auto-instrumentation via `opentelemetry-instrumentation-fastapi` wraps every route in a span. Attributes are the request path + status code. Sampling is controlled by `HELIX_OTEL_SAMPLER_RATIO` (default `1.0`; drop to `0.1` at high QPS).
+Auto-instrumentation via `opentelemetry-instrumentation-fastapi` wraps every route in a span. Attributes are the request path + status code. Sampling is controlled by `CYMATIX_OTEL_SAMPLER_RATIO` (default `1.0`; drop to `0.1` at high QPS).
 
 ### Metrics
 
 Two surfaces:
 
-1. **Helix-domain** — `helix_*` metrics that capture the engine's
+1. **Cymatix-domain** — `helix_*` metrics that capture the engine's
    internal mechanics (pipeline stages, retrieval tiers, knowledge-store
    health, A/B cluster convergence, co-activation graph). Vocabulary
    has bio-domain origins (chromatin, harmonic_links, CWoLa) and the
    metric names are stable contracts; dashboard panels translate to
    engineering names with inline references — see `docs/ROSETTA.md` for
    the full bidirectional table.
-2. **OTel `gen_ai.*` standard** — `helix_context/telemetry/genai_telemetry.py`
+2. **OTel `gen_ai.*` standard** — `cymatix_context/telemetry/genai_telemetry.py`
    (#209). `helix_genai_*` token usage / TTFT / finish reasons /
    per-call cost following the upstream GenAI semantic conventions,
    plus `helix_context_cache_outcome_total`. Metric names carry the
@@ -172,7 +172,7 @@ Two span families sit on top of FastAPI auto-instrumentation:
    the 7 pipeline stages (classify / extract / express / rerank /
    splice / assemble / persist), plus `helix.pipeline.build_context`
    as the request-level root wrapping `build_context`. Implemented via
-   `helix_context.telemetry.pipeline_stage_span()`, which emits the
+   `cymatix_context.telemetry.pipeline_stage_span()`, which emits the
    span only; the matching `helix_pipeline_stage_seconds` histogram
    point comes from the `_stage_timer` context manager in
    `context_manager.py`. Both mechanisms cover all seven stages. The
@@ -198,7 +198,7 @@ Two span families sit on top of FastAPI auto-instrumentation:
 
 ### Logs
 
-Helix's `log.warning` / `log.debug` calls propagate to stdout; when
+Cymatix's `log.warning` / `log.debug` calls propagate to stdout; when
 running under the OTel SDK with a log handler configured, they flow to
 Loki tagged with trace context so you can pivot from a slow span to
 its logs.
@@ -213,31 +213,31 @@ hash (never the prompt text). Filter in Loki with
 
 ## Privacy
 
-Query text is hashed by default — spans carry `query=<first-50-chars>[hash:<12-hex>]`. Set `HELIX_OTEL_REDACT_QUERY=0` to store raw query strings (dev only; do not enable in shared deployments).
+Query text is hashed by default — spans carry `query=<first-50-chars>[hash:<12-hex>]`. Set `CYMATIX_OTEL_REDACT_QUERY=0` to store raw query strings (dev only; do not enable in shared deployments).
 
 ## Configuration
 
 Every knob is settable two ways — an env var or its `[telemetry]` key
-in `helix.toml`. Resolution per knob: **env var > toml > default**
-(`helix_context.telemetry.otel.resolve_telemetry_settings`). An env var
+in `cymatix.toml`. Resolution per knob: **env var > toml > default**
+(`cymatix_context.telemetry.otel.resolve_telemetry_settings`). An env var
 set to the empty string counts as unset.
 
 | Env var | `[telemetry]` key | Default | Purpose |
 |---|---|---|---|
-| `HELIX_OTEL_ENABLED` | `enabled` | off | master switch (env: `1` = on) |
-| `HELIX_OTEL_ENDPOINT` | `endpoint` | `localhost:4317` | OTLP gRPC endpoint |
-| `HELIX_OTEL_INSECURE` | `insecure` | on | plain gRPC (local dev) |
-| `HELIX_OTEL_SAMPLER_RATIO` | `sampler_ratio` | `1.0` | trace sampler 0.0–1.0 |
-| `HELIX_OTEL_REDACT_QUERY` | `redact_query` | on | hash query strings (env: `0` = raw) |
-| `HELIX_OTEL_LOGS_ENABLED` | `logs_enabled` | on | ship Python logs → collector → Loki |
-| `HELIX_OTEL_LOGS_LEVEL` | `logs_level` | `INFO` | min log level forwarded |
+| `CYMATIX_OTEL_ENABLED` | `enabled` | off | master switch (env: `1` = on) |
+| `CYMATIX_OTEL_ENDPOINT` | `endpoint` | `localhost:4317` | OTLP gRPC endpoint |
+| `CYMATIX_OTEL_INSECURE` | `insecure` | on | plain gRPC (local dev) |
+| `CYMATIX_OTEL_SAMPLER_RATIO` | `sampler_ratio` | `1.0` | trace sampler 0.0–1.0 |
+| `CYMATIX_OTEL_REDACT_QUERY` | `redact_query` | on | hash query strings (env: `0` = raw) |
+| `CYMATIX_OTEL_LOGS_ENABLED` | `logs_enabled` | on | ship Python logs → collector → Loki |
+| `CYMATIX_OTEL_LOGS_LEVEL` | `logs_level` | `INFO` | min log level forwarded |
 
-The tray launcher exports `HELIX_OTEL_ENABLED=1` into the helix child's
+The tray launcher exports `CYMATIX_OTEL_ENABLED=1` into the cymatix child's
 environment after the observability stack is up and the collector's
 OTLP port answers — that export is an env-layer value, so it beats the
 shipped `[telemetry] enabled = false` default but never overrides an
-explicit user `HELIX_OTEL_ENABLED`, and it does not touch
-`HELIX_OTEL_ENDPOINT`.
+explicit user `CYMATIX_OTEL_ENABLED`, and it does not touch
+`CYMATIX_OTEL_ENDPOINT`.
 
 ## Dashboards
 
@@ -271,7 +271,7 @@ full bidirectional vocabulary table.
   surface (#209): token throughput by type, TTFT quantiles per model,
   finish-reason mix, cost/hour + top spend by model, cache-outcome
   pie, and the `helix.proxy` structured log stream. Populated by
-  `helix_context/telemetry/genai_telemetry.py`; a contract test
+  `cymatix_context/telemetry/genai_telemetry.py`; a contract test
   (`tests/test_genai_telemetry.py::test_genai_dashboard_queries_are_covered`)
   keeps every panel query backed by an emitted metric.
 - **Helix — Retrieval Quality + HITL** (`helix-retrieval-hitl.json`) —
@@ -292,7 +292,7 @@ full bidirectional vocabulary table.
 
 The native install (`tools/native-otel/`) auto-syncs dashboards from
 `deploy/otel/grafana/dashboards/` via
-`helix_context.launcher.observability_render._wire_grafana_provisioning`.
+`cymatix_context.launcher.observability_render._wire_grafana_provisioning`.
 After editing a dashboard JSON, re-run the launcher render step to
 propagate, or restart the launcher.
 
@@ -302,14 +302,14 @@ propagate, or restart the launcher.
 # Bring up the stack
 cd deploy/otel && docker compose up -d
 
-# In another shell, start helix with OTel on
-export HELIX_OTEL_ENABLED=1
-python -m uvicorn helix_context._asgi:app --port 11437
+# In another shell, start cymatix with OTel on
+export CYMATIX_OTEL_ENABLED=1
+python -m uvicorn cymatix_context._asgi:app --port 11437
 
 # Hit /context to emit spans + tier metrics
 curl -s -X POST http://localhost:11437/context \
   -H "Content-Type: application/json" \
-  -d '{"query":"what port does helix use","verbose":true}'
+  -d '{"query":"what port does cymatix use","verbose":true}'
 
 # Hit /stats to refresh chromatin + edge gauges
 curl -s http://localhost:11437/stats > /dev/null
@@ -322,8 +322,8 @@ If the final `curl` returns `data.result[0].value`, metrics are flowing end-to-e
 
 ## Troubleshooting
 
-- **"OTel disabled" in logs** — set `HELIX_OTEL_ENABLED=1` in the helix server's env or `[telemetry] enabled = true` in helix.toml. If the server runs under the tray launcher this is exported automatically once the stack starts — check the launcher log for "Observability stack up" and make sure no stray `HELIX_OTEL_ENABLED=0` is set in the launcher's shell.
-- **"OTel packages not installed"** — `pip install "helix-context[otel]"`.
+- **"OTel disabled" in logs** — set `CYMATIX_OTEL_ENABLED=1` in the cymatix server's env or `[telemetry] enabled = true` in cymatix.toml. If the server runs under the tray launcher this is exported automatically once the stack starts — check the launcher log for "Observability stack up" and make sure no stray `CYMATIX_OTEL_ENABLED=0` is set in the launcher's shell.
+- **"OTel packages not installed"** — `pip install "cymatix-context[otel]"`.
 - **Grafana shows no data** — check `http://localhost:9090/targets`; the `otel-collector` target should be `UP`. If it isn't, `docker compose logs otel-collector`.
 - **Trace spans appear but metrics don't** — Prometheus remote-write endpoint needs `--web.enable-remote-write-receiver` (included in the provided `docker-compose.yml`). If running Prometheus outside the compose stack, add the flag.
 

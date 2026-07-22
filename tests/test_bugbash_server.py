@@ -73,7 +73,7 @@ class TestBridgeSignalContainment:
         assert r.status_code == 400
 
     def test_write_signal_rejects_traversal_direct(self, tmp_path):
-        from helix_context.bridge import AgentBridge
+        from cymatix_context.bridge import AgentBridge
         b = AgentBridge(shared_dir=str(tmp_path / "shared"))
         with pytest.raises(ValueError):
             b.write_signal("../evil", {})
@@ -82,7 +82,7 @@ class TestBridgeSignalContainment:
         assert not (tmp_path / "shared" / "evil.json").exists()
 
     def test_read_and_clear_signal_tolerate_bad_names(self, tmp_path):
-        from helix_context.bridge import AgentBridge
+        from cymatix_context.bridge import AgentBridge
         b = AgentBridge(shared_dir=str(tmp_path / "shared"))
         assert b.read_signal("../evil") is None
         b.clear_signal("../evil")  # must not raise
@@ -194,7 +194,7 @@ class _StubManager:
 
     def build_context(self, **kwargs):
         self.calls.append(kwargs)
-        from helix_context.schemas import ContextWindow
+        from cymatix_context.schemas import ContextWindow
         return ContextWindow(
             ribosome_prompt="",
             expressed_context="ctx",
@@ -205,7 +205,7 @@ class _StubManager:
 
 class TestSessionQueryK:
     def test_query_forwards_k_as_max_genes(self):
-        from helix_context.api import HelixSession
+        from cymatix_context.api import HelixSession
         mgr = _StubManager()
         sess = HelixSession(mgr, session_id="sess-bugbash")
         sess.query("what is the port?", k=3)
@@ -213,7 +213,7 @@ class TestSessionQueryK:
         assert mgr.calls[0].get("max_genes") == 3
 
     def test_query_without_k_passes_none(self):
-        from helix_context.api import HelixSession
+        from cymatix_context.api import HelixSession
         mgr = _StubManager()
         sess = HelixSession(mgr, session_id="sess-bugbash-2")
         sess.query("what is the port?")

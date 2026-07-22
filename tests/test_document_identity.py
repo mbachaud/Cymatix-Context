@@ -11,7 +11,7 @@ Pins the core identity contract:
 
 from __future__ import annotations
 
-from helix_context.context_packet import document_identity
+from cymatix_context.context_packet import document_identity
 
 from tests.conftest import make_gene
 

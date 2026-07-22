@@ -10,8 +10,8 @@ from types import SimpleNamespace
 import pytest
 import yaml
 
-from helix_context.vault.locking import VaultLock
-from helix_context.vault.writer import (
+from cymatix_context.vault.locking import VaultLock
+from cymatix_context.vault.writer import (
     compute_disk_hash,
     render_gene_markdown,
     write_atomic,
@@ -74,7 +74,7 @@ class TestRenderGeneMarkdown:
             gene_id="abc123def456",
             content="def hello():\n    return 'world'\n",
             content_type="code",
-            source_id="helix_context/auth/middleware.py",
+            source_id="cymatix_context/auth/middleware.py",
             source_lines="42-89",
             domains=["auth", "jwt"],
             chromatin="euchromatin",
@@ -138,7 +138,7 @@ class TestRenderGeneMarkdown:
 
 class TestRenderTraceMarkdown:
     def test_includes_request_id_and_timing(self):
-        from helix_context.vault.writer import render_trace_markdown
+        from cymatix_context.vault.writer import render_trace_markdown
 
         md = render_trace_markdown(
             request_id="abc12345",
@@ -164,7 +164,7 @@ class TestRenderTraceMarkdown:
         assert md.startswith("---\n")
 
     def test_frontmatter_contains_expires_at(self):
-        from helix_context.vault.writer import render_trace_markdown
+        from cymatix_context.vault.writer import render_trace_markdown
 
         md = render_trace_markdown(
             request_id="x", created_at="t1", expires_at="t2",
@@ -186,7 +186,7 @@ class TestRenderTraceMarkdown:
         assert "*(no genes returned)*" in md
 
     def test_handles_none_and_nan_scores(self):
-        from helix_context.vault.writer import render_trace_markdown
+        from cymatix_context.vault.writer import render_trace_markdown
 
         md = render_trace_markdown(
             request_id="x", created_at="t1", expires_at="t2",
@@ -212,7 +212,7 @@ class TestRenderTraceMarkdown:
 def _make_test_gene(content: str, source_id: str, domains=None):
     """Build a test gene with explicit source_id and EUCHROMATIN to survive the density gate."""
     from tests.conftest import make_gene
-    from helix_context.schemas import ChromatinState
+    from cymatix_context.schemas import ChromatinState
 
     g = make_gene(content, domains=domains or [], chromatin=ChromatinState.EUCHROMATIN)
     g.source_id = source_id
@@ -227,7 +227,7 @@ class TestFullExport:
     @pytest.fixture
     def genome(self, tmp_path: Path):
         """File-based genome (not in-memory) so VaultLock can live alongside it."""
-        from helix_context.genome import Genome
+        from cymatix_context.genome import Genome
 
         db_path = tmp_path / "genome.db"
         g = Genome(path=str(db_path))
@@ -236,7 +236,7 @@ class TestFullExport:
 
     @pytest.fixture
     def state(self, vault_root: Path):
-        from helix_context.vault.state import VaultState
+        from cymatix_context.vault.state import VaultState
 
         vault_root.mkdir(parents=True, exist_ok=True, mode=0o700)
         vs = VaultState(vault_root)
@@ -245,14 +245,14 @@ class TestFullExport:
 
     @pytest.fixture
     def lock(self, vault_root: Path):
-        from helix_context.vault.locking import VaultLock
+        from cymatix_context.vault.locking import VaultLock
 
         vault_root.mkdir(parents=True, exist_ok=True, mode=0o700)
         return VaultLock(vault_root, timeout=10.0)
 
     def test_exports_all_genes(self, genome, state, lock, vault_root):
         import time
-        from helix_context.vault.writer import full_export
+        from cymatix_context.vault.writer import full_export
 
         g1 = _make_test_gene("def foo(): pass", "src/foo.py", domains=["auth"])
         g2 = _make_test_gene("def bar(): pass", "src/bar.py", domains=["db"])
@@ -279,7 +279,7 @@ class TestFullExport:
 
     def test_export_filters_by_party(self, genome, state, lock, vault_root):
         import time
-        from helix_context.vault.writer import full_export
+        from cymatix_context.vault.writer import full_export
 
         g1 = _make_test_gene("def alpha(): pass", "src/alpha.py", domains=["auth"])
         g2 = _make_test_gene("def beta(): pass", "src/beta.py", domains=["db"])
@@ -313,7 +313,7 @@ class TestFullExport:
         assert len(gene_files) == 1
 
     def test_state_records_each_gene(self, genome, state, lock, vault_root):
-        from helix_context.vault.writer import full_export
+        from cymatix_context.vault.writer import full_export
 
         g1 = _make_test_gene("def record_me(): pass", "src/record.py", domains=["core"])
         gid = genome.upsert_gene(g1)
@@ -337,10 +337,10 @@ class TestFullExport:
 
     def test_attribute_error_in_adapter_propagates(self, tmp_path: Path, monkeypatch):
         """Programmer bugs (AttributeError) should NOT be silently swallowed."""
-        from helix_context.genome import Genome
-        from helix_context.vault import writer as vault_writer
-        from helix_context.vault.locking import VaultLock
-        from helix_context.vault.state import VaultState
+        from cymatix_context.genome import Genome
+        from cymatix_context.vault import writer as vault_writer
+        from cymatix_context.vault.locking import VaultLock
+        from cymatix_context.vault.state import VaultState
 
         def broken_adapter(row):
             raise AttributeError("simulated bug in row adapter")
@@ -372,10 +372,10 @@ class TestFullExport:
 
 class TestIncrementalExport:
     def test_returns_zero_when_nothing_changed(self, tmp_path: Path):
-        from helix_context.genome import Genome
-        from helix_context.vault.locking import VaultLock
-        from helix_context.vault.state import VaultState
-        from helix_context.vault.writer import full_export, incremental_export
+        from cymatix_context.genome import Genome
+        from cymatix_context.vault.locking import VaultLock
+        from cymatix_context.vault.state import VaultState
+        from cymatix_context.vault.writer import full_export, incremental_export
         import time
 
         genome = Genome(path=str(tmp_path / "genome.db"), synonym_map={})
@@ -409,10 +409,10 @@ class TestIncrementalExport:
             genome.close()
 
     def test_only_re_exports_changed_genes(self, tmp_path: Path):
-        from helix_context.genome import Genome
-        from helix_context.vault.locking import VaultLock
-        from helix_context.vault.state import VaultState
-        from helix_context.vault.writer import full_export, incremental_export
+        from cymatix_context.genome import Genome
+        from cymatix_context.vault.locking import VaultLock
+        from cymatix_context.vault.state import VaultState
+        from cymatix_context.vault.writer import full_export, incremental_export
         import time
 
         genome = Genome(path=str(tmp_path / "genome.db"), synonym_map={})
@@ -453,12 +453,12 @@ class TestIncrementalExport:
             genome.close()
 
     def test_updates_last_incremental_export_ts(self, tmp_path: Path):
-        from helix_context.vault.writer import full_export, incremental_export
+        from cymatix_context.vault.writer import full_export, incremental_export
         import time
 
-        from helix_context.genome import Genome
-        from helix_context.vault.locking import VaultLock
-        from helix_context.vault.state import VaultState
+        from cymatix_context.genome import Genome
+        from cymatix_context.vault.locking import VaultLock
+        from cymatix_context.vault.state import VaultState
 
         genome = Genome(path=str(tmp_path / "genome.db"), synonym_map={})
         try:
@@ -492,7 +492,7 @@ class TestIncrementalExport:
 
 class TestTraceExport:
     def test_writes_trace_file(self, tmp_path: Path):
-        from helix_context.vault.writer import trace_export
+        from cymatix_context.vault.writer import trace_export
 
         vault_root = tmp_path / "vault"
         vault_root.mkdir(mode=0o700)
@@ -518,7 +518,7 @@ class TestTraceExport:
         assert "rerank" in body
 
     def test_filename_contains_unix_expiry(self, tmp_path: Path):
-        from helix_context.vault.writer import trace_export
+        from cymatix_context.vault.writer import trace_export
 
         vault_root = tmp_path / "vault"
         vault_root.mkdir(mode=0o700)

@@ -15,7 +15,7 @@ from pathlib import Path
 
 import pytest
 
-from helix_context.sharding import corpus_shard_db, corpus_shard_dir
+from cymatix_context.sharding import corpus_shard_db, corpus_shard_dir
 
 
 SHORT_ROOT = "F:/Projects/helix-context"

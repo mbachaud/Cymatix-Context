@@ -50,7 +50,7 @@ from pathlib import Path
 
 import pytest
 
-from helix_context.config import (
+from cymatix_context.config import (
     BudgetConfig,
     ClassifierConfig,
     GenomeConfig,
@@ -59,24 +59,24 @@ from helix_context.config import (
     RibosomeConfig,
     load_config,
 )
-from helix_context.context_manager import HelixContextManager
-from helix_context.knowledge_store import KnowledgeStore
-from helix_context.retrieval.query_classifier import (
+from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.knowledge_store import KnowledgeStore
+from cymatix_context.retrieval.query_classifier import (
     VALID_QUERY_CLASSES,
     classify_query,
 )
-from helix_context.retrieval.rerank_combinators import (
+from cymatix_context.retrieval.rerank_combinators import (
     VALID_COMBINATORS,
     resolve_class_combinator,
 )
-from helix_context.shard_router import ShardRouter
-from helix_context.shard_schema import (
+from cymatix_context.shard_router import ShardRouter
+from cymatix_context.shard_schema import (
     init_main_db,
     open_main_db,
     register_shard,
     upsert_fingerprint,
 )
-from helix_context.sharding import ShardedGenomeAdapter
+from cymatix_context.sharding import ShardedGenomeAdapter
 
 # Reuse the single-source rerank-firing corpora + store harness.
 from tests.test_rerank_combinators import _defect1_corpus
@@ -285,7 +285,7 @@ def test_per_query_override_eps_band_also_reaches_store():
 def _build_single_shard_main(root: Path) -> str:
     """Materialize the DEFECT-1 corpus into one on-disk shard + a main.db that
     routes ``alpha`` to it. Returns the main_path."""
-    from helix_context.genome import Genome
+    from cymatix_context.genome import Genome
 
     main_path = str(root / "main.db")
     shard_path = str(root / "shard_a.db")

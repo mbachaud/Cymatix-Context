@@ -25,7 +25,7 @@ import pytest
 pytest.importorskip("jinja2", reason="launcher extra not installed")
 import httpx
 
-from helix_context.launcher.app import create_app
+from cymatix_context.launcher.app import create_app
 
 BLOCK_S = 0.6          # how long the backing call stalls
 HEARTBEAT_S = 0.05     # concurrent loop heartbeat
@@ -113,7 +113,7 @@ def test_slow_collector_or_supervisor_does_not_block_loop(method, path):
 
 
 def test_slow_genome_scan_does_not_block_loop(monkeypatch):
-    from helix_context.launcher import genome_registry
+    from cymatix_context.launcher import genome_registry
 
     def slow_discover():
         time.sleep(BLOCK_S)

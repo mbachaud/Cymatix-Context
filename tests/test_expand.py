@@ -15,9 +15,9 @@ from __future__ import annotations
 
 import pytest
 
-from helix_context.retrieval import expand
-from helix_context.identity import session_delivery
-from helix_context.context_manager import HelixContextManager
+from cymatix_context.retrieval import expand
+from cymatix_context.identity import session_delivery
+from cymatix_context.context_manager import HelixContextManager
 from tests.conftest import make_gene, make_client, make_helix_config
 
 

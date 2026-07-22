@@ -1,27 +1,27 @@
 # Configuration Reference
 
 This document is the canonical reference for every section and key in
-`helix.toml`. It tracks the runtime configuration consumed by
-`helix_context/config.py` (the TOML loader) and the post-merge state of
+`cymatix.toml`. It tracks the runtime configuration consumed by
+`cymatix_context/config.py` (the TOML loader) and the post-merge state of
 the 7-stage retrieval-fix initiative landed 2026-05-08 / 2026-05-10.
 
-Every key documented below is verified against `helix.toml` in the
+Every key documented below is verified against `cymatix.toml` in the
 repository root (the canonical reference) and against the dataclass
-definitions in `helix_context/config.py`. File-line citations use the
-`helix.toml:NN` shorthand.
+definitions in `cymatix_context/config.py`. File-line citations use the
+`cymatix.toml:NN` shorthand.
 
 The configuration file is loaded at process start by
-`helix_context.config.load_config()`. The default lookup order is:
+`cymatix_context.config.load_config()`. The default lookup order is:
 
 1. Path argument supplied to `load_config(path=...)` (programmatic).
-2. `HELIX_CONFIG` environment variable (process-level override).
-3. `helix.toml` in the current working directory (default).
+2. `CYMATIX_CONFIG` environment variable (process-level override).
+3. `cymatix.toml` in the current working directory (default).
 
 If no file is found, the loader returns the dataclass defaults baked
-into `helix_context/config.py`. Malformed TOML is logged and falls back
+into `cymatix_context/config.py`. Malformed TOML is logged and falls back
 to the same defaults so the server never blocks on a config typo. Keys
 in a section that the loader does not recognise are surfaced as a
-`WARNING` in the server log via `_warn_unknown` (`helix_context/config.py:500`)
+`WARNING` in the server log via `_warn_unknown` (`cymatix_context/config.py:500`)
 but do not abort startup.
 
 The order of sections below mirrors the file's top-to-bottom order so
@@ -31,11 +31,11 @@ Each section's **Keys** table lives between a
 "BEGIN GENERATED: config-tables:&lt;name&gt;" /
 "END GENERATED" HTML-comment marker pair and is produced by
 [`scripts/gen_config_reference.py`](../scripts/gen_config_reference.py)
-directly from the `helix_context/config.py` dataclasses (field name,
+directly from the `cymatix_context/config.py` dataclasses (field name,
 type annotation, default value, and — where a comment sits next to the
 field in the source — a harvested description). **Do not hand-edit the
 rows inside a marked region**: edit the field / comment in
-`helix_context/config.py` and re-run
+`cymatix_context/config.py` and re-run
 `python scripts/gen_config_reference.py` instead. Everything outside
 the markers (this intro, each section's **Purpose**, **Example**,
 **Migration notes**, and **Cross-refs** prose) stays hand-authored.
@@ -54,7 +54,7 @@ this section configures a separate subsystem against the same knowledge store.
 Leaving `enabled = false` (the design pillar: deterministic,
 auditable, LLM-free retrieval) means `/context` never touches an LLM
 even when other knobs in this section are populated. See
-`helix.toml:1-19` for the design preamble.
+`cymatix.toml:1-19` for the design preamble.
 
 **Keys.**
 
@@ -62,12 +62,12 @@ even when other knobs in this section are populated. See
 | Key | Type | Default | Description |
 |---|---|---|---|
 | `enabled` | `bool` | `false` | Master switch; false = ignore compressor config/runtime |
-| `model` | `str` | `"gemma4:e2b"` | default aligned with shipped helix.toml (2026-06-12 default-honesty pass): the shipped toml pins the light pack/replicate fallback model instead of "auto" (compressor auto-detect). Inert while enabled=False. |
+| `model` | `str` | `"gemma4:e2b"` | default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass): the shipped toml pins the light pack/replicate fallback model instead of "auto" (compressor auto-detect). Inert while enabled=False. |
 | `base_url` | `str` | `"http://localhost:11434"` |  |
-| `timeout` | `float` | `120.0` | default aligned with shipped helix.toml (2026-06-12 default-honesty pass) — bulk ingestion headroom |
+| `timeout` | `float` | `120.0` | default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) — bulk ingestion headroom |
 | `keep_alive` | `str` | `"30m"` | How long Ollama keeps the compressor model loaded |
-| `warmup` | `bool` | `false` | Pre-load model on server start. Default aligned with shipped helix.toml (2026-06-12 default-honesty pass) |
-| `backend` | `str` | `"none"` | disabled-state placeholder; only "deberta" or "litellm" are honored when enabled. Default aligned with shipped helix.toml (2026-06-12 default-honesty pass) |
+| `warmup` | `bool` | `false` | Pre-load model on server start. Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
+| `backend` | `str` | `"none"` | disabled-state placeholder; only "deberta" or "litellm" are honored when enabled. Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
 | `claude_model` | `str` | `"claude-haiku-4-5-20251001"` | Claude model when backend="claude" |
 | `claude_base_url` | `str` | `""` | Proxy URL (e.g. Headroom at http://127.0.0.1:8787); "" = direct |
 | `litellm_model` | `str` | `"gemini/gemini-2.5-flash"` | LiteLLM model string when backend="litellm" |
@@ -78,14 +78,14 @@ even when other knobs in this section are populated. See
 | `nli_splice_bonus` | `float` | `0.15` | Prob bonus for entailment-linked fragments |
 | `nli_splice_penalty` | `float` | `0.15` | Prob penalty for alternation-linked fragments |
 | `device` | `str` | `"auto"` | "auto", "cpu", "cuda" |
-| `query_expansion_enabled` | `bool` | `false` | Step 0 query-intent expansion fires ONE LLM call per novel query (LRU-cached) upstream of the 12-tone retrieval stack. Flip to false for a strictly LLM-free /context pipeline — the 12 tiers below still run on raw query text + synonym map. See context_manager _expand_query_intent. default aligned with shipped helix.toml (2026-06-12 default-honesty pass): false keeps /context strictly LLM-free (the design default — docs/MISSION.md); flip on for ~2-3pp on ambiguous queries at one ribosome call per novel query. |
+| `query_expansion_enabled` | `bool` | `false` | Step 0 query-intent expansion fires ONE LLM call per novel query (LRU-cached) upstream of the 12-tone retrieval stack. Flip to false for a strictly LLM-free /context pipeline — the 12 tiers below still run on raw query text + synonym map. See context_manager _expand_query_intent. default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass): false keeps /context strictly LLM-free (the design default — docs/MISSION.md); flip on for ~2-3pp on ambiguous queries at one ribosome call per novel query. |
 | `query_decomposition_enabled` | `bool` | `false` | Step 2 sub-query decomposition: decomposes broad queries into 2-4 point-fact sub-queries via one LLM call. Only fires for multi_hop/default classifier classes. Dark-shipped (default off). |
 <!-- END GENERATED -->
 
 `device` is **DEPRECATED**: a legacy device hint kept for one release.
 The loader emits a `WARNING` whenever this key is set, urging the
 operator to move to `[hardware] device`. When both keys are present,
-`[hardware] device` wins (`helix_context/config.py:1267-1279`).
+`[hardware] device` wins (`cymatix_context/config.py:1267-1279`).
 
 **Example.**
 
@@ -110,7 +110,7 @@ set, and the warning text is part of the test contract — see
 `tests/test_hardware_overrides_ribosome_device`.
 
 **Cross-refs.** `[hardware]` (device picker), `[budget]` (token caps
-for the compressor), `helix_context/config.py:24-117` (`RibosomeConfig`
+for the compressor), `cymatix_context/config.py:24-117` (`RibosomeConfig`
 dataclass), `RibosomeConfig.cost_class` for the surfaced cost-class
 (`local` / `api+paid` / `disabled`) consumed by `/health`.
 
@@ -138,9 +138,9 @@ from `hardware.init_from_config()` at server startup.
 
 `batch_sizes`'s generated default of `{}` is the runtime-equivalent of
 the shipped TOML string sentinel `"auto"` — both mean "use the
-auto-detected VRAM/RAM-aware table in `helix_context/hardware.py`".
+auto-detected VRAM/RAM-aware table in `cymatix_context/hardware.py`".
 When provided as a TOML inline table, every key is cast to `int`
-(loader normalisation in `helix_context/config.py`).
+(loader normalisation in `cymatix_context/config.py`).
 
 **Example.**
 
@@ -160,8 +160,8 @@ initiative (MPS+ROCm+CI hardening) is the next merge in flight per the
 session-memory note.
 
 **Cross-refs.** `[ribosome] device` (deprecated; this section
-overrides it), `helix_context/config.py:432-449` (`Hardware`
-dataclass), `helix_context/hardware.py` (auto-detection table),
+overrides it), `cymatix_context/config.py:432-449` (`Hardware`
+dataclass), `cymatix_context/hardware.py` (auto-detection table),
 `docs/archive/specs/2026-05-04-hardware-detection-design.md` (design
 spec).
 
@@ -182,15 +182,15 @@ calibration adds a per-classifier override path for `foveated_alpha`
 | Key | Type | Default | Description |
 |---|---|---|---|
 | `ribosome_tokens` | `int` | `3000` |  |
-| `expression_tokens` | `int` | `7000` | default aligned with shipped helix.toml (2026-06-12 default-honesty pass) |
-| `max_genes_per_turn` | `int` | `12` | default aligned with shipped helix.toml (2026-06-12 default-honesty pass) |
+| `expression_tokens` | `int` | `7000` | default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
+| `max_genes_per_turn` | `int` | `12` | default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
 | `max_fingerprints_per_turn` | `int` | `40` |  |
-| `splice_aggressiveness` | `float` | `0.3` | default aligned with shipped helix.toml (2026-06-12 default-honesty pass) |
-| `decoder_mode` | `str` | `"condensed"` | "full"\|"condensed"\|"minimal"\|"none". Default aligned with shipped helix.toml (2026-06-12 default-honesty pass) |
+| `splice_aggressiveness` | `float` | `0.3` | default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
+| `decoder_mode` | `str` | `"condensed"` | "full"\|"condensed"\|"minimal"\|"none". Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
 | `decoder_mode_overrides` | `Dict[str, str]` | `{}` | Issue #207 item 6: operator override for the compressor/ribosome-model capability classification (context_manager.resolve_model_capability_class) -- NOT the same table as decoder_mode above. Maps a model-name substring (case-insensitive) to one of "moe" / "small" / "large"; checked before the hand-calibrated MOE_MODEL_FAMILIES / SMALL_MODEL_PATTERNS tables and the generic ":NNb" parameter-size fallback those tables now have. Empty by default: byte-identical to pre-#207 behavior. |
-| `legibility_enabled` | `bool` | `true` | Sprint 1 legibility pack (AI-consumer roadmap): emit a one-line metadata header per document in expressed_context — fired tiers, confidence marker, short gene_id, compression ratio. See helix_context/legibility.py. Default on; flip off to restore the pre-Sprint-1 plain-dividers format (useful for bench A/B). |
+| `legibility_enabled` | `bool` | `true` | Sprint 1 legibility pack (AI-consumer roadmap): emit a one-line metadata header per document in expressed_context — fired tiers, confidence marker, short gene_id, compression ratio. See cymatix_context/legibility.py. Default on; flip off to restore the pre-Sprint-1 plain-dividers format (useful for bench A/B). |
 | `slate_char_budget` | `int` | `1500` | Stage 5 (2026-05-08): char-budget for the small_moe JSON answer slate. Counts the rendered string the model actually sees, INCLUDING the <helix:slate>...</helix:slate> wrapper, JSON braces, quotes, commas, and per-KV separators. Spec §5 default is 1500. Generic and frontier branches do not consult this knob. |
-| `session_delivery_enabled` | `bool` | `true` | Sprint 2 session working-set register: track delivered documents per session, elide repeats with a pointer stub so the consumer doesn't pay full token cost for content it already holds. Enabled 2026-04-19 (saves ~40% tokens on multi-turn conversations); only fires when the caller supplies a session_id. See session_delivery.py. default aligned with shipped helix.toml (2026-06-12 default-honesty pass) |
+| `session_delivery_enabled` | `bool` | `true` | Sprint 2 session working-set register: track delivered documents per session, elide repeats with a pointer stub so the consumer doesn't pay full token cost for content it already holds. Enabled 2026-04-19 (saves ~40% tokens on multi-turn conversations); only fires when the caller supplies a session_id. See session_delivery.py. default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
 | `abstain_enabled` | `bool` | `true` | NEW — see docs/specs/2026-05-02-abstain-tier-design.md |
 | `foveated_enabled` | `bool` | `false` | Foveated-splice (BROAD tier only). Off by default for the measurement period — see docs/specs/2026-05-03-foveated-splice-design.md §6.3 and docs/plans/2026-05-05-foveated-splice.md. Flip to True only after the phased α-sweep bench (§9) identifies a winning configuration. |
 | `foveated_alpha` | `float` | `1.0` | Power-law exponent for c_i = max(c_min, c_max · i^(-α)). α=0.5 = gentle decay, α=1.0 = harmonic-ish, α=2.0 = aggressive top-bias. |
@@ -240,9 +240,9 @@ values that override `budget.foveated_alpha` when
 `[cymatics] splice_threshold_scale` (consumes `splice_aggressiveness`),
 `docs/archive/specs/2026-05-02-abstain-tier-design.md` (ABSTAIN tier
 design), `docs/archive/specs/2026-05-03-foveated-splice-design.md`
-(foveated schedule), `helix_context/config.py:120-162`
-(`BudgetConfig`), `helix_context/legibility.py`
-(`legibility_enabled`), `helix_context/session_delivery.py`
+(foveated schedule), `cymatix_context/config.py:120-162`
+(`BudgetConfig`), `cymatix_context/legibility.py`
+(`legibility_enabled`), `cymatix_context/session_delivery.py`
 (`session_delivery_enabled`).
 
 ---
@@ -278,7 +278,7 @@ synthetic_session_window_s = 300
 synthetic_session_enabled = true
 ```
 
-**Cross-refs.** `helix_context/config.py:221-236` (`SessionConfig`),
+**Cross-refs.** `cymatix_context/config.py:221-236` (`SessionConfig`),
 `docs/archive/FUTURE/STATISTICAL_FUSION.md` §C2 (CWoLa framework),
 `cwola.py` (`sweep_buckets` consumer).
 
@@ -297,7 +297,7 @@ shard router.
 <!-- BEGIN GENERATED: config-tables:genome -->
 | Key | Type | Default | Description |
 |---|---|---|---|
-| `path` | `str` | `"genomes/main/genome.db"` | default aligned with shipped helix.toml (2026-06-12 default-honesty pass) — genomes/ is the phase-2 sharding root; CLAUDE.md documents this as THE default |
+| `path` | `str` | `"genomes/main/genome.db"` | default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) — genomes/ is the phase-2 sharding root; CLAUDE.md documents this as THE default |
 | `compact_interval` | `float` | `3600.0` | Seconds between source-change checks |
 | `cold_start_threshold` | `int` | `10` | Fix 3: documents needed before history stripping |
 | `replicas` | `List[str]` | `[]` | Read-only clone paths |
@@ -305,10 +305,10 @@ shard router.
 <!-- END GENERATED -->
 
 `path`'s generated default (`genome.db`, the bare code-default) differs
-from the **shipped** `helix.toml` value (`genomes/main/genome.db`,
+from the **shipped** `cymatix.toml` value (`genomes/main/genome.db`,
 CLAUDE.md's documented default) — see the Migration notes below.
-Override via the `HELIX_GENOME_PATH` env var, honored even when the
-`[genome]` section is absent from `helix.toml`.
+Override via the `CYMATIX_GENOME_PATH` env var, honored even when the
+`[genome]` section is absent from `cymatix.toml`.
 
 **Example.**
 
@@ -322,13 +322,13 @@ replica_sync_interval = 100
 ```
 
 **Migration notes.** No time-based decay. Documents never expire.
-2026-04-16 rebuild migrated from `F:/Projects/helix-context/genome.db`
+2026-04-16 rebuild migrated from `F:/Projects/cymatix-context/genome.db`
 (old master) and `C:/helix-cache/genome.db` (old replica with
-backfill) to the new `genomes/` folder. `HELIX_GENOME_PATH` env var
+backfill) to the new `genomes/` folder. `CYMATIX_GENOME_PATH` env var
 overrides this path so sharded vs monolithic servers can coexist on
-different ports without duplicating `helix.toml`.
+different ports without duplicating `cymatix.toml`.
 
-**Cross-refs.** `helix_context/config.py:165-171` (`GenomeConfig`),
+**Cross-refs.** `cymatix_context/config.py:165-171` (`GenomeConfig`),
 `docs/archive/FUTURE/GENOME_SHARDING.md` (phase-2 sharding plan).
 
 ---
@@ -336,7 +336,7 @@ different ports without duplicating `helix.toml`.
 ## `[server]`
 
 **Purpose.** HTTP server and chat-upstream wiring for the
-OpenAI-compatible proxy. Helix front-ends Ollama (or any
+OpenAI-compatible proxy. Cymatix front-ends Ollama (or any
 OpenAI-compatible upstream) at `127.0.0.1:11437` by default.
 
 **Keys.**
@@ -347,18 +347,18 @@ OpenAI-compatible upstream) at `127.0.0.1:11437` by default.
 | `host` | `str` | `"127.0.0.1"` |  |
 | `port` | `int` | `11437` |  |
 | `upstream` | `str` | `"http://localhost:11434"` |  |
-| `bench_enabled` | `bool` | `false` | Dev/configuration mode (v0.7.0): run a SECOND helix instance on a side port bound to a bench genome, so a primary chat stays attached to the main genome while a subagent drives the bench-harness against the bench port. Default OFF — a final deployment leaves this off and gets exactly one server. The launcher reads these at boot; flip in helix.toml or via --bench / HELIX_BENCH_ENABLED=1. |
+| `bench_enabled` | `bool` | `false` | Dev/configuration mode (v0.7.0): run a SECOND cymatix instance on a side port bound to a bench genome, so a primary chat stays attached to the main genome while a subagent drives the bench-harness against the bench port. Default OFF — a final deployment leaves this off and gets exactly one server. The launcher reads these at boot; flip in cymatix.toml or via --bench / CYMATIX_BENCH_ENABLED=1. |
 | `bench_port` | `int` | `11439` |  |
 | `bench_genome_path` | `str` | `"genomes/bench/bench.genome.db"` |  |
-| `upstream_timeout` | `float` | `180.0` | Timeout for proxied requests to Ollama. Bumped from 120s on 2026-05-02 — observed Proxy 500s on slow gemma4:e4b GPQA queries at ~125s; 180s gives long-tail generation room without letting truly stuck requests hang. Override per-deployment via [server] in helix.toml. |
+| `upstream_timeout` | `float` | `180.0` | Timeout for proxied requests to Ollama. Bumped from 120s on 2026-05-02 — observed Proxy 500s on slow gemma4:e4b GPQA queries at ~125s; 180s gives long-tail generation room without letting truly stuck requests hang. Override per-deployment via [server] in cymatix.toml. |
 <!-- END GENERATED -->
 
 `bench_enabled` / `bench_port` / `bench_genome_path` are the v0.7.0
-dev/configuration mode: a second helix instance on a side port bound to
+dev/configuration mode: a second cymatix instance on a side port bound to
 a bench genome, so a primary chat session stays attached to the main
 genome while a subagent drives the bench harness against the bench
-port. Default off; flip via `helix.toml`, `--bench`, or
-`HELIX_BENCH_ENABLED=1`.
+port. Default off; flip via `cymatix.toml`, `--bench`, or
+`CYMATIX_BENCH_ENABLED=1`.
 
 **Example.**
 
@@ -370,7 +370,7 @@ upstream = "http://localhost:11434"
 # upstream_timeout = 180
 ```
 
-**Cross-refs.** `helix_context/config.py` (`ServerConfig`), env
+**Cross-refs.** `cymatix_context/config.py` (`ServerConfig`), env
 overrides in `load_config()`.
 
 ---
@@ -380,7 +380,7 @@ overrides in `load_config()`.
 **Purpose.** OpenTelemetry export defaults for the backend — traces,
 metrics, and (optionally) forwarded Python logs to the native OTel
 sidecar (collector + Prometheus + Tempo + Loki + Grafana; see
-`docs/architecture/OBSERVABILITY.md`). Mirrors the `HELIX_OTEL_*` env
+`docs/architecture/OBSERVABILITY.md`). Mirrors the `CYMATIX_OTEL_*` env
 vars read by `telemetry/otel.py`. Precedence at setup time is
 **env > toml > default** — resolved in `otel.resolve_telemetry_settings()`,
 not in `load_config()`, so the default-honesty comparator
@@ -390,7 +390,7 @@ values.
 `enabled` defaults `false`: a bare backend (no launcher, no stack) must
 not dial a dead collector. The tray launcher closes the out-of-the-box
 gap the other way — once it starts (or adopts) the observability stack
-it exports `HELIX_OTEL_ENABLED=1` into the helix child's env
+it exports `CYMATIX_OTEL_ENABLED=1` into the cymatix child's env
 (`launcher/app.py` `_export_otel_env_for_backend`), which wins over
 this default by design.
 
@@ -399,13 +399,13 @@ this default by design.
 <!-- BEGIN GENERATED: config-tables:telemetry -->
 | Key | Type | Default | Description |
 |---|---|---|---|
-| `enabled` | `bool` | `false` | Master switch (HELIX_OTEL_ENABLED) |
-| `endpoint` | `str` | `"localhost:4317"` | OTLP gRPC (HELIX_OTEL_ENDPOINT) |
-| `insecure` | `bool` | `true` | Plain gRPC, dev-local (HELIX_OTEL_INSECURE) |
-| `sampler_ratio` | `float` | `1.0` | Trace sampler 0.0-1.0 (HELIX_OTEL_SAMPLER_RATIO) |
-| `redact_query` | `bool` | `true` | Hash query strings in spans (HELIX_OTEL_REDACT_QUERY) |
-| `logs_enabled` | `bool` | `true` | Ship Python logs to OTel/Loki (HELIX_OTEL_LOGS_ENABLED) |
-| `logs_level` | `str` | `"INFO"` | Min level forwarded (HELIX_OTEL_LOGS_LEVEL) |
+| `enabled` | `bool` | `false` | Master switch (CYMATIX_OTEL_ENABLED) |
+| `endpoint` | `str` | `"localhost:4317"` | OTLP gRPC (CYMATIX_OTEL_ENDPOINT) |
+| `insecure` | `bool` | `true` | Plain gRPC, dev-local (CYMATIX_OTEL_INSECURE) |
+| `sampler_ratio` | `float` | `1.0` | Trace sampler 0.0-1.0 (CYMATIX_OTEL_SAMPLER_RATIO) |
+| `redact_query` | `bool` | `true` | Hash query strings in spans (CYMATIX_OTEL_REDACT_QUERY) |
+| `logs_enabled` | `bool` | `true` | Ship Python logs to OTel/Loki (CYMATIX_OTEL_LOGS_ENABLED) |
+| `logs_level` | `str` | `"INFO"` | Min level forwarded (CYMATIX_OTEL_LOGS_LEVEL) |
 <!-- END GENERATED -->
 
 **Example.**
@@ -421,9 +421,9 @@ logs_enabled = true
 logs_level = "INFO"
 ```
 
-**Cross-refs.** `helix_context/config.py` (`TelemetryConfig`),
-`helix_context/telemetry/otel.py` (`resolve_telemetry_settings`, env >
-toml > default resolution), `helix_context/launcher/app.py`
+**Cross-refs.** `cymatix_context/config.py` (`TelemetryConfig`),
+`cymatix_context/telemetry/otel.py` (`resolve_telemetry_settings`, env >
+toml > default resolution), `cymatix_context/launcher/app.py`
 (`_export_otel_env_for_backend`), `docs/architecture/OBSERVABILITY.md`.
 
 ---
@@ -439,7 +439,7 @@ adopts an existing process if one is already listening on `port`
 child. The tray menu surfaces "Open Headroom Dashboard" and
 Start/Restart/Stop entries.
 
-Requires `pip install "helix-context[codec]"` (pulls
+Requires `pip install "cymatix-context[codec]"` (pulls
 `headroom-ai[proxy]`).
 
 **Keys.**
@@ -447,21 +447,21 @@ Requires `pip install "helix-context[codec]"` (pulls
 <!-- BEGIN GENERATED: config-tables:headroom -->
 | Key | Type | Default | Description |
 |---|---|---|---|
-| `enabled` | `bool` | `true` | Master switch; false = do nothing. Default aligned with shipped helix.toml (2026-06-12 default-honesty pass) |
+| `enabled` | `bool` | `true` | Master switch; false = do nothing. Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
 | `autostart` | `bool` | `true` | When enabled: adopt if running, spawn if not |
 | `host` | `str` | `"127.0.0.1"` |  |
 | `port` | `int` | `8787` |  |
 | `mode` | `str` | `"token"` | "token" \| "cache" (passed to --mode) |
 | `dashboard_path` | `str` | `"/dashboard"` | Appended to http://{host}:{port} |
-| `route_upstream` | `bool` | `false` | When true: launcher points helix's chat upstream at this proxy |
+| `route_upstream` | `bool` | `false` | When true: launcher points cymatix's chat upstream at this proxy |
 <!-- END GENERATED -->
 
-`route_upstream` controls whether helix's chat upstream is rewritten to
+`route_upstream` controls whether cymatix's chat upstream is rewritten to
 dial this proxy — separate from `enabled` (proxy lifecycle: start /
 adopt the process). You may want the proxy + dashboard running without
 the chat redirect, or vice versa. Off by default so a fresh install
 never silently rewrites the upstream to a proxy that isn't actually
-running. The `HELIX_HEADROOM_ROUTE_UPSTREAM_AUTO` env var (truthy →
+running. The `CYMATIX_HEADROOM_ROUTE_UPSTREAM_AUTO` env var (truthy →
 force on, falsy → force off, unset → defer to config) is a per-launch
 override.
 
@@ -478,7 +478,7 @@ dashboard_path = "/dashboard"
 route_upstream = false
 ```
 
-**Cross-refs.** `helix_context/config.py` (`HeadroomConfig`).
+**Cross-refs.** `cymatix_context/config.py` (`HeadroomConfig`).
 
 ---
 
@@ -496,11 +496,11 @@ is governed by per-feature flags in this section.
 |---|---|---|---|
 | `backend` | `str` | `"cpu"` | "ollama" \| "cpu" \| "hybrid" |
 | `splade_enabled` | `bool` | `true` | Phase 2: SPLADE sparse expansion at index time |
-| `rerank_model` | `str` | `"cross-encoder/ms-marco-MiniLM-L-6-v2"` | Phase 3: pretrained cross-encoder HF model ID — inert while rerank_enabled=False. Default aligned with shipped helix.toml (2026-06-12 default-honesty pass) |
+| `rerank_model` | `str` | `"cross-encoder/ms-marco-MiniLM-L-6-v2"` | Phase 3: pretrained cross-encoder HF model ID — inert while rerank_enabled=False. Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
 | `rerank_enabled` | `bool` | `false` | Phase 3: enable cross-encoder reranking |
 | `colbert_enabled` | `bool` | `false` | Phase 4: ColBERT late interaction (optional) |
-| `entity_graph` | `bool` | `true` | Phase 5: entity-based co-activation links (ingest-time edges). Default aligned with shipped helix.toml (2026-06-12 default-honesty pass) |
-| `dense_embed_on_ingest` | `bool` | `true` | Tier-0 PR-1 (2026-05-16): compute BGE-M3 dense vectors (genes.embedding_dense_v2) inline at ingest. Default true so a genome built by `helix ingest` / `/ingest` / context_manager.ingest is dense-populated without a separate backfill pass. Latency-sensitive callers can set false to defer encoding to scripts/backfill_bgem3_v2.py. This is purely the WRITE path — retrieval still gates on [retrieval] dense_embedding_enabled (default true). |
+| `entity_graph` | `bool` | `true` | Phase 5: entity-based co-activation links (ingest-time edges). Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
+| `dense_embed_on_ingest` | `bool` | `true` | Tier-0 PR-1 (2026-05-16): compute BGE-M3 dense vectors (genes.embedding_dense_v2) inline at ingest. Default true so a genome built by `cymatix ingest` / `/ingest` / context_manager.ingest is dense-populated without a separate backfill pass. Latency-sensitive callers can set false to defer encoding to scripts/backfill_bgem3_v2.py. This is purely the WRITE path — retrieval still gates on [retrieval] dense_embedding_enabled (default true). |
 | `sema_embed_on_ingest` | `bool` | `true` | Issue #227: compute the 20D ΣĒMA embedding at ingest (feeds TCM / cymatics via gene.embedding). Default True preserves current behaviour. Set False to skip the ingest-time SEMA encode entirely — the MiniLM model is then never materialized (TCM falls back to its text-derived path, cymatics off), which is what a lexical-only config or a multi-worker bench wants. Without this, ingest always materialized the lazy SEMA codec (#220), loading MiniLM per worker and OOMing parallel bench runs even with dense/cymatics disabled. |
 | `symbol_graph` | `bool` | `false` | WS2 (symbol graph): at ingest, index symbol definitions and emit referencing-chunk -> defining-chunk SYMBOL_REF edges (code only). Resolution is intra-file (high precision). Off = WS1-only chunking, at zero extraction cost (the flag gates the symbol parse itself, not just emission — WS2 review FIX-3). Default False — INTENTIONAL DARK-SHIP (2026-07-20). The ContextBench held-out re-run cleared the merge gate (packet +2.8pp line / +3.8pp sym; docs/benchmarks/2026-07-20-armc-contextbench-heldout.md), so this deviates deliberately from decision rule 2's "merge default-on": SIKE 2026-07-19 showed a prose-bed regression with the current code-query gating, so default-on waits on the symbol_expansion_cap sweep {4,16} + code-gating validation. Flipping the default is #231's follow-up, not this PR's. |
 | `splade_auto_enable_below_genes` | `int` | `0` | Issue #164 (size-aware SPLADE auto-toggle): SPLADE expansion's value follows a corpus-regime curve -- the v2 EnterpriseRAG-Onyx storage breakdown showed SPLADE at 21.1% of disk on the 850K-gene fixture while contributing 0 pp recall@10 vs SPLADE-off at the same scale (n=5 + 100q in-flight; see issue body). Below ~50K it's likely useful; above ~200K it's likely net-negative (disk + p95 + SQL fan-out). When BOTH thresholds are 0 (default) the toggle is disabled and the static ``splade_enabled`` value governs every upsert -- byte-identical to pre-#164 behaviour. Setting either threshold to a positive value opts the genome in: - splade_auto_enable_below_genes > 0: force SPLADE ON when the current gene_count is strictly below the threshold, even if ``splade_enabled = false``. The "sparse-corpus rescue" arm. - splade_auto_disable_above_genes > 0: force SPLADE OFF when the current gene_count is strictly above the threshold, even if ``splade_enabled = true``. The "enterprise-scale storage cliff" arm. Both default 0 (opt-in) because the scale curve in #164 is not yet empirically resolved across the 10K-100K transition band; conservative defaults will land in a follow-up once the per-fixture sweep is wired to a head-to-head SPLADE-on/off ablation across that range. |
@@ -546,7 +546,7 @@ splade_content_cap = 1000
 dense_passage_char_cap = 2000
 ```
 
-**Cross-refs.** `helix_context/config.py`
+**Cross-refs.** `cymatix_context/config.py`
 (`IngestionConfig`).
 
 ---
@@ -583,7 +583,7 @@ cold_tier_min_cosine = 0.15
 fingerprint_mode_profile = "balanced"
 ```
 
-**Cross-refs.** `helix_context/config.py`
+**Cross-refs.** `cymatix_context/config.py`
 (`ContextConfig`), `Genome.query_cold_tier` (consumer).
 
 ---
@@ -621,7 +621,7 @@ harmonic_links = true
 distance_metric = "cosine"
 ```
 
-**Cross-refs.** `helix_context/config.py`
+**Cross-refs.** `cymatix_context/config.py`
 (`CymaticsConfig`).
 
 ---
@@ -648,7 +648,7 @@ abstain-floor lookup when `[abstain].mode = "per_classifier"`.
 enabled = true
 ```
 
-**Cross-refs.** `helix_context/config.py`
+**Cross-refs.** `cymatix_context/config.py`
 (`ClassifierConfig`),
 `docs/archive/specs/2026-04-29-query-classifier-injection-router-design.md`,
 `[abstain]` (per-classifier floors keyed by classifier output).
@@ -678,7 +678,7 @@ which stay additive) lives in
 <!-- BEGIN GENERATED: config-tables:retrieval -->
 | Key | Type | Default | Description |
 |---|---|---|---|
-| `sr_enabled` | `bool` | `false` | Successor Representation (Stachenfeld 2017) - lazy on-demand SR rows via truncated power series over co-activation graph. 2026-06-12 default-honesty pass: stays FALSE on both sides. helix.toml had flipped this true (2026-04-22 Stage-1 bench), but the evidence roadmap measured SR at zero effect on retrieval outcomes, so the shipped toml was aligned back to the code default (the inverse of the usual toml-wins rule: measured-zero features default off). |
+| `sr_enabled` | `bool` | `false` | Successor Representation (Stachenfeld 2017) - lazy on-demand SR rows via truncated power series over co-activation graph. 2026-06-12 default-honesty pass: stays FALSE on both sides. cymatix.toml had flipped this true (2026-04-22 Stage-1 bench), but the evidence roadmap measured SR at zero effect on retrieval outcomes, so the shipped toml was aligned back to the code default (the inverse of the usual toml-wins rule: measured-zero features default off). |
 | `sr_gamma` | `float` | `0.85` | Discount factor (5-10 hop horizon at 0.9) |
 | `sr_k_steps` | `int` | `4` | Power-series truncation depth |
 | `sr_weight` | `float` | `1.5` | Per-document contribution multiplier |
@@ -688,9 +688,9 @@ which stay additive) lives in
 | `seeded_edges_enabled` | `bool` | `false` | Dark ship — flip to start evidence accumulation |
 | `seeded_edge_weight` | `float` | `1.0` | Base weight written on seed insertion |
 | `symbol_expansion_cap` | `int` | `8` | WS3: cap on referenced definitions pulled in by symbol-graph expansion (SYMBOL_REF). When more than `cap` candidates reference distinct defs, keep the top-`cap` by structural-centrality PageRank. 0 disables symbol expansion; <0 keeps all (unbounded — regresses budget-fill arms). Default 8 recovers the WS2 fingerprint regression while preserving the packet gain. |
-| `filename_anchor_enabled` | `bool` | `true` | Stage-1 bench flip 2026-04-22: +12pp Dewey axis-2. Default aligned with shipped helix.toml (2026-06-12 default-honesty pass) |
+| `filename_anchor_enabled` | `bool` | `true` | Stage-1 bench flip 2026-04-22: +12pp Dewey axis-2. Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
 | `filename_anchor_weight` | `float` | `4.0` | Per-match boost (higher than Tier 1's 3.0) |
-| `bm25_shortlist_enabled` | `bool` | `true` | Keep on (2026-04-22 sprint): +1/8 ans_full, clean attribution. Default aligned with shipped helix.toml (2026-06-12 default-honesty pass) |
+| `bm25_shortlist_enabled` | `bool` | `true` | Keep on (2026-04-22 sprint): +1/8 ans_full, clean attribution. Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
 | `bm25_shortlist_size` | `int` | `50` | BM25 top-N kept in the final ranking |
 | `bm25_prefilter_enabled` | `bool` | `false` |  |
 | `bm25_prefilter_size` | `int` | `200` | BM25 top-N fed into tier scoring |
@@ -728,12 +728,12 @@ which stay additive) lives in
 | `dense_weight` | `float` | `1.0` | Stage 2 dense recall, RRF participant |
 | `dense_additive_weight` | `float` | `4.0` | Tier-0 PR-3 (2026-05-16): additive-mode dense merge weight. Under fusion_mode == "additive" a dense hit's cosine is scaled by this before entering the gene_scores accumulator. BM25-comparable (tag_exact_weight is 3.0). Unused under RRF. Issue #203 (closed 2026-07-03): the real-query sweep (``benchmarks/sweep_dense_additive_weight.py``, n=100 ERB queries per bed) found recall@10 monotone INCREASING in this weight — erb10k 0.58 (w=0) → 0.64 (w=6), erb50k 0.47 → 0.56, medium 0.23 → 0.40 — with zero gold evictions at any weight. The #138 H10q gold-eviction fear did not reproduce on enterprise-class queries. 4.0 stands; the raise-to-6.0 decision is deferred to the #205 per-class retrieval profiles (w=6 may become the semantic-class value rather than a global default). ``0.0`` flips dense additively-off without disabling the dense write path or RRF participation. |
 | `dense_additive_min_cosine` | `float` | `0.15` | Tier-0 review fix (2026-05-16): noise floor for the additive-mode dense merge. A dense hit whose cosine is below this does not contribute to gene_scores (it is still kept as a candidate with negligible weight). Consistent with the cold tier's 0.15 min_cosine; deliberately gentle so it removes only noise-grade hits. Unused under RRF. |
-| `semantic_dense_additive_weight` | `float` | `16.0` | Semantic-wiring arm (2026-06-02; PRD docs/prds/2026-06-02-semantic-wiring-arm.md). When query_type=="semantic" AND env HELIX_SEMANTIC_ARM=1, the per-shard dense term is scaled by semantic_dense_additive_weight (instead of dense_additive_weight) AND routing broadens to all healthy shards. The two fire together or not at all. Default-off (env unset) => byte-identical baseline; lexical/tag/SPLADE tiers are never touched (additive KEEP-BOTH). |
+| `semantic_dense_additive_weight` | `float` | `16.0` | Semantic-wiring arm (2026-06-02; PRD docs/prds/2026-06-02-semantic-wiring-arm.md). When query_type=="semantic" AND env CYMATIX_SEMANTIC_ARM=1, the per-shard dense term is scaled by semantic_dense_additive_weight (instead of dense_additive_weight) AND routing broadens to all healthy shards. The two fire together or not at all. Default-off (env unset) => byte-identical baseline; lexical/tag/SPLADE tiers are never touched (additive KEEP-BOTH). |
 | `semantic_broaden_routing` | `bool` | `true` |  |
 | `pki_weight` | `float` | `1.0` | PKI tier, RRF participant |
-| `shard_fetch_multiplier` | `float` | `2.0` | ── Sharded-retrieval fetch depth + co-activation budget (#222/#223) ── These bind ONLY on the sharded read path (ShardRouter); blob mode never constructs a router, so they are inert there. Threaded to the router via open_read_source -> ShardedGenomeAdapter -> ShardRouter (mirrors semantic_broaden_routing). Defaults reproduce the dark-shipped env-knob behaviour byte-for-byte and keep the sharded merge identical to today. #222 per-shard fetch depth: the router fetches max_genes * multiplier candidates per shard before the cross-shard merge. multiplier=2.0 is the legacy flat 2× cut. scale_with_shards amplifies the multiplier by sqrt(n_shards) (clamped to 10×max_genes) so populous many-shard corpora oversample each shard deeply enough that a mid-shard gold survives to the merge. HELIX_SHARD_FETCH_FACTOR (int) overrides. |
+| `shard_fetch_multiplier` | `float` | `2.0` | ── Sharded-retrieval fetch depth + co-activation budget (#222/#223) ── These bind ONLY on the sharded read path (ShardRouter); blob mode never constructs a router, so they are inert there. Threaded to the router via open_read_source -> ShardedGenomeAdapter -> ShardRouter (mirrors semantic_broaden_routing). Defaults reproduce the dark-shipped env-knob behaviour byte-for-byte and keep the sharded merge identical to today. #222 per-shard fetch depth: the router fetches max_genes * multiplier candidates per shard before the cross-shard merge. multiplier=2.0 is the legacy flat 2× cut. scale_with_shards amplifies the multiplier by sqrt(n_shards) (clamped to 10×max_genes) so populous many-shard corpora oversample each shard deeply enough that a mid-shard gold survives to the merge. CYMATIX_SHARD_FETCH_FACTOR (int) overrides. |
 | `shard_fetch_scale_with_shards` | `bool` | `false` |  |
-| `coact_reserved_slots` | `int` | `0` | #223 co-activation reserved budget: reserve up to N of the final 2×max_genes output slots for newly graph-promoted (co-activated) docs so a link-discounted gold isn't truncated by lexical incumbents. 0 = legacy (no reservation). HELIX_SHARD_COACT_RESERVE (int) overrides. coact_link_boost is the discount a linked doc enters at (× its source doc's corrected score); 0.5 == the shipped constant. |
+| `coact_reserved_slots` | `int` | `0` | #223 co-activation reserved budget: reserve up to N of the final 2×max_genes output slots for newly graph-promoted (co-activated) docs so a link-discounted gold isn't truncated by lexical incumbents. 0 = legacy (no reservation). CYMATIX_SHARD_COACT_RESERVE (int) overrides. coact_link_boost is the discount a linked doc enters at (× its source doc's corrected score); 0.5 == the shipped constant. |
 | `coact_link_boost` | `float` | `0.5` |  |
 | `doc_type_boost_mode` | `str` | `"additive"` | ── #121 doc-type boost mode (#264) ─────────────────────────────── Router-only. Controls how the README/CLAUDE/INDEX summary-doc lift (#121) is applied on the cross-shard merge. DEFAULT-INERT: "additive" reproduces the shipped fixed ×DOC_TYPE_BOOST (1.15) post-multiply on the IDF-corrected score, byte-for-byte. The 1.15× multiplier was calibrated on additive/BM25-scale per-shard margins; production per-shard Genomes now score in RRF (fusion_mode="rrf"), which compresses intra-shard margins to ~1.6% so the fixed multiplier becomes decisive on nearly every candidate pair (#264). Two honest RRF-native alternatives, both bench-gated behind this knob: "off"  — skip the boost entirely (the flip case resolves because the unboosted impl file already out-ranks the README). "rank" — apply the boost as a rank-domain tier input to the cross-shard Fuser (#264 candidate b) instead of a magnitude multiply; final merge sorts primarily by the rank-fused score so a summary doc can only reorder genuine rank near-ties, never leapfrog a doc that dominates the shard ranks. Scale-free under both fusion modes. Inert on blob/single-shard paths (no ShardRouter constructed). |
 <!-- END GENERATED -->
@@ -748,7 +748,7 @@ fused+rerank_additive block so this knob ships inert; the alternatives
 50-needle beds — see
 `docs/research/2026-07-09-scoring-combinator-exploration.md`.
 `semantic_dense_additive_weight` / `semantic_broaden_routing` are the
-2026-06-02 semantic-wiring arm (env-gated, `HELIX_SEMANTIC_ARM=1`) —
+2026-06-02 semantic-wiring arm (env-gated, `CYMATIX_SEMANTIC_ARM=1`) —
 see `docs/prds/2026-06-02-semantic-wiring-arm.md`.
 `dense_pool_floor_genes` (issue #214) is a graceful-degradation floor:
 when the ANN threshold gate admits zero dense candidates due to
@@ -840,7 +840,7 @@ entity_graph_weight = 0.5
 dense_weight = 1.0
 dense_additive_weight = 4.0            # additive-mode only; unused under rrf
 dense_additive_min_cosine = 0.15       # additive-mode only; unused under rrf
-# Semantic-wiring arm (env-gated HELIX_SEMANTIC_ARM=1)
+# Semantic-wiring arm (env-gated CYMATIX_SEMANTIC_ARM=1)
 semantic_dense_additive_weight = 16.0
 semantic_broaden_routing = true
 pki_weight = 1.0
@@ -868,8 +868,8 @@ pki_weight = 1.0
   `genome_calibration` table. Missing row → one-time WARN, fallback to
   `ann_similarity_threshold`.
 
-**Cross-refs.** `helix_context/config.py:239-320`
-(`RetrievalConfig`), `helix_context/fusion.py` (RRF `Fuser`),
+**Cross-refs.** `cymatix_context/config.py:239-320`
+(`RetrievalConfig`), `cymatix_context/fusion.py` (RRF `Fuser`),
 `docs/specs/2026-05-08-stage-2-dense-recall.md`,
 `docs/specs/2026-05-08-stage-3-rrf-fusion.md`,
 `docs/specs/2026-05-08-stage-4-threshold-calibration.md`,
@@ -891,7 +891,7 @@ confidence in the retrieval.
 The current artifact is a **query-quality head**, not the per-(q, g)
 ranker originally described in the spec. Document ranking stays on the
 fuser (additive or RRF, see `[retrieval] fusion_mode`); this signal
-only feeds the packet / router. See `helix_context/fusion_plr.py`
+only feeds the packet / router. See `cymatix_context/fusion_plr.py`
 docstring and `docs/archive/FUTURE/STATISTICAL_FUSION.md` §C3 addendum
 for the scope trade-off.
 
@@ -900,9 +900,9 @@ for the scope trade-off.
 <!-- BEGIN GENERATED: config-tables:plr -->
 | Key | Type | Default | Description |
 |---|---|---|---|
-| `enabled` | `bool` | `true` | default aligned with shipped helix.toml (2026-06-12 default-honesty pass) — bench-gated #74; soft-no-op without artifact |
+| `enabled` | `bool` | `true` | default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) — bench-gated #74; soft-no-op without artifact |
 | `model_path` | `str` | `"training/models/stacked_plr.joblib"` |  |
-| `expected_sha256` | `str` | `""` | SHA256 of the artifact — when set, load refuses to proceed unless the file's digest matches. Empty string = trust the sidecar .sha256 next to the artifact (written by the trainer). Set a pinned hex digest in helix.toml if you want explicit operator-level pinning. |
+| `expected_sha256` | `str` | `""` | SHA256 of the artifact — when set, load refuses to proceed unless the file's digest matches. Empty string = trust the sidecar .sha256 next to the artifact (written by the trainer). Set a pinned hex digest in cymatix.toml if you want explicit operator-level pinning. |
 | `high_risk_threshold` | `float` | `0.5` | Threshold the fuser's `prob_B` is compared against to emit a coarse "likely-to-re-query" boolean alongside the log-odds. 0.5 is the symmetric default; tune only with bench evidence. |
 <!-- END GENERATED -->
 
@@ -924,8 +924,8 @@ python scripts/pwpc/sprint3.py <windowed_export.json> \
     --save-label-set best
 ```
 
-**Cross-refs.** `helix_context/config.py:387-410` (`PLRConfig`),
-`helix_context/fusion_plr.py` (consumer),
+**Cross-refs.** `cymatix_context/config.py:387-410` (`PLRConfig`),
+`cymatix_context/fusion_plr.py` (consumer),
 `docs/archive/FUTURE/STATISTICAL_FUSION.md` §C3.
 
 ---
@@ -955,7 +955,7 @@ These are SHIP-TIME defaults. Operator action post-merge:
 ```bash
 python scripts/calibrate_know_confidence.py \
     --input results/located_n1000.jsonl \
-    --out helix.toml
+    --out cymatix.toml
 ```
 
 Calibration requires Stage 1 (bench axis split) to land first — it
@@ -980,7 +980,7 @@ after which the `/context` response flags `calibration_stale`.
 `calibrated_at` / `calibrated_on_n` are written by
 `scripts/calibrate_know_confidence.py` after a fresh calibration run —
 `None` means the betas are still the SHIP-TIME defaults. The shipped
-`helix.toml` today carries the 2026-07-06 real calibration fit (ECE
+`cymatix.toml` today carries the 2026-07-06 real calibration fit (ECE
 0.74 → 0.04 vs the code defaults above); see
 `docs/benchmarks/2026-07-06-know-logistic-calibration.md`.
 
@@ -1000,14 +1000,14 @@ calibrated_on_n = 800
 `betas` array (missing the freshness coefficient). The loader expects
 6 entries (`1 + N_FEATURES = 1 + 5`) post-Stage-7; a mismatched length
 logs a `WARNING` and falls back to the 6-element code default.
-Operators upgrading from a pre-Stage-7 `helix.toml` should either
+Operators upgrading from a pre-Stage-7 `cymatix.toml` should either
 re-run `scripts/calibrate_know_confidence.py` to refresh `[know]`, or
 manually append the Stage-7 default coefficient (`+1.5`) to the array.
-The shipped `helix.toml` has carried a real 6-element calibration fit
+The shipped `cymatix.toml` has carried a real 6-element calibration fit
 since the 2026-07-06 rrf-default sweep.
 
-**Cross-refs.** `helix_context/know_calibration.py` (pure-function
-loader; soft-fails to defaults), `helix_context/context_packet.py`
+**Cross-refs.** `cymatix_context/know_calibration.py` (pure-function
+loader; soft-fails to defaults), `cymatix_context/context_packet.py`
 (`KnowBlock` / `MissBlock` emit path),
 `docs/specs/2026-05-08-stage-6-know-miss-blocks.md` §3, §11,
 `docs/specs/2026-05-08-stage-7-freshness-gate.md` §10,
@@ -1017,19 +1017,19 @@ loader; soft-fails to defaults), `helix_context/context_packet.py`
 
 ## `[mem_sync]`
 
-**Purpose.** Auto-memory → helix sync. Every `.md` file in a watched
+**Purpose.** Auto-memory → cymatix sync. Every `.md` file in a watched
 directory becomes a document; persona / agent attribution comes from
-`HELIX_AGENT` / `HELIX_USER` env vars on the syncer process. See
+`CYMATIX_AGENT` / `CYMATIX_USER` env vars on the syncer process. See
 `scripts/run_mem_sync.py`.
 
 **Keys.**
 
 | Key | Type | Default | Effect |
 |---|---|---|---|
-| `enabled` | bool | `false` | Master switch. Set `true` and run `scripts/run_mem_sync.py`. The shipped value (`helix.toml:349`). |
-| `helix_url` | str | `"http://127.0.0.1:11437"` | Helix server URL — must match `[server] host:port` for the local case. The shipped value (`helix.toml:350`). |
-| `sync_interval_s` | int | `60` | Poll cadence in seconds. Human-speed writes; cheap stat+hash check per file. The shipped value (`helix.toml:351`). |
-| `agent_kind` | str | `"claude-code"` | Stamp written on every ingest; identifies the writer tool for downstream attribution. The shipped value (`helix.toml:352`). |
+| `enabled` | bool | `false` | Master switch. Set `true` and run `scripts/run_mem_sync.py`. The shipped value (`cymatix.toml:349`). |
+| `helix_url` | str | `"http://127.0.0.1:11437"` | Cymatix server URL — must match `[server] host:port` for the local case. The shipped value (`cymatix.toml:350`). |
+| `sync_interval_s` | int | `60` | Poll cadence in seconds. Human-speed writes; cheap stat+hash check per file. The shipped value (`cymatix.toml:351`). |
+| `agent_kind` | str | `"claude-code"` | Stamp written on every ingest; identifies the writer tool for downstream attribution. The shipped value (`cymatix.toml:352`). |
 | `watch_dirs` | array<str> | `[]` | Directories to watch. `~` is expanded automatically. Empty by default for the public release — point this at your own memory/notes directories. |
 
 **Example.**
@@ -1045,8 +1045,8 @@ watch_dirs = []
 ```
 
 **Note.** This section is **not** parsed by
-`helix_context/config.py` directly — it is consumed by the standalone
-`scripts/run_mem_sync.py` syncer. The block lives in `helix.toml` for
+`cymatix_context/config.py` directly — it is consumed by the standalone
+`scripts/run_mem_sync.py` syncer. The block lives in `cymatix.toml` for
 single-source-of-truth co-location; the syncer reads its own copy.
 
 **Cross-refs.** `scripts/run_mem_sync.py` (consumer).
@@ -1064,9 +1064,9 @@ read once at process start.
 
 Each entry is `<query keyword> = [<synonym>, <synonym>, ...]`. There
 are no nested tables. The loader builds `cfg.synonym_map` as a
-`Dict[str, List[str]]` (`helix_context/config.py:867-870`).
+`Dict[str, List[str]]` (`cymatix_context/config.py:867-870`).
 
-**Example (excerpt from the shipped file at `helix.toml:357-398`).**
+**Example (excerpt from the shipped file at `cymatix.toml:357-398`).**
 
 ```toml
 [synonyms]
@@ -1080,7 +1080,7 @@ api = ["endpoint", "route", "rest", "http", "request", "response"]
 test = ["pytest", "unittest", "mock", "assert", "coverage"]
 deploy = ["docker", "kubernetes", "ci", "cd", "pipeline", "helm"]
 config = ["settings", "toml", "env", "environment", "dotenv"]
-# ... (full set in helix.toml)
+# ... (full set in cymatix.toml)
 ```
 
 **Operator note.** The synonym map is critical. If queries return "no
@@ -1088,8 +1088,8 @@ relevant context", the most common cause is that query keywords don't
 map to the tags the ingestion layer assigned. Add a synonym
 entry and restart.
 
-**Cross-refs.** `helix_context/config.py:866-870` (loader),
-`helix.toml:357-398` (full shipped map).
+**Cross-refs.** `cymatix_context/config.py:866-870` (loader),
+`cymatix.toml:357-398` (full shipped map).
 
 ---
 
@@ -1105,7 +1105,7 @@ to `"per_classifier"` after running
 `[abstain.<cls>]` blocks.
 
 `"per_classifier"` **REQUIRES** an `[abstain.default]` block — the
-loader raises `ConfigError` otherwise (`helix_context/config.py:751-756`).
+loader raises `ConfigError` otherwise (`cymatix_context/config.py:751-756`).
 Other classes may be omitted; runtime falls back to
 `[abstain.default]` via `AbstainConfig.floors_for(cls)`.
 
@@ -1183,7 +1183,7 @@ foveated_alpha = 1.0
   rate on factual queries ≤ 5% (current implicit ~95% — `5.0` floor
   unreachable post-RRF).
 
-**Cross-refs.** `helix_context/config.py:323-373` (`AbstainConfig`,
+**Cross-refs.** `cymatix_context/config.py:323-373` (`AbstainConfig`,
 `AbstainClassFloors`, `floors_for`),
 `docs/specs/2026-05-08-stage-4-threshold-calibration.md` §4 + §6,
 `scripts/calibrate_thresholds.py` (operator runbook —
@@ -1200,7 +1200,7 @@ Stage-3 spec §9 transitional bypass).
 **Purpose.** Obsidian-style vault export for operators. v1 ships as a
 read-only export plus diagnostic `/context` traces; curation / inbox
 arrive in v1.1. Off by default; the entire block is commented out in
-the shipped `helix.toml`.
+the shipped `cymatix.toml`.
 
 **Keys.**
 
@@ -1251,61 +1251,61 @@ prune_interval_minutes = 60
 trigger_only = false
 ```
 
-**Cross-refs.** `helix_context/config.py:452-476` (`VaultConfig`,
-`VaultTracesConfig`), `helix.toml:399-419` (commented template).
+**Cross-refs.** `cymatix_context/config.py:452-476` (`VaultConfig`,
+`VaultTracesConfig`), `cymatix.toml:399-419` (commented template).
 
 ---
 
 # Configuration loading order
 
-`helix_context.config.load_config()` resolves configuration in this
+`cymatix_context.config.load_config()` resolves configuration in this
 priority order (highest priority wins):
 
 1. **Per-call request fields.** Endpoint-specific overrides on the
    request body (e.g., `caller_model_class` on `/context`,
    `include_cold` on `/context`, `pool_size` on the dense recall
    path). Per-call overrides do not mutate the loaded `HelixConfig`.
-2. **Process-level environment variables.** A defined set of `HELIX_*`
+2. **Process-level environment variables.** A defined set of `CYMATIX_*`
    env vars override loaded values:
-   - `HELIX_CONFIG` — path to the TOML file (defaults to
-     `helix.toml`). Read in
-     `helix_context/config.py:520-521`.
-   - `HELIX_GENOME_PATH` — overrides `[genome] path` after the TOML
-     load. Read in `helix_context/config.py:611-612`.
-   - `HELIX_SERVER_UPSTREAM` — overrides `[server] upstream`. Read in
-     `helix_context/config.py:616-617`.
-   - `HELIX_SERVER_UPSTREAM_TIMEOUT` — overrides `[server]
+   - `CYMATIX_CONFIG` — path to the TOML file (defaults to
+     `cymatix.toml`). Read in
+     `cymatix_context/config.py:520-521`.
+   - `CYMATIX_GENOME_PATH` — overrides `[genome] path` after the TOML
+     load. Read in `cymatix_context/config.py:611-612`.
+   - `CYMATIX_SERVER_UPSTREAM` — overrides `[server] upstream`. Read in
+     `cymatix_context/config.py:616-617`.
+   - `CYMATIX_SERVER_UPSTREAM_TIMEOUT` — overrides `[server]
      upstream_timeout` (float, ignored on parse error with a
-     `WARNING`). Read in `helix_context/config.py:618-625`.
-   - `HELIX_DEVICE` — one-shot device pin. Consumed by
+     `WARNING`). Read in `cymatix_context/config.py:618-625`.
+   - `CYMATIX_DEVICE` — one-shot device pin. Consumed by
      `hardware.init_from_config()`, not the TOML loader directly.
-   - `HELIX_PARTY_ID` — preferred override for `[session]
+   - `CYMATIX_PARTY_ID` — preferred override for `[session]
      default_party_id` (consumed by request-handling code, not the
      loader).
-   - `HELIX_USE_SHARDS` — sharded vs monolithic knowledge store routing.
-   - `HELIX_FILENAME_ANCHOR_ENABLED` — one-shot override for
+   - `CYMATIX_USE_SHARDS` — sharded vs monolithic knowledge store routing.
+   - `CYMATIX_FILENAME_ANCHOR_ENABLED` — one-shot override for
      `[retrieval] filename_anchor_enabled`.
-   - `HELIX_ABSTAIN_DISABLE` — one-shot override for `[budget]
+   - `CYMATIX_ABSTAIN_DISABLE` — one-shot override for `[budget]
      abstain_enabled`.
-3. **TOML file values.** `helix.toml` (or the path in `HELIX_CONFIG`).
+3. **TOML file values.** `cymatix.toml` (or the path in `CYMATIX_CONFIG`).
    Loaded once at process start.
-4. **Dataclass defaults.** Every field in `helix_context/config.py`
+4. **Dataclass defaults.** Every field in `cymatix_context/config.py`
    has a typed default. Returned as-is when no file is present
-   (`helix_context/config.py:524-526`).
+   (`cymatix_context/config.py:524-526`).
 
 The loader is **soft-fail** on every section: malformed TOML, unknown
-keys (`_warn_unknown` in `helix_context/config.py:500-512`), or
+keys (`_warn_unknown` in `cymatix_context/config.py:500-512`), or
 malformed values fall back to the dataclass default with a
 `log.warning`. The single hard-fail is `[abstain].mode =
 "per_classifier"` without an `[abstain.default]` block, which raises
-`ConfigError` (`helix_context/config.py:751-756`).
+`ConfigError` (`cymatix_context/config.py:751-756`).
 
 ---
 
 # Hot-reload semantics
 
 **Restart-required.** Most sections are read **once** at process
-start. Changes take effect only after restarting the helix-context
+start. Changes take effect only after restarting the cymatix-context
 process:
 
 - `[ribosome]`, `[hardware]`, `[server]`, `[genome]`, `[ingestion]`,
@@ -1338,11 +1338,11 @@ invalidation surface:
 - The `genome_calibration` row consumed by `ann_threshold_mode =
   "margin_over_random"` is read on first `/context` after process
   start, then cached. **Persistence-manager rotation invalidates the
-  cache** (`helix_context/genome.py` `_effective_ann_threshold` —
+  cache** (`cymatix_context/genome.py` `_effective_ann_threshold` —
   Stage-4 spec §8).
 
 **`[know]` hot-reload.** The `[know]` block is **hot-reloaded** via
-the pure-function loader in `helix_context/know_calibration.py`. The
+the pure-function loader in `cymatix_context/know_calibration.py`. The
 calibration table is read on first `/context` after process start and
 cached thereafter; subsequent edits to `[know]` require a
 `/admin/refresh` (or process restart) to invalidate the cache. The
@@ -1357,9 +1357,9 @@ the highest-churn knobs (`fusion_mode`, `ann_threshold_mode`,
 
 ---
 
-# Default `helix.toml`
+# Default `cymatix.toml`
 
-The full current `helix.toml` as of 2026-05-10 (post-7-stage merge),
+The full current `cymatix.toml` as of 2026-05-10 (post-7-stage merge),
 provided as a copy-paste baseline for new operators. Cross-reference
 the per-section tables above for key-by-key behavior.
 
@@ -1408,13 +1408,13 @@ query_decomposition_enabled = false
 
 [hardware]
 # Device picker. "auto" picks best-available (cuda -> rocm -> mps -> cpu).
-# Explicit values fall back loudly to CPU on probe failure; helix never
+# Explicit values fall back loudly to CPU on probe failure; cymatix never
 # blocks on hardware mismatch -- see /health for fallback state.
-# Override one-shot via HELIX_DEVICE=cpu env var.
+# Override one-shot via CYMATIX_DEVICE=cpu env var.
 device = "auto"        # auto | cuda | rocm | mps | cpu
 
 # Batch-size policy. "auto" consults the VRAM/RAM-aware table in
-# helix_context/hardware.py. Override per model when tuning:
+# cymatix_context/hardware.py. Override per model when tuning:
 #   batch_sizes = { rerank = 16, splice = 32, splade = 8, nli = 8 }
 batch_sizes = "auto"
 
@@ -1431,7 +1431,7 @@ splice_aggressiveness = 0.3             # 0=keep all, 1=ruthless trim (lower pre
 decoder_mode = "condensed"              # "full"|"condensed"|"minimal"|"none" (none saves ~750 tokens for API models)
 # Sprint 1 legibility pack (AI-consumer roadmap): emit one metadata line
 # per gene in expressed_context — fired tiers, confidence marker, short
-# gene_id, raw→compressed chars. See helix_context/legibility.py + docs/
+# gene_id, raw→compressed chars. See cymatix_context/legibility.py + docs/
 # FUTURE/AI_CONSUMER_ROADMAP_2026-04-14.md. Flip to false to restore
 # plain-dividers format for bench A/B.
 legibility_enabled = true
@@ -1440,16 +1440,16 @@ legibility_enabled = true
 # pointer stub. Enabled 2026-04-19 — MVP writes to session_delivery_log
 # on every /context call (synthetic session_id fallback covers callers
 # that don't supply one). Set to false to restore pre-MVP dark behavior.
-# See helix_context/session_delivery.py.
+# See cymatix_context/session_delivery.py.
 session_delivery_enabled = true
 # Confidence-gated context attachment (ABSTAIN tier). When true (default),
 # build_context returns a marker-only ContextWindow when post-refinement
 # retrieval is weak on BOTH absolute score (top_score < 2.5) AND ratio
 # (top_score/mean < 1.8) — the negative space of the TIGHT and FOCUSED
-# tiers. Goal: skip the 12K-token BROAD fallback on queries where helix
+# tiers. Goal: skip the 12K-token BROAD fallback on queries where cymatix
 # can't help, so the small model answers from weights instead of digesting
 # irrelevant noise. Set to false to restore the legacy always-inject
-# behavior (BROAD takes the negative space). HELIX_ABSTAIN_DISABLE=1 env
+# behavior (BROAD takes the negative space). CYMATIX_ABSTAIN_DISABLE=1 env
 # var forces off without redeploy. See docs/specs/2026-05-02-abstain-tier-design.md.
 abstain_enabled = true
 # Foveated-splice (BROAD tier only). When True, the BROAD branch of the
@@ -1480,14 +1480,14 @@ foveated_base_chars = 1000
 # (no re-query detectable without a session), making CWoLa training
 # impossible. See cwola.py + STATISTICAL_FUSION.md §C2.
 # Default party_id for CWoLa / session attribution when no env var or header is set.
-# Operators: set HELIX_PARTY_ID in your environment (preferred) or change this value.
+# Operators: set CYMATIX_PARTY_ID in your environment (preferred) or change this value.
 default_party_id = "default"            # Attribution fallback when the request omits party_id
 synthetic_session_window_s = 300        # 5 min — same-IP requests within this window group into one session
 synthetic_session_enabled = true        # Flip to false to restore prior NULL-session behavior (not recommended)
 
 [genome]
 # 2026-04-16: swapped to fresh-rebuild clean genome. Old paths archived:
-# F:/Projects/helix-context/genome.db   — old master (pre-rebuild)
+# F:/Projects/cymatix-context/genome.db   — old master (pre-rebuild)
 # C:/helix-cache/genome.db              — old replica (had backfill)
 # New genomes/ folder is the phase-2 sharding root. main/ is v1's only
 # shard; future shards land as genomes/reference/, genomes/agent/, etc.
@@ -1521,7 +1521,7 @@ upstream = "http://localhost:11434"     # Ollama
 #   2. Otherwise spawns a fresh headroom child (``autostart=true`` default).
 # the tray gains "Open Headroom Dashboard" + Start/Restart/Stop
 # Headroom menu items.
-# Requires: pip install "helix-context[codec]" (pulls headroom-ai[proxy])
+# Requires: pip install "cymatix-context[codec]" (pulls headroom-ai[proxy])
 [headroom]
 enabled = true                          # Master switch; true = tray wires Headroom and adopts/spawns it on launch
 autostart = true                        # When enabled: adopt if running, spawn if not. Set false for menu-only mode.
@@ -1587,7 +1587,7 @@ seeded_edge_weight = 1.0                # Base weight stamped at seed insertion
 # Dewey bench 2026-04-14: filename-as-primary-anchor gave +24pp
 # retrieval over full path-token bag. Boosts genes whose filename
 # stem matches a query term. One-shot env var override:
-# HELIX_FILENAME_ANCHOR_ENABLED=1.
+# CYMATIX_FILENAME_ANCHOR_ENABLED=1.
 filename_anchor_enabled = true          # Stage-1 bench flip (2026-04-22); +12pp on Dewey axis-2 spike
 filename_anchor_weight = 4.0            # Per-match boost (Tier 1 exact-tag = 3.0 for reference)
 # BM25 shortlist post-filter (2026-04-22, research-review Pareto move 1).
@@ -1658,7 +1658,7 @@ pki_weight = 1.0                        # path-key-index tier, RRF participant
 # The current artifact is a **query-quality head**, not the per-(q, g)
 # ranker originally described in the spec. Gene ranking stays on the
 # additive fuser; this signal only feeds the packet / router.
-# See helix_context/fusion_plr.py docstring for the scope trade-off.
+# See cymatix_context/fusion_plr.py docstring for the scope trade-off.
 #
 # Train a fresh artifact with:
 #   python scripts/pwpc/sprint3.py <windowed_export.json> \
@@ -1688,7 +1688,7 @@ high_risk_threshold = 0.5               # `prob_B > this` surfaces a coarse "lik
 # These are SHIP-TIME defaults. Operator action post-merge:
 #   python scripts/calibrate_know_confidence.py \
 #       --input results/located_n1000.jsonl \
-#       --out helix.toml
+#       --out cymatix.toml
 # Calibration requires Stage 1 to land first (it produces the bench
 # JSONL).
 #
@@ -1701,8 +1701,8 @@ g_ref           = 0.5
 betas           = [-2.0, 2.0, 1.5, 0.7, 1.8]
 
 [mem_sync]
-# Auto-memory → helix sync. Every .md file in a watched dir becomes a
-# gene; persona/agent attribution comes from HELIX_AGENT / HELIX_USER
+# Auto-memory → cymatix sync. Every .md file in a watched dir becomes a
+# gene; persona/agent attribution comes from CYMATIX_AGENT / CYMATIX_USER
 # env vars on the syncer process. See scripts/run_mem_sync.py.
 enabled = false                         # Set true + run scripts/run_mem_sync.py
 helix_url = "http://127.0.0.1:11437"

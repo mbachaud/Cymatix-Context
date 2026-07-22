@@ -49,16 +49,16 @@ from typing import List
 
 import pytest
 
-# Make sure we can import scripts/ as well as helix_context.
+# Make sure we can import scripts/ as well as cymatix_context.
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
-from helix_context.config import (
+from cymatix_context.config import (
     AbstainClassFloors, AbstainConfig, HelixConfig, RetrievalConfig, load_config,
 )
-from helix_context.exceptions import ConfigError
-from helix_context.genome import Genome
+from cymatix_context.exceptions import ConfigError
+from cymatix_context.genome import Genome
 
 
 # ─── Fixtures ────────────────────────────────────────────────────────────
@@ -226,7 +226,7 @@ def _make_fake_cm(cfg):
     and the bound config. Avoids a full HelixContextManager.__init__
     (which loads ribosome + genome).
     """
-    from helix_context.context_manager import HelixContextManager
+    from cymatix_context.context_manager import HelixContextManager
     from types import SimpleNamespace
     return SimpleNamespace(
         config=cfg,
@@ -243,7 +243,7 @@ def test_global_mode_preserves_legacy_behavior():
     when ``config.abstain.mode == "global"``, regardless of cls. The full
     1000-row pipeline regression is in ``test_global_mode_regression_diff``.
     """
-    from helix_context.context_manager import HelixContextManager as ContextManager
+    from cymatix_context.context_manager import HelixContextManager as ContextManager
     cfg = HelixConfig()  # default: abstain.mode = "global"
     assert cfg.abstain.mode == "global"
     fake_self = _make_fake_cm(cfg)
@@ -269,7 +269,7 @@ def test_global_mode_regression_diff():
     import random as _random
     rng = _random.Random(20260508)
     cfg = HelixConfig()  # default mode='global'
-    from helix_context.context_manager import HelixContextManager as ContextManager
+    from cymatix_context.context_manager import HelixContextManager as ContextManager
     fake_self = _make_fake_cm(cfg)
 
     diff_count = 0
@@ -464,7 +464,7 @@ def test_calibration_age_warning_on_stale_db(tmp_path, caplog):
     g.conn.commit()
     g.conn.close()
 
-    with caplog.at_level(logging.WARNING, logger="helix_context.genome"):
+    with caplog.at_level(logging.WARNING, logger="cymatix_context.genome"):
         # Reopen and trigger the warning via the constructor's age check.
         g2 = Genome(
             str(db_path), dense_embedding_enabled=True, dense_embedding_dim=64,
@@ -607,13 +607,13 @@ def test_calibration_script_smoke(fixture_genome, tmp_path):
 #                            "calibration_stale" when threshold trips)
 #
 # These tests exercise the underlying helpers in
-# ``helix_context.know_calibration`` so the contract is enforced without
+# ``cymatix_context.know_calibration`` so the contract is enforced without
 # spinning up FastAPI for every assertion.
 
 
 from datetime import datetime, timedelta, timezone
 
-from helix_context.scoring.know_calibration import (
+from cymatix_context.scoring.know_calibration import (
     DEFAULT_STALE_AFTER_DAYS,
     KnowCalibration,
     calibration_age_days,

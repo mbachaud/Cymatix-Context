@@ -1,4 +1,4 @@
-# Helix-Context Retrieval Dimensions
+# Cymatix-Context Retrieval Dimensions
 
 > **Last reviewed:** 2026-04-17 (working tree)
 > **Knowledge store snapshot:** 19,738 documents (13,710 OPEN / 1,949 EUCHRO / 4,079 HETERO)
@@ -76,8 +76,8 @@
 Auxiliary live tiers not counted as separate D-lanes:
 
 - `path_key_index` Tier 0 compound retrieval is live and fires before D1/D2 fusion.
-- `filename_anchor` exists as a dark-shipped lexical boost, but remains off in the default `helix.toml`.
-- `SR` exists as a graph-expansion path under D8, but remains dark-shipped in the default `helix.toml`.
+- `filename_anchor` exists as a dark-shipped lexical boost, but remains off in the default `cymatix.toml`.
+- `SR` exists as a graph-expansion path under D8, but remains dark-shipped in the default `cymatix.toml`.
 
 ---
 
@@ -102,7 +102,7 @@ Related live adjuncts, not counted as separate dimensions:
 ### D2 — Tagging (promoter index)
 
 Keyword + entity tag matching at retrieval time. Documents tagged at ingest via `promoter_index`.
-Query terms expanded through `helix.toml [synonyms]`.
+Query terms expanded through `cymatix.toml [synonyms]`.
 
 ### D3 — Source Provenance
 
@@ -177,7 +177,7 @@ Current live wiring:
 Still partial:
 
 - `entity_graph` is now a first-class retrieval signal (Tier 5b, Step 3C, 2026-05-08); dark-shipped (`entity_graph_retrieval_enabled = false`) pending bench gate
-- SR (`sr_boost`) exists under D8; `sr_enabled = true` in helix.toml (flip 2026-04-22) but gate bench (2026-05-08) found no recall gain at N=50 — leaving enabled pending higher-N validation
+- SR (`sr_boost`) exists under D8; `sr_enabled = true` in cymatix.toml (flip 2026-04-22) but gate bench (2026-05-08) found no recall gain at N=50 — leaving enabled pending higher-N validation
 - seeded edges exist but are dark-shipped by default
 
 **SR Gate Bench Result (2026-05-08, N=50, SEED=42, gemma4:e4b, same knowledge-store A/B):**
@@ -194,7 +194,7 @@ Result: **GATE NOT MET.** No retrieval_pct gain on any axis. Axis-2 shows -2pp r
 (within N=50 noise floor of ±1 needle). SR's in_context_pct shows marginal +2pp on axes 2-3
 but this does not clear the gate on the primary recall@1 metric.
 
-SR remains enabled in helix.toml (flip 2026-04-22 was signal-positive in earlier sweep) and
+SR remains enabled in cymatix.toml (flip 2026-04-22 was signal-positive in earlier sweep) and
 does not harm latency. Recommend re-gate at N=200+ or with a larger knowledge-store snapshot before
 deciding to disable or promote SR to a required-on tier.
 

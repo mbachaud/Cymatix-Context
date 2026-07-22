@@ -31,12 +31,12 @@ from pathlib import Path
 
 import pytest
 
-from helix_context.config import RetrievalConfig, load_config
-from helix_context.genome import Genome
-from helix_context.knowledge_store import KnowledgeStore
-from helix_context.retrieval.fusion import DEFAULT_RRF_K, Fuser
-from helix_context.shard_router import ShardRouter
-from helix_context.shard_schema import (
+from cymatix_context.config import RetrievalConfig, load_config
+from cymatix_context.genome import Genome
+from cymatix_context.knowledge_store import KnowledgeStore
+from cymatix_context.retrieval.fusion import DEFAULT_RRF_K, Fuser
+from cymatix_context.shard_router import ShardRouter
+from cymatix_context.shard_schema import (
     init_main_db,
     open_main_db,
     register_shard,
@@ -325,7 +325,7 @@ def test_config_threads_through_open_read_source_solo():
         p.write_text(toml, encoding="utf-8")
         cfg = load_config(str(p))
 
-    from helix_context.sharding import open_read_source
+    from cymatix_context.sharding import open_read_source
 
     store = open_read_source(
         genome_path=":memory:",

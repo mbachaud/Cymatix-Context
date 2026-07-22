@@ -15,10 +15,10 @@ import json
 import tempfile
 from pathlib import Path
 
-from helix_context.context_packet import build_context_packet
-from helix_context.genome import Genome
-from helix_context.sharding import ShardedGenomeAdapter
-from helix_context.shard_schema import (
+from cymatix_context.context_packet import build_context_packet
+from cymatix_context.genome import Genome
+from cymatix_context.sharding import ShardedGenomeAdapter
+from cymatix_context.shard_schema import (
     init_main_db,
     open_main_db,
     register_shard,

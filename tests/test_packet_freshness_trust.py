@@ -16,9 +16,9 @@ from __future__ import annotations
 
 import pytest
 
-from helix_context.context_packet import build_context_packet
-from helix_context.genome import Genome
-from helix_context.scoring.know_calibration import KnowCalibration
+from cymatix_context.context_packet import build_context_packet
+from cymatix_context.genome import Genome
+from cymatix_context.scoring.know_calibration import KnowCalibration
 
 from tests.conftest import make_gene
 
@@ -28,7 +28,7 @@ def default_calibration(monkeypatch):
     """Pin the DEFAULT calibration (same rationale as the fixture in
     test_know_miss_block.py): the shipped helix.toml [know] betas are
     under the #287 HOLD and would mask the trust contract under test."""
-    from helix_context.scoring import know_calibration as kc
+    from cymatix_context.scoring import know_calibration as kc
 
     monkeypatch.setattr(
         kc, "load_calibration_from_toml", lambda *a, **k: kc.KnowCalibration()

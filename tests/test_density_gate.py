@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import pytest
 
-from helix_context.genome import (
+from cymatix_context.genome import (
     Genome,
     is_denied_source,
     _DENSITY_HETEROCHROMATIN_THRESHOLD,
@@ -26,8 +26,8 @@ from helix_context.genome import (
     _DENSITY_RATE_WINDOW,
     _DENSITY_RATE_MIN_HITS,
 )
-from helix_context.exceptions import PromoterMismatch
-from helix_context.schemas import (
+from cymatix_context.exceptions import PromoterMismatch
+from cymatix_context.schemas import (
     Gene,
     PromoterTags,
     EpigeneticMarkers,
@@ -58,7 +58,7 @@ class TestIsDeniedSource:
             pytest.param(None, id="none"),
             pytest.param("", id="empty_string"),
             # Real helix-context source files must never be denied.
-            pytest.param("F:/Projects/helix-context/helix_context/genome.py", id="helix_context_genome_py"),
+            pytest.param("F:/Projects/helix-context/cymatix_context/genome.py", id="helix_context_genome_py"),
             pytest.param("helix-context/docs/RESEARCH.md", id="helix_context_research_md"),
             pytest.param("accounting/src/ledger.py", id="accounting_ledger"),
             pytest.param("projects/fleet/dashboard.py", id="fleet_dashboard"),
@@ -91,7 +91,7 @@ class TestIsDeniedSource:
             # Build artifacts.
             pytest.param("F:/webshop/.next/server/app/page.js", id="next_build"),
             pytest.param("project/node_modules/react/index.js", id="node_modules"),
-            pytest.param("helix_context/__pycache__/genome.cpython-314.pyc", id="pycache_dir"),
+            pytest.param("cymatix_context/__pycache__/genome.cpython-314.pyc", id="pycache_dir"),
             pytest.param("project/dist/bundle.js", id="dist_bundle"),
             pytest.param("acme-rs/target/debug/deps/libcore.rlib", id="target_debug"),
             pytest.param("acme-rs/target/release/acme.exe", id="target_release"),
@@ -282,7 +282,7 @@ class TestApplyDensityGate:
             domains=["python", "function", "compute"],
             kvs=["name=compute", "returns=int", "value=42", "type=pure"],
             access=0,
-            source_id="helix-context/helix_context/math.py",
+            source_id="helix-context/cymatix_context/math.py",
         )
         state, reason = genome.apply_density_gate(g)
         assert state == ChromatinState.OPEN
@@ -452,11 +452,11 @@ class TestUpsertGateIntegration:
     def test_upsert_preserves_signal_content(self, gated_genome):
         """Real helix-context source stays OPEN through the gate."""
         g = make_gene(
-            "def helix_context(): return 'signal'",
+            "def cymatix_context(): return 'signal'",
             domains=["python", "helix", "function"],
         )
-        g.source_id = "F:/Projects/helix-context/helix_context/api.py"
-        g.key_values = ["name=helix_context", "returns=str"]
+        g.source_id = "F:/Projects/helix-context/cymatix_context/api.py"
+        g.key_values = ["name=cymatix_context", "returns=str"]
         gated_genome.upsert_gene(g)
 
         retrieved = gated_genome.get_gene(g.gene_id)
@@ -740,7 +740,7 @@ class TestColdTierRetrieval:
 
     @pytest.fixture(scope="class")
     def codec(self):
-        from helix_context.backends.sema import SemaCodec
+        from cymatix_context.backends.sema import SemaCodec
         return SemaCodec()
 
     @pytest.fixture

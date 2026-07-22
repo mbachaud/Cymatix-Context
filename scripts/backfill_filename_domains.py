@@ -29,8 +29,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from helix_context.config import load_config  # noqa: E402
-from helix_context.tagger import CpuTagger  # noqa: E402
+from cymatix_context.config import load_config  # noqa: E402
+from cymatix_context.tagger import CpuTagger  # noqa: E402
 
 
 def _get_filename_tokens(tagger: CpuTagger, source_id: str) -> list[str]:

@@ -21,7 +21,7 @@ from __future__ import annotations
 
 import pytest
 
-from helix_context.tagger import CpuTagger
+from cymatix_context.tagger import CpuTagger
 
 # Module-level fixture avoids re-loading spaCy per test (expensive)
 _TAGGER = None

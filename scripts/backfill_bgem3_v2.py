@@ -55,12 +55,12 @@ from crawl_watchdog import (
     cuda_vram_fraction,
     release_cuda_cache,
 )
-from helix_context.backends.bgem3_codec import (
+from cymatix_context.backends.bgem3_codec import (
     PASSAGE_CHAR_CAP,
     BGEM3Codec,
     vec_to_blob,
 )
-from helix_context.config import load_config
+from cymatix_context.config import load_config
 
 
 def _ensure_v2_schema(conn: sqlite3.Connection) -> None:
@@ -79,7 +79,7 @@ def _ensure_v2_schema(conn: sqlite3.Connection) -> None:
 
 
 # ``_vec_to_blob`` is kept as a thin alias of the canonical
-# ``helix_context.backends.bgem3_codec.vec_to_blob`` so the inline-ingest
+# ``cymatix_context.backends.bgem3_codec.vec_to_blob`` so the inline-ingest
 # write path (knowledge_store.upsert_doc) and this offline backfill share one
 # encoding and cannot drift. See PR-1 of the 2026-05-16 Tier-0 plan.
 _vec_to_blob = vec_to_blob
@@ -107,7 +107,7 @@ def backfill_dense_db(
     cannot drift.
 
     The loop reuses PR-1's canonical helpers from
-    ``helix_context.backends.bgem3_codec``: :data:`PASSAGE_CHAR_CAP` (the
+    ``cymatix_context.backends.bgem3_codec``: :data:`PASSAGE_CHAR_CAP` (the
     passage input char cap, now the byte-identical default anchor for
     ``char_cap`` below — #207 dense fast-follow), :meth:`BGEM3Codec.encode_batch`
     (the batch encoder) and :func:`vec_to_blob` (the fp32 packer). A genome

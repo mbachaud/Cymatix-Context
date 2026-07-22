@@ -22,10 +22,10 @@ Three paths exist. Pick based on corpus size and available VRAM:
 Set `BGEM3_DEVICE=cpu` (or leave it unset on a CPU-only host). The backfill script auto-detects CUDA when `BGEM3_DEVICE` is empty or `"auto"`, so an explicit `cpu` value is necessary when you want to force the CPU path on a machine that has a GPU but whose VRAM is contended. Throughput is ~30–90 minutes for an 18.9k-document store on CPU sentence-transformers BGE-M3; no OOM risk.
 
 **1-worker GPU path — use for: speed, 12 GB card, Ollama NOT resident.**  
-Set `BGEM3_DEVICE=cuda`, one worker. Expect ~5–15 minutes for an 18.9k-document store (FlagEmbedding) or ~12 minutes for a single ContextBench django task. Peak VRAM before PR #177 reached 11.7 GB / 95% on one worker without cache release. After PR #177 merges, set `HELIX_DENSE_VRAM_RELEASE_EVERY` to a value between 64 and 256 to bound the within-run peak. Do not raise the worker count above 1 on a 12 GB card.
+Set `BGEM3_DEVICE=cuda`, one worker. Expect ~5–15 minutes for an 18.9k-document store (FlagEmbedding) or ~12 minutes for a single ContextBench django task. Peak VRAM before PR #177 reached 11.7 GB / 95% on one worker without cache release. After PR #177 merges, set `CYMATIX_DENSE_VRAM_RELEASE_EVERY` to a value between 64 and 256 to bound the within-run peak. Do not raise the worker count above 1 on a 12 GB card.
 
 **Deferred-backfill path — use for: latency-sensitive ingest where you want no GPU involvement at ingest time.**  
-Set `[ingestion] dense_embed_on_ingest = false` in `helix.toml`. Documents are ingested without a dense vector; the `embedding_dense_v2` column stays NULL. Run `scripts/backfill_bgem3_v2.py` separately during a maintenance window, using the CPU or 1-worker-GPU guidance above. Retrieval continues to work on the lexical/tag path; dense recall is disabled until backfill completes.
+Set `[ingestion] dense_embed_on_ingest = false` in `cymatix.toml`. Documents are ingested without a dense vector; the `embedding_dense_v2` column stays NULL. Run `scripts/backfill_bgem3_v2.py` separately during a maintenance window, using the CPU or 1-worker-GPU guidance above. Retrieval continues to work on the lexical/tag path; dense recall is disabled until backfill completes.
 
 ---
 
@@ -41,7 +41,7 @@ Controls which device the BGE-M3 codec runs on in `scripts/backfill_bgem3_v2.py`
 2. Auto-detected CUDA when `torch.cuda.is_available()` returns true and `BGEM3_DEVICE` is empty or `"auto"`.
 3. CPU otherwise.
 
-`BGEM3Codec.__init__` defaults to `device="cpu"` (`helix_context/backends/bgem3_codec.py:57`), so any path that bypasses the backfill script's device-selection block lands on CPU. Setting `BGEM3_DEVICE=cpu` explicitly is the safe way to force CPU when a GPU is visible.
+`BGEM3Codec.__init__` defaults to `device="cpu"` (`cymatix_context/backends/bgem3_codec.py:57`), so any path that bypasses the backfill script's device-selection block lands on CPU. Setting `BGEM3_DEVICE=cpu` explicitly is the safe way to force CPU when a GPU is visible.
 
 ```powershell
 # Force CPU even on a CUDA-visible machine
@@ -54,7 +54,7 @@ python scripts/backfill_bgem3_v2.py
 BGEM3_DEVICE=cpu python scripts/backfill_bgem3_v2.py
 ```
 
-### `HELIX_DENSE_VRAM_RELEASE_EVERY`
+### `CYMATIX_DENSE_VRAM_RELEASE_EVERY`
 
 **Status: added in PR #177, not yet merged to `master` as of 2026-06-07.**
 
@@ -62,20 +62,20 @@ When merged, this env var adds a periodic `torch.cuda.empty_cache()` call inside
 
 ```powershell
 # After PR #177 merges: release cache every 64 batches (more aggressive)
-$env:HELIX_DENSE_VRAM_RELEASE_EVERY = "64"
+$env:CYMATIX_DENSE_VRAM_RELEASE_EVERY = "64"
 $env:BGEM3_DEVICE = "cuda"
 python scripts/backfill_bgem3_v2.py
 ```
 
 Until PR #177 is merged, there is no automatic cache release on the production code path. On a 12 GB card with a large corpus, the GPU path will climb toward the card ceiling regardless of batch size. The workaround is either `BGEM3_DEVICE=cpu` or very small corpora per session with a process restart between runs.
 
-### `HELIX_BFM_SPLADE` and `HELIX_BFM_DENSE_BACKFILL`
+### `CYMATIX_BFM_SPLADE` and `CYMATIX_BFM_DENSE_BACKFILL`
 
 **Status: announced in release notes (`.qa-rel065.py`) and CLAUDE.md; not yet present in Python source as of 2026-06-07.**
 
 These are lean-ingest kill-switches intended to prevent the multi-CUDA-context WDDM-spill livelock (issue #176) during test runs and parallel worker scenarios. When implemented, setting either to `0` will force the lean path — omitting SPLADE encoding or inline BGE-M3 backfill respectively — so that only one CUDA context is active at a time.
 
-Until the implementation lands, the equivalent is to set in `helix.toml`:
+Until the implementation lands, the equivalent is to set in `cymatix.toml`:
 
 ```toml
 [ingestion]
@@ -87,11 +87,11 @@ Combined with `BGEM3_DEVICE=cpu` on the backfill script, this eliminates the mul
 
 ### `[ingestion] dense_embed_on_ingest`
 
-Config key in `helix.toml`, default `true` (code default: `helix_context/config.py:198`; helix.toml also sets `true`). Controls whether the inline ingest path (`context_manager.ingest`) calls the BGE-M3 codec to populate `embedding_dense_v2` at write time. Set to `false` to defer all dense encoding to the offline backfill script.
+Config key in `cymatix.toml`, default `true` (code default: `cymatix_context/config.py:198`; cymatix.toml also sets `true`). Controls whether the inline ingest path (`context_manager.ingest`) calls the BGE-M3 codec to populate `embedding_dense_v2` at write time. Set to `false` to defer all dense encoding to the offline backfill script.
 
 ### `[ingestion] splade_enabled`
 
-Config key in `helix.toml`, default `false` in code (`helix_context/config.py:186`), but `true` in the shipped `helix.toml`. SPLADE encoding loads a separate transformer model and opens a second CUDA context. On a 12 GB card with dense encoding active, two concurrent CUDA contexts (SPLADE + BGE-M3) is the trigger for the #176 livelock. Set to `false` during dense backfill.
+Config key in `cymatix.toml`, default `false` in code (`cymatix_context/config.py:186`), but `true` in the shipped `cymatix.toml`. SPLADE encoding loads a separate transformer model and opens a second CUDA context. On a 12 GB card with dense encoding active, two concurrent CUDA contexts (SPLADE + BGE-M3) is the trigger for the #176 livelock. Set to `false` during dense backfill.
 
 ---
 
@@ -120,7 +120,7 @@ This is the scenario described in CLAUDE.md (Ryzen 7, 48 GB RAM, 12 GB VRAM, Oll
 Use the CPU path:
 
 ```powershell
-# helix.toml — set once:
+# cymatix.toml — set once:
 # [ingestion]
 # dense_embed_on_ingest = false
 # splade_enabled = false
@@ -139,7 +139,7 @@ Stop-Process -Name "ollama" -Force   # or use the Ollama tray icon
 # One worker, GPU
 $env:BGEM3_DEVICE = "cuda"
 # If PR #177 is merged, also set:
-# $env:HELIX_DENSE_VRAM_RELEASE_EVERY = "128"
+# $env:CYMATIX_DENSE_VRAM_RELEASE_EVERY = "128"
 
 python scripts/backfill_bgem3_v2.py
 
@@ -159,7 +159,7 @@ This sequence is safe for an 18.9k-document store on a 12 GB card. It takes the 
 # 1. Snapshot the DB before starting.
 Copy-Item genomes\main\genome.db genomes\main\genome.db.bak
 
-# 2. Stop the helix server if running (prevents concurrent writes).
+# 2. Stop the cymatix server if running (prevents concurrent writes).
 #    If using the launcher, quit via the system tray.
 #    If started manually:
 # Stop-Process -Name "python" -ErrorAction SilentlyContinue
@@ -177,8 +177,8 @@ python scripts/backfill_bgem3_v2.py
 
 # 4. Verify coverage=100% in the final line before proceeding.
 
-# 5. Restart the helix server.
-python -m uvicorn helix_context._asgi:app --host 127.0.0.1 --port 11437
+# 5. Restart the cymatix server.
+python -m uvicorn cymatix_context._asgi:app --host 127.0.0.1 --port 11437
 ```
 
 To use a non-default DB path or a smaller batch size (reduces peak RAM usage on very large stores):
@@ -200,9 +200,9 @@ The script is idempotent: rows that already carry a correctly-sized `embedding_d
 
 ## After the backfill
 
-Once `coverage=100%`, dense recall is active under the default `[retrieval] dense_embedding_enabled = true`. The next step in the Stage 2 → Stage 4 calibration sequence is to recalibrate `ann_similarity_threshold` at 1024-dim using `scripts/calibrate_thresholds.py` — the shipped default of `0.35` (`helix.toml`) is a legacy value calibrated at dim=256 and should be re-derived. See `docs/operator-runbooks.md` Runbook 2 for that procedure.
+Once `coverage=100%`, dense recall is active under the default `[retrieval] dense_embedding_enabled = true`. The next step in the Stage 2 → Stage 4 calibration sequence is to recalibrate `ann_similarity_threshold` at 1024-dim using `scripts/calibrate_thresholds.py` — the shipped default of `0.35` (`cymatix.toml`) is a legacy value calibrated at dim=256 and should be re-derived. See `docs/operator-runbooks.md` Runbook 2 for that procedure.
 
-The `ann_threshold_max_genes` cap of `12` (`helix.toml`) is a known candidate pool collapse bug on single-shard stores (issue tracked in the 2026-06-06 handoff). Until a fix ships, consider raising it to 500 via `helix.toml` if dense retrieval returns fewer candidates than expected:
+The `ann_threshold_max_genes` cap of `12` (`cymatix.toml`) is a known candidate pool collapse bug on single-shard stores (issue tracked in the 2026-06-06 handoff). Until a fix ships, consider raising it to 500 via `cymatix.toml` if dense retrieval returns fewer candidates than expected:
 
 ```toml
 [retrieval]

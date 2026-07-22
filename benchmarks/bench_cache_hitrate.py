@@ -30,8 +30,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import httpx  # noqa: E402
 
-from helix_context.adapters.cache import CachedDAL  # noqa: E402
-from helix_context.adapters.dal import DAL  # noqa: E402
+from cymatix_context.adapters.cache import CachedDAL  # noqa: E402
+from cymatix_context.adapters.dal import DAL  # noqa: E402
 
 HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
 

@@ -4,7 +4,7 @@ Read-only. Recomputes know-confidence under candidate (betas, s_ref, g_ref, floo
 and reports recall (delivered-and-used should fire) vs false-fire (heldout/non-causal
 should not) on the sec.3 (48-needle) and sec.4 (72-needle) beds.
 
-Formula mirrors helix_context/scoring/know_calibration.py:267-280 exactly.
+Formula mirrors cymatix_context/scoring/know_calibration.py:267-280 exactly.
 """
 import json, math
 

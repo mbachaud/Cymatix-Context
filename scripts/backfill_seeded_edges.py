@@ -43,8 +43,8 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO))
 
-from helix_context.config import load_config
-from helix_context.genome import Genome
+from cymatix_context.config import load_config
+from cymatix_context.genome import Genome
 
 logging.basicConfig(
     level=logging.INFO,

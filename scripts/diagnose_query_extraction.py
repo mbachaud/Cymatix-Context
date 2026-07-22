@@ -31,8 +31,8 @@ try:
 except Exception:
     pass
 
-from helix_context.accel import extract_query_signals, STOP_WORDS
-from helix_context.genome import path_tokens
+from cymatix_context.accel import extract_query_signals, STOP_WORDS
+from cymatix_context.genome import path_tokens
 from bench_needle import NEEDLES
 
 

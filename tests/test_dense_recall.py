@@ -38,9 +38,9 @@ from unittest.mock import MagicMock
 import numpy as np
 import pytest
 
-from helix_context.backends.bgem3_codec import BGEM3Codec
-from helix_context.genome import Genome
-from helix_context.schemas import (
+from cymatix_context.backends.bgem3_codec import BGEM3Codec
+from cymatix_context.genome import Genome
+from cymatix_context.schemas import (
     ChromatinState, EpigeneticMarkers, Gene, PromoterTags,
 )
 
@@ -521,7 +521,7 @@ def test_query_docs_additive_dense_null_v2_degrades_to_lexical():
         caplog_records: list = []
         handler = logging.Handler()
         handler.emit = lambda rec: caplog_records.append(rec)
-        ks_log = logging.getLogger("helix_context.knowledge_store")
+        ks_log = logging.getLogger("cymatix_context.knowledge_store")
         ks_log.addHandler(handler)
         try:
             docs = g.query_docs(domains=["alpha"], entities=[], max_genes=12)

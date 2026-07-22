@@ -10,7 +10,7 @@ Exercises:
 """
 import pytest
 
-from helix_context.launcher.ide_fingerprint import detect_ide
+from cymatix_context.launcher.ide_fingerprint import detect_ide
 
 
 @pytest.fixture(autouse=True)

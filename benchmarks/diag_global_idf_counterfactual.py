@@ -28,7 +28,7 @@ read-only via ``immutable=1``.
 
 Gold-match rule and query-signal extraction are reused from
 bench_shard_recall.py / diag_shard_score.py (bidirectional substring on
-normalised paths; helix_context.accel.extract_query_signals).
+normalised paths; cymatix_context.accel.extract_query_signals).
 
 CLI
 ---
@@ -259,7 +259,7 @@ def main() -> int:
     ap.add_argument("--out", default="benchmarks/results/diag_global_idf_counterfactual_medium.json")
     args = ap.parse_args()
 
-    from helix_context.accel import extract_query_signals
+    from cymatix_context.accel import extract_query_signals
 
     root = Path(args.root)
     shard_paths = _discover_shards(root)

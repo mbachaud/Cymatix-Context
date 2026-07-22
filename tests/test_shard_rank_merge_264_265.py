@@ -28,19 +28,19 @@ from pathlib import Path
 
 import pytest
 
-from helix_context.config import RetrievalConfig
-from helix_context.genome import Genome
-from helix_context.schemas import (
+from cymatix_context.config import RetrievalConfig
+from cymatix_context.genome import Genome
+from cymatix_context.schemas import (
     ChromatinState,
     EpigeneticMarkers,
     Gene,
     PromoterTags,
 )
-from helix_context.shard_router import (
+from cymatix_context.shard_router import (
     DOC_TYPE_BOOST,
     ShardRouter,
 )
-from helix_context.shard_schema import (
+from cymatix_context.shard_schema import (
     init_main_db,
     open_main_db,
     register_shard,
@@ -144,7 +144,7 @@ def test_doc_type_boost_mode_invalid_config_raises():
 
 
 def test_doc_type_boost_mode_toml_roundtrip(tmp_path):
-    from helix_context.config import load_config
+    from cymatix_context.config import load_config
     toml = tmp_path / "helix.toml"
     toml.write_text('[retrieval]\ndoc_type_boost_mode = "off"\n', encoding="utf-8")
     c = load_config(str(toml))
@@ -373,7 +373,7 @@ def test_global_idf_runs_under_additive(idf_trap):
 
 def test_global_idf_rrf_warns_once(idf_trap, caplog):
     """A truthy flag under per-shard RRF logs the suppression notice once."""
-    import helix_context.shard_router as sr
+    import cymatix_context.shard_router as sr
     sr._GLOBAL_IDF_RRF_WARNED = False  # reset process-once latch for the test
     os.environ[_GIDF] = "1"
     with caplog.at_level(logging.WARNING):

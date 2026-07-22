@@ -11,7 +11,7 @@ Per fixture:
 Pre-conditions:
   * Helix server running on http://127.0.0.1:11437.
   * For sharded fixtures, server must be started with HELIX_USE_SHARDS=1
-    so the auto-detect path in helix_context.sharding.open_read_source
+    so the auto-detect path in cymatix_context.sharding.open_read_source
     promotes main.genome.db to a ShardedGenomeAdapter on swap. (Required
     by the path/filename heuristic since /admin/swap-db today is path-only.)
   * Claude Code CLI available on PATH and the helix-context MCP wired up

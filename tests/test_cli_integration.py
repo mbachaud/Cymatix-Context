@@ -31,14 +31,14 @@ def _isolate_genome(monkeypatch, tmp_path):
     # Reset and pre-warm the cached module-level manager with a CPU-backend
     # config so all CLI commands that call open_session() get a manager that
     # can actually ingest (ribosome is disabled; cpu tagger is the only path).
-    from helix_context import api
-    from helix_context.config import HelixConfig, IngestionConfig
+    from cymatix_context import api
+    from cymatix_context.config import HelixConfig, IngestionConfig
     api.close_manager()
     cfg = HelixConfig()
     cfg.genome.path = ":memory:"
     cfg.ingestion = IngestionConfig(backend="cpu")
     # Prime the module-level manager directly so open_session() reuses it.
-    from helix_context.context_manager import HelixContextManager
+    from cymatix_context.context_manager import HelixContextManager
     api._DEFAULT_MANAGER = HelixContextManager(config=cfg)
 
     yield
@@ -86,8 +86,8 @@ def test_end_to_end_cold_start_constructs_manager_lazily(monkeypatch, tmp_path):
     query both succeed and return well-shaped JSON — proving the lazy
     construction path works end-to-end.
     """
-    from helix_context import api
-    from helix_context.config import HelixConfig, IngestionConfig
+    from cymatix_context import api
+    from cymatix_context.config import HelixConfig, IngestionConfig
 
     # 1. Wipe the manager the autouse fixture pre-warmed. This is the
     #    whole point: we want open_session() to hit `_DEFAULT_MANAGER is None`.
@@ -110,7 +110,7 @@ def test_end_to_end_cold_start_constructs_manager_lazily(monkeypatch, tmp_path):
     # HelixContextManager construction. This makes the regression
     # explicit: if a future change re-introduces pre-warming, this
     # assertion will catch it.
-    from helix_context import context_manager as cm_mod
+    from cymatix_context import context_manager as cm_mod
     construction_count = {"n": 0}
     real_ctor = cm_mod.HelixContextManager
 

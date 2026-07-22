@@ -6,7 +6,7 @@ the symbol graph resolves into referencing-chunk -> defining-chunk edges.
 """
 import pytest
 
-from helix_context.encoding import tree_chunker as tc
+from cymatix_context.encoding import tree_chunker as tc
 
 pytestmark = pytest.mark.skipif(
     not tc.is_available(), reason="tree-sitter (+ tree-sitter-python) not installed"

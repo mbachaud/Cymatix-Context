@@ -75,7 +75,7 @@ def _load_labels(path: str, id_to_idx: dict):
 
 
 def _encode_queries(queries, device, batch=32):
-    from helix_context.backends.bgem3_codec import BGEM3Codec
+    from cymatix_context.backends.bgem3_codec import BGEM3Codec
 
     codec = BGEM3Codec(dim=1024, device=device)
     out = []

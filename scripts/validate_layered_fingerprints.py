@@ -28,9 +28,9 @@ try:
 except Exception:
     pass
 
-from helix_context.context_manager import HelixContextManager
-from helix_context.genome import Genome
-from helix_context.schemas import (
+from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.genome import Genome
+from cymatix_context.schemas import (
     ChromatinState,
     EpigeneticMarkers,
     Gene,

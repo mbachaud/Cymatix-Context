@@ -19,8 +19,8 @@ import joblib  # noqa: E402
 import numpy as np  # noqa: E402
 from sklearn.ensemble import GradientBoostingClassifier  # noqa: E402
 
-from helix_context.retrieval import fusion_plr
-from helix_context.retrieval.fusion_plr import (
+from cymatix_context.retrieval import fusion_plr
+from cymatix_context.retrieval.fusion_plr import (
     EXPECTED_SCHEMA_VERSION,
     PLRLoadError,
     StackedPLRFuser,

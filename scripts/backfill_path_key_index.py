@@ -39,7 +39,7 @@ from pathlib import Path
 
 
 def _ensure_root_on_path():
-    """Make helix_context importable when run as a script."""
+    """Make cymatix_context importable when run as a script."""
     root = Path(__file__).resolve().parent.parent
     if str(root) not in sys.path:
         sys.path.insert(0, str(root))
@@ -82,7 +82,7 @@ def backfill(
     Returns stats dict with counts. On dry_run=True, no writes happen.
     """
     _ensure_root_on_path()
-    from helix_context.genome import path_tokens, _kv_keys_from_list
+    from cymatix_context.genome import path_tokens, _kv_keys_from_list
 
     if backup and not dry_run:
         bak = db_path + ".pre-pki-backfill.bak"

@@ -8,7 +8,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from helix_context.vault.cli import main
+from cymatix_context.vault.cli import main
 
 
 def test_main_no_args_prints_usage(capsys):
@@ -19,7 +19,7 @@ def test_main_no_args_prints_usage(capsys):
 
 
 def test_status_calls_endpoint(capsys):
-    with patch("helix_context.vault.cli.httpx") as httpx:
+    with patch("cymatix_context.vault.cli.httpx") as httpx:
         client = MagicMock()
         httpx.Client.return_value.__enter__.return_value = client
         client.get.return_value.json.return_value = {"enabled": True}
@@ -29,7 +29,7 @@ def test_status_calls_endpoint(capsys):
 
 
 def test_export_full_calls_endpoint():
-    with patch("helix_context.vault.cli.httpx") as httpx:
+    with patch("cymatix_context.vault.cli.httpx") as httpx:
         client = MagicMock()
         httpx.Client.return_value.__enter__.return_value = client
         client.post.return_value.status_code = 200
@@ -42,7 +42,7 @@ def test_export_full_calls_endpoint():
 
 
 def test_pin_calls_endpoint():
-    with patch("helix_context.vault.cli.httpx") as httpx:
+    with patch("cymatix_context.vault.cli.httpx") as httpx:
         client = MagicMock()
         httpx.Client.return_value.__enter__.return_value = client
         client.post.return_value.status_code = 200
@@ -54,7 +54,7 @@ def test_pin_calls_endpoint():
 
 
 def test_trace_request_id_calls_trace_endpoint():
-    with patch("helix_context.vault.cli.httpx") as httpx:
+    with patch("cymatix_context.vault.cli.httpx") as httpx:
         client = MagicMock()
         httpx.Client.return_value.__enter__.return_value = client
         client.post.return_value.status_code = 200
@@ -66,7 +66,7 @@ def test_trace_request_id_calls_trace_endpoint():
 
 
 def test_trace_last_calls_status_endpoint(capsys):
-    with patch("helix_context.vault.cli.httpx") as httpx:
+    with patch("cymatix_context.vault.cli.httpx") as httpx:
         client = MagicMock()
         httpx.Client.return_value.__enter__.return_value = client
         client.get.return_value.status_code = 200
@@ -80,6 +80,6 @@ def test_trace_last_calls_status_endpoint(capsys):
 
 
 def test_trace_no_args_errors():
-    with patch("helix_context.vault.cli.httpx"):
+    with patch("cymatix_context.vault.cli.httpx"):
         rc = main(["trace"])
     assert rc != 0  # returns 2 when neither request_id nor --last given

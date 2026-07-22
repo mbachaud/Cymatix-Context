@@ -1,5 +1,5 @@
 """
-Tests for helix_context.launcher.installer — platform detection,
+Tests for cymatix_context.launcher.installer — platform detection,
 template substitution, install + uninstall paths.
 """
 
@@ -11,7 +11,7 @@ from unittest.mock import patch
 
 import pytest
 
-from helix_context.launcher import installer
+from cymatix_context.launcher import installer
 
 
 class TestCurrentPlatform:
@@ -55,14 +55,14 @@ class TestFindLauncherBinary:
 
 class TestInstallWin32:
     def test_windows_install_returns_instructions(self):
-        with patch("helix_context.launcher.installer.current_platform", return_value="win32"):
+        with patch("cymatix_context.launcher.installer.current_platform", return_value="win32"):
             ok, msg = installer.install_service()
         assert ok is False
         assert "NSSM" in msg
         assert "choco install nssm" in msg or "scoop install nssm" in msg
 
     def test_windows_uninstall_returns_instructions(self):
-        with patch("helix_context.launcher.installer.current_platform", return_value="win32"):
+        with patch("cymatix_context.launcher.installer.current_platform", return_value="win32"):
             ok, msg = installer.uninstall_service()
         assert ok is False
         assert "nssm remove" in msg
@@ -70,7 +70,7 @@ class TestInstallWin32:
 
 class TestInstallUnsupported:
     def test_unknown_platform_errors(self):
-        with patch("helix_context.launcher.installer.current_platform", return_value="unsupported"):
+        with patch("cymatix_context.launcher.installer.current_platform", return_value="unsupported"):
             ok, msg = installer.install_service()
         assert ok is False
         assert "Unsupported platform" in msg
@@ -78,8 +78,8 @@ class TestInstallUnsupported:
 
 class TestInstallMissingBinary:
     def test_linux_install_without_binary_errors(self):
-        with patch("helix_context.launcher.installer.current_platform", return_value="linux"):
-            with patch("helix_context.launcher.installer.find_launcher_binary", return_value=None):
+        with patch("cymatix_context.launcher.installer.current_platform", return_value="linux"):
+            with patch("cymatix_context.launcher.installer.find_launcher_binary", return_value=None):
                 ok, msg = installer.install_service()
         assert ok is False
         assert "helix-launcher" in msg.lower()
@@ -92,9 +92,9 @@ class TestLinuxDryRun:
         fake_launcher.write_text("#!/bin/bash\necho hi")
         fake_launcher.chmod(0o755)
 
-        with patch("helix_context.launcher.installer.current_platform", return_value="linux"):
-            with patch("helix_context.launcher.installer.target_path", return_value=fake_target):
-                with patch("helix_context.launcher.installer.find_launcher_binary", return_value=fake_launcher):
+        with patch("cymatix_context.launcher.installer.current_platform", return_value="linux"):
+            with patch("cymatix_context.launcher.installer.target_path", return_value=fake_target):
+                with patch("cymatix_context.launcher.installer.find_launcher_binary", return_value=fake_launcher):
                     ok, msg = installer.install_service(dry_run=True)
 
         assert ok is True
@@ -108,9 +108,9 @@ class TestLinuxInstallAndUninstall:
         fake_launcher = tmp_path / "helix-launcher"
         fake_launcher.write_text("#!/bin/bash\necho hi")
 
-        with patch("helix_context.launcher.installer.current_platform", return_value="linux"):
-            with patch("helix_context.launcher.installer.target_path", return_value=fake_target):
-                with patch("helix_context.launcher.installer.find_launcher_binary", return_value=fake_launcher):
+        with patch("cymatix_context.launcher.installer.current_platform", return_value="linux"):
+            with patch("cymatix_context.launcher.installer.target_path", return_value=fake_target):
+                with patch("cymatix_context.launcher.installer.find_launcher_binary", return_value=fake_launcher):
                     ok, msg = installer.install_service()
 
         assert ok is True
@@ -125,8 +125,8 @@ class TestLinuxInstallAndUninstall:
         fake_target.parent.mkdir(parents=True, exist_ok=True)
         fake_target.write_text("stub content")
 
-        with patch("helix_context.launcher.installer.current_platform", return_value="linux"):
-            with patch("helix_context.launcher.installer.target_path", return_value=fake_target):
+        with patch("cymatix_context.launcher.installer.current_platform", return_value="linux"):
+            with patch("cymatix_context.launcher.installer.target_path", return_value=fake_target):
                 ok, msg = installer.uninstall_service()
 
         assert ok is True
@@ -135,8 +135,8 @@ class TestLinuxInstallAndUninstall:
 
     def test_linux_uninstall_errors_when_not_installed(self, tmp_path):
         fake_target = tmp_path / "not-there.service"
-        with patch("helix_context.launcher.installer.current_platform", return_value="linux"):
-            with patch("helix_context.launcher.installer.target_path", return_value=fake_target):
+        with patch("cymatix_context.launcher.installer.current_platform", return_value="linux"):
+            with patch("cymatix_context.launcher.installer.target_path", return_value=fake_target):
                 ok, msg = installer.uninstall_service()
         assert ok is False
         assert "does not exist" in msg
@@ -149,9 +149,9 @@ class TestDarwinInstall:
         fake_launcher.parent.mkdir(parents=True)
         fake_launcher.write_text("#!/bin/bash\necho hi")
 
-        with patch("helix_context.launcher.installer.current_platform", return_value="darwin"):
-            with patch("helix_context.launcher.installer.target_path", return_value=fake_target):
-                with patch("helix_context.launcher.installer.find_launcher_binary", return_value=fake_launcher):
+        with patch("cymatix_context.launcher.installer.current_platform", return_value="darwin"):
+            with patch("cymatix_context.launcher.installer.target_path", return_value=fake_target):
+                with patch("cymatix_context.launcher.installer.find_launcher_binary", return_value=fake_launcher):
                     ok, msg = installer.install_service()
 
         assert ok is True
@@ -165,8 +165,8 @@ class TestDarwinInstall:
 
 class TestCLIIntegration:
     def test_install_service_command_dispatches(self, capsys):
-        from helix_context.launcher import app as app_mod
-        with patch("helix_context.launcher.installer.install_service",
+        from cymatix_context.launcher import app as app_mod
+        with patch("cymatix_context.launcher.installer.install_service",
                    return_value=(True, "ok message")):
             rc = app_mod.main(["install-service"])
         captured = capsys.readouterr()
@@ -174,8 +174,8 @@ class TestCLIIntegration:
         assert "ok message" in captured.out
 
     def test_uninstall_service_command_dispatches(self, capsys):
-        from helix_context.launcher import app as app_mod
-        with patch("helix_context.launcher.installer.uninstall_service",
+        from cymatix_context.launcher import app as app_mod
+        with patch("cymatix_context.launcher.installer.uninstall_service",
                    return_value=(True, "removed")):
             rc = app_mod.main(["uninstall-service"])
         captured = capsys.readouterr()
@@ -183,8 +183,8 @@ class TestCLIIntegration:
         assert "removed" in captured.out
 
     def test_install_service_failure_returns_nonzero(self, capsys):
-        from helix_context.launcher import app as app_mod
-        with patch("helix_context.launcher.installer.install_service",
+        from cymatix_context.launcher import app as app_mod
+        with patch("cymatix_context.launcher.installer.install_service",
                    return_value=(False, "error")):
             rc = app_mod.main(["install-service"])
         captured = capsys.readouterr()
@@ -192,8 +192,8 @@ class TestCLIIntegration:
         assert "error" in captured.out
 
     def test_dry_run_flag_passed_through(self):
-        from helix_context.launcher import app as app_mod
-        with patch("helix_context.launcher.installer.install_service",
+        from cymatix_context.launcher import app as app_mod
+        with patch("cymatix_context.launcher.installer.install_service",
                    return_value=(True, "dry")) as mock_install:
             app_mod.main(["install-service", "--dry-run"])
         mock_install.assert_called_once_with(dry_run=True, port=11438)

@@ -15,9 +15,9 @@ from __future__ import annotations
 
 import pytest
 
-from helix_context.encoding import tree_chunker as tc
-from helix_context.genome import Genome
-from helix_context.schemas import StructuralRelation
+from cymatix_context.encoding import tree_chunker as tc
+from cymatix_context.genome import Genome
+from cymatix_context.schemas import StructuralRelation
 from tests.conftest import make_gene
 
 SYMBOL_REF = int(StructuralRelation.SYMBOL_REF)
@@ -158,8 +158,8 @@ _CODE = (
 def test_ingest_then_delete_leaves_zero_symbol_rows(tmp_path, monkeypatch):
     monkeypatch.delenv("HELIX_USE_SHARDS", raising=False)
     monkeypatch.setenv("HELIX_GENOME_PATH", str(tmp_path / "genome.db"))
-    from helix_context.config import load_config
-    from helix_context.context_manager import HelixContextManager
+    from cymatix_context.config import load_config
+    from cymatix_context.context_manager import HelixContextManager
 
     cfg = load_config()
     cfg.ingestion.symbol_graph = True

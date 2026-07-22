@@ -8,7 +8,7 @@ definition chunks carry symbol/type/span metadata for the symbol graph (WS2).
 """
 import pytest
 
-from helix_context.encoding import tree_chunker as tc
+from cymatix_context.encoding import tree_chunker as tc
 
 pytestmark = pytest.mark.skipif(
     not tc.is_available(), reason="tree-sitter (+ tree-sitter-python) not installed"

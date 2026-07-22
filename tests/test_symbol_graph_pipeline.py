@@ -10,7 +10,7 @@ import sqlite3
 
 import pytest
 
-from helix_context.encoding import tree_chunker as tc
+from cymatix_context.encoding import tree_chunker as tc
 
 pytestmark = pytest.mark.skipif(
     not tc.is_available(), reason="tree-sitter (+ tree-sitter-python) not installed"
@@ -28,8 +28,8 @@ _CODE = (
 def _manager(tmp_path, monkeypatch):
     monkeypatch.delenv("HELIX_USE_SHARDS", raising=False)
     monkeypatch.setenv("HELIX_GENOME_PATH", str(tmp_path / "genome.db"))
-    from helix_context.config import load_config
-    from helix_context.context_manager import HelixContextManager
+    from cymatix_context.config import load_config
+    from cymatix_context.context_manager import HelixContextManager
 
     cfg = load_config()
     cfg.ingestion.symbol_graph = True
@@ -38,8 +38,8 @@ def _manager(tmp_path, monkeypatch):
 
 
 def test_symbol_graph_end_to_end(tmp_path, monkeypatch):
-    from helix_context.schemas import StructuralRelation
-    from helix_context.storage.co_activation import (
+    from cymatix_context.schemas import StructuralRelation
+    from cymatix_context.storage.co_activation import (
         expand_coactivated, _row_to_gene_inline,
     )
 
@@ -81,7 +81,7 @@ def test_expansion_is_append_only_lexical_first(tmp_path, monkeypatch):
     """Lexical-first guard: expansion only APPENDS referenced defs — it never
     reorders or displaces the lexical candidates (PRD §4)."""
     import sqlite3
-    from helix_context.storage.co_activation import expand_coactivated, _row_to_gene_inline
+    from cymatix_context.storage.co_activation import expand_coactivated, _row_to_gene_inline
 
     mgr = _manager(tmp_path, monkeypatch)
     mgr.ingest(_CODE, content_type="code",
@@ -104,8 +104,8 @@ def test_expansion_is_append_only_lexical_first(tmp_path, monkeypatch):
 def test_symbol_expansion_cap_bounds_top_k(tmp_path, monkeypatch):
     """The cap actually bounds the expansion to top-K (WS3 Phase 2a core)."""
     import sqlite3
-    from helix_context.schemas import StructuralRelation
-    from helix_context.storage.co_activation import expand_coactivated, _row_to_gene_inline
+    from cymatix_context.schemas import StructuralRelation
+    from cymatix_context.storage.co_activation import expand_coactivated, _row_to_gene_inline
 
     mgr = _manager(tmp_path, monkeypatch)
     # 15 large helpers (each its own chunk) + one driver that calls all of them.

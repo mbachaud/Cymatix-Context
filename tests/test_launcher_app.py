@@ -1,5 +1,5 @@
 """
-Tests for helix_context.launcher.app — FastAPI endpoints with mocked
+Tests for cymatix_context.launcher.app — FastAPI endpoints with mocked
 supervisor + collector. No real helix process is spawned.
 """
 
@@ -11,9 +11,9 @@ from unittest.mock import MagicMock
 import pytest
 from fastapi.testclient import TestClient
 
-from helix_context.config import HeadroomConfig, HelixConfig, ServerConfig
-from helix_context.launcher.app import create_app
-from helix_context.launcher.supervisor import (
+from cymatix_context.config import HeadroomConfig, HelixConfig, ServerConfig
+from cymatix_context.launcher.app import create_app
+from cymatix_context.launcher.supervisor import (
     AlreadyRunning,
     NotRunning,
     ShutdownTimeout,
@@ -74,7 +74,7 @@ class TestDashboardHTML:
         assert resp.status_code == 200
         assert resp.headers["content-type"].startswith("text/html")
         # Page must contain the brand and the empty-state message
-        assert "Helix Launcher" in resp.text
+        assert "Cymatix Launcher" in resp.text
         assert "Helix is stopped" in resp.text
 
     def test_root_renders_running_state(self, client, fake_supervisor, fake_collector):
@@ -277,21 +277,21 @@ class TestControlRestart:
 class TestNativeFailFast:
     def test_main_exits_1_when_native_without_pywebview(self, monkeypatch):
         """--native must fail loudly when pywebview isn't available, not silently exit."""
-        from helix_context.launcher import app as app_mod
+        from cymatix_context.launcher import app as app_mod
 
         monkeypatch.setattr(app_mod, "_check_native_available", lambda: False)
         rc = app_mod.main(["--native", "--no-browser", "--no-autostart"])
         assert rc == 1
 
     def test_check_native_available_returns_bool(self):
-        from helix_context.launcher.app import _check_native_available
+        from cymatix_context.launcher.app import _check_native_available
         assert isinstance(_check_native_available(), bool)
 
 
 class TestMaybeBuildHeadroom:
     def test_adopts_running_headroom_even_when_disabled(self, fake_store, monkeypatch):
-        from helix_context.launcher import app as app_mod
-        from helix_context import config as config_mod
+        from cymatix_context.launcher import app as app_mod
+        from cymatix_context import config as config_mod
 
         class FakeHeadroomSupervisor:
             def __init__(self, store, host, port, mode):
@@ -334,8 +334,8 @@ class TestMaybeBuildHeadroom:
         fake_store,
         monkeypatch,
     ):
-        from helix_context.launcher import app as app_mod
-        from helix_context import config as config_mod
+        from cymatix_context.launcher import app as app_mod
+        from cymatix_context import config as config_mod
 
         instances = []
 
@@ -386,7 +386,7 @@ class TestHeadroomAutoRoute:
         """Default config (route_upstream=False) must NOT rewrite the
         upstream even for a remote target. Pre-fix this routed silently
         and pointed helix at a dead :8787 when Headroom wasn't installed."""
-        from helix_context.launcher import app as app_mod
+        from cymatix_context.launcher import app as app_mod
 
         cfg = HelixConfig(
             server=ServerConfig(upstream="https://api.openai.com/v1"),
@@ -407,7 +407,7 @@ class TestHeadroomAutoRoute:
     def test_remote_upstream_routes_when_route_upstream_opted_in(self, monkeypatch):
         """Explicit opt-in via [headroom] route_upstream = true keeps the
         original auto-route behavior for operators who do want it."""
-        from helix_context.launcher import app as app_mod
+        from cymatix_context.launcher import app as app_mod
 
         cfg = HelixConfig(
             server=ServerConfig(upstream="https://api.openai.com/v1"),
@@ -426,7 +426,7 @@ class TestHeadroomAutoRoute:
         """HELIX_HEADROOM_ROUTE_UPSTREAM_AUTO=0 is the per-launch kill
         switch: must override route_upstream=True. Useful when the proxy
         is misbehaving and the operator wants helix direct for one session."""
-        from helix_context.launcher import app as app_mod
+        from cymatix_context.launcher import app as app_mod
 
         cfg = HelixConfig(
             server=ServerConfig(upstream="https://api.openai.com/v1"),
@@ -446,7 +446,7 @@ class TestHeadroomAutoRoute:
         """HELIX_HEADROOM_ROUTE_UPSTREAM_AUTO=1 is also a per-launch
         override: must turn routing on even when route_upstream=False
         in config. Symmetric to the kill-switch test."""
-        from helix_context.launcher import app as app_mod
+        from cymatix_context.launcher import app as app_mod
 
         cfg = HelixConfig(
             server=ServerConfig(upstream="https://api.openai.com/v1"),
@@ -463,7 +463,7 @@ class TestHeadroomAutoRoute:
     def test_local_ollama_upstream_stays_direct(self, monkeypatch):
         """Loopback upstream is never rewritten, even with route_upstream=True
         (Headroom proxy hop doesn't buy anything for a localhost model server)."""
-        from helix_context.launcher import app as app_mod
+        from cymatix_context.launcher import app as app_mod
 
         cfg = HelixConfig(
             server=ServerConfig(upstream="http://localhost:11434"),
@@ -507,10 +507,10 @@ def test_observability_env_opt_out(monkeypatch, env_value, expects_skip):
     # Stub install-complete so the opt-IN branches actually return a
     # supervisor rather than skipping due to missing binaries/configs.
     monkeypatch.setattr(
-        "helix_context.launcher.app._observability_install_complete",
+        "cymatix_context.launcher.app._observability_install_complete",
         lambda: True,
     )
-    from helix_context.launcher.app import _maybe_build_observability
+    from cymatix_context.launcher.app import _maybe_build_observability
     sup, install_pending = _maybe_build_observability()
     if expects_skip:
         assert sup is None, (
@@ -535,10 +535,10 @@ def test_observability_enabled_when_unset(monkeypatch, tmp_path):
     haven't been rendered yet; either way, not silently disabled)."""
     monkeypatch.delenv("HELIX_OBSERVABILITY", raising=False)
     monkeypatch.setattr(
-        "helix_context.launcher.app._observability_install_complete",
+        "cymatix_context.launcher.app._observability_install_complete",
         lambda: True,
     )
-    from helix_context.launcher.app import _maybe_build_observability
+    from cymatix_context.launcher.app import _maybe_build_observability
     sup, install_pending = _maybe_build_observability()
     assert sup is not None
     assert install_pending is False
@@ -553,10 +553,10 @@ def test_observability_skipped_when_install_incomplete(monkeypatch):
     flag in the tuple so the caller doesn't depend on global state."""
     monkeypatch.delenv("HELIX_OBSERVABILITY", raising=False)
     monkeypatch.setattr(
-        "helix_context.launcher.app._observability_install_complete",
+        "cymatix_context.launcher.app._observability_install_complete",
         lambda: False,
     )
-    from helix_context.launcher.app import _maybe_build_observability
+    from cymatix_context.launcher.app import _maybe_build_observability
     sup, install_pending = _maybe_build_observability()
     assert sup is None
     assert install_pending is True

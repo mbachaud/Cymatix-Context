@@ -10,7 +10,7 @@ import pytest
 pytest.importorskip("jinja2", reason="launcher extra not installed")
 from fastapi.testclient import TestClient
 
-from helix_context.launcher.app import create_app
+from cymatix_context.launcher.app import create_app
 from tests.test_launcher_dashboard_wiring import FakeCollector, FakeSupervisor
 
 
@@ -66,7 +66,7 @@ def test_bench_state_and_controls():
 
 
 def test_server_config_bench_fields(tmp_path, monkeypatch):
-    from helix_context.config import load_config
+    from cymatix_context.config import load_config
     toml = tmp_path / "helix.toml"
     toml.write_text(
         "[server]\nbench_enabled = true\nbench_port = 12001\n"
@@ -84,7 +84,7 @@ def test_server_config_bench_fields(tmp_path, monkeypatch):
 
 
 def test_supervisor_extra_env_merge():
-    from helix_context.launcher.supervisor import HelixSupervisor
+    from cymatix_context.launcher.supervisor import HelixSupervisor
     sup = HelixSupervisor.__new__(HelixSupervisor)
     sup.extra_env = {"HELIX_GENOME_PATH": "x.db"}
     # the merge logic is inline in start(); assert the attribute shape
@@ -132,7 +132,7 @@ def test_db_modal_js_retries_and_wires_dismiss():
     # Select buttons. No JS harness exists, so smoke the wiring: the
     # poll callback must re-run population, and the dismiss control
     # must be wired.
-    from helix_context.launcher.app import STATIC_DIR
+    from cymatix_context.launcher.app import STATIC_DIR
     js = (STATIC_DIR / "launcher.js").read_text(encoding="utf-8")
     assert "data-db-modal-close" in js
     assert "pollDbModal" in js
@@ -150,7 +150,7 @@ def test_db_modal_hidden_when_not_needed():
 
 def test_ensure_streams_replaces_none_stdio(tmp_path, monkeypatch):
     import sys
-    from helix_context.launcher.app import _ensure_streams
+    from cymatix_context.launcher.app import _ensure_streams
     log = tmp_path / "launcher.log"
     monkeypatch.setattr(sys, "stdout", None)
     monkeypatch.setattr(sys, "stderr", None)
@@ -162,7 +162,7 @@ def test_ensure_streams_replaces_none_stdio(tmp_path, monkeypatch):
 
 
 def test_ensure_streams_noop_with_console(capsys):
-    from helix_context.launcher.app import _ensure_streams
+    from cymatix_context.launcher.app import _ensure_streams
     import sys
     before_out, before_err = sys.stdout, sys.stderr
     _ensure_streams(None)

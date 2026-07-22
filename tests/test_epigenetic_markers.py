@@ -15,7 +15,7 @@ import time
 
 import pytest
 
-from helix_context.schemas import EpigeneticMarkers
+from cymatix_context.schemas import EpigeneticMarkers
 
 
 # ── Field defaults / serialization ─────────────────────────────────────

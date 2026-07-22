@@ -111,8 +111,8 @@ class TestRecallMath:
 
     def test_gold_hit_exact_forward_slash(self):
         assert _gold_hit(
-            "F:/Projects/helix-context/helix_context/pipeline/stages.py",
-            ["helix-context/helix_context/pipeline/stages.py"],
+            "F:/Projects/helix-context/cymatix_context/pipeline/stages.py",
+            ["helix-context/cymatix_context/pipeline/stages.py"],
         )
 
     def test_gold_hit_backslash_source(self):
@@ -137,8 +137,8 @@ class TestRecallMath:
     def test_gold_hit_bidirectional_short_gold(self):
         """Gold may be a directory prefix — match any file under it."""
         assert _gold_hit(
-            "F:/Projects/helix-context/helix_context/pipeline/stages.py",
-            ["helix-context/helix_context/pipeline"],
+            "F:/Projects/helix-context/cymatix_context/pipeline/stages.py",
+            ["helix-context/cymatix_context/pipeline"],
         )
 
     def test_gold_hit_multiple_gold_paths_any_match(self):
@@ -191,12 +191,12 @@ class TestRecallMath:
                 "id": "b",
                 "type": "within",
                 "question": "How is the pipeline staged?",
-                "gold_paths": ["helix-context/helix_context/pipeline/stages.py"],
+                "gold_paths": ["helix-context/cymatix_context/pipeline/stages.py"],
             },
         ]
         ranked = [
             ["F:/Projects/BookKeeper/bookkeeper/auth.py", "F:/Projects/other/foo.py"],
-            ["F:/Projects/helix-context/helix_context/pipeline/stages.py"],
+            ["F:/Projects/helix-context/cymatix_context/pipeline/stages.py"],
         ]
         monkeypatch.setattr(bsr, "fingerprint", self._make_fake_fingerprint_server(ranked))
 

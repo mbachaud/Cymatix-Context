@@ -1,4 +1,4 @@
-"""Unit tests for helix_context.hardware (mocked-torch).
+"""Unit tests for cymatix_context.hardware (mocked-torch).
 
 All tests use monkeypatch to mock torch internals — they never touch a real
 GPU. Pattern mirrors tests/test_observability_paths.py.
@@ -9,7 +9,7 @@ from __future__ import annotations
 import dataclasses
 import pytest
 
-from helix_context import hardware
+from cymatix_context import hardware
 
 
 @pytest.fixture(autouse=True)
@@ -82,7 +82,7 @@ def test_reset_for_test_clears_cached_singleton(monkeypatch):
 def test_cpu_brand_source_precedence(monkeypatch, cpuinfo_result, platform_processor, expected_brand):
     """cpu_brand source precedence: py-cpuinfo brand_raw > platform.processor() > 'unknown CPU'."""
     monkeypatch.setattr(
-        "helix_context.hardware._cpuinfo_get_info",
+        "cymatix_context.hardware._cpuinfo_get_info",
         lambda: cpuinfo_result,
     )
     monkeypatch.setattr("platform.processor", lambda: platform_processor)

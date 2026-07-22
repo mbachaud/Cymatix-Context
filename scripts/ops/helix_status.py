@@ -1,4 +1,4 @@
-"""Backward-compat shim -- real module at helix_context.cli.helix_status.
+"""Backward-compat shim -- real module at cymatix_context.cli.helix_status.
 
 Moved into the package (bugbash BUG-3) so the ``helix-status`` console
 script and `helix status`'s network probes resolve in installed
@@ -7,7 +7,7 @@ muscle memory of ``python scripts/ops/helix_status.py`` still works.
 """
 from __future__ import annotations
 
-from helix_context.cli.helix_status import (  # noqa: F401 — re-exports
+from cymatix_context.cli.helix_status import (  # noqa: F401 — re-exports
     collect_status,
     main,
 )

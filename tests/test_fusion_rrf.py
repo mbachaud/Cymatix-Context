@@ -24,9 +24,9 @@ from pathlib import Path
 
 import pytest
 
-from helix_context.retrieval.fusion import DEFAULT_RRF_K, Fuser
-from helix_context.genome import Genome
-from helix_context.schemas import (
+from cymatix_context.retrieval.fusion import DEFAULT_RRF_K, Fuser
+from cymatix_context.genome import Genome
+from cymatix_context.schemas import (
     ChromatinState, EpigeneticMarkers, Gene, PromoterTags,
 )
 
@@ -333,7 +333,7 @@ def test_rrf_skips_absolute_floors_in_context_manager():
     # context_manager.py.
     tier_path = (
         Path(__file__).resolve().parents[1]
-        / "helix_context" / "pipeline" / "tier_logic.py"
+        / "cymatix_context" / "pipeline" / "tier_logic.py"
     )
     tier_text = tier_path.read_text(encoding="utf-8")
     assert "skip_absolute_floors" in tier_text, (
@@ -345,7 +345,7 @@ def test_rrf_skips_absolute_floors_in_context_manager():
     # The delegation site in context_manager.py should pass fusion_mode
     cm_path = (
         Path(__file__).resolve().parents[1]
-        / "helix_context" / "context_manager.py"
+        / "cymatix_context" / "context_manager.py"
     )
     cm_text = cm_path.read_text(encoding="utf-8")
     assert "_fusion_mode" in cm_text, (
@@ -491,7 +491,7 @@ def test_retrieval_config_default_fusion_mode_is_rrf():
     equality); legacy additive physics now requires an explicit
     fusion_mode="additive" at construction.
     """
-    from helix_context.config import RetrievalConfig
+    from cymatix_context.config import RetrievalConfig
 
     assert RetrievalConfig().fusion_mode == "rrf"
 
@@ -499,7 +499,7 @@ def test_retrieval_config_default_fusion_mode_is_rrf():
 def test_toml_loader_defaults_fusion_mode_rrf(tmp_path):
     """A helix.toml without [retrieval].fusion_mode inherits the flipped
     default; an explicit "additive" still wins until v(N+2) removes it."""
-    from helix_context.config import load_config
+    from cymatix_context.config import load_config
 
     bare = tmp_path / "bare.toml"
     bare.write_text("[retrieval]\nrrf_k = 60\n")
@@ -512,7 +512,7 @@ def test_toml_loader_defaults_fusion_mode_rrf(tmp_path):
 
 def test_shipped_helix_toml_fusion_mode_is_rrf():
     """The repo-root helix.toml ships the new default explicitly."""
-    from helix_context.config import load_config
+    from cymatix_context.config import load_config
 
     repo_toml = Path(__file__).resolve().parents[1] / "helix.toml"
     cfg = load_config(str(repo_toml))

@@ -21,7 +21,7 @@ Historical JSONL/results files (pre-2026-05) embedded each delivered
 document as ``<GENE src="path/to/file.py" ...>...</GENE>`` inline in the
 ``content``/``expressed_context`` string. The renderer no longer emits
 that markup -- it was replaced by ``[gene=...]`` legibility headers
-(see :mod:`helix_context.encoding.legibility`) -- but old JSONL captures
+(see :mod:`cymatix_context.encoding.legibility`) -- but old JSONL captures
 must remain inspectable.
 
 This module is the single place benchmark/diagnostic code should look up
@@ -136,7 +136,7 @@ def parse_legacy_gene_blocks(content: str) -> list[tuple[str, str]]:
     return LEGACY_GENE_BLOCK_RE.findall(content)
 
 
-# Modern legibility header (see helix_context/encoding/legibility.py):
+# Modern legibility header (see cymatix_context/encoding/legibility.py):
 #   [gene=abc12345abc1 ◆ fired=harmonic:2.3,lex_anchor:1.1 1200→320c]
 # The captured id is ``gene_id[:12]`` — a plain prefix of the full
 # citation gene_id (id_width=12 in both format_gene_header and the

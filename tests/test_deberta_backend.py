@@ -1,4 +1,4 @@
-"""Unit tests for helix_context.deberta_backend (mocked tokenizer + model).
+"""Unit tests for cymatix_context.deberta_backend (mocked tokenizer + model).
 
 Exists separately from tests/test_ribosome.py because that file tests the
 Ollama-backed Ribosome class with MockBackend, not the DeBERTa cross-encoder
@@ -13,8 +13,8 @@ from unittest.mock import MagicMock
 import pytest
 import torch
 
-from helix_context import hardware
-from helix_context.schemas import Gene, PromoterTags
+from cymatix_context import hardware
+from cymatix_context.schemas import Gene, PromoterTags
 
 
 @pytest.fixture(autouse=True)
@@ -108,7 +108,7 @@ def test_deberta_rerank_chunks_in_recommended_batch_size(monkeypatch):
     calls (6 full + 1 partial of 4)."""
     _override_hardware(monkeypatch, rerank_batch=16)
 
-    from helix_context.backends.deberta_backend import DeBERTaRibosome
+    from cymatix_context.backends.deberta_backend import DeBERTaRibosome
 
     rib = DeBERTaRibosome.__new__(DeBERTaRibosome)  # bypass __init__
     rib._device = torch.device("cpu")
@@ -132,7 +132,7 @@ def test_deberta_splice_chunks_in_recommended_batch_size(monkeypatch):
     expect ceil(50/16) = 4 tokenizer calls (16 + 16 + 16 + 2)."""
     _override_hardware(monkeypatch, splice_batch=16)
 
-    from helix_context.backends.deberta_backend import DeBERTaRibosome
+    from cymatix_context.backends.deberta_backend import DeBERTaRibosome
 
     rib = DeBERTaRibosome.__new__(DeBERTaRibosome)  # bypass __init__
     rib._device = torch.device("cpu")
@@ -159,7 +159,7 @@ def test_deberta_rerank_preserves_ordering_of_negative_logits(monkeypatch):
     destroying ordering among them (bugbash BUG-3)."""
     _override_hardware(monkeypatch, rerank_batch=16)
 
-    from helix_context.backends.deberta_backend import DeBERTaRibosome
+    from cymatix_context.backends.deberta_backend import DeBERTaRibosome
 
     rib = DeBERTaRibosome.__new__(DeBERTaRibosome)  # bypass __init__
     rib._device = torch.device("cpu")
@@ -201,7 +201,7 @@ def test_deberta_init_consults_get_hardware_when_device_none(monkeypatch):
 
     _override_hardware(monkeypatch, rerank_batch=8)
 
-    import helix_context.backends.deberta_backend as db
+    import cymatix_context.backends.deberta_backend as db
 
     monkeypatch.setattr(
         "transformers.AutoTokenizer.from_pretrained",

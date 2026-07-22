@@ -1,7 +1,7 @@
 """
 One-shot backfill: populate filename_index from existing genes.
 
-New ingests auto-index via helix_context.genome.upsert_gene, but genes
+New ingests auto-index via cymatix_context.genome.upsert_gene, but genes
 already in the genome at the time filename_anchor shipped have empty
 filename_index rows. Run this once per genome DB.
 
@@ -23,8 +23,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from helix_context import filename_anchor  # noqa: E402
-from helix_context.config import load_config  # noqa: E402
+from cymatix_context import filename_anchor  # noqa: E402
+from cymatix_context.config import load_config  # noqa: E402
 
 
 def main() -> int:

@@ -35,12 +35,12 @@ import time
 
 import pytest
 
-from helix_context.config import AbstainClassFloors, RetrievalConfig
-from helix_context.genome import Genome
-from helix_context.knowledge_store import KnowledgeStore
-from helix_context.pipeline.tier_logic import apply_budget_tiers
-from helix_context.retrieval import fusion as fusion_mod
-from helix_context.schemas import (
+from cymatix_context.config import AbstainClassFloors, RetrievalConfig
+from cymatix_context.genome import Genome
+from cymatix_context.knowledge_store import KnowledgeStore
+from cymatix_context.pipeline.tier_logic import apply_budget_tiers
+from cymatix_context.retrieval import fusion as fusion_mod
+from cymatix_context.schemas import (
     ChromatinState, EpigeneticMarkers, Gene, PromoterTags,
 )
 from tests.test_additive_weight_plumbing import (
@@ -165,7 +165,7 @@ _FUSED_ONLY_TIERS = {"pki", "tag_exact", "tag_prefix", "fts5", "lex_anchor"}
 # knowledge_store.query_docs imports the Fuser LOCALLY
 # (``from .retrieval.fusion import Fuser as _Fuser``, knowledge_store.py:2012),
 # resolving the attribute at call time — so patching
-# helix_context.retrieval.fusion.Fuser intercepts every tier feed.
+# cymatix_context.retrieval.fusion.Fuser intercepts every tier feed.
 
 _TIER_TRANSFORMS = {
     "tag_exact": lambda s: 250.0 * s + 17.0,   # affine
@@ -207,7 +207,7 @@ class _MonotoneFuser(fusion_mod.Fuser):
 def _patched_splade(hits):
     """Replace the SPLADE model calls with fixed hits (local variant of
     the harness patched_splade — we need custom (gid, raw) pairs)."""
-    from helix_context.backends import splade_backend
+    from cymatix_context.backends import splade_backend
 
     old_encode = splade_backend.encode
     old_query = splade_backend.query_splade

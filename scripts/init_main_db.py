@@ -19,7 +19,7 @@ try:
 except Exception:
     pass
 
-from helix_context.shard_schema import init_main_db, open_main_db, list_shards
+from cymatix_context.shard_schema import init_main_db, open_main_db, list_shards
 
 
 DEFAULT_PATH = "F:/Projects/helix-context/genomes/main.db"

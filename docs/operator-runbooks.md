@@ -1,13 +1,13 @@
 # Operator Runbooks
 
-This document is the operator reference for `helix-context` post-deployment
+This document is the operator reference for `cymatix-context` post-deployment
 maintenance and the three calibration scripts the 2026-05-08 7-stage
 retrieval-fix landed in `master` on 2026-05-10. After upgrading to a
 release with the Stage 2 / Stage 4 / Stage 6 / Stage 7 changes, the new
 code paths take effect on a production knowledge store only after these scripts
 run against it.
 
-Assumptions: `helix.toml` at repo root (or `HELIX_CONFIG`); active
+Assumptions: `cymatix.toml` at repo root (or `CYMATIX_CONFIG`); active
 knowledge store at `genomes/main/genome.db`; server bound to loopback
 at `127.0.0.1:11437`. Admin endpoints are auth-free by design — bind
 to loopback or a reverse proxy that enforces auth in front; do not
@@ -20,7 +20,7 @@ first time you bring a knowledge store up against a release containing PR #46
 (Stage 2) through the Stage 7 freshness gate:
 
 1. **Pull and stop traffic** — block writers (`/v1/chat/completions`,
-   `/ingest`, `/consolidate`) by stopping the helix process.
+   `/ingest`, `/consolidate`) by stopping the cymatix process.
 2. **Runbook 1 — BGE-M3 1024-dim backfill** (Stage 2). Re-encode every
    document into the new `embedding_dense_v2 BLOB` column.
 3. **Runbook 2 — Threshold calibration** (Stage 4). Derive a
@@ -29,7 +29,7 @@ first time you bring a knowledge store up against a release containing PR #46
 4. **Runbook 3 — Know-confidence calibration** (Stage 6 + Stage 7). Fit
    the 5-feature logistic for `KnowBlock.confidence`. Stage 7 added
    `freshness_min` as β5.
-5. **Resume traffic** — restart helix or POST `/admin/refresh`. The
+5. **Resume traffic** — restart cymatix or POST `/admin/refresh`. The
    runbooks for `/admin/refresh`, `/admin/vacuum`, `/consolidate`, and
    `/context/refresh-plan` follow as day-2 operations.
 
@@ -59,7 +59,7 @@ release as a rollback safety net.
 After upgrading to a release containing PR #46 (Stage 2 dense recall).
 First-time only on a given knowledge store; idempotent on rerun. The Stage 2 spec
 ships an init-time warning at `Genome.__init__`: if
-`dense_embedding_enabled=True` AND v2 coverage is non-zero, helix warns
+`dense_embedding_enabled=True` AND v2 coverage is non-zero, cymatix warns
 once that `ann_similarity_threshold` is calibrated for dim=256 and
 invalid against dim=1024 — Runbook 2 is the fix.
 
@@ -76,7 +76,7 @@ allow ~5 MiB per 1,000 documents.
 
 ### Pre-flight checklist
 
-1. Stop the helix process. Background `replicate()` and `/admin/compact`
+1. Stop the cymatix process. Background `replicate()` and `/admin/compact`
    both UPSERT the `genes` table; concurrent writes interleave partial
    rows that the idempotent skip-clause then has to retry.
 2. Snapshot-copy `genomes/main/genome.db` to a side path. The script is
@@ -100,7 +100,7 @@ python scripts/backfill_bgem3_v2.py [DB_PATH]
 Flags:
 
 - Positional `db_path` (optional). When omitted the script reads
-  `[genome] path` from `helix.toml`
+  `[genome] path` from `cymatix.toml`
   (`scripts/backfill_bgem3_v2.py:87-88`).
 - `--batch INT` — encode batch + SQLite commit cadence. Default `64`
   (`scripts/backfill_bgem3_v2.py:73`). Spec §3 describes "every 100
@@ -188,9 +188,9 @@ work but `bench_needle_1000` recall numbers will not improve.
 
 The backfill is non-destructive. To revert:
 
-1. Set `[retrieval] dense_embedding_enabled = false` in `helix.toml` —
+1. Set `[retrieval] dense_embedding_enabled = false` in `cymatix.toml` —
    this skips the dense recall path; lexical-only retrieval resumes.
-2. Restart helix or POST `/admin/refresh`.
+2. Restart cymatix or POST `/admin/refresh`.
 
 The legacy `embedding_dense TEXT` (256-dim JSON) column stays intact for
 one release after Stage 2, so retrieval falls back to pre-Stage-2
@@ -226,7 +226,7 @@ knowledge store plus a `located_n1000` bench JSON:
    `default`).
 
 Both replace hand-picked constants. The output is a TOML snippet that the
-operator pastes into `helix.toml`, plus a JSON provenance report.
+operator pastes into `cymatix.toml`, plus a JSON provenance report.
 
 ### When to calibrate thresholds
 
@@ -333,7 +333,7 @@ Three outputs:
    with default floors (2.5, 2.5, 5.0) and a `# WARNING:` comment.
 
 2. **JSON provenance report** at `--output-report` — schema URI
-   `https://helix-context.dev/schemas/calibration_report.v1.json`. Layout
+   `https://cymatix-context.dev/schemas/calibration_report.v1.json`. Layout
    per `scripts/calibrate_thresholds.py:397-442`: `computed_at`,
    `genome.{path,gene_count,dim}`, `ann_threshold.{mode,value,mu,sigma,
    sigma_mult,n_pairs,seed}`, `floors.{abstain_pct,focused_pct,tight_pct,
@@ -349,14 +349,14 @@ Three outputs:
 
 ### Apply the output
 
-1. In `helix.toml`, add `ann_threshold_mode = "margin_over_random"` and
+1. In `cymatix.toml`, add `ann_threshold_mode = "margin_over_random"` and
    `ann_threshold_sigma_multiplier = 3.0` to `[retrieval]` (leave the
    legacy `ann_similarity_threshold` in place as fallback).
 2. Set `[abstain] mode = "per_classifier"`.
 3. Append every `[abstain.<cls>]` block from the snippet. The loader
    raises `ConfigError` at startup if a per-class block is missing for
    any emitted class (Stage 4 spec §6).
-4. Restart helix or POST `/admin/refresh`. The knowledge store reads
+4. Restart cymatix or POST `/admin/refresh`. The knowledge store reads
    `ann_threshold` from `genome_calibration` on the first
    `query_genes()` after refresh; the cache invalidates on
    `set_replication_manager` rotation per Stage 4 spec §3.
@@ -385,7 +385,7 @@ Algorithm per Stage 4 spec §3-§5:
 
 ### Threshold-calibration verification
 
-After applying the snippet to `helix.toml` and refreshing:
+After applying the snippet to `cymatix.toml` and refreshing:
 
 ```bash
 curl -s http://127.0.0.1:11437/health | jq .calibration
@@ -396,7 +396,7 @@ Expected fields (server.py:2752-2768):
 - `ann_threshold_mode`: `"margin_over_random"`
 - `abstain_mode`: `"per_classifier"`
 - `abstain_classes`: sorted list of every per-class block found in
-  `helix.toml`. Should contain the five known classes.
+  `cymatix.toml`. Should contain the five known classes.
 - `ann_threshold`: nested dict from `Genome.get_calibration_provenance()`
   carrying `value`, `mu`, `sigma`, `N`, `dim`, `sigma_mult`, `seed`,
   `computed_at`. Omitted when mode is `"absolute"` or no calibration row
@@ -411,10 +411,10 @@ calibration without `--no-write-db` and without `--dry-run`, then
 
 To revert to pre-Stage-4 behavior:
 
-1. In `helix.toml`, set `[abstain] mode = "global"` and `[retrieval]
+1. In `cymatix.toml`, set `[abstain] mode = "global"` and `[retrieval]
    ann_threshold_mode = "absolute"` — the legacy `ann_similarity_threshold`
    value is read.
-2. Restart helix or POST `/admin/refresh`.
+2. Restart cymatix or POST `/admin/refresh`.
 
 The legacy floors `TIGHT_SCORE_FLOOR = 5.0`, `FOCUSED_SCORE_FLOOR = 2.5`,
 `FOCUSED_SCORE_FLOOR_FOR_ABSTAIN = 2.5` resume. The `genome_calibration`
@@ -449,7 +449,7 @@ form (one row per query) — not JSON like Runbook 2 wants.
 
 After Runbook 2. Optional but recommended; the default coefficients
 (`DEFAULT_BETAS = (-2.0, 2.0, 1.5, 0.7, 1.8, 1.5)` in
-`helix_context/know_calibration.py:57`) are a reasonable cold-start, and
+`cymatix_context/know_calibration.py:57`) are a reasonable cold-start, and
 the absent `[know]` block falls back to defaults with a `log.warning`.
 Calibration mainly improves precision at the boundary — it shifts the
 emit_floor toward the data's actual P95 operating point and re-fits the
@@ -496,7 +496,7 @@ Flags (verified at lines 391-450):
   `top_score`, `score_gap`, `lexical_dense_agree`,
   `coordinate_confidence`, `label`, and optionally `freshness_min`
   (5th feature). Schema at `scripts/calibrate_know_confidence.py:104-140`.
-- `--out PATH` — default `Path("helix.toml")`. The writer at
+- `--out PATH` — default `Path("cymatix.toml")`. The writer at
   `scripts/calibrate_know_confidence.py:212-273` reads the existing
   file, replaces the `[know]` section (or appends if absent). Hand-rolled
   because `tomllib` is parse-only.
@@ -505,10 +505,10 @@ Flags (verified at lines 391-450):
   (`scripts/calibrate_know_confidence.py:539-546`).
 - `--seed INT` — default `42`. Seeds the train/test split.
 - `--smoke` — synthetic separable fixture instead of `--input`. Does NOT
-  touch `helix.toml` (and is not subject to the AUC gate below, since it
+  touch `cymatix.toml` (and is not subject to the AUC gate below, since it
   never writes).
 - `--n-features INT` — default `N_FEATURES = 5` (Stage 7,
-  `helix_context/scoring/know_calibration.py:84`). Stage 6 era was 4; the
+  `cymatix_context/scoring/know_calibration.py:84`). Stage 6 era was 4; the
   pure-Python fitter still works against a Stage 6 era JSONL because
   `_row_to_features` only emits 4 features when `freshness_min` is
   absent.
@@ -525,7 +525,7 @@ Typical invocation:
 ```bash
 python scripts/calibrate_know_confidence.py \
     --input results/located_n1000.jsonl \
-    --out helix.toml
+    --out cymatix.toml
 ```
 
 ### AUC trust gate (issue #239)
@@ -542,7 +542,7 @@ write `[know]` betas when that AUC is below `--auc-floor`**
 (`gate_auc_or_raise()` / `write_calibration_gated()`,
 `scripts/calibrate_know_confidence.py:335-386`). A refusal prints
 `ERROR: AUC gate FAILED: ...` to stderr and exits non-zero (3);
-`helix.toml` is left untouched. An undefined AUC (single-class held-out
+`cymatix.toml` is left untouched. An undefined AUC (single-class held-out
 split) is treated as a failure too — there's no basis to trust it.
 
 Re-running with `--force` writes anyway and logs
@@ -574,7 +574,7 @@ Per Stage 6 spec §11 and Stage 7 spec §10:
 
 ### Output
 
-The script writes (or replaces) the `[know]` block in `helix.toml`
+The script writes (or replaces) the `[know]` block in `cymatix.toml`
 (`scripts/calibrate_know_confidence.py:223-239`), gated on AUC as
 described above:
 
@@ -599,10 +599,10 @@ without `last_verified_at`).
 
 ### Know-calibration apply + verify
 
-`helix.toml` is hot-reloaded per `/context` call (the
+`cymatix.toml` is hot-reloaded per `/context` call (the
 `know_calibration` loader is pure functions, no per-call I/O beyond the
 file read). No restart required. If `--out` writes somewhere your server
-does not load (`HELIX_CONFIG` override), copy the `[know]` block over
+does not load (`CYMATIX_CONFIG` override), copy the `[know]` block over
 manually and POST `/admin/refresh`.
 
 ```bash
@@ -623,7 +623,7 @@ labels or all-zero features.
 Without `located_n1000` ground truth (early bring-up, novel knowledge store, no
 Stage 1 bench), the default `(-2.0, 2.0, 1.5, 0.7, 1.8, 1.5)` is a
 reasonable cold-start. The loader at
-`helix_context/know_calibration.py:160` falls back to defaults on a
+`cymatix_context/know_calibration.py:160` falls back to defaults on a
 missing or malformed `[know]` table with a `log.warning`. Calibration
 mainly improves precision at the boundary.
 
@@ -640,21 +640,21 @@ python scripts/calibrate_know_confidence.py --smoke
 ```
 
 Runs an 80-row synthetic separable fixture through the full fit. Does
-NOT touch `helix.toml`. Confirms the script wires together.
+NOT touch `cymatix.toml`. Confirms the script wires together.
 
 ---
 
 ## Runbook 4: `/admin/refresh` (admin-only)
 
-The `/admin/refresh` endpoint at `helix_context/server.py:2805-2810`
+The `/admin/refresh` endpoint at `cymatix_context/server.py:2805-2810`
 forces the knowledge store connection to reopen its WAL snapshot. Effective on
 external writers — useful when ingest happened via a sibling replica or
 direct sqlite3 write.
 
 ### When to refresh
 
-- After manual edits to `helix.toml` that need to take effect without a
-  full process restart. The `helix.toml` loader is a pure function
+- After manual edits to `cymatix.toml` that need to take effect without a
+  full process restart. The `cymatix.toml` loader is a pure function
   invoked per relevant code path, so most config flips already hot-reload;
   use `/admin/refresh` for the conservative case where you want the
   knowledge store connection itself reset.
@@ -670,14 +670,14 @@ direct sqlite3 write.
 curl -X POST http://127.0.0.1:11437/admin/refresh
 ```
 
-The endpoint handler at `helix_context/server.py:2806-2810` calls
+The endpoint handler at `cymatix_context/server.py:2806-2810` calls
 `helix.genome.refresh()` and then `helix.genome.stats()["total_genes"]`
 to confirm the connection is healthy. The response is
 `{"refreshed": true, "genes": <count>}`.
 
 ### What it triggers
 
-`helix.genome.refresh()` (`helix_context/genome.py:4089-4112`):
+`helix.genome.refresh()` (`cymatix_context/genome.py:4089-4112`):
 
 - Primary path: `_refresh_snapshot()` commits the read transaction so
   the next SELECT starts a new WAL snapshot, then `SELECT 1` verifies
@@ -689,16 +689,16 @@ to confirm the connection is healthy. The response is
 Spec divergence: Stage 2 spec §4 wording described `/admin/refresh` as
 also calling `_invalidate_dense_matrix(force=True)`. The actual handler
 does not — the in-memory dense matrix
-(`helix_context/genome.py:3062-3074`) is invalidated only by the
+(`cymatix_context/genome.py:3062-3074`) is invalidated only by the
 upsert/delete paths. After a manual UPDATE of `embedding_dense_v2`
-outside the server, restart the helix process to force a lazy-load
+outside the server, restart the cymatix process to force a lazy-load
 rebuild.
 
 ---
 
 ## Runbook 5: `/admin/vacuum` (admin-only)
 
-The `/admin/vacuum` endpoint at `helix_context/server.py:2812-2828`
+The `/admin/vacuum` endpoint at `cymatix_context/server.py:2812-2828`
 calls `Genome.vacuum()` to reclaim free pages from the SQLite knowledge store
 file after thinning, compaction, or large-scale deletions.
 
@@ -723,7 +723,7 @@ curl -X POST http://127.0.0.1:11437/admin/vacuum
 
 Returns `{"ok": true, "before_bytes": ..., "after_bytes": ...,
 "reclaimed_bytes": ...}` from `Genome.vacuum()` at
-`helix_context/genome.py:4182-4236`.
+`cymatix_context/genome.py:4182-4236`.
 
 ### Vacuum wall time
 
@@ -738,7 +738,7 @@ maintenance window — the operation blocks all writers for its duration.
 
 ### Vacuum effect
 
-`Genome.vacuum()` (`helix_context/genome.py:4202-4232`), in order:
+`Genome.vacuum()` (`cymatix_context/genome.py:4202-4232`), in order:
 
 1. `PRAGMA wal_checkpoint(TRUNCATE)` flushes the WAL into the main DB.
 2. Closes the long-lived connection (VACUUM needs exclusive access).
@@ -758,7 +758,7 @@ the time the exception surfaces, so subsequent reads still work.
 
 ## Runbook 6: `/consolidate` (rewrite stale document bodies)
 
-The `/consolidate` endpoint at `helix_context/server.py:2672-2690`
+The `/consolidate` endpoint at `cymatix_context/server.py:2672-2690`
 distills the session buffer into consolidated knowledge documents,
 extracting only new facts, decisions, and discoveries.
 
@@ -776,7 +776,7 @@ extracting only new facts, decisions, and discoveries.
 Stage 7's `MissBlock(reason="stale")` carries `refresh_targets: list[str]`
 that typically point at document source paths the agent should refetch.
 `/consolidate` is the server-side counterpart for the case where the
-refresh target IS a document the helix process owns and can rewrite from
+refresh target IS a document the cymatix process owns and can rewrite from
 its source.
 
 ### Consolidate command
@@ -817,7 +817,7 @@ failure; retry is safe.
 
 ## Runbook 7: `/context/refresh-plan` vs `/context`
 
-`/context/refresh-plan` at `helix_context/server.py:1546-1593` is a thin
+`/context/refresh-plan` at `cymatix_context/server.py:1546-1593` is a thin
 convenience over `/context/packet`: it returns only the `refresh_targets`
 list — the set of source paths or URLs the agent should refetch — without
 the full evidence items (no `KnowBlock`, no `expressed_context`, no
@@ -839,7 +839,7 @@ breakout). See Stage 7 spec §11 for the round-trip mapping between
 
 ### Symptoms
 
-- `database disk image is malformed` from sqlite3 or any helix endpoint
+- `database disk image is malformed` from sqlite3 or any cymatix endpoint
   that reads the knowledge store.
 - `/health` returns `status: "degraded"` with `genome_ready: false` and
   the message `Genome stats failed; inspect the local knowledge store.`
@@ -848,7 +848,7 @@ breakout). See Stage 7 spec §11 for the round-trip mapping between
 
 ### Recovery: backup-from-WAL → reingest-from-source-paths
 
-1. Stop helix. Side-copy `genome.db`, `genome.db-wal`, `genome.db-shm`.
+1. Stop cymatix. Side-copy `genome.db`, `genome.db-wal`, `genome.db-shm`.
 2. Try `sqlite3 genome.db ".recover" | sqlite3 recovered.db` — pulls
    every readable page out of the corrupt DB into a fresh file. If it
    succeeds, swap `recovered.db` in for `genome.db` and skip to step 5.
@@ -861,7 +861,7 @@ breakout). See Stage 7 spec §11 for the round-trip mapping between
    each document's `source_id` fingerprint to rewrite the body.
 5. Re-run all three calibration runbooks — the `genome_calibration`
    table is gone if you started from a fresh DB.
-6. Bring helix up. Verify `/health` reports `status: "ok"` and the document
+6. Bring cymatix up. Verify `/health` reports `status: "ok"` and the document
    count matches the pre-corruption snapshot.
 
 `/consolidate` is also the bulk-recovery option for per-document corruption
@@ -897,10 +897,10 @@ significant changes to the knowledge store corpus.
        --output-report docs/calibrations/$(date +%Y-%m-%d).json
    python scripts/calibrate_know_confidence.py \
        --input results/located_n1000.jsonl \
-       --out helix.toml
+       --out cymatix.toml
    ```
 
-   Apply the new TOML snippet to `helix.toml`; POST `/admin/refresh`.
+   Apply the new TOML snippet to `cymatix.toml`; POST `/admin/refresh`.
 
 3. **Run `/admin/vacuum`** if `genome.db` size is more than 1.5x the
    logical content size (document count × average content length × ~2 for

@@ -1,5 +1,5 @@
 """
-Tests for helix_context.launcher.state — atomic JSON read/write,
+Tests for cymatix_context.launcher.state — atomic JSON read/write,
 default values, mutation helpers, and corrupt-file recovery.
 """
 
@@ -8,7 +8,7 @@ import os
 
 import pytest
 
-from helix_context.launcher.state import LauncherState, StateStore
+from cymatix_context.launcher.state import LauncherState, StateStore
 
 
 @pytest.fixture
@@ -41,7 +41,7 @@ class TestSetHelix:
         store = StateStore(path=state_path)
         store.set_helix(
             pid=12345,
-            command=["python", "-m", "uvicorn", "helix_context.server:app"],
+            command=["python", "-m", "uvicorn", "cymatix_context.server:app"],
             port=11437,
         )
         assert state_path.exists()

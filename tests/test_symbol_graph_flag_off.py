@@ -10,8 +10,8 @@ from __future__ import annotations
 
 import pytest
 
-from helix_context.encoding import tree_chunker as tc
-from helix_context.encoding.fragments import CodonChunker
+from cymatix_context.encoding import tree_chunker as tc
+from cymatix_context.encoding.fragments import CodonChunker
 
 _needs_tree_sitter = pytest.mark.skipif(
     not tc.is_available(), reason="tree-sitter (+ tree-sitter-python) not installed"
@@ -37,7 +37,7 @@ def test_symbol_graph_default_is_dark_shipped():
     docs/ROADMAP.md. Flipping this default belongs to #231's follow-up,
     not a drive-by.
     """
-    from helix_context.config import IngestionConfig
+    from cymatix_context.config import IngestionConfig
 
     assert IngestionConfig().symbol_graph is False
 
@@ -98,8 +98,8 @@ _CODE = (
 def _manager(tmp_path, monkeypatch, symbol_graph: bool):
     monkeypatch.delenv("HELIX_USE_SHARDS", raising=False)
     monkeypatch.setenv("HELIX_GENOME_PATH", str(tmp_path / "genome.db"))
-    from helix_context.config import load_config
-    from helix_context.context_manager import HelixContextManager
+    from cymatix_context.config import load_config
+    from cymatix_context.context_manager import HelixContextManager
 
     cfg = load_config()
     cfg.ingestion.symbol_graph = symbol_graph
@@ -110,7 +110,7 @@ def _manager(tmp_path, monkeypatch, symbol_graph: bool):
 def test_flag_off_ingest_writes_zero_symbol_rows(tmp_path, monkeypatch):
     """Flag-off ingest succeeds even if the symbol extractor would explode —
     proof it is never invoked — and leaves symbol tables empty."""
-    from helix_context.schemas import StructuralRelation
+    from cymatix_context.schemas import StructuralRelation
 
     def boom(*_a, **_kw):
         raise AssertionError(

@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from helix_context.context_packet import build_context_packet, get_refresh_targets
-from helix_context.genome import Genome
-from helix_context.shard_schema import init_main_db, open_main_db, register_shard, upsert_source_index
+from cymatix_context.context_packet import build_context_packet, get_refresh_targets
+from cymatix_context.genome import Genome
+from cymatix_context.shard_schema import init_main_db, open_main_db, register_shard, upsert_source_index
 
 from tests.conftest import make_gene
 

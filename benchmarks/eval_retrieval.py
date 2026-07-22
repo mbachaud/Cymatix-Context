@@ -14,7 +14,7 @@ and reports:
         confidence-ordered)
 
 The confidence column is recomputed from the raw features via
-``helix_context.scoring.know_calibration.compute_confidence`` so the
+``cymatix_context.scoring.know_calibration.compute_confidence`` so the
 same JSONL can be scored under DEFAULT_BETAS (--calibration default),
 the shipped helix.toml ([know] table), or any candidate TOML — which is
 exactly the before/after comparison the #239 recalibration needs.
@@ -39,7 +39,7 @@ _REPO_ROOT = _BENCH_DIR.parent
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
-from helix_context.scoring.know_calibration import (  # noqa: E402
+from cymatix_context.scoring.know_calibration import (  # noqa: E402
     DEFAULT_BETAS,
     DEFAULT_EMIT_FLOOR,
     DEFAULT_G_REF,

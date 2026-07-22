@@ -13,19 +13,19 @@ import tempfile
 
 import pytest
 
-from helix_context.config import (
+from cymatix_context.config import (
     GenomeConfig,
     VaultConfig,
     VaultTracesConfig,
 )
-from helix_context.knowledge_store import KnowledgeStore
-from helix_context.schemas import (
+from cymatix_context.knowledge_store import KnowledgeStore
+from cymatix_context.schemas import (
     ChromatinState,
     EpigeneticMarkers,
     Gene,
     PromoterTags,
 )
-from helix_context.shard_schema import (
+from cymatix_context.shard_schema import (
     init_main_db,
     open_main_db,
     register_shard,
@@ -469,7 +469,7 @@ class TestSwapDbShardedRoundTrip:
         assert data["new_path"] == main_b
 
         # Now the active store is the sharded adapter.
-        from helix_context.sharding import ShardedGenomeAdapter
+        from cymatix_context.sharding import ShardedGenomeAdapter
         assert isinstance(app.state.helix.genome, ShardedGenomeAdapter)
         # And critically: helix.genome.path is reachable (this was the
         # AttributeError that blocked every swap-db once sharded was active).
@@ -493,7 +493,7 @@ class TestSwapDbShardedRoundTrip:
 
         app, client = _make_app_and_client(main_a)
 
-        from helix_context.sharding import ShardedGenomeAdapter
+        from cymatix_context.sharding import ShardedGenomeAdapter
         assert isinstance(app.state.helix.genome, ShardedGenomeAdapter), (
             "App should start with a ShardedGenomeAdapter when "
             "HELIX_USE_SHARDS=1 and genome path ends with main.genome.db"
@@ -535,7 +535,7 @@ class TestSwapDbShardedRoundTrip:
         # A -> B
         resp = client.post("/admin/swap-db", json={"path": main_b})
         assert resp.status_code == 200, resp.json()
-        from helix_context.sharding import ShardedGenomeAdapter
+        from cymatix_context.sharding import ShardedGenomeAdapter
         assert isinstance(app.state.helix.genome, ShardedGenomeAdapter)
 
         # B -> A

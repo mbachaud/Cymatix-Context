@@ -48,14 +48,14 @@ if os.environ.get("PYTHONHASHSEED") not in ("0",):
         file=sys.stderr,
     )
 
-from helix_context.config import (
+from cymatix_context.config import (
     BudgetConfig,
     ClassifierConfig,
     GenomeConfig,
     HelixConfig,
     RibosomeConfig,
 )
-from helix_context.context_manager import HelixContextManager
+from cymatix_context.context_manager import HelixContextManager
 from tests.conftest import make_gene
 from tests.conftest import MockCompressorBackend
 

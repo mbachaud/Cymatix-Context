@@ -11,7 +11,7 @@ import os
 
 import pytest
 
-from helix_context.genome import Genome
+from cymatix_context.genome import Genome
 from tests.conftest import make_gene
 
 

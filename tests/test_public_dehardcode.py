@@ -2,7 +2,7 @@
 
 Pins the removal of owner-specific vocabulary from the shipped defaults:
 
-* ``helix_context.tagger`` ships no private project names in its
+* ``cymatix_context.tagger`` ships no private project names in its
   EntityRuler patterns or tech-term dictionary, and supports
   per-deployment extension via the HELIX_TAGGER_EXTRA_ENTITIES /
   HELIX_TAGGER_EXTRA_TERMS env vars.
@@ -29,8 +29,8 @@ try:
 except ModuleNotFoundError:
     import tomli as tomllib  # type: ignore[no-redef]
 
-import helix_context.tagger as tagger_mod
-from helix_context.retrieval.lexical_rescue import _source_path_bonus
+import cymatix_context.tagger as tagger_mod
+from cymatix_context.retrieval.lexical_rescue import _source_path_bonus
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
@@ -165,8 +165,8 @@ class TestLexicalRescuePathAffinity:
         assert _source_path_bonus("F:/x/tests/y.py", set()) == -0.75
 
     def test_rescue_prefers_query_term_path_segment(self, tmp_path):
-        from helix_context.genome import Genome
-        from helix_context.retrieval.lexical_rescue import lexical_rescue_sources
+        from cymatix_context.genome import Genome
+        from cymatix_context.retrieval.lexical_rescue import lexical_rescue_sources
 
         from tests.conftest import make_gene
 
@@ -200,7 +200,10 @@ class TestLexicalRescuePathAffinity:
 class TestHelixTomlShipsNeutral:
     @pytest.fixture()
     def cfg(self):
-        with open(REPO_ROOT / "helix.toml", "rb") as fh:
+        _shipped = REPO_ROOT / "cymatix.toml"
+        if not _shipped.exists():
+            _shipped = REPO_ROOT / "helix.toml"
+        with open(_shipped, "rb") as fh:
             return tomllib.load(fh)
 
     def test_synonyms_have_no_owner_rows(self, cfg):

@@ -18,7 +18,7 @@ from pathlib import Path
 
 import pytest
 
-from helix_context.shard_schema import (
+from cymatix_context.shard_schema import (
     SHARD_CATEGORIES,
     init_main_db,
     list_shards,

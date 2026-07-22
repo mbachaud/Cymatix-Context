@@ -1,6 +1,6 @@
 """Issue #255 / audit §4 item 5: post-fusion BLEND-layer mode knob.
 
-The blend layer (``helix_context/scoring/blend.py``) runs three post-fusion
+The blend layer (``cymatix_context/scoring/blend.py``) runs three post-fusion
 refiners — cymatics (``* 0.5``), harmonic_bin (``* 1.5``), TCM
 (``BONUS_WEIGHT = 0.3``) — that mutate ``genome.last_query_scores`` on an
 unspecified score scale (audit §2d, class d) and contaminate the ``[know]``
@@ -34,8 +34,8 @@ import textwrap
 
 import pytest
 
-from helix_context.config import RetrievalConfig, load_config
-from helix_context.scoring.blend import (
+from cymatix_context.config import RetrievalConfig, load_config
+from cymatix_context.scoring.blend import (
     VALID_BLEND_MODES,
     _BLEND_SCALE_REF,
     _scale_relative_multiplier,
@@ -69,10 +69,10 @@ def _patch_cymatics(monkeypatch, flux_map):
     """Drive the cymatics refiner with a controlled per-gene flux.
 
     ``bonus = flux_map[gene_id] * 0.5`` — the blend imports these names from
-    ``helix_context.scoring.cymatics`` inside the call, so patching the module
+    ``cymatix_context.scoring.cymatics`` inside the call, so patching the module
     attributes is picked up at call time.
     """
-    import helix_context.scoring.cymatics as cym
+    import cymatix_context.scoring.cymatics as cym
 
     monkeypatch.setattr(cym, "query_spectrum",
                         lambda *a, **k: "QSPEC", raising=True)
@@ -319,7 +319,7 @@ def test_legacy_blend_mode_emits_deprecation_warning(caplog):
     ``tests/test_config.py::test_ribosome_device_deprecation_warning``).
     The shipped default (``scale_relative``) stays silent.
     """
-    with caplog.at_level("WARNING", logger="helix_context.config"):
+    with caplog.at_level("WARNING", logger="cymatix_context.config"):
         RetrievalConfig(blend_mode="legacy")
     assert any(
         "blend_mode" in rec.message.lower() and "deprecated" in rec.message.lower()
@@ -327,7 +327,7 @@ def test_legacy_blend_mode_emits_deprecation_warning(caplog):
     )
 
     caplog.clear()
-    with caplog.at_level("WARNING", logger="helix_context.config"):
+    with caplog.at_level("WARNING", logger="cymatix_context.config"):
         RetrievalConfig()  # default: scale_relative
     assert not any("blend_mode" in rec.message.lower() for rec in caplog.records)
 
@@ -335,8 +335,8 @@ def test_legacy_blend_mode_emits_deprecation_warning(caplog):
 def test_unknown_blend_mode_raises_at_manager_construction(tmp_path):
     """The manager validates at __init__ (fail-fast, mirrors the store's
     rerank_combinator guard) — a bad blend_mode never reaches a query."""
-    from helix_context.config import load_config as _load
-    from helix_context.context_manager import HelixContextManager
+    from cymatix_context.config import load_config as _load
+    from cymatix_context.context_manager import HelixContextManager
 
     toml = tmp_path / "helix.toml"
     toml.write_text(textwrap.dedent(f"""

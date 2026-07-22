@@ -1,88 +1,92 @@
+"""Backward-compat namespace: ``helix_context`` -> ``cymatix_context``.
+
+The project was renamed to cymatix-context (July 2026). ``import
+helix_context`` yields the *identical* ``cymatix_context`` module object
+(``helix_context is cymatix_context``), and every ``helix_context.sub``
+import resolves through the meta-path finder below to the identical
+``cymatix_context.sub`` module — no copies — so isinstance checks and
+module singletons keep working across old and new import paths. This
+package will be removed after a deprecation window.
 """
-Helix Context — KnowledgeStore-based context compression for local LLMs.
+import importlib
+import importlib.abc
+import importlib.util
+import sys
+import warnings
 
-Makes 9k tokens of context window feel like 600k by treating
-context like a knowledge store instead of a flat text buffer.
-"""
+_OLD = "helix_context"
+_NEW = "cymatix_context"
+# Real files shipped in this shim dir (needed for ``python -m``): let the
+# normal path finder handle them instead of aliasing.
+_REAL_FILES = {f"{_OLD}.mcp_server"}
 
-# GB10 / Grace+Blackwell (aarch64, sm_121) platform handshake — default-OFF.
-# When HELIX_CUDA_LAUNCH_BLOCKING=1, force synchronous CUDA launches BEFORE any
-# torch/CUDA import to dodge the sm_121 async-dispatch livelock (see
-# docs/hardware/grace-blackwell.md). Byte-identical for everyone who leaves it
-# unset; never overrides an operator-exported CUDA_LAUNCH_BLOCKING.
-import os
-if os.environ.get("HELIX_CUDA_LAUNCH_BLOCKING", "0") == "1":
-    os.environ.setdefault("CUDA_LAUNCH_BLOCKING", "1")
-
-from .accel import accel_info, JSON_BACKEND
-from .config import HelixConfig, load_config
-from .schemas import Gene, ContextWindow, ContextHealth, ChromatinState, PromoterTags, EpigeneticMarkers
-from .genome import Genome
-from .ribosome import Ribosome, OllamaBackend
-from .codons import CodonChunker, CodonEncoder, RawStrand, Codon
-from .context_manager import HelixContextManager
-from .exceptions import (
-    HelixError,
-    CodonAlignmentError,
-    PromoterMismatch,
-    FoldingError,
-    TranscriptionError,
-    GenomeFullError,
+warnings.warn(
+    "'helix_context' has been renamed to 'cymatix_context'; the old import "
+    "path will be removed in a future release.",
+    DeprecationWarning,
+    stacklevel=2,
 )
 
-# CpuTagger is optional (requires spacy)
-try:
-    from .tagger import CpuTagger
-except ImportError:
-    CpuTagger = None
 
-from .replication import ReplicationManager
+class _AliasLoader(importlib.abc.Loader):
+    def __init__(self, real_name, real_spec):
+        self._real_name = real_name
+        self._real_spec = real_spec
+        self._saved = None
 
-# ΣĒMA is optional (requires sentence-transformers)
-try:
-    from .backends.sema import SemaCodec, SemaPrime, PRIMES, PRIME_COUNT
-except ImportError:
-    SemaCodec = None
-    SemaPrime = None
-    PRIMES = None
-    PRIME_COUNT = None
+    def create_module(self, spec):
+        real = importlib.import_module(self._real_name)
+        # module_from_spec will stamp the alias spec onto this shared
+        # object; stash the canonical identity so exec_module can restore it.
+        self._saved = (
+            real.__name__,
+            real.__spec__,
+            real.__package__,
+            getattr(real, "__loader__", None),
+        )
+        sys.modules[spec.name] = real
+        return real
+
+    def exec_module(self, module):
+        name, spec, package, loader = self._saved
+        module.__name__ = name
+        module.__spec__ = spec
+        module.__package__ = package
+        module.__loader__ = loader
+
+    def get_code(self, fullname):
+        # Lets runpy (``python -m helix_context.submodule``) execute the
+        # real module's code under the old dotted name.
+        return self._real_spec.loader.get_code(self._real_name)
 
 
-def create_app(*args, **kwargs):
-    """Lazy server import so package import has no HTTP/app side effects."""
-    from .server import create_app as _create_app
+class _AliasFinder(importlib.abc.MetaPathFinder):
+    def find_spec(self, fullname, path=None, target=None):
+        if fullname.startswith(_OLD + ".") and fullname not in _REAL_FILES:
+            real_name = _NEW + fullname[len(_OLD):]
+            real_spec = importlib.util.find_spec(real_name)
+            if real_spec is None:
+                return None
+            loader = _AliasLoader(real_name, real_spec)
+            return importlib.util.spec_from_loader(
+                fullname,
+                loader,
+                is_package=real_spec.submodule_search_locations is not None,
+            )
+        return None
 
-    return _create_app(*args, **kwargs)
 
-__all__ = [
-    "accel_info",
-    "JSON_BACKEND",
-    "HelixConfig",
-    "load_config",
-    "Gene",
-    "ContextWindow",
-    "ContextHealth",
-    "ChromatinState",
-    "PromoterTags",
-    "EpigeneticMarkers",
-    "Genome",
-    "Ribosome",
-    "OllamaBackend",
-    "CodonChunker",
-    "CodonEncoder",
-    "RawStrand",
-    "Codon",
-    "HelixContextManager",
-    "create_app",
-    "HelixError",
-    "CodonAlignmentError",
-    "PromoterMismatch",
-    "FoldingError",
-    "TranscriptionError",
-    "GenomeFullError",
-    "SemaCodec",
-    "SemaPrime",
-    "PRIMES",
-    "PRIME_COUNT",
-    "CpuTagger",
-]
+if not any(type(f).__name__ == "_AliasFinder" for f in sys.meta_path):
+    sys.meta_path.insert(0, _AliasFinder())
+
+# Make the root package itself an identical alias, not just its submodules:
+# ``import helix_context`` and ``import cymatix_context`` return the same
+# module object. This works because Python's import machinery re-reads
+# sys.modules[spec.name] after exec_module() finishes — a module is allowed
+# to replace itself during its own import. Subsequent ``helix_context.X``
+# imports resolve through the meta-path finder above to the identical
+# ``cymatix_context.X`` objects, and ``python -m helix_context.mcp_server``
+# still works because it walks the parent's ``__path__`` (now cymatix's
+# package dir, which contains ``cymatix_context/mcp_server.py``).
+_pkg = importlib.import_module(_NEW)
+sys.modules[_OLD] = _pkg

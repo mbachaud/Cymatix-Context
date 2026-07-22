@@ -29,11 +29,11 @@ import os
 import sys
 from pathlib import Path
 
-# Add project root to path so `helix_context.mem_sync` resolves when
+# Add project root to path so `cymatix_context.mem_sync` resolves when
 # running as a loose script.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from helix_context.mem_sync import run_daemon  # noqa: E402
+from cymatix_context.mem_sync import run_daemon  # noqa: E402
 
 
 def _load_toml_config() -> dict:
@@ -45,7 +45,10 @@ def _load_toml_config() -> dict:
             import tomli as tomllib  # type: ignore
         except ImportError:
             return {}
-    toml_path = Path(__file__).resolve().parent.parent / "helix.toml"
+    _repo_root = Path(__file__).resolve().parent.parent
+    toml_path = _repo_root / "cymatix.toml"
+    if not toml_path.exists():
+        toml_path = _repo_root / "helix.toml"
     if not toml_path.exists():
         return {}
     try:

@@ -11,14 +11,14 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from helix_context.launcher.headroom_supervisor import (
+from cymatix_context.launcher.headroom_supervisor import (
     HeadroomSupervisor,
     HeadroomSupervisorError,
     HeadroomNotInstalled,
     HeadroomNotRunning,
     is_headroom_installed,
 )
-from helix_context.launcher.state import LauncherState, StateStore
+from cymatix_context.launcher.state import LauncherState, StateStore
 
 
 @pytest.fixture
@@ -52,7 +52,7 @@ def test_cmdline_markers_match_headroom_proxy(supervisor):
 
 def test_cmdline_markers_reject_other_processes(supervisor):
     assert not supervisor._cmdline_looks_like_headroom([
-        "python", "-m", "uvicorn", "helix_context.server:app",
+        "python", "-m", "uvicorn", "cymatix_context.server:app",
     ])
     # "headroom" alone (no proxy subcommand) → not the proxy
     assert not supervisor._cmdline_looks_like_headroom([
@@ -266,7 +266,7 @@ def test_stop_with_force_overrides_ownership(supervisor, store):
     # Mock port-freeing loop to succeed immediately
     with patch.object(supervisor, "_kill_tree") as mock_kill, \
          patch(
-             "helix_context.launcher.headroom_supervisor._port_is_free",
+             "cymatix_context.launcher.headroom_supervisor._port_is_free",
              return_value=True,
          ):
         supervisor.stop(force=True)
@@ -285,7 +285,7 @@ def test_stop_raises_when_not_running(supervisor):
 
 def test_start_raises_when_headroom_not_installed(supervisor):
     with patch(
-        "helix_context.launcher.headroom_supervisor.is_headroom_installed",
+        "cymatix_context.launcher.headroom_supervisor.is_headroom_installed",
         return_value=False,
     ):
         with pytest.raises(HeadroomNotInstalled):

@@ -260,12 +260,12 @@ def _install_drain_stubs(monkeypatch):
     technique as test_build_fixture_matrix.py::TestResume) and make sure the
     SIGINT flag can't be the thing that raises."""
     import build_fixture_matrix as bfm
-    fake_backends = types.ModuleType("helix_context.backends")
+    fake_backends = types.ModuleType("cymatix_context.backends")
     fake_backends.splade_backend = _StubSplade
-    fake_schemas = types.ModuleType("helix_context.schemas")
+    fake_schemas = types.ModuleType("cymatix_context.schemas")
     fake_schemas.Gene = _StubGene
-    monkeypatch.setitem(sys.modules, "helix_context.backends", fake_backends)
-    monkeypatch.setitem(sys.modules, "helix_context.schemas", fake_schemas)
+    monkeypatch.setitem(sys.modules, "cymatix_context.backends", fake_backends)
+    monkeypatch.setitem(sys.modules, "cymatix_context.schemas", fake_schemas)
     monkeypatch.setattr(bfm, "_PAUSE_REQUESTED", False)
     return bfm
 

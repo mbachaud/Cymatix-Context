@@ -110,7 +110,7 @@ def _patch_dense_gpu():
     same vectors) — only faster. v0.6.2/worktree build BGEM3Codec(dim=...) with no device
     arg, defaulting to cpu; this subclass forces cuda. (SPLADE already uses get_hardware().device.)"""
     try:
-        from helix_context.backends import bgem3_codec as _bc
+        from cymatix_context.backends import bgem3_codec as _bc
     except Exception:  # noqa: BLE001
         return
     if getattr(_bc, "_cb_gpu_patched", False):
@@ -133,8 +133,8 @@ def build_helix(genome_dir):
     os.makedirs(genome_dir, exist_ok=True)
     if os.environ.get("CB_DENSE_DEVICE", "cpu").strip().lower() == "cuda":
         _patch_dense_gpu()
-    from helix_context.config import load_config
-    from helix_context.context_manager import HelixContextManager
+    from cymatix_context.config import load_config
+    from cymatix_context.context_manager import HelixContextManager
     cfg = load_config()
     return HelixContextManager(cfg)
 
@@ -206,7 +206,7 @@ def run_fingerprint(helix, q, max_results=400):
 
 def run_packet(helix, q):
     """Delivered packet items (verified + stale_risk). Each dict has gene_id, content, source_id."""
-    from helix_context.context_packet import build_context_packet
+    from cymatix_context.context_packet import build_context_packet
     packet = build_context_packet(q, task_type="explain", genome=helix.genome, max_genes=32,
                                   now_ts=0.0, read_only=True, include_raw=True,
                                   max_item_chars=100000)
