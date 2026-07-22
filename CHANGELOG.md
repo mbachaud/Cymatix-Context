@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+- **rename: Windows launcher surface follows the 0.8.0 cymatix rename.**
+  `setup-helix.bat` → `setup-cymatix.bat`, `start-helix-tray.bat` →
+  `start-cymatix-tray.bat`, `start-helix-mcpo.bat` →
+  `start-cymatix-mcpo.bat`, `deploy/windows/setup-helix.ps1` →
+  `setup-cymatix.ps1`; thin forwarders remain at the old .bat names for
+  the deprecation window. The launchers now invoke
+  `python -m cymatix_context.*` directly and set the canonical
+  `CYMATIX_*` env vars (adopting any `HELIX_*` already present in the
+  shell, so old-prefix deployments are untouched) — this makes the
+  SETUP.md claims about which vars the tray bat sets actually true.
+  Setup now creates/refreshes `Cymatix` shortcuts and retires stale
+  repo-local `Helix` ones; the NSSM service recipe
+  (`deploy/windows/README.md`) moves to `cymatix-launcher` /
+  `CymatixLauncher`. Also adds the `*.local.bat` gitignore rule the
+  launcher comments always promised.
+
 - **fix(bench): `sweep_splade_scale_curve.py` on-arm never ran query-side
   SPLADE (#204).** The harness constructed `Genome(path=...,
   dense_embedding_enabled=False)` without threading `splade_enabled`, and

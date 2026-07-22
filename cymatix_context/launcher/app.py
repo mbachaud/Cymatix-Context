@@ -862,7 +862,7 @@ def _configure_logging(verbose: bool) -> None:
 
     Without the file handler, autostart failures are invisible — the
     ``start "..." /B python -m cymatix_context.launcher.app`` invocation in
-    ``start-helix-tray.bat`` redirects stdout/stderr to the calling cmd
+    ``start-cymatix-tray.bat`` redirects stdout/stderr to the calling cmd
     window, which exits immediately, so any WARN/ERROR from
     ``_maybe_build_headroom`` or ``supervisor.start()`` is lost.
     """

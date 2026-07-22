@@ -16,7 +16,7 @@
        the supervisor is already running, otherwise prints next steps.
 
   This script does NOT start the supervisor — it only prepares the
-  on-disk state so that `start-helix-tray.bat` (Windows) or the equivalent
+  on-disk state so that `start-cymatix-tray.bat` (Windows) or the equivalent
   `helix-launcher --tray` invocation can spawn the five binaries.
 
   If you only want metrics and not the tray, call this script and then
@@ -189,7 +189,7 @@ Write-Host ""
 Write-Host "Defaults: admin / admin (set at first Grafana boot; rotate via UI)." -ForegroundColor Gray
 Write-Host ""
 Write-Host "To start the full stack (collector + Prom + Tempo + Loki + Grafana):"
-Write-Host "  start-helix-tray.bat               # daily driver (Windows)"
+Write-Host "  start-cymatix-tray.bat               # daily driver (Windows)"
 Write-Host "  helix-launcher --tray              # cross-platform"
 Write-Host ""
 Write-Host "To enable telemetry on a headless backend:"

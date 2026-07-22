@@ -87,14 +87,14 @@ def test_root_readme_preserves_canonical_launch_section():
     """Regression: don't rip out the launch/get-started content.
 
     README v3 renamed 'Quick Start' to 'Get started'; the tray entry point
-    (start-helix-tray.bat) is documented in docs/SETUP.md.
+    (start-cymatix-tray.bat) is documented in docs/SETUP.md.
     """
     body = _read("README.md")
     assert "## Get started" in body or "## Quick Start" in body, (
         "Root README must keep a Get started / Quick Start section"
     )
     setup = _read("docs/SETUP.md")
-    assert "start-helix-tray.bat" in setup.lower()
+    assert "start-cymatix-tray.bat" in setup.lower()
 
 
 # ---------------------------------------------------------------------------

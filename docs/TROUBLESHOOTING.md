@@ -80,7 +80,7 @@ Expected: a JSON object with `"genome_genes": <int>` and
 `"upstream_url": "http://localhost:11434"`. A `Connection refused`
 means the server did not bind; re-check step 1.
 
-**Prevention.** Use the launcher (`start-helix-tray.bat` /
+**Prevention.** Use the launcher (`start-cymatix-tray.bat` /
 `python -m cymatix_context.launcher.app`) instead of bare `uvicorn`. The
 launcher auto-adopts an orphan cymatix on the same port instead of
 crashing — see `cymatix_context/launcher/supervisor.py:288-312`. If you
@@ -139,8 +139,8 @@ python -c "import cymatix_context; print(cymatix_context.CpuTagger)"
 Expected: `<class 'cymatix_context.tagger.CpuTagger'>`. A `None` means
 the `spacy` extra is missing or `en_core_web_sm` is not installed.
 
-**Prevention.** Use the one-click installers — `setup-helix.bat` on
-Windows runs `deploy/windows/setup-helix.ps1`, which pins the
+**Prevention.** Use the one-click installers — `setup-cymatix.bat` on
+Windows runs `deploy/windows/setup-cymatix.ps1`, which pins the
 correct extras for the platform. For headless servers, pin the extras
 in your project's lockfile so CI matches production.
 
@@ -292,7 +292,7 @@ to the Headroom port automatically; check `/health` after toggling
 
 ## Tray icon is missing on Linux or macOS
 
-**Symptom.** `start-helix-tray.bat` (or the equivalent `python -m
+**Symptom.** `start-cymatix-tray.bat` (or the equivalent `python -m
 cymatix_context.launcher.app --tray` invocation) exits with:
 ```
 --tray requires pystray + Pillow. Install with:

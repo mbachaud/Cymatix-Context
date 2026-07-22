@@ -1,4 +1,4 @@
-# Helix Launcher as a Windows Service
+# Cymatix Launcher as a Windows Service
 
 Windows doesn't ship with a clean Python service wrapper, so the
 recommended path is **NSSM** (Non-Sucking Service Manager) — a tiny
@@ -7,22 +7,25 @@ service with restart-on-failure semantics.
 
 This directory intentionally does **not** ship a service installer.
 Instead, here's the recipe a user can follow once. A future
-`helix-launcher install-service` CLI command may automate this.
+`cymatix-launcher install-service` CLI command may automate this.
 
 ## One-time setup
 
-### 1. Install Python + helix-context with the launcher extra
+### 1. Install Python + cymatix-context with the launcher extra
 
 ```cmd
-pip install helix-context[launcher]
-where helix-launcher
+pip install cymatix-context[launcher]
+where cymatix-launcher
 ```
 
 Note the absolute path that `where` prints — you'll need it below.
 Typical paths:
 
-- `C:\Users\<you>\AppData\Local\Programs\Python\Python311\Scripts\helix-launcher.exe`
-- `C:\Users\<you>\.venvs\helix\Scripts\helix-launcher.exe`
+- `C:\Users\<you>\AppData\Local\Programs\Python\Python311\Scripts\cymatix-launcher.exe`
+- `C:\Users\<you>\.venvs\cymatix\Scripts\cymatix-launcher.exe`
+
+(`helix-launcher` still exists as a deprecated alias of the same
+entry point; new installs should register `cymatix-launcher`.)
 
 ### 2. Install NSSM
 
@@ -46,35 +49,35 @@ nssm --version
 Run an **elevated** command prompt (Run as administrator):
 
 ```cmd
-nssm install HelixLauncher
+nssm install CymatixLauncher
 ```
 
 NSSM will open a small GUI. Fill in:
 
 | Field | Value |
 |---|---|
-| **Path** | The full path to `helix-launcher.exe` from step 1 |
+| **Path** | The full path to `cymatix-launcher.exe` from step 1 |
 | **Startup directory** | Leave blank or set to your venv `Scripts` folder |
 | **Arguments** | `--no-browser` |
 
 On the **Details** tab:
 
-- **Display name:** `Helix Launcher`
-- **Description:** `Helix Context supervisor + dashboard`
+- **Display name:** `Cymatix Launcher`
+- **Description:** `Cymatix Context supervisor + dashboard`
 - **Startup type:** `Automatic` (or `Automatic (Delayed Start)` if you
   want it to wait for slower boot dependencies)
 
 On the **I/O** tab (optional but recommended):
 
-- **Output (stdout):** `C:\ProgramData\HelixLauncher\helix-launcher.log`
-- **Error (stderr):** `C:\ProgramData\HelixLauncher\helix-launcher.err.log`
+- **Output (stdout):** `C:\ProgramData\CymatixLauncher\cymatix-launcher.log`
+- **Error (stderr):** `C:\ProgramData\CymatixLauncher\cymatix-launcher.err.log`
 
 Click **Install service**.
 
 ### 4. Start it
 
 ```cmd
-nssm start HelixLauncher
+nssm start CymatixLauncher
 ```
 
 Or via the standard Services app (`services.msc`).
@@ -88,51 +91,51 @@ launcher dashboard.
 
 ```cmd
 :: Stop
-nssm stop HelixLauncher
+nssm stop CymatixLauncher
 
 :: Restart
-nssm restart HelixLauncher
+nssm restart CymatixLauncher
 
 :: Check status
-nssm status HelixLauncher
-sc query HelixLauncher
+nssm status CymatixLauncher
+sc query CymatixLauncher
 
 :: Uninstall
-nssm stop HelixLauncher
-nssm remove HelixLauncher confirm
+nssm stop CymatixLauncher
+nssm remove CymatixLauncher confirm
 ```
 
 ## Why not `pywin32` or `pyinstaller`?
 
 - **`pywin32`** can register a Python class as a Win32 service, but it
-  pulls a heavy dependency into the helix-context project for a feature
+  pulls a heavy dependency into the cymatix-context project for a feature
   that only matters at install time. NSSM keeps the service shim
   external and OS-native.
 - **`pyinstaller`** would let us ship a single `.exe`, but adds a build
   step and bloats releases by ~30 MB. Not worth it for a launcher
   binary.
 
-If a future `helix-launcher install-service` CLI is added, it will
+If a future `cymatix-launcher install-service` CLI is added, it will
 likely shell out to NSSM (downloading it on demand if missing) rather
 than reimplement the service shim from scratch.
 
 ## Troubleshooting
 
 **Service starts then immediately stops:**
-Check `helix-launcher.err.log`. The most common cause is the venv path
-being wrong, or `pip install helix-context[launcher]` not being run in
+Check `cymatix-launcher.err.log`. The most common cause is the venv path
+being wrong, or `pip install cymatix-context[launcher]` not being run in
 the same Python environment NSSM is invoking.
 
 **Port 11438 in use:**
 Pass `--port <other>` in NSSM's Arguments field. Reach the dashboard at
 `http://127.0.0.1:<other>/` afterwards.
 
-**Helix child process refuses to start:**
-This usually means port 11437 is already in use by another helix
+**Cymatix child process refuses to start:**
+This usually means port 11437 is already in use by another cymatix
 instance. Stop the other one, or pass `--helix-port <other>` in NSSM's
-Arguments.
+Arguments (the flag keeps its pre-rename spelling for now).
 
-**Service is registered but `helix-launcher` isn't found:**
+**Service is registered but `cymatix-launcher` isn't found:**
 Re-check the absolute path on the **Application** tab. NSSM doesn't
 inherit `PATH` from your interactive shell — you need the full path
 to the `.exe`.
