@@ -1042,12 +1042,20 @@ def main(argv: Optional[list] = None) -> int:
     # First-boot db-selection gate: if the active genome file does not
     # exist yet, do NOT silently autostart onto an empty store — let the
     # dashboard pop the select-or-create dialog instead.
+    #
+    # TEMPORARILY OPT-IN (issue #314): the exists() probe false-positives
+    # on a live server with an active genome (modal pops over a Running
+    # dashboard and its auto-dismiss doesn't fire), so the gate is
+    # disabled unless CYMATIX_DB_SELECT_MODAL=1. Re-flip the default once
+    # the false trigger is root-caused. While disabled, first boot falls
+    # back to the pre-#308 behaviour (autostart creates the store).
     needs_db_selection = False
-    try:
-        from . import genome_registry as _gr
-        needs_db_selection = not _gr.active_genome_path().exists()
-    except Exception:
-        needs_db_selection = False
+    if _env_truthy("HELIX_DB_SELECT_MODAL"):
+        try:
+            from . import genome_registry as _gr
+            needs_db_selection = not _gr.active_genome_path().exists()
+        except Exception:
+            needs_db_selection = False
 
     update_checker = UpdateChecker()
 
