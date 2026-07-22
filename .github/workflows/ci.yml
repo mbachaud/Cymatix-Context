@@ -75,6 +75,35 @@ jobs:
           tests/test_store_write_integrity.py
           -v
 
+  # Full offline suite (v0.8.0 release-audit follow-up). The historical
+  # blocker — server.py's module-level `app = create_app()` import side
+  # effect — is gone: the eager app now lives only in _asgi.py, which
+  # tests never import. This job exists because file-scoped selection let
+  # real drift slide (the ShardedGenomeAdapter parity gap shipped unseen
+  # for weeks); ~3.4k tests, ~10 min. Tests whose optional deps are absent
+  # skip rather than fail.
+  test-full-suite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install CPU-only torch
+        run: pip install --index-url https://download.pytorch.org/whl/cpu torch
+
+      - name: Install package + test deps + tree-sitter extra
+        run: pip install -e ".[dev,ast]" psutil platformdirs py-cpuinfo numpy joblib scikit-learn
+
+      - name: Install spaCy model (ingest-path tests exercise the CPU tagger)
+        run: python -m spacy download en_core_web_sm
+
+      - name: Run full offline suite
+        run: pytest tests/ -m "not live" -q
+
   test-macos-mps:
     runs-on: macos-14
     steps:
