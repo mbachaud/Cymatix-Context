@@ -1181,6 +1181,13 @@ p {
   z-index: 50;
 }
 
+/* `display: flex` above outranks the UA's `[hidden] { display: none }`
+   (author origin wins), so without this guard the modal paints even when
+   the template or launcher.js sets `hidden` — root cause of #314. */
+.modal-backdrop[hidden] {
+  display: none;
+}
+
 .modal {
   position: relative;
   width: min(560px, 92vw);

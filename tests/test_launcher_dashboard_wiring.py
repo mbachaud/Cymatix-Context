@@ -60,6 +60,19 @@ class FakeObservability:
         }
 
 
+@pytest.fixture(autouse=True)
+def _isolated_launcher_state(tmp_path, monkeypatch):
+    """Keep genome select/create tests out of the real ~/.helix/launcher.
+
+    Without this, /api/genome/select|create persist the choice to the
+    user's durable selected_genome.json — a test run then hijacks the
+    real tray's active genome (observed live: the dashboard came up
+    ACTIVE on a pytest-tmp new.genome.db)."""
+    monkeypatch.setenv(
+        "HELIX_LAUNCHER_STATE_DIR", str(tmp_path / "launcher-state"),
+    )
+
+
 @pytest.fixture
 def client():
     app = create_app(
@@ -192,6 +205,23 @@ def test_api_genomes_shape(client):
     body = c.get("/api/genomes").json()
     assert body["ok"] is True
     assert "active" in body and isinstance(body["genomes"], list)
+
+
+# ── db-select modal actually hides when `hidden` is set (#314) ─────────
+
+
+def test_modal_backdrop_has_hidden_display_guard():
+    """#314 root cause: `.modal-backdrop { display: flex }` is an
+    author-origin rule, so it beats the UA stylesheet's
+    `[hidden] { display: none }` in the cascade — the db-select modal
+    stayed painted no matter what the server template or launcher.js set.
+    The stylesheet must carry an explicit `[hidden]` guard."""
+    import re
+    css = (Path(__file__).resolve().parent.parent / "cymatix_context" /
+           "launcher" / "static" / "launcher.css").read_text(encoding="utf-8")
+    assert re.search(
+        r"\.modal-backdrop\[hidden\]\s*\{[^}]*display:\s*none", css,
+    ), ".modal-backdrop[hidden] { display: none } guard missing from launcher.css"
 
 
 # ── fresh-checkout mkdir fix ───────────────────────────────────────────
