@@ -8,41 +8,41 @@ proxies each call to helix's HTTP API. Lets Claude Code / Claude Desktop
 Tools exposed:
     Retrieval / knowledge store:
       cymatix_context         — main retrieval (the big one)
-      helix_context_packet  — agent-safe packet with freshness labels +
+      cymatix_context_packet  — agent-safe packet with freshness labels +
                                refresh plan (per agent-context-index
                                build spec, 2026-04-17)
-      helix_refresh_targets — just the reread plan for an edit/ops task
-      helix_stats           — knowledge store health + size
-      helix_ingest          — add content to the knowledge store
-      helix_resonance       — four-primitive introspection chart (ΣĒMA +
+      cymatix_refresh_targets — just the reread plan for an edit/ops task
+      cymatix_stats           — knowledge store health + size
+      cymatix_ingest          — add content to the knowledge store
+      cymatix_resonance       — four-primitive introspection chart (ΣĒMA +
                                cymatic + harmonic + neighbor set) — new in
                                2026-04-14, see server.py:/debug/resonance
-      helix_consolidate     — distill the session buffer into
+      cymatix_consolidate     — distill the session buffer into
                                consolidated knowledge documents
 
     Session registry:
-      helix_sessions_list   — list active participants (filter by party,
+      cymatix_sessions_list   — list active participants (filter by party,
                                status, workspace)
-      helix_session_recent  — documents authored by a handle, chronological
+      cymatix_session_recent  — documents authored by a handle, chronological
 
     HITL events:
-      helix_hitl_emit       — record a Human-In-The-Loop pause event
-      helix_hitl_recent     — query recent HITL events
+      cymatix_hitl_emit       — record a Human-In-The-Loop pause event
+      cymatix_hitl_recent     — query recent HITL events
 
     Operational:
-      helix_health          — compressor / documents / upstream readiness probe
-      helix_metrics_tokens  — session + lifetime token counters
-      helix_bridge_status   — federation/bridge inbox + signal state
+      cymatix_health          — compressor / documents / upstream readiness probe
+      cymatix_metrics_tokens  — session + lifetime token counters
+      cymatix_bridge_status   — federation/bridge inbox + signal state
 
     Introspection / debugging:
-      helix_gene_get        — fetch a single document by ID
-      helix_neighbors       — top-k SEMA neighbors for a query (light)
-      helix_splice_preview  — dry-run retrieval pipeline (skip splice)
+      cymatix_gene_get        — fetch a single document by ID
+      cymatix_neighbors       — top-k SEMA neighbors for a query (light)
+      cymatix_splice_preview  — dry-run retrieval pipeline (skip splice)
 
     Software-vocabulary aliases (per docs/ROSETTA.md):
-      helix_document_get     — alias for helix_gene_get
-      helix_document_query   — alias for cymatix_context
-      helix_document_preview — alias for helix_splice_preview
+      cymatix_document_get     — alias for cymatix_gene_get
+      cymatix_document_query   — alias for cymatix_context
+      cymatix_document_preview — alias for cymatix_splice_preview
       All three are thin pass-throughs; callers should prefer the
       ``document_*`` names in new code. Legacy names remain valid.
 
@@ -77,10 +77,18 @@ Env:
                            (defaults to HELIX_MCP_HOST when omitted)
     HELIX_MCP_FULL       - expose the full 24-tool surface. Default (unset)
                            serves the lean 5-tool core (cymatix_context,
-                           helix_context_packet, helix_ingest, helix_health,
-                           helix_sessions_list) to cut ~4-5K schema tokens per
+                           cymatix_context_packet, cymatix_ingest, cymatix_health,
+                           cymatix_sessions_list) to cut ~4-5K schema tokens per
                            agent session. Set 1/true/yes/on for the full
                            admin/diagnostic/debug/alias surface.
+    CYMATIX_MCP_COMPAT   - deprecated helix_* tool aliases (0.8.0 rename).
+                           Default ON for the deprecation window: every
+                           cymatix_* tool is also callable under its old
+                           helix_* name, and the lean core carries its 5
+                           aliases (10 tools total). Set 0/false/off once
+                           clients are migrated to drop the aliases and
+                           their per-turn schema-token cost.
+                           (HELIX_MCP_COMPAT is honored equivalently.)
 
 Composition hook: Headroom already ships `codebase-memory-mcp` (manual
 install, off-by-default as of 2026-04-14 per Tejas on Discord). Its
@@ -133,7 +141,7 @@ MCP_AGENT_HANDLE: Optional[str] = (
 )
 
 # Set by _register_with_registry on success; consumed by the
-# helix_announce MCP tool to PATCH the same participant row.
+# cymatix_announce MCP tool to PATCH the same participant row.
 _registered_bridge: Optional[Any] = None
 
 
@@ -377,7 +385,7 @@ def cymatix_context(
     return _unwrap_context_list(_http("POST", "/context", body))
 
 
-# ── Tool: helix_context_packet ───────────────────────────────────────
+# ── Tool: cymatix_context_packet ───────────────────────────────────────
 # Agent-safe retrieval per docs/specs/2026-04-17-agent-context-index-
 # build-spec.md. Returns evidence labeled verified / stale_risk /
 # needs_refresh plus explicit refresh_targets, instead of raw content.
@@ -385,7 +393,7 @@ def cymatix_context(
 # evidence OR reread the source first.
 
 @mcp.tool()
-def helix_context_packet(
+def cymatix_context_packet(
     query: str,
     task_type: str = "explain",
     max_genes: int = 8,
@@ -416,10 +424,10 @@ def helix_context_packet(
     return _http("POST", "/context/packet", body)
 
 
-# ── Tool: helix_refresh_targets ──────────────────────────────────────
+# ── Tool: cymatix_refresh_targets ──────────────────────────────────────
 
 @mcp.tool()
-def helix_refresh_targets(
+def cymatix_refresh_targets(
     query: str,
     task_type: str = "edit",
     max_genes: int = 8,
@@ -441,10 +449,10 @@ def helix_refresh_targets(
     return _http("POST", "/context/refresh-plan", body)
 
 
-# ── Tool: helix_stats ────────────────────────────────────────────────
+# ── Tool: cymatix_stats ────────────────────────────────────────────────
 
 @mcp.tool()
-def helix_stats() -> Dict[str, Any]:
+def cymatix_stats() -> Dict[str, Any]:
     """Return knowledge store health + size stats.
 
     Gives document counts, lifecycle tier distribution, session info, current
@@ -454,10 +462,10 @@ def helix_stats() -> Dict[str, Any]:
     return _http("GET", "/stats")
 
 
-# ── Tool: helix_ingest ───────────────────────────────────────────────
+# ── Tool: cymatix_ingest ───────────────────────────────────────────────
 
 @mcp.tool()
-def helix_ingest(
+def cymatix_ingest(
     content: str,
     content_type: str = "text",
     metadata: Optional[Dict[str, Any]] = None,
@@ -488,10 +496,10 @@ def helix_ingest(
     return _http("POST", "/ingest", body)
 
 
-# ── Tool: helix_resonance ────────────────────────────────────────────
+# ── Tool: cymatix_resonance ────────────────────────────────────────────
 
 @mcp.tool()
-def helix_resonance(query: str, k: int = 10, downsample: int = 64) -> Dict[str, Any]:
+def cymatix_resonance(query: str, k: int = 10, downsample: int = 64) -> Dict[str, Any]:
     """Four-primitive introspection view for `query`.
 
     Returns SEMA prime vector, cymatic spectrum (256 -> `downsample` bins),
@@ -506,14 +514,14 @@ def helix_resonance(query: str, k: int = 10, downsample: int = 64) -> Dict[str, 
     return _http("GET", path)
 
 
-# ── Tool: helix_hitl_emit ────────────────────────────────────────────
+# ── Tool: cymatix_hitl_emit ────────────────────────────────────────────
 # Record a Human-In-The-Loop pause event from an MCP host. Storage and
 # DAL shipped earlier (hitl_events table + registry.emit_hitl_event);
 # this surface lets Claude Code / Desktop / Antigravity emit events
 # without HTTP client boilerplate on their side.
 
 @mcp.tool()
-def helix_hitl_emit(
+def cymatix_hitl_emit(
     pause_type: str,
     task_context: Optional[str] = None,
     resolved_without_operator: bool = False,
@@ -576,13 +584,13 @@ def helix_hitl_emit(
     return _http("POST", "/hitl/emit", body)
 
 
-# ── Tool: helix_hitl_recent ──────────────────────────────────────────
-# Query recent HITL events -- the inverse of helix_hitl_emit. Lets
+# ── Tool: cymatix_hitl_recent ──────────────────────────────────────────
+# Query recent HITL events -- the inverse of cymatix_hitl_emit. Lets
 # clients ask "has this operator been flagging events recently?"
 # without a separate HTTP client.
 
 @mcp.tool()
-def helix_hitl_recent(
+def cymatix_hitl_recent(
     party_id: Optional[str] = None,
     pause_type: Optional[str] = None,
     since_ts: Optional[float] = None,
@@ -613,12 +621,12 @@ def helix_hitl_recent(
     return _http("GET", f"/hitl/recent?{'&'.join(qs_parts)}")
 
 
-# ── Tool: helix_sessions_list ────────────────────────────────────────
+# ── Tool: cymatix_sessions_list ────────────────────────────────────────
 # List active participants in the session registry. Lets MCP clients
 # see peers -- "who else is working under this party right now?"
 
 @mcp.tool()
-def helix_sessions_list(
+def cymatix_sessions_list(
     party_id: Optional[str] = None,
     status: str = "active",
     workspace: Optional[str] = None,
@@ -644,13 +652,13 @@ def helix_sessions_list(
     return _http("GET", path)
 
 
-# ── Tool: helix_session_recent ───────────────────────────────────────
+# ── Tool: cymatix_session_recent ───────────────────────────────────────
 # Documents authored by a specific handle, chronological. This is the
 # reliable broadcast channel -- short notes surface here regardless of
 # how much code/spec material lives in the knowledge store.
 
 @mcp.tool()
-def helix_session_recent(
+def cymatix_session_recent(
     handle: str,
     limit: int = 10,
     party_id: Optional[str] = None,
@@ -675,12 +683,12 @@ def helix_session_recent(
     return _http("GET", path)
 
 
-# ── Tool: helix_consolidate ──────────────────────────────────────────
+# ── Tool: cymatix_consolidate ──────────────────────────────────────────
 # Trigger session memory consolidation. Distills the session buffer
 # into consolidated knowledge documents.
 
 @mcp.tool()
-def helix_consolidate() -> Dict[str, Any]:
+def cymatix_consolidate() -> Dict[str, Any]:
     """Consolidate the current session buffer into long-term knowledge documents.
 
     Extracts only new facts, decisions, and discoveries from the
@@ -693,28 +701,28 @@ def helix_consolidate() -> Dict[str, Any]:
     return _http("POST", "/consolidate")
 
 
-# ── Tool: helix_health ───────────────────────────────────────────────
-# Lightweight readiness probe. Separate from helix_stats (which is
+# ── Tool: cymatix_health ───────────────────────────────────────────────
+# Lightweight readiness probe. Separate from cymatix_stats (which is
 # heavier) -- useful for "is the server reachable / compressor configured?"
 # checks without pulling full knowledge store aggregates.
 
 @mcp.tool()
-def helix_health() -> Dict[str, Any]:
+def cymatix_health() -> Dict[str, Any]:
     """Compressor model, document count, upstream URL, and overall status.
 
-    Cheaper than helix_stats -- returns just the readiness signals
+    Cheaper than cymatix_stats -- returns just the readiness signals
     (status, compressor backend, total documents, upstream). Use this for
-    connectivity probes; use helix_stats for detailed knowledge store health.
+    connectivity probes; use cymatix_stats for detailed knowledge store health.
     """
     return _normalize_health_payload(_http("GET", "/health"))
 
 
-# ── Tool: helix_swap_db ─────────────────────────────────────────────
+# ── Tool: cymatix_swap_db ─────────────────────────────────────────────
 # Hot-swap the knowledge store .db file without restarting the server.
 # Useful for bench runs and multi-tenant exploration.
 
 @mcp.tool()
-def helix_swap_db(
+def cymatix_swap_db(
     path: str,
     read_only: bool = False,
 ) -> Dict[str, Any]:
@@ -738,20 +746,20 @@ def helix_swap_db(
     })
 
 
-# ── Tool: helix_announce ─────────────────────────────────────────────
+# ── Tool: cymatix_announce ─────────────────────────────────────────────
 # Self-report model identity + optional IDE override. Call once per
-# session after helix_health so the dashboard can display the model
+# session after cymatix_health so the dashboard can display the model
 # in the agent badge tooltip.
 
 @mcp.tool()
-def helix_announce(
+def cymatix_announce(
     model_id: str,
     ide_override: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Self-report the agent's model identity and (optionally) override
     the auto-detected IDE.
 
-    Call this once per session, after your first ``helix_health`` call,
+    Call this once per session, after your first ``cymatix_health`` call,
     so the dashboard can display your model in the agent badge tooltip.
 
     Args:
@@ -779,12 +787,12 @@ def helix_announce(
     return {"ok": success}
 
 
-# ── Tool: helix_metrics_tokens ───────────────────────────────────────
+# ── Tool: cymatix_metrics_tokens ───────────────────────────────────────
 # Session + lifetime token counters, exact-from-upstream when possible,
 # char-estimate fallback. Surfaces helix's cost/savings story.
 
 @mcp.tool()
-def helix_metrics_tokens() -> Dict[str, Any]:
+def cymatix_metrics_tokens() -> Dict[str, Any]:
     """Token counters for the current session and lifetime.
 
     Returns exact counts from upstream `usage` fields when available
@@ -795,14 +803,14 @@ def helix_metrics_tokens() -> Dict[str, Any]:
     return _http("GET", "/metrics/tokens")
 
 
-# ── Tool: helix_bridge_status ────────────────────────────────────────
+# ── Tool: cymatix_bridge_status ────────────────────────────────────────
 # Federation bridge state -- shared-dir location, signal list, inbox
 # count. Pairs with the /bridge/collect + /bridge/signal endpoints
-# which remain server-side only (writes are better done via helix_ingest
+# which remain server-side only (writes are better done via cymatix_ingest
 # or direct HTTP from a privileged client).
 
 @mcp.tool()
-def helix_bridge_status() -> Dict[str, Any]:
+def cymatix_bridge_status() -> Dict[str, Any]:
     """Federation bridge status: shared_dir, inbox count, signal list.
 
     The bridge is helix's multi-instance handoff channel (laude ↔ raude
@@ -813,12 +821,12 @@ def helix_bridge_status() -> Dict[str, Any]:
     return _http("GET", "/bridge/status")
 
 
-# ── Tool: helix_gene_get ─────────────────────────────────────────────
+# ── Tool: cymatix_gene_get ─────────────────────────────────────────────
 # Fetch a single document by ID. Indispensable for debugging retrieval
 # results -- "what were this document's tags? what's the content?"
 
 @mcp.tool()
-def helix_gene_get(gene_id: str) -> Dict[str, Any]:
+def cymatix_gene_get(gene_id: str) -> Dict[str, Any]:
     """Fetch a single document by ID.
 
     Returns the full document model as JSON -- content, tags
@@ -833,14 +841,14 @@ def helix_gene_get(gene_id: str) -> Dict[str, Any]:
     return _http("GET", f"/genes/{urllib.request.quote(gene_id)}")
 
 
-# ── Tool: helix_neighbors ────────────────────────────────────────────
-# Lightweight top-k SEMA neighbors. Cheaper than helix_resonance when
+# ── Tool: cymatix_neighbors ────────────────────────────────────────────
+# Lightweight top-k SEMA neighbors. Cheaper than cymatix_resonance when
 # the caller only wants "what's near this query in SEMA space?" without
 # the cymatic spectrum / harmonic edges.
 
 @mcp.tool()
-def helix_neighbors(query: str, k: int = 10) -> Dict[str, Any]:
-    """Top-k SEMA neighbors for a query (light version of helix_resonance).
+def cymatix_neighbors(query: str, k: int = 10) -> Dict[str, Any]:
+    """Top-k SEMA neighbors for a query (light version of cymatix_resonance).
 
     Returns {query, k, neighbors: [{gene_id, sema_cos_sim, preview,
     path}], count}. No cymatic spectrum, no harmonic edges, no query
@@ -848,19 +856,19 @@ def helix_neighbors(query: str, k: int = 10) -> Dict[str, Any]:
 
     Use this when debugging "which documents are semantically closest to X?"
     and you don't need the full four-primitive introspection of
-    helix_resonance.
+    cymatix_resonance.
     """
     path = f"/debug/neighbors?query={urllib.request.quote(query)}&k={int(k)}"
     return _http("GET", path)
 
 
-# ── Tool: helix_splice_preview ───────────────────────────────────────
+# ── Tool: cymatix_splice_preview ───────────────────────────────────────
 # Dry-run the retrieval pipeline: extract -> retrieve -> candidates,
 # SKIPS the expensive splice step. Answers "what WOULD be in the context
 # window?" without paying full /context cost (no compressor calls).
 
 @mcp.tool()
-def helix_splice_preview(query: str, max_genes: int = 12) -> Dict[str, Any]:
+def cymatix_splice_preview(query: str, max_genes: int = 12) -> Dict[str, Any]:
     """Preview which documents WOULD be selected for a query's context window.
 
     Runs the cheap half of the /context pipeline: query keyword
@@ -884,7 +892,7 @@ def helix_splice_preview(query: str, max_genes: int = 12) -> Dict[str, Any]:
 
 
 @mcp.tool()
-def helix_fingerprint(
+def cymatix_fingerprint(
     query: str,
     max_results: Optional[int] = None,
     profile: Optional[str] = None,
@@ -907,20 +915,20 @@ def helix_fingerprint(
 # Lexicon: see docs/ROSETTA.md for the full biology<->software map.
 
 @mcp.tool()
-def helix_document_get(document_id: str) -> Dict[str, Any]:
-    """Fetch a single document by ID. Canonical alias for ``helix_gene_get``.
+def cymatix_document_get(document_id: str) -> Dict[str, Any]:
+    """Fetch a single document by ID. Canonical alias for ``cymatix_gene_get``.
 
     Returns the full document model (content, tags, signals, fragments,
     lifecycle tier, embedding). 404 if unknown.
 
-    Identical behavior to ``helix_gene_get`` -- prefer this name in
+    Identical behavior to ``cymatix_gene_get`` -- prefer this name in
     new code.
     """
     return _http("GET", f"/genes/{urllib.request.quote(document_id)}")
 
 
 @mcp.tool()
-def helix_document_query(
+def cymatix_document_query(
     query: str,
     decoder_mode: Optional[str] = None,
     downstream_model: Optional[str] = None,
@@ -950,9 +958,9 @@ def helix_document_query(
 
 
 @mcp.tool()
-def helix_document_preview(query: str, max_genes: int = 12) -> Dict[str, Any]:
+def cymatix_document_preview(query: str, max_genes: int = 12) -> Dict[str, Any]:
     """Preview which documents WOULD be selected for a query. Canonical
-    alias for ``helix_splice_preview``.
+    alias for ``cymatix_splice_preview``.
 
     Runs the retrieval pipeline through candidate selection, skips the
     final compression step. Cheap; no compressor calls. Prefer this
@@ -966,12 +974,12 @@ def helix_document_preview(query: str, max_genes: int = 12) -> Dict[str, Any]:
 
 
 @mcp.tool()
-def helix_document_fingerprint(
+def cymatix_document_fingerprint(
     query: str,
     max_results: Optional[int] = None,
     profile: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Canonical alias for ``helix_fingerprint``."""
+    """Canonical alias for ``cymatix_fingerprint``."""
     body: Dict[str, Any] = {"query": query}
     if max_results is not None:
         body["max_results"] = int(max_results)
@@ -1013,13 +1021,88 @@ def helix_document_fingerprint(
 # #219 Slice 3; see docs/design/2026-07-05-efficiency-cost-reduction.md.
 _MCP_CORE_TOOLS = frozenset({
     "cymatix_context",         # primary retrieval — the big one
-    "helix_context_packet",  # agent-safe bundle (know/miss + refresh plan)
-    "helix_ingest",          # contribute to the knowledge store
-    "helix_health",          # readiness probe
-    "helix_sessions_list",   # sibling-agent awareness (identity contract)
+    "cymatix_context_packet",  # agent-safe bundle (know/miss + refresh plan)
+    "cymatix_ingest",          # contribute to the knowledge store
+    "cymatix_health",          # readiness probe
+    "cymatix_sessions_list",   # sibling-agent awareness (identity contract)
 })
 
 _TRUTHY = frozenset({"1", "true", "yes", "on"})
+
+# ── 0.8.0 rename: deprecated helix_* aliases ─────────────────────────
+# Canonical tool names are cymatix_* as of the 0.8.0 rename. The old
+# helix_* names stay registered as thin aliases for one deprecation
+# window (default ON so existing host configs keep working; flip off
+# with CYMATIX_MCP_COMPAT=0 once clients are migrated — each alias
+# costs tool-list tokens on every turn).
+_CANONICAL_RENAMES = {
+    "helix_" + name[len("cymatix_"):]: name
+    for name in (
+        # The flagship: its helix_context name was dropped outright in the
+        # first rename pass, breaking old configs — restored here as an
+        # alias for the same deprecation window as everything else.
+        "cymatix_context",
+        "cymatix_context_packet", "cymatix_refresh_targets", "cymatix_stats",
+        "cymatix_ingest", "cymatix_resonance", "cymatix_hitl_emit",
+        "cymatix_hitl_recent", "cymatix_sessions_list", "cymatix_session_recent",
+        "cymatix_consolidate", "cymatix_health", "cymatix_swap_db",
+        "cymatix_announce", "cymatix_metrics_tokens", "cymatix_bridge_status",
+        "cymatix_gene_get", "cymatix_neighbors", "cymatix_splice_preview",
+        "cymatix_fingerprint", "cymatix_document_get", "cymatix_document_query",
+        "cymatix_document_preview", "cymatix_document_fingerprint",
+    )
+}
+
+
+def _mcp_compat_enabled() -> bool:
+    """True (default) while the helix_* alias window is open.
+
+    Reads HELIX_MCP_COMPAT — CYMATIX_MCP_COMPAT lands here via the
+    package-level env mirror. Unset means ON for the deprecation window.
+    """
+    return os.environ.get("HELIX_MCP_COMPAT", "1").strip().lower() in _TRUTHY
+
+
+def _register_compat_aliases(server: FastMCP = mcp) -> List[str]:
+    """Register each old helix_* name as an alias of its cymatix_* tool.
+
+    Returns the alias names registered (empty when compat is off). A
+    per-alias failure is non-fatal: the canonical tool still works.
+    """
+    if not _mcp_compat_enabled():
+        return []
+    registered: List[str] = []
+    for old, canonical in _CANONICAL_RENAMES.items():
+        fn = globals().get(canonical)
+        if fn is None:  # pragma: no cover - rename drift; canonical missing
+            log.warning("compat alias %s skipped: no canonical %s", old, canonical)
+            continue
+        try:
+            server.add_tool(
+                fn,
+                name=old,
+                description=(
+                    f"Deprecated alias of `{canonical}` (0.8.0 rename); "
+                    f"use that instead."
+                ),
+            )
+            registered.append(old)
+        except Exception:  # pragma: no cover - FastMCP add_tool contract changed
+            log.warning("could not register compat alias %s", old, exc_info=True)
+    return registered
+
+
+def _effective_core_tools() -> frozenset:
+    """Lean-profile keep-set: canonical core + their helix_* aliases when
+    compat is on (so un-migrated hosts calling e.g. ``helix_ingest``
+    keep working in the default lean profile)."""
+    core = _MCP_CORE_TOOLS
+    if _mcp_compat_enabled():
+        core = core | frozenset(
+            old for old, canonical in _CANONICAL_RENAMES.items()
+            if canonical in _MCP_CORE_TOOLS
+        )
+    return core
 
 
 def _mcp_full_surface() -> bool:
@@ -1041,9 +1124,10 @@ def _apply_mcp_profile(server: FastMCP = mcp) -> List[str]:
     except Exception:  # pragma: no cover - FastMCP internal shape changed
         log.warning("could not enumerate MCP tools; exposing full surface")
         return []
+    keep = _effective_core_tools()
     removed: List[str] = []
     for name in names:
-        if name in _MCP_CORE_TOOLS:
+        if name in keep:
             continue
         try:
             server.remove_tool(name)
@@ -1059,7 +1143,9 @@ def _apply_mcp_profile(server: FastMCP = mcp) -> List[str]:
     return removed
 
 
-# Applied at import so the host's tool-list handshake sees the lean surface.
+# Aliases first, then the profile prune, so the host's tool-list
+# handshake sees the lean surface with (by default) its compat aliases.
+_register_compat_aliases()
 _apply_mcp_profile()
 
 
@@ -1119,7 +1205,7 @@ def _register_with_registry() -> None:
 
     # IDE auto-detect via env-var fingerprint chain. Falls back to
     # (None, "no_match") when no signal — agent can later override via
-    # helix_announce(ide_override=...).
+    # cymatix_announce(ide_override=...).
     ide_detected, ide_detection_via = detect_ide()
 
     bridge = AgentBridge(helix_base_url=HELIX_URL)
@@ -1134,7 +1220,7 @@ def _register_with_registry() -> None:
         ide_detection_via=ide_detection_via,
         start_auto_heartbeat=True,
     )
-    # Stash the bridge for the helix_announce tool to use later.
+    # Stash the bridge for the cymatix_announce tool to use later.
     if participant_id:
         global _registered_bridge
         _registered_bridge = bridge
@@ -1168,7 +1254,7 @@ def main() -> None:
     # this way on Windows even with helix alive, because AgentBridge's
     # auto-heartbeat startup raised at registration time. Tool calls
     # themselves still proxy to the HTTP API independently — registry is
-    # only used by helix_announce + dashboards.
+    # only used by cymatix_announce + dashboards.
     try:
         _register_with_registry()
     except Exception:

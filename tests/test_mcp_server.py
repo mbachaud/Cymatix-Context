@@ -252,12 +252,12 @@ def test_helix_context_unwraps_continue_list_shape(monkeypatch):
     assert body["query"] == "what does the splice step do?"
 
 
-def test_helix_announce_tool_calls_bridge_announce(monkeypatch, mock_bridge):
-    """The helix_announce MCP tool delegates to AgentBridge.announce()."""
+def test_cymatix_announce_tool_calls_bridge_announce(monkeypatch, mock_bridge):
+    """The cymatix_announce MCP tool delegates to AgentBridge.announce()."""
     from cymatix_context import mcp_server
-    # Force the module to think it's registered so helix_announce proceeds
+    # Force the module to think it's registered so cymatix_announce proceeds
     mcp_server._registered_bridge = mock_bridge
-    result = mcp_server.helix_announce(
+    result = mcp_server.cymatix_announce(
         model_id="claude-opus-4-7",
         ide_override=None,
     )
@@ -296,11 +296,15 @@ def restore_mcp_profile():
 
 
 def test_lean_mcp_profile_is_default(monkeypatch, restore_mcp_profile):
-    """Unset HELIX_MCP_FULL → only the 5 core tools are registered."""
+    """Unset HELIX_MCP_FULL → only the core tools are registered. With the
+    default compat window open (0.8.0 rename) that is the 5 canonical
+    cymatix_* tools plus their 5 deprecated helix_* aliases."""
+    monkeypatch.delenv("HELIX_MCP_COMPAT", raising=False)
     m = _reload_mcp(monkeypatch, full=False)
     names = set(m.mcp._tool_manager._tools.keys())
-    assert names == set(m._MCP_CORE_TOOLS)
-    assert len(names) == 5
+    assert names == set(m._effective_core_tools())
+    assert set(m._MCP_CORE_TOOLS) <= names
+    assert len(names) == 10
 
 
 def test_full_mcp_surface_is_opt_in(monkeypatch, restore_mcp_profile):
@@ -318,7 +322,7 @@ def test_apply_mcp_profile_never_prunes_core(monkeypatch, restore_mcp_profile):
     m = _reload_mcp(monkeypatch, full=True)  # start from the full surface
     monkeypatch.delenv("HELIX_MCP_FULL", raising=False)
     removed = m._apply_mcp_profile()
-    assert set(removed).isdisjoint(m._MCP_CORE_TOOLS)
-    assert set(m.mcp._tool_manager._tools.keys()) == set(m._MCP_CORE_TOOLS)
+    assert set(removed).isdisjoint(m._effective_core_tools())
+    assert set(m.mcp._tool_manager._tools.keys()) == set(m._effective_core_tools())
     # Idempotent: a second application removes nothing.
     assert m._apply_mcp_profile() == []

@@ -94,7 +94,7 @@ chip when both are present.
 
 As of 2026-05-06, the MCP adapter additionally **auto-detects** the
 host IDE from intentional env vars (`VSCODE_PID`, `CURSOR_TRACE_ID`)
-and the agent **self-reports** its model via the new `helix_announce`
+and the agent **self-reports** its model via the new `cymatix_announce`
 MCP tool. Together they populate three new columns on the
 `participants` row — `ide_detected`, `ide_detection_via`, `model_id`
 — and the dashboard renders the full identity in a tooltip on the
@@ -121,7 +121,7 @@ terminal but want the chip to say `"vscode"` anyway).
 4. Registration failure is **non-fatal**. Tool calls still proxy. A
    warning is logged.
 
-**On every tool call** (e.g., `cymatix_context`, `helix_ingest`):
+**On every tool call** (e.g., `cymatix_context`, `cymatix_ingest`):
 
 1. Claude Code emits a JSON-RPC `tools/call` over stdio.
 2. The MCP adapter wraps the args into an HTTP request and posts to
@@ -165,7 +165,7 @@ is purely instructional — it does not run code.
 ## Verifying the route
 
 After wiring `.mcp.json` and starting Claude Code, ask Claude to call
-`helix_health`. Then check the dashboard at
+`cymatix_health`. Then check the dashboard at
 `http://127.0.0.1:11437/launcher` (or the launcher tray):
 
 1. **Parties** panel should show your `CYMATIX_PARTY_ID`.
@@ -187,7 +187,7 @@ chosen handle, `CYMATIX_MCP_HANDLE` didn't carry. In both cases, fix the
 | Tool calls work but participant never appears in dashboard | Registration silently failed | Check the MCP adapter's stderr for the warning from `_register_with_registry` |
 | Authored documents show `agent=unknown` | `CYMATIX_AGENT` (or fallback chain) unset in MCP env | Set `CYMATIX_AGENT` in `.mcp.json` |
 | Two Claude panels collide on one handle | Both panels share `CYMATIX_MCP_HANDLE` | Give each panel a distinct handle, or omit it (`mcp-<pid>` is unique per process) |
-| `helix_sessions_list` empty | Cymatix bridge import failed at adapter startup | Check the adapter's startup log; likely a missing dep in the spawn env |
+| `cymatix_sessions_list` empty | Cymatix bridge import failed at adapter startup | Check the adapter's startup log; likely a missing dep in the spawn env |
 
 ## What's not covered here
 
