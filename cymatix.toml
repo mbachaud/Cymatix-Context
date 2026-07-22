@@ -157,10 +157,12 @@ synthetic_session_enabled = true        # Flip to false to restore prior NULL-se
 #   C:/helix-cache/genome.db                     — old replica (had backfill)
 # New genomes/ folder is the phase-2 sharding root. main/ is v1's only
 # shard; future shards land as genomes/reference/, genomes/agent/, etc.
-# 2026-07-13: default switched main -> dogfood (5 project roots, 5,636 genes)
-# for the agent-dogfooding phase. Bench harnesses pin their own genome via
-# HELIX_GENOME_PATH; switch back by restoring "genomes/main/genome.db".
-path = "genomes/dogfood/genome.db"
+# 2026-07-22 (v0.8.0): back to main as the shipped default. Per-machine
+# genome choice does NOT belong here — the launcher persists the last-used
+# selection (~/.helix/launcher/selected_genome.json, issue #286) and it wins
+# over this value on every startup after the first. Bench harnesses pin
+# their own genome via HELIX_GENOME_PATH (highest precedence).
+path = "genomes/main/genome.db"
 # Sharded stores (HELIX_USE_SHARDS=1 against a routing main.db): cross-shard
 # query fan-out width comes from the HELIX_SHARD_WORKERS env var, not this
 # file. Unset = auto-size when >4 shards are routed (serial measured 5
