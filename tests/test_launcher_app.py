@@ -75,7 +75,7 @@ class TestDashboardHTML:
         assert resp.headers["content-type"].startswith("text/html")
         # Page must contain the brand and the empty-state message
         assert "Cymatix Launcher" in resp.text
-        assert "Helix is stopped" in resp.text
+        assert "Cymatix is stopped" in resp.text
 
     def test_root_renders_running_state(self, client, fake_supervisor, fake_collector):
         fake_supervisor.is_running.return_value = True
@@ -143,7 +143,7 @@ class TestPanelsPartial:
         assert resp.status_code == 200
         assert resp.headers["content-type"].startswith("text/html")
         # Empty state when helix down
-        assert "Helix is stopped" in resp.text
+        assert "Cymatix is stopped" in resp.text
 
     def test_panels_partial_browser_navigation_redirects_to_dashboard(self, client):
         resp = client.get(

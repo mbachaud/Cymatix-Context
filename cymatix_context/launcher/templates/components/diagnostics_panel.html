@@ -24,7 +24,7 @@
 
   {% if state.helix.orphan_pid %}
     <div class="diagnostics-warn">
-      <strong>Orphan helix detected</strong> —
+      <strong>Orphan server detected</strong> —
       PID {{ state.helix.orphan_pid }} is listening on port
       {{ state.helix.port }} but is not managed by this launcher.
       Click <em>Start</em> to adopt it.
@@ -39,7 +39,7 @@
     {% if state.helix.paths %}
       <dt>State</dt>
       <dd class="path-value">{{ state.helix.paths.state_file }}</dd>
-      <dt>Helix log</dt>
+      <dt>Server log</dt>
       <dd class="path-value">{{ state.helix.paths.helix_log }}</dd>
     {% endif %}
   </dl>
