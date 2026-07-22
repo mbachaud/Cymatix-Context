@@ -1,5 +1,33 @@
 # Changelog
 
+## Unreleased
+
+- **rename: MCP tool surface completes the cymatix rename.** All 24 tools
+  now register under canonical `cymatix_*` names (0.8.0 renamed only the
+  flagship `cymatix_context` and dropped its old name outright, breaking
+  `helix_context` callers). Every old `helix_*` name — including
+  `helix_context` — stays callable as a deprecated alias while the compat
+  window is open: default ON, disable with `CYMATIX_MCP_COMPAT=0` once
+  clients are migrated (each alias costs tool-list schema tokens per
+  turn). The lean profile serves the 5 canonical core tools plus their 5
+  aliases (10 total) by default.
+
+- **feat: `cymatix_context.__version__`.** New single-source version
+  export (pinned to `pyproject.toml` by test); the FastAPI app no longer
+  claims `0.1.0` at `/docs`, and `/health` now carries a `version` field
+  so agents and dashboards can see what they're talking to.
+
+- **ci: full offline suite job.** CI previously ran only file-scoped
+  subsets, which let the ShardedGenomeAdapter parity gap ship unseen.
+  The historical blocker (server.py import-time `create_app()`) is gone —
+  the eager app lives only in `_asgi.py` — so `pytest tests/ -m "not
+  live"` (~3.4k tests) now runs on every push/PR.
+
+- **docs: drop dangling `HELIX_DAEMON_DESIGN.md` / `CYMATIX_DAEMON_DESIGN.md`
+  pointers.** The daemon design doc was planned but never written; all
+  references (cli.md, cmd_serve, dispatcher help, api.py) now say so
+  honestly and point at `cymatix-server` for the long-lived HTTP surface.
+
 ## 0.8.0 — 2026-07-22
 
 - **rename: helix-context → cymatix-context.** Canonical package is now
