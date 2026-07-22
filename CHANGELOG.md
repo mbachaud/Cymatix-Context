@@ -1,6 +1,22 @@
 # Changelog
 
-## Unreleased
+## 0.8.0 — 2026-07-22
+
+- **rename: helix-context → cymatix-context.** Canonical package is now
+  `cymatix_context`; the old `helix_context` package is a live alias —
+  every submodule import resolves to the identical `cymatix_context`
+  module object (no copies, isinstance-safe) and emits a
+  `DeprecationWarning`. CLI entry points are now `cymatix`/`cymatix-server`/
+  `cymatix-launcher`/`cymatix-status`/`cymatix-vault`, with the old
+  `helix*` names kept as console-script aliases. Env vars: `CYMATIX_*` is
+  canonical and mirrored to `HELIX_*` unless an explicit `HELIX_*` value
+  is already set (old deployments untouched). Config: `cymatix.toml` is
+  canonical, `helix.toml` still loads as a fallback. MCP server identifies
+  as `cymatix` (was `helix`) — a client-visible tool-namespace change.
+  OTel `service.name` is now `cymatix-context`; metric names, logger
+  names, and dashboard UIDs are deliberately unchanged. The wheel ships
+  both packages. Knowledge-store format is unchanged — no re-ingest
+  needed.
 
 - **rename: Windows launcher surface follows the 0.8.0 cymatix rename.**
   `setup-helix.bat` → `setup-cymatix.bat`, `start-helix-tray.bat` →
@@ -17,6 +33,34 @@
   (`deploy/windows/README.md`) moves to `cymatix-launcher` /
   `CymatixLauncher`. Also adds the `*.local.bat` gitignore rule the
   launcher comments always promised.
+
+- **rename: CLI `--help` surfaces follow the invoked alias.** Subcommand
+  parsers hardcoded `prog="helix <sub>"`, so `cymatix query --help` printed
+  `usage: helix query`. All nine subcommands, `cymatix-status`,
+  `cymatix-vault`, and `cymatix-launcher` now derive prog from argv[0]
+  (`cli.dispatcher.invoked_prog`) — the `cymatix` entry points brand
+  themselves cymatix while the deprecated `helix*` aliases keep showing
+  the name they were invoked as. Help descriptions drop the helix brand.
+
+- **fix(sharding): mirror the WS2 symbol-graph + delete surface on
+  `ShardedGenomeAdapter`.** `KnowledgeStore` grew `store_symbol_defs` /
+  `resolve_symbol` / `_sweep_symbol_orphans` (WS2) and `delete_gene`
+  without adapter counterparts, so any of those calls on a sharded store
+  (`HELIX_USE_SHARDS=1`) raised `AttributeError` — caught by
+  `test_adapter_covers_full_knowledgestore_surface`, which CI's
+  file-scoped test selection never ran. `resolve_symbol` fans out across
+  shards (soft-fail, deduped) like `term_doc_frequencies`; the three
+  writes are V1 read-only-adapter no-ops, with `delete_gene` returning
+  False so admin callers don't believe a hard-delete happened.
+
+- **config: shipped `cymatix.toml` genome default back to
+  `genomes/main/genome.db`.** The 2026-07-13 dogfooding commit pointed the
+  shipped default at the dogfood genome (and broke
+  `test_shipped_toml_matches_code_defaults`). Per-machine genome choice
+  lives in the launcher's durable last-used selection
+  (`~/.helix/launcher/selected_genome.json`, #286), which wins over the
+  toml on every startup after the first — fresh installs get `main`,
+  existing setups keep whatever they last selected.
 
 - **fix(bench): `sweep_splade_scale_curve.py` on-arm never ran query-side
   SPLADE (#204).** The harness constructed `Genome(path=...,
@@ -61,24 +105,6 @@
   silently. Pass `fusion_mode="additive"` explicitly for legacy physics
   (scheduled for removal in v(N+2)). `test_layer_defaults_agree` now guards
   the two layers' equality permanently.
-
-## 0.8.0 — 2026-07-21
-
-- **rename: helix-context → cymatix-context.** Canonical package is now
-  `cymatix_context`; the old `helix_context` package is a live alias —
-  every submodule import resolves to the identical `cymatix_context`
-  module object (no copies, isinstance-safe) and emits a
-  `DeprecationWarning`. CLI entry points are now `cymatix`/`cymatix-server`/
-  `cymatix-launcher`/`cymatix-status`/`cymatix-vault`, with the old
-  `helix*` names kept as console-script aliases. Env vars: `CYMATIX_*` is
-  canonical and mirrored to `HELIX_*` unless an explicit `HELIX_*` value
-  is already set (old deployments untouched). Config: `cymatix.toml` is
-  canonical, `helix.toml` still loads as a fallback. MCP server identifies
-  as `cymatix` (was `helix`) — a client-visible tool-namespace change.
-  OTel `service.name` is now `cymatix-context`; metric names, logger
-  names, and dashboard UIDs are deliberately unchanged. The wheel ships
-  both packages. Knowledge-store format is unchanged — no re-ingest
-  needed.
 
 ## 0.7.2b1 — 2026-07-06 (beta)
 
@@ -159,7 +185,6 @@ Prometheus / Tempo / Loki / Grafana).
   wall. Prometheus pinned to 127.0.0.1:9090; update/analytics
   phone-home disabled. The duplicate `helix-overview` dashboard uid is
   now a real **Helix — Overview** entry point.
-
 
 ## 0.6.5 — 2026-06-09
 
