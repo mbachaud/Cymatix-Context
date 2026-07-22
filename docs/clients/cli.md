@@ -3,9 +3,9 @@
 `cymatix` is the cold-start command-line surface for the Cymatix Context
 genome. Every invocation is a fresh Python process: it opens the
 SQLite genome (read-only by default), runs the requested operation,
-and exits. No daemon, no long-lived state. The daemon design (see
-`docs/architecture/CYMATIX_DAEMON_DESIGN.md`) is parked until walk-bench
-numbers come in.
+and exits. No daemon, no long-lived state. Daemon mode is parked until walk-bench
+numbers come in (no design doc yet); the long-lived HTTP surface is
+`cymatix-server`.
 
 ## Install
 
@@ -63,8 +63,8 @@ agent or operator is debugging a broken install.
 ## Agent-driven walk surface (v1.x)
 
 The four commands below are the **agent-facing** retrieval surface —
-the same operations the MCP tools `cymatix_context`, `helix_context_packet`,
-`helix_refresh_targets`, `helix_gene_get`, and `helix_neighbors` expose,
+the same operations the MCP tools `cymatix_context`, `cymatix_context_packet`,
+`cymatix_refresh_targets`, `cymatix_gene_get`, and `cymatix_neighbors` expose,
 but reachable from the CLI without an MCP host or a running HTTP server.
 An agent can drive a full retrieval-and-walk loop (query → packet → drill
 into specific genes → fetch neighbors → refresh-targets before acting)
@@ -140,8 +140,8 @@ relevance checks.
 
 Exit codes: `0` success, `1` unknown gene_id or read failure.
 
-The subcommand name `gene` matches the legacy MCP tool (`helix_gene_get`).
-The canonical engineering alias is `helix_document_get` per
+The subcommand name `gene` matches the legacy MCP tool (`cymatix_gene_get`).
+The canonical engineering alias is `cymatix_document_get` per
 [`docs/ROSETTA.md`](../ROSETTA.md); both names will continue to resolve
 to the same document model.
 
@@ -154,7 +154,7 @@ acting.
 - `--k N` — neighbor count (default 10).
 - `--json` — `{ query, k, neighbors: [{ gene_id, sema_cos_sim, preview, path }], count }`.
   Identical shape to the `/debug/neighbors` HTTP endpoint and the
-  `helix_neighbors` MCP tool.
+  `cymatix_neighbors` MCP tool.
 
 Returns `count: 0` with no error when the SEMA codec is unavailable
 (e.g. the `embeddings` extra is not installed or no embeddings populated
@@ -201,8 +201,8 @@ Exit codes: `0` success.
 
 ### `cymatix serve` (DEFERRED)
 
-Prints a pointer at `cymatix-server` and exits 4. Daemon design lives
-in `docs/architecture/CYMATIX_DAEMON_DESIGN.md`.
+Prints a pointer at `cymatix-server` and exits 4. Daemon mode is
+deferred; no design doc exists yet.
 
 ## Environment variables
 

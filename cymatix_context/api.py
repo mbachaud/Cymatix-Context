@@ -33,7 +33,7 @@ A ``HelixSession`` always carries a ``session_id`` so telemetry can
 group calls. In v1 (cold-start CLI shipping first) the session is a
 pure tagging construct: the adaptive-cap heuristic, daemon-tracked
 state, and per-session profile evolution are all **deferred to v2**
-(see ``docs/architecture/HELIX_DAEMON_DESIGN.md`` — currently parked
+(daemon design doc not yet written — currently parked
 behind initial-benchmarking results).
 
 Module-level convenience functions (``api.query(...)``, etc.) wrap a
@@ -50,7 +50,7 @@ Surfaces should NOT import from ``cymatix_context.context_manager``
 directly. If a method is missing on this boundary, add it here first.
 
 See:
-  * ``docs/architecture/HELIX_DAEMON_DESIGN.md`` — daemon spec; deferred to v1.x
+  * daemon spec — deferred to v1.x; no design doc exists yet
   * ``docs/benchmarks/SESSION_AWARE_BENCH_DESIGN.md`` — multi-turn walk bench
   * ``cymatix_context/context_manager.py`` — implementation behind the delegating calls
 """
@@ -194,12 +194,12 @@ class HelixSession:
         manager: "Any",  # Forward ref — HelixContextManager — avoids circular import
         *,
         session_id: Optional[str] = None,
-        adaptive_caps: bool = False,  # v1: stub. v2: see HELIX_DAEMON_DESIGN.md
+        adaptive_caps: bool = False,  # v1: stub. v2: daemon-mode follow-up
     ) -> None:
         self._manager = manager
         self.session_id: str = session_id or self._generate_session_id()
         # v1: adaptive_caps is a no-op flag. The AdaptiveCap heuristic
-        # is part of the deferred daemon work (see HELIX_DAEMON_DESIGN.md).
+        # is part of the deferred daemon work (no design doc yet).
         # We keep the flag + history hook so the v2 wiring is purely
         # additive (no API breakage).
         self.adaptive_caps = adaptive_caps
@@ -533,7 +533,7 @@ class HelixSession:
 
         When the daemon ships, this method will append to the call
         history that drives the AdaptiveCap heuristic in
-        ``docs/architecture/HELIX_DAEMON_DESIGN.md``. Until then we
+        the deferred daemon work (no design doc yet). Until then we
         keep the call site so v2 wiring is purely additive (no API
         breakage). Triggered only when ``adaptive_caps=True`` was
         passed to the session (default False in v1).

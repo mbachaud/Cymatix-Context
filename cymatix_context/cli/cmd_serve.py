@@ -1,8 +1,8 @@
 """`helix serve` — DEFERRED in v1.
 
 Per the 2026-05-11 council pass, v1 ships as cold-start CLI; the
-daemon design lives in docs/architecture/HELIX_DAEMON_DESIGN.md but
-is parked until benchmarking proves the thesis. This stub keeps the
+daemon design doc has not been written yet — it is parked until
+benchmarking proves the thesis. This stub keeps the
 subcommand visible in `helix --help` and tells the user what to do
 in the meantime.
 """
@@ -21,9 +21,8 @@ point or uvicorn directly:
   # or
   python -m uvicorn cymatix_context._asgi:app --host 127.0.0.1 --port 11437
 
-The JSON-RPC daemon design lives in
-docs/architecture/HELIX_DAEMON_DESIGN.md and will land in v1.x after
-walk-bench numbers come in.
+A JSON-RPC daemon may land in v1.x after walk-bench numbers come in;
+no design doc exists yet.
 """
 
 

@@ -78,7 +78,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     sub.add_parser(
         "serve",
-        help="(DEFERRED in v1; see HELIX_DAEMON_DESIGN.md)",
+        help="(DEFERRED in v1 — run the HTTP proxy via `cymatix-server`)",
     )
 
     return parser

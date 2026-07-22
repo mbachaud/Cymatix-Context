@@ -14,10 +14,10 @@ from tests.conftest import run_cli as _run
 
 def test_no_args_prints_help_and_returns_nonzero():
     rc, out, err = _run([])
-    assert rc != 0, "running `helix` with no subcommand should be an error"
+    assert rc != 0, "running `cymatix` with no subcommand should be an error"
     combined = (out + err).lower()
     assert "usage:" in combined
-    assert "helix" in combined
+    assert "cymatix" in combined
 
 
 def test_help_flag_exits_zero():
