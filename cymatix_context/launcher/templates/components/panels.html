@@ -2,7 +2,7 @@
 
 {% if state.update and state.update.update_available %}
 <div class="panel panel--health-warning">
-  <p>Helix Context {{ state.update.latest_version }} is available. Installed version: {{ state.update.current_version }}.</p>
+  <p>Cymatix Context {{ state.update.latest_version }} is available. Installed version: {{ state.update.current_version }}.</p>
 </div>
 {% endif %}
 
@@ -13,15 +13,15 @@
 {% elif state.helix.start_pending %}
   <div class="panel panel--starting">
     <span class="spinner" aria-hidden="true"></span>
-    <p>Helix is starting — first boot can take a minute while encoders warm up.</p>
+    <p>Cymatix is starting — first boot can take a minute while encoders warm up.</p>
   </div>
 {% elif state.helix.availability == "unavailable" or not state.helix.running %}
   <div class="panel panel--empty">
-    <p>Helix is stopped. Click <strong>Start</strong> to launch the server.</p>
+    <p>Cymatix is stopped. Click <strong>Start</strong> to launch the server.</p>
   </div>
 {% elif state.helix.availability == "degraded" %}
   <div class="panel panel--health-warning">
-    <p>{{ state.helix.health_message or state.helix.next_action or "Helix is running with degraded health." }}</p>
+    <p>{{ state.helix.health_message or state.helix.next_action or "Cymatix is running with degraded health." }}</p>
   </div>
 {% endif %}
 

@@ -156,19 +156,19 @@ class StateCollector:
                 )
                 if health.get("status") == "ok":
                     state["helix"]["next_action"] = (
-                        "Helix is healthy. Query it through MCP or the OpenAI-compatible endpoint."
+                        "Cymatix is healthy. Query it through MCP or the OpenAI-compatible endpoint."
                     )
                 elif checks.get("upstream_ready") is False:
                     state["helix"]["next_action"] = (
-                        "Start or fix the upstream model server, then use Restart if Helix stays degraded."
+                        "Start or fix the upstream model server, then use Restart if Cymatix stays degraded."
                     )
                 elif checks.get("genome_ready") is False:
                     state["helix"]["next_action"] = (
-                        "Inspect the local genome database, then use Restart if Helix stays degraded."
+                        "Inspect the local genome database, then use Restart if Cymatix stays degraded."
                     )
                 else:
                     state["helix"]["next_action"] = (
-                        "Helix responded unexpectedly. Restart it from the launcher UI."
+                        "Cymatix responded unexpectedly. Restart it from the launcher UI."
                     )
                 state["helix"]["health_message"] = health.get("message")
 
@@ -208,13 +208,13 @@ class StateCollector:
         if not health_seen and endpoint_seen:
             state["helix"]["availability"] = "available"
             state["helix"]["next_action"] = (
-                "Helix is responding; the launcher health endpoint has "
-                "not answered yet (cold start, or an older helix build)."
+                "Cymatix is responding; the launcher health endpoint has "
+                "not answered yet (cold start, or an older build)."
             )
         elif not health_seen:
             state["helix"]["availability"] = "degraded"
             state["helix"]["next_action"] = (
-                "The Helix process exists but did not answer its health endpoints. "
+                "The Cymatix process exists but did not answer its health endpoints. "
                 "Restart it from the launcher UI."
             )
 

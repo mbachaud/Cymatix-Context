@@ -145,10 +145,10 @@ def _confirm_genome_switch(target: Path) -> bool:
     If both backends fail we default to DECLINE (False). This action
     restarts the server; a dialog we couldn't render is not consent.
     """
-    title = "Helix Launcher — switch database?"
+    title = "Cymatix Launcher — switch database?"
     body = (
         f"Switch the active genome to:\n\n    {target}\n\n"
-        "Helix will restart so the new genome can be loaded. "
+        "Cymatix will restart so the new genome can be loaded. "
         "In-flight /context requests will fail until restart completes."
     )
 
