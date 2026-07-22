@@ -6,6 +6,8 @@ into the same argparse subparser.
 from __future__ import annotations
 
 import argparse
+
+from .dispatcher import invoked_prog
 from typing import Any, Dict
 
 from . import output
@@ -14,7 +16,7 @@ from cymatix_context.api import open_session
 
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="helix diag",
+        prog=f"{invoked_prog()} diag",
         description="Diagnostic introspection.",
     )
     sub = parser.add_subparsers(dest="target", metavar="<target>", required=True)

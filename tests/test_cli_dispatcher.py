@@ -93,3 +93,41 @@ def test_installed_console_script_prog_matches_invoked_name(script_name, expecte
     assert proc.returncode == 0, proc.stderr
     first_line = proc.stdout.splitlines()[0]
     assert first_line.startswith(f"usage: {expected_prog}"), first_line
+
+
+# ── subcommand parsers follow the invoked alias too (0.8.0 rename) ─────
+
+
+_SUBCOMMAND_MODULES = [
+    ("query", "cmd_query"),
+    ("packet", "cmd_packet"),
+    ("refresh-targets", "cmd_refresh_targets"),
+    ("gene", "cmd_gene"),
+    ("neighbors", "cmd_neighbors"),
+    ("ingest", "cmd_ingest"),
+    ("config", "cmd_config"),
+    ("diag", "cmd_diag"),
+    ("status", "cmd_status"),
+]
+
+
+@pytest.mark.parametrize("alias", ["cymatix", "helix"])
+@pytest.mark.parametrize("sub,module_name", _SUBCOMMAND_MODULES)
+def test_subcommand_parser_prog_derives_from_argv0(monkeypatch, alias, sub, module_name):
+    """`cymatix query --help` must say `usage: cymatix query`, not
+    `usage: helix query` — and the `helix` alias keeps showing helix."""
+    import importlib
+    monkeypatch.setattr(sys, "argv", [rf"C:\env\Scripts\{alias}.exe", sub, "--help"])
+    mod = importlib.import_module(f"cymatix_context.cli.{module_name}")
+    parser = mod._build_parser()
+    assert parser.prog == f"{alias} {sub}"
+
+
+@pytest.mark.parametrize("sub,module_name", _SUBCOMMAND_MODULES)
+def test_subcommand_descriptions_say_cymatix_not_helix(monkeypatch, sub, module_name):
+    """Post-rename, no subcommand --help description should brand itself helix."""
+    import importlib
+    monkeypatch.setattr(sys, "argv", ["cymatix", sub])
+    mod = importlib.import_module(f"cymatix_context.cli.{module_name}")
+    parser = mod._build_parser()
+    assert "helix" not in (parser.description or "").lower(), parser.description

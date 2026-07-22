@@ -12,6 +12,8 @@ Mirrors the ``/context/refresh-plan`` HTTP endpoint and the
 from __future__ import annotations
 
 import argparse
+
+from .dispatcher import invoked_prog
 from typing import Any, Dict, List
 
 from . import output
@@ -23,7 +25,7 @@ _TASK_TYPES = ("plan", "explain", "review", "edit", "debug", "ops", "quote")
 
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="helix refresh-targets",
+        prog=f"{invoked_prog()} refresh-targets",
         description=(
             "Return the reread plan for a query — refresh_targets only, "
             "no evidence items. Default task_type is 'edit'."

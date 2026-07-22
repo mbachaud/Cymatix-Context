@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import argparse
+
+from .dispatcher import invoked_prog
 import logging
 import sqlite3
 from pathlib import Path
@@ -72,7 +74,7 @@ def _probe_config(config_path):
 
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="helix status",
+        prog=f"{invoked_prog()} status",
         description="Check genome / config / (optional) HTTP server health.",
     )
     parser.add_argument("--json", action="store_true", help="Machine-readable output.")

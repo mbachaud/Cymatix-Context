@@ -16,6 +16,8 @@ the spec does not define.
 from __future__ import annotations
 
 import argparse
+
+from .dispatcher import invoked_prog
 from typing import Any, Dict
 
 from . import output
@@ -32,8 +34,8 @@ _TIER_TO_DECODER = {
 
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="helix query",
-        description="Run the helix retrieval pipeline for one query.",
+        prog=f"{invoked_prog()} query",
+        description="Run the cymatix retrieval pipeline for one query.",
     )
     parser.add_argument("text", help="The query string.")
     parser.add_argument(

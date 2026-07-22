@@ -15,6 +15,8 @@ that may be stale.
 from __future__ import annotations
 
 import argparse
+
+from .dispatcher import invoked_prog
 from typing import Any, Dict
 
 from . import output
@@ -29,7 +31,7 @@ _TASK_TYPES = ("plan", "explain", "review", "edit", "debug", "ops", "quote")
 
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="helix packet",
+        prog=f"{invoked_prog()} packet",
         description=(
             "Build a freshness-labeled evidence packet for an agent action. "
             "Returns verified / stale_risk items plus refresh_targets."

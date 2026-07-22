@@ -1,11 +1,11 @@
-"""Top-level argparse dispatcher for `helix <subcommand>`.
+"""Top-level argparse dispatcher for `cymatix <subcommand>`.
 
 Subcommands are registered via add_parser; each one points at a
 ``cmd_*.run(args)`` callable that returns an integer exit code.
 
 This module deliberately does NOT import the heavy retrieval stack at
 module-load time — subcommand modules import their dependencies lazily
-inside ``run()`` so `helix --help` stays sub-100ms cold-start.
+inside ``run()`` so `cymatix --help` stays sub-100ms cold-start.
 """
 from __future__ import annotations
 
@@ -17,13 +17,20 @@ from typing import Callable, Optional
 from . import output
 
 
+def invoked_prog(default: str = "cymatix") -> str:
+    """The console-script name this process was invoked as.
+
+    Derived from argv[0] so each alias (`cymatix`, deprecated `helix`,
+    `cymatix-status`, ...) shows itself in --help / usage / error output
+    instead of a hardcoded brand. Subcommand parsers compose it as
+    ``f"{invoked_prog()} query"``.
+    """
+    return Path(sys.argv[0]).stem if sys.argv and sys.argv[0] else default
+
+
 def _build_parser() -> argparse.ArgumentParser:
-    # Derive prog from the invoked script name so each console-script alias
-    # (`cymatix`, `helix`) shows itself in --help / usage / error output
-    # instead of always claiming to be "helix".
-    prog = Path(sys.argv[0]).stem if sys.argv and sys.argv[0] else "cymatix"
     parser = argparse.ArgumentParser(
-        prog=prog,
+        prog=invoked_prog(),
         description=(
             "Cymatix Context CLI — cold-start retrieval over a local genome. "
             "See `cymatix <subcommand> --help` for details."
@@ -47,7 +54,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     sub.add_parser(
         "gene",
-        help="Inspect a single document (`helix gene get|preview <id>`).",
+        help="Inspect a single document (`cymatix gene get|preview <id>`).",
     )
     sub.add_parser(
         "neighbors",
@@ -63,11 +70,11 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     sub.add_parser(
         "diag",
-        help="Diagnostic introspection (e.g. `helix diag corpus`).",
+        help="Diagnostic introspection (e.g. `cymatix diag corpus`).",
     )
     sub.add_parser(
         "config",
-        help="Inspect effective configuration (`helix config show`).",
+        help="Inspect effective configuration (`cymatix config show`).",
     )
     sub.add_parser(
         "serve",

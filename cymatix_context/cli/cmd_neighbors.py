@@ -10,6 +10,8 @@ distinguish "no codec" from "no matches" structurally; check
 from __future__ import annotations
 
 import argparse
+
+from .dispatcher import invoked_prog
 from typing import Any, Dict, List
 
 from . import output
@@ -18,7 +20,7 @@ from cymatix_context.api import open_session
 
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="helix neighbors",
+        prog=f"{invoked_prog()} neighbors",
         description="Top-k SEMA neighbors for a query (semantic graph walk).",
     )
     parser.add_argument("text", help="The query string.")

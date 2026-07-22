@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import argparse
+
+from .dispatcher import invoked_prog
 from pathlib import Path
 from typing import Iterable, List
 
@@ -35,7 +37,7 @@ def _content_type_for(path: Path) -> str:
 
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="helix ingest",
+        prog=f"{invoked_prog()} ingest",
         description="Add a file (or directory of files) to the genome.",
     )
     parser.add_argument("path", help="Path to a file or directory.")

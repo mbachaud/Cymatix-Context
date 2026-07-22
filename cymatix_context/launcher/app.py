@@ -7,6 +7,8 @@ Run via the ``helix-launcher`` console script. See ``docs/LAUNCHER.md``.
 from __future__ import annotations
 
 import argparse
+
+from ..cli.dispatcher import invoked_prog
 import logging
 import os
 import sys
@@ -453,8 +455,8 @@ def _launcher_port(request: Request) -> int:
 
 def _parse_args(argv: Optional[list] = None) -> argparse.Namespace:
     p = argparse.ArgumentParser(
-        prog="helix-launcher",
-        description="Supervisor + dashboard for a helix-context server.",
+        prog=invoked_prog(default="cymatix-launcher"),
+        description="Supervisor + dashboard for a cymatix-context server.",
     )
     p.add_argument(
         "command",

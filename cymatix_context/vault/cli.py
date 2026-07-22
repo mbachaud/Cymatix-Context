@@ -6,6 +6,8 @@ and concurrent-writer races.
 from __future__ import annotations
 
 import argparse
+
+from ..cli.dispatcher import invoked_prog
 import json
 import os
 import sys
@@ -107,7 +109,10 @@ def _cmd_prune(args) -> int:
 
 
 def main(argv: Optional[list] = None) -> int:
-    p = argparse.ArgumentParser(prog="helix-vault", description="Helix vault operator CLI")
+    p = argparse.ArgumentParser(
+        prog=invoked_prog(default="cymatix-vault"),
+        description="Cymatix vault operator CLI",
+    )
     sp = p.add_subparsers(dest="cmd", required=True)
 
     ex = sp.add_parser("export", help="Trigger snapshot export")

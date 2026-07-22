@@ -7,6 +7,8 @@ Entry point: ``helix-status``.
 from __future__ import annotations
 
 import argparse
+
+from .dispatcher import invoked_prog
 import json
 import os
 import urllib.error
@@ -280,8 +282,8 @@ def _render_text(status: Dict[str, Any]) -> str:
 
 def _parse_args(argv: Optional[list[str]] = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        prog="helix-status",
-        description="Check the canonical Helix server, launcher, MCP config, and shared skill.",
+        prog=invoked_prog(default="cymatix-status"),
+        description="Check the canonical Cymatix server, launcher, MCP config, and shared skill.",
     )
     parser.add_argument("--server-url", default=DEFAULT_SERVER_URL)
     parser.add_argument("--launcher-url", default=DEFAULT_LAUNCHER_URL)

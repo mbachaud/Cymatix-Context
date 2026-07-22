@@ -19,6 +19,8 @@ wave lands.
 from __future__ import annotations
 
 import argparse
+
+from .dispatcher import invoked_prog
 from typing import Any, Dict, Optional
 
 from . import output
@@ -27,7 +29,7 @@ from cymatix_context.api import open_session
 
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="helix gene",
+        prog=f"{invoked_prog()} gene",
         description="Inspect a single document by ID.",
     )
     sub = parser.add_subparsers(dest="action", metavar="<action>", required=True)

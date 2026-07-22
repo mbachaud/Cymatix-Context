@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import argparse
+
+from .dispatcher import invoked_prog
 import dataclasses
 import json
 import sys
@@ -17,8 +19,8 @@ def _config_to_dict(cfg: Any) -> Dict[str, Any]:
 
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="helix config",
-        description="Inspect the effective Helix configuration.",
+        prog=f"{invoked_prog()} config",
+        description="Inspect the effective Cymatix configuration.",
     )
     sub = parser.add_subparsers(dest="action", metavar="<action>")
     show = sub.add_parser("show", help="Print effective config (helix.toml + env).")
