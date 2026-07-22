@@ -540,9 +540,11 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
         configured_backend = (
             config.ribosome.normalized_backend if config.ribosome.enabled else None
         )
+        from .. import __version__ as _pkg_version
         return {
             "status": status,
             "message": message,
+            "version": _pkg_version,
             # OS pid of the process answering this request. Lets callers
             # (e.g. the bench orchestrator's _wait_healthy) confirm they
             # are talking to the process they just spawned, not a stale

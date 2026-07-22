@@ -7,6 +7,10 @@ context like a knowledge store instead of a flat text buffer.
 
 import os as _os
 
+# Single source of truth is pyproject.toml; tests/test_version.py pins
+# this string to it so the two can't drift.
+__version__ = "0.8.0"
+
 
 def _mirror_env() -> None:
     """Accept CYMATIX_* env vars while internal reads still use HELIX_*.
@@ -74,6 +78,7 @@ def create_app(*args, **kwargs):
     return _create_app(*args, **kwargs)
 
 __all__ = [
+    "__version__",
     "accel_info",
     "JSON_BACKEND",
     "HelixConfig",

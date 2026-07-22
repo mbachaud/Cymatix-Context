@@ -178,7 +178,8 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
 
         log.info("Shutdown: final WAL checkpoint completed")
 
-    app = FastAPI(title="Cymatix Context Proxy", version="0.1.0", lifespan=lifespan)
+    from .. import __version__ as _pkg_version
+    app = FastAPI(title="Cymatix Context Proxy", version=_pkg_version, lifespan=lifespan)
     app.state.helix = helix  # Expose for testing
     app.state.bridge = bridge  # Expose for testing
     app.state.registry = registry  # Expose for testing
