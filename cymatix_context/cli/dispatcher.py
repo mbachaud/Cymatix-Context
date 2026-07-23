@@ -10,8 +10,9 @@ inside ``run()`` so `cymatix --help` stays sub-100ms cold-start.
 from __future__ import annotations
 
 import argparse
+import ntpath
+import os
 import sys
-from pathlib import Path
 from typing import Callable, Optional
 
 from . import output
@@ -24,8 +25,16 @@ def invoked_prog(default: str = "cymatix") -> str:
     `cymatix-status`, ...) shows itself in --help / usage / error output
     instead of a hardcoded brand. Subcommand parsers compose it as
     ``f"{invoked_prog()} query"``.
+
+    Splits via ``ntpath.basename`` (handles both ``/`` and ``\\``) so a
+    Windows-style argv[0] — Git Bash shims, cross-platform tests —
+    resolves identically on every OS; ``pathlib.Path.stem`` treats a
+    backslash as a filename character on POSIX.
     """
-    return Path(sys.argv[0]).stem if sys.argv and sys.argv[0] else default
+    argv0 = sys.argv[0] if sys.argv else ""
+    if not argv0:
+        return default
+    return os.path.splitext(ntpath.basename(argv0))[0] or default
 
 
 def _build_parser() -> argparse.ArgumentParser:
