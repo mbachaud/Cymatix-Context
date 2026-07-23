@@ -189,6 +189,13 @@ class AgentBridge:
         """
         if not isinstance(name, str) or not name.strip():
             raise ValueError("signal name must be a non-empty string")
+        # Reject either separator flavor outright. On POSIX a backslash is
+        # a legal filename character, so "..\\evil" resolves INSIDE the
+        # signals dir and the containment check below can't see it — but
+        # the same name traverses on Windows, and a signals dir synced
+        # across machines must reject identical names everywhere.
+        if "/" in name or "\\" in name:
+            raise ValueError(f"signal name must not contain path separators: {name!r}")
         candidate = (self.signals / f"{name}.json").resolve()
         if candidate.parent != self.signals.resolve():
             raise ValueError(f"signal name escapes signals directory: {name!r}")
