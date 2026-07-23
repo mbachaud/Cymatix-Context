@@ -12,6 +12,8 @@ from __future__ import annotations
 
 import pytest
 
+pytest.importorskip("mcp", reason="mcp SDK extra not installed")
+
 from cymatix_context.mcp import mcp_server
 
 

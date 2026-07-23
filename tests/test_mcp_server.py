@@ -2,6 +2,10 @@
 
 import pytest
 
+pytest.importorskip("mcp", reason="mcp SDK extra not installed")
+
+import pytest
+
 from cymatix_context.mcp_server import (
     _default_ingest_identity,
     _normalize_health_payload,

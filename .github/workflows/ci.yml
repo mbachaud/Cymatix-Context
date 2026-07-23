@@ -95,8 +95,8 @@ jobs:
       - name: Install CPU-only torch
         run: pip install --index-url https://download.pytorch.org/whl/cpu torch
 
-      - name: Install package + test deps + tree-sitter extra
-        run: pip install -e ".[dev,ast]" psutil platformdirs py-cpuinfo numpy joblib scikit-learn
+      - name: Install package + test deps + tree-sitter and MCP extras
+        run: pip install -e ".[dev,ast,mcp]" psutil platformdirs py-cpuinfo numpy joblib scikit-learn
 
       - name: Install spaCy model (ingest-path tests exercise the CPU tagger)
         run: python -m spacy download en_core_web_sm
