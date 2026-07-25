@@ -7,8 +7,8 @@
 # Runtime expectation: ~8-10 hours total based on the 2026-05-01 e4b
 # numbers (off=129min). qwen3:8b is roughly comparable.
 #
-# helix.toml is NOT modified; default upstream_timeout used.
-# Helix server expected to already be running on :11437.
+# cymatix.toml is NOT modified; default upstream_timeout used.
+# Cymatix server expected to already be running on :11437.
 
 set -u
 
@@ -21,7 +21,7 @@ STATUS=overnight_logs/diamond_${DATE}_e4b_qwen3.status
 REPORT=overnight_logs/diamond_${DATE}_e4b_qwen3_report.md
 
 CLIENT_TIMEOUT=180
-HELIX_URL=http://127.0.0.1:11437
+CYMATIX_URL=http://127.0.0.1:11437
 
 E4B_MODEL=gemma4:e4b
 QWEN_MODEL=qwen3:8b
@@ -83,8 +83,8 @@ log "  $QWEN_OFF"
 log "  $QWEN_ON"
 log "============================================================"
 
-log "Helix server health:"
-curl -s -m 5 "$HELIX_URL/health" >> "$LOG" 2>&1 || true
+log "Cymatix server health:"
+curl -s -m 5 "$CYMATIX_URL/health" >> "$LOG" 2>&1 || true
 echo "" >> "$LOG"
 
 # Phase 1: e4b
@@ -107,12 +107,12 @@ cat > "$REPORT" <<EOF
 **Started:** $(head -1 "$LOG" | sed 's/^\[\(.*\)\].*/\1/')
 **Completed:** $(ts)
 **Models:** \`$E4B_MODEL\` then \`$QWEN_MODEL\`
-**Helix server:** $HELIX_URL
+**Cymatix server:** $CYMATIX_URL
 **Branch:** $(git rev-parse --abbrev-ref HEAD)  HEAD: $(git rev-parse --short HEAD)
 **Client timeout:** ${CLIENT_TIMEOUT}s
 **Mode definitions:**
-- \`off\`: background injected directly into prompt (no helix retrieval).
-- \`on\`: helix \`/context\` queried first; LLM then answers from question alone.
+- \`off\`: background injected directly into prompt (no cymatix retrieval).
+- \`on\`: cymatix \`/context\` queried first; LLM then answers from question alone.
 
 EOF
 

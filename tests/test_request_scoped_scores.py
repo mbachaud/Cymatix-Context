@@ -25,23 +25,23 @@ from cymatix_context.config import (
     BudgetConfig,
     ClassifierConfig,
     GenomeConfig,
-    HelixConfig,
+    CymatixConfig,
     RibosomeConfig,
 )
-from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.context_manager import CymatixContextManager
 from cymatix_context.schemas import Gene, PromoterTags
 
-from tests.conftest import MockCompressorBackend, make_gene, make_helix_config
+from tests.conftest import MockCompressorBackend, make_gene, make_cymatix_config
 
 
 def _make_manager():
-    cfg = HelixConfig(
+    cfg = CymatixConfig(
         ribosome=RibosomeConfig(model="mock", timeout=5),
         budget=BudgetConfig(max_genes_per_turn=12),
         genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
         classifier=ClassifierConfig(enabled=False),
     )
-    return HelixContextManager(cfg)
+    return CymatixContextManager(cfg)
 
 
 def _make_genes(gene_ids, contents=None):
@@ -114,10 +114,10 @@ class TestRequestScopedScores:
         republishes ``genome.last_query_scores`` with a foreign map.
         Downstream stages (tiering, trim, health) must keep using this
         request's own scores."""
-        config = make_helix_config(
+        config = make_cymatix_config(
             synonym_map={"auth": ["jwt", "login", "security"]},
         )
-        mgr = HelixContextManager(config)
+        mgr = CymatixContextManager(config)
         mgr.ribosome.backend = MockCompressorBackend()
         try:
             seed = [

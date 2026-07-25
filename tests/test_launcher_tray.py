@@ -11,7 +11,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from cymatix_context.launcher import tray as tray_mod
-from cymatix_context.launcher.tray import HelixTrayIcon, _build_icon_image, is_tray_available
+from cymatix_context.launcher.tray import CymatixTrayIcon, _build_icon_image, is_tray_available
 from cymatix_context.launcher.update_check import UpdateInfo
 from cymatix_context.launcher.supervisor import (
     AlreadyRunning,
@@ -32,7 +32,7 @@ def fake_supervisor():
 
 @pytest.fixture
 def tray_icon(fake_supervisor):
-    return HelixTrayIcon(
+    return CymatixTrayIcon(
         supervisor=fake_supervisor,
         dashboard_url="http://127.0.0.1:11438/",
     )
@@ -77,22 +77,22 @@ class TestMenuActions:
 
     def test_start_calls_supervisor_start(self, tray_icon, fake_supervisor):
         fake_supervisor.is_running.return_value = False
-        tray_icon._start_helix(None, None)
+        tray_icon._start_cymatix(None, None)
         fake_supervisor.start.assert_called_once()
 
     @pytest.mark.parametrize(
         ("supervisor_method", "handler_method", "exception"),
         [
             pytest.param(
-                "start", "_start_helix", AlreadyRunning("already up"),
+                "start", "_start_cymatix", AlreadyRunning("already up"),
                 id="start-already-running",
             ),
             pytest.param(
-                "start", "_start_helix", SupervisorError("port in use"),
+                "start", "_start_cymatix", SupervisorError("port in use"),
                 id="start-supervisor-error",
             ),
             pytest.param(
-                "stop", "_stop_helix", NotRunning("not running"),
+                "stop", "_stop_cymatix", NotRunning("not running"),
                 id="stop-not-running",
             ),
         ],
@@ -109,11 +109,11 @@ class TestMenuActions:
         handler(None, None)
 
     def test_restart_calls_supervisor_restart(self, tray_icon, fake_supervisor):
-        tray_icon._restart_helix(None, None)
+        tray_icon._restart_cymatix(None, None)
         fake_supervisor.restart.assert_called_once()
 
     def test_stop_calls_supervisor_stop(self, tray_icon, fake_supervisor):
-        tray_icon._stop_helix(None, None)
+        tray_icon._stop_cymatix(None, None)
         fake_supervisor.stop.assert_called_once()
 
     def test_notify_update_available_is_one_shot(self, fake_supervisor):
@@ -123,7 +123,7 @@ class TestMenuActions:
             latest_version="0.14.0",
             update_available=True,
         )
-        icon = HelixTrayIcon(
+        icon = CymatixTrayIcon(
             supervisor=fake_supervisor,
             dashboard_url="http://127.0.0.1:11438/",
             update_checker=checker,
@@ -137,7 +137,7 @@ class TestMenuActions:
 
 
 class TestQuitAction:
-    def test_quit_stops_helix_when_running(self, tray_icon, fake_supervisor):
+    def test_quit_stops_cymatix_when_running(self, tray_icon, fake_supervisor):
         fake_supervisor.is_running.return_value = True
         tray_icon._icon = MagicMock()
         with patch("cymatix_context.launcher.tray.os.kill"):
@@ -146,7 +146,7 @@ class TestQuitAction:
         tray_icon._icon.stop.assert_called_once()
         assert tray_icon._quit_event.is_set()
 
-    def test_quit_skips_helix_stop_when_already_stopped(self, tray_icon, fake_supervisor):
+    def test_quit_skips_cymatix_stop_when_already_stopped(self, tray_icon, fake_supervisor):
         fake_supervisor.is_running.return_value = False
         tray_icon._icon = MagicMock()
         with patch("cymatix_context.launcher.tray.os.kill"):
@@ -156,7 +156,7 @@ class TestQuitAction:
 
     def test_quit_calls_on_quit_extra(self, fake_supervisor):
         on_quit_mock = MagicMock()
-        tray = HelixTrayIcon(
+        tray = CymatixTrayIcon(
             supervisor=fake_supervisor,
             dashboard_url="http://127.0.0.1:11438/",
             on_quit=on_quit_mock,
@@ -169,7 +169,7 @@ class TestQuitAction:
 
     def test_quit_survives_on_quit_hook_exception(self, fake_supervisor):
         on_quit_mock = MagicMock(side_effect=Exception("boom"))
-        tray = HelixTrayIcon(
+        tray = CymatixTrayIcon(
             supervisor=fake_supervisor,
             dashboard_url="http://127.0.0.1:11438/",
             on_quit=on_quit_mock,
@@ -183,12 +183,12 @@ class TestQuitAction:
 
 
 class TestQuitOwnership:
-    """BUG-3: Quit must only stop a helix this launcher spawned. Adopted
+    """BUG-3: Quit must only stop a cymatix this launcher spawned. Adopted
     instances (started outside the launcher) survive Quit — same policy
     the Headroom supervisor and the FastAPI lifespan shutdown already
     enforce via ``owns_process()``."""
 
-    def test_quit_stops_owned_helix(self, tray_icon, fake_supervisor):
+    def test_quit_stops_owned_cymatix(self, tray_icon, fake_supervisor):
         fake_supervisor.is_running.return_value = True
         fake_supervisor.owns_process.return_value = True
         tray_icon._icon = MagicMock()
@@ -196,7 +196,7 @@ class TestQuitOwnership:
             tray_icon._quit(None, None)
         fake_supervisor.stop.assert_called_once()
 
-    def test_quit_leaves_adopted_helix_running(self, tray_icon, fake_supervisor):
+    def test_quit_leaves_adopted_cymatix_running(self, tray_icon, fake_supervisor):
         fake_supervisor.is_running.return_value = True
         fake_supervisor.owns_process.return_value = False
         tray_icon._icon = MagicMock()
@@ -286,21 +286,21 @@ def test_tray_observability_submenu_built_when_supervisor_present(tmp_path):
     """When an ObservabilitySupervisor is wired, the tray menu gains an
     Observability submenu with per-service status entries."""
     pytest.importorskip("pystray")  # only meaningful if [launcher-tray] installed
-    from cymatix_context.launcher.tray import HelixTrayIcon
+    from cymatix_context.launcher.tray import CymatixTrayIcon
     from cymatix_context.launcher.observability_supervisor import (
         ObservabilitySupervisor,
     )
     from cymatix_context.launcher.state import StateStore
-    from cymatix_context.launcher.supervisor import HelixSupervisor
+    from cymatix_context.launcher.supervisor import CymatixSupervisor
 
     store = StateStore(path=tmp_path / "state.json")
-    helix_sup = HelixSupervisor(
-        store=store, helix_host="127.0.0.1", helix_port=11999,
-        helix_log_path=tmp_path / "h.log",
+    cymatix_sup = CymatixSupervisor(
+        store=store, cymatix_host="127.0.0.1", cymatix_port=11999,
+        cymatix_log_path=tmp_path / "h.log",
     )
     obs_sup = ObservabilitySupervisor()
-    icon = HelixTrayIcon(
-        supervisor=helix_sup,
+    icon = CymatixTrayIcon(
+        supervisor=cymatix_sup,
         dashboard_url="http://127.0.0.1:11438",
         observability_supervisor=obs_sup,
     )
@@ -312,19 +312,19 @@ def test_tray_observability_submenu_built_when_supervisor_present(tmp_path):
 
 def test_tray_observability_submenu_omitted_without_supervisor(tmp_path):
     """No supervisor wired AND install not pending → no Observability submenu
-    (clean menu for users who opted out via HELIX_OBSERVABILITY=0)."""
+    (clean menu for users who opted out via CYMATIX_OBSERVABILITY=0)."""
     pytest.importorskip("pystray")
-    from cymatix_context.launcher.tray import HelixTrayIcon
+    from cymatix_context.launcher.tray import CymatixTrayIcon
     from cymatix_context.launcher.state import StateStore
-    from cymatix_context.launcher.supervisor import HelixSupervisor
+    from cymatix_context.launcher.supervisor import CymatixSupervisor
 
     store = StateStore(path=tmp_path / "state.json")
-    helix_sup = HelixSupervisor(
-        store=store, helix_host="127.0.0.1", helix_port=11999,
-        helix_log_path=tmp_path / "h.log",
+    cymatix_sup = CymatixSupervisor(
+        store=store, cymatix_host="127.0.0.1", cymatix_port=11999,
+        cymatix_log_path=tmp_path / "h.log",
     )
-    icon = HelixTrayIcon(
-        supervisor=helix_sup,
+    icon = CymatixTrayIcon(
+        supervisor=cymatix_sup,
         dashboard_url="http://127.0.0.1:11438",
         observability_supervisor=None,
         install_pending=False,
@@ -346,15 +346,15 @@ def _build_install_pending_tray(tmp_path):
     """
     pytest.importorskip("pystray")
     from cymatix_context.launcher.state import StateStore
-    from cymatix_context.launcher.supervisor import HelixSupervisor
+    from cymatix_context.launcher.supervisor import CymatixSupervisor
 
     store = StateStore(path=tmp_path / "state.json")
-    helix_sup = HelixSupervisor(
-        store=store, helix_host="127.0.0.1", helix_port=11999,
-        helix_log_path=tmp_path / "h.log",
+    cymatix_sup = CymatixSupervisor(
+        store=store, cymatix_host="127.0.0.1", cymatix_port=11999,
+        cymatix_log_path=tmp_path / "h.log",
     )
-    icon = HelixTrayIcon(
-        supervisor=helix_sup,
+    icon = CymatixTrayIcon(
+        supervisor=cymatix_sup,
         dashboard_url="http://127.0.0.1:11438",
         observability_supervisor=None,
         install_pending=True,
@@ -534,7 +534,7 @@ class TestInstallPendingSubmenu:
     ):
         """Constructor's install_pending kwarg must default to False so
         existing call sites keep working without modification."""
-        icon = HelixTrayIcon(
+        icon = CymatixTrayIcon(
             supervisor=fake_supervisor,
             dashboard_url="http://127.0.0.1:11438/",
         )
@@ -585,16 +585,16 @@ def _build_pulsing_tray(tmp_path):
         ObservabilitySupervisor,
     )
     from cymatix_context.launcher.state import StateStore
-    from cymatix_context.launcher.supervisor import HelixSupervisor
+    from cymatix_context.launcher.supervisor import CymatixSupervisor
 
     store = StateStore(path=tmp_path / "state.json")
-    helix_sup = HelixSupervisor(
-        store=store, helix_host="127.0.0.1", helix_port=11999,
-        helix_log_path=tmp_path / "h.log",
+    cymatix_sup = CymatixSupervisor(
+        store=store, cymatix_host="127.0.0.1", cymatix_port=11999,
+        cymatix_log_path=tmp_path / "h.log",
     )
     obs_sup = ObservabilitySupervisor()
-    icon = HelixTrayIcon(
-        supervisor=helix_sup,
+    icon = CymatixTrayIcon(
+        supervisor=cymatix_sup,
         dashboard_url="http://127.0.0.1:11438",
         observability_supervisor=obs_sup,
     )
@@ -910,7 +910,7 @@ class TestInstallCompletionWatcher:
 
 
 class TestAutoRestart:
-    """The auto-restart path spawns Start-helix-tray.bat in a fully
+    """The auto-restart path spawns Start-cymatix-tray.bat in a fully
     detached process (DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP) so
     the new tray survives the dying one, then calls icon.stop() to wind
     down the current tray cleanly."""
@@ -921,7 +921,7 @@ class TestAutoRestart:
         icon = _build_install_pending_tray(tmp_path)
         repo_root = tmp_path / "repo"
         repo_root.mkdir()
-        bat = repo_root / "Start-helix-tray.bat"
+        bat = repo_root / "Start-cymatix-tray.bat"
         bat.write_text("@echo on\n")
         icon._repo_root = lambda: repo_root  # type: ignore[method-assign]
 
@@ -934,7 +934,7 @@ class TestAutoRestart:
         cmd = args[0]
         # First element is the bat path.
         from pathlib import Path
-        assert Path(cmd[0]).name == "Start-helix-tray.bat"
+        assert Path(cmd[0]).name == "Start-cymatix-tray.bat"
         # Detach flags: DETACHED_PROCESS (0x08) | CREATE_NEW_PROCESS_GROUP (0x200) = 0x208.
         cf = kwargs.get("creationflags", 0)
         DETACHED_PROCESS = 0x00000008
@@ -953,7 +953,7 @@ class TestAutoRestart:
         icon._icon.stop.assert_called_once()
 
     def test_auto_restart_skips_if_bat_missing(self, tmp_path):
-        """If Start-helix-tray.bat doesn't exist, auto-restart logs a
+        """If Start-cymatix-tray.bat doesn't exist, auto-restart logs a
         warning and skips — icon.stop is NOT called (don't kill the
         current tray when we can't bring up a replacement)."""
         icon = _build_install_pending_tray(tmp_path)
@@ -975,7 +975,7 @@ class TestAutoRestart:
         icon = _build_install_pending_tray(tmp_path)
         repo_root = tmp_path / "repo"
         repo_root.mkdir()
-        bat = repo_root / "Start-helix-tray.bat"
+        bat = repo_root / "Start-cymatix-tray.bat"
         bat.write_text("@echo on\n")
         icon._repo_root = lambda: repo_root  # type: ignore[method-assign]
 
@@ -994,7 +994,7 @@ class TestRepoRootHelper:
     def test_repo_root_resolves_from_module_path(self, tmp_path, fake_supervisor):
         """_repo_root() returns the repo containing cymatix_context/, computed
         from the tray.py module location (not cwd-dependent)."""
-        icon = HelixTrayIcon(
+        icon = CymatixTrayIcon(
             supervisor=fake_supervisor,
             dashboard_url="http://127.0.0.1:11438/",
         )

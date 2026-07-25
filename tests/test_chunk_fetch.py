@@ -14,11 +14,11 @@ def test_fetch_relevant_chunks_uses_promoter_tags(tmp_path):
             "Claim types include path_value and config_value.",
             domains=["claims"],
         )
-        claim.source_id = "F:/Projects/helix-context/cymatix_context/schemas.py"
+        claim.source_id = "F:/Projects/cymatix-context/cymatix_context/schemas.py"
         genome.upsert_gene(claim, apply_gate=False)
 
         other = make_gene("Unrelated prose", domains=["notes"])
-        other.source_id = "F:/Projects/helix-context/docs/noisy.md"
+        other.source_id = "F:/Projects/cymatix-context/docs/noisy.md"
         genome.upsert_gene(other, apply_gate=False)
     finally:
         genome.close()
@@ -30,7 +30,7 @@ def test_fetch_relevant_chunks_uses_promoter_tags(tmp_path):
     )
 
     assert hits
-    assert hits[0].source_id == "F:/Projects/helix-context/cymatix_context/schemas.py"
+    assert hits[0].source_id == "F:/Projects/cymatix-context/cymatix_context/schemas.py"
     assert "path_value" in hits[0].content
 
 
@@ -42,7 +42,7 @@ def test_fetch_relevant_chunks_uses_fts_when_promoter_is_sparse(tmp_path):
             "The headroom dashboard listens on port 8787.",
             domains=["misc"],
         )
-        gene.source_id = "F:/Projects/helix-context/helix.toml"
+        gene.source_id = "F:/Projects/cymatix-context/cymatix.toml"
         genome.upsert_gene(gene, apply_gate=False)
     finally:
         genome.close()
@@ -54,5 +54,5 @@ def test_fetch_relevant_chunks_uses_fts_when_promoter_is_sparse(tmp_path):
     )
 
     assert len(hits) == 1
-    assert hits[0].source_id == "F:/Projects/helix-context/helix.toml"
+    assert hits[0].source_id == "F:/Projects/cymatix-context/cymatix.toml"
     assert "8787" in hits[0].content

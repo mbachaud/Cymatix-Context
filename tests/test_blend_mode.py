@@ -270,7 +270,7 @@ def test_blend_mode_layer_defaults_agree():
     """#256-style permanent single-source guard, extended to blend_mode:
     ``apply_candidate_refiners``'s own ``blend_mode`` kwarg default (the
     layer that's live when something calls the free function directly,
-    bypassing ``HelixContextManager``) must agree with
+    bypassing ``CymatixContextManager``) must agree with
     ``RetrievalConfig.blend_mode`` -- the same shape as
     ``tests/test_retrieval_invariance.py::test_layer_defaults_agree`` pins
     ``KnowledgeStore.__init__``'s ``fusion_mode`` default against
@@ -291,7 +291,7 @@ def test_blend_mode_layer_defaults_agree():
 
 
 def test_config_threads_blend_mode_from_toml(tmp_path):
-    toml = tmp_path / "helix.toml"
+    toml = tmp_path / "cymatix.toml"
     toml.write_text(textwrap.dedent("""
         [retrieval]
         blend_mode = "scale_relative"
@@ -336,9 +336,9 @@ def test_unknown_blend_mode_raises_at_manager_construction(tmp_path):
     """The manager validates at __init__ (fail-fast, mirrors the store's
     rerank_combinator guard) — a bad blend_mode never reaches a query."""
     from cymatix_context.config import load_config as _load
-    from cymatix_context.context_manager import HelixContextManager
+    from cymatix_context.context_manager import CymatixContextManager
 
-    toml = tmp_path / "helix.toml"
+    toml = tmp_path / "cymatix.toml"
     toml.write_text(textwrap.dedent(f"""
         [genome]
         path = "{(tmp_path / 'g.db').as_posix()}"
@@ -349,4 +349,4 @@ def test_unknown_blend_mode_raises_at_manager_construction(tmp_path):
     """), encoding="utf-8")
     cfg = _load(str(toml))
     with pytest.raises(ValueError, match="blend_mode"):
-        HelixContextManager(cfg)
+        CymatixContextManager(cfg)

@@ -1,12 +1,12 @@
-"""Stage 1 of local real-helix faithfulness (runs in the HELIX env).
+"""Stage 1 of local real-cymatix faithfulness (runs in the CYMATIX env).
 
 Ingest the 6 synthetic facts into a fresh bed, run build_context(read_only) per
 needle, and dump the FULL expressed_context to JSON for the graph env (np-graph
-venv) to consume. Separates the helix models (BGE-M3/SPLADE) from circuit-tracer
+venv) to consume. Separates the cymatix models (BGE-M3/SPLADE) from circuit-tracer
 so the two dependency stacks never mix.
 """
 import os, sys, json, tempfile
-os.environ.setdefault("HELIX_DISABLE_LEARN", "1")
+os.environ.setdefault("CYMATIX_DISABLE_LEARN", "1")
 from pathlib import Path
 
 _REPO = Path("f:/Projects/helix-context")
@@ -15,7 +15,7 @@ sys.path.insert(0, str(_REPO))
 
 from needle_faithfulness_experiment import NEEDLES
 from cymatix_context.config import load_config
-from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.context_manager import CymatixContextManager
 
 BED = str(Path(tempfile.gettempdir()) / "faith_needle_bed.db")
 OUT = "f:/Projects/np-graph/expressed_contexts.json"
@@ -24,10 +24,10 @@ OUT = "f:/Projects/np-graph/expressed_contexts.json"
 def main():
     if os.path.exists(BED):
         os.remove(BED)
-    _cfg_path = _REPO / "cymatix.toml" if (_REPO / "cymatix.toml").exists() else _REPO / "helix.toml"
+    _cfg_path = _REPO / "cymatix.toml" if (_REPO / "cymatix.toml").exists() else _REPO / "cymatix.toml"
     cfg = load_config(str(_cfg_path))
     cfg.genome.path = BED
-    mgr = HelixContextManager(cfg)
+    mgr = CymatixContextManager(cfg)
     print(f"ingesting {len(NEEDLES)} facts...", flush=True)
     for nd in NEEDLES:
         mgr.ingest(nd["ctx"], metadata={"source_id": nd["id"]})

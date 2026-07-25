@@ -59,7 +59,7 @@ def _mk_gene(content: str, domains: list[str], entities: list[str], source: str)
 def two_shard_setup():
     """Create main.db + two populated shard .db files on disk.
 
-    Shard A (reference): contains 'docs' + 'helix' fingerprints
+    Shard A (reference): contains 'docs' + 'cymatix' fingerprints
     Shard B (participant): contains 'auth' + 'jwt' fingerprints
     """
     td = tempfile.TemporaryDirectory()
@@ -71,9 +71,9 @@ def two_shard_setup():
     # Populate Shard A with a docs gene.
     ga = Genome(shard_a_path)
     gene_a = _mk_gene(
-        "Helix design doc. Context retrieval via fingerprints.",
+        "Cymatix design doc. Context retrieval via fingerprints.",
         domains=["docs"],
-        entities=["helix"],
+        entities=["cymatix"],
         source="/docs/intro.md",
     )
     gene_a_id = ga.upsert_gene(gene_a, apply_gate=False)
@@ -104,7 +104,7 @@ def two_shard_setup():
         main, gene_id=gene_a_id, shard_name="shard_a",
         source_id="/docs/intro.md",
         domains_json=json.dumps(["docs"]),
-        entities_json=json.dumps(["helix"]),
+        entities_json=json.dumps(["cymatix"]),
         key_values_json="[]",
     )
     upsert_fingerprint(
@@ -133,8 +133,8 @@ def test_route_picks_matching_shards(two_shard_setup):
         shards = router.route(domains=["auth"], entities=[])
         assert shards == ["shard_b"]
 
-        # Helix query should only route to shard_a
-        shards = router.route(domains=[], entities=["helix"])
+        # Cymatix query should only route to shard_a
+        shards = router.route(domains=[], entities=["cymatix"])
         assert shards == ["shard_a"]
     finally:
         router.close()
@@ -153,9 +153,9 @@ def test_route_orders_by_hit_count(two_shard_setup):
     """Query matching multiple fingerprints in one shard should prefer it."""
     router = ShardRouter(two_shard_setup["main_path"])
     try:
-        # Query hits shard_a for both 'docs' and 'helix' (2 hits);
+        # Query hits shard_a for both 'docs' and 'cymatix' (2 hits);
         # shard_b has none. Only shard_a returns.
-        shards = router.route(domains=["docs"], entities=["helix"])
+        shards = router.route(domains=["docs"], entities=["cymatix"])
         assert shards == ["shard_a"]
     finally:
         router.close()
@@ -255,16 +255,16 @@ def test_known_shards_filters_by_category(two_shard_setup):
 
 
 def test_use_shards_flag(monkeypatch):
-    monkeypatch.delenv("HELIX_USE_SHARDS", raising=False)
+    monkeypatch.delenv("CYMATIX_USE_SHARDS", raising=False)
     assert use_shards_enabled() is False
 
-    monkeypatch.setenv("HELIX_USE_SHARDS", "1")
+    monkeypatch.setenv("CYMATIX_USE_SHARDS", "1")
     assert use_shards_enabled() is True
 
-    monkeypatch.setenv("HELIX_USE_SHARDS", "0")
+    monkeypatch.setenv("CYMATIX_USE_SHARDS", "0")
     assert use_shards_enabled() is False
 
-    monkeypatch.setenv("HELIX_USE_SHARDS", "on")
+    monkeypatch.setenv("CYMATIX_USE_SHARDS", "on")
     assert use_shards_enabled() is True
 
 
@@ -276,7 +276,7 @@ def test_sharded_get_citation_rows_resolves_via_fingerprint_index(two_shard_setu
 
     Before the fix, /context constructed citations with a direct
     ``SELECT FROM genes WHERE gene_id IN (...)`` against
-    ``helix.genome.read_conn``. In sharded mode that connection points
+    ``cymatix.genome.read_conn``. In sharded mode that connection points
     at main.db whose ``genes`` table is empty (rows live in shard .db
     files), so every citation lookup came back empty and the bench
     harness fell back to <GENE src=...> regex parsing.
@@ -300,7 +300,7 @@ def test_sharded_get_citation_rows_resolves_via_fingerprint_index(two_shard_setu
         a_row = rows[two_shard_setup["gene_a_id"]]
         assert a_row["source_id"] == "/docs/intro.md"
         assert "docs" in a_row["domains"]
-        assert "helix" in a_row["entities"]
+        assert "cymatix" in a_row["entities"]
 
         b_row = rows[two_shard_setup["gene_b_id"]]
         assert b_row["source_id"] == "/code/auth.py"
@@ -369,7 +369,7 @@ def test_sharded_get_citation_rows_multi_shard_is_deterministic(tmp_path):
     gene_a = _mk_gene(
         content,
         domains=["docs"],
-        entities=["helix"],
+        entities=["cymatix"],
         source="/shard_a/doc.md",
     )
     gid_a = ga.upsert_gene(gene_a, apply_gate=False)
@@ -381,7 +381,7 @@ def test_sharded_get_citation_rows_multi_shard_is_deterministic(tmp_path):
     gene_b = _mk_gene(
         content,
         domains=["docs"],
-        entities=["helix"],
+        entities=["cymatix"],
         source="/shard_b/doc.md",
     )
     gid_b = gb.upsert_gene(gene_b, apply_gate=False)
@@ -407,14 +407,14 @@ def test_sharded_get_citation_rows_multi_shard_is_deterministic(tmp_path):
         main, gene_id=gene_id, shard_name="shard_a",
         source_id="/shard_a/doc.md",
         domains_json=json.dumps(["docs"]),
-        entities_json=json.dumps(["helix"]),
+        entities_json=json.dumps(["cymatix"]),
         key_values_json="[]",
     )
     upsert_fingerprint(
         main, gene_id=gene_id, shard_name="shard_b",
         source_id="/shard_b/doc.md",
         domains_json=json.dumps(["docs"]),
-        entities_json=json.dumps(["helix"]),
+        entities_json=json.dumps(["cymatix"]),
         key_values_json="[]",
     )
     main.close()
@@ -1442,7 +1442,7 @@ def test_doc_type_boost_skipped_on_single_shard_path(two_shard_setup):
         router.close()
 
 
-# ── Phase 1: concurrent shard fan-out (HELIX_SHARD_WORKERS) ──────────────
+# ── Phase 1: concurrent shard fan-out (CYMATIX_SHARD_WORKERS) ──────────────
 #
 # The serial fan-out is the reference oracle. Parallel fan-out must produce
 # byte-identical ranked output (same gene_ids in the same order, same
@@ -1451,17 +1451,17 @@ def test_doc_type_boost_skipped_on_single_shard_path(two_shard_setup):
 
 
 def test_parallel_fanout_matches_serial_byte_for_byte(two_shard_setup, monkeypatch):
-    """HELIX_SHARD_WORKERS>1 must yield identical ranked ids + scores to serial.
+    """CYMATIX_SHARD_WORKERS>1 must yield identical ranked ids + scores to serial.
 
     Issue #206 (2026-06-12): the serial reference leg is pinned EXPLICITLY
-    via HELIX_SHARD_WORKERS=1 rather than by deleting the env var — unset
+    via CYMATIX_SHARD_WORKERS=1 rather than by deleting the env var — unset
     now auto-sizes the pool when >4 shards are routed, so "unset" is no
     longer a guaranteed serial oracle on every fixture shape.
     """
     main_path = two_shard_setup["main_path"]
-    q = dict(domains=["auth", "docs"], entities=["helix", "jwt"], max_genes=10)
+    q = dict(domains=["auth", "docs"], entities=["cymatix", "jwt"], max_genes=10)
 
-    monkeypatch.setenv("HELIX_SHARD_WORKERS", "1")
+    monkeypatch.setenv("CYMATIX_SHARD_WORKERS", "1")
     r1 = ShardRouter(main_path)
     try:
         serial = r1.query_genes(**q)
@@ -1471,7 +1471,7 @@ def test_parallel_fanout_matches_serial_byte_for_byte(two_shard_setup, monkeypat
     finally:
         r1.close()
 
-    monkeypatch.setenv("HELIX_SHARD_WORKERS", "4")
+    monkeypatch.setenv("CYMATIX_SHARD_WORKERS", "4")
     r2 = ShardRouter(main_path)
     try:
         parallel = r2.query_genes(**q)
@@ -1510,7 +1510,7 @@ def test_parallel_fanout_actually_uses_threadpool(two_shard_setup, monkeypatch):
         return real_tpe(*args, **kwargs)
 
     monkeypatch.setattr(sr, "ThreadPoolExecutor", _spy)
-    monkeypatch.setenv("HELIX_SHARD_WORKERS", "4")
+    monkeypatch.setenv("CYMATIX_SHARD_WORKERS", "4")
 
     router = ShardRouter(two_shard_setup["main_path"])
     try:
@@ -1524,7 +1524,7 @@ def test_parallel_fanout_actually_uses_threadpool(two_shard_setup, monkeypatch):
 
 
 def test_serial_default_does_not_use_threadpool(two_shard_setup, monkeypatch):
-    """Default (no HELIX_SHARD_WORKERS) stays serial for SMALL fan-outs.
+    """Default (no CYMATIX_SHARD_WORKERS) stays serial for SMALL fan-outs.
 
     Issue #206 (2026-06-12): unset env auto-sizes only when >4 shards are
     routed; this fixture routes 2, so the serial reference path must still
@@ -1540,7 +1540,7 @@ def test_serial_default_does_not_use_threadpool(two_shard_setup, monkeypatch):
         return real_tpe(*args, **kwargs)
 
     monkeypatch.setattr(sr, "ThreadPoolExecutor", _spy)
-    monkeypatch.delenv("HELIX_SHARD_WORKERS", raising=False)
+    monkeypatch.delenv("CYMATIX_SHARD_WORKERS", raising=False)
 
     router = ShardRouter(two_shard_setup["main_path"])
     try:
@@ -1554,16 +1554,16 @@ def test_serial_default_does_not_use_threadpool(two_shard_setup, monkeypatch):
 # ── Issue #206 (2026-06-12): auto shard fan-out sizing ────────────────────
 #
 # Serial-by-default measured 5 min/query at 829K genes / 100 shards vs ~55s
-# at 8 workers. Resolution: HELIX_SHARD_WORKERS unset → auto_shard_workers()
+# at 8 workers. Resolution: CYMATIX_SHARD_WORKERS unset → auto_shard_workers()
 # when >4 shards are routed, else the serial reference path; an explicit env
-# value always wins; HELIX_SHARD_WORKERS=1 forces serial.
+# value always wins; CYMATIX_SHARD_WORKERS=1 forces serial.
 
 
 def test_workers_unset_small_fanout_stays_serial(monkeypatch):
     """Unset env + ≤4 routed shards → 1 (serial reference oracle)."""
     import cymatix_context.parallel as par
 
-    monkeypatch.delenv("HELIX_SHARD_WORKERS", raising=False)
+    monkeypatch.delenv("CYMATIX_SHARD_WORKERS", raising=False)
     monkeypatch.setattr(
         par, "auto_shard_workers",
         lambda *a, **k: pytest.fail("sizer must not be consulted at ≤4 shards"),
@@ -1578,40 +1578,40 @@ def test_workers_unset_large_fanout_auto_sizes(monkeypatch):
     """Unset env + >4 routed shards → auto_shard_workers() sizes the pool."""
     import cymatix_context.parallel as par
 
-    monkeypatch.delenv("HELIX_SHARD_WORKERS", raising=False)
+    monkeypatch.delenv("CYMATIX_SHARD_WORKERS", raising=False)
     monkeypatch.setattr(par, "auto_shard_workers", lambda *a, **k: 7)
     assert shard_fanout_workers(5) == 7
     assert shard_fanout_workers(100) == 7
 
 
 def test_workers_explicit_env_always_wins(monkeypatch):
-    """An explicit HELIX_SHARD_WORKERS beats the auto-sizer at any shard count."""
+    """An explicit CYMATIX_SHARD_WORKERS beats the auto-sizer at any shard count."""
     import cymatix_context.parallel as par
 
     monkeypatch.setattr(
         par, "auto_shard_workers",
         lambda *a, **k: pytest.fail("explicit env must short-circuit the sizer"),
     )
-    monkeypatch.setenv("HELIX_SHARD_WORKERS", "8")
+    monkeypatch.setenv("CYMATIX_SHARD_WORKERS", "8")
     assert shard_fanout_workers(2) == 8
     assert shard_fanout_workers(100) == 8
 
 
 def test_workers_env_one_forces_serial(monkeypatch):
-    """HELIX_SHARD_WORKERS=1 pins the serial reference path even at 100 shards."""
+    """CYMATIX_SHARD_WORKERS=1 pins the serial reference path even at 100 shards."""
     import cymatix_context.parallel as par
 
     monkeypatch.setattr(
         par, "auto_shard_workers",
         lambda *a, **k: pytest.fail("=1 must force serial without sizing"),
     )
-    monkeypatch.setenv("HELIX_SHARD_WORKERS", "1")
+    monkeypatch.setenv("CYMATIX_SHARD_WORKERS", "1")
     assert shard_fanout_workers(100) == 1
 
 
 def test_workers_unparseable_env_keeps_legacy_serial(monkeypatch):
     """Garbage env values keep the legacy fail-safe: serial."""
-    monkeypatch.setenv("HELIX_SHARD_WORKERS", "lots")
+    monkeypatch.setenv("CYMATIX_SHARD_WORKERS", "lots")
     assert shard_fanout_workers(100) == 1
 
 
@@ -1619,7 +1619,7 @@ def test_workers_sizer_failure_falls_back_serial(monkeypatch):
     """A sizer probe blow-up degrades to serial instead of raising."""
     import cymatix_context.parallel as par
 
-    monkeypatch.delenv("HELIX_SHARD_WORKERS", raising=False)
+    monkeypatch.delenv("CYMATIX_SHARD_WORKERS", raising=False)
 
     def _boom(*a, **k):
         raise RuntimeError("vram probe exploded")
@@ -1640,7 +1640,7 @@ def test_router_passes_routed_shard_count_to_sizer(two_shard_setup, monkeypatch)
         seen["n_shards"] = n_shards
         return real(n_shards)
 
-    monkeypatch.delenv("HELIX_SHARD_WORKERS", raising=False)
+    monkeypatch.delenv("CYMATIX_SHARD_WORKERS", raising=False)
     monkeypatch.setattr(sr, "shard_fanout_workers", _spy)
     router = ShardRouter(two_shard_setup["main_path"])
     try:
@@ -1681,7 +1681,7 @@ def test_router_threads_mem_plan_from_shard_count(two_shard_setup, monkeypatch):
     threads it into each lazily-opened shard's KnowledgeStore. The `8gb`
     profile makes the plan host-independent so the assertion is deterministic.
     two_shard_setup registers exactly two 'ok' shards -> plan == budget(2)."""
-    monkeypatch.setenv("HELIX_MEM_PROFILE", "8gb")
+    monkeypatch.setenv("CYMATIX_MEM_PROFILE", "8gb")
     expected = sqlite_memory_budget(2)
     router = ShardRouter(two_shard_setup["main_path"])
     try:

@@ -76,7 +76,7 @@ gRPC channel. The endpoint itself is not exported; it resolves via the
 normal env > toml > default chain, so an explicit `[telemetry]
 endpoint` in cymatix.toml is respected.
 
-Open <http://localhost:3000/d/helix-overview>. Retrieval latency, tier contributions, CWoLa f_gap, chromatin distribution, harmonic-edges-by-source — all live.
+Open <http://localhost:3000/d/cymatix-overview>. Retrieval latency, tier contributions, CWoLa f_gap, chromatin distribution, harmonic-edges-by-source — all live.
 
 **Docker-compose alternative.** If you prefer the containerized stack,
 see [`deploy/otel/README.md`](../../deploy/otel/README.md). Both
@@ -93,7 +93,7 @@ Auto-instrumentation via `opentelemetry-instrumentation-fastapi` wraps every rou
 
 Two surfaces:
 
-1. **Cymatix-domain** — `helix_*` metrics that capture the engine's
+1. **Cymatix-domain** — `cymatix_*` metrics that capture the engine's
    internal mechanics (pipeline stages, retrieval tiers, knowledge-store
    health, A/B cluster convergence, co-activation graph). Vocabulary
    has bio-domain origins (chromatin, harmonic_links, CWoLa) and the
@@ -101,10 +101,10 @@ Two surfaces:
    engineering names with inline references — see `docs/ROSETTA.md` for
    the full bidirectional table.
 2. **OTel `gen_ai.*` standard** — `cymatix_context/telemetry/genai_telemetry.py`
-   (#209). `helix_genai_*` token usage / TTFT / finish reasons /
+   (#209). `cymatix_genai_*` token usage / TTFT / finish reasons /
    per-call cost following the upstream GenAI semantic conventions,
-   plus `helix_context_cache_outcome_total`. Metric names carry the
-   `helix_` namespace prefix; the spec name (`gen_ai.client.token.usage`,
+   plus `cymatix_context_cache_outcome_total`. Metric names carry the
+   `cymatix_` namespace prefix; the spec name (`gen_ai.client.token.usage`,
    …) lives in each instrument's description. Emitting call sites today:
    the three `/v1/chat/completions` proxy forward paths (streaming,
    non-streaming, raw passthrough) and `CachedDAL.fetch` for the cache
@@ -114,47 +114,47 @@ Two surfaces:
 
    | Metric | Type | Labels | Source |
    |---|---|---|---|
-   | `helix_genai_client_token_usage` | histogram | `gen_ai.provider.name`, `gen_ai.request.model`, `gen_ai.response.model`, `gen_ai.operation.name`, `gen_ai.token.type` ∈ {input, output, cached, reasoning} | proxy forward paths |
-   | `helix_genai_time_to_first_chunk_seconds` | histogram | same minus token.type | streaming proxy path |
-   | `helix_genai_cost_usd` | histogram | same minus token.type | `estimate_cost_usd` over the module's `PRICE_TABLE`; 0.0 for local/unpriced models |
-   | `helix_genai_finish_reasons_total` | counter | `finish_reason` | proxy forward paths |
-   | `helix_context_cache_outcome_total` | counter | `outcome` ∈ {hit, miss, partial} | `CachedDAL.fetch` (partial = stale-then-refetched; not on the retrieval hot path yet) |
+   | `cymatix_genai_client_token_usage` | histogram | `gen_ai.provider.name`, `gen_ai.request.model`, `gen_ai.response.model`, `gen_ai.operation.name`, `gen_ai.token.type` ∈ {input, output, cached, reasoning} | proxy forward paths |
+   | `cymatix_genai_time_to_first_chunk_seconds` | histogram | same minus token.type | streaming proxy path |
+   | `cymatix_genai_cost_usd` | histogram | same minus token.type | `estimate_cost_usd` over the module's `PRICE_TABLE`; 0.0 for local/unpriced models |
+   | `cymatix_genai_finish_reasons_total` | counter | `finish_reason` | proxy forward paths |
+   | `cymatix_context_cache_outcome_total` | counter | `outcome` ∈ {hit, miss, partial} | `CachedDAL.fetch` (partial = stale-then-refetched; not on the retrieval hot path yet) |
 
 | Metric | Type | Labels | Source |
 |---|---|---|---|
-| `helix_context_latency_seconds` | histogram | `health`, `budget_tier`, `cold_tier_used` | `/context` endpoint |
-| `helix_pipeline_stage_seconds` | histogram | `stage` | `_stage_timer` in `context_manager.py` records the histogram; `pipeline_stage_span` emits spans only — both cover all 7 stages |
-| `helix_context_health_status_total` | counter | `status` ∈ {aligned, sparse, stale, denatured} | `/context` health classifier |
-| `helix_context_ellipticity` | histogram | `party` | per-query coverage × density × freshness |
-| `helix_tier_contribution` | histogram | `tier` | `query_genes` accumulation |
-| `helix_tier_fired_total` | counter | `tier` | `query_genes` accumulation |
-| `helix_rrf_fused_score` | histogram | — | RRF fused-score distribution, recorded per query per fused document (`query_genes`, default `fusion_mode = "rrf"` path); attribute-less by design — a per-document label would explode series cardinality |
-| `helix_cwola_bucket_total` | counter | `bucket` ∈ {A, B, pending} | `cwola.log_query` + `sweep_buckets` |
-| `helix_cwola_f_gap_sq` | gauge | — | `cwola.sweep_buckets` |
-| `helix_harmonic_edges_total` | gauge | `source` ∈ {seeded, co_retrieved, cwola_validated} | `/stats` snapshot |
-| `helix_chromatin_state_total` | gauge | `state` ∈ {open, euchromatin, heterochromatin} | `/stats` snapshot |
-| `helix_genome_size_bytes` | gauge | `kind` ∈ {raw, compressed} | `/stats` snapshot |
-| `helix_genome_wal_size_bytes` | gauge | — | `/stats` snapshot |
-| `helix_genome_signal_seconds` | histogram | `signal` | per-signal SQLite query timing |
-| `helix_genome_checkpoint_blocked_total` | counter | — | WAL checkpoint contention |
-| `helix_hub_concentration_ratio` | gauge | — | `/stats` snapshot |
-| `helix_hub_inbound_degree` | gauge | `stat` ∈ {max, p99, p95, p50, mean} | `/stats` snapshot |
-| `helix_ribosome_call_seconds` | histogram | `backend`, `model`, `call_kind` | every compressor call |
-| `helix_ribosome_info` | gauge | `backend`, `model`, `cost_class` | active compressor backend |
-| `helix_dense_cosine` | histogram | `arm` ∈ {hot, cold} | dense-recall merge + cold-tier scan (#209) |
-| `helix_shard_fanout` | histogram | — | shards consulted per `ShardRouter.query_genes` (#209) |
-| `helix_shard_discrimination` | histogram | — | fraction of healthy shards hit per routed query (#209) |
-| `helix_know_decision_total` | counter | `outcome` ∈ {know, miss, abstain}, `reason` | `decide_know_or_miss` (#209) |
-| `helix_session_tokens_saved_total` | counter | — | session working-set elision savings (#209) |
-| `helix_splice_ratio` | histogram | `caller_model_class` | assembled-window compression ratio (#209) |
-| `helix_know_confidence` | histogram | — | KnowBlock confidence, know outcomes only (#209 ph2) |
-| `helix_abstain_total` | counter | `gate` ∈ {floor_and_ratio, ratio_only}, `fusion_mode` | ABSTAIN gate in `pipeline/tier_logic.py` (#209 ph2) |
-| `helix_freshness_demotion_total` | counter | `status` ∈ {stale, missing, unknown, superseded} | freshness revalidation + supersession (#209 ph2) |
-| `helix_session_elided_total` | counter | — | elision-stub event count (#209 ph2) |
-| `helix_pki_candidates` | histogram | — | docs hit by ≥1 path_key_index pair per query (#209 ph2) |
-| `helix_pki_pairs_skipped_total` | counter | — | PKI pairs over the noise cutoff (#209 ph2) |
-| `helix_fingerprint_filtered_total` | counter | `cause` ∈ {floor, cap} | /fingerprint floor/cap outcomes (#209 ph2) |
-| `helix_ingest_vram_bytes` | gauge | — | CUDA memory per dense ingest batch (#209 ph2) |
+| `cymatix_context_latency_seconds` | histogram | `health`, `budget_tier`, `cold_tier_used` | `/context` endpoint |
+| `cymatix_pipeline_stage_seconds` | histogram | `stage` | `_stage_timer` in `context_manager.py` records the histogram; `pipeline_stage_span` emits spans only — both cover all 7 stages |
+| `cymatix_context_health_status_total` | counter | `status` ∈ {aligned, sparse, stale, denatured} | `/context` health classifier |
+| `cymatix_context_ellipticity` | histogram | `party` | per-query coverage × density × freshness |
+| `cymatix_tier_contribution` | histogram | `tier` | `query_genes` accumulation |
+| `cymatix_tier_fired_total` | counter | `tier` | `query_genes` accumulation |
+| `cymatix_rrf_fused_score` | histogram | — | RRF fused-score distribution, recorded per query per fused document (`query_genes`, default `fusion_mode = "rrf"` path); attribute-less by design — a per-document label would explode series cardinality |
+| `cymatix_cwola_bucket_total` | counter | `bucket` ∈ {A, B, pending} | `cwola.log_query` + `sweep_buckets` |
+| `cymatix_cwola_f_gap_sq` | gauge | — | `cwola.sweep_buckets` |
+| `cymatix_harmonic_edges_total` | gauge | `source` ∈ {seeded, co_retrieved, cwola_validated} | `/stats` snapshot |
+| `cymatix_chromatin_state_total` | gauge | `state` ∈ {open, euchromatin, heterochromatin} | `/stats` snapshot |
+| `cymatix_genome_size_bytes` | gauge | `kind` ∈ {raw, compressed} | `/stats` snapshot |
+| `cymatix_genome_wal_size_bytes` | gauge | — | `/stats` snapshot |
+| `cymatix_genome_signal_seconds` | histogram | `signal` | per-signal SQLite query timing |
+| `cymatix_genome_checkpoint_blocked_total` | counter | — | WAL checkpoint contention |
+| `cymatix_hub_concentration_ratio` | gauge | — | `/stats` snapshot |
+| `cymatix_hub_inbound_degree` | gauge | `stat` ∈ {max, p99, p95, p50, mean} | `/stats` snapshot |
+| `cymatix_ribosome_call_seconds` | histogram | `backend`, `model`, `call_kind` | every compressor call |
+| `cymatix_ribosome_info` | gauge | `backend`, `model`, `cost_class` | active compressor backend |
+| `cymatix_dense_cosine` | histogram | `arm` ∈ {hot, cold} | dense-recall merge + cold-tier scan (#209) |
+| `cymatix_shard_fanout` | histogram | — | shards consulted per `ShardRouter.query_genes` (#209) |
+| `cymatix_shard_discrimination` | histogram | — | fraction of healthy shards hit per routed query (#209) |
+| `cymatix_know_decision_total` | counter | `outcome` ∈ {know, miss, abstain}, `reason` | `decide_know_or_miss` (#209) |
+| `cymatix_session_tokens_saved_total` | counter | — | session working-set elision savings (#209) |
+| `cymatix_splice_ratio` | histogram | `caller_model_class` | assembled-window compression ratio (#209) |
+| `cymatix_know_confidence` | histogram | — | KnowBlock confidence, know outcomes only (#209 ph2) |
+| `cymatix_abstain_total` | counter | `gate` ∈ {floor_and_ratio, ratio_only}, `fusion_mode` | ABSTAIN gate in `pipeline/tier_logic.py` (#209 ph2) |
+| `cymatix_freshness_demotion_total` | counter | `status` ∈ {stale, missing, unknown, superseded} | freshness revalidation + supersession (#209 ph2) |
+| `cymatix_session_elided_total` | counter | — | elision-stub event count (#209 ph2) |
+| `cymatix_pki_candidates` | histogram | — | docs hit by ≥1 path_key_index pair per query (#209 ph2) |
+| `cymatix_pki_pairs_skipped_total` | counter | — | PKI pairs over the noise cutoff (#209 ph2) |
+| `cymatix_fingerprint_filtered_total` | counter | `cause` ∈ {floor, cap} | /fingerprint floor/cap outcomes (#209 ph2) |
+| `cymatix_ingest_vram_bytes` | gauge | — | CUDA memory per dense ingest batch (#209 ph2) |
 
 The #209 ph2 rows are the hallucination-visibility completion set — gates
 and alert queries in `docs/specs/2026-07-01-goal-gates-hallucination-visibility.md`.
@@ -168,17 +168,17 @@ fresh.
 
 Two span families sit on top of FastAPI auto-instrumentation:
 
-1. **Pipeline stage spans** — `helix.pipeline.<stage>` for each of
+1. **Pipeline stage spans** — `cymatix.pipeline.<stage>` for each of
    the 7 pipeline stages (classify / extract / express / rerank /
-   splice / assemble / persist), plus `helix.pipeline.build_context`
+   splice / assemble / persist), plus `cymatix.pipeline.build_context`
    as the request-level root wrapping `build_context`. Implemented via
    `cymatix_context.telemetry.pipeline_stage_span()`, which emits the
-   span only; the matching `helix_pipeline_stage_seconds` histogram
+   span only; the matching `cymatix_pipeline_stage_seconds` histogram
    point comes from the `_stage_timer` context manager in
    `context_manager.py`. Both mechanisms cover all seven stages. The
    persist span is emitted from the background `learn()` task after
    the response ships, so it is **not** a child of the
-   `helix.pipeline.build_context` root (which closed with the
+   `cymatix.pipeline.build_context` root (which closed with the
    request) — on the server path it attaches to the enclosing HTTP
    request span, outside the build_context waterfall. Lets Tempo
    show the per-request waterfall instead of just the request
@@ -193,7 +193,7 @@ Two span families sit on top of FastAPI auto-instrumentation:
    streaming path opens its span *after* the stream completes (the
    response was already forwarded chunk-by-chunk), so that span's
    duration is not the upstream latency — use the `total_ms` field
-   on the `helix.proxy` log line or the TTFT histogram for timing.
+   on the `cymatix.proxy` log line or the TTFT histogram for timing.
    Compressor/embedding call sites are not yet wrapped.
 
 ### Logs
@@ -204,12 +204,12 @@ Loki tagged with trace context so you can pivot from a slow span to
 its logs.
 
 Every `/v1/chat/completions` request additionally emits one
-structured-JSON `helix.proxy` log line (`genai_telemetry.
+structured-JSON `cymatix.proxy` log line (`genai_telemetry.
 emit_proxy_log_line()`, #209): request id, trace id, model + provider,
 token counts split four ways (in/out/cached/reasoning), TTFT and total
 latency, finish reason, cost estimate, and the prompt's SHA256-prefix
 hash (never the prompt text). Filter in Loki with
-`{logger="helix.proxy"} |= "proxy.call"`.
+`{logger="cymatix.proxy"} |= "proxy.call"`.
 
 ## Privacy
 
@@ -246,47 +246,47 @@ engineering vocabulary in panel titles; bio-domain legacy terms are
 referenced inline in panel descriptions. See `docs/ROSETTA.md` for the
 full bidirectional vocabulary table.
 
-- **Helix — Operations Overview** (`helix-overview.json`) — default
+- **Cymatix — Operations Overview** (`cymatix-overview.json`) — default
   landing dashboard. Top-line operational KPIs: `/context` request
   rate, latency p50/p95/p99 by health, cache hit / miss / partial
   outcome, per-stage pipeline latency, compressor backend cost class
   + active model, knowledge-store size, WAL health, structured proxy
   log stream. Cross-links to the other dashboards.
-- **Helix — Agent Usage** (`helix-agent-usage.json`) — `/context` call
+- **Cymatix — Agent Usage** (`cymatix-agent-usage.json`) — `/context` call
   mix and latency bucketed by `caller_model_class`
-  (`helix_context_calls_by_class_total`).
-- **Helix — Pipeline Observatory** (`helix-pipeline-observatory.json`)
+  (`cymatix_context_calls_by_class_total`).
+- **Cymatix — Pipeline Observatory** (`cymatix-pipeline-observatory.json`)
   — research panels reconciled to real instrument names in #209
   phase 1: tier activation share, per-signal retrieval latency, CWoLa
   bucket accumulation, p99 `/context` latency, co-activation edges by
   provenance, lifecycle tier distribution, hub concentration +
   inbound-degree stats, knowledge-store size.
-- **Helix — Internals & Research** (`helix-internals.json`) — the #209
+- **Cymatix — Internals & Research** (`cymatix-internals.json`) — the #209
   phase-1 tuning signals: dense-cosine calibration distribution,
   shard-router fan-out + discrimination, know / miss / abstain
   decision mix, session-elision token savings, splice compression
   ratio by caller class. For deep-design work — not day-to-day
   operations.
-- **Helix — GenAI** (`helix-genai.json`) — OTel `gen_ai.*` standard
+- **Cymatix — GenAI** (`cymatix-genai.json`) — OTel `gen_ai.*` standard
   surface (#209): token throughput by type, TTFT quantiles per model,
   finish-reason mix, cost/hour + top spend by model, cache-outcome
-  pie, and the `helix.proxy` structured log stream. Populated by
+  pie, and the `cymatix.proxy` structured log stream. Populated by
   `cymatix_context/telemetry/genai_telemetry.py`; a contract test
   (`tests/test_genai_telemetry.py::test_genai_dashboard_queries_are_covered`)
   keeps every panel query backed by an emitted metric.
-- **Helix — Retrieval Quality + HITL** (`helix-retrieval-hitl.json`) —
+- **Cymatix — Retrieval Quality + HITL** (`cymatix-retrieval-hitl.json`) —
   per-query ellipticity distribution, health-status pie, denatured-rate
   alert stat, budget-tier mix, ellipticity percentiles, HITL pause-event
   signals (alignment, override, escalation) with party-id breakdown.
   Uses technical-term vocabulary (ellipticity, denatured) that is on
   ROSETTA's "STAYS" list.
-- **Helix — Know/Miss (Hallucination Visibility)** (`helix-know-miss.json`,
+- **Cymatix — Know/Miss (Hallucination Visibility)** (`cymatix-know-miss.json`,
   #209 phase 2) — the G1 visibility-gate view: non-know share vs the 10%
   budget, miss rate by reason, know-confidence percentiles vs emit_floor,
   abstain fires by gate, freshness demotions, splice-ratio/abstain
   balancing pair, dense-cosine by arm, shard fan-out + discrimination,
   session-elision savings, latency row with load-annotation discipline.
-  Overlaps helix-internals on the phase-1 series by design: internals is
+  Overlaps cymatix-internals on the phase-1 series by design: internals is
   the tuning view, this is the goal-gates view. Companion spec:
   `docs/specs/2026-07-01-goal-gates-hallucination-visibility.md`.
 
@@ -315,7 +315,7 @@ curl -s -X POST http://localhost:11437/context \
 curl -s http://localhost:11437/stats > /dev/null
 
 # Confirm Prometheus received metrics
-curl -s 'http://localhost:9090/api/v1/query?query=helix_context_latency_seconds_count'
+curl -s 'http://localhost:9090/api/v1/query?query=cymatix_context_latency_seconds_count'
 ```
 
 If the final `curl` returns `data.result[0].value`, metrics are flowing end-to-end.

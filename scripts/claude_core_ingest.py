@@ -12,12 +12,12 @@ then decide whether to run the bulk pass via claude_batch_ingest.py.
 
 Usage:
     python scripts/claude_core_ingest.py
-    python scripts/claude_core_ingest.py --roots F:/Projects/helix-context/cymatix_context
+    python scripts/claude_core_ingest.py --roots F:/Projects/cymatix-context/cymatix_context
     python scripts/claude_core_ingest.py --model claude-sonnet-4-6
     python scripts/claude_core_ingest.py --dry-run   # count files, no API calls
 
 Requires:
-    - helix.toml: ribosome.backend = "claude"
+    - cymatix.toml: ribosome.backend = "claude"
     - ANTHROPIC_API_KEY in env (routed through Headroom via claude_base_url)
 """
 
@@ -45,7 +45,7 @@ log = logging.getLogger("ingest.claude_core")
 
 # Default core roots — high-value, moderate size
 DEFAULT_ROOTS = [
-    "F:/Projects/helix-context/cymatix_context",
+    "F:/Projects/cymatix-context/cymatix_context",
     "F:/Projects/Education/fleet",
     "F:/Projects/Education/autoresearch",
 ]
@@ -92,10 +92,10 @@ def main() -> int:
     parser.add_argument("--db", default="genome.db")
     parser.add_argument(
         "--config",
-        default="cymatix.toml" if os.path.exists("cymatix.toml") else "helix.toml",
+        default="cymatix.toml" if os.path.exists("cymatix.toml") else "cymatix.toml",
     )
     parser.add_argument("--roots", nargs="+", default=DEFAULT_ROOTS)
-    parser.add_argument("--model", default=None, help="Override helix.toml claude_model")
+    parser.add_argument("--model", default=None, help="Override cymatix.toml claude_model")
     parser.add_argument("--dry-run", action="store_true", help="Count files, no API calls")
     parser.add_argument("--limit", type=int, default=0, help="Stop after N files (0=all)")
     args = parser.parse_args()
@@ -113,7 +113,7 @@ def main() -> int:
 
     cfg = load_config(args.config)
     if cfg.ribosome.backend not in ("claude", "litellm"):
-        log.error("helix.toml ribosome.backend must be 'claude' or 'litellm' (got %r). Aborting.", cfg.ribosome.backend)
+        log.error("cymatix.toml ribosome.backend must be 'claude' or 'litellm' (got %r). Aborting.", cfg.ribosome.backend)
         return 2
 
     if cfg.ribosome.backend == "litellm":

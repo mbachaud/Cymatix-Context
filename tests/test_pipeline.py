@@ -1,7 +1,7 @@
 """
 Gate 3 -- Pipeline tests (full stack, no HTTP).
 
-Tests the HelixContextManager orchestrator with mock ribosome backend.
+Tests the CymatixContextManager orchestrator with mock ribosome backend.
 Validates the expression pipeline, pending buffer, history munging,
 cold-start bootstrap (Fix 3), and build_context assembly.
 """
@@ -9,13 +9,13 @@ cold-start bootstrap (Fix 3), and build_context assembly.
 import pytest
 
 from cymatix_context.config import BudgetConfig
-from cymatix_context.context_manager import HelixContextManager, RIBOSOME_DECODER
+from cymatix_context.context_manager import CymatixContextManager, RIBOSOME_DECODER
 from cymatix_context.ribosome import Ribosome
 from cymatix_context.genome import Genome
 from cymatix_context.schemas import Gene, PromoterTags, EpigeneticMarkers
 from cymatix_context.server import _munge_messages
 
-from tests.conftest import MockCompressorBackend, make_gene, make_helix_config
+from tests.conftest import MockCompressorBackend, make_gene, make_cymatix_config
 
 
 # -- Helpers -----------------------------------------------------------
@@ -23,7 +23,7 @@ from tests.conftest import MockCompressorBackend, make_gene, make_helix_config
 
 @pytest.fixture
 def pipeline_config():
-    return make_helix_config(
+    return make_cymatix_config(
         budget=BudgetConfig(max_genes_per_turn=4, splice_aggressiveness=0.5),
         synonym_map={
             "slow": ["performance", "latency"],
@@ -33,9 +33,9 @@ def pipeline_config():
 
 
 @pytest.fixture
-def helix(pipeline_config):
-    """HelixContextManager with mock backend and in-memory genome."""
-    mgr = HelixContextManager(pipeline_config)
+def cymatix(pipeline_config):
+    """CymatixContextManager with mock backend and in-memory genome."""
+    mgr = CymatixContextManager(pipeline_config)
     # Replace the ribosome backend with our mock
     mgr.ribosome.backend = MockCompressorBackend()
     yield mgr
@@ -43,8 +43,8 @@ def helix(pipeline_config):
 
 
 @pytest.fixture
-def seeded_helix(helix):
-    """Helix with pre-loaded genes (bypassing ribosome for speed)."""
+def seeded_cymatix(cymatix):
+    """Cymatix with pre-loaded genes (bypassing ribosome for speed)."""
     genes = [
         make_gene("Authentication middleware with JWT validation",
                   domains=["auth", "security"], entities=["jwt"],
@@ -63,90 +63,90 @@ def seeded_helix(helix):
                   gene_id="api_gene_00001"),
     ]
     for g in genes:
-        helix.genome.upsert_gene(g)
-    return helix
+        cymatix.genome.upsert_gene(g)
+    return cymatix
 
 
 # -- Pipeline tests ----------------------------------------------------
 
 
 class TestBuildContext:
-    def test_empty_genome_returns_empty_window(self, helix):
-        window = helix.build_context("anything")
+    def test_empty_genome_returns_empty_window(self, cymatix):
+        window = cymatix.build_context("anything")
         # Stage 6 (§6): empty genome ships the no_promoter_match form
         # of the structured tag (was the prose "no relevant context"
         # marker). Lowercasing the bytes still allows substring matches.
-        assert "<helix:no_match" in window.expressed_context
+        assert "<cymatix:no_match" in window.expressed_context
         assert window.total_estimated_tokens > 0  # decoder prompt still counts
 
-    def test_matching_query_returns_context(self, seeded_helix):
-        window = seeded_helix.build_context("How does JWT auth work?")
+    def test_matching_query_returns_context(self, seeded_cymatix):
+        window = seeded_cymatix.build_context("How does JWT auth work?")
         assert window.metadata.get("genes_expressed", 0) >= 1
         assert len(window.expressed_gene_ids) >= 1
         assert window.compression_ratio > 0
 
-    def test_synonym_expansion_in_pipeline(self, seeded_helix):
+    def test_synonym_expansion_in_pipeline(self, seeded_cymatix):
         """'slow' should expand to 'performance'/'latency' and match db gene."""
-        window = seeded_helix.build_context("Why is the database slow?")
+        window = seeded_cymatix.build_context("Why is the database slow?")
         assert window.metadata.get("genes_expressed", 0) >= 1
 
-    def test_decoder_prompt_always_present(self, seeded_helix):
-        window = seeded_helix.build_context("anything about auth")
+    def test_decoder_prompt_always_present(self, seeded_cymatix):
+        window = seeded_cymatix.build_context("anything about auth")
         assert "expressed_context" in window.ribosome_prompt.lower() or \
                "codon" in window.ribosome_prompt.lower()
 
-    def test_expressed_context_wrapped_in_tags(self, seeded_helix):
-        window = seeded_helix.build_context("auth")
+    def test_expressed_context_wrapped_in_tags(self, seeded_cymatix):
+        window = seeded_cymatix.build_context("auth")
         assert "<expressed_context>" in window.expressed_context
         assert "</expressed_context>" in window.expressed_context
 
-    def test_multiple_genes_joined_with_dividers(self, seeded_helix):
+    def test_multiple_genes_joined_with_dividers(self, seeded_cymatix):
         """Query matching multiple genes should join with --- dividers."""
         # 'security' matches both auth and api genes
-        window = seeded_helix.build_context("security performance")
+        window = seeded_cymatix.build_context("security performance")
         if window.metadata.get("genes_expressed", 0) > 1:
             assert "---" in window.expressed_context
 
 
 class TestIngest:
-    def test_ingest_creates_genes(self, helix):
-        gene_ids = helix.ingest("This is a test document about authentication.", content_type="text")
+    def test_ingest_creates_genes(self, cymatix):
+        gene_ids = cymatix.ingest("This is a test document about authentication.", content_type="text")
         assert len(gene_ids) >= 1
-        stats = helix.stats()
+        stats = cymatix.stats()
         assert stats["total_genes"] >= 1
 
-    def test_ingest_code(self, helix):
+    def test_ingest_code(self, cymatix):
         code = "def hello():\n    return 'world'\n\ndef goodbye():\n    return 'farewell'"
-        gene_ids = helix.ingest(code, content_type="code")
+        gene_ids = cymatix.ingest(code, content_type="code")
         assert len(gene_ids) >= 1
 
 
 class TestLearn:
-    def test_learn_stores_gene(self, helix):
-        gid = helix.learn("Why is auth slow?", "The JWT validation is hitting the DB on every request.")
+    def test_learn_stores_gene(self, cymatix):
+        gid = cymatix.learn("Why is auth slow?", "The JWT validation is hitting the DB on every request.")
         assert gid is not None
-        gene = helix.genome.get_gene(gid)
+        gene = cymatix.genome.get_gene(gid)
         assert gene is not None
 
-    def test_pending_buffer_accessible(self, helix):
+    def test_pending_buffer_accessible(self, cymatix):
         """After learn(), the gene should be in the pending buffer momentarily."""
         # Since learn() commits synchronously in our impl, pending is cleared.
         # But let's verify the flow doesn't crash.
-        gid = helix.learn("test query", "test response")
+        gid = cymatix.learn("test query", "test response")
         assert gid is not None
         # Pending should be empty after commit
-        assert len(helix._pending) == 0
+        assert len(cymatix._pending) == 0
 
 
 class TestStats:
-    def test_stats_include_config(self, seeded_helix):
-        stats = seeded_helix.stats()
+    def test_stats_include_config(self, seeded_cymatix):
+        stats = seeded_cymatix.stats()
         assert "config" in stats
         assert stats["config"]["max_genes_per_turn"] == 4
         assert stats["total_genes"] == 5
 
-    def test_stats_include_pending(self, helix):
-        stats = helix.stats()
+    def test_stats_include_pending(self, cymatix):
+        stats = cymatix.stats()
         assert "pending_replications" in stats
 
 
@@ -156,29 +156,29 @@ class TestStats:
 class TestExtractQuerySignals:
     """Test the heuristic keyword extractor directly."""
 
-    def test_stop_words_removed(self, helix):
-        domains, entities = helix._extract_query_signals("What is the best way to do this?")
+    def test_stop_words_removed(self, cymatix):
+        domains, entities = cymatix._extract_query_signals("What is the best way to do this?")
         assert "what" not in domains
         assert "the" not in domains
         assert "best" in domains
 
-    def test_entities_are_longer_words(self, helix):
-        domains, entities = helix._extract_query_signals("How does AlphaFold predict protein structure?")
+    def test_entities_are_longer_words(self, cymatix):
+        domains, entities = cymatix._extract_query_signals("How does AlphaFold predict protein structure?")
         assert "alphafold" in entities
         assert "predict" in entities
         assert "protein" in entities
 
-    def test_short_query(self, helix):
-        domains, entities = helix._extract_query_signals("auth")
+    def test_short_query(self, cymatix):
+        domains, entities = cymatix._extract_query_signals("auth")
         assert "auth" in domains
 
-    def test_empty_query(self, helix):
-        domains, entities = helix._extract_query_signals("")
+    def test_empty_query(self, cymatix):
+        domains, entities = cymatix._extract_query_signals("")
         assert domains == []
         assert entities == []
 
-    def test_punctuation_stripped(self, helix):
-        domains, entities = helix._extract_query_signals("What about caching? And redis!")
+    def test_punctuation_stripped(self, cymatix):
+        domains, entities = cymatix._extract_query_signals("What about caching? And redis!")
         assert "caching" in domains
         assert "redis" in domains
 
@@ -293,16 +293,16 @@ class TestColdTierWiring:
         return SemaCodec()
 
     @pytest.fixture
-    def cold_helix(self, pipeline_config, codec):
-        """HelixContextManager with a SemaCodec attached + a single cold gene."""
-        from cymatix_context.context_manager import HelixContextManager
+    def cold_cymatix(self, pipeline_config, codec):
+        """CymatixContextManager with a SemaCodec attached + a single cold gene."""
+        from cymatix_context.context_manager import CymatixContextManager
         # Enable cold-tier in the config so wiring fires by default
         pipeline_config.context.cold_tier_enabled = True
         pipeline_config.context.cold_tier_min_hot_genes = 0
         pipeline_config.context.cold_tier_k = 3
         pipeline_config.context.cold_tier_min_cosine = 0.05  # very permissive
 
-        mgr = HelixContextManager(pipeline_config)
+        mgr = CymatixContextManager(pipeline_config)
         mgr.ribosome.backend = MockCompressorBackend()
         # Attach the codec so query_cold_tier can encode queries
         mgr.genome._sema_codec = codec
@@ -318,77 +318,77 @@ class TestColdTierWiring:
         mgr.genome.compress_to_heterochromatin(g.gene_id)
         return g
 
-    def test_cold_disabled_by_default(self, helix, codec):
+    def test_cold_disabled_by_default(self, cymatix, codec):
         """With config off and no override, cold-tier never fires."""
-        # The default `helix` fixture has cold_tier_enabled=False (default)
-        helix.genome._sema_codec = codec
+        # The default `cymatix` fixture has cold_tier_enabled=False (default)
+        cymatix.genome._sema_codec = codec
         cold_g = self._make_cold_gene(
-            helix, codec,
+            cymatix, codec,
             "def authenticate_user(): return jwt_decode(token)",
             "cold_authzz_001",
         )
 
-        window = helix.build_context("how does authentication work")
+        window = cymatix.build_context("how does authentication work")
 
-        assert helix._last_cold_tier_used is False, (
+        assert cymatix._last_cold_tier_used is False, (
             "cold tier must not fire when config is off and no override"
         )
         # The demoted gene should NOT appear in the context
         assert cold_g.gene_id not in (window.expressed_gene_ids or [])
 
-    def test_cold_enabled_via_config_fires_on_empty_hot(self, cold_helix, codec):
+    def test_cold_enabled_via_config_fires_on_empty_hot(self, cold_cymatix, codec):
         """When config enables cold AND hot returns empty, cold fires."""
         cold_g = self._make_cold_gene(
-            cold_helix, codec,
+            cold_cymatix, codec,
             "def authenticate_user(): return jwt_decode(token)",
             "cold_authzz_002",
         )
 
-        window = cold_helix.build_context("authentication user password")
+        window = cold_cymatix.build_context("authentication user password")
 
-        assert cold_helix._last_cold_tier_used is True
-        assert cold_helix._last_cold_tier_count >= 1
+        assert cold_cymatix._last_cold_tier_used is True
+        assert cold_cymatix._last_cold_tier_count >= 1
         assert cold_g.gene_id in (window.expressed_gene_ids or [])
 
-    def test_include_cold_true_overrides_disabled_config(self, helix, codec):
+    def test_include_cold_true_overrides_disabled_config(self, cymatix, codec):
         """Per-call include_cold=True forces cold even if config is off."""
-        helix.genome._sema_codec = codec
+        cymatix.genome._sema_codec = codec
         # Loosen the threshold by editing the (default) config in-place so
         # the override is the only difference vs the previous test.
-        helix.config.context.cold_tier_min_cosine = 0.05
-        helix.config.context.cold_tier_min_hot_genes = 0
+        cymatix.config.context.cold_tier_min_cosine = 0.05
+        cymatix.config.context.cold_tier_min_hot_genes = 0
         cold_g = self._make_cold_gene(
-            helix, codec,
+            cymatix, codec,
             "def authenticate_user(): return jwt_decode(token)",
             "cold_authzz_003",
         )
 
         # Config flag is still False — only the per-call override flips it
-        assert helix.config.context.cold_tier_enabled is False
-        window = helix.build_context(
+        assert cymatix.config.context.cold_tier_enabled is False
+        window = cymatix.build_context(
             "authentication user password", include_cold=True,
         )
 
-        assert helix._last_cold_tier_used is True
+        assert cymatix._last_cold_tier_used is True
         assert cold_g.gene_id in (window.expressed_gene_ids or [])
 
-    def test_include_cold_false_overrides_enabled_config(self, cold_helix, codec):
+    def test_include_cold_false_overrides_enabled_config(self, cold_cymatix, codec):
         """Per-call include_cold=False forces cold OFF even if config is on."""
         cold_g = self._make_cold_gene(
-            cold_helix, codec,
+            cold_cymatix, codec,
             "def authenticate_user(): return jwt_decode(token)",
             "cold_authzz_004",
         )
 
-        assert cold_helix.config.context.cold_tier_enabled is True
-        window = cold_helix.build_context(
+        assert cold_cymatix.config.context.cold_tier_enabled is True
+        window = cold_cymatix.build_context(
             "authentication user password", include_cold=False,
         )
 
-        assert cold_helix._last_cold_tier_used is False
+        assert cold_cymatix._last_cold_tier_used is False
         assert cold_g.gene_id not in (window.expressed_gene_ids or [])
 
-    def test_cold_does_not_fire_when_hot_above_min_hot_genes(self, cold_helix, codec):
+    def test_cold_does_not_fire_when_hot_above_min_hot_genes(self, cold_cymatix, codec):
         """If hot returns enough results, cold-tier fallthrough is skipped."""
         # Seed an OPEN gene that will hit on the query
         hot_g = make_gene(
@@ -397,48 +397,48 @@ class TestColdTierWiring:
             entities=["jwt"],
             gene_id="hot_authzz_005",
         )
-        cold_helix.genome.upsert_gene(hot_g, apply_gate=False)
+        cold_cymatix.genome.upsert_gene(hot_g, apply_gate=False)
         # Also add a cold gene that WOULD match if cold fired
         cold_g = self._make_cold_gene(
-            cold_helix, codec,
+            cold_cymatix, codec,
             "def authenticate_user(): return jwt_decode(token)",
             "cold_authzz_005",
         )
         # Set min_hot to 0 — cold only fires when hot returns ZERO
-        cold_helix.config.context.cold_tier_min_hot_genes = 0
+        cold_cymatix.config.context.cold_tier_min_hot_genes = 0
 
-        window = cold_helix.build_context("authentication jwt")
+        window = cold_cymatix.build_context("authentication jwt")
 
         # Hot should have matched, so cold should NOT have fired
-        assert cold_helix._last_cold_tier_used is False
+        assert cold_cymatix._last_cold_tier_used is False
         # Hot gene appears
         assert hot_g.gene_id in (window.expressed_gene_ids or [])
         # Cold gene does NOT appear
         assert cold_g.gene_id not in (window.expressed_gene_ids or [])
 
-    def test_markers_reset_between_calls(self, cold_helix, codec):
+    def test_markers_reset_between_calls(self, cold_cymatix, codec):
         """The _last_cold_tier_used flag must reset on each build_context call.
 
         Tests reset semantics directly: a previous True must not bleed into
         the next call when cold-tier is explicitly disabled per-call. Avoids
         depending on min_cosine sensitivity (the very-permissive 0.05
-        threshold the cold_helix fixture uses can match nearly anything).
+        threshold the cold_cymatix fixture uses can match nearly anything).
         """
         # First call with cold enabled — marker becomes True
         self._make_cold_gene(
-            cold_helix, codec,
+            cold_cymatix, codec,
             "def authenticate_user(): return jwt_decode(token)",
             "cold_authzz_006a",
         )
-        cold_helix.build_context("authentication user password")
-        assert cold_helix._last_cold_tier_used is True
+        cold_cymatix.build_context("authentication user password")
+        assert cold_cymatix._last_cold_tier_used is True
 
         # Second call with cold explicitly OFF — marker must reset to False
-        cold_helix.build_context(
+        cold_cymatix.build_context(
             "anything at all",
             include_cold=False,
         )
-        assert cold_helix._last_cold_tier_used is False, (
+        assert cold_cymatix._last_cold_tier_used is False, (
             "cold-tier marker must reset on each build_context call"
         )
-        assert cold_helix._last_cold_tier_count == 0
+        assert cold_cymatix._last_cold_tier_count == 0

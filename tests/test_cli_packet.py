@@ -1,4 +1,4 @@
-"""Tests for `helix packet`. Mocks ``cymatix_context.api.open_session`` so
+"""Tests for `cymatix packet`. Mocks ``cymatix_context.api.open_session`` so
 the CLI surface is tested without standing up the retrieval stack."""
 from __future__ import annotations
 

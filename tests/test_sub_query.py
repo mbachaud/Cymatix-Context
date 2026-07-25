@@ -1,23 +1,23 @@
 """Sub-query decomposition tests (2026-05-08 retrieval stack upgrade, Step 2)."""
 import pytest
 from unittest.mock import patch, MagicMock
-from cymatix_context.context_manager import HelixContextManager, _merge_subquery_candidates
+from cymatix_context.context_manager import CymatixContextManager, _merge_subquery_candidates
 from cymatix_context.config import (
     BudgetConfig,
     GenomeConfig,
-    HelixConfig,
+    CymatixConfig,
     RibosomeConfig,
 )
 
 
-def _make_manager() -> HelixContextManager:
-    cfg = HelixConfig(
+def _make_manager() -> CymatixContextManager:
+    cfg = CymatixConfig(
         ribosome=RibosomeConfig(model="mock", timeout=5),
         budget=BudgetConfig(max_genes_per_turn=4),
         genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
         synonym_map={},
     )
-    return HelixContextManager(cfg)
+    return CymatixContextManager(cfg)
 
 
 @pytest.fixture

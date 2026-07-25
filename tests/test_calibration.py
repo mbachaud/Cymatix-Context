@@ -55,7 +55,7 @@ if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
 from cymatix_context.config import (
-    AbstainClassFloors, AbstainConfig, HelixConfig, RetrievalConfig, load_config,
+    AbstainClassFloors, AbstainConfig, CymatixConfig, RetrievalConfig, load_config,
 )
 from cymatix_context.exceptions import ConfigError
 from cymatix_context.genome import Genome
@@ -223,16 +223,16 @@ def test_calibration_report_jsonschema_validates(fixture_genome, tmp_path):
 def _make_fake_cm(cfg):
     """Build a stub that has the attributes ContextManager._floors_for /
     ._alpha_for_cls touch — namely, the class-level _GLOBAL_* constants
-    and the bound config. Avoids a full HelixContextManager.__init__
+    and the bound config. Avoids a full CymatixContextManager.__init__
     (which loads ribosome + genome).
     """
-    from cymatix_context.context_manager import HelixContextManager
+    from cymatix_context.context_manager import CymatixContextManager
     from types import SimpleNamespace
     return SimpleNamespace(
         config=cfg,
-        _GLOBAL_TIGHT_FLOOR=HelixContextManager._GLOBAL_TIGHT_FLOOR,
-        _GLOBAL_FOCUSED_FLOOR=HelixContextManager._GLOBAL_FOCUSED_FLOOR,
-        _GLOBAL_ABSTAIN_FLOOR=HelixContextManager._GLOBAL_ABSTAIN_FLOOR,
+        _GLOBAL_TIGHT_FLOOR=CymatixContextManager._GLOBAL_TIGHT_FLOOR,
+        _GLOBAL_FOCUSED_FLOOR=CymatixContextManager._GLOBAL_FOCUSED_FLOOR,
+        _GLOBAL_ABSTAIN_FLOOR=CymatixContextManager._GLOBAL_ABSTAIN_FLOOR,
     )
 
 
@@ -243,8 +243,8 @@ def test_global_mode_preserves_legacy_behavior():
     when ``config.abstain.mode == "global"``, regardless of cls. The full
     1000-row pipeline regression is in ``test_global_mode_regression_diff``.
     """
-    from cymatix_context.context_manager import HelixContextManager as ContextManager
-    cfg = HelixConfig()  # default: abstain.mode = "global"
+    from cymatix_context.context_manager import CymatixContextManager as ContextManager
+    cfg = CymatixConfig()  # default: abstain.mode = "global"
     assert cfg.abstain.mode == "global"
     fake_self = _make_fake_cm(cfg)
     floors = ContextManager._floors_for(fake_self, "factual")
@@ -268,8 +268,8 @@ def test_global_mode_regression_diff():
     """
     import random as _random
     rng = _random.Random(20260508)
-    cfg = HelixConfig()  # default mode='global'
-    from cymatix_context.context_manager import HelixContextManager as ContextManager
+    cfg = CymatixConfig()  # default mode='global'
+    from cymatix_context.context_manager import CymatixContextManager as ContextManager
     fake_self = _make_fake_cm(cfg)
 
     diff_count = 0
@@ -405,7 +405,7 @@ def test_floor_lookup_falls_back_to_default_when_cls_missing():
     """Spec §6: per_classifier mode with only [abstain.default] should
     work for any cls — runtime falls back to default.
     """
-    cfg = HelixConfig()
+    cfg = CymatixConfig()
     cfg.abstain = AbstainConfig(
         mode="per_classifier",
         per_class={
@@ -424,7 +424,7 @@ def test_floor_lookup_falls_back_to_default_when_cls_missing():
 
 def test_per_classifier_mode_requires_default_block(tmp_path):
     """Spec §6: ConfigError if mode='per_classifier' without [abstain.default]."""
-    cfg_path = tmp_path / "helix.toml"
+    cfg_path = tmp_path / "cymatix.toml"
     cfg_path.write_text(
         "[abstain]\nmode = \"per_classifier\"\n\n"
         "[abstain.factual]\n"
@@ -684,7 +684,7 @@ def test_calibration_age_future_dated_clamps_to_zero():
 
 def test_load_calibration_from_toml_reads_stale_after_days(tmp_path):
     """Loader picks up stale_after_days from [know] table."""
-    toml = tmp_path / "helix.toml"
+    toml = tmp_path / "cymatix.toml"
     toml.write_text(
         "[know]\n"
         "emit_floor = 0.55\n"
@@ -700,7 +700,7 @@ def test_load_calibration_from_toml_reads_stale_after_days(tmp_path):
 
 def test_load_calibration_from_toml_defaults_stale_after_days(tmp_path):
     """Missing stale_after_days → DEFAULT_STALE_AFTER_DAYS (30)."""
-    toml = tmp_path / "helix.toml"
+    toml = tmp_path / "cymatix.toml"
     toml.write_text(
         "[know]\n"
         "emit_floor = 0.55\n"
@@ -713,7 +713,7 @@ def test_load_calibration_from_toml_defaults_stale_after_days(tmp_path):
 
 def test_load_calibration_from_toml_rejects_negative_stale_days(tmp_path):
     """Negative stale_after_days falls back to default with a warning."""
-    toml = tmp_path / "helix.toml"
+    toml = tmp_path / "cymatix.toml"
     toml.write_text(
         "[know]\n"
         "betas = [-2.0, 2.0, 1.5, 0.7, 1.8, 1.5]\n"

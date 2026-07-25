@@ -65,7 +65,7 @@ the surviving lever is **rerank over dense top-200**.
 
 1. **PR #230** (WS2 symbol graph, +447/−5, CI green, CLEAN, no rebase needed) — merge iff arm C passes; record the arm-C number in the PR thread. If dark-shipping instead, flip `config.py` `symbol_graph` default to False first (currently True, which contradicts the "stays dark" rule).
 2. **PR #231** (WS3 PageRank, stacked on #230) — after #230 squash-merges: rebase onto master, retarget to master (**this triggers CI for the first time** — the 5 ws3-only commits have zero CI coverage because ci.yml only runs on PRs targeting master), then merge per the same gate. Branch already dark-ships `symbol_graph=false` (17f275d) with an in-degree ablation knob.
-3. **Bench harness commit:** untracked `scripts/bench_chain/` (incl. the 07-03 13:10 fixes), `docs/benchmarks/helix_probe_symbol.toml` (fix its stale header comment saying `helix_probe_lexical.toml`), and the 3-line progress-print diff in `benchmarks/sweep_dense_additive_weight.py`.
+3. **Bench harness commit:** untracked `scripts/bench_chain/` (incl. the 07-03 13:10 fixes), `docs/benchmarks/cymatix_probe_symbol.toml` (fix its stale header comment saying `cymatix_probe_lexical.toml`), and the 3-line progress-print diff in `benchmarks/sweep_dense_additive_weight.py`.
 4. Neither PR has a recorded review — get one on record before merging (ingest-path changes are load-bearing).
 5. **Scoring-invariance lane** (`audit/scoring-invariance`, 2026-07-09, not bench-gated — docs + tests only, zero scoring edits): symmetry audit of every dimensionful constant in the scoring path (`docs/research/2026-07-08-scoring-invariance-audit.md`) + metamorphic invariance tests (`tests/test_fusion_invariance.py`, `tests/test_retrieval_invariance.py`) pinning current behavior. Adopts the #250 diagnosis-only follow-ups; provides the regression net for the additive-path removal scheduled in v(N+2). Filed #255 (RRF rerank-additive scale mismatch) + #256 (fusion_mode layer-default disagreement) — both fixes stay bench-gated.
 
@@ -79,7 +79,7 @@ the surviving lever is **rerank over dense top-200**.
 | #222 | Per-shard fetch depth | done-but-open (dark in #235) | Post-bench: confirmatory factor 2-vs-4 A/B on medium+xl; expected null (twice-measured) → close with "shipped dark, default stays 2". |
 | #223 | Cross-shard co-act reserve | partially-done (dark in #235) | Post-bench: fixture A/B with graph-surfaced golds (`diag_blob_vs_shard_tiers.py`), pick reserve N, promote env var to config key, flip default, close. |
 | #219 | Config unification epic | partially-done (2/5 slices) | Update body: check Slice 2 (3aa6c5c/#220). Then Slice 5 (dark-feature decision — cheapest, unblocks doc honesty), Slice 4 (config-reference generated from dataclasses + ratchet), Slice 3 (serve-lean MCP profile). |
-| #209 | genai_telemetry module | partially-done (phases 1-2 landed) | Rewrite body to the remaining slice: implement `genai_telemetry.py` (OTel GenAI conventions), light up the 15 phantom `helix_genai_*` dashboard queries (or pull the dashboard), flip the 4 "planned" stubs in OBSERVABILITY.md. |
+| #209 | genai_telemetry module | partially-done (phases 1-2 landed) | Rewrite body to the remaining slice: implement `genai_telemetry.py` (OTel GenAI conventions), light up the 15 phantom `cymatix_genai_*` dashboard queries (or pull the dashboard), flip the 4 "planned" stubs in OBSERVABILITY.md. |
 | #205 | Retrieval profiles 3-layer | in-progress (groundwork only) | Unblocked by #203 result (all beds prefer w=6 → Layer-3 per-class values). Update body checklist; implement after merge wave. |
 | #93 | EnterpriseRAG-Bench adoption | partially-done | Rescope body to 3 items: full-480 rerun on 829K fixture (post-bench, ~8h rig), scored Q&A vs Onyx leaderboard (= the skipped S4), declare blob-vs-sharded answered-by-construction. |
 | #204 | SPLADE scale curve | outstanding (deferred by consensus) | Comment: reuse #221 beds as the "on" twins; schedule twin builds + sweep next rig-free window after the external wave. |
@@ -112,7 +112,7 @@ Full forensic inventory (branch↔PR SHA matching) done 2026-07-03; summary:
 - [ ] `[ribosome]` backend lists (README:125 + CLAUDE.md): honored values are only `litellm`/`deberta`; drop `claude`/`ollama` or mark legacy. *(not done — needs a code check of honored backend values first)*
 - [x] Package count "16" → 15 (README:191 + CLAUDE.md). ✅ 2026-07-05 (table already listed 15; summary + CLAUDE corrected).
 - [ ] README "Proof (30 seconds)" table + `docs/benchmarks/BENCHMARKS.md` (last updated 2026-05-28) — refresh from the #221 re-baseline once valid. **License caveat:** ContextBench/CodeRAG numbers stay internal until cleared.
-- [ ] Commit/reconstruct `helix_probe_nosema.toml` (referenced by code-track-regression-log.md, absent from tree).
+- [ ] Commit/reconstruct `cymatix_probe_nosema.toml` (referenced by code-track-regression-log.md, absent from tree).
 - [ ] Minor: README `[ingestion]` add `hybrid`; note `[mem_sync]` is consumed out-of-band; document `[vault]`/`[hardware]`.
 
 ## Sequenced plan

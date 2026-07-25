@@ -61,7 +61,7 @@ THRESHOLDS = {
 
 
 def classify_gap(abs_gap: float, rel_gap: float, score_a: float, score_b: float) -> str:
-    # Both scores zero → padding (helix returned more slots than it had real
+    # Both scores zero → padding (cymatix returned more slots than it had real
     # hits for). Not a ranking decision worth analyzing.
     if score_a == 0.0 and score_b == 0.0:
         return "padding"

@@ -32,7 +32,7 @@ class TestWriteAtomic:
     def test_no_sentinel_left_behind(self, tmp_path: Path):
         target = tmp_path / "out.md"
         write_atomic(vault_root=tmp_path, target=target, content="hello")
-        assert not (tmp_path / ".helix-syncing").exists()
+        assert not (tmp_path / ".cymatix-syncing").exists()
 
     def test_creates_parent_dirs(self, tmp_path: Path):
         target = tmp_path / "genes" / "auth" / "x.md"

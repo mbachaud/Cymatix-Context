@@ -4,7 +4,7 @@ The Step-4 splice loop capped every candidate at a query-agnostic
 ``target = 1000`` chars (context_manager.py) and the headroom-unavailable
 fallback truncated with a blind prefix cut ``content[:target].strip()``
 (encoding/headroom_bridge.py). Any answer past char 1000 of its document
-was silently cut — 6/50 SIKE xl needles (helix_port, scorerift_threshold,
+was silently cut — 6/50 SIKE xl needles (cymatix_port, scorerift_threshold,
 bookkeeper_1099_threshold, bookkeeper_test_count,
 bookkeeper_backup_interval, cosmictasha_auth_library) had gold delivered
 but the answer truncated away.
@@ -39,7 +39,7 @@ def test_budget_config_default_is_auto():
 
 
 def test_toml_loader_plumbs_splice_target_chars(tmp_path):
-    cfg_file = tmp_path / "helix.toml"
+    cfg_file = tmp_path / "cymatix.toml"
     cfg_file.write_text("[budget]\nsplice_target_chars = 1500\n")
     cfg = load_config(str(cfg_file))
     assert cfg.budget.splice_target_chars == 1500
@@ -118,9 +118,16 @@ def test_trim_keeps_multiple_matching_lines_in_order():
     assert len(out) <= 1200
 
 
-def test_compress_text_fallback_is_query_aware():
-    """compress_text (headroom unavailable here) threads query_terms
-    through to the fallback trim."""
+def test_compress_text_fallback_is_query_aware(monkeypatch):
+    """compress_text (headroom forced off) threads query_terms
+    through to the fallback trim.
+
+    Force the legacy truncation path deterministically rather than relying
+    on Headroom being absent from the environment (it may be installed via
+    the ``codec`` extra); ``CYMATIX_DISABLE_HEADROOM`` is re-checked on every
+    ``is_headroom_available()`` call.
+    """
+    monkeypatch.setenv("CYMATIX_DISABLE_HEADROOM", "1")
     content = _doc_with_deep_answer()
     out = compress_text(content, target_chars=1000, query_terms=["server_port"])
     assert "11437" in out
@@ -151,13 +158,13 @@ def _make_manager(gene_contents, scores, budget_kwargs=None):
         BudgetConfig,
         ClassifierConfig,
         GenomeConfig,
-        HelixConfig,
+        CymatixConfig,
         RibosomeConfig,
     )
-    from cymatix_context.context_manager import HelixContextManager
+    from cymatix_context.context_manager import CymatixContextManager
     from tests.conftest import make_gene
 
-    cfg = HelixConfig(
+    cfg = CymatixConfig(
         ribosome=RibosomeConfig(model="mock", timeout=5),
         budget=BudgetConfig(
             max_genes_per_turn=len(gene_contents) + 2,
@@ -167,7 +174,7 @@ def _make_manager(gene_contents, scores, budget_kwargs=None):
         genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
         classifier=ClassifierConfig(enabled=False),
     )
-    mgr = HelixContextManager(cfg)
+    mgr = CymatixContextManager(cfg)
     candidates = [
         make_gene(content, gene_id=f"gene_{i:02d}")
         for i, content in enumerate(gene_contents)

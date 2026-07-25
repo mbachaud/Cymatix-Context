@@ -2,8 +2,8 @@
 
 In-process diagnostic for the sharded retrieval path. For each gold needle
 it runs the SAME query path the server uses (``open_read_source`` with
-``HELIX_USE_SHARDS=1`` -> ``ShardedGenomeAdapter.query_docs`` ->
-``ShardRouter.query_genes``), with ``HELIX_SHARD_SCORE_DEBUG=1`` so the
+``CYMATIX_USE_SHARDS=1`` -> ``ShardedGenomeAdapter.query_docs`` ->
+``ShardRouter.query_genes``), with ``CYMATIX_SHARD_SCORE_DEBUG=1`` so the
 router populates ``ShardRouter.last_score_breakdown`` for EVERY merged
 candidate (including golds that fell below the merge truncation).
 
@@ -33,7 +33,7 @@ CLI
 python benchmarks/diag_shard_score.py \\
     --genome genomes/main/main.genome.db \\
     --needles benchmarks/results/shard_gold_medium.jsonl \\
-    --helix-config helix.toml \\
+    --cymatix-config cymatix.toml \\
     --limit 8 \\
     --out benchmarks/results/diag_shard_score_medium.json
 
@@ -86,7 +86,7 @@ def _gold_hit(source: Optional[str], gold_paths: List[str]) -> bool:
 def _genome_kwargs_from_config(config: Any) -> Dict[str, Any]:
     """Build the retrieval-affecting kwargs the server forwards to each shard.
 
-    Mirrors ``HelixContextManager.__init__``'s ``open_read_source`` call
+    Mirrors ``CymatixContextManager.__init__``'s ``open_read_source`` call
     (context_manager.py ~530) for the keys that drive scoring/fusion, but
     forces ``sema_codec=None`` and leaves dense default-off so no model is
     loaded (no-GPU constraint). The cross-shard lexical scoring under test
@@ -135,8 +135,8 @@ def _open_router_source(genome_path: str, config: Any):
     isn't a routing DB / sharding disabled — in which case there's nothing
     to diagnose and we say so).
     """
-    os.environ["HELIX_USE_SHARDS"] = "1"
-    os.environ["HELIX_SHARD_SCORE_DEBUG"] = "1"
+    os.environ["CYMATIX_USE_SHARDS"] = "1"
+    os.environ["CYMATIX_SHARD_SCORE_DEBUG"] = "1"
     from cymatix_context.sharding import open_read_source
 
     kwargs = _genome_kwargs_from_config(config)
@@ -329,8 +329,8 @@ def main(argv: Optional[List[str]] = None) -> int:
                     help="path to the sharded routing DB (main.genome.db).")
     ap.add_argument("--needles", required=True,
                     help="jsonl with question/gold_paths (build_shard_gold.py output).")
-    ap.add_argument("--helix-config", default=None,
-                    help="helix.toml path (default: load_config's default search).")
+    ap.add_argument("--cymatix-config", default=None,
+                    help="cymatix.toml path (default: load_config's default search).")
     ap.add_argument("--limit", type=int, default=8,
                     help="max_genes passed to query_docs (default 8).")
     ap.add_argument("--out", default=None,
@@ -340,14 +340,14 @@ def main(argv: Optional[List[str]] = None) -> int:
     args = ap.parse_args(argv)
 
     from cymatix_context.config import load_config
-    config = load_config(args.helix_config)
+    config = load_config(args.cymatix_config)
 
     source = _open_router_source(args.genome, config)
     router = _router_of(source)
     if router is None:
         print(
             "ERROR: opened source is not a sharded adapter (no _router). "
-            "Either HELIX_USE_SHARDS didn't take or --genome is not a "
+            "Either CYMATIX_USE_SHARDS didn't take or --genome is not a "
             "main.genome.db routing DB. Nothing to diagnose.",
             file=sys.stderr,
         )

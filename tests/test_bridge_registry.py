@@ -1,7 +1,7 @@
 """
 Tests for the AgentBridge session registry HTTP client (item 8).
 
-Mocked httpx — no real helix server is contacted. The tests verify
+Mocked httpx — no real cymatix server is contacted. The tests verify
 state mutation, error handling, the auto-heartbeat daemon thread
 lifecycle, and the soft-fail-on-network-error contract.
 """

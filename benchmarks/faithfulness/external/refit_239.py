@@ -11,7 +11,7 @@ compute_confidence uses (shipped s_ref/g_ref), then:
   refit-R   : LogisticRegression(features -> retrieval)  (PR#249 label, on this bed)
               then scored AGAINST causal_use -> shows the proxy underperforms.
 
-Helix env (sklearn + know_calibration). No graphs, no network.
+Cymatix env (sklearn + know_calibration). No graphs, no network.
 """
 import os, sys, json, math, argparse
 from pathlib import Path
@@ -59,7 +59,7 @@ def main():
     ap.add_argument("--faith", default=FAITH)
     args = ap.parse_args()
 
-    _cfg_path = _REPO / "cymatix.toml" if (_REPO / "cymatix.toml").exists() else _REPO / "helix.toml"
+    _cfg_path = _REPO / "cymatix.toml" if (_REPO / "cymatix.toml").exists() else _REPO / "cymatix.toml"
     cfg = load_config(str(_cfg_path))
     cal = calibration_from_config(cfg.know)
     s_ref, g_ref = cal.s_ref, cal.g_ref

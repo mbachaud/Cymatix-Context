@@ -70,7 +70,7 @@ def test_emit_gauges_snapshot_reads_registered_shards_without_warning(
 
         adapter = ShardedGenomeAdapter(str(main_path))
         try:
-            with caplog.at_level(logging.WARNING, logger="helix.telemetry"):
+            with caplog.at_level(logging.WARNING, logger="cymatix.telemetry"):
                 emit_gauges_snapshot(adapter)
         finally:
             adapter.close()
@@ -90,7 +90,7 @@ def test_emit_gauges_snapshot_reads_registered_shards_without_warning(
         main_conn.close()
 
 
-# -- HELIX_OTEL_LOGS_* env-var toggle --------------------------------
+# -- CYMATIX_OTEL_LOGS_* env-var toggle --------------------------------
 
 def test_resolve_logs_level_accepts_canonical_names():
     assert _resolve_logs_level("INFO") == logging.INFO
@@ -103,19 +103,19 @@ def test_resolve_logs_level_falls_back_on_garbage():
     """Unknown level names log a warning and default to INFO rather than
     crashing the OTel setup path. Matches the soft-fail policy elsewhere
     in setup_telemetry — telemetry init is opt-in and must never block
-    helix from serving /context."""
+    cymatix from serving /context."""
     assert _resolve_logs_level("LOUD") == logging.INFO
     assert _resolve_logs_level("") == logging.INFO
 
 
 @pytest.mark.parametrize("env_value", ["0", "false", "no"])
 def test_attach_otlp_logging_handler_skips_when_disabled(monkeypatch, env_value):
-    """HELIX_OTEL_LOGS_ENABLED=0 (or any non-'1') keeps traces+metrics on
+    """CYMATIX_OTEL_LOGS_ENABLED=0 (or any non-'1') keeps traces+metrics on
     but skips log shipment. The downstream LoggerProvider / handler
     constructors should never be called — keeps Loki disk pressure or
     PII concerns fully addressable without forcing a full telemetry
     shutdown."""
-    monkeypatch.setenv("HELIX_OTEL_LOGS_ENABLED", env_value)
+    monkeypatch.setenv("CYMATIX_OTEL_LOGS_ENABLED", env_value)
 
     LoggerProvider = MagicMock()
     BatchLogRecordProcessor = MagicMock()
@@ -140,10 +140,10 @@ def test_attach_otlp_logging_handler_skips_when_disabled(monkeypatch, env_value)
 
 
 def test_attach_otlp_logging_handler_wires_root_when_enabled(monkeypatch):
-    """Default path (HELIX_OTEL_LOGS_ENABLED unset → "1") builds the
+    """Default path (CYMATIX_OTEL_LOGS_ENABLED unset → "1") builds the
     LoggerProvider and attaches a LoggingHandler to the root logger."""
-    monkeypatch.delenv("HELIX_OTEL_LOGS_ENABLED", raising=False)
-    monkeypatch.setenv("HELIX_OTEL_LOGS_LEVEL", "WARNING")
+    monkeypatch.delenv("CYMATIX_OTEL_LOGS_ENABLED", raising=False)
+    monkeypatch.setenv("CYMATIX_OTEL_LOGS_LEVEL", "WARNING")
 
     # Real-shape stub so `type(resource).create({...})` resolves to a
     # classmethod the production code can actually call. MagicMock can't

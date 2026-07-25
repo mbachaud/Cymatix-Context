@@ -9,7 +9,7 @@ to confirm:
     5. Feature flag ON: parent surfaces when ≥ 2 chunks hit
     6. reassemble() roundtrips content
 
-Does NOT touch C:/helix-cache/genome.db — safe to run while helix is up.
+Does NOT touch C:/cymatix-cache/genome.db — safe to run while cymatix is up.
 
 Usage:
     python scripts/validate_layered_fingerprints.py
@@ -28,7 +28,7 @@ try:
 except Exception:
     pass
 
-from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.context_manager import CymatixContextManager
 from cymatix_context.genome import Genome
 from cymatix_context.schemas import (
     ChromatinState,
@@ -76,7 +76,7 @@ def main() -> int:
         child_ids.append(genome.upsert_gene(gene, apply_gate=False))
 
     # Build parent manually (simulating what _upsert_parent_gene does in ingest).
-    parent_gid = HelixContextManager._make_parent_gene_id(multi_source)
+    parent_gid = CymatixContextManager._make_parent_gene_id(multi_source)
     parent = Gene(
         gene_id=parent_gid,
         content="\n\n".join(chunks_multi)[:1024],
@@ -116,7 +116,7 @@ def main() -> int:
     assert edges["c"] == len(child_ids), "Edge count mismatch"
 
     # --- Check 2: flag OFF — capture parent's natural (unboosted) score ---
-    os.environ.pop("HELIX_LAYERED_FINGERPRINTS", None)
+    os.environ.pop("CYMATIX_LAYERED_FINGERPRINTS", None)
     genome.query_genes(domains=["auth"], entities=["JWT"], max_genes=10)
     score_off = genome.last_query_scores.get(parent_gid, 0.0)
     tier_off = genome.last_tier_contributions.get(parent_gid, {})
@@ -125,7 +125,7 @@ def main() -> int:
     print(f"    has parent_coactivation tier? {'parent_coactivation' in tier_off} (expected False)")
 
     # --- Check 3: flag ON — parent score should be HIGHER via co-activation ---
-    os.environ["HELIX_LAYERED_FINGERPRINTS"] = "1"
+    os.environ["CYMATIX_LAYERED_FINGERPRINTS"] = "1"
     genome.query_genes(domains=["auth"], entities=["JWT"], max_genes=10)
     score_on = genome.last_query_scores.get(parent_gid, 0.0)
     tier_on = genome.last_tier_contributions.get(parent_gid, {})

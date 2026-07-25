@@ -27,7 +27,7 @@ def test_lexical_rescue_finds_claims_for_singular_query(tmp_path):
             "CLAIM_TYPES allowed values include path_value and config_value.",
             domains=["claims"],
         )
-        gene.source_id = "F:/Projects/helix-context/cymatix_context/schemas.py"
+        gene.source_id = "F:/Projects/cymatix-context/cymatix_context/schemas.py"
         genome.upsert_gene(gene, apply_gate=False)
     finally:
         genome.close()
@@ -38,7 +38,7 @@ def test_lexical_rescue_finds_claims_for_singular_query(tmp_path):
         limit=4,
     )
 
-    assert sources == ["F:/Projects/helix-context/cymatix_context/schemas.py"]
+    assert sources == ["F:/Projects/cymatix-context/cymatix_context/schemas.py"]
 
 
 def test_lexical_rescue_excludes_existing_packet_sources(tmp_path):
@@ -46,11 +46,11 @@ def test_lexical_rescue_excludes_existing_packet_sources(tmp_path):
     genome = Genome(str(db))
     try:
         first = make_gene("headroom dashboard listens on port 8787", domains=["headroom"])
-        first.source_id = "F:/Projects/helix-context/helix.toml"
+        first.source_id = "F:/Projects/cymatix-context/cymatix.toml"
         genome.upsert_gene(first, apply_gate=False)
 
         second = make_gene("headroom supervisor default port is 8787", domains=["headroom"])
-        second.source_id = "F:/Projects/helix-context/cymatix_context/launcher/headroom_supervisor.py"
+        second.source_id = "F:/Projects/cymatix-context/cymatix_context/launcher/headroom_supervisor.py"
         genome.upsert_gene(second, apply_gate=False)
     finally:
         genome.close()
@@ -59,11 +59,11 @@ def test_lexical_rescue_excludes_existing_packet_sources(tmp_path):
         "headroom ports",
         genome_path=str(db),
         limit=4,
-        exclude_source_ids=["f:/projects/helix-context/helix.toml"],
+        exclude_source_ids=["f:/projects/cymatix-context/cymatix.toml"],
     )
 
     assert sources == [
-        "F:/Projects/helix-context/cymatix_context/launcher/headroom_supervisor.py"
+        "F:/Projects/cymatix-context/cymatix_context/launcher/headroom_supervisor.py"
     ]
 
 
@@ -75,22 +75,22 @@ def test_lexical_rescue_uses_promoter_tags_before_fts_noise(tmp_path):
             "A long discussion of ports and listeners and headroom processes.",
             domains=["notes"],
         )
-        noisy.source_id = "F:/Projects/helix-context/docs/noisy.md"
+        noisy.source_id = "F:/Projects/cymatix-context/docs/noisy.md"
         genome.upsert_gene(noisy, apply_gate=False)
 
         config = make_gene(
             "server configuration values",
-            domains=["helix", "headroom", "port"],
+            domains=["cymatix", "headroom", "port"],
         )
-        config.source_id = "F:/Projects/helix-context/helix.toml"
+        config.source_id = "F:/Projects/cymatix-context/cymatix.toml"
         genome.upsert_gene(config, apply_gate=False)
     finally:
         genome.close()
 
     sources = lexical_rescue_sources(
-        "what ports do helix and headroom listen on",
+        "what ports do cymatix and headroom listen on",
         genome_path=str(db),
         limit=2,
     )
 
-    assert sources[0] == "F:/Projects/helix-context/helix.toml"
+    assert sources[0] == "F:/Projects/cymatix-context/cymatix.toml"

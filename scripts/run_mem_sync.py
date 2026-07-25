@@ -1,22 +1,22 @@
 """
-Daemon entry: auto-memory → helix sync.
+Daemon entry: auto-memory → cymatix sync.
 
-Reads config from helix.toml `[mem_sync]` section, honors env-var
+Reads config from cymatix.toml `[mem_sync]` section, honors env-var
 overrides, starts the poll loop.
 
 Usage:
     python scripts/run_mem_sync.py
 
 Env-var overrides (take precedence over toml):
-    HELIX_MEM_SYNC_URL        - helix server URL (default http://127.0.0.1:11437)
-    HELIX_MEM_SYNC_INTERVAL   - poll interval in seconds (default 60)
-    HELIX_MEM_SYNC_DIRS       - colon-separated dirs (overrides toml list)
+    CYMATIX_MEM_SYNC_URL        - cymatix server URL (default http://127.0.0.1:11437)
+    CYMATIX_MEM_SYNC_INTERVAL   - poll interval in seconds (default 60)
+    CYMATIX_MEM_SYNC_DIRS       - colon-separated dirs (overrides toml list)
 
 Persona/agent attribution is automatic via the syncer process's env:
-    HELIX_AGENT=raude         - which persona is doing the writes
-    HELIX_USER=max            - the human principal
-    HELIX_DEVICE=<hostname>   - auto-detected if unset
-    HELIX_ORG=<org>           - optional
+    CYMATIX_AGENT=raude         - which persona is doing the writes
+    CYMATIX_USER=max            - the human principal
+    CYMATIX_DEVICE=<hostname>   - auto-detected if unset
+    CYMATIX_ORG=<org>           - optional
 
 Set these once in your shell profile and every gene ingested from this
 syncer carries the attribution automatically.
@@ -37,7 +37,7 @@ from cymatix_context.mem_sync import run_daemon  # noqa: E402
 
 
 def _load_toml_config() -> dict:
-    """Read [mem_sync] from helix.toml. Returns {} if section missing."""
+    """Read [mem_sync] from cymatix.toml. Returns {} if section missing."""
     try:
         import tomllib  # py3.11+
     except ImportError:
@@ -48,7 +48,7 @@ def _load_toml_config() -> dict:
     _repo_root = Path(__file__).resolve().parent.parent
     toml_path = _repo_root / "cymatix.toml"
     if not toml_path.exists():
-        toml_path = _repo_root / "helix.toml"
+        toml_path = _repo_root / "cymatix.toml"
     if not toml_path.exists():
         return {}
     try:
@@ -56,7 +56,7 @@ def _load_toml_config() -> dict:
             data = tomllib.load(f)
         return data.get("mem_sync", {})
     except Exception as exc:
-        print(f"[mem_sync] failed to read helix.toml: {exc}", file=sys.stderr)
+        print(f"[mem_sync] failed to read cymatix.toml: {exc}", file=sys.stderr)
         return {}
 
 
@@ -68,19 +68,19 @@ def main() -> int:
 
     cfg = _load_toml_config()
     if not cfg.get("enabled", False):
-        print("[mem_sync] disabled in helix.toml — set [mem_sync].enabled=true",
+        print("[mem_sync] disabled in cymatix.toml — set [mem_sync].enabled=true",
               file=sys.stderr)
         return 1
 
-    helix_url = (
-        os.environ.get("HELIX_MEM_SYNC_URL")
-        or cfg.get("helix_url", "http://127.0.0.1:11437")
+    cymatix_url = (
+        os.environ.get("CYMATIX_MEM_SYNC_URL")
+        or cfg.get("cymatix_url", "http://127.0.0.1:11437")
     )
     interval = int(
-        os.environ.get("HELIX_MEM_SYNC_INTERVAL")
+        os.environ.get("CYMATIX_MEM_SYNC_INTERVAL")
         or cfg.get("sync_interval_s", 60)
     )
-    env_dirs = os.environ.get("HELIX_MEM_SYNC_DIRS")
+    env_dirs = os.environ.get("CYMATIX_MEM_SYNC_DIRS")
     if env_dirs:
         watch_dirs = [d.strip() for d in env_dirs.split(os.pathsep) if d.strip()]
     else:
@@ -88,17 +88,17 @@ def main() -> int:
 
     if not watch_dirs:
         print("[mem_sync] no watch_dirs configured — set [mem_sync].watch_dirs "
-              "in helix.toml or export HELIX_MEM_SYNC_DIRS", file=sys.stderr)
+              "in cymatix.toml or export CYMATIX_MEM_SYNC_DIRS", file=sys.stderr)
         return 1
 
     # Expand ~ in paths — toml doesn't.
     watch_dirs = [os.path.expanduser(d) for d in watch_dirs]
 
-    agent_kind = cfg.get("agent_kind") or os.environ.get("HELIX_AGENT_KIND")
+    agent_kind = cfg.get("agent_kind") or os.environ.get("CYMATIX_AGENT_KIND")
 
     run_daemon(
         watch_dirs=watch_dirs,
-        helix_url=helix_url,
+        cymatix_url=cymatix_url,
         sync_interval_s=interval,
         agent_kind=agent_kind,
     )

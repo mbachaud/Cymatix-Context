@@ -2,7 +2,7 @@
 Gate 4 -- HTTP sidecar + proxy tests.
 
 Tests the FastAPI endpoints using TestClient (no real Ollama or upstream needed).
-The HelixContextManager is initialized with a mock ribosome backend.
+The CymatixContextManager is initialized with a mock ribosome backend.
 """
 
 import json
@@ -13,20 +13,20 @@ import pytest
 from fastapi.testclient import TestClient
 
 import cymatix_context.server as server_mod
-from cymatix_context.config import HelixConfig, GenomeConfig, KnowConfig, RibosomeConfig, ServerConfig
+from cymatix_context.config import CymatixConfig, GenomeConfig, KnowConfig, RibosomeConfig, ServerConfig
 from cymatix_context.server import create_app
 
-from tests.conftest import make_client, make_helix_config
+from tests.conftest import make_client, make_cymatix_config
 
 
 # -- Helpers -----------------------------------------------------------
 #
 # The mock ribosome backend and standard test config previously defined
-# here (``ServerMockBackend`` / inline ``HelixConfig(...)``) are now the
-# canonical ``MockCompressorBackend`` / ``make_helix_config`` in
+# here (``ServerMockBackend`` / inline ``CymatixConfig(...)``) are now the
+# canonical ``MockCompressorBackend`` / ``make_cymatix_config`` in
 # tests/conftest.py — this file's variant was the one the canonical
 # version was derived from. The few tests below that build their own
-# ``HelixConfig(...)`` with REAL (non-mock) ribosome/budget defaults are
+# ``CymatixConfig(...)`` with REAL (non-mock) ribosome/budget defaults are
 # intentionally left local — they exercise the disabled/real-backend
 # path, not the shared mock shape.
 
@@ -78,7 +78,7 @@ class TestHealthEndpoint:
             "_probe_upstream",
             lambda _url, timeout_s=1.0: {"reachable": True, "probe": "/api/tags", "status_code": 200},
         )
-        app = create_app(HelixConfig(
+        app = create_app(CymatixConfig(
             genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
             server=ServerConfig(upstream="http://localhost:11434"),
         ))
@@ -103,7 +103,7 @@ class TestHealthEndpoint:
             "_probe_upstream",
             lambda _url, timeout_s=1.0: {"reachable": True, "probe": "/api/tags", "status_code": 200},
         )
-        app = create_app(HelixConfig(
+        app = create_app(CymatixConfig(
             genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
             server=ServerConfig(upstream="http://localhost:11434"),
             ribosome=RibosomeConfig(enabled=True, backend="litellm"),
@@ -173,7 +173,7 @@ class TestHealthEndpoint:
             "_probe_upstream",
             lambda _url, timeout_s=1.0: {"reachable": True, "probe": "/api/tags", "status_code": 200},
         )
-        client = make_client(make_helix_config(know=KnowConfig()))
+        client = make_client(make_cymatix_config(know=KnowConfig()))
         resp = client.get("/health")
         assert resp.status_code == 200
         body = resp.json()
@@ -191,7 +191,7 @@ class TestHealthEndpoint:
         )
         import datetime as _dt
         now_iso = _dt.datetime.now(_dt.timezone.utc).replace(microsecond=0).isoformat()
-        client = make_client(make_helix_config(
+        client = make_client(make_cymatix_config(
             know=KnowConfig(calibrated_at=now_iso, calibrated_on_n=842, stale_after_days=30),
         ))
         resp = client.get("/health")
@@ -211,7 +211,7 @@ class TestHealthEndpoint:
         old_iso = (
             _dt.datetime.now(_dt.timezone.utc) - _dt.timedelta(days=60)
         ).replace(microsecond=0).isoformat()
-        client = make_client(make_helix_config(
+        client = make_client(make_cymatix_config(
             know=KnowConfig(calibrated_at=old_iso, calibrated_on_n=500, stale_after_days=30),
         ))
         resp = client.get("/health")
@@ -233,7 +233,7 @@ class TestHealthEndpoint:
         ten_days_ago = (
             _dt.datetime.now(_dt.timezone.utc) - _dt.timedelta(days=10)
         ).replace(microsecond=0).isoformat()
-        client = make_client(make_helix_config(
+        client = make_client(make_cymatix_config(
             know=KnowConfig(calibrated_at=ten_days_ago, calibrated_on_n=100, stale_after_days=5),
         ))
         resp = client.get("/health")
@@ -364,7 +364,7 @@ class TestIngestFederationOverrides:
         assert data["attributed"] >= 1
 
         gene_id = data["gene_ids"][0]
-        row = client.app.state.helix.genome.conn.execute(
+        row = client.app.state.cymatix.genome.conn.execute(
             "SELECT ga.org_id, ga.party_id, p.handle AS participant_handle, "
             "       a.handle AS agent_handle, a.kind AS agent_kind "
             "FROM gene_attribution ga "
@@ -453,7 +453,7 @@ class TestAdminComponentsEndpoint:
         assert data["count"] == len(data["components"])
 
     def test_components_omit_disabled_ribosome(self):
-        app = create_app(HelixConfig(
+        app = create_app(CymatixConfig(
             genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
             server=ServerConfig(upstream="http://localhost:11434"),
         ))
@@ -572,38 +572,38 @@ class TestResolveCallerAgent:
 
     def test_body_agent_takes_precedence(self, monkeypatch):
         from cymatix_context.server import _resolve_caller_agent
-        monkeypatch.setenv("HELIX_AGENT", "raude")
-        req = self._make_request({"x-helix-agent": "taude"})
+        monkeypatch.setenv("CYMATIX_AGENT", "raude")
+        req = self._make_request({"x-cymatix-agent": "taude"})
         assert _resolve_caller_agent(req, {"agent": "laude"}) == "laude"
 
     def test_header_when_body_missing(self, monkeypatch):
         from cymatix_context.server import _resolve_caller_agent
-        monkeypatch.setenv("HELIX_AGENT", "raude")
-        req = self._make_request({"x-helix-agent": "taude"})
+        monkeypatch.setenv("CYMATIX_AGENT", "raude")
+        req = self._make_request({"x-cymatix-agent": "taude"})
         assert _resolve_caller_agent(req, {}) == "taude"
 
     def test_env_when_body_and_header_missing(self, monkeypatch):
         from cymatix_context.server import _resolve_caller_agent
-        monkeypatch.setenv("HELIX_AGENT", "gemini")
+        monkeypatch.setenv("CYMATIX_AGENT", "gemini")
         assert _resolve_caller_agent(self._make_request(), {}) == "gemini"
 
     def test_unknown_when_no_source_supplies(self, monkeypatch):
         from cymatix_context.server import _resolve_caller_agent
-        monkeypatch.delenv("HELIX_AGENT", raising=False)
+        monkeypatch.delenv("CYMATIX_AGENT", raising=False)
         assert _resolve_caller_agent(self._make_request(), {}) == "unknown"
 
     def test_off_allowlist_collapses_to_other(self, monkeypatch):
         """Cardinality cap: any handle not in the allowlist (or
-        HELIX_AGENT_ALLOW extension) becomes "other", protecting
+        CYMATIX_AGENT_ALLOW extension) becomes "other", protecting
         Prometheus from per-pid / per-tab handles."""
         from cymatix_context.server import _resolve_caller_agent
-        monkeypatch.delenv("HELIX_AGENT_ALLOW", raising=False)
+        monkeypatch.delenv("CYMATIX_AGENT_ALLOW", raising=False)
         req = self._make_request()
         assert _resolve_caller_agent(req, {"agent": "weird-tab-37"}) == "other"
 
-    def test_helix_agent_allow_extends_allowlist(self, monkeypatch):
+    def test_cymatix_agent_allow_extends_allowlist(self, monkeypatch):
         from cymatix_context.server import _resolve_caller_agent
-        monkeypatch.setenv("HELIX_AGENT_ALLOW", "qaude, vaude")
+        monkeypatch.setenv("CYMATIX_AGENT_ALLOW", "qaude, vaude")
         req = self._make_request()
         assert _resolve_caller_agent(req, {"agent": "qaude"}) == "qaude"
         assert _resolve_caller_agent(req, {"agent": "vaude"}) == "vaude"
@@ -612,7 +612,7 @@ class TestResolveCallerAgent:
 
     def test_normalizes_case_and_whitespace(self, monkeypatch):
         from cymatix_context.server import _resolve_caller_agent
-        monkeypatch.delenv("HELIX_AGENT", raising=False)
+        monkeypatch.delenv("CYMATIX_AGENT", raising=False)
         req = self._make_request()
         assert _resolve_caller_agent(req, {"agent": "  Laude  "}) == "laude"
 
@@ -893,11 +893,11 @@ class TestDebugIntrospectionEndpoints:
         ]
         score_map = {gid: float(score) for gid, score in scored}
 
-        helix = client.app.state.helix
+        cymatix = client.app.state.cymatix
 
         def _fake_express(domains, entities, max_genes, **_kw):
-            helix.genome.last_query_scores = dict(score_map)
-            helix.genome.last_tier_contributions = {
+            cymatix.genome.last_query_scores = dict(score_map)
+            cymatix.genome.last_tier_contributions = {
                 gid: {"fts5": score} for gid, score in score_map.items()
             }
             return list(genes)
@@ -907,9 +907,9 @@ class TestDebugIntrospectionEndpoints:
 
         # R3 Stage C renamed _express -> _retrieve (with _express alias).
         # Internal callers use the canonical name, so patch that.
-        monkeypatch.setattr(helix, "_retrieve", _fake_express)
-        monkeypatch.setattr(helix, "_express", _fake_express)
-        monkeypatch.setattr(helix, "_apply_candidate_refiners", _fake_refiners)
+        monkeypatch.setattr(cymatix, "_retrieve", _fake_express)
+        monkeypatch.setattr(cymatix, "_express", _fake_express)
+        monkeypatch.setattr(cymatix, "_apply_candidate_refiners", _fake_refiners)
 
     def test_preview_score_floor_default_preserves_behavior(
         self, client, monkeypatch
@@ -990,7 +990,7 @@ class TestDebugIntrospectionEndpoints:
         def _fake_expand(q):
             return q + " expandedterm"
 
-        monkeypatch.setattr(client.app.state.helix, "_expand_query_intent", _fake_expand)
+        monkeypatch.setattr(client.app.state.cymatix, "_expand_query_intent", _fake_expand)
 
         fast = client.post("/fingerprint", json={
             "query": "plain query",
@@ -1030,11 +1030,11 @@ class TestDebugIntrospectionEndpoints:
         ]
         score_map = {gid: float(score) for gid, score in scored}
 
-        helix = client.app.state.helix
+        cymatix = client.app.state.cymatix
 
         def _fake_express(domains, entities, max_results, **_kw):
-            helix.genome.last_query_scores = dict(score_map)
-            helix.genome.last_tier_contributions = {
+            cymatix.genome.last_query_scores = dict(score_map)
+            cymatix.genome.last_tier_contributions = {
                 gid: {"fts5": score} for gid, score in score_map.items()
             }
             return list(genes)
@@ -1044,9 +1044,9 @@ class TestDebugIntrospectionEndpoints:
 
         # R3 Stage C renamed _express -> _retrieve (with _express alias).
         # Internal callers use the canonical name, so patch that.
-        monkeypatch.setattr(helix, "_retrieve", _fake_express)
-        monkeypatch.setattr(helix, "_express", _fake_express)
-        monkeypatch.setattr(helix, "_apply_candidate_refiners", _fake_refiners)
+        monkeypatch.setattr(cymatix, "_retrieve", _fake_express)
+        monkeypatch.setattr(cymatix, "_express", _fake_express)
+        monkeypatch.setattr(cymatix, "_apply_candidate_refiners", _fake_refiners)
 
     def test_fingerprint_score_floor_default_is_backwards_compatible(
         self, client, monkeypatch
@@ -1161,7 +1161,7 @@ class TestContextPacketEndpoint:
         """Ingest a single gene so the packet has something to classify."""
         resp = client.post("/ingest", json={
             "content": (
-                "Helix Context exposes /context/packet for agent-safe "
+                "Cymatix Context exposes /context/packet for agent-safe "
                 "actions. The packet carries verified, stale_risk, and "
                 "refresh_targets lists so the caller can decide which "
                 "sources to reread before edits."
@@ -1207,7 +1207,7 @@ class TestContextPacketEndpoint:
     def test_packet_large_query_does_not_crash(self, client):
         self._seed_one_gene(client)
         # 50KB query — unusual but must not raise.
-        big = "how does helix compress context? " * 1500
+        big = "how does cymatix compress context? " * 1500
         resp = client.post("/context/packet", json={
             "query": big,
             "task_type": "explain",
@@ -1328,7 +1328,7 @@ def test_announce_endpoint_sets_model_id(client):
     Registers with IDE + vendor fields so the same round trip also
     verifies announce (without ide_override) leaves them untouched at
     the HTTP layer — folded from the retired
-    test_helix_announce_plumbing.py end-to-end test.
+    test_cymatix_announce_plumbing.py end-to-end test.
     """
     reg = client.post(
         "/sessions/register",

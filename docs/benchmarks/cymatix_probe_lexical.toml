@@ -1,13 +1,13 @@
-# helix_probe_lexical.toml
+# cymatix_probe_lexical.toml
 # -------------------------------------------------------------------------
 # Lexical-probe profile for RepoBench-R (and other retrieval benchmarks).
 # All neural/GPU paths are OFF. Pipeline is pure FTS5 + tag lookup +
 # synonym expansion + BM25 shortlist. LLM-free, GPU-free.
 #
 # This file is the default config consumed by:
-#   benchmarks/repobench_r_helix.py
-#   benchmarks/repobench_r_helix_global.py
-# when no --helix-config / HELIX_CONFIG is supplied.
+#   benchmarks/repobench_r_cymatix.py
+#   benchmarks/repobench_r_cymatix_global.py
+# when no --cymatix-config / CYMATIX_CONFIG is supplied.
 # -------------------------------------------------------------------------
 
 [ribosome]
@@ -69,7 +69,7 @@ enabled = false
 emit_floor = 0.0                         # A3 fix: real key (was confidence_floor, a no-op)
 
 # A3 fix: synonym expansion was a no-op (no [synonyms] section) for all 50
-# needles despite the probe header claiming it runs. Mirrors root helix.toml.
+# needles despite the probe header claiming it runs. Mirrors root cymatix.toml.
 [synonyms]
 slow = ["performance", "latency", "bottleneck", "timeout", "lag"]
 fast = ["performance", "speed", "optimization", "cache"]
@@ -77,7 +77,7 @@ cache = ["redis", "ttl", "invalidation", "cdn", "caching", "eviction"]
 auth = ["jwt", "login", "security", "token", "session", "oauth"]
 protein = ["folding", "amino", "alpha_helix", "beta_sheet", "alphafold", "biochemistry"]
 tree = ["btree", "b-tree", "data_structures", "index", "binary_tree"]
-helix = ["genome", "ribosome", "codons", "splice", "chromatin", "promoter", "context compression"]
+cymatix = ["genome", "ribosome", "codons", "splice", "chromatin", "promoter", "context compression"]
 pipeline = ["steps", "expression", "workflow", "process", "stages"]
 scoring = ["divergence", "audit", "grades", "ratchet", "dimensions"]
 compress = ["compression", "ratio", "target", "context_compression"]

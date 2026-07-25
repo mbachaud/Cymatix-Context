@@ -1,5 +1,5 @@
 """
-Deep ingest of F:\Projects into the Helix genome.
+Deep ingest of F:\Projects into the Cymatix genome.
 Runs as a long-running background process.
 
 Usage:
@@ -14,7 +14,7 @@ import time
 
 import httpx
 
-HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
+CYMATIX_URL = os.environ.get("CYMATIX_URL", "http://127.0.0.1:11437")
 PROJECTS_ROOT = "F:/Projects"
 
 # Directories to skip entirely
@@ -139,7 +139,7 @@ def _save_progress(path):
 
 
 def ingest(files, client):
-    """Ingest files into the Helix genome, resumable via progress file."""
+    """Ingest files into the Cymatix genome, resumable via progress file."""
     done = _load_progress()
     total_genes = 0
     total_time = 0
@@ -174,7 +174,7 @@ def ingest(files, client):
 
         for ci, chunk in enumerate(chunks):
             try:
-                resp = client.post(f"{HELIX_URL}/ingest", json={
+                resp = client.post(f"{CYMATIX_URL}/ingest", json={
                     "content": chunk,
                     "content_type": content_type,
                     "metadata": {"path": os.path.abspath(path), "chunk": ci},
@@ -214,7 +214,7 @@ def ingest(files, client):
         # Progress checkpoint every 50 files
         if (i + 1) % 50 == 0:
             try:
-                stats = client.get(f"{HELIX_URL}/stats").json()
+                stats = client.get(f"{CYMATIX_URL}/stats").json()
                 print(f"\n  --- Checkpoint: {stats['total_genes']} genes, "
                       f"{stats['compression_ratio']:.1f}x, "
                       f"{total_time:.0f}s elapsed ---\n")
@@ -225,7 +225,7 @@ def ingest(files, client):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Deep ingest F:\\Projects into Helix")
+    parser = argparse.ArgumentParser(description="Deep ingest F:\\Projects into Cymatix")
     parser.add_argument("--dry-run", action="store_true", help="Count files only")
     args = parser.parse_args()
 
@@ -254,11 +254,11 @@ def main():
 
     # Check server
     try:
-        health = client.get(f"{HELIX_URL}/health").json()
+        health = client.get(f"{CYMATIX_URL}/health").json()
         print(f"Server: {health['status']}, ribosome: {health['ribosome']}, "
               f"genes: {health['genes']}")
     except Exception:
-        print(f"Cannot reach Helix at {HELIX_URL}")
+        print(f"Cannot reach Cymatix at {CYMATIX_URL}")
         sys.exit(1)
 
     print()
@@ -266,7 +266,7 @@ def main():
 
     # Final stats
     try:
-        stats = client.get(f"{HELIX_URL}/stats").json()
+        stats = client.get(f"{CYMATIX_URL}/stats").json()
         print(f"\n=== COMPLETE ===")
         print(f"New genes: {total_genes}")
         print(f"Errors: {errors}, Skipped: {skipped}")

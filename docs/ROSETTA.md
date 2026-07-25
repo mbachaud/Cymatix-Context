@@ -1,12 +1,14 @@
 # Rosetta Stone — biology lexicon ↔ software lexicon
 
-> **July 2026:** the project itself was renamed **helix-context → cymatix-context**
+> **July 2026 → 0.9.0:** the project itself was renamed **helix-context → cymatix-context**
 > (package `helix_context` → `cymatix_context`, env `HELIX_*` → `CYMATIX_*`,
-> config `helix.toml` → `cymatix.toml`, CLI `helix` → `cymatix`). Old names
-> remain as working aliases for a deprecation window. Historical docs
-> (benchmarks, council verdicts, dated plans) intentionally keep the helix
-> vocabulary — they are point-in-time records. This table's biology↔software
-> mapping is unchanged by the rename.
+> config `helix.toml` → `cymatix.toml`, CLI `helix` → `cymatix`). **The product
+> rename is now complete: as of 0.9.0 the old `helix` names have been removed
+> (clean break) — there is no `helix_context` alias package, no `helix*` CLI, no
+> `helix_*` MCP tools, no `HELIX_*` env vars, and no `helix.toml` fallback.**
+> Historical docs (benchmarks, council verdicts, dated plans) intentionally keep
+> the helix vocabulary — they are point-in-time records and are left unchanged.
+> This table's biology↔software mapping is unchanged by the rename.
 
 Cymatix's original vocabulary borrowed from molecular biology (gene, genome,
 ribosome, chromatin, splice, codon, promoter, epigenetics, transcription,
@@ -99,9 +101,9 @@ they keep their engineering names everywhere.
 
 | Type | Purpose | Where it surfaces |
 |---|---|---|
-| `ContextWindow` | Full pipeline output — the bytes the agent reads. Carries `expressed_context`, `expressed_gene_ids`, `total_estimated_tokens`, plus the `metadata` dict that pipes `know`/`miss` upward. | `cymatix_context.schemas.ContextWindow`; returned from `HelixContextManager.build_context()`. |
+| `ContextWindow` | Full pipeline output — the bytes the agent reads. Carries `expressed_context`, `expressed_gene_ids`, `total_estimated_tokens`, plus the `metadata` dict that pipes `know`/`miss` upward. | `cymatix_context.schemas.ContextWindow`; returned from `CymatixContextManager.build_context()`. |
 | `QueryResult` | Agent-facing projection of `ContextWindow`. Adds `verdict` / `next_action` / `decision_reason`. The shape `cymatix query --json` emits via `to_agent_json()`. | `cymatix_context.api.QueryResult`. |
-| `ContextPacket` | Freshness-labeled agent-safe bundle for high-risk actions. Holds `verified[]`, `stale_risk[]`, `refresh_targets[]`, plus `coordinate_confidence` and `file_coverage`. | `cymatix_context.schemas.ContextPacket`; built by `build_context_packet()`; emitted by `/context/packet`, `cymatix packet`, and the `helix_context_packet` MCP tool. |
+| `ContextPacket` | Freshness-labeled agent-safe bundle for high-risk actions. Holds `verified[]`, `stale_risk[]`, `refresh_targets[]`, plus `coordinate_confidence` and `file_coverage`. | `cymatix_context.schemas.ContextPacket`; built by `build_context_packet()`; emitted by `/context/packet`, `cymatix packet`, and the `cymatix_context_packet` MCP tool. |
 | `ContextItem` | One evidence row inside a packet — `gene_id` / `title` / `content` / `relevance_score` / `live_truth_score` / `status` (`"verified"` / `"stale"` / `"missing"`). | `cymatix_context.schemas.ContextItem`. |
 | `RefreshTarget` | One reread directive in a packet — `target_kind` / `source_id` / `reason` / `priority`. | `cymatix_context.schemas.RefreshTarget`; emitted by `cymatix refresh-targets`. |
 | `KnowBlock` | Top-level "you may answer from this evidence" verdict. Fields: `found`, `confidence`, `gene_id_match`, `soft_stale`, etc. Mutually exclusive with `MissBlock` on a single response. | `cymatix_context.schemas.KnowBlock`; populated by `know_decision.decide_know_or_miss()`. |
@@ -128,31 +130,31 @@ inline so navigation stays one-step).
 
 | Prometheus metric (canonical, stays) | Bio framing (legacy) | Engineering meaning |
 |---|---|---|
-| `helix_chromatin_state_total` | chromatin state distribution | document lifecycle tier (OPEN / WARM / COLD) |
-| `helix_harmonic_edges_total` | harmonic links by source | co-activation edges by provenance |
-| `helix_ribosome_call_seconds` | ribosome call timing | compressor call latency, by `call_kind` ∈ {pack, rerank, splice, replicate, ...} |
-| `helix_ribosome_info` | active ribosome model | active compressor backend + model + cost class |
-| `helix_genome_size_genes` | gene count in genome | document count in knowledge store |
-| `helix_genome_wal_size_bytes` | — | SQLite WAL file size |
-| `helix_genome_signal_seconds` | genome signal timing | per-signal SQLite query latency |
-| `helix_genome_checkpoint_blocked_total` | — | WAL checkpoint contention events |
-| `helix_pipeline_stage_seconds` | — | per-stage /context handler latency, by `stage` ∈ {classify, extract, express, rerank, splice, assemble} |
-| `helix_tier_fired_total` | tier activation | retrieval-signal firing, by `tier` |
-| `helix_tier_contribution` | per-tier score contribution | per-signal score magnitude added to gene_scores |
-| `helix_cwola_bucket_total` | CWoLa bucket accumulation | A/B unsupervised-partition bucket fill |
-| `helix_cwola_f_gap_sq` | f_gap_sq divergence | A/B partition divergence gate (≥ 0.16 = pass) |
-| `helix_hub_concentration_ratio` | hub concentration | top-1%-inbound / mean-inbound on co-activation graph |
-| `helix_hub_inbound_degree` | hub inbound degree | inbound-degree distribution stats (max/p99/p95/p50/mean) |
-| `helix_context_health_status_total` | — | retrieval health classification (aligned/sparse/stale/denatured) |
-| `helix_context_ellipticity` | — (CD-spectroscopy term — STAYS) | per-query retrieval shape: geometric mean of coverage × density × freshness |
-| `helix_context_cache_outcome_total` | — | /context cache outcome (hit / miss / partial) |
-| `helix_pipeline_stage_seconds` (span) | — | also emits a `helix.pipeline.<stage>` span via `pipeline_stage_span()` |
-| `helix_genai_client_token_usage` | n/a — new OTel surface | OTel `gen_ai.client.token.usage`, by `gen_ai.token.type` ∈ {input, output, cached, reasoning} |
-| `helix_genai_time_to_first_chunk_seconds` | n/a — new OTel surface | OTel `gen_ai.response.time_to_first_chunk` (TTFT, streaming) |
-| `helix_genai_cost_usd` | n/a — new surface | per-call USD cost from `cymatix_context.genai_telemetry.PRICE_TABLE` |
-| `helix_genai_finish_reasons_total` | n/a — new OTel surface | OTel `gen_ai.response.finish_reasons` distribution |
+| `cymatix_chromatin_state_total` | chromatin state distribution | document lifecycle tier (OPEN / WARM / COLD) |
+| `cymatix_harmonic_edges_total` | harmonic links by source | co-activation edges by provenance |
+| `cymatix_ribosome_call_seconds` | ribosome call timing | compressor call latency, by `call_kind` ∈ {pack, rerank, splice, replicate, ...} |
+| `cymatix_ribosome_info` | active ribosome model | active compressor backend + model + cost class |
+| `cymatix_genome_size_genes` | gene count in genome | document count in knowledge store |
+| `cymatix_genome_wal_size_bytes` | — | SQLite WAL file size |
+| `cymatix_genome_signal_seconds` | genome signal timing | per-signal SQLite query latency |
+| `cymatix_genome_checkpoint_blocked_total` | — | WAL checkpoint contention events |
+| `cymatix_pipeline_stage_seconds` | — | per-stage /context handler latency, by `stage` ∈ {classify, extract, express, rerank, splice, assemble} |
+| `cymatix_tier_fired_total` | tier activation | retrieval-signal firing, by `tier` |
+| `cymatix_tier_contribution` | per-tier score contribution | per-signal score magnitude added to gene_scores |
+| `cymatix_cwola_bucket_total` | CWoLa bucket accumulation | A/B unsupervised-partition bucket fill |
+| `cymatix_cwola_f_gap_sq` | f_gap_sq divergence | A/B partition divergence gate (≥ 0.16 = pass) |
+| `cymatix_hub_concentration_ratio` | hub concentration | top-1%-inbound / mean-inbound on co-activation graph |
+| `cymatix_hub_inbound_degree` | hub inbound degree | inbound-degree distribution stats (max/p99/p95/p50/mean) |
+| `cymatix_context_health_status_total` | — | retrieval health classification (aligned/sparse/stale/denatured) |
+| `cymatix_context_ellipticity` | — (CD-spectroscopy term — STAYS) | per-query retrieval shape: geometric mean of coverage × density × freshness |
+| `cymatix_context_cache_outcome_total` | — | /context cache outcome (hit / miss / partial) |
+| `cymatix_pipeline_stage_seconds` (span) | — | also emits a `cymatix.pipeline.<stage>` span via `pipeline_stage_span()` |
+| `cymatix_genai_client_token_usage` | n/a — new OTel surface | OTel `gen_ai.client.token.usage`, by `gen_ai.token.type` ∈ {input, output, cached, reasoning} |
+| `cymatix_genai_time_to_first_chunk_seconds` | n/a — new OTel surface | OTel `gen_ai.response.time_to_first_chunk` (TTFT, streaming) |
+| `cymatix_genai_cost_usd` | n/a — new surface | per-call USD cost from `cymatix_context.genai_telemetry.PRICE_TABLE` |
+| `cymatix_genai_finish_reasons_total` | n/a — new OTel surface | OTel `gen_ai.response.finish_reasons` distribution |
 
-**The standardized labels on the new `helix_genai_*` metrics follow the
+**The standardized labels on the new `cymatix_genai_*` metrics follow the
 OTel GenAI semantic-convention attribute namespace:** `gen_ai.provider.name`,
 `gen_ai.operation.name` ∈ {chat, text_generation, embeddings, rerank,
 classify}, `gen_ai.request.model`, `gen_ai.response.model`,
@@ -191,17 +193,17 @@ index for panel-hunting.
 
 The three top-level dashboards that consume the canonical vocabulary:
 
-- **Helix — Operations Overview** (`helix-overview.json`): top-line
+- **Cymatix — Operations Overview** (`cymatix-overview.json`): top-line
   request/latency/cache/pipeline KPIs in engineering names. Default
   landing dashboard.
-- **Helix — GenAI** (`helix-genai.json`): the new `helix_genai_*` /
+- **Cymatix — GenAI** (`cymatix-genai.json`): the new `cymatix_genai_*` /
   `gen_ai.*` surface — token usage by direction, TTFT, cost, finish
   reasons, cache hit ratio.
-- **Helix — Internals & Research** (`helix-internals.json`): preserved
+- **Cymatix — Internals & Research** (`cymatix-internals.json`): preserved
   bio/research panels (CWoLa, chromatin, harmonic_links, hub
   concentration, tier dynamics) with engineering titles + inline legacy
   references.
-- **Helix — Retrieval Quality + HITL** (`helix-retrieval-hitl.json`):
+- **Cymatix — Retrieval Quality + HITL** (`cymatix-retrieval-hitl.json`):
   per-query ellipticity / health status / HITL pause-event signals.
   Uses the technical-term vocabulary (ellipticity, denatured) that is
   already on the "STAYS" list.
@@ -289,6 +291,6 @@ assert DocumentTags is PromoterTags
 client code.
 
 ```
-helix_document_get(doc_id)   # canonical
-helix_gene_get(gene_id)       # legacy alias, same behavior
+cymatix_document_get(doc_id)   # canonical
+cymatix_gene_get(gene_id)      # legacy alias, same behavior
 ```

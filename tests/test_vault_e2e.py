@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from cymatix_context.config import HelixConfig, VaultConfig, VaultTracesConfig
+from cymatix_context.config import CymatixConfig, VaultConfig, VaultTracesConfig
 from cymatix_context.genome import Genome
 from cymatix_context.schemas import ChromatinState
 from cymatix_context.vault import VaultManager
@@ -16,7 +16,7 @@ from tests.conftest import make_gene
 
 @pytest.fixture
 def vm(tmp_path: Path):
-    cfg = HelixConfig()
+    cfg = CymatixConfig()
     cfg.vault = VaultConfig(
         enabled=True, path=str(tmp_path / "vault"),
         party_id="", fan_out_threshold=5000, redact_body=False,

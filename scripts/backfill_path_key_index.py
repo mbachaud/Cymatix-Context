@@ -10,13 +10,13 @@ Zero LLM calls. Pure regex + SQL.
 
 Usage:
     # Dry run (counts what would be inserted):
-    python scripts/backfill_path_key_index.py --db F:/Projects/helix-context/genome.db
+    python scripts/backfill_path_key_index.py --db F:/Projects/cymatix-context/genome.db
 
     # Apply (writes rows):
-    python scripts/backfill_path_key_index.py --db F:/Projects/helix-context/genome.db --apply
+    python scripts/backfill_path_key_index.py --db F:/Projects/cymatix-context/genome.db --apply
 
     # Backup before applying:
-    python scripts/backfill_path_key_index.py --db F:/Projects/helix-context/genome.db --apply --backup
+    python scripts/backfill_path_key_index.py --db F:/Projects/cymatix-context/genome.db --apply --backup
 
 Coordination:
   - WAL mode allows concurrent reads. Writes queue behind the server's

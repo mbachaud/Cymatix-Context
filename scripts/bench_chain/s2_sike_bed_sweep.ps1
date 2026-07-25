@@ -8,7 +8,7 @@
 # On a per-bed failure: log and continue to the next bed. Never exit on one step.
 # Pure ASCII, PowerShell 5.1-safe.
 $ErrorActionPreference = 'Continue'
-$repo = 'F:\Projects\helix-context'
+$repo = 'F:\Projects\cymatix-context'
 $logs = "$repo\benchmarks\logs"
 $results = "$repo\benchmarks\results"
 $bedsDir = "$repo\genomes\bench\sike_beds"
@@ -19,11 +19,11 @@ $ts = Get-Date -Format 'yyyy-MM-dd_HHmm'
 New-Item -ItemType Directory -Force -Path $logs | Out-Null
 New-Item -ItemType Directory -Force -Path $results | Out-Null
 New-Item -ItemType Directory -Force -Path $bedsDir | Out-Null
-$env:HELIX_OTEL_ENABLED = '1'
-$env:HELIX_OTEL_ENDPOINT = 'localhost:4317'
+$env:CYMATIX_OTEL_ENABLED = '1'
+$env:CYMATIX_OTEL_ENDPOINT = 'localhost:4317'
 $env:PYTHONHASHSEED = '0'
 $port = 11437
-$helixUrl = "http://127.0.0.1:$port"
+$cymatixUrl = "http://127.0.0.1:$port"
 cd $repo
 
 function Set-Status {
@@ -65,49 +65,49 @@ function Wait-Healthy {
     return $false
 }
 
-function Start-HelixOnBed {
-    # Start uvicorn (blob mode) pointed at $bedPath via HELIX_GENOME_PATH.
+function Start-CymatixOnBed {
+    # Start uvicorn (blob mode) pointed at $bedPath via CYMATIX_GENOME_PATH.
     # Returns the process object, or $null on failure.
     param([string]$bedPath, [string]$srvLog)
-    $env:HELIX_GENOME_PATH = $bedPath
+    $env:CYMATIX_GENOME_PATH = $bedPath
     # 2026-07-03 fix: serve beds with the LEXICAL probe config (dense OFF).
     # Master's default has dense_embedding_enabled=true, which put BGE-M3
     # on the same 12GB GPU the ollama 26b/31b consumers were using -->
     # 30-60s/query --> the runner's httpx calls ALL hit ReadTimeout and
     # every needle scored zero delivery. SIKE needles are lexical-designed;
     # the CPU-only lexical config removes the contention entirely.
-    $env:HELIX_CONFIG = "$repo\docs\benchmarks\helix_probe_lexical.toml"
+    $env:CYMATIX_CONFIG = "$repo\docs\benchmarks\cymatix_probe_lexical.toml"
     # 2026-07-05 fix: the proxy's default upstream_timeout (180s,
-    # helix_context/config.py) fired mid-generation for the CPU-offloaded
+    # cymatix_context/config.py) fired mid-generation for the CPU-offloaded
     # gemma4 26b-a4b/31b/26b rungs -- ~25-30% of their needles came back
     # as httpx.ReadTimeout -> http_error rows at ~181s elapsed, deflating
     # coverage to 0.66-0.78. 600s gives slow local generations room; the
     # runner's client timeout is 660s so the server side still decides.
-    $env:HELIX_SERVER_UPSTREAM_TIMEOUT = '600'
+    $env:CYMATIX_SERVER_UPSTREAM_TIMEOUT = '600'
     # 2026-07-05 fix (gap A2): serve read-only so answering a needle never
     # persists a "User query: ..." echo gene back into the bed. Without this
     # the 1556 run self-contaminated its own corpus with 260-285 echoes that
     # ranked as perfect-lexical distractors. Gated in server/helpers.py.
-    $env:HELIX_DISABLE_LEARN = '1'
-    Remove-Item Env:\HELIX_USE_SHARDS -ErrorAction SilentlyContinue
+    $env:CYMATIX_DISABLE_LEARN = '1'
+    Remove-Item Env:\CYMATIX_USE_SHARDS -ErrorAction SilentlyContinue
     if (-not (Wait-PortFree -p $port -timeoutSec 20)) {
         "  port $port still occupied; cannot start server" | Add-Content $srvLog
         return $null
     }
-    $srvArgs = @('-m', 'uvicorn', 'helix_context._asgi:app',
+    $srvArgs = @('-m', 'uvicorn', 'cymatix_context._asgi:app',
                  '--host', '127.0.0.1', '--port', "$port")
     $proc = Start-Process -FilePath 'python' -ArgumentList $srvArgs `
         -RedirectStandardOutput $srvLog -RedirectStandardError "$srvLog.err" `
         -WindowStyle Hidden -PassThru
-    if (-not (Wait-Healthy -url $helixUrl -timeoutSec 90)) {
+    if (-not (Wait-Healthy -url $cymatixUrl -timeoutSec 90)) {
         "  server did not become healthy" | Add-Content $srvLog
-        Stop-HelixTree -proc $proc
+        Stop-CymatixTree -proc $proc
         return $null
     }
     return $proc
 }
 
-function Stop-HelixTree {
+function Stop-CymatixTree {
     param($proc)
     if ($null -eq $proc) { return }
     try { taskkill /T /F /PID $proc.Id 2>&1 | Out-Null } catch {}
@@ -214,7 +214,7 @@ foreach ($bed in $beds) {
 
     # 3. Start a blob-mode server on the bed copy.
     $srvLog = "$logs\s2_${name}_server_$ts.log"
-    $proc = Start-HelixOnBed -bedPath $copy -srvLog $srvLog
+    $proc = Start-CymatixOnBed -bedPath $copy -srvLog $srvLog
     if ($null -eq $proc) {
         "  SERVER START FAILED for $name -- skipping bed" | Add-Content "$logs\s2_summary_$ts.log"
         continue
@@ -229,7 +229,7 @@ foreach ($bed in $beds) {
     $runLog = "$logs\s2_${name}_run_$ts.log"
     $claudeArgs = @('scripts\bench_chain\s2_sike_bedsweep_run.py',
                     '--bed', $name,
-                    '--helix-url', $helixUrl,
+                    '--cymatix-url', $cymatixUrl,
                     '--claude-model', 'sonnet',
                     '--claude-max-usd', '0.15',
                     '--resume',
@@ -252,16 +252,16 @@ foreach ($bed in $beds) {
     if ($runExit -eq 42) {
         "  bed $name PAUSED (exit 42). Delete $pauseFlag and relaunch to resume." |
             Add-Content "$logs\s2_summary_$ts.log"
-        Stop-HelixTree -proc $proc
+        Stop-CymatixTree -proc $proc
         Set-Status 's2_sike_beds' "PAUSED:$name"
         break
     }
 
     # 5. Tear down the server before the next bed.
-    Stop-HelixTree -proc $proc
+    Stop-CymatixTree -proc $proc
     "  server stopped for $name" | Add-Content "$logs\s2_summary_$ts.log"
 }
 
-Remove-Item Env:\HELIX_GENOME_PATH, Env:\HELIX_SERVER_UPSTREAM_TIMEOUT, Env:\HELIX_CONFIG -ErrorAction SilentlyContinue
+Remove-Item Env:\CYMATIX_GENOME_PATH, Env:\CYMATIX_SERVER_UPSTREAM_TIMEOUT, Env:\CYMATIX_CONFIG -ErrorAction SilentlyContinue
 Set-Status 's2_sike_beds' 'DONE'
 "s2 complete $(Get-Date -Format o)" | Add-Content "$logs\s2_summary_$ts.log"

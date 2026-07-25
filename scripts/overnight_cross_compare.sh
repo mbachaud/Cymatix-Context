@@ -2,11 +2,11 @@
 # Overnight orchestrator — build bench genomes + cross-compare.
 #
 # Runs two phases sequentially:
-#   1. scripts/build_bench_genomes.py   (~10min for helix, ~1-2h for organic)
+#   1. scripts/build_bench_genomes.py   (~10min for cymatix, ~1-2h for organic)
 #   2. scripts/cross_compare_genomes.py (~1-2min per genome + queries)
 #
 # Writes all output to:
-#   overnight_logs/build_{helix,organic}.log
+#   overnight_logs/build_{cymatix,organic}.log
 #   docs/FUTURE/genome_cross_compare_2026-04-15.md
 #
 # Intended to be launched detached and forgotten. Safe to re-run — each
@@ -15,7 +15,7 @@
 
 set -u  # unbound variable = fail
 # Deliberately NOT set -e — we want phase failures logged but not fatal
-# so that e.g. a successful "helix" build still gets compared even if
+# so that e.g. a successful "cymatix" build still gets compared even if
 # "organic" bails halfway.
 
 cd "$(dirname "$0")/.."  # repo root
@@ -38,15 +38,15 @@ log "=== Overnight cross-compare run: $STAMP ==="
 log "Writing final report to: $REPORT"
 log ""
 
-# ── Phase 1a: build the tight helix-only bench genome ─────────────
-log "Phase 1a: build genome_bench_helix.db (tight, ~5-10 min)"
-python scripts/build_bench_genomes.py --target helix \
-    >> "$LOGDIR/build_helix_${STAMP}.log" 2>&1
-RC_HELIX=$?
-if [ $RC_HELIX -eq 0 ]; then
-    log "  ✓ helix bench genome built"
+# ── Phase 1a: build the tight cymatix-only bench genome ─────────────
+log "Phase 1a: build genome_bench_cymatix.db (tight, ~5-10 min)"
+python scripts/build_bench_genomes.py --target cymatix \
+    >> "$LOGDIR/build_cymatix_${STAMP}.log" 2>&1
+RC_CYMATIX=$?
+if [ $RC_CYMATIX -eq 0 ]; then
+    log "  ✓ cymatix bench genome built"
 else
-    log "  ✗ helix bench build failed (rc=$RC_HELIX); see $LOGDIR/build_helix_${STAMP}.log"
+    log "  ✗ cymatix bench build failed (rc=$RC_CYMATIX); see $LOGDIR/build_cymatix_${STAMP}.log"
 fi
 
 # ── Phase 1b: build the wide organic bench genome ────────────────
@@ -65,7 +65,7 @@ log ""
 log "Phase 2: cross-compare"
 
 GENOMES="genome.db"
-[ -f "genome_bench_helix.db" ]    && GENOMES="$GENOMES genome_bench_helix.db"
+[ -f "genome_bench_cymatix.db" ]    && GENOMES="$GENOMES genome_bench_cymatix.db"
 [ -f "genome_bench_organic.db" ]  && GENOMES="$GENOMES genome_bench_organic.db"
 
 log "Comparing: $GENOMES"
@@ -82,7 +82,7 @@ fi
 log ""
 log "=== DONE ==="
 log "Report: $REPORT"
-log "Phase exit codes: helix=$RC_HELIX, organic=$RC_ORGANIC, compare=$RC_CMP"
+log "Phase exit codes: cymatix=$RC_CYMATIX, organic=$RC_ORGANIC, compare=$RC_CMP"
 log ""
 log "Listing produced .db files:"
 ls -lh genome_bench_*.db 2>/dev/null | awk '{print "  " $5 "  " $NF}' | tee -a "$OVERALL_LOG"

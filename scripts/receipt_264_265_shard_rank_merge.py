@@ -3,7 +3,7 @@
 Deterministic, no server / GPU / network. Builds two small real on-disk
 shard fixtures that reproduce each defect, then sweeps the cross-shard merge
 over ``fusion_mode`` x ``doc_type_boost_mode`` (#264) and ``fusion_mode`` x
-``HELIX_SHARD_GLOBAL_IDF`` (#265), reporting recall@10 / MRR over a small
+``CYMATIX_SHARD_GLOBAL_IDF`` (#265), reporting recall@10 / MRR over a small
 multi-needle bed plus the exact flip case each issue documents.
 
     PYTHONPATH=<worktree> python scripts/receipt_264_265_shard_rank_merge.py
@@ -184,9 +184,9 @@ def run():
     for fusion in ("rrf", "additive"):
         for flag in ("0", "1"):
             if flag == "1":
-                os.environ["HELIX_SHARD_GLOBAL_IDF"] = "1"
+                os.environ["CYMATIX_SHARD_GLOBAL_IDF"] = "1"
             else:
-                os.environ.pop("HELIX_SHARD_GLOBAL_IDF", None)
+                os.environ.pop("CYMATIX_SHARD_GLOBAL_IDF", None)
             r = ShardRouter(idf["main_path"], fusion_mode=fusion)
             try:
                 res = r.query_genes(domains=["topic"], entities=["widget", "frob"],
@@ -204,7 +204,7 @@ def run():
                 }
             finally:
                 r.close()
-    os.environ.pop("HELIX_SHARD_GLOBAL_IDF", None)
+    os.environ.pop("CYMATIX_SHARD_GLOBAL_IDF", None)
 
     report["notes"] = [
         "#264: rrf/additive(default) FLIPS the keyword-dense impl below the "

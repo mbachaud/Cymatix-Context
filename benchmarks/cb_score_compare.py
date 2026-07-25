@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""ContextBench Step-0 arm-D: score Helix preds with the OFFICIAL evaluator + compare to BM25.
+"""ContextBench Step-0 arm-D: score Cymatix preds with the OFFICIAL evaluator + compare to BM25.
 
-Run with the cb-step0 venv. For each Helix pred JSON: run `python -m contextbench.evaluate`
+Run with the cb-step0 venv. For each Cymatix pred JSON: run `python -m contextbench.evaluate`
 (same convention as the BM25 harness), parse the per-instance JSONL, micro-average file/symbol/
 line EXACTLY like the evaluator (cov=inter/gold if gold else 1.0; prec=inter/pred if pred else 1.0),
 join injected_tokens (median) from the meta sidecar. Load existing BM25 numbers from step0_summary.json.
@@ -57,8 +57,8 @@ def run_evaluator(pred_path, out_jsonl, env):
     return rows, r.returncode
 
 
-def score_helix_pred(label, pred_path, meta_path, env):
-    """Returns a summary dict for one Helix arm (or not_measured)."""
+def score_cymatix_pred(label, pred_path, meta_path, env):
+    """Returns a summary dict for one Cymatix arm (or not_measured)."""
     out_jsonl = os.path.join(RESULTS, os.path.basename(pred_path).replace("_pred.json", "_eval.jsonl"))
     rows, rc = run_evaluator(pred_path, out_jsonl, env)
     n_scored = sum(1 for r in rows if "error" not in r)
@@ -102,9 +102,9 @@ def bm25_row(bm, label_in):
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Score Helix arm-D + compare to BM25")
+    ap = argparse.ArgumentParser(description="Score Cymatix arm-D + compare to BM25")
     ap.add_argument("--tags", default="v062,wt")
-    ap.add_argument("--out", default=os.path.join(RESULTS, "step0_helix_compare_summary.json"))
+    ap.add_argument("--out", default=os.path.join(RESULTS, "step0_cymatix_compare_summary.json"))
     args = ap.parse_args()
 
     os.environ["CONTEXTBENCH_TMP_ROOT"] = "F:/Projects/_cache/cb_wt"
@@ -117,24 +117,24 @@ def main():
     with open(BM25_SUMMARY, "r", encoding="utf-8") as f:
         bm = json.load(f)
 
-    # row order: bm25:8k, bm25:27k, then helix arms per tag
+    # row order: bm25:8k, bm25:27k, then cymatix arms per tag
     rows = {}
     rows["bm25:8k"] = bm25_row(bm, "bm25:8k")
     rows["bm25:27k"] = bm25_row(bm, "bm25:27k")
 
     tags = [t.strip() for t in args.tags.split(",") if t.strip()]
-    helix_specs = []  # (row_label, pred_basename, meta_basename)
+    cymatix_specs = []  # (row_label, pred_basename, meta_basename)
     for tag in tags:
-        helix_specs += [
-            (f"helix_{tag}_fingerprint_8k", f"helix_{tag}_fingerprint_8k_pred.json",
-             f"helix_{tag}_fingerprint_8k_meta.json"),
-            (f"helix_{tag}_fingerprint_27k", f"helix_{tag}_fingerprint_27k_pred.json",
-             f"helix_{tag}_fingerprint_27k_meta.json"),
-            (f"helix_{tag}_packet", f"helix_{tag}_packet_pred.json",
-             f"helix_{tag}_packet_meta.json"),
+        cymatix_specs += [
+            (f"cymatix_{tag}_fingerprint_8k", f"cymatix_{tag}_fingerprint_8k_pred.json",
+             f"cymatix_{tag}_fingerprint_8k_meta.json"),
+            (f"cymatix_{tag}_fingerprint_27k", f"cymatix_{tag}_fingerprint_27k_pred.json",
+             f"cymatix_{tag}_fingerprint_27k_meta.json"),
+            (f"cymatix_{tag}_packet", f"cymatix_{tag}_packet_pred.json",
+             f"cymatix_{tag}_packet_meta.json"),
         ]
 
-    for label, predb, metab in helix_specs:
+    for label, predb, metab in cymatix_specs:
         pred_path = os.path.join(RESULTS, predb)
         meta_path = os.path.join(RESULTS, metab)
         if not os.path.isfile(pred_path):
@@ -142,7 +142,7 @@ def main():
             rows[label] = {"not_measured": True, "reason": "pred_missing"}
             continue
         print(f"\n===== SCORE {label} =====", file=sys.stderr)
-        row, _ = score_helix_pred(label, pred_path, meta_path, env)
+        row, _ = score_cymatix_pred(label, pred_path, meta_path, env)
         rows[label] = row
 
     # ---- combined table ----

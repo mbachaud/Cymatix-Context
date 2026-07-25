@@ -52,10 +52,10 @@ from cymatix_context.config import (
     BudgetConfig,
     ClassifierConfig,
     GenomeConfig,
-    HelixConfig,
+    CymatixConfig,
     RibosomeConfig,
 )
-from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.context_manager import CymatixContextManager
 from tests.conftest import make_gene
 from tests.conftest import MockCompressorBackend
 
@@ -230,14 +230,14 @@ def _serializable_window(win: Any) -> Dict[str, Any]:
     }
 
 
-def _build_manager() -> HelixContextManager:
-    cfg = HelixConfig(
+def _build_manager() -> CymatixContextManager:
+    cfg = CymatixConfig(
         ribosome=RibosomeConfig(model="mock", timeout=5),
         budget=BudgetConfig(max_genes_per_turn=4, splice_aggressiveness=0.5),
         genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
         classifier=ClassifierConfig(enabled=True),
     )
-    mgr = HelixContextManager(cfg)
+    mgr = CymatixContextManager(cfg)
     mgr.ribosome.backend = MockCompressorBackend()
     for i, spec in enumerate(_SEED_GENES):
         mgr.genome.upsert_gene(make_gene(

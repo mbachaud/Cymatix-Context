@@ -3,8 +3,8 @@
 Exercises the primitives added in docs/specs/2026-04-16-layered-fingerprints-plan.md:
 
 - StructuralRelation.CHUNK_OF enum
-- HelixContextManager._make_parent_gene_id (deterministic)
-- HelixContextManager._upsert_parent_gene (creates parent + CHUNK_OF edges)
+- CymatixContextManager._make_parent_gene_id (deterministic)
+- CymatixContextManager._upsert_parent_gene (creates parent + CHUNK_OF edges)
 - Genome.reassemble (child → full-file content)
 - Genome._aggregate_parent_fingerprints (co-activation boost)
 
@@ -16,7 +16,7 @@ import os
 
 import pytest
 
-from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.context_manager import CymatixContextManager
 from cymatix_context.genome import Genome
 from cymatix_context.schemas import (
     ChromatinState,
@@ -48,19 +48,19 @@ class TestStructuralRelationEnum:
 
 class TestParentGeneId:
     def test_deterministic_for_same_path(self):
-        a = HelixContextManager._make_parent_gene_id("F:/Projects/file.md")
-        b = HelixContextManager._make_parent_gene_id("F:/Projects/file.md")
+        a = CymatixContextManager._make_parent_gene_id("F:/Projects/file.md")
+        b = CymatixContextManager._make_parent_gene_id("F:/Projects/file.md")
         assert a == b
 
     def test_different_paths_different_ids(self):
-        a = HelixContextManager._make_parent_gene_id("F:/Projects/a.md")
-        b = HelixContextManager._make_parent_gene_id("F:/Projects/b.md")
+        a = CymatixContextManager._make_parent_gene_id("F:/Projects/a.md")
+        b = CymatixContextManager._make_parent_gene_id("F:/Projects/b.md")
         assert a != b
 
     def test_distinct_from_content_hash(self):
         """Parent ID must not collide with a content-hashed child ID."""
         path = "/tmp/file.txt"
-        parent_id = HelixContextManager._make_parent_gene_id(path)
+        parent_id = CymatixContextManager._make_parent_gene_id(path)
         content_id = Genome.make_gene_id(path)  # hash of the path as content
         assert parent_id != content_id
 
@@ -79,7 +79,7 @@ def _insert_parent_with_children(genome: Genome, source_path: str, chunks: list[
         gid = genome.upsert_gene(g)
         child_ids.append(gid)
 
-    parent_gid = HelixContextManager._make_parent_gene_id(source_path)
+    parent_gid = CymatixContextManager._make_parent_gene_id(source_path)
     full_content = "\n\n".join(chunks)
     parent = Gene(
         gene_id=parent_gid,
@@ -135,7 +135,7 @@ class TestReassemble:
             g.is_fragment = True
             child_ids.append(genome.upsert_gene(g))
 
-        parent_gid = HelixContextManager._make_parent_gene_id(source)
+        parent_gid = CymatixContextManager._make_parent_gene_id(source)
         parent = Gene(
             gene_id=parent_gid,
             content="abc",
@@ -260,17 +260,17 @@ class TestParentAggregation:
 
 class TestFeatureFlag:
     def test_flag_off_preserves_behaviour(self, genome, monkeypatch):
-        """With HELIX_LAYERED_FINGERPRINTS unset, query_genes path bypasses
+        """With CYMATIX_LAYERED_FINGERPRINTS unset, query_genes path bypasses
         parent aggregation (it only runs behind the flag)."""
-        monkeypatch.delenv("HELIX_LAYERED_FINGERPRINTS", raising=False)
+        monkeypatch.delenv("CYMATIX_LAYERED_FINGERPRINTS", raising=False)
         chunks = ["one", "two"]
         _, child_ids = _insert_parent_with_children(genome, "/tmp/flag.md", chunks)
 
         # Direct call to the method mutates, but the auto-hook is gated:
         # verify by reading the env var — the genome.query_genes wrapper
         # only calls _aggregate_parent_fingerprints when flag is "1".
-        assert os.environ.get("HELIX_LAYERED_FINGERPRINTS", "0") != "1"
+        assert os.environ.get("CYMATIX_LAYERED_FINGERPRINTS", "0") != "1"
 
     def test_flag_on_triggers_aggregation(self, genome, monkeypatch):
-        monkeypatch.setenv("HELIX_LAYERED_FINGERPRINTS", "1")
-        assert os.environ.get("HELIX_LAYERED_FINGERPRINTS") == "1"
+        monkeypatch.setenv("CYMATIX_LAYERED_FINGERPRINTS", "1")
+        assert os.environ.get("CYMATIX_LAYERED_FINGERPRINTS") == "1"

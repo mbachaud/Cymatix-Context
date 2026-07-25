@@ -1,6 +1,6 @@
 """Stage 2: backfill BGE-M3 v2 dense vectors as raw fp32 BLOBs.
 
-Stage 2 of the helix-context retrieval-fix plan (2026-05-08).
+Stage 2 of the cymatix-context retrieval-fix plan (2026-05-08).
 
 Writes ``embedding_dense_v2`` (BLOB, raw little-endian fp32, ``dim*4`` bytes)
 for every gene whose v2 column is currently NULL. Idempotent: rows with a
@@ -10,7 +10,7 @@ Usage:
 
     python scripts/backfill_bgem3_v2.py [path/to/genome.db]
 
-If no path is given, reads ``[genome] path`` from ``helix.toml``.
+If no path is given, reads ``[genome] path`` from ``cymatix.toml``.
 
 Operator runbook (post-merge):
 
@@ -120,9 +120,9 @@ def backfill_dense_db(
     Args:
         db_path: path to the genome ``.db`` to backfill in place.
         dim: dense vector dimension. ``None`` → ``retrieval.dense_embedding_dim``
-            from ``helix.toml``.
+            from ``cymatix.toml``.
         model_name: BGE-M3 model ID passed to ``BGEM3Codec``. ``None`` →
-            ``retrieval.dense_model`` from ``helix.toml`` (#207 dense
+            ``retrieval.dense_model`` from ``cymatix.toml`` (#207 dense
             fast-follow; default ``"BAAI/bge-m3"``, byte-identical to the
             prior hardwired literal).
         char_cap: passage char cap applied before encoding — MUST stay
@@ -130,7 +130,7 @@ def backfill_dense_db(
             (``context_manager.ingest``) and the query-side slice
             (``KnowledgeStore._encode_dense_v2_blob``) so the three encode
             paths cannot drift. ``None`` → ``ingestion.dense_passage_char_cap``
-            from ``helix.toml``, falling back to the module constant
+            from ``cymatix.toml``, falling back to the module constant
             :data:`PASSAGE_CHAR_CAP` if a stale config object lacks the key.
         batch: encode + commit batch size. Default 64.
         limit: optional cap on rows to process (smoke tests).
@@ -141,12 +141,12 @@ def backfill_dense_db(
         crawl_detector: an object exposing ``feed(genes, dt, vram_frac)``
             (the issue #212 crawl watchdog). ``None`` -> a
             :class:`crawl_watchdog.CrawlDetector` built from the
-            ``HELIX_BFM_CRAWL_*`` env knobs -- honored HERE so both the
+            ``CYMATIX_BFM_CRAWL_*`` env knobs -- honored HERE so both the
             standalone operator script and the fixture builder's
             ``_backfill_dense`` pass get the watchdog. On a sustained
             crawl (per-batch genes/s EMA below the run's own early-batch
-            baseline / ``HELIX_BFM_CRAWL_FACTOR`` for
-            ``HELIX_BFM_CRAWL_WINDOW`` consecutive batches with dedicated
+            baseline / ``CYMATIX_BFM_CRAWL_FACTOR`` for
+            ``CYMATIX_BFM_CRAWL_WINDOW`` consecutive batches with dedicated
             VRAM > 0.92 of capacity) the ladder first releases the CUDA
             cache, then tears the codec down and reloads it on CPU for
             the REMAINDER of this DB (``BGEM3_DEVICE=cpu`` semantics,
@@ -244,7 +244,7 @@ def backfill_dense_db(
         processed = 0
         skipped = 0
         # Issue #212 crawl watchdog: one observation per batch, env knobs
-        # (HELIX_BFM_CRAWL_WINDOW / _FACTOR / _ACTION) honored here so the
+        # (CYMATIX_BFM_CRAWL_WINDOW / _FACTOR / _ACTION) honored here so the
         # standalone script and build_fixture_matrix._backfill_dense share
         # one implementation. CPU-only boxes never trip (vram probe = None).
         watchdog = (
@@ -372,7 +372,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Backfill BGE-M3 v2 BLOBs.")
     parser.add_argument(
         "db_path", nargs="?", default=None,
-        help="Path to genome.db (defaults to helix.toml [genome] path).",
+        help="Path to genome.db (defaults to cymatix.toml [genome] path).",
     )
     parser.add_argument(
         "--batch", type=int, default=64,

@@ -128,9 +128,9 @@ def test_aggregate_scorecard_carries_profile_metadata(tmp_path):
         model_name="oracle-only",
         genome_path=str(genome_path),
         fingerprint_profile="fast",
-        helix_url="http://127.0.0.1:11437",
+        cymatix_url="http://127.0.0.1:11437",
     )
 
     assert scorecard["meta"]["fingerprint_profile"] == "fast"
-    assert scorecard["meta"]["helix_url"] == "http://127.0.0.1:11437"
+    assert scorecard["meta"]["cymatix_url"] == "http://127.0.0.1:11437"
     assert scorecard["meta"]["gene_count"] == 2

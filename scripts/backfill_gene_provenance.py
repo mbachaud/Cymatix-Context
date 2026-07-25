@@ -52,7 +52,7 @@ except Exception:
 
 from cymatix_context.provenance import infer_source_kind, infer_volatility
 
-DEFAULT_GENOME = "F:/Projects/helix-context/genomes/main/genome.db"
+DEFAULT_GENOME = "F:/Projects/cymatix-context/genomes/main/genome.db"
 
 
 def pick_last_verified_at(

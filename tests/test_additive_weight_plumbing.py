@@ -464,7 +464,7 @@ def test_retrieval_config_defaults_match_additive_literals():
 
 
 def test_toml_loader_plumbs_sema_boost_weight(tmp_path):
-    cfg_file = tmp_path / "helix.toml"
+    cfg_file = tmp_path / "cymatix.toml"
     cfg_file.write_text(
         "[retrieval]\nsema_boost_weight = 9.0\ntag_exact_weight = 4.5\n"
     )

@@ -56,8 +56,8 @@ from cymatix_context.backends.bgem3_codec import (
     BGEM3Codec,
     vec_to_blob,
 )
-from cymatix_context.config import HelixConfig
-from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.config import CymatixConfig
+from cymatix_context.context_manager import CymatixContextManager
 from cymatix_context.genome import Genome
 from cymatix_context.schemas import (
     ChromatinState, EpigeneticMarkers, Gene, PromoterTags,
@@ -244,12 +244,12 @@ def test_fresh_genome_round_trips_dense_vector():
 # ── 5. context_manager.ingest populates every strand ─────────────────
 
 
-def _make_manager(*, dense_on: bool) -> HelixContextManager:
-    cfg = HelixConfig()
+def _make_manager(*, dense_on: bool) -> CymatixContextManager:
+    cfg = CymatixConfig()
     cfg.genome.path = ":memory:"
     cfg.ingestion.backend = "cpu"
     cfg.ingestion.dense_embed_on_ingest = dense_on
-    mgr = HelixContextManager(cfg)
+    mgr = CymatixContextManager(cfg)
     mgr._dense_codec = _FakeCodec(cfg.retrieval.dense_embedding_dim)
     return mgr
 
@@ -406,7 +406,7 @@ def test_backfill_v2_idempotent(tmp_path):
             spec = importlib.util.spec_from_file_location("backfill_bgem3_v2", script)
             mod = importlib.util.module_from_spec(spec)
             # First run — populates everything. Pin --dim 1024 so the test
-            # is independent of whatever the local helix.toml says.
+            # is independent of whatever the local cymatix.toml says.
             sys.argv = ["backfill_bgem3_v2.py", str(db_path), "--dim", "1024"]
             spec.loader.exec_module(mod)
             mod.main()
@@ -552,7 +552,7 @@ def test_live_real_codec_encode_and_pack_roundtrip():
     """
     try:
         codec = BGEM3Codec(dim=DIM)
-        vec = codec.encode("helix runs an OpenAI-compatible proxy", task="passage")
+        vec = codec.encode("cymatix runs an OpenAI-compatible proxy", task="passage")
     except Exception as exc:  # noqa: BLE001 — model download / import failure
         pytest.skip(f"BGE-M3 model unavailable: {exc}")
 

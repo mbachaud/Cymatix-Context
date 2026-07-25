@@ -2,7 +2,7 @@
 # (SIKE bed-sweep) that was killed after the 2026-07-02 ollama-list hang.
 # Serial discipline: never runs S2 while S3/S4 own the rig.
 $ErrorActionPreference = 'Continue'
-$repo = 'F:\Projects\helix-context'
+$repo = 'F:\Projects\cymatix-context'
 $logs = "$repo\benchmarks\logs"
 $status = "$logs\chain_status.json"
 "s2 rerun watcher started $(Get-Date -Format o) pid=$PID" | Set-Content "$logs\s2_watcher.log"

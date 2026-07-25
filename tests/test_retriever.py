@@ -7,7 +7,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from cymatix_context.adapters.retriever import (
-    HelixNarrowedRetriever,
+    CymatixNarrowedRetriever,
     LangChainRetriever,
     LlamaIndexRetriever,
     Retriever,
@@ -169,7 +169,7 @@ def test_langchain_retriever_softfails_on_exception():
     assert wrapper.retrieve("q") == []
 
 
-# ── HelixNarrowedRetriever ──────────────────────────────────────────
+# ── CymatixNarrowedRetriever ──────────────────────────────────────────
 
 
 def _mock_packet(source_ids):
@@ -181,10 +181,10 @@ def _mock_packet(source_ids):
     }
 
 
-def test_narrowed_passes_helix_shortlist_to_inner():
+def test_narrowed_passes_cymatix_shortlist_to_inner():
     inner = MagicMock(spec=Retriever)
     inner.retrieve.return_value = [RetrievedDoc(source_id="/a.py")]
-    narrowed = HelixNarrowedRetriever(inner)
+    narrowed = CymatixNarrowedRetriever(inner)
     fake_resp = MagicMock()
     fake_resp.json.return_value = _mock_packet(["/a.py", "/b.py"])
     fake_resp.raise_for_status = MagicMock()
@@ -196,10 +196,10 @@ def test_narrowed_passes_helix_shortlist_to_inner():
     assert docs[0].source_id == "/a.py"
 
 
-def test_narrowed_intersects_caller_filter_with_helix_shortlist():
+def test_narrowed_intersects_caller_filter_with_cymatix_shortlist():
     inner = MagicMock(spec=Retriever)
     inner.retrieve.return_value = []
-    narrowed = HelixNarrowedRetriever(inner, fallback_unscoped=False)
+    narrowed = CymatixNarrowedRetriever(inner, fallback_unscoped=False)
     fake_resp = MagicMock()
     fake_resp.json.return_value = _mock_packet(["/a.py", "/b.py", "/c.py"])
     fake_resp.raise_for_status = MagicMock()
@@ -210,10 +210,10 @@ def test_narrowed_intersects_caller_filter_with_helix_shortlist():
     assert call_kwargs["filter_paths"] == {"/b.py"}
 
 
-def test_narrowed_falls_back_unscoped_when_helix_empty():
+def test_narrowed_falls_back_unscoped_when_cymatix_empty():
     inner = MagicMock(spec=Retriever)
     inner.retrieve.return_value = [RetrievedDoc(source_id="/x.py")]
-    narrowed = HelixNarrowedRetriever(inner, fallback_unscoped=True)
+    narrowed = CymatixNarrowedRetriever(inner, fallback_unscoped=True)
     fake_resp = MagicMock()
     fake_resp.json.return_value = _mock_packet([])
     fake_resp.raise_for_status = MagicMock()
@@ -226,20 +226,20 @@ def test_narrowed_falls_back_unscoped_when_helix_empty():
     assert docs[0].source_id == "/x.py"
 
 
-def test_narrowed_survives_helix_unreachable():
-    """Helix down → fall back unscoped to the inner retriever."""
+def test_narrowed_survives_cymatix_unreachable():
+    """Cymatix down → fall back unscoped to the inner retriever."""
     inner = MagicMock(spec=Retriever)
     inner.retrieve.return_value = [RetrievedDoc(source_id="/x.py")]
-    narrowed = HelixNarrowedRetriever(inner, fallback_unscoped=True)
+    narrowed = CymatixNarrowedRetriever(inner, fallback_unscoped=True)
     with patch("httpx.post", side_effect=Exception("connection refused")):
         docs = narrowed.retrieve("q")
     assert docs[0].source_id == "/x.py"
 
 
-def test_narrowed_no_fallback_returns_empty_when_helix_empty():
+def test_narrowed_no_fallback_returns_empty_when_cymatix_empty():
     inner = MagicMock(spec=Retriever)
     inner.retrieve.return_value = [RetrievedDoc(source_id="/x.py")]
-    narrowed = HelixNarrowedRetriever(inner, fallback_unscoped=False)
+    narrowed = CymatixNarrowedRetriever(inner, fallback_unscoped=False)
     fake_resp = MagicMock()
     fake_resp.json.return_value = _mock_packet([])
     fake_resp.raise_for_status = MagicMock()
@@ -249,11 +249,11 @@ def test_narrowed_no_fallback_returns_empty_when_helix_empty():
 
 
 def test_narrowed_empty_intersection_never_widens_past_caller_filter():
-    """Helix shortlist ∩ caller filter = ∅ must NOT fall back unscoped —
+    """Cymatix shortlist ∩ caller filter = ∅ must NOT fall back unscoped —
     the caller's filter_paths is a repository/tenant boundary."""
     inner = MagicMock(spec=Retriever)
     inner.retrieve.return_value = [RetrievedDoc(source_id="/tenant/a.py")]
-    narrowed = HelixNarrowedRetriever(inner, fallback_unscoped=True)
+    narrowed = CymatixNarrowedRetriever(inner, fallback_unscoped=True)
     fake_resp = MagicMock()
     fake_resp.json.return_value = _mock_packet(["/other/x.py", "/other/y.py"])
     fake_resp.raise_for_status = MagicMock()
@@ -271,7 +271,7 @@ def test_narrowed_caller_scoped_miss_does_not_fall_back_unscoped():
     than widening to an unscoped retrieve outside the caller's filter."""
     inner = MagicMock(spec=Retriever)
     inner.retrieve.return_value = []
-    narrowed = HelixNarrowedRetriever(inner, fallback_unscoped=True)
+    narrowed = CymatixNarrowedRetriever(inner, fallback_unscoped=True)
     fake_resp = MagicMock()
     fake_resp.json.return_value = _mock_packet([])
     fake_resp.raise_for_status = MagicMock()
@@ -287,7 +287,7 @@ def test_narrowed_caller_scoped_miss_does_not_fall_back_unscoped():
 def test_narrowed_forwards_read_only_flag_to_packet_request():
     inner = MagicMock(spec=Retriever)
     inner.retrieve.return_value = []
-    narrowed = HelixNarrowedRetriever(inner, read_only=True, fallback_unscoped=False)
+    narrowed = CymatixNarrowedRetriever(inner, read_only=True, fallback_unscoped=False)
     fake_resp = MagicMock()
     fake_resp.json.return_value = _mock_packet([])
     fake_resp.raise_for_status = MagicMock()

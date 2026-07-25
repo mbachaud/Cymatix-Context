@@ -57,13 +57,13 @@ def test_entity_keys_extracts_file_path():
 
 
 def test_entity_keys_extracts_port():
-    keys = extract_entity_keys("helix listens on port 11437")
+    keys = extract_entity_keys("cymatix listens on port 11437")
     assert "port:11437" in keys
 
 
 def test_entity_keys_extracts_symbol():
-    keys = extract_entity_keys("HELIX_USE_SHARDS is off by default")
-    assert "HELIX_USE_SHARDS" in keys
+    keys = extract_entity_keys("CYMATIX_USE_SHARDS is off by default")
+    assert "CYMATIX_USE_SHARDS" in keys
 
 
 def test_entity_keys_extracts_kv_lhs():
@@ -170,7 +170,7 @@ def test_config_extractor_toml_style():
 
 def test_doc_extractor_headers_and_ports():
     content = (
-        "# Helix Design\n"
+        "# Cymatix Design\n"
         "## Retrieval Pipeline\n"
         "### Deep section\n"                # skipped (> H2)
         "\n"
@@ -179,7 +179,7 @@ def test_doc_extractor_headers_and_ports():
     gene = _gene(content=content, source_kind="doc")
     claims = extract_literal_claims(gene)
     titles = {c.claim_text for c in claims if c.claim_type == "operational_state"}
-    assert "section: Helix Design" in titles
+    assert "section: Cymatix Design" in titles
     assert "section: Retrieval Pipeline" in titles
     assert "section: Deep section" not in titles
     ports = {c.entity_key for c in claims if c.claim_type == "path_value"}
@@ -240,7 +240,7 @@ def test_ingest_hook_auto_populates_claims(tmp_path):
     """Full round-trip: Genome wired with main_conn → upsert_gene triggers
     claim extraction → query_claims returns claims without reading gene content.
 
-    First-milestone verification for Phase 2: "Helix can answer structured
+    First-milestone verification for Phase 2: "Cymatix can answer structured
     fact questions without reopening bulk content."
     """
     from cymatix_context.genome import Genome

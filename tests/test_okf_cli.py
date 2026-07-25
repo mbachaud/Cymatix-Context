@@ -1,4 +1,4 @@
-"""`helix ingest --okf` — CLI surface for OKF bundle ingestion."""
+"""`cymatix ingest --okf` — CLI surface for OKF bundle ingestion."""
 
 import json
 from pathlib import Path
@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 import pytest
 
-from tests.conftest import make_helix_config, run_cli as _run
+from tests.conftest import make_cymatix_config, run_cli as _run
 
 pytest.importorskip("spacy")
 
@@ -17,9 +17,9 @@ OKF_FIXTURES = Path(__file__).parent / "fixtures" / "okf"
 @pytest.fixture
 def real_session():
     """A session-shaped object over a real in-memory manager."""
-    from cymatix_context.context_manager import HelixContextManager
+    from cymatix_context.context_manager import CymatixContextManager
 
-    return SimpleNamespace(_manager=HelixContextManager(make_helix_config()))
+    return SimpleNamespace(_manager=CymatixContextManager(make_cymatix_config()))
 
 
 def test_okf_ingest_happy_path(real_session):
@@ -95,7 +95,7 @@ def test_okf_deterministic_profile_flips_ingest_flags(real_session):
     with patch(
         "cymatix_context.cli.cmd_ingest.open_session", side_effect=fake_open_session
     ), patch(
-        "cymatix_context.config.load_config", return_value=make_helix_config()
+        "cymatix_context.config.load_config", return_value=make_cymatix_config()
     ):
         rc, out, err = _run(
             [

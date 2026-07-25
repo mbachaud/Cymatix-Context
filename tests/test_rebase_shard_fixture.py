@@ -104,9 +104,9 @@ def relocated_fixture(tmp_path: Path):
 
     ga = Genome(str(a_path))
     gene_a = _mk_gene(
-        "Helix retrieval pipeline design. Splice and assemble context.",
+        "Cymatix retrieval pipeline design. Splice and assemble context.",
         domains=["retrieval"],
-        entities=["helix"],
+        entities=["cymatix"],
         source="/docs/pipeline.md",
     )
     gene_a_id = ga.upsert_gene(gene_a, apply_gate=False)
@@ -138,7 +138,7 @@ def relocated_fixture(tmp_path: Path):
         main, gene_id=gene_a_id, shard_name="alpha",
         source_id="/docs/pipeline.md",
         domains_json=json.dumps(["retrieval"]),
-        entities_json=json.dumps(["helix"]),
+        entities_json=json.dumps(["cymatix"]),
         key_values_json="[]",
     )
     upsert_fingerprint(

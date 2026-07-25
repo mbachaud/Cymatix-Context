@@ -9,7 +9,7 @@ query, finds the first gold-path hit in the ranked list, and computes:
 All metrics are broken out by needle type (within / cross) and written to
 benchmarks/results/shard_recall_<label>_<ts>.json.
 
-Conventions match coderag_bench_helix.py and bench_claude_matrix.py:
+Conventions match coderag_bench_cymatix.py and bench_claude_matrix.py:
   - urllib (no third-party deps)
   - /fingerprint endpoint, max_results=10, score_floor=0, profile="fast"
   - path normalisation: forward-slash, lowercase, substring containment
@@ -33,12 +33,12 @@ CLI
 ---
 python benchmarks/bench_shard_recall.py \\
     --needles benchmarks/results/shard_gold.jsonl \\
-    --helix-url http://127.0.0.1:11437 \\
+    --cymatix-url http://127.0.0.1:11437 \\
     --label sharded_medium
 
 python benchmarks/bench_shard_recall.py \\
     --needles benchmarks/results/shard_gold.jsonl \\
-    --helix-url http://127.0.0.1:11438 \\
+    --cymatix-url http://127.0.0.1:11438 \\
     --label unsharded_medium_dense
 
 RUN SEQUENCE (4 genome modes)
@@ -46,25 +46,25 @@ RUN SEQUENCE (4 genome modes)
 # 1. SHARDED / dense-disabled server (medium corpus)
 python benchmarks/bench_shard_recall.py \\
     --needles benchmarks/results/shard_gold_medium.jsonl \\
-    --helix-url http://127.0.0.1:11437 \\
+    --cymatix-url http://127.0.0.1:11437 \\
     --label medium_sharded
 
 # 2. UNSHARDED / dense-ON + backfilled server (medium corpus)
 python benchmarks/bench_shard_recall.py \\
     --needles benchmarks/results/shard_gold_medium.jsonl \\
-    --helix-url http://127.0.0.1:11438 \\
+    --cymatix-url http://127.0.0.1:11438 \\
     --label medium_unsharded_dense
 
 # 3. SHARDED / dense-disabled server (xl corpus)
 python benchmarks/bench_shard_recall.py \\
     --needles benchmarks/results/shard_gold_xl.jsonl \\
-    --helix-url http://127.0.0.1:11437 \\
+    --cymatix-url http://127.0.0.1:11437 \\
     --label xl_sharded
 
 # 4. UNSHARDED / dense-ON + backfilled server (xl corpus)
 python benchmarks/bench_shard_recall.py \\
     --needles benchmarks/results/shard_gold_xl.jsonl \\
-    --helix-url http://127.0.0.1:11438 \\
+    --cymatix-url http://127.0.0.1:11438 \\
     --label xl_unsharded_dense
 """
 from __future__ import annotations
@@ -136,13 +136,13 @@ def _percentile(values: list[float], pct: float) -> float:
 # ---------------------------------------------------------------------------
 
 def fingerprint(
-    helix_url: str,
+    cymatix_url: str,
     query: str,
     max_results: int = 10,
     timeout_s: float = 30.0,
 ) -> tuple[list[dict], float]:
     """POST /fingerprint; return (fingerprints_list, latency_ms)."""
-    url = helix_url.rstrip("/") + "/fingerprint"
+    url = cymatix_url.rstrip("/") + "/fingerprint"
     payload = json.dumps({
         "query": query,
         "max_results": max_results,
@@ -174,7 +174,7 @@ def _zero_agg() -> dict:
 
 def score_needles(
     needles: list[dict],
-    helix_url: str,
+    cymatix_url: str,
     max_results: int = 10,
     timeout_s: float = 30.0,
 ) -> tuple[dict, list[dict]]:
@@ -192,7 +192,7 @@ def score_needles(
         gold_paths = nd.get("gold_paths", [])
 
         try:
-            fps, lat_ms = fingerprint(helix_url, nd["question"], max_results, timeout_s)
+            fps, lat_ms = fingerprint(cymatix_url, nd["question"], max_results, timeout_s)
         except Exception as exc:
             for key in (ntype, "all"):
                 agg[key]["err"] += 1
@@ -310,10 +310,10 @@ def main(argv: list[str] | None = None) -> int:
         help="Path to JSONL needle file produced by build_shard_gold.py.",
     )
     ap.add_argument(
-        "--helix-url",
+        "--cymatix-url",
         default="http://127.0.0.1:11437",
-        dest="helix_url",
-        help="Base URL of the Helix server (default: http://127.0.0.1:11437).",
+        dest="cymatix_url",
+        help="Base URL of the Cymatix server (default: http://127.0.0.1:11437).",
     )
     ap.add_argument(
         "--label",
@@ -371,20 +371,20 @@ def main(argv: list[str] | None = None) -> int:
         needles = needles[: args.limit]
 
     print("[shard_recall] {} needles from {}".format(len(needles), needles_path))
-    print("[shard_recall] server: {}  label: {}".format(args.helix_url, args.label))
+    print("[shard_recall] server: {}  label: {}".format(args.cymatix_url, args.label))
 
     # Health check.
     try:
-        health_url = args.helix_url.rstrip("/") + "/health"
+        health_url = args.cymatix_url.rstrip("/") + "/health"
         with urllib.request.urlopen(health_url, timeout=30) as r:
             health = json.loads(r.read())
         print("[shard_recall] server health: {} docs={}".format(
             health.get("status", "ok"), health.get("document_count", "?")))
     except Exception as exc:
         print(
-            "ERROR: cannot reach Helix at {}: {}\n"
+            "ERROR: cannot reach Cymatix at {}: {}\n"
             "  Start: python -m uvicorn cymatix_context._asgi:app --port 11437".format(
-                args.helix_url, exc
+                args.cymatix_url, exc
             ),
             file=sys.stderr,
         )
@@ -392,7 +392,7 @@ def main(argv: list[str] | None = None) -> int:
 
     summary, per_rows = score_needles(
         needles=needles,
-        helix_url=args.helix_url,
+        cymatix_url=args.cymatix_url,
         max_results=args.max_results,
         timeout_s=args.timeout,
     )
@@ -407,7 +407,7 @@ def main(argv: list[str] | None = None) -> int:
         "benchmark": "shard_recall",
         "label": args.label,
         "timestamp": ts,
-        "helix_url": args.helix_url,
+        "cymatix_url": args.cymatix_url,
         "needles_file": str(needles_path),
         "n_needles": len(needles),
         "max_results": args.max_results,

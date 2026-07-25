@@ -293,7 +293,7 @@ def test_load_config_parses_gate_knobs():
         "rrf_gate_min_score = 0.3\n"
     )
     with tempfile.TemporaryDirectory() as d:
-        p = Path(d) / "helix.toml"
+        p = Path(d) / "cymatix.toml"
         p.write_text(toml, encoding="utf-8")
         cfg = load_config(str(p))
     assert cfg.retrieval.rrf_gate_enabled is True
@@ -303,7 +303,7 @@ def test_load_config_parses_gate_knobs():
 
 def test_load_config_absent_keys_keep_inert_defaults():
     with tempfile.TemporaryDirectory() as d:
-        p = Path(d) / "helix.toml"
+        p = Path(d) / "cymatix.toml"
         p.write_text('[retrieval]\nfusion_mode = "rrf"\n', encoding="utf-8")
         cfg = load_config(str(p))
     assert cfg.retrieval.rrf_gate_enabled is False
@@ -321,7 +321,7 @@ def test_config_threads_through_open_read_source_solo():
         "rrf_gate_min_score = 0.15\n"
     )
     with tempfile.TemporaryDirectory() as d:
-        p = Path(d) / "helix.toml"
+        p = Path(d) / "cymatix.toml"
         p.write_text(toml, encoding="utf-8")
         cfg = load_config(str(p))
 

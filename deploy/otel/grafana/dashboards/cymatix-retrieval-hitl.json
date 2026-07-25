@@ -12,7 +12,7 @@
       }
     ]
   },
-  "description": "Per-query retrieval quality signals (ellipticity, health status, budget tier) paired with operator HITL events. Companion to helix-overview.json; covers the 4 meters added 2026-04-14.",
+  "description": "Per-query retrieval quality signals (ellipticity, health status, budget tier) paired with operator HITL events. Companion to cymatix-overview.json; covers the 4 meters added 2026-04-14.",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
@@ -37,7 +37,7 @@
       "id": 2,
       "targets": [
         {
-          "expr": "sum by (le) (increase(helix_context_ellipticity_bucket{party=~\"$party_id\"}[$__rate_interval]))",
+          "expr": "sum by (le) (increase(cymatix_context_ellipticity_bucket{party=~\"$party_id\"}[$__rate_interval]))",
           "format": "heatmap",
           "legendFormat": "{{le}}",
           "refId": "A"
@@ -66,7 +66,7 @@
       "id": 3,
       "targets": [
         {
-          "expr": "sum by (status) (increase(helix_context_health_status_total{party=~\"$party_id\"}[1h]))",
+          "expr": "sum by (status) (increase(cymatix_context_health_status_total{party=~\"$party_id\"}[1h]))",
           "legendFormat": "{{status}}",
           "refId": "A"
         }
@@ -99,7 +99,7 @@
       "id": 4,
       "targets": [
         {
-          "expr": "sum(rate(helix_context_health_status_total{status=\"denatured\",party=~\"$party_id\"}[10m])) / sum(rate(helix_context_health_status_total{party=~\"$party_id\"}[10m]))",
+          "expr": "sum(rate(cymatix_context_health_status_total{status=\"denatured\",party=~\"$party_id\"}[10m])) / sum(rate(cymatix_context_health_status_total{party=~\"$party_id\"}[10m]))",
           "refId": "A"
         }
       ],
@@ -132,7 +132,7 @@
       "id": 5,
       "targets": [
         {
-          "expr": "sum by (tier) (rate(helix_budget_tier_total[$__rate_interval]))",
+          "expr": "sum by (tier) (rate(cymatix_budget_tier_total[$__rate_interval]))",
           "legendFormat": "{{tier}}",
           "refId": "A"
         }
@@ -170,12 +170,12 @@
       "id": 6,
       "targets": [
         {
-          "expr": "histogram_quantile(0.50, sum by (le) (rate(helix_context_ellipticity_bucket{party=~\"$party_id\"}[5m])))",
+          "expr": "histogram_quantile(0.50, sum by (le) (rate(cymatix_context_ellipticity_bucket{party=~\"$party_id\"}[5m])))",
           "legendFormat": "p50",
           "refId": "A"
         },
         {
-          "expr": "histogram_quantile(0.95, sum by (le) (rate(helix_context_ellipticity_bucket{party=~\"$party_id\"}[5m])))",
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(cymatix_context_ellipticity_bucket{party=~\"$party_id\"}[5m])))",
           "legendFormat": "p95",
           "refId": "B"
         }
@@ -219,7 +219,7 @@
       "id": 8,
       "targets": [
         {
-          "expr": "sum by (pause_type) (rate(helix_hitl_events_total{party=~\"$party_id\"}[1m])) * 60",
+          "expr": "sum by (pause_type) (rate(cymatix_hitl_events_total{party=~\"$party_id\"}[1m])) * 60",
           "legendFormat": "{{pause_type}}",
           "refId": "A"
         }
@@ -255,12 +255,12 @@
       "id": 9,
       "targets": [
         {
-          "expr": "sum(rate(helix_hitl_events_total{party=~\"$party_id\"}[1m])) * 60",
+          "expr": "sum(rate(cymatix_hitl_events_total{party=~\"$party_id\"}[1m])) * 60",
           "legendFormat": "HITL events/min",
           "refId": "A"
         },
         {
-          "expr": "histogram_quantile(0.50, sum by (le) (rate(helix_context_ellipticity_bucket{party=~\"$party_id\"}[5m])))",
+          "expr": "histogram_quantile(0.50, sum by (le) (rate(cymatix_context_ellipticity_bucket{party=~\"$party_id\"}[5m])))",
           "legendFormat": "Ellipticity p50",
           "refId": "B"
         }
@@ -300,7 +300,7 @@
       "id": 10,
       "targets": [
         {
-          "expr": "sum by (party, pause_type) (increase(helix_hitl_events_total[24h]))",
+          "expr": "sum by (party, pause_type) (increase(cymatix_hitl_events_total[24h]))",
           "format": "table",
           "instant": true,
           "refId": "A"
@@ -331,7 +331,7 @@
       "id": 11,
       "targets": [
         {
-          "expr": "sum(increase(helix_hitl_events_total[24h]))",
+          "expr": "sum(increase(cymatix_hitl_events_total[24h]))",
           "refId": "A"
         }
       ],
@@ -354,7 +354,7 @@
       "id": 12,
       "targets": [
         {
-          "expr": "sum(rate(helix_context_health_status_total{status=\"aligned\",party=~\"$party_id\"}[1h])) / sum(rate(helix_context_health_status_total{party=~\"$party_id\"}[1h]))",
+          "expr": "sum(rate(cymatix_context_health_status_total{status=\"aligned\",party=~\"$party_id\"}[1h])) / sum(rate(cymatix_context_health_status_total{party=~\"$party_id\"}[1h]))",
           "refId": "A"
         }
       ],
@@ -383,20 +383,20 @@
   ],
   "refresh": "30s",
   "schemaVersion": 39,
-  "tags": ["helix", "retrieval", "hitl"],
+  "tags": ["cymatix", "retrieval", "hitl"],
   "templating": {
     "list": [
       {
         "current": { "selected": false, "text": "All", "value": "$__all" },
         "datasource": "Prometheus",
-        "definition": "label_values(helix_context_health_status_total, party)",
+        "definition": "label_values(cymatix_context_health_status_total, party)",
         "hide": 0,
         "includeAll": true,
         "label": "Party",
         "multi": true,
         "name": "party_id",
         "options": [],
-        "query": { "query": "label_values(helix_context_health_status_total, party)", "refId": "PrometheusVariableQueryEditor-VariableQuery" },
+        "query": { "query": "label_values(cymatix_context_health_status_total, party)", "refId": "PrometheusVariableQueryEditor-VariableQuery" },
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
@@ -408,8 +408,8 @@
   "time": { "from": "now-6h", "to": "now" },
   "timepicker": {},
   "timezone": "",
-  "title": "Helix — Retrieval Quality + HITL",
-  "uid": "helix-retrieval-hitl",
+  "title": "Cymatix — Retrieval Quality + HITL",
+  "uid": "cymatix-retrieval-hitl",
   "version": 1,
   "weekStart": ""
 }

@@ -7,7 +7,7 @@ of a single gold_source. A query is fully answered only if at least one
 gene from **each** group is delivered. Partial delivery is tracked separately.
 
 The distractor signal is implicit — the existing genome already holds
-multiple `port` mentions (11437 for helix, 8787 for headroom, 11434 for
+multiple `port` mentions (11437 for cymatix, 8787 for headroom, 11434 for
 ollama), multiple `model =` configs, multiple `CLAIM_TYPES`-like
 constants. That's the adversarial surface: folder/file-grain routing has
 to disambiguate between *semantically identical* phrases in different
@@ -33,7 +33,7 @@ import httpx  # noqa: E402
 
 import _citations  # noqa: E402
 
-HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
+CYMATIX_URL = os.environ.get("CYMATIX_URL", "http://127.0.0.1:11437")
 # Legacy regex retained for historical JSONL inspection only -- modern
 # /context responses surface sources via ``agent.citations`` (issue #101).
 GENE_SRC_RE = _citations.LEGACY_GENE_SRC_RE
@@ -46,16 +46,16 @@ GENE_SRC_RE = _citations.LEGACY_GENE_SRC_RE
 # mention 'port', 'model', 'version' in different contexts).
 NEEDLES_MULTI = [
     {
-        "name": "helix_and_headroom_ports",
-        "query": "what ports do helix and headroom listen on",
+        "name": "cymatix_and_headroom_ports",
+        "query": "what ports do cymatix and headroom listen on",
         "gold_source_groups": [
-            ["helix-context/helix.toml"],                  # 11437
-            ["helix-context/start-helix-tray.bat", "helix-context/helix.toml"],  # 8787 (headroom section)
+            ["helix-context/cymatix.toml"],                  # 11437
+            ["helix-context/start-cymatix-tray.bat", "helix-context/cymatix.toml"],  # 8787 (headroom section)
         ],
     },
     {
         "name": "python_version_and_codec_extra",
-        "query": "what python version does helix require and which extra enables headroom integration",
+        "query": "what python version does cymatix require and which extra enables headroom integration",
         "gold_source_groups": [
             ["helix-context/pyproject.toml"],              # requires-python
             ["helix-context/pyproject.toml", "helix-context/README.md"],  # [codec]
@@ -63,7 +63,7 @@ NEEDLES_MULTI = [
     },
     {
         "name": "pipeline_steps_and_compression_target",
-        "query": "how many steps are in the helix pipeline and what is the target compression ratio",
+        "query": "how many steps are in the cymatix pipeline and what is the target compression ratio",
         "gold_source_groups": [
             ["helix-context/docs/architecture/PIPELINE_LANES.md", "helix-context/README.md"],
             ["helix-context/docs/DESIGN_TARGET.md", "helix-context/README.md"],
@@ -78,10 +78,10 @@ NEEDLES_MULTI = [
         ],
     },
     {
-        "name": "helix_port_and_fleet_port",
-        "query": "what port does helix listen on and what port does the bigEd fleet dashboard use",
+        "name": "cymatix_port_and_fleet_port",
+        "query": "what port does cymatix listen on and what port does the bigEd fleet dashboard use",
         "gold_source_groups": [
-            ["helix-context/helix.toml"],                  # 11437
+            ["helix-context/cymatix.toml"],                  # 11437
             ["Education/fleet/fleet.toml", "Education/fleet/CLAUDE.md",
              "Education/CLAUDE.md"],                        # bigEd dashboard port
         ],
@@ -90,8 +90,8 @@ NEEDLES_MULTI = [
         "name": "headroom_dashboard_port_and_mode_default",
         "query": "what port does the headroom dashboard serve on and what is the default compression mode",
         "gold_source_groups": [
-            ["helix-context/helix.toml", "helix-context/README.md"],  # 8787
-            ["helix-context/helix.toml", "helix-context/cymatix_context/launcher/headroom_supervisor.py"],  # token mode
+            ["helix-context/cymatix.toml", "helix-context/README.md"],  # 8787
+            ["helix-context/cymatix.toml", "helix-context/cymatix_context/launcher/headroom_supervisor.py"],  # token mode
         ],
     },
     {
@@ -130,7 +130,7 @@ def fetch_delivered_srcs(client: httpx.Client, query: str,
     (issue #101).
     """
     r = client.post(
-        f"{HELIX_URL}/context",
+        f"{CYMATIX_URL}/context",
         json={"query": query, "task_type": task_type, "read_only": True},
         timeout=60,
     )
@@ -201,13 +201,13 @@ def run_needle(client: httpx.Client, needle: dict) -> dict:
 def main(out_path: Optional[Path] = None) -> int:
     client = httpx.Client(timeout=120)
     try:
-        stats = client.get(f"{HELIX_URL}/stats").json()
+        stats = client.get(f"{CYMATIX_URL}/stats").json()
         print(
             f"Genome: {stats['total_genes']} genes, "
             f"{stats['compression_ratio']:.2f}x compression"
         )
     except Exception as exc:
-        print(f"Cannot reach helix at {HELIX_URL}: {exc}")
+        print(f"Cannot reach cymatix at {CYMATIX_URL}: {exc}")
         return 1
 
     print(f"\n=== Multi-needle NIAH ({len(NEEDLES_MULTI)} needles) ===\n")

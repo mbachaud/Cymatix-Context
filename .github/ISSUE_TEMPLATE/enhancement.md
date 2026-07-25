@@ -1,6 +1,6 @@
 ---
 name: Enhancement request
-about: Suggest a new capability or extension to helix-context
+about: Suggest a new capability or extension to cymatix-context
 title: "[Enhancement] "
 labels: enhancement
 assignees: ''

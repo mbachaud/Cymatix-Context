@@ -6,7 +6,7 @@ because its `projects` shard fixture is corrupt (see issue #133). Pass
 
 Per fixture:
   1. POST /admin/swap-db pointing at the fixture's primary .db
-     (or restart uvicorn with HELIX_USE_SHARDS=1 when crossing
+     (or restart uvicorn with CYMATIX_USE_SHARDS=1 when crossing
      blob<->sharded mode boundaries - handled by BenchServer)
   2. For each needle, invoke ``claude -p --output-format json`` so the
      model answers via helix-context MCP (which now hits the swapped db)
@@ -20,9 +20,9 @@ Pre-conditions:
   * Claude Code CLI available on PATH and the helix-context MCP wired up
     in the user's settings/.mcp.json. New ``claude -p`` subprocesses
     discover the MCP automatically.
-  * By default the harness manages the helix server itself via
+  * By default the harness manages the cymatix server itself via
     ``bench_orchestrator.BenchServer``, including the
-    HELIX_USE_SHARDS=1 env required for sharded fixtures. Pass
+    CYMATIX_USE_SHARDS=1 env required for sharded fixtures. Pass
     ``--external-server`` to use a server you've started manually
     (legacy behavior).
 
@@ -73,7 +73,7 @@ import _citations  # noqa: E402
 
 # ── Configuration ────────────────────────────────────────────────────────
 
-HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
+CYMATIX_URL = os.environ.get("CYMATIX_URL", "http://127.0.0.1:11437")
 MANIFEST = Path(r"F:\Projects\helix-context\genomes\bench\matrix\frozen.json")
 RESULTS_ROOT = Path(r"F:\Projects\helix-context\benchmarks\results")
 
@@ -84,7 +84,7 @@ CONTEXT_TIMEOUT_S = 30        # /context retrieval-only call
 # Profiles whose fixture is known-untrustworthy and excluded from a
 # default run. xl-sharded's `projects` shard was built from a polluted
 # source tree — F:\Projects\_worktrees\helix-context\* PR-branch
-# worktrees plus a helix-retrieval-upgrade clone, with no canonical
+# worktrees plus a cymatix-retrieval-upgrade clone, with no canonical
 # helix-context/ checkout — so the needles' gold_source labels resolve
 # to nothing there and retr_hit / MRR on it are meaningless (correctness
 # decoupled from retrieval). See issue #133. Re-include once the projects
@@ -113,11 +113,11 @@ UNTRUSTED_PROFILES = frozenset({"xl-sharded"})
 # is circular and inflates scores.
 
 NEEDLES = [
-    {"name": "helix_port",
-     "query": "What port does the Helix proxy server listen on?",
+    {"name": "cymatix_port",
+     "query": "What port does the Cymatix proxy server listen on?",
      "expected": "11437", "accept": ["11437"],
      "gold_source": [
-         "helix-context/helix.toml",
+         "helix-context/cymatix.toml",
          "helix-context/README.md",
          "helix-context/CLAUDE.md",
          "helix-context/docs/SETUP.md",
@@ -152,8 +152,8 @@ NEEDLES = [
          "BookKeeper/docs/planning/GAPS.md",
          "BookKeeper/bookkeeper/storage/db.py",
      ]},
-    {"name": "helix_pipeline_steps",
-     "query": "How many steps are in the Helix expression pipeline?",
+    {"name": "cymatix_pipeline_steps",
+     "query": "How many steps are in the Cymatix expression pipeline?",
      "expected": "6", "accept": ["6", "six"],
      "gold_source": [
          "helix-context/CLAUDE.md",
@@ -168,7 +168,7 @@ NEEDLES = [
          "Education/fleet/knowledge/wiki/architecture.md",
      ]},
     {"name": "genome_compression_target",
-     "query": "What is the target compression ratio for Helix Context?",
+     "query": "What is the target compression ratio for Cymatix Context?",
      "expected": "5x", "accept": ["5x", "5:1", "5 to 1"],
      "gold_source": [
          "helix-context/README.md",
@@ -183,11 +183,11 @@ NEEDLES = [
          "two-brain-audit/docs/ARCHITECTURE.md",
          "two-brain-audit/src/scorerift/presets/python_project.py",
      ]},
-    {"name": "helix_ribosome_budget",
+    {"name": "cymatix_ribosome_budget",
      "query": "How many tokens are allocated for the ribosome decoder prompt?",
      "expected": "3000", "accept": ["3000", "3k", "3,000"],
      "gold_source": [
-         "helix-context/helix.toml",
+         "helix-context/cymatix.toml",
          "helix-context/README.md",
          "helix-context/docs/config-reference.md",
      ]},
@@ -440,74 +440,74 @@ NEEDLES = [
      ]},
 
     # ─── helix-context (10) ───────────────────────────────────────────
-    {"name": "helix_expression_budget",
-     "query": "What is the expression_tokens budget set in helix.toml?",
+    {"name": "cymatix_expression_budget",
+     "query": "What is the expression_tokens budget set in cymatix.toml?",
      "expected": "7000", "accept": ["7000", "7K", "7,000", "~7K"],
      "gold_source": [
-         "helix-context/helix.toml",
+         "helix-context/cymatix.toml",
          "helix-context/overnight_logs/broad_tighten_2026-05-12_1422_report.md",
      ]},
-    {"name": "helix_max_genes_per_turn",
-     "query": "What is the max_genes_per_turn cap in helix.toml?",
+    {"name": "cymatix_max_genes_per_turn",
+     "query": "What is the max_genes_per_turn cap in cymatix.toml?",
      "expected": "12", "accept": ["12"],
      "gold_source": [
-         "helix-context/helix.toml",
+         "helix-context/cymatix.toml",
          "helix-context/docs/config-reference.md",
      ]},
-    {"name": "helix_rrf_k",
-     "query": "What is the RRF k constant used by Helix Reciprocal Rank Fusion?",
+    {"name": "cymatix_rrf_k",
+     "query": "What is the RRF k constant used by Cymatix Reciprocal Rank Fusion?",
      "expected": "60", "accept": ["60", "k=60", "k = 60"],
      "gold_source": [
-         "helix-context/helix.toml",
+         "helix-context/cymatix.toml",
          "helix-context/docs/config-reference.md",
          "helix-context/docs/specs/2026-05-08-stage-3-rrf-fusion.md",
      ]},
-    {"name": "helix_cold_start_threshold",
-     "query": "What is the cold_start_threshold gene count in the Helix knowledge store?",
+    {"name": "cymatix_cold_start_threshold",
+     "query": "What is the cold_start_threshold gene count in the Cymatix knowledge store?",
      "expected": "10", "accept": ["10", "10 genes"],
      "gold_source": [
-         "helix-context/helix.toml",
+         "helix-context/cymatix.toml",
          "helix-context/docs/config-reference.md",
          "helix-context/CLAUDE.md",
      ]},
-    {"name": "helix_session_window",
+    {"name": "cymatix_session_window",
      "query": "What is the synthetic_session_window_s in seconds for grouping same-IP requests?",
      "expected": "300", "accept": ["300", "5 min", "5 minutes", "five minutes"],
      "gold_source": [
-         "helix-context/helix.toml",
+         "helix-context/cymatix.toml",
          "helix-context/docs/config-reference.md",
          "helix-context/CLAUDE.md",
      ]},
-    {"name": "helix_headroom_port",
-     "query": "What is the default port for the Headroom proxy that Helix can route through?",
+    {"name": "cymatix_headroom_port",
+     "query": "What is the default port for the Headroom proxy that Cymatix can route through?",
      "expected": "8787", "accept": ["8787", "port 8787"],
      "gold_source": [
-         "helix-context/helix.toml",
+         "helix-context/cymatix.toml",
          "helix-context/docs/config-reference.md",
      ]},
-    {"name": "helix_calibration_staleness",
-     "query": "After how many days does Helix flag the know-confidence calibration as stale?",
+    {"name": "cymatix_calibration_staleness",
+     "query": "After how many days does Cymatix flag the know-confidence calibration as stale?",
      "expected": "30", "accept": ["30", "30 days"],
      "gold_source": [
-         "helix-context/helix.toml",
+         "helix-context/cymatix.toml",
          "helix-context/docs/specs/2026-05-08-stage-6-know-miss-blocks.md",
      ]},
-    {"name": "helix_dense_encoder",
-     "query": "Which dense embedding model does Helix use for Stage-2 recall?",
+    {"name": "cymatix_dense_encoder",
+     "query": "Which dense embedding model does Cymatix use for Stage-2 recall?",
      "expected": "BGE-M3", "accept": ["BGE-M3", "bge-m3", "bge m3"],
      "gold_source": [
          "helix-context/CLAUDE.md",
          "helix-context/README.md",
-         "helix-context/helix.toml",
+         "helix-context/cymatix.toml",
      ]},
-    {"name": "helix_filename_anchor",
-     "query": "What is the filename_anchor_weight per-match boost in helix.toml?",
+    {"name": "cymatix_filename_anchor",
+     "query": "What is the filename_anchor_weight per-match boost in cymatix.toml?",
      "expected": "4.0", "accept": ["4.0", "4"],
      "gold_source": [
-         "helix-context/helix.toml",
+         "helix-context/cymatix.toml",
          "helix-context/docs/config-reference.md",
      ]},
-    {"name": "helix_subpackages_count",
+    {"name": "cymatix_subpackages_count",
      "query": "Into how many sub-packages is cymatix_context organized after the PR #90 restructure?",
      "expected": "16", "accept": ["16", "sixteen"],
      "gold_source": [
@@ -571,7 +571,7 @@ def swap_db_external(target_path: str, log: logging.Logger) -> dict:
     log.info("swap-db (external) -> %s", target_path)
     try:
         resp = httpx.post(
-            f"{HELIX_URL}/admin/swap-db",
+            f"{CYMATIX_URL}/admin/swap-db",
             json={"path": target_path},
             timeout=SWAP_TIMEOUT_S,
         )
@@ -613,7 +613,7 @@ def gold_match_rank(delivered_sources: list[str],
 
 
 def retrieval_probe(query: str, gold_sources: list[str],
-                    helix_url: str = HELIX_URL) -> dict:
+                    cymatix_url: str = CYMATIX_URL) -> dict:
     """Direct /context call to get retrieval signal independent of the model.
 
     Prefers structured ``agent.citations[].source`` (issue #101 fix),
@@ -623,7 +623,7 @@ def retrieval_probe(query: str, gold_sources: list[str],
     t0 = time.perf_counter()
     try:
         resp = httpx.post(
-            f"{helix_url}/context",
+            f"{cymatix_url}/context",
             json={"query": query, "decoder_mode": "none"},
             timeout=CONTEXT_TIMEOUT_S,
         )
@@ -771,10 +771,10 @@ def score_answer(answer_text: str, accept_substrings: list[str]) -> dict:
 #     external server) ─────────────────────────────────────────────────────
 
 def run_one_needle(needle: dict, profile_key: str, model: str,
-                   max_usd: float, claude_cwd: str, helix_url: str,
+                   max_usd: float, claude_cwd: str, cymatix_url: str,
                    log: logging.Logger, *, isolated: bool = False) -> dict:
     log.info("[%s] %s", profile_key, needle["name"])
-    retr = retrieval_probe(needle["query"], needle["gold_source"], helix_url=helix_url)
+    retr = retrieval_probe(needle["query"], needle["gold_source"], cymatix_url=cymatix_url)
     claude_r = run_claude(needle["query"], model, max_usd, claude_cwd, log,
                           isolated=isolated)
 
@@ -922,7 +922,7 @@ def main() -> int:
                         help="cwd for claude -p subprocess")
     parser.add_argument("--external-server", action="store_true",
                         help="Don't manage uvicorn; use a server you've started yourself. "
-                             "Required for sharded fixtures to set HELIX_USE_SHARDS=1 "
+                             "Required for sharded fixtures to set CYMATIX_USE_SHARDS=1 "
                              "manually. Default: harness manages uvicorn via BenchServer.")
     parser.add_argument("--host", default="127.0.0.1",
                         help="Host for the managed server (ignored with --external-server)")
@@ -981,23 +981,23 @@ def main() -> int:
         "profiles": {},
     }
 
-    helix_url = f"http://{args.host}:{args.port}"
+    cymatix_url = f"http://{args.host}:{args.port}"
 
     if args.external_server:
         # Legacy path: server is already running. We can only hot-swap (no
         # cross-mode handling). For sharded fixtures the operator must
-        # have started the server with HELIX_USE_SHARDS=1.
+        # have started the server with CYMATIX_USE_SHARDS=1.
         try:
-            r = httpx.get(f"{helix_url}/stats", timeout=10)
+            r = httpx.get(f"{cymatix_url}/stats", timeout=10)
             log.info("server /stats ok: %d genes", r.json().get("total_genes", -1))
         except Exception as exc:
-            log.error("server not reachable at %s: %s", helix_url, exc)
+            log.error("server not reachable at %s: %s", cymatix_url, exc)
             return 3
-        rc = _run_loop_external(keys, manifest, run_dir, args, helix_url, log, overall)
+        rc = _run_loop_external(keys, manifest, run_dir, args, cymatix_url, log, overall)
     else:
         # Managed path: BenchServer handles boot + hot-swap + cross-mode
         # restarts automatically.
-        rc = _run_loop_managed(keys, manifest, run_dir, args, helix_url, log, overall)
+        rc = _run_loop_managed(keys, manifest, run_dir, args, cymatix_url, log, overall)
 
     overall["finished_at"] = datetime.now(timezone.utc).isoformat()
     summary_path = run_dir / "summary.json"
@@ -1007,7 +1007,7 @@ def main() -> int:
     return rc
 
 
-def _run_loop_external(keys, manifest, run_dir, args, helix_url, log, overall) -> int:
+def _run_loop_external(keys, manifest, run_dir, args, cymatix_url, log, overall) -> int:
     for key in keys:
         target = manifest["targets"][key]
         log.info("=" * 60)
@@ -1019,7 +1019,7 @@ def _run_loop_external(keys, manifest, run_dir, args, helix_url, log, overall) -
         if target.get("mode") == "sharded":
             log.warning(
                 "  sharded profile %s requires the external server to "
-                "have been started with HELIX_USE_SHARDS=1; harness "
+                "have been started with CYMATIX_USE_SHARDS=1; harness "
                 "cannot enforce this in --external-server mode",
                 key,
             )
@@ -1030,12 +1030,12 @@ def _run_loop_external(keys, manifest, run_dir, args, helix_url, log, overall) -
             overall["profiles"][key] = {"swap_error": swap_result["error"]}
             continue
 
-        per_needle = _run_profile(key, run_dir, args, helix_url, log)
+        per_needle = _run_profile(key, run_dir, args, cymatix_url, log)
         overall["profiles"][key] = summarize_profile(per_needle, len(NEEDLES))
     return 0
 
 
-def _run_loop_managed(keys, manifest, run_dir, args, helix_url, log, overall) -> int:
+def _run_loop_managed(keys, manifest, run_dir, args, cymatix_url, log, overall) -> int:
     uvicorn_log = run_dir / "uvicorn.log"
     with BenchServer(
         host=args.host,
@@ -1067,12 +1067,12 @@ def _run_loop_managed(keys, manifest, run_dir, args, helix_url, log, overall) ->
             log.info("  %s in %.2fs (genes=%d, pid=%s)",
                      swap.mechanism, swap.elapsed_s, swap.genes, swap.server_pid)
 
-            per_needle = _run_profile(key, run_dir, args, helix_url, log)
+            per_needle = _run_profile(key, run_dir, args, cymatix_url, log)
             overall["profiles"][key] = summarize_profile(per_needle, len(NEEDLES))
     return 0
 
 
-def _run_profile(profile_key: str, run_dir: Path, args, helix_url: str,
+def _run_profile(profile_key: str, run_dir: Path, args, cymatix_url: str,
                  log: logging.Logger) -> list[dict]:
     profile_path = run_dir / f"{profile_key}.jsonl"
     per_needle: list[dict] = []
@@ -1081,7 +1081,7 @@ def _run_profile(profile_key: str, run_dir: Path, args, helix_url: str,
             log.info("[%s %d/%d] %s", profile_key, i + 1, len(NEEDLES), n["name"])
             record = run_one_needle(
                 n, profile_key, args.model, args.max_usd, args.cwd,
-                helix_url, log, isolated=args.isolated,
+                cymatix_url, log, isolated=args.isolated,
             )
             f.write(json.dumps(record, ensure_ascii=False) + "\n")
             f.flush()

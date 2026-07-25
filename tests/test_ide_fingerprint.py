@@ -2,11 +2,11 @@
 MCP adapter.
 
 Exercises:
-- HELIX_MCP_HOST explicit override (highest priority, "explicit:..." via)
+- CYMATIX_MCP_HOST explicit override (highest priority, "explicit:..." via)
 - VSCODE_PID present → ("vscode", "env:VSCODE_PID")
 - CURSOR_TRACE_ID present → ("cursor", "env:CURSOR_TRACE_ID")
 - nothing matches → (None, "no_match")
-- "unknown" sentinel for HELIX_MCP_HOST falls through, doesn't trigger explicit branch
+- "unknown" sentinel for CYMATIX_MCP_HOST falls through, doesn't trigger explicit branch
 """
 import pytest
 
@@ -17,7 +17,7 @@ from cymatix_context.launcher.ide_fingerprint import detect_ide
 def _clean_env(monkeypatch):
     """Strip every env var the chain might read so each test is isolated."""
     for key in (
-        "HELIX_MCP_HOST",
+        "CYMATIX_MCP_HOST",
         "VSCODE_PID",
         "VSCODE_IPC_HOOK",
         "CURSOR_TRACE_ID",
@@ -26,15 +26,15 @@ def _clean_env(monkeypatch):
         monkeypatch.delenv(key, raising=False)
 
 
-def test_explicit_helix_mcp_host_wins(monkeypatch):
-    monkeypatch.setenv("HELIX_MCP_HOST", "claude-code")
+def test_explicit_cymatix_mcp_host_wins(monkeypatch):
+    monkeypatch.setenv("CYMATIX_MCP_HOST", "claude-code")
     monkeypatch.setenv("VSCODE_PID", "1234")  # would otherwise win
-    assert detect_ide() == ("claude-code", "explicit:HELIX_MCP_HOST")
+    assert detect_ide() == ("claude-code", "explicit:CYMATIX_MCP_HOST")
 
 
-def test_helix_mcp_host_unknown_sentinel_falls_through(monkeypatch):
-    """HELIX_MCP_HOST=unknown is the legacy default — treat as unset."""
-    monkeypatch.setenv("HELIX_MCP_HOST", "unknown")
+def test_cymatix_mcp_host_unknown_sentinel_falls_through(monkeypatch):
+    """CYMATIX_MCP_HOST=unknown is the legacy default — treat as unset."""
+    monkeypatch.setenv("CYMATIX_MCP_HOST", "unknown")
     monkeypatch.setenv("VSCODE_PID", "1234")
     assert detect_ide() == ("vscode", "env:VSCODE_PID")
 

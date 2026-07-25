@@ -7,18 +7,18 @@ import pytest
 import tempfile
 import os
 
-from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.context_manager import CymatixContextManager
 from cymatix_context.genome import Genome
 from cymatix_context.hgt import export_genome, import_genome, genome_diff
 from cymatix_context.schemas import ContextHealth
 
-from tests.conftest import make_gene, make_helix_config, MockCompressorBackend
+from tests.conftest import make_gene, make_cymatix_config, MockCompressorBackend
 
 
 @pytest.fixture
-def health_helix():
-    config = make_helix_config(synonym_map={"auth": ["jwt", "login", "security"]})
-    mgr = HelixContextManager(config)
+def health_cymatix():
+    config = make_cymatix_config(synonym_map={"auth": ["jwt", "login", "security"]})
+    mgr = CymatixContextManager(config)
     # MockCompressorBackend's splice branch returns codon indices for
     # "Gene <id>" prompts, so these tests exercise codons-kept assembly
     # (the old local mock returned {} -> complement fallback; that path
@@ -30,7 +30,7 @@ def health_helix():
 
 
 @pytest.fixture
-def seeded_health_helix(health_helix):
+def seeded_health_cymatix(health_cymatix):
     genes = [
         make_gene("JWT authentication middleware",
                   domains=["auth", "security"], entities=["jwt"],
@@ -43,8 +43,8 @@ def seeded_health_helix(health_helix):
                   gene_id="react_gene_01"),
     ]
     for g in genes:
-        health_helix.genome.upsert_gene(g)
-    return health_helix
+        health_cymatix.genome.upsert_gene(g)
+    return health_cymatix
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -53,14 +53,14 @@ def seeded_health_helix(health_helix):
 
 
 class TestContextHealth:
-    def test_empty_genome_is_sparse(self, health_helix):
-        window = health_helix.build_context("anything")
+    def test_empty_genome_is_sparse(self, health_cymatix):
+        window = health_cymatix.build_context("anything")
         assert window.context_health.status in ("denatured", "sparse")
         assert window.context_health.genes_expressed == 0
         assert window.context_health.ellipticity == 0.0
 
-    def test_matching_query_has_coverage(self, seeded_health_helix):
-        window = seeded_health_helix.build_context("How does JWT auth work?")
+    def test_matching_query_has_coverage(self, seeded_health_cymatix):
+        window = seeded_health_cymatix.build_context("How does JWT auth work?")
         health = window.context_health
         assert health.genes_expressed >= 1
         assert health.coverage > 0
@@ -70,7 +70,7 @@ class TestContextHealth:
         # so ellipticity may be low. Just verify the signals are populated.
         assert health.genes_available == 3
 
-    def test_no_match_shows_denatured(self, seeded_health_helix):
+    def test_no_match_shows_denatured(self, seeded_health_cymatix):
         """Query lexically disjoint from the genome → denatured health.
 
         Tier-0 PR-3 (2026-05-16) decoupled BGE-M3 dense recall from
@@ -88,7 +88,7 @@ class TestContextHealth:
         ``denatured`` status — the dense neighbours are weak enough that
         retrieval quality is correctly flagged as bad.
         """
-        window = seeded_health_helix.build_context("quantum entanglement physics")
+        window = seeded_health_cymatix.build_context("quantum entanglement physics")
         health = window.context_health
         assert health.genes_available == 3
         assert health.status == "denatured"
@@ -100,8 +100,8 @@ class TestContextHealth:
             f"ellipticity; got {health.ellipticity}"
         )
 
-    def test_health_in_metadata(self, seeded_health_helix):
-        window = seeded_health_helix.build_context("auth security jwt")
+    def test_health_in_metadata(self, seeded_health_cymatix):
+        window = seeded_health_cymatix.build_context("auth security jwt")
         assert hasattr(window, "context_health")
         health = window.context_health
         assert isinstance(health, ContextHealth)
@@ -110,20 +110,20 @@ class TestContextHealth:
         assert 0 <= health.density <= 1
         assert 0 <= health.freshness <= 1
 
-    def test_freshness_reflects_decay(self, seeded_health_helix):
+    def test_freshness_reflects_decay(self, seeded_health_cymatix):
         """Genes with low decay scores should reduce freshness."""
         # Manually decay a gene
-        gene = seeded_health_helix.genome.get_gene("auth_gene_001")
+        gene = seeded_health_cymatix.genome.get_gene("auth_gene_001")
         gene.epigenetics.decay_score = 0.2
-        seeded_health_helix.genome.upsert_gene(gene)
+        seeded_health_cymatix.genome.upsert_gene(gene)
 
-        window = seeded_health_helix.build_context("auth security")
+        window = seeded_health_cymatix.build_context("auth security")
         health = window.context_health
         # Freshness should be lower since one gene is stale
         assert health.freshness < 1.0
 
-    def test_health_genes_available_count(self, seeded_health_helix):
-        window = seeded_health_helix.build_context("auth")
+    def test_health_genes_available_count(self, seeded_health_cymatix):
+        window = seeded_health_cymatix.build_context("auth")
         assert window.context_health.genes_available == 3
 
 
@@ -137,7 +137,7 @@ class TestHGTExport:
         genome = Genome(":memory:")
         genome.upsert_gene(make_gene("test content", domains=["test"], gene_id="gene_001"))
 
-        with tempfile.NamedTemporaryFile(suffix=".helix", delete=False) as f:
+        with tempfile.NamedTemporaryFile(suffix=".cymatix", delete=False) as f:
             path = f.name
 
         try:
@@ -147,7 +147,7 @@ class TestHGTExport:
             assert os.path.exists(path)
 
             data = json.loads(open(path, encoding="utf-8").read())
-            assert data["helix_format_version"] == 1
+            assert data["cymatix_format_version"] == 1
             assert data["header"]["gene_count"] == 1
             assert data["header"]["description"] == "Test export"
             assert len(data["genes"]) == 1
@@ -162,7 +162,7 @@ class TestHGTExport:
         genome.upsert_gene(make_gene("stale", domains=["test"], gene_id="stale_1",
                                      chromatin=ChromatinState.HETEROCHROMATIN))
 
-        with tempfile.NamedTemporaryFile(suffix=".helix", delete=False) as f:
+        with tempfile.NamedTemporaryFile(suffix=".cymatix", delete=False) as f:
             path = f.name
 
         try:
@@ -188,7 +188,7 @@ class TestHGTImport:
         source.upsert_gene(make_gene(content_a, domains=["test"]))
         source.upsert_gene(make_gene(content_b, domains=["test"]))
 
-        with tempfile.NamedTemporaryFile(suffix=".helix", delete=False) as f:
+        with tempfile.NamedTemporaryFile(suffix=".cymatix", delete=False) as f:
             path = f.name
 
         try:
@@ -214,7 +214,7 @@ class TestHGTDiff:
         source.upsert_gene(make_gene("shared", domains=["test"], gene_id="shared_1"))
         source.upsert_gene(make_gene("only in file", domains=["test"], gene_id="file_only"))
 
-        with tempfile.NamedTemporaryFile(suffix=".helix", delete=False) as f:
+        with tempfile.NamedTemporaryFile(suffix=".cymatix", delete=False) as f:
             path = f.name
 
         try:

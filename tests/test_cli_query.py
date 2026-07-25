@@ -1,4 +1,4 @@
-"""Tests for `helix query`. Mocks cymatix_context.api.open_session so the
+"""Tests for `cymatix query`. Mocks cymatix_context.api.open_session so the
 CLI surface is tested in isolation from the retrieval stack."""
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ def fake_session():
     sess = MagicMock()
     sess.session_id = "sess-test-0000000000000000"
     sess.query.return_value = QueryResult(
-        expressed_context="<helix>example bytes</helix>",
+        expressed_context="<cymatix>example bytes</cymatix>",
         document_ids=["gene-001", "gene-002"],
         know=None,
         miss=None,
@@ -34,7 +34,7 @@ def test_query_text_mode_prints_expressed_context(fake_session):
     with patch("cymatix_context.cli.cmd_query.open_session", return_value=fake_session):
         rc, out, err = _run(["query", "hello world"])
     assert rc == 0, err
-    assert "<helix>example bytes</helix>" in out
+    assert "<cymatix>example bytes</cymatix>" in out
 
 
 def test_query_json_emits_agent_payload(fake_session):
@@ -42,7 +42,7 @@ def test_query_json_emits_agent_payload(fake_session):
         rc, out, err = _run(["query", "hello world", "--json"])
     assert rc == 0, err
     payload = json.loads(out)
-    assert payload["expressed_context"] == "<helix>example bytes</helix>"
+    assert payload["expressed_context"] == "<cymatix>example bytes</cymatix>"
     assert payload["evidence"] == ["gene-001", "gene-002"]
     assert payload["estimated_tokens"] == 42
     assert payload["decision_reason"] == "test fixture verdict"

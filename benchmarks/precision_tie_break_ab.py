@@ -2,8 +2,8 @@
 Pass 3c — A/B test: baseline insertion-order tie-break vs walking tie-break.
 
 Runs the same 25 queries twice against genome-bench-2026-04-14.db:
-    Run A (baseline):  HELIX_WALKING_TIEBREAK unset — current behaviour
-    Run B (walking):   HELIX_WALKING_TIEBREAK=1 — associative-graph ordering
+    Run A (baseline):  CYMATIX_WALKING_TIEBREAK unset — current behaviour
+    Run B (walking):   CYMATIX_WALKING_TIEBREAK=1 — associative-graph ordering
 
 Compares per-query top-k orderings. For any query whose top-k changed,
 emits the specific rank-swaps plus a per-rule explanation of why walking
@@ -28,7 +28,7 @@ import time
 from pathlib import Path
 from typing import Dict, List, Tuple
 
-os.environ["HELIX_DISABLE_HEADROOM"] = "1"
+os.environ["CYMATIX_DISABLE_HEADROOM"] = "1"
 
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO))
@@ -38,7 +38,7 @@ try:
 except Exception:
     pass
 
-from cymatix_context import HelixContextManager, load_config  # noqa: E402
+from cymatix_context import CymatixContextManager, load_config  # noqa: E402
 from cymatix_context import tie_break  # noqa: E402
 
 
@@ -54,7 +54,7 @@ def load_needles(path: Path, n: int) -> List[Dict]:
         return json.load(f)[:n]
 
 
-def run_query(hcm: HelixContextManager, query: str) -> Tuple[List[str], Dict[str, float]]:
+def run_query(hcm: CymatixContextManager, query: str) -> Tuple[List[str], Dict[str, float]]:
     expanded = hcm._expand_query_intent(query)
     domains, entities = hcm._extract_query_signals(expanded)
     genes = hcm.genome.query_genes(domains=domains, entities=entities, max_genes=TOP_K)
@@ -83,9 +83,9 @@ def main() -> int:
     cfg.ribosome.query_expansion_enabled = False
     cfg.ingestion.rerank_enabled = False
 
-    print(f"[ab] initializing HelixContextManager...")
+    print(f"[ab] initializing CymatixContextManager...")
     t0 = time.perf_counter()
-    hcm = HelixContextManager(cfg)
+    hcm = CymatixContextManager(cfg)
     init_ms = (time.perf_counter() - t0) * 1000.0
     print(f"[ab] init: {init_ms:.0f} ms\n")
 
@@ -110,15 +110,15 @@ def main() -> int:
         idx = needle["idx"]
 
         # Run A — baseline
-        os.environ.pop("HELIX_WALKING_TIEBREAK", None)
+        os.environ.pop("CYMATIX_WALKING_TIEBREAK", None)
         ids_a, scores_a = run_query(hcm, query)
 
         # Run B — walking
-        os.environ["HELIX_WALKING_TIEBREAK"] = "1"
+        os.environ["CYMATIX_WALKING_TIEBREAK"] = "1"
         ids_b, scores_b = run_query(hcm, query)
 
         # Clean up env so subsequent work isn't affected
-        os.environ.pop("HELIX_WALKING_TIEBREAK", None)
+        os.environ.pop("CYMATIX_WALKING_TIEBREAK", None)
 
         # Scores should be identical — tie_break only reorders within ties,
         # doesn't change the values. Verify.

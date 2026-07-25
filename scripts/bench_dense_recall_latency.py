@@ -86,7 +86,7 @@ def _build_fixture_genome(n_genes: int, dim: int) -> tuple[Genome, str]:
 
     Returns ``(genome, db_path)``. Caller is responsible for cleanup.
     """
-    tmp_dir = tempfile.mkdtemp(prefix="helix-bench-stage2-")
+    tmp_dir = tempfile.mkdtemp(prefix="cymatix-bench-stage2-")
     db_path = os.path.join(tmp_dir, "genome.db")
     genome = Genome(
         path=db_path,

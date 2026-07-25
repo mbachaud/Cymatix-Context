@@ -1,12 +1,12 @@
-"""ACTION 3 — faithfulness on helix's REAL output.
+"""ACTION 3 — faithfulness on cymatix's REAL output.
 
-Instead of hand-written context, condition B injects helix's actual
+Instead of hand-written context, condition B injects cymatix's actual
 `build_context().expressed_context` (shipped config: dense+SPLADE on, rrf,
-splice fix). This is the true "test helix's output" step. It separates two
+splice fix). This is the true "test cymatix's output" step. It separates two
 failure modes the know/miss contract conflates:
 
   RETRIEVAL-PRESERVATION : did the answer token survive retrieve->splice->assemble
-                           into expressed_context at all? (helix's job)
+                           into expressed_context at all? (cymatix's job)
   FAITHFULNESS           : given it survived, does the model causally read it?
                            (measured mechanistically, retargeted answer logit)
 
@@ -14,7 +14,7 @@ Pipeline: fresh tiny bed -> ingest the 6 synthetic facts -> per needle,
 build_context(read_only) -> expressed_context -> A/B graphs -> metric suite.
 
 Egress: synthetic "Redwood Inference" facts only (same as the hand-context run).
-Read-only + HELIX_DISABLE_LEARN so the bench bed is never mutated.
+Read-only + CYMATIX_DISABLE_LEARN so the bench bed is never mutated.
 """
 from __future__ import annotations
 
@@ -24,7 +24,7 @@ import sys
 import time
 from pathlib import Path
 
-os.environ.setdefault("HELIX_DISABLE_LEARN", "1")
+os.environ.setdefault("CYMATIX_DISABLE_LEARN", "1")
 
 _HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(_HERE))
@@ -39,9 +39,9 @@ from needle_faithfulness_experiment import (  # noqa: E402
 )
 
 from cymatix_context.config import load_config  # noqa: E402
-from cymatix_context.context_manager import HelixContextManager  # noqa: E402
+from cymatix_context.context_manager import CymatixContextManager  # noqa: E402
 
-OUT = str(_REPO / "benchmarks" / "results" / "real_helix_faith_results.json")
+OUT = str(_REPO / "benchmarks" / "results" / "real_cymatix_faith_results.json")
 import tempfile
 BED = str(Path(tempfile.gettempdir()) / "faith_needle_bed.db")
 
@@ -50,10 +50,10 @@ def build_bed():
     """Fresh bed with only the 6 synthetic facts -> short expressed_context."""
     if os.path.exists(BED):
         os.remove(BED)
-    _cfg_path = _REPO / "cymatix.toml" if (_REPO / "cymatix.toml").exists() else _REPO / "helix.toml"
+    _cfg_path = _REPO / "cymatix.toml" if (_REPO / "cymatix.toml").exists() else _REPO / "cymatix.toml"
     cfg = load_config(str(_cfg_path))
     cfg.genome.path = BED
-    mgr = HelixContextManager(cfg)
+    mgr = CymatixContextManager(cfg)
     for nd in NEEDLES:
         mgr.ingest(nd["ctx"], metadata={"source_id": nd["id"]})
     return mgr
@@ -117,7 +117,7 @@ def main():
     surv = [r for r in results if r.get("answer_survived_retrieval")]
     scored = [r for r in surv if "faith" in r]
     causal = [r for r in scored if r.get("causal_use")]
-    print("\n=== REAL-HELIX SUMMARY ===")
+    print("\n=== REAL-CYMATIX SUMMARY ===")
     print(f"answer survived retrieval : {len(surv)}/{len(results)}")
     if scored:
         print(f"causal-use | survived      : {len(causal)}/{len(scored)} = {len(causal)/len(scored):.2f}")

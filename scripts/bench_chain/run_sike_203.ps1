@@ -4,11 +4,11 @@
 # (n=100 seeded sample, weights 0,2,4,6 -- real queries run ~25s each, the
 # full 470x6 grid would be ~23h/bed).
 $ErrorActionPreference = 'Continue'
-$repo = 'F:\Projects\helix-context'
+$repo = 'F:\Projects\cymatix-context'
 $logs = "$repo\benchmarks\logs"
 $ts = Get-Date -Format 'yyyy-MM-dd_HHmm'
-$env:HELIX_OTEL_ENABLED = '1'
-$env:HELIX_OTEL_ENDPOINT = 'localhost:4317'
+$env:CYMATIX_OTEL_ENABLED = '1'
+$env:CYMATIX_OTEL_ENDPOINT = 'localhost:4317'
 cd $repo
 "sike+203 sequencer started $(Get-Date -Format o) pid=$PID" | Set-Content "$logs\sike203_runner.log"
 $PID | Set-Content "$logs\sike203.pid"

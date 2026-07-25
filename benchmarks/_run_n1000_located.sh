@@ -15,13 +15,13 @@
 #     2>&1 | tee benchmarks/logs/n1000_located_$(date +%Y-%m-%d_%H%M).log
 #
 # Preconditions:
-#   - Helix bench server running on $HELIX_URL (default http://127.0.0.1:11437)
+#   - Cymatix bench server running on $CYMATIX_URL (default http://127.0.0.1:11437)
 #   - Snapshot DB present at $GENOME_DB
-#   - Optional: HELIX_MODEL set (default qwen3:4b); ASK_PROXY=0 to skip /chat
+#   - Optional: CYMATIX_MODEL set (default qwen3:4b); ASK_PROXY=0 to skip /chat
 #
 # Environment overrides:
-#   HELIX_URL       /context endpoint (default http://127.0.0.1:11437)
-#   HELIX_MODEL     downstream model (default qwen3:4b)
+#   CYMATIX_URL       /context endpoint (default http://127.0.0.1:11437)
+#   CYMATIX_MODEL     downstream model (default qwen3:4b)
 #   GENOME_DB       absolute path to snapshot DB
 #   N               needle count (default 1000)
 #   SEED            random seed (default 42)
@@ -44,7 +44,7 @@ ok()   { echo "[$(date +%H:%M:%S)] OK    $*"; }
 fail() { echo "[$(date +%H:%M:%S)] FAIL  $*"; }
 
 GENOME_DB_RESOLVED="${GENOME_DB:-$SNAPSHOT_DEFAULT}"
-HELIX_URL_RESOLVED="${HELIX_URL:-http://127.0.0.1:11437}"
+CYMATIX_URL_RESOLVED="${CYMATIX_URL:-http://127.0.0.1:11437}"
 
 if [ ! -f "$GENOME_DB_RESOLVED" ]; then
     fail "Snapshot DB not found at $GENOME_DB_RESOLVED"
@@ -52,17 +52,17 @@ if [ ! -f "$GENOME_DB_RESOLVED" ]; then
 fi
 ok "Snapshot DB: $GENOME_DB_RESOLVED"
 
-if ! curl -sf "${HELIX_URL_RESOLVED}/health" >/dev/null 2>&1; then
-    fail "Helix not responding at ${HELIX_URL_RESOLVED}"
+if ! curl -sf "${CYMATIX_URL_RESOLVED}/health" >/dev/null 2>&1; then
+    fail "Cymatix not responding at ${CYMATIX_URL_RESOLVED}"
     exit 1
 fi
-ok "Helix UP at ${HELIX_URL_RESOLVED}"
+ok "Cymatix UP at ${CYMATIX_URL_RESOLVED}"
 
 log "=== N=${N:-1000} needle bench — LOCATED axis ==="
 log "Output:  ${OUT_DIR}/needle_1000_located_${TS}.json"
 
-env HELIX_URL="$HELIX_URL_RESOLVED" \
-    HELIX_MODEL="${HELIX_MODEL:-qwen3:4b}" \
+env CYMATIX_URL="$CYMATIX_URL_RESOLVED" \
+    CYMATIX_MODEL="${CYMATIX_MODEL:-qwen3:4b}" \
     GENOME_DB="$GENOME_DB_RESOLVED" \
     N="${N:-1000}" \
     SEED="${SEED:-42}" \

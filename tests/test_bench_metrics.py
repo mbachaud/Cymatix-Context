@@ -30,8 +30,8 @@ from bench_claude_matrix import gold_match_rank, summarize_profile  # noqa: E402
 
 def test_rank_is_one_when_gold_is_first_delivered():
     rank = gold_match_rank(
-        ["F:/Projects/helix-context/helix.toml"],
-        ["helix-context/helix.toml"],
+        ["F:/Projects/cymatix-context/cymatix.toml"],
+        ["cymatix-context/cymatix.toml"],
     )
     assert rank == 1
 
@@ -40,24 +40,24 @@ def test_rank_reflects_later_position():
     delivered = [
         "F:/Projects/other/a.md",
         "F:/Projects/other/b.md",
-        "F:/Projects/helix-context/helix.toml",
+        "F:/Projects/cymatix-context/cymatix.toml",
     ]
-    assert gold_match_rank(delivered, ["helix-context/helix.toml"]) == 3
+    assert gold_match_rank(delivered, ["cymatix-context/cymatix.toml"]) == 3
 
 
 def test_rank_is_none_when_no_delivered_source_matches():
     delivered = ["F:/Projects/Education/CLAUDE.md"]
-    assert gold_match_rank(delivered, ["helix-context/helix.toml"]) is None
+    assert gold_match_rank(delivered, ["cymatix-context/cymatix.toml"]) is None
 
 
 def test_rank_returns_earliest_when_multiple_sources_match():
     """Two delivered docs satisfy the gold list -- rank is the earliest."""
     delivered = [
         "F:/Projects/other/a.md",
-        "F:/Projects/helix-context/README.md",
-        "F:/Projects/helix-context/helix.toml",
+        "F:/Projects/cymatix-context/README.md",
+        "F:/Projects/cymatix-context/cymatix.toml",
     ]
-    gold = ["helix-context/helix.toml", "helix-context/README.md"]
+    gold = ["cymatix-context/cymatix.toml", "cymatix-context/README.md"]
     assert gold_match_rank(delivered, gold) == 2
 
 
@@ -65,24 +65,24 @@ def test_rank_multi_valid_gold_matches_any_entry():
     """A later gold_source entry still produces the delivered position."""
     delivered = [
         "F:/Projects/other/a.md",
-        "F:/Projects/helix-context/docs/SETUP.md",
+        "F:/Projects/cymatix-context/docs/SETUP.md",
     ]
-    gold = ["helix-context/helix.toml", "helix-context/docs/SETUP.md"]
+    gold = ["cymatix-context/cymatix.toml", "cymatix-context/docs/SETUP.md"]
     assert gold_match_rank(delivered, gold) == 2
 
 
 def test_rank_is_case_insensitive():
     rank = gold_match_rank(
-        ["F:/Projects/Helix-Context/HELIX.TOML"],
-        ["helix-context/helix.toml"],
+        ["F:/Projects/Cymatix-Context/CYMATIX.TOML"],
+        ["cymatix-context/cymatix.toml"],
     )
     assert rank == 1
 
 
 def test_rank_normalizes_backslashes():
     rank = gold_match_rank(
-        ["F:\\Projects\\helix-context\\helix.toml"],
-        ["helix-context/helix.toml"],
+        ["F:\\Projects\\cymatix-context\\cymatix.toml"],
+        ["cymatix-context/cymatix.toml"],
     )
     assert rank == 1
 
@@ -100,8 +100,8 @@ def test_rank_ignores_empty_gold_entries():
 
 def test_rank_none_is_equivalent_to_legacy_gold_not_delivered():
     """(gold_match_rank is not None) reproduces the old gold_delivered bool."""
-    gold = ["helix-context/helix.toml"]
-    hit = ["F:/Projects/helix-context/helix.toml"]
+    gold = ["cymatix-context/cymatix.toml"]
+    hit = ["F:/Projects/cymatix-context/cymatix.toml"]
     miss = ["F:/Projects/Education/CLAUDE.md"]
     assert (gold_match_rank(hit, gold) is not None) is True
     assert (gold_match_rank(miss, gold) is not None) is False

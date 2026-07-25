@@ -1,4 +1,4 @@
-"""Emit a helix participant heartbeat with optional presence state.
+"""Emit a cymatix participant heartbeat with optional presence state.
 
 Wraps POST /sessions/{participant_id}/heartbeat so each agent persona
 (laude, raude, taude, ...) can publish what it's currently doing to a
@@ -7,10 +7,10 @@ normal /context retrievals.
 
 Usage:
     # Simple ping (unchanged behavior — just refreshes TTL)
-    python scripts/helix_heartbeat.py laude
+    python scripts/cymatix_heartbeat.py laude
 
     # Publish presence state
-    python scripts/helix_heartbeat.py laude \\
+    python scripts/cymatix_heartbeat.py laude \\
         --party swift_wing21 \\
         --focus "PWPC Phase 1 followup" \\
         --blocked-on "batman access" \\
@@ -19,7 +19,7 @@ Usage:
         --notes "See docs/collab/comms/LOCKSTEP_TEST.md"
 
     # Read git state automatically for last_commit_hash
-    python scripts/helix_heartbeat.py laude --git
+    python scripts/cymatix_heartbeat.py laude --git
 
 The participant must already be registered (POST /sessions/register).
 """
@@ -34,7 +34,7 @@ import urllib.request
 from typing import Any
 
 
-DEFAULT_HELIX_URL = "http://localhost:11437"
+DEFAULT_CYMATIX_URL = "http://localhost:11437"
 
 
 def read_git_head() -> str | None:
@@ -67,8 +67,8 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("participant_id",
                     help="Participant id (e.g. laude / raude / taude / UUID)")
-    ap.add_argument("--url", default=DEFAULT_HELIX_URL,
-                    help=f"Helix base URL (default: {DEFAULT_HELIX_URL})")
+    ap.add_argument("--url", default=DEFAULT_CYMATIX_URL,
+                    help=f"Cymatix base URL (default: {DEFAULT_CYMATIX_URL})")
     ap.add_argument("--handle", default=None,
                     help="Display handle — defaults to participant_id")
     ap.add_argument("--party", default=None, help="party_id")

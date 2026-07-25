@@ -134,7 +134,7 @@ def test_upsert_fingerprint_writes_and_replaces(main_db):
         shard_name="s_ref",
         source_id="/docs/intro.md",
         domains_json='["docs"]',
-        entities_json='["helix"]',
+        entities_json='["cymatix"]',
         key_values_json='["chunk_count=1"]',
         is_parent=False,
     )
@@ -152,7 +152,7 @@ def test_upsert_fingerprint_writes_and_replaces(main_db):
         shard_name="s_ref",
         source_id="/docs/intro.md",
         domains_json='["docs", "design"]',
-        entities_json='["helix"]',
+        entities_json='["cymatix"]',
         key_values_json='["chunk_count=3", "is_parent=true"]',
         is_parent=True,
     )
@@ -173,7 +173,7 @@ def test_fingerprint_index_keeps_same_gene_id_across_shards(main_db):
     INSERT OR REPLACE silently overwrote the first shard's pointer.
     """
     register_shard(main_db, "education", "reference", "/edu.db")
-    register_shard(main_db, "helix-context", "reference", "/hc.db")
+    register_shard(main_db, "cymatix-context", "reference", "/hc.db")
 
     upsert_fingerprint(
         main_db,
@@ -187,7 +187,7 @@ def test_fingerprint_index_keeps_same_gene_id_across_shards(main_db):
     upsert_fingerprint(
         main_db,
         gene_id="63ab90e26082c8ec",
-        shard_name="helix-context",
+        shard_name="cymatix-context",
         source_id="/hc/audit_baseline.json",
         domains_json='["docs"]',
         entities_json='[]',
@@ -210,7 +210,7 @@ def test_fingerprint_index_keeps_same_gene_id_across_shards(main_db):
             ("63ab90e26082c8ec",),
         ).fetchall()
     }
-    assert shards == {"education", "helix-context"}
+    assert shards == {"education", "cymatix-context"}
 
 
 def test_fingerprint_index_replaces_same_shard_same_gene(main_db):
@@ -308,7 +308,7 @@ def test_source_index_keeps_same_gene_id_across_shards(main_db):
     serves the first-shard copy.
     """
     register_shard(main_db, "education", "reference", "/edu.db")
-    register_shard(main_db, "helix-context", "reference", "/hc.db")
+    register_shard(main_db, "cymatix-context", "reference", "/hc.db")
 
     upsert_source_index(
         main_db,
@@ -324,9 +324,9 @@ def test_source_index_keeps_same_gene_id_across_shards(main_db):
     upsert_source_index(
         main_db,
         gene_id="63ab90e26082c8ec",
-        shard_name="helix-context",
+        shard_name="cymatix-context",
         source_id="/hc/audit_baseline.json",
-        repo_root="/projects/helix-context",
+        repo_root="/projects/cymatix-context",
         source_kind="doc",
         observed_at=200.0,
         mtime=190.0,
@@ -349,7 +349,7 @@ def test_source_index_keeps_same_gene_id_across_shards(main_db):
     by_shard = {r["shard_name"]: r["repo_root"] for r in rows}
     assert by_shard == {
         "education": "/projects/education",
-        "helix-context": "/projects/helix-context",
+        "cymatix-context": "/projects/cymatix-context",
     }
 
 

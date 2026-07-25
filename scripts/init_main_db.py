@@ -3,7 +3,7 @@
 Idempotent. Safe to run on an existing main.db; schema is additive.
 
 Usage:
-    python scripts/init_main_db.py [--path F:/Projects/helix-context/genomes/main.db]
+    python scripts/init_main_db.py [--path F:/Projects/cymatix-context/genomes/main.db]
 """
 
 from __future__ import annotations
@@ -22,7 +22,7 @@ except Exception:
 from cymatix_context.shard_schema import init_main_db, open_main_db, list_shards
 
 
-DEFAULT_PATH = "F:/Projects/helix-context/genomes/main.db"
+DEFAULT_PATH = "F:/Projects/cymatix-context/genomes/main.db"
 
 
 def main() -> int:

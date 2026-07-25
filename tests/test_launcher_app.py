@@ -1,6 +1,6 @@
 """
 Tests for cymatix_context.launcher.app — FastAPI endpoints with mocked
-supervisor + collector. No real helix process is spawned.
+supervisor + collector. No real cymatix process is spawned.
 """
 
 from __future__ import annotations
@@ -11,7 +11,7 @@ from unittest.mock import MagicMock
 import pytest
 from fastapi.testclient import TestClient
 
-from cymatix_context.config import HeadroomConfig, HelixConfig, ServerConfig
+from cymatix_context.config import HeadroomConfig, CymatixConfig, ServerConfig
 from cymatix_context.launcher.app import create_app
 from cymatix_context.launcher.supervisor import (
     AlreadyRunning,
@@ -24,7 +24,7 @@ from cymatix_context.launcher.supervisor import (
 @pytest.fixture
 def fake_store():
     store = MagicMock()
-    store.state.helix_pid = None
+    store.state.cymatix_pid = None
     store.state.last_restart_reason = None
     store.state.last_restart_at = None
     return store
@@ -35,14 +35,14 @@ def fake_supervisor(fake_store, tmp_path):
     sup = MagicMock()
     sup.store = fake_store
     sup.store.path = tmp_path / "state.json"
-    sup.helix_host = "127.0.0.1"
-    sup.helix_port = 11437
-    sup.helix_log_path = tmp_path / "helix.log"
+    sup.cymatix_host = "127.0.0.1"
+    sup.cymatix_port = 11437
+    sup.cymatix_log_path = tmp_path / "cymatix.log"
     sup.is_running.return_value = False
     sup.get_pid.return_value = None
     sup.get_uptime_s.return_value = None
     sup.adopt.return_value = False
-    sup.find_orphan_helix.return_value = None
+    sup.find_orphan_cymatix.return_value = None
     sup.get_last_error.return_value = None
     sup.owns_process.return_value = False
     return sup
@@ -52,7 +52,7 @@ def fake_supervisor(fake_store, tmp_path):
 def fake_collector():
     collector = MagicMock()
     collector.collect.return_value = {
-        "helix": {
+        "cymatix": {
             "running": False,
             "host": "127.0.0.1",
             "port": 11437,
@@ -81,7 +81,7 @@ class TestDashboardHTML:
         fake_supervisor.is_running.return_value = True
         fake_supervisor.get_pid.return_value = 12345
         fake_collector.collect.return_value = {
-            "helix": {"running": True, "pid": 12345, "port": 11437},
+            "cymatix": {"running": True, "pid": 12345, "port": 11437},
             "genes": {
                 "total": 8000,
                 "raw_chars": 47_000_000,
@@ -96,13 +96,13 @@ class TestDashboardHTML:
 
 class TestApiState:
     def test_api_state_returns_collector_payload(self, client, fake_collector):
-        fake_collector.collect.return_value = {"helix": {"running": False, "port": 11437}}
+        fake_collector.collect.return_value = {"cymatix": {"running": False, "port": 11437}}
         resp = client.get("/api/state")
         assert resp.status_code == 200
         # v0.7.0: /api/state additionally carries the launcher-side
         # observability snapshot (None when no sidecar is wired in).
         assert resp.json() == {
-            "helix": {
+            "cymatix": {
                 "running": False,
                 "port": 11437,
                 "start_pending": False,
@@ -114,7 +114,7 @@ class TestApiState:
 
 
 class TestLauncherOwnership:
-    def test_shutdown_does_not_stop_adopted_helix(self, fake_store, fake_supervisor, fake_collector):
+    def test_shutdown_does_not_stop_adopted_cymatix(self, fake_store, fake_supervisor, fake_collector):
         fake_supervisor.adopt.return_value = True
         fake_supervisor.is_running.return_value = True
         fake_supervisor.owns_process.return_value = False
@@ -125,7 +125,7 @@ class TestLauncherOwnership:
 
         fake_supervisor.stop.assert_not_called()
 
-    def test_shutdown_stops_owned_helix(self, fake_store, fake_supervisor, fake_collector):
+    def test_shutdown_stops_owned_cymatix(self, fake_store, fake_supervisor, fake_collector):
         fake_supervisor.adopt.return_value = False
         fake_supervisor.is_running.return_value = True
         fake_supervisor.owns_process.return_value = True
@@ -142,7 +142,7 @@ class TestPanelsPartial:
         resp = client.get("/api/state/panels")
         assert resp.status_code == 200
         assert resp.headers["content-type"].startswith("text/html")
-        # Empty state when helix down
+        # Empty state when cymatix down
         assert "Cymatix is stopped" in resp.text
 
     def test_panels_partial_browser_navigation_redirects_to_dashboard(self, client):
@@ -156,7 +156,7 @@ class TestPanelsPartial:
 
     def test_panels_partial_renders_degraded_message(self, client, fake_collector):
         fake_collector.collect.return_value = {
-            "helix": {
+            "cymatix": {
                 "running": True,
                 "availability": "degraded",
                 "next_action": "Restart it from the launcher UI.",
@@ -170,7 +170,7 @@ class TestPanelsPartial:
 
     def test_panels_partial_renders_disconnected_agents(self, client, fake_collector):
         fake_collector.collect.return_value = {
-            "helix": {
+            "cymatix": {
                 "running": True,
                 "availability": "available",
                 "port": 11437,
@@ -308,7 +308,7 @@ class TestMaybeBuildHeadroom:
                 self.start_calls += 1
                 return 4242
 
-        cfg = HelixConfig(
+        cfg = CymatixConfig(
             headroom=HeadroomConfig(
                 enabled=False,
                 autostart=True,
@@ -355,7 +355,7 @@ class TestMaybeBuildHeadroom:
                 self.start_calls += 1
                 return 4242
 
-        cfg = HelixConfig(
+        cfg = CymatixConfig(
             headroom=HeadroomConfig(
                 enabled=False,
                 autostart=True,
@@ -385,23 +385,23 @@ class TestHeadroomAutoRoute:
     def test_remote_upstream_does_not_route_when_route_upstream_disabled(self, monkeypatch):
         """Default config (route_upstream=False) must NOT rewrite the
         upstream even for a remote target. Pre-fix this routed silently
-        and pointed helix at a dead :8787 when Headroom wasn't installed."""
+        and pointed cymatix at a dead :8787 when Headroom wasn't installed."""
         from cymatix_context.launcher import app as app_mod
 
-        cfg = HelixConfig(
+        cfg = CymatixConfig(
             server=ServerConfig(upstream="https://api.openai.com/v1"),
             headroom=HeadroomConfig(host="127.0.0.1", port=8787),
         )
         assert cfg.headroom.route_upstream is False  # contract guard
 
-        monkeypatch.delenv("HELIX_SERVER_UPSTREAM", raising=False)
+        monkeypatch.delenv("CYMATIX_SERVER_UPSTREAM", raising=False)
         monkeypatch.delenv("OPENAI_TARGET_API_URL", raising=False)
         # auto_override=None means "defer to config" — the precedence path under
-        # test (HELIX_HEADROOM_ROUTE_UPSTREAM_AUTO unset at the call site).
-        routed = app_mod._configure_helix_upstream_routing(cfg, auto_override=None)
+        # test (CYMATIX_HEADROOM_ROUTE_UPSTREAM_AUTO unset at the call site).
+        routed = app_mod._configure_cymatix_upstream_routing(cfg, auto_override=None)
 
         assert routed is False
-        assert "HELIX_SERVER_UPSTREAM" not in os.environ
+        assert "CYMATIX_SERVER_UPSTREAM" not in os.environ
         assert "OPENAI_TARGET_API_URL" not in os.environ
 
     def test_remote_upstream_routes_when_route_upstream_opted_in(self, monkeypatch):
@@ -409,74 +409,74 @@ class TestHeadroomAutoRoute:
         original auto-route behavior for operators who do want it."""
         from cymatix_context.launcher import app as app_mod
 
-        cfg = HelixConfig(
+        cfg = CymatixConfig(
             server=ServerConfig(upstream="https://api.openai.com/v1"),
             headroom=HeadroomConfig(host="127.0.0.1", port=8787, route_upstream=True),
         )
 
-        monkeypatch.delenv("HELIX_SERVER_UPSTREAM", raising=False)
+        monkeypatch.delenv("CYMATIX_SERVER_UPSTREAM", raising=False)
         monkeypatch.delenv("OPENAI_TARGET_API_URL", raising=False)
-        routed = app_mod._configure_helix_upstream_routing(cfg, auto_override=None)
+        routed = app_mod._configure_cymatix_upstream_routing(cfg, auto_override=None)
 
         assert routed is True
-        assert os.environ["HELIX_SERVER_UPSTREAM"] == "http://127.0.0.1:8787"
+        assert os.environ["CYMATIX_SERVER_UPSTREAM"] == "http://127.0.0.1:8787"
         assert os.environ["OPENAI_TARGET_API_URL"] == "https://api.openai.com/v1"
 
     def test_env_var_false_forces_off_even_when_config_opted_in(self, monkeypatch):
-        """HELIX_HEADROOM_ROUTE_UPSTREAM_AUTO=0 is the per-launch kill
+        """CYMATIX_HEADROOM_ROUTE_UPSTREAM_AUTO=0 is the per-launch kill
         switch: must override route_upstream=True. Useful when the proxy
-        is misbehaving and the operator wants helix direct for one session."""
+        is misbehaving and the operator wants cymatix direct for one session."""
         from cymatix_context.launcher import app as app_mod
 
-        cfg = HelixConfig(
+        cfg = CymatixConfig(
             server=ServerConfig(upstream="https://api.openai.com/v1"),
             headroom=HeadroomConfig(host="127.0.0.1", port=8787, route_upstream=True),
         )
 
-        monkeypatch.delenv("HELIX_SERVER_UPSTREAM", raising=False)
+        monkeypatch.delenv("CYMATIX_SERVER_UPSTREAM", raising=False)
         monkeypatch.delenv("OPENAI_TARGET_API_URL", raising=False)
-        # auto_override=False simulates HELIX_HEADROOM_ROUTE_UPSTREAM_AUTO=0
-        routed = app_mod._configure_helix_upstream_routing(cfg, auto_override=False)
+        # auto_override=False simulates CYMATIX_HEADROOM_ROUTE_UPSTREAM_AUTO=0
+        routed = app_mod._configure_cymatix_upstream_routing(cfg, auto_override=False)
 
         assert routed is False
-        assert "HELIX_SERVER_UPSTREAM" not in os.environ
+        assert "CYMATIX_SERVER_UPSTREAM" not in os.environ
         assert "OPENAI_TARGET_API_URL" not in os.environ
 
     def test_env_var_true_forces_on_even_when_config_disabled(self, monkeypatch):
-        """HELIX_HEADROOM_ROUTE_UPSTREAM_AUTO=1 is also a per-launch
+        """CYMATIX_HEADROOM_ROUTE_UPSTREAM_AUTO=1 is also a per-launch
         override: must turn routing on even when route_upstream=False
         in config. Symmetric to the kill-switch test."""
         from cymatix_context.launcher import app as app_mod
 
-        cfg = HelixConfig(
+        cfg = CymatixConfig(
             server=ServerConfig(upstream="https://api.openai.com/v1"),
             headroom=HeadroomConfig(host="127.0.0.1", port=8787),  # route_upstream defaults False
         )
 
-        monkeypatch.delenv("HELIX_SERVER_UPSTREAM", raising=False)
+        monkeypatch.delenv("CYMATIX_SERVER_UPSTREAM", raising=False)
         monkeypatch.delenv("OPENAI_TARGET_API_URL", raising=False)
-        routed = app_mod._configure_helix_upstream_routing(cfg, auto_override=True)
+        routed = app_mod._configure_cymatix_upstream_routing(cfg, auto_override=True)
 
         assert routed is True
-        assert os.environ["HELIX_SERVER_UPSTREAM"] == "http://127.0.0.1:8787"
+        assert os.environ["CYMATIX_SERVER_UPSTREAM"] == "http://127.0.0.1:8787"
 
     def test_local_ollama_upstream_stays_direct(self, monkeypatch):
         """Loopback upstream is never rewritten, even with route_upstream=True
         (Headroom proxy hop doesn't buy anything for a localhost model server)."""
         from cymatix_context.launcher import app as app_mod
 
-        cfg = HelixConfig(
+        cfg = CymatixConfig(
             server=ServerConfig(upstream="http://localhost:11434"),
             headroom=HeadroomConfig(host="127.0.0.1", port=8787, route_upstream=True),
         )
 
-        monkeypatch.setenv("HELIX_SERVER_UPSTREAM", "http://127.0.0.1:8787")
+        monkeypatch.setenv("CYMATIX_SERVER_UPSTREAM", "http://127.0.0.1:8787")
         monkeypatch.setenv("OPENAI_TARGET_API_URL", "https://api.openai.com/v1")
 
-        routed = app_mod._configure_helix_upstream_routing(cfg, auto_override=True)
+        routed = app_mod._configure_cymatix_upstream_routing(cfg, auto_override=True)
 
         assert routed is False
-        assert "HELIX_SERVER_UPSTREAM" not in os.environ
+        assert "CYMATIX_SERVER_UPSTREAM" not in os.environ
         assert "OPENAI_TARGET_API_URL" not in os.environ
 
 
@@ -496,14 +496,14 @@ class TestHeadroomAutoRoute:
     ("", False),         # empty → default opt-IN
 ])
 def test_observability_env_opt_out(monkeypatch, env_value, expects_skip):
-    """HELIX_OBSERVABILITY parsing is case-insensitive across recognised
+    """CYMATIX_OBSERVABILITY parsing is case-insensitive across recognised
     opt-out tokens; everything else (including unknown strings) falls
     through to the default opt-IN behaviour.
 
     Cleanup A: assertion is on the (supervisor, install_pending) tuple
     returned by _maybe_build_observability — the previous module-level
     _OBS_INSTALL_PENDING global has been removed."""
-    monkeypatch.setenv("HELIX_OBSERVABILITY", env_value)
+    monkeypatch.setenv("CYMATIX_OBSERVABILITY", env_value)
     # Stub install-complete so the opt-IN branches actually return a
     # supervisor rather than skipping due to missing binaries/configs.
     monkeypatch.setattr(
@@ -514,7 +514,7 @@ def test_observability_env_opt_out(monkeypatch, env_value, expects_skip):
     sup, install_pending = _maybe_build_observability()
     if expects_skip:
         assert sup is None, (
-            f"HELIX_OBSERVABILITY={env_value!r} should opt out, "
+            f"CYMATIX_OBSERVABILITY={env_value!r} should opt out, "
             f"but a supervisor was built"
         )
         # Opt-out path never marks install-pending; the user explicitly
@@ -523,7 +523,7 @@ def test_observability_env_opt_out(monkeypatch, env_value, expects_skip):
         assert install_pending is False
     else:
         assert sup is not None, (
-            f"HELIX_OBSERVABILITY={env_value!r} should opt in, "
+            f"CYMATIX_OBSERVABILITY={env_value!r} should opt in, "
             f"but no supervisor was built"
         )
         # Opt-IN with install complete → no install balloon needed.
@@ -533,7 +533,7 @@ def test_observability_env_opt_out(monkeypatch, env_value, expects_skip):
 def test_observability_enabled_when_unset(monkeypatch, tmp_path):
     """Default — env unset → returns a supervisor (or None if configs
     haven't been rendered yet; either way, not silently disabled)."""
-    monkeypatch.delenv("HELIX_OBSERVABILITY", raising=False)
+    monkeypatch.delenv("CYMATIX_OBSERVABILITY", raising=False)
     monkeypatch.setattr(
         "cymatix_context.launcher.app._observability_install_complete",
         lambda: True,
@@ -551,7 +551,7 @@ def test_observability_skipped_when_install_incomplete(monkeypatch):
     Cleanup A: previously this was tracked through a module-level
     _OBS_INSTALL_PENDING global + setter. The helper now returns the
     flag in the tuple so the caller doesn't depend on global state."""
-    monkeypatch.delenv("HELIX_OBSERVABILITY", raising=False)
+    monkeypatch.delenv("CYMATIX_OBSERVABILITY", raising=False)
     monkeypatch.setattr(
         "cymatix_context.launcher.app._observability_install_complete",
         lambda: False,

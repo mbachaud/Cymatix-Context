@@ -9,7 +9,7 @@ knowledge-store tree:
       .../<name2>.genome.db
       ...
 
-and produce one flat ``genome.db`` that a normal (non-sharded) Helix server can
+and produce one flat ``genome.db`` that a normal (non-sharded) Cymatix server can
 open with dense retrieval fully working -- because we copy ``embedding_dense_v2``
 (and every other column) VERBATIM. We never re-embed.
 
@@ -381,7 +381,7 @@ def main(argv: list[str] | None = None) -> int:
         description=(
             "Merge a sharded genome (main.genome.db + per-shard "
             "*.genome.db files) into a single blob genome.db, preserving "
-            "embedding_dense_v2 verbatim so a non-sharded Helix server can "
+            "embedding_dense_v2 verbatim so a non-sharded Cymatix server can "
             "serve dense retrieval. Does NOT re-embed."
         )
     )

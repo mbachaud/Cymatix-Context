@@ -1,14 +1,20 @@
-"""0.8.0 MCP tool-surface rename: canonical ``cymatix_*`` names with
-``helix_*`` compat aliases.
+"""MCP tool-surface contract (0.9.0 clean break).
 
-The 0.8.0 changelog shipped "MCP server identifies as cymatix" but only
-the flagship retrieval tool was actually renamed — the other 23 tools
-still registered as ``helix_*``. Canonical names are now ``cymatix_*``
-across the board; the old names stay callable as deprecated aliases for
-the deprecation window (default ON, disable with ``CYMATIX_MCP_COMPAT=0``
-/ ``HELIX_MCP_COMPAT=0``) so existing host configs keep working.
+The compat era is over: the MCP server registers **only** ``cymatix_*``
+tools. There are no ``helix_*`` aliases and no alias machinery
+(``_CANONICAL_RENAMES`` / ``_register_compat_aliases`` /
+``_mcp_compat_enabled``) left to test.
+
+By default the server prunes to the lean 5-tool core surface (issue #219);
+the full ~24-tool surface is exposed with ``CYMATIX_MCP_FULL=1``. Both
+surfaces must be 100%% ``cymatix_*`` with zero ``helix`` in any tool name.
 """
 from __future__ import annotations
+
+import json
+import os
+import subprocess
+import sys
 
 import pytest
 
@@ -17,101 +23,92 @@ pytest.importorskip("mcp", reason="mcp SDK extra not installed")
 from cymatix_context.mcp import mcp_server
 
 
-# The full pre-rename helix_* surface (all 24 tools — including
-# helix_context, whose alias the first rename pass dropped outright).
-# Every one must have a canonical cymatix_* function and a compat-alias
-# mapping.
-_OLD_NAMES = [
-    "helix_context",
-    "helix_context_packet",
-    "helix_refresh_targets",
-    "helix_stats",
-    "helix_ingest",
-    "helix_resonance",
-    "helix_hitl_emit",
-    "helix_hitl_recent",
-    "helix_sessions_list",
-    "helix_session_recent",
-    "helix_consolidate",
-    "helix_health",
-    "helix_swap_db",
-    "helix_announce",
-    "helix_metrics_tokens",
-    "helix_bridge_status",
-    "helix_gene_get",
-    "helix_neighbors",
-    "helix_splice_preview",
-    "helix_fingerprint",
-    "helix_document_get",
-    "helix_document_query",
-    "helix_document_preview",
-    "helix_document_fingerprint",
-]
+_CORE_TOOLS = {
+    "cymatix_context",
+    "cymatix_context_packet",
+    "cymatix_ingest",
+    "cymatix_health",
+    "cymatix_sessions_list",
+}
 
 
-def test_canonical_functions_exist_for_every_old_name():
-    for old in _OLD_NAMES:
-        canonical = "cymatix_" + old[len("helix_"):]
-        assert callable(getattr(mcp_server, canonical, None)), (
-            f"missing canonical tool function {canonical}"
-        )
+def _lean_tool_names() -> set[str]:
+    return set(mcp_server.mcp._tool_manager._tools.keys())
 
 
-def test_alias_map_covers_exactly_the_old_surface():
-    assert set(mcp_server._CANONICAL_RENAMES.keys()) == set(_OLD_NAMES)
-    for old, canonical in mcp_server._CANONICAL_RENAMES.items():
-        assert canonical == "cymatix_" + old[len("helix_"):]
+def _full_tool_names() -> set[str]:
+    """Enumerate the full tool surface in an isolated subprocess with
+    CYMATIX_MCP_FULL=1 so we don't perturb the in-process lean server."""
+    env = dict(os.environ)
+    env["CYMATIX_MCP_FULL"] = "1"
+    proc = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "import json; from cymatix_context.mcp import mcp_server as m; "
+            "print(json.dumps(sorted(m.mcp._tool_manager._tools.keys())))",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=120,
+        env=env,
+    )
+    assert proc.returncode == 0, proc.stderr
+    return set(json.loads(proc.stdout.strip().splitlines()[-1]))
 
 
-def test_core_tools_are_canonical_names():
-    assert mcp_server._MCP_CORE_TOOLS == frozenset({
-        "cymatix_context",
-        "cymatix_context_packet",
-        "cymatix_ingest",
-        "cymatix_health",
-        "cymatix_sessions_list",
-    })
+# ── only cymatix_* tools, zero helix ────────────────────────────────
 
 
-def test_compat_enabled_by_default(monkeypatch):
-    monkeypatch.delenv("HELIX_MCP_COMPAT", raising=False)
-    assert mcp_server._mcp_compat_enabled() is True
+def test_lean_surface_is_all_cymatix_no_helix():
+    names = _lean_tool_names()
+    assert names, "no MCP tools registered"
+    assert all(n.startswith("cymatix_") for n in names), names
+    assert not any("helix" in n for n in names), names
 
 
-@pytest.mark.parametrize("value,expected", [
-    ("0", False), ("false", False), ("off", False),
-    ("1", True), ("true", True),
-])
-def test_compat_env_flag(monkeypatch, value, expected):
-    monkeypatch.setenv("HELIX_MCP_COMPAT", value)
-    assert mcp_server._mcp_compat_enabled() is expected
+def test_lean_surface_is_exactly_the_core_five():
+    assert _lean_tool_names() == _CORE_TOOLS
 
 
-def test_register_compat_aliases_registers_old_names(monkeypatch):
-    monkeypatch.delenv("HELIX_MCP_COMPAT", raising=False)
-    from mcp.server.fastmcp import FastMCP
-    fresh = FastMCP("test")
-    registered = mcp_server._register_compat_aliases(fresh)
-    assert set(registered) == set(_OLD_NAMES)
-    tool_names = set(fresh._tool_manager._tools.keys())
-    assert set(_OLD_NAMES) <= tool_names
+def test_full_surface_is_all_cymatix_no_helix():
+    names = _full_tool_names()
+    assert len(names) > len(_CORE_TOOLS), (
+        f"CYMATIX_MCP_FULL did not expand the surface: {sorted(names)}"
+    )
+    assert all(n.startswith("cymatix_") for n in names), sorted(names)
+    assert not any("helix" in n for n in names), sorted(names)
 
 
-def test_register_compat_aliases_noop_when_disabled(monkeypatch):
-    monkeypatch.setenv("HELIX_MCP_COMPAT", "0")
-    from mcp.server.fastmcp import FastMCP
-    fresh = FastMCP("test")
-    assert mcp_server._register_compat_aliases(fresh) == []
-    assert not fresh._tool_manager._tools
+def test_full_surface_includes_the_core_five():
+    assert _CORE_TOOLS <= _full_tool_names()
 
 
-def test_effective_core_includes_aliases_only_when_compat(monkeypatch):
-    monkeypatch.delenv("HELIX_MCP_COMPAT", raising=False)
-    core = mcp_server._effective_core_tools()
-    assert "cymatix_ingest" in core and "helix_ingest" in core
-    assert "helix_context_packet" in core  # alias of a core tool
-    assert "helix_stats" not in core      # alias of a non-core tool
+# ── the 5 core tools exist as functions and are the canonical set ───
 
-    monkeypatch.setenv("HELIX_MCP_COMPAT", "0")
-    core = mcp_server._effective_core_tools()
-    assert core == mcp_server._MCP_CORE_TOOLS
+
+def test_core_tool_functions_exist():
+    for name in _CORE_TOOLS:
+        assert callable(getattr(mcp_server, name, None)), f"missing tool fn {name}"
+
+
+def test_core_tools_frozenset_is_canonical():
+    assert mcp_server._MCP_CORE_TOOLS == frozenset(_CORE_TOOLS)
+
+
+# ── no helix_* functions, no alias machinery ────────────────────────
+
+
+def test_no_helix_tool_functions_at_module_level():
+    leaked = [name for name in vars(mcp_server) if name.startswith("helix_")]
+    assert not leaked, f"module still defines helix_* symbols: {leaked}"
+
+
+@pytest.mark.parametrize(
+    "symbol",
+    ["_CANONICAL_RENAMES", "_register_compat_aliases", "_mcp_compat_enabled"],
+)
+def test_alias_machinery_removed(symbol):
+    assert not hasattr(mcp_server, symbol), (
+        f"compat alias machinery {symbol} should have been removed"
+    )

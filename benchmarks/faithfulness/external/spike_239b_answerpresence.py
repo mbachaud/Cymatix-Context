@@ -1,7 +1,7 @@
 """
 #239 answer-presence SPIKE — does an answer-presence scorer discriminate causal-use?
 
-Offline, read-only. No helix code/config touched, no graphs, no ingestion.
+Offline, read-only. No cymatix code/config touched, no graphs, no ingestion.
 Inputs (join on id):
   f:/Projects/np-graph/needles_239b_stage1.json  (q, expressed_context, 5 feats, ans[label-only])
   f:/Projects/np-graph/needles_239b_faith.json    (causal_use, pB, cell)
@@ -12,7 +12,7 @@ Sets:
 
 Scorers (decision priority):
   1. ms_marco_ce   cross-encoder/ms-marco-MiniLM-L-6-v2  (purpose-built (q,passage) relevance; hot-path candidate)
-  2. nli_*         DeBERTa-v3-small NLI entailment, BOTH orders  (helix's training/models/nli ABSENT -> public substitute)
+  2. nli_*         DeBERTa-v3-small NLI entailment, BOTH orders  (cymatix's training/models/nli ABSENT -> public substitute)
   3. minilm_cos    all-MiniLM-L6-v2 cosine  (naive baseline floor)
 
 Never feed the gold token. query=q, span=expressed_context.
@@ -83,16 +83,16 @@ nli_source = None
 try:
     from transformers import AutoTokenizer, AutoModelForSequenceClassification
     if os.path.isdir(NLI_LOCAL):
-        nli_path, nli_source = NLI_LOCAL, "helix-local (7-class MacCartney)"
+        nli_path, nli_source = NLI_LOCAL, "cymatix-local (7-class MacCartney)"
     else:
-        nli_path, nli_source = NLI_PUBLIC, "PUBLIC SUBSTITUTE (helix training/models/nli ABSENT)"
+        nli_path, nli_source = NLI_PUBLIC, "PUBLIC SUBSTITUTE (cymatix training/models/nli ABSENT)"
     print(f"\n[load] NLI: {nli_path}  <- {nli_source}", flush=True)
     tok = AutoTokenizer.from_pretrained(nli_path)
     nli = AutoModelForSequenceClassification.from_pretrained(nli_path).to(DEVICE)
     nli.eval()
     nli_params = sum(p.numel() for p in nli.parameters())
     id2label = {int(k): v for k, v in nli.config.id2label.items()}
-    # locate entailment column robustly (helix local: ENTAILMENT==0; public: read label map)
+    # locate entailment column robustly (cymatix local: ENTAILMENT==0; public: read label map)
     ent_idx = next((k for k, v in id2label.items() if "entail" in str(v).lower()), 0)
     print(f"  id2label={id2label}  entailment_idx={ent_idx}  params={nli_params/1e6:.1f}M")
 

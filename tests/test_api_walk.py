@@ -1,12 +1,12 @@
-"""Tests for the walk-aware methods on ``cymatix_context.api.HelixSession``.
+"""Tests for the walk-aware methods on ``cymatix_context.api.CymatixSession``.
 
 These methods (``gene_get``, ``packet``, ``refresh_targets``,
 ``neighbors``) were added 2026-05-12 to back the CLI agent surface. The
 council review of the v1 CLI flagged that the in-process API
-deliberately deferred them to v1.1; making them v1 unblocks `helix
-packet`, `helix gene get`, etc. without standing up an HTTP server.
+deliberately deferred them to v1.1; making them v1 unblocks `cymatix
+packet`, `cymatix gene get`, etc. without standing up an HTTP server.
 
-The tests stub the underlying ``HelixContextManager`` (and the
+The tests stub the underlying ``CymatixContextManager`` (and the
 ``build_context_packet`` helper that the packet methods delegate to) so
 they verify the API boundary in isolation from the retrieval stack.
 """
@@ -16,7 +16,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from cymatix_context.api import HelixSession
+from cymatix_context.api import CymatixSession
 from cymatix_context.schemas import (
     ChromatinState,
     ContextItem,
@@ -28,11 +28,11 @@ from cymatix_context.schemas import (
 
 
 def _make_session(manager=None):
-    """Build a HelixSession bound to a MagicMock manager — bypasses
+    """Build a CymatixSession bound to a MagicMock manager — bypasses
     open_session() so we don't accidentally spin up a real
-    HelixContextManager (and a real SQLite genome)."""
+    CymatixContextManager (and a real SQLite genome)."""
     manager = manager or MagicMock()
-    return HelixSession(manager=manager, session_id="sess-test-walk")
+    return CymatixSession(manager=manager, session_id="sess-test-walk")
 
 
 def _make_gene(gene_id="gene-001", content="splice trims fragments"):
@@ -153,7 +153,7 @@ def test_refresh_targets_default_task_type_is_edit():
 def test_neighbors_empty_when_codec_missing():
     """If the SEMA codec didn't initialize (e.g. `embeddings` extra not
     installed), we return [] rather than raise — the CLI surface relies
-    on this so a fresh install doesn't crash on `helix neighbors`."""
+    on this so a fresh install doesn't crash on `cymatix neighbors`."""
     mgr = MagicMock()
     mgr._sema_codec = None
     sess = _make_session(mgr)
@@ -201,29 +201,29 @@ def test_neighbors_sorts_by_similarity_desc():
     assert out[0]["path"] == "cymatix_context/splice.py"
 
 
-def test_open_session_honors_helix_config_env(monkeypatch, tmp_path):
+def test_open_session_honors_cymatix_config_env(monkeypatch, tmp_path):
     """`open_session()` must route through ``load_config()`` so that
-    ``HELIX_CONFIG`` and ``HELIX_GENOME_PATH`` are honored exactly like
-    ``helix status`` already honors them. Pre-fix this used the
-    ``HelixConfig()`` default and silently fell back to ``./genome.db``
-    regardless of operator config — making ``helix status`` and
-    ``helix query`` look at different genomes."""
+    ``CYMATIX_CONFIG`` and ``CYMATIX_GENOME_PATH`` are honored exactly like
+    ``cymatix status`` already honors them. Pre-fix this used the
+    ``CymatixConfig()`` default and silently fell back to ``./genome.db``
+    regardless of operator config — making ``cymatix status`` and
+    ``cymatix query`` look at different genomes."""
     import cymatix_context.api as api
 
     # Reset the cached manager so the test exercises the cold-start path.
     api._DEFAULT_MANAGER = None
 
-    cfg_path = tmp_path / "helix.toml"
+    cfg_path = tmp_path / "cymatix.toml"
     cfg_path.write_text(
         "[genome]\npath = \"" + str(tmp_path / "configured.db").replace("\\", "/") + "\"\n",
         encoding="utf-8",
     )
-    monkeypatch.setenv("HELIX_CONFIG", str(cfg_path))
-    # The test environment sets HELIX_GENOME_PATH=:memory: to keep tests
-    # off-disk; that env var wins over helix.toml at load_config time
+    monkeypatch.setenv("CYMATIX_CONFIG", str(cfg_path))
+    # The test environment sets CYMATIX_GENOME_PATH=:memory: to keep tests
+    # off-disk; that env var wins over cymatix.toml at load_config time
     # (see config.py:611). Delete it for this test so we exercise the
     # TOML-discovery path. Real operators usually don't set both.
-    monkeypatch.delenv("HELIX_GENOME_PATH", raising=False)
+    monkeypatch.delenv("CYMATIX_GENOME_PATH", raising=False)
 
     seen: dict = {}
 
@@ -232,12 +232,12 @@ def test_open_session_honors_helix_config_env(monkeypatch, tmp_path):
             seen["config"] = config
 
     monkeypatch.setattr(
-        "cymatix_context.context_manager.HelixContextManager", _FakeMgr,
+        "cymatix_context.context_manager.CymatixContextManager", _FakeMgr,
     )
 
     api.open_session()
     assert seen["config"].genome.path.endswith("configured.db"), (
-        "open_session() did not propagate HELIX_CONFIG → load_config(); got: "
+        "open_session() did not propagate CYMATIX_CONFIG → load_config(); got: "
         f"{seen['config'].genome.path!r}"
     )
 

@@ -1,14 +1,14 @@
 """Fresh genome rebuild — phase 1 of the sharding migration.
 
 Builds a clean genome.db at a new path by re-ingesting whitelisted
-directories through HelixContextManager. Skips the dirty legacy genome
+directories through CymatixContextManager. Skips the dirty legacy genome
 entirely. Layered fingerprints (parent genes + CHUNK_OF edges) are
 created natively at ingest — no post-hoc backfill needed.
 
-Runs safely while helix is serving from the old genome: the new
+Runs safely while cymatix is serving from the old genome: the new
 genome path is different, no lock contention, no shared state.
 
-Cutover is a single helix.toml path change + supervisor restart.
+Cutover is a single cymatix.toml path change + supervisor restart.
 
 Usage:
     python scripts/fresh_genome_build.py [--dry-run] [--limit N]
@@ -32,14 +32,14 @@ try:
 except Exception:
     pass
 
-from cymatix_context.context_manager import HelixContextManager  # noqa: E402
-from cymatix_context.config import HelixConfig, load_config  # noqa: E402
+from cymatix_context.context_manager import CymatixContextManager  # noqa: E402
+from cymatix_context.config import CymatixConfig, load_config  # noqa: E402
 
 
 # ── Defaults (override via CLI or edit in place) ─────────────────────
 
 WHITELIST_DIRS = [
-    "F:/Projects/helix-context",
+    "F:/Projects/cymatix-context",
     "F:/Projects/Education",
     "F:/Projects/BookKeeper",
     "F:/Projects/BigEd-ModuleHub",
@@ -51,7 +51,7 @@ IGNORE_DIR_NAMES = {
     ".next", "node_modules", "dist", "build", "target",
     "__pycache__", ".venv", ".git", ".claude",
     ".pytest_cache", ".mypy_cache", ".ruff_cache",
-    "helix-cache", "Helix-backup",
+    "cymatix-cache", "Cymatix-backup",
     "genomes",  # don't ingest our own new genome storage
 }
 
@@ -78,7 +78,7 @@ INGESTIBLE_EXTS = {
     ".lua", ".vim", ".el",
 }
 
-TARGET_PATH = "F:/Projects/helix-context/genomes/main/genome.db"
+TARGET_PATH = "F:/Projects/cymatix-context/genomes/main/genome.db"
 
 
 # ── File walker ──────────────────────────────────────────────────────
@@ -119,7 +119,7 @@ def walk(root: str) -> Iterator[Path]:
 
 
 def content_type_for(path: Path) -> str:
-    """Map extension to helix content_type hint."""
+    """Map extension to cymatix content_type hint."""
     ext = path.suffix.lower()
     if ext in {".py", ".rs", ".ts", ".tsx", ".js", ".jsx", ".go",
                ".java", ".c", ".cpp", ".h", ".rb", ".php", ".lua", ".sh",
@@ -132,13 +132,13 @@ def content_type_for(path: Path) -> str:
     return "text"
 
 
-def build_config(target_path: str) -> HelixConfig:
-    """Clone the live helix.toml config but override the genome path.
+def build_config(target_path: str) -> CymatixConfig:
+    """Clone the live cymatix.toml config but override the genome path.
 
     Ingest uses the same ribosome + tagger stack as production — the
     new genome is shaped identically to what a live install produces.
     """
-    cfg = load_config()  # reads helix.toml by default
+    cfg = load_config()  # reads cymatix.toml by default
     # Swap the genome path — everything else (ribosome, ingestion
     # backend, tagger, budget) stays identical.
     cfg.genome.path = target_path
@@ -201,7 +201,7 @@ def main() -> int:
 
     cfg = build_config(str(target))
     print(f"[fresh-build] building ContextManager against {target}")
-    mgr = HelixContextManager(cfg)
+    mgr = CymatixContextManager(cfg)
 
     # Phase 3: ingest loop.
     t_ingest = time.perf_counter()
@@ -252,8 +252,8 @@ def main() -> int:
     print(f"  total genes in DB: {total:,}")
     print(f"  parent genes:      {parents:,}")
     print(f"  CHUNK_OF edges:    {edges:,}")
-    print(f"\nNext: update helix.toml [genome] path → {target}")
-    print(f"      then stop + restart helix supervisor.")
+    print(f"\nNext: update cymatix.toml [genome] path → {target}")
+    print(f"      then stop + restart cymatix supervisor.")
     return 0
 
 

@@ -387,8 +387,8 @@ class TestParallel:
         Env vars (unlike monkeypatched module attrs) cross the Windows spawn
         boundary, so the workers inherit the kill-switches.
         """
-        monkeypatch.setenv("HELIX_BFM_SPLADE", "0")
-        monkeypatch.setenv("HELIX_BFM_DENSE_BACKFILL", "0")
+        monkeypatch.setenv("CYMATIX_BFM_SPLADE", "0")
+        monkeypatch.setenv("CYMATIX_BFM_DENSE_BACKFILL", "0")
 
     @pytest.mark.slow
     def test_parallel_matches_sequential(self, tmp_path, monkeypatch):

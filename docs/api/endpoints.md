@@ -26,7 +26,7 @@ and an agent-mode `know`/`miss` block.
 ```json
 [
   {
-    "name": "Helix Genome Context",
+    "name": "Cymatix Genome Context",
     "description": "5 genes expressed, 4.2x compression, health=aligned (Δε=0.32)",
     "content": "[gene=abc12345 ◆ fired=harmonic:2.3,lex_anchor:1.1 1200→320c]\nspliced text...\n---\n[gene=def67890 ◇ fired=sema_boost:1.8 180c]\n...",
     "context_health": {

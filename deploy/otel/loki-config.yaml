@@ -29,5 +29,5 @@ schema_config:
 ruler:
   alertmanager_url: http://localhost:9093
 
-# Native runtime substitutes /loki -> %LOCALAPPDATA%/helix-context/observability/loki
-# at install time. See helix_context/launcher/observability_render.py.
+# Native runtime substitutes /loki -> %LOCALAPPDATA%/cymatix-context/observability/loki
+# at install time. See cymatix_context/launcher/observability_render.py.

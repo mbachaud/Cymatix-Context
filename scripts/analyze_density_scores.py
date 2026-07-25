@@ -9,7 +9,7 @@ import json
 import sys
 from collections import defaultdict
 
-DB = sys.argv[1] if len(sys.argv) > 1 else "F:/Projects/helix-context/genome.db"
+DB = sys.argv[1] if len(sys.argv) > 1 else "F:/Projects/cymatix-context/genome.db"
 
 # Mirror of Genome.compute_density_score from cymatix_context/genome.py:1486
 def compute_density(content_len, n_domains, n_entities, n_kv, access_count, has_complement_50plus):
@@ -24,7 +24,7 @@ def compute_density(content_len, n_domains, n_entities, n_kv, access_count, has_
     )
 
 STEAM_MARKERS = ("steamlibrary", "steamapps", "beamng.drive", "hades/", "hades\\", "dyson sphere")
-HELIX_MARKERS = ("helix-context", "cymatix_context")
+CYMATIX_MARKERS = ("cymatix-context", "cymatix_context")
 COSMIC_MARKERS = ("cosmictasha", "novabridge")
 TALLY_MARKERS = ("bookkeeper",)
 SCORERIFT_MARKERS = ("two-brain-audit", "scorerift")
@@ -35,8 +35,8 @@ def bucket(src):
     s = (src or "").lower()
     if any(m in s for m in STEAM_MARKERS) and "education" not in s and "fleet" not in s:
         return "steam_noise"
-    if any(m in s for m in HELIX_MARKERS):
-        return "helix"
+    if any(m in s for m in CYMATIX_MARKERS):
+        return "cymatix"
     if any(m in s for m in COSMIC_MARKERS):
         return "cosmic"
     if any(m in s for m in TALLY_MARKERS):

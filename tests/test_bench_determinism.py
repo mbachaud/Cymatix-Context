@@ -38,10 +38,10 @@ import pytest
 from cymatix_context.config import (
     BudgetConfig,
     GenomeConfig,
-    HelixConfig,
+    CymatixConfig,
     RibosomeConfig,
 )
-from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.context_manager import CymatixContextManager
 from cymatix_context.knowledge_store import KnowledgeStore
 
 
@@ -49,13 +49,13 @@ from cymatix_context.knowledge_store import KnowledgeStore
 
 
 def _make_store(synonym_map: dict | None = None) -> KnowledgeStore:
-    cfg = HelixConfig(
+    cfg = CymatixConfig(
         ribosome=RibosomeConfig(model="mock", timeout=5),
         budget=BudgetConfig(max_genes_per_turn=4),
         genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
         synonym_map=synonym_map or {},
     )
-    mgr = HelixContextManager(cfg)
+    mgr = CymatixContextManager(cfg)
     return mgr
 
 
@@ -126,7 +126,7 @@ def test_concurrent_publish_preserves_score_tier_pair_consistency():
     This is the exact bench-time race: claude-MCP's /context call and the
     bench probe's retrieval_probe arrive at the same uvicorn worker via
     ThreadPoolExecutor(max_workers=2); the router's writes raced inside
-    HelixContextManager._build_signals.
+    CymatixContextManager._build_signals.
     """
     mgr = _make_store(synonym_map={})
     try:

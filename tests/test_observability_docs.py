@@ -5,7 +5,7 @@ Asserts that the docs say what the spec promises:
 1. Root README:
    - has a "Native observability (default)" section under Quick Start.
    - mentions the bootstrap script run, tray-managed lifecycle, balloon
-     notification, and the HELIX_OBSERVABILITY=0 opt-out.
+     notification, and the CYMATIX_OBSERVABILITY=0 opt-out.
    - demotes the docker-compose path to an "Advanced" footnote pointing at
      deploy/otel/README.md.
 2. deploy/otel/README.md:

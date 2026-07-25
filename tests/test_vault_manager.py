@@ -6,14 +6,14 @@ from pathlib import Path
 
 import pytest
 
-from cymatix_context.config import HelixConfig, VaultConfig, VaultTracesConfig
+from cymatix_context.config import CymatixConfig, VaultConfig, VaultTracesConfig
 from cymatix_context.genome import Genome
 from cymatix_context.vault import VaultManager
 
 
 @pytest.fixture
-def cfg(tmp_path: Path) -> HelixConfig:
-    c = HelixConfig()
+def cfg(tmp_path: Path) -> CymatixConfig:
+    c = CymatixConfig()
     c.vault = VaultConfig(
         enabled=True, path=str(tmp_path / "vault"),
         party_id="", fan_out_threshold=5000,
@@ -37,7 +37,7 @@ def genome(tmp_path: Path) -> Genome:
 
 
 def test_disabled_vault_does_nothing(tmp_path: Path, genome):
-    cfg = HelixConfig()
+    cfg = CymatixConfig()
     cfg.vault = VaultConfig(enabled=False, path=str(tmp_path / "vault"))
     vm = VaultManager(config=cfg, genome=genome)
     vm.start()
@@ -62,7 +62,7 @@ def test_start_creates_vault_root(cfg, genome):
 
 def test_stale_sentinel_cleaned_at_startup(cfg, genome):
     Path(cfg.vault.path).mkdir(parents=True, exist_ok=True, mode=0o700)
-    sentinel = Path(cfg.vault.path) / ".helix-syncing"
+    sentinel = Path(cfg.vault.path) / ".cymatix-syncing"
     sentinel.touch()
     vm = VaultManager(config=cfg, genome=genome)
     vm.start()

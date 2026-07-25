@@ -3,12 +3,12 @@
 # Arm B: master (cAST default-on) with the committed lexical probe config
 # Arm C: ws3 worktree code (WS2+WS3, rebased on master) + symbol_graph=true
 $ErrorActionPreference = 'Continue'
-$repo = 'F:\Projects\helix-context'
+$repo = 'F:\Projects\cymatix-context'
 $logs = "$repo\benchmarks\logs"
 $ts = Get-Date -Format 'yyyy-MM-dd_HHmm'
 New-Item -ItemType Directory -Force -Path $logs | Out-Null
-$env:HELIX_OTEL_ENABLED = '1'
-$env:HELIX_OTEL_ENDPOINT = 'localhost:4317'
+$env:CYMATIX_OTEL_ENABLED = '1'
+$env:CYMATIX_OTEL_ENDPOINT = 'localhost:4317'
 
 function Set-Status($stage, $state) {
     @{stage=$stage; state=$state; at=(Get-Date -Format o)} | ConvertTo-Json |
@@ -19,8 +19,8 @@ Set-Status 's1_3arm' 'building-armC-config'
 # Build arm-C toml: lexical probe + symbol knobs (python keeps TOML valid).
 $py = @'
 import io, tomllib
-src = r"F:\Projects\helix-context\docs\benchmarks\helix_probe_lexical.toml"
-dst = r"F:\Projects\helix-context\docs\benchmarks\helix_probe_symbol.toml"
+src = r"F:\Projects\cymatix-context\docs\benchmarks\cymatix_probe_lexical.toml"
+dst = r"F:\Projects\cymatix-context\docs\benchmarks\cymatix_probe_symbol.toml"
 t = io.open(src, encoding="utf-8").read()
 def set_key(t, section, line):
     hdr = f"[{section}]"
@@ -41,16 +41,16 @@ cd $repo
 # ── Arm B: master code ───────────────────────────────────────────────
 Set-Status 's1_3arm' 'armB-running'
 Remove-Item Env:\PYTHONPATH -ErrorAction SilentlyContinue
-python benchmarks\cb_helix_pred.py --tag armB_cast_master_$ts `
-    --config docs\benchmarks\helix_probe_lexical.toml --workers 3 `
+python benchmarks\cb_cymatix_pred.py --tag armB_cast_master_$ts `
+    --config docs\benchmarks\cymatix_probe_lexical.toml --workers 3 `
     *> "$logs\s1_armB_$ts.log"
 $armB_exit = $LASTEXITCODE
 
 # ── Arm C: ws3 worktree code (WS2+WS3) + symbol config ──────────────
 Set-Status 's1_3arm' 'armC-running'
-$env:PYTHONPATH = 'F:\Projects\helix-context\.worktrees\ws3-pagerank'
-python benchmarks\cb_helix_pred.py --tag armC_symbol_ws3_$ts `
-    --config docs\benchmarks\helix_probe_symbol.toml --workers 3 `
+$env:PYTHONPATH = 'F:\Projects\cymatix-context\.worktrees\ws3-pagerank'
+python benchmarks\cb_cymatix_pred.py --tag armC_symbol_ws3_$ts `
+    --config docs\benchmarks\cymatix_probe_symbol.toml --workers 3 `
     *> "$logs\s1_armC_$ts.log"
 $armC_exit = $LASTEXITCODE
 Remove-Item Env:\PYTHONPATH -ErrorAction SilentlyContinue

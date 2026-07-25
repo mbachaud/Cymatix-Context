@@ -59,7 +59,7 @@ fields documented from `_request_read_only` are at
 | `session_id` | `str \| null` | synthesized | Session attribution for CWoLa logging. When `null` and `synthetic_session_enabled` is on, the server synthesizes `"syn_<sha1(client_ip:bucket_ts)>[:12]"` (`server.py:1056-1067`). |
 | `party_id` | `str \| null` | `config.session.default_party_id` | Trust identity. Defaults to the configured party when `null`. |
 | `caller_model_class` | `"generic" \| "small_moe" \| "frontier"` | `"generic"` | **Stage 5.** Render-branch selector. Unknown values return 400 (`server.py:1135-1142`). The `generic` branch is regression-locked byte-identical to pre-Stage-5 output. See §7 for the behavior matrix. Wire enum at [`schemas.py:692-696`](../../cymatix_context/schemas.py#L692). |
-| `clean` | `bool` | `false` | **Stage 1.** When true: (a) implies `read_only=true` (`server.py:1008`); (b) calls `helix.reset_session_state()` to clear per-session caches before the request runs (`server.py:1075-1079`). Used by synthetic benches to isolate from prior state. |
+| `clean` | `bool` | `false` | **Stage 1.** When true: (a) implies `read_only=true` (`server.py:1008`); (b) calls `cymatix.reset_session_state()` to clear per-session caches before the request runs (`server.py:1075-1079`). Used by synthetic benches to isolate from prior state. |
 | `read_only` | `bool \| null` | `null` | Explicit override. When non-null, takes precedence over `clean`'s implicit value (`_request_read_only` at `server.py:1000`). When true: no knowledge store learning, no `touch_genes`, no `link_coactivated`, no harmonic/relation writes. Mtime cache may still update (in-memory; not a knowledge store write). |
 | `response_mode` | `"continue" \| "packet"` | `"continue"` | When `"packet"`, the route delegates to `build_context_packet` and returns a `ContextPacket`-shaped payload instead of the Continue-compatible envelope (`server.py:1090-1111`). Other values return 400. |
 | `format` | `str \| null` | — | Legacy alias for `response_mode`. Ignored when `response_mode` is set; otherwise its value is used (`server.py:1019`). |
@@ -98,7 +98,7 @@ When the discriminator returns a `KnowBlock`, the response top-level is:
 ```json
 {
   "know": { ... },
-  "name": "Helix Genome Context",
+  "name": "Cymatix Genome Context",
   "description": "12 genes expressed, 3.4x compression, health=aligned (Δε=0.91)",
   "content": "<expressed_context>...</expressed_context>",
   "context_health": { ... },
@@ -191,9 +191,9 @@ When the discriminator returns a `MissBlock`, the response top-level is:
 ```json
 {
   "miss": { ... },
-  "name": "Helix Genome Context",
+  "name": "Cymatix Genome Context",
   "description": "0 genes expressed, 0.0x compression, health=abstain (Δε=0.00)",
-  "content": "<expressed_context><helix:no_match reason=\"abstain\" do_not_answer=\"true\"/></expressed_context>",
+  "content": "<expressed_context><cymatix:no_match reason=\"abstain\" do_not_answer=\"true\"/></expressed_context>",
   "context_health": { ... },
   "agent": { ... }
 }
@@ -370,7 +370,7 @@ The `content` field of the response contains the assembled
 `<expressed_context>...</expressed_context>` tags. Three special
 inline tokens may appear:
 
-### 6.1 `<helix:no_match/>` — Stage 6 miss token (legacy-compat surface)
+### 6.1 `<cymatix:no_match/>` — Stage 6 miss token (legacy-compat surface)
 
 Self-closing tag injected by `_no_match_token` at
 [`context_manager.py:221-236`](../../cymatix_context/context_manager.py#L221).
@@ -379,10 +379,10 @@ Lowercase tag name, attributes in fixed order (`reason` then
 literal. **Only four reasons are ever emitted by the inline tag:**
 
 ```
-<helix:no_match reason="abstain"           do_not_answer="true"/>
-<helix:no_match reason="denatured"         do_not_answer="true"/>
-<helix:no_match reason="sparse"            do_not_answer="true"/>
-<helix:no_match reason="no_promoter_match" do_not_answer="true"/>
+<cymatix:no_match reason="abstain"           do_not_answer="true"/>
+<cymatix:no_match reason="denatured"         do_not_answer="true"/>
+<cymatix:no_match reason="sparse"            do_not_answer="true"/>
+<cymatix:no_match reason="no_promoter_match" do_not_answer="true"/>
 ```
 
 The tag is emitted only on the three "expressed context is empty"
@@ -390,7 +390,7 @@ branches in `context_manager.py` (lines 1153, 2116, 2345); an unknown
 reason falls back to the abstain form (`context_manager.py:233-236`).
 
 **Stage 7 freshness-gate reasons (`stale`, `cold`, `superseded`) are
-NOT emitted as `<helix:no_match/>` tags by design.** They surface
+NOT emitted as `<cymatix:no_match/>` tags by design.** They surface
 via:
 
 - `MissBlock.reason` in the structured envelope, with
@@ -400,16 +400,16 @@ via:
   context is non-empty in this case — the data is shown, but tagged
   as needing a refresh).
 
-The inline `<helix:no_match/>` tag is a legacy-compat surface for
+The inline `<cymatix:no_match/>` tag is a legacy-compat surface for
 regex-based clients written before Stage 6 / Stage 7. Its
 "empty + do_not_answer" semantics are incompatible with Stage 7's
 "non-empty + stale + refresh" UX, which is why the Stage 7 reasons
 live in the structured envelope. New clients should branch on the
 structured `miss.reason` / `know` fields and treat the inline tag as
 the legacy fallback. Design decision recorded in
-[ADR 2026-05-14](../architecture/adr/2026-05-14-spec-vs-code-design-decisions.md#q3-stage-7-reasons-in-missblockreason-but-not-in-inline-helixno_match).
+[ADR 2026-05-14](../architecture/adr/2026-05-14-spec-vs-code-design-decisions.md#q3-stage-7-reasons-in-missblockreason-but-not-in-inline-cymatixno_match).
 
-### 6.2 `<helix:slate>` — Stage 5 small-MoE answer slate
+### 6.2 `<cymatix:slate>` — Stage 5 small-MoE answer slate
 
 Injected by `_render_small_moe_slate` at
 [`context_manager.py:288-342`](../../cymatix_context/context_manager.py#L288).
@@ -418,13 +418,13 @@ Char-bounded JSON KV pack, default budget 1500 chars (config key
 `ensure_ascii=False`); keys deduped first-write-wins:
 
 ```
-<helix:slate>{"port":"11437","model":"qwen3:4b","cold_start_threshold":"0.62"}</helix:slate>
+<cymatix:slate>{"port":"11437","model":"qwen3:4b","cold_start_threshold":"0.62"}</cymatix:slate>
 ```
 
 Empty form when no KV fits the budget:
 
 ```
-<helix:slate>{}</helix:slate>
+<cymatix:slate>{}</cymatix:slate>
 ```
 
 The slate is emitted only when `caller_model_class == "small_moe"` (or
@@ -436,8 +436,8 @@ suppressed entirely (see §7).
 When `decoder_mode == "answer_slate_only"` (small_moe × arithmetic /
 factual) or `decoder_mode == "condensed_with_slate"` (small_moe ×
 procedural / multi_hop / default), the rendered prompt template
-substitutes `{answer_slate}` with the rendered `<helix:slate>` string
-and emits the result — there is no distinct `<helix:answer_slate>` tag.
+substitutes `{answer_slate}` with the rendered `<cymatix:slate>` string
+and emits the result — there is no distinct `<cymatix:answer_slate>` tag.
 Templates at
 [`context_manager.py:176-192`](../../cymatix_context/context_manager.py#L176).
 
@@ -469,7 +469,7 @@ cell-for-cell (regression-locked by
 |---|---|---|---|
 | **foveated** | ON if `budget_tier=="broad"` AND `foveated_enabled` | ON always (regardless of `budget_tier`) | **OFF** (skip reversal entirely) |
 | **slate emitted** | iff `_should_use_slate()` (legacy MoE flag OR small downstream model) | always ON | OFF |
-| **slate format** | `\n`-joined raw KV lines | **JSON object** `<helix:slate>{...}</helix:slate>` | n/a |
+| **slate format** | `\n`-joined raw KV lines | **JSON object** `<cymatix:slate>{...}</cymatix:slate>` | n/a |
 | **slate bound** | 20 entries (status quo) | **1500 chars** (config: `slate_char_budget`) | n/a |
 | **assembly cap** | `classifier.assembly_max_genes_cap` | `min(classifier_cap, 4)` | `max(12, classifier_cap*2)` |
 | **decoder mode default** | per classifier (§8 `generic` column) | per classifier (§8 `small_moe` column) | per classifier (§8 `frontier` column) |
@@ -515,7 +515,7 @@ Mode definitions (templates at
 - `answer_slate_only` (NEW for small_moe × short-answer): the JSON
   slate is the **entire** decoder context, no `<expressed_context>`
   block. ~150 tokens.
-- `condensed_with_slate` (NEW): `<helix:slate>` first (so attention
+- `condensed_with_slate` (NEW): `<cymatix:slate>` first (so attention
   locks before prose), then the condensed decoder prompt.
 
 ---
@@ -632,7 +632,7 @@ Returns `status` (`"ok" | "degraded"`), `message`, `ribosome` model,
 ### 9.9 `GET /stats` — knowledge store metrics
 
 Handler: [`server.py:1829-1838`](../../cymatix_context/server.py#L1829).
-Returns `helix.stats()` — knowledge store metrics, compression ratio, per-tier
+Returns `cymatix.stats()` — knowledge store metrics, compression ratio, per-tier
 counters. Cheap synchronous DB read; safe to poll.
 
 ---
@@ -710,7 +710,7 @@ import httpx
 import json
 import re
 
-_SLATE_RE = re.compile(r"<helix:slate>(.*?)</helix:slate>", re.DOTALL)
+_SLATE_RE = re.compile(r"<cymatix:slate>(.*?)</cymatix:slate>", re.DOTALL)
 
 def small_moe_lookup(user_query: str) -> dict | None:
     with httpx.Client(timeout=30.0) as client:

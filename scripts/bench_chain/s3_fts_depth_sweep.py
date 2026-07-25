@@ -32,9 +32,9 @@ Reading the curve:
   * additive vs rrf: which fusion better preserves gold rank at each depth.
 
 Server lifecycle mirrors scripts/bench_chain/s2_sike_bed_sweep.ps1
-(Start-HelixOnBed): uvicorn on the bed via HELIX_GENOME_PATH, the lexical
-probe profile via HELIX_CONFIG (dense/splade/cymatics OFF -> no GPU
-contention), HELIX_DISABLE_LEARN=1 (read-only serve, no echo genes). Each
+(Start-CymatixOnBed): uvicorn on the bed via CYMATIX_GENOME_PATH, the lexical
+probe profile via CYMATIX_CONFIG (dense/splade/cymatics OFF -> no GPU
+contention), CYMATIX_DISABLE_LEARN=1 (read-only serve, no echo genes). Each
 cell rewrites the probe TOML's [retrieval] block with that cell's depth +
 fusion (tomllib read / tomli_w write -- no string surgery).
 
@@ -86,7 +86,7 @@ def _write_cell_config(base_config: Path, bed_db: Path, depth: int,
     cfg.setdefault("retrieval", {})
     cfg["retrieval"]["fts5_candidate_depth"] = int(depth)
     cfg["retrieval"]["fusion_mode"] = str(fusion)
-    # Pin the bed here too; HELIX_GENOME_PATH env also points at it (env wins
+    # Pin the bed here too; CYMATIX_GENOME_PATH env also points at it (env wins
     # in the loader, but keeping them equal avoids any ambiguity on inspect).
     cfg.setdefault("genome", {})
     cfg["genome"]["path"] = str(bed_db)
@@ -125,10 +125,10 @@ def _wait_port_free(url: str, timeout_s: int = 20) -> None:
 def _start_server(bed_db: Path, cell_config: Path, port: int,
                   log_path: Path) -> subprocess.Popen:
     env = dict(os.environ)
-    env["HELIX_GENOME_PATH"] = str(bed_db)
-    env["HELIX_CONFIG"] = str(cell_config)
-    env["HELIX_DISABLE_LEARN"] = "1"          # read-only serve (gap A2)
-    env.pop("HELIX_USE_SHARDS", None)         # single-file bed, not sharded
+    env["CYMATIX_GENOME_PATH"] = str(bed_db)
+    env["CYMATIX_CONFIG"] = str(cell_config)
+    env["CYMATIX_DISABLE_LEARN"] = "1"          # read-only serve (gap A2)
+    env.pop("CYMATIX_USE_SHARDS", None)         # single-file bed, not sharded
     args = [sys.executable, "-m", "uvicorn", "cymatix_context._asgi:app",
             "--host", "127.0.0.1", "--port", str(port)]
     log_fh = log_path.open("w", encoding="utf-8")
@@ -254,7 +254,7 @@ def main(argv: list[str] | None = None) -> int:
                     help="Path to the decontaminated bed (default: xl_clean).")
     ap.add_argument("--bed-label", default="xl")
     ap.add_argument("--base-config",
-                    default=str(_REPO_ROOT / "docs/benchmarks/helix_probe_lexical.toml"))
+                    default=str(_REPO_ROOT / "docs/benchmarks/cymatix_probe_lexical.toml"))
     ap.add_argument("--depths", default="48,200,500",
                     help="Comma-separated FTS candidate depths.")
     ap.add_argument("--fusions", default="additive,rrf",

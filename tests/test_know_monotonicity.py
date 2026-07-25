@@ -73,7 +73,7 @@ class _FakeKnowCfg:
 
 def test_calibration_from_config_warns_on_non_monotonic(caplog):
     cfg = _FakeKnowCfg((-2.1222, -1.1442, 0.8794, 0.9407, 0.2999, 0.7979))
-    with caplog.at_level(logging.WARNING, logger="helix.know_calibration"):
+    with caplog.at_level(logging.WARNING, logger="cymatix.know_calibration"):
         cal = calibration_from_config(cfg)
     assert isinstance(cal, KnowCalibration)
     # betas pass through unchanged (the guard warns, it does not mutate).
@@ -85,6 +85,6 @@ def test_calibration_from_config_warns_on_non_monotonic(caplog):
 
 def test_calibration_from_config_quiet_on_monotonic(caplog):
     cfg = _FakeKnowCfg(DEFAULT_BETAS)
-    with caplog.at_level(logging.WARNING, logger="helix.know_calibration"):
+    with caplog.at_level(logging.WARNING, logger="cymatix.know_calibration"):
         calibration_from_config(cfg)
     assert not any("non-monotonic" in r.message for r in caplog.records)

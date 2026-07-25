@@ -2,7 +2,7 @@
 Tests for cymatix_context.launcher.supervisor.
 
 All external side effects (subprocess spawn, psutil, httpx, taskkill) are
-mocked — these are pure unit tests. No real helix process is ever started.
+mocked — these are pure unit tests. No real cymatix process is ever started.
 """
 
 from __future__ import annotations
@@ -14,7 +14,7 @@ import pytest
 from cymatix_context.launcher.state import StateStore
 from cymatix_context.launcher.supervisor import (
     AlreadyRunning,
-    HelixSupervisor,
+    CymatixSupervisor,
     NotRunning,
     StartupTimeout,
     SupervisorError,
@@ -28,11 +28,11 @@ def store(tmp_path):
 
 @pytest.fixture
 def supervisor(store, tmp_path):
-    return HelixSupervisor(
+    return CymatixSupervisor(
         store=store,
-        helix_host="127.0.0.1",
-        helix_port=11999,  # unlikely to be in use
-        helix_log_path=tmp_path / "helix.log",
+        cymatix_host="127.0.0.1",
+        cymatix_port=11999,  # unlikely to be in use
+        cymatix_log_path=tmp_path / "cymatix.log",
     )
 
 
@@ -61,25 +61,25 @@ class TestIsRunning:
         assert supervisor.is_running() is False
 
     def test_false_when_pid_dead(self, supervisor, store):
-        store.set_helix(pid=12345, command=["python"], port=11999)
+        store.set_cymatix(pid=12345, command=["python"], port=11999)
         fake = _FakePsutil(alive_pids=set())
         supervisor._psutil = fake
         assert supervisor.is_running() is False
         # State should be cleared
-        assert store.state.helix_pid is None
+        assert store.state.cymatix_pid is None
 
     def test_false_when_cmdline_mismatch(self, supervisor, store):
-        store.set_helix(pid=12345, command=["python"], port=11999)
+        store.set_cymatix(pid=12345, command=["python"], port=11999)
         fake = _FakePsutil(
             alive_pids={12345},
             cmdlines={12345: ["nginx", "-g", "daemon off;"]},
         )
         supervisor._psutil = fake
         assert supervisor.is_running() is False
-        assert store.state.helix_pid is None
+        assert store.state.cymatix_pid is None
 
     def test_true_when_pid_alive_and_matching(self, supervisor, store):
-        store.set_helix(pid=12345, command=["python"], port=11999)
+        store.set_cymatix(pid=12345, command=["python"], port=11999)
         fake = _FakePsutil(
             alive_pids={12345},
             cmdlines={12345: ["python", "-m", "uvicorn", "cymatix_context._asgi:app"]},
@@ -89,21 +89,21 @@ class TestIsRunning:
 
     def test_true_when_pid_alive_and_matching_old_asgi_marker(self, supervisor, store):
         """A still-running server launched with the pre-rename target
-        (helix_context._asgi:app) must still be recognized as our process,
+        (cymatix_context._asgi:app) must still be recognized as our process,
         not treated as dead and cleared/double-spawned (P1 finding)."""
-        store.set_helix(pid=12345, command=["python"], port=11999)
+        store.set_cymatix(pid=12345, command=["python"], port=11999)
         fake = _FakePsutil(
             alive_pids={12345},
-            cmdlines={12345: ["python", "-m", "uvicorn", "helix_context._asgi:app"]},
+            cmdlines={12345: ["python", "-m", "uvicorn", "cymatix_context._asgi:app"]},
         )
         supervisor._psutil = fake
         assert supervisor.is_running() is True
-        assert store.state.helix_pid == 12345
+        assert store.state.cymatix_pid == 12345
 
 
 class TestStart:
     def test_refuses_if_already_running(self, supervisor, store):
-        store.set_helix(pid=12345, command=["python"], port=11999)
+        store.set_cymatix(pid=12345, command=["python"], port=11999)
         supervisor._psutil = _FakePsutil(
             alive_pids={12345},
             cmdlines={12345: ["python", "-m", "uvicorn", "cymatix_context._asgi:app"]},
@@ -129,8 +129,8 @@ class TestStart:
                     pid = supervisor.start()
 
         assert pid == 54321
-        assert store.state.helix_pid == 54321
-        assert store.state.helix_port == 11999
+        assert store.state.cymatix_pid == 54321
+        assert store.state.cymatix_port == 11999
         assert popen_mock.called
         # Success path: pending flag is cleared (closes #72).
         assert supervisor.last_start_pending is False
@@ -167,7 +167,7 @@ class TestStart:
                         kill_mock.assert_not_called()
 
         # State remains set; the tray will probe /stats on the next refresh.
-        assert store.state.helix_pid == 54321
+        assert store.state.cymatix_pid == 54321
         # Pending flag is set so REST callers can distinguish ready vs
         # alive-but-not-ready (closes #72).
         assert supervisor.last_start_pending is True
@@ -180,7 +180,7 @@ class TestStop:
             supervisor.stop()
 
     def test_stop_announces_waits_kills_clears(self, supervisor, store):
-        store.set_helix(pid=12345, command=["python"], port=11999)
+        store.set_cymatix(pid=12345, command=["python"], port=11999)
         supervisor._psutil = _FakePsutil(
             alive_pids={12345},
             cmdlines={12345: ["python", "-m", "uvicorn", "cymatix_context._asgi:app"]},
@@ -200,7 +200,7 @@ class TestStop:
 
         announce_mock.assert_called_once()
         kill_mock.assert_called_once_with(12345)
-        assert store.state.helix_pid is None
+        assert store.state.cymatix_pid is None
         assert store.state.last_restart_reason == "test stop"
 
 
@@ -210,7 +210,7 @@ class TestAdopt:
         assert supervisor.adopt() is False
 
     def test_adopt_returns_true_when_alive_and_matching(self, supervisor, store):
-        store.set_helix(pid=12345, command=["python"], port=11999)
+        store.set_cymatix(pid=12345, command=["python"], port=11999)
         supervisor._psutil = _FakePsutil(
             alive_pids={12345},
             cmdlines={12345: ["python", "-m", "uvicorn", "cymatix_context._asgi:app"]},
@@ -268,25 +268,25 @@ def _make_fake_process(cmdline, parent_pid=None, parent=None):
     return p
 
 
-class TestFindOrphanHelix:
+class TestFindOrphanCymatix:
     def test_no_listener_returns_none(self, supervisor):
         supervisor._psutil = _FakePsutilForOrphans(connections=[])
-        assert supervisor.find_orphan_helix() is None
+        assert supervisor.find_orphan_cymatix() is None
 
     def test_listener_on_wrong_port_returns_none(self, supervisor):
         conns = [_FakeConn(pid=100, laddr_port=80)]
         supervisor._psutil = _FakePsutilForOrphans(connections=conns)
-        assert supervisor.find_orphan_helix() is None
+        assert supervisor.find_orphan_cymatix() is None
 
-    def test_listener_non_helix_returns_none(self, supervisor):
+    def test_listener_non_cymatix_returns_none(self, supervisor):
         proc = _make_fake_process(["nginx", "-g", "daemon off;"])
         supervisor._psutil = _FakePsutilForOrphans(
             connections=[_FakeConn(pid=100, laddr_port=11999)],
             processes={100: proc},
         )
-        assert supervisor.find_orphan_helix() is None
+        assert supervisor.find_orphan_cymatix() is None
 
-    def test_helix_worker_with_uvicorn_parent_returns_parent_pid(self, supervisor):
+    def test_cymatix_worker_with_uvicorn_parent_returns_parent_pid(self, supervisor):
         parent = _make_fake_process([
             "python", "-m", "uvicorn", "cymatix_context._asgi:app", "--host", "127.0.0.1", "--port", "11999",
         ])
@@ -302,9 +302,9 @@ class TestFindOrphanHelix:
             connections=[_FakeConn(pid=100, laddr_port=11999)],
             processes={100: worker, 200: parent},
         )
-        assert supervisor.find_orphan_helix() == 200
+        assert supervisor.find_orphan_cymatix() == 200
 
-    def test_helix_listener_with_no_matching_parent_returns_listener_pid(self, supervisor):
+    def test_cymatix_listener_with_no_matching_parent_returns_listener_pid(self, supervisor):
         worker = _make_fake_process(
             [
                 "python", "-m", "uvicorn", "cymatix_context._asgi:app",
@@ -316,17 +316,17 @@ class TestFindOrphanHelix:
             connections=[_FakeConn(pid=100, laddr_port=11999)],
             processes={100: worker},
         )
-        assert supervisor.find_orphan_helix() == 100
+        assert supervisor.find_orphan_cymatix() == 100
 
-    def test_helix_worker_with_old_asgi_marker_still_matches(self, supervisor):
-        """Pre-rename orphan (helix_context._asgi:app) must still be
+    def test_cymatix_worker_with_old_asgi_marker_still_matches(self, supervisor):
+        """Pre-rename orphan (cymatix_context._asgi:app) must still be
         recognized so it is adopted rather than double-spawned (P1 finding)."""
         parent = _make_fake_process([
-            "python", "-m", "uvicorn", "helix_context._asgi:app", "--host", "127.0.0.1", "--port", "11999",
+            "python", "-m", "uvicorn", "cymatix_context._asgi:app", "--host", "127.0.0.1", "--port", "11999",
         ])
         worker = _make_fake_process(
             [
-                "python", "-m", "uvicorn", "helix_context._asgi:app",
+                "python", "-m", "uvicorn", "cymatix_context._asgi:app",
                 "--host", "127.0.0.1", "--port", "11999",
             ],
             parent=parent,
@@ -336,19 +336,19 @@ class TestFindOrphanHelix:
             connections=[_FakeConn(pid=100, laddr_port=11999)],
             processes={100: worker, 200: parent},
         )
-        assert supervisor.find_orphan_helix() == 200
+        assert supervisor.find_orphan_cymatix() == 200
 
 
 class TestAdoptOrphan:
     def test_adopt_via_state_file_takes_precedence(self, supervisor, store):
         """If state file has a valid PID, adoption short-circuits to stage 1."""
-        store.set_helix(pid=12345, command=["python"], port=11999)
+        store.set_cymatix(pid=12345, command=["python"], port=11999)
         supervisor._psutil = _FakePsutil(
             alive_pids={12345},
             cmdlines={12345: ["python", "-m", "uvicorn", "cymatix_context._asgi:app"]},
         )
         assert supervisor.adopt() is True
-        assert store.state.helix_pid == 12345
+        assert store.state.cymatix_pid == 12345
 
     def test_adopt_orphan_when_state_file_empty(self, supervisor, store):
         parent = _make_fake_process(
@@ -368,7 +368,7 @@ class TestAdoptOrphan:
         supervisor._psutil = fake
 
         assert supervisor.adopt() is True
-        assert store.state.helix_pid == 200
+        assert store.state.cymatix_pid == 200
 
     def test_adopt_returns_false_when_nothing_found(self, supervisor):
         supervisor._psutil = _FakePsutilForOrphans(connections=[])
@@ -376,7 +376,7 @@ class TestAdoptOrphan:
 
 
 class TestStartAdoptsOrphan:
-    def test_start_adopts_orphan_when_port_busy_with_helix(self, supervisor, store):
+    def test_start_adopts_orphan_when_port_busy_with_cymatix(self, supervisor, store):
         parent = _make_fake_process(
             ["python", "-m", "uvicorn", "cymatix_context._asgi:app"],
         )
@@ -394,18 +394,18 @@ class TestStartAdoptsOrphan:
         with patch("cymatix_context.launcher.supervisor._port_is_free", return_value=False):
             pid = supervisor.start()
         assert pid == 200
-        assert store.state.helix_pid == 200
+        assert store.state.cymatix_pid == 200
         # Error should have been cleared on the successful adoption path
         assert supervisor.get_last_error() is None
 
-    def test_start_errors_when_port_busy_with_non_helix(self, supervisor):
+    def test_start_errors_when_port_busy_with_non_cymatix(self, supervisor):
         proc = _make_fake_process(["nginx", "-g", "daemon off;"])
         supervisor._psutil = _FakePsutilForOrphans(
             connections=[_FakeConn(pid=100, laddr_port=11999)],
             processes={100: proc},
         )
         with patch("cymatix_context.launcher.supervisor._port_is_free", return_value=False):
-            with pytest.raises(SupervisorError, match="non-helix"):
+            with pytest.raises(SupervisorError, match="non-cymatix"):
                 supervisor.start()
         # Error should be recorded
         last = supervisor.get_last_error()

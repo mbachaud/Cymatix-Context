@@ -12,7 +12,7 @@ Acceptance gate (#74):
   - plr_confidence NEVER present on off-side responses
 
 Usage:
-  HELIX_URL=http://127.0.0.1:11437 \
+  CYMATIX_URL=http://127.0.0.1:11437 \
   GENOME_DB=F:/.../genome-bench-2026-05-08.db \
   N=50 SEED=42 \
   OUTPUT=overnight_logs/plr_smoke_off.json \
@@ -38,7 +38,7 @@ from pathlib import Path
 
 import httpx
 
-HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
+CYMATIX_URL = os.environ.get("CYMATIX_URL", "http://127.0.0.1:11437")
 GENOME_DB = os.environ.get(
     "GENOME_DB", "F:/Projects/helix-context/genome-bench-2026-05-08.db"
 )
@@ -66,16 +66,16 @@ except Exception as e:  # pragma: no cover - exercised when snapshot absent
 def _fallback_queries(n: int) -> list[dict]:
     """Minimal programmatic corpus if the harvester can't load."""
     seeds = [
-        "What is the port in the helix source?",
+        "What is the port in the cymatix source?",
         "What is the path mentioned in the code?",
         "What is the value of expression_tokens?",
         "What is the value of ribosome_tokens?",
-        "What is the budget in the helix source?",
+        "What is the budget in the cymatix source?",
         "What is the name?",
         "What is the value of upstream_timeout?",
         "What is the value of cold_start_threshold?",
         "What is the value of keep_alive?",
-        "What is the threshold in the helix source?",
+        "What is the threshold in the cymatix source?",
     ]
     out = []
     for i in range(n):
@@ -101,7 +101,7 @@ def _build_corpus() -> list[dict]:
 
 def _run() -> None:
     corpus = _build_corpus()
-    print(f"[smoke] {len(corpus)} queries against {HELIX_URL}/context/packet")
+    print(f"[smoke] {len(corpus)} queries against {CYMATIX_URL}/context/packet")
 
     rows = []
     client = httpx.Client(timeout=TIMEOUT_S)
@@ -115,7 +115,7 @@ def _run() -> None:
         item_count = 0
         err = None
         try:
-            r = client.post(f"{HELIX_URL}/context/packet", json=body)
+            r = client.post(f"{CYMATIX_URL}/context/packet", json=body)
             status = r.status_code
             try:
                 data = r.json()
@@ -173,7 +173,7 @@ def _run() -> None:
     )
 
     summary = {
-        "helix_url": HELIX_URL,
+        "cymatix_url": CYMATIX_URL,
         "n": len(rows),
         "seed": SEED,
         "wall_s": wall_s,

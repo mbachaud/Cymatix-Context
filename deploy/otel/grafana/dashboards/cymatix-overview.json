@@ -1,6 +1,6 @@
 {
-  "title": "Helix — Overview",
-  "uid": "helix-overview",
+  "title": "Cymatix — Overview",
+  "uid": "cymatix-overview",
   "editable": true,
   "schemaVersion": 39,
   "time": {
@@ -9,7 +9,7 @@
   },
   "refresh": "10s",
   "tags": [
-    "helix",
+    "cymatix",
     "retrieval",
     "agentome"
   ],
@@ -36,17 +36,17 @@
       },
       "targets": [
         {
-          "expr": "histogram_quantile(0.50, sum by (le, health) (rate(helix_context_latency_seconds_bucket[5m])))",
+          "expr": "histogram_quantile(0.50, sum by (le, health) (rate(cymatix_context_latency_seconds_bucket[5m])))",
           "legendFormat": "p50 {{health}}",
           "refId": "A"
         },
         {
-          "expr": "histogram_quantile(0.95, sum by (le, health) (rate(helix_context_latency_seconds_bucket[5m])))",
+          "expr": "histogram_quantile(0.95, sum by (le, health) (rate(cymatix_context_latency_seconds_bucket[5m])))",
           "legendFormat": "p95 {{health}}",
           "refId": "B"
         },
         {
-          "expr": "histogram_quantile(0.99, sum by (le, health) (rate(helix_context_latency_seconds_bucket[5m])))",
+          "expr": "histogram_quantile(0.99, sum by (le, health) (rate(cymatix_context_latency_seconds_bucket[5m])))",
           "legendFormat": "p99 {{health}}",
           "refId": "C"
         }
@@ -69,7 +69,7 @@
       },
       "targets": [
         {
-          "expr": "sum by (tier) (rate(helix_tier_fired_total[1m])) * 60",
+          "expr": "sum by (tier) (rate(cymatix_tier_fired_total[1m])) * 60",
           "legendFormat": "{{tier}}",
           "refId": "A"
         }
@@ -92,7 +92,7 @@
       },
       "targets": [
         {
-          "expr": "sum by (le, tier) (rate(helix_tier_contribution_score_bucket[5m]))",
+          "expr": "sum by (le, tier) (rate(cymatix_tier_contribution_score_bucket[5m]))",
           "legendFormat": "{{tier}}",
           "refId": "A",
           "format": "heatmap"
@@ -127,7 +127,7 @@
       },
       "targets": [
         {
-          "expr": "sum by (bucket) (increase(helix_cwola_bucket_total[1h]))",
+          "expr": "sum by (bucket) (increase(cymatix_cwola_bucket_total[1h]))",
           "legendFormat": "bucket={{bucket}}",
           "refId": "A"
         }
@@ -151,7 +151,7 @@
       },
       "targets": [
         {
-          "expr": "helix_cwola_f_gap_sq",
+          "expr": "cymatix_cwola_f_gap_sq",
           "refId": "A"
         }
       ],
@@ -200,7 +200,7 @@
       },
       "targets": [
         {
-          "expr": "helix_harmonic_edges_total",
+          "expr": "cymatix_harmonic_edges_total",
           "legendFormat": "{{source}}",
           "refId": "A"
         }
@@ -223,7 +223,7 @@
       },
       "targets": [
         {
-          "expr": "helix_chromatin_state_total",
+          "expr": "cymatix_chromatin_state_total",
           "legendFormat": "{{state}}",
           "refId": "A"
         }
@@ -242,7 +242,7 @@
       },
       "targets": [
         {
-          "expr": "helix_hub_concentration_ratio",
+          "expr": "cymatix_hub_concentration_ratio",
           "refId": "A"
         }
       ],
@@ -282,7 +282,7 @@
       },
       "targets": [
         {
-          "expr": "helix_hub_inbound_degree",
+          "expr": "cymatix_hub_inbound_degree",
           "legendFormat": "{{stat}}",
           "refId": "A"
         }
@@ -306,7 +306,7 @@
     {
       "type": "stat",
       "title": "Ribosome backend — cost class",
-      "description": "Cost classification of the active ribosome backend. local = Ollama / DeBERTa on the operator machine. api+paid = metered remote API (Claude direct, or LiteLLM routed to a paid model). Pair with the startup WARNING log line. Red = paid; the local-first promise is broken until the operator flips backend in helix.toml.",
+      "description": "Cost classification of the active ribosome backend. local = Ollama / DeBERTa on the operator machine. api+paid = metered remote API (Claude direct, or LiteLLM routed to a paid model). Pair with the startup WARNING log line. Red = paid; the local-first promise is broken until the operator flips backend in cymatix.toml.",
       "datasource": "Prometheus",
       "gridPos": {
         "h": 8,
@@ -316,7 +316,7 @@
       },
       "targets": [
         {
-          "expr": "helix_ribosome_info",
+          "expr": "cymatix_ribosome_info",
           "legendFormat": "{{cost_class}} — {{backend}}/{{model}}",
           "instant": true,
           "refId": "A"
@@ -390,7 +390,7 @@
       },
       "targets": [
         {
-          "expr": "helix_ribosome_info",
+          "expr": "cymatix_ribosome_info",
           "legendFormat": "{{model}}",
           "instant": true,
           "refId": "A"

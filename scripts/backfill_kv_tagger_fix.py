@@ -24,7 +24,7 @@ Usage:
 
     # Target a different DB (e.g. a benchmark snapshot)
     python scripts/backfill_kv_tagger_fix.py --apply \\
-        --db F:/Projects/helix-context/genome.db
+        --db F:/Projects/cymatix-context/genome.db
 
 Output:
     - Counts: total genes, unchanged, changed, type-leaks removed
@@ -180,8 +180,8 @@ def backfill(db_path: str, apply: bool, sample_limit: int = 10) -> dict:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--db", default="F:/Projects/helix-context/genome.db",
-                        help="Path to genome.db (default: live helix genome)")
+    parser.add_argument("--db", default="F:/Projects/cymatix-context/genome.db",
+                        help="Path to genome.db (default: live cymatix genome)")
     parser.add_argument("--apply", action="store_true",
                         help="Actually apply changes (default: dry-run)")
     parser.add_argument("--sample-limit", type=int, default=10,

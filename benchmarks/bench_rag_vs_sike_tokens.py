@@ -1,7 +1,7 @@
 """
 RAG vs SIKE token-budget estimator.
 
-For each query, capture what helix actually delivers (compressed
+For each query, capture what cymatix actually delivers (compressed
 expressed_context + decoder + scaffolding) and compare to what a
 naive RAG pipeline would deliver (raw chunks @ standard chunk size,
 top-k from the same source files).
@@ -42,7 +42,7 @@ from pathlib import Path
 
 import httpx
 
-HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
+CYMATIX_URL = os.environ.get("CYMATIX_URL", "http://127.0.0.1:11437")
 OUTPUT_PATH = os.environ.get(
     "OUTPUT",
     str(Path(__file__).resolve().parent / "results" / "rag_vs_sike_tokens.json"),
@@ -57,8 +57,8 @@ RAG_OVERHEAD = int(os.environ.get("RAG_OVERHEAD", "500"))
 
 # ── Realistic test queries (mix of natural & technical) ───────────────
 TEST_QUERIES = [
-    "How does helix handle WAL checkpoints?",
-    "What port does the helix proxy server listen on?",
+    "How does cymatix handle WAL checkpoints?",
+    "What port does the cymatix proxy server listen on?",
     "How is the ribosome budget calculated?",
     "What does the path_key_index store?",
     "How does the density gate work?",
@@ -80,13 +80,13 @@ def estimate_rag_tokens(num_chunks: int = RAG_TOP_K) -> int:
     return num_chunks * RAG_CHUNK_TOKENS + RAG_OVERHEAD
 
 
-def probe_helix(client: httpx.Client, query: str) -> dict:
+def probe_cymatix(client: httpx.Client, query: str) -> dict:
     """Run query through /context, capture token usage."""
     out = {"query": query, "error": None}
     t0 = time.time()
     try:
         resp = client.post(
-            f"{HELIX_URL}/context",
+            f"{CYMATIX_URL}/context",
             json={
                 "query": query,
                 "decoder_mode": "condensed",  # realistic prod default
@@ -132,7 +132,7 @@ def render_bar(value: int, max_value: int, width: int = 30) -> str:
 
 def main() -> int:
     print(f"=== RAG vs SIKE token-budget estimator ===")
-    print(f"Server:        {HELIX_URL}")
+    print(f"Server:        {CYMATIX_URL}")
     print(f"RAG model:     top-{RAG_TOP_K} chunks @ {RAG_CHUNK_TOKENS} tokens "
           f"+ {RAG_OVERHEAD} overhead = {estimate_rag_tokens()} tokens/query")
     print(f"SIKE model:    measured from /context (decoder=condensed, broad budget)")
@@ -140,7 +140,7 @@ def main() -> int:
     print()
 
     try:
-        h = httpx.get(f"{HELIX_URL}/health", timeout=5).json()
+        h = httpx.get(f"{CYMATIX_URL}/health", timeout=5).json()
         print(f"Server: ok, ribosome={h.get('ribosome')}, genes={h.get('genes')}\n")
     except Exception as e:
         print(f"Server unreachable: {e}", file=sys.stderr)
@@ -154,7 +154,7 @@ def main() -> int:
 
     with httpx.Client() as client:
         for i, q in enumerate(TEST_QUERIES, 1):
-            r = probe_helix(client, q)
+            r = probe_cymatix(client, q)
             results.append(r)
             if r.get("error"):
                 print(f"{i:>3} {q[:40]:40s}  ERROR: {r['error']}")

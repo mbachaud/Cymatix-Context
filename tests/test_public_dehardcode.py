@@ -4,12 +4,12 @@ Pins the removal of owner-specific vocabulary from the shipped defaults:
 
 * ``cymatix_context.tagger`` ships no private project names in its
   EntityRuler patterns or tech-term dictionary, and supports
-  per-deployment extension via the HELIX_TAGGER_EXTRA_ENTITIES /
-  HELIX_TAGGER_EXTRA_TERMS env vars.
+  per-deployment extension via the CYMATIX_TAGGER_EXTRA_ENTITIES /
+  CYMATIX_TAGGER_EXTRA_TERMS env vars.
 * ``lexical_rescue`` path scoring is corpus-neutral — a generic
   query-term / path-segment match earns the boost, and this
   repository's own paths get no special treatment.
-* ``helix.toml`` ships no owner-project synonym rows and no personal
+* ``cymatix.toml`` ships no owner-project synonym rows and no personal
   ``watch_dirs``.
 
 None of these tests require the spaCy model — they assert on the
@@ -63,8 +63,8 @@ class TestTaggerShipsNeutralVocabulary:
 
     def test_own_stack_vocabulary_survives(self):
         # The product's own stack stays taggable out of the box.
-        assert "Helix Context" in tagger_mod._PROJECT_ENTITIES["PRODUCT"]
-        assert "helix" in tagger_mod._TECH_TERMS
+        assert "Cymatix Context" in tagger_mod._PROJECT_ENTITIES["PRODUCT"]
+        assert "cymatix" in tagger_mod._TECH_TERMS
         assert "splade" in tagger_mod._TECH_TERMS
 
 
@@ -73,9 +73,9 @@ class TestTaggerShipsNeutralVocabulary:
 class TestTaggerEnvExtension:
     def test_extra_entities_and_terms_appended(self, monkeypatch):
         monkeypatch.setenv(
-            "HELIX_TAGGER_EXTRA_ENTITIES", "PRODUCT:AcmeApp, ORG:AcmeCorp"
+            "CYMATIX_TAGGER_EXTRA_ENTITIES", "PRODUCT:AcmeApp, ORG:AcmeCorp"
         )
-        monkeypatch.setenv("HELIX_TAGGER_EXTRA_TERMS", "acmeapp, AcmeCorp")
+        monkeypatch.setenv("CYMATIX_TAGGER_EXTRA_TERMS", "acmeapp, AcmeCorp")
         mod = importlib.reload(tagger_mod)
         try:
             assert "AcmeApp" in mod._PROJECT_ENTITIES["PRODUCT"]
@@ -85,22 +85,22 @@ class TestTaggerEnvExtension:
             patterns = mod._build_project_patterns()
             assert {"label": "PRODUCT", "pattern": "AcmeApp"} in patterns
         finally:
-            monkeypatch.delenv("HELIX_TAGGER_EXTRA_ENTITIES", raising=False)
-            monkeypatch.delenv("HELIX_TAGGER_EXTRA_TERMS", raising=False)
+            monkeypatch.delenv("CYMATIX_TAGGER_EXTRA_ENTITIES", raising=False)
+            monkeypatch.delenv("CYMATIX_TAGGER_EXTRA_TERMS", raising=False)
             importlib.reload(tagger_mod)
 
     def test_new_label_creates_bucket(self, monkeypatch):
-        monkeypatch.setenv("HELIX_TAGGER_EXTRA_ENTITIES", "gpe:Acmeville")
+        monkeypatch.setenv("CYMATIX_TAGGER_EXTRA_ENTITIES", "gpe:Acmeville")
         mod = importlib.reload(tagger_mod)
         try:
             assert "Acmeville" in mod._PROJECT_ENTITIES["GPE"]
         finally:
-            monkeypatch.delenv("HELIX_TAGGER_EXTRA_ENTITIES", raising=False)
+            monkeypatch.delenv("CYMATIX_TAGGER_EXTRA_ENTITIES", raising=False)
             importlib.reload(tagger_mod)
 
     def test_malformed_entity_pairs_skipped(self, monkeypatch):
         monkeypatch.setenv(
-            "HELIX_TAGGER_EXTRA_ENTITIES", "NoColonHere,:NoLabel,PRODUCT:Good"
+            "CYMATIX_TAGGER_EXTRA_ENTITIES", "NoColonHere,:NoLabel,PRODUCT:Good"
         )
         mod = importlib.reload(tagger_mod)
         try:
@@ -109,12 +109,12 @@ class TestTaggerEnvExtension:
             assert "NoColonHere" not in rendered
             assert "NoLabel" not in rendered
         finally:
-            monkeypatch.delenv("HELIX_TAGGER_EXTRA_ENTITIES", raising=False)
+            monkeypatch.delenv("CYMATIX_TAGGER_EXTRA_ENTITIES", raising=False)
             importlib.reload(tagger_mod)
 
     def test_clean_env_reload_restores_defaults(self, monkeypatch):
-        monkeypatch.delenv("HELIX_TAGGER_EXTRA_ENTITIES", raising=False)
-        monkeypatch.delenv("HELIX_TAGGER_EXTRA_TERMS", raising=False)
+        monkeypatch.delenv("CYMATIX_TAGGER_EXTRA_ENTITIES", raising=False)
+        monkeypatch.delenv("CYMATIX_TAGGER_EXTRA_TERMS", raising=False)
         mod = importlib.reload(tagger_mod)
         assert "AcmeApp" not in repr(mod._PROJECT_ENTITIES)
         assert "acmeapp" not in mod._TECH_TERMS
@@ -141,24 +141,24 @@ class TestLexicalRescuePathAffinity:
         # len < 4 terms are too unspecific for the +2.0 path-affinity boost
         assert _source_path_bonus("F:/work/api/handlers.py", {"api"}) == 0.0
 
-    def test_helix_context_paths_are_not_special_cased(self):
+    def test_cymatix_context_paths_are_not_special_cased(self):
         # Structurally identical paths must score identically whether they
         # mention this product or any other project.
-        helix = _source_path_bonus(
-            "F:/projects/helix-context/server.py", {"helix"}
+        cymatix = _source_path_bonus(
+            "F:/projects/cymatix-context/server.py", {"cymatix"}
         )
         acme = _source_path_bonus(
             "F:/projects/acme-context/server.py", {"acme"}
         )
-        assert helix == pytest.approx(acme)
+        assert cymatix == pytest.approx(acme)
 
-        helix_toml = _source_path_bonus(
-            "F:/projects/helix-context/helix.toml", {"helix"}
+        cymatix_toml = _source_path_bonus(
+            "F:/projects/cymatix-context/cymatix.toml", {"cymatix"}
         )
         acme_toml = _source_path_bonus(
             "F:/projects/acme-context/acme.toml", {"acme"}
         )
-        assert helix_toml == pytest.approx(acme_toml)
+        assert cymatix_toml == pytest.approx(acme_toml)
 
     def test_worktrees_penalty_removed_tests_penalty_kept(self):
         assert _source_path_bonus("F:/x/_worktrees/y.py", set()) == 0.0
@@ -195,14 +195,12 @@ class TestLexicalRescuePathAffinity:
         assert sources[0] == "F:/work/acme/policies.md"
 
 
-# ── (d) helix.toml ships neutral config ─────────────────────────────
+# ── (d) cymatix.toml ships neutral config ───────────────────────────
 
-class TestHelixTomlShipsNeutral:
+class TestCymatixTomlShipsNeutral:
     @pytest.fixture()
     def cfg(self):
         _shipped = REPO_ROOT / "cymatix.toml"
-        if not _shipped.exists():
-            _shipped = REPO_ROOT / "helix.toml"
         with open(_shipped, "rb") as fh:
             return tomllib.load(fh)
 

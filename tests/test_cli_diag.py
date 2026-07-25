@@ -1,4 +1,4 @@
-"""Tests for `helix diag corpus`."""
+"""Tests for `cymatix diag corpus`."""
 from __future__ import annotations
 
 import json
@@ -55,7 +55,7 @@ def test_diag_unknown_target_returns_two(fake_session):
 
 
 def test_diag_corpus_json_remains_valid_when_session_raises(monkeypatch):
-    """Regression: `helix diag corpus --json` must emit a parseable JSON
+    """Regression: `cymatix diag corpus --json` must emit a parseable JSON
     payload on the error path, not a half-printed traceback.
 
     cmd_diag.run wraps open_session() + sess.stats() in a single try/except;

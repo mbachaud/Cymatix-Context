@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  One-shot setup for the helix-context Grafana telemetry stack (native sidecar).
+  One-shot setup for the cymatix-context Grafana telemetry stack (native sidecar).
 
 .DESCRIPTION
   Convenience wrapper around scripts/install-native-observability.ps1 that:
@@ -17,11 +17,11 @@
 
   This script does NOT start the supervisor — it only prepares the
   on-disk state so that `start-cymatix-tray.bat` (Windows) or the equivalent
-  `helix-launcher --tray` invocation can spawn the five binaries.
+  `cymatix-launcher --tray` invocation can spawn the five binaries.
 
   If you only want metrics and not the tray, call this script and then
-  start helix with HELIX_OTEL_ENABLED=1 — the supervisor child binaries
-  are reused across helix sessions and survive a backend restart.
+  start cymatix with CYMATIX_OTEL_ENABLED=1 — the supervisor child binaries
+  are reused across cymatix sessions and survive a backend restart.
 
 .PARAMETER SkipDownload
   Skip the binary download step (use when binaries are already on disk).
@@ -181,22 +181,22 @@ Write-Host "`n[grafana-telem] Step 3/3: verifying stack reachability..." -Foregr
 
 Write-Host "`n== Grafana telemetry setup complete =====================" -ForegroundColor Cyan
 Write-Host "Dashboards:"
-Write-Host "  Overview     http://localhost:3000/d/helix-overview"
-Write-Host "  GenAI        http://localhost:3000/d/helix-genai"
-Write-Host "  Internals    http://localhost:3000/d/helix-internals"
-Write-Host "  Retrieval    http://localhost:3000/d/helix-retrieval-hitl"
+Write-Host "  Overview     http://localhost:3000/d/cymatix-overview"
+Write-Host "  GenAI        http://localhost:3000/d/cymatix-genai"
+Write-Host "  Internals    http://localhost:3000/d/cymatix-internals"
+Write-Host "  Retrieval    http://localhost:3000/d/cymatix-retrieval-hitl"
 Write-Host ""
 Write-Host "Defaults: admin / admin (set at first Grafana boot; rotate via UI)." -ForegroundColor Gray
 Write-Host ""
 Write-Host "To start the full stack (collector + Prom + Tempo + Loki + Grafana):"
 Write-Host "  start-cymatix-tray.bat               # daily driver (Windows)"
-Write-Host "  helix-launcher --tray              # cross-platform"
+Write-Host "  cymatix-launcher --tray              # cross-platform"
 Write-Host ""
 Write-Host "To enable telemetry on a headless backend:"
-Write-Host "  `$env:HELIX_OTEL_ENABLED='1'; `$env:HELIX_OTEL_ENDPOINT='localhost:4317'"
-Write-Host "  python -m uvicorn helix_context._asgi:app --port 11437"
+Write-Host "  `$env:CYMATIX_OTEL_ENABLED='1'; `$env:CYMATIX_OTEL_ENDPOINT='localhost:4317'"
+Write-Host "  python -m uvicorn cymatix_context._asgi:app --port 11437"
 Write-Host ""
 Write-Host "Verify metrics are flowing (after first /context call):"
-Write-Host "  curl http://localhost:9090/api/v1/query?query=helix_context_latency_seconds_count"
+Write-Host "  curl http://localhost:9090/api/v1/query?query=cymatix_context_latency_seconds_count"
 
 exit 0

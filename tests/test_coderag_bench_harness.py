@@ -11,7 +11,7 @@ Covers:
   - score_queries() mocked: confirms NDCG/Recall/Precision accumulation with a
     fake /fingerprint response
 
-All tests are pure-Python; zero network, zero Helix server, zero GPU.
+All tests are pure-Python; zero network, zero Cymatix server, zero GPU.
 """
 from __future__ import annotations
 
@@ -38,7 +38,7 @@ from coderag_bench import (  # noqa: E402
     tok,
     token_estimate,
 )
-from coderag_bench_helix import (  # noqa: E402
+from coderag_bench_cymatix import (  # noqa: E402
     parse_doc_idx,
     preview_token_estimate,
     score_queries,
@@ -453,7 +453,7 @@ class TestRunPipeline:
 # ===========================================================================
 
 class TestScoreQueriesMocked:
-    """Test the Helix arm scoring path using a fake fingerprint() function."""
+    """Test the Cymatix arm scoring path using a fake fingerprint() function."""
 
     # A tiny query set with gold resolved.
     _QUERIES = [
@@ -483,16 +483,16 @@ class TestScoreQueriesMocked:
                     ), 5.0
             return [], 5.0
 
-        with patch("coderag_bench_helix.fingerprint", side_effect=fake_fingerprint):
+        with patch("coderag_bench_cymatix.fingerprint", side_effect=fake_fingerprint):
             summary, rows = score_queries(
                 queries=queries,
-                helix_url="http://mock",
+                cymatix_url="http://mock",
                 max_results=10,
             )
 
         for ds, s in summary.items():
-            assert math.isclose(s["helix_ndcg@10"], 1.0, abs_tol=1e-6), (
-                f"{ds}: expected perfect ndcg@10, got {s['helix_ndcg@10']}"
+            assert math.isclose(s["cymatix_ndcg@10"], 1.0, abs_tol=1e-6), (
+                f"{ds}: expected perfect ndcg@10, got {s['cymatix_ndcg@10']}"
             )
 
     def test_ndcg_zero_when_gold_not_retrieved(self):
@@ -501,15 +501,15 @@ class TestScoreQueriesMocked:
             # Return docs with indices that never include the gold.
             return self._make_fps([99, 88, 77, 66, 55]), 5.0
 
-        with patch("coderag_bench_helix.fingerprint", side_effect=fake_fingerprint):
+        with patch("coderag_bench_cymatix.fingerprint", side_effect=fake_fingerprint):
             summary, rows = score_queries(
                 queries=self._QUERIES[:1],  # just humaneval:0 (gold_idx=0)
-                helix_url="http://mock",
+                cymatix_url="http://mock",
                 max_results=10,
                 n_corpus=100,
             )
 
-        assert summary["humaneval"]["helix_ndcg@10"] == 0.0
+        assert summary["humaneval"]["cymatix_ndcg@10"] == 0.0
 
     def test_recall_at_1_correct(self):
         """Gold ranked first -> recall@1 = 1.0."""
@@ -518,10 +518,10 @@ class TestScoreQueriesMocked:
         def fake_fingerprint(url, query, max_results, timeout_s):
             return self._make_fps([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]), 5.0
 
-        with patch("coderag_bench_helix.fingerprint", side_effect=fake_fingerprint):
-            summary, _ = score_queries(q, helix_url="http://mock", max_results=10)
+        with patch("coderag_bench_cymatix.fingerprint", side_effect=fake_fingerprint):
+            summary, _ = score_queries(q, cymatix_url="http://mock", max_results=10)
 
-        assert summary["humaneval"]["helix_recall@1"] == 1.0
+        assert summary["humaneval"]["cymatix_recall@1"] == 1.0
 
     def test_recall_at_5_but_not_1(self):
         """Gold ranked 3rd -> recall@1=0, recall@5=1."""
@@ -531,11 +531,11 @@ class TestScoreQueriesMocked:
             # Gold (idx=0) is ranked 3rd (pos=2).
             return self._make_fps([1, 2, 0, 3, 4, 5, 6, 7, 8, 9]), 5.0
 
-        with patch("coderag_bench_helix.fingerprint", side_effect=fake_fingerprint):
-            summary, _ = score_queries(q, helix_url="http://mock", max_results=10)
+        with patch("coderag_bench_cymatix.fingerprint", side_effect=fake_fingerprint):
+            summary, _ = score_queries(q, cymatix_url="http://mock", max_results=10)
 
-        assert summary["humaneval"]["helix_recall@1"] == 0.0
-        assert summary["humaneval"]["helix_recall@5"] == 1.0
+        assert summary["humaneval"]["cymatix_recall@1"] == 0.0
+        assert summary["humaneval"]["cymatix_recall@5"] == 1.0
 
     def test_precision_at_k_formula(self):
         """Gold ranked first -> precision@k = 1/k."""
@@ -544,13 +544,13 @@ class TestScoreQueriesMocked:
         def fake_fingerprint(url, query, max_results, timeout_s):
             return self._make_fps([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]), 5.0
 
-        with patch("coderag_bench_helix.fingerprint", side_effect=fake_fingerprint):
-            summary, _ = score_queries(q, helix_url="http://mock", max_results=10)
+        with patch("coderag_bench_cymatix.fingerprint", side_effect=fake_fingerprint):
+            summary, _ = score_queries(q, cymatix_url="http://mock", max_results=10)
 
         s = summary["humaneval"]
-        assert math.isclose(s["helix_precision@1"], 1.0)
-        assert math.isclose(s["helix_precision@5"], 0.2, abs_tol=1e-6)
-        assert math.isclose(s["helix_precision@10"], 0.1, abs_tol=1e-6)
+        assert math.isclose(s["cymatix_precision@1"], 1.0)
+        assert math.isclose(s["cymatix_precision@5"], 0.2, abs_tol=1e-6)
+        assert math.isclose(s["cymatix_precision@10"], 0.1, abs_tol=1e-6)
 
     def test_efficiency_keys_present(self):
         q = [self._QUERIES[0]]
@@ -558,8 +558,8 @@ class TestScoreQueriesMocked:
         def fake_fingerprint(url, query, max_results, timeout_s):
             return self._make_fps([0, 1, 2]), 12.5
 
-        with patch("coderag_bench_helix.fingerprint", side_effect=fake_fingerprint):
-            summary, _ = score_queries(q, helix_url="http://mock", max_results=10)
+        with patch("coderag_bench_cymatix.fingerprint", side_effect=fake_fingerprint):
+            summary, _ = score_queries(q, cymatix_url="http://mock", max_results=10)
 
         eff = summary["humaneval"]["efficiency"]
         assert "median_injected_tokens" in eff
@@ -573,8 +573,8 @@ class TestScoreQueriesMocked:
         def fake_fingerprint(url, query, max_results, timeout_s):
             return self._make_fps([0, 1, 2]), 42.0
 
-        with patch("coderag_bench_helix.fingerprint", side_effect=fake_fingerprint):
-            summary, rows = score_queries(q, helix_url="http://mock", max_results=10)
+        with patch("coderag_bench_cymatix.fingerprint", side_effect=fake_fingerprint):
+            summary, rows = score_queries(q, cymatix_url="http://mock", max_results=10)
 
         assert rows[0]["latency_ms"] == 42.0
         assert summary["humaneval"]["efficiency"]["median_latency_ms"] == 42.0
@@ -587,9 +587,9 @@ class TestScoreQueriesMocked:
         def fake_fingerprint(url, query, max_results, timeout_s):
             raise urllib.error.URLError("connection refused")
 
-        with patch("coderag_bench_helix.fingerprint", side_effect=fake_fingerprint):
+        with patch("coderag_bench_cymatix.fingerprint", side_effect=fake_fingerprint):
             summary, rows = score_queries(
-                q, helix_url="http://mock", max_results=10, n_corpus=100
+                q, cymatix_url="http://mock", max_results=10, n_corpus=100
             )
 
         # Summary may be empty (n=0) since no successful queries.
@@ -609,8 +609,8 @@ class TestScoreQueriesMocked:
                     return self._make_fps([q["gold_idx"]] + list(range(99, 89, -1))), 5.0
             return [], 5.0
 
-        with patch("coderag_bench_helix.fingerprint", side_effect=fake_fingerprint):
-            summary, _ = score_queries(queries, helix_url="http://mock", max_results=10)
+        with patch("coderag_bench_cymatix.fingerprint", side_effect=fake_fingerprint):
+            summary, _ = score_queries(queries, cymatix_url="http://mock", max_results=10)
 
         assert "humaneval" in summary
         assert "mbpp" in summary

@@ -199,7 +199,7 @@ The same `CYMATIX_DEVICE` env var is read by two consumers, and they
 parse it differently. The overload is intentional and safe — this
 section documents the parse rules so operators don't have to read
 both consumers' code. Design decision recorded in
-[ADR 2026-05-14](../adr/2026-05-14-spec-vs-code-design-decisions.md#q1-helix_device-overloaded-between-hardware-picker-and-federation-attribution).
+[ADR 2026-05-14](../adr/2026-05-14-spec-vs-code-design-decisions.md#q1-cymatix_device-overloaded-between-hardware-picker-and-federation-attribution).
 
 | Consumer | Source | Parse rule |
 |---|---|---|

@@ -48,15 +48,15 @@ def medtok(metaf, fixed=None):
 arms = [
     ("BM25 @8k", "bm25_8k_pred.json", None, 8000),
     ("BM25 @27k", "bm25_27k_pred.json", None, 27000),
-    ("v063 lexical @8k", "helix_v063lex_fingerprint_8k_pred.json", "helix_v063lex_fingerprint_8k_meta.json", None),
-    ("v063 lexical @27k", "helix_v063lex_fingerprint_27k_pred.json", "helix_v063lex_fingerprint_27k_meta.json", None),
-    ("v063 lexical packet", "helix_v063lex_packet_pred.json", "helix_v063lex_packet_meta.json", None),
-    ("v063 SHIP dense @8k", "helix_v063ship8_fingerprint_8k_pred.json", "helix_v063ship8_fingerprint_8k_meta.json", None),
-    ("v063 SHIP dense @27k", "helix_v063ship8_fingerprint_27k_pred.json", "helix_v063ship8_fingerprint_27k_meta.json", None),
-    ("v063 SHIP dense packet", "helix_v063ship8_packet_pred.json", "helix_v063ship8_packet_meta.json", None),
-    ("v063 DENSEFIX @8k", "helix_v063fix8_fingerprint_8k_pred.json", "helix_v063fix8_fingerprint_8k_meta.json", None),
-    ("v063 DENSEFIX @27k", "helix_v063fix8_fingerprint_27k_pred.json", "helix_v063fix8_fingerprint_27k_meta.json", None),
-    ("v063 DENSEFIX packet", "helix_v063fix8_packet_pred.json", "helix_v063fix8_packet_meta.json", None),
+    ("v063 lexical @8k", "cymatix_v063lex_fingerprint_8k_pred.json", "cymatix_v063lex_fingerprint_8k_meta.json", None),
+    ("v063 lexical @27k", "cymatix_v063lex_fingerprint_27k_pred.json", "cymatix_v063lex_fingerprint_27k_meta.json", None),
+    ("v063 lexical packet", "cymatix_v063lex_packet_pred.json", "cymatix_v063lex_packet_meta.json", None),
+    ("v063 SHIP dense @8k", "cymatix_v063ship8_fingerprint_8k_pred.json", "cymatix_v063ship8_fingerprint_8k_meta.json", None),
+    ("v063 SHIP dense @27k", "cymatix_v063ship8_fingerprint_27k_pred.json", "cymatix_v063ship8_fingerprint_27k_meta.json", None),
+    ("v063 SHIP dense packet", "cymatix_v063ship8_packet_pred.json", "cymatix_v063ship8_packet_meta.json", None),
+    ("v063 DENSEFIX @8k", "cymatix_v063fix8_fingerprint_8k_pred.json", "cymatix_v063fix8_fingerprint_8k_meta.json", None),
+    ("v063 DENSEFIX @27k", "cymatix_v063fix8_fingerprint_27k_pred.json", "cymatix_v063fix8_fingerprint_27k_meta.json", None),
+    ("v063 DENSEFIX packet", "cymatix_v063fix8_packet_pred.json", "cymatix_v063fix8_packet_meta.json", None),
 ]
 
 print(f"\nSubset = {len(iids)} tasks (2 each django/sympy/sklearn/requests)")

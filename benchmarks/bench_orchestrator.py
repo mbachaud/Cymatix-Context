@@ -7,7 +7,7 @@ Two transition shapes:
 - **Same-mode (blob->blob, sharded->sharded)**: POST /admin/swap-db.
   Atomic, ~milliseconds, no process restart. Available since PR #91.
 - **Cross-mode (blob<->sharded)**: full uvicorn restart with the
-  ``HELIX_USE_SHARDS`` env var set/unset. ``open_read_source()`` in
+  ``CYMATIX_USE_SHARDS`` env var set/unset. ``open_read_source()`` in
   ``cymatix_context/sharding.py`` reads that env at store-construction time;
   it can't be flipped mid-process.
 
@@ -88,8 +88,8 @@ def _repo_root() -> Optional[Path]:
     return None
 
 
-# Tables the spawned helix server must find in the fixture DB before we
-# accept it as "the right helix talking to the right fixture". Issue #153:
+# Tables the spawned cymatix server must find in the fixture DB before we
+# accept it as "the right cymatix talking to the right fixture". Issue #153:
 # a stale worktree's code path queried tables the fixture's schema didn't
 # include (``cwola_log``, ``session_delivery_log``, ``genes``) and the
 # whole bench logged ``retr=err`` × 50 instead of failing fast. We probe
@@ -101,7 +101,7 @@ def _repo_root() -> Optional[Path]:
 # ``session_delivery_log`` are RECOMMENDED — we warn rather than fail on
 # their absence, because a deliberately-stripped fixture (e.g. a
 # routing-only sharded DB) may legitimately omit them but the loaded
-# helix code path may still try to write to them. The warning gives the
+# cymatix code path may still try to write to them. The warning gives the
 # operator a heads-up without aborting valid benches.
 REQUIRED_FIXTURE_TABLES: tuple[str, ...] = ("genes",)
 RECOMMENDED_FIXTURE_TABLES: tuple[str, ...] = (
@@ -110,7 +110,7 @@ RECOMMENDED_FIXTURE_TABLES: tuple[str, ...] = (
 )
 
 
-def _resolve_helix_context_file(repo_root: Optional[Path]) -> str:
+def _resolve_cymatix_context_file(repo_root: Optional[Path]) -> str:
     """Best-effort: report ``cymatix_context.__file__`` for ``repo_root``.
 
     Used in the RUN START log line so the operator sees which checkout
@@ -142,7 +142,7 @@ def _probe_fixture_schema(
     50 times per bench because a stale-worktree cymatix_context queried
     tables the fixture's schema didn't include. Probing from the
     orchestrator side catches the mismatch in milliseconds — and produces
-    a single clear error pointing at the wrong-helix root cause instead
+    a single clear error pointing at the wrong-cymatix root cause instead
     of N "retr=err" log lines.
 
     Required tables raise ``BenchServerError``. Recommended tables only
@@ -179,7 +179,7 @@ def _probe_fixture_schema(
     if missing_required:
         raise BenchServerError(
             f"fixture {db_path} is missing required table(s) "
-            f"{missing_required}: the spawned helix server would raise "
+            f"{missing_required}: the spawned cymatix server would raise "
             "sqlite3.OperationalError on first /context call. Likely "
             "causes: wrong cymatix_context source on PYTHONPATH (issue "
             "#153), or a fixture built with a stripped schema."
@@ -187,7 +187,7 @@ def _probe_fixture_schema(
     missing_recommended = [t for t in recommended if t not in names]
     if missing_recommended:
         log.warning(
-            "fixture %s missing recommended table(s) %s — some helix "
+            "fixture %s missing recommended table(s) %s — some cymatix "
             "code paths will log OperationalError but the bench will "
             "proceed",
             db_path, missing_recommended,
@@ -220,7 +220,7 @@ class Fixture:
     ``db`` is the SQLite path to swap in. For sharded fixtures, this is the
     routing DB path (``.../main.genome.db``); ``open_read_source`` in
     ``cymatix_context/sharding.py`` detects the basename and dispatches to
-    ``ShardedGenomeAdapter`` when ``HELIX_USE_SHARDS=1``.
+    ``ShardedGenomeAdapter`` when ``CYMATIX_USE_SHARDS=1``.
 
     ``read_only`` defaults True so a bench run can't accidentally mutate
     the fixture (PR #91 ``read_only`` guard).
@@ -355,7 +355,7 @@ class BenchServer(AbstractContextManager["BenchServer"]):
         """Transition to ``fixture``. Picks hot-swap or restart.
 
         Cross-mode transitions (sharded ↔ blob) require restarting uvicorn
-        because ``HELIX_USE_SHARDS`` is read at process startup by
+        because ``CYMATIX_USE_SHARDS`` is read at process startup by
         ``open_read_source``. Same-mode transitions use the atomic
         ``/admin/swap-db`` endpoint.
         """
@@ -471,9 +471,9 @@ class BenchServer(AbstractContextManager["BenchServer"]):
         ]
         env = os.environ.copy()
         if fixture.sharded:
-            env["HELIX_USE_SHARDS"] = "1"
+            env["CYMATIX_USE_SHARDS"] = "1"
         else:
-            env.pop("HELIX_USE_SHARDS", None)
+            env.pop("CYMATIX_USE_SHARDS", None)
         # Pin PYTHONHASHSEED so set / dict iteration orders stay stable
         # across uvicorn re-spawns. Belt-and-suspenders defence on top of
         # the determinism fixes in cymatix_context (sorted expansion, lock
@@ -522,7 +522,7 @@ class BenchServer(AbstractContextManager["BenchServer"]):
             fixture.sharded,
             fixture.db,
             self.repo_root,
-            _resolve_helix_context_file(self.repo_root),
+            _resolve_cymatix_context_file(self.repo_root),
             self.python,
         )
 
@@ -637,7 +637,7 @@ class BenchServer(AbstractContextManager["BenchServer"]):
 
     def _post_swap(self, fixture: Fixture) -> dict[str, Any]:
         # Issue #153: schema probe BEFORE the swap. A missing required
-        # table here means the running helix code will raise
+        # table here means the running cymatix code will raise
         # OperationalError on every /context call — better to abort now
         # than to log retr=err × 50 and produce an unactionable summary.
         _probe_fixture_schema(fixture.db)
@@ -659,7 +659,7 @@ class BenchServer(AbstractContextManager["BenchServer"]):
         A ``start``/``restart``/``hot_swap`` that yields zero genes for a
         fixture the manifest says has content is always a harness failure
         — the canonical case (issue #127) is a sharded routing DB opened
-        in blob mode because ``HELIX_USE_SHARDS`` did not take effect, so
+        in blob mode because ``CYMATIX_USE_SHARDS`` did not take effect, so
         ``stats()`` reads the empty local ``genes`` table. Without this
         guard the bench silently produces a 0/N result that looks like a
         retrieval regression.
@@ -672,7 +672,7 @@ class BenchServer(AbstractContextManager["BenchServer"]):
                 f"fixture {fixture.name} ({fixture.db}) reported genes=0 "
                 "after swap, but the manifest marks it non-empty. This is a "
                 "harness failure (likely a sharded DB opened in blob mode — "
-                "HELIX_USE_SHARDS not in effect, or a stale server answered). "
+                "CYMATIX_USE_SHARDS not in effect, or a stale server answered). "
                 "Refusing to run a bench that would silently score 0/N."
             )
 
@@ -768,7 +768,7 @@ BENCH_SCRIPTS = {
 def _run_one_bench(
     bench_script: Path,
     *,
-    helix_url: str,
+    cymatix_url: str,
     fixture: Fixture,
     out_dir: Path,
     extra_args: Iterable[str] = (),
@@ -784,7 +784,7 @@ def _run_one_bench(
     out_dir.mkdir(parents=True, exist_ok=True)
     log_path = out_dir / f"{fixture.name}.log"
     env = os.environ.copy()
-    env["HELIX_URL"] = helix_url
+    env["CYMATIX_URL"] = cymatix_url
     # bench_needle_1000.py honors GENOME_DB for needle harvesting; the
     # orchestrator points it at the same path the server is serving so
     # harvested needles and retrieval target match.
@@ -877,7 +877,7 @@ def main(argv: Optional[list[str]] = None) -> int:
 
             rc = _run_one_bench(
                 bench_script,
-                helix_url=srv.url,
+                cymatix_url=srv.url,
                 fixture=fx,
                 out_dir=args.out,
                 extra_args=extra,

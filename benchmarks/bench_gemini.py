@@ -3,7 +3,7 @@ Gemini API vs Local Model — Needle-in-a-Haystack comparison harness.
 
 Mirrors bench_sweep.py exactly, but targets the Gemini REST API instead
 of a local Ollama model.  Context retrieval is still fetched from the
-local Helix proxy so the comparison is clean: same genome, same
+local Cymatix proxy so the comparison is clean: same genome, same
 compressed context, different downstream model.
 
 Usage:
@@ -25,7 +25,7 @@ Environment:
     GEMINI_API_KEY  — required
     MODEL           — Gemini model ID, default gemini-2.5-flash
     N               — number of passes per needle, default 1 (use 20 for variance)
-    HELIX_URL       — default http://127.0.0.1:11437
+    CYMATIX_URL       — default http://127.0.0.1:11437
 """
 
 from __future__ import annotations
@@ -67,15 +67,15 @@ def _resolve_auth() -> tuple[str, str]:
     )
     sys.exit(1)
 
-HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
+CYMATIX_URL = os.environ.get("CYMATIX_URL", "http://127.0.0.1:11437")
 GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta/openai"
 MODEL = os.environ.get("MODEL", "gemini-2.5-flash")
 N_RUNS = int(os.environ.get("N", "1"))
 
 NEEDLES = [
     {
-        "name": "helix_port",
-        "query": "What port does the Helix proxy server listen on?",
+        "name": "cymatix_port",
+        "query": "What port does the Cymatix proxy server listen on?",
         "expected": "11437",
         "accept": ["11437"],
     },
@@ -98,8 +98,8 @@ NEEDLES = [
         "accept": ["decimal", "Decimal"],
     },
     {
-        "name": "helix_pipeline_steps",
-        "query": "How many steps are in the Helix expression pipeline?",
+        "name": "cymatix_pipeline_steps",
+        "query": "How many steps are in the Cymatix expression pipeline?",
         "expected": "6",
         "accept": ["6", "six"],
     },
@@ -111,7 +111,7 @@ NEEDLES = [
     },
     {
         "name": "genome_compression_target",
-        "query": "What is the target compression ratio for Helix Context?",
+        "query": "What is the target compression ratio for Cymatix Context?",
         "expected": "5x",
         "accept": ["5x", "5:1", "5 to 1"],
     },
@@ -122,7 +122,7 @@ NEEDLES = [
         "accept": ["8", "eight"],
     },
     {
-        "name": "helix_ribosome_budget",
+        "name": "cymatix_ribosome_budget",
         "query": "How many tokens are allocated for the ribosome decoder prompt?",
         "expected": "3000",
         "accept": ["3000", "3k", "3,000"],
@@ -137,19 +137,19 @@ NEEDLES = [
 
 
 def fetch_context(client: httpx.Client, query: str) -> tuple[str, float]:
-    """Fetch Helix-compressed context for a query. Returns (content, latency_s)."""
+    """Fetch Cymatix-compressed context for a query. Returns (content, latency_s)."""
     t0 = time.time()
     try:
-        resp = client.post(f"{HELIX_URL}/context", json={
+        resp = client.post(f"{CYMATIX_URL}/context", json={
             "query": query,
             "decoder_mode": "none",
         }, timeout=30)
     except Exception as exc:
-        return f"[helix error: {exc}]", time.time() - t0
+        return f"[cymatix error: {exc}]", time.time() - t0
 
     latency = time.time() - t0
     if resp.status_code != 200:
-        return f"[helix HTTP {resp.status_code}]", latency
+        return f"[cymatix HTTP {resp.status_code}]", latency
 
     data = resp.json()
     entry = data[0] if data else {}
@@ -163,7 +163,7 @@ def ask_gemini(
     query: str,
     context: str,
 ) -> tuple[str, float]:
-    """Send query + Helix context to Gemini. Returns (answer_text, latency_s)."""
+    """Send query + Cymatix context to Gemini. Returns (answer_text, latency_s)."""
     system_msg = (
         "You are a precise assistant. Answer using only the provided context. "
         "Be concise — give the exact value or term requested."
@@ -237,13 +237,13 @@ def main() -> None:
 
     client = httpx.Client(timeout=120)
 
-    # Verify Helix is up
+    # Verify Cymatix is up
     try:
-        stats = client.get(f"{HELIX_URL}/stats", timeout=10).json()
+        stats = client.get(f"{CYMATIX_URL}/stats", timeout=10).json()
         genome_genes = stats["total_genes"]
         print(f"Genome: {genome_genes} genes, {stats['compression_ratio']:.1f}x")
     except Exception as exc:
-        print(f"Cannot reach Helix at {HELIX_URL}: {exc}", file=sys.stderr)
+        print(f"Cannot reach Cymatix at {CYMATIX_URL}: {exc}", file=sys.stderr)
         sys.exit(1)
 
     print(f"Model:   {MODEL}")

@@ -13,7 +13,7 @@ def test_build_context_packet_marks_recent_stable_doc_verified():
     now_ts = 10_000.0
     genome = Genome(":memory:")
     try:
-        gene = make_gene("Helix design notes for the agent index", domains=["helix", "design"])
+        gene = make_gene("Cymatix design notes for the agent index", domains=["cymatix", "design"])
         gene.source_id = "/repo/docs/design.md"
         gene.source_kind = "doc"
         gene.volatility_class = "stable"
@@ -22,7 +22,7 @@ def test_build_context_packet_marks_recent_stable_doc_verified():
         genome.upsert_gene(gene, apply_gate=False)
 
         packet = build_context_packet(
-            "helix design",
+            "cymatix design",
             task_type="explain",
             genome=genome,
             now_ts=now_ts,
@@ -261,8 +261,8 @@ def test_default_mode_truncates_to_thumbnail():
     now_ts = 10_000.0
     genome = Genome(":memory:")
     try:
-        body = "Helix design discussion. " * 200  # ~5000 chars raw
-        gene = make_gene(body, domains=["helix", "design"])
+        body = "Cymatix design discussion. " * 200  # ~5000 chars raw
+        gene = make_gene(body, domains=["cymatix", "design"])
         gene.source_id = "/repo/docs/design.md"
         gene.source_kind = "doc"
         gene.volatility_class = "stable"
@@ -271,7 +271,7 @@ def test_default_mode_truncates_to_thumbnail():
         genome.upsert_gene(gene, apply_gate=False)
 
         packet = build_context_packet(
-            "helix design", task_type="explain",
+            "cymatix design", task_type="explain",
             genome=genome, now_ts=now_ts,
         )
         assert len(packet.verified) == 1
@@ -285,8 +285,8 @@ def test_include_raw_bypasses_thumbnail_cap():
     now_ts = 10_000.0
     genome = Genome(":memory:")
     try:
-        body = "Helix design discussion. " * 200  # ~5000 chars
-        gene = make_gene(body, domains=["helix", "design"])
+        body = "Cymatix design discussion. " * 200  # ~5000 chars
+        gene = make_gene(body, domains=["cymatix", "design"])
         gene.source_id = "/repo/docs/design.md"
         gene.source_kind = "doc"
         gene.volatility_class = "stable"
@@ -295,7 +295,7 @@ def test_include_raw_bypasses_thumbnail_cap():
         genome.upsert_gene(gene, apply_gate=False)
 
         packet = build_context_packet(
-            "helix design", task_type="explain",
+            "cymatix design", task_type="explain",
             genome=genome, now_ts=now_ts,
             include_raw=True,
         )
@@ -305,7 +305,7 @@ def test_include_raw_bypasses_thumbnail_cap():
         # with "...". Raw mode delivers the real content.
         assert len(content) > 1000
         assert not content.endswith("...")
-        assert "Helix design discussion" in content
+        assert "Cymatix design discussion" in content
     finally:
         genome.close()
 
@@ -316,8 +316,8 @@ def test_max_item_chars_override_caps_raw_mode():
     now_ts = 10_000.0
     genome = Genome(":memory:")
     try:
-        body = "Helix design discussion. " * 200
-        gene = make_gene(body, domains=["helix", "design"])
+        body = "Cymatix design discussion. " * 200
+        gene = make_gene(body, domains=["cymatix", "design"])
         gene.source_id = "/repo/docs/design.md"
         gene.source_kind = "doc"
         gene.volatility_class = "stable"
@@ -326,7 +326,7 @@ def test_max_item_chars_override_caps_raw_mode():
         genome.upsert_gene(gene, apply_gate=False)
 
         packet = build_context_packet(
-            "helix design", task_type="explain",
+            "cymatix design", task_type="explain",
             genome=genome, now_ts=now_ts,
             include_raw=True,
             max_item_chars=1000,

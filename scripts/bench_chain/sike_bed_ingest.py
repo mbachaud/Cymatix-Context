@@ -15,7 +15,7 @@ This helper reads the canonical needle list straight out of
 ``gold_source`` path substring, resolves each to a real file on disk under a
 set of project roots (default ``F:\Projects``), and ingests those files into
 the target bed copy with ``source_id`` set to the on-disk path -- exactly the
-provenance shape ``helix ingest`` uses (``metadata={"path":..,
+provenance shape ``cymatix ingest`` uses (``metadata={"path":..,
 "source_id":..}``, see cymatix_context/cli/cmd_ingest.py) so bench_needle's
 bidirectional-substring gold match fires.
 
@@ -78,7 +78,7 @@ def _load_gold_sources() -> list[str]:
 
     Reads ``benchmarks/bench_needle.py``'s NEEDLES so the sweep never drifts
     from the harness's own gold list. We DELIBERATELY skip pure-directory
-    entries (e.g. ``helix-context/docs``) and the bench answer-key doc -- a
+    entries (e.g. ``cymatix-context/docs``) and the bench answer-key doc -- a
     directory can't be ingested as a single file and the answer-key would
     inflate recall circularly (the harness's own DO-NOT-ADD rule).
     """
@@ -118,7 +118,7 @@ def _resolve(gold_substr: str, roots: list[Path]) -> Path | None:
     """Resolve a project-relative gold substring to a real file on disk.
 
     ``gold_source`` entries are project-relative like
-    ``helix-context/helix.toml`` or ``Education/CLAUDE.md``. Try each root as a
+    ``cymatix-context/cymatix.toml`` or ``Education/CLAUDE.md``. Try each root as a
     prefix; the sibling repos (Education, BookKeeper, two-brain-audit, ...)
     live directly under a projects root on the rig, and the substring already
     carries the repo dir as its first segment.

@@ -11,7 +11,7 @@ outage as a crash.
 One canonical file, single-slot, always overwritten:
 
 ```
-~/.helix/shared/signals/server_state.json
+~/.cymatix/shared/signals/server_state.json
 ```
 
 ## Signal schema
@@ -71,7 +71,7 @@ When you get `ConnectionRefused` / `background command failed` from Cymatix,
 read the signal file directly — **no HTTP needed**, the server is down:
 
 ```bash
-cat ~/.helix/shared/signals/server_state.json
+cat ~/.cymatix/shared/signals/server_state.json
 ```
 
 Interpret the `state` field:

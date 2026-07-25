@@ -37,7 +37,7 @@ def _make_fp(**kw):
     ),
     [
         pytest.param(
-            {"g1": _make_fp(entities=["port", "11437", "helix"])},
+            {"g1": _make_fp(entities=["port", "11437", "cymatix"])},
             ["g1"],
             {},
             "11437",

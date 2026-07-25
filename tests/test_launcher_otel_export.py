@@ -1,16 +1,16 @@
 """Launcher → backend OTel env coupling.
 
 Out of the box the launcher auto-starts the full Grafana/Tempo/Loki/
-Prometheus stack (HELIX_OBSERVABILITY defaults "1") while the backend
-emitted nothing (HELIX_OTEL_ENABLED defaults off) — an empty Grafana by
+Prometheus stack (CYMATIX_OBSERVABILITY defaults "1") while the backend
+emitted nothing (CYMATIX_OTEL_ENABLED defaults off) — an empty Grafana by
 default. The fix: when the launcher starts (or adopts an external)
 observability stack AND the collector's OTLP port is actually accepting
-connections, it exports HELIX_OTEL_ENABLED=1 into its own environment
-BEFORE spawning the helix child, so the child inherits it
-(HelixSupervisor.start passes env through).
+connections, it exports CYMATIX_OTEL_ENABLED=1 into its own environment
+BEFORE spawning the cymatix child, so the child inherits it
+(CymatixSupervisor.start passes env through).
 
 Two hard guards:
-- An EXPLICIT user HELIX_OTEL_ENABLED — on or off — is never overridden.
+- An EXPLICIT user CYMATIX_OTEL_ENABLED — on or off — is never overridden.
 - No export unless :4317 is reachable. ObservabilitySupervisor.start_all
   does NOT raise on the dominant failure mode (service spawned but never
   ready → STATUS_RED → normal return), and a backend dialing a dead
@@ -34,7 +34,7 @@ from cymatix_context.launcher.app import (
     _start_observability_stack,
 )
 
-_ENV_KEYS = ("HELIX_OTEL_ENABLED", "HELIX_OTEL_ENDPOINT")
+_ENV_KEYS = ("CYMATIX_OTEL_ENABLED", "CYMATIX_OTEL_ENDPOINT")
 
 
 @pytest.fixture(autouse=True)
@@ -64,42 +64,42 @@ def _collector_port_up(monkeypatch):
 
 def test_export_sets_enabled_when_unset():
     _export_otel_env_for_backend()
-    assert os.environ["HELIX_OTEL_ENABLED"] == "1"
+    assert os.environ["CYMATIX_OTEL_ENABLED"] == "1"
 
 
 def test_export_does_not_set_endpoint():
     """Endpoint resolution is left to env > toml > default in the backend;
     a synthesized env endpoint would override an explicit user
-    [telemetry] endpoint in helix.toml."""
+    [telemetry] endpoint in cymatix.toml."""
     _export_otel_env_for_backend()
-    assert "HELIX_OTEL_ENDPOINT" not in os.environ
+    assert "CYMATIX_OTEL_ENDPOINT" not in os.environ
 
 
 def test_export_respects_explicit_off(monkeypatch):
-    monkeypatch.setenv("HELIX_OTEL_ENABLED", "0")
+    monkeypatch.setenv("CYMATIX_OTEL_ENABLED", "0")
     _export_otel_env_for_backend()
-    assert os.environ["HELIX_OTEL_ENABLED"] == "0"
+    assert os.environ["CYMATIX_OTEL_ENABLED"] == "0"
 
 
 def test_export_respects_explicit_on(monkeypatch):
-    monkeypatch.setenv("HELIX_OTEL_ENABLED", "1")
-    monkeypatch.setenv("HELIX_OTEL_ENDPOINT", "otherhost:9317")
+    monkeypatch.setenv("CYMATIX_OTEL_ENABLED", "1")
+    monkeypatch.setenv("CYMATIX_OTEL_ENDPOINT", "otherhost:9317")
     _export_otel_env_for_backend()
-    assert os.environ["HELIX_OTEL_ENABLED"] == "1"
-    assert os.environ["HELIX_OTEL_ENDPOINT"] == "otherhost:9317"
+    assert os.environ["CYMATIX_OTEL_ENABLED"] == "1"
+    assert os.environ["CYMATIX_OTEL_ENDPOINT"] == "otherhost:9317"
 
 
 def test_export_preserves_user_endpoint(monkeypatch):
-    monkeypatch.setenv("HELIX_OTEL_ENDPOINT", "customhost:9317")
+    monkeypatch.setenv("CYMATIX_OTEL_ENDPOINT", "customhost:9317")
     _export_otel_env_for_backend()
-    assert os.environ["HELIX_OTEL_ENABLED"] == "1"
-    assert os.environ["HELIX_OTEL_ENDPOINT"] == "customhost:9317"
+    assert os.environ["CYMATIX_OTEL_ENABLED"] == "1"
+    assert os.environ["CYMATIX_OTEL_ENDPOINT"] == "customhost:9317"
 
 
 def test_export_treats_blank_enabled_as_unset(monkeypatch):
-    monkeypatch.setenv("HELIX_OTEL_ENABLED", "  ")
+    monkeypatch.setenv("CYMATIX_OTEL_ENABLED", "  ")
     _export_otel_env_for_backend()
-    assert os.environ["HELIX_OTEL_ENABLED"] == "1"
+    assert os.environ["CYMATIX_OTEL_ENABLED"] == "1"
 
 
 def test_export_skipped_when_collector_port_down(monkeypatch):
@@ -110,7 +110,7 @@ def test_export_skipped_when_collector_port_down(monkeypatch):
         observability_health, "is_port_bound", lambda host, port: False
     )
     _export_otel_env_for_backend()
-    assert "HELIX_OTEL_ENABLED" not in os.environ
+    assert "CYMATIX_OTEL_ENABLED" not in os.environ
 
 
 def test_export_probes_the_collector_otlp_port(monkeypatch):
@@ -143,7 +143,7 @@ def test_start_stack_exports_env_on_success():
     sup = _FakeSupervisor()
     _start_observability_stack(sup)
     assert sup.start_calls == 1
-    assert os.environ["HELIX_OTEL_ENABLED"] == "1"
+    assert os.environ["CYMATIX_OTEL_ENABLED"] == "1"
 
 
 def test_start_stack_does_not_export_on_failure():
@@ -151,18 +151,18 @@ def test_start_stack_does_not_export_on_failure():
     must not export."""
     sup = _FakeSupervisor(fail=True)
     _start_observability_stack(sup)  # must swallow, not raise
-    assert "HELIX_OTEL_ENABLED" not in os.environ
+    assert "CYMATIX_OTEL_ENABLED" not in os.environ
 
 
 def test_start_stack_none_supervisor_is_noop():
     _start_observability_stack(None)
-    assert "HELIX_OTEL_ENABLED" not in os.environ
+    assert "CYMATIX_OTEL_ENABLED" not in os.environ
 
 
 def test_start_stack_success_still_respects_explicit_off(monkeypatch):
-    monkeypatch.setenv("HELIX_OTEL_ENABLED", "0")
+    monkeypatch.setenv("CYMATIX_OTEL_ENABLED", "0")
     _start_observability_stack(_FakeSupervisor())
-    assert os.environ["HELIX_OTEL_ENABLED"] == "0"
+    assert os.environ["CYMATIX_OTEL_ENABLED"] == "0"
 
 
 def test_start_stack_success_but_dead_collector_does_not_export(monkeypatch):
@@ -170,4 +170,4 @@ def test_start_stack_success_but_dead_collector_does_not_export(monkeypatch):
         observability_health, "is_port_bound", lambda host, port: False
     )
     _start_observability_stack(_FakeSupervisor())
-    assert "HELIX_OTEL_ENABLED" not in os.environ
+    assert "CYMATIX_OTEL_ENABLED" not in os.environ

@@ -1,4 +1,4 @@
-"""Tests for helix-vault CLI subcommands.
+"""Tests for cymatix-vault CLI subcommands.
 
 The CLI talks to the running server over HTTP. Tests mock the HTTP client.
 """

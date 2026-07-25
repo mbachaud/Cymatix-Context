@@ -1,4 +1,4 @@
-"""Tests for `helix gene get` and `helix gene preview`."""
+"""Tests for `cymatix gene get` and `cymatix gene preview`."""
 from __future__ import annotations
 
 import contextlib

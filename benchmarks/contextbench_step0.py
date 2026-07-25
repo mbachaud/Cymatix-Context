@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ContextBench Step-0 offline retrieval scorer for Helix.
+ContextBench Step-0 offline retrieval scorer for Cymatix.
 
 Measures CODE-context retrieval on its designed terrain (path/symbol/structure),
 LLM-free, scored by the OFFICIAL ContextBench evaluator (tree-sitter alignment).
@@ -8,8 +8,8 @@ LLM-free, scored by the OFFICIAL ContextBench evaluator (tree-sitter alignment).
 Arms:
   none              no-retrieval floor (empty pred -> recall 0)
   bm25:<budget>     BM25-dump foil, fill to a token budget (e.g. bm25:8k, bm25:27k)
-  helix_fingerprint Helix /fingerprint ranked retrieval (recall ceiling)  [needs --helix-url]
-  helix_packet      Helix /context/packet delivered evidence              [needs --helix-url]
+  cymatix_fingerprint Cymatix /fingerprint ranked retrieval (recall ceiling)  [needs --cymatix-url]
+  cymatix_packet      Cymatix /context/packet delivered evidence              [needs --cymatix-url]
 
 Per task:
   checkout repo@base_commit (contextbench.core.checkout, cached + shared with evaluator)
@@ -43,8 +43,8 @@ from rank_bm25 import BM25Okapi  # noqa: E402
 ENC = tiktoken.get_encoding("cl100k_base")
 
 # Index any source/text file; gold is always real source. Exclude only generated/binary trees.
-# Code + core docs only. Kept symmetric with the Helix arm (cb_helix_pred.py): high-volume
-# non-code (.po/.html/.json/.css/.xml...) is excluded because Helix's spaCy ingest chokes on
+# Code + core docs only. Kept symmetric with the Cymatix arm (cb_cymatix_pred.py): high-volume
+# non-code (.po/.html/.json/.css/.xml...) is excluded because Cymatix's spaCy ingest chokes on
 # django's thousands of .po files and they are never code gold. The gold-file warn flags any drop.
 SRC_EXT = {
     ".py", ".js", ".jsx", ".ts", ".tsx", ".go", ".rs", ".c", ".h", ".cpp", ".cc",
@@ -179,19 +179,19 @@ def arm_bm25(task, repo_dir, budget_tokens, gold_files=None):
     return pred, meta
 
 
-def arm_helix(task, repo_dir, mode, helix_url):
-    """Placeholder for Helix arms (wired once a code-genome daemon is up).
+def arm_cymatix(task, repo_dir, mode, cymatix_url):
+    """Placeholder for Cymatix arms (wired once a code-genome daemon is up).
 
     mode in {"fingerprint","packet"}. Will POST the problem_statement to the
-    helix endpoint and translate ranked spans -> unified pred. Raises until wired.
+    cymatix endpoint and translate ranked spans -> unified pred. Raises until wired.
     """
     raise NotImplementedError(
-        f"helix arm '{mode}' not yet wired (needs --helix-url + code-genome daemon). "
+        f"cymatix arm '{mode}' not yet wired (needs --cymatix-url + code-genome daemon). "
         "Build/validate the BM25 + scoring pipeline first.")
 
 
 def parse_arm(spec):
-    """'bm25:27k' -> ('bm25', 27000); 'none' -> ('none', None); 'helix_packet' -> ('helix_packet', None)."""
+    """'bm25:27k' -> ('bm25', 27000); 'none' -> ('none', None); 'cymatix_packet' -> ('cymatix_packet', None)."""
     if spec.startswith("bm25:"):
         b = spec.split(":", 1)[1].lower().replace("k", "000")
         return "bm25", int(b)
@@ -239,12 +239,12 @@ def main():
     ap = argparse.ArgumentParser(description="ContextBench Step-0 offline retrieval scorer")
     ap.add_argument("--gold", required=True, help="Gold parquet (e.g. gold_smoke_4repo.parquet)")
     ap.add_argument("--arms", default="bm25:8k,bm25:27k",
-                    help="comma list: bm25:8k,bm25:27k,helix_fingerprint,helix_packet,none "
+                    help="comma list: bm25:8k,bm25:27k,cymatix_fingerprint,cymatix_packet,none "
                          "(note: 'none' yields all-error rows, reported as not-measured)")
     ap.add_argument("--limit", type=int, default=0, help="cap number of tasks (0=all in gold)")
     ap.add_argument("--cache", default="F:/Projects/_cache/cb_repos", help="repo base-clone cache")
     ap.add_argument("--worktree-root", default="F:/Projects/_cache/cb_wt", help="CONTEXTBENCH_TMP_ROOT (worktrees)")
-    ap.add_argument("--helix-url", default="", help="Helix bench-lane base URL, e.g. http://127.0.0.1:11439")
+    ap.add_argument("--cymatix-url", default="", help="Cymatix bench-lane base URL, e.g. http://127.0.0.1:11439")
     ap.add_argument("--out", default="", help="summary JSON output path")
     args = ap.parse_args()
 
@@ -326,9 +326,9 @@ def main():
                     pred, meta = arm_none(t, rd)
                 elif arm_name == "bm25":
                     pred, meta = arm_bm25(t, rd, budget, t["gold_files"])
-                elif arm_name in ("helix_fingerprint", "helix_packet"):
+                elif arm_name in ("cymatix_fingerprint", "cymatix_packet"):
                     mode = "fingerprint" if arm_name.endswith("fingerprint") else "packet"
-                    pred, meta = arm_helix(t, rd, mode, args.helix_url)
+                    pred, meta = arm_cymatix(t, rd, mode, args.cymatix_url)
                 else:
                     raise ValueError(f"unknown arm {arm_name}")
             except NotImplementedError as e:

@@ -17,7 +17,7 @@ for the wiring.
 
 Usage:
     python benchmarks/bench_skill_activation.py
-    HELIX_MODEL=qwen3:8b python benchmarks/bench_skill_activation.py
+    CYMATIX_MODEL=qwen3:8b python benchmarks/bench_skill_activation.py
 
 Output:
     benchmarks/skill_activation_results.json - per-shape activation
@@ -38,7 +38,7 @@ from pathlib import Path
 
 import httpx
 
-HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
+CYMATIX_URL = os.environ.get("CYMATIX_URL", "http://127.0.0.1:11437")
 OUTPUT_PATH = os.environ.get(
     "OUTPUT",
     str(Path(__file__).resolve().parent / "results" / "skill_activation_results.json"),
@@ -70,14 +70,14 @@ PROMPT_SHAPES = [
     {
         "id": "project_plus_key",
         "label": "project + key",
-        "query": "helix port",
+        "query": "cymatix port",
         "expected_strong": ["pki", "tag_exact", "lex_anchor"],
-        "rationale": "compound (helix, port) hits PKI; both terms are tag-like",
+        "rationale": "compound (cymatix, port) hits PKI; both terms are tag-like",
     },
     {
         "id": "project_plus_entity",
         "label": "project + entity",
-        "query": "helix ribosome",
+        "query": "cymatix ribosome",
         "expected_strong": ["tag_exact", "pki", "lex_anchor"],
         "rationale": "two named entities, narrows hard",
     },
@@ -98,14 +98,14 @@ PROMPT_SHAPES = [
     {
         "id": "natural_sentence",
         "label": "natural sentence",
-        "query": "How does helix handle WAL checkpoints?",
+        "query": "How does cymatix handle WAL checkpoints?",
         "expected_strong": ["fts5", "splade", "lex_anchor"],
         "rationale": "long natural language; multiple weak signals stack",
     },
     {
         "id": "multi_key_compound",
         "label": "multi-key compound",
-        "query": "helix port and ribosome model",
+        "query": "cymatix port and ribosome model",
         "expected_strong": ["pki", "tag_exact", "lex_anchor"],
         "rationale": "two PKI compound hits, two tag matches",
     },
@@ -135,7 +135,7 @@ def probe_shape(client: httpx.Client, shape: dict) -> dict:
     t0 = time.time()
     try:
         resp = client.post(
-            f"{HELIX_URL}/context",
+            f"{CYMATIX_URL}/context",
             json={
                 "query": shape["query"],
                 "decoder_mode": "none",
@@ -273,9 +273,9 @@ def main() -> int:
     # Stage 3 (2026-05-08): --fusion-mode flag (spec §11 A/B harness).
     # Annotates the run output with the fusion_mode the operator
     # claims is active server-side. The bench is HTTP-only — to
-    # actually flip the mode you must restart the helix server with
-    # the new helix.toml [retrieval] fusion_mode value (or via
-    # HELIX_FUSION_MODE_OVERRIDE if/when wired). This flag exists so
+    # actually flip the mode you must restart the cymatix server with
+    # the new cymatix.toml [retrieval] fusion_mode value (or via
+    # CYMATIX_FUSION_MODE_OVERRIDE if/when wired). This flag exists so
     # the A/B sweep result file records which side was being measured.
     import argparse
     parser = argparse.ArgumentParser(
@@ -284,24 +284,24 @@ def main() -> int:
     parser.add_argument(
         "--fusion-mode",
         choices=("additive", "rrf"),
-        default=os.environ.get("HELIX_FUSION_MODE_LABEL", "additive"),
+        default=os.environ.get("CYMATIX_FUSION_MODE_LABEL", "additive"),
         help=(
             "Annotation only - the bench reads server output as-is. "
-            "Restart the helix server with [retrieval] fusion_mode=<this> "
+            "Restart the cymatix server with [retrieval] fusion_mode=<this> "
             "before running the bench to actually exercise the path."
         ),
     )
     args = parser.parse_args()
 
     print(f"=== Skill / tool activation profiler ===")
-    print(f"Server: {HELIX_URL}")
+    print(f"Server: {CYMATIX_URL}")
     print(f"Shapes: {len(PROMPT_SHAPES)}")
     print(f"Fusion mode (annotation): {args.fusion_mode}")
     print()
 
     # Sanity ping
     try:
-        h = httpx.get(f"{HELIX_URL}/health", timeout=5).json()
+        h = httpx.get(f"{CYMATIX_URL}/health", timeout=5).json()
         print(f"Server: ok, ribosome={h.get('ribosome')}, genes={h.get('genes')}\n")
     except Exception as e:
         print(f"Server unreachable: {e}", file=sys.stderr)

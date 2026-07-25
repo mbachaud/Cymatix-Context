@@ -21,24 +21,24 @@ would provide on inputs alone.
 Usage:
     # Submit a batch (returns batch_id, writes manifest)
     python scripts/claude_batch_ingest.py submit \
-        --roots F:/Projects/helix-context/cymatix_context \
-        --manifest .batch-helix-core.json
+        --roots F:/Projects/cymatix-context/cymatix_context \
+        --manifest .batch-cymatix-core.json
 
     # Check batch status
-    python scripts/claude_batch_ingest.py status --manifest .batch-helix-core.json
+    python scripts/claude_batch_ingest.py status --manifest .batch-cymatix-core.json
 
     # Poll until done, then ingest results into genome
-    python scripts/claude_batch_ingest.py ingest --manifest .batch-helix-core.json
+    python scripts/claude_batch_ingest.py ingest --manifest .batch-cymatix-core.json
 
     # One-shot: submit + block until done + ingest
     python scripts/claude_batch_ingest.py run \
-        --roots F:/Projects/helix-context/cymatix_context \
-        --manifest .batch-helix-core.json
+        --roots F:/Projects/cymatix-context/cymatix_context \
+        --manifest .batch-cymatix-core.json
 
 Requires:
     - ANTHROPIC_API_KEY in env
     - anthropic SDK >= 0.40 (for messages.batches support)
-    - helix.toml for defaults
+    - cymatix.toml for defaults
 """
 
 from __future__ import annotations
@@ -274,7 +274,7 @@ def main() -> int:
         p.add_argument("--db", default="genome.db")
         p.add_argument(
             "--config",
-            default="cymatix.toml" if os.path.exists("cymatix.toml") else "helix.toml",
+            default="cymatix.toml" if os.path.exists("cymatix.toml") else "cymatix.toml",
         )
         p.add_argument("--manifest", required=True)
 

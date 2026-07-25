@@ -8,7 +8,7 @@ gene count affects retrieval recall, gene count, and token footprint.
 Usage:
 
     # 1. Start the server with the flag ON:
-    HELIX_BUDGET_ZONE=1 python -m uvicorn cymatix_context.server:app \
+    CYMATIX_BUDGET_ZONE=1 python -m uvicorn cymatix_context.server:app \
         --host 127.0.0.1 --port 11437
 
     # 2. Run the bench:
@@ -20,7 +20,7 @@ is ``prompt_tokens``. One row per (zone, needle). Two summary tables:
     1. Per-zone aggregates (R@k, mean genes, mean ellipticity, est tokens)
     2. Per-needle delta vs. baseline (which queries got hurt)
 
-If the server has HELIX_BUDGET_ZONE unset or false, the cap is a no-op and
+If the server has CYMATIX_BUDGET_ZONE unset or false, the cap is a no-op and
 every zone should look identical to the baseline — a useful sanity check.
 """
 
@@ -35,20 +35,20 @@ from typing import List, Optional
 
 import httpx
 
-HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
+CYMATIX_URL = os.environ.get("CYMATIX_URL", "http://127.0.0.1:11437")
 
 # Reuse the needle set — same structure as bench_needle.py but inlined so
 # we can edit this bench without touching the upstream one.
 NEEDLES = [
-    {"name": "helix_port",              "query": "What port does the Helix proxy server listen on?",                             "accept": ["11437"]},
+    {"name": "cymatix_port",              "query": "What port does the Cymatix proxy server listen on?",                             "accept": ["11437"]},
     {"name": "scorerift_threshold",     "query": "What is the divergence threshold that triggers alerts in ScoreRift?",          "accept": ["0.15", ".15"]},
     {"name": "biged_skills_count",      "query": "How many skills does the BigEd fleet have?",                                    "accept": ["125", "129"]},
     {"name": "bookkeeper_monetary",     "query": "What type should be used for monetary values in BookKeeper instead of float?", "accept": ["decimal"]},
-    {"name": "helix_pipeline_steps",    "query": "How many steps are in the Helix expression pipeline?",                          "accept": ["6", "six"]},
+    {"name": "cymatix_pipeline_steps",    "query": "How many steps are in the Cymatix expression pipeline?",                          "accept": ["6", "six"]},
     {"name": "biged_rust_binary_size",  "query": "What is the binary size of the Rust BigEd build in MB?",                       "accept": ["11", "11mb", "11 mb"]},
-    {"name": "genome_compression",      "query": "What is the target compression ratio for Helix Context?",                       "accept": ["5x", "5:1", "5 to 1"]},
+    {"name": "genome_compression",      "query": "What is the target compression ratio for Cymatix Context?",                       "accept": ["5x", "5:1", "5 to 1"]},
     {"name": "scorerift_preset_dims",   "query": "How many dimensions does the Python preset in ScoreRift check?",               "accept": ["8", "eight"]},
-    {"name": "helix_ribosome_budget",   "query": "How many tokens are allocated for the ribosome decoder prompt?",                "accept": ["3000", "3k", "3,000"]},
+    {"name": "cymatix_ribosome_budget",   "query": "How many tokens are allocated for the ribosome decoder prompt?",                "accept": ["3000", "3k", "3,000"]},
     {"name": "biged_default_model",     "query": "What is the default local model used by BigEd for conductor tasks?",           "accept": ["qwen3", "qwen"]},
 ]
 
@@ -83,7 +83,7 @@ def query_needle(client: httpx.Client, needle: dict, prompt_tokens: Optional[int
 
     t0 = time.time()
     try:
-        resp = client.post(f"{HELIX_URL}/context", json=body)
+        resp = client.post(f"{CYMATIX_URL}/context", json=body)
     except Exception as exc:
         return {"name": needle["name"], "ok": False, "error": str(exc),
                 "prompt_tokens": prompt_tokens}
@@ -136,9 +136,9 @@ def main() -> int:
     client = httpx.Client(timeout=120)
 
     try:
-        stats = client.get(f"{HELIX_URL}/stats", timeout=10).json()
+        stats = client.get(f"{CYMATIX_URL}/stats", timeout=10).json()
     except Exception as exc:
-        print(f"Cannot reach Helix at {HELIX_URL}: {exc}")
+        print(f"Cannot reach Cymatix at {CYMATIX_URL}: {exc}")
         return 1
 
     print(f"Genome: {stats.get('total_genes', '?')} genes, "
@@ -148,11 +148,11 @@ def main() -> int:
         print("Server /stats does not expose budget_zone_enabled — "
               "upgrade the server image (added with this spike).")
     elif not server_flag:
-        print("⚠  Server-side HELIX_BUDGET_ZONE is OFF. All zones will "
+        print("⚠  Server-side CYMATIX_BUDGET_ZONE is OFF. All zones will "
               "produce identical numbers (no-op). Restart the server with "
               "the flag enabled for a meaningful Phase 2 run.")
     else:
-        print("Server-side HELIX_BUDGET_ZONE is ON — caps are active.")
+        print("Server-side CYMATIX_BUDGET_ZONE is ON — caps are active.")
     print()
 
     all_rows: List[dict] = []
@@ -198,7 +198,7 @@ def main() -> int:
     # Save results
     output = {
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S"),
-        "helix_budget_zone_client_env": os.environ.get("HELIX_BUDGET_ZONE"),
+        "cymatix_budget_zone_client_env": os.environ.get("CYMATIX_BUDGET_ZONE"),
         "genome_genes": stats.get("total_genes"),
         "sweep_points": SWEEP_POINTS,
         "per_zone_summary": {

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# One-shot setup for the helix-context Grafana telemetry stack (native sidecar).
+# One-shot setup for the cymatix-context Grafana telemetry stack (native sidecar).
 #
 # Convenience wrapper around scripts/install-native-observability.sh that:
 #   1. Verifies the [otel] + [launcher] extras are importable.
@@ -12,8 +12,8 @@
 #      is already running.
 #
 # This script does NOT start the supervisor — it only prepares state.
-# Run `helix-launcher --tray` (or start-cymatix-tray.bat on Windows) to
-# spawn the five binaries; configs are reused across helix sessions.
+# Run `cymatix-launcher --tray` (or start-cymatix-tray.bat on Windows) to
+# spawn the five binaries; configs are reused across cymatix sessions.
 #
 # Spec: docs/specs/2026-05-04-native-observability-sidecar-design.md
 #
@@ -137,22 +137,22 @@ cat <<'EOF'
 
 == Grafana telemetry setup complete =====================
 Dashboards:
-  Overview     http://localhost:3000/d/helix-overview
-  GenAI        http://localhost:3000/d/helix-genai
-  Internals    http://localhost:3000/d/helix-internals
-  Retrieval    http://localhost:3000/d/helix-retrieval-hitl
+  Overview     http://localhost:3000/d/cymatix-overview
+  GenAI        http://localhost:3000/d/cymatix-genai
+  Internals    http://localhost:3000/d/cymatix-internals
+  Retrieval    http://localhost:3000/d/cymatix-retrieval-hitl
 
 Defaults: admin / admin (set at first Grafana boot; rotate via UI).
 
 To start the full stack (collector + Prom + Tempo + Loki + Grafana):
-  helix-launcher --tray              # cross-platform
+  cymatix-launcher --tray              # cross-platform
   start-cymatix-tray.bat               # Windows daily-driver wrapper
 
 To enable telemetry on a headless backend:
-  export HELIX_OTEL_ENABLED=1
-  export HELIX_OTEL_ENDPOINT=localhost:4317
-  python -m uvicorn helix_context._asgi:app --port 11437
+  export CYMATIX_OTEL_ENABLED=1
+  export CYMATIX_OTEL_ENDPOINT=localhost:4317
+  python -m uvicorn cymatix_context._asgi:app --port 11437
 
 Verify metrics are flowing (after first /context call):
-  curl 'http://localhost:9090/api/v1/query?query=helix_context_latency_seconds_count'
+  curl 'http://localhost:9090/api/v1/query?query=cymatix_context_latency_seconds_count'
 EOF

@@ -309,12 +309,12 @@ def test_format_elision_stub_is_one_line():
 # ── Integration: _assemble uses session working-set register ──────────
 
 from cymatix_context.config import BudgetConfig
-from cymatix_context.context_manager import HelixContextManager
-from tests.conftest import make_gene, make_helix_config, make_client, MockCompressorBackend
+from cymatix_context.context_manager import CymatixContextManager
+from tests.conftest import make_gene, make_cymatix_config, make_client, MockCompressorBackend
 
 
-def _make_manager(session_delivery_enabled: bool = True) -> HelixContextManager:
-    cfg = make_helix_config(
+def _make_manager(session_delivery_enabled: bool = True) -> CymatixContextManager:
+    cfg = make_cymatix_config(
         budget=BudgetConfig(
             max_genes_per_turn=4,
             splice_aggressiveness=0.5,
@@ -323,7 +323,7 @@ def _make_manager(session_delivery_enabled: bool = True) -> HelixContextManager:
         ),
         synonym_map={},
     )
-    return HelixContextManager(cfg)
+    return CymatixContextManager(cfg)
 
 
 def test_assemble_logs_fresh_delivery_when_session_on():
@@ -520,7 +520,7 @@ def test_assemble_sessions_dont_cross_contaminate():
 def http_client():
     """TestClient against an app with session_delivery enabled."""
     client = make_client(
-        config=make_helix_config(
+        config=make_cymatix_config(
             budget=BudgetConfig(
                 max_genes_per_turn=4,
                 session_delivery_enabled=True,
@@ -543,7 +543,7 @@ def test_session_manifest_empty_session_returns_empty_list(http_client):
 
 def test_session_manifest_returns_logged_deliveries(http_client):
     app = http_client.app
-    conn = app.state.helix.genome.conn
+    conn = app.state.cymatix.genome.conn
     # Seed some deliveries directly
     session_delivery.log_delivery(
         conn, session_id="sess_X", gene_id="g1",
@@ -570,7 +570,7 @@ def test_session_manifest_returns_logged_deliveries(http_client):
 
 def test_session_manifest_respects_limit_param(http_client):
     app = http_client.app
-    conn = app.state.helix.genome.conn
+    conn = app.state.cymatix.genome.conn
     for i in range(5):
         session_delivery.log_delivery(
             conn, session_id="sess_X", gene_id=f"g{i}", ts=float(i),

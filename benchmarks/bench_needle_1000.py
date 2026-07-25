@@ -3,7 +3,7 @@ N=1000 Needle-in-a-Haystack benchmark with KV-harvested needles.
 
 Generates 1000 needles from pre-extracted key-value facts in the genome,
 stratified by source category to avoid single-source bias. Runs each
-needle through Helix + downstream model and computes:
+needle through Cymatix + downstream model and computes:
 
   - Context retrieval rate (did the genome express the right gene?)
   - Answer accuracy rate (did the model extract the value?)
@@ -16,12 +16,12 @@ Reproducibility:
   - Results saved to benchmarks/needle_1000_results.json
 
 Usage:
-  HELIX_MODEL=qwen3:4b python benchmarks/bench_needle_1000.py
-  HELIX_MODEL=qwen3:4b N=200 python benchmarks/bench_needle_1000.py  # sanity check
+  CYMATIX_MODEL=qwen3:4b python benchmarks/bench_needle_1000.py
+  CYMATIX_MODEL=qwen3:4b N=200 python benchmarks/bench_needle_1000.py  # sanity check
 
   # Upload the most recent results to a HuggingFace dataset (manual trigger).
   # Requires `huggingface_hub` installed and HF_TOKEN env var or prior `hf auth login`.
-  HF_REPO=SwiftWing21/helix-needle-bench python benchmarks/bench_needle_1000.py --upload
+  HF_REPO=SwiftWing21/cymatix-needle-bench python benchmarks/bench_needle_1000.py --upload
 """
 
 import json
@@ -56,9 +56,9 @@ HARNESS_VERSION = 3
 # CLI: --axis {blind,located}; env override: BENCH_AXIS={blind,located}.
 AXIS = os.environ.get("BENCH_AXIS", "located").lower()
 
-HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
+CYMATIX_URL = os.environ.get("CYMATIX_URL", "http://127.0.0.1:11437")
 GENOME_DB = os.environ.get("GENOME_DB", "F:/Projects/helix-context/genome-bench-2026-05-08.db")
-MODEL = os.environ.get("HELIX_MODEL", "qwen3:4b")
+MODEL = os.environ.get("CYMATIX_MODEL", "qwen3:4b")
 N_TOTAL = int(os.environ.get("N", "1000"))
 SEED = int(os.environ.get("SEED", "42"))
 OUTPUT_PATH = os.environ.get("OUTPUT", "F:/Projects/helix-context/benchmarks/results/needle_1000_results.json")
@@ -72,7 +72,7 @@ LEGACY_HARVEST = os.environ.get("BENCH_LEGACY_HARVEST") == "1"
 # script was previously unconditionally dispatching to /chat — making the
 # retrieval-only path unreachable and the "25-40 min" wall-time estimate
 # inaccessible. Defaults to "1" (full pipeline) to preserve historical
-# behavior; set "0" for A/B retrieval-only runs (helix budget knobs,
+# behavior; set "0" for A/B retrieval-only runs (cymatix budget knobs,
 # fusion-signal toggles, etc) where the downstream model is irrelevant.
 ASK_PROXY = os.environ.get("ASK_PROXY", "1").strip().lower() in ("1", "true", "yes", "on")
 
@@ -96,7 +96,7 @@ else:
 # noise resistance (mirrors the natural ~34% signal / 66% noise genome).
 STRATIFICATION = {
     "education_public": 0.30,
-    "helix":            0.15,
+    "cymatix":            0.15,
     "cosmic":           0.12,
     "tally":            0.08,
     "scorerift":        0.05,
@@ -107,7 +107,7 @@ STRATIFICATION = {
 SOURCE_BUCKETS = {
     "steam": ["SteamLibrary", "steamapps", "Hades/", "BeamNG", "Factorio", "Dyson Sphere"],
     "education_public": ["biged-rs", "BigEd/", "fleet/", "Education"],
-    "helix": ["helix-context", "cymatix_context"],
+    "cymatix": ["helix-context", "cymatix_context"],
     "cosmic": ["CosmicTasha", "cosmictasha", "novabridge"],
     "tally": ["BookKeeper"],
     "scorerift": ["two-brain-audit", "scorerift"],
@@ -176,8 +176,8 @@ def _gold_source_in_citations(citations, gold_source: str) -> bool:
     cross-run comparability with pre-2026-05 result files is preserved.
 
     Matching is forward-slash normalized and case-insensitive, and uses
-    substring containment (so ``helix-context/helix.toml`` matches
-    ``F:/Projects/helix-context/helix.toml`` from the citation).
+    substring containment (so ``helix-context/cymatix.toml`` matches
+    ``F:/Projects/helix-context/cymatix.toml`` from the citation).
     """
     if not citations or not gold_source:
         return False
@@ -440,7 +440,7 @@ def build_query(needle: dict, axis: str | None = None) -> str:
 
 
 def run_needle(client: httpx.Client, needle: dict) -> dict:
-    """Execute a single needle test through Helix + downstream model."""
+    """Execute a single needle test through Cymatix + downstream model."""
     query = needle["query"]
     accept = needle["value"].lower()
 
@@ -464,7 +464,7 @@ def run_needle(client: httpx.Client, needle: dict) -> dict:
     if INCLUDE_COLD_TIER is not None:
         context_payload["include_cold"] = INCLUDE_COLD_TIER
     try:
-        resp = client.post(f"{HELIX_URL}/context", json=context_payload, timeout=30)
+        resp = client.post(f"{CYMATIX_URL}/context", json=context_payload, timeout=30)
     except Exception as e:
         result.update({
             "retrieved": False, "answered": False,
@@ -502,7 +502,7 @@ def run_needle(client: httpx.Client, needle: dict) -> dict:
 
     # Step 2: downstream model extraction (skipped when ASK_PROXY=0;
     # /chat dispatches the downstream model AND triggers the proxy's
-    # background helix.learn replication that MUTATES the genome —
+    # background cymatix.learn replication that MUTATES the genome —
     # neither is wanted for a clean A/B on retrieval-only knobs).
     if not ASK_PROXY:
         proxy_latency = 0.0
@@ -511,7 +511,7 @@ def run_needle(client: httpx.Client, needle: dict) -> dict:
     else:
         t1 = time.time()
         try:
-            proxy_resp = client.post(f"{HELIX_URL}/v1/chat/completions", json={
+            proxy_resp = client.post(f"{CYMATIX_URL}/v1/chat/completions", json={
                 "model": MODEL,
                 "messages": [{"role": "user", "content": query}],
                 "stream": False,
@@ -760,15 +760,15 @@ size_categories:
 - n<1K
 ---
 
-# Helix Context — Needle-in-a-Haystack Results (N≤{max_n})
+# Cymatix Context — Needle-in-a-Haystack Results (N≤{max_n})
 
-Retrieval + extraction benchmark for the **Helix Context** genome compression
+Retrieval + extraction benchmark for the **Cymatix Context** genome compression
 system — a DNA-inspired long-context memory that stores codebase knowledge as
 compressed "genes" (~7x compression ratio) and expresses them on demand via
 promoter matching.
 
 Each needle is a globally-unique key/value fact harvested from the genome.
-For every needle, the benchmark (1) asks Helix to express relevant genes
+For every needle, the benchmark (1) asks Cymatix to express relevant genes
 (`/context` endpoint), then (2) asks the downstream model to extract the value
 (`/v1/chat/completions`). A needle counts as **retrieved** if the expected value
 appears in the expressed context, and **answered** if the model emits it in
@@ -782,7 +782,7 @@ plain text.
 - **retrieval** — % of needles where the expected value appears in the expressed context
 - **answer** — % of needles where the downstream model emits the expected value
 - **inj tokens (avg)** — average context tokens injected into the downstream model per query
-- **compression** — avg `total_tokens_est / raw_source_tokens` ratio from the Helix decoder (higher = more aggressive compression)
+- **compression** — avg `total_tokens_est / raw_source_tokens` ratio from the Cymatix decoder (higher = more aggressive compression)
 - **budget util** — avg `injected / budget_ceiling` (how tight the budget was against the cap)
 - **ans/ktoken** — answered needles per 1000 injected context tokens (efficiency metric; higher = more answers per token spent)
 
@@ -903,7 +903,7 @@ def main():
 
     print(f"=== N={N_TOTAL} Needle benchmark ===")
     print(f"Genome:  {GENOME_DB}")
-    print(f"Server:  {HELIX_URL}")
+    print(f"Server:  {CYMATIX_URL}")
     print(f"Model:   {MODEL}")
     print(f"Seed:    {SEED}")
     print(f"Axis:    {AXIS}")
@@ -934,11 +934,11 @@ def main():
     open(incremental_path, "w").close()
 
     # ── Pre-flight monitor check ──────────────────────────────────
-    # Verifies: Helix alive, Ollama alive, target model loaded, no unauthorized
+    # Verifies: Cymatix alive, Ollama alive, target model loaded, no unauthorized
     # models in VRAM, genome snapshot present. Aborts before any work starts
-    # if conditions aren't clean. Opt out with HELIX_SKIP_MONITOR=1.
+    # if conditions aren't clean. Opt out with CYMATIX_SKIP_MONITOR=1.
     monitor = None
-    if not os.environ.get("HELIX_SKIP_MONITOR"):
+    if not os.environ.get("CYMATIX_SKIP_MONITOR"):
         try:
             sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
             from benchmark_monitor import BenchmarkMonitor, MonitorConfig
@@ -952,7 +952,7 @@ def main():
                 benchmark_model=MODEL,
                 incremental_output_path=incremental_path,
                 total_needles=len(needles),
-                helix_url=HELIX_URL,
+                cymatix_url=CYMATIX_URL,
                 genome_snapshot_path=GENOME_DB,
                 config=mon_cfg,
                 ask_proxy=ASK_PROXY,
@@ -974,10 +974,10 @@ def main():
         limits=httpx.Limits(max_keepalive_connections=0, max_connections=10),
     )
     try:
-        health = client.get(f"{HELIX_URL}/health").json()
+        health = client.get(f"{CYMATIX_URL}/health").json()
         print(f"Server: {health['status']}, ribosome={health['ribosome']}, genes={health['genes']}")
     except Exception:
-        print(f"ERROR: cannot reach Helix at {HELIX_URL}")
+        print(f"ERROR: cannot reach Cymatix at {CYMATIX_URL}")
         sys.exit(1)
     print(flush=True)
 

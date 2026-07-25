@@ -1,4 +1,4 @@
-"""#239 delivery-balanced stage 1 (HELIX env). Ingest the 3-cell bed (real files
+"""#239 delivery-balanced stage 1 (CYMATIX env). Ingest the 3-cell bed (real files
 -> fresh), then per needle dump the 5 know-features + confidence + answer_survived
 (gold) + competitor_survived + cell. GO/NO-GO checks printed:
   - label balance (answerable survive / heldout drop / competition split)
@@ -7,7 +7,7 @@
 Output -> np-graph/needles_239b_stage1.json
 """
 import os, sys, json, shutil, statistics, argparse, tempfile
-os.environ.setdefault("HELIX_DISABLE_LEARN", "1")
+os.environ.setdefault("CYMATIX_DISABLE_LEARN", "1")
 from pathlib import Path
 
 _REPO = Path("f:/Projects/helix-context")
@@ -17,7 +17,7 @@ sys.path.insert(0, "f:/Projects/np-graph")
 from needles_239b import NEEDLES_239B
 from located_n1000 import features_for_query
 from cymatix_context.config import load_config
-from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.context_manager import CymatixContextManager
 from cymatix_context.server.helpers import _compute_know_or_miss_block
 from cymatix_context.scoring.know_calibration import compute_confidence, calibration_from_config
 
@@ -32,7 +32,7 @@ def main():
     ap.add_argument("--expr-tokens", type=int, default=600)
     ap.add_argument("--abstain", action="store_true",
                     help="leave the abstain ratio-gate ON (default off) to quantify how many "
-                         "answerable rank-1 golds it suppresses to <helix:no_match>")
+                         "answerable rank-1 golds it suppresses to <cymatix:no_match>")
     args = ap.parse_args()
 
     if os.path.exists(BED):
@@ -40,18 +40,18 @@ def main():
     if CORPUS.exists():
         shutil.rmtree(CORPUS)
     CORPUS.mkdir(parents=True, exist_ok=True)
-    _cfg_path = _REPO / "cymatix.toml" if (_REPO / "cymatix.toml").exists() else _REPO / "helix.toml"
+    _cfg_path = _REPO / "cymatix.toml" if (_REPO / "cymatix.toml").exists() else _REPO / "cymatix.toml"
     cfg = load_config(str(_cfg_path))
     cfg.genome.path = BED
     cfg.budget.max_genes_per_turn = args.max_genes
     cfg.budget.expression_tokens = args.expr_tokens
     # Decouple the abstain RATIO-gate (top_score/mean<1.8) from this study: it
-    # otherwise suppresses ALL context (<helix:no_match>) on low-ratio queries —
+    # otherwise suppresses ALL context (<cymatix:no_match>) on low-ratio queries —
     # even when the gold is rank-1 — so we could not label what retrieval found.
     # (That suppression is itself a finding; recorded separately. Here we need
     # deliveries to measure causal use of the KNOW-CONFIDENCE signal.)
     cfg.budget.abstain_enabled = bool(args.abstain)
-    mgr = HelixContextManager(cfg)
+    mgr = CymatixContextManager(cfg)
     cal = calibration_from_config(cfg.know)
 
     gold_gene_ids = {}
@@ -77,7 +77,7 @@ def main():
                                  calibration=cal, freshness_min=f["freshness_min"])
         w = mgr.build_context(nd["q"], read_only=True, ignore_delivered=True)
         exp = (w.expressed_context or "")
-        block = _compute_know_or_miss_block(helix=mgr, window=w, query=nd["q"])
+        block = _compute_know_or_miss_block(cymatix=mgr, window=w, query=nd["q"])
         gset = gold_gene_ids.get(nd["id"], set())
         ranked = f.get("ranked_ids", [])
         gold_rank = next((i + 1 for i, g in enumerate(ranked) if g in gset), -1)

@@ -1,4 +1,4 @@
-"""Cross-shard global-IDF lexical re-score (HELIX_SHARD_GLOBAL_IDF, #182).
+"""Cross-shard global-IDF lexical re-score (CYMATIX_SHARD_GLOBAL_IDF, #182).
 
 Reproduces and fixes the within-shard mis-ranking bug on sharded
 retrieval:
@@ -10,7 +10,7 @@ retrieval:
   term is globally-rare-but-locally-common is buried under a same-shard
   incumbent, and no scalar can rescue it.
 
-  Fix: when HELIX_SHARD_GLOBAL_IDF is truthy and ≥2 shards participate,
+  Fix: when CYMATIX_SHARD_GLOBAL_IDF is truthy and ≥2 shards participate,
   re-score each candidate's BM25 lexical component per-doc with TRUE
   GLOBAL IDF (aggregated N / df over all shards) instead of the shard's
   local IDF.
@@ -61,7 +61,7 @@ from cymatix_context.shard_schema import (
     upsert_fingerprint,
 )
 
-_FLAG = "HELIX_SHARD_GLOBAL_IDF"
+_FLAG = "CYMATIX_SHARD_GLOBAL_IDF"
 
 
 def _mk_gene(content: str, domains: list, entities: list, source: str) -> Gene:
@@ -306,7 +306,7 @@ def test_flag_truthy_variants(idf_trap_setup):
 
 # ── FTS5 bm25() scale-parity (#182 root-cause guard) ──────────────────
 #
-# The HELIX_SHARD_GLOBAL_IDF recall regression (0.347 -> 0.168 on medium
+# The CYMATIX_SHARD_GLOBAL_IDF recall regression (0.347 -> 0.168 on medium
 # sharded) was a SCALE bug, not a gating bug: the manual BM25 in
 # rescore_lexical_global_idf used the SMOOTHED, always-positive IDF
 # ln((N-n+0.5)/(n+0.5) + 1.0), while SQLite FTS5's bm25() uses the RAW

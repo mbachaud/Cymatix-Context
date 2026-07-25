@@ -1,4 +1,4 @@
-"""RepoBench-R (Step-1) Helix GLOBAL-genome arm.
+"""RepoBench-R (Step-1) Cymatix GLOBAL-genome arm.
 
 One persistent genome over the deduped union of ALL candidate snippets across both
 difficulty levels.  Scores two ways:
@@ -9,17 +9,17 @@ difficulty levels.  Scores two ways:
 
   C (global-rank, realistic agent scenario):
       Gold counts only if its snippet lands in the global top-k against the whole
-      corpus.  recall@1/3/5/10.  This is the real multi-project Helix use-case.
+      corpus.  recall@1/3/5/10.  This is the real multi-project Cymatix use-case.
 
 Also computes a matched global-BM25 foil (floored-IDF Okapi, same identifier
 tokenizer) scored both ways.
 
-Motivation: the per-example arm (repobench_r_helix.py) gives each query a corpus
+Motivation: the per-example arm (repobench_r_cymatix.py) gives each query a corpus
 of only ~5-17 snippets.  BM25 IDF is degenerate at that scale. A realistic
 deployment ingests many documents, so the global arm gives a fairer picture.
 
 LLM-free, GPU-free (lexical config).  Run DIRECTLY (not via uv):
-  F:/Projects/_venvs/helix063/Scripts/python.exe -u benchmarks/repobench_r_helix_global.py
+  F:/Projects/_venvs/cymatix063/Scripts/python.exe -u benchmarks/repobench_r_cymatix_global.py
 
 Reads per-example dumps from benchmarks/results/ (written by repobench_r.py).
 
@@ -45,8 +45,8 @@ RESULTS_DIR = BENCH_DIR / "results"
 RESULTS_DIR.mkdir(exist_ok=True)
 
 _DEFAULT_CONFIG_CANDIDATES = [
-    Path(__file__).resolve().parents[1] / "docs" / "benchmarks" / "helix_probe_lexical.toml",
-    Path("F:/tmp/cb_helix_probe/helix_probe.toml"),
+    Path(__file__).resolve().parents[1] / "docs" / "benchmarks" / "cymatix_probe_lexical.toml",
+    Path("F:/tmp/cb_cymatix_probe/cymatix_probe.toml"),
 ]
 
 _TOK = re.compile(r"[A-Za-z_][A-Za-z_0-9]*")
@@ -118,18 +118,18 @@ class BM25:
 
 
 # ---------------------------------------------------------------------------
-# Helix wiring
+# Cymatix wiring
 # ---------------------------------------------------------------------------
 
-def build_helix(genome_dir, config_path):
-    os.environ.pop("HELIX_USE_SHARDS", None)
-    os.environ["HELIX_CONFIG"] = config_path
-    os.environ["HELIX_GENOME_PATH"] = os.path.join(genome_dir, "genome.db")
+def build_cymatix(genome_dir, config_path):
+    os.environ.pop("CYMATIX_USE_SHARDS", None)
+    os.environ["CYMATIX_CONFIG"] = config_path
+    os.environ["CYMATIX_GENOME_PATH"] = os.path.join(genome_dir, "genome.db")
     shutil.rmtree(genome_dir, ignore_errors=True)
     os.makedirs(genome_dir, exist_ok=True)
     from cymatix_context.config import load_config
-    from cymatix_context.context_manager import HelixContextManager
-    return HelixContextManager(load_config())
+    from cymatix_context.context_manager import CymatixContextManager
+    return CymatixContextManager(load_config())
 
 
 def gene_sid(g):
@@ -145,17 +145,17 @@ def gene_sid(g):
     return None
 
 
-def helix_sid_scores(helix, query, n_corpus):
+def cymatix_sid_scores(cymatix, query, n_corpus):
     """Return {sid: best_score} for this query over the whole genome."""
-    _eq, dom, ent = helix._prepare_query_signals(query, session_context=None,
+    _eq, dom, ent = cymatix._prepare_query_signals(query, session_context=None,
                                                  expand_query=False)
-    cands = helix._retrieve(dom, ent, n_corpus, query_text=query, include_cold=None,
+    cands = cymatix._retrieve(dom, ent, n_corpus, query_text=query, include_cold=None,
                             party_id="default", use_harmonic=False, use_sr=False)
-    cands, _ = helix._apply_candidate_refiners(query, cands, n_corpus,
+    cands, _ = cymatix._apply_candidate_refiners(query, cands, n_corpus,
                                                use_cymatics=False,
                                                use_harmonic_bin=False,
                                                use_tcm=True, allow_rerank=False)
-    raw = dict(helix.genome.last_query_scores or {})
+    raw = dict(cymatix.genome.last_query_scores or {})
     best = {}
     for g in cands:
         sid = gene_sid(g)
@@ -188,7 +188,7 @@ def global_rank_pos(scores_by_sid, gold_sid):
 
 def main():
     ap = argparse.ArgumentParser(
-        description="RepoBench-R Helix global-genome arm -- B (pool-rank) + C (global-rank)"
+        description="RepoBench-R Cymatix global-genome arm -- B (pool-rank) + C (global-rank)"
     )
     ap.add_argument(
         "--config",
@@ -208,9 +208,9 @@ def main():
         help="Cap examples/level (0 = all from dump)",
     )
     ap.add_argument(
-        "--helix-config",
+        "--cymatix-config",
         default=None,
-        help="Path to lexical-probe helix.toml. Falls back to HELIX_CONFIG env var.",
+        help="Path to lexical-probe cymatix.toml. Falls back to CYMATIX_CONFIG env var.",
     )
     ap.add_argument(
         "--genome-dir",
@@ -224,15 +224,15 @@ def main():
     )
     args = ap.parse_args()
 
-    helix_config = (
-        args.helix_config
-        or os.environ.get("HELIX_CONFIG")
+    cymatix_config = (
+        args.cymatix_config
+        or os.environ.get("CYMATIX_CONFIG")
         or _find_default_config()
     )
-    if not helix_config or not Path(helix_config).exists():
+    if not cymatix_config or not Path(cymatix_config).exists():
         print(
-            "ERROR: No helix config found. Provide --helix-config or set HELIX_CONFIG.\n"
-            "  See docs/benchmarks/helix_probe_lexical.toml for a template.",
+            "ERROR: No cymatix config found. Provide --cymatix-config or set CYMATIX_CONFIG.\n"
+            "  See docs/benchmarks/cymatix_probe_lexical.toml for a template.",
             file=sys.stderr,
         )
         sys.exit(1)
@@ -281,12 +281,12 @@ def main():
         flush=True,
     )
 
-    # ---- Ingest into Helix ----
-    helix = build_helix(genome_dir, helix_config)
+    # ---- Ingest into Cymatix ----
+    cymatix = build_cymatix(genome_dir, cymatix_config)
     ing_err = 0
     for sid, content in enumerate(sid2content):
         try:
-            helix.ingest(content, content_type="code", metadata={"path": f"snip_{sid}"})
+            cymatix.ingest(content, content_type="code", metadata={"path": f"snip_{sid}"})
         except Exception:  # noqa: BLE001
             ing_err += 1
     print(f"ingested {n_corpus - ing_err}/{n_corpus} ({ing_err} ingest errors)",
@@ -300,9 +300,9 @@ def main():
 
     summary = {
         "config": args.config,
-        "helix_config": helix_config,
+        "cymatix_config": cymatix_config,
         "timestamp": ts,
-        "arm": "helix_global",
+        "arm": "cymatix_global",
         "corpus_size": n_corpus,
         "ingest_errors": ing_err,
         "levels": {},
@@ -312,7 +312,7 @@ def main():
         rows = rows_by_level.get(lv, [])
         B_KS = _ks_for_level(lv)
         agg = {
-            "helix": {"B": {k: 0.0 for k in B_KS}, "C": {k: 0.0 for k in C_KS}},
+            "cymatix": {"B": {k: 0.0 for k in B_KS}, "C": {k: 0.0 for k in C_KS}},
             "bm25":  {"B": {k: 0.0 for k in B_KS}, "C": {k: 0.0 for k in C_KS}},
         }
         n = 0
@@ -326,15 +326,15 @@ def main():
             gold_sid = content2sid[cands[gold_local]]
             q = ex["query"]
 
-            # -- Helix --
-            h = helix_sid_scores(helix, q, n_corpus)
+            # -- Cymatix --
+            h = cymatix_sid_scores(cymatix, q, n_corpus)
             h_score = lambda s: h.get(s, 0.0)
             h_pool = rank_pool(h_score, cand_sids)
             for k in B_KS:
-                agg["helix"]["B"][k] += 1.0 if gold_local in h_pool[:k] else 0.0
+                agg["cymatix"]["B"][k] += 1.0 if gold_local in h_pool[:k] else 0.0
             h_pos = global_rank_pos(h, gold_sid)
             for k in C_KS:
-                agg["helix"]["C"][k] += 1.0 if h_pos < k else 0.0
+                agg["cymatix"]["C"][k] += 1.0 if h_pos < k else 0.0
 
             # -- BM25 --
             bs = bm.scores(tok(q))
@@ -350,16 +350,16 @@ def main():
             n += 1
 
         lvl = {"n": n, "corpus": n_corpus}
-        for arm in ("helix", "bm25"):
+        for arm in ("cymatix", "bm25"):
             for k in B_KS:
                 lvl[f"{arm}_B_acc@{k}"] = round(agg[arm]["B"][k] / n, 3) if n else 0.0
             for k in C_KS:
                 lvl[f"{arm}_C_recall@{k}"] = round(agg[arm]["C"][k] / n, 3) if n else 0.0
         summary["levels"][lv] = lvl
 
-        b_str = "  ".join(f"B@{k}={lvl[f'helix_B_acc@{k}']}" for k in B_KS)
-        c_str = "  ".join(f"C@{k}={lvl[f'helix_C_recall@{k}']}" for k in C_KS)
-        print(f"[{lv}] n={n}  HELIX {b_str} | {c_str}", flush=True)
+        b_str = "  ".join(f"B@{k}={lvl[f'cymatix_B_acc@{k}']}" for k in B_KS)
+        c_str = "  ".join(f"C@{k}={lvl[f'cymatix_C_recall@{k}']}" for k in C_KS)
+        print(f"[{lv}] n={n}  CYMATIX {b_str} | {c_str}", flush=True)
 
         bm_b = "  ".join(f"B@{k}={lvl[f'bm25_B_acc@{k}']}" for k in B_KS)
         bm_c = "  ".join(f"C@{k}={lvl[f'bm25_C_recall@{k}']}" for k in C_KS)

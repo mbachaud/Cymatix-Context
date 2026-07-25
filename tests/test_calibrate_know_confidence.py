@@ -122,14 +122,14 @@ def test_gate_refuses_undefined_auc():
 
 def test_gate_force_overrides_low_auc_with_warning(caplog):
     import logging
-    with caplog.at_level(logging.WARNING, logger="helix.calibrate_know_confidence"):
+    with caplog.at_level(logging.WARNING, logger="cymatix.calibrate_know_confidence"):
         gate_auc_or_raise(0.35, floor=DEFAULT_AUC_FLOOR, force=True)  # must not raise
     assert any("OVERRIDDEN" in rec.message for rec in caplog.records)
 
 
 def test_gate_force_overrides_undefined_auc_with_warning(caplog):
     import logging
-    with caplog.at_level(logging.WARNING, logger="helix.calibrate_know_confidence"):
+    with caplog.at_level(logging.WARNING, logger="cymatix.calibrate_know_confidence"):
         gate_auc_or_raise(None, floor=DEFAULT_AUC_FLOOR, force=True)  # must not raise
     assert any("OVERRIDDEN" in rec.message for rec in caplog.records)
 
@@ -156,8 +156,8 @@ def _fake_cal(n: int = 100) -> KnowCalibration:
 
 
 def test_write_calibration_gated_refuses_below_floor_and_does_not_write(tmp_path):
-    """Synthetic low-AUC score set -> refuse; helix.toml must be untouched."""
-    out_path = tmp_path / "helix.toml"
+    """Synthetic low-AUC score set -> refuse; cymatix.toml must be untouched."""
+    out_path = tmp_path / "cymatix.toml"
     hit_scores = [0.2, 0.3, 0.25, 0.15]
     miss_scores = [0.6, 0.7, 0.65, 0.55]
     scores = hit_scores + miss_scores
@@ -172,7 +172,7 @@ def test_write_calibration_gated_refuses_below_floor_and_does_not_write(tmp_path
 
 def test_write_calibration_gated_accepts_above_floor_and_writes(tmp_path):
     """Synthetic high-AUC score set -> accept; TOML is written with betas."""
-    out_path = tmp_path / "helix.toml"
+    out_path = tmp_path / "cymatix.toml"
     hit_scores = [0.9, 0.85, 0.95, 0.99]
     miss_scores = [0.1, 0.2, 0.05, 0.15]
     scores = hit_scores + miss_scores
@@ -190,7 +190,7 @@ def test_write_calibration_gated_accepts_above_floor_and_writes(tmp_path):
 
 def test_write_calibration_gated_force_writes_despite_low_auc(tmp_path):
     """--force bypasses a failing gate and still writes the file."""
-    out_path = tmp_path / "helix.toml"
+    out_path = tmp_path / "cymatix.toml"
     scores = [0.2, 0.3, 0.6, 0.7]  # inverted: hits below misses
     labels = [1, 1, 0, 0]
     auc = compute_auc(scores, labels)
@@ -202,8 +202,8 @@ def test_write_calibration_gated_force_writes_despite_low_auc(tmp_path):
 
 
 def test_write_calibration_gated_updates_existing_toml_only_above_floor(tmp_path):
-    """Below-floor gate must not clobber a pre-existing helix.toml either."""
-    out_path = tmp_path / "helix.toml"
+    """Below-floor gate must not clobber a pre-existing cymatix.toml either."""
+    out_path = tmp_path / "cymatix.toml"
     out_path.write_text(
         "[server]\nport = 11437\n\n[know]\nemit_floor = 0.55\nbetas = [0.0]\n",
         encoding="utf-8",
@@ -237,7 +237,7 @@ def test_main_returns_nonzero_and_prints_error_on_gate_failure(tmp_path, capsys)
     from scripts.calibrate_know_confidence import main as cli_main
 
     input_path = tmp_path / "bench.jsonl"
-    out_path = tmp_path / "helix.toml"
+    out_path = tmp_path / "cymatix.toml"
     rows = []
     for i in range(60):
         rows.append({

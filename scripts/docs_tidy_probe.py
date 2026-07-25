@@ -1,4 +1,4 @@
-"""Docs-tidy helix path-sensitivity probe.
+"""Docs-tidy cymatix path-sensitivity probe.
 
 Hits /debug/preview for a fixed query set, resolves source_id per returned
 gene_id, and writes a JSON report. Run before moves, then after, then diff.
@@ -18,12 +18,12 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
-HELIX = "http://127.0.0.1:11437"
+CYMATIX = "http://127.0.0.1:11437"
 
 PROBES: list[tuple[str, str]] = [
     ("RESTART_PROTOCOL", "restart protocol"),
     ("MUSIC_OF_RETRIEVAL", "music of retrieval"),
-    ("DIMENSIONS", "9 dimensions helix"),
+    ("DIMENSIONS", "9 dimensions cymatix"),
     ("FEDERATION_LOCAL", "4-layer federation identity"),
     ("KNOWLEDGE_GRAPH", "knowledge graph entity links"),
     ("PIPELINE_LANES", "pipeline lanes"),
@@ -35,7 +35,7 @@ PROBES: list[tuple[str, str]] = [
     ("PAPER_FIGURE_SPECS", "paper figure specs"),
     ("PAPER_THREE_CONSTRAINTS", "three constraints paper"),
     ("SIKE_POST_DRAFT", "sike post draft"),
-    ("ECONOMICS", "economics helix"),
+    ("ECONOMICS", "economics cymatix"),
     ("ENTERPRISE", "enterprise compliance"),
     ("SKILLS_BUNDLE", "skills bundle"),
     ("BENCHMARKS", "benchmarks"),
@@ -57,11 +57,11 @@ def _get_json(url: str) -> dict | None:
 
 def preview(query: str) -> dict:
     qs = urllib.parse.urlencode({"query": query, "max_genes": MAX_GENES})
-    return _get_json(f"{HELIX}/debug/preview?{qs}") or {}
+    return _get_json(f"{CYMATIX}/debug/preview?{qs}") or {}
 
 
 def gene_meta(gene_id: str) -> dict:
-    d = _get_json(f"{HELIX}/genes/{gene_id}") or {}
+    d = _get_json(f"{CYMATIX}/genes/{gene_id}") or {}
     return {
         "source_id": d.get("source_id"),
         "chromatin": d.get("chromatin"),
@@ -99,7 +99,7 @@ def run() -> dict:
                 "error": prev.get("error"),
             }
         )
-    stats = _get_json(f"{HELIX}/stats") or {}
+    stats = _get_json(f"{CYMATIX}/stats") or {}
     return {
         "timestamp": time.time(),
         "timestamp_human": time.strftime("%Y-%m-%d %H:%M:%S"),
