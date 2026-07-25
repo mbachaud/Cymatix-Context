@@ -1,6 +1,6 @@
 """OKF bundle ingestion orchestrator.
 
-Routes every concept through ``HelixContextManager.ingest`` — never
+Routes every concept through ``CymatixContextManager.ingest`` — never
 ``upsert_doc``-direct (the historical density-gate-bypass path) — so
 frontmatter tags MERGE with tagger output via the ingest seam, and all
 downstream indexes (promoter_index, genes_fts, entity_graph,
@@ -24,7 +24,7 @@ from typing import Dict, List, Optional, Tuple
 from .bundle import OkfBundle, read_bundle
 from .digest import compute_bundle_digest
 
-log = logging.getLogger("helix.okf")
+log = logging.getLogger("cymatix.okf")
 
 
 @dataclass

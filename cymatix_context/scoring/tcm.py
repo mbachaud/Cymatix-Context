@@ -30,7 +30,7 @@ from typing import Dict, List, Optional, Tuple
 
 from ..schemas import Gene
 
-log = logging.getLogger("helix.tcm")
+log = logging.getLogger("cymatix.tcm")
 
 # -- Numpy detection (mirrors cymatics.py) ---------------------
 
@@ -56,7 +56,7 @@ BONUS_WEIGHT = 0.3   # TCM bonus scaling -- tiebreaker only
 # bounding per-session memory regardless of query count (issue #126).
 ITEM_HISTORY_CAP = 64
 
-_HASH_SEED = b"helix-tcm"  # Deterministic seed for tag->dimension hashing
+_HASH_SEED = b"cymatix-tcm"  # Deterministic seed for tag->dimension hashing
 
 
 # -- Vector math helpers ----------------------------------------

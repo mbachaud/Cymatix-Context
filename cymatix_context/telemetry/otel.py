@@ -1,40 +1,40 @@
 """
-OpenTelemetry setup for helix-context.
+OpenTelemetry setup for cymatix-context.
 
 Makes the retrieval pipeline observable: traces per /context span, metric
 histograms per tier, counters for CWoLa bucket accumulation, gauges for
 lifecycle tier + graph density. Everything degrades gracefully if the
-opentelemetry packages aren't installed — helix still runs, just blind.
+opentelemetry packages aren't installed — cymatix still runs, just blind.
 
 Usage:
     from cymatix_context.telemetry import setup_telemetry, meter
     app = FastAPI()
-    setup_telemetry(app, service_name="helix-context")
-    h = meter.create_histogram("helix_tier_contribution", unit="score")
+    setup_telemetry(app, service_name="cymatix-context")
+    h = meter.create_histogram("cymatix_tier_contribution", unit="score")
     h.record(5.3, attributes={"tier": "pki", "shape": "project_key"})
 
-Configuration (precedence: env var > [telemetry] in helix.toml > default):
-    Every knob below has a matching key in the ``[telemetry]`` helix.toml
+Configuration (precedence: env var > [telemetry] in cymatix.toml > default):
+    Every knob below has a matching key in the ``[telemetry]`` cymatix.toml
     section (config.TelemetryConfig) — ``enabled``, ``endpoint``,
     ``insecure``, ``sampler_ratio``, ``redact_query``, ``logs_enabled``,
     ``logs_level``. Pass ``config=cfg.telemetry`` to ``setup_telemetry``
     to activate the toml layer; the env vars always win over it, in both
-    directions (an explicit HELIX_OTEL_ENABLED=0 silences a toml
+    directions (an explicit CYMATIX_OTEL_ENABLED=0 silences a toml
     ``enabled = true``). An env var set to the empty string counts as
     unset. Resolution lives in ``resolve_telemetry_settings()``.
 
 Environment:
-    HELIX_OTEL_ENABLED       - "1" to turn on, default "0"
-    HELIX_OTEL_ENDPOINT      - OTLP gRPC endpoint, default "localhost:4317"
-    HELIX_OTEL_INSECURE      - "1" for plain gRPC, default "1" (dev-local)
-    HELIX_OTEL_SAMPLER_RATIO - trace sampler 0.0-1.0, default 1.0
-    HELIX_OTEL_REDACT_QUERY  - "1" to hash query strings in spans, default "1"
-    HELIX_OTEL_LOGS_ENABLED  - "1" to ship Python log records to OTel
+    CYMATIX_OTEL_ENABLED       - "1" to turn on, default "0"
+    CYMATIX_OTEL_ENDPOINT      - OTLP gRPC endpoint, default "localhost:4317"
+    CYMATIX_OTEL_INSECURE      - "1" for plain gRPC, default "1" (dev-local)
+    CYMATIX_OTEL_SAMPLER_RATIO - trace sampler 0.0-1.0, default 1.0
+    CYMATIX_OTEL_REDACT_QUERY  - "1" to hash query strings in spans, default "1"
+    CYMATIX_OTEL_LOGS_ENABLED  - "1" to ship Python log records to OTel
                                (collector → Loki), default "1". Set "0"
                                to keep traces+metrics on while suppressing
                                log shipment — useful under Loki disk
                                pressure or for PII-sensitive deployments.
-    HELIX_OTEL_LOGS_LEVEL    - Minimum log level forwarded to OTel: one
+    CYMATIX_OTEL_LOGS_LEVEL    - Minimum log level forwarded to OTel: one
                                of DEBUG / INFO / WARNING / ERROR /
                                CRITICAL. Default "INFO". Tunes log
                                volume without disabling traces/metrics.
@@ -49,7 +49,7 @@ import sqlite3
 import socket
 from typing import Any, Optional
 
-log = logging.getLogger("helix.telemetry")
+log = logging.getLogger("cymatix.telemetry")
 
 
 # Graceful no-op stand-ins so callers can always
@@ -129,26 +129,26 @@ def resolve_telemetry_settings(config: Any = None) -> dict:
     def _layer(attr: str) -> Any:
         return getattr(config, attr) if config is not None else _TELEMETRY_DEFAULTS[attr]
 
-    enabled_env = _env_raw("HELIX_OTEL_ENABLED")
-    insecure_env = _env_raw("HELIX_OTEL_INSECURE")
-    redact_env = _env_raw("HELIX_OTEL_REDACT_QUERY")
-    logs_enabled_env = _env_raw("HELIX_OTEL_LOGS_ENABLED")
+    enabled_env = _env_raw("CYMATIX_OTEL_ENABLED")
+    insecure_env = _env_raw("CYMATIX_OTEL_INSECURE")
+    redact_env = _env_raw("CYMATIX_OTEL_REDACT_QUERY")
+    logs_enabled_env = _env_raw("CYMATIX_OTEL_LOGS_ENABLED")
 
-    ratio_env = _env_raw("HELIX_OTEL_SAMPLER_RATIO")
+    ratio_env = _env_raw("CYMATIX_OTEL_SAMPLER_RATIO")
     ratio: float = float(_layer("sampler_ratio"))
     if ratio_env is not None:
         try:
             ratio = float(ratio_env)
         except ValueError:
             log.warning(
-                "HELIX_OTEL_SAMPLER_RATIO=%r is not a float — using %s",
+                "CYMATIX_OTEL_SAMPLER_RATIO=%r is not a float — using %s",
                 ratio_env, ratio,
             )
 
     return {
         "enabled": (enabled_env == "1") if enabled_env is not None
                    else bool(_layer("enabled")),
-        "endpoint": _env_raw("HELIX_OTEL_ENDPOINT") or str(_layer("endpoint")),
+        "endpoint": _env_raw("CYMATIX_OTEL_ENDPOINT") or str(_layer("endpoint")),
         "insecure": (insecure_env == "1") if insecure_env is not None
                     else bool(_layer("insecure")),
         "sampler_ratio": ratio,
@@ -156,7 +156,7 @@ def resolve_telemetry_settings(config: Any = None) -> dict:
                         else bool(_layer("redact_query")),
         "logs_enabled": (logs_enabled_env == "1") if logs_enabled_env is not None
                         else bool(_layer("logs_enabled")),
-        "logs_level": _env_raw("HELIX_OTEL_LOGS_LEVEL") or str(_layer("logs_level")),
+        "logs_level": _env_raw("CYMATIX_OTEL_LOGS_LEVEL") or str(_layer("logs_level")),
     }
 
 
@@ -170,7 +170,7 @@ def _redact_query(q: str) -> str:
     if not q:
         return ""
     digest = hashlib.sha256(q.encode("utf-8", errors="replace")).hexdigest()[:12]
-    redact_env = _env_raw("HELIX_OTEL_REDACT_QUERY")
+    redact_env = _env_raw("CYMATIX_OTEL_REDACT_QUERY")
     redact = (redact_env != "0") if redact_env is not None else _settings["redact_query"]
     return f"{q[:50]}[hash:{digest}]" if redact else q
 
@@ -199,7 +199,7 @@ class _LoggerNameInjector(logging.Filter):
     OTel's default LoggingHandler maps the Python logger name to the
     InstrumentationScope.name, which the collector → Loki bridge does
     NOT promote to a Loki stream label by default. The
-    helix-overview "Proxy call log" panel queries `{logger="helix.proxy"}`,
+    cymatix-overview "Proxy call log" panel queries `{logger="cymatix.proxy"}`,
     so we surface the logger name as a record attribute and add the
     `loki.attribute.labels` resource hint below so Loki's OTLP ingest
     promotes it to a stream label.
@@ -217,7 +217,7 @@ _LOG_LEVEL_NAMES = {"DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"}
 
 
 def _resolve_logs_level(raw: Optional[str]) -> int:
-    """Map HELIX_OTEL_LOGS_LEVEL → numeric level, defaulting to INFO on
+    """Map CYMATIX_OTEL_LOGS_LEVEL → numeric level, defaulting to INFO on
     unrecognised values."""
     if not raw:
         return logging.INFO
@@ -225,7 +225,7 @@ def _resolve_logs_level(raw: Optional[str]) -> int:
     if name in _LOG_LEVEL_NAMES:
         return getattr(logging, name)
     log.warning(
-        "HELIX_OTEL_LOGS_LEVEL=%r is not one of %s — falling back to INFO",
+        "CYMATIX_OTEL_LOGS_LEVEL=%r is not one of %s — falling back to INFO",
         raw, sorted(_LOG_LEVEL_NAMES),
     )
     return logging.INFO
@@ -251,14 +251,14 @@ def _attach_otlp_logging_handler(
     Honors two knobs (env var first, then the [telemetry] toml values
     captured in ``_settings``):
 
-    - ``HELIX_OTEL_LOGS_ENABLED`` / ``logs_enabled`` (default on): set
+    - ``CYMATIX_OTEL_LOGS_ENABLED`` / ``logs_enabled`` (default on): set
       ``"0"`` to skip log shipping entirely while keeping traces +
       metrics enabled.
-    - ``HELIX_OTEL_LOGS_LEVEL`` / ``logs_level`` (default ``"INFO"``):
+    - ``CYMATIX_OTEL_LOGS_LEVEL`` / ``logs_level`` (default ``"INFO"``):
       minimum level forwarded to OTel. DEBUG / INFO / WARNING / ERROR /
       CRITICAL.
     """
-    logs_enabled_env = _env_raw("HELIX_OTEL_LOGS_ENABLED")
+    logs_enabled_env = _env_raw("CYMATIX_OTEL_LOGS_ENABLED")
     logs_enabled = (
         (logs_enabled_env == "1") if logs_enabled_env is not None
         else _settings["logs_enabled"]
@@ -266,7 +266,7 @@ def _attach_otlp_logging_handler(
     if not logs_enabled:
         log.info(
             "OTel log shipping disabled "
-            "(HELIX_OTEL_LOGS_ENABLED=0 / [telemetry] logs_enabled=false) — "
+            "(CYMATIX_OTEL_LOGS_ENABLED=0 / [telemetry] logs_enabled=false) — "
             "traces + metrics still on, Loki Logs panel will stay empty",
         )
         return
@@ -277,13 +277,13 @@ def _attach_otlp_logging_handler(
     if any(isinstance(h, LoggingHandler) for h in root.handlers):
         return
     level = _resolve_logs_level(
-        _env_raw("HELIX_OTEL_LOGS_LEVEL") or str(_settings["logs_level"])
+        _env_raw("CYMATIX_OTEL_LOGS_LEVEL") or str(_settings["logs_level"])
     )
     try:
         # Resource hint: tells Loki's OTLP ingest to promote `logger`
         # (and `service.name`, which Loki promotes by default but we
         # name it explicitly for clarity) from a record attribute to a
-        # stream label so `{logger="helix.proxy"}` queries work.
+        # stream label so `{logger="cymatix.proxy"}` queries work.
         merged_resource = resource.merge(
             type(resource).create({"loki.attribute.labels": "logger"})
         )
@@ -317,7 +317,7 @@ def setup_telemetry(
     """Initialize OTel tracer + meter providers + FastAPI auto-instrumentation.
 
     ``config`` is an optional ``config.TelemetryConfig`` — the [telemetry]
-    helix.toml layer. Every knob resolves env > config > default (see
+    cymatix.toml layer. Every knob resolves env > config > default (see
     ``resolve_telemetry_settings``); omitting it preserves the legacy
     env-only behavior.
 
@@ -342,8 +342,8 @@ def setup_telemetry(
         return True
     if not settings["enabled"]:
         log.info(
-            "OTel disabled (set HELIX_OTEL_ENABLED=1 or [telemetry] "
-            "enabled=true in helix.toml to turn on)"
+            "OTel disabled (set CYMATIX_OTEL_ENABLED=1 or [telemetry] "
+            "enabled=true in cymatix.toml to turn on)"
         )
         return False
     try:
@@ -435,8 +435,8 @@ def setup_telemetry(
     metrics.set_meter_provider(meter_provider)
     meter = metrics.get_meter(service_name, service_version)
 
-    # Logs → OTLP → collector → Loki. Without this, helix emits zero log
-    # records via OTel and the helix-overview "Proxy call log" panel
+    # Logs → OTLP → collector → Loki. Without this, cymatix emits zero log
+    # records via OTel and the cymatix-overview "Proxy call log" panel
     # stays empty. Attached at INFO so uvicorn access logs flow through.
     _attach_otlp_logging_handler(
         endpoint=endpoint, insecure=insecure, resource=resource,
@@ -453,7 +453,7 @@ def setup_telemetry(
     _instrument_fastapi(app)
     # Promoted to WARNING so the confirmation is visible even when the root
     # logger is at the default WARNING level (uvicorn's --log-level only
-    # affects uvicorn's own loggers; helix.* loggers are not auto-promoted).
+    # affects uvicorn's own loggers; cymatix.* loggers are not auto-promoted).
     # Without this, operators can't confirm OTel is actually on.
     log.warning("OTel telemetry ON, endpoint=%s insecure=%s sampler=%.2f",
                 endpoint, insecure, ratio)
@@ -477,7 +477,7 @@ _instruments: dict = {}
 def tier_contribution_histogram():
     if "tier_contribution" not in _instruments:
         _instruments["tier_contribution"] = meter.create_histogram(
-            "helix_tier_contribution",
+            "cymatix_tier_contribution",
             unit="score",
             description="Per-tier bonus magnitude contributed to gene_scores",
         )
@@ -487,7 +487,7 @@ def tier_contribution_histogram():
 def context_latency_histogram():
     if "context_latency" not in _instruments:
         _instruments["context_latency"] = meter.create_histogram(
-            "helix_context_latency_seconds",
+            "cymatix_context_latency_seconds",
             unit="s",
             description="End-to-end /context build time",
         )
@@ -502,7 +502,7 @@ def context_calls_by_class_counter():
     """
     if "context_calls_by_class" not in _instruments:
         _instruments["context_calls_by_class"] = meter.create_counter(
-            "helix_context_calls_by_class",
+            "cymatix_context_calls_by_class",
             description="/context calls bucketed by caller_model_class (Stage 5)",
         )
     return _instruments["context_calls_by_class"]
@@ -511,7 +511,7 @@ def context_calls_by_class_counter():
 def cwola_bucket_counter():
     if "cwola_bucket" not in _instruments:
         _instruments["cwola_bucket"] = meter.create_counter(
-            "helix_cwola_bucket_total",
+            "cymatix_cwola_bucket_total",
             description="CWoLa log rows by bucket (A/B/pending)",
         )
     return _instruments["cwola_bucket"]
@@ -520,7 +520,7 @@ def cwola_bucket_counter():
 def cwola_f_gap_gauge():
     if "cwola_f_gap" not in _instruments:
         _instruments["cwola_f_gap"] = meter.create_gauge(
-            "helix_cwola_f_gap_sq",
+            "cymatix_cwola_f_gap_sq",
             description="(f_A - f_B)^2 — CWoLa bucket divergence (0.16 promotes PLR)",
         )
     return _instruments["cwola_f_gap"]
@@ -529,7 +529,7 @@ def cwola_f_gap_gauge():
 def harmonic_edges_counter():
     if "harmonic_edges" not in _instruments:
         _instruments["harmonic_edges"] = meter.create_gauge(
-            "helix_harmonic_edges_total",
+            "cymatix_harmonic_edges_total",
             description="Count of harmonic_links edges by provenance source",
         )
     return _instruments["harmonic_edges"]
@@ -538,7 +538,7 @@ def harmonic_edges_counter():
 def chromatin_state_counter():
     if "chromatin_state" not in _instruments:
         _instruments["chromatin_state"] = meter.create_gauge(
-            "helix_chromatin_state_total",
+            "cymatix_chromatin_state_total",
             description="Gene count by chromatin state (OPEN/EUCHROMATIN/HETEROCHROMATIN)",
         )
     return _instruments["chromatin_state"]
@@ -547,7 +547,7 @@ def chromatin_state_counter():
 def genome_size_gauge():
     if "genome_size" not in _instruments:
         _instruments["genome_size"] = meter.create_gauge(
-            "helix_genome_size_bytes",
+            "cymatix_genome_size_bytes",
             unit="By",
             description="Genome total char count — raw vs compressed",
         )
@@ -557,7 +557,7 @@ def genome_size_gauge():
 def tier_fired_counter():
     if "tier_fired" not in _instruments:
         _instruments["tier_fired"] = meter.create_counter(
-            "helix_tier_fired_total",
+            "cymatix_tier_fired_total",
             description="Retrieval tier activation events, labelled by tier",
         )
     return _instruments["tier_fired"]
@@ -566,7 +566,7 @@ def tier_fired_counter():
 def hub_concentration_gauge():
     if "hub_concentration" not in _instruments:
         _instruments["hub_concentration"] = meter.create_gauge(
-            "helix_hub_concentration_ratio",
+            "cymatix_hub_concentration_ratio",
             description="harmonic_links inbound-degree top-1% mean / overall mean. "
                         "Watch for condensation transition (preferential-attachment "
                         "graphs collapse flow into hubs as N grows). Healthy ≲ ~10x; "
@@ -579,7 +579,7 @@ def hub_concentration_gauge():
 def hub_inbound_degree_gauge():
     if "hub_inbound_degree" not in _instruments:
         _instruments["hub_inbound_degree"] = meter.create_gauge(
-            "helix_hub_inbound_degree",
+            "cymatix_hub_inbound_degree",
             description="harmonic_links inbound-degree summary statistics, labelled by stat "
                         "(max / p99 / p95 / p50 / mean). Backfill cap is 500; values "
                         "approaching that consistently mean the cap is the binding constraint.",
@@ -590,12 +590,12 @@ def hub_inbound_degree_gauge():
 def hitl_events_counter():
     if "hitl_events" not in _instruments:
         _instruments["hitl_events"] = meter.create_counter(
-            "helix_hitl_events_total",
+            "cymatix_hitl_events_total",
             description="Human-In-The-Loop pause events, labelled by pause_type "
                         "(permission_request / uncertainty_check / rollback_confirm "
                         "/ other) and party. Emitted on every successful "
                         "registry.emit_hitl_event write. Pair with "
-                        "helix_context_ellipticity to correlate HITL spikes with "
+                        "cymatix_context_ellipticity to correlate HITL spikes with "
                         "degraded context windows.",
         )
     return _instruments["hitl_events"]
@@ -604,7 +604,7 @@ def hitl_events_counter():
 def context_ellipticity_histogram():
     if "context_ellipticity" not in _instruments:
         _instruments["context_ellipticity"] = meter.create_histogram(
-            "helix_context_ellipticity",
+            "cymatix_context_ellipticity",
             description="Per-query ellipticity (geometric mean of coverage, density, "
                         "freshness, and optional logical_coherence). Range 0-1. "
                         ">=0.7 classified aligned; 0.3-0.7 sparse; <0.3 denatured. "
@@ -617,7 +617,7 @@ def context_ellipticity_histogram():
 def context_health_status_counter():
     if "context_health_status" not in _instruments:
         _instruments["context_health_status"] = meter.create_counter(
-            "helix_context_health_status_total",
+            "cymatix_context_health_status_total",
             description="/context call outcomes labelled by status (aligned | "
                         "sparse | stale | denatured). Watch the ratio: "
                         "aligned-dominant genome is healthy, rising sparse or "
@@ -629,7 +629,7 @@ def context_health_status_counter():
 def budget_tier_counter():
     if "budget_tier" not in _instruments:
         _instruments["budget_tier"] = meter.create_counter(
-            "helix_budget_tier_total",
+            "cymatix_budget_tier_total",
             description="Dynamic budget tier selected per /context call, labelled "
                         "by tier (tight | focused | broad | abstain). Tier reflects "
                         "retrieval confidence: tight = single-gene dominance, "
@@ -647,7 +647,7 @@ def ribosome_info_gauge():
     info-metric pattern -- the value is meaningless; the
     labels carry the data. Use in dashboards via:
 
-        helix_ribosome_info{cost_class="api+paid"}
+        cymatix_ribosome_info{cost_class="api+paid"}
 
     A red stat panel keyed on cost_class="api+paid" surfaces
     paid-backend operation in the dashboard view, complementing
@@ -655,7 +655,7 @@ def ribosome_info_gauge():
     """
     if "ribosome_info" not in _instruments:
         _instruments["ribosome_info"] = meter.create_gauge(
-            "helix_ribosome_info",
+            "cymatix_ribosome_info",
             description="Ribosome backend info; value=1, labels "
                         "{backend, model, cost_class} carry the data.",
         )
@@ -665,7 +665,7 @@ def ribosome_info_gauge():
 def vault_export_histogram():
     if "vault_export" not in _instruments:
         _instruments["vault_export"] = meter.create_histogram(
-            "helix_vault_export_seconds",
+            "cymatix_vault_export_seconds",
             unit="s",
             description="Latency of vault export operations.",
         )
@@ -675,7 +675,7 @@ def vault_export_histogram():
 def vault_pruner_histogram():
     if "vault_pruner" not in _instruments:
         _instruments["vault_pruner"] = meter.create_histogram(
-            "helix_vault_pruner_seconds",
+            "cymatix_vault_pruner_seconds",
             unit="s",
             description="Latency of one pruner cycle.",
         )
@@ -685,7 +685,7 @@ def vault_pruner_histogram():
 def vault_force_prune_counter():
     if "vault_force_prune" not in _instruments:
         _instruments["vault_force_prune"] = meter.create_counter(
-            "helix_vault_force_prune_total",
+            "cymatix_vault_force_prune_total",
             description="Pinned traces force-deleted per max_retention_hours_hard.",
         )
     return _instruments["vault_force_prune"]
@@ -695,7 +695,7 @@ def vault_file_count_gauge():
     """Imperative gauge — VaultManager.status() updates it on each call."""
     if "vault_file_count" not in _instruments:
         _instruments["vault_file_count"] = meter.create_gauge(
-            "helix_vault_file_count",
+            "cymatix_vault_file_count",
             description="Files in each vault folder (per `folder` label).",
         )
     return _instruments["vault_file_count"]
@@ -715,7 +715,7 @@ def pipeline_stage_histogram():
     """
     if "pipeline_stage" not in _instruments:
         _instruments["pipeline_stage"] = meter.create_histogram(
-            "helix_pipeline_stage_seconds",
+            "cymatix_pipeline_stage_seconds",
             unit="s",
             description="Latency of each /context pipeline stage.",
         )
@@ -725,19 +725,19 @@ def pipeline_stage_histogram():
 def pipeline_stage_span(stage: str, *, decoder_mode: Optional[str] = None):
     """Open a span bracketing one /context pipeline stage.
 
-    The span name is ``helix.pipeline.<stage>`` (e.g.
-    ``helix.pipeline.classify``). Use as a context manager around the
+    The span name is ``cymatix.pipeline.<stage>`` (e.g.
+    ``cymatix.pipeline.classify``). Use as a context manager around the
     stage's code block; pairs with ``pipeline_stage_histogram()`` so
     each stage emits BOTH a span (visible in Tempo as the per-request
     waterfall) AND a histogram point (visible in Prometheus as the
     aggregate latency distribution).
 
-    The root span ``helix.pipeline.build_context`` should wrap the full
+    The root span ``cymatix.pipeline.build_context`` should wrap the full
     /context handler so per-stage spans nest under it correctly.
 
     Returns the underlying tracer span; the caller can ``set_attribute``
-    additional helix-namespace fields (e.g. ``helix.cache_outcome``,
-    ``helix.context_block``).
+    additional cymatix-namespace fields (e.g. ``cymatix.cache_outcome``,
+    ``cymatix.context_block``).
 
     Args:
         stage: stage identifier, e.g. ``"classify"``, ``"extract"``,
@@ -746,16 +746,16 @@ def pipeline_stage_span(stage: str, *, decoder_mode: Optional[str] = None):
         decoder_mode: optional ``CallerModelClass`` value (``"generic"``,
             ``"small_moe"``, ``"frontier"``) to tag the stage's branch.
     """
-    cm = tracer.start_as_current_span(f"helix.pipeline.{stage}")
+    cm = tracer.start_as_current_span(f"cymatix.pipeline.{stage}")
     # The OTel tracer returns a context manager; the noop tracer
     # returns a _NoopSpan that is itself a context manager. Both
     # support the same protocol, so we wrap the entry/exit by hand
     # to be able to set attributes before yielding.
     span = cm.__enter__()
     try:
-        span.set_attribute("helix.pipeline.stage", stage)
+        span.set_attribute("cymatix.pipeline.stage", stage)
         if decoder_mode:
-            span.set_attribute("helix.pipeline.decoder_mode", decoder_mode)
+            span.set_attribute("cymatix.pipeline.decoder_mode", decoder_mode)
     except Exception:
         pass
     return _PipelineStageSpanCM(cm, span)
@@ -793,7 +793,7 @@ def ribosome_call_histogram():
     """
     if "ribosome_call" not in _instruments:
         _instruments["ribosome_call"] = meter.create_histogram(
-            "helix_ribosome_call_seconds",
+            "cymatix_ribosome_call_seconds",
             unit="s",
             description="Latency of each ribosome backend.complete() call, "
                         "labelled by backend, model, and call_kind.",
@@ -809,7 +809,7 @@ def genome_signal_histogram():
     """
     if "genome_signal" not in _instruments:
         _instruments["genome_signal"] = meter.create_histogram(
-            "helix_genome_signal_seconds",
+            "cymatix_genome_signal_seconds",
             unit="s",
             description="Latency of each retrieval signal inside query_genes(), "
                         "labelled by signal name.",
@@ -825,7 +825,7 @@ def genome_wal_size_gauge():
     """
     if "genome_wal_size" not in _instruments:
         _instruments["genome_wal_size"] = meter.create_gauge(
-            "helix_genome_wal_size_bytes",
+            "cymatix_genome_wal_size_bytes",
             unit="By",
             description="SQLite WAL file size in bytes. Spikes indicate "
                         "checkpoint pressure; sustained high values = WAL bloat.",
@@ -841,7 +841,7 @@ def genome_checkpoint_blocked_counter():
     """
     if "genome_checkpoint_blocked" not in _instruments:
         _instruments["genome_checkpoint_blocked"] = meter.create_counter(
-            "helix_genome_checkpoint_blocked_total",
+            "cymatix_genome_checkpoint_blocked_total",
             description="Number of WAL checkpoints that returned busy=1, "
                         "meaning a reader was holding a snapshot.",
         )
@@ -862,7 +862,7 @@ def dense_cosine_histogram():
     """
     if "dense_cosine" not in _instruments:
         _instruments["dense_cosine"] = meter.create_histogram(
-            "helix_dense_cosine",
+            "cymatix_dense_cosine",
             description="Raw cosine of each dense-tier hit, labelled by arm "
                         "(hot = BGE-M3 dense recall, cold = cold-tier ΣĒMA).",
         )
@@ -883,7 +883,7 @@ def rrf_fused_score_histogram():
     """
     if "rrf_fused_score" not in _instruments:
         _instruments["rrf_fused_score"] = meter.create_histogram(
-            "helix_rrf_fused_score",
+            "cymatix_rrf_fused_score",
             description="Post-fusion RRF score (fused reciprocal ranks + "
                         "re-rank additives) of each ranked document.",
         )
@@ -898,7 +898,7 @@ def shard_fanout_histogram():
     """
     if "shard_fanout" not in _instruments:
         _instruments["shard_fanout"] = meter.create_histogram(
-            "helix_shard_fanout",
+            "cymatix_shard_fanout",
             description="Number of shards consulted per ShardRouter query.",
         )
     return _instruments["shard_fanout"]
@@ -913,7 +913,7 @@ def shard_discrimination_histogram():
     """
     if "shard_discrimination" not in _instruments:
         _instruments["shard_discrimination"] = meter.create_histogram(
-            "helix_shard_discrimination",
+            "cymatix_shard_discrimination",
             description="Fraction of healthy shards consulted per ShardRouter "
                         "query (routed / known, 1.0 = no discrimination).",
         )
@@ -931,7 +931,7 @@ def know_decision_counter():
     """
     if "know_decision" not in _instruments:
         _instruments["know_decision"] = meter.create_counter(
-            "helix_know_decision_total",
+            "cymatix_know_decision_total",
             description="Know/miss discriminator outcomes, labelled by outcome "
                         "(know | miss | abstain) and miss reason.",
         )
@@ -948,7 +948,7 @@ def session_tokens_saved_counter():
     """
     if "session_tokens_saved" not in _instruments:
         _instruments["session_tokens_saved"] = meter.create_counter(
-            "helix_session_tokens_saved_total",
+            "cymatix_session_tokens_saved_total",
             description="Estimated tokens saved by session working-set elision "
                         "of already-delivered documents.",
         )
@@ -966,7 +966,7 @@ def splice_ratio_histogram():
     """
     if "splice_ratio" not in _instruments:
         _instruments["splice_ratio"] = meter.create_histogram(
-            "helix_splice_ratio",
+            "cymatix_splice_ratio",
             description="Splice compression ratio (raw_chars / compressed_chars) "
                         "per assembled context window, labelled by "
                         "caller_model_class.",
@@ -977,13 +977,13 @@ def splice_ratio_histogram():
 def know_confidence_histogram():
     """Histogram of KnowBlock.confidence (know outcomes only).
 
-    #209 phase 2: pairs with helix_know_decision_total — the confidence
+    #209 phase 2: pairs with cymatix_know_decision_total — the confidence
     distribution calibrates [know] emit_floor per corpus, and judged eval
     runs map it to P(correct) (goal-gates spec 2026-07-01).
     """
     if "know_confidence" not in _instruments:
         _instruments["know_confidence"] = meter.create_histogram(
-            "helix_know_confidence",
+            "cymatix_know_confidence",
             unit="1",
             description="KnowBlock confidence distribution, know outcomes only.",
         )
@@ -995,12 +995,12 @@ def abstain_counter():
 
     #209 phase 2: gate is floor_and_ratio (additive: both the absolute
     floor and the ratio tripped) or ratio_only (RRF: absolute floors
-    bypassed). Balancing partner of helix_splice_ratio — tuning that
+    bypassed). Balancing partner of cymatix_splice_ratio — tuning that
     raises compression but spikes abstains is a net loss.
     """
     if "abstain" not in _instruments:
         _instruments["abstain"] = meter.create_counter(
-            "helix_abstain_total",
+            "cymatix_abstain_total",
             description="ABSTAIN gate fires, labelled by gate "
                         "(floor_and_ratio | ratio_only) and fusion_mode.",
         )
@@ -1016,7 +1016,7 @@ def freshness_demotion_counter():
     """
     if "freshness_demotion" not in _instruments:
         _instruments["freshness_demotion"] = meter.create_counter(
-            "helix_freshness_demotion_total",
+            "cymatix_freshness_demotion_total",
             description="Freshness demotion-relevant events, labelled by "
                         "status (stale | missing | unknown | superseded).",
         )
@@ -1027,11 +1027,11 @@ def session_elided_counter():
     """Counter of documents replaced by an elision stub.
 
     #209 phase 2: the event-count companion of
-    helix_session_tokens_saved_total (docs elided vs tokens saved).
+    cymatix_session_tokens_saved_total (docs elided vs tokens saved).
     """
     if "session_elided" not in _instruments:
         _instruments["session_elided"] = meter.create_counter(
-            "helix_session_elided_total",
+            "cymatix_session_elided_total",
             description="Documents elided by the session working-set register.",
         )
     return _instruments["session_elided"]
@@ -1045,7 +1045,7 @@ def pki_candidates_histogram():
     """
     if "pki_candidates" not in _instruments:
         _instruments["pki_candidates"] = meter.create_histogram(
-            "helix_pki_candidates",
+            "cymatix_pki_candidates",
             unit="genes",
             description="Documents hit by >=1 path_key_index pair per query.",
         )
@@ -1061,7 +1061,7 @@ def pki_pairs_skipped_counter():
     """
     if "pki_pairs_skipped" not in _instruments:
         _instruments["pki_pairs_skipped"] = meter.create_counter(
-            "helix_pki_pairs_skipped_total",
+            "cymatix_pki_pairs_skipped_total",
             description="path_key_index pairs skipped by the noise cutoff.",
         )
     return _instruments["pki_pairs_skipped"]
@@ -1075,7 +1075,7 @@ def fingerprint_filtered_counter():
     """
     if "fingerprint_filtered" not in _instruments:
         _instruments["fingerprint_filtered"] = meter.create_counter(
-            "helix_fingerprint_filtered_total",
+            "cymatix_fingerprint_filtered_total",
             description="/fingerprint candidates dropped, labelled by cause "
                         "(floor | cap).",
         )
@@ -1090,7 +1090,7 @@ def ingest_vram_gauge():
     """
     if "ingest_vram" not in _instruments:
         _instruments["ingest_vram"] = meter.create_gauge(
-            "helix_ingest_vram_bytes",
+            "cymatix_ingest_vram_bytes",
             unit="By",
             description="torch.cuda.memory_allocated per dense ingest batch.",
         )

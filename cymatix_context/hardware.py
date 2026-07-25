@@ -1,4 +1,4 @@
-"""Hardware detection + device backend dispatch for helix-context.
+"""Hardware detection + device backend dispatch for cymatix-context.
 
 Single source of truth for which torch device backends consult. Auto-mode
 picker walks CUDA -> ROCm -> MPS -> CPU; explicit-device requests fall back
@@ -22,7 +22,7 @@ import platform
 from dataclasses import dataclass, field
 from typing import Any, Dict, Mapping, Optional
 
-log = logging.getLogger("helix.hardware")
+log = logging.getLogger("cymatix.hardware")
 
 _VALID_DEVICES = ("auto", "cuda", "rocm", "mps", "cpu")
 
@@ -31,19 +31,19 @@ def _resolve_requested_device(config_device: str = "auto") -> str:
     """Resolve the user's requested device.
 
     Order of precedence:
-      1. ``HELIX_DEVICE`` env var (operator override at launch).
-      2. ``config_device`` arg (from ``[hardware] device`` in helix.toml).
+      1. ``CYMATIX_DEVICE`` env var (operator override at launch).
+      2. ``config_device`` arg (from ``[hardware] device`` in cymatix.toml).
       3. ``"auto"`` (sentinel; the picker walks CUDA -> ROCm -> MPS -> CPU).
 
     Returns one of ``_VALID_DEVICES``; invalid env/config values log a
     warning and fall through to the next layer."""
-    env_value = os.environ.get("HELIX_DEVICE")
+    env_value = os.environ.get("CYMATIX_DEVICE")
     if env_value is not None:
         normalized = env_value.strip().lower()
         if normalized in _VALID_DEVICES:
             return normalized
         log.warning(
-            "Invalid HELIX_DEVICE=%r (valid: %s); ignoring HELIX_DEVICE",
+            "Invalid CYMATIX_DEVICE=%r (valid: %s); ignoring CYMATIX_DEVICE",
             env_value, ", ".join(_VALID_DEVICES),
         )
         # fall through to config / auto
@@ -459,17 +459,17 @@ def sqlite_memory_budget(n_shards: int, *,
                          available_bytes: Optional[int] = None) -> "SqliteMemPlan":
     """Resolve per-connection SQLite PRAGMA values for the host + shard count.
 
-    Profile via ``HELIX_MEM_PROFILE`` (default ``auto``):
+    Profile via ``CYMATIX_MEM_PROFILE`` (default ``auto``):
       auto         dynamic budget = (available - 25% reserve) / n_shards
       aggressive   same split, leaner 15% reserve + higher caps
       conservative byte-identical to v0.6.1 (mmap off, 2/4 MB caches)
       <N>gb        pin the TOTAL SQLite budget to N GiB, host-independent
 
     Hard overrides (win over the profile):
-      HELIX_SQLITE_MMAP_SIZE   per-conn mmap_size, in bytes
-      HELIX_SQLITE_CACHE_SIZE  raw cache_size pragma value (negative = KiB)
+      CYMATIX_SQLITE_MMAP_SIZE   per-conn mmap_size, in bytes
+      CYMATIX_SQLITE_CACHE_SIZE  raw cache_size pragma value (negative = KiB)
     """
-    profile = os.environ.get("HELIX_MEM_PROFILE", "auto").strip().lower()
+    profile = os.environ.get("CYMATIX_MEM_PROFILE", "auto").strip().lower()
 
     if profile == "conservative":
         plan = _conservative_plan()
@@ -487,8 +487,8 @@ def sqlite_memory_budget(n_shards: int, *,
             plan = _scaled_plan(max(0, avail - reserve), n_shards, mf, cap, cmax)
 
     # Hard env overrides win over the profile.
-    mmap_env = os.environ.get("HELIX_SQLITE_MMAP_SIZE")
-    cache_env = os.environ.get("HELIX_SQLITE_CACHE_SIZE")
+    mmap_env = os.environ.get("CYMATIX_SQLITE_MMAP_SIZE")
+    cache_env = os.environ.get("CYMATIX_SQLITE_CACHE_SIZE")
     if mmap_env or cache_env:
         mmap_size = int(mmap_env) if mmap_env else plan.mmap_size
         if cache_env:

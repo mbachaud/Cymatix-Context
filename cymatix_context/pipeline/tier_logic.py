@@ -58,7 +58,7 @@ def apply_budget_tiers(
     Dynamic budget tiers -- size the retrieval window based on
     retrieval confidence instead of always sending max_genes.
 
-    The insight: on a CURATED query ("what port does helix use?") the
+    The insight: on a CURATED query ("what port does cymatix use?") the
     top document will score 5-10x higher than #12. Sending 12 documents for a
     query with an obvious winner wastes 91% of the budget on padding
     and dilutes the small model's attention.
@@ -76,7 +76,7 @@ def apply_budget_tiers(
     (1.8), ``hard_floor_frac`` (0.15), ``lagrange_frac`` (0.7),
     ``abstain_ratio_threshold`` (1.8) and
     ``abstain_ratio_threshold_rrf_norm`` (1.5). They thread from
-    ``[budget]`` / ``[abstain]`` in helix.toml via the context_manager
+    ``[budget]`` / ``[abstain]`` in cymatix.toml via the context_manager
     call site. All were calibrated on owner-corpus probes at the
     additive/BM25 score scale; under RRF the abstain *absolute* floors
     are bypassed and the (normalized) ratio gate runs alone (issue
@@ -150,7 +150,7 @@ def apply_budget_tiers(
     # 2026-05-14 medium-sharded probe (post-refiner):
     #
     #   query             legacy   norm
-    #   helix_port         1.77    2.02
+    #   cymatix_port         1.77    2.02
     #   biged_skills       1.57    1.61
     #   scorerift          1.46    2.32
     #   all-tied           1.00    0.00  (correctly abstains)

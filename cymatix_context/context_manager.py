@@ -1,5 +1,5 @@
 """
-HelixContextManager -- The pipeline orchestrator.
+CymatixContextManager -- The pipeline orchestrator.
 
 Orchestrates the full /context pipeline per turn:
     1. Extract tags signals from query (heuristic, no model)
@@ -29,7 +29,7 @@ from typing import Dict, List, Optional, Tuple
 
 from .accel import extract_query_signals, estimate_tokens
 from .codons import CodonChunker, CodonEncoder
-from .config import HelixConfig
+from .config import CymatixConfig
 from .exceptions import PromoterMismatch
 from .genome import Genome
 from .budget_zone import is_enabled as _budget_zone_is_enabled, zone_cap as _budget_zone_cap
@@ -49,7 +49,7 @@ from .schemas import (
     StructuralRelation,
 )
 
-log = logging.getLogger("helix.context_manager")
+log = logging.getLogger("cymatix.context_manager")
 
 
 # ── Stage-timer context manager ──────────────────────────────────────
@@ -119,8 +119,8 @@ def _apply_symbol_expansion_cap(genome, cap: int) -> None:
 
 
 def _pipeline_ring_enabled() -> bool:
-    """The ring is on by default; disable with HELIX_PIPELINE_RING=0."""
-    return os.environ.get("HELIX_PIPELINE_RING", "1").strip().lower() not in (
+    """The ring is on by default; disable with CYMATIX_PIPELINE_RING=0."""
+    return os.environ.get("CYMATIX_PIPELINE_RING", "1").strip().lower() not in (
         "0", "false", "off", "no",
     )
 
@@ -170,7 +170,7 @@ def _shorten_source_path(src: str, anchors) -> str:
 
 
 class _stage_timer:
-    """Context manager that records helix_pipeline_stage_seconds on exit."""
+    """Context manager that records cymatix_pipeline_stage_seconds on exit."""
 
     __slots__ = ("stage", "labels", "_t0")
 
@@ -205,7 +205,7 @@ class _stage_timer:
             pass
 
 # Thread pool for running sync compressor calls from async context
-_executor = ThreadPoolExecutor(max_workers=2, thread_name_prefix="helix-ribosome")
+_executor = ThreadPoolExecutor(max_workers=2, thread_name_prefix="cymatix-ribosome")
 
 
 # -- Compressor decoder prompt (3k fixed, tells the big model how to read context) --
@@ -411,12 +411,12 @@ RIBOSOME_DECODER = DECODER_FULL
 # difference is observable only via context_health.status.
 #
 # Stage 6 (2026-05-08): the prose marker is replaced with a structured
-# `<helix:no_match reason="..." do_not_answer="true"/>` token so a
+# `<cymatix:no_match reason="..." do_not_answer="true"/>` token so a
 # frontier agent can branch on a tag rather than a string match. The
 # four spec-defined reasons (§6) map 1:1 onto the MissBlock.reason
 # enum. _ABSTAIN_MARKER is kept for one release as a deprecated alias
 # to keep tests/test_abstain_tier.py passing without modification.
-_NO_MATCH_TAG = '<helix:no_match reason="{reason}" do_not_answer="true"/>'
+_NO_MATCH_TAG = '<cymatix:no_match reason="{reason}" do_not_answer="true"/>'
 
 
 def _no_match_token(reason: str) -> str:
@@ -431,7 +431,7 @@ def _no_match_token(reason: str) -> str:
     Legacy-compat surface (ADR 2026-05-14, Q3). The four whitelisted
     reasons are the pre-Stage-7 contract. Stage 7 added
     ``stale``/``cold``/``superseded`` to ``MissBlock.reason``; those
-    reasons are NOT emitted as inline ``<helix:no_match/>`` tags by
+    reasons are NOT emitted as inline ``<cymatix:no_match/>`` tags by
     design, because Stage 7 demotions ship non-empty expressed context
     (the data is shown with ``stale_risk`` + ``refresh_targets``),
     which is semantically incompatible with the tag's
@@ -526,8 +526,8 @@ def _compute_splice_target(
 # Stage 5 (2026-05-08) §5: small_moe slate render — JSON-shaped, char-bounded,
 # greedy-fill ordered by per-KV score (best-first; caller sorts upstream).
 # See docs/specs/2026-05-08-stage-5-caller-model-class.md §5.
-_SLATE_WRAPPER_OPEN = "<helix:slate>"
-_SLATE_WRAPPER_CLOSE = "</helix:slate>"
+_SLATE_WRAPPER_OPEN = "<cymatix:slate>"
+_SLATE_WRAPPER_CLOSE = "</cymatix:slate>"
 _SLATE_MIN_VALUE_CHARS = 8  # Truncation rule per spec §5.
 
 
@@ -547,8 +547,8 @@ def _render_small_moe_slate(
     The budget counts the rendered string the model actually sees, INCLUDING
     the wrapper tag, the JSON braces/quotes/commas, and per-KV separators.
 
-    Returns the wrapped slate string `<helix:slate>{...}</helix:slate>` or an
-    empty wrapper `<helix:slate>{}</helix:slate>` if no KV fits.
+    Returns the wrapped slate string `<cymatix:slate>{...}</cymatix:slate>` or an
+    empty wrapper `<cymatix:slate>{}</cymatix:slate>` if no KV fits.
     """
     import json as _json
     # Reserve room for wrapper + the empty-object braces.
@@ -766,28 +766,28 @@ def _merge_caller_tags(gene: Gene, metadata: Optional[Dict]) -> None:
         )
 
 
-class HelixContextManager:
+class CymatixContextManager:
     """
     Main orchestrator. Sits between the client and the upstream LLM.
 
     Usage:
-        helix = HelixContextManager(config)
-        helix.ingest("some long document")
+        cymatix = CymatixContextManager(config)
+        cymatix.ingest("some long document")
 
         # Per turn:
-        window = helix.build_context("user query")
+        window = cymatix.build_context("user query")
         # Inject window into the LLM request
 
         # After response:
-        helix.learn("user query", "assistant response")
+        cymatix.learn("user query", "assistant response")
     """
 
-    def __init__(self, config: HelixConfig):
+    def __init__(self, config: CymatixConfig):
         self.config = config
 
         # Blend-layer mode (Issue #255 / audit §4 item 5). "legacy" is
         # byte-identical to the shipped additive blend. Validated first so a
-        # typo in helix.toml fails fast — before any genome construction —
+        # typo in cymatix.toml fails fast — before any genome construction —
         # mirroring the store's rerank_combinator guard.
         from .scoring.blend import VALID_BLEND_MODES as _VALID_BLEND_MODES
         self._blend_mode = config.retrieval.blend_mode
@@ -813,7 +813,7 @@ class HelixContextManager:
             # In-memory tests: keep metrics in-memory too (write to a tmp path
             # that we won't actually flush; persistence is opt-in via flush()).
             import tempfile as _tempfile
-            _metrics_path = _Path(_tempfile.gettempdir()) / "helix_metrics_test.json"
+            _metrics_path = _Path(_tempfile.gettempdir()) / "cymatix_metrics_test.json"
         else:
             _metrics_path = _genome_path.parent / "metrics.json"
         self.token_counter: TokenCounter = TokenCounter(persist_path=_metrics_path)
@@ -864,7 +864,7 @@ class HelixContextManager:
         self._dense_codec = None  # type: ignore[var-annotated]
 
         # KnowledgeStore (SQLite storage) — swapped for a ShardedGenomeAdapter when
-        # HELIX_USE_SHARDS=1 and the configured path is a routing DB. Writes
+        # CYMATIX_USE_SHARDS=1 and the configured path is a routing DB. Writes
         # become no-ops in that mode; suitable for read-heavy serving and
         # benchmarks until ingest-time sharding (spec Task 6) lands.
         from .sharding import open_read_source
@@ -894,7 +894,7 @@ class HelixContextManager:
             seeded_edges_enabled=config.retrieval.seeded_edges_enabled,
             filename_anchor_enabled=(
                 config.retrieval.filename_anchor_enabled
-                or os.environ.get("HELIX_FILENAME_ANCHOR_ENABLED", "").lower()
+                or os.environ.get("CYMATIX_FILENAME_ANCHOR_ENABLED", "").lower()
                 in {"1", "true", "yes", "on"}
             ),
             filename_anchor_weight=config.retrieval.filename_anchor_weight,
@@ -947,7 +947,7 @@ class HelixContextManager:
             # Tier-0 review fix (2026-05-16): additive-mode dense merge noise floor.
             dense_additive_min_cosine=config.retrieval.dense_additive_min_cosine,
             # Semantic-wiring arm (2026-06-02): scoped dense weight + broaden
-            # routing for query_type=="semantic" under HELIX_SEMANTIC_ARM.
+            # routing for query_type=="semantic" under CYMATIX_SEMANTIC_ARM.
             # Fanned to the solo Genome AND every per-shard Genome (open_read_source
             # -> ShardedGenomeAdapter -> ShardRouter -> Genome). Default-off.
             semantic_dense_additive_weight=config.retrieval.semantic_dense_additive_weight,
@@ -1025,7 +1025,7 @@ class HelixContextManager:
                 log.warning("LiteLLMBackend failed to load, disabling ribosome", exc_info=True)
         elif effective_backend == "deberta":
             def _build_deberta_ribosome(
-                _config: HelixConfig = config,
+                _config: CymatixConfig = config,
                 _encoder: CodonEncoder = self.encoder,
             ):
                 """Construct the DeBERTa hybrid ribosome (two DeBERTa-v3 loads).
@@ -1605,11 +1605,11 @@ class HelixContextManager:
                 used for per-request MoE/small-model detection.
             include_cold: per-request override for cold-tier retrieval.
                 ``None`` (default) honors the ``[context] cold_tier_enabled``
-                config flag in helix.toml. ``True`` forces cold-tier on,
+                config flag in cymatix.toml. ``True`` forces cold-tier on,
                 ``False`` forces it off. Plumbed from the /context endpoint's
                 ``include_cold`` body parameter.
             session_context: optional dict carrying the caller's working
-                context — typically ``{"active_project": "helix-context",
+                context — typically ``{"active_project": "cymatix-context",
                 "active_files": ["cymatix_context/genome.py", ...]}``. The
                 path-tokens of these are appended to the entity list so
                 the path_key_index tier in ``query_genes`` can fire on
@@ -1620,7 +1620,7 @@ class HelixContextManager:
                 preserves the previous behaviour exactly.
             query_type: optional per-call retrieval-intent hint (semantic-wiring
                 arm, PRD 2026-06-02). Forwarded to ``_retrieve`` → sharded
-                ``query_docs`` so that ``"semantic"`` + HELIX_SEMANTIC_ARM=1
+                ``query_docs`` so that ``"semantic"`` + CYMATIX_SEMANTIC_ARM=1
                 broadens routing and scopes the dense weight. ``None`` (default)
                 or any other value with the arm off is inert / byte-identical —
                 production /context callers omit it; the bench injects the
@@ -1629,13 +1629,13 @@ class HelixContextManager:
             max_genes: optional per-call cap on assembled documents.
                 ``None`` (default) honors the static ``[budget]
                 max_genes_per_turn`` config. Plumbed from
-                ``HelixSession.query(k=...)`` / ``helix query --k``.
+                ``CymatixSession.query(k=...)`` / ``cymatix query --k``.
                 Clamped to >= 1; downstream caps (budget-zone, classifier,
                 caller_model_class) can still lower it further.
         """
-        # Root span for the per-turn pipeline: every helix.pipeline.<stage>
+        # Root span for the per-turn pipeline: every cymatix.pipeline.<stage>
         # span opened inside the impl nests under
-        # helix.pipeline.build_context (the Tempo waterfall root promised
+        # cymatix.pipeline.build_context (the Tempo waterfall root promised
         # by docs/architecture/OBSERVABILITY.md). The impl split keeps the
         # span open across every return path (normal, empty-genome,
         # abstain). Span-only — stage durations are recorded exactly once,
@@ -1748,15 +1748,15 @@ class HelixContextManager:
         if max_genes is None:
             max_genes = self.config.budget.max_genes_per_turn
         else:
-            # Explicit caller cap (HelixSession.query(k=...)) overrides the
+            # Explicit caller cap (CymatixSession.query(k=...)) overrides the
             # static [budget] max_genes_per_turn for this call only.
             max_genes = max(1, int(max_genes))
 
         # ABSTAIN gate enable-state: config flag AND no env override.
-        # Resolved per-call so HELIX_ABSTAIN_DISABLE flips without restart.
+        # Resolved per-call so CYMATIX_ABSTAIN_DISABLE flips without restart.
         abstain_enabled = (
             self.config.budget.abstain_enabled
-            and not _env_truthy("HELIX_ABSTAIN_DISABLE")
+            and not _env_truthy("CYMATIX_ABSTAIN_DISABLE")
         )
 
         # Budget-zone cap (spike) — clamp max_genes down when the caller's
@@ -2114,7 +2114,7 @@ class HelixContextManager:
         )
         _splice_terms = list(dict.fromkeys([*domains, *entities]))
         # Splice stage (covers the compress_text loop over all documents):
-        # _stage_timer records the helix_pipeline_stage_seconds point
+        # _stage_timer records the cymatix_pipeline_stage_seconds point
         # (replacing the former manual _splice_t0 record — exactly one
         # duration per stage), the span feeds the Tempo waterfall.
         with _pipeline_stage_span("splice"), _stage_timer("splice"):
@@ -2371,10 +2371,10 @@ class HelixContextManager:
         Returns gene_id or None on failure.
         """
         # Persist stage (Step 6). learn() runs as a background task after
-        # the response ships, so its helix.pipeline.persist span is NOT a
-        # child of the helix.pipeline.build_context root span (the root
+        # the response ships, so its cymatix.pipeline.persist span is NOT a
+        # child of the cymatix.pipeline.build_context root span (the root
         # closed with the request); _stage_timer still feeds the persist
-        # bucket of helix_pipeline_stage_seconds.
+        # bucket of cymatix_pipeline_stage_seconds.
         #
         # In the embedded sync flow learn() runs on the caller's thread,
         # where _pipeline_request_id still holds the previous
@@ -2780,7 +2780,7 @@ class HelixContextManager:
         ``query_type`` (semantic-wiring arm, PRD 2026-06-02) is forwarded to the
         sharded ``query_docs`` path so the router can broaden routing and the
         per-shard merge can scope the dense weight when it is "semantic" and
-        HELIX_SEMANTIC_ARM=1. Defaults to None (arm inert). The dense-ANN solo
+        CYMATIX_SEMANTIC_ARM=1. Defaults to None (arm inert). The dense-ANN solo
         branch is intentionally NOT threaded — the arm is sharded-only.
 
         Parameters
@@ -2794,7 +2794,7 @@ class HelixContextManager:
             cold-tier is skipped even if config-enabled.
         include_cold : bool, optional
             Per-call override of the ``[context] cold_tier_enabled``
-            flag in helix.toml. ``None`` (default) uses the config flag,
+            flag in cymatix.toml. ``None`` (default) uses the config flag,
             ``True`` forces cold-tier on, ``False`` forces it off.
             Plumbed from the /context endpoint's ``include_cold`` body
             parameter so callers can opt in/out per request without
@@ -2924,7 +2924,7 @@ class HelixContextManager:
         See docs/specs/2026-05-02-abstain-tier-design.md §4. Distinct from the
         empty-candidates branch (above, in build_context) only on
         context_health.status — the LLM-visible bytes are identical
-        (both ship the abstain form of <helix:no_match/>).
+        (both ship the abstain form of <cymatix:no_match/>).
 
         Stage 6 (§6): the bytes are now the structured tag rather than
         the prose marker. ``_ABSTAIN_MARKER`` is preserved as the same
@@ -3232,7 +3232,7 @@ class HelixContextManager:
         # so they land in the first ~200 tokens (inside every SWA window).
         #
         # Stage 5 (2026-05-08) §5: small_moe gets a JSON-shaped, char-bounded
-        # slate wrapped in <helix:slate>...</helix:slate>. Generic preserves
+        # slate wrapped in <cymatix:slate>...</cymatix:slate>. Generic preserves
         # the legacy newline-joined 20-entry cap (regression baseline).
         if answer_slate:
             # Dedupe in arrival order (caller ordered them per §5 already).

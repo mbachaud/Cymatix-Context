@@ -3,7 +3,7 @@ Symbol-graph personalized PageRank (WS3).
 
 Ranks code chunks by *structural centrality* over the WS2 symbol graph, then
 the assembler trims the candidate set to budget by this centrality. This is
-Aider's repo-map recipe pointed at Helix's graph: a definition that many
+Aider's repo-map recipe pointed at Cymatix's graph: a definition that many
 retrieved chunks reference is structurally central and should be kept.
 
 Edge direction: a ``SYMBOL_REF`` edge runs referencing-chunk -> defining-chunk,
@@ -15,7 +15,7 @@ user's query (Aider's 10x) and chunks already delivered this session (Aider's
 
 Pure CPU, no model, no neural inference — graph arithmetic over a
 **candidate-local** subgraph (the retrieved set + its 1-hop neighbourhood), so
-it stays cheap and respects Helix's no-query-time-inference posture. Pure-Python
+it stays cheap and respects Cymatix's no-query-time-inference posture. Pure-Python
 (no numpy dependency), following the cymatics.py / tcm.py pattern.
 
 This is an additive fusion tier *under* the lexical tiers, never a gate — an
@@ -26,7 +26,7 @@ from __future__ import annotations
 import logging
 from typing import Dict, Iterable, List, Optional, Sequence, Tuple
 
-log = logging.getLogger("helix.symbol_pagerank")
+log = logging.getLogger("cymatix.symbol_pagerank")
 
 # Aider-style restart weights for the personalization vector.
 QUERY_SYMBOL_WEIGHT = 10.0    # chunk defines/references an identifier in the query

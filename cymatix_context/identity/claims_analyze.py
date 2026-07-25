@@ -37,7 +37,7 @@ from typing import Iterable, Optional
 
 from ..shard_schema import upsert_claim_edge
 
-log = logging.getLogger("helix.claims_analyze")
+log = logging.getLogger("cymatix.claims_analyze")
 
 
 # Entity keys too generic to meaningfully compare. Tune as we see

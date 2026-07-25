@@ -19,7 +19,7 @@ from typing import Optional
 
 import httpx
 
-log = logging.getLogger("helix.launcher.observability_health")
+log = logging.getLogger("cymatix.launcher.observability_health")
 
 _POLL_INTERVAL_S = 0.5
 

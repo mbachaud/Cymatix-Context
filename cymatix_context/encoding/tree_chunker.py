@@ -35,7 +35,7 @@ from __future__ import annotations
 import logging
 from typing import Dict, List, Optional, Tuple
 
-log = logging.getLogger("helix.tree_chunker")
+log = logging.getLogger("cymatix.tree_chunker")
 
 
 # ── Language detection from file path ────────────────────────────

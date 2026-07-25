@@ -1,6 +1,6 @@
 """Bounded lexical rescue for full-stack source fetching.
 
-Helix should not become plain BM25, but BM25 is an excellent safety net
+Cymatix should not become plain BM25, but BM25 is an excellent safety net
 for tiny literal needles. This module returns a small ordered list of
 source_ids from ``genes_fts`` so callers can merge them after packet
 sources and before DAL fetch.
@@ -94,7 +94,7 @@ def _source_path_bonus(source_id: str, query_terms: set[str]) -> float:
     # naming a whole path segment (directory, filename, or filename stem)
     # is strong evidence the source belongs to the thing being asked about.
     # Applied once per path. Replaces the pre-public hardwired boosts for
-    # this repository's own paths ("helix-context", "/helix.toml") and the
+    # this repository's own paths ("cymatix-context", "/cymatix.toml") and the
     # owner-specific "/_worktrees/" penalty, so rescue scoring stays
     # corpus-neutral.
     segments = _path_segments(path)
@@ -114,7 +114,7 @@ def lexical_rescue_sources(
 ) -> list[str]:
     """Return a tiny BM25-ranked source-id rescue list.
 
-    ``exclude_source_ids`` lets callers keep Helix packet sources first
+    ``exclude_source_ids`` lets callers keep Cymatix packet sources first
     and only use BM25 to fill gaps.
     """
     match_expr = _fts_match_expr(query)

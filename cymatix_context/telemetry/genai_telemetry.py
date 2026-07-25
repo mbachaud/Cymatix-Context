@@ -1,16 +1,16 @@
 """
-OpenTelemetry GenAI semantic-convention instrumentation for helix-context.
+OpenTelemetry GenAI semantic-convention instrumentation for cymatix-context.
 
-This module is the helix-context-side implementation of the OTel `gen_ai.*`
+This module is the cymatix-context-side implementation of the OTel `gen_ai.*`
 semantic conventions (https://opentelemetry.io/docs/specs/semconv/gen-ai/).
 It is the *standard* observability surface for every LLM-touching call site
 in the codebase: the proxy `/v1/chat/completions` handler, the compressor
 (legacy: ribosome) backends, the local embedding/scoring backends.
 
-It is intentionally separate from `otel.py` (which owns helix-domain
+It is intentionally separate from `otel.py` (which owns cymatix-domain
 metrics like tier_contribution, chromatin_state, cwola_bucket) because the
 two surfaces evolve on different cadences:
-  * `otel.py` follows helix's internal data-model evolution
+  * `otel.py` follows cymatix's internal data-model evolution
   * `genai_telemetry.py` follows the upstream OTel GenAI spec
 
 Both modules share the same OTel SDK initialised by ``setup_telemetry()`` in
@@ -28,7 +28,7 @@ Usage at a call site::
         provider="ollama",
         model=model_name,
         request_attributes={"temperature": 0.0, "max_tokens": 256},
-        helix_attributes={"helix.ribosome.operation": "rerank"},
+        cymatix_attributes={"cymatix.ribosome.operation": "rerank"},
     ) as span:
         first_chunk_t = None
         async for chunk in upstream_stream():
@@ -55,7 +55,7 @@ Standards reference:
     https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-metrics/
 
 The price table is intentionally small and lives in this module. To extend
-it, edit ``PRICE_TABLE`` below. A helix.toml-driven override is a future
+it, edit ``PRICE_TABLE`` below. A cymatix.toml-driven override is a future
 nice-to-have but not required for v1; unknown models simply report cost=0.
 """
 
@@ -72,11 +72,11 @@ from typing import Any, Iterable, Mapping, Optional
 # ``from .otel import meter, tracer``. setup_telemetry() *reassigns*
 # otel.meter / otel.tracer module globals when it initialises the real
 # SDK; an import-by-value here would freeze the pre-setup no-op objects
-# and every helix_genai_* panel would render empty forever (the exact
+# and every cymatix_genai_* panel would render empty forever (the exact
 # defect class #209 was filed about).
 from . import otel as _otel
 
-log = logging.getLogger("helix.genai_telemetry")
+log = logging.getLogger("cymatix.genai_telemetry")
 
 # ── Module-level instrument cache ───────────────────────────────────────
 # Mirrors the pattern in otel.py: lazy-create on first access so that
@@ -87,8 +87,8 @@ _instruments: dict[str, Any] = {}
 def genai_token_usage_histogram():
     """Histogram of per-call token counts.
 
-    Spec name: ``gen_ai.client.token.usage``. We prefix with ``helix_``
-    because every helix metric is namespaced (``helix_*``); the OTel spec
+    Spec name: ``gen_ai.client.token.usage``. We prefix with ``cymatix_``
+    because every cymatix metric is namespaced (``cymatix_*``); the OTel spec
     name lives in the histogram description for grep-discoverability.
     Attributes: ``gen_ai.operation.name``, ``gen_ai.provider.name``,
     ``gen_ai.request.model``, ``gen_ai.response.model``,
@@ -96,7 +96,7 @@ def genai_token_usage_histogram():
     """
     if "token_usage" not in _instruments:
         _instruments["token_usage"] = _otel.meter.create_histogram(
-            "helix_genai_client_token_usage",
+            "cymatix_genai_client_token_usage",
             unit="{token}",
             description="OTel gen_ai.client.token.usage — per-call token counts "
                         "split by direction (input|output|cached|reasoning).",
@@ -112,7 +112,7 @@ def genai_ttft_histogram():
     """
     if "ttft" not in _instruments:
         _instruments["ttft"] = _otel.meter.create_histogram(
-            "helix_genai_time_to_first_chunk_seconds",
+            "cymatix_genai_time_to_first_chunk_seconds",
             unit="s",
             description="Time from request send to first content chunk for "
                         "streaming LLM responses (gen_ai.response."
@@ -131,11 +131,11 @@ def genai_cost_histogram():
     if "cost" not in _instruments:
         # No OTel unit annotation: the collector's Prometheus exporter
         # appends non-annotation units to the metric name, which would
-        # publish helix_genai_cost_usd_USD_* and orphan the dashboard's
-        # helix_genai_cost_usd_sum queries. The name already carries the
+        # publish cymatix_genai_cost_usd_USD_* and orphan the dashboard's
+        # cymatix_genai_cost_usd_sum queries. The name already carries the
         # unit; test_telemetry_phase1 pins the translation contract.
         _instruments["cost"] = _otel.meter.create_histogram(
-            "helix_genai_cost_usd",
+            "cymatix_genai_cost_usd",
             description="Estimated USD cost per LLM call, derived from "
                         "PRICE_TABLE. 0.0 for local/unpriced models.",
         )
@@ -145,7 +145,7 @@ def genai_cost_histogram():
 def genai_finish_reasons_counter():
     if "finish_reasons" not in _instruments:
         _instruments["finish_reasons"] = _otel.meter.create_counter(
-            "helix_genai_finish_reasons_total",
+            "cymatix_genai_finish_reasons_total",
             description="LLM response finish reasons (stop, length, "
                         "tool_calls, content_filter, error, ...).",
         )
@@ -160,7 +160,7 @@ def cache_outcome_counter():
     """
     if "cache_outcome" not in _instruments:
         _instruments["cache_outcome"] = _otel.meter.create_counter(
-            "helix_context_cache_outcome_total",
+            "cymatix_context_cache_outcome_total",
             description="/context cache outcomes — hit | miss | partial.",
         )
     return _instruments["cache_outcome"]
@@ -174,7 +174,7 @@ def cache_outcome_counter():
 #
 # Local-inference models report 0.0 — they are amortized hardware, not
 # per-token spend. If you want to track local-inference cost, override
-# this table from helix.toml in a follow-up.
+# this table from cymatix.toml in a follow-up.
 PRICE_TABLE: dict[str, dict[str, float]] = {
     # Anthropic — checked 2026-05-10
     "claude-opus-4-7":     {"input": 15.00, "output": 75.00, "cached": 1.50},
@@ -239,7 +239,7 @@ def llm_span(
     provider: str,
     model: str,
     request_attributes: Optional[Mapping[str, Any]] = None,
-    helix_attributes: Optional[Mapping[str, Any]] = None,
+    cymatix_attributes: Optional[Mapping[str, Any]] = None,
 ):
     """Open a CLIENT-kind span for a single LLM call following OTel GenAI
     semantic conventions.
@@ -260,8 +260,8 @@ def llm_span(
         request_attributes: Optional ``{temperature, top_p, top_k, max_tokens,
             seed, stream}``. Keys without the ``gen_ai.request.`` prefix are
             normalized for you.
-        helix_attributes: Helix-namespace extras (``helix.ribosome.operation``,
-            ``helix.pipeline.stage``, ``helix.cache_outcome``).
+        cymatix_attributes: Cymatix-namespace extras (``cymatix.ribosome.operation``,
+            ``cymatix.pipeline.stage``, ``cymatix.cache_outcome``).
     """
     span_name = f"{operation} {model}".strip()
     span = _otel.tracer.start_as_current_span(span_name)
@@ -280,8 +280,8 @@ def llm_span(
                     continue
                 key = k if k.startswith("gen_ai.") else f"gen_ai.request.{k}"
                 actual.set_attribute(key, v)
-        if helix_attributes:
-            for k, v in helix_attributes.items():
+        if cymatix_attributes:
+            for k, v in cymatix_attributes.items():
                 if v is None:
                     continue
                 actual.set_attribute(k, v)
@@ -465,8 +465,8 @@ def extract_openai_usage(usage: Any) -> dict[str, int]:
 
 # Logger configured separately so OTel's logging handler (when enabled)
 # routes these lines to Loki tagged with the trace context. The name is
-# stable so a Loki LogQL filter can pin to ``logger="helix.proxy"``.
-_proxy_log = logging.getLogger("helix.proxy")
+# stable so a Loki LogQL filter can pin to ``logger="cymatix.proxy"``.
+_proxy_log = logging.getLogger("cymatix.proxy")
 
 
 def emit_proxy_log_line(
@@ -493,10 +493,10 @@ def emit_proxy_log_line(
     The line carries everything a future analyst needs to replay the
     request without storing the prompt itself: request_id, trace_id,
     model + provider, token counts split four ways, TTFT and total
-    latency, finish_reason, cost estimate, helix-cache outcome, and
+    latency, finish_reason, cost estimate, cymatix-cache outcome, and
     the know/miss/none classification of the injected context block.
 
-    Sink: ``helix.proxy`` logger at INFO. With OTel's logging handler
+    Sink: ``cymatix.proxy`` logger at INFO. With OTel's logging handler
     configured, it flows to Loki tagged with the active trace context
     so dashboards can pivot from a slow span to its log line.
     """
@@ -516,7 +516,7 @@ def emit_proxy_log_line(
         "total_ms": total_ms,
         "finish_reason": finish_reason,
         "cost_usd_estimate": cost_usd_estimate,
-        "helix": {
+        "cymatix": {
             "cache_outcome": cache_outcome,
             "context_block": context_block,
         },

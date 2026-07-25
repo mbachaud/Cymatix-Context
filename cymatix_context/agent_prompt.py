@@ -1,15 +1,15 @@
-"""Importable agent-prompt fragments for the Helix know/miss contract.
+"""Importable agent-prompt fragments for the Cymatix know/miss contract.
 
 Spec: docs/specs/2026-05-08-stage-6-know-miss-blocks.md §12 +
       docs/specs/2026-05-08-stage-7-freshness-gate.md §12.
 
 The Stage 6 machine-tagged contract is load-bearing only if the
 frontier agent's system prompt teaches it to honor the
-``<helix:no_match/>`` tag and the ``do_not_answer_from_genome=true``
+``<cymatix:no_match/>`` tag and the ``do_not_answer_from_genome=true``
 field. This module exposes the fragment as a Python constant so callers
 can prepend it to the system prompt without parsing markdown.
 
-Stage 7 (2026-05-08) adds ``HELIX_REFRESH_FRAGMENT`` for the new
+Stage 7 (2026-05-08) adds ``CYMATIX_REFRESH_FRAGMENT`` for the new
 ``recommendation="refresh"`` branch — distinct from ``"escalate"`` —
 plus a ``full_fragment()`` helper that concatenates both for callers
 that want the full instruction set in one string.
@@ -22,8 +22,8 @@ is the programmatic mirror.
 from __future__ import annotations
 
 
-HELIX_NO_MATCH_FRAGMENT: str = """\
-HELIX KNOW/MISS retrieval returns one of two top-level blocks at every
+CYMATIX_NO_MATCH_FRAGMENT: str = """\
+CYMATIX KNOW/MISS retrieval returns one of two top-level blocks at every
 /context call:
 
   know { found, confidence, gene_id_match, ... }
@@ -33,7 +33,7 @@ HELIX KNOW/MISS retrieval returns one of two top-level blocks at every
 
   miss { reason, escalate_to, do_not_answer_from_genome:true, ... }
     -- Retrieval did NOT find it. The expressed_context bytes will
-       contain a <helix:no_match reason="..." do_not_answer="true"/>
+       contain a <cymatix:no_match reason="..." do_not_answer="true"/>
        tag. When you see this tag OR a `miss` block:
 
        1. DO NOT answer from the genome content.
@@ -45,7 +45,7 @@ HELIX KNOW/MISS retrieval returns one of two top-level blocks at every
             - "rag"       call the project RAG retriever
             - "web"       fetch from the open web
             - "ask_human" surface the question to the operator
-       4. Pick the FIRST tool in the list. Helix orders them by
+       4. Pick the FIRST tool in the list. Cymatix orders them by
           expected information-yield for the query shape.
 
 `miss.reason` tells you WHY the genome failed:
@@ -56,8 +56,8 @@ HELIX KNOW/MISS retrieval returns one of two top-level blocks at every
 """
 
 
-HELIX_REFRESH_FRAGMENT: str = """\
-HELIX REFRESH branch — Stage 7 contract.
+CYMATIX_REFRESH_FRAGMENT: str = """\
+CYMATIX REFRESH branch — Stage 7 contract.
 
 If `recommendation` is "refresh" (NOT "escalate"):
   The genome found a candidate but the underlying source is stale,
@@ -87,13 +87,13 @@ def full_fragment() -> str:
 
     Convenience for callers that want the full instruction set in a
     single string (e.g., system-prompt prefix injectors). Identical
-    to ``HELIX_NO_MATCH_FRAGMENT + "\\n\\n" + HELIX_REFRESH_FRAGMENT``.
+    to ``CYMATIX_NO_MATCH_FRAGMENT + "\\n\\n" + CYMATIX_REFRESH_FRAGMENT``.
     """
-    return HELIX_NO_MATCH_FRAGMENT + "\n\n" + HELIX_REFRESH_FRAGMENT
+    return CYMATIX_NO_MATCH_FRAGMENT + "\n\n" + CYMATIX_REFRESH_FRAGMENT
 
 
 __all__ = [
-    "HELIX_NO_MATCH_FRAGMENT",
-    "HELIX_REFRESH_FRAGMENT",
+    "CYMATIX_NO_MATCH_FRAGMENT",
+    "CYMATIX_REFRESH_FRAGMENT",
     "full_fragment",
 ]

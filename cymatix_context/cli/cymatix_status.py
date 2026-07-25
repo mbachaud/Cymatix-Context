@@ -1,7 +1,7 @@
 """
-Helix status CLI — quick operator check for the canonical Helix setup.
+Cymatix status CLI — quick operator check for the canonical Cymatix setup.
 
-Entry point: ``helix-status``.
+Entry point: ``cymatix-status``.
 """
 
 from __future__ import annotations
@@ -17,27 +17,27 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 
-DEFAULT_SERVER_URL = os.environ.get("HELIX_STATUS_URL", "http://127.0.0.1:11437").rstrip("/")
-DEFAULT_LAUNCHER_URL = os.environ.get("HELIX_LAUNCHER_URL", "http://127.0.0.1:11438").rstrip("/")
+DEFAULT_SERVER_URL = os.environ.get("CYMATIX_STATUS_URL", "http://127.0.0.1:11437").rstrip("/")
+DEFAULT_LAUNCHER_URL = os.environ.get("CYMATIX_LAUNCHER_URL", "http://127.0.0.1:11438").rstrip("/")
 
 # Status probe timeout (seconds). The pre-fix default was 1.5s, which
 # silently reported a healthy but slow server as ``unreachable`` —
 # cold-start ``/health`` can take 5-10s under model warmup / manager
 # init / SQLite WAL replay. 10s is generous for a status check and
 # matches the operator's expectation that "alive but slow" is still
-# alive. Override via ``HELIX_STATUS_TIMEOUT_S`` for tight CI loops
+# alive. Override via ``CYMATIX_STATUS_TIMEOUT_S`` for tight CI loops
 # (e.g. ``0.5``) or for very large genomes (e.g. ``30``).
 _DEFAULT_STATUS_TIMEOUT_S = 10.0
 try:
     DEFAULT_STATUS_TIMEOUT_S = float(
-        os.environ.get("HELIX_STATUS_TIMEOUT_S", _DEFAULT_STATUS_TIMEOUT_S)
+        os.environ.get("CYMATIX_STATUS_TIMEOUT_S", _DEFAULT_STATUS_TIMEOUT_S)
     )
 except ValueError:
     # Never let a malformed env var crash status — fall back, warn the
     # operator on stderr so the override gets noticed and fixed.
     import sys
     sys.stderr.write(
-        f"HELIX_STATUS_TIMEOUT_S={os.environ.get('HELIX_STATUS_TIMEOUT_S')!r} "
+        f"CYMATIX_STATUS_TIMEOUT_S={os.environ.get('CYMATIX_STATUS_TIMEOUT_S')!r} "
         f"is not a float; falling back to {_DEFAULT_STATUS_TIMEOUT_S}s\n"
     )
     DEFAULT_STATUS_TIMEOUT_S = _DEFAULT_STATUS_TIMEOUT_S
@@ -83,22 +83,22 @@ def _find_mcp_config(
 
 
 # The MCP entry key candidates, checked in this order. "cymatix-context" is
-# the documented canonical key; "helix-context" is the pre-rename key, kept
+# the documented canonical key; "cymatix-context" is the pre-rename key, kept
 # working (still resolves to the same server) so existing setups aren't
-# nagged. The suffix-less "cymatix"/"helix" forms are accepted but flagged
+# nagged. The suffix-less "cymatix"/"cymatix" forms are accepted but flagged
 # noncanonical.
-_MCP_NAME_CANDIDATES = ("cymatix-context", "cymatix", "helix-context", "helix")
-_MCP_NAMES_CANONICAL = ("cymatix-context", "helix-context")
-_MCP_NAMES_NONCANONICAL = ("cymatix", "helix")
+_MCP_NAME_CANDIDATES = ("cymatix-context", "cymatix", "cymatix-context", "cymatix")
+_MCP_NAMES_CANONICAL = ("cymatix-context", "cymatix-context")
+_MCP_NAMES_NONCANONICAL = ("cymatix", "cymatix")
 
 # Both module paths resolve to the same server: cymatix_context.mcp_server
-# is canonical, helix_context.mcp_server is the back-compat shim (see
-# helix_context/__init__.py) that aliases to it.
+# is canonical, cymatix_context.mcp_server is the back-compat shim (see
+# cymatix_context/__init__.py) that aliases to it.
 _MCP_MODULE_CANONICAL = "cymatix_context.mcp_server"
-_MCP_MODULE_LEGACY_SHIM = "helix_context.mcp_server"
+_MCP_MODULE_LEGACY_SHIM = "cymatix_context.mcp_server"
 _MCP_MODULES_ACCEPTED = (_MCP_MODULE_CANONICAL, _MCP_MODULE_LEGACY_SHIM)
 
-_MCP_ENV_VARS = ("CYMATIX_MCP_URL", "HELIX_MCP_URL")
+_MCP_ENV_VARS = ("CYMATIX_MCP_URL", "CYMATIX_MCP_URL")
 
 
 def _check_mcp_config(path: Optional[Path]) -> Dict[str, Any]:
@@ -149,7 +149,7 @@ def _check_mcp_config(path: Optional[Path]) -> Dict[str, Any]:
         }
         if module == _MCP_MODULE_LEGACY_SHIM:
             result["note"] = (
-                "`helix_context.mcp_server` is a compatibility shim that aliases to "
+                "`cymatix_context.mcp_server` is a compatibility shim that aliases to "
                 "`cymatix_context.mcp_server`; no change needed."
             )
         return result
@@ -170,7 +170,7 @@ def _check_mcp_config(path: Optional[Path]) -> Dict[str, Any]:
             "path": str(path),
             "server_name": server_name,
             "module": module,
-            "env_var": "HELIX_URL" if "HELIX_URL" in env else None,
+            "env_var": "CYMATIX_URL" if "CYMATIX_URL" in env else None,
             "next_action": "Switch to `cymatix_context.mcp_server` and `CYMATIX_MCP_URL`.",
         }
 
@@ -180,7 +180,7 @@ def _check_mcp_config(path: Optional[Path]) -> Dict[str, Any]:
         "server_name": server_name,
         "module": module,
         "env_keys": sorted(env.keys()),
-        "next_action": "Point the Helix MCP entry at `cymatix_context.mcp_server` with `CYMATIX_MCP_URL`.",
+        "next_action": "Point the Cymatix MCP entry at `cymatix_context.mcp_server` with `CYMATIX_MCP_URL`.",
     }
 
 
@@ -194,7 +194,7 @@ def _check_skill(skill_path: Path) -> Dict[str, Any]:
     return {
         "status": "missing",
         "path": str(skill_file),
-        "next_action": "Install or restore the shared `helix-context` skill.",
+        "next_action": "Install or restore the shared `cymatix-context` skill.",
     }
 
 
@@ -210,7 +210,7 @@ def collect_status(
     launcher = _get_json(f"{launcher_url}/api/state")
     mcp_status = _check_mcp_config(_find_mcp_config(mcp_config, start_dir=start_dir))
     skill_status = _check_skill(
-        skill_dir or (Path.home() / ".claude" / "skills" / "helix-context")
+        skill_dir or (Path.home() / ".claude" / "skills" / "cymatix-context")
     )
 
     launcher_reachable = "error" not in launcher
@@ -224,7 +224,7 @@ def collect_status(
     if not server_reachable:
         if launcher_reachable:
             availability = "degraded"
-            next_action = "Open the launcher UI and click Start or Restart to bring Helix up."
+            next_action = "Open the launcher UI and click Start or Restart to bring Cymatix up."
         else:
             availability = "unavailable"
             next_action = "Run `cymatix-launcher` to start the canonical supervisor."
@@ -258,7 +258,7 @@ def collect_status(
 
 def _render_text(status: Dict[str, Any]) -> str:
     lines = [
-        f"Helix availability: {status['availability']}",
+        f"Cymatix availability: {status['availability']}",
         f"Next action: {status['next_action']}",
         "",
         f"Server: {'up' if status['server']['reachable'] else 'down'} ({status['server']['url']})",

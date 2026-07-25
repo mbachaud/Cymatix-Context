@@ -15,7 +15,7 @@ Spec facts this module encodes (OKF v0.1 @ ee67a5ca):
   ``type`` (§9). The upstream reference implementation validates four
   fields; that is deliberately NOT copied here (council Amendment 6).
 
-Degradation policy — this is HELIX'S OWN policy, not the spec's (§9
+Degradation policy — this is CYMATIX'S OWN policy, not the spec's (§9
 covers missing optional fields / unknown types / broken links, and is
 silent on missing or unparseable frontmatter and empty ``type``):
 
@@ -46,7 +46,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-log = logging.getLogger("helix.okf")
+log = logging.getLogger("cymatix.okf")
 
 RESERVED_FILENAMES = frozenset({"index.md", "log.md"})
 

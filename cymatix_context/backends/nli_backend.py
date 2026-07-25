@@ -24,7 +24,7 @@ import torch
 
 from ..schemas import Gene, NLRelation
 
-log = logging.getLogger("helix.nli")
+log = logging.getLogger("cymatix.nli")
 
 # Coherence weights for each relation type
 _COHERENCE_WEIGHTS: Dict[NLRelation, float] = {

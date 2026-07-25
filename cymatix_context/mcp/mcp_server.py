@@ -1,9 +1,9 @@
 """
-MCP server for helix — exposes helix as a first-class tool inside MCP hosts.
+MCP server for cymatix — exposes cymatix as a first-class tool inside MCP hosts.
 
 Thin adapter: stdio JSON-RPC server that declares a handful of tools and
-proxies each call to helix's HTTP API. Lets Claude Code / Claude Desktop
-/ Cursor consume helix without any HTTP client boilerplate in the host.
+proxies each call to cymatix's HTTP API. Lets Claude Code / Claude Desktop
+/ Cursor consume cymatix without any HTTP client boilerplate in the host.
 
 Tools exposed:
     Retrieval / knowledge store:
@@ -52,53 +52,53 @@ Run (stdio transport — what MCP hosts spawn):
 Configure in Claude Code .mcp.json:
     {
       "mcpServers": {
-        "helix-context": {
+        "cymatix-context": {
           "command": "python",
           "args": ["-m", "cymatix_context.mcp_server"],
           "env": {
-            "HELIX_MCP_URL": "http://127.0.0.1:11437"
+            "CYMATIX_MCP_URL": "http://127.0.0.1:11437"
           }
         }
       }
     }
 
 Env:
-    HELIX_MCP_URL        - helix HTTP base URL (default http://127.0.0.1:11437)
-    HELIX_MCP_TIMEOUT    - per-request timeout in seconds (default 30)
-    HELIX_MCP_HANDLE     - live MCP session handle for registry presence
-    HELIX_PARTY_ID       - party/device id for session presence; also the
-                           ingest default when HELIX_DEVICE is unset
-    HELIX_MCP_HOST       - MCP host/tool family for presence tags
-    HELIX_ORG            - ingest attribution org id
-    HELIX_DEVICE         - ingest attribution device/party id override
-    HELIX_USER           - ingest attribution human participant handle
-    HELIX_AGENT          - ingest attribution AI agent handle
-    HELIX_AGENT_KIND     - optional ingest attribution agent kind
-                           (defaults to HELIX_MCP_HOST when omitted)
-    HELIX_MCP_FULL       - expose the full 24-tool surface. Default (unset)
+    CYMATIX_MCP_URL        - cymatix HTTP base URL (default http://127.0.0.1:11437)
+    CYMATIX_MCP_TIMEOUT    - per-request timeout in seconds (default 30)
+    CYMATIX_MCP_HANDLE     - live MCP session handle for registry presence
+    CYMATIX_PARTY_ID       - party/device id for session presence; also the
+                           ingest default when CYMATIX_DEVICE is unset
+    CYMATIX_MCP_HOST       - MCP host/tool family for presence tags
+    CYMATIX_ORG            - ingest attribution org id
+    CYMATIX_DEVICE         - ingest attribution device/party id override
+    CYMATIX_USER           - ingest attribution human participant handle
+    CYMATIX_AGENT          - ingest attribution AI agent handle
+    CYMATIX_AGENT_KIND     - optional ingest attribution agent kind
+                           (defaults to CYMATIX_MCP_HOST when omitted)
+    CYMATIX_MCP_FULL       - expose the full 24-tool surface. Default (unset)
                            serves the lean 5-tool core (cymatix_context,
                            cymatix_context_packet, cymatix_ingest, cymatix_health,
                            cymatix_sessions_list) to cut ~4-5K schema tokens per
                            agent session. Set 1/true/yes/on for the full
                            admin/diagnostic/debug/alias surface.
-    CYMATIX_MCP_COMPAT   - deprecated helix_* tool aliases (0.8.0 rename).
+    CYMATIX_MCP_COMPAT   - deprecated cymatix_* tool aliases (0.8.0 rename).
                            Default ON for the deprecation window: every
                            cymatix_* tool is also callable under its old
-                           helix_* name, and the lean core carries its 5
+                           cymatix_* name, and the lean core carries its 5
                            aliases (10 tools total). Set 0/false/off once
                            clients are migrated to drop the aliases and
                            their per-turn schema-token cost.
-                           (HELIX_MCP_COMPAT is honored equivalently.)
+                           (CYMATIX_MCP_COMPAT is honored equivalently.)
 
 Composition hook: Headroom already ships `codebase-memory-mcp` (manual
 install, off-by-default as of 2026-04-14 per Tejas on Discord). Its
 scope is the call graph — `trace_call_path(function_name, direction)`
 etc — NOT compression. Composition story:
 
-  1. User-facing: helix-mcp spawns codebase-memory-mcp as a child and
-     re-exports its tools (`helix_trace_calls` etc) — user's .mcp.json
+  1. User-facing: cymatix-mcp spawns codebase-memory-mcp as a child and
+     re-exports its tools (`cymatix_trace_calls` etc) — user's .mcp.json
      stays one entry.
-  2. Internal: helix's /context retrieval becomes a CLIENT of
+  2. Internal: cymatix's /context retrieval becomes a CLIENT of
      codebase-memory-mcp — call-path relevance gets added as a retrieval
      tier, invisible to the MCP host.
 
@@ -117,27 +117,27 @@ from typing import Any, Dict, List, Optional
 
 from mcp.server.fastmcp import FastMCP
 
-log = logging.getLogger("helix.mcp")
+log = logging.getLogger("cymatix.mcp")
 
-HELIX_URL = os.environ.get("HELIX_MCP_URL", "http://127.0.0.1:11437").rstrip("/")
-TIMEOUT_S = float(os.environ.get("HELIX_MCP_TIMEOUT", "30"))
+CYMATIX_URL = os.environ.get("CYMATIX_MCP_URL", "http://127.0.0.1:11437").rstrip("/")
+TIMEOUT_S = float(os.environ.get("CYMATIX_MCP_TIMEOUT", "30"))
 
 # Stable session_id for this MCP subprocess lifetime. Used to attribute
 # every `cymatix_context` call from this host to the same row in
 # session_delivery_log, so already-delivered documents can be elided with a
 # pointer stub on subsequent calls within the same MCP session. Prefer
-# HELIX_MCP_HANDLE when set (hosts commonly set "laude", "raude", etc);
+# CYMATIX_MCP_HANDLE when set (hosts commonly set "laude", "raude", etc);
 # otherwise fall back to "mcp-<pid>" which is still stable for one
 # subprocess lifetime. Matches the _register_with_registry() handle
 # scheme, so the session_id here aligns with the registry participant.
-MCP_SESSION_ID = os.environ.get("HELIX_MCP_HANDLE", f"mcp-{os.getpid()}")
+MCP_SESSION_ID = os.environ.get("CYMATIX_MCP_HANDLE", f"mcp-{os.getpid()}")
 
-# Agent label passed to helix's per-agent telemetry path. Same handle the
-# session registry uses, so dashboards align with attribution. HELIX_AGENT
-# is the canonical env var; HELIX_MCP_HANDLE is the older host-set
+# Agent label passed to cymatix's per-agent telemetry path. Same handle the
+# session registry uses, so dashboards align with attribution. CYMATIX_AGENT
+# is the canonical env var; CYMATIX_MCP_HANDLE is the older host-set
 # fallback (Claude Code, OpenWebUI, etc. commonly set this).
 MCP_AGENT_HANDLE: Optional[str] = (
-    os.environ.get("HELIX_AGENT") or os.environ.get("HELIX_MCP_HANDLE") or None
+    os.environ.get("CYMATIX_AGENT") or os.environ.get("CYMATIX_MCP_HANDLE") or None
 )
 
 # Set by _register_with_registry on success; consumed by the
@@ -150,11 +150,11 @@ def _default_party_id() -> str:
 
     Mirrors the device-resolution pattern in
     ``server.py:_local_attribution_defaults``:
-    HELIX_PARTY_ID > HELIX_DEVICE > HELIX_PARTY > socket.gethostname().
+    CYMATIX_PARTY_ID > CYMATIX_DEVICE > CYMATIX_PARTY > socket.gethostname().
     Falls back to ``"unknown-host"`` only if the hostname lookup itself
     fails, so the caller always gets a usable string.
     """
-    for key in ("HELIX_PARTY_ID", "HELIX_DEVICE", "HELIX_PARTY"):
+    for key in ("CYMATIX_PARTY_ID", "CYMATIX_DEVICE", "CYMATIX_PARTY"):
         val = os.environ.get(key)
         if val:
             return val
@@ -173,7 +173,7 @@ mcp = FastMCP("cymatix")
 # that the MCP host can render instead of a crashed tool call.
 
 def _http(method: str, path: str, body: Optional[Dict] = None) -> Dict[str, Any]:
-    url = f"{HELIX_URL}{path}"
+    url = f"{CYMATIX_URL}{path}"
     data = json.dumps(body).encode("utf-8") if body is not None else None
     req = urllib.request.Request(
         url,
@@ -197,13 +197,13 @@ def _http(method: str, path: str, body: Optional[Dict] = None) -> Dict[str, Any]
         }
     except urllib.error.URLError as exc:
         # Preserved: _normalize_health_payload branches on the literal
-        # "helix unreachable" marker to surface a restart hint.
+        # "cymatix unreachable" marker to surface a restart hint.
         return {
-            "_error": "helix unreachable",
+            "_error": "cymatix unreachable",
             "_detail": f"{exc.reason} at {url}",
             "_hint": (
-                "Start `cymatix-launcher` (recommended) or run `helix` manually. "
-                "If Helix is already running elsewhere, check HELIX_MCP_URL."
+                "Start `cymatix-launcher` (recommended) or run `cymatix` manually. "
+                "If Cymatix is already running elsewhere, check CYMATIX_MCP_URL."
             ),
         }
     except Exception as exc:
@@ -211,7 +211,7 @@ def _http(method: str, path: str, body: Optional[Dict] = None) -> Dict[str, Any]
         # so hosts can distinguish them from structured transport
         # failures above. FastMCP wraps raised exceptions for us.
         log.warning(
-            "helix-mcp _http(%s %s) unexpected failure", method, path, exc_info=True
+            "cymatix-mcp _http(%s %s) unexpected failure", method, path, exc_info=True
         )
         raise
 
@@ -243,14 +243,14 @@ def _normalize_health_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
     """Project raw /health or transport errors into a stable status shape."""
     normalized: Dict[str, Any] = {"server": payload}
 
-    if payload.get("_error") == "helix unreachable":
+    if payload.get("_error") == "cymatix unreachable":
         normalized.update({
             "availability": "unavailable",
             "next_action": (
                 "Run `cymatix-launcher` to start the canonical supervisor. "
-                "If you intentionally run Helix elsewhere, update HELIX_MCP_URL."
+                "If you intentionally run Cymatix elsewhere, update CYMATIX_MCP_URL."
             ),
-            "message": payload.get("_detail", "Helix is unreachable."),
+            "message": payload.get("_detail", "Cymatix is unreachable."),
         })
         return normalized
 
@@ -258,7 +258,7 @@ def _normalize_health_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
         normalized.update({
             "availability": "degraded",
             "next_action": (
-                "Inspect the server error details, then restart Helix with "
+                "Inspect the server error details, then restart Cymatix with "
                 "`cymatix-launcher` if the issue persists."
             ),
             "message": payload.get("_detail") or payload.get("_error"),
@@ -270,13 +270,13 @@ def _normalize_health_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
         next_action = "Use `cymatix_context` for repo questions."
         if genes == 0:
             next_action = (
-                "Helix is up but the genome is empty. Ingest project content "
-                "or point Helix at the intended database before relying on retrieval."
+                "Cymatix is up but the genome is empty. Ingest project content "
+                "or point Cymatix at the intended database before relying on retrieval."
             )
         normalized.update({
             "availability": "available",
             "next_action": next_action,
-            "message": "Helix answered /health successfully.",
+            "message": "Cymatix answered /health successfully.",
         })
         return normalized
 
@@ -285,16 +285,16 @@ def _normalize_health_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
             "availability": payload.get("status"),
             "next_action": (
                 payload.get("message")
-                or "Inspect the Helix health payload, then restart with `cymatix-launcher` if needed."
+                or "Inspect the Cymatix health payload, then restart with `cymatix-launcher` if needed."
             ),
-            "message": payload.get("message", "Helix reported a degraded health state."),
+            "message": payload.get("message", "Cymatix reported a degraded health state."),
         })
         return normalized
 
     normalized.update({
         "availability": "degraded",
         "next_action": (
-            "Helix responded, but the health payload was unexpected. "
+            "Cymatix responded, but the health payload was unexpected. "
             "Check `/health`, then restart with `cymatix-launcher` if needed."
         ),
         "message": "Unexpected /health payload.",
@@ -303,7 +303,7 @@ def _normalize_health_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def _normalize_identity_token(value: Optional[str]) -> Optional[str]:
-    """Normalize env-driven identity tokens to Helix's local-tier shape."""
+    """Normalize env-driven identity tokens to Cymatix's local-tier shape."""
     if not value:
         return None
     normalized = str(value).strip().lower()[:64]
@@ -313,24 +313,24 @@ def _normalize_identity_token(value: Optional[str]) -> Optional[str]:
 def _default_ingest_identity() -> Dict[str, Any]:
     """Resolve explicit ingest attribution forwarded from the MCP process.
 
-    Unlike registry presence, Helix's HTTP /ingest route runs in another
+    Unlike registry presence, Cymatix's HTTP /ingest route runs in another
     process and cannot see this MCP process's env vars. We therefore ship
     the resolved identity over the wire so ingests can be attributed to the
-    intended org/device/user/agent chain even when Helix was launched from
+    intended org/device/user/agent chain even when Cymatix was launched from
     a different shell.
     """
-    org_id = _normalize_identity_token(os.environ.get("HELIX_ORG"))
+    org_id = _normalize_identity_token(os.environ.get("CYMATIX_ORG"))
     party_id = _normalize_identity_token(
-        os.environ.get("HELIX_DEVICE")
-        or os.environ.get("HELIX_PARTY_ID")
-        or os.environ.get("HELIX_PARTY")
+        os.environ.get("CYMATIX_DEVICE")
+        or os.environ.get("CYMATIX_PARTY_ID")
+        or os.environ.get("CYMATIX_PARTY")
     )
-    participant_handle = _normalize_identity_token(os.environ.get("HELIX_USER"))
+    participant_handle = _normalize_identity_token(os.environ.get("CYMATIX_USER"))
     agent_handle = _normalize_identity_token(
-        os.environ.get("HELIX_AGENT") or os.environ.get("HELIX_MCP_HANDLE")
+        os.environ.get("CYMATIX_AGENT") or os.environ.get("CYMATIX_MCP_HANDLE")
     )
     agent_kind = _normalize_identity_token(
-        os.environ.get("HELIX_AGENT_KIND") or os.environ.get("HELIX_MCP_HOST")
+        os.environ.get("CYMATIX_AGENT_KIND") or os.environ.get("CYMATIX_MCP_HOST")
     )
 
     payload: Dict[str, Any] = {}
@@ -359,15 +359,15 @@ def cymatix_context(
     downstream_model: Optional[str] = None,
     session_id: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Build a compressed context window for `query` from the helix knowledge store.
+    """Build a compressed context window for `query` from the cymatix knowledge store.
 
     decoder_mode: "condensed" (default), "broad", or "dense". Controls
         how documents are unfolded into tokens. "broad" → more documents, less
         per-document detail. "condensed" → fewer documents, more detail each.
-    downstream_model: hint string so helix can size the budget for the
+    downstream_model: hint string so cymatix can size the budget for the
         target model (e.g. "claude-opus-4-6", "gpt-4").
     session_id: explicit session id for the working-set register. When
-        omitted, defaults to MCP_SESSION_ID (HELIX_MCP_HANDLE or
+        omitted, defaults to MCP_SESSION_ID (CYMATIX_MCP_HANDLE or
         mcp-<pid>) so every call from this MCP subprocess is attributed
         to the same session. Pass a fresh value to isolate benches.
     """
@@ -378,9 +378,9 @@ def cymatix_context(
         body["downstream_model"] = downstream_model
     body["session_id"] = session_id or MCP_SESSION_ID
     if MCP_AGENT_HANDLE:
-        # Plumb agent identity through so helix's per-agent telemetry
+        # Plumb agent identity through so cymatix's per-agent telemetry
         # labels (request rate / latency by agent) reflect THIS shim,
-        # not the bare HELIX_AGENT env on the helix server process.
+        # not the bare CYMATIX_AGENT env on the cymatix server process.
         body["agent"] = MCP_AGENT_HANDLE
     return _unwrap_context_list(_http("POST", "/context", body))
 
@@ -473,20 +473,20 @@ def cymatix_ingest(
     """Ingest raw text into the knowledge store.
 
     content_type: "text" | "markdown" | "python" | "rust" | ... — see
-        helix's tree_chunker for the full list. Affects how content is
+        cymatix's tree_chunker for the full list. Affects how content is
         split into documents.
     metadata: optional dict stamped onto every created document. Include
         "source_id" to make re-ingests idempotent.
 
     Attribution defaults come from this MCP process's env vars and are
-    forwarded explicitly to Helix's 4-layer federation:
-        HELIX_ORG -> org_id
-        HELIX_DEVICE or HELIX_PARTY_ID -> party_id
-        HELIX_USER -> participant_handle
-        HELIX_AGENT or HELIX_MCP_HANDLE -> agent_handle
-        HELIX_AGENT_KIND or HELIX_MCP_HOST -> agent_kind
+    forwarded explicitly to Cymatix's 4-layer federation:
+        CYMATIX_ORG -> org_id
+        CYMATIX_DEVICE or CYMATIX_PARTY_ID -> party_id
+        CYMATIX_USER -> participant_handle
+        CYMATIX_AGENT or CYMATIX_MCP_HANDLE -> agent_handle
+        CYMATIX_AGENT_KIND or CYMATIX_MCP_HOST -> agent_kind
 
-    This keeps ingests correctly attributed even when the Helix HTTP
+    This keeps ingests correctly attributed even when the Cymatix HTTP
     server was launched from a different shell. See docs/FEDERATION_LOCAL.md.
     """
     body: Dict[str, Any] = {"content": content, "content_type": content_type}
@@ -545,8 +545,8 @@ def cymatix_hitl_emit(
     Participant resolution (pick the most specific you have):
         participant_id: explicit participant UUID (from /sessions/register)
         party_id: explicit party (if no participant)
-        If neither is given, the party_id is derived from HELIX_PARTY_ID
-        (or HELIX_DEVICE / HELIX_PARTY), falling back to
+        If neither is given, the party_id is derived from CYMATIX_PARTY_ID
+        (or CYMATIX_DEVICE / CYMATIX_PARTY), falling back to
         socket.gethostname(). This ensures events always land somewhere
         rather than dropping silently.
 
@@ -598,7 +598,7 @@ def cymatix_hitl_recent(
 ) -> Dict[str, Any]:
     """List recent HITL pause events, newest first.
 
-    party_id: defaults to HELIX_PARTY_ID (or HELIX_DEVICE / HELIX_PARTY),
+    party_id: defaults to CYMATIX_PARTY_ID (or CYMATIX_DEVICE / CYMATIX_PARTY),
         then socket.gethostname(), so calls without args scope to this
         session's party. Pass an explicit party_id to override.
     pause_type: filter to one of "permission_request", "uncertainty_check",
@@ -778,7 +778,7 @@ def cymatix_announce(
     if _registered_bridge is None:
         return {
             "ok": False,
-            "error": "Not yet registered with helix; announce skipped.",
+            "error": "Not yet registered with cymatix; announce skipped.",
         }
     success = _registered_bridge.announce(
         model_id=model_id,
@@ -789,7 +789,7 @@ def cymatix_announce(
 
 # ── Tool: cymatix_metrics_tokens ───────────────────────────────────────
 # Session + lifetime token counters, exact-from-upstream when possible,
-# char-estimate fallback. Surfaces helix's cost/savings story.
+# char-estimate fallback. Surfaces cymatix's cost/savings story.
 
 @mcp.tool()
 def cymatix_metrics_tokens() -> Dict[str, Any]:
@@ -813,7 +813,7 @@ def cymatix_metrics_tokens() -> Dict[str, Any]:
 def cymatix_bridge_status() -> Dict[str, Any]:
     """Federation bridge status: shared_dir, inbox count, signal list.
 
-    The bridge is helix's multi-instance handoff channel (laude ↔ raude
+    The bridge is cymatix's multi-instance handoff channel (laude ↔ raude
     ↔ batman etc). This tool is read-only; use it to check whether
     inbox items are waiting to be collected, or which signals are in
     flight between instances.
@@ -950,9 +950,9 @@ def cymatix_document_query(
         body["downstream_model"] = downstream_model
     body["session_id"] = session_id or MCP_SESSION_ID
     if MCP_AGENT_HANDLE:
-        # Plumb agent identity through so helix's per-agent telemetry
+        # Plumb agent identity through so cymatix's per-agent telemetry
         # labels (request rate / latency by agent) reflect THIS shim,
-        # not the bare HELIX_AGENT env on the helix server process.
+        # not the bare CYMATIX_AGENT env on the cymatix server process.
         body["agent"] = MCP_AGENT_HANDLE
     return _unwrap_context_list(_http("POST", "/context", body))
 
@@ -994,19 +994,19 @@ def cymatix_document_fingerprint(
 # composition patterns:
 #
 #  A. Re-export (user sees 1 entry, gets both toolsets):
-#     HELIX_EMBED_CODEGRAPH=1  → helix-mcp spawns codebase-memory-mcp
+#     CYMATIX_EMBED_CODEGRAPH=1  → cymatix-mcp spawns codebase-memory-mcp
 #                                as a stdio child, relays its tools
-#                                under `helix_trace_calls` etc
-#     HELIX_CODEGRAPH_PATH=...  → override binary path if not on PATH
+#                                under `cymatix_trace_calls` etc
+#     CYMATIX_CODEGRAPH_PATH=...  → override binary path if not on PATH
 #
 #  B. Retrieval enrichment (invisible to host):
-#     helix's /context internally queries codebase-memory-mcp for
+#     cymatix's /context internally queries codebase-memory-mcp for
 #     call-path distance from query target, adds as a scoring tier.
 #     No new MCP tools exposed — just smarter retrieval.
 #
 # Pattern A is the "reduce MCP count" story — useful once the user
 # actually installs codebase-memory-mcp. Pattern B is the bigger long-
-# term win: helix document scoring gains structural signal. Both deferred
+# term win: cymatix document scoring gains structural signal. Both deferred
 # until codebase-memory-mcp stabilizes (currently off-by-default). Hook
 # points: this file for A, cymatix_context/context_manager.py for B.
 
@@ -1017,7 +1017,7 @@ def cymatix_document_fingerprint(
 # ~4-5K tokens per agent session before any retrieval runs. Default to a lean
 # core set (the agent loop: retrieve, agent-safe packet, ingest, health,
 # sibling-agent awareness); expose the full admin / diagnostic / debug / alias
-# surface only when the operator opts in with HELIX_MCP_FULL=1. This is issue
+# surface only when the operator opts in with CYMATIX_MCP_FULL=1. This is issue
 # #219 Slice 3; see docs/design/2026-07-05-efficiency-cost-reduction.md.
 _MCP_CORE_TOOLS = frozenset({
     "cymatix_context",         # primary retrieval — the big one
@@ -1029,85 +1029,14 @@ _MCP_CORE_TOOLS = frozenset({
 
 _TRUTHY = frozenset({"1", "true", "yes", "on"})
 
-# ── 0.8.0 rename: deprecated helix_* aliases ─────────────────────────
-# Canonical tool names are cymatix_* as of the 0.8.0 rename. The old
-# helix_* names stay registered as thin aliases for one deprecation
-# window (default ON so existing host configs keep working; flip off
-# with CYMATIX_MCP_COMPAT=0 once clients are migrated — each alias
-# costs tool-list tokens on every turn).
-_CANONICAL_RENAMES = {
-    "helix_" + name[len("cymatix_"):]: name
-    for name in (
-        # The flagship: its helix_context name was dropped outright in the
-        # first rename pass, breaking old configs — restored here as an
-        # alias for the same deprecation window as everything else.
-        "cymatix_context",
-        "cymatix_context_packet", "cymatix_refresh_targets", "cymatix_stats",
-        "cymatix_ingest", "cymatix_resonance", "cymatix_hitl_emit",
-        "cymatix_hitl_recent", "cymatix_sessions_list", "cymatix_session_recent",
-        "cymatix_consolidate", "cymatix_health", "cymatix_swap_db",
-        "cymatix_announce", "cymatix_metrics_tokens", "cymatix_bridge_status",
-        "cymatix_gene_get", "cymatix_neighbors", "cymatix_splice_preview",
-        "cymatix_fingerprint", "cymatix_document_get", "cymatix_document_query",
-        "cymatix_document_preview", "cymatix_document_fingerprint",
-    )
-}
-
-
-def _mcp_compat_enabled() -> bool:
-    """True (default) while the helix_* alias window is open.
-
-    Reads HELIX_MCP_COMPAT — CYMATIX_MCP_COMPAT lands here via the
-    package-level env mirror. Unset means ON for the deprecation window.
-    """
-    return os.environ.get("HELIX_MCP_COMPAT", "1").strip().lower() in _TRUTHY
-
-
-def _register_compat_aliases(server: FastMCP = mcp) -> List[str]:
-    """Register each old helix_* name as an alias of its cymatix_* tool.
-
-    Returns the alias names registered (empty when compat is off). A
-    per-alias failure is non-fatal: the canonical tool still works.
-    """
-    if not _mcp_compat_enabled():
-        return []
-    registered: List[str] = []
-    for old, canonical in _CANONICAL_RENAMES.items():
-        fn = globals().get(canonical)
-        if fn is None:  # pragma: no cover - rename drift; canonical missing
-            log.warning("compat alias %s skipped: no canonical %s", old, canonical)
-            continue
-        try:
-            server.add_tool(
-                fn,
-                name=old,
-                description=(
-                    f"Deprecated alias of `{canonical}` (0.8.0 rename); "
-                    f"use that instead."
-                ),
-            )
-            registered.append(old)
-        except Exception:  # pragma: no cover - FastMCP add_tool contract changed
-            log.warning("could not register compat alias %s", old, exc_info=True)
-    return registered
-
-
 def _effective_core_tools() -> frozenset:
-    """Lean-profile keep-set: canonical core + their helix_* aliases when
-    compat is on (so un-migrated hosts calling e.g. ``helix_ingest``
-    keep working in the default lean profile)."""
-    core = _MCP_CORE_TOOLS
-    if _mcp_compat_enabled():
-        core = core | frozenset(
-            old for old, canonical in _CANONICAL_RENAMES.items()
-            if canonical in _MCP_CORE_TOOLS
-        )
-    return core
+    """Lean-profile keep-set: the canonical cymatix_* core tools."""
+    return _MCP_CORE_TOOLS
 
 
 def _mcp_full_surface() -> bool:
-    """True when the operator opts into the full tool surface (HELIX_MCP_FULL)."""
-    return os.environ.get("HELIX_MCP_FULL", "").strip().lower() in _TRUTHY
+    """True when the operator opts into the full tool surface (CYMATIX_MCP_FULL)."""
+    return os.environ.get("CYMATIX_MCP_FULL", "").strip().lower() in _TRUTHY
 
 
 def _apply_mcp_profile(server: FastMCP = mcp) -> List[str]:
@@ -1137,15 +1066,13 @@ def _apply_mcp_profile(server: FastMCP = mcp) -> List[str]:
     if removed:
         log.info(
             "lean MCP profile: %d core tools exposed, %d hidden "
-            "(set HELIX_MCP_FULL=1 for the full surface)",
+            "(set CYMATIX_MCP_FULL=1 for the full surface)",
             len(_MCP_CORE_TOOLS), len(removed),
         )
     return removed
 
 
-# Aliases first, then the profile prune, so the host's tool-list
-# handshake sees the lean surface with (by default) its compat aliases.
-_register_compat_aliases()
+# Prune to the lean core surface unless the operator opts into the full set.
 _apply_mcp_profile()
 
 
@@ -1158,19 +1085,19 @@ def _register_with_registry() -> None:
     each gets its own participant_id under the configured party.
 
     Env vars (all optional — sensible defaults):
-        HELIX_MCP_HANDLE   Handle for this session (default: mcp-<pid>).
+        CYMATIX_MCP_HANDLE   Handle for this session (default: mcp-<pid>).
                            Hosts SHOULD set this: "laude", "gemini", etc.
-        HELIX_PARTY_ID     Party this participant belongs to. Falls
-                           back to HELIX_DEVICE, HELIX_PARTY, then
+        CYMATIX_PARTY_ID     Party this participant belongs to. Falls
+                           back to CYMATIX_DEVICE, CYMATIX_PARTY, then
                            socket.gethostname() — no hardcoded default.
-        HELIX_MCP_HOST     MCP host name — used as a capability tag so
+        CYMATIX_MCP_HOST     MCP host name — used as a capability tag so
                            ``GET /sessions`` can tell which IDE spawned
                            this process. E.g. "claude-code",
                            "antigravity", "cursor". Default: "unknown".
                            The literal "unknown" default is normalised to
                            None at the wire level so the column is not
                            polluted with a sentinel string.
-        HELIX_AGENT_KIND   Agent implementation flavour — e.g.
+        CYMATIX_AGENT_KIND   Agent implementation flavour — e.g.
                            "claude-code", "gemini-cli", "codex". If
                            unset, None is passed to the bridge (no
                            default fallback).
@@ -1185,10 +1112,10 @@ def _register_with_registry() -> None:
         log.warning("Registry bridge import failed, skipping registration: %s", exc)
         return
 
-    handle = os.environ.get("HELIX_MCP_HANDLE", f"mcp-{os.getpid()}")
+    handle = os.environ.get("CYMATIX_MCP_HANDLE", f"mcp-{os.getpid()}")
     party_id = _default_party_id()
-    mcp_host_env = os.environ.get("HELIX_MCP_HOST", "unknown")
-    agent_kind_env = os.environ.get("HELIX_AGENT_KIND")  # no default — None means "unset"
+    mcp_host_env = os.environ.get("CYMATIX_MCP_HOST", "unknown")
+    agent_kind_env = os.environ.get("CYMATIX_AGENT_KIND")  # no default — None means "unset"
     # Normalize the literal "unknown" sentinel to None at the wire level
     # so the column doesn't get polluted with the env default.
     mcp_host = None if mcp_host_env == "unknown" else mcp_host_env
@@ -1208,7 +1135,7 @@ def _register_with_registry() -> None:
     # cymatix_announce(ide_override=...).
     ide_detected, ide_detection_via = detect_ide()
 
-    bridge = AgentBridge(helix_base_url=HELIX_URL)
+    bridge = AgentBridge(cymatix_base_url=CYMATIX_URL)
     participant_id = bridge.register_participant(
         party_id=party_id,
         handle=handle,
@@ -1231,27 +1158,27 @@ def _register_with_registry() -> None:
         )
     else:
         log.warning(
-            "Session registration failed (is helix running at %s?) "
+            "Session registration failed (is cymatix running at %s?) "
             "— tool calls will still work",
-            HELIX_URL,
+            CYMATIX_URL,
         )
 
 
 def main() -> None:
     logging.basicConfig(
-        level=os.environ.get("HELIX_MCP_LOG_LEVEL", "INFO"),
+        level=os.environ.get("CYMATIX_MCP_LOG_LEVEL", "INFO"),
         format="%(asctime)s %(levelname)s %(name)s: %(message)s",
     )
-    log.info("helix-mcp starting — proxying to %s (timeout=%.1fs)",
-             HELIX_URL, TIMEOUT_S)
+    log.info("cymatix-mcp starting — proxying to %s (timeout=%.1fs)",
+             CYMATIX_URL, TIMEOUT_S)
 
-    # Registry handshake is best-effort: if helix is unreachable or the
+    # Registry handshake is best-effort: if cymatix is unreachable or the
     # bridge raises during register_participant() (auto-heartbeat thread
     # init, etc.), we must NOT propagate the failure — it kills the MCP
     # subprocess before mcp.run() enters the stdio handshake, which the
     # MCP host then reports as "Connection closed" after ~2s. See the
     # 2026-05-20 bench-debug session: every claude -p MCP attempt crashed
-    # this way on Windows even with helix alive, because AgentBridge's
+    # this way on Windows even with cymatix alive, because AgentBridge's
     # auto-heartbeat startup raised at registration time. Tool calls
     # themselves still proxy to the HTTP API independently — registry is
     # only used by cymatix_announce + dashboards.
@@ -1260,7 +1187,7 @@ def main() -> None:
     except Exception:
         log.exception(
             "Registry handshake failed — continuing without registration. "
-            "Tool calls will still proxy to %s.", HELIX_URL,
+            "Tool calls will still proxy to %s.", CYMATIX_URL,
         )
 
     mcp.run()

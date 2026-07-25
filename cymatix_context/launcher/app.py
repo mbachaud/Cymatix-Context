@@ -1,7 +1,7 @@
 """
 Launcher FastAPI app + CLI entry point.
 
-Run via the ``helix-launcher`` console script. See ``docs/LAUNCHER.md``.
+Run via the ``cymatix-launcher`` console script. See ``docs/LAUNCHER.md``.
 """
 
 from __future__ import annotations
@@ -28,7 +28,7 @@ from .collector import StateCollector
 from .state import StateStore
 from .supervisor import (
     AlreadyRunning,
-    HelixSupervisor,
+    CymatixSupervisor,
     NotRunning,
     ShutdownTimeout,
     SupervisorError,
@@ -47,9 +47,9 @@ from .observability_paths import (
     configs_dir,
 )
 
-log = logging.getLogger("helix.launcher.app")
+log = logging.getLogger("cymatix.launcher.app")
 
-DEFAULT_GRAFANA_URL = "http://127.0.0.1:3000/d/helix-overview/helix-overview"
+DEFAULT_GRAFANA_URL = "http://127.0.0.1:3000/d/cymatix-overview/cymatix-overview"
 DEFAULT_PROMETHEUS_URL = "http://127.0.0.1:9090/graph"
 
 if TYPE_CHECKING:
@@ -79,13 +79,13 @@ def _get_templates():
 
 def create_app(
     store: StateStore,
-    supervisor: HelixSupervisor,
+    supervisor: CymatixSupervisor,
     collector: StateCollector,
     observability: Optional["ObservabilitySupervisor"] = None,
     observability_install_pending: bool = False,
     grafana_url: str = DEFAULT_GRAFANA_URL,
     prometheus_url: str = DEFAULT_PROMETHEUS_URL,
-    bench_supervisor: Optional[HelixSupervisor] = None,
+    bench_supervisor: Optional[CymatixSupervisor] = None,
     bench_genome_path: str = "",
     needs_db_selection: bool = False,
 ) -> FastAPI:
@@ -101,19 +101,19 @@ def create_app(
     # uid -> human title; rendered as direct links on the Monitoring tab.
     _grafana_base = grafana_url.split("/d/")[0].rstrip("/")
     _telem_dashboards = [
-        ("helix-overview", "Overview"),
-        ("helix-a27094-pipeline-observatory", "Pipeline Observatory"),
-        ("helix-retrieval-hitl", "Retrieval + HITL"),
-        ("helix-agent-usage", "Agent Usage"),
-        ("helix-genai", "GenAI (gen_ai.*)"),
-        ("helix-internals", "Internals & Research"),
+        ("cymatix-overview", "Overview"),
+        ("cymatix-a27094-pipeline-observatory", "Pipeline Observatory"),
+        ("cymatix-retrieval-hitl", "Retrieval + HITL"),
+        ("cymatix-agent-usage", "Agent Usage"),
+        ("cymatix-genai", "GenAI (gen_ai.*)"),
+        ("cymatix-internals", "Internals & Research"),
     ]
 
     def _observability_state() -> Optional[dict]:
         """Launcher-side observability snapshot injected into the page
         state — service health from the supervisor plus the telemetry
         links the Monitoring tab renders. None when the operator opted
-        out via HELIX_OBSERVABILITY=0 (panel hidden entirely)."""
+        out via CYMATIX_OBSERVABILITY=0 (panel hidden entirely)."""
         if observability is None and not observability_install_pending:
             return None
         statuses = (
@@ -138,22 +138,22 @@ def create_app(
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
-        # On startup, try to adopt an already-running helix.
+        # On startup, try to adopt an already-running cymatix.
         try:
             supervisor.adopt()
         except Exception:
             log.warning("Adoption check failed", exc_info=True)
         yield
         # On shutdown, stop only processes this launcher spawned itself.
-        # Adopted Helix instances should keep running when the launcher exits.
+        # Adopted Cymatix instances should keep running when the launcher exits.
         if supervisor.is_running() and supervisor.owns_process():
             try:
-                log.info("Launcher shutting down — stopping helix")
+                log.info("Launcher shutting down — stopping cymatix")
                 supervisor.stop(reason="launcher shutdown")
             except Exception:
-                log.warning("Graceful helix stop failed during launcher shutdown", exc_info=True)
+                log.warning("Graceful cymatix stop failed during launcher shutdown", exc_info=True)
         elif supervisor.is_running():
-            log.info("Launcher shutting down — leaving adopted helix running")
+            log.info("Launcher shutting down — leaving adopted cymatix running")
 
     app = FastAPI(title="Cymatix Launcher", version="0.1.0", lifespan=lifespan)
     app.state.store = store
@@ -172,20 +172,20 @@ def create_app(
         try:
             # Strict identity: test doubles (MagicMock) must not render
             # the starting panel by accident.
-            state.setdefault("helix", {})["start_pending"] = (
+            state.setdefault("cymatix", {})["start_pending"] = (
                 supervisor.last_start_pending is True
             )
         except Exception:
-            state.setdefault("helix", {})["start_pending"] = False
+            state.setdefault("cymatix", {})["start_pending"] = False
         # First-boot db selection: stays true until a genome is selected
-        # (the select/create endpoints start helix, which flips running).
+        # (the select/create endpoints start cymatix, which flips running).
         state["needs_db_selection"] = bool(
-            needs_db_selection and not state.get("helix", {}).get("running"),
+            needs_db_selection and not state.get("cymatix", {}).get("running"),
         )
         if bench_supervisor is not None:
             state["bench"] = {
                 "running": bench_supervisor.is_running(),
-                "port": bench_supervisor.helix_port,
+                "port": bench_supervisor.cymatix_port,
                 "genome": bench_genome_path,
             }
         else:
@@ -294,7 +294,7 @@ def create_app(
                 )
 
         threading.Thread(
-            target=_worker, name="helix-genome-switch-web", daemon=True,
+            target=_worker, name="cymatix-genome-switch-web", daemon=True,
         ).start()
         return JSONResponse(
             {"ok": True, "selected": str(resolved), "restarting": True},
@@ -364,7 +364,7 @@ def create_app(
                 )
 
         threading.Thread(
-            target=_create_worker, name="helix-genome-create-web", daemon=True,
+            target=_create_worker, name="cymatix-genome-create-web", daemon=True,
         ).start()
         return JSONResponse(
             {"ok": True, "creating": str(target), "restarting": True},
@@ -471,8 +471,8 @@ def _parse_args(argv: Optional[list] = None) -> argparse.Namespace:
     p.add_argument("--port", type=int, default=11438, help="Launcher UI port (default: 11438)")
     p.add_argument(
         "--bench", action="store_true",
-        help="Dev mode: also supervise a second helix on the bench port "
-             "bound to the bench genome ([server] bench_* in helix.toml; "
+        help="Dev mode: also supervise a second cymatix on the bench port "
+             "bound to the bench genome ([server] bench_* in cymatix.toml; "
              "overrides bench_enabled=false).",
     )
     p.add_argument(
@@ -480,9 +480,9 @@ def _parse_args(argv: Optional[list] = None) -> argparse.Namespace:
         help="Append launcher logs to this file (enables fully headless "
              "pythonw starts where stderr has nowhere to go).",
     )
-    p.add_argument("--helix-host", default="127.0.0.1", help="Host for supervised helix (default: 127.0.0.1)")
-    p.add_argument("--helix-port", type=int, default=11437, help="Port for supervised helix (default: 11437)")
-    p.add_argument("--no-autostart", action="store_true", help="Don't spawn helix on launcher start")
+    p.add_argument("--cymatix-host", default="127.0.0.1", help="Host for supervised cymatix (default: 127.0.0.1)")
+    p.add_argument("--cymatix-port", type=int, default=11437, help="Port for supervised cymatix (default: 11437)")
+    p.add_argument("--no-autostart", action="store_true", help="Don't spawn cymatix on launcher start")
     p.add_argument("--no-browser", action="store_true", help="Don't open the dashboard in a browser")
     p.add_argument("--native", action="store_true", help="Use pywebview native window instead of browser")
     p.add_argument(
@@ -500,7 +500,7 @@ def _parse_args(argv: Optional[list] = None) -> argparse.Namespace:
         "--grafana-url",
         default=None,
         help="If set, tray menu gains 'Open Grafana' item pointing here "
-             "(e.g. http://localhost:3000/d/helix-overview/helix-overview)",
+             "(e.g. http://localhost:3000/d/cymatix-overview/cymatix-overview)",
     )
     p.add_argument(
         "--prometheus-url",
@@ -567,13 +567,13 @@ def _is_loopback_host(host: Optional[str]) -> bool:
     return (host or "").strip().lower() in {"127.0.0.1", "localhost", "::1"}
 
 
-def _should_route_helix_upstream_via_headroom(cfg, auto_override: Optional[bool] = None) -> bool:
-    """Decide whether the launcher should rewrite helix's chat upstream
+def _should_route_cymatix_upstream_via_headroom(cfg, auto_override: Optional[bool] = None) -> bool:
+    """Decide whether the launcher should rewrite cymatix's chat upstream
     to dial the local Headroom proxy.
 
     Precedence (highest wins):
 
-      1. ``auto_override`` (from ``HELIX_HEADROOM_ROUTE_UPSTREAM_AUTO``):
+      1. ``auto_override`` (from ``CYMATIX_HEADROOM_ROUTE_UPSTREAM_AUTO``):
          truthy forces ON, falsy forces OFF, ``None`` defers to config.
       2. ``cfg.headroom.route_upstream``: must be ``True`` to route.
          Defaults False so a fresh install never silently rewrites the
@@ -611,29 +611,29 @@ def _should_route_helix_upstream_via_headroom(cfg, auto_override: Optional[bool]
     return True
 
 
-def _configure_helix_upstream_routing(cfg, auto_override: Optional[bool] = None) -> bool:
-    """Set env overrides so Helix optionally routes chat upstream via Headroom.
+def _configure_cymatix_upstream_routing(cfg, auto_override: Optional[bool] = None) -> bool:
+    """Set env overrides so Cymatix optionally routes chat upstream via Headroom.
 
-    Returns True when Helix should point at the local Headroom proxy.
+    Returns True when Cymatix should point at the local Headroom proxy.
     """
-    route_via_headroom = _should_route_helix_upstream_via_headroom(
+    route_via_headroom = _should_route_cymatix_upstream_via_headroom(
         cfg, auto_override=auto_override,
     )
     if route_via_headroom:
         headroom_base = f"http://{cfg.headroom.host}:{cfg.headroom.port}"
         os.environ["OPENAI_TARGET_API_URL"] = str(cfg.server.upstream).rstrip("/")
-        os.environ["HELIX_SERVER_UPSTREAM"] = headroom_base
+        os.environ["CYMATIX_SERVER_UPSTREAM"] = headroom_base
         log.info(
-            "Helix upstream auto-route ON: %s -> %s",
+            "Cymatix upstream auto-route ON: %s -> %s",
             cfg.server.upstream,
             headroom_base,
         )
         return True
 
     # Clear launcher-managed routing so local upstreams stay direct.
-    os.environ.pop("HELIX_SERVER_UPSTREAM", None)
+    os.environ.pop("CYMATIX_SERVER_UPSTREAM", None)
     os.environ.pop("OPENAI_TARGET_API_URL", None)
-    log.info("Helix upstream auto-route OFF: using direct upstream %s", cfg.server.upstream)
+    log.info("Cymatix upstream auto-route OFF: using direct upstream %s", cfg.server.upstream)
     return False
 
 
@@ -646,12 +646,12 @@ def _maybe_build_headroom(
     the feature isn't enabled for this environment.
 
     Resolution order:
-        1. `helix-context[codec]` must be installed (headroom importable)
+        1. `cymatix-context[codec]` must be installed (headroom importable)
         2. Try to adopt an existing headroom proxy on the configured port.
         3. If no orphan found, require `[headroom] enabled = true` in
-           helix.toml (or HELIX_HEADROOM_ENABLED=1).
+           cymatix.toml (or CYMATIX_HEADROOM_ENABLED=1).
         4. If enabled AND no orphan found AND
-           (autostart=true OR HELIX_HEADROOM_AUTOSTART=1),
+           (autostart=true OR CYMATIX_HEADROOM_AUTOSTART=1),
            spawn a new headroom child.
 
     Never raises — returns (None, None) on any failure. Headroom is an
@@ -718,7 +718,7 @@ def _observability_install_complete() -> bool:
 
 
 def _should_skip_observability() -> bool:
-    """True iff HELIX_OBSERVABILITY is explicitly set to an opt-out token.
+    """True iff CYMATIX_OBSERVABILITY is explicitly set to an opt-out token.
 
     The default is opt-IN: unset or unrecognized strings yield False
     (run observability). The opt-out vocabulary is "0"/"false"/"no"/"off"
@@ -726,7 +726,7 @@ def _should_skip_observability() -> bool:
     matches OPT-IN tokens — the inverse vocabulary), so we keep this as
     a small named helper rather than forcing a negate-of-truthy fit.
     """
-    return os.environ.get("HELIX_OBSERVABILITY", "1").strip().lower() in (
+    return os.environ.get("CYMATIX_OBSERVABILITY", "1").strip().lower() in (
         "0", "false", "no", "off",
     )
 
@@ -737,7 +737,7 @@ def _maybe_build_observability() -> tuple[
     """Return (supervisor, install_pending).
 
     supervisor is None when:
-        - HELIX_OBSERVABILITY is opt-out (install_pending=False)
+        - CYMATIX_OBSERVABILITY is opt-out (install_pending=False)
         - install is incomplete (install_pending=True — tray will balloon)
         - import error / extras not installed (install_pending=False)
 
@@ -745,7 +745,7 @@ def _maybe_build_observability() -> tuple[
     and the caller should schedule the install-needed balloon.
     """
     if _should_skip_observability():
-        log.info("Observability skipped: HELIX_OBSERVABILITY=0")
+        log.info("Observability skipped: CYMATIX_OBSERVABILITY=0")
         return None, False
 
     if not _observability_install_complete():
@@ -768,21 +768,21 @@ def _maybe_build_observability() -> tuple[
 
 
 def _export_otel_env_for_backend() -> None:
-    """Point the helix child's OTel exporter at the observability stack.
+    """Point the cymatix child's OTel exporter at the observability stack.
 
     Called after ObservabilitySupervisor.start_all() returns without
     raising (services spawned or adopted as external). Without this, the
     default boot ran a full Grafana/Tempo/Loki/Prometheus stack while the
-    backend emitted nothing — HELIX_OTEL_ENABLED defaults off — so a
-    fresh install got an empty helix-overview dashboard.
+    backend emitted nothing — CYMATIX_OTEL_ENABLED defaults off — so a
+    fresh install got an empty cymatix-overview dashboard.
 
-    Mutates the launcher's own os.environ BEFORE the helix child spawns;
-    HelixSupervisor.start() passes the environment through (env=None
+    Mutates the launcher's own os.environ BEFORE the cymatix child spawns;
+    CymatixSupervisor.start() passes the environment through (env=None
     inherits, extra_env copies os.environ first), so main + bench children
     both pick it up, as do tray-menu restarts.
 
     Guards:
-    - An EXPLICIT user HELIX_OTEL_ENABLED — on or off — is never
+    - An EXPLICIT user CYMATIX_OTEL_ENABLED — on or off — is never
       overridden. (Env-over-toml precedence is otherwise intentional:
       the export must beat the shipped ``[telemetry] enabled=false``
       default.)
@@ -797,9 +797,9 @@ def _export_otel_env_for_backend() -> None:
     The endpoint is deliberately NOT exported: the backend's own
     resolution chain (env > [telemetry] toml > default) already lands on
     localhost:4317, and a synthesized env endpoint would override an
-    explicit user [telemetry] endpoint in helix.toml.
+    explicit user [telemetry] endpoint in cymatix.toml.
     """
-    if os.environ.get("HELIX_OTEL_ENABLED", "").strip():
+    if os.environ.get("CYMATIX_OTEL_ENABLED", "").strip():
         return
     from .observability_health import SERVICE_PORTS, is_port_bound
     otlp_port = SERVICE_PORTS["collector"][0]
@@ -807,14 +807,14 @@ def _export_otel_env_for_backend() -> None:
         log.warning(
             "Observability start reported success but the collector OTLP "
             "port :%d is not accepting connections — NOT exporting "
-            "HELIX_OTEL_ENABLED for the helix child (a backend dialing a "
+            "CYMATIX_OTEL_ENABLED for the cymatix child (a backend dialing a "
             "dead collector wedges its gRPC channel)",
             otlp_port,
         )
         return
-    os.environ["HELIX_OTEL_ENABLED"] = "1"
+    os.environ["CYMATIX_OTEL_ENABLED"] = "1"
     log.info(
-        "Observability stack up — exported HELIX_OTEL_ENABLED=1 for helix "
+        "Observability stack up — exported CYMATIX_OTEL_ENABLED=1 for cymatix "
         "children spawned by this launcher (collector :%d)",
         otlp_port,
     )
@@ -823,7 +823,7 @@ def _export_otel_env_for_backend() -> None:
 def _start_observability_stack(
     observability_sup: Optional["ObservabilitySupervisor"],
 ) -> None:
-    """start_all() + on success export the OTel env for the helix child.
+    """start_all() + on success export the OTel env for the cymatix child.
 
     A failed start deliberately skips the export — pointing the backend
     at a dead collector wedges its gRPC channel (see the start-order
@@ -860,7 +860,7 @@ def _handle_service_command(command: str, dry_run: bool, port: int = 11438) -> i
 
 def _configure_logging(verbose: bool) -> None:
     """Attach a console handler AND a rotating file handler at
-    ``~/.helix/launcher/launcher.log``.
+    ``~/.cymatix/launcher/launcher.log``.
 
     Without the file handler, autostart failures are invisible — the
     ``start "..." /B python -m cymatix_context.launcher.app`` invocation in
@@ -884,7 +884,7 @@ def _configure_logging(verbose: bool) -> None:
     try:
         from logging.handlers import RotatingFileHandler
 
-        log_dir = Path.home() / ".helix" / "launcher"
+        log_dir = Path.home() / ".cymatix" / "launcher"
         log_dir.mkdir(parents=True, exist_ok=True)
         file_handler = RotatingFileHandler(
             log_dir / "launcher.log",
@@ -982,7 +982,7 @@ def main(argv: Optional[list] = None) -> int:
     store.set_launcher(pid=_current_pid())
 
     # Re-apply a durable tray genome selection (issue #286) BEFORE the
-    # supervisor spawns helix, so the child inherits HELIX_GENOME_PATH.
+    # supervisor spawns cymatix, so the child inherits CYMATIX_GENOME_PATH.
     # An explicit env var (bench wrapper, dev shell) still wins.
     try:
         from . import genome_registry as _gr_boot
@@ -992,24 +992,24 @@ def main(argv: Optional[list] = None) -> int:
 
     from cymatix_context.config import load_config
     runtime_cfg = load_config()
-    route_helix_via_headroom = _configure_helix_upstream_routing(
+    route_cymatix_via_headroom = _configure_cymatix_upstream_routing(
         runtime_cfg,
-        auto_override=_env_truthy("HELIX_HEADROOM_ROUTE_UPSTREAM_AUTO"),
+        auto_override=_env_truthy("CYMATIX_HEADROOM_ROUTE_UPSTREAM_AUTO"),
     )
 
-    supervisor = HelixSupervisor(
+    supervisor = CymatixSupervisor(
         store=store,
-        helix_host=args.helix_host,
-        helix_port=args.helix_port,
+        cymatix_host=args.cymatix_host,
+        cymatix_port=args.cymatix_port,
     )
 
-    # ── dev/configuration mode: optional second helix on the bench port ──
+    # ── dev/configuration mode: optional second cymatix on the bench port ──
     # Chat stays attached to the MAIN genome on the main port; a subagent
     # can point the bench-harness at the bench port without the two
     # instances sharing a knowledge store. Final deployments leave
     # [server] bench_enabled = false (and pass no --bench) and get exactly
     # one server.
-    bench_supervisor: Optional[HelixSupervisor] = None
+    bench_supervisor: Optional[CymatixSupervisor] = None
     bench_genome_path = ""
     try:
         from ..config import load_config as _load_config
@@ -1019,22 +1019,22 @@ def main(argv: Optional[list] = None) -> int:
             bench_genome_path = _cfg.server.bench_genome_path
             from .state import StateStore as _StateStore
             _bench_store = _StateStore(
-                path=Path.home() / ".helix" / "launcher" / "bench-state.json",
+                path=Path.home() / ".cymatix" / "launcher" / "bench-state.json",
             )
-            bench_supervisor = HelixSupervisor(
+            bench_supervisor = CymatixSupervisor(
                 store=_bench_store,
-                helix_host=args.helix_host,
-                helix_port=_cfg.server.bench_port,
-                helix_log_path=(
-                    Path.home() / ".helix" / "launcher" / "helix-bench.log"
+                cymatix_host=args.cymatix_host,
+                cymatix_port=_cfg.server.bench_port,
+                cymatix_log_path=(
+                    Path.home() / ".cymatix" / "launcher" / "cymatix-bench.log"
                 ),
                 extra_env={
-                    "HELIX_GENOME_PATH": bench_genome_path,
-                    "HELIX_SERVER_PORT": str(_cfg.server.bench_port),
+                    "CYMATIX_GENOME_PATH": bench_genome_path,
+                    "CYMATIX_SERVER_PORT": str(_cfg.server.bench_port),
                 },
             )
             log.info(
-                "Bench mode: second helix planned on :%d (genome=%s)",
+                "Bench mode: second cymatix planned on :%d (genome=%s)",
                 _cfg.server.bench_port, bench_genome_path,
             )
     except Exception:
@@ -1052,7 +1052,7 @@ def main(argv: Optional[list] = None) -> int:
     # the false trigger is root-caused. While disabled, first boot falls
     # back to the pre-#308 behaviour (autostart creates the store).
     needs_db_selection = False
-    if _env_truthy("HELIX_DB_SELECT_MODAL"):
+    if _env_truthy("CYMATIX_DB_SELECT_MODAL"):
         try:
             from . import genome_registry as _gr
             needs_db_selection = not _gr.active_genome_path().exists()
@@ -1073,13 +1073,13 @@ def main(argv: Optional[list] = None) -> int:
     # the launcher may provision a new Headroom child.
     headroom_supervisor, headroom_dashboard_url = _maybe_build_headroom(
         store=store,
-        autostart_override=_env_truthy("HELIX_HEADROOM_AUTOSTART"),
-        enabled_override=_env_truthy("HELIX_HEADROOM_ENABLED"),
+        autostart_override=_env_truthy("CYMATIX_HEADROOM_AUTOSTART"),
+        enabled_override=_env_truthy("CYMATIX_HEADROOM_ENABLED"),
     )
 
-    # Build + start the observability stack BEFORE helix in tray mode so
-    # the collector is already bound to :4317 when helix's OTLP exporter
-    # dials it. Otherwise helix dials a dead port at startup, the gRPC
+    # Build + start the observability stack BEFORE cymatix in tray mode so
+    # the collector is already bound to :4317 when cymatix's OTLP exporter
+    # dials it. Otherwise cymatix dials a dead port at startup, the gRPC
     # channel wedges, and metrics drop with `StatusCode.UNIMPLEMENTED`
     # even after the collector eventually binds.
     observability_sup: Optional["ObservabilitySupervisor"] = None
@@ -1088,12 +1088,12 @@ def main(argv: Optional[list] = None) -> int:
         observability_sup, observability_install_pending = (
             _maybe_build_observability()
         )
-        # On success this also exports HELIX_OTEL_ENABLED=1 (+ endpoint)
-        # into our env so the helix child spawned below actually emits
+        # On success this also exports CYMATIX_OTEL_ENABLED=1 (+ endpoint)
+        # into our env so the cymatix child spawned below actually emits
         # into the stack we just started. Explicit user env wins.
         _start_observability_stack(observability_sup)
 
-    # Adopt or start helix before the UI comes up.
+    # Adopt or start cymatix before the UI comes up.
     if needs_db_selection:
         log.info(
             "No genome found at the active path — skipping autostart; "
@@ -1101,20 +1101,20 @@ def main(argv: Optional[list] = None) -> int:
         )
     if not supervisor.adopt() and not args.no_autostart and not needs_db_selection:
         try:
-            if route_helix_via_headroom:
+            if route_cymatix_via_headroom:
                 log.info(
-                    "Starting helix on %s:%d via Headroom upstream %s",
-                    args.helix_host,
-                    args.helix_port,
-                    os.environ.get("HELIX_SERVER_UPSTREAM"),
+                    "Starting cymatix on %s:%d via Headroom upstream %s",
+                    args.cymatix_host,
+                    args.cymatix_port,
+                    os.environ.get("CYMATIX_SERVER_UPSTREAM"),
                 )
             else:
-                log.info("Starting helix on %s:%d", args.helix_host, args.helix_port)
+                log.info("Starting cymatix on %s:%d", args.cymatix_host, args.cymatix_port)
             supervisor.start()
         except AlreadyRunning:
             pass
         except Exception as exc:
-            log.error("Failed to start helix: %s", exc)
+            log.error("Failed to start cymatix: %s", exc)
             log.info("Launcher will continue; use the Start button once the issue is fixed")
 
     if bench_supervisor is not None and not args.no_autostart:
@@ -1124,7 +1124,7 @@ def main(argv: Optional[list] = None) -> int:
         except AlreadyRunning:
             pass
         except Exception as exc:
-            log.error("Failed to start bench helix: %s", exc)
+            log.error("Failed to start bench cymatix: %s", exc)
 
     app = create_app(
         store=store,
@@ -1154,7 +1154,7 @@ def main(argv: Optional[list] = None) -> int:
         # pystray owns the process lifecycle — Quit from the tray menu
         # calls icon.stop() which unblocks this main thread; main() returns
         # and the daemon thread dies with the process.
-        from .tray import HelixTrayIcon
+        from .tray import CymatixTrayIcon
 
         server_thread = threading.Thread(
             target=_run_uvicorn,
@@ -1165,8 +1165,8 @@ def main(argv: Optional[list] = None) -> int:
         server_thread.start()
         _wait_for_port_bound(args.host, args.port)  # replaces 0.4s race
 
-        # observability_sup was built + started above (BEFORE helix), so the
-        # collector is already bound to :4317 when helix's OTLP exporter
+        # observability_sup was built + started above (BEFORE cymatix), so the
+        # collector is already bound to :4317 when cymatix's OTLP exporter
         # dials on first metric push. Only the menu URLs need wiring here.
         if observability_sup is not None:
             if args.grafana_url is None:
@@ -1174,7 +1174,7 @@ def main(argv: Optional[list] = None) -> int:
             if args.prometheus_url is None:
                 args.prometheus_url = DEFAULT_PROMETHEUS_URL
 
-        tray_icon = HelixTrayIcon(
+        tray_icon = CymatixTrayIcon(
             supervisor=supervisor,
             dashboard_url=url,
             grafana_url=args.grafana_url,
@@ -1251,7 +1251,7 @@ def _run_tray_native_combined(
     host: str,
     port: int,
     url: str,
-    supervisor: HelixSupervisor,
+    supervisor: CymatixSupervisor,
     grafana_url: Optional[str] = None,
     prometheus_url: Optional[str] = None,
 ) -> int:
@@ -1330,19 +1330,19 @@ def _run_tray_native_combined(
         except Exception:
             log.warning("Open browser failed", exc_info=True)
 
-    def _start_helix(icon, item):  # noqa: ARG001
+    def _start_cymatix(icon, item):  # noqa: ARG001
         try:
             supervisor.start()
         except Exception:
             log.warning("Tray start failed", exc_info=True)
 
-    def _restart_helix(icon, item):  # noqa: ARG001
+    def _restart_cymatix(icon, item):  # noqa: ARG001
         try:
             supervisor.restart(reason="manual restart from tray menu")
         except Exception:
             log.warning("Tray restart failed", exc_info=True)
 
-    def _stop_helix(icon, item):  # noqa: ARG001
+    def _stop_cymatix(icon, item):  # noqa: ARG001
         try:
             supervisor.stop(reason="manual stop from tray menu")
         except Exception:
@@ -1352,7 +1352,7 @@ def _run_tray_native_combined(
         log.info("Tray Quit — destroying window")
         quitting.set()
 
-        # Only stop a helix this launcher spawned — adopted instances
+        # Only stop a cymatix this launcher spawned — adopted instances
         # (started outside the launcher) survive Quit.
         stop_on_quit(supervisor, reason="launcher quit from tray menu (native)")
 
@@ -1398,15 +1398,15 @@ def _run_tray_native_combined(
     menu_items.extend([
         pystray.Menu.SEPARATOR,
         pystray.MenuItem(
-            "Start helix", _start_helix,
+            "Start cymatix", _start_cymatix,
             enabled=lambda item: not supervisor.is_running(),  # noqa: ARG005
         ),
         pystray.MenuItem(
-            "Restart helix", _restart_helix,
+            "Restart cymatix", _restart_cymatix,
             enabled=lambda item: supervisor.is_running(),  # noqa: ARG005
         ),
         pystray.MenuItem(
-            "Stop helix", _stop_helix,
+            "Stop cymatix", _stop_cymatix,
             enabled=lambda item: supervisor.is_running(),  # noqa: ARG005
         ),
         pystray.Menu.SEPARATOR,
@@ -1415,7 +1415,7 @@ def _run_tray_native_combined(
     tray_menu = pystray.Menu(*menu_items)
 
     tray_icon = pystray.Icon(
-        name="helix-launcher",
+        name="cymatix-launcher",
         icon=_build_icon_image(),
         title="Cymatix Launcher",
         menu=tray_menu,

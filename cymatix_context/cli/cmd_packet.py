@@ -1,9 +1,9 @@
-"""`helix packet` — agent-safe evidence bundle with freshness labels.
+"""`cymatix packet` — agent-safe evidence bundle with freshness labels.
 
-Wraps :meth:`cymatix_context.api.HelixSession.packet`, which itself
+Wraps :meth:`cymatix_context.api.CymatixSession.packet`, which itself
 delegates to ``cymatix_context.context_packet.build_context_packet`` —
 the same builder the FastAPI ``/context/packet`` endpoint and the
-``helix_context_packet`` MCP tool use. Output shape is identical so
+``cymatix_context_packet`` MCP tool use. Output shape is identical so
 agents can swap surfaces (CLI ↔ MCP ↔ HTTP) without changing call
 logic.
 

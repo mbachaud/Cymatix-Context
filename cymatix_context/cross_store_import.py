@@ -1,8 +1,8 @@
 """
 Horizontal Document Transfer (cross-store import) -- KnowledgeStore export/import.
 
-Enables portable knowledge store files (.helix) that can be transferred
-between Helix instances, seeding new projects with institutional
+Enables portable knowledge store files (.cymatix) that can be transferred
+between Cymatix instances, seeding new projects with institutional
 memory from mature ones.
 
 Bio analogue (legacy term: HGT):
@@ -11,7 +11,7 @@ Bio analogue (legacy term: HGT):
     (parent to offspring). Bacteria use it to share antibiotic
     resistance documents. We use it to share project knowledge.
 
-Export format (.helix):
+Export format (.cymatix):
     A JSON file containing:
     - header: metadata (source, timestamp, document count, version)
     - documents: list of Document objects (full fidelity, including signals)
@@ -32,9 +32,9 @@ from typing import Dict, List, Optional
 from .genome import Genome
 from .schemas import Gene
 
-log = logging.getLogger("helix.hgt")
+log = logging.getLogger("cymatix.hgt")
 
-HELIX_FORMAT_VERSION = 1
+CYMATIX_FORMAT_VERSION = 1
 
 
 def export_genome(
@@ -44,11 +44,11 @@ def export_genome(
     include_heterochromatin: bool = False,
 ) -> Dict:
     """
-    Export the knowledge store to a portable .helix file.
+    Export the knowledge store to a portable .cymatix file.
 
     Args:
         knowledge store: Source knowledge store to export
-        output_path: Path to write the .helix file
+        output_path: Path to write the .cymatix file
         description: Human-readable description of this knowledge store snapshot
         include_heterochromatin: Include stale/compacted documents (default: skip them)
 
@@ -85,7 +85,7 @@ def export_genome(
 
     # Build export
     export = {
-        "helix_format_version": HELIX_FORMAT_VERSION,
+        "cymatix_format_version": CYMATIX_FORMAT_VERSION,
         "header": {
             "exported_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
             "description": description,
@@ -120,11 +120,11 @@ def import_genome(
     merge_strategy: str = "skip_existing",
 ) -> Dict:
     """
-    Import documents from a .helix file into the knowledge store.
+    Import documents from a .cymatix file into the knowledge store.
 
     Args:
         knowledge store: Target knowledge store to import into
-        input_path: Path to the .helix file
+        input_path: Path to the .cymatix file
         merge_strategy: How to handle duplicate document IDs
             - "skip_existing": Keep the existing document (default, safe)
             - "overwrite": Replace existing documents with imported ones
@@ -135,14 +135,17 @@ def import_genome(
     """
     data = json.loads(Path(input_path).read_text(encoding="utf-8"))
 
-    version = data.get("helix_format_version", 0)
-    if version != HELIX_FORMAT_VERSION:
-        log.warning("Format version mismatch: expected %d, got %d", HELIX_FORMAT_VERSION, version)
+    # Read-compat: accept the legacy ``helix_format_version`` key so bundles
+    # exported before the cymatix rename still import (we only ever write the
+    # cymatix key back out).
+    version = data.get("cymatix_format_version", data.get("helix_format_version", 0))
+    if version != CYMATIX_FORMAT_VERSION:
+        log.warning("Format version mismatch: expected %d, got %d", CYMATIX_FORMAT_VERSION, version)
 
     genes_data = data.get("genes", [])
     header = data.get("header", {})
     # Transit checksums written by export_genome (same digest recomputed
-    # here — symmetric with export). Older .helix files predate the map;
+    # here — symmetric with export). Older .cymatix files predate the map;
     # for those, fall back to the legacy content-address check, which is
     # only valid when the gene_id actually is a content address.
     gene_checksums = data.get("gene_checksums")
@@ -155,7 +158,7 @@ def import_genome(
     for gene_dict in genes_data:
         gene = Gene.model_validate(gene_dict)
 
-        # Integrity verification: .helix files may have been edited in
+        # Integrity verification: .cymatix files may have been edited in
         # transit. Recompute the content digest and skip the row if it
         # doesn't match what the exporter recorded.
         actual = Genome.make_gene_id(gene.content)
@@ -210,14 +213,14 @@ def import_genome(
     }
 
 
-def genome_diff(genome: Genome, helix_path: str) -> Dict:
+def genome_diff(genome: Genome, cymatix_path: str) -> Dict:
     """
-    Compare a knowledge store against a .helix file without modifying anything.
+    Compare a knowledge store against a .cymatix file without modifying anything.
 
     Returns counts of documents that are new, shared, or only in the file.
     Useful for previewing an import before committing.
     """
-    data = json.loads(Path(helix_path).read_text(encoding="utf-8"))
+    data = json.loads(Path(cymatix_path).read_text(encoding="utf-8"))
     file_ids = {g["gene_id"] for g in data.get("genes", [])}
 
     cur = genome.conn.cursor()

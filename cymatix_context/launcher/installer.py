@@ -3,8 +3,8 @@ Service installer — platform-aware wrapper around the deploy/ templates.
 
 Supports three install targets:
 
-    Linux    → systemd user unit at ~/.config/systemd/user/helix-launcher.service
-    macOS    → launchd plist at ~/Library/LaunchAgents/com.swiftwing21.helix-launcher.plist
+    Linux    → systemd user unit at ~/.config/systemd/user/cymatix-launcher.service
+    macOS    → launchd plist at ~/Library/LaunchAgents/com.swiftwing21.cymatix-launcher.plist
     Windows  → prints NSSM recipe (cannot bundle NSSM due to licensing +
                download requirements; user runs the steps themselves)
 
@@ -15,14 +15,14 @@ the user can paste it into their own shell.
 
 Invoked via the CLI:
 
-    helix-launcher install-service
-    helix-launcher uninstall-service
+    cymatix-launcher install-service
+    cymatix-launcher uninstall-service
 
 Each subcommand walks through:
 
     1. Detect platform
     2. Locate the template file in the installed package (or repo `deploy/`)
-    3. Substitute placeholders (USER, ABSOLUTE_PATH_TO_HELIX_LAUNCHER, etc.)
+    3. Substitute placeholders (USER, ABSOLUTE_PATH_TO_CYMATIX_LAUNCHER, etc.)
     4. Write the target file with sane perms
     5. Print the next-step command
 """
@@ -37,7 +37,7 @@ import sys
 from pathlib import Path
 from typing import Optional, Tuple
 
-log = logging.getLogger("helix.launcher.installer")
+log = logging.getLogger("cymatix.launcher.installer")
 
 
 # ── platform detection ────────────────────────────────────────────
@@ -78,9 +78,9 @@ def _find_template(platform: str) -> Optional[Path]:
     if deploy is None:
         return None
     if platform == "linux":
-        return deploy / "systemd" / "helix-launcher.service"
+        return deploy / "systemd" / "cymatix-launcher.service"
     if platform == "darwin":
-        return deploy / "launchd" / "com.swiftwing21.helix-launcher.plist"
+        return deploy / "launchd" / "com.swiftwing21.cymatix-launcher.plist"
     return None  # Windows has no installable template (see install_service below)
 
 
@@ -89,25 +89,25 @@ def _find_template(platform: str) -> Optional[Path]:
 def target_path(platform: str) -> Optional[Path]:
     """Return the path the service file should be written to."""
     if platform == "linux":
-        return Path.home() / ".config" / "systemd" / "user" / "helix-launcher.service"
+        return Path.home() / ".config" / "systemd" / "user" / "cymatix-launcher.service"
     if platform == "darwin":
-        return Path.home() / "Library" / "LaunchAgents" / "com.swiftwing21.helix-launcher.plist"
+        return Path.home() / "Library" / "LaunchAgents" / "com.swiftwing21.cymatix-launcher.plist"
     return None
 
 
-# ── helix-launcher binary discovery ──────────────────────────────
+# ── cymatix-launcher binary discovery ──────────────────────────────
 
 def find_launcher_binary() -> Optional[Path]:
-    """Locate the helix-launcher console script on the current PATH."""
-    path = shutil.which("helix-launcher")
+    """Locate the cymatix-launcher console script on the current PATH."""
+    path = shutil.which("cymatix-launcher")
     if path:
         return Path(path)
     # Fall back to the same Python that's running us + its Scripts/bin dir.
     py = Path(sys.executable)
     for candidate in (
-        py.parent / "helix-launcher",
-        py.parent / "helix-launcher.exe",
-        py.parent / "Scripts" / "helix-launcher.exe",
+        py.parent / "cymatix-launcher",
+        py.parent / "cymatix-launcher.exe",
+        py.parent / "Scripts" / "cymatix-launcher.exe",
     ):
         if candidate.exists():
             return candidate
@@ -127,7 +127,7 @@ def _linux_replacements(launcher_path: Path) -> dict:
     # The systemd template uses %h (systemd's home placeholder) so we
     # only need to swap the ExecStart path.
     return {
-        "%h/.local/share/helix/.venv/bin/helix-launcher --no-browser":
+        "%h/.local/share/cymatix/.venv/bin/cymatix-launcher --no-browser":
             f"{launcher_path} --no-browser",
     }
 
@@ -135,7 +135,7 @@ def _linux_replacements(launcher_path: Path) -> dict:
 def _darwin_replacements(launcher_path: Path) -> dict:
     user = getpass.getuser()
     return {
-        "/usr/local/bin/helix-launcher": str(launcher_path),
+        "/usr/local/bin/cymatix-launcher": str(launcher_path),
         "/Users/USERNAME": str(Path.home()),
     }
 
@@ -162,14 +162,14 @@ def install_service(dry_run: bool = False, port: int = 11438) -> Tuple[bool, str
             "installed and the service registered manually. Recipe:\n\n"
             "    1. Install NSSM:\n"
             "         choco install nssm   (or scoop install nssm)\n\n"
-            "    2. Find your helix-launcher.exe:\n"
-            "         where helix-launcher\n\n"
+            "    2. Find your cymatix-launcher.exe:\n"
+            "         where cymatix-launcher\n\n"
             "    3. Register as a Windows service (run as admin):\n"
-            "         nssm install HelixLauncher\n"
+            "         nssm install CymatixLauncher\n"
             "       ... then fill in the NSSM GUI with the launcher path + --no-browser\n"
             "       See deploy/windows/README.md for the complete walkthrough.\n\n"
             "    4. Start the service:\n"
-            "         nssm start HelixLauncher"
+            "         nssm start CymatixLauncher"
         )
         return False, msg
 
@@ -184,7 +184,7 @@ def install_service(dry_run: bool = False, port: int = 11438) -> Tuple[bool, str
     launcher_path = find_launcher_binary()
     if launcher_path is None:
         return False, (
-            "Could not locate the `helix-launcher` executable on PATH. "
+            "Could not locate the `cymatix-launcher` executable on PATH. "
             "Install the launcher extras first:\n\n"
             "    pip install cymatix-context[launcher]"
         )
@@ -217,10 +217,10 @@ def install_service(dry_run: bool = False, port: int = 11438) -> Tuple[bool, str
             f"Wrote {target}\n\n"
             "Next steps:\n\n"
             "    systemctl --user daemon-reload\n"
-            "    systemctl --user enable --now helix-launcher.service\n\n"
+            "    systemctl --user enable --now cymatix-launcher.service\n\n"
             "Verify:\n\n"
-            "    systemctl --user status helix-launcher.service\n"
-            "    journalctl --user -u helix-launcher.service -f\n\n"
+            "    systemctl --user status cymatix-launcher.service\n"
+            "    journalctl --user -u cymatix-launcher.service -f\n\n"
             f"Open http://127.0.0.1:{port}/ in your browser."
         )
     else:  # darwin
@@ -229,8 +229,8 @@ def install_service(dry_run: bool = False, port: int = 11438) -> Tuple[bool, str
             "Next steps:\n\n"
             f"    launchctl load {target}\n\n"
             "Verify:\n\n"
-            "    launchctl list | grep helix-launcher\n"
-            "    tail -f ~/Library/Logs/helix-launcher.log\n\n"
+            "    launchctl list | grep cymatix-launcher\n"
+            "    tail -f ~/Library/Logs/cymatix-launcher.log\n\n"
             f"Open http://127.0.0.1:{port}/ in your browser."
         )
 
@@ -253,8 +253,8 @@ def uninstall_service(dry_run: bool = False) -> Tuple[bool, str]:
     if platform == "win32":
         msg = (
             "Windows uninstall is not automated. Run:\n\n"
-            "    nssm stop HelixLauncher\n"
-            "    nssm remove HelixLauncher confirm"
+            "    nssm stop CymatixLauncher\n"
+            "    nssm remove CymatixLauncher confirm"
         )
         return False, msg
 
@@ -272,7 +272,7 @@ def uninstall_service(dry_run: bool = False) -> Tuple[bool, str]:
         post = (
             f"Removed {target}\n\n"
             "If the service was running, stop and disable it:\n\n"
-            "    systemctl --user disable --now helix-launcher.service\n"
+            "    systemctl --user disable --now cymatix-launcher.service\n"
             "    systemctl --user daemon-reload"
         )
     else:  # darwin

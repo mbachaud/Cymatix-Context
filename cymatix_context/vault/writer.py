@@ -2,7 +2,7 @@
 
 Atomic writes use a tmp+rename pattern with a vault-root sentinel so that any
 external file watcher (in v1.1, our own watcher) can suppress events for
-helix-side writes.
+cymatix-side writes.
 """
 from __future__ import annotations
 
@@ -26,7 +26,7 @@ if TYPE_CHECKING:
 
 log = logging.getLogger(__name__)
 
-SENTINEL_FILENAME = ".helix-syncing"
+SENTINEL_FILENAME = ".cymatix-syncing"
 
 
 def write_atomic(*, vault_root: Path, target: Path, content: str) -> None:

@@ -1,7 +1,7 @@
 """
 Session working-set register — Sprint 2 of the AI-consumer roadmap.
 
-Every /context call today is stateless: the same LLM querying Helix 20-60
+Every /context call today is stateless: the same LLM querying Cymatix 20-60
 times in one conversation pays full token cost for overlapping document sets
 delivered on nearly every turn. The expected ~40% token reduction comes
 from elidng documents the consumer already holds.
@@ -44,7 +44,7 @@ import sqlite3
 import time
 from typing import List, Optional, Tuple
 
-log = logging.getLogger("helix.session_delivery")
+log = logging.getLogger("cymatix.session_delivery")
 
 
 # ── Schema ────────────────────────────────────────────────────────────

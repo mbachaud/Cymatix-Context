@@ -21,7 +21,7 @@ from . import output
 def invoked_prog(default: str = "cymatix") -> str:
     """The console-script name this process was invoked as.
 
-    Derived from argv[0] so each alias (`cymatix`, deprecated `helix`,
+    Derived from argv[0] so each alias (`cymatix`, deprecated `cymatix`,
     `cymatix-status`, ...) shows itself in --help / usage / error output
     instead of a hardcoded brand. Subcommand parsers compose it as
     ``f"{invoked_prog()} query"``.

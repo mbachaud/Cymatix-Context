@@ -20,8 +20,8 @@ Structure:
 Noise stems are excluded — generic names like ``__init__`` / ``index`` /
 ``main`` match too many documents to discriminate. See ``_NOISE_STEMS``.
 
-Flag-gated: ``[retrieval].filename_anchor_enabled`` in helix.toml and
-``HELIX_FILENAME_ANCHOR_ENABLED=1`` env var. Default off so the existing
+Flag-gated: ``[retrieval].filename_anchor_enabled`` in cymatix.toml and
+``CYMATIX_FILENAME_ANCHOR_ENABLED=1`` env var. Default off so the existing
 retrieval behavior is untouched until benched.
 """
 
@@ -33,7 +33,7 @@ import re
 import sqlite3
 from typing import Dict, List, Optional, Set
 
-log = logging.getLogger("helix.filename_anchor")
+log = logging.getLogger("cymatix.filename_anchor")
 
 # Noise stems — generic filenames that appear across many projects and
 # would blanket-boost documents if we treated them as discriminators. This
@@ -46,7 +46,7 @@ _NOISE_STEMS = frozenset({
 })
 
 # Match a filename with an extension, capture the stem. Accepts things
-# like "config.py", "Hero.tsx", "helix-launcher.py.bak" (stem stops at
+# like "config.py", "Hero.tsx", "cymatix-launcher.py.bak" (stem stops at
 # the first extension to keep stems meaningful).
 _FILE_WITH_EXT = re.compile(r"([A-Za-z0-9_.-]+?)\.([A-Za-z0-9]{1,6})$")
 
@@ -55,7 +55,7 @@ def filename_stem(source_id: Optional[str]) -> Optional[str]:
     """Return the filename stem (basename without extension) or None.
 
     Examples:
-        "F:/Projects/helix-context/cymatix_context/config.py"  -> "config"
+        "F:/Projects/cymatix-context/cymatix_context/config.py"  -> "config"
         "src/components/Hero.tsx"                            -> "hero"
         "F:/SteamLibrary/steamapps/common/Hades/maps.lua"    -> "maps"
         "README.md"                                          -> "readme"   # will be filtered
@@ -72,8 +72,8 @@ def filename_stem(source_id: Optional[str]) -> Optional[str]:
         return None
     stem = m.group(1).lower()
     # Strip any sub-extension piece like ".bak" left in the stem
-    # (e.g. "helix.toml.bak" -> stem candidate was "helix.toml", we
-    # want "helix"). Safe to split on '.' since real stems don't contain
+    # (e.g. "cymatix.toml.bak" -> stem candidate was "cymatix.toml", we
+    # want "cymatix"). Safe to split on '.' since real stems don't contain
     # meaningful dots once the extension is off.
     if "." in stem:
         stem = stem.split(".", 1)[0]
@@ -131,7 +131,7 @@ def remove_gene(conn: sqlite3.Connection, gene_id: str) -> None:
 
 def is_enabled() -> bool:
     """Check env-var override. Toml flag is read separately by the caller."""
-    return os.environ.get("HELIX_FILENAME_ANCHOR_ENABLED", "").lower() in {"1", "true", "yes", "on"}
+    return os.environ.get("CYMATIX_FILENAME_ANCHOR_ENABLED", "").lower() in {"1", "true", "yes", "on"}
 
 
 def boost_scores(

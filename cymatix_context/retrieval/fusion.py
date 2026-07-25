@@ -38,7 +38,7 @@ __all__ = ["Fuser", "DEFAULT_RRF_K"]
 
 # Cormack 2009 default. The original IR paper used 60 across TREC tracks
 # and showed insensitivity in [10, 100]. Surfaced as ``[retrieval] rrf_k``
-# in helix.toml for operators who want to tune.
+# in cymatix.toml for operators who want to tune.
 DEFAULT_RRF_K: int = 60
 
 

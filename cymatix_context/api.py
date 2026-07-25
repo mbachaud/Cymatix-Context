@@ -1,25 +1,25 @@
 """
-Helix Context — shared-lib API boundary.
+Cymatix Context — shared-lib API boundary.
 
 DESIGN SKETCH (2026-05-11). The function bodies delegate to
-``HelixContextManager``; this module is the *interface contract* the
+``CymatixContextManager``; this module is the *interface contract* the
 three surfaces (MCP, CLI, FastAPI) all import from. Implementation
 bodies will be filled in once the daemon protocol and session-aware
 bench shape are locked.
 
 Why this file exists
 --------------------
-Helix is moving to a three-surface architecture. All three surfaces
+Cymatix is moving to a three-surface architecture. All three surfaces
 import from this module so behavior is single-sourced:
 
 ::
 
-    helix-cli (subcommand)         ─┐
-    helix-mcp (mcp tool)           ─┼──► cymatix_context.api ──► HelixContextManager
-    helix.serve (FastAPI / daemon) ─┘
+    cymatix-cli (subcommand)         ─┐
+    cymatix-mcp (mcp tool)           ─┼──► cymatix_context.api ──► CymatixContextManager
+    cymatix.serve (FastAPI / daemon) ─┘
 
-- **MCP** — ambient agent tool. One rich call: ``helix.query(text, k)``.
-  Plus ``helix.help()`` advertising the CLI escape hatch.
+- **MCP** — ambient agent tool. One rich call: ``cymatix.query(text, k)``.
+  Plus ``cymatix.help()`` advertising the CLI escape hatch.
 - **CLI** — agent autonomy + human ops. Multi-stage, label/drift,
   diagnostics. The agent reaches for it when it needs to walk the
   genome.
@@ -29,7 +29,7 @@ import from this module so behavior is single-sourced:
 
 Sessions (v1 = stub; v2 adds adaptive caps)
 -------------------------------------------
-A ``HelixSession`` always carries a ``session_id`` so telemetry can
+A ``CymatixSession`` always carries a ``session_id`` so telemetry can
 group calls. In v1 (cold-start CLI shipping first) the session is a
 pure tagging construct: the adaptive-cap heuristic, daemon-tracked
 state, and per-session profile evolution are all **deferred to v2**
@@ -60,7 +60,7 @@ import logging
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
-from .config import HelixConfig
+from .config import CymatixConfig
 from .backends.sema_codec import decode_embedding
 from .schemas import (
     ContextItem,
@@ -84,7 +84,7 @@ log = logging.getLogger(__name__)
 
 @dataclass
 class QueryResult:
-    """The headline shape returned by ``HelixSession.query``.
+    """The headline shape returned by ``CymatixSession.query``.
 
     A ``ContextWindow`` is the full pipeline output; ``QueryResult``
     is the agent-facing projection: the bytes the agent will read,
@@ -142,7 +142,7 @@ class QueryResult:
 
 @dataclass
 class IngestResult:
-    """Returned from ``HelixSession.ingest``."""
+    """Returned from ``CymatixSession.ingest``."""
     gene_ids: List[str]
     chunks: int
     bytes_written: int = 0
@@ -150,7 +150,7 @@ class IngestResult:
 
 @dataclass
 class StatsResult:
-    """Lightweight stats projection — ``HelixSession.stats``.
+    """Lightweight stats projection — ``CymatixSession.stats``.
 
     Mirror of the ``GET /stats`` endpoint output. Kept narrow on
     purpose: anything richer goes through the FastAPI surface.
@@ -167,8 +167,8 @@ class StatsResult:
 # ── Sessions ──────────────────────────────────────────────────────────
 
 
-class HelixSession:
-    """Stateful handle to a helix-context instance.
+class CymatixSession:
+    """Stateful handle to a cymatix-context instance.
 
     One session per logical agent conversation. Carries the session_id
     that telemetry stamps on every emitted span and the adaptive tier
@@ -176,7 +176,7 @@ class HelixSession:
 
     Lifecycle:
       * Constructed by ``open_session()`` (preferred) or directly when
-        the caller already owns a configured ``HelixContextManager``.
+        the caller already owns a configured ``CymatixContextManager``.
       * ``close()`` flushes pending replication, releases handles, and
         emits the final session-summary span.
       * Can be used as a context manager (``with open_session() as s:``).
@@ -185,13 +185,13 @@ class HelixSession:
       * Sessions are NOT thread-safe. One session per agent / per
         worker. Concurrent calls on the same session may interleave
         adaptive-cap state updates incorrectly.
-      * Multiple sessions on the same ``HelixContextManager`` are safe;
+      * Multiple sessions on the same ``CymatixContextManager`` are safe;
         the manager itself handles SQLite-level concurrency.
     """
 
     def __init__(
         self,
-        manager: "Any",  # Forward ref — HelixContextManager — avoids circular import
+        manager: "Any",  # Forward ref — CymatixContextManager — avoids circular import
         *,
         session_id: Optional[str] = None,
         adaptive_caps: bool = False,  # v1: stub. v2: daemon-mode follow-up
@@ -220,7 +220,7 @@ class HelixSession:
         ignore_delivered: bool = False,
         learn: bool = False,
     ) -> QueryResult:
-        """Run the helix retrieval pipeline for ``text``.
+        """Run the cymatix retrieval pipeline for ``text``.
 
         **Read-only by default.** No background replication is
         triggered unless ``learn=True``. This makes the CLI safe to
@@ -246,7 +246,7 @@ class HelixSession:
                filter — useful when the agent re-queries to get the
                same document with a fresh splice.
             learn: When ``True``, the pipeline writes the query (and
-               eventually the response, via ``HelixSession.learn``)
+               eventually the response, via ``CymatixSession.learn``)
                back into the genome. Defaults to ``False`` so the CLI
                default is non-mutating.
 
@@ -320,7 +320,7 @@ class HelixSession:
         content_type: str = "text",
         metadata: Optional[Dict[str, Any]] = None,
     ) -> IngestResult:
-        """Add ``content`` to the genome. See ``HelixContextManager.ingest``."""
+        """Add ``content`` to the genome. See ``CymatixContextManager.ingest``."""
         gene_ids = self._manager.ingest(
             content=content,
             content_type=content_type,
@@ -360,8 +360,8 @@ class HelixSession:
     # thin in-process wrapper over the existing primitives — no HTTP,
     # no separate server, so cold-start CLI keeps its single-process
     # promise. Identical semantics to the matching MCP tools
-    # (helix_gene_get / helix_neighbors / helix_context_packet /
-    # helix_refresh_targets) so agents can switch surfaces without
+    # (cymatix_gene_get / cymatix_neighbors / cymatix_context_packet /
+    # cymatix_refresh_targets) so agents can switch surfaces without
     # changing call logic.
 
     def gene_get(self, gene_id: str) -> Optional[Gene]:
@@ -427,7 +427,7 @@ class HelixSession:
 
         Returns a list of ``{gene_id, sema_cos_sim, preview, path}``
         dicts — the same shape the ``/debug/neighbors`` HTTP endpoint
-        and the ``helix_neighbors`` MCP tool emit. Read-only.
+        and the ``cymatix_neighbors`` MCP tool emit. Read-only.
 
         Returns an empty list when the SEMA codec is unavailable
         (e.g. the ``embeddings`` extra is not installed, or no genes
@@ -515,7 +515,7 @@ class HelixSession:
         # session-local state is released. Cold-start callers go
         # through close_manager() to also tear down the manager.
 
-    def __enter__(self) -> "HelixSession":
+    def __enter__(self) -> "CymatixSession":
         return self
 
     def __exit__(self, *exc_info: Any) -> None:
@@ -557,10 +557,10 @@ _DEFAULT_MANAGER: Optional[Any] = None  # cached one-shot manager for module-lev
 
 def open_session(
     *,
-    config: Optional[HelixConfig] = None,
+    config: Optional[CymatixConfig] = None,
     session_id: Optional[str] = None,
     adaptive_caps: bool = True,
-) -> HelixSession:
+) -> CymatixSession:
     """Construct a session backed by a fresh or cached manager.
 
     Surface notes:
@@ -574,21 +574,21 @@ def open_session(
     if _DEFAULT_MANAGER is None:
         from .config import load_config  # late import — cheap, but keeps the
         # top-level import surface narrow
-        from .context_manager import HelixContextManager  # late import
+        from .context_manager import CymatixContextManager  # late import
 
         # If the caller hands us a config explicitly, honor it. Otherwise
-        # go through ``load_config`` so HELIX_CONFIG (path to helix.toml)
-        # and HELIX_GENOME_PATH (override of [genome] path) are respected
-        # the same way ``helix status`` already honors them. Before this
-        # call site used ``HelixConfig()`` directly, every cold-start CLI
+        # go through ``load_config`` so CYMATIX_CONFIG (path to cymatix.toml)
+        # and CYMATIX_GENOME_PATH (override of [genome] path) are respected
+        # the same way ``cymatix status`` already honors them. Before this
+        # call site used ``CymatixConfig()`` directly, every cold-start CLI
         # subcommand (query, packet, gene, neighbors, refresh-targets,
         # diag corpus) silently fell back to defaults and read/created
         # ./genome.db regardless of what the operator configured — which
-        # made ``helix status`` look healthy but ``helix query`` look at
+        # made ``cymatix status`` look healthy but ``cymatix query`` look at
         # an entirely different (often empty) genome.
         cfg = config or load_config()
-        _DEFAULT_MANAGER = HelixContextManager(config=cfg)
-    return HelixSession(
+        _DEFAULT_MANAGER = CymatixContextManager(config=cfg)
+    return CymatixSession(
         manager=_DEFAULT_MANAGER,
         session_id=session_id,
         adaptive_caps=adaptive_caps,
@@ -679,21 +679,21 @@ def neighbors(query_text: str, *, k: int = 10) -> List[Dict[str, Any]]:
 #
 # Belongs on the CLI but not in this lib (CLI-specific UX):
 #   * argparse subcommand definitions, TTY-aware output formatting,
-#     `helix label set`, `helix drift baseline/compare`, `helix diag genome`
+#     `cymatix label set`, `cymatix drift baseline/compare`, `cymatix diag genome`
 #
 # Belongs in the future "walk-aware" v1.1+:
 #   * `walk(seed_gene_id, max_hops)` — multi-hop traversal as a
 #     single call (an alternative to the agent calling
 #     `gene + neighbors` repeatedly via the CLI)
 #   * `score_against(query, gene_ids)` — re-rank a caller-supplied
-#     set against a query (lets external retrievers fuse with helix)
+#     set against a query (lets external retrievers fuse with cymatix)
 
 
 __all__ = [
     "QueryResult",
     "IngestResult",
     "StatsResult",
-    "HelixSession",
+    "CymatixSession",
     "open_session",
     "close_manager",
     "query",

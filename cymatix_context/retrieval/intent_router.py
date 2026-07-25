@@ -1,7 +1,7 @@
 """Intent-based sub-query router — LLM-free decomposition path (D8, Step 3B).
 
 Maps IntentClass values to sub-query template functions. Used by
-HelixContextManager._decompose_query() when query_decomposition_enabled=False
+CymatixContextManager._decompose_query() when query_decomposition_enabled=False
 or when no LLM backend is available.
 """
 from __future__ import annotations

@@ -1,12 +1,12 @@
 <section class="controls">
   <div class="controls-primary">
     <div class="controls-status">
-      <span class="status-dot status-dot--{{ 'running' if state.helix.running else 'stopped' }}"></span>
+      <span class="status-dot status-dot--{{ 'running' if state.cymatix.running else 'stopped' }}"></span>
       <div>
         <p class="eyebrow">Server</p>
         <p class="status-label">
-          {% if state.helix.running %}
-            Running / pid {{ state.helix.pid }} / port {{ state.helix.port }}
+          {% if state.cymatix.running %}
+            Running / pid {{ state.cymatix.pid }} / port {{ state.cymatix.port }}
           {% else %}
             Stopped
           {% endif %}
@@ -38,15 +38,15 @@
 
   <div class="controls-buttons">
     <button type="button" class="btn btn--start" data-action="start"
-      {% if state.helix.running %}disabled{% endif %}>
+      {% if state.cymatix.running %}disabled{% endif %}>
       Start
     </button>
     <button type="button" class="btn btn--restart" data-action="restart"
-      {% if not state.helix.running %}disabled{% endif %}>
+      {% if not state.cymatix.running %}disabled{% endif %}>
       Restart
     </button>
     <button type="button" class="btn btn--stop" data-action="stop"
-      {% if not state.helix.running %}disabled{% endif %}>
+      {% if not state.cymatix.running %}disabled{% endif %}>
       Stop
     </button>
   </div>

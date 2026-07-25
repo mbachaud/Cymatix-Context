@@ -1,7 +1,7 @@
 """Data Access Layer — uniform ``fetch(source_id) -> bytes/str`` across
 heterogeneous storage backends.
 
-Helix emits source_ids that can be anything: a local file path, an
+Cymatix emits source_ids that can be anything: a local file path, an
 ``https://`` URL, an ``s3://`` key, a ``git://`` ref, a database URI.
 This module provides a scheme-dispatch fetcher so the agent's call
 site stays uniform regardless of what store the packet pointed at.
@@ -45,7 +45,7 @@ from pathlib import Path
 from typing import Callable, Optional
 from urllib.parse import urlparse
 
-log = logging.getLogger("helix.adapters.dal")
+log = logging.getLogger("cymatix.adapters.dal")
 
 
 @dataclass
@@ -271,14 +271,14 @@ def fetch_packet_sources(
     include_refresh_targets: bool = True,
     max_sources: int = 12,
 ) -> list[tuple[str, FetchResult]]:
-    """Fetch every source referenced by a Helix packet.
+    """Fetch every source referenced by a Cymatix packet.
 
     Returns ``[(source_id, FetchResult), ...]`` preserving packet
     ordering. Deduplicates by source_id. Soft-fails on individual
     fetch errors (FetchResult carries the reason).
 
     This is the "path 1" integration primitive from the routing doc:
-    once Helix has emitted its verdict, pull every byte the agent
+    once Cymatix has emitted its verdict, pull every byte the agent
     might need in one call.
     """
     dal = dal or DAL()

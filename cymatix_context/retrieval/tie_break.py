@@ -1,10 +1,10 @@
 """
 Walking tie-break — associative-graph-informed ordering for tied top-k scores.
 
-When helix's 12-tier fusion produces two or more documents with bitwise-identical
+When cymatix's 12-tier fusion produces two or more documents with bitwise-identical
 scores, the current behaviour is to fall through to dict insertion order —
 effectively arbitrary. This module replaces that arbitrary choice with a
-deterministic ladder of signals drawn from data helix already computes.
+deterministic ladder of signals drawn from data cymatix already computes.
 
 Empirical basis for the ladder (see docs/FUTURE/tie_break_walking.md):
 
@@ -19,7 +19,7 @@ The ladder below uses those signals in the order their asymmetry is
 most interpretable. Each rule is a pairwise comparator that either
 returns a decision or abstains and lets the next rule try.
 
-Opt-in via HELIX_WALKING_TIEBREAK=1 for now. No config-schema change
+Opt-in via CYMATIX_WALKING_TIEBREAK=1 for now. No config-schema change
 until the approach is validated on real workloads.
 """
 
@@ -38,8 +38,8 @@ _STRONG_EDGE_THRESHOLD = 0.7   # edges above this mean "graph-validated twins"
 
 
 def is_enabled() -> bool:
-    """True iff HELIX_WALKING_TIEBREAK is set to a truthy value."""
-    return os.environ.get("HELIX_WALKING_TIEBREAK", "").lower() in _TRUTHY
+    """True iff CYMATIX_WALKING_TIEBREAK is set to a truthy value."""
+    return os.environ.get("CYMATIX_WALKING_TIEBREAK", "").lower() in _TRUTHY
 
 
 # ── Per-document attribute lookup (batched for efficiency) ──────────────

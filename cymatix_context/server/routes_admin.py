@@ -20,10 +20,10 @@ from .helpers import (
 )
 from ..backends.sema_codec import decode_embedding
 
-log = logging.getLogger("helix.server")
+log = logging.getLogger("cymatix.server")
 
 
-def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> None:
+def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -> None:
     """Register admin, health, stats, debug, bridge, and replication routes."""
     from ..accel import json_dumps, json_loads
 
@@ -34,10 +34,10 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
         # Refresh OTel gauges
         try:
             from ..telemetry import emit_gauges_snapshot
-            emit_gauges_snapshot(helix.genome)
+            emit_gauges_snapshot(cymatix.genome)
         except Exception:
             log.debug("telemetry gauges snapshot failed", exc_info=True)
-        return helix.stats()
+        return cymatix.stats()
 
     # -- Resonance introspection endpoint -------------------------------
 
@@ -46,8 +46,8 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
         import json as _json
 
         try:
-            genome = helix.genome
-            codec = getattr(helix, "_sema_codec", None)
+            genome = cymatix.genome
+            codec = getattr(cymatix, "_sema_codec", None)
 
             from ..scoring.cymatics import query_spectrum, cached_doc_spectrum, resonance_score
             q_spec = query_spectrum(query)
@@ -147,7 +147,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
     async def gene_get_endpoint(gene_id: str):
         """Fetch a single document by ID."""
         try:
-            gene = helix.genome.get_doc(gene_id)
+            gene = cymatix.genome.get_doc(gene_id)
         except Exception as exc:
             log.warning("/genes/%s failed: %s", gene_id, exc, exc_info=True)
             return JSONResponse(
@@ -167,7 +167,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
         import json as _json
 
         try:
-            rows = helix.genome.read_conn.execute(
+            rows = cymatix.genome.read_conn.execute(
                 "SELECT gene_id, embedding FROM genes "
                 "WHERE embedding IS NOT NULL AND chromatin < 2 "
                 "LIMIT 20000"
@@ -179,7 +179,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
                     "count": 0,
                     "neighbors": [],
                 }
-            codec = getattr(helix, "_sema_codec", None)
+            codec = getattr(cymatix, "_sema_codec", None)
             if codec is None:
                 return JSONResponse(
                     {
@@ -202,7 +202,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
 
             neighbors: list = []
             for sim, gid in top:
-                g = helix.genome.get_doc(gid)
+                g = cymatix.genome.get_doc(gid)
                 if g is None:
                     continue
                 path = None
@@ -260,12 +260,12 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
         use_tcm = True
 
         try:
-            expanded_query, domains, entities = helix._prepare_query_signals(
+            expanded_query, domains, entities = cymatix._prepare_query_signals(
                 query,
                 session_context=None,
                 expand_query=expand_query,
             )
-            candidates = helix._retrieve(
+            candidates = cymatix._retrieve(
                 domains=domains,
                 entities=entities,
                 max_genes=eval_budget,
@@ -273,7 +273,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
                 use_harmonic=use_harmonic,
                 use_sr=use_sr,
             )
-            candidates, refiner_contrib = helix._apply_candidate_refiners(
+            candidates, refiner_contrib = cymatix._apply_candidate_refiners(
                 query,
                 candidates,
                 eval_budget,
@@ -286,9 +286,9 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
             log.error("/debug/preview failed", exc_info=True)
             raise HTTPException(status_code=500, detail="Internal error")
 
-        scores = dict(helix.genome.last_query_scores or {})
+        scores = dict(cymatix.genome.last_query_scores or {})
         merged_tiers = _merge_tier_contributions(
-            getattr(helix.genome, "last_tier_contributions", {}) or {},
+            getattr(cymatix.genome, "last_tier_contributions", {}) or {},
             refiner_contrib,
         )
 
@@ -370,7 +370,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
 
     @app.get("/health/history")
     async def health_history_endpoint(limit: int = 50):
-        return helix.genome.health_history(limit=limit)
+        return cymatix.genome.health_history(limit=limit)
 
     # -- Pipeline viewer feed (launcher dashboard) ---
 
@@ -400,9 +400,9 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
         """Describe the genome file the running process actually opened.
 
         Used by the launcher's Database panel to confirm that the
-        supervised helix is serving from the file the user expects (and
-        to detect divergence when helix was started outside the launcher
-        with a different HELIX_GENOME_PATH override).
+        supervised cymatix is serving from the file the user expects (and
+        to detect divergence when cymatix was started outside the launcher
+        with a different CYMATIX_GENOME_PATH override).
         """
         from pathlib import Path as _Path
 
@@ -416,7 +416,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
         out = {
             "path": str(resolved),
             "configured_path": path_str,
-            "env_override": os.environ.get("HELIX_GENOME_PATH"),
+            "env_override": os.environ.get("CYMATIX_GENOME_PATH"),
         }
         try:
             if resolved.exists() and resolved.is_file():
@@ -429,7 +429,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
             out["error"] = f"stat failed: {exc}"
 
         try:
-            out["total_genes"] = int(helix.genome.stats().get("total_genes", 0))
+            out["total_genes"] = int(cymatix.genome.stats().get("total_genes", 0))
         except Exception:
             log.debug("/admin/genome stats failed", exc_info=True)
         return out
@@ -440,7 +440,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
     async def metrics_tokens_endpoint():
         """Session + lifetime token counters."""
         try:
-            return helix.token_counter.snapshot()
+            return cymatix.token_counter.snapshot()
         except Exception as exc:
             log.warning("Token metrics snapshot failed: %s", exc, exc_info=True)
             return JSONResponse(
@@ -452,17 +452,17 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
 
     @app.get("/health")
     async def health_endpoint():
-        ribosome_disabled = getattr(helix.ribosome.backend, "is_disabled_backend", False)
+        ribosome_disabled = getattr(cymatix.ribosome.backend, "is_disabled_backend", False)
         ribosome_model = "disabled" if ribosome_disabled else "unknown"
-        if not ribosome_disabled and hasattr(helix.ribosome, "backend") and hasattr(helix.ribosome.backend, "model"):
-            ribosome_model = helix.ribosome.backend.model
-        elif not ribosome_disabled and hasattr(helix.ribosome, "ollama_ribosome"):
-            ribosome_model = f"deberta+{helix.ribosome.ollama_ribosome.backend.model}"
+        if not ribosome_disabled and hasattr(cymatix.ribosome, "backend") and hasattr(cymatix.ribosome.backend, "model"):
+            ribosome_model = cymatix.ribosome.backend.model
+        elif not ribosome_disabled and hasattr(cymatix.ribosome, "ollama_ribosome"):
+            ribosome_model = f"deberta+{cymatix.ribosome.ollama_ribosome.backend.model}"
 
         genome_ready = True
         total_genes = 0
         try:
-            total_genes = helix.genome.stats()["total_genes"]
+            total_genes = cymatix.genome.stats()["total_genes"]
         except Exception:
             genome_ready = False
             log.warning("/health genome stats failed", exc_info=True)
@@ -479,7 +479,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
         status = "ok" if genome_ready and upstream_reachable else "degraded"
 
         if status == "ok":
-            message = "Helix and its upstream model server answered readiness checks."
+            message = "Cymatix and its upstream model server answered readiness checks."
         elif not genome_ready and not upstream_reachable:
             message = "Genome stats failed and the upstream model server is unreachable."
         elif not genome_ready:
@@ -510,7 +510,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
             "abstain_classes": sorted(config.abstain.per_class.keys()),
         }
         try:
-            ann_meta = helix.genome.get_calibration_provenance()
+            ann_meta = cymatix.genome.get_calibration_provenance()
         except Exception:
             ann_meta = None
             log.debug("/health calibration provenance read failed", exc_info=True)
@@ -568,15 +568,15 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
 
     @app.get("/replicas")
     async def replicas_endpoint():
-        if helix._replication_mgr is None:
+        if cymatix._replication_mgr is None:
             return {"enabled": False, "replicas": []}
-        return {"enabled": True, **helix._replication_mgr.status()}
+        return {"enabled": True, **cymatix._replication_mgr.status()}
 
     @app.post("/replicas/sync")
     async def replicas_sync_endpoint():
-        if helix._replication_mgr is None:
+        if cymatix._replication_mgr is None:
             return {"synced": 0, "error": "replication not configured"}
-        synced = helix._replication_mgr.sync_now()
+        synced = cymatix._replication_mgr.sync_now()
         return {"synced": synced}
 
     # ---- Admin: knowledge store management ----
@@ -584,9 +584,9 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
     @app.post("/admin/refresh")
     async def admin_refresh():
         """Reopen knowledge store connection to see external changes."""
-        helix.genome.refresh()
-        helix.genome._invalidate_dense_matrix(force=True)
-        new_count = helix.genome.stats()["total_genes"]
+        cymatix.genome.refresh()
+        cymatix.genome._invalidate_dense_matrix(force=True)
+        new_count = cymatix.genome.stats()["total_genes"]
         return {"refreshed": True, "genes": new_count}
 
     @app.post("/admin/genes/tombstone")
@@ -606,7 +606,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
                 {"error": "source_id required"},
                 status_code=400,
             )
-        cur = helix.genome.conn.cursor()
+        cur = cymatix.genome.conn.cursor()
         rows = cur.execute(
             "SELECT gene_id FROM genes WHERE source_id = ? AND chromatin < 2",
             (source_id,),
@@ -614,7 +614,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
         tombstoned = []
         for row in rows:
             try:
-                if helix.genome.compress_to_heterochromatin(row["gene_id"]):
+                if cymatix.genome.compress_to_heterochromatin(row["gene_id"]):
                     tombstoned.append(row["gene_id"])
             except Exception:
                 log.warning("Tombstone failed for gene %s",
@@ -629,7 +629,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
     async def admin_vacuum():
         """Reclaim free pages from the knowledge store database."""
         try:
-            result = helix.genome.vacuum()
+            result = cymatix.genome.vacuum()
             return {"ok": True, **result}
         except Exception as exc:
             log.warning("VACUUM failed: %s", exc, exc_info=True)
@@ -642,13 +642,13 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
     async def admin_kv_backfill():
         """Run CPU regex KV extraction on documents missing key_values."""
         import re as _re
-        cur = helix.genome.conn.cursor()
+        cur = cymatix.genome.conn.cursor()
         rows = cur.execute(
             "SELECT gene_id, content FROM genes "
             "WHERE key_values IS NULL OR key_values = '[]' OR key_values = 'null'"
         ).fetchall()
         if not rows:
-            return {"backfilled": 0, "total": helix.genome.stats()["total_genes"]}
+            return {"backfilled": 0, "total": cymatix.genome.stats()["total_genes"]}
 
         patterns = [
             _re.compile(r'^\s*([A-Za-z_]\w*)\s*=\s*["\']([^"\'\n]{1,100})["\']', _re.MULTILINE),
@@ -670,13 +670,13 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
                 (json_dumps(sorted(kvs)[:15]), row["gene_id"]),
             )
             updated += 1
-        helix.genome.conn.commit()
-        return {"backfilled": updated, "total": helix.genome.stats()["total_genes"]}
+        cymatix.genome.conn.commit()
+        return {"backfilled": updated, "total": cymatix.genome.stats()["total_genes"]}
 
     @app.post("/admin/compact")
     async def admin_compact(dry_run: bool = False, density_threshold: float = 0.3, access_threshold: int = 5):
         """Run compaction sweep."""
-        result = helix.genome.compact_genome(
+        result = cymatix.genome.compact_genome(
             density_threshold=density_threshold,
             access_threshold=access_threshold,
             dry_run=dry_run,
@@ -699,7 +699,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
         cutoff = noise_cutoff if noise_cutoff >= 0 else PKI_NOISE_CUTOFF
         try:
             result = compact_path_key_index(
-                helix.genome.conn, noise_cutoff=cutoff, dry_run=dry_run,
+                cymatix.genome.conn, noise_cutoff=cutoff, dry_run=dry_run,
             )
             return {"ok": True, **result}
         except Exception as exc:
@@ -711,13 +711,13 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
     @app.post("/admin/checkpoint")
     async def admin_checkpoint(mode: str = "PASSIVE"):
         """Force a WAL checkpoint."""
-        helix.genome.checkpoint(mode)
+        cymatix.genome.checkpoint(mode)
         return {"checkpointed": True, "mode": mode}
 
     @app.post("/admin/ribosome/pause")
     async def admin_ribosome_pause():
         """Disable the compressor's LLM calls without unloading or restarting."""
-        backend = helix.ribosome.backend
+        backend = cymatix.ribosome.backend
         backend_id = id(backend)
         if backend_id in _paused_ribosomes:
             return {
@@ -751,7 +751,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
     @app.post("/admin/ribosome/resume")
     async def admin_ribosome_resume():
         """Restore the compressor backend after /admin/ribosome/pause."""
-        backend = helix.ribosome.backend
+        backend = cymatix.ribosome.backend
         backend_id = id(backend)
         if backend_id not in _paused_ribosomes:
             return {"resumed": False, "reason": "not paused"}
@@ -769,7 +769,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
     @app.get("/admin/ribosome/status")
     async def admin_ribosome_status():
         """Check whether the compressor is currently paused."""
-        backend = helix.ribosome.backend
+        backend = cymatix.ribosome.backend
         return {
             "paused": id(backend) in _paused_ribosomes,
             "model": getattr(backend, "model", "unknown"),
@@ -879,7 +879,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
         """
         import time as _time
         idle_threshold_s = 60.0
-        age = _time.time() - getattr(helix, "_last_activity_ts", 0.0)
+        age = _time.time() - getattr(cymatix, "_last_activity_ts", 0.0)
         active_status = "running" if age < idle_threshold_s else "idle"
 
         def _status(loaded: bool) -> str:
@@ -888,7 +888,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
         # ── ribosome (a LazyRibosome proxy when backend=deberta+lazy) ──
         # type()-level probe: instance attribute access on the proxy
         # would materialize the DeBERTa models.
-        rib = helix.ribosome
+        rib = cymatix.ribosome
         rib_is_lazy = bool(getattr(type(rib), "is_lazy_component", False))
         rib_real = rib.peek() if rib_is_lazy else rib
         rib_loaded = rib_real is not None
@@ -913,7 +913,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
                 "loaded": rib_loaded,
             })
 
-        sema = getattr(helix, "_sema_codec", None)
+        sema = getattr(cymatix, "_sema_codec", None)
         if sema is not None:
             # LazySemaCodec exposes ``loaded`` without touching the model;
             # a plain (eager) SemaCodec has no such attr -> resident.
@@ -925,7 +925,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
                 "loaded": sema_loaded,
             })
 
-        if getattr(helix, "_cpu_tagger", None) is not None:
+        if getattr(cymatix, "_cpu_tagger", None) is not None:
             # spaCy loads lazily inside tagger._get_nlp(); the module
             # global reflects whether the pipeline is resident.
             try:
@@ -940,7 +940,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
                 "loaded": tagger_loaded,
             })
 
-        if getattr(helix.genome, "_splade_enabled", False):
+        if getattr(cymatix.genome, "_splade_enabled", False):
             # splade_backend keeps its model in a module global, set on
             # first encode (already first-use-lazy pre-#219).
             try:
@@ -960,15 +960,15 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
         # ingest-side, store query-side) has a materialized model; the
         # codec wrapper itself is cheap and loads weights on first encode.
         dense_enabled = bool(
-            getattr(helix.genome, "_dense_embedding_enabled", False)
+            getattr(cymatix.genome, "_dense_embedding_enabled", False)
             or getattr(config.ingestion, "dense_embed_on_ingest", False)
         )
         if dense_enabled:
             dense_loaded = any(
                 holder is not None and getattr(holder, "_model", None) is not None
                 for holder in (
-                    getattr(helix, "_dense_codec", None),
-                    getattr(helix.genome, "_dense_codec", None),
+                    getattr(cymatix, "_dense_codec", None),
+                    getattr(cymatix.genome, "_dense_codec", None),
                 )
             )
             components.append({
@@ -978,7 +978,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
                 "loaded": dense_loaded,
             })
 
-        if getattr(helix.genome, "_entity_graph_enabled", False):
+        if getattr(cymatix.genome, "_entity_graph_enabled", False):
             components.append({
                 "name": "entity_graph",
                 "kind": "encoder",
@@ -1008,9 +1008,9 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
     @app.post("/admin/sema/rebuild")
     async def admin_sema_rebuild():
         """Force-rebuild the SEMA vector cache."""
-        helix.genome.invalidate_sema_cache()
-        helix.genome._build_sema_cache()
-        cache = helix.genome._sema_cache
+        cymatix.genome.invalidate_sema_cache()
+        cymatix.genome._build_sema_cache()
+        cache = cymatix.genome._sema_cache
         return {
             "rebuilt": True,
             "vectors": len(cache["gene_ids"]) if cache else 0,
@@ -1022,13 +1022,13 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
         """Hot-reload server runtime state without killing the process."""
         changes = {}
 
-        # 1. Reload config from helix.toml
+        # 1. Reload config from cymatix.toml
         try:
             from ..config import load_config
             new_config = load_config()
-            old_budget = helix.config.budget.max_genes_per_turn
+            old_budget = cymatix.config.budget.max_genes_per_turn
             new_budget = new_config.budget.max_genes_per_turn
-            helix.config = new_config
+            cymatix.config = new_config
             if old_budget != new_budget:
                 changes["max_genes_per_turn"] = {"old": old_budget, "new": new_budget}
             else:
@@ -1038,24 +1038,24 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
 
         # 2. Refresh knowledge store snapshot
         try:
-            helix.genome.refresh()
-            total = helix.genome.stats().get("total_genes", 0)
+            cymatix.genome.refresh()
+            total = cymatix.genome.stats().get("total_genes", 0)
             changes["genome_genes"] = total
         except Exception as exc:
             changes["genome_error"] = str(exc)[:200]
 
         # 3. Rebuild SEMA vector cache
         try:
-            helix.genome.invalidate_sema_cache()
-            helix.genome._build_sema_cache()
-            cache = helix.genome._sema_cache
+            cymatix.genome.invalidate_sema_cache()
+            cymatix.genome._build_sema_cache()
+            cache = cymatix.genome._sema_cache
             if cache:
                 changes["sema_vectors"] = len(cache["gene_ids"])
         except Exception as exc:
             changes["sema_error"] = str(exc)[:200]
 
         # 4. Clear last_query_scores
-        helix.genome.last_query_scores = {}
+        cymatix.genome.last_query_scores = {}
 
         log.info("Admin reload complete: %s", changes)
         return {"reloaded": True, "changes": changes}
@@ -1081,7 +1081,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
             )
 
         t0 = _time.time()
-        old_path = str(helix.genome.path)
+        old_path = str(cymatix.genome.path)
 
         try:
             from ..sharding import open_read_source
@@ -1089,7 +1089,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
             new_store = open_read_source(
                 genome_path=path,
                 synonym_map=config.synonym_map,
-                sema_codec=getattr(helix, "_sema_codec", None),
+                sema_codec=getattr(cymatix, "_sema_codec", None),
                 splade_enabled=config.ingestion.splade_enabled,
                 splade_model=config.ingestion.splade_model,  # #207 item 1
                 splade_content_cap=config.ingestion.splade_content_cap,  # #207 item 3
@@ -1147,13 +1147,13 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
             new_store._build_sema_cache()
 
             # Atomic swap
-            old_store = helix.genome
-            helix.genome = new_store
-            helix.genome.last_query_scores = {}
+            old_store = cymatix.genome
+            cymatix.genome = new_store
+            cymatix.genome.last_query_scores = {}
 
             # Tier-0 fix (2026-05-17): repoint the session Registry at the
             # new store. The Registry captures a genome reference at app
-            # construction (app.py: Registry(helix.genome)) and uses
+            # construction (app.py: Registry(cymatix.genome)) and uses
             # genome.conn directly for every read/write — including the
             # background sweep task. Without this repoint, after a swap the
             # Registry still holds the OLD store, which old_store.close()
@@ -1168,8 +1168,8 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
 
             # Tier-0 follow-up #4 (2026-05-17): repoint the VaultManager at
             # the new store too. Like the Registry above, VaultManager
-            # captures helix.genome at construction (app.py:
-            # VaultManager(genome=helix.genome)); its pruner thread runs
+            # captures cymatix.genome at construction (app.py:
+            # VaultManager(genome=cymatix.genome)); its pruner thread runs
             # refresh_stale_view(genome=self.genome) on a timer, so without
             # this repoint a post-swap prune cycle would hit the closed old
             # store — the same closed-database failure. Vault is opt-in, so
@@ -1230,7 +1230,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
         gene_ids: list = []
         for item in items:
             try:
-                ids = await helix.ingest_async(
+                ids = await cymatix.ingest_async(
                     item["content"],
                     content_type="text",
                     metadata={"path": f"__bridge_{item['source']}__"},
@@ -1241,7 +1241,7 @@ def setup_admin_routes(app: FastAPI, helix, config, registry, bridge, **_kw) -> 
 
         # Update shared context
         try:
-            stats_snapshot = helix.stats()
+            stats_snapshot = cymatix.stats()
             await asyncio.to_thread(bridge.update_shared_context, stats_snapshot)
         except Exception:
             log.warning("Bridge shared-context update failed", exc_info=True)

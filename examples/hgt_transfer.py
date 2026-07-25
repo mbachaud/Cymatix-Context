@@ -6,16 +6,16 @@ Usage:
     python examples/hgt_transfer.py export --description "ScoreRift knowledge"
 
     # Preview what an import would do
-    python examples/hgt_transfer.py diff genome_export.helix
+    python examples/hgt_transfer.py diff genome_export.cymatix
 
     # Import into current genome
-    python examples/hgt_transfer.py import genome_export.helix
+    python examples/hgt_transfer.py import genome_export.cymatix
 
     # Import with overwrite (replace existing genes)
-    python examples/hgt_transfer.py import genome_export.helix --strategy overwrite
+    python examples/hgt_transfer.py import genome_export.cymatix --strategy overwrite
 
 Prerequisites:
-    pip install helix-context
+    pip install cymatix-context
     A genome.db must exist (run the server or quickstart first)
 """
 
@@ -23,31 +23,31 @@ import argparse
 import json
 import sys
 
-from helix_context.config import load_config
-from helix_context.genome import Genome
-from helix_context.hgt import export_genome, import_genome, genome_diff
+from cymatix_context.config import load_config
+from cymatix_context.genome import Genome
+from cymatix_context.hgt import export_genome, import_genome, genome_diff
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Helix Horizontal Gene Transfer")
+    parser = argparse.ArgumentParser(description="Cymatix Horizontal Gene Transfer")
     sub = parser.add_subparsers(dest="command", required=True)
 
     # Export
-    exp = sub.add_parser("export", help="Export genome to .helix file")
-    exp.add_argument("-o", "--output", default="genome_export.helix", help="Output path")
+    exp = sub.add_parser("export", help="Export genome to .cymatix file")
+    exp.add_argument("-o", "--output", default="genome_export.cymatix", help="Output path")
     exp.add_argument("-d", "--description", default="", help="Description of this export")
     exp.add_argument("--include-stale", action="store_true", help="Include HETEROCHROMATIN genes")
 
     # Import
-    imp = sub.add_parser("import", help="Import .helix file into genome")
-    imp.add_argument("file", help="Path to .helix file")
+    imp = sub.add_parser("import", help="Import .cymatix file into genome")
+    imp.add_argument("file", help="Path to .cymatix file")
     imp.add_argument("--strategy", default="skip_existing",
                      choices=["skip_existing", "overwrite", "newest"],
                      help="How to handle duplicates")
 
     # Diff
     dif = sub.add_parser("diff", help="Preview import without modifying genome")
-    dif.add_argument("file", help="Path to .helix file")
+    dif.add_argument("file", help="Path to .cymatix file")
 
     args = parser.parse_args()
     config = load_config()

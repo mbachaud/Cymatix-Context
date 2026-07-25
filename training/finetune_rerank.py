@@ -21,7 +21,7 @@ import os
 import torch
 from torch.utils.data import Dataset, DataLoader, random_split
 
-log = logging.getLogger("helix.training.rerank")
+log = logging.getLogger("cymatix.training.rerank")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
 

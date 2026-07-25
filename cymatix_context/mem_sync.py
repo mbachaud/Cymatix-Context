@@ -1,9 +1,9 @@
 """
-Auto-memory → helix sync.
+Auto-memory → cymatix sync.
 
 Watches Claude Code auto-memory directories and ingests each `.md` file
-as a document. Persona/agent attribution uses helix's existing 4-layer
-federation (HELIX_USER / HELIX_AGENT / HELIX_DEVICE / HELIX_ORG) — the
+as a document. Persona/agent attribution uses cymatix's existing 4-layer
+federation (CYMATIX_USER / CYMATIX_AGENT / CYMATIX_DEVICE / CYMATIX_ORG) — the
 syncer forwards whichever of those env vars are set in ITS process on
 every /ingest call. (The server is a separate process and resolves any
 missing fields from its own env, so without forwarding, provenance would
@@ -42,7 +42,7 @@ import urllib.request
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
-log = logging.getLogger("helix.mem_sync")
+log = logging.getLogger("cymatix.mem_sync")
 
 
 # ── Frontmatter parsing (no yaml dep) ────────────────────────────────
@@ -78,11 +78,11 @@ def _parse_frontmatter(text: str) -> Tuple[Dict[str, str], str]:
 
 # ── State tracking ───────────────────────────────────────────────────
 # We stash {path: sha256} in a JSON file next to the syncer so restarts
-# don't re-ingest unchanged files. Lives at ~/.helix/mem_sync_state.json
+# don't re-ingest unchanged files. Lives at ~/.cymatix/mem_sync_state.json
 # by default. Purely cache — safe to delete (forces full re-sync).
 
 def _state_path() -> Path:
-    home = Path(os.path.expanduser("~")) / ".helix"
+    home = Path(os.path.expanduser("~")) / ".cymatix"
     home.mkdir(parents=True, exist_ok=True)
     return home / "mem_sync_state.json"
 
@@ -121,7 +121,7 @@ def _infer_content_type(path: Path, fields: Dict[str, str]) -> str:
 
 
 def _ingest_file(
-    helix_url: str,
+    cymatix_url: str,
     path: Path,
     content: str,
     fields: Dict[str, str],
@@ -151,10 +151,10 @@ def _ingest_file(
     # separate process, so without forwarding, provenance would fall back
     # to the server's identity instead of the agent that wrote the memory.
     identity = {
-        "participant_handle": os.environ.get("HELIX_USER"),
-        "agent_handle": os.environ.get("HELIX_AGENT"),
-        "party_id": os.environ.get("HELIX_DEVICE") or os.environ.get("HELIX_PARTY"),
-        "org_id": os.environ.get("HELIX_ORG"),
+        "participant_handle": os.environ.get("CYMATIX_USER"),
+        "agent_handle": os.environ.get("CYMATIX_AGENT"),
+        "party_id": os.environ.get("CYMATIX_DEVICE") or os.environ.get("CYMATIX_PARTY"),
+        "org_id": os.environ.get("CYMATIX_ORG"),
     }
     for field, value in identity.items():
         if value:
@@ -162,7 +162,7 @@ def _ingest_file(
 
     data = json.dumps(payload).encode("utf-8")
     req = urllib.request.Request(
-        f"{helix_url.rstrip('/')}/ingest",
+        f"{cymatix_url.rstrip('/')}/ingest",
         data=data,
         headers={"Content-Type": "application/json"},
         method="POST",
@@ -179,7 +179,7 @@ def _ingest_file(
     return None
 
 
-def _tombstone_file(helix_url: str, path: Path) -> bool:
+def _tombstone_file(cymatix_url: str, path: Path) -> bool:
     """Mark a removed memory's documents as heterochromatin (retrieval-excluded).
 
     POSTs /admin/genes/tombstone with each source_id the file may have
@@ -192,7 +192,7 @@ def _tombstone_file(helix_url: str, path: Path) -> bool:
     for source_id in candidates:
         try:
             req = urllib.request.Request(
-                f"{helix_url.rstrip('/')}/admin/genes/tombstone",
+                f"{cymatix_url.rstrip('/')}/admin/genes/tombstone",
                 data=json.dumps({"source_id": source_id}).encode("utf-8"),
                 headers={"Content-Type": "application/json"},
                 method="POST",
@@ -231,7 +231,7 @@ def _is_skipped(path: Path, fields: Dict[str, str]) -> Optional[str]:
 
 def sync_once(
     watch_dirs: List[str],
-    helix_url: str,
+    cymatix_url: str,
     agent_kind: Optional[str] = None,
     state: Optional[Dict[str, str]] = None,
 ) -> Dict[str, int]:
@@ -273,7 +273,7 @@ def sync_once(
                 counters["unchanged"] += 1
                 continue
 
-            gene_ids = _ingest_file(helix_url, md, text, fields, agent_kind)
+            gene_ids = _ingest_file(cymatix_url, md, text, fields, agent_kind)
             if gene_ids is None:
                 counters["errors"] += 1
                 continue
@@ -299,7 +299,7 @@ def sync_once(
         if not any(parent == root for root in scanned_roots):
             continue
         counters["deleted"] += 1
-        _tombstone_file(helix_url, Path(key))
+        _tombstone_file(cymatix_url, Path(key))
         del state[key]
         log.info("mem_sync DELETED %s", Path(key).name)
 
@@ -311,23 +311,23 @@ def sync_once(
 
 def run_daemon(
     watch_dirs: List[str],
-    helix_url: str = "http://127.0.0.1:11437",
+    cymatix_url: str = "http://127.0.0.1:11437",
     sync_interval_s: int = 60,
     agent_kind: Optional[str] = None,
 ) -> None:
     """Blocking loop — call sync_once every `sync_interval_s` seconds."""
     log.warning(
         "mem_sync daemon starting — watching %d dir(s), interval=%ds, "
-        "agent_kind=%s (HELIX_AGENT=%s, HELIX_USER=%s)",
+        "agent_kind=%s (CYMATIX_AGENT=%s, CYMATIX_USER=%s)",
         len(watch_dirs), sync_interval_s, agent_kind,
-        os.environ.get("HELIX_AGENT", "<unset>"),
-        os.environ.get("HELIX_USER", "<unset>"),
+        os.environ.get("CYMATIX_AGENT", "<unset>"),
+        os.environ.get("CYMATIX_USER", "<unset>"),
     )
     state = _load_state()
     while True:
         t0 = time.time()
         try:
-            counters = sync_once(watch_dirs, helix_url, agent_kind, state)
+            counters = sync_once(watch_dirs, cymatix_url, agent_kind, state)
             # Only log when something changed — quiet in steady state.
             if any(counters[k] for k in ("new", "changed", "deleted", "errors")):
                 log.info("mem_sync pass: %s", counters)

@@ -7,7 +7,7 @@ e.g. "Claude Code + VS Code". Unknown values echo verbatim so a new
 vendor surfaces immediately rather than being swallowed.
 
 The literal string "unknown" is treated as missing on the host axis
-because ``mcp_server.py`` defaults ``HELIX_MCP_HOST`` to "unknown" when
+because ``mcp_server.py`` defaults ``CYMATIX_MCP_HOST`` to "unknown" when
 the host doesn't set it.
 """
 from __future__ import annotations

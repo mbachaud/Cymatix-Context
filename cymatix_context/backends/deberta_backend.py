@@ -31,7 +31,7 @@ import torch
 
 from ..schemas import Gene, NLRelation
 
-log = logging.getLogger("helix.ribosome.deberta")
+log = logging.getLogger("cymatix.ribosome.deberta")
 
 
 class DeBERTaRibosome:

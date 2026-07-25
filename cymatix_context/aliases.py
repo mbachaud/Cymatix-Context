@@ -1,4 +1,4 @@
-"""Canonical software-vocabulary surface for the helix knowledge store.
+"""Canonical software-vocabulary surface for the cymatix knowledge store.
 
 **Post-R3:** the canonical names are now the *real* class definitions.
 ``Document``, ``KnowledgeStore``, ``Compressor``, ``DocumentTags``,

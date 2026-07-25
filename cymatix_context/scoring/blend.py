@@ -112,8 +112,8 @@ log = logging.getLogger(__name__)
 
 __all__ = ["apply_candidate_refiners", "VALID_BLEND_MODES"]
 
-# The three valid blend modes. ``HelixContextManager.__init__`` validates the
-# configured value against this same set so a typo in helix.toml fails fast at
+# The three valid blend modes. ``CymatixContextManager.__init__`` validates the
+# configured value against this same set so a typo in cymatix.toml fails fast at
 # construction.
 VALID_BLEND_MODES: Tuple[str, ...] = ("legacy", "scale_relative", "off")
 

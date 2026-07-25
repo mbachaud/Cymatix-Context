@@ -1,4 +1,4 @@
-"""`helix status` — cold-start health check."""
+"""`cymatix status` — cold-start health check."""
 from __future__ import annotations
 
 import argparse
@@ -22,7 +22,7 @@ def _probe_genome(path: str) -> Dict[str, Any]:
             "reachable": False,
             "path": str(p),
             "error": "file_not_found",
-            "next_action": f"Create the genome by ingesting content: `helix ingest <path>`. Expected at {p}.",
+            "next_action": f"Create the genome by ingesting content: `cymatix ingest <path>`. Expected at {p}.",
         }
     try:
         # Open URI-style read-only so we don't accidentally lock the file.
@@ -45,14 +45,14 @@ def _probe_genome(path: str) -> Dict[str, Any]:
         return {
             "reachable": False,
             "path": str(p),
-            "error": "not_a_helix_genome",
+            "error": "not_a_cymatix_genome",
             "detail": str(exc),
             "next_action": "Delete the file and re-ingest, or point [genome] path at the correct DB.",
         }
 
 
 def _probe_config(config_path):
-    """Validate helix.toml loads without error."""
+    """Validate cymatix.toml loads without error."""
     from cymatix_context.config import load_config
     try:
         cfg = load_config(config_path)
@@ -68,7 +68,7 @@ def _probe_config(config_path):
             "path": config_path or "(defaults)",
             "error": type(exc).__name__,
             "detail": str(exc),
-            "next_action": "Fix the [genome]/[server]/... sections in helix.toml.",
+            "next_action": "Fix the [genome]/[server]/... sections in cymatix.toml.",
         }
 
 
@@ -86,7 +86,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--config",
         default=None,
-        help="Path to helix.toml (default: $HELIX_CONFIG or ./helix.toml).",
+        help="Path to cymatix.toml (default: $CYMATIX_CONFIG or ./cymatix.toml).",
     )
     return parser
 
@@ -152,7 +152,7 @@ def run(argv: list[str]) -> int:
         "config": config_report,
     }
 
-    # Optional network probes — reuse the existing helix-status logic.
+    # Optional network probes — reuse the existing cymatix-status logic.
     if not args.no_network:
         # Narrow catch around the *import* so we can distinguish "probe code
         # itself is broken" (module missing/renamed) from "probe ran and
@@ -160,15 +160,15 @@ def run(argv: list[str]) -> int:
         # into one except, an ImportError would leave report["launcher"]
         # unset and --json consumers would silently lose the key.
         try:
-            from cymatix_context.cli.helix_status import collect_status
+            from cymatix_context.cli.cymatix_status import collect_status
         except ImportError as exc:
-            err = f"helix_status import failed: {type(exc).__name__}: {exc}"
+            err = f"cymatix_status import failed: {type(exc).__name__}: {exc}"
             report["server"] = {"reachable": False, "error": err}
             report["launcher"] = {"reachable": False, "error": err}
         else:
             # collect_status() / _get_json() already return structured error
             # payloads with reachable=False on network failure (see
-            # helix_status._get_json), so we surface those directly rather
+            # cymatix_status._get_json), so we surface those directly rather
             # than papering over them with a top-level except. Any *other*
             # exception here is a real bug — let it propagate.
             net = collect_status()
@@ -186,7 +186,7 @@ def run(argv: list[str]) -> int:
         report["next_action"] = genome_report.get("next_action", "Bring the genome online.")
         rc = output.EXIT_STATUS_FAIL
     elif not config_report["valid"]:
-        report["next_action"] = config_report.get("next_action", "Fix helix.toml.")
+        report["next_action"] = config_report.get("next_action", "Fix cymatix.toml.")
         rc = output.EXIT_STATUS_FAIL
     else:
         # Genome + config are the core contract (exit code 3 gates on
@@ -204,7 +204,7 @@ def run(argv: list[str]) -> int:
                 "--no-network for an offline check."
             )
         else:
-            report["next_action"] = "Healthy — try `helix query \"...\"`."
+            report["next_action"] = "Healthy — try `cymatix query \"...\"`."
         rc = output.EXIT_OK
 
     if args.json:

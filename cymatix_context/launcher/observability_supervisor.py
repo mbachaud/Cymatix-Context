@@ -48,7 +48,7 @@ from .observability_paths import (
     state_dir,
 )
 
-log = logging.getLogger("helix.launcher.observability")
+log = logging.getLogger("cymatix.launcher.observability")
 
 _HEALTH_POLL_INTERVAL_S = 30.0
 _TERM_GRACE_S = 5.0
@@ -312,7 +312,7 @@ class ObservabilitySupervisor:
     def _setup_log_handler(self, svc: str) -> logging.Logger:
         """Build (or fetch cached) per-service Logger backed by a
         RotatingFileHandler at logs_dir/<svc>.log, 10 MiB, 3 backups."""
-        logger = logging.getLogger(f"helix.observability.{svc}")
+        logger = logging.getLogger(f"cymatix.observability.{svc}")
         logger.setLevel(logging.INFO)
         logger.propagate = False  # don't bubble child stdout to root logger
 
@@ -390,7 +390,7 @@ class ObservabilitySupervisor:
         handler = self._log_handlers.pop(svc, None)
         if handler is None:
             return
-        logger = logging.getLogger(f"helix.observability.{svc}")
+        logger = logging.getLogger(f"cymatix.observability.{svc}")
         try:
             logger.removeHandler(handler)
         except Exception:

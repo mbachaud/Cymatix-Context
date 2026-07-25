@@ -1,13 +1,13 @@
 """
-Helix Context MCP Server — exposes knowledge store tools to Claude Code.
+Cymatix Context MCP Server — exposes knowledge store tools to Claude Code.
 
 LEGACY SERVER: kept for rollback compatibility only.
-Prefer `python -m cymatix_context.mcp_server` with `HELIX_MCP_URL`.
+Prefer `python -m cymatix_context.mcp_server` with `CYMATIX_MCP_URL`.
 
 Three tools:
     cymatix_context    — query compressed context for a topic (the money saver)
-    helix_ingest     — ingest content into the knowledge store
-    helix_stats      — knowledge store health metrics + delta-epsilon history
+    cymatix_ingest     — ingest content into the knowledge store
+    cymatix_stats      — knowledge store health metrics + delta-epsilon history
 
 Claude auto-discovers these tools and calls them when relevant,
 replacing raw file reads with 7x compressed knowledge store context.
@@ -16,9 +16,9 @@ Usage:
     Register in .mcp.json:
     {
         "mcpServers": {
-            "helix-context": {
+            "cymatix-context": {
                 "command": "python",
-                "args": ["F:/Projects/helix-context/cymatix_context/mcp/server.py"]
+                "args": ["F:/Projects/cymatix-context/cymatix_context/mcp/server.py"]
             }
         }
     }
@@ -26,9 +26,9 @@ Usage:
     Or with cmd /c wrapper for Claude Code on Windows:
     {
         "mcpServers": {
-            "helix-context": {
+            "cymatix-context": {
                 "command": "cmd",
-                "args": ["/c", "python", "F:/Projects/helix-context/cymatix_context/mcp/server.py"]
+                "args": ["/c", "python", "F:/Projects/cymatix-context/cymatix_context/mcp/server.py"]
             }
         }
     }
@@ -42,12 +42,12 @@ import sys
 
 import httpx
 
-HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
-TIMEOUT = float(os.environ.get("HELIX_TIMEOUT", "30"))
+CYMATIX_URL = os.environ.get("CYMATIX_URL", "http://127.0.0.1:11437")
+TIMEOUT = float(os.environ.get("CYMATIX_TIMEOUT", "30"))
 
 _LEGACY_WARNING = (
     "WARNING: cymatix_context.mcp.server is the legacy 3-tool MCP server. "
-    "Switch to `python -m cymatix_context.mcp_server` and `HELIX_MCP_URL` "
+    "Switch to `python -m cymatix_context.mcp_server` and `CYMATIX_MCP_URL` "
     "for the canonical 18-tool surface."
 )
 
@@ -124,7 +124,7 @@ TOOLS = [
     {
         "name": "cymatix_context",
         "description": (
-            "Query compressed project context from the Helix genome. "
+            "Query compressed project context from the Cymatix genome. "
             "Returns 7x compressed codebase knowledge instead of raw files. "
             "Use this BEFORE reading source files to save tokens. "
             "The genome contains ingested code, docs, and conversation history."
@@ -141,9 +141,9 @@ TOOLS = [
         },
     },
     {
-        "name": "helix_ingest",
+        "name": "cymatix_ingest",
         "description": (
-            "Ingest new content into the Helix genome. "
+            "Ingest new content into the Cymatix genome. "
             "Use after creating or modifying files so the genome stays current. "
             "The content is compressed and stored for future context queries."
         ),
@@ -169,9 +169,9 @@ TOOLS = [
         },
     },
     {
-        "name": "helix_stats",
+        "name": "cymatix_stats",
         "description": (
-            "Get Helix genome health metrics: gene count, compression ratio, "
+            "Get Cymatix genome health metrics: gene count, compression ratio, "
             "delta-epsilon health signals, and recent query history."
         ),
         "inputSchema": {
@@ -190,16 +190,16 @@ TOOLS = [
 
 # ── Tool handlers ───────────────────────────────────────────────────
 
-def _handle_helix_context(args: dict) -> str:
+def _handle_cymatix_context(args: dict) -> str:
     query = args.get("query", "")
     if not query:
         return "Error: query is required"
 
     try:
         with httpx.Client(timeout=TIMEOUT) as client:
-            resp = client.post(f"{HELIX_URL}/context", json={"query": query})
+            resp = client.post(f"{CYMATIX_URL}/context", json={"query": query})
             if resp.status_code != 200:
-                return f"Helix error: HTTP {resp.status_code}"
+                return f"Cymatix error: HTTP {resp.status_code}"
 
             data = resp.json()
             if not data or not isinstance(data, list) or not data[0]:
@@ -210,7 +210,7 @@ def _handle_helix_context(args: dict) -> str:
             content = entry.get("content", "")
             health = entry.get("context_health", {})
 
-            result = f"[Helix Context] {desc}\n"
+            result = f"[Cymatix Context] {desc}\n"
             if health:
                 status = health.get("status", "unknown")
                 ell = health.get("ellipticity", 0)
@@ -219,12 +219,12 @@ def _handle_helix_context(args: dict) -> str:
             return result
 
     except httpx.ConnectError:
-        return f"Cannot connect to Helix at {HELIX_URL}. Is the server running?"
+        return f"Cannot connect to Cymatix at {CYMATIX_URL}. Is the server running?"
     except Exception as e:
         return f"Error: {e}"
 
 
-def _handle_helix_ingest(args: dict) -> str:
+def _handle_cymatix_ingest(args: dict) -> str:
     content = args.get("content", "")
     if not content:
         return "Error: content is required"
@@ -236,7 +236,7 @@ def _handle_helix_ingest(args: dict) -> str:
 
     try:
         with httpx.Client(timeout=TIMEOUT) as client:
-            resp = client.post(f"{HELIX_URL}/ingest", json={
+            resp = client.post(f"{CYMATIX_URL}/ingest", json={
                 "content": content,
                 "content_type": content_type,
                 "metadata": metadata if metadata else None,
@@ -250,21 +250,21 @@ def _handle_helix_ingest(args: dict) -> str:
                 return f"Ingest error: HTTP {resp.status_code}"
 
     except httpx.ConnectError:
-        return f"Cannot connect to Helix at {HELIX_URL}. Is the server running?"
+        return f"Cannot connect to Cymatix at {CYMATIX_URL}. Is the server running?"
     except Exception as e:
         return f"Error: {e}"
 
 
-def _handle_helix_stats(args: dict) -> str:
+def _handle_cymatix_stats(args: dict) -> str:
     try:
         with httpx.Client(timeout=TIMEOUT) as client:
-            resp = client.get(f"{HELIX_URL}/stats")
+            resp = client.get(f"{CYMATIX_URL}/stats")
             if resp.status_code != 200:
                 return f"Stats error: HTTP {resp.status_code}"
 
             stats = resp.json()
             lines = [
-                "Helix Genome Stats",
+                "Cymatix Genome Stats",
                 f"  Genes: {stats.get('total_genes', 0)}",
                 f"  Compression: {stats.get('compression_ratio', 0):.1f}x",
                 f"  Open: {stats.get('open', 0)}, Euchromatin: {stats.get('euchromatin', 0)}, "
@@ -282,7 +282,7 @@ def _handle_helix_stats(args: dict) -> str:
                 lines.append(f"    Status counts: {health.get('status_counts', {})}")
 
             if args.get("include_history"):
-                hist_resp = client.get(f"{HELIX_URL}/health/history?limit=10")
+                hist_resp = client.get(f"{CYMATIX_URL}/health/history?limit=10")
                 if hist_resp.status_code == 200:
                     history = hist_resp.json()
                     if history:
@@ -297,15 +297,15 @@ def _handle_helix_stats(args: dict) -> str:
             return "\n".join(lines)
 
     except httpx.ConnectError:
-        return f"Cannot connect to Helix at {HELIX_URL}. Is the server running?"
+        return f"Cannot connect to Cymatix at {CYMATIX_URL}. Is the server running?"
     except Exception as e:
         return f"Error: {e}"
 
 
 HANDLERS = {
-    "cymatix_context": _handle_helix_context,
-    "helix_ingest": _handle_helix_ingest,
-    "helix_stats": _handle_helix_stats,
+    "cymatix_context": _handle_cymatix_context,
+    "cymatix_ingest": _handle_cymatix_ingest,
+    "cymatix_stats": _handle_cymatix_stats,
 }
 
 
@@ -329,7 +329,7 @@ def main():
                 "protocolVersion": "2024-11-05",
                 "capabilities": {"tools": {}},
                 "serverInfo": {
-                    "name": "helix-context",
+                    "name": "cymatix-context",
                     "version": "0.1.0",
                 },
             })

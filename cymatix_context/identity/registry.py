@@ -1,5 +1,5 @@
 """
-Registry — Presence and attribution for multi-session Helix usage.
+Registry — Presence and attribution for multi-session Cymatix usage.
 
 Provides the data-access layer for:
     - Parties (trust identities — humans, tenants, org service identities)
@@ -206,7 +206,7 @@ class Registry:
         """Find-or-create an AI agent persona under a participant.
 
         Maps (participant_id, agent_handle) -> agent_id. The handle is
-        the persona name passed via HELIX_AGENT ('laude', 'taude',
+        the persona name passed via CYMATIX_AGENT ('laude', 'taude',
         'claude-code', 'manual'). The kind is the optional category
         ('claude-code', 'gemini', 'gpt-4', 'human') — useful for
         cross-org analytics ("how much did Claude-family agents
@@ -262,11 +262,11 @@ class Registry:
 
         This is the OS-level federation entry point — it lets ingest paths
         attribute documents to "max@desktop", "laude@desktop", etc. without
-        any auth infrastructure. The handle is the OS username (HELIX_USER
-        or getpass.getuser()); the party_id is the hostname (HELIX_DEVICE
-        or HELIX_PARTY or socket.gethostname()). See FEDERATION_LOCAL.md.
+        any auth infrastructure. The handle is the OS username (CYMATIX_USER
+        or getpass.getuser()); the party_id is the hostname (CYMATIX_DEVICE
+        or CYMATIX_PARTY or socket.gethostname()). See FEDERATION_LOCAL.md.
 
-        When ``org_id`` is provided (typically from HELIX_ORG via
+        When ``org_id`` is provided (typically from CYMATIX_ORG via
         _local_attribution_defaults), the party is linked to that org so
         the 4-layer attribution chain (org -> device -> user -> agent)
         is queryable end-to-end. Defaults to 'local' org otherwise.
@@ -473,7 +473,7 @@ class Registry:
         focus_tokens = (current_focus or "").split() if current_focus else []
         codons = ["presence", "participant", handle_label, *focus_tokens[:5]]
         promoter = PromoterTags(
-            domains=["helix:team", "helix:presence"],
+            domains=["cymatix:team", "cymatix:presence"],
             entities=[handle_label, party_label],
             intent="participant heartbeat",
             summary=current_focus or f"{handle_label} is present",
@@ -811,7 +811,7 @@ class Registry:
     # mediated propagation of the HITL shift — the mechanism lives in
     # the chat channel, not in the knowledge store substrate. So the logger
     # records chat-channel signals in addition to knowledge store-state snapshots.
-    # See ~/.helix/shared/handoffs/2026-04-11_hitl_observation.md.
+    # See ~/.cymatix/shared/handoffs/2026-04-11_hitl_observation.md.
     #
     # None of the methods below raise on bad input — instrumentation
     # must never fail a session because of a logging error.
@@ -926,7 +926,7 @@ class Registry:
         self.genome.conn.commit()
 
         # Telemetry: counter labelled by pause_type + party. Pair with
-        # helix_context_ellipticity to correlate HITL spikes with
+        # cymatix_context_ellipticity to correlate HITL spikes with
         # degraded context windows.
         try:
             from ..telemetry import hitl_events_counter

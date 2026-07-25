@@ -1,6 +1,6 @@
-"""helix-vault — operator CLI for the vault.
+"""cymatix-vault — operator CLI for the vault.
 
-Talks to the running helix server via HTTP. Avoids shared SQLite handles
+Talks to the running cymatix server via HTTP. Avoids shared SQLite handles
 and concurrent-writer races.
 """
 from __future__ import annotations
@@ -17,7 +17,7 @@ import httpx
 
 
 def _api_base() -> str:
-    return os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
+    return os.environ.get("CYMATIX_URL", "http://127.0.0.1:11437")
 
 
 def _print(obj) -> None:
@@ -103,7 +103,7 @@ def _cmd_unpin(args) -> int:
 
 
 def _cmd_prune(args) -> int:
-    print("prune is automatic; for manual prune the helix server must be running",
+    print("prune is automatic; for manual prune the cymatix server must be running",
           file=sys.stderr)
     return 0
 

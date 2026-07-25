@@ -4,7 +4,7 @@ Headroom supervisor — manages the optional Headroom proxy child process.
 Headroom (https://github.com/chopratejas/headroom, Apache-2.0) is a
 separate CLI process that serves a compression proxy + dashboard at
 ``http://{host}:{port}/dashboard``. This supervisor mirrors the pattern
-in ``supervisor.py`` (HelixSupervisor) with two important behavioural
+in ``supervisor.py`` (CymatixSupervisor) with two important behavioural
 differences:
 
 1. **Graceful adoption is primary, not fallback.** If a headroom proxy
@@ -39,7 +39,7 @@ import httpx
 
 from .state import StateStore
 
-log = logging.getLogger("helix.launcher.headroom")
+log = logging.getLogger("cymatix.launcher.headroom")
 
 
 class HeadroomSupervisorError(Exception):
@@ -88,7 +88,7 @@ def is_headroom_installed() -> bool:
 class HeadroomSupervisor:
     """Lifecycle manager for one optional Headroom proxy child.
 
-    Exactly mirrors HelixSupervisor's start/stop/restart surface so the
+    Exactly mirrors CymatixSupervisor's start/stop/restart surface so the
     tray menu can treat both uniformly.
     """
 
@@ -112,7 +112,7 @@ class HeadroomSupervisor:
         self.mode = mode
         self.python_executable = python_executable or sys.executable
         self.log_path = log_path or (
-            Path.home() / ".helix" / "launcher" / "headroom.log"
+            Path.home() / ".cymatix" / "launcher" / "headroom.log"
         )
         self.log_path.parent.mkdir(parents=True, exist_ok=True)
         self._psutil = None
@@ -158,7 +158,7 @@ class HeadroomSupervisor:
     def is_running(self) -> bool:
         """Return True if a tracked headroom process is alive.
 
-        Follows the HelixSupervisor pattern: PID from state → exists →
+        Follows the CymatixSupervisor pattern: PID from state → exists →
         cmdline contains the expected markers. Cleans up stale state.
         """
         pid = self.store.state.headroom_pid
@@ -225,7 +225,7 @@ class HeadroomSupervisor:
     def find_orphan_headroom(self) -> Optional[int]:
         """Find a headroom proxy listening on `self.port` we didn't spawn.
 
-        Same strategy as HelixSupervisor.find_orphan_helix: walk
+        Same strategy as CymatixSupervisor.find_orphan_cymatix: walk
         psutil.net_connections looking for a LISTEN on our port, then
         verify the process's cmdline matches the markers.
 
@@ -374,7 +374,7 @@ class HeadroomSupervisor:
             raise HeadroomSupervisorError(
                 f"Port {self.host}:{self.port} is already in use by a "
                 "non-headroom process. Free the port or set a different "
-                "[headroom] port in helix.toml."
+                "[headroom] port in cymatix.toml."
             )
 
         cmd = self._command()

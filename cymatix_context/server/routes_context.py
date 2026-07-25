@@ -24,13 +24,13 @@ from .helpers import (
 )
 from ..schemas import KnowBlock, MissBlock
 
-log = logging.getLogger("helix.server")
+log = logging.getLogger("cymatix.server")
 
 
-def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
+def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None:
     """Register context retrieval routes on *app*.
 
-    Routes are defined as closures so they capture *helix*, *config*, and
+    Routes are defined as closures so they capture *cymatix*, *config*, and
     *registry* without requiring global state.
     """
     from ..context_packet import build_context_packet, get_refresh_targets
@@ -54,14 +54,14 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
 
         if not user_query:
             # No user message -- pass through unmodified
-            return await _forward_raw(body, config, helix)
+            return await _forward_raw(body, config, cymatix)
 
         # Step 1-5: Retrieval pipeline
         downstream_model = body.get("model")
         # Budget-zone signal: sum all message content tokens so the
         # pipeline can see how full the caller's window already is.
         # Computed here (not in context_manager) because messages[] is
-        # a proxy-layer concept. No-op unless HELIX_BUDGET_ZONE=1.
+        # a proxy-layer concept. No-op unless CYMATIX_BUDGET_ZONE=1.
         try:
             from ..telemetry.metrics import estimate_tokens as _est_tokens
             _prompt_tokens = sum(
@@ -82,7 +82,7 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
                 _proxy_caller_model_class = CallerModelClass(str(_proxy_cmc_raw)).value
             except ValueError:
                 _proxy_caller_model_class = CALLER_MODEL_CLASS_DEFAULT
-        context_window = await helix.build_context_async(
+        context_window = await cymatix.build_context_async(
             user_query,
             downstream_model=downstream_model,
             prompt_tokens_hint=_prompt_tokens,
@@ -104,7 +104,7 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
             messages=messages,
             expressed_context=context_window.expressed_context,
             ribosome_prompt=context_window.ribosome_prompt,
-            total_genes=helix.genome.stats()["total_genes"],
+            total_genes=cymatix.genome.stats()["total_genes"],
             cold_start_threshold=config.genome.cold_start_threshold,
         )
 
@@ -130,11 +130,11 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
 
         if body.get("stream", False):
             return StreamingResponse(
-                _stream_and_tee(body, config, helix, user_query, background_tasks),
+                _stream_and_tee(body, config, cymatix, user_query, background_tasks),
                 media_type="text/event-stream",
             )
         else:
-            return await _forward_and_replicate(body, config, helix, user_query, background_tasks)
+            return await _forward_and_replicate(body, config, cymatix, user_query, background_tasks)
 
     # -- Context endpoint (Continue HTTP context provider format) -------
 
@@ -152,7 +152,7 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
     async def context_endpoint(request: Request):
         import time as _time
         t0 = _time.time()
-        helix._last_activity_ts = t0
+        cymatix._last_activity_ts = t0
 
         data = await request.json()
         query = data.get("query", "")
@@ -194,7 +194,7 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
         # clean=true: reset per-session caches
         if data.get("clean", False):
             try:
-                helix.reset_session_state()
+                cymatix.reset_session_state()
             except Exception:
                 log.debug("reset_session_state failed", exc_info=True)
         read_only = _request_read_only(data)
@@ -216,7 +216,7 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
             packet = build_context_packet(
                 str(query),
                 task_type=str(data.get("task_type", "explain") or "explain"),
-                genome=helix.genome,
+                genome=cymatix.genome,
                 max_genes=max_genes,
                 now_ts=t0,
                 read_only=read_only,
@@ -264,11 +264,11 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
         # mirroring the /fingerprint thread. The bench injects the needle's
         # ground-truth type so the fixed pipeline can be A/B'd on /context
         # (delivery), not just /fingerprint (recall). Production callers omit
-        # it; only "semantic" + HELIX_SEMANTIC_ARM=1 changes retrieval — any
+        # it; only "semantic" + CYMATIX_SEMANTIC_ARM=1 changes retrieval — any
         # other value (or arm off) is inert / byte-identical.
         query_type = (str(data.get("query_type", "")).strip().lower() or None)
 
-        window = await helix.build_context_async(
+        window = await cymatix.build_context_async(
             query,
             include_cold=include_cold,
             session_context=session_context,
@@ -292,7 +292,7 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
         # Stage 6: machine-tagged know/miss block
         try:
             kmblock = _compute_know_or_miss_block(
-                helix=helix,
+                cymatix=cymatix,
                 window=window,
                 query=str(query),
             )
@@ -308,7 +308,7 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
             response["miss"] = kmblock.model_dump()
 
         response.update({
-            "name": "Helix Genome Context",
+            "name": "Cymatix Genome Context",
             "description": (
                 f"{health.genes_expressed} genes expressed, "
                 f"{window.compression_ratio:.1f}x compression, "
@@ -324,12 +324,12 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
             # of last_query_scores while another /context call is
             # mid-write (the writer holds the same lock; see
             # ShardRouter.query_genes / ShardedGenomeAdapter.query_docs).
-            _lock = getattr(helix.genome, "_last_query_scores_lock", None)
+            _lock = getattr(cymatix.genome, "_last_query_scores_lock", None)
             if _lock is not None:
                 with _lock:
-                    scores = dict(helix.genome.last_query_scores or {})
+                    scores = dict(cymatix.genome.last_query_scores or {})
             else:
-                scores = dict(helix.genome.last_query_scores or {})
+                scores = dict(cymatix.genome.last_query_scores or {})
             # Fetch source_id for retrieved documents for citation
             gene_ids = window.expressed_gene_ids or []
             citations = []
@@ -337,9 +337,9 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
                 # Polymorphic citation lookup so blob and sharded backends
                 # both work. Sharded mode resolves source_id + tags from
                 # main.db's fingerprint_index (the genes table on main.db is
-                # empty under HELIX_USE_SHARDS=1, so the prior direct SQL
+                # empty under CYMATIX_USE_SHARDS=1, so the prior direct SQL
                 # silently returned zero rows — see issue #104).
-                row_map = helix.genome.get_citation_rows(gene_ids)
+                row_map = cymatix.genome.get_citation_rows(gene_ids)
 
                 # Session registry citation enrichment
                 attribution_map: dict = {}
@@ -443,8 +443,8 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
                 "budget_tier": window.metadata.get("budget_tier", "broad"),
                 "budget_tokens_est": window.metadata.get("budget_tokens_est", 15000),
                 # C.2 of B->C: cold-tier retrieval markers
-                "cold_tier_used": getattr(helix, "_last_cold_tier_used", False),
-                "cold_tier_count": getattr(helix, "_last_cold_tier_count", 0),
+                "cold_tier_used": getattr(cymatix, "_last_cold_tier_used", False),
+                "cold_tier_count": getattr(cymatix, "_last_cold_tier_count", 0),
                 # Stage 4 (2026-05-08): calibration provenance
                 "ann_threshold_mode": config.retrieval.ann_threshold_mode,
                 "abstain_mode": config.abstain.mode,
@@ -457,7 +457,7 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
             # Activation profile: per-tier score breakdown
             if verbose:
                 try:
-                    tier_contrib = getattr(helix.genome, "last_tier_contributions", {}) or {}
+                    tier_contrib = getattr(cymatix.genome, "last_tier_contributions", {}) or {}
                     expressed_ids = set(window.expressed_gene_ids or [])
                     activation = {
                         gid: contribs
@@ -480,7 +480,7 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
         # CWoLa label logger (STATISTICAL_FUSION sect C2)
         try:
             from ..identity import cwola
-            tier_contrib_all = getattr(helix.genome, "last_tier_contributions", {}) or {}
+            tier_contrib_all = getattr(cymatix.genome, "last_tier_contributions", {}) or {}
             cwola_tier_totals: dict = {}
             for contribs in tier_contrib_all.values():
                 for tier, score in contribs.items():
@@ -492,18 +492,18 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
             query_sema_vec = None
             top_candidate_sema_vec = None
             try:
-                codec = getattr(helix, "_sema_codec", None)
+                codec = getattr(cymatix, "_sema_codec", None)
                 if codec is not None:
                     query_sema_vec = codec.encode(query)
                 if top_gene:
-                    gene = helix.genome.get_doc(top_gene)
+                    gene = cymatix.genome.get_doc(top_gene)
                     if gene is not None and gene.embedding:
                         top_candidate_sema_vec = gene.embedding
             except Exception:
                 log.debug("CWoLa sema enrichment failed", exc_info=True)
 
             cwola.log_query(
-                helix.genome.conn,
+                cymatix.genome.conn,
                 session_id=cwola_session_id,
                 party_id=cwola_party_id,
                 query=query,
@@ -513,7 +513,7 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
                 query_sema=query_sema_vec,
                 top_candidate_sema=top_candidate_sema_vec,
             )
-            cwola.sweep_buckets(helix.genome.conn, now=_time.time())
+            cwola.sweep_buckets(cymatix.genome.conn, now=_time.time())
         except Exception:
             log.debug("CWoLa log_query/sweep failed", exc_info=True)
 
@@ -530,7 +530,7 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
                 {
                     "health": health.status,
                     "budget_tier": window.metadata.get("budget_tier", "broad"),
-                    "cold_tier_used": str(getattr(helix, "_last_cold_tier_used", False)),
+                    "cold_tier_used": str(getattr(cymatix, "_last_cold_tier_used", False)),
                     "class": caller_model_class,
                     "agent": agent_label,
                 },
@@ -549,7 +549,7 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
         import time as _time
 
         t0 = _time.time()
-        helix._last_activity_ts = t0
+        cymatix._last_activity_ts = t0
 
         data = await request.json()
         query = data.get("query", "")
@@ -563,7 +563,7 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
             max_item_chars = None
         if data.get("clean", False):
             try:
-                helix.reset_session_state()
+                cymatix.reset_session_state()
             except Exception:
                 log.debug("reset_session_state failed", exc_info=True)
         read_only = _request_read_only(data)
@@ -580,7 +580,7 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
         packet = build_context_packet(
             str(query),
             task_type=str(task_type or "explain"),
-            genome=helix.genome,
+            genome=cymatix.genome,
             max_genes=max_genes,
             now_ts=t0,
             read_only=read_only,
@@ -602,11 +602,11 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
         payload["response_mode"] = "packet"
 
         # PLR query-confidence head
-        live_cfg = getattr(helix, "config", config)
+        live_cfg = getattr(cymatix, "config", config)
         if live_cfg.plr.enabled:
             try:
                 plr_block = _compute_plr_confidence(
-                    helix, live_cfg, str(query), now_ts=t0,
+                    cymatix, live_cfg, str(query), now_ts=t0,
                 )
                 if plr_block is not None:
                     payload["plr_confidence"] = plr_block
@@ -621,7 +621,7 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
         import time as _time
 
         t0 = _time.time()
-        helix._last_activity_ts = t0
+        cymatix._last_activity_ts = t0
 
         data = await request.json()
         query = data.get("query", "")
@@ -629,7 +629,7 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
         max_genes = data.get("max_genes", 8)
         if data.get("clean", False):
             try:
-                helix.reset_session_state()
+                cymatix.reset_session_state()
             except Exception:
                 log.debug("reset_session_state failed", exc_info=True)
         read_only = _request_read_only(data)
@@ -646,7 +646,7 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
         targets = get_refresh_targets(
             str(query),
             task_type=str(task_type or "edit"),
-            genome=helix.genome,
+            genome=cymatix.genome,
             max_genes=max_genes,
             now_ts=t0,
             read_only=read_only,
@@ -664,7 +664,7 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
         import time as _time
 
         t0 = _time.time()
-        helix._last_activity_ts = t0
+        cymatix._last_activity_ts = t0
 
         data = await request.json()
         query = data.get("query", "")
@@ -690,7 +690,7 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
 
         if data.get("clean", False):
             try:
-                helix.reset_session_state()
+                cymatix.reset_session_state()
             except Exception:
                 log.debug("reset_session_state failed", exc_info=True)
 
@@ -733,7 +733,7 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
         # Semantic-wiring arm (PRD 2026-06-02): optional per-call query_type.
         # The bench injects the needle's ground-truth type so the arm can be
         # A/B'd; production callers omit it (a runtime semantic detector is a
-        # separate track). Only "semantic" + HELIX_SEMANTIC_ARM=1 changes
+        # separate track). Only "semantic" + CYMATIX_SEMANTIC_ARM=1 changes
         # retrieval; any other value (or arm off) is inert/byte-identical.
         query_type = (str(data.get("query_type", "")).strip().lower() or None)
 
@@ -745,12 +745,12 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
         use_tcm = True
 
         try:
-            expanded_query, domains, entities = helix._prepare_query_signals(
+            expanded_query, domains, entities = cymatix._prepare_query_signals(
                 query,
                 session_context=session_context,
                 expand_query=expand_query,
             )
-            candidates = helix._retrieve(
+            candidates = cymatix._retrieve(
                 domains,
                 entities,
                 eval_budget,
@@ -761,7 +761,7 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
                 use_sr=use_sr,
                 query_type=query_type,
             )
-            candidates, refiner_contrib = helix._apply_candidate_refiners(
+            candidates, refiner_contrib = cymatix._apply_candidate_refiners(
                 query,
                 candidates,
                 eval_budget,
@@ -780,14 +780,14 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
         # Snapshot scores + tier contributions atomically under the
         # writer lock so the (base_scores, last_tier_contributions) pair
         # comes from the same /context call.
-        _lock = getattr(helix.genome, "_last_query_scores_lock", None)
+        _lock = getattr(cymatix.genome, "_last_query_scores_lock", None)
         if _lock is not None:
             with _lock:
-                base_scores = dict(helix.genome.last_query_scores or {})
-                _tier_contribs = dict(getattr(helix.genome, "last_tier_contributions", {}) or {})
+                base_scores = dict(cymatix.genome.last_query_scores or {})
+                _tier_contribs = dict(getattr(cymatix.genome, "last_tier_contributions", {}) or {})
         else:
-            base_scores = dict(helix.genome.last_query_scores or {})
-            _tier_contribs = dict(getattr(helix.genome, "last_tier_contributions", {}) or {})
+            base_scores = dict(cymatix.genome.last_query_scores or {})
+            _tier_contribs = dict(getattr(cymatix.genome, "last_tier_contributions", {}) or {})
         merged_tiers = _merge_tier_contributions(
             _tier_contribs,
             refiner_contrib,
@@ -907,8 +907,8 @@ def setup_context_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
                 "recommendation": "triage",
                 "hint": "Use tier fingerprints to decide which genes to fetch in full.",
                 "latency_ms": latency_ms,
-                "cold_tier_used": getattr(helix, "_last_cold_tier_used", False),
-                "cold_tier_count": getattr(helix, "_last_cold_tier_count", 0),
+                "cold_tier_used": getattr(cymatix, "_last_cold_tier_used", False),
+                "cold_tier_count": getattr(cymatix, "_last_cold_tier_count", 0),
                 "tier_totals": {k: round(v, 4) for k, v in sorted(tier_totals.items())},
             },
         }

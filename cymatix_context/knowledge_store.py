@@ -68,7 +68,7 @@ log = logging.getLogger(__name__)
 #     86% of correct answers on the N=50 v2 NIAH benchmark before the
 #     original gate. Individual low-density game documents still get caught
 #     by the score gate; the structural path is no longer a categorical
-#     reject. See docs/BENCHMARKS.md and ~/.helix/shared/handoffs/ for
+#     reject. See docs/BENCHMARKS.md and ~/.cymatix/shared/handoffs/ for
 #     the full empirical basis.
 #
 # Patterns are anchored to directory boundaries to avoid false positives
@@ -171,8 +171,8 @@ def is_denied_source(
 # ── Path tokenization for the path_key_index retrieval layer ────────────
 # Splits source_id on common path separators + common filename punctuation.
 # Each token becomes a retrieval signal paired with the document's key_values
-# keys. A query like "what is the value of helix_port?" hits the index on
-# path_token='helix' AND kv_key='port' → direct boost to the document.
+# keys. A query like "what is the value of cymatix_port?" hits the index on
+# path_token='cymatix' AND kv_key='port' → direct boost to the document.
 #
 # No LLM, no manual project list, no re-ingest required — purely derived
 # from source_id + CpuTagger-extracted key_values. When a new project
@@ -246,8 +246,8 @@ def path_tokens(source_id: Optional[str]) -> set:
     identify this document's provenance for compound-lookup retrieval.
 
     Examples:
-        "F:/Projects/helix-context/cymatix_context/config.py"
-          → {"helix-context", "cymatix_context", "helix", "context"}
+        "F:/Projects/cymatix-context/cymatix_context/config.py"
+          → {"cymatix-context", "cymatix_context", "cymatix", "context"}
 
         "F:/SteamLibrary/steamapps/common/Hades II/content/maps.lua"
           → {"steamlibrary", "steamapps", "hades", "ii", "content", "maps"}
@@ -267,8 +267,8 @@ def path_tokens(source_id: Optional[str]) -> set:
         if len(t) <= 1 or t in _PATH_NOISE_TOKENS:
             continue
         out.add(t)
-        # Sub-split on interior hyphens/underscores to surface "helix"
-        # from "helix-context" and "cymatix_context". Keeps the compound
+        # Sub-split on interior hyphens/underscores to surface "cymatix"
+        # from "cymatix-context" and "cymatix_context". Keeps the compound
         # form too so direct matches still work.
         if "-" in t or "_" in t:
             for sub in re.split(r"[-_]+", t):
@@ -284,21 +284,21 @@ def file_tokens(source_id: Optional[str]) -> set:
     Companion to path_tokens() — where that returns folder + file tokens
     mixed together, this returns only the basename's tokens. Motivated by
     the "same-folder-wrong-file" failure mode on the 10-needle bench:
-    a query for "helix pipeline" matches path_tokens on any document under
-    helix-context/, but only the documents whose filename itself mentions
+    a query for "cymatix pipeline" matches path_tokens on any document under
+    cymatix-context/, but only the documents whose filename itself mentions
     "pipeline" deserve a coordinate-confidence boost.
 
     Uses the same split + noise rules as path_tokens() but restricts
     input to the basename after the last separator.
 
     Examples:
-        "F:/Projects/helix-context/docs/architecture/PIPELINE_LANES.md"
+        "F:/Projects/cymatix-context/docs/architecture/PIPELINE_LANES.md"
           → {"pipeline", "lanes"}
 
-        "F:/Projects/helix-context/cymatix_context/retrieval.py"
+        "F:/Projects/cymatix-context/cymatix_context/retrieval.py"
           → {"retrieval"}
 
-        "F:/Projects/helix-context/cymatix_context/genome.py"
+        "F:/Projects/cymatix-context/cymatix_context/genome.py"
           → {"knowledge store"}
     """
     if not source_id:
@@ -346,7 +346,7 @@ _DENSITY_ACCESS_OVERRIDE = 5         # access_count >= this keeps document OPEN 
 # documents that haven't been touched yet) fall through to the monotonic
 # fallback path, preserving backward compatibility.
 #
-# Reference: ~/.helix/shared/handoffs/2026-04-11_8d_dimensional_roadmap.md
+# Reference: ~/.cymatix/shared/handoffs/2026-04-11_8d_dimensional_roadmap.md
 _DENSITY_RATE_WINDOW = 3600.0   # 1-hour window
 _DENSITY_RATE_MIN_HITS = 3      # ≥3 accesses in the window → override
 
@@ -391,13 +391,13 @@ def _dense_matrix_dtype():
     """Resident dtype for the per-shard dense matrix (A2 RAM lever).
 
     Default ``float32`` (byte-identical to the historical path). Set
-    ``HELIX_DENSE_MATRIX_DTYPE=float16`` to halve the resident dense-matrix
+    ``CYMATIX_DENSE_MATRIX_DTYPE=float16`` to halve the resident dense-matrix
     footprint at 100-shard scale (~3.3 GB -> ~1.65 GB); numpy promotes to
     fp32 inside the matmul so cosine precision is unaffected -- only storage
     shrinks. OFF by default because it is a real (if tiny) precision change.
     """
     import numpy as _np
-    val = os.environ.get("HELIX_DENSE_MATRIX_DTYPE", "float32").strip().lower()
+    val = os.environ.get("CYMATIX_DENSE_MATRIX_DTYPE", "float32").strip().lower()
     return _np.float16 if val in ("float16", "fp16", "half") else _np.float32
 
 
@@ -622,7 +622,7 @@ class KnowledgeStore:
         # min_cosine. Unused under RRF.
         dense_additive_min_cosine: float = 0.15,
         # Semantic-wiring arm (PRD 2026-06-02). semantic_dense_additive_weight
-        # is consulted only when query_type=="semantic" AND HELIX_SEMANTIC_ARM=1.
+        # is consulted only when query_type=="semantic" AND CYMATIX_SEMANTIC_ARM=1.
         # semantic_broaden_routing is read by ShardRouter; accepted here so the
         # fanned genome_kwargs don't raise (Genome ignores it).
         semantic_dense_additive_weight: float = 16.0,
@@ -739,7 +739,7 @@ class KnowledgeStore:
         # consumes them as tier coefficients/caps (defaults == the old
         # inline literals -> bit-identical when untouched); RRF consumes
         # them as rank post-multipliers.
-        # Validate now so a typo in helix.toml fails fast at construction
+        # Validate now so a typo in cymatix.toml fails fast at construction
         # instead of producing surprising rankings at query time.
         if fusion_mode not in ("additive", "rrf"):
             raise ValueError(
@@ -748,7 +748,7 @@ class KnowledgeStore:
         self._fusion_mode: str = fusion_mode
         self._rrf_k: int = int(rrf_k)
         # Issue #260: rank/confidence-gated RRF. Validate now so a bad
-        # rrf_gate_top_m in helix.toml fails fast at construction, mirroring the
+        # rrf_gate_top_m in cymatix.toml fails fast at construction, mirroring the
         # fusion_mode / rerank_combinator guards. gate_min_score accepts any
         # float (a negative floor is legitimate for negated-bm25 arms), so it is
         # only coerced. enabled=False keeps the store byte-identical regardless
@@ -761,7 +761,7 @@ class KnowledgeStore:
         self._rrf_gate_top_m: int = int(rrf_gate_top_m)
         self._rrf_gate_min_score: float = float(rrf_gate_min_score)
         # Issue #255 (PR-2): validate the rerank combinator now so a typo in
-        # helix.toml fails fast at construction, mirroring the fusion_mode
+        # cymatix.toml fails fast at construction, mirroring the fusion_mode
         # guard above. The four names are the only valid operators (see
         # retrieval/rerank_combinators.py).
         if rerank_combinator not in ("additive", "fused_tier", "eps_band", "off"):
@@ -788,7 +788,7 @@ class KnowledgeStore:
         # Tier-0 review fix: additive-mode dense merge noise floor (see ctor param).
         self._dense_additive_min_cosine: float = float(dense_additive_min_cosine)
         # Semantic-wiring arm (PRD 2026-06-02): scoped dense weight, gated at
-        # query time by query_type=="semantic" + env HELIX_SEMANTIC_ARM=1.
+        # query time by query_type=="semantic" + env CYMATIX_SEMANTIC_ARM=1.
         self._semantic_dense_additive_weight: float = float(semantic_dense_additive_weight)
         self._semantic_broaden_routing: bool = bool(semantic_broaden_routing)
         self._pki_weight: float = float(pki_weight)
@@ -1046,7 +1046,7 @@ class KnowledgeStore:
     #   - Callers must explicitly request cold-tier retrieval — it is
     #     never invoked implicitly from query_genes(). The wiring into
     #     context_manager is a follow-up (C.2-wire) and is gated behind
-    #     a helix.toml config flag.
+    #     a cymatix.toml config flag.
 
     def _build_cold_sema_cache(self) -> None:
         """Build the heterochromatin ΣĒMA vector cache for fast cosine scans.
@@ -1226,7 +1226,7 @@ class KnowledgeStore:
                     break
 
             # #209 phase 1: observe above-floor cold-tier ΣĒMA cosines so
-            # the cold arm shares the helix_dense_cosine calibration
+            # the cold arm shares the cymatix_dense_cosine calibration
             # surface. No-op instrument when OTel is off.
             try:
                 from .telemetry import dense_cosine_histogram
@@ -1893,7 +1893,7 @@ class KnowledgeStore:
     ) -> Dict[str, float]:
         """Recompute each candidate's BM25 LEXICAL score with injected global IDF.
 
-        Cross-shard global-IDF re-score (HELIX_SHARD_GLOBAL_IDF, #182).
+        Cross-shard global-IDF re-score (CYMATIX_SHARD_GLOBAL_IDF, #182).
 
         SQLite FTS5's built-in ``bm25()`` (the ``rank`` column used in
         :meth:`query_docs`'s Tier-3 FTS5 block) computes IDF over THIS
@@ -2139,7 +2139,7 @@ class KnowledgeStore:
         ``query_docs``. Values are validated at config load.
 
         ``query_type`` (semantic-wiring arm, PRD 2026-06-02): when "semantic"
-        AND env HELIX_SEMANTIC_ARM=1, the additive-mode dense term is scaled by
+        AND env CYMATIX_SEMANTIC_ARM=1, the additive-mode dense term is scaled by
         ``self._semantic_dense_additive_weight`` instead of the default
         ``self._dense_additive_weight``. All other tiers are untouched. Any
         other value (or arm off) is byte-identical to the prior behaviour.
@@ -2285,11 +2285,11 @@ class KnowledgeStore:
         # Highest-confidence retrieval signal — a hit means the query
         # mentions both a path-token (project/module) AND a kv_key that
         # an indexed document was tagged with at ingest. This catches
-        # template queries like "what is the value of helix_port?" where
+        # template queries like "what is the value of cymatix_port?" where
         # FTS5/SPLADE both miss because the query lacks domain context.
         #
         # CRITICAL: bonus is INVERSELY proportional to the (path_token,
-        # kv_key) pair cardinality. Rare pairs like (helix, port) — only
+        # kv_key) pair cardinality. Rare pairs like (cymatix, port) — only
         # 2-3 documents share — each get a strong boost (~+5). Common pairs
         # like (steamapps, url) — 3000+ documents share — get ~zero boost,
         # so they don't drown the signal. This is the standard IDF
@@ -2832,7 +2832,7 @@ class KnowledgeStore:
                     # is enabled, so dense cosine ordering clears the lexical
                     # stack into @10. Computed once; lex/tag/SPLADE are untouched.
                     _dense_w = self._dense_additive_weight
-                    if query_type == "semantic" and os.environ.get("HELIX_SEMANTIC_ARM") == "1":
+                    if query_type == "semantic" and os.environ.get("CYMATIX_SEMANTIC_ARM") == "1":
                         _dense_w = self._semantic_dense_additive_weight
                     for gid, cosine in dense_hits:
                         if float(cosine) >= self._dense_additive_min_cosine:
@@ -3088,8 +3088,8 @@ class KnowledgeStore:
 
         # Layered fingerprints: inject parent-document aggregate scores when
         # ≥ 2 chunks of the same file surface in candidates. Opt-in via
-        # HELIX_LAYERED_FINGERPRINTS=1. See docs/FUTURE/LAYERED_FINGERPRINTS.md.
-        if os.environ.get("HELIX_LAYERED_FINGERPRINTS", "0") == "1":
+        # CYMATIX_LAYERED_FINGERPRINTS=1. See docs/FUTURE/LAYERED_FINGERPRINTS.md.
+        if os.environ.get("CYMATIX_LAYERED_FINGERPRINTS", "0") == "1":
             try:
                 self._aggregate_parent_fingerprints(gene_scores, tier_contrib)
             except Exception:
@@ -3243,7 +3243,7 @@ class KnowledgeStore:
             # Additive mode — pre-Stage-3 behavior, byte-identical.
             ranked_ids = sorted(gene_scores, key=gene_scores.get, reverse=True)[:limit]
 
-        # Walking tie-break (opt-in via HELIX_WALKING_TIEBREAK=1).
+        # Walking tie-break (opt-in via CYMATIX_WALKING_TIEBREAK=1).
         # When adjacent top-k documents have bitwise-identical fused scores,
         # re-order them using associative-graph signals (neighborhood
         # size, direct edge weight, NLI entailment, freshness) instead
@@ -3314,7 +3314,7 @@ class KnowledgeStore:
             from .backends.bgem3_codec import get_shared_codec, shared_dense_codec_enabled
             # A1: share ONE BGE-M3 model process-wide instead of building a
             # ~2 GB instance per shard (the dominant 100-shard RAM driver).
-            # Default on; HELIX_SHARE_DENSE_CODEC=0 reverts to per-instance.
+            # Default on; CYMATIX_SHARE_DENSE_CODEC=0 reverts to per-instance.
             self._dense_codec = get_shared_codec(
                 dim=self._dense_embedding_dim,
                 model_name=self._dense_model,  # #207 dense fast-follow
@@ -3463,7 +3463,7 @@ class KnowledgeStore:
             # A2 (RAM): optionally store the resident dense matrix as fp16,
             # halving its heap footprint (~3.3 GB -> ~1.65 GB across 100
             # shards). Default float32 = byte-identical to the prior path; set
-            # HELIX_DENSE_MATRIX_DTYPE=float16 to opt in. Cosine ranking is
+            # CYMATIX_DENSE_MATRIX_DTYPE=float16 to opt in. Cosine ranking is
             # robust to fp16, but it is a real precision change so it is OFF by
             # default. (numpy promotes to fp32 inside the matmul, so the
             # per-query compute is unaffected; only resident storage shrinks.)
@@ -3933,7 +3933,7 @@ class KnowledgeStore:
         when ≥ 2 chunks of the same file hit current candidates.
 
         Mutates the two dicts in place. Called only when
-        HELIX_LAYERED_FINGERPRINTS=1. Errors are swallowed by the caller.
+        CYMATIX_LAYERED_FINGERPRINTS=1. Errors are swallowed by the caller.
 
         Rules:
           - Candidates with a CHUNK_OF edge to parent P that has N≥2
@@ -4449,7 +4449,7 @@ class KnowledgeStore:
             log.warning("WAL checkpoint (%s) failed", mode, exc_info=True)
 
     def emit_wal_health_gauges(self) -> None:
-        """Emit helix_genome_wal_size_bytes gauge for the current knowledge store WAL.
+        """Emit cymatix_genome_wal_size_bytes gauge for the current knowledge store WAL.
 
         Intended to be called from a background task every ~30 s. No-op for
         in-memory knowledge stores and when OTel is disabled (noop instruments drop the

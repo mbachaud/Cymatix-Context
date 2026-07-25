@@ -1,4 +1,4 @@
-"""`helix gene <action>` — inspect a single document.
+"""`cymatix gene <action>` — inspect a single document.
 
 Two actions:
   * ``get <id>``     — full document (content + tags + signals + tier
@@ -7,12 +7,12 @@ Two actions:
                        240). Cheaper than ``get`` when you just want to
                        eyeball whether the document is relevant.
 
-Both wrap :meth:`cymatix_context.api.HelixSession.gene_get`, which uses
+Both wrap :meth:`cymatix_context.api.CymatixSession.gene_get`, which uses
 ``Genome.get_gene`` under the hood. Read-only.
 
 Vocabulary note: the subcommand is ``gene`` to match the legacy MCP
-tool name (``helix_gene_get``) — the canonical engineering alias is
-``helix_document_get`` per ROSETTA.md. A future ``helix document``
+tool name (``cymatix_gene_get``) — the canonical engineering alias is
+``cymatix_document_get`` per ROSETTA.md. A future ``cymatix document``
 top-level subcommand alias can co-exist once the R4 soft-deprecation
 wave lands.
 """

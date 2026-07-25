@@ -39,7 +39,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from ..identity import session_delivery as _session_delivery
 from ..schemas import Gene
 
-log = logging.getLogger("helix.expand")
+log = logging.getLogger("cymatix.expand")
 
 
 DIRECTIONS = ("forward", "backward", "sideways")
