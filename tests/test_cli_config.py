@@ -1,4 +1,4 @@
-"""Tests for `helix config show`."""
+"""Tests for `cymatix config show`."""
 from __future__ import annotations
 
 import json
@@ -7,12 +7,12 @@ from tests.conftest import run_cli as _run
 
 
 def test_config_show_emits_json_by_default(monkeypatch, tmp_path):
-    cfg = tmp_path / "helix.toml"
+    cfg = tmp_path / "cymatix.toml"
     cfg.write_text(
         "[budget]\nribosome_tokens = 3500\n[server]\nport = 11437\n",
         encoding="utf-8",
     )
-    monkeypatch.setenv("HELIX_CONFIG", str(cfg))
+    monkeypatch.setenv("CYMATIX_CONFIG", str(cfg))
 
     rc, out, err = _run(["config", "show"])
     assert rc == 0, err
@@ -22,9 +22,9 @@ def test_config_show_emits_json_by_default(monkeypatch, tmp_path):
 
 
 def test_config_show_text_mode(monkeypatch, tmp_path):
-    cfg = tmp_path / "helix.toml"
+    cfg = tmp_path / "cymatix.toml"
     cfg.write_text("[budget]\nribosome_tokens = 4000\n", encoding="utf-8")
-    monkeypatch.setenv("HELIX_CONFIG", str(cfg))
+    monkeypatch.setenv("CYMATIX_CONFIG", str(cfg))
 
     rc, out, err = _run(["config", "show", "--text"])
     assert rc == 0, err
@@ -33,7 +33,7 @@ def test_config_show_text_mode(monkeypatch, tmp_path):
 
 
 def test_config_show_falls_back_to_defaults_when_no_toml(monkeypatch, tmp_path):
-    monkeypatch.setenv("HELIX_CONFIG", str(tmp_path / "missing.toml"))
+    monkeypatch.setenv("CYMATIX_CONFIG", str(tmp_path / "missing.toml"))
 
     rc, out, err = _run(["config", "show"])
     assert rc == 0, err
@@ -44,12 +44,12 @@ def test_config_show_falls_back_to_defaults_when_no_toml(monkeypatch, tmp_path):
 
 def test_config_show_text_mode_uses_json_scalars(monkeypatch, tmp_path):
     """Booleans + None should serialize as JSON (true/false/null), not Python repr."""
-    cfg = tmp_path / "helix.toml"
+    cfg = tmp_path / "cymatix.toml"
     cfg.write_text(
         "[budget]\nlegibility_enabled = true\nsession_delivery_enabled = false\n",
         encoding="utf-8",
     )
-    monkeypatch.setenv("HELIX_CONFIG", str(cfg))
+    monkeypatch.setenv("CYMATIX_CONFIG", str(cfg))
 
     rc, out, err = _run(["config", "show", "--text"])
     assert rc == 0, err

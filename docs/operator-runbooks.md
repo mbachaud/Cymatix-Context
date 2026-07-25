@@ -671,13 +671,13 @@ curl -X POST http://127.0.0.1:11437/admin/refresh
 ```
 
 The endpoint handler at `cymatix_context/server.py:2806-2810` calls
-`helix.genome.refresh()` and then `helix.genome.stats()["total_genes"]`
+`cymatix.genome.refresh()` and then `cymatix.genome.stats()["total_genes"]`
 to confirm the connection is healthy. The response is
 `{"refreshed": true, "genes": <count>}`.
 
 ### What it triggers
 
-`helix.genome.refresh()` (`cymatix_context/genome.py:4089-4112`):
+`cymatix.genome.refresh()` (`cymatix_context/genome.py:4089-4112`):
 
 - Primary path: `_refresh_snapshot()` commits the read transaction so
   the next SELECT starts a new WAL snapshot, then `SELECT 1` verifies
@@ -788,7 +788,7 @@ curl -X POST http://127.0.0.1:11437/consolidate \
 
 The endpoint takes no required body fields — it operates on the active
 session buffer. The handler invokes
-`helix.consolidate_session_async()` and returns
+`cymatix.consolidate_session_async()` and returns
 `{"facts_extracted": <int>, "gene_ids": [...]}`.
 
 (Note: the endpoint signature in the worktree's `server.py:2673` does

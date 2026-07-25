@@ -15,7 +15,7 @@ The backfill is ADDITIVE and IDEMPOTENT:
 Usage:
     python scripts/backfill_filename_domains.py [--db PATH] [--dry-run]
 
-Default DB: helix.toml genome.path (via config loader).
+Default DB: cymatix.toml genome.path (via config loader).
 """
 
 from __future__ import annotations
@@ -40,7 +40,7 @@ def _get_filename_tokens(tagger: CpuTagger, source_id: str) -> list[str]:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--db", default=None, help="genome DB path (default: from helix.toml)")
+    ap.add_argument("--db", default=None, help="genome DB path (default: from cymatix.toml)")
     ap.add_argument("--batch-size", type=int, default=2000, help="commit interval")
     ap.add_argument("--dry-run", action="store_true", help="scan and count without writing")
     args = ap.parse_args()

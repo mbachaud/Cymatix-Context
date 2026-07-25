@@ -16,12 +16,12 @@ def test_state_dir_returns_absolute_path():
     assert p.name == "observability"
 
 
-def test_state_dir_includes_helix_context_segment():
-    """Sanity: helix-context segment appears so we don't accidentally
+def test_state_dir_includes_cymatix_context_segment():
+    """Sanity: cymatix-context segment appears so we don't accidentally
     hit a different app's data dir on a shared host."""
     from cymatix_context.launcher.observability_paths import state_dir
     p = state_dir()
-    assert "helix-context" in str(p) or "cymatix_context" in str(p)
+    assert "cymatix-context" in str(p) or "cymatix_context" in str(p)
 
 
 def test_per_service_state_dir():
@@ -61,15 +61,15 @@ def test_state_dir_creates_on_request(tmp_path, monkeypatch):
     assert p.exists()
 
 
-def test_state_dir_no_doubled_helix_context_segment():
-    """Spec §5 documents %LOCALAPPDATA%\\helix-context\\observability\\
-    (single helix-context segment). Without appauthor=False, platformdirs
-    on Windows produces ...\\helix-context\\helix-context\\... — pinning
+def test_state_dir_no_doubled_cymatix_context_segment():
+    """Spec §5 documents %LOCALAPPDATA%\\cymatix-context\\observability\\
+    (single cymatix-context segment). Without appauthor=False, platformdirs
+    on Windows produces ...\\cymatix-context\\cymatix-context\\... — pinning
     against that regression here."""
     from cymatix_context.launcher.observability_paths import state_dir
     parts = state_dir().parts
-    assert parts.count("helix-context") == 1, (
-        f"state_dir must contain exactly one 'helix-context' segment per "
+    assert parts.count("cymatix-context") == 1, (
+        f"state_dir must contain exactly one 'cymatix-context' segment per "
         f"spec §5; got {state_dir()!s}"
     )
 

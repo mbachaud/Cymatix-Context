@@ -497,7 +497,7 @@ def test_retrieval_config_default_fusion_mode_is_rrf():
 
 
 def test_toml_loader_defaults_fusion_mode_rrf(tmp_path):
-    """A helix.toml without [retrieval].fusion_mode inherits the flipped
+    """A cymatix.toml without [retrieval].fusion_mode inherits the flipped
     default; an explicit "additive" still wins until v(N+2) removes it."""
     from cymatix_context.config import load_config
 
@@ -510,10 +510,10 @@ def test_toml_loader_defaults_fusion_mode_rrf(tmp_path):
     assert load_config(str(legacy)).retrieval.fusion_mode == "additive"
 
 
-def test_shipped_helix_toml_fusion_mode_is_rrf():
-    """The repo-root helix.toml ships the new default explicitly."""
+def test_shipped_cymatix_toml_fusion_mode_is_rrf():
+    """The repo-root cymatix.toml ships the new default explicitly."""
     from cymatix_context.config import load_config
 
-    repo_toml = Path(__file__).resolve().parents[1] / "helix.toml"
+    repo_toml = Path(__file__).resolve().parents[1] / "cymatix.toml"
     cfg = load_config(str(repo_toml))
     assert cfg.retrieval.fusion_mode == "rrf"

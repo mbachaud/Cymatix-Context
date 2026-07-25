@@ -30,7 +30,7 @@ Test families:
      combine_rerank; None is byte-identical to the global),
   5. sharded threading (the override rides the router fan-out to each shard's
      own query_docs),
-  6. end-to-end wiring through HelixContextManager.build_context (the classifier
+  6. end-to-end wiring through CymatixContextManager.build_context (the classifier
      class actually selects the store's per-query combinator; disabled
      classifier and not-in-map classes fall back to the global; the shipped
      default map routes multi_hop/default queries to eps_band).
@@ -54,12 +54,12 @@ from cymatix_context.config import (
     BudgetConfig,
     ClassifierConfig,
     GenomeConfig,
-    HelixConfig,
+    CymatixConfig,
     RetrievalConfig,
     RibosomeConfig,
     load_config,
 )
-from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.context_manager import CymatixContextManager
 from cymatix_context.knowledge_store import KnowledgeStore
 from cymatix_context.retrieval.query_classifier import (
     VALID_QUERY_CLASSES,
@@ -171,7 +171,7 @@ def test_all_valid_class_x_combinator_pairs_construct():
 
 
 def test_toml_load_threads_and_validates_map(tmp_path):
-    toml = tmp_path / "helix.toml"
+    toml = tmp_path / "cymatix.toml"
     toml.write_text(textwrap.dedent("""
         [retrieval]
         fusion_mode = "rrf"
@@ -187,7 +187,7 @@ def test_toml_load_threads_and_validates_map(tmp_path):
 
 
 def test_toml_load_rejects_unknown_combinator(tmp_path):
-    toml = tmp_path / "helix.toml"
+    toml = tmp_path / "cymatix.toml"
     toml.write_text(textwrap.dedent("""
         [retrieval]
         fusion_mode = "rrf"
@@ -200,7 +200,7 @@ def test_toml_load_rejects_unknown_combinator(tmp_path):
 
 
 def test_toml_load_rejects_unknown_class(tmp_path):
-    toml = tmp_path / "helix.toml"
+    toml = tmp_path / "cymatix.toml"
     toml.write_text(textwrap.dedent("""
         [retrieval]
         fusion_mode = "rrf"
@@ -378,7 +378,7 @@ def _seeded_manager(rerank_map: dict, classifier_enabled: bool = True):
     observe. Seeded so build_context reaches retrieval."""
     from tests.conftest import MockCompressorBackend, make_gene
 
-    cfg = HelixConfig(
+    cfg = CymatixConfig(
         ribosome=RibosomeConfig(model="mock", timeout=5),
         budget=BudgetConfig(max_genes_per_turn=4, splice_aggressiveness=0.5),
         genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
@@ -389,7 +389,7 @@ def _seeded_manager(rerank_map: dict, classifier_enabled: bool = True):
             rerank_combinator_by_class=rerank_map,
         ),
     )
-    mgr = HelixContextManager(cfg)
+    mgr = CymatixContextManager(cfg)
     mgr.ribosome.backend = MockCompressorBackend()
     for i, (content, doms, ents) in enumerate([
         ("what is the auth middleware path in the server module",

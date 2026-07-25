@@ -1,8 +1,8 @@
-"""CodeRAG-Bench (Step-2) Helix diagnostic: why does Helix miss lexically-obvious
+"""CodeRAG-Bench (Step-2) Cymatix diagnostic: why does Cymatix miss lexically-obvious
 gold docs on the canonical programming-solutions corpus?
 
 For each sampled query, reports whether the gold doc is:
-  (a) absent from Helix's scored set (gating/shortlist excludes it), or
+  (a) absent from Cymatix's scored set (gating/shortlist excludes it), or
   (b) present but out-ranked (additive fusion / IDF buries it).
 
 Also reports:
@@ -10,7 +10,7 @@ Also reports:
   - top-3 retrieved (idx, score)
   - BM25 rank for the same query (reference foil)
 
-USAGE (requires in-process Helix -- run in helix063 venv DIRECTLY):
+USAGE (requires in-process Cymatix -- run in cymatix063 venv DIRECTLY):
   python benchmarks/coderag_diag.py --n 12 --ds humaneval
   python benchmarks/coderag_diag.py --n 20 --ds mbpp --queries-json benchmarks/results/coderag_queries_<ts>.json
 
@@ -91,12 +91,12 @@ def _smoke_queries():
 
 
 # ---------------------------------------------------------------------------
-# In-process Helix wiring
+# In-process Cymatix wiring
 # ---------------------------------------------------------------------------
 
 _DEFAULT_CONFIG_CANDIDATES = [
-    Path(__file__).resolve().parents[1] / "docs" / "benchmarks" / "helix_probe_lexical.toml",
-    Path("F:/tmp/cb_helix_probe/helix_probe.toml"),
+    Path(__file__).resolve().parents[1] / "docs" / "benchmarks" / "cymatix_probe_lexical.toml",
+    Path("F:/tmp/cb_cymatix_probe/cymatix_probe.toml"),
 ]
 
 
@@ -107,16 +107,16 @@ def _find_default_config():
     return None
 
 
-def build_helix(genome_dir, config_path):
-    """Return a HelixContextManager with a fresh genome at genome_dir."""
-    os.environ.pop("HELIX_USE_SHARDS", None)
-    os.environ["HELIX_CONFIG"] = config_path
-    os.environ["HELIX_GENOME_PATH"] = os.path.join(genome_dir, "genome.db")
+def build_cymatix(genome_dir, config_path):
+    """Return a CymatixContextManager with a fresh genome at genome_dir."""
+    os.environ.pop("CYMATIX_USE_SHARDS", None)
+    os.environ["CYMATIX_CONFIG"] = config_path
+    os.environ["CYMATIX_GENOME_PATH"] = os.path.join(genome_dir, "genome.db")
     shutil.rmtree(genome_dir, ignore_errors=True)
     os.makedirs(genome_dir, exist_ok=True)
     from cymatix_context.config import load_config
-    from cymatix_context.context_manager import HelixContextManager
-    return HelixContextManager(load_config())
+    from cymatix_context.context_manager import CymatixContextManager
+    return CymatixContextManager(load_config())
 
 
 def _gene_doc_idx(g):
@@ -132,21 +132,21 @@ def _gene_doc_idx(g):
     return None
 
 
-def helix_scores(helix, query, n_corpus):
+def cymatix_scores(cymatix, query, n_corpus):
     """Return {corpus_idx: best_score} for this query over the genome."""
-    _eq, dom, ent = helix._prepare_query_signals(
+    _eq, dom, ent = cymatix._prepare_query_signals(
         query, session_context=None, expand_query=False
     )
-    cands = helix._retrieve(
+    cands = cymatix._retrieve(
         dom, ent, n_corpus,
         query_text=query, include_cold=None,
         party_id="default", use_harmonic=False, use_sr=False,
     )
-    cands, _ = helix._apply_candidate_refiners(
+    cands, _ = cymatix._apply_candidate_refiners(
         query, cands, n_corpus,
         use_cymatics=False, use_harmonic_bin=False, use_tcm=True, allow_rerank=False,
     )
-    raw = dict(getattr(helix.genome, "last_query_scores", None) or {})
+    raw = dict(getattr(cymatix.genome, "last_query_scores", None) or {})
     best = {}
     for g in cands:
         di = _gene_doc_idx(g)
@@ -203,7 +203,7 @@ class _BM25:
 # Main diagnostic loop
 # ---------------------------------------------------------------------------
 
-def diagnose(corpus, queries, helix, n=12, ds_filter=None):
+def diagnose(corpus, queries, cymatix, n=12, ds_filter=None):
     """Run per-query diagnostics; return list of result dicts."""
     filtered = [q for q in queries if not ds_filter or q.get("ds") == ds_filter]
     if n:
@@ -219,7 +219,7 @@ def diagnose(corpus, queries, helix, n=12, ds_filter=None):
         query = q["query"]
         qt = list(tok(query))
 
-        scores = helix_scores(helix, query, n_corpus)
+        scores = cymatix_scores(cymatix, query, n_corpus)
         in_scored = gi in scores
         order = sorted(scores.keys(), key=lambda d: (-scores[d], d))
         gold_rank = order.index(gi) if in_scored else None
@@ -255,7 +255,7 @@ def main():
     ap = argparse.ArgumentParser(
         description=(
             "CodeRAG-Bench diagnostic: per-query retrieved-vs-not-retrieved "
-            "for the first N queries. Requires in-process Helix (helix063 venv)."
+            "for the first N queries. Requires in-process Cymatix (cymatix063 venv)."
         )
     )
     ap.add_argument("--n", type=int, default=12, help="Number of queries to diagnose")
@@ -272,8 +272,8 @@ def main():
         help="Path to the per-query dump JSON from coderag_bench.py.",
     )
     ap.add_argument(
-        "--helix-config", default=None, dest="helix_config",
-        help="Path to lexical-probe helix.toml. Falls back to HELIX_CONFIG env var.",
+        "--cymatix-config", default=None, dest="cymatix_config",
+        help="Path to lexical-probe cymatix.toml. Falls back to CYMATIX_CONFIG env var.",
     )
     ap.add_argument(
         "--genome-dir", default=None, dest="genome_dir",
@@ -281,15 +281,15 @@ def main():
     )
     args = ap.parse_args()
 
-    helix_config = (
-        args.helix_config
-        or os.environ.get("HELIX_CONFIG")
+    cymatix_config = (
+        args.cymatix_config
+        or os.environ.get("CYMATIX_CONFIG")
         or _find_default_config()
     )
-    if not helix_config or not Path(helix_config).exists():
+    if not cymatix_config or not Path(cymatix_config).exists():
         print(
-            "ERROR: No helix config found. Provide --helix-config or set HELIX_CONFIG.\n"
-            "  See docs/benchmarks/helix_probe_lexical.toml for a template.",
+            "ERROR: No cymatix config found. Provide --cymatix-config or set CYMATIX_CONFIG.\n"
+            "  See docs/benchmarks/cymatix_probe_lexical.toml for a template.",
             file=sys.stderr,
         )
         sys.exit(1)
@@ -321,13 +321,13 @@ def main():
             print("[diag] Using inline smoke fixture queries ({} queries)".format(
                   len(queries)), flush=True)
 
-    print("[diag] Building Helix genome at {}...".format(genome_dir), flush=True)
-    helix = build_helix(genome_dir, helix_config)
+    print("[diag] Building Cymatix genome at {}...".format(genome_dir), flush=True)
+    cymatix = build_cymatix(genome_dir, cymatix_config)
 
     ing_err = 0
     for di, doc in enumerate(corpus):
         try:
-            helix.ingest(doc["text"], content_type="code", metadata={"path": "doc_{}".format(di)})
+            cymatix.ingest(doc["text"], content_type="code", metadata={"path": "doc_{}".format(di)})
         except Exception:
             ing_err += 1
 
@@ -335,7 +335,7 @@ def main():
           len(corpus) - ing_err, len(corpus), ing_err), flush=True)
     print("\n[diag] Diagnosing first {} '{}' queries:\n".format(args.n, args.ds))
 
-    diagnose(corpus, queries, helix, n=args.n, ds_filter=args.ds)
+    diagnose(corpus, queries, cymatix, n=args.n, ds_filter=args.ds)
 
 
 if __name__ == "__main__":

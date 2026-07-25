@@ -1,13 +1,13 @@
-"""Onyx EnterpriseRAG-Bench recall@10 driver for helix (thread 2).
+"""Onyx EnterpriseRAG-Bench recall@10 driver for cymatix (thread 2).
 
-The long-absent driver (memory erb-onyx-semantic-bench): query -> helix
+The long-absent driver (memory erb-onyx-semantic-bench): query -> cymatix
 in-process retrieval -> ranked source_ids -> dsids -> dedupe -> recall@10 by
 question_type. Uses `genome.last_query_scores` (full post-fusion ranking, NOT
 the budget-truncated expressed window) so recall is measured on retrieval, not
 on the expression cap.
 
 Plumbing mirrors benchmarks/located_n1000.py (in-process, read_only,
-HELIX_DISABLE_LEARN). Config cells via --set section.key=value.
+CYMATIX_DISABLE_LEARN). Config cells via --set section.key=value.
 
 Cells for the ANN-threshold re-A/B on SEMANTIC queries (PR#250 refuted 0.58->0.47
 on LITERAL SIKE; open question is whether it helps where dense carries signal):
@@ -21,7 +21,7 @@ Blobs only (shards relabel fusion to additive; the rrf flip is inert there).
 
 Usage:
   python onyx_recall.py --bed-db <blob.db> --corpus-root F:/tmp/enterprise_rag_10k \
-     --questions F:/tmp/ext_ct_helixbench/questions/onyx_500.jsonl \
+     --questions F:/tmp/ext_ct_cymatixbench/questions/onyx_500.jsonl \
      --k 10 [--limit N] [--qtype semantic] [--set retrieval.ann_similarity_threshold=0.47]
 """
 from __future__ import annotations
@@ -36,13 +36,13 @@ import time
 from collections import defaultdict
 from pathlib import Path
 
-os.environ.setdefault("HELIX_DISABLE_LEARN", "1")
+os.environ.setdefault("CYMATIX_DISABLE_LEARN", "1")
 
 _REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_REPO))
 
 from cymatix_context.config import load_config  # noqa: E402
-from cymatix_context.context_manager import HelixContextManager  # noqa: E402
+from cymatix_context.context_manager import CymatixContextManager  # noqa: E402
 
 
 def _norm(p: str) -> str:
@@ -118,7 +118,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--bed-db", required=True)
     ap.add_argument("--corpus-root", required=True)
-    ap.add_argument("--questions", default="F:/tmp/ext_ct_helixbench/questions/onyx_500.jsonl")
+    ap.add_argument("--questions", default="F:/tmp/ext_ct_cymatixbench/questions/onyx_500.jsonl")
     ap.add_argument("--k", type=int, default=10)
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--qtype", default="")
@@ -134,11 +134,11 @@ def main():
     gene_src = load_gene_source_map(args.bed_db)
     print(f"  gene->source: {len(gene_src)} genes", file=sys.stderr)
 
-    _cfg_path = _REPO / "cymatix.toml" if (_REPO / "cymatix.toml").exists() else _REPO / "helix.toml"
+    _cfg_path = _REPO / "cymatix.toml" if (_REPO / "cymatix.toml").exists() else _REPO / "cymatix.toml"
     cfg = load_config(str(_cfg_path))
     cfg.genome.path = args.bed_db
     _apply_overrides(cfg, args.overrides)
-    manager = HelixContextManager(cfg)
+    manager = CymatixContextManager(cfg)
 
     qs = []
     with open(args.questions, encoding="utf-8") as f:

@@ -13,14 +13,14 @@ def test_promoter_tags_has_intent_class():
 def test_promoter_tags_existing_fields_unchanged():
     """All pre-existing PromoterTags fields must still work."""
     tags = PromoterTags(
-        domains=["helix"],
+        domains=["cymatix"],
         entities=["port"],
-        intent="The helix proxy listens on port 11437.",
+        intent="The cymatix proxy listens on port 11437.",
         summary="port config",
     )
-    assert tags.domains == ["helix"]
+    assert tags.domains == ["cymatix"]
     assert tags.entities == ["port"]
-    assert tags.intent == "The helix proxy listens on port 11437."
+    assert tags.intent == "The cymatix proxy listens on port 11437."
 
 
 def test_classify_intent_config_knob():
@@ -60,7 +60,7 @@ def test_promoter_tags_deserializes_without_intent_class():
     import json
     from pydantic import TypeAdapter
     old_json = json.dumps({
-        "domains": ["helix"],
+        "domains": ["cymatix"],
         "entities": ["port"],
         "intent": "old gene",
         "summary": "",

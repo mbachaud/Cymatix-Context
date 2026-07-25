@@ -1,7 +1,7 @@
 """
 SNOW benchmark harness — oracle + LLM cascade runner.
 
-Runs T0 retrieval through the live Helix `/fingerprint` endpoint for each
+Runs T0 retrieval through the live Cymatix `/fingerprint` endpoint for each
 query, fetches deeper gene fields from SQLite, runs oracle, optionally runs
 LLM cascade, aggregates into a SNOW scorecard, writes JSON to results/.
 
@@ -34,7 +34,7 @@ try:
 except Exception:
     pass
 
-os.environ["HELIX_DISABLE_HEADROOM"] = "1"
+os.environ["CYMATIX_DISABLE_HEADROOM"] = "1"
 
 REPO = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(REPO))
@@ -47,7 +47,7 @@ GENOME_DB_DEFAULT = "genome-bench-2026-04-14.db"
 QUERIES_JSON = REPO / "benchmarks" / "snow" / "snow_queries.json"
 RESULTS_DIR = REPO / "benchmarks" / "snow" / "results"
 TOP_K = 12
-DEFAULT_HELIX_TIMEOUT_S = 120.0
+DEFAULT_CYMATIX_TIMEOUT_S = 120.0
 
 ALL_MODELS = ["gemma4:e2b", "qwen3:4b", "qwen3:8b"]
 ALL_PROFILES = ["fast", "balanced", "quality"]
@@ -89,11 +89,11 @@ class OllamaModel:
 
 
 # ---------------------------------------------------------------------------
-# Helix fingerprint client
+# Cymatix fingerprint client
 # ---------------------------------------------------------------------------
 
-def default_helix_url() -> str:
-    """Resolve the default Helix base URL from local config."""
+def default_cymatix_url() -> str:
+    """Resolve the default Cymatix base URL from local config."""
     from cymatix_context import load_config  # noqa: WPS433
 
     cfg = load_config()
@@ -103,10 +103,10 @@ def default_helix_url() -> str:
     return f"http://{host}:{cfg.server.port}"
 
 
-class HelixFingerprintClient:
+class CymatixFingerprintClient:
     """Thin HTTP client for the live `/fingerprint` benchmark surface."""
 
-    def __init__(self, base_url: str, timeout: float = DEFAULT_HELIX_TIMEOUT_S):
+    def __init__(self, base_url: str, timeout: float = DEFAULT_CYMATIX_TIMEOUT_S):
         self.base_url = base_url.rstrip("/")
         self.client = httpx.Client(timeout=timeout)
 
@@ -131,7 +131,7 @@ class HelixFingerprintClient:
         self.client.close()
 
 
-def run_t0(client: HelixFingerprintClient, query: str, profile: str, max_results: int):
+def run_t0(client: CymatixFingerprintClient, query: str, profile: str, max_results: int):
     """Run T0 retrieval via /fingerprint and normalize the response."""
     response = client.fingerprint(query=query, max_results=max_results, profile=profile)
     fingerprints = response.get("fingerprints", [])
@@ -238,7 +238,7 @@ def build_oracle_fingerprints(
 # ---------------------------------------------------------------------------
 
 def run_single_query(
-    helix_client: HelixFingerprintClient,
+    cymatix_client: CymatixFingerprintClient,
     conn: sqlite3.Connection,
     q: Dict,
     profile: str,
@@ -253,7 +253,7 @@ def run_single_query(
     # T0 retrieval
     t0_start = time.perf_counter()
     t0_payload, gene_ids, scores, tier_contribs = run_t0(
-        helix_client,
+        cymatix_client,
         query=query_text,
         profile=profile,
         max_results=max_results,
@@ -336,7 +336,7 @@ def aggregate_scorecard(
     model_name: str,
     genome_path: str,
     fingerprint_profile: str,
-    helix_url: str,
+    cymatix_url: str,
 ) -> Dict:
     """Aggregate individual query results into a SNOW scorecard."""
     n = len(query_results)
@@ -467,7 +467,7 @@ def aggregate_scorecard(
             "gene_count": gene_count,
             "n_queries": n,
             "fingerprint_profile": fingerprint_profile,
-            "helix_url": helix_url,
+            "cymatix_url": cymatix_url,
             "timestamp": datetime.now(timezone.utc).isoformat(),
         },
         "oracle": {
@@ -565,8 +565,8 @@ def main():
         help="Ollama base URL",
     )
     parser.add_argument(
-        "--helix-url", default=None,
-        help="Helix base URL serving POST /fingerprint (default: local helix.toml host/port)",
+        "--cymatix-url", default=None,
+        help="Cymatix base URL serving POST /fingerprint (default: local cymatix.toml host/port)",
     )
     parser.add_argument(
         "--profile", default="balanced",
@@ -587,7 +587,7 @@ def main():
         print(f"ERROR: genome not found: {genome_path}", file=sys.stderr)
         sys.exit(1)
 
-    helix_url = args.helix_url or default_helix_url()
+    cymatix_url = args.cymatix_url or default_cymatix_url()
 
     # Load queries
     with open(QUERIES_JSON, "r", encoding="utf-8") as f:
@@ -597,7 +597,7 @@ def main():
 
     print(f"Loaded {len(queries)} queries from {QUERIES_JSON.name}")
     print(f"Genome: {genome_path}")
-    print(f"Helix:  {helix_url}")
+    print(f"Cymatix:  {cymatix_url}")
 
     # Determine model(s)
     if args.model == "all":
@@ -618,24 +618,24 @@ def main():
     gene_count = row[0] if row else "unknown"
     print(f"Genome loaded: {gene_count} genes")
 
-    helix_client = HelixFingerprintClient(helix_url)
+    cymatix_client = CymatixFingerprintClient(cymatix_url)
 
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
     try:
         try:
-            warmup = helix_client.fingerprint(
-                query="helix benchmark warmup",
+            warmup = cymatix_client.fingerprint(
+                query="cymatix benchmark warmup",
                 max_results=min(args.max_results, 3),
                 profile=profiles_to_run[0],
             )
             print(
-                "Helix ready:"
+                "Cymatix ready:"
                 f" {warmup.get('count', 0)} warmup fingerprints"
                 f" via profile={profiles_to_run[0]}"
             )
         except Exception as e:
-            print(f"ERROR: cannot reach Helix /fingerprint at {helix_url}: {e}", file=sys.stderr)
+            print(f"ERROR: cannot reach Cymatix /fingerprint at {cymatix_url}: {e}", file=sys.stderr)
             sys.exit(1)
 
         for profile in profiles_to_run:
@@ -667,7 +667,7 @@ def main():
                     t_q = time.perf_counter()
                     try:
                         result = run_single_query(
-                            helix_client,
+                            cymatix_client,
                             conn,
                             q,
                             profile=profile,
@@ -719,7 +719,7 @@ def main():
                     model_name,
                     genome_path,
                     fingerprint_profile=profile,
-                    helix_url=helix_url,
+                    cymatix_url=cymatix_url,
                 )
                 print_scorecard(scorecard)
 
@@ -732,7 +732,7 @@ def main():
                 print(f"  Results written to {out_path}")
     finally:
         conn.close()
-        helix_client.close()
+        cymatix_client.close()
     print("\nDone.")
 
 

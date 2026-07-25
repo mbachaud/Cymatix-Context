@@ -20,7 +20,7 @@ Read the result:
     shipped floor (still worth fixing for floor=0 deployments + honesty).
 
 Server lifecycle + scoring reuse scripts/bench_chain/s3_fts_depth_sweep.py
-verbatim (uvicorn on the bed, HELIX_DISABLE_LEARN=1, retrieval-only
+verbatim (uvicorn on the bed, CYMATIX_DISABLE_LEARN=1, retrieval-only
 /context, bench_needle.check_gold_delivery). Dense on => the BGE-M3 query
 encoder loads (GPU), so this is seconds-to-minutes per cell, not free.
 """
@@ -68,7 +68,7 @@ def main() -> None:
     ap.add_argument("--bed-db", default="genomes/bench/matrix/xl_clean.db")
     ap.add_argument("--bed-label", default="xl_clean")
     ap.add_argument("--base-config",
-                    default="docs/benchmarks/helix_probe_lexical.toml")
+                    default="docs/benchmarks/cymatix_probe_lexical.toml")
     ap.add_argument("--port", type=int, default=11440)
     ap.add_argument("--limit", type=int, default=0, help="first N needles (0=all)")
     ap.add_argument("--out",

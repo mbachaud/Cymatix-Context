@@ -1,4 +1,4 @@
-"""Tests for `helix refresh-targets`."""
+"""Tests for `cymatix refresh-targets`."""
 from __future__ import annotations
 
 import json

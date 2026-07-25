@@ -9,7 +9,7 @@ Covers the first slice of the session registry (see docs/SESSION_REGISTRY.md):
     - /ingest extension: participant_id -> automatic attribution
 
 All tests run against in-memory SQLite — no touching of the live genome.db
-at F:\\Projects\\helix-context\\genome.db. Safe to run while the real server
+at F:\\Projects\\cymatix-context\\genome.db. Safe to run while the real server
 is live.
 """
 

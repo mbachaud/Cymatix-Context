@@ -159,7 +159,7 @@ ConfigError: [abstain].mode='per_classifier' requires an
 ```
 
 **Cause.** The TOML loader at `cymatix_context/config.py:528-533` falls
-back to `HelixConfig()` defaults on a `tomllib.TOMLDecodeError` and
+back to `CymatixConfig()` defaults on a `tomllib.TOMLDecodeError` and
 emits a single `log.error` line. Defaults bind to port 11437 with
 `genome.path = "genome.db"` (relative to cwd) and Ollama at
 `http://localhost:11434` — which is rarely what an operator tuning
@@ -336,7 +336,7 @@ but no system-tray icon appears in the panel.
 
 3. On macOS, no extra system packages are needed; the icon lives in
    the menu bar. If it does not appear, check
-   `~/.helix/launcher/launcher.log` for `pystray` import errors —
+   `~/.cymatix/launcher/launcher.log` for `pystray` import errors —
    typically a Pillow ABI mismatch on Python 3.14 (see the wheel
    mismatch section below).
 
@@ -428,7 +428,7 @@ file. The lifespan shutdown at `server.py:717` runs
 
 **Symptom.** Claude Opus / GPT-5 / Gemini 3 Pro receives a `/context`
 response with `miss { do_not_answer_from_genome: true }` and a
-`<helix:no_match reason="..."/>` token in `expressed_context`, but
+`<cymatix:no_match reason="..."/>` token in `expressed_context`, but
 answers from training prior anyway.
 
 **Cause.** The agent's system prompt does not import the
@@ -469,7 +469,7 @@ caller's responsibility. The compiled fragment lives at
    `cymatix_context/schemas.py:564-569` (`ESCALATE_TARGETS`).
 
 3. Ensure your agent has a tool-call-before-answer loop: when `miss`
-   is present (or the `<helix:no_match/>` tag appears in
+   is present (or the `<cymatix:no_match/>` tag appears in
    `expressed_context`), the model emits a tool call from the
    `escalate_to` list, waits for the result, then composes the reply.
 
@@ -518,7 +518,7 @@ column populated, dense recall silently degrades to lexical-only.
 
 1. Stop cymatix:
    ```bash
-   _stop_bench_helix.bat       # Windows bench helper
+   _stop_bench_cymatix.bat       # Windows bench helper
    # Or Ctrl+C the uvicorn process
    ```
 

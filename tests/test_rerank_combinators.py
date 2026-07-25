@@ -281,7 +281,7 @@ def test_config_defaults_are_additive_byte_identical():
 
 
 def test_config_threads_toml_to_store_attrs(tmp_path):
-    toml = tmp_path / "helix.toml"
+    toml = tmp_path / "cymatix.toml"
     toml.write_text(textwrap.dedent("""
         [retrieval]
         fusion_mode = "rrf"

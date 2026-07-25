@@ -160,19 +160,19 @@ def _stub_manager(scores: dict, expressed_ids: list):
         BudgetConfig,
         ClassifierConfig,
         GenomeConfig,
-        HelixConfig,
+        CymatixConfig,
         RibosomeConfig,
     )
-    from cymatix_context.context_manager import HelixContextManager
+    from cymatix_context.context_manager import CymatixContextManager
     from tests.conftest import make_gene
 
-    cfg = HelixConfig(
+    cfg = CymatixConfig(
         ribosome=RibosomeConfig(model="mock", timeout=5),
         budget=BudgetConfig(max_genes_per_turn=12, abstain_enabled=False),
         genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
         classifier=ClassifierConfig(enabled=False),
     )
-    mgr = HelixContextManager(cfg)
+    mgr = CymatixContextManager(cfg)
     candidates = [make_gene(f"content {gid}", gene_id=gid) for gid in expressed_ids]
 
     def fake_express(domains, entities, max_genes, **_kwargs):

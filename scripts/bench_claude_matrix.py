@@ -3,18 +3,18 @@ r"""Run the 10-needle bench against all 6 frozen fixtures via ``claude -p``.
 Per fixture:
   1. POST /admin/swap-db pointing at the fixture's primary .db
   2. For each needle, invoke ``claude -p --output-format json`` so the
-     model answers via helix-context MCP (which now hits the swapped db)
+     model answers via cymatix-context MCP (which now hits the swapped db)
   3. Also call /context directly per needle for retrieval-only metrics
   4. Score answer ∈ {-1, 0, +1} via word-boundary accept-match
   5. Write per-fixture JSONL into a timestamped results dir
 
 Pre-conditions:
-  * Helix server running on http://127.0.0.1:11437.
-  * For sharded fixtures, server must be started with HELIX_USE_SHARDS=1
+  * Cymatix server running on http://127.0.0.1:11437.
+  * For sharded fixtures, server must be started with CYMATIX_USE_SHARDS=1
     so the auto-detect path in cymatix_context.sharding.open_read_source
     promotes main.genome.db to a ShardedGenomeAdapter on swap. (Required
     by the path/filename heuristic since /admin/swap-db today is path-only.)
-  * Claude Code CLI available on PATH and the helix-context MCP wired up
+  * Claude Code CLI available on PATH and the cymatix-context MCP wired up
     in the user's settings/.mcp.json. New ``claude -p`` subprocesses
     discover the MCP automatically.
 
@@ -54,9 +54,9 @@ import httpx
 
 # ── Configuration ────────────────────────────────────────────────────────
 
-HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
-MANIFEST = Path(r"F:\Projects\helix-context\genomes\bench\matrix\frozen.json")
-RESULTS_ROOT = Path(r"F:\Projects\helix-context\benchmarks\results")
+CYMATIX_URL = os.environ.get("CYMATIX_URL", "http://127.0.0.1:11437")
+MANIFEST = Path(r"F:\Projects\cymatix-context\genomes\bench\matrix\frozen.json")
+RESULTS_ROOT = Path(r"F:\Projects\cymatix-context\benchmarks\results")
 
 CLAUDE_TIMEOUT_S = 300        # 5 min per question — generous for MCP + reasoning
 SWAP_TIMEOUT_S = 60           # SPLADE rebuild on swap can take a moment
@@ -67,10 +67,10 @@ CONTEXT_TIMEOUT_S = 30        # /context retrieval-only call
 #     standalone and the runner doesn't depend on the bench dir on PYTHONPATH).
 
 NEEDLES = [
-    {"name": "helix_port",
-     "query": "What port does the Helix proxy server listen on?",
+    {"name": "cymatix_port",
+     "query": "What port does the Cymatix proxy server listen on?",
      "expected": "11437", "accept": ["11437"],
-     "gold_source": ["helix-context/helix.toml"]},
+     "gold_source": ["cymatix-context/cymatix.toml"]},
     {"name": "scorerift_threshold",
      "query": "What is the divergence threshold that triggers alerts in ScoreRift?",
      "expected": "0.15", "accept": ["0.15", ".15"],
@@ -83,26 +83,26 @@ NEEDLES = [
      "query": "What type should be used for monetary values in BookKeeper instead of float?",
      "expected": "Decimal", "accept": ["decimal", "Decimal"],
      "gold_source": ["BookKeeper/CLAUDE.md"]},
-    {"name": "helix_pipeline_steps",
-     "query": "How many steps are in the Helix expression pipeline?",
+    {"name": "cymatix_pipeline_steps",
+     "query": "How many steps are in the Cymatix expression pipeline?",
      "expected": "6", "accept": ["6", "six"],
-     "gold_source": ["helix-context/CLAUDE.md", "helix-context/README.md"]},
+     "gold_source": ["cymatix-context/CLAUDE.md", "cymatix-context/README.md"]},
     {"name": "biged_rust_binary_size",
      "query": "What is the binary size of the Rust BigEd build in MB?",
      "expected": "11", "accept": ["11", "11mb", "11 mb"],
      "gold_source": ["Education/biged-rs/README.md"]},
     {"name": "genome_compression_target",
-     "query": "What is the target compression ratio for Helix Context?",
+     "query": "What is the target compression ratio for Cymatix Context?",
      "expected": "5x", "accept": ["5x", "5:1", "5 to 1"],
-     "gold_source": ["helix-context/README.md", "helix-context/docs"]},
+     "gold_source": ["cymatix-context/README.md", "cymatix-context/docs"]},
     {"name": "scorerift_preset_dimensions",
      "query": "How many dimensions does the Python preset in ScoreRift check?",
      "expected": "8", "accept": ["8", "eight"],
      "gold_source": ["two-brain-audit/README.md"]},
-    {"name": "helix_ribosome_budget",
+    {"name": "cymatix_ribosome_budget",
      "query": "How many tokens are allocated for the ribosome decoder prompt?",
      "expected": "3000", "accept": ["3000", "3k", "3,000"],
-     "gold_source": ["helix-context/helix.toml", "helix-context/README.md"]},
+     "gold_source": ["cymatix-context/cymatix.toml", "cymatix-context/README.md"]},
     {"name": "biged_default_model",
      "query": "What is the default local model used by BigEd for conductor tasks?",
      "expected": "qwen3", "accept": ["qwen3", "qwen3:4b", "qwen"],
@@ -153,7 +153,7 @@ def swap_db(target_path: str, log: logging.Logger) -> dict:
     log.info("swap-db -> %s", target_path)
     try:
         resp = httpx.post(
-            f"{HELIX_URL}/admin/swap-db",
+            f"{CYMATIX_URL}/admin/swap-db",
             json={"path": target_path},
             timeout=SWAP_TIMEOUT_S,
         )
@@ -173,7 +173,7 @@ def retrieval_probe(query: str, gold_sources: list[str]) -> dict:
     t0 = time.perf_counter()
     try:
         resp = httpx.post(
-            f"{HELIX_URL}/context",
+            f"{CYMATIX_URL}/context",
             json={"query": query, "decoder_mode": "none"},
             timeout=CONTEXT_TIMEOUT_S,
         )
@@ -306,7 +306,7 @@ def main() -> int:
                         help="claude -p --model arg (sonnet/opus/haiku/full id)")
     parser.add_argument("--max-usd", type=float, default=0.30,
                         help="Per-question budget cap (sonnet smoke run averaged $0.11)")
-    parser.add_argument("--cwd", default=r"F:\Projects\helix-context",
+    parser.add_argument("--cwd", default=r"F:\Projects\cymatix-context",
                         help="cwd for claude -p subprocess")
     args = parser.parse_args()
 
@@ -330,10 +330,10 @@ def main() -> int:
 
     # Sanity: server reachable?
     try:
-        r = httpx.get(f"{HELIX_URL}/stats", timeout=10)
+        r = httpx.get(f"{CYMATIX_URL}/stats", timeout=10)
         log.info("server /stats ok: %d genes", r.json().get("total_genes", -1))
     except Exception as exc:
-        log.error("server not reachable at %s: %s", HELIX_URL, exc)
+        log.error("server not reachable at %s: %s", CYMATIX_URL, exc)
         return 3
 
     overall: dict = {

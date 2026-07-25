@@ -8,7 +8,7 @@ verifies the fix WITHOUT any real models: constructors are monkeypatched
 with counting (or raising) fakes.
 
 Covered:
-- HelixContextManager init constructs NO encoder (sema / spacy / splade /
+- CymatixContextManager init constructs NO encoder (sema / spacy / splade /
   bgem3 / deberta all untouched);
 - first use constructs exactly once; later uses reuse the instance;
 - concurrent first use constructs exactly once (double-checked lock);
@@ -31,14 +31,14 @@ from cymatix_context.backends import sema as sema_mod
 from cymatix_context.config import (
     GenomeConfig,
     Hardware,
-    HelixConfig,
+    CymatixConfig,
     RibosomeConfig,
     ServerConfig,
     load_config,
 )
-from cymatix_context.context_manager import HelixContextManager, LazyRibosome
+from cymatix_context.context_manager import CymatixContextManager, LazyRibosome
 
-from tests.conftest import make_helix_config
+from tests.conftest import make_cymatix_config
 
 
 # ── test isolation: pristine view of the process-lifetime singletons ──
@@ -150,20 +150,20 @@ def fake_deberta(monkeypatch):
     return FakeDeBERTaRibosome
 
 
-def _config(tmp_path, **hardware_kwargs) -> HelixConfig:
-    # Shares conftest's HelixConfig shape (genome/server sections); this
+def _config(tmp_path, **hardware_kwargs) -> CymatixConfig:
+    # Shares conftest's CymatixConfig shape (genome/server sections); this
     # file's own genome path (a real tmp file, not ":memory:") and the
     # [hardware] override are passed explicitly since the lazy-encoder
-    # suite needs per-test hardware knobs make_helix_config doesn't cover.
-    return make_helix_config(
+    # suite needs per-test hardware knobs make_cymatix_config doesn't cover.
+    return make_cymatix_config(
         genome=GenomeConfig(path=str(tmp_path / "genome.db"), cold_start_threshold=5),
         server=ServerConfig(upstream="http://localhost:11434"),
         hardware=Hardware(**hardware_kwargs),
     )
 
 
-def _deberta_config(tmp_path, lazy: bool = True) -> HelixConfig:
-    return make_helix_config(
+def _deberta_config(tmp_path, lazy: bool = True) -> CymatixConfig:
+    return make_cymatix_config(
         genome=GenomeConfig(path=str(tmp_path / "genome.db"), cold_start_threshold=5),
         server=ServerConfig(upstream="http://localhost:11434"),
         ribosome=RibosomeConfig(
@@ -189,7 +189,7 @@ def test_manager_init_constructs_no_encoders(tmp_path, fake_sema, monkeypatch):
     import cymatix_context.tagger as tagger_mod
     from cymatix_context.backends import splade_backend
 
-    mgr = HelixContextManager(_config(tmp_path))
+    mgr = CymatixContextManager(_config(tmp_path))
 
     # SemaCodec deferred: proxy armed, model not constructed.
     assert fake_sema.constructions == 0
@@ -207,7 +207,7 @@ def test_manager_init_constructs_no_encoders(tmp_path, fake_sema, monkeypatch):
 
 def test_sema_disabled_when_dependency_missing(tmp_path, monkeypatch):
     monkeypatch.setattr(sema_mod, "sema_available", lambda: False)
-    mgr = HelixContextManager(_config(tmp_path))
+    mgr = CymatixContextManager(_config(tmp_path))
     assert mgr._sema_codec is None
 
 
@@ -215,7 +215,7 @@ def test_sema_disabled_when_dependency_missing(tmp_path, monkeypatch):
 
 
 def test_first_use_constructs_exactly_once(tmp_path, fake_sema):
-    mgr = HelixContextManager(_config(tmp_path))
+    mgr = CymatixContextManager(_config(tmp_path))
     codec = mgr._sema_codec
     assert fake_sema.constructions == 0
 
@@ -231,7 +231,7 @@ def test_first_use_constructs_exactly_once(tmp_path, fake_sema):
 
 
 def test_static_math_does_not_force_load(tmp_path, fake_sema):
-    mgr = HelixContextManager(_config(tmp_path))
+    mgr = CymatixContextManager(_config(tmp_path))
     codec = mgr._sema_codec
     e0 = [1.0] + [0.0] * 19
     assert codec.similarity(e0, e0) == pytest.approx(1.0)
@@ -243,7 +243,7 @@ def test_static_math_does_not_force_load(tmp_path, fake_sema):
 
 def test_concurrent_first_use_constructs_once(tmp_path, fake_sema):
     fake_sema.construct_delay_s = 0.05
-    mgr = HelixContextManager(_config(tmp_path))
+    mgr = CymatixContextManager(_config(tmp_path))
     codec = mgr._sema_codec
     errors = []
     barrier = threading.Barrier(8)
@@ -273,7 +273,7 @@ def test_sema_load_failure_cached_not_retried(tmp_path, fake_sema, monkeypatch):
             raise RuntimeError("model download failed")
 
     monkeypatch.setattr(sema_mod, "SemaCodec", _Boom)
-    mgr = HelixContextManager(_config(tmp_path))
+    mgr = CymatixContextManager(_config(tmp_path))
     codec = mgr._sema_codec
     with pytest.raises(RuntimeError):
         codec.encode("x")
@@ -288,20 +288,20 @@ def test_sema_load_failure_cached_not_retried(tmp_path, fake_sema, monkeypatch):
 
 
 def test_lazy_encoders_false_restores_eager(tmp_path, fake_sema):
-    mgr = HelixContextManager(_config(tmp_path, lazy_encoders=False))
+    mgr = CymatixContextManager(_config(tmp_path, lazy_encoders=False))
     assert fake_sema.constructions == 1
     assert mgr._sema_codec is not None
     assert mgr._sema_codec.loaded is True
 
 
 def test_lazy_encoders_knob_parses_from_toml(tmp_path):
-    p = tmp_path / "helix.toml"
+    p = tmp_path / "cymatix.toml"
     p.write_text("[hardware]\nlazy_encoders = false\n", encoding="utf-8")
     cfg = load_config(str(p))
     assert cfg.hardware.lazy_encoders is False
     # Default stays true (lazy).
-    assert HelixConfig().hardware.lazy_encoders is True
-    p2 = tmp_path / "helix2.toml"
+    assert CymatixConfig().hardware.lazy_encoders is True
+    p2 = tmp_path / "cymatix2.toml"
     p2.write_text("[hardware]\ndevice = \"cpu\"\n", encoding="utf-8")
     assert load_config(str(p2)).hardware.lazy_encoders is True
 
@@ -310,7 +310,7 @@ def test_lazy_encoders_knob_parses_from_toml(tmp_path):
 
 
 def test_deberta_lazy_until_first_use(tmp_path, fake_deberta):
-    mgr = HelixContextManager(_deberta_config(tmp_path))
+    mgr = CymatixContextManager(_deberta_config(tmp_path))
     assert fake_deberta.constructions == 0
     assert isinstance(mgr.ribosome, LazyRibosome)
     assert mgr.ribosome.loaded is False
@@ -332,7 +332,7 @@ def test_deberta_lazy_until_first_use(tmp_path, fake_deberta):
 
 
 def test_deberta_eager_when_knob_off(tmp_path, fake_deberta):
-    mgr = HelixContextManager(_deberta_config(tmp_path, lazy=False))
+    mgr = CymatixContextManager(_deberta_config(tmp_path, lazy=False))
     assert fake_deberta.constructions == 1
     assert type(mgr.ribosome).__name__ == "FakeDeBERTaRibosome"
 
@@ -348,7 +348,7 @@ def test_deberta_load_failure_falls_back_to_disabled(tmp_path, monkeypatch):
     monkeypatch.setitem(
         sys.modules, "cymatix_context.backends.deberta_backend", mod
     )
-    mgr = HelixContextManager(_deberta_config(tmp_path))
+    mgr = CymatixContextManager(_deberta_config(tmp_path))
     rib = mgr.ribosome
     assert rib.loaded is False
     # First use: factory raises -> permanent fallback to disabled ribosome.
@@ -359,7 +359,7 @@ def test_deberta_load_failure_falls_back_to_disabled(tmp_path, monkeypatch):
 
 
 def test_lazy_ribosome_private_lookup_never_loads(tmp_path, fake_deberta):
-    mgr = HelixContextManager(_deberta_config(tmp_path))
+    mgr = CymatixContextManager(_deberta_config(tmp_path))
     rib = mgr.ribosome
     # Introspection on private/dunder names must not materialize models.
     assert not hasattr(rib, "_nli")
@@ -389,7 +389,7 @@ def test_admin_components_reports_unloaded_without_loading(tmp_path, fake_sema):
     assert by_name["sema"]["status"] == "idle (not loaded)"
     # The probe itself must not have constructed the model.
     assert fake_sema.constructions == 0
-    assert app.state.helix._sema_codec.loaded is False
+    assert app.state.cymatix._sema_codec.loaded is False
 
     # cpu_tagger configured (default backend "cpu") but spaCy not resident.
     if "cpu_tagger" in by_name:
@@ -400,7 +400,7 @@ def test_admin_components_reports_unloaded_without_loading(tmp_path, fake_sema):
     assert "ribosome" not in by_name
 
     # After first use the panel flips to loaded without further builds.
-    app.state.helix._sema_codec.encode("warm me up")
+    app.state.cymatix._sema_codec.encode("warm me up")
     data2 = client.get("/admin/components").json()
     by_name2 = {c["name"]: c for c in data2["components"]}
     assert by_name2["sema"]["loaded"] is True

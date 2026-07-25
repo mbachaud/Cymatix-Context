@@ -1,7 +1,7 @@
 """
 Pass 3b — associative-graph coverage on the tied pairs.
 
-Question: do helix's existing associative tables have enough signal to
+Question: do cymatix's existing associative tables have enough signal to
 distinguish the tied genes? Three checks per tied pair:
 
     1. Direct edge — is there a harmonic_links row between gene_a and
@@ -51,7 +51,7 @@ try:
 except Exception:
     pass
 
-# Crude query → entity-candidate split. The real helix extractor does
+# Crude query → entity-candidate split. The real cymatix extractor does
 # more work (stopword removal, filepath tokens, etc.); we approximate
 # with lowercase word tokens of length >= 3.
 _WORD_RE = re.compile(r"[A-Za-z][A-Za-z0-9_]{2,}")

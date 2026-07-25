@@ -22,18 +22,18 @@ from cymatix_context.launcher.collector import StateCollector
 @pytest.fixture
 def fake_supervisor(tmp_path):
     sup = MagicMock()
-    sup.helix_host = "127.0.0.1"
-    sup.helix_port = 11437
+    sup.cymatix_host = "127.0.0.1"
+    sup.cymatix_port = 11437
     sup.is_running.return_value = True
     sup.get_pid.return_value = 12345
     sup.get_uptime_s.return_value = 42.5
     sup.store.state.last_restart_reason = "test"
     sup.store.state.last_restart_at = time.time()
     # Telemetry defaults — collector now reads these
-    sup.find_orphan_helix.return_value = None
+    sup.find_orphan_cymatix.return_value = None
     sup.get_last_error.return_value = None
     sup.store.path = tmp_path / "state.json"
-    sup.helix_log_path = tmp_path / "helix.log"
+    sup.cymatix_log_path = tmp_path / "cymatix.log"
     return sup
 
 
@@ -61,49 +61,49 @@ def _mock_client(responses: dict):
     return client
 
 
-class TestCollectHelixDown:
-    def test_returns_only_helix_field_when_stopped(self, collector, fake_supervisor):
+class TestCollectCymatixDown:
+    def test_returns_only_cymatix_field_when_stopped(self, collector, fake_supervisor):
         fake_supervisor.is_running.return_value = False
-        fake_supervisor.find_orphan_helix.return_value = None
+        fake_supervisor.find_orphan_cymatix.return_value = None
         fake_supervisor.get_last_error.return_value = None
         result = collector.collect()
-        assert "helix" in result
-        assert result["helix"]["running"] is False
-        assert result["helix"]["availability"] == "unavailable"
+        assert "cymatix" in result
+        assert result["cymatix"]["running"] is False
+        assert result["cymatix"]["availability"] == "unavailable"
         # No other panels should be present
         assert "genes" not in result
         assert "parties" not in result
         assert "tools" not in result
 
-    def test_orphan_pid_surfaced_when_helix_down(self, collector, fake_supervisor):
+    def test_orphan_pid_surfaced_when_cymatix_down(self, collector, fake_supervisor):
         fake_supervisor.is_running.return_value = False
-        fake_supervisor.find_orphan_helix.return_value = 45678
+        fake_supervisor.find_orphan_cymatix.return_value = 45678
         fake_supervisor.get_last_error.return_value = None
         result = collector.collect()
-        assert result["helix"]["orphan_pid"] == 45678
+        assert result["cymatix"]["orphan_pid"] == 45678
 
     def test_last_error_surfaced(self, collector, fake_supervisor):
         fake_supervisor.is_running.return_value = False
-        fake_supervisor.find_orphan_helix.return_value = None
+        fake_supervisor.find_orphan_cymatix.return_value = None
         fake_supervisor.get_last_error.return_value = {
             "operation": "start",
             "message": "port 11437 occupied",
             "at": 1775896000.0,
         }
         result = collector.collect()
-        assert result["helix"]["last_error"]["operation"] == "start"
-        assert "port 11437" in result["helix"]["last_error"]["message"]
+        assert result["cymatix"]["last_error"]["operation"] == "start"
+        assert "port 11437" in result["cymatix"]["last_error"]["message"]
 
     def test_paths_always_present(self, collector, fake_supervisor, tmp_path):
         fake_supervisor.is_running.return_value = False
-        fake_supervisor.find_orphan_helix.return_value = None
+        fake_supervisor.find_orphan_cymatix.return_value = None
         fake_supervisor.get_last_error.return_value = None
         fake_supervisor.store.path = tmp_path / "state.json"
-        fake_supervisor.helix_log_path = tmp_path / "helix.log"
+        fake_supervisor.cymatix_log_path = tmp_path / "cymatix.log"
         result = collector.collect()
-        assert "paths" in result["helix"]
-        assert "state_file" in result["helix"]["paths"]
-        assert "helix_log" in result["helix"]["paths"]
+        assert "paths" in result["cymatix"]
+        assert "state_file" in result["cymatix"]["paths"]
+        assert "cymatix_log" in result["cymatix"]["paths"]
 
 
 class TestGenesPanel:
@@ -138,9 +138,9 @@ class TestGenesPanel:
         with patch("httpx.Client", return_value=_mock_client(responses)):
             with patch.object(collector, "_collect_models", return_value=None):
                 state = collector.collect()
-        assert state["helix"]["availability"] == "available"
+        assert state["cymatix"]["availability"] == "available"
 
-    def test_missing_health_still_available_when_older_helix_answers_stats(self, collector):
+    def test_missing_health_still_available_when_older_cymatix_answers_stats(self, collector):
         responses = {
             "/stats": {
                 "total_genes": 8000,
@@ -154,8 +154,8 @@ class TestGenesPanel:
         with patch("httpx.Client", return_value=_mock_client(responses)):
             with patch.object(collector, "_collect_models", return_value=None):
                 state = collector.collect()
-        assert state["helix"]["availability"] == "available"
-        assert state["helix"]["version"] == "0.2.0"
+        assert state["cymatix"]["availability"] == "available"
+        assert state["cymatix"]["version"] == "0.2.0"
 
 
 class TestPartiesAndParticipants:
@@ -393,8 +393,8 @@ class TestModelsPanel:
 
 def _make_label_supervisor():
     sup = MagicMock()
-    sup.helix_host = "127.0.0.1"
-    sup.helix_port = 11437
+    sup.cymatix_host = "127.0.0.1"
+    sup.cymatix_port = 11437
     return sup
 
 

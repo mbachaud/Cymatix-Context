@@ -1,5 +1,5 @@
 """
-Ingest all text-based files from F:\\ into the Helix Context genome.
+Ingest all text-based files from F:\\ into the Cymatix Context genome.
 Safe: skips secrets, binaries, build artifacts, already-ingested files.
 """
 
@@ -17,8 +17,8 @@ import urllib.request
 import urllib.error
 
 # === Configuration ===
-HELIX_URL = "http://127.0.0.1:11437/ingest"
-GENOME_DB = "F:/Projects/helix-context/genome.db"
+CYMATIX_URL = "http://127.0.0.1:11437/ingest"
+GENOME_DB = "F:/Projects/cymatix-context/genome.db"
 ROOT = "F:/"
 CHUNK_SIZE = 4000
 MIN_SIZE = 100
@@ -232,7 +232,7 @@ def ingest_file(fpath, ext, existing):
         }).encode("utf-8")
 
         req = urllib.request.Request(
-            HELIX_URL,
+            CYMATIX_URL,
             data=payload,
             headers={"Content-Type": "application/json"},
             method="POST"
@@ -251,7 +251,7 @@ def ingest_file(fpath, ext, existing):
 
 def main():
     print("=" * 60)
-    print("Helix Context F:\\ Drive Ingest")
+    print("Cymatix Context F:\\ Drive Ingest")
     print("=" * 60)
 
     # Step 1: Load existing sources

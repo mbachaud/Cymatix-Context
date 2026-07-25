@@ -19,7 +19,7 @@ from tests.conftest import make_gene
 
 class TestBuildWeightVector:
     def test_shape(self):
-        w = build_weight_vector("what port does helix use")
+        w = build_weight_vector("what port does cymatix use")
         assert len(w) == N_BINS
 
     def test_baseline_when_empty(self):
@@ -36,8 +36,8 @@ class TestBuildWeightVector:
 
     def test_amplification_is_gaussian(self):
         """Bins near but not at query freq should be boosted, decaying with distance."""
-        w = build_weight_vector("helix", peak_width=3.0)
-        freq = term_to_frequency("helix")
+        w = build_weight_vector("cymatix", peak_width=3.0)
+        freq = term_to_frequency("cymatix")
         # At center: maximum boost
         center_val = w[freq]
         # 1 bin away: still boosted but less

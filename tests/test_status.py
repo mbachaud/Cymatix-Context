@@ -1,12 +1,12 @@
-"""Tests for the helix-status CLI helpers."""
+"""Tests for the cymatix-status CLI helpers."""
 
 from __future__ import annotations
 
 import json
 
 # Packaged module (bugbash BUG-3) — was file-path-loaded from
-# scripts/ops/helix_status.py before the move into cymatix_context.cli.
-from cymatix_context.cli import helix_status as status_mod
+# scripts/ops/cymatix_status.py before the move into cymatix_context.cli.
+from cymatix_context.cli import cymatix_status as status_mod
 
 
 class TestCheckMcpConfig:
@@ -14,23 +14,23 @@ class TestCheckMcpConfig:
         cfg = tmp_path / ".mcp.json"
         cfg.write_text(json.dumps({
             "mcpServers": {
-                "helix-context": {
+                "cymatix-context": {
                     "args": ["-m", "cymatix_context.mcp_server"],
-                    "env": {"HELIX_MCP_URL": "http://127.0.0.1:11437"},
+                    "env": {"CYMATIX_MCP_URL": "http://127.0.0.1:11437"},
                 }
             }
         }), encoding="utf-8")
         result = status_mod._check_mcp_config(cfg)
         assert result["status"] == "canonical"
-        assert result["env_var"] == "HELIX_MCP_URL"
+        assert result["env_var"] == "CYMATIX_MCP_URL"
 
     def test_legacy_config_detected(self, tmp_path):
         cfg = tmp_path / ".mcp.json"
         cfg.write_text(json.dumps({
             "mcpServers": {
-                "helix-context": {
+                "cymatix-context": {
                     "args": ["-m", "cymatix_context.mcp.server"],
-                    "env": {"HELIX_URL": "http://127.0.0.1:11437"},
+                    "env": {"CYMATIX_URL": "http://127.0.0.1:11437"},
                 }
             }
         }), encoding="utf-8")
@@ -55,20 +55,20 @@ class TestCheckMcpConfig:
         assert result["server_name"] == "cymatix-context"
 
     def test_old_pair_still_canonical(self, tmp_path):
-        """helix-context + HELIX_MCP_URL must remain canonical — don't nag
+        """cymatix-context + CYMATIX_MCP_URL must remain canonical — don't nag
         working setups just because the rename shipped."""
         cfg = tmp_path / ".mcp.json"
         cfg.write_text(json.dumps({
             "mcpServers": {
-                "helix-context": {
+                "cymatix-context": {
                     "args": ["-m", "cymatix_context.mcp_server"],
-                    "env": {"HELIX_MCP_URL": "http://127.0.0.1:11437"},
+                    "env": {"CYMATIX_MCP_URL": "http://127.0.0.1:11437"},
                 }
             }
         }), encoding="utf-8")
         result = status_mod._check_mcp_config(cfg)
         assert result["status"] == "canonical"
-        assert result["env_var"] == "HELIX_MCP_URL"
+        assert result["env_var"] == "CYMATIX_MCP_URL"
 
     def test_short_server_name_is_noncanonical(self, tmp_path):
         """Right module + right env var, but the suffix-less `cymatix` key
@@ -87,13 +87,13 @@ class TestCheckMcpConfig:
         assert "cymatix-context" in result["next_action"]
 
     def test_legacy_shim_module_is_canonical_equivalent(self, tmp_path):
-        """`-m helix_context.mcp_server` aliases to the same server via the
+        """`-m cymatix_context.mcp_server` aliases to the same server via the
         compatibility shim; it should not be reported as missing/broken."""
         cfg = tmp_path / ".mcp.json"
         cfg.write_text(json.dumps({
             "mcpServers": {
                 "cymatix-context": {
-                    "args": ["-m", "helix_context.mcp_server"],
+                    "args": ["-m", "cymatix_context.mcp_server"],
                     "env": {"CYMATIX_MCP_URL": "http://127.0.0.1:11437"},
                 }
             }
@@ -110,16 +110,16 @@ class TestCheckMcpConfig:
 
 class TestCollectStatus:
     def test_collect_status_available(self, tmp_path, monkeypatch):
-        skill_dir = tmp_path / "helix-context"
+        skill_dir = tmp_path / "cymatix-context"
         skill_dir.mkdir()
         (skill_dir / "SKILL.md").write_text("ok", encoding="utf-8")
 
         cfg = tmp_path / ".mcp.json"
         cfg.write_text(json.dumps({
             "mcpServers": {
-                "helix-context": {
+                "cymatix-context": {
                     "args": ["-m", "cymatix_context.mcp_server"],
-                    "env": {"HELIX_MCP_URL": "http://127.0.0.1:11437"},
+                    "env": {"CYMATIX_MCP_URL": "http://127.0.0.1:11437"},
                 }
             }
         }), encoding="utf-8")
@@ -128,7 +128,7 @@ class TestCollectStatus:
             if url.endswith("/health"):
                 return {"status": "ok", "genes": 10}
             if url.endswith("/api/state"):
-                return {"helix": {"running": True}}
+                return {"cymatix": {"running": True}}
             raise AssertionError(url)
 
         monkeypatch.setattr(status_mod, "_get_json", fake_get_json)
@@ -150,7 +150,7 @@ class TestCollectStatus:
 
         result = status_mod.collect_status(
             mcp_config=tmp_path / ".mcp.json",
-            skill_dir=tmp_path / "helix-context",
+            skill_dir=tmp_path / "cymatix-context",
         )
         assert result["availability"] == "unavailable"
         assert result["integration_ready"] is False
@@ -160,9 +160,9 @@ class TestCollectStatus:
         cfg = tmp_path / ".mcp.json"
         cfg.write_text(json.dumps({
             "mcpServers": {
-                "helix-context": {
+                "cymatix-context": {
                     "args": ["-m", "cymatix_context.mcp_server"],
-                    "env": {"HELIX_MCP_URL": "http://127.0.0.1:11437"},
+                    "env": {"CYMATIX_MCP_URL": "http://127.0.0.1:11437"},
                 }
             }
         }), encoding="utf-8")
@@ -171,7 +171,7 @@ class TestCollectStatus:
             if url.endswith("/health"):
                 return {"status": "ok", "genes": 10}
             if url.endswith("/api/state"):
-                return {"helix": {"running": True}}
+                return {"cymatix": {"running": True}}
             raise AssertionError(url)
 
         monkeypatch.setattr(status_mod, "_get_json", fake_get_json)
@@ -182,12 +182,12 @@ class TestCollectStatus:
         )
         assert result["availability"] == "available"
         assert result["integration_ready"] is False
-        assert "shared `helix-context` skill" in result["next_action"]
+        assert "shared `cymatix-context` skill" in result["next_action"]
 
     def test_collect_status_available_with_new_documented_setup(self, tmp_path, monkeypatch):
         """The README-documented setup (cymatix-context key,
         CYMATIX_MCP_URL) must report integration_ready, not 'missing'."""
-        skill_dir = tmp_path / "helix-context"
+        skill_dir = tmp_path / "cymatix-context"
         skill_dir.mkdir()
         (skill_dir / "SKILL.md").write_text("ok", encoding="utf-8")
 
@@ -205,7 +205,7 @@ class TestCollectStatus:
             if url.endswith("/health"):
                 return {"status": "ok", "genes": 10}
             if url.endswith("/api/state"):
-                return {"helix": {"running": True}}
+                return {"cymatix": {"running": True}}
             raise AssertionError(url)
 
         monkeypatch.setattr(status_mod, "_get_json", fake_get_json)

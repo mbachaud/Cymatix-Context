@@ -25,8 +25,8 @@ def test_python_m_mcp_server_blocks_instead_of_exiting():
     env = dict(os.environ)
     # Dead port: registry handshake is best-effort and must not block or
     # crash startup; connection-refused on localhost fails fast.
-    env["HELIX_MCP_URL"] = "http://127.0.0.1:1"
-    env["HELIX_MCP_LOG_LEVEL"] = "WARNING"
+    env["CYMATIX_MCP_URL"] = "http://127.0.0.1:1"
+    env["CYMATIX_MCP_LOG_LEVEL"] = "WARNING"
     proc = subprocess.Popen(
         [sys.executable, "-m", "cymatix_context.mcp_server"],
         cwd=str(_REPO_ROOT),

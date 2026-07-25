@@ -1,22 +1,22 @@
 #!/usr/bin/env python3
-"""ContextBench Step-0 arm-D: in-process Helix retrieval -> unified-format preds.
+"""ContextBench Step-0 arm-D: in-process Cymatix retrieval -> unified-format preds.
 
 Run TWICE:
-  helix062 venv  -> --tag v062   (shipped helix-context 0.6.2)
+  cymatix062 venv  -> --tag v062   (shipped helix-context 0.6.2)
   bgem3   venv   -> --tag wt      (vibrant-easley perf worktree)
 
-Per task: fresh isolated genome under F:/tmp/cb_helix_genomes/<tag>/<iid>/, ingest the
+Per task: fresh isolated genome under F:/tmp/cb_cymatix_genomes/<tag>/<iid>/, ingest the
 worktree's indexable files (same file-universe constants as the BM25 arm), run the
 LLM-free fingerprint + packet recipe, recover 1-indexed line ranges by VERBATIM
 content-match (no fabrication — failures are recorded and skipped), tally injected
 tokens with cl100k_base (same tokenizer as BM25). rmtree the genome after each task.
 
 Emits per (mode,budget) a unified-format pred list:
-  helix_<tag>_fingerprint_8k_pred.json, ..._fingerprint_27k_pred.json, ..._packet_pred.json
+  cymatix_<tag>_fingerprint_8k_pred.json, ..._fingerprint_27k_pred.json, ..._packet_pred.json
 plus a meta sidecar ..._meta.json = {iid: {injected_tokens, n_genes, n_match_fail, n_indexed_files}}.
 
-Read-only on helix + contextbench source. No server / no ports touched (in-process).
-HARMLESS: torch "hardware candidate cuda failed" tracebacks on helix062 are CPU-fallback noise.
+Read-only on cymatix + contextbench source. No server / no ports touched (in-process).
+HARMLESS: torch "hardware candidate cuda failed" tracebacks on cymatix062 are CPU-fallback noise.
 """
 import argparse
 import json
@@ -26,14 +26,14 @@ import sys
 
 # ---- file universe (MUST match contextbench_step0.py exactly) ----------------
 # Code + core docs only. High-volume non-code (.po/.html/.json/.css/.xml...) is dropped:
-# Helix's per-file spaCy ingest chokes on django's thousands of .po files, and they are
+# Cymatix's per-file spaCy ingest chokes on django's thousands of .po files, and they are
 # never code gold. Kept symmetric with the BM25 arm. The gold-file warn flags any drop.
 SRC_EXT = {
     ".py", ".js", ".jsx", ".ts", ".tsx", ".go", ".rs", ".c", ".h", ".cpp", ".cc",
     ".hpp", ".hh", ".java", ".cs", ".rb", ".php", ".swift", ".kt", ".scala",
     ".cfg", ".ini", ".toml", ".yaml", ".yml", ".pyi",
 }
-# Helix compacts large genes -> content becomes "[COMPRESSED:euchromatin] source=...".
+# Cymatix compacts large genes -> content becomes "[COMPRESSED:euchromatin] source=...".
 # Such genes cannot be line-mapped; they hit large DOCS prose (.txt/.rst/.md), never .py code
 # gold, so docs are dropped above. This guard skips any residual compressed gene (never mis-mapped).
 COMPRESSED_PREFIX = "[COMPRESSED"
@@ -43,8 +43,8 @@ SKIP_DIRS = {
 }
 MAX_FILE_BYTES = 2_000_000
 
-HELIX_CONFIG = "F:/tmp/cb_helix_probe/helix_probe.toml"
-GENOME_ROOT = "F:/tmp/cb_helix_genomes"
+CYMATIX_CONFIG = "F:/tmp/cb_cymatix_probe/cymatix_probe.toml"
+GENOME_ROOT = "F:/tmp/cb_cymatix_genomes"
 GOLD = "F:/Projects/helix-context/benchmarks/contextbench/gold_smoke_4repo.parquet"
 
 import tiktoken  # noqa: E402
@@ -125,27 +125,27 @@ def _patch_dense_gpu():
     _bc._cb_gpu_patched = True
 
 
-def build_helix(genome_dir):
-    """Fresh in-process Helix on an isolated genome. Imports helix AFTER env is set."""
-    os.environ.pop("HELIX_USE_SHARDS", None)
-    os.environ.setdefault("HELIX_CONFIG", HELIX_CONFIG)  # main sets the real path; fallback only
-    os.environ["HELIX_GENOME_PATH"] = genome_dir + "/genome.db"
+def build_cymatix(genome_dir):
+    """Fresh in-process Cymatix on an isolated genome. Imports cymatix AFTER env is set."""
+    os.environ.pop("CYMATIX_USE_SHARDS", None)
+    os.environ.setdefault("CYMATIX_CONFIG", CYMATIX_CONFIG)  # main sets the real path; fallback only
+    os.environ["CYMATIX_GENOME_PATH"] = genome_dir + "/genome.db"
     os.makedirs(genome_dir, exist_ok=True)
     if os.environ.get("CB_DENSE_DEVICE", "cpu").strip().lower() == "cuda":
         _patch_dense_gpu()
     from cymatix_context.config import load_config
-    from cymatix_context.context_manager import HelixContextManager
+    from cymatix_context.context_manager import CymatixContextManager
     cfg = load_config()
-    return HelixContextManager(cfg)
+    return CymatixContextManager(cfg)
 
 
-# Release CUDA caching-allocator memory every N ingested files. helix.ingest() dense-encodes
+# Release CUDA caching-allocator memory every N ingested files. cymatix.ingest() dense-encodes
 # each file, and torch caches a distinct block size-class per input shape; over a large repo
 # (~1k+ files of varying size) those size-classes accumulate and VRAM climbs to the card
 # ceiling even on ONE worker (measured: 11.7GB/95% on a 12GB 3080 Ti; expandable_segments
 # alone only got the *start* down to 7.7GB, it still climbed within a single task). A periodic
 # empty_cache() inside the loop bounds the within-task peak. This is a STOP-GAP for the bench;
-# the real fix belongs in helix's dense ingest path (see issue). Off unless dense on cuda.
+# the real fix belongs in cymatix's dense ingest path (see issue). Off unless dense on cuda.
 VRAM_RELEASE_EVERY = int(os.environ.get("CB_VRAM_RELEASE_EVERY", "100"))
 
 
@@ -160,7 +160,7 @@ def _release_vram():
         pass
 
 
-def ingest_repo(helix, repo_dir, file_cache):
+def ingest_repo(cymatix, repo_dir, file_cache):
     """Ingest every indexable file as whole-file code blobs. Populates file_cache[rel]=text.
     Returns n_indexed_files."""
     n = 0
@@ -170,7 +170,7 @@ def ingest_repo(helix, repo_dir, file_cache):
             continue
         file_cache[rel] = text
         try:
-            helix.ingest(text, content_type="code", metadata={"path": rel})
+            cymatix.ingest(text, content_type="code", metadata={"path": rel})
             n += 1
             if n % VRAM_RELEASE_EVERY == 0:
                 _release_vram()
@@ -191,23 +191,23 @@ def gene_src(g):
     return None
 
 
-def run_fingerprint(helix, q, max_results=400):
+def run_fingerprint(cymatix, q, max_results=400):
     """LLM-free fingerprint. Returns ranked list of genes (by last_query_scores desc)."""
-    eq, dom, ent = helix._prepare_query_signals(q, session_context=None, expand_query=False)
-    cands = helix._retrieve(dom, ent, max_results, query_text=q, include_cold=None,
+    eq, dom, ent = cymatix._prepare_query_signals(q, session_context=None, expand_query=False)
+    cands = cymatix._retrieve(dom, ent, max_results, query_text=q, include_cold=None,
                             party_id="default", use_harmonic=False, use_sr=False)
-    cands, contrib = helix._apply_candidate_refiners(
+    cands, contrib = cymatix._apply_candidate_refiners(
         q, cands, max_results, use_cymatics=False, use_harmonic_bin=False,
         use_tcm=True, allow_rerank=False)
-    scores = dict(helix.genome.last_query_scores or {})
+    scores = dict(cymatix.genome.last_query_scores or {})
     ranked = sorted(cands, key=lambda g: scores.get(g.gene_id, 0.0), reverse=True)
     return ranked
 
 
-def run_packet(helix, q):
+def run_packet(cymatix, q):
     """Delivered packet items (verified + stale_risk). Each dict has gene_id, content, source_id."""
     from cymatix_context.context_packet import build_context_packet
-    packet = build_context_packet(q, task_type="explain", genome=helix.genome, max_genes=32,
+    packet = build_context_packet(q, task_type="explain", genome=cymatix.genome, max_genes=32,
                                   now_ts=0.0, read_only=True, include_raw=True,
                                   max_item_chars=100000)
     pd = packet.model_dump()
@@ -229,7 +229,7 @@ def genes_to_pred(iid, items, file_cache):
             n_fail += 1
             continue
         if (content or "").startswith(COMPRESSED_PREFIX):
-            n_compressed += 1  # Helix-compacted gene: not line-mappable (separate from a real fail)
+            n_compressed += 1  # Cymatix-compacted gene: not line-mappable (separate from a real fail)
             continue
         ftext = file_cache.get(src)
         rng = recover_lines(content, ftext)
@@ -264,14 +264,14 @@ def process_task(payload):
            "n_indexed": 0, "n_ranked": 0, "gold_in_ranked": 0, "n_gold": len(gold_files or [])}
     do_fp = "fingerprint" in modes
     do_pk = "packet" in modes
-    helix = None
+    cymatix = None
     file_cache = {}
     try:
-        helix = build_helix(gdir)
-        n_indexed = ingest_repo(helix, wt, file_cache)
+        cymatix = build_cymatix(gdir)
+        n_indexed = ingest_repo(cymatix, wt, file_cache)
         res["n_indexed"] = n_indexed
         q = task["problem_statement"]
-        ranked = run_fingerprint(helix, q, max_results=400) if do_fp else []
+        ranked = run_fingerprint(cymatix, q, max_results=400) if do_fp else []
         ranked_items = [(gene_src(g), (g.content or "")) for g in ranked]
         res["n_ranked"] = len(ranked_items)
         gset = set(gold_files or [])
@@ -292,7 +292,7 @@ def process_task(payload):
                 res["fp"][b] = (pred, meta)
         if do_pk:
             items = [(((it.get("source_id") or "").replace("\\", "/")) or None, it.get("content") or "")
-                     for it in run_packet(helix, q)]
+                     for it in run_packet(cymatix, q)]
             pred, meta = genes_to_pred(iid, items, file_cache)
             meta["n_indexed_files"] = n_indexed
             res["packet"] = (pred, meta)
@@ -301,13 +301,13 @@ def process_task(payload):
         res["error"] = f"{e!r} | {traceback.format_exc().splitlines()[-1]}"
     finally:
         try:
-            if helix is not None and getattr(helix, "genome", None) is not None:
-                close = getattr(helix.genome, "close", None)
+            if cymatix is not None and getattr(cymatix, "genome", None) is not None:
+                close = getattr(cymatix.genome, "close", None)
                 if callable(close):
                     close()
         except Exception:  # noqa: BLE001
             pass
-        helix = None
+        cymatix = None
         file_cache = None
         import gc as _gc
         _gc.collect()
@@ -339,7 +339,7 @@ def _print_result(n, total, r):
 
 
 def main():
-    ap = argparse.ArgumentParser(description="ContextBench Step-0 Helix arm-D predictor")
+    ap = argparse.ArgumentParser(description="ContextBench Step-0 Cymatix arm-D predictor")
     ap.add_argument("--tasks", default="F:/tmp/cb_tasks_smoke.json")
     ap.add_argument("--tag", required=True, help="v062 | wt")
     ap.add_argument("--out-dir", default="F:/Projects/helix-context/benchmarks/contextbench/results")
@@ -347,13 +347,13 @@ def main():
     ap.add_argument("--modes", default="fingerprint,packet")
     ap.add_argument("--validate-only", action="store_true", help="only first 3 tasks; don't write preds")
     ap.add_argument("--workers", type=int, default=1, help="parallel task workers (one process+genome each)")
-    ap.add_argument("--config", default=HELIX_CONFIG, help="HELIX_CONFIG toml (v1=lexical, v2=dense+splade)")
+    ap.add_argument("--config", default=CYMATIX_CONFIG, help="CYMATIX_CONFIG toml (v1=lexical, v2=dense+splade)")
     ap.add_argument("--dense-device", default="cpu", choices=["cpu", "cuda"],
                     help="device for BGE-M3 dense codec (cuda = results-identical speedup)")
     args = ap.parse_args()
 
     # Set before spawning workers so they inherit (Windows spawn copies os.environ).
-    os.environ["HELIX_CONFIG"] = args.config
+    os.environ["CYMATIX_CONFIG"] = args.config
     os.environ["CB_DENSE_DEVICE"] = args.dense_device
 
     budgets = [int(b) for b in args.budgets.split(",") if b.strip()]
@@ -433,11 +433,11 @@ def main():
     if do_fp:
         for b in budgets:
             bk = f"{b // 1000}k"
-            dump(f"helix_{args.tag}_fingerprint_{bk}_pred.json",
-                 f"helix_{args.tag}_fingerprint_{bk}_meta.json", fp_preds[b], fp_meta[b])
+            dump(f"cymatix_{args.tag}_fingerprint_{bk}_pred.json",
+                 f"cymatix_{args.tag}_fingerprint_{bk}_meta.json", fp_preds[b], fp_meta[b])
     if do_pk:
-        dump(f"helix_{args.tag}_packet_pred.json",
-             f"helix_{args.tag}_packet_meta.json", pk_preds, pk_meta)
+        dump(f"cymatix_{args.tag}_packet_pred.json",
+             f"cymatix_{args.tag}_packet_meta.json", pk_preds, pk_meta)
 
     print(f"\nwrote {len(written)} files:", file=sys.stderr)
     for w in written:

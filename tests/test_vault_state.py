@@ -85,7 +85,7 @@ class TestSchemaVersion:
         s = VaultState(vault_root=tmp_path)
         s.close()
         import json
-        state_file = tmp_path / ".helix-state.json"
+        state_file = tmp_path / ".cymatix-state.json"
         data = json.loads(state_file.read_text())
         data["schema_version"] = 999
         state_file.write_text(json.dumps(data))

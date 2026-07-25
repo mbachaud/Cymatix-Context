@@ -165,7 +165,7 @@ def retrieve_fileread(query: str, task_type: str = "explain",
 
 **Bench result:** 0.81 answer recall on multi-needle, vs 0.62 for
 pure BM25, vs 0.19 for Cymatix alone. See
-[`benchmarks/bench_helix_rag_composition.py`](../benchmarks/bench_helix_rag_composition.py).
+[`benchmarks/bench_cymatix_rag_composition.py`](../benchmarks/bench_cymatix_rag_composition.py).
 
 ---
 
@@ -309,7 +309,7 @@ Cymatix stores whatever path you send at ingest. If your RAG uses
 **"Packet says `verified` but I can't find the answer in my RAG
 result."**
 Expected. Cymatix's packet delivers *pointers + verdict*, not content
-(see the helix_only bench cell — 0/8 full answer recall on its own).
+(see the cymatix_only bench cell — 0/8 full answer recall on its own).
 Agents MUST fetch. That's what patterns 2 and 3 are for.
 
 **"Packet note says `coord_confidence=0.12 below 0.30 floor`."**
@@ -483,11 +483,11 @@ hit_rate` for diagnostics.
 
 Wrap your existing RAG (LlamaIndex, LangChain, or any duck-typed
 retriever) behind the `Retriever` protocol, then compose with Cymatix's
-packet-shortlist via `HelixNarrowedRetriever`:
+packet-shortlist via `CymatixNarrowedRetriever`:
 
 ```python
 from cymatix_context.adapters.retriever import (
-    LlamaIndexRetriever, LangChainRetriever, HelixNarrowedRetriever,
+    LlamaIndexRetriever, LangChainRetriever, CymatixNarrowedRetriever,
 )
 
 # Option A: LlamaIndex
@@ -499,7 +499,7 @@ inner = LlamaIndexRetriever(li_retriever)
 # inner = LangChainRetriever(my_langchain_retriever)
 
 # Compose with Cymatix
-narrowed = HelixNarrowedRetriever(inner, helix_url="http://127.0.0.1:11437")
+narrowed = CymatixNarrowedRetriever(inner, cymatix_url="http://127.0.0.1:11437")
 docs = narrowed.retrieve("where does auth middleware live", top_k=8)
 ```
 
@@ -566,12 +566,12 @@ Empirical check of the stack against the multi-needle NIAH on a
 |---|---|---|---|---|
 | pure_rag_bm25 | 0.19 | 4/8 | 0.62 | 35 ms |
 | pure_rag_embedding | 0.00 | 1/8 | 0.44 | 1092 ms |
-| helix_only | 0.19 | 0/8 | 0.19 | 1096 ms |
-| helix_rag | 0.19 | 5/8 | **0.81** | 923 ms |
-| helix_full_stack | 0.19 | 5/8 | **0.81** | 960 ms |
+| cymatix_only | 0.19 | 0/8 | 0.19 | 1096 ms |
+| cymatix_rag | 0.19 | 5/8 | **0.81** | 923 ms |
+| cymatix_full_stack | 0.19 | 5/8 | **0.81** | 960 ms |
 
-The `helix_full_stack` cell (DAG resolve + cached DAL) **matches
-`helix_rag` exactly** at 0.81 today. That's expected — we extract
+The `cymatix_full_stack` cell (DAG resolve + cached DAL) **matches
+`cymatix_rag` exactly** at 0.81 today. That's expected — we extract
 literal claims at ingest but don't auto-populate `claim_edges`
 (contradiction / supersedes detection is a follow-on). The DAG layer
 is a no-op right now, so it's a pure +37ms overhead.
@@ -630,9 +630,9 @@ edges into the existing 78,472-claim main.db, we detected:
   pairs — most documents in the corpus were ingested together)
 - Total: **95,382 edges** across 20,978 entity_key groups (190s scan)
 
-With `claim_edges` populated, the `helix_full_stack` cell re-ran on
+With `claim_edges` populated, the `cymatix_full_stack` cell re-ran on
 the multi-needle bench — still **0.81 ans_partial**, matching
-`helix_rag`. The DAG layer is actively walking now (`resolve_from_packet`
+`cymatix_rag`. The DAG layer is actively walking now (`resolve_from_packet`
 returns accepted/rejected claims), but the file-read content blob
 already contains the answer strings, so DAG resolution doesn't lift
 content recall on this bench.
@@ -647,7 +647,7 @@ infrastructure now, measure its value on the right question later.
 
 - [`docs/specs/2026-04-17-agent-context-index-build-spec.md`](specs/2026-04-17-agent-context-index-build-spec.md)
   — full packet-mode design spec
-- [`benchmarks/bench_helix_rag_composition.py`](../benchmarks/bench_helix_rag_composition.py)
+- [`benchmarks/bench_cymatix_rag_composition.py`](../benchmarks/bench_cymatix_rag_composition.py)
   — the 4-cell composition benchmark source
 - [`cymatix_context/claims_graph.py`](../cymatix_context/claims_graph.py)
   — DAG walker reference implementation

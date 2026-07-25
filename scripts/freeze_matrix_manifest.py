@@ -21,8 +21,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
-MATRIX_BLOB_DIR = Path(r"F:\Projects\helix-context\genomes\bench\matrix")
-MATRIX_SHARDED_DIR = Path(r"F:\Projects\helix-context\genomes\bench\matrix-sharded")
+MATRIX_BLOB_DIR = Path(r"F:\Projects\cymatix-context\genomes\bench\matrix")
+MATRIX_SHARDED_DIR = Path(r"F:\Projects\cymatix-context\genomes\bench\matrix-sharded")
 
 TARGETS = [
     {

@@ -7,10 +7,10 @@ Tests cover:
   - rank_bm25: BM25Okapi ranker on a tiny pool
   - rank_random: deterministic seeded permutation
   - _ks_for_level: k values per difficulty level
-  - BM25 global variant (floored IDF from repobench_r_helix_global)
+  - BM25 global variant (floored IDF from repobench_r_cymatix_global)
   - Full pipeline simulation: make_query + rank + acc_at against an inline fixture
 
-All tests are pure-Python; no HuggingFace downloads, no Helix server, no CUDA.
+All tests are pure-Python; no HuggingFace downloads, no Cymatix server, no CUDA.
 """
 from __future__ import annotations
 
@@ -33,7 +33,7 @@ from repobench_r import (  # noqa: E402
     rank_random,
     _ks_for_level,
 )
-from repobench_r_helix_global import BM25  # noqa: E402
+from repobench_r_cymatix_global import BM25  # noqa: E402
 
 
 # ================================================================================
@@ -225,7 +225,7 @@ class TestRankRandom:
 
 
 # ================================================================================
-# BM25 (global floored-IDF variant from repobench_r_helix_global)
+# BM25 (global floored-IDF variant from repobench_r_cymatix_global)
 # ================================================================================
 
 class TestGlobalBM25:

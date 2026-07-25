@@ -44,7 +44,7 @@ def mock_bridge(monkeypatch):
 class TestNormalizeHealthPayload:
     def test_unreachable_becomes_unavailable(self):
         payload = {
-            "_error": "helix unreachable",
+            "_error": "cymatix unreachable",
             "_detail": "connection refused",
         }
         result = _normalize_health_payload(payload)
@@ -94,13 +94,13 @@ class TestNormalizeHealthPayload:
 
 class TestDefaultIngestIdentity:
     def test_prefers_explicit_full_identity_env(self, monkeypatch):
-        monkeypatch.setenv("HELIX_ORG", "SwiftWing")
-        monkeypatch.setenv("HELIX_DEVICE", "Wing-21")
-        monkeypatch.setenv("HELIX_USER", "Max")
-        monkeypatch.setenv("HELIX_AGENT", "Laude")
-        monkeypatch.setenv("HELIX_AGENT_KIND", "Claude-Code")
-        monkeypatch.setenv("HELIX_MCP_HANDLE", "ignored-session")
-        monkeypatch.setenv("HELIX_MCP_HOST", "ignored-host")
+        monkeypatch.setenv("CYMATIX_ORG", "SwiftWing")
+        monkeypatch.setenv("CYMATIX_DEVICE", "Wing-21")
+        monkeypatch.setenv("CYMATIX_USER", "Max")
+        monkeypatch.setenv("CYMATIX_AGENT", "Laude")
+        monkeypatch.setenv("CYMATIX_AGENT_KIND", "Claude-Code")
+        monkeypatch.setenv("CYMATIX_MCP_HANDLE", "ignored-session")
+        monkeypatch.setenv("CYMATIX_MCP_HOST", "ignored-host")
 
         result = _default_ingest_identity()
 
@@ -113,14 +113,14 @@ class TestDefaultIngestIdentity:
         }
 
     def test_falls_back_to_session_presence_env(self, monkeypatch):
-        monkeypatch.delenv("HELIX_ORG", raising=False)
-        monkeypatch.delenv("HELIX_DEVICE", raising=False)
-        monkeypatch.delenv("HELIX_USER", raising=False)
-        monkeypatch.delenv("HELIX_AGENT", raising=False)
-        monkeypatch.delenv("HELIX_AGENT_KIND", raising=False)
-        monkeypatch.setenv("HELIX_PARTY_ID", "swift_wing21")
-        monkeypatch.setenv("HELIX_MCP_HANDLE", "laude")
-        monkeypatch.setenv("HELIX_MCP_HOST", "claude-code")
+        monkeypatch.delenv("CYMATIX_ORG", raising=False)
+        monkeypatch.delenv("CYMATIX_DEVICE", raising=False)
+        monkeypatch.delenv("CYMATIX_USER", raising=False)
+        monkeypatch.delenv("CYMATIX_AGENT", raising=False)
+        monkeypatch.delenv("CYMATIX_AGENT_KIND", raising=False)
+        monkeypatch.setenv("CYMATIX_PARTY_ID", "swift_wing21")
+        monkeypatch.setenv("CYMATIX_MCP_HANDLE", "laude")
+        monkeypatch.setenv("CYMATIX_MCP_HOST", "claude-code")
 
         result = _default_ingest_identity()
 
@@ -133,12 +133,12 @@ class TestDefaultIngestIdentity:
 
 class TestRegisterWithRegistry:
     def test_register_with_registry_sends_env_vendor_host(self, monkeypatch, mock_bridge):
-        """_register_with_registry reads HELIX_AGENT_KIND and HELIX_MCP_HOST
+        """_register_with_registry reads CYMATIX_AGENT_KIND and CYMATIX_MCP_HOST
         from env and forwards them to AgentBridge.register_participant."""
-        monkeypatch.setenv("HELIX_MCP_HANDLE", "laude")
-        monkeypatch.setenv("HELIX_PARTY_ID", "swift_wing21")
-        monkeypatch.setenv("HELIX_AGENT_KIND", "claude-code")
-        monkeypatch.setenv("HELIX_MCP_HOST", "vscode")
+        monkeypatch.setenv("CYMATIX_MCP_HANDLE", "laude")
+        monkeypatch.setenv("CYMATIX_PARTY_ID", "swift_wing21")
+        monkeypatch.setenv("CYMATIX_AGENT_KIND", "claude-code")
+        monkeypatch.setenv("CYMATIX_MCP_HOST", "vscode")
 
         from cymatix_context import mcp_server
         mcp_server._register_with_registry()
@@ -149,11 +149,11 @@ class TestRegisterWithRegistry:
         assert call["handle"] == "laude"
 
     def test_register_with_registry_omits_unset_env(self, monkeypatch, mock_bridge):
-        """If HELIX_AGENT_KIND is unset, registration sends None (not 'unknown')."""
-        monkeypatch.delenv("HELIX_AGENT_KIND", raising=False)
-        monkeypatch.setenv("HELIX_MCP_HOST", "antigravity")
-        monkeypatch.setenv("HELIX_MCP_HANDLE", "raude")
-        monkeypatch.setenv("HELIX_PARTY_ID", "party_test")
+        """If CYMATIX_AGENT_KIND is unset, registration sends None (not 'unknown')."""
+        monkeypatch.delenv("CYMATIX_AGENT_KIND", raising=False)
+        monkeypatch.setenv("CYMATIX_MCP_HOST", "antigravity")
+        monkeypatch.setenv("CYMATIX_MCP_HANDLE", "raude")
+        monkeypatch.setenv("CYMATIX_PARTY_ID", "party_test")
 
         from cymatix_context import mcp_server
         mcp_server._register_with_registry()
@@ -165,9 +165,9 @@ class TestRegisterWithRegistry:
 
 def test_register_with_registry_calls_detect_ide(monkeypatch, mock_bridge):
     """_register_with_registry calls detect_ide() and forwards both fields."""
-    monkeypatch.setenv("HELIX_MCP_HANDLE", "laude")
-    monkeypatch.setenv("HELIX_PARTY_ID", "swift_wing21")
-    monkeypatch.delenv("HELIX_MCP_HOST", raising=False)
+    monkeypatch.setenv("CYMATIX_MCP_HANDLE", "laude")
+    monkeypatch.setenv("CYMATIX_PARTY_ID", "swift_wing21")
+    monkeypatch.delenv("CYMATIX_MCP_HOST", raising=False)
     monkeypatch.setenv("VSCODE_PID", "9999")
 
     from cymatix_context import mcp_server
@@ -180,9 +180,9 @@ def test_register_with_registry_calls_detect_ide(monkeypatch, mock_bridge):
 
 def test_register_with_registry_no_match_sends_none(monkeypatch, mock_bridge):
     """When fingerprint chain has no signal, ide_detected is None and via is no_match."""
-    monkeypatch.setenv("HELIX_MCP_HANDLE", "laude")
-    monkeypatch.setenv("HELIX_PARTY_ID", "swift_wing21")
-    monkeypatch.delenv("HELIX_MCP_HOST", raising=False)
+    monkeypatch.setenv("CYMATIX_MCP_HANDLE", "laude")
+    monkeypatch.setenv("CYMATIX_PARTY_ID", "swift_wing21")
+    monkeypatch.delenv("CYMATIX_MCP_HOST", raising=False)
     monkeypatch.delenv("VSCODE_PID", raising=False)
     monkeypatch.delenv("CURSOR_TRACE_ID", raising=False)
 
@@ -208,7 +208,7 @@ class TestUnwrapContextList:
         assert out["name"] == "cymatix"
 
     def test_error_envelope_dict_passes_through(self):
-        envelope = {"_error": "helix unreachable", "_detail": "connection refused"}
+        envelope = {"_error": "cymatix unreachable", "_detail": "connection refused"}
         assert _unwrap_context_list(envelope) is envelope
 
     def test_raw_envelope_dict_passes_through(self):
@@ -227,7 +227,7 @@ class TestUnwrapContextList:
         assert out["items"] == []
 
 
-def test_helix_context_unwraps_continue_list_shape(monkeypatch):
+def test_cymatix_context_unwraps_continue_list_shape(monkeypatch):
     """End-to-end: cymatix_context tool returns a flat dict even though
     /context responds with the Continue list shape. This is the failure
     the AI-user feedback hit on origin/master@93deaf2."""
@@ -240,15 +240,15 @@ def test_helix_context_unwraps_continue_list_shape(monkeypatch):
         # Mirror what the real /context endpoint returns — a single-entry
         # list whose entry is the Continue context-provider dict.
         return [{
-            "name": "helix",
-            "description": "helix context",
-            "content": "<helix>example</helix>",
+            "name": "cymatix",
+            "description": "cymatix context",
+            "content": "<cymatix>example</cymatix>",
         }]
 
     monkeypatch.setattr(mcp_server, "_http", _fake_http)
     out = mcp_server.cymatix_context("what does the splice step do?")
     assert isinstance(out, dict), f"expected dict, got {type(out).__name__}: {out!r}"
-    assert out["content"] == "<helix>example</helix>"
+    assert out["content"] == "<cymatix>example</cymatix>"
     # Verify the call was made with the expected shape so we don't
     # accidentally regress the body payload.
     method, path, body = captured["call"]
@@ -274,13 +274,13 @@ def test_cymatix_announce_tool_calls_bridge_announce(monkeypatch, mock_bridge):
 
 
 def _reload_mcp(monkeypatch, *, full: bool):
-    """Reimport the MCP module under the given HELIX_MCP_FULL setting."""
+    """Reimport the MCP module under the given CYMATIX_MCP_FULL setting."""
     import importlib
 
     if full:
-        monkeypatch.setenv("HELIX_MCP_FULL", "1")
+        monkeypatch.setenv("CYMATIX_MCP_FULL", "1")
     else:
-        monkeypatch.delenv("HELIX_MCP_FULL", raising=False)
+        monkeypatch.delenv("CYMATIX_MCP_FULL", raising=False)
     import cymatix_context.mcp.mcp_server as m
 
     return importlib.reload(m)
@@ -293,38 +293,37 @@ def restore_mcp_profile():
     import importlib
     import os
 
-    os.environ.pop("HELIX_MCP_FULL", None)
+    os.environ.pop("CYMATIX_MCP_FULL", None)
     import cymatix_context.mcp.mcp_server as m
 
     importlib.reload(m)
 
 
 def test_lean_mcp_profile_is_default(monkeypatch, restore_mcp_profile):
-    """Unset HELIX_MCP_FULL → only the core tools are registered. With the
-    default compat window open (0.8.0 rename) that is the 5 canonical
-    cymatix_* tools plus their 5 deprecated helix_* aliases."""
-    monkeypatch.delenv("HELIX_MCP_COMPAT", raising=False)
+    """Unset CYMATIX_MCP_FULL → only the core tools are registered. After the
+    0.9.0 clean break there are no helix_* compat aliases, so the lean surface
+    is exactly the 5 canonical cymatix_* core tools."""
     m = _reload_mcp(monkeypatch, full=False)
     names = set(m.mcp._tool_manager._tools.keys())
     assert names == set(m._effective_core_tools())
     assert set(m._MCP_CORE_TOOLS) <= names
-    assert len(names) == 10
+    assert len(names) == 5
 
 
 def test_full_mcp_surface_is_opt_in(monkeypatch, restore_mcp_profile):
-    """HELIX_MCP_FULL=1 → the whole surface is exposed, core included."""
+    """CYMATIX_MCP_FULL=1 → the whole surface is exposed, core included."""
     m = _reload_mcp(monkeypatch, full=True)
     names = set(m.mcp._tool_manager._tools.keys())
     assert set(m._MCP_CORE_TOOLS) <= names
     # Non-core admin/diagnostic/alias tools return only under the full flag.
-    assert {"helix_stats", "helix_swap_db", "helix_document_query"} <= names
+    assert {"cymatix_stats", "cymatix_swap_db", "cymatix_document_query"} <= names
     assert len(names) > len(m._MCP_CORE_TOOLS)
 
 
 def test_apply_mcp_profile_never_prunes_core(monkeypatch, restore_mcp_profile):
     """The prune reports only non-core removals and leaves core intact."""
     m = _reload_mcp(monkeypatch, full=True)  # start from the full surface
-    monkeypatch.delenv("HELIX_MCP_FULL", raising=False)
+    monkeypatch.delenv("CYMATIX_MCP_FULL", raising=False)
     removed = m._apply_mcp_profile()
     assert set(removed).isdisjoint(m._effective_core_tools())
     assert set(m.mcp._tool_manager._tools.keys()) == set(m._effective_core_tools())

@@ -70,7 +70,7 @@ def test_cross_encoder_two_pair_forward_pass_on_mps():
     model = model.to("mps")
     model.train(False)  # nn.Module inference mode — same effect as .eval()
 
-    pairs_a = ["What is helix-context?", "How does the picker work?"]
+    pairs_a = ["What is cymatix-context?", "How does the picker work?"]
     pairs_b = ["A retrieval system.", "It walks CUDA, ROCm, MPS, then CPU."]
 
     enc = tokenizer(

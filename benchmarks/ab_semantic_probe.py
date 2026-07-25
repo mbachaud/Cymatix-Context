@@ -3,7 +3,7 @@ lexical / dense / fused retrieval arms (Issue #260, scope item 1).
 
 In-process, retrieval-only, LLM-free, ~$0. For each (arm x optional
 rerank-combinator) cell it runs ``build_context(read_only=True,
-ignore_delivered=True)`` on a fresh ``HelixContextManager`` against a READ-ONLY
+ignore_delivered=True)`` on a fresh ``CymatixContextManager`` against a READ-ONLY
 bed, and measures -- per question -- whether the gold gene(s) were delivered,
 at what rank they sit in the full scored pool, and whether they were in the
 candidate pool at all. That last split distinguishes a **recall miss** (gold
@@ -65,7 +65,7 @@ if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
 from cymatix_context.config import load_config  # noqa: E402
-from cymatix_context.context_manager import HelixContextManager  # noqa: E402
+from cymatix_context.context_manager import CymatixContextManager  # noqa: E402
 
 
 DEFAULT_TYPES_JSONL = "benchmarks/results/erb500k_blob_additive_scored.jsonl"
@@ -297,7 +297,7 @@ def _make_manager(base_config: str, bed_path: str, cell: Cell):
     if cell.combinator:
         cfg.retrieval.rerank_combinator = cell.combinator
         cfg.retrieval.rerank_band_delta = cell.delta
-    return HelixContextManager(cfg)
+    return CymatixContextManager(cfg)
 
 
 # ── per-cell run ──────────────────────────────────────────────────────
@@ -382,7 +382,7 @@ def main() -> None:
     ap.add_argument("--delta", type=float, default=0.05,
                     help="eps_band delta for combinator riders")
     ap.add_argument("--base-config",
-                    default="docs/benchmarks/helix_probe_lexical.toml",
+                    default="docs/benchmarks/cymatix_probe_lexical.toml",
                     help="LLM-free base config (decoder off); arms layer on top")
     ap.add_argument("--limit", type=int, default=0,
                     help="probe only the first N questions (0 = all)")

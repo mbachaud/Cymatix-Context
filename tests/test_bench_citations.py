@@ -1,6 +1,6 @@
 """Regression tests for the shared benchmark citation parser.
 
-Closes https://github.com/mbachaud/helix-context/issues/101 -- the bench
+Closes https://github.com/mbachaud/cymatix-context/issues/101 -- the bench
 parsers were still regexing for legacy ``<GENE src="...">`` markup that
 the live renderer no longer emits, causing retrieval hit-rates to look
 artificially low. The helper now prefers ``agent.citations[].source``
@@ -31,7 +31,7 @@ def _modern_response() -> list[dict]:
     payload is populated from genes table rows (see lines 317-359).
     """
     return [{
-        "name": "Helix Genome Context",
+        "name": "Cymatix Genome Context",
         "description": "2 genes expressed, 4.2x compression",
         "content": (
             "[gene=abc12345... ◆ fired=harmonic:2.3,lex_anchor:1.1 1200→320c]\n"
@@ -47,12 +47,12 @@ def _modern_response() -> list[dict]:
             "citations": [
                 {
                     "gene_id": "abc12345abc12345",
-                    "source": "helix-context/helix.toml",
+                    "source": "cymatix-context/cymatix.toml",
                     "score": 1.42,
                 },
                 {
                     "gene_id": "def67890def67890",
-                    "source": "helix-context/README.md",
+                    "source": "cymatix-context/README.md",
                     "score": 0.93,
                 },
             ],
@@ -67,13 +67,13 @@ def _legacy_response() -> list[dict]:
     ``<GENE src=...>...</GENE>`` markup survives in the content blob.
     """
     return [{
-        "name": "Helix Genome Context",
+        "name": "Cymatix Genome Context",
         "content": (
             "<expressed_context>\n"
-            '<GENE src="helix-context/helix.toml" facts="port=11437">\n'
-            "The helix proxy listens on port 11437.\n"
+            '<GENE src="cymatix-context/cymatix.toml" facts="port=11437">\n'
+            "The cymatix proxy listens on port 11437.\n"
             "</GENE>\n"
-            '<GENE src="helix-context/README.md" facts="pipeline=6">\n'
+            '<GENE src="cymatix-context/README.md" facts="pipeline=6">\n'
             "Six-step expression pipeline.\n"
             "</GENE>\n"
             "</expressed_context>\n"
@@ -88,8 +88,8 @@ def _legacy_response() -> list[dict]:
 def test_modern_response_returns_citation_sources():
     sources = cit.extract_sources(_modern_response())
     assert sources == [
-        "helix-context/helix.toml",
-        "helix-context/README.md",
+        "cymatix-context/cymatix.toml",
+        "cymatix-context/README.md",
     ]
 
 
@@ -101,7 +101,7 @@ def test_modern_response_returns_gene_ids():
 def test_modern_response_returns_full_citation_dicts():
     citations = cit.extract_citations(_modern_response())
     assert len(citations) == 2
-    assert citations[0]["source"] == "helix-context/helix.toml"
+    assert citations[0]["source"] == "cymatix-context/cymatix.toml"
     assert citations[0]["score"] == 1.42
 
 
@@ -109,8 +109,8 @@ def test_modern_response_unwrapped_dict_also_works():
     """Some callers may pass response[0] directly instead of the wrapper list."""
     entry = _modern_response()[0]
     assert cit.extract_sources(entry) == [
-        "helix-context/helix.toml",
-        "helix-context/README.md",
+        "cymatix-context/cymatix.toml",
+        "cymatix-context/README.md",
     ]
 
 
@@ -121,8 +121,8 @@ def test_legacy_response_falls_back_to_regex():
     """No agent.citations → use <GENE src="..."> markup from content."""
     sources = cit.extract_sources(_legacy_response())
     assert sources == [
-        "helix-context/helix.toml",
-        "helix-context/README.md",
+        "cymatix-context/cymatix.toml",
+        "cymatix-context/README.md",
     ]
 
 
@@ -137,7 +137,7 @@ def test_legacy_block_parser_returns_src_and_body():
     content = _legacy_response()[0]["content"]
     blocks = cit.parse_legacy_gene_blocks(content)
     assert len(blocks) == 2
-    assert blocks[0][0] == "helix-context/helix.toml"
+    assert blocks[0][0] == "cymatix-context/cymatix.toml"
     assert "port 11437" in blocks[0][1]
 
 
@@ -171,7 +171,7 @@ def test_citations_with_empty_source_strings_filtered():
 def test_no_content_and_no_citations_returns_empty():
     """A degenerate response with neither structured citations nor any
     content string must not raise."""
-    payload = [{"name": "Helix Genome Context"}]
+    payload = [{"name": "Cymatix Genome Context"}]
     assert cit.extract_sources(payload) == []
     assert cit.extract_citations(payload) == []
     assert cit.extract_gene_ids(payload) == []
@@ -183,9 +183,9 @@ def test_unrecognized_payload_type_returns_empty():
 
 
 def test_normalize_sources_lowercases_and_forward_slashes():
-    raw = ["Helix-Context\\helix.toml", "EDUCATION/CLAUDE.md", ""]
+    raw = ["Cymatix-Context\\cymatix.toml", "EDUCATION/CLAUDE.md", ""]
     assert cit.normalize_sources(raw) == [
-        "helix-context/helix.toml",
+        "cymatix-context/cymatix.toml",
         "education/claude.md",
         "",
     ]
@@ -216,10 +216,10 @@ def test_modern_block_bodies_paired_with_citations():
     headers, pair each body with its citation by order."""
     blocks = cit.extract_block_bodies(_modern_response())
     assert len(blocks) == 2
-    assert blocks[0][0] == "helix-context/helix.toml"        # source
+    assert blocks[0][0] == "cymatix-context/cymatix.toml"        # source
     assert blocks[0][1] == "abc12345abc12345"                 # gene_id
     assert "spliced text from document 1" in blocks[0][2]    # body
-    assert blocks[1][0] == "helix-context/README.md"
+    assert blocks[1][0] == "cymatix-context/README.md"
     assert "spliced text from document 2" in blocks[1][2]
 
 
@@ -227,7 +227,7 @@ def test_legacy_block_bodies_fallback():
     """Legacy responses: bodies come from <GENE>...</GENE>; gene_id empty."""
     blocks = cit.extract_block_bodies(_legacy_response())
     assert len(blocks) == 2
-    assert blocks[0][0] == "helix-context/helix.toml"
+    assert blocks[0][0] == "cymatix-context/cymatix.toml"
     assert blocks[0][1] == ""  # legacy markup has no gene_id
     assert "port 11437" in blocks[0][2]
 
@@ -254,13 +254,13 @@ def _wrapped_response(with_headers: bool = True) -> list[dict]:
 
     ``with_headers=False`` mirrors bench configs that set
     ``legibility_enabled = false`` (e.g. docs/benchmarks/
-    helix_probe_lexical.toml): parts are bare spliced text.
+    cymatix_probe_lexical.toml): parts are bare spliced text.
     """
     if with_headers:
         content = (
             "<expressed_context>\n"
             "[gene=aaaa11112222 ◆ fired=harmonic:2.3,lex_anchor:1.1 1200→320c]\n"
-            "The helix proxy listens on port 11437.\n"
+            "The cymatix proxy listens on port 11437.\n"
             "---\n"
             "[gene=bbbb33334444 ◇ fired=sema_boost:1.8 180c]\n"
             "Six-step expression pipeline.\n"
@@ -269,18 +269,18 @@ def _wrapped_response(with_headers: bool = True) -> list[dict]:
     else:
         content = (
             "<expressed_context>\n"
-            "The helix proxy listens on port 11437.\n"
+            "The cymatix proxy listens on port 11437.\n"
             "---\n"
             "Six-step expression pipeline.\n"
             "</expressed_context>"
         )
     return [{
-        "name": "Helix Genome Context",
+        "name": "Cymatix Genome Context",
         "content": content,
         "agent": {
             "citations": [
-                {"gene_id": "aaaa11112222aaaa", "source": "helix-context/helix.toml"},
-                {"gene_id": "bbbb33334444bbbb", "source": "helix-context/README.md"},
+                {"gene_id": "aaaa11112222aaaa", "source": "cymatix-context/cymatix.toml"},
+                {"gene_id": "bbbb33334444bbbb", "source": "cymatix-context/README.md"},
             ],
         },
     }]
@@ -292,9 +292,9 @@ def test_wrapped_content_first_block_body_not_lost():
     shifted by one."""
     blocks = cit.extract_block_bodies(_wrapped_response())
     assert len(blocks) == 2
-    assert blocks[0][0] == "helix-context/helix.toml"
+    assert blocks[0][0] == "cymatix-context/cymatix.toml"
     assert "port 11437" in blocks[0][2]
-    assert blocks[1][0] == "helix-context/README.md"
+    assert blocks[1][0] == "cymatix-context/README.md"
     assert "Six-step" in blocks[1][2]
 
 
@@ -378,7 +378,7 @@ def test_elision_stub_body_is_empty():
 
 
 def test_elision_stub_numeric_accept_does_not_inflate_metrics():
-    """The real collision: helix_subpackages_count accepts '16', and a
+    """The real collision: cymatix_subpackages_count accepts '16', and a
     stub reading 'delivered 16 queries ago' must NOT count as
     body_has_answer/gold_has_answer."""
     import bench_needle
@@ -391,12 +391,12 @@ def test_elision_stub_numeric_accept_does_not_inflate_metrics():
         ),
         "agent": {
             "citations": [
-                {"gene_id": "aaaa11112222aaaa", "source": "helix-context/CLAUDE.md"},
+                {"gene_id": "aaaa11112222aaaa", "source": "cymatix-context/CLAUDE.md"},
             ],
         },
     }]
     gold = bench_needle.check_gold_delivery(
-        "", ["helix-context/CLAUDE.md"], ["16", "1"], response=payload,
+        "", ["cymatix-context/CLAUDE.md"], ["16", "1"], response=payload,
     )
     assert gold["gold_delivered"] is True   # citation still counts
     assert gold["gold_has_answer"] is False
@@ -524,7 +524,7 @@ def test_check_gold_delivery_body_has_answer_on_live_shape():
     import bench_needle
 
     gold = bench_needle.check_gold_delivery(
-        "", ["helix-context/helix.toml"], ["11437"],
+        "", ["cymatix-context/cymatix.toml"], ["11437"],
         response=_wrapped_response(),
     )
     assert gold["gold_delivered"] is True

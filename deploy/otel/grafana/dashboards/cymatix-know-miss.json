@@ -1,12 +1,12 @@
 {
-  "title": "Helix — Know/Miss (Hallucination Visibility)",
-  "uid": "helix-know-miss",
+  "title": "Cymatix — Know/Miss (Hallucination Visibility)",
+  "uid": "cymatix-know-miss",
   "description": "G1 visibility gate (docs/specs/2026-07-01-goal-gates-hallucination-visibility.md). Miss/abstain stream = the observable slice of the 10% hallucination budget; scored benches calibrate confidence→P(correct).",
   "editable": true,
   "schemaVersion": 39,
   "time": {"from": "now-3h", "to": "now"},
   "refresh": "10s",
-  "tags": ["helix", "know-miss", "hallucination", "telemetry"],
+  "tags": ["cymatix", "know-miss", "hallucination", "telemetry"],
   "panels": [
     {
       "type": "row",
@@ -21,7 +21,7 @@
       "gridPos": {"h": 8, "w": 6, "x": 0, "y": 1},
       "targets": [
         {
-          "expr": "sum(rate(helix_know_decision_total{outcome=~\"miss|abstain\"}[15m])) / sum(rate(helix_know_decision_total[15m]))",
+          "expr": "sum(rate(cymatix_know_decision_total{outcome=~\"miss|abstain\"}[15m])) / sum(rate(cymatix_know_decision_total[15m]))",
           "legendFormat": "non-know share",
           "refId": "A"
         }
@@ -48,7 +48,7 @@
       "gridPos": {"h": 8, "w": 9, "x": 6, "y": 1},
       "targets": [
         {
-          "expr": "sum by (reason) (rate(helix_know_decision_total{outcome=~\"miss|abstain\"}[5m]))",
+          "expr": "sum by (reason) (rate(cymatix_know_decision_total{outcome=~\"miss|abstain\"}[5m]))",
           "legendFormat": "{{reason}}",
           "refId": "A"
         }
@@ -62,17 +62,17 @@
       "gridPos": {"h": 8, "w": 9, "x": 15, "y": 1},
       "targets": [
         {
-          "expr": "histogram_quantile(0.10, sum by (le) (rate(helix_know_confidence_bucket[15m])))",
+          "expr": "histogram_quantile(0.10, sum by (le) (rate(cymatix_know_confidence_bucket[15m])))",
           "legendFormat": "p10",
           "refId": "A"
         },
         {
-          "expr": "histogram_quantile(0.50, sum by (le) (rate(helix_know_confidence_bucket[15m])))",
+          "expr": "histogram_quantile(0.50, sum by (le) (rate(cymatix_know_confidence_bucket[15m])))",
           "legendFormat": "p50",
           "refId": "B"
         },
         {
-          "expr": "histogram_quantile(0.90, sum by (le) (rate(helix_know_confidence_bucket[15m])))",
+          "expr": "histogram_quantile(0.90, sum by (le) (rate(cymatix_know_confidence_bucket[15m])))",
           "legendFormat": "p90",
           "refId": "C"
         }
@@ -92,7 +92,7 @@
       "gridPos": {"h": 8, "w": 8, "x": 0, "y": 10},
       "targets": [
         {
-          "expr": "sum by (gate, fusion_mode) (rate(helix_abstain_total[15m]))",
+          "expr": "sum by (gate, fusion_mode) (rate(cymatix_abstain_total[15m]))",
           "legendFormat": "{{gate}} ({{fusion_mode}})",
           "refId": "A"
         }
@@ -106,7 +106,7 @@
       "gridPos": {"h": 8, "w": 8, "x": 8, "y": 10},
       "targets": [
         {
-          "expr": "sum by (status) (rate(helix_freshness_demotion_total[15m]))",
+          "expr": "sum by (status) (rate(cymatix_freshness_demotion_total[15m]))",
           "legendFormat": "{{status}}",
           "refId": "A"
         }
@@ -120,12 +120,12 @@
       "gridPos": {"h": 8, "w": 8, "x": 16, "y": 10},
       "targets": [
         {
-          "expr": "histogram_quantile(0.50, sum by (le, caller_model_class) (rate(helix_splice_ratio_bucket[15m])))",
+          "expr": "histogram_quantile(0.50, sum by (le, caller_model_class) (rate(cymatix_splice_ratio_bucket[15m])))",
           "legendFormat": "splice ratio p50 {{caller_model_class}}",
           "refId": "A"
         },
         {
-          "expr": "sum(rate(helix_abstain_total[15m]))",
+          "expr": "sum(rate(cymatix_abstain_total[15m]))",
           "legendFormat": "abstain rate",
           "refId": "B"
         }
@@ -144,17 +144,17 @@
       "gridPos": {"h": 8, "w": 8, "x": 0, "y": 19},
       "targets": [
         {
-          "expr": "histogram_quantile(0.10, sum by (le, arm) (rate(helix_dense_cosine_bucket[15m])))",
+          "expr": "histogram_quantile(0.10, sum by (le, arm) (rate(cymatix_dense_cosine_bucket[15m])))",
           "legendFormat": "p10 {{arm}}",
           "refId": "A"
         },
         {
-          "expr": "histogram_quantile(0.50, sum by (le, arm) (rate(helix_dense_cosine_bucket[15m])))",
+          "expr": "histogram_quantile(0.50, sum by (le, arm) (rate(cymatix_dense_cosine_bucket[15m])))",
           "legendFormat": "p50 {{arm}}",
           "refId": "B"
         },
         {
-          "expr": "histogram_quantile(0.90, sum by (le, arm) (rate(helix_dense_cosine_bucket[15m])))",
+          "expr": "histogram_quantile(0.90, sum by (le, arm) (rate(cymatix_dense_cosine_bucket[15m])))",
           "legendFormat": "p90 {{arm}}",
           "refId": "C"
         }
@@ -164,17 +164,17 @@
     {
       "type": "timeseries",
       "title": "Shard fan-out",
-      "description": "#165 router degeneracy, continuously monitored: shards consulted per ShardRouter.query_genes call. The helix_shard_fanout instrument carries no attributes, so both lines aggregate all traffic.",
+      "description": "#165 router degeneracy, continuously monitored: shards consulted per ShardRouter.query_genes call. The cymatix_shard_fanout instrument carries no attributes, so both lines aggregate all traffic.",
       "datasource": "Prometheus",
       "gridPos": {"h": 8, "w": 8, "x": 8, "y": 19},
       "targets": [
         {
-          "expr": "histogram_quantile(0.50, sum by (le) (rate(helix_shard_fanout_bucket[15m])))",
+          "expr": "histogram_quantile(0.50, sum by (le) (rate(cymatix_shard_fanout_bucket[15m])))",
           "legendFormat": "fanout p50",
           "refId": "A"
         },
         {
-          "expr": "histogram_quantile(0.95, sum by (le) (rate(helix_shard_fanout_bucket[15m])))",
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(cymatix_shard_fanout_bucket[15m])))",
           "legendFormat": "fanout p95",
           "refId": "B"
         }
@@ -188,12 +188,12 @@
       "gridPos": {"h": 8, "w": 8, "x": 16, "y": 19},
       "targets": [
         {
-          "expr": "sum(rate(helix_session_elided_total[15m]))",
+          "expr": "sum(rate(cymatix_session_elided_total[15m]))",
           "legendFormat": "docs elided /s",
           "refId": "A"
         },
         {
-          "expr": "sum(rate(helix_session_tokens_saved_total[15m]))",
+          "expr": "sum(rate(cymatix_session_tokens_saved_total[15m]))",
           "legendFormat": "tokens saved /s",
           "refId": "B"
         }
@@ -212,12 +212,12 @@
       "gridPos": {"h": 8, "w": 12, "x": 0, "y": 28},
       "targets": [
         {
-          "expr": "histogram_quantile(0.50, sum by (le) (rate(helix_context_latency_seconds_bucket[15m])))",
+          "expr": "histogram_quantile(0.50, sum by (le) (rate(cymatix_context_latency_seconds_bucket[15m])))",
           "legendFormat": "p50",
           "refId": "A"
         },
         {
-          "expr": "histogram_quantile(0.95, sum by (le) (rate(helix_context_latency_seconds_bucket[15m])))",
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(cymatix_context_latency_seconds_bucket[15m])))",
           "legendFormat": "p95",
           "refId": "B"
         }
@@ -227,12 +227,12 @@
     {
       "type": "timeseries",
       "title": "Pipeline stage p95 by stage",
-      "description": "helix_pipeline_stage_seconds — first panel anywhere for this instrument (roadmap §3a flagged it panel-less). Splice/assemble are the tuning targets.",
+      "description": "cymatix_pipeline_stage_seconds — first panel anywhere for this instrument (roadmap §3a flagged it panel-less). Splice/assemble are the tuning targets.",
       "datasource": "Prometheus",
       "gridPos": {"h": 8, "w": 12, "x": 12, "y": 28},
       "targets": [
         {
-          "expr": "histogram_quantile(0.95, sum by (le, stage) (rate(helix_pipeline_stage_seconds_bucket[15m])))",
+          "expr": "histogram_quantile(0.95, sum by (le, stage) (rate(cymatix_pipeline_stage_seconds_bucket[15m])))",
           "legendFormat": "p95 {{stage}}",
           "refId": "A"
         }

@@ -10,7 +10,7 @@ Takes N paths and emits a markdown report covering:
 
 Usage:
   python scripts/cross_compare_genomes.py \\
-      genome.db genome_bench_helix.db genome_bench_organic.db \\
+      genome.db genome_bench_cymatix.db genome_bench_organic.db \\
       --out docs/FUTURE/genome_cross_compare_2026-04-15.md
 
 The report is intentionally standalone — hand it to a human or to a
@@ -41,7 +41,7 @@ log = logging.getLogger("bench.compare")
 
 # Canonical queries we run against each genome to see what it surfaces.
 # Picked to probe different retrieval behaviors without being so specific
-# that ONE genome has unfair advantage (e.g. "helix" is present in all
+# that ONE genome has unfair advantage (e.g. "cymatix" is present in all
 # three corpora through docs + code mentions, but expresses differently).
 CANONICAL_QUERIES = [
     "session delivery working-set register",
@@ -175,21 +175,21 @@ def gene_id_set(path: str) -> set:
 def run_query(genome_path: str, query: str, max_genes: int = 5) -> Dict:
     """Run a single /context-like query against a genome via Python API.
 
-    Uses HelixContextManager directly so the live :11437 server stays
+    Uses CymatixContextManager directly so the live :11437 server stays
     undisturbed. Just the retrieval step — no splice, no ribosome calls.
     """
     from cymatix_context.config import (
-        HelixConfig, BudgetConfig, GenomeConfig, RibosomeConfig,
+        CymatixConfig, BudgetConfig, GenomeConfig, RibosomeConfig,
     )
-    from cymatix_context.context_manager import HelixContextManager
+    from cymatix_context.context_manager import CymatixContextManager
 
-    cfg = HelixConfig(
+    cfg = CymatixConfig(
         ribosome=RibosomeConfig(model="mock", timeout=5),
         budget=BudgetConfig(max_genes_per_turn=max_genes),
         genome=GenomeConfig(path=genome_path, cold_start_threshold=5),
         synonym_map={},
     )
-    mgr = HelixContextManager(cfg)
+    mgr = CymatixContextManager(cfg)
     try:
         t0 = time.perf_counter()
         # Just call _express (Step 2) directly — returns ranked candidates

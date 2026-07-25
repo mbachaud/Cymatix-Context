@@ -184,7 +184,7 @@ class TestBm25Shortlist:
     def test_enabled_bounds_result_count_by_size(self):
         """With the flag on and size=2, the final result set is capped by
         the BM25 top-N even when the tier accumulation would otherwise rank
-        more genes. (Helix's FTS content bakes in tag text — `source_id +
+        more genes. (Cymatix's FTS content bakes in tag text — `source_id +
         tag_text + content` — so the honest observable is the size bound
         rather than tag-vs-content discrimination.)"""
         g = _mk_shortlist_genome(enabled=True, size=2)
@@ -502,7 +502,7 @@ class TestFileTokens:
 
     def test_file_tokens_basename_only(self):
         from cymatix_context.genome import file_tokens, path_tokens
-        sid = "F:/Projects/helix-context/docs/architecture/PIPELINE_LANES.md"
+        sid = "F:/Projects/cymatix-context/docs/architecture/PIPELINE_LANES.md"
         assert file_tokens(sid) == {"pipeline", "lanes"}
         # path_tokens keeps folder tokens too
         assert "pipeline" in path_tokens(sid)

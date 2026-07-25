@@ -34,12 +34,12 @@ OKF_FIXTURES = Path(__file__).parent / "fixtures" / "okf"
 _INGEST_SCRIPT = """
 import json, sys
 from cymatix_context.config import (
-    BudgetConfig, GenomeConfig, HelixConfig, RibosomeConfig,
+    BudgetConfig, GenomeConfig, CymatixConfig, RibosomeConfig,
 )
-from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.context_manager import CymatixContextManager
 from cymatix_context.okf import ingest_bundle
 
-cfg = HelixConfig(
+cfg = CymatixConfig(
     ribosome=RibosomeConfig(model="mock", timeout=5),
     budget=BudgetConfig(max_genes_per_turn=4),
     genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
@@ -48,7 +48,7 @@ cfg.ingestion.sema_embed_on_ingest = False
 cfg.ingestion.dense_embed_on_ingest = False
 cfg.ingestion.splade_enabled = False
 
-mgr = HelixContextManager(cfg)
+mgr = CymatixContextManager(cfg)
 result = ingest_bundle(mgr, sys.argv[1])
 row = mgr.genome.conn.execute(
     "SELECT MAX(last_seen), MAX(last_verified_at) FROM genes"
@@ -126,21 +126,21 @@ class TestClockIndependence:
 class TestFloatExclusion:
     def test_embeddings_vary_with_config_but_digest_does_not(self):
         pytest.importorskip("spacy")
-        from cymatix_context.context_manager import HelixContextManager
+        from cymatix_context.context_manager import CymatixContextManager
         from cymatix_context.okf import ingest_bundle
-        from tests.conftest import make_helix_config
+        from tests.conftest import make_cymatix_config
 
         path = OKF_FIXTURES / "type_only"
 
-        default_cfg = make_helix_config()
-        mgr_default = HelixContextManager(default_cfg)
+        default_cfg = make_cymatix_config()
+        mgr_default = CymatixContextManager(default_cfg)
         res_default = ingest_bundle(mgr_default, path)
 
-        det_cfg = make_helix_config()
+        det_cfg = make_cymatix_config()
         det_cfg.ingestion.sema_embed_on_ingest = False
         det_cfg.ingestion.dense_embed_on_ingest = False
         det_cfg.ingestion.splade_enabled = False
-        mgr_det = HelixContextManager(det_cfg)
+        mgr_det = CymatixContextManager(det_cfg)
         res_det = ingest_bundle(mgr_det, path)
 
         assert res_default.digest == res_det.digest

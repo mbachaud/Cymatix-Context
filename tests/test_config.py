@@ -1,13 +1,13 @@
 def test_upstream_timeout_default_is_180s():
     """Regression test for the 2026-05-02 default bump.
 
-    Helix's default of 120s was observed to silently return Proxy 500s
+    Cymatix's default of 120s was observed to silently return Proxy 500s
     on slow gemma4:e4b GPQA queries at ~125s (full breakdown in the
     2026-05-01 overnight report). 180s is the shipping default; 120s
     is a regression.
     """
-    from cymatix_context.config import HelixConfig
-    cfg = HelixConfig()
+    from cymatix_context.config import CymatixConfig
+    cfg = CymatixConfig()
     assert cfg.server.upstream_timeout == 180.0
 
 
@@ -16,19 +16,19 @@ def test_budget_abstain_enabled_default_is_true():
 
     The 2026-05-02 ABSTAIN tier (docs/specs/2026-05-02-abstain-tier-design.md)
     is shipped on-by-default so the latency win lands without an opt-in step.
-    Operators flip to false in helix.toml [budget] for the legacy always-
+    Operators flip to false in cymatix.toml [budget] for the legacy always-
     inject behavior. Bumping this default to false would silently undo the
     GPQA Diamond p95 fix.
     """
-    from cymatix_context.config import HelixConfig
-    cfg = HelixConfig()
+    from cymatix_context.config import CymatixConfig
+    cfg = CymatixConfig()
     assert cfg.budget.abstain_enabled is True
 
 
 def test_budget_abstain_enabled_toml_override(tmp_path):
-    """Regression: helix.toml [budget] abstain_enabled = false is honored."""
+    """Regression: cymatix.toml [budget] abstain_enabled = false is honored."""
     from cymatix_context.config import load_config
-    toml = tmp_path / "helix.toml"
+    toml = tmp_path / "cymatix.toml"
     toml.write_text(
         "[budget]\nabstain_enabled = false\n",
         encoding="utf-8",
@@ -40,7 +40,7 @@ def test_budget_abstain_enabled_toml_override(tmp_path):
 # ── Ingestion / ribosome coherence guard ──────────────────────────────
 # Tests pin the auto-fallback added 2026-05-12: when [ribosome] is
 # disabled (LLM-free pillar) but [ingestion] still points at an LLM
-# backend, ``load_config`` flips ingestion to "cpu" so `helix ingest`
+# backend, ``load_config`` flips ingestion to "cpu" so `cymatix ingest`
 # doesn't crash with "Ribosome is disabled". See AI-user feedback on
 # cli+mcp ingest path.
 
@@ -50,7 +50,7 @@ def test_ingestion_falls_back_to_cpu_when_ribosome_disabled(tmp_path, caplog):
     import logging
     from cymatix_context.config import load_config
 
-    toml = tmp_path / "helix.toml"
+    toml = tmp_path / "cymatix.toml"
     toml.write_text(
         "[ribosome]\nenabled = false\n[ingestion]\nbackend = \"ollama\"\n",
         encoding="utf-8",
@@ -67,7 +67,7 @@ def test_ingestion_falls_back_to_cpu_when_ribosome_disabled(tmp_path, caplog):
 def test_ingestion_left_alone_when_ribosome_enabled(tmp_path):
     """Operators who enable ribosome + ollama get exactly what they asked for."""
     from cymatix_context.config import load_config
-    toml = tmp_path / "helix.toml"
+    toml = tmp_path / "cymatix.toml"
     toml.write_text(
         "[ribosome]\nenabled = true\n[ingestion]\nbackend = \"ollama\"\n",
         encoding="utf-8",
@@ -79,7 +79,7 @@ def test_ingestion_left_alone_when_ribosome_enabled(tmp_path):
 def test_ingestion_left_alone_when_explicitly_cpu(tmp_path):
     """Explicit cpu / hybrid backends stay put even with ribosome off."""
     from cymatix_context.config import load_config
-    toml = tmp_path / "helix.toml"
+    toml = tmp_path / "cymatix.toml"
     toml.write_text(
         "[ribosome]\nenabled = false\n[ingestion]\nbackend = \"hybrid\"\n",
         encoding="utf-8",
@@ -104,7 +104,7 @@ device = "cuda"
 batch_sizes = "auto"
 low_vram_threshold_gb = 4.0
 """
-    p = tmp_path / "helix.toml"
+    p = tmp_path / "cymatix.toml"
     p.write_text(cfg_text)
     cfg = load_config(str(p))
     assert cfg.hardware.device == "cuda"
@@ -118,7 +118,7 @@ def test_hardware_section_batch_sizes_dict(tmp_path):
 device = "auto"
 batch_sizes = { rerank = 16, splice = 32 }
 """
-    p = tmp_path / "helix.toml"
+    p = tmp_path / "cymatix.toml"
     p.write_text(cfg_text)
     cfg = load_config(str(p))
     assert cfg.hardware.batch_sizes == {"rerank": 16, "splice": 32}
@@ -130,7 +130,7 @@ def test_ribosome_device_deprecation_warning(tmp_path, caplog):
 [ribosome]
 device = "cuda"
 """
-    p = tmp_path / "helix.toml"
+    p = tmp_path / "cymatix.toml"
     p.write_text(cfg_text)
     with caplog.at_level("WARNING", logger="cymatix_context.config"):
         cfg = load_config(str(p))
@@ -150,7 +150,7 @@ device = "cpu"
 [hardware]
 device = "cuda"
 """
-    p = tmp_path / "helix.toml"
+    p = tmp_path / "cymatix.toml"
     p.write_text(cfg_text)
     with caplog.at_level("WARNING", logger="cymatix_context.config"):
         cfg = load_config(str(p))
@@ -162,7 +162,7 @@ device = "cuda"
 
 
 def test_no_device_config_defaults_to_auto(tmp_path):
-    p = tmp_path / "helix.toml"
+    p = tmp_path / "cymatix.toml"
     p.write_text("# empty\n")
     cfg = load_config(str(p))
     assert cfg.hardware.device == "auto"
@@ -178,8 +178,8 @@ def test_budget_foveated_defaults_off_with_alpha_one():
     here without bench evidence would silently change BROAD-tier
     compression on every install.
     """
-    from cymatix_context.config import HelixConfig
-    cfg = HelixConfig()
+    from cymatix_context.config import CymatixConfig
+    cfg = CymatixConfig()
     assert cfg.budget.foveated_enabled is False
     assert cfg.budget.foveated_alpha == 1.0
     assert cfg.budget.foveated_c_min == 0.15
@@ -189,26 +189,26 @@ def test_budget_foveated_defaults_off_with_alpha_one():
 # ── Env overrides on failed-load paths (bugbash BUG-1) ───────────────
 # Documented precedence is env > toml > default. The pre-fix loader
 # returned bare defaults from the missing-file and malformed-TOML early
-# exits, silently dropping HELIX_GENOME_PATH / HELIX_SERVER_UPSTREAM.
+# exits, silently dropping CYMATIX_GENOME_PATH / CYMATIX_SERVER_UPSTREAM.
 
 
 def test_env_overrides_apply_when_config_file_missing(tmp_path, monkeypatch):
-    """HELIX_* env overrides must win even when helix.toml does not exist."""
+    """CYMATIX_* env overrides must win even when cymatix.toml does not exist."""
     from cymatix_context.config import load_config
-    monkeypatch.setenv("HELIX_GENOME_PATH", "genomes/env-override.db")
-    monkeypatch.setenv("HELIX_SERVER_UPSTREAM", "http://127.0.0.1:9999")
+    monkeypatch.setenv("CYMATIX_GENOME_PATH", "genomes/env-override.db")
+    monkeypatch.setenv("CYMATIX_SERVER_UPSTREAM", "http://127.0.0.1:9999")
     cfg = load_config(str(tmp_path / "does-not-exist.toml"))
     assert cfg.genome.path == "genomes/env-override.db"
     assert cfg.server.upstream == "http://127.0.0.1:9999"
 
 
 def test_env_overrides_apply_when_toml_malformed(tmp_path, monkeypatch):
-    """HELIX_* env overrides must win even when helix.toml fails to parse."""
+    """CYMATIX_* env overrides must win even when cymatix.toml fails to parse."""
     from cymatix_context.config import load_config
-    p = tmp_path / "helix.toml"
+    p = tmp_path / "cymatix.toml"
     p.write_text("[genome\npath = broken", encoding="utf-8")
-    monkeypatch.setenv("HELIX_GENOME_PATH", "genomes/env-override.db")
-    monkeypatch.setenv("HELIX_SERVER_UPSTREAM", "http://127.0.0.1:9999")
+    monkeypatch.setenv("CYMATIX_GENOME_PATH", "genomes/env-override.db")
+    monkeypatch.setenv("CYMATIX_SERVER_UPSTREAM", "http://127.0.0.1:9999")
     cfg = load_config(str(p))
     assert cfg.genome.path == "genomes/env-override.db"
     assert cfg.server.upstream == "http://127.0.0.1:9999"
@@ -217,23 +217,23 @@ def test_env_overrides_apply_when_toml_malformed(tmp_path, monkeypatch):
 def test_env_overrides_still_beat_toml_on_success_path(tmp_path, monkeypatch):
     """Sanity pin: env > toml on the normal (parsed) load path too."""
     from cymatix_context.config import load_config
-    p = tmp_path / "helix.toml"
+    p = tmp_path / "cymatix.toml"
     p.write_text(
         "[genome]\npath = \"genomes/from-toml.db\"\n"
         "[server]\nupstream = \"http://toml-upstream:1\"\n",
         encoding="utf-8",
     )
-    monkeypatch.setenv("HELIX_GENOME_PATH", "genomes/env-override.db")
-    monkeypatch.setenv("HELIX_SERVER_UPSTREAM", "http://127.0.0.1:9999")
+    monkeypatch.setenv("CYMATIX_GENOME_PATH", "genomes/env-override.db")
+    monkeypatch.setenv("CYMATIX_SERVER_UPSTREAM", "http://127.0.0.1:9999")
     cfg = load_config(str(p))
     assert cfg.genome.path == "genomes/env-override.db"
     assert cfg.server.upstream == "http://127.0.0.1:9999"
 
 
 def test_budget_foveated_toml_override(tmp_path):
-    """Regression: helix.toml [budget] foveated_* keys are honored."""
+    """Regression: cymatix.toml [budget] foveated_* keys are honored."""
     from cymatix_context.config import load_config
-    p = tmp_path / "helix.toml"
+    p = tmp_path / "cymatix.toml"
     p.write_text(
         "[budget]\nfoveated_enabled = true\nfoveated_alpha = 2.0\nfoveated_c_min = 0.20\nfoveated_base_chars = 1500\n",
         encoding="utf-8",

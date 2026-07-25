@@ -9,8 +9,8 @@ from cymatix_context.context_manager import _compute_foveated_caps
 
 
 @pytest.fixture
-def helix_manager_with_three_genes(tmp_path):
-    """Minimal HelixContextManager with three genes of distinct scores.
+def cymatix_manager_with_three_genes(tmp_path):
+    """Minimal CymatixContextManager with three genes of distinct scores.
 
     Avoids the tests.test_pipeline import (broken at collection time
     due to module-level cymatix_context.server.create_app() failure).
@@ -22,19 +22,19 @@ def helix_manager_with_three_genes(tmp_path):
         BudgetConfig,
         ClassifierConfig,
         GenomeConfig,
-        HelixConfig,
+        CymatixConfig,
         RibosomeConfig,
     )
-    from cymatix_context.context_manager import HelixContextManager
+    from cymatix_context.context_manager import CymatixContextManager
     from cymatix_context.schemas import Gene, PromoterTags
 
-    cfg = HelixConfig(
+    cfg = CymatixConfig(
         ribosome=RibosomeConfig(model="mock", timeout=5),
         budget=BudgetConfig(max_genes_per_turn=12),
         genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
         classifier=ClassifierConfig(enabled=False),
     )
-    mgr = HelixContextManager(cfg)
+    mgr = CymatixContextManager(cfg)
     g_low = Gene(
         gene_id="g_low",
         content="low content",
@@ -116,9 +116,9 @@ class TestAssembleRespectsCallerOrder:
     order verbatim — no score-desc or sequence-index re-sort. This is what
     makes reverse-rank placement actually reach the prompt (spec §5)."""
 
-    def test_assemble_default_resorts_by_score_for_slate(self, helix_manager_with_three_genes):
+    def test_assemble_default_resorts_by_score_for_slate(self, cymatix_manager_with_three_genes):
         """Sanity: default (use_slate=True) re-sorts by score DESC."""
-        m, g_low, g_mid, g_high = helix_manager_with_three_genes
+        m, g_low, g_mid, g_high = cymatix_manager_with_three_genes
         # Pass in low→high; default behavior should re-emit high→low
         window = m._assemble(
             query="q",
@@ -134,9 +134,9 @@ class TestAssembleRespectsCallerOrder:
         # Top-score gene (g_high) should appear first in the rendered text.
         assert window.expressed_context.find("H") < window.expressed_context.find("L")
 
-    def test_assemble_respects_caller_order_when_flagged(self, helix_manager_with_three_genes):
+    def test_assemble_respects_caller_order_when_flagged(self, cymatix_manager_with_three_genes):
         """With respect_caller_order=True, the input order is preserved."""
-        m, g_low, g_mid, g_high = helix_manager_with_three_genes
+        m, g_low, g_mid, g_high = cymatix_manager_with_three_genes
         # Pass in reverse-rank order (low→high → bottom-rank first, top-rank last)
         window = m._assemble(
             query="q",
@@ -183,26 +183,26 @@ def _stub_express(manager, *, candidates, scores):
 
 
 def _make_manager_with_n_genes(n, scores_fn):
-    """Build a HelixContextManager and stub _express to return n genes
+    """Build a CymatixContextManager and stub _express to return n genes
     with scores supplied by scores_fn(i) for i in [0, n).
 
     scores_fn maps position to score. Caller picks scores to land the
     tier resolution at the desired bucket.
     """
     from cymatix_context.config import (
-        BudgetConfig, ClassifierConfig, GenomeConfig, HelixConfig,
+        BudgetConfig, ClassifierConfig, GenomeConfig, CymatixConfig,
         RibosomeConfig,
     )
-    from cymatix_context.context_manager import HelixContextManager
+    from cymatix_context.context_manager import CymatixContextManager
     from tests.conftest import make_gene
 
-    cfg = HelixConfig(
+    cfg = CymatixConfig(
         ribosome=RibosomeConfig(model="mock", timeout=5),
         budget=BudgetConfig(max_genes_per_turn=n + 2, abstain_enabled=True),
         genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
         classifier=ClassifierConfig(enabled=False),
     )
-    mgr = HelixContextManager(cfg)
+    mgr = CymatixContextManager(cfg)
     candidates = [
         make_gene(f"gene_{i} content", gene_id=f"gene_{i:02d}")
         for i in range(n)
@@ -213,7 +213,7 @@ def _make_manager_with_n_genes(n, scores_fn):
 
 
 @pytest.fixture
-def helix_manager_broad_with_twelve_genes():
+def cymatix_manager_broad_with_twelve_genes():
     """12 genes whose scores land the dynamic budget in BROAD.
 
     Scores: 3.0, 2.9, 2.8, ..., 1.9 → top=3.0 (>=2.5 escapes ABSTAIN,
@@ -228,7 +228,7 @@ def helix_manager_broad_with_twelve_genes():
 
 
 @pytest.fixture
-def helix_manager_tight():
+def cymatix_manager_tight():
     """4 genes — top dominates so the dynamic budget tiers as TIGHT.
 
     top=20.0, others=0.1 → mean≈5.075, ratio≈3.94. PASSES TIGHT
@@ -245,7 +245,7 @@ def helix_manager_tight():
 
 
 @pytest.fixture
-def helix_manager_focused():
+def cymatix_manager_focused():
     """6 genes that pass FOCUSED but fail TIGHT.
 
     top=4.5, others=2.0 → mean=2.42, ratio≈1.86. PASSES FOCUSED
@@ -261,7 +261,7 @@ def helix_manager_focused():
 
 
 @pytest.fixture
-def helix_manager_abstain():
+def cymatix_manager_abstain():
     """8 genes whose scores trigger ABSTAIN under BOTH fusion modes.
 
     All-tied scores (1.2 each). Additive gate: top 1.2 < 2.5 AND
@@ -283,17 +283,17 @@ def helix_manager_abstain():
 class TestFoveatedTierGating:
     """Foveated only fires on BROAD (spec §3, §10 Tests 1-5)."""
 
-    def test_disabled_broad_no_metadata(self, helix_manager_broad_with_twelve_genes):
+    def test_disabled_broad_no_metadata(self, cymatix_manager_broad_with_twelve_genes):
         """Test 1: foveated_enabled=False on BROAD → no metadata key, uniform compression."""
-        m = helix_manager_broad_with_twelve_genes
+        m = cymatix_manager_broad_with_twelve_genes
         m.config.budget.foveated_enabled = False
         window = m.build_context("a query that lands in BROAD")
         assert window.metadata.get("budget_tier") == "broad"
         assert "foveated_caps" not in window.metadata
 
-    def test_enabled_broad_metadata_present(self, helix_manager_broad_with_twelve_genes):
+    def test_enabled_broad_metadata_present(self, cymatix_manager_broad_with_twelve_genes):
         """Test 2: foveated_enabled=True on BROAD → metadata['foveated_caps'] is a list, len = N."""
-        m = helix_manager_broad_with_twelve_genes
+        m = cymatix_manager_broad_with_twelve_genes
         m.config.budget.foveated_enabled = True
         window = m.build_context("a query that lands in BROAD")
         assert window.metadata.get("budget_tier") == "broad"
@@ -302,25 +302,25 @@ class TestFoveatedTierGating:
         assert len(caps) == 12
         assert window.metadata.get("foveated_alpha") == 1.0
 
-    def test_enabled_tight_no_metadata(self, helix_manager_tight):
+    def test_enabled_tight_no_metadata(self, cymatix_manager_tight):
         """Test 3: foveated_enabled=True but tier=tight → no metadata key."""
-        m = helix_manager_tight
+        m = cymatix_manager_tight
         m.config.budget.foveated_enabled = True
         window = m.build_context("a query that lands in TIGHT")
         assert window.metadata.get("budget_tier") == "tight"
         assert "foveated_caps" not in window.metadata
 
-    def test_enabled_focused_no_metadata(self, helix_manager_focused):
+    def test_enabled_focused_no_metadata(self, cymatix_manager_focused):
         """Test 4: foveated_enabled=True but tier=focused → no metadata key."""
-        m = helix_manager_focused
+        m = cymatix_manager_focused
         m.config.budget.foveated_enabled = True
         window = m.build_context("a query that lands in FOCUSED")
         assert window.metadata.get("budget_tier") == "focused"
         assert "foveated_caps" not in window.metadata
 
-    def test_enabled_abstain_no_metadata(self, helix_manager_abstain):
+    def test_enabled_abstain_no_metadata(self, cymatix_manager_abstain):
         """Test 5: foveated_enabled=True but ABSTAIN gate fired first → no metadata key."""
-        m = helix_manager_abstain
+        m = cymatix_manager_abstain
         m.config.budget.foveated_enabled = True
         window = m.build_context("a weak query that triggers ABSTAIN")
         assert window.metadata.get("budget_tier") == "abstain"
@@ -331,9 +331,9 @@ class TestFoveatedReverseRankEndToEnd:
     """Top-rank gene lands LAST in the assembled prompt (spec §10 Test 7)."""
 
     def test_top_rank_gene_appears_last_in_window_text(
-        self, helix_manager_broad_with_twelve_genes,
+        self, cymatix_manager_broad_with_twelve_genes,
     ):
-        m = helix_manager_broad_with_twelve_genes
+        m = cymatix_manager_broad_with_twelve_genes
         m.config.budget.foveated_enabled = True
         window = m.build_context("a query that lands in BROAD")
         # The fixture seeds gene_0..gene_11 with descending scores. With
@@ -365,9 +365,9 @@ class TestFoveatedBudgetTrim:
     """
 
     def test_top_rank_survives_budget_trim_under_reverse_rank(
-        self, helix_manager_broad_with_twelve_genes,
+        self, cymatix_manager_broad_with_twelve_genes,
     ):
-        m = helix_manager_broad_with_twelve_genes
+        m = cymatix_manager_broad_with_twelve_genes
         m.config.budget.foveated_enabled = True
         # Force the budget-overflow trim to fire by shrinking the budget
         # below what 12 genes can fit. With 12 genes and reverse-rank
@@ -405,19 +405,19 @@ def _make_manager_with_n_genes_classifier_enabled(n, scores_fn):
     (foveated must run AFTER classifier cap, not before).
     """
     from cymatix_context.config import (
-        BudgetConfig, ClassifierConfig, GenomeConfig, HelixConfig,
+        BudgetConfig, ClassifierConfig, GenomeConfig, CymatixConfig,
         RibosomeConfig,
     )
-    from cymatix_context.context_manager import HelixContextManager
+    from cymatix_context.context_manager import CymatixContextManager
     from tests.conftest import make_gene
 
-    cfg = HelixConfig(
+    cfg = CymatixConfig(
         ribosome=RibosomeConfig(model="mock", timeout=5),
         budget=BudgetConfig(max_genes_per_turn=n + 2, abstain_enabled=True),
         genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
         classifier=ClassifierConfig(enabled=True),
     )
-    mgr = HelixContextManager(cfg)
+    mgr = CymatixContextManager(cfg)
     candidates = [
         make_gene(f"gene_{i} content", gene_id=f"gene_{i:02d}")
         for i in range(n)
@@ -440,7 +440,7 @@ class TestFoveatedClassifierInteraction:
         """Regression: foveated must run AFTER classifier cap, not before.
 
         Setup: 12 BROAD genes with descending scores + a wh-style factual
-        query ("what is the helix port") that the classifier routes to
+        query ("what is the cymatix port") that the classifier routes to
         assembly_max_genes_cap=5. Foveated enabled.
 
         Assertions:
@@ -458,7 +458,7 @@ class TestFoveatedClassifierInteraction:
         try:
             mgr.config.budget.foveated_enabled = True
             # "what is X" is a wh-word + <15 words → cls=factual → cap=5.
-            window = mgr.build_context("what is the helix retrieval port")
+            window = mgr.build_context("what is the cymatix retrieval port")
 
             # Sanity: BROAD tier resolved (foveated only fires on BROAD).
             assert window.metadata.get("budget_tier") == "broad"
@@ -495,13 +495,13 @@ class TestFoveatedClassifierInteraction:
             mgr.close()
 
     def test_foveated_scalar_reductions_present_when_active(
-        self, helix_manager_broad_with_twelve_genes,
+        self, cymatix_manager_broad_with_twelve_genes,
     ):
         """I3: when foveated fires, the scalar reductions are stashed
         alongside the list. Confirms keys exist on the no-classifier path
         (the fixture has classifier disabled) so non-classifier callers
         also benefit from the scalar reductions for Prom translation."""
-        m = helix_manager_broad_with_twelve_genes
+        m = cymatix_manager_broad_with_twelve_genes
         m.config.budget.foveated_enabled = True
         window = m.build_context("a query that lands in BROAD")
         assert window.metadata.get("budget_tier") == "broad"

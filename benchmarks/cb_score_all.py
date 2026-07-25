@@ -1,5 +1,5 @@
 """Score all arms on the ContextBench smoke gold (official evaluator) -> one combined table.
-BM25 pulled from step0_summary.json; every helix_*_pred.json scored fresh. cb-step0 venv."""
+BM25 pulled from step0_summary.json; every cymatix_*_pred.json scored fresh. cb-step0 venv."""
 import glob, json, os, subprocess, sys
 
 CB_SRC = "F:/Projects/contextbench-src"
@@ -49,8 +49,8 @@ if os.path.isfile(summ):
             rows_out.append((arm, d["n_scored"], g["file"]["recall"], g["line"]["recall"],
                              g["line"]["precision"], g["symbol"]["recall"], d["median_injected_tokens"], 0))
 
-# every helix pred
-for pred in sorted(glob.glob(os.path.join(RES, "helix_*_pred.json"))):
+# every cymatix pred
+for pred in sorted(glob.glob(os.path.join(RES, "cymatix_*_pred.json"))):
     name = os.path.basename(pred).replace("_pred.json", "")
     metaf = pred.replace("_pred.json", "_meta.json")
     rows, rc = run_eval(pred, os.path.join(RES, name + "_eval.jsonl"))
@@ -62,7 +62,7 @@ for pred in sorted(glob.glob(os.path.join(RES, "helix_*_pred.json"))):
         m = json.load(open(metaf, encoding="utf-8"))
         inj = [v.get("injected_tokens", 0) for v in m.values()]
         comp = sum(v.get("n_compressed", 0) for v in m.values())
-    rows_out.append((name.replace("helix_", ""), n, fr, lr, lp, sr, med(inj), comp))
+    rows_out.append((name.replace("cymatix_", ""), n, fr, lr, lp, sr, med(inj), comp))
 
 print(f"\n{'arm':<26}{'n':>3}{'file_R':>8}{'line_R':>8}{'line_P':>8}{'sym_R':>8}{'med_inj':>9}{'cmprsd':>7}")
 print("-" * 77)

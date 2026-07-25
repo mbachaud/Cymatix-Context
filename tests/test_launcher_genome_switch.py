@@ -24,15 +24,15 @@ import pytest
 
 from cymatix_context.launcher import genome_registry as gr
 from cymatix_context.launcher import tray as tray_mod
-from cymatix_context.launcher.tray import HelixTrayIcon
+from cymatix_context.launcher.tray import CymatixTrayIcon
 
 
 @pytest.fixture(autouse=True)
 def _isolate_state(tmp_path, monkeypatch):
     """Redirect the durable selection file into a tmp dir and clear the
-    HELIX_GENOME_PATH env for every test in this module."""
-    monkeypatch.setenv("HELIX_LAUNCHER_STATE_DIR", str(tmp_path / "state"))
-    monkeypatch.delenv("HELIX_GENOME_PATH", raising=False)
+    CYMATIX_GENOME_PATH env for every test in this module."""
+    monkeypatch.setenv("CYMATIX_LAUNCHER_STATE_DIR", str(tmp_path / "state"))
+    monkeypatch.delenv("CYMATIX_GENOME_PATH", raising=False)
     gr.clear_cache()
     yield
     gr.clear_cache()
@@ -51,7 +51,7 @@ class TestDurableSelection:
     def test_select_genome_sets_env_and_persists(self, tmp_path):
         g = _make_genome(tmp_path)
         resolved = gr.select_genome(g)
-        assert os.environ["HELIX_GENOME_PATH"] == str(resolved)
+        assert os.environ["CYMATIX_GENOME_PATH"] == str(resolved)
         # File written co-located under the redirected state dir.
         assert gr._selection_state_path().exists()
         assert gr._read_selected_genome() == g.resolve()
@@ -60,14 +60,14 @@ class TestDurableSelection:
         g = _make_genome(tmp_path)
         gr.select_genome(g)
         # Simulate a relaunch: env is gone, only the file remains.
-        monkeypatch.delenv("HELIX_GENOME_PATH", raising=False)
+        monkeypatch.delenv("CYMATIX_GENOME_PATH", raising=False)
         assert gr.active_genome_path() == g.resolve()
 
     def test_env_var_wins_over_persisted(self, tmp_path, monkeypatch):
         persisted = _make_genome(tmp_path, "persisted.db")
         gr.select_genome(persisted)
         override = _make_genome(tmp_path, "override.db")
-        monkeypatch.setenv("HELIX_GENOME_PATH", str(override))
+        monkeypatch.setenv("CYMATIX_GENOME_PATH", str(override))
         assert gr.active_genome_path() == override.resolve()
 
     def test_missing_persisted_file_is_ignored(self, tmp_path):
@@ -79,23 +79,23 @@ class TestDurableSelection:
     def test_apply_persisted_selection_sets_env(self, tmp_path, monkeypatch):
         g = _make_genome(tmp_path)
         gr.select_genome(g)
-        monkeypatch.delenv("HELIX_GENOME_PATH", raising=False)
+        monkeypatch.delenv("CYMATIX_GENOME_PATH", raising=False)
         applied = gr.apply_persisted_selection()
         assert applied == g.resolve()
-        assert os.environ["HELIX_GENOME_PATH"] == str(g.resolve())
+        assert os.environ["CYMATIX_GENOME_PATH"] == str(g.resolve())
 
     def test_apply_does_not_override_explicit_env(self, tmp_path, monkeypatch):
         persisted = _make_genome(tmp_path, "persisted.db")
         gr.select_genome(persisted)
         override = _make_genome(tmp_path, "override.db")
-        monkeypatch.setenv("HELIX_GENOME_PATH", str(override))
+        monkeypatch.setenv("CYMATIX_GENOME_PATH", str(override))
         assert gr.apply_persisted_selection() is None
-        assert os.environ["HELIX_GENOME_PATH"] == str(override)
+        assert os.environ["CYMATIX_GENOME_PATH"] == str(override)
 
     def test_apply_noop_without_selection(self, monkeypatch):
-        monkeypatch.delenv("HELIX_GENOME_PATH", raising=False)
+        monkeypatch.delenv("CYMATIX_GENOME_PATH", raising=False)
         assert gr.apply_persisted_selection() is None
-        assert "HELIX_GENOME_PATH" not in os.environ
+        assert "CYMATIX_GENOME_PATH" not in os.environ
 
     def test_clear_selection(self, tmp_path):
         g = _make_genome(tmp_path)
@@ -112,7 +112,7 @@ class TestDurableSelection:
 def tray_icon():
     sup = MagicMock()
     sup.is_running.return_value = True
-    return HelixTrayIcon(supervisor=sup, dashboard_url="http://127.0.0.1:11438/")
+    return CymatixTrayIcon(supervisor=sup, dashboard_url="http://127.0.0.1:11438/")
 
 
 class TestOffPumpDispatch:
@@ -137,7 +137,7 @@ class TestOffPumpDispatch:
             release.set()
         # Let the daemon flow thread finish.
         for t in threading.enumerate():
-            if t.name == "helix-genome-switch":
+            if t.name == "cymatix-genome-switch":
                 t.join(timeout=5)
 
     def test_flow_declined_does_not_switch(self, tray_icon, tmp_path):

@@ -8,7 +8,7 @@ filename_index rows. Run this once per genome DB.
 Usage:
     python scripts/backfill_filename_anchor.py [--db PATH]
 
-Default DB: helix.toml genome.path (via config loader).
+Default DB: cymatix.toml genome.path (via config loader).
 Safe to re-run — uses INSERT OR IGNORE.
 """
 
@@ -29,7 +29,7 @@ from cymatix_context.config import load_config  # noqa: E402
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--db", default=None, help="genome DB path (default: from helix.toml)")
+    ap.add_argument("--db", default=None, help="genome DB path (default: from cymatix.toml)")
     ap.add_argument("--batch-size", type=int, default=5000, help="commit interval")
     args = ap.parse_args()
 

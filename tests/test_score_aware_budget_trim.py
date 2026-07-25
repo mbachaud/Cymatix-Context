@@ -25,10 +25,10 @@ from cymatix_context.config import (
     BudgetConfig,
     ClassifierConfig,
     GenomeConfig,
-    HelixConfig,
+    CymatixConfig,
     RibosomeConfig,
 )
-from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.context_manager import CymatixContextManager
 from cymatix_context.schemas import Gene, PromoterTags
 
 
@@ -42,13 +42,13 @@ def manager_five_genes():
     score-aware trim drops the score=1 gene (lowest score, second by
     sequence_index).
     """
-    cfg = HelixConfig(
+    cfg = CymatixConfig(
         ribosome=RibosomeConfig(model="mock", timeout=5),
         budget=BudgetConfig(max_genes_per_turn=12),
         genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
         classifier=ClassifierConfig(enabled=False),
     )
-    mgr = HelixContextManager(cfg)
+    mgr = CymatixContextManager(cfg)
 
     scores = [10.0, 1.0, 8.0, 2.0, 9.0]
     gene_ids = [f"gene_{i:02d}" for i in range(5)]

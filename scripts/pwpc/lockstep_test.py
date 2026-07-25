@@ -251,7 +251,7 @@ def main() -> None:
         lines.append(
             "**Gate PASSES.** At least one lockstep scalar produces |r| ≥ 0.2 "
             "against bucket label on the full 1865-row dataset. The "
-            "antiresonance signature is a load-bearing signal on helix's "
+            "antiresonance signature is a load-bearing signal on cymatix's "
             "substrate, not an artifact of the top-10 drilldown."
         )
     else:

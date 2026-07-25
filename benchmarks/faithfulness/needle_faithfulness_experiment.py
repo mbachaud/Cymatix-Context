@@ -10,7 +10,7 @@ diagnosis (diag_target/diag_notrail/diag_retarget):
     it directly. Decouples the faithfulness measurement from the 2B model's
     prior-competition weakness.
 
-Design: document-style context + natural question (mirrors real helix output,
+Design: document-style context + natural question (mirrors real cymatix output,
 not trivial verbatim Q/A). Prior-free distinctive single-token answers so the
 answer logit lands in-graph. Egress = synthetic "Redwood Inference" only.
 

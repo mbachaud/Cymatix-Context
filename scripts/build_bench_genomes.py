@@ -8,16 +8,16 @@ Produces two genome files distinct from the working genome.db so that:
     pipeline improvements from corpus changes
 
 Targets built (configurable via --target):
-  helix   -> F:/Projects/helix-context/ only (tight, ~1-3k genes, <10 min)
+  cymatix   -> F:/Projects/cymatix-context/ only (tight, ~1-3k genes, <10 min)
   organic -> F:/Projects/ minus every `benchmarks/` dir (wide, 1-2 hrs)
-  both    → helix then organic (default)
+  both    → cymatix then organic (default)
 
 Output sits next to the working genome.db as:
-  genome_bench_helix.db
+  genome_bench_cymatix.db
   genome_bench_organic.db
 
 Usage:
-  python scripts/build_bench_genomes.py --target helix
+  python scripts/build_bench_genomes.py --target cymatix
   python scripts/build_bench_genomes.py --target organic
   python scripts/build_bench_genomes.py              # builds both
 
@@ -198,7 +198,7 @@ def build(db_path: str, roots: list) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "--target", choices=["helix", "organic", "both"],
+        "--target", choices=["cymatix", "organic", "both"],
         default="both",
         help="Which bench genome(s) to build",
     )
@@ -211,12 +211,12 @@ def main() -> int:
 
     results = {}
 
-    if args.target in ("helix", "both"):
-        log.info("### Target 1/2: helix-context self (tight bench) ###")
-        results["helix"] = build(
-            db_path=os.path.join(args.out_dir, "genome_bench_helix.db"),
+    if args.target in ("cymatix", "both"):
+        log.info("### Target 1/2: cymatix-context self (tight bench) ###")
+        results["cymatix"] = build(
+            db_path=os.path.join(args.out_dir, "genome_bench_cymatix.db"),
             roots=[
-                os.path.join("F:\\", "Projects", "helix-context"),
+                os.path.join("F:\\", "Projects", "cymatix-context"),
             ],
         )
 

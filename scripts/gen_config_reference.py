@@ -62,8 +62,8 @@ END_MARKER = "<!-- END GENERATED -->"
 
 # ---------------------------------------------------------------------------
 # [section] -> dataclass name, mirroring load_config()'s raw["section"]
-# lookups / HelixConfig's field declarations. ``None`` marks a section that
-# is documented in helix.toml but intentionally NOT a config.py dataclass
+# lookups / CymatixConfig's field declarations. ``None`` marks a section that
+# is documented in cymatix.toml but intentionally NOT a config.py dataclass
 # (consumed by a standalone script instead) — no table is generated for it.
 # ---------------------------------------------------------------------------
 SECTION_TO_CLASS: Dict[str, Optional[str]] = {
@@ -85,7 +85,7 @@ SECTION_TO_CLASS: Dict[str, Optional[str]] = {
     "abstain": "AbstainConfig",
     "vault": "VaultConfig",
     "mem_sync": None,  # scripts/run_mem_sync.py reads this section itself
-    "synonyms": None,  # free-form Dict[str, List[str]] -> HelixConfig.synonym_map
+    "synonyms": None,  # free-form Dict[str, List[str]] -> CymatixConfig.synonym_map
 }
 
 # Extra named sub-tables for nested-dataclass fields, keyed by the marker

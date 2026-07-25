@@ -18,17 +18,17 @@ import pytest
 from cymatix_context.sharding import corpus_shard_db, corpus_shard_dir
 
 
-SHORT_ROOT = "F:/Projects/helix-context"
+SHORT_ROOT = "F:/Projects/cymatix-context"
 
 
 def test_short_paths_keep_mirrored_layout(tmp_path):
-    db = corpus_shard_db(SHORT_ROOT, "helix", tmp_path)
-    assert db == corpus_shard_dir(SHORT_ROOT, tmp_path) / "helix.genome.db"
+    db = corpus_shard_db(SHORT_ROOT, "cymatix", tmp_path)
+    assert db == corpus_shard_dir(SHORT_ROOT, tmp_path) / "cymatix.genome.db"
     assert "_overflow" not in str(db)
 
 
 def test_long_paths_fall_back_to_overflow(tmp_path, monkeypatch):
-    monkeypatch.setenv("HELIX_SHARD_PATH_MAX", "120")
+    monkeypatch.setenv("CYMATIX_SHARD_PATH_MAX", "120")
     deep_root = "C:/Users/max/AppData/Local/Temp/pytest-of-max/pytest-4764/" + \
         "test_sharded_pool_matches_seri0/rootA"
     db = corpus_shard_db(deep_root, "roota", tmp_path)
@@ -42,7 +42,7 @@ def test_long_paths_fall_back_to_overflow(tmp_path, monkeypatch):
 
 
 def test_overflow_path_is_deterministic(tmp_path, monkeypatch):
-    monkeypatch.setenv("HELIX_SHARD_PATH_MAX", "120")
+    monkeypatch.setenv("CYMATIX_SHARD_PATH_MAX", "120")
     deep_root = "C:/Users/max/AppData/Local/Temp/very/deep/tree/rootA"
     a = corpus_shard_db(deep_root, "roota", tmp_path)
     b = corpus_shard_db(deep_root, "roota", tmp_path)
@@ -50,7 +50,7 @@ def test_overflow_path_is_deterministic(tmp_path, monkeypatch):
 
 
 def test_overflow_distinguishes_roots(tmp_path, monkeypatch):
-    monkeypatch.setenv("HELIX_SHARD_PATH_MAX", "120")
+    monkeypatch.setenv("CYMATIX_SHARD_PATH_MAX", "120")
     base = "C:/Users/max/AppData/Local/Temp/very/deep/tree/"
     a = corpus_shard_db(base + "rootA", "shard", tmp_path)
     b = corpus_shard_db(base + "rootB", "shard", tmp_path)
@@ -60,16 +60,16 @@ def test_overflow_distinguishes_roots(tmp_path, monkeypatch):
 
 def test_cap_is_env_overridable(tmp_path, monkeypatch):
     deep_root = "C:/Users/max/AppData/Local/Temp/very/deep/tree/rootA"
-    monkeypatch.setenv("HELIX_SHARD_PATH_MAX", "100000")
+    monkeypatch.setenv("CYMATIX_SHARD_PATH_MAX", "100000")
     db = corpus_shard_db(deep_root, "roota", tmp_path)
     assert "_overflow" not in str(db)
-    monkeypatch.setenv("HELIX_SHARD_PATH_MAX", "1")
+    monkeypatch.setenv("CYMATIX_SHARD_PATH_MAX", "1")
     db = corpus_shard_db(deep_root, "roota", tmp_path)
     assert "_overflow" in str(db)
 
 
 def test_bad_env_value_falls_back_to_default(tmp_path, monkeypatch):
-    monkeypatch.setenv("HELIX_SHARD_PATH_MAX", "not-a-number")
-    db = corpus_shard_db(SHORT_ROOT, "helix", tmp_path)
+    monkeypatch.setenv("CYMATIX_SHARD_PATH_MAX", "not-a-number")
+    db = corpus_shard_db(SHORT_ROOT, "cymatix", tmp_path)
     # default cap (240) — short mirrored path survives
     assert "_overflow" not in str(db) or len(str(db)) > 240

@@ -1,7 +1,7 @@
 """Stale-claim avoidance bench — measures DAG walker value on decision quality.
 
 Content-presence benches (multi-needle, composition) showed 0.81 vs 0.81 for
-helix_rag vs helix_full_stack because DAG traversal does not change what's
+cymatix_rag vs cymatix_full_stack because DAG traversal does not change what's
 *retrievable*. The question DAG actually answers is: "of the candidates
 retrieval surfaced, which one is current?"
 
@@ -21,7 +21,7 @@ Three retrieval modes are compared:
 
     - ``raw_newest``  — query_claims() newest-first, top-1 wins
     - ``raw_all``     — query_claims(), no resolution; agent "acts on" first
-    - ``helix_dag``   — resolve(policy='latest_then_authority')
+    - ``cymatix_dag``   — resolve(policy='latest_then_authority')
 
 Metrics:
     - correct_current_rate     — top accepted matches the intended current truth
@@ -238,7 +238,7 @@ def mode_raw_all(db, entity_key):
     return {"top": rows[0] if rows else None, "all": rows, "clusters": [], "dt_ms": dt}
 
 
-def mode_helix_dag(db, entity_key):
+def mode_cymatix_dag(db, entity_key):
     """DAG resolve — supersedes chains walked, contradictions clustered."""
     t0 = time.perf_counter()
     rows = query_claims(db, entity_key=entity_key, limit=50)
@@ -260,7 +260,7 @@ def mode_helix_dag(db, entity_key):
 MODES = {
     "raw_newest": mode_raw_newest,
     "raw_all": mode_raw_all,
-    "helix_dag": mode_helix_dag,
+    "cymatix_dag": mode_cymatix_dag,
 }
 
 

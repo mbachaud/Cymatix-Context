@@ -28,7 +28,7 @@ isolated to ``tmp_path``, no real uvicorn is spawned.
      the spawned uvicorn always loads the orchestrator's own
      ``cymatix_context`` checkout.
   6. (#153) ``_probe_fixture_schema`` aborts on a fixture missing the
-     ``genes`` table — the canonical wrong-helix failure mode — and
+     ``genes`` table — the canonical wrong-cymatix failure mode — and
      warns rather than fails on missing aux tables.
 """
 
@@ -406,7 +406,7 @@ def _make_fixture_db(path: Path, tables: tuple[str, ...]) -> Path:
     name in ``tables`` (tables with a single ``id INTEGER`` column).
 
     Helper for the schema-probe tests so each case can declare exactly
-    which tables exist — including the "wrong helix" case where ``genes``
+    which tables exist — including the "wrong cymatix" case where ``genes``
     is missing.
     """
     conn = sqlite3.connect(path)
@@ -420,7 +420,7 @@ def _make_fixture_db(path: Path, tables: tuple[str, ...]) -> Path:
 
 
 def test_repo_root_resolves_to_this_checkout() -> None:
-    """``_repo_root`` must find the helix-context repo this orchestrator
+    """``_repo_root`` must find the cymatix-context repo this orchestrator
     lives in (the test runs from one of its checkouts)."""
     root = _repo_root()
     assert root is not None, "expected to resolve a repo root from __file__"
@@ -609,7 +609,7 @@ def test_probe_fixture_schema_passes_when_required_tables_present(tmp_path: Path
 def test_probe_fixture_schema_raises_when_required_table_missing(tmp_path: Path) -> None:
     """The canonical #153 failure: ``genes`` is missing because a stale
     worktree's schema doesn't include it. Probe must abort with a clear
-    pointer to the wrong-helix root cause."""
+    pointer to the wrong-cymatix root cause."""
     db = _make_fixture_db(tmp_path / "bad.db", tables=("not_genes",))
     with pytest.raises(BenchServerError, match=r"missing required table"):
         _probe_fixture_schema(str(db))
@@ -637,7 +637,7 @@ def test_probe_fixture_schema_skips_nonfile_path(tmp_path: Path) -> None:
 def test_post_swap_aborts_when_fixture_missing_required_table(tmp_path: Path) -> None:
     """``_post_swap`` runs the schema probe before the HTTP call; a bad
     fixture must abort before we ever hit /admin/swap-db. Otherwise the
-    bench logs ``retr=err`` × N when the live helix code hits the same
+    bench logs ``retr=err`` × N when the live cymatix code hits the same
     OperationalError."""
     db = _make_fixture_db(tmp_path / "bad.db", tables=("not_genes",))
     srv = BenchServer()

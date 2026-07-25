@@ -11,11 +11,11 @@ from cymatix_context.config import (
     BudgetConfig,
     ClassifierConfig,
     GenomeConfig,
-    HelixConfig,
+    CymatixConfig,
     RetrievalConfig,
     RibosomeConfig,
 )
-from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.context_manager import CymatixContextManager
 from tests.conftest import MockCompressorBackend
 
 
@@ -24,14 +24,14 @@ def test_abstain_marker_constant_is_exported():
     candidates branch and the abstain branch can ship identical bytes.
 
     Stage 6 (2026-05-08, §6): the prose marker is replaced with the
-    structured `<helix:no_match reason="abstain" do_not_answer="true"/>`
+    structured `<cymatix:no_match reason="abstain" do_not_answer="true"/>`
     tag. ``_ABSTAIN_MARKER`` is preserved as a deprecated alias that
     points at the new tag for one release, so call sites migrate
     transparently.
     """
     assert cm._ABSTAIN_MARKER == cm._no_match_token("abstain")
     assert cm._ABSTAIN_MARKER == (
-        '<helix:no_match reason="abstain" do_not_answer="true"/>'
+        '<cymatix:no_match reason="abstain" do_not_answer="true"/>'
     )
 
 
@@ -48,13 +48,13 @@ def test_abstain_marker_constant_is_exported():
     ("garbage", False),
 ])
 def test_env_truthy_parsing(monkeypatch, value, expected):
-    monkeypatch.setenv("HELIX_TEST_ENV_TRUTHY", value)
-    assert cm._env_truthy("HELIX_TEST_ENV_TRUTHY") is expected
+    monkeypatch.setenv("CYMATIX_TEST_ENV_TRUTHY", value)
+    assert cm._env_truthy("CYMATIX_TEST_ENV_TRUTHY") is expected
 
 
 def test_env_truthy_unset_is_false(monkeypatch):
-    monkeypatch.delenv("HELIX_TEST_ENV_TRUTHY", raising=False)
-    assert cm._env_truthy("HELIX_TEST_ENV_TRUTHY") is False
+    monkeypatch.delenv("CYMATIX_TEST_ENV_TRUTHY", raising=False)
+    assert cm._env_truthy("CYMATIX_TEST_ENV_TRUTHY") is False
 
 
 @pytest.fixture
@@ -68,14 +68,14 @@ def abstain_manager():
     the #115 baseline-normalized ratio — that path has its own explicit
     fusion_mode="rrf" coverage further down this file.
     """
-    cfg = HelixConfig(
+    cfg = CymatixConfig(
         ribosome=RibosomeConfig(model="mock", timeout=5),
         budget=BudgetConfig(max_genes_per_turn=12, abstain_enabled=True),
         genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
         classifier=ClassifierConfig(enabled=False),
         retrieval=RetrievalConfig(fusion_mode="additive"),
     )
-    mgr = HelixContextManager(cfg)
+    mgr = CymatixContextManager(cfg)
     mgr.ribosome.backend = MockCompressorBackend()
     yield mgr
     mgr.close()
@@ -177,15 +177,15 @@ def test_focused_score_floor_constants_in_sync():
     Stage 4 (2026-05-08) moved the literal floors out of build_context
     into _floors_for / AbstainClassFloors. Both modes need pinning:
     - global mode reads _GLOBAL_FOCUSED_FLOOR / _GLOBAL_ABSTAIN_FLOOR
-      from HelixContextManager;
+      from CymatixContextManager;
     - per_classifier mode falls back to AbstainClassFloors defaults
       when a class lacks an explicit block.
     """
     from cymatix_context.config import AbstainClassFloors
 
     assert (
-        cm.HelixContextManager._GLOBAL_FOCUSED_FLOOR
-        == cm.HelixContextManager._GLOBAL_ABSTAIN_FLOOR
+        cm.CymatixContextManager._GLOBAL_FOCUSED_FLOOR
+        == cm.CymatixContextManager._GLOBAL_ABSTAIN_FLOOR
     ), "global-mode floors drifted apart"
     defaults = AbstainClassFloors()
     assert defaults.focused_top == defaults.abstain_top, (
@@ -252,8 +252,8 @@ def test_abstain_disabled_via_config_falls_through_to_broad(abstain_manager):
 
 
 def test_abstain_env_override_beats_config_flag(abstain_manager, monkeypatch):
-    """HELIX_ABSTAIN_DISABLE=1 forces off even when config flag is on."""
-    monkeypatch.setenv("HELIX_ABSTAIN_DISABLE", "1")
+    """CYMATIX_ABSTAIN_DISABLE=1 forces off even when config flag is on."""
+    monkeypatch.setenv("CYMATIX_ABSTAIN_DISABLE", "1")
     assert abstain_manager.config.budget.abstain_enabled is True   # config still on
     candidates, scores = _weak_setup(abstain_manager, top_score=1.5, ratio=1.2)
     _stub_express(abstain_manager, candidates=candidates, scores=scores)
@@ -271,7 +271,7 @@ def test_abstain_env_override_beats_config_flag(abstain_manager, monkeypatch):
 # sharded queries. Measured 2026-05-14 on medium-sharded fixture:
 #
 #   query              legacy ratio   result
-#   helix_port              1.77      abstain (just below 1.8)
+#   cymatix_port              1.77      abstain (just below 1.8)
 #   biged_skills            1.57      abstain
 #   scorerift               1.46      abstain
 #
@@ -357,7 +357,7 @@ def _candidates_with_scores(top_score: float, ratio: float, n: int = 8):
 def test_rrf_realistic_gradient_does_not_abstain():
     """Issue #115: realistic post-refiner RRF curve (top=0.40, gradient
     down to floor=0.05) must NOT abstain. This is the SHAPE we observe on
-    biged_skills / helix_port / scorerift on medium-sharded.
+    biged_skills / cymatix_port / scorerift on medium-sharded.
     """
     from cymatix_context.config import AbstainClassFloors
     from cymatix_context.pipeline.tier_logic import apply_budget_tiers
@@ -368,7 +368,7 @@ def test_rrf_realistic_gradient_does_not_abstain():
     )
     assert result.abstain is False, (
         f"RRF gradient top=0.40 low=0.05 should NOT abstain — represents "
-        f"a real biged_skills / helix_port style curve; tier={result.budget_tier}"
+        f"a real biged_skills / cymatix_port style curve; tier={result.budget_tier}"
     )
 
 

@@ -5,10 +5,10 @@ Measures:
   1. Compression ratio (raw chars / compressed chars)
   2. Information retention (oracle grading via local model)
   3. Per-step latency (extract, express, re-rank, splice, assemble)
-  4. Token savings (with vs without Helix)
+  4. Token savings (with vs without Cymatix)
 
 Usage:
-    # Requires Helix server running
+    # Requires Cymatix server running
     python benchmarks/bench_compression.py
     python benchmarks/bench_compression.py --queries 20 --output results.json
 """
@@ -22,14 +22,14 @@ from pathlib import Path
 
 import httpx
 
-HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
+CYMATIX_URL = os.environ.get("CYMATIX_URL", "http://127.0.0.1:11437")
 
 # Benchmark queries — diverse topics that should hit different genome regions
 BENCHMARK_QUERIES = [
     # Architecture questions
     "How does the BigEd fleet supervisor manage worker processes?",
     "What is the ScoreRift divergence detection threshold?",
-    "How does the Helix expression pipeline work?",
+    "How does the Cymatix expression pipeline work?",
     "What database does BookKeeper use for tenant isolation?",
     # Implementation questions
     "How does the ribosome handle splice failures?",
@@ -41,7 +41,7 @@ BENCHMARK_QUERIES = [
     "What security patterns are shared across BigEd and BookKeeper?",
     # Specific detail questions (needle-in-haystack)
     "What is the exact name of the class that handles SQLite gene storage?",
-    "What port does the Helix proxy server run on?",
+    "What port does the Cymatix proxy server run on?",
     "How many audit dimensions does the Python preset in ScoreRift have?",
     "What is the default splice aggressiveness value?",
     # Impossible questions (should return 'no context')
@@ -53,7 +53,7 @@ BENCHMARK_QUERIES = [
 def bench_context_query(client, query, decoder_mode="none"):
     """Benchmark a single context query."""
     t0 = time.time()
-    resp = client.post(f"{HELIX_URL}/context", json={
+    resp = client.post(f"{CYMATIX_URL}/context", json={
         "query": query,
         "decoder_mode": decoder_mode,
     })
@@ -89,7 +89,7 @@ def bench_context_query(client, query, decoder_mode="none"):
 def bench_proxy_query(client, query, model="gemma4:e2b"):
     """Benchmark a full proxy pass (context + generation)."""
     t0 = time.time()
-    resp = client.post(f"{HELIX_URL}/v1/chat/completions", json={
+    resp = client.post(f"{CYMATIX_URL}/v1/chat/completions", json={
         "model": model,
         "messages": [{"role": "user", "content": query}],
         "stream": False,
@@ -116,45 +116,45 @@ def bench_proxy_query(client, query, model="gemma4:e2b"):
 
 
 def bench_token_savings(client, queries):
-    """Compare token usage: raw file reads vs Helix context."""
+    """Compare token usage: raw file reads vs Cymatix context."""
     results = []
 
     for query in queries:
-        # With Helix (decoder_mode=none for max savings)
-        helix = bench_context_query(client, query, decoder_mode="none")
+        # With Cymatix (decoder_mode=none for max savings)
+        cymatix = bench_context_query(client, query, decoder_mode="none")
 
-        # With Helix (decoder_mode=full for proxy comparison)
-        helix_full = bench_context_query(client, query, decoder_mode="full")
+        # With Cymatix (decoder_mode=full for proxy comparison)
+        cymatix_full = bench_context_query(client, query, decoder_mode="full")
 
         # Estimate raw file tokens (assume 8 genes * avg gene raw size)
-        genes_available = helix.get("genes_available", 0)
+        genes_available = cymatix.get("genes_available", 0)
         if genes_available > 0:
             # Get genome stats to calculate avg raw per gene
-            stats = client.get(f"{HELIX_URL}/stats").json()
+            stats = client.get(f"{CYMATIX_URL}/stats").json()
             avg_raw_per_gene = stats["total_chars_raw"] / max(stats["total_genes"], 1)
-            genes_expressed = helix.get("genes_expressed", 0)
+            genes_expressed = cymatix.get("genes_expressed", 0)
             estimated_raw_tokens = int(genes_expressed * avg_raw_per_gene / 4)
         else:
             estimated_raw_tokens = 0
 
-        helix_tokens = helix["content_chars"] // 4
-        helix_full_tokens = helix_full["content_chars"] // 4 + 750  # +decoder prompt
+        cymatix_tokens = cymatix["content_chars"] // 4
+        cymatix_full_tokens = cymatix_full["content_chars"] // 4 + 750  # +decoder prompt
 
         results.append({
             "query": query,
             "raw_tokens_est": estimated_raw_tokens,
-            "helix_none_tokens": helix_tokens,
-            "helix_full_tokens": helix_full_tokens,
-            "savings_none_pct": round((1 - helix_tokens / max(estimated_raw_tokens, 1)) * 100, 1),
-            "savings_full_pct": round((1 - helix_full_tokens / max(estimated_raw_tokens, 1)) * 100, 1),
-            "status": helix["status"],
+            "cymatix_none_tokens": cymatix_tokens,
+            "cymatix_full_tokens": cymatix_full_tokens,
+            "savings_none_pct": round((1 - cymatix_tokens / max(estimated_raw_tokens, 1)) * 100, 1),
+            "savings_full_pct": round((1 - cymatix_full_tokens / max(estimated_raw_tokens, 1)) * 100, 1),
+            "status": cymatix["status"],
         })
 
     return results
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Helix Context Benchmarks")
+    parser = argparse.ArgumentParser(description="Cymatix Context Benchmarks")
     parser.add_argument("--queries", type=int, default=len(BENCHMARK_QUERIES),
                         help="Number of queries to benchmark")
     parser.add_argument("--output", default=None, help="Output JSON file")
@@ -165,11 +165,11 @@ def main():
 
     # Check server
     try:
-        stats = client.get(f"{HELIX_URL}/stats").json()
+        stats = client.get(f"{CYMATIX_URL}/stats").json()
         print(f"Genome: {stats['total_genes']} genes, {stats['compression_ratio']:.1f}x")
         print(f"Raw: {stats['total_chars_raw']:,} chars, Compressed: {stats['total_chars_compressed']:,} chars")
     except Exception:
-        print(f"Cannot reach Helix at {HELIX_URL}")
+        print(f"Cannot reach Cymatix at {CYMATIX_URL}")
         sys.exit(1)
 
     queries = BENCHMARK_QUERIES[:args.queries]

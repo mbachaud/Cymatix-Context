@@ -1,46 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  launchd plist for helix-launcher (macOS).
+  launchd plist for cymatix-launcher (macOS).
 
-  Installs the helix supervisor + dashboard as a per-user LaunchAgent so
+  Installs the cymatix supervisor + dashboard as a per-user LaunchAgent so
   it starts at login and is kept alive by launchd.
 
   Installation:
 
-    1. Edit the ProgramArguments path below to point at the helix-launcher
+    1. Edit the ProgramArguments path below to point at the cymatix-launcher
        script in your environment. Common locations:
-         - /usr/local/bin/helix-launcher          (Homebrew Python)
-         - ~/.venvs/helix/bin/helix-launcher      (manual venv)
-         - ~/Library/Python/3.12/bin/helix-launcher  (--user install)
+         - /usr/local/bin/cymatix-launcher          (Homebrew Python)
+         - ~/.venvs/cymatix/bin/cymatix-launcher      (manual venv)
+         - ~/Library/Python/3.12/bin/cymatix-launcher  (--user install)
 
     2. Copy this file to ~/Library/LaunchAgents/:
-         cp deploy/launchd/com.swiftwing21.helix-launcher.plist \
+         cp deploy/launchd/com.swiftwing21.cymatix-launcher.plist \
             ~/Library/LaunchAgents/
 
     3. Load it:
-         launchctl load ~/Library/LaunchAgents/com.swiftwing21.helix-launcher.plist
+         launchctl load ~/Library/LaunchAgents/com.swiftwing21.cymatix-launcher.plist
 
     4. Verify:
-         launchctl list | grep helix-launcher
-         tail -f ~/Library/Logs/helix-launcher.log
+         launchctl list | grep cymatix-launcher
+         tail -f ~/Library/Logs/cymatix-launcher.log
 
     5. Open http://127.0.0.1:11438/ in your browser.
 
   Uninstall:
 
-    launchctl unload ~/Library/LaunchAgents/com.swiftwing21.helix-launcher.plist
-    rm ~/Library/LaunchAgents/com.swiftwing21.helix-launcher.plist
+    launchctl unload ~/Library/LaunchAgents/com.swiftwing21.cymatix-launcher.plist
+    rm ~/Library/LaunchAgents/com.swiftwing21.cymatix-launcher.plist
 -->
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
   <key>Label</key>
-  <string>com.swiftwing21.helix-launcher</string>
+  <string>com.swiftwing21.cymatix-launcher</string>
 
-  <!-- Replace with the absolute path to your helix-launcher executable. -->
+  <!-- Replace with the absolute path to your cymatix-launcher executable. -->
   <key>ProgramArguments</key>
   <array>
-    <string>/usr/local/bin/helix-launcher</string>
+    <string>/usr/local/bin/cymatix-launcher</string>
     <string>--no-browser</string>
   </array>
 
@@ -68,9 +68,9 @@
 
   <!-- Logs land in ~/Library/Logs/. -->
   <key>StandardOutPath</key>
-  <string>/Users/USERNAME/Library/Logs/helix-launcher.log</string>
+  <string>/Users/USERNAME/Library/Logs/cymatix-launcher.log</string>
   <key>StandardErrorPath</key>
-  <string>/Users/USERNAME/Library/Logs/helix-launcher.err.log</string>
+  <string>/Users/USERNAME/Library/Logs/cymatix-launcher.err.log</string>
 
   <!-- Resource hygiene -->
   <key>SoftResourceLimits</key>

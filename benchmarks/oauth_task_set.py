@@ -1,4 +1,4 @@
-"""Frozen OAuth-shaped task records for model-free Helix benchmarks."""
+"""Frozen OAuth-shaped task records for model-free Cymatix benchmarks."""
 
 from __future__ import annotations
 

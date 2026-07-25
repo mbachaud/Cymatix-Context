@@ -34,7 +34,7 @@ sys.path.insert(0, str(_REPO_ROOT / "benchmarks"))
 
 import bench_needle  # noqa: E402
 from cymatix_context.config import load_config  # noqa: E402
-from cymatix_context.context_manager import HelixContextManager  # noqa: E402
+from cymatix_context.context_manager import CymatixContextManager  # noqa: E402
 
 
 def _answer_genes(conn, needle):
@@ -55,7 +55,7 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--bed-db", default="genomes/bench/matrix/xl_clean.db")
     ap.add_argument("--base-config",
-                    default="docs/benchmarks/helix_probe_lexical.toml")
+                    default="docs/benchmarks/cymatix_probe_lexical.toml")
     ap.add_argument("--needles",
                     default="biged_ram_ceiling,biged_smoke_tests,"
                             "cosmictasha_postgres_version")
@@ -70,7 +70,7 @@ def main() -> None:
         cfg = load_config(args.base_config)
         cfg.genome.path = str(Path(args.bed_db).resolve())
         cfg.retrieval.fusion_mode = mode
-        mgr = HelixContextManager(cfg)
+        mgr = CymatixContextManager(cfg)
         print(f"\n===== fusion_mode = {mode} =====")
         for t in targets:
             nd = by_name[t]

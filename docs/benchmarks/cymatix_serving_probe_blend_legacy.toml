@@ -2,7 +2,7 @@
 # SERVING-EQUIVALENT bench profile - blend_mode graduation receipt
 # (2026-07-12, branch bench/blend-serving-receipt).
 #
-# Built from the authoritative serving helix.toml. SERVING retrieval/
+# Built from the authoritative serving cymatix.toml. SERVING retrieval/
 # scoring stack is inherited UNCHANGED: [cymatics] enabled, dense
 # embedding enabled, SPLADE enabled, abstain enabled, [know] emit_floor
 # 0.45 + calibrated betas, fusion_mode=rrf, all RRF weights, synonyms.
@@ -40,7 +40,7 @@
 #
 # Any other backend string (including the default "none") is reported
 # by /health as ``ribosome_backend = "disabled"`` and dispatches the
-# no-op DisabledBackend. See helix_context/ribosome.py:24 for the
+# no-op DisabledBackend. See cymatix_context/ribosome.py:24 for the
 # rationale on why the ribosome stays paused by default.
 # ──────────────────────────────────────────────────────────────────────
 [ribosome]
@@ -67,13 +67,13 @@ query_decomposition_enabled = false
 
 [hardware]
 # Device picker. "auto" picks best-available (cuda -> rocm -> mps -> cpu).
-# Explicit values fall back loudly to CPU on probe failure; helix never
+# Explicit values fall back loudly to CPU on probe failure; cymatix never
 # blocks on hardware mismatch -- see /health for fallback state.
-# Override one-shot via HELIX_DEVICE=cpu env var.
+# Override one-shot via CYMATIX_DEVICE=cpu env var.
 device = "auto"        # auto | cuda | rocm | mps | cpu
 
 # Batch-size policy. "auto" consults the VRAM/RAM-aware table in
-# helix_context/hardware.py. Override per model when tuning:
+# cymatix_context/hardware.py. Override per model when tuning:
 #   batch_sizes = { rerank = 16, splice = 32, splade = 8, nli = 8 }
 batch_sizes = "auto"
 
@@ -100,7 +100,7 @@ splice_aggressiveness = 0.3             # 0=keep all, 1=ruthless trim (lower pre
 decoder_mode = "none"              # "full"|"condensed"|"minimal"|"none" (none saves ~750 tokens for API models)
 # Sprint 1 legibility pack (AI-consumer roadmap): emit one metadata line
 # per gene in expressed_context — fired tiers, confidence marker, short
-# gene_id, raw→compressed chars. See helix_context/legibility.py + docs/
+# gene_id, raw→compressed chars. See cymatix_context/legibility.py + docs/
 # FUTURE/AI_CONSUMER_ROADMAP_2026-04-14.md. Flip to false to restore
 # plain-dividers format for bench A/B.
 legibility_enabled = false
@@ -109,16 +109,16 @@ legibility_enabled = false
 # pointer stub. Enabled 2026-04-19 — MVP writes to session_delivery_log
 # on every /context call (synthetic session_id fallback covers callers
 # that don't supply one). Set to false to restore pre-MVP dark behavior.
-# See helix_context/session_delivery.py.
+# See cymatix_context/session_delivery.py.
 session_delivery_enabled = false
 # Confidence-gated context attachment (ABSTAIN tier). When true (default),
 # build_context returns a marker-only ContextWindow when post-refinement
 # retrieval is weak on BOTH absolute score (top_score < 2.5) AND ratio
 # (top_score/mean < 1.8) — the negative space of the TIGHT and FOCUSED
-# tiers. Goal: skip the 12K-token BROAD fallback on queries where helix
+# tiers. Goal: skip the 12K-token BROAD fallback on queries where cymatix
 # can't help, so the small model answers from weights instead of digesting
 # irrelevant noise. Set to false to restore the legacy always-inject
-# behavior (BROAD takes the negative space). HELIX_ABSTAIN_DISABLE=1 env
+# behavior (BROAD takes the negative space). CYMATIX_ABSTAIN_DISABLE=1 env
 # var forces off without redeploy. See docs/specs/2026-05-02-abstain-tier-design.md.
 abstain_enabled = true
 # Foveated-splice (BROAD tier only). When True, the BROAD branch of the
@@ -160,23 +160,23 @@ splice_target_chars = 0
 # (no re-query detectable without a session), making CWoLa training
 # impossible. See cwola.py + STATISTICAL_FUSION.md §C2.
 # Default party_id for CWoLa / session attribution when no env var or header is set.
-# Operators: set HELIX_PARTY_ID in your environment (preferred) or change this value.
+# Operators: set CYMATIX_PARTY_ID in your environment (preferred) or change this value.
 default_party_id = "default"            # Attribution fallback when the request omits party_id
 synthetic_session_window_s = 300        # 5 min — same-IP requests within this window group into one session
 synthetic_session_enabled = false       # Flip to false to restore prior NULL-session behavior (not recommended)
 
 [genome]
 # 2026-04-16: swapped to fresh-rebuild clean genome. Old path archived:
-#   F:/Projects/helix-context/genome.db          — old master (pre-rebuild)
-#   C:/helix-cache/genome.db                     — old replica (had backfill)
+#   F:/Projects/cymatix-context/genome.db          — old master (pre-rebuild)
+#   C:/cymatix-cache/genome.db                     — old replica (had backfill)
 # New genomes/ folder is the phase-2 sharding root. main/ is v1's only
 # shard; future shards land as genomes/reference/, genomes/agent/, etc.
 path = "genomes/main/genome.db"
-# Sharded stores (HELIX_USE_SHARDS=1 against a routing main.db): cross-shard
-# query fan-out width comes from the HELIX_SHARD_WORKERS env var, not this
+# Sharded stores (CYMATIX_USE_SHARDS=1 against a routing main.db): cross-shard
+# query fan-out width comes from the CYMATIX_SHARD_WORKERS env var, not this
 # file. Unset = auto-size when >4 shards are routed (serial measured 5
 # min/query at 829K genes / 100 shards vs ~55s at 8 workers — issue #206,
-# 2026-06-12); HELIX_SHARD_WORKERS=1 forces the serial reference path.
+# 2026-06-12); CYMATIX_SHARD_WORKERS=1 forces the serial reference path.
 compact_interval = 0                 # seconds between source-change checks (hourly)
 cold_start_threshold = 10              # genes needed before history stripping kicks in (Fix 3)
 # Replicas disabled during phase-1 cutover. Will re-enable alongside
@@ -192,10 +192,10 @@ host = "127.0.0.1"
 port = 11437
 upstream = "http://localhost:11434"     # Ollama
 
-# Dev/configuration mode (v0.7.0): second helix on a side port bound to
+# Dev/configuration mode (v0.7.0): second cymatix on a side port bound to
 # a bench genome - chat stays on the main port/genome while a subagent
 # drives the bench-harness against the bench port. Leave false for
-# final deployments. CLI --bench / env HELIX_BENCH_ENABLED=1 override.
+# final deployments. CLI --bench / env CYMATIX_BENCH_ENABLED=1 override.
 bench_enabled = false
 bench_port = 11439
 bench_genome_path = "genomes/bench/bench.genome.db"
@@ -204,28 +204,28 @@ bench_genome_path = "genomes/bench/bench.genome.db"
 # ----------------------------------------------------------------------
 # [telemetry] - OPENTELEMETRY EXPORT (backend).
 #
-# TOML defaults for the HELIX_OTEL_* env vars. Precedence, per knob:
-#     HELIX_OTEL_* env var  >  this section  >  code default
-# Env always wins, in BOTH directions: HELIX_OTEL_ENABLED=0 silences a
+# TOML defaults for the CYMATIX_OTEL_* env vars. Precedence, per knob:
+#     CYMATIX_OTEL_* env var  >  this section  >  code default
+# Env always wins, in BOTH directions: CYMATIX_OTEL_ENABLED=0 silences a
 # toml enabled=true, and the launcher's auto-export (below) beats a toml
 # enabled=false.
 #
 # enabled stays false here because a bare backend (no launcher, no
 # collector) must not dial a dead endpoint. The tray launcher closes the
 # out-of-the-box gap itself: when it starts (or adopts) the native
-# observability stack it exports HELIX_OTEL_ENABLED=1 into the helix
+# observability stack it exports CYMATIX_OTEL_ENABLED=1 into the cymatix
 # child's environment, so the default tray boot ships data to Grafana
-# with no config edits. Set HELIX_OTEL_ENABLED=0 to keep the stack up
+# with no config edits. Set CYMATIX_OTEL_ENABLED=0 to keep the stack up
 # but the backend silent.
 # ----------------------------------------------------------------------
 [telemetry]
-enabled = false                         # Master switch (HELIX_OTEL_ENABLED). Launcher exports =1 once the local stack's collector port is up.
-endpoint = "localhost:4317"             # OTLP gRPC collector intake (HELIX_OTEL_ENDPOINT)
-insecure = true                         # Plain gRPC, dev-local (HELIX_OTEL_INSECURE)
-sampler_ratio = 1.0                     # Trace sampler 0.0-1.0; drop to 0.1 at high QPS (HELIX_OTEL_SAMPLER_RATIO)
-redact_query = true                     # Hash query strings in spans; false = raw queries, dev only (HELIX_OTEL_REDACT_QUERY)
-logs_enabled = true                     # Ship Python logs to the collector -> Loki (HELIX_OTEL_LOGS_ENABLED)
-logs_level = "INFO"                     # Min level forwarded: DEBUG/INFO/WARNING/ERROR/CRITICAL (HELIX_OTEL_LOGS_LEVEL)
+enabled = false                         # Master switch (CYMATIX_OTEL_ENABLED). Launcher exports =1 once the local stack's collector port is up.
+endpoint = "localhost:4317"             # OTLP gRPC collector intake (CYMATIX_OTEL_ENDPOINT)
+insecure = true                         # Plain gRPC, dev-local (CYMATIX_OTEL_INSECURE)
+sampler_ratio = 1.0                     # Trace sampler 0.0-1.0; drop to 0.1 at high QPS (CYMATIX_OTEL_SAMPLER_RATIO)
+redact_query = true                     # Hash query strings in spans; false = raw queries, dev only (CYMATIX_OTEL_REDACT_QUERY)
+logs_enabled = true                     # Ship Python logs to the collector -> Loki (CYMATIX_OTEL_LOGS_ENABLED)
+logs_level = "INFO"                     # Min level forwarded: DEBUG/INFO/WARNING/ERROR/CRITICAL (CYMATIX_OTEL_LOGS_LEVEL)
 
 # ──────────────────────────────────────────────────────────────────────
 # [headroom] — OPTIONAL PROXY LIFECYCLE (launcher only).
@@ -244,7 +244,7 @@ logs_level = "INFO"                     # Min level forwarded: DEBUG/INFO/WARNIN
 # Either way the tray gains "Open Headroom Dashboard" + Start/Restart/Stop
 # Headroom menu items.
 #
-# Requires: pip install "helix-context[codec]"  (pulls headroom-ai[proxy])
+# Requires: pip install "cymatix-context[codec]"  (pulls headroom-ai[proxy])
 # ──────────────────────────────────────────────────────────────────────
 [headroom]
 enabled = false                         # bench: launcher-only, inert in-process and adopts/spawns it on launch
@@ -253,13 +253,13 @@ host = "127.0.0.1"
 port = 8787                             # Default headroom proxy port
 mode = "token"                          # "token" (compression-first) | "cache" (prefix-cache-stable)
 dashboard_path = "/dashboard"           # Appended to http://{host}:{port} for the tray menu link
-# route_upstream — controls whether the launcher rewrites helix's chat upstream
+# route_upstream — controls whether the launcher rewrites cymatix's chat upstream
 # to dial this proxy. Off by default. Turn on ONLY when (a) Headroom is
 # actually installed/running AND (b) you want to pay its compression-pass
 # latency on every /v1/chat/completions call. Loopback upstreams (Ollama at
 # localhost:11434, etc.) are never rewritten regardless of this flag — the
 # proxy hop doesn't buy anything for a localhost model server. The env var
-# HELIX_HEADROOM_ROUTE_UPSTREAM_AUTO=0|1 overrides this per-launch.
+# CYMATIX_HEADROOM_ROUTE_UPSTREAM_AUTO=0|1 overrides this per-launch.
 route_upstream = false
 
 [ingestion]
@@ -353,13 +353,13 @@ seeded_edge_weight = 1.0                # Base weight stamped at seed insertion
 # Tier 0.5 filename-anchor (2026-04-15 Dewey-pivot spike).
 # Dewey bench 2026-04-14: filename-as-primary-anchor gave +24pp
 # retrieval over full path-token bag. Boosts genes whose filename
-# stem matches a query term. Env override: HELIX_FILENAME_ANCHOR_ENABLED=1.
+# stem matches a query term. Env override: CYMATIX_FILENAME_ANCHOR_ENABLED=1.
 filename_anchor_enabled = true          # Stage-1 bench flip (2026-04-22); +12pp on Dewey axis-2 spike
 filename_anchor_weight = 4.0            # Per-match boost (Tier 1 exact-tag = 3.0 for reference)
 # BM25 shortlist post-filter (Stage-2 bench flip 2026-04-22, research-review Pareto move 1).
 # When on, query_genes restricts its final ranking to genes in the BM25 top-N.
 # Dark by default — flip to true for Stage-2 A/B measurement.
-bm25_shortlist_enabled = true           # Keep on (2026-04-22 sprint): +1/8 ans_full on helix_rag + helix_full_stack, clean attribution
+bm25_shortlist_enabled = true           # Keep on (2026-04-22 sprint): +1/8 ans_full on cymatix_rag + cymatix_full_stack, clean attribution
 bm25_shortlist_size = 50
 # BM25 pre-filter — fires BEFORE tier scoring (inverse of shortlist).
 # Enable for A/B against bm25_shortlist. Disable shortlist when using this.
@@ -423,7 +423,7 @@ dense_pool_size = 500
 # Deprecation timeline: v(N) shipped additive default; v(N+1) (this
 # release) flips to rrf default; v(N+2) removes the additive code path.
 fusion_mode = "rrf"                     # "rrf" | "additive" (legacy)
-blend_mode = "scale_relative"           # AXIS UNDER TEST (serving blend receipt 2026-07-12)
+blend_mode = "legacy"                   # AXIS UNDER TEST (serving blend receipt 2026-07-12)
 rrf_k = 60                              # Cormack 2009 default
 fts5_weight = 3.0                       # FTS5 cap-only knob: additive cap = 2.0 × this (6.0)
 splade_weight = 3.5                     # SPLADE leading coeff (== tier cap)
@@ -452,11 +452,11 @@ pki_weight = 1.0                        # path-key-index tier, RRF participant
 # Note: filename_anchor_weight (above) and sr_weight (above) are reused.
 
 # ── Sharded-retrieval fetch depth + co-activation budget (#222/#223) ──
-# Bind ONLY on the sharded read path (HELIX_USE_SHARDS=1 / ShardRouter); blob
+# Bind ONLY on the sharded read path (CYMATIX_USE_SHARDS=1 / ShardRouter); blob
 # mode never builds a router, so these are inert there. Defaults below are
 # byte-identical to the pre-knob (and dark-shipped env-knob) sharded merge.
-# Env overrides still win: HELIX_SHARD_FETCH_FACTOR (int) > shard_fetch_multiplier,
-# HELIX_SHARD_COACT_RESERVE (int) > coact_reserved_slots.
+# Env overrides still win: CYMATIX_SHARD_FETCH_FACTOR (int) > shard_fetch_multiplier,
+# CYMATIX_SHARD_COACT_RESERVE (int) > coact_reserved_slots.
 #
 # #222 — per-shard fetch depth. The router fetches max_genes * multiplier
 # candidates from each shard before the cross-shard merge. The flat 2× equals
@@ -485,7 +485,7 @@ coact_link_boost = 0.5                  # linked-doc score = boost × source sco
 # The current artifact is a **query-quality head**, not the per-(q, g)
 # ranker originally described in the spec. Gene ranking stays on the
 # additive fuser; this signal only feeds the packet / router.
-# See helix_context/fusion_plr.py docstring for the scope trade-off.
+# See cymatix_context/fusion_plr.py docstring for the scope trade-off.
 #
 # Train a fresh artifact with:
 #   python scripts/pwpc/sprint3.py <windowed_export.json> \
@@ -513,11 +513,11 @@ calibrated_at   = "2026-07-07T01:39:23+00:00"
 calibrated_on_n = 1617
 
 [mem_sync]
-# Auto-memory → helix sync. Every .md file in a watched dir becomes a
-# gene; persona/agent attribution comes from HELIX_AGENT / HELIX_USER
+# Auto-memory → cymatix sync. Every .md file in a watched dir becomes a
+# gene; persona/agent attribution comes from CYMATIX_AGENT / CYMATIX_USER
 # env vars on the syncer process. See scripts/run_mem_sync.py.
 enabled = false                         # Set true + run scripts/run_mem_sync.py
-helix_url = "http://127.0.0.1:11437"
+cymatix_url = "http://127.0.0.1:11437"
 sync_interval_s = 60                    # Poll cadence; human-speed writes, cheap stat+hash
 agent_kind = "claude-code"              # Stamp on every ingest; identifies writer tool
 # Empty by default for the public release — point this at your own
@@ -536,7 +536,7 @@ cache = ["redis", "ttl", "invalidation", "cdn", "caching", "eviction"]
 auth = ["jwt", "login", "security", "token", "session", "oauth"]
 protein = ["folding", "amino", "alpha_helix", "beta_sheet", "alphafold", "biochemistry"]
 tree = ["btree", "b-tree", "data_structures", "index", "binary_tree"]
-helix = ["genome", "ribosome", "codons", "splice", "chromatin", "promoter", "context compression"]
+cymatix = ["genome", "ribosome", "codons", "splice", "chromatin", "promoter", "context compression"]
 pipeline = ["steps", "expression", "workflow", "process", "stages"]
 scoring = ["divergence", "audit", "grades", "ratchet", "dimensions"]
 compress = ["compression", "ratio", "target", "context_compression"]
@@ -581,7 +581,7 @@ tables = ["database", "db", "sqlite", "schema", "ddl"]
 # v1: read-only export + diagnostic /context traces. Curation/inbox in v1.1.
 # [vault]
 # enabled = false
-# path = "~/.helix/vault"
+# path = "~/.cymatix/vault"
 # party_id = ""                     # empty = server's primary party
 # fan_out_threshold = 5000          # split domain folders above this count
 # redact_body = false               # true → replace body with sha+excerpt

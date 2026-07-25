@@ -21,7 +21,7 @@ def _make_codec_with_mock(dim=256):
 
 def test_encode_returns_correct_dim():
     codec = _make_codec_with_mock(dim=64)
-    vec = codec.encode("what port does helix use?", task="query")
+    vec = codec.encode("what port does cymatix use?", task="query")
     assert len(vec) == 64
 
 
@@ -76,17 +76,17 @@ def _make_batch_codec(dim=64, device="cpu", n_rows=3):
 
 
 def test_vram_release_interval_default(monkeypatch):
-    monkeypatch.delenv("HELIX_DENSE_VRAM_RELEASE_EVERY", raising=False)
+    monkeypatch.delenv("CYMATIX_DENSE_VRAM_RELEASE_EVERY", raising=False)
     assert _codec_mod._vram_release_interval() == 256
 
 
 def test_vram_release_interval_custom(monkeypatch):
-    monkeypatch.setenv("HELIX_DENSE_VRAM_RELEASE_EVERY", "10")
+    monkeypatch.setenv("CYMATIX_DENSE_VRAM_RELEASE_EVERY", "10")
     assert _codec_mod._vram_release_interval() == 10
 
 
 def test_vram_release_interval_invalid_falls_back(monkeypatch):
-    monkeypatch.setenv("HELIX_DENSE_VRAM_RELEASE_EVERY", "not-an-int")
+    monkeypatch.setenv("CYMATIX_DENSE_VRAM_RELEASE_EVERY", "not-an-int")
     assert _codec_mod._vram_release_interval() == 256
 
 
@@ -102,7 +102,7 @@ def test_cpu_device_never_releases(monkeypatch):
     """CPU encoding has no CUDA cache: empty_cache must never be reached."""
     codec = _make_batch_codec(device="cpu")
     fake_torch = MagicMock()
-    monkeypatch.setenv("HELIX_DENSE_VRAM_RELEASE_EVERY", "1")
+    monkeypatch.setenv("CYMATIX_DENSE_VRAM_RELEASE_EVERY", "1")
     with patch.dict(sys.modules, {"torch": fake_torch}):
         codec.encode_batch(["x"])
     fake_torch.cuda.empty_cache.assert_not_called()
@@ -113,7 +113,7 @@ def test_cuda_releases_on_interval(monkeypatch):
     codec = _make_batch_codec(device="cuda")
     fake_torch = MagicMock()
     fake_torch.cuda.is_available.return_value = True
-    monkeypatch.setenv("HELIX_DENSE_VRAM_RELEASE_EVERY", "2")
+    monkeypatch.setenv("CYMATIX_DENSE_VRAM_RELEASE_EVERY", "2")
     with patch.dict(sys.modules, {"torch": fake_torch}):
         codec.encode_batch(["a"])  # call 1: 1 % 2 != 0 -> no release
         assert fake_torch.cuda.empty_cache.call_count == 0
@@ -125,11 +125,11 @@ def test_cuda_releases_on_interval(monkeypatch):
 
 
 def test_cuda_release_disabled_with_zero(monkeypatch):
-    """HELIX_DENSE_VRAM_RELEASE_EVERY=0 disables the release entirely."""
+    """CYMATIX_DENSE_VRAM_RELEASE_EVERY=0 disables the release entirely."""
     codec = _make_batch_codec(device="cuda")
     fake_torch = MagicMock()
     fake_torch.cuda.is_available.return_value = True
-    monkeypatch.setenv("HELIX_DENSE_VRAM_RELEASE_EVERY", "0")
+    monkeypatch.setenv("CYMATIX_DENSE_VRAM_RELEASE_EVERY", "0")
     with patch.dict(sys.modules, {"torch": fake_torch}):
         for t in "abcd":
             codec.encode_batch([t])
@@ -138,11 +138,11 @@ def test_cuda_release_disabled_with_zero(monkeypatch):
 
 def test_encode_batch_vectors_unchanged_by_release(monkeypatch):
     """The release is byte-neutral: vectors with release on == vectors with it off."""
-    monkeypatch.setenv("HELIX_DENSE_VRAM_RELEASE_EVERY", "0")
+    monkeypatch.setenv("CYMATIX_DENSE_VRAM_RELEASE_EVERY", "0")
     off = _make_batch_codec(device="cpu").encode_batch(["a", "b", "c"])
     fake_torch = MagicMock()
     fake_torch.cuda.is_available.return_value = True
-    monkeypatch.setenv("HELIX_DENSE_VRAM_RELEASE_EVERY", "1")
+    monkeypatch.setenv("CYMATIX_DENSE_VRAM_RELEASE_EVERY", "1")
     with patch.dict(sys.modules, {"torch": fake_torch}):
         on = _make_batch_codec(device="cuda").encode_batch(["a", "b", "c"])
     assert np.allclose(np.array(off), np.array(on))

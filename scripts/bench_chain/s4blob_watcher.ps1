@@ -5,7 +5,7 @@
 #   2. claude auth works (probe succeeds) -- the first S4 attempt burned
 #      74 min on 401s; this watcher self-resumes the moment Max re-auths.
 $ErrorActionPreference = 'Continue'
-$repo = 'F:\Projects\helix-context'
+$repo = 'F:\Projects\cymatix-context'
 $logs = "$repo\benchmarks\logs"
 $status = "$logs\chain_status.json"
 "s4blob watcher started $(Get-Date -Format o) pid=$PID" | Set-Content "$logs\s4blob_watcher.log"

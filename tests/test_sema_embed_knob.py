@@ -12,14 +12,14 @@ def test_default_is_true():
 
 
 def test_toml_can_disable(tmp_path):
-    p = tmp_path / "helix.toml"
+    p = tmp_path / "cymatix.toml"
     p.write_text("[ingestion]\nsema_embed_on_ingest = false\n", encoding="utf-8")
     cfg = load_config(str(p))
     assert cfg.ingestion.sema_embed_on_ingest is False
 
 
 def test_toml_omitted_keeps_default_true(tmp_path):
-    p = tmp_path / "helix.toml"
+    p = tmp_path / "cymatix.toml"
     p.write_text('[ingestion]\nbackend = "cpu"\n', encoding="utf-8")
     cfg = load_config(str(p))
     assert cfg.ingestion.sema_embed_on_ingest is True

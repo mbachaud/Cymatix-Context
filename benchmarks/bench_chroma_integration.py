@@ -1,9 +1,9 @@
-"""Helix + Chroma — third-party retriever integration bench.
+"""Cymatix + Chroma — third-party retriever integration bench.
 
 Validates the `Retriever` adapter against a *real* production RAG store
 (Chroma 1.x with MiniLM embeddings), not just our internal SEMA wrapper.
 This closes the gap left by `bench_external_retriever.py`, which proved
-the adapter protocol works but only with a helix-internal retriever.
+the adapter protocol works but only with a cymatix-internal retriever.
 
 Setup:
     1. Index ~200 real gene contents fetched from the running genome
@@ -13,8 +13,8 @@ Setup:
        helix-context `Retriever` protocol (retrieve(query, filter_paths,
        top_k) -> list[RetrievedDoc]).
     3. For a set of benchmark queries, compare:
-         - Raw Chroma (no helix) — baseline
-         - HelixNarrowedRetriever(raw=Chroma) — Helix packet narrows the
+         - Raw Chroma (no cymatix) — baseline
+         - CymatixNarrowedRetriever(raw=Chroma) — Cymatix packet narrows the
            candidate space via filter_paths before Chroma scores.
 
 Metrics:
@@ -47,23 +47,23 @@ import chromadb  # noqa: E402
 import httpx  # noqa: E402
 
 from cymatix_context.adapters.retriever import (  # noqa: E402
-    HelixNarrowedRetriever,
+    CymatixNarrowedRetriever,
     RetrievedDoc,
     Retriever,
 )
 
 
-HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
+CYMATIX_URL = os.environ.get("CYMATIX_URL", "http://127.0.0.1:11437")
 INDEX_SIZE_TARGET = 200
 
 
-# ── Chroma retriever conforming to Helix Retriever protocol ─────────
+# ── Chroma retriever conforming to Cymatix Retriever protocol ─────────
 
 
 class ChromaRetriever:
     """Adapter: wrap a chromadb Collection behind the Retriever protocol.
 
-    Supports the optional ``filter_paths`` kwarg so Helix's narrowing
+    Supports the optional ``filter_paths`` kwarg so Cymatix's narrowing
     pattern can pre-filter the candidate space by source_id.
     """
 
@@ -115,17 +115,17 @@ def _protocol_check():
     assert isinstance(cr, Retriever), "ChromaRetriever violates Retriever protocol"
 
 
-# ── Corpus construction from live Helix ─────────────────────────────
+# ── Corpus construction from live Cymatix ─────────────────────────────
 
 
 def harvest_corpus(client: httpx.Client, target_size: int) -> list[dict]:
-    """Pull gene contents from running Helix to seed Chroma.
+    """Pull gene contents from running Cymatix to seed Chroma.
 
     We query a broad set of topics, collect unique gene contents + source_ids,
     stop when we have ``target_size`` docs.
     """
     seed_queries = [
-        "helix packet verdict task_type",
+        "cymatix packet verdict task_type",
         "claim extraction supersedes",
         "cache TTL volatility",
         "retriever protocol",
@@ -154,7 +154,7 @@ def harvest_corpus(client: httpx.Client, target_size: int) -> list[dict]:
             break
         try:
             r = client.post(
-                f"{HELIX_URL}/context/packet",
+                f"{CYMATIX_URL}/context/packet",
                 json={
                     "query": q,
                     "task_type": "explain",
@@ -188,7 +188,7 @@ def harvest_corpus(client: httpx.Client, target_size: int) -> list[dict]:
 def build_chroma_collection(docs: list[dict]):
     client = chromadb.EphemeralClient()
     # Unique collection name — EphemeralClient is per-process but be safe
-    coll = client.get_or_create_collection(f"helix_bench_{int(time.time())}")
+    coll = client.get_or_create_collection(f"cymatix_bench_{int(time.time())}")
     # Chroma requires string-safe IDs; hash source_id
     import hashlib
     ids = [hashlib.md5(d["source_id"].encode()).hexdigest() for d in docs]
@@ -204,7 +204,7 @@ def build_chroma_collection(docs: list[dict]):
 
 
 BENCH_QUERIES = [
-    {"query": "what port does helix listen on", "gold_substring": "helix.toml"},
+    {"query": "what port does cymatix listen on", "gold_substring": "cymatix.toml"},
     {"query": "how does claim extraction work", "gold_substring": "claims.py"},
     {"query": "what is the supersedes chain walker", "gold_substring": "claims_graph"},
     {"query": "cache TTL volatility classes", "gold_substring": "cache.py"},
@@ -222,13 +222,13 @@ BENCH_QUERIES = [
 ]
 
 
-# ── Helix shortlist from packet ──────────────────────────────────────
+# ── Cymatix shortlist from packet ──────────────────────────────────────
 
 
-def helix_shortlist(client: httpx.Client, query: str) -> list[str]:
+def cymatix_shortlist(client: httpx.Client, query: str) -> list[str]:
     try:
         r = client.post(
-            f"{HELIX_URL}/context/packet",
+            f"{CYMATIX_URL}/context/packet",
             json={
                 "query": query,
                 "task_type": "explain",
@@ -262,7 +262,7 @@ def score(docs: list[RetrievedDoc], gold_substring: str) -> int:
 
 
 def run_cell(label: str, retriever: Retriever, queries: list[dict],
-             helix_client: httpx.Client = None) -> dict:
+             cymatix_client: httpx.Client = None) -> dict:
     per_q = []
     hits = 0
     latencies = []
@@ -271,13 +271,13 @@ def run_cell(label: str, retriever: Retriever, queries: list[dict],
         gold = q["gold_substring"]
         query_text = q["query"]
         t0 = time.perf_counter()
-        if label.startswith("helix_narrowed"):
+        if label.startswith("cymatix_narrowed"):
             docs = retriever.retrieve(query_text, top_k=10)
         else:
             docs = retriever.retrieve(query_text, top_k=10)
         dt = (time.perf_counter() - t0) * 1000.0
         latencies.append(dt)
-        if isinstance(retriever, HelixNarrowedRetriever):
+        if isinstance(retriever, CymatixNarrowedRetriever):
             cs = getattr(retriever._inner, "last_candidate_space", None)
         else:
             cs = getattr(retriever, "last_candidate_space", None)
@@ -314,13 +314,13 @@ def main():
 
     client = httpx.Client(timeout=120)
     try:
-        stats = client.get(f"{HELIX_URL}/stats").json()
+        stats = client.get(f"{CYMATIX_URL}/stats").json()
     except Exception as exc:
-        print(f"Cannot reach Helix at {HELIX_URL}: {exc}")
+        print(f"Cannot reach Cymatix at {CYMATIX_URL}: {exc}")
         return 1
     print(f"Genome: {stats.get('total_genes')} genes")
 
-    print(f"Harvesting corpus (~{INDEX_SIZE_TARGET} docs from Helix)...")
+    print(f"Harvesting corpus (~{INDEX_SIZE_TARGET} docs from Cymatix)...")
     docs = harvest_corpus(client, INDEX_SIZE_TARGET)
     print(f"  collected {len(docs)} unique gene contents")
 
@@ -331,15 +331,15 @@ def main():
     print(f"  indexed in {idx_ms:.0f} ms ({coll.count()} docs)")
 
     raw = ChromaRetriever(coll)
-    narrowed = HelixNarrowedRetriever(
+    narrowed = CymatixNarrowedRetriever(
         inner=raw,
-        helix_url=HELIX_URL,
+        cymatix_url=CYMATIX_URL,
         read_only=True,
     )
 
     print("\nRunning benchmark cells...")
     raw_stats = run_cell("raw_chroma", raw, BENCH_QUERIES)
-    narrowed_stats = run_cell("helix_narrowed_chroma", narrowed, BENCH_QUERIES, client)
+    narrowed_stats = run_cell("cymatix_narrowed_chroma", narrowed, BENCH_QUERIES, client)
 
     print("\n-- Results ---------------------------------------------------")
     for s in (raw_stats, narrowed_stats):
@@ -353,7 +353,7 @@ def main():
         "corpus_size": len(docs),
         "chroma_index_ms": round(idx_ms, 1),
         "n_queries": len(BENCH_QUERIES),
-        "cells": {"raw_chroma": raw_stats, "helix_narrowed_chroma": narrowed_stats},
+        "cells": {"raw_chroma": raw_stats, "cymatix_narrowed_chroma": narrowed_stats},
     }
     out_path = REPO_ROOT / "benchmarks" / "results" / "chroma_integration_2026-04-19.json"
     out_path.parent.mkdir(parents=True, exist_ok=True)

@@ -57,8 +57,8 @@ def _make_monitor(
     )
 
 
-def _stub_helix_only(monitor: BenchmarkMonitor) -> dict:
-    """Replace monitor._client.get: helix /health → 200, everything else → ConnectError.
+def _stub_cymatix_only(monitor: BenchmarkMonitor) -> dict:
+    """Replace monitor._client.get: cymatix /health → 200, everything else → ConnectError.
 
     Returns a capture dict; ``health_timeouts`` records the ``timeout=`` kwarg
     passed to each /health call.
@@ -82,7 +82,7 @@ def _stub_helix_only(monitor: BenchmarkMonitor) -> dict:
 def test_preflight_skips_ollama_when_ask_proxy_false(tmp_path: Path) -> None:
     """ask_proxy=False: unreachable Ollama must not fail preflight."""
     monitor = _make_monitor(tmp_path, ask_proxy=False)
-    _stub_helix_only(monitor)
+    _stub_cymatix_only(monitor)
 
     assert monitor.preflight() is True
 
@@ -142,7 +142,7 @@ def test_preflight_skips_unauthorized_models_when_ask_proxy_false(tmp_path: Path
 def test_preflight_still_gates_ollama_when_ask_proxy_true(tmp_path: Path) -> None:
     """ask_proxy=True (default): unreachable Ollama still fails preflight."""
     monitor = _make_monitor(tmp_path, ask_proxy=True)
-    _stub_helix_only(monitor)
+    _stub_cymatix_only(monitor)
 
     assert monitor.preflight() is False
 
@@ -172,7 +172,7 @@ def test_preflight_still_gates_missing_model_when_ask_proxy_true(tmp_path: Path)
 def test_health_timeout_is_configurable(tmp_path: Path) -> None:
     """The /health timeout used in preflight respects health_timeout_s."""
     monitor = _make_monitor(tmp_path, ask_proxy=False, health_timeout_s=22.0)
-    captured = _stub_helix_only(monitor)
+    captured = _stub_cymatix_only(monitor)
 
     monitor.preflight()
 
@@ -184,7 +184,7 @@ def test_health_timeout_is_configurable(tmp_path: Path) -> None:
 def test_health_timeout_default_is_15s(tmp_path: Path) -> None:
     """Default health_timeout_s is 15s (raised from 5s for post-swap cache-warm)."""
     monitor = _make_monitor(tmp_path, ask_proxy=False)  # no explicit timeout
-    captured = _stub_helix_only(monitor)
+    captured = _stub_cymatix_only(monitor)
 
     monitor.preflight()
 

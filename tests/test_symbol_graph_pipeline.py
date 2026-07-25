@@ -26,15 +26,15 @@ _CODE = (
 
 
 def _manager(tmp_path, monkeypatch):
-    monkeypatch.delenv("HELIX_USE_SHARDS", raising=False)
-    monkeypatch.setenv("HELIX_GENOME_PATH", str(tmp_path / "genome.db"))
+    monkeypatch.delenv("CYMATIX_USE_SHARDS", raising=False)
+    monkeypatch.setenv("CYMATIX_GENOME_PATH", str(tmp_path / "genome.db"))
     from cymatix_context.config import load_config
-    from cymatix_context.context_manager import HelixContextManager
+    from cymatix_context.context_manager import CymatixContextManager
 
     cfg = load_config()
     cfg.ingestion.symbol_graph = True
     cfg.ingestion.sema_embed_on_ingest = False
-    return HelixContextManager(cfg)
+    return CymatixContextManager(cfg)
 
 
 def test_symbol_graph_end_to_end(tmp_path, monkeypatch):

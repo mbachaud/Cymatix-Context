@@ -4,14 +4,14 @@
 callers; ``rrf_fused_score_histogram`` was imported by ``knowledge_store`` but
 never defined. This file pins the fixes:
 
-  - every pipeline stage opens a ``helix.pipeline.<stage>`` span during a
+  - every pipeline stage opens a ``cymatix.pipeline.<stage>`` span during a
     seeded ``build_context`` run, nested under a
-    ``helix.pipeline.build_context`` root span;
+    ``cymatix.pipeline.build_context`` root span;
   - the persist stage (``learn``) opens its own span and histogram point
     (it runs as a background task, outside the request root);
-  - all seven stages feed ``helix_pipeline_stage_seconds`` exactly once;
+  - all seven stages feed ``cymatix_pipeline_stage_seconds`` exactly once;
   - ``rrf_fused_score_histogram`` is exported, creates
-    ``helix_rrf_fused_score``, records at the query_genes RRF call site;
+    ``cymatix_rrf_fused_score``, records at the query_genes RRF call site;
   - the whole surface is a silent no-op with OTel disabled (the default
     test environment — ``otel.tracer``/``otel.meter`` are the noop
     stand-ins unless ``setup_telemetry`` ran).
@@ -30,10 +30,10 @@ import pytest
 
 import cymatix_context.context_manager as cm_mod
 from cymatix_context.config import BudgetConfig
-from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.context_manager import CymatixContextManager
 from cymatix_context.telemetry import otel
 
-from tests.conftest import MockCompressorBackend, make_gene, make_helix_config
+from tests.conftest import MockCompressorBackend, make_gene, make_cymatix_config
 
 
 # ── Helpers ──────────────────────────────────────────────────────────
@@ -93,19 +93,19 @@ class _RecordingTracer:
 
 
 @pytest.fixture
-def helix():
-    config = make_helix_config(
+def cymatix():
+    config = make_cymatix_config(
         budget=BudgetConfig(max_genes_per_turn=4, splice_aggressiveness=0.5),
         synonym_map={"auth": ["jwt", "login", "security"]},
     )
-    mgr = HelixContextManager(config)
+    mgr = CymatixContextManager(config)
     mgr.ribosome.backend = MockCompressorBackend()
     yield mgr
     mgr.close()
 
 
 @pytest.fixture
-def seeded_helix(helix):
+def seeded_cymatix(cymatix):
     genes = [
         make_gene("Authentication middleware with JWT validation",
                   domains=["auth", "security"], entities=["jwt"],
@@ -118,14 +118,14 @@ def seeded_helix(helix):
                   gene_id="api_gene_00001"),
     ]
     for g in genes:
-        helix.genome.upsert_gene(g)
-    return helix
+        cymatix.genome.upsert_gene(g)
+    return cymatix
 
 
 # ── (a) per-stage spans fire during build_context ────────────────────
 
 
-def test_stage_spans_open_for_each_stage(seeded_helix, monkeypatch):
+def test_stage_spans_open_for_each_stage(seeded_cymatix, monkeypatch):
     """One span per stage, in pipeline order, root first."""
     stages: list[str] = []
 
@@ -135,7 +135,7 @@ def test_stage_spans_open_for_each_stage(seeded_helix, monkeypatch):
 
     monkeypatch.setattr(cm_mod, "_pipeline_stage_span", fake_span)
 
-    window = seeded_helix.build_context("How does JWT auth work?")
+    window = seeded_cymatix.build_context("How does JWT auth work?")
     assert window.metadata.get("genes_expressed", 0) >= 1, (
         "seeded query must express genes — otherwise the rerank/splice/"
         "assemble stages never run and this test asserts nothing"
@@ -146,7 +146,7 @@ def test_stage_spans_open_for_each_stage(seeded_helix, monkeypatch):
     ]
 
 
-def test_early_return_still_opens_root_and_early_stages(helix, monkeypatch):
+def test_early_return_still_opens_root_and_early_stages(cymatix, monkeypatch):
     """Empty genome returns after express — root span still brackets it."""
     stages: list[str] = []
 
@@ -156,48 +156,48 @@ def test_early_return_still_opens_root_and_early_stages(helix, monkeypatch):
 
     monkeypatch.setattr(cm_mod, "_pipeline_stage_span", fake_span)
 
-    window = helix.build_context("anything")
-    assert "<helix:no_match" in window.expressed_context
+    window = cymatix.build_context("anything")
+    assert "<cymatix:no_match" in window.expressed_context
     assert stages == ["build_context", "classify", "extract", "express"]
 
 
 # ── (b) root span wraps the per-stage spans ──────────────────────────
 
 
-def test_root_span_named_build_context_wraps_pipeline(seeded_helix, monkeypatch):
+def test_root_span_named_build_context_wraps_pipeline(seeded_cymatix, monkeypatch):
     tracer = _RecordingTracer()
     monkeypatch.setattr(otel, "tracer", tracer)
 
-    seeded_helix.build_context("How does JWT auth work?")
+    seeded_cymatix.build_context("How does JWT auth work?")
 
-    root = "helix.pipeline.build_context"
+    root = "cymatix.pipeline.build_context"
     assert tracer.events[0] == ("start", root)
     assert tracer.events[-1] == ("end", root)
 
     started = {name for kind, name in tracer.events if kind == "start"}
     assert started >= {
         root,
-        "helix.pipeline.classify",
-        "helix.pipeline.extract",
-        "helix.pipeline.express",
-        "helix.pipeline.rerank",
-        "helix.pipeline.splice",
-        "helix.pipeline.assemble",
+        "cymatix.pipeline.classify",
+        "cymatix.pipeline.extract",
+        "cymatix.pipeline.express",
+        "cymatix.pipeline.rerank",
+        "cymatix.pipeline.splice",
+        "cymatix.pipeline.assemble",
     }
     # Every span that started also ended (no leaked spans on any path).
     assert Counter(n for k, n in tracer.events if k == "start") == \
         Counter(n for k, n in tracer.events if k == "end")
     # pipeline_stage_span stamps the stage attribute on each span.
-    assert tracer.spans[root].attributes.get("helix.pipeline.stage") == \
+    assert tracer.spans[root].attributes.get("cymatix.pipeline.stage") == \
         "build_context"
-    assert tracer.spans["helix.pipeline.splice"].attributes.get(
-        "helix.pipeline.stage") == "splice"
+    assert tracer.spans["cymatix.pipeline.splice"].attributes.get(
+        "cymatix.pipeline.stage") == "splice"
 
 
 # ── persist stage (background pack) ──────────────────────────────────
 
 
-def test_persist_stage_span_and_histogram_on_learn(helix, monkeypatch):
+def test_persist_stage_span_and_histogram_on_learn(cymatix, monkeypatch):
     stages: list[str] = []
 
     def fake_span(stage, **kw):
@@ -208,22 +208,22 @@ def test_persist_stage_span_and_histogram_on_learn(helix, monkeypatch):
     monkeypatch.setattr(cm_mod, "_pipeline_stage_span", fake_span)
     monkeypatch.setattr(cm_mod, "_pipeline_stage_histogram", lambda: recorder)
 
-    gid = helix.learn("test query", "test response")
+    gid = cymatix.learn("test query", "test response")
     assert gid is not None
 
     assert "persist" in stages
     assert "persist" in [attrs.get("stage") for _, attrs in recorder.calls]
 
 
-# ── all seven stages feed helix_pipeline_stage_seconds once each ─────
+# ── all seven stages feed cymatix_pipeline_stage_seconds once each ─────
 
 
-def test_all_seven_stages_recorded_exactly_once(seeded_helix, monkeypatch):
+def test_all_seven_stages_recorded_exactly_once(seeded_cymatix, monkeypatch):
     recorder = _RecordingInstrument()
     monkeypatch.setattr(cm_mod, "_pipeline_stage_histogram", lambda: recorder)
 
-    seeded_helix.build_context("How does JWT auth work?")
-    seeded_helix.learn("test query", "test response")
+    seeded_cymatix.build_context("How does JWT auth work?")
+    seeded_cymatix.learn("test query", "test response")
 
     counts = Counter(attrs.get("stage") for _, attrs in recorder.calls)
     assert counts == Counter({
@@ -254,7 +254,7 @@ def test_rrf_fused_score_histogram_importable_and_named(monkeypatch):
     monkeypatch.setattr(otel, "_instruments", {})
 
     inst = rrf_fused_score_histogram()
-    assert ("histogram", "helix_rrf_fused_score") in rec.created
+    assert ("histogram", "cymatix_rrf_fused_score") in rec.created
     # Lazy getter caches: repeated calls return the same instrument.
     assert rrf_fused_score_histogram() is inst
 
@@ -289,17 +289,17 @@ def test_rrf_fused_score_recorded_at_query_genes_call_site(tmp_path, monkeypatch
 # ── (d) no-op path: OTel disabled must not raise or change behavior ──
 
 
-def test_build_context_and_learn_unchanged_with_otel_disabled(seeded_helix):
+def test_build_context_and_learn_unchanged_with_otel_disabled(seeded_cymatix):
     """Default test env: otel.tracer/meter are the noop stand-ins.
 
     No monkeypatching — the real span/histogram wrappers run against the
     noop tracer/meter and must neither raise nor alter the window.
     """
-    window = seeded_helix.build_context("How does JWT auth work?")
+    window = seeded_cymatix.build_context("How does JWT auth work?")
     assert window.metadata.get("genes_expressed", 0) >= 1
     assert "<expressed_context>" in window.expressed_context
 
-    gid = seeded_helix.learn("Why is auth slow?", "JWT validation hits the DB.")
+    gid = seeded_cymatix.learn("Why is auth slow?", "JWT validation hits the DB.")
     assert gid is not None
 
 
@@ -310,7 +310,7 @@ def test_rrf_record_is_noop_when_otel_disabled():
 def test_pipeline_stage_span_is_noop_safe():
     """pipeline_stage_span works as a CM against the noop tracer."""
     with otel.pipeline_stage_span("classify") as span:
-        span.set_attribute("helix.pipeline.stage", "classify")  # must not raise
+        span.set_attribute("cymatix.pipeline.stage", "classify")  # must not raise
 
 
 if __name__ == "__main__":  # pragma: no cover

@@ -1,7 +1,7 @@
-# helix_probe_symbol.toml
+# cymatix_probe_symbol.toml
 # -------------------------------------------------------------------------
 # Symbol-graph probe profile (external-bench arm C: WS2 #230 + WS3 #231).
-# Generated from helix_probe_lexical.toml via tomllib read + tomli_w write
+# Generated from cymatix_probe_lexical.toml via tomllib read + tomli_w write
 # (no hand edits, no key drift -- gap A3 fix) plus exactly two overrides:
 #   [ingestion] symbol_graph = true
 #   [retrieval] symbol_expansion_cap = 8
@@ -9,9 +9,9 @@
 # neural/GPU paths OFF (pure FTS5 + tag lookup + synonym expansion +
 # BM25 shortlist + symbol-edge expansion). LLM-free, GPU-free.
 #
-# Pass explicitly via --helix-config / HELIX_CONFIG when serving the
+# Pass explicitly via --cymatix-config / CYMATIX_CONFIG when serving the
 # arm-C comparison; the lexical probe stays the default for
-# benchmarks/repobench_r_helix.py and repobench_r_helix_global.py.
+# benchmarks/repobench_r_cymatix.py and repobench_r_cymatix_global.py.
 # -------------------------------------------------------------------------
 
 [ribosome]
@@ -119,7 +119,7 @@ tree = [
     "index",
     "binary_tree",
 ]
-helix = [
+cymatix = [
     "genome",
     "ribosome",
     "codons",

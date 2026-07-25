@@ -26,18 +26,18 @@ from cymatix_context.knowledge_store import _dense_matrix_dtype
 # ── A2: dense matrix dtype ──────────────────────────────────────────────
 
 def test_dense_matrix_dtype_default_is_float32(monkeypatch):
-    monkeypatch.delenv("HELIX_DENSE_MATRIX_DTYPE", raising=False)
+    monkeypatch.delenv("CYMATIX_DENSE_MATRIX_DTYPE", raising=False)
     assert _dense_matrix_dtype() is np.float32
 
 
 def test_dense_matrix_dtype_float16_opt_in(monkeypatch):
     for val in ("float16", "fp16", "half", "FLOAT16"):
-        monkeypatch.setenv("HELIX_DENSE_MATRIX_DTYPE", val)
+        monkeypatch.setenv("CYMATIX_DENSE_MATRIX_DTYPE", val)
         assert _dense_matrix_dtype() is np.float16, val
 
 
 def test_dense_matrix_dtype_unknown_falls_back_to_float32(monkeypatch):
-    monkeypatch.setenv("HELIX_DENSE_MATRIX_DTYPE", "bananas")
+    monkeypatch.setenv("CYMATIX_DENSE_MATRIX_DTYPE", "bananas")
     assert _dense_matrix_dtype() is np.float32
 
 
@@ -47,7 +47,7 @@ def test_dense_matrix_dtype_unknown_falls_back_to_float32(monkeypatch):
 def temp_genome(monkeypatch):
     # The pragma tests below pin the `conservative` profile == the exact
     # v0.6.1 posture (the escape hatch), now opt-in rather than the default.
-    monkeypatch.setenv("HELIX_MEM_PROFILE", "conservative")
+    monkeypatch.setenv("CYMATIX_MEM_PROFILE", "conservative")
     td = tempfile.TemporaryDirectory()
     g = Genome(str(Path(td.name) / "g.db"))
     yield g

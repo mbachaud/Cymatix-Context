@@ -75,7 +75,7 @@ compare() {
 
 log "Overnight benchmark run starting"
 log "Model: $MODEL    GPQA limit: $GPQA_LIMIT    SciCode limit: $SCICODE_LIMIT"
-log "Helix server health:"
+log "Cymatix server health:"
 curl -s -m 5 http://127.0.0.1:11437/health >> "$LOG" 2>&1 || true
 echo "" >> "$LOG"
 
@@ -111,7 +111,7 @@ cat > "$REPORT" <<EOF
 **Started:** $(head -1 "$LOG" | sed 's/^\[\(.*\)\].*/\1/')
 **Completed:** $(ts)
 **Model:** $MODEL
-**Helix server:** http://127.0.0.1:11437 (17,090 genes at start)
+**Cymatix server:** http://127.0.0.1:11437 (17,090 genes at start)
 **Branch:** master ($(git rev-parse --short HEAD))
 **WIP in working tree:** accel.py expand_query_terms + lexical_rescue + chunk_fetch + relevance_window (gemini's uncommitted work)
 EOF

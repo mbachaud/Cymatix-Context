@@ -15,9 +15,9 @@ Workflow:
 
     2. python scripts/calibrate_know_confidence.py \\
            --input results/located_n1000.jsonl \\
-           --out helix.toml
+           --out cymatix.toml
 
-    3. Confirm helix.toml [know] table updated; redeploy.
+    3. Confirm cymatix.toml [know] table updated; redeploy.
 
 The script is intentionally light on dependencies. sklearn is used
 when available (faster convergence; pip install scikit-learn);
@@ -67,7 +67,7 @@ from cymatix_context.scoring.know_calibration import (  # noqa: E402
     fit_betas_from_features,
 )
 
-log = logging.getLogger("helix.calibrate_know_confidence")
+log = logging.getLogger("cymatix.calibrate_know_confidence")
 
 # Issue #239: minimum acceptable held-out hit/miss AUC before the script
 # will write ``[know]`` betas. Below this, a downstream agent trusting
@@ -209,11 +209,11 @@ def _pick_emit_floor(
     return float(best) if best is not None else DEFAULT_EMIT_FLOOR
 
 
-def _write_helix_toml(
+def _write_cymatix_toml(
     out_path: Path,
     cal: KnowCalibration,
 ) -> None:
-    """Write/update the [know] table in ``helix.toml``.
+    """Write/update the [know] table in ``cymatix.toml``.
 
     Strategy: read the existing file (if any) line-by-line, locate the
     [know] section, replace it; or append if absent. tomllib parses
@@ -376,14 +376,14 @@ def write_calibration_gated(
 ) -> None:
     """Gate on hit/miss AUC, then write the ``[know]`` table if it clears.
 
-    Thin wrapper around ``_write_helix_toml`` so tests can exercise the
+    Thin wrapper around ``_write_cymatix_toml`` so tests can exercise the
     refuse/accept decision with synthetic ``auc``/``cal`` values —
     without running a real logistic fit. Raises ``AUCGateError`` (and
     does NOT touch ``out_path``) when the gate fails and ``force`` is
     False.
     """
     gate_auc_or_raise(auc, floor=floor, force=force)
-    _write_helix_toml(out_path, cal)
+    _write_cymatix_toml(out_path, cal)
 
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
@@ -397,9 +397,9 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     parser.add_argument(
         "--out",
         type=Path,
-        default=Path("cymatix.toml") if Path("cymatix.toml").exists() else Path("helix.toml"),
+        default=Path("cymatix.toml") if Path("cymatix.toml").exists() else Path("cymatix.toml"),
         help="Path to the cymatix.toml file to update (default: cymatix.toml, "
-        "falling back to helix.toml).",
+        "falling back to cymatix.toml).",
     )
     parser.add_argument(
         "--target-precision",
@@ -419,7 +419,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         help=(
             "Run on a tiny synthetic fixture instead of --input. Used "
             "by the test suite to verify the script wires together; "
-            "does NOT touch helix.toml."
+            "does NOT touch cymatix.toml."
         ),
     )
     parser.add_argument(
@@ -548,7 +548,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     )
 
     # Issue #239: held-out hit/miss AUC — the trust gate that decides
-    # whether these betas are allowed to reach helix.toml at all.
+    # whether these betas are allowed to reach cymatix.toml at all.
     auc = compute_auc(test_probs, l_test)
     log.info(
         "held-out hit/miss AUC: %s (floor=%.2f)",
@@ -568,7 +568,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     )
 
     if args.smoke:
-        log.info("smoke: betas=%s emit_floor=%s (NOT writing helix.toml)",
+        log.info("smoke: betas=%s emit_floor=%s (NOT writing cymatix.toml)",
                  cal.betas, cal.emit_floor)
         # Sanity assertions: the synthetic fixture is separable, so
         # the test-set probs should split cleanly.

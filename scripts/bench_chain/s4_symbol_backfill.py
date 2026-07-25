@@ -30,7 +30,7 @@ Mechanics:
      gene's stored content; union defs/refs across returned sub-chunks into
      one (gene_id, defs, refs) tuple. Per-gene failures log + skip.
   5. Per source_id group: call the branch's
-     HelixContextManager._emit_symbol_graph itself (via a genome-only shim, so
+     CymatixContextManager._emit_symbol_graph itself (via a genome-only shim, so
      the emission semantics -- def indexing, intra-file ref->definer
      resolution, self-edge skip, dedupe -- are the shipped code, not a
      re-implementation). A counting wrapper around the store records how
@@ -76,7 +76,7 @@ log = logging.getLogger("s4_symbol_backfill")
 class _CountingStore:
     """Pass-through to KnowledgeStore that counts symbol writes.
 
-    HelixContextManager._emit_symbol_graph resolves ``store_symbol_defs`` /
+    CymatixContextManager._emit_symbol_graph resolves ``store_symbol_defs`` /
     ``store_relations_batch`` via getattr on ``self.genome``; wrapping the
     store lets us run the shipped emission code verbatim while still
     reporting exactly how many rows/edges it wrote.
@@ -157,7 +157,7 @@ def main(argv: list[str] | None = None) -> int:
 
     # Branch imports (worktree root is sys.path[0]): the served capability.
     from cymatix_context.cli.cmd_ingest import _CODE_EXTENSIONS  # #224 mapping
-    from cymatix_context.context_manager import HelixContextManager
+    from cymatix_context.context_manager import CymatixContextManager
     from cymatix_context.encoding import tree_chunker
     from cymatix_context.knowledge_store import KnowledgeStore
     from cymatix_context.schemas import StructuralRelation
@@ -238,7 +238,7 @@ def main(argv: list[str] | None = None) -> int:
     n_files = 0
     for source_id, chunk_syms in by_file.items():
         try:
-            HelixContextManager._emit_symbol_graph(shim, chunk_syms)
+            CymatixContextManager._emit_symbol_graph(shim, chunk_syms)
             n_files += 1
         except Exception as exc:
             skipped["emit_error"] += 1

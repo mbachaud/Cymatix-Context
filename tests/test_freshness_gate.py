@@ -21,7 +21,7 @@ Cases (one per spec bullet in §13):
   9. test_refresh_targets_required_for_stale_cold_superseded — validator
 
 Plus integration-shape tests that confirm the public surface
-(`MissBlock.to_refresh_targets`, `agent_prompt.HELIX_REFRESH_FRAGMENT`)
+(`MissBlock.to_refresh_targets`, `agent_prompt.CYMATIX_REFRESH_FRAGMENT`)
 is wired.
 """
 
@@ -36,11 +36,11 @@ import pytest
 from pydantic import ValidationError
 
 from cymatix_context.agent_prompt import (
-    HELIX_NO_MATCH_FRAGMENT,
-    HELIX_REFRESH_FRAGMENT,
+    CYMATIX_NO_MATCH_FRAGMENT,
+    CYMATIX_REFRESH_FRAGMENT,
     full_fragment,
 )
-from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.context_manager import CymatixContextManager
 from cymatix_context.retrieval.freshness import (
     DEFAULT_CACHE_TTL_S,
     check_superseded,
@@ -123,7 +123,7 @@ def test_freshness_top1_dominates_padding(tmp_path):
     """
     # Build a fake context manager with a controlled stats() so
     # _compute_health doesn't depend on a real genome.
-    stub = MagicMock(spec=HelixContextManager)
+    stub = MagicMock(spec=CymatixContextManager)
     stub.config = MagicMock()
     stub.config.budget = MagicMock()
     stub.config.budget.expression_tokens = 6000
@@ -140,7 +140,7 @@ def test_freshness_top1_dominates_padding(tmp_path):
         _make_gene(f"pad_{i}", decay=1.0) for i in range(11)
     ]
 
-    health = HelixContextManager._compute_health(
+    health = CymatixContextManager._compute_health(
         stub,
         query_terms=["needle"],
         candidates=candidates,
@@ -173,7 +173,7 @@ def test_compute_health_back_compat_freshness_field():
     meaningful number — and a stale top-1 pulls it down (vs the old
     mean(decay) where 11 padding genes could float it back up).
     """
-    stub = MagicMock(spec=HelixContextManager)
+    stub = MagicMock(spec=CymatixContextManager)
     stub.config = MagicMock()
     stub.config.budget = MagicMock()
     stub.config.budget.expression_tokens = 6000
@@ -189,7 +189,7 @@ def test_compute_health_back_compat_freshness_field():
     candidates = [_make_gene("needle", decay=0.1)] + [
         _make_gene(f"pad_{i}", decay=1.0) for i in range(11)
     ]
-    health = HelixContextManager._compute_health(
+    health = CymatixContextManager._compute_health(
         stub, query_terms=["needle"],
         candidates=candidates, compressed_chars=2000,
     )
@@ -569,20 +569,20 @@ def test_escalate_to_required_for_escalate_class_reasons():
 # Integration shape: public exports + adapter
 # ─────────────────────────────────────────────────────────────────────
 
-def test_helix_refresh_fragment_constant():
+def test_cymatix_refresh_fragment_constant():
     """The Stage 7 prompt fragment exists and carries the load-bearing
     semantics (refresh != escalate, refresh_targets, do not answer)."""
-    assert isinstance(HELIX_REFRESH_FRAGMENT, str)
-    assert "refresh_targets" in HELIX_REFRESH_FRAGMENT
-    assert "DO NOT answer from the genome" in HELIX_REFRESH_FRAGMENT
-    assert "refresh" in HELIX_REFRESH_FRAGMENT
-    assert "escalate" in HELIX_REFRESH_FRAGMENT
+    assert isinstance(CYMATIX_REFRESH_FRAGMENT, str)
+    assert "refresh_targets" in CYMATIX_REFRESH_FRAGMENT
+    assert "DO NOT answer from the genome" in CYMATIX_REFRESH_FRAGMENT
+    assert "refresh" in CYMATIX_REFRESH_FRAGMENT
+    assert "escalate" in CYMATIX_REFRESH_FRAGMENT
 
 
 def test_full_fragment_concatenates_stage6_and_stage7():
     full = full_fragment()
-    assert HELIX_NO_MATCH_FRAGMENT in full
-    assert HELIX_REFRESH_FRAGMENT in full
+    assert CYMATIX_NO_MATCH_FRAGMENT in full
+    assert CYMATIX_REFRESH_FRAGMENT in full
 
 
 def test_miss_block_to_refresh_targets_adapter():

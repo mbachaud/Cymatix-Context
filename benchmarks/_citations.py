@@ -5,7 +5,7 @@ at ``response[0]["agent"]["citations"]``:
 
     [
       {
-        "name": "Helix Genome Context",
+        "name": "Cymatix Genome Context",
         "content": "[gene=abc12345... ◆ fired=harmonic:2.3 1200→320c]\nspliced text...",
         "agent": {
           "citations": [
@@ -25,7 +25,7 @@ that markup -- it was replaced by ``[gene=...]`` legibility headers
 must remain inspectable.
 
 This module is the single place benchmark/diagnostic code should look up
-"what sources did Helix actually deliver?". It prefers the structured
+"what sources did Cymatix actually deliver?". It prefers the structured
 ``agent.citations`` payload and falls back to the legacy regex only when
 no structured citations are present.
 

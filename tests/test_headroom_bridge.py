@@ -113,8 +113,8 @@ class TestFallbackPath:
         assert not out.startswith(" ")
 
     def test_env_toggle_disables_headroom(self, monkeypatch):
-        """HELIX_DISABLE_HEADROOM=1 should bypass Headroom even if installed."""
-        monkeypatch.setenv("HELIX_DISABLE_HEADROOM", "1")
+        """CYMATIX_DISABLE_HEADROOM=1 should bypass Headroom even if installed."""
+        monkeypatch.setenv("CYMATIX_DISABLE_HEADROOM", "1")
         assert is_headroom_available() is False
         # Compressing should fall back to truncation
         content = "a" * 3000
@@ -124,12 +124,12 @@ class TestFallbackPath:
     def test_env_toggle_accepts_truthy_variants(self, monkeypatch):
         """Env toggle should accept 1, true, yes, on (case insensitive)."""
         for val in ("1", "true", "True", "TRUE", "yes", "on"):
-            monkeypatch.setenv("HELIX_DISABLE_HEADROOM", val)
+            monkeypatch.setenv("CYMATIX_DISABLE_HEADROOM", val)
             assert is_headroom_available() is False, f"Expected False for {val!r}"
 
     def test_env_toggle_off_leaves_headroom_active(self, monkeypatch):
         """Empty or falsy env var should NOT disable Headroom (when installed)."""
-        monkeypatch.delenv("HELIX_DISABLE_HEADROOM", raising=False)
+        monkeypatch.delenv("CYMATIX_DISABLE_HEADROOM", raising=False)
         # Only meaningful if headroom is actually installed; otherwise the
         # probe will naturally return False.
         # This test asserts the env override doesn't interfere with normal
@@ -153,7 +153,7 @@ requires_headroom = pytest.mark.skipif(
 class TestLiveSpecialists:
     def test_kompress_generic_text(self):
         content = (
-            "The helix-context project implements a genome-based approach "
+            "The cymatix-context project implements a genome-based approach "
             "to LLM context compression. It uses a SQLite database to store "
             "compressed chunks called genes, which are retrieved and expressed "
             "per query to fit within a small context window. "
@@ -189,7 +189,7 @@ class ContextHealth:
 
     def test_log_specialist(self):
         log_content = """
-2026-04-10 10:15:26 [INFO] Starting helix-context server on port 11437
+2026-04-10 10:15:26 [INFO] Starting cymatix-context server on port 11437
 2026-04-10 10:15:27 [INFO] Loaded 7990 genes from genome.db
 2026-04-10 10:15:27 [WARNING] Ribosome warmup disabled per config
 2026-04-10 10:15:28 [ERROR] Failed to connect to Ollama at localhost:11434
@@ -208,7 +208,7 @@ diff --git a/cymatix_context/context_manager.py b/cymatix_context/context_manage
 index abc123..def456 100644
 --- a/cymatix_context/context_manager.py
 +++ b/cymatix_context/context_manager.py
-@@ -492,7 +492,11 @@ class HelixContextManager:
+@@ -492,7 +492,11 @@ class CymatixContextManager:
              src_attr = f' src="{short}"' if short else ""
 -            content = g.content[:1000].strip()
 +            content = compress_text(

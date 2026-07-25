@@ -12,7 +12,7 @@ def test_is_newer_version_compares_numeric_prefixes():
 def test_update_checker_reports_new_pypi_version(monkeypatch):
     monkeypatch.setattr(
         "cymatix_context.launcher.update_check.installed_version",
-        lambda package_name="helix-context": "0.13.4",
+        lambda package_name="cymatix-context": "0.13.4",
     )
     resp = MagicMock()
     resp.json.return_value = {"info": {"version": "0.14.0"}}
@@ -24,7 +24,7 @@ def test_update_checker_reports_new_pypi_version(monkeypatch):
 
 
 def test_update_checker_can_be_disabled(monkeypatch):
-    monkeypatch.setenv("HELIX_LAUNCHER_UPDATE_CHECK", "0")
+    monkeypatch.setenv("CYMATIX_LAUNCHER_UPDATE_CHECK", "0")
     info = UpdateChecker().check()
     assert info.update_available is False
     assert info.latest_version is None

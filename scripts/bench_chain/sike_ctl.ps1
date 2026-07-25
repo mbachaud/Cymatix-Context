@@ -10,7 +10,7 @@
 # picks up from the next unfinished rung. Pure ASCII, PowerShell 5.1-safe.
 param([Parameter(Position = 0)][ValidateSet('pause', 'resume', 'status', 'launch')][string]$cmd = 'status')
 
-$repo = 'F:\Projects\helix-context'
+$repo = 'F:\Projects\cymatix-context'
 $logs = "$repo\benchmarks\logs"
 $results = "$repo\benchmarks\results"
 $pauseFlag = "$logs\sike_pause.flag"

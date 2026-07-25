@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Overnight benchmark suite — gemma4:e4b vs current Helix.
+# Overnight benchmark suite — gemma4:e4b vs current Cymatix.
 #
 # Estimated wall time: ~8.5h (comfortable inside 9h).
 #
 # What runs (in order):
 #   A. bench_needle_1000   N=1000  (core NIAH, live genome snapshot)   ~5.25h
 #   B. bench_dimensional_lock N=50 (multi-axis retrieval curve)         ~1.1h
-#   C. bench_aa_suite gpqa diamond ON  N=100 (Helix-augmented)          ~1.1h
+#   C. bench_aa_suite gpqa diamond ON  N=100 (Cymatix-augmented)          ~1.1h
 #   D. bench_aa_suite gpqa diamond OFF N=100 (baseline)                 ~1.1h
 #   E. bench_multi_needle_50  (retrieval-only, fast)                    ~5m
 #   F. bench_rag_vs_sike_tokens (token budget, no model)                ~5m
@@ -16,7 +16,7 @@
 #   bash benchmarks/_run_overnight_e4b.sh 2>&1 | tee benchmarks/logs/overnight_$(date +%Y-%m-%d_%H%M).log
 #
 # Preconditions (checked at start):
-#   - Helix running on :11437
+#   - Cymatix running on :11437
 #   - Ollama running with gemma4:e4b available
 #   - Python env has httpx, datasets (for gpqa HF load)
 
@@ -26,7 +26,7 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
 MODEL="gemma4:e4b"
-HELIX_URL="http://127.0.0.1:11437"
+CYMATIX_URL="http://127.0.0.1:11437"
 OLLAMA_URL="http://localhost:11434"
 TS=$(date +%Y-%m-%d_%H%M)
 OUT_DIR="benchmarks/results/overnight_e4b_${TS}"
@@ -50,11 +50,11 @@ fail() { echo "[$(date +%H:%M:%S)] FAIL  $*"; }
 # ── Preflight ─────────────────────────────────────────────────────────────────
 log "=== Preflight checks ==="
 
-if ! curl -sf "${HELIX_URL}/health" >/dev/null 2>&1; then
-    fail "Helix not responding at ${HELIX_URL} — aborting"; exit 1
+if ! curl -sf "${CYMATIX_URL}/health" >/dev/null 2>&1; then
+    fail "Cymatix not responding at ${CYMATIX_URL} — aborting"; exit 1
 fi
-GENOME_GENES=$(curl -sf "${HELIX_URL}/stats" | python -c "import json,sys; print(json.load(sys.stdin)['total_genes'])")
-ok "Helix UP — ${GENOME_GENES} genes"
+GENOME_GENES=$(curl -sf "${CYMATIX_URL}/stats" | python -c "import json,sys; print(json.load(sys.stdin)['total_genes'])")
+ok "Cymatix UP — ${GENOME_GENES} genes"
 
 if ! curl -sf "${OLLAMA_URL}/api/tags" >/dev/null 2>&1; then
     fail "Ollama not responding at ${OLLAMA_URL} — aborting"; exit 1
@@ -102,7 +102,7 @@ LIVE_GENOME="F:/Projects/helix-context/genomes/main/genome.db"
 
 # ── A. bench_needle_1000 N=1000 ───────────────────────────────────────────────
 _run "A_needle_1000" \
-    env HELIX_MODEL="$MODEL" \
+    env CYMATIX_MODEL="$MODEL" \
         GENOME_DB="$LIVE_GENOME" \
         N=1000 \
         SEED=42 \
@@ -112,7 +112,7 @@ _run "A_needle_1000" \
 
 # ── B. bench_dimensional_lock N=50 ───────────────────────────────────────────
 _run "B_dimensional_lock_n50" \
-    env HELIX_MODEL="$MODEL" \
+    env CYMATIX_MODEL="$MODEL" \
         GENOME_DB="$LIVE_GENOME" \
         N=50 \
         SEED=42 \
@@ -120,7 +120,7 @@ _run "B_dimensional_lock_n50" \
         OUTPUT="${OUT_DIR}/dimensional_lock_n50_e4b_${TS}.json" \
     python benchmarks/bench_dimensional_lock.py
 
-# ── C. GPQA diamond ON (Helix-augmented) ─────────────────────────────────────
+# ── C. GPQA diamond ON (Cymatix-augmented) ─────────────────────────────────────
 _run "C_gpqa_on_n100" \
     python benchmarks/bench_aa_suite.py \
         --benchmark gpqa \
@@ -162,7 +162,7 @@ echo " Overnight Bench — gemma4:e4b — ${TS}"
 echo " Total elapsed: $((SUITE_ELAPSED/60))m$((SUITE_ELAPSED%60))s"
 echo " Passed: ${PASS_COUNT}  Failed: ${FAIL_COUNT}"
 echo " Branch: $(git branch --show-current 2>/dev/null)"
-echo " Genome: ${GENOME_GENES} genes  Helix: ${HELIX_URL}"
+echo " Genome: ${GENOME_GENES} genes  Cymatix: ${CYMATIX_URL}"
 echo "============================================================"
 echo ""
 echo "Bench breakdown:"

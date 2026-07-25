@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from cymatix_context.config import HelixConfig, VaultConfig, VaultTracesConfig
+from cymatix_context.config import CymatixConfig, VaultConfig, VaultTracesConfig
 from cymatix_context.genome import Genome
 from cymatix_context.vault import VaultManager
 
@@ -46,7 +46,7 @@ def _extract_local_paths(text: str) -> list[str]:
 
 @pytest.fixture
 def vault_manager(tmp_path: Path):
-    cfg = HelixConfig()
+    cfg = CymatixConfig()
     cfg.vault = VaultConfig(
         enabled=True,
         path=str(tmp_path / "vault"),

@@ -31,7 +31,7 @@ def _footprint_bytes(plan: SqliteMemPlan) -> int:
 # ── escape hatch: conservative == exact v0.6.1 ──────────────────────────────
 
 def test_conservative_profile_is_byte_identical_to_v061(monkeypatch):
-    monkeypatch.setenv("HELIX_MEM_PROFILE", "conservative")
+    monkeypatch.setenv("CYMATIX_MEM_PROFILE", "conservative")
     plan = sqlite_memory_budget(100, available_bytes=128 * GiB)
     assert plan.mmap_size == 0
     assert plan.writer_cache_size == -2048   # 2 MB writer (v0.6.1)
@@ -41,13 +41,13 @@ def test_conservative_profile_is_byte_identical_to_v061(monkeypatch):
 # ── auto: the core dynamic behavior ─────────────────────────────────────────
 
 def test_auto_enables_mmap_when_ram_is_free(monkeypatch):
-    monkeypatch.delenv("HELIX_MEM_PROFILE", raising=False)  # default == auto
+    monkeypatch.delenv("CYMATIX_MEM_PROFILE", raising=False)  # default == auto
     plan = sqlite_memory_budget(100, available_bytes=28 * GiB)
     assert plan.mmap_size > 0, "auto must turn mmap ON when RAM is available"
 
 
 def test_auto_never_exceeds_available_ram(monkeypatch):
-    monkeypatch.setenv("HELIX_MEM_PROFILE", "auto")
+    monkeypatch.setenv("CYMATIX_MEM_PROFILE", "auto")
     for avail_gib, n in [(28, 100), (110, 100), (12, 105), (48, 8), (8, 1)]:
         plan = sqlite_memory_budget(n, available_bytes=avail_gib * GiB)
         total = _footprint_bytes(plan) * n
@@ -57,21 +57,21 @@ def test_auto_never_exceeds_available_ram(monkeypatch):
 
 
 def test_auto_more_ram_yields_more_mmap(monkeypatch):
-    monkeypatch.setenv("HELIX_MEM_PROFILE", "auto")
+    monkeypatch.setenv("CYMATIX_MEM_PROFILE", "auto")
     small = sqlite_memory_budget(100, available_bytes=28 * GiB)
     big = sqlite_memory_budget(100, available_bytes=110 * GiB)
     assert big.mmap_size > small.mmap_size
 
 
 def test_auto_more_shards_yields_less_mmap_per_shard(monkeypatch):
-    monkeypatch.setenv("HELIX_MEM_PROFILE", "auto")
+    monkeypatch.setenv("CYMATIX_MEM_PROFILE", "auto")
     few = sqlite_memory_budget(10, available_bytes=48 * GiB)
     many = sqlite_memory_budget(100, available_bytes=48 * GiB)
     assert many.mmap_size < few.mmap_size
 
 
 def test_auto_cache_within_bounds(monkeypatch):
-    monkeypatch.setenv("HELIX_MEM_PROFILE", "auto")
+    monkeypatch.setenv("CYMATIX_MEM_PROFILE", "auto")
     for avail_gib, n in [(28, 100), (110, 100), (12, 105)]:
         plan = sqlite_memory_budget(n, available_bytes=avail_gib * GiB)
         for cs in (plan.writer_cache_size, plan.reader_cache_size):
@@ -82,14 +82,14 @@ def test_auto_cache_within_bounds(monkeypatch):
 
 def test_auto_mmap_has_absolute_cap(monkeypatch):
     # n_shards=1 on a huge host would otherwise map an unbounded amount.
-    monkeypatch.setenv("HELIX_MEM_PROFILE", "auto")
+    monkeypatch.setenv("CYMATIX_MEM_PROFILE", "auto")
     plan = sqlite_memory_budget(1, available_bytes=110 * GiB)
     assert plan.mmap_size == 2 * GiB, "auto mmap must cap at 2 GiB/shard"
 
 
 def test_auto_high_shard_pressure_throttles(monkeypatch):
     # the 105-shard / low-RAM stress case must throttle back toward off.
-    monkeypatch.setenv("HELIX_MEM_PROFILE", "auto")
+    monkeypatch.setenv("CYMATIX_MEM_PROFILE", "auto")
     plan = sqlite_memory_budget(105, available_bytes=12 * GiB)
     assert plan.mmap_size < 100 * MiB
 
@@ -98,13 +98,13 @@ def test_auto_high_shard_pressure_throttles(monkeypatch):
 
 def test_tiny_ram_falls_back_to_conservative(monkeypatch):
     # available < reserve floor -> no budget -> behave like conservative.
-    monkeypatch.setenv("HELIX_MEM_PROFILE", "auto")
+    monkeypatch.setenv("CYMATIX_MEM_PROFILE", "auto")
     plan = sqlite_memory_budget(100, available_bytes=2 * GiB)
     assert plan.mmap_size == 0
 
 
 def test_psutil_failure_falls_back_to_conservative(monkeypatch):
-    monkeypatch.setenv("HELIX_MEM_PROFILE", "auto")
+    monkeypatch.setenv("CYMATIX_MEM_PROFILE", "auto")
 
     def _boom():
         raise RuntimeError("psutil unavailable")
@@ -116,7 +116,7 @@ def test_psutil_failure_falls_back_to_conservative(monkeypatch):
 
 
 def test_auto_reads_available_from_psutil_when_not_passed(monkeypatch):
-    monkeypatch.setenv("HELIX_MEM_PROFILE", "auto")
+    monkeypatch.setenv("CYMATIX_MEM_PROFILE", "auto")
 
     class _VM:
         available = 110 * GiB
@@ -129,15 +129,15 @@ def test_auto_reads_available_from_psutil_when_not_passed(monkeypatch):
 # ── explicit overrides win over the profile ─────────────────────────────────
 
 def test_mmap_size_env_override_wins(monkeypatch):
-    monkeypatch.setenv("HELIX_MEM_PROFILE", "conservative")  # would be 0
-    monkeypatch.setenv("HELIX_SQLITE_MMAP_SIZE", str(123 * MiB))
+    monkeypatch.setenv("CYMATIX_MEM_PROFILE", "conservative")  # would be 0
+    monkeypatch.setenv("CYMATIX_SQLITE_MMAP_SIZE", str(123 * MiB))
     plan = sqlite_memory_budget(100, available_bytes=28 * GiB)
     assert plan.mmap_size == 123 * MiB
 
 
 def test_cache_size_env_override_wins(monkeypatch):
-    monkeypatch.setenv("HELIX_MEM_PROFILE", "auto")
-    monkeypatch.setenv("HELIX_SQLITE_CACHE_SIZE", "-8192")  # raw pragma value
+    monkeypatch.setenv("CYMATIX_MEM_PROFILE", "auto")
+    monkeypatch.setenv("CYMATIX_SQLITE_CACHE_SIZE", "-8192")  # raw pragma value
     plan = sqlite_memory_budget(100, available_bytes=28 * GiB)
     assert plan.writer_cache_size == -8192
     assert plan.reader_cache_size == -8192
@@ -146,7 +146,7 @@ def test_cache_size_env_override_wins(monkeypatch):
 # ── explicit GiB budget is independent of host available RAM ────────────────
 
 def test_explicit_gb_budget_ignores_available(monkeypatch):
-    monkeypatch.setenv("HELIX_MEM_PROFILE", "8gb")
+    monkeypatch.setenv("CYMATIX_MEM_PROFILE", "8gb")
     lo = sqlite_memory_budget(100, available_bytes=16 * GiB)
     hi = sqlite_memory_budget(100, available_bytes=512 * GiB)
     assert lo == hi, "explicit budget must not vary with host available RAM"
@@ -156,8 +156,8 @@ def test_explicit_gb_budget_ignores_available(monkeypatch):
 # ── aggressive grants at least as much as auto ──────────────────────────────
 
 def test_aggressive_grants_at_least_auto(monkeypatch):
-    monkeypatch.setenv("HELIX_MEM_PROFILE", "auto")
+    monkeypatch.setenv("CYMATIX_MEM_PROFILE", "auto")
     auto = sqlite_memory_budget(100, available_bytes=110 * GiB)
-    monkeypatch.setenv("HELIX_MEM_PROFILE", "aggressive")
+    monkeypatch.setenv("CYMATIX_MEM_PROFILE", "aggressive")
     aggr = sqlite_memory_budget(100, available_bytes=110 * GiB)
     assert aggr.mmap_size >= auto.mmap_size

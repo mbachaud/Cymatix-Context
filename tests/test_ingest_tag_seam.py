@@ -1,7 +1,7 @@
 """Ingest tag seam — caller-supplied domains/entities/key_values merge.
 
 Covers the two council-required properties of the structured-source seam
-in ``HelixContextManager.ingest`` (OKF Phase 1, Commit 1):
+in ``CymatixContextManager.ingest`` (OKF Phase 1, Commit 1):
 
 1. **Equivalence** — tags supplied via ``metadata`` produce identical
    promoter_index / genes_fts / path_key_index rows to the same tags
@@ -16,12 +16,12 @@ import json
 import pytest
 
 from cymatix_context.context_manager import (
-    HelixContextManager,
+    CymatixContextManager,
     _merge_caller_tags,
 )
 from cymatix_context.schemas import Gene, PromoterTags
 
-from tests.conftest import make_gene, make_helix_config
+from tests.conftest import make_gene, make_cymatix_config
 
 pytest.importorskip("spacy")
 
@@ -38,8 +38,8 @@ _CONTENT = (
 _SOURCE = "docs/runbooks/cache-layer.md"
 
 
-def _fresh_manager() -> HelixContextManager:
-    return HelixContextManager(make_helix_config())
+def _fresh_manager() -> CymatixContextManager:
+    return CymatixContextManager(make_cymatix_config())
 
 
 def _index_rows(genome, gene_id):
@@ -78,7 +78,7 @@ def _stored_tags(genome, gene_id):
     return promoter["domains"], promoter["entities"], key_values
 
 
-def _strip_tagger_tags(mgr: HelixContextManager) -> None:
+def _strip_tagger_tags(mgr: CymatixContextManager) -> None:
     """Wrap the manager's tagger so it emits no tags of its own.
 
     Everything else the tagger produces (complement, intent, summary,

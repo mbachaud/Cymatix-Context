@@ -1,11 +1,11 @@
 # Stage 3 — issue #203: dense_additive_weight sweep with REAL ERB questions
 # Arms: ERB-10K, ERB-50K (prose) + medium.db with SIKE-style content queries (code side)
 $ErrorActionPreference = 'Continue'
-$repo = 'F:\Projects\helix-context'
+$repo = 'F:\Projects\cymatix-context'
 $logs = "$repo\benchmarks\logs"
 $ts = Get-Date -Format 'yyyy-MM-dd_HHmm'
-$env:HELIX_OTEL_ENABLED = '1'
-$env:HELIX_OTEL_ENDPOINT = 'localhost:4317'
+$env:CYMATIX_OTEL_ENABLED = '1'
+$env:CYMATIX_OTEL_ENDPOINT = 'localhost:4317'
 cd $repo
 
 function Set-Status($stage, $state) {

@@ -2,7 +2,7 @@
 # #203 sweeps, then reruns the FIXED S2 bed-sweep (lexical-config serving,
 # no GPU contention with the ollama ladder). Final state: COMPLETE-FINAL.
 $ErrorActionPreference = 'Continue'
-$repo = 'F:\Projects\helix-context'
+$repo = 'F:\Projects\cymatix-context'
 $logs = "$repo\benchmarks\logs"
 $status = "$logs\chain_status.json"
 "s2-after-203 watcher started $(Get-Date -Format o) pid=$PID" | Set-Content "$logs\s2after203_watcher.log"

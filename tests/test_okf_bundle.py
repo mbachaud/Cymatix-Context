@@ -3,7 +3,7 @@
 Conformance is enforced against the vendored spec snapshot
 (tests/fixtures/okf/SPEC-ee67a5ca.md), NOT the upstream reference
 implementation: exactly ONE required frontmatter field (`type`).
-The degradation policy tested here is helix's own (see
+The degradation policy tested here is cymatix's own (see
 cymatix_context/okf/bundle.py module docstring) — spec §9 does not
 cover missing frontmatter or empty `type`.
 """
@@ -143,7 +143,7 @@ class TestConformance:
 
 
 class TestDegradationPolicy:
-    """Helix's own policy: warn + generic document, bundle continues."""
+    """Cymatix's own policy: warn + generic document, bundle continues."""
 
     @pytest.fixture(scope="class")
     def degraded(self):

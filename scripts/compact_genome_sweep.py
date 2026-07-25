@@ -12,7 +12,7 @@ Defaults to --dry-run (no DB writes). Pass --apply to actually write.
 Usage:
     # Preview what would happen (safe):
     python scripts/compact_genome_sweep.py
-    python scripts/compact_genome_sweep.py --db F:/Projects/helix-context/genome.db
+    python scripts/compact_genome_sweep.py --db F:/Projects/cymatix-context/genome.db
     python scripts/compact_genome_sweep.py --output stats.json
 
     # Apply the sweep (writes to the DB — make a backup first):
@@ -20,14 +20,14 @@ Usage:
     python scripts/compact_genome_sweep.py --apply --db /path/to/genome.db
 
 Coordination notes:
-  - If another process has the genome open (a running helix server, an
+  - If another process has the genome open (a running cymatix server, an
     active benchmark), SQLite's WAL mode allows concurrent reads from
     this script BUT writes will queue behind the server's writer lock.
     For large sweeps (~4000 demotions on the 2026-04-10 genome), the
     safe pattern is:
       1. Run with --dry-run first, review the preview
       2. Announce a restart via bridge.announce_restart() if a server
-         is running, coordinating via ~/.helix/shared/signals/server_state.json
+         is running, coordinating via ~/.cymatix/shared/signals/server_state.json
       3. Stop the server / wait for benchmarks to finish
       4. Back up the DB (cp genome.db genome.db.pre-compact.bak)
       5. Run with --apply
@@ -48,8 +48,8 @@ from collections import Counter
 
 def _open_genome(db_path: str):
     """Open a Genome pointed at the given path. Imports lazily so the
-    script can print --help without pulling in the full helix stack."""
-    # Force the helix-context root onto sys.path so "from cymatix_context ..." works
+    script can print --help without pulling in the full cymatix stack."""
+    # Force the cymatix-context root onto sys.path so "from cymatix_context ..." works
     root = Path(__file__).resolve().parent.parent
     if str(root) not in sys.path:
         sys.path.insert(0, str(root))
@@ -64,8 +64,8 @@ def _source_bucket(src: str | None) -> str:
         return "steam"
     if "\\.next\\" in s or "/.next/" in s or "node_modules" in s or "__pycache__" in s:
         return "build_artifacts"
-    if "helix-context" in s or "cymatix_context" in s:
-        return "helix"
+    if "cymatix-context" in s or "cymatix_context" in s:
+        return "cymatix"
     if "cosmictasha" in s or "novabridge" in s:
         return "cosmic"
     if "bookkeeper" in s:
@@ -105,14 +105,14 @@ def _report(stats: dict, dry_run: bool) -> str:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Density gate compaction sweep for helix-context genome",
+        description="Density gate compaction sweep for cymatix-context genome",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=__doc__,
     )
     parser.add_argument(
         "--db",
-        default="F:/Projects/helix-context/genome.db",
-        help="Path to the genome database (default: F:/Projects/helix-context/genome.db)",
+        default="F:/Projects/cymatix-context/genome.db",
+        help="Path to the genome database (default: F:/Projects/cymatix-context/genome.db)",
     )
     parser.add_argument(
         "--apply",

@@ -3,11 +3,11 @@
 > 2026-07-05. Design memo synthesizing three questions asked during the roadmap
 > session: (1) binary vs JSON storage, (2) algorithm vs embedded model, (3) MCP
 > per-prompt token cost. Grounded in the live code (paths + line numbers below),
-> cross-checked against `config.py`/`helix.toml` shipped defaults, and tied to the
+> cross-checked against `config.py`/`cymatix.toml` shipped defaults, and tied to the
 > existing roadmap issues that already own slices of this work.
 >
-> **Through-line.** Helix's stated thesis is *AI is the first-class user* and
-> *local-first, CPU-cheap, no-neural-at-query-time*. The cheaper Helix is in
+> **Through-line.** Cymatix's stated thesis is *AI is the first-class user* and
+> *local-first, CPU-cheap, no-neural-at-query-time*. The cheaper Cymatix is in
 > tokens + compute + disk, the more adoption rises — and accuracy is the other
 > adoption driver. The three questions are really one program: **stop paying for
 > capability that isn't earning its cost on the default path.**
@@ -18,8 +18,8 @@
 
 | # | Win | Effort | Impact | Risk | Owner issue |
 |---|-----|--------|--------|------|-------------|
-| 1 | **Lean MCP profile** — expose ~4 core tools by default, gate the other ~20 behind `HELIX_MCP_FULL=1` | S | **−3 to −4K tokens *every agent turn*** | low | #219 Slice 3 |
-| 2 | **Drop the 4 back-compat alias tools** (`helix_document_*`) from the MCP surface | S | −~600–800 tokens/turn, less agent confusion | low | #219 Slice 3 |
+| 1 | **Lean MCP profile** — expose ~4 core tools by default, gate the other ~20 behind `CYMATIX_MCP_FULL=1` | S | **−3 to −4K tokens *every agent turn*** | low | #219 Slice 3 |
+| 2 | **Drop the 4 back-compat alias tools** (`cymatix_document_*`) from the MCP surface | S | −~600–800 tokens/turn, less agent confusion | low | #219 Slice 3 |
 | 3 | **Flip `splade_auto_disable_above_genes` to a positive threshold** (e.g. 200 000) | S | reclaims the measured **9.96 GB / 21.1 % of disk** SPLADE cliff at enterprise scale, zero code | low | #204 |
 | 4 | **Pack `genes.embedding` (20-d SEMA vector) as a float32/float16 BLOB** | S | **~5× (fp32) / ~10× (fp16)** on that column | low | new |
 | 5 | **Ship a documented "algorithmic profile"** — config flip that removes all 3 encoder loads | S–M | **−~2.6 GB resident + kills the torch cold-start** on that path | med (recall delta unmeasured) | #205 |
@@ -32,7 +32,7 @@ becomes a *default*, but is shippable as an opt-in low-resource profile today.
 
 ## Q3 first (it's the cheapest, biggest, most-requested win): MCP per-prompt token cost
 
-**Where the cost is.** `helix_context/mcp/mcp_server.py` registers **24 FastMCP
+**Where the cost is.** `cymatix_context/mcp/mcp_server.py` registers **24 FastMCP
 tools** (`@mcp.tool()` at lines 341–963). A host like Claude Code injects every
 tool's name + description (the docstring) + JSON input schema into the model
 context **on every single turn**. Issue #219 already measured this surface at
@@ -41,26 +41,26 @@ about is if anything an under-count.
 
 **The 24 tools, by need:**
 
-- **Core agent loop (keep default, ~4):** `helix_context`, `helix_context_packet`,
-  `helix_health`, `helix_ingest`. (Arguably `helix_refresh_targets`,
-  `helix_sessions_list` for multi-agent awareness.)
-- **Back-compat alias duplicates (drop from MCP, ~4):** `helix_document_get`,
-  `helix_document_query`, `helix_document_preview`, `helix_document_fingerprint`
+- **Core agent loop (keep default, ~4):** `cymatix_context`, `cymatix_context_packet`,
+  `cymatix_health`, `cymatix_ingest`. (Arguably `cymatix_refresh_targets`,
+  `cymatix_sessions_list` for multi-agent awareness.)
+- **Back-compat alias duplicates (drop from MCP, ~4):** `cymatix_document_get`,
+  `cymatix_document_query`, `cymatix_document_preview`, `cymatix_document_fingerprint`
   mirror the gene/context tools 1:1 (the biology→software rename in ROSETTA).
   They cost schema tokens *and* make the agent pick between synonyms. Keep them in
   CLI/HTTP; the MCP surface does not need both vocabularies.
-- **Admin / diagnostic (gate behind a flag, ~16):** `helix_swap_db`,
-  `helix_announce`, `helix_consolidate`, `helix_stats`, `helix_metrics_tokens`,
-  `helix_bridge_status`, `helix_hitl_emit`, `helix_hitl_recent`, `helix_resonance`,
-  `helix_gene_get`, `helix_neighbors`, `helix_splice_preview`, `helix_fingerprint`,
-  `helix_session_recent`, … — rarely needed inline; an operator opts in.
+- **Admin / diagnostic (gate behind a flag, ~16):** `cymatix_swap_db`,
+  `cymatix_announce`, `cymatix_consolidate`, `cymatix_stats`, `cymatix_metrics_tokens`,
+  `cymatix_bridge_status`, `cymatix_hitl_emit`, `cymatix_hitl_recent`, `cymatix_resonance`,
+  `cymatix_gene_get`, `cymatix_neighbors`, `cymatix_splice_preview`, `cymatix_fingerprint`,
+  `cymatix_session_recent`, … — rarely needed inline; an operator opts in.
 
 **Recommendations (all land under #219 Slice 3, "serve-lean MCP profile"):**
 
-1. **Profile-gate the surface.** Default = the ~4 core tools. `HELIX_MCP_FULL=1`
+1. **Profile-gate the surface.** Default = the ~4 core tools. `CYMATIX_MCP_FULL=1`
    (or a `[mcp] profile = "full"` key) restores all 24. Est. **−60–80 % of the
    4–5K = ~3–3.5K tokens saved per session**, before any retrieval.
-2. **Remove the 4 `helix_document_*` aliases** from the MCP registration entirely
+2. **Remove the 4 `cymatix_document_*` aliases** from the MCP registration entirely
    (they remain reachable via HTTP/CLI).
 3. **Tighten docstrings.** Each tool's docstring *is* its description. Trim to one
    crisp line + param docs; a 100-token docstring × 24 ≈ 2.4K, halving them ≈ −1.2K
@@ -93,7 +93,7 @@ pipeline is **already almost entirely algorithmic**:
   tie-break, and `/context/expand` graph walk are already pure algorithms.**
 
 **What still loads transformer weights on the default path — and it's more than the
-docs claim.** Verified in `config.py` + `helix.toml`:
+docs claim.** Verified in `config.py` + `cymatix.toml`:
 
 | Encoder | Shipped default | Cost | CLAUDE.md says |
 |---|---|---|---|
@@ -143,7 +143,7 @@ meaningful and degrades on tiny genomes.
 
 ## Q1: binary instead of JSON storage — *one clean win, and the real cliffs are elsewhere*
 
-**Key finding.** Helix already does the right thing for its **biggest** vector:
+**Key finding.** Cymatix already does the right thing for its **biggest** vector:
 BGE-M3 `embedding_dense_v2` is a **packed float32 BLOB** (`storage/ddl.py:113`,
 `backends/bgem3_codec.py:37-52`). And the premise's headline example doesn't apply:
 the **256-bin cymatics spectrum is never persisted** — it's computed on the fly and

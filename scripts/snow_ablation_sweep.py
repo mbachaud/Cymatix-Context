@@ -1,4 +1,4 @@
-"""SNOW oracle-only ablation sweep across helix.toml toggles.
+"""SNOW oracle-only ablation sweep across cymatix.toml toggles.
 
 Runs N=65 SNOW oracle-only against the same genome under several
 config variants, writes per-run results to benchmarks/snow/results/,
@@ -12,7 +12,7 @@ dimensions are deliberately not in this sweep.
 
 Usage:
     python scripts/snow_ablation_sweep.py \\
-        --genome F:/Projects/helix-context/genomes/main/genome.db
+        --genome F:/Projects/cymatix-context/genomes/main/genome.db
 """
 
 from __future__ import annotations
@@ -47,17 +47,17 @@ except Exception:
     pass
 
 REPO = Path(__file__).resolve().parent.parent
-DEFAULT_CONFIG = REPO / "cymatix.toml" if (REPO / "cymatix.toml").exists() else REPO / "helix.toml"
-DEFAULT_GENOME = "F:/Projects/helix-context/genomes/main/genome.db"
+DEFAULT_CONFIG = REPO / "cymatix.toml" if (REPO / "cymatix.toml").exists() else REPO / "cymatix.toml"
+DEFAULT_GENOME = "F:/Projects/cymatix-context/genomes/main/genome.db"
 RESULTS_DIR = REPO / "benchmarks" / "snow" / "results"
 
 
-# Config variants — each one is (label, nested helix.toml patch dict).
-# The patch is deep-merged onto the base helix.toml.
+# Config variants — each one is (label, nested cymatix.toml patch dict).
+# The patch is deep-merged onto the base cymatix.toml.
 VARIANTS: list[tuple[str, dict]] = [
     (
         "baseline",
-        {},  # No patch — baseline is current helix.toml
+        {},  # No patch — baseline is current cymatix.toml
     ),
     (
         "d6_cymatics_off",
@@ -97,7 +97,7 @@ def write_variant_config(base: dict, patch: dict, dest: Path) -> None:
 
 def run_bench(config_path: Path, genome: str) -> Path:
     env = os.environ.copy()
-    env["HELIX_CONFIG"] = str(config_path)
+    env["CYMATIX_CONFIG"] = str(config_path)
     env["PYTHONIOENCODING"] = "utf-8"
     cmd = [
         sys.executable,
@@ -171,7 +171,7 @@ def main() -> int:
     results: dict[str, list[dict]] = {label: [] for label, _ in VARIANTS}
     with tempfile.TemporaryDirectory() as td:
         for label, patch in VARIANTS:
-            variant_path = Path(td) / f"helix_{label}.toml"
+            variant_path = Path(td) / f"cymatix_{label}.toml"
             write_variant_config(base_config, patch, variant_path)
             for rep in range(args.repeats):
                 tag = label if args.repeats == 1 else f"{label}_r{rep + 1}"

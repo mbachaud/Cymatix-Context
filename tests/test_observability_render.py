@@ -72,7 +72,7 @@ def test_tempo_otlp_receiver_remapped_off_collector_port(rendered):
     so the supervisor's external-instance pre-flight check doesn't mistake
     a healthy tempo for a pre-existing collector and skip spawning ours.
 
-    Regression test for the wiring bug where helix's OTel exporter saw
+    Regression test for the wiring bug where cymatix's OTel exporter saw
     `StatusCode.UNIMPLEMENTED` because tempo (which only accepts traces)
     was answering on 4317.
     """

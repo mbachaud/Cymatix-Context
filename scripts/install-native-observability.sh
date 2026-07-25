@@ -78,12 +78,12 @@ while IFS=":" read -r svc relpath; do
     fi
 
     echo "[install][$svc] downloading $url"
-    tmp="$(mktemp -t helix-native-otel.XXXXXX)"
+    tmp="$(mktemp -t cymatix-native-otel.XXXXXX)"
     $PYTHON -m cymatix_context.launcher._install_helpers download "$url" "$tmp" --timeout 120
     $PYTHON -m cymatix_context.launcher._install_helpers verify-hash "$tmp" "$expected"
 
     mkdir -p "$svcdir"
-    staging="$(mktemp -d -t helix-native-otel-extract.XXXXXX)"
+    staging="$(mktemp -d -t cymatix-native-otel-extract.XXXXXX)"
     case "$url" in
         *.tar.gz|*.tgz) tar -xzf "$tmp" -C "$staging" ;;
         *.zip)          unzip -q "$tmp" -d "$staging" ;;

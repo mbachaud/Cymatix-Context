@@ -17,13 +17,13 @@ from cymatix_context.budget_zone import (
 
 @pytest.fixture
 def zone_on(monkeypatch):
-    monkeypatch.setenv("HELIX_BUDGET_ZONE", "1")
+    monkeypatch.setenv("CYMATIX_BUDGET_ZONE", "1")
     assert is_enabled()
 
 
 @pytest.fixture
 def zone_off(monkeypatch):
-    monkeypatch.delenv("HELIX_BUDGET_ZONE", raising=False)
+    monkeypatch.delenv("CYMATIX_BUDGET_ZONE", raising=False)
     assert not is_enabled()
 
 

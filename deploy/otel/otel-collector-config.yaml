@@ -1,5 +1,5 @@
-# OpenTelemetry Collector pipeline for helix-context.
-# Receives OTLP gRPC on :4317 from helix's FastAPI server and routes:
+# OpenTelemetry Collector pipeline for cymatix-context.
+# Receives OTLP gRPC on :4317 from cymatix's FastAPI server and routes:
 #   traces  -> Tempo   (http://tempo:4317)
 #   metrics -> Prometheus remote-write (http://prometheus:9090/api/v1/write)
 #   logs    -> Loki    (http://loki:3100/otlp/v1/logs)
@@ -14,7 +14,7 @@ receivers:
 
 extensions:
   # health_check exposes a JSON status endpoint at :13133/ for supervisor
-  # readiness gating (helix_context.launcher.observability_health probes
+  # readiness gating (cymatix_context.launcher.observability_health probes
   # this URL during the spawn-order sequence). Same port + path on Docker
   # and native runtimes; collector-only — other services have built-in
   # health endpoints (/-/healthy, /ready, /api/health).

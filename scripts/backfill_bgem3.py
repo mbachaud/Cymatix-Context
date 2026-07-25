@@ -12,7 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from cymatix_context.backends.bgem3_codec import BGEM3Codec
 from cymatix_context.config import load_config
 
-# Read genome path from helix.toml; CLI arg overrides if provided
+# Read genome path from cymatix.toml; CLI arg overrides if provided
 _repo_root = Path(__file__).resolve().parents[1]
 cfg = load_config()
 _default_db = str(_repo_root / cfg.genome.path)

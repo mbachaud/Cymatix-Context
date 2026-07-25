@@ -132,7 +132,7 @@ cymatix_context/
     __init__.py
     app.py              # FastAPI app factory + CLI entry point (main())
     supervisor.py       # cymatix subprocess lifecycle (Start/Restart/Stop)
-    state.py            # ~/.helix/launcher/state.json read/write + adoption
+    state.py            # ~/.cymatix/launcher/state.json read/write + adoption
     models.py           # Pydantic models for launcher state + API responses
     templates/
       layout.html       # base template (head, htmx, css link, body shell)
@@ -282,11 +282,11 @@ first launcher slice, with two exceptions flagged below.
 
 | State field | Source |
 |---|---|
-| `helix.running` | `psutil` check on stored PID + `GET /stats` reachability |
-| `helix.pid` | launcher state file |
-| `helix.port` | launcher config |
-| `helix.uptime_s` | stored `start_time` subtracted from `now()` |
-| `helix.version` | read from `cymatix_context.__version__` in child's env (or GET /stats if a version field is added — see note below) |
+| `cymatix.running` | `psutil` check on stored PID + `GET /stats` reachability |
+| `cymatix.pid` | launcher state file |
+| `cymatix.port` | launcher config |
+| `cymatix.uptime_s` | stored `start_time` subtracted from `now()` |
+| `cymatix.version` | read from `cymatix_context.__version__` in child's env (or GET /stats if a version field is added — see note below) |
 | `parties.count` | derived — count unique `party_id` values in `GET /sessions?status=all` |
 | `parties.party_ids` | same query, projected to unique set |
 | `participants.count` | `GET /sessions?status=active`, count |
@@ -413,11 +413,11 @@ The launcher adopts already-running cymatix processes in two situations:
 
 **1. On launcher startup** — `supervisor.adopt()` runs a two-stage check:
 
-   1. **State file**: if `~/.helix/launcher/state.json` has a `helix_pid`,
+   1. **State file**: if `~/.cymatix/launcher/state.json` has a `cymatix_pid`,
       verify the process is alive and the command line still matches
       `cymatix_context.server:app`. If yes → adopted, no further scan.
    2. **Orphan scan**: use `psutil.net_connections()` to find the PID
-      listening on `helix_host:helix_port`. Verify its command line
+      listening on `cymatix_host:cymatix_port`. Verify its command line
       matches cymatix uvicorn. Walk up to the uvicorn parent process (the
       one `subprocess.Popen` would hand us). Write its PID + command
       line to the state file.
@@ -475,14 +475,14 @@ without hunting for them.
 
 ## State file
 
-`~/.helix/launcher/state.json` (atomic write + rename):
+`~/.cymatix/launcher/state.json` (atomic write + rename):
 
 ```json
 {
-  "helix_pid": 56792,
-  "helix_port": 11437,
-  "helix_start_time": 1775881217.9,
-  "helix_command": ["python", "-m", "uvicorn", "cymatix_context.server:app", "--host", "127.0.0.1", "--port", "11437"],
+  "cymatix_pid": 56792,
+  "cymatix_port": 11437,
+  "cymatix_start_time": 1775881217.9,
+  "cymatix_command": ["python", "-m", "uvicorn", "cymatix_context.server:app", "--host", "127.0.0.1", "--port", "11437"],
   "launcher_pid": 48213,
   "launcher_start_time": 1775881200.0,
   "last_restart_reason": "session registry DAL fix",
@@ -493,7 +493,7 @@ without hunting for them.
 On launcher startup:
 
 1. Read state file.
-2. If `helix_pid` is set, check `psutil.pid_exists(pid)` + verify the
+2. If `cymatix_pid` is set, check `psutil.pid_exists(pid)` + verify the
    process command line matches expected uvicorn invocation.
 3. If alive and matching, **adopt** the process (no spawn, just track).
 4. If alive but mismatch (PID reused for something else), clear and
@@ -509,11 +509,11 @@ UX property.
 Pseudocode for `supervisor.py`:
 
 ```python
-class HelixSupervisor:
+class CymatixSupervisor:
     def __init__(self, state: LauncherState, config: LauncherConfig):
         self.state = state
         self.config = config
-        self._helix_pid: int | None = None
+        self._cymatix_pid: int | None = None
 
     def start(self) -> None:
         if self.is_running():
@@ -524,8 +524,8 @@ class HelixSupervisor:
             stdout=open(self.config.log_path, "ab"),
             stderr=subprocess.STDOUT,
         )
-        self._helix_pid = proc.pid
-        self.state.write(helix_pid=proc.pid, helix_start_time=time.time())
+        self._cymatix_pid = proc.pid
+        self.state.write(cymatix_pid=proc.pid, cymatix_start_time=time.time())
         self._wait_for_ready(timeout=30)
 
     def stop(self, reason: str = "manual stop from launcher") -> None:
@@ -533,21 +533,21 @@ class HelixSupervisor:
             return
         self._announce_restart(reason, expected_downtime_s=10)
         time.sleep(0.75)
-        self._kill_tree(self._helix_pid)
-        self._wait_for_port_free(port=self.config.helix_port, timeout=10)
-        self._helix_pid = None
-        self.state.clear_helix()
+        self._kill_tree(self._cymatix_pid)
+        self._wait_for_port_free(port=self.config.cymatix_port, timeout=10)
+        self._cymatix_pid = None
+        self.state.clear_cymatix()
 
     def restart(self, reason: str) -> None:
         self.stop(reason=reason)
         self.start()
 
     def is_running(self) -> bool:
-        if self._helix_pid is None:
+        if self._cymatix_pid is None:
             return False
-        if not psutil.pid_exists(self._helix_pid):
-            self._helix_pid = None
-            self.state.clear_helix()
+        if not psutil.pid_exists(self._cymatix_pid):
+            self._cymatix_pid = None
+            self.state.clear_cymatix()
             return False
         return True
 ```
@@ -699,7 +699,7 @@ What it does (by platform):
 | Platform | Action |
 |---|---|
 | Linux | Writes `~/.config/systemd/user/cymatix-launcher.service` with `ExecStart` substituted to the actual `cymatix-launcher` binary path. Prints the `systemctl --user daemon-reload && systemctl --user enable --now` next steps. |
-| macOS | Writes `~/Library/LaunchAgents/com.swiftwing21.helix-launcher.plist` with `ProgramArguments` and `StandardOutPath` substituted. Prints the `launchctl load` next step. |
+| macOS | Writes `~/Library/LaunchAgents/com.swiftwing21.cymatix-launcher.plist` with `ProgramArguments` and `StandardOutPath` substituted. Prints the `launchctl load` next step. |
 | Windows | Prints the NSSM recipe. Does NOT install NSSM (licensing + download), does NOT register the service. User follows the printed steps. |
 
 The installer deliberately **never runs** `systemctl enable`,
@@ -758,7 +758,7 @@ Rough ordering for the first PR. Each is independently testable.
    modules, add `[launcher]` + `[launcher-native]` extras to
    `pyproject.toml`, add `cymatix-launcher` script entry.
 2. **State module.** `state.py` with atomic read/write/clear of
-   `~/.helix/launcher/state.json`.
+   `~/.cymatix/launcher/state.json`.
 3. **Supervisor module.** `supervisor.py` with Start / Stop / Restart
    / is_running / adopt. Unit tests with a dummy `sleep 60` child
    process.

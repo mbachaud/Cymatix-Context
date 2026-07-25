@@ -31,7 +31,7 @@ ARMS:
 Writes:
   benchmarks/results/coderag_foils_{timestamp}.json   -- summary
   benchmarks/results/coderag_queries_{timestamp}.json -- per-query dump for
-    the Helix arm (coderag_bench_helix.py) to consume with the same examples.
+    the Cymatix arm (coderag_bench_cymatix.py) to consume with the same examples.
 
 License: CC-BY-SA-4.0 (ShareAlike copyleft, internal measurement OK; verify
 before any redistributed/public claim on processed data).
@@ -58,7 +58,7 @@ BENCH_DIR = Path(__file__).resolve().parent
 RESULTS_DIR = BENCH_DIR / "results"
 RESULTS_DIR.mkdir(exist_ok=True)
 
-# Identifier tokenizer (same as the Helix lexical probe).
+# Identifier tokenizer (same as the Cymatix lexical probe).
 _TOK = re.compile(r"[A-Za-z_][A-Za-z_0-9]*")
 
 # k-values to evaluate (NDCG@10 is primary; recall/prec at 1, 5, 10).
@@ -270,7 +270,7 @@ def run(corpus, doc_index, queries, limit=0):
     Returns
     -------
     summary        : per-dataset metric dict
-    per_query_rows : per-query data (consumed by coderag_bench_helix.py)
+    per_query_rows : per-query data (consumed by coderag_bench_cymatix.py)
     """
     # Resolve gold indices; drop unresolvable.
     resolved = []
@@ -403,7 +403,7 @@ def main():
     ap = argparse.ArgumentParser(
         description=(
             "CodeRAG-Bench (Step-2) foils: random + BM25 over the "
-            "programming-solutions corpus. Writes per-query dump for the Helix arm."
+            "programming-solutions corpus. Writes per-query dump for the Cymatix arm."
         )
     )
     ap.add_argument(
@@ -465,7 +465,7 @@ def main():
 
     print("\n-> summary:        {}".format(out_path))
     print("-> per-query dump: {}".format(queries_path))
-    print("   (Helix arm: python benchmarks/coderag_bench_helix.py --queries {})".format(
+    print("   (Cymatix arm: python benchmarks/coderag_bench_cymatix.py --queries {})".format(
           queries_path))
 
 

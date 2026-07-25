@@ -39,7 +39,7 @@ def test_log_query_writes_row(conn):
         conn,
         session_id="s1",
         party_id="alice",
-        query="what port does helix use",
+        query="what port does cymatix use",
         tier_totals={"pki": 12.0, "fts5": 3.5},
         top_gene_id="g_001",
     )
@@ -50,7 +50,7 @@ def test_log_query_writes_row(conn):
     ).fetchone()
     assert row[0] == "s1"
     assert row[1] == "alice"
-    assert row[2] == "what port does helix use"
+    assert row[2] == "what port does cymatix use"
     assert json.loads(row[3]) == {"pki": 12.0, "fts5": 3.5}
     assert row[4] == "g_001"
     assert row[5] is None  # bucket pending

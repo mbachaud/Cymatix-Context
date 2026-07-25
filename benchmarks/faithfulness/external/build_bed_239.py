@@ -1,4 +1,4 @@
-"""#239 stage 1 (HELIX env) — build the graded-distractor bed and dump, per gold
+"""#239 stage 1 (CYMATIX env) — build the graded-distractor bed and dump, per gold
 needle: the 5 know-features, the continuous know-confidence, the KnowBlock/MissBlock
 verdict, and whether the gold answer SURVIVED into expressed_context (the cheap
 upper bound on causal_use). Facts are written to real files first (fresh), then
@@ -9,10 +9,10 @@ same-entity distractors out-compete the gold under fusion, the gold drops out of
 the expressed_context -> answer_survived=False -> a genuine causal_use=0 case.
 
 Output -> np-graph/needles_239_stage1.json  (consumed by the graph env stage 2).
-Helix env, read-only retrieval, learn disabled, no graphs.
+Cymatix env, read-only retrieval, learn disabled, no graphs.
 """
 import os, sys, json, shutil, statistics, argparse
-os.environ.setdefault("HELIX_DISABLE_LEARN", "1")
+os.environ.setdefault("CYMATIX_DISABLE_LEARN", "1")
 from pathlib import Path
 
 _REPO = Path("f:/Projects/helix-context")
@@ -23,7 +23,7 @@ sys.path.insert(0, "f:/Projects/np-graph")
 from needles_239 import NEEDLES_239
 from located_n1000 import features_for_query
 from cymatix_context.config import load_config
-from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.context_manager import CymatixContextManager
 from cymatix_context.server.helpers import _compute_know_or_miss_block
 from cymatix_context.scoring.know_calibration import compute_confidence, calibration_from_config
 
@@ -45,12 +45,12 @@ def main():
         shutil.rmtree(CORPUS)
     CORPUS.mkdir(parents=True, exist_ok=True)
 
-    _cfg_path = _REPO / "cymatix.toml" if (_REPO / "cymatix.toml").exists() else _REPO / "helix.toml"
+    _cfg_path = _REPO / "cymatix.toml" if (_REPO / "cymatix.toml").exists() else _REPO / "cymatix.toml"
     cfg = load_config(str(_cfg_path))
     cfg.genome.path = BED
     cfg.budget.max_genes_per_turn = args.max_genes
     cfg.budget.expression_tokens = args.expr_tokens
-    mgr = HelixContextManager(cfg)
+    mgr = CymatixContextManager(cfg)
     cal = calibration_from_config(cfg.know)
 
     # --- ingest: one real file per fact (gold + distractors), fresh ---
@@ -83,7 +83,7 @@ def main():
             calibration=cal, freshness_min=f["freshness_min"])
         w = mgr.build_context(nd["q"], read_only=True, ignore_delivered=True)
         exp = w.expressed_context or ""
-        block = _compute_know_or_miss_block(helix=mgr, window=w, query=nd["q"])
+        block = _compute_know_or_miss_block(cymatix=mgr, window=w, query=nd["q"])
         kind = type(block).__name__
         gset = gold_gene_ids[nd["id"]]
         ranked = f.get("ranked_ids", [])

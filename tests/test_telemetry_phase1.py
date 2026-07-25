@@ -8,7 +8,7 @@ Two contracts:
    without raising. (Getter resolution + caching identity is covered by
    the consolidated registry smoke in test_telemetry_wiring.py.)
 
-2. **No phantom dashboard metrics** — every ``helix_*`` metric name
+2. **No phantom dashboard metrics** — every ``cymatix_*`` metric name
    referenced by any shipped Grafana dashboard JSON must correspond to
    an instrument actually created in ``cymatix_context/telemetry``,
    after applying the OTel-collector Prometheus name translation
@@ -40,23 +40,23 @@ DASHBOARD_DIRS = (
 RUNTIME_EMITTED_WHITELIST: frozenset[str] = frozenset()
 
 NEW_METRIC_NAMES = (
-    "helix_dense_cosine",
-    "helix_shard_fanout",
-    "helix_shard_discrimination",
-    "helix_know_decision_total",
-    "helix_session_tokens_saved_total",
-    "helix_splice_ratio",
+    "cymatix_dense_cosine",
+    "cymatix_shard_fanout",
+    "cymatix_shard_discrimination",
+    "cymatix_know_decision_total",
+    "cymatix_session_tokens_saved_total",
+    "cymatix_splice_ratio",
 )
 
 OBSERVATORY_PHANTOMS = (
-    "helix_chroni_join_state",
-    "helix_cost_concentration_ratio",
-    "helix_crdt_bucket_accumulation",
-    "helix_resolve_degree_distribution",
-    "helix_ring_edges_by_provenance",
-    "helix_rq_duration_seconds",
-    "helix_tier_estimation_percent",
-    "helix_tier_readable_time",
+    "cymatix_chroni_join_state",
+    "cymatix_cost_concentration_ratio",
+    "cymatix_crdt_bucket_accumulation",
+    "cymatix_resolve_degree_distribution",
+    "cymatix_ring_edges_by_provenance",
+    "cymatix_rq_duration_seconds",
+    "cymatix_tier_estimation_percent",
+    "cymatix_tier_readable_time",
 )
 
 
@@ -116,7 +116,7 @@ def _prometheus_names(kind: str, name: str, unit: str | None) -> set[str]:
     if unit and not unit.startswith("{"):
         translated = _PROM_UNIT_MAP.get(unit, unit)
         # "1" only suffixes gauges (as _ratio); skip for simplicity —
-        # no helix instrument uses it.
+        # no cymatix instrument uses it.
         if translated != "1" and not base.endswith(f"_{translated}"):
             base = f"{base}_{translated}"
     out = {base}
@@ -128,14 +128,14 @@ def _prometheus_names(kind: str, name: str, unit: str | None) -> set[str]:
 
 
 def _dashboard_metric_refs():
-    """helix_* tokens from every expr/query/definition in every dashboard."""
+    """cymatix_* tokens from every expr/query/definition in every dashboard."""
     refs: dict[str, set[str]] = {}
 
     def walk(node, sink):
         if isinstance(node, dict):
             for key, val in node.items():
                 if key in ("expr", "query", "definition") and isinstance(val, str):
-                    sink |= set(re.findall(r"\bhelix_[a-z0-9_]+", val))
+                    sink |= set(re.findall(r"\bcymatix_[a-z0-9_]+", val))
                 else:
                     walk(val, sink)
         elif isinstance(node, list):

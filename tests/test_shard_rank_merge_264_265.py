@@ -47,7 +47,7 @@ from cymatix_context.shard_schema import (
     upsert_fingerprint,
 )
 
-_GIDF = "HELIX_SHARD_GLOBAL_IDF"
+_GIDF = "CYMATIX_SHARD_GLOBAL_IDF"
 
 
 def _mk_gene(content: str, domains: list, entities: list, source: str) -> Gene:
@@ -145,7 +145,7 @@ def test_doc_type_boost_mode_invalid_config_raises():
 
 def test_doc_type_boost_mode_toml_roundtrip(tmp_path):
     from cymatix_context.config import load_config
-    toml = tmp_path / "helix.toml"
+    toml = tmp_path / "cymatix.toml"
     toml.write_text('[retrieval]\ndoc_type_boost_mode = "off"\n', encoding="utf-8")
     c = load_config(str(toml))
     assert c.retrieval.doc_type_boost_mode == "off"
@@ -383,5 +383,5 @@ def test_global_idf_rrf_warns_once(idf_trap, caplog):
             r.query_genes(**_Q, max_genes=8)  # second call must NOT re-warn
         finally:
             r.close()
-    hits = [rec for rec in caplog.records if "HELIX_SHARD_GLOBAL_IDF" in rec.message]
+    hits = [rec for rec in caplog.records if "CYMATIX_SHARD_GLOBAL_IDF" in rec.message]
     assert len(hits) == 1, f"expected exactly one suppression warning, got {len(hits)}"

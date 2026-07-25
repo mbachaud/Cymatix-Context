@@ -29,7 +29,7 @@ _REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
-from cymatix_context.config import HelixConfig, load_config
+from cymatix_context.config import CymatixConfig, load_config
 from cymatix_context.genome import Genome
 from cymatix_context.knowledge_store import apply_ann_gate
 from cymatix_context.schemas import (
@@ -151,19 +151,19 @@ def test_no_dense_candidates_floor_is_noop():
 
 
 def test_dense_pool_floor_default_is_8():
-    cfg = HelixConfig()
+    cfg = CymatixConfig()
     assert cfg.retrieval.dense_pool_floor_genes == 8
 
 
 def test_dense_pool_floor_loads_from_toml(tmp_path):
-    toml = tmp_path / "helix.toml"
+    toml = tmp_path / "cymatix.toml"
     toml.write_text("[retrieval]\ndense_pool_floor_genes = 3\n", encoding="utf-8")
     cfg = load_config(str(toml))
     assert cfg.retrieval.dense_pool_floor_genes == 3
 
 
 def test_dense_pool_floor_toml_zero_disables(tmp_path):
-    toml = tmp_path / "helix.toml"
+    toml = tmp_path / "cymatix.toml"
     toml.write_text("[retrieval]\ndense_pool_floor_genes = 0\n", encoding="utf-8")
     cfg = load_config(str(toml))
     assert cfg.retrieval.dense_pool_floor_genes == 0

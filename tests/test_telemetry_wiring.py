@@ -102,7 +102,7 @@ def test_know_emits_confidence_histogram(fakes):
 
     out = decide_know_or_miss(
         _window("healthy", genes=3),
-        query="what port does helix use",
+        query="what port does cymatix use",
         top_score=10.0,
         score_gap=5.0,
         lexical_dense_agree=True,

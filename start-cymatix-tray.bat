@@ -11,8 +11,8 @@ REM To customize: edit this file or create start-cymatix-tray.local.bat
 REM (gitignored) alongside it and invoke via cmd /k.
 REM
 REM CYMATIX_* is the canonical env prefix since 0.8.0; the package
-REM mirrors each CYMATIX_X to HELIX_X at import, and an explicit
-REM HELIX_X already set in your shell wins over the mirror.
+REM mirrors each CYMATIX_X to CYMATIX_X at import, and an explicit
+REM CYMATIX_X already set in your shell wins over the mirror.
 REM ─────────────────────────────────────────────────────────────────
 
 cd /d "%~dp0"
@@ -44,7 +44,7 @@ REM ── 4-layer federation attribution (edit to your handle) ─────�
 REM CYMATIX_AGENT is the persona writing genes. If unset, ingests tag
 REM as "manual / no AI persona involved." Set per shell/shortcut for
 REM per-persona tagging (Laude/Taude/Raude each pin their own .bat).
-if not defined CYMATIX_USER if defined HELIX_USER set "CYMATIX_USER=%HELIX_USER%"
+if not defined CYMATIX_USER if defined CYMATIX_USER set "CYMATIX_USER=%CYMATIX_USER%"
 if not defined CYMATIX_USER set "CYMATIX_USER=max"
 REM set "CYMATIX_AGENT=raude"   REM uncomment + edit if you want persona tagging
 
@@ -72,22 +72,22 @@ set "CYMATIX_HEADROOM_ROUTE_UPSTREAM_AUTO=1"
 
 REM ── Launch the tray (headless) ──────────────────────────────────
 REM pythonw detaches from the console entirely — no terminal window
-REM stays behind; logs land in %USERPROFILE%\.helix\launcher\launcher.log
-REM via --log-file (the ~/.helix data dir is deliberately unrenamed —
+REM stays behind; logs land in %USERPROFILE%\.cymatix\launcher\launcher.log
+REM via --log-file (the ~/.cymatix data dir is deliberately unrenamed —
 REM existing installs keep their state). If pythonw is unavailable we
 REM fall back to python /B (the legacy visible-console behaviour).
 where pythonw >nul 2>&1
 if %ERRORLEVEL%==0 (
   start "" pythonw -m cymatix_context.launcher.app ^
     --tray ^
-    --log-file "%USERPROFILE%\.helix\launcher\launcher.log" ^
-    --grafana-url "http://localhost:3000/d/helix-overview/helix-overview" ^
+    --log-file "%USERPROFILE%\.cymatix\launcher\launcher.log" ^
+    --grafana-url "http://localhost:3000/d/cymatix-overview/cymatix-overview" ^
     --prometheus-url "http://localhost:9090/graph"
 ) else (
   start "cymatix-launcher" /B python -m cymatix_context.launcher.app ^
     --tray ^
-    --log-file "%USERPROFILE%\.helix\launcher\launcher.log" ^
-    --grafana-url "http://localhost:3000/d/helix-overview/helix-overview" ^
+    --log-file "%USERPROFILE%\.cymatix\launcher\launcher.log" ^
+    --grafana-url "http://localhost:3000/d/cymatix-overview/cymatix-overview" ^
     --prometheus-url "http://localhost:9090/graph"
 )
 

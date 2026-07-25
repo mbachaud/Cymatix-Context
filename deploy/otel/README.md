@@ -1,6 +1,6 @@
 # deploy/otel/ — Docker observability stack (advanced)
 
-The default helix install ships native observability binaries managed
+The default cymatix install ships native observability binaries managed
 by the tray launcher. To set those up without bringing up the tray, run
 [`scripts/setup-grafana-telem.ps1`](../../scripts/setup-grafana-telem.ps1)
 (Windows) or [`scripts/setup-grafana-telem.sh`](../../scripts/setup-grafana-telem.sh)

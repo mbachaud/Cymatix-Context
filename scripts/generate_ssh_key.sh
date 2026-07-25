@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Generate an ed25519 SSH key for the Celestia × Helix collab, with a
+# Generate an ed25519 SSH key for the Celestia × Cymatix collab, with a
 # passphrase (deviating from the onboarding doc's "no passphrase"
 # default — the private key lives on your laptop, not on the compute
 # instance, so encrypting at rest matters).
@@ -13,9 +13,9 @@
 
 set -euo pipefail
 
-KEY_NAME="${KEY_NAME:-helix_collab_ed25519}"
+KEY_NAME="${KEY_NAME:-cymatix_collab_ed25519}"
 KEY_PATH="${HOME}/.ssh/${KEY_NAME}"
-COMMENT="${COMMENT:-max-helix-collab}"
+COMMENT="${COMMENT:-max-cymatix-collab}"
 
 # ── Pre-flight ───────────────────────────────────────────────────────
 

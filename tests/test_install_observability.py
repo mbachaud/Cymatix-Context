@@ -146,7 +146,7 @@ def test_powershell_install_script_handles_targz():
 def test_powershell_install_script_handles_loki_archive_name():
     """Loki's Windows archive contains the binary as loki-windows-amd64.exe,
     not loki.exe. Naive Get-ChildItem -Filter loki.exe misses it and the
-    install fails with 'loki.exe not found inside ... helix-native-otel-loki.zip'.
+    install fails with 'loki.exe not found inside ... cymatix-native-otel-loki.zip'.
 
     Caught a real regression. Pin: the script must special-case Loki's
     in-archive filename. Copy-Item renames it to the canonical on-disk
@@ -173,7 +173,7 @@ def test_powershell_install_script_names_temp_archive_with_real_extension():
     URL, not hardcode .tmp.
     """
     text = PS_SCRIPT.read_text(encoding="utf-8")
-    # The simple-minded form `helix-native-otel-$svc.tmp` was the bug.
+    # The simple-minded form `cymatix-native-otel-$svc.tmp` was the bug.
     # Allow the substring inside a fallback branch but require explicit
     # `.zip` and `.tar.gz` cases too.
     assert '$url.EndsWith(".zip")' in text, (

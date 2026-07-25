@@ -2,8 +2,8 @@
 diag_shard_dense.py — Gold-free retrieval diagnostic: tier-contribution + dense-fired flag.
 
 Usage:
-    python benchmarks/diag_shard_dense.py --helix-url http://127.0.0.1:11437 --label unsharded
-    python benchmarks/diag_shard_dense.py --helix-url http://127.0.0.1:11438 --label sharded
+    python benchmarks/diag_shard_dense.py --cymatix-url http://127.0.0.1:11437 --label unsharded
+    python benchmarks/diag_shard_dense.py --cymatix-url http://127.0.0.1:11438 --label sharded
 
 For each query the script calls:
     POST /fingerprint  {query, max_results:10, score_floor:0, profile:"fast"}
@@ -65,7 +65,7 @@ DEFAULT_QUERIES: list[dict[str, str]] = [
         "id": "w01",
         "type": "within",
         "query": (
-            "How does Helix decide which tier of the retrieval budget "
+            "How does Cymatix decide which tier of the retrieval budget "
             "to place a response in — the very narrow set versus the "
             "broader wider set?"
         ),
@@ -289,17 +289,17 @@ def _post(client: httpx.Client, url: str, payload: dict, timeout: float = 30.0) 
 # ---------------------------------------------------------------------------
 
 def run_diagnostic(
-    helix_url: str,
+    cymatix_url: str,
     queries: list[dict],
     *,
     label: str = "run",
     verbose: bool = False,
 ) -> dict:
-    """Run the diagnostic against a live Helix server.
+    """Run the diagnostic against a live Cymatix server.
 
     Returns the full result dict (per-query rows + aggregate).
     """
-    base = helix_url.rstrip("/")
+    base = cymatix_url.rstrip("/")
     fp_url = f"{base}/fingerprint"
     packet_url = f"{base}/context/packet"
 
@@ -390,7 +390,7 @@ def run_diagnostic(
 
     return {
         "label": label,
-        "helix_url": base,
+        "cymatix_url": base,
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "queries": rows,
         "aggregate": {
@@ -414,8 +414,8 @@ def _print_table(result: dict) -> None:
     rows = result["queries"]
 
     print(f"\n{'='*72}")
-    print(f"  Helix Shard*Dense Diagnostic  |  label={label}")
-    print(f"  URL: {result['helix_url']}")
+    print(f"  Cymatix Shard*Dense Diagnostic  |  label={label}")
+    print(f"  URL: {result['cymatix_url']}")
     print(f"  Run: {result['timestamp']}")
     print(f"{'='*72}")
 
@@ -469,9 +469,9 @@ def main(argv: list[str] | None = None) -> None:
         description="Gold-free retrieval diagnostic: tier-contribution + dense-fired."
     )
     parser.add_argument(
-        "--helix-url",
+        "--cymatix-url",
         default="http://127.0.0.1:11437",
-        help="Base URL of the Helix server (default: http://127.0.0.1:11437)",
+        help="Base URL of the Cymatix server (default: http://127.0.0.1:11437)",
     )
     parser.add_argument(
         "--queries",
@@ -519,13 +519,13 @@ def main(argv: list[str] | None = None) -> None:
         out_path = out_dir / f"diag_shard_dense_{args.label}_{ts}.json"
 
     print(
-        f"Running diagnostic: label={args.label!r} url={args.helix_url} "
+        f"Running diagnostic: label={args.label!r} url={args.cymatix_url} "
         f"queries={len(queries)}",
         flush=True,
     )
 
     result = run_diagnostic(
-        args.helix_url,
+        args.cymatix_url,
         queries,
         label=args.label,
         verbose=args.verbose,

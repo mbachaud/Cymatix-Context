@@ -3,7 +3,7 @@
 Monolithic profiles (default, ``--mode blob``)
 ----------------------------------------------
 small   4 roots — BookKeeper, CosmicTasha, two-brain-audit, MaxExpressKit
-medium  6 roots — small + Education + helix-context (helix-context skips .db sidecars)
+medium  6 roots — small + Education + cymatix-context (cymatix-context skips .db sidecars)
 large   1 root  — F:/Projects whole tree, standard denylist
 xl     13 roots — F:/Projects + 12 selected Steam/game installs (code/scripts/configs only)
 
@@ -22,7 +22,7 @@ Output (sharded mode):
     <out-dir>-sharded/<profile>/<drive>/<mirrored-path>/<label>.genome.db
     <out-dir>-sharded/manifest.json
 
-By default ``<out-dir> = F:/Projects/helix-context/genomes/bench/matrix``.
+By default ``<out-dir> = F:/Projects/cymatix-context/genomes/bench/matrix``.
 
 Usage
 -----
@@ -53,9 +53,9 @@ Examples:
     python scripts/build_fixture_matrix.py --profile xl --parallel --workers 6
     python scripts/build_fixture_matrix.py --profile xl --mode sharded --shard-workers 2 --shard-file-workers 3
 
-The script does not talk to the running Helix server -- it builds fresh
+The script does not talk to the running Cymatix server -- it builds fresh
 SQLite files directly. Use ``POST /admin/swap-db`` with ``mode="blob"``
-or ``mode="sharded"`` (or the ``helix_swap_db`` MCP tool) to mount one
+or ``mode="sharded"`` (or the ``cymatix_swap_db`` MCP tool) to mount one
 of the resulting files into a running server without restarting.
 """
 
@@ -216,9 +216,9 @@ SKIP_DIRS_COMMON = {
     # Windows system
     "$RECYCLE.BIN", "System Volume Information", "WpSystem",
     "WUDownloadCache", "WindowsApps",
-    # Helix-internal artifacts that should not pollute benches
+    # Cymatix-internal artifacts that should not pollute benches
     "benchmarks", "cwola_export", "logs", "training",
-    "Helix-backup blobs", "D3D12",
+    "Cymatix-backup blobs", "D3D12",
 }
 
 
@@ -491,7 +491,7 @@ def _drain_with_batched_splade(
 
     Crawl watchdog (issue #212): every flushed batch feeds
     ``crawl_detector`` (``None`` -> a :class:`crawl_watchdog.CrawlDetector`
-    built from the ``HELIX_BFM_CRAWL_*`` env knobs) with the end-to-end
+    built from the ``CYMATIX_BFM_CRAWL_*`` env knobs) with the end-to-end
     genes/s for that batch plus the dedicated-VRAM fraction. Ladder rung 1
     releases the CUDA cache and continues; the terminal rung raises the
     existing :class:`_PauseRequested` at this (already-committed) batch
@@ -504,7 +504,7 @@ def _drain_with_batched_splade(
     from cymatix_context.backends import splade_backend
     from cymatix_context.schemas import Gene
 
-    # SPLADE kill-switch, honoured at drain time. ``HELIX_BFM_SPLADE=0`` (set
+    # SPLADE kill-switch, honoured at drain time. ``CYMATIX_BFM_SPLADE=0`` (set
     # by the lean/CI builder env and the parity tests) must skip the batched
     # sparse encode entirely -- otherwise this drain loads the real SPLADE
     # model into the ``splade_backend`` process globals even when the caller
@@ -513,7 +513,7 @@ def _drain_with_batched_splade(
     # call time via the same ``_env_flag`` idiom so spawn workers inherit it
     # through the process environment. When present, a genome that was itself
     # built with SPLADE disabled (``_splade_enabled``) also forces the skip.
-    splade_on = _env_flag("HELIX_BFM_SPLADE") and getattr(
+    splade_on = _env_flag("CYMATIX_BFM_SPLADE") and getattr(
         genome, "_splade_enabled", True
     )
 
@@ -690,7 +690,7 @@ PROFILES: dict[str, dict] = {
     "medium": {
         "label": "Broader project corpus",
         # NOTE: the published matrix doc summary says "6 active roots" — that
-        # count includes Education plus helix-context. The 2026-05-13 doc
+        # count includes Education plus cymatix-context. The 2026-05-13 doc
         # body listed only 5 paths; Education was the missing 6th. Authoritative
         # here.
         "active_roots": 6,
@@ -700,10 +700,10 @@ PROFILES: dict[str, dict] = {
             r"F:\Projects\two-brain-audit",
             r"F:\Projects\MaxExpressKit",
             r"F:\Projects\Education",
-            r"F:\Projects\helix-context",
+            r"F:\Projects\cymatix-context",
         ],
         "extra_skip_dirs": set(),
-        # Skip any .db / .sqlite sidecars under helix-context. The walker
+        # Skip any .db / .sqlite sidecars under cymatix-context. The walker
         # already filters by extension; this is just an extra safety belt.
         "extra_filename_filters": [_is_sqlite_sidecar],
     },
@@ -846,8 +846,8 @@ def ingest_tree(
 def _env_flag(name: str, default: str = "1") -> bool:
     """Read a boolean env toggle. Truthy unless set to 0/false/no/off.
 
-    Used for the test/CI kill-switches ``HELIX_BFM_SPLADE`` and
-    ``HELIX_BFM_DENSE_BACKFILL``. Read at call time (not import time) and
+    Used for the test/CI kill-switches ``CYMATIX_BFM_SPLADE`` and
+    ``CYMATIX_BFM_DENSE_BACKFILL``. Read at call time (not import time) and
     inherited by spawn workers via the process environment, so a test can
     ``monkeypatch.setenv`` in the parent and have the ProcessPoolExecutor
     children honour it — monkeypatching module attributes does NOT cross
@@ -872,7 +872,7 @@ def _backfill_dense(db_path: str) -> dict:
     Delegates to :func:`backfill_bgem3_v2.backfill_dense_db` — the shared
     encode-and-pack loop also used by the standalone operator backfill
     script — so the two paths cannot drift. ``dim`` defaults to
-    ``retrieval.dense_embedding_dim`` from ``helix.toml``.
+    ``retrieval.dense_embedding_dim`` from ``cymatix.toml``.
 
     Call sites:
       * blob mode — at the end of :func:`build_profile`, after
@@ -888,9 +888,9 @@ def _backfill_dense(db_path: str) -> dict:
     and an ``error`` key is returned, so a dense-encode failure surfaces
     in the manifest rather than silently producing a dense-dark fixture.
     """
-    if not _env_flag("HELIX_BFM_DENSE_BACKFILL"):
+    if not _env_flag("CYMATIX_BFM_DENSE_BACKFILL"):
         log.info(
-            "dense backfill skipped (HELIX_BFM_DENSE_BACKFILL=0): %s", db_path,
+            "dense backfill skipped (CYMATIX_BFM_DENSE_BACKFILL=0): %s", db_path,
         )
         return {
             "db_path": db_path,
@@ -951,7 +951,7 @@ def build_profile(
     genome = Genome(
         path=db_path,
         synonym_map={},
-        splade_enabled=_env_flag("HELIX_BFM_SPLADE"),
+        splade_enabled=_env_flag("CYMATIX_BFM_SPLADE"),
         entity_graph=True,
     )
 
@@ -1424,7 +1424,7 @@ def _build_one_shard(
 
     shard = Genome(
         path=str(p), synonym_map={},
-        splade_enabled=_env_flag("HELIX_BFM_SPLADE"), entity_graph=True,
+        splade_enabled=_env_flag("CYMATIX_BFM_SPLADE"), entity_graph=True,
     )
     s_stats = {
         "files": 0, "genes": 0, "skipped": 0, "errors": 0,
@@ -1505,7 +1505,7 @@ def _build_one_shard(
         # shard's Genome is still open; the parent process seeds CROSS-shard
         # edges once all shards are built (build_profile_sharded, below).
         harmonic_links_seeded = 0
-        if not paused and _env_flag("HELIX_BFM_SEED_EDGES"):
+        if not paused and _env_flag("CYMATIX_BFM_SEED_EDGES"):
             try:
                 harmonic_links_seeded = seed_edges(
                     shard, [r["gene_id"] for r in fp_rows],
@@ -1630,7 +1630,7 @@ def _assert_shard_coverage(
     The slack-root gap shipped silently — 4/84 never-surfaced golds were
     files no shard ever ingested. This turns the fall-through into a
     build error: on violation, log ERROR with the orphan list and raise
-    ``RuntimeError``. Set ``HELIX_BFM_COVERAGE_CHECK=0`` to skip on huge
+    ``RuntimeError``. Set ``CYMATIX_BFM_COVERAGE_CHECK=0`` to skip on huge
     corpora (default ON).
 
     Cost: ONE walk of the roots (same pruning + eligibility filters as
@@ -1643,9 +1643,9 @@ def _assert_shard_coverage(
     files directly at its root: counting its whole subtree as covered
     would let a dropped-subdir bug slide through unnoticed.
     """
-    if not _env_flag("HELIX_BFM_COVERAGE_CHECK"):
+    if not _env_flag("CYMATIX_BFM_COVERAGE_CHECK"):
         log.info(
-            "shard coverage check skipped (HELIX_BFM_COVERAGE_CHECK=0)",
+            "shard coverage check skipped (CYMATIX_BFM_COVERAGE_CHECK=0)",
         )
         return
     prefixes = [
@@ -1741,7 +1741,7 @@ def build_profile_sharded(
     the main-DB ``shards`` table. Files living directly at a decomposed
     root get a dedicated ``<root-slug>__root`` catch-all shard (#213),
     and a post-construction coverage assertion verifies every eligible
-    file falls under some task's root (``HELIX_BFM_COVERAGE_CHECK=0``
+    file falls under some task's root (``CYMATIX_BFM_COVERAGE_CHECK=0``
     to skip).
     """
     profile = PROFILES[name]
@@ -1997,7 +1997,7 @@ def build_profile_sharded(
     # each shard .db directly (the per-shard Genome instances were already
     # closed inside _build_one_shard) -- skipped entirely on a paused
     # (partial) run since the shard set isn't final yet.
-    if not paused_mid_run and _env_flag("HELIX_BFM_SEED_EDGES") and totals["shards"]:
+    if not paused_mid_run and _env_flag("CYMATIX_BFM_SEED_EDGES") and totals["shards"]:
         import sqlite3 as _sqlite3
         shard_conns: dict = {}
         try:
@@ -2124,7 +2124,7 @@ def main() -> int:
     )
     parser.add_argument(
         "--out-dir",
-        default=r"F:\Projects\helix-context\genomes\bench\matrix",
+        default=r"F:\Projects\cymatix-context\genomes\bench\matrix",
         help="Base output dir. Blob writes <out-dir>/<profile>.db; "
              "sharded writes <out-dir>-sharded/<profile>/.",
     )

@@ -3,7 +3,7 @@ Dimensional-lock benchmark — measure how recall scales with axis count.
 
 Standard NIAH (bench_needle_1000.py) generates one query per needle and
 grades recall@1. That works for single-axis RAG systems but
-under-measures multi-axis retrieval engines like helix, where every
+under-measures multi-axis retrieval engines like cymatix, where every
 gene is addressed by 12 retrieval signals + 4-5 attribution axes
 simultaneously. Single-axis recall ignores 11 of the 12 narrowing
 dimensions the system actually has.
@@ -31,7 +31,7 @@ the needles are directly comparable to prior NIAH runs.
 
 Usage:
     python benchmarks/bench_dimensional_lock.py
-    N=50 SEED=42 HELIX_MODEL=qwen3:8b python benchmarks/bench_dimensional_lock.py
+    N=50 SEED=42 CYMATIX_MODEL=qwen3:8b python benchmarks/bench_dimensional_lock.py
     GENOME_DB=F:/Projects/helix-context/genome-bench-2026-05-08.db \\
         python benchmarks/bench_dimensional_lock.py
 
@@ -68,12 +68,12 @@ from bench_needle_1000 import (  # noqa: E402
 )
 
 
-HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
+CYMATIX_URL = os.environ.get("CYMATIX_URL", "http://127.0.0.1:11437")
 GENOME_DB = os.environ.get(
     "GENOME_DB",
     "F:/Projects/helix-context/genome-bench-2026-05-08.db",
 )
-MODEL = os.environ.get("HELIX_MODEL", "qwen3:8b")
+MODEL = os.environ.get("CYMATIX_MODEL", "qwen3:8b")
 N_TOTAL = int(os.environ.get("N", "50"))
 SEED = int(os.environ.get("SEED", "42"))
 OUTPUT_PATH = os.environ.get(
@@ -298,7 +298,7 @@ def eval_variant(
     t0 = time.time()
     try:
         resp = client.post(
-            f"{HELIX_URL}/context",
+            f"{CYMATIX_URL}/context",
             json={
                 "query": variant["query"],
                 "decoder_mode": "none",
@@ -353,7 +353,7 @@ def eval_variant(
         t1 = time.time()
         try:
             proxy_resp = client.post(
-                f"{HELIX_URL}/v1/chat/completions",
+                f"{CYMATIX_URL}/v1/chat/completions",
                 json={
                     "model": MODEL,
                     "messages": [{"role": "user", "content": prompt}],
@@ -385,7 +385,7 @@ def eval_variant(
 def main() -> int:
     print(f"=== Dimensional-lock benchmark ===")
     print(f"Genome:  {GENOME_DB}")
-    print(f"Server:  {HELIX_URL}")
+    print(f"Server:  {CYMATIX_URL}")
     print(f"Model:   {MODEL}")
     print(f"Seed:    {SEED}")
     print(f"N:       {N_TOTAL} needles × 4 variants = {N_TOTAL * 4} queries")
@@ -393,7 +393,7 @@ def main() -> int:
 
     # Sanity ping
     try:
-        h = httpx.get(f"{HELIX_URL}/health", timeout=5).json()
+        h = httpx.get(f"{CYMATIX_URL}/health", timeout=5).json()
         print(f"Server: ok, ribosome={h.get('ribosome')}, genes={h.get('genes')}")
     except Exception as e:
         print(f"Server unreachable: {e}", file=sys.stderr)

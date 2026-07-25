@@ -3,7 +3,7 @@
 # -> S4 ERB 500-q scored @ June-11 500K fixture (#93).
 # Every stage logs to benchmarks/logs and updates chain_status.json.
 $ErrorActionPreference = 'Continue'
-$repo = 'F:\Projects\helix-context'
+$repo = 'F:\Projects\cymatix-context'
 $chain = "$repo\scripts\bench_chain"
 $logs = "$repo\benchmarks\logs"
 New-Item -ItemType Directory -Force -Path $logs | Out-Null

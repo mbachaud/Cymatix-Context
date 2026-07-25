@@ -7,22 +7,22 @@ Design is grounded in three existing harnesses:
     load-bearing gold-delivery scorer (check_gold_delivery / find_needle).
     We import and reuse its retrieval scoring verbatim so recall numbers are
     directly comparable to the standalone harness. bench_needle drives its
-    answer model via the HELIX_MODEL env var and hits HELIX_URL /context +
-    /v1/chat/completions -- so an ollama rung is just "set HELIX_MODEL and run
+    answer model via the CYMATIX_MODEL env var and hits CYMATIX_URL /context +
+    /v1/chat/completions -- so an ollama rung is just "set CYMATIX_MODEL and run
     find_needle".
   * scripts/bench_claude_matrix.py -- the claude -p convention: json output,
     per-question --max-budget-usd cost cap, sonnet default. We reuse
     score_answer's {-1,0,+1} trinary and the ABSTAIN markers.
   * benchmarks/bench_orchestrator.py -- NOT imported here (the .ps1 owns the
     BenchServer lifecycle so a bed failure can't wedge the whole sweep); this
-    script assumes a server is already serving the bed at --helix-url and just
+    script assumes a server is already serving the bed at --cymatix-url and just
     runs the needle battery.
 
 Consumers (rungs):
   * local ollama models discovered at runtime (`ollama list`), passed in via
-    --ollama-models (comma-separated). Each is driven THROUGH helix's proxy
+    --ollama-models (comma-separated). Each is driven THROUGH cymatix's proxy
     (/v1/chat/completions) exactly as bench_needle does, so the context the
-    local model sees is helix-assembled.
+    local model sees is cymatix-assembled.
   * one Claude rung using Sonnet via `claude -p` (retrieval context injected
     as a system prompt the same way bench_enterprise_rag does), hard-capped at
     --claude-max-usd per query.
@@ -102,9 +102,9 @@ _SYS_INJECTED = (
 )
 
 
-def _fetch_context(helix_url: str, query: str,
+def _fetch_context(cymatix_url: str, query: str,
                    timeout_s: float = 30.0) -> tuple[str, bool]:
-    """Fetch helix /context text for a query (decoder off, retrieval only).
+    """Fetch cymatix /context text for a query (decoder off, retrieval only).
 
     Returns (context_text, fetch_ok). fetch_ok=False distinguishes a
     fetch failure from a genuinely-empty retrieval so Claude-rung rows
@@ -113,7 +113,7 @@ def _fetch_context(helix_url: str, query: str,
     """
     try:
         resp = httpx.post(
-            f"{helix_url}/context",
+            f"{cymatix_url}/context",
             json={"query": query, "decoder_mode": "none",
                   "ignore_delivered": True},
             timeout=timeout_s,
@@ -138,7 +138,7 @@ def _run_claude_sonnet(query: str, ctx_text: str, model: str,
     and bench_enterprise_rag.run_claude (context via --append-system-prompt-file
     + an empty --mcp-config so no local MCP is consulted).
     """
-    clean_cwd = Path(tempfile.gettempdir()) / "helix-bench-clean-cwd"
+    clean_cwd = Path(tempfile.gettempdir()) / "cymatix-bench-clean-cwd"
     clean_cwd.mkdir(parents=True, exist_ok=True)
     empty_cfg = clean_cwd / "_empty_mcp.json"
     if not empty_cfg.exists():
@@ -200,18 +200,18 @@ def _run_claude_sonnet(query: str, ctx_text: str, model: str,
 
 
 # ---------------------------------------------------------------------------
-# Ollama rung -- driven THROUGH the helix proxy, exactly like bench_needle
+# Ollama rung -- driven THROUGH the cymatix proxy, exactly like bench_needle
 # ---------------------------------------------------------------------------
 
-def _run_ollama_via_proxy(helix_url: str, query: str, model: str,
+def _run_ollama_via_proxy(cymatix_url: str, query: str, model: str,
                           timeout_s: float = 660.0) -> dict:
-    """Answer via helix /v1/chat/completions with the given ollama model.
+    """Answer via cymatix /v1/chat/completions with the given ollama model.
 
     This is the same call bench_needle.find_needle makes for answer accuracy
-    (HELIX_MODEL) -- context is helix-assembled and injected by the proxy.
+    (CYMATIX_MODEL) -- context is cymatix-assembled and injected by the proxy.
 
     timeout_s must exceed the proxy's upstream timeout (600s via
-    HELIX_SERVER_UPSTREAM_TIMEOUT in s2_sike_bed_sweep.ps1) so the server
+    CYMATIX_SERVER_UPSTREAM_TIMEOUT in s2_sike_bed_sweep.ps1) so the server
     side decides and the bench records a real HTTP status instead of a
     client-side ReadTimeout (2026-07-05: the 180s default upstream
     timeout censored ~25-30 percent of the big-gemma needles as http_error).
@@ -219,7 +219,7 @@ def _run_ollama_via_proxy(helix_url: str, query: str, model: str,
     t0 = time.perf_counter()
     try:
         resp = httpx.post(
-            f"{helix_url}/v1/chat/completions",
+            f"{cymatix_url}/v1/chat/completions",
             json={
                 "model": model,
                 "messages": [{"role": "user", "content": query}],
@@ -250,8 +250,8 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--bed", required=True,
                     help="Bed label for the output filename, e.g. 'xl'.")
-    ap.add_argument("--helix-url", default=os.environ.get(
-        "HELIX_URL", "http://127.0.0.1:11437"))
+    ap.add_argument("--cymatix-url", default=os.environ.get(
+        "CYMATIX_URL", "http://127.0.0.1:11437"))
     ap.add_argument("--ollama-models", default="",
                     help="Comma-separated ollama model tags (local ladder).")
     ap.add_argument("--claude-model", default="sonnet",
@@ -285,7 +285,7 @@ def main(argv: list[str] | None = None) -> int:
         "benchmark": "sike_bedsweep",
         "issue": "#221",
         "bed": args.bed,
-        "helix_url": args.helix_url,
+        "cymatix_url": args.cymatix_url,
         "timestamp": ts,
         "n_needles": len(needles),
         "consumers": {"ollama": ollama_models,
@@ -323,9 +323,9 @@ def main(argv: list[str] | None = None) -> int:
         return PAUSE_EXIT
 
     # Server sanity + gene count.
-    bench_needle.HELIX_URL = args.helix_url  # so find_needle hits this server
+    bench_needle.CYMATIX_URL = args.cymatix_url  # so find_needle hits this server
     try:
-        stats = httpx.get(f"{args.helix_url}/stats", timeout=15).json()
+        stats = httpx.get(f"{args.cymatix_url}/stats", timeout=15).json()
         result["genome_genes"] = stats.get("total_genes")
         result["compression_ratio"] = stats.get("compression_ratio")
     except Exception as exc:
@@ -334,7 +334,7 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     # Pass-1 client timeout must exceed the proxy's upstream timeout
-    # (600s via HELIX_SERVER_UPSTREAM_TIMEOUT in the .ps1): find_needle's
+    # (600s via CYMATIX_SERVER_UPSTREAM_TIMEOUT in the .ps1): find_needle's
     # answer step drives a local model through the proxy, and a client
     # that fires first turns a slow generation into a dropped recall row
     # (silent denominator shrink — review 2026-07-05).
@@ -414,9 +414,9 @@ def main(argv: list[str] | None = None) -> int:
             accept = nd.get("accept", [nd.get("expected", "")])
             q = nd["query"]
             if kind == "ollama":
-                a = _run_ollama_via_proxy(args.helix_url, q, model)
+                a = _run_ollama_via_proxy(args.cymatix_url, q, model)
             else:  # claude
-                ctx, ctx_ok = _fetch_context(args.helix_url, q)
+                ctx, ctx_ok = _fetch_context(args.cymatix_url, q)
                 a = _run_claude_sonnet(q, ctx, model, args.claude_max_usd)
                 a["ctx_chars"] = len(ctx)
                 if not ctx_ok:

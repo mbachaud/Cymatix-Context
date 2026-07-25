@@ -67,7 +67,7 @@ def test_legit_identifier_values_pass():
 
 
 def test_legit_path_values_pass():
-    assert bench.is_quality_kv("genome_path", "F:/Projects/helix-context/genome.db") is True
+    assert bench.is_quality_kv("genome_path", "F:/Projects/cymatix-context/genome.db") is True
     assert bench.is_quality_kv("output_dir", "benchmarks/results") is True
 
 

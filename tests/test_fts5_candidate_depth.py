@@ -89,7 +89,7 @@ def test_override_is_independent_of_max_genes():
 
 def test_config_round_trip(tmp_path):
     """[retrieval] fts5_candidate_depth parses off a TOML file."""
-    toml = tmp_path / "helix.toml"
+    toml = tmp_path / "cymatix.toml"
     toml.write_text("[retrieval]\nfts5_candidate_depth = 300\n", encoding="utf-8")
     cfg = load_config(str(toml))
     assert cfg.retrieval.fts5_candidate_depth == 300

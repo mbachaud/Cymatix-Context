@@ -1,4 +1,4 @@
-"""Shared fixtures for Helix Context tests."""
+"""Shared fixtures for Cymatix Context tests."""
 
 import contextlib
 import hashlib
@@ -14,12 +14,12 @@ from pathlib import Path
 # --reload) runs at import time. Without a real genome path it raises
 # sqlite3.OperationalError during collection. Set :memory: so tests can
 # import cymatix_context.server without a real DB file on disk.
-os.environ.setdefault("HELIX_GENOME_PATH", ":memory:")
+os.environ.setdefault("CYMATIX_GENOME_PATH", ":memory:")
 
 from cymatix_context.config import (
     BudgetConfig,
     GenomeConfig,
-    HelixConfig,
+    CymatixConfig,
     RibosomeConfig,
     ServerConfig,
 )
@@ -127,7 +127,7 @@ def _stub_dense_codec(request, monkeypatch):
     accessor on both seams that construct a real ``BGEM3Codec``:
 
     - ``knowledge_store.KnowledgeStore._get_dense_codec``
-    - ``context_manager.HelixContextManager._get_dense_codec``
+    - ``context_manager.CymatixContextManager._get_dense_codec``
 
     Both originally do ``from .backends.bgem3_codec import BGEM3Codec`` and
     ``BGEM3Codec(dim=...)`` — that construction (and its lazy ``_load()``,
@@ -138,7 +138,7 @@ def _stub_dense_codec(request, monkeypatch):
 
     - a test that pre-assigns ``g._dense_codec = ...`` still wins (the
       replacement returns the already-set codec untouched);
-    - ``HelixContextManager._get_dense_codec`` still returns ``None`` when
+    - ``CymatixContextManager._get_dense_codec`` still returns ``None`` when
       ``config.ingestion.dense_embed_on_ingest`` is false.
 
     ``live``-marked tests are skipped entirely by this fixture — they must
@@ -159,7 +159,7 @@ def _stub_dense_codec(request, monkeypatch):
         return self._dense_codec
 
     def _fake_manager_codec(self):
-        # Mirrors HelixContextManager._get_dense_codec: the dense-on-ingest
+        # Mirrors CymatixContextManager._get_dense_codec: the dense-on-ingest
         # gate still applies, only the constructed class changes.
         if not self.config.ingestion.dense_embed_on_ingest:
             return None
@@ -173,7 +173,7 @@ def _stub_dense_codec(request, monkeypatch):
         _ks.KnowledgeStore, "_get_dense_codec", _fake_store_codec
     )
     monkeypatch.setattr(
-        _cm.HelixContextManager, "_get_dense_codec", _fake_manager_codec
+        _cm.CymatixContextManager, "_get_dense_codec", _fake_manager_codec
     )
 
 
@@ -370,30 +370,30 @@ class MockCompressorBackend:
 
 # ── Shared config / client / CLI helpers ─────────────────────────────
 #
-# The same four-section ``HelixConfig(...)`` literal (mock ribosome,
+# The same four-section ``CymatixConfig(...)`` literal (mock ribosome,
 # small budget, in-memory genome, localhost upstream) was repeated in
 # ~22 test files, and the same 5-line stdout/stderr-capturing CLI
 # runner in all 12 ``tests/test_cli_*.py`` files. One definition each.
 
 
-def make_helix_config(**overrides) -> HelixConfig:
+def make_cymatix_config(**overrides) -> CymatixConfig:
     """Standard in-memory test config; ``**overrides`` replace whole sections.
 
     Returns the config shape shared by the server/pipeline test files::
 
-        HelixConfig(
+        CymatixConfig(
             ribosome=RibosomeConfig(model="mock", timeout=5),   # backend stays "none"
             budget=BudgetConfig(max_genes_per_turn=4),
             genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
             server=ServerConfig(upstream="http://localhost:11434"),
         )
 
-    Each keyword must be a ``HelixConfig`` field name; the value replaces
+    Each keyword must be a ``CymatixConfig`` field name; the value replaces
     that section wholesale (no deep merge). Examples::
 
-        make_helix_config(budget=BudgetConfig(max_genes_per_turn=4,
+        make_cymatix_config(budget=BudgetConfig(max_genes_per_turn=4,
                                               session_delivery_enabled=True))
-        make_helix_config(synonym_map={"auth": ["jwt", "login"]})
+        make_cymatix_config(synonym_map={"auth": ["jwt", "login"]})
     """
     defaults: dict = {
         "ribosome": RibosomeConfig(model="mock", timeout=5),
@@ -402,7 +402,7 @@ def make_helix_config(**overrides) -> HelixConfig:
         "server": ServerConfig(upstream="http://localhost:11434"),
     }
     defaults.update(overrides)
-    return HelixConfig(**defaults)
+    return CymatixConfig(**defaults)
 
 
 def make_client(config=None, backend=None) -> "TestClient":
@@ -410,9 +410,9 @@ def make_client(config=None, backend=None) -> "TestClient":
 
     Builds the app the way ``tests/test_server.py``'s ``client`` fixture
     does: ``create_app(config)``, then injects ``backend`` into
-    ``app.state.helix.ribosome.backend`` so no Ollama/upstream is needed.
+    ``app.state.cymatix.ribosome.backend`` so no Ollama/upstream is needed.
 
-    - ``config``  defaults to ``make_helix_config()``.
+    - ``config``  defaults to ``make_cymatix_config()``.
     - ``backend`` defaults to a fresh ``MockCompressorBackend()``.
 
     Returns the ``TestClient`` un-entered — use it directly (test_server
@@ -426,15 +426,15 @@ def make_client(config=None, backend=None) -> "TestClient":
     from fastapi.testclient import TestClient
     from cymatix_context.server import create_app
 
-    app = create_app(config if config is not None else make_helix_config())
-    app.state.helix.ribosome.backend = (
+    app = create_app(config if config is not None else make_cymatix_config())
+    app.state.cymatix.ribosome.backend = (
         backend if backend is not None else MockCompressorBackend()
     )
     return TestClient(app)
 
 
 def run_cli(argv: list[str]) -> tuple[int, str, str]:
-    """Run the ``helix`` CLI in-process; return ``(exit_code, stdout, stderr)``.
+    """Run the ``cymatix`` CLI in-process; return ``(exit_code, stdout, stderr)``.
 
     The exact helper duplicated as ``_run`` in all 12
     ``tests/test_cli_*.py`` files: captures stdout/stderr via

@@ -21,7 +21,7 @@ from itertools import combinations, product
 import numpy as np
 from sklearn.cluster import KMeans
 
-DB_PATH = "F:/Projects/helix-context/genome.db"
+DB_PATH = "F:/Projects/cymatix-context/genome.db"
 SAMPLE_SIZES = [50, 100, 200, 500, 1000, 1500, 5000]
 N_TRIALS = 3           # Average over N random samples per size (smooths noise)
 N_PROBE = 50           # Neighbor-recovery probes per trial

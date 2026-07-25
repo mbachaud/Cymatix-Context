@@ -11,13 +11,13 @@
 #     bash benchmarks/_run_slice3_gate.sh
 #
 # Preconditions the script checks:
-#   - Helix server is currently running on :11437
+#   - Cymatix server is currently running on :11437
 #   - qwen3:1.7b is loaded in Ollama (unloaded competitors)
-#   - Nothing else is midway through writing helix.toml
+#   - Nothing else is midway through writing cymatix.toml
 #
 # Side effects (all reverted on exit, even on failure):
-#   - Temporarily sets [retrieval] sr_enabled = false in helix.toml
-#   - Restarts the Helix server twice (once to flip, once to restore)
+#   - Temporarily sets [retrieval] sr_enabled = false in cymatix.toml
+#   - Restarts the Cymatix server twice (once to flip, once to restore)
 #
 # Output:
 #   - benchmarks/needle_50_v2_slice3_gate_<timestamp>.json   (result)
@@ -31,25 +31,25 @@ cd "$REPO_ROOT"
 TS=$(date +%Y-%m-%d_%H%M)
 RESULT_JSON="benchmarks/needle_50_v2_slice3_gate_${TS}.json"
 RESULT_LOG="benchmarks/needle_50_v2_slice3_gate_${TS}.log"
-HELIX_TOML="cymatix.toml"
-BACKUP_TOML="helix.toml.slice3_gate_backup"
+CYMATIX_TOML="cymatix.toml"
+BACKUP_TOML="cymatix.toml.slice3_gate_backup"
 
 # ── Safety: capture original state ─────────────────────────────────
-cp "$HELIX_TOML" "$BACKUP_TOML"
+cp "$CYMATIX_TOML" "$BACKUP_TOML"
 
 restore_toml() {
     echo ""
-    echo "[slice3-gate] Restoring original helix.toml..."
-    mv "$BACKUP_TOML" "$HELIX_TOML"
-    echo "[slice3-gate] Restart the Helix server manually to pick up restored sr_enabled=true."
+    echo "[slice3-gate] Restoring original cymatix.toml..."
+    mv "$BACKUP_TOML" "$CYMATIX_TOML"
+    echo "[slice3-gate] Restart the Cymatix server manually to pick up restored sr_enabled=true."
 }
 trap restore_toml EXIT
 
 # ── Flip sr_enabled=false ──────────────────────────────────────────
-echo "[slice3-gate] Flipping sr_enabled to false in helix.toml..."
+echo "[slice3-gate] Flipping sr_enabled to false in cymatix.toml..."
 python -c "
 import pathlib, re
-path = pathlib.Path('$HELIX_TOML')
+path = pathlib.Path('$CYMATIX_TOML')
 src = path.read_text(encoding='utf-8')
 new = re.sub(
     r'^sr_enabled\s*=\s*true.*\$',
@@ -66,10 +66,10 @@ print('  ok — sr_enabled flipped to false')
 cat <<'EOF'
 
 [slice3-gate] ACTION REQUIRED:
-  1. Restart the Helix server now so the flipped flag takes effect.
+  1. Restart the Cymatix server now so the flipped flag takes effect.
      Typical command:
        (kill the running server, then)
-       python -m uvicorn helix_context.server:app --host 127.0.0.1 --port 11437
+       python -m uvicorn cymatix_context.server:app --host 127.0.0.1 --port 11437
 
   2. Press ENTER here once the server is back up and /stats responds 200.
 
@@ -78,13 +78,13 @@ read -r
 
 # ── Verify server is up ────────────────────────────────────────────
 if ! curl -s -f http://127.0.0.1:11437/health >/dev/null; then
-    echo "[slice3-gate] Helix /health did not respond. Aborting; toml will be restored."
+    echo "[slice3-gate] Cymatix /health did not respond. Aborting; toml will be restored."
     exit 1
 fi
 
 # ── Run bench ──────────────────────────────────────────────────────
 echo "[slice3-gate] Running N=50 v2 bench at qwen3:1.7b with sr_enabled=false..."
-N=50 SEED=42 HELIX_MODEL=qwen3:1.7b OUTPUT="$RESULT_JSON" \
+N=50 SEED=42 CYMATIX_MODEL=qwen3:1.7b OUTPUT="$RESULT_JSON" \
     python benchmarks/bench_needle_1000.py > "$RESULT_LOG" 2>&1
 
 # ── Surface the result ─────────────────────────────────────────────
@@ -105,4 +105,4 @@ echo ""
 echo "[slice3-gate] Full result: $RESULT_JSON"
 echo "[slice3-gate] Full log:    $RESULT_LOG"
 
-# trap will restore helix.toml on exit
+# trap will restore cymatix.toml on exit

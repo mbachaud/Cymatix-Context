@@ -156,15 +156,15 @@ _CODE = (
     not tc.is_available(), reason="tree-sitter (+ tree-sitter-python) not installed"
 )
 def test_ingest_then_delete_leaves_zero_symbol_rows(tmp_path, monkeypatch):
-    monkeypatch.delenv("HELIX_USE_SHARDS", raising=False)
-    monkeypatch.setenv("HELIX_GENOME_PATH", str(tmp_path / "genome.db"))
+    monkeypatch.delenv("CYMATIX_USE_SHARDS", raising=False)
+    monkeypatch.setenv("CYMATIX_GENOME_PATH", str(tmp_path / "genome.db"))
     from cymatix_context.config import load_config
-    from cymatix_context.context_manager import HelixContextManager
+    from cymatix_context.context_manager import CymatixContextManager
 
     cfg = load_config()
     cfg.ingestion.symbol_graph = True
     cfg.ingestion.sema_embed_on_ingest = False
-    mgr = HelixContextManager(cfg)
+    mgr = CymatixContextManager(cfg)
     mgr.ingest(_CODE, content_type="code",
                metadata={"path": "billing.py", "source_id": "billing.py"})
 

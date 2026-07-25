@@ -1,9 +1,9 @@
-"""External retriever bench — measures what HelixNarrowedRetriever
+"""External retriever bench — measures what CymatixNarrowedRetriever
 adds when composed with a real external retriever.
 
 We wrap the existing SEMA-embedding retriever as a ``Retriever`` and
 run it both raw (unscoped over the full 7846-gene genome) and
-narrowed (scoped to Helix's packet shortlist). The bench measures:
+narrowed (scoped to Cymatix's packet shortlist). The bench measures:
 
     - retrieval_candidate_count: how many docs the retriever
       searched over (raw = all genes; narrowed = ~12)
@@ -36,12 +36,12 @@ import httpx  # noqa: E402
 
 from cymatix_context.backends.sema_codec import decode_embedding  # noqa: E402
 from cymatix_context.adapters.retriever import (  # noqa: E402
-    HelixNarrowedRetriever, RetrievedDoc, Retriever,
+    CymatixNarrowedRetriever, RetrievedDoc, Retriever,
 )
 
-HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
+CYMATIX_URL = os.environ.get("CYMATIX_URL", "http://127.0.0.1:11437")
 GENOME_PATH = os.environ.get(
-    "HELIX_GENOME_PATH",
+    "CYMATIX_GENOME_PATH",
     str(Path(__file__).resolve().parents[1] / "genomes" / "main" / "genome.db"),
 )
 
@@ -49,17 +49,17 @@ GENOME_PATH = os.environ.get(
 # Reuse the multi-needle needles (with expected answers) from the
 # composition bench. Inline so this bench is self-contained.
 NEEDLES = [
-    {"name": "helix_and_headroom_ports",
-     "query": "what ports do helix and headroom listen on",
+    {"name": "cymatix_and_headroom_ports",
+     "query": "what ports do cymatix and headroom listen on",
      "expected": ["11437", "8787"]},
     {"name": "python_version_and_codec_extra",
-     "query": "python version helix requires and extra that enables headroom",
+     "query": "python version cymatix requires and extra that enables headroom",
      "expected": ["3.11", "codec"]},
     {"name": "pipeline_steps_and_compression_target",
-     "query": "steps in helix pipeline and target compression ratio",
+     "query": "steps in cymatix pipeline and target compression ratio",
      "expected": ["6", "5x"]},
     {"name": "claim_types_and_spec_source",
-     "query": "claim_type allowed values helix claims layer specification",
+     "query": "claim_type allowed values cymatix claims layer specification",
      "expected": ["path_value", "agent-context-index"]},
     {"name": "headroom_port_and_mode_default",
      "query": "headroom dashboard port default compression mode",
@@ -70,8 +70,8 @@ NEEDLES = [
     {"name": "coord_floor_and_file_grain_floor",
      "query": "coordinate confidence floor file-grain coverage floor",
      "expected": ["0.30", "0.15"]},
-    {"name": "helix_port_and_fleet_port",
-     "query": "helix listen port bigEd fleet dashboard port",
+    {"name": "cymatix_port_and_fleet_port",
+     "query": "cymatix listen port bigEd fleet dashboard port",
      "expected": ["11437", "5555"]},
 ]
 
@@ -171,7 +171,7 @@ def _content_recall(expected: list[str], content: str) -> float:
 
 
 def run(raw: SemaEmbeddingRetriever,
-        narrowed: HelixNarrowedRetriever,
+        narrowed: CymatixNarrowedRetriever,
         needles: list[dict],
         top_k: int = 8) -> dict:
     results = []
@@ -184,17 +184,17 @@ def run(raw: SemaEmbeddingRetriever,
         raw_recall = _content_recall(needle["expected"], raw_content)
         raw_candidates = raw.corpus_size  # Searches every vector
 
-        # B: narrowed — Helix scopes, then retriever searches within
+        # B: narrowed — Cymatix scopes, then retriever searches within
         t0 = time.time()
         nar_docs = narrowed.retrieve(needle["query"], top_k=top_k)
         nar_latency = time.time() - t0
         nar_content = "\n".join(d.content for d in nar_docs)
         nar_recall = _content_recall(needle["expected"], nar_content)
         # The actual candidate count for the narrowed retrieve is
-        # Helix's shortlist size (we measure via the packet call).
+        # Cymatix's shortlist size (we measure via the packet call).
         try:
             pkt = httpx.post(
-                f"{HELIX_URL}/context/packet",
+                f"{CYMATIX_URL}/context/packet",
                 json={
                     "query": needle["query"],
                     "task_type": "explain",
@@ -233,10 +233,10 @@ def main() -> int:
         print(f"ERROR: genome not found at {GENOME_PATH}")
         return 1
     try:
-        stats = httpx.get(f"{HELIX_URL}/stats", timeout=5).json()
+        stats = httpx.get(f"{CYMATIX_URL}/stats", timeout=5).json()
         print(f"Genome: {stats['total_genes']} genes\n")
     except Exception as exc:
-        print(f"Cannot reach Helix at {HELIX_URL}: {exc}")
+        print(f"Cannot reach Cymatix at {CYMATIX_URL}: {exc}")
         return 1
 
     print("Loading SemaEmbeddingRetriever (this is the 'external' retriever)…",
@@ -244,9 +244,9 @@ def main() -> int:
     raw = SemaEmbeddingRetriever(GENOME_PATH)
     print(f"  {raw.corpus_size} vectors loaded\n")
 
-    narrowed = HelixNarrowedRetriever(
+    narrowed = CymatixNarrowedRetriever(
         raw,
-        helix_url=HELIX_URL,
+        cymatix_url=CYMATIX_URL,
         fallback_unscoped=True,
         read_only=True,
     )

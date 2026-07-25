@@ -17,7 +17,7 @@ Retrieve and compress context for a query. Equivalent to `POST /context`.
 
 **Returns:** compressed expressed_context string with `<GENE>` blocks.
 
-## helix_ingest
+## cymatix_ingest
 
 Ingest content into the knowledge store.
 
@@ -30,7 +30,7 @@ Ingest content into the knowledge store.
 }
 ```
 
-## helix_fingerprint
+## cymatix_fingerprint
 
 Navigation-first retrieval — returns scores and source pointers without assembling content. Use when the agent needs to decide whether to fetch, not when it needs the content directly.
 

@@ -1,6 +1,6 @@
 """Provider OAuth focus benchmark runner.
 
-This runner keeps Helix retrieval telemetry separate from optional provider
+This runner keeps Cymatix retrieval telemetry separate from optional provider
 host paths. The ``dry_run`` provider is model-free and never invokes a
 provider adapter.
 """
@@ -22,7 +22,7 @@ import httpx
 from benchmarks.oauth_task_set import OAUTH_TASKS
 
 BENCH_NAME = "oauth_provider_focus"
-DEFAULT_HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
+DEFAULT_CYMATIX_URL = os.environ.get("CYMATIX_URL", "http://127.0.0.1:11437")
 DEFAULT_OUT = Path("runs/oauth_provider_focus.jsonl")
 HTTP_TIMEOUT_S = 30.0
 PROVIDER_TIMEOUT_S = 120.0
@@ -140,7 +140,7 @@ def _metric(payload: Any, name: str, default: float = 0.0) -> float:
 
 
 def fetch_context(
-    helix_url: str,
+    cymatix_url: str,
     task: dict[str, Any],
     *,
     arm: str,
@@ -173,7 +173,7 @@ def fetch_context(
     t0 = time.time()
     try:
         resp = httpx.post(
-            f"{helix_url.rstrip('/')}/context",
+            f"{cymatix_url.rstrip('/')}/context",
             json=body,
             timeout=HTTP_TIMEOUT_S,
         )
@@ -182,7 +182,7 @@ def fetch_context(
         payload = resp.json()
     except Exception as exc:
         latency_s = time.time() - t0
-        log.warning("failed to fetch Helix context: %s", exc)
+        log.warning("failed to fetch Cymatix context: %s", exc)
         return ContextResult("", latency_s, 0, 0.0)
 
     content = _context_content(payload)
@@ -196,7 +196,7 @@ def fetch_context(
 def _build_prompt(task: dict[str, str], context: str) -> str:
     if context:
         return (
-            "Answer using only the provided Helix context. Be concise.\n\n"
+            "Answer using only the provided Cymatix context. Be concise.\n\n"
             f"<cymatix_context>\n{context}\n</cymatix_context>\n\n"
             f"Question: {task['query']}"
         )
@@ -318,7 +318,7 @@ def run(args: argparse.Namespace) -> list[dict[str, Any]]:
     for task in selected_tasks:
         if args.arm == "context_attached":
             context = fetch_context(
-                args.helix_url,
+                args.cymatix_url,
                 task,
                 arm=args.arm,
                 provider=args.provider,
@@ -376,7 +376,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
-    parser.add_argument("--helix-url", default=DEFAULT_HELIX_URL)
+    parser.add_argument("--cymatix-url", default=DEFAULT_CYMATIX_URL)
     parser.add_argument("--model", default=None)
     parser.add_argument("--pass-id", default=None)
     parser.add_argument("--run-id", default=None)

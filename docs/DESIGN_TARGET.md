@@ -4,7 +4,7 @@
 > deterministic lookup, and trust-calibration signals. Human UX is for operators
 > and debugging, not for primary queries.
 
-**Established:** 2026-04-15 (helix day 9).
+**Established:** 2026-04-15 (cymatix day 9).
 **Authors:** Max + Laude, after a full-day session where the feedback loop
 driving cymatix decisions was explicitly "ask Laude / Raude / Taude what hurts."
 Raude's Dewey filename-anchor pivot (+12pp), Laude's PWPC Phase 1 shipment

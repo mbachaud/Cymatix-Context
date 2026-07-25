@@ -7,7 +7,7 @@ Benchmark state monitor — detects the three failure modes we hit in practice:
      mid-run, or a new model appearing in VRAM)
 
 Design notes:
-  - Config-driven: reads helix.toml to find the genome path, Ollama URL, etc.
+  - Config-driven: reads cymatix.toml to find the genome path, Ollama URL, etc.
     No hardcoded paths. Follows raude's temporary A/B switches automatically.
   - Progress-gated response: restart early (<N-weighted %), warn late.
   - Tiered VRAM detection: 90% = pressure (3 consecutive passes = warn),
@@ -103,8 +103,8 @@ class BenchmarkMonitor:
         total_needles: int,
         allowed_models: Optional[list[str]] = None,
         genome_snapshot_path: Optional[str] = None,
-        helix_config_path: Optional[str] = None,
-        helix_url: str = "http://127.0.0.1:11437",
+        cymatix_config_path: Optional[str] = None,
+        cymatix_url: str = "http://127.0.0.1:11437",
         ollama_url: str = "http://localhost:11434",
         monitor_log_path: Optional[str] = None,
         config: Optional[MonitorConfig] = None,
@@ -115,7 +115,7 @@ class BenchmarkMonitor:
         self.allowed_models = [m.lower() for m in (allowed_models or [benchmark_model])]
         self.incremental_path = Path(incremental_output_path)
         self.total_needles = total_needles
-        self.helix_url = helix_url.rstrip("/")
+        self.cymatix_url = cymatix_url.rstrip("/")
         self.ollama_url = ollama_url.rstrip("/")
         self.cfg = config or MonitorConfig()
         # ask_proxy=False → retrieval-only run (/context, no /v1/chat). The
@@ -127,11 +127,11 @@ class BenchmarkMonitor:
         # in _run_check still use their own (tighter) timeout.
         self.health_timeout_s = health_timeout_s
 
-        # Config-driven genome path — resolved from helix.toml unless overridden
+        # Config-driven genome path — resolved from cymatix.toml unless overridden
         if genome_snapshot_path:
             self.genome_path = Path(genome_snapshot_path)
         else:
-            self.genome_path = Path(self._resolve_genome_path(helix_config_path))
+            self.genome_path = Path(self._resolve_genome_path(cymatix_config_path))
 
         # Monitor log file (one JSON line per check or incident)
         if monitor_log_path:
@@ -161,7 +161,7 @@ class BenchmarkMonitor:
     # ────────────────────────────────────────────────────────────────
 
     def _resolve_genome_path(self, config_path: Optional[str]) -> str:
-        """Read helix.toml via load_config() to find the current genome path."""
+        """Read cymatix.toml via load_config() to find the current genome path."""
         try:
             # Lazy import — avoids pulling in ΣĒMA/transformers at module load time
             sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -372,7 +372,7 @@ class BenchmarkMonitor:
         if any fatal check failed. The caller should exit non-zero on False.
 
         Checks:
-          1. Helix server is reachable
+          1. Cymatix server is reachable
           2. Ollama is reachable
           3. Target benchmark model is loaded
           4. No unauthorized models are loaded
@@ -382,7 +382,7 @@ class BenchmarkMonitor:
         self._print(f"Benchmark model:   {self.benchmark_model}")
         self._print(f"Allowed models:    {self.allowed_models}")
         self._print(f"Genome path:       {self.genome_path}")
-        self._print(f"Helix URL:         {self.helix_url}")
+        self._print(f"Cymatix URL:         {self.cymatix_url}")
         self._print(f"Ollama URL:        {self.ollama_url}")
         self._print(f"Total needles:     {self.total_needles}")
         self._print(f"Ask-proxy mode:    {self.ask_proxy} "
@@ -393,17 +393,17 @@ class BenchmarkMonitor:
 
         fatal = []
 
-        # 1. Helix server reachable?
+        # 1. Cymatix server reachable?
         try:
-            r = self._client.get(f"{self.helix_url}/health", timeout=self.health_timeout_s)
+            r = self._client.get(f"{self.cymatix_url}/health", timeout=self.health_timeout_s)
             if r.status_code != 200:
-                fatal.append(f"Helix server returned HTTP {r.status_code}")
+                fatal.append(f"Cymatix server returned HTTP {r.status_code}")
             else:
                 health = r.json()
-                self._print(f"[OK] Helix alive: {health.get('genes')} genes, "
+                self._print(f"[OK] Cymatix alive: {health.get('genes')} genes, "
                             f"ribosome={health.get('ribosome')}")
         except Exception as e:
-            fatal.append(f"Helix server unreachable at {self.helix_url}: {e}")
+            fatal.append(f"Cymatix server unreachable at {self.cymatix_url}: {e}")
 
         # 2-4. Ollama-side gates — skipped entirely in retrieval-only mode.
         # When ask_proxy=False, no /v1/chat call is ever issued so Ollama
@@ -552,21 +552,21 @@ class BenchmarkMonitor:
                     ),
                 )
 
-        # ── HIGH: Helix server heartbeat ────────────────────────────
-        helix_alive = True
+        # ── HIGH: Cymatix server heartbeat ────────────────────────────
+        cymatix_alive = True
         try:
-            r = self._client.get(f"{self.helix_url}/health", timeout=5)
-            helix_alive = r.status_code == 200
+            r = self._client.get(f"{self.cymatix_url}/health", timeout=5)
+            cymatix_alive = r.status_code == 200
         except Exception:
-            helix_alive = False
+            cymatix_alive = False
 
-        if not helix_alive:
+        if not cymatix_alive:
             self._gated_incident(
-                incident_type="helix_server_down",
-                details={"url": self.helix_url},
-                reason_early="Helix server not responding. Restarting to recover.",
+                incident_type="cymatix_server_down",
+                details={"url": self.cymatix_url},
+                reason_early="Cymatix server not responding. Restarting to recover.",
                 reason_late=(
-                    f"Helix server not responding at {progress*100:.0f}% progress. "
+                    f"Cymatix server not responding at {progress*100:.0f}% progress. "
                     f"Warning — benchmark may stall imminently."
                 ),
             )
@@ -771,10 +771,10 @@ def main() -> None:
     parser.add_argument("--incremental", default="/tmp/bench_incremental.jsonl",
                         help="Path to incremental JSONL (dummy value ok for pre-flight)")
     parser.add_argument("--n", type=int, default=50, help="Total needle count")
-    parser.add_argument("--helix-url", default="http://127.0.0.1:11437")
+    parser.add_argument("--cymatix-url", default="http://127.0.0.1:11437")
     parser.add_argument("--ollama-url", default="http://localhost:11434")
-    parser.add_argument("--helix-config", default=None,
-                        help="Path to helix.toml (default: HELIX_CONFIG env or cwd)")
+    parser.add_argument("--cymatix-config", default=None,
+                        help="Path to cymatix.toml (default: CYMATIX_CONFIG env or cwd)")
     parser.add_argument("--check-only", action="store_true",
                         help="Run pre-flight check and exit")
     args = parser.parse_args()
@@ -783,8 +783,8 @@ def main() -> None:
         benchmark_model=args.model,
         incremental_output_path=args.incremental,
         total_needles=args.n,
-        helix_config_path=args.helix_config,
-        helix_url=args.helix_url,
+        cymatix_config_path=args.cymatix_config,
+        cymatix_url=args.cymatix_url,
         ollama_url=args.ollama_url,
     )
 

@@ -16,7 +16,7 @@ bench JSON (``located_n1000.json``) into:
 Outputs:
 
   - TOML snippet on stdout (or ``--output-toml``) suitable for paste-in to
-    ``helix.toml`` under ``[retrieval]`` and ``[abstain.<cls>]``.
+    ``cymatix.toml`` under ``[retrieval]`` and ``[abstain.<cls>]``.
   - ``calibration_report.json`` (``--output-report``) — provenance + stats,
     validates against ``$schema = calibration_report.v1.json``.
   - UPSERT into ``genome_calibration`` when ``--write-db`` (default).
@@ -585,7 +585,7 @@ def calibrate_floors(
 
 
 _CALIBRATION_REPORT_SCHEMA_URI = (
-    "https://helix-context.dev/schemas/calibration_report.v1.json"
+    "https://cymatix-context.dev/schemas/calibration_report.v1.json"
 )
 
 

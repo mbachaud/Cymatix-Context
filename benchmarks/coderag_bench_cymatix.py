@@ -1,5 +1,5 @@
-"""CodeRAG-Bench (Step-2) Helix arm: HTTP fingerprint retriever over a live
-helix server (the "helix063" daemon, bench lane :11439).
+"""CodeRAG-Bench (Step-2) Cymatix arm: HTTP fingerprint retriever over a live
+cymatix server (the "cymatix063" daemon, bench lane :11439).
 
 Reads the per-query dump written by coderag_bench.py, issues one
 POST /fingerprint per query, extracts the ranked list of doc_* paths,
@@ -8,9 +8,9 @@ resolves them back to corpus indices, and scores NDCG@10 + Recall@{1,5,10}
 tokens from the fingerprint previews, plus per-query latency).
 
 DESIGN NOTES
-- The Helix server must have the programming-solutions corpus ingested before
+- The Cymatix server must have the programming-solutions corpus ingested before
   this script runs. Use coderag_bench.py to build the per-query dump, then
-  ingest via 'helix ingest' or the server /ingest endpoint.
+  ingest via 'cymatix ingest' or the server /ingest endpoint.
 - Retrieval via POST /fingerprint with score_floor=0, profile="fast",
   max_results=50 (NDCG@10 saturates well below 50).
 - The fingerprint "source" field carries the doc_{idx} path set at ingest.
@@ -23,19 +23,19 @@ METRICS
   - Efficiency: median/p90 injected-token estimate + median/p90 latency (ms)
 
 WRITES
-  benchmarks/results/coderag_helix_{timestamp}.json
+  benchmarks/results/coderag_cymatix_{timestamp}.json
 
 CLI
-  # Requires a live Helix server at --helix-url with the corpus pre-ingested.
-  python benchmarks/coderag_bench_helix.py \
+  # Requires a live Cymatix server at --cymatix-url with the corpus pre-ingested.
+  python benchmarks/coderag_bench_cymatix.py \
       --queries benchmarks/results/coderag_queries_<ts>.json \
-      --helix-url http://127.0.0.1:11439 \
+      --cymatix-url http://127.0.0.1:11439 \
       --limit 50
 
   # Run all queries (HumanEval + MBPP):
-  python benchmarks/coderag_bench_helix.py \
+  python benchmarks/coderag_bench_cymatix.py \
       --queries benchmarks/results/coderag_queries_<ts>.json \
-      --helix-url http://127.0.0.1:11439
+      --cymatix-url http://127.0.0.1:11439
 
 License: CC-BY-SA-4.0 (internal measurement OK; verify before public claim).
 """
@@ -133,12 +133,12 @@ def parse_doc_idx(source):
 # /fingerprint HTTP call
 # ---------------------------------------------------------------------------
 
-def fingerprint(helix_url, query, max_results=50, timeout_s=30.0):
+def fingerprint(cymatix_url, query, max_results=50, timeout_s=30.0):
     """POST /fingerprint and return (fingerprints_list, latency_ms).
 
     Raises urllib.error.URLError on network failure.
     """
-    url = helix_url.rstrip("/") + "/fingerprint"
+    url = cymatix_url.rstrip("/") + "/fingerprint"
     payload = json.dumps({
         "query": query,
         "max_results": max_results,
@@ -161,13 +161,13 @@ def fingerprint(helix_url, query, max_results=50, timeout_s=30.0):
 # Core scoring loop
 # ---------------------------------------------------------------------------
 
-def score_queries(queries, helix_url, max_results=50, timeout_s=30.0, n_corpus=None):
+def score_queries(queries, cymatix_url, max_results=50, timeout_s=30.0, n_corpus=None):
     """Run /fingerprint for each query; return (summary, per_query_rows).
 
     Parameters
     ----------
     queries      : list of {"ds", "query", "gold", "gold_idx", ...}
-    helix_url    : base URL of the Helix server
+    cymatix_url    : base URL of the Cymatix server
     max_results  : /fingerprint max_results
     timeout_s    : per-request HTTP timeout
     n_corpus     : corpus size; used as rank sentinel when gold unretrieved
@@ -195,15 +195,15 @@ def score_queries(queries, helix_url, max_results=50, timeout_s=30.0, n_corpus=N
         a = agg[ds]
 
         if (qi + 1) % 50 == 0 or qi == 0:
-            print("[helix] {}/{} queries scored...".format(qi + 1, n_total), flush=True)
+            print("[cymatix] {}/{} queries scored...".format(qi + 1, n_total), flush=True)
 
         try:
-            fps, lat_ms = fingerprint(helix_url, q["query"], max_results, timeout_s)
+            fps, lat_ms = fingerprint(cymatix_url, q["query"], max_results, timeout_s)
         except Exception as exc:
             a["err"] += 1
             per_query_rows.append({
                 "ds": ds, "gold": q["gold"], "gold_idx": gi,
-                "helix_rank": None, "error": repr(exc),
+                "cymatix_rank": None, "error": repr(exc),
             })
             continue
 
@@ -232,7 +232,7 @@ def score_queries(queries, helix_url, max_results=50, timeout_s=30.0, n_corpus=N
             "ds": ds,
             "gold": q["gold"],
             "gold_idx": gi,
-            "helix_rank": pos0,
+            "cymatix_rank": pos0,
             "n_retrieved": len(ranked_idxs),
             "latency_ms": round(lat_ms, 1),
         })
@@ -246,12 +246,12 @@ def score_queries(queries, helix_url, max_results=50, timeout_s=30.0, n_corpus=N
         row = {
             "n": n,
             "err": a["err"],
-            "helix_ndcg@10": round(a["ndcg10"] / n, 4),
+            "cymatix_ndcg@10": round(a["ndcg10"] / n, 4),
             "efficiency": eff,
         }
         for k in KS:
-            row["helix_recall@{}".format(k)] = round(a["recall@{}".format(k)] / n, 4)
-            row["helix_precision@{}".format(k)] = round(a["precision@{}".format(k)] / n, 4)
+            row["cymatix_recall@{}".format(k)] = round(a["recall@{}".format(k)] / n, 4)
+            row["cymatix_precision@{}".format(k)] = round(a["precision@{}".format(k)] / n, 4)
         summary[ds] = row
 
     return summary, per_query_rows
@@ -275,14 +275,14 @@ def _print_table(summary, foils_path=None):
             "med_tok", "p90_tok", "med_ms"
         )
     )
-    print("\nCodeRAG-Bench -- Helix arm (D)")
+    print("\nCodeRAG-Bench -- Cymatix arm (D)")
     print(header)
     print("-" * len(header))
     for ds, s in summary.items():
         eff = s.get("efficiency", {})
         print("{:<14} {:>5}  {:>9.4f} {:>7.4f} {:>7.4f} {:>7.4f}  {:>8.0f} {:>8.0f}  {:>8.1f}".format(
-            "helix:" + ds, s["n"],
-            s["helix_ndcg@10"], s["helix_recall@1"], s["helix_recall@5"], s["helix_recall@10"],
+            "cymatix:" + ds, s["n"],
+            s["cymatix_ndcg@10"], s["cymatix_recall@1"], s["cymatix_recall@5"], s["cymatix_recall@10"],
             eff.get("median_injected_tokens", 0), eff.get("p90_injected_tokens", 0),
             eff.get("median_latency_ms", 0),
         ))
@@ -305,8 +305,8 @@ def _print_table(summary, foils_path=None):
 def main():
     ap = argparse.ArgumentParser(
         description=(
-            "CodeRAG-Bench (Step-2) Helix arm. "
-            "Requires a live Helix server with the corpus pre-ingested. "
+            "CodeRAG-Bench (Step-2) Cymatix arm. "
+            "Requires a live Cymatix server with the corpus pre-ingested. "
             "Reads the per-query dump from coderag_bench.py."
         )
     )
@@ -319,8 +319,8 @@ def main():
         ),
     )
     ap.add_argument(
-        "--helix-url", default="http://127.0.0.1:11439", dest="helix_url",
-        help="Base URL of the Helix bench server (default: http://127.0.0.1:11439)",
+        "--cymatix-url", default="http://127.0.0.1:11439", dest="cymatix_url",
+        help="Base URL of the Cymatix bench server (default: http://127.0.0.1:11439)",
     )
     ap.add_argument(
         "--max-results", type=int, default=50, dest="max_results",
@@ -340,7 +340,7 @@ def main():
     )
     ap.add_argument(
         "--out", default=None,
-        help="Override output JSON path (default: benchmarks/results/coderag_helix_{ts}.json)",
+        help="Override output JSON path (default: benchmarks/results/coderag_cymatix_{ts}.json)",
     )
     args = ap.parse_args()
 
@@ -363,45 +363,45 @@ def main():
         print("ERROR: queries file not found: {}".format(queries_path), file=sys.stderr)
         sys.exit(1)
 
-    print("[helix] Loading queries from {}".format(queries_path), flush=True)
+    print("[cymatix] Loading queries from {}".format(queries_path), flush=True)
     queries = json.loads(queries_path.read_text(encoding="utf-8"))
     if args.limit:
         queries = queries[:args.limit]
-    print("[helix] {} queries to score against {}".format(len(queries), args.helix_url),
+    print("[cymatix] {} queries to score against {}".format(len(queries), args.cymatix_url),
           flush=True)
 
     # Health check.
     try:
-        health_url = args.helix_url.rstrip("/") + "/health"
+        health_url = args.cymatix_url.rstrip("/") + "/health"
         with urllib.request.urlopen(health_url, timeout=5) as r:
             health = json.loads(r.read())
-        print("[helix] server health: {} docs={}".format(
+        print("[cymatix] server health: {} docs={}".format(
               health.get("status", "ok"), health.get("document_count", "?")), flush=True)
     except Exception as exc:
         print(
-            "ERROR: cannot reach Helix server at {}: {}\n"
+            "ERROR: cannot reach Cymatix server at {}: {}\n"
             "  Start it: python -m uvicorn cymatix_context._asgi:app --port 11439".format(
-                args.helix_url, exc),
+                args.cymatix_url, exc),
             file=sys.stderr,
         )
         sys.exit(1)
 
     summary, per_query_rows = score_queries(
         queries=queries,
-        helix_url=args.helix_url,
+        cymatix_url=args.cymatix_url,
         max_results=args.max_results,
         timeout_s=args.timeout,
     )
 
     _print_table(summary, foils_path=args.foils)
 
-    out_path = Path(args.out) if args.out else RESULTS_DIR / "coderag_helix_{}.json".format(ts)
+    out_path = Path(args.out) if args.out else RESULTS_DIR / "coderag_cymatix_{}.json".format(ts)
 
     result_blob = {
         "benchmark": "coderag_bench",
-        "arm": "helix_fingerprint",
+        "arm": "cymatix_fingerprint",
         "timestamp": ts,
-        "helix_url": args.helix_url,
+        "cymatix_url": args.cymatix_url,
         "queries_file": str(queries_path),
         "limit": args.limit,
         "max_results": args.max_results,

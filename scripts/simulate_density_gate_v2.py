@@ -16,7 +16,7 @@ import sys
 import re
 from collections import defaultdict
 
-DB = sys.argv[1] if len(sys.argv) > 1 else "F:/Projects/helix-context/genome.db"
+DB = sys.argv[1] if len(sys.argv) > 1 else "F:/Projects/cymatix-context/genome.db"
 
 # ─────────────────────────────────────────────────────────────────────────
 # Proposed Fix 2: Source-path deny list (fast-reject to HETEROCHROMATIN)
@@ -35,8 +35,8 @@ DENY_PATTERNS = [
     r"[\\/]\.next[\\/]",
     r"[\\/]node_modules[\\/]",
     r"[\\/]__pycache__[\\/]",
-    r"[\\/]dist[\\/](?!helix)",   # dist/ but not e.g. distance/, or dist/ in helix itself
-    r"[\\/]build[\\/](?!helix)",
+    r"[\\/]dist[\\/](?!cymatix)",   # dist/ but not e.g. distance/, or dist/ in cymatix itself
+    r"[\\/]build[\\/](?!cymatix)",
     r"[\\/]target[\\/]debug[\\/]",
     r"[\\/]target[\\/]release[\\/]",
     # Non-English localization only — English locale often has signal value
@@ -120,7 +120,7 @@ def main():
         s = (src or "").lower()
         if any(m in s for m in ("steamlibrary", "steamapps", "beamng.drive")): return "steam"
         if "\\.next\\" in s or "/.next/" in s or "node_modules" in s: return "build_artifacts"
-        if "helix-context" in s or "cymatix_context" in s: return "helix"
+        if "cymatix-context" in s or "cymatix_context" in s: return "cymatix"
         if "cosmictasha" in s: return "cosmic"
         if "bookkeeper" in s: return "bookkeeper"
         if "education" in s or "biged" in s or "fleet/" in s: return "education"
@@ -194,7 +194,7 @@ def main():
 
     print()
     print("=== Retention rate of signal categories ===")
-    signal_buckets = ["helix", "cosmic", "bookkeeper", "education", "scorerift", "autoresearch"]
+    signal_buckets = ["cymatix", "cosmic", "bookkeeper", "education", "scorerift", "autoresearch"]
     for b in signal_buckets:
         cnts = by_source_bucket.get(b, {})
         t = cnts.get("open", 0) + cnts.get("demoted", 0)

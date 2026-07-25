@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  Install native observability binaries for the helix tray launcher.
+  Install native observability binaries for the cymatix tray launcher.
 
 .DESCRIPTION
   Reads tools/native-otel/.versions, downloads each component from its
@@ -131,7 +131,7 @@ foreach ($svc in $binaries.Keys) {
                   elseif ($url.EndsWith(".tar.gz")) { ".tar.gz" }
                   elseif ($url.EndsWith(".tgz")) { ".tgz" }
                   else { ".tmp" }
-    $tmpArchive = Join-Path $env:TEMP "helix-native-otel-$svc$archiveExt"
+    $tmpArchive = Join-Path $env:TEMP "cymatix-native-otel-$svc$archiveExt"
     & $python -m cymatix_context.launcher._install_helpers download $url $tmpArchive --timeout 120
     if ($LASTEXITCODE -ne 0) {
         Write-Error "[install][$svc] download failed"
@@ -149,7 +149,7 @@ foreach ($svc in $binaries.Keys) {
     # Extract -- .zip vs .tar.gz handled inline. Tempo + otelcol-contrib
     # ship .tar.gz on Windows; the others ship .zip.
     New-Item -ItemType Directory -Force -Path $svcDir | Out-Null
-    $stagingDir = Join-Path $env:TEMP "helix-native-otel-$svc-extract"
+    $stagingDir = Join-Path $env:TEMP "cymatix-native-otel-$svc-extract"
     if (Test-Path $stagingDir) { Remove-Item -Recurse -Force $stagingDir }
     New-Item -ItemType Directory -Force -Path $stagingDir | Out-Null
 
@@ -213,7 +213,7 @@ if ($LASTEXITCODE -ne 0) {
 
 Write-Host "[install] Native observability install complete."
 
-# Write the completion sentinel -- the helix tray polls for this file
+# Write the completion sentinel -- the cymatix tray polls for this file
 # every 2 s and auto-restarts the launcher when it appears, so the
 # freshly-installed binaries get picked up without the user having to
 # manually quit + re-launch. Sentinel is removed by the tray after
@@ -221,5 +221,5 @@ Write-Host "[install] Native observability install complete."
 $sentinelPath = Join-Path $RepoRoot "tools\native-otel\.install-complete"
 New-Item -Path $sentinelPath -ItemType File -Force | Out-Null
 Write-Host "[install] Wrote completion sentinel: $sentinelPath"
-Write-Host "[install] Helix tray will auto-restart shortly. You can close this window."
+Write-Host "[install] Cymatix tray will auto-restart shortly. You can close this window."
 Start-Sleep -Seconds 2

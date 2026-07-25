@@ -15,7 +15,7 @@ def test_best_relevance_window_finds_relevant_late_section():
 
     window = best_relevance_window(
         text,
-        "claim_type allowed values helix claims layer specification",
+        "claim_type allowed values cymatix claims layer specification",
         max_chars=800,
         overlap=100,
     )

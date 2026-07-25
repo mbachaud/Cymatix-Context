@@ -30,9 +30,9 @@ from tests.conftest import make_gene
 
 # The one content string used on both routes. gene_id is content-addressed,
 # so identical content => identical gene_id => a true same-gene comparison.
-_CONTENT = "Helix design notes for the agent index and retrieval"
-_DOMAINS = ["helix", "design"]
-_QUERY = "helix design"
+_CONTENT = "Cymatix design notes for the agent index and retrieval"
+_DOMAINS = ["cymatix", "design"]
+_QUERY = "cymatix design"
 _TRUE_SOURCE_ID = "/repo/docs/design.md"
 _OVERRIDE_SOURCE_ID = "/repo/config/OVERRIDDEN.toml"
 

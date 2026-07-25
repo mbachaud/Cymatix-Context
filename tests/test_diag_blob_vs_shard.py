@@ -12,7 +12,7 @@ from routes_context.py L800-826.  No server, no network, no GPU.
 Wire schema reference:
   fingerprints[*].tier_contributions  (routes_context.py L817-819)
   -- dict {tier_name: float}, built from _merge_tier_contributions(
-         helix.genome.last_tier_contributions, refiner_contrib)
+         cymatix.genome.last_tier_contributions, refiner_contrib)
      rounded to 4dp, sorted by key.
   fingerprints[*].rank   -- 0-based (converted to 1-based by diagnostic)
   fingerprints[*].source -- source_id used for gold matching

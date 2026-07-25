@@ -16,7 +16,7 @@ produced promoted docs, how many were already inside the internal
 differs between arms.
 
 Why not grep the server log for the FIRED line: uvicorn's default
-logging config does not emit helix module INFO records, so absence of
+logging config does not emit cymatix module INFO records, so absence of
 the line proves nothing. This probe observes the pure function's
 arguments and output directly.
 
@@ -96,7 +96,7 @@ def main(argv: list[str] | None = None) -> int:
     per_arm_top: dict[str, dict] = {}
     try:
         for reserve in (0, args.reserve):
-            os.environ["HELIX_SHARD_COACT_RESERVE"] = str(reserve)
+            os.environ["CYMATIX_SHARD_COACT_RESERVE"] = str(reserve)
             arm = f"c{reserve}"
             stats: Counter = Counter()
             fired_ids: list[str] = []

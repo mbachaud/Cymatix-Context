@@ -8,7 +8,7 @@ what it doesn't know?
 If yes: fingerprint mode is truly scale-invariant, same as SIKE 10/10
 retrieval. The math works at every parameter count.
 
-Sends 3 fingerprint prompts directly to Ollama (not through helix proxy)
+Sends 3 fingerprint prompts directly to Ollama (not through cymatix proxy)
 so we get raw model behaviour with ONLY the fingerprint in context.
 """
 
@@ -113,7 +113,7 @@ entities: [SentenceTransformer, all-MiniLM-L6-v2, GPU, VRAM, RTX, Ollama]""",
     },
 ]
 
-SYSTEM_PROMPT = """You are a small local LLM consuming retrieval fingerprints from a knowledge store called Helix. You receive ONLY the mathematical fingerprint of top-3 retrieved genes - tier scores, source file, domain tags, and named entities. You do NOT get actual content.
+SYSTEM_PROMPT = """You are a small local LLM consuming retrieval fingerprints from a knowledge store called Cymatix. You receive ONLY the mathematical fingerprint of top-3 retrieved genes - tier scores, source file, domain tags, and named entities. You do NOT get actual content.
 
 Your job: answer the question if the fingerprint gives you enough to reason from. If not, say which gene_id you would need to READ and why. Be concise. /no_think"""
 

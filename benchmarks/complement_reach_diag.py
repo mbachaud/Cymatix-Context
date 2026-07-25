@@ -34,7 +34,7 @@ sys.path.insert(0, str(_REPO))
 
 BED = str(_REPO / "genomes/bench/matrix/enterprise_rag_50k_batched.db")
 DSID_MAP = str(_REPO / "benchmarks" / "results" / "dsid_map_enterprise_rag_50k.json")
-QUESTIONS = "F:/tmp/ext_ct_helixbench/questions/onyx_500.jsonl"
+QUESTIONS = "F:/tmp/ext_ct_cymatixbench/questions/onyx_500.jsonl"
 CAP = 2000  # PASSAGE_CHAR_CAP
 
 

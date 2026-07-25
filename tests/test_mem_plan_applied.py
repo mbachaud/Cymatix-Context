@@ -44,7 +44,7 @@ def test_explicit_plan_lands_on_writer_and_reader(tmp_db_path):
 
 
 def test_conservative_profile_preserves_v061_through_wiring(tmp_db_path, monkeypatch):
-    monkeypatch.setenv("HELIX_MEM_PROFILE", "conservative")
+    monkeypatch.setenv("CYMATIX_MEM_PROFILE", "conservative")
     ks = KnowledgeStore(tmp_db_path)  # mem_plan=None -> sqlite_memory_budget(1)
     try:
         assert _pragma(ks.conn, "mmap_size") == 0
@@ -56,7 +56,7 @@ def test_conservative_profile_preserves_v061_through_wiring(tmp_db_path, monkeyp
 
 
 def test_default_none_plan_constructs_valid(tmp_db_path, monkeypatch):
-    monkeypatch.setenv("HELIX_MEM_PROFILE", "auto")
+    monkeypatch.setenv("CYMATIX_MEM_PROFILE", "auto")
     ks = KnowledgeStore(tmp_db_path)  # no mem_plan
     try:
         assert _pragma(ks.conn, "mmap_size") >= 0
@@ -66,7 +66,7 @@ def test_default_none_plan_constructs_valid(tmp_db_path, monkeypatch):
 
 
 def test_open_main_db_applies_single_db_plan(tmp_db_path, monkeypatch):
-    monkeypatch.setenv("HELIX_MEM_PROFILE", "8gb")  # host-independent
+    monkeypatch.setenv("CYMATIX_MEM_PROFILE", "8gb")  # host-independent
     expected = sqlite_memory_budget(1)
     conn = open_main_db(tmp_db_path)
     try:
