@@ -1,8 +1,8 @@
 """
-Launcher state — atomic JSON read/write at ~/.helix/launcher/state.json.
+Launcher state — atomic JSON read/write at ~/.cymatix/launcher/state.json.
 
-Tracks the supervised helix child process across launcher restarts. The
-launcher can crash or be restarted without killing helix; on next start
+Tracks the supervised cymatix child process across launcher restarts. The
+launcher can crash or be restarted without killing cymatix; on next start
 it reads this file, validates the PID is still alive and matches the
 expected command line, and adopts the running process.
 """
@@ -18,10 +18,10 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import List, Optional
 
-log = logging.getLogger("helix.launcher.state")
+log = logging.getLogger("cymatix.launcher.state")
 
 
-DEFAULT_STATE_DIR = Path.home() / ".helix" / "launcher"
+DEFAULT_STATE_DIR = Path.home() / ".cymatix" / "launcher"
 DEFAULT_STATE_PATH = DEFAULT_STATE_DIR / "state.json"
 
 
@@ -29,10 +29,10 @@ DEFAULT_STATE_PATH = DEFAULT_STATE_DIR / "state.json"
 class LauncherState:
     """Persisted launcher state — read/written atomically."""
 
-    helix_pid: Optional[int] = None
-    helix_port: int = 11437
-    helix_start_time: Optional[float] = None
-    helix_command: List[str] = field(default_factory=list)
+    cymatix_pid: Optional[int] = None
+    cymatix_port: int = 11437
+    cymatix_start_time: Optional[float] = None
+    cymatix_command: List[str] = field(default_factory=list)
     launcher_pid: Optional[int] = None
     launcher_start_time: Optional[float] = None
     last_restart_reason: Optional[str] = None
@@ -96,23 +96,23 @@ class StateStore:
 
     # ── mutation helpers ───────────────────────────────────────────
 
-    def set_helix(
+    def set_cymatix(
         self,
         pid: int,
         command: List[str],
         port: int,
         start_time: Optional[float] = None,
     ) -> None:
-        self._state.helix_pid = pid
-        self._state.helix_command = list(command)
-        self._state.helix_port = port
-        self._state.helix_start_time = start_time if start_time is not None else time.time()
+        self._state.cymatix_pid = pid
+        self._state.cymatix_command = list(command)
+        self._state.cymatix_port = port
+        self._state.cymatix_start_time = start_time if start_time is not None else time.time()
         self._write()
 
-    def clear_helix(self) -> None:
-        self._state.helix_pid = None
-        self._state.helix_start_time = None
-        self._state.helix_command = []
+    def clear_cymatix(self) -> None:
+        self._state.cymatix_pid = None
+        self._state.cymatix_start_time = None
+        self._state.cymatix_command = []
         self._write()
 
     def set_headroom(

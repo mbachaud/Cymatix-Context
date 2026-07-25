@@ -19,7 +19,7 @@ continues to pick the actual number within that ceiling, so behavior
 only narrows under pressure — never widens past what the current
 max_genes_per_turn would allow.
 
-Enabled via env var ``HELIX_BUDGET_ZONE=1``. When unset or false, the
+Enabled via env var ``CYMATIX_BUDGET_ZONE=1``. When unset or false, the
 helper is a no-op. This keeps the spike safe to merge behind a flag.
 """
 
@@ -45,7 +45,7 @@ _ZONE_BOUNDARIES = (
 
 def is_enabled() -> bool:
     """Env-flag check, re-read every call so tests can toggle in-process."""
-    return os.environ.get("HELIX_BUDGET_ZONE", "").lower() in _TRUTHY
+    return os.environ.get("CYMATIX_BUDGET_ZONE", "").lower() in _TRUTHY
 
 
 def zone_for(prompt_tokens: int, window_tokens: int = DEFAULT_WINDOW_TOKENS) -> str:

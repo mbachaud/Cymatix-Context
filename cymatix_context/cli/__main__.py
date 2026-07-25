@@ -1,5 +1,5 @@
 """Enable ``python -m cymatix_context.cli`` as a fallback when the
-pip-installed ``helix`` console script is broken or off PATH.
+pip-installed ``cymatix`` console script is broken or off PATH.
 
 Documented in ``docs/clients/cli.md`` as the always-works recovery path
 when the editable-install entry point points at a deleted source tree.

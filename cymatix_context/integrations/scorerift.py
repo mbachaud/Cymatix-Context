@@ -1,7 +1,7 @@
 """
-Helix-ScoreRift Integration -- The CD Spectroscope.
+Cymatix-ScoreRift Integration -- The CD Spectroscope.
 
-Bridges Helix Context (knowledge store memory) with ScoreRift (divergence detection)
+Bridges Cymatix Context (knowledge store memory) with ScoreRift (divergence detection)
 using a Circular Dichroism (CD) metaphor:
 
     epsilon_L (left beam)  = automated engine score (ScoreRift auto)
@@ -9,9 +9,9 @@ using a Circular Dichroism (CD) metaphor:
     delta_epsilon (CD signal) = structural anomaly in context health
 
 Three integration points, zero coupling:
-    1. GenomeHealthProbe  -- ScoreRift dimension that probes the Helix knowledge store
+    1. GenomeHealthProbe  -- ScoreRift dimension that probes the Cymatix knowledge store
     2. cd_signal()        -- the divergence math (delta_epsilon)
-    3. resolution_to_gene() -- packages divergence resolutions as Helix documents
+    3. resolution_to_gene() -- packages divergence resolutions as Cymatix documents
 
 Usage with ScoreRift:
     from scorerift import AuditEngine, Tier
@@ -38,7 +38,7 @@ from typing import Any, Dict, List, Optional
 
 import httpx
 
-log = logging.getLogger("helix.scorerift")
+log = logging.getLogger("cymatix.scorerift")
 
 
 # -- CD Signal Math ---------------------------------------------------
@@ -111,7 +111,7 @@ def cd_signal(
 @dataclass
 class GenomeHealthProbe:
     """
-    Probes a running Helix server to assess knowledge store health.
+    Probes a running Cymatix server to assess knowledge store health.
 
     Checks:
         - genome_freshness: ratio of OPEN documents to total (are documents being accessed?)
@@ -119,12 +119,12 @@ class GenomeHealthProbe:
         - gene_coverage: does the knowledge store have enough documents to be useful?
         - context_relevance: given a test query, does the knowledge store return useful context?
     """
-    helix_url: str = "http://127.0.0.1:11437"
+    cymatix_url: str = "http://127.0.0.1:11437"
     timeout: float = 30.0
     _client: httpx.Client = field(init=False, repr=False)
 
     def __post_init__(self):
-        self._client = httpx.Client(base_url=self.helix_url, timeout=self.timeout)
+        self._client = httpx.Client(base_url=self.cymatix_url, timeout=self.timeout)
 
     # -- Individual checks (ScoreRift dimension format) ---------------
 
@@ -266,7 +266,7 @@ class GenomeHealthProbe:
             resp = self._client.get("/stats")
             return resp.json() if resp.status_code == 200 else {}
         except Exception:
-            log.warning("Failed to reach Helix at %s", self.helix_url, exc_info=True)
+            log.warning("Failed to reach Cymatix at %s", self.cymatix_url, exc_info=True)
             return {}
 
     def close(self):
@@ -281,11 +281,11 @@ def resolution_to_gene(
     manual_score: float,
     resolution: str,
     resolution_type: str = "update_manual",
-    helix_url: str = "http://127.0.0.1:11437",
+    cymatix_url: str = "http://127.0.0.1:11437",
     timeout: float = 60.0,
 ) -> Optional[str]:
     """
-    Package a divergence resolution as a Helix document.
+    Package a divergence resolution as a Cymatix document.
 
     When a ScoreRift divergence is resolved (manual grade updated,
     acknowledged, or re-audited), this function ingests the resolution
@@ -307,7 +307,7 @@ def resolution_to_gene(
     try:
         with httpx.Client(timeout=timeout) as client:
             resp = client.post(
-                f"{helix_url}/ingest",
+                f"{cymatix_url}/ingest",
                 json={
                     "content": content,
                     "content_type": "text",
@@ -335,7 +335,7 @@ def resolution_to_gene(
 # -- ScoreRift Dimension Factory --------------------------------------
 
 def make_genome_dimensions(
-    helix_url: str = "http://127.0.0.1:11437",
+    cymatix_url: str = "http://127.0.0.1:11437",
     test_query: str = "How does the system work?",
 ) -> list:
     """
@@ -354,7 +354,7 @@ def make_genome_dimensions(
     # Lazy import — scorerift may not be installed
     from scorerift import Dimension, Tier
 
-    probe = GenomeHealthProbe(helix_url=helix_url)
+    probe = GenomeHealthProbe(cymatix_url=cymatix_url)
 
     return [
         Dimension(

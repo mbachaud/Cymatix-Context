@@ -22,7 +22,7 @@ import urllib.request
 from pathlib import Path
 from typing import Optional
 
-log = logging.getLogger("helix.launcher.install")
+log = logging.getLogger("cymatix.launcher.install")
 
 _HASH_CHUNK = 1 << 20  # 1 MiB
 

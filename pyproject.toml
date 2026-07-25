@@ -3,11 +3,11 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["cymatix_context", "helix_context"]
+packages = ["cymatix_context"]
 
 [project]
 name = "cymatix-context"
-version = "0.8.0"
+version = "0.9.0"
 description = "Coordinate index layer for LLM context — Cymatix weighs, doesn't retrieve"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -31,7 +31,7 @@ dependencies = [
     "httpx>=0.27",
     "pydantic>=2.6",
     "filelock>=3.12",
-    # Frontmatter parsing for the OKF adapter (helix_context/okf/). Also
+    # Frontmatter parsing for the OKF adapter (cymatix_context/okf/). Also
     # fixes a latent packaging bug: vault/writer.py and vault/pruner.py
     # have imported yaml unconditionally since the vault shipped, but no
     # dependency list declared it.
@@ -44,14 +44,14 @@ Repository = "https://github.com/mbachaud/Cymatix-Context"
 Issues = "https://github.com/mbachaud/Cymatix-Context/issues"
 
 [project.optional-dependencies]
-# Every extra below is gated on a feature helix exposes at runtime. Core
+# Every extra below is gated on a feature cymatix exposes at runtime. Core
 # (`pip install cymatix-context`) gives a working HTTP server + /context
 # + /context/packet with genome-local retrieval. Add extras as you turn
 # on specific features.
 accel = ["orjson>=3.9"]
 embeddings = ["numpy", "sentence-transformers"]
 cpu = ["spacy>=3.7"]
-# MCP SDK — required for `python -m helix_context.mcp_server` (Claude Code,
+# MCP SDK — required for `python -m cymatix_context.mcp_server` (Claude Code,
 # Cursor, Claude Desktop integration). Core install does NOT pull this;
 # add the extra if you're a MCP host operator.
 mcp = ["mcp>=1.0"]
@@ -61,7 +61,7 @@ mcp = ["mcp>=1.0"]
 # so this is just the standalone path.
 nli = ["torch>=2.0", "transformers>=4.30"]
 # OpenTelemetry observability — traces + metrics + logs via OTLP gRPC.
-# Required only when `HELIX_OTEL_ENABLED=1`; core helix runs without them.
+# Required only when `CYMATIX_OTEL_ENABLED=1`; core cymatix runs without them.
 otel = [
     "opentelemetry-sdk>=1.27",
     "opentelemetry-exporter-otlp-proto-grpc>=1.27",
@@ -121,22 +121,15 @@ all = [
 cymatix = "cymatix_context.cli:main"
 cymatix-server = "cymatix_context.server:main"
 cymatix-launcher = "cymatix_context.launcher.app:main"
-cymatix-status = "cymatix_context.cli.helix_status:main"
+cymatix-status = "cymatix_context.cli.cymatix_status:main"
 cymatix-vault = "cymatix_context.vault.cli:main"
-# Deprecated aliases from the helix-context era — identical targets, kept
-# for one deprecation window.
-helix = "cymatix_context.cli:main"
-helix-server = "cymatix_context.server:main"
-helix-launcher = "cymatix_context.launcher.app:main"
-helix-status = "cymatix_context.cli.helix_status:main"
-helix-vault = "cymatix_context.vault.cli:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 markers = [
     "live: requires Ollama running with at least one model",
-    "requires_rocm: opt-in test that needs ROCm-capable hardware (gated by HELIX_TEST_ROCM=1)",
-    "requires_real_cuda: opt-in test that needs real CUDA hardware (gated by HELIX_TEST_CUDA=1)",
+    "requires_rocm: opt-in test that needs ROCm-capable hardware (gated by CYMATIX_TEST_ROCM=1)",
+    "requires_real_cuda: opt-in test that needs real CUDA hardware (gated by CYMATIX_TEST_CUDA=1)",
     "requires_mps: test that runs only on macOS with MPS-capable hardware",
     "slow: end-to-end test that loads SPLADE / spaCy and takes 10+ seconds",
 ]

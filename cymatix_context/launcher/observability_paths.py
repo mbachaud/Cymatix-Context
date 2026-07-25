@@ -7,9 +7,9 @@ Single source of truth for "where does X live" — used by:
   - the tray "Open log directory" menu
 
 State dir uses platformdirs.user_data_dir, so:
-  Windows: %LOCALAPPDATA%\\helix-context\\observability\\<service>\\
-  Linux:   ~/.local/share/helix-context/observability/<service>/
-  macOS:   ~/Library/Application Support/helix-context/observability/<service>/
+  Windows: %LOCALAPPDATA%\\cymatix-context\\observability\\<service>\\
+  Linux:   ~/.local/share/cymatix-context/observability/<service>/
+  macOS:   ~/Library/Application Support/cymatix-context/observability/<service>/
 
 Binaries live in the repo at tools/native-otel/<service>/<exe>, NOT in
 state-dir, so the install script can hash-verify them and so a uninstall
@@ -22,7 +22,7 @@ import sys
 from pathlib import Path
 
 
-_APP_NAME = "helix-context"
+_APP_NAME = "cymatix-context"
 _BINARY_LAYOUT = {
     "collector": ("collector", "otelcol-contrib"),
     "prometheus": ("prometheus", "prometheus"),
@@ -69,7 +69,7 @@ def _user_data_dir() -> Path:
         ) from exc
     # appauthor=False on Windows omits the appauthor folder; without it,
     # platformdirs reuses appname for both, producing a doubled
-    # ...\helix-context\helix-context\... segment. Spec §5 documents the
+    # ...\cymatix-context\cymatix-context\... segment. Spec §5 documents the
     # single-segment form, so opt out.
     return Path(user_data_dir(_APP_NAME, appauthor=False))
 

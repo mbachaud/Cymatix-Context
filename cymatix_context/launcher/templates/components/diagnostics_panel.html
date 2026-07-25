@@ -1,46 +1,46 @@
 {# Diagnostics panel — paths, PID, last error, orphan warning.
-   Renders regardless of helix state so the user always has debugging
+   Renders regardless of cymatix state so the user always has debugging
    context. Keep it at the bottom so it doesn't distract when things
    are working normally. #}
 
 <section class="panel panel--diagnostics">
   <h2 class="panel-title">Diagnostics</h2>
 
-  {% if state.helix.availability %}
+  {% if state.cymatix.availability %}
     <div class="diagnostics-warn">
-      <strong>Status:</strong> {{ state.helix.availability }}
-      {% if state.helix.next_action %}
-        — {{ state.helix.next_action }}
+      <strong>Status:</strong> {{ state.cymatix.availability }}
+      {% if state.cymatix.next_action %}
+        — {{ state.cymatix.next_action }}
       {% endif %}
     </div>
   {% endif %}
 
-  {% if state.helix.last_error %}
+  {% if state.cymatix.last_error %}
     <div class="diagnostics-error">
-      <strong>Last {{ state.helix.last_error.operation }} error:</strong>
-      <span class="muted">{{ state.helix.last_error.message }}</span>
+      <strong>Last {{ state.cymatix.last_error.operation }} error:</strong>
+      <span class="muted">{{ state.cymatix.last_error.message }}</span>
     </div>
   {% endif %}
 
-  {% if state.helix.orphan_pid %}
+  {% if state.cymatix.orphan_pid %}
     <div class="diagnostics-warn">
       <strong>Orphan server detected</strong> —
-      PID {{ state.helix.orphan_pid }} is listening on port
-      {{ state.helix.port }} but is not managed by this launcher.
+      PID {{ state.cymatix.orphan_pid }} is listening on port
+      {{ state.cymatix.port }} but is not managed by this launcher.
       Click <em>Start</em> to adopt it.
     </div>
   {% endif %}
 
   <dl class="panel-kv">
-    {% if state.helix.running and state.helix.pid %}
+    {% if state.cymatix.running and state.cymatix.pid %}
       <dt>PID</dt>
-      <dd>{{ state.helix.pid }}</dd>
+      <dd>{{ state.cymatix.pid }}</dd>
     {% endif %}
-    {% if state.helix.paths %}
+    {% if state.cymatix.paths %}
       <dt>State</dt>
-      <dd class="path-value">{{ state.helix.paths.state_file }}</dd>
+      <dd class="path-value">{{ state.cymatix.paths.state_file }}</dd>
       <dt>Server log</dt>
-      <dd class="path-value">{{ state.helix.paths.helix_log }}</dd>
+      <dd class="path-value">{{ state.cymatix.paths.cymatix_log }}</dd>
     {% endif %}
   </dl>
 </section>

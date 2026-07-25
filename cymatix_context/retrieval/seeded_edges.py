@@ -49,7 +49,7 @@ from typing import Dict, Iterable, List, Optional, Tuple, TYPE_CHECKING
 if TYPE_CHECKING:
     from .genome import Genome
 
-log = logging.getLogger("helix.seeded_edges")
+log = logging.getLogger("cymatix.seeded_edges")
 
 
 SOURCE_SEEDED = "seeded"

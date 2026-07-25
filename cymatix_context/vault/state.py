@@ -15,7 +15,7 @@ from typing import Iterator, Optional
 log = logging.getLogger(__name__)
 
 SCHEMA_VERSION = 1
-TOP_LEVEL_FILENAME = ".helix-state.json"
+TOP_LEVEL_FILENAME = ".cymatix-state.json"
 
 _TOP_LEVEL_STATE_KEYS = frozenset({
     "schema_version",
@@ -38,7 +38,7 @@ class VaultState:
     """SQLite + JSON state for the vault.
 
     vault.db holds per-document rows (vault_state table).
-    .helix-state.json holds top-level state (schema_version, export timestamps).
+    .cymatix-state.json holds top-level state (schema_version, export timestamps).
 
     Callers must call close() explicitly. Context manager support
     will be added in Task 14 alongside VaultManager lifecycle.
@@ -98,7 +98,7 @@ class VaultState:
         if existing.get("schema_version") != SCHEMA_VERSION:
             raise VaultState.SchemaVersionMismatch(
                 f"vault state schema_version={existing.get('schema_version')} "
-                f"but code expects {SCHEMA_VERSION}; run helix-vault migrate"
+                f"but code expects {SCHEMA_VERSION}; run cymatix-vault migrate"
             )
 
     def read_top_level_state(self) -> dict:

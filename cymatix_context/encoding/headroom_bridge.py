@@ -8,7 +8,7 @@ toolkit (Apache-2.0) by Tejas Chopra.
 Upstream: https://github.com/chopratejas/headroom
 PyPI:     https://pypi.org/project/headroom-ai/
 
-Headroom is an optional dependency (``helix-context[codec]``). When it is not
+Headroom is an optional dependency (``cymatix-context[codec]``). When it is not
 installed, ``compress_text`` falls back to the legacy truncation so the rest
 of the pipeline keeps working.
 
@@ -42,14 +42,14 @@ _TRUTHY = {"1", "true", "yes", "on"}
 
 
 def _headroom_disabled_by_env() -> bool:
-    """Honor HELIX_DISABLE_HEADROOM=1 for A/B benchmarking.
+    """Honor CYMATIX_DISABLE_HEADROOM=1 for A/B benchmarking.
 
     When set to a truthy value (1/true/yes/on), compress_text bypasses all
     Headroom specialists and falls through to legacy character-level
     truncation. Useful for comparing v0.3.0b4-equivalent behavior against
     v0.3.0b5 on the same knowledge store without reverting code.
     """
-    return os.environ.get("HELIX_DISABLE_HEADROOM", "").lower() in _TRUTHY
+    return os.environ.get("CYMATIX_DISABLE_HEADROOM", "").lower() in _TRUTHY
 
 
 def is_headroom_available() -> bool:

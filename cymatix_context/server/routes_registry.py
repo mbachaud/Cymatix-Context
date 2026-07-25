@@ -14,10 +14,10 @@ from fastapi.responses import JSONResponse
 
 from ..identity.registry import DEFAULT_HEARTBEAT_INTERVAL_S, DEFAULT_TTL_S
 
-log = logging.getLogger("helix.server")
+log = logging.getLogger("cymatix.server")
 
 
-def setup_registry_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
+def setup_registry_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None:
     """Register session registry and HITL routes on *app*."""
 
     @app.post("/sessions/register")
@@ -234,7 +234,7 @@ def setup_registry_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
         try:
             from ..retrieval import expand as _expand
             result = _expand.expand_neighbors(
-                helix.genome,
+                cymatix.genome,
                 gene_id=gene_id,
                 direction=direction,
                 k=max(1, min(100, int(k))),
@@ -258,7 +258,7 @@ def setup_registry_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
         try:
             from ..identity import session_delivery as _sd
             rows = _sd.session_manifest(
-                helix.genome.conn,
+                cymatix.genome.conn,
                 session_id=session_id,
                 limit=max(1, min(5000, int(limit))),
             )

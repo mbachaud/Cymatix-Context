@@ -17,7 +17,7 @@ import threading
 
 import numpy as np
 
-log = logging.getLogger("helix.bgem3")
+log = logging.getLogger("cymatix.bgem3")
 
 _QUERY_PREFIX = "Represent this sentence for searching relevant passages: "
 
@@ -74,7 +74,7 @@ def _vram_release_interval() -> int:
     encoding has no CUDA cache and is unaffected. Tune/disable via the env var.
     """
     try:
-        return max(0, int(os.environ.get("HELIX_DENSE_VRAM_RELEASE_EVERY", "256")))
+        return max(0, int(os.environ.get("CYMATIX_DENSE_VRAM_RELEASE_EVERY", "256")))
     except ValueError:
         return 256
 
@@ -203,7 +203,7 @@ class BGEM3Codec:
         """Periodically free torch's CUDA caching-allocator cache during batch ingest.
 
         See ``_vram_release_interval`` for why this is needed. No-op on CPU (no CUDA
-        cache) or when ``HELIX_DENSE_VRAM_RELEASE_EVERY=0``. Best-effort: a failure to
+        cache) or when ``CYMATIX_DENSE_VRAM_RELEASE_EVERY=0``. Best-effort: a failure to
         free is logged at debug and never interrupts ingest.
         """
         if self._device != "cuda":
@@ -240,10 +240,10 @@ _GLOBAL_CODEC_LOCK = threading.Lock()
 def shared_dense_codec_enabled() -> bool:
     """Whether to share one BGE-M3 codec process-wide (the A1 fix).
 
-    Default ON. Set ``HELIX_SHARE_DENSE_CODEC=0`` to reproduce the legacy
+    Default ON. Set ``CYMATIX_SHARE_DENSE_CODEC=0`` to reproduce the legacy
     per-shard-instance behavior (for an A/B on the RAM impact).
     """
-    return os.environ.get("HELIX_SHARE_DENSE_CODEC", "1").strip().lower() not in (
+    return os.environ.get("CYMATIX_SHARE_DENSE_CODEC", "1").strip().lower() not in (
         "0", "false", "no", "off",
     )
 

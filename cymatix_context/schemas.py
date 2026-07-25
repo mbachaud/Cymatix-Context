@@ -1,5 +1,5 @@
 """
-Schemas — Pydantic models for the Helix knowledge store data layer.
+Schemas — Pydantic models for the Cymatix knowledge store data layer.
 
 These are the stable internal contracts. All models are JSON-serializable
 for SQLite storage (via model_dump_json / model_validate_json).
@@ -109,7 +109,7 @@ class DocumentSignals(BaseModel):
     #
     # Inert until Slice 2 wires the touch path to populate it. New code
     # should NOT use this field as a primary retrieval signal — see the
-    # warning in ~/.helix/shared/handoffs/2026-04-11_8d_dimensional_roadmap.md
+    # warning in ~/.cymatix/shared/handoffs/2026-04-11_8d_dimensional_roadmap.md
     # (Phase 1 section): cost-of-fetch is not a relevance signal.
     recent_accesses: List[float] = Field(default_factory=list)
 
@@ -380,7 +380,7 @@ class Participant(BaseModel):
     mcp_host: Optional[str] = None      # host tag — "vscode", "cursor"
     ide_detected: Optional[str] = None        # adapter detect at register time
     ide_detection_via: Optional[str] = None   # "env:VSCODE_PID", "agent_override", etc.
-    model_id: Optional[str] = None            # agent self-reported via helix_announce
+    model_id: Optional[str] = None            # agent self-reported via cymatix_announce
 
 
 class ParticipantInfo(BaseModel):
@@ -411,7 +411,7 @@ class DocumentAttribution(BaseModel):
 GeneAttribution = DocumentAttribution
 
 
-# ── HITL event logging (see ~/.helix/shared/handoffs/2026-04-11_hitl_observation.md) ──
+# ── HITL event logging (see ~/.cymatix/shared/handoffs/2026-04-11_hitl_observation.md) ──
 
 
 class HITLPauseType(str, Enum):
@@ -499,7 +499,7 @@ _ESCALATE_REASONS: frozenset[str] = frozenset({
     "abstain", "denatured", "sparse", "no_promoter_match",
 })
 
-# Tools an agent can escalate to. Helix only signals the class; the
+# Tools an agent can escalate to. Cymatix only signals the class; the
 # consumer registers the concrete tool. Kept narrow on purpose.
 ESCALATE_TARGETS: tuple[str, ...] = (
     "grep",
@@ -550,7 +550,7 @@ class MissBlock(BaseModel):
     Carries a discriminator (``reason``) and a concrete next-step list
     (``escalate_to``). ``do_not_answer_from_genome=True`` is a load-bearing
     contract bit: the frontier agent MUST honor it (see
-    docs/agent-sdk-fragment.md / HELIX_NO_MATCH_FRAGMENT).
+    docs/agent-sdk-fragment.md / CYMATIX_NO_MATCH_FRAGMENT).
 
     Stage 7 extends this additively (spec §8):
       * ``refresh_targets: list[str]`` — concrete file paths or URLs

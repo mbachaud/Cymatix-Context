@@ -42,7 +42,7 @@ from typing import Any, Optional
 import joblib
 import numpy as np
 
-log = logging.getLogger("helix.fusion_plr")
+log = logging.getLogger("cymatix.fusion_plr")
 
 # Must match `scripts/pwpc/sprint3.py::MODEL_SCHEMA_VERSION`. Bumping the
 # trainer schema rejects older artifacts at load time instead of silently

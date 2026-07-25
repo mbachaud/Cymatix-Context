@@ -1,5 +1,5 @@
 """
-Helix error types — every error has a fallback, the pipeline never crashes.
+Cymatix error types — every error has a fallback, the pipeline never crashes.
 
 Biology → Error map:
     CodonAlignmentError  — chunker produces un-processable fragment
@@ -10,32 +10,32 @@ Biology → Error map:
 """
 
 
-class HelixError(Exception):
-    """Base class for all Helix errors."""
+class CymatixError(Exception):
+    """Base class for all Cymatix errors."""
 
 
-class CodonAlignmentError(HelixError):
+class CodonAlignmentError(CymatixError):
     """Chunker produced a fragment that can't be processed."""
 
 
-class PromoterMismatch(HelixError):
+class PromoterMismatch(CymatixError):
     """Query matched zero documents in the knowledge store."""
 
 
-class FoldingError(HelixError):
+class FoldingError(CymatixError):
     """Compressor returned unparseable JSON."""
 
 
-class TranscriptionError(HelixError):
+class TranscriptionError(CymatixError):
     """Compressor model call failed entirely (network, OOM, etc.)."""
 
 
-class GenomeFullError(HelixError):
+class GenomeFullError(CymatixError):
     """KnowledgeStore storage limit reached."""
 
 
-class ConfigError(HelixError):
-    """helix.toml is structurally invalid.
+class ConfigError(CymatixError):
+    """cymatix.toml is structurally invalid.
 
     Raised by the Stage 4 loader when ``[abstain].mode = "per_classifier"``
     is set but a required per-class block is missing. See

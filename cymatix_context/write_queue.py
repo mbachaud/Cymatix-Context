@@ -38,7 +38,7 @@ import time
 from concurrent.futures import Future
 from typing import List, Optional
 
-log = logging.getLogger("helix.write_queue")
+log = logging.getLogger("cymatix.write_queue")
 
 
 class GenomeWriter:

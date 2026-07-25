@@ -10,22 +10,22 @@
   <div class="panel panel--empty">
     <p>No database selected — choose or create one in the dialog.</p>
   </div>
-{% elif state.helix.start_pending %}
+{% elif state.cymatix.start_pending %}
   <div class="panel panel--starting">
     <span class="spinner" aria-hidden="true"></span>
     <p>Cymatix is starting — first boot can take a minute while encoders warm up.</p>
   </div>
-{% elif state.helix.availability == "unavailable" or not state.helix.running %}
+{% elif state.cymatix.availability == "unavailable" or not state.cymatix.running %}
   <div class="panel panel--empty">
     <p>Cymatix is stopped. Click <strong>Start</strong> to launch the server.</p>
   </div>
-{% elif state.helix.availability == "degraded" %}
+{% elif state.cymatix.availability == "degraded" %}
   <div class="panel panel--health-warning">
-    <p>{{ state.helix.health_message or state.helix.next_action or "Cymatix is running with degraded health." }}</p>
+    <p>{{ state.cymatix.health_message or state.cymatix.next_action or "Cymatix is running with degraded health." }}</p>
   </div>
 {% endif %}
 
-{# Switchboard + Database render even when helix is stopped — they
+{# Switchboard + Database render even when cymatix is stopped — they
    describe the planned configuration for the next start. #}
 {% if state.switchboard %}
   {% include "components/switchboard_panel.html" %}
@@ -35,7 +35,7 @@
   {% include "components/database_panel.html" %}
 {% endif %}
 
-{% if state.helix.running %}
+{% if state.cymatix.running %}
   {% if state.parties %}
     {% include "components/parties_panel.html" %}
   {% endif %}
@@ -89,11 +89,11 @@
 {% endif %}
 
 {# Observability renders whenever the launcher owns (or expects) the
-   sidecar — independent of helix state. #}
+   sidecar — independent of cymatix state. #}
 {% if state.observability %}
   {% include "components/observability_panel.html" %}
 {% endif %}
 
 {# Diagnostics always renders — surfaces errors, orphans, and paths
-   regardless of whether helix is up. #}
+   regardless of whether cymatix is up. #}
 {% include "components/diagnostics_panel.html" %}

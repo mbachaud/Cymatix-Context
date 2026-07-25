@@ -3,7 +3,7 @@
 Reads OKF v0.1 knowledge bundles (plain directories of markdown files
 with YAML frontmatter, spec snapshot pinned at upstream commit ee67a5ca
 — see tests/fixtures/okf/SPEC-ee67a5ca.md) and routes every concept
-through ``HelixContextManager.ingest`` so frontmatter tags merge with
+through ``CymatixContextManager.ingest`` so frontmatter tags merge with
 tagger output instead of bypassing it.
 
 Cross-links are captured into the inert ``okf_links`` table only —

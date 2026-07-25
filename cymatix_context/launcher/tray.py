@@ -1,5 +1,5 @@
 """
-Tray — system tray icon for the helix launcher.
+Tray — system tray icon for the cymatix launcher.
 
 Runs on the main thread on Windows (pystray needs the Win32 message
 pump), with uvicorn running in a daemon thread. The tray icon is the
@@ -10,18 +10,18 @@ actually stops things.
 Menu:
     - Open Dashboard        opens the browser at the launcher URL
     - ---                   (separator)
-    - Start helix           supervisor.start()   (disabled if running)
-    - Restart helix         supervisor.restart() (disabled if stopped)
-    - Stop helix            supervisor.stop()    (disabled if stopped)
+    - Start cymatix           supervisor.start()   (disabled if running)
+    - Restart cymatix         supervisor.restart() (disabled if stopped)
+    - Stop cymatix            supervisor.stop()    (disabled if stopped)
     - ---
-    - Quit                  stops launcher AND helix, exits the process
+    - Quit                  stops launcher AND cymatix, exits the process
 
-License note: pystray is LGPL-3. It is NOT bundled with helix-context
+License note: pystray is LGPL-3. It is NOT bundled with cymatix-context
 — users install it explicitly via the optional extra:
 
-    pip install helix-context[launcher-tray]
+    pip install cymatix-context[launcher-tray]
 
-This keeps the helix-context wheel itself Apache-2.0-clean.
+This keeps the cymatix-context wheel itself Apache-2.0-clean.
 """
 
 from __future__ import annotations
@@ -46,14 +46,14 @@ CREATE_NEW_PROCESS_GROUP = 0x00000200
 
 from .supervisor import (
     AlreadyRunning,
-    HelixSupervisor,
+    CymatixSupervisor,
     NotRunning,
     SupervisorError,
     stop_on_quit,
 )
 from . import genome_registry
 
-log = logging.getLogger("helix.launcher.tray")
+log = logging.getLogger("cymatix.launcher.tray")
 
 
 def is_tray_available() -> bool:
@@ -134,7 +134,7 @@ def _confirm_genome_switch(target: Path) -> bool:
     thread; when that thread is pystray's icon pump, the two loops
     contend and button clicks are never dispatched — the dialog appears
     wedged and the whole tray goes dead. Callers spawn a dedicated
-    worker thread (see `HelixTrayIcon._genome_switch_flow`) so the modal
+    worker thread (see `CymatixTrayIcon._genome_switch_flow`) so the modal
     gets a thread of its own.
 
     On Windows the prompt is a Win32 MessageBoxW with MB_SETFOREGROUND |
@@ -218,7 +218,7 @@ def _fire_hardware_fallback_balloon(tray_icon) -> None:
         log.warning("Could not write hardware-fallback sentinel %s", sentinel, exc_info=True)
 
 
-class HelixTrayIcon:
+class CymatixTrayIcon:
     """Wraps a pystray.Icon with launcher-aware menu actions.
 
     Instantiate after pystray is verified available (call is_tray_available
@@ -228,9 +228,9 @@ class HelixTrayIcon:
 
     def __init__(
         self,
-        supervisor: HelixSupervisor,
+        supervisor: CymatixSupervisor,
         dashboard_url: str,
-        name: str = "helix-launcher",
+        name: str = "cymatix-launcher",
         tooltip: str = "Cymatix Launcher",
         on_quit: Optional[Callable[[], None]] = None,
         grafana_url: Optional[str] = None,
@@ -248,13 +248,13 @@ class HelixTrayIcon:
         self._on_quit_extra = on_quit
         self.grafana_url = grafana_url
         self.prometheus_url = prometheus_url
-        # Optional — provided when helix-context[codec] is installed and
+        # Optional — provided when cymatix-context[codec] is installed and
         # the launcher either adopted a running Headroom proxy or is
         # allowed to manage one from config.
         self.headroom = headroom_supervisor
         self.headroom_dashboard_url = headroom_dashboard_url
         # Optional — wired when the native observability sidecar stack is
-        # enabled (HELIX_OBSERVABILITY != 0 and install bootstrap is
+        # enabled (CYMATIX_OBSERVABILITY != 0 and install bootstrap is
         # complete). Drives the Observability submenu (spec §7.5, §11.4).
         self.observability = observability_supervisor
         self.update_checker = update_checker
@@ -305,7 +305,7 @@ class HelixTrayIcon:
         We show a balloon on Yes so the operator gets feedback the moment
         they confirm, and a second balloon (success or failure) when the
         restart worker finishes. Every branch logs at INFO so an operator
-        inspecting `~/.helix/launcher/launcher.log` can see exactly which
+        inspecting `~/.cymatix/launcher/launcher.log` can see exactly which
         step ran — no more silent menu clicks.
         """
         def _h(icon, item):  # noqa: ARG001 — pystray API
@@ -313,14 +313,14 @@ class HelixTrayIcon:
             worker = threading.Thread(
                 target=self._genome_switch_flow,
                 args=(Path(genome_path),),
-                name="helix-genome-switch",
+                name="cymatix-genome-switch",
                 daemon=True,
             )
             worker.start()
         return _h
 
     def _genome_switch_flow(self, target: Path) -> None:
-        """Off-pump worker: confirm, persist selection, then restart helix.
+        """Off-pump worker: confirm, persist selection, then restart cymatix.
 
         Runs on a dedicated daemon thread (never the pystray pump, issue
         #286) so the blocking confirm dialog AND the 10-30 s supervisor
@@ -352,13 +352,13 @@ class HelixTrayIcon:
         # Immediate confirmation so the user sees feedback before the
         # 10-30 s restart cycle completes.
         self._safe_notify(
-            f"Restarting helix on {resolved.name}…",
+            f"Restarting cymatix on {resolved.name}…",
             title="Cymatix: switching database",
         )
         self._switch_worker(resolved)
 
     def _switch_worker(self, resolved: Path) -> None:
-        """Background worker: stop + start helix, then notify + refresh menu.
+        """Background worker: stop + start cymatix, then notify + refresh menu.
 
         Runs off the pystray message-pump thread so the tray icon stays
         clickable while supervisor.stop / start are blocking on
@@ -373,7 +373,7 @@ class HelixTrayIcon:
             else:
                 self.supervisor.start()
         except Exception as exc:
-            log.error("Tray: helix restart after genome switch failed: %s",
+            log.error("Tray: cymatix restart after genome switch failed: %s",
                       exc, exc_info=True)
             self._safe_notify(
                 f"Restart failed: {exc}",
@@ -600,7 +600,7 @@ class HelixTrayIcon:
         try:
             watcher = threading.Thread(
                 target=self._install_completion_watcher,
-                name="helix-install-watcher",
+                name="cymatix-install-watcher",
                 daemon=True,
             )
             watcher.start()
@@ -665,7 +665,7 @@ class HelixTrayIcon:
                     try:
                         self._icon.notify(
                             "Native observability installed — "
-                            "restarting helix launcher...",
+                            "restarting cymatix launcher...",
                             title="Cymatix Launcher",
                         )
                     except Exception:
@@ -693,10 +693,10 @@ class HelixTrayIcon:
         the new launcher survives even when the current process exits.
         """
         repo_root = self._repo_root()
-        bat_path = repo_root / "Start-helix-tray.bat"
+        bat_path = repo_root / "Start-cymatix-tray.bat"
         if not bat_path.exists():
             log.warning(
-                "Tray: auto-restart skipped — Start-helix-tray.bat not "
+                "Tray: auto-restart skipped — Start-cymatix-tray.bat not "
                 "found at %s. User must manually relaunch.",
                 bat_path,
             )
@@ -740,11 +740,11 @@ class HelixTrayIcon:
                     exc_info=True,
                 )
 
-    def _start_helix(self, icon, item) -> None:  # noqa: ARG002
-        log.info("Tray: starting helix")
+    def _start_cymatix(self, icon, item) -> None:  # noqa: ARG002
+        log.info("Tray: starting cymatix")
         try:
             pid = self.supervisor.start()
-            log.info("Tray: helix started (pid=%d)", pid)
+            log.info("Tray: cymatix started (pid=%d)", pid)
         except AlreadyRunning as exc:
             log.warning("Tray start: %s", exc)
         except (SupervisorError, Exception) as exc:
@@ -752,8 +752,8 @@ class HelixTrayIcon:
         finally:
             self._refresh_menu()
 
-    def _restart_helix(self, icon, item) -> None:  # noqa: ARG002
-        log.info("Tray: restarting helix")
+    def _restart_cymatix(self, icon, item) -> None:  # noqa: ARG002
+        log.info("Tray: restarting cymatix")
         try:
             self.supervisor.restart(reason="manual restart from tray menu")
         except Exception as exc:
@@ -761,8 +761,8 @@ class HelixTrayIcon:
         finally:
             self._refresh_menu()
 
-    def _stop_helix(self, icon, item) -> None:  # noqa: ARG002
-        log.info("Tray: stopping helix")
+    def _stop_cymatix(self, icon, item) -> None:  # noqa: ARG002
+        log.info("Tray: stopping cymatix")
         try:
             self.supervisor.stop(reason="manual stop from tray menu")
         except NotRunning as exc:
@@ -773,13 +773,13 @@ class HelixTrayIcon:
             self._refresh_menu()
 
     def _quit(self, icon, item) -> None:  # noqa: ARG002
-        """Stop helix then tear down the tray icon.
+        """Stop cymatix then tear down the tray icon.
 
         After icon.stop(), pystray's run() returns, main() exits, and
         the process terminates. The uvicorn daemon thread dies with the
-        process. If the supervisor is still holding a helix WE spawned,
+        process. If the supervisor is still holding a cymatix WE spawned,
         try to stop it cleanly first — best-effort, never blocks the
-        quit path. Adopted helix instances (started outside the
+        quit path. Adopted cymatix instances (started outside the
         launcher) are left running, mirroring the Headroom policy below.
         """
         log.info("Tray: quit")
@@ -896,7 +896,7 @@ class HelixTrayIcon:
 
         items = [
             pystray.MenuItem(
-                "Use this database (restart helix)",
+                "Use this database (restart cymatix)",
                 self._switch_genome(info.path),
             ),
             pystray.Menu.SEPARATOR,
@@ -930,7 +930,7 @@ class HelixTrayIcon:
         return pystray.Menu(*items)
 
     def _build_menu(self):
-        """Build a fresh pystray.Menu reflecting current helix state.
+        """Build a fresh pystray.Menu reflecting current cymatix state.
 
         pystray reads the menu dynamically from the Icon.menu property
         so re-entering the menu picks up enable/disable state without
@@ -970,18 +970,18 @@ class HelixTrayIcon:
             ),
             pystray.Menu.SEPARATOR,
             pystray.MenuItem(
-                "Start helix",
-                self._start_helix,
+                "Start cymatix",
+                self._start_cymatix,
                 enabled=lambda item: not self.supervisor.is_running(),  # noqa: ARG005
             ),
             pystray.MenuItem(
-                "Restart helix",
-                self._restart_helix,
+                "Restart cymatix",
+                self._restart_cymatix,
                 enabled=lambda item: self.supervisor.is_running(),  # noqa: ARG005
             ),
             pystray.MenuItem(
-                "Stop helix",
-                self._stop_helix,
+                "Stop cymatix",
+                self._stop_cymatix,
                 enabled=lambda item: self.supervisor.is_running(),  # noqa: ARG005
             ),
         ])
@@ -1014,7 +1014,7 @@ class HelixTrayIcon:
         #      Dismiss reminder. Without this branch the user sees ONLY
         #      the balloon and has no clickable surface.
         # When supervisor is None AND install_pending is False (e.g. user
-        # opted out via HELIX_OBSERVABILITY=0), the submenu is omitted
+        # opted out via CYMATIX_OBSERVABILITY=0), the submenu is omitted
         # entirely so the menu stays clean.
         if self.observability is not None:
             obs_services = ["collector", "prometheus", "tempo", "loki", "grafana"]
@@ -1121,7 +1121,7 @@ class HelixTrayIcon:
         _fire_hardware_fallback_balloon(self._icon)
 
     def notify_update_available(self) -> None:
-        """Show a one-shot balloon when a newer Helix Context release exists."""
+        """Show a one-shot balloon when a newer Cymatix Context release exists."""
         if self._icon is None or self.update_checker is None or self._update_notified:
             return
         info = self.update_checker.check()

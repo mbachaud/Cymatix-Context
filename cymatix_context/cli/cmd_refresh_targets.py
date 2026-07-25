@@ -1,13 +1,13 @@
-"""`helix refresh-targets` — just the reread plan, no evidence items.
+"""`cymatix refresh-targets` — just the reread plan, no evidence items.
 
 Useful when the caller already has content cached and only needs to
 know which sources are stale enough that rereading is required before
-a high-risk action completes. Same call as ``helix packet`` then
+a high-risk action completes. Same call as ``cymatix packet`` then
 projected down to the ``refresh_targets`` list — cheap to build, no
 extra retrieval pass.
 
 Mirrors the ``/context/refresh-plan`` HTTP endpoint and the
-``helix_refresh_targets`` MCP tool.
+``cymatix_refresh_targets`` MCP tool.
 """
 from __future__ import annotations
 

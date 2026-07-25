@@ -1,4 +1,4 @@
-"""`helix config show` — print effective helix.toml + env overrides."""
+"""`cymatix config show` — print effective cymatix.toml + env overrides."""
 from __future__ import annotations
 
 import argparse
@@ -13,7 +13,7 @@ from . import output
 
 
 def _config_to_dict(cfg: Any) -> Dict[str, Any]:
-    """Convert a HelixConfig dataclass to a JSON-serializable dict."""
+    """Convert a CymatixConfig dataclass to a JSON-serializable dict."""
     return dataclasses.asdict(cfg)
 
 
@@ -23,7 +23,7 @@ def _build_parser() -> argparse.ArgumentParser:
         description="Inspect the effective Cymatix configuration.",
     )
     sub = parser.add_subparsers(dest="action", metavar="<action>")
-    show = sub.add_parser("show", help="Print effective config (helix.toml + env).")
+    show = sub.add_parser("show", help="Print effective config (cymatix.toml + env).")
     show.add_argument(
         "--text",
         action="store_true",
@@ -32,7 +32,7 @@ def _build_parser() -> argparse.ArgumentParser:
     show.add_argument(
         "--config",
         default=None,
-        help="Path to helix.toml (default: $HELIX_CONFIG or ./helix.toml).",
+        help="Path to cymatix.toml (default: $CYMATIX_CONFIG or ./cymatix.toml).",
     )
     return parser
 
@@ -69,13 +69,13 @@ def run(argv: list[str]) -> int:
     try:
         cfg = load_config(args.config)
     except Exception as exc:
-        # A malformed helix.toml previously dumped a raw traceback. CI
-        # consumers that pipe `helix config show --json` need structured
+        # A malformed cymatix.toml previously dumped a raw traceback. CI
+        # consumers that pipe `cymatix config show --json` need structured
         # error output instead. Mirrors cmd_status._probe_config's pattern.
         err = {
             "ok": False,
             "error": f"{type(exc).__name__}: {exc}",
-            "next_action": "Fix the [genome]/[server]/... sections in helix.toml.",
+            "next_action": "Fix the [genome]/[server]/... sections in cymatix.toml.",
         }
         if args.text:
             output.eprint(err["error"])

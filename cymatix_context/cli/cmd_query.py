@@ -1,6 +1,6 @@
-"""`helix query` — run the retrieval pipeline once and print the result.
+"""`cymatix query` — run the retrieval pipeline once and print the result.
 
-The CLI is a thin wrapper around ``cymatix_context.api.HelixSession.query``.
+The CLI is a thin wrapper around ``cymatix_context.api.CymatixSession.query``.
 Mapping notes:
   * --tier focused → decoder_mode="condensed" (fewer genes, tighter)
   * --tier (omit)  → no override; classifier picks

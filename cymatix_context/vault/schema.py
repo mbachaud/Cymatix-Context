@@ -1,7 +1,7 @@
 """Frontmatter shape, filename derivation, and path safety helpers.
 
 The frontmatter is the load-bearing surface for vault interop.
-Computed fields are helix-authoritative (read-only in the vault).
+Computed fields are cymatix-authoritative (read-only in the vault).
 Authored fields are operator-editable starting in v1.1; in v1 they are
 rendered as cosmetic placeholders for forward-compat.
 """
@@ -77,7 +77,7 @@ def derive_gene_filename(source_id: str, gene_id: str) -> str:
     Pattern: <source_stem>-<short_id>.md
 
     Note: compound extensions strip only the last suffix
-    (e.g., 'foo.tar.gz' → 'foo.tar'). Helix typically operates on
+    (e.g., 'foo.tar.gz' → 'foo.tar'). Cymatix typically operates on
     single-extension files so this is rarely surprising.
     """
     stem = Path(source_id).stem if Path(source_id).suffix else Path(source_id).name

@@ -32,7 +32,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List, Optional, Sequence
 
-log = logging.getLogger("helix.launcher.genome_registry")
+log = logging.getLogger("cymatix.launcher.genome_registry")
 
 # How many `source_id` rows to read when computing the folder summary. A
 # few thousand is enough to surface the top folders without scanning a
@@ -99,7 +99,7 @@ def _cache_key(path: Path, mtime: float, size: int) -> str:
 
 
 def _repo_root() -> Path:
-    """The helix-context repo root, used as the base for discovery walks."""
+    """The cymatix-context repo root, used as the base for discovery walks."""
     return Path(__file__).resolve().parent.parent.parent
 
 
@@ -229,7 +229,7 @@ def _read_genome_info(path: Path) -> GenomeInfo:
 
     try:
         # `uri=True` + `mode=ro` makes the read non-locking and safe to
-        # run against a database that helix has open for writes.
+        # run against a database that cymatix has open for writes.
         conn = sqlite3.connect(
             f"file:{path.as_posix()}?mode=ro",
             uri=True,
@@ -262,10 +262,10 @@ def _read_genome_info(path: Path) -> GenomeInfo:
 
 # ── durable selection state (issue #286) ──────────────────────────────
 #
-# `select_genome` used to set HELIX_GENOME_PATH in the launcher process env
+# `select_genome` used to set CYMATIX_GENOME_PATH in the launcher process env
 # ONLY, so a Quit + relaunch (desktop icon, new shell) silently reverted to
-# the helix.toml genome. We now also write the choice to a tiny JSON file
-# co-located with the launcher state (~/.helix/launcher/selected_genome.json)
+# the cymatix.toml genome. We now also write the choice to a tiny JSON file
+# co-located with the launcher state (~/.cymatix/launcher/selected_genome.json)
 # and consult it in `active_genome_path`, so the tray's genome choice sticks.
 
 _SELECTION_FILENAME = "selected_genome.json"
@@ -274,36 +274,53 @@ _SELECTION_FILENAME = "selected_genome.json"
 def _selection_state_path() -> Path:
     """Path to the durable genome-selection record.
 
-    Co-located with the launcher state at ``~/.helix/launcher/``. Honors
-    ``HELIX_LAUNCHER_STATE_DIR`` so tests (and unusual deployments) can
+    Co-located with the launcher state at ``~/.cymatix/launcher/``. Honors
+    ``CYMATIX_LAUNCHER_STATE_DIR`` so tests (and unusual deployments) can
     redirect it without monkeypatching.
     """
-    override = os.environ.get("HELIX_LAUNCHER_STATE_DIR")
-    base = Path(override) if override else (Path.home() / ".helix" / "launcher")
+    override = os.environ.get("CYMATIX_LAUNCHER_STATE_DIR")
+    base = Path(override) if override else (Path.home() / ".cymatix" / "launcher")
     return base / _SELECTION_FILENAME
+
+
+def _legacy_selection_state_path() -> Optional[Path]:
+    """Legacy ~/.helix genome-selection record — read-only back-compat.
+
+    Returns None when a ``CYMATIX_LAUNCHER_STATE_DIR`` override is active
+    (the override fully governs the location, so there is no legacy path
+    to consult). New selections are always written to the cymatix path;
+    this only lets an upgraded install inherit a helix-era choice once.
+    """
+    if os.environ.get("CYMATIX_LAUNCHER_STATE_DIR"):
+        return None
+    return Path.home() / ".helix" / "launcher" / _SELECTION_FILENAME
 
 
 def _read_selected_genome() -> Optional[Path]:
     """Return the durably-persisted genome selection, or None.
 
+    Prefers the cymatix-native record and falls back to the legacy
+    ~/.helix path so an upgraded install keeps its genome choice.
     Returns None (rather than a stale path) if the file is missing,
     unreadable, or points at a genome that no longer exists on disk.
     """
-    path = _selection_state_path()
-    try:
-        raw = json.loads(path.read_text(encoding="utf-8"))
-    except FileNotFoundError:
-        return None
-    except Exception:
-        log.debug("Failed to read genome selection state %s", path, exc_info=True)
-        return None
-    candidate = raw.get("genome_path") if isinstance(raw, dict) else None
-    if not candidate:
-        return None
-    resolved = Path(candidate)
-    if resolved.exists() and resolved.is_file():
-        return resolved
-    log.debug("Persisted genome %s no longer exists; ignoring", resolved)
+    for path in (_selection_state_path(), _legacy_selection_state_path()):
+        if path is None:
+            continue
+        try:
+            raw = json.loads(path.read_text(encoding="utf-8"))
+        except FileNotFoundError:
+            continue
+        except Exception:
+            log.debug("Failed to read genome selection state %s", path, exc_info=True)
+            continue
+        candidate = raw.get("genome_path") if isinstance(raw, dict) else None
+        if not candidate:
+            continue
+        resolved = Path(candidate)
+        if resolved.exists() and resolved.is_file():
+            return resolved
+        log.debug("Persisted genome %s no longer exists; ignoring", resolved)
     return None
 
 
@@ -336,23 +353,23 @@ def clear_selection() -> None:
 
 
 def apply_persisted_selection() -> Optional[Path]:
-    """Seed HELIX_GENOME_PATH from the durable selection at launcher start.
+    """Seed CYMATIX_GENOME_PATH from the durable selection at launcher start.
 
     Called once early in launcher startup (before the supervisor spawns
-    helix) so the spawned helix subprocess inherits the persisted genome
-    via its environment. An explicit HELIX_GENOME_PATH already in the
+    cymatix) so the spawned cymatix subprocess inherits the persisted genome
+    via its environment. An explicit CYMATIX_GENOME_PATH already in the
     environment always wins — a bench wrapper .bat or a developer's shell
     export must not be overridden by a stale tray selection.
 
     Returns the applied path, or None if nothing was applied.
     """
-    if os.environ.get("HELIX_GENOME_PATH"):
+    if os.environ.get("CYMATIX_GENOME_PATH"):
         return None
     selected = _read_selected_genome()
     if selected is None:
         return None
     resolved = str(selected.resolve())
-    os.environ["HELIX_GENOME_PATH"] = resolved
+    os.environ["CYMATIX_GENOME_PATH"] = resolved
     log.info("Applied persisted genome selection: %s", resolved)
     return selected.resolve()
 
@@ -361,17 +378,17 @@ def apply_persisted_selection() -> Optional[Path]:
 
 
 def active_genome_path() -> Path:
-    """Resolve the genome path the supervised helix will load on next start.
+    """Resolve the genome path the supervised cymatix will load on next start.
 
     Resolution order:
-      1. HELIX_GENOME_PATH env var (explicit override — matches
+      1. CYMATIX_GENOME_PATH env var (explicit override — matches
          `cymatix_context.config.load_config`)
-      2. Durable tray selection (~/.helix/launcher/selected_genome.json,
+      2. Durable tray selection (~/.cymatix/launcher/selected_genome.json,
          issue #286) — survives Quit + relaunch
-      3. [genome] path in helix.toml
-      4. Default "genome.db" relative to the helix repo root
+      3. [genome] path in cymatix.toml
+      4. Default "genome.db" relative to the cymatix repo root
     """
-    env = os.environ.get("HELIX_GENOME_PATH")
+    env = os.environ.get("CYMATIX_GENOME_PATH")
     if env:
         return Path(env).resolve()
     persisted = _read_selected_genome()
@@ -419,19 +436,19 @@ def is_active(info: GenomeInfo) -> bool:
 
 
 def select_genome(path: Path) -> Path:
-    """Mark `path` as the genome to use on the next helix start.
+    """Mark `path` as the genome to use on the next cymatix start.
 
-    Sets `HELIX_GENOME_PATH` in the current process so the supervisor's
+    Sets `CYMATIX_GENOME_PATH` in the current process so the supervisor's
     next subprocess.Popen inherits it, AND writes a durable selection
     record (issue #286) so the choice survives a launcher Quit + relaunch.
-    Does NOT restart helix — callers that want a hot swap must invoke
+    Does NOT restart cymatix — callers that want a hot swap must invoke
     `supervisor.restart()` separately. Returns the resolved absolute path
     that was written.
     """
     resolved = Path(path).resolve()
     if not resolved.exists() or not resolved.is_file():
         raise FileNotFoundError(f"Genome not found: {resolved}")
-    os.environ["HELIX_GENOME_PATH"] = str(resolved)
+    os.environ["CYMATIX_GENOME_PATH"] = str(resolved)
     _write_selected_genome(resolved)
     log.info("Selected genome: %s", resolved)
     return resolved

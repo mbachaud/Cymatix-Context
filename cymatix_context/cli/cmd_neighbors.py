@@ -1,11 +1,11 @@
-"""`helix neighbors` — top-k SEMA neighbors for a query.
+"""`cymatix neighbors` — top-k SEMA neighbors for a query.
 
 Read-only, cheap. Mirrors the ``/debug/neighbors`` HTTP endpoint and
-the ``helix_neighbors`` MCP tool. Returns an empty list (exit 0) when
+the ``cymatix_neighbors`` MCP tool. Returns an empty list (exit 0) when
 the SEMA codec is unavailable or no embeddings are populated — the
 ``--json`` shape includes a ``count: 0`` so consumers don't have to
 distinguish "no codec" from "no matches" structurally; check
-``helix status`` or ``helix diag corpus`` for that.
+``cymatix status`` or ``cymatix diag corpus`` for that.
 """
 from __future__ import annotations
 

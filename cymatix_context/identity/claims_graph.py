@@ -1,6 +1,6 @@
 """Claims-graph traversal — the DAG layer that consumes Phase 2 claim_edges.
 
-Helix emits ``claims`` + ``claim_edges`` (see shard_schema.py + claims.py);
+Cymatix emits ``claims`` + ``claim_edges`` (see shard_schema.py + claims.py);
 this module turns those into agent-actionable signals:
 
     - ``supersedes_chain(claim_id)`` — walk supersedes to the head (latest)
@@ -9,7 +9,7 @@ this module turns those into agent-actionable signals:
       (latest-supersedes / highest-authority / keep-all-with-flags)
     - ``topologically_sorted(claim_ids)`` — supersedes-chain topo order
 
-Helix is the router above the stack (emits signals); this is the DAG
+Cymatix is the router above the stack (emits signals); this is the DAG
 layer of the stack (executes traversal). Kept narrow by design —
 contradiction *detection* lives in claim_edges generation; this module
 only walks what's already been written.
@@ -22,7 +22,7 @@ import sqlite3
 from collections import defaultdict
 from typing import Iterable, Optional
 
-log = logging.getLogger("helix.claims_graph")
+log = logging.getLogger("cymatix.claims_graph")
 
 
 # ── Supersedes chain walking ───────────────────────────────────────
@@ -314,7 +314,7 @@ def resolve_from_packet(
     packet: dict,
     policy: str = "latest_then_authority",
 ) -> dict:
-    """Convenience: pull claim_ids out of a Helix packet and resolve.
+    """Convenience: pull claim_ids out of a Cymatix packet and resolve.
 
     The packet's ContextItems may carry ``claim_id`` pointers; we also
     look up claims for every ``gene_id`` mentioned. Returns the

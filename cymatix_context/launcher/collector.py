@@ -2,8 +2,8 @@
 State collector — builds the `/api/state` payload the dashboard renders.
 
 Aggregates data from:
-    - Supervisor (helix process liveness, pid, uptime)
-    - Helix HTTP endpoints: /stats, /sessions, /health
+    - Supervisor (cymatix process liveness, pid, uptime)
+    - Cymatix HTTP endpoints: /stats, /sessions, /health
     - Ollama: /api/ps (optional, soft-fails if unreachable)
 
 All HTTP calls use short timeouts. Any upstream failure produces a
@@ -18,11 +18,11 @@ from typing import Any, Dict, List, Optional
 
 import httpx
 
-from .supervisor import HelixSupervisor
+from .supervisor import CymatixSupervisor
 from .host_labels import compose_label, host_pretty, vendor_pretty
 from .model_labels import model_pretty
 
-log = logging.getLogger("helix.launcher.collector")
+log = logging.getLogger("cymatix.launcher.collector")
 
 
 def _coerce_value(value: Any) -> str:
@@ -63,14 +63,14 @@ def _build_tooltip(participant: Dict[str, Any]) -> Dict[str, str]:
       - agent_kind_label: "Not set"  when agent_kind is NULL
     The ide_detection_via line tells the operator how (or whether) the
     IDE value was obtained: "env:VSCODE_PID", "agent_override",
-    "no_match", "explicit:HELIX_MCP_HOST".
+    "no_match", "explicit:CYMATIX_MCP_HOST".
 
     ide_label fallback chain (in order):
       1. ide_detected — populated by the adapter at register time, or by
-         an agent's ide_override via helix_announce. Authoritative when present.
+         an agent's ide_override via cymatix_announce. Authoritative when present.
       2. mcp_host — PR #26's column. Sessions registered after PR #26 but
          before this change will have ide_detected=NULL but mcp_host set
-         from HELIX_MCP_HOST env. Fall back so those sessions' chips
+         from CYMATIX_MCP_HOST env. Fall back so those sessions' chips
          still render correctly until they re-register.
       3. "Not detected" — explicit placeholder when neither column
          carries a value, so the tooltip surfaces the gap rather than
@@ -92,11 +92,11 @@ def _build_tooltip(participant: Dict[str, Any]) -> Dict[str, str]:
 
 
 class StateCollector:
-    """Builds the launcher-side state snapshot by polling helix + ollama."""
+    """Builds the launcher-side state snapshot by polling cymatix + ollama."""
 
     def __init__(
         self,
-        supervisor: HelixSupervisor,
+        supervisor: CymatixSupervisor,
         ollama_base_url: str = "http://127.0.0.1:11434",
         http_timeout: float = 4.0,
         update_checker: Optional[Any] = None,
@@ -108,21 +108,21 @@ class StateCollector:
 
     def collect(self) -> Dict[str, Any]:
         """Return the full launcher state dict. Never raises."""
-        helix_state = self._collect_helix_process()
-        state: Dict[str, Any] = {"helix": helix_state}
+        cymatix_state = self._collect_cymatix_process()
+        state: Dict[str, Any] = {"cymatix": cymatix_state}
         if self.update_checker is not None:
             state["update"] = self.update_checker.check().as_dict()
 
-        # The switchboard + database panels are useful even when helix is
+        # The switchboard + database panels are useful even when cymatix is
         # stopped — they describe the *next* run's planned configuration.
-        # Pipeline/runs panels need a live helix so they stay gated below.
+        # Pipeline/runs panels need a live cymatix so they stay gated below.
         state["switchboard"] = self._switchboard_panel()
         state["database"] = self._database_panel()
 
-        if not helix_state["running"]:
+        if not cymatix_state["running"]:
             return state
 
-        base = f"http://{self.supervisor.helix_host}:{self.supervisor.helix_port}"
+        base = f"http://{self.supervisor.cymatix_host}:{self.supervisor.cymatix_port}"
         client = httpx.Client(base_url=base, timeout=self.http_timeout)
         health_seen = False
         endpoint_seen = False
@@ -130,7 +130,7 @@ class StateCollector:
             stats = self._safe_get_json(client, "/stats")
             if stats:
                 endpoint_seen = True
-                self._copy_helix_version(state["helix"], stats)
+                self._copy_cymatix_version(state["cymatix"], stats)
                 state["genes"] = self._genes_panel(stats)
 
             sessions = self._safe_get_json(client, "/sessions", params={"status": "all"})
@@ -148,29 +148,29 @@ class StateCollector:
             if health:
                 health_seen = True
                 endpoint_seen = True
-                self._copy_helix_version(state["helix"], health)
-                state["helix"]["ribosome"] = health.get("ribosome")
+                self._copy_cymatix_version(state["cymatix"], health)
+                state["cymatix"]["ribosome"] = health.get("ribosome")
                 checks = health.get("checks", {}) or {}
-                state["helix"]["availability"] = (
+                state["cymatix"]["availability"] = (
                     "available" if health.get("status") == "ok" else "degraded"
                 )
                 if health.get("status") == "ok":
-                    state["helix"]["next_action"] = (
+                    state["cymatix"]["next_action"] = (
                         "Cymatix is healthy. Query it through MCP or the OpenAI-compatible endpoint."
                     )
                 elif checks.get("upstream_ready") is False:
-                    state["helix"]["next_action"] = (
+                    state["cymatix"]["next_action"] = (
                         "Start or fix the upstream model server, then use Restart if Cymatix stays degraded."
                     )
                 elif checks.get("genome_ready") is False:
-                    state["helix"]["next_action"] = (
+                    state["cymatix"]["next_action"] = (
                         "Inspect the local genome database, then use Restart if Cymatix stays degraded."
                     )
                 else:
-                    state["helix"]["next_action"] = (
+                    state["cymatix"]["next_action"] = (
                         "Cymatix responded unexpectedly. Restart it from the launcher UI."
                     )
-                state["helix"]["health_message"] = health.get("message")
+                state["cymatix"]["health_message"] = health.get("message")
 
             components = self._safe_get_json(client, "/admin/components")
             if components and components.get("components"):
@@ -185,7 +185,7 @@ class StateCollector:
                 state["tokens"] = self._tokens_panel(tokens)
 
             # Backfill the database panel with live information from the
-            # running helix (the on-disk-discovery path can drift from the
+            # running cymatix (the on-disk-discovery path can drift from the
             # process that's actually open). Adds an `active` block in the
             # panel so the dashboard can show "selected vs running".
             live_genome = self._safe_get_json(client, "/admin/genome")
@@ -193,8 +193,8 @@ class StateCollector:
                 endpoint_seen = True
                 state["database"]["live"] = self._live_genome(live_genome)
 
-            # Pipeline viewer events. The ring is only present on a helix
-            # that includes the launcher-companion code; an older helix
+            # Pipeline viewer events. The ring is only present on a cymatix
+            # that includes the launcher-companion code; an older cymatix
             # answers 404 and we skip the panel quietly.
             pipeline = self._safe_get_json(
                 client, "/debug/pipeline/recent", params={"limit": 64},
@@ -206,14 +206,14 @@ class StateCollector:
             client.close()
 
         if not health_seen and endpoint_seen:
-            state["helix"]["availability"] = "available"
-            state["helix"]["next_action"] = (
+            state["cymatix"]["availability"] = "available"
+            state["cymatix"]["next_action"] = (
                 "Cymatix is responding; the launcher health endpoint has "
                 "not answered yet (cold start, or an older build)."
             )
         elif not health_seen:
-            state["helix"]["availability"] = "degraded"
-            state["helix"]["next_action"] = (
+            state["cymatix"]["availability"] = "degraded"
+            state["cymatix"]["next_action"] = (
                 "The Cymatix process exists but did not answer its health endpoints. "
                 "Restart it from the launcher UI."
             )
@@ -224,19 +224,19 @@ class StateCollector:
 
         return state
 
-    def _copy_helix_version(self, helix: Dict[str, Any], payload: Dict[str, Any]) -> None:
-        version = payload.get("version") or payload.get("helix_version")
+    def _copy_cymatix_version(self, cymatix: Dict[str, Any], payload: Dict[str, Any]) -> None:
+        version = payload.get("version") or payload.get("cymatix_version")
         if isinstance(version, str) and version.strip():
-            helix["version"] = version.strip()
+            cymatix["version"] = version.strip()
 
-    # ── helix process ──────────────────────────────────────────────
+    # ── cymatix process ──────────────────────────────────────────────
 
-    def _collect_helix_process(self) -> Dict[str, Any]:
+    def _collect_cymatix_process(self) -> Dict[str, Any]:
         running = self.supervisor.is_running()
         out: Dict[str, Any] = {
             "running": running,
-            "port": self.supervisor.helix_port,
-            "host": self.supervisor.helix_host,
+            "port": self.supervisor.cymatix_port,
+            "host": self.supervisor.cymatix_host,
             "availability": "available" if running else "unavailable",
         }
         if running:
@@ -245,20 +245,20 @@ class StateCollector:
             st = self.supervisor.store.state
             out["last_restart_reason"] = st.last_restart_reason
             out["last_restart_at"] = st.last_restart_at
-            out["next_action"] = "Wait for the health probe or use Restart if Helix looks stuck."
+            out["next_action"] = "Wait for the health probe or use Restart if Cymatix looks stuck."
         else:
-            # When helix is down, surface an orphan warning if one is
+            # When cymatix is down, surface an orphan warning if one is
             # detected on the configured port — it's almost certainly
             # the user's real problem.
             try:
-                orphan_pid = self.supervisor.find_orphan_helix()
+                orphan_pid = self.supervisor.find_orphan_cymatix()
                 if orphan_pid is not None:
                     out["orphan_pid"] = orphan_pid
             except Exception:
                 log.debug("Orphan scan failed", exc_info=True)
-            out["next_action"] = "Click Start to launch Helix."
+            out["next_action"] = "Click Start to launch Cymatix."
 
-        # Last error — present whether helix is up or down.
+        # Last error — present whether cymatix is up or down.
         last_error = self.supervisor.get_last_error()
         if last_error is not None:
             out["last_error"] = last_error
@@ -268,7 +268,7 @@ class StateCollector:
             state_path = self.supervisor.store.path
             out["paths"] = {
                 "state_file": str(state_path),
-                "helix_log": str(self.supervisor.helix_log_path),
+                "cymatix_log": str(self.supervisor.cymatix_log_path),
             }
         except Exception:
             pass
@@ -465,7 +465,7 @@ class StateCollector:
     def _tools_panel(self, components: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """Project /admin/components into the launcher components panel.
 
-        The launcher already has dedicated Helix health and model panels.
+        The launcher already has dedicated Cymatix health and model panels.
         Hide the compressor here so Ollama/model activity does not get
         mistaken for a separate operator-facing tool.
         """
@@ -522,8 +522,8 @@ class StateCollector:
         """Snapshot the operationally-interesting retrieval/pipeline knobs.
 
         Reads `cymatix_context.config.load_config()` directly. Both the
-        launcher and the supervised helix child resolve the same
-        `helix.toml` from the same working directory, so this snapshot
+        launcher and the supervised cymatix child resolve the same
+        `cymatix.toml` from the same working directory, so this snapshot
         matches the live process. On any load failure the panel reports
         the error so the operator sees the gap.
         """

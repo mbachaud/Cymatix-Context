@@ -9,7 +9,7 @@ gene transfer) still resolves at import time:
     from cymatix_context.cross_store_import import export_genome, import_genome, genome_diff  # canonical
 
 Per docs/ROSETTA.md the canonical name for this concept is
-"cross-store import" — moving documents from one helix instance to
+"cross-store import" — moving documents from one cymatix instance to
 another. Function names themselves (``export_genome`` /
 ``import_genome`` / ``genome_diff``) keep their current names in
 Stage B; renaming the function-level surface is Stage C work.

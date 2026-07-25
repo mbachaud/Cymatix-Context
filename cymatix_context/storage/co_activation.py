@@ -184,12 +184,12 @@ def expand_coactivated(
             cap = symbol_expansion_cap if symbol_expansion_cap > 0 else len(uniq)
             if len(uniq) > cap:
                 # Ranking method for the top-cap selection. Default = personalized
-                # PageRank centrality. HELIX_EXPANSION_RANK=indegree selects the
+                # PageRank centrality. CYMATIX_EXPANSION_RANK=indegree selects the
                 # simpler raw in-degree (count of candidate referencers per def) —
                 # the council's ablation lever: if in-degree matches PageRank on
                 # the bench, the PageRank module isn't earning its place.
                 import os
-                if os.environ.get("HELIX_EXPANSION_RANK", "").strip().lower() == "indegree":
+                if os.environ.get("CYMATIX_EXPANSION_RANK", "").strip().lower() == "indegree":
                     from collections import Counter
                     keep = set(uniq)
                     indeg = Counter(b for (a, b) in sref if b in keep)

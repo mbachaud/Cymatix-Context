@@ -11,7 +11,7 @@ future visits to every other state. Tier 5's harmonic boost is
 effectively the k=1 slice of this; SR generalises to multi-hop
 futures without densifying the whole matrix.
 
-For helix's 18K-document knowledge store, dense M is 18K x 18K float32 = 1.3 GB.
+For cymatix's 18K-document knowledge store, dense M is 18K x 18K float32 = 1.3 GB.
 We never build that. Instead, per query, we compute M[seed, :] via a
 truncated sparse power series over the co-activation graph - one row
 per seed, k_steps sparse matvecs.
@@ -33,7 +33,7 @@ from typing import Dict, List, Optional, TYPE_CHECKING
 if TYPE_CHECKING:
     from .genome import Genome
 
-log = logging.getLogger("helix.sr")
+log = logging.getLogger("cymatix.sr")
 
 DEFAULT_GAMMA = 0.85
 DEFAULT_K_STEPS = 4

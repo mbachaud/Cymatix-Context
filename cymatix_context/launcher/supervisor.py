@@ -1,15 +1,15 @@
 """
-Supervisor — manages the helix child process lifecycle.
+Supervisor — manages the cymatix child process lifecycle.
 
 Responsibilities:
-    - Start a new helix uvicorn process with the user's configured port
+    - Start a new cymatix uvicorn process with the user's configured port
     - Stop it gracefully via the restart protocol (announce → kill → wait)
     - Restart (stop + start)
-    - Adopt an already-running helix from state file (PID + command-line match)
+    - Adopt an already-running cymatix from state file (PID + command-line match)
     - Cross-platform process tree kill (taskkill /F /T on Windows, killpg on POSIX)
 
 Never imports cymatix_context.server directly — all communication with the
-supervised helix is over HTTP at http://127.0.0.1:{port}.
+supervised cymatix is over HTTP at http://127.0.0.1:{port}.
 """
 
 from __future__ import annotations
@@ -28,7 +28,7 @@ import httpx
 
 from .state import StateStore
 
-log = logging.getLogger("helix.launcher.supervisor")
+log = logging.getLogger("cymatix.launcher.supervisor")
 
 
 class SupervisorError(Exception):
@@ -55,8 +55,8 @@ def _is_windows() -> bool:
     return sys.platform == "win32"
 
 
-def stop_on_quit(supervisor: "HelixSupervisor", reason: str) -> bool:
-    """Launcher-quit stop policy: stop helix ONLY if this launcher spawned it.
+def stop_on_quit(supervisor: "CymatixSupervisor", reason: str) -> bool:
+    """Launcher-quit stop policy: stop cymatix ONLY if this launcher spawned it.
 
     Adopted instances (started outside the launcher — a dev shell, a
     service, another launcher) survive Quit; we log what is left running
@@ -72,15 +72,15 @@ def stop_on_quit(supervisor: "HelixSupervisor", reason: str) -> bool:
             return False
         if not supervisor.owns_process():
             log.info(
-                "Quit: leaving adopted helix running on port %s (pid=%s — "
+                "Quit: leaving adopted cymatix running on port %s (pid=%s — "
                 "it was started outside the launcher)",
-                supervisor.helix_port, supervisor.get_pid(),
+                supervisor.cymatix_port, supervisor.get_pid(),
             )
             return False
         supervisor.stop(reason=reason)
         return True
     except Exception:
-        log.warning("Quit: helix stop failed (continuing)", exc_info=True)
+        log.warning("Quit: cymatix stop failed (continuing)", exc_info=True)
         return False
 
 
@@ -94,31 +94,31 @@ def _port_is_free(host: str, port: int) -> bool:
         return False
 
 
-class HelixSupervisor:
-    """Lifecycle manager for one helix child process."""
+class CymatixSupervisor:
+    """Lifecycle manager for one cymatix child process."""
 
     def __init__(
         self,
         store: StateStore,
-        helix_host: str = "127.0.0.1",
-        helix_port: int = 11437,
+        cymatix_host: str = "127.0.0.1",
+        cymatix_port: int = 11437,
         python_executable: Optional[str] = None,
-        helix_log_path: Optional[Path] = None,
+        cymatix_log_path: Optional[Path] = None,
         extra_env: Optional[dict] = None,
     ) -> None:
         self.store = store
-        self.helix_host = helix_host
-        self.helix_port = helix_port
+        self.cymatix_host = cymatix_host
+        self.cymatix_port = cymatix_port
         # v0.7.0 dev-mode: per-instance environment overlay (e.g. the
-        # bench supervisor pins HELIX_GENOME_PATH to the bench genome
-        # without touching the launcher process env that the MAIN helix
+        # bench supervisor pins CYMATIX_GENOME_PATH to the bench genome
+        # without touching the launcher process env that the MAIN cymatix
         # inherits). None = inherit parent env untouched.
         self.extra_env = dict(extra_env) if extra_env else None
         self.python_executable = python_executable or sys.executable
-        self.helix_log_path = helix_log_path or (
-            Path.home() / ".helix" / "launcher" / "helix.log"
+        self.cymatix_log_path = cymatix_log_path or (
+            Path.home() / ".cymatix" / "launcher" / "cymatix.log"
         )
-        self.helix_log_path.parent.mkdir(parents=True, exist_ok=True)
+        self.cymatix_log_path.parent.mkdir(parents=True, exist_ok=True)
         # Import psutil lazily so the module can be imported even when the
         # [launcher] extra is not installed.
         self._psutil = None
@@ -130,7 +130,7 @@ class HelixSupervisor:
         # did not answer /stats within the wait timeout. Read by REST callers
         # (closes #72) so a hung backend doesn't look like "ok pid=42".
         self._last_start_pending: bool = False
-        self._owns_helix_process = False
+        self._owns_cymatix_process = False
         # Tracked Popen handle — used for POSIX zombie reap via poll().
         # Windows reaps through taskkill; POSIX needs a wait() sibling call.
         self._proc: Optional[subprocess.Popen] = None
@@ -155,15 +155,15 @@ class HelixSupervisor:
             "uvicorn",
             "cymatix_context._asgi:app",
             "--host",
-            self.helix_host,
+            self.cymatix_host,
             "--port",
-            str(self.helix_port),
+            str(self.cymatix_port),
         ]
 
     # ── liveness checks ────────────────────────────────────────────
 
     def is_running(self) -> bool:
-        """Return True if a tracked helix process is alive and responsive."""
+        """Return True if a tracked cymatix process is alive and responsive."""
         # POSIX zombie reap: non-blocking poll() retires a dead child so it
         # doesn't accumulate as <defunct> in ps. No-op on a live process.
         if self._proc is not None:
@@ -171,42 +171,42 @@ class HelixSupervisor:
                 self._proc.poll()
             except Exception:
                 log.warning("Popen.poll() failed", exc_info=True)
-        pid = self.store.state.helix_pid
+        pid = self.store.state.cymatix_pid
         if pid is None:
-            self._owns_helix_process = False
+            self._owns_cymatix_process = False
             return False
         psutil = self._get_psutil()
         if not psutil.pid_exists(pid):
-            log.info("Stored helix PID %d is dead; clearing state", pid)
-            self.store.clear_helix()
-            self._owns_helix_process = False
+            log.info("Stored cymatix PID %d is dead; clearing state", pid)
+            self.store.clear_cymatix()
+            self._owns_cymatix_process = False
             return False
         # PID exists — verify it's actually our uvicorn process.
         try:
             proc = psutil.Process(pid)
             cmdline = proc.cmdline()
         except (psutil.NoSuchProcess, psutil.AccessDenied):
-            self.store.clear_helix()
-            self._owns_helix_process = False
+            self.store.clear_cymatix()
+            self._owns_cymatix_process = False
             return False
-        expected_markers = ("cymatix_context._asgi:app", "helix_context._asgi:app")
+        expected_markers = ("cymatix_context._asgi:app", "cymatix_context._asgi:app")
         if not any(m in part for part in cmdline for m in expected_markers):
             log.warning(
-                "PID %d exists but command line doesn't match helix uvicorn; clearing state",
+                "PID %d exists but command line doesn't match cymatix uvicorn; clearing state",
                 pid,
             )
-            self.store.clear_helix()
-            self._owns_helix_process = False
+            self.store.clear_cymatix()
+            self._owns_cymatix_process = False
             return False
         return True
 
     def get_pid(self) -> Optional[int]:
-        return self.store.state.helix_pid if self.is_running() else None
+        return self.store.state.cymatix_pid if self.is_running() else None
 
     def get_uptime_s(self) -> Optional[float]:
         if not self.is_running():
             return None
-        start = self.store.state.helix_start_time
+        start = self.store.state.cymatix_start_time
         if start is None:
             return None
         return max(0.0, time.time() - start)
@@ -249,20 +249,20 @@ class HelixSupervisor:
         self._last_error_operation = None
 
     def owns_process(self) -> bool:
-        """Return True if this launcher instance spawned the tracked Helix."""
-        return self._owns_helix_process
+        """Return True if this launcher instance spawned the tracked Cymatix."""
+        return self._owns_cymatix_process
 
     # ── orphan detection ───────────────────────────────────────────
 
-    def find_orphan_helix(self) -> Optional[int]:
-        """Scan for an unmanaged helix uvicorn process on the configured port.
+    def find_orphan_cymatix(self) -> Optional[int]:
+        """Scan for an unmanaged cymatix uvicorn process on the configured port.
 
         Uses psutil's process-wide connection table to find the listener
-        on helix_host:helix_port, then walks up to the uvicorn parent
+        on cymatix_host:cymatix_port, then walks up to the uvicorn parent
         process whose command line matches cymatix_context._asgi:app.
 
         Returns the uvicorn **parent** PID (the one ``subprocess.Popen``
-        would hand us if we'd started helix ourselves), or None if no
+        would hand us if we'd started cymatix ourselves), or None if no
         matching orphan is found.
 
         Never raises — returns None on any psutil failure.
@@ -272,14 +272,14 @@ class HelixSupervisor:
         except SupervisorError:
             return None
 
-        # Step 1: find the PID listening on helix_port.
+        # Step 1: find the PID listening on cymatix_port.
         listener_pid: Optional[int] = None
         try:
             for conn in psutil.net_connections(kind="tcp"):
                 if (
                     conn.status == "LISTEN"
                     and conn.laddr
-                    and conn.laddr.port == self.helix_port
+                    and conn.laddr.port == self.cymatix_port
                     and conn.pid is not None
                 ):
                     listener_pid = conn.pid
@@ -294,23 +294,23 @@ class HelixSupervisor:
         if listener_pid is None:
             return None
 
-        # Step 2: verify the listener is actually a helix uvicorn process.
+        # Step 2: verify the listener is actually a cymatix uvicorn process.
         try:
             listener_proc = psutil.Process(listener_pid)
             listener_cmdline = listener_proc.cmdline()
         except (psutil.NoSuchProcess, psutil.AccessDenied):
             return None
 
-        expected_markers = ("cymatix_context._asgi:app", "helix_context._asgi:app")
+        expected_markers = ("cymatix_context._asgi:app", "cymatix_context._asgi:app")
         if not any(m in part for part in listener_cmdline for m in expected_markers):
             log.debug(
-                "Orphan scan: PID %d listens on %d but is not helix (%r)",
-                listener_pid, self.helix_port, listener_cmdline[:3],
+                "Orphan scan: PID %d listens on %d but is not cymatix (%r)",
+                listener_pid, self.cymatix_port, listener_cmdline[:3],
             )
             return None
 
         # Step 3: walk up to the uvicorn parent (matches what subprocess.Popen
-        # would hand us for our own spawned helix). On Windows the listener
+        # would hand us for our own spawned cymatix). On Windows the listener
         # is typically the worker (uvicorn spawns a child process); its
         # parent is the top-level uvicorn entrypoint.
         try:
@@ -328,23 +328,23 @@ class HelixSupervisor:
     # ── lifecycle ──────────────────────────────────────────────────
 
     def start(self, wait_ready: bool = True, timeout: float = 90.0) -> int:
-        """Spawn a new helix uvicorn subprocess, or adopt an existing one.
+        """Spawn a new cymatix uvicorn subprocess, or adopt an existing one.
 
-        If the port is occupied by another helix uvicorn process (e.g.
+        If the port is occupied by another cymatix uvicorn process (e.g.
         started outside the launcher by a developer's bash shell), the
         start path adopts that process instead of failing. Only when
-        the port is occupied by a *non-helix* process does start() raise.
+        the port is occupied by a *non-cymatix* process does start() raise.
         """
         if self.is_running():
-            raise AlreadyRunning(f"helix already running (pid={self.get_pid()})")
+            raise AlreadyRunning(f"cymatix already running (pid={self.get_pid()})")
 
-        if not _port_is_free(self.helix_host, self.helix_port):
-            # Port is busy — check whether it's a helix we can adopt.
-            orphan_pid = self.find_orphan_helix()
+        if not _port_is_free(self.cymatix_host, self.cymatix_port):
+            # Port is busy — check whether it's a cymatix we can adopt.
+            orphan_pid = self.find_orphan_cymatix()
             if orphan_pid is not None:
                 log.info(
-                    "Start: port %d busy with orphan helix (pid=%d) — adopting instead",
-                    self.helix_port, orphan_pid,
+                    "Start: port %d busy with orphan cymatix (pid=%d) — adopting instead",
+                    self.cymatix_port, orphan_pid,
                 )
                 try:
                     psutil = self._get_psutil()
@@ -352,25 +352,25 @@ class HelixSupervisor:
                     cmdline = proc.cmdline()
                 except Exception:
                     cmdline = self._command()
-                self.store.set_helix(
+                self.store.set_cymatix(
                     pid=orphan_pid,
                     command=cmdline,
-                    port=self.helix_port,
+                    port=self.cymatix_port,
                 )
-                self._owns_helix_process = False
+                self._owns_cymatix_process = False
                 self._last_start_pending = False
                 self._clear_error()
                 return orphan_pid
 
             msg = (
-                f"Port {self.helix_host}:{self.helix_port} is already in use "
-                "by a non-helix process. Free the port or change --helix-port."
+                f"Port {self.cymatix_host}:{self.cymatix_port} is already in use "
+                "by a non-cymatix process. Free the port or change --cymatix-port."
             )
             self._record_error("start", msg)
             raise SupervisorError(msg)
 
         cmd = self._command()
-        log.info("Starting helix: %s", " ".join(cmd))
+        log.info("Starting cymatix: %s", " ".join(cmd))
 
         # Per project convention (CLAUDE.md): suppress console window flash on Windows.
         creationflags = getattr(subprocess, "CREATE_NO_WINDOW", 0) if _is_windows() else 0
@@ -385,7 +385,7 @@ class HelixSupervisor:
         if self.extra_env:
             spawn_env = dict(os.environ)
             spawn_env.update(self.extra_env)
-        with open(self.helix_log_path, "ab") as log_file:
+        with open(self.cymatix_log_path, "ab") as log_file:
             proc = subprocess.Popen(
                 cmd,
                 cwd=self._cwd(),
@@ -398,8 +398,8 @@ class HelixSupervisor:
             )
 
         self._proc = proc
-        self.store.set_helix(pid=proc.pid, command=cmd, port=self.helix_port)
-        self._owns_helix_process = True
+        self.store.set_cymatix(pid=proc.pid, command=cmd, port=self.cymatix_port)
+        self._owns_cymatix_process = True
 
         if wait_ready:
             try:
@@ -413,7 +413,7 @@ class HelixSupervisor:
                 # periodic is_running()/ping() poll surfaces "starting…"
                 # via the disabled Start button until /stats answers.
                 log.warning(
-                    "Helix did not answer /stats within %.0fs (pid=%d still "
+                    "Cymatix did not answer /stats within %.0fs (pid=%d still "
                     "running; tray will pick it up on the next refresh): %s",
                     timeout, proc.pid, exc,
                 )
@@ -421,7 +421,7 @@ class HelixSupervisor:
                 self._last_start_pending = True
                 return proc.pid
 
-        log.info("Helix started (pid=%d)", proc.pid)
+        log.info("Cymatix started (pid=%d)", proc.pid)
         self._last_start_pending = False
         self._clear_error()
         return proc.pid
@@ -434,9 +434,9 @@ class HelixSupervisor:
     ) -> None:
         """Announce, wait, kill, wait for port to free up."""
         if not self.is_running():
-            raise NotRunning("helix is not running")
+            raise NotRunning("cymatix is not running")
 
-        pid = self.store.state.helix_pid
+        pid = self.store.state.cymatix_pid
         assert pid is not None  # narrowed by is_running
 
         if announce:
@@ -450,16 +450,16 @@ class HelixSupervisor:
         # Wait for port to free up.
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline:
-            if _port_is_free(self.helix_host, self.helix_port):
-                self.store.clear_helix()
-                self._owns_helix_process = False
-                log.info("Helix stopped (pid=%d)", pid)
+            if _port_is_free(self.cymatix_host, self.cymatix_port):
+                self.store.clear_cymatix()
+                self._owns_cymatix_process = False
+                log.info("Cymatix stopped (pid=%d)", pid)
                 self._clear_error()
                 return
             time.sleep(0.2)
 
         msg = (
-            f"Port {self.helix_port} did not free up within {timeout}s after kill"
+            f"Port {self.cymatix_port} did not free up within {timeout}s after kill"
         )
         self._record_error("stop", msg)
         raise ShutdownTimeout(msg)
@@ -476,27 +476,27 @@ class HelixSupervisor:
             raise
 
     def adopt(self) -> bool:
-        """Try to adopt an already-running helix.
+        """Try to adopt an already-running cymatix.
 
         Two-stage:
             1. Stored PID in state file → is_running() verifies and returns
-            2. Orphan scan → find any helix on the configured port and
+            2. Orphan scan → find any cymatix on the configured port and
                adopt it by writing its PID to the state file
 
-        Returns True if a helix was adopted by either path, False
+        Returns True if a cymatix was adopted by either path, False
         otherwise.
         """
         # Stage 1: stored PID
         if self.is_running():
             log.info(
-                "Adopted existing helix via state file (pid=%d, port=%d)",
-                self.store.state.helix_pid, self.store.state.helix_port,
+                "Adopted existing cymatix via state file (pid=%d, port=%d)",
+                self.store.state.cymatix_pid, self.store.state.cymatix_port,
             )
-            self._owns_helix_process = False
+            self._owns_cymatix_process = False
             return True
 
         # Stage 2: orphan scan
-        orphan_pid = self.find_orphan_helix()
+        orphan_pid = self.find_orphan_cymatix()
         if orphan_pid is None:
             return False
 
@@ -511,26 +511,26 @@ class HelixSupervisor:
         except Exception:
             cmdline = self._command()
 
-        self.store.set_helix(
+        self.store.set_cymatix(
             pid=orphan_pid,
             command=cmdline,
-            port=self.helix_port,
+            port=self.cymatix_port,
         )
-        self._owns_helix_process = False
+        self._owns_cymatix_process = False
         log.info(
-            "Adopted orphan helix on %s:%d (pid=%d)",
-            self.helix_host, self.helix_port, orphan_pid,
+            "Adopted orphan cymatix on %s:%d (pid=%d)",
+            self.cymatix_host, self.cymatix_port, orphan_pid,
         )
         return True
 
     # ── internals ──────────────────────────────────────────────────
 
     def _cwd(self) -> Optional[str]:
-        """Where to run helix from — default is the helix-context repo root if
+        """Where to run cymatix from — default is the cymatix-context repo root if
         we're inside it, else None (use inherited cwd)."""
         try:
             here = Path(__file__).resolve()
-            # cymatix_context/launcher/supervisor.py → helix-context root
+            # cymatix_context/launcher/supervisor.py → cymatix-context root
             candidate = here.parent.parent.parent
             if (candidate / "pyproject.toml").exists():
                 return str(candidate)
@@ -539,8 +539,8 @@ class HelixSupervisor:
         return None
 
     def _announce_restart(self, reason: str, expected_downtime_s: int) -> None:
-        """Best-effort announce via helix /admin/announce_restart."""
-        url = f"http://{self.helix_host}:{self.helix_port}/admin/announce_restart"
+        """Best-effort announce via cymatix /admin/announce_restart."""
+        url = f"http://{self.cymatix_host}:{self.cymatix_port}/admin/announce_restart"
         payload = {
             "actor": "launcher",
             "reason": reason,
@@ -592,8 +592,8 @@ class HelixSupervisor:
             log.warning("SIGKILL to pgid failed for pid %d", pid, exc_info=True)
 
     def _wait_for_ready(self, timeout: float = 30.0) -> None:
-        """Poll GET /stats until helix responds."""
-        url = f"http://{self.helix_host}:{self.helix_port}/stats"
+        """Poll GET /stats until cymatix responds."""
+        url = f"http://{self.cymatix_host}:{self.cymatix_port}/stats"
         deadline = time.monotonic() + timeout
         last_error: Optional[str] = None
         while time.monotonic() < deadline:
@@ -606,5 +606,5 @@ class HelixSupervisor:
                 last_error = str(exc)
             time.sleep(0.5)
         raise StartupTimeout(
-            f"helix did not become ready within {timeout}s (last_error: {last_error})"
+            f"cymatix did not become ready within {timeout}s (last_error: {last_error})"
         )

@@ -7,8 +7,8 @@ Bio analogue (legacy term: replication):
     across multiple drives so parallel agents can query without contention.
 
 Architecture:
-    - Master knowledge store (F:/Projects/helix-context/genome.db) — receives all writes
-    - Read replicas (C:/helix-cache/genome.db, E:/helix-cache/genome.db) — read-only
+    - Master knowledge store (F:/Projects/cymatix-context/genome.db) — receives all writes
+    - Read replicas (C:/cymatix-cache/genome.db, E:/cymatix-cache/genome.db) — read-only
     - Delta-sync: WAL checkpoint + file copy every N inserts
     - Agents open replicas with ?mode=ro for zero write contention
 
@@ -16,8 +16,8 @@ Usage:
     from cymatix_context.replication import ReplicationManager
 
     mgr = ReplicationManager(
-        master="F:/Projects/helix-context/genome.db",
-        replicas=["C:/helix-cache/genome.db", "E:/helix-cache/genome.db"],
+        master="F:/Projects/cymatix-context/genome.db",
+        replicas=["C:/cymatix-cache/genome.db", "E:/cymatix-cache/genome.db"],
         sync_interval=100,  # sync every 100 inserts
     )
 
@@ -41,7 +41,7 @@ import time
 from pathlib import Path
 from typing import List, Optional
 
-log = logging.getLogger("helix.replication")
+log = logging.getLogger("cymatix.replication")
 
 
 class ReplicationManager:

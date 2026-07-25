@@ -1,4 +1,4 @@
-"""Pretty-label module for model_id strings reported via helix_announce.
+"""Pretty-label module for model_id strings reported via cymatix_announce.
 
 Maps known model identifiers to canonical display form for the dashboard
 tooltip. Unknown IDs echo verbatim — no fabrication. The map grows as

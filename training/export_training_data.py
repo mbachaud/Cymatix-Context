@@ -1,5 +1,5 @@
 """
-Export training data from the Helix genome for DeBERTa ribosome fine-tuning.
+Export training data from the Cymatix genome for DeBERTa ribosome fine-tuning.
 
 Produces two datasets:
   1. rerank_pairs.jsonl  — (query, gene_summary, relevance_score) for cross-encoder
@@ -26,13 +26,13 @@ import time
 from pathlib import Path
 from typing import List, Dict
 
-# Add parent to path for helix_context imports
+# Add parent to path for cymatix_context imports
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from helix_context.schemas import Gene, PromoterTags, EpigeneticMarkers
-from helix_context.ribosome import Ribosome, OllamaBackend, _EXPRESS_SYSTEM, _splice_system, _parse_json
+from cymatix_context.schemas import Gene, PromoterTags, EpigeneticMarkers
+from cymatix_context.ribosome import Ribosome, OllamaBackend, _EXPRESS_SYSTEM, _splice_system, _parse_json
 
-log = logging.getLogger("helix.training.export")
+log = logging.getLogger("cymatix.training.export")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
 
@@ -276,7 +276,7 @@ def export(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Export DeBERTa training data from Helix genome")
+    parser = argparse.ArgumentParser(description="Export DeBERTa training data from Cymatix genome")
     parser.add_argument("--genome", default="genome.db", help="Path to genome.db")
     parser.add_argument("--out", default="training/data/", help="Output directory")
     parser.add_argument("--queries", default=None, help="Optional queries file (one per line)")

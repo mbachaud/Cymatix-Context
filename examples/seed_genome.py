@@ -7,9 +7,9 @@ Usage:
     python examples/seed_genome.py README.md
 
 Prerequisites:
-    pip install helix-context
+    pip install cymatix-context
     ollama pull gemma4:e2b
-    helix server running: python -m helix_context.server
+    cymatix server running: python -m cymatix_context.server
 """
 
 import argparse
@@ -19,22 +19,22 @@ from pathlib import Path
 import httpx
 
 
-def seed(target: str, content_type: str, helix_url: str) -> None:
+def seed(target: str, content_type: str, cymatix_url: str) -> None:
     path = Path(target)
-    client = httpx.Client(base_url=helix_url, timeout=300)
+    client = httpx.Client(base_url=cymatix_url, timeout=300)
 
     # Check server is up
     try:
         health = client.get("/health").json()
-        print(f"Helix server: {health['status']}, ribosome: {health['ribosome']}, "
+        print(f"Cymatix server: {health['status']}, ribosome: {health['ribosome']}, "
               f"genes: {health['genes']}")
     except Exception as exc:
         # Surface the underlying reason (connection refused, timeout,
         # DNS failure, bad JSON, ...) so users don't have to guess why
         # the probe failed.
-        print(f"Cannot reach Helix at {helix_url}: {exc}")
+        print(f"Cannot reach Cymatix at {cymatix_url}: {exc}")
         print(f"  Start the server first:")
-        print(f"  python -m uvicorn helix_context.server:app --host 127.0.0.1 --port 11437")
+        print(f"  python -m uvicorn cymatix_context.server:app --host 127.0.0.1 --port 11437")
         sys.exit(1)
 
     # Collect files
@@ -84,11 +84,11 @@ def seed(target: str, content_type: str, helix_url: str) -> None:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Seed a Helix genome from files")
+    parser = argparse.ArgumentParser(description="Seed a Cymatix genome from files")
     parser.add_argument("target", help="File or directory to ingest")
     parser.add_argument("--type", default="auto", choices=["text", "code", "auto"],
                         help="Content type (default: auto-detect by extension)")
     parser.add_argument("--url", default="http://127.0.0.1:11437",
-                        help="Helix server URL (default: http://127.0.0.1:11437)")
+                        help="Cymatix server URL (default: http://127.0.0.1:11437)")
     args = parser.parse_args()
     seed(args.target, args.type, args.url)

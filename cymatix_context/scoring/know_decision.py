@@ -46,7 +46,7 @@ from ..schemas import (
 if TYPE_CHECKING:
     from ..schemas import ContextWindow, Gene
 
-log = logging.getLogger("helix.know_decision")
+log = logging.getLogger("cymatix.know_decision")
 
 
 # ─────────────────────────────────────────────────────────────────────
@@ -339,7 +339,7 @@ def _decide_know_or_miss_impl(
         top_gene: the rank-1 Document, used only for the gene_id_match beacon.
         ratio: top/2nd score ratio if pre-computed; defaults derived from
             ``window.metadata["ratio"]``, then 0.0.
-        calibration: override; defaults to KnowCalibration() (= helix.toml
+        calibration: override; defaults to KnowCalibration() (= cymatix.toml
             defaults if loaded by the route; module defaults otherwise).
         freshness_min: Stage 7 — min decay across retrieved candidates;
             plumbed through to ``compute_confidence`` for β5 application.
@@ -497,11 +497,11 @@ def decide_know_or_miss(
     Delegates to :func:`_decide_know_or_miss_impl` (the single source of
     truth — see its docstring; every parameter besides ``window`` is
     keyword-only and forwards verbatim), then records one
-    ``helix_know_decision_total`` increment labelled ``{outcome,
+    ``cymatix_know_decision_total`` increment labelled ``{outcome,
     reason}``: outcome is ``know`` | ``miss`` | ``abstain``; reason is
     ``"none"`` for know and the ``MissBlock.reason`` (a member of
     ``schemas.MISS_REASONS``) otherwise. #209 phase 1. Know outcomes
-    additionally record ``helix_know_confidence`` for [know] floor
+    additionally record ``cymatix_know_confidence`` for [know] floor
     calibration (#209 phase 2). Instruments are no-ops when OTel is
     off; a telemetry failure never alters the decision.
     """

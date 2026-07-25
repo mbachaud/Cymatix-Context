@@ -1,4 +1,4 @@
-"""`helix ingest <path>` — read a file or directory into the genome."""
+"""`cymatix ingest <path>` — read a file or directory into the genome."""
 from __future__ import annotations
 
 import argparse
@@ -82,7 +82,7 @@ def _collect_files(root: Path, recursive: bool, exts: Iterable[str]) -> List[Pat
     ext_set = {e.lower() if e.startswith(".") else "." + e.lower() for e in exts}
     if root.is_file():
         # Honor the extension filter even when the user pointed at a single file
-        # — otherwise `helix ingest binary.exe` would silently ingest replacement
+        # — otherwise `cymatix ingest binary.exe` would silently ingest replacement
         # characters via the errors="replace" decode.
         return [root] if root.suffix.lower() in ext_set else []
     if not root.is_dir():
@@ -92,7 +92,7 @@ def _collect_files(root: Path, recursive: bool, exts: Iterable[str]) -> List[Pat
 
 
 def _run_okf(args) -> int:
-    """`helix ingest --okf <bundle_dir>` — ingest an OKF v0.1 bundle."""
+    """`cymatix ingest --okf <bundle_dir>` — ingest an OKF v0.1 bundle."""
     root = Path(args.path)
     if not root.is_dir():
         err = {"ok": False, "error": f"--okf requires a bundle directory: {root}"}

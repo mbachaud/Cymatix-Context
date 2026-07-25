@@ -17,16 +17,16 @@ from .helpers import (
     _normalize_identity_token,
 )
 
-log = logging.getLogger("helix.server")
+log = logging.getLogger("cymatix.server")
 
 
-def setup_ingest_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
+def setup_ingest_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None:
     """Register ingest routes on *app*."""
 
     @app.post("/ingest")
     async def ingest_endpoint(request: Request):
         import time as _time
-        helix._last_activity_ts = _time.time()
+        cymatix._last_activity_ts = _time.time()
 
         try:
             data = await request.json()
@@ -113,7 +113,7 @@ def setup_ingest_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
                 )
 
         try:
-            gene_ids = await helix.ingest_async(content, content_type, metadata)
+            gene_ids = await cymatix.ingest_async(content, content_type, metadata)
         except Exception as exc:
             log.warning("Ingest failed: %s", exc, exc_info=True)
             return JSONResponse(
@@ -151,7 +151,7 @@ def setup_ingest_routes(app: FastAPI, helix, config, registry, **_kw) -> None:
     async def consolidate_endpoint():
         """Trigger session memory consolidation."""
         try:
-            gene_ids = await helix.consolidate_session_async()
+            gene_ids = await cymatix.consolidate_session_async()
             return {
                 "facts_extracted": len(gene_ids),
                 "gene_ids": gene_ids,

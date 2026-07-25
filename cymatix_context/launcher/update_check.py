@@ -11,7 +11,7 @@ from typing import Any, Optional
 
 import httpx
 
-log = logging.getLogger("helix.launcher.update_check")
+log = logging.getLogger("cymatix.launcher.update_check")
 
 
 def _parse_version(value: str) -> tuple[int, ...]:
@@ -82,7 +82,7 @@ class UpdateChecker:
         self.enabled = (
             enabled
             if enabled is not None
-            else os.environ.get("HELIX_LAUNCHER_UPDATE_CHECK", "1").strip().lower()
+            else os.environ.get("CYMATIX_LAUNCHER_UPDATE_CHECK", "1").strip().lower()
             not in {"0", "false", "no", "off"}
         )
         self._cached: Optional[UpdateInfo] = None
