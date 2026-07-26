@@ -6,7 +6,7 @@ Slice 1 ships only the schema field + helper. The actual wiring (touch
 path populating recent_accesses, density gate consuming access_rate) is
 Slice 2 and lives in test_density_gate.py and test_genome.py respectively.
 
-Reference: ~/.helix/shared/handoffs/2026-04-11_8d_dimensional_roadmap.md
+Reference: ~/.cymatix/shared/handoffs/2026-04-11_8d_dimensional_roadmap.md
 """
 
 from __future__ import annotations

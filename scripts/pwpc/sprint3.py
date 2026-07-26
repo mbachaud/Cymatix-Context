@@ -330,7 +330,7 @@ def build_report(
         if gate == "PASS":
             L.append(
                 "- The Stacked PLR classifier extracts above-chance signal on "
-                "this label set. Ship the trained model as `fleet/helix/"
+                "this label set. Ship the trained model as `fleet/cymatix/"
                 "fusion_plr.py::StackedPLRFuser` per STATISTICAL_FUSION.md §C3; "
                 "wire its `score()` behind a `plr.enabled` feature flag."
             )

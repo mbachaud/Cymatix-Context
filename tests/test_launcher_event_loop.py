@@ -37,7 +37,7 @@ class SlowCollector:
 
     def collect(self):
         time.sleep(BLOCK_S)
-        return {"helix": {"running": False, "availability": "unavailable"}}
+        return {"cymatix": {"running": False, "availability": "unavailable"}}
 
 
 class SlowSupervisor:

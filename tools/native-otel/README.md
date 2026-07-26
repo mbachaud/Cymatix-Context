@@ -39,11 +39,11 @@ component.
 ## State
 
 Per-user observability state (TSDB, traces, logs) lives outside the repo
-under `platformdirs.user_data_dir("helix-context") / "observability"`:
+under `platformdirs.user_data_dir("cymatix-context") / "observability"`:
 
-- Windows: `%LOCALAPPDATA%\helix-context\observability\`
-- Linux:   `~/.local/share/helix-context/observability/`
-- macOS:   `~/Library/Application Support/helix-context/observability/`
+- Windows: `%LOCALAPPDATA%\cymatix-context\observability\`
+- Linux:   `~/.local/share/cymatix-context/observability/`
+- macOS:   `~/Library/Application Support/cymatix-context/observability/`
 
 ## Uninstall
 

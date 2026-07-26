@@ -1,9 +1,9 @@
 """diag_global_idf_counterfactual.py — counterfactual for the cross-shard
-global-IDF lexical re-score (HELIX_SHARD_GLOBAL_IDF, #182).
+global-IDF lexical re-score (CYMATIX_SHARD_GLOBAL_IDF, #182).
 
 Hypothesis under test
 ---------------------
-The HELIX_SHARD_GLOBAL_IDF rescore regressed medium-sharded recall
+The CYMATIX_SHARD_GLOBAL_IDF rescore regressed medium-sharded recall
 (0.347 -> 0.168) because the manual BM25 used the SMOOTHED, always-positive
 IDF ``ln(... + 1.0)`` instead of SQLite FTS5's RAW idf ``ln((N-n+0.5)/(n+0.5))``
 (which can be negative). With the parity-correct raw-idf formula and

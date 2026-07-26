@@ -1,5 +1,5 @@
 """
-Export NLI training data from the Helix genome.
+Export NLI training data from the Cymatix genome.
 
 Generates (gene_summary_a, gene_summary_b, relation) triples using three
 complementary strategies:
@@ -35,9 +35,9 @@ from typing import List, Dict, Tuple
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from helix_context.schemas import Gene, PromoterTags, EpigeneticMarkers
+from cymatix_context.schemas import Gene, PromoterTags, EpigeneticMarkers
 
-log = logging.getLogger("helix.training.nli")
+log = logging.getLogger("cymatix.training.nli")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 
 # Relation labels
@@ -232,7 +232,7 @@ def teacher_nli_labels(
     timeout: float = 30.0,
 ) -> List[dict]:
     """Use Ollama to generate high-quality NLI labels."""
-    from helix_context.ribosome import _parse_json
+    from cymatix_context.ribosome import _parse_json
 
     log.info("Generating teacher NLI labels for %d pairs...", n_pairs)
 
@@ -383,7 +383,7 @@ def export(
 
     # Strategy B: Teacher (optional, slow)
     if use_teacher:
-        from helix_context.ribosome import OllamaBackend
+        from cymatix_context.ribosome import OllamaBackend
         backend = OllamaBackend(timeout=timeout, warmup=True)
         all_records.extend(teacher_nli_labels(genes, backend, n_pairs=teacher_count))
 
@@ -409,7 +409,7 @@ def export(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Export NLI training data from Helix genome")
+    parser = argparse.ArgumentParser(description="Export NLI training data from Cymatix genome")
     parser.add_argument("--genome", default="genome.db", help="Path to genome.db")
     parser.add_argument("--out", default="training/data/", help="Output directory")
     parser.add_argument("--teacher", action="store_true", help="Use Ollama teacher labels")

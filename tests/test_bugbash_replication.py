@@ -132,7 +132,7 @@ class TestCrossStoreRoundTrip:
         )
         source.upsert_doc(gene)
 
-        path = str(tmp_path / "export.helix")
+        path = str(tmp_path / "export.cymatix")
         export_genome(source, path)
         source.close()
 
@@ -159,7 +159,7 @@ class TestCrossStoreRoundTrip:
             "fixture error: compression did not run"
         )
 
-        path = str(tmp_path / "export.helix")
+        path = str(tmp_path / "export.cymatix")
         export_genome(source, path)
         source.close()
 
@@ -180,7 +180,7 @@ class TestCrossStoreRoundTrip:
         gene = make_gene("original trustworthy content", domains=["test"])
         source.upsert_doc(gene)
 
-        path = str(tmp_path / "export.helix")
+        path = str(tmp_path / "export.cymatix")
         export_genome(source, path)
         source.close()
 
@@ -196,13 +196,13 @@ class TestCrossStoreRoundTrip:
         target.close()
 
     def test_legacy_file_without_checksums_still_imports(self, tmp_path):
-        """Pre-checksum .helix files (content-addressed IDs) keep working."""
+        """Pre-checksum .cymatix files (content-addressed IDs) keep working."""
         source = Genome(str(tmp_path / "source.db"))
         content = "legacy content-addressed knowledge"
         gene = make_gene(content, domains=["test"])
         source.upsert_doc(gene)
 
-        path = str(tmp_path / "export.helix")
+        path = str(tmp_path / "export.cymatix")
         export_genome(source, path)
         source.close()
 
@@ -244,7 +244,7 @@ class TestImportPreservesLifecycleTier:
         source.upsert_doc(gene, apply_gate=False)
         assert source.get_doc(gene.gene_id).chromatin == ChromatinState.OPEN
 
-        path = str(tmp_path / "export.helix")
+        path = str(tmp_path / "export.cymatix")
         export_genome(source, path)
         source.close()
 

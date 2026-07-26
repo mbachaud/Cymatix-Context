@@ -5,7 +5,7 @@ Creates a file-based protocol that any AI assistant (Claude, Gemini, etc.)
 can read and write to share context through the Agentome knowledge store.
 
 Architecture:
-    ~/.helix/shared/          — shared memory directory
+    ~/.cymatix/shared/          — shared memory directory
         inbox/                — files TO ingest (any assistant drops files here)
         outbox/               — knowledge store context snapshots (assistants read from here)
         signals/              — lightweight status signals between assistants
@@ -24,7 +24,7 @@ Usage:
     bridge.update_shared_context(genome_stats)
 
 Integration:
-    - Claude Code: reads SHARED_CONTEXT.md via /helix skill
+    - Claude Code: reads SHARED_CONTEXT.md via /cymatix skill
     - Gemini Code Assist: reads SHARED_CONTEXT.md via GEMINI.md include
     - Any agent: drops files into inbox/ for knowledge store ingestion
 """
@@ -39,10 +39,10 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-log = logging.getLogger("helix.bridge")
+log = logging.getLogger("cymatix.bridge")
 
 # Default shared directory
-DEFAULT_SHARED_DIR = os.path.expanduser("~/.helix/shared")
+DEFAULT_SHARED_DIR = os.path.expanduser("~/.cymatix/shared")
 
 
 class AgentBridge:
@@ -51,7 +51,7 @@ class AgentBridge:
     def __init__(
         self,
         shared_dir: Optional[str] = None,
-        helix_base_url: str = "http://127.0.0.1:11437",
+        cymatix_base_url: str = "http://127.0.0.1:11437",
         http_timeout: float = 5.0,
     ):
         self.shared_dir = Path(shared_dir or DEFAULT_SHARED_DIR)
@@ -66,8 +66,8 @@ class AgentBridge:
         # Session registry HTTP client config (item 8 of SESSION_REGISTRY.md).
         # Used by register_participant / heartbeat / list_sessions /
         # recent_by_handle / ingest. Defaults target the standard local
-        # helix server but are overridable for testing or remote use.
-        self.helix_base_url = helix_base_url.rstrip("/")
+        # cymatix server but are overridable for testing or remote use.
+        self.cymatix_base_url = cymatix_base_url.rstrip("/")
         self.http_timeout = http_timeout
         self._participant_id: Optional[str] = None
         self._registered_handle: Optional[str] = None
@@ -127,7 +127,7 @@ class AgentBridge:
         that other assistants can read from their instruction files.
         """
         lines = [
-            "# Helix Genome — Shared Context",
+            "# Cymatix Genome — Shared Context",
             f"*Updated: {time.strftime('%Y-%m-%d %H:%M:%S')}*",
             "",
             "## Genome Stats",
@@ -159,9 +159,9 @@ class AgentBridge:
 
         lines.extend([
             "## How to Use",
-            f"- **Query:** POST {self.helix_base_url}/context with `{{\"query\": \"...\", \"decoder_mode\": \"none\"}}`",
-            "- **Ingest:** Drop .md/.txt files into `~/.helix/shared/inbox/`",
-            "- **Signal:** Write JSON to `~/.helix/shared/signals/<name>.json`",
+            f"- **Query:** POST {self.cymatix_base_url}/context with `{{\"query\": \"...\", \"decoder_mode\": \"none\"}}`",
+            "- **Ingest:** Drop .md/.txt files into `~/.cymatix/shared/inbox/`",
+            "- **Signal:** Write JSON to `~/.cymatix/shared/signals/<name>.json`",
             "",
             "## Inbox Protocol",
             "Any AI assistant can share knowledge by writing files to:",
@@ -343,7 +343,7 @@ class AgentBridge:
 
     # ── Session registry HTTP client (item 8 of SESSION_REGISTRY.md) ──
     #
-    # Convenience methods that talk to the helix session registry over
+    # Convenience methods that talk to the cymatix session registry over
     # HTTP. After register_participant() the bridge remembers the
     # participant_id so subsequent heartbeat() / ingest() calls don't
     # need it as an argument. start_auto_heartbeat() spins up a daemon
@@ -365,7 +365,7 @@ class AgentBridge:
         except ImportError:
             log.warning("httpx not installed — bridge HTTP methods unavailable")
             return None
-        url = f"{self.helix_base_url}{path}"
+        url = f"{self.cymatix_base_url}{path}"
         try:
             resp = httpx.post(url, json=json_body or {}, timeout=self.http_timeout)
             if resp.status_code >= 400:
@@ -389,7 +389,7 @@ class AgentBridge:
         except ImportError:
             log.warning("httpx not installed — bridge HTTP methods unavailable")
             return None
-        url = f"{self.helix_base_url}{path}"
+        url = f"{self.cymatix_base_url}{path}"
         try:
             resp = httpx.get(url, params=params, timeout=self.http_timeout)
             if resp.status_code >= 400:
@@ -417,7 +417,7 @@ class AgentBridge:
         ide_detection_via: Optional[str] = None,
         model_id: Optional[str] = None,
     ) -> Optional[str]:
-        """Register a participant with the helix session registry.
+        """Register a participant with the cymatix session registry.
 
         On success, the bridge remembers the participant_id internally
         so heartbeat() and ingest() can use it without re-passing.
@@ -523,7 +523,7 @@ class AgentBridge:
             import httpx
         except ImportError:
             return False
-        url = f"{self.helix_base_url}/sessions/{self._participant_id}/heartbeat"
+        url = f"{self.cymatix_base_url}/sessions/{self._participant_id}/heartbeat"
         try:
             resp = httpx.post(url, timeout=self.http_timeout)
             if resp.status_code == 404:
@@ -579,7 +579,7 @@ class AgentBridge:
         metadata: Optional[Dict] = None,
         attribute: bool = True,
     ) -> Optional[Dict]:
-        """Ingest content into the knowledge store via the helix /ingest endpoint.
+        """Ingest content into the knowledge store via the cymatix /ingest endpoint.
 
         If ``attribute=True`` (default) and a participant has been
         registered, the resulting documents are tagged via the session

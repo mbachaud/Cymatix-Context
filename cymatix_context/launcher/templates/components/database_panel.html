@@ -1,10 +1,10 @@
 {# Database panel — list of discovered genome (.db) databases on disk.
    Marks the currently active one, surfaces the top folders contributing
-   to each genome, and (when helix is up) cross-checks against the live
+   to each genome, and (when cymatix is up) cross-checks against the live
    /admin/genome reply so a drift between "selected" and "running" is
    visible at a glance.
 
-   Genomes can be selected (with a confirm + helix restart) or created
+   Genomes can be selected (with a confirm + cymatix restart) or created
    directly from this panel — parity with the tray's "Manage Database"
    submenu (v0.7.0). #}
 
@@ -34,7 +34,7 @@
       </dd>
       {% if state.database.live.env_override %}
         <dt>Env override</dt>
-        <dd class="muted">HELIX_GENOME_PATH = {{ state.database.live.env_override }}</dd>
+        <dd class="muted">CYMATIX_GENOME_PATH = {{ state.database.live.env_override }}</dd>
       {% endif %}
       {% if state.database.live.error %}
         <dt>Error</dt>

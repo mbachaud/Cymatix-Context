@@ -7,7 +7,7 @@ BALANCED bed (answerable causal=1 / heldout causal=0 / competition graph-decided
 Reports: ROC-AUC and ECE of shipped confidence vs causal; refit AUC (LOOCV +
 train/test), betas (does coord get up-weighted, does b1 flip); recall at the
 shipped emit_floor vs at a matched operating point.
-Helix env (sklearn). No graphs.
+Cymatix env (sklearn). No graphs.
 """
 import os, sys, json, math, argparse
 from pathlib import Path
@@ -52,7 +52,7 @@ def main():
     ap.add_argument("--stage1", default=STAGE1)
     ap.add_argument("--faith", default=FAITH)
     args = ap.parse_args()
-    _cfg_path = _REPO / "cymatix.toml" if (_REPO / "cymatix.toml").exists() else _REPO / "helix.toml"
+    _cfg_path = _REPO / "cymatix.toml" if (_REPO / "cymatix.toml").exists() else _REPO / "cymatix.toml"
     cfg = load_config(str(_cfg_path))
     cal = calibration_from_config(cfg.know)
     s, g, floor = cal.s_ref, cal.g_ref, cal.emit_floor

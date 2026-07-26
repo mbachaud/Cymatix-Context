@@ -23,11 +23,11 @@ genome.db.pre-*.bak-wal
 genome_*.db
 genome_*.db-shm
 genome_*.db-wal
-helix.db
-helix.db-shm
-helix.db-wal
+cymatix.db
+cymatix.db-shm
+cymatix.db-wal
 *.SAFETY_COPY
-helix.log
+cymatix.log
 metrics.json
 overnight_logs/
 logs/
@@ -90,19 +90,19 @@ deep_ingest*.log
 core_ingest.log
 *_ingest*.log
 
-# Server runtime log (redirected stdout when starting via `python -m helix_context.server > helix_server.log`)
-helix_server.log
-# Catches sharded_server.log, helix_mcpo_server.log, etc. — any *_server.log shape.
+# Server runtime log (redirected stdout when starting via `python -m cymatix_context.server > cymatix_server.log`)
+cymatix_server.log
+# Catches sharded_server.log, cymatix_mcpo_server.log, etc. — any *_server.log shape.
 *_server.log
 
 # cwola_log export staging area (scripts/export_cwola_log.py writes here before rclone upload)
 cwola_export/
 
 # Upload tarballs built for R2 delivery (see scripts/ + docs/collab/)
-helix-collab-bundle*.tar.gz
-helix-code-bundle*.tar.gz
+cymatix-collab-bundle*.tar.gz
+cymatix-code-bundle*.tar.gz
 
-# Local scratch + benchmark backups (e.g. helix.toml.bench-backup written by
+# Local scratch + benchmark backups (e.g. cymatix.toml.bench-backup written by
 # overnight orchestrators while temporarily tuning config for a run).
 temp_*.md
 *.bench-backup

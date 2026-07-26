@@ -1156,10 +1156,10 @@ p {
   border: 2px solid rgba(255, 255, 255, 0.15);
   border-top-color: #d29922;
   border-radius: 50%;
-  animation: helix-spin 0.9s linear infinite;
+  animation: cymatix-spin 0.9s linear infinite;
 }
 
-@keyframes helix-spin { to { transform: rotate(360deg); } }
+@keyframes cymatix-spin { to { transform: rotate(360deg); } }
 
 .bench-row {
   display: flex;

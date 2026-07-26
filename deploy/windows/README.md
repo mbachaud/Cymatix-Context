@@ -24,7 +24,7 @@ Typical paths:
 - `C:\Users\<you>\AppData\Local\Programs\Python\Python311\Scripts\cymatix-launcher.exe`
 - `C:\Users\<you>\.venvs\cymatix\Scripts\cymatix-launcher.exe`
 
-(`helix-launcher` still exists as a deprecated alias of the same
+(`cymatix-launcher` still exists as a deprecated alias of the same
 entry point; new installs should register `cymatix-launcher`.)
 
 ### 2. Install NSSM
@@ -132,7 +132,7 @@ Pass `--port <other>` in NSSM's Arguments field. Reach the dashboard at
 
 **Cymatix child process refuses to start:**
 This usually means port 11437 is already in use by another cymatix
-instance. Stop the other one, or pass `--helix-port <other>` in NSSM's
+instance. Stop the other one, or pass `--cymatix-port <other>` in NSSM's
 Arguments (the flag keeps its pre-rename spelling for now).
 
 **Service is registered but `cymatix-launcher` isn't found:**

@@ -1,5 +1,5 @@
 """Vault-root filelock — coordinates writers across the in-process VaultManager
-and any external `helix-vault` CLI invocations.
+and any external `cymatix-vault` CLI invocations.
 
 Backed by `filelock` (portable, file-based advisory locks). The lockfile lives
 at <vault_root>/vault.lock and is created on first acquire.

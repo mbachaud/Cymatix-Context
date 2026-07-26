@@ -1,4 +1,4 @@
-"""Shared helpers for the Helix Context server package.
+"""Shared helpers for the Cymatix Context server package.
 
 Contains module-level utility functions, background tasks, and proxy
 helpers that are used across multiple route modules.  Extracted from the
@@ -21,8 +21,8 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from ..accel import json_loads
-from ..config import HelixConfig
-from ..context_manager import HelixContextManager
+from ..config import CymatixConfig
+from ..context_manager import CymatixContextManager
 from ..scoring.know_calibration import calibration_from_config, load_calibration_from_toml
 from ..scoring.know_decision import (
     _agree_from_tier_contributions,
@@ -31,7 +31,7 @@ from ..scoring.know_decision import (
 )
 from ..schemas import KnowBlock, MissBlock
 
-log = logging.getLogger("helix.server")
+log = logging.getLogger("cymatix.server")
 
 _LEARN_DISABLED_TRUTHY = frozenset({"1", "true", "yes", "on"})
 
@@ -39,17 +39,17 @@ _LEARN_DISABLED_TRUTHY = frozenset({"1", "true", "yes", "on"})
 def _learn_disabled() -> bool:
     """True when Stage-6 persistence is turned off for this serve.
 
-    Set ``HELIX_DISABLE_LEARN=1`` for read-only / ephemeral serving —
+    Set ``CYMATIX_DISABLE_LEARN=1`` for read-only / ephemeral serving —
     benchmarks, evaluation harnesses, air-gapped read-only deploys — so that
     answering a query never mutates the knowledge store. By default every
-    ``/v1/chat/completions`` call fires ``helix.learn`` -> ``genome.upsert_doc``
+    ``/v1/chat/completions`` call fires ``cymatix.learn`` -> ``genome.upsert_doc``
     in the background, persisting the query+response exchange as a new gene;
     during a bench that self-contaminates the served corpus with
     ``"User query: …"`` echo genes that later rank as perfect-lexical
     distractors (see docs/benchmarks/2026-07-05-sike-bedsweep-issue-resolutions.md,
     gap A2).
     """
-    return os.environ.get("HELIX_DISABLE_LEARN", "").strip().lower() in _LEARN_DISABLED_TRUTHY
+    return os.environ.get("CYMATIX_DISABLE_LEARN", "").strip().lower() in _LEARN_DISABLED_TRUTHY
 
 
 _CHECKPOINT_INTERVAL = 60  # seconds between background WAL checkpoints
@@ -65,7 +65,7 @@ _paused_ribosomes: Dict[int, object] = {}
 # allowlist below covers our shipped MCP-host handles; anything else gets
 # folded into "other" to prevent a label-cardinality blow-up if a caller
 # starts shipping per-pid handles or freeform strings. Operators who
-# really want a custom label can extend this set via HELIX_AGENT_ALLOW.
+# really want a custom label can extend this set via CYMATIX_AGENT_ALLOW.
 _KNOWN_AGENTS_DEFAULT = frozenset({
     "laude", "raude", "taude", "gemini", "codex", "claude", "manual",
 })
@@ -78,7 +78,7 @@ def _local_timezone() -> Optional[str]:
     """Resolve the local IANA timezone name for attribution.
 
     Order of precedence:
-      1. ``HELIX_TZ`` env var (e.g., 'America/Los_Angeles', 'Europe/Berlin')
+      1. ``CYMATIX_TZ`` env var (e.g., 'America/Los_Angeles', 'Europe/Berlin')
          -- the only path that guarantees an IANA name on Windows, where
          the OS exposes display names like 'Pacific Standard Time'.
       2. ``tzlocal.get_localzone_name()`` if the package is installed.
@@ -100,7 +100,7 @@ def _local_timezone() -> Optional[str]:
     user's city or actual coordinates. See docs/FEDERATION_LOCAL.md
     "What timezone capture actually tells us" for the honest framing.
     """
-    if tz := os.environ.get("HELIX_TZ"):
+    if tz := os.environ.get("CYMATIX_TZ"):
         return tz.strip()[:64] or None
     try:
         from tzlocal import get_localzone_name  # type: ignore
@@ -131,20 +131,20 @@ def _local_attribution_defaults() -> tuple[Optional[str], Optional[str], Optiona
 
     Returns (user_handle, device, org, agent_handle):
 
-        org           HELIX_ORG env       || 'local'
-        device        HELIX_DEVICE env    || HELIX_PARTY env (legacy)
+        org           CYMATIX_ORG env       || 'local'
+        device        CYMATIX_DEVICE env    || CYMATIX_PARTY env (legacy)
                                           || socket.gethostname()
-        user_handle   HELIX_USER env      || HELIX_AGENT env (legacy fallback
-                                             -- when only HELIX_AGENT is set,
+        user_handle   CYMATIX_USER env      || CYMATIX_AGENT env (legacy fallback
+                                             -- when only CYMATIX_AGENT is set,
                                              treat it as the human handle so
                                              pre-4-layer setups don't break)
                                           || getpass.getuser()
-        agent_handle  HELIX_AGENT env     || None (no AI agent -- manual ingest)
+        agent_handle  CYMATIX_AGENT env     || None (no AI agent -- manual ingest)
 
-    The legacy/back-compat note: pre-4-layer code overloaded HELIX_AGENT
+    The legacy/back-compat note: pre-4-layer code overloaded CYMATIX_AGENT
     as the "handle" of whoever was acting (could be human or AI). When
-    HELIX_USER is now also set, we honor the new split. When only
-    HELIX_AGENT is set without HELIX_USER, we keep treating it as the
+    CYMATIX_USER is now also set, we honor the new split. When only
+    CYMATIX_AGENT is set without CYMATIX_USER, we keep treating it as the
     handle (preserves the prior commit's behaviour) AND also surface it
     as agent_handle so the agents table picks it up.
 
@@ -154,29 +154,29 @@ def _local_attribution_defaults() -> tuple[Optional[str], Optional[str], Optiona
     See docs/FEDERATION_LOCAL.md for the full design.
     """
     # Org (top layer)
-    org = os.environ.get("HELIX_ORG") or "local"
+    org = os.environ.get("CYMATIX_ORG") or "local"
 
-    # Device (PC) -- accept HELIX_DEVICE preferentially, fall back to
-    # legacy HELIX_PARTY, then hostname.
+    # Device (PC) -- accept CYMATIX_DEVICE preferentially, fall back to
+    # legacy CYMATIX_PARTY, then hostname.
     try:
         device = (
-            os.environ.get("HELIX_DEVICE")
-            or os.environ.get("HELIX_PARTY")
+            os.environ.get("CYMATIX_DEVICE")
+            or os.environ.get("CYMATIX_PARTY")
             or socket.gethostname()
         )
     except Exception:
         device = None
 
     # Agent (AI persona) -- explicit only. None means "manual / no agent".
-    agent_handle = os.environ.get("HELIX_AGENT") or None
+    agent_handle = os.environ.get("CYMATIX_AGENT") or None
 
-    # User (human) -- HELIX_USER wins; otherwise we have to pick one of
-    # HELIX_AGENT (legacy back-compat) or OS user. Logic: if HELIX_USER
-    # is set, use it. Else if HELIX_AGENT is set AND HELIX_USER is not,
+    # User (human) -- CYMATIX_USER wins; otherwise we have to pick one of
+    # CYMATIX_AGENT (legacy back-compat) or OS user. Logic: if CYMATIX_USER
+    # is set, use it. Else if CYMATIX_AGENT is set AND CYMATIX_USER is not,
     # the user must be the OS account that started the process (we can't
     # tell from env alone). Use OS user.
     try:
-        user_handle = os.environ.get("HELIX_USER") or getpass.getuser()
+        user_handle = os.environ.get("CYMATIX_USER") or getpass.getuser()
     except Exception:
         user_handle = None
 
@@ -199,7 +199,7 @@ def _normalize_identity_token(value: Optional[str]) -> Optional[str]:
 
 
 def _agent_allowlist() -> frozenset[str]:
-    extra = os.environ.get("HELIX_AGENT_ALLOW", "")
+    extra = os.environ.get("CYMATIX_AGENT_ALLOW", "")
     if not extra:
         return _KNOWN_AGENTS_DEFAULT
     extra_set = {
@@ -214,8 +214,8 @@ def _resolve_caller_agent(request, data: dict) -> str:
 
     Precedence:
       1. body ``agent`` field -- explicit caller-provided handle
-      2. header ``X-Helix-Agent`` -- for callers that can't shape the body
-      3. env ``HELIX_AGENT`` -- per-process default set by the host bat /
+      2. header ``X-Cymatix-Agent`` -- for callers that can't shape the body
+      3. env ``CYMATIX_AGENT`` -- per-process default set by the host bat /
          shim (start-cymatix-tray.bat, MCP shim, etc.)
       4. ``"unknown"`` -- last-resort label so the metric always carries
          a value (avoiding NULL-style gaps that confuse stacked-area
@@ -227,8 +227,8 @@ def _resolve_caller_agent(request, data: dict) -> str:
     """
     candidates = (
         data.get("agent") if isinstance(data, dict) else None,
-        request.headers.get("x-helix-agent") if request is not None else None,
-        os.environ.get("HELIX_AGENT"),
+        request.headers.get("x-cymatix-agent") if request is not None else None,
+        os.environ.get("CYMATIX_AGENT"),
     )
     handle = None
     for c in candidates:
@@ -246,7 +246,7 @@ def _resolve_caller_agent(request, data: dict) -> str:
 
 def _compute_know_or_miss_block(
     *,
-    helix: "HelixContextManager",
+    cymatix: "CymatixContextManager",
     window,  # ContextWindow
     query: str,
 ):
@@ -261,14 +261,14 @@ def _compute_know_or_miss_block(
     Stage 7 (2026-05-08) hooks the freshness pipeline here:
       * top-1 mtime revalidation via ``freshness.revalidate_and_mark``
       * Path-A supersession check via ``freshness.check_superseded``
-      * cold-tier peek via ``HelixContextManager._cold_tier_peek``
+      * cold-tier peek via ``CymatixContextManager._cold_tier_peek``
       * ``health.freshness_min`` plumbed through to ``compute_confidence``
         for the beta5 contribution.
     """
     # Pull retrieval scores. ``last_query_scores`` is the post-fusion
     # per-document score map (gene_id -> float). Top-1 / score-gap are
     # derived from a sorted-desc view of this map.
-    raw_scores = helix.genome.last_query_scores or {}
+    raw_scores = cymatix.genome.last_query_scores or {}
     if raw_scores:
         sorted_scores = sorted(raw_scores.values(), reverse=True)
         top_score = float(sorted_scores[0])
@@ -282,7 +282,7 @@ def _compute_know_or_miss_block(
         ratio = 0.0
 
     # Lexical-dense agreement from per-tier contribution map.
-    tier_contrib = getattr(helix.genome, "last_tier_contributions", {}) or {}
+    tier_contrib = getattr(cymatix.genome, "last_tier_contributions", {}) or {}
     lex_dense_agree = _agree_from_tier_contributions(tier_contrib, k=3)
 
     # Coordinate confidence -- promoted to first-class in Stage 6 (section 9).
@@ -300,7 +300,7 @@ def _compute_know_or_miss_block(
     top_gene = None
     if gene_ids:
         try:
-            row_map = helix.genome.get_citation_rows(gene_ids)
+            row_map = cymatix.genome.get_citation_rows(gene_ids)
             # Preserve the response order (same as expressed_gene_ids).
             for gid in gene_ids:
                 r = row_map.get(gid)
@@ -324,7 +324,7 @@ def _compute_know_or_miss_block(
     # Calibration -- prefer the manager's already-loaded config ([know] is
     # a first-class config section since the 2026-06-12 default-honesty
     # pass); fall back to the disk shim for stub managers without .config.
-    _live_cfg = getattr(helix, "config", None)
+    _live_cfg = getattr(cymatix, "config", None)
     if _live_cfg is not None and getattr(_live_cfg, "know", None) is not None:
         cal = calibration_from_config(_live_cfg.know)
     else:
@@ -355,7 +355,7 @@ def _compute_know_or_miss_block(
             # empty main.db genes table (issue #104). Returns a full
             # Gene; the freshness helpers only read source_id,
             # last_verified_at, epigenetics, supersedes.
-            top_gene_obj = helix.genome.get_doc(top_gid)
+            top_gene_obj = cymatix.genome.get_doc(top_gid)
             if top_gene_obj is not None:
                 # Build a minimal Document-shaped object the freshness
                 # helpers can read. We forward only the fields they
@@ -388,9 +388,9 @@ def _compute_know_or_miss_block(
                 # update (in-memory; not a knowledge store write).
                 try:
                     freshness_status = revalidate_and_mark(
-                        helix.genome,
+                        cymatix.genome,
                         top_proxy,
-                        mtime_cache=helix._mtime_cache,
+                        mtime_cache=cymatix._mtime_cache,
                         now_ts=now_ts,
                         read_only=True,
                     )
@@ -400,7 +400,7 @@ def _compute_know_or_miss_block(
 
                 try:
                     successor_source_id = check_superseded(
-                        helix.genome, top_proxy,
+                        cymatix.genome, top_proxy,
                     )
                 except Exception:
                     log.debug("Stage-7 supersession check failed", exc_info=True)
@@ -418,8 +418,8 @@ def _compute_know_or_miss_block(
         )
         health_status = getattr(window.context_health, "status", "")
         if genes_expressed_n < 3 and health_status not in ("abstain", "denatured"):
-            cold_targets = helix._cold_tier_peek(query, k=3, min_cosine=0.4)
-            helix._last_cold_peek_targets = list(cold_targets)
+            cold_targets = cymatix._cold_tier_peek(query, k=3, min_cosine=0.4)
+            cymatix._last_cold_peek_targets = list(cold_targets)
     except Exception:
         log.debug("Stage-7 cold-tier peek failed", exc_info=True)
         cold_targets = []
@@ -442,15 +442,15 @@ def _compute_know_or_miss_block(
 
 
 def _compute_plr_confidence(
-    helix: "HelixContextManager",
-    config: HelixConfig,
+    cymatix: "CymatixContextManager",
+    config: CymatixConfig,
     query: str,
     *,
     now_ts: Optional[float] = None,
 ) -> Optional[dict]:
     """Score the just-completed retrieval with the PLR query-quality head.
 
-    Called after ``build_context_packet`` so ``helix.genome.last_tier_contributions``
+    Called after ``build_context_packet`` so ``cymatix.genome.last_tier_contributions``
     reflects the current query. Returns a dict suitable for JSON serialization
     (prob_B, logit, score_A, high_risk, artifact_label_set) or None when the
     fuser can't be loaded / scored.
@@ -470,7 +470,7 @@ def _compute_plr_confidence(
 
     # 1. Aggregate tier_totals across all documents in the current retrieval.
     #    Mirrors the CWoLa-logger aggregation at server.py ~line 898.
-    tier_contrib_all = getattr(helix.genome, "last_tier_contributions", {}) or {}
+    tier_contrib_all = getattr(cymatix.genome, "last_tier_contributions", {}) or {}
     tier_totals: dict[str, float] = {}
     for contribs in tier_contrib_all.values():
         for tier, score in contribs.items():
@@ -493,17 +493,17 @@ def _compute_plr_confidence(
     #    Phase 1 logger enrichment in server.py ~line 910.
     cos_qc: Optional[float] = None
     try:
-        codec = getattr(helix, "_sema_codec", None)
+        codec = getattr(cymatix, "_sema_codec", None)
         if codec is None:
             raise RuntimeError("sema codec unavailable")
         q_sema = codec.encode(query)
 
         top_gene_id = None
-        last_scores = getattr(helix.genome, "last_query_scores", {}) or {}
+        last_scores = getattr(cymatix.genome, "last_query_scores", {}) or {}
         if last_scores:
             top_gene_id = max(last_scores, key=last_scores.get)
         if top_gene_id:
-            gene = helix.genome.get_doc(top_gene_id)
+            gene = cymatix.genome.get_doc(top_gene_id)
             if gene is not None and gene.embedding and q_sema is not None:
                 # inline cosine to avoid extra imports
                 a, b = q_sema, gene.embedding
@@ -536,7 +536,7 @@ def _merge_tier_contributions(base: dict, extra: dict) -> dict:
 def _probe_upstream(upstream_url: str, timeout_s: float = 1.0) -> Dict[str, object]:
     """Best-effort readiness probe for the configured upstream model server.
 
-    Helix most often fronts Ollama, but we tolerate any OpenAI-compatible
+    Cymatix most often fronts Ollama, but we tolerate any OpenAI-compatible
     upstream by probing a few common endpoints and treating any non-5xx
     response as "reachable". This avoids false greens when the model server
     is entirely down while still handling auth-gated upstreams honestly.
@@ -579,7 +579,7 @@ def _probe_upstream(upstream_url: str, timeout_s: float = 1.0) -> Dict[str, obje
 # ── Background tasks ────────────────────────────────────────────────
 
 
-async def _background_checkpoint(helix: HelixContextManager) -> None:
+async def _background_checkpoint(cymatix: CymatixContextManager) -> None:
     """Periodically flush WAL to main database file."""
     # Read the interval from the package __init__ each iteration so
     # monkeypatch in tests can override the value at runtime.
@@ -587,13 +587,13 @@ async def _background_checkpoint(helix: HelixContextManager) -> None:
     while True:
         await asyncio.sleep(getattr(_srv, "_CHECKPOINT_INTERVAL", _CHECKPOINT_INTERVAL))
         try:
-            helix.genome.checkpoint("PASSIVE")
+            cymatix.genome.checkpoint("PASSIVE")
         except Exception:
             log.warning("Background WAL checkpoint failed", exc_info=True)
 
 
-async def _background_wal_gauge(helix: HelixContextManager) -> None:
-    """Emit helix_genome_wal_size_bytes every _WAL_GAUGE_INTERVAL seconds.
+async def _background_wal_gauge(cymatix: CymatixContextManager) -> None:
+    """Emit cymatix_genome_wal_size_bytes every _WAL_GAUGE_INTERVAL seconds.
 
     Best-effort: failures are ignored so the gauge never affects uptime.
     No-op when OTel is disabled (noop instruments silently drop the call).
@@ -602,7 +602,7 @@ async def _background_wal_gauge(helix: HelixContextManager) -> None:
     while True:
         await asyncio.sleep(getattr(_srv, "_WAL_GAUGE_INTERVAL", _WAL_GAUGE_INTERVAL))
         try:
-            helix.genome.emit_wal_health_gauges()
+            cymatix.genome.emit_wal_health_gauges()
         except Exception:
             pass  # diagnostic path; never block the event loop
 
@@ -710,7 +710,7 @@ def _munge_messages(
 def _emit_genai_proxy_telemetry(
     *,
     body: dict,
-    config: HelixConfig,
+    config: CymatixConfig,
     user_query: str,
     usage: Optional[dict],
     response_id: Optional[str] = None,
@@ -723,9 +723,9 @@ def _emit_genai_proxy_telemetry(
 ) -> None:
     """Emit OTel GenAI telemetry for one /v1/chat/completions proxy call.
 
-    One GenAI client span (``chat <model>``), the ``helix_genai_*``
+    One GenAI client span (``chat <model>``), the ``cymatix_genai_*``
     metrics (token usage, TTFT, cost, finish reasons), and the
-    structured-JSON ``helix.proxy`` log line — see
+    structured-JSON ``cymatix.proxy`` log line — see
     ``cymatix_context/telemetry/genai_telemetry.py`` (#209).
 
     Called *after* the upstream exchange completes. On the streaming
@@ -737,8 +737,8 @@ def _emit_genai_proxy_telemetry(
     Best-effort: never raises into the proxy path.
 
     Gated on ``setup_telemetry()`` having initialised the OTel SDK
-    ([telemetry] enabled / HELIX_OTEL_ENABLED=1): spans and metrics
-    would be no-ops anyway, and the structured ``helix.proxy`` log
+    ([telemetry] enabled / CYMATIX_OTEL_ENABLED=1): spans and metrics
+    would be no-ops anyway, and the structured ``cymatix.proxy`` log
     line must not start appearing on stdout for deployments that never
     opted into telemetry — default behavior stays byte-identical.
     """
@@ -771,7 +771,7 @@ def _emit_genai_proxy_telemetry(
                 "max_tokens": body.get("max_tokens"),
                 "stream": streamed,
             },
-            helix_attributes={"helix.pipeline.stage": "proxy"},
+            cymatix_attributes={"cymatix.pipeline.stage": "proxy"},
         ) as span:
             record_response(
                 span,
@@ -822,8 +822,8 @@ def _emit_genai_proxy_telemetry(
 
 async def _stream_and_tee(
     body: dict,
-    config: HelixConfig,
-    helix: HelixContextManager,
+    config: CymatixConfig,
+    cymatix: CymatixContextManager,
     user_query: str,
     background_tasks,
 ):
@@ -908,14 +908,14 @@ async def _stream_and_tee(
     # Stream is complete -- fire background persistence
     full_response = "".join(accumulated)
     if full_response and not _learn_disabled():
-        background_tasks.add_task(helix.learn, user_query, full_response)
+        background_tasks.add_task(cymatix.learn, user_query, full_response)
 
     # Token accounting -- prefer authoritative usage if upstream provided it,
     # else estimate from the user query + accumulated response.
     try:
-        if not helix.token_counter.add_from_usage(captured_usage):
+        if not cymatix.token_counter.add_from_usage(captured_usage):
             from ..telemetry.metrics import estimate_tokens
-            helix.token_counter.add(
+            cymatix.token_counter.add(
                 prompt_tokens=estimate_tokens(user_query),
                 completion_tokens=estimate_tokens(full_response),
                 estimated=True,
@@ -939,8 +939,8 @@ async def _stream_and_tee(
 
 async def _forward_and_replicate(
     body: dict,
-    config: HelixConfig,
-    helix: HelixContextManager,
+    config: CymatixConfig,
+    cymatix: CymatixContextManager,
     user_query: str,
     background_tasks,
 ):
@@ -973,13 +973,13 @@ async def _forward_and_replicate(
     if choices:
         content = choices[0].get("message", {}).get("content", "")
         if content and not _learn_disabled():
-            background_tasks.add_task(helix.learn, user_query, content)
+            background_tasks.add_task(cymatix.learn, user_query, content)
 
     # Token accounting -- exact if usage was provided, else estimated.
     try:
-        if not helix.token_counter.add_from_usage(data.get("usage")):
+        if not cymatix.token_counter.add_from_usage(data.get("usage")):
             from ..telemetry.metrics import estimate_tokens
-            helix.token_counter.add(
+            cymatix.token_counter.add(
                 prompt_tokens=estimate_tokens(user_query),
                 completion_tokens=estimate_tokens(content),
                 estimated=True,
@@ -1001,7 +1001,7 @@ async def _forward_and_replicate(
     return JSONResponse(data)
 
 
-async def _forward_raw(body: dict, config: HelixConfig, helix: Optional[HelixContextManager] = None):
+async def _forward_raw(body: dict, config: CymatixConfig, cymatix: Optional[CymatixContextManager] = None):
     """Pass request through to upstream without context injection."""
     _t0 = time.monotonic()
     try:
@@ -1047,10 +1047,10 @@ async def _forward_raw(body: dict, config: HelixConfig, helix: Optional[HelixCon
             detail="Upstream chat backend returned a non-JSON response.",
         ) from exc
 
-    # Token accounting if helix is wired in.
-    if helix is not None:
+    # Token accounting if cymatix is wired in.
+    if cymatix is not None:
         try:
-            helix.token_counter.add_from_usage(data.get("usage"))
+            cymatix.token_counter.add_from_usage(data.get("usage"))
         except Exception:
             log.debug("Token counter update failed (raw)", exc_info=True)
 

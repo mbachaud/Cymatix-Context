@@ -4,14 +4,14 @@ cb_dpacket_clamp_rescore.py  — ContextBench D-packet 27k-clamp re-run + re-sco
 
 PURPOSE
 -------
-Re-emits the D-packet arm (/context/packet via in-process Helix) with a hard
+Re-emits the D-packet arm (/context/packet via in-process Cymatix) with a hard
 27 000-token greedy budget cap applied AFTER packet assembly, then scores it
 with the official contextbench.evaluate and regenerates the combined recall-vs-
 tokens table + scatter plot alongside all existing arms.
 
 BACKGROUND (why the first run was unclamped)
 --------------------------------------------
-The original cb_helix_pred.py called build_context_packet with max_genes=32
+The original cb_cymatix_pred.py called build_context_packet with max_genes=32
 and max_item_chars=100_000. build_context_packet has no internal token-budget
 cap; it just returns all genes up to max_genes with each gene's content
 truncated at max_item_chars characters. With 32-55 genes each up to 100k chars
@@ -33,12 +33,12 @@ in order, accumulate tiktoken cl100k_base token counts, stop when the running
 total reaches the budget.
 
 For the live re-run there are two equivalent implementation options:
-  Option A (config):  set max_genes=8 AND max_item_chars~=3400 in the helix
+  Option A (config):  set max_genes=8 AND max_item_chars~=3400 in the cymatix
                       probe config so each gene ≤ ~850 tokens; the 8 × 850 = 6.8k
                       budget is too small. Not a clean match to 27k.
   Option B (post-assembly clamp, USED HERE): keep the full packet assembly
                       (max_genes=32, max_item_chars=100_000 same as before) so
-                      we see what Helix "would deliver", then greedy-cap the pred
+                      we see what Cymatix "would deliver", then greedy-cap the pred
                       spans at 27k tokens before writing the pred JSON. This is
                       the same discipline the fingerprint arm uses.
 
@@ -55,11 +55,11 @@ HOW TO RUN (one-liner for the Windows rig)
       --cache F:/Projects/_cache/cb_repos
 
 Kill-switches (no GPU needed):
-  HELIX_BFM_SPLADE=0 HELIX_BFM_DENSE_BACKFILL=0 (prevent multi-CUDA-context livelock)
+  CYMATIX_BFM_SPLADE=0 CYMATIX_BFM_DENSE_BACKFILL=0 (prevent multi-CUDA-context livelock)
 
 Full example with all defaults shown:
-  set HELIX_BFM_SPLADE=0
-  set HELIX_BFM_DENSE_BACKFILL=0
+  set CYMATIX_BFM_SPLADE=0
+  set CYMATIX_BFM_DENSE_BACKFILL=0
   C:/Users/max/AppData/Local/Python/pythoncore-3.14-64/python.exe ^
       benchmarks/cb_dpacket_clamp_rescore.py ^
       --tag wt --budget 27000 ^
@@ -67,7 +67,7 @@ Full example with all defaults shown:
       --gold benchmarks/contextbench/gold_smoke_4repo.parquet ^
       --cb-src F:/Projects/contextbench-src ^
       --cache F:/Projects/_cache/cb_repos ^
-      --config F:/tmp/cb_helix_probe/helix_probe.toml ^
+      --config F:/tmp/cb_cymatix_probe/cymatix_probe.toml ^
       --out-dir benchmarks/contextbench/results
 """
 import argparse
@@ -79,7 +79,7 @@ import statistics
 import subprocess
 import sys
 
-# ──────────────────────── file universe (mirror cb_helix_pred.py) ─────────────
+# ──────────────────────── file universe (mirror cb_cymatix_pred.py) ─────────────
 SRC_EXT = {
     ".py", ".js", ".jsx", ".ts", ".tsx", ".go", ".rs", ".c", ".h", ".cpp", ".cc",
     ".hpp", ".hh", ".java", ".cs", ".rb", ".php", ".swift", ".kt", ".scala",
@@ -93,8 +93,8 @@ MAX_FILE_BYTES = 2_000_000
 COMPRESSED_PREFIX = "[COMPRESSED"
 
 # ──────────────────────── defaults ────────────────────────────────────────────
-DEFAULT_HELIX_CONFIG = "F:/tmp/cb_helix_probe/helix_probe.toml"
-DEFAULT_GENOME_ROOT  = "F:/tmp/cb_helix_genomes"
+DEFAULT_CYMATIX_CONFIG = "F:/tmp/cb_cymatix_probe/cymatix_probe.toml"
+DEFAULT_GENOME_ROOT  = "F:/tmp/cb_cymatix_genomes"
 DEFAULT_OUT_DIR      = "F:/Projects/helix-context/benchmarks/contextbench/results"
 DEFAULT_CB_SRC       = "F:/Projects/contextbench-src"
 DEFAULT_CACHE        = "F:/Projects/_cache/cb_repos"
@@ -155,19 +155,19 @@ def recover_lines(content, file_text):
     return start, end
 
 
-# ──────────────────────── helix bootstrap (mirror cb_helix_pred.py) ───────────
-def build_helix(genome_dir, helix_config):
-    os.environ.pop("HELIX_USE_SHARDS", None)
-    os.environ["HELIX_CONFIG"] = helix_config
-    os.environ["HELIX_GENOME_PATH"] = genome_dir + "/genome.db"
+# ──────────────────────── cymatix bootstrap (mirror cb_cymatix_pred.py) ───────────
+def build_cymatix(genome_dir, cymatix_config):
+    os.environ.pop("CYMATIX_USE_SHARDS", None)
+    os.environ["CYMATIX_CONFIG"] = cymatix_config
+    os.environ["CYMATIX_GENOME_PATH"] = genome_dir + "/genome.db"
     os.makedirs(genome_dir, exist_ok=True)
     from cymatix_context.config import load_config
-    from cymatix_context.context_manager import HelixContextManager
+    from cymatix_context.context_manager import CymatixContextManager
     cfg = load_config()
-    return HelixContextManager(cfg)
+    return CymatixContextManager(cfg)
 
 
-def ingest_repo(helix, repo_dir, file_cache):
+def ingest_repo(cymatix, repo_dir, file_cache):
     n = 0
     for rel, ap in iter_repo_files(repo_dir):
         text = read_text(ap)
@@ -175,7 +175,7 @@ def ingest_repo(helix, repo_dir, file_cache):
             continue
         file_cache[rel] = text
         try:
-            helix.ingest(text, content_type="code", metadata={"path": rel})
+            cymatix.ingest(text, content_type="code", metadata={"path": rel})
             n += 1
         except Exception as e:
             print(f"    [ingest-warn] {rel}: {e!r}", file=sys.stderr)
@@ -193,13 +193,13 @@ def gene_src(g):
     return None
 
 
-def run_packet(helix, query, max_genes=32, max_item_chars=100_000):
-    """Call build_context_packet exactly like the original cb_helix_pred.py did."""
+def run_packet(cymatix, query, max_genes=32, max_item_chars=100_000):
+    """Call build_context_packet exactly like the original cb_cymatix_pred.py did."""
     from cymatix_context.context_packet import build_context_packet
     packet = build_context_packet(
         query,
         task_type="explain",
-        genome=helix.genome,
+        genome=cymatix.genome,
         max_genes=max_genes,
         now_ts=0.0,
         read_only=True,
@@ -218,7 +218,7 @@ def items_to_pred_clamped(iid, items, file_cache, budget_tokens):
     Items are consumed in delivery order (verified first, then stale_risk, as
     returned by build_context_packet). We accumulate injected_tokens and stop
     when the budget is reached. This is identical to the fingerprint arm's
-    strategy (cb_helix_pred.py process_task lines 281-289).
+    strategy (cb_cymatix_pred.py process_task lines 281-289).
     """
     from collections import defaultdict
     spans = defaultdict(list)
@@ -321,7 +321,7 @@ def med(xs):
 
 
 # ──────────────────────── per-task entry point ────────────────────────────────
-def process_task(task, tag, budget, genome_root, helix_config):
+def process_task(task, tag, budget, genome_root, cymatix_config):
     """Run one task: ingest → packet → clamp → pred. Returns a result dict."""
     iid  = task["instance_id"]
     wt   = task["worktree_dir"]
@@ -332,14 +332,14 @@ def process_task(task, tag, budget, genome_root, helix_config):
         "iid": iid, "repo": task.get("repo", ""),
         "pred": None, "meta": None, "error": None, "n_indexed": 0,
     }
-    helix = None
+    cymatix = None
     file_cache = {}
     try:
-        helix = build_helix(gdir, helix_config)
-        n_indexed = ingest_repo(helix, wt, file_cache)
+        cymatix = build_cymatix(gdir, cymatix_config)
+        n_indexed = ingest_repo(cymatix, wt, file_cache)
         res["n_indexed"] = n_indexed
         q = task["problem_statement"]
-        items = run_packet(helix, q)
+        items = run_packet(cymatix, q)
         pred, meta = items_to_pred_clamped(iid, items, file_cache, budget)
         meta["n_indexed_files"] = n_indexed
         res["pred"] = pred
@@ -349,13 +349,13 @@ def process_task(task, tag, budget, genome_root, helix_config):
         res["error"] = f"{e!r} | {traceback.format_exc().splitlines()[-1]}"
     finally:
         try:
-            if helix is not None and getattr(helix, "genome", None) is not None:
-                close = getattr(helix.genome, "close", None)
+            if cymatix is not None and getattr(cymatix, "genome", None) is not None:
+                close = getattr(cymatix.genome, "close", None)
                 if callable(close):
                     close()
         except Exception:
             pass
-        helix = None
+        cymatix = None
         file_cache = None
         gc.collect()
         try:
@@ -494,8 +494,8 @@ def postprocess_existing_packet(tag, budget, out_dir, cb_src, gold, cache_dir):
     drop spans that would have fit) but it's directionally correct.
     If repo worktrees are unavailable we emit the pred as-is and note it.
     """
-    pred_path = os.path.join(out_dir, f"helix_{tag}_packet_pred.json")
-    meta_path = os.path.join(out_dir, f"helix_{tag}_packet_meta.json")
+    pred_path = os.path.join(out_dir, f"cymatix_{tag}_packet_pred.json")
+    meta_path = os.path.join(out_dir, f"cymatix_{tag}_packet_meta.json")
     if not os.path.isfile(pred_path):
         print(f"  [preview] no existing pred at {pred_path} — skipping preview",
               file=sys.stderr)
@@ -547,7 +547,7 @@ def postprocess_existing_packet(tag, budget, out_dir, cb_src, gold, cache_dir):
         })
         approx_totals.append(approx_injected)
 
-    out_pred = os.path.join(out_dir, f"helix_{tag}_packet27k_approx_pred.json")
+    out_pred = os.path.join(out_dir, f"cymatix_{tag}_packet27k_approx_pred.json")
     with open(out_pred, "w", encoding="utf-8") as f:
         json.dump(clamped_preds, f)
     print(f"  [preview] approx-clamped pred -> {out_pred}", file=sys.stderr)
@@ -555,7 +555,7 @@ def postprocess_existing_packet(tag, budget, out_dir, cb_src, gold, cache_dir):
           f"{statistics.median(approx_totals):.0f}", file=sys.stderr)
 
     # Try to score if cb_src is available
-    out_jsonl = os.path.join(out_dir, f"helix_{tag}_packet27k_approx_eval.jsonl")
+    out_jsonl = os.path.join(out_dir, f"cymatix_{tag}_packet27k_approx_eval.jsonl")
     rows, rc = run_evaluator(cb_src, gold, out_pred, cache_dir, out_jsonl)
     if rc == 0 and rows:
         lr_r = micro(rows, "line")
@@ -589,7 +589,7 @@ def main():
         description="Re-emit D-packet arm at 27k token budget and re-score"
     )
     ap.add_argument("--tag", required=True,
-                    help="Helix variant tag, e.g. wt | v062 | r063fix")
+                    help="Cymatix variant tag, e.g. wt | v062 | r063fix")
     ap.add_argument("--tasks", default=DEFAULT_TASKS,
                     help="JSON task list from cb_dump_tasks.py")
     ap.add_argument("--gold", default=DEFAULT_GOLD,
@@ -600,8 +600,8 @@ def main():
                     help="Path to contextbench-src (for contextbench.evaluate)")
     ap.add_argument("--cache", default=DEFAULT_CACHE,
                     help="Repo clone cache dir for evaluator")
-    ap.add_argument("--config", default=DEFAULT_HELIX_CONFIG,
-                    help="HELIX_CONFIG toml for the probe genome")
+    ap.add_argument("--config", default=DEFAULT_CYMATIX_CONFIG,
+                    help="CYMATIX_CONFIG toml for the probe genome")
     ap.add_argument("--genome-root", default=DEFAULT_GENOME_ROOT,
                     help="Root dir for temporary probe genomes")
     ap.add_argument("--out-dir", default=DEFAULT_OUT_DIR,
@@ -706,8 +706,8 @@ def main():
         sys.exit(1)
 
     # Write pred + meta
-    pred_path = os.path.join(args.out_dir, f"helix_{arm_label}_pred.json")
-    meta_path = os.path.join(args.out_dir, f"helix_{arm_label}_meta.json")
+    pred_path = os.path.join(args.out_dir, f"cymatix_{arm_label}_pred.json")
+    meta_path = os.path.join(args.out_dir, f"cymatix_{arm_label}_meta.json")
     with open(pred_path, "w", encoding="utf-8") as f:
         json.dump(preds, f)
     with open(meta_path, "w", encoding="utf-8") as f:
@@ -716,7 +716,7 @@ def main():
     print(f"[meta] -> {meta_path}", file=sys.stderr)
 
     # Score
-    out_jsonl = os.path.join(args.out_dir, f"helix_{arm_label}_eval.jsonl")
+    out_jsonl = os.path.join(args.out_dir, f"cymatix_{arm_label}_eval.jsonl")
     rows, rc = run_evaluator(args.cb_src, args.gold, pred_path, args.cache, out_jsonl)
     n_scored = sum(1 for r in rows if "error" not in r)
 

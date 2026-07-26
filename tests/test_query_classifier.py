@@ -62,7 +62,7 @@ def test_arithmetic_critical_path_plus_calculate_fires():
 
 
 def test_factual_short_wh_query_fires():
-    r = classify_query("What port does helix use?")
+    r = classify_query("What port does cymatix use?")
     assert r.cls == "factual"
     assert r.assembly_max_genes_cap == 5
     assert r.decoder_mode == "condensed"
@@ -71,7 +71,7 @@ def test_factual_short_wh_query_fires():
 def test_factual_long_wh_query_does_not_fire():
     # 16+ words — over the < 15 word threshold; must fall through.
     long_q = (
-        "What is the precise mechanism by which the helix promoter index "
+        "What is the precise mechanism by which the cymatix promoter index "
         "interacts with the synonym map and the co-activation graph during retrieval?"
     )
     assert len(long_q.split()) >= 16
@@ -80,7 +80,7 @@ def test_factual_long_wh_query_does_not_fire():
 
 
 def test_factual_at_14_words_fires():
-    q = "What does the helix promoter index do during retrieval for very small simple queries?"
+    q = "What does the cymatix promoter index do during retrieval for very small simple queries?"
     assert len(q.split()) == 14
     r = classify_query(q)
     assert r.cls == "factual"
@@ -88,7 +88,7 @@ def test_factual_at_14_words_fires():
 
 def test_factual_no_wh_word_does_not_fire():
     # Short, but no leading wh-word.
-    r = classify_query("Helix port number.")
+    r = classify_query("Cymatix port number.")
     assert r.cls != "factual"
 
 
@@ -178,7 +178,7 @@ def test_classifier_never_raises_on_pathological_input():
 
 def test_classifier_config_defaults_to_enabled(tmp_path):
     from cymatix_context.config import load_config
-    cfg_path = tmp_path / "helix.toml"
+    cfg_path = tmp_path / "cymatix.toml"
     cfg_path.write_text("[classifier]\nenabled = true\n", encoding="utf-8")
     cfg = load_config(str(cfg_path))
     assert cfg.classifier.enabled is True
@@ -186,7 +186,7 @@ def test_classifier_config_defaults_to_enabled(tmp_path):
 
 def test_classifier_config_can_be_disabled(tmp_path):
     from cymatix_context.config import load_config
-    cfg_path = tmp_path / "helix.toml"
+    cfg_path = tmp_path / "cymatix.toml"
     cfg_path.write_text("[classifier]\nenabled = false\n", encoding="utf-8")
     cfg = load_config(str(cfg_path))
     assert cfg.classifier.enabled is False
@@ -194,7 +194,7 @@ def test_classifier_config_can_be_disabled(tmp_path):
 
 def test_classifier_config_default_when_section_absent(tmp_path):
     from cymatix_context.config import load_config
-    cfg_path = tmp_path / "helix.toml"
+    cfg_path = tmp_path / "cymatix.toml"
     cfg_path.write_text("", encoding="utf-8")
     cfg = load_config(str(cfg_path))
     assert cfg.classifier.enabled is True

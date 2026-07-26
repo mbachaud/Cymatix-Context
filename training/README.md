@@ -74,7 +74,7 @@ python training/finetune_nli.py \
 
 Time: ~10-15 min per head on RTX 3080 Ti.
 
-### 3. Wire into helix.toml
+### 3. Wire into cymatix.toml
 
 ```toml
 [ribosome]
@@ -85,7 +85,7 @@ nli_model = "training/models/nli"  # optional
 fallback = "ollama"  # keep Ollama for PACK operations
 ```
 
-Restart the Helix server to pick up the new backend.
+Restart the Cymatix server to pick up the new backend.
 
 ### 4. Verify with benchmarks
 

@@ -2,12 +2,12 @@
 # Full GPQA Diamond overnight — ABSTAIN tier bench gate (spec §9).
 # Date: 2026-05-03. Branch: feat/abstain-tier.
 # Runs n=198 (full diamond) off + on with bumped timeouts on both
-# layers (httpx client 180s, helix upstream 240s in helix.toml).
-# helix.toml is auto-reverted at end (the upstream_timeout=240 line is
+# layers (httpx client 180s, cymatix upstream 240s in cymatix.toml).
+# cymatix.toml is auto-reverted at end (the upstream_timeout=240 line is
 # applied for this run only — the committed default stays 180).
 #
 # Spec: docs/specs/2026-05-02-abstain-tier-design.md
-# Pre-flight (already done by operator): helix server PID 95240 was
+# Pre-flight (already done by operator): cymatix server PID 95240 was
 # stale (started 2026-05-01, before abstain code landed) — killed and
 # restarted; smoke test confirmed budget_tier=abstain on a noise query.
 
@@ -19,8 +19,8 @@ mkdir -p overnight_logs benchmarks/results
 LOG=overnight_logs/diamond_2026-05-03.log
 STATUS=overnight_logs/diamond_2026-05-03.status
 REPORT=overnight_logs/diamond_2026-05-03_report.md
-HELIX_TOML=helix.toml
-HELIX_TOML_BACKUP=helix.toml.bench-backup
+CYMATIX_TOML=cymatix.toml
+CYMATIX_TOML_BACKUP=cymatix.toml.bench-backup
 
 MODEL=gemma4:e4b
 CLIENT_TIMEOUT=180
@@ -29,15 +29,15 @@ ts() { date '+%Y-%m-%d %H:%M:%S'; }
 log() { echo "[$(ts)] $*" | tee -a "$LOG"; }
 write_status() { echo "$1" > "$STATUS"; }
 
-# Save current helix.toml so we can restore it at end (the upstream_timeout=240
+# Save current cymatix.toml so we can restore it at end (the upstream_timeout=240
 # bump is for this run only — not committed).
-cp -p "$HELIX_TOML" "$HELIX_TOML_BACKUP"
+cp -p "$CYMATIX_TOML" "$CYMATIX_TOML_BACKUP"
 
 revert_config() {
-  if [ -f "$HELIX_TOML_BACKUP" ]; then
-    log "Reverting $HELIX_TOML to pre-run state"
-    cp -p "$HELIX_TOML_BACKUP" "$HELIX_TOML"
-    rm "$HELIX_TOML_BACKUP"
+  if [ -f "$CYMATIX_TOML_BACKUP" ]; then
+    log "Reverting $CYMATIX_TOML to pre-run state"
+    cp -p "$CYMATIX_TOML_BACKUP" "$CYMATIX_TOML"
+    rm "$CYMATIX_TOML_BACKUP"
   fi
 }
 # Ensure config is reverted even on Ctrl-C / kill.
@@ -74,10 +74,10 @@ run_bench() {
 
 # -- Begin run -------------------------------------------------------
 
-log "Diamond overnight run starting — ABSTAIN tier ON (helix.toml default)"
+log "Diamond overnight run starting — ABSTAIN tier ON (cymatix.toml default)"
 log "Spec: docs/specs/2026-05-02-abstain-tier-design.md"
-log "Model: $MODEL    Client timeout: ${CLIENT_TIMEOUT}s    Helix upstream_timeout: 240s (helix.toml)"
-log "Helix server health:"
+log "Model: $MODEL    Client timeout: ${CLIENT_TIMEOUT}s    Cymatix upstream_timeout: 240s (cymatix.toml)"
+log "Cymatix server health:"
 curl -s -m 5 http://127.0.0.1:11437/health >> "$LOG" 2>&1 || true
 echo "" >> "$LOG"
 log "Branch: $(git rev-parse --abbrev-ref HEAD)  HEAD: $(git rev-parse --short HEAD)"
@@ -101,10 +101,10 @@ cat > "$REPORT" <<EOF
 **Started:** $(head -1 "$LOG" | sed 's/^\[\(.*\)\].*/\1/')
 **Completed:** $(ts)
 **Model:** $MODEL
-**Helix server:** http://127.0.0.1:11437
+**Cymatix server:** http://127.0.0.1:11437
 **Branch:** $(git rev-parse --abbrev-ref HEAD)  HEAD: $(git rev-parse --short HEAD)
-**Timeouts:** httpx client = ${CLIENT_TIMEOUT}s, helix upstream = 240s
-**Mode:** ABSTAIN tier ON (helix.toml default; abstain_enabled = true)
+**Timeouts:** httpx client = ${CLIENT_TIMEOUT}s, cymatix upstream = 240s
+**Mode:** ABSTAIN tier ON (cymatix.toml default; abstain_enabled = true)
 **Spec:** [2026-05-02-abstain-tier-design.md](../docs/specs/2026-05-02-abstain-tier-design.md)
 
 ## Headline numbers
@@ -278,9 +278,9 @@ echo "\`\`\`" >> "$REPORT"
 py -3 benchmarks/compare_ab.py "$OFF" "$ON" >> "$REPORT" 2>&1 || echo "(compare_ab.py failed)" >> "$REPORT"
 echo "\`\`\`" >> "$REPORT"
 
-# Restore helix.toml
+# Restore cymatix.toml
 revert_config
 
 write_status "DONE at $(ts)"
 log "Diamond overnight run COMPLETE — report at $REPORT"
-log "helix.toml has been reverted to pre-run state. Server still has 240s upstream_timeout in memory; restart helix to pick up the reverted config."
+log "cymatix.toml has been reverted to pre-run state. Server still has 240s upstream_timeout in memory; restart cymatix to pick up the reverted config."

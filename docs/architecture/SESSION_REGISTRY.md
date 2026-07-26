@@ -40,7 +40,7 @@ Known gaps (tracked as follow-up work, not blockers):
   TTL out naturally.
 - **Phase 2** (DocumentAttribution wired into `query_genes` for per-party
   scoping + authorship-class scoring) — design in
-  `~/.helix/shared/handoffs/2026-04-11_8d_dimensional_roadmap.md` §
+  `~/.cymatix/shared/handoffs/2026-04-11_8d_dimensional_roadmap.md` §
   Phase 2. Unblocked now that the registry is on master.
 
 The rest of this document is the original design spec, preserved for
@@ -162,7 +162,7 @@ MCP host identity first-class in the registry:
 - `ide_detection_via`  — how IDE was determined ("env:VSCODE_PID",
                          "explicit:CYMATIX_MCP_HOST", "agent_override",
                          "no_match") — added 2026-05-06
-- `model_id`           — agent self-reported via helix_announce
+- `model_id`           — agent self-reported via cymatix_announce
                          (free-form, NULL until announced) — added 2026-05-06
 
 Both are nullable. Pre-2026-05-05 rows read as `NULL`. These fields are sourced from the
@@ -307,7 +307,7 @@ it and returns `status: "active"`. If the `participant_id` is unknown, returns
 ### POST /sessions/{participant_id}/announce  *(added 2026-05-06)*
 
 Agent self-report endpoint. Called once per session by the agent via
-the `helix_announce` MCP tool, after the MCP adapter has registered
+the `cymatix_announce` MCP tool, after the MCP adapter has registered
 the participant.
 
 ```bash

@@ -1,4 +1,4 @@
-"""`helix diag <target>` — diagnostic introspection.
+"""`cymatix diag <target>` — diagnostic introspection.
 
 v1 only ships `corpus`. Future targets (`genome`, `index`, ...) plug
 into the same argparse subparser.

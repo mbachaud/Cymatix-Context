@@ -21,7 +21,7 @@ from tests.conftest import make_client
 
 def _all_genes(client):
     """Return every gene currently in the in-memory genome."""
-    genome = client.app.state.helix.genome
+    genome = client.app.state.cymatix.genome
     rows = genome.conn.execute(
         "SELECT gene_id, source_id, source_kind, volatility_class, authority_class, "
         "support_span, observed_at, last_verified_at, repo_root, mtime, content_hash, content "
@@ -106,8 +106,8 @@ class TestKnowVsGoProvenance:
             "content": "port = 11437\nmodel = qwen3:8b\n",
             "content_type": "config",
             "metadata": {
-                "source_id": "/repo/helix/helix.toml",
-                "repo_root": "/repo/helix",
+                "source_id": "/repo/cymatix/cymatix.toml",
+                "repo_root": "/repo/cymatix",
                 "observed_at": 1234.5,
                 "last_verified_at": 1235.5,
                 "mtime": 1200.0,
@@ -122,8 +122,8 @@ class TestKnowVsGoProvenance:
         genes = _genes_by_ids(client, resp.json()["gene_ids"])
         assert len(genes) == 1
         gene = genes[0]
-        assert gene.source_id == "/repo/helix/helix.toml"
-        assert gene.repo_root == "/repo/helix"
+        assert gene.source_id == "/repo/cymatix/cymatix.toml"
+        assert gene.repo_root == "/repo/cymatix"
         assert gene.observed_at == 1234.5
         assert gene.last_verified_at == 1235.5
         assert gene.mtime == 1200.0

@@ -1,5 +1,5 @@
 """External retriever adapter — wrap your existing RAG (LlamaIndex,
-LangChain, custom) behind a uniform ``Retriever`` protocol so Helix's
+LangChain, custom) behind a uniform ``Retriever`` protocol so Cymatix's
 shortlist-narrowing pattern (pattern 2 in the integration doc) works
 with any backend.
 
@@ -10,20 +10,20 @@ Design:
   matches the signature is a retriever — you don't need to inherit.
 - Two reference wrappers: ``LlamaIndexRetriever``, ``LangChainRetriever``.
   Lazy imports so neither framework is a hard dep.
-- ``HelixNarrowedRetriever`` composes Helix's ``/context/packet`` with
+- ``CymatixNarrowedRetriever`` composes Cymatix's ``/context/packet`` with
   your retriever: packet returns source_ids, your retriever searches
   *only within those source_ids*, you get a scoped top-K back.
 
 Typical integration::
 
     from cymatix_context.adapters.retriever import (
-        LlamaIndexRetriever, HelixNarrowedRetriever,
+        LlamaIndexRetriever, CymatixNarrowedRetriever,
     )
 
     my_retriever = LlamaIndexRetriever(llama_index_retriever)
-    narrowed = HelixNarrowedRetriever(
+    narrowed = CymatixNarrowedRetriever(
         my_retriever,
-        helix_url="http://127.0.0.1:11437",
+        cymatix_url="http://127.0.0.1:11437",
     )
     docs = narrowed.retrieve("where does auth middleware live", top_k=8)
 """
@@ -34,7 +34,7 @@ import logging
 from dataclasses import dataclass, field
 from typing import Any, Iterable, Optional, Protocol, runtime_checkable
 
-log = logging.getLogger("helix.adapters.retriever")
+log = logging.getLogger("cymatix.adapters.retriever")
 
 
 @dataclass
@@ -170,14 +170,14 @@ class LangChainRetriever:
         return out
 
 
-# ── Helix-narrowed composition ──────────────────────────────────────
+# ── Cymatix-narrowed composition ──────────────────────────────────────
 
 
-class HelixNarrowedRetriever:
-    """Composes Helix's packet-shortlist with an underlying Retriever.
+class CymatixNarrowedRetriever:
+    """Composes Cymatix's packet-shortlist with an underlying Retriever.
 
     Flow:
-        1. Query Helix's ``/context/packet`` → extract source_ids
+        1. Query Cymatix's ``/context/packet`` → extract source_ids
            (verified + stale_risk + contradictions + refresh_targets).
         2. Pass the shortlist to the underlying retriever as
            ``filter_paths``.
@@ -187,21 +187,21 @@ class HelixNarrowedRetriever:
            (that's a repository/tenant boundary).
 
     The ``filter_paths`` parameter is still honored if the caller
-    supplies their own filter — it intersects with the Helix shortlist,
+    supplies their own filter — it intersects with the Cymatix shortlist,
     and every fallback stays inside it.
     """
 
     def __init__(
         self,
         inner: Retriever,
-        helix_url: str = "http://127.0.0.1:11437",
+        cymatix_url: str = "http://127.0.0.1:11437",
         *,
         task_type: str = "explain",
         fallback_unscoped: bool = True,
         read_only: bool = False,
     ) -> None:
         self._inner = inner
-        self._helix_url = helix_url.rstrip("/")
+        self._cymatix_url = cymatix_url.rstrip("/")
         self._task_type = task_type
         self._fallback_unscoped = fallback_unscoped
         self._read_only = read_only
@@ -210,11 +210,11 @@ class HelixNarrowedRetriever:
         try:
             import httpx
         except ImportError:
-            log.warning("httpx not installed; bypassing Helix narrowing")
+            log.warning("httpx not installed; bypassing Cymatix narrowing")
             return {}
         try:
             resp = httpx.post(
-                f"{self._helix_url}/context/packet",
+                f"{self._cymatix_url}/context/packet",
                 json={
                     "query": query,
                     "task_type": self._task_type,
@@ -225,7 +225,7 @@ class HelixNarrowedRetriever:
             resp.raise_for_status()
             return resp.json()
         except Exception as exc:
-            log.warning("Helix packet fetch failed: %s", exc)
+            log.warning("Cymatix packet fetch failed: %s", exc)
             return {}
 
     def _shortlist(self, packet: dict) -> set[str]:
@@ -249,16 +249,16 @@ class HelixNarrowedRetriever:
         top_k: int = 8,
     ) -> list[RetrievedDoc]:
         packet = self._get_packet(query)
-        helix_set = self._shortlist(packet)
+        cymatix_set = self._shortlist(packet)
         caller_set = set(filter_paths) if filter_paths else None
 
-        if helix_set and caller_set:
-            # Empty intersection: Helix's shortlist has nothing inside the
+        if cymatix_set and caller_set:
+            # Empty intersection: Cymatix's shortlist has nothing inside the
             # caller's boundary. Never widen past the caller's filter —
             # fall back to the caller's own scope, not unscoped.
-            effective = (helix_set & caller_set) or caller_set
+            effective = (cymatix_set & caller_set) or caller_set
         else:
-            effective = helix_set or caller_set
+            effective = cymatix_set or caller_set
 
         if effective:
             docs = self._inner.retrieve(
@@ -271,11 +271,11 @@ class HelixNarrowedRetriever:
         # outside a caller-supplied filter (repository/tenant boundary).
         if not docs and self._fallback_unscoped:
             if caller_set is None:
-                log.debug("Helix-scoped retrieve returned 0; falling back unscoped")
+                log.debug("Cymatix-scoped retrieve returned 0; falling back unscoped")
                 docs = self._inner.retrieve(query, top_k=top_k)
             elif effective != caller_set:
                 log.debug(
-                    "Helix-narrowed retrieve returned 0; retrying with the "
+                    "Cymatix-narrowed retrieve returned 0; retrying with the "
                     "caller's full filter",
                 )
                 docs = self._inner.retrieve(

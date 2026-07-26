@@ -189,7 +189,7 @@ calibration adds a per-classifier override path for `foveated_alpha`
 | `decoder_mode` | `str` | `"condensed"` | "full"\|"condensed"\|"minimal"\|"none". Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
 | `decoder_mode_overrides` | `Dict[str, str]` | `{}` | Issue #207 item 6: operator override for the compressor/ribosome-model capability classification (context_manager.resolve_model_capability_class) -- NOT the same table as decoder_mode above. Maps a model-name substring (case-insensitive) to one of "moe" / "small" / "large"; checked before the hand-calibrated MOE_MODEL_FAMILIES / SMALL_MODEL_PATTERNS tables and the generic ":NNb" parameter-size fallback those tables now have. Empty by default: byte-identical to pre-#207 behavior. |
 | `legibility_enabled` | `bool` | `true` | Sprint 1 legibility pack (AI-consumer roadmap): emit a one-line metadata header per document in expressed_context — fired tiers, confidence marker, short gene_id, compression ratio. See cymatix_context/legibility.py. Default on; flip off to restore the pre-Sprint-1 plain-dividers format (useful for bench A/B). |
-| `slate_char_budget` | `int` | `1500` | Stage 5 (2026-05-08): char-budget for the small_moe JSON answer slate. Counts the rendered string the model actually sees, INCLUDING the <helix:slate>...</helix:slate> wrapper, JSON braces, quotes, commas, and per-KV separators. Spec §5 default is 1500. Generic and frontier branches do not consult this knob. |
+| `slate_char_budget` | `int` | `1500` | Stage 5 (2026-05-08): char-budget for the small_moe JSON answer slate. Counts the rendered string the model actually sees, INCLUDING the <cymatix:slate>...</cymatix:slate> wrapper, JSON braces, quotes, commas, and per-KV separators. Spec §5 default is 1500. Generic and frontier branches do not consult this knob. |
 | `session_delivery_enabled` | `bool` | `true` | Sprint 2 session working-set register: track delivered documents per session, elide repeats with a pointer stub so the consumer doesn't pay full token cost for content it already holds. Enabled 2026-04-19 (saves ~40% tokens on multi-turn conversations); only fires when the caller supplies a session_id. See session_delivery.py. default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
 | `abstain_enabled` | `bool` | `true` | NEW — see docs/specs/2026-05-02-abstain-tier-design.md |
 | `foveated_enabled` | `bool` | `false` | Foveated-splice (BROAD tier only). Off by default for the measurement period — see docs/specs/2026-05-03-foveated-splice-design.md §6.3 and docs/plans/2026-05-05-foveated-splice.md. Flip to True only after the phased α-sweep bench (§9) identifies a winning configuration. |
@@ -323,7 +323,7 @@ replica_sync_interval = 100
 
 **Migration notes.** No time-based decay. Documents never expire.
 2026-04-16 rebuild migrated from `F:/Projects/cymatix-context/genome.db`
-(old master) and `C:/helix-cache/genome.db` (old replica with
+(old master) and `C:/cymatix-cache/genome.db` (old replica with
 backfill) to the new `genomes/` folder. `CYMATIX_GENOME_PATH` env var
 overrides this path so sharded vs monolithic servers can coexist on
 different ports without duplicating `cymatix.toml`.
@@ -1027,7 +1027,7 @@ directory becomes a document; persona / agent attribution comes from
 | Key | Type | Default | Effect |
 |---|---|---|---|
 | `enabled` | bool | `false` | Master switch. Set `true` and run `scripts/run_mem_sync.py`. The shipped value (`cymatix.toml:349`). |
-| `helix_url` | str | `"http://127.0.0.1:11437"` | Cymatix server URL — must match `[server] host:port` for the local case. The shipped value (`cymatix.toml:350`). |
+| `cymatix_url` | str | `"http://127.0.0.1:11437"` | Cymatix server URL — must match `[server] host:port` for the local case. The shipped value (`cymatix.toml:350`). |
 | `sync_interval_s` | int | `60` | Poll cadence in seconds. Human-speed writes; cheap stat+hash check per file. The shipped value (`cymatix.toml:351`). |
 | `agent_kind` | str | `"claude-code"` | Stamp written on every ingest; identifies the writer tool for downstream attribution. The shipped value (`cymatix.toml:352`). |
 | `watch_dirs` | array<str> | `[]` | Directories to watch. `~` is expanded automatically. Empty by default for the public release — point this at your own memory/notes directories. |
@@ -1037,7 +1037,7 @@ directory becomes a document; persona / agent attribution comes from
 ```toml
 [mem_sync]
 enabled = false
-helix_url = "http://127.0.0.1:11437"
+cymatix_url = "http://127.0.0.1:11437"
 sync_interval_s = 60
 agent_kind = "claude-code"
 # watch_dirs = ["~/.claude/projects/<your-project>/memory"]
@@ -1074,7 +1074,7 @@ slow = ["performance", "latency", "bottleneck", "timeout", "lag"]
 fast = ["performance", "speed", "optimization", "cache"]
 cache = ["redis", "ttl", "invalidation", "cdn", "caching", "eviction"]
 auth = ["jwt", "login", "security", "token", "session", "oauth"]
-helix = ["genome", "ribosome", "codons", "splice", "chromatin", "promoter", "context compression"]
+cymatix = ["genome", "ribosome", "codons", "splice", "chromatin", "promoter", "context compression"]
 db = ["database", "sqlite", "postgres", "sql", "query", "schema"]
 api = ["endpoint", "route", "rest", "http", "request", "response"]
 test = ["pytest", "unittest", "mock", "assert", "coverage"]
@@ -1208,7 +1208,7 @@ the shipped `cymatix.toml`.
 | Key | Type | Default | Description |
 |---|---|---|---|
 | `enabled` | `bool` | `false` |  |
-| `path` | `str` | `"~/.helix/vault"` |  |
+| `path` | `str` | `"~/.cymatix/vault"` |  |
 | `party_id` | `str` | `""` | empty = use server's primary party |
 | `fan_out_threshold` | `int` | `5000` |  |
 | `redact_body` | `bool` | `false` |  |
@@ -1235,7 +1235,7 @@ the shipped `cymatix.toml`.
 ```toml
 [vault]
 enabled = false
-path = "~/.helix/vault"
+path = "~/.cymatix/vault"
 fan_out_threshold = 5000
 redact_body = false
 stale_threshold = 0.5
@@ -1264,7 +1264,7 @@ priority order (highest priority wins):
 1. **Per-call request fields.** Endpoint-specific overrides on the
    request body (e.g., `caller_model_class` on `/context`,
    `include_cold` on `/context`, `pool_size` on the dense recall
-   path). Per-call overrides do not mutate the loaded `HelixConfig`.
+   path). Per-call overrides do not mutate the loaded `CymatixConfig`.
 2. **Process-level environment variables.** A defined set of `CYMATIX_*`
    env vars override loaded values:
    - `CYMATIX_CONFIG` — path to the TOML file (defaults to
@@ -1488,7 +1488,7 @@ synthetic_session_enabled = true        # Flip to false to restore prior NULL-se
 [genome]
 # 2026-04-16: swapped to fresh-rebuild clean genome. Old paths archived:
 # F:/Projects/cymatix-context/genome.db   — old master (pre-rebuild)
-# C:/helix-cache/genome.db              — old replica (had backfill)
+# C:/cymatix-cache/genome.db              — old replica (had backfill)
 # New genomes/ folder is the phase-2 sharding root. main/ is v1's only
 # shard; future shards land as genomes/reference/, genomes/agent/, etc.
 path = "genomes/main/genome.db"
@@ -1593,7 +1593,7 @@ filename_anchor_weight = 4.0            # Per-match boost (Tier 1 exact-tag = 3.
 # BM25 shortlist post-filter (2026-04-22, research-review Pareto move 1).
 # When enabled, query_genes restricts final ranking to genes in BM25 top-N.
 # Dark by design — flip on for Stage-2 A/B measurement.
-bm25_shortlist_enabled = true           # Keep on (2026-04-22 sprint): +1/8 ans_full on helix_rag + helix_full_stack, clean attribution
+bm25_shortlist_enabled = true           # Keep on (2026-04-22 sprint): +1/8 ans_full on cymatix_rag + cymatix_full_stack, clean attribution
 bm25_shortlist_size = 50
 # BM25 pre-filter — fires BEFORE tier scoring (vs the post-filter shortlist).
 # Enable for A/B against bm25_shortlist. Disable shortlist when using this.
@@ -1705,7 +1705,7 @@ betas           = [-2.0, 2.0, 1.5, 0.7, 1.8]
 # gene; persona/agent attribution comes from CYMATIX_AGENT / CYMATIX_USER
 # env vars on the syncer process. See scripts/run_mem_sync.py.
 enabled = false                         # Set true + run scripts/run_mem_sync.py
-helix_url = "http://127.0.0.1:11437"
+cymatix_url = "http://127.0.0.1:11437"
 sync_interval_s = 60                    # Poll cadence; human-speed writes, cheap stat+hash
 agent_kind = "claude-code"              # Stamp on every ingest; identifies writer tool
 watch_dirs = [                          # Expand ~ automatically; add more as needed
@@ -1720,7 +1720,7 @@ cache = ["redis", "ttl", "invalidation", "cdn", "caching", "eviction"]
 auth = ["jwt", "login", "security", "token", "session", "oauth"]
 protein = ["folding", "amino", "alpha_helix", "beta_sheet", "alphafold", "biochemistry"]
 tree = ["btree", "b-tree", "data_structures", "index", "binary_tree"]
-helix = ["genome", "ribosome", "codons", "splice", "chromatin", "promoter", "context compression"]
+cymatix = ["genome", "ribosome", "codons", "splice", "chromatin", "promoter", "context compression"]
 pipeline = ["steps", "expression", "workflow", "process", "stages"]
 scoring = ["scorerift", "divergence", "audit", "grades", "ratchet", "dimensions"]
 compress = ["compression", "ratio", "target", "context_compression"]
@@ -1759,7 +1759,7 @@ maintenance = ["admin", "vacuum", "refresh", "checkpoint", "compact"]
 # v1: read-only export + diagnostic /context traces. Curation/inbox in v1.1.
 # [vault]
 # enabled = false
-# path = "~/.helix/vault"
+# path = "~/.cymatix/vault"
 # party_id = ""                     # empty = server's primary party
 # fan_out_threshold = 5000          # split domain folders above this count
 # redact_body = false               # true → replace body with sha+excerpt

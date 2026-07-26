@@ -1,11 +1,11 @@
 """
 Precision probe — Stage 1: determinism check + per-tier contribution capture.
 
-Question: is helix calculator-grade? Given identical query + identical genome
+Question: is cymatix calculator-grade? Given identical query + identical genome
 + identical config, does it return bitwise-identical top-k gene IDs and
 scores on back-to-back runs?
 
-If yes: helix is already deterministic at the coarse level, and Stage 2
+If yes: cymatix is already deterministic at the coarse level, and Stage 2
 (Decimal vs float fusion) builds on a clean baseline.
 
 If no: there's nondeterminism somewhere (numpy parallel reductions, dict
@@ -35,7 +35,7 @@ from typing import Dict, List, Tuple
 # Force LLM-free config path for this probe so we're not timing Ollama warmup
 # or hitting a backend we don't need. The /context retrieval loop doesn't
 # touch the ribosome anyway when these are off.
-os.environ["HELIX_DISABLE_HEADROOM"] = "1"
+os.environ["CYMATIX_DISABLE_HEADROOM"] = "1"
 
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO))
@@ -46,7 +46,7 @@ try:
 except Exception:
     pass
 
-from cymatix_context import HelixContextManager, load_config  # noqa: E402
+from cymatix_context import CymatixContextManager, load_config  # noqa: E402
 
 
 GENOME_DB = "genome-bench-2026-04-14.db"
@@ -62,7 +62,7 @@ def load_needles(path: Path, n: int) -> List[Dict]:
     return needles[:n]
 
 
-def snapshot_run(hcm: HelixContextManager, query: str) -> Dict:
+def snapshot_run(hcm: CymatixContextManager, query: str) -> Dict:
     """Run a query and snapshot the raw retrieval state (scores + tier contribs).
 
     We bypass build_context()'s assembly/splice overhead and hit the genome
@@ -161,9 +161,9 @@ def main() -> int:
     cfg.ribosome.query_expansion_enabled = False
     cfg.ingestion.rerank_enabled = False
 
-    print(f"[probe] initializing HelixContextManager...")
+    print(f"[probe] initializing CymatixContextManager...")
     t0 = time.perf_counter()
-    hcm = HelixContextManager(cfg)
+    hcm = CymatixContextManager(cfg)
     init_ms = (time.perf_counter() - t0) * 1000.0
     print(f"[probe] init: {init_ms:.0f} ms\n")
 

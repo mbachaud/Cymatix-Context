@@ -33,7 +33,7 @@ Usage:
 
     python benchmarks/located_n1000.py \
         --bed-db genomes/bench/matrix/xl_clean.db \
-        --base-config docs/benchmarks/helix_probe_lexical.toml \
+        --base-config docs/benchmarks/cymatix_probe_lexical.toml \
         --n 1000 --seed 42 --axis located \
         --set retrieval.fusion_mode=rrf \
         --out benchmarks/results/located_n1000.jsonl
@@ -55,7 +55,7 @@ from pathlib import Path
 # Read-only contract, twice over: build_context(read_only=True) below AND
 # the process-wide learn kill-switch (#221) — an echo-gene write into a
 # bench bed poisons every later run against it (the SIKE Run-1 lesson).
-os.environ.setdefault("HELIX_DISABLE_LEARN", "1")
+os.environ.setdefault("CYMATIX_DISABLE_LEARN", "1")
 
 _BENCH_DIR = Path(__file__).resolve().parent
 _REPO_ROOT = _BENCH_DIR.parent
@@ -70,7 +70,7 @@ from bench_needle_1000 import (  # noqa: E402
 )
 
 from cymatix_context.config import load_config  # noqa: E402
-from cymatix_context.context_manager import HelixContextManager  # noqa: E402
+from cymatix_context.context_manager import CymatixContextManager  # noqa: E402
 from cymatix_context.context_packet import _coordinate_confidence  # noqa: E402
 from cymatix_context.scoring.know_decision import (  # noqa: E402
     _agree_from_tier_contributions,
@@ -123,7 +123,7 @@ def _gene_proxies(genome, gene_ids: list[str]):
     return proxies
 
 
-def features_for_query(manager: HelixContextManager, query: str) -> dict:
+def features_for_query(manager: CymatixContextManager, query: str) -> dict:
     """Run one read-only retrieval turn and extract the raw know-features.
 
     Mirrors server/helpers._compute_know_or_miss_block field-for-field.
@@ -165,7 +165,7 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--bed-db", default="genomes/bench/matrix/xl_clean.db")
     ap.add_argument(
-        "--base-config", default="docs/benchmarks/helix_probe_lexical.toml"
+        "--base-config", default="docs/benchmarks/cymatix_probe_lexical.toml"
     )
     ap.add_argument("--n", type=int, default=1000)
     ap.add_argument("--seed", type=int, default=42)
@@ -193,7 +193,7 @@ def main() -> None:
     if not needles:
         raise SystemExit("no needles harvested — is this a KV-bearing bed?")
 
-    manager = HelixContextManager(cfg)
+    manager = CymatixContextManager(cfg)
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
 

@@ -1,8 +1,8 @@
-"""OKF bundle ingestion through HelixContextManager.
+"""OKF bundle ingestion through CymatixContextManager.
 
 Council hard constraints exercised here:
 
-- The adapter routes exclusively through ``HelixContextManager.ingest``
+- The adapter routes exclusively through ``CymatixContextManager.ingest``
   (frontmatter merges with tagger output via the caller-tag seam).
 - Cross-links land ONLY in the inert ``okf_links`` table. Writes to
   ``harmonic_links`` and ``gene_relations`` are prohibited (both are
@@ -15,10 +15,10 @@ from pathlib import Path
 
 import pytest
 
-from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.context_manager import CymatixContextManager
 from cymatix_context.okf import ingest_bundle, read_bundle
 
-from tests.conftest import make_helix_config
+from tests.conftest import make_cymatix_config
 
 pytest.importorskip("spacy")
 
@@ -27,7 +27,7 @@ OKF_FIXTURES = Path(__file__).parent / "fixtures" / "okf"
 
 @pytest.fixture
 def manager():
-    return HelixContextManager(make_helix_config())
+    return CymatixContextManager(make_cymatix_config())
 
 
 def _links_rows(genome, bundle_id):
@@ -178,12 +178,12 @@ class TestInertness:
         """OKF adds NOTHING to gene_relations beyond what a plain ingest
         of the same bodies produces (CHUNK_OF parent edges + entity-graph
         auto-links are standard ingest machinery, not OKF link writes)."""
-        from tests.conftest import make_helix_config as _mkcfg
+        from tests.conftest import make_cymatix_config as _mkcfg
 
         bundle = read_bundle(OKF_FIXTURES / "crypto_bitcoin")
         ingest_bundle(manager, OKF_FIXTURES / "crypto_bitcoin")
 
-        mgr_plain = HelixContextManager(_mkcfg())
+        mgr_plain = CymatixContextManager(_mkcfg())
         for c in bundle.concepts:
             mgr_plain.ingest(
                 c.body,

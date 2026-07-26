@@ -20,7 +20,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from cymatix_context.sema import SemaCodec  # noqa: E402
 
-DB_PATH = "F:/Projects/helix-context/genome.db"
+DB_PATH = "F:/Projects/cymatix-context/genome.db"
 BATCH_SIZE = 200  # commit every N rows for WAL friendliness
 REPORT_EVERY = 1000
 

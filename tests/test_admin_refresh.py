@@ -8,10 +8,10 @@ Issue #62 / Stage 2 spec (``docs/specs/2026-05-08-stage-2-dense-recall.md`` §4)
 Prior to the fix, ``admin_refresh`` only reopened the genome snapshot via
 ``Genome.refresh()`` and never invalidated the in-memory dense matrix cache.
 Out-of-process inserts (e.g., the backfill script writing ``embedding_dense_v2``
-BLOBs directly) were silently invisible to dense recall until the helix process
+BLOBs directly) were silently invisible to dense recall until the cymatix process
 restarted.
 
-The fix wires ``helix.genome._invalidate_dense_matrix(force=True)`` into the
+The fix wires ``cymatix.genome._invalidate_dense_matrix(force=True)`` into the
 handler. This test pins that contract.
 """
 from __future__ import annotations
@@ -33,7 +33,7 @@ from cymatix_context.schemas import (
     PromoterTags,
 )
 
-from tests.conftest import make_client, make_helix_config
+from tests.conftest import make_client, make_cymatix_config
 
 
 def _hash_vec(text: str, dim: int) -> np.ndarray:
@@ -80,7 +80,7 @@ def dense_client(tmp_path):
     ``Genome.refresh()`` exercises the real reopen-on-bad-state branch.
     """
     db_path = tmp_path / "admin-refresh.db"
-    config = make_helix_config(
+    config = make_cymatix_config(
         genome=GenomeConfig(path=str(db_path), cold_start_threshold=5),
         retrieval=RetrievalConfig(
             dense_embedding_enabled=True,
@@ -98,8 +98,8 @@ def test_admin_refresh_invalidates_dense_matrix(dense_client):
     matrix is cleared so the next dense recall rebuilds from the new
     snapshot (and therefore sees out-of-process inserts).
     """
-    helix = dense_client.app.state.helix
-    genome = helix.genome
+    cymatix = dense_client.app.state.cymatix
+    genome = cymatix.genome
 
     # Seed two genes with v2 BLOBs so _ensure_dense_matrix returns a matrix.
     for i in range(2):
@@ -137,8 +137,8 @@ def test_admin_refresh_surfaces_out_of_process_inserts(dense_client, tmp_path):
     POSTs /admin/refresh. The dense matrix should rebuild and include the
     newly-inserted row on the next ``_ensure_dense_matrix()`` call.
     """
-    helix = dense_client.app.state.helix
-    genome = helix.genome
+    cymatix = dense_client.app.state.cymatix
+    genome = cymatix.genome
 
     # Seed one gene through the live connection.
     seeded = _make_gene("seeded via api", gene_id="seed-0")
@@ -151,7 +151,7 @@ def test_admin_refresh_surfaces_out_of_process_inserts(dense_client, tmp_path):
     assert "seed-0" in ids1
 
     # Simulate an out-of-process insert: open a separate sqlite connection,
-    # add a row, close it. The live helix snapshot does NOT see it yet.
+    # add a row, close it. The live cymatix snapshot does NOT see it yet.
     side = sqlite3.connect(genome.path, timeout=30)
     side.execute("PRAGMA journal_mode=WAL")
     side.execute(

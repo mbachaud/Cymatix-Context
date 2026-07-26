@@ -1,11 +1,11 @@
 # Benchmarks
 
-This directory holds Helix Context's benchmark harness — the scripts that
+This directory holds Cymatix Context's benchmark harness — the scripts that
 measure retrieval correctness, compression ratio, cache hit-rate, latency,
 and end-to-end agent answer quality against frozen genome fixtures. It has
 ~40 scripts and no single entry point; this README orients a reader and
-points at the pieces that matter. Most benches assume a running Helix
-server (`helix-server`, port 11437) and read from `genomes/`.
+points at the pieces that matter. Most benches assume a running Cymatix
+server (`cymatix-server`, port 11437) and read from `genomes/`.
 
 ## Flagship: `bench_claude_matrix.py`
 
@@ -27,7 +27,7 @@ python benchmarks/bench_claude_matrix.py --external-server     # use a server yo
 
 By default the harness manages the uvicorn server itself; pass
 `--external-server` to drive a server you started manually (required when
-setting `HELIX_USE_SHARDS=1` by hand).
+setting `CYMATIX_USE_SHARDS=1` by hand).
 
 > **This bench spends real money.** Each needle spawns a `claude -p`
 > subprocess against the Anthropic API. A full single-model arm costs
@@ -44,7 +44,7 @@ fixture plus `summary.json` and `run.log`.
   fixture hot-swap across the 6-fixture matrix. Same-mode switches
   (blob→blob, sharded→sharded) use an atomic `POST /admin/swap-db`;
   cross-mode switches (blob↔sharded) require a full uvicorn restart with
-  `HELIX_USE_SHARDS` toggled, since sharding mode is fixed at
+  `CYMATIX_USE_SHARDS` toggled, since sharding mode is fixed at
   store-construction time. Callers just say "switch to fixture X". Also
   usable as a standalone CLI to loop other benches over the matrix.
 - **`scripts/build_fixture_matrix.py`** — builds the genome fixtures
@@ -75,7 +75,7 @@ per-needle table, and the rules for adding a needle are in
 ## Other benches
 
 The directory also holds many single-purpose benches — compression
-ratio, cache hit-rate, latency, RAG-vs-Helix token comparison,
+ratio, cache hit-rate, latency, RAG-vs-Cymatix token comparison,
 multi-needle recall, and others. They are mostly self-documenting via
 their module docstrings; read the top of any `bench_*.py` for its
 purpose and usage. Background and methodology notes live in

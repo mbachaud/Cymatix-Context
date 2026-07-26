@@ -32,7 +32,7 @@ from cymatix_context.shard_schema import (
     upsert_fingerprint,
 )
 
-from tests.conftest import MockCompressorBackend, make_client, make_helix_config
+from tests.conftest import MockCompressorBackend, make_client, make_cymatix_config
 
 
 # -- Helpers ---------------------------------------------------------------
@@ -166,7 +166,7 @@ class TestReadOnlyFlag:
 
 def _make_app_and_client(genome_path: str):
     """Build a FastAPI app + TestClient with a real KnowledgeStore at *genome_path*."""
-    config = make_helix_config(
+    config = make_cymatix_config(
         genome=GenomeConfig(path=genome_path, cold_start_threshold=5),
     )
     client = make_client(
@@ -251,7 +251,7 @@ class TestSwapDbEndpoint:
         assert data["read_only"] is True
 
         # Verify the actual genome object has read_only set
-        assert app.state.helix.genome.read_only is True
+        assert app.state.cymatix.genome.read_only is True
 
     def test_swap_db_endpoint_read_only_default_false(self, tmp_path):
         """read_only defaults to False when omitted."""
@@ -265,7 +265,7 @@ class TestSwapDbEndpoint:
         resp = client.post("/admin/swap-db", json={"path": db_b})
         assert resp.status_code == 200
         assert resp.json()["read_only"] is False
-        assert app.state.helix.genome.read_only is False
+        assert app.state.cymatix.genome.read_only is False
 
     def test_swap_db_repoints_registry_genome(self, tmp_path):
         """The session Registry is repointed at the new store after a swap.
@@ -288,13 +288,13 @@ class TestSwapDbEndpoint:
         registry = app.state.registry
 
         # Pre-swap: registry points at the boot store.
-        assert registry.genome is app.state.helix.genome
+        assert registry.genome is app.state.cymatix.genome
 
         resp = client.post("/admin/swap-db", json={"path": db_b})
         assert resp.status_code == 200
 
         # Post-swap: registry tracks the new live store, not the closed one.
-        assert registry.genome is app.state.helix.genome
+        assert registry.genome is app.state.cymatix.genome
         assert registry.genome.path == db_b
 
         # And the sweep — the background task's payload — runs against the
@@ -310,7 +310,7 @@ class TestSwapDbEndpoint:
 
         Tier-0 follow-up #4 (2026-05-17): the VaultManager — like the
         session Registry (Bug B, test above) — captures a genome reference
-        at app construction (app.py: ``VaultManager(genome=helix.genome)``).
+        at app construction (app.py: ``VaultManager(genome=cymatix.genome)``).
         Its pruner thread calls ``refresh_stale_view(genome=self.genome)``
         on a timer. Before this fix a swap left the VaultManager holding
         the OLD store, which the swap then closed; the next prune cycle
@@ -326,7 +326,7 @@ class TestSwapDbEndpoint:
 
         # Build the app with the vault ENABLED so the pruner payload
         # actually touches the genome (a disabled vault would no-op).
-        config = make_helix_config(
+        config = make_cymatix_config(
             genome=GenomeConfig(path=db_a, cold_start_threshold=5),
         )
         config.vault = VaultConfig(
@@ -353,13 +353,13 @@ class TestSwapDbEndpoint:
         try:
             assert vault._started is True
             # Pre-swap: vault points at the boot store.
-            assert vault.genome is app.state.helix.genome
+            assert vault.genome is app.state.cymatix.genome
 
             resp = client.post("/admin/swap-db", json={"path": db_b})
             assert resp.status_code == 200
 
             # Post-swap: vault tracks the new live store, not the closed one.
-            assert vault.genome is app.state.helix.genome
+            assert vault.genome is app.state.cymatix.genome
             assert vault.genome.path == db_b
 
             # The pruner's payload runs against the new store without
@@ -385,7 +385,7 @@ class TestSwapDbEndpoint:
 # against a live sharded store hit ``AttributeError: 'ShardedGenomeAdapter'
 # object has no attribute 'path'`` at line 858 in routes_admin.py.
 #
-# These tests cover the swap-A->B->A round trip with ``HELIX_USE_SHARDS=1``
+# These tests cover the swap-A->B->A round trip with ``CYMATIX_USE_SHARDS=1``
 # active so each adapter call surface (path, stats, close) actually fires.
 
 
@@ -395,7 +395,7 @@ def _build_sharded_layout(root_dir, gene_content: str, domains: list[str],
 
     Returns ``(main_path, gene_id)``. ``main_path`` is the
     ``main.genome.db`` that ``open_read_source`` will route through
-    ``ShardedGenomeAdapter`` when ``HELIX_USE_SHARDS=1`` is set.
+    ``ShardedGenomeAdapter`` when ``CYMATIX_USE_SHARDS=1`` is set.
     """
     main_path = str(root_dir / "main.genome.db")
     shard_path = str(root_dir / "shard_a.genome.db")
@@ -435,7 +435,7 @@ def _build_sharded_layout(root_dir, gene_content: str, domains: list[str],
 
 
 class TestSwapDbShardedRoundTrip:
-    """Round-trip swap-db with HELIX_USE_SHARDS=1 active (issue #98).
+    """Round-trip swap-db with CYMATIX_USE_SHARDS=1 active (issue #98).
 
     Each test enables sharding via monkeypatch so ``open_read_source``
     returns a ``ShardedGenomeAdapter`` when handed a ``main.genome.db``
@@ -444,23 +444,23 @@ class TestSwapDbShardedRoundTrip:
 
     def test_swap_blob_to_sharded(self, tmp_path, monkeypatch):
         """A -> B where A is blob, B is sharded. After the swap,
-        ``helix.genome`` is a ``ShardedGenomeAdapter`` and ``/stats``
+        ``cymatix.genome`` is a ``ShardedGenomeAdapter`` and ``/stats``
         reports the shard's gene count."""
-        monkeypatch.setenv("HELIX_USE_SHARDS", "1")
+        monkeypatch.setenv("CYMATIX_USE_SHARDS", "1")
 
         db_a = str(tmp_path / "blob.db")
         _make_db(db_a, genes=3).close()
         sharded_dir = tmp_path / "sharded"
         sharded_dir.mkdir()
         main_b, _ = _build_sharded_layout(
-            sharded_dir, "Helix design doc.", domains=["docs"], entities=["helix"],
+            sharded_dir, "Cymatix design doc.", domains=["docs"], entities=["cymatix"],
         )
 
         app, client = _make_app_and_client(db_a)
 
         # Sanity: starts as a blob KnowledgeStore.
-        assert isinstance(app.state.helix.genome, KnowledgeStore)
-        assert app.state.helix.genome.path == db_a
+        assert isinstance(app.state.cymatix.genome, KnowledgeStore)
+        assert app.state.cymatix.genome.path == db_a
 
         resp = client.post("/admin/swap-db", json={"path": main_b})
         assert resp.status_code == 200, resp.json()
@@ -470,23 +470,23 @@ class TestSwapDbShardedRoundTrip:
 
         # Now the active store is the sharded adapter.
         from cymatix_context.sharding import ShardedGenomeAdapter
-        assert isinstance(app.state.helix.genome, ShardedGenomeAdapter)
-        # And critically: helix.genome.path is reachable (this was the
+        assert isinstance(app.state.cymatix.genome, ShardedGenomeAdapter)
+        # And critically: cymatix.genome.path is reachable (this was the
         # AttributeError that blocked every swap-db once sharded was active).
-        assert app.state.helix.genome.path == main_b
+        assert app.state.cymatix.genome.path == main_b
 
     def test_swap_sharded_back_to_blob(self, tmp_path, monkeypatch):
         """The path that originally crashed in #98: an already-sharded
-        active store reads ``helix.genome.path`` during swap-db logging.
+        active store reads ``cymatix.genome.path`` during swap-db logging.
         With the fix, the swap succeeds and the active store goes back
         to a blob ``KnowledgeStore``."""
-        monkeypatch.setenv("HELIX_USE_SHARDS", "1")
+        monkeypatch.setenv("CYMATIX_USE_SHARDS", "1")
 
         sharded_dir = tmp_path / "sharded"
         sharded_dir.mkdir()
         main_a, _ = _build_sharded_layout(
             sharded_dir, "Sharded source content.",
-            domains=["docs"], entities=["helix"],
+            domains=["docs"], entities=["cymatix"],
         )
         db_b = str(tmp_path / "after_swap.db")
         _make_db(db_b, genes=5).close()
@@ -494,9 +494,9 @@ class TestSwapDbShardedRoundTrip:
         app, client = _make_app_and_client(main_a)
 
         from cymatix_context.sharding import ShardedGenomeAdapter
-        assert isinstance(app.state.helix.genome, ShardedGenomeAdapter), (
+        assert isinstance(app.state.cymatix.genome, ShardedGenomeAdapter), (
             "App should start with a ShardedGenomeAdapter when "
-            "HELIX_USE_SHARDS=1 and genome path ends with main.genome.db"
+            "CYMATIX_USE_SHARDS=1 and genome path ends with main.genome.db"
         )
 
         # This call previously threw AttributeError: 'ShardedGenomeAdapter'
@@ -510,7 +510,7 @@ class TestSwapDbShardedRoundTrip:
         assert data["new_path"] == db_b
         assert data["genes"] == 5
         # Active store is now a blob KnowledgeStore again.
-        assert isinstance(app.state.helix.genome, KnowledgeStore)
+        assert isinstance(app.state.cymatix.genome, KnowledgeStore)
 
     def test_swap_blob_to_sharded_to_blob(self, tmp_path, monkeypatch):
         """Full round-trip: A (blob) -> B (sharded) -> A (blob).
@@ -518,7 +518,7 @@ class TestSwapDbShardedRoundTrip:
         Exercises every adapter surface that fires during swap:
         ``path``, ``stats``, ``invalidate_sema_cache``,
         ``_build_sema_cache``, ``close``."""
-        monkeypatch.setenv("HELIX_USE_SHARDS", "1")
+        monkeypatch.setenv("CYMATIX_USE_SHARDS", "1")
 
         db_a = str(tmp_path / "blob_a.db")
         _make_db(db_a, genes=2).close()
@@ -536,11 +536,11 @@ class TestSwapDbShardedRoundTrip:
         resp = client.post("/admin/swap-db", json={"path": main_b})
         assert resp.status_code == 200, resp.json()
         from cymatix_context.sharding import ShardedGenomeAdapter
-        assert isinstance(app.state.helix.genome, ShardedGenomeAdapter)
+        assert isinstance(app.state.cymatix.genome, ShardedGenomeAdapter)
 
         # B -> A
         resp = client.post("/admin/swap-db", json={"path": db_a})
         assert resp.status_code == 200, resp.json()
         assert resp.json()["genes"] == 2
-        assert isinstance(app.state.helix.genome, KnowledgeStore)
-        assert app.state.helix.genome.path == db_a
+        assert isinstance(app.state.cymatix.genome, KnowledgeStore)
+        assert app.state.cymatix.genome.path == db_a

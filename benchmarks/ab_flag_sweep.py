@@ -1,8 +1,8 @@
 """A/B sweep: stand up a bench server on port 11438 with variant
-helix.toml configs and run bench_skill_activation.py against each.
+cymatix.toml configs and run bench_skill_activation.py against each.
 
-Does NOT touch the live server on :11437. Uses HELIX_CONFIG env var
-to point at per-config tomls and HELIX_URL to redirect benches.
+Does NOT touch the live server on :11437. Uses CYMATIX_CONFIG env var
+to point at per-config tomls and CYMATIX_URL to redirect benches.
 
 Output: ab_sweep_<config>.json per config + ab_sweep_summary.json
 """
@@ -21,7 +21,7 @@ from pathlib import Path
 import httpx
 
 REPO = Path(__file__).resolve().parent.parent
-BASE_TOML = REPO / "cymatix.toml" if (REPO / "cymatix.toml").exists() else REPO / "helix.toml"
+BASE_TOML = REPO / "cymatix.toml" if (REPO / "cymatix.toml").exists() else REPO / "cymatix.toml"
 BENCH_PORT = 11438
 BENCH_URL = f"http://127.0.0.1:{BENCH_PORT}"
 
@@ -50,7 +50,7 @@ DIM_LOCK_ASK_PROXY = "0"  # retrieval-only, no LLM answer grading
 def patch_toml(out_path: Path, flags: dict) -> None:
     """Copy base toml, patch flag lines + the FIRST `port =` only.
 
-    helix.toml has two `port =` lines: the server port (under [server])
+    cymatix.toml has two `port =` lines: the server port (under [server])
     and a synonym entry `port = ["proxy", ...]` under [synonyms]. Only
     rewrite the first one; overwriting the synonym list with an int
     breaks load_config().
@@ -103,11 +103,11 @@ def wait_healthy(url: str, timeout: float = 90) -> bool:
 
 def run_config(name: str, flags: dict) -> dict:
     """Start bench server, run skill_activation, tear down, return result."""
-    toml_path = REPO / f"helix.bench.{name}.toml"
+    toml_path = REPO / f"cymatix.bench.{name}.toml"
     patch_toml(toml_path, flags)
 
     env = os.environ.copy()
-    env["HELIX_CONFIG"] = str(toml_path)
+    env["CYMATIX_CONFIG"] = str(toml_path)
     env["PYTHONIOENCODING"] = "utf-8"
 
     log_path = REPO / f"benchmarks/ab_server_{name}.log"
@@ -125,7 +125,7 @@ def run_config(name: str, flags: dict) -> dict:
             return {"config": name, "error": "server_unhealthy"}
 
         bench_env = os.environ.copy()
-        bench_env["HELIX_URL"] = BENCH_URL
+        bench_env["CYMATIX_URL"] = BENCH_URL
         bench_env["PYTHONIOENCODING"] = "utf-8"
 
         out = {

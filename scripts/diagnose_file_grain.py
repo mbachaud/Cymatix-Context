@@ -1,5 +1,5 @@
 """Offline file-grain diagnostic — runs 10-needle queries against the
-live helix server, parses delivered gene source paths, and computes
+live cymatix server, parses delivered gene source paths, and computes
 file_token_coverage in-python to validate the new signal WITHOUT
 requiring a server restart.
 
@@ -28,7 +28,7 @@ from benchmarks.bench_needle import NEEDLES  # noqa: E402
 from cymatix_context.accel import extract_query_signals  # noqa: E402
 from cymatix_context.genome import file_tokens, path_tokens  # noqa: E402
 
-HELIX_URL = "http://localhost:11437"
+CYMATIX_URL = "http://localhost:11437"
 
 
 def fetch_delivered_srcs(client: httpx.Client, query: str) -> list[str]:
@@ -39,7 +39,7 @@ def fetch_delivered_srcs(client: httpx.Client, query: str) -> list[str]:
     historical JSONL replays (issue #101).
     """
     r = client.post(
-        f"{HELIX_URL}/context",
+        f"{CYMATIX_URL}/context",
         json={"query": query, "task_type": "explain"},
         timeout=60,
     )

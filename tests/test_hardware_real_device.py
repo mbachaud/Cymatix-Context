@@ -1,7 +1,7 @@
 """Opt-in real-hardware device tests (CUDA + ROCm).
 
-Skipped by default. Set ``HELIX_TEST_CUDA=1`` on a host with CUDA-built
-torch + NVIDIA GPU, or ``HELIX_TEST_ROCM=1`` on a Linux host with
+Skipped by default. Set ``CYMATIX_TEST_CUDA=1`` on a host with CUDA-built
+torch + NVIDIA GPU, or ``CYMATIX_TEST_ROCM=1`` on a Linux host with
 ROCm-built torch (``torch.version.hip is not None``) + AMD GPU
 passthrough, to exercise the full picker against real hardware. Mocked
 device tests in ``tests/test_hardware.py`` cover the wiring; this
@@ -23,13 +23,13 @@ import pytest
 from cymatix_context import hardware
 
 requires_real_cuda = pytest.mark.skipif(
-    os.environ.get("HELIX_TEST_CUDA") != "1",
-    reason="Set HELIX_TEST_CUDA=1 on a CUDA-capable host to enable",
+    os.environ.get("CYMATIX_TEST_CUDA") != "1",
+    reason="Set CYMATIX_TEST_CUDA=1 on a CUDA-capable host to enable",
 )
 
 requires_rocm = pytest.mark.skipif(
-    os.environ.get("HELIX_TEST_ROCM") != "1",
-    reason="Set HELIX_TEST_ROCM=1 on a ROCm-capable host to enable",
+    os.environ.get("CYMATIX_TEST_ROCM") != "1",
+    reason="Set CYMATIX_TEST_ROCM=1 on a ROCm-capable host to enable",
 )
 
 _DEVICE_PARAMS = (

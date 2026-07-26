@@ -1,23 +1,23 @@
-"""Helix + RAG composition benchmark — 3-cell NIAH.
+"""Cymatix + RAG composition benchmark — 3-cell NIAH.
 
-Tests the `project_helix_weighs_not_retrieves.md` thesis:
-Helix narrows the search space (card catalog), classical RAG fetches
+Tests the `project_cymatix_weighs_not_retrieves.md` thesis:
+Cymatix narrows the search space (card catalog), classical RAG fetches
 the bytes (library). Together they should out-recall either alone.
 
 ## Cells
 
 1. **pure_rag_bm25** — direct FTS5/BM25 query against genes_fts, no
-   Helix pipeline. Lexical baseline.
+   Cymatix pipeline. Lexical baseline.
 2. **pure_rag_embedding** — cosine similarity over the 20D SEMA vectors
    stored in genome.genes.embedding. Semantic baseline. Uses the same
-   embedding space Helix uses internally, so it's a direct test of
-   what a downstream retriever with only Helix's encoder would get.
-3. **helix_only** — /context/packet (Helix's weighing layer). The
+   embedding space Cymatix uses internally, so it's a direct test of
+   what a downstream retriever with only Cymatix's encoder would get.
+3. **cymatix_only** — /context/packet (Cymatix's weighing layer). The
    agent-safe index surface as it stands today.
-4. **helix_rag** — /context/packet for pointers, then read the source
-   files from disk. The composition: Helix points, naive fetcher reads.
-5. **helix_full_stack** — /context/packet + DAG resolution (claims_graph)
-   + cached DAL fetch. Demonstrates the router framing — Helix emits,
+4. **cymatix_rag** — /context/packet for pointers, then read the source
+   files from disk. The composition: Cymatix points, naive fetcher reads.
+5. **cymatix_full_stack** — /context/packet + DAG resolution (claims_graph)
+   + cached DAL fetch. Demonstrates the router framing — Cymatix emits,
    the three-layer stack executes. Adds resolved claim text to the
    content blob. Requires a backfilled main.db (see
    scripts/backfill_claims.py).
@@ -64,13 +64,13 @@ from cymatix_context.relevance_window import (  # noqa: E402
     best_relevance_window,
 )
 
-HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
+CYMATIX_URL = os.environ.get("CYMATIX_URL", "http://127.0.0.1:11437")
 GENOME_PATH = os.environ.get(
-    "HELIX_GENOME_PATH",
+    "CYMATIX_GENOME_PATH",
     str(Path(__file__).resolve().parents[1] / "genomes" / "main" / "genome.db"),
 )
 MAIN_DB_PATH = os.environ.get(
-    "HELIX_MAIN_DB_PATH",
+    "CYMATIX_MAIN_DB_PATH",
     str(Path(__file__).resolve().parents[1] / "genomes" / "main.db"),
 )
 # All cells in this bench resolve delivered source_ids from
@@ -99,17 +99,17 @@ def _fts_query(natural: str) -> str:
 
 NEEDLES = [
     {
-        "name": "helix_and_headroom_ports",
-        "query": "what ports do helix and headroom listen on",
+        "name": "cymatix_and_headroom_ports",
+        "query": "what ports do cymatix and headroom listen on",
         "expected": ["11437", "8787"],
         "gold_source_groups": [
-            ["helix-context/helix.toml"],
-            ["helix-context/start-helix-tray.bat", "helix-context/helix.toml"],
+            ["helix-context/cymatix.toml"],
+            ["helix-context/start-cymatix-tray.bat", "helix-context/cymatix.toml"],
         ],
     },
     {
         "name": "python_version_and_codec_extra",
-        "query": "python version helix requires and extra that enables headroom",
+        "query": "python version cymatix requires and extra that enables headroom",
         "expected": ["3.11", "codec"],
         "gold_source_groups": [
             ["helix-context/pyproject.toml"],
@@ -118,7 +118,7 @@ NEEDLES = [
     },
     {
         "name": "pipeline_steps_and_compression_target",
-        "query": "steps in helix pipeline and target compression ratio",
+        "query": "steps in cymatix pipeline and target compression ratio",
         "expected": ["6", "5x"],
         "gold_source_groups": [
             ["helix-context/docs/architecture/PIPELINE_LANES.md",
@@ -129,7 +129,7 @@ NEEDLES = [
     },
     {
         "name": "claim_types_and_spec_source",
-        "query": "claim_type allowed values helix claims layer specification",
+        "query": "claim_type allowed values cymatix claims layer specification",
         "expected": ["path_value", "agent-context-index"],
         "gold_source_groups": [
             ["helix-context/cymatix_context/schemas.py",
@@ -142,8 +142,8 @@ NEEDLES = [
         "query": "headroom dashboard port default compression mode",
         "expected": ["8787", "token"],
         "gold_source_groups": [
-            ["helix-context/helix.toml", "helix-context/README.md"],
-            ["helix-context/helix.toml",
+            ["helix-context/cymatix.toml", "helix-context/README.md"],
+            ["helix-context/cymatix.toml",
              "helix-context/cymatix_context/launcher/headroom_supervisor.py"],
         ],
     },
@@ -170,11 +170,11 @@ NEEDLES = [
         ],
     },
     {
-        "name": "helix_port_and_fleet_port",
-        "query": "helix listen port bigEd fleet dashboard port",
+        "name": "cymatix_port_and_fleet_port",
+        "query": "cymatix listen port bigEd fleet dashboard port",
         "expected": ["11437", "5555"],
         "gold_source_groups": [
-            ["helix-context/helix.toml"],
+            ["helix-context/cymatix.toml"],
             ["Education/fleet/fleet.toml",
              "Education/CLAUDE.md",
              "Education/fleet/CLAUDE.md"],
@@ -282,14 +282,14 @@ def cell_pure_rag_embedding(needle: dict, top_k: int = 12) -> dict:
     }
 
 
-# ── Cell B: Helix only (packet mode) ────────────────────────────────
+# ── Cell B: Cymatix only (packet mode) ────────────────────────────────
 
 
-def cell_helix_only(client: httpx.Client, needle: dict) -> dict:
+def cell_cymatix_only(client: httpx.Client, needle: dict) -> dict:
     t0 = time.time()
     try:
         resp = client.post(
-            f"{HELIX_URL}/context/packet",
+            f"{CYMATIX_URL}/context/packet",
             json={
                 "query": needle["query"],
                 "task_type": "explain",
@@ -299,7 +299,7 @@ def cell_helix_only(client: httpx.Client, needle: dict) -> dict:
                 # thumbnail. This cell is meant to measure retrieval
                 # quality without external I/O — the thumbnail caps
                 # answer recall at whatever survives splice, which was
-                # masking retrieval-side wins (helix_rag reads files
+                # masking retrieval-side wins (cymatix_rag reads files
                 # from disk so it wasn't affected).
                 "include_raw": True,
             },
@@ -308,7 +308,7 @@ def cell_helix_only(client: httpx.Client, needle: dict) -> dict:
         resp.raise_for_status()
         packet = resp.json()
     except Exception as exc:
-        return {"cell": "helix_only", "error": str(exc)}
+        return {"cell": "cymatix_only", "error": str(exc)}
 
     items = []
     for bucket in ("verified", "stale_risk", "contradictions"):
@@ -318,7 +318,7 @@ def cell_helix_only(client: httpx.Client, needle: dict) -> dict:
         (i.get("content") or i.get("title") or "") for i in items
     )
     return {
-        "cell": "helix_only",
+        "cell": "cymatix_only",
         "latency_s": round(time.time() - t0, 3),
         "delivered_srcs": delivered_srcs,
         "n_delivered": len(delivered_srcs),
@@ -329,7 +329,7 @@ def cell_helix_only(client: httpx.Client, needle: dict) -> dict:
     }
 
 
-# ── Cell C: Helix + naive RAG (file-read) ───────────────────────────
+# ── Cell C: Cymatix + naive RAG (file-read) ───────────────────────────
 
 
 def _resolve_path(source_id: str) -> Optional[Path]:
@@ -347,12 +347,12 @@ def _resolve_path(source_id: str) -> Optional[Path]:
     return None
 
 
-def cell_helix_rag(client: httpx.Client, needle: dict, max_files: int = 16,
+def cell_cymatix_rag(client: httpx.Client, needle: dict, max_files: int = 16,
                    chars_per_file: int = 5000) -> dict:
     t0 = time.time()
     try:
         resp = client.post(
-            f"{HELIX_URL}/context/packet",
+            f"{CYMATIX_URL}/context/packet",
             json={
                 "query": needle["query"],
                 "task_type": "explain",
@@ -363,7 +363,7 @@ def cell_helix_rag(client: httpx.Client, needle: dict, max_files: int = 16,
         resp.raise_for_status()
         packet = resp.json()
     except Exception as exc:
-        return {"cell": "helix_rag", "error": str(exc)}
+        return {"cell": "cymatix_rag", "error": str(exc)}
 
     packet_source_ids: list[str] = []
     for bucket in ("verified", "stale_risk", "contradictions"):
@@ -415,7 +415,7 @@ def cell_helix_rag(client: httpx.Client, needle: dict, max_files: int = 16,
         for sid, text in fetched.items()
     )
     return {
-        "cell": "helix_rag",
+        "cell": "cymatix_rag",
         "latency_s": round(time.time() - t0, 3),
         "delivered_srcs": source_ids,
         "n_delivered": len(source_ids),
@@ -429,10 +429,10 @@ def cell_helix_rag(client: httpx.Client, needle: dict, max_files: int = 16,
     }
 
 
-# ── Cell E: Helix + full stack (DAG + cached DAL) ────────────────────
+# ── Cell E: Cymatix + full stack (DAG + cached DAL) ────────────────────
 
 
-def cell_helix_full_stack(client: httpx.Client, needle: dict,
+def cell_cymatix_full_stack(client: httpx.Client, needle: dict,
                           max_files: int = 16,
                           chars_per_file: int = 5000) -> dict:
     """Packet → DAG-resolved claims + cached DAL fetch.
@@ -444,7 +444,7 @@ def cell_helix_full_stack(client: httpx.Client, needle: dict,
     t0 = time.time()
     try:
         resp = client.post(
-            f"{HELIX_URL}/context/packet",
+            f"{CYMATIX_URL}/context/packet",
             json={
                 "query": needle["query"],
                 "task_type": "explain",
@@ -455,7 +455,7 @@ def cell_helix_full_stack(client: httpx.Client, needle: dict,
         resp.raise_for_status()
         packet = resp.json()
     except Exception as exc:
-        return {"cell": "helix_full_stack", "error": f"packet: {exc}"}
+        return {"cell": "cymatix_full_stack", "error": f"packet: {exc}"}
 
     # DAG: resolve claims for every gene the packet touched
     resolved_claims: list[dict] = []
@@ -508,7 +508,7 @@ def cell_helix_full_stack(client: httpx.Client, needle: dict,
         cache = CachedDAL(DAL(max_bytes=max(chars_per_file * 8, 50000)))
         fetched = [(sid, cache.fetch(sid)) for sid in source_ids]
     except Exception as exc:
-        return {"cell": "helix_full_stack", "error": f"DAL: {exc}"}
+        return {"cell": "cymatix_full_stack", "error": f"DAL: {exc}"}
 
     # Build content blob: claim texts + fetched file contents
     claim_text = "\n".join(c.get("claim_text", "") for c in resolved_claims)
@@ -543,7 +543,7 @@ def cell_helix_full_stack(client: httpx.Client, needle: dict,
     delivered_srcs = [sid for sid, _ in fetched]
     chunk_source_ids = [hit.source_id for hit in chunk_hits if hit.source_id]
     return {
-        "cell": "helix_full_stack",
+        "cell": "cymatix_full_stack",
         "latency_s": round(time.time() - t0, 3),
         "delivered_srcs": merge_source_ids(
             delivered_srcs,
@@ -610,17 +610,17 @@ def score_cell(result: dict, needle: dict) -> dict:
 # ── Runner + reporting ──────────────────────────────────────────────
 
 
-CELL_ORDER = ("pure_rag_bm25", "pure_rag_embedding", "helix_only",
-              "helix_rag", "helix_full_stack")
+CELL_ORDER = ("pure_rag_bm25", "pure_rag_embedding", "cymatix_only",
+              "cymatix_rag", "cymatix_full_stack")
 
 
 def run_needle(client: httpx.Client, needle: dict) -> dict:
     cells = {
         "pure_rag_bm25": cell_pure_rag_bm25(needle),
         "pure_rag_embedding": cell_pure_rag_embedding(needle),
-        "helix_only": cell_helix_only(client, needle),
-        "helix_rag": cell_helix_rag(client, needle),
-        "helix_full_stack": cell_helix_full_stack(client, needle),
+        "cymatix_only": cell_cymatix_only(client, needle),
+        "cymatix_rag": cell_cymatix_rag(client, needle),
+        "cymatix_full_stack": cell_cymatix_full_stack(client, needle),
     }
     scores = {name: score_cell(r, needle) for name, r in cells.items()}
     return {
@@ -699,30 +699,30 @@ def _answer_full_count(results: list[dict], cell_name: str) -> int:
 
 def print_bm25_delta(results: list[dict]) -> None:
     bm25 = _answer_full_count(results, "pure_rag_bm25")
-    full = _answer_full_count(results, "helix_full_stack")
-    rag = _answer_full_count(results, "helix_rag")
+    full = _answer_full_count(results, "cymatix_full_stack")
+    rag = _answer_full_count(results, "cymatix_rag")
     print("\n=== BM25 parity gate ===")
     print(f"pure_rag_bm25 answer_full:    {bm25}/{len(results)}")
-    print(f"helix_rag answer_full:        {rag}/{len(results)}  delta={rag - bm25:+d}")
-    print(f"helix_full_stack answer_full: {full}/{len(results)}  delta={full - bm25:+d}")
+    print(f"cymatix_rag answer_full:        {rag}/{len(results)}  delta={rag - bm25:+d}")
+    print(f"cymatix_full_stack answer_full: {full}/{len(results)}  delta={full - bm25:+d}")
 
 
 def main() -> int:
     if not Path(GENOME_PATH).exists():
         print(f"ERROR: genome not found at {GENOME_PATH}")
-        print("Set HELIX_GENOME_PATH or run from helix-context dir.")
+        print("Set CYMATIX_GENOME_PATH or run from helix-context dir.")
         return 1
 
     client = httpx.Client(timeout=120)
     try:
-        stats = client.get(f"{HELIX_URL}/stats").json()
+        stats = client.get(f"{CYMATIX_URL}/stats").json()
         print(f"Genome: {stats['total_genes']} genes, "
               f"{stats['compression_ratio']:.2f}x")
     except Exception as exc:
-        print(f"Cannot reach helix at {HELIX_URL}: {exc}")
+        print(f"Cannot reach cymatix at {CYMATIX_URL}: {exc}")
         return 1
 
-    print(f"\n=== Helix + RAG composition NIAH "
+    print(f"\n=== Cymatix + RAG composition NIAH "
           f"({len(NEEDLES)} needles, 3 cells) ===\n")
 
     results = []
@@ -748,7 +748,7 @@ def main() -> int:
     print_aggregate(results)
     print_bm25_delta(results)
 
-    out = Path("benchmarks/results") / f"helix_rag_composition_{time.strftime('%Y-%m-%d')}.json"
+    out = Path("benchmarks/results") / f"cymatix_rag_composition_{time.strftime('%Y-%m-%d')}.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     # Strip content blobs from saved JSON to keep size reasonable
     trimmed = []
@@ -769,11 +769,11 @@ def main() -> int:
     }, indent=2))
     print(f"\nsaved to {out}")
     if (
-        os.environ.get("HELIX_BENCH_REQUIRE_BM25_PARITY", "0") == "1"
-        and _answer_full_count(results, "helix_full_stack")
+        os.environ.get("CYMATIX_BENCH_REQUIRE_BM25_PARITY", "0") == "1"
+        and _answer_full_count(results, "cymatix_full_stack")
         < _answer_full_count(results, "pure_rag_bm25")
     ):
-        print("ERROR: helix_full_stack is below pure_rag_bm25 answer_full")
+        print("ERROR: cymatix_full_stack is below pure_rag_bm25 answer_full")
         return 2
     return 0
 

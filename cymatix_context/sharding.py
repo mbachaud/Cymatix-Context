@@ -80,12 +80,12 @@ def corpus_shard_dir(
 # mirrored under an already-deep ``genomes_root``. sqlite3's C layer does not
 # reliably honour long-path opt-in, so we cap conservatively and fall back to
 # a compact deterministic location. Overridable for tests / long-path-enabled
-# hosts via ``HELIX_SHARD_PATH_MAX``.
+# hosts via ``CYMATIX_SHARD_PATH_MAX``.
 _SHARD_PATH_MAX_DEFAULT = 240
 
 
 def _shard_path_max() -> int:
-    raw = os.environ.get("HELIX_SHARD_PATH_MAX", "").strip()
+    raw = os.environ.get("CYMATIX_SHARD_PATH_MAX", "").strip()
     try:
         return int(raw) if raw else _SHARD_PATH_MAX_DEFAULT
     except ValueError:
@@ -100,7 +100,7 @@ def corpus_shard_db(
     """Return ``<corpus_shard_dir>/<label>.genome.db``.
 
     MAX_PATH guard: when the mirrored path would exceed
-    ``HELIX_SHARD_PATH_MAX`` (default 240) characters, return
+    ``CYMATIX_SHARD_PATH_MAX`` (default 240) characters, return
     ``<genomes_root>/_overflow/<label>-<digest10>.genome.db`` instead, where
     ``digest10`` is a stable sha1 of the mirrored relative path. The
     function stays deterministic in ``(source_root, label, genomes_root)``,
@@ -144,7 +144,7 @@ class IngestTargetRouter:
 
     def __init__(self) -> None:
         # List of (normalized_root, shard_db_path) — sorted longest first
-        # so that nested sources (e.g., F:/Projects/helix-context inside
+        # so that nested sources (e.g., F:/Projects/cymatix-context inside
         # F:/Projects) would route to the more specific shard.
         self._registered: list[tuple[str, Path]] = []
 
@@ -191,11 +191,11 @@ log = logging.getLogger(__name__)
 
 class ShardedGenomeAdapter:
     """Present a ``ShardRouter`` with the subset of the ``Genome`` API that
-    ``HelixContextManager`` uses on the read path.
+    ``CymatixContextManager`` uses on the read path.
 
     Writes are logged no-ops: the adapter is intended for read-heavy serving
     (benchmarks, agent retrieval) until ingest-time sharding (spec Task 6)
-    lands. Enable via the ``HELIX_USE_SHARDS=1`` env flag — the factory
+    lands. Enable via the ``CYMATIX_USE_SHARDS=1`` env flag — the factory
     ``open_read_source`` below wires this in for callers.
 
     Limitations (V1):
@@ -554,7 +554,7 @@ class ShardedGenomeAdapter:
 def open_read_source(genome_path: str, **genome_kwargs: Any):
     """Factory: return a ``Genome`` or a ``ShardedGenomeAdapter``.
 
-    If ``HELIX_USE_SHARDS=1`` and ``genome_path`` ends with
+    If ``CYMATIX_USE_SHARDS=1`` and ``genome_path`` ends with
     ``main.genome.db``, open a ``ShardedGenomeAdapter``. Otherwise open
     a regular ``Genome`` at ``genome_path``.
     """
@@ -563,6 +563,6 @@ def open_read_source(genome_path: str, **genome_kwargs: Any):
 
     is_routing_db = os.path.basename(genome_path) == "main.genome.db"
     if use_shards_enabled() and is_routing_db:
-        log.info("HELIX_USE_SHARDS=1 and path is routing DB — opening ShardedGenomeAdapter")
+        log.info("CYMATIX_USE_SHARDS=1 and path is routing DB — opening ShardedGenomeAdapter")
         return ShardedGenomeAdapter(main_path=genome_path, **genome_kwargs)
     return Genome(path=genome_path, **genome_kwargs)

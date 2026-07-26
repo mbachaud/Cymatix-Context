@@ -145,7 +145,7 @@ def _process_file(args: tuple[str, str]) -> list[dict[str, Any]]:
 def main() -> int:
     import argparse
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--db", default="F:/Projects/helix-context/genome.db")
+    parser.add_argument("--db", default="F:/Projects/cymatix-context/genome.db")
     parser.add_argument("--workers", type=int, default=0,
                         help="Worker count (0=auto: cpu_count - 2, max 6)")
     parser.add_argument("--dry-run", action="store_true",

@@ -20,7 +20,7 @@ Read-only contract (Stage 1 boundary, spec §5):
 
 Cache shape: ``dict[str, tuple[float, float]]`` keyed on absolute
 source path, value is ``(mtime, cached_at)``. TTL defaults to 60s. The
-cache lives on ``HelixContextManager`` (per-batch state, not KnowledgeStore) so
+cache lives on ``CymatixContextManager`` (per-batch state, not KnowledgeStore) so
 admin /admin/refresh can clear it without touching the DB.
 """
 
@@ -33,7 +33,7 @@ from typing import TYPE_CHECKING, Literal, Optional
 if TYPE_CHECKING:  # pragma: no cover - typing only
     from .schemas import Gene
 
-log = logging.getLogger("helix.freshness")
+log = logging.getLogger("cymatix.freshness")
 
 
 # Default cache TTL. Stat is microsecond-cheap warm but we still skip

@@ -2,14 +2,14 @@
 Monte Carlo evidence propagation over the document co-activation graph.
 
 Ports the ScoreRift ray-trace pattern into a retrieval dimension for
-helix-context.  Casts random rays from seed documents through co-activation
+cymatix-context.  Casts random rays from seed documents through co-activation
 edges (``co_activated_with`` + ``harmonic_links``), accumulating energy
 at terminal nodes.  High-energy terminals are "supported by evidence"
 from the seed set and receive a retrieval boost.
 
 Origin story (2026-04-11):
   Max asked "why are my RT cores sitting at 0%?" while staring at the
-  GPU performance panel during a helix bench run.  The chain that
+  GPU performance panel during a cymatix bench run.  The chain that
   followed:
 
     1. RT cores do hardware-accelerated ray-trace against BVH structures

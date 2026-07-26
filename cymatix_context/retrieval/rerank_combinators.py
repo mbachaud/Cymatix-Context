@@ -49,7 +49,7 @@ from .fusion import rank_by_score
 __all__ = ["combine_rerank", "resolve_class_combinator", "VALID_COMBINATORS"]
 
 # The only valid operators. ``KnowledgeStore.__init__`` validates against this
-# same set so a typo in helix.toml fails fast at construction.
+# same set so a typo in cymatix.toml fails fast at construction.
 VALID_COMBINATORS: Tuple[str, ...] = ("additive", "fused_tier", "eps_band", "off")
 
 

@@ -1,7 +1,7 @@
 """Stage 1 — read-only isolation contract + axis-split harness.
 
 Verifies that ``clean=true`` HTTP requests and ``read_only=True`` direct
-calls to ``HelixContextManager.build_context`` produce zero genome
+calls to ``CymatixContextManager.build_context`` produce zero genome
 mutations. Also locks the per-axis query-template wording so the
 ``blind`` baseline stays byte-identical to the v2 single-axis output and
 the ``located`` axis emits the dim-lock variant-4 4-axis form.
@@ -23,8 +23,8 @@ import pytest
 
 from cymatix_context import server as server_mod
 from cymatix_context.config import BudgetConfig, ClassifierConfig
-from cymatix_context.context_manager import HelixContextManager
-from tests.conftest import MockCompressorBackend, make_client, make_gene, make_helix_config
+from cymatix_context.context_manager import CymatixContextManager
+from tests.conftest import MockCompressorBackend, make_client, make_gene, make_cymatix_config
 
 
 # ---------------------------------------------------------------------------
@@ -32,7 +32,7 @@ from tests.conftest import MockCompressorBackend, make_client, make_gene, make_h
 # ---------------------------------------------------------------------------
 
 
-def _seeded_manager() -> HelixContextManager:
+def _seeded_manager() -> CymatixContextManager:
     """In-memory genome with a handful of seeded genes so build_context
     has candidates to express + can exercise the touch / coactivate /
     relations-batch tail of the pipeline.
@@ -48,14 +48,14 @@ def _seeded_manager() -> HelixContextManager:
     confidence, so abstain is disabled to decouple the two concerns rather
     than hand-tuning the corpus to dodge one gate's threshold.
     """
-    cfg = make_helix_config(
+    cfg = make_cymatix_config(
         budget=BudgetConfig(
             max_genes_per_turn=4, splice_aggressiveness=0.5, abstain_enabled=False,
         ),
         classifier=ClassifierConfig(enabled=True),
         synonym_map={"port": ["upstream", "endpoint", "url"]},
     )
-    mgr = HelixContextManager(cfg)
+    mgr = CymatixContextManager(cfg)
     mgr.ribosome.backend = MockCompressorBackend()
 
     seed_data = [
@@ -170,7 +170,7 @@ def http_client():
         ("upstream_port = 11434", ["network"], ["port"]),
         ("HELIX_PORT = 11437", ["network"], ["port"]),
     ]):
-        app.state.helix.genome.upsert_gene(
+        app.state.cymatix.genome.upsert_gene(
             make_gene(
                 content, domains=doms, entities=ents,
                 gene_id=f"http_seed_{i:010d}",
@@ -192,7 +192,7 @@ def test_clean_flag_implies_read_only(http_client):
     #                 ignore_delivered, read_only, decoder_override)
     # So `read_only` is positional arg index 8 (zero-indexed, after query).
     captured: dict = {}
-    real_build = app.state.helix.build_context
+    real_build = app.state.cymatix.build_context
 
     def spy(*args, **kwargs):
         # The async wrapper passes everything positionally; the synchronous
@@ -202,7 +202,7 @@ def test_clean_flag_implies_read_only(http_client):
         captured["read_only"] = kwargs.get("read_only", ro_pos)
         return real_build(*args, **kwargs)
 
-    with patch.object(app.state.helix, "build_context", side_effect=spy):
+    with patch.object(app.state.cymatix, "build_context", side_effect=spy):
         resp = client.post("/context", json={"query": "upstream port", "clean": True})
 
     assert resp.status_code == 200, resp.text
@@ -221,7 +221,7 @@ def test_response_mode_packet_with_clean_isolates_writes(http_client):
     plumbing with the dedicated /context/packet route, otherwise
     `clean=true` is a silent escape hatch for genome writes."""
     client, app = http_client
-    before = _genome_state_snapshot(app.state.helix.genome.conn)
+    before = _genome_state_snapshot(app.state.cymatix.genome.conn)
     resp = client.post(
         "/context",
         json={"query": "upstream port", "clean": True, "response_mode": "packet"},
@@ -230,7 +230,7 @@ def test_response_mode_packet_with_clean_isolates_writes(http_client):
     body = resp.json()
     # Sanity: we actually hit the packet branch.
     assert body.get("response_mode") == "packet"
-    after = _genome_state_snapshot(app.state.helix.genome.conn)
+    after = _genome_state_snapshot(app.state.cymatix.genome.conn)
     assert before == after, (
         "response_mode='packet' + clean=true must not mutate the genome; "
         f"diff:\n  before: {before}\n  after:  {after}"

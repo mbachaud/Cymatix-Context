@@ -1,7 +1,7 @@
 r"""erb_dsid_adapter.py -- PURE transformer: delivered gene_ids -> ERB dsids.
 
 This is a bench-side adapter (issue: durable per-gene document identity). It keeps
-the ERB-specific ``dsid_*`` vocabulary OUT of helix core: core only knows the raw
+the ERB-specific ``dsid_*`` vocabulary OUT of cymatix core: core only knows the raw
 ``source_id`` (via ``ContextItem.document_id`` / ``context_packet.document_identity``).
 This script maps those source_ids back to the official EnterpriseRAG-Bench
 ``expected_doc_ids`` space (``dsid_...``) for scoring.
@@ -9,7 +9,7 @@ This script maps those source_ids back to the official EnterpriseRAG-Bench
 It does NOT run retrieval (the ~15h re-retrieval is not approved). Inputs:
 
   (i)  a per-question *delivered map* JSONL, one row ``{"question_id": ...,
-       "gene_ids": [...]}`` (what helix actually delivered per question);
+       "gene_ids": [...]}`` (what cymatix actually delivered per question);
   (ii) gene_id -> source_id resolved READ-ONLY from the blob DB
        (``SELECT gene_id, source_id FROM genes WHERE gene_id IN (...)``,
        opened ``mode=ro``); brief access -- the blob is shared;

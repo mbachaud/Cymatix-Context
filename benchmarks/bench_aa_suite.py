@@ -1,14 +1,14 @@
 """
 Benchmark Suite for AA (Artificial Analysis) and Hard Reasoning Tasks.
 
-Supports "On" (Helix-augmented) and "Off" (Baseline) modes for comparison.
+Supports "On" (Cymatix-augmented) and "Off" (Baseline) modes for comparison.
 Mocked datasets are used for initial functional validation.
 
 Usage:
     # Run Baseline
     python benchmarks/bench_aa_suite.py --benchmark scicode --mode off --output benchmarks/scicode_off.json
     
-    # Run Treatment (Helix On)
+    # Run Treatment (Cymatix On)
     python benchmarks/bench_aa_suite.py --benchmark scicode --mode on --output benchmarks/scicode_on.json
 """
 
@@ -31,7 +31,7 @@ except ImportError:
 
 import httpx
 
-HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
+CYMATIX_URL = os.environ.get("CYMATIX_URL", "http://127.0.0.1:11437")
 
 # --- Mock Datasets ---
 MOCK_DATASETS = {
@@ -246,7 +246,7 @@ def ingest_backgrounds(client: httpx.Client, benchmark: str, problems: List[Dict
                 "source_id": f"{benchmark}_{p['id']}",
                 "benchmark": benchmark
             }
-            resp = client.post(f"{HELIX_URL}/ingest", json={
+            resp = client.post(f"{CYMATIX_URL}/ingest", json={
                 "content": p["background"],
                 "content_type": "text",
                 "metadata": metadata,
@@ -273,7 +273,7 @@ def run_problem(client: httpx.Client, problem: Dict, model: str, mode: str) -> D
         prompt = f"Background:\n{problem['background']}\n\nQuestion:\n{problem['question']}"
         t1 = time.time()
         try:
-            proxy_resp = client.post(f"{HELIX_URL}/v1/chat/completions", json={
+            proxy_resp = client.post(f"{CYMATIX_URL}/v1/chat/completions", json={
                 "model": model,
                 "messages": [{"role": "user", "content": prompt}],
                 "stream": False,
@@ -293,10 +293,10 @@ def run_problem(client: httpx.Client, problem: Dict, model: str, mode: str) -> D
             proxy_latency = time.time() - t1
             error_msg = str(e)
             
-    # Mode: ON (Treatment) - rely on Helix context
+    # Mode: ON (Treatment) - rely on Cymatix context
     elif mode == "on":
         try:
-            resp = client.post(f"{HELIX_URL}/context", json={
+            resp = client.post(f"{CYMATIX_URL}/context", json={
                 "query": problem["question"],
                 "decoder_mode": "condensed",
             })
@@ -317,7 +317,7 @@ def run_problem(client: httpx.Client, problem: Dict, model: str, mode: str) -> D
 
         t1 = time.time()
         try:
-            proxy_resp = client.post(f"{HELIX_URL}/v1/chat/completions", json={
+            proxy_resp = client.post(f"{CYMATIX_URL}/v1/chat/completions", json={
                 "model": model,
                 "messages": [{"role": "user", "content": problem["question"]}],
                 "stream": False,
@@ -352,7 +352,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--benchmark", choices=["gpqa", "scicode", "aa-lcr", "tau-bench", "terminal-bench", "ifbench", "aa-omniscience", "critpt"], required=True)
     parser.add_argument("--mode", choices=["on", "off"], required=True)
-    parser.add_argument("--model", default=os.environ.get("HELIX_MODEL", "qwen3:8b"))
+    parser.add_argument("--model", default=os.environ.get("CYMATIX_MODEL", "qwen3:8b"))
     parser.add_argument("--output", required=True)
     parser.add_argument("--limit", type=int, default=None, help="Limit number of problems for a smoke test.")
     parser.add_argument("--mock", action="store_true", help="Force use of mock datasets.")
@@ -364,13 +364,13 @@ def main():
     
     # Server check
     try:
-        stats = client.get(f"{HELIX_URL}/stats").json()
+        stats = client.get(f"{CYMATIX_URL}/stats").json()
         genome_genes = stats['total_genes']
-        print(f"Helix server: {genome_genes} genes, mode={args.mode}")
+        print(f"Cymatix server: {genome_genes} genes, mode={args.mode}")
     except Exception as e:
-        print(f"ERROR: Helix server unreachable at {HELIX_URL}: {e}")
+        print(f"ERROR: Cymatix server unreachable at {CYMATIX_URL}: {e}")
         # Allow offline running if mode is OFF and testing direct completion?
-        # Actually, completions run through Helix proxy, so it must be up.
+        # Actually, completions run through Cymatix proxy, so it must be up.
         sys.exit(1)
 
     if args.mock:

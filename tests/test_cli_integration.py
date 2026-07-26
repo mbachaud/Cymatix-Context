@@ -1,4 +1,4 @@
-"""End-to-end smoke: real HelixSession against an :memory: genome.
+"""End-to-end smoke: real CymatixSession against an :memory: genome.
 
 These tests are slow-ish (cold-start the manager once) but catch
 wiring bugs the per-subcommand unit tests can't.
@@ -25,21 +25,21 @@ def _isolate_genome(monkeypatch, tmp_path):
     intentionally disabled in this project (LLM-free retrieval is a
     design pillar), so we must configure backend="cpu" explicitly.
     """
-    monkeypatch.setenv("HELIX_GENOME_PATH", ":memory:")
-    monkeypatch.setenv("HELIX_CONFIG", str(tmp_path / "no-such-file.toml"))
+    monkeypatch.setenv("CYMATIX_GENOME_PATH", ":memory:")
+    monkeypatch.setenv("CYMATIX_CONFIG", str(tmp_path / "no-such-file.toml"))
 
     # Reset and pre-warm the cached module-level manager with a CPU-backend
     # config so all CLI commands that call open_session() get a manager that
     # can actually ingest (ribosome is disabled; cpu tagger is the only path).
     from cymatix_context import api
-    from cymatix_context.config import HelixConfig, IngestionConfig
+    from cymatix_context.config import CymatixConfig, IngestionConfig
     api.close_manager()
-    cfg = HelixConfig()
+    cfg = CymatixConfig()
     cfg.genome.path = ":memory:"
     cfg.ingestion = IngestionConfig(backend="cpu")
     # Prime the module-level manager directly so open_session() reuses it.
-    from cymatix_context.context_manager import HelixContextManager
-    api._DEFAULT_MANAGER = HelixContextManager(config=cfg)
+    from cymatix_context.context_manager import CymatixContextManager
+    api._DEFAULT_MANAGER = CymatixContextManager(config=cfg)
 
     yield
 
@@ -78,47 +78,47 @@ def test_end_to_end_cold_start_constructs_manager_lazily(monkeypatch, tmp_path):
     """Regression for review #11: the integration suite was pre-warming
     ``api._DEFAULT_MANAGER`` in its autouse fixture, so the cold-start
     branch in ``open_session()`` (``if _DEFAULT_MANAGER is None: ...
-    HelixContextManager(config=cfg)``) was never exercised.
+    CymatixContextManager(config=cfg)``) was never exercised.
 
     This test explicitly clears the cached manager AFTER the autouse
     fixture has run, points the construction at an in-memory genome via
-    a monkeypatched ``HelixConfig`` factory, and verifies that ingest +
+    a monkeypatched ``CymatixConfig`` factory, and verifies that ingest +
     query both succeed and return well-shaped JSON — proving the lazy
     construction path works end-to-end.
     """
     from cymatix_context import api
-    from cymatix_context.config import HelixConfig, IngestionConfig
+    from cymatix_context.config import CymatixConfig, IngestionConfig
 
     # 1. Wipe the manager the autouse fixture pre-warmed. This is the
     #    whole point: we want open_session() to hit `_DEFAULT_MANAGER is None`.
     api._DEFAULT_MANAGER = None
 
-    # 2. Monkeypatch the HelixConfig used inside api.open_session so that
-    #    when it calls `HelixConfig()` (no args), we get a CPU/:memory:
+    # 2. Monkeypatch the CymatixConfig used inside api.open_session so that
+    #    when it calls `CymatixConfig()` (no args), we get a CPU/:memory:
     #    config instead of the disk-backed default. open_session() does
-    #    NOT call load_config — it constructs HelixConfig() directly —
+    #    NOT call load_config — it constructs CymatixConfig() directly —
     #    so an env-var-only approach won't redirect the genome path.
     def _cpu_memory_config():
-        cfg = HelixConfig()
+        cfg = CymatixConfig()
         cfg.genome.path = ":memory:"
         cfg.ingestion = IngestionConfig(backend="cpu")
         return cfg
 
-    monkeypatch.setattr(api, "HelixConfig", _cpu_memory_config)
+    monkeypatch.setattr(api, "CymatixConfig", _cpu_memory_config)
 
     # Track whether the cold-start branch actually fires by wrapping
-    # HelixContextManager construction. This makes the regression
+    # CymatixContextManager construction. This makes the regression
     # explicit: if a future change re-introduces pre-warming, this
     # assertion will catch it.
     from cymatix_context import context_manager as cm_mod
     construction_count = {"n": 0}
-    real_ctor = cm_mod.HelixContextManager
+    real_ctor = cm_mod.CymatixContextManager
 
     def _counting_ctor(*args, **kwargs):
         construction_count["n"] += 1
         return real_ctor(*args, **kwargs)
 
-    monkeypatch.setattr(cm_mod, "HelixContextManager", _counting_ctor)
+    monkeypatch.setattr(cm_mod, "CymatixContextManager", _counting_ctor)
 
     import tempfile
     with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False) as f:
@@ -154,7 +154,7 @@ def test_end_to_end_cold_start_constructs_manager_lazily(monkeypatch, tmp_path):
 
 @pytest.mark.live
 def test_end_to_end_diag_corpus_returns_well_shaped_payload():
-    """`helix diag corpus --json` returns a well-shaped JSON payload
+    """`cymatix diag corpus --json` returns a well-shaped JSON payload
     against a fresh :memory: genome. Verifies pipeline wiring, not
     retrieval quality — total_genes may legitimately be 0."""
     rc, out, err = _run(["diag", "corpus", "--json"])

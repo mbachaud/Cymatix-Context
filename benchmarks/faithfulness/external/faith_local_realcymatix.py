@@ -1,11 +1,11 @@
-"""Stage 2 of local real-helix faithfulness (np-graph venv).
+"""Stage 2 of local real-cymatix faithfulness (np-graph venv).
 
-Consumes expressed_contexts.json (dumped by dump_expressed.py in the helix env)
-and runs local circuit-tracer graphs on A (question) vs B (helix's REAL
+Consumes expressed_contexts.json (dumped by dump_expressed.py in the cymatix env)
+and runs local circuit-tracer graphs on A (question) vs B (cymatix's REAL
 expressed_context + question), computing the retargeted faithfulness metric.
 Completes the #239 payoff that was blocked on the Neuronpedia rate limit.
 
-Real-helix prompts are long (~350 tok) so max_feature_nodes/batch_size are
+Real-cymatix prompts are long (~350 tok) so max_feature_nodes/batch_size are
 smaller than the short-needle pilot; tune with --mfn/--bs if VRAM is tight.
 """
 import os, sys, json, time, argparse
@@ -20,7 +20,7 @@ from faithfulness_circuit_tracer import answer_logit_node, answer_prob  # noqa: 
 from needle_faithfulness_experiment import find_answer_ctx, retargeted_input_attr  # noqa: E402
 
 EXP = "f:/Projects/np-graph/expressed_contexts.json"
-OUT = "f:/Projects/np-graph/realhelix_local_results.json"
+OUT = "f:/Projects/np-graph/realcymatix_local_results.json"
 
 
 def score(nd, expressed, mfn, bs):
@@ -80,7 +80,7 @@ def main():
     surv = [r for r in res if not r.get("skipped")]
     scored = [r for r in surv if "faith" in r]
     causal = [r for r in scored if r.get("causal_use")]
-    print("\n=== REAL-HELIX LOCAL SUMMARY (gemma-2-2b, circuit-tracer, no egress) ===")
+    print("\n=== REAL-CYMATIX LOCAL SUMMARY (gemma-2-2b, circuit-tracer, no egress) ===")
     print(f"answer survived retrieval : {len(surv)}/{len(res)}")
     if scored:
         print(f"causal-use | survived      : {len(causal)}/{len(scored)} = {len(causal)/len(scored):.2f}")

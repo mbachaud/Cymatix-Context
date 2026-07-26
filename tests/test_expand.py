@@ -17,14 +17,14 @@ import pytest
 
 from cymatix_context.retrieval import expand
 from cymatix_context.identity import session_delivery
-from cymatix_context.context_manager import HelixContextManager
-from tests.conftest import make_gene, make_client, make_helix_config
+from cymatix_context.context_manager import CymatixContextManager
+from tests.conftest import make_gene, make_client, make_cymatix_config
 
 
 # ── Helper fixtures ───────────────────────────────────────────────────
 
-def _make_manager() -> HelixContextManager:
-    return HelixContextManager(make_helix_config())
+def _make_manager() -> CymatixContextManager:
+    return CymatixContextManager(make_cymatix_config())
 
 
 def _seed_harmonic_link(conn, a, b, weight, source="co_retrieved"):
@@ -256,13 +256,13 @@ def test_endpoint_empty_response_for_unknown_gene(http_client):
 
 
 def test_endpoint_returns_forward_neighbors(http_client):
-    conn = http_client.app.state.helix.genome.conn
+    conn = http_client.app.state.cymatix.genome.conn
     _seed_harmonic_link(conn, "a", "b1", 0.9)
     _seed_harmonic_link(conn, "a", "b2", 0.5)
-    http_client.app.state.helix.genome.upsert_gene(
+    http_client.app.state.cymatix.genome.upsert_gene(
         make_gene(content="first hit", gene_id="b1"),
     )
-    http_client.app.state.helix.genome.upsert_gene(
+    http_client.app.state.cymatix.genome.upsert_gene(
         make_gene(content="second hit", gene_id="b2"),
     )
     resp = http_client.get("/context/expand?gene_id=a&direction=forward&k=5")
@@ -274,10 +274,10 @@ def test_endpoint_returns_forward_neighbors(http_client):
 
 
 def test_endpoint_respects_k_cap(http_client):
-    conn = http_client.app.state.helix.genome.conn
+    conn = http_client.app.state.cymatix.genome.conn
     for i in range(10):
         _seed_harmonic_link(conn, "a", f"b{i}", 1.0 - i * 0.05)
-        http_client.app.state.helix.genome.upsert_gene(
+        http_client.app.state.cymatix.genome.upsert_gene(
             make_gene(content=f"b{i}", gene_id=f"b{i}"),
         )
     resp = http_client.get("/context/expand?gene_id=a&direction=forward&k=3")
@@ -286,11 +286,11 @@ def test_endpoint_respects_k_cap(http_client):
 
 
 def test_endpoint_filters_delivered_when_session_given(http_client):
-    conn = http_client.app.state.helix.genome.conn
+    conn = http_client.app.state.cymatix.genome.conn
     _seed_harmonic_link(conn, "a", "b1", 0.9)
     _seed_harmonic_link(conn, "a", "b2", 0.5)
     for gid in ("b1", "b2"):
-        http_client.app.state.helix.genome.upsert_gene(
+        http_client.app.state.cymatix.genome.upsert_gene(
             make_gene(content=gid, gene_id=gid),
         )
     session_delivery.log_delivery(conn, session_id="sess_X", gene_id="b1")

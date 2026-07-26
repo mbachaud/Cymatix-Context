@@ -16,14 +16,14 @@ and reports:
 The confidence column is recomputed from the raw features via
 ``cymatix_context.scoring.know_calibration.compute_confidence`` so the
 same JSONL can be scored under DEFAULT_BETAS (--calibration default),
-the shipped helix.toml ([know] table), or any candidate TOML — which is
+the shipped cymatix.toml ([know] table), or any candidate TOML — which is
 exactly the before/after comparison the #239 recalibration needs.
 
 Usage:
 
     python benchmarks/eval_retrieval.py \
         --input benchmarks/results/located_n1000.jsonl \
-        --calibration helix.toml \
+        --calibration cymatix.toml \
         --out benchmarks/results/eval_retrieval_report.json
 """
 

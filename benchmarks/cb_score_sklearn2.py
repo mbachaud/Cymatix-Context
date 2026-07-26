@@ -52,15 +52,15 @@ def inj(metaf, fixed=None):
 arms = [
     ("BM25 @8k", "bm25_8k_pred.json", None, 8000),
     ("BM25 @27k", "bm25_27k_pred.json", None, 27000),
-    ("v063 lexical @8k", "helix_v063lex_fingerprint_8k_pred.json", "helix_v063lex_fingerprint_8k_meta.json", None),
-    ("v063 lexical @27k", "helix_v063lex_fingerprint_27k_pred.json", "helix_v063lex_fingerprint_27k_meta.json", None),
-    ("s063 DENSEFIX @8k", "helix_s063fix_fingerprint_8k_pred.json", "helix_s063fix_fingerprint_8k_meta.json", None),
-    ("s063 DENSEFIX @27k", "helix_s063fix_fingerprint_27k_pred.json", "helix_s063fix_fingerprint_27k_meta.json", None),
-    ("s063 +SPLADE @8k", "helix_s063splade_fingerprint_8k_pred.json", "helix_s063splade_fingerprint_8k_meta.json", None),
-    ("s063 +SPLADE @27k", "helix_s063splade_fingerprint_27k_pred.json", "helix_s063splade_fingerprint_27k_meta.json", None),
-    ("v063 lexical packet", "helix_v063lex_packet_pred.json", "helix_v063lex_packet_meta.json", None),
-    ("s063 DENSEFIX packet", "helix_s063fix_packet_pred.json", "helix_s063fix_packet_meta.json", None),
-    ("s063 +SPLADE packet", "helix_s063splade_packet_pred.json", "helix_s063splade_packet_meta.json", None),
+    ("v063 lexical @8k", "cymatix_v063lex_fingerprint_8k_pred.json", "cymatix_v063lex_fingerprint_8k_meta.json", None),
+    ("v063 lexical @27k", "cymatix_v063lex_fingerprint_27k_pred.json", "cymatix_v063lex_fingerprint_27k_meta.json", None),
+    ("s063 DENSEFIX @8k", "cymatix_s063fix_fingerprint_8k_pred.json", "cymatix_s063fix_fingerprint_8k_meta.json", None),
+    ("s063 DENSEFIX @27k", "cymatix_s063fix_fingerprint_27k_pred.json", "cymatix_s063fix_fingerprint_27k_meta.json", None),
+    ("s063 +SPLADE @8k", "cymatix_s063splade_fingerprint_8k_pred.json", "cymatix_s063splade_fingerprint_8k_meta.json", None),
+    ("s063 +SPLADE @27k", "cymatix_s063splade_fingerprint_27k_pred.json", "cymatix_s063splade_fingerprint_27k_meta.json", None),
+    ("v063 lexical packet", "cymatix_v063lex_packet_pred.json", "cymatix_v063lex_packet_meta.json", None),
+    ("s063 DENSEFIX packet", "cymatix_s063fix_packet_pred.json", "cymatix_s063fix_packet_meta.json", None),
+    ("s063 +SPLADE packet", "cymatix_s063splade_packet_pred.json", "cymatix_s063splade_packet_meta.json", None),
 ]
 
 print(f"\nsklearn-2 GPU isolation set = {sorted(IIDS)} (N=2)")

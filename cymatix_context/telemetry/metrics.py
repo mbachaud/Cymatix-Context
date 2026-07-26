@@ -2,7 +2,7 @@
 Token metrics — session + lifetime token counters with disk persistence.
 
 Counts prompt + completion tokens flowing through `/v1/chat/completions`.
-The session counter resets on each helix process restart; the lifetime
+The session counter resets on each cymatix process restart; the lifetime
 counter is persisted to a small JSON file next to ``genome.db`` and
 survives restarts.
 
@@ -38,7 +38,7 @@ import time
 from pathlib import Path
 from typing import Optional
 
-log = logging.getLogger("helix.metrics")
+log = logging.getLogger("cymatix.metrics")
 
 
 # Rough chars-per-token estimate for English text. Used only as a fallback
@@ -56,7 +56,7 @@ def estimate_tokens(text: str) -> int:
 class TokenCounter:
     """Thread-safe session + lifetime token counter with disk persistence.
 
-    Designed for the helix proxy's hot path. ``add()`` is O(1) under a
+    Designed for the cymatix proxy's hot path. ``add()`` is O(1) under a
     short critical section; the actual disk write only happens every
     ``persist_interval_s`` seconds.
     """

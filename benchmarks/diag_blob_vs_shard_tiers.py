@@ -26,7 +26,7 @@ WIRE SCHEMA (routes_context.py L800-826):
     "chromatin"          int
 
   tier_contributions is built from _merge_tier_contributions(
-      helix.genome.last_tier_contributions,   # lexical + co-activation tiers
+      cymatix.genome.last_tier_contributions,   # lexical + co-activation tiers
       refiner_contrib,                         # tcm, cymatics, harmonic_bin
   ) and then rounded to 4dp, sorted by key (routes_context.py L817-819).
 
@@ -101,7 +101,7 @@ def _gold_hit(source: Optional[str], gold_paths: List[str]) -> bool:
 # ---------------------------------------------------------------------------
 
 def _fingerprint(
-    helix_url: str,
+    cymatix_url: str,
     query: str,
     max_results: int = 200,
     timeout_s: float = 45.0,
@@ -112,7 +112,7 @@ def _fingerprint(
     max_results=200 so deep golds (rank > 10) are still captured for pool
     analysis.  score_floor=0.0 so nothing is filtered.
     """
-    url = helix_url.rstrip("/") + "/fingerprint"
+    url = cymatix_url.rstrip("/") + "/fingerprint"
     payload = json.dumps({
         "query": query,
         "max_results": max_results,
@@ -464,7 +464,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     ap = argparse.ArgumentParser(
         description=(
             "Per-tier blob-vs-sharded candidate-pool decomposition diagnostic.\n"
-            "Requires two already-running Helix servers (no server is started here)."
+            "Requires two already-running Cymatix servers (no server is started here)."
         )
     )
     ap.add_argument(
@@ -476,13 +476,13 @@ def main(argv: Optional[List[str]] = None) -> int:
         "--blob-url",
         default="http://127.0.0.1:11437",
         dest="blob_url",
-        help="Base URL of the unified-blob Helix server.",
+        help="Base URL of the unified-blob Cymatix server.",
     )
     ap.add_argument(
         "--sharded-url",
         default="http://127.0.0.1:11438",
         dest="sharded_url",
-        help="Base URL of the sharded Helix server.",
+        help="Base URL of the sharded Cymatix server.",
     )
     ap.add_argument("--label", default="medium",
                     help="Run label for results filename.")

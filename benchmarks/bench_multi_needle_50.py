@@ -9,10 +9,10 @@ The genome is the running main instance (~7800 genes across the
 Education + helix-context + sibling repos). Needles cover eight
 topic clusters so the score isn't dominated by any one area:
 
-    cluster A — helix core (packet, pipeline, compression targets)
-    cluster B — helix launcher / headroom integration
-    cluster C — helix adapters / DAL / cache / retriever
-    cluster D — helix claims layer (extraction, edges, DAG)
+    cluster A — cymatix core (packet, pipeline, compression targets)
+    cluster B — cymatix launcher / headroom integration
+    cluster C — cymatix adapters / DAL / cache / retriever
+    cluster D — cymatix claims layer (extraction, edges, DAG)
     cluster E — BigEd fleet config + skills
     cluster F — BigEd launcher + DB + ops
     cluster G — test / bench infrastructure
@@ -45,12 +45,12 @@ import benchmarks.bench_multi_needle as _mn  # noqa: E402
 
 
 NEEDLES_50 = [
-    # ── Cluster A: helix core ────────────────────────────────────────
+    # ── Cluster A: cymatix core ────────────────────────────────────────
     {
-        "name": "helix_port_and_pipeline_steps",
-        "query": "what port does helix listen on and how many steps are in the pipeline",
+        "name": "cymatix_port_and_pipeline_steps",
+        "query": "what port does cymatix listen on and how many steps are in the pipeline",
         "gold_source_groups": [
-            ["helix-context/helix.toml"],
+            ["helix-context/cymatix.toml"],
             ["helix-context/docs/architecture/PIPELINE_LANES.md",
              "helix-context/README.md"],
         ],
@@ -76,7 +76,7 @@ NEEDLES_50 = [
     },
     {
         "name": "packet_task_types_and_verdict_values",
-        "query": "what are the allowed task_type values for a helix packet and what verdict values exist",
+        "query": "what are the allowed task_type values for a cymatix packet and what verdict values exist",
         "gold_source_groups": [
             ["helix-context/cymatix_context/context_packet.py",
              "helix-context/cymatix_context/schemas.py"],
@@ -125,9 +125,9 @@ NEEDLES_50 = [
         "name": "headroom_port_and_dashboard_path",
         "query": "what port does headroom serve on and what is the dashboard path",
         "gold_source_groups": [
-            ["helix-context/helix.toml",
+            ["helix-context/cymatix.toml",
              "helix-context/cymatix_context/config.py"],
-            ["helix-context/helix.toml",
+            ["helix-context/cymatix.toml",
              "helix-context/cymatix_context/config.py"],
         ],
     },
@@ -135,10 +135,10 @@ NEEDLES_50 = [
         "name": "headroom_mode_default_and_autostart_default",
         "query": "what is the default headroom compression mode and the default autostart setting",
         "gold_source_groups": [
-            ["helix-context/helix.toml",
+            ["helix-context/cymatix.toml",
              "helix-context/cymatix_context/config.py",
              "helix-context/cymatix_context/launcher/headroom_supervisor.py"],
-            ["helix-context/helix.toml",
+            ["helix-context/cymatix.toml",
              "helix-context/cymatix_context/config.py"],
         ],
     },
@@ -151,13 +151,13 @@ NEEDLES_50 = [
         ],
     },
     {
-        "name": "helix_supervisor_and_restart_protocol",
-        "query": "how does helix supervisor manage the child process and what is the restart protocol",
+        "name": "cymatix_supervisor_and_restart_protocol",
+        "query": "how does cymatix supervisor manage the child process and what is the restart protocol",
         "gold_source_groups": [
             ["helix-context/cymatix_context/launcher/supervisor.py",
-             "helix-context/cymatix_context/launcher/helix_supervisor.py"],
+             "helix-context/cymatix_context/launcher/cymatix_supervisor.py"],
             ["helix-context/cymatix_context/launcher/supervisor.py",
-             "helix-context/cymatix_context/launcher/helix_supervisor.py",
+             "helix-context/cymatix_context/launcher/cymatix_supervisor.py",
              "helix-context/cymatix_context/launcher/headroom_supervisor.py"],
         ],
     },
@@ -168,7 +168,7 @@ NEEDLES_50 = [
             ["helix-context/cymatix_context/launcher/app.py",
              "helix-context/cymatix_context/launcher/tray.py"],
             ["helix-context/cymatix_context/launcher/app.py",
-             "helix-context/start-helix-tray.bat"],
+             "helix-context/start-cymatix-tray.bat"],
         ],
     },
 
@@ -191,7 +191,7 @@ NEEDLES_50 = [
     },
     {
         "name": "retriever_protocol_and_narrowed_wrapper",
-        "query": "what signature defines the retriever protocol and what does HelixNarrowedRetriever do",
+        "query": "what signature defines the retriever protocol and what does CymatixNarrowedRetriever do",
         "gold_source_groups": [
             ["helix-context/cymatix_context/adapters/retriever.py"],
             ["helix-context/cymatix_context/adapters/retriever.py",
@@ -200,7 +200,7 @@ NEEDLES_50 = [
     },
     {
         "name": "llamaindex_wrapper_and_langchain_wrapper",
-        "query": "how is LlamaIndex wrapped as a helix retriever and how is LangChain wrapped",
+        "query": "how is LlamaIndex wrapped as a cymatix retriever and how is LangChain wrapped",
         "gold_source_groups": [
             ["helix-context/cymatix_context/adapters/retriever.py"],
             ["helix-context/cymatix_context/adapters/retriever.py"],
@@ -455,8 +455,8 @@ NEEDLES_50 = [
         "name": "composition_bench_cells_and_sema_codec",
         "query": "how many cells does the composition bench compare and what is the SEMA codec projection",
         "gold_source_groups": [
-            ["helix-context/benchmarks/bench_helix_rag_composition.py"],
-            ["helix-context/benchmarks/bench_helix_rag_composition.py",
+            ["helix-context/benchmarks/bench_cymatix_rag_composition.py"],
+            ["helix-context/benchmarks/bench_cymatix_rag_composition.py",
              "helix-context/benchmarks/bench_external_retriever.py",
              "helix-context/cymatix_context/codec/sema.py"],
         ],
@@ -490,7 +490,7 @@ NEEDLES_50 = [
         ],
     },
     {
-        "name": "integrating_with_existing_rag_doc_and_helix_narrowing",
+        "name": "integrating_with_existing_rag_doc_and_cymatix_narrowing",
         "query": "what does the integrating-with-existing-rag doc cover and what is pattern 2 narrowing",
         "gold_source_groups": [
             ["helix-context/docs/INTEGRATING_WITH_EXISTING_RAG.md"],
@@ -519,7 +519,7 @@ NEEDLES_50 = [
         "name": "sibling_session_ribosome_and_launcher_paused",
         "query": "which sibling session worked on ribosome config cleanup and which worked on paused ribosome UI",
         "gold_source_groups": [
-            ["helix-context/helix.toml",
+            ["helix-context/cymatix.toml",
              "helix-context/cymatix_context/ribosome.py"],
             ["helix-context/cymatix_context/launcher/app.py",
              "helix-context/cymatix_context/launcher/tray.py"],

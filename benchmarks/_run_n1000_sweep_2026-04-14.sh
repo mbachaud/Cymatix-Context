@@ -1,7 +1,7 @@
 #!/bin/bash
 # Sequential n=1000 sike sweep — 2026-04-14
 # All 3 benches against fresh snapshot post Sprint 1/2/4/5A + 192K-edge backfill.
-# Helix is assumed running on :11437 with OTel ON (so the dashboard captures
+# Cymatix is assumed running on :11437 with OTel ON (so the dashboard captures
 # the load profile alongside the bench results).
 
 set -u  # don't 'set -e' — we want all 3 to attempt even if one errors
@@ -11,13 +11,13 @@ LOG_DIR="benchmarks"
 cd /f/Projects/helix-context
 
 export GENOME_DB="$SNAPSHOT"
-export HELIX_MODEL="qwen3:4b"
+export CYMATIX_MODEL="qwen3:4b"
 
 echo "==============================================="
 echo "  n=1000 sike sweep starting at $(date)"
 echo "  snapshot: $SNAPSHOT"
-echo "  model:    $HELIX_MODEL"
-echo "  helix:    http://127.0.0.1:11437"
+echo "  model:    $CYMATIX_MODEL"
+echo "  cymatix:    http://127.0.0.1:11437"
 echo "==============================================="
 
 echo ""

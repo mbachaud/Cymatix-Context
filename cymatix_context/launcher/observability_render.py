@@ -34,7 +34,7 @@ from .observability_paths import (
     state_dir,
 )
 
-log = logging.getLogger("helix.launcher.render")
+log = logging.getLogger("cymatix.launcher.render")
 
 
 def _repo_root() -> Path:

@@ -1,5 +1,5 @@
 /*
- * Helix Launcher dashboard reactivity.
+ * Cymatix Launcher dashboard reactivity.
  *
  * Polls server-rendered panels, wires lifecycle actions, and preserves
  * selected dashboard tabs across refreshes.
@@ -14,10 +14,10 @@
   const pollUrl = panels.dataset.pollUrl || "/api/state/panels";
   const pollIntervalMs = parseInt(panels.dataset.pollIntervalMs || "2000", 10);
   const domParser = new DOMParser();
-  const tabStorageKey = "helix-dashboard-tab";
-  const agentTabStorageKey = "helix-dashboard-agent-tab";
-  const agentOpenStorageKey = "helix-dashboard-agent-open";
-  const pipelineDevStorageKey = "helix-pipeline-dev-view";
+  const tabStorageKey = "cymatix-dashboard-tab";
+  const agentTabStorageKey = "cymatix-dashboard-agent-tab";
+  const agentOpenStorageKey = "cymatix-dashboard-agent-open";
+  const pipelineDevStorageKey = "cymatix-pipeline-dev-view";
 
   let pollTimer = null;
   let inFlight = false;
@@ -157,7 +157,7 @@
       const resp = await fetch("/api/state", { headers: { Accept: "application/json" } });
       if (!resp.ok) return;
       const state = await resp.json();
-      const running = state?.helix?.running === true;
+      const running = state?.cymatix?.running === true;
 
       const statusDot = document.querySelector(".status-dot");
       if (statusDot) {
@@ -169,7 +169,7 @@
       if (statusLabel) {
         if (running) {
           statusLabel.textContent =
-            "Running / pid " + state.helix.pid + " / port " + state.helix.port;
+            "Running / pid " + state.cymatix.pid + " / port " + state.cymatix.port;
         } else {
           statusLabel.textContent = "Stopped";
         }
@@ -259,7 +259,7 @@
       const path = actionButton.dataset.genomePath;
       if (!path) return;
       if (!window.confirm("Switch the active genome to:\n\n" + path +
-          "\n\nHelix will restart so the new genome can be loaded.")) {
+          "\n\nCymatix will restart so the new genome can be loaded.")) {
         return;
       }
       postGenome("/api/genome/select", { path: path }, actionButton);
@@ -298,7 +298,7 @@
     const path = input instanceof HTMLInputElement ? input.value.trim() : "";
     if (!path) return;
     if (!window.confirm("Create a new genome at:\n\n" + path +
-        "\n\nand switch helix to it?")) {
+        "\n\nand switch cymatix to it?")) {
       return;
     }
     postGenome("/api/genome/create", { path: path },
@@ -378,7 +378,7 @@
     try {
       const resp = await fetch("/api/state");
       const state = await resp.json();
-      if (state?.helix?.running || state?.needs_db_selection === false) {
+      if (state?.cymatix?.running || state?.needs_db_selection === false) {
         dbModal.hidden = true;
       }
     } catch (err) {

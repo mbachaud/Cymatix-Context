@@ -1,6 +1,6 @@
 """Tests for the cross-shard score-path instrumentation (#181).
 
-Verifies the HELIX_SHARD_SCORE_DEBUG gate on ShardRouter.query_genes:
+Verifies the CYMATIX_SHARD_SCORE_DEBUG gate on ShardRouter.query_genes:
 
   (a) flag OFF  -> last_score_breakdown / last_shard_multipliers stay {},
       and the returned ranking is byte-identical to a baseline call (no
@@ -38,7 +38,7 @@ from cymatix_context.shard_schema import (
     upsert_fingerprint,
 )
 
-_DEBUG_ENV = "HELIX_SHARD_SCORE_DEBUG"
+_DEBUG_ENV = "CYMATIX_SHARD_SCORE_DEBUG"
 
 
 def _mk_gene(content: str, domains: list, entities: list, source: str) -> Gene:
@@ -71,7 +71,7 @@ def _clear_debug_env():
 def two_shard_setup():
     """main.db + two populated shard .db files on disk (2 docs, 2 shards).
 
-    Shard A: a README.md doc tagged docs/helix (eligible for doc-type boost).
+    Shard A: a README.md doc tagged docs/cymatix (eligible for doc-type boost).
     Shard B: an auth.py doc tagged auth/jwt.
     """
     td = tempfile.TemporaryDirectory()
@@ -82,9 +82,9 @@ def two_shard_setup():
 
     ga = Genome(shard_a_path)
     gene_a = _mk_gene(
-        "Helix design README. Context retrieval via fingerprints and shards.",
+        "Cymatix design README. Context retrieval via fingerprints and shards.",
         domains=["docs"],
-        entities=["helix"],
+        entities=["cymatix"],
         source="/docs/README.md",  # basename README.md -> doc-type boost
     )
     gene_a_id = ga.upsert_gene(gene_a, apply_gate=False)
@@ -112,7 +112,7 @@ def two_shard_setup():
         main, gene_id=gene_a_id, shard_name="shard_a",
         source_id="/docs/README.md",
         domains_json=json.dumps(["docs"]),
-        entities_json=json.dumps(["helix"]),
+        entities_json=json.dumps(["cymatix"]),
         key_values_json="[]",
     )
     upsert_fingerprint(
@@ -135,7 +135,7 @@ def two_shard_setup():
 # Query spans both shards so the genuine cross-shard merge path runs
 # (>=2 shards participate -> IDF correction + doc-type boost active).
 _DOMAINS = ["auth", "docs"]
-_ENTITIES = ["helix", "jwt"]
+_ENTITIES = ["cymatix", "jwt"]
 
 
 def test_init_attrs_default_empty(two_shard_setup):

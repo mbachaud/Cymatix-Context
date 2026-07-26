@@ -1,4 +1,4 @@
-"""Helix Context Server -- The cell membrane.
+"""Cymatix Context Server -- The cell membrane.
 
 A FastAPI HTTP sidecar that acts as an OpenAI-compatible proxy.
 Clients point their model endpoint at this server instead of Ollama directly.
@@ -26,8 +26,8 @@ from typing import Optional
 import uvicorn
 from fastapi import FastAPI
 
-from ..config import HelixConfig, load_config
-from ..context_manager import HelixContextManager
+from ..config import CymatixConfig, load_config
+from ..context_manager import CymatixContextManager
 from ..identity.registry import Registry
 from ..vault import VaultManager
 
@@ -42,11 +42,11 @@ from .routes_ingest import setup_ingest_routes
 from .routes_admin import setup_admin_routes
 from .routes_registry import setup_registry_routes
 
-log = logging.getLogger("helix.server")
+log = logging.getLogger("cymatix.server")
 
 
-def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
-    """Factory -- creates the FastAPI app with a HelixContextManager."""
+def create_app(config: Optional[CymatixConfig] = None) -> FastAPI:
+    """Factory -- creates the FastAPI app with a CymatixContextManager."""
     from ..bridge import AgentBridge
 
     if config is None:
@@ -82,7 +82,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
             _cost_class, config.ribosome.effective_backend, config.ribosome.active_model,
         )
 
-    helix = HelixContextManager(config)
+    cymatix = CymatixContextManager(config)
 
     # W2-B: emit the compressor info-metric for dashboard visibility.
     try:
@@ -102,10 +102,10 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
     bridge = AgentBridge()
 
     # Session registry -- presence + attribution.
-    registry = Registry(helix.genome)
+    registry = Registry(cymatix.genome)
 
     # Vault manager -- operator-facing markdown export.
-    vault = VaultManager(config=config, genome=helix.genome)
+    vault = VaultManager(config=config, genome=cymatix.genome)
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
@@ -131,9 +131,9 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
         except Exception:
             log.warning("Startup: failed to stamp server_state signal", exc_info=True)
 
-        task = asyncio.create_task(_background_checkpoint(helix))
+        task = asyncio.create_task(_background_checkpoint(cymatix))
         sweep_task = asyncio.create_task(_background_registry_sweep(registry))
-        wal_gauge_task = asyncio.create_task(_background_wal_gauge(helix))
+        wal_gauge_task = asyncio.create_task(_background_wal_gauge(cymatix))
 
         # Vault export -- opt-in, off if config.vault.enabled=false.
         try:
@@ -150,7 +150,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
                 await _t
             except asyncio.CancelledError:
                 pass
-        helix.genome.checkpoint("TRUNCATE")
+        cymatix.genome.checkpoint("TRUNCATE")
 
         try:
             vault.stop()
@@ -159,7 +159,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
 
         # Flush token counter so lifetime totals persist across restart.
         try:
-            helix.token_counter.flush()
+            cymatix.token_counter.flush()
         except Exception:
             log.warning("Token counter flush failed during shutdown", exc_info=True)
 
@@ -180,12 +180,12 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
 
     from .. import __version__ as _pkg_version
     app = FastAPI(title="Cymatix Context Proxy", version=_pkg_version, lifespan=lifespan)
-    app.state.helix = helix  # Expose for testing
+    app.state.cymatix = cymatix  # Expose for testing
     app.state.bridge = bridge  # Expose for testing
     app.state.registry = registry  # Expose for testing
     app.state.vault = vault
 
-    # OpenTelemetry init (off unless HELIX_OTEL_ENABLED=1 or [telemetry]
+    # OpenTelemetry init (off unless CYMATIX_OTEL_ENABLED=1 or [telemetry]
     # enabled=true; env wins over toml — see otel.resolve_telemetry_settings).
     try:
         from ..telemetry import setup_telemetry
@@ -194,10 +194,10 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
         log.debug("OTel setup failed", exc_info=True)
 
     # ---- Register all route modules ----
-    setup_context_routes(app, helix=helix, config=config, registry=registry)
-    setup_ingest_routes(app, helix=helix, config=config, registry=registry)
-    setup_registry_routes(app, helix=helix, config=config, registry=registry)
-    setup_admin_routes(app, helix=helix, config=config, registry=registry, bridge=bridge)
+    setup_context_routes(app, cymatix=cymatix, config=config, registry=registry)
+    setup_ingest_routes(app, cymatix=cymatix, config=config, registry=registry)
+    setup_registry_routes(app, cymatix=cymatix, config=config, registry=registry)
+    setup_admin_routes(app, cymatix=cymatix, config=config, registry=registry, bridge=bridge)
 
     # Register vault endpoints (export, status, trace, pin/unpin).
     _register_vault_routes(app)
@@ -210,7 +210,7 @@ def create_app(config: Optional[HelixConfig] = None) -> FastAPI:
 def main():
     config = load_config()
     app = create_app(config)
-    log.info("Helix Context Proxy starting on %s:%d", config.server.host, config.server.port)
+    log.info("Cymatix Context Proxy starting on %s:%d", config.server.host, config.server.port)
     log.info("Upstream: %s", config.server.upstream)
     uvicorn.run(app, host=config.server.host, port=config.server.port)
 

@@ -199,8 +199,8 @@ def test_ladder_escalates_rung1_then_rung2_across_two_windows():
 
 
 def test_from_env_defaults(monkeypatch):
-    for var in ("HELIX_BFM_CRAWL_WINDOW", "HELIX_BFM_CRAWL_FACTOR",
-                "HELIX_BFM_CRAWL_ACTION"):
+    for var in ("CYMATIX_BFM_CRAWL_WINDOW", "CYMATIX_BFM_CRAWL_FACTOR",
+                "CYMATIX_BFM_CRAWL_ACTION"):
         monkeypatch.delenv(var, raising=False)
     det = CrawlDetector.from_env()
     assert det.baseline_window == 8
@@ -209,17 +209,17 @@ def test_from_env_defaults(monkeypatch):
 
 
 def test_from_env_overrides(monkeypatch):
-    monkeypatch.setenv("HELIX_BFM_CRAWL_WINDOW", "3")
-    monkeypatch.setenv("HELIX_BFM_CRAWL_FACTOR", "2.5")
-    monkeypatch.setenv("HELIX_BFM_CRAWL_ACTION", "CPU")
+    monkeypatch.setenv("CYMATIX_BFM_CRAWL_WINDOW", "3")
+    monkeypatch.setenv("CYMATIX_BFM_CRAWL_FACTOR", "2.5")
+    monkeypatch.setenv("CYMATIX_BFM_CRAWL_ACTION", "CPU")
     det = CrawlDetector.from_env()
     assert (det.baseline_window, det.factor, det.action) == (3, 2.5, "cpu")
 
 
 def test_from_env_garbage_falls_back_to_defaults(monkeypatch):
-    monkeypatch.setenv("HELIX_BFM_CRAWL_WINDOW", "banana")
-    monkeypatch.setenv("HELIX_BFM_CRAWL_FACTOR", "-3")
-    monkeypatch.setenv("HELIX_BFM_CRAWL_ACTION", "explode")
+    monkeypatch.setenv("CYMATIX_BFM_CRAWL_WINDOW", "banana")
+    monkeypatch.setenv("CYMATIX_BFM_CRAWL_FACTOR", "-3")
+    monkeypatch.setenv("CYMATIX_BFM_CRAWL_ACTION", "explode")
     det = CrawlDetector.from_env()
     assert (det.baseline_window, det.factor, det.action) == (8, 5.0, "ladder")
 

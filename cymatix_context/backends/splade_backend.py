@@ -23,7 +23,7 @@ from __future__ import annotations
 import logging
 from typing import Dict, List, Optional, Tuple
 
-log = logging.getLogger("helix.splade")
+log = logging.getLogger("cymatix.splade")
 
 # Lazy-loaded model + tokenizer
 _model = None

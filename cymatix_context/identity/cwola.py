@@ -24,7 +24,7 @@ import sqlite3
 import time
 from typing import Any, Dict, List, Optional, Sequence
 
-log = logging.getLogger("helix.cwola")
+log = logging.getLogger("cymatix.cwola")
 
 BUCKET_WINDOW_S = 60.0  # same-session re-query counts as Bucket B within this
 

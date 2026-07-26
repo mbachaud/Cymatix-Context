@@ -1,5 +1,5 @@
 """Headroom E2E latency - measure the compress_text() seam with headroom
-enabled vs disabled (HELIX_DISABLE_HEADROOM=1 fallback).
+enabled vs disabled (CYMATIX_DISABLE_HEADROOM=1 fallback).
 
 Samples real gene content from the running genome across content types
 (code / config / doc / benchmark / log-ish), runs N trials per sample
@@ -173,13 +173,13 @@ def main(argv=None) -> int:
             if not samples:
                 continue
             # A: headroom ON
-            os.environ.pop("HELIX_DISABLE_HEADROOM", None)
+            os.environ.pop("CYMATIX_DISABLE_HEADROOM", None)
             on_stats = _run_one_mode(samples, budget, args.trials)
             on_row = {"kind": kind, "budget": budget, "mode": "headroom_on",
                       **on_stats}
 
             # B: headroom OFF (character-level fallback)
-            os.environ["HELIX_DISABLE_HEADROOM"] = "1"
+            os.environ["CYMATIX_DISABLE_HEADROOM"] = "1"
             off_stats = _run_one_mode(samples, budget, args.trials)
             off_row = {"kind": kind, "budget": budget, "mode": "headroom_off",
                        **off_stats}
@@ -187,7 +187,7 @@ def main(argv=None) -> int:
             results.extend([on_row, off_row])
             rows_table.extend([on_row, off_row])
 
-    os.environ.pop("HELIX_DISABLE_HEADROOM", None)
+    os.environ.pop("CYMATIX_DISABLE_HEADROOM", None)
 
     print(_format_table(rows_table))
 

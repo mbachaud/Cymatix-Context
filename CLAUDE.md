@@ -1,6 +1,6 @@
 # Cymatix Context
 
-Knowledge-store-based context compression for local LLMs. v0.8.0 (renamed from helix-context in July 2026 — old CLI/env/import names still work).
+Knowledge-store-based context compression for local LLMs. v0.8.5 (clean break: renamed from helix-context in July 2026; as of 0.8.5 the old helix CLI/env/import names, `helix.toml`, and `helix_*` MCP tools are removed — cymatix only).
 
 ## Quick Start
 
@@ -46,13 +46,13 @@ The pipeline emits a **know/miss agent contract** on `/context/packet`: every re
 
 ## Package Structure (post-PR #90)
 
-After the repo restructure, `cymatix_context/` is organized into 15 sub-packages plus a handful of top-level orchestration modules. `helix_context` remains as an alias shim package.
+After the repo restructure, `cymatix_context/` is organized into 15 sub-packages plus a handful of top-level orchestration modules. (The old `helix_context` alias package was removed in 0.8.5.)
 
 | Package | Purpose |
 |---------|---------|
 | `adapters/` | Cache, DAL, retriever abstractions |
 | `backends/` | Compressor (formerly ribosome), DeBERTa, NLI, SEMA codec, SPLADE |
-| `cli/` | `helix` CLI: query, packet, ingest, gene, neighbors, diag, config, status |
+| `cli/` | `cymatix` CLI: query, packet, ingest, gene, neighbors, diag, config, status |
 | `encoding/` | Chunking, fragment encoding, legibility headers, Headroom bridge |
 | `identity/` | CWoLa logger, session delivery, registry, provenance, claims |
 | `pipeline/` | Tier logic, pipeline-stage helpers |
@@ -68,21 +68,21 @@ After the repo restructure, `cymatix_context/` is organized into 15 sub-packages
 
 Top-level modules: `context_manager.py` (pipeline orchestrator), `config.py` (TOML loader), `schemas.py` (Pydantic models), `knowledge_store.py` (SQLite DDL + retrieval), `codons.py` (chunker + encoder), `tagger.py` (CPU ingest tagger).
 
-**Back-compat shims:** `genome.py`, `ribosome.py`, `replication.py`, `hgt.py`, `server.py`, `mcp_server.py` re-export from their new locations. Old import paths still work. See `docs/ROSETTA.md` for the full biology-to-software lexicon. The whole helix_context package name is itself now a shim for cymatix_context.
+**Biology-lexicon shims:** `genome.py`, `ribosome.py`, `replication.py`, `hgt.py`, `server.py`, `mcp_server.py` re-export from their new locations (the domain metaphor, not the helix brand). See `docs/ROSETTA.md` for the full biology-to-software lexicon. The `helix_context` alias package was removed in 0.8.5 — import `cymatix_context`.
 
 ## Configuration
 
-All config lives in `cymatix.toml` (`helix.toml` still honored as fallback). Sections:
+All config lives in `cymatix.toml` (the `helix.toml` fallback was removed in 0.8.5). Sections:
 
 | Section | Key settings |
 |---------|-------------|
 | `[ribosome]` | model, backend (`"ollama"` / `"claude"` / `"litellm"` / `"none"`), timeout, query_expansion_enabled |
 | `[hardware]` | device auto-detection (CUDA, MPS, ROCm, CPU) |
-| `[budget]` | expression_tokens (default 7000 — code and helix.toml unified in the 2026-06-12 default-honesty pass), max_genes_per_turn, splice_aggressiveness, decoder_mode, legibility_enabled, session_delivery_enabled |
+| `[budget]` | expression_tokens (default 7000 — code and cymatix.toml unified in the 2026-06-12 default-honesty pass), max_genes_per_turn, splice_aggressiveness, decoder_mode, legibility_enabled, session_delivery_enabled |
 | `[session]` | synthetic_session_enabled, synthetic_session_window_s, default_party_id |
 | `[genome]` | path (`genomes/main/genome.db`), compact_interval, cold_start_threshold, replicas |
 | `[server]` | host, port, upstream |
-| `[telemetry]` | OTel export defaults: enabled (default false), endpoint (`"localhost:4317"`), insecure, sampler_ratio, redact_query, logs_enabled, logs_level. Precedence: `CYMATIX_OTEL_* (HELIX_OTEL_* honored)` env > toml > default (env wins both directions); the tray launcher auto-exports `HELIX_OTEL_ENABLED=1` once the observability stack's collector port is up |
+| `[telemetry]` | OTel export defaults: enabled (default false), endpoint (`"localhost:4317"`), insecure, sampler_ratio, redact_query, logs_enabled, logs_level. Precedence: `CYMATIX_OTEL_*` env > toml > default (env wins both directions); the tray launcher auto-exports `CYMATIX_OTEL_ENABLED=1` once the observability stack's collector port is up |
 | `[headroom]` | route_upstream toggle for Headroom proxy integration |
 | `[ingestion]` | backend (`"cpu"` / `"ollama"` / `"hybrid"`), splade_enabled, rerank_model, entity_graph, sema_embed_on_ingest (#227: false = no MiniLM load at ingest; TCM falls back to text) |
 | `[context]` | cold_tier_enabled, cold_tier_k, cold_tier_min_cosine |
@@ -91,7 +91,7 @@ All config lives in `cymatix.toml` (`helix.toml` still honored as fallback). Sec
 | `[retrieval]` | fusion_mode (`"rrf"` default / `"additive"` legacy), sr_enabled, sr_gamma, ray_trace_theta, seeded_edges_enabled, fts5_candidate_depth (#205: FTS content-tier fetch depth; 0 = auto = max_genes*4), blend_mode (`"scale_relative"` default / `"legacy"` DEPRECATED-FOR-REMOVAL, condition-gated — not calendar-based; target v(N+2) at earliest) |
 | `[plr]` | Piecewise linear reranker: enabled, model_path |
 | `[know]` | KnowBlock confidence logistic: emit_floor, betas, s_ref, g_ref, stale_after_days (+ calibrated_at / calibrated_on_n written by scripts/calibrate_know_confidence.py) |
-| `[mem_sync]` | Auto-memory-to-helix sync: watch_dirs, sync_interval_s |
+| `[mem_sync]` | Auto-memory-to-cymatix sync: watch_dirs, sync_interval_s |
 | `[synonyms]` | Lightweight query expansion (e.g., "cache" -> ["redis", "ttl", "invalidation"]) |
 | `[abstain]` | Abstention thresholds for low-confidence responses |
 
@@ -150,7 +150,7 @@ python -m pytest tests/ -m live -v -s
 
 ## Observability (Grafana telemetry)
 
-Helix ships a native OTel sidecar (collector + Prometheus + Tempo + Loki + Grafana):
+Cymatix ships a native OTel sidecar (collector + Prometheus + Tempo + Loki + Grafana):
 
 ```powershell
 scripts\setup-grafana-telem.ps1     # Windows
@@ -160,11 +160,11 @@ scripts/setup-grafana-telem.sh      # Linux / macOS
 Enable telemetry on the backend:
 
 ```bash
-HELIX_OTEL_ENABLED=1 HELIX_OTEL_ENDPOINT=localhost:4317 \
-  python -m uvicorn helix_context._asgi:app --port 11437
+CYMATIX_OTEL_ENABLED=1 CYMATIX_OTEL_ENDPOINT=localhost:4317 \
+  python -m uvicorn cymatix_context._asgi:app --port 11437
 ```
 
-Dashboards: <http://localhost:3000/d/helix-overview>.
+Dashboards: <http://localhost:3000/d/cymatix-overview>.
 See [`docs/architecture/OBSERVABILITY.md`](docs/architecture/OBSERVABILITY.md) for the full instrumentation surface.
 
 ## Gotchas

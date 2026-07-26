@@ -1,8 +1,8 @@
 """Untrusted-fixture exclusion for the claude-matrix bench (issue #133).
 
 The xl-sharded fixture's `projects` shard was built from a polluted
-source tree -- F:/Projects/_worktrees/helix-context/* PR-branch worktrees
-plus a helix-retrieval-upgrade clone, with no canonical helix-context/
+source tree -- F:/Projects/_worktrees/cymatix-context/* PR-branch worktrees
+plus a cymatix-retrieval-upgrade clone, with no canonical cymatix-context/
 checkout. The needles' gold_source labels cannot resolve there, so
 retr_hit / MRR on xl-sharded are not meaningful (correctness decoupled
 from retrieval -- the 4-correct-with-gold / 17-correct-without inversion).

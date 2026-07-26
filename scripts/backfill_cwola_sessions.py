@@ -10,7 +10,7 @@ Problem (discovered 2026-04-13):
 Server-side fix (commit pending):
     server.py now falls back to a synthetic session_id from
     sha1(client_ip + time_window_bucket) and a default party_id from
-    helix.toml `[session]`. See the cwola_session_id block in
+    cymatix.toml `[session]`. See the cwola_session_id block in
     cymatix_context/server.py (~line 500).
 
 This script:
@@ -27,7 +27,7 @@ Usage:
 Safety:
     - Uses a transaction — either all backfill applies or none does.
     - Only touches rows where session_id IS NULL (idempotent).
-    - Caller must stop the helix server first to avoid write contention.
+    - Caller must stop the cymatix server first to avoid write contention.
 """
 
 from __future__ import annotations
@@ -49,7 +49,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--db", type=Path, default=Path("genome.db"),
                    help="Path to genome.db (default: ./genome.db)")
     p.add_argument("--window-s", type=int, default=300,
-                   help="Session grouping window in seconds (default: 300 = 5 min); must match helix.toml")
+                   help="Session grouping window in seconds (default: 300 = 5 min); must match cymatix.toml")
     p.add_argument("--party-id", type=str, default="swift_wing21",
                    help="Default party_id to assign (default: swift_wing21)")
     p.add_argument("--client-ip", type=str, default="historical",

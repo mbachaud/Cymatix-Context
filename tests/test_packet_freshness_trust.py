@@ -26,7 +26,7 @@ from tests.conftest import make_gene
 @pytest.fixture
 def default_calibration(monkeypatch):
     """Pin the DEFAULT calibration (same rationale as the fixture in
-    test_know_miss_block.py): the shipped helix.toml [know] betas are
+    test_know_miss_block.py): the shipped cymatix.toml [know] betas are
     under the #287 HOLD and would mask the trust contract under test."""
     from cymatix_context.scoring import know_calibration as kc
 
@@ -91,8 +91,8 @@ def test_unverified_only_packet_caps_confidence_and_flags_soft_stale(
     genome = Genome(":memory:")
     try:
         gene = make_gene(
-            "Helix design notes for the agent index",
-            domains=["helix", "design"],
+            "Cymatix design notes for the agent index",
+            domains=["cymatix", "design"],
         )
         gene.source_id = "/repo/docs/design.md"
         gene.source_kind = "doc"
@@ -104,7 +104,7 @@ def test_unverified_only_packet_caps_confidence_and_flags_soft_stale(
         genome.upsert_gene(gene, apply_gate=False)
 
         packet = build_context_packet(
-            "helix design",
+            "cymatix design",
             task_type="explain",
             genome=genome,
             now_ts=now_ts,
@@ -131,8 +131,8 @@ def test_verified_packet_know_confidence_unaffected(default_calibration):
     genome = Genome(":memory:")
     try:
         gene = make_gene(
-            "Helix design notes for the agent index",
-            domains=["helix", "design"],
+            "Cymatix design notes for the agent index",
+            domains=["cymatix", "design"],
         )
         gene.source_id = "/repo/docs/design.md"
         gene.source_kind = "doc"
@@ -142,7 +142,7 @@ def test_verified_packet_know_confidence_unaffected(default_calibration):
         genome.upsert_gene(gene, apply_gate=False)
 
         packet = build_context_packet(
-            "helix design",
+            "cymatix design",
             task_type="explain",
             genome=genome,
             now_ts=now_ts,

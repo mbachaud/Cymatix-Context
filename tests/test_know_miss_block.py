@@ -21,7 +21,7 @@ import pytest
 from pydantic import ValidationError
 
 from cymatix_context import context_manager as cm
-from cymatix_context.agent_prompt import HELIX_NO_MATCH_FRAGMENT
+from cymatix_context.agent_prompt import CYMATIX_NO_MATCH_FRAGMENT
 from cymatix_context.context_packet import _attach_know_or_miss, build_context_packet
 from cymatix_context.scoring.know_calibration import (
     DEFAULT_BETAS,
@@ -69,7 +69,7 @@ def fake_gene():
         codons=[],
         promoter=PromoterTags(),
         epigenetics=EpigeneticMarkers(created_at=0.0),
-        source_id="F:/Projects/helix-context/cymatix_context/context_manager.py",
+        source_id="F:/Projects/cymatix-context/cymatix_context/context_manager.py",
     )
 
 
@@ -182,7 +182,7 @@ def _make_packet_gene(content: str, domain: str, *, gene_id: str | None = None):
     from tests.conftest import make_gene
 
     gene = make_gene(content, domains=[domain], gene_id=gene_id)
-    gene.source_id = f"F:/Projects/helix-context/cymatix_context/{domain}.py"
+    gene.source_id = f"F:/Projects/cymatix-context/cymatix_context/{domain}.py"
     gene.source_kind = "code"
     gene.volatility_class = "stable"
     gene.authority_class = "primary"
@@ -191,7 +191,7 @@ def _make_packet_gene(content: str, domain: str, *, gene_id: str | None = None):
 
 def test_gene_id_match_beacon_only_on_exact_filename_match():
     g = _SyntheticGene(
-        "g1", "F:/Projects/helix-context/cymatix_context/context_manager.py"
+        "g1", "F:/Projects/cymatix-context/cymatix_context/context_manager.py"
     )
     # Filename match — wins.
     assert _gene_id_beacon("context_manager", g) in ("context", "manager", "context_manager")
@@ -214,19 +214,19 @@ def test_expressed_context_has_no_match_tag_on_miss():
     # Exact byte-equality assertion (§6).
     assert (
         cm._no_match_token("abstain")
-        == '<helix:no_match reason="abstain" do_not_answer="true"/>'
+        == '<cymatix:no_match reason="abstain" do_not_answer="true"/>'
     )
     assert (
         cm._no_match_token("denatured")
-        == '<helix:no_match reason="denatured" do_not_answer="true"/>'
+        == '<cymatix:no_match reason="denatured" do_not_answer="true"/>'
     )
     assert (
         cm._no_match_token("sparse")
-        == '<helix:no_match reason="sparse" do_not_answer="true"/>'
+        == '<cymatix:no_match reason="sparse" do_not_answer="true"/>'
     )
     assert (
         cm._no_match_token("no_promoter_match")
-        == '<helix:no_match reason="no_promoter_match" do_not_answer="true"/>'
+        == '<cymatix:no_match reason="no_promoter_match" do_not_answer="true"/>'
     )
     # The deprecated alias points at the abstain form.
     assert cm._ABSTAIN_MARKER == cm._no_match_token("abstain")
@@ -239,11 +239,11 @@ def test_expressed_context_has_no_match_tag_on_miss():
 def test_agent_recommendation_escalate_on_code_shaped_miss():
     # Code-shaped queries pick (grep, rag) regardless of reason.
     assert _pick_escalation("def parse_promoter()", "sparse") == ["grep", "rag"]
-    assert _pick_escalation("cymatix_context.config.HelixConfig", "no_promoter_match") == ["grep", "rag"]
+    assert _pick_escalation("cymatix_context.config.CymatixConfig", "no_promoter_match") == ["grep", "rag"]
     # Code shape detection itself
     assert _is_code_shaped("def foo(): pass")
     assert _is_code_shaped("module.submodule.fn")
-    assert not _is_code_shaped("what is helix philosophy")
+    assert not _is_code_shaped("what is cymatix philosophy")
 
 
 # ─────────────────────────────────────────────────────────────────────
@@ -318,7 +318,7 @@ def test_calibration_load_falls_back_to_defaults_on_missing_toml(tmp_path):
 
 
 def test_calibration_load_falls_back_on_malformed_betas(tmp_path):
-    bad_toml = tmp_path / "helix.toml"
+    bad_toml = tmp_path / "cymatix.toml"
     bad_toml.write_text(
         '[know]\nbetas = ["nope"]\nemit_floor = 0.55\n', encoding="utf-8"
     )
@@ -540,11 +540,11 @@ def test_calibration_script_smoke_runs():
 # Agent-prompt fragment exposed
 # ─────────────────────────────────────────────────────────────────────
 
-def test_helix_no_match_fragment_constant():
-    assert isinstance(HELIX_NO_MATCH_FRAGMENT, str)
-    assert "do_not_answer_from_genome" in HELIX_NO_MATCH_FRAGMENT
-    assert "<helix:no_match" in HELIX_NO_MATCH_FRAGMENT
-    assert "scored as a hard failure" in HELIX_NO_MATCH_FRAGMENT
+def test_cymatix_no_match_fragment_constant():
+    assert isinstance(CYMATIX_NO_MATCH_FRAGMENT, str)
+    assert "do_not_answer_from_genome" in CYMATIX_NO_MATCH_FRAGMENT
+    assert "<cymatix:no_match" in CYMATIX_NO_MATCH_FRAGMENT
+    assert "scored as a hard failure" in CYMATIX_NO_MATCH_FRAGMENT
 
 
 # ─────────────────────────────────────────────────────────────────────
@@ -553,7 +553,7 @@ def test_helix_no_match_fragment_constant():
 
 def test_packet_attach_know_on_strong_signal(default_calibration):
     g = _SyntheticGene(
-        "g1", "F:/Projects/helix-context/cymatix_context/context_manager.py"
+        "g1", "F:/Projects/cymatix-context/cymatix_context/context_manager.py"
     )
     p = ContextPacket(task_type="explain", query="context_manager")
     _attach_know_or_miss(
@@ -601,7 +601,7 @@ def test_packet_attach_lexical_dense_agree_true_on_agreeing_tiers(
     both rank the same gene_id at the top must yield
     KnowBlock.lexical_dense_agree=True."""
     g = _SyntheticGene(
-        "g1", "F:/Projects/helix-context/cymatix_context/context_manager.py"
+        "g1", "F:/Projects/cymatix-context/cymatix_context/context_manager.py"
     )
     # g1 wins both the lexical and the dense ranker -> intersection
     # non-empty -> lexical_dense_agree must be True.
@@ -627,7 +627,7 @@ def test_packet_attach_lexical_dense_agree_true_on_agreeing_tiers(
 def default_calibration(monkeypatch):
     """Pin decide_know_or_miss to the DEFAULT calibration for tests that
     assert lexical_dense_agree PLUMBING via the know-block shape. Since
-    the 2026-07-06 first real fit, helix.toml [know] carries fitted
+    the 2026-07-06 first real fit, cymatix.toml [know] carries fitted
     betas + a deliberately conservative emit_floor under which these
     synthetic agree=False scenarios correctly land below the floor
     (MissBlock instead of KnowBlock). The plumbing contract under test
@@ -649,10 +649,10 @@ def test_packet_attach_lexical_dense_agree_false_on_disjoint_tiers(
     safe no-agreement direction. Pins the negative case so the
     plumbing fix can't regress into a false-positive boost."""
     g = _SyntheticGene(
-        "g1", "F:/Projects/helix-context/cymatix_context/context_manager.py"
+        "g1", "F:/Projects/cymatix-context/cymatix_context/context_manager.py"
     )
     g2 = _SyntheticGene(
-        "g2", "F:/Projects/helix-context/cymatix_context/codons.py"
+        "g2", "F:/Projects/cymatix-context/cymatix_context/codons.py"
     )
     # Lexical tiers favour g1; dense tiers favour g2. Disjoint top-K.
     tier_contributions = {
@@ -680,7 +680,7 @@ def test_packet_attach_lexical_dense_agree_false_when_no_tiers_passed(
     still works and lands on the safe False direction (no KeyError, no
     crash) — guards the older direct-caller path."""
     g = _SyntheticGene(
-        "g1", "F:/Projects/helix-context/cymatix_context/context_manager.py"
+        "g1", "F:/Projects/cymatix-context/cymatix_context/context_manager.py"
     )
     p = ContextPacket(task_type="explain", query="context_manager")
     _attach_know_or_miss(

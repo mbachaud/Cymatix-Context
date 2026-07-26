@@ -19,7 +19,7 @@ import pytest
 
 from cymatix_context import context_manager as _cm
 from cymatix_context.config import BudgetConfig, ClassifierConfig
-from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.context_manager import CymatixContextManager
 from cymatix_context.retrieval.query_classifier import (
     DECODER_MODE_TABLE,
     resolve_decoder_mode,
@@ -28,19 +28,19 @@ from cymatix_context.schemas import (
     CALLER_MODEL_CLASS_DEFAULT,
     CallerModelClass,
 )
-from tests.conftest import MockCompressorBackend, make_client, make_gene, make_helix_config
+from tests.conftest import MockCompressorBackend, make_client, make_gene, make_cymatix_config
 
 
 # ── Test fixtures ────────────────────────────────────────────────────────
 
 
-def _make_manager_with_kvs() -> HelixContextManager:
+def _make_manager_with_kvs() -> CymatixContextManager:
     """Manager with mock backend + genes that carry KVs (for slate tests)."""
-    cfg = make_helix_config(
+    cfg = make_cymatix_config(
         budget=BudgetConfig(max_genes_per_turn=4, splice_aggressiveness=0.5),
         classifier=ClassifierConfig(enabled=True),
     )
-    mgr = HelixContextManager(cfg)
+    mgr = CymatixContextManager(cfg)
     mgr.ribosome.backend = MockCompressorBackend()
     # Seed genes with key_values so slate population has material.
     seeds: List[Tuple[str, List[str], List[str], List[str]]] = [
@@ -70,7 +70,7 @@ def _make_manager_with_kvs() -> HelixContextManager:
 
 @pytest.fixture
 def http_client():
-    cfg = make_helix_config(classifier=ClassifierConfig(enabled=True))
+    cfg = make_cymatix_config(classifier=ClassifierConfig(enabled=True))
     client = make_client(config=cfg, backend=MockCompressorBackend())
     app = client.app
     # Seed at least one gene so the build_context path runs.
@@ -78,7 +78,7 @@ def http_client():
                   domains=["auth"], entities=["jwt"],
                   gene_id="http_seed_00001")
     g.key_values = ["jwt_expiry=15m"]
-    app.state.helix.genome.upsert_gene(g)
+    app.state.cymatix.genome.upsert_gene(g)
     with client as c:
         yield c
 
@@ -180,7 +180,7 @@ def test_frontier_skips_foveated(monkeypatch):
 
 
 def test_small_moe_emits_json_slate():
-    """Spec §10 test 3: decoder prompt contains <helix:slate>{ and the
+    """Spec §10 test 3: decoder prompt contains <cymatix:slate>{ and the
     rendered slate body parses as JSON."""
     mgr = _make_manager_with_kvs()
     try:
@@ -189,10 +189,10 @@ def test_small_moe_emits_json_slate():
             caller_model_class="small_moe",
         )
         prompt = win.ribosome_prompt
-        assert "<helix:slate>" in prompt
+        assert "<cymatix:slate>" in prompt
         # Extract the slate body and assert it is JSON.
-        start = prompt.index("<helix:slate>") + len("<helix:slate>")
-        end = prompt.index("</helix:slate>", start)
+        start = prompt.index("<cymatix:slate>") + len("<cymatix:slate>")
+        end = prompt.index("</cymatix:slate>", start)
         slate_body = prompt[start:end]
         parsed = json.loads(slate_body)  # must not raise
         assert isinstance(parsed, dict)
@@ -211,11 +211,11 @@ def test_slate_char_bounded_not_entry_bounded():
     kvs = [f"k{i:02d}=v{i:02d}" for i in range(50)]
     rendered = _cm._render_small_moe_slate(kvs, char_budget=400)
 
-    assert rendered.startswith("<helix:slate>")
-    assert rendered.endswith("</helix:slate>")
+    assert rendered.startswith("<cymatix:slate>")
+    assert rendered.endswith("</cymatix:slate>")
     assert len(rendered) <= 400
     # Parse the JSON and count entries.
-    body = rendered[len("<helix:slate>"): -len("</helix:slate>")]
+    body = rendered[len("<cymatix:slate>"): -len("</cymatix:slate>")]
     parsed = json.loads(body)
     assert len(parsed) > 20, (
         f"expected >20 entries to fit in 400-char budget with short KVs, "
@@ -231,7 +231,7 @@ def test_slate_truncates_long_value_to_min_chars():
         "next=short",
     ]
     rendered = _cm._render_small_moe_slate(kvs, char_budget=80)
-    body = rendered[len("<helix:slate>"): -len("</helix:slate>")]
+    body = rendered[len("<cymatix:slate>"): -len("</cymatix:slate>")]
     parsed = json.loads(body)
     # The huge value must be truncated; we don't assert the precise length
     # because the binary-search width depends on the JSON-overhead of the

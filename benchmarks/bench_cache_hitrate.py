@@ -4,7 +4,7 @@ overlapping queries hit overlapping source_ids.
 Design:
     - N "agents" (distinct session_ids) run a shared pool of queries.
     - Queries are drawn with replacement so overlap is explicit.
-    - Each query -> Helix packet -> DAL fetch for every source_id.
+    - Each query -> Cymatix packet -> DAL fetch for every source_id.
     - Two runs: cold (fresh cache per call) and warm (shared cache).
     - Reports: per-agent + aggregate hit-rate + latency savings.
 
@@ -33,13 +33,13 @@ import httpx  # noqa: E402
 from cymatix_context.adapters.cache import CachedDAL  # noqa: E402
 from cymatix_context.adapters.dal import DAL  # noqa: E402
 
-HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
+CYMATIX_URL = os.environ.get("CYMATIX_URL", "http://127.0.0.1:11437")
 
 # Queries overlap — shared interest pool across agents. Some unique
 # per agent to simulate working sets that diverge.
 SHARED_QUERIES = [
     "where does auth config live",
-    "what port does helix listen on",
+    "what port does cymatix listen on",
     "how does the packet freshness model work",
     "claim extraction pipeline",
     "headroom dashboard configuration",
@@ -61,7 +61,7 @@ AGENT_SPECIALTIES = {
 def _get_packet(client, query: str) -> dict:
     try:
         r = client.post(
-            f"{HELIX_URL}/context/packet",
+            f"{CYMATIX_URL}/context/packet",
             json={"query": query, "task_type": "explain", "read_only": True},
             timeout=60,
         )
@@ -175,12 +175,12 @@ def main() -> int:
     )
     args = p.parse_args()
 
-    # Probe Helix
+    # Probe Cymatix
     try:
-        stats = httpx.get(f"{HELIX_URL}/stats", timeout=5).json()
+        stats = httpx.get(f"{CYMATIX_URL}/stats", timeout=5).json()
         print(f"Genome: {stats['total_genes']} genes")
     except Exception as exc:
-        print(f"Cannot reach Helix at {HELIX_URL}: {exc}")
+        print(f"Cannot reach Cymatix at {CYMATIX_URL}: {exc}")
         return 1
 
     print(f"\n=== Cache hit-rate bench "

@@ -50,7 +50,7 @@ def main():
     post = json.loads(Path(args.post).read_text())
 
     lines = []
-    lines.append("# Docs-Tidy Helix Probe — Pre/Post Diff")
+    lines.append("# Docs-Tidy Cymatix Probe — Pre/Post Diff")
     lines.append("")
     lines.append(f"**Pre:**  {pre['timestamp_human']}  ({pre['genome']['total_genes']} genes)")
     lines.append(f"**Post:** {post['timestamp_human']}  ({post['genome']['total_genes']} genes)")

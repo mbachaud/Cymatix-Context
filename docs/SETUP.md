@@ -185,7 +185,7 @@ What that batch file does (from
 - Sets `CYMATIX_HEADROOM_ROUTE_UPSTREAM_AUTO=1` so non-local upstreams
   auto-route through Headroom.
 - Spawns `python -m cymatix_context.launcher.app --tray --grafana-url
-  http://localhost:3000/d/helix-overview/helix-overview --prometheus-url
+  http://localhost:3000/d/cymatix-overview/cymatix-overview --prometheus-url
   http://localhost:9090/graph` in `/B` (no new window) mode.
 
 Verify it's up:
@@ -212,7 +212,7 @@ CYMATIX_BUDGET_ZONE=1 \
 CYMATIX_HEADROOM_ENABLED=1 \
 CYMATIX_HEADROOM_AUTOSTART=1 \
 cymatix-launcher --tray \
-  --grafana-url "http://localhost:3000/d/helix-overview/helix-overview" \
+  --grafana-url "http://localhost:3000/d/cymatix-overview/cymatix-overview" \
   --prometheus-url "http://localhost:9090/graph"
 ```
 
@@ -242,7 +242,7 @@ python -m uvicorn cymatix_context._asgi:app --host 127.0.0.1 --port 11437
 
 > **Note.** The internal ASGI module is `cymatix_context._asgi`. The
 > `start-cymatix-tray.bat` flow goes through the launcher's
-> `HelixSupervisor` which spawns its own uvicorn — this direct command
+> `CymatixSupervisor` which spawns its own uvicorn — this direct command
 > is for headless servers and CI where the supervisor adds no value.
 > An equivalent, also-supported entry-point is
 > `python -m uvicorn cymatix_context.server:app` — that path exists in
@@ -282,7 +282,7 @@ Run the proxy:
 python -m uvicorn cymatix_context._asgi:app --host 127.0.0.1 --port 11437
 ```
 
-Then inject the `<helix:no_match/>` and `know` / `miss` contract into
+Then inject the `<cymatix:no_match/>` and `know` / `miss` contract into
 the agent's system prompt. The fragment is exported from
 `cymatix_context.agent_prompt.CYMATIX_NO_MATCH_FRAGMENT` for programmatic
 inclusion, and documented in plain text at
@@ -375,11 +375,11 @@ Smoke-test that telemetry is flowing end-to-end after the agent issues
 its first `/context` call:
 
 ```bash
-curl 'http://localhost:9090/api/v1/query?query=helix_context_latency_seconds_count'
+curl 'http://localhost:9090/api/v1/query?query=cymatix_context_latency_seconds_count'
 ```
 
 A non-empty `data.result` array confirms the wiring is correct. The
-Grafana panels at <http://localhost:3000/d/helix-overview> populate
+Grafana panels at <http://localhost:3000/d/cymatix-overview> populate
 within ~15s (one Prometheus scrape interval).
 
 ## Implicit requirements
@@ -716,10 +716,10 @@ the `.egg-link` and console scripts (`cymatix`, `cymatix-launcher`,
 
 ```bash
 # Linux / macOS
-rm -rf ~/.helix/
+rm -rf ~/.cymatix/
 
 # Windows (PowerShell)
-Remove-Item -Recurse -Force "$env:USERPROFILE\.helix"
+Remove-Item -Recurse -Force "$env:USERPROFILE\.cymatix"
 ```
 
 This directory holds the supervisor's PID files and Unix sockets, the
@@ -790,7 +790,7 @@ The launcher's first-run install lives there. Reinstall via
   `cymatix.toml` section, every env-var override, every default value.
 - [`docs/agent-sdk-fragment.md`](agent-sdk-fragment.md) — the
   prompt-template fragment teaching frontier agents to honor
-  `do_not_answer_from_genome=true` and the `<helix:no_match/>` tag.
+  `do_not_answer_from_genome=true` and the `<cymatix:no_match/>` tag.
 - [`docs/architecture/LAUNCHER.md`](architecture/LAUNCHER.md) —
   supervisor + tray + observability stack lifecycle.
 - [`docs/architecture/OBSERVABILITY.md`](architecture/OBSERVABILITY.md)

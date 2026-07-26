@@ -1,12 +1,12 @@
-"""Helix faithfulness probe via Neuronpedia's Circuit-Tracer (Attribution Graph) API.
+"""Cymatix faithfulness probe via Neuronpedia's Circuit-Tracer (Attribution Graph) API.
 
-PROVEN 2026-07-06 (single-needle, real helix fact port=11437):
+PROVEN 2026-07-06 (single-needle, real cymatix fact port=11437):
   Condition A (question only)      -> gemma-2-2b predicts "8" (p=.42, hallucinated)
-  Condition B (helix ctx injected) -> predicts "1" (p=.75) = first digit of 11437,
+  Condition B (cymatix ctx injected) -> predicts "1" (p=.75) = first digit of 11437,
                                       and the answer traces to ctx 11 = the '1' of
                                       "11437" in the injected fact.
 
-WHY: measures whether a model CAUSALLY USES helix's injected context (faithfulness)
+WHY: measures whether a model CAUSALLY USES cymatix's injected context (faithfulness)
 vs pattern-matches from weights — the mechanistic ground truth #239's know/miss
 "found=true" contract has never had. This instrument is the yardstick the retrieval
 work (complement/DNA-pair, ANN threshold) will be measured by when we return to it.
@@ -32,8 +32,8 @@ METRIC: backward-propagate influence from the target-logit over links -> per-inp
 NEXT ACTIONS (thread 1):
   1. Add trailing-space prompt shaping so target logit = answer token (done here).
   2. Add structural-token exclusion to the localization metric.
-  3. Build a NEEDLE set (question, injected_context, answer) from SIKE helix-internal
-     facts (public) + synthetic ERB; then swap injected_context for REAL helix
+  3. Build a NEEDLE set (question, injected_context, answer) from SIKE cymatix-internal
+     facts (public) + synthetic ERB; then swap injected_context for REAL cymatix
      build_context() outputs.
   4. Run N needles -> causal-use rate; write a faithfulness note feeding #239.
 """
@@ -172,9 +172,9 @@ def faithfulness(g: dict, ctx_span, exclude_structural: bool = True, target_node
 
 if __name__ == "__main__":
     ts = int(time.time()) % 100000
-    A = gen_graph("The Helix proxy server default port number is ", f"faithA-{ts}")
-    B = gen_graph("Config: the Helix proxy server listens on port 11437 by default. "
-                  "The Helix proxy server default port number is ", f"faithB-{ts}")
+    A = gen_graph("The Cymatix proxy server default port number is ", f"faithA-{ts}")
+    B = gen_graph("Config: the Cymatix proxy server listens on port 11437 by default. "
+                  "The Cymatix proxy server default port number is ", f"faithB-{ts}")
     bt = B["metadata"]["prompt_tokens"]
     fs = [i for i, t in enumerate(bt) if str(t).strip() in ("1", "4", "3", "7") and i < 19]
     print("A:", faithfulness(A, (0, 0)))          # no fact span

@@ -189,7 +189,7 @@ class TestQuerySignalExtraction:
 
     def test_query_entities_include_expanded_retrieval_terms(self):
         domains, entities = extract_query_signals(
-            "claim_type allowed values helix claims layer specification"
+            "claim_type allowed values cymatix claims layer specification"
         )
         combined = set(domains) | set(entities)
         assert "claim" in combined

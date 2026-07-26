@@ -9,7 +9,7 @@ questions. Without these fields, every packet item degrades to
 This module centralizes the inference rules so that:
 
 - ``scripts/backfill_gene_provenance.py`` (retroactive sweep) and
-- ``HelixContextManager.ingest`` (steady-state population)
+- ``CymatixContextManager.ingest`` (steady-state population)
 
 share the same logic. Changing an extension -> kind mapping here flows
 through both paths without drift.

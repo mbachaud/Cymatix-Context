@@ -1,11 +1,11 @@
-"""[telemetry] toml section + HELIX_OTEL_* env precedence.
+"""[telemetry] toml section + CYMATIX_OTEL_* env precedence.
 
 Contract (2026-07-08, feat/telemetry-toml-defaults):
 
-    HELIX_OTEL_* env var  >  [telemetry] in helix.toml  >  dataclass default
+    CYMATIX_OTEL_* env var  >  [telemetry] in cymatix.toml  >  dataclass default
 
 - Env vars ALWAYS win over toml, in both directions: an explicit
-  HELIX_OTEL_ENABLED=0 must silence a toml ``enabled = true`` (the
+  CYMATIX_OTEL_ENABLED=0 must silence a toml ``enabled = true`` (the
   launcher's auto-export relies on this asymmetry — see
   tests/test_launcher_otel_export.py).
 - An env var set to the empty string counts as unset (falls to toml).
@@ -35,13 +35,13 @@ from cymatix_context.telemetry.otel import (
 )
 
 _OTEL_ENV = (
-    "HELIX_OTEL_ENABLED",
-    "HELIX_OTEL_ENDPOINT",
-    "HELIX_OTEL_INSECURE",
-    "HELIX_OTEL_SAMPLER_RATIO",
-    "HELIX_OTEL_REDACT_QUERY",
-    "HELIX_OTEL_LOGS_ENABLED",
-    "HELIX_OTEL_LOGS_LEVEL",
+    "CYMATIX_OTEL_ENABLED",
+    "CYMATIX_OTEL_ENDPOINT",
+    "CYMATIX_OTEL_INSECURE",
+    "CYMATIX_OTEL_SAMPLER_RATIO",
+    "CYMATIX_OTEL_REDACT_QUERY",
+    "CYMATIX_OTEL_LOGS_ENABLED",
+    "CYMATIX_OTEL_LOGS_LEVEL",
 )
 
 
@@ -69,7 +69,7 @@ def test_telemetry_config_defaults():
 
 
 def test_load_config_parses_telemetry_section(tmp_path):
-    cfg_file = tmp_path / "helix.toml"
+    cfg_file = tmp_path / "cymatix.toml"
     cfg_file.write_text(
         "[telemetry]\n"
         "enabled = true\n"
@@ -92,14 +92,14 @@ def test_load_config_parses_telemetry_section(tmp_path):
 
 
 def test_load_config_without_telemetry_section_uses_defaults(tmp_path):
-    cfg_file = tmp_path / "helix.toml"
+    cfg_file = tmp_path / "cymatix.toml"
     cfg_file.write_text("[server]\nport = 11437\n", encoding="utf-8")
     cfg = load_config(str(cfg_file))
     assert cfg.telemetry == TelemetryConfig()
 
 
 def test_load_config_warns_on_unknown_telemetry_keys(tmp_path, caplog):
-    cfg_file = tmp_path / "helix.toml"
+    cfg_file = tmp_path / "cymatix.toml"
     cfg_file.write_text("[telemetry]\nenabledd = true\n", encoding="utf-8")
     with caplog.at_level(logging.WARNING, logger="cymatix_context.config"):
         load_config(str(cfg_file))
@@ -144,9 +144,9 @@ def test_resolve_toml_beats_default():
 
 
 def test_resolve_env_beats_toml(monkeypatch):
-    monkeypatch.setenv("HELIX_OTEL_ENABLED", "1")
-    monkeypatch.setenv("HELIX_OTEL_ENDPOINT", "envhost:1111")
-    monkeypatch.setenv("HELIX_OTEL_SAMPLER_RATIO", "0.1")
+    monkeypatch.setenv("CYMATIX_OTEL_ENABLED", "1")
+    monkeypatch.setenv("CYMATIX_OTEL_ENDPOINT", "envhost:1111")
+    monkeypatch.setenv("CYMATIX_OTEL_SAMPLER_RATIO", "0.1")
     s = resolve_telemetry_settings(
         TelemetryConfig(enabled=False, endpoint="tomlhost:2222", sampler_ratio=0.9)
     )
@@ -156,31 +156,31 @@ def test_resolve_env_beats_toml(monkeypatch):
 
 
 def test_resolve_explicit_env_off_beats_toml_on(monkeypatch):
-    monkeypatch.setenv("HELIX_OTEL_ENABLED", "0")
+    monkeypatch.setenv("CYMATIX_OTEL_ENABLED", "0")
     s = resolve_telemetry_settings(TelemetryConfig(enabled=True))
     assert s["enabled"] is False
 
 
 def test_resolve_empty_env_counts_as_unset(monkeypatch):
-    monkeypatch.setenv("HELIX_OTEL_ENABLED", "")
-    monkeypatch.setenv("HELIX_OTEL_ENDPOINT", "")
+    monkeypatch.setenv("CYMATIX_OTEL_ENABLED", "")
+    monkeypatch.setenv("CYMATIX_OTEL_ENDPOINT", "")
     s = resolve_telemetry_settings(TelemetryConfig(enabled=True, endpoint="tomlhost:2222"))
     assert s["enabled"] is True
     assert s["endpoint"] == "tomlhost:2222"
 
 
 def test_resolve_bad_sampler_ratio_env_falls_back_to_toml(monkeypatch):
-    monkeypatch.setenv("HELIX_OTEL_SAMPLER_RATIO", "not-a-float")
+    monkeypatch.setenv("CYMATIX_OTEL_SAMPLER_RATIO", "not-a-float")
     s = resolve_telemetry_settings(TelemetryConfig(sampler_ratio=0.3))
     assert s["sampler_ratio"] == 0.3
 
 
 def test_resolve_legacy_env_bool_semantics(monkeypatch):
     """ENABLED/INSECURE/LOGS_ENABLED are on iff '1'; REDACT off iff '0'."""
-    monkeypatch.setenv("HELIX_OTEL_ENABLED", "true")  # historically NOT on
-    monkeypatch.setenv("HELIX_OTEL_INSECURE", "0")
-    monkeypatch.setenv("HELIX_OTEL_REDACT_QUERY", "0")
-    monkeypatch.setenv("HELIX_OTEL_LOGS_ENABLED", "no")
+    monkeypatch.setenv("CYMATIX_OTEL_ENABLED", "true")  # historically NOT on
+    monkeypatch.setenv("CYMATIX_OTEL_INSECURE", "0")
+    monkeypatch.setenv("CYMATIX_OTEL_REDACT_QUERY", "0")
+    monkeypatch.setenv("CYMATIX_OTEL_LOGS_ENABLED", "no")
     s = resolve_telemetry_settings(None)
     assert s["enabled"] is False
     assert s["insecure"] is False
@@ -192,7 +192,7 @@ def test_resolve_legacy_env_bool_semantics(monkeypatch):
 
 
 def test_setup_telemetry_disabled_by_default(caplog):
-    with caplog.at_level(logging.INFO, logger="helix.telemetry"):
+    with caplog.at_level(logging.INFO, logger="cymatix.telemetry"):
         assert setup_telemetry(app=None, config=TelemetryConfig()) is False
     assert "OTel disabled" in caplog.text
 
@@ -205,22 +205,22 @@ def test_setup_telemetry_toml_only_enablement_passes_gate(monkeypatch, caplog):
     proves the gate consumed the toml value rather than the env default.
     """
     monkeypatch.setitem(sys.modules, "opentelemetry", None)
-    with caplog.at_level(logging.WARNING, logger="helix.telemetry"):
+    with caplog.at_level(logging.WARNING, logger="cymatix.telemetry"):
         assert setup_telemetry(app=None, config=TelemetryConfig(enabled=True)) is False
     assert "OTel packages not installed" in caplog.text
 
 
 def test_setup_telemetry_env_off_beats_toml_on(monkeypatch, caplog):
-    monkeypatch.setenv("HELIX_OTEL_ENABLED", "0")
-    with caplog.at_level(logging.INFO, logger="helix.telemetry"):
+    monkeypatch.setenv("CYMATIX_OTEL_ENABLED", "0")
+    with caplog.at_level(logging.INFO, logger="cymatix.telemetry"):
         assert setup_telemetry(app=None, config=TelemetryConfig(enabled=True)) is False
     assert "OTel disabled" in caplog.text
 
 
 def test_setup_telemetry_env_on_beats_toml_off(monkeypatch, caplog):
-    monkeypatch.setenv("HELIX_OTEL_ENABLED", "1")
+    monkeypatch.setenv("CYMATIX_OTEL_ENABLED", "1")
     monkeypatch.setitem(sys.modules, "opentelemetry", None)
-    with caplog.at_level(logging.WARNING, logger="helix.telemetry"):
+    with caplog.at_level(logging.WARNING, logger="cymatix.telemetry"):
         assert setup_telemetry(app=None, config=TelemetryConfig(enabled=False)) is False
     assert "OTel packages not installed" in caplog.text
 
@@ -252,7 +252,7 @@ def test_redact_query_env_beats_settings(monkeypatch):
     monkeypatch.setattr(
         otel_mod, "_settings", {**_TELEMETRY_DEFAULTS, "redact_query": False}
     )
-    monkeypatch.setenv("HELIX_OTEL_REDACT_QUERY", "1")
+    monkeypatch.setenv("CYMATIX_OTEL_REDACT_QUERY", "1")
     assert "hash:" in otel_mod._redact_query("raw query")
 
 

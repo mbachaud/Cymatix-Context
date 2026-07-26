@@ -1,4 +1,4 @@
-"""Tests for `helix neighbors`."""
+"""Tests for `cymatix neighbors`."""
 from __future__ import annotations
 
 import json

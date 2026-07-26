@@ -1,5 +1,5 @@
 r"""
-Parallel deep ingest of F:\Projects into the Helix genome.
+Parallel deep ingest of F:\Projects into the Cymatix genome.
 
 Uses concurrent workers to overlap I/O with GPU inference.
 Normal proxy operation is unaffected — only this script uses parallelism.
@@ -26,7 +26,7 @@ from threading import Lock
 
 import httpx
 
-HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
+CYMATIX_URL = os.environ.get("CYMATIX_URL", "http://127.0.0.1:11437")
 PROJECTS_ROOT = r"F:\Projects"
 
 # Directories to skip
@@ -298,7 +298,7 @@ def ingest_one_file(index, total, path, content_type, size):
 
     for chunk in chunks:
         try:
-            resp = client.post(f"{HELIX_URL}/ingest", json={
+            resp = client.post(f"{CYMATIX_URL}/ingest", json={
                 "content": chunk,
                 "content_type": content_type,
                 "metadata": {"path": abs_path},
@@ -330,7 +330,7 @@ def ingest_one_file(index, total, path, content_type, size):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Parallel deep ingest into Helix")
+    parser = argparse.ArgumentParser(description="Parallel deep ingest into Cymatix")
     parser.add_argument("--workers", type=int, default=3, help="Concurrent workers (default: 3)")
     parser.add_argument("--dry-run", action="store_true", help="Count files only")
     args = parser.parse_args()
@@ -362,10 +362,10 @@ def main():
 
     # Check server
     try:
-        health = httpx.Client(timeout=10).get(f"{HELIX_URL}/health").json()
+        health = httpx.Client(timeout=10).get(f"{CYMATIX_URL}/health").json()
         print(f"Server: {health['status']}, ribosome: {health['ribosome']}, genes: {health['genes']}")
     except Exception:
-        print(f"Cannot reach Helix at {HELIX_URL}")
+        print(f"Cannot reach Cymatix at {CYMATIX_URL}")
         sys.exit(1)
 
     print()
@@ -393,7 +393,7 @@ def main():
 
     # Final stats
     try:
-        stats = httpx.Client(timeout=10).get(f"{HELIX_URL}/stats").json()
+        stats = httpx.Client(timeout=10).get(f"{CYMATIX_URL}/stats").json()
         print(f"\n=== COMPLETE ===")
         print(f"New genes: {_stats['genes']}")
         print(f"Files done: {_stats['files_done']}, Errors: {_stats['errors']}, Skipped: {_stats['skipped']}")

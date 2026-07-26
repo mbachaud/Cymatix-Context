@@ -1,6 +1,6 @@
 """#239 needle set — 48 Redwood-Inference facts with GRADED same-entity
 distractors, so retrieval quality (and thus gold survival into expressed_context)
-varies across families. Shared by the helix env (stage-1 features) and the graph
+varies across families. Shared by the cymatix env (stage-1 features) and the graph
 env (stage-2 faithfulness). Answers are all single-token in Qwen3-4B (tok_probe)
 and unique across the set, so 'answer word present in context' unambiguously
 means the RIGHT gold fact was delivered. Egress: synthetic only.

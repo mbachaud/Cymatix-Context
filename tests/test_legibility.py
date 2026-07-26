@@ -278,13 +278,13 @@ def test_format_gene_header_includes_all_three_sprint1_fields():
 
 # ── Integration: _assemble emits headers when flag on ─────────────────
 
-from cymatix_context.config import HelixConfig, BudgetConfig, GenomeConfig, RibosomeConfig
-from cymatix_context.context_manager import HelixContextManager
+from cymatix_context.config import CymatixConfig, BudgetConfig, GenomeConfig, RibosomeConfig
+from cymatix_context.context_manager import CymatixContextManager
 from tests.conftest import make_gene
 
 
-def _make_manager(legibility_enabled: bool) -> HelixContextManager:
-    cfg = HelixConfig(
+def _make_manager(legibility_enabled: bool) -> CymatixContextManager:
+    cfg = CymatixConfig(
         ribosome=RibosomeConfig(model="mock", timeout=5),
         budget=BudgetConfig(
             max_genes_per_turn=4,
@@ -294,7 +294,7 @@ def _make_manager(legibility_enabled: bool) -> HelixContextManager:
         genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
         synonym_map={},
     )
-    return HelixContextManager(cfg)
+    return CymatixContextManager(cfg)
 
 
 def test_assemble_emits_headers_when_flag_on():

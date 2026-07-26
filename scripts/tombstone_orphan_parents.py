@@ -1,7 +1,7 @@
 """Delete orphan parent genes whose source file no longer exists on disk.
 
 Parent gene IDs are derived from ``sha256(source_path + "::parent")[:16]``
-(see ``HelixContextManager._make_parent_gene_id`` — shipped 2026-04-16
+(see ``CymatixContextManager._make_parent_gene_id`` — shipped 2026-04-16
 with the layered-fingerprints work). That means when a source file is
 moved or deleted, the old parent gene is NOT overwritten on re-ingest —
 it becomes an orphan with dangling CHUNK_OF edges pointing at it.
@@ -17,7 +17,7 @@ rather than moved. Conservative default because a moved file's child
 genes are still content-correct; only their ``source_id`` is stale.
 
 Safety:
-- Takes a write lock. Run while helix is stopped OR accept that the
+- Takes a write lock. Run while cymatix is stopped OR accept that the
   live server may momentarily see a shrinking genome.
 - ``--dry-run`` prints what would be deleted without touching the DB.
 - Takes no backup of its own. Make one first if you care:
@@ -47,7 +47,7 @@ try:
 except Exception:
     pass
 
-DEFAULT_GENOME = "F:/Projects/helix-context/genomes/main/genome.db"
+DEFAULT_GENOME = "F:/Projects/cymatix-context/genomes/main/genome.db"
 CHUNK_OF_RELATION = 100  # StructuralRelation.CHUNK_OF
 
 

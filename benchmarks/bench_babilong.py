@@ -32,9 +32,9 @@ Usage:
 
 Note: This benchmark creates a separate scratch genome at
       ./benchmarks/babilong_scratch.db so it doesn't pollute the main
-      genome. Set HELIX_SCRATCH_URL to point to a second Helix server
+      genome. Set CYMATIX_SCRATCH_URL to point to a second Cymatix server
       instance running against that DB, or run with --in-process mode
-      to use HelixContextManager directly.
+      to use CymatixContextManager directly.
 """
 
 from __future__ import annotations
@@ -49,7 +49,7 @@ from typing import Dict, List, Tuple
 
 import httpx
 
-HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
+CYMATIX_URL = os.environ.get("CYMATIX_URL", "http://127.0.0.1:11437")
 
 # Fixed seed for reproducible problem generation
 random.seed(42)
@@ -193,7 +193,7 @@ def ingest_problems(client: httpx.Client, problems: List[Dict]) -> int:
                 "path": f"babilong/{p['name']}.txt",
                 "task": p["name"].rsplit("_", 1)[0],
             }
-            resp = client.post(f"{HELIX_URL}/ingest", json={
+            resp = client.post(f"{CYMATIX_URL}/ingest", json={
                 "content": p["story"],
                 "content_type": "text",
                 "metadata": metadata,
@@ -211,7 +211,7 @@ def run_problem(client: httpx.Client, problem: Dict, model: str) -> Dict:
 
     # Step 1: Retrieval check
     try:
-        resp = client.post(f"{HELIX_URL}/context", json={
+        resp = client.post(f"{CYMATIX_URL}/context", json={
             "query": problem["question"],
             "decoder_mode": "none",
         })
@@ -254,7 +254,7 @@ def run_problem(client: httpx.Client, problem: Dict, model: str) -> Dict:
     # Step 2: Answer generation
     t1 = time.time()
     try:
-        proxy_resp = client.post(f"{HELIX_URL}/v1/chat/completions", json={
+        proxy_resp = client.post(f"{CYMATIX_URL}/v1/chat/completions", json={
             "model": model,
             "messages": [{"role": "user", "content": problem["question"]}],
             "stream": False,
@@ -302,7 +302,7 @@ def main():
                         help="Problems per task")
     parser.add_argument("--no-ingest", action="store_true",
                         help="Skip ingestion (use existing genome)")
-    parser.add_argument("--model", default=os.environ.get("HELIX_MODEL", "qwen3:4b"))
+    parser.add_argument("--model", default=os.environ.get("CYMATIX_MODEL", "qwen3:4b"))
     parser.add_argument("--output", default="benchmarks/results/babilong_results.json")
     args = parser.parse_args()
 
@@ -310,11 +310,11 @@ def main():
 
     # Server check
     try:
-        stats = client.get(f"{HELIX_URL}/stats").json()
-        print(f"Helix server: {stats['total_genes']} genes, "
+        stats = client.get(f"{CYMATIX_URL}/stats").json()
+        print(f"Cymatix server: {stats['total_genes']} genes, "
               f"{stats['compression_ratio']:.2f}x compression")
     except Exception as e:
-        print(f"ERROR: Helix server unreachable at {HELIX_URL}: {e}")
+        print(f"ERROR: Cymatix server unreachable at {CYMATIX_URL}: {e}")
         sys.exit(1)
 
     # Generate problems for selected task(s)
@@ -372,7 +372,7 @@ def main():
     # Save results
     output = {
         "model": args.model,
-        "helix_url": HELIX_URL,
+        "cymatix_url": CYMATIX_URL,
         "timestamp": time.time(),
         "summary": summary,
         "results": all_results,

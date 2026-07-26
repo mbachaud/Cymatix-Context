@@ -1,4 +1,4 @@
-"""Export cwola_log rows for the Celestia × Helix joint experiment.
+"""Export cwola_log rows for the Celestia × Cymatix joint experiment.
 
 Reads genome.db (SQLite, read-only), filters cwola_log rows with assigned
 A/B buckets, parses tier_features JSON, writes two artifacts:
@@ -12,7 +12,7 @@ Usage:
     python scripts/export_cwola_log.py --redact           # drop raw query text (governance scan)
     python scripts/export_cwola_log.py --since 2026-04-01 # filter by date
 
-Author/owner: helix side of the Celestia × Helix joint experiment
+Author/owner: cymatix side of the Celestia × Cymatix joint experiment
 See: docs/collab/CELESTIA_JOINT_EXPERIMENT.md
 """
 
@@ -264,7 +264,7 @@ def main() -> int:
             "retrieval_id": "INTEGER PRIMARY KEY",
             "ts": "REAL — epoch seconds UTC of the retrieval",
             "session_id": "TEXT — groups retrievals within one user session",
-            "party_id": "TEXT — identity / project / tenant; see helix federation docs",
+            "party_id": "TEXT — identity / project / tenant; see cymatix federation docs",
             "query": "TEXT — raw query text (redacted if --redact was set)",
             "tier_features": "JSON object {tier_name: raw_score} for the 9 retrieval dimensions",
             "top_gene_id": "TEXT — the winning gene for this retrieval",

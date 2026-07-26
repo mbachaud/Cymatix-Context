@@ -4,22 +4,22 @@ from __future__ import annotations
 import textwrap
 from pathlib import Path
 
-from cymatix_context.config import HelixConfig, load_config
+from cymatix_context.config import CymatixConfig, load_config
 
 
 def test_vault_defaults_when_section_absent(tmp_path: Path):
-    """If helix.toml has no [vault] section, defaults apply and vault is disabled."""
-    cfg_path = tmp_path / "helix.toml"
+    """If cymatix.toml has no [vault] section, defaults apply and vault is disabled."""
+    cfg_path = tmp_path / "cymatix.toml"
     cfg_path.write_text("")
     cfg = load_config(cfg_path)
     assert cfg.vault.enabled is False
-    assert cfg.vault.path == "~/.helix/vault"
+    assert cfg.vault.path == "~/.cymatix/vault"
     assert cfg.vault.traces.retention_hours == 48
     assert cfg.vault.traces.enabled is True
 
 
 def test_vault_section_overrides_defaults(tmp_path: Path):
-    cfg_path = tmp_path / "helix.toml"
+    cfg_path = tmp_path / "cymatix.toml"
     cfg_path.write_text(textwrap.dedent("""
         [vault]
         enabled = true
@@ -57,7 +57,7 @@ def test_vault_section_overrides_defaults(tmp_path: Path):
 
 
 def test_vault_traces_max_retention_hours_hard_zero_disables_cap(tmp_path: Path):
-    cfg_path = tmp_path / "helix.toml"
+    cfg_path = tmp_path / "cymatix.toml"
     cfg_path.write_text(textwrap.dedent("""
         [vault.traces]
         max_retention_hours_hard = 0

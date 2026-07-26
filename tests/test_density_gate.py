@@ -5,7 +5,7 @@ Covers:
   - is_denied_source pattern matching for build artifacts, lockfiles,
     manifests, binary files, and non-English software locales
   - Steam / game content is NOT deny-listed (reframed 2026-04-10 — see
-    ~/.helix/shared/handoffs/2026-04-10_density_gate_b_to_c.md)
+    ~/.cymatix/shared/handoffs/2026-04-10_density_gate_b_to_c.md)
   - apply_density_gate decisioning across the three stages (deny list,
     access override, score-based thresholds)
   - upsert_gene integration: the gate actually fires at the storage boundary
@@ -57,9 +57,9 @@ class TestIsDeniedSource:
         [
             pytest.param(None, id="none"),
             pytest.param("", id="empty_string"),
-            # Real helix-context source files must never be denied.
-            pytest.param("F:/Projects/helix-context/cymatix_context/genome.py", id="helix_context_genome_py"),
-            pytest.param("helix-context/docs/RESEARCH.md", id="helix_context_research_md"),
+            # Real cymatix-context source files must never be denied.
+            pytest.param("F:/Projects/cymatix-context/cymatix_context/genome.py", id="cymatix_context_genome_py"),
+            pytest.param("cymatix-context/docs/RESEARCH.md", id="cymatix_context_research_md"),
             pytest.param("accounting/src/ledger.py", id="accounting_ledger"),
             pytest.param("projects/fleet/dashboard.py", id="fleet_dashboard"),
             pytest.param("side-project/audit/core.py", id="side_project_audit_core"),
@@ -99,7 +99,7 @@ class TestIsDeniedSource:
             pytest.param("F:/webshop/package-lock.json", id="package_lock"),
             pytest.param("project/yarn.lock", id="yarn_lock"),
             pytest.param("acme-rs/Cargo.lock", id="cargo_lock"),
-            pytest.param("helix-context/uv.lock", id="uv_lock"),
+            pytest.param("cymatix-context/uv.lock", id="uv_lock"),
             # Minified and source maps.
             pytest.param("static/bundle.min.js", id="min_js"),
             pytest.param("static/theme.min.css", id="min_css"),
@@ -282,7 +282,7 @@ class TestApplyDensityGate:
             domains=["python", "function", "compute"],
             kvs=["name=compute", "returns=int", "value=42", "type=pure"],
             access=0,
-            source_id="helix-context/cymatix_context/math.py",
+            source_id="cymatix-context/cymatix_context/math.py",
         )
         state, reason = genome.apply_density_gate(g)
         assert state == ChromatinState.OPEN
@@ -450,12 +450,12 @@ class TestUpsertGateIntegration:
         assert retrieved.chromatin == ChromatinState.HETEROCHROMATIN
 
     def test_upsert_preserves_signal_content(self, gated_genome):
-        """Real helix-context source stays OPEN through the gate."""
+        """Real cymatix-context source stays OPEN through the gate."""
         g = make_gene(
             "def cymatix_context(): return 'signal'",
-            domains=["python", "helix", "function"],
+            domains=["python", "cymatix", "function"],
         )
-        g.source_id = "F:/Projects/helix-context/cymatix_context/api.py"
+        g.source_id = "F:/Projects/cymatix-context/cymatix_context/api.py"
         g.key_values = ["name=cymatix_context", "returns=str"]
         gated_genome.upsert_gene(g)
 
@@ -529,12 +529,12 @@ class TestUpsertGateIntegration:
 class TestCompactGenomeSweep:
     def test_dry_run_does_not_modify(self, genome):
         """dry_run=True must not change any genes on disk."""
-        # Signal gene: helix source with embedding (dense enough to stay OPEN)
+        # Signal gene: cymatix source with embedding (dense enough to stay OPEN)
         g_signal = make_gene(
             "def foo(): return 42",
             domains=["python", "function"],
         )
-        g_signal.source_id = "helix-context/math.py"
+        g_signal.source_id = "cymatix-context/math.py"
         g_signal.embedding = [0.1] * 20
 
         # Noise gene: build-artifact path with embedding so compact can actually demote
@@ -595,11 +595,11 @@ class TestCompactGenomeSweep:
         g_accessed.embedding = [0.1] * 20
 
         g_signal = make_gene(
-            "def helix_compute(): return 'signal'",
-            domains=["python", "function", "helix", "compute"],
+            "def cymatix_compute(): return 'signal'",
+            domains=["python", "function", "cymatix", "compute"],
         )
-        g_signal.source_id = "helix-context/api.py"
-        g_signal.key_values = ["name=helix_compute", "returns=str", "value=signal"]
+        g_signal.source_id = "cymatix-context/api.py"
+        g_signal.key_values = ["name=cymatix_compute", "returns=str", "value=signal"]
         g_signal.embedding = [0.1] * 20
 
         genome.upsert_gene(g_denied, apply_gate=False)

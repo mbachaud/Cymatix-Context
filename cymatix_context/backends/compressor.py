@@ -35,7 +35,7 @@ Every method in this file is an LLM function call. The operations are:
 As of v0.3.0b3, the default runtime configuration disables the LLM
 compressor via two mechanisms:
 
-    1. helix.toml:  ribosome.warmup = false
+    1. cymatix.toml:  ribosome.warmup = false
        → server does NOT pre-load gemma4:e4b on startup
 
     2. /admin/ribosome/pause endpoint + background_tasks.add_task wrapper
@@ -213,7 +213,7 @@ class ClaudeBackend:
     """Anthropic Claude API backend for the compressor.
 
     Drop-in replacement for OllamaBackend. Routes through a proxy (e.g.
-    Headroom at :8787) when claude_base_url is set in helix.toml; hits
+    Headroom at :8787) when claude_base_url is set in cymatix.toml; hits
     Anthropic directly otherwise.
 
     Cost controls:
@@ -223,7 +223,7 @@ class ClaudeBackend:
     - 300ms minimum between requests per CLAUDE.md rate-limit policy.
     - Explicit 30s timeout so ingest can't hang indefinitely.
 
-    Switch back to Ollama: set backend = "ollama" in helix.toml.
+    Switch back to Ollama: set backend = "ollama" in cymatix.toml.
     """
 
     def __init__(
@@ -507,7 +507,7 @@ class Compressor:
         temperature: float = 0.0,
         call_kind: str = "unknown",
     ) -> str:
-        """Call backend.complete() and record helix_ribosome_call_seconds.
+        """Call backend.complete() and record cymatix_ribosome_call_seconds.
 
         call_kind labels the histogram entry so callers can distinguish
         pack / rerank / splice / replicate latency. Telemetry is best-effort:

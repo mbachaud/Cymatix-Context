@@ -45,7 +45,7 @@ class FakeSupervisor:
 class FakeCollector:
     def collect(self):
         return {
-            "helix": {"running": False, "availability": "unavailable"},
+            "cymatix": {"running": False, "availability": "unavailable"},
         }
 
 
@@ -62,14 +62,14 @@ class FakeObservability:
 
 @pytest.fixture(autouse=True)
 def _isolated_launcher_state(tmp_path, monkeypatch):
-    """Keep genome select/create tests out of the real ~/.helix/launcher.
+    """Keep genome select/create tests out of the real ~/.cymatix/launcher.
 
     Without this, /api/genome/select|create persist the choice to the
     user's durable selected_genome.json — a test run then hijacks the
     real tray's active genome (observed live: the dashboard came up
     ACTIVE on a pytest-tmp new.genome.db)."""
     monkeypatch.setenv(
-        "HELIX_LAUNCHER_STATE_DIR", str(tmp_path / "launcher-state"),
+        "CYMATIX_LAUNCHER_STATE_DIR", str(tmp_path / "launcher-state"),
     )
 
 
@@ -80,7 +80,7 @@ def client():
         supervisor=FakeSupervisor(),
         collector=FakeCollector(),
         observability=FakeObservability(),
-        grafana_url="http://127.0.0.1:3000/d/helix-overview/helix-overview",
+        grafana_url="http://127.0.0.1:3000/d/cymatix-overview/cymatix-overview",
         prometheus_url="http://127.0.0.1:9090/graph",
     )
     with TestClient(app) as c:
@@ -99,7 +99,7 @@ def test_api_state_carries_observability(client):
     assert names["tempo"] == "red" and names["grafana"] == "green"
     assert obs["links"]["prometheus"].endswith("/graph")
     urls = [d["url"] for d in obs["links"]["dashboards"]]
-    assert "http://127.0.0.1:3000/d/helix-overview" in urls
+    assert "http://127.0.0.1:3000/d/cymatix-overview" in urls
     assert any("pipeline-observatory" in u for u in urls)
 
 
@@ -156,14 +156,14 @@ def test_genome_select_existing_restarts(client, tmp_path, monkeypatch):
     c, app = client
     db = tmp_path / "alt.genome.db"
     db.write_bytes(b"")
-    monkeypatch.delenv("HELIX_GENOME_PATH", raising=False)
+    monkeypatch.delenv("CYMATIX_GENOME_PATH", raising=False)
     r = c.post("/api/genome/select", json={"path": str(db)})
     assert r.status_code == 202
     body = r.json()
     assert body["ok"] is True and body["restarting"] is True
     assert Path(body["selected"]) == db.resolve()
     import os
-    assert os.environ.get("HELIX_GENOME_PATH") == str(db.resolve())
+    assert os.environ.get("CYMATIX_GENOME_PATH") == str(db.resolve())
 
 
 def test_genome_create_validations(client, tmp_path):
@@ -176,7 +176,7 @@ def test_genome_create_validations(client, tmp_path):
 
 def test_genome_create_builds_schema_and_selects(client, tmp_path, monkeypatch):
     c, _ = client
-    monkeypatch.delenv("HELIX_GENOME_PATH", raising=False)
+    monkeypatch.delenv("CYMATIX_GENOME_PATH", raising=False)
     target = tmp_path / "fresh" / "deep" / "new.genome.db"
     r = c.post("/api/genome/create", json={"path": str(target)})
     assert r.status_code == 202, r.text
@@ -187,7 +187,7 @@ def test_genome_create_builds_schema_and_selects(client, tmp_path, monkeypatch):
     import time
     deadline = time.time() + 30
     while time.time() < deadline:
-        if target.exists() and os.environ.get("HELIX_GENOME_PATH"):
+        if target.exists() and os.environ.get("CYMATIX_GENOME_PATH"):
             break
         time.sleep(0.1)
     assert target.exists(), "worker thread never created the genome"
@@ -197,7 +197,7 @@ def test_genome_create_builds_schema_and_selects(client, tmp_path, monkeypatch):
         "SELECT name FROM sqlite_master WHERE type='table'").fetchall()}
     conn.close()
     assert "genes" in tables
-    assert os.environ.get("HELIX_GENOME_PATH") == str(target.resolve())
+    assert os.environ.get("CYMATIX_GENOME_PATH") == str(target.resolve())
 
 
 def test_api_genomes_shape(client):
@@ -258,7 +258,7 @@ def test_grafana_service_env_defaults(monkeypatch):
 
 def test_overview_dashboard_is_retitled():
     p = Path(__file__).resolve().parent.parent / \
-        "deploy" / "otel" / "grafana" / "dashboards" / "helix-overview.json"
+        "deploy" / "otel" / "grafana" / "dashboards" / "cymatix-overview.json"
     d = json.loads(p.read_text(encoding="utf-8"))
-    assert d["uid"] == "helix-overview"
-    assert d["title"] == "Helix — Overview"
+    assert d["uid"] == "cymatix-overview"
+    assert d["title"] == "Cymatix — Overview"

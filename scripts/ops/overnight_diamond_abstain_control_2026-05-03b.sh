@@ -3,14 +3,14 @@
 # Date: 2026-05-03b. Branch: feat/abstain-tier. HEAD: 24dd0cf.
 #
 # Today's morning OFF/ON bench showed +14.7pp accuracy with abstain ON, but the
-# OFF run was a "no helix" baseline, not an abstain-disabled control on the same
+# OFF run was a "no cymatix" baseline, not an abstain-disabled control on the same
 # gene state. This script produces the missing control by running TWO ON cells
 # back-to-back on the same gene state:
-#   Cell 1: ON with abstain DISABLED (helix.toml abstain_enabled = false)
-#   Cell 2: ON with abstain ENABLED  (helix.toml abstain_enabled = true)
+#   Cell 1: ON with abstain DISABLED (cymatix.toml abstain_enabled = false)
+#   Cell 2: ON with abstain ENABLED  (cymatix.toml abstain_enabled = true)
 # Then a head-to-head report compares them.
 #
-# Today's no-helix OFF baseline is benchmarks/results/gpqa_off_diamond_2026-05-03.json
+# Today's no-cymatix OFF baseline is benchmarks/results/gpqa_off_diamond_2026-05-03.json
 # (available for reference, not the comparison axis here).
 #
 # Spec: docs/specs/2026-05-02-abstain-tier-design.md
@@ -23,34 +23,34 @@ mkdir -p overnight_logs benchmarks/results
 LOG=overnight_logs/diamond_2026-05-03b.log
 STATUS=overnight_logs/diamond_2026-05-03b.status
 REPORT=overnight_logs/diamond_2026-05-03b_report.md
-HELIX_TOML=helix.toml
-HELIX_TOML_BACKUP=helix.toml.bench-backup
+CYMATIX_TOML=cymatix.toml
+CYMATIX_TOML_BACKUP=cymatix.toml.bench-backup
 
 MODEL=gemma4:e4b
 CLIENT_TIMEOUT=180
-HELIX_PORT=11437
-HEALTH_URL="http://127.0.0.1:${HELIX_PORT}/health"
-CONTEXT_URL="http://127.0.0.1:${HELIX_PORT}/context"
+CYMATIX_PORT=11437
+HEALTH_URL="http://127.0.0.1:${CYMATIX_PORT}/health"
+CONTEXT_URL="http://127.0.0.1:${CYMATIX_PORT}/context"
 
 CELL_A_OUT=benchmarks/results/gpqa_on_disabled_2026-05-03b.json
 CELL_B_OUT=benchmarks/results/gpqa_on_enabled_2026-05-03b.json
 
-CELL_A_LOG=overnight_logs/helix_server_2026-05-03b_disabled.log
-CELL_A_ERR=overnight_logs/helix_server_2026-05-03b_disabled.err
-CELL_A_PID=overnight_logs/helix_server_2026-05-03b_disabled.pid
+CELL_A_LOG=overnight_logs/cymatix_server_2026-05-03b_disabled.log
+CELL_A_ERR=overnight_logs/cymatix_server_2026-05-03b_disabled.err
+CELL_A_PID=overnight_logs/cymatix_server_2026-05-03b_disabled.pid
 CELL_A_SMOKE=overnight_logs/abstain_smoke_2026-05-03b_disabled.json
 
-CELL_B_LOG=overnight_logs/helix_server_2026-05-03b_enabled.log
-CELL_B_ERR=overnight_logs/helix_server_2026-05-03b_enabled.err
-CELL_B_PID=overnight_logs/helix_server_2026-05-03b_enabled.pid
+CELL_B_LOG=overnight_logs/cymatix_server_2026-05-03b_enabled.log
+CELL_B_ERR=overnight_logs/cymatix_server_2026-05-03b_enabled.err
+CELL_B_PID=overnight_logs/cymatix_server_2026-05-03b_enabled.pid
 CELL_B_SMOKE=overnight_logs/abstain_smoke_2026-05-03b_enabled.json
 
 ts() { date '+%Y-%m-%d %H:%M:%S'; }
 log() { echo "[$(ts)] $*" | tee -a "$LOG"; }
 write_status() { echo "$1" > "$STATUS"; }
 
-# Save current helix.toml so we can restore it at end.
-cp -p "$HELIX_TOML" "$HELIX_TOML_BACKUP"
+# Save current cymatix.toml so we can restore it at end.
+cp -p "$CYMATIX_TOML" "$CYMATIX_TOML_BACKUP"
 
 # Track the currently-spawned bench server PID so we can clean it up on exit.
 CURRENT_SERVER_PID=""
@@ -74,10 +74,10 @@ stop_server() {
 }
 
 revert_config() {
-  if [ -f "$HELIX_TOML_BACKUP" ]; then
-    log "Reverting $HELIX_TOML to pre-run state"
-    cp -p "$HELIX_TOML_BACKUP" "$HELIX_TOML"
-    rm "$HELIX_TOML_BACKUP"
+  if [ -f "$CYMATIX_TOML_BACKUP" ]; then
+    log "Reverting $CYMATIX_TOML to pre-run state"
+    cp -p "$CYMATIX_TOML_BACKUP" "$CYMATIX_TOML"
+    rm "$CYMATIX_TOML_BACKUP"
   fi
 }
 
@@ -98,34 +98,34 @@ trap 'log "Caught signal; cleaning up"; write_status "INTERRUPTED at $(ts)"; exi
 
 # Set abstain_enabled to a given value (true|false) inside the [budget] block.
 # Uses sed to rewrite the abstain_enabled = ... line directly. The current
-# helix.toml has exactly one such line, on line 68; we match by key name to
+# cymatix.toml has exactly one such line, on line 68; we match by key name to
 # stay robust to small line shifts.
 set_abstain() {
   local val="$1"
-  if ! grep -q '^abstain_enabled' "$HELIX_TOML"; then
-    log "ERROR: no 'abstain_enabled' line in $HELIX_TOML — bailing"
+  if ! grep -q '^abstain_enabled' "$CYMATIX_TOML"; then
+    log "ERROR: no 'abstain_enabled' line in $CYMATIX_TOML — bailing"
     return 1
   fi
   # Use a temp file so sed -i works portably on Windows.
   sed -E "s/^(abstain_enabled[[:space:]]*=[[:space:]]*)(true|false)/\1${val}/" \
-    "$HELIX_TOML" > "${HELIX_TOML}.tmp" && mv "${HELIX_TOML}.tmp" "$HELIX_TOML"
+    "$CYMATIX_TOML" > "${CYMATIX_TOML}.tmp" && mv "${CYMATIX_TOML}.tmp" "$CYMATIX_TOML"
   local now
-  now=$(grep '^abstain_enabled' "$HELIX_TOML" | head -1)
-  log "helix.toml now: $now"
+  now=$(grep '^abstain_enabled' "$CYMATIX_TOML" | head -1)
+  log "cymatix.toml now: $now"
   if ! echo "$now" | grep -q "= ${val}"; then
     log "ERROR: failed to set abstain_enabled=${val} (got: $now)"
     return 1
   fi
 }
 
-# Spawn a fresh helix server in the background. Args: log err pid_file
+# Spawn a fresh cymatix server in the background. Args: log err pid_file
 start_server() {
   local out_log="$1" out_err="$2" pid_file="$3"
-  log "Starting fresh helix server: log=$out_log err=$out_err pid=$pid_file"
+  log "Starting fresh cymatix server: log=$out_log err=$out_err pid=$pid_file"
   # Subshell + & detaches from this script so it survives until we kill it.
   (
-    py -3 -u -m uvicorn helix_context.server:app \
-      --host 127.0.0.1 --port "$HELIX_PORT" \
+    py -3 -u -m uvicorn cymatix_context.server:app \
+      --host 127.0.0.1 --port "$CYMATIX_PORT" \
       >"$out_log" 2>"$out_err" &
     echo $! > "$pid_file"
   )
@@ -136,7 +136,7 @@ start_server() {
     log "ERROR: failed to capture spawned PID"
     return 1
   fi
-  log "Spawned helix server PID=$pid"
+  log "Spawned cymatix server PID=$pid"
   CURRENT_SERVER_PID="$pid"
   return 0
 }
@@ -150,7 +150,7 @@ wait_for_ready() {
   log "Waiting up to 90s for /health 200 + Uvicorn ready markers..."
   while [ "$(date +%s)" -lt "$deadline" ]; do
     if ! kill -0 "$pid" 2>/dev/null; then
-      log "ERROR: helix server PID=$pid died during warmup; tail of err:"
+      log "ERROR: cymatix server PID=$pid died during warmup; tail of err:"
       tail -40 "$err_log" >>"$LOG" 2>&1 || true
       return 1
     fi
@@ -158,13 +158,13 @@ wait_for_ready() {
     code=$(curl -s -o /dev/null -w '%{http_code}' -m 3 "$HEALTH_URL" 2>/dev/null || echo "000")
     if [ "$code" = "200" ] \
        && grep -q "Application startup complete" "$err_log" 2>/dev/null \
-       && grep -q "Uvicorn running on http://127.0.0.1:${HELIX_PORT}" "$err_log" 2>/dev/null; then
-      log "Helix server ready (health=200, uvicorn marker seen)"
+       && grep -q "Uvicorn running on http://127.0.0.1:${CYMATIX_PORT}" "$err_log" 2>/dev/null; then
+      log "Cymatix server ready (health=200, uvicorn marker seen)"
       return 0
     fi
     sleep 2
   done
-  log "ERROR: helix server did not become ready within 90s"
+  log "ERROR: cymatix server did not become ready within 90s"
   log "Tail of err log:"
   tail -60 "$err_log" >>"$LOG" 2>&1 || true
   return 1
@@ -237,13 +237,13 @@ log "Cell A: ON, abstain DISABLED -> $CELL_A_OUT"
 log "Cell B: ON, abstain ENABLED  -> $CELL_B_OUT"
 log "============================================================"
 
-# -- Stop the currently running helix server (PID from this morning's run).
-if [ -f overnight_logs/helix_server_2026-05-03.pid ]; then
-  EXISTING_PID=$(cat overnight_logs/helix_server_2026-05-03.pid 2>/dev/null || true)
+# -- Stop the currently running cymatix server (PID from this morning's run).
+if [ -f overnight_logs/cymatix_server_2026-05-03.pid ]; then
+  EXISTING_PID=$(cat overnight_logs/cymatix_server_2026-05-03.pid 2>/dev/null || true)
   if [ -n "$EXISTING_PID" ]; then
-    log "Existing helix PID from morning run: $EXISTING_PID"
+    log "Existing cymatix PID from morning run: $EXISTING_PID"
     if kill -0 "$EXISTING_PID" 2>/dev/null; then
-      log "Killing existing helix server PID=$EXISTING_PID"
+      log "Killing existing cymatix server PID=$EXISTING_PID"
       taskkill //PID "$EXISTING_PID" //F >>"$LOG" 2>&1 || true
       sleep 3
     else
@@ -253,9 +253,9 @@ if [ -f overnight_logs/helix_server_2026-05-03.pid ]; then
 fi
 
 # Belt-and-braces: anything still bound to 11437?
-PORT_OWNER=$(netstat -ano 2>/dev/null | grep "127.0.0.1:${HELIX_PORT} " | grep LISTENING | awk '{print $5}' | head -1 || true)
+PORT_OWNER=$(netstat -ano 2>/dev/null | grep "127.0.0.1:${CYMATIX_PORT} " | grep LISTENING | awk '{print $5}' | head -1 || true)
 if [ -n "$PORT_OWNER" ]; then
-  log "Port ${HELIX_PORT} still owned by PID=$PORT_OWNER; force-killing"
+  log "Port ${CYMATIX_PORT} still owned by PID=$PORT_OWNER; force-killing"
   taskkill //PID "$PORT_OWNER" //F >>"$LOG" 2>&1 || true
   sleep 3
 fi
@@ -335,13 +335,13 @@ cat > "$REPORT" <<EOF
 **Started:** $(head -1 "$LOG" | sed 's/^\[\(.*\)\].*/\1/')
 **Completed:** $(ts)
 **Model:** $MODEL
-**Helix server:** http://127.0.0.1:${HELIX_PORT}
+**Cymatix server:** http://127.0.0.1:${CYMATIX_PORT}
 **Branch:** $(git rev-parse --abbrev-ref HEAD)  HEAD: $(git rev-parse --short HEAD)
 **Timeouts:** httpx client = ${CLIENT_TIMEOUT}s
 **Spec:** [2026-05-02-abstain-tier-design.md](../docs/specs/2026-05-02-abstain-tier-design.md)
 
 This run produces the in-run abstain-disabled control that the morning OFF/ON
-bench could not provide. Both cells use ON-mode helix retrieval on the same
+bench could not provide. Both cells use ON-mode cymatix retrieval on the same
 gene state; the only difference is the \`abstain_enabled\` toggle in
 \`[budget]\`. Cell A = abstain DISABLED. Cell B = abstain ENABLED.
 
@@ -527,9 +527,9 @@ echo "\`\`\`" >> "$REPORT"
 py -3 benchmarks/compare_ab.py "$CELL_A_OUT" "$CELL_B_OUT" >> "$REPORT" 2>&1 || echo "(compare_ab.py failed)" >> "$REPORT"
 echo "\`\`\`" >> "$REPORT"
 
-# Restore helix.toml (also handled by EXIT trap, but explicit here for clarity).
+# Restore cymatix.toml (also handled by EXIT trap, but explicit here for clarity).
 revert_config
 
 write_status "DONE at $(ts)"
 log "Diamond ABSTAIN control bench COMPLETE — report at $REPORT"
-log "helix.toml has been reverted to pre-run state."
+log "cymatix.toml has been reverted to pre-run state."

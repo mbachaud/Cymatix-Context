@@ -1,4 +1,4 @@
-"""Tests for `helix status`."""
+"""Tests for `cymatix status`."""
 from __future__ import annotations
 
 import importlib
@@ -20,12 +20,12 @@ def _make_genome_file(path):
 
 def test_status_exit_3_when_genome_missing(monkeypatch, tmp_path):
     missing_db = (tmp_path / 'does-not-exist.db').as_posix()
-    cfg = tmp_path / "helix.toml"
+    cfg = tmp_path / "cymatix.toml"
     cfg.write_text(
         f"[genome]\npath = \"{missing_db}\"\n",
         encoding="utf-8",
     )
-    monkeypatch.setenv("HELIX_CONFIG", str(cfg))
+    monkeypatch.setenv("CYMATIX_CONFIG", str(cfg))
 
     rc, out, err = _run(["status", "--json", "--no-network"])
     assert rc == 3, err
@@ -37,14 +37,14 @@ def test_status_exit_3_when_genome_missing(monkeypatch, tmp_path):
 def test_status_exit_0_when_genome_present(monkeypatch, tmp_path):
     genome = tmp_path / "genome.db"
     _make_genome_file(genome)
-    cfg = tmp_path / "helix.toml"
+    cfg = tmp_path / "cymatix.toml"
     cfg.write_text(
         f"[genome]\npath = \"{genome.as_posix()}\"\n",
         encoding="utf-8",
     )
-    monkeypatch.setenv("HELIX_CONFIG", str(cfg))
-    # Unset HELIX_GENOME_PATH so load_config reads from the TOML file
-    monkeypatch.delenv("HELIX_GENOME_PATH", raising=False)
+    monkeypatch.setenv("CYMATIX_CONFIG", str(cfg))
+    # Unset CYMATIX_GENOME_PATH so load_config reads from the TOML file
+    monkeypatch.delenv("CYMATIX_GENOME_PATH", raising=False)
 
     rc, out, err = _run(["status", "--json", "--no-network"])
     assert rc == 0, err
@@ -56,11 +56,11 @@ def test_status_exit_0_when_genome_present(monkeypatch, tmp_path):
 def test_status_text_mode_human_readable(monkeypatch, tmp_path):
     genome = tmp_path / "genome.db"
     _make_genome_file(genome)
-    cfg = tmp_path / "helix.toml"
+    cfg = tmp_path / "cymatix.toml"
     cfg.write_text(f"[genome]\npath = \"{genome.as_posix()}\"\n", encoding="utf-8")
-    monkeypatch.setenv("HELIX_CONFIG", str(cfg))
-    # Unset HELIX_GENOME_PATH so load_config reads from the TOML file
-    monkeypatch.delenv("HELIX_GENOME_PATH", raising=False)
+    monkeypatch.setenv("CYMATIX_CONFIG", str(cfg))
+    # Unset CYMATIX_GENOME_PATH so load_config reads from the TOML file
+    monkeypatch.delenv("CYMATIX_GENOME_PATH", raising=False)
 
     rc, out, err = _run(["status", "--no-network"])
     assert rc == 0, err
@@ -70,7 +70,7 @@ def test_status_text_mode_human_readable(monkeypatch, tmp_path):
 
 def test_status_json_remains_valid_when_load_config_raises(monkeypatch, tmp_path):
     """Regression for production fix #6: when load_config() raises (e.g.
-    type-coerced field rejects a value), `helix status --json` must still
+    type-coerced field rejects a value), `cymatix status --json` must still
     emit valid JSON, log a warning, and annotate the genome section so
     consumers know the path is a CWD-relative fallback, not authoritative.
 
@@ -80,13 +80,13 @@ def test_status_json_remains_valid_when_load_config_raises(monkeypatch, tmp_path
     coercion (server.port = string → int() raises ValueError). This is the
     realistic trigger for the fallback path.
     """
-    cfg = tmp_path / "helix.toml"
+    cfg = tmp_path / "cymatix.toml"
     # Parses as TOML but server.port=int(...) will raise ValueError.
     cfg.write_text('[server]\nport = "not-a-number"\n', encoding="utf-8")
 
     # Ensure no env override masks the malformed file's effect.
-    monkeypatch.delenv("HELIX_GENOME_PATH", raising=False)
-    monkeypatch.delenv("HELIX_CONFIG", raising=False)
+    monkeypatch.delenv("CYMATIX_GENOME_PATH", raising=False)
+    monkeypatch.delenv("CYMATIX_CONFIG", raising=False)
 
     rc, out, err = _run(["status", "--json", "--no-network", "--config", str(cfg)])
 
@@ -106,16 +106,16 @@ def test_status_json_remains_valid_when_load_config_raises(monkeypatch, tmp_path
 # ── bugbash BUG-3: entry point + roll-up honesty ─────────────────────
 
 
-def test_helix_status_console_script_targets_importable_module():
-    """pyproject's helix-status entry must resolve to a real module:attr.
+def test_cymatix_status_console_script_targets_importable_module():
+    """pyproject's cymatix-status entry must resolve to a real module:attr.
 
-    Regression: it pointed at top-level ``helix_status:main``, but that
-    module only ever lived at scripts/ops/helix_status.py and was never
+    Regression: it pointed at top-level ``cymatix_status:main``, but that
+    module only ever lived at scripts/ops/cymatix_status.py and was never
     packaged, so the installed console script crashed on import.
     """
     pyproject = Path(__file__).resolve().parents[1] / "pyproject.toml"
     scripts = tomllib.loads(pyproject.read_text(encoding="utf-8"))["project"]["scripts"]
-    module_name, _, attr = scripts["helix-status"].partition(":")
+    module_name, _, attr = scripts["cymatix-status"].partition(":")
     mod = importlib.import_module(module_name)
     assert callable(getattr(mod, attr))
 
@@ -138,12 +138,12 @@ def test_status_not_healthy_when_network_probes_down(monkeypatch, tmp_path):
     """
     genome = tmp_path / "genome.db"
     _make_genome_file(genome)
-    cfg = tmp_path / "helix.toml"
+    cfg = tmp_path / "cymatix.toml"
     cfg.write_text(f"[genome]\npath = \"{genome.as_posix()}\"\n", encoding="utf-8")
-    monkeypatch.setenv("HELIX_CONFIG", str(cfg))
-    monkeypatch.delenv("HELIX_GENOME_PATH", raising=False)
+    monkeypatch.setenv("CYMATIX_CONFIG", str(cfg))
+    monkeypatch.delenv("CYMATIX_GENOME_PATH", raising=False)
     monkeypatch.setattr(
-        "cymatix_context.cli.helix_status.collect_status",
+        "cymatix_context.cli.cymatix_status.collect_status",
         _fake_net(server_up=False, launcher_up=False),
     )
 
@@ -160,12 +160,12 @@ def test_status_healthy_when_network_probes_up(monkeypatch, tmp_path):
     """All probes up -> the 'Healthy' summary is preserved."""
     genome = tmp_path / "genome.db"
     _make_genome_file(genome)
-    cfg = tmp_path / "helix.toml"
+    cfg = tmp_path / "cymatix.toml"
     cfg.write_text(f"[genome]\npath = \"{genome.as_posix()}\"\n", encoding="utf-8")
-    monkeypatch.setenv("HELIX_CONFIG", str(cfg))
-    monkeypatch.delenv("HELIX_GENOME_PATH", raising=False)
+    monkeypatch.setenv("CYMATIX_CONFIG", str(cfg))
+    monkeypatch.delenv("CYMATIX_GENOME_PATH", raising=False)
     monkeypatch.setattr(
-        "cymatix_context.cli.helix_status.collect_status",
+        "cymatix_context.cli.cymatix_status.collect_status",
         _fake_net(server_up=True, launcher_up=True),
     )
 
@@ -178,14 +178,14 @@ def test_status_healthy_when_network_probes_up(monkeypatch, tmp_path):
 
 def test_status_probes_genome_on_absolute_windows_path(monkeypatch, tmp_path):
     """Regression: as_uri() must produce a SQLite-parseable URI on Windows paths."""
-    monkeypatch.delenv("HELIX_GENOME_PATH", raising=False)
+    monkeypatch.delenv("CYMATIX_GENOME_PATH", raising=False)
     genome = tmp_path / "genome.db"
     _make_genome_file(genome)
-    cfg = tmp_path / "helix.toml"
+    cfg = tmp_path / "cymatix.toml"
     # TOML literal string (single quotes) preserves backslashes verbatim,
     # so this works for native Windows paths and POSIX paths alike.
     cfg.write_text(f"[genome]\npath = '{genome.resolve()}'\n", encoding="utf-8")
-    monkeypatch.setenv("HELIX_CONFIG", str(cfg))
+    monkeypatch.setenv("CYMATIX_CONFIG", str(cfg))
 
     rc, out, err = _run(["status", "--json", "--no-network"])
     assert rc == 0, err

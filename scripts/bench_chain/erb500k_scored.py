@@ -29,8 +29,8 @@ Grounding (all read on the rig, file:line in the chain report):
     gene_id_match, ...} XOR "miss" {reason, escalate_to|refresh_targets, ...}.
     Evidence lists are verified / stale_risk / contradictions of ContextItem
     (schemas.py:239-275; item body is `content`, path is `source_id`).
-  * Sharded fixture is served by the caller (.ps1) with HELIX_USE_SHARDS=1 and
-    HELIX_GENOME_PATH pointing at .../enterprise_rag_500k/main.genome.db
+  * Sharded fixture is served by the caller (.ps1) with CYMATIX_USE_SHARDS=1 and
+    CYMATIX_GENOME_PATH pointing at .../enterprise_rag_500k/main.genome.db
     (cymatix_context/sharding.open_read_source detects the basename).
 
 RESUMABLE: the output JSONL is append-only, one line per finished question,
@@ -170,7 +170,7 @@ def match_delivered(delivered_path, gold_index, gold_canonicals):
 # /context/packet -- record know/miss verbatim + assemble injectable context
 # ---------------------------------------------------------------------------
 
-def fetch_packet(helix_url, query, max_genes, timeout_s=40.0,
+def fetch_packet(cymatix_url, query, max_genes, timeout_s=40.0,
                  context_char_cap=12000):
     """POST /context/packet. Returns the full packet dict (know/miss verbatim)
     plus a derived {context_text, delivered_paths} for answer injection.
@@ -184,7 +184,7 @@ def fetch_packet(helix_url, query, max_genes, timeout_s=40.0,
            "context_text": "", "delivered_paths": [], "raw_keys": []}
     try:
         resp = httpx.post(
-            helix_url + "/context/packet",
+            cymatix_url + "/context/packet",
             json={"query": query, "task_type": "explain",
                   "max_genes": max_genes, "include_raw": True},
             timeout=timeout_s,
@@ -231,7 +231,7 @@ def fetch_packet(helix_url, query, max_genes, timeout_s=40.0,
     # Fallback: if the packet gave us no usable context body, pull /context.
     if not out["context_text"]:
         try:
-            r2 = httpx.post(helix_url + "/context",
+            r2 = httpx.post(cymatix_url + "/context",
                             json={"query": query, "decoder_mode": "none"},
                             timeout=timeout_s)
             if r2.status_code == 200:
@@ -271,7 +271,7 @@ def _claude(prompt, model, max_usd, system_text="", timeout_s=180):
     --append-system-prompt-file to dodge the 32K arg-line limit (the
     bench_enterprise_rag pattern).
     """
-    clean_cwd = Path(tempfile.gettempdir()) / "helix-bench-clean-cwd"
+    clean_cwd = Path(tempfile.gettempdir()) / "cymatix-bench-clean-cwd"
     clean_cwd.mkdir(parents=True, exist_ok=True)
     empty_cfg = clean_cwd / "_empty_mcp.json"
     if not empty_cfg.exists():
@@ -416,8 +416,8 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--erb-root", default=os.environ.get(
         "ERB_ROOT", r"F:\Projects\EnterpriseRAG-Bench-main"))
-    ap.add_argument("--helix-url", default=os.environ.get(
-        "HELIX_URL", "http://127.0.0.1:11437"))
+    ap.add_argument("--cymatix-url", default=os.environ.get(
+        "CYMATIX_URL", "http://127.0.0.1:11437"))
     ap.add_argument("--out", required=True, help="Per-question output JSONL.")
     ap.add_argument("--summary-out", required=True, help="Summary JSON path.")
     ap.add_argument("--answer-model", default="sonnet",
@@ -473,21 +473,21 @@ def main(argv=None):
 
     # Health check (fail fast if the sharded server isn't up / genes=0).
     try:
-        h = httpx.get(args.helix_url + "/health", timeout=10).json()
+        h = httpx.get(args.cymatix_url + "/health", timeout=10).json()
         genes = h.get("genes") or h.get("document_count")
-        print("[erb500k] helix health: genes={} pid={}".format(
+        print("[erb500k] cymatix health: genes={} pid={}".format(
             genes, h.get("pid")))
         if genes is not None and int(genes) == 0:
             print("[erb500k] WARN: server reports genes=0 -- sharded fixture "
-                  "may not be mounted (HELIX_USE_SHARDS?)", file=sys.stderr)
+                  "may not be mounted (CYMATIX_USE_SHARDS?)", file=sys.stderr)
     except Exception as exc:
         summary_path.write_text(json.dumps({
             "benchmark": "erb500k_scored", "issue": "#93",
-            "error": "helix /health unreachable at {}: {}".format(
-                args.helix_url, exc),
+            "error": "cymatix /health unreachable at {}: {}".format(
+                args.cymatix_url, exc),
             "baselines": BASELINES,
         }, indent=2), encoding="utf-8")
-        print("ERROR: helix unreachable: {}".format(exc), file=sys.stderr)
+        print("ERROR: cymatix unreachable: {}".format(exc), file=sys.stderr)
         return 2
 
     processed = 0
@@ -498,7 +498,7 @@ def main(argv=None):
                 continue
 
             # (a) packet + verbatim know/miss
-            packet = fetch_packet(args.helix_url, nd["question"], args.max_genes,
+            packet = fetch_packet(args.cymatix_url, nd["question"], args.max_genes,
                       context_char_cap=args.context_char_cap)
             gold_index, gold_canon = make_gold_index(nd["gold_paths"])
             gold_delivered = any(
@@ -575,7 +575,7 @@ def main(argv=None):
         "benchmark": "erb500k_scored",
         "issue": "#93",
         "fixture": "genomes/bench/matrix-sharded/enterprise_rag_500k",
-        "helix_url": args.helix_url,
+        "cymatix_url": args.cymatix_url,
         "answer_model": args.answer_model,
         "audit_model": args.audit_model,
         "n_questions_total": len(needles),

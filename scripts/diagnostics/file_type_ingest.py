@@ -1,4 +1,4 @@
-"""File-type ingest diagnostic — sniff the failure modes Helix has around
+"""File-type ingest diagnostic — sniff the failure modes Cymatix has around
 binary / rich / structured file types.
 
 Known from code audit (2026-04-19):
@@ -11,7 +11,7 @@ Known from code audit (2026-04-19):
       pdf, html, docx, xlsx entries — all fall through to ``"doc"``.
 
 This script feeds one representative of each broken category to the
-live Helix instance and records what happened. Output is a single table
+live Cymatix instance and records what happened. Output is a single table
 you can triage from, plus a JSON artifact for the bug report.
 
 Per-type expectations (BEFORE running):
@@ -52,7 +52,7 @@ if str(REPO_ROOT) not in sys.path:
 import httpx  # noqa: E402
 
 
-HELIX_URL = "http://127.0.0.1:11437"
+CYMATIX_URL = "http://127.0.0.1:11437"
 
 
 # ── Fixture generators (tiny, self-contained, no network/disk deps) ─
@@ -245,8 +245,8 @@ def run_case(client: httpx.Client, case: IngestCase) -> CaseResult:
         return res
     res.payload_bytes = len(content.encode("utf-8", errors="replace"))
 
-    source_id = f"F:/Projects/helix-context/scripts/diagnostics/fixtures/{case.name}{case.source_ext}"
-    # NOTE: Helix only honors metadata["path"] (not metadata["source_id"]).
+    source_id = f"F:/Projects/cymatix-context/scripts/diagnostics/fixtures/{case.name}{case.source_ext}"
+    # NOTE: Cymatix only honors metadata["path"] (not metadata["source_id"]).
     # See context_manager.py:389 — metadata.source_id is silently dropped.
     # We populate BOTH here so when the bug is fixed the test doesn't silently
     # swap meaning; the case.name being unique in both keys makes that visible.
@@ -256,7 +256,7 @@ def run_case(client: httpx.Client, case: IngestCase) -> CaseResult:
         "metadata": {"path": source_id, "source_id": source_id},
     }
     try:
-        r = client.post(f"{HELIX_URL}/ingest", json=payload, timeout=90)
+        r = client.post(f"{CYMATIX_URL}/ingest", json=payload, timeout=90)
         res.status = r.status_code
         if r.status_code == 200:
             data = r.json()
@@ -277,7 +277,7 @@ def run_case(client: httpx.Client, case: IngestCase) -> CaseResult:
     #      gene exists with proper metadata.path regardless of content.
     try:
         rr = client.post(
-            f"{HELIX_URL}/context/packet",
+            f"{CYMATIX_URL}/context/packet",
             json={"query": case.content_probe or case.name,
                   "task_type": "explain", "top_k": 10},
             timeout=30,
@@ -297,7 +297,7 @@ def run_case(client: httpx.Client, case: IngestCase) -> CaseResult:
     try:
         import sqlite3
         db = sqlite3.connect(
-            "F:/Projects/helix-context/genomes/main/genome.db",
+            "F:/Projects/cymatix-context/genomes/main/genome.db",
             timeout=5,
         )
         row = db.execute(
@@ -320,13 +320,13 @@ def run_case(client: httpx.Client, case: IngestCase) -> CaseResult:
 
 
 def main():
-    print(f"File-type ingest diagnostic - {HELIX_URL}")
+    print(f"File-type ingest diagnostic - {CYMATIX_URL}")
     client = httpx.Client(timeout=120)
     try:
-        stats = client.get(f"{HELIX_URL}/stats", timeout=5).json()
+        stats = client.get(f"{CYMATIX_URL}/stats", timeout=5).json()
         print(f"Genome start: {stats.get('total_genes')} genes")
     except Exception as e:
-        print(f"Cannot reach Helix: {e}")
+        print(f"Cannot reach Cymatix: {e}")
         return 1
 
     results: list[CaseResult] = []
@@ -352,7 +352,7 @@ def main():
               f"{kind:7s}{retr:6s}{ci:12s}{notes}")
 
     try:
-        stats_end = client.get(f"{HELIX_URL}/stats", timeout=5).json()
+        stats_end = client.get(f"{CYMATIX_URL}/stats", timeout=5).json()
         delta = (stats_end.get("total_genes") or 0) - (stats.get("total_genes") or 0)
         print(f"\nGenome delta: +{delta} genes from {len(CASES)} fixtures")
     except Exception:
@@ -361,7 +361,7 @@ def main():
     out_path = REPO_ROOT / "scripts" / "diagnostics" / f"file_type_ingest_{time.strftime('%Y-%m-%d')}.json"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps({
-        "helix_url": HELIX_URL,
+        "cymatix_url": CYMATIX_URL,
         "genome_before": stats.get("total_genes"),
         "results": [
             {

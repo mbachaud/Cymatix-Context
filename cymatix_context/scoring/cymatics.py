@@ -1,7 +1,7 @@
 """
 Cymatics — Frequency-domain context compression.
 
-Maps the biological metaphors of helix-context (gene, genome, chromatin)
+Maps the biological metaphors of cymatix-context (gene, genome, chromatin)
 onto wave physics:
     Document (gene)       → Resonant mode (excited by query "frequencies")
     Fragment weight  → Spectral amplitude
@@ -28,7 +28,7 @@ from typing import Dict, List, Optional, Tuple
 
 from ..schemas import Document, Gene  # Gene retained as legacy alias
 
-log = logging.getLogger("helix.cymatics")
+log = logging.getLogger("cymatix.cymatics")
 
 
 # ── Query signal extraction (inlined from accel.py) ────────────────
@@ -77,7 +77,7 @@ MATH_BACKEND = "numpy" if _HAS_NUMPY else "python"
 # ── Constants ──────────────────────────────────────────────────────
 
 N_BINS = 256              # Spectrum resolution (fixed-width, <2KB per spectrum)
-_HASH_SEED = b"helix"     # Deterministic seed for term→frequency mapping
+_HASH_SEED = b"cymatix"     # Deterministic seed for term→frequency mapping
 
 
 # ── Section 1: Frequency Space ─────────────────────────────────────

@@ -19,7 +19,7 @@ import sys
 from pathlib import Path
 
 
-def _import_helix():
+def _import_cymatix():
     """Import cymatix_context modules — ensures SQLite schema has new columns."""
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
     from cymatix_context import genome as _genome  # noqa: F401
@@ -42,7 +42,7 @@ def main() -> int:
         print(f"ERROR: {args.db} not found", file=sys.stderr)
         return 1
 
-    Genome, SemaCodec = _import_helix()
+    Genome, SemaCodec = _import_cymatix()
     # Genome() init applies schema migrations — ensures the new columns exist
     # before we try to SELECT/UPDATE them.
     g = Genome(str(args.db))

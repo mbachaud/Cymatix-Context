@@ -25,7 +25,7 @@ CYMATIX KNOW/MISS retrieval returns one of two top-level blocks at every
 
   miss { reason, escalate_to, do_not_answer_from_genome:true, ... }
     — Retrieval did NOT find it. The expressed_context bytes will
-      contain a <helix:no_match reason="..." do_not_answer="true"/>
+      contain a <cymatix:no_match reason="..." do_not_answer="true"/>
       tag. When you see this tag OR a `miss` block:
 
       1. DO NOT answer from the genome content.
@@ -58,7 +58,7 @@ The agent's compliance with this contract is the load-bearing piece;
 without it the structured tags are noise. Every `miss` row that
 produces a fabricated answer fails the eval.
 
-NOTE: the `<helix:no_match/>` inline tag is a legacy-compat surface
+NOTE: the `<cymatix:no_match/>` inline tag is a legacy-compat surface
 that only carries the four Stage-6 reasons listed above. Stage-7
 freshness-gate reasons (`stale`, `cold`, `superseded`) appear ONLY
 in the structured `miss.reason` field (alongside non-empty

@@ -21,7 +21,7 @@ V1 design decisions:
 
 Not in this task:
 - Ingest-time routing (Task 6)
-- HelixContextManager integration behind HELIX_USE_SHARDS flag (Task 7)
+- CymatixContextManager integration behind CYMATIX_USE_SHARDS flag (Task 7)
 - Cross-shard FTS bloom prefilter (deferred)
 """
 
@@ -68,8 +68,8 @@ def shard_fanout_workers(n_shards: Optional[int] = None) -> int:
 
     Resolution order (issue #206, 2026-06-12):
 
-    1. ``HELIX_SHARD_WORKERS`` set and parseable → that value (explicit env
-       always wins; ``HELIX_SHARD_WORKERS=1`` forces the serial path). An
+    1. ``CYMATIX_SHARD_WORKERS`` set and parseable → that value (explicit env
+       always wins; ``CYMATIX_SHARD_WORKERS=1`` forces the serial path). An
        unparseable value keeps the legacy behavior and forces serial.
     2. Env unset/empty and ``n_shards`` (the routed-shard count for this
        query) > 4 → :func:`cymatix_context.parallel.auto_shard_workers`
@@ -87,7 +87,7 @@ def shard_fanout_workers(n_shards: Optional[int] = None) -> int:
     accumulation/merge stays in deterministic ``shard_names`` order, so
     ranked output is byte-identical at any worker count.
     """
-    raw = os.environ.get("HELIX_SHARD_WORKERS", "").strip()
+    raw = os.environ.get("CYMATIX_SHARD_WORKERS", "").strip()
     if not raw:
         if n_shards is not None and n_shards > 4:
             try:
@@ -324,7 +324,7 @@ def _compute_shard_idf_correction(
         # Clip extreme values. Without clipping, a single very-common
         # local term (l_idf near zero) can produce m_shard >> 100×,
         # which would let the unrelated co-shard docs steamroll the
-        # merge. The clip is a stability knob; tune in helix.toml if
+        # merge. The clip is a stability knob; tune in cymatix.toml if
         # later bench data wants different bounds.
         multipliers[shard_name] = max(IDF_CLIP_LO, min(IDF_CLIP_HI, m))
 
@@ -332,7 +332,7 @@ def _compute_shard_idf_correction(
 
 
 def _global_idf_enabled() -> bool:
-    """True iff HELIX_SHARD_GLOBAL_IDF is set to a truthy value.
+    """True iff CYMATIX_SHARD_GLOBAL_IDF is set to a truthy value.
 
     Truthy (case-insensitive): '1', 'true', 'yes', 'on'. Anything else
     (including unset) is False. Gates the per-doc global-IDF lexical
@@ -340,7 +340,7 @@ def _global_idf_enabled() -> bool:
     when off, the router uses the legacy per-shard scalar ``m_shard``
     correction and behaviour is byte-identical to the pre-#182 build.
     """
-    v = os.environ.get("HELIX_SHARD_GLOBAL_IDF")
+    v = os.environ.get("CYMATIX_SHARD_GLOBAL_IDF")
     if v is None:
         return False
     return v.strip().lower() in ("1", "true", "yes", "on")
@@ -354,13 +354,13 @@ _GLOBAL_IDF_RRF_WARNED = False
 
 
 def _warn_global_idf_rrf_suppressed() -> None:
-    """Log once that HELIX_SHARD_GLOBAL_IDF is inert under per-shard RRF (#265)."""
+    """Log once that CYMATIX_SHARD_GLOBAL_IDF is inert under per-shard RRF (#265)."""
     global _GLOBAL_IDF_RRF_WARNED
     if _GLOBAL_IDF_RRF_WARNED:
         return
     _GLOBAL_IDF_RRF_WARNED = True
     log.warning(
-        "HELIX_SHARD_GLOBAL_IDF is set but the per-shard Genomes score in "
+        "CYMATIX_SHARD_GLOBAL_IDF is set but the per-shard Genomes score in "
         "RRF; the global-IDF lexical splice (raw - old_local_lex + "
         "new_global_lex) is undefined on the BM25 magnitude scale under RRF "
         "(#265) and is suppressed. The scalar m_shard IDF correction runs "
@@ -392,7 +392,7 @@ def _compute_global_idf_map(
     (unsmoothed) FTS5 BM25 sum; using the smoothed always-positive IDF here
     would put the global lexical term on a different (always-larger,
     never-negative) scale, and the splice would corrupt ranking — the
-    HELIX_SHARD_GLOBAL_IDF recall regression (0.347 → 0.168) traced to
+    CYMATIX_SHARD_GLOBAL_IDF recall regression (0.347 → 0.168) traced to
     exactly this scale mismatch (#182).
 
     Returns ``{}`` when there's no corpus.
@@ -462,15 +462,15 @@ FTS5_IDF_FLOOR = 1e-6
 SHARD_FETCH_SCALE_CAP = 10   # × max_genes ceiling for the scaled fetch path
 
 # Env overrides (dark-shipped in #235, still honored, env > toml > default):
-#   HELIX_SHARD_FETCH_FACTOR   (int) overrides shard_fetch_multiplier.
-#   HELIX_SHARD_COACT_RESERVE  (int) overrides coact_reserved_slots.
+#   CYMATIX_SHARD_FETCH_FACTOR   (int) overrides shard_fetch_multiplier.
+#   CYMATIX_SHARD_COACT_RESERVE  (int) overrides coact_reserved_slots.
 
 
 def _env_int(name: str) -> Optional[int]:
     """Parse an int env var. Returns None when unset/empty/unparseable.
 
     Shared by the legacy env-knob helpers and the router's env-over-config
-    resolution so the ``HELIX_SHARD_*`` var names are parsed one way only.
+    resolution so the ``CYMATIX_SHARD_*`` var names are parsed one way only.
     """
     raw = os.environ.get(name, "").strip()
     if not raw:
@@ -484,27 +484,27 @@ def _env_int(name: str) -> Optional[int]:
 def _shard_fetch_factor() -> int:
     """Legacy per-shard fetch-depth factor (issue #222). Default 2 = legacy.
 
-    Reads ``HELIX_SHARD_FETCH_FACTOR`` only; retained for the standalone
+    Reads ``CYMATIX_SHARD_FETCH_FACTOR`` only; retained for the standalone
     dark-ship contract (env override, clamped to ≥1, unparseable keeps the
     legacy 2). The router now resolves the effective multiplier from
     config with this env as an override — see
     :meth:`ShardRouter._resolved_fetch_multiplier`.
     """
-    v = _env_int("HELIX_SHARD_FETCH_FACTOR")
+    v = _env_int("CYMATIX_SHARD_FETCH_FACTOR")
     return max(1, v) if v is not None else 2
 
 
 def _coact_reserve_slots() -> int:
     """Legacy reserved-slot count for co-activation docs (issue #223).
 
-    Reads ``HELIX_SHARD_COACT_RESERVE`` only. Default 0 = legacy (no
+    Reads ``CYMATIX_SHARD_COACT_RESERVE`` only. Default 0 = legacy (no
     reservation: linked docs enter the final sort at the link discount and
     are truncated like any other candidate — exactly how graph-surfaced
     golds get displaced). Retained for the standalone dark-ship contract;
     the router resolves the effective value from config with this env as an
     override — see :meth:`ShardRouter._resolved_coact_reserve`.
     """
-    v = _env_int("HELIX_SHARD_COACT_RESERVE")
+    v = _env_int("CYMATIX_SHARD_COACT_RESERVE")
     return max(0, v) if v is not None else 0
 
 
@@ -552,7 +552,7 @@ def _validate_shard_knobs(
 
     A negative fetch multiplier, reserved-slot count, or link discount has
     no meaning; raise ``ValueError`` rather than silently clamp so a
-    fat-fingered ``helix.toml`` fails loud when the router is built.
+    fat-fingered ``cymatix.toml`` fails loud when the router is built.
     """
     if multiplier < 0:
         raise ValueError(
@@ -602,7 +602,7 @@ def _apply_coact_reserve(
         # slot actually changes the result (reserve > 0, a promoted doc
         # survived the cross-shard co-activation pull but was sitting
         # beyond the plain [:limit] cut, and got swapped in here). Gated
-        # behind the existing HELIX_SHARD_SCORE_DEBUG introspection flag
+        # behind the existing CYMATIX_SHARD_SCORE_DEBUG introspection flag
         # (issue #181) rather than a new one.
         log.info(
             "coact_reserve FIRED: reserve=%d in_cut=%d/%d promoting %d doc(s) "
@@ -630,14 +630,14 @@ def _apply_coact_reserve(
 
 
 def _score_debug_enabled() -> bool:
-    """True iff HELIX_SHARD_SCORE_DEBUG is set to a truthy value.
+    """True iff CYMATIX_SHARD_SCORE_DEBUG is set to a truthy value.
 
     Truthy (case-insensitive): '1', 'true', 'yes', 'on'. Anything else
     (including unset) is False. Gates the score-path instrumentation in
     :meth:`ShardRouter.query_genes` (#181) so the hot path is untouched
     when off.
     """
-    v = os.environ.get("HELIX_SHARD_SCORE_DEBUG")
+    v = os.environ.get("CYMATIX_SHARD_SCORE_DEBUG")
     if v is None:
         return False
     return v.strip().lower() in ("1", "true", "yes", "on")
@@ -658,7 +658,7 @@ class ShardRouter:
         """Open main.db. Shard KnowledgeStores open lazily on first access.
 
         genome_kwargs are forwarded to each KnowledgeStore on lazy-open — keep
-        them identical to what HelixContextManager passes when
+        them identical to what CymatixContextManager passes when
         constructing a solo KnowledgeStore, so sharded + non-sharded return
         identical tiers.
         """
@@ -671,10 +671,10 @@ class ShardRouter:
         # raise) but ignores them. Defaults reproduce the dark-shipped env-knob
         # behaviour byte-for-byte: 2.0× flat fetch, no shard-count scaling,
         # zero reserved co-activation slots, 0.5 link discount. The env vars
-        # HELIX_SHARD_FETCH_FACTOR / HELIX_SHARD_COACT_RESERVE still override
+        # CYMATIX_SHARD_FETCH_FACTOR / CYMATIX_SHARD_COACT_RESERVE still override
         # these at query time (env > toml > default), resolved per-call.
         # Resolved + validated FIRST, before any resource (the main.db
-        # connection) is acquired, so a fat-fingered helix.toml fails loud
+        # connection) is acquired, so a fat-fingered cymatix.toml fails loud
         # without leaking an open SQLite handle.
         self._shard_fetch_multiplier: float = float(
             genome_kwargs.get("shard_fetch_multiplier", 2.0)
@@ -696,7 +696,7 @@ class ShardRouter:
 
         # #264 doc-type boost mode (default-inert "additive"). Validated here
         # so a direct ShardRouter(..., doc_type_boost_mode=...) fails fast the
-        # same way a typo in helix.toml does (RetrievalConfig.__post_init__).
+        # same way a typo in cymatix.toml does (RetrievalConfig.__post_init__).
         self._doc_type_boost_mode: str = str(
             genome_kwargs.get("doc_type_boost_mode", "additive")
         )
@@ -723,7 +723,7 @@ class ShardRouter:
         self._mem_plan = sqlite_memory_budget(max(1, int(_n or 1)))
 
         # Semantic-wiring arm (PRD 2026-06-02): broaden routing to all healthy
-        # shards for query_type=="semantic" when HELIX_SEMANTIC_ARM=1. Pulled
+        # shards for query_type=="semantic" when CYMATIX_SEMANTIC_ARM=1. Pulled
         # from the fanned genome_kwargs (config.retrieval.semantic_broaden_routing).
         self._semantic_broaden_routing: bool = bool(
             genome_kwargs.get("semantic_broaden_routing", True)
@@ -734,7 +734,7 @@ class ShardRouter:
         self.last_query_scores: Dict[str, float] = {}
         self.last_tier_contributions: Dict[str, Dict[str, float]] = {}
         # Cross-shard score-path introspection (issue #181 -- gold score
-        # depression). Populated ONLY when HELIX_SHARD_SCORE_DEBUG is
+        # depression). Populated ONLY when CYMATIX_SHARD_SCORE_DEBUG is
         # truthy; stays {} otherwise so the hot path has zero overhead
         # and behaviour is byte-identical. See query_genes.
         #   last_score_breakdown: gene_id -> {shard, raw, m_shard,
@@ -760,12 +760,12 @@ class ShardRouter:
     def _resolved_fetch_multiplier(self) -> float:
         """Effective per-shard fetch multiplier (issue #222).
 
-        ``HELIX_SHARD_FETCH_FACTOR`` (int, dark-ship override) wins when set
+        ``CYMATIX_SHARD_FETCH_FACTOR`` (int, dark-ship override) wins when set
         and parseable; otherwise the config-threaded
         ``shard_fetch_multiplier`` (default 2.0). Clamped to ≥1 on the env
         path to preserve the legacy env contract.
         """
-        v = _env_int("HELIX_SHARD_FETCH_FACTOR")
+        v = _env_int("CYMATIX_SHARD_FETCH_FACTOR")
         if v is not None:
             return float(max(1, v))
         return float(self._shard_fetch_multiplier)
@@ -773,11 +773,11 @@ class ShardRouter:
     def _resolved_coact_reserve(self) -> int:
         """Effective reserved co-activation slot count (issue #223).
 
-        ``HELIX_SHARD_COACT_RESERVE`` (int, dark-ship override) wins when set
+        ``CYMATIX_SHARD_COACT_RESERVE`` (int, dark-ship override) wins when set
         and parseable; otherwise the config-threaded ``coact_reserved_slots``
         (default 0). Clamped to ≥0.
         """
-        v = _env_int("HELIX_SHARD_COACT_RESERVE")
+        v = _env_int("CYMATIX_SHARD_COACT_RESERVE")
         if v is not None:
             return max(0, v)
         return max(0, int(self._coact_reserved_slots))
@@ -846,7 +846,7 @@ class ShardRouter:
         fallback path callers rely on for "return something").
 
         Semantic-wiring arm (PRD 2026-06-02): when ``query_type=="semantic"``
-        AND env ``HELIX_SEMANTIC_ARM=1`` AND ``semantic_broaden_routing``,
+        AND env ``CYMATIX_SEMANTIC_ARM=1`` AND ``semantic_broaden_routing``,
         bypass the LIKE gate and fan out to every healthy shard so dense-top
         golds whose shard the literal gate would drop still enter the pool.
         Any other query_type (or arm off) keeps the byte-identical LIKE scan.
@@ -854,7 +854,7 @@ class ShardRouter:
         if (
             query_type == "semantic"
             and self._semantic_broaden_routing
-            and os.environ.get("HELIX_SEMANTIC_ARM") == "1"
+            and os.environ.get("CYMATIX_SEMANTIC_ARM") == "1"
         ):
             return self.known_shards()
 
@@ -1002,7 +1002,7 @@ class ShardRouter:
         #
         # Issue #222: the depth is config-tunable (shard_fetch_multiplier /
         # shard_fetch_scale_with_shards, threaded through the router;
-        # HELIX_SHARD_FETCH_FACTOR still overrides). Defaults (2.0×, scale
+        # CYMATIX_SHARD_FETCH_FACTOR still overrides). Defaults (2.0×, scale
         # off) are byte-identical to the legacy flat 2×max_genes cut. The
         # flat 2× is too shallow whenever post-fetch rescaling (m_shard,
         # doc-type boost, global-IDF splice) would promote a mid-shard doc
@@ -1111,7 +1111,7 @@ class ShardRouter:
             with _blas_limit(1):
                 with ThreadPoolExecutor(
                     max_workers=min(_workers, len(shard_names)),
-                    thread_name_prefix="helix-shard",
+                    thread_name_prefix="cymatix-shard",
                 ) as _ex:
                     fetched = list(_ex.map(_fetch, shard_names))
         else:
@@ -1164,7 +1164,7 @@ class ShardRouter:
         # distinguishing term is globally-rare-but-locally-common is buried
         # under a same-shard incumbent, and no scalar can rescue it.
         #
-        # When HELIX_SHARD_GLOBAL_IDF is truthy AND ≥2 shards participated,
+        # When CYMATIX_SHARD_GLOBAL_IDF is truthy AND ≥2 shards participated,
         # we recompute each candidate's BM25 LEXICAL sub-score per-doc with
         # TRUE GLOBAL IDF (from the aggregated global N / df already probed
         # for the scalar path) and SPLICE it back into that doc's fused
@@ -1314,7 +1314,7 @@ class ShardRouter:
         rrf_all = fuser.all_scores()
 
         # -- Score-path introspection (issue #181) ------------------
-        # Behaviour-preserving: ONLY runs when HELIX_SHARD_SCORE_DEBUG is
+        # Behaviour-preserving: ONLY runs when CYMATIX_SHARD_SCORE_DEBUG is
         # truthy. Populates last_score_breakdown for EVERY merged
         # candidate (including golds that fall below the `limit` cut, so
         # the diag harness can see the depression) plus
@@ -1645,7 +1645,7 @@ class ShardRouter:
         # Issue #223: optionally reserve slots for promoted linked docs so
         # the link-discounted graph-surfaced candidates aren't displaced by
         # the flat truncation. The reserve count is config-threaded
-        # (coact_reserved_slots; HELIX_SHARD_COACT_RESERVE overrides).
+        # (coact_reserved_slots; CYMATIX_SHARD_COACT_RESERVE overrides).
         # Reserve=0 (default) is byte-identical to the legacy plain [:limit]
         # cut.
         return _apply_coact_reserve(
@@ -1677,5 +1677,5 @@ class ShardRouter:
 
 
 def use_shards_enabled() -> bool:
-    """Read HELIX_USE_SHARDS env flag. Default OFF until Task 8 cutover."""
-    return os.environ.get("HELIX_USE_SHARDS", "").strip() in ("1", "true", "yes", "on")
+    """Read CYMATIX_USE_SHARDS env flag. Default OFF until Task 8 cutover."""
+    return os.environ.get("CYMATIX_USE_SHARDS", "").strip() in ("1", "true", "yes", "on")

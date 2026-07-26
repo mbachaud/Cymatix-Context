@@ -13,7 +13,7 @@ Coverage:
     - #223 reserved-slot semantics via the resolved path.
     - Config threading (ShardRouter reads kwargs; load_config parses TOML).
     - Validation (negative values raise).
-    - Env-over-config precedence (HELIX_SHARD_* still wins).
+    - Env-over-config precedence (CYMATIX_SHARD_* still wins).
 """
 
 from __future__ import annotations
@@ -54,7 +54,7 @@ def _clean_env():
     """Isolate the dark-ship env overrides so config precedence tests are hermetic."""
     saved = {
         k: os.environ.pop(k, None)
-        for k in ("HELIX_SHARD_FETCH_FACTOR", "HELIX_SHARD_COACT_RESERVE")
+        for k in ("CYMATIX_SHARD_FETCH_FACTOR", "CYMATIX_SHARD_COACT_RESERVE")
     }
     yield
     for k, v in saved.items():
@@ -183,13 +183,13 @@ def test_validate_legacy_defaults_ok():
 
 
 def test_env_int_helper():
-    assert _env_int("HELIX_DEFINITELY_UNSET_XYZ") is None
-    os.environ["HELIX_SHARD_FETCH_FACTOR"] = "5"
-    assert _env_int("HELIX_SHARD_FETCH_FACTOR") == 5
-    os.environ["HELIX_SHARD_FETCH_FACTOR"] = "junk"
-    assert _env_int("HELIX_SHARD_FETCH_FACTOR") is None
-    os.environ["HELIX_SHARD_FETCH_FACTOR"] = ""
-    assert _env_int("HELIX_SHARD_FETCH_FACTOR") is None
+    assert _env_int("CYMATIX_DEFINITELY_UNSET_XYZ") is None
+    os.environ["CYMATIX_SHARD_FETCH_FACTOR"] = "5"
+    assert _env_int("CYMATIX_SHARD_FETCH_FACTOR") == 5
+    os.environ["CYMATIX_SHARD_FETCH_FACTOR"] = "junk"
+    assert _env_int("CYMATIX_SHARD_FETCH_FACTOR") is None
+    os.environ["CYMATIX_SHARD_FETCH_FACTOR"] = ""
+    assert _env_int("CYMATIX_SHARD_FETCH_FACTOR") is None
 
 
 # ── Config threading: RetrievalConfig + load_config(TOML) ─────────────
@@ -211,7 +211,7 @@ def test_load_config_parses_shard_knobs():
         "coact_link_boost = 0.75\n"
     )
     with tempfile.TemporaryDirectory() as d:
-        p = Path(d) / "helix.toml"
+        p = Path(d) / "cymatix.toml"
         p.write_text(toml, encoding="utf-8")
         cfg = load_config(str(p))
     assert cfg.retrieval.shard_fetch_multiplier == 4.0
@@ -222,7 +222,7 @@ def test_load_config_parses_shard_knobs():
 
 def test_load_config_absent_section_keeps_defaults():
     with tempfile.TemporaryDirectory() as d:
-        p = Path(d) / "helix.toml"
+        p = Path(d) / "cymatix.toml"
         p.write_text("[retrieval]\nfusion_mode = \"rrf\"\n", encoding="utf-8")
         cfg = load_config(str(p))
     assert cfg.retrieval.shard_fetch_multiplier == 2.0
@@ -279,9 +279,9 @@ def test_env_fetch_factor_overrides_config(bare_main_db):
     r = ShardRouter(bare_main_db, shard_fetch_multiplier=3.0)
     try:
         assert r._resolved_fetch_multiplier() == 3.0
-        os.environ["HELIX_SHARD_FETCH_FACTOR"] = "5"
+        os.environ["CYMATIX_SHARD_FETCH_FACTOR"] = "5"
         assert r._resolved_fetch_multiplier() == 5.0  # env wins
-        os.environ["HELIX_SHARD_FETCH_FACTOR"] = "junk"
+        os.environ["CYMATIX_SHARD_FETCH_FACTOR"] = "junk"
         assert r._resolved_fetch_multiplier() == 3.0  # invalid env => config
     finally:
         r.close()
@@ -291,9 +291,9 @@ def test_env_coact_reserve_overrides_config(bare_main_db):
     r = ShardRouter(bare_main_db, coact_reserved_slots=2)
     try:
         assert r._resolved_coact_reserve() == 2
-        os.environ["HELIX_SHARD_COACT_RESERVE"] = "7"
+        os.environ["CYMATIX_SHARD_COACT_RESERVE"] = "7"
         assert r._resolved_coact_reserve() == 7  # env wins
-        os.environ["HELIX_SHARD_COACT_RESERVE"] = "junk"
+        os.environ["CYMATIX_SHARD_COACT_RESERVE"] = "junk"
         assert r._resolved_coact_reserve() == 2  # invalid env => config
     finally:
         r.close()
@@ -325,8 +325,8 @@ def two_shard_setup():
 
     ga = Genome(shard_a_path)
     gene_a_id = ga.upsert_gene(
-        _mk_gene("Helix design doc. Context retrieval via fingerprints.",
-                 ["docs"], ["helix"], "/docs/intro.md"),
+        _mk_gene("Cymatix design doc. Context retrieval via fingerprints.",
+                 ["docs"], ["cymatix"], "/docs/intro.md"),
         apply_gate=False,
     )
     ga.conn.close()
@@ -349,7 +349,7 @@ def two_shard_setup():
     register_shard(main, "shard_b", "participant", shard_b_path, gene_count=1)
     upsert_fingerprint(
         main, gene_id=gene_a_id, shard_name="shard_a", source_id="/docs/intro.md",
-        domains_json=json.dumps(["docs"]), entities_json=json.dumps(["helix"]),
+        domains_json=json.dumps(["docs"]), entities_json=json.dumps(["cymatix"]),
         key_values_json="[]",
     )
     upsert_fingerprint(

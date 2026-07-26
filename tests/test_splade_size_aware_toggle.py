@@ -271,7 +271,7 @@ class TestConfigPlumbing:
     def test_loader_reads_overrides(self, tmp_path):
         from cymatix_context.config import load_config
 
-        path = tmp_path / "helix.toml"
+        path = tmp_path / "cymatix.toml"
         path.write_text(
             "[ingestion]\n"
             "splade_enabled = true\n"

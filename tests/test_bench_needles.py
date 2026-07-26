@@ -52,8 +52,8 @@ def _gold_delivered(delivered_sources, gold_sources) -> bool:
 
 def test_multi_gold_hit_when_first_source_appears():
     """A 2-valid-gold needle hits when the FIRST gold source is delivered."""
-    gold = ["helix-context/helix.toml", "helix-context/docs/SETUP.md"]
-    delivered = ["F:/Projects/helix-context/helix.toml"]
+    gold = ["cymatix-context/cymatix.toml", "cymatix-context/docs/SETUP.md"]
+    delivered = ["F:/Projects/cymatix-context/cymatix.toml"]
     assert _gold_delivered(delivered, gold) is True
 
 
@@ -64,14 +64,14 @@ def test_multi_gold_hit_when_second_source_appears():
     delivery would miss, even though the answer is in a documentation
     file an honest reader would consider a valid source.
     """
-    gold = ["helix-context/helix.toml", "helix-context/docs/SETUP.md"]
-    delivered = ["F:/Projects/helix-context/docs/SETUP.md"]
+    gold = ["cymatix-context/cymatix.toml", "cymatix-context/docs/SETUP.md"]
+    delivered = ["F:/Projects/cymatix-context/docs/SETUP.md"]
     assert _gold_delivered(delivered, gold) is True
 
 
 def test_multi_gold_miss_when_neither_source_appears():
     """A 2-valid-gold needle misses when NEITHER gold source is delivered."""
-    gold = ["helix-context/helix.toml", "helix-context/docs/SETUP.md"]
+    gold = ["cymatix-context/cymatix.toml", "cymatix-context/docs/SETUP.md"]
     delivered = [
         "F:/Projects/Education/CLAUDE.md",
         "F:/Projects/OtherRepo/CLAUDE.md",
@@ -82,17 +82,17 @@ def test_multi_gold_miss_when_neither_source_appears():
 def test_multi_gold_hit_with_multiple_candidates():
     """Realistic case: a 6-valid-gold needle hits on a middle-of-list entry."""
     gold = [
-        "helix-context/helix.toml",
-        "helix-context/README.md",
-        "helix-context/CLAUDE.md",
-        "helix-context/docs/SETUP.md",
-        "helix-context/docs/TROUBLESHOOTING.md",
-        "helix-context/docs/api/endpoints.md",
+        "cymatix-context/cymatix.toml",
+        "cymatix-context/README.md",
+        "cymatix-context/CLAUDE.md",
+        "cymatix-context/docs/SETUP.md",
+        "cymatix-context/docs/TROUBLESHOOTING.md",
+        "cymatix-context/docs/api/endpoints.md",
     ]
     # Only the TROUBLESHOOTING entry is delivered; under single-gold
-    # (gold = ["helix-context/helix.toml"]) this miss would silently
+    # (gold = ["cymatix-context/cymatix.toml"]) this miss would silently
     # underestimate retrieval quality.
-    delivered = ["F:/Projects/helix-context/docs/TROUBLESHOOTING.md"]
+    delivered = ["F:/Projects/cymatix-context/docs/TROUBLESHOOTING.md"]
     assert _gold_delivered(delivered, gold) is True
 
 
@@ -102,13 +102,13 @@ def test_multi_gold_hit_with_multiple_candidates():
 def test_single_gold_legacy_hit_still_works():
     """A 1-item gold_source list must behave identically to the
     pre-multi-gold schema -- existing JSONL captures remain comparable."""
-    gold = ["helix-context/helix.toml"]
-    delivered = ["F:/Projects/helix-context/helix.toml"]
+    gold = ["cymatix-context/cymatix.toml"]
+    delivered = ["F:/Projects/cymatix-context/cymatix.toml"]
     assert _gold_delivered(delivered, gold) is True
 
 
 def test_single_gold_legacy_miss_still_works():
-    gold = ["helix-context/helix.toml"]
+    gold = ["cymatix-context/cymatix.toml"]
     delivered = ["F:/Projects/Education/CLAUDE.md"]
     assert _gold_delivered(delivered, gold) is False
 
@@ -119,31 +119,31 @@ def test_single_gold_legacy_miss_still_works():
 def test_match_is_case_insensitive():
     """Windows mixed-case paths must match lowercase gold substrings.
 
-    The crawler may emit ``F:/Projects/Helix-Context/...`` (mixed case
+    The crawler may emit ``F:/Projects/Cymatix-Context/...`` (mixed case
     from the on-disk dir) while the gold label is lowercase
-    ``helix-context/...``."""
-    gold = ["helix-context/helix.toml"]
-    delivered = ["F:/Projects/Helix-Context/HELIX.TOML"]
+    ``cymatix-context/...``."""
+    gold = ["cymatix-context/cymatix.toml"]
+    delivered = ["F:/Projects/Cymatix-Context/CYMATIX.TOML"]
     assert _gold_delivered(delivered, gold) is True
 
 
 def test_match_normalizes_backslashes_to_forward_slashes():
     """Native Windows paths (``F:\\Projects\\...``) must match the
     forward-slash gold convention."""
-    gold = ["helix-context/helix.toml"]
-    delivered = ["F:\\Projects\\helix-context\\helix.toml"]
+    gold = ["cymatix-context/cymatix.toml"]
+    delivered = ["F:\\Projects\\cymatix-context\\cymatix.toml"]
     assert _gold_delivered(delivered, gold) is True
 
 
 def test_match_handles_directory_substring_gold():
     """A gold-source entry that is a directory substring (e.g.
-    ``helix-context/docs``) must match any file under that directory.
+    ``cymatix-context/docs``) must match any file under that directory.
 
     Used by the ``genome_compression_target`` needle to accept any
     ``docs/...`` file as evidence the docs root was retrieved."""
-    gold = ["helix-context/docs"]
+    gold = ["cymatix-context/docs"]
     delivered = [
-        "F:/Projects/helix-context/docs/architecture/OBSERVABILITY.md"
+        "F:/Projects/cymatix-context/docs/architecture/OBSERVABILITY.md"
     ]
     assert _gold_delivered(delivered, gold) is True
 
@@ -249,13 +249,13 @@ class _FakeClient:
                 "content": (
                     "<expressed_context>\n"
                     "[gene=aaaa11112222 ◆ fired=lex:1.0 100c]\n"
-                    "The helix proxy listens on port 11437.\n"
+                    "The cymatix proxy listens on port 11437.\n"
                     "</expressed_context>"
                 ),
                 "context_health": {"status": "aligned", "ellipticity": 0.1},
                 "agent": {"citations": [
                     {"gene_id": "aaaa11112222aaaa",
-                     "source": "helix-context/helix.toml"},
+                     "source": "cymatix-context/cymatix.toml"},
                 ]},
             }])
         raise TimeoutError("simulated answer-step ReadTimeout")
@@ -269,11 +269,11 @@ def test_find_needle_survives_answer_step_failure():
 
     client = _FakeClient()
     needle = {
-        "name": "helix_port",
-        "query": "what port does the helix proxy listen on",
+        "name": "cymatix_port",
+        "query": "what port does the cymatix proxy listen on",
         "expected": "11437",
         "accept": ["11437"],
-        "gold_source": ["helix-context/helix.toml"],
+        "gold_source": ["cymatix-context/cymatix.toml"],
     }
     r = bench_needle.find_needle(client, needle)
     assert r["gold_delivered"] is True
@@ -289,11 +289,11 @@ def test_find_needle_passes_ignore_delivered():
 
     client = _FakeClient()
     needle = {
-        "name": "helix_port",
-        "query": "what port does the helix proxy listen on",
+        "name": "cymatix_port",
+        "query": "what port does the cymatix proxy listen on",
         "expected": "11437",
         "accept": ["11437"],
-        "gold_source": ["helix-context/helix.toml"],
+        "gold_source": ["cymatix-context/cymatix.toml"],
     }
     bench_needle.find_needle(client, needle)
     ctx_posts = [j for (u, j) in client.posts if u.endswith("/context")]
@@ -317,11 +317,11 @@ def test_content_has_answer_recovers_answer_outside_block_bodies():
     content = (
         "<expressed_context>\n"
         "note: the proxy listens on 11437 by default\n"
-        '<GENE src="helix-context/helix.toml">unrelated config body</GENE>\n'
+        '<GENE src="cymatix-context/cymatix.toml">unrelated config body</GENE>\n'
         "</expressed_context>"
     )
     r = bench_needle.check_gold_delivery(
-        content, ["helix-context/helix.toml"], ["11437"])
+        content, ["cymatix-context/cymatix.toml"], ["11437"])
     assert r["gold_delivered"] is True       # gold source delivered
     assert r["body_has_answer"] is False     # not in the gold block's body
     assert r["content_has_answer"] is True   # but in the content the model reads
@@ -333,7 +333,7 @@ def test_content_has_answer_word_boundary_guard():
     import bench_needle
     content = "<expressed_context>\nupstream is http://localhost:11434\n</expressed_context>"
     r = bench_needle.check_gold_delivery(
-        content, ["helix-context/helix.toml"], ["11437"])
+        content, ["cymatix-context/cymatix.toml"], ["11437"])
     assert r["content_has_answer"] is False
 
 
@@ -341,9 +341,9 @@ def test_content_has_answer_true_when_body_also_has_it():
     """When the answer IS in a delivered body, both metrics agree."""
     import bench_needle
     content = (
-        '<GENE src="helix-context/helix.toml">port = 11437  # proxy</GENE>'
+        '<GENE src="cymatix-context/cymatix.toml">port = 11437  # proxy</GENE>'
     )
     r = bench_needle.check_gold_delivery(
-        content, ["helix-context/helix.toml"], ["11437"])
+        content, ["cymatix-context/cymatix.toml"], ["11437"])
     assert r["body_has_answer"] is True
     assert r["content_has_answer"] is True

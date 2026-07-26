@@ -1,4 +1,4 @@
-"""DAL cache — TTL-bounded LRU respecting Helix volatility classes.
+"""DAL cache — TTL-bounded LRU respecting Cymatix volatility classes.
 
 Wraps a ``DAL`` instance. Same API (``fetch(source_id)``), same
 ``FetchResult`` shape, plus freshness-aware eviction and an explicit
@@ -17,13 +17,13 @@ Deployment model:
   Different machines have different filesystems and should have
   separate caches. The default in-process LRU naturally gives you
   this — no cross-party coordination needed.
-- **NOT agent-scoped.** We don't partition by ``HELIX_AGENT``.
+- **NOT agent-scoped.** We don't partition by ``CYMATIX_AGENT``.
   Partitioning would defeat the cache's purpose (Laude fetches, Taude
   refetches the same file 10 seconds later).
 - **NOT cross-party.** Don't share caches across devices. Use a
-  shared knowledge store + ingest instead — Helix syncs metadata, not bytes.
+  shared knowledge store + ingest instead — Cymatix syncs metadata, not bytes.
 
-TTLs come from Helix's ``volatility_class`` (``stable=7d, medium=12h,
+TTLs come from Cymatix's ``volatility_class`` (``stable=7d, medium=12h,
 hot=15min``) or an explicit ``ttl_s`` argument at fetch time.
 Invalidation is explicit via ``invalidate(source_id)`` or
 ``invalidate_all()``; wire those to your ingest hooks if your corpus
@@ -40,11 +40,11 @@ from typing import Optional
 
 from .dal import DAL, FetchResult
 
-log = logging.getLogger("helix.adapters.cache")
+log = logging.getLogger("cymatix.adapters.cache")
 
 
 def _record_cache_outcome_safe(outcome: str) -> None:
-    """Best-effort bump of ``helix_context_cache_outcome_total`` (#209).
+    """Best-effort bump of ``cymatix_context_cache_outcome_total`` (#209).
 
     No-op instrument when telemetry is off; never raises into fetch().
     """
@@ -121,7 +121,7 @@ class CachedDAL:
         Parameters
         ----------
         source_id: as in DAL.fetch
-        volatility_class: Helix's volatility label. When provided (and
+        volatility_class: Cymatix's volatility label. When provided (and
             ``ttl_s`` is None), the TTL comes from ``DEFAULT_TTLS_S``.
         ttl_s: explicit TTL override. Wins over ``volatility_class``.
         bypass_cache: force a miss; still writes the result back.
@@ -268,7 +268,7 @@ def fetch_packet_sources_cached(
     ``volatility_class`` for TTL selection.
 
     Items in ``stale_risk`` or ``refresh_targets`` bypass the cache
-    automatically — Helix already flagged them as needing a fresh
+    automatically — Cymatix already flagged them as needing a fresh
     fetch, and serving stale bytes would defeat the verdict.
     """
     cache = cache or CachedDAL()

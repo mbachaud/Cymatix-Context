@@ -38,11 +38,11 @@ logging.basicConfig(
 
 CANONICAL_QUERIES: list[tuple[str, list[str], list[str]]] = [
     # (label, domains, entities)
-    ("helix_pipeline",      ["helix", "pipeline"],              ["HelixContextManager", "ribosome"]),
+    ("cymatix_pipeline",      ["cymatix", "pipeline"],              ["CymatixContextManager", "ribosome"]),
     ("factorio_prototype",  ["factorio", "lua", "prototype"],   ["data", "transport-belt", "recipe"]),
     ("turing_circuit",      ["turing", "circuit", "logic"],     ["NAND", "gate", "bit"]),
     ("stationeers_ic10",    ["stationeers", "ic10", "assembly"], ["atmospherics", "device"]),
-    ("helix_openai_proxy",  ["openai", "proxy", "streaming"],   ["chat", "completions", "forward"]),
+    ("cymatix_openai_proxy",  ["openai", "proxy", "streaming"],   ["chat", "completions", "forward"]),
 ]
 
 

@@ -37,7 +37,7 @@ from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 
-log = logging.getLogger("helix.sema")
+log = logging.getLogger("cymatix.sema")
 
 
 # ── The 20 Universal Primes ──────────────────────────────────────────
@@ -90,9 +90,9 @@ PRIMES: List[SemaPrime] = [
               "Scope — constraints, limits, permissions, access control"),
     SemaPrime(13, "state",        "Sn", "The server is currently running in production mode with debug disabled",
               "Condition — current status, configuration, mode, flags"),
-    SemaPrime(14, "identity",     "Id", "The class is named HelixContextManager and is defined in context_manager.py",
+    SemaPrime(14, "identity",     "Id", "The class is named CymatixContextManager and is defined in context_manager.py",
               "Naming — definitions, references, identifiers, types"),
-    SemaPrime(15, "instruction",  "In", "To install the package run pip install helix-context and configure helix.toml",
+    SemaPrime(15, "instruction",  "In", "To install the package run pip install cymatix-context and configure cymatix.toml",
               "Directives — how-to, commands, setup steps, recipes"),
     SemaPrime(16, "data",         "Da", "The JSON response contains fields for name, status, count, and timestamp",
               "Information — values, types, formats, schemas, payloads"),

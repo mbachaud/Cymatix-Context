@@ -46,7 +46,7 @@ Tracking design lives in
    ```toml
    [vault]
    enabled = true
-   path = "~/.helix/vault"
+   path = "~/.cymatix/vault"
    # party_id = ""           # empty = server's primary party
    # redact_body = false     # set true if Obsidian Sync / iCloud watches the path
 
@@ -71,7 +71,7 @@ Tracking design lives in
         -H "Content-Type: application/json" \
         -d '{"query": "what does the splice step do?"}'
 
-   # Find the latest trace file in ~/.helix/vault/_traces/
+   # Find the latest trace file in ~/.cymatix/vault/_traces/
    cymatix-vault trace --list | head
    cymatix-vault pin <trace-filename>
    cymatix-vault status     # _traces-pinned count goes up by 1

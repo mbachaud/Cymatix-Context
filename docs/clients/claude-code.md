@@ -212,7 +212,7 @@ Enable in `cymatix.toml`:
 ```toml
 [vault]
 enabled = true
-path = "~/.helix/vault"
+path = "~/.cymatix/vault"
 # party_id = ""           # empty = server's primary party
 # redact_body = false     # set true if Obsidian Sync / iCloud watches the path
 

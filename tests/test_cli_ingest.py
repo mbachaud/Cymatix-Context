@@ -1,4 +1,4 @@
-"""Tests for `helix ingest`."""
+"""Tests for `cymatix ingest`."""
 from __future__ import annotations
 
 import json
@@ -21,7 +21,7 @@ def fake_session():
 
 def test_ingest_single_file(fake_session, tmp_path):
     src = tmp_path / "doc.txt"
-    src.write_text("hello helix\n", encoding="utf-8")
+    src.write_text("hello cymatix\n", encoding="utf-8")
 
     with patch("cymatix_context.cli.cmd_ingest.open_session", return_value=fake_session):
         rc, out, err = _run(["ingest", str(src), "--json"])
@@ -34,7 +34,7 @@ def test_ingest_single_file(fake_session, tmp_path):
     # The session.ingest was called once with the file contents.
     assert fake_session.ingest.call_count == 1
     args, kwargs = fake_session.ingest.call_args
-    assert args == ("hello helix\n",) or kwargs.get("content") == "hello helix\n"
+    assert args == ("hello cymatix\n",) or kwargs.get("content") == "hello cymatix\n"
 
 
 def test_ingest_directory_walks_top_level_files(fake_session, tmp_path):

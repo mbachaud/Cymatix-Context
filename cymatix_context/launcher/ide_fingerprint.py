@@ -2,16 +2,16 @@
 
 Used by ``mcp_server._register_with_registry`` to populate the
 ``ide_detected`` and ``ide_detection_via`` columns on the participants
-row without depending on each MCP host vendor to set ``HELIX_MCP_HOST``
+row without depending on each MCP host vendor to set ``CYMATIX_MCP_HOST``
 correctly.
 
 Only env vars set intentionally by the host process are trusted as
 signals. No PPID walking, no terminal-program guessing, no inference.
 When no signal matches we return ``(None, "no_match")`` and let the
-agent self-report later via ``helix_announce``.
+agent self-report later via ``cymatix_announce``.
 
 Priority chain (first match wins):
-    1. HELIX_MCP_HOST explicit (and not the legacy "unknown" sentinel)
+    1. CYMATIX_MCP_HOST explicit (and not the legacy "unknown" sentinel)
     2. VSCODE_PID
     3. CURSOR_TRACE_ID
     4. fallback → (None, "no_match")
@@ -34,9 +34,9 @@ def detect_ide() -> Tuple[Optional[str], str]:
     a string documenting how the result was reached, suitable for the
     tooltip's diagnostic line.
     """
-    explicit = os.environ.get("HELIX_MCP_HOST", "").strip()
+    explicit = os.environ.get("CYMATIX_MCP_HOST", "").strip()
     if explicit and explicit != "unknown":
-        return explicit, "explicit:HELIX_MCP_HOST"
+        return explicit, "explicit:CYMATIX_MCP_HOST"
 
     if os.environ.get("VSCODE_PID", "").strip():
         return "vscode", "env:VSCODE_PID"

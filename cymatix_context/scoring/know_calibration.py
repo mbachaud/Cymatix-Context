@@ -47,7 +47,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional, Sequence
 
-log = logging.getLogger("helix.know_calibration")
+log = logging.getLogger("cymatix.know_calibration")
 
 
 # ─────────────────────────────────────────────────────────────────────
@@ -122,7 +122,7 @@ def monotonicity_violations(betas: Sequence[float]) -> list[str]:
 
 
 # ─────────────────────────────────────────────────────────────────────
-# Data class — bundles betas + scale refs + floor; loaded from helix.toml
+# Data class — bundles betas + scale refs + floor; loaded from cymatix.toml
 # ─────────────────────────────────────────────────────────────────────
 
 @dataclass(frozen=True)
@@ -172,7 +172,7 @@ def calibration_age_days(
     pin the result.
 
     Soft-fails on unparseable timestamps with a debug log so a bad
-    helix.toml entry does not break /context.
+    cymatix.toml entry does not break /context.
     """
     if not calibrated_at:
         return None
@@ -296,7 +296,7 @@ def compute_confidence(
         betas = DEFAULT_BETAS
 
     # Squash top_score and score_gap with tanh so saturating outliers
-    # cannot dominate the logit. Reference scales come from helix.toml
+    # cannot dominate the logit. Reference scales come from cymatix.toml
     # so calibration can re-tune them to the current retriever.
     s_ref = cal.s_ref if cal.s_ref > 0 else DEFAULT_S_REF
     g_ref = cal.g_ref if cal.g_ref > 0 else DEFAULT_G_REF
@@ -326,8 +326,8 @@ def calibration_from_config(know_cfg) -> KnowCalibration:
     """Convert a ``config.KnowConfig`` block into a ``KnowCalibration``.
 
     The canonical consumption path: callers that already hold a loaded
-    ``HelixConfig`` pass ``cfg.know`` here instead of re-reading
-    helix.toml from disk (see server/helpers.attach_know_or_miss).
+    ``CymatixConfig`` pass ``cfg.know`` here instead of re-reading
+    cymatix.toml from disk (see server/helpers.attach_know_or_miss).
 
     Defensive re-validation of the betas length is kept even though the
     config loader performs the same check — a hand-built ``KnowConfig``
@@ -376,7 +376,7 @@ def load_calibration_from_toml(
     drift from the documented config surface again.
 
     ``toml_path=None`` resolves like every other config consumer
-    (``HELIX_CONFIG`` env, then ./helix.toml) instead of the old
+    (``CYMATIX_CONFIG`` env, then ./cymatix.toml) instead of the old
     hard-coded cwd lookup.
     """
     try:

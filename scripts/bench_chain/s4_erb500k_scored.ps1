@@ -9,17 +9,17 @@
 # so a mid-run interruption is recovered by re-running (the chain may restart it).
 # Pure ASCII, PowerShell 5.1-safe. Never exits on a single-step failure.
 $ErrorActionPreference = 'Continue'
-$repo = 'F:\Projects\helix-context'
+$repo = 'F:\Projects\cymatix-context'
 $logs = "$repo\benchmarks\logs"
 $results = "$repo\benchmarks\results"
 $ts = Get-Date -Format 'yyyy-MM-dd_HHmm'
 New-Item -ItemType Directory -Force -Path $logs | Out-Null
 New-Item -ItemType Directory -Force -Path $results | Out-Null
-$env:HELIX_OTEL_ENABLED = '1'
-$env:HELIX_OTEL_ENDPOINT = 'localhost:4317'
+$env:CYMATIX_OTEL_ENABLED = '1'
+$env:CYMATIX_OTEL_ENDPOINT = 'localhost:4317'
 $env:PYTHONHASHSEED = '0'
 $port = 11437
-$helixUrl = "http://127.0.0.1:$port"
+$cymatixUrl = "http://127.0.0.1:$port"
 # 2026-07-02 repoint (Max): use the BLOB-mode ERB fixture instead of the
 # sharded routing DB. F:\tmp\erb_blob.db = 829,131 genes over 499,997 ERB
 # source docs, dense_v2 97.6% populated, finished 2026-06-16, WAL
@@ -66,7 +66,7 @@ function Wait-Healthy {
     return $false
 }
 
-function Stop-HelixTree {
+function Stop-CymatixTree {
     param($proc)
     if ($null -eq $proc) { return }
     try { taskkill /T /F /PID $proc.Id 2>&1 | Out-Null } catch {}
@@ -111,25 +111,25 @@ if (-not (Test-Path "$erbRoot\questions.jsonl")) {
 "preflight ok: fixture + questions present" | Add-Content "$logs\s4_summary_$ts.log"
 
 # Start uvicorn in BLOB mode pointed at erb_blob.db (2026-07-02 repoint).
-# No HELIX_USE_SHARDS: a plain genome path loads the standard KnowledgeStore
+# No CYMATIX_USE_SHARDS: a plain genome path loads the standard KnowledgeStore
 # with the full blob-mode tier stack.
 Set-Status 's4_erb500k' 'starting-server'
-Remove-Item Env:\HELIX_USE_SHARDS -ErrorAction SilentlyContinue
-$env:HELIX_GENOME_PATH = $fixture
+Remove-Item Env:\CYMATIX_USE_SHARDS -ErrorAction SilentlyContinue
+$env:CYMATIX_GENOME_PATH = $fixture
 $srvLog = "$logs\s4_server_$ts.log"
 $proc = $null
 if (Wait-PortFree -p $port -timeoutSec 20) {
-    $srvArgs = @('-m', 'uvicorn', 'helix_context._asgi:app',
+    $srvArgs = @('-m', 'uvicorn', 'cymatix_context._asgi:app',
                  '--host', '127.0.0.1', '--port', "$port")
     $proc = Start-Process -FilePath 'python' -ArgumentList $srvArgs `
         -RedirectStandardOutput $srvLog -RedirectStandardError "$srvLog.err" `
         -WindowStyle Hidden -PassThru
-    if (-not (Wait-Healthy -url $helixUrl -timeoutSec 120)) {
+    if (-not (Wait-Healthy -url $cymatixUrl -timeoutSec 120)) {
         "SERVER did not become healthy (sharded 500K) -- see $srvLog" |
             Add-Content "$logs\s4_summary_$ts.log"
-        Stop-HelixTree -proc $proc
-        Remove-Item Env:\HELIX_USE_SHARDS -ErrorAction SilentlyContinue
-        Remove-Item Env:\HELIX_GENOME_PATH -ErrorAction SilentlyContinue
+        Stop-CymatixTree -proc $proc
+        Remove-Item Env:\CYMATIX_USE_SHARDS -ErrorAction SilentlyContinue
+        Remove-Item Env:\CYMATIX_GENOME_PATH -ErrorAction SilentlyContinue
         Set-Status 's4_erb500k' 'FAILED-server-start'
         return
     }
@@ -156,7 +156,7 @@ $runLog = "$logs\s4_run_$ts.log"
 
 python scripts\bench_chain\erb500k_scored.py `
     --erb-root $erbRoot `
-    --helix-url $helixUrl `
+    --cymatix-url $cymatixUrl `
     --out $outJsonl `
     --summary-out $summaryJson `
     --answer-model sonnet `
@@ -182,9 +182,9 @@ try {
 }
 
 # Tear down the server.
-Stop-HelixTree -proc $proc
-Remove-Item Env:\HELIX_USE_SHARDS -ErrorAction SilentlyContinue
-Remove-Item Env:\HELIX_GENOME_PATH -ErrorAction SilentlyContinue
+Stop-CymatixTree -proc $proc
+Remove-Item Env:\CYMATIX_USE_SHARDS -ErrorAction SilentlyContinue
+Remove-Item Env:\CYMATIX_GENOME_PATH -ErrorAction SilentlyContinue
 "server stopped" | Add-Content "$logs\s4_summary_$ts.log"
 
 if ($runExit -eq 0) { Set-Status 's4_erb500k' 'DONE' }

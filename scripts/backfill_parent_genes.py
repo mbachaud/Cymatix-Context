@@ -4,13 +4,13 @@ Idempotent. Safe to re-run. Reads the current genome, groups existing
 genes by ``source_id``, and for any source with ≥ 2 chunks creates the
 deterministic parent gene (UPSERT) and CHUNK_OF edges.
 
-WARNING: run with helix stopped and AFTER WAL checkpoint / cleanup.
+WARNING: run with cymatix stopped and AFTER WAL checkpoint / cleanup.
 Grabs a write lock on genome.db. Also run with a backup in hand
-(E:\\Helix-backup is the operator's current off-disk blob).
+(E:\\Cymatix-backup is the operator's current off-disk blob).
 
 Usage:
     python scripts/backfill_parent_genes.py \
-        --genome C:/helix-cache/genome.db \
+        --genome C:/cymatix-cache/genome.db \
         [--dry-run] [--limit N]
 
 --dry-run  Report how many parents would be created, no writes.
@@ -30,7 +30,7 @@ from pathlib import Path
 # Make cymatix_context importable when run from repo root.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from cymatix_context.context_manager import HelixContextManager  # noqa: E402
+from cymatix_context.context_manager import CymatixContextManager  # noqa: E402
 from cymatix_context.schemas import StructuralRelation  # noqa: E402
 
 try:
@@ -79,7 +79,7 @@ def group_by_source(conn: sqlite3.Connection) -> dict[str, list[tuple[str, int]]
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--genome", default="C:/helix-cache/genome.db")
+    ap.add_argument("--genome", default="C:/cymatix-cache/genome.db")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--limit", type=int, default=None)
     args = ap.parse_args()
@@ -112,7 +112,7 @@ def main() -> int:
         chunks.sort(key=lambda t: t[1])  # order by sequence_index
         child_ids = [gid for gid, _ in chunks]
 
-        parent_gid = HelixContextManager._make_parent_gene_id(source_id)
+        parent_gid = CymatixContextManager._make_parent_gene_id(source_id)
 
         # Minimal parent gene row — mirrors _upsert_parent_gene shape.
         # Skip content for backfill (would require re-reading files from disk);

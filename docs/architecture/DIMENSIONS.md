@@ -207,7 +207,7 @@ reorders already-retrieved candidates.
 
 Current live wiring:
 
-- per-session TCM state is initialized in `HelixContextManager`
+- per-session TCM state is initialized in `CymatixContextManager`
 - Step 3.25 applies `tcm_bonus(...)` as a tiebreaker over current candidates
 - optional theta-biased ray tracing can use TCM velocity, but that flag is off by default
 

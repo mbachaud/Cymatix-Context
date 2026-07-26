@@ -3,7 +3,7 @@ surface that the rest of the codebase reads.
 
 The adapter is hand-maintained and historically lagged ``KnowledgeStore``
 additions, which surfaced as HTTP 500s during the bench when the
-``HELIX_USE_SHARDS=1`` read path was first driven end-to-end (issue #98).
+``CYMATIX_USE_SHARDS=1`` read path was first driven end-to-end (issue #98).
 
 One merged surface check here (2026-07-05 test-suite consolidation, Task 9
 folded the former two overlapping tests into a single
@@ -13,7 +13,7 @@ folded the former two overlapping tests into a single
 
 1. A hard-coded list (``REQUIRED_CALLER_SURFACE``) of every
    attribute/method that ``context_manager`` and the FastAPI routes
-   actually read off ``self.genome`` / ``helix.genome`` today. This is
+   actually read off ``self.genome`` / ``cymatix.genome`` today. This is
    the contract the adapter MUST satisfy or callers crash at runtime.
    Several of these (``conn``, ``path``, ``last_query_scores``, ...) are
    instance-only attributes on ``KnowledgeStore`` that never show up in
@@ -44,7 +44,7 @@ from cymatix_context.sharding import ShardedGenomeAdapter
 #
 # Derived from:
 #   grep -oE "self\.genome\.[a-zA-Z_]+"  cymatix_context/context_manager.py
-#   grep -oE "helix\.genome\.[a-zA-Z_]+" cymatix_context/server/routes_*.py
+#   grep -oE "cymatix\.genome\.[a-zA-Z_]+" cymatix_context/server/routes_*.py
 #
 # When a caller adds a new read, add it here. Failure means the adapter
 # will AttributeError at runtime for that caller's path.
@@ -176,7 +176,7 @@ ADAPTER_ONLY_DIFFERENCES_WHITELIST = frozenset({
 
     # Density / calibration / relations — per-shard write-path helpers
     # not consumed via the adapter today. If a route starts reading any
-    # of these off helix.genome, move them out of the whitelist and
+    # of these off cymatix.genome, move them out of the whitelist and
     # mirror them.
     "apply_density_gate", "compute_density_score", "corpus_size",
     "emit_wal_health_gauges", "get_relations", "store_relation",
@@ -211,7 +211,7 @@ def adapter(empty_main_db):
 
 
 def test_adapter_path_property_returns_main_path(adapter, empty_main_db):
-    """``/admin/swap-db`` reads ``helix.genome.path`` to log the previous DB."""
+    """``/admin/swap-db`` reads ``cymatix.genome.path`` to log the previous DB."""
     assert adapter.path == empty_main_db
 
 

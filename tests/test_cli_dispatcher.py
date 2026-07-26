@@ -1,4 +1,4 @@
-"""Tests for the top-level `helix` CLI dispatcher (no subcommand work yet)."""
+"""Tests for the top-level `cymatix` CLI dispatcher (no subcommand work yet)."""
 from __future__ import annotations
 
 import shutil
@@ -38,15 +38,15 @@ def test_main_consults_sys_argv_when_argv_is_none(monkeypatch):
     """Regression for commit 7647b72: main() with no argument must read sys.argv[1:].
 
     Previously ``main()`` (no argument) bypassed the `if argv is None: argv = sys.argv[1:]`
-    branch in some entry-point setups, so the installed `helix` console-script
+    branch in some entry-point setups, so the installed `cymatix` console-script
     crashed when invoked without explicit args. We exercise the path by setting
-    sys.argv to a benign ``["helix", "--help"]`` value and calling ``main()``
+    sys.argv to a benign ``["cymatix", "--help"]`` value and calling ``main()``
     with no positional argument — argparse should still see ``--help`` and
     SystemExit(0). If main() failed to consult sys.argv, it would instead see
     an empty argv and return EXIT_ERROR via the no-args branch.
     """
     import sys
-    monkeypatch.setattr(sys, "argv", ["helix", "--help"])
+    monkeypatch.setattr(sys, "argv", ["cymatix", "--help"])
     with pytest.raises(SystemExit) as exc:
         main()
     # argparse --help → exit 0; proves sys.argv was consulted (the no-args
@@ -59,13 +59,11 @@ def test_main_consults_sys_argv_when_argv_is_none(monkeypatch):
 
 @pytest.mark.parametrize("argv0,expected_prog", [
     ("/usr/local/bin/cymatix", "cymatix"),
-    ("/usr/local/bin/helix", "helix"),
     (r"C:\env\Scripts\cymatix.exe", "cymatix"),
-    (r"C:\env\Scripts\helix.exe", "helix"),
 ])
 def test_parser_prog_derives_from_argv0(monkeypatch, argv0, expected_prog):
-    """Each console-script alias should show itself in usage/help output,
-    not always claim to be `helix` (P3 finding)."""
+    """The console script should show its own invoked name in usage/help
+    output (P3 finding)."""
     monkeypatch.setattr(sys, "argv", [argv0, "--help"])
     parser = dispatcher._build_parser()
     assert parser.prog == expected_prog
@@ -79,11 +77,10 @@ def test_parser_prog_falls_back_when_argv_empty(monkeypatch):
 
 @pytest.mark.parametrize("script_name,expected_prog", [
     ("cymatix", "cymatix"),
-    ("helix", "helix"),
 ])
 def test_installed_console_script_prog_matches_invoked_name(script_name, expected_prog):
-    """Smoke-test the real installed console scripts: `cymatix --help` must
-    say `usage: cymatix`, `helix --help` must say `usage: helix`."""
+    """Smoke-test the real installed console script: `cymatix --help` must
+    say `usage: cymatix`."""
     exe = shutil.which(script_name)
     if exe is None:
         pytest.skip(f"{script_name} console script not found on PATH")
@@ -111,11 +108,11 @@ _SUBCOMMAND_MODULES = [
 ]
 
 
-@pytest.mark.parametrize("alias", ["cymatix", "helix"])
+@pytest.mark.parametrize("alias", ["cymatix"])
 @pytest.mark.parametrize("sub,module_name", _SUBCOMMAND_MODULES)
 def test_subcommand_parser_prog_derives_from_argv0(monkeypatch, alias, sub, module_name):
-    """`cymatix query --help` must say `usage: cymatix query`, not
-    `usage: helix query` — and the `helix` alias keeps showing helix."""
+    """`cymatix query --help` must say `usage: cymatix query`, deriving the
+    prog from the invoked argv0."""
     import importlib
     monkeypatch.setattr(sys, "argv", [rf"C:\env\Scripts\{alias}.exe", sub, "--help"])
     mod = importlib.import_module(f"cymatix_context.cli.{module_name}")

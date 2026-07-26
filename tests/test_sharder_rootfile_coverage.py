@@ -23,7 +23,7 @@ Tests pin:
   duplication of subdir shards)
 - the builder coverage assertion: passes on a complete mapping, raises
   with the orphan list on a synthetic gap, and honours the
-  ``HELIX_BFM_COVERAGE_CHECK=0`` kill-switch
+  ``CYMATIX_BFM_COVERAGE_CHECK=0`` kill-switch
 - ``build_profile_sharded`` wires the catch-all task end-to-end
 """
 from __future__ import annotations
@@ -238,7 +238,7 @@ def test_rootfiles_only_walk_excludes_subdirs(tmp_path):
 def test_coverage_check_passes_on_complete_mapping(tmp_path, monkeypatch):
     """A decomposition that covers every eligible file (post-fix shape,
     including the rootfiles-only catch-all) passes silently."""
-    monkeypatch.delenv("HELIX_BFM_COVERAGE_CHECK", raising=False)
+    monkeypatch.delenv("CYMATIX_BFM_COVERAGE_CHECK", raising=False)
     root = _make_slack_like_root(tmp_path)
     entries = bfm._decompose_oversized_root(
         str(root), skip_dirs=set(), extra_filename_filters=[],
@@ -270,20 +270,20 @@ def test_coverage_check_raises_with_orphan_list(tmp_path, caplog):
 
 
 def test_coverage_check_env_kill_switch(tmp_path, monkeypatch):
-    """``HELIX_BFM_COVERAGE_CHECK=0`` skips the check (speed valve for
+    """``CYMATIX_BFM_COVERAGE_CHECK=0`` skips the check (speed valve for
     huge corpora) — the same synthetic gap no longer raises."""
     root = _make_slack_like_root(tmp_path)
     tasks = [
         {"label": "slack__eng-sre", "root": str(root / "eng-sre"),
          "skip_dirs": set()},
     ]
-    monkeypatch.setenv("HELIX_BFM_COVERAGE_CHECK", "0")
+    monkeypatch.setenv("CYMATIX_BFM_COVERAGE_CHECK", "0")
     bfm._assert_shard_coverage([str(root)], tasks, set(), [])  # no raise
 
 
 def test_coverage_check_default_on(tmp_path, monkeypatch):
     """Unset env means the check runs (default ON)."""
-    monkeypatch.delenv("HELIX_BFM_COVERAGE_CHECK", raising=False)
+    monkeypatch.delenv("CYMATIX_BFM_COVERAGE_CHECK", raising=False)
     root = _make_slack_like_root(tmp_path)
     with pytest.raises(RuntimeError):
         bfm._assert_shard_coverage([str(root)], [], set(), [])
@@ -297,7 +297,7 @@ def test_build_profile_sharded_wires_catchall_task(tmp_path, monkeypatch):
     becomes a real task (rootfiles_only + extended skip set), the sizing
     pass counts only its root-level files, and the coverage assertion
     passes on the resulting task list."""
-    monkeypatch.delenv("HELIX_BFM_COVERAGE_CHECK", raising=False)
+    monkeypatch.delenv("CYMATIX_BFM_COVERAGE_CHECK", raising=False)
     root = _make_slack_like_root(tmp_path)
     out_dir = tmp_path / "out"
 

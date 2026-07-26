@@ -1,7 +1,7 @@
 @echo off
 REM Wrapper for launch.json — sets OTel env vars, then runs the backend directly.
 REM CYMATIX_* is the canonical prefix since 0.8.0; the package mirrors each
-REM CYMATIX_X to HELIX_X at import (an explicit HELIX_X in your shell wins).
+REM CYMATIX_X to CYMATIX_X at import (an explicit CYMATIX_X in your shell wins).
 cd /d "%~dp0"
 set "CYMATIX_OTEL_ENABLED=1"
 set "CYMATIX_OTEL_ENDPOINT=localhost:4317"

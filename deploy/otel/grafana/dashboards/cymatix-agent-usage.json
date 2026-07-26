@@ -12,14 +12,14 @@
       }
     ]
   },
-  "description": "Per-agent /context traffic — request rate, latency, and caller_model_class mix labelled by `agent`. Sourced from the `agent` label on helix_context_latency_seconds and helix_context_calls_by_class_total (default `unknown`; `other` for handles outside the allowlist). MCP shims forward HELIX_AGENT automatically; direct callers can set the `agent` body field or X-Helix-Agent header.",
+  "description": "Per-agent /context traffic — request rate, latency, and caller_model_class mix labelled by `agent`. Sourced from the `agent` label on cymatix_context_latency_seconds and cymatix_context_calls_by_class_total (default `unknown`; `other` for handles outside the allowlist). MCP shims forward CYMATIX_AGENT automatically; direct callers can set the `agent` body field or X-Cymatix-Agent header.",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
   "id": null,
   "links": [
-    {"title": "Helix — Operations Overview", "type": "dashboards", "tags": ["helix", "operations"], "asDropdown": false, "icon": "external link"},
-    {"title": "Helix — Retrieval Quality + HITL", "type": "dashboards", "tags": ["helix", "retrieval"], "asDropdown": false, "icon": "external link"}
+    {"title": "Cymatix — Operations Overview", "type": "dashboards", "tags": ["cymatix", "operations"], "asDropdown": false, "icon": "external link"},
+    {"title": "Cymatix — Retrieval Quality + HITL", "type": "dashboards", "tags": ["cymatix", "retrieval"], "asDropdown": false, "icon": "external link"}
   ],
   "liveNow": false,
   "panels": [
@@ -40,7 +40,7 @@
       "id": 2,
       "targets": [
         {
-          "expr": "sum by (agent) (rate(helix_context_latency_seconds_count[$__rate_interval]))",
+          "expr": "sum by (agent) (rate(cymatix_context_latency_seconds_count[$__rate_interval]))",
           "legendFormat": "{{agent}}",
           "refId": "A"
         }
@@ -64,13 +64,13 @@
     {
       "type": "timeseries",
       "title": "/context p95 latency by agent (seconds)",
-      "description": "p95 of helix_context_latency_seconds per agent. Spikes localized to a single agent typically mean a specific MCP host is sending pathological queries; spikes across all agents point at helix-side regressions.",
+      "description": "p95 of cymatix_context_latency_seconds per agent. Spikes localized to a single agent typically mean a specific MCP host is sending pathological queries; spikes across all agents point at cymatix-side regressions.",
       "datasource": "Prometheus",
       "gridPos": {"h": 8, "w": 12, "x": 12, "y": 1},
       "id": 3,
       "targets": [
         {
-          "expr": "histogram_quantile(0.95, sum by (le, agent) (rate(helix_context_latency_seconds_bucket[$__rate_interval])))",
+          "expr": "histogram_quantile(0.95, sum by (le, agent) (rate(cymatix_context_latency_seconds_bucket[$__rate_interval])))",
           "legendFormat": "{{agent}}",
           "refId": "A"
         }
@@ -97,13 +97,13 @@
     {
       "type": "timeseries",
       "title": "caller_model_class breakdown by agent",
-      "description": "Stacked rate of helix_context_calls_by_class_total grouped by (agent, class). Lets you see which agents are sending `frontier` vs `small_moe` vs `generic` requests over time — useful when calibrating decoder-mode tradeoffs per caller.",
+      "description": "Stacked rate of cymatix_context_calls_by_class_total grouped by (agent, class). Lets you see which agents are sending `frontier` vs `small_moe` vs `generic` requests over time — useful when calibrating decoder-mode tradeoffs per caller.",
       "datasource": "Prometheus",
       "gridPos": {"h": 9, "w": 16, "x": 0, "y": 10},
       "id": 5,
       "targets": [
         {
-          "expr": "sum by (agent, class) (rate(helix_context_calls_by_class_total[$__rate_interval]))",
+          "expr": "sum by (agent, class) (rate(cymatix_context_calls_by_class_total[$__rate_interval]))",
           "legendFormat": "{{agent}} / {{class}}",
           "refId": "A"
         }
@@ -133,7 +133,7 @@
       "id": 6,
       "targets": [
         {
-          "expr": "count(count by (agent) (increase(helix_context_latency_seconds_count[1h])))",
+          "expr": "count(count by (agent) (increase(cymatix_context_latency_seconds_count[1h])))",
           "refId": "A"
         }
       ],
@@ -160,13 +160,13 @@
   ],
   "refresh": "30s",
   "schemaVersion": 39,
-  "tags": ["helix", "agents", "operations"],
+  "tags": ["cymatix", "agents", "operations"],
   "templating": {"list": []},
   "time": {"from": "now-1h", "to": "now"},
   "timepicker": {},
   "timezone": "",
-  "title": "Helix — Agent Usage",
-  "uid": "helix-agent-usage",
+  "title": "Cymatix — Agent Usage",
+  "uid": "cymatix-agent-usage",
   "version": 1,
   "weekStart": ""
 }

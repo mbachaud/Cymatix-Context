@@ -6,7 +6,7 @@ Skips XL models (26B+) that overflow 12GB VRAM without extra config.
 
 All models run with:
   - OLLAMA_KV_CACHE_TYPE=q4_0 (INT4 quantized KV cache)
-  - Helix context injection (15K tokens expressed)
+  - Cymatix context injection (15K tokens expressed)
   - Same 10 needles
 
 Usage:
@@ -20,7 +20,7 @@ import time
 
 import httpx
 
-HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
+CYMATIX_URL = os.environ.get("CYMATIX_URL", "http://127.0.0.1:11437")
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434")
 
 # Models to sweep — ordered smallest to largest
@@ -35,8 +35,8 @@ MODELS = [
 
 NEEDLES = [
     {
-        "name": "helix_port",
-        "query": "What port does the Helix proxy server listen on?",
+        "name": "cymatix_port",
+        "query": "What port does the Cymatix proxy server listen on?",
         "expected": "11437",
         "accept": ["11437"],
     },
@@ -59,8 +59,8 @@ NEEDLES = [
         "accept": ["decimal", "Decimal"],
     },
     {
-        "name": "helix_pipeline_steps",
-        "query": "How many steps are in the Helix expression pipeline?",
+        "name": "cymatix_pipeline_steps",
+        "query": "How many steps are in the Cymatix expression pipeline?",
         "expected": "6",
         "accept": ["6", "six"],
     },
@@ -72,7 +72,7 @@ NEEDLES = [
     },
     {
         "name": "genome_compression_target",
-        "query": "What is the target compression ratio for Helix Context?",
+        "query": "What is the target compression ratio for Cymatix Context?",
         "expected": "5x",
         "accept": ["5x", "5:1", "5 to 1"],
     },
@@ -83,7 +83,7 @@ NEEDLES = [
         "accept": ["8", "eight"],
     },
     {
-        "name": "helix_ribosome_budget",
+        "name": "cymatix_ribosome_budget",
         "query": "How many tokens are allocated for the ribosome decoder prompt?",
         "expected": "3000",
         "accept": ["3000", "3k", "3,000"],
@@ -135,7 +135,7 @@ def run_needle(client, model_name, needle):
     # Step 1: Context retrieval (model-independent — same genome)
     t0 = time.time()
     try:
-        resp = client.post(f"{HELIX_URL}/context", json={
+        resp = client.post(f"{CYMATIX_URL}/context", json={
             "query": needle["query"],
             "decoder_mode": "none",
         }, timeout=30)
@@ -160,7 +160,7 @@ def run_needle(client, model_name, needle):
     # Step 2: Proxy query (model-specific)
     t1 = time.time()
     try:
-        proxy_resp = client.post(f"{HELIX_URL}/v1/chat/completions", json={
+        proxy_resp = client.post(f"{CYMATIX_URL}/v1/chat/completions", json={
             "model": model_name,
             "messages": [{"role": "user", "content": needle["query"]}],
             "stream": False,
@@ -193,10 +193,10 @@ def main():
 
     # Check server
     try:
-        stats = client.get(f"{HELIX_URL}/stats").json()
+        stats = client.get(f"{CYMATIX_URL}/stats").json()
         print(f"Genome: {stats['total_genes']} genes, {stats['compression_ratio']:.1f}x")
     except Exception:
-        print(f"Cannot reach Helix at {HELIX_URL}")
+        print(f"Cannot reach Cymatix at {CYMATIX_URL}")
         sys.exit(1)
 
     print(f"KV cache: q4_0 (INT4 quantized)")

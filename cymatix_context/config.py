@@ -1,7 +1,7 @@
 """
 Config — Runtime signal environment.
 
-Loads helix.toml and exposes typed configuration for all modules.
+Loads cymatix.toml and exposes typed configuration for all modules.
 Falls back to sensible defaults if no config file exists.
 """
 
@@ -74,7 +74,7 @@ class RibosomeConfig:
 
     @property
     def effective_backend(self) -> str:
-        """Return the backend Helix should actually run.
+        """Return the backend Cymatix should actually run.
 
         Compressor is opt-in. Legacy/default backends like ``ollama`` are kept
         in config for future reference but intentionally ignored unless a
@@ -148,7 +148,7 @@ class BudgetConfig:
     legibility_enabled: bool = True
     # Stage 5 (2026-05-08): char-budget for the small_moe JSON answer slate.
     # Counts the rendered string the model actually sees, INCLUDING the
-    # <helix:slate>...</helix:slate> wrapper, JSON braces, quotes, commas,
+    # <cymatix:slate>...</cymatix:slate> wrapper, JSON braces, quotes, commas,
     # and per-KV separators. Spec §5 default is 1500. Generic and frontier
     # branches do not consult this knob.
     slate_char_budget: int = 1500
@@ -231,7 +231,7 @@ class ServerConfig:
 class TelemetryConfig:
     """[telemetry] — OpenTelemetry export defaults for the backend.
 
-    Mirrors the HELIX_OTEL_* env vars read by ``telemetry/otel.py``.
+    Mirrors the CYMATIX_OTEL_* env vars read by ``telemetry/otel.py``.
     Precedence at setup time is env > this section > dataclass default —
     the resolution happens in ``otel.resolve_telemetry_settings()``, NOT
     here, so ``load_config`` stays env-free for telemetry and the
@@ -241,7 +241,7 @@ class TelemetryConfig:
     ``enabled`` defaults false: a bare backend (no launcher, no stack)
     must not dial a dead collector. The launcher closes the out-of-the-
     box gap the other way — when it starts (or adopts) the observability
-    stack it exports HELIX_OTEL_ENABLED=1 into the helix child's env
+    stack it exports CYMATIX_OTEL_ENABLED=1 into the cymatix child's env
     (launcher/app.py ``_export_otel_env_for_backend``), which wins over
     this default by design.
     """
@@ -257,12 +257,12 @@ class TelemetryConfig:
 @dataclass
 class IngestionConfig:
     """Controls which backend encodes raw content into documents."""
-    # default aligned with shipped helix.toml (2026-06-12 default-honesty
+    # default aligned with shipped cymatix.toml (2026-06-12 default-honesty
     # pass): "cpu" (spaCy/heuristic CpuTagger). The load_config coherence
     # guard already auto-flipped "ollama" to "cpu" whenever the ribosome was
     # disabled (the default), so "cpu" is what installs actually ran.
     backend: str = "cpu"            # "ollama" | "cpu" | "hybrid"
-    # default aligned with shipped helix.toml (2026-06-12 default-honesty
+    # default aligned with shipped cymatix.toml (2026-06-12 default-honesty
     # pass). NOTE #164 measured SPLADE at 0 pp recall@10 / 21.1% of disk on
     # the 850K fixture, but the curve below ~50K genes is unresolved and the
     # shipped toml (every bench this month) ran true — so toml wins here;
@@ -913,7 +913,7 @@ class PLRConfig:
     Attaches a `plr_confidence` log-odds signal to /context/packet responses
     when a trained artifact is on disk. Bench-gated on 2026-05-12 (#74) and
     enabled by default since the 2026-06-12 default-honesty pass (aligned
-    with shipped helix.toml); soft-fails to "PLR unavailable" when no
+    with shipped cymatix.toml); soft-fails to "PLR unavailable" when no
     artifact exists, so a fresh install pays nothing.
 
     The current artifact is a **query-quality head** (same score for all documents
@@ -946,15 +946,15 @@ class HeadroomConfig:
     spawning a duplicate — the adopted process survives launcher Quit.
 
     ``enabled`` controls the proxy lifecycle (start / adopt the process).
-    ``route_upstream`` controls whether helix's chat upstream is
+    ``route_upstream`` controls whether cymatix's chat upstream is
     rewritten to dial this proxy. Separate concerns: you may want the
     proxy + dashboard running without the chat redirect, or vice versa.
     ``enabled`` defaults on (2026-06-12 default-honesty pass, aligned with
-    shipped helix.toml) — the launcher adopts/spawns the proxy and no-ops
+    shipped cymatix.toml) — the launcher adopts/spawns the proxy and no-ops
     when the [codec] extra isn't installed. ``route_upstream`` stays off
     so a fresh install never silently rewrites the upstream to a proxy
     that isn't actually running. The
-    ``HELIX_HEADROOM_ROUTE_UPSTREAM_AUTO`` env var (truthy → force on,
+    ``CYMATIX_HEADROOM_ROUTE_UPSTREAM_AUTO`` env var (truthy → force on,
     falsy → force off, unset → defer to config) continues to work as a
     per-launch override.
     """
@@ -995,7 +995,7 @@ class Hardware:
 
 @dataclass
 class VaultTracesConfig:
-    """Per-trace TTL/rollup knobs — see [vault.traces] in helix.toml."""
+    """Per-trace TTL/rollup knobs — see [vault.traces] in cymatix.toml."""
 
     enabled: bool = True
     retention_hours: int = 48
@@ -1012,7 +1012,7 @@ class VaultConfig:
     """Obsidian vault export settings — off by default (enabled = False)."""
 
     enabled: bool = False
-    path: str = "~/.helix/vault"
+    path: str = "~/.cymatix/vault"
     party_id: str = ""  # empty = use server's primary party
     fan_out_threshold: int = 5000
     redact_body: bool = False
@@ -1021,7 +1021,7 @@ class VaultConfig:
 
 
 @dataclass
-class HelixConfig:
+class CymatixConfig:
     ribosome: RibosomeConfig = field(default_factory=RibosomeConfig)
     budget: BudgetConfig = field(default_factory=BudgetConfig)
     genome: GenomeConfig = field(default_factory=GenomeConfig)
@@ -1090,63 +1090,63 @@ def _positive_float(
     return v
 
 
-def _apply_env_overrides(cfg: HelixConfig) -> HelixConfig:
-    """Apply HELIX_* env overrides to *cfg* in place and return it.
+def _apply_env_overrides(cfg: CymatixConfig) -> CymatixConfig:
+    """Apply CYMATIX_* env overrides to *cfg* in place and return it.
 
     Documented precedence is env > toml > default, so this must run on
     EVERY load path — success, missing file, and malformed TOML alike
     (the fallback paths used to return bare defaults, silently dropping
-    HELIX_GENOME_PATH / HELIX_SERVER_UPSTREAM).
+    CYMATIX_GENOME_PATH / CYMATIX_SERVER_UPSTREAM).
     """
     # KnowledgeStore path override — lets sharded vs monolithic servers coexist
-    # on different ports without duplicating helix.toml. Typical use:
-    # ``HELIX_GENOME_PATH=genomes/main.genome.db HELIX_USE_SHARDS=1`` for a
+    # on different ports without duplicating cymatix.toml. Typical use:
+    # ``CYMATIX_GENOME_PATH=genomes/main.genome.db CYMATIX_USE_SHARDS=1`` for a
     # sharded bench server on a side port; defaults still serve monolithic.
-    if os.environ.get("HELIX_GENOME_PATH"):
-        cfg.genome.path = os.environ["HELIX_GENOME_PATH"]
+    if os.environ.get("CYMATIX_GENOME_PATH"):
+        cfg.genome.path = os.environ["CYMATIX_GENOME_PATH"]
 
-    # Server env overrides — lets launchers/profiles redirect Helix to a
-    # different chat upstream without rewriting helix.toml on disk.
-    if os.environ.get("HELIX_BENCH_ENABLED"):
-        cfg.server.bench_enabled = os.environ["HELIX_BENCH_ENABLED"].strip().lower() in (
+    # Server env overrides — lets launchers/profiles redirect Cymatix to a
+    # different chat upstream without rewriting cymatix.toml on disk.
+    if os.environ.get("CYMATIX_BENCH_ENABLED"):
+        cfg.server.bench_enabled = os.environ["CYMATIX_BENCH_ENABLED"].strip().lower() in (
             "1", "true", "yes", "on",
         )
-    if os.environ.get("HELIX_SERVER_UPSTREAM"):
-        cfg.server.upstream = os.environ["HELIX_SERVER_UPSTREAM"]
-    if os.environ.get("HELIX_SERVER_UPSTREAM_TIMEOUT"):
+    if os.environ.get("CYMATIX_SERVER_UPSTREAM"):
+        cfg.server.upstream = os.environ["CYMATIX_SERVER_UPSTREAM"]
+    if os.environ.get("CYMATIX_SERVER_UPSTREAM_TIMEOUT"):
         try:
-            cfg.server.upstream_timeout = float(os.environ["HELIX_SERVER_UPSTREAM_TIMEOUT"])
+            cfg.server.upstream_timeout = float(os.environ["CYMATIX_SERVER_UPSTREAM_TIMEOUT"])
         except ValueError:
             log.warning(
-                "HELIX_SERVER_UPSTREAM_TIMEOUT=%r is not a float — ignoring override",
-                os.environ["HELIX_SERVER_UPSTREAM_TIMEOUT"],
+                "CYMATIX_SERVER_UPSTREAM_TIMEOUT=%r is not a float — ignoring override",
+                os.environ["CYMATIX_SERVER_UPSTREAM_TIMEOUT"],
             )
     return cfg
 
 
-def load_config(path: Optional[str] = None) -> HelixConfig:
+def load_config(path: Optional[str] = None) -> CymatixConfig:
     """
-    Load helix.toml from the given path, or auto-discover from cwd / env.
+    Load cymatix.toml from the given path, or auto-discover from cwd / env.
     Returns defaults if no config file is found.
     """
     if path is None:
-        path = os.environ.get("HELIX_CONFIG")  # CYMATIX_CONFIG lands here via _mirror_env
+        path = os.environ.get("CYMATIX_CONFIG")
         if path is None:
-            path = "cymatix.toml" if Path("cymatix.toml").exists() else "helix.toml"
+            path = "cymatix.toml"
 
     config_path = Path(path)
     if not config_path.exists():
         log.info("No config file at %s, using defaults", path)
-        return _apply_env_overrides(HelixConfig())
+        return _apply_env_overrides(CymatixConfig())
 
     with open(config_path, "rb") as f:
         try:
             raw = tomllib.load(f)
         except tomllib.TOMLDecodeError as exc:
-            log.error("helix.toml is malformed (%s) — using defaults", exc)
-            return _apply_env_overrides(HelixConfig())
+            log.error("cymatix.toml is malformed (%s) — using defaults", exc)
+            return _apply_env_overrides(CymatixConfig())
 
-    cfg = HelixConfig()
+    cfg = CymatixConfig()
 
     # Compressor
     if "ribosome" in raw:
@@ -1235,10 +1235,10 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             ),
         )
 
-    # HELIX_GENOME_PATH / HELIX_SERVER_* overrides (env > toml > default).
+    # CYMATIX_GENOME_PATH / CYMATIX_SERVER_* overrides (env > toml > default).
     _apply_env_overrides(cfg)
 
-    # Telemetry — toml defaults for the HELIX_OTEL_* knobs. Deliberately NO
+    # Telemetry — toml defaults for the CYMATIX_OTEL_* knobs. Deliberately NO
     # env handling here (see TelemetryConfig docstring): otel.py resolves
     # env > toml > default at setup_telemetry time.
     if "telemetry" in raw:
@@ -1663,7 +1663,7 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
     # Coherence guard: if the ribosome is disabled (the LLM-free design
     # default — see docs/MISSION.md) but ingestion.backend still asks for
     # an LLM-backed path (``ollama`` / ``deberta`` / ``litellm``), the
-    # CLI ``helix ingest`` call will raise ``TranscriptionError: Pack
+    # CLI ``cymatix ingest`` call will raise ``TranscriptionError: Pack
     # failed: Ribosome is disabled`` on the first chunk. The two settings
     # contradict each other; flip ``ingestion.backend`` to ``"cpu"`` so
     # the spaCy/heuristic CpuTagger handles the ingest. Emit at WARNING
@@ -1681,7 +1681,7 @@ def load_config(path: Optional[str] = None) -> HelixConfig:
             "ribosome — auto-falling-back to backend='cpu' (spaCy CpuTagger). "
             "Install the [cpu] extra if you have not. Override by either "
             "enabling [ribosome] or setting [ingestion] backend='cpu' / 'hybrid' "
-            "explicitly in helix.toml.",
+            "explicitly in cymatix.toml.",
             cfg.ingestion.backend,
         )
         cfg.ingestion.backend = "cpu"

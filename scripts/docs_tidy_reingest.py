@@ -16,7 +16,7 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-HELIX = "http://127.0.0.1:11437"
+CYMATIX = "http://127.0.0.1:11437"
 DOCS_ROOT = Path(__file__).resolve().parent.parent / "docs"
 SKIP_DIRS = {"FUTURE", "specs", "plans", "collab"}
 
@@ -33,7 +33,7 @@ def ingest_one(path: Path) -> dict:
             "content": content,
             "content_type": "markdown",
             "metadata": {
-                # Helix reads metadata["path"] for source_id (see
+                # Cymatix reads metadata["path"] for source_id (see
                 # context_manager.py:397). Must be "path", not "source_id".
                 "path": str(path).replace("\\", "/"),
                 "tidy_reingest": True,
@@ -41,7 +41,7 @@ def ingest_one(path: Path) -> dict:
         }
     ).encode()
     req = urllib.request.Request(
-        f"{HELIX}/ingest",
+        f"{CYMATIX}/ingest",
         data=body,
         headers={"Content-Type": "application/json"},
         method="POST",

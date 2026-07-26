@@ -10,7 +10,7 @@ Baselines:
   - bm25     : BM25Okapi. NOTE its IDF goes NEGATIVE for terms appearing in >half the
                candidates, which on ~6-candidate sets penalises shared tokens and can
                sink below random. Kept to show why naive BM25 is the wrong foil here.
-               The global-arm (repobench_r_helix_global.py) uses a floored-IDF variant.
+               The global-arm (repobench_r_cymatix_global.py) uses a floored-IDF variant.
 
 Settings (--config):
   python_cff  = XF-F: cross-file, next-line prediction (file context comes from
@@ -27,7 +27,7 @@ HF loader itself uses gzip+pickle (see note in load_split). Fetched via hf_hub_d
 Writes:
   benchmarks/results/repobench_r_{config}_{level}_n{n}.json   per-example query/cand dump
   benchmarks/results/repobench_r_{config}_foils_{timestamp}.json  summary
-  (Helix arm in repobench_r_helix.py reads the per-example json.)
+  (Cymatix arm in repobench_r_cymatix.py reads the per-example json.)
 
 CLI:
   python benchmarks/repobench_r.py --config python_cff --n 200
@@ -245,7 +245,7 @@ def main():
             })
 
         m_ = len(dump)
-        # Write per-example dump for the Helix arms to consume.
+        # Write per-example dump for the Cymatix arms to consume.
         dump_path = RESULTS_DIR / f"repobench_r_{args.config}_{level}_n{m_}.json"
         dump_path.write_text(
             json.dumps(dump, ensure_ascii=False), encoding="utf-8"
@@ -296,7 +296,7 @@ def main():
     out_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
     print(f"\n-> per-example dumps + summary in {RESULTS_DIR}/")
     print(f"   summary: {out_path}")
-    print("   (Helix arms read the per-example JSON files)")
+    print("   (Cymatix arms read the per-example JSON files)")
 
 
 if __name__ == "__main__":

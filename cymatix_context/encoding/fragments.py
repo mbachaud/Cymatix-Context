@@ -221,7 +221,7 @@ class CodonChunker:
 
         # Phase-0 observability (2026-07-01): the regex fallback is no
         # longer silent — PRD leak-guard 5 / council finding #10 minimum
-        # bar. Counter rides the existing helix_tier_fired_total series;
+        # bar. Counter rides the existing cymatix_tier_fired_total series;
         # the log line is greppable with OTel off.
         try:
             from ..telemetry import tier_fired_counter

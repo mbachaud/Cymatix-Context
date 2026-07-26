@@ -220,10 +220,10 @@
   {
     "idx": 19,
     "query": "What is the value of mgr?",
-    "expected_answer": "HelixContextManager",
+    "expected_answer": "CymatixContextManager",
     "accept": [
-      "HelixContextManager",
-      "helixcontextmanager"
+      "CymatixContextManager",
+      "cymatixcontextmanager"
     ],
     "source": "needles_50",
     "oracle_tier": null,

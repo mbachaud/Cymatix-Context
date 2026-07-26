@@ -46,7 +46,7 @@ def test_llm_span_with_request_attributes():
         provider="local.sentence_transformers",
         model="BAAI/bge-m3",
         request_attributes={"temperature": 0.0, "stream": False},
-        helix_attributes={"helix.pipeline.stage": "extract"},
+        cymatix_attributes={"cymatix.pipeline.stage": "extract"},
     ) as span:
         assert span is not None
 
@@ -197,7 +197,7 @@ def test_record_cache_outcome_safe(outcome):
 # ── emit_proxy_log_line ───────────────────────────────────────────────
 
 def test_emit_proxy_log_line_info_path(caplog):
-    with caplog.at_level(logging.INFO, logger="helix.proxy"):
+    with caplog.at_level(logging.INFO, logger="cymatix.proxy"):
         emit_proxy_log_line(
             request_id="test-req-id",
             trace_id="abc123",
@@ -215,7 +215,7 @@ def test_emit_proxy_log_line_info_path(caplog):
 
 
 def test_emit_proxy_log_line_error_path_uses_warning(caplog):
-    with caplog.at_level(logging.WARNING, logger="helix.proxy"):
+    with caplog.at_level(logging.WARNING, logger="cymatix.proxy"):
         emit_proxy_log_line(
             request_id="err-req",
             trace_id=None,
@@ -250,7 +250,7 @@ def test_infer_provider(url, expected):
 #
 # setup_telemetry() reassigns otel.meter after SDK init. The module must
 # resolve otel.meter at instrument-creation time, not freeze the pre-setup
-# no-op meter at import time — otherwise every helix_genai_* panel renders
+# no-op meter at import time — otherwise every cymatix_genai_* panel renders
 # empty forever (the #209 defect class).
 
 class _RecordingInstrument:
@@ -292,8 +292,8 @@ def recording_meter(monkeypatch):
 def test_instruments_use_meter_assigned_after_import(recording_meter):
     """Reassigning otel.meter (as setup_telemetry does) must take effect."""
     record_cache_outcome("hit")
-    assert "helix_context_cache_outcome_total" in recording_meter.created
-    inst = recording_meter.created["helix_context_cache_outcome_total"]
+    assert "cymatix_context_cache_outcome_total" in recording_meter.created
+    inst = recording_meter.created["cymatix_context_cache_outcome_total"]
     assert inst.points == [("add", 1, {"outcome": "hit"})]
 
 
@@ -313,12 +313,12 @@ def test_record_response_emits_all_metric_families(recording_meter):
             operation="chat",
         )
     assert set(recording_meter.created) == {
-        "helix_genai_client_token_usage",
-        "helix_genai_time_to_first_chunk_seconds",
-        "helix_genai_cost_usd",
-        "helix_genai_finish_reasons_total",
+        "cymatix_genai_client_token_usage",
+        "cymatix_genai_time_to_first_chunk_seconds",
+        "cymatix_genai_cost_usd",
+        "cymatix_genai_finish_reasons_total",
     }
-    usage = recording_meter.created["helix_genai_client_token_usage"]
+    usage = recording_meter.created["cymatix_genai_client_token_usage"]
     token_types = {p[2]["gen_ai.token.type"] for p in usage.points}
     assert token_types == {"input", "output", "cached", "reasoning"}
 
@@ -333,7 +333,7 @@ def test_genai_dashboard_queries_are_covered(recording_meter):
 
     dash_path = (
         Path(__file__).resolve().parents[1]
-        / "deploy" / "otel" / "grafana" / "dashboards" / "helix-genai.json"
+        / "deploy" / "otel" / "grafana" / "dashboards" / "cymatix-genai.json"
     )
     dash = json.loads(dash_path.read_text(encoding="utf-8"))
 
@@ -350,9 +350,9 @@ def test_genai_dashboard_queries_are_covered(recording_meter):
 
     queried = set()
     for e in exprs:
-        for name in re.findall(r"helix_[a-z0-9_]+", e):
+        for name in re.findall(r"cymatix_[a-z0-9_]+", e):
             # Strip Prometheus histogram/counter suffixes to recover the
-            # OTel instrument name (helix_genai_finish_reasons_total is
+            # OTel instrument name (cymatix_genai_finish_reasons_total is
             # created WITH the _total suffix, so it is kept as-is below).
             base = re.sub(r"_(sum|count|bucket)$", "", name)
             queried.add(base)
@@ -386,7 +386,7 @@ def test_emit_genai_proxy_telemetry_logs_proxy_line(recording_meter, caplog, mon
 
     # The proxy emission is gated on setup_telemetry() having run.
     monkeypatch.setattr(otel, "_initialised", True)
-    with caplog.at_level(logging.INFO, logger="helix.proxy"):
+    with caplog.at_level(logging.INFO, logger="cymatix.proxy"):
         _emit_genai_proxy_telemetry(
             body={"model": "qwen3:8b", "stream": False},
             config=_proxy_config(),
@@ -401,8 +401,8 @@ def test_emit_genai_proxy_telemetry_logs_proxy_line(recording_meter, caplog, mon
     assert len(lines) == 1
     assert "chatcmpl-123" in lines[0]
     # Metrics side: token usage + finish reason recorded.
-    assert "helix_genai_client_token_usage" in recording_meter.created
-    assert "helix_genai_finish_reasons_total" in recording_meter.created
+    assert "cymatix_genai_client_token_usage" in recording_meter.created
+    assert "cymatix_genai_finish_reasons_total" in recording_meter.created
 
 
 def test_emit_genai_proxy_telemetry_never_raises(recording_meter, monkeypatch):
@@ -427,7 +427,7 @@ def test_emit_genai_proxy_telemetry_silent_when_telemetry_off(recording_meter, c
     from cymatix_context.telemetry import otel
 
     monkeypatch.setattr(otel, "_initialised", False)
-    with caplog.at_level(logging.DEBUG, logger="helix.proxy"):
+    with caplog.at_level(logging.DEBUG, logger="cymatix.proxy"):
         _emit_genai_proxy_telemetry(
             body={"model": "qwen3:8b"},
             config=_proxy_config(),
@@ -450,7 +450,7 @@ def test_cached_dal_records_hit_and_miss(recording_meter, tmp_path):
     cache = CachedDAL(DAL())
     cache.fetch(str(p))   # miss
     cache.fetch(str(p))   # hit
-    inst = recording_meter.created["helix_context_cache_outcome_total"]
+    inst = recording_meter.created["cymatix_context_cache_outcome_total"]
     outcomes = [pt[2]["outcome"] for pt in inst.points]
     assert outcomes == ["miss", "hit"]
 
@@ -463,5 +463,5 @@ def test_cached_dal_bypass_not_recorded(recording_meter, tmp_path):
     p.write_text("hello", encoding="utf-8")
     cache = CachedDAL(DAL())
     cache.fetch(str(p), bypass_cache=True)
-    inst = recording_meter.created.get("helix_context_cache_outcome_total")
+    inst = recording_meter.created.get("cymatix_context_cache_outcome_total")
     assert inst is None or inst.points == []

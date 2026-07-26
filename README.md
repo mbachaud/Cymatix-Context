@@ -12,8 +12,9 @@
 > retrieval path.
 
 A [Brick Wall Studio](https://brickwallstudio.com) project. **Formerly
-`helix-context`** — renamed July 2026; every old surface (imports, CLI names,
-`HELIX_*` env vars, `helix.toml`) still works. See [Migrating from
+`helix-context`** — renamed July 2026. As of 0.8.5 the old surface (the
+`helix_context` import, `helix*` CLI names, `HELIX_*` env vars, `helix.toml`)
+has been **removed** — see [Migrating from
 helix-context](#migrating-from-helix-context).
 
 The name comes from the engine's cymatics stage: retrieval candidates are
@@ -143,9 +144,7 @@ curl -s http://127.0.0.1:11437/context/packet \
   -d '{"query": "how does the freshness gate demote stale docs?"}'
 ```
 
-Configuration lives in `cymatix.toml` (`helix.toml` still honored). Env vars
-use the `CYMATIX_*` prefix (`HELIX_*` still honored — explicit `HELIX_*`
-settings win over mirrored values):
+Configuration lives in `cymatix.toml`. Env vars use the `CYMATIX_*` prefix:
 
 ```bash
 CYMATIX_GENOME_PATH=genomes/dogfood/genome.db cymatix-server
@@ -291,9 +290,9 @@ Full schema: [docs/api/endpoints.md](docs/api/endpoints.md).
 | `mcp/` | MCP tool surface for Claude Code / Desktop |
 | `integrations/` | ScoreRift bridge |
 
-Canonical import package is `cymatix_context`; `helix_context` remains as an
-alias shim (identical module objects). Module-level shims `genome.py`,
-`ribosome.py`, `server.py`, `replication.py`, `hgt.py` also persist.
+The import package is `cymatix_context` (the old `helix_context` alias was
+removed in 0.8.5). Biology-named module shims `genome.py`, `ribosome.py`,
+`server.py`, `replication.py`, `hgt.py` persist as the domain lexicon.
 Lexicon: [docs/ROSETTA.md](docs/ROSETTA.md).
 
 </details>
@@ -317,8 +316,7 @@ Lexicon: [docs/ROSETTA.md](docs/ROSETTA.md).
 ```
 
 The server self-identifies as `cymatix`, so client tools appear as
-`mcp__cymatix__*`. Configs written for the helix era keep working if you
-leave `-m helix_context.mcp_server` and `HELIX_MCP_URL` in place.
+`mcp__cymatix__*`.
 
 </details>
 
@@ -375,21 +373,26 @@ scripts\setup-grafana-telem.ps1     # Windows
 scripts/setup-grafana-telem.sh      # Linux / macOS
 ```
 
-Dashboard: <http://localhost:3000/d/helix-overview>.
+Dashboard: <http://localhost:3000/d/cymatix-overview>.
 Full surface: [docs/architecture/OBSERVABILITY.md](docs/architecture/OBSERVABILITY.md).
 
 ## Migrating from helix-context
 
-Everything old keeps working for a deprecation window; new names are canonical.
+**As of 0.8.5 the old `helix` surface has been removed** — this is a clean
+break. The table below maps each removed name to its replacement. If you are
+still on the old names, migrate to the right-hand column, or pin
+`cymatix-context<0.8.5` (0.8.0 keeps the aliases), or the last `helix-context`
+release, until you can.
 
-| Surface | Old (still works) | New (canonical) |
+| Surface | Old (removed in 0.8.5) | New (use this) |
 |---|---|---|
-| Install | `helix-context` (final PyPI release points here) | `pip install cymatix-context` |
-| Import | `import helix_context` (DeprecationWarning, same module objects) | `import cymatix_context` |
+| Install | `pip install helix-context` | `pip install cymatix-context` |
+| Import | `import helix_context` → `ModuleNotFoundError` | `import cymatix_context` |
 | CLI | `helix`, `helix-server`, `helix-launcher`, `helix-status`, `helix-vault` | `cymatix`, `cymatix-server`, `cymatix-launcher`, `cymatix-status`, `cymatix-vault` |
-| Config file | `helix.toml` | `cymatix.toml` |
-| Env vars | `HELIX_*` (explicit settings win) | `CYMATIX_*` |
+| Config file | `helix.toml` (no longer read) | `cymatix.toml` |
+| Env vars | `HELIX_*` (no longer read) | `CYMATIX_*` |
 | MCP `-m` entry | `python -m helix_context.mcp_server` | `python -m cymatix_context.mcp_server` |
+| MCP tools | `helix_*` tool names | `cymatix_*` |
 | ASGI target | `helix_context._asgi:app` | `cymatix_context._asgi:app` |
 
 The knowledge-store file format is unchanged — existing `genome.db` files

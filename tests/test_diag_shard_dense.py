@@ -104,7 +104,7 @@ def _packet_response(
     source_ids: list[str] | None = None,
 ) -> dict:
     """Build a minimal /context/packet response matching routes_context.py L583-607."""
-    source_ids = source_ids or ["F:/Projects/helix-context/README.md"]
+    source_ids = source_ids or ["F:/Projects/cymatix-context/README.md"]
     verified = [
         {
             "kind": "gene",
@@ -205,7 +205,7 @@ class _ErrorTransport(httpx.BaseTransport):
         return httpx.Response(200, content=body, headers={"content-type": "application/json"})
 
 
-def _patched_run(transport: httpx.BaseTransport, helix_url: str,
+def _patched_run(transport: httpx.BaseTransport, cymatix_url: str,
                  queries: list[dict], **kw) -> dict:
     """Run run_diagnostic with the given transport injected via patch."""
     _real_client = httpx.Client
@@ -216,7 +216,7 @@ def _patched_run(transport: httpx.BaseTransport, helix_url: str,
         return _real_client(*args, transport=transport, **kwargs)
 
     with patch.object(_mod.httpx, "Client", _client_with_transport):
-        return run_diagnostic(helix_url, queries, **kw)
+        return run_diagnostic(cymatix_url, queries, **kw)
 
 
 # ===========================================================================
@@ -356,14 +356,14 @@ class TestExtractFromPacket:
         resp = _packet_response(
             found=True,
             source_ids=[
-                "F:/Projects/helix-context/README.md",
+                "F:/Projects/cymatix-context/README.md",
                 "F:/Projects/BookKeeper/docs/api.md",
                 "F:/Projects/Education/curriculum.md",
             ],
         )
         info = _extract_from_packet(resp)
         assert len(info["top_sources"]) == 3
-        assert "F:/Projects/helix-context/README.md" in info["top_sources"]
+        assert "F:/Projects/cymatix-context/README.md" in info["top_sources"]
 
     def test_empty_packet(self):
         """Empty / minimal packet does not raise."""
@@ -482,7 +482,7 @@ class TestRunDiagnosticMocked:
         )
 
         # Top-level keys
-        for key in ("label", "helix_url", "timestamp", "queries", "aggregate"):
+        for key in ("label", "cymatix_url", "timestamp", "queries", "aggregate"):
             assert key in result, f"missing top-level key: {key}"
 
         # Aggregate keys

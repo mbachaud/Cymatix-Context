@@ -6,13 +6,13 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-from cymatix_context.config import HelixConfig, VaultConfig, VaultTracesConfig
+from cymatix_context.config import CymatixConfig, VaultConfig, VaultTracesConfig
 from cymatix_context.server import create_app
 
 
 @pytest.fixture
 def app(tmp_path: Path):
-    cfg = HelixConfig()
+    cfg = CymatixConfig()
     cfg.vault = VaultConfig(
         enabled=True, path=str(tmp_path / "vault"),
         traces=VaultTracesConfig(),

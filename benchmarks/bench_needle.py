@@ -29,7 +29,7 @@ import httpx
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import _citations  # noqa: E402
 
-HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
+CYMATIX_URL = os.environ.get("CYMATIX_URL", "http://127.0.0.1:11437")
 
 # Needles: specific facts that exist in the ingested content
 # Each has a query and the expected answer substring
@@ -53,13 +53,13 @@ HELIX_URL = os.environ.get("HELIX_URL", "http://127.0.0.1:11437")
 # circularly.
 NEEDLES = [
     {
-        "name": "helix_port",
-        "query": "What port does the Helix proxy server listen on?",
+        "name": "cymatix_port",
+        "query": "What port does the Cymatix proxy server listen on?",
         "expected": "11437",
         "accept": ["11437"],
-        "source": "helix-context/helix.toml",
+        "source": "helix-context/cymatix.toml",
         "gold_source": [
-            "helix-context/helix.toml",
+            "helix-context/cymatix.toml",
             "helix-context/README.md",
             "helix-context/CLAUDE.md",
             "helix-context/docs/SETUP.md",
@@ -108,8 +108,8 @@ NEEDLES = [
         ],
     },
     {
-        "name": "helix_pipeline_steps",
-        "query": "How many steps are in the Helix expression pipeline?",
+        "name": "cymatix_pipeline_steps",
+        "query": "How many steps are in the Cymatix expression pipeline?",
         "expected": "6",
         "accept": ["6", "six"],
         "source": "helix-context/README.md",
@@ -132,7 +132,7 @@ NEEDLES = [
     },
     {
         "name": "genome_compression_target",
-        "query": "What is the target compression ratio for Helix Context?",
+        "query": "What is the target compression ratio for Cymatix Context?",
         "expected": "5x",
         "accept": ["5x", "5:1", "5 to 1"],
         "source": "helix-context design spec",
@@ -155,13 +155,13 @@ NEEDLES = [
         ],
     },
     {
-        "name": "helix_ribosome_budget",
+        "name": "cymatix_ribosome_budget",
         "query": "How many tokens are allocated for the ribosome decoder prompt?",
         "expected": "3000",
         "accept": ["3000", "3k", "3,000"],
         "source": "helix-context design spec",
         "gold_source": [
-            "helix-context/helix.toml",
+            "helix-context/cymatix.toml",
             "helix-context/README.md",
             "helix-context/docs/config-reference.md",
         ],
@@ -537,110 +537,110 @@ NEEDLES = [
 
     # ─── helix-context (10) ───────────────────────────────────────────
     {
-        "name": "helix_expression_budget",
-        "query": "What is the expression_tokens budget set in helix.toml?",
+        "name": "cymatix_expression_budget",
+        "query": "What is the expression_tokens budget set in cymatix.toml?",
         "expected": "7000",
         "accept": ["7000", "7K", "7,000", "~7K"],
-        "source": "helix-context/helix.toml",
+        "source": "helix-context/cymatix.toml",
         "gold_source": [
-            "helix-context/helix.toml",
+            "helix-context/cymatix.toml",
             "helix-context/overnight_logs/broad_tighten_2026-05-12_1422_report.md",
         ],
     },
     {
-        "name": "helix_max_genes_per_turn",
-        "query": "What is the max_genes_per_turn cap in helix.toml?",
+        "name": "cymatix_max_genes_per_turn",
+        "query": "What is the max_genes_per_turn cap in cymatix.toml?",
         "expected": "12",
         "accept": ["12"],
-        "source": "helix-context/helix.toml",
+        "source": "helix-context/cymatix.toml",
         "gold_source": [
-            "helix-context/helix.toml",
+            "helix-context/cymatix.toml",
             "helix-context/docs/config-reference.md",
         ],
     },
     {
-        "name": "helix_rrf_k",
-        "query": "What is the RRF k constant used by Helix Reciprocal Rank Fusion?",
+        "name": "cymatix_rrf_k",
+        "query": "What is the RRF k constant used by Cymatix Reciprocal Rank Fusion?",
         "expected": "60",
         "accept": ["60", "k=60", "k = 60"],
-        "source": "helix-context/helix.toml",
+        "source": "helix-context/cymatix.toml",
         "gold_source": [
-            "helix-context/helix.toml",
+            "helix-context/cymatix.toml",
             "helix-context/docs/config-reference.md",
             "helix-context/docs/specs/2026-05-08-stage-3-rrf-fusion.md",
         ],
     },
     {
-        "name": "helix_cold_start_threshold",
-        "query": "What is the cold_start_threshold gene count in the Helix knowledge store?",
+        "name": "cymatix_cold_start_threshold",
+        "query": "What is the cold_start_threshold gene count in the Cymatix knowledge store?",
         "expected": "10",
         "accept": ["10", "10 genes"],
-        "source": "helix-context/helix.toml",
+        "source": "helix-context/cymatix.toml",
         "gold_source": [
-            "helix-context/helix.toml",
+            "helix-context/cymatix.toml",
             "helix-context/docs/config-reference.md",
             "helix-context/CLAUDE.md",
         ],
     },
     {
-        "name": "helix_session_window",
+        "name": "cymatix_session_window",
         "query": "What is the synthetic_session_window_s in seconds for grouping same-IP requests?",
         "expected": "300",
         "accept": ["300", "5 min", "5 minutes", "five minutes"],
-        "source": "helix-context/helix.toml",
+        "source": "helix-context/cymatix.toml",
         "gold_source": [
-            "helix-context/helix.toml",
+            "helix-context/cymatix.toml",
             "helix-context/docs/config-reference.md",
             "helix-context/CLAUDE.md",
         ],
     },
     {
-        "name": "helix_headroom_port",
-        "query": "What is the default port for the Headroom proxy that Helix can route through?",
+        "name": "cymatix_headroom_port",
+        "query": "What is the default port for the Headroom proxy that Cymatix can route through?",
         "expected": "8787",
         "accept": ["8787", "port 8787"],
-        "source": "helix-context/helix.toml",
+        "source": "helix-context/cymatix.toml",
         "gold_source": [
-            "helix-context/helix.toml",
+            "helix-context/cymatix.toml",
             "helix-context/docs/config-reference.md",
         ],
     },
     {
-        "name": "helix_calibration_staleness",
-        "query": "After how many days does Helix flag the know-confidence calibration as stale?",
+        "name": "cymatix_calibration_staleness",
+        "query": "After how many days does Cymatix flag the know-confidence calibration as stale?",
         "expected": "30",
         "accept": ["30", "30 days"],
-        "source": "helix-context/helix.toml",
+        "source": "helix-context/cymatix.toml",
         "gold_source": [
-            "helix-context/helix.toml",
+            "helix-context/cymatix.toml",
             "helix-context/docs/specs/2026-05-08-stage-6-know-miss-blocks.md",
         ],
     },
     {
-        "name": "helix_dense_encoder",
-        "query": "Which dense embedding model does Helix use for Stage-2 recall?",
+        "name": "cymatix_dense_encoder",
+        "query": "Which dense embedding model does Cymatix use for Stage-2 recall?",
         "expected": "BGE-M3",
         "accept": ["BGE-M3", "bge-m3", "bge m3"],
         "source": "helix-context/CLAUDE.md",
         "gold_source": [
             "helix-context/CLAUDE.md",
             "helix-context/README.md",
-            "helix-context/helix.toml",
+            "helix-context/cymatix.toml",
         ],
     },
     {
-        "name": "helix_filename_anchor",
-        "query": "What is the filename_anchor_weight per-match boost in helix.toml?",
+        "name": "cymatix_filename_anchor",
+        "query": "What is the filename_anchor_weight per-match boost in cymatix.toml?",
         "expected": "4.0",
         "accept": ["4.0", "4"],
-        "source": "helix-context/helix.toml",
+        "source": "helix-context/cymatix.toml",
         "gold_source": [
-            "helix-context/helix.toml",
+            "helix-context/cymatix.toml",
             "helix-context/docs/config-reference.md",
         ],
     },
     {
-        "name": "helix_subpackages_count",
+        "name": "cymatix_subpackages_count",
         "query": "Into how many sub-packages is cymatix_context organized after the PR #90 restructure?",
         "expected": "16",
         "accept": ["16", "sixteen"],
@@ -779,7 +779,7 @@ def find_needle(client, needle):
     # would otherwise get elision stubs instead of gold bodies for any
     # document retrieved twice (CLAUDE.md bench guidance; review 2026-07-05).
     try:
-        resp = client.post(f"{HELIX_URL}/context", json={
+        resp = client.post(f"{CYMATIX_URL}/context", json={
             "query": needle["query"],
             "decoder_mode": "none",
             "ignore_delivered": True,
@@ -851,11 +851,11 @@ def find_needle(client, needle):
     # a raised exception here silently shrinks that denominator
     # (review 2026-07-05).
     t1 = time.time()
-    model = os.environ.get("HELIX_MODEL", "qwen3:8b")
+    model = os.environ.get("CYMATIX_MODEL", "qwen3:8b")
     answer_correct = False
     answer_text = ""
     try:
-        proxy_resp = client.post(f"{HELIX_URL}/v1/chat/completions", json={
+        proxy_resp = client.post(f"{CYMATIX_URL}/v1/chat/completions", json={
             "model": model,
             "messages": [{"role": "user", "content": needle["query"]}],
             "stream": False,
@@ -908,10 +908,10 @@ def main():
 
     # Check server
     try:
-        stats = client.get(f"{HELIX_URL}/stats").json()
+        stats = client.get(f"{CYMATIX_URL}/stats").json()
         print(f"Genome: {stats['total_genes']} genes, {stats['compression_ratio']:.1f}x")
     except Exception:
-        print(f"Cannot reach Helix at {HELIX_URL}")
+        print(f"Cannot reach Cymatix at {CYMATIX_URL}")
         sys.exit(1)
 
     print(f"\n=== Needle in a Haystack ({len(NEEDLES)} needles) ===\n")
@@ -950,8 +950,8 @@ def main():
           f"(old-scoring would count these as hits)")
 
     # Weighing surface (Step 1b, 2026-04-17): know-vs-go quality
-    # correctly_known_miss = gold missing AND helix's resolution_confidence
-    # is below threshold. High rate means helix knows when it doesn't know.
+    # correctly_known_miss = gold missing AND cymatix's resolution_confidence
+    # is below threshold. High rate means cymatix knows when it doesn't know.
     # silent_miss = gold missing AND confidence above threshold (dangerous).
     # overconfident_false_positive = substring false-positive AND confidence high.
     confidence_threshold = 0.30  # empirical; tune against distribution below

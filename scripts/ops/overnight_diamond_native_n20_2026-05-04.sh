@@ -8,10 +8,10 @@
 # Docker baseline: benchmarks/results/gpqa_on_diamond_2026-05-03.json
 # Native output:   benchmarks/results/gpqa_native_n20_2026-05-04.json
 #
-# This is a SINGLE-cell ON-mode run. No abstain toggle (helix.toml stays at
-# its current state), no helix.toml mutation. Native observability stack
+# This is a SINGLE-cell ON-mode run. No abstain toggle (cymatix.toml stays at
+# its current state), no cymatix.toml mutation. Native observability stack
 # (otelcol/prom/tempo/loki/grafana) must already be running -- the user
-# launches it via the helix tray. Helix server on :11437 will be stopped
+# launches it via the cymatix tray. Cymatix server on :11437 will be stopped
 # (taskkill) and respawned by this script for clean lifecycle.
 
 set -u
@@ -26,13 +26,13 @@ REPORT=overnight_logs/diamond_native_n20_2026-05-04_report.md
 MODEL=gemma4:e4b
 CLIENT_TIMEOUT=180
 N_LIMIT=20
-HELIX_PORT=11437
-HEALTH_URL="http://127.0.0.1:${HELIX_PORT}/health"
+CYMATIX_PORT=11437
+HEALTH_URL="http://127.0.0.1:${CYMATIX_PORT}/health"
 
 CELL_OUT=benchmarks/results/gpqa_native_n20_2026-05-04.json
-CELL_LOG=overnight_logs/helix_server_native_n20_2026-05-04.log
-CELL_ERR=overnight_logs/helix_server_native_n20_2026-05-04.err
-CELL_PID=overnight_logs/helix_server_native_n20_2026-05-04.pid
+CELL_LOG=overnight_logs/cymatix_server_native_n20_2026-05-04.log
+CELL_ERR=overnight_logs/cymatix_server_native_n20_2026-05-04.err
+CELL_PID=overnight_logs/cymatix_server_native_n20_2026-05-04.pid
 
 DOCKER_BASELINE=benchmarks/results/gpqa_on_diamond_2026-05-03.json
 
@@ -74,10 +74,10 @@ trap 'log "Caught signal; cleaning up"; write_status "INTERRUPTED at $(ts)"; exi
 
 start_server() {
   local out_log="$1" out_err="$2" pid_file="$3"
-  log "Starting fresh helix server: log=$out_log err=$out_err pid=$pid_file"
+  log "Starting fresh cymatix server: log=$out_log err=$out_err pid=$pid_file"
   (
-    py -3 -u -m uvicorn helix_context.server:app \
-      --host 127.0.0.1 --port "$HELIX_PORT" \
+    py -3 -u -m uvicorn cymatix_context.server:app \
+      --host 127.0.0.1 --port "$CYMATIX_PORT" \
       >"$out_log" 2>"$out_err" &
     echo $! > "$pid_file"
   )
@@ -87,7 +87,7 @@ start_server() {
     log "ERROR: failed to capture spawned PID"
     return 1
   fi
-  log "Spawned helix server PID=$pid"
+  log "Spawned cymatix server PID=$pid"
   CURRENT_SERVER_PID="$pid"
   return 0
 }
@@ -99,7 +99,7 @@ wait_for_ready() {
   log "Waiting up to 90s for /health 200 + Uvicorn ready markers..."
   while [ "$(date +%s)" -lt "$deadline" ]; do
     if ! kill -0 "$pid" 2>/dev/null; then
-      log "ERROR: helix server PID=$pid died during warmup; tail of err:"
+      log "ERROR: cymatix server PID=$pid died during warmup; tail of err:"
       tail -40 "$err_log" >>"$LOG" 2>&1 || true
       return 1
     fi
@@ -107,13 +107,13 @@ wait_for_ready() {
     code=$(curl -s -o /dev/null -w '%{http_code}' -m 3 "$HEALTH_URL" 2>/dev/null || echo "000")
     if [ "$code" = "200" ] \
        && grep -q "Application startup complete" "$err_log" 2>/dev/null \
-       && grep -q "Uvicorn running on http://127.0.0.1:${HELIX_PORT}" "$err_log" 2>/dev/null; then
-      log "Helix server ready (health=200, uvicorn marker seen)"
+       && grep -q "Uvicorn running on http://127.0.0.1:${CYMATIX_PORT}" "$err_log" 2>/dev/null; then
+      log "Cymatix server ready (health=200, uvicorn marker seen)"
       return 0
     fi
     sleep 2
   done
-  log "ERROR: helix server did not become ready within 90s"
+  log "ERROR: cymatix server did not become ready within 90s"
   log "Tail of err log:"
   tail -60 "$err_log" >>"$LOG" 2>&1 || true
   return 1
@@ -175,29 +175,29 @@ if [ -n "$MISSING" ]; then
 fi
 log "Native observability stack OK."
 
-# Stop any existing helix server on :11437 (likely the tray-launched one).
-PORT_OWNER=$(netstat -ano 2>/dev/null | grep "127.0.0.1:${HELIX_PORT} " | grep LISTENING | awk '{print $5}' | head -1 || true)
+# Stop any existing cymatix server on :11437 (likely the tray-launched one).
+PORT_OWNER=$(netstat -ano 2>/dev/null | grep "127.0.0.1:${CYMATIX_PORT} " | grep LISTENING | awk '{print $5}' | head -1 || true)
 if [ -n "$PORT_OWNER" ]; then
-  log "Port ${HELIX_PORT} held by PID=$PORT_OWNER; stopping"
+  log "Port ${CYMATIX_PORT} held by PID=$PORT_OWNER; stopping"
   taskkill //PID "$PORT_OWNER" //F >>"$LOG" 2>&1 || true
   sleep 3
 fi
 
-# Start fresh helix server.
+# Start fresh cymatix server.
 start_server "$CELL_LOG" "$CELL_ERR" "$CELL_PID" \
-  || { log "ABORT: failed to start helix"; write_status "ABORT start at $(ts)"; exit 1; }
+  || { log "ABORT: failed to start cymatix"; write_status "ABORT start at $(ts)"; exit 1; }
 
 CELL_PID_VAL=$(cat "$CELL_PID")
 
 wait_for_ready "$CELL_ERR" "$CELL_PID_VAL" \
-  || { log "ABORT: helix not ready"; write_status "ABORT ready at $(ts)"; exit 1; }
+  || { log "ABORT: cymatix not ready"; write_status "ABORT ready at $(ts)"; exit 1; }
 
 # Run the bench.
 run_bench
 BENCH_RC=$?
 log "Bench rc=$BENCH_RC"
 
-stop_server "$CELL_PID_VAL" "bench helix"
+stop_server "$CELL_PID_VAL" "bench cymatix"
 CURRENT_SERVER_PID=""
 
 # Build the report.
@@ -211,7 +211,7 @@ cat > "$REPORT" <<EOF
 **Started:** $(head -1 "$LOG" | sed 's/^\[\(.*\)\].*/\1/')
 **Completed:** $(ts)
 **Model:** $MODEL
-**Helix server:** http://127.0.0.1:${HELIX_PORT}
+**Cymatix server:** http://127.0.0.1:${CYMATIX_PORT}
 **Branch:** $(git rev-parse --abbrev-ref HEAD)  HEAD: $(git rev-parse --short HEAD)
 **Spec:** [2026-05-04-native-observability-sidecar-design.md](../docs/specs/2026-05-04-native-observability-sidecar-design.md)
 **Spec gate:** p95(native) - p95(docker, same IDs) <= 5s

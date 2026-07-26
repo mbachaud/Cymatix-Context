@@ -155,7 +155,7 @@ def test_fingerprint_format(codec):
 
 def test_instruction_prime_high_for_howto(codec):
     """Instructional text should score high on the 'instruction' prime."""
-    vec = codec.encode("To install, run pip install helix-context and then configure helix.toml")
+    vec = codec.encode("To install, run pip install cymatix-context and then configure cymatix.toml")
     instruction_idx = PRIME_BY_NAME["instruction"].index
     # instruction should be among the top primes
     scored = [(i, abs(vec[i])) for i in range(20)]

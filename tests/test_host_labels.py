@@ -49,7 +49,7 @@ def test_host_pretty_unknown_echoes_verbatim():
 
 
 def test_host_pretty_unknown_marker_returns_none():
-    """The MCP server defaults HELIX_MCP_HOST to 'unknown' — we don't
+    """The MCP server defaults CYMATIX_MCP_HOST to 'unknown' — we don't
     want a meaningless 'Unknown' chip cluttering the dashboard."""
     assert host_pretty("unknown") is None
     assert host_pretty(None) is None
@@ -74,7 +74,7 @@ def test_compose_label_neither_returns_none():
 
 
 def test_compose_label_dedupes_when_vendor_equals_host():
-    """Common case: HELIX_AGENT_KIND=claude-code and HELIX_MCP_HOST=claude-code.
+    """Common case: CYMATIX_AGENT_KIND=claude-code and CYMATIX_MCP_HOST=claude-code.
     Render as a single chip, not 'Claude Code + Claude Code'."""
     assert compose_label("claude-code", "claude-code") == "Claude Code"
 
@@ -90,7 +90,7 @@ def test_compose_label_dedupes_case_insensitive():
 class TestModelLabels:
     """Absorbed from the deleted `test_model_labels.py`.
 
-    model_labels.py maps known model_id strings reported via helix_announce
+    model_labels.py maps known model_id strings reported via cymatix_announce
     to a canonical display form for the dashboard tooltip; unknown IDs echo
     verbatim (no fabrication) and None/empty returns None — the same
     contract host_pretty/vendor_pretty implement above, just for models.

@@ -1,6 +1,6 @@
-"""Helix adapters — reference composition-layer modules.
+"""Cymatix adapters — reference composition-layer modules.
 
-This subpackage is deliberately thin and opt-in: Helix's core stays a
+This subpackage is deliberately thin and opt-in: Cymatix's core stays a
 coordinate index, and these adapters are example consumers of the
 packet surface (see ``docs/INTEGRATING_WITH_EXISTING_RAG.md``).
 

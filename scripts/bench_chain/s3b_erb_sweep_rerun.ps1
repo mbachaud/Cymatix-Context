@@ -2,11 +2,11 @@
 # 2026-07-02 (sweep expects a JSON LIST of {query, gold_ids}; ERB ships
 # JSONL with uuid golds). erb_to_sweep_queries.py adapts per bed genome.
 $ErrorActionPreference = 'Continue'
-$repo = 'F:\Projects\helix-context'
+$repo = 'F:\Projects\cymatix-context'
 $logs = "$repo\benchmarks\logs"
 $ts = Get-Date -Format 'yyyy-MM-dd_HHmm'
-$env:HELIX_OTEL_ENABLED = '1'
-$env:HELIX_OTEL_ENDPOINT = 'localhost:4317'
+$env:CYMATIX_OTEL_ENABLED = '1'
+$env:CYMATIX_OTEL_ENDPOINT = 'localhost:4317'
 cd $repo
 
 function Set-Status {

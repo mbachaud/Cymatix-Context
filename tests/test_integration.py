@@ -82,7 +82,7 @@ class TestCheckRelevanceShape:
 
     def _probe_with_mock(self, response_json, status_code=200):
         probe = GenomeHealthProbe.__new__(GenomeHealthProbe)
-        probe.helix_url = "http://mock"
+        probe.cymatix_url = "http://mock"
         probe.timeout = 5.0
         mock_client = MagicMock()
         mock_resp = MagicMock()
@@ -94,7 +94,7 @@ class TestCheckRelevanceShape:
 
     def test_dict_response_with_rich_content_scores_high(self):
         payload = {
-            "name": "Helix Context",
+            "name": "Cymatix Context",
             "content": (
                 "The 6-step pipeline: extract, express, re-rank, splice, "
                 "assemble, replicate. The genome is stored in SQLite and "
@@ -115,7 +115,7 @@ class TestCheckRelevanceShape:
 
     def test_dict_response_with_short_content_scores_mid(self):
         payload = {
-            "name": "Helix",
+            "name": "Cymatix",
             "content": "Short but non-empty content block.",
             "context_health": {},
         }
@@ -125,7 +125,7 @@ class TestCheckRelevanceShape:
 
     def test_no_relevant_context_phrase_returns_low_score(self):
         payload = {
-            "name": "Helix",
+            "name": "Cymatix",
             "content": "No relevant context found for your query.",
             "context_health": {},
         }

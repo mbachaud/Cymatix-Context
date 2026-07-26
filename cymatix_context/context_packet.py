@@ -1,6 +1,6 @@
 """Agent-safe context packet builder.
 
-Additive surface for the Helix index work: it reuses existing tags
+Additive surface for the Cymatix index work: it reuses existing tags
 retrieval, then labels results by freshness/authority so callers can
 decide whether to trust, reread, or refresh before acting.
 """
@@ -231,7 +231,7 @@ def _item_content(
     packet is itself routing metadata and the LLM will re-fetch on demand.
 
     When ``prefer_raw=True`` the full ``gene.content`` is returned instead,
-    bounded by ``max_chars``. This is the "helix_only gives me the real
+    bounded by ``max_chars``. This is the "cymatix_only gives me the real
     content, not a thumbnail" path — opt-in via the ``include_raw`` flag
     on ``/context/packet`` (research-review Proposal 3, 2026-04-22).
     """
@@ -472,7 +472,7 @@ def build_context_packet(
     ``include_raw=True`` switches each item's content from the compressor-
     compressed summary to the full ``gene.content``, and bumps the per-item
     cap to ``_RAW_MAX_ITEM_CHARS`` (48k) unless ``max_item_chars`` overrides.
-    This is the "helix_only ships the real content" path from the
+    This is the "cymatix_only ships the real content" path from the
     2026-04-22 research review (Proposal 3) — use when the packet is the
     only context source and the downstream LLM needs real bytes, not
     thumbnails.
@@ -598,7 +598,7 @@ def build_context_packet(
         )
     except Exception:
         import logging
-        logging.getLogger("helix.context_packet").warning(
+        logging.getLogger("cymatix.context_packet").warning(
             "Stage-6 know/miss attach failed", exc_info=True
         )
 

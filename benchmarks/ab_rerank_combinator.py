@@ -48,7 +48,7 @@ sys.path.insert(0, str(_REPO_ROOT / "benchmarks"))
 
 import bench_needle  # noqa: E402
 from cymatix_context.config import load_config  # noqa: E402
-from cymatix_context.context_manager import HelixContextManager  # noqa: E402
+from cymatix_context.context_manager import CymatixContextManager  # noqa: E402
 from cymatix_context.retrieval.rerank_combinators import combine_rerank  # noqa: E402
 
 # The four post-fusion rerank classes — excluded from the fused-tier vector
@@ -264,7 +264,7 @@ def main() -> None:
                     default="genomes/bench/matrix/xl.db,genomes/bench/matrix/xl_clean.db",
                     help="comma-separated bed DB paths (opened read-only)")
     ap.add_argument("--base-config",
-                    default="docs/benchmarks/helix_probe_lexical.toml")
+                    default="docs/benchmarks/cymatix_probe_lexical.toml")
     ap.add_argument("--combinators", default="additive,fused_tier,eps_band,off")
     ap.add_argument("--deltas", default="0.02,0.05,0.10")
     ap.add_argument("--tier-weights", default="1.0")
@@ -304,7 +304,7 @@ def main() -> None:
             cfg.retrieval.rerank_combinator = cell.combinator
             cfg.retrieval.rerank_band_delta = cell.delta
             cfg.retrieval.rerank_tier_weight = cell.tier_weight
-            mgr = HelixContextManager(cfg)
+            mgr = CymatixContextManager(cfg)
             per_needle: Dict[str, dict] = {}
             for nd in needles:
                 try:

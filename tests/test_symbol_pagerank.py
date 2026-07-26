@@ -79,7 +79,7 @@ def test_symbol_expansion_cap_incapable_store_warns_no_crash(caplog):
 
         __slots__ = ()
 
-    with caplog.at_level(logging.WARNING, logger="helix.context_manager"):
+    with caplog.at_level(logging.WARNING, logger="cymatix.context_manager"):
         _apply_symbol_expansion_cap(_SlottedAdapter(), 4)  # must not raise
     assert any(
         "symbol_expansion_cap" in rec.getMessage() and rec.levelno == logging.WARNING

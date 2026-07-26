@@ -15,7 +15,7 @@ from itertools import combinations, product
 
 import numpy as np
 
-DB_PATH = "F:/Projects/helix-context/genome.db"
+DB_PATH = "F:/Projects/cymatix-context/genome.db"
 
 # ============================================================
 # Snapshot

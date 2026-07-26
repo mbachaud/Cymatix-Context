@@ -1,7 +1,7 @@
 """#239 stage 2 (GRAPH env) — faithfulness label on the graded-distractor bed.
 
-Reads needles_239_stage1.json (helix env), and for each needle whose gold answer
-SURVIVED into helix's expressed_context, runs local circuit-tracer graphs on
+Reads needles_239_stage1.json (cymatix env), and for each needle whose gold answer
+SURVIVED into cymatix's expressed_context, runs local circuit-tracer graphs on
 A (question only) vs B (expressed_context + question) with Qwen3-4B (the stronger
 instrument: scaled causal 23/24). Emits per-needle causal_use — the LABEL the
 know-logistic should be calibrated against (#239).

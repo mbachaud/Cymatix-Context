@@ -1,6 +1,6 @@
 """Regression tests for #146 — `<GENE src=...>` source-prefix preservation.
 
-The renderer in ``HelixContextManager.build_context`` shortens
+The renderer in ``CymatixContextManager.build_context`` shortens
 ``gene.source_id`` into the ``src=...`` attribute of each `<GENE>` block.
 Before the fix, the shortener:
 
@@ -24,8 +24,8 @@ from __future__ import annotations
 import pytest
 
 from cymatix_context.config import BudgetConfig
-from cymatix_context.context_manager import HelixContextManager
-from tests.conftest import MockCompressorBackend, make_gene, make_helix_config
+from cymatix_context.context_manager import CymatixContextManager
+from tests.conftest import MockCompressorBackend, make_gene, make_cymatix_config
 
 
 @pytest.fixture
@@ -36,10 +36,10 @@ def manager():
     real LLM; the path-shortening branch we exercise sits in the splice
     loop, which runs unconditionally once candidates are selected.
     """
-    cfg = make_helix_config(
+    cfg = make_cymatix_config(
         budget=BudgetConfig(max_genes_per_turn=4, splice_aggressiveness=0.5),
     )
-    mgr = HelixContextManager(cfg)
+    mgr = CymatixContextManager(cfg)
     mgr.ribosome.backend = MockCompressorBackend()
     yield mgr
     mgr.close()
@@ -138,9 +138,9 @@ def test_projects_path_still_short_circuits_to_projects_index(manager):
     """``F:/Projects/<repo>/<sub>/<file>`` is the dev-laptop layout.
     Without a ``sources`` segment the shortener still slices after the
     ``Projects`` segment exactly as before."""
-    src = r"F:\Projects\helix-context\cymatix_context\context_manager.py"
+    src = r"F:\Projects\cymatix-context\cymatix_context\context_manager.py"
     out = _render_src_for(manager, src)
-    assert out == "helix-context/cymatix_context/context_manager.py", out
+    assert out == "cymatix-context/cymatix_context/context_manager.py", out
 
 
 def test_projects_with_nested_sources_prefers_sources_anchor(manager):
@@ -166,7 +166,7 @@ def test_short_non_sources_path_falls_back_to_parts3(manager):
     The path is constructed to include the retrieval-side query tokens
     (``confluence``, ``audit``) so the synthetic gene clears the
     promoter-match floor and a `<GENE>` tag is actually emitted —
-    otherwise build_context short-circuits to a `<helix:no_match>`
+    otherwise build_context short-circuits to a `<cymatix:no_match>`
     token before the shortener ever runs.
     """
     src = "/var/log/confluence/audit/output.json"

@@ -21,7 +21,7 @@ from cymatix_context.shard_router import (
 def _clean_env():
     saved = {
         k: os.environ.pop(k, None)
-        for k in ("HELIX_SHARD_FETCH_FACTOR", "HELIX_SHARD_COACT_RESERVE")
+        for k in ("CYMATIX_SHARD_FETCH_FACTOR", "CYMATIX_SHARD_COACT_RESERVE")
     }
     yield
     for k, v in saved.items():
@@ -44,7 +44,7 @@ def test_fetch_factor_default_is_legacy_2():
     ("", 2),
 ])
 def test_fetch_factor_env_parsing(raw, expected):
-    os.environ["HELIX_SHARD_FETCH_FACTOR"] = raw
+    os.environ["CYMATIX_SHARD_FETCH_FACTOR"] = raw
     assert _shard_fetch_factor() == expected
 
 
@@ -57,9 +57,9 @@ def test_fetch_depth_formula_matches_router_contract():
     already dropped. factor=4 doubles the headroom.
     """
     max_genes = 8
-    os.environ["HELIX_SHARD_FETCH_FACTOR"] = "4"
+    os.environ["CYMATIX_SHARD_FETCH_FACTOR"] = "4"
     assert max(max_genes, max_genes * _shard_fetch_factor()) == 32
-    os.environ.pop("HELIX_SHARD_FETCH_FACTOR")
+    os.environ.pop("CYMATIX_SHARD_FETCH_FACTOR")
     assert max(max_genes, max_genes * _shard_fetch_factor()) == 16
 
 
@@ -121,7 +121,7 @@ def test_reserve_output_stays_sorted_by_corrected():
 
 def test_reserve_env_parsing():
     assert _coact_reserve_slots() == 0
-    os.environ["HELIX_SHARD_COACT_RESERVE"] = "2"
+    os.environ["CYMATIX_SHARD_COACT_RESERVE"] = "2"
     assert _coact_reserve_slots() == 2
-    os.environ["HELIX_SHARD_COACT_RESERVE"] = "junk"
+    os.environ["CYMATIX_SHARD_COACT_RESERVE"] = "junk"
     assert _coact_reserve_slots() == 0

@@ -18,7 +18,7 @@ class FakeBench(FakeSupervisor):
     def __init__(self, running=False, port=11439):
         super().__init__()
         self._running = running
-        self.helix_port = port
+        self.cymatix_port = port
 
     def is_running(self):
         return self._running
@@ -67,29 +67,29 @@ def test_bench_state_and_controls():
 
 def test_server_config_bench_fields(tmp_path, monkeypatch):
     from cymatix_context.config import load_config
-    toml = tmp_path / "helix.toml"
+    toml = tmp_path / "cymatix.toml"
     toml.write_text(
         "[server]\nbench_enabled = true\nbench_port = 12001\n"
         'bench_genome_path = "genomes/bench/alt.db"\n',
         encoding="utf-8",
     )
-    monkeypatch.delenv("HELIX_BENCH_ENABLED", raising=False)
+    monkeypatch.delenv("CYMATIX_BENCH_ENABLED", raising=False)
     cfg = load_config(str(toml))
     assert cfg.server.bench_enabled is True
     assert cfg.server.bench_port == 12001
     assert cfg.server.bench_genome_path == "genomes/bench/alt.db"
-    monkeypatch.setenv("HELIX_BENCH_ENABLED", "0")
+    monkeypatch.setenv("CYMATIX_BENCH_ENABLED", "0")
     cfg = load_config(str(toml))
     assert cfg.server.bench_enabled is False
 
 
 def test_supervisor_extra_env_merge():
-    from cymatix_context.launcher.supervisor import HelixSupervisor
-    sup = HelixSupervisor.__new__(HelixSupervisor)
-    sup.extra_env = {"HELIX_GENOME_PATH": "x.db"}
+    from cymatix_context.launcher.supervisor import CymatixSupervisor
+    sup = CymatixSupervisor.__new__(CymatixSupervisor)
+    sup.extra_env = {"CYMATIX_GENOME_PATH": "x.db"}
     # the merge logic is inline in start(); assert the attribute shape
-    assert sup.extra_env == {"HELIX_GENOME_PATH": "x.db"}
-    sup2 = HelixSupervisor.__new__(HelixSupervisor)
+    assert sup.extra_env == {"CYMATIX_GENOME_PATH": "x.db"}
+    sup2 = CymatixSupervisor.__new__(CymatixSupervisor)
     sup2.extra_env = None
     assert sup2.extra_env is None
 
@@ -106,7 +106,7 @@ def test_start_pending_renders_spinner():
     with TestClient(app) as c:
         html = c.get("/api/state/panels").text
         assert "panel--starting" in html and "spinner" in html
-        assert c.get("/api/state").json()["helix"]["start_pending"] is True
+        assert c.get("/api/state").json()["cymatix"]["start_pending"] is True
 
 
 def test_needs_db_selection_modal_and_clearing():

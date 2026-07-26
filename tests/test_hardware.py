@@ -338,7 +338,7 @@ def test_multi_gpu_all_dead_falls_through_to_cpu(mock_torch):
 
 
 def test_explicit_cuda_succeeds(mock_torch, monkeypatch):
-    monkeypatch.setenv("HELIX_DEVICE", "cuda")
+    monkeypatch.setenv("CYMATIX_DEVICE", "cuda")
     mock_torch["cuda_available"] = True
     mock_torch["cuda_device_count"] = 1
     mock_torch["cuda_device_names"] = ["RTX 4090"]
@@ -354,7 +354,7 @@ def test_explicit_cuda_falls_back_to_cpu_on_probe_failure(mock_torch, monkeypatc
 
     Spec §5.4 asymmetry: auto picks the best available; explicit means
     'I want this exactly, downgrade to CPU if not there'."""
-    monkeypatch.setenv("HELIX_DEVICE", "cuda")
+    monkeypatch.setenv("CYMATIX_DEVICE", "cuda")
     mock_torch["cuda_available"] = False
     mock_torch["mps_available"] = True
     mock_torch["mps_built"] = True
@@ -372,9 +372,9 @@ def test_fallback_emits_summary_warning_for_headless_operators(
     requested/active devices to the fallback_reason so the cause is in
     line-of-sight, not just a downstream /health field."""
     import logging
-    monkeypatch.setenv("HELIX_DEVICE", "cuda")
+    monkeypatch.setenv("CYMATIX_DEVICE", "cuda")
     mock_torch["cuda_available"] = False
-    with caplog.at_level(logging.WARNING, logger="helix.hardware"):
+    with caplog.at_level(logging.WARNING, logger="cymatix.hardware"):
         info = hardware._detect()
     assert info.device_type == "cpu"
     assert info.fallback_reason is not None
@@ -398,7 +398,7 @@ def test_auto_picker_does_not_emit_fallback_warning(mock_torch, caplog):
     WARNING from SF2 must not fire — auto-on-CPU is not noteworthy."""
     import logging
     # mock_torch fixture defaults all backends to unavailable -> auto -> cpu
-    with caplog.at_level(logging.WARNING, logger="helix.hardware"):
+    with caplog.at_level(logging.WARNING, logger="cymatix.hardware"):
         info = hardware._detect()
     assert info.device_type == "cpu"
     assert info.fallback_reason is None
@@ -412,33 +412,33 @@ def test_auto_picker_does_not_emit_fallback_warning(mock_torch, caplog):
     )
 
 
-def test_helix_device_env_var_case_insensitive(mock_torch, monkeypatch):
-    monkeypatch.setenv("HELIX_DEVICE", "CPU")
+def test_cymatix_device_env_var_case_insensitive(mock_torch, monkeypatch):
+    monkeypatch.setenv("CYMATIX_DEVICE", "CPU")
     info = hardware._detect()
     assert info.device_type == "cpu"
     assert info.requested_device == "cpu"
 
 
-def test_helix_device_env_var_invalid_falls_back_to_auto(mock_torch, monkeypatch, caplog):
-    monkeypatch.setenv("HELIX_DEVICE", "nonsense")
+def test_cymatix_device_env_var_invalid_falls_back_to_auto(mock_torch, monkeypatch, caplog):
+    monkeypatch.setenv("CYMATIX_DEVICE", "nonsense")
     mock_torch["cuda_available"] = True
     mock_torch["cuda_device_count"] = 1
     mock_torch["cuda_device_names"] = ["RTX 4090"]
     mock_torch["cuda_mem"] = [(22.0, 24.0)]
     import logging
-    with caplog.at_level(logging.WARNING, logger="helix.hardware"):
+    with caplog.at_level(logging.WARNING, logger="cymatix.hardware"):
         info = hardware._detect()
     assert info.requested_device == "auto"
     assert info.device_type == "cuda"
     assert any(
-        "invalid helix_device" in rec.message.lower()
-        or "ignoring helix_device" in rec.message.lower()
+        "invalid cymatix_device" in rec.message.lower()
+        or "ignoring cymatix_device" in rec.message.lower()
         for rec in caplog.records
     )
 
 
 def test_explicit_mps_on_non_mps_host_falls_back_to_cpu(mock_torch, monkeypatch):
-    monkeypatch.setenv("HELIX_DEVICE", "mps")
+    monkeypatch.setenv("CYMATIX_DEVICE", "mps")
     info = hardware._detect()
     assert info.device_type == "cpu"
     assert info.fallback_reason is not None
@@ -545,7 +545,7 @@ def test_init_from_config_must_run_before_get_hardware(mock_torch, monkeypatch):
     """Regression pin: if get_hardware() runs before init_from_config(),
     the cached singleton ignores config. This test documents that
     server startup MUST call init_from_config() first."""
-    monkeypatch.setenv("HELIX_DEVICE", "auto")
+    monkeypatch.setenv("CYMATIX_DEVICE", "auto")
     mock_torch["cuda_available"] = True
     mock_torch["cuda_device_count"] = 1
     mock_torch["cuda_device_names"] = ["RTX 4090"]

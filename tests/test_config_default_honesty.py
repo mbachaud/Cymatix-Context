@@ -1,7 +1,7 @@
-"""Default-honesty regression — code defaults vs the shipped helix.toml.
+"""Default-honesty regression — code defaults vs the shipped cymatix.toml.
 
-2026-06-12 council audit (Option B slice 1): ``HelixConfig()`` dataclass
-defaults had silently drifted from the shipped helix.toml on 20 fields —
+2026-06-12 council audit (Option B slice 1): ``CymatixConfig()`` dataclass
+defaults had silently drifted from the shipped cymatix.toml on 20 fields —
 the audit's headline five (expression_tokens 6000 vs 7000,
 max_genes_per_turn 8 vs 12, splice_aggressiveness 0.5 vs 0.3,
 decoder_mode "full" vs "condensed", sr_enabled false vs true) plus 15
@@ -10,7 +10,7 @@ backend/query_expansion, session_delivery, genome.path, ingestion
 backend/splade/rerank_model/entity_graph, filename_anchor,
 bm25_shortlist, plr.enabled, headroom.enabled).
 
-Resolution policy: the shipped helix.toml is the operationally-tested
+Resolution policy: the shipped cymatix.toml is the operationally-tested
 product (every bench this month ran those values), so CODE defaults were
 aligned to the TOML — except measured-zero features, which align the
 other way: sr_enabled was flipped to false in the TOML because the
@@ -28,16 +28,16 @@ from pathlib import Path
 
 import pytest
 
-from cymatix_context.config import HelixConfig, KnowConfig, load_config
+from cymatix_context.config import CymatixConfig, KnowConfig, load_config
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SHIPPED_TOML = (
     REPO_ROOT / "cymatix.toml"
     if (REPO_ROOT / "cymatix.toml").exists()
-    else REPO_ROOT / "helix.toml"
+    else REPO_ROOT / "cymatix.toml"
 )
 
-# Fields where the shipped helix.toml and the code defaults are ALLOWED to
+# Fields where the shipped cymatix.toml and the code defaults are ALLOWED to
 # differ. Keep this empty or tiny — every entry needs a reason.
 INTENTIONAL_DIVERGENCES: dict[str, str] = {
     # The shipped toml carries a starter synonym vocabulary for the repo's
@@ -60,13 +60,13 @@ INTENTIONAL_DIVERGENCES: dict[str, str] = {
 }
 
 # Env vars load_config consults; the comparator must neutralize them so a
-# developer shell (HELIX_GENOME_PATH etc.) can't fake or mask a drift.
+# developer shell (CYMATIX_GENOME_PATH etc.) can't fake or mask a drift.
 _CONFIG_ENV_OVERRIDES = (
-    "HELIX_CONFIG",
-    "HELIX_GENOME_PATH",
-    "HELIX_BENCH_ENABLED",
-    "HELIX_SERVER_UPSTREAM",
-    "HELIX_SERVER_UPSTREAM_TIMEOUT",
+    "CYMATIX_CONFIG",
+    "CYMATIX_GENOME_PATH",
+    "CYMATIX_BENCH_ENABLED",
+    "CYMATIX_SERVER_UPSTREAM",
+    "CYMATIX_SERVER_UPSTREAM_TIMEOUT",
 )
 
 
@@ -88,23 +88,23 @@ def _shipped_vs_code_drift(monkeypatch) -> dict[str, tuple]:
     for var in _CONFIG_ENV_OVERRIDES:
         monkeypatch.delenv(var, raising=False)
     toml_cfg = load_config(str(SHIPPED_TOML))
-    return _walk_drift(toml_cfg, HelixConfig())
+    return _walk_drift(toml_cfg, CymatixConfig())
 
 
 def test_shipped_toml_matches_code_defaults(monkeypatch):
-    """The honesty ratchet: shipped helix.toml == HelixConfig() defaults.
+    """The honesty ratchet: shipped cymatix.toml == CymatixConfig() defaults.
 
     Allowed exceptions live in INTENTIONAL_DIVERGENCES, each with a
     documented reason. A failure here means someone changed a default on
     ONE side only — either align the other side or (rarely) document the
     divergence in the allowlist.
     """
-    assert SHIPPED_TOML.exists(), "shipped helix.toml missing from repo root"
+    assert SHIPPED_TOML.exists(), "shipped cymatix.toml missing from repo root"
     drift = _shipped_vs_code_drift(monkeypatch)
 
     undocumented = {k: v for k, v in drift.items() if k not in INTENTIONAL_DIVERGENCES}
     assert not undocumented, (
-        "helix.toml and HelixConfig() defaults drifted on undocumented "
+        "cymatix.toml and CymatixConfig() defaults drifted on undocumented "
         "fields (code, toml): "
         + "; ".join(f"{k}={v}" for k, v in sorted(undocumented.items()))
         + " — align the lagging side (toml wins unless the feature measured "
@@ -126,7 +126,7 @@ def test_sr_enabled_defaults_false_on_both_sides(monkeypatch):
     """
     for var in _CONFIG_ENV_OVERRIDES:
         monkeypatch.delenv(var, raising=False)
-    assert HelixConfig().retrieval.sr_enabled is False
+    assert CymatixConfig().retrieval.sr_enabled is False
     assert load_config(str(SHIPPED_TOML)).retrieval.sr_enabled is False
 
 
@@ -151,7 +151,7 @@ def test_know_config_defaults_match_know_calibration_constants():
 
 def test_know_section_loads_through_config(tmp_path):
     """[know] is a first-class config section now (not a shadow loader)."""
-    toml = tmp_path / "helix.toml"
+    toml = tmp_path / "cymatix.toml"
     toml.write_text(
         "[know]\n"
         "emit_floor = 0.7\n"
@@ -178,7 +178,7 @@ def test_know_section_malformed_betas_soft_fail(tmp_path, caplog):
     contract, kept verbatim in the config loader)."""
     import logging
 
-    toml = tmp_path / "helix.toml"
+    toml = tmp_path / "cymatix.toml"
     toml.write_text('[know]\nbetas = ["nope"]\nstale_after_days = -3\n', encoding="utf-8")
     with caplog.at_level(logging.WARNING, logger="cymatix_context.config"):
         cfg = load_config(str(toml))
@@ -188,7 +188,7 @@ def test_know_section_malformed_betas_soft_fail(tmp_path, caplog):
 
 
 def test_know_section_wrong_length_betas_soft_fail(tmp_path):
-    toml = tmp_path / "helix.toml"
+    toml = tmp_path / "cymatix.toml"
     toml.write_text("[know]\nbetas = [1.0, 2.0]\n", encoding="utf-8")
     cfg = load_config(str(toml))
     assert cfg.know.betas == list(KnowConfig().betas)
@@ -203,7 +203,7 @@ def test_load_calibration_from_toml_back_compat_delegates_to_config(tmp_path):
         load_calibration_from_toml,
     )
 
-    toml = tmp_path / "helix.toml"
+    toml = tmp_path / "cymatix.toml"
     toml.write_text(
         "[know]\nemit_floor = 0.61\nbetas = [-2.0, 2.0, 1.5, 0.7, 1.8, 1.5]\n"
         "stale_after_days = 14\n",
@@ -220,19 +220,19 @@ def test_load_calibration_from_toml_back_compat_delegates_to_config(tmp_path):
 
 def test_load_calibration_from_toml_no_args_self_loads(tmp_path, monkeypatch):
     """Callers that pass nothing still self-load via the config system
-    (HELIX_CONFIG / ./helix.toml discovery) and default cleanly when no
+    (CYMATIX_CONFIG / ./cymatix.toml discovery) and default cleanly when no
     file exists."""
     from cymatix_context.scoring.know_calibration import (
         KnowCalibration,
         load_calibration_from_toml,
     )
 
-    monkeypatch.delenv("HELIX_CONFIG", raising=False)
-    monkeypatch.chdir(tmp_path)  # no helix.toml here
+    monkeypatch.delenv("CYMATIX_CONFIG", raising=False)
+    monkeypatch.chdir(tmp_path)  # no cymatix.toml here
     assert load_calibration_from_toml() == KnowCalibration()
 
     # And the env-var discovery path the old shadow loader never had:
     custom = tmp_path / "custom.toml"
     custom.write_text("[know]\nemit_floor = 0.9\n", encoding="utf-8")
-    monkeypatch.setenv("HELIX_CONFIG", str(custom))
+    monkeypatch.setenv("CYMATIX_CONFIG", str(custom))
     assert load_calibration_from_toml().emit_floor == 0.9

@@ -12,13 +12,13 @@ on a 12 GB rig:
 * NOT a wall-clock per-shard timer -- that false-positives on legitimately
   large shards and misses crawls on small ones. The trigger is the
   unambiguous signature: the per-batch genes/s EMA drops below the shard's
-  OWN early-batch baseline divided by ``HELIX_BFM_CRAWL_FACTOR`` for
-  ``HELIX_BFM_CRAWL_WINDOW`` consecutive batches, AND dedicated VRAM sits
+  OWN early-batch baseline divided by ``CYMATIX_BFM_CRAWL_FACTOR`` for
+  ``CYMATIX_BFM_CRAWL_WINDOW`` consecutive batches, AND dedicated VRAM sits
   near device capacity (fraction > 0.92). A slow disk alone is not a
   crawl; a CPU-only box (no probe-able CUDA device) structurally cannot
   trip.
 
-* Escalation ladder (``HELIX_BFM_CRAWL_ACTION=ladder``, the default):
+* Escalation ladder (``CYMATIX_BFM_CRAWL_ACTION=ladder``, the default):
   rung 1 -- ``gc.collect()`` + ``torch.cuda.empty_cache()`` (cheap,
   occasionally sufficient early). Rung 2, if the crawl persists for
   another full window -- terminal action: the dense BACKFILL path tears
@@ -27,7 +27,7 @@ on a 12 GB rig:
   ceiling), while the INGEST path raises the existing ``_PauseRequested``
   so the shard pauses cleanly at a batch boundary and the #183 salvage +
   file-level-resume machinery restarts it with a fresh CUDA context.
-  ``HELIX_BFM_CRAWL_ACTION=cpu`` jumps straight to the terminal rung;
+  ``CYMATIX_BFM_CRAWL_ACTION=cpu`` jumps straight to the terminal rung;
   ``off`` detects and logs only. The 2026-06-11 slack__eng-oncall
   incident proved ``empty_cache`` alone does not un-crawl an
   already-spilled context -- context recycle / CPU demotion is the fix.
@@ -48,7 +48,7 @@ import logging
 import os
 import statistics
 
-log = logging.getLogger("helix.crawl_watchdog")
+log = logging.getLogger("cymatix.crawl_watchdog")
 
 #: Stable grep-able prefix for every watchdog log line.
 LOG_PREFIX = "[crawl-watchdog]"
@@ -85,26 +85,26 @@ def _env_parse(name: str, default, cast):
 
 
 def env_crawl_window() -> int:
-    """``HELIX_BFM_CRAWL_WINDOW`` -- baseline length AND consecutive-slow
+    """``CYMATIX_BFM_CRAWL_WINDOW`` -- baseline length AND consecutive-slow
     streak length, in batches. Default 8; clamped to >= 1."""
-    return max(1, _env_parse("HELIX_BFM_CRAWL_WINDOW", DEFAULT_CRAWL_WINDOW, int))
+    return max(1, _env_parse("CYMATIX_BFM_CRAWL_WINDOW", DEFAULT_CRAWL_WINDOW, int))
 
 
 def env_crawl_factor() -> float:
-    """``HELIX_BFM_CRAWL_FACTOR`` -- crawl threshold = baseline / factor.
+    """``CYMATIX_BFM_CRAWL_FACTOR`` -- crawl threshold = baseline / factor.
     Default 5.0; non-positive values fall back to the default."""
-    val = _env_parse("HELIX_BFM_CRAWL_FACTOR", DEFAULT_CRAWL_FACTOR, float)
+    val = _env_parse("CYMATIX_BFM_CRAWL_FACTOR", DEFAULT_CRAWL_FACTOR, float)
     return val if val > 0 else DEFAULT_CRAWL_FACTOR
 
 
 def env_crawl_action() -> str:
-    """``HELIX_BFM_CRAWL_ACTION`` -- ``ladder`` (default) | ``cpu`` | ``off``."""
-    raw = os.environ.get("HELIX_BFM_CRAWL_ACTION", "").strip().lower()
+    """``CYMATIX_BFM_CRAWL_ACTION`` -- ``ladder`` (default) | ``cpu`` | ``off``."""
+    raw = os.environ.get("CYMATIX_BFM_CRAWL_ACTION", "").strip().lower()
     if not raw:
         return "ladder"
     if raw not in _VALID_ACTIONS:
         log.warning(
-            "%s ignoring unknown HELIX_BFM_CRAWL_ACTION=%r (using 'ladder')",
+            "%s ignoring unknown CYMATIX_BFM_CRAWL_ACTION=%r (using 'ladder')",
             LOG_PREFIX, raw,
         )
         return "ladder"
@@ -221,7 +221,7 @@ class CrawlDetector:
 
     @classmethod
     def from_env(cls, *, log_fn=None, name: str = "") -> "CrawlDetector":
-        """Build a detector from the ``HELIX_BFM_CRAWL_*`` env knobs
+        """Build a detector from the ``CYMATIX_BFM_CRAWL_*`` env knobs
         (read now, not at import time, so tests can monkeypatch)."""
         return cls(
             baseline_window=env_crawl_window(),
@@ -290,13 +290,13 @@ class CrawlDetector:
         )
         if self.action == "off":
             self.log_fn(
-                ctx + " action=none (HELIX_BFM_CRAWL_ACTION=off: log-only)"
+                ctx + " action=none (CYMATIX_BFM_CRAWL_ACTION=off: log-only)"
             )
             return None
         if self.action == "cpu":
             self.disarmed = True
             self.log_fn(
-                ctx + " action=demote (HELIX_BFM_CRAWL_ACTION=cpu: straight "
+                ctx + " action=demote (CYMATIX_BFM_CRAWL_ACTION=cpu: straight "
                 "to terminal rung; watchdog disarmed for this shard)"
             )
             return ACTION_DEMOTE

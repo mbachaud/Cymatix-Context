@@ -115,18 +115,18 @@ def test_gen_config_reference_output_is_deterministic():
     assert applied_twice == applied_a
 
 
-def test_every_helix_config_section_has_a_registry_entry():
-    """Every field on HelixConfig (i.e. every real [section]) must be
+def test_every_cymatix_config_section_has_a_registry_entry():
+    """Every field on CymatixConfig (i.e. every real [section]) must be
     accounted for in SECTION_TO_CLASS, so a brand-new config section can
     never silently ship without a generated table."""
     module = gen.load_config_module()
-    helix_config_fields = {f.name for f in dataclasses.fields(module.HelixConfig)}
+    cymatix_config_fields = {f.name for f in dataclasses.fields(module.CymatixConfig)}
     # synonym_map has no fixed field set (free-form Dict[str, List[str]])
     # and is intentionally not table-generated.
     accounted = set(gen.SECTION_TO_CLASS) | {"synonym_map"}
-    missing = helix_config_fields - accounted
+    missing = cymatix_config_fields - accounted
     assert not missing, (
-        f"HelixConfig field(s) {sorted(missing)} have no entry in "
+        f"CymatixConfig field(s) {sorted(missing)} have no entry in "
         "gen_config_reference.SECTION_TO_CLASS -- add one (or None if the "
         "section is intentionally not a generated table)."
     )

@@ -21,10 +21,10 @@ class TestCurrentPlatform:
 
 class TestTargetPath:
     def test_linux_target(self):
-        assert installer.target_path("linux") == Path.home() / ".config" / "systemd" / "user" / "helix-launcher.service"
+        assert installer.target_path("linux") == Path.home() / ".config" / "systemd" / "user" / "cymatix-launcher.service"
 
     def test_darwin_target(self):
-        assert installer.target_path("darwin") == Path.home() / "Library" / "LaunchAgents" / "com.swiftwing21.helix-launcher.plist"
+        assert installer.target_path("darwin") == Path.home() / "Library" / "LaunchAgents" / "com.swiftwing21.cymatix-launcher.plist"
 
     def test_win32_target_is_none(self):
         assert installer.target_path("win32") is None
@@ -35,13 +35,13 @@ class TestFindTemplate:
         p = installer._find_template("linux")
         assert p is not None
         assert p.exists()
-        assert p.name == "helix-launcher.service"
+        assert p.name == "cymatix-launcher.service"
 
     def test_darwin_template_exists(self):
         p = installer._find_template("darwin")
         assert p is not None
         assert p.exists()
-        assert p.name == "com.swiftwing21.helix-launcher.plist"
+        assert p.name == "com.swiftwing21.cymatix-launcher.plist"
 
     def test_win32_template_is_none(self):
         assert installer._find_template("win32") is None
@@ -82,13 +82,13 @@ class TestInstallMissingBinary:
             with patch("cymatix_context.launcher.installer.find_launcher_binary", return_value=None):
                 ok, msg = installer.install_service()
         assert ok is False
-        assert "helix-launcher" in msg.lower()
+        assert "cymatix-launcher" in msg.lower()
 
 
 class TestLinuxDryRun:
     def test_linux_dry_run_does_not_write_file(self, tmp_path):
-        fake_target = tmp_path / "helix-launcher.service"
-        fake_launcher = tmp_path / "helix-launcher"
+        fake_target = tmp_path / "cymatix-launcher.service"
+        fake_launcher = tmp_path / "cymatix-launcher"
         fake_launcher.write_text("#!/bin/bash\necho hi")
         fake_launcher.chmod(0o755)
 
@@ -104,8 +104,8 @@ class TestLinuxDryRun:
 
 class TestLinuxInstallAndUninstall:
     def test_linux_install_writes_file_and_substitutes_path(self, tmp_path):
-        fake_target = tmp_path / "systemd" / "user" / "helix-launcher.service"
-        fake_launcher = tmp_path / "helix-launcher"
+        fake_target = tmp_path / "systemd" / "user" / "cymatix-launcher.service"
+        fake_launcher = tmp_path / "cymatix-launcher"
         fake_launcher.write_text("#!/bin/bash\necho hi")
 
         with patch("cymatix_context.launcher.installer.current_platform", return_value="linux"):
@@ -121,7 +121,7 @@ class TestLinuxInstallAndUninstall:
         assert "systemctl --user" in msg
 
     def test_linux_uninstall_removes_file(self, tmp_path):
-        fake_target = tmp_path / "systemd" / "user" / "helix-launcher.service"
+        fake_target = tmp_path / "systemd" / "user" / "cymatix-launcher.service"
         fake_target.parent.mkdir(parents=True, exist_ok=True)
         fake_target.write_text("stub content")
 
@@ -144,8 +144,8 @@ class TestLinuxInstallAndUninstall:
 
 class TestDarwinInstall:
     def test_darwin_install_substitutes_username_and_launcher_path(self, tmp_path):
-        fake_target = tmp_path / "LaunchAgents" / "com.swiftwing21.helix-launcher.plist"
-        fake_launcher = tmp_path / "bin" / "helix-launcher"
+        fake_target = tmp_path / "LaunchAgents" / "com.swiftwing21.cymatix-launcher.plist"
+        fake_launcher = tmp_path / "bin" / "cymatix-launcher"
         fake_launcher.parent.mkdir(parents=True)
         fake_launcher.write_text("#!/bin/bash\necho hi")
 

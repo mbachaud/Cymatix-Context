@@ -1,4 +1,4 @@
-"""Model-free OAuth-shaped scope benchmark for Helix retrieval."""
+"""Model-free OAuth-shaped scope benchmark for Cymatix retrieval."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ from benchmarks.oauth_fixtures import seed_oauth_fixtures
 from benchmarks.oauth_task_set import OAUTH_TASKS
 from cymatix_context.knowledge_store import KnowledgeStore
 
-HELIX_URL = "http://127.0.0.1:11437"
+CYMATIX_URL = "http://127.0.0.1:11437"
 
 
 def _entry(payload: Any) -> dict[str, Any]:
@@ -40,7 +40,7 @@ def run_task(
     task: dict[str, Any],
     *,
     arm: str,
-    helix_url: str = HELIX_URL,
+    cymatix_url: str = CYMATIX_URL,
     timeout: float = 30.0,
     pass_id: str | None = None,
     run_id: str | None = None,
@@ -68,7 +68,7 @@ def run_task(
     t0 = time.time()
     error = None
     try:
-        resp = client.post(f"{helix_url}/context", json=body, timeout=timeout)
+        resp = client.post(f"{cymatix_url}/context", json=body, timeout=timeout)
         context_latency = time.time() - t0
         if resp.status_code == 200:
             payload = _entry(resp.json())
@@ -193,7 +193,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Run model-free OAuth scope benchmark.")
     parser.add_argument("--arm", choices=("scope_off", "scope_on", "dense_guarded"), required=True)
     parser.add_argument("--out", required=True)
-    parser.add_argument("--helix-url", default=HELIX_URL)
+    parser.add_argument("--cymatix-url", default=CYMATIX_URL)
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--timeout", type=float, default=30.0)
     parser.add_argument("--pass-id", default=None)
@@ -201,7 +201,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--synthetic",
         action="store_true",
-        help="Run against an isolated in-memory OAuth fixture instead of a live Helix server.",
+        help="Run against an isolated in-memory OAuth fixture instead of a live Cymatix server.",
     )
     return parser
 
@@ -221,7 +221,7 @@ def main(argv: list[str] | None = None) -> int:
         with httpx.Client(timeout=args.timeout) as client:
             for endpoint in ("health", "stats"):
                 try:
-                    client.get(f"{args.helix_url}/{endpoint}", timeout=args.timeout)
+                    client.get(f"{args.cymatix_url}/{endpoint}", timeout=args.timeout)
                 except Exception:
                     pass
             for task in tasks:
@@ -230,7 +230,7 @@ def main(argv: list[str] | None = None) -> int:
                         client,
                         task,
                         arm=args.arm,
-                        helix_url=args.helix_url,
+                        cymatix_url=args.cymatix_url,
                         timeout=args.timeout,
                         pass_id=args.pass_id,
                         run_id=args.run_id,

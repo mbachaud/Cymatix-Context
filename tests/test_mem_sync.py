@@ -1,7 +1,7 @@
 """
 Tests for cymatix_context.mem_sync — bugbash regressions.
 
-BUG-1a: all syncers share one global state file (~/.helix/mem_sync_state.json)
+BUG-1a: all syncers share one global state file (~/.cymatix/mem_sync_state.json)
         but deletion detection considered only the *current invocation's*
         watch dirs, so agent A's sync pass tombstoned + dropped agent B's
         tracking entries. Deletion detection must be scoped to entries that
@@ -9,8 +9,8 @@ BUG-1a: all syncers share one global state file (~/.helix/mem_sync_state.json)
 BUG-1b: the tombstone call targeted /admin/genes/tombstone which did not
         exist server-side — deleted memories stayed retrievable forever.
         The route now exists and demotes matching genes to heterochromatin.
-BUG-2:  the syncer's 4-layer identity env (HELIX_USER / HELIX_AGENT /
-        HELIX_DEVICE / HELIX_ORG) was never forwarded to /ingest; the
+BUG-2:  the syncer's 4-layer identity env (CYMATIX_USER / CYMATIX_AGENT /
+        CYMATIX_DEVICE / CYMATIX_ORG) was never forwarded to /ingest; the
         server resolved attribution from its OWN process env, so provenance
         fell back to the server's identity. The syncer must forward its
         identity explicitly in the /ingest payload.
@@ -28,7 +28,7 @@ import cymatix_context.mem_sync as mem_sync
 
 @pytest.fixture(autouse=True)
 def _no_state_io(monkeypatch):
-    """Never touch the real ~/.helix/mem_sync_state.json from tests."""
+    """Never touch the real ~/.cymatix/mem_sync_state.json from tests."""
     monkeypatch.setattr(mem_sync, "_save_state", lambda state: None)
     monkeypatch.setattr(mem_sync, "_load_state", lambda: {})
 
@@ -159,10 +159,10 @@ class TestIdentityForwarding:
         return captured
 
     def test_ingest_forwards_syncer_identity_env(self, tmp_path, monkeypatch):
-        monkeypatch.setenv("HELIX_USER", "max")
-        monkeypatch.setenv("HELIX_AGENT", "raude")
-        monkeypatch.setenv("HELIX_DEVICE", "gandalf")
-        monkeypatch.setenv("HELIX_ORG", "helixorg")
+        monkeypatch.setenv("CYMATIX_USER", "max")
+        monkeypatch.setenv("CYMATIX_AGENT", "raude")
+        monkeypatch.setenv("CYMATIX_DEVICE", "gandalf")
+        monkeypatch.setenv("CYMATIX_ORG", "cymatixorg")
         captured = self._capture_urlopen(monkeypatch)
 
         md = tmp_path / "note.md"
@@ -174,17 +174,17 @@ class TestIdentityForwarding:
         assert gene_ids == ["g1"]
         payload = captured["payload"]
         assert payload["participant_handle"] == "max", (
-            "BUG-2: HELIX_USER not forwarded — provenance falls back to "
+            "BUG-2: CYMATIX_USER not forwarded — provenance falls back to "
             "the server's identity"
         )
         assert payload["agent_handle"] == "raude"
         assert payload["party_id"] == "gandalf"
-        assert payload["org_id"] == "helixorg"
+        assert payload["org_id"] == "cymatixorg"
         assert payload["agent_kind"] == "claude-code"
 
     def test_ingest_omits_unset_identity_fields(self, tmp_path, monkeypatch):
-        for var in ("HELIX_USER", "HELIX_AGENT", "HELIX_DEVICE",
-                    "HELIX_PARTY", "HELIX_ORG"):
+        for var in ("CYMATIX_USER", "CYMATIX_AGENT", "CYMATIX_DEVICE",
+                    "CYMATIX_PARTY", "CYMATIX_ORG"):
             monkeypatch.delenv(var, raising=False)
         captured = self._capture_urlopen(monkeypatch)
 
@@ -233,7 +233,7 @@ class TestTombstoneRoute:
         genome.upsert_gene(gene, apply_gate=False)
 
     def test_tombstone_demotes_matching_genes(self, client):
-        genome = client.app.state.helix.genome
+        genome = client.app.state.cymatix.genome
         self._seed_gene(genome, "tomb-1", "C:/mem/feedback.md")
         self._seed_gene(genome, "tomb-2", "C:/mem/feedback.md")
         self._seed_gene(genome, "keep-1", "C:/mem/other.md")

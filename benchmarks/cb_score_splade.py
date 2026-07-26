@@ -56,17 +56,17 @@ def inj(metaf, fixed=None):
 arms = [
     ("BM25 @8k", "bm25_8k_pred.json", None, 8000),
     ("BM25 @27k", "bm25_27k_pred.json", None, 27000),
-    ("v063 lexical @8k", "helix_v063lex_fingerprint_8k_pred.json", "helix_v063lex_fingerprint_8k_meta.json", None),
-    ("v063 lexical @27k", "helix_v063lex_fingerprint_27k_pred.json", "helix_v063lex_fingerprint_27k_meta.json", None),
-    ("r063 SHIP dense(cap12) @8k", "helix_r063ship_fingerprint_8k_pred.json", "helix_r063ship_fingerprint_8k_meta.json", None),
-    ("r063 SHIP dense(cap12) @27k", "helix_r063ship_fingerprint_27k_pred.json", "helix_r063ship_fingerprint_27k_meta.json", None),
-    ("r063 DENSEFIX(cap500) @8k", "helix_r063fix_fingerprint_8k_pred.json", "helix_r063fix_fingerprint_8k_meta.json", None),
-    ("r063 DENSEFIX(cap500) @27k", "helix_r063fix_fingerprint_27k_pred.json", "helix_r063fix_fingerprint_27k_meta.json", None),
-    ("r063 +SPLADE @8k", "helix_r063splade_fingerprint_8k_pred.json", "helix_r063splade_fingerprint_8k_meta.json", None),
-    ("r063 +SPLADE @27k", "helix_r063splade_fingerprint_27k_pred.json", "helix_r063splade_fingerprint_27k_meta.json", None),
-    ("v063 lexical packet", "helix_v063lex_packet_pred.json", "helix_v063lex_packet_meta.json", None),
-    ("r063 DENSEFIX packet", "helix_r063fix_packet_pred.json", "helix_r063fix_packet_meta.json", None),
-    ("r063 +SPLADE packet", "helix_r063splade_packet_pred.json", "helix_r063splade_packet_meta.json", None),
+    ("v063 lexical @8k", "cymatix_v063lex_fingerprint_8k_pred.json", "cymatix_v063lex_fingerprint_8k_meta.json", None),
+    ("v063 lexical @27k", "cymatix_v063lex_fingerprint_27k_pred.json", "cymatix_v063lex_fingerprint_27k_meta.json", None),
+    ("r063 SHIP dense(cap12) @8k", "cymatix_r063ship_fingerprint_8k_pred.json", "cymatix_r063ship_fingerprint_8k_meta.json", None),
+    ("r063 SHIP dense(cap12) @27k", "cymatix_r063ship_fingerprint_27k_pred.json", "cymatix_r063ship_fingerprint_27k_meta.json", None),
+    ("r063 DENSEFIX(cap500) @8k", "cymatix_r063fix_fingerprint_8k_pred.json", "cymatix_r063fix_fingerprint_8k_meta.json", None),
+    ("r063 DENSEFIX(cap500) @27k", "cymatix_r063fix_fingerprint_27k_pred.json", "cymatix_r063fix_fingerprint_27k_meta.json", None),
+    ("r063 +SPLADE @8k", "cymatix_r063splade_fingerprint_8k_pred.json", "cymatix_r063splade_fingerprint_8k_meta.json", None),
+    ("r063 +SPLADE @27k", "cymatix_r063splade_fingerprint_27k_pred.json", "cymatix_r063splade_fingerprint_27k_meta.json", None),
+    ("v063 lexical packet", "cymatix_v063lex_packet_pred.json", "cymatix_v063lex_packet_meta.json", None),
+    ("r063 DENSEFIX packet", "cymatix_r063fix_packet_pred.json", "cymatix_r063fix_packet_meta.json", None),
+    ("r063 +SPLADE packet", "cymatix_r063splade_packet_pred.json", "cymatix_r063splade_packet_meta.json", None),
 ]
 
 print(f"\nrequests isolation subset = {sorted(IIDS)} (N=2)")

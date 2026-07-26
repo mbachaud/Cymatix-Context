@@ -196,11 +196,11 @@ def _wait_port_free(url: str, timeout_s: int = 20) -> None:
 def _start_server(bed_db: Path, cell_config: Path, port: int,
                   log_path: Path) -> subprocess.Popen:
     env = dict(os.environ)
-    env["HELIX_GENOME_PATH"] = str(bed_db)
-    env["HELIX_CONFIG"] = str(cell_config)
-    env["HELIX_DISABLE_LEARN"] = "1"          # read-only serve (gap A2)
-    env.pop("HELIX_USE_SHARDS", None)         # single-file bed, not sharded
-    env.pop("HELIX_EXPANSION_RANK", None)     # default = WS3 PageRank ranking
+    env["CYMATIX_GENOME_PATH"] = str(bed_db)
+    env["CYMATIX_CONFIG"] = str(cell_config)
+    env["CYMATIX_DISABLE_LEARN"] = "1"          # read-only serve (gap A2)
+    env.pop("CYMATIX_USE_SHARDS", None)         # single-file bed, not sharded
+    env.pop("CYMATIX_EXPANSION_RANK", None)     # default = WS3 PageRank ranking
     args = [sys.executable, "-m", "uvicorn", "cymatix_context._asgi:app",
             "--host", "127.0.0.1", "--port", str(port)]
     log_fh = log_path.open("w", encoding="utf-8")
@@ -346,7 +346,7 @@ def main(argv: list[str] | None = None) -> int:
                     help="Symbol-backfilled bed (s4_symbol_backfill.py output).")
     ap.add_argument("--bed-label", default="xl_symbol")
     ap.add_argument("--base-config",
-                    default=str(_REPO_ROOT / "docs/benchmarks/helix_probe_symbol.toml"))
+                    default=str(_REPO_ROOT / "docs/benchmarks/cymatix_probe_symbol.toml"))
     ap.add_argument("--caps", default="0,8",
                     help="Comma-separated symbol_expansion_cap values.")
     ap.add_argument("--fusions", default="rrf,additive")

@@ -65,7 +65,7 @@ SKIP_DIRS = {
     # live working genome so they cannot be retrieved as evidence.
     "benchmarks",
     # Archived genome backups — never re-ingest a previous genome.
-    "Helix-backup blobs",
+    "Cymatix-backup blobs",
     # Unity / game engine runtime directories with no ingestable text.
     "D3D12",
 }

@@ -1,4 +1,4 @@
-"""Shared output helpers + exit-code constants for the helix CLI.
+"""Shared output helpers + exit-code constants for the cymatix CLI.
 
 Every subcommand returns one of these integers from main(). Keeps the
 contract testable without parsing stderr.
@@ -9,12 +9,12 @@ import json
 import sys
 from typing import Any
 
-# Exit codes (see docs/superpowers/plans/2026-05-11-helix-cli-v1.md).
+# Exit codes (see docs/superpowers/plans/2026-05-11-cymatix-cli-v1.md).
 EXIT_OK = 0
 EXIT_ERROR = 1
 EXIT_BAD_ARGS = 2          # argparse hands this out itself
-EXIT_STATUS_FAIL = 3       # `helix status` only
-EXIT_DEFERRED = 4          # `helix serve` and any other "not yet" subcommand
+EXIT_STATUS_FAIL = 3       # `cymatix status` only
+EXIT_DEFERRED = 4          # `cymatix serve` and any other "not yet" subcommand
 
 
 def print_json(obj: Any) -> None:

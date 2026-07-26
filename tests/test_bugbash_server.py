@@ -4,7 +4,7 @@ BUG-1  /bridge/signal path traversal      — write_signal containment
 BUG-2  /export/obsidian blocks event loop — export offloaded to a thread
 BUG-3  /ingest 500s on malformed input    — 4xx validation
 BUG-4  /vault/trace missing disabled gate — mirrors pin/unpin guard
-BUG-5  HelixSession.query(k=...) ignored  — k forwarded as max_genes cap
+BUG-5  CymatixSession.query(k=...) ignored  — k forwarded as max_genes cap
 
 (BUG-6, the scorerift relevance-probe shape claim, is a false positive:
 /context returns a dict and check_relevance already consumes it — pinned
@@ -183,7 +183,7 @@ class TestVaultTraceDisabledGuard:
         assert body == {"ok": False, "error": "vault disabled"}
 
 
-# ── BUG-5: HelixSession.query(k=...) must be honored ─────────────────
+# ── BUG-5: CymatixSession.query(k=...) must be honored ─────────────────
 
 
 class _StubManager:
@@ -205,30 +205,30 @@ class _StubManager:
 
 class TestSessionQueryK:
     def test_query_forwards_k_as_max_genes(self):
-        from cymatix_context.api import HelixSession
+        from cymatix_context.api import CymatixSession
         mgr = _StubManager()
-        sess = HelixSession(mgr, session_id="sess-bugbash")
+        sess = CymatixSession(mgr, session_id="sess-bugbash")
         sess.query("what is the port?", k=3)
         assert mgr.calls, "build_context was never called"
         assert mgr.calls[0].get("max_genes") == 3
 
     def test_query_without_k_passes_none(self):
-        from cymatix_context.api import HelixSession
+        from cymatix_context.api import CymatixSession
         mgr = _StubManager()
-        sess = HelixSession(mgr, session_id="sess-bugbash-2")
+        sess = CymatixSession(mgr, session_id="sess-bugbash-2")
         sess.query("what is the port?")
         assert mgr.calls[0].get("max_genes", "missing") is None
 
     def test_build_context_max_genes_override_caps_documents(self):
         client = make_client()
-        helix = client.app.state.helix
+        cymatix = client.app.state.cymatix
         for i in range(4):
-            helix.ingest(
+            cymatix.ingest(
                 f"needle document {i}: the flux capacitor voltage is {i}00 volts",
                 "text",
                 {"path": f"/doc{i}.txt"},
             )
-        window = helix.build_context(
+        window = cymatix.build_context(
             "flux capacitor voltage", read_only=True, max_genes=1,
         )
         assert len(window.expressed_gene_ids) <= 1

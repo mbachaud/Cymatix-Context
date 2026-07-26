@@ -38,7 +38,7 @@ from cymatix_context.config import (
     AbstainClassFloors,
     AbstainConfig,
     BudgetConfig,
-    HelixConfig,
+    CymatixConfig,
     IngestionConfig,
     RetrievalConfig,
     load_config,
@@ -63,7 +63,7 @@ from tests.conftest import FakeBGEM3Codec, make_gene
 
 
 def test_ingestion_knob_defaults_match_prior_literals():
-    ing = HelixConfig().ingestion
+    ing = CymatixConfig().ingestion
     assert ing.splade_model == "naver/splade-cocondenser-ensembledistil"
     assert ing.sema_model == "all-MiniLM-L6-v2"
     assert ing.splade_content_cap == 1000
@@ -71,7 +71,7 @@ def test_ingestion_knob_defaults_match_prior_literals():
 
 
 def test_ingestion_knobs_load_from_toml(tmp_path):
-    toml = tmp_path / "helix.toml"
+    toml = tmp_path / "cymatix.toml"
     toml.write_text(textwrap.dedent("""
         [ingestion]
         splade_model = "/mnt/mirror/splade"
@@ -161,7 +161,7 @@ def test_dense_knob_defaults_match_prior_literals():
 
 
 def test_dense_knobs_load_from_toml(tmp_path):
-    toml = tmp_path / "helix.toml"
+    toml = tmp_path / "cymatix.toml"
     toml.write_text(textwrap.dedent("""
         [retrieval]
         dense_model = "/mnt/mirror/bge-m3"
@@ -331,13 +331,13 @@ def test_dense_cap_byte_identical_across_ingest_and_backfill(tmp_path):
 
 
 def test_deny_list_knob_defaults_match_prior_literals():
-    ing = HelixConfig().ingestion
+    ing = CymatixConfig().ingestion
     assert ing.deny_list_extra == []
     assert ing.locale_demotion_enabled is True
 
 
 def test_deny_list_knobs_load_from_toml(tmp_path):
-    toml = tmp_path / "helix.toml"
+    toml = tmp_path / "cymatix.toml"
     toml.write_text(textwrap.dedent("""
         [ingestion]
         deny_list_extra = ["internal_only", "mycorp_scratch"]
@@ -363,7 +363,7 @@ def test_build_deny_regex_defaults_are_byte_identical_to_module_level():
     assert default_re.search("project/node_modules/react/index.js")
     assert default_re.search("project/locale/de/messages.po")
     assert not default_re.search("project/locale/en/messages.po")
-    assert not default_re.search("F:/Projects/helix-context/cymatix_context/genome.py")
+    assert not default_re.search("F:/Projects/cymatix-context/cymatix_context/genome.py")
 
 
 def test_build_deny_regex_extra_patterns_are_ored_in():
@@ -503,7 +503,7 @@ def test_decoder_mode_overrides_default_is_empty():
 
 
 def test_decoder_mode_overrides_loads_from_toml(tmp_path):
-    toml = tmp_path / "helix.toml"
+    toml = tmp_path / "cymatix.toml"
     toml.write_text(textwrap.dedent("""
         [budget]
         decoder_mode_overrides = { mistral = "large" }
@@ -587,7 +587,7 @@ def test_tier_abstain_knob_defaults_match_prior_literals():
 
 
 def test_tier_abstain_knobs_load_from_toml(tmp_path):
-    toml = tmp_path / "helix.toml"
+    toml = tmp_path / "cymatix.toml"
     toml.write_text(textwrap.dedent("""
         [budget]
         tier_tight_ratio = 4.0
@@ -612,7 +612,7 @@ def test_tier_abstain_knob_validation_falls_back_to_defaults(tmp_path):
     """Non-positive or non-numeric values warn and keep the shipped
     default instead of propagating (a 0 tight ratio would make EVERY
     query TIGHT); valid keys in the same tables still apply."""
-    toml = tmp_path / "helix.toml"
+    toml = tmp_path / "cymatix.toml"
     toml.write_text(textwrap.dedent("""
         [budget]
         tier_tight_ratio = -1.0
@@ -636,7 +636,7 @@ def test_tier_abstain_knob_validation_falls_back_to_defaults(tmp_path):
 def test_abstain_scalar_knobs_coexist_with_per_class_subtables(tmp_path):
     """The [abstain] loader discovers class sub-tables by dict-ness; the
     new scalar keys must not be mistaken for classes (and vice versa)."""
-    toml = tmp_path / "helix.toml"
+    toml = tmp_path / "cymatix.toml"
     toml.write_text(textwrap.dedent("""
         [abstain]
         mode = "per_classifier"
