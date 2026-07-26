@@ -11,8 +11,7 @@
 > your codebase into a context window — without a single LLM call on the
 > retrieval path.
 
-A [Brick Wall Studio](https://brickwallstudio.com) project. **Formerly
-`helix-context`** — renamed July 2026. As of 0.8.5 the old surface (the
+**Formerly `helix-context`** — renamed July 2026. As of 0.8.5 the old surface (the
 `helix_context` import, `helix*` CLI names, `HELIX_*` env vars, `helix.toml`)
 has been **removed** — see [Migrating from
 helix-context](#migrating-from-helix-context).
@@ -468,4 +467,3 @@ authority; the models own the code production.
 ## License
 
 [Apache-2.0](LICENSE). See [NOTICE](NOTICE) for third-party attributions.
-Cymatix Context is a [Brick Wall Studio](https://brickwallstudio.com) project by Michael Bachaud.
