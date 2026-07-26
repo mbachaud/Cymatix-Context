@@ -301,7 +301,7 @@ def restore_mcp_profile():
 
 def test_lean_mcp_profile_is_default(monkeypatch, restore_mcp_profile):
     """Unset CYMATIX_MCP_FULL → only the core tools are registered. After the
-    0.9.0 clean break there are no helix_* compat aliases, so the lean surface
+    0.8.5 clean break there are no helix_* compat aliases, so the lean surface
     is exactly the 5 canonical cymatix_* core tools."""
     m = _reload_mcp(monkeypatch, full=False)
     names = set(m.mcp._tool_manager._tools.keys())

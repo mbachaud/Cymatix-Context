@@ -12,7 +12,7 @@
 > retrieval path.
 
 A [Brick Wall Studio](https://brickwallstudio.com) project. **Formerly
-`helix-context`** — renamed July 2026. As of 0.9.0 the old surface (the
+`helix-context`** — renamed July 2026. As of 0.8.5 the old surface (the
 `helix_context` import, `helix*` CLI names, `HELIX_*` env vars, `helix.toml`)
 has been **removed** — see [Migrating from
 helix-context](#migrating-from-helix-context).
@@ -291,7 +291,7 @@ Full schema: [docs/api/endpoints.md](docs/api/endpoints.md).
 | `integrations/` | ScoreRift bridge |
 
 The import package is `cymatix_context` (the old `helix_context` alias was
-removed in 0.9.0). Biology-named module shims `genome.py`, `ribosome.py`,
+removed in 0.8.5). Biology-named module shims `genome.py`, `ribosome.py`,
 `server.py`, `replication.py`, `hgt.py` persist as the domain lexicon.
 Lexicon: [docs/ROSETTA.md](docs/ROSETTA.md).
 
@@ -378,12 +378,13 @@ Full surface: [docs/architecture/OBSERVABILITY.md](docs/architecture/OBSERVABILI
 
 ## Migrating from helix-context
 
-**As of 0.9.0 the old `helix` surface has been removed** — this is a clean
+**As of 0.8.5 the old `helix` surface has been removed** — this is a clean
 break. The table below maps each removed name to its replacement. If you are
 still on the old names, migrate to the right-hand column, or pin
-`cymatix-context<0.9` (or the last `helix-context` release) until you can.
+`cymatix-context<0.8.5` (0.8.0 keeps the aliases), or the last `helix-context`
+release, until you can.
 
-| Surface | Old (removed in 0.9.0) | New (use this) |
+| Surface | Old (removed in 0.8.5) | New (use this) |
 |---|---|---|
 | Install | `pip install helix-context` | `pip install cymatix-context` |
 | Import | `import helix_context` → `ModuleNotFoundError` | `import cymatix_context` |

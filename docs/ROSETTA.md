@@ -1,9 +1,9 @@
 # Rosetta Stone — biology lexicon ↔ software lexicon
 
-> **July 2026 → 0.9.0:** the project itself was renamed **helix-context → cymatix-context**
+> **July 2026 → 0.8.5:** the project itself was renamed **helix-context → cymatix-context**
 > (package `helix_context` → `cymatix_context`, env `HELIX_*` → `CYMATIX_*`,
 > config `helix.toml` → `cymatix.toml`, CLI `helix` → `cymatix`). **The product
-> rename is now complete: as of 0.9.0 the old `helix` names have been removed
+> rename is now complete: as of 0.8.5 the old `helix` names have been removed
 > (clean break) — there is no `helix_context` alias package, no `helix*` CLI, no
 > `helix_*` MCP tools, no `HELIX_*` env vars, and no `helix.toml` fallback.**
 > Historical docs (benchmarks, council verdicts, dated plans) intentionally keep
