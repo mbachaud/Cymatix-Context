@@ -1,4 +1,4 @@
-"""MCP tool-surface contract (0.9.0 clean break).
+"""MCP tool-surface contract (0.8.5 clean break).
 
 The compat era is over: the MCP server registers **only** ``cymatix_*``
 tools. There are no ``helix_*`` aliases and no alias machinery

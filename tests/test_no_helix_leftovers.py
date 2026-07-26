@@ -3,7 +3,7 @@
 This replaces the old ``test_cymatix_rename.py`` back-compat contract. That
 file pinned the *presence* of the compatibility layer (the ``helix_context``
 alias package, ``helix*`` console scripts, the ``CYMATIX_*→HELIX_*`` env
-mirror, the ``helix.toml`` fallback). As of 0.9.0 all of that is **removed**,
+mirror, the ``helix.toml`` fallback). As of 0.8.5 all of that is **removed**,
 so the contract inverts: we now assert the shims are *absent*.
 
 A second section (``TestNoHelixInSource``) greps the live ``cymatix_context``
@@ -29,7 +29,7 @@ PKG_ROOT = REPO_ROOT / "cymatix_context"
 
 def test_helix_context_package_is_unimportable():
     """``import helix_context`` must raise ModuleNotFoundError — the alias
-    shim package was deleted in the 0.9.0 clean break."""
+    shim package was deleted in the 0.8.5 clean break."""
     for mod in [m for m in list(sys.modules) if m.split(".")[0] == "helix_context"]:
         del sys.modules[mod]
     with pytest.raises(ModuleNotFoundError):

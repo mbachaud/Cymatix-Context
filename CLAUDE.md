@@ -1,6 +1,6 @@
 # Cymatix Context
 
-Knowledge-store-based context compression for local LLMs. v0.9.0 (clean break: renamed from helix-context in July 2026; as of 0.9.0 the old helix CLI/env/import names, `helix.toml`, and `helix_*` MCP tools are removed — cymatix only).
+Knowledge-store-based context compression for local LLMs. v0.8.5 (clean break: renamed from helix-context in July 2026; as of 0.8.5 the old helix CLI/env/import names, `helix.toml`, and `helix_*` MCP tools are removed — cymatix only).
 
 ## Quick Start
 
@@ -46,7 +46,7 @@ The pipeline emits a **know/miss agent contract** on `/context/packet`: every re
 
 ## Package Structure (post-PR #90)
 
-After the repo restructure, `cymatix_context/` is organized into 15 sub-packages plus a handful of top-level orchestration modules. (The old `helix_context` alias package was removed in 0.9.0.)
+After the repo restructure, `cymatix_context/` is organized into 15 sub-packages plus a handful of top-level orchestration modules. (The old `helix_context` alias package was removed in 0.8.5.)
 
 | Package | Purpose |
 |---------|---------|
@@ -68,11 +68,11 @@ After the repo restructure, `cymatix_context/` is organized into 15 sub-packages
 
 Top-level modules: `context_manager.py` (pipeline orchestrator), `config.py` (TOML loader), `schemas.py` (Pydantic models), `knowledge_store.py` (SQLite DDL + retrieval), `codons.py` (chunker + encoder), `tagger.py` (CPU ingest tagger).
 
-**Biology-lexicon shims:** `genome.py`, `ribosome.py`, `replication.py`, `hgt.py`, `server.py`, `mcp_server.py` re-export from their new locations (the domain metaphor, not the helix brand). See `docs/ROSETTA.md` for the full biology-to-software lexicon. The `helix_context` alias package was removed in 0.9.0 — import `cymatix_context`.
+**Biology-lexicon shims:** `genome.py`, `ribosome.py`, `replication.py`, `hgt.py`, `server.py`, `mcp_server.py` re-export from their new locations (the domain metaphor, not the helix brand). See `docs/ROSETTA.md` for the full biology-to-software lexicon. The `helix_context` alias package was removed in 0.8.5 — import `cymatix_context`.
 
 ## Configuration
 
-All config lives in `cymatix.toml` (the `helix.toml` fallback was removed in 0.9.0). Sections:
+All config lives in `cymatix.toml` (the `helix.toml` fallback was removed in 0.8.5). Sections:
 
 | Section | Key settings |
 |---------|-------------|

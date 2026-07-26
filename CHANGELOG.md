@@ -2,31 +2,40 @@
 
 ## Unreleased
 
-- **rename: MCP tool surface completes the cymatix rename.** All 24 tools
-  now register under canonical `cymatix_*` names (0.8.0 renamed only the
-  flagship `cymatix_context` and dropped its old name outright, breaking
-  `helix_context` callers). Every old `helix_*` name — including
-  `helix_context` — stays callable as a deprecated alias while the compat
-  window is open: default ON, disable with `CYMATIX_MCP_COMPAT=0` once
-  clients are migrated (each alias costs tool-list schema tokens per
-  turn). The lean profile serves the 5 canonical core tools plus their 5
-  aliases (10 total) by default.
+## 0.8.5 — 2026-07-25
 
-- **feat: `cymatix_context.__version__`.** New single-source version
-  export (pinned to `pyproject.toml` by test); the FastAPI app no longer
-  claims `0.1.0` at `/docs`, and `/health` now carries a `version` field
-  so agents and dashboards can see what they're talking to.
+Completes the helix → cymatix rename as a **clean break** (0.8.0 was the soft
+rename; 0.8.5 removes all of its back-compat). **Breaking:** if you still use
+the old names, migrate or pin `cymatix-context<0.8.5` (0.8.0 keeps the aliases).
 
-- **ci: full offline suite job.** CI previously ran only file-scoped
-  subsets, which let the ShardedGenomeAdapter parity gap ship unseen.
-  The historical blocker (server.py import-time `create_app()`) is gone —
-  the eager app lives only in `_asgi.py` — so `pytest tests/ -m "not
-  live"` (~3.4k tests) now runs on every push/PR.
+- **rename: removed all helix back-compat.** Deleted the `helix_context` alias
+  package (`import helix_context` now raises `ModuleNotFoundError`), the `helix*`
+  console scripts, the `helix_*` MCP tool aliases (and the `CYMATIX_MCP_COMPAT`
+  machinery), the `CYMATIX_*→HELIX_*` env mirror (internal reads are `CYMATIX_*`
+  only), and the `helix.toml` config fallback (`cymatix.toml` / `$CYMATIX_CONFIG`
+  only). The MCP surface is the 5 canonical `cymatix_*` core tools, no aliases.
 
-- **docs: drop dangling `HELIX_DAEMON_DESIGN.md` / `CYMATIX_DAEMON_DESIGN.md`
-  pointers.** The daemon design doc was planned but never written; all
-  references (cli.md, cmd_serve, dispatcher help, api.py) now say so
-  honestly and point at `cymatix-server` for the long-lived HTTP surface.
+- **rename: internal identifiers + observability.** `Helix*` classes → `Cymatix*`
+  (`CymatixConfig`, `CymatixContextManager`, `CymatixError`, `CymatixSession`);
+  loggers `helix.*` → `cymatix.*`; OTel metrics `helix_*` → `cymatix_*`, spans
+  `helix.pipeline.*` → `cymatix.pipeline.*`, and the 7 Grafana dashboards
+  (uids/titles/queries) renamed to match; agent protocol tags `<helix:…>` →
+  `<cymatix:…>`; portable bundle format is now `.cymatix` /
+  `cymatix_format_version` (import still accepts the legacy `helix_format_version`
+  key).
+
+- **compat: data stays readable.** Existing `genome.db` opens unchanged; new
+  launcher/observability state lands under `~/.cymatix` / `cymatix-context` with
+  a read-fallback to the old `~/.helix` / `helix-context` locations.
+
+- **feat: `cymatix_context.__version__`.** Single-source version export (pinned
+  to `pyproject.toml` by test); `/health` carries a `version` field.
+
+- **ci: full offline suite job.** `pytest tests/ -m "not live"` (~3.4k tests)
+  runs on every push/PR (the eager app lives only in `_asgi.py`).
+
+- **docs: drop dangling `*_DAEMON_DESIGN.md` pointers.** References now point at
+  `cymatix-server` for the long-lived HTTP surface.
 
 ## 0.8.0 — 2026-07-22
 
