@@ -1,0 +1,53 @@
+{
+  "benchmark": "ab_whitening_dense",
+  "phase": "1a (J-space council move #4)",
+  "bed_db": "f:/Projects/helix-context/genomes/bench/matrix/xl_clean.db",
+  "labels": "C:/Users/max/AppData/Local/Temp/claude/f--Projects-helix-context/f4004f37-cb76-439e-83b8-4440f4ba8052/scratchpad/wt-eval/benchmarks/results/located_n1000_xl_clean_rrf.jsonl",
+  "n_docs": 41803,
+  "n_queries": 1000,
+  "dim": 1024,
+  "device": "cpu",
+  "ledoit_wolf_shrinkage": 0.002607592847198248,
+  "arms": {
+    "cosine": {
+      "retrieval_at_1": 0.085,
+      "retrieval_at_5": 0.173,
+      "retrieval_at_10": 0.225,
+      "mrr": 0.133636347554522,
+      "median_gold_rank": 217,
+      "gold_mean": 0.4762531816959381,
+      "gold_p50": 0.4773673713207245,
+      "gold_p10": 0.38576817512512207,
+      "random_mean": 0.36056143045425415,
+      "random_p90": 0.422090083360672,
+      "random_std": 0.04904545471072197,
+      "margin_over_random_threshold_mu_plus_3sigma": 0.5076978206634521,
+      "gold_frac_clearing_threshold": 0.332,
+      "gold_vs_random_auc": 0.91240919
+    },
+    "whitened": {
+      "retrieval_at_1": 0.078,
+      "retrieval_at_5": 0.153,
+      "retrieval_at_10": 0.192,
+      "mrr": 0.11797379373974863,
+      "median_gold_rank": 496,
+      "gold_mean": 0.08164539933204651,
+      "gold_p50": 0.07204949110746384,
+      "gold_p10": -0.0011651715030893683,
+      "random_mean": -0.00029959791572764516,
+      "random_p90": 0.03847314417362213,
+      "random_std": 0.030444851145148277,
+      "margin_over_random_threshold_mu_plus_3sigma": 0.09103495627641678,
+      "gold_frac_clearing_threshold": 0.409,
+      "gold_vs_random_auc": 0.86816234
+    }
+  },
+  "deltas": {
+    "retrieval_at_1": -0.007,
+    "retrieval_at_5": -0.02,
+    "retrieval_at_10": -0.033,
+    "mrr": -0.0157,
+    "gold_frac_clearing_threshold": 0.077,
+    "gold_vs_random_auc": -0.0442
+  }
+}
