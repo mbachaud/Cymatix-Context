@@ -11,16 +11,20 @@
 > your codebase into a context window — without a single LLM call on the
 > retrieval path.
 
-A [Brick Wall Studio](https://brickwallstudio.com) project. **Formerly
-`helix-context`** — renamed July 2026. As of 0.8.5 the old surface (the
+**Formerly `helix-context`** — renamed July 2026. As of 0.8.5 the old surface (the
 `helix_context` import, `helix*` CLI names, `HELIX_*` env vars, `helix.toml`)
 has been **removed** — see [Migrating from
 helix-context](#migrating-from-helix-context).
 
-The name comes from the engine's cymatics stage: retrieval candidates are
-scored against a 256-bin frequency-domain fingerprint of the query, the same
-way cymatics renders sound as standing-wave geometry. The `/fingerprint`
-endpoint exposes that spectrum directly.
+The name comes from the engine's cymatics stage: each term is hashed (MD5) into
+one of 256 bins and given a small Gaussian spread, and query and candidate are
+compared as the resulting 256-dimensional vectors. It's a cheap, deterministic,
+model-free term transform — "cymatics" is a mnemonic for that binned spectrum,
+not a claim of signal-processing semantics (nearby bins are hash placement, not
+related meaning). It's a candidate-reordering signal that has **not yet been
+isolated against hashed bag-of-words or random-bin controls** — treat it as an
+experimental cheap feature, not a proven one. The `/fingerprint` endpoint
+exposes the binned vector directly.
 
 ---
 
@@ -39,6 +43,14 @@ documents — observed **37× reduction** on repeated retrievals within a
 conversation (~40% token savings on typical multi-turn work).
 
 Reproducer: `python benchmarks/bench_rag_vs_sike_tokens.py` against your own knowledge store.
+
+*Caveat: the "vs standard RAG" denominator (top-5 @ 1500 tokens) is a
+configurable baseline, and the 37× multi-turn figure is elision of
+already-delivered documents, not compression of new content. The decision-useful
+claim is **equal-or-better task completion at fewer input tokens**; a same-harness
+baseline/ablation frontier (BM25 / BGE-M3 / BM25+dense RRF / Cymatix full /
+Cymatix minus-cymatics), paired with correctness, is future work — not yet
+published.*
 
 **External benchmark** — [EnterpriseRAG-Bench](https://github.com/onyx-dot-app/EnterpriseRAG-Bench)
 (Onyx, 500 questions over a ~500K-document enterprise corpus), July 2026,
@@ -61,14 +73,28 @@ the time, so retrieval breadth at extreme scale, not answer synthesis, is
 the current ceiling. Full methodology + repro:
 [docs/benchmarks/2026-07-10-erb-blob-829k-reproduction.md](docs/benchmarks/2026-07-10-erb-blob-829k-reproduction.md).
 
+**Scale caveat:** the 829K-fragment operating point above runs the *unsharded*
+engine. The **sharded** path (corpora split across shard DBs) currently trails
+unsharded by ~31pp recall@10 / ~30pp MRR on the xl bed — dense recall and
+co-activation are not yet at parity across shards
+([#275](https://github.com/mbachaud/Cymatix-Context/issues/275)). "Local-first
+at scale" is a demonstrated research operating point on the unsharded engine, not
+yet a turnkey general substrate for sharded corpora.
+
 **Fusion**: Reciprocal Rank Fusion has been the default ranker since
 2026-07-06 — measured **+12pp gold-document delivery** over the legacy
 additive accumulator on the hardest internal bed (0.74 vs 0.62).
 
-**Agent contract**: every `/context` response carries `know { found, confidence }`
-(grounded — you may answer) or `miss { reason, escalate_to }` (not found —
-don't answer from the knowledge store). Stale results downgrade to
-`miss(reason="stale"|"cold"|"superseded")` via the freshness gate.
+**Agent contract** *(shape stable; confidence calibration experimental)*: every
+`/context` response carries `know { found, confidence }` (grounded — you may
+answer) or `miss { reason, escalate_to }` (not found — don't answer from the
+knowledge store). Stale results downgrade to
+`miss(reason="stale"|"cold"|"superseded")` via the freshness gate. The contract
+*shape* is stable and load-bearing, but the `confidence` scalar is under active
+recalibration — on current internal beds it is not yet a reliable trust signal
+([#287](https://github.com/mbachaud/Cymatix-Context/issues/287),
+[#239](https://github.com/mbachaud/Cymatix-Context/issues/239)). Rely on `found`
+/ `reason` today; treat `confidence` as provisional.
 
 ## Get started
 
@@ -196,7 +222,7 @@ Seven stages per turn, all LLM-free except optional splice:
    know { } or miss { }
 ```
 
-- **know/miss contract**: `know` means the context is grounded, agent may answer. `miss` means don't answer from the knowledge store — escalate via `escalate_to` tools or refetch from `refresh_targets`.
+- **know/miss contract** *(shape stable; confidence experimental)*: `know` means the context is grounded, agent may answer. `miss` means don't answer from the knowledge store — escalate via `escalate_to` tools or refetch from `refresh_targets`. The `confidence` scalar is under active recalibration ([#287](https://github.com/mbachaud/Cymatix-Context/issues/287), [#239](https://github.com/mbachaud/Cymatix-Context/issues/239)) — rely on `found` / `reason`, treat `confidence` as provisional.
 - **Caller model class**: `/context` accepts `caller_model_class: "generic" | "small_moe" | "frontier"` to select render branch (ordering, assembly cap, decoder mode). See [docs/api/context-endpoint.md §7](docs/api/context-endpoint.md).
 
 <details>
@@ -403,6 +429,7 @@ work as-is, no re-ingest needed.
 - **Knowledge store path** is `genomes/main/genome.db` (not project root). Delete to start fresh.
 - **BGE-M3 backfill** is one-time post-install — `embedding_dense_v2 IS NULL` until you run `scripts/backfill_bgem3_v2.py`. Low retrieval rate without it.
 - **Fusion mode** defaults to `"rrf"` (since 2026-07-06; +12pp gold delivery vs additive on the hardest bed). `"additive"` remains as the legacy accumulator, scheduled for condition-gated removal. Under RRF the abstain gates run ratio-only.
+- **Sharded scale gap**: the sharded adapter currently trails the unsharded engine by ~31pp recall@10 on xl (dense recall and co-activation not yet at parity) — [#275](https://github.com/mbachaud/Cymatix-Context/issues/275). Prefer the unsharded engine for accuracy-sensitive corpora until this is closed.
 - **Session delivery** (`session_delivery_enabled = true`) tracks delivered docs per session, elides repeats. ~40% token savings on multi-turn. Pass `ignore_delivered: true` in `/context` body for benchmarks.
 - **know/miss contract** requires the agent prompt fragment to be honored — without it, frontier models confabulate. Import `cymatix_context.agent_prompt.full_fragment()`.
 - **Naming lexicon**: biology terms (gene, genome, ribosome) have canonical software equivalents (document, knowledge store, compressor). Both work in code; new code uses software terms. See [docs/ROSETTA.md](docs/ROSETTA.md).
@@ -429,7 +456,14 @@ python -m pytest tests/ -m "not live" -v   # ~2,900 tests, no external services
 
 Built on: [spaCy](https://spacy.io/) NER · [Howard 2005](https://doi.org/10.1037/0033-295X.112.3.559) TCM · [Stachenfeld 2017](https://www.nature.com/articles/nn.4650) SR · SQLite FTS5 BM25 · [BGE-M3](https://huggingface.co/BAAI/bge-m3) · [Kompress](https://huggingface.co/chopratejas/kompress-base) · [Headroom](https://github.com/chopratejas/headroom)
 
+## How this was built
+
+Cymatix Context is architected and QA-directed by Michael Bachaud. Implementation,
+refactoring, draft documentation, and test generation are produced by AI coding
+agents under spec- and benchmark-gated review. The human owns the product thesis,
+architecture selection, acceptance criteria, experiment design, and falsification
+authority; the models own the code production.
+
 ## License
 
 [Apache-2.0](LICENSE). See [NOTICE](NOTICE) for third-party attributions.
-Cymatix Context is a [Brick Wall Studio](https://brickwallstudio.com) project by Michael Bachaud.
