@@ -1,159 +1,287 @@
 # Cymatix Roadmap
 
-> Canonical forward-planning doc. Created 2026-07-03 from a full repo/issue/bench triage.
-> Supersedes scattered planning in: [2026-06-09 next-steps-evidence](audits/2026-06-09-next-steps-evidence.md),
-> [2026-06-10 test-tuning-roadmap](audits/2026-06-10-test-tuning-roadmap.md),
-> [2026-07-01 next-bench-wave-consensus](research/2026-07-01-next-bench-wave-consensus.md),
-> [2026-07-01 external-bench-run-plan](benchmarks/2026-07-01-external-bench-run-plan.md) — those remain the
-> detailed specs; this doc is the sequencing layer on top.
+> Canonical forward-planning doc. **Rewritten 2026-07-27** against the 0.8.5 clean break.
+> Supersedes the 2026-07-03 edition, archived verbatim at
+> [`docs/archive/2026-07-03-roadmap.md`](archive/2026-07-03-roadmap.md) — that document's
+> bench-gate decision rules and WS2/WS3 outcome box remain the historical record; everything
+> it sequenced as "next" has since shipped, closed, or been superseded.
+>
+> Detailed specs still live in their own files; this doc is the sequencing layer on top.
 
-## Status snapshot (2026-07-03 evening)
+## Status snapshot (2026-07-27)
 
-- **Version:** 0.7.1 on master (`pyproject.toml`). Docs claiming v0.5.0 are stale (see Docs refresh below).
-- **Bench chain (external wave) is RUNNING** — do not disturb until `benchmarks/logs/chain_status.json` reads `COMPLETE-FINAL` (est. July 4 morning).
-- **Open PRs:** #230 (WS2 symbol graph), #231 (WS3 PageRank, stacked on #230). Both CI-green/clean but **gated on the bench results** per the external-bench run plan's council rules.
-- **Open issues:** 12 — triaged below; 2 are closable now (#203, #206), the rest are scheduled or bench-gated.
+- **Version:** 0.8.5 on master. The helix → cymatix rename is a **completed clean break** —
+  no alias package, no `helix*` console scripts, no `HELIX_*` env mirror, no `helix.toml`
+  fallback, no `helix_*` MCP tools. `tests/test_no_helix_leftovers.py` is the standing guard.
+- **Release state:** `pyproject.toml` and `CHANGELOG.md` say 0.8.5; the **tag and GitHub
+  Release are still owed** (`publish.yml` fires on `release: published`, not on tag push).
+- **Test baseline:** green. The long-standing sharded-adapter parity failure was fixed on
+  master by `a0f3fe3` (2026-07-22).
+- **Open issues:** 15. Two are closable on sight (#311, #307); the rest are triaged below.
+- **The rig is idle.** No bench chain is running locally. The blocking work is now
+  **cross-box** — see the data pipeline section.
 
-### Update 2026-07-05 (merge + roadmap session)
+### What changed since the previous edition
 
-- **Merged:** #237 (bench harness fix: `body_has_answer` parser + `upstream_timeout=600` + `bench_chain`) → master `cb34284`. This unblocks valid future bench runs.
-- **Opened:** #238 (test-suite consolidation, 6 commits, **green on all 3 platforms**, awaiting human review — the agent that authored it is not permitted to self-merge).
-- **#230/#231:** status-commented, still **gated but not failed** — the 1556 run's arm-C probe referenced `symbol_graph`/`symbol_expansion_cap` keys absent from master (gap A3), so arm C was never validly measured. Blocked on #221 Run 1→3 + a fail-fast capability assert + a recorded review.
-- **New issue #239:** know-confidence is **anti-signal** on every bed (hit-mean < miss-mean, AUC 0.35–0.44) — recalibrate + AUC>0.7 gate before agents trust the know contract (gap A5).
-  - **Update 2026-07-07 (circuit-tracer §3–§4 — supersedes "recalibrate"):** recalibrating the 5 retrieval features is **REFUTED** — they carry no causal-use signal on ambiguous deliveries, and the logistic emits **0/72 KnowBlocks even on a balanced bed** (ceiling ~0.42 < `emit_floor` 0.45 = *structural* zero recall). The "coord is the lever / refit→0.72" win was a cell-imputation circularity (coord AUC 0.809 imputed → 0.462 measured). Fix = (a) **operating-point repair** (un-invert β1, lower floor/raise intercept so the gate can fire) + (b) a **new answer-presence feature** (answerability/NLI on the delivered span), the latter **gated on a validation spike** (see Phase 1b). Detail: [2026-07-07 faithfulness](research/2026-07-07-faithfulness-circuit-tracer.md) §3–§4 + issue #239. This also **re-points the J-space council's "fit the incumbent" prerequisite (kill-switch #4)** at the cheap operating-point repair, which unblocks the density/Bet-B track without waiting on the spike.
-  - **Spike outcome 2026-07-08** ([answer-presence spike](research/2026-07-07-answer-presence-spike-239.md)): the answer-presence feature (B2) is **NO-GO as a causal-use discriminator** — no span-level scorer beats chance on the competition cell (both conflicting facts are in the delivered span, so answerability is blind to *which* one the model used). The answer-*absence* half is real but under-powered (MS-MARCO G24 0.71, p=0.044) → **scale-N first (§6)** before wiring the B3 abstain gate. Open reframe: the competition case is answer-*selection*, not answer-presence → detect it with **span↔span NLI contradiction (delivery-coherence)**, not query↔span relevance.
-  - **B1 validated 2026-07-08 — partially supersedes "ship it"** ([B1 operating-point coupling](research/2026-07-08-b1-operating-point-coupling.md)): the β1 inversion is a **provable defect** (every know-feature is oriented so higher=stronger, so every feature coefficient must be ≥0; shipped `b1=−1.14` violates it → un-inverting rescues §3 recall **0/45→45/45**). **Shipped this pass:** a monotonicity guard — `monotonicity_violations()` + a load-time WARNING in `calibration_from_config` + `tests/test_know_monotonicity.py` — coverage-neutral, no betas changed. **But the beta/floor *operating-point* re-ship is NOT independent of B3:** run for the first time against the §4 heldout cell (30 answer-absent needles), the repaired gate fires on **80% of answer-absent queries** at floor 0.45, because `top_score`/`score_gap` are identical for answer-present vs answer-absent (medians 4.79≈4.72, 0.06≈0.03) and the only separator (`coord` 0.56 vs 0.29) overlaps too much to gate without overfitting n=30/cell. **→ B1 and B3 must ship together on the scale-N delivery-balanced bench, with a monotone-constrained re-fit.** The coverage/precision-vs-recall posture is a product decision for the user.
-  - **Scale-N faithfulness 2026-07-08 — §6 first half DONE** ([scale-N note](research/2026-07-08-scale-n-faithfulness-239.md)): the scale-N / non-arbitrary-needles half of §6 is closed — **N=24** needles (5 semantic families × 5 templates, answers verified single-token in BOTH gemma-2-2b and Qwen3-4B tokenizers) on Qwen3-4B ideal-context: **23/24 causal-use (0.958), mechanistic top-driver 24/24, mean faith 0.585, mean lift 0.754, pA≡0**, one clean pass, no per-needle tuning. Sole failure (`spire`→plum, pB 0.252 < 0.30) is behavioral prior-suppression, not mechanistic (answer still the #1 driver, faith 0.5435). Raw data + runners imported into the repo: `benchmarks/results/faithfulness/` + `benchmarks/faithfulness/external/`. **Still open from §6:** (a) confirm on the cymatix *serving* model (Qwen3-4B is the instrument, not the deployment target); (b) the **B1+B3 joint re-ship** (monotone-constrained beta/floor re-fit + answer-absence gate) — this run scales only the answerable ideal-context cell, so the scale-N *delivery-balanced* bench the joint re-fit needs is still outstanding.
-  - **NLI restore 2026-07-08 — record corrected + verdict** ([NLI restore note](research/2026-07-08-nli-restore-239.md)): the fine-tuned `training/models/nli` was **never trained**, not lost (2026-04-22 audit + git history confirm; sibling `rerank`/`splice` heads did train and persist). It is **dormant** (shipped `[ribosome] enabled=false`), so nothing is live-broken. First genuine 7-class train executed (Ollama `gemma4:e2b` teacher + heuristic export → `finetune_nli.py`) and is **empirically degenerate**: the 4500-pair dataset is 99.0% `independence` (negation=0), so the head predicts `INDEPENDENCE` @ 0.999 for everything — including a flat contradiction (port 11437 vs 8080). **→ For delivery-coherence, use the cached public `cross-encoder/nli-deberta-v3-small` (SNLI/MNLI), which flags that same conflict as contradiction 1.00.** NLI/delivery-coherence is now **on the critical path for a trustworthy know-gate** (it is B1's answer-absence lever), not a nice-to-have. Hazard: the degenerate artifact sits at the default `nli_model_path` (inert under shipped config; delete or move if `backend="deberta"` is ever used).
-- **Docs honesty + root-tidy:** on branch `chore/root-tidy` (see docs-refresh boxes below) + a new efficiency/cost-reduction design memo (`docs/design/2026-07-05-efficiency-cost-reduction.md`) answering the binary-storage / algorithm-vs-model / MCP-token-cost questions.
+| Previous roadmap item | Outcome |
+| --- | --- |
+| The bench gate (arm B vs BM25, arm C vs +1pp) | **Resolved 2026-07-20.** Arm C cleared the threshold on the held-out ContextBench re-run (packet +2.8pp line / +3.8pp sym). Dark-ship chosen deliberately over "merge default-on" — SIKE 2026-07-19 showed a prose-bed regression under the current code-query gating. |
+| Merge queue #230 → #231 | **Both merged** (`1161092`, `8c149f2`). `[ingestion] symbol_graph` ships default `False`, fully available opt-in. |
+| Phase 3: #222, #223 | **Both closed** (2026-07-12, 2026-07-13). |
+| Phase 3: #204, #93, #209 | **All closed** (2026-07-18, 07-10, 07-18). |
+| Scoring-invariance lane: #255, #256 | **Both closed** (2026-07-18, 07-10). |
+| Phase 2: "tag the 0.8.0 baseline" | **Overtaken.** 0.8.0 tagged 07-22; 0.8.5 clean break landed 07-25. |
+| Housekeeping checklist | **Still entirely undone** — carried forward below. |
 
-## The bench gate (everything sequences around this)
+Three issue clusters now dominate the board and **postdate the previous roadmap entirely**:
+the sharded structural gap (#275 umbrella), the know-gate trust problem (#287), and the
+semantic-arm admission ceiling (#260).
 
-Currently running: **S2 SIKE 50-needle bed-sweep** (#221), third attempt, launched 15:56 by the
-`s2_rerun_after_203.ps1` watcher. Beds: xl → enterprise_rag_10k → enterprise_rag_50k.
-Corpus verified correct this time (46,517 genes on xl; the 07-02 and 07-03_0104 attempts served a stub corpus).
+---
 
-- Results land in `benchmarks/results/sike_bedsweep_<bed>_2026-07-03_1556.json` (written only at run end).
-- Live status: `benchmarks/logs/chain_status.json`; logs in `benchmarks/logs/s2_*_2026-07-03_1556.log`.
-- `claude -p --model sonnet` auth **verified working 2026-07-03 ~19:00** (the 0104 run's Sonnet rung failed 50/50 on a 401 signature; no preflight exists in the script).
-- **Invalid results to quarantine after the run:** `sike_bedsweep_{xl,enterprise_rag_10k,enterprise_rag_50k}_2026-07-03_0104.json` and the 07-02_1252 attempt — wrong corpus, 0.0 gold delivery, 100% Claude-rung errors. Never quote these as #221 numbers.
-- Already-valid from this chain: **S3b' dense-weight sweeps** (n=100 real ERB queries, done 07-03 15:55) — recall@10 monotone in `dense_additive_weight`: erb10k 0.58(w0)→0.64(w6), erb50k 0.47→0.56, zero gold evictions. This closes #203.
-- Known chain defects to follow up: S1's AST assertion failed (586 regex-fallback chunk lines — arm B/C ContextBench comparison is suspect until explained); ~~28/153 HTTP-500 ollama ReadTimeouts in the current xl ladder~~ **root-caused 2026-07-05** (proxy `upstream_timeout=180s` < CPU-offloaded gemma generation time; fixed via `CYMATIX_SERVER_UPSTREAM_TIMEOUT=600` in the sweep — see [2026-07-05 issue-resolutions](benchmarks/2026-07-05-sike-bedsweep-issue-resolutions.md)); S4 (ERB-500q scored, #93) was skipped and still needs its own run.
+## The three live tracks
 
-### Decision rules (from the run plan; read results in this order)
+Everything on the board sequences under one of these.
 
-1. **Arm B (master-cAST) vs BM25 foil:** if B ≤ BM25 → halt all code-track merges (including #230/#231).
-2. **Arm C (ws2+ws3 symbol graph) vs +1pp threshold:** C ≥ +1pp on either external bench → merge #230 then #231 with default-on; C regresses on both → WS2/WS3 stays dark permanently (flip `symbol_graph` default to False or park the PRs).
-3. PageRank-vs-in-degree ablation decides whether `symbol_pagerank.py` survives or simplifies (council flagged personalization as inert in the live path).
+### Track 1 — Sharded structural gap (#275 umbrella)
 
-#### WS2/WS3 gate outcome (recorded 2026-07-20)
+The sharded path trails unsharded by **+31.1pp recall@10 / +30.3pp MRR** on xl. Per-shard
+fetch depth is ruled out (#222, confirmed null). This is disclosed in the README as of #318;
+"local-first at scale" is scoped to the unsharded engine until it closes.
 
-- **Gate cleared.** The arm-C ContextBench **held-out** re-run cleared rule 2's +1pp threshold: **packet +2.8pp (line) / +3.8pp (sym)** — see [2026-07-20 armc-contextbench-heldout](benchmarks/2026-07-20-armc-contextbench-heldout.md). This supersedes the 2026-06-28 sympy held-out read ("small/corpus-sensitive"); the regression log carries a dated addendum.
-- **Dark-ship chosen intentionally** — a deliberate deviation from rule 2's "merge default-on". SIKE 2026-07-19 showed a **prose-bed regression with the current code-query gating**, so `[ingestion] symbol_graph` stays default **False** in #230 (flipped on the branch 2026-07-20; the feature is fully available opt-in).
-- **Follow-up (owns the default flip, #231 lane):** `symbol_expansion_cap` sweep **{4, 16}** + code-gated default-on revisit once the gating validation clears the prose beds.
+Live sub-issues: **#264** (doc-type ×1.15 boost decisive under RRF margin compression),
+**#265** (global-IDF splice scale-corrupt under RRF). Both have **fixes shipped default-inert**
+in #292; what remains is a graduation decision, not a fix.
 
-### Retrieval yardstick (added 2026-07-07)
+**The independent action that needs no bench:** `sharding.py:251` hard-wires
+`_dense_embedding_enabled = False`, so **production sharded mode runs with no dense recall at
+all**. That is a product decision owed regardless of how the A/B lands, and it confounds every
+sharded-vs-unsharded number measured so far.
 
-Retrieval levers must show **causal-use lift** (does the model *causally use* the newly-retrieved content),
-not merely delivery — measured by the self-hosted circuit-tracer faithfulness instrument
-(`benchmarks/faithfulness/`; see [2026-07-07 faithfulness](research/2026-07-07-faithfulness-circuit-tracer.md)).
-Under this yardstick the **complement / DNA-pair dense re-embedding and the ANN-threshold recalibration
-were REFUTED** 2026-07-07 ([2026-07-07 semantic-ceiling](research/2026-07-07-semantic-ceiling-complement-refutation.md));
-the surviving lever is **rerank over dense top-200**.
+### Track 2 — Know-gate trust (#287, absorbing #239)
 
-## Merge queue (in order, post-bench)
+The `/context/packet` know/miss contract is the core of the "AI is the first-class user"
+thesis, and its `confidence` scalar is a **structural zero**: 0% `know_emitted` across all
+500 ERB questions, on both fusion modes, including provably-correct retrievals.
 
-1. **PR #230** (WS2 symbol graph, +447/−5, CI green, CLEAN, no rebase needed) — merge iff arm C passes; record the arm-C number in the PR thread. If dark-shipping instead, flip `config.py` `symbol_graph` default to False first (currently True, which contradicts the "stays dark" rule).
-2. **PR #231** (WS3 PageRank, stacked on #230) — after #230 squash-merges: rebase onto master, retarget to master (**this triggers CI for the first time** — the 5 ws3-only commits have zero CI coverage because ci.yml only runs on PRs targeting master), then merge per the same gate. Branch already dark-ships `symbol_graph=false` (17f275d) with an in-degree ablation knob.
-3. **Bench harness commit:** untracked `scripts/bench_chain/` (incl. the 07-03 13:10 fixes), `docs/benchmarks/cymatix_probe_symbol.toml` (fix its stale header comment saying `cymatix_probe_lexical.toml`), and the 3-line progress-print diff in `benchmarks/sweep_dense_additive_weight.py`.
-4. Neither PR has a recorded review — get one on record before merging (ingest-path changes are load-bearing).
-5. **Scoring-invariance lane** (`audit/scoring-invariance`, 2026-07-09, not bench-gated — docs + tests only, zero scoring edits): symmetry audit of every dimensionful constant in the scoring path (`docs/research/2026-07-08-scoring-invariance-audit.md`) + metamorphic invariance tests (`tests/test_fusion_invariance.py`, `tests/test_retrieval_invariance.py`) pinning current behavior. Adopts the #250 diagnosis-only follow-ups; provides the regression net for the additive-path removal scheduled in v(N+2). Filed #255 (RRF rerank-additive scale mismatch) + #256 (fusion_mode layer-default disagreement) — both fixes stay bench-gated.
+Root cause is settled and is a **location bug, not a ranking bug**: the shipped `b1`
+(`top_score`) coefficient is negative, so better retrieval yields lower confidence, and a
+structurally perfect retrieval scores 0.4137 < `emit_floor` 0.45. Every know-feature is
+oriented higher = stronger, so every coefficient must be ≥ 0.
 
-## Issue board (triaged 2026-07-03)
+**Council verdict: HOLD — 0/5 would_ship.** No operating point is shippable today. The
+best-diagnosed direction is **V2** (swap the scale-sensitive `top_score` / `score_gap` for
+`top_dominance` + `coordinate_crispness`). #318 already labels the scalar experimental in the
+README, so this no longer blocks doc honesty.
 
-| # | Title (short) | State | Action |
+**#239 is now the historical parent; #287 carries the forward plan.** Work the latter.
+
+### Track 3 — Retrieval profiles → navigation benchmark (#205 → #208)
+
+#205's 3-layer implementation plan was posted 2026-07-16 as an explicit review artifact and
+**no code has been written since**. It is the critical path to #208 (SNOW-2), which is blocked
+two hops upstream and needs no respec.
+
+Governing rule (council): every PR ships **default-inert** — untouched configs reproduce
+today's constants byte-identically; default flips are separate receipt-gated PRs. No profile
+or override may set `[know]` keys (that gate belongs to #287).
+
+**New as of 2026-07-26:** the cross-box cell-5 decomposition (below) hands Layer 1 a measured,
+cheap lever — `fts5_candidate_depth`. See the next section.
+
+---
+
+## Cross-box data pipeline (cc-exchange)
+
+Collaborator receipts arrive through `github.com/addiplus/cc-exchange`. Two threads are live
+and **both currently block on us**. This section is the ledger; nothing here is optional
+sequencing — the beds and the box are the collaborator's, and each stalled turn costs a window.
+
+### Owed BY us — clears two blockers on `sike-run1` (gates #221)
+
+The SIKE Run-1 ladder is fully accepted on the collaborator side and cannot start. Two items:
+
+1. **Gold pack (raised 2026-07-25, `sike-run1/0005`).** `scripts/bench_chain/sike_bed_ingest.py`
+   `_resolve` requires every `gold_source` substring to resolve to a real file under `--roots`.
+   The gold set is **50 needles / 64 distinct files across 6 repo roots**; **51 of the 64 live
+   in sibling repos** (`Education/`, `BookKeeper/`, `CosmicTasha/`, `two-brain-audit/`,
+   `MaxExpressKit/`) that do not exist on the collaborator's disk. Without them the ingest step
+   cannot inject gold, `recall_rows n == 50` per bed cannot be met, and the xl
+   `gold_delivered_rate >= ~0.75` validity gate cannot pass.
+   **Action:** ship a tarball of the 64 files preserving `<repo>/<path>` prefixes (a few hundred
+   KB, text and code). This is the collaborator's stated preference — it keeps the published bed
+   checksums valid and keeps the ingest step in the loop so both runs stay byte-comparable.
+2. **The xl decontamination predicate matches zero rows (raised 2026-07-26, `sike-run1/0006`).**
+   `DELETE FROM genes WHERE source_id LIKE '%worktree%'` matches **0 rows** in the published
+   41,898-gene `xl.db` — the `source_id` values on that build are Windows paths under
+   `F:\Projects` and none contain the substring (0 matches in `repo_root` and `gene_id` too;
+   61 in `content` only, which the predicate does not touch). The documented recipe expects
+   46,479 → 41,803. `xl_clean.db` was deliberately **not** created pending our answer.
+   **Action:** answer with an updated predicate, an explicit gene-id list, or a ruling that the
+   shipped 41,898 is already clean and the 41,803 expectation is stale for this build.
+3. **Two small confirms owed in the same reply:** the code pin (collaborator proposes tag
+   `v0.7.2b1` = `a20817a`; say whether `b83e1bc` is preferred) and the `gemma4:26b` /
+   `gemma4:31b` / `gemma4:26b-a4b-it-q4_K_M` registry + rough blob sizes.
+4. **Post-0.8.5 note that must ride along:** the collaborator is pinned pre-rename and uses
+   `HELIX_USE_SHARDS=1`. On master that env var is **`CYMATIX_USE_SHARDS`**. Any pin at or
+   after `876698c` needs the new name.
+
+### Owed TO us — already delivered, needs acting on
+
+**`spark-erb-receipts/0010` (2026-07-25) — set-identity receipt.** The semantic ceiling is a
+**fixed set**, not a config artifact: the same **62 of 125** semantic questions miss gold in all
+six primary arms (cell-1 lexical, all four cell-2 gate cells, cell-4 with SPLADE live);
+intersection = union = 62, minimum pairwise Jaccard **exactly 1.000000**, every arm at
+`pool_present` 0.504. Same shape at all-types n=469: the same **108** miss everywhere.
+Independently verified, 184/184 checks.
+
+**`spark-erb-receipts/0011` (2026-07-26) — cell-5 admission decomposition.** Run once against
+that fixed 62-set. This is the most actionable retrieval datapoint we have:
+
+| leg | recoverable @50 | @200 | @1000 |
 | --- | --- | --- | --- |
-| #203 | dense_additive_weight sweep | **CLOSED 2026-07-03** | Done: sweep table posted (erb10k 0.58→0.64, erb50k 0.47→0.56, medium 0.23→0.40, zero evictions); no flip, 4.0 stands, raise-to-6 deferred to #205. Still owed in the harness commit: refresh stale comment block at `config.py:430-438`. |
-| #206 | Fate of dense-latency PRs #158/#160 | **CLOSED 2026-07-03** | Done: decision comment posted (#158 re-landed via #172+#218; #160 superseded-by-evidence). Still owed: mark "closed by decision" in test-tuning-roadmap:179 during the docs pass; Wall-1 issue only if ~60s/query at 850K is unacceptable. |
-| #221 | SIKE scale-sweep re-baseline | **in progress (running now)** | Validate xl JSON tonight (genes ~46.5K, delivery > 0, Sonnet errors 0). After COMPLETE-FINAL: comment results, commit harness, schedule the missing 829K/100-shard 4th bed, re-admit numbers to README. |
-| #222 | Per-shard fetch depth | done-but-open (dark in #235) | Post-bench: confirmatory factor 2-vs-4 A/B on medium+xl; expected null (twice-measured) → close with "shipped dark, default stays 2". |
-| #223 | Cross-shard co-act reserve | partially-done (dark in #235) | Post-bench: fixture A/B with graph-surfaced golds (`diag_blob_vs_shard_tiers.py`), pick reserve N, promote env var to config key, flip default, close. |
-| #219 | Config unification epic | partially-done (2/5 slices) | Update body: check Slice 2 (3aa6c5c/#220). Then Slice 5 (dark-feature decision — cheapest, unblocks doc honesty), Slice 4 (config-reference generated from dataclasses + ratchet), Slice 3 (serve-lean MCP profile). |
-| #209 | genai_telemetry module | partially-done (phases 1-2 landed) | Rewrite body to the remaining slice: implement `genai_telemetry.py` (OTel GenAI conventions), light up the 15 phantom `cymatix_genai_*` dashboard queries (or pull the dashboard), flip the 4 "planned" stubs in OBSERVABILITY.md. |
-| #205 | Retrieval profiles 3-layer | in-progress (groundwork only) | Unblocked by #203 result (all beds prefer w=6 → Layer-3 per-class values). Update body checklist; implement after merge wave. |
-| #93 | EnterpriseRAG-Bench adoption | partially-done | Rescope body to 3 items: full-480 rerun on 829K fixture (post-bench, ~8h rig), scored Q&A vs Onyx leaderboard (= the skipped S4), declare blob-vs-sharded answered-by-construction. |
-| #204 | SPLADE scale curve | outstanding (deferred by consensus) | Comment: reuse #221 beds as the "on" twins; schedule twin builds + sweep next rig-free window after the external wave. |
-| #207 | De-hardcoding wave 2 | partially-done (item 8 only) | Update body: check item 8; next slice = items 1-3 (model-ID knobs, citation root-stripping, truncation caps) — they block air-gap deploys. |
-| #208 | SNOW-2 nav benchmark re-spec | blocked (on #205 ← #203/#204) | Spec done and reaffirmed 07-01; comment status, re-date after #205 lands. No respec. |
-| #255 | RRF rerank-additive scale mismatch | open (2026-07-09, documented + pinned) | DEFECT-1 of the scoring-invariance audit. Fix is a scoring change → bench-gated; characterization test `test_defect1_authority_bonus_dominates_rrf_ordering` must be consciously flipped by the fix PR. |
-| #256 | fusion_mode layer-default disagreement | open (2026-07-09, documented + pinned) | DEFECT-2 of the scoring-invariance audit. Constructor default "additive" vs config default "rrf"; most direct-construction tests silently run additive. Pinned by `test_defect2_layer_default_disagreement`. |
+| fts (lexical) | 14 | 24 | **45** |
+| splade | 2 | 8 | 17 |
+| dense | **0** | **0** | **0** |
+| any leg | 15 | 27 | 48 |
 
-## Housekeeping checklist (ALL post-`COMPLETE-FINAL` — nothing while the bench runs)
+- **Dense recovers zero at every fetchable depth.** It *holds* gold for 59 of the 62, but at
+  full-corpus ranks of ~19,000–203,000 — the cell-1 rank cliff restated at the depths that
+  actually govern admission. This **refutes the collaborator's own 0010 prediction**, and it
+  refutes query-encoding work as the semantic-arm lever.
+- **Plain FTS at depth 1000 recovers 45 of 62 — 73% of the missing-gold mass, for a config
+  change.** Our knob for exactly this is `[retrieval] fts5_candidate_depth`
+  (`config.py:468`, default 0 = auto = `limit * 2`; consumed at
+  `knowledge_store.py:2184`).
+- Query-encoding work would target only the **SPLADE-marginal 3** (any-leg 48 − fts 45).
+- Chunk/ingest surgery is implicated only for the **14 inadmissible** at depth 1000 in every
+  leg — and even those hold dense full-corpus ranks, so "inadmissible" here is depth-relative,
+  not absent from the bed.
+- **Bed footnote — do not misreconcile:** the blob carries **850,379** genes, not the sharded
+  fixture's 850,578. `shard_to_blob` dropped 199 rows at build on 07-17. The blob is byte-frozen
+  since cell-4 close, so cells 1/2/4, the set-identity receipt, and cell 5 all pertain to the
+  850,379 bed.
+- **One observation for us to verify in our own code:** `cell1_fused`'s per-record
+  `pool_present` vector is byte-identical to `cell1_lexical`, median `pool_size` 50, while
+  `cell1_dense` on the same run has median `pool_size` 156,941. In the fused arm the dense
+  candidates do not appear to widen the delivered pool at all.
 
-Full forensic inventory (branch↔PR SHA matching) done 2026-07-03; summary:
+**Cell 3 (the #275 shard A/B) is in flight** on the rebased fixture, pacing 2–5 days out from
+07-25 — i.e. **due now**. The ruling stands: no shard numbers enter #275 until the adapter's
+smoke gate is green on the collaborator's bed.
 
-- [ ] **Branches — delete 61 merged** (tip SHA == squash-merged PR head; needs `-D`): full list in the 2026-07-03 triage; includes all release/*, fix/*, feat/* through #220. 8 are checked out in worktrees — remove worktrees first.
-- [ ] **Branches — delete 17 superseded** (closed PRs ported to master via #162/#172/#112/#113/#234 etc.).
-- [ ] **Branches — review 4 before deciding:** `perf/dense-prefilter-via-splade-candidates` (#160 closed; Onyx v0.6.3 validation kit + codex runner not on master), `feat/onyx-full-v2-build-bundle` (`enterprise_rag_onyx_full_2` bench profile may still be needed for Onyx 500q), `bench/int-5fixture` (verify 977924b claude-p stdio fix landed elsewhere), `fix/dense-fusion-composite-sort` (tip says "do not merge"; salvage H10 investigation docs first).
-- [ ] **Worktrees — remove 13 stale** (incl. `F:/Projects/cymatix-retrieval-upgrade`, `F:/tmp/cymatix-release-064`, codex scratch, 2 locked agent worktrees on merged branches — unlock then remove), then `git worktree prune`. **Keep:** `.worktrees/ws2-symbol-graph`, `.worktrees/ws3-pagerank` until PRs resolve.
-- [ ] **Stashes — drop all 8** (0-6 superseded by merged PRs; glance at stash@{7}'s 90-line token-count helper first).
-- [x] **Remote:** `git push origin --delete docs/external-review-gemini` (merged as #236). ✅ already gone (verified 2026-07-05).
-- [x] **Quarantine invalid bench results** (07-02_1252 + 07-03_0104 sike_bedsweep JSONs). ✅ 2026-07-05 → moved to `benchmarks/results/_quarantine_invalid/` with a DO-NOT-QUOTE README.
-- [ ] **Root runtime clutter** (git-ignored): root-level `genome.db{,-shm,-wal}` (canonical store is `genomes/main/` — verify nothing points at the root copy), `metrics.json`, `logs/`, `overnight_logs/`, `cwola_export/`, `dist/`, caches.
-- [x] **Commit the bench harness** (`scripts/bench_chain/`, probe toml, sweep diff) — see merge queue item 3. ✅ merged via #237 (2026-07-05).
-- Note (2026-07-05): **branch/worktree/stash deletion NOT auto-executed** — `git branch --merged origin/master` returns 0 (the 61 "merged" branches were *squash*-merged, undetectable by `--merged`). Deleting off the 2-day-old forensic list without squash-aware verification risks nuking live work; deferred to a verified pass. Root runtime clutter is all gitignored (`!!`), so it's local-disk tidiness, not a repo concern; only the stale `dist/` (0.5.0) was removed.
+**Adapter audit (0010): 6/7 claims confirmed, zero defects — but three real follow-ups for us:**
 
-## Docs refresh (the "fresh baseline" pass — do together with the new bench numbers)
+1. **The smoke gate has a blind spot.** `scripts/rebase_shard_fixture.py` derives its probes
+   from the same `fingerprint_index` table routing consults, so the gate asks whether the
+   fixture can retrieve its own hottest tags. **It cannot detect a partially truncated
+   fingerprint index** — precisely the failure that yields plausible low numbers instead of an
+   honest red. Fix: support explicit `--probe` terms drawn from the question set, and
+   cross-check `fingerprint_index` row count against the sum of shard gene counts.
+2. **`SHARD_FIXTURE_RELOCATION.md` needs two lines:** (a) a relocated fixture serves zeros
+   through the normal consumer path unless `CYMATIX_USE_SHARDS=1` is exported — the verify-only
+   gate passes anyway because the tool constructs `ShardRouter` directly; (b) serve verification
+   opens the coordinator through `open_main_db`, which connects **read-write** and sets
+   `journal_mode=WAL`, so "verify-only" is not byte-read-only against the coordinator — back it
+   up first.
+3. **Doc nuance:** the path-matching floor is weaker than "longest suffix" implies — acceptance
+   is any candidate sharing at least one trailing component, so a basename-only hit qualifies,
+   and longest-suffix only breaks ties among qualified candidates.
 
-- [x] `CLAUDE.md:3` — v0.5.0 → v0.7.1. ✅ 2026-07-05.
-- [x] `CLAUDE.md` Stage-2 text — `dense_embedding_enabled` and `splade_enabled` are **default ON** (config.py:355/:214), not off; drop the "no neural inference at query time" claim for the default path. ✅ 2026-07-05 (rewritten + links the algorithmic-profile memo).
-- [x] `README.md:138` — phantom `[know]` keys `confidence_floor, margin_threshold` → real keys `emit_floor, betas, s_ref, g_ref, stale_after_days`. ✅ 2026-07-05.
-- [x] Test count in 3 places (README badge + Testing section, CLAUDE.md): "~1950" → **~2,750** (measured 2,756 collected under `-m "not live"`). ✅ 2026-07-05.
-- [ ] `[ribosome]` backend lists (README:125 + CLAUDE.md): honored values are only `litellm`/`deberta`; drop `claude`/`ollama` or mark legacy. *(not done — needs a code check of honored backend values first)*
-- [x] Package count "16" → 15 (README:191 + CLAUDE.md). ✅ 2026-07-05 (table already listed 15; summary + CLAUDE corrected).
-- [ ] README "Proof (30 seconds)" table + `docs/benchmarks/BENCHMARKS.md` (last updated 2026-05-28) — refresh from the #221 re-baseline once valid. **License caveat:** ContextBench/CodeRAG numbers stay internal until cleared.
-- [ ] Commit/reconstruct `cymatix_probe_nosema.toml` (referenced by code-track-regression-log.md, absent from tree).
-- [ ] Minor: README `[ingestion]` add `hybrid`; note `[mem_sync]` is consumed out-of-band; document `[vault]`/`[hardware]`.
+---
+
+## Issue board (triaged 2026-07-27)
+
+### Ready now — no gate
+
+| # | Title (short) | Action |
+| --- | --- | --- |
+| #311 | Sharded adapter missing `_sweep_symbol*` | **Close.** Fixed on master by `a0f3fe3` (2026-07-22); `tests/test_sharded_adapter_parity.py` is green (12 passed). |
+| #307 | Same parity failure, filed from the #231 merge | **Close as duplicate of #311**, same receipt. |
+| #313 | Fresh install: 63 tests fail without `en_core_web_sm` | Implement the agreed (1)+(3) shape: legible error in `_get_nlp()` naming the download command; `spacy.util.is_package()` skip guard on the affected tests; pinned install line in `setup-cymatix.ps1` + `docs/SETUP.md` **not** in published extras (PyPI rejects direct-URL deps and `publish.yml` uses trusted publishing); reconcile the `spacy>=3.7` floor against the 3.8.0 model wheel. |
+
+### Sequenced feature work — unblocked, needs a start
+
+| # | Title (short) | Action |
+| --- | --- | --- |
+| #219 | Config unification epic | Slices 1–4 all merged; **slice 5** (dark-feature decision: `ray_trace` / `seeded_edges` / `sr`) is the cheapest remaining and unblocks doc honesty. Also tick the slice-3 checkbox — the 2026-07-13 audit confirmed #241 shipped it. |
+| #207 | De-hardcoding wave 2 | **Item 7 only** remains: de-Windows tray edges (`com.swiftwing21` plist id + orphaned auto-migration, PowerShell-only installer spawn, `.bat`-only restart). Items 1–6 and 8 are done. |
+| #205 | Retrieval profiles, 3 layers | Review the 2026-07-16 plan, then build **Layer 1 first**. The cc-exchange cell-5 receipt now hands it a measured lever: an `fts5_candidate_depth` sweep is the highest-value Layer-1 experiment on the board. |
+| #208 | SNOW-2 navigation benchmark | No action. Stays blocked on #205; spec current, no respec. Re-date when #205 lands. |
+
+### Data-gated — the action is collecting or receiving
+
+| # | Title (short) | Action |
+| --- | --- | --- |
+| #260 | Semantic arm: 20% gold_delivered | **Reframed by cell-5.** The lever is depth on the lexical leg, not dense query encoding — dense recovers 0/62 at every fetchable depth. Run the local `fts5_candidate_depth` sweep; chase the 850K `rrf_gate` receipt (off vs `top_m` 5/10/20) that graduates the rank-gated RRF knob; verify the fused-arm pool-width observation against our code. |
+| #275 | Sharded structural gap (umbrella) | Receive cell 3. Independently: make the **dense-off product decision** for sharded mode (`sharding.py:251`). Fix the adapter smoke-gate blind spot + land the three `SHARD_FIXTURE_RELOCATION.md` doc lines. |
+| #264 | Doc-type boost decisive under RRF | Fix shipped default-inert (#292). Needs a full seeded-bed bench to graduate a default flip. Honest finding on record: **`doc_type_boost_mode="off"` is the mode that satisfies #121's hard constraint under RRF**; `"rank"` still flips on the adversarial fixture. |
+| #265 | Global-IDF splice scale-corrupt under RRF | Capability guard shipped (#292) — byte-identical no-op under RRF, #182 contract preserved on additive-pinned shards. Follow-up (rrf-native global-IDF as a rank input to per-shard fusion) is deferred, not lost. |
+| #221 | SIKE scale-sweep re-baseline | **Blocked on us**, not on the rig: ship the gold pack and answer the decontam question (above). Then the 829K injection point + the README re-admission write-up with fixture/date citations. |
+| #287 | Know/miss gate RRF-era recalibration | **Ship nothing.** Council HOLD stands. Next step is the V2 feature swap, not another re-fit of the current five. Second actionable: **harden the #268 AUC gate** to median (or worst) held-out AUC across k splits — at n=300 the seed alone swings the verdict 0.36 → 0.71. |
+| #239 | know-confidence anti-signal | Historical parent of #287. Fold forward and close, or relabel as the tracking record. |
+| #284 | AssetOpsBench external eval | NO-GO stands; issue is now a tracking record for the gated program. Next slice is **docs-only**: upstream appetite issue draft + redistribution-clean corpus licensing inventory, 3-week kill-switch. |
+
+---
+
+## Housekeeping (carried forward, still undone)
+
+The 2026-07-03 forensic inventory is now three weeks stale and must be **re-derived**, not
+executed off the old list. `git branch --merged origin/master` returns nothing useful — the
+branches were *squash*-merged and are undetectable that way, so deleting off a stale list risks
+nuking live work.
+
+- [ ] **Branches** — re-derive the squash-merged set with a content-equality check, then delete.
+      The 2026-07-27 pass found one live example worth noting: `bench/blend-serving-receipt` is
+      **fully superseded** (its receipt landed via #282 and the rename sweep de-helixed the probe
+      TOMLs) and would only re-add three stale-named duplicates.
+- [ ] **Worktrees** — prune stale entries, then `git worktree prune`.
+- [ ] **Stashes** — 8 outstanding; glance at the token-count helper before dropping.
+- [ ] **Root runtime clutter** (all gitignored, local-disk tidiness only): root-level
+      `genome.db{,-shm,-wal}` — verify nothing points at the root copy rather than
+      `genomes/main/` — plus `metrics.json`, `logs/`, `overnight_logs/`, `cwola_export/`, caches.
+
+## Docs refresh (remaining from the previous edition)
+
+- [ ] `[ribosome]` backend lists (README + CLAUDE.md): verify which values are actually honored
+      and drop or mark-legacy the rest. *(Needs a code check first — do not edit blind.)*
+- [ ] README "Proof (30 seconds)" table + `docs/benchmarks/BENCHMARKS.md` (last refreshed
+      2026-05-28) — re-admit numbers only from a valid re-baseline. **License caveat:**
+      ContextBench / CodeRAG numbers stay internal until cleared.
+- [ ] Commit or reconstruct `cymatix_probe_nosema.toml` (referenced by
+      `code-track-regression-log.md`, absent from the tree).
+- [ ] Minor: README `[ingestion]` add `hybrid`; note `[mem_sync]` is consumed out-of-band;
+      document `[vault]` / `[hardware]`.
+
+---
 
 ## Sequenced plan
 
-**Phase 0 — tonight (bench running, hands off the rig):**
+**Now — release + unblock the collaborator (nothing here needs the rig):**
 
-1. ~~Verify `claude -p` Sonnet auth~~ ✅ verified 2026-07-03.
-2. ~~Close #203 and #206 with decision comments~~ ✅ done 2026-07-03.
-3. ~~Update issues: #219 (slice-2 box checked + comment), #209 (scope note prepended to body), #207/#222/#223/#204/#208/#93 (status comments)~~ ✅ done 2026-07-03.
-4. When `sike_bedsweep_xl_*_1556.json` lands (~23:00-01:00): sanity-check genes/delivery/Sonnet-errors before beds 2-3 start their Claude pass.
+1. Tag `v0.8.5` and publish the GitHub Release (triggers `publish.yml` → PyPI).
+2. Close #311 and #307.
+3. **Reply on `sike-run1`**: gold pack + the decontam ruling + the two small confirms + the
+   `CYMATIX_USE_SHARDS` rename note. This is the single highest-leverage item on the board —
+   it is the only thing standing between us and a full SIKE Run-1 ladder on a second box.
+4. Land #313 so a fresh clone is green.
 
-**Phase 1 — July 4, after COMPLETE-FINAL:**
+**Next — the cheap measured lever:**
 
-1. Validate all three bed JSONs; comment results on #221; quarantine invalid runs.
-2. Read the gate: arm B vs BM25, arm C vs +1pp → merge/dark-ship/park #230 then #231 per the decision rules; commit bench harness.
-3. ~~Investigate the S1 AST-assertion failure and the ollama ReadTimeout cluster.~~ ReadTimeout cluster **done 2026-07-05** (upstream_timeout root cause + fix in the harness PR); S1 AST assertion still open.
+5. `fts5_candidate_depth` sweep on our own beds, replicating the cell-5 ladder (50 / 200 / 1000)
+   against the semantic arm. This is simultaneously #260's reframed lever and #205's Layer-1
+   auto-calibration input.
+6. Verify the fused-arm pool-width observation (does dense widen the delivered pool at all?)
+   against our code path.
+7. Make the sharded dense-off product decision (#275 suspect 1); fix the adapter smoke-gate
+   blind spot and land the three relocation-doc lines.
 
-**Phase 1b — bench validity wave (added 2026-07-05, from the bedsweep review):**
+**Then — feature work, in cost order:**
 
-Detail + numbers: [docs/benchmarks/2026-07-05-sike-bedsweep-issue-resolutions.md](benchmarks/2026-07-05-sike-bedsweep-issue-resolutions.md).
-The 1556 results are the only valid run AND still mismeasure retrieval (dead
-`body_has_answer` parser — fixed; 6/4/3 false-neg + 7/14/15 false-pos needles
-per bed; 260 echo genes + 43 worktree-dupe genes contaminating xl; probe-TOML
-no-op keys incl. `[abstain] enabled` and the arm-C `symbol_graph` keys that
-don't exist on master). **Hold README re-admission of #221 numbers until Run 1
-(clean baseline) reproduces them on decontaminated beds.** Sequence: Run 1
-(harness+bed validity) → Run 2 (fts5_candidate_depth × additive/RRF A/B on xl)
-→ Run 3 (**#239, re-scoped 2026-07-07 — recalibration of the 5 features is REFUTED, §4**):
-**(3a) operating-point repair** (un-invert β1 / lower floor so the gate fires at all) on a
-delivery-balanced bench — independent, ships recall regardless; **(3b) spike-then-conditionally-integrate**
-a new answer-presence feature (a validation spike gates the ~9-file integration). Production-profile arm +
-arm-C only after its fail-fast capability assert.
+8. #219 slice 5 → #207 item 7 → #205 Layer 1 (now data-fed) → Layers 2 and 3 → unblocks #208.
+9. #287 V2 feature swap + #268 gate hardening. Ship nothing on the current five features.
 
-**Phase 2 — fresh baseline (same week):**
+**Receiving:**
 
-1. Housekeeping sweep (branches/worktrees/stashes/remote/clutter) — checklist above.
-2. Docs refresh pass (checklist above) + README bench-number re-admission.
-3. Tag the result — candidate 0.8.0 baseline: post-merge master, clean tree, honest docs, valid 3-bed scale curve.
-
-**Phase 3 — next wave (re-dated per the 07-01 consensus):**
-
-1. #221's missing 829K/100-shard bed; S4/#93 scored Q&A run (auth preflight now in place).
-2. #223 reserve-N A/B → default flip; #222 confirmatory null → close.
-3. #219 slices 5→4→3; #207 items 1-3; then #205 profiles (now data-fed by #203/#204) → unblocks #208 SNOW-2 build.
+10. Cell 3 (#275 shard A/B) — due now. 850K `rrf_gate` receipt (#260 graduation cell).
+11. Once #221 is unblocked and run: README bench-number re-admission, then a fresh baseline tag.
