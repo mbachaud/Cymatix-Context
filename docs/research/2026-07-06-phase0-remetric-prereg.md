@@ -13,7 +13,7 @@ This probe measures whether an **activation-variance re-metric**
 document/query representations that retrieve better than the incumbent
 BGE-M3 dense arm on the committed labeled harness. Per the council's
 re-scoping it is **not called J-space**: the true Jacobian **J-lens
-computation is a separate, unbudgeted line** — Helix has **no
+computation is a separate, unbudgeted line** — Cymatix has **no
 decoder-fp16 capture path** today, and nothing in this probe pretends
 otherwise. (The browser-driven Neuronpedia faithfulness runbook,
 `docs/benchmarks/2026-07-06-faithfulness-experiment-runbook.md`, is a

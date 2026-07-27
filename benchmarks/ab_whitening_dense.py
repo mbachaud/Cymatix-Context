@@ -86,7 +86,7 @@ def load_labels(path: str) -> list[dict]:
 
 
 def encode_queries(queries: list[str], device: str, batch: int = 32) -> np.ndarray:
-    from helix_context.backends.bgem3_codec import BGEM3Codec
+    from cymatix_context.backends.bgem3_codec import BGEM3Codec
 
     codec = BGEM3Codec(dim=1024, device=device)
     out = []
