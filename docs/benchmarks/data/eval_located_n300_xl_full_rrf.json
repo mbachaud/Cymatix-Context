@@ -1,0 +1,263 @@
+{
+  "input": "benchmarks/results/located_n300_xl_rrf.jsonl",
+  "reports": [
+    {
+      "n": 300,
+      "calibration": "default",
+      "betas": [
+        -2.0,
+        2.0,
+        1.5,
+        0.7,
+        1.8,
+        1.5
+      ],
+      "s_ref": 1.0,
+      "g_ref": 0.5,
+      "emit_floor": 0.55,
+      "retrieval_at_1": 0.21,
+      "retrieval_at_5": 0.6833333333333333,
+      "retrieval_at_10": 0.7866666666666666,
+      "mrr": 0.40028164975785563,
+      "expressed_rate": 0.25,
+      "auc": 0.5852923447860157,
+      "ece_10bin": 0.7414748715448841,
+      "risk_coverage": [
+        {
+          "coverage": 0.1,
+          "n": 30,
+          "risk": 0.6333333333333333,
+          "min_confidence": 0.9830211413123952
+        },
+        {
+          "coverage": 0.2,
+          "n": 60,
+          "risk": 0.65,
+          "min_confidence": 0.9783515289241179
+        },
+        {
+          "coverage": 0.3,
+          "n": 90,
+          "risk": 0.6888888888888889,
+          "min_confidence": 0.9749092670956119
+        },
+        {
+          "coverage": 0.4,
+          "n": 120,
+          "risk": 0.7166666666666667,
+          "min_confidence": 0.9690263423364558
+        },
+        {
+          "coverage": 0.5,
+          "n": 150,
+          "risk": 0.7466666666666667,
+          "min_confidence": 0.9651879236340346
+        },
+        {
+          "coverage": 0.6,
+          "n": 180,
+          "risk": 0.7722222222222223,
+          "min_confidence": 0.9600390604787298
+        },
+        {
+          "coverage": 0.7,
+          "n": 210,
+          "risk": 0.7857142857142857,
+          "min_confidence": 0.9508063551695692
+        },
+        {
+          "coverage": 0.8,
+          "n": 240,
+          "risk": 0.7875,
+          "min_confidence": 0.9336542911186981
+        },
+        {
+          "coverage": 0.9,
+          "n": 270,
+          "risk": 0.7925925925925926,
+          "min_confidence": 0.9060751512468161
+        },
+        {
+          "coverage": 1.0,
+          "n": 300,
+          "risk": 0.79,
+          "min_confidence": 0.5173910972224555
+        }
+      ],
+      "emit_rate_at_floor": 0.9966666666666667,
+      "precision_at_floor": 0.21070234113712374
+    },
+    {
+      "n": 300,
+      "calibration": "benchmarks/results/shipped_helix_249.toml",
+      "betas": [
+        -2.1222,
+        -1.1442,
+        0.8794,
+        0.9407,
+        0.2999,
+        0.7979
+      ],
+      "s_ref": 4.2503,
+      "g_ref": 0.4386,
+      "emit_floor": 0.45,
+      "retrieval_at_1": 0.21,
+      "retrieval_at_5": 0.6833333333333333,
+      "retrieval_at_10": 0.7866666666666666,
+      "mrr": 0.40028164975785563,
+      "expressed_rate": 0.25,
+      "auc": 0.5863639407943205,
+      "ece_10bin": 0.016704870397125687,
+      "risk_coverage": [
+        {
+          "coverage": 0.1,
+          "n": 30,
+          "risk": 0.6,
+          "min_confidence": 0.326480835164762
+        },
+        {
+          "coverage": 0.2,
+          "n": 60,
+          "risk": 0.7333333333333333,
+          "min_confidence": 0.26542626796255414
+        },
+        {
+          "coverage": 0.3,
+          "n": 90,
+          "risk": 0.7222222222222222,
+          "min_confidence": 0.2275966552144112
+        },
+        {
+          "coverage": 0.4,
+          "n": 120,
+          "risk": 0.7083333333333334,
+          "min_confidence": 0.21254190454913655
+        },
+        {
+          "coverage": 0.5,
+          "n": 150,
+          "risk": 0.74,
+          "min_confidence": 0.19815210398880745
+        },
+        {
+          "coverage": 0.6,
+          "n": 180,
+          "risk": 0.7611111111111111,
+          "min_confidence": 0.1815936576633048
+        },
+        {
+          "coverage": 0.7,
+          "n": 210,
+          "risk": 0.7761904761904762,
+          "min_confidence": 0.15088968884820575
+        },
+        {
+          "coverage": 0.8,
+          "n": 240,
+          "risk": 0.7833333333333333,
+          "min_confidence": 0.13523382444427595
+        },
+        {
+          "coverage": 0.9,
+          "n": 270,
+          "risk": 0.7925925925925926,
+          "min_confidence": 0.12460487182629404
+        },
+        {
+          "coverage": 1.0,
+          "n": 300,
+          "risk": 0.79,
+          "min_confidence": 0.04963725320422308
+        }
+      ],
+      "emit_rate_at_floor": 0.0,
+      "precision_at_floor": 0.0
+    },
+    {
+      "n": 300,
+      "calibration": "helix.toml",
+      "betas": [
+        -1.4991,
+        -0.2936,
+        0.0901,
+        0.3755,
+        0.0081,
+        0.271
+      ],
+      "s_ref": 4.1294,
+      "g_ref": 0.2936,
+      "emit_floor": 0.271,
+      "retrieval_at_1": 0.21,
+      "retrieval_at_5": 0.6833333333333333,
+      "retrieval_at_10": 0.7866666666666666,
+      "mrr": 0.40028164975785563,
+      "expressed_rate": 0.25,
+      "auc": 0.5997588908981314,
+      "ece_10bin": 0.01637694855355783,
+      "risk_coverage": [
+        {
+          "coverage": 0.1,
+          "n": 30,
+          "risk": 0.6,
+          "min_confidence": 0.26228633721612316
+        },
+        {
+          "coverage": 0.2,
+          "n": 60,
+          "risk": 0.6833333333333333,
+          "min_confidence": 0.25618352836685143
+        },
+        {
+          "coverage": 0.3,
+          "n": 90,
+          "risk": 0.7222222222222222,
+          "min_confidence": 0.2059396800763964
+        },
+        {
+          "coverage": 0.4,
+          "n": 120,
+          "risk": 0.6916666666666667,
+          "min_confidence": 0.2035478951746484
+        },
+        {
+          "coverage": 0.5,
+          "n": 150,
+          "risk": 0.7333333333333333,
+          "min_confidence": 0.2030976280721427
+        },
+        {
+          "coverage": 0.6,
+          "n": 180,
+          "risk": 0.7666666666666667,
+          "min_confidence": 0.20144727968113196
+        },
+        {
+          "coverage": 0.7,
+          "n": 210,
+          "risk": 0.780952380952381,
+          "min_confidence": 0.19508587920409365
+        },
+        {
+          "coverage": 0.8,
+          "n": 240,
+          "risk": 0.7791666666666667,
+          "min_confidence": 0.19345394613147032
+        },
+        {
+          "coverage": 0.9,
+          "n": 270,
+          "risk": 0.7814814814814814,
+          "min_confidence": 0.19048008822095341
+        },
+        {
+          "coverage": 1.0,
+          "n": 300,
+          "risk": 0.79,
+          "min_confidence": 0.151815362380762
+        }
+      ],
+      "emit_rate_at_floor": 0.02666666666666667,
+      "precision_at_floor": 0.5
+    }
+  ]
+}
