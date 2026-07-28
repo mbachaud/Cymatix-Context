@@ -180,32 +180,61 @@ def main() -> int:
                 print(f"  removed {p.name}")
     target.parent.mkdir(parents=True, exist_ok=True)
 
-    env = dict(os.environ)
-    env["CYMATIX_GENOME_PATH"] = str(target)
-    env["CYMATIX_DISABLE_LEARN"] = "1"
+    # Ingest the curated list file-by-file through the session API.
+    #
+    # NOT `cymatix ingest <repo> --recursive`: that re-walks the tree itself via
+    # ``_collect_files``, which is a bare ``rglob("*")`` with no directory
+    # exclusions. Handing it a repo root ingests `.venv/Lib/site-packages`,
+    # `node_modules` and every other vendored tree, and the curation computed
+    # above is silently discarded. Measured on the first attempt: 5,331 of the
+    # 5,337 files it had ingested were site-packages.
+    os.environ["CYMATIX_GENOME_PATH"] = str(target)
+    os.environ["CYMATIX_DISABLE_LEARN"] = "1"
+
+    sys.path.insert(0, str(REPO_ROOT))
+    from cymatix_context.api import open_session  # noqa: E402
+    from cymatix_context.cli.cmd_ingest import _content_type_for  # noqa: E402
+    from cymatix_context.config import load_config  # noqa: E402
+
+    cfg = load_config()
+    cfg.genome.path = str(target)
 
     started = time.time()
     per_repo: list[dict] = []
+    sess = open_session(config=cfg)
+
     for spec, rd, files in plan:
         t0 = time.time()
         print(f"\n=== ingesting {spec['label']} ({len(files)} files) ===", flush=True)
-        proc = subprocess.run(
-            [sys.executable, "-m", "cymatix_context.cli", "ingest",
-             str(rd), "--recursive", "--json"],
-            cwd=REPO_ROOT, env=env, capture_output=True, text=True,
-            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
-        )
-        if proc.returncode != 0:
-            print(proc.stdout[-3000:])
-            print(proc.stderr[-3000:], file=sys.stderr)
-            print(f"ERROR: ingest failed for {spec['label']}", file=sys.stderr)
-            return 1
+        done = 0
+        failed: list[str] = []
+        for f in files:
+            try:
+                content = f.read_text(encoding="utf-8", errors="replace")
+                sess.ingest(
+                    content,
+                    content_type=_content_type_for(f),
+                    metadata={"path": str(f), "source_id": str(f)},
+                )
+                done += 1
+            except KeyboardInterrupt:
+                raise
+            except Exception as exc:  # noqa: BLE001 - one bad file must not abort
+                failed.append(f"{f}: {type(exc).__name__}: {exc}")
+            if done % 50 == 0:
+                rate = done / max(time.time() - t0, 1e-6)
+                print(f"    {done}/{len(files)}  ({rate*60:.1f} files/min)", flush=True)
         dt = time.time() - t0
-        print(f"    done in {dt:.0f}s")
+        print(f"    done {done}/{len(files)} in {dt:.0f}s"
+              f"{f'  ({len(failed)} failed)' if failed else ''}")
+        for msg in failed[:5]:
+            print(f"      ! {msg}", file=sys.stderr)
         per_repo.append({
             "label": spec["label"],
             "dir": str(rd),
             "files_planned": len(files),
+            "files_ingested": done,
+            "files_failed": len(failed),
             "seconds": round(dt, 1),
         })
 
