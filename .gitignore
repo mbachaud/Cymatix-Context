@@ -158,3 +158,5 @@ benchmarks/dogfood/pack/*.sha256
 benchmarks/dogfood/gene_ids/
 benchmarks/dogfood/baseline.json
 benchmarks/dogfood/dogfood_manifest.json
+
+benchmarks/dogfood/baseline_k50.json

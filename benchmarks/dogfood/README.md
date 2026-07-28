@@ -50,6 +50,11 @@ one-for-one:
 Curation takes the walk from 2,679 files to **1,172**, and rebalances it from
 87% cymatix-context to 70%.
 
+**By gene count the bed is still 88% cymatix-context** (5,654 of 6,427) — its
+files are larger and chunk into more genes than the other three repos'. That
+imbalance is not a defect of the curation, it is what a dogfood bed centred on
+cymatix looks like, but it is load-bearing for how the baseline reads.
+
 ## Needles
 
 18 needles, each pinning a **specific value** — a port, a threshold, a default,
@@ -101,11 +106,27 @@ This pattern is proven: the 2026-07-27 SIKE decontamination established that
 gene_ids survive deletion unchanged, so a list computed on one host selects
 exactly the right rows on another, and the delete count verifies itself.
 
+## First baseline (2026-07-28)
+
+6,427 genes over 1,177 files. **recall@12 = 0.667, recall@50 = 1.000** — every
+needle's gold is in the pool, so the whole deficit at the shipped budget is
+ranking, not recall.
+
+The split is the finding: needles about `driftwatch` / `scorerift` /
+`MaxExpressKit` land at ranks 1-7, while **six of eight `cymatix-context`
+needles land past k=12** (ranks 23-41). Cymatix ranks worst on the repo it is
+88% made of. Write-up:
+[`docs/benchmarks/2026-07-28-dogfood-baseline.md`](../../docs/benchmarks/2026-07-28-dogfood-baseline.md).
+
 ## Artifacts
 
 Committed: the tooling, `needles_dogfood.py`, `needles_resolved.json`, and
 `pack/gold_pack_manifest.json`.
 
-Not committed: the genome (`genomes/`), the pack tarball, and the generated
-`gene_ids/` + `baseline.json`. All are reproducible from the above, and the
+Not committed: the genome (`genomes/`), the pack tarball, and the working
+`gene_ids/` + `baseline*.json`. All are reproducible from the above, and the
 tarball ships out-of-band the same way the bench beds do.
+
+**Dated measurements are committed as receipts**, under `docs/benchmarks/data/`
+— a baseline is a fact about a bed on a day, not a regenerable artifact, since
+re-running it after the repos change gives a different number.
