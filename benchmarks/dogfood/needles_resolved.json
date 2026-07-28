@@ -1,0 +1,510 @@
+{
+  "max_gold": 15,
+  "needles_total": 18,
+  "needles_ok": 18,
+  "distinct_gold_files": 71,
+  "gold_files": [
+    "MaxExpressKit/.claude-plugin/marketplace.json",
+    "MaxExpressKit/.claude-plugin/plugin.json",
+    "MaxExpressKit/CHANGELOG.md",
+    "MaxExpressKit/README.md",
+    "MaxExpressKit/commands/mek-soc2.md",
+    "MaxExpressKit/docs/concepts.md",
+    "MaxExpressKit/docs/source-app-integration.md",
+    "MaxExpressKit/docs/superpowers/plans/2026-05-10-mek-v0.1.0.md",
+    "MaxExpressKit/docs/superpowers/specs/2026-05-10-mek-design.md",
+    "MaxExpressKit/lib/source_app_detect.py",
+    "MaxExpressKit/package.json",
+    "MaxExpressKit/pyproject.toml",
+    "MaxExpressKit/skills/using-mek/SKILL.md",
+    "cymatix-context/README.md",
+    "cymatix-context/benchmarks/dogfood/needles_dogfood.py",
+    "cymatix-context/benchmarks/dogfood/needles_resolved.json",
+    "cymatix-context/cymatix.toml",
+    "cymatix-context/cymatix_context/config.py",
+    "cymatix-context/cymatix_context/identity/registry.py",
+    "cymatix-context/cymatix_context/knowledge_store.py",
+    "cymatix-context/docs/api/endpoints.md",
+    "cymatix-context/docs/architecture/OBSERVABILITY.md",
+    "cymatix-context/docs/architecture/SESSION_REGISTRY.md",
+    "cymatix-context/docs/benchmarks/2026-07-06-know-logistic-calibration.md",
+    "cymatix-context/docs/benchmarks/2026-07-10-erb-blob-829k-reproduction.md",
+    "cymatix-context/docs/benchmarks/MULTI_VALID_GOLD.md",
+    "cymatix-context/docs/benchmarks/cymatix_probe_lexical.toml",
+    "cymatix-context/docs/benchmarks/cymatix_probe_symbol.toml",
+    "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_legacy.toml",
+    "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_off.toml",
+    "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_scale_relative.toml",
+    "cymatix-context/docs/config-reference.md",
+    "cymatix-context/docs/ops/SKILLS_BUNDLE.md",
+    "cymatix-context/docs/reviews/2026-05-16-deep-review/00-tier0-implementation-plan.md",
+    "cymatix-context/docs/reviews/2026-05-16-deep-review/pipeline-02-retrieval-fusion.md",
+    "cymatix-context/docs/superpowers/plans/2026-07-20-cymatix-readme-draft.md",
+    "cymatix-context/docs/superpowers/plans/2026-07-25-portfolio-readme-refresh.md",
+    "cymatix-context/docs/superpowers/specs/2026-07-25-portfolio-readme-refresh-design.md",
+    "cymatix-context/scripts/cymatix_heartbeat.py",
+    "cymatix-context/scripts/diagnose_file_grain.py",
+    "cymatix-context/scripts/run_repobench_r.ps1",
+    "cymatix-context/tests/test_diag_shard_dense.py",
+    "cymatix-context/tests/test_freshness_gate.py",
+    "driftwatch/.github/workflows/ci.yml",
+    "driftwatch/README.md",
+    "driftwatch/SECURITY.md",
+    "driftwatch/deploy/litellm-config.yaml",
+    "driftwatch/docker-compose.yml",
+    "driftwatch/docs/superpowers/plans/2026-04-07-auth-biged-templates.md",
+    "driftwatch/docs/superpowers/plans/2026-07-10-driftwatch-pre-migration-cutover.md",
+    "driftwatch/docs/superpowers/specs/2026-04-07-auth-biged-templates-design.md",
+    "driftwatch/docs/superpowers/specs/2026-07-10-driftwatch-pre-migration-cutover-design.md",
+    "driftwatch/docs/testing/2026-07-10-presentation-demo-checklist.md",
+    "driftwatch/web/src/app/api/docs/inference/route.ts",
+    "driftwatch/web/src/lib/inference/providers/local-ollama.ts",
+    "driftwatch/web/src/lib/inference/providers/ollama-cloud.ts",
+    "driftwatch/web/src/lib/inference/providers/openai-compat.ts",
+    "driftwatch/web/src/lib/inference/router.ts",
+    "driftwatch/web/src/lib/ollama/client.ts",
+    "driftwatch/web/tests/brand/legacy-name.test.ts",
+    "scorerift/CHANGELOG.md",
+    "scorerift/README.md",
+    "scorerift/docs/ARCHITECTURE.md",
+    "scorerift/docs/QUICKSTART.md",
+    "scorerift/docs/STANDARDS.md",
+    "scorerift/examples/snapshots/self_audit_example.json",
+    "scorerift/src/scorerift/dashboard/ui.py",
+    "scorerift/src/scorerift/engine.py",
+    "scorerift/src/scorerift/presets/interaction_graphs.py",
+    "scorerift/src/scorerift/presets/python_project.py",
+    "scorerift/tests/test_ray_trace.py"
+  ],
+  "needles": [
+    {
+      "name": "cymatix_proxy_port",
+      "query": "What port does the Cymatix proxy server listen on?",
+      "expected": "11437",
+      "accept": [
+        "11437"
+      ],
+      "anchor": "localhost:11437",
+      "repos": [
+        "cymatix-context"
+      ],
+      "gold_source": [
+        "cymatix-context/README.md",
+        "cymatix-context/benchmarks/dogfood/needles_dogfood.py",
+        "cymatix-context/cymatix_context/identity/registry.py",
+        "cymatix-context/docs/api/endpoints.md",
+        "cymatix-context/docs/architecture/OBSERVABILITY.md",
+        "cymatix-context/docs/architecture/SESSION_REGISTRY.md",
+        "cymatix-context/docs/ops/SKILLS_BUNDLE.md",
+        "cymatix-context/docs/superpowers/plans/2026-07-20-cymatix-readme-draft.md",
+        "cymatix-context/scripts/cymatix_heartbeat.py",
+        "cymatix-context/scripts/diagnose_file_grain.py",
+        "cymatix-context/tests/test_diag_shard_dense.py"
+      ],
+      "gold_count": 11,
+      "status": "ok"
+    },
+    {
+      "name": "cymatix_expression_tokens",
+      "query": "What is the default expression_tokens budget in Cymatix?",
+      "expected": "7000",
+      "accept": [
+        "7000",
+        "7,000",
+        "~7K"
+      ],
+      "anchor": "expression_tokens = 7000",
+      "repos": [
+        "cymatix-context"
+      ],
+      "gold_source": [
+        "cymatix-context/benchmarks/dogfood/needles_dogfood.py",
+        "cymatix-context/cymatix.toml",
+        "cymatix-context/docs/benchmarks/2026-07-10-erb-blob-829k-reproduction.md",
+        "cymatix-context/docs/benchmarks/MULTI_VALID_GOLD.md",
+        "cymatix-context/docs/benchmarks/cymatix_probe_lexical.toml",
+        "cymatix-context/docs/benchmarks/cymatix_probe_symbol.toml",
+        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_legacy.toml",
+        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_off.toml",
+        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_scale_relative.toml",
+        "cymatix-context/docs/config-reference.md",
+        "cymatix-context/scripts/run_repobench_r.ps1"
+      ],
+      "gold_count": 11,
+      "status": "ok"
+    },
+    {
+      "name": "cymatix_cymatics_bins",
+      "query": "How many bins does the Cymatix cymatics spectrum use?",
+      "expected": "256",
+      "accept": [
+        "256"
+      ],
+      "anchor": "256 bin",
+      "repos": [
+        "cymatix-context"
+      ],
+      "gold_source": [
+        "cymatix-context/README.md",
+        "cymatix-context/benchmarks/dogfood/needles_dogfood.py",
+        "cymatix-context/benchmarks/dogfood/needles_resolved.json",
+        "cymatix-context/cymatix.toml",
+        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_legacy.toml",
+        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_off.toml",
+        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_scale_relative.toml",
+        "cymatix-context/docs/config-reference.md",
+        "cymatix-context/docs/superpowers/plans/2026-07-25-portfolio-readme-refresh.md",
+        "cymatix-context/docs/superpowers/specs/2026-07-25-portfolio-readme-refresh-design.md"
+      ],
+      "gold_count": 10,
+      "status": "ok"
+    },
+    {
+      "name": "cymatix_fusion_default",
+      "query": "What is the default retrieval fusion_mode in Cymatix?",
+      "expected": "rrf",
+      "accept": [
+        "rrf",
+        "RRF",
+        "Reciprocal Rank Fusion"
+      ],
+      "anchor": "fusion_mode: str = \"rrf\"",
+      "repos": [
+        "cymatix-context"
+      ],
+      "gold_source": [
+        "cymatix-context/benchmarks/dogfood/needles_dogfood.py",
+        "cymatix-context/cymatix_context/config.py",
+        "cymatix-context/cymatix_context/knowledge_store.py",
+        "cymatix-context/docs/reviews/2026-05-16-deep-review/00-tier0-implementation-plan.md"
+      ],
+      "gold_count": 4,
+      "status": "ok"
+    },
+    {
+      "name": "cymatix_know_emit_floor",
+      "query": "What is the emit_floor for the Cymatix know confidence gate?",
+      "expected": "0.45",
+      "accept": [
+        "0.45",
+        ".45"
+      ],
+      "anchor": "emit_floor      = 0.45",
+      "repos": [
+        "cymatix-context"
+      ],
+      "gold_source": [
+        "cymatix-context/benchmarks/dogfood/needles_dogfood.py",
+        "cymatix-context/cymatix.toml",
+        "cymatix-context/docs/benchmarks/2026-07-06-know-logistic-calibration.md",
+        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_legacy.toml",
+        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_off.toml",
+        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_scale_relative.toml"
+      ],
+      "gold_count": 6,
+      "status": "ok"
+    },
+    {
+      "name": "cymatix_max_genes",
+      "query": "How many genes per turn does Cymatix deliver by default?",
+      "expected": "12",
+      "accept": [
+        "12"
+      ],
+      "anchor": "max_genes_per_turn = 12",
+      "repos": [
+        "cymatix-context"
+      ],
+      "gold_source": [
+        "cymatix-context/benchmarks/dogfood/needles_dogfood.py",
+        "cymatix-context/cymatix.toml",
+        "cymatix-context/docs/benchmarks/MULTI_VALID_GOLD.md",
+        "cymatix-context/docs/benchmarks/cymatix_probe_lexical.toml",
+        "cymatix-context/docs/benchmarks/cymatix_probe_symbol.toml",
+        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_legacy.toml",
+        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_off.toml",
+        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_scale_relative.toml",
+        "cymatix-context/docs/config-reference.md",
+        "cymatix-context/docs/reviews/2026-05-16-deep-review/pipeline-02-retrieval-fusion.md",
+        "cymatix-context/scripts/run_repobench_r.ps1",
+        "cymatix-context/tests/test_freshness_gate.py"
+      ],
+      "gold_count": 12,
+      "status": "ok"
+    },
+    {
+      "name": "cymatix_genome_path",
+      "query": "What is the default Cymatix knowledge store path?",
+      "expected": "genomes/main/genome.db",
+      "accept": [
+        "genomes/main/genome.db",
+        "genomes\\main\\genome.db"
+      ],
+      "anchor": "path = \"genomes/main/genome.db\"",
+      "repos": [
+        "cymatix-context"
+      ],
+      "gold_source": [
+        "cymatix-context/README.md",
+        "cymatix-context/benchmarks/dogfood/needles_dogfood.py",
+        "cymatix-context/cymatix.toml",
+        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_legacy.toml",
+        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_off.toml",
+        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_scale_relative.toml",
+        "cymatix-context/docs/config-reference.md",
+        "cymatix-context/docs/superpowers/plans/2026-07-20-cymatix-readme-draft.md"
+      ],
+      "gold_count": 8,
+      "status": "ok"
+    },
+    {
+      "name": "cymatix_splice_aggressiveness",
+      "query": "What is the default splice_aggressiveness in Cymatix?",
+      "expected": "0.3",
+      "accept": [
+        "0.3",
+        ".3"
+      ],
+      "anchor": "splice_aggressiveness = 0.3",
+      "repos": [
+        "cymatix-context"
+      ],
+      "gold_source": [
+        "cymatix-context/benchmarks/dogfood/needles_dogfood.py",
+        "cymatix-context/cymatix.toml",
+        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_legacy.toml",
+        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_off.toml",
+        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_scale_relative.toml",
+        "cymatix-context/docs/config-reference.md"
+      ],
+      "gold_count": 6,
+      "status": "ok"
+    },
+    {
+      "name": "scorerift_divergence_threshold",
+      "query": "What is the divergence threshold that triggers alerts in ScoreRift?",
+      "expected": "0.15",
+      "accept": [
+        "0.15",
+        ".15"
+      ],
+      "anchor": "> 0.15",
+      "repos": [
+        "scorerift"
+      ],
+      "gold_source": [
+        "scorerift/README.md",
+        "scorerift/docs/ARCHITECTURE.md",
+        "scorerift/docs/QUICKSTART.md",
+        "scorerift/src/scorerift/engine.py"
+      ],
+      "gold_count": 4,
+      "status": "ok"
+    },
+    {
+      "name": "scorerift_confidence_gate",
+      "query": "What auto-confidence level must a ScoreRift dimension exceed before divergence can fire?",
+      "expected": "50%",
+      "accept": [
+        "50%",
+        "0.5",
+        "50 percent"
+      ],
+      "anchor": "50%",
+      "repos": [
+        "scorerift"
+      ],
+      "gold_source": [
+        "scorerift/README.md",
+        "scorerift/docs/QUICKSTART.md",
+        "scorerift/docs/STANDARDS.md",
+        "scorerift/src/scorerift/dashboard/ui.py"
+      ],
+      "gold_count": 4,
+      "status": "ok"
+    },
+    {
+      "name": "scorerift_import_hygiene_confidence",
+      "query": "What confidence does ScoreRift assign the import_hygiene dimension?",
+      "expected": "85%",
+      "accept": [
+        "85%",
+        "0.85"
+      ],
+      "anchor": "import_hygiene",
+      "repos": [
+        "scorerift"
+      ],
+      "gold_source": [
+        "scorerift/CHANGELOG.md",
+        "scorerift/README.md",
+        "scorerift/examples/snapshots/self_audit_example.json",
+        "scorerift/src/scorerift/presets/interaction_graphs.py",
+        "scorerift/src/scorerift/presets/python_project.py",
+        "scorerift/tests/test_ray_trace.py"
+      ],
+      "gold_count": 6,
+      "status": "ok"
+    },
+    {
+      "name": "driftwatch_version",
+      "query": "What version is DriftWatch currently at?",
+      "expected": "v0.2.0",
+      "accept": [
+        "v0.2.0",
+        "0.2.0"
+      ],
+      "anchor": "v0.2.0",
+      "repos": [
+        "driftwatch"
+      ],
+      "gold_source": [
+        "driftwatch/README.md",
+        "driftwatch/docs/superpowers/specs/2026-07-10-driftwatch-pre-migration-cutover-design.md"
+      ],
+      "gold_count": 2,
+      "status": "ok"
+    },
+    {
+      "name": "driftwatch_default_ollama_model",
+      "query": "What is the default Ollama model tag in DriftWatch?",
+      "expected": "qwen3:8b",
+      "accept": [
+        "qwen3:8b"
+      ],
+      "anchor": "qwen3:8b",
+      "repos": [
+        "driftwatch"
+      ],
+      "gold_source": [
+        "driftwatch/.github/workflows/ci.yml",
+        "driftwatch/README.md",
+        "driftwatch/deploy/litellm-config.yaml",
+        "driftwatch/docs/superpowers/plans/2026-04-07-auth-biged-templates.md",
+        "driftwatch/docs/superpowers/plans/2026-07-10-driftwatch-pre-migration-cutover.md",
+        "driftwatch/docs/testing/2026-07-10-presentation-demo-checklist.md",
+        "driftwatch/web/src/lib/inference/providers/local-ollama.ts",
+        "driftwatch/web/src/lib/inference/providers/ollama-cloud.ts",
+        "driftwatch/web/src/lib/ollama/client.ts"
+      ],
+      "gold_count": 9,
+      "status": "ok"
+    },
+    {
+      "name": "driftwatch_default_inference_server",
+      "query": "Which inference server is the recommended default for DriftWatch nodes?",
+      "expected": "vLLM",
+      "accept": [
+        "vLLM",
+        "vllm"
+      ],
+      "anchor": "vLLM",
+      "repos": [
+        "driftwatch"
+      ],
+      "gold_source": [
+        "driftwatch/README.md",
+        "driftwatch/SECURITY.md",
+        "driftwatch/deploy/litellm-config.yaml",
+        "driftwatch/docker-compose.yml",
+        "driftwatch/docs/superpowers/plans/2026-04-07-auth-biged-templates.md",
+        "driftwatch/docs/superpowers/specs/2026-04-07-auth-biged-templates-design.md",
+        "driftwatch/web/src/app/api/docs/inference/route.ts",
+        "driftwatch/web/src/lib/inference/providers/openai-compat.ts",
+        "driftwatch/web/src/lib/inference/router.ts",
+        "driftwatch/web/tests/brand/legacy-name.test.ts"
+      ],
+      "gold_count": 10,
+      "status": "ok"
+    },
+    {
+      "name": "driftwatch_default_secret",
+      "query": "What password does the DriftWatch docker-compose fall back to if DB_PASSWORD is unset?",
+      "expected": "changeme",
+      "accept": [
+        "changeme"
+      ],
+      "anchor": "changeme",
+      "repos": [
+        "driftwatch"
+      ],
+      "gold_source": [
+        "driftwatch/README.md",
+        "driftwatch/SECURITY.md",
+        "driftwatch/docker-compose.yml"
+      ],
+      "gold_count": 3,
+      "status": "ok"
+    },
+    {
+      "name": "mek_guardrails",
+      "query": "What are the three guardrails MaxExpressKit ships for Claude Code?",
+      "expected": "compliance, drift, ledger",
+      "accept": [
+        "compliance, drift, ledger",
+        "compliance",
+        "drift",
+        "ledger"
+      ],
+      "anchor": "compliance, drift, ledger",
+      "repos": [
+        "MaxExpressKit"
+      ],
+      "gold_source": [
+        "MaxExpressKit/.claude-plugin/marketplace.json",
+        "MaxExpressKit/.claude-plugin/plugin.json",
+        "MaxExpressKit/docs/superpowers/plans/2026-05-10-mek-v0.1.0.md",
+        "MaxExpressKit/package.json",
+        "MaxExpressKit/pyproject.toml",
+        "MaxExpressKit/skills/using-mek/SKILL.md"
+      ],
+      "gold_count": 6,
+      "status": "ok"
+    },
+    {
+      "name": "mek_source_apps",
+      "query": "Which three applications was MaxExpressKit distilled from?",
+      "expected": "CosmicTasha, ScoreRift, BookKeeper",
+      "accept": [
+        "CosmicTasha",
+        "ScoreRift",
+        "BookKeeper"
+      ],
+      "anchor": "CosmicTasha",
+      "repos": [
+        "MaxExpressKit"
+      ],
+      "gold_source": [
+        "MaxExpressKit/CHANGELOG.md",
+        "MaxExpressKit/README.md",
+        "MaxExpressKit/commands/mek-soc2.md",
+        "MaxExpressKit/docs/concepts.md",
+        "MaxExpressKit/docs/source-app-integration.md",
+        "MaxExpressKit/docs/superpowers/plans/2026-05-10-mek-v0.1.0.md",
+        "MaxExpressKit/docs/superpowers/specs/2026-05-10-mek-design.md",
+        "MaxExpressKit/lib/source_app_detect.py",
+        "MaxExpressKit/skills/using-mek/SKILL.md"
+      ],
+      "gold_count": 9,
+      "status": "ok"
+    },
+    {
+      "name": "mek_marketplace_name",
+      "query": "What marketplace name does the MaxExpressKit plugin install under?",
+      "expected": "mek-marketplace",
+      "accept": [
+        "mek-marketplace"
+      ],
+      "anchor": "mek-marketplace",
+      "repos": [
+        "MaxExpressKit"
+      ],
+      "gold_source": [
+        "MaxExpressKit/.claude-plugin/marketplace.json",
+        "MaxExpressKit/README.md"
+      ],
+      "gold_count": 2,
+      "status": "ok"
+    }
+  ]
+}

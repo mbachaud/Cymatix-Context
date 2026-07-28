@@ -1,0 +1,638 @@
+{
+  "name": "cymatix-dogfood-gold-pack",
+  "cut_at": "2026-07-27T17:08:48-0700",
+  "archive": "cymatix-dogfood-gold-pack.tar.gz",
+  "archive_sha256": "40ac985d34119e66ae8746cd7b69618003ee52d63c760bddaf328d418598f48b",
+  "archive_bytes": 465252,
+  "files": 71,
+  "files_by_repo": {
+    "MaxExpressKit": 13,
+    "cymatix-context": 30,
+    "driftwatch": 17,
+    "scorerift": 11
+  },
+  "needles_served": 18,
+  "layout": "<repo>/<path> \u2014 point --roots at the unpacked directory",
+  "entries": [
+    {
+      "path": "MaxExpressKit/.claude-plugin/marketplace.json",
+      "bytes": 447,
+      "sha256": "f8992e3e15407d886d66084cd8257595cc3461827388d617f192416506b6006d",
+      "needles": [
+        "mek_guardrails",
+        "mek_marketplace_name"
+      ]
+    },
+    {
+      "path": "MaxExpressKit/.claude-plugin/plugin.json",
+      "bytes": 186,
+      "sha256": "8ceed1f37f3245542aabbb6df40400bd639be9ccacbd5198e562c8925fdadc7f",
+      "needles": [
+        "mek_guardrails"
+      ]
+    },
+    {
+      "path": "MaxExpressKit/CHANGELOG.md",
+      "bytes": 4810,
+      "sha256": "9cefa1e44e866d93696bacf8eda0609370d4ec16378cbbdcdb3d2b1bfc3c66b9",
+      "needles": [
+        "mek_source_apps"
+      ]
+    },
+    {
+      "path": "MaxExpressKit/README.md",
+      "bytes": 2500,
+      "sha256": "dc36ce599ec3b2d30460728aff0cdedf4967818f09ddf4586929c968d8c1a2bf",
+      "needles": [
+        "mek_marketplace_name",
+        "mek_source_apps"
+      ]
+    },
+    {
+      "path": "MaxExpressKit/commands/mek-soc2.md",
+      "bytes": 562,
+      "sha256": "38be434dcac91642c2ec5f8d2ffe7135bd65ba47e5096bfe0e7a51ab40642eb0",
+      "needles": [
+        "mek_source_apps"
+      ]
+    },
+    {
+      "path": "MaxExpressKit/docs/concepts.md",
+      "bytes": 2563,
+      "sha256": "28929c9132c85b0a9c5d1851db738ace072b7de28a4e1fe8bd62848f1c8f84be",
+      "needles": [
+        "mek_source_apps"
+      ]
+    },
+    {
+      "path": "MaxExpressKit/docs/source-app-integration.md",
+      "bytes": 1273,
+      "sha256": "ea3f8498effcc7a1bb4d6cc04f278c72dc3e578bc64794f5e3ebf07139333b0e",
+      "needles": [
+        "mek_source_apps"
+      ]
+    },
+    {
+      "path": "MaxExpressKit/docs/superpowers/plans/2026-05-10-mek-v0.1.0.md",
+      "bytes": 96788,
+      "sha256": "d0f687c5b144d787786d23aadf15b5a50b338b46956d321abb96308a90761fbc",
+      "needles": [
+        "mek_guardrails",
+        "mek_source_apps"
+      ]
+    },
+    {
+      "path": "MaxExpressKit/docs/superpowers/specs/2026-05-10-mek-design.md",
+      "bytes": 17454,
+      "sha256": "331c5a3c0f77fca206feaa9341162e690c50b436d37870bf7225abdb020baf8c",
+      "needles": [
+        "mek_source_apps"
+      ]
+    },
+    {
+      "path": "MaxExpressKit/lib/source_app_detect.py",
+      "bytes": 1158,
+      "sha256": "28538dcf8520d4c1e76c084c7c8dabefc9fc18471edc29178cc69c82ad4aa93e",
+      "needles": [
+        "mek_source_apps"
+      ]
+    },
+    {
+      "path": "MaxExpressKit/package.json",
+      "bytes": 186,
+      "sha256": "932a63df58a6fb981a62c8d4ab4a995c2d8bb36fe66da617f720c88e31bfd6db",
+      "needles": [
+        "mek_guardrails"
+      ]
+    },
+    {
+      "path": "MaxExpressKit/pyproject.toml",
+      "bytes": 1470,
+      "sha256": "01f11a135041c41cd7c6ec70a0658292dd88c4ca15026d4beaaf1c6a3110dfd4",
+      "needles": [
+        "mek_guardrails"
+      ]
+    },
+    {
+      "path": "MaxExpressKit/skills/using-mek/SKILL.md",
+      "bytes": 1474,
+      "sha256": "176a74fcdfd5e5526bd535d3c45dc5fc2a925413d8b2674204a1cd68bcfee189",
+      "needles": [
+        "mek_guardrails",
+        "mek_source_apps"
+      ]
+    },
+    {
+      "path": "cymatix-context/README.md",
+      "bytes": 21845,
+      "sha256": "7b47be5ad45ae1f911f55afb5b17088ed699d4c9ff237e87f8676b6427bdc5e2",
+      "needles": [
+        "cymatix_cymatics_bins",
+        "cymatix_genome_path",
+        "cymatix_proxy_port"
+      ]
+    },
+    {
+      "path": "cymatix-context/benchmarks/dogfood/needles_dogfood.py",
+      "bytes": 7519,
+      "sha256": "9c8d2e2e113a6b503cecd0f8daa535fedce1a4de23d0de7f763d7ec58bb8cf24",
+      "needles": [
+        "cymatix_cymatics_bins",
+        "cymatix_expression_tokens",
+        "cymatix_fusion_default",
+        "cymatix_genome_path",
+        "cymatix_know_emit_floor",
+        "cymatix_max_genes",
+        "cymatix_proxy_port",
+        "cymatix_splice_aggressiveness"
+      ]
+    },
+    {
+      "path": "cymatix-context/benchmarks/dogfood/needles_resolved.json",
+      "bytes": 19095,
+      "sha256": "b3013cb01c396d400f2f2f6b964dc89e053a96efd7ac6f6ad2463332fccc6186",
+      "needles": [
+        "cymatix_cymatics_bins"
+      ]
+    },
+    {
+      "path": "cymatix-context/cymatix.toml",
+      "bytes": 40557,
+      "sha256": "5bcccb54b74d68060f0dc38a3020deee9f89682c09cddb9ffda6a08226c7974d",
+      "needles": [
+        "cymatix_cymatics_bins",
+        "cymatix_expression_tokens",
+        "cymatix_genome_path",
+        "cymatix_know_emit_floor",
+        "cymatix_max_genes",
+        "cymatix_splice_aggressiveness"
+      ]
+    },
+    {
+      "path": "cymatix-context/cymatix_context/config.py",
+      "bytes": 99469,
+      "sha256": "a7859f27d640bbf7f321bbed47ace056cca8e8d31ef17eb6aada9997b59b5500",
+      "needles": [
+        "cymatix_fusion_default"
+      ]
+    },
+    {
+      "path": "cymatix-context/cymatix_context/identity/registry.py",
+      "bytes": 48015,
+      "sha256": "6890b1cdb918fccbdf41497fd4c709e08962eb1d198cbd89d44bafde50bba51e",
+      "needles": [
+        "cymatix_proxy_port"
+      ]
+    },
+    {
+      "path": "cymatix-context/cymatix_context/knowledge_store.py",
+      "bytes": 244509,
+      "sha256": "22fbe25929a137b068a50a16a3f679f8db9eed6083adee9b9e1c62e2f88c6591",
+      "needles": [
+        "cymatix_fusion_default"
+      ]
+    },
+    {
+      "path": "cymatix-context/docs/api/endpoints.md",
+      "bytes": 4392,
+      "sha256": "d05ec8afe032abd419ec63a8d6f993980f9036eae1f4407d2255a9a1a96971ac",
+      "needles": [
+        "cymatix_proxy_port"
+      ]
+    },
+    {
+      "path": "cymatix-context/docs/architecture/OBSERVABILITY.md",
+      "bytes": 18930,
+      "sha256": "f6456a318987d02d4628bdc19d09cef53a2ded91d095dc644dadfc37e87666c8",
+      "needles": [
+        "cymatix_proxy_port"
+      ]
+    },
+    {
+      "path": "cymatix-context/docs/architecture/SESSION_REGISTRY.md",
+      "bytes": 29127,
+      "sha256": "274410a47b0d8df4acbaf8ac4ee37846ad083c29a3bc25527454afc9003793c7",
+      "needles": [
+        "cymatix_proxy_port"
+      ]
+    },
+    {
+      "path": "cymatix-context/docs/benchmarks/2026-07-06-know-logistic-calibration.md",
+      "bytes": 5041,
+      "sha256": "e9affeae0ca9c8ff889b2fcae85c7d27c9804db0531ea13dc5af0e209e18f2ac",
+      "needles": [
+        "cymatix_know_emit_floor"
+      ]
+    },
+    {
+      "path": "cymatix-context/docs/benchmarks/2026-07-10-erb-blob-829k-reproduction.md",
+      "bytes": 29058,
+      "sha256": "84b597936c60fb4f20580be728d59514001f2cdedf64450dcab9115c39bd2fe3",
+      "needles": [
+        "cymatix_expression_tokens"
+      ]
+    },
+    {
+      "path": "cymatix-context/docs/benchmarks/MULTI_VALID_GOLD.md",
+      "bytes": 22733,
+      "sha256": "5d3cdf698d8204b41fa5a7a906b7eef85c6814ac7d9bd4210cbe0d4c05ffd0e3",
+      "needles": [
+        "cymatix_expression_tokens",
+        "cymatix_max_genes"
+      ]
+    },
+    {
+      "path": "cymatix-context/docs/benchmarks/cymatix_probe_lexical.toml",
+      "bytes": 4408,
+      "sha256": "2c06d5b1c0fcdbd0f2d71a70cd6c9fe2a996ea5d865656bd186cf571ef3508c4",
+      "needles": [
+        "cymatix_expression_tokens",
+        "cymatix_max_genes"
+      ]
+    },
+    {
+      "path": "cymatix-context/docs/benchmarks/cymatix_probe_symbol.toml",
+      "bytes": 5427,
+      "sha256": "e5b73d0df5e65f60642f64a21a674e68d91849b3c38fb7da560dd9d58de83b5f",
+      "needles": [
+        "cymatix_expression_tokens",
+        "cymatix_max_genes"
+      ]
+    },
+    {
+      "path": "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_legacy.toml",
+      "bytes": 40188,
+      "sha256": "2a5f5a5eda3ec69023e1af0ef5ca6e14c8cdc1d436c2eeffdf7772c76c12834e",
+      "needles": [
+        "cymatix_cymatics_bins",
+        "cymatix_expression_tokens",
+        "cymatix_genome_path",
+        "cymatix_know_emit_floor",
+        "cymatix_max_genes",
+        "cymatix_splice_aggressiveness"
+      ]
+    },
+    {
+      "path": "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_off.toml",
+      "bytes": 40188,
+      "sha256": "7a2db300b1d492a32e723e23d9c9cf4336b83f6060e19717a9316008d671b35c",
+      "needles": [
+        "cymatix_cymatics_bins",
+        "cymatix_expression_tokens",
+        "cymatix_genome_path",
+        "cymatix_know_emit_floor",
+        "cymatix_max_genes",
+        "cymatix_splice_aggressiveness"
+      ]
+    },
+    {
+      "path": "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_scale_relative.toml",
+      "bytes": 40188,
+      "sha256": "e91b2f2df4cdaf8f711bebd2fa4b60060f49f5555139f47226ddc029b63993a9",
+      "needles": [
+        "cymatix_cymatics_bins",
+        "cymatix_expression_tokens",
+        "cymatix_genome_path",
+        "cymatix_know_emit_floor",
+        "cymatix_max_genes",
+        "cymatix_splice_aggressiveness"
+      ]
+    },
+    {
+      "path": "cymatix-context/docs/config-reference.md",
+      "bytes": 106488,
+      "sha256": "94d99e72759a4336c6e7f46c8c4d4050caf36b5a24d0d9760693c9d7379ead8f",
+      "needles": [
+        "cymatix_cymatics_bins",
+        "cymatix_expression_tokens",
+        "cymatix_genome_path",
+        "cymatix_max_genes",
+        "cymatix_splice_aggressiveness"
+      ]
+    },
+    {
+      "path": "cymatix-context/docs/ops/SKILLS_BUNDLE.md",
+      "bytes": 10561,
+      "sha256": "bfa576e0e3604e89bc8beee783e3221e133698807a12485be2a5db1ac121bf15",
+      "needles": [
+        "cymatix_proxy_port"
+      ]
+    },
+    {
+      "path": "cymatix-context/docs/reviews/2026-05-16-deep-review/00-tier0-implementation-plan.md",
+      "bytes": 57400,
+      "sha256": "35d5f5ba5b2a8797d7a1066101f6ad802a383c30823d13259ff367330bbbb5bc",
+      "needles": [
+        "cymatix_fusion_default"
+      ]
+    },
+    {
+      "path": "cymatix-context/docs/reviews/2026-05-16-deep-review/pipeline-02-retrieval-fusion.md",
+      "bytes": 27336,
+      "sha256": "22b385eb2e6fda52793443b53503630a786de6b674048383231b869aab3ed850",
+      "needles": [
+        "cymatix_max_genes"
+      ]
+    },
+    {
+      "path": "cymatix-context/docs/superpowers/plans/2026-07-20-cymatix-readme-draft.md",
+      "bytes": 19272,
+      "sha256": "7ee809577c52e4c552ea73b9171b1ab8daa0363bba2609bd5f20628da63974c2",
+      "needles": [
+        "cymatix_genome_path",
+        "cymatix_proxy_port"
+      ]
+    },
+    {
+      "path": "cymatix-context/docs/superpowers/plans/2026-07-25-portfolio-readme-refresh.md",
+      "bytes": 20077,
+      "sha256": "2b85c420ec3b88a6c9f4e9d2ad623e1662dbea78b3a320b3b7c97089b029ec6d",
+      "needles": [
+        "cymatix_cymatics_bins"
+      ]
+    },
+    {
+      "path": "cymatix-context/docs/superpowers/specs/2026-07-25-portfolio-readme-refresh-design.md",
+      "bytes": 13904,
+      "sha256": "676ab9c4cc98477053a9c649d2d2d66437a4fb00baac3dae504fbefa366b4152",
+      "needles": [
+        "cymatix_cymatics_bins"
+      ]
+    },
+    {
+      "path": "cymatix-context/scripts/cymatix_heartbeat.py",
+      "bytes": 4468,
+      "sha256": "380308582dfa3e509d31d3a1b64d0f4d3eafabb710e34df9ce6c50fb732f5263",
+      "needles": [
+        "cymatix_proxy_port"
+      ]
+    },
+    {
+      "path": "cymatix-context/scripts/diagnose_file_grain.py",
+      "bytes": 4655,
+      "sha256": "50e2c1ed98d890331a05fc49a32faef18f1f77b54a830e23564afcd4d0711fba",
+      "needles": [
+        "cymatix_proxy_port"
+      ]
+    },
+    {
+      "path": "cymatix-context/scripts/run_repobench_r.ps1",
+      "bytes": 18522,
+      "sha256": "0d61b644d01198a4040a7736d4f2c157c2a9718bfec2f1c171e2c4ea588531cd",
+      "needles": [
+        "cymatix_expression_tokens",
+        "cymatix_max_genes"
+      ]
+    },
+    {
+      "path": "cymatix-context/tests/test_diag_shard_dense.py",
+      "bytes": 20682,
+      "sha256": "6dc42c354bcaed3335fa34e4357f4040e9db8c414feb96ccfcd85ffd6b536633",
+      "needles": [
+        "cymatix_proxy_port"
+      ]
+    },
+    {
+      "path": "cymatix-context/tests/test_freshness_gate.py",
+      "bytes": 27978,
+      "sha256": "ebfd836b2bdbade0713ab20f23c8242fff25e26eb418bf8229c9f7780cc3436d",
+      "needles": [
+        "cymatix_max_genes"
+      ]
+    },
+    {
+      "path": "driftwatch/.github/workflows/ci.yml",
+      "bytes": 1107,
+      "sha256": "8f6d18f6b7a8d907f8f41c0fcf4c9fbbf0ec196b321a23b83231009ce8ef9d89",
+      "needles": [
+        "driftwatch_default_ollama_model"
+      ]
+    },
+    {
+      "path": "driftwatch/README.md",
+      "bytes": 8780,
+      "sha256": "6ac391da440e70e6c803d53d9ac2edbaf255293ff4c1991448cc7ed8c8e308fb",
+      "needles": [
+        "driftwatch_default_inference_server",
+        "driftwatch_default_ollama_model",
+        "driftwatch_default_secret",
+        "driftwatch_version"
+      ]
+    },
+    {
+      "path": "driftwatch/SECURITY.md",
+      "bytes": 3836,
+      "sha256": "0a45fa775d8f21aea48e04f1a5e66607b2f8aad0d0bfc01e7d07dee31ead0a3b",
+      "needles": [
+        "driftwatch_default_inference_server",
+        "driftwatch_default_secret"
+      ]
+    },
+    {
+      "path": "driftwatch/deploy/litellm-config.yaml",
+      "bytes": 1346,
+      "sha256": "94187457e9a524cbfec143eaddfca4955927da07332c84d1c8bb76c760cb2b2e",
+      "needles": [
+        "driftwatch_default_inference_server",
+        "driftwatch_default_ollama_model"
+      ]
+    },
+    {
+      "path": "driftwatch/docker-compose.yml",
+      "bytes": 4089,
+      "sha256": "6f4e1123747b27104d0771b02f03be27be96f5e6e5e4ce9883855e504b4d5401",
+      "needles": [
+        "driftwatch_default_inference_server",
+        "driftwatch_default_secret"
+      ]
+    },
+    {
+      "path": "driftwatch/docs/superpowers/plans/2026-04-07-auth-biged-templates.md",
+      "bytes": 85192,
+      "sha256": "afa428cb350d27f5431bcd9893d4353747640f15a054cf73ae7736bec4294314",
+      "needles": [
+        "driftwatch_default_inference_server",
+        "driftwatch_default_ollama_model"
+      ]
+    },
+    {
+      "path": "driftwatch/docs/superpowers/plans/2026-07-10-driftwatch-pre-migration-cutover.md",
+      "bytes": 28061,
+      "sha256": "01d0282d8bbf5c0b6944f2a36207e19aaa3113f32b6f3489a959f29fc1ef0698",
+      "needles": [
+        "driftwatch_default_ollama_model"
+      ]
+    },
+    {
+      "path": "driftwatch/docs/superpowers/specs/2026-04-07-auth-biged-templates-design.md",
+      "bytes": 28982,
+      "sha256": "946f308051f7a1047676226735b805d9b9a130b060dee81dc803ea46eb916d06",
+      "needles": [
+        "driftwatch_default_inference_server"
+      ]
+    },
+    {
+      "path": "driftwatch/docs/superpowers/specs/2026-07-10-driftwatch-pre-migration-cutover-design.md",
+      "bytes": 11657,
+      "sha256": "21e713c8129471594d1d7c325e54e5921157017ebd005b00d3a102e6d41e43da",
+      "needles": [
+        "driftwatch_version"
+      ]
+    },
+    {
+      "path": "driftwatch/docs/testing/2026-07-10-presentation-demo-checklist.md",
+      "bytes": 5954,
+      "sha256": "4b525ba98727b8d1247e71196739d8fb2e9758a881737b475db916f84628dc34",
+      "needles": [
+        "driftwatch_default_ollama_model"
+      ]
+    },
+    {
+      "path": "driftwatch/web/src/app/api/docs/inference/route.ts",
+      "bytes": 1704,
+      "sha256": "bdc05e206849e10fc2c1d889b11c1525bddcb4981abdac94c5e07fcf5d371f84",
+      "needles": [
+        "driftwatch_default_inference_server"
+      ]
+    },
+    {
+      "path": "driftwatch/web/src/lib/inference/providers/local-ollama.ts",
+      "bytes": 1701,
+      "sha256": "6af701a5ed921d4d5aaceeb4116b4ea48e95be701857626ce0ebfcb8570288ab",
+      "needles": [
+        "driftwatch_default_ollama_model"
+      ]
+    },
+    {
+      "path": "driftwatch/web/src/lib/inference/providers/ollama-cloud.ts",
+      "bytes": 684,
+      "sha256": "a8c26d98fe58ed6abd1be9978b0b78ccd9c22ad1c85ec23adb650e837594f4e4",
+      "needles": [
+        "driftwatch_default_ollama_model"
+      ]
+    },
+    {
+      "path": "driftwatch/web/src/lib/inference/providers/openai-compat.ts",
+      "bytes": 3086,
+      "sha256": "51bd188ef25c367de99e2542b83ef85e845b25e39bbc357db679953cc89406f3",
+      "needles": [
+        "driftwatch_default_inference_server"
+      ]
+    },
+    {
+      "path": "driftwatch/web/src/lib/inference/router.ts",
+      "bytes": 2571,
+      "sha256": "c5d89533094dced4062f37ff9b94b6276cb722442b262a4db4a99052be09fa42",
+      "needles": [
+        "driftwatch_default_inference_server"
+      ]
+    },
+    {
+      "path": "driftwatch/web/src/lib/ollama/client.ts",
+      "bytes": 2832,
+      "sha256": "3a38964e9a45f827a7e5e221d9288ccdbc67fed167ee94cc98953a620a0c5954",
+      "needles": [
+        "driftwatch_default_ollama_model"
+      ]
+    },
+    {
+      "path": "driftwatch/web/tests/brand/legacy-name.test.ts",
+      "bytes": 5385,
+      "sha256": "f45fafda5c2874a7c00d6ba5953946e20da471e65c0481e0311948bfc5dd9c8f",
+      "needles": [
+        "driftwatch_default_inference_server"
+      ]
+    },
+    {
+      "path": "scorerift/CHANGELOG.md",
+      "bytes": 4563,
+      "sha256": "68d0ecd3963f35bd0acfd6cfddae42d4deff62f8af0ff0b9380d8fae3b0708a8",
+      "needles": [
+        "scorerift_import_hygiene_confidence"
+      ]
+    },
+    {
+      "path": "scorerift/README.md",
+      "bytes": 16355,
+      "sha256": "8bb480336221503591d1211c09ad0c707f78a282205645923cb232c9bead6daa",
+      "needles": [
+        "scorerift_confidence_gate",
+        "scorerift_divergence_threshold",
+        "scorerift_import_hygiene_confidence"
+      ]
+    },
+    {
+      "path": "scorerift/docs/ARCHITECTURE.md",
+      "bytes": 10449,
+      "sha256": "886987449794e7214ea8f8c6a82d0a6ddfd9aff5ef415ccf13bd75b201e9a39a",
+      "needles": [
+        "scorerift_divergence_threshold"
+      ]
+    },
+    {
+      "path": "scorerift/docs/QUICKSTART.md",
+      "bytes": 8188,
+      "sha256": "b163103d04e78d2de6647944096b7bccfeb1697482109c477f86f57354c0055d",
+      "needles": [
+        "scorerift_confidence_gate",
+        "scorerift_divergence_threshold"
+      ]
+    },
+    {
+      "path": "scorerift/docs/STANDARDS.md",
+      "bytes": 9934,
+      "sha256": "f85a74cad188be9fad40ba6b67c6ea55f4e6847d914ae5f68ed20dc8011d9484",
+      "needles": [
+        "scorerift_confidence_gate"
+      ]
+    },
+    {
+      "path": "scorerift/examples/snapshots/self_audit_example.json",
+      "bytes": 1697,
+      "sha256": "f36d72842674743fcb79db0258684dc0870dc88a857a6d08f1f720ebb751dea5",
+      "needles": [
+        "scorerift_import_hygiene_confidence"
+      ]
+    },
+    {
+      "path": "scorerift/src/scorerift/dashboard/ui.py",
+      "bytes": 29818,
+      "sha256": "fff8414b926af6cb1bf059618778a4079ff7a6f357a8b35a0d055166f464ce3d",
+      "needles": [
+        "scorerift_confidence_gate"
+      ]
+    },
+    {
+      "path": "scorerift/src/scorerift/engine.py",
+      "bytes": 18738,
+      "sha256": "4fef7faaa3c8fec9148251055ecd2b96186703534fd9f6719f15c50d9e18bf09",
+      "needles": [
+        "scorerift_divergence_threshold"
+      ]
+    },
+    {
+      "path": "scorerift/src/scorerift/presets/interaction_graphs.py",
+      "bytes": 2494,
+      "sha256": "3ffc4ff41e08423bfee2b783edbf96db4814282bea36fd44895b36bb24961593",
+      "needles": [
+        "scorerift_import_hygiene_confidence"
+      ]
+    },
+    {
+      "path": "scorerift/src/scorerift/presets/python_project.py",
+      "bytes": 12540,
+      "sha256": "589fc2f844e9e957d45be910a0d0437c6e0f2e8f3bd68b41b4500daa3f223d7a",
+      "needles": [
+        "scorerift_import_hygiene_confidence"
+      ]
+    },
+    {
+      "path": "scorerift/tests/test_ray_trace.py",
+      "bytes": 10361,
+      "sha256": "2bf7f1424ebb9ebddc07f3c9c194bbaed51356d3f1f7edc590f35cbc8f1771e1",
+      "needles": [
+        "scorerift_import_hygiene_confidence"
+      ]
+    }
+  ]
+}

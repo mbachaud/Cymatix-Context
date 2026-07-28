@@ -151,3 +151,10 @@ google_doc.*
 overnight_logs/
 GEMINI.md
 scripts/.ingest_progress
+
+# Dogfood bed — regenerable artifacts (see benchmarks/dogfood/README.md)
+benchmarks/dogfood/pack/*.tar.gz
+benchmarks/dogfood/pack/*.sha256
+benchmarks/dogfood/gene_ids/
+benchmarks/dogfood/baseline.json
+benchmarks/dogfood/dogfood_manifest.json
