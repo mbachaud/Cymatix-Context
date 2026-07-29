@@ -120,7 +120,7 @@ Delivery as a function of `max_genes`, from the baseline ranks:
 | 40 | 0.944 | 0.875 | 1.000 |
 | 50 | 1.000 | 1.000 | 1.000 |
 
-```
+```text
 cymatix ranks: 6, 6, 23, 23, 29, 30, 31, 41
 other   ranks: 1, 1, 1, 1, 1, 1, 2, 2, 3, 7
 ```
@@ -141,24 +141,66 @@ option, and it is why it is not a recommendation.
 weight (inert under the default), fusion mode (RRF already the best), rerank
 combinator (default already the best of four).
 
-**Not yet tested — and the remaining hypothesis.** Nothing in this ladder
-touches *why* cymatix's own documentation crowds out its own gold. The
-gold-set-size inversion from the baseline still stands: 121 gold genes lands at
-rank 30, 2 gold genes lands at rank 1. That is the signature of near-duplicate
-documents splitting score mass, and no reweighting of legs fixes it because
-every leg sees the same near-duplicates.
+**What actually occupies the delivered window — and it is not what the baseline
+guessed.** The baseline hypothesised near-duplicate *documentation* splitting
+score mass. Inspecting the top-12 of each failing needle refutes that. **Test
+files are the crowd.**
 
-That points at **deduplication / diversity** rather than weighting:
+For `cymatix_fusion_default` ("What is the default retrieval fusion_mode?"),
+where gold sits at rank 30, the delivered window is:
 
-1. **Balanced-bed control first.** Rebuild with cymatix-context down-sampled to
-   roughly the other three and re-measure. If the cymatix ranks collapse toward
-   the others, corpus share is confirmed as the mechanism and the target is
-   clear. This is the single highest-value next run and it is a ~40 min rebuild.
-2. **Near-duplicate diagnosis.** For a failing needle, inspect what actually
-   occupies ranks 1-12. If they are other chunks restating the same default,
-   that is direct evidence.
-3. **MMR-style diversity or near-duplicate collapse at assembly** — untested,
-   and the only family of fix this ladder has not ruled out.
+```text
+rank  score  source
+   1  4.192  tests/test_foveated_splice.py
+   2  4.156  tests/test_fusion_rrf.py
+   3  4.110  tests/test_ribosome.py
+   4  4.110  tests/test_pipeline.py
+   5  4.103  docs/MISSION.md
+   6  4.064  tests/test_ribosome.py
+   7  4.048  cymatix_context/backends/compressor.py
+   8  2.738  CLAUDE.md
+```
+
+Across all six failing needles the 72 delivered slots break down as:
+
+| kind | slots | share of window | share of cymatix corpus |
+| --- | ---: | ---: | ---: |
+| **test** | **32** | **44%** | **16.9%** |
+| source | 24 | 33% | — |
+| docs | 10 | 14% | — |
+| bench/script | 5 | 7% | — |
+
+Tests are **16.9% of the cymatix genes but 44% of the delivered slots — 2.6x
+over-represented** — and they are close to the worst possible answer to "what is
+the default X?". A test file mentions `fusion_mode`, `rrf` and the surrounding
+vocabulary constantly, in fixtures, parametrize lists and assertions, so it is
+lexically dense in exactly the query terms while being definitionally worthless.
+`config.py`, which states the default once, loses on term density.
+
+This is far more tractable than "near-duplicate documentation", and it explains
+the gold-set-size inversion without needing a diversity argument: large gold
+sets belong to values that are *discussed* widely, and widely-discussed values
+are widely *tested*, so they attract proportionally more test-file competition.
+
+The repo already has the mechanism that ought to cover this — `doc_type_boost_mode`
+(#121/#264), which exists to prefer implementation files over READMEs. It has no
+notion of tests.
+
+### Next, in priority order
+
+1. **Doc-type/authority demotion for tests on definitional queries.** The most
+   direct lever and the one the evidence points at. Needs care rather than a
+   blanket rule: tests are legitimately the *best* answer to "how is X used?",
+   so this is a query-class-conditional signal — which places it squarely in
+   #205 Layer 2's classifier-owned scope rather than in a global weight.
+2. **Ablation: rebuild excluding `tests/`.** The cheapest possible confirmation.
+   If the six failing needles jump inside k=12, the diagnosis is settled. This
+   is a diagnostic bed variant, **not** a proposed default — tests belong in a
+   real corpus.
+3. **Balanced-bed control** (~40 min rebuild, cymatix-context down-sampled to
+   match the other three). Still worth running, but its priority drops now that
+   the top-12 composition names the competitor: it tests whether corpus *share*
+   adds anything beyond corpus *composition*.
 
 ## Caveats
 
