@@ -161,3 +161,5 @@ benchmarks/dogfood/dogfood_manifest.json
 
 benchmarks/dogfood/baseline_k50.json
 benchmarks/dogfood/ladder*.json
+benchmarks/dogfood/cymatics_ablation.json
+benchmarks/dogfood/arm_*.json
