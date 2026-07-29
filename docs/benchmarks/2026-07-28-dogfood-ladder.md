@@ -186,21 +186,90 @@ The repo already has the mechanism that ought to cover this — `doc_type_boost_
 (#121/#264), which exists to prefer implementation files over READMEs. It has no
 notion of tests.
 
-### Next, in priority order
+## The tests ablation — necessary, but nowhere near sufficient
 
-1. **Doc-type/authority demotion for tests on definitional queries.** The most
-   direct lever and the one the evidence points at. Needs care rather than a
-   blanket rule: tests are legitimately the *best* answer to "how is X used?",
-   so this is a query-class-conditional signal — which places it squarely in
-   #205 Layer 2's classifier-owned scope rather than in a global weight.
-2. **Ablation: rebuild excluding `tests/`.** The cheapest possible confirmation.
-   If the six failing needles jump inside k=12, the diagnosis is settled. This
-   is a diagnostic bed variant, **not** a proposed default — tests belong in a
-   real corpus.
-3. **Balanced-bed control** (~40 min rebuild, cymatix-context down-sampled to
-   match the other three). Still worth running, but its priority drops now that
-   the top-12 composition names the competitor: it tests whether corpus *share*
-   adds anything beyond corpus *composition*.
+Run as a **simulation, not a rebuild**: re-rank the existing scored pool with
+test-file genes dropped. That answers "if tests weren't competing for slots,
+where would gold land?" without a 2.7 h re-ingest. (It holds scores fixed, so it
+does not model the small IDF shift a real rebuild would cause. For the
+delivered-window question that is close enough; for a default flip it would not
+be.)
+
+| needle | with tests | no tests | Δ |
+| --- | ---: | ---: | ---: |
+| cymatix_proxy_port | 6 | **3** | −3 |
+| cymatix_expression_tokens | 6 | **2** | −4 |
+| cymatix_max_genes | 23 | **9** | −14 |
+| cymatix_splice_aggressiveness | 29 | 14 | −15 |
+| cymatix_fusion_default | 30 | 16 | −14 |
+| cymatix_cymatics_bins | 23 | 17 | −6 |
+| cymatix_genome_path | 31 | 23 | −8 |
+| cymatix_know_emit_floor | 41 | 28 | −13 |
+| *all 10 non-cymatix* | 1–7 | 1–6 | 0 or −1 |
+
+**Every** cymatix needle improves, by 3 to 15 ranks. **No** non-cymatix needle
+is meaningfully affected. That is a clean attribution: tests are demonstrably a
+real competitor, and only for the repo that has many of them.
+
+**And yet recall@12 moves only 0.667 → 0.722** (cymatix 0.250 → 0.375). One
+needle crosses the line. Five still miss, at ranks 14, 16, 17, 23, 28.
+
+So demoting tests is **not the fix**. It is one contributor among several, and
+anyone who shipped it expecting the deficit to close would be disappointed by
+roughly 5 percentage points.
+
+## What is really wrong: "mentions X" out-ranks "defines X"
+
+Composition of the top-12 for the five needles that still miss *after* tests are
+removed:
+
+| kind | slots | share |
+| --- | ---: | ---: |
+| **source** (`.py` under `cymatix_context/`) | 32 | **53%** |
+| docs | 15 | 25% |
+| bench/script | 9 | 15% |
+| root markdown | 3 | 5% |
+| **config `.toml`** | **0** | **0%** |
+
+The residual competitor is cymatix's **own source modules** — the ones that
+*thread* a config key through the pipeline, read it, pass it as a keyword
+argument — out-ranking the single place that *declares* its default.
+
+The sharpest case is `cymatix_genome_path`. The query is "What is the default
+Cymatix knowledge store path?" The answer is declared in `cymatix.toml`. **Not
+one `.toml` file appears anywhere in the top 12** — the window is nine source
+files and three docs, all of which mention the path without defining it.
+
+That unifies both halves of the finding. Tests, usage sites and design docs all
+mention a config key far more often than the declaration site states it, and
+term-frequency scoring rewards exactly that. Retrieval currently cannot
+distinguish **"mentions X"** from **"defines X"**, and for a definitional query
+that distinction is the entire answer.
+
+It also explains the gold-set-size inversion cleanly: a widely-discussed value
+has more mentions, so more competitors, so a *worse* rank — which is why 121
+gold genes ranks below 2.
+
+## Next, in priority order
+
+1. **A definition-site signal for definitional queries.** This is the lever the
+   evidence actually points at, and it is not a weight tweak: it needs retrieval
+   to know that `fusion_mode: str = "rrf"` in `config.py` and
+   `fusion_mode = "rrf"` in `cymatix.toml` are *declarations*, while the same
+   token in a test fixture or a keyword-argument pass-through is a *reference*.
+   Assignment/declaration detection at ingest is one route; a `.toml`/config
+   authority class for the `definitional` query class is a cheaper first cut.
+   Query-class-conditional either way — tests and usage sites are the *right*
+   answer to "how is X used?" — which places it in **#205 Layer 2**'s
+   classifier-owned scope, not a global weight.
+2. **Extend `doc_type_boost_mode` with a test/usage tier** (#121/#264). It
+   already exists to prefer implementation over READMEs and has no notion of
+   tests or declaration sites. The ablation quantifies the ceiling of this route
+   on its own: **+5.5pp**. Useful, not sufficient, and worth knowing before
+   building it.
+3. **Balanced-bed control** — now the lowest priority of the three. The window
+   composition names the competitors directly, so corpus *share* is no longer
+   the open question; corpus *composition* is, and that is answered.
 
 ## Caveats
 
