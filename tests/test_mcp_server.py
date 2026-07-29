@@ -2,7 +2,11 @@
 
 import pytest
 
-pytest.importorskip("mcp", reason="mcp SDK extra not installed")
+pytest.importorskip(
+    "mcp.server.fastmcp",
+    reason="mcp SDK extra not installed, or too new to expose "
+           "mcp.server.fastmcp (removed in mcp 2.0 — see pyproject pin)",
+)
 
 import pytest
 

@@ -54,7 +54,7 @@ cpu = ["spacy>=3.7"]
 # MCP SDK — required for `python -m cymatix_context.mcp_server` (Claude Code,
 # Cursor, Claude Desktop integration). Core install does NOT pull this;
 # add the extra if you're a MCP host operator.
-mcp = ["mcp>=1.0"]
+mcp = ["mcp>=1.0,<2"]
 # NLI / DeBERTa cross-encoder backends — only needed when
 # `[ribosome] backend = "deberta"` or relation-graph NLI is enabled.
 # `embeddings` already transitively pulls torch via sentence-transformers,
@@ -100,7 +100,7 @@ all = [
     "numpy",
     "sentence-transformers",
     "spacy>=3.7",
-    "mcp>=1.0",
+    "mcp>=1.0,<2",
     "torch>=2.0",
     "transformers>=4.30",
     "opentelemetry-sdk>=1.27",
