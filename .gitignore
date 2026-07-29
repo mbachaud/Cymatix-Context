@@ -160,3 +160,4 @@ benchmarks/dogfood/baseline.json
 benchmarks/dogfood/dogfood_manifest.json
 
 benchmarks/dogfood/baseline_k50.json
+benchmarks/dogfood/ladder*.json
