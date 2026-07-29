@@ -1,0 +1,217 @@
+{
+  "measured_at": "2026-07-29T14:45:08-0700",
+  "genome": "F:\\Projects\\cymatix-context\\genomes\\dogfood\\genome.db",
+  "k": 50,
+  "needles": 18,
+  "controls": "README-named: hashed bag-of-words + random-bin",
+  "arms": [
+    {
+      "label": "A shipped (md5 bins, spread 3.0)",
+      "ranks": {
+        "cymatix_proxy_port": 7,
+        "cymatix_expression_tokens": 6,
+        "cymatix_cymatics_bins": 14,
+        "cymatix_fusion_default": 33,
+        "cymatix_know_emit_floor": 15,
+        "cymatix_max_genes": 14,
+        "cymatix_genome_path": 18,
+        "cymatix_splice_aggressiveness": 13,
+        "scorerift_divergence_threshold": 1,
+        "scorerift_confidence_gate": 1,
+        "scorerift_import_hygiene_confidence": 4,
+        "driftwatch_version": 3,
+        "driftwatch_default_ollama_model": 1,
+        "driftwatch_default_inference_server": 1,
+        "driftwatch_default_secret": 2,
+        "mek_guardrails": 2,
+        "mek_source_apps": 1,
+        "mek_marketplace_name": 1
+      },
+      "rollup": {
+        "recall@1": 0.3333,
+        "recall@5": 0.5556,
+        "recall@12": 0.6667,
+        "recall@50": 1.0,
+        "mrr": 0.4592,
+        "median_rank": 3.5
+      },
+      "seconds": 29.8
+    },
+    {
+      "label": "B cymatics OFF",
+      "ranks": {
+        "cymatix_proxy_port": 7,
+        "cymatix_expression_tokens": 6,
+        "cymatix_cymatics_bins": 14,
+        "cymatix_fusion_default": 33,
+        "cymatix_know_emit_floor": 15,
+        "cymatix_max_genes": 14,
+        "cymatix_genome_path": 18,
+        "cymatix_splice_aggressiveness": 13,
+        "scorerift_divergence_threshold": 1,
+        "scorerift_confidence_gate": 1,
+        "scorerift_import_hygiene_confidence": 4,
+        "driftwatch_version": 1,
+        "driftwatch_default_ollama_model": 1,
+        "driftwatch_default_inference_server": 1,
+        "driftwatch_default_secret": 1,
+        "mek_guardrails": 1,
+        "mek_source_apps": 1,
+        "mek_marketplace_name": 1
+      },
+      "rollup": {
+        "recall@1": 0.5,
+        "recall@5": 0.5556,
+        "recall@12": 0.6667,
+        "recall@50": 1.0,
+        "mrr": 0.5518,
+        "median_rank": 2.5
+      },
+      "seconds": 19.1
+    },
+    {
+      "label": "C hashed bag-of-words (no spread)",
+      "ranks": {
+        "cymatix_proxy_port": 7,
+        "cymatix_expression_tokens": 6,
+        "cymatix_cymatics_bins": 14,
+        "cymatix_fusion_default": 33,
+        "cymatix_know_emit_floor": 15,
+        "cymatix_max_genes": 14,
+        "cymatix_genome_path": 18,
+        "cymatix_splice_aggressiveness": 13,
+        "scorerift_divergence_threshold": 1,
+        "scorerift_confidence_gate": 1,
+        "scorerift_import_hygiene_confidence": 4,
+        "driftwatch_version": 3,
+        "driftwatch_default_ollama_model": 1,
+        "driftwatch_default_inference_server": 1,
+        "driftwatch_default_secret": 2,
+        "mek_guardrails": 2,
+        "mek_source_apps": 1,
+        "mek_marketplace_name": 1
+      },
+      "rollup": {
+        "recall@1": 0.3333,
+        "recall@5": 0.5556,
+        "recall@12": 0.6667,
+        "recall@50": 1.0,
+        "mrr": 0.4592,
+        "median_rank": 3.5
+      },
+      "seconds": 18.9
+    },
+    {
+      "label": "D random-bin control seed=0",
+      "ranks": {
+        "cymatix_proxy_port": 7,
+        "cymatix_expression_tokens": 6,
+        "cymatix_cymatics_bins": 14,
+        "cymatix_fusion_default": 33,
+        "cymatix_know_emit_floor": 15,
+        "cymatix_max_genes": 14,
+        "cymatix_genome_path": 18,
+        "cymatix_splice_aggressiveness": 13,
+        "scorerift_divergence_threshold": 1,
+        "scorerift_confidence_gate": 1,
+        "scorerift_import_hygiene_confidence": 4,
+        "driftwatch_version": 3,
+        "driftwatch_default_ollama_model": 1,
+        "driftwatch_default_inference_server": 1,
+        "driftwatch_default_secret": 1,
+        "mek_guardrails": 2,
+        "mek_source_apps": 1,
+        "mek_marketplace_name": 1
+      },
+      "rollup": {
+        "recall@1": 0.3889,
+        "recall@5": 0.5556,
+        "recall@12": 0.6667,
+        "recall@50": 1.0,
+        "mrr": 0.487,
+        "median_rank": 3.5
+      },
+      "seconds": 19.2
+    },
+    {
+      "label": "D random-bin control seed=1",
+      "ranks": {
+        "cymatix_proxy_port": 7,
+        "cymatix_expression_tokens": 6,
+        "cymatix_cymatics_bins": 14,
+        "cymatix_fusion_default": 33,
+        "cymatix_know_emit_floor": 15,
+        "cymatix_max_genes": 14,
+        "cymatix_genome_path": 18,
+        "cymatix_splice_aggressiveness": 13,
+        "scorerift_divergence_threshold": 1,
+        "scorerift_confidence_gate": 1,
+        "scorerift_import_hygiene_confidence": 4,
+        "driftwatch_version": 3,
+        "driftwatch_default_ollama_model": 1,
+        "driftwatch_default_inference_server": 1,
+        "driftwatch_default_secret": 1,
+        "mek_guardrails": 2,
+        "mek_source_apps": 1,
+        "mek_marketplace_name": 1
+      },
+      "rollup": {
+        "recall@1": 0.3889,
+        "recall@5": 0.5556,
+        "recall@12": 0.6667,
+        "recall@50": 1.0,
+        "mrr": 0.487,
+        "median_rank": 3.5
+      },
+      "seconds": 19.7
+    },
+    {
+      "label": "D random-bin control seed=2",
+      "ranks": {
+        "cymatix_proxy_port": 7,
+        "cymatix_expression_tokens": 6,
+        "cymatix_cymatics_bins": 14,
+        "cymatix_fusion_default": 33,
+        "cymatix_know_emit_floor": 15,
+        "cymatix_max_genes": 14,
+        "cymatix_genome_path": 18,
+        "cymatix_splice_aggressiveness": 13,
+        "scorerift_divergence_threshold": 1,
+        "scorerift_confidence_gate": 1,
+        "scorerift_import_hygiene_confidence": 4,
+        "driftwatch_version": 3,
+        "driftwatch_default_ollama_model": 1,
+        "driftwatch_default_inference_server": 1,
+        "driftwatch_default_secret": 1,
+        "mek_guardrails": 2,
+        "mek_source_apps": 1,
+        "mek_marketplace_name": 1
+      },
+      "rollup": {
+        "recall@1": 0.3889,
+        "recall@5": 0.5556,
+        "recall@12": 0.6667,
+        "recall@50": 1.0,
+        "mrr": 0.487,
+        "median_rank": 3.5
+      },
+      "seconds": 19.7
+    }
+  ],
+  "verdict_inputs": {
+    "A_recall@12": 0.6667,
+    "A_mrr": 0.4592,
+    "B_off_recall@12": 0.6667,
+    "C_bow_recall@12": 0.6667,
+    "D_random_recall@12_mean": 0.6667,
+    "D_random_recall@12_spread": [
+      0.6667,
+      0.6667
+    ],
+    "D_random_mrr_mean": 0.487,
+    "D_random_mrr_spread": [
+      0.487,
+      0.487
+    ]
+  }
+}
