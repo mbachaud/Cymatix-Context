@@ -2,7 +2,7 @@
   "max_gold": 15,
   "needles_total": 18,
   "needles_ok": 18,
-  "distinct_gold_files": 71,
+  "distinct_gold_files": 61,
   "gold_files": [
     "MaxExpressKit/.claude-plugin/marketplace.json",
     "MaxExpressKit/.claude-plugin/plugin.json",
@@ -18,8 +18,6 @@
     "MaxExpressKit/pyproject.toml",
     "MaxExpressKit/skills/using-mek/SKILL.md",
     "cymatix-context/README.md",
-    "cymatix-context/benchmarks/dogfood/needles_dogfood.py",
-    "cymatix-context/benchmarks/dogfood/needles_resolved.json",
     "cymatix-context/cymatix.toml",
     "cymatix-context/cymatix_context/config.py",
     "cymatix-context/cymatix_context/identity/registry.py",
@@ -27,14 +25,6 @@
     "cymatix-context/docs/api/endpoints.md",
     "cymatix-context/docs/architecture/OBSERVABILITY.md",
     "cymatix-context/docs/architecture/SESSION_REGISTRY.md",
-    "cymatix-context/docs/benchmarks/2026-07-06-know-logistic-calibration.md",
-    "cymatix-context/docs/benchmarks/2026-07-10-erb-blob-829k-reproduction.md",
-    "cymatix-context/docs/benchmarks/MULTI_VALID_GOLD.md",
-    "cymatix-context/docs/benchmarks/cymatix_probe_lexical.toml",
-    "cymatix-context/docs/benchmarks/cymatix_probe_symbol.toml",
-    "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_legacy.toml",
-    "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_off.toml",
-    "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_scale_relative.toml",
     "cymatix-context/docs/config-reference.md",
     "cymatix-context/docs/ops/SKILLS_BUNDLE.md",
     "cymatix-context/docs/reviews/2026-05-16-deep-review/00-tier0-implementation-plan.md",
@@ -90,7 +80,6 @@
       ],
       "gold_source": [
         "cymatix-context/README.md",
-        "cymatix-context/benchmarks/dogfood/needles_dogfood.py",
         "cymatix-context/cymatix_context/identity/registry.py",
         "cymatix-context/docs/api/endpoints.md",
         "cymatix-context/docs/architecture/OBSERVABILITY.md",
@@ -101,7 +90,8 @@
         "cymatix-context/scripts/diagnose_file_grain.py",
         "cymatix-context/tests/test_diag_shard_dense.py"
       ],
-      "gold_count": 11,
+      "gold_count": 10,
+      "harness_excluded": [],
       "status": "ok"
     },
     {
@@ -118,19 +108,12 @@
         "cymatix-context"
       ],
       "gold_source": [
-        "cymatix-context/benchmarks/dogfood/needles_dogfood.py",
         "cymatix-context/cymatix.toml",
-        "cymatix-context/docs/benchmarks/2026-07-10-erb-blob-829k-reproduction.md",
-        "cymatix-context/docs/benchmarks/MULTI_VALID_GOLD.md",
-        "cymatix-context/docs/benchmarks/cymatix_probe_lexical.toml",
-        "cymatix-context/docs/benchmarks/cymatix_probe_symbol.toml",
-        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_legacy.toml",
-        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_off.toml",
-        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_scale_relative.toml",
         "cymatix-context/docs/config-reference.md",
         "cymatix-context/scripts/run_repobench_r.ps1"
       ],
-      "gold_count": 11,
+      "gold_count": 3,
+      "harness_excluded": [],
       "status": "ok"
     },
     {
@@ -146,17 +129,13 @@
       ],
       "gold_source": [
         "cymatix-context/README.md",
-        "cymatix-context/benchmarks/dogfood/needles_dogfood.py",
-        "cymatix-context/benchmarks/dogfood/needles_resolved.json",
         "cymatix-context/cymatix.toml",
-        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_legacy.toml",
-        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_off.toml",
-        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_scale_relative.toml",
         "cymatix-context/docs/config-reference.md",
         "cymatix-context/docs/superpowers/plans/2026-07-25-portfolio-readme-refresh.md",
         "cymatix-context/docs/superpowers/specs/2026-07-25-portfolio-readme-refresh-design.md"
       ],
-      "gold_count": 10,
+      "gold_count": 5,
+      "harness_excluded": [],
       "status": "ok"
     },
     {
@@ -173,12 +152,12 @@
         "cymatix-context"
       ],
       "gold_source": [
-        "cymatix-context/benchmarks/dogfood/needles_dogfood.py",
         "cymatix-context/cymatix_context/config.py",
         "cymatix-context/cymatix_context/knowledge_store.py",
         "cymatix-context/docs/reviews/2026-05-16-deep-review/00-tier0-implementation-plan.md"
       ],
-      "gold_count": 4,
+      "gold_count": 3,
+      "harness_excluded": [],
       "status": "ok"
     },
     {
@@ -194,14 +173,10 @@
         "cymatix-context"
       ],
       "gold_source": [
-        "cymatix-context/benchmarks/dogfood/needles_dogfood.py",
-        "cymatix-context/cymatix.toml",
-        "cymatix-context/docs/benchmarks/2026-07-06-know-logistic-calibration.md",
-        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_legacy.toml",
-        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_off.toml",
-        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_scale_relative.toml"
+        "cymatix-context/cymatix.toml"
       ],
-      "gold_count": 6,
+      "gold_count": 1,
+      "harness_excluded": [],
       "status": "ok"
     },
     {
@@ -216,20 +191,14 @@
         "cymatix-context"
       ],
       "gold_source": [
-        "cymatix-context/benchmarks/dogfood/needles_dogfood.py",
         "cymatix-context/cymatix.toml",
-        "cymatix-context/docs/benchmarks/MULTI_VALID_GOLD.md",
-        "cymatix-context/docs/benchmarks/cymatix_probe_lexical.toml",
-        "cymatix-context/docs/benchmarks/cymatix_probe_symbol.toml",
-        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_legacy.toml",
-        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_off.toml",
-        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_scale_relative.toml",
         "cymatix-context/docs/config-reference.md",
         "cymatix-context/docs/reviews/2026-05-16-deep-review/pipeline-02-retrieval-fusion.md",
         "cymatix-context/scripts/run_repobench_r.ps1",
         "cymatix-context/tests/test_freshness_gate.py"
       ],
-      "gold_count": 12,
+      "gold_count": 5,
+      "harness_excluded": [],
       "status": "ok"
     },
     {
@@ -246,15 +215,12 @@
       ],
       "gold_source": [
         "cymatix-context/README.md",
-        "cymatix-context/benchmarks/dogfood/needles_dogfood.py",
         "cymatix-context/cymatix.toml",
-        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_legacy.toml",
-        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_off.toml",
-        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_scale_relative.toml",
         "cymatix-context/docs/config-reference.md",
         "cymatix-context/docs/superpowers/plans/2026-07-20-cymatix-readme-draft.md"
       ],
-      "gold_count": 8,
+      "gold_count": 4,
+      "harness_excluded": [],
       "status": "ok"
     },
     {
@@ -270,14 +236,11 @@
         "cymatix-context"
       ],
       "gold_source": [
-        "cymatix-context/benchmarks/dogfood/needles_dogfood.py",
         "cymatix-context/cymatix.toml",
-        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_legacy.toml",
-        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_off.toml",
-        "cymatix-context/docs/benchmarks/cymatix_serving_probe_blend_scale_relative.toml",
         "cymatix-context/docs/config-reference.md"
       ],
-      "gold_count": 6,
+      "gold_count": 2,
+      "harness_excluded": [],
       "status": "ok"
     },
     {
@@ -299,6 +262,7 @@
         "scorerift/src/scorerift/engine.py"
       ],
       "gold_count": 4,
+      "harness_excluded": [],
       "status": "ok"
     },
     {
@@ -321,6 +285,7 @@
         "scorerift/src/scorerift/dashboard/ui.py"
       ],
       "gold_count": 4,
+      "harness_excluded": [],
       "status": "ok"
     },
     {
@@ -344,6 +309,7 @@
         "scorerift/tests/test_ray_trace.py"
       ],
       "gold_count": 6,
+      "harness_excluded": [],
       "status": "ok"
     },
     {
@@ -363,6 +329,7 @@
         "driftwatch/docs/superpowers/specs/2026-07-10-driftwatch-pre-migration-cutover-design.md"
       ],
       "gold_count": 2,
+      "harness_excluded": [],
       "status": "ok"
     },
     {
@@ -388,6 +355,7 @@
         "driftwatch/web/src/lib/ollama/client.ts"
       ],
       "gold_count": 9,
+      "harness_excluded": [],
       "status": "ok"
     },
     {
@@ -415,6 +383,7 @@
         "driftwatch/web/tests/brand/legacy-name.test.ts"
       ],
       "gold_count": 10,
+      "harness_excluded": [],
       "status": "ok"
     },
     {
@@ -434,6 +403,7 @@
         "driftwatch/docker-compose.yml"
       ],
       "gold_count": 3,
+      "harness_excluded": [],
       "status": "ok"
     },
     {
@@ -459,6 +429,7 @@
         "MaxExpressKit/skills/using-mek/SKILL.md"
       ],
       "gold_count": 6,
+      "harness_excluded": [],
       "status": "ok"
     },
     {
@@ -486,6 +457,7 @@
         "MaxExpressKit/skills/using-mek/SKILL.md"
       ],
       "gold_count": 9,
+      "harness_excluded": [],
       "status": "ok"
     },
     {
@@ -504,6 +476,7 @@
         "MaxExpressKit/README.md"
       ],
       "gold_count": 2,
+      "harness_excluded": [],
       "status": "ok"
     }
   ]

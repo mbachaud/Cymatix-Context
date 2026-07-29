@@ -87,6 +87,19 @@ EXCLUDE_PREFIXES = (
     # Synthetic test scaffolding (calculator.py, essay_caching.txt, ...) —
     # authored to exercise the chunker, not to be retrieved as knowledge.
     "tests/fixtures",
+    # The needle harness itself. needles_dogfood.py carries every query AND its
+    # expected answer; needles_resolved.json adds the resolved gold file list;
+    # gold_pack_manifest.json maps gold files to the needles they serve. Ingesting
+    # them puts the answer key in the corpus and lets the bed retrieve its own
+    # mark scheme — the echo-gene defect, in its purest form.
+    "benchmarks/dogfood",
+    # Bench literature, for the same reason. Our own write-ups quote the values
+    # the needles pin, so every measurement doc we publish enlarges the answer
+    # key — a feedback loop where the bed grades itself against its own
+    # previous reports. The probe TOMLs are whole-config dumps, so they carry
+    # every shipped default verbatim. Neither is knowledge a user would want
+    # retrieved; both are artifacts OF measurement.
+    "docs/benchmarks",
 )
 
 # Individual files that are pure noise or enormous generated artifacts.

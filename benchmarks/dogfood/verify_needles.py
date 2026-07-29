@@ -88,6 +88,14 @@ def main() -> int:
                     hits.append(relpath)
         hits.sort()
 
+        # Self-reference guard: the harness states every anchor literally, so
+        # needles_dogfood.py and needles_resolved.json match their own needles
+        # and would be accepted as gold. Scoring a retrieval against the file
+        # that defines the answer measures nothing.
+        harness = [h for h in hits if "/dogfood/" in h or "build_dogfood" in h]
+        if harness:
+            hits = [h for h in hits if h not in harness]
+
         status = "ok"
         if not hits:
             status = "UNRESOLVED"
@@ -105,6 +113,7 @@ def main() -> int:
             "repos": nd["repos"],
             "gold_source": hits,
             "gold_count": len(hits),
+            "harness_excluded": harness,
             "status": status,
         })
 
