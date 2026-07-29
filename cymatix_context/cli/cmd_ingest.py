@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 
 from .dispatcher import invoked_prog
 from pathlib import Path
@@ -12,6 +13,28 @@ from cymatix_context.api import open_session
 
 
 _DEFAULT_EXTENSIONS = (".txt", ".md", ".rst", ".py", ".ts", ".js", ".json", ".toml", ".yml", ".yaml")
+
+# Directories never descended into during a recursive walk (#323).
+#
+# Without this, `cymatix ingest <repo> --recursive` matched on extension alone
+# and happily indexed the repo's own virtualenv: measured on a real run, 5,331
+# of the first 5,337 files ingested were `.venv/Lib/site-packages`. That is
+# corpus poisoning, not just wasted time — a store full of library internals
+# out-ranks the user's own code, and the symptom looks like bad retrieval
+# rather than bad ingest.
+#
+# These are vendored, generated, or cache trees: none of them is content a user
+# means to make retrievable. `--exclude-dir` extends the set;
+# `--no-default-excludes` drops it entirely for the rare deliberate case.
+_DEFAULT_EXCLUDE_DIRS = frozenset({
+    ".git", ".hg", ".svn",
+    ".venv", "venv", "env", "virtualenv", "site-packages",
+    "node_modules", "bower_components", "vendor",
+    "__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache", ".tox",
+    ".cache", ".next", ".nuxt", ".parcel-cache", ".turbo",
+    "dist", "build", "target", "out", "htmlcov", ".coverage",
+    ".idea", ".vscode", ".gradle", ".terraform",
+})
 
 # Extensions whose contents should be chunked as CODE (AST/structure-aware via
 # the tree-sitter chunker) rather than prose paragraphs. Issue #224: the ingest
@@ -57,6 +80,21 @@ def _build_parser() -> argparse.ArgumentParser:
              "Default: " + ", ".join(_DEFAULT_EXTENSIONS),
     )
     parser.add_argument(
+        "--exclude-dir",
+        action="append",
+        default=None,
+        metavar="NAME",
+        help="Directory name to skip during a recursive walk. Repeatable. "
+             "Adds to the default set (.venv, node_modules, .git, __pycache__, "
+             "dist, build, …), which is skipped unless --no-default-excludes.",
+    )
+    parser.add_argument(
+        "--no-default-excludes", action="store_true",
+        help="Walk vendored/generated trees too (.venv, node_modules, …). "
+             "Off by default: ingesting a virtualenv poisons the store with "
+             "third-party library source.",
+    )
+    parser.add_argument(
         "--okf", action="store_true",
         help="Treat path as an OKF v0.1 knowledge bundle directory "
              "(markdown + YAML frontmatter). Walks every non-reserved "
@@ -78,7 +116,12 @@ def _build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def _collect_files(root: Path, recursive: bool, exts: Iterable[str]) -> List[Path]:
+def _collect_files(
+    root: Path,
+    recursive: bool,
+    exts: Iterable[str],
+    exclude_dirs: Iterable[str] | None = None,
+) -> List[Path]:
     ext_set = {e.lower() if e.startswith(".") else "." + e.lower() for e in exts}
     if root.is_file():
         # Honor the extension filter even when the user pointed at a single file
@@ -87,8 +130,26 @@ def _collect_files(root: Path, recursive: bool, exts: Iterable[str]) -> List[Pat
         return [root] if root.suffix.lower() in ext_set else []
     if not root.is_dir():
         return []
-    iterator = root.rglob("*") if recursive else root.iterdir()
-    return sorted(p for p in iterator if p.is_file() and p.suffix.lower() in ext_set)
+
+    skip = {d.lower() for d in
+            (_DEFAULT_EXCLUDE_DIRS if exclude_dirs is None else exclude_dirs)}
+
+    if not recursive:
+        return sorted(p for p in root.iterdir()
+                      if p.is_file() and p.suffix.lower() in ext_set)
+
+    # os.walk with in-place dirnames pruning, not rglob("*") + post-filter:
+    # pruning means an excluded subtree is never descended into at all.
+    # Post-filtering would still stat every file in a 40k-file virtualenv
+    # before discarding it, which is the slow half of the #323 bug.
+    out: List[Path] = []
+    for dirpath, dirnames, filenames in os.walk(root):
+        dirnames[:] = [d for d in dirnames
+                       if d.lower() not in skip and not d.lower().endswith(".egg-info")]
+        for fn in filenames:
+            if Path(fn).suffix.lower() in ext_set:
+                out.append(Path(dirpath) / fn)
+    return sorted(out)
 
 
 def _run_okf(args) -> int:
@@ -191,7 +252,11 @@ def run(argv: list[str]) -> int:
         return output.EXIT_ERROR
 
     exts = args.ext or _DEFAULT_EXTENSIONS
-    files = _collect_files(root, args.recursive, exts)
+    if args.no_default_excludes:
+        exclude_dirs = set(args.exclude_dir or ())
+    else:
+        exclude_dirs = set(_DEFAULT_EXCLUDE_DIRS) | set(args.exclude_dir or ())
+    files = _collect_files(root, args.recursive, exts, exclude_dirs)
     if not files:
         msg = {
             "ok": False,
