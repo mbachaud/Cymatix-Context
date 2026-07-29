@@ -736,6 +736,11 @@ class RetrievalConfig:
     #            shard ranks. Scale-free under both fusion modes.
     # Inert on blob/single-shard paths (no ShardRouter constructed).
     doc_type_boost_mode: str = "additive"
+    # #327: scale the +2.0 source-authority boost by how selective the
+    # matching query term is across source paths. Off = today's behaviour
+    # byte-for-byte, where a query naming the project boosts every gene in
+    # it equally (measured: "cymatix" matches 88% of dogfood paths).
+    authority_path_selectivity: bool = False
 
     def __post_init__(self) -> None:
         # #264: validate the doc-type boost mode now so a typo in
@@ -1431,6 +1436,7 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             coact_link_boost=float(r.get("coact_link_boost", cfg.retrieval.coact_link_boost)),
             # #264: doc-type boost mode (default-inert "additive").
             doc_type_boost_mode=str(r.get("doc_type_boost_mode", cfg.retrieval.doc_type_boost_mode)),
+            authority_path_selectivity=bool(r.get("authority_path_selectivity", cfg.retrieval.authority_path_selectivity)),
         )
 
     # Stage 4 (2026-05-08) abstain config — global vs per_classifier mode.

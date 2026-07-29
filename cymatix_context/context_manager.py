@@ -966,6 +966,7 @@ class CymatixContextManager:
             # Genome and every per-shard Genome); binds on the cross-shard
             # merge. Default-inert "additive" == the shipped ×1.15 multiply.
             doc_type_boost_mode=config.retrieval.doc_type_boost_mode,
+            authority_path_selectivity=config.retrieval.authority_path_selectivity,
         )
 
         # WS3: hand the symbol-expansion cap to the genome's co-activation
