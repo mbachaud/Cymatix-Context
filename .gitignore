@@ -157,10 +157,17 @@ benchmarks/dogfood/pack/*.tar.gz
 benchmarks/dogfood/pack/*.sha256
 benchmarks/dogfood/gene_ids/
 benchmarks/dogfood/baseline.json
-benchmarks/dogfood/dogfood_manifest.json
+benchmarks/dogfood/dogfood_manifest*.json
 
 benchmarks/dogfood/baseline_k50.json
 benchmarks/dogfood/ladder*.json
 benchmarks/dogfood/cymatics_ablation.json
 benchmarks/dogfood/arm_*.json
 benchmarks/dogfood/*_clean.json
+benchmarks/dogfood/latency_scaling*.json
+benchmarks/dogfood/expression_arms*.json
+benchmarks/dogfood/ollama_concurrency*.json
+benchmarks/dogfood/dispatch_manifest.json
+benchmarks/dogfood/logs/
+benchmarks/dogfood/gene_ids_*/
+benchmarks/dogfood/baseline_tagger*.json
