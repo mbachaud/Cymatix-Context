@@ -1,0 +1,61 @@
+{
+  "measured_at": "2026-07-30T00:54:44-0700",
+  "genome": "F:\\Projects\\cymatix-context\\genomes\\dogfood\\genome.db",
+  "bed_identity_sha256": "13f8bbe3d3a37912d7686eef6fdf61a2d2cb6a584eed98863d57ddc8a2262ddd",
+  "k": 12,
+  "rounds": 2,
+  "needles": "all",
+  "cpu_count": 16,
+  "worker_model": "subprocess per worker, own manager + encoders, same genome file, read-only",
+  "note": "warmup untimed; workers barrier-synced; ranks recorded as a fast-because-broken guard",
+  "levels": [
+    {
+      "concurrency": 1,
+      "samples": 36,
+      "errors": 0,
+      "median_latency_ms": 806.9,
+      "mean_latency_ms": 805.3,
+      "p95_latency_ms": 971.3,
+      "max_latency_ms": 1011.9,
+      "per_worker_median_ms": [
+        806.9
+      ],
+      "recall@12": 0.6667,
+      "wall_seconds": 29.0,
+      "overlap_fraction": 1.0,
+      "throughput_qps": 1.24
+    },
+    {
+      "concurrency": 2,
+      "samples": 72,
+      "errors": 0,
+      "median_latency_ms": 1194.8,
+      "mean_latency_ms": 1192.9,
+      "p95_latency_ms": 1370.3,
+      "max_latency_ms": 1426.3,
+      "per_worker_median_ms": [
+        1194.8,
+        1194.8
+      ],
+      "recall@12": 0.6667,
+      "wall_seconds": 43.0,
+      "overlap_fraction": 0.999,
+      "throughput_qps": 1.68
+    }
+  ],
+  "scaling_vs_c1": [
+    {
+      "concurrency": 1,
+      "median_latency_x": 1.0,
+      "p95_latency_x": 1.0,
+      "throughput_x": 1.0
+    },
+    {
+      "concurrency": 2,
+      "median_latency_x": 1.48,
+      "p95_latency_x": 1.41,
+      "throughput_x": 1.35
+    }
+  ],
+  "worker_logs": "F:\\Projects\\cymatix-context\\benchmarks\\dogfood\\logs\\latency_scaling\\20260730-005301"
+}

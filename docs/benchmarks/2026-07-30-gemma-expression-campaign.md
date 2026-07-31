@@ -131,7 +131,18 @@ store fails specifically on its own project's config facts, consistent with
 residual stale/near-duplicate cymatix literature outranking gold — the
 893f19a contamination class, incompletely purged.
 
-## Tagger A/B — control bed validated, e4b bed in flight
+## Tagger A/B — RESULTS LANDED: see [2026-07-31-tagger-ab-tag-flood.md](2026-07-31-tagger-ab-tag-flood.md)
+
+The e2b bed finished (17.7 h) and the verified outcome supersedes this
+section's projections: file-level recall@12 0.667 → **1.000** (all six
+cymatix misses recovered), mechanism = **CPU-tagger tag flood** (~⅔
+reproducible by tag-thinning alone, no LLM), but 4 of 6 recoveries are
+answer-hollow — the LLM ingest stubs 45.8% of gene content and destroyed
+two of the answers it recovered. Cheapest next lever: deterministic
+tag-IDF discipline (#327). Full receipts + ablation table in the linked
+doc. Original section kept below for the projections' provenance.
+
+## Tagger A/B — control bed validated, e4b bed in flight (as-projected, superseded)
 
 `taggerdogfood.db` (gemma4:e4b as ingest tagger via `ribosome.encode`) vs
 `taggerdogfood_cpu` (CpuTagger control) — **same-day snapshot, single

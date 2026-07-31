@@ -1,0 +1,82 @@
+{
+  "measured_at": "2026-07-30T01:51:54-0700",
+  "note": "LLM-leg contention in isolation: expansion-shaped calls straight at Ollama; no retrieval pipeline; no OTel",
+  "queries": 18,
+  "rounds": 1,
+  "models": [
+    {
+      "model": "gemma4:e2b",
+      "levels": [
+        {
+          "concurrency": 1,
+          "calls": 18,
+          "errors": 0,
+          "median_ms": 942.8,
+          "mean_ms": 1010.0,
+          "p95_ms": 1891.5,
+          "wall_seconds": 18.4,
+          "throughput_cps": 0.98
+        },
+        {
+          "concurrency": 2,
+          "calls": 36,
+          "errors": 0,
+          "median_ms": 492.8,
+          "mean_ms": 1524.4,
+          "p95_ms": 3440.4,
+          "wall_seconds": 31.5,
+          "throughput_cps": 1.14
+        }
+      ],
+      "scaling_vs_c1": [
+        {
+          "concurrency": 1,
+          "median_x": 1.0,
+          "throughput_x": 1.0
+        },
+        {
+          "concurrency": 2,
+          "median_x": 0.52,
+          "throughput_x": 1.16
+        }
+      ]
+    },
+    {
+      "model": "gemma4:e4b",
+      "levels": [
+        {
+          "concurrency": 1,
+          "calls": 18,
+          "errors": 0,
+          "median_ms": 10671.4,
+          "mean_ms": 9083.6,
+          "p95_ms": 12838.7,
+          "wall_seconds": 163.7,
+          "throughput_cps": 0.11
+        },
+        {
+          "concurrency": 2,
+          "calls": 36,
+          "errors": 0,
+          "median_ms": 11225.9,
+          "mean_ms": 9082.5,
+          "p95_ms": 13236.8,
+          "wall_seconds": 175.0,
+          "throughput_cps": 0.21
+        }
+      ],
+      "scaling_vs_c1": [
+        {
+          "concurrency": 1,
+          "median_x": 1.0,
+          "throughput_x": 1.0
+        },
+        {
+          "concurrency": 2,
+          "median_x": 1.05,
+          "throughput_x": 1.91
+        }
+      ]
+    }
+  ]
+}

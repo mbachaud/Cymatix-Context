@@ -115,7 +115,10 @@ def main() -> int:
         print(f"ERROR: unknown arms {unknown}; known: {list(ARMS)}", file=sys.stderr)
         return 2
 
-    summary_path = REPO_ROOT / "benchmarks/dogfood/gene_ids/summary.json"
+    # Bed identity must come from the SAME gene_ids dir as the gold file —
+    # reading the default dir mislabels receipts for alternate beds (bug
+    # found on the 2026-07-31 tagger-bed run, receipt patched post-hoc).
+    summary_path = (REPO_ROOT / args.gold).parent / "summary.json"
     identity = (json.loads(summary_path.read_text(encoding="utf-8"))
                 .get("identity_sha256") if summary_path.exists() else None)
     print(f"expression arms: {arm_names} x {len(needles)} needles, "
