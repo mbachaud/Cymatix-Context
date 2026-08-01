@@ -169,6 +169,51 @@ index time, needs an FTS rebuild to measure) and tag content quality
 this receipt in the config comment; the default-flip is a separate
 decision on more than n=18.
 
+## Addendum 2, same day: the FTS channel, measured by per-arm index rebuild
+
+Tags are baked into `genes_fts.content` at index time (per-doc
+`storage/indexes.py:76-88`, bulk `storage/ddl.py:426-436`), a channel
+tier pruning cannot reach. `benchmarks/dogfood/rebuild_fts_arm.py`
+copies a bed (SQLite backup API — source beds are receipts, never
+mutated) and rebuilds `genes_fts` with the arm's tag composition. The
+2×3 factorial on the control bed, gold fixed:
+
+| FTS composition \ tier cap | off | 0.02 |
+| --- | ---: | ---: |
+| stock (all tags) | 0.667 | 0.833 |
+| tags df-capped @0.02 (81 tags out) | 0.722 | **0.889** |
+| tags stripped entirely | 0.722 | **0.889** |
+
+Findings:
+
+1. **The FTS channel is real and worth +5.5pp on its own** (one needle),
+   replicating **exactly** on the clean bed (0.722 both builds).
+2. **Capping 81 flooded tags ≡ stripping all ~thousands** in every cell
+   — the surgical fix captures the entire channel; rare tags in FTS are
+   harmless and can stay.
+3. **The channels are additive**: 0.667 + 5.5 (FTS) + 16.6 (tier) ≈
+   0.889 combined. Independent mechanisms, compose freely.
+4. **Replication scopes the claim**: the clean bed's combined cells top
+   out at 0.833 — the 0.889 includes `know_emit_floor` crossing at
+   exactly r12, which does not survive bed change. Claim as
+   **0.833–0.889**, boundary disclosed. Clean-bed MRR also peaks at
+   tier cap 0.05–0.10 (0.468) rather than 0.02 — the aggressive cap
+   trades a little MRR for the extra crossing.
+5. The excluded-tag list is face-valid index noise: gene-id fragments,
+   bare years, `agent`/`agents`/`ablation`.
+6. **What resists density relief entirely**: `fusion_default` (32→34 —
+   slightly *worse* under relief) and `genome_path` (18, unmoved).
+   These two are the tag-content-quality residual — the channel only a
+   better tagger (or curated tags) reaches, and exactly what the spark
+   e4b run isolates.
+
+Deterministic scoreboard after both addenda: flat baseline 0.667 →
+full deterministic stack **0.833–0.889**, vs LLM-ingest 1.000 (with its
+45.8% stubbing, 23 failed files, and 6.8× ingest cost). Receipts:
+`2026-07-31-ftsarm-{none,cap02,cap02-cleanbed}.json`. Productizing the
+index-side cap (an `[ingestion]` knob + reindex migration for existing
+beds) is a follow-up; the bench tool is the reference implementation.
+
 ## Caveats, stated not buried
 
 n=18, one build per arm, no A/A control on ingest (the 23 failures
