@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import hashlib
 import logging
+import math
 import os
 import re
 import sqlite3
@@ -599,6 +600,12 @@ class KnowledgeStore:
         splade_weight: float = 3.5,
         tag_exact_weight: float = 3.0,
         tag_prefix_weight: float = 1.5,
+        # Issue #327: Tier-1 tag-IDF discipline (default off — flat legacy
+        # scoring). See RetrievalConfig.tag_idf_enabled for the receipt.
+        tag_idf_enabled: bool = False,
+        # #327 iteration 2: exclude tags with df > cap×N from Tier-1
+        # entirely (membership relief). 0.0 = off.
+        tag_df_cap: float = 0.0,
         # Issue #202: warm ΣĒMA boost (Tier 4 Mode A) weight. NEW knob --
         # the tier's additive literal was 2.0 and it had no per-tier
         # weight at all (under RRF it is a post-fusion additive, so it
@@ -776,6 +783,8 @@ class KnowledgeStore:
         self._fts5_weight: float = float(fts5_weight)
         self._splade_weight: float = float(splade_weight)
         self._tag_exact_weight: float = float(tag_exact_weight)
+        self._tag_idf_enabled: bool = bool(tag_idf_enabled)
+        self._tag_df_cap: float = float(tag_df_cap)
         self._tag_prefix_weight: float = float(tag_prefix_weight)
         self._sema_boost_weight: float = float(sema_boost_weight)
         self._sema_cold_weight: float = float(sema_cold_weight)
@@ -2441,27 +2450,103 @@ class KnowledgeStore:
         # ── Tier 1: exact tag match (weight: tag_exact_weight) ────
         _tag_exact_t0 = time.monotonic()
         placeholders = ",".join("?" * len(query_terms))
-        rows = cur.execute(
-            f"""
-            SELECT g.gene_id, COUNT(pi.tag_value) AS match_count
-            FROM genes g
-            JOIN promoter_index pi ON g.gene_id = pi.gene_id
-            WHERE pi.tag_value IN ({placeholders})
-              AND g.chromatin < ?
-              {_party_filter}
-              {_prefilter_aliased_clause}
-            GROUP BY g.gene_id
-            """,
-            (*query_terms, int(ChromatinState.HETEROCHROMATIN), *_party_params, *_prefilter_params),
-        ).fetchall()
+        _effective_terms = list(query_terms)
+        if self._tag_df_cap > 0.0:
+            # #327 iteration 2: membership relief. Tags covering more than
+            # cap×N genes are index noise, not signal — they are removed
+            # from the tier's term set entirely, so flood-tied genes whose
+            # only match was the flooded tag drop out of the tier instead
+            # of staying tied at a scaled score (the measured failure of
+            # IDF scaling under RRF).
+            _cap_df_rows = cur.execute(
+                f"""
+                SELECT tag_value, COUNT(DISTINCT gene_id) AS df
+                FROM promoter_index
+                WHERE tag_value IN ({placeholders})
+                GROUP BY tag_value
+                """,
+                tuple(query_terms),
+            ).fetchall()
+            _cap_n = cur.execute("SELECT COUNT(*) FROM genes").fetchone()[0]
+            if _cap_n > 0:
+                _flooded = {r["tag_value"] for r in _cap_df_rows
+                            if r["df"] / _cap_n > self._tag_df_cap}
+                if _flooded:
+                    _effective_terms = [t for t in query_terms
+                                        if t not in _flooded]
+        if not _effective_terms:
+            _tag_exact_ranked: List[Tuple[str, float]] = []
+        elif self._tag_idf_enabled:
+            # Issue #327: per-tag selectivity scaling. A tag on 25%+ of
+            # the corpus ('cymatix' on 1,596/6,276 genes — the verified
+            # tag-flood mechanism, docs/benchmarks/2026-07-31-tagger-ab-
+            # tag-flood.md) contributes ~0 instead of a full weight;
+            # df=1 tags contribute the full weight. Scale, don't drop.
+            _eff_placeholders = ",".join("?" * len(_effective_terms))
+            _df_rows = cur.execute(
+                f"""
+                SELECT tag_value, COUNT(DISTINCT gene_id) AS df
+                FROM promoter_index
+                WHERE tag_value IN ({_eff_placeholders})
+                GROUP BY tag_value
+                """,
+                tuple(_effective_terms),
+            ).fetchall()
+            _n_genes = cur.execute("SELECT COUNT(*) FROM genes").fetchone()[0]
+            _log_n = math.log(_n_genes) if _n_genes > 1 else 1.0
+            _idf = {
+                r["tag_value"]: (
+                    math.log(_n_genes / r["df"]) / _log_n
+                    if _n_genes > 1 and r["df"] >= 1 else 1.0
+                )
+                for r in _df_rows
+            }
+            rows = cur.execute(
+                f"""
+                SELECT g.gene_id, pi.tag_value
+                FROM genes g
+                JOIN promoter_index pi ON g.gene_id = pi.gene_id
+                WHERE pi.tag_value IN ({_eff_placeholders})
+                  AND g.chromatin < ?
+                  {_party_filter}
+                  {_prefilter_aliased_clause}
+                """,
+                (*_effective_terms, int(ChromatinState.HETEROCHROMATIN),
+                 *_party_params, *_prefilter_params),
+            ).fetchall()
+            _idf_scores: Dict[str, float] = {}
+            for r in rows:
+                _idf_scores[r["gene_id"]] = _idf_scores.get(r["gene_id"], 0.0) + \
+                    _idf.get(r["tag_value"], 1.0) * self._tag_exact_weight
+            _tag_exact_ranked = sorted(
+                _idf_scores.items(), key=lambda kv: kv[1], reverse=True
+            )
+            for gid, tag_score in _tag_exact_ranked:
+                gene_scores[gid] = tag_score
+                tier_contrib.setdefault(gid, {})["tag_exact"] = tag_score
+        else:
+            _eff_placeholders = ",".join("?" * len(_effective_terms))
+            rows = cur.execute(
+                f"""
+                SELECT g.gene_id, COUNT(pi.tag_value) AS match_count
+                FROM genes g
+                JOIN promoter_index pi ON g.gene_id = pi.gene_id
+                WHERE pi.tag_value IN ({_eff_placeholders})
+                  AND g.chromatin < ?
+                  {_party_filter}
+                  {_prefilter_aliased_clause}
+                GROUP BY g.gene_id
+                """,
+                (*_effective_terms, int(ChromatinState.HETEROCHROMATIN), *_party_params, *_prefilter_params),
+            ).fetchall()
 
-        _tag_exact_ranked: List[Tuple[str, float]] = []  # Stage 3 RRF
-        for r in rows:
-            # #202: tag_exact_weight (default 3.0 == legacy literal).
-            tag_score = r["match_count"] * self._tag_exact_weight
-            gene_scores[r["gene_id"]] = tag_score
-            tier_contrib.setdefault(r["gene_id"], {})["tag_exact"] = tag_score
-            _tag_exact_ranked.append((r["gene_id"], tag_score))
+            _tag_exact_ranked = []  # Stage 3 RRF
+            for r in rows:
+                # #202: tag_exact_weight (default 3.0 == legacy literal).
+                tag_score = r["match_count"] * self._tag_exact_weight
+                gene_scores[r["gene_id"]] = tag_score
+                tier_contrib.setdefault(r["gene_id"], {})["tag_exact"] = tag_score
+                _tag_exact_ranked.append((r["gene_id"], tag_score))
         # Stage 3: count tier — rank by raw score (= match_count ×
         # tag_exact_weight)
         # which is monotone in match_count, so the rank order matches

@@ -131,6 +131,44 @@ the value was delivered. The 2×2 with query expansion: {cpu, raw} 0.667 ·
    and treat gold-count deltas as first-class. His e4b arm now tests
    whether a stronger tagger moves the ⅓ that isn't density.
 
+## Addendum, same day: the #327 lever, two iterations
+
+**Iteration 1 — IDF scaling: NULL, mechanism-informative.**
+`[retrieval] tag_idf_enabled` scales each matched tag's Tier-1
+contribution by `log(N/df)/log(N)`. Measured on both beds: recall@12
+0.667 flat, MRR ±0.001 (threaded, not inert-by-plumbing). Why it can't
+work under RRF: flood-tied genes are scaled *uniformly*, so the tier's
+ordering — the only thing RRF consumes — never changes. The flood is
+tier **membership**, not score magnitude. Receipts:
+`2026-07-31-tagidf-{cpubed,cleanbed}.json`.
+
+**Iteration 2 — DF-cap membership relief: hits the Arm-D target.**
+`[retrieval] tag_df_cap` excludes a tag from Tier-1 when its df exceeds
+cap×N (tag-side drop; the query-side "scale, don't drop" verdict does
+not cover index noise). The curve, identical on both beds:
+
+| cap | recall@12 | cymatix recall | note |
+| --- | ---: | ---: | --- |
+| off / 0.25 | 0.667 | 0.250 | flood tags cover 25–39% — 0.25 misses them |
+| 0.15 / 0.10 / 0.05 | 0.778 | 0.500 | two misses recovered |
+| **0.02** | **0.833** | **0.625** | **= the tagger-ablation Arm-D ceiling** |
+
+Per-needle at 0.02 (both beds): `cymatics_bins`, `max_genes`,
+`splice_aggressiveness` recovered (splice at exactly r12 — boundary,
+flagged); `proxy_port` 7→8 and `expression_tokens` ±1 jitter inside the
+window; `fusion_default` deep either way (32→34). No needle leaves the
+window; other-repo recall stays 1.000 in every arm.
+
+So the deterministic query-time knob reaches the full density-relief
+ceiling — **+16.7pp at zero model cost, zero re-ingest, replicated on
+two independent bed builds** — and the residual gap to the LLM bed's
+1.000 is confined to the two channels tier pruning cannot touch: tag
+text baked into `fts_content` (next lever: exclude high-DF tags at
+index time, needs an FTS rebuild to measure) and tag content quality
+(what the spark e4b run tests). Both flags ship **default off** with
+this receipt in the config comment; the default-flip is a separate
+decision on more than n=18.
+
 ## Caveats, stated not buried
 
 n=18, one build per arm, no A/A control on ingest (the 23 failures

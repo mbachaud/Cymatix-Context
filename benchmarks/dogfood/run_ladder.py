@@ -62,6 +62,18 @@ def _arms(axes: set[str]) -> list[dict]:
     if "fusion" in axes:
         out.append({"name": "fusion=additive", "axis": "fusion",
                     "overrides": {"retrieval.fusion_mode": "additive"}})
+    if "tagidf" in axes:
+        # #327: tag-tier IDF discipline. Target set by the tagger-ablation
+        # arms (docs/benchmarks/2026-07-31-tagger-ab-tag-flood.md): density
+        # relief alone reached 0.833, tag transplant 0.944.
+        out.append({"name": "tag_idf=on", "axis": "tagidf",
+                    "overrides": {"retrieval.tag_idf_enabled": True}})
+    if "tagdfcap" in axes:
+        # #327 iteration 2: membership relief — IDF scaling measured NULL
+        # (the flood is tier membership under RRF, not score magnitude).
+        for cap in (0.25, 0.15, 0.10, 0.05, 0.02):
+            out.append({"name": f"tag_df_cap={cap}", "axis": "tagdfcap",
+                        "overrides": {"retrieval.tag_df_cap": cap}})
     if "rerank" in axes:
         # config.py:582 — additive | fused_tier | eps_band | off
         for combi in ("fused_tier", "eps_band", "off"):

@@ -720,6 +720,8 @@ which stay additive) lives in
 | `splade_weight` | `float` | `3.5` | leading coeff == tier cap |
 | `tag_exact_weight` | `float` | `3.0` | current weight × match_count |
 | `tag_prefix_weight` | `float` | `1.5` | current weight × match_count |
+| `tag_idf_enabled` | `bool` | `false` | Issue #327 (2026-07-31 tagger A/B, docs/benchmarks/2026-07-31-tagger- ab-tag-flood.md): Tier-1 scores a flat weight per matched tag with no corpus-frequency discipline, so a tag on 25%+ of the corpus ('cymatix' on 1,596/6,276 genes) floods the pool and drowns gold. When true, each matched tag's contribution is scaled by selectivity log(N/df)/log(N) (df=1 → 1.0, ubiquitous → ~0.0) — scale, don't drop. Default off pending the A/B receipt; target set by the tagger-ablation Arm D (density-only relief reached recall@12 0.833 vs flat-tag 0.667). |
+| `tag_df_cap` | `float` | `0.0` | #327 second iteration (2026-07-31): IDF *scaling* measured NULL on both beds — under RRF the flood is tier MEMBERSHIP, not score magnitude (flood-tied genes stay tied when scaled uniformly). This cap EXCLUDES a tag from Tier-1 when its df exceeds this fraction of the corpus (0.0 = off). Tag-side drop is not covered by the query- side "scale, don't drop" verdict — the tag is not query signal, it is index noise above this coverage. |
 | `sema_boost_weight` | `float` | `2.0` | Issue #202: warm ΣĒMA boost (Tier 4 Mode A) weight — NEW knob; the additive literal was sim·2.0·scale and the tier previously had no weight knob at all (post-fusion additive under RRF, never fused). Default == old literal, so untouched configs are bit-identical. |
 | `sema_cold_weight` | `float` | `3.0` | current sim·3.0 multiplier |
 | `lex_anchor_weight` | `float` | `1.5` | idf coeff; cap = 2.0 × this (3.0) |
