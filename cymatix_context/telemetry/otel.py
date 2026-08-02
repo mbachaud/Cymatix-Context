@@ -817,6 +817,36 @@ def genome_signal_histogram():
     return _instruments["genome_signal"]
 
 
+# Process-cumulative encoder/model load time, keyed by short model name
+# ("dense", "splade", "sema", ...). Cold-start receipts subtract this from
+# the express stage so request #1's model loads are not booked to retrieval.
+_MODEL_LOAD_MS: dict = {}
+
+
+def record_model_load(name: str, seconds: float) -> None:
+    """Record one lazy model/encoder load.
+
+    Feeds two consumers: the ``model_load_<name>`` genome-signal histogram
+    (OTel) and the process-cumulative ``model_load_ms()`` map that the
+    pipeline ring / bench receipts read over HTTP. Never raises.
+    """
+    try:
+        _MODEL_LOAD_MS[name] = _MODEL_LOAD_MS.get(name, 0.0) + seconds * 1000.0
+    except Exception:
+        pass
+    try:
+        genome_signal_histogram().record(
+            seconds, {"signal": f"model_load_{name}"}
+        )
+    except Exception:
+        pass
+
+
+def model_load_ms() -> dict:
+    """Snapshot copy of cumulative model-load milliseconds by model name."""
+    return dict(_MODEL_LOAD_MS)
+
+
 def genome_wal_size_gauge():
     """Gauge for the WAL file size in bytes.
 

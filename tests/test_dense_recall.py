@@ -703,6 +703,38 @@ def test_dense_additive_weight_zero_disables_additive_dense():
         g.close()
 
 
+# ── 7.5 perf slice-1 W0.4: ANN union step must not encode the query ──
+
+
+def test_ann_union_step_does_not_encode_query(dense_genome):
+    """``query_docs_ann`` performs exactly two query encodes: one inside the
+    lex pool's dense tier (joined query terms) and one for the dense recall
+    leg (raw query string). The union step itself must not encode — it has
+    no consumer for a query vector.
+    """
+    g = dense_genome
+
+    for i in range(20):
+        gid = f"g-{i:04d}"
+        g.upsert_gene(
+            _make_gene(f"alpha gene number {i} body", domains=["alpha"], gene_id=gid)
+        )
+        _populate_v2(g, gid, _hash_vec(f"vec for {gid}", 1024))
+
+    codec = _FakeCodec(dim=1024)
+    g._dense_codec = codec
+
+    result = g.query_docs_ann(
+        "alpha query text", domains=["alpha"], entities=[], max_genes=12
+    )
+
+    assert result, "sanity: retrieval must return candidates for the count to mean anything"
+    assert codec.encode_calls == 2, (
+        f"expected 2 query encodes (lex-leg dense tier + dense recall leg), "
+        f"got {codec.encode_calls}"
+    )
+
+
 # ── 8. live — real BGE-M3 dense recall through query_docs (additive) ─
 
 

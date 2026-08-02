@@ -379,8 +379,12 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
         """Most recent build_context stage events for the launcher's
         pipeline-viewer panel. Each event is
             { request_id, stage, ms, ts }
+        plus, on some stages (perf slice 1, W0.2/W0.3):
+            express     + { signals: {name: ms}, model_load_ms: {name: ms} }
+            tail_writes + { commits: int }   # per-request writer-commit delta
         Ordered oldest to newest. Backed by a bounded in-process ring
         (see cymatix_context.context_manager.get_recent_pipeline_events).
+        Bench-side consumer: benchmarks/dogfood/_stage_receipts.py.
         """
         try:
             from ..context_manager import (

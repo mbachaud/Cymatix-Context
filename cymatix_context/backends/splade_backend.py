@@ -40,15 +40,25 @@ def _ensure_loaded(model_name: str = "naver/splade-cocondenser-ensembledistil"):
     if _model is not None:
         return
 
+    import time as _time
+
     import torch
     from transformers import AutoModelForMaskedLM, AutoTokenizer
 
     from cymatix_context.hardware import get_hardware
 
+    _load_t0 = _time.monotonic()
     _device = torch.device(get_hardware().device)
     _tokenizer = AutoTokenizer.from_pretrained(model_name)
     _model = AutoModelForMaskedLM.from_pretrained(model_name).to(_device)
     _model.eval()
+    # Perf slice 1 (W0.2): record the lazy weight load so cold-start
+    # receipts can subtract it from the express stage.
+    try:
+        from cymatix_context.telemetry import record_model_load
+        record_model_load("splade", _time.monotonic() - _load_t0)
+    except Exception:
+        pass
     log.info("SPLADE model loaded: %s on %s", model_name, _device)
 
 

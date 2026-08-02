@@ -130,6 +130,11 @@ ADAPTER_ONLY_DIFFERENCES_WHITELIST = frozenset({
     "_dense_pool_size", "_dense_recall_enabled", "ann_similarity_threshold",
     "_reader", "_fusion_mode", "_calibration_provenance",
 
+    # Perf slice 1 (W0.3): writer-connection commit trace hook + its
+    # (re)installer — the V1 adapter has no single writer connection to
+    # trace (writes are no-ops).
+    "_trace_commit", "_install_commit_trace",
+
     # Internal builders / loaders that only make sense on a single .db.
     "make_gene_id", "_load_genes_by_ids", "_score_query",
     "_apply_promoter_tier", "_apply_dense_recall", "_apply_entity_graph",

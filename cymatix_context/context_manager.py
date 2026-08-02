@@ -25,7 +25,7 @@ import re
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
-from typing import Dict, List, Optional, Tuple
+from typing import Callable, Dict, List, Optional, Tuple
 
 from .accel import extract_query_signals, estimate_tokens
 from .codons import CodonChunker, CodonEncoder
@@ -84,12 +84,14 @@ _pipeline_request_id: "_contextvars.ContextVar[str]" = _contextvars.ContextVar(
 
 # Bounded ring of recent stage events. Each entry is
 #   {"request_id", "stage", "ms", "ts"}
-# where ts is wall-clock seconds since the epoch. Sized to roughly the
-# last ~10 requests' worth of stage events (6 in-request stages × 10
-# requests + slack; the persist stage runs as a background task with no
+# (express also carries {"signals", "model_load_ms"}, tail_writes carries
+# {"commits"} — perf slice 1) where ts is wall-clock seconds since the
+# epoch. Sized to roughly the last ~10 requests' worth of stage events
+# (~10 in-request stages per request since the perf-slice-1 sub-stage
+# timers landed; the persist stage runs as a background task with no
 # request_id, so it never rings) so the launcher dashboard can render a
 # recent-runs table without unbounded memory growth on busy servers.
-_PIPELINE_RING_MAX = 64
+_PIPELINE_RING_MAX = 128
 _pipeline_events: "_collections.deque[dict]" = _collections.deque(
     maxlen=_PIPELINE_RING_MAX
 )
@@ -170,13 +172,22 @@ def _shorten_source_path(src: str, anchors) -> str:
 
 
 class _stage_timer:
-    """Context manager that records cymatix_pipeline_stage_seconds on exit."""
+    """Context manager that records cymatix_pipeline_stage_seconds on exit.
 
-    __slots__ = ("stage", "labels", "_t0")
+    ``extra``: optional zero-arg callable evaluated at exit; its dict is
+    merged into the ring entry (never into the histogram labels — payloads
+    like per-signal sub-maps would mint unbounded label sets). Reserved
+    ring keys (request_id/stage/ms/ts) always win over payload keys, and a
+    raising ``extra`` drops the payload, never the entry.
+    """
 
-    def __init__(self, stage: str, labels: Optional[dict] = None):
+    __slots__ = ("stage", "labels", "extra", "_t0")
+
+    def __init__(self, stage: str, labels: Optional[dict] = None,
+                 extra: Optional[Callable[[], dict]] = None):
         self.stage = stage
         self.labels = labels or {}
+        self.extra = extra
 
     def __enter__(self):
         self._t0 = _time.monotonic()
@@ -195,14 +206,30 @@ class _stage_timer:
             if _pipeline_ring_enabled():
                 rid = _pipeline_request_id.get()
                 if rid:
-                    _pipeline_events.append({
+                    entry = {}
+                    if self.extra is not None:
+                        try:
+                            entry.update(self.extra() or {})
+                        except Exception:
+                            pass
+                    entry.update({
                         "request_id": rid,
                         "stage": self.stage,
                         "ms": round(elapsed * 1000.0, 3),
                         "ts": _time.time(),
                     })
+                    _pipeline_events.append(entry)
         except Exception:
             pass
+
+def _model_load_ms_snapshot() -> dict:
+    """Cumulative encoder-load ms by model name (perf slice 1, W0.2)."""
+    try:
+        from .telemetry import model_load_ms
+        return model_load_ms()
+    except Exception:
+        return {}
+
 
 # Thread pool for running sync compressor calls from async context
 _executor = ThreadPoolExecutor(max_workers=2, thread_name_prefix="cymatix-ribosome")
@@ -1686,6 +1713,12 @@ class CymatixContextManager:
         if _pipeline_ring_enabled():
             _pipeline_request_id.set(_uuid.uuid4().hex[:12])
 
+        # Perf slice 1 (W0.3): commit-count snapshot; the tail_writes ring
+        # entry carries the per-request delta (assemble's delivery log +
+        # the post-retrieval tail writes; route-level CWoLa commits land
+        # after this and are visible only in the process-cumulative count).
+        _commit_c0 = getattr(self.genome, "commit_count", 0)
+
         # Per-call locals for foveated-splice state (spec §4-5). Local —
         # not instance state — so concurrent build_context calls cannot
         # race on writes/reads, and a prior call's state cannot leak in
@@ -1830,7 +1863,18 @@ class CymatixContextManager:
         # ``tier_contribs`` are then threaded through the refiners,
         # tiering, assembly, and health instead of re-reading the shared
         # attribute.
-        with _pipeline_stage_span("express"), _stage_timer("express"):
+        with _pipeline_stage_span("express"), _stage_timer(
+            "express",
+            # Perf slice 1 (W0.2): attach the store's per-signal ms map and
+            # the process-cumulative model-load ms to the express ring entry
+            # so /debug/pipeline/recent exposes sub-stage detail over HTTP.
+            extra=lambda: {
+                "signals": dict(
+                    getattr(self.genome, "last_signal_timings", None) or {}
+                ),
+                "model_load_ms": _model_load_ms_snapshot(),
+            },
+        ):
             if len(_sub_queries) == 1:
                 candidates = self._retrieve(
                     domains, entities, max_genes,
@@ -2225,54 +2269,73 @@ class CymatixContextManager:
         # gate — it writes only to `health_log` (observability, not
         # learning) and is the only way to see what a read-only run did.
         expressed_ids = [g.gene_id for g in candidates]
-        if not read_only:
-            self.genome.touch_genes(expressed_ids)
-            self.genome.link_coactivated(expressed_ids)
+        # Perf slice 1 (W0.2): the post-retrieval writes (touch/link/
+        # harmonic/relations/log_health) were the largest untimed region on
+        # the response path. One ring stage covers them; its "commits"
+        # payload is the whole request's writer-connection commit delta.
+        with _stage_timer(
+            "tail_writes",
+            extra=lambda: {
+                "commits": getattr(self.genome, "commit_count", 0) - _commit_c0,
+            },
+        ):
+            if not read_only:
+                self.genome.touch_genes(expressed_ids)
+                self.genome.link_coactivated(expressed_ids)
 
-            # Compute harmonic weights between retrieved documents (cymatics)
-            if self._use_cymatics and self.config.cymatics.harmonic_links:
+                # Compute harmonic weights between retrieved documents (cymatics)
+                if self._use_cymatics and self.config.cymatics.harmonic_links:
+                    try:
+                        from .scoring.cymatics import compute_harmonic_weights
+                        weights = compute_harmonic_weights(
+                            candidates, peak_width=self._cymatics_peak_width,
+                        )
+                        if weights:
+                            self.genome.store_harmonic_weights(weights)
+                    except Exception:
+                        # Harmonic links are diagnostic, not critical — non-blocking,
+                        # but log so failures don't disappear silently.
+                        log.warning("Harmonic link persistence failed", exc_info=True)
+
+                # Store typed relations in knowledge store (if available)
+                if relation_graph:
+                    batch = []
+                    for (gid_a, gid_b), (relation, confidence) in relation_graph.items():
+                        if confidence >= 0.6:
+                            batch.append((gid_a, gid_b, int(relation), confidence))
+                    if batch:
+                        self.genome.store_relations_batch(batch)
+
+            # Update TCM session context with retrieved documents (in-memory only,
+            # not gated — TCM session is per-process state, not knowledge store state).
+            if self._tcm_session is not None:
                 try:
-                    from .scoring.cymatics import compute_harmonic_weights
-                    weights = compute_harmonic_weights(
-                        candidates, peak_width=self._cymatics_peak_width,
-                    )
-                    if weights:
-                        self.genome.store_harmonic_weights(weights)
+                    for doc in candidates:
+                        self._tcm_session.update_from_gene(doc)
                 except Exception:
-                    # Harmonic links are diagnostic, not critical — non-blocking,
-                    # but log so failures don't disappear silently.
-                    log.warning("Harmonic link persistence failed", exc_info=True)
+                    pass  # TCM is diagnostic, not critical
 
-            # Store typed relations in knowledge store (if available)
-            if relation_graph:
-                batch = []
-                for (gid_a, gid_b), (relation, confidence) in relation_graph.items():
-                    if confidence >= 0.6:
-                        batch.append((gid_a, gid_b, int(relation), confidence))
-                if batch:
-                    self.genome.store_relations_batch(batch)
+            # Log health signal for historical tracking
+            health = window.context_health
+            self.genome.log_health(
+                query=query,
+                ellipticity=health.ellipticity,
+                coverage=health.coverage,
+                density=health.density,
+                freshness=health.freshness,
+                genes_expressed=health.genes_expressed,
+                genes_available=health.genes_available,
+                status=health.status,
+            )
 
-        # Update TCM session context with retrieved documents (in-memory only,
-        # not gated — TCM session is per-process state, not knowledge store state).
-        if self._tcm_session is not None:
-            try:
-                for doc in candidates:
-                    self._tcm_session.update_from_gene(doc)
-            except Exception:
-                pass  # TCM is diagnostic, not critical
-
-        # Log health signal for historical tracking
-        health = window.context_health
-        self.genome.log_health(
-            query=query,
-            ellipticity=health.ellipticity,
-            coverage=health.coverage,
-            density=health.density,
-            freshness=health.freshness,
-            genes_expressed=health.genes_expressed,
-            genes_available=health.genes_available,
-            status=health.status,
-        )
+        # Perf slice 1 (W0.2): expose the request id so route-level work
+        # (CWoLa log/sweep) can ring stages correlated to this request —
+        # build_context runs on an executor thread, so the route's own
+        # contextvar never sees the id set at the top of this function.
+        try:
+            window.metadata["pipeline_request_id"] = _pipeline_request_id.get()
+        except Exception:
+            pass
 
         return window
 
@@ -3127,20 +3190,24 @@ class CymatixContextManager:
         _prior_deliveries: Dict[str, Tuple[float, Optional[str], Optional[str]]] = {}
         _now_ts = time.time()
         if session_on:
-            try:
-                for g in sorted_genes:
-                    prior = _session_delivery.already_delivered(
-                        self.genome.conn,
-                        session_id=session_id,
-                        gene_id=g.gene_id,
-                    )
-                    if prior is not None:
-                        _prior_deliveries[g.gene_id] = prior
-            except Exception:
-                log.debug("already_delivered lookup failed", exc_info=True)
-                # Treat as no prior deliveries — soft-fail preserves the
-                # retrieval path; at worst consumer re-sees content.
-                _prior_deliveries = {}
+            # Perf slice 1 (W0.2): this lookup is one SQL round trip per
+            # candidate on the write connection — a campaign-flagged blind
+            # spot (W1.3 batches it; this timer is its before/after gate).
+            with _stage_timer("delivery_lookup"):
+                try:
+                    for g in sorted_genes:
+                        prior = _session_delivery.already_delivered(
+                            self.genome.conn,
+                            session_id=session_id,
+                            gene_id=g.gene_id,
+                        )
+                        if prior is not None:
+                            _prior_deliveries[g.gene_id] = prior
+                except Exception:
+                    log.debug("already_delivered lookup failed", exc_info=True)
+                    # Treat as no prior deliveries — soft-fail preserves the
+                    # retrieval path; at worst consumer re-sees content.
+                    _prior_deliveries = {}
 
         parts: List[str] = []
         total_raw = 0
@@ -3323,22 +3390,26 @@ class CymatixContextManager:
         # we don't re-log them here. Any exception is swallowed — a log
         # hiccup must not break the retrieval response.
         if session_on and session_id is not None:
-            try:
-                delivered_ids = [g.gene_id for g in sorted_genes[:len(parts)]]
-                for gid in delivered_ids:
-                    entry = _delivery_log_map.get(gid)
-                    if entry is None:
-                        continue  # elided stub — no fresh log
-                    mode, chash = entry
-                    _session_delivery.log_delivery(
-                        self.genome.conn,
-                        session_id=session_id,
-                        gene_id=gid,
-                        content_hash=chash,
-                        mode=mode,
-                    )
-            except Exception:
-                log.warning("session_delivery log_delivery failed", exc_info=True)
+            # Perf slice 1 (W0.2): one INSERT+commit per delivered document
+            # on the write connection — W1.3 collapses it to one txn; this
+            # timer is its before/after gate.
+            with _stage_timer("delivery_log"):
+                try:
+                    delivered_ids = [g.gene_id for g in sorted_genes[:len(parts)]]
+                    for gid in delivered_ids:
+                        entry = _delivery_log_map.get(gid)
+                        if entry is None:
+                            continue  # elided stub — no fresh log
+                        mode, chash = entry
+                        _session_delivery.log_delivery(
+                            self.genome.conn,
+                            session_id=session_id,
+                            gene_id=gid,
+                            content_hash=chash,
+                            mode=mode,
+                        )
+                except Exception:
+                    log.warning("session_delivery log_delivery failed", exc_info=True)
 
         # Delta-epsilon health signal
         # Use extracted domain/entity signals (not raw word splits with stop words)

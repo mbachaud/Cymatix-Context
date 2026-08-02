@@ -874,6 +874,19 @@ class KnowledgeStore:
         # candidate document — turns the lane graph into a measurable activation matrix.
         # See benchmarks/bench_skill_activation.py and docs/PIPELINE_LANES.md.
         self.last_tier_contributions: Dict[str, Dict[str, float]] = {}
+        # Perf slice 1 (W0.2): per-signal wall-time (ms) for the last query,
+        # published under _last_query_scores_lock alongside last_query_scores
+        # (same last-query contract and the same known cross-request-global
+        # caveat — W1.6 scoops all of these into a request-scoped outcome).
+        self.last_signal_timings: Dict[str, float] = {}
+        # Perf slice 1 (W0.3): every COMMIT executed on the writer connection,
+        # including raw conn.commit() calls from call sites that bypass
+        # _write_lock (Registry, session_delivery, cwola). Uses the sqlite3
+        # authorizer-free trace hook so no caller has to cooperate. Counter
+        # is process-cumulative; per-request deltas are computed by the
+        # pipeline ring. Approximate under concurrent writers by design.
+        self.commit_count: int = 0
+        self._install_commit_trace()
         self._sema_cache: Optional[Dict] = None  # Pre-materialized ΣĒMA vectors (hot tier)
         self._cold_sema_cache: Optional[Dict] = None  # Pre-materialized ΣĒMA vectors (cold tier, C.2)
         # Memoized corpus size for IDF weighting (refreshed every
@@ -2181,6 +2194,26 @@ class KnowledgeStore:
         if not query_terms:
             raise PromoterMismatch("No query terms after expansion")
 
+        # Perf slice 1 (W0.2): per-signal wall-time collector. Every
+        # genome-signal histogram observation is mirrored into a per-query
+        # {signal: ms} map, published as self.last_signal_timings on return
+        # so the pipeline ring / bench receipts can read sub-stage detail
+        # over HTTP without an OTel collector. Cleared up front so a query
+        # that raises (e.g. zero tier matches) never leaves the previous
+        # query's map behind.
+        _sig_ms: Dict[str, float] = {}
+        with self._last_query_scores_lock:
+            self.last_signal_timings = {}
+
+        def _sig(name: str, t0: float) -> None:
+            _dt = time.monotonic() - t0
+            _sig_ms[name] = _sig_ms.get(name, 0.0) + _dt * 1000.0
+            try:
+                from .telemetry import genome_signal_histogram
+                genome_signal_histogram().record(_dt, {"signal": name})
+            except Exception:
+                pass
+
         self._refresh_snapshot()  # See latest WAL state (external thinning, deletes)
         cur = self.read_conn.cursor()  # Read path — avoids WAL lock contention
         limit = max_genes * 2
@@ -2401,13 +2434,7 @@ class KnowledgeStore:
             except Exception as exc:
                 log.debug("path_key_index tier skipped: %s", exc)
             finally:
-                try:
-                    from .telemetry import genome_signal_histogram
-                    genome_signal_histogram().record(
-                        time.monotonic() - _pki_t0, {"signal": "pki"}
-                    )
-                except Exception:
-                    pass
+                _sig("pki", _pki_t0)
 
         # ── Tier 0.5: filename-anchor boost (flag-gated spike) ─────
         # Dewey bench 2026-04-14: filename alone drives retrieval lift;
@@ -2552,13 +2579,7 @@ class KnowledgeStore:
         # which is monotone in match_count, so the rank order matches
         # the spec's "rank by match_count descending" rule (§4).
         fuser.add_tier("tag_exact", _tag_exact_ranked, weight=self._tag_exact_weight)
-        try:
-            from .telemetry import genome_signal_histogram
-            genome_signal_histogram().record(
-                time.monotonic() - _tag_exact_t0, {"signal": "tag_exact"}
-            )
-        except Exception:
-            pass
+        _sig("tag_exact", _tag_exact_t0)
 
         # ── Tier 2: prefix tag match (weight: tag_prefix_weight) ───
         # "server" matches "serverconfig", "server_api", etc.
@@ -2590,13 +2611,7 @@ class KnowledgeStore:
             tier_contrib.setdefault(gid, {})["tag_prefix"] = prefix_score
             _tag_prefix_ranked.append((gid, prefix_score))
         fuser.add_tier("tag_prefix", _tag_prefix_ranked, weight=self._tag_prefix_weight)
-        try:
-            from .telemetry import genome_signal_histogram
-            genome_signal_histogram().record(
-                time.monotonic() - _tag_prefix_t0, {"signal": "tag_prefix"}
-            )
-        except Exception:
-            pass
+        _sig("tag_prefix", _tag_prefix_t0)
 
         # ── Tier 3: FTS5 content search (cap: 2.0 × fts5_weight) ───
         if self._fts_available:
@@ -2656,13 +2671,7 @@ class KnowledgeStore:
                 except Exception:
                     log.warning("FTS5 query failed", exc_info=True)
                 finally:
-                    try:
-                        from .telemetry import genome_signal_histogram
-                        genome_signal_histogram().record(
-                            time.monotonic() - _fts5_t0, {"signal": "fts5"}
-                        )
-                    except Exception:
-                        pass
+                    _sig("fts5", _fts5_t0)
 
         # ── Tier 3.5: SPLADE sparse retrieval (weight: splade_weight) ─
         if self._splade_enabled:
@@ -2717,13 +2726,7 @@ class KnowledgeStore:
             except Exception:
                 log.warning("SPLADE retrieval failed", exc_info=True)
             finally:
-                try:
-                    from .telemetry import genome_signal_histogram
-                    genome_signal_histogram().record(
-                        time.monotonic() - _splade_t0, {"signal": "splade"}
-                    )
-                except Exception:
-                    pass
+                _sig("splade", _splade_t0)
 
         # ── Tier 4: ΣĒMA semantic retrieval + re-ranking ───────────────
         # Two modes:
@@ -2775,13 +2778,7 @@ class KnowledgeStore:
                                     # Issue #255 (PR-2): mirror into per-class map.
                                     _sema_cls = rerank_by_class.setdefault("sema_boost", {})
                                     _sema_cls[gid] = _sema_cls.get(gid, 0.0) + sema_boost
-                try:
-                    from .telemetry import genome_signal_histogram
-                    genome_signal_histogram().record(
-                        time.monotonic() - _sema_boost_t0, {"signal": "sema_boost"}
-                    )
-                except Exception:
-                    pass
+                _sig("sema_boost", _sema_boost_t0)
 
                 # Mode B: Add new candidates when pool is undersized
                 # Uses pre-materialized numpy cache for fast cosine scan
@@ -2927,13 +2924,7 @@ class KnowledgeStore:
                         else:
                             gene_scores.setdefault(gid, 1e-9)
                             tier_contrib.setdefault(gid, {})["dense"] = 0.0
-                try:
-                    from .telemetry import genome_signal_histogram
-                    genome_signal_histogram().record(
-                        time.monotonic() - _dense_t0, {"signal": "dense"}
-                    )
-                except Exception:
-                    pass
+                _sig("dense", _dense_t0)
             except Exception:
                 log.debug("dense recall tier skipped", exc_info=True)
 
@@ -2948,6 +2939,7 @@ class KnowledgeStore:
         # latter is the scored-candidate pool and collapses IDF to ~0 on
         # large knowledge stores, nullifying the boost.
         total_genes_est = max(self.corpus_size(), len(gene_scores), 100)
+        _lex_anchor_t0 = time.monotonic()
         import math as _math
         # Stage 3: lex_anchor accumulates over multiple query terms.
         # We capture per-document total contribution after the loop and
@@ -2994,6 +2986,7 @@ class KnowledgeStore:
         fuser.add_tier(
             "lex_anchor", _lex_anchor_ranked, weight=self._lex_anchor_weight,
         )
+        _sig("lex_anchor", _lex_anchor_t0)
 
         # ── Authority boosts: distinguish "about X" from "mentions X" ──
         # Stage 3: thread rerank_additive + tier_contrib so RRF mode
@@ -3354,6 +3347,7 @@ class KnowledgeStore:
         # queries should not punish the edge). Soft-fails — logger
         # hiccups never perturb the retrieval result.
         if self._seeded_edges_enabled and ranked_ids and not read_only:
+            _hebbian_t0 = time.monotonic()
             try:
                 from .retrieval.seeded_edges import update_edge_evidence
                 update_edge_evidence(
@@ -3361,8 +3355,10 @@ class KnowledgeStore:
                 )
             except Exception:
                 log.debug("Hebbian edge update failed", exc_info=True)
+            _sig("hebbian", _hebbian_t0)
 
         # Batch fetch document rows
+        _body_fetch_t0 = time.monotonic()
         id_placeholders = ",".join("?" * len(ranked_ids))
         rows = cur.execute(
             f"SELECT * FROM genes WHERE gene_id IN ({id_placeholders})",
@@ -3372,9 +3368,12 @@ class KnowledgeStore:
         # Preserve ranked order
         row_map = {r["gene_id"]: r for r in rows}
         genes = [self._row_to_gene(row_map[gid]) for gid in ranked_ids if gid in row_map]
+        _sig("body_fetch", _body_fetch_t0)
 
         # Co-activation pull-forward
+        _coact_t0 = time.monotonic()
         expanded = self._expand_coactivated(genes, limit=limit)
+        _sig("coact_expand", _coact_t0)
 
         # Dedupe while preserving order
         seen: set[str] = set()
@@ -3383,6 +3382,9 @@ class KnowledgeStore:
             if g.gene_id not in seen:
                 seen.add(g.gene_id)
                 result.append(g)
+
+        with self._last_query_scores_lock:
+            self.last_signal_timings = dict(_sig_ms)
 
         return result[:limit]
 
@@ -3400,11 +3402,21 @@ class KnowledgeStore:
             # A1: share ONE BGE-M3 model process-wide instead of building a
             # ~2 GB instance per shard (the dominant 100-shard RAM driver).
             # Default on; CYMATIX_SHARE_DENSE_CODEC=0 reverts to per-instance.
+            # Perf slice 1 (W0.2): time the codec CONSTRUCTION (metadata
+            # only, near-zero). The real ~2 GB weight load happens lazily
+            # on first encode inside BGEM3Codec._load(), which records
+            # itself under "dense" — receipts subtract THAT one.
+            _load_t0 = time.monotonic()
             self._dense_codec = get_shared_codec(
                 dim=self._dense_embedding_dim,
                 model_name=self._dense_model,  # #207 dense fast-follow
                 share=shared_dense_codec_enabled(),
             )
+            try:
+                from .telemetry import record_model_load
+                record_model_load("dense_codec", time.monotonic() - _load_t0)
+            except Exception:
+                pass
             # One-time threshold-staleness warn: ann_similarity_threshold is
             # calibrated for dim=1024 (Issue #139 / Stage 4, 2026-05-18). If
             # this knowledge store runs at a different dense_embedding_dim, the
@@ -3431,6 +3443,32 @@ class KnowledgeStore:
                     )
                     self._threshold_dim_warned = True
         return self._dense_codec
+
+    def _trace_commit(self, sql: str) -> None:
+        """sqlite3 trace hook on the writer connection (W0.3).
+
+        Counts every COMMIT — conn.commit() surfaces here as the literal
+        statement "COMMIT" — so unlocked committers that bypass
+        _write_lock are counted without any call-site cooperation.
+        """
+        try:
+            if sql.lstrip()[:6].upper() == "COMMIT":
+                self.commit_count += 1
+        except Exception:
+            pass
+
+    def _install_commit_trace(self) -> None:
+        """(Re)register the commit trace hook on the CURRENT self.conn.
+
+        Must be called at every site that rebinds self.conn (init, the
+        refresh() bad-connection fallback, the vacuum() reopen) — the hook
+        lives on the connection object, so a reopen without this call
+        silently freezes commit_count for the rest of the process.
+        """
+        try:
+            self.conn.set_trace_callback(self._trace_commit)
+        except Exception:
+            log.debug("commit trace callback unavailable", exc_info=True)
 
     def _encode_dense_v2_blob(
         self,
@@ -3698,16 +3736,15 @@ class KnowledgeStore:
             return lex_pool[:max_genes]
 
         # ── 2. Dense recall pool (id+score, no bodies). ──────────────
+        _ann_dense_t0 = time.monotonic()
         dense_hits = self.query_docs_dense_recall(
             query, k=pool_size, party_id=party_id, read_only=read_only,
         )
+        _ann_dense_ms = (time.monotonic() - _ann_dense_t0) * 1000.0
 
         # ── 3. Union by gene_id. Lex documents get sim=threshold-0.01 unless
         # they also appeared in the dense pool. Dense-only ids get loaded
         # via _load_genes_by_ids so we body-fetch once.
-        codec = self._get_dense_codec() if dense_hits else None
-        query_vec = codec.encode(query, task="query") if codec is not None else None
-
         sim_by_id: dict[str, float] = {gid: float(s) for gid, s in dense_hits}
         ordered_ids: list[str] = [gid for gid, _ in dense_hits]
         seen: set[str] = set(ordered_ids)
@@ -3724,7 +3761,18 @@ class KnowledgeStore:
         # dense-only ids need loading.
         lex_by_id = {d.gene_id: d for d in lex_pool}
         missing_ids = [gid for gid in ordered_ids if gid not in lex_by_id]
+        _ann_body_t0 = time.monotonic()
         loaded = self._load_genes_by_ids(missing_ids) if missing_ids else {}
+        _ann_body_ms = (time.monotonic() - _ann_body_t0) * 1000.0
+
+        # Perf slice 1 (W0.2): merge this function's own leg timings into
+        # the signal map the inner query_docs just published, so one read
+        # of last_signal_timings covers the whole ANN retrieval.
+        with self._last_query_scores_lock:
+            _merged = dict(getattr(self, "last_signal_timings", None) or {})
+            _merged["ann_dense_leg"] = _merged.get("ann_dense_leg", 0.0) + _ann_dense_ms
+            _merged["ann_body_fetch"] = _merged.get("ann_body_fetch", 0.0) + _ann_body_ms
+            self.last_signal_timings = _merged
 
         # ── 4. Resolve final Document objects in score order. ────────────
         scored: list[tuple[Gene, float]] = []
@@ -4481,6 +4529,7 @@ class KnowledgeStore:
             self.conn.execute("PRAGMA journal_mode=WAL")
             self.conn.execute("PRAGMA busy_timeout=30000")
             self.conn.execute("PRAGMA journal_size_limit=67108864")  # 64 MB
+            self._install_commit_trace()
 
     # ── Close ───────────────────────────────────────────────────────
 
@@ -4601,6 +4650,7 @@ class KnowledgeStore:
         self.conn.execute("PRAGMA journal_mode=WAL")
         self.conn.execute("PRAGMA busy_timeout=30000")
         self.conn.execute("PRAGMA journal_size_limit=67108864")  # 64 MB
+        self._install_commit_trace()
 
         after = os.path.getsize(path) if os.path.exists(path) else 0
         reclaimed = before - after
