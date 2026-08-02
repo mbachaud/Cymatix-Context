@@ -171,3 +171,6 @@ benchmarks/dogfood/dispatch_manifest.json
 benchmarks/dogfood/logs/
 benchmarks/dogfood/gene_ids_*/
 benchmarks/dogfood/baseline_tagger*.json
+
+# Claude Code worktrees (session isolation)
+.claude/worktrees/
