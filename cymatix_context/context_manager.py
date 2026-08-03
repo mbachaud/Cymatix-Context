@@ -3197,7 +3197,10 @@ class CymatixContextManager:
                 try:
                     for g in sorted_genes:
                         prior = _session_delivery.already_delivered(
-                            self.genome.conn,
+                            # Perf slice 2: pure read — per-thread reader
+                            # (prior-turn deliveries are committed; the
+                            # writer conn deadlocks cross-thread on py3.14).
+                            self.genome.read_conn,
                             session_id=session_id,
                             gene_id=g.gene_id,
                         )
@@ -3230,7 +3233,7 @@ class CymatixContextManager:
                 prior_ts, _prior_mode, _prior_hash = prior
                 try:
                     queries_ago = _session_delivery.count_queries_in_session_since(
-                        self.genome.conn,
+                        self.genome.read_conn,  # pure read — see delivery_lookup
                         session_id=session_id,  # type: ignore[arg-type]
                         since=prior_ts,
                     )

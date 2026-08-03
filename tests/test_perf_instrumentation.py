@@ -574,6 +574,56 @@ def test_concurrent_query_docs_completes(tmp_path):
             g.close()  # closing under a wedged reader would hang too
 
 
+def test_concurrent_build_context_with_refiners(tmp_path):
+    """Manager-level two-thread hammer through the FULL pipeline (rerank
+    refiners on): ray_trace read co-activation/harmonic data on the shared
+    WRITER connection, which interleaves with locked writes (log_health)
+    cross-thread and deadlocks on py3.14 — caught live in arm-a of the
+    baseline battery. Request-path reads must never touch the writer conn."""
+    from cymatix_context.config import BudgetConfig
+    from cymatix_context.context_manager import CymatixContextManager
+
+    from tests.conftest import MockCompressorBackend, make_cymatix_config
+
+    cfg = make_cymatix_config(
+        budget=BudgetConfig(max_genes_per_turn=4),
+    )
+    cfg.genome.path = str(tmp_path / "refiners.db")
+    mgr = CymatixContextManager(cfg)
+    mgr.ribosome.backend = MockCompressorBackend()
+    try:
+        for i in range(20):
+            mgr.genome.upsert_doc(make_gene(
+                f"harmonic alpha body {i}", domains=["alpha"],
+                entities=[f"e{i % 4}"], gene_id=f"rf-{i:03d}",
+            ), apply_gate=False)
+        mgr.build_context("alpha harmonic", read_only=True,
+                          ignore_delivered=True)  # warm
+
+        errors: list = []
+
+        def worker():
+            try:
+                for _ in range(15):
+                    mgr.build_context("alpha harmonic body", read_only=True,
+                                      ignore_delivered=True)
+            except Exception as exc:  # noqa: BLE001
+                errors.append(exc)
+
+        ts = [threading.Thread(target=worker, daemon=True) for _ in range(2)]
+        for t in ts:
+            t.start()
+        for t in ts:
+            t.join(timeout=120)
+        assert not any(t.is_alive() for t in ts), (
+            "build_context wedged under two threads (writer-conn read collision)"
+        )
+        assert not errors, f"concurrent build raised: {errors[:2]!r}"
+    finally:
+        if not any(t.is_alive() for t in ts):
+            mgr.close()
+
+
 def test_concurrent_log_health_no_commit_steal(tmp_path):
     """Two threads on the shared writer: an unlocked log_health commit can
     commit the OTHER thread's in-flight transaction, whose own commit then

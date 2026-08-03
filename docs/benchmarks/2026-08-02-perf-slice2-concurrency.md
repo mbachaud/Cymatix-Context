@@ -100,8 +100,74 @@ ever server-mode concurrency measurement found it within minutes.
 - **Windows venv shims break Popen-pid identity checks** — anywhere else
   pid equality is assumed, audit (fixed in BenchServer via spawn token).
 
-## Verdicts pending
+## The fourth defect: reads on the writer connection
 
-- G1 (event-loop/executor wall vs SQLite): needs the full c=1..16 read-arm
-  curve post-sweep.
-- G2 (write contention): needs `run_write_contention.py` arms a–d.
+The first battery pass wedged intermittently (scaling c=4 warmups, arm a
+of write contention) — py-spy on the live wedge caught an executor thread
+blocked in `ray_trace._load_co_activated` (rerank stage): a request-path
+READ on the shared **writer** connection. `_write_lock` serializes writers
+against writers; an unlocked read on the same connection still interleaves
+cross-thread with locked writes and deadlocks on py3.14. Rule enforced:
+**request-path reads never touch the writer connection** — ray_trace (×2)
+and the session-delivery lookups moved to the per-thread reader. (Two
+polluting factors were also removed before the final pass: leaked pre-fix
+probe processes had been spinning through the entire first battery.)
+
+## Final baselines (clean box, all fixes)
+
+**Server-mode read arm** (18 needles × 2 rounds, bed COPY; recall measured
+within delivered citations — a different basis than in-proc raw-ranking
+0.667, consistent across levels which is what gates compare):
+
+| c | median | p95 | qps | r@12 | canary p95 | errors |
+|---|---|---|---|---|---|---|
+| 1 | 968ms | 1106ms | 1.04 | 0.556 | 30ms | 0 |
+| 2 | 1384ms | 1628ms | 1.45 | 0.556 | 41ms | 0 |
+| 4 | 2655ms | 3106ms | 1.47 | 0.556 | 52ms | 0 |
+| 8 | 5302ms | 6180ms | 1.46 | 0.556 | 59ms | 0 |
+| 16 | 10476ms | 12252ms | 1.47 | 0.556 | 59ms | 0 |
+
+**In-proc control (post-sweep):** c=1 823ms, c=2 1.34×/1.52×,
+c=4 1.88×/2.16× (median×/qps×). The lock sweep costs ~13% at c=1
+(729→823ms) and buys strictly better concurrent scaling
+(c=4: 2.13×→1.88× median, 1.93×→2.16× qps).
+
+**Cold start (N=5):** boot 5.1s; request #1 median 16.3s, 91.4% attributed
+model load; warm 1.3s; warmup endpoint (W1.7) worth ~15.1s median.
+Attribution gate PASS ×5.
+
+**Write contention** (arms on a bed copy, 4 readers × 36 queries):
+
+| arm | topology | read median vs control | busy | WAL max | verdict |
+|---|---|---|---|---|---|
+| a | readers only | 1.0× (2669ms) | 0 | 1.5MB | PASS |
+| b | + HTTP /ingest writer | 1.17× | 0 | 4.7MB | PASS |
+| c | + direct bypass writer (tagger) | **1.45×** | 0 | 11.9MB | PASS |
+| d | two direct writers, no server | n/a | 0 | 5.5MB | PASS |
+
+recall@12 identical (0.5556) across a/b/c — the first-pass arm-b recall
+collapse (0.258) was zombie-process contamination, not a real quality loss.
+Zero lost writes, zero partial publish, integrity ok everywhere.
+
+## Gate verdicts
+
+- **G1 — FIRED, wall = in-process serving architecture.** Server-mode
+  throughput saturates at **1.46 qps from c=2 through c=16** (pure
+  executor queueing; latency linear in c; loop healthy) while
+  subprocess-per-worker reaches 2.16× qps at c=4. Not SQLite, not the box.
+  → Fork 1's serving half (N read workers) justified; **Postgres is not**
+  (per the gate table). Cheapest next experiment: W3.2 executor sizing on
+  main — find the knee before cutting the fork.
+- **G2 — PARTIAL.** Bypass-writer (tagger topology) costs readers 1.45×
+  median with perfect integrity and zero busy errors — real but bounded
+  degradation, no wedge post-fixes. The July "2 agents benign" conclusion
+  survives; sustained-ingest degradation is the Fork-1 (writer daemon)
+  motivation, at lower urgency than G1. Longer soak arms (full tagger
+  runtime) remain future work.
+
+## Session lesson for the harness bed
+
+`TaskStop` on a bash wrapper does not kill python children on Windows —
+two wedged pre-fix probes survived four hours and contaminated the first
+battery. Bench discipline: `taskkill /T` for cleanup, and a preflight
+process sweep (benchmark_monitor-style) before any receipt run.
