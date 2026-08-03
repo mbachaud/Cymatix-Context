@@ -506,6 +506,7 @@ def test_pipeline_panel_total_excludes_nested_stages():
 # a different database).
 
 
+@pytest.mark.concurrency
 def test_read_conn_is_thread_local_for_file_backed(tmp_path):
     g = Genome(path=str(tmp_path / "tl.db"))
     try:
@@ -540,6 +541,7 @@ def test_read_conn_memory_store_falls_back_to_writer(genome):
     assert genome.read_conn is genome.conn
 
 
+@pytest.mark.concurrency
 def test_concurrent_query_docs_completes(tmp_path):
     """Regression canary: two threads querying one file-backed store must
     finish promptly (pre-fix, shared-conn interleaving could wedge)."""
@@ -574,6 +576,7 @@ def test_concurrent_query_docs_completes(tmp_path):
             g.close()  # closing under a wedged reader would hang too
 
 
+@pytest.mark.concurrency
 def test_concurrent_build_context_with_refiners(tmp_path):
     """Manager-level two-thread hammer through the FULL pipeline (rerank
     refiners on): ray_trace read co-activation/harmonic data on the shared
@@ -624,6 +627,7 @@ def test_concurrent_build_context_with_refiners(tmp_path):
             mgr.close()
 
 
+@pytest.mark.concurrency
 def test_concurrent_log_health_no_commit_steal(tmp_path):
     """Two threads on the shared writer: an unlocked log_health commit can
     commit the OTHER thread's in-flight transaction, whose own commit then

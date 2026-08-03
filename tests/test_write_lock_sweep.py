@@ -97,6 +97,7 @@ def _log_health_loop(g: Genome, n: int = 200):
 # ── 1. Concurrent hammer tests ───────────────────────────────────────
 
 
+@pytest.mark.concurrency
 def test_concurrent_touch_genes_vs_log_health(tmp_path):
     """touch_genes is a SELECT→UPDATE*→commit transaction on the shared
     writer — unlocked it wedges against the (locked) log_health committer."""
@@ -118,6 +119,7 @@ def test_concurrent_touch_genes_vs_log_health(tmp_path):
             g.close()  # close() on a wedged writer conn would hang too
 
 
+@pytest.mark.concurrency
 def test_concurrent_link_coactivated_vs_upsert_doc(tmp_path):
     g = Genome(path=str(tmp_path / "lc.db"))
     ids = _seed(g, 10, "lc")
@@ -144,6 +146,7 @@ def test_concurrent_link_coactivated_vs_upsert_doc(tmp_path):
             g.close()
 
 
+@pytest.mark.concurrency
 def test_concurrent_log_delivery_vs_log_health(tmp_path):
     """session_delivery.log_delivery is a module fn (INSERT+commit) on the
     store conn; the lock lives at the call site (context_manager._assemble
@@ -174,6 +177,7 @@ def test_concurrent_log_delivery_vs_log_health(tmp_path):
             g.close()
 
 
+@pytest.mark.concurrency
 def test_concurrent_checkpoint_vs_upsert_doc(tmp_path):
     """PRAGMA wal_checkpoint writes on the shared writer connection —
     unlocked it interleaves with an in-flight upsert transaction."""
@@ -202,6 +206,7 @@ def test_concurrent_checkpoint_vs_upsert_doc(tmp_path):
             g.close()
 
 
+@pytest.mark.concurrency
 def test_concurrent_registry_heartbeat_vs_log_health(tmp_path):
     """Registry commits on the store conn (~12 sites); heartbeat is the
     hottest. Post-sweep it acquires the store's _write_lock internally."""
