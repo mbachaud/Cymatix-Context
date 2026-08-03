@@ -165,14 +165,22 @@ def seed_edges(
         gene_ids = gene_ids[:SEEDING_CAP]
     import time as _time
 
-    cur = genome.conn.cursor()
     now = _time.time()
+    # W2.3-A: overlap checks are reads — run them OUTSIDE the write lock;
+    # only the insert burst + commit hold it (offline callers today, but
+    # this is the one retrieval/ committer that had no locked call site).
+    pairs = [
+        (gene_ids[i], gene_ids[j])
+        for i in range(len(gene_ids))
+        for j in range(i + 1, len(gene_ids))
+        if overlap_fn(genome, gene_ids[i], gene_ids[j])
+    ]
     written = 0
-    for i in range(len(gene_ids)):
-        for j in range(i + 1, len(gene_ids)):
-            a, b = gene_ids[i], gene_ids[j]
-            if not overlap_fn(genome, a, b):
-                continue
+    import contextlib as _contextlib
+    _lock = getattr(genome, "_write_lock", None)  # absent on test stubs
+    with (_lock if _lock is not None else _contextlib.nullcontext()):
+        cur = genome.conn.cursor()
+        for a, b in pairs:
             try:
                 cur.execute(
                     """INSERT INTO harmonic_links
@@ -186,8 +194,8 @@ def seed_edges(
                     written += 1
             except Exception:
                 log.warning("seed_edges insert failed for (%s,%s)", a, b, exc_info=True)
-    if written:
-        genome.conn.commit()
+        if written:
+            genome.conn.commit()
     return written
 
 

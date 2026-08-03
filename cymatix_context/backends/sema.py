@@ -128,6 +128,12 @@ class SemaCodec:
             from cymatix_context.hardware import get_hardware
             device = get_hardware().device
 
+        import time as _time
+
+        # Timer starts BEFORE the sentence_transformers import — on a cold
+        # process that import drags in torch (seconds); excluding it would
+        # leave the cost silently booked to the express stage.
+        _load_t0 = _time.monotonic()
         from sentence_transformers import SentenceTransformer
 
         self._model = SentenceTransformer(model_name, device=device)
@@ -135,6 +141,15 @@ class SemaCodec:
 
         # Build projection matrix from prime anchors
         self._projection = self._build_projection()
+
+        # Perf slice 2 (W0.2): MiniLM load + projection build is the
+        # second-largest cold sink after BGE-M3 — record it so cold-start
+        # receipts can subtract it from the express stage.
+        try:
+            from cymatix_context.telemetry import record_model_load
+            record_model_load("sema", _time.monotonic() - _load_t0)
+        except Exception:
+            pass
 
         log.info(
             "ΣĒMA codec ready: %dD → %dD via %s",

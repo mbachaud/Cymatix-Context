@@ -42,12 +42,15 @@ def _ensure_loaded(model_name: str = "naver/splade-cocondenser-ensembledistil"):
 
     import time as _time
 
+    # Timer starts BEFORE the torch/transformers imports — on a cold
+    # process those imports cost seconds and belong to the load bill.
+    _load_t0 = _time.monotonic()
+
     import torch
     from transformers import AutoModelForMaskedLM, AutoTokenizer
 
     from cymatix_context.hardware import get_hardware
 
-    _load_t0 = _time.monotonic()
     _device = torch.device(get_hardware().device)
     _tokenizer = AutoTokenizer.from_pretrained(model_name)
     _model = AutoModelForMaskedLM.from_pretrained(model_name).to(_device)

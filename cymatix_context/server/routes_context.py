@@ -495,6 +495,12 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
         try:
             with _stage_timer("cwola"):
                 from ..identity import cwola
+                # Perf slice 2 interim: cwola writes on the shared writer
+                # connection with no lock — under concurrent requests it
+                # races log_health for the implicit transaction (same
+                # unlocked-committer class). Serialize via the store's
+                # write lock until W2.3-A / W2.4 move it properly.
+                _wl = getattr(cymatix.genome, "_write_lock", None)
                 tier_contrib_all = getattr(cymatix.genome, "last_tier_contributions", {}) or {}
                 cwola_tier_totals: dict = {}
                 for contribs in tier_contrib_all.values():
@@ -517,18 +523,20 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
                 except Exception:
                     log.debug("CWoLa sema enrichment failed", exc_info=True)
 
-                cwola.log_query(
-                    cymatix.genome.conn,
-                    session_id=cwola_session_id,
-                    party_id=cwola_party_id,
-                    query=query,
-                    tier_totals=cwola_tier_totals,
-                    top_gene_id=top_gene,
-                    ts=t0,
-                    query_sema=query_sema_vec,
-                    top_candidate_sema=top_candidate_sema_vec,
-                )
-                cwola.sweep_buckets(cymatix.genome.conn, now=_time.time())
+                import contextlib as _contextlib
+                with (_wl if _wl is not None else _contextlib.nullcontext()):
+                    cwola.log_query(
+                        cymatix.genome.conn,
+                        session_id=cwola_session_id,
+                        party_id=cwola_party_id,
+                        query=query,
+                        tier_totals=cwola_tier_totals,
+                        top_gene_id=top_gene,
+                        ts=t0,
+                        query_sema=query_sema_vec,
+                        top_candidate_sema=top_candidate_sema_vec,
+                    )
+                    cwola.sweep_buckets(cymatix.genome.conn, now=_time.time())
         except Exception:
             log.debug("CWoLa log_query/sweep failed", exc_info=True)
         finally:

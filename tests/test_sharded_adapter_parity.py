@@ -135,6 +135,10 @@ ADAPTER_ONLY_DIFFERENCES_WHITELIST = frozenset({
     # trace (writes are no-ops).
     "_trace_commit", "_install_commit_trace",
 
+    # Perf slice 2: per-thread reader-connection factory — single-db
+    # machinery; the adapter's per-shard stores each own their readers.
+    "_open_reader_conn",
+
     # Internal builders / loaders that only make sense on a single .db.
     "make_gene_id", "_load_genes_by_ids", "_score_query",
     "_apply_promoter_tier", "_apply_dense_recall", "_apply_entity_graph",

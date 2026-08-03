@@ -191,7 +191,10 @@ def ingest_bundle(
                 )
             )
     result.links_captured = len(rows)
-    replace_bundle_links(manager.genome.conn, bundle.bundle_id, rows)
+    # W2.3-A: shared-writer commit — serialize against any background
+    # persist/mem-sync thread in the same process.
+    with manager.genome._write_lock:
+        replace_bundle_links(manager.genome.conn, bundle.bundle_id, rows)
 
     log.info(
         "OKF bundle %s ingested: %d/%d concepts, %d links (%d resolved, "

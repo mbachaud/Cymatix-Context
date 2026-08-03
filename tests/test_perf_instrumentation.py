@@ -28,15 +28,17 @@ from __future__ import annotations
 
 import sqlite3
 import sys
+import threading
 from pathlib import Path
 
 import pytest
 
-# Make benchmarks/dogfood importable as a flat module path (repo test
-# convention — see tests/test_bench_orchestrator.py).
-_BENCH_DOGFOOD = Path(__file__).resolve().parents[1] / "benchmarks" / "dogfood"
-if str(_BENCH_DOGFOOD) not in sys.path:
-    sys.path.insert(0, str(_BENCH_DOGFOOD))
+# Make benchmarks/ and benchmarks/dogfood importable as flat module paths
+# (repo test convention — see tests/test_bench_orchestrator.py).
+_BENCH = Path(__file__).resolve().parents[1] / "benchmarks"
+for _p in (_BENCH, _BENCH / "dogfood"):
+    if str(_p) not in sys.path:
+        sys.path.insert(0, str(_p))
 
 import cymatix_context.context_manager as cm_mod
 import cymatix_context.telemetry as telemetry_mod
@@ -332,6 +334,61 @@ def types_simple_namespace_factory():
     return _Fake
 
 
+def test_sema_codec_load_records_model_load(monkeypatch):
+    """SemaCodec.__init__ loads MiniLM + builds the projection — the second
+    biggest cold sink after BGE-M3; must land in model_load_ms (cold-start
+    smoke showed 8.1s unattributed without it)."""
+    import numpy as np
+
+    from cymatix_context.telemetry import otel as otel_mod
+
+    monkeypatch.setattr(otel_mod, "_MODEL_LOAD_MS", {})
+
+    class _FakeST:
+        def __init__(self, name, device=None):
+            pass
+
+        def get_sentence_embedding_dimension(self):
+            return 384
+
+        def encode(self, texts, **kw):
+            return np.zeros((len(texts), 384), dtype=np.float32)
+
+    import sentence_transformers
+    monkeypatch.setattr(sentence_transformers, "SentenceTransformer", _FakeST)
+
+    from cymatix_context.backends.sema import SemaCodec
+    SemaCodec(device="cpu")
+
+    assert "sema" in otel_mod.model_load_ms()
+
+
+def test_dense_matrix_build_records_model_load(monkeypatch):
+    """First _ensure_dense_matrix builds the full hot-tier matrix — a cold
+    cost that must not be silently attributed to express."""
+    from cymatix_context.telemetry import otel as otel_mod
+
+    monkeypatch.setattr(otel_mod, "_MODEL_LOAD_MS", {})
+
+    g = Genome(path=":memory:", dense_embedding_enabled=True,
+               dense_embedding_dim=1024)
+    try:
+        g.upsert_doc(make_gene("matrix body", domains=["mx"],
+                               gene_id="mx-1"), apply_gate=False)
+        _populate_v2(g, "mx-1", hash_vec("mx vec", 1024))
+
+        matrix, ids = g._ensure_dense_matrix()
+        assert matrix is not None and list(ids) == ["mx-1"]
+        assert "dense_matrix" in otel_mod.model_load_ms()
+
+        # Cached second call must not re-record.
+        before = otel_mod.model_load_ms()["dense_matrix"]
+        g._ensure_dense_matrix()
+        assert otel_mod.model_load_ms()["dense_matrix"] == before
+    finally:
+        g.close()
+
+
 # ── 5. _stage_receipts: bench-side ring aggregation ──────────────────
 
 
@@ -437,7 +494,184 @@ def test_pipeline_panel_total_excludes_nested_stages():
     assert row["stages"]["delivery_log"] == 10.0
 
 
-# ── 7. end-to-end: /context rings the new stages ─────────────────────
+# ── 6b. thread-local reader connections (c=2 livelock fix) ───────────
+#
+# Two concurrent build_context calls interleaving large scans on ONE
+# shared connection (reader for the tiers, writer for the co-activation
+# expansion) livelock: shared page cache thrash + per-step mutex
+# ping-pong + GIL starvation wedged the whole server at c=2 (slice-2
+# smoke, faulthandler-confirmed in storage/co_activation.py). Fix:
+# read_conn hands each thread its own mode=ro connection; :memory:
+# stores keep the shared-writer fallback (a second connection would be
+# a different database).
+
+
+def test_read_conn_is_thread_local_for_file_backed(tmp_path):
+    g = Genome(path=str(tmp_path / "tl.db"))
+    try:
+        main_conn = g.read_conn
+        assert g.read_conn is main_conn, "same thread must reuse its reader"
+        assert main_conn is not g.conn, "reader must not be the writer"
+
+        seen: dict = {}
+
+        def grab(i):
+            seen[i] = g.read_conn
+            # A second access on the same thread reuses it.
+            seen[f"{i}_again"] = g.read_conn
+
+        ts = [threading.Thread(target=grab, args=(i,)) for i in (1, 2)]
+        for t in ts:
+            t.start()
+        for t in ts:
+            t.join(timeout=10)
+
+        assert seen[1] is seen["1_again"]
+        assert seen[2] is seen["2_again"]
+        assert seen[1] is not seen[2], (
+            "two threads must get distinct reader connections"
+        )
+        assert seen[1] is not main_conn and seen[2] is not main_conn
+    finally:
+        g.close()
+
+
+def test_read_conn_memory_store_falls_back_to_writer(genome):
+    assert genome.read_conn is genome.conn
+
+
+def test_concurrent_query_docs_completes(tmp_path):
+    """Regression canary: two threads querying one file-backed store must
+    finish promptly (pre-fix, shared-conn interleaving could wedge)."""
+    g = Genome(path=str(tmp_path / "cc.db"))
+    try:
+        for i in range(30):
+            g.upsert_doc(make_gene(
+                f"alpha shared body {i}", domains=["alpha"],
+                entities=[f"ent{i % 5}", "common"], gene_id=f"cc-{i:03d}",
+            ), apply_gate=False)
+
+        errors: list = []
+
+        def worker():
+            try:
+                for _ in range(5):
+                    g.query_docs(["alpha"], ["common"], max_genes=8)
+            except Exception as exc:  # noqa: BLE001
+                errors.append(exc)
+
+        # daemon=True: if the bug reproduces, wedged threads must fail the
+        # assert — not block interpreter shutdown and hang the whole run.
+        ts = [threading.Thread(target=worker, daemon=True) for _ in range(2)]
+        for t in ts:
+            t.start()
+        for t in ts:
+            t.join(timeout=30)
+        assert not any(t.is_alive() for t in ts), "concurrent query wedged"
+        assert not errors, f"concurrent query raised: {errors!r}"
+    finally:
+        if not any(t.is_alive() for t in ts):
+            g.close()  # closing under a wedged reader would hang too
+
+
+def test_concurrent_log_health_no_commit_steal(tmp_path):
+    """Two threads on the shared writer: an unlocked log_health commit can
+    commit the OTHER thread's in-flight transaction, whose own commit then
+    raises 'cannot commit - no transaction is active' (serialization point
+    #1; reproduced live at c=2 in the slice-2 probe). log_health must hold
+    _write_lock. First flipped member of the W2.3-A acceptance family."""
+    g = Genome(path=str(tmp_path / "lh.db"))
+    errors: list = []
+
+    def hammer():
+        try:
+            for i in range(200):
+                g.log_health(query=f"q{i}", ellipticity=0.5, coverage=0.5,
+                             density=0.5, freshness=0.5, genes_expressed=1,
+                             genes_available=1, status="healthy")
+        except Exception as exc:  # noqa: BLE001
+            errors.append(exc)
+
+    try:
+        ts = [threading.Thread(target=hammer, daemon=True) for _ in range(2)]
+        for t in ts:
+            t.start()
+        for t in ts:
+            t.join(timeout=60)
+        # Pre-fix this deadlocks outright on py3.14 sqlite3 (both threads
+        # blocked in the INSERT) rather than raising — assert liveness
+        # first so the failure mode is a clean assert, not a hang.
+        assert not any(t.is_alive() for t in ts), (
+            "log_health wedged under two threads (shared-writer deadlock)"
+        )
+        assert not errors, f"commit steal reproduced: {errors[:2]!r}"
+    finally:
+        if not any(t.is_alive() for t in ts):
+            g.close()  # close() on a wedged writer conn would hang too
+
+
+# ── 7. bench-server spawn-token identity (venv-shim pid fix) ─────────
+#
+# On Windows a venv's python.exe is a launcher that re-execs the real
+# interpreter as a CHILD, so Popen.pid never equals the /health-reported
+# os.getpid() and the issue-#127 pid guard false-positives on every boot.
+# The spawn token is the reliable identity; pid equality stays fatal only
+# when the target server is too old to echo the token.
+
+
+def test_health_echoes_spawn_token_when_env_set(monkeypatch):
+    monkeypatch.setenv("CYMATIX_BENCH_SPAWN_TOKEN", "tok-e2e-123")
+    client = make_client()
+    payload = client.get("/health").json()
+    assert payload.get("bench_spawn_token") == "tok-e2e-123"
+
+
+def test_health_omits_spawn_token_when_env_unset(monkeypatch):
+    monkeypatch.delenv("CYMATIX_BENCH_SPAWN_TOKEN", raising=False)
+    client = make_client()
+    payload = client.get("/health").json()
+    assert payload.get("bench_spawn_token") is None
+
+
+def _bench_server_with(payload, spawn_token, proc_pid=111):
+    import types as _types
+
+    from bench_orchestrator import BenchServer
+
+    srv = BenchServer()
+    srv._proc = _types.SimpleNamespace(pid=proc_pid, poll=lambda: None,
+                                       returncode=None)
+    srv._spawn_token = spawn_token
+    srv.health = lambda: payload
+    return srv
+
+
+def test_wait_healthy_token_match_overrides_pid_mismatch():
+    srv = _bench_server_with(
+        {"pid": 999, "bench_spawn_token": "tok-1"}, spawn_token="tok-1")
+    srv._wait_healthy()  # must not raise: token is authoritative
+
+
+def test_wait_healthy_token_mismatch_raises():
+    from bench_orchestrator import BenchServerError
+
+    srv = _bench_server_with(
+        {"pid": 111, "bench_spawn_token": "tok-OTHER"}, spawn_token="tok-1")
+    with pytest.raises(BenchServerError):
+        srv._wait_healthy()
+
+
+def test_wait_healthy_no_token_in_payload_keeps_pid_guard():
+    from bench_orchestrator import BenchServerError
+
+    srv = _bench_server_with({"pid": 999}, spawn_token="tok-1")
+    with pytest.raises(BenchServerError):
+        srv._wait_healthy()
+    srv_ok = _bench_server_with({"pid": 111}, spawn_token="tok-1")
+    srv_ok._wait_healthy()  # pid equal — old guard passes
+
+
+# ── 8. end-to-end: /context rings the new stages ─────────────────────
 
 
 def test_context_turn_rings_new_stages():

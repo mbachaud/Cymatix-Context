@@ -3396,18 +3396,26 @@ class CymatixContextManager:
             with _stage_timer("delivery_log"):
                 try:
                     delivered_ids = [g.gene_id for g in sorted_genes[:len(parts)]]
-                    for gid in delivered_ids:
-                        entry = _delivery_log_map.get(gid)
-                        if entry is None:
-                            continue  # elided stub — no fresh log
-                        mode, chash = entry
-                        _session_delivery.log_delivery(
-                            self.genome.conn,
-                            session_id=session_id,
-                            gene_id=gid,
-                            content_hash=chash,
-                            mode=mode,
-                        )
+                    # W2.3 Phase A: log_delivery is a module fn doing
+                    # INSERT+commit on the shared writer — serialize at
+                    # this call site via the store's write lock (the DAL
+                    # module stays store-agnostic). getattr-guarded for
+                    # sharded/stub genomes without a _write_lock.
+                    import contextlib as _contextlib
+                    _wl = getattr(self.genome, "_write_lock", None)
+                    with (_wl if _wl is not None else _contextlib.nullcontext()):
+                        for gid in delivered_ids:
+                            entry = _delivery_log_map.get(gid)
+                            if entry is None:
+                                continue  # elided stub — no fresh log
+                            mode, chash = entry
+                            _session_delivery.log_delivery(
+                                self.genome.conn,
+                                session_id=session_id,
+                                gene_id=gid,
+                                content_hash=chash,
+                                mode=mode,
+                            )
                 except Exception:
                     log.warning("session_delivery log_delivery failed", exc_info=True)
 

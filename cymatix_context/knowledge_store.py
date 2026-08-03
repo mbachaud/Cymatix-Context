@@ -918,6 +918,13 @@ class KnowledgeStore:
             self._reader.execute(f"PRAGMA mmap_size={_plan.mmap_size}")
         else:
             self._reader = None
+        # Perf slice 2: per-thread reader connections (see read_conn).
+        # The creating thread keeps self._reader; other threads get their
+        # own mode=ro connection, tracked in a registry for close().
+        self._thread_readers = threading.local()
+        self._reader_owner_thread = threading.get_ident()
+        self._thread_reader_registry: list = []
+        self._thread_reader_registry_lock = threading.Lock()
 
         # Create SPLADE inverted index if enabled, or if the size-aware
         # auto-toggle (issue #164) could turn it on later. Without this
@@ -976,7 +983,12 @@ class KnowledgeStore:
         will start a new one with the latest WAL state.
         """
         try:
-            self.conn.commit()
+            # W2.3 Phase A: a bare commit on the shared writer can publish
+            # ANOTHER thread's half-written transaction (the commit-steal
+            # class) — take the write lock so it only ever lands between
+            # complete writer transactions.
+            with self._write_lock:
+                self.conn.commit()
         except Exception:
             pass  # No active transaction — safe to ignore
 
@@ -1144,15 +1156,18 @@ class KnowledgeStore:
         if not gene_ids:
             return 0
         try:
-            cur = self.conn.cursor()
-            placeholders = ",".join("?" * len(gene_ids))
-            cur.execute(
-                f"UPDATE genes SET last_verified_at = ? "
-                f"WHERE gene_id IN ({placeholders})",
-                (float(ts), *gene_ids),
-            )
-            updated = cur.rowcount or 0
-            self.conn.commit()
+            # W2.3 Phase A: UPDATE + commit on the shared writer must hold
+            # the write lock (unlocked-committer class; see log_health).
+            with self._write_lock:
+                cur = self.conn.cursor()
+                placeholders = ",".join("?" * len(gene_ids))
+                cur.execute(
+                    f"UPDATE genes SET last_verified_at = ? "
+                    f"WHERE gene_id IN ({placeholders})",
+                    (float(ts), *gene_ids),
+                )
+                updated = cur.rowcount or 0
+                self.conn.commit()
             return int(updated)
         except Exception:
             log.warning(
@@ -1360,20 +1375,23 @@ class KnowledgeStore:
         script and tests. Idempotent — last write wins.
 
         SQLite's ``busy_timeout=30000`` and the journal_mode=WAL configuration
-        on ``self.conn`` (set in ``__init__``) handle writer serialization;
-        no in-process lock is needed.
+        on ``self.conn`` (set in ``__init__``) handle CROSS-PROCESS writer
+        serialization; cross-THREAD access to this one shared connection is
+        serialized by ``_write_lock`` (W2.3 Phase A — unlocked, a concurrent
+        committer steals the implicit transaction or deadlocks on py3.14).
         """
         payload = json_dumps(value)
         now = time.time()
-        self.conn.execute(
-            "INSERT INTO genome_calibration (key, value_json, computed_at) "
-            "VALUES (?, ?, ?) "
-            "ON CONFLICT(key) DO UPDATE SET "
-            "  value_json = excluded.value_json, "
-            "  computed_at = excluded.computed_at",
-            (key, payload, now),
-        )
-        self.conn.commit()
+        with self._write_lock:
+            self.conn.execute(
+                "INSERT INTO genome_calibration (key, value_json, computed_at) "
+                "VALUES (?, ?, ?) "
+                "ON CONFLICT(key) DO UPDATE SET "
+                "  value_json = excluded.value_json, "
+                "  computed_at = excluded.computed_at",
+                (key, payload, now),
+            )
+            self.conn.commit()
         # Invalidate cache so the next read sees the new value.
         if key == "ann_threshold":
             self._ann_threshold_calibrated = None
@@ -1419,10 +1437,17 @@ class KnowledgeStore:
     @property
     def read_conn(self) -> sqlite3.Connection:
         """
-        Dedicated read-only connection. In WAL mode, readers and writers
-        don't block each other — but only if they use separate connections.
+        Per-thread read-only connection. In WAL mode, readers and writers
+        don't block each other — but only if they use separate connections,
+        and (perf slice 2) only if concurrent THREADS do too: two threads
+        interleaving large scans on one shared connection livelock on the
+        shared page cache + per-step connection mutex, wedging the whole
+        server at c=2 (faulthandler-confirmed in co_activation expansion).
 
-        Priority: persistence replica > dedicated reader > write connection.
+        Priority: persistence replica > this thread's reader > write
+        connection (:memory: stores, where a second connection would be a
+        different database). The init-time ``self._reader`` doubles as the
+        creating thread's entry.
         """
         if self._replication_mgr is not None:
             try:
@@ -1430,8 +1455,32 @@ class KnowledgeStore:
             except Exception:
                 pass
         if self._reader is not None:
-            return self._reader
+            local = self._thread_readers
+            conn = getattr(local, "conn", None)
+            if conn is None:
+                if threading.get_ident() == self._reader_owner_thread:
+                    conn = self._reader
+                else:
+                    conn = self._open_reader_conn()
+                    with self._thread_reader_registry_lock:
+                        self._thread_reader_registry.append(conn)
+                local.conn = conn
+            return conn
         return self.conn
+
+    def _open_reader_conn(self) -> sqlite3.Connection:
+        """One mode=ro autocommit connection, pragmas mirroring _reader."""
+        conn = sqlite3.connect(
+            f"file:{self.path}?mode=ro", uri=True,
+            check_same_thread=False, timeout=10,
+            isolation_level=None,
+        )
+        conn.row_factory = sqlite3.Row
+        conn.execute("PRAGMA busy_timeout=10000")
+        _plan = self._mem_plan if self._mem_plan is not None else sqlite_memory_budget(1)
+        conn.execute(f"PRAGMA cache_size={_plan.reader_cache_size}")
+        conn.execute(f"PRAGMA mmap_size={_plan.mmap_size}")
+        return conn
 
     # ── Document ID (content-addressable) ───────────────────────────────
 
@@ -1892,11 +1941,13 @@ class KnowledgeStore:
         if not self._fts_available:
             return
         try:
-            self.conn.execute(
-                "CREATE VIRTUAL TABLE IF NOT EXISTS genes_fts_vocab "
-                "USING fts5vocab(genes_fts, instance)"
-            )
-            self.conn.commit()
+            # W2.3 Phase A: DDL + commit on the shared writer — lock it.
+            with self._write_lock:
+                self.conn.execute(
+                    "CREATE VIRTUAL TABLE IF NOT EXISTS genes_fts_vocab "
+                    "USING fts5vocab(genes_fts, instance)"
+                )
+                self.conn.commit()
         except Exception:
             # Read-only-DB or fts5vocab-unavailable build — non-fatal.
             log.debug(
@@ -3350,9 +3401,14 @@ class KnowledgeStore:
             _hebbian_t0 = time.monotonic()
             try:
                 from .retrieval.seeded_edges import update_edge_evidence
-                update_edge_evidence(
-                    self, gene_scores, ranked_ids, max_genes=max_genes,
-                )
+                # W2.3 Phase A: update_edge_evidence executes UPDATE/DELETE
+                # + commit on genome.conn — lock at the store boundary (the
+                # retrieval module stays store-agnostic). All SQLite work
+                # plus trivial counter math; no model calls inside.
+                with self._write_lock:
+                    update_edge_evidence(
+                        self, gene_scores, ranked_ids, max_genes=max_genes,
+                    )
             except Exception:
                 log.debug("Hebbian edge update failed", exc_info=True)
             _sig("hebbian", _hebbian_t0)
@@ -3555,6 +3611,11 @@ class KnowledgeStore:
                 log.debug("numpy unavailable; dense recall disabled")
                 return None, None
 
+            # Perf slice 2 (W0.2): the first build scans every hot-tier
+            # blob into RAM — a cold cost that must not be silently booked
+            # to the express stage. Recorded under "dense_matrix".
+            _build_t0 = time.monotonic()
+
             # Hot-tier scan. Partial index idx_genes_dense_v2_hot makes this
             # an index range scan rather than a full table scan during
             # partial-rollout / backfill.
@@ -3593,6 +3654,11 @@ class KnowledgeStore:
             matrix = np.stack(vecs).astype(_dense_matrix_dtype(), copy=False)
             self._dense_matrix = matrix
             self._dense_matrix_ids = ids
+            try:
+                from .telemetry import record_model_load
+                record_model_load("dense_matrix", time.monotonic() - _build_t0)
+            except Exception:
+                pass
             log.debug(
                 "dense matrix loaded: shape=%s dtype=%s ids=%d",
                 matrix.shape, matrix.dtype, len(ids),
@@ -3837,8 +3903,11 @@ class KnowledgeStore:
 
     def _expand_coactivated(self, genes: List[Gene], limit: int) -> List[Gene]:
         from .storage.co_activation import expand_coactivated
+        # Perf slice 2: pure-read expansion belongs on the (per-thread)
+        # reader, not the shared writer — two threads interleaving these
+        # scans on one connection was the c=2 server wedge.
         return expand_coactivated(
-            genes, limit, self.conn, self._entity_graph_enabled,
+            genes, limit, self.read_conn, self._entity_graph_enabled,
             symbol_expansion_cap=getattr(self, "_symbol_expansion_cap", 8),
         )
 
@@ -3908,38 +3977,45 @@ class KnowledgeStore:
         if not gene_ids:
             return
 
-        cur = self.conn.cursor()
-        now = time.time()
+        # W2.3 Phase A: multi-statement read-modify-write transaction on the
+        # shared writer — unlocked, a concurrent committer steals the
+        # implicit transaction or hard-deadlocks inside an UPDATE on py3.14
+        # sqlite3 (same class as log_health, Perf slice 2). Hold the write
+        # lock for the whole SELECT→UPDATE*→commit section; the JSON
+        # parse/dump inside is pure CPU (mirrors upsert_doc).
+        with self._write_lock:
+            cur = self.conn.cursor()
+            now = time.time()
 
-        # Batch fetch all signals in one query
-        placeholders = ",".join("?" * len(gene_ids))
-        rows = cur.execute(
-            f"SELECT gene_id, epigenetics FROM genes WHERE gene_id IN ({placeholders})",
-            gene_ids,
-        ).fetchall()
+            # Batch fetch all signals in one query
+            placeholders = ",".join("?" * len(gene_ids))
+            rows = cur.execute(
+                f"SELECT gene_id, epigenetics FROM genes WHERE gene_id IN ({placeholders})",
+                gene_ids,
+            ).fetchall()
 
-        # Individual UPDATEs — safe against column-swap corruption
-        # (CASE WHEN batch was causing signals JSON to land in lifecycle tier)
-        for row in rows:
-            if not row["epigenetics"]:
-                continue
-            epi = parse_epigenetics(row["epigenetics"], use_cache=False)
-            epi.last_accessed = now
-            epi.access_count += 1
-            epi.decay_score = min(1.0, epi.decay_score + 0.1)
-            # Phase 1 slice 2 — populate the windowed access-rate buffer.
-            # Bounded ring buffer of last 100 timestamps (~800 bytes).
-            # The slice 1 schema added the field; this is where it gets
-            # written. apply_density_gate consumes it via the rate signal.
-            epi.recent_accesses.append(now)
-            if len(epi.recent_accesses) > 100:
-                epi.recent_accesses = epi.recent_accesses[-100:]
-            cur.execute(
-                "UPDATE genes SET epigenetics = ?, chromatin = ? WHERE gene_id = ?",
-                (epi.model_dump_json(), int(ChromatinState.OPEN), row["gene_id"]),
-            )
+            # Individual UPDATEs — safe against column-swap corruption
+            # (CASE WHEN batch was causing signals JSON to land in lifecycle tier)
+            for row in rows:
+                if not row["epigenetics"]:
+                    continue
+                epi = parse_epigenetics(row["epigenetics"], use_cache=False)
+                epi.last_accessed = now
+                epi.access_count += 1
+                epi.decay_score = min(1.0, epi.decay_score + 0.1)
+                # Phase 1 slice 2 — populate the windowed access-rate buffer.
+                # Bounded ring buffer of last 100 timestamps (~800 bytes).
+                # The slice 1 schema added the field; this is where it gets
+                # written. apply_density_gate consumes it via the rate signal.
+                epi.recent_accesses.append(now)
+                if len(epi.recent_accesses) > 100:
+                    epi.recent_accesses = epi.recent_accesses[-100:]
+                cur.execute(
+                    "UPDATE genes SET epigenetics = ?, chromatin = ? WHERE gene_id = ?",
+                    (epi.model_dump_json(), int(ChromatinState.OPEN), row["gene_id"]),
+                )
 
-        self.conn.commit()
+            self.conn.commit()
         clear_parse_caches()
 
     # ── Update co-activation links (mutual) ─────────────────────────
@@ -3952,33 +4028,38 @@ class KnowledgeStore:
         if len(gene_ids) < 2:
             return
 
-        cur = self.conn.cursor()
+        # W2.3 Phase A: same shared-writer transaction shape as touch_genes
+        # (SELECT→UPDATE*→commit) — hold the write lock for the whole
+        # section so a concurrent committer can't steal the implicit
+        # transaction or wedge the UPDATE (py3.14 sqlite3 deadlock class).
+        with self._write_lock:
+            cur = self.conn.cursor()
 
-        # Batch fetch all signals in one query
-        placeholders = ",".join("?" * len(gene_ids))
-        rows = cur.execute(
-            f"SELECT gene_id, epigenetics FROM genes WHERE gene_id IN ({placeholders})",
-            gene_ids,
-        ).fetchall()
+            # Batch fetch all signals in one query
+            placeholders = ",".join("?" * len(gene_ids))
+            rows = cur.execute(
+                f"SELECT gene_id, epigenetics FROM genes WHERE gene_id IN ({placeholders})",
+                gene_ids,
+            ).fetchall()
 
-        # Build individual updates (signals only, preserve lifecycle tier)
-        for row in rows:
-            if not row["epigenetics"]:
-                continue
-            epi = parse_epigenetics(row["epigenetics"], use_cache=False)
-            gid = row["gene_id"]
-            peers = [other for other in gene_ids if other != gid]
+            # Build individual updates (signals only, preserve lifecycle tier)
+            for row in rows:
+                if not row["epigenetics"]:
+                    continue
+                epi = parse_epigenetics(row["epigenetics"], use_cache=False)
+                gid = row["gene_id"]
+                peers = [other for other in gene_ids if other != gid]
 
-            existing = set(epi.co_activated_with)
-            existing.update(peers)
-            epi.co_activated_with = list(existing)[:10]
+                existing = set(epi.co_activated_with)
+                existing.update(peers)
+                epi.co_activated_with = list(existing)[:10]
 
-            cur.execute(
-                "UPDATE genes SET epigenetics = ? WHERE gene_id = ?",
-                (epi.model_dump_json(), gid),
-            )
+                cur.execute(
+                    "UPDATE genes SET epigenetics = ? WHERE gene_id = ?",
+                    (epi.model_dump_json(), gid),
+                )
 
-        self.conn.commit()
+            self.conn.commit()
         clear_parse_caches()
 
     # ── Harmonic weights (cymatics) ──────────────────────────────────
@@ -3989,7 +4070,11 @@ class KnowledgeStore:
             log.debug("read_only: skipping store_harmonic_weights")
             return
         from .storage.co_activation import store_harmonic_weights
-        store_harmonic_weights(self.conn, weights)
+        # W2.3 Phase A: the delegate executes + commits on the shared
+        # writer connection — serialize at the store boundary (the storage
+        # module stays store-agnostic and must not know about the lock).
+        with self._write_lock:
+            store_harmonic_weights(self.conn, weights)
 
     # ── Typed document relations (NLI) ───────────────────────────────────
 
@@ -3999,7 +4084,10 @@ class KnowledgeStore:
     ) -> None:
         """Delegate to storage.co_activation.store_relation."""
         from .storage.co_activation import store_relation
-        store_relation(self.conn, gene_id_a, gene_id_b, relation, confidence)
+        # W2.3 Phase A: delegate executes + commits on the shared writer —
+        # same store-boundary lock rule as store_harmonic_weights.
+        with self._write_lock:
+            store_relation(self.conn, gene_id_a, gene_id_b, relation, confidence)
 
     def store_relations_batch(
         self, relations: list,
@@ -4254,9 +4342,16 @@ class KnowledgeStore:
         cur = self.conn.cursor()
         change_detected = 0
 
-        rows = cur.execute(
-            "SELECT gene_id, epigenetics, chromatin, source_id FROM genes"
-        ).fetchall()
+        # W2.3 Phase A: the mtime probes in the loop are filesystem I/O, so
+        # the write lock is NOT held across the whole sweep — each UPDATE
+        # is locked individually (write order and semantics unchanged; a
+        # concurrent committer may publish a prefix of the sweep, which is
+        # exactly as safe as the pre-lock behavior since every UPDATE here
+        # is final-intent with no rollback path).
+        with self._write_lock:
+            rows = cur.execute(
+                "SELECT gene_id, epigenetics, chromatin, source_id FROM genes"
+            ).fetchall()
 
         for row in rows:
             source_id = row["source_id"]
@@ -4276,16 +4371,17 @@ class KnowledgeStore:
                 new_chromatin = int(ChromatinState.EUCHROMATIN)
                 change_detected += 1
 
-                cur.execute(
-                    "UPDATE genes SET epigenetics = ?, chromatin = ? WHERE gene_id = ?",
-                    (epi.model_dump_json(), new_chromatin, row["gene_id"]),
-                )
+                with self._write_lock:
+                    cur.execute(
+                        "UPDATE genes SET epigenetics = ?, chromatin = ? WHERE gene_id = ?",
+                        (epi.model_dump_json(), new_chromatin, row["gene_id"]),
+                    )
 
         # WS2 review FIX-2: orphaned symbol rows (genes removed out-of-band)
         # are swept as part of the same compaction commit.
-        self._sweep_symbol_orphans()
-
-        self.conn.commit()
+        with self._write_lock:
+            self._sweep_symbol_orphans()
+            self.conn.commit()
         if change_detected:
             log.info("Compaction: %d source changes detected (genes marked EUCHROMATIN)",
                      change_detected)
@@ -4295,7 +4391,14 @@ class KnowledgeStore:
 
     def stats(self) -> Dict:
         self._refresh_snapshot()  # See latest WAL state
-        cur = self.conn.cursor()  # Always master — stats must be authoritative
+        # Perf slice 2: pure-read aggregates on the (per-thread) reader.
+        # These full-table scans ran on the shared writer ("authoritative")
+        # and were the second c=2 livelock site after the co-activation
+        # expansion (py-spy: both threads spinning here via
+        # _compute_health). The WAL reader sees every committed row, and
+        # _refresh_snapshot() above already advanced the snapshot — the
+        # authority argument bought nothing but the collision.
+        cur = self.read_conn.cursor()
 
         total = cur.execute("SELECT COUNT(*) FROM genes").fetchone()[0]
         by_chromatin = cur.execute(
@@ -4409,14 +4512,21 @@ class KnowledgeStore:
         if self.read_only:
             log.debug("read_only: skipping log_health")
             return
-        self.conn.execute(
-            "INSERT INTO health_log (timestamp, query, ellipticity, coverage, "
-            "density, freshness, genes_expressed, genes_available, status) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            (time.time(), query, ellipticity, coverage, density, freshness,
-             genes_expressed, genes_available, status),
-        )
-        self.conn.commit()
+        # Perf slice 2: log_health runs on EVERY build (intentionally
+        # outside the read_only gate) — the first always-on unlocked
+        # committer to be locked. Unlocked, two concurrent builds steal
+        # each other's implicit transaction ("cannot commit - no
+        # transaction is active") or hard-deadlock inside the INSERT on
+        # py3.14 sqlite3. Remaining unlocked committers: W2.3 Phase A.
+        with self._write_lock:
+            self.conn.execute(
+                "INSERT INTO health_log (timestamp, query, ellipticity, coverage, "
+                "density, freshness, genes_expressed, genes_available, status) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (time.time(), query, ellipticity, coverage, density, freshness,
+                 genes_expressed, genes_available, status),
+            )
+            self.conn.commit()
 
     def health_history(self, limit: int = 50) -> List[Dict]:
         """Return recent health signals, newest first."""
@@ -4485,19 +4595,22 @@ class KnowledgeStore:
         t0 = _time.time()
         cur = self.conn.cursor()
 
-        # Clear and repopulate with enriched content
-        cur.execute("DELETE FROM genes_fts")
-        cur.execute(
-            "INSERT INTO genes_fts(gene_id, content, complement) "
-            "SELECT g.gene_id, "
-            "  COALESCE(g.source_id,'') || ' ' || "
-            "  COALESCE((SELECT GROUP_CONCAT(pi.tag_value, ' ') "
-            "    FROM promoter_index pi WHERE pi.gene_id = g.gene_id), '') "
-            "  || ' ' || g.content, "
-            "  COALESCE(g.complement, '') "
-            "FROM genes g"
-        )
-        self.conn.commit()
+        # W2.3 Phase A: DELETE+INSERT+commit is one writer transaction —
+        # hold the write lock for the whole section (all SQLite work).
+        with self._write_lock:
+            # Clear and repopulate with enriched content
+            cur.execute("DELETE FROM genes_fts")
+            cur.execute(
+                "INSERT INTO genes_fts(gene_id, content, complement) "
+                "SELECT g.gene_id, "
+                "  COALESCE(g.source_id,'') || ' ' || "
+                "  COALESCE((SELECT GROUP_CONCAT(pi.tag_value, ' ') "
+                "    FROM promoter_index pi WHERE pi.gene_id = g.gene_id), '') "
+                "  || ' ' || g.content, "
+                "  COALESCE(g.complement, '') "
+                "FROM genes g"
+            )
+            self.conn.commit()
         count = cur.execute("SELECT COUNT(*) FROM genes_fts").fetchone()[0]
         elapsed = _time.time() - t0
         log.info("FTS5 index rebuilt: %d genes indexed in %.1fs", count, elapsed)
@@ -4520,16 +4633,20 @@ class KnowledgeStore:
             self.conn.execute("SELECT 1").fetchone()
         except Exception:
             log.warning("Snapshot refresh failed, reopening connection", exc_info=True)
-            try:
-                self.conn.close()
-            except Exception:
-                pass
-            self.conn = sqlite3.connect(self.path, check_same_thread=False, timeout=30)
-            self.conn.row_factory = sqlite3.Row
-            self.conn.execute("PRAGMA journal_mode=WAL")
-            self.conn.execute("PRAGMA busy_timeout=30000")
-            self.conn.execute("PRAGMA journal_size_limit=67108864")  # 64 MB
-            self._install_commit_trace()
+            # W2.3 Phase A: hold the write lock across the close→reopen so
+            # no writer holds a cursor on a dying connection (same rule as
+            # vacuum()).
+            with self._write_lock:
+                try:
+                    self.conn.close()
+                except Exception:
+                    pass
+                self.conn = sqlite3.connect(self.path, check_same_thread=False, timeout=30)
+                self.conn.row_factory = sqlite3.Row
+                self.conn.execute("PRAGMA journal_mode=WAL")
+                self.conn.execute("PRAGMA busy_timeout=30000")
+                self.conn.execute("PRAGMA journal_size_limit=67108864")  # 64 MB
+                self._install_commit_trace()
 
     # ── Close ───────────────────────────────────────────────────────
 
@@ -4557,9 +4674,14 @@ class KnowledgeStore:
                     self._reader.commit()
                 except Exception:
                     pass
-            row = self.conn.execute(
-                f"PRAGMA wal_checkpoint({mode})"
-            ).fetchone()
+            # W2.3 Phase A: wal_checkpoint writes on the shared writer
+            # connection — unlocked it interleaves with an in-flight
+            # writer's statements (py3.14 deadlock class). Lock exactly
+            # the execute; the telemetry/log tail stays outside.
+            with self._write_lock:
+                row = self.conn.execute(
+                    f"PRAGMA wal_checkpoint({mode})"
+                ).fetchone()
             # Returns (busy, log_pages, checkpointed_pages). busy=1 means a
             # reader was holding a snapshot and the checkpoint was incomplete.
             if row and row[0]:
@@ -4623,34 +4745,40 @@ class KnowledgeStore:
         path = self.path
         before = os.path.getsize(path) if os.path.exists(path) else 0
 
-        # Flush WAL and close the main connection
-        try:
-            self.conn.execute("PRAGMA wal_checkpoint(TRUNCATE)")
-            self.conn.commit()
-        except Exception:
-            log.warning("Pre-VACUUM WAL checkpoint failed", exc_info=True)
-        try:
-            self.conn.close()
-        except Exception:
-            pass
+        # W2.3 Phase A: hold the write lock across the entire flush→close→
+        # VACUUM→reopen sequence so no thread can be mid-statement on a
+        # connection that is about to be closed underneath it. Everything
+        # inside is SQLite work (VACUUM included) — the size probes stay
+        # outside the lock.
+        with self._write_lock:
+            # Flush WAL and close the main connection
+            try:
+                self.conn.execute("PRAGMA wal_checkpoint(TRUNCATE)")
+                self.conn.commit()
+            except Exception:
+                log.warning("Pre-VACUUM WAL checkpoint failed", exc_info=True)
+            try:
+                self.conn.close()
+            except Exception:
+                pass
 
-        # Run VACUUM on a fresh, autocommit connection
-        try:
-            vac_conn = sqlite3.connect(path)
-            vac_conn.isolation_level = None  # autocommit — VACUUM requires it
-            vac_conn.execute("VACUUM")
-            vac_conn.close()
-            log.info("VACUUM completed on %s", path)
-        except Exception:
-            log.warning("VACUUM failed", exc_info=True)
+            # Run VACUUM on a fresh, autocommit connection
+            try:
+                vac_conn = sqlite3.connect(path)
+                vac_conn.isolation_level = None  # autocommit — VACUUM requires it
+                vac_conn.execute("VACUUM")
+                vac_conn.close()
+                log.info("VACUUM completed on %s", path)
+            except Exception:
+                log.warning("VACUUM failed", exc_info=True)
 
-        # Reopen the long-lived connection
-        self.conn = sqlite3.connect(path, check_same_thread=False, timeout=30)
-        self.conn.row_factory = sqlite3.Row
-        self.conn.execute("PRAGMA journal_mode=WAL")
-        self.conn.execute("PRAGMA busy_timeout=30000")
-        self.conn.execute("PRAGMA journal_size_limit=67108864")  # 64 MB
-        self._install_commit_trace()
+            # Reopen the long-lived connection
+            self.conn = sqlite3.connect(path, check_same_thread=False, timeout=30)
+            self.conn.row_factory = sqlite3.Row
+            self.conn.execute("PRAGMA journal_mode=WAL")
+            self.conn.execute("PRAGMA busy_timeout=30000")
+            self.conn.execute("PRAGMA journal_size_limit=67108864")  # 64 MB
+            self._install_commit_trace()
 
         after = os.path.getsize(path) if os.path.exists(path) else 0
         reclaimed = before - after
@@ -4770,19 +4898,22 @@ class KnowledgeStore:
         Keeps: complement, fragments, tags, signals, embedding, key_values
         Drops: content (replaced with pointer to source_id for unwinding)
         """
-        cur = self.conn.cursor()
-        row = cur.execute(
-            "SELECT source_id, complement FROM genes WHERE gene_id = ?",
-            (gene_id,),
-        ).fetchone()
-        if not row or not row["complement"]:
-            return False
+        # W2.3 Phase A: check-then-write + commit on the shared writer —
+        # hold the write lock for the whole section (see log_health).
+        with self._write_lock:
+            cur = self.conn.cursor()
+            row = cur.execute(
+                "SELECT source_id, complement FROM genes WHERE gene_id = ?",
+                (gene_id,),
+            ).fetchone()
+            if not row or not row["complement"]:
+                return False
 
-        cur.execute(
-            "UPDATE genes SET content = ?, compression_tier = 1 WHERE gene_id = ?",
-            (f"[COMPRESSED:euchromatin] source={row['source_id'] or 'unknown'}", gene_id),
-        )
-        self.conn.commit()
+            cur.execute(
+                "UPDATE genes SET content = ?, compression_tier = 1 WHERE gene_id = ?",
+                (f"[COMPRESSED:euchromatin] source={row['source_id'] or 'unknown'}", gene_id),
+            )
+            self.conn.commit()
         log.debug("Compressed gene %s to EUCHROMATIN", gene_id)
         return True
 
@@ -4816,20 +4947,26 @@ class KnowledgeStore:
         Keeps: everything (content, complement, fragments, SPLADE, FTS5)
         Flips: ``chromatin = 2``, ``compression_tier = 2``
         """
-        cur = self.conn.cursor()
-        row = cur.execute(
-            "SELECT source_id FROM genes WHERE gene_id = ?",
-            (gene_id,),
-        ).fetchone()
-        if not row:
-            return False
+        # W2.3 Phase A: check-then-write + commit on the shared writer —
+        # hold the write lock for the whole section. Cache/dense-matrix
+        # invalidation stays OUTSIDE the lock (lock-ordering rule: never
+        # take _dense_matrix_lock while holding _write_lock — mirrors
+        # upsert_doc / delete_gene).
+        with self._write_lock:
+            cur = self.conn.cursor()
+            row = cur.execute(
+                "SELECT source_id FROM genes WHERE gene_id = ?",
+                (gene_id,),
+            ).fetchone()
+            if not row:
+                return False
 
-        cur.execute(
-            "UPDATE genes SET chromatin = 2, compression_tier = 2 "
-            "WHERE gene_id = ?",
-            (gene_id,),
-        )
-        self.conn.commit()
+            cur.execute(
+                "UPDATE genes SET chromatin = 2, compression_tier = 2 "
+                "WHERE gene_id = ?",
+                (gene_id,),
+            )
+            self.conn.commit()
         # Document moved hot → cold — both tier caches are now stale
         if self._sema_cache is not None:
             self._sema_cache = None
@@ -4973,12 +5110,17 @@ class KnowledgeStore:
             by_reason             : dict of reason counts (deny_list, low_score_*, etc.)
         """
         cur = self.conn.cursor()
-        rows = cur.execute(
-            "SELECT gene_id, content, complement, codons, promoter, "
-            "epigenetics, chromatin, embedding, source_id, key_values, "
-            "compression_tier "
-            "FROM genes WHERE compression_tier = 0"
-        ).fetchall()
+        # W2.3 Phase A: the scan is one execute on the shared writer — lock
+        # it. The gate loop below is NOT held under the lock (pure-CPU row
+        # parsing); the per-row demotions go through compress_to_* which
+        # each take the lock around their own execute+commit.
+        with self._write_lock:
+            rows = cur.execute(
+                "SELECT gene_id, content, complement, codons, promoter, "
+                "epigenetics, chromatin, embedding, source_id, key_values, "
+                "compression_tier "
+                "FROM genes WHERE compression_tier = 0"
+            ).fetchall()
 
         stats = {
             "scanned": len(rows),
@@ -5047,8 +5189,10 @@ class KnowledgeStore:
         if not dry_run:
             # WS2 review FIX-2: sweep orphaned symbol rows (genes removed
             # out-of-band) whenever the /admin/compact sweep runs for real.
-            self._sweep_symbol_orphans()
-            self.conn.commit()
+            # W2.3 Phase A: orphan sweep + commit is one writer transaction.
+            with self._write_lock:
+                self._sweep_symbol_orphans()
+                self.conn.commit()
             self.checkpoint("PASSIVE")
 
         log.info(
@@ -5108,6 +5252,12 @@ class KnowledgeStore:
         if self._reader is not None:
             try:
                 self._reader.close()
+            except Exception:
+                pass
+        # Perf slice 2: close every per-thread reader minted by read_conn.
+        for _c in getattr(self, "_thread_reader_registry", []) or []:
+            try:
+                _c.close()
             except Exception:
                 pass
         self.conn.close()

@@ -587,7 +587,11 @@ async def _background_checkpoint(cymatix: CymatixContextManager) -> None:
     while True:
         await asyncio.sleep(getattr(_srv, "_CHECKPOINT_INTERVAL", _CHECKPOINT_INTERVAL))
         try:
-            cymatix.genome.checkpoint("PASSIVE")
+            # W2.5 (background-loop half): checkpoint() is blocking SQLite
+            # (and now waits on the store's _write_lock, which it acquires
+            # internally) — run it off the event loop so a busy writer
+            # can't stall every request coroutine for the duration.
+            await asyncio.to_thread(cymatix.genome.checkpoint, "PASSIVE")
         except Exception:
             log.warning("Background WAL checkpoint failed", exc_info=True)
 
@@ -602,7 +606,9 @@ async def _background_wal_gauge(cymatix: CymatixContextManager) -> None:
     while True:
         await asyncio.sleep(getattr(_srv, "_WAL_GAUGE_INTERVAL", _WAL_GAUGE_INTERVAL))
         try:
-            cymatix.genome.emit_wal_health_gauges()
+            # W2.5 (background-loop half): the gauge body does filesystem
+            # stat() calls — blocking I/O off the event loop.
+            await asyncio.to_thread(cymatix.genome.emit_wal_health_gauges)
         except Exception:
             pass  # diagnostic path; never block the event loop
 
@@ -627,7 +633,12 @@ async def _background_registry_sweep(registry_obj) -> None:
     while True:
         await asyncio.sleep(getattr(_srv, "_REGISTRY_SWEEP_INTERVAL", _REGISTRY_SWEEP_INTERVAL))
         try:
-            counts = registry_obj.sweep()
+            # W2.5 (background-loop half): sweep() is blocking SQLite on the
+            # shared writer — run it off the event loop. The write-lock half
+            # lives inside Registry.sweep() itself (W2.3 Phase A), which
+            # acquires the owning store's _write_lock around its
+            # SELECT→UPDATE/DELETE→commit transaction.
+            counts = await asyncio.to_thread(registry_obj.sweep)
             # Only log when something interesting happened
             if counts.get("hard_deleted", 0) > 0 or counts.get("gone", 0) > 0:
                 log.info("Registry sweep: %s", counts)
