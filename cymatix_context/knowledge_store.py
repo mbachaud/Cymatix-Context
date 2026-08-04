@@ -606,6 +606,10 @@ class KnowledgeStore:
         # #327 iteration 2: exclude tags with df > cap×N from Tier-1
         # entirely (membership relief). 0.0 = off.
         tag_df_cap: float = 0.0,
+        # 2026-08-03 ERB fix: same discipline for SPLADE query terms —
+        # drop terms with df > cap×N before the postings join (one real
+        # query vector touched 5.06M posting rows at 829k genes). 0.0 = off.
+        splade_df_cap_fraction: float = 0.0,
         # Issue #202: warm ΣĒMA boost (Tier 4 Mode A) weight. NEW knob --
         # the tier's additive literal was 2.0 and it had no per-tier
         # weight at all (under RRF it is a post-fusion additive, so it
@@ -785,6 +789,7 @@ class KnowledgeStore:
         self._tag_exact_weight: float = float(tag_exact_weight)
         self._tag_idf_enabled: bool = bool(tag_idf_enabled)
         self._tag_df_cap: float = float(tag_df_cap)
+        self._splade_df_cap_fraction: float = float(splade_df_cap_fraction)
         self._tag_prefix_weight: float = float(tag_prefix_weight)
         self._sema_boost_weight: float = float(sema_boost_weight)
         self._sema_cold_weight: float = float(sema_cold_weight)
@@ -2186,6 +2191,50 @@ class KnowledgeStore:
         finally:
             cur.close()
 
+    def _tag_prefix_sql(
+        self,
+        query_terms: List[str],
+        party_filter: str = "",
+        party_params: tuple = (),
+        prefilter_clause: str = "",
+        prefilter_params: tuple = (),
+    ) -> Tuple[str, tuple]:
+        """Build the Tier-2 prefix-tag query (SQL, params).
+
+        2026-08-03 ERB fix: the legacy form (genes JOIN promoter_index
+        WHERE OR-of-LIKEs) planned as SCAN genes + one idx_promoter_gene
+        probe per gene, evaluating every LIKE against every tag — 35-44s
+        at 829k genes, and ANALYZE does NOT flip the plan. This form
+        drives one covering-index range scan per prefix (UNION ALL keeps
+        the per-tag multiplicity COUNT depends on) and joins genes only
+        for the matched ids. Semantics pinned by
+        test_tag_prefix_semantics_pinned.
+        """
+        sub = " UNION ALL ".join(
+            "SELECT gene_id, tag_value FROM promoter_index "
+            "WHERE tag_value LIKE ?"
+            for _ in query_terms
+        )
+        # CROSS JOIN is SQLite's documented ordering hint: it pins the
+        # aggregated tag matches as the outer loop so genes is one PK
+        # lookup per MATCHED id. A plain JOIN let the planner flatten and
+        # drive from SCAN genes again (caught by
+        # test_tag_prefix_drives_promoter_index).
+        sql = (
+            f"SELECT g.gene_id, p.match_count AS match_count "
+            f"FROM (SELECT gene_id, COUNT(tag_value) AS match_count "
+            f"      FROM ({sub}) GROUP BY gene_id) p "
+            f"CROSS JOIN genes g ON g.gene_id = p.gene_id "
+            f"WHERE g.chromatin < ? {party_filter} {prefilter_clause}"
+        )
+        params = (
+            *[f"{t}%" for t in query_terms],
+            int(ChromatinState.HETEROCHROMATIN),
+            *party_params,
+            *prefilter_params,
+        )
+        return sql, params
+
     def query_docs(
         self,
         domains: List[str],
@@ -2635,23 +2684,14 @@ class KnowledgeStore:
         # ── Tier 2: prefix tag match (weight: tag_prefix_weight) ───
         # "server" matches "serverconfig", "server_api", etc.
         _tag_prefix_t0 = time.monotonic()
-        prefix_conditions = " OR ".join(
-            "pi.tag_value LIKE ?" for _ in query_terms
+        _tp_sql, _tp_params = self._tag_prefix_sql(
+            query_terms,
+            _party_filter,
+            tuple(_party_params),
+            _prefilter_aliased_clause,
+            tuple(_prefilter_params),
         )
-        prefix_params = [f"{t}%" for t in query_terms]
-        rows = cur.execute(
-            f"""
-            SELECT g.gene_id, COUNT(pi.tag_value) AS match_count
-            FROM genes g
-            JOIN promoter_index pi ON g.gene_id = pi.gene_id
-            WHERE ({prefix_conditions})
-              AND g.chromatin < ?
-              {_party_filter}
-              {_prefilter_aliased_clause}
-            GROUP BY g.gene_id
-            """,
-            (*prefix_params, int(ChromatinState.HETEROCHROMATIN), *_party_params, *_prefilter_params),
-        ).fetchall()
+        rows = cur.execute(_tp_sql, _tp_params).fetchall()
 
         _tag_prefix_ranked: List[Tuple[str, float]] = []  # Stage 3 RRF
         for r in rows:
@@ -2736,7 +2776,14 @@ class KnowledgeStore:
                 if has_table:
                     query_text = " ".join(query_terms)
                     query_sparse = splade_backend.encode(query_text)
-                    splade_hits = splade_backend.query_splade(self.read_conn, query_sparse, limit=limit * 2)
+                    splade_hits = splade_backend.query_splade(
+                        self.read_conn, query_sparse, limit=limit * 2,
+                        max_df_fraction=self._splade_df_cap_fraction,
+                        total_docs=(
+                            self.total_genes()
+                            if self._splade_df_cap_fraction > 0.0 else None
+                        ),
+                    )
                     if _prefilter_set is not None:
                         splade_hits = [(gid, s) for gid, s in splade_hits if gid in _prefilter_set]
                     # Chromatin filter (batch lookup) — mirror the FTS5 tier so
@@ -4388,6 +4435,21 @@ class KnowledgeStore:
         return change_detected
 
     # ── Stats ───────────────────────────────────────────────────────
+
+    def total_genes(self) -> int:
+        """Bare gene count for the request path.
+
+        2026-08-03 ERB fix: every hot-path consumer of ``stats()``
+        (_compute_health, _build_abstain_window, the proxy munge,
+        /admin/swap-db) only ever read ``total_genes`` — but paid the
+        SUM(LENGTH(content))/SUM(LENGTH(complement)) full scans too:
+        11.1s warm / 72.7s cold per call on the 829k-gene / 49GB bed.
+        COUNT(*) alone measured 29ms on the same bed.
+        """
+        self._refresh_snapshot()
+        return int(
+            self.read_conn.execute("SELECT COUNT(*) FROM genes").fetchone()[0]
+        )
 
     def stats(self) -> Dict:
         self._refresh_snapshot()  # See latest WAL state

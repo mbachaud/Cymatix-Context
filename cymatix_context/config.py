@@ -666,6 +666,14 @@ class RetrievalConfig:
     # side "scale, don't drop" verdict — the tag is not query signal, it
     # is index noise above this coverage.
     tag_df_cap: float = 0.0
+    # 2026-08-03 ERB step-test fix: the tag_df_cap discipline applied to
+    # SPLADE query terms — drop terms whose posting-list df exceeds this
+    # fraction of the corpus before the postings join (one real query
+    # vector touched 5.06M posting rows at 829k genes; flood terms carry
+    # score mass but no discrimination). 0.0 = off. Needs the
+    # splade_term_df counters (auto-maintained on ingest; older beds are
+    # capless until backfilled).
+    splade_df_cap_fraction: float = 0.0
     # Issue #202: warm ΣĒMA boost (Tier 4 Mode A) weight — NEW knob; the
     # additive literal was sim·2.0·scale and the tier previously had no
     # weight knob at all (post-fusion additive under RRF, never fused).
@@ -1427,6 +1435,9 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             # Issue #327: tag-tier IDF discipline (see field docstring).
             tag_idf_enabled=bool(r.get("tag_idf_enabled", cfg.retrieval.tag_idf_enabled)),
             tag_df_cap=float(r.get("tag_df_cap", cfg.retrieval.tag_df_cap)),
+            splade_df_cap_fraction=float(
+                r.get("splade_df_cap_fraction",
+                      cfg.retrieval.splade_df_cap_fraction)),
             # Issue #202: warm ΣĒMA boost knob (new).
             sema_boost_weight=float(r.get("sema_boost_weight", cfg.retrieval.sema_boost_weight)),
             sema_cold_weight=float(r.get("sema_cold_weight", cfg.retrieval.sema_cold_weight)),

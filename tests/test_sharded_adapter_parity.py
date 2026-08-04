@@ -139,6 +139,10 @@ ADAPTER_ONLY_DIFFERENCES_WHITELIST = frozenset({
     # machinery; the adapter's per-shard stores each own their readers.
     "_open_reader_conn",
 
+    # 2026-08-03 ERB fix: Tier-2 SQL builder, internal to query_docs —
+    # each shard store builds its own; the adapter never calls it.
+    "_tag_prefix_sql",
+
     # Internal builders / loaders that only make sense on a single .db.
     "make_gene_id", "_load_genes_by_ids", "_score_query",
     "_apply_promoter_tier", "_apply_dense_recall", "_apply_entity_graph",

@@ -104,7 +104,7 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
             messages=messages,
             expressed_context=context_window.expressed_context,
             ribosome_prompt=context_window.ribosome_prompt,
-            total_genes=cymatix.genome.stats()["total_genes"],
+            total_genes=cymatix.genome.total_genes(),
             cold_start_threshold=config.genome.cold_start_threshold,
         )
 

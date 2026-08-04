@@ -597,7 +597,7 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
         """Reopen knowledge store connection to see external changes."""
         cymatix.genome.refresh()
         cymatix.genome._invalidate_dense_matrix(force=True)
-        new_count = cymatix.genome.stats()["total_genes"]
+        new_count = cymatix.genome.total_genes()
         return {"refreshed": True, "genes": new_count}
 
     @app.post("/admin/genes/tombstone")
@@ -1210,7 +1210,9 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
                 log.warning("swap-db: failed to close old store", exc_info=True)
 
             elapsed_ms = round((_time.time() - t0) * 1000, 1)
-            genes = new_store.stats().get("total_genes", 0)
+            # 2026-08-03 ERB fix: stats() here cost 72.7s cold on a 49GB bed and
+            # broke the bench 60s swap timeout; only the count is reported.
+            genes = new_store.total_genes()
 
             log.info(
                 "swap-db: %s -> %s (%d genes, read_only=%s, %.1fms)",

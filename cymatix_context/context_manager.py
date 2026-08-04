@@ -965,6 +965,7 @@ class CymatixContextManager:
             # Issue #327: tag-tier IDF discipline (flag-gated, default off).
             tag_idf_enabled=config.retrieval.tag_idf_enabled,
             tag_df_cap=config.retrieval.tag_df_cap,
+            splade_df_cap_fraction=config.retrieval.splade_df_cap_fraction,
             # Issue #202: warm ΣĒMA boost knob (new; additive-mode Tier 4A).
             sema_boost_weight=config.retrieval.sema_boost_weight,
             sema_cold_weight=config.retrieval.sema_cold_weight,
@@ -1937,7 +1938,7 @@ class CymatixContextManager:
         )
 
         if not candidates:
-            total_genes = self.genome.stats().get("total_genes", 0)
+            total_genes = self.genome.total_genes()
             # Stage 6 (§6): the legacy "denatured if knowledge store non-empty
             # else sparse" status maps onto two distinct MissBlock
             # reasons:
@@ -3002,7 +3003,7 @@ class CymatixContextManager:
             coverage=0.0,
             density=0.0,
             freshness=0.0,
-            genes_available=self.genome.stats().get("total_genes", 0),
+            genes_available=self.genome.total_genes(),
             genes_expressed=0,
             status="abstain",
         )
@@ -3507,8 +3508,9 @@ class CymatixContextManager:
         """
         import math
 
-        genome_stats = self.genome.stats()
-        total_genes = genome_stats.get("total_genes", 0)
+        # 2026-08-03 ERB fix: stats()'s SUM(LENGTH()) scans cost 11.1s
+        # warm per request at 829k genes; only the count is consumed here.
+        total_genes = self.genome.total_genes()
         genes_expressed = len(candidates)
         # Request-scoped score map with legacy fallback (see docstring).
         _scores_map = (
