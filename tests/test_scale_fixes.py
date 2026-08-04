@@ -136,7 +136,11 @@ def test_tag_prefix_drives_promoter_index(tmp_path):
         r[3] for r in store.conn.execute(f"EXPLAIN QUERY PLAN {sql}", params)
     )
     assert "SCAN g" not in plan and "SCAN genes" not in plan, plan
-    assert "idx_promoter" in plan, plan
+    # LIKE disables index range use on BINARY-collation indexes
+    # (case_sensitive_like=OFF) — the branch degraded to a full covering-
+    # index SCAN, 6.2s at 100k genes. Require true range SEARCHes.
+    assert "SCAN promoter_index" not in plan, plan
+    assert "SEARCH promoter_index" in plan and "tag_value>" in plan, plan
 
 
 # ── Fix 3: SPLADE covering index + DF cap ────────────────────────────

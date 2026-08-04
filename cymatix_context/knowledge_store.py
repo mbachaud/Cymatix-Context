@@ -2210,9 +2210,17 @@ class KnowledgeStore:
         for the matched ids. Semantics pinned by
         test_tag_prefix_semantics_pinned.
         """
+        # Range predicates, NOT LIKE: with the default
+        # case_sensitive_like=OFF, LIKE cannot use a BINARY-collation
+        # index and each branch degraded to a full covering-index SCAN
+        # (6.2s at 100k genes / 2.4M tag rows). tag_value >= lo AND
+        # tag_value < hi is a true index range SEARCH. Tags are
+        # ingest-normalized to lowercase (verified 0 mixed-case rows on
+        # dogfood and every ERB bed), so lowercasing the query term
+        # preserves LIKE's case-insensitive matching.
         sub = " UNION ALL ".join(
             "SELECT gene_id, tag_value FROM promoter_index "
-            "WHERE tag_value LIKE ?"
+            "WHERE tag_value >= ? AND tag_value < ?"
             for _ in query_terms
         )
         # CROSS JOIN is SQLite's documented ordering hint: it pins the
@@ -2227,8 +2235,15 @@ class KnowledgeStore:
             f"CROSS JOIN genes g ON g.gene_id = p.gene_id "
             f"WHERE g.chromatin < ? {party_filter} {prefilter_clause}"
         )
+        bounds: List[str] = []
+        for t in query_terms:
+            lo = t.lower()
+            # "next prefix" upper bound: increment the last char so every
+            # suffix (including astral-plane chars) stays inside the range.
+            hi = lo[:-1] + chr(ord(lo[-1]) + 1) if lo else "￿"
+            bounds.extend((lo, hi))
         params = (
-            *[f"{t}%" for t in query_terms],
+            *bounds,
             int(ChromatinState.HETEROCHROMATIN),
             *party_params,
             *prefilter_params,
