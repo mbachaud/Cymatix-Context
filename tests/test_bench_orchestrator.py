@@ -286,6 +286,47 @@ def test_wait_healthy_raises_if_process_exits() -> None:
 # ── Fix 4: _guard_genes() ─────────────────────────────────────────────
 
 
+def test_post_swap_honors_swap_timeout_env(monkeypatch, tmp_path: Path) -> None:
+    """CYMATIX_BENCH_SWAP_TIMEOUT_S must override the 60s default.
+
+    /admin/swap-db calls genome.stats() server-side, whose SUM(LENGTH())
+    full scans take >60s cold on beds in the tens of GB (72.7s measured
+    on the 49GB / 829k-gene ERB blob) — without the override the ERB
+    step test cannot even swap onto the bed."""
+    monkeypatch.setenv("CYMATIX_BENCH_SWAP_TIMEOUT_S", "1234.5")
+    srv = BenchServer()
+    fx = Fixture(name="erb-full", db=str(tmp_path / "erb.db"))
+    seen: dict[str, float] = {}
+
+    def fake_http(method, path, payload=None, timeout=None):
+        seen["timeout"] = timeout
+        return {"genes": 829131}
+
+    with patch.object(srv, "_http", side_effect=fake_http), \
+            patch("bench_orchestrator._probe_fixture_schema"):
+        srv._post_swap(fx)
+
+    assert seen["timeout"] == 1234.5
+
+
+def test_post_swap_defaults_to_module_timeout(monkeypatch, tmp_path: Path) -> None:
+    """Without the env var the historical 60s default still applies."""
+    monkeypatch.delenv("CYMATIX_BENCH_SWAP_TIMEOUT_S", raising=False)
+    srv = BenchServer()
+    fx = Fixture(name="dogfood", db=str(tmp_path / "g.db"))
+    seen: dict[str, float] = {}
+
+    def fake_http(method, path, payload=None, timeout=None):
+        seen["timeout"] = timeout
+        return {"genes": 6427}
+
+    with patch.object(srv, "_http", side_effect=fake_http), \
+            patch("bench_orchestrator._probe_fixture_schema"):
+        srv._post_swap(fx)
+
+    assert seen["timeout"] == 60.0
+
+
 def test_guard_genes_raises_on_zero_for_nonempty_fixture() -> None:
     """genes=0 on a fixture the manifest marks non-empty is a harness
     failure (sharded DB opened in blob mode) and must raise."""

@@ -670,10 +670,16 @@ class BenchServer(AbstractContextManager["BenchServer"]):
         # than to log retr=err × 50 and produce an unactionable summary.
         _probe_fixture_schema(fixture.db)
         payload = {"path": fixture.db, "read_only": fixture.read_only}
+        # /admin/swap-db calls genome.stats() server-side; its SUM(LENGTH())
+        # full scans exceed 60s cold on multi-GB beds (72.7s measured on the
+        # 49GB ERB blob), so huge-bed runs raise this via env.
+        swap_timeout_s = float(
+            os.environ.get("CYMATIX_BENCH_SWAP_TIMEOUT_S", DEFAULT_SWAP_TIMEOUT_S)
+        )
         try:
             return self._http(
                 "POST", "/admin/swap-db", payload,
-                timeout=DEFAULT_SWAP_TIMEOUT_S,
+                timeout=swap_timeout_s,
             )
         except Exception as exc:
             raise BenchServerError(
