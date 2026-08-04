@@ -165,6 +165,25 @@ Zero lost writes, zero partial publish, integrity ok everywhere.
   motivation, at lower urgency than G1. Longer soak arms (full tagger
   runtime) remain future work.
 
+## fp16 dense-matrix A/B (2026-08-03)
+
+`CYMATIX_DENSE_MATRIX_DTYPE=float16` vs the committed fp32 baseline
+(`RUNBOOK_fp16_ab.md`; receipt `benchmarks/dogfood/fp16_server_scaling.json`):
+**PASS, 10/10 gates** via `check_perf_receipts.py`.
+
+| level | median (fp16 / fp32) | ratio | recall@12 Δ | qps ratio | errors |
+|---|---|---|---|---|---|
+| c=1 | 989ms / 968ms | 1.02× | 0.000 (0.5556) | 0.97× | 0 |
+| c=2 | 1434ms / 1384ms | 1.04× | 0.000 (0.5556) | 0.97× | 0 |
+
+fp16-active verified, not inferred: `bench_orchestrator.py:480` copies the
+parent env into the server spawn, and a read-only load of the bed under the
+knob yields `dtype=float16, shape=(6266, 1024)`. Overlap 1.0 / 0.995,
+canary p95 31/37ms. As expected, no latency effect at 26MB matrix scale —
+this run was the quality gate. **Recommendation: enable fp16 on the
+EnterpriseRAG bed (850k genes)** — halves resident matrix RAM
+(~3.5GB → ~1.75GB) with recall provably unchanged on the dogfood bed.
+
 ## Session lesson for the harness bed
 
 `TaskStop` on a bash wrapper does not kill python children on Windows —

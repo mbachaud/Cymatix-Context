@@ -44,3 +44,12 @@ Expectation: PASS with ratios ≈1.0 — fp16 quantization perturbs cosines
 ~1e-4, three orders below the 0.58 ANN threshold granularity; the dogfood
 matrix is only ~26MB so no RAM effect is visible here. This run is the
 quality check; the RAM payoff is measured later on the 850k-gene bed.
+
+## Result (2026-08-03): PASS — 10/10 gates
+
+Receipt: `benchmarks/dogfood/fp16_server_scaling.json`. Medians 1.02×/1.04×
+(c=1/c=2), recall@12 delta 0.000 at both levels, qps 0.97×, zero errors.
+fp16-active verified two ways (env copy at `bench_orchestrator.py:480`;
+read-only bed load shows `dtype=float16 (6266, 1024)`). Full write-up in
+`docs/benchmarks/2026-08-02-perf-slice2-concurrency.md`. fp16 is the
+recommended setting for the EnterpriseRAG 850k-gene bed.
