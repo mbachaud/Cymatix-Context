@@ -1,0 +1,8 @@
+dogfood_6k: genes=6272  count=1ms  chromatin=15ms  sum_content=48ms  sum_complement=50ms  TOTAL=114ms (cold-ish)
+dogfood_6k: warm repeat TOTAL=98ms
+erb_10k: genes=15888  count=15ms  chromatin=45ms  sum_content=108ms  sum_complement=98ms  TOTAL=266ms (cold-ish)
+erb_10k: warm repeat TOTAL=245ms
+erb_50k: genes=80362  count=16ms  chromatin=203ms  sum_content=514ms  sum_complement=444ms  TOTAL=1177ms (cold-ish)
+erb_50k: warm repeat TOTAL=1120ms
+erb_full: genes=829131  count=29ms  chromatin=1794ms  sum_content=59170ms  sum_complement=11722ms  TOTAL=72715ms (cold-ish)
+erb_full: warm repeat TOTAL=11138ms
