@@ -84,8 +84,30 @@ express residual seen at 10k does not scale with N; separate item.)
 
 ## Fix-candidate probes (throwaway copy of the full bed)
 
-_TBD — ANALYZE (join-order fix for tag_prefix) and covering-index
-`(term, gene_id, weight)` (SPLADE) timed on a copy; results land here._
+Receipt: `benchmarks/dogfood/erb/receipts/fix_candidate_probe.txt` (3 real
+ERB queries, real SPLADE encodes; later phases benefit from warmed pages —
+effect sizes dwarf that).
+
+| candidate | before | after | verdict |
+|---|---|---|---|
+| SPLADE covering index `(term, gene_id, weight)` | 60-177s | **3.0-4.5s** | ~40×; planner picks it up with ZERO code changes (`USING COVERING INDEX`); build 266s, ~+5GB |
+| ANALYZE (analysis_limit=400) for tag_prefix | 24-126s | unchanged — same `SCAN genes` plan | ANALYZE alone is NOT the fix |
+| tag_prefix SQL rewrite (UNION ALL prefix ranges → join genes) | 24-126s | 14-17s | 7× but still slow: `idx_promoter_value` doesn't cover `gene_id`; pair the rewrite with a `(tag_value, gene_id)` covering index (untested here) |
+
+Posting-list reality behind the remaining SPLADE seconds: one 58-term query
+vector touches **5.06M posting rows** (top lists 905k/677k/604k). A
+query-side term-frequency cap (skip/downweight terms with DF above ~10% of
+corpus — the #327 DF-cap discipline applied at query time) is the second
+lever; covered+capped should land sub-second.
+
+**End-to-end validation** (`erb_step_full_c1_covidx.json`, same 20 needles,
+c=1, real server): **median 111.7s → 88.9s (−21%)** from the covering index
+alone — splade signal p50 43.4s → **4.9s**, recall@12 unchanged (0.45),
+overlap 1.0, canary 17ms. Remaining anatomy: tag_prefix 44.2s +
+assemble/stats 15.7s + fts5 2.9s + dense 2.5s — i.e. the two code-change
+fixes now own ~60s of the 89s. Projected median with all three fixes landed
+≈ 25-30s; the residue is then the healthy linear tiers plus cache pressure,
+which the intermediate beds below will map.
 
 ## Council input: 100k / 250k / 500k intermediate beds
 
