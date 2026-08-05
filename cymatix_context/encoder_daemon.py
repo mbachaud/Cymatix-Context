@@ -670,11 +670,15 @@ class _Daemon:
         registry = self.registry
         if registry is None:
             # Production: config is loaded here (not in main()) so the HTTP
-            # surface comes up first. hardware.init_from_config has already
-            # run in main() — the order is load-bearing.
+            # surface comes up first. init_hardware() is idempotent on the
+            # hardware cache — main() has normally already run it, and this
+            # call is what keeps the layer pins correct for any entry point
+            # that skipped main().
             from .config import load_config
 
-            registry = EncoderRegistry.load(load_config())
+            cfg = load_config()
+            init_hardware(cfg)
+            registry = EncoderRegistry.load(cfg)
         registry.warm()  # eager: no lazy loads behind the ready flip
         self.install(registry)
 
@@ -927,6 +931,30 @@ def create_encoder_app(
 # ── entry point ─────────────────────────────────────────────────────
 
 
+def init_hardware(cfg: Any) -> None:
+    """Apply the four ``[hardware]`` layer knobs — MUST precede any model.
+
+    ``hardware.init_from_config`` is idempotent *on the cache*: if anything
+    calls ``get_hardware()`` first, the singleton freezes with defaults and
+    the layer pins plus batch-size overrides are silently dropped (pinned by
+    tests/test_hardware.py::test_init_from_config_must_run_before_get_hardware).
+    Both entry points — ``main()`` and the app's production bring-up — route
+    through here so the order can only be got right once.
+    """
+    from . import hardware
+
+    hardware.init_from_config(
+        config_device=cfg.hardware.device,
+        batch_size_overrides=cfg.hardware.batch_sizes,
+        layer_devices={
+            "dense": cfg.hardware.dense_device,
+            "splade": cfg.hardware.splade_device,
+            "sema": cfg.hardware.sema_device,
+            "rerank": cfg.hardware.rerank_device,
+        },
+    )
+
+
 def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="python -m cymatix_context.encoder_daemon",
@@ -955,20 +983,9 @@ def main(argv: Optional[Sequence[str]] = None) -> None:
     """
     args = build_arg_parser().parse_args(argv)
 
-    from . import hardware
     from .config import load_config
 
-    cfg = load_config()
-    hardware.init_from_config(
-        config_device=cfg.hardware.device,
-        batch_size_overrides=cfg.hardware.batch_sizes,
-        layer_devices={
-            "dense": cfg.hardware.dense_device,
-            "splade": cfg.hardware.splade_device,
-            "sema": cfg.hardware.sema_device,
-            "rerank": cfg.hardware.rerank_device,
-        },
-    )
+    init_hardware(load_config())
 
     app = create_encoder_app()
     log.info("Cymatix encoder daemon starting on %s:%d", args.host, args.port)

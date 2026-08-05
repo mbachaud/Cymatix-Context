@@ -1138,3 +1138,94 @@ def test_module_never_imports_torch_at_module_scope():
     assert not (banned & set(top_level)), (
         f"module-scope model import: {sorted(banned & set(top_level))}"
     )
+
+
+# ── production bring-up path (EncoderRegistry.load stubbed — no weights) ──
+
+
+def _await_ready_state(client, wanted: str, budget_s: float = 15.0) -> dict:
+    """Poll /ready until it reports *wanted* (liveness, not a latency assert).
+
+    The 200 body carries no ``state`` (contract: ready/spawn_token/probe_ms),
+    so "ready" is matched on the flag itself.
+    """
+    deadline = time.monotonic() + budget_s
+    while True:
+        body = client.get("/ready").json()
+        if body.get("state") == wanted or (wanted == "ready" and body.get("ready")):
+            return body
+        if time.monotonic() >= deadline:
+            return body
+        time.sleep(0.005)
+
+
+def test_production_bring_up_inits_hardware_before_constructing_models(monkeypatch):
+    """registry=None is the production path: HTTP answers while weights load."""
+    from fastapi.testclient import TestClient
+
+    import cymatix_context.encoder_daemon as mod
+    import cymatix_context.hardware as hw
+
+    calls: list = []
+    monkeypatch.setattr(hw, "init_from_config", lambda **kw: calls.append(("hardware", kw)))
+
+    fake = make_registry()
+
+    def _fake_load(cfg):
+        calls.append("load")
+        return fake
+
+    monkeypatch.setattr(mod.EncoderRegistry, "load", staticmethod(_fake_load))
+
+    with TestClient(mod.create_encoder_app(batch_window_ms=1.0)) as client:
+        # /health is up while the background thread is still loading.
+        assert client.get("/health").status_code == 200
+        assert _await_ready_state(client, "ready")["ready"] is True
+        assert client.get("/ready").status_code == 200
+
+    assert [c[0] if isinstance(c, tuple) else c for c in calls] == ["hardware", "load"], (
+        "hardware init must run before any model constructs — a get_hardware() "
+        "first freezes the singleton with defaults and drops the layer pins"
+    )
+    assert sorted(calls[0][1]["layer_devices"]) == ["dense", "rerank", "sema", "splade"]
+
+
+def test_production_bring_up_failure_marks_failed_and_keeps_health_up(monkeypatch):
+    """A broken model install must not kill the HTTP surface — clients fall back."""
+    from fastapi.testclient import TestClient
+
+    import cymatix_context.encoder_daemon as mod
+    import cymatix_context.hardware as hw
+
+    monkeypatch.setattr(hw, "init_from_config", lambda **kw: None)
+
+    def _boom(cfg):
+        raise RuntimeError("weights missing")
+
+    monkeypatch.setattr(mod.EncoderRegistry, "load", staticmethod(_boom))
+
+    with TestClient(mod.create_encoder_app(batch_window_ms=1.0)) as client:
+        body = _await_ready_state(client, "failed")
+        assert body["ready"] is False
+        assert body["state"] == "failed"
+        assert "weights missing" in (body["error"] or "")
+        assert client.get("/ready").status_code == 503
+        health = client.get("/health")
+        assert health.status_code == 200
+        assert health.json()["ready"] is False
+
+
+def test_production_bring_up_encode_is_refused_until_ready(monkeypatch):
+    """No encode may sneak in against a half-loaded registry."""
+    from fastapi.testclient import TestClient
+
+    import cymatix_context.encoder_daemon as mod
+    import cymatix_context.hardware as hw
+
+    monkeypatch.setattr(hw, "init_from_config", lambda **kw: None)
+    monkeypatch.setattr(mod.EncoderRegistry, "load", staticmethod(lambda cfg: make_registry()))
+
+    app = mod.create_encoder_app(batch_window_ms=1.0)
+    with TestClient(app) as client:
+        app.state.ready_state.mark("loading")
+        assert client.post("/encode/dense", json={"texts": ["a"]}).status_code == 503
