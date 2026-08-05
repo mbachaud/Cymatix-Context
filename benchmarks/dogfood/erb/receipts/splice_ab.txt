@@ -1,0 +1,106 @@
+=== dogfood/headroom ===
+  cymatix_proxy_port: 439ms chars=16766 ans=True
+  cymatix_expression_tokens: 398ms chars=19398 ans=True
+  cymatix_cymatics_bins: 414ms chars=15859 ans=True
+  cymatix_fusion_default: 439ms chars=20333 ans=True
+  cymatix_know_emit_floor: 413ms chars=19327 ans=False
+  cymatix_max_genes: 515ms chars=19316 ans=True
+  cymatix_genome_path: 445ms chars=17988 ans=False
+  cymatix_splice_aggressiveness: 443ms chars=17406 ans=False
+  scorerift_divergence_threshold: 374ms chars=10786 ans=True
+  scorerift_confidence_gate: 399ms chars=14224 ans=True
+  scorerift_import_hygiene_confidence: 477ms chars=12728 ans=True
+  driftwatch_version: 454ms chars=16962 ans=True
+  driftwatch_default_ollama_model: 423ms chars=9115 ans=True
+  driftwatch_default_inference_server: 388ms chars=16767 ans=True
+  driftwatch_default_secret: 391ms chars=57 ans=False
+  mek_guardrails: 374ms chars=9156 ans=True
+  mek_source_apps: 411ms chars=5492 ans=True
+  mek_marketplace_name: 395ms chars=6825 ans=True
+=== dogfood/trim ===
+  cymatix_proxy_port: 491ms chars=16766 ans=True
+  cymatix_expression_tokens: 439ms chars=19398 ans=True
+  cymatix_cymatics_bins: 417ms chars=15859 ans=True
+  cymatix_fusion_default: 444ms chars=20333 ans=True
+  cymatix_know_emit_floor: 418ms chars=19327 ans=False
+  cymatix_max_genes: 494ms chars=19316 ans=True
+  cymatix_genome_path: 448ms chars=17988 ans=False
+  cymatix_splice_aggressiveness: 426ms chars=17406 ans=False
+  scorerift_divergence_threshold: 375ms chars=10786 ans=True
+  scorerift_confidence_gate: 382ms chars=14224 ans=True
+  scorerift_import_hygiene_confidence: 368ms chars=12728 ans=True
+  driftwatch_version: 448ms chars=16962 ans=True
+  driftwatch_default_ollama_model: 464ms chars=9115 ans=True
+  driftwatch_default_inference_server: 383ms chars=16767 ans=True
+  driftwatch_default_secret: 378ms chars=57 ans=False
+  mek_guardrails: 370ms chars=9156 ans=True
+  mek_source_apps: 361ms chars=5492 ans=True
+  mek_marketplace_name: 447ms chars=6825 ans=True
+=== erb_100k/headroom ===
+  erb_000: 2448ms chars=8548
+  erb_001: 2873ms chars=11706
+  erb_003: 10801ms chars=24657
+  erb_008: 7886ms chars=24913
+  erb_009: 7454ms chars=23248
+  erb_010: 3102ms chars=25509
+  erb_012: 4427ms chars=25786
+  erb_013: 8072ms chars=22910
+  erb_015: 3330ms chars=25208
+  erb_019: 6972ms chars=22894
+  erb_020: 4956ms chars=12902
+  erb_021: 5558ms chars=25721
+  erb_022: 3073ms chars=26947
+  erb_024: 7831ms chars=25188
+  erb_029: 8669ms chars=27602
+  erb_031: 3237ms chars=15272
+  erb_033: 4838ms chars=16147
+  erb_036: 2708ms chars=17066
+  erb_038: 3243ms chars=22841
+  erb_039: 7769ms chars=25197
+  erb_042: 5078ms chars=23762
+  erb_050: 5081ms chars=24282
+  erb_066: 6165ms chars=22186
+  erb_068: 7304ms chars=19085
+  erb_072: 3710ms chars=26374
+  erb_073: 2055ms chars=23786
+  erb_075: 9359ms chars=29861
+  erb_080: 2638ms chars=15487
+  erb_087: 4582ms chars=16211
+  erb_095: 5466ms chars=23605
+=== erb_100k/trim ===
+  erb_000: 2566ms chars=8548
+  erb_001: 2537ms chars=11706
+  erb_003: 2942ms chars=25845
+  erb_008: 4731ms chars=26250
+  erb_009: 2990ms chars=25457
+  erb_010: 1911ms chars=26077
+  erb_012: 2295ms chars=26378
+  erb_013: 2705ms chars=22910
+  erb_015: 2573ms chars=25978
+  erb_019: 2180ms chars=25526
+  erb_020: 4759ms chars=12902
+  erb_021: 2460ms chars=26575
+  erb_022: 2724ms chars=26947
+  erb_024: 2532ms chars=27005
+  erb_029: 2462ms chars=28837
+  erb_031: 3239ms chars=15272
+  erb_033: 3153ms chars=17309
+  erb_036: 2555ms chars=17066
+  erb_038: 2958ms chars=22841
+  erb_039: 3571ms chars=25775
+  erb_042: 2628ms chars=25402
+  erb_050: 2801ms chars=26465
+  erb_066: 2905ms chars=24992
+  erb_068: 3480ms chars=17788
+  erb_072: 2208ms chars=25837
+  erb_073: 2094ms chars=23786
+  erb_075: 2164ms chars=28390
+  erb_080: 2773ms chars=15487
+  erb_087: 2044ms chars=16074
+  erb_095: 1978ms chars=25107
+
+===== SUMMARY =====
+dogfood: median headroom=414ms trim=426ms | mean chars headroom=13806 trim=13806
+dogfood: ANSWER SURVIVAL headroom=14/18 trim=14/18
+erb_100k: median headroom=5078ms trim=2628ms | mean chars headroom=21830 trim=22484
+DONE

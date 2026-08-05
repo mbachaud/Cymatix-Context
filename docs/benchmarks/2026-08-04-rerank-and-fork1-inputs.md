@@ -158,3 +158,28 @@ the campaign. Correction from issue-annotation review: `dense_pool_size`
 and `fts5_candidate_depth` are already config-exposed — the depth-
 scaling experiment is a pure config sweep; only SPLADE's `limit * 2`
 fetch depth is hardcoded.
+
+
+## Headroom-vs-trim splice A/B (2026-08-05) — null; trim recommended at scale
+
+Blunt cost/benefit receipt (`splice_ab.txt` / `splice_ab_metrics.json`;
+arms toggled per-boot via CYMATIX_DISABLE_HEADROOM, identical retrieval):
+
+| | headroom | trim |
+|---|---|---|
+| dogfood answer survival (18 accept-keyed needles) | 14/18 | **14/18, zero flips** |
+| dogfood delivered chars | 13,806 | 13,806 (identical) |
+| erb_100k median | 5,078ms | **2,628ms (-48%)** |
+| erb_100k delivered chars | 21,830 | 22,484 |
+
+The token budget clamps both arms to the same delivered volume; the only
+question is WHICH text survives, and no measurable axis distinguishes
+them — while Kompress costs ~2.45s/query at 100k-class beds (~half the
+median). **Recommendation: CYMATIX_DISABLE_HEADROOM=1 for large-corpus
+serving profiles** until a workload demonstrates Kompress selection
+value. Caveats: dogfood needles are short-answer factoids; long-form
+answer quality on ERB is unmeasured (no ground-truth strings exist for
+that corpus) — this is a "no detectable benefit on available metrics"
+verdict, not proof of equivalence. GPU note: Kompress warm compress is
+GPU-invariant (1,535ms vs 1,493ms cpu) — its cost is Python-side
+chunking/CCR, not model forward, so no device knob can rescue it.
