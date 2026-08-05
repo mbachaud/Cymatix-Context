@@ -842,6 +842,18 @@ class CymatixContextManager:
     def __init__(self, config: CymatixConfig):
         self.config = config
 
+        # Encoder daemon (Fork 1 slice 1). Backends never import config, so
+        # the manager is the one fan-out point that hands them the configured
+        # URL; env CYMATIX_ENCODER_URL still wins over it inside the client.
+        # Empty (the default) means every encoder seam stays in-process,
+        # byte-identical to the pre-daemon path. The getattr is defensive for
+        # tests that build partial config objects.
+        from .backends import encoder_client
+        from .config import EncoderDaemonConfig as _EncoderDaemonConfig
+        encoder_client.configure(
+            getattr(config, "encoder_daemon", _EncoderDaemonConfig()).url
+        )
+
         # Blend-layer mode (Issue #255 / audit §4 item 5). "legacy" is
         # byte-identical to the shipped additive blend. Validated first so a
         # typo in cymatix.toml fails fast — before any genome construction —
@@ -893,9 +905,19 @@ class CymatixContextManager:
         )
         try:
             from .backends.sema import LazySemaCodec, sema_available
-            if self._sema_embed_on_ingest and sema_available():
-                self._sema_codec = LazySemaCodec(
-                    model_name=self.config.ingestion.sema_model)  # #207 item 1
+            # Fork 1 slice 1: with a daemon URL active the daemon owns MiniLM,
+            # so sentence-transformers need not be installed here; without one
+            # the availability probe gates construction exactly as before.
+            _encoder_url = encoder_client.active_url()
+            if self._sema_embed_on_ingest and (_encoder_url or sema_available()):
+                if _encoder_url:
+                    self._sema_codec = encoder_client.RemoteSemaCodec(
+                        model_name=self.config.ingestion.sema_model,
+                        url=_encoder_url,
+                    )
+                else:
+                    self._sema_codec = LazySemaCodec(
+                        model_name=self.config.ingestion.sema_model)  # #207 item 1
                 if self._lazy_encoders:
                     log.info(
                         "ΣĒMA codec armed (lazy) — model loads on first semantic call"
@@ -1253,15 +1275,28 @@ class CymatixContextManager:
         codec cannot be constructed (e.g. sentence-transformers / FlagEmbedding
         not installed). ingest() treats ``None`` as "skip dense encoding" and
         the genome stores rows with a NULL ``embedding_dense_v2`` column.
+
+        Goes through ``get_shared_codec`` like KnowledgeStore does (Fork 1
+        slice 1): the private codec this used to construct directly was a
+        second, unshared ~2 GB model in the same process, was pinned to the
+        ctor's "cpu" default even under a CUDA config, and — being outside the
+        shared factory — was the one dense path an encoder daemon could not
+        substitute.
         """
         if not self.config.ingestion.dense_embed_on_ingest:
             return None
         if self._dense_codec is None:
             try:
-                from .backends.bgem3_codec import BGEM3Codec
-                self._dense_codec = BGEM3Codec(
+                from .backends.bgem3_codec import (
+                    get_shared_codec,
+                    shared_dense_codec_enabled,
+                )
+                from .hardware import resolve_layer_device
+                self._dense_codec = get_shared_codec(
                     dim=self.config.retrieval.dense_embedding_dim,
                     model_name=self.config.retrieval.dense_model,  # #207
+                    device=resolve_layer_device("dense"),
+                    share=shared_dense_codec_enabled(),
                 )
                 log.info("BGE-M3 dense codec loaded — dense vectors written at ingest")
             except Exception:

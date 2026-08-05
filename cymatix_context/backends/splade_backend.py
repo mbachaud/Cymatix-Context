@@ -24,6 +24,8 @@ import logging
 import sqlite3
 from typing import Dict, List, Optional, Tuple
 
+from . import encoder_client
+
 log = logging.getLogger("cymatix.splade")
 
 # Lazy-loaded model + tokenizer
@@ -32,6 +34,65 @@ _tokenizer = None
 _device = None
 
 _SPECIAL_TOKENS = frozenset({"[CLS]", "[SEP]", "[PAD]", "[UNK]"})
+
+# Encoder-daemon transport (Fork 1 slice 1), as a single ``(url, client)``
+# tuple so the rebind on a URL change is atomic — like ``_model`` this is
+# lock-free module state, and a benign race just rebuilds a cheap stdlib
+# client. ``None`` until the first remote encode; stays ``None`` forever when
+# no daemon URL is configured.
+_remote_client = None
+
+
+def _remote_sparse(texts: List[str], top_k: int) -> Optional[List[Dict[str, float]]]:
+    """Daemon-encoded sparse vectors, or ``None`` meaning "run the local body".
+
+    Deliberately reached BEFORE the ``import torch`` in ``encode`` /
+    ``encode_batch``: with a daemon serving this process, importing
+    splade_backend — and encoding with it — must work on a host that has no
+    transformers installed at all.
+
+    Any failure (transport, malformed payload, wrong item count) records the
+    failure on the shared circuit breaker and returns ``None``, so the caller
+    re-encodes in process. Never skip: ``sync_splade_index`` soft-fails to
+    ``log.debug``, so a "skip" would silently drop terms from the index.
+    """
+    url = encoder_client.active_url()
+    if not url:
+        return None
+    if not texts:
+        return []
+    if not encoder_client.should_attempt():
+        return None
+
+    global _remote_client
+    cached = _remote_client
+    if cached is None or cached[0] != url:
+        client = encoder_client.EncoderClient(
+            url, timeout_s=encoder_client.default_timeout_s(),
+        )
+        _remote_client = (url, client)
+    else:
+        client = cached[1]
+
+    try:
+        sparse = client.encode_splade(list(texts), top_k=top_k)
+    except Exception as exc:  # EncoderClientError + any stray transport error
+        encoder_client.record_failure()
+        log.debug("remote SPLADE encode failed (%s); encoding in process", exc)
+        return None
+    if (
+        not isinstance(sparse, list)
+        or len(sparse) != len(texts)
+        or not all(isinstance(d, dict) for d in sparse)
+    ):
+        encoder_client.record_failure()
+        log.debug("remote SPLADE returned an unusable payload; encoding in process")
+        return None
+    encoder_client.record_success()
+    # Weights and descending-weight dict order pass through untouched: the
+    # daemon already applied round(w, 4) and the topk ordering, and JSON
+    # round-trips both.
+    return sparse
 
 
 def _ensure_loaded(model_name: str = "naver/splade-cocondenser-ensembledistil"):
@@ -75,6 +136,10 @@ def encode(text: str, top_k: int = 128, model_name: str = "naver/splade-coconden
     Each token is from the BERT vocabulary; weight indicates how
     strongly that term is associated with this content.
     """
+    remote = _remote_sparse([text], top_k)
+    if remote is not None:
+        return remote[0]
+
     import torch
 
     _ensure_loaded(model_name)
@@ -126,8 +191,13 @@ def encode_batch(
 
     ``batch_size`` defaults to ``recommended_batch_size("splade")`` when unset,
     sized for the detected hardware (VRAM tier on CUDA/ROCm, system RAM on
-    MPS/CPU). Pass an explicit value to override.
+    MPS/CPU). Pass an explicit value to override — advisory only when an
+    encoder daemon serves the request, since the daemon owns micro-batching.
     """
+    remote = _remote_sparse(texts, top_k)
+    if remote is not None:
+        return remote
+
     import torch
 
     _ensure_loaded(model_name)
