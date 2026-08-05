@@ -1063,6 +1063,172 @@ def test_concurrent_bundles_coalesce_dense_but_keep_splade_and_sema_per_item():
     assert sema.encode_calls - base_sema == n, "SEMA must stay one encode per item"
 
 
+# ── Task 4: two-client hammer + first-use readiness race ────────────
+
+
+@pytest.mark.concurrency
+def test_two_clients_hammer_mixed_dense_and_bundle_no_cross_request_bleed():
+    """Two daemon threads hammer one app with K=25 mixed /encode/dense +
+    /encode/bundle requests each, distinct per-thread texts.
+
+    This is the GIL-side tokenizer-state concern from the kickoff: dense
+    requests ride a shared micro-batcher that groups items from concurrent
+    callers into one ``encode_batch`` call and zips results back out — a
+    mis-aligned zip would hand one caller's vector to another. Every
+    response must equal ``hash_vec`` of ITS OWN text, never a sibling's.
+    """
+    from fastapi.testclient import TestClient
+
+    dense = FakeBGEM3Codec(dim=8)
+    splade, sema = CountingSplade(), CountingSemaCodec()
+    registry = make_registry(dense=dense, splade=splade, sema=sema)
+    n_clients, k = 2, 25
+    barrier = threading.Barrier(n_clients)
+    results: list = []
+    errors: list = []
+    lock = threading.Lock()
+
+    def _hammer_client(cid, client):
+        try:
+            barrier.wait(timeout=10)
+            for i in range(k):
+                text = f"client{cid}-item{i}"
+                if i % 2 == 0:
+                    resp = client.post(
+                        "/encode/dense", json={"texts": [text], "task": "passage"}
+                    )
+                    kind = "dense"
+                else:
+                    resp = client.post(
+                        "/encode/bundle", json={"text": text, "task": "query", "top_k": 32}
+                    )
+                    kind = "bundle"
+                with lock:
+                    results.append((cid, i, kind, text, resp))
+        except Exception as exc:
+            with lock:
+                errors.append(exc)
+
+    with TestClient(_app(registry, batch_window_ms=50.0)) as client:
+        threads = [
+            threading.Thread(target=_hammer_client, args=(cid, client), daemon=True)
+            for cid in range(n_clients)
+        ]
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join(timeout=30)
+        wedged = [t for t in threads if t.is_alive()]
+
+    # Liveness before correctness.
+    assert not wedged, "hammer client threads wedged"
+    assert not errors, f"hammer client threads raised: {errors}"
+    assert len(results) == n_clients * k
+
+    for cid, i, kind, text, resp in results:
+        assert resp.status_code == 200, (
+            f"{kind} client{cid} item{i}: {resp.status_code} {resp.text}"
+        )
+        expected = hash_vec(text, 8).tolist()
+        got = resp.json()["vectors"][0] if kind == "dense" else resp.json()["dense"]
+        assert got == expected, (
+            f"cross-request bleed: {kind} client{cid} item{i} ({text!r}) did not get "
+            "the vector for its own text"
+        )
+
+    # Proof of real interleaving, not two threads that happened to run
+    # back-to-back: within one client thread every request blocks on its own
+    # response before the next is sent, so no two dense-family submissions
+    # from the SAME thread can ever land in the same drained batch. Any
+    # coalescing observed here can only come from genuine cross-thread
+    # overlap of the two hammer threads.
+    total_dense_submissions = n_clients * k
+    assert 1 <= dense.batch_calls < total_dense_submissions, (
+        f"expected cross-thread batch coalescing ({dense.batch_calls} encode_batch calls "
+        f"for {total_dense_submissions} submissions) — this run does not prove concurrent "
+        "interleaving between the two hammer threads"
+    )
+
+
+@pytest.mark.concurrency
+def test_ready_gate_eight_thread_first_use_race_blocks_until_ready_flips(monkeypatch):
+    """8-thread first-use readiness race against the client-side ready gate.
+
+    ``encoder_client.ready_gate`` (module docstring, "shared one-shot
+    readiness gate") is process-wide, not per-codec: if 8 concurrent first
+    users each polled ``/ready`` on their own, whichever one lost the
+    daemon-not-ready race would open the shared circuit and strand every
+    seam in permanent in-process fallback even though the daemon comes up
+    moments later. Only the lock-winning thread may poll; every racer must
+    block on the gate itself (not skip it, not error) and observe the
+    eventual ready flip.
+    """
+    import urllib.request
+
+    from fastapi.testclient import TestClient
+
+    from cymatix_context.backends import encoder_client
+    from cymatix_context.backends.encoder_client import EncoderClient
+
+    class _CountingClient(EncoderClient):
+        """Counts ``wait_ready()`` invocations — the single-flight proof."""
+
+        def __init__(self, *a, **kw):
+            super().__init__(*a, **kw)
+            self.wait_ready_calls = 0
+            self._count_lock = threading.Lock()
+
+        def wait_ready(self, budget_s, poll_s=0.5):
+            with self._count_lock:
+                self.wait_ready_calls += 1
+            return super().wait_ready(budget_s, poll_s=poll_s)
+
+    app = _app()
+    with TestClient(app) as tc:
+        app.state.ready_state.mark("loading")  # simulate: daemon not ready yet
+        transport = _TestClientTransport(tc)
+        monkeypatch.setattr(urllib.request, "urlopen", transport.urlopen)
+        client = _CountingClient("http://127.0.0.1:11439", timeout_s=5.0)
+
+        def _flip_after_delay():
+            time.sleep(0.1)
+            app.state.ready_state.mark_ready(probe_ms=1.0, capacity={})
+
+        flipper = threading.Thread(target=_flip_after_delay, daemon=True)
+        barrier = threading.Barrier(8)
+        results: list = []
+        errors: list = []
+        lock = threading.Lock()
+
+        def _racer():
+            try:
+                barrier.wait(timeout=5)
+                ok = encoder_client.ready_gate(client)
+                with lock:
+                    results.append(ok)
+            except Exception as exc:
+                with lock:
+                    errors.append(exc)
+
+        threads = [threading.Thread(target=_racer, daemon=True) for _ in range(8)]
+        flipper.start()
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join(timeout=15)
+        wedged = [t for t in threads if t.is_alive()]
+        flipper.join(timeout=15)
+
+    # Liveness before correctness.
+    assert not wedged, "readiness racers wedged"
+    assert not errors, f"readiness racers raised: {errors}"
+    assert results == [True] * 8, f"every racer must observe ready=True; got {results}"
+    assert client.wait_ready_calls == 1, (
+        f"only the lock-winning thread may poll wait_ready(); got {client.wait_ready_calls}"
+    )
+    assert encoder_client.ready_probed() is True
+
+
 # ── main() / CLI ────────────────────────────────────────────────────
 
 
