@@ -993,6 +993,24 @@ class HeadroomConfig:
 
 
 @dataclass
+class EncoderDaemonConfig:
+    """[encoder_daemon] — optional shared BGE-M3/SPLADE/SEMA process (Fork 1 slice 1).
+
+    ``url`` empty (default) means "off": every encoder seam (dense, SPLADE,
+    SEMA) runs in-process exactly as before — the off-state is the dataclass
+    default, so byte-identical-when-off holds for free. Set ``url`` to point
+    ``cymatix_context.backends.encoder_client`` at a running
+    ``cymatix_context.encoder_daemon`` process (e.g.
+    "http://127.0.0.1:11439"); leave it empty, or leave
+    ``CYMATIX_ENCODER_URL`` unset, to keep current behavior untouched.
+    Timeouts / batch windows / retry cooldowns are env-tunable constants in
+    ``encoder_client.py``, not config surface, for this slice.
+    """
+
+    url: str = ""
+
+
+@dataclass
 class Hardware:
     """[hardware] config — see docs/specs/2026-05-04-hardware-detection-design.md.
 
@@ -1077,6 +1095,9 @@ class CymatixConfig:
     hardware: Hardware = field(default_factory=Hardware)
     vault: VaultConfig = field(default_factory=VaultConfig)
     synonym_map: Dict[str, List[str]] = field(default_factory=dict)
+    # Fork 1 slice 1: optional shared encoder daemon (docs/design/2026-08-05-
+    # fork1-slice1-contract.md). url="" = off = in-process (default).
+    encoder_daemon: EncoderDaemonConfig = field(default_factory=EncoderDaemonConfig)
 
 
 def _warn_unknown(section: str, raw_section: Dict[str, Any], dataclass_type: type) -> None:
@@ -1155,6 +1176,12 @@ def _apply_env_overrides(cfg: CymatixConfig) -> CymatixConfig:
                 "CYMATIX_SERVER_UPSTREAM_TIMEOUT=%r is not a float — ignoring override",
                 os.environ["CYMATIX_SERVER_UPSTREAM_TIMEOUT"],
             )
+
+    # Encoder daemon URL — same truthiness style as CYMATIX_SERVER_UPSTREAM:
+    # an empty/unset env var never disables a toml-configured url; only a
+    # non-empty value overrides.
+    if os.environ.get("CYMATIX_ENCODER_URL"):
+        cfg.encoder_daemon.url = os.environ["CYMATIX_ENCODER_URL"]
     return cfg
 
 
@@ -1267,6 +1294,15 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             bench_genome_path=s.get(
                 "bench_genome_path", cfg.server.bench_genome_path,
             ),
+        )
+
+    # Encoder daemon (Fork 1 slice 1) — parsed BEFORE _apply_env_overrides so
+    # CYMATIX_ENCODER_URL can win over a toml value below.
+    if "encoder_daemon" in raw:
+        e = raw["encoder_daemon"]
+        _warn_unknown("encoder_daemon", e, EncoderDaemonConfig)
+        cfg.encoder_daemon = EncoderDaemonConfig(
+            url=str(e.get("url", cfg.encoder_daemon.url)),
         )
 
     # CYMATIX_GENOME_PATH / CYMATIX_SERVER_* overrides (env > toml > default).
