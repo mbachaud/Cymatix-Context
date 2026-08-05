@@ -32,14 +32,28 @@ re-sorts, or re-groups anything the codecs return.
 
 from __future__ import annotations
 
+import argparse
 import logging
+import math
+import os
 import queue
+import sys
 import threading
 import time
 from concurrent.futures import Future
-from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple
+from concurrent.futures import TimeoutError as FutureTimeoutError
+from contextlib import asynccontextmanager
+from typing import Any, Callable, Dict, List, Literal, Optional, Sequence, Tuple
 
+import uvicorn
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel
+
+# ``_env_float`` is deliberately shared with the client rather than
+# re-implemented: both sides must agree on how a malformed env knob degrades.
 from .backends.encoder_client import _env_float
+from .backends.encoder_client import batch_window_ms as client_batch_window_ms
 
 log = logging.getLogger("cymatix.encoder_daemon")
 
@@ -418,22 +432,548 @@ class _Batcher:
             # Belt-and-braces: a buggy executor that silently skipped an item
             # must not leave an HTTP handler blocked until its timeout.
             for _, fut in batch:
-                _resolve(fut, exc=RuntimeError(
-                    f"encoder daemon {self.name} produced no result for a queued item"
-                ))
+                if not fut.done():
+                    _resolve(fut, exc=RuntimeError(
+                        f"encoder daemon {self.name} produced no result for a queued item"
+                    ))
             if saw_stop:
                 break
         self._drain_pending()
 
     def _drain_pending(self) -> None:
+        """Fail everything still queued — nothing may outlive the worker unresolved."""
+        requeue_stop = False
         while True:
             try:
                 item = self._queue.get_nowait()
             except queue.Empty:
-                return
+                break
             if item is _STOP:
+                requeue_stop = True
                 continue
             _, fut = item
             _resolve(fut, exc=RuntimeError(
                 f"encoder daemon {self.name} batcher is shutting down"
             ))
+        if requeue_stop and threading.current_thread() is not self._thread:
+            # A submit racing stop() must not swallow the worker's exit signal
+            # (the worker itself has already consumed one — it needs no more).
+            self._queue.put(_STOP)
+
+
+# ── readiness ───────────────────────────────────────────────────────
+
+
+class ReadyState:
+    """Thread-safe readiness record behind ``/ready`` and ``/health``.
+
+    Clients gate on ``/ready``: 200 only after every model is loaded AND one
+    probe bundle has round-tripped through the real micro-batch path. Anything
+    earlier is a 503 carrying the current ``state`` string, so an operator
+    watching a cold daemon can tell "loading weights" from "probing" from
+    "failed".
+    """
+
+    def __init__(self) -> None:
+        self._lock = threading.Lock()
+        self._state = "starting"
+        self._ready = False
+        self._probe_ms: Optional[float] = None
+        self._error: Optional[str] = None
+        self._capacity: Dict[str, Any] = {}
+
+    @property
+    def ready(self) -> bool:
+        with self._lock:
+            return self._ready
+
+    @property
+    def state(self) -> str:
+        with self._lock:
+            return self._state
+
+    @property
+    def capacity(self) -> Dict[str, Any]:
+        with self._lock:
+            return dict(self._capacity)
+
+    def mark(self, state: str) -> None:
+        """Move to a not-ready *state* (also the test hook for flipping back)."""
+        with self._lock:
+            self._state = state
+            self._ready = False
+
+    def mark_ready(self, probe_ms: float, capacity: Dict[str, Any]) -> None:
+        with self._lock:
+            self._state = "ready"
+            self._ready = True
+            self._probe_ms = float(probe_ms)
+            self._capacity = dict(capacity)
+            self._error = None
+
+    def mark_failed(self, error: str) -> None:
+        with self._lock:
+            self._state = "failed"
+            self._ready = False
+            self._error = error
+
+    def snapshot(self) -> Dict[str, Any]:
+        with self._lock:
+            return {
+                "ready": self._ready,
+                "state": self._state,
+                "probe_ms": self._probe_ms,
+                "error": self._error,
+            }
+
+
+# ── capacity self-report ────────────────────────────────────────────
+
+
+def _torch_version() -> Optional[str]:
+    """torch.__version__ if torch is ALREADY imported — never imports it.
+
+    In the daemon torch is resident the moment the codecs load, so this is
+    truthful in production while keeping this module (and the non-live suite)
+    torch-free.
+    """
+    torch = sys.modules.get("torch")
+    return getattr(torch, "__version__", None) if torch is not None else None
+
+
+def _vram_gb() -> Tuple[Optional[float], Optional[float]]:
+    """(total, free) VRAM in GiB via torch.cuda.mem_get_info, fully guarded."""
+    torch = sys.modules.get("torch")
+    if torch is None:
+        return None, None
+    try:
+        if not torch.cuda.is_available():
+            return None, None
+        free, total = torch.cuda.mem_get_info()
+        return round(total / (1024 ** 3), 3), round(free / (1024 ** 3), 3)
+    except Exception as exc:
+        log.debug("VRAM probe failed: %s", exc)
+        return None, None
+
+
+def _system_ram_gb() -> Optional[float]:
+    """System RAM in GiB via psutil (optional dependency — guarded)."""
+    try:
+        import psutil
+
+        return round(psutil.virtual_memory().total / (1024 ** 3), 2)
+    except Exception as exc:
+        log.debug("system RAM probe failed: %s", exc)
+        return None
+
+
+def _finite_rate(value: Optional[float]) -> Optional[float]:
+    """Round a rate for the report; inf/nan/<=0 become None.
+
+    Starlette's JSONResponse serializes with ``allow_nan=False``, so an
+    infinite rate (a fake encoder finishing in zero measurable time) would
+    turn ``/health`` into a 500 — the report must never carry one.
+    """
+    if value is None:
+        return None
+    try:
+        rate = float(value)
+    except (TypeError, ValueError):
+        return None
+    if not math.isfinite(rate) or rate <= 0.0:
+        return None
+    return round(rate, 3)
+
+
+def build_capacity_report(
+    registry: EncoderRegistry,
+    rates: Dict[str, Optional[float]],
+    window_s: float,
+    probe_ms: float,
+) -> Dict[str, Any]:
+    """The self-report logged at the ready flip and served at /health.capacity.
+
+    ``bundles_per_s`` reports both readings the fork's bars are quoted
+    against: ``interleaved`` = 1/sum(1/rate) (one worker doing all three
+    encodes back to back) and ``pipelined`` = min(rate) (three stages in
+    flight at once, so the slowest model sets the ceiling).
+    """
+    warm = {family: _finite_rate(rates.get(family)) for family in FAMILIES}
+    usable = [r for r in warm.values() if r]
+    if len(usable) == len(FAMILIES):
+        interleaved: Optional[float] = round(1.0 / sum(1.0 / r for r in usable), 3)
+        pipelined: Optional[float] = round(min(usable), 3)
+    else:
+        interleaved = pipelined = None
+
+    vram_total, vram_free = _vram_gb()
+    return {
+        "devices": {family: registry.devices.get(family) for family in FAMILIES},
+        "warm_encodes_per_s": warm,
+        "bundles_per_s": {"interleaved": interleaved, "pipelined": pipelined},
+        "max_batch": {family: registry.max_batch(family) for family in FAMILIES},
+        "batch_window_ms": round(window_s * 1000.0, 3),
+        "probe_ms": round(float(probe_ms), 3),
+        "warm_probe_encodes": WARM_PROBE_ENCODES,
+        "loaded": registry.loaded,
+        "dense_model": registry.dense_model_name,
+        "dense_dim": registry.dense_dim,
+        "torch_version": _torch_version(),
+        "vram_total_gb": vram_total,
+        "vram_free_gb": vram_free,
+        "system_ram_gb": _system_ram_gb(),
+        "pid": os.getpid(),
+    }
+
+
+# ── daemon wiring (registry + batchers + readiness, one object) ──────
+
+
+class _Daemon:
+    """Owns the registry, the three batchers, and the readiness lifecycle."""
+
+    def __init__(self, registry: Optional[EncoderRegistry], window_s: float) -> None:
+        self.registry = registry
+        self.window_s = window_s
+        self.ready_state = ReadyState()
+        self.batchers: Dict[str, _Batcher] = {}
+        self._startup_thread: Optional[threading.Thread] = None
+        self._shutdown = threading.Event()
+
+    # -- startup --------------------------------------------------------
+
+    def start(self) -> None:
+        """Called from the FastAPI lifespan.
+
+        Injected registry (tests): bring-up is synchronous and sub-millisecond.
+        Production: a daemon thread loads ~3 GB of weights while HTTP is
+        already answering, so ``/health`` is reachable throughout the load and
+        ``/ready`` reports progress instead of a dead socket.
+        """
+        if self.registry is not None:
+            self.bring_up()
+            return
+        self._startup_thread = threading.Thread(
+            target=self._bring_up_guarded, name="encoder-daemon-startup", daemon=True
+        )
+        self._startup_thread.start()
+
+    def _bring_up_guarded(self) -> None:
+        try:
+            self.bring_up()
+        except Exception as exc:
+            log.error("encoder daemon startup failed: %s", exc, exc_info=True)
+            self.ready_state.mark_failed(str(exc))
+
+    def bring_up(self) -> None:
+        self.ready_state.mark("loading")
+        registry = self.registry
+        if registry is None:
+            # Production: config is loaded here (not in main()) so the HTTP
+            # surface comes up first. hardware.init_from_config has already
+            # run in main() — the order is load-bearing.
+            from .config import load_config
+
+            registry = EncoderRegistry.load(load_config())
+        registry.warm()  # eager: no lazy loads behind the ready flip
+        self.install(registry)
+
+        self.ready_state.mark("probing")
+        started = time.monotonic()
+        self._probe_bundle()
+        probe_ms = (time.monotonic() - started) * 1000.0
+        rates = self._warm_rates()
+        capacity = build_capacity_report(registry, rates, self.window_s, probe_ms)
+        self.ready_state.mark_ready(probe_ms, capacity)
+        log.info("encoder daemon ready in %.1f ms — capacity: %s", probe_ms, capacity)
+        if self._shutdown.is_set():
+            # Raced a shutdown that started while we were loading.
+            self.stop()
+
+    def install(self, registry: EncoderRegistry) -> None:
+        """Build + start one batcher per family against *registry*."""
+        self.registry = registry
+        self.batchers = {
+            "dense": _Batcher(
+                "dense",
+                make_dense_executor(registry.dense_encode_batch),
+                max_batch=registry.max_batch("dense"),
+                window_s=self.window_s,
+            ),
+            "splade": _Batcher(
+                "splade",
+                make_sequential_executor(registry.splade_encode_one),
+                max_batch=registry.max_batch("splade"),
+                window_s=self.window_s,
+            ),
+            "sema": _Batcher(
+                "sema",
+                make_sequential_executor(registry.sema_encode_one),
+                max_batch=registry.max_batch("sema"),
+                window_s=self.window_s,
+            ),
+        }
+        for batcher in self.batchers.values():
+            batcher.start()
+
+    # -- probes ---------------------------------------------------------
+
+    def _payload(self, family: str) -> Tuple[Any, ...]:
+        return {
+            "dense": (PROBE_TEXT, "query"),
+            "splade": (PROBE_TEXT, 128),
+            "sema": (PROBE_TEXT,),
+        }[family]
+
+    def _probe_bundle(self) -> None:
+        """One bundle through the real micro-batch path — the ready gate."""
+        timeout = request_timeout_s()
+        futures = [self.batchers[family].submit(self._payload(family)) for family in FAMILIES]
+        for future in futures:
+            future.result(timeout=timeout)
+
+    def _warm_rates(self) -> Dict[str, Optional[float]]:
+        """Per-model warm encode rate from WARM_PROBE_ENCODES sequential encodes."""
+        timeout = request_timeout_s()
+        rates: Dict[str, Optional[float]] = {}
+        for family in FAMILIES:
+            try:
+                started = time.monotonic()
+                for _ in range(WARM_PROBE_ENCODES):
+                    self.batchers[family].submit(self._payload(family)).result(timeout=timeout)
+                elapsed = max(time.monotonic() - started, 1e-6)
+                rates[family] = WARM_PROBE_ENCODES / elapsed
+            except Exception as exc:
+                log.warning("warm-rate probe failed for %s: %s", family, exc)
+                rates[family] = None
+        return rates
+
+    # -- shutdown -------------------------------------------------------
+
+    def stop(self) -> None:
+        self._shutdown.set()
+        thread = self._startup_thread
+        if thread is not None and thread.is_alive():
+            thread.join(timeout=5.0)
+        for batcher in list(self.batchers.values()):
+            batcher.stop()
+        self.ready_state.mark("stopped")
+
+
+# ── request models ──────────────────────────────────────────────────
+
+
+class DenseRequest(BaseModel):
+    texts: List[str]
+    task: Literal["query", "passage"] = "passage"
+
+
+class SpladeRequest(BaseModel):
+    texts: List[str]
+    top_k: int = 128
+
+
+class SemaRequest(BaseModel):
+    texts: List[str]
+
+
+class BundleRequest(BaseModel):
+    text: str
+    task: Literal["query", "passage"] = "query"
+    top_k: int = 128
+
+
+def _require_ready(daemon: _Daemon) -> None:
+    """503 before the ready flip — clients gate on /ready and fall back."""
+    snapshot = daemon.ready_state.snapshot()
+    if not snapshot["ready"]:
+        raise HTTPException(
+            status_code=503,
+            detail=f"encoder daemon not ready (state={snapshot['state']})",
+        )
+
+
+def _join(futures: Sequence["Future"], path: str) -> List[Any]:
+    """Await *futures* under one request budget; map failures onto HTTP 500."""
+    timeout = request_timeout_s()
+    deadline = time.monotonic() + timeout
+    results: List[Any] = []
+    for future in futures:
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            raise HTTPException(
+                status_code=500, detail=f"{path}: encode timed out after {timeout:.1f}s"
+            )
+        try:
+            results.append(future.result(timeout=remaining))
+        except FutureTimeoutError:
+            raise HTTPException(
+                status_code=500, detail=f"{path}: encode timed out after {timeout:.1f}s"
+            )
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"{path}: encode failed: {exc}")
+    return results
+
+
+# ── app factory ─────────────────────────────────────────────────────
+
+
+def create_encoder_app(
+    registry: Optional[EncoderRegistry] = None,
+    *,
+    batch_window_ms: Optional[float] = None,
+) -> FastAPI:
+    """Build the daemon's FastAPI app.
+
+    *registry* ``None`` is the production path: the lifespan starts a
+    background thread that loads the real codecs. Tests inject an
+    ``EncoderRegistry`` of fakes, which makes bring-up synchronous — every
+    line of serving, batching, probing and reporting code is shared between
+    the two paths.
+
+    *batch_window_ms* overrides ``CYMATIX_ENCODER_BATCH_WINDOW_MS`` (8 ms).
+    """
+    window_ms = client_batch_window_ms() if batch_window_ms is None else float(batch_window_ms)
+    daemon = _Daemon(registry, window_s=max(0.0, window_ms) / 1000.0)
+
+    @asynccontextmanager
+    async def lifespan(app: FastAPI):
+        daemon.start()
+        try:
+            yield
+        finally:
+            daemon.stop()
+
+    from . import __version__ as _pkg_version
+
+    app = FastAPI(title="Cymatix Encoder Daemon", version=_pkg_version, lifespan=lifespan)
+    app.state.encoder = daemon
+    app.state.ready_state = daemon.ready_state
+
+    # ---- readiness / health ----
+
+    @app.get("/ready")
+    def ready() -> JSONResponse:
+        snapshot = daemon.ready_state.snapshot()
+        if not snapshot["ready"]:
+            return JSONResponse(
+                status_code=503,
+                content={"ready": False, "state": snapshot["state"], "error": snapshot["error"]},
+            )
+        return JSONResponse(
+            status_code=200,
+            content={
+                "ready": True,
+                "spawn_token": os.environ.get(SPAWN_TOKEN_ENV),
+                "probe_ms": snapshot["probe_ms"],
+            },
+        )
+
+    @app.get("/health")
+    def health() -> Dict[str, Any]:
+        snapshot = daemon.ready_state.snapshot()
+        return {
+            "status": "ok",
+            "ready": snapshot["ready"],
+            "state": snapshot["state"],
+            "pid": os.getpid(),
+            "spawn_token": os.environ.get(SPAWN_TOKEN_ENV),
+            "capacity": daemon.ready_state.capacity,
+        }
+
+    # ---- encode endpoints (thin: validate, enqueue, join) ----
+
+    @app.post("/encode/dense")
+    def encode_dense(req: DenseRequest) -> Dict[str, Any]:
+        _require_ready(daemon)
+        meta = daemon.registry.dense_meta
+        if not req.texts:
+            return {"vectors": [], **meta}
+        futures = [daemon.batchers["dense"].submit((text, req.task)) for text in req.texts]
+        return {"vectors": _join(futures, "/encode/dense"), **meta}
+
+    @app.post("/encode/splade")
+    def encode_splade(req: SpladeRequest) -> Dict[str, Any]:
+        _require_ready(daemon)
+        if not req.texts:
+            return {"sparse": []}
+        futures = [daemon.batchers["splade"].submit((text, req.top_k)) for text in req.texts]
+        return {"sparse": _join(futures, "/encode/splade")}
+
+    @app.post("/encode/sema")
+    def encode_sema(req: SemaRequest) -> Dict[str, Any]:
+        _require_ready(daemon)
+        if not req.texts:
+            return {"vectors": []}
+        futures = [daemon.batchers["sema"].submit((text,)) for text in req.texts]
+        return {"vectors": _join(futures, "/encode/sema")}
+
+    @app.post("/encode/bundle")
+    def encode_bundle(req: BundleRequest) -> Dict[str, Any]:
+        _require_ready(daemon)
+        # Fan out to all three queues BEFORE joining any of them: the three
+        # models then run concurrently and the bundle costs max(), not sum().
+        futures = [
+            daemon.batchers["dense"].submit((req.text, req.task)),
+            daemon.batchers["splade"].submit((req.text, req.top_k)),
+            daemon.batchers["sema"].submit((req.text,)),
+        ]
+        dense, splade, sema = _join(futures, "/encode/bundle")
+        return {"dense": dense, "splade": splade, "sema": sema}
+
+    return app
+
+
+# ── entry point ─────────────────────────────────────────────────────
+
+
+def build_arg_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        prog="python -m cymatix_context.encoder_daemon",
+        description="Shared BGE-M3 + SPLADE + SEMA encoder daemon (localhost HTTP).",
+    )
+    parser.add_argument("--host", default=DEFAULT_HOST, help="bind host (default: %(default)s)")
+    parser.add_argument(
+        "--port", type=int, default=DEFAULT_PORT, help="bind port (default: %(default)s)"
+    )
+    parser.add_argument(
+        "--log-level",
+        default="info",
+        choices=["critical", "error", "warning", "info", "debug", "trace"],
+        help="uvicorn log level (default: %(default)s)",
+    )
+    return parser
+
+
+def main(argv: Optional[Sequence[str]] = None) -> None:
+    """Start the daemon. Hardware init runs FIRST — the order is load-bearing.
+
+    ``hardware.init_from_config`` is idempotent *on the cache*: if anything
+    calls ``get_hardware()`` before it, the singleton freezes with defaults
+    and the ``[hardware]`` layer pins plus batch-size overrides are silently
+    dropped. Model construction happens later, in the app's startup thread.
+    """
+    args = build_arg_parser().parse_args(argv)
+
+    from . import hardware
+    from .config import load_config
+
+    cfg = load_config()
+    hardware.init_from_config(
+        config_device=cfg.hardware.device,
+        batch_size_overrides=cfg.hardware.batch_sizes,
+        layer_devices={
+            "dense": cfg.hardware.dense_device,
+            "splade": cfg.hardware.splade_device,
+            "sema": cfg.hardware.sema_device,
+            "rerank": cfg.hardware.rerank_device,
+        },
+    )
+
+    app = create_encoder_app()
+    log.info("Cymatix encoder daemon starting on %s:%d", args.host, args.port)
+    uvicorn.run(app, host=args.host, port=args.port, log_level=args.log_level)
+
+
+if __name__ == "__main__":  # pragma: no cover - process entry point
+    main()
