@@ -20,6 +20,7 @@ ephemeral-port stdlib ``http.server.HTTPServer`` fixtures in daemon threads.
 
 from __future__ import annotations
 
+import io
 import json
 import logging
 import socket
@@ -1004,3 +1005,154 @@ def test_deterministic_profile_never_touches_the_network(tmp_path, monkeypatch):
     assert mgr._sema_codec is None
     assert mgr._get_dense_codec() is None
     mgr.ingest("deterministic profile: cache invalidation notes for the retry budget")
+
+
+# ══ 9. Batch-size-scaled timeout (Finding 1) ══════════════════════════
+#
+# A whole-batch POST (RemoteBGEM3Codec.encode_batch, RemoteSemaCodec.
+# encode_batch, splade_backend.encode_batch's remote path) sent under the
+# flat 10s default times out client-side once the batch is big enough
+# (CPU dense ~18.6 enc/s -> ~185 texts), which dumps every worker onto the
+# in-process fallback and opens the shared circuit. These tests monkeypatch
+# the transport directly (not the HTTPServer fixture) so the captured
+# `timeout=` kwarg can be asserted exactly against the scaling formula.
+
+
+def _install_capturing_transport(monkeypatch):
+    """Monkeypatch urllib.request.urlopen; returns a list of (path, timeout).
+
+    Serves minimally-shaped canned JSON for /ready and the three /encode/*
+    endpoints, sized to the request's own texts list so N-in/N-out holds.
+    """
+    from urllib.parse import urlsplit
+
+    calls: list = []
+
+    class _Resp(io.BytesIO):
+        status = 200
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *exc):
+            return False
+
+    def _fake_urlopen(req, timeout=None):
+        path = urlsplit(req.full_url).path
+        calls.append((path, timeout))
+        if path == "/ready":
+            payload = {"ready": True, "spawn_token": "tok", "probe_ms": 1.0}
+        elif path == "/encode/dense":
+            n = len(json.loads(req.data)["texts"])
+            payload = {"vectors": [[0.1, 0.2, 0.3, 0.4]] * n, "dim": 4}
+        elif path == "/encode/splade":
+            n = len(json.loads(req.data)["texts"])
+            payload = {"sparse": [{"t": 0.1}] * n}
+        elif path == "/encode/sema":
+            n = len(json.loads(req.data)["texts"])
+            payload = {"vectors": [[0.1] * 20] * n}
+        else:  # pragma: no cover - defensive
+            raise AssertionError(f"unexpected path {path}")
+        return _Resp(json.dumps(payload).encode())
+
+    monkeypatch.setattr(urllib.request, "urlopen", _fake_urlopen)
+    return calls
+
+
+def _timeouts_for(calls, path) -> list:
+    return [t for p, t in calls if p == path]
+
+
+def test_dense_encode_batch_timeout_scales_with_batch_size(monkeypatch):
+    from cymatix_context.backends import encoder_client
+
+    calls = _install_capturing_transport(monkeypatch)
+    codec = encoder_client.RemoteBGEM3Codec(dim=4, device="cpu", url="http://127.0.0.1:1")
+    texts = [f"t{i}" for i in range(37)]
+    codec.encode_batch(texts)
+
+    encode_calls = _timeouts_for(calls, "/encode/dense")
+    assert len(encode_calls) == 1
+    assert encode_calls[0] == pytest.approx(encoder_client.batch_timeout_s(37))
+    assert encode_calls[0] > encoder_client.default_timeout_s(), "must exceed the flat default"
+
+
+def test_dense_encode_single_item_keeps_flat_default_timeout(monkeypatch):
+    from cymatix_context.backends import encoder_client
+
+    calls = _install_capturing_transport(monkeypatch)
+    codec = encoder_client.RemoteBGEM3Codec(dim=4, device="cpu", url="http://127.0.0.1:1")
+    codec.encode("hello")
+
+    assert _timeouts_for(calls, "/encode/dense") == [encoder_client.default_timeout_s()]
+
+
+def test_sema_encode_batch_timeout_scales_with_batch_size(monkeypatch):
+    from cymatix_context.backends import encoder_client
+
+    calls = _install_capturing_transport(monkeypatch)
+    codec = encoder_client.RemoteSemaCodec(url="http://127.0.0.1:1")
+    texts = [f"t{i}" for i in range(40)]
+    codec.encode_batch(texts)
+
+    encode_calls = _timeouts_for(calls, "/encode/sema")
+    assert len(encode_calls) == 1
+    assert encode_calls[0] == pytest.approx(encoder_client.batch_timeout_s(40))
+    assert encode_calls[0] > encoder_client.default_timeout_s()
+
+
+def test_sema_encode_single_item_keeps_flat_default_timeout(monkeypatch):
+    from cymatix_context.backends import encoder_client
+
+    calls = _install_capturing_transport(monkeypatch)
+    codec = encoder_client.RemoteSemaCodec(url="http://127.0.0.1:1")
+    codec.encode("hello")
+
+    assert _timeouts_for(calls, "/encode/sema") == [encoder_client.default_timeout_s()]
+
+
+def test_splade_encode_batch_timeout_scales_with_batch_size(monkeypatch):
+    from cymatix_context.backends import encoder_client, splade_backend
+
+    calls = _install_capturing_transport(monkeypatch)
+    encoder_client.configure("http://127.0.0.1:1")
+    texts = [f"t{i}" for i in range(50)]
+    splade_backend.encode_batch(texts)
+
+    encode_calls = _timeouts_for(calls, "/encode/splade")
+    assert len(encode_calls) == 1
+    assert encode_calls[0] == pytest.approx(encoder_client.batch_timeout_s(50))
+    assert encode_calls[0] > encoder_client.default_timeout_s()
+
+
+def test_splade_encode_single_item_keeps_flat_default_timeout(monkeypatch):
+    from cymatix_context.backends import encoder_client, splade_backend
+
+    calls = _install_capturing_transport(monkeypatch)
+    encoder_client.configure("http://127.0.0.1:1")
+    splade_backend.encode("hello world")
+
+    assert _timeouts_for(calls, "/encode/splade") == [encoder_client.default_timeout_s()]
+
+
+def test_batch_timeout_scaling_honors_per_item_env_knob(monkeypatch):
+    from cymatix_context.backends import encoder_client
+
+    monkeypatch.setenv("CYMATIX_ENCODER_PER_ITEM_TIMEOUT_S", "1.0")
+    calls = _install_capturing_transport(monkeypatch)
+    codec = encoder_client.RemoteBGEM3Codec(dim=4, device="cpu", url="http://127.0.0.1:1")
+    codec.encode_batch(["a", "b", "c"])
+
+    encode_calls = _timeouts_for(calls, "/encode/dense")
+    assert encode_calls[0] == pytest.approx(encoder_client.default_timeout_s() + 3 * 1.0)
+
+
+def test_batch_timeout_does_not_construct_a_new_client(monkeypatch):
+    """The scaled timeout must be a per-call override, not a fresh EncoderClient."""
+    from cymatix_context.backends import encoder_client
+
+    _install_capturing_transport(monkeypatch)
+    codec = encoder_client.RemoteBGEM3Codec(dim=4, device="cpu", url="http://127.0.0.1:1")
+    client_before = codec._client
+    codec.encode_batch(["a", "b", "c", "d", "e"])
+    assert codec._client is client_before, "encode_batch must reuse the one held client"

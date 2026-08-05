@@ -71,6 +71,9 @@ _RETRY_COOLDOWN_DEFAULT = 30.0
 _BATCH_WINDOW_ENV = "CYMATIX_ENCODER_BATCH_WINDOW_MS"
 _BATCH_WINDOW_DEFAULT = 8.0  # Consumed by the daemon (Task 2); parsed here so both sides share one helper.
 
+_PER_ITEM_TIMEOUT_ENV = "CYMATIX_ENCODER_PER_ITEM_TIMEOUT_S"
+_PER_ITEM_TIMEOUT_DEFAULT = 0.25
+
 
 def _env_float(name: str, default: float) -> float:
     """Read an env-tunable float knob; malformed/unset values fall back to default."""
@@ -102,6 +105,31 @@ def retry_cooldown_s() -> float:
 def batch_window_ms() -> float:
     """CYMATIX_ENCODER_BATCH_WINDOW_MS — daemon micro-batch window (default 8.0)."""
     return _env_float(_BATCH_WINDOW_ENV, _BATCH_WINDOW_DEFAULT)
+
+
+def per_item_timeout_s() -> float:
+    """CYMATIX_ENCODER_PER_ITEM_TIMEOUT_S — added per batch item (default 0.25)."""
+    return _env_float(_PER_ITEM_TIMEOUT_ENV, _PER_ITEM_TIMEOUT_DEFAULT)
+
+
+def batch_timeout_s(n: int) -> float:
+    """Per-request timeout for a whole-batch POST of *n* texts (Finding 1).
+
+    ``default_timeout_s() + n * per_item_timeout_s()``. A whole-batch
+    ``/encode/dense`` (or splade/sema) POST sent under the flat 10s default
+    times out client-side once the batch is big enough — at CPU dense rate
+    ~18.6 enc/s (the slowest measured local backend, see the fork1-slice1
+    contract's bars) that is roughly 185 texts. A client-side timeout mid
+    batch dumps every worker onto the ~2GB in-process fallback and opens the
+    shared circuit for every seam — exactly the memory blow-up the daemon
+    exists to prevent. 0.25s/item is ~4.6x margin over that rate.
+
+    Deliberately NOT used for single-item ``encode()`` calls, which keep the
+    flat ``default_timeout_s()`` — only the three whole-batch POST paths
+    (``RemoteBGEM3Codec.encode_batch``, ``RemoteSemaCodec.encode_batch``,
+    ``splade_backend.encode_batch``'s remote branch) call this.
+    """
+    return default_timeout_s() + n * per_item_timeout_s()
 
 
 # ── URL resolution slot ────────────────────────────────────────────
@@ -316,19 +344,40 @@ class EncoderClient:
 
     # -- POST endpoints -------------------------------------------------
 
-    def encode_dense(self, texts: List[str], task: str = "passage") -> List[List[float]]:
-        """POST /encode/dense {texts, task} -> vectors (contract table)."""
-        resp = self._post_json("/encode/dense", {"texts": texts, "task": task})
+    def encode_dense(
+        self, texts: List[str], task: str = "passage", timeout_s: Optional[float] = None,
+    ) -> List[List[float]]:
+        """POST /encode/dense {texts, task} -> vectors (contract table).
+
+        ``timeout_s`` overrides this client's constructor-time timeout for
+        this one request — batch callers pass ``batch_timeout_s(len(texts))``
+        (Finding 1); omitted, it falls back to ``self.timeout_s``.
+        """
+        resp = self._post_json(
+            "/encode/dense", {"texts": texts, "task": task}, timeout_s=timeout_s,
+        )
         return self._require(resp, "vectors", "/encode/dense")
 
-    def encode_splade(self, texts: List[str], top_k: int = 128) -> List[Dict[str, float]]:
-        """POST /encode/splade {texts, top_k} -> sparse (contract table)."""
-        resp = self._post_json("/encode/splade", {"texts": texts, "top_k": top_k})
+    def encode_splade(
+        self, texts: List[str], top_k: int = 128, timeout_s: Optional[float] = None,
+    ) -> List[Dict[str, float]]:
+        """POST /encode/splade {texts, top_k} -> sparse (contract table).
+
+        See ``encode_dense`` for the ``timeout_s`` override semantics.
+        """
+        resp = self._post_json(
+            "/encode/splade", {"texts": texts, "top_k": top_k}, timeout_s=timeout_s,
+        )
         return self._require(resp, "sparse", "/encode/splade")
 
-    def encode_sema(self, texts: List[str]) -> List[List[float]]:
-        """POST /encode/sema {texts} -> vectors (contract table)."""
-        resp = self._post_json("/encode/sema", {"texts": texts})
+    def encode_sema(
+        self, texts: List[str], timeout_s: Optional[float] = None,
+    ) -> List[List[float]]:
+        """POST /encode/sema {texts} -> vectors (contract table).
+
+        See ``encode_dense`` for the ``timeout_s`` override semantics.
+        """
+        resp = self._post_json("/encode/sema", {"texts": texts}, timeout_s=timeout_s)
         return self._require(resp, "vectors", "/encode/sema")
 
     def encode_bundle(self, text: str, task: str = "query", top_k: int = 128) -> Dict[str, Any]:
@@ -371,7 +420,9 @@ class EncoderClient:
 
     # -- internals --------------------------------------------------------
 
-    def _post_json(self, path: str, payload: Dict[str, Any]) -> Dict[str, Any]:
+    def _post_json(
+        self, path: str, payload: Dict[str, Any], timeout_s: Optional[float] = None,
+    ) -> Dict[str, Any]:
         url = f"{self.url}{path}"
         data = json.dumps(payload).encode("utf-8")
         req = urllib.request.Request(
@@ -380,8 +431,9 @@ class EncoderClient:
             method="POST",
             headers={"Content-Type": "application/json"},
         )
+        t = self.timeout_s if timeout_s is None else timeout_s
         try:
-            with urllib.request.urlopen(req, timeout=self.timeout_s) as resp:
+            with urllib.request.urlopen(req, timeout=t) as resp:
                 raw = resp.read()
         except Exception as exc:
             raise EncoderClientError(f"POST {path} failed: {exc}") from exc
@@ -485,7 +537,11 @@ class RemoteBGEM3Codec:
             # Matches BGEM3Codec: no model load, and here also no network and
             # no fallback construction.
             return []
-        vectors = self._encode_remote(list(texts), task)
+        # Finding 1: a whole-batch POST under the flat default times out
+        # client-side on large batches; scale the timeout with len(texts)
+        # (batch_timeout_s) rather than the single-item flat default that
+        # encode() uses.
+        vectors = self._encode_remote(list(texts), task, timeout_s=batch_timeout_s(len(texts)))
         if vectors is not None:
             return vectors
         try:
@@ -508,14 +564,20 @@ class RemoteBGEM3Codec:
 
     # -- internals --------------------------------------------------------
 
-    def _encode_remote(self, texts: List[str], task: str) -> Optional[List[List[float]]]:
-        """Daemon-encoded vectors, or None to signal "fall back in process"."""
+    def _encode_remote(
+        self, texts: List[str], task: str, timeout_s: Optional[float] = None,
+    ) -> Optional[List[List[float]]]:
+        """Daemon-encoded vectors, or None to signal "fall back in process".
+
+        ``timeout_s`` is None from ``encode()`` (flat client default) and
+        ``batch_timeout_s(len(texts))`` from ``encode_batch()`` (Finding 1).
+        """
         if not should_attempt():
             return None
         if not ready_gate(self._client):
             return None
         try:
-            vectors = self._client.encode_dense(texts, task=task)
+            vectors = self._client.encode_dense(texts, task=task, timeout_s=timeout_s)
         except Exception as exc:  # EncoderClientError + any stray transport error
             record_failure()
             log.debug("remote dense encode failed (%s); encoding in process", exc)
@@ -639,7 +701,9 @@ class RemoteSemaCodec:
     def encode_batch(self, texts: List[str], batch_size: int = 64) -> List[List[float]]:
         if not texts:
             return []
-        vectors = self._encode_remote(list(texts))
+        # Finding 1: scale the timeout with len(texts) for the whole-batch
+        # POST — see RemoteBGEM3Codec.encode_batch for the same rationale.
+        vectors = self._encode_remote(list(texts), timeout_s=batch_timeout_s(len(texts)))
         if vectors is not None:
             return vectors
         return self._fallback().encode_batch(list(texts), batch_size=batch_size)
@@ -688,14 +752,20 @@ class RemoteSemaCodec:
 
     # -- internals --------------------------------------------------------
 
-    def _encode_remote(self, texts: List[str]) -> Optional[List[List[float]]]:
-        """Daemon-encoded ΣĒMA vectors, or None to signal "fall back in process"."""
+    def _encode_remote(
+        self, texts: List[str], timeout_s: Optional[float] = None,
+    ) -> Optional[List[List[float]]]:
+        """Daemon-encoded ΣĒMA vectors, or None to signal "fall back in process".
+
+        ``timeout_s`` is None from ``encode()`` (flat client default) and
+        ``batch_timeout_s(len(texts))`` from ``encode_batch()`` (Finding 1).
+        """
         if not should_attempt():
             return None
         if not ready_gate(self._client):
             return None
         try:
-            vectors = self._client.encode_sema(texts)
+            vectors = self._client.encode_sema(texts, timeout_s=timeout_s)
         except Exception as exc:  # EncoderClientError + any stray transport error
             record_failure()
             log.debug("remote ΣĒMA encode failed (%s); encoding in process", exc)

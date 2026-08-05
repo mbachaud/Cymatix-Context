@@ -43,7 +43,9 @@ _SPECIAL_TOKENS = frozenset({"[CLS]", "[SEP]", "[PAD]", "[UNK]"})
 _remote_client = None
 
 
-def _remote_sparse(texts: List[str], top_k: int) -> Optional[List[Dict[str, float]]]:
+def _remote_sparse(
+    texts: List[str], top_k: int, timeout_s: Optional[float] = None,
+) -> Optional[List[Dict[str, float]]]:
     """Daemon-encoded sparse vectors, or ``None`` meaning "run the local body".
 
     Deliberately reached BEFORE the ``import torch`` in ``encode`` /
@@ -55,6 +57,12 @@ def _remote_sparse(texts: List[str], top_k: int) -> Optional[List[Dict[str, floa
     failure on the shared circuit breaker and returns ``None``, so the caller
     re-encodes in process. Never skip: ``sync_splade_index`` soft-fails to
     ``log.debug``, so a "skip" would silently drop terms from the index.
+
+    ``timeout_s`` (Finding 1): ``encode()`` passes None (flat client
+    default); ``encode_batch()`` passes
+    ``encoder_client.batch_timeout_s(len(texts))`` — a whole-batch POST under
+    the flat 10s default times out client-side on large batches, which dumps
+    every worker onto the local fallback and opens the shared circuit.
     """
     url = encoder_client.active_url()
     if not url:
@@ -81,7 +89,7 @@ def _remote_sparse(texts: List[str], top_k: int) -> Optional[List[Dict[str, floa
         return None
 
     try:
-        sparse = client.encode_splade(list(texts), top_k=top_k)
+        sparse = client.encode_splade(list(texts), top_k=top_k, timeout_s=timeout_s)
     except Exception as exc:  # EncoderClientError + any stray transport error
         encoder_client.record_failure()
         log.debug("remote SPLADE encode failed (%s); encoding in process", exc)
@@ -200,7 +208,9 @@ def encode_batch(
     MPS/CPU). Pass an explicit value to override — advisory only when an
     encoder daemon serves the request, since the daemon owns micro-batching.
     """
-    remote = _remote_sparse(texts, top_k)
+    # Finding 1: scale the timeout with len(texts) for the whole-batch POST
+    # — see _remote_sparse's docstring for the rationale.
+    remote = _remote_sparse(texts, top_k, timeout_s=encoder_client.batch_timeout_s(len(texts)))
     if remote is not None:
         return remote
 
