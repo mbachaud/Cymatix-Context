@@ -1229,3 +1229,129 @@ def test_production_bring_up_encode_is_refused_until_ready(monkeypatch):
     with TestClient(app) as client:
         app.state.ready_state.mark("loading")
         assert client.post("/encode/dense", json={"texts": ["a"]}).status_code == 503
+
+
+# ── review fixes ────────────────────────────────────────────────────
+
+
+def test_shutdown_during_load_stops_batchers_without_a_self_join(monkeypatch, caplog):
+    """Shutdown racing a multi-GB load: bring-up's recovery runs ON the startup
+    thread, so it must not try to join itself (CPython raises RuntimeError,
+    which would leave all three batcher threads running and the daemon
+    reporting `failed` instead of `stopped`)."""
+    import logging
+
+    import cymatix_context.encoder_daemon as mod
+    import cymatix_context.hardware as hw
+
+    monkeypatch.setattr(hw, "init_from_config", lambda **kw: None)
+    load_gate = threading.Event()
+
+    def _slow_load(cfg):
+        assert load_gate.wait(timeout=15), "load gate never opened"
+        return make_registry()
+
+    monkeypatch.setattr(mod.EncoderRegistry, "load", staticmethod(_slow_load))
+
+    daemon = mod._Daemon(None, window_s=0.001)
+    with caplog.at_level(logging.ERROR, logger="cymatix.encoder_daemon"):
+        daemon.start()  # startup thread parks inside the load
+        daemon._shutdown.set()  # lifespan shutdown fires mid-load (what stop() sets first)
+        load_gate.set()  # ...and only then do the weights finish loading
+        daemon._startup_thread.join(timeout=20)
+
+    assert not daemon._startup_thread.is_alive(), "startup thread wedged"
+    errors = [r.getMessage() for r in caplog.records if r.levelno >= logging.ERROR]
+    assert errors == [], f"bring-up recovery raised: {errors}"
+    assert daemon.ready_state.state == "stopped"
+    assert daemon.batchers, "batchers were never installed — test staged the wrong race"
+    alive = [name for name, b in daemon.batchers.items() if b.is_alive()]
+    assert not alive, f"batcher threads survived shutdown-during-load: {alive}"
+
+
+def test_warm_rates_are_measured_outside_the_micro_batcher():
+    """Only the probe BUNDLE rides the micro-batch path.
+
+    A warm-rate probe submitted through a batcher measures
+    ``1/(window + t_encode)``, so every reported enc/s would be hard-capped at
+    ``1/window`` (125/s at the 8 ms default) — a property of the batcher, not
+    of the model, and ``bundles_per_s`` (the number the fork's bars are quoted
+    against) is computed from those rates. Asserted by call path, never by
+    elapsed time.
+    """
+    from fastapi.testclient import TestClient
+
+    from cymatix_context.encoder_daemon import WARM_PROBE_ENCODES
+
+    def _batcher_thread() -> bool:
+        return threading.current_thread().name.startswith("encoder-batcher-")
+
+    class _PathAwareDense:
+        def __init__(self):
+            self.calls = []  # (n_texts, via_batcher)
+
+        def encode_batch(self, texts, task="passage"):
+            self.calls.append((len(texts), _batcher_thread()))
+            return [hash_vec(t, 8).tolist() for t in texts]
+
+    class _PathAwareSplade:
+        def __init__(self):
+            self.calls = []
+
+        def __call__(self, text, top_k=128, **kw):
+            self.calls.append(_batcher_thread())
+            return {"sentinel": 9.99}
+
+    class _PathAwareSema:
+        def __init__(self):
+            self.calls = []
+
+        def encode(self, text):
+            self.calls.append(_batcher_thread())
+            return [0.0] * 20
+
+    dense, splade, sema = _PathAwareDense(), _PathAwareSplade(), _PathAwareSema()
+    registry = make_registry(dense=dense, splade=splade, sema=sema)
+    # Window forced high: if the rate probe went through the batcher, this is
+    # exactly the configuration that corrupts the receipt.
+    with TestClient(_app(registry, batch_window_ms=50.0)):
+        pass
+
+    assert [via for _, via in dense.calls].count(True) == 1, (
+        f"dense: only the probe bundle may ride the batcher; got {dense.calls}"
+    )
+    assert splade.calls.count(True) == 1, f"splade: {splade.calls}"
+    assert sema.calls.count(True) == 1, f"sema: {sema.calls}"
+
+    # Off-batcher work = the eager warm() touch + the WARM_PROBE_ENCODES rate probe.
+    assert splade.calls.count(False) == 1 + WARM_PROBE_ENCODES
+    assert sema.calls.count(False) == 1 + WARM_PROBE_ENCODES
+    direct_dense = [n for n, via in dense.calls if not via]
+    assert direct_dense == [1, WARM_PROBE_ENCODES], (
+        "dense warm rate must be one batched call of WARM_PROBE_ENCODES texts "
+        f"(that is how the daemon serves dense); got {direct_dense}"
+    )
+
+
+def test_warm_rates_survive_a_model_that_raises_during_the_rate_probe():
+    """A flaky model must not block the ready flip — its rate reports None."""
+    from fastapi.testclient import TestClient
+
+    class _RateBomb:
+        def __init__(self):
+            self.calls = 0
+
+        def encode(self, text):
+            # 1 = the eager warm(), 2 = the probe bundle; the rate probe
+            # (3..3+WARM_PROBE_ENCODES) is what explodes.
+            self.calls += 1
+            if self.calls > 2:
+                raise RuntimeError("sema exploded")
+            return [0.0] * 20
+
+    with TestClient(_app(make_registry(sema=_RateBomb()))) as client:
+        body = client.get("/ready").json()
+        cap = client.get("/health").json()["capacity"]
+    assert body["ready"] is True
+    assert cap["warm_encodes_per_s"]["sema"] is None
+    assert cap["bundles_per_s"] == {"interleaved": None, "pipelined": None}

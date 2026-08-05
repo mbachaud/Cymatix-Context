@@ -686,7 +686,7 @@ class _Daemon:
         started = time.monotonic()
         self._probe_bundle()
         probe_ms = (time.monotonic() - started) * 1000.0
-        rates = self._warm_rates()
+        rates = self._warm_rates(registry)
         capacity = build_capacity_report(registry, rates, self.window_s, probe_ms)
         self.ready_state.mark_ready(probe_ms, capacity)
         log.info("encoder daemon ready in %.1f ms — capacity: %s", probe_ms, capacity)
@@ -736,15 +736,37 @@ class _Daemon:
         for future in futures:
             future.result(timeout=timeout)
 
-    def _warm_rates(self) -> Dict[str, Optional[float]]:
-        """Per-model warm encode rate from WARM_PROBE_ENCODES sequential encodes."""
-        timeout = request_timeout_s()
+    def _warm_rates(self, registry: EncoderRegistry) -> Dict[str, Optional[float]]:
+        """Per-model warm encode rate — measured DIRECTLY, not via the batcher.
+
+        The probe *bundle* must ride the real micro-batch path (it is the
+        readiness gate). The warm-*rate* probe must not: a worker waits out
+        its whole window on an idle queue, so a submitted probe measures
+        ``1/(window + t_encode)`` and every reported rate would be hard-capped
+        at ``1/window`` — 125 enc/s at the 8 ms default, which silently
+        understates a GPU by ~4x. ``bundles_per_s`` is derived from these
+        numbers and is what the fork's ≥3.5 CPU / ≥30 GPU bars are read
+        against, so the rate must describe the model, not the batcher.
+
+        Each family is measured the way the daemon actually serves it: SPLADE
+        and SEMA as WARM_PROBE_ENCODES sequential single encodes, dense as one
+        ``encode_batch`` of WARM_PROBE_ENCODES texts (batching is the whole
+        reason dense is worth daemonizing).
+        """
+        probes: Dict[str, Callable[[], Any]] = {
+            "dense": lambda: registry.dense_encode_batch([PROBE_TEXT] * WARM_PROBE_ENCODES, "query"),
+            "splade": lambda: [
+                registry.splade_encode_one(PROBE_TEXT, 128) for _ in range(WARM_PROBE_ENCODES)
+            ],
+            "sema": lambda: [
+                registry.sema_encode_one(PROBE_TEXT) for _ in range(WARM_PROBE_ENCODES)
+            ],
+        }
         rates: Dict[str, Optional[float]] = {}
         for family in FAMILIES:
             try:
                 started = time.monotonic()
-                for _ in range(WARM_PROBE_ENCODES):
-                    self.batchers[family].submit(self._payload(family)).result(timeout=timeout)
+                probes[family]()
                 elapsed = max(time.monotonic() - started, 1e-6)
                 rates[family] = WARM_PROBE_ENCODES / elapsed
             except Exception as exc:
@@ -757,7 +779,15 @@ class _Daemon:
     def stop(self) -> None:
         self._shutdown.set()
         thread = self._startup_thread
-        if thread is not None and thread.is_alive():
+        # `is not current_thread()`: bring_up() calls stop() on itself when a
+        # shutdown lands mid-load, and CPython raises RuntimeError if a thread
+        # joins itself — which would abort the recovery and leave the batcher
+        # threads running.
+        if (
+            thread is not None
+            and thread is not threading.current_thread()
+            and thread.is_alive()
+        ):
             thread.join(timeout=5.0)
         for batcher in list(self.batchers.values()):
             batcher.stop()
