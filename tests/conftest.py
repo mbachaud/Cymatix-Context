@@ -177,6 +177,36 @@ def _stub_dense_codec(request, monkeypatch):
     )
 
 
+@pytest.fixture(autouse=True)
+def _clean_encoder_url_env(request, monkeypatch):
+    """Autouse: strip CYMATIX_ENCODER_URL for every non-``live`` test.
+
+    A dev/receipts shell that exports CYMATIX_ENCODER_URL (to point at a
+    running encoder daemon, per docs/design/2026-08-05-fork1-slice1-contract.md)
+    silently flips ``bgem3_codec.get_shared_codec`` and the splade/sema seams
+    over to the Remote* substitutes for every test collected in the same
+    process — e.g. ``test_bgem3_singleton.py::test_shared_codec_returns_same_
+    instance_for_same_key`` asserts ``isinstance(codec, BGEM3Codec)``, which
+    fails once the env is set, even though the test itself never mentions the
+    encoder daemon.
+
+    Env removal ONLY, deliberately: the encoder-daemon test files
+    (tests/test_encoder_client.py, tests/test_remote_codecs.py,
+    tests/test_encoder_daemon.py) already own their own module-state resets
+    via ``encoder_client.reset_for_test()`` inside their own autouse
+    fixtures — calling that globally here too would be redundant and risks
+    masking their coverage of that reset path, so this fixture never touches
+    anything but the env var.
+
+    ``live``-marked tests are skipped entirely, same as ``_stub_dense_codec``
+    above — they exercise the real stack, including a real daemon URL when
+    one is intentionally configured.
+    """
+    if request.node.get_closest_marker("live") is not None:
+        return
+    monkeypatch.delenv("CYMATIX_ENCODER_URL", raising=False)
+
+
 @pytest.fixture
 def poem_text():
     return (FIXTURES_DIR / "poem.txt").read_text(encoding="utf-8")
