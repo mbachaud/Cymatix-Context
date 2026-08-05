@@ -231,8 +231,38 @@ def _model_load_ms_snapshot() -> dict:
         return {}
 
 
-# Thread pool for running sync compressor calls from async context
-_executor = ThreadPoolExecutor(max_workers=2, thread_name_prefix="cymatix-ribosome")
+# Thread pool for running sync pipeline/compressor calls from async
+# context. W3.2 (gate G1): this pool IS the server's concurrency ceiling —
+# qps saturated at 1.46 from c=2..16 with the old hardcoded 2 workers.
+# Lazy + env-sized so the c-curve receipt can sweep sizes; the default
+# stays 2 until a receipt picks the knee (benchmarks/dogfood/erb docs).
+_executor = None
+_executor_init_lock = threading.Lock()
+
+
+def _resolve_executor_workers() -> int:
+    raw = os.environ.get("CYMATIX_EXECUTOR_WORKERS", "").strip()
+    if raw:
+        try:
+            return max(1, int(raw))
+        except ValueError:
+            log.warning(
+                "CYMATIX_EXECUTOR_WORKERS=%r is not an int; using default 2",
+                raw,
+            )
+    return 2
+
+
+def _get_executor() -> ThreadPoolExecutor:
+    global _executor
+    if _executor is None:
+        with _executor_init_lock:
+            if _executor is None:
+                _executor = ThreadPoolExecutor(
+                    max_workers=_resolve_executor_workers(),
+                    thread_name_prefix="cymatix-ribosome",
+                )
+    return _executor
 
 
 # -- Compressor decoder prompt (3k fixed, tells the big model how to read context) --
@@ -1529,7 +1559,7 @@ class CymatixContextManager:
     async def ingest_async(self, content: str, content_type: str = "text", metadata: Optional[Dict] = None) -> List[str]:
         """Async wrapper for ingest -- runs compressor calls in thread pool."""
         loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(_executor, self.ingest, content, content_type, metadata)
+        return await loop.run_in_executor(_get_executor(), self.ingest, content, content_type, metadata)
 
     # -- Build context: the main per-turn operation --------------------
 
@@ -2359,7 +2389,7 @@ class CymatixContextManager:
         """Async wrapper -- runs the sync pipeline in thread pool."""
         loop = asyncio.get_event_loop()
         return await loop.run_in_executor(
-            _executor,
+            _get_executor(),
             self.build_context,
             query,
             downstream_model,
@@ -2526,7 +2556,7 @@ class CymatixContextManager:
     async def learn_async(self, query: str, response: str) -> Optional[str]:
         """Async wrapper for learn."""
         loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(_executor, self.learn, query, response)
+        return await loop.run_in_executor(_get_executor(), self.learn, query, response)
 
     # -- Session consolidation (Synaptic Plasticity) ---------------------
 
@@ -2621,7 +2651,7 @@ class CymatixContextManager:
     async def consolidate_session_async(self) -> List[str]:
         """Async wrapper for consolidate_session."""
         loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(_executor, self.consolidate_session)
+        return await loop.run_in_executor(_get_executor(), self.consolidate_session)
 
     # -- Stats ---------------------------------------------------------
 
