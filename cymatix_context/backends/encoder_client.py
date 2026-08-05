@@ -69,7 +69,13 @@ _RETRY_COOLDOWN_ENV = "CYMATIX_ENCODER_RETRY_COOLDOWN_S"
 _RETRY_COOLDOWN_DEFAULT = 30.0
 
 _BATCH_WINDOW_ENV = "CYMATIX_ENCODER_BATCH_WINDOW_MS"
-_BATCH_WINDOW_DEFAULT = 8.0  # Consumed by the daemon (Task 2); parsed here so both sides share one helper.
+# 2026-08-05 dogfood A/B receipts: 8ms cost +4pp on the c=1 latency gate
+# (three sequential seam RPCs pay the idle window each) with ZERO batching
+# benefit at any measured concurrency — coalescing under load comes from
+# queue backpressure while the worker encodes, not from the idle window.
+# 2ms: c=1 median ratio 1.117 (vs 1.154-1.157 at 8ms, gate 1.15), c=2 qps
+# +8.6%, c=4 qps +12.7% — strictly better on every axis measured.
+_BATCH_WINDOW_DEFAULT = 2.0  # Consumed by the daemon (Task 2); parsed here so both sides share one helper.
 
 _PER_ITEM_TIMEOUT_ENV = "CYMATIX_ENCODER_PER_ITEM_TIMEOUT_S"
 _PER_ITEM_TIMEOUT_DEFAULT = 0.25
@@ -103,7 +109,12 @@ def retry_cooldown_s() -> float:
 
 
 def batch_window_ms() -> float:
-    """CYMATIX_ENCODER_BATCH_WINDOW_MS — daemon micro-batch window (default 8.0)."""
+    """CYMATIX_ENCODER_BATCH_WINDOW_MS — daemon micro-batch window (default 2.0).
+
+    2026-08-05 dogfood A/B receipt: 8ms cost +4pp on the c=1 latency gate
+    with zero batching benefit at any concurrency; 2ms is strictly better
+    on every measured axis (c=1 latency, c=2/c=4 qps).
+    """
     return _env_float(_BATCH_WINDOW_ENV, _BATCH_WINDOW_DEFAULT)
 
 

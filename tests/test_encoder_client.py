@@ -281,9 +281,12 @@ def test_retry_cooldown_s_default_is_30():
     assert encoder_client.retry_cooldown_s() == 30.0
 
 
-def test_batch_window_ms_default_is_8():
+def test_batch_window_ms_default_is_2():
+    """2026-08-05 dogfood A/B receipt: 8ms cost +4pp on the c=1 latency gate
+    with zero batching benefit at any concurrency; 2ms measured strictly
+    better on every axis (c=1 latency, c=2/c=4 qps)."""
     from cymatix_context.backends import encoder_client
-    assert encoder_client.batch_window_ms() == 8.0
+    assert encoder_client.batch_window_ms() == 2.0
 
 
 def test_per_item_timeout_s_default_is_point25():
@@ -310,7 +313,7 @@ def test_batch_timeout_s_is_default_plus_n_times_per_item(monkeypatch):
         ("CYMATIX_ENCODER_TIMEOUT_S", "default_timeout_s", 10.0),
         ("CYMATIX_ENCODER_READY_TIMEOUT_S", "ready_timeout_s", 15.0),
         ("CYMATIX_ENCODER_RETRY_COOLDOWN_S", "retry_cooldown_s", 30.0),
-        ("CYMATIX_ENCODER_BATCH_WINDOW_MS", "batch_window_ms", 8.0),
+        ("CYMATIX_ENCODER_BATCH_WINDOW_MS", "batch_window_ms", 2.0),
         ("CYMATIX_ENCODER_PER_ITEM_TIMEOUT_S", "per_item_timeout_s", 0.25),
     ],
 )

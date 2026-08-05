@@ -17,8 +17,11 @@ Three pieces:
    the non-live suite against it) never touches a model.
 2. The micro-batcher — one queue + one worker thread per model family.
    Requests enqueue ``(payload, Future)``; a worker drains up to
-   ``max_batch`` items within a window (default 8 ms,
-   ``CYMATIX_ENCODER_BATCH_WINDOW_MS``). **Dense** issues one
+   ``max_batch`` items within a window (default 2 ms,
+   ``CYMATIX_ENCODER_BATCH_WINDOW_MS`` — 2026-08-05 dogfood A/B receipt: 8ms
+   cost +4pp on the c=1 latency gate with no batching benefit at any
+   concurrency; coalescing under load comes from queue backpressure while
+   the worker encodes, not from the idle window). **Dense** issues one
    ``encode_batch`` call per drained batch (the only place batching is
    byte-sanctioned); **SPLADE and SEMA** drain batches but execute a
    sequential per-item loop, because ``encode_batch``'s ``padding=True``
@@ -743,8 +746,8 @@ class _Daemon:
         readiness gate). The warm-*rate* probe must not: a worker waits out
         its whole window on an idle queue, so a submitted probe measures
         ``1/(window + t_encode)`` and every reported rate would be hard-capped
-        at ``1/window`` — 125 enc/s at the 8 ms default, which silently
-        understates a GPU by ~4x. ``bundles_per_s`` is derived from these
+        at ``1/window`` — 500 enc/s at the 2 ms default, which would still
+        silently understate a fast GPU. ``bundles_per_s`` is derived from these
         numbers and is what the fork's ≥3.5 CPU / ≥30 GPU bars are read
         against, so the rate must describe the model, not the batcher.
 
@@ -865,7 +868,7 @@ def create_encoder_app(
     line of serving, batching, probing and reporting code is shared between
     the two paths.
 
-    *batch_window_ms* overrides ``CYMATIX_ENCODER_BATCH_WINDOW_MS`` (8 ms).
+    *batch_window_ms* overrides ``CYMATIX_ENCODER_BATCH_WINDOW_MS`` (2 ms).
     """
     # This process IS the daemon: force every encoder seam back in-process
     # before a registry can load. Otherwise an operator who exports

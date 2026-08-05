@@ -523,7 +523,7 @@ def _app(registry=None, **kw):
 
     The window defaults to 1 ms here purely to keep the suite fast — the
     worker waits out its window on every drained batch, and startup runs a
-    probe bundle plus 15 warm-rate encodes. The real 8 ms default and its env
+    probe bundle plus 15 warm-rate encodes. The real 2 ms default and its env
     knob are asserted explicitly below.
     """
     from cymatix_context.encoder_daemon import create_encoder_app
@@ -537,7 +537,7 @@ def test_batch_window_defaults_to_the_client_env_knob():
     from cymatix_context.encoder_daemon import create_encoder_app
 
     with TestClient(create_encoder_app(make_registry())) as client:
-        assert client.get("/health").json()["capacity"]["batch_window_ms"] == 8.0
+        assert client.get("/health").json()["capacity"]["batch_window_ms"] == 2.0
 
 
 def test_batch_window_honors_cymatix_encoder_batch_window_ms(monkeypatch):

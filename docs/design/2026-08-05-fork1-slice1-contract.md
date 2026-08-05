@@ -56,7 +56,11 @@ against. Deviations require editing this doc first.
 
 - One queue + worker thread per model family. Requests enqueue
   `(payload, Future)`; worker drains up to `max_batch` within a window.
-- Window default **8 ms** (`CYMATIX_ENCODER_BATCH_WINDOW_MS`, 5-10 sane).
+- Window default **2 ms** (`CYMATIX_ENCODER_BATCH_WINDOW_MS`). Lowered from
+  the original 8 ms sane-range guess per 2026-08-05 dogfood A/B receipts: 8ms
+  cost +4pp on the c=1 latency gate with no batching benefit at any measured
+  concurrency, because coalescing under load comes from queue backpressure
+  while the worker encodes, not from the idle window.
 - `max_batch`: `[hardware] batch_sizes = { dense = N, ... }` override first,
   then `recommended_batch_size(model)`, then daemon defaults dense=16,
   splade=8, sema=64 (the `_BATCH_TABLE` has no dense/sema rows — floor 1 is
