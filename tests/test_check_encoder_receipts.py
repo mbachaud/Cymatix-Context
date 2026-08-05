@@ -98,45 +98,86 @@ def gates_named(result, name):
 
 
 # ── encoder_capacity ─────────────────────────────────────────────────
+#
+# Calibrated from the first real receipts: CPU 4.26/5.60/6.86/7.02
+# bundles/s at c=1/2/4/8 (bar 3.5), GPU 19.46/31.34/45.09/52.70 (bar 30).
+# The kickoff bar is discounted from measured CONCURRENT-BATCHED ceilings
+# (9.3/62 bundles/s); a single synchronous client is latency-bound by
+# construction (measured GPU c=1: 19.5 bundles/s at 47ms/bundle) and cannot
+# express that ceiling, so the binding gate is the SATURATED (max-across-
+# levels) throughput, not every level individually — per-level entries are
+# informational only.
 
 
 def test_encoder_capacity_passes_default_bar(tmp_path):
-    fresh = make_capacity_receipt([(1, 4.0, 0), (2, 5.0, 0), (4, 6.0, 0), (8, 7.0, 0)])
+    fresh = make_capacity_receipt([(1, 4.26, 0), (2, 5.60, 0), (4, 6.86, 0), (8, 7.02, 0)])
     rc, result = run_checker(tmp_path, "encoder_capacity", fresh)
     assert rc == 0
     assert result["verdict"] == "PASS"
-    assert len(gates_named(result, "bundles_per_s_floor")) == 4
+    level_gates = gates_named(result, "level_c1_bundles_per_s") \
+        + gates_named(result, "level_c2_bundles_per_s") \
+        + gates_named(result, "level_c4_bundles_per_s") \
+        + gates_named(result, "level_c8_bundles_per_s")
+    assert len(level_gates) == 4
+    assert all(g["informational"] is True for g in level_gates)
     assert len(gates_named(result, "errors_zero")) == 4
-    assert all(g["pass"] for g in result["gates"])
+    cap = gates_named(result, "capacity_bundles_per_s")
+    assert len(cap) == 1
+    assert cap[0]["value"] == 7.02  # the saturated (c=8) reading
+    assert cap[0]["pass"] is True
+    assert not cap[0].get("informational")
+    assert all(g["pass"] for g in result["gates"])  # every level clears the bar here too
 
 
-def test_encoder_capacity_below_bar_fails(tmp_path):
-    fresh = make_capacity_receipt([(1, 4.0, 0), (2, 3.0, 0)])  # n2 below 3.5 default
+def test_encoder_capacity_c1_below_bar_but_saturated_above_passes(tmp_path):
+    """Case (a): c=1 is latency-bound below the bar; c=8 saturates above it."""
+    fresh = make_capacity_receipt([(1, 2.0, 0), (2, 4.26, 0), (4, 6.86, 0), (8, 7.02, 0)])
+    rc, result = run_checker(tmp_path, "encoder_capacity", fresh)
+    assert rc == 0
+    assert result["verdict"] == "PASS"
+
+    c1 = gates_named(result, "level_c1_bundles_per_s")
+    assert c1 and c1[0]["pass"] is False and c1[0]["informational"] is True
+
+    cap = gates_named(result, "capacity_bundles_per_s")[0]
+    assert cap["value"] == 7.02
+    assert cap["pass"] is True
+
+
+def test_encoder_capacity_saturated_max_below_bar_fails(tmp_path):
+    """Case (b): every level (including the saturated one) is below the bar."""
+    fresh = make_capacity_receipt([(1, 1.0, 0), (2, 1.5, 0), (4, 2.0, 0), (8, 2.5, 0)])
     rc, result = run_checker(tmp_path, "encoder_capacity", fresh)
     assert rc == 1
     assert result["verdict"] == "FAIL"
-    bad = [g for g in gates_named(result, "bundles_per_s_floor") if g["level_or_arm"] == "n2"]
-    assert bad and bad[0]["pass"] is False
-    good = [g for g in gates_named(result, "bundles_per_s_floor") if g["level_or_arm"] == "n1"]
-    assert good and good[0]["pass"] is True
+    cap = gates_named(result, "capacity_bundles_per_s")[0]
+    assert cap["value"] == 2.5
+    assert cap["pass"] is False
 
 
-def test_encoder_capacity_errors_fail(tmp_path):
-    fresh = make_capacity_receipt([(1, 10.0, 0), (2, 10.0, 2)])
+def test_encoder_capacity_errors_fail_even_when_saturated_above_bar(tmp_path):
+    """Case (c): errors_zero is binding regardless of throughput."""
+    fresh = make_capacity_receipt([(1, 4.26, 0), (2, 5.60, 0), (4, 6.86, 0), (8, 7.02, 2)])
     rc, result = run_checker(tmp_path, "encoder_capacity", fresh)
     assert rc == 1
-    bad = [g for g in gates_named(result, "errors_zero") if g["level_or_arm"] == "n2"]
+    assert result["verdict"] == "FAIL"
+    cap = gates_named(result, "capacity_bundles_per_s")[0]
+    assert cap["pass"] is True  # throughput itself is fine
+    bad = [g for g in gates_named(result, "errors_zero") if g["level_or_arm"] == "n8"]
     assert bad and bad[0]["pass"] is False
 
 
 def test_encoder_capacity_gpu_bar_via_cli(tmp_path):
-    fresh = make_capacity_receipt([(1, 40.0, 0), (2, 35.0, 0)])
+    fresh = make_capacity_receipt([(1, 19.46, 0), (2, 31.34, 0), (4, 45.09, 0), (8, 52.70, 0)])
     rc, result = run_checker(tmp_path, "encoder_capacity", fresh,
                              extra_args=["--bar-bundles-per-s", "30"])
     assert rc == 0
     assert result["verdict"] == "PASS"
+    # c=1 (19.46) is latency-bound below a 30 GPU bar — informational only.
+    c1 = gates_named(result, "level_c1_bundles_per_s")
+    assert c1 and c1[0]["pass"] is False and c1[0]["informational"] is True
 
-    fresh_low = make_capacity_receipt([(1, 20.0, 0)])  # below a 30 GPU bar
+    fresh_low = make_capacity_receipt([(1, 20.0, 0)])  # only level, below a 30 GPU bar
     rc2, result2 = run_checker(tmp_path, "encoder_capacity", fresh_low,
                                out_name="verdict2.json",
                                extra_args=["--bar-bundles-per-s", "30"])
