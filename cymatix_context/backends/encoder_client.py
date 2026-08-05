@@ -109,10 +109,14 @@ def configure(url: str) -> None:
     """Set the manager-provided URL slot (from cfg.encoder_daemon.url).
 
     Task 3 wires the caller: CymatixContextManager.__init__ calls this once
-    at construction with ``config.encoder_daemon.url``.
+    at construction with ``config.encoder_daemon.url``. Stripped so a
+    whitespace-only value (e.g. from a misconfigured env/toml round-trip)
+    is normalized to "" here too — active_url()'s truthiness check on the
+    configured slot must see "" for the "off" case, not a truthy
+    whitespace string that would flip the daemon on unintentionally.
     """
     global _configured_url
-    _configured_url = url or ""
+    _configured_url = (url or "").strip()
 
 
 def configured_url() -> str:
@@ -125,7 +129,8 @@ def active_url() -> str:
 
     Truthiness check mirrors the config-layer CYMATIX_SERVER_UPSTREAM
     convention: an empty or whitespace-only CYMATIX_ENCODER_URL counts as
-    unset, not an override to "". The env value is stripped.
+    unset, not an override to "". The env value is stripped here; the
+    configured slot is already stripped by configure().
     """
     env_url = os.environ.get("CYMATIX_ENCODER_URL", "").strip()
     if env_url:

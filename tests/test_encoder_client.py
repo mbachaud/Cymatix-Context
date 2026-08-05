@@ -233,6 +233,28 @@ def test_active_url_whitespace_only_env_counts_as_unset(monkeypatch):
     assert encoder_client.active_url() == "http://configured:1"
 
 
+def test_configure_whitespace_only_url_normalizes_to_off():
+    """Regression: configure("   ") must leave the daemon OFF, not ON.
+
+    Once Task 3 wires configure(cfg.encoder_daemon.url), a whitespace-only
+    value reaching this slot (e.g. a stray env/toml round-trip) must not
+    make active_url() return a truthy garbage string — that would flip
+    every RemoteCodec seam on with no real daemon behind it, violating
+    "off means untouched".
+    """
+    from cymatix_context.backends import encoder_client
+    encoder_client.configure("   ")
+    assert encoder_client.configured_url() == ""
+    assert encoder_client.active_url() == ""
+
+
+def test_configure_strips_surrounding_whitespace_from_real_url():
+    from cymatix_context.backends import encoder_client
+    encoder_client.configure("  http://configured:1  ")
+    assert encoder_client.configured_url() == "http://configured:1"
+    assert encoder_client.active_url() == "http://configured:1"
+
+
 def test_reset_for_test_clears_configured_slot():
     from cymatix_context.backends import encoder_client
     encoder_client.configure("http://x:1")
