@@ -1,0 +1,33 @@
+probing 12: lost=['erb_013', 'erb_021', 'erb_031', 'erb_038'] always_miss=['erb_001', 'erb_003', 'erb_008', 'erb_009', 'erb_015', 'erb_020'] controls=['erb_000', 'erb_010']
+
+===== bed 100k =====
+Loading weights:   0%|          | 0/204 [00:00<?, ?it/s]Loading weights: 100%|##########| 204/204 [00:00<00:00, 20493.34it/s]
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]Loading weights: 100%|##########| 391/391 [00:00<00:00, 25103.29it/s]
+erb_013 (15.6s, pool=17130): d3e9cdc3=pool_rank_2 tiers=['authority', 'dense', 'fts5', 'lex_anchor', 'splade', 'tag_exact', 'tag_prefix']; 580b5522=delivered@1
+erb_021 (1.9s, pool=16439): 70ce6780=delivered@10; bdaea76d=pool_rank_27 tiers=['authority', 'fts5', 'lex_anchor', 'pki', 'splade', 'tag_exact', 'tag_prefix']
+erb_031 (2.8s, pool=27881): 7b6b6daa=delivered@6; f44d1431=pool_rank_4 tiers=['authority', 'fts5', 'lex_anchor', 'splade', 'tag_exact', 'tag_prefix']
+erb_038 (2.2s, pool=19169): 612c405e=pool_rank_4 tiers=['authority', 'dense', 'fts5', 'lex_anchor', 'pki', 'splade', 'tag_exact', 'tag_prefix']; d0fe3cc7=delivered@5
+erb_001 (2.0s, pool=19247): 98d01c5f=pool_rank_747 tiers=['authority', 'fts5', 'lex_anchor', 'splade', 'tag_exact', 'tag_prefix']; 92592770=pool_rank_4288 tiers=['authority', 'tag_prefix']
+erb_003 (2.4s, pool=20400): ac847d25=pool_rank_1236 tiers=['authority', 'fts5', 'lex_anchor', 'splade', 'tag_exact', 'tag_prefix']; dc240a4e=pool_rank_1234 tiers=['authority', 'fts5', 'lex_anchor', 'pki', 'splade', 'tag_exact', 'tag_prefix']
+erb_008 (4.0s, pool=59476): 9b7836a6=pool_rank_691 tiers=['authority', 'fts5', 'lex_anchor', 'pki', 'splade', 'tag_exact', 'tag_prefix']; eaf9e80f=pool_rank_672 tiers=['authority', 'dense', 'fts5', 'lex_anchor', 'splade', 'tag_exact', 'tag_prefix']
+erb_009 (2.1s, pool=17743): 13be4603=pool_rank_909 tiers=['authority', 'lex_anchor', 'splade', 'tag_exact', 'tag_prefix']; da5c5d80=pool_rank_883 tiers=['authority', 'dense', 'fts5', 'lex_anchor', 'tag_exact', 'tag_prefix']
+erb_015 (1.9s, pool=13574): a883285f=pool_rank_604 tiers=['authority', 'dense', 'fts5', 'lex_anchor', 'pki', 'splade', 'tag_exact', 'tag_prefix']; 1e4fe3c0=pool_rank_3781 tiers=['authority', 'lex_anchor', 'tag_exact', 'tag_prefix']
+erb_020 (3.9s, pool=62908): 1bf0c693=pool_rank_6 tiers=['authority', 'fts5', 'lex_anchor', 'pki', 'tag_exact', 'tag_prefix']; 7a071348=pool_rank_2 tiers=['authority', 'fts5', 'lex_anchor', 'pki', 'splade', 'tag_exact', 'tag_prefix']
+erb_000 (1.9s, pool=14298): 53511b62=delivered@2; 9dfbfaf6=pool_rank_3 tiers=['authority', 'dense', 'fts5', 'lex_anchor', 'pki', 'splade', 'tag_exact', 'tag_prefix']
+erb_010 (1.7s, pool=9807): eb09db15=delivered@2; 81301ad1=delivered@1
+
+===== bed 829k =====
+erb_013 (61.1s, pool=115405): d3e9cdc3=pool_rank_20 tiers=['authority', 'fts5', 'lex_anchor', 'splade', 'tag_exact', 'tag_prefix']; 580b5522=delivered@3
+erb_021 (14.3s, pool=94671): 70ce6780=pool_rank_50 tiers=['authority', 'fts5', 'lex_anchor', 'pki', 'tag_exact', 'tag_prefix']; bdaea76d=pool_rank_66 tiers=['authority', 'fts5', 'lex_anchor', 'pki', 'tag_exact', 'tag_prefix']
+erb_031 (29.3s, pool=218235): 7b6b6daa=pool_rank_3 tiers=['authority', 'dense', 'fts5', 'lex_anchor', 'pki', 'tag_exact', 'tag_prefix']; f44d1431=pool_rank_407 tiers=['authority', 'fts5', 'lex_anchor', 'tag_exact', 'tag_prefix']
+erb_038 (27.3s, pool=203214): 612c405e=pool_rank_17 tiers=['authority', 'fts5', 'lex_anchor', 'pki', 'tag_exact', 'tag_prefix']; d0fe3cc7=pool_rank_4 tiers=['authority', 'fts5', 'lex_anchor', 'pki', 'splade', 'tag_exact', 'tag_prefix']
+erb_001 (21.3s, pool=149165): 98d01c5f=pool_rank_6333 tiers=['authority', 'fts5', 'lex_anchor', 'tag_exact', 'tag_prefix']; 92592770=pool_rank_46003 tiers=['authority', 'tag_prefix']
+erb_003 (24.6s, pool=170452): ac847d25=pool_rank_10661 tiers=['authority', 'fts5', 'lex_anchor', 'tag_exact', 'tag_prefix']; dc240a4e=pool_rank_10758 tiers=['authority', 'fts5', 'lex_anchor', 'pki', 'splade', 'tag_exact', 'tag_prefix']
+erb_008 (31.7s, pool=244133): 9b7836a6=pool_rank_5156 tiers=['authority', 'fts5', 'lex_anchor', 'pki', 'tag_exact', 'tag_prefix']; eaf9e80f=pool_rank_5161 tiers=['authority', 'dense', 'fts5', 'lex_anchor', 'tag_exact', 'tag_prefix']
+erb_009 (19.5s, pool=124876): 13be4603=pool_rank_8170 tiers=['authority', 'lex_anchor', 'tag_exact', 'tag_prefix']; da5c5d80=pool_rank_5790 tiers=['authority', 'fts5', 'lex_anchor', 'tag_exact', 'tag_prefix']
+erb_015 (16.9s, pool=101231): a883285f=pool_rank_30762 tiers=['authority', 'dense', 'fts5', 'lex_anchor', 'tag_exact', 'tag_prefix']; 1e4fe3c0=pool_rank_55471 tiers=['authority', 'lex_anchor', 'tag_exact', 'tag_prefix']
+erb_020 (30.7s, pool=294479): 1bf0c693=pool_rank_5 tiers=['authority', 'fts5', 'lex_anchor', 'pki', 'tag_exact', 'tag_prefix']; 7a071348=pool_rank_4 tiers=['authority', 'fts5', 'lex_anchor', 'pki', 'tag_exact', 'tag_prefix']
+erb_000 (16.8s, pool=100328): 53511b62=delivered@2; 9dfbfaf6=pool_rank_12 tiers=['authority', 'dense', 'fts5', 'lex_anchor', 'pki', 'tag_exact', 'tag_prefix']
+erb_010 (11.6s, pool=48140): eb09db15=delivered@2; 81301ad1=delivered@1
+
+DONE
