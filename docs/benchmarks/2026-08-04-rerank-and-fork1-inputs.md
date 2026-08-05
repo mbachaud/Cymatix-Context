@@ -71,6 +71,35 @@ the CUDA build and letting `[hardware]` auto-detect would put BGE-M3 on
 the idle RTX GPU — typically 5-20× encode throughput, no architecture
 change. Worth an A/B before any daemon work.
 
+### CUDA A/B (same day, RTX 3080 Ti, isolated venv torch 2.11+cu128)
+
+Receipt `benchmarks/dogfood/erb/receipts/encoder_throughput_cuda.txt`
+(caveat: torch 2.13-cpu vs 2.11-cu128 — version and device move
+together; effect sizes dwarf version drift):
+
+| encoder | CPU best | GPU | speedup |
+|---|---|---|---|
+| BGE-M3 single | 8.2/s | 47.0/s | 5.7× |
+| BGE-M3 batched bs=16 | 18.6/s | **421.6/s** | **22.7×** |
+| SPLADE | 21.2/s | 135.5/s | 6.4× |
+| SEMA/MiniLM | 153/s | 155/s | ~1× (overhead-bound) |
+| cross-encoder, 50 pairs | 1,799ms | **219ms** | 8.2× |
+
+GPU bundle rate ~62/s (vs 9.3 CPU); bottleneck moves to SPLADE; worker
+ceilings ~99 (dogfood-class) to ~3,537 (829k-class) — the encoder
+daemon can never be Fork 1's wall on this box. The top-50 rerank drops
+to 0.22s/query (+0.8% at 829k for +6.7pp recall). VRAM footprint ~3GB
+of 12GB.
+
+**Per-layer device knobs landed** (`[hardware] dense_device /
+splade_device / sema_device / rerank_device`, default `"auto"` =
+inherit global; explicit pins probe with cpu fallback). This also fixed
+a real bug: `_get_dense_codec` never passed a device, so BGE-M3 was
+silently CPU-pinned even under a CUDA torch with `[hardware]
+device="cuda"`. Operating profiles: **fast-bench** = CUDA torch +
+defaults (auto → GPU); **cheap-operate** = CPU wheel, or CUDA wheel with
+per-layer `*_device = "cpu"` pins.
+
 ## 3. Fork 1 design review (subagent, full report in PR discussion)
 
 Verified seams (minor drift): `open_read_source` sharding.py:563; write

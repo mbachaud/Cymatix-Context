@@ -52,7 +52,8 @@ def _ensure_loaded(model_name: str = "naver/splade-cocondenser-ensembledistil"):
 
     from cymatix_context.hardware import get_hardware
 
-    _device = torch.device(get_hardware().device)
+    from cymatix_context.hardware import resolve_layer_device
+    _device = torch.device(resolve_layer_device("splade"))
     _tokenizer = AutoTokenizer.from_pretrained(model_name)
     _model = AutoModelForMaskedLM.from_pretrained(model_name).to(_device)
     _model.eval()

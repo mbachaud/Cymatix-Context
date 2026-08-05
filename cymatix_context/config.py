@@ -1008,6 +1008,15 @@ class Hardware:
     used by the picker itself.
     """
     device: str = "auto"
+    # 2026-08-04 per-layer device pins (CUDA A/B enablement): each encoder
+    # layer can be pinned independently — GPU for fast benchmarking, CPU for
+    # the cheaper-to-operate profile. "auto" inherits the global `device`
+    # resolution. rerank_device is consumed when the pre-cap cross-encoder
+    # rerank lands.
+    dense_device: str = "auto"
+    splade_device: str = "auto"
+    sema_device: str = "auto"
+    rerank_device: str = "auto"
     batch_sizes: Dict[str, int] = field(default_factory=dict)
     low_vram_threshold_gb: float = 4.0
     # #219 slice 2: when true (default), heavy encoders (ΣĒMA MiniLM,
@@ -1656,6 +1665,10 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
 
     cfg.hardware = Hardware(
         device=str(hardware_device),
+        dense_device=str(hw.get("dense_device", "auto")),
+        splade_device=str(hw.get("splade_device", "auto")),
+        sema_device=str(hw.get("sema_device", "auto")),
+        rerank_device=str(hw.get("rerank_device", "auto")),
         batch_sizes=bs,
         low_vram_threshold_gb=float(hw.get("low_vram_threshold_gb", 4.0)),
         lazy_encoders=bool(hw.get("lazy_encoders", True)),

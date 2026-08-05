@@ -215,7 +215,7 @@ def test_get_dense_codec_passes_configured_model_name(monkeypatch):
 
     captured = {}
 
-    def fake_get_shared_codec(dim=1024, model_name="BAAI/bge-m3", share=True):
+    def fake_get_shared_codec(dim=1024, model_name="BAAI/bge-m3", share=True, **kw):
         captured["dim"] = dim
         captured["model_name"] = model_name
         return object()

@@ -131,6 +131,10 @@ from `hardware.init_from_config()` at server startup.
 | Key | Type | Default | Description |
 |---|---|---|---|
 | `device` | `str` | `"auto"` |  |
+| `dense_device` | `str` | `"auto"` | 2026-08-04 per-layer device pins (CUDA A/B enablement): each encoder layer can be pinned independently — GPU for fast benchmarking, CPU for the cheaper-to-operate profile. "auto" inherits the global `device` resolution. rerank_device is consumed when the pre-cap cross-encoder rerank lands. |
+| `splade_device` | `str` | `"auto"` |  |
+| `sema_device` | `str` | `"auto"` |  |
+| `rerank_device` | `str` | `"auto"` |  |
 | `batch_sizes` | `Dict[str, int]` | `{}` |  |
 | `low_vram_threshold_gb` | `float` | `4.0` |  |
 | `lazy_encoders` | `bool` | `true` | #219 slice 2: when true (default), heavy encoders (ΣĒMA MiniLM, DeBERTa rerank/splice) are armed lazily and load on FIRST USE; when false, restore the pre-slice eager warmup at manager init for operators who want first-query latency paid at boot. SPLADE / BGE-M3 / spaCy were already first-use-lazy and ignore this knob. |

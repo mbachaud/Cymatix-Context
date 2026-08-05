@@ -3525,9 +3525,14 @@ class KnowledgeStore:
             # on first encode inside BGEM3Codec._load(), which records
             # itself under "dense" — receipts subtract THAT one.
             _load_t0 = time.monotonic()
+            # 2026-08-04: pass the per-layer resolved device. Without it
+            # BGEM3Codec fell to its "cpu" ctor default and dense NEVER used
+            # the GPU, even under a CUDA torch with [hardware] device="cuda".
+            from .hardware import resolve_layer_device
             self._dense_codec = get_shared_codec(
                 dim=self._dense_embedding_dim,
                 model_name=self._dense_model,  # #207 dense fast-follow
+                device=resolve_layer_device("dense"),
                 share=shared_dense_codec_enabled(),
             )
             try:

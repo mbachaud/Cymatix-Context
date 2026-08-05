@@ -125,8 +125,8 @@ class SemaCodec:
         device: Optional[str] = None,
     ):
         if device is None or device == "auto":
-            from cymatix_context.hardware import get_hardware
-            device = get_hardware().device
+            from cymatix_context.hardware import resolve_layer_device
+            device = resolve_layer_device("sema")
 
         import time as _time
 
