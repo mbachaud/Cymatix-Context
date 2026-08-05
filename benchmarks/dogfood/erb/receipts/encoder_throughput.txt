@@ -1,0 +1,30 @@
+torch 2.13.0+cpu  cuda_available=False  num_threads=8
+
+-- BGE-M3 dense (query encode) --
+codec device: ?
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]Loading weights: 100%|##########| 391/391 [00:00<00:00, 29962.60it/s]
+bge-m3 single                threads=1      8.2 enc/s  (6.1s/50)
+bge-m3 threaded              threads=2     10.5 enc/s  (4.8s/50)
+bge-m3 threaded              threads=4     10.5 enc/s  (4.8s/50)
+bge-m3 threaded              threads=8      9.7 enc/s  (5.1s/50)
+bge-m3 batch bs= 8               17.7 enc/s
+bge-m3 batch bs=16               18.6 enc/s
+
+-- SPLADE (query encode) --
+Loading weights:   0%|          | 0/204 [00:00<?, ?it/s]Loading weights: 100%|##########| 204/204 [00:00<00:00, 27554.12it/s]
+splade single                threads=1     18.8 enc/s  (2.7s/50)
+splade threaded              threads=2     21.2 enc/s  (2.4s/50)
+splade threaded              threads=4     21.0 enc/s  (2.4s/50)
+
+-- SEMA / MiniLM --
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 5636.77it/s]
+sema single                  threads=1    139.4 enc/s  (0.4s/50)
+sema threaded                threads=2    152.7 enc/s  (0.3s/50)
+
+-- implied worker ceilings --
+per-family best enc/s: {'bge': 18.6, 'splade': 21.2, 'sema': 152.7}
+bottleneck encoder: bge at 18.6 enc/s
+  dogfood   (pipeline  0.73s/query): ~ 13.6 concurrent workers before encoder saturation
+  erb_100k  (pipeline  5.10s/query): ~ 94.8 concurrent workers before encoder saturation
+  erb_829k  (pipeline 26.10s/query): ~485.1 concurrent workers before encoder saturation
+DONE
