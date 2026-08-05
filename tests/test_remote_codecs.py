@@ -818,6 +818,66 @@ def test_cold_daemon_gate_blocks_encodes_then_all_three_seams_recover(
     assert len(_paths("/ready")) == probes, "the gate is one-shot, not re-polled"
 
 
+@pytest.mark.concurrency
+def test_cold_daemon_race_across_seams_fires_no_encode_rpc(
+    daemon_url, monkeypatch, fake_local_dense, fake_local_sema
+):
+    """Threads that lose the gate's lock race must see the real probe result.
+
+    A blocked waiter returning a hardcoded True would fire a live RPC at the
+    daemon the winning thread just confirmed cold — the exact outcome the gate
+    exists to prevent, and one neither seam re-checks for afterwards.
+    """
+    from cymatix_context.backends import encoder_client, splade_backend
+    from cymatix_context.backends.bgem3_codec import get_shared_codec
+
+    monkeypatch.setenv("CYMATIX_ENCODER_READY_TIMEOUT_S", "0.3")
+    _DaemonHandler.ready = False  # still loading
+    encoder_client.configure(daemon_url)
+    _arm_local_splade(monkeypatch)
+
+    sema = encoder_client.RemoteSemaCodec(url=daemon_url)
+    dense = get_shared_codec(dim=4, device="cpu")
+
+    barrier = threading.Barrier(3)
+    results: dict = {}
+    errors: list = []
+
+    def _run(name, fn):
+        try:
+            barrier.wait(timeout=5)
+            results[name] = fn()
+        except Exception as exc:  # pragma: no cover - failure path
+            errors.append((name, exc))
+
+    def _splade_call():
+        try:
+            splade_backend.encode("hello")
+        except _LocalSpladeSentinel:
+            return "local"
+        return "remote"
+
+    threads = [
+        threading.Thread(target=_run, args=("splade", _splade_call), daemon=True),
+        threading.Thread(target=_run, args=("sema", lambda: sema.encode("hello")), daemon=True),
+        threading.Thread(target=_run, args=("dense", lambda: dense.encode("hello")), daemon=True),
+    ]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join(timeout=15)
+
+    assert not any(t.is_alive() for t in threads), "liveness: the gate must not wedge"
+    assert not errors, f"seams must degrade, not raise: {errors}"
+    assert results["splade"] == "local"
+    assert results["sema"] == [1.0] * 20
+    assert results["dense"] == [0.5] * 4
+    assert not [p for p, _ in _DaemonHandler.received if p.startswith("/encode/")], (
+        "a race loser must not RPC a daemon the winner just found cold"
+    )
+    assert len(_paths("/ready")) == 1, "one probe for the whole race"
+
+
 # ══ 7. The daemon must never become a client of itself ═══════════════
 
 

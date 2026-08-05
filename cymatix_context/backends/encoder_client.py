@@ -241,33 +241,45 @@ def record_success() -> None:
 # though the daemon is healthy 30 s later.
 
 _ready_probed: bool = False
+_ready_result: Optional[bool] = None
 _ready_gate_lock = threading.Lock()
 
 
 def ready_gate(client: "EncoderClient") -> bool:
     """Poll ``GET /ready`` once per process; every seam calls this first.
 
-    The first caller pays the ``CYMATIX_ENCODER_READY_TIMEOUT_S`` budget;
-    concurrent callers block on the lock and then proceed. A not-ready
-    outcome records a failure, which opens the circuit for the cooldown —
-    so a cold daemon costs one readiness budget and one round of in-process
-    encoding, and the *next* attempt after the cooldown goes straight to the
-    RPC (the gate is spent, not a permanent verdict). That is what keeps a
-    slow-starting daemon from disabling remote encoding for the process
+    The first caller pays the ``CYMATIX_ENCODER_READY_TIMEOUT_S`` budget and
+    records a failure if the daemon is not ready, which opens the circuit for
+    the cooldown. Threads that lose the lock race read that same outcome —
+    never a hardcoded True, or a loser would fire a live RPC at a daemon the
+    winner just confirmed cold, which is precisely what this gate exists to
+    prevent.
+
+    A not-ready outcome is "spent", not a permanent verdict: retry timing
+    belongs to the circuit breaker, so the final answer for a failed probe is
+    ``should_attempt()`` — False for the race losers (the winner just opened
+    the circuit) and True once the cooldown has elapsed, which lets the retry
+    go straight to the RPC with no second readiness poll. That is what keeps
+    a slow-starting daemon from disabling remote encoding for the process
     lifetime.
     """
-    global _ready_probed
-    if _ready_probed:
+    global _ready_probed, _ready_result
+    if _ready_probed and _ready_result:
         return True
+    probed_now = False
     with _ready_gate_lock:
-        if _ready_probed:
-            return True
-        ok = client.wait_ready(budget_s=ready_timeout_s())
-        _ready_probed = True
-    if not ok:
+        if not _ready_probed:
+            _ready_result = client.wait_ready(budget_s=ready_timeout_s())
+            _ready_probed = True
+            probed_now = True
+        ok = bool(_ready_result)
+    if probed_now and not ok:
+        # Exactly one failure recorded per process for a cold daemon: later
+        # callers must not keep pushing the cooldown window forward.
         record_failure()
-        return False
-    return True
+    if ok:
+        return True
+    return should_attempt()
 
 
 def ready_probed() -> bool:
@@ -277,10 +289,11 @@ def ready_probed() -> bool:
 
 def reset_for_test() -> None:
     """Clear the URL slot, daemon flag, readiness gate, and circuit state."""
-    global _configured_url, _daemon_process, _ready_probed
+    global _configured_url, _daemon_process, _ready_probed, _ready_result
     _configured_url = ""
     _daemon_process = False
     _ready_probed = False
+    _ready_result = None
     _circuit.reset()
 
 
