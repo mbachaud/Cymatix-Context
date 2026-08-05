@@ -108,6 +108,18 @@ def main() -> int:
     n_genes = dest.execute("SELECT COUNT(*) FROM genes").fetchone()[0]
     log(f"genes copied: {n_genes}")
 
+    # Indexed temp id set + EXISTS probes. The original double-IN pair
+    # filter went quadratic: SQLite materialized only ONE of the two IN
+    # subqueries and ran the other as a correlated scan of dest genes per
+    # source row — 4.4h at 250k / killed at ~12h CPU at 500k, for a 9.4M-row
+    # source table. Two indexed EXISTS probes per row finish in seconds.
+    dest.execute(
+        "CREATE TEMP TABLE subset_ids AS SELECT gene_id FROM genes"
+    )
+    dest.execute(
+        "CREATE UNIQUE INDEX idx_subset_ids ON subset_ids(gene_id)"
+    )
+
     for name, _ in tables:
         if name in shadow or name == "genes" or name in SKIP_DATA:
             continue
@@ -116,13 +128,14 @@ def main() -> int:
             a, b = PAIR_TABLES[name]
             dest.execute(
                 f"INSERT INTO {name} SELECT t.* FROM src.{name} t "
-                f"WHERE t.{a} IN (SELECT gene_id FROM genes) "
-                f"AND t.{b} IN (SELECT gene_id FROM genes)"
+                f"WHERE EXISTS (SELECT 1 FROM subset_ids s WHERE s.gene_id = t.{a}) "
+                f"AND EXISTS (SELECT 1 FROM subset_ids s WHERE s.gene_id = t.{b})"
             )
         elif "gene_id" in cols:
             dest.execute(
                 f"INSERT INTO {name} SELECT t.* FROM src.{name} t "
-                f"WHERE t.gene_id IN (SELECT gene_id FROM genes)"
+                f"WHERE EXISTS (SELECT 1 FROM subset_ids s "
+                f"WHERE s.gene_id = t.gene_id)"
             )
         else:
             dest.execute(f"INSERT INTO {name} SELECT * FROM src.{name}")
