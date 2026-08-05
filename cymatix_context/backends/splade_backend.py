@@ -74,6 +74,12 @@ def _remote_sparse(texts: List[str], top_k: int) -> Optional[List[Dict[str, floa
     else:
         client = cached[1]
 
+    # Shared one-shot readiness gate: SPLADE usually encodes ahead of dense on
+    # the ingest path, so skipping it here would let a cold daemon open the
+    # process-wide circuit before dense ever probes.
+    if not encoder_client.ready_gate(client):
+        return None
+
     try:
         sparse = client.encode_splade(list(texts), top_k=top_k)
     except Exception as exc:  # EncoderClientError + any stray transport error

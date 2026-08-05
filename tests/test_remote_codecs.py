@@ -374,12 +374,14 @@ def test_on_dense_encode_batch_empty_makes_no_network_call(daemon_url, fake_loca
     assert fake_local_dense.constructions == 0, "empty batch must not build a fallback"
 
 
-def test_on_dense_probes_ready_once_per_instance(daemon_url):
+def test_on_dense_probes_ready_once_per_process(daemon_url):
     from cymatix_context.backends import encoder_client
 
     codec = encoder_client.RemoteBGEM3Codec(dim=4, device="cpu", url=daemon_url)
     codec.encode("one")
     codec.encode("two")
+    # A second instance (e.g. a different dim key) shares the process gate.
+    encoder_client.RemoteBGEM3Codec(dim=4, device="cuda", url=daemon_url).encode("three")
     assert len(_paths("/ready")) == 1, "readiness is a first-use gate, not per-encode"
 
 
@@ -747,7 +749,174 @@ def test_manager_dense_codec_routes_through_get_shared_codec():
     assert "BGEM3Codec(" not in body, "direct construction bypasses the remote seam"
 
 
-# ══ 6. --deterministic ingest profile never consults the daemon ══════
+# ══ 6. Shared one-shot readiness gate ════════════════════════════════
+
+
+def test_shared_ready_gate_is_polled_once_across_all_three_seams(daemon_url):
+    from cymatix_context.backends import encoder_client, splade_backend
+    from cymatix_context.backends.bgem3_codec import get_shared_codec
+
+    encoder_client.configure(daemon_url)
+    splade_backend.encode("hello")
+    encoder_client.RemoteSemaCodec(url=daemon_url).encode("hello")
+    get_shared_codec(dim=4, device="cpu").encode("hello")
+
+    assert len(_paths("/ready")) == 1, "one daemon, one readiness question"
+    assert encoder_client.ready_probed() is True
+
+
+def test_cold_daemon_gate_blocks_encodes_then_all_three_seams_recover(
+    daemon_url, monkeypatch, fake_local_dense, fake_local_sema
+):
+    """The startup race: a loading daemon must not permanently disable remote.
+
+    SPLADE/SEMA encode ahead of dense on the ingest path. Without a shared
+    gate, the first of them hammers a loading daemon, opens the process-wide
+    circuit, and dense — never reaching its own gate — caches a real ~2 GB
+    in-process codec for the life of the process.
+    """
+    import time
+
+    from cymatix_context.backends import encoder_client, splade_backend
+    from cymatix_context.backends.bgem3_codec import get_shared_codec
+
+    monkeypatch.setenv("CYMATIX_ENCODER_READY_TIMEOUT_S", "0.2")
+    _DaemonHandler.ready = False  # still loading its models
+    encoder_client.configure(daemon_url)
+    _arm_local_splade(monkeypatch)
+
+    # SPLADE first, exactly as ingest orders it.
+    with pytest.raises(_LocalSpladeSentinel):
+        splade_backend.encode("hello")
+    assert _paths("/ready"), "the gate asked before encoding"
+    assert not [p for p, _ in _DaemonHandler.received if p.startswith("/encode/")], (
+        "a cold daemon must not be hammered with encode RPCs"
+    )
+    assert encoder_client.should_attempt() is False, "not-ready opens the circuit"
+
+    sema = encoder_client.RemoteSemaCodec(url=daemon_url)
+    dense = get_shared_codec(dim=4, device="cpu")
+    assert sema.encode("hello") == [1.0] * 20, "SEMA serves from the fallback"
+    assert dense.encode("hello") == [0.5] * 4, "dense serves from the fallback"
+    assert not [p for p, _ in _DaemonHandler.received if p.startswith("/encode/")]
+    probes = len(_paths("/ready"))
+
+    # The daemon finishes loading and the cooldown elapses.
+    _DaemonHandler.ready = True
+    now = time.monotonic()
+    monkeypatch.setattr(
+        encoder_client.time,
+        "monotonic",
+        lambda: now + encoder_client.retry_cooldown_s() + 1.0,
+    )
+
+    assert splade_backend.encode("hello") == {"beta": 0.5, "alpha": 0.25, "gamma": 0.1234}
+    assert sema.encode("hello") == [0.125] * 20
+    assert dense.encode("hello") == [0.25, -0.5, 0.75, 1.0], (
+        "dense must not be stuck on its cached fallback"
+    )
+    assert len(_paths("/ready")) == probes, "the gate is one-shot, not re-polled"
+
+
+# ══ 7. The daemon must never become a client of itself ═══════════════
+
+
+def test_daemon_flag_forces_active_url_off(monkeypatch):
+    from cymatix_context.backends import encoder_client
+
+    monkeypatch.setenv("CYMATIX_ENCODER_URL", "http://127.0.0.1:11439")
+    encoder_client.configure("http://127.0.0.1:11439")
+    assert encoder_client.active_url() == "http://127.0.0.1:11439"
+
+    encoder_client.mark_encoder_daemon_process()
+    assert encoder_client.is_encoder_daemon_process() is True
+    assert encoder_client.active_url() == "", "the daemon must not resolve a URL for itself"
+
+
+def test_reset_for_test_clears_the_daemon_flag():
+    from cymatix_context.backends import encoder_client
+
+    encoder_client.mark_encoder_daemon_process()
+    encoder_client.reset_for_test()
+    assert encoder_client.is_encoder_daemon_process() is False
+
+
+def test_daemon_marked_process_keeps_the_dense_and_splade_seams_in_process(monkeypatch):
+    """The exact recursion hazard: URL exported, daemon started from that shell."""
+    from cymatix_context.backends import encoder_client, splade_backend
+    from cymatix_context.backends.bgem3_codec import BGEM3Codec, get_shared_codec
+
+    monkeypatch.setenv("CYMATIX_ENCODER_URL", "http://127.0.0.1:11439")
+
+    def _no_client(*a, **kw):
+        raise AssertionError("the daemon must not build an encoder client")
+
+    monkeypatch.setattr(encoder_client, "EncoderClient", _no_client)
+    encoder_client.mark_encoder_daemon_process()
+    _arm_local_splade(monkeypatch)
+
+    # EncoderRegistry.load() goes through both of these.
+    assert isinstance(get_shared_codec(dim=1024, device="cpu"), BGEM3Codec)
+    with pytest.raises(_LocalSpladeSentinel):
+        splade_backend.encode("hello world")
+
+
+def test_create_encoder_app_marks_the_process_as_the_daemon(monkeypatch):
+    from cymatix_context.backends import encoder_client
+    from cymatix_context.encoder_daemon import create_encoder_app
+    from tests.test_encoder_daemon import make_registry
+
+    monkeypatch.setenv("CYMATIX_ENCODER_URL", "http://127.0.0.1:11439")
+    create_encoder_app(make_registry())
+    assert encoder_client.is_encoder_daemon_process() is True
+    assert encoder_client.active_url() == ""
+
+
+def test_daemon_app_bringup_never_calls_the_client_transport(monkeypatch):
+    from fastapi.testclient import TestClient
+
+    from cymatix_context.backends import encoder_client
+    from cymatix_context.encoder_daemon import create_encoder_app
+    from tests.test_encoder_daemon import make_registry
+
+    monkeypatch.setenv("CYMATIX_ENCODER_URL", "http://127.0.0.1:11439")
+
+    def _no_network(*a, **kw):
+        raise AssertionError("the daemon must never act as a client of itself")
+
+    monkeypatch.setattr(urllib.request, "urlopen", _no_network)
+
+    app = create_encoder_app(make_registry())
+    with TestClient(app) as client:  # lifespan → bring_up → warm + probe + rates
+        assert client.get("/ready").status_code == 200
+        assert client.post(
+            "/encode/splade", json={"texts": ["hello"], "top_k": 8}
+        ).status_code == 200
+    assert encoder_client.active_url() == ""
+
+
+def test_main_marks_the_daemon_process_before_building_the_app(monkeypatch):
+    from cymatix_context import encoder_daemon
+    from cymatix_context.backends import encoder_client
+
+    monkeypatch.setenv("CYMATIX_ENCODER_URL", "http://127.0.0.1:11439")
+    seen: dict = {}
+    monkeypatch.setattr(encoder_daemon, "init_hardware", lambda cfg: None)
+    monkeypatch.setattr(
+        encoder_daemon,
+        "create_encoder_app",
+        lambda *a, **kw: seen.setdefault("url_at_app_build", encoder_client.active_url()),
+    )
+    monkeypatch.setattr(encoder_daemon.uvicorn, "run", lambda *a, **kw: seen.update(ran=True))
+
+    encoder_daemon.main([])
+
+    assert seen["url_at_app_build"] == "", "the flag must be set before the app exists"
+    assert seen.get("ran") is True
+    assert encoder_client.is_encoder_daemon_process() is True
+
+
+# ══ 8. --deterministic ingest profile never consults the daemon ══════
 
 
 def test_deterministic_profile_never_touches_the_network(tmp_path, monkeypatch):

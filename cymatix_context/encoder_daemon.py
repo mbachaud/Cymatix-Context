@@ -867,6 +867,17 @@ def create_encoder_app(
 
     *batch_window_ms* overrides ``CYMATIX_ENCODER_BATCH_WINDOW_MS`` (8 ms).
     """
+    # This process IS the daemon: force every encoder seam back in-process
+    # before a registry can load. Otherwise an operator who exports
+    # CYMATIX_ENCODER_URL (the documented switch) and starts the daemon from
+    # that shell gets a daemon that is a client of itself — a readiness poll
+    # against its own unbound port at startup, then /encode/* handlers POSTing
+    # to themselves. Set here, not only in main(), so an embedded/ASGI-factory
+    # bring-up is covered too.
+    from .backends.encoder_client import mark_encoder_daemon_process
+
+    mark_encoder_daemon_process()
+
     window_ms = client_batch_window_ms() if batch_window_ms is None else float(batch_window_ms)
     daemon = _Daemon(registry, window_s=max(0.0, window_ms) / 1000.0)
 
@@ -1012,6 +1023,13 @@ def main(argv: Optional[Sequence[str]] = None) -> None:
     dropped. Model construction happens later, in the app's startup thread.
     """
     args = build_arg_parser().parse_args(argv)
+
+    # Before config, hardware or app: this process must never resolve a daemon
+    # URL for itself (see create_encoder_app). Set in both entry points so
+    # neither ordering can leave the window open.
+    from .backends.encoder_client import mark_encoder_daemon_process
+
+    mark_encoder_daemon_process()
 
     from .config import load_config
 

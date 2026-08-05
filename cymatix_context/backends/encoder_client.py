@@ -108,6 +108,33 @@ def batch_window_ms() -> float:
 
 _configured_url: str = ""
 
+#: True in the encoder daemon's OWN process. The daemon builds its codecs
+#: through the very seams this module substitutes, so if an operator exports
+#: CYMATIX_ENCODER_URL (the documented way to turn the daemon on) and then
+#: starts the daemon from that same shell, the daemon would become a client
+#: of itself: startup would pay the readiness budget polling its own
+#: not-yet-bound port, and after the circuit cooldown its own /encode/splade
+#: handler would POST to itself, recursively, until the threadpool starved.
+#: The daemon's entry points set this flag before any model is constructed.
+_daemon_process: bool = False
+
+
+def mark_encoder_daemon_process() -> None:
+    """Declare this process the encoder daemon — forces ``active_url()`` off.
+
+    Called by both daemon entry points (``create_encoder_app`` and
+    ``main``) before the registry loads, so the daemon's own dense / SPLADE /
+    SEMA construction takes the in-process path no matter what the
+    environment says.
+    """
+    global _daemon_process
+    _daemon_process = True
+
+
+def is_encoder_daemon_process() -> bool:
+    """True once ``mark_encoder_daemon_process()`` has run in this process."""
+    return _daemon_process
+
 
 def configure(url: str) -> None:
     """Set the manager-provided URL slot (from cfg.encoder_daemon.url).
@@ -135,7 +162,12 @@ def active_url() -> str:
     convention: an empty or whitespace-only CYMATIX_ENCODER_URL counts as
     unset, not an override to "". The env value is stripped here; the
     configured slot is already stripped by configure().
+
+    Always "" inside the daemon's own process (see ``_daemon_process``) —
+    the daemon must never route its own encodes back through HTTP.
     """
+    if _daemon_process:
+        return ""
     env_url = os.environ.get("CYMATIX_ENCODER_URL", "").strip()
     if env_url:
         return env_url
@@ -198,10 +230,57 @@ def record_success() -> None:
     _circuit.record_success()
 
 
+# ── shared one-shot readiness gate ──────────────────────────────────
+#
+# Process-wide, not per-codec: the daemon is one process holding all three
+# models, so "is it up yet?" is one question. If each seam polled on its own,
+# whichever seam encoded first during a cold start (SEMA and SPLADE both run
+# ahead of dense on the ingest path) would skip the gate, hammer a loading
+# daemon, and open the SHARED circuit — after which dense never reaches its
+# own gate and permanently materializes a ~2 GB in-process fallback even
+# though the daemon is healthy 30 s later.
+
+_ready_probed: bool = False
+_ready_gate_lock = threading.Lock()
+
+
+def ready_gate(client: "EncoderClient") -> bool:
+    """Poll ``GET /ready`` once per process; every seam calls this first.
+
+    The first caller pays the ``CYMATIX_ENCODER_READY_TIMEOUT_S`` budget;
+    concurrent callers block on the lock and then proceed. A not-ready
+    outcome records a failure, which opens the circuit for the cooldown —
+    so a cold daemon costs one readiness budget and one round of in-process
+    encoding, and the *next* attempt after the cooldown goes straight to the
+    RPC (the gate is spent, not a permanent verdict). That is what keeps a
+    slow-starting daemon from disabling remote encoding for the process
+    lifetime.
+    """
+    global _ready_probed
+    if _ready_probed:
+        return True
+    with _ready_gate_lock:
+        if _ready_probed:
+            return True
+        ok = client.wait_ready(budget_s=ready_timeout_s())
+        _ready_probed = True
+    if not ok:
+        record_failure()
+        return False
+    return True
+
+
+def ready_probed() -> bool:
+    """Whether the one-shot readiness gate has already run in this process."""
+    return _ready_probed
+
+
 def reset_for_test() -> None:
-    """Clear the configured URL slot, circuit state, and warn-once flag."""
-    global _configured_url
+    """Clear the URL slot, daemon flag, readiness gate, and circuit state."""
+    global _configured_url, _daemon_process, _ready_probed
     _configured_url = ""
+    _daemon_process = False
+    _ready_probed = False
     _circuit.reset()
 
 
@@ -358,8 +437,6 @@ class RemoteBGEM3Codec:
         self._device = device
         self.url = url
         self._client = EncoderClient(url, timeout_s=default_timeout_s())
-        self._ready_probed = False
-        self._ready_lock = threading.Lock()
         self._fallback: Optional[Any] = None
         self._fallback_lock = threading.Lock()
 
@@ -422,7 +499,7 @@ class RemoteBGEM3Codec:
         """Daemon-encoded vectors, or None to signal "fall back in process"."""
         if not should_attempt():
             return None
-        if not self._ready_gate():
+        if not ready_gate(self._client):
             return None
         try:
             vectors = self._client.encode_dense(texts, task=task)
@@ -451,26 +528,6 @@ class RemoteBGEM3Codec:
         if not isinstance(vectors, list) or len(vectors) != expected:
             return False
         return all(isinstance(v, list) and len(v) == self.dim for v in vectors)
-
-    def _ready_gate(self) -> bool:
-        """Poll ``/ready`` once per instance; a ready-failure opens the circuit.
-
-        After that one probe the circuit breaker alone governs retries — a
-        daemon that dies later fails the RPC, which reopens the circuit for
-        the cooldown, and a daemon that comes back is picked up by the next
-        attempt without re-polling readiness.
-        """
-        if self._ready_probed:
-            return True
-        with self._ready_lock:
-            if self._ready_probed:
-                return True
-            ok = self._client.wait_ready(budget_s=ready_timeout_s())
-            self._ready_probed = True
-        if not ok:
-            record_failure()
-            return False
-        return True
 
     def _local(self) -> Any:
         """The lazily-built in-process fallback codec (one per instance).
@@ -621,6 +678,8 @@ class RemoteSemaCodec:
     def _encode_remote(self, texts: List[str]) -> Optional[List[List[float]]]:
         """Daemon-encoded ΣĒMA vectors, or None to signal "fall back in process"."""
         if not should_attempt():
+            return None
+        if not ready_gate(self._client):
             return None
         try:
             vectors = self._client.encode_sema(texts)
