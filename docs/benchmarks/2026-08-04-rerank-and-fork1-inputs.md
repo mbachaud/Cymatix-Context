@@ -119,3 +119,42 @@ collapses N matrix copies to one physical 1.7GB, making N=8-12 RAM-easy);
 encoder daemon relocating the GIL wall (mitigated: batch bundles, 2+
 replicas, warmup gating). **Scope: ~24-41 person-days**, writer daemon +
 worker wiring on the critical path.
+
+
+## GPU-vs-CPU full ladder (2026-08-05, deconfounded)
+
+First pass had a venv-parity confound: venv-cuda lacked headroom-ai, so
+the splice stage silently fell back to trim (2.3-2.6s/query cheaper at
+100k+). Caught by per-stage ring attribution; re-run with headroom
+installed (splice p50 parity confirmed). Receipts:
+`benchmarks/dogfood/erb/receipts/gpu2_*.json` (+ `gpu_erb829k.json`,
+clean first pass) vs CPU baselines (`exec_curve_w2`, `erb_ladder_*`,
+`cpu_erb{10k,50k}_postfix`).
+
+| bed | CPU c=1 | GPU c=1 | delta |
+|---|---|---|---|
+| dogfood 6.4k | 729ms | **428ms** | **-41%** |
+| erb_10k | 5,052ms | 4,774ms | -5.5% |
+| erb_50k | 12,361ms | 11,945ms | -3.4% |
+| erb_100k | 5,084ms | 5,337ms | +5% (noise) |
+| erb_250k | 8,567ms | 8,891ms | +3.8% (noise) |
+| erb_500k | 15,172ms | 15,772ms | +4% (noise) |
+| erb_829k | 26,081ms | 26,028ms | -0.2% |
+
+**Verdict: GPU leverage decays with corpus size on the current
+pipeline.** It wins where encode dominates (dogfood-class: -41% median,
+c=2 qps 1.75→3.68 = 2.1× throughput) and washes to noise at ERB scale
+where SQL tiers + splice own the latency. Strategic GPU value at scale:
+the 219ms top-50 rerank, 22.7× batched encode for ingest/backfill, and
+the encoder daemon for worker fleets. recall@12 identical CPU-vs-GPU on
+every bed.
+
+New W-items from this pass: (a) **headroom splice costs ~2.6s/query at
+100k — ~half the median** — needs its own cost/benefit receipt (recall
+is splice-invariant; the value claim is delivered-token quality);
+(b) cross-venv A/B discipline: verify optional-dep parity (headroom,
+spacy) before comparing environments — second probe-fidelity lesson of
+the campaign. Correction from issue-annotation review: `dense_pool_size`
+and `fts5_candidate_depth` are already config-exposed — the depth-
+scaling experiment is a pure config sweep; only SPLADE's `limit * 2`
+fetch depth is hardcoded.
