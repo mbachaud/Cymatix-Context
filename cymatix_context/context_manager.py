@@ -935,6 +935,9 @@ class CymatixContextManager:
             splade_weight=config.retrieval.splade_weight,
             tag_exact_weight=config.retrieval.tag_exact_weight,
             tag_prefix_weight=config.retrieval.tag_prefix_weight,
+            # Issue #327: tag-tier IDF discipline (flag-gated, default off).
+            tag_idf_enabled=config.retrieval.tag_idf_enabled,
+            tag_df_cap=config.retrieval.tag_df_cap,
             # Issue #202: warm ΣĒMA boost knob (new; additive-mode Tier 4A).
             sema_boost_weight=config.retrieval.sema_boost_weight,
             sema_cold_weight=config.retrieval.sema_cold_weight,

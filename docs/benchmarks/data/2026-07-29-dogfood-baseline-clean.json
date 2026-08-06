@@ -1,0 +1,202 @@
+{
+  "measured_at": "2026-07-29T14:42:42-0700",
+  "genome": "F:\\Projects\\cymatix-context\\genomes\\dogfood\\genome.db",
+  "scoring": "gene_id set membership (no path matching)",
+  "note": "retrieval only \u2014 no decoder, no consumer ladder, no judge",
+  "rollup": {
+    "needles": 18,
+    "errors": 0,
+    "k": 50,
+    "recall@50": 1.0,
+    "recall@1": 0.3333,
+    "recall@3": 0.5,
+    "recall@5": 0.5556,
+    "recall@10": 0.6667,
+    "mrr": 0.4592,
+    "median_rank_when_delivered": 3.5,
+    "median_latency_ms": 962.6,
+    "seconds_total": 49.9
+  },
+  "per_needle": [
+    {
+      "name": "cymatix_proxy_port",
+      "query": "What port does the Cymatix proxy server listen on?",
+      "expected": "11437",
+      "gold_genes": 65,
+      "returned": 50,
+      "delivered": true,
+      "rank": 7,
+      "latency_ms": 33346.2
+    },
+    {
+      "name": "cymatix_expression_tokens",
+      "query": "What is the default expression_tokens budget in Cymatix?",
+      "expected": "7000",
+      "gold_genes": 49,
+      "returned": 50,
+      "delivered": true,
+      "rank": 6,
+      "latency_ms": 1077.8
+    },
+    {
+      "name": "cymatix_cymatics_bins",
+      "query": "How many bins does the Cymatix cymatics spectrum use?",
+      "expected": "256",
+      "gold_genes": 63,
+      "returned": 50,
+      "delivered": true,
+      "rank": 14,
+      "latency_ms": 942.3
+    },
+    {
+      "name": "cymatix_fusion_default",
+      "query": "What is the default retrieval fusion_mode in Cymatix?",
+      "expected": "rrf",
+      "gold_genes": 118,
+      "returned": 50,
+      "delivered": true,
+      "rank": 33,
+      "latency_ms": 1161.3
+    },
+    {
+      "name": "cymatix_know_emit_floor",
+      "query": "What is the emit_floor for the Cymatix know confidence gate?",
+      "expected": "0.45",
+      "gold_genes": 12,
+      "returned": 50,
+      "delivered": true,
+      "rank": 15,
+      "latency_ms": 1028.1
+    },
+    {
+      "name": "cymatix_max_genes",
+      "query": "How many genes per turn does Cymatix deliver by default?",
+      "expected": "12",
+      "gold_genes": 67,
+      "returned": 50,
+      "delivered": true,
+      "rank": 14,
+      "latency_ms": 1049.3
+    },
+    {
+      "name": "cymatix_genome_path",
+      "query": "What is the default Cymatix knowledge store path?",
+      "expected": "genomes/main/genome.db",
+      "gold_genes": 57,
+      "returned": 50,
+      "delivered": true,
+      "rank": 18,
+      "latency_ms": 1211.3
+    },
+    {
+      "name": "cymatix_splice_aggressiveness",
+      "query": "What is the default splice_aggressiveness in Cymatix?",
+      "expected": "0.3",
+      "gold_genes": 43,
+      "returned": 50,
+      "delivered": true,
+      "rank": 13,
+      "latency_ms": 1106.5
+    },
+    {
+      "name": "scorerift_divergence_threshold",
+      "query": "What is the divergence threshold that triggers alerts in ScoreRift?",
+      "expected": "0.15",
+      "gold_genes": 19,
+      "returned": 50,
+      "delivered": true,
+      "rank": 1,
+      "latency_ms": 997.8
+    },
+    {
+      "name": "scorerift_confidence_gate",
+      "query": "What auto-confidence level must a ScoreRift dimension exceed before divergence can fire?",
+      "expected": "50%",
+      "gold_genes": 22,
+      "returned": 50,
+      "delivered": true,
+      "rank": 1,
+      "latency_ms": 964.5
+    },
+    {
+      "name": "scorerift_import_hygiene_confidence",
+      "query": "What confidence does ScoreRift assign the import_hygiene dimension?",
+      "expected": "85%",
+      "gold_genes": 19,
+      "returned": 50,
+      "delivered": true,
+      "rank": 4,
+      "latency_ms": 904.2
+    },
+    {
+      "name": "driftwatch_version",
+      "query": "What version is DriftWatch currently at?",
+      "expected": "v0.2.0",
+      "gold_genes": 9,
+      "returned": 50,
+      "delivered": true,
+      "rank": 3,
+      "latency_ms": 848.2
+    },
+    {
+      "name": "driftwatch_default_ollama_model",
+      "query": "What is the default Ollama model tag in DriftWatch?",
+      "expected": "qwen3:8b",
+      "gold_genes": 44,
+      "returned": 50,
+      "delivered": true,
+      "rank": 1,
+      "latency_ms": 960.7
+    },
+    {
+      "name": "driftwatch_default_inference_server",
+      "query": "Which inference server is the recommended default for DriftWatch nodes?",
+      "expected": "vLLM",
+      "gold_genes": 45,
+      "returned": 50,
+      "delivered": true,
+      "rank": 1,
+      "latency_ms": 912.3
+    },
+    {
+      "name": "driftwatch_default_secret",
+      "query": "What password does the DriftWatch docker-compose fall back to if DB_PASSWORD is unset?",
+      "expected": "changeme",
+      "gold_genes": 6,
+      "returned": 50,
+      "delivered": true,
+      "rank": 2,
+      "latency_ms": 892.8
+    },
+    {
+      "name": "mek_guardrails",
+      "query": "What are the three guardrails MaxExpressKit ships for Claude Code?",
+      "expected": "compliance, drift, ledger",
+      "gold_genes": 32,
+      "returned": 50,
+      "delivered": true,
+      "rank": 2,
+      "latency_ms": 891.7
+    },
+    {
+      "name": "mek_source_apps",
+      "query": "Which three applications was MaxExpressKit distilled from?",
+      "expected": "CosmicTasha, ScoreRift, BookKeeper",
+      "gold_genes": 42,
+      "returned": 50,
+      "delivered": true,
+      "rank": 1,
+      "latency_ms": 790.6
+    },
+    {
+      "name": "mek_marketplace_name",
+      "query": "What marketplace name does the MaxExpressKit plugin install under?",
+      "expected": "mek-marketplace",
+      "gold_genes": 2,
+      "returned": 50,
+      "delivered": true,
+      "rank": 1,
+      "latency_ms": 813.8
+    }
+  ]
+}
