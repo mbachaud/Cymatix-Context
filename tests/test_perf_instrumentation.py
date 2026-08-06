@@ -295,6 +295,9 @@ def test_bgem3_weight_load_records_model_load(monkeypatch):
 
 
 def test_splade_load_records_model_load(monkeypatch):
+    # The fakes below are monkeypatched onto the real module object, so the
+    # package must be importable even though no model is ever downloaded.
+    transformers = pytest.importorskip("transformers")
     from cymatix_context.backends import splade_backend
     from cymatix_context.telemetry import otel as otel_mod
 
@@ -302,8 +305,6 @@ def test_splade_load_records_model_load(monkeypatch):
     monkeypatch.setattr(splade_backend, "_model", None)
     monkeypatch.setattr(splade_backend, "_tokenizer", None)
     monkeypatch.setattr(splade_backend, "_device", None)
-
-    import transformers
     monkeypatch.setattr(transformers, "AutoTokenizer",
                         types_simple_namespace_factory())
     monkeypatch.setattr(transformers, "AutoModelForMaskedLM",
@@ -340,6 +341,7 @@ def test_sema_codec_load_records_model_load(monkeypatch):
     smoke showed 8.1s unattributed without it)."""
     import numpy as np
 
+    sentence_transformers = pytest.importorskip("sentence_transformers")
     from cymatix_context.telemetry import otel as otel_mod
 
     monkeypatch.setattr(otel_mod, "_MODEL_LOAD_MS", {})
@@ -354,7 +356,6 @@ def test_sema_codec_load_records_model_load(monkeypatch):
         def encode(self, texts, **kw):
             return np.zeros((len(texts), 384), dtype=np.float32)
 
-    import sentence_transformers
     monkeypatch.setattr(sentence_transformers, "SentenceTransformer", _FakeST)
 
     from cymatix_context.backends.sema import SemaCodec
