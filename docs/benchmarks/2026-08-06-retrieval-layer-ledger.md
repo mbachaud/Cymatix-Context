@@ -160,3 +160,18 @@ needle-in-haystack bench family).
 genes, zero splade objects): med rank 1.0 / p50 17.5s on the first-10 blob
 needles — matches the probe A/B's no_splade arm. Certified for the full
 469-needle run; 13.6GB RAM headroom on the 48GB box.
+
+## Addendum 3 (2026-08-06): full 469-needle baseline on the splade-less bed
+
+`full469_nosplade_c1.json` (per-needle records included): **r@12 0.676
+(317/469), median gold rank 2.0, p50 18.9s / p95 36.3s / mean 20.4s, one
+arm = 2.65h wall** at c=1 trim under the GPU daemon on
+`erb_829k_nosplade.db`. The ladder's always-on control arm doubled as
+validation: shipped config on this bed re-creates empty splade tables and
+scores identically (r@12 delta 0.0000, p50 delta 7ms) — serve with
+`splade_enabled=false` to avoid the table re-creation. 99/469 needles
+(21%) never score gold anywhere in the pool — the static-miss class,
+now quantified on the full set with per-needle receipts; the remaining
+misses are near-cutoff ranks. Slowest 10% of needles = 21% of wall
+(tail is splice/SQL-bound per the ledger's dense analysis; run predates
+the sema auto-gate so ~1 idle sema RTT/query is included).
