@@ -1,0 +1,7 @@
+# sweep pass tag=gdaemon executor=8  2026-08-06T00:02:45Z  beds=dogfood,erb10k,erb50k,erb100k
+# git 5f95e9c  daemon_py=F:/tmp/venv-cuda/Scripts/python.exe  devices={'dense': 'cuda:0', 'splade': 'cuda:0', 'sema': 'cuda:0'} | torch 2.11.0+cu128  token 0bc07414d7c649ea85ac93027939883b  trim  n~100/level  c=1,2,4,8  level-timeout 5400
+dogfood x8: rc=0 wall=507s encode_posts=8195 out=benchmarks/dogfood/sweep/n100_gdaemon_dogfood_x8.json
+erb10k x8: rc=0 wall=574s encode_posts=6845 out=benchmarks/dogfood/sweep/n100_gdaemon_erb10k_x8.json
+erb50k x8: rc=0 wall=1203s encode_posts=6845 out=benchmarks/dogfood/sweep/n100_gdaemon_erb50k_x8.json
+erb100k x8: rc=0 wall=1951s encode_posts=6845 out=benchmarks/dogfood/sweep/n100_gdaemon_erb100k_x8.json
+pass gdaemon x8 (beds=dogfood,erb10k,erb50k,erb100k) complete 2026-08-06T01:13:22Z, daemon killed (pid 33668)

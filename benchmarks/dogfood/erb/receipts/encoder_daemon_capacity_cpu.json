@@ -1,0 +1,88 @@
+{
+  "kind": "encoder_capacity",
+  "profile_label": "cpu",
+  "python": "F:\\Projects\\cymatix-context\\.venv\\Scripts\\python.exe",
+  "port": 11439,
+  "torch_version": "2.13.0+cpu",
+  "capacity": {
+    "devices": {
+      "dense": "cpu",
+      "splade": "cpu",
+      "sema": "cpu"
+    },
+    "warm_encodes_per_s": {
+      "dense": 21.191,
+      "splade": 22.263,
+      "sema": 139.309
+    },
+    "bundles_per_s": {
+      "interleaved": 10.072,
+      "pipelined": 21.191
+    },
+    "max_batch": {
+      "dense": 16,
+      "splade": 8,
+      "sema": 64
+    },
+    "batch_window_ms": 2.0,
+    "probe_ms": 165.795,
+    "warm_probe_encodes": 5,
+    "loaded": {
+      "dense": true,
+      "splade": true,
+      "sema": true
+    },
+    "dense_model": "BAAI/bge-m3",
+    "dense_dim": 1024,
+    "torch_version": "2.13.0+cpu",
+    "vram_total_gb": null,
+    "vram_free_gb": null,
+    "system_ram_gb": 47.93,
+    "pid": 11688
+  },
+  "spawn_token_verified": true,
+  "levels": [
+    {
+      "n_clients": 1,
+      "bundles_total": 50,
+      "errors": 0,
+      "wall_s": 11.8192,
+      "bundles_per_s": 4.2304,
+      "latency_p50_ms": 234.107,
+      "latency_p95_ms": 253.065,
+      "latency_max_ms": 265.44
+    },
+    {
+      "n_clients": 2,
+      "bundles_total": 100,
+      "errors": 0,
+      "wall_s": 17.2557,
+      "bundles_per_s": 5.7952,
+      "latency_p50_ms": 340.999,
+      "latency_p95_ms": 370.943,
+      "latency_max_ms": 571.32
+    },
+    {
+      "n_clients": 4,
+      "bundles_total": 200,
+      "errors": 0,
+      "wall_s": 29.3937,
+      "bundles_per_s": 6.8042,
+      "latency_p50_ms": 572.194,
+      "latency_p95_ms": 764.773,
+      "latency_max_ms": 801.556
+    },
+    {
+      "n_clients": 8,
+      "bundles_total": 400,
+      "errors": 0,
+      "wall_s": 59.7553,
+      "bundles_per_s": 6.694,
+      "latency_p50_ms": 1212.146,
+      "latency_p95_ms": 1367.282,
+      "latency_max_ms": 3108.816
+    }
+  ],
+  "generated_at": "2026-08-05T13:03:06.943005+00:00",
+  "env": {}
+}

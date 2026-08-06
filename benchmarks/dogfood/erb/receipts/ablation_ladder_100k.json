@@ -1,0 +1,537 @@
+{
+  "tool": "benchmarks/dogfood/erb/ablation_ladder.py",
+  "stamp": "2026-08-06T02:30Z",
+  "bed": "f:\\tmp\\erb_carve\\erb_100k.db",
+  "bed_bytes": 6426775552,
+  "config": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\fork1-encoder-daemon\\cymatix.toml",
+  "git_sha": "8bd356e725b38bd57107e8f83b329c5586055ad7",
+  "needles_file": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\fork1-encoder-daemon\\benchmarks\\dogfood\\erb\\needles_resolved_carve.json",
+  "gold_file": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\fork1-encoder-daemon\\benchmarks\\dogfood\\erb\\gold_by_needle_carve.json",
+  "needle_count": 30,
+  "k": 12,
+  "env": {
+    "CYMATIX_ENCODER_URL": "http://127.0.0.1:11439",
+    "CYMATIX_ENCODER_URL_set": true,
+    "CYMATIX_DISABLE_HEADROOM": null,
+    "CYMATIX_DISABLE_LEARN": "1",
+    "CYMATIX_GENOME_PATH": "f:\\tmp\\erb_carve\\erb_100k.db"
+  },
+  "note": "Ranks read from genome.last_query_scores (post-blend; blend republishes the map at scoring/blend.py:233/:281), ties broken by gene_id ascending. delivered_gold_queries reads window.expressed_gene_ids. Each arm runs one untimed warmup query first so the lazy encoder load is not billed to p50. Latencies are wall ms on a shared box \u2014 within-run relatives only.",
+  "dropped_arms": [
+    {
+      "arm": "no_plr",
+      "knob": "[plr] enabled",
+      "reason": "Not on the build_context path. [plr] enabled is read only by server/routes_context.py:635 -> server/helpers.py:444 _compute_plr_confidence, which decorates the /context/packet response; retrieval/fusion_plr.py:31 states it 'leaves document ranking untouched'. An in-process arm would measure zero by construction, not by evidence."
+    },
+    {
+      "arm": "no_harmonic",
+      "knob": "use_harmonic / [cymatics] harmonic_links",
+      "reason": "No query-time off-switch. `use_harmonic` defaults True at context_manager.py:2895 and knowledge_store.py:2259 and is passed by NO call site (context_manager.py:1945, :1965), so Tier 5 (knowledge_store.py:3119) and _expand_coactivated (knowledge_store.py:3494) are unconditional. [cymatics] harmonic_links gates only the ingest/expression-time edge WRITE inside the `if not read_only` block at context_manager.py:2353."
+    },
+    {
+      "arm": "no_tag_prefix / tag discipline",
+      "knob": "[retrieval] tag_idf_enabled, tag_df_cap, tag_prefix_weight",
+      "reason": "Tier 1 (knowledge_store.py:2697) and Tier 2 (:2720) are unconditional. The #327 knobs default to OFF (config.py:660, :668), so flipping them is an intervention, not an ablation. The only mute is weight-zeroing (tag_prefix_weight=0.0), which silences the contribution while still paying the SQL cost \u2014 that would misreport the cost axis, so no arm is offered."
+    },
+    {
+      "arm": "no_cold_tier",
+      "knob": "context.cold_tier_enabled",
+      "reason": "identity vs baseline \u2014 context.cold_tier_enabled already False (gate exists at context_manager.py:3013-3018 cold_enabled gate, but the effective config already sits at the ablated value, so this arm would measure an identity transform)"
+    },
+    {
+      "arm": "no_sr",
+      "knob": "retrieval.sr_enabled",
+      "reason": "identity vs baseline \u2014 retrieval.sr_enabled already False (gate exists at knowledge_store.py:3162 `sr_enabled = self._sr_enabled if use_sr is None`, but the effective config already sits at the ablated value, so this arm would measure an identity transform)"
+    },
+    {
+      "arm": "no_seeded_edges",
+      "knob": "retrieval.seeded_edges_enabled",
+      "reason": "identity vs baseline \u2014 retrieval.seeded_edges_enabled already False (gate exists at knowledge_store.py:3462 `if self._seeded_edges_enabled and ranked_ids and not read_only:`, but the effective config already sits at the ablated value, so this arm would measure an identity transform)"
+    }
+  ],
+  "arms": [
+    {
+      "arm": "baseline",
+      "knobs_changed": {},
+      "gate": "\u2014  (shipped config, untouched)",
+      "arm_valid": true,
+      "validation": "control",
+      "validation_detail": "control arm \u2014 shipped config, no ablation to validate",
+      "recall_at_k": 0.8,
+      "mean_rank_of_gold": 7.07,
+      "median_rank_of_gold": 3.0,
+      "gold_found_queries": 29,
+      "gold_ranks_total": 48,
+      "delivered_gold_queries": 15,
+      "queries_with_scores": 30,
+      "latency_ms": {
+        "p50": 2951.017,
+        "p95": 17017.456
+      },
+      "signal_ms_median": {
+        "ann_body_fetch": 17.212,
+        "ann_dense_leg": 97.367,
+        "body_fetch": 3.645,
+        "coact_expand": 185.478,
+        "dense": 118.223,
+        "fts5": 322.313,
+        "lex_anchor": 49.195,
+        "pki": 41.638,
+        "sema_boost": 0.001,
+        "splade": 395.569,
+        "tag_exact": 55.415,
+        "tag_prefix": 70.291
+      },
+      "n_queries": 30,
+      "warmup_ran": true,
+      "encoder_url": "http://127.0.0.1:11439",
+      "dense_codec_class": "RemoteBGEM3Codec",
+      "remote_dense": true,
+      "observables": {
+        "signal_keys": [
+          "ann_body_fetch",
+          "ann_dense_leg",
+          "body_fetch",
+          "coact_expand",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "sema_boost",
+          "splade",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_keys": [
+          "authority",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "splade",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "classifier_metadata_queries": 30,
+        "synonym_expansions": 12,
+        "cymatics_calls": 30,
+        "cold_tier_queries": 0
+      },
+      "errors": []
+    },
+    {
+      "arm": "no_splade",
+      "knobs_changed": {
+        "ingestion.splade_enabled": false
+      },
+      "gate": "knowledge_store.py:2783 `if self._splade_enabled:`",
+      "arm_valid": true,
+      "validation": "signal_absent",
+      "validation_detail": "signal_keys: ['splade'] present at baseline, absent in this arm",
+      "recall_at_k": 0.9,
+      "mean_rank_of_gold": 6.48,
+      "median_rank_of_gold": 2.0,
+      "gold_found_queries": 29,
+      "gold_ranks_total": 48,
+      "delivered_gold_queries": 15,
+      "queries_with_scores": 30,
+      "latency_ms": {
+        "p50": 2345.957,
+        "p95": 16097.824
+      },
+      "signal_ms_median": {
+        "ann_body_fetch": 18.017,
+        "ann_dense_leg": 73.892,
+        "body_fetch": 4.097,
+        "coact_expand": 146.41,
+        "dense": 84.991,
+        "fts5": 296.019,
+        "lex_anchor": 46.93,
+        "pki": 30.411,
+        "sema_boost": 0.001,
+        "tag_exact": 49.985,
+        "tag_prefix": 82.445
+      },
+      "n_queries": 30,
+      "warmup_ran": true,
+      "encoder_url": "http://127.0.0.1:11439",
+      "dense_codec_class": "RemoteBGEM3Codec",
+      "remote_dense": true,
+      "observables": {
+        "signal_keys": [
+          "ann_body_fetch",
+          "ann_dense_leg",
+          "body_fetch",
+          "coact_expand",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "sema_boost",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_keys": [
+          "authority",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "classifier_metadata_queries": 30,
+        "synonym_expansions": 12,
+        "cymatics_calls": 30,
+        "cold_tier_queries": 0
+      },
+      "errors": []
+    },
+    {
+      "arm": "no_dense",
+      "knobs_changed": {
+        "retrieval.dense_embedding_enabled": false
+      },
+      "gate": "knowledge_store.py:2972 / :3757 `if self._dense_embedding_enabled` + context_manager.py:2946 ANN-branch selector",
+      "arm_valid": true,
+      "validation": "signal_absent",
+      "validation_detail": "signal_keys: ['ann_dense_leg', 'dense'] present at baseline, absent in this arm",
+      "recall_at_k": 0.8333,
+      "mean_rank_of_gold": 4.82,
+      "median_rank_of_gold": 2.5,
+      "gold_found_queries": 28,
+      "gold_ranks_total": 45,
+      "delivered_gold_queries": 23,
+      "queries_with_scores": 30,
+      "latency_ms": {
+        "p50": 10497.764,
+        "p95": 14513.095
+      },
+      "signal_ms_median": {
+        "body_fetch": 3.107,
+        "coact_expand": 106.795,
+        "fts5": 242.699,
+        "lex_anchor": 45.165,
+        "pki": 28.608,
+        "sema_boost": 0.001,
+        "splade": 317.21,
+        "tag_exact": 51.656,
+        "tag_prefix": 74.465
+      },
+      "n_queries": 30,
+      "warmup_ran": true,
+      "encoder_url": "http://127.0.0.1:11439",
+      "dense_codec_class": null,
+      "remote_dense": false,
+      "observables": {
+        "signal_keys": [
+          "body_fetch",
+          "coact_expand",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "sema_boost",
+          "splade",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_keys": [
+          "authority",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "splade",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "classifier_metadata_queries": 30,
+        "synonym_expansions": 12,
+        "cymatics_calls": 30,
+        "cold_tier_queries": 0
+      },
+      "errors": []
+    },
+    {
+      "arm": "no_sema",
+      "knobs_changed": {
+        "ingestion.sema_embed_on_ingest": false
+      },
+      "gate": "context_manager.py:903-935 (codec never materialised) -> knowledge_store.py:2848 `if self._sema_codec is not None:`",
+      "arm_valid": true,
+      "validation": "signal_absent",
+      "validation_detail": "signal_keys: ['sema_boost'] present at baseline, absent in this arm",
+      "recall_at_k": 0.8,
+      "mean_rank_of_gold": 7.07,
+      "median_rank_of_gold": 3.0,
+      "gold_found_queries": 29,
+      "gold_ranks_total": 48,
+      "delivered_gold_queries": 15,
+      "queries_with_scores": 30,
+      "latency_ms": {
+        "p50": 2621.867,
+        "p95": 17335.093
+      },
+      "signal_ms_median": {
+        "ann_body_fetch": 17.859,
+        "ann_dense_leg": 77.437,
+        "body_fetch": 3.799,
+        "coact_expand": 147.572,
+        "dense": 98.36,
+        "fts5": 295.331,
+        "lex_anchor": 48.521,
+        "pki": 31.392,
+        "splade": 318.62,
+        "tag_exact": 50.343,
+        "tag_prefix": 78.222
+      },
+      "n_queries": 30,
+      "warmup_ran": true,
+      "encoder_url": "http://127.0.0.1:11439",
+      "dense_codec_class": "RemoteBGEM3Codec",
+      "remote_dense": true,
+      "observables": {
+        "signal_keys": [
+          "ann_body_fetch",
+          "ann_dense_leg",
+          "body_fetch",
+          "coact_expand",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "splade",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_keys": [
+          "authority",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "splade",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "classifier_metadata_queries": 30,
+        "synonym_expansions": 12,
+        "cymatics_calls": 30,
+        "cold_tier_queries": 0
+      },
+      "errors": []
+    },
+    {
+      "arm": "no_cymatics",
+      "knobs_changed": {
+        "cymatics.enabled": false
+      },
+      "gate": "context_manager.py:1216 -> :3119 -> scoring/blend.py:212 `if use_cymatics and cymatics_enabled ...`",
+      "arm_valid": true,
+      "validation": "cymatics_call_probe",
+      "validation_detail": "scoring.cymatics.query_spectrum called 30x at baseline, 0 here",
+      "recall_at_k": 0.8,
+      "mean_rank_of_gold": 6.86,
+      "median_rank_of_gold": 3.0,
+      "gold_found_queries": 29,
+      "gold_ranks_total": 47,
+      "delivered_gold_queries": 14,
+      "queries_with_scores": 30,
+      "latency_ms": {
+        "p50": 3933.449,
+        "p95": 16131.476
+      },
+      "signal_ms_median": {
+        "ann_body_fetch": 17.593,
+        "ann_dense_leg": 69.05,
+        "body_fetch": 3.78,
+        "coact_expand": 147.625,
+        "dense": 106.695,
+        "fts5": 290.786,
+        "lex_anchor": 51.867,
+        "pki": 33.095,
+        "sema_boost": 0.001,
+        "splade": 302.475,
+        "tag_exact": 50.071,
+        "tag_prefix": 77.926
+      },
+      "n_queries": 30,
+      "warmup_ran": true,
+      "encoder_url": "http://127.0.0.1:11439",
+      "dense_codec_class": "RemoteBGEM3Codec",
+      "remote_dense": true,
+      "observables": {
+        "signal_keys": [
+          "ann_body_fetch",
+          "ann_dense_leg",
+          "body_fetch",
+          "coact_expand",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "sema_boost",
+          "splade",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_keys": [
+          "authority",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "splade",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "classifier_metadata_queries": 29,
+        "synonym_expansions": 12,
+        "cymatics_calls": 0,
+        "cold_tier_queries": 0
+      },
+      "errors": []
+    },
+    {
+      "arm": "no_synonyms",
+      "knobs_changed": {
+        "synonym_map": {}
+      },
+      "gate": "knowledge_store.py:1773-1784 `_expand_terms` (called at :2305-2306)",
+      "arm_valid": true,
+      "validation": "synonym_expansion_absent",
+      "validation_detail": "_expand_terms expanded 12 probe terms at baseline, 0 here",
+      "recall_at_k": 0.8333,
+      "mean_rank_of_gold": 5.96,
+      "median_rank_of_gold": 2.5,
+      "gold_found_queries": 28,
+      "gold_ranks_total": 47,
+      "delivered_gold_queries": 15,
+      "queries_with_scores": 30,
+      "latency_ms": {
+        "p50": 2619.252,
+        "p95": 16544.017
+      },
+      "signal_ms_median": {
+        "ann_body_fetch": 17.294,
+        "ann_dense_leg": 71.082,
+        "body_fetch": 4.211,
+        "coact_expand": 160.315,
+        "dense": 89.119,
+        "fts5": 282.206,
+        "lex_anchor": 43.608,
+        "pki": 29.971,
+        "sema_boost": 0.001,
+        "splade": 297.698,
+        "tag_exact": 44.654,
+        "tag_prefix": 72.2
+      },
+      "n_queries": 30,
+      "warmup_ran": true,
+      "encoder_url": "http://127.0.0.1:11439",
+      "dense_codec_class": "RemoteBGEM3Codec",
+      "remote_dense": true,
+      "observables": {
+        "signal_keys": [
+          "ann_body_fetch",
+          "ann_dense_leg",
+          "body_fetch",
+          "coact_expand",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "sema_boost",
+          "splade",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_keys": [
+          "authority",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "splade",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "classifier_metadata_queries": 30,
+        "synonym_expansions": 0,
+        "cymatics_calls": 30,
+        "cold_tier_queries": 0
+      },
+      "errors": []
+    },
+    {
+      "arm": "no_classifier",
+      "knobs_changed": {
+        "classifier.enabled": false
+      },
+      "gate": "context_manager.py:1801-1807 classify_query gate; metadata at :2316; assembly cap at :2101-2113",
+      "arm_valid": true,
+      "validation": "classifier_metadata_absent",
+      "validation_detail": "window.metadata['classifier'] written on 30 baseline queries, 0 here",
+      "recall_at_k": 0.8,
+      "mean_rank_of_gold": 7.76,
+      "median_rank_of_gold": 2.0,
+      "gold_found_queries": 29,
+      "gold_ranks_total": 48,
+      "delivered_gold_queries": 15,
+      "queries_with_scores": 30,
+      "latency_ms": {
+        "p50": 2718.178,
+        "p95": 17271.549
+      },
+      "signal_ms_median": {
+        "ann_body_fetch": 17.396,
+        "ann_dense_leg": 63.013,
+        "body_fetch": 3.96,
+        "coact_expand": 150.976,
+        "dense": 125.409,
+        "fts5": 321.902,
+        "lex_anchor": 48.245,
+        "pki": 32.372,
+        "sema_boost": 0.002,
+        "splade": 292.128,
+        "tag_exact": 48.618,
+        "tag_prefix": 78.43
+      },
+      "n_queries": 30,
+      "warmup_ran": true,
+      "encoder_url": "http://127.0.0.1:11439",
+      "dense_codec_class": "RemoteBGEM3Codec",
+      "remote_dense": true,
+      "observables": {
+        "signal_keys": [
+          "ann_body_fetch",
+          "ann_dense_leg",
+          "body_fetch",
+          "coact_expand",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "sema_boost",
+          "splade",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_keys": [
+          "authority",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "splade",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "classifier_metadata_queries": 0,
+        "synonym_expansions": 12,
+        "cymatics_calls": 30,
+        "cold_tier_queries": 0
+      },
+      "errors": []
+    }
+  ]
+}

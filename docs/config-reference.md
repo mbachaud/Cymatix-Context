@@ -1263,6 +1263,41 @@ trigger_only = false
 
 ---
 
+## `[encoder_daemon]`
+
+**Purpose.** Fork 1 slice 1 (`docs/design/2026-08-05-fork1-slice1-contract.md`):
+an optional shared process (`cymatix_context.encoder_daemon`) that owns one
+BGE-M3 + SPLADE + SEMA load behind localhost HTTP, so the dense, SPLADE, and
+SEMA seams in `cymatix_context/backends/` can encode through it instead of
+each holding their own weights. `url` empty (the default, and not present in
+the shipped `cymatix.toml`) means "off": every seam runs in-process exactly
+as before, so byte-identical-when-off holds for free. Set `url` (or export
+`CYMATIX_ENCODER_URL`, which wins over the TOML value) to point at a running
+daemon, e.g. `"http://127.0.0.1:11439"`. Timeouts, the micro-batch window,
+and the circuit-breaker retry cooldown are env-tunable constants in
+`encoder_client.py` for this slice, not config surface.
+
+**Keys.**
+
+<!-- BEGIN GENERATED: config-tables:encoder_daemon -->
+| Key | Type | Default | Description |
+|---|---|---|---|
+| `url` | `str` | `""` |  |
+<!-- END GENERATED -->
+
+**Example.**
+
+```toml
+[encoder_daemon]
+url = "http://127.0.0.1:11439"
+```
+
+**Cross-refs.** `cymatix_context/config.py` (`EncoderDaemonConfig`),
+`cymatix_context/backends/encoder_client.py` (`active_url`, `configure`),
+`cymatix_context/encoder_daemon.py` (`create_encoder_app`, `main`).
+
+---
+
 # Configuration loading order
 
 `cymatix_context.config.load_config()` resolves configuration in this
