@@ -106,3 +106,23 @@ Ladder tooling: `benchmarks/dogfood/erb/ablation_ladder.py` (arms
 self-validate via signal absence), `storage_audit.py` (layer-mapped GB).
 Re-run cadence: after any tier-gating change, and at blob scale before
 acting on any REMOVE verdict.
+
+## Addendum (2026-08-06): splade blob-scale A/B — verdict lands
+
+Two order-reversed ladder passes on the index-fixed 829k probe bed
+(`erb_blob_probe.db`, 56.7GB), 30 blob needles, trim profile, GPU daemon
+(receipts `splade_ab_blob_run{1,2}.json`): **recall identical in all four
+arm executions** (r@12 0.767, med rank 2.0 — zero flips, not noise-level
+similarity), latency −2.9/−3.1s p50 (−14/−15%) and −5s p95 without splade,
+reproduced across arm orders. Splade's per-query cost scales with posting
+lists (~400ms at 100k → ~3s at 829k) while contributing nothing measurable
+at either scale on these needle sets.
+
+**Verdict upgrade: TRIM/REMOVE-CANDIDATE → REMOVE for ERB-class serving.**
+Actions this licenses: `[ingestion] splade_enabled=false` for large-corpus
+serving profiles (or the ledger's #164-generalized size gate with
+`disable_above` ≈ 100-250k), and a splade-less carve of the blob
+(≈37GB, RAM-cacheable) for the full 469-needle benchmark — projected
+c=1 runtime ≈2.2h (469 × ~17s), before any concurrency.
+Caveat retained: n=30 of 469 needles; a 100-needle confirmation pass is
+cheap insurance before changing shipped defaults (not before bench use).
