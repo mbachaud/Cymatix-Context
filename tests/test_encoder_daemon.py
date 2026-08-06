@@ -46,6 +46,17 @@ def _pristine_encoder_daemon(monkeypatch):
     monkeypatch.setattr(splade_backend, "_device", None, raising=False)
     monkeypatch.delenv("CYMATIX_ENCODER_URL", raising=False)
     monkeypatch.delenv("CYMATIX_ENCODER_SPAWN_TOKEN", raising=False)
+    # Slice-2 knobs: the determinism gate changes batch SHAPE and the LRU
+    # changes call COUNTS, so a dev machine exporting either would silently
+    # rewrite what every assertion in this file observes.
+    for _knob in (
+        "CYMATIX_ENCODER_DETERMINISTIC",
+        "CYMATIX_ENCODER_TF32",
+        "CYMATIX_ENCODER_FILLER_CHARS",
+        "CYMATIX_ENCODER_VECTOR_CACHE",
+        "CUBLAS_WORKSPACE_CONFIG",
+    ):
+        monkeypatch.delenv(_knob, raising=False)
     encoder_client.reset_for_test()
     yield
     encoder_client.reset_for_test()
@@ -1521,3 +1532,799 @@ def test_warm_rates_survive_a_model_that_raises_during_the_rate_probe():
     assert body["ready"] is True
     assert cap["warm_encodes_per_s"]["sema"] is None
     assert cap["bundles_per_s"] == {"interleaved": None, "pipelined": None}
+
+
+# ══ slice 2: determinism profile ════════════════════════════════════
+#
+# docs/benchmarks/2026-08-05-fork1-worker-sweep.md, "Rank stability under
+# parallelism": on CUDA the dense micro-batch SHAPE depends on concurrent
+# arrival order and batched-GEMM drift across shapes flips near-cutoff
+# ranks. Everything below is env-gated; the default path must stay
+# byte-for-byte what slice 1 shipped, which is what the "…_by_default"
+# tests pin.
+
+
+# ── env knobs ───────────────────────────────────────────────────────
+
+
+def test_deterministic_gate_defaults_off_and_is_env_readable(monkeypatch):
+    from cymatix_context.encoder_daemon import deterministic_enabled
+
+    assert deterministic_enabled() is False
+    monkeypatch.setenv("CYMATIX_ENCODER_DETERMINISTIC", "1")
+    assert deterministic_enabled() is True, "the knob must be read at CALL time"
+    monkeypatch.setenv("CYMATIX_ENCODER_DETERMINISTIC", "off")
+    assert deterministic_enabled() is False
+
+
+def test_deterministic_gate_falls_back_to_off_on_a_nonsense_value(monkeypatch):
+    from cymatix_context.encoder_daemon import deterministic_enabled
+
+    monkeypatch.setenv("CYMATIX_ENCODER_DETERMINISTIC", "maybe")
+    assert deterministic_enabled() is False
+
+
+def test_tf32_is_off_by_default_and_re_enabled_by_its_own_knob(monkeypatch):
+    """TF32 off is part of the deterministic profile, not a separate opt-in."""
+    from cymatix_context.encoder_daemon import tf32_enabled
+
+    assert tf32_enabled() is False
+    monkeypatch.setenv("CYMATIX_ENCODER_TF32", "1")
+    assert tf32_enabled() is True
+
+
+def test_filler_text_is_deterministic_and_sized_by_its_env_knob(monkeypatch):
+    from cymatix_context.encoder_daemon import (
+        FILLER_CHARS_DEFAULT,
+        dense_filler_text,
+        filler_chars,
+    )
+
+    assert filler_chars() == FILLER_CHARS_DEFAULT
+    first = dense_filler_text()
+    assert len(first) == FILLER_CHARS_DEFAULT
+    assert dense_filler_text() == first, "the filler must be constant across calls"
+
+    monkeypatch.setenv("CYMATIX_ENCODER_FILLER_CHARS", "64")
+    assert len(dense_filler_text()) == 64
+    # Clamped, never empty: a 0-char filler would pin nothing at all.
+    monkeypatch.setenv("CYMATIX_ENCODER_FILLER_CHARS", "0")
+    assert len(dense_filler_text()) == 1
+
+
+def test_filler_is_longer_than_the_dense_passage_char_cap():
+    """The length pin is by domination: the filler must out-length real text.
+
+    Callers cap dense passages at ``[ingestion] dense_passage_char_cap``
+    (default = PASSAGE_CHAR_CAP), and both backends pad each chunk to its
+    longest member — so the filler only pins the padded length while it is
+    that longest member.
+    """
+    from cymatix_context.backends.bgem3_codec import PASSAGE_CHAR_CAP
+    from cymatix_context.encoder_daemon import dense_filler_text
+
+    assert len(dense_filler_text()) > PASSAGE_CHAR_CAP
+
+
+def test_vector_cache_size_knob_defaults_to_4096_and_zero_disables(monkeypatch):
+    from cymatix_context.encoder_daemon import vector_cache_size
+
+    assert vector_cache_size() == 4096
+    monkeypatch.setenv("CYMATIX_ENCODER_VECTOR_CACHE", "16")
+    assert vector_cache_size() == 16
+    monkeypatch.setenv("CYMATIX_ENCODER_VECTOR_CACHE", "0")
+    assert vector_cache_size() == 0
+    monkeypatch.setenv("CYMATIX_ENCODER_VECTOR_CACHE", "nonsense")
+    assert vector_cache_size() == 4096
+
+
+# ── fixed-shape dense batching ──────────────────────────────────────
+
+
+class _ShapeRecorder:
+    """encode_batch that records the exact texts of every call it receives."""
+
+    def __init__(self):
+        self.calls: list = []
+
+    def __call__(self, texts, task="passage"):
+        self.calls.append((list(texts), task))
+        return [hash_vec(t, 8).tolist() for t in texts]
+
+    @property
+    def sizes(self):
+        return [len(texts) for texts, _ in self.calls]
+
+
+def _drain_two(recorder, max_batch=4, window_ms=50.0):
+    """Enqueue two dense items, run one drain, return their results."""
+    from cymatix_context.encoder_daemon import _Batcher, make_dense_executor
+
+    b = _Batcher(
+        "dense",
+        make_dense_executor(recorder, max_batch=max_batch),
+        max_batch=max_batch,
+        window_s=window_ms / 1000.0,
+    )
+    futures = [b.submit((f"text-{i}", "passage")) for i in range(2)]
+    b.start()
+    try:
+        return [f.result(timeout=5) for f in futures]
+    finally:
+        b.stop()
+
+
+def test_dense_drain_is_not_padded_by_default():
+    """Default path: the backend sees exactly the items that were queued."""
+    rec = _ShapeRecorder()
+    results = _drain_two(rec)
+    assert rec.sizes == [2]
+    assert results == [hash_vec("text-0", 8).tolist(), hash_vec("text-1", 8).tolist()]
+
+
+def test_dense_drain_is_padded_to_max_batch_when_deterministic(monkeypatch):
+    """The whole point: a 2-item drain becomes one 4-item backend call."""
+    from cymatix_context.encoder_daemon import dense_filler_text
+
+    monkeypatch.setenv("CYMATIX_ENCODER_DETERMINISTIC", "1")
+    rec = _ShapeRecorder()
+    results = _drain_two(rec, max_batch=4)
+
+    assert len(rec.calls) == 1, f"expected exactly one backend call; got {rec.sizes}"
+    texts, task = rec.calls[0]
+    assert len(texts) == 4, f"batch must be padded to max_batch=4; got {len(texts)}"
+    assert task == "passage"
+    assert texts[:2] == ["text-0", "text-1"]
+    assert texts[2:] == [dense_filler_text()] * 2, "filler must be the constant text"
+    # Filler rows are discarded and each caller still gets ITS OWN vector.
+    assert results == [hash_vec("text-0", 8).tolist(), hash_vec("text-1", 8).tolist()]
+
+
+def test_dense_padding_is_shape_stable_across_arrival_counts(monkeypatch):
+    """1-item and 2-item drains must produce the SAME backend batch shape.
+
+    This is the rank-wobble mechanism stated as an assertion: without the
+    gate the two drains differ in shape, which is what moves the low
+    mantissa bits on CUDA.
+    """
+    from cymatix_context.encoder_daemon import (
+        _Batcher,
+        dense_filler_text,
+        make_dense_executor,
+    )
+
+    monkeypatch.setenv("CYMATIX_ENCODER_DETERMINISTIC", "1")
+    rec = _ShapeRecorder()
+
+    def _run(n):
+        b = _Batcher(
+            "dense", make_dense_executor(rec, max_batch=4), max_batch=4, window_s=0.05
+        )
+        futures = [b.submit((f"t{i}", "passage")) for i in range(n)]
+        b.start()
+        try:
+            for f in futures:
+                f.result(timeout=5)
+        finally:
+            b.stop()
+
+    _run(1)
+    _run(2)
+    assert rec.sizes == [4, 4], f"batch shape varied with arrival count: {rec.sizes}"
+    # ...and the padding is the same constant text in both, not merely the
+    # same count — a filler that varied would move the mantissa bits itself.
+    filler = dense_filler_text()
+    assert rec.calls[0][0][1:] == [filler] * 3
+    assert rec.calls[1][0][2:] == [filler] * 2
+
+
+def test_dense_full_batch_is_not_padded_when_deterministic(monkeypatch):
+    """A drain already at max_batch has nothing to pin — no filler, no cost."""
+    from cymatix_context.encoder_daemon import _Batcher, make_dense_executor
+
+    monkeypatch.setenv("CYMATIX_ENCODER_DETERMINISTIC", "1")
+    rec = _ShapeRecorder()
+    b = _Batcher("dense", make_dense_executor(rec, max_batch=4), max_batch=4, window_s=0.05)
+    futures = [b.submit((f"t{i}", "passage")) for i in range(4)]
+    b.start()
+    try:
+        for f in futures:
+            f.result(timeout=5)
+    finally:
+        b.stop()
+    assert rec.sizes == [4]
+    assert rec.calls[0][0] == ["t0", "t1", "t2", "t3"]
+
+
+def test_dense_padding_applies_per_task_group(monkeypatch):
+    """Task grouping is upstream of padding: each group is pinned separately."""
+    from cymatix_context.encoder_daemon import _Batcher, make_dense_executor
+
+    monkeypatch.setenv("CYMATIX_ENCODER_DETERMINISTIC", "1")
+    rec = _ShapeRecorder()
+    b = _Batcher("dense", make_dense_executor(rec, max_batch=4), max_batch=4, window_s=0.05)
+    f_q = b.submit(("q-text", "query"))
+    f_p = b.submit(("p-text", "passage"))
+    b.start()
+    try:
+        assert f_q.result(timeout=5) == hash_vec("q-text", 8).tolist()
+        assert f_p.result(timeout=5) == hash_vec("p-text", 8).tolist()
+    finally:
+        b.stop()
+    assert sorted(rec.sizes) == [4, 4]
+    assert sorted(task for _, task in rec.calls) == ["passage", "query"]
+
+
+def test_dense_padding_failure_still_fails_only_the_real_callers(monkeypatch):
+    """A padded batch that explodes must not change the failure contract."""
+    from cymatix_context.encoder_daemon import _Batcher, make_dense_executor
+
+    monkeypatch.setenv("CYMATIX_ENCODER_DETERMINISTIC", "1")
+
+    def _boom(texts, task="passage"):
+        raise RuntimeError("padded batch exploded")
+
+    b = _Batcher("dense", make_dense_executor(_boom, max_batch=4), max_batch=4, window_s=0.05)
+    futures = [b.submit((f"t{i}", "passage")) for i in range(2)]
+    b.start()
+    try:
+        for f in futures:
+            with pytest.raises(RuntimeError, match="padded batch exploded"):
+                f.result(timeout=5)
+        assert b.is_alive()
+    finally:
+        b.stop()
+
+
+def test_dense_padding_length_mismatch_is_measured_against_the_padded_batch(monkeypatch):
+    """A backend returning only the un-padded count is a bug, not a success."""
+    from cymatix_context.encoder_daemon import _Batcher, make_dense_executor
+
+    monkeypatch.setenv("CYMATIX_ENCODER_DETERMINISTIC", "1")
+
+    def _short(texts, task="passage"):
+        return [hash_vec(t, 8).tolist() for t in texts[:2]]
+
+    b = _Batcher("dense", make_dense_executor(_short, max_batch=4), max_batch=4, window_s=0.05)
+    fut = b.submit(("t0", "passage"))
+    b.start()
+    try:
+        with pytest.raises(Exception):
+            fut.result(timeout=5)
+    finally:
+        b.stop()
+
+
+def test_daemon_wires_max_batch_into_the_dense_executor(monkeypatch):
+    """End to end through the app: install() must pass the cap down."""
+    from fastapi.testclient import TestClient
+
+    monkeypatch.setenv("CYMATIX_ENCODER_DETERMINISTIC", "1")
+
+    class _Codec:
+        def __init__(self):
+            self.rec = _ShapeRecorder()
+
+        def encode_batch(self, texts, task="passage"):
+            return self.rec(texts, task)
+
+    codec = _Codec()
+    registry = make_registry(dense=codec, batch_sizes={"dense": 4, "splade": 8, "sema": 64})
+    with TestClient(_app(registry)) as client:
+        before = len(codec.rec.calls)
+        resp = client.post("/encode/dense", json={"texts": ["alpha"], "task": "passage"})
+    assert resp.status_code == 200
+    assert resp.json()["vectors"] == [hash_vec("alpha", 8).tolist()]
+    served = codec.rec.calls[before:]
+    assert [len(texts) for texts, _ in served] == [4], (
+        f"the app's dense executor did not receive max_batch: {served}"
+    )
+
+
+def test_splade_and_sema_stay_per_item_under_the_deterministic_gate(monkeypatch):
+    """Per-item IS fixed shape (n=1); the gate must not touch those seams."""
+    from fastapi.testclient import TestClient
+
+    monkeypatch.setenv("CYMATIX_ENCODER_DETERMINISTIC", "1")
+    splade, sema = CountingSplade(), CountingSemaCodec()
+    with TestClient(_app(make_registry(splade=splade, sema=sema))) as client:
+        base_splade, base_sema = splade.calls, sema.encode_calls
+        client.post("/encode/splade", json={"texts": ["a", "b"]})
+        client.post("/encode/sema", json={"texts": ["a", "b"]})
+    assert splade.calls - base_splade == 2
+    assert sema.encode_calls - base_sema == 2
+    assert splade.texts[-2:] == ["a", "b"], "no filler may reach the SPLADE seam"
+    assert sema.texts[-2:] == ["a", "b"], "no filler may reach the SEMA seam"
+
+
+# ── determinism flags (fake torch — the real one is never imported) ──
+
+
+class _FakeMatmul:
+    def __init__(self):
+        self.allow_tf32 = True
+
+
+class _FakeCudaBackend:
+    def __init__(self):
+        self.matmul = _FakeMatmul()
+
+
+class _FakeBackends:
+    def __init__(self, *, cuda=True):
+        if cuda:
+            self.cuda = _FakeCudaBackend()
+
+
+class _FakeTorch:
+    """Records the determinism calls; never a real torch import."""
+
+    __version__ = "9.9.9-fake"
+
+    def __init__(self, *, cuda=True):
+        self.backends = _FakeBackends(cuda=cuda)
+        self.deterministic_calls: list = []
+
+    def use_deterministic_algorithms(self, mode, warn_only=False):
+        self.deterministic_calls.append((mode, warn_only))
+
+
+def _install_fake_torch(monkeypatch, **kw):
+    import sys
+
+    fake = _FakeTorch(**kw)
+    monkeypatch.setitem(sys.modules, "torch", fake)
+    return fake
+
+
+def test_determinism_flags_are_inert_when_the_gate_is_off(monkeypatch):
+    import os
+
+    from cymatix_context.encoder_daemon import apply_determinism_flags
+
+    fake = _install_fake_torch(monkeypatch)
+    applied = apply_determinism_flags()
+
+    assert applied["enabled"] is False
+    assert fake.deterministic_calls == [], "no torch call may happen with the gate off"
+    assert fake.backends.cuda.matmul.allow_tf32 is True, "TF32 must be untouched"
+    assert "CUBLAS_WORKSPACE_CONFIG" not in os.environ
+
+
+def test_determinism_flags_set_the_torch_knobs_when_gated(monkeypatch):
+    import os
+
+    from cymatix_context.encoder_daemon import (
+        CUBLAS_WORKSPACE_DEFAULT,
+        apply_determinism_flags,
+    )
+
+    monkeypatch.setenv("CYMATIX_ENCODER_DETERMINISTIC", "1")
+    fake = _install_fake_torch(monkeypatch)
+    applied = apply_determinism_flags()
+
+    assert fake.deterministic_calls == [(True, True)], "warn_only=True is required"
+    assert fake.backends.cuda.matmul.allow_tf32 is False
+    assert os.environ["CUBLAS_WORKSPACE_CONFIG"] == CUBLAS_WORKSPACE_DEFAULT
+    assert applied == {
+        "enabled": True,
+        "cublas_workspace_config": CUBLAS_WORKSPACE_DEFAULT,
+        "use_deterministic_algorithms": True,
+        "allow_tf32": False,
+        "torch": True,
+    }
+
+
+def test_determinism_flags_keep_an_operator_set_cublas_workspace_config(monkeypatch):
+    import os
+
+    from cymatix_context.encoder_daemon import apply_determinism_flags
+
+    monkeypatch.setenv("CYMATIX_ENCODER_DETERMINISTIC", "1")
+    monkeypatch.setenv("CUBLAS_WORKSPACE_CONFIG", ":16:8")
+    _install_fake_torch(monkeypatch)
+    apply_determinism_flags()
+    assert os.environ["CUBLAS_WORKSPACE_CONFIG"] == ":16:8"
+
+
+def test_determinism_flags_honor_the_tf32_re_enable_knob(monkeypatch):
+    from cymatix_context.encoder_daemon import apply_determinism_flags
+
+    monkeypatch.setenv("CYMATIX_ENCODER_DETERMINISTIC", "1")
+    monkeypatch.setenv("CYMATIX_ENCODER_TF32", "1")
+    fake = _install_fake_torch(monkeypatch)
+    applied = apply_determinism_flags()
+    assert fake.backends.cuda.matmul.allow_tf32 is True
+    assert applied["allow_tf32"] is True
+    assert fake.deterministic_calls == [(True, True)], "TF32 on ≠ determinism off"
+
+
+def test_determinism_flags_no_op_on_a_cpu_only_torch(monkeypatch):
+    """CPU-only builds have no torch.backends.cuda — a no-op, never a crash."""
+    from cymatix_context.encoder_daemon import apply_determinism_flags
+
+    monkeypatch.setenv("CYMATIX_ENCODER_DETERMINISTIC", "1")
+    fake = _install_fake_torch(monkeypatch, cuda=False)
+    applied = apply_determinism_flags()
+
+    assert applied["use_deterministic_algorithms"] is True
+    assert applied["allow_tf32"] is None, "no CUDA backend ⇒ nothing to report"
+    assert fake.deterministic_calls == [(True, True)]
+
+
+def test_determinism_flags_survive_a_torch_that_rejects_the_call(monkeypatch):
+    """An old torch without warn_only must degrade, not kill the daemon."""
+    from cymatix_context.encoder_daemon import apply_determinism_flags
+
+    monkeypatch.setenv("CYMATIX_ENCODER_DETERMINISTIC", "1")
+    fake = _install_fake_torch(monkeypatch)
+
+    def _reject(mode, warn_only=False):
+        raise RuntimeError("unsupported on this build")
+
+    fake.use_deterministic_algorithms = _reject
+    applied = apply_determinism_flags()
+    assert applied["use_deterministic_algorithms"] is False
+    assert applied["allow_tf32"] is False, "one failed knob must not skip the others"
+
+
+def test_determinism_flags_survive_a_missing_torch(monkeypatch):
+    """No torch at all (client-side import of this module) is not an error."""
+    import sys
+
+    from cymatix_context.encoder_daemon import apply_determinism_flags
+
+    monkeypatch.setenv("CYMATIX_ENCODER_DETERMINISTIC", "1")
+    monkeypatch.setitem(sys.modules, "torch", None)  # `import torch` → ImportError
+    applied = apply_determinism_flags()
+    assert applied["torch"] is False
+    assert applied["use_deterministic_algorithms"] is False
+    assert applied["cublas_workspace_config"], "the env var is set before torch loads"
+
+
+def test_registry_load_applies_the_flags_before_constructing_any_codec():
+    """Source-level: CUBLAS_WORKSPACE_CONFIG is only read at cuBLAS init.
+
+    ``EncoderRegistry.load`` is the last point in the daemon process where
+    torch has not built a CUDA context, so the call has to be the FIRST
+    statement in it — asserted structurally because the non-live suite must
+    never execute the real ``load()`` (it constructs ~3 GB of weights).
+    """
+    import ast
+    from pathlib import Path
+
+    import cymatix_context.encoder_daemon as mod
+
+    tree = ast.parse(Path(mod.__file__).read_text(encoding="utf-8"))
+    load_fn = next(
+        node
+        for cls in tree.body
+        if isinstance(cls, ast.ClassDef) and cls.name == "EncoderRegistry"
+        for node in cls.body
+        if isinstance(node, ast.FunctionDef) and node.name == "load"
+    )
+    body = [
+        node
+        for node in load_fn.body
+        if not (isinstance(node, ast.Expr) and isinstance(node.value, ast.Constant))
+    ]
+    first = body[0]
+    assert isinstance(first, ast.Expr) and isinstance(first.value, ast.Call)
+    assert getattr(first.value.func, "id", None) == "apply_determinism_flags", (
+        f"first statement of EncoderRegistry.load is {ast.dump(first)[:120]}"
+    )
+
+
+# ── daemon-side vector LRU ──────────────────────────────────────────
+
+
+def test_vector_cache_lru_evicts_the_least_recently_used_entry():
+    from cymatix_context.encoder_daemon import _VectorCache
+
+    cache = _VectorCache(2)
+    cache.put(("dense", "m", "passage", "a"), [1.0])
+    cache.put(("dense", "m", "passage", "b"), [2.0])
+    assert cache.get(("dense", "m", "passage", "a"))[0] is True  # 'a' is now MRU
+    cache.put(("dense", "m", "passage", "c"), [3.0])
+
+    assert cache.get(("dense", "m", "passage", "b")) == (False, None), "LRU victim"
+    assert cache.get(("dense", "m", "passage", "a")) == (True, [1.0])
+    assert cache.get(("dense", "m", "passage", "c")) == (True, [3.0])
+    assert cache.stats()["size"] == 2
+
+
+def test_vector_cache_zero_capacity_stores_nothing():
+    from cymatix_context.encoder_daemon import _VectorCache
+
+    cache = _VectorCache(0)
+    assert cache.enabled is False
+    cache.put(("dense", "m", "passage", "a"), [1.0])
+    assert cache.get(("dense", "m", "passage", "a")) == (False, None)
+    stats = cache.stats()
+    assert stats["enabled"] is False
+    assert stats == {"enabled": False, "size": 0, "max_size": 0, "hits": 0, "misses": 0}
+
+
+def test_vector_cache_distinguishes_none_from_a_miss():
+    """``get`` returns (hit, value) so a legitimately falsy value still hits."""
+    from cymatix_context.encoder_daemon import _VectorCache
+
+    cache = _VectorCache(4)
+    cache.put(("sema", "m", "", "x"), [])
+    assert cache.get(("sema", "m", "", "x")) == (True, [])
+
+
+def test_vector_cache_key_covers_family_model_task_and_text():
+    from cymatix_context.encoder_daemon import _Daemon
+
+    registry = make_registry()
+    registry.splade_model_name = "splade-a"
+    registry.sema_model_name = "sema-a"
+    daemon = _Daemon(registry, window_s=0.001)
+
+    dense_q = daemon.cache_key("dense", ("hello", "query"))
+    dense_p = daemon.cache_key("dense", ("hello", "passage"))
+    assert dense_q != dense_p, "the query prefix changes the bytes"
+    assert daemon.cache_key("splade", ("hello", 32)) != daemon.cache_key(
+        "splade", ("hello", 128)
+    ), "top_k truncates the term set — it is part of the key"
+    assert daemon.cache_key("sema", ("hello",)) != daemon.cache_key("sema", ("other",))
+
+    registry.dense_model_name = "another-model"
+    assert daemon.cache_key("dense", ("hello", "query")) != dense_q, (
+        "a reload onto a different model must not be served stale vectors"
+    )
+
+
+def test_vector_cache_key_is_none_when_disabled_or_registry_absent():
+    from cymatix_context.encoder_daemon import _Daemon
+
+    assert _Daemon(make_registry(), window_s=0.001, vector_cache_max=0).cache_key(
+        "dense", ("a", "query")
+    ) is None
+    assert _Daemon(None, window_s=0.001, vector_cache_max=8).cache_key(
+        "dense", ("a", "query")
+    ) is None
+
+
+def test_repeat_text_hits_the_cache_and_never_reaches_the_dense_codec():
+    from fastapi.testclient import TestClient
+
+    dense = FakeBGEM3Codec(dim=8)
+    with TestClient(_app(make_registry(dense=dense))) as client:
+        baseline = dense.batch_calls
+        first = client.post("/encode/dense", json={"texts": ["alpha"], "task": "passage"})
+        after_first = dense.batch_calls
+        second = client.post("/encode/dense", json={"texts": ["alpha"], "task": "passage"})
+        cache = client.get("/health").json()["capacity"]["vector_cache"]
+
+    assert first.json()["vectors"] == second.json()["vectors"]
+    assert after_first - baseline == 1
+    assert dense.batch_calls == after_first, "the repeat must not reach the codec"
+    assert cache["hits"] >= 1 and cache["size"] >= 1
+
+
+def test_repeat_text_hits_the_cache_on_the_splade_and_sema_seams():
+    from fastapi.testclient import TestClient
+
+    splade, sema = CountingSplade(), CountingSemaCodec()
+    with TestClient(_app(make_registry(splade=splade, sema=sema))) as client:
+        base_splade, base_sema = splade.calls, sema.encode_calls
+        for _ in range(3):
+            client.post("/encode/splade", json={"texts": ["hello"], "top_k": 64})
+            client.post("/encode/sema", json={"texts": ["hello"]})
+    assert splade.calls - base_splade == 1
+    assert sema.encode_calls - base_sema == 1
+
+
+def test_a_different_task_or_top_k_misses_the_cache():
+    from fastapi.testclient import TestClient
+
+    class _TaskAware:
+        def __init__(self):
+            self.calls = 0
+
+        def encode_batch(self, texts, task="passage"):
+            self.calls += 1
+            return [hash_vec(f"{task}:{t}", 8).tolist() for t in texts]
+
+    dense, splade = _TaskAware(), CountingSplade()
+    with TestClient(_app(make_registry(dense=dense, splade=splade))) as client:
+        base_dense, base_splade = dense.calls, splade.calls
+        client.post("/encode/dense", json={"texts": ["q"], "task": "query"})
+        client.post("/encode/dense", json={"texts": ["q"], "task": "passage"})
+        client.post("/encode/splade", json={"texts": ["q"], "top_k": 32})
+        client.post("/encode/splade", json={"texts": ["q"], "top_k": 128})
+    assert dense.calls - base_dense == 2, "query and passage are different bytes"
+    assert splade.calls - base_splade == 2, "top_k is part of the key"
+
+
+def test_the_bundle_path_shares_the_cache_with_the_single_family_routes():
+    """The bundle fans into the same queues, so it gets the LRU for free."""
+    from fastapi.testclient import TestClient
+
+    dense, splade, sema = FakeBGEM3Codec(dim=8), CountingSplade(), CountingSemaCodec()
+    registry = make_registry(dense=dense, splade=splade, sema=sema)
+    with TestClient(_app(registry)) as client:
+        first = client.post(
+            "/encode/bundle", json={"text": "shared", "task": "query", "top_k": 64}
+        ).json()
+        base = (dense.batch_calls, splade.calls, sema.encode_calls)
+        second = client.post(
+            "/encode/bundle", json={"text": "shared", "task": "query", "top_k": 64}
+        ).json()
+    assert second == first
+    assert (dense.batch_calls, splade.calls, sema.encode_calls) == base, (
+        "a repeated bundle must be served entirely from the cache"
+    )
+
+
+def test_the_cache_is_bounded_and_evicts(monkeypatch):
+    """Capacity 1: a→b→a must re-encode a (it was evicted by b)."""
+    from fastapi.testclient import TestClient
+
+    dense = FakeBGEM3Codec(dim=8)
+    app = _app(make_registry(dense=dense), vector_cache_max=1)
+    with TestClient(app) as client:
+        baseline = dense.batch_calls
+        for text in ("a", "b", "a"):
+            client.post("/encode/dense", json={"texts": [text], "task": "passage"})
+        cache = client.get("/health").json()["capacity"]["vector_cache"]
+    assert dense.batch_calls - baseline == 3
+    assert cache["max_size"] == 1
+    assert cache["size"] == 1
+
+
+def test_vector_cache_zero_disables_it_through_the_app():
+    from fastapi.testclient import TestClient
+
+    dense = FakeBGEM3Codec(dim=8)
+    with TestClient(_app(make_registry(dense=dense), vector_cache_max=0)) as client:
+        baseline = dense.batch_calls
+        client.post("/encode/dense", json={"texts": ["alpha"]})
+        client.post("/encode/dense", json={"texts": ["alpha"]})
+        cache = client.get("/health").json()["capacity"]["vector_cache"]
+    assert dense.batch_calls - baseline == 2, "0 must disable the cache entirely"
+    assert cache == {"enabled": False, "size": 0, "max_size": 0, "hits": 0, "misses": 0}
+
+
+def test_vector_cache_capacity_comes_from_the_env_knob(monkeypatch):
+    from fastapi.testclient import TestClient
+    from cymatix_context.encoder_daemon import create_encoder_app
+
+    monkeypatch.setenv("CYMATIX_ENCODER_VECTOR_CACHE", "7")
+    with TestClient(create_encoder_app(make_registry(), batch_window_ms=1.0)) as client:
+        cache = client.get("/health").json()["capacity"]["vector_cache"]
+    assert cache["max_size"] == 7 and cache["enabled"] is True
+
+
+def test_the_cache_never_stores_a_failure():
+    from fastapi.testclient import TestClient
+
+    calls: list = []
+
+    def _splade(text, top_k=128, **kw):
+        calls.append(text)
+        if text == "boom":
+            raise RuntimeError("splade exploded")
+        return {"sentinel": 9.99}
+
+    with TestClient(_app(make_registry(splade=_splade))) as client:
+        first = client.post("/encode/splade", json={"texts": ["boom"]})
+        second = client.post("/encode/splade", json={"texts": ["boom"]})
+    assert first.status_code == 500 and second.status_code == 500
+    assert calls.count("boom") == 2, "a failed encode must be retried, not memoized"
+
+
+def test_the_readiness_probe_does_not_populate_the_cache():
+    """The ready gate must be a real encode on every bring-up, forever."""
+    from fastapi.testclient import TestClient
+
+    with TestClient(_app()) as client:
+        cache = client.get("/health").json()["capacity"]["vector_cache"]
+    assert cache["size"] == 0
+    assert cache["hits"] == 0 and cache["misses"] == 0
+
+
+@pytest.mark.concurrency
+def test_vector_cache_is_thread_safe_under_a_concurrent_hammer():
+    """Liveness first: 8 threads racing get/put on a bounded LRU."""
+    from cymatix_context.encoder_daemon import _VectorCache
+
+    cache = _VectorCache(16)
+    barrier = threading.Barrier(8)
+    errors: list = []
+    lock = threading.Lock()
+
+    def _worker(w):
+        try:
+            barrier.wait(timeout=5)
+            for i in range(200):
+                key = ("dense", "m", "passage", f"text-{i % 32}")
+                hit, value = cache.get(key)
+                if hit:
+                    # A hit must be the value that was stored for THAT key.
+                    assert value == [float(i % 32)], f"{key} -> {value!r}"
+                else:
+                    cache.put(key, [float(i % 32)])
+        except Exception as exc:
+            with lock:
+                errors.append(exc)
+
+    threads = [threading.Thread(target=_worker, args=(w,), daemon=True) for w in range(8)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join(timeout=30)
+
+    assert not [t for t in threads if t.is_alive()], "cache hammer threads wedged"
+    assert not errors, f"concurrent cache access raised: {errors}"
+    stats = cache.stats()
+    assert stats["size"] <= 16, f"LRU bound broken under concurrency: {stats}"
+    assert stats["hits"] + stats["misses"] == 8 * 200
+
+
+@pytest.mark.concurrency
+def test_concurrent_repeats_of_one_text_never_bleed_across_callers():
+    """Cache + micro-batcher under load: every caller gets its own vector."""
+    from fastapi.testclient import TestClient
+
+    dense = FakeBGEM3Codec(dim=8)
+    n = 8
+    with TestClient(_app(make_registry(dense=dense), batch_window_ms=50.0)) as client:
+        # Half the threads ask for the SAME text (cache-hit racers), half for
+        # distinct ones (queue traffic that keeps batches forming).
+        responses, wedged, errors = _hammer(
+            client,
+            "/encode/dense",
+            lambda i: {"texts": ["shared" if i % 2 == 0 else f"text-{i}"]},
+            n=n,
+        )
+        cache = client.get("/health").json()["capacity"]["vector_cache"]
+
+    assert not wedged, "concurrent cached dense POSTs wedged"
+    assert not errors, f"concurrent cached dense POSTs raised: {errors}"
+    assert len(responses) == n
+    for i, resp in responses:
+        assert resp.status_code == 200
+        expected = "shared" if i % 2 == 0 else f"text-{i}"
+        assert resp.json()["vectors"] == [hash_vec(expected, 8).tolist()]
+    assert cache["size"] >= 1
+
+
+# ── capacity self-report ────────────────────────────────────────────
+
+
+def test_health_capacity_reports_the_determinism_profile_and_cache_shape():
+    from fastapi.testclient import TestClient
+
+    with TestClient(_app()) as client:
+        cap = client.get("/health").json()["capacity"]
+
+    assert cap["deterministic"] is False
+    assert isinstance(cap["vector_cache"], dict)
+    for key in ("size", "hits", "misses"):
+        assert key in cap["vector_cache"], f"vector_cache missing {key!r}"
+    for key in ("size", "hits", "misses"):
+        assert isinstance(cap["vector_cache"][key], int)
+
+
+def test_health_capacity_deterministic_flag_follows_the_env_knob(monkeypatch):
+    from fastapi.testclient import TestClient
+
+    monkeypatch.setenv("CYMATIX_ENCODER_DETERMINISTIC", "1")
+    with TestClient(_app()) as client:
+        assert client.get("/health").json()["capacity"]["deterministic"] is True
+
+
+def test_health_capacity_cache_counters_are_live_not_a_ready_flip_snapshot():
+    from fastapi.testclient import TestClient
+
+    with TestClient(_app()) as client:
+        before = client.get("/health").json()["capacity"]["vector_cache"]
+        client.post("/encode/dense", json={"texts": ["alpha"]})
+        client.post("/encode/dense", json={"texts": ["alpha"]})
+        after = client.get("/health").json()["capacity"]["vector_cache"]
+    assert before["hits"] == 0
+    assert after["hits"] >= 1, "the capacity report must re-read the counters"
+    assert after["size"] >= 1
