@@ -1,0 +1,9 @@
+# sweep pass executor=4  2026-08-05T21:02:02Z  beds=dogfood,erb10k,erb50k,erb100k
+# git 5f95e9c  daemon token 97990f00b5b240799b18cc8fec3722a7  trim  n~100/level (erb500k n=60)  c=1,2,4,8  level-timeout 5400  daemon=ON  10k/50k = fresh index-correct carves
+dogfood x4: rc=1 wall=16s encode_posts=0 out=benchmarks/dogfood/sweep/n100_daemon_dogfood_x4.json
+erb10k x4: rc=1 wall=15s encode_posts=17 out=benchmarks/dogfood/sweep/n100_daemon_erb10k_x4.json
+erb50k x4: rc=1 wall=16s encode_posts=38 out=benchmarks/dogfood/sweep/n100_daemon_erb50k_x4.json
+erb100k x4: rc=1 wall=15s encode_posts=35 out=benchmarks/dogfood/sweep/n100_daemon_erb100k_x4.json
+pass x4 (beds=dogfood,erb10k,erb50k,erb100k) complete 2026-08-05T21:03:07Z, daemon killed (pid 8868)
+# sweep pass executor=4  2026-08-05T21:07:31Z  beds=dogfood,erb10k,erb50k,erb100k
+# git 5f95e9c  daemon token d595ed33b14546448e252f59a8777cc8  trim  n~100/level (erb500k n=60)  c=1,2,4,8  level-timeout 5400  daemon=ON  10k/50k = fresh index-correct carves
