@@ -84,6 +84,70 @@ def test_entity_graph_boost_applied_to_matching_gene(genome):
     assert gene_id in ids, f"Expected {gene_id} in {ids}"
 
 
+def test_coactivation_expansion_not_gated_by_ingest_flag(genome, monkeypatch):
+    """Regression test: the post-ranking co-activation expansion read
+    (KnowledgeStore._expand_coactivated -> storage.co_activation.expand_coactivated
+    -> expand_by_entity_graph) is a QUERY-time scan and must be gated by the
+    retrieval-side flag (_entity_graph_retrieval_enabled), not the write/ingest
+    -side flag (_entity_graph_enabled / [ingestion] entity_graph). Shipped
+    defaults have the ingest flag True and the retrieval flag False; before the
+    fix, the ingest flag alone authorized this scan on every query.
+    """
+    import cymatix_context.storage.co_activation as coact
+
+    calls = []
+    original = coact.expand_by_entity_graph
+
+    def _spy(*args, **kwargs):
+        calls.append((args, kwargs))
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(coact, "expand_by_entity_graph", _spy)
+
+    gene = _make("leak test gene content", domains=["leaktest"])
+    genome.upsert_gene(gene)
+
+    # Shipped-default-shaped combo: ingest flag ON, retrieval flag OFF.
+    genome._entity_graph_enabled = True
+    genome._entity_graph_retrieval_enabled = False
+
+    genes = genome.query_genes(domains=["leaktest"], entities=[], max_genes=5)
+    assert isinstance(genes, list)
+    assert calls == [], (
+        "expand_by_entity_graph fired even though the retrieval-side flag is "
+        "off; the post-ranking expansion read must not be gated by the "
+        "ingest-side flag"
+    )
+
+
+def test_coactivation_expansion_fires_when_retrieval_flag_on(genome, monkeypatch):
+    """Counterpart: the read still fires when the retrieval flag is on,
+    independent of the ingest flag's value.
+    """
+    import cymatix_context.storage.co_activation as coact
+
+    calls = []
+    original = coact.expand_by_entity_graph
+
+    def _spy(*args, **kwargs):
+        calls.append((args, kwargs))
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(coact, "expand_by_entity_graph", _spy)
+
+    gene = _make("leak test gene content two", domains=["leaktest2"])
+    genome.upsert_gene(gene)
+
+    genome._entity_graph_enabled = False
+    genome._entity_graph_retrieval_enabled = True
+
+    genes = genome.query_genes(domains=["leaktest2"], entities=[], max_genes=5)
+    assert isinstance(genes, list)
+    assert len(calls) >= 1, (
+        "expand_by_entity_graph should fire when the retrieval-side flag is on"
+    )
+
+
 def test_entity_graph_use_entity_graph_override(genome):
     """use_entity_graph=True per-call override enables Tier 5b even when flag is False."""
     gene = _make("override test gene content", domains=["override"])

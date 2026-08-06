@@ -3973,8 +3973,16 @@ class KnowledgeStore:
         # Perf slice 2: pure-read expansion belongs on the (per-thread)
         # reader, not the shared writer — two threads interleaving these
         # scans on one connection was the c=2 server wedge.
+        # Council fix (flag-leak): the entity_graph sub-scan inside this
+        # post-ranking expansion is a QUERY-time read and must be gated by
+        # the retrieval-side flag (_entity_graph_retrieval_enabled — same
+        # flag as Tier 5b at query_docs' entity-graph scoring block), not
+        # the write/ingest-side _entity_graph_enabled ([ingestion]
+        # entity_graph). Previously the ingest flag (default True) silently
+        # authorized this scan on every query even when the retrieval flag
+        # (default False) had Tier 5b's scoring disabled.
         return expand_coactivated(
-            genes, limit, self.read_conn, self._entity_graph_enabled,
+            genes, limit, self.read_conn, self._entity_graph_retrieval_enabled,
             symbol_expansion_cap=getattr(self, "_symbol_expansion_cap", 8),
         )
 
