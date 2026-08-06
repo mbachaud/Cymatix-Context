@@ -1,0 +1,985 @@
+{
+  "tool": "benchmarks/dogfood/erb/storage_audit.py",
+  "db": "f:\\tmp\\erb_blob.db",
+  "mode": "estimate",
+  "exact_requested": false,
+  "exact_available": false,
+  "exact_error": null,
+  "estimator": {
+    "sample_rows": 10000,
+    "btree_overhead": 1.3,
+    "index_rowid_bytes": 8,
+    "note": "rows x sampled mean row bytes x btree_overhead; byte lengths via LENGTH(CAST(col AS BLOB)) so UTF-8 text is counted in bytes, not codepoints"
+  },
+  "file": {
+    "page_size": 4096,
+    "page_count": 12112354,
+    "freelist_count": 0,
+    "file_bytes": 49612201984,
+    "freelist_bytes": 0,
+    "file_gb": 46.204964,
+    "on_disk_bytes": 49612201984
+  },
+  "accounted_bytes": 55574564527,
+  "accounted_gb": 51.757847,
+  "accounted_pct_of_file": 112.02,
+  "unaccounted_bytes": -5962362543,
+  "unaccounted_gb": -5.552883,
+  "unaccounted_note": "file_bytes minus the sum of per-object sizes. In exact mode this is free/unused pages only. In estimate mode it also absorbs estimator error, and the SIGN matters: positive means the estimator under-counted (the layers are bigger than listed), negative means it over-counted (the btree_overhead multiplier and the per-index column estimates are the usual culprits). Per-layer percentages are shares of the exact file size, so they do not sum to 100 when the residual is nonzero.",
+  "column_split_note": "genes.embedding_dense_v2 / genes.embedding are estimated (sampled mean blob length x non-null count) and subtracted from the genes b-tree; dbstat cannot attribute pages to columns, so this split is estimated even in --exact mode",
+  "layers": {
+    "splade": {
+      "bytes": 13160549564,
+      "gb": 12.256717,
+      "pct_of_file": 26.53,
+      "objects": [
+        "idx_splade_gene",
+        "idx_splade_term",
+        "splade_terms"
+      ]
+    },
+    "fts5": {
+      "bytes": 12224581733,
+      "gb": 11.385029,
+      "pct_of_file": 24.64,
+      "objects": [
+        "genes_fts",
+        "genes_fts_config",
+        "genes_fts_content",
+        "genes_fts_data",
+        "genes_fts_docsize",
+        "genes_fts_idx",
+        "genes_fts_vocab"
+      ]
+    },
+    "core": {
+      "bytes": 11661246614,
+      "gb": 10.860382,
+      "pct_of_file": 23.5,
+      "objects": [
+        "genes",
+        "genome_calibration",
+        "idx_genes_last_seen",
+        "idx_genes_supersedes",
+        "sqlite_autoindex_genes_1",
+        "sqlite_autoindex_genome_calibration_1",
+        "sqlite_sequence"
+      ]
+    },
+    "pki": {
+      "bytes": 9186026112,
+      "gb": 8.555153,
+      "pct_of_file": 18.52,
+      "objects": [
+        "idx_pki_gene",
+        "idx_pki_lookup",
+        "path_key_index"
+      ]
+    },
+    "dense": {
+      "bytes": 3340577367,
+      "gb": 3.111155,
+      "pct_of_file": 6.73,
+      "objects": [
+        "genes.embedding_dense_v2",
+        "idx_genes_dense_v2_hot"
+      ]
+    },
+    "tags": {
+      "bytes": 2772004506,
+      "gb": 2.58163,
+      "pct_of_file": 5.59,
+      "objects": [
+        "idx_promoter_gene",
+        "idx_promoter_value",
+        "promoter_index"
+      ]
+    },
+    "coact": {
+      "bytes": 1543998569,
+      "gb": 1.437961,
+      "pct_of_file": 3.11,
+      "objects": [
+        "gene_relations",
+        "harmonic_links",
+        "idx_gene_relations_rel_a",
+        "idx_harmonic_b",
+        "idx_harmonic_source",
+        "sqlite_autoindex_gene_relations_1",
+        "sqlite_autoindex_harmonic_links_1"
+      ]
+    },
+    "entity_graph": {
+      "bytes": 1473748233,
+      "gb": 1.372535,
+      "pct_of_file": 2.97,
+      "objects": [
+        "entity_graph",
+        "idx_entity_graph_entity",
+        "idx_entity_graph_gene",
+        "sqlite_autoindex_entity_graph_1"
+      ]
+    },
+    "filename_anchor": {
+      "bytes": 211428017,
+      "gb": 0.196908,
+      "pct_of_file": 0.43,
+      "objects": [
+        "filename_index",
+        "idx_filename_stem",
+        "sqlite_autoindex_filename_index_1"
+      ]
+    },
+    "ops_not_retrieval": {
+      "bytes": 403720,
+      "gb": 0.000376,
+      "pct_of_file": 0.0,
+      "objects": [
+        "cwola_log",
+        "health_log",
+        "hitl_events",
+        "idx_cwola_bucket",
+        "idx_cwola_session_time",
+        "idx_hitl_participant_time",
+        "idx_hitl_party_time",
+        "idx_hitl_pause_type",
+        "idx_sdl_session_gene",
+        "idx_sdl_session_time",
+        "session_delivery_log",
+        "sqlite_autoindex_hitl_events_1"
+      ]
+    },
+    "identity": {
+      "bytes": 92,
+      "gb": 0.0,
+      "pct_of_file": 0.0,
+      "objects": [
+        "agents",
+        "gene_attribution",
+        "idx_agents_handle",
+        "idx_agents_kind",
+        "idx_agents_participant",
+        "idx_attribution_agent_time",
+        "idx_attribution_org_time",
+        "idx_attribution_participant_time",
+        "idx_attribution_party_time",
+        "idx_orgs_trust_domain",
+        "idx_participants_handle",
+        "idx_participants_heartbeat",
+        "idx_participants_party",
+        "idx_participants_status",
+        "idx_parties_trust_domain",
+        "orgs",
+        "participants",
+        "parties",
+        "sqlite_autoindex_agents_1",
+        "sqlite_autoindex_agents_2",
+        "sqlite_autoindex_gene_attribution_1",
+        "sqlite_autoindex_orgs_1",
+        "sqlite_autoindex_participants_1",
+        "sqlite_autoindex_parties_1"
+      ]
+    },
+    "okf": {
+      "bytes": 0,
+      "gb": 0.0,
+      "pct_of_file": 0.0,
+      "objects": [
+        "idx_okf_links_bundle",
+        "okf_links"
+      ]
+    },
+    "symbol_graph": {
+      "bytes": 0,
+      "gb": 0.0,
+      "pct_of_file": 0.0,
+      "objects": [
+        "idx_symbol_defs_gene",
+        "idx_symbol_defs_symbol",
+        "sqlite_autoindex_symbol_defs_1",
+        "symbol_defs"
+      ]
+    },
+    "sema": {
+      "bytes": 0,
+      "gb": 0.0,
+      "pct_of_file": 0.0,
+      "objects": [
+        "genes.embedding"
+      ]
+    }
+  },
+  "unknown_objects": [],
+  "objects": [
+    {
+      "name": "genes",
+      "type": "table",
+      "layer": "core",
+      "rationale": "the document rows themselves",
+      "bytes": 14915713754,
+      "gb": 13.891341,
+      "measured": "estimated",
+      "rows": 829131,
+      "bytes_after_column_carveout": 11601005274,
+      "column_split": "estimated"
+    },
+    {
+      "name": "genes_fts_content",
+      "type": "table",
+      "layer": "fts5",
+      "rationale": "FTS5 shadow tables for Tier 3 content search (knowledge_store.py:2780)",
+      "bytes": 9311688539,
+      "gb": 8.672186,
+      "measured": "estimated",
+      "rows": 829131
+    },
+    {
+      "name": "splade_terms",
+      "type": "table",
+      "layer": "splade",
+      "rationale": "SPLADE postings + df counters, Tier 3.5 (knowledge_store.py:2783-2842)",
+      "bytes": 5340524785,
+      "gb": 4.973751,
+      "measured": "estimated",
+      "rows": 147115451
+    },
+    {
+      "name": "idx_splade_gene",
+      "type": "index",
+      "layer": "splade",
+      "rationale": "SPLADE posting-list covering indexes",
+      "bytes": 4590002071,
+      "gb": 4.274773,
+      "measured": "estimated"
+    },
+    {
+      "name": "idx_pki_gene",
+      "type": "index",
+      "layer": "pki",
+      "rationale": "PKI lookup indexes",
+      "bytes": 3471752669,
+      "gb": 3.233322,
+      "measured": "estimated"
+    },
+    {
+      "name": "path_key_index",
+      "type": "table",
+      "layer": "pki",
+      "rationale": "PKI tier (knowledge_store.py:2552 _sig('pki'))",
+      "bytes": 3435762166,
+      "gb": 3.199803,
+      "measured": "estimated",
+      "rows": 111274124
+    },
+    {
+      "name": "genes.embedding_dense_v2",
+      "type": "column",
+      "layer": "dense",
+      "rationale": "BGE-M3 dense vectors ([retrieval] dense_embedding_enabled)",
+      "bytes": 3314708480,
+      "gb": 3.087063,
+      "measured": "estimated",
+      "non_null_rows": 809255
+    },
+    {
+      "name": "idx_splade_term",
+      "type": "index",
+      "layer": "splade",
+      "rationale": "SPLADE posting-list covering indexes",
+      "bytes": 3230022708,
+      "gb": 3.008193,
+      "measured": "estimated"
+    },
+    {
+      "name": "genes_fts_data",
+      "type": "table",
+      "layer": "fts5",
+      "rationale": "FTS5 shadow tables for Tier 3 content search (knowledge_store.py:2780)",
+      "bytes": 2902021803,
+      "gb": 2.702718,
+      "measured": "estimated",
+      "rows": 554340
+    },
+    {
+      "name": "idx_pki_lookup",
+      "type": "index",
+      "layer": "pki",
+      "rationale": "PKI lookup indexes",
+      "bytes": 2278511277,
+      "gb": 2.122029,
+      "measured": "estimated"
+    },
+    {
+      "name": "promoter_index",
+      "type": "table",
+      "layer": "tags",
+      "rationale": "Tier 1/2 tag_exact + tag_prefix join this table (knowledge_store.py:2676, :2707)",
+      "bytes": 1144233489,
+      "gb": 1.06565,
+      "measured": "estimated",
+      "rows": 25804908
+    },
+    {
+      "name": "idx_promoter_value",
+      "type": "index",
+      "layer": "tags",
+      "rationale": "tag-tier covering indexes",
+      "bytes": 822657887,
+      "gb": 0.76616,
+      "measured": "estimated"
+    },
+    {
+      "name": "idx_promoter_gene",
+      "type": "index",
+      "layer": "tags",
+      "rationale": "tag-tier covering indexes",
+      "bytes": 805113130,
+      "gb": 0.74982,
+      "measured": "estimated"
+    },
+    {
+      "name": "gene_relations",
+      "type": "table",
+      "layer": "coact",
+      "rationale": "document-linkage edges, retrieval-live per okf/__init__.py:10",
+      "bytes": 748741691,
+      "gb": 0.69732,
+      "measured": "estimated",
+      "rows": 9411324
+    },
+    {
+      "name": "sqlite_autoindex_gene_relations_1",
+      "type": "index",
+      "layer": "coact",
+      "rationale": "gene_relations PK autoindex",
+      "bytes": 489388848,
+      "gb": 0.455779,
+      "measured": "estimated"
+    },
+    {
+      "name": "sqlite_autoindex_entity_graph_1",
+      "type": "index",
+      "layer": "entity_graph",
+      "rationale": "entity_graph PK autoindex",
+      "bytes": 471712344,
+      "gb": 0.439316,
+      "measured": "estimated"
+    },
+    {
+      "name": "entity_graph",
+      "type": "table",
+      "layer": "entity_graph",
+      "rationale": "Tier 5b entity co-occurrence ([retrieval] entity_graph_retrieval_enabled)",
+      "bytes": 368220696,
+      "gb": 0.342932,
+      "measured": "estimated",
+      "rows": 9951120
+    },
+    {
+      "name": "idx_entity_graph_entity",
+      "type": "index",
+      "layer": "entity_graph",
+      "rationale": "entity_graph lookup indexes",
+      "bytes": 323340249,
+      "gb": 0.301134,
+      "measured": "estimated"
+    },
+    {
+      "name": "idx_entity_graph_gene",
+      "type": "index",
+      "layer": "entity_graph",
+      "rationale": "entity_graph lookup indexes",
+      "bytes": 310474944,
+      "gb": 0.289152,
+      "measured": "estimated"
+    },
+    {
+      "name": "idx_gene_relations_rel_a",
+      "type": "index",
+      "layer": "coact",
+      "rationale": "gene_relations traversal index",
+      "bytes": 305868030,
+      "gb": 0.284862,
+      "measured": "estimated"
+    },
+    {
+      "name": "sqlite_autoindex_filename_index_1",
+      "type": "index",
+      "layer": "filename_anchor",
+      "rationale": "filename_index PK autoindex",
+      "bytes": 80784036,
+      "gb": 0.075236,
+      "measured": "estimated"
+    },
+    {
+      "name": "filename_index",
+      "type": "table",
+      "layer": "filename_anchor",
+      "rationale": "Tier 0.5 filename anchor ([retrieval] filename_anchor_enabled)",
+      "bytes": 72158941,
+      "gb": 0.067203,
+      "measured": "estimated",
+      "rows": 829336
+    },
+    {
+      "name": "idx_filename_stem",
+      "type": "index",
+      "layer": "filename_anchor",
+      "rationale": "filename anchor lookup index",
+      "bytes": 58485040,
+      "gb": 0.054468,
+      "measured": "estimated"
+    },
+    {
+      "name": "idx_genes_dense_v2_hot",
+      "type": "index",
+      "layer": "dense",
+      "rationale": "hot-tier partial index over embedding_dense_v2 (knowledge_store dense recall)",
+      "bytes": 25868887,
+      "gb": 0.024092,
+      "measured": "estimated"
+    },
+    {
+      "name": "sqlite_autoindex_genes_1",
+      "type": "index",
+      "layer": "core",
+      "rationale": "genes PK autoindex",
+      "bytes": 25868887,
+      "gb": 0.024092,
+      "measured": "estimated"
+    },
+    {
+      "name": "idx_genes_last_seen",
+      "type": "index",
+      "layer": "core",
+      "rationale": "genes housekeeping indexes (last_seen, supersedes)",
+      "bytes": 25749459,
+      "gb": 0.023981,
+      "measured": "estimated"
+    },
+    {
+      "name": "genes_fts_docsize",
+      "type": "table",
+      "layer": "fts5",
+      "rationale": "FTS5 shadow tables for Tier 3 content search (knowledge_store.py:2780)",
+      "bytes": 9570410,
+      "gb": 0.008913,
+      "measured": "estimated",
+      "rows": 829131
+    },
+    {
+      "name": "idx_genes_supersedes",
+      "type": "index",
+      "layer": "core",
+      "rationale": "genes housekeeping indexes (last_seen, supersedes)",
+      "bytes": 8622962,
+      "gb": 0.008031,
+      "measured": "estimated"
+    },
+    {
+      "name": "genes_fts_idx",
+      "type": "table",
+      "layer": "fts5",
+      "rationale": "FTS5 shadow tables for Tier 3 content search (knowledge_store.py:2780)",
+      "bytes": 1300971,
+      "gb": 0.001212,
+      "measured": "estimated",
+      "rows": 78209
+    },
+    {
+      "name": "health_log",
+      "type": "table",
+      "layer": "ops_not_retrieval",
+      "rationale": "logging + session bookkeeping; carries no retrieval signal",
+      "bytes": 352268,
+      "gb": 0.000328,
+      "measured": "estimated",
+      "rows": 1073
+    },
+    {
+      "name": "cwola_log",
+      "type": "table",
+      "layer": "ops_not_retrieval",
+      "rationale": "logging + session bookkeeping; carries no retrieval signal",
+      "bytes": 48833,
+      "gb": 4.5e-05,
+      "measured": "estimated",
+      "rows": 45
+    },
+    {
+      "name": "idx_cwola_session_time",
+      "type": "index",
+      "layer": "ops_not_retrieval",
+      "rationale": "ops log indexes",
+      "bytes": 2093,
+      "gb": 2e-06,
+      "measured": "estimated"
+    },
+    {
+      "name": "idx_cwola_bucket",
+      "type": "index",
+      "layer": "ops_not_retrieval",
+      "rationale": "ops log indexes",
+      "bytes": 526,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "orgs",
+      "type": "table",
+      "layer": "identity",
+      "rationale": "party/agent attribution \u2014 feeds the cross-party retrieval filter",
+      "bytes": 58,
+      "gb": 0.0,
+      "measured": "estimated",
+      "rows": 1
+    },
+    {
+      "name": "sqlite_sequence",
+      "type": "table",
+      "layer": "core",
+      "rationale": "SQLite internal bookkeeping",
+      "bytes": 32,
+      "gb": 0.0,
+      "measured": "estimated",
+      "rows": 2
+    },
+    {
+      "name": "idx_orgs_trust_domain",
+      "type": "index",
+      "layer": "identity",
+      "rationale": "identity lookup indexes",
+      "bytes": 17,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "sqlite_autoindex_orgs_1",
+      "type": "index",
+      "layer": "identity",
+      "rationale": "identity PK/UNIQUE autoindexes",
+      "bytes": 17,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "genes_fts_config",
+      "type": "table",
+      "layer": "fts5",
+      "rationale": "FTS5 shadow tables for Tier 3 content search (knowledge_store.py:2780)",
+      "bytes": 10,
+      "gb": 0.0,
+      "measured": "estimated",
+      "rows": 1
+    },
+    {
+      "name": "idx_agents_handle",
+      "type": "index",
+      "layer": "identity",
+      "rationale": "identity lookup indexes",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "idx_agents_kind",
+      "type": "index",
+      "layer": "identity",
+      "rationale": "identity lookup indexes",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "idx_agents_participant",
+      "type": "index",
+      "layer": "identity",
+      "rationale": "identity lookup indexes",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "idx_attribution_agent_time",
+      "type": "index",
+      "layer": "identity",
+      "rationale": "identity lookup indexes",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "idx_attribution_org_time",
+      "type": "index",
+      "layer": "identity",
+      "rationale": "identity lookup indexes",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "idx_attribution_participant_time",
+      "type": "index",
+      "layer": "identity",
+      "rationale": "identity lookup indexes",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "idx_attribution_party_time",
+      "type": "index",
+      "layer": "identity",
+      "rationale": "identity lookup indexes",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "idx_harmonic_b",
+      "type": "index",
+      "layer": "coact",
+      "rationale": "harmonic_links traversal indexes",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "idx_harmonic_source",
+      "type": "index",
+      "layer": "coact",
+      "rationale": "harmonic_links traversal indexes",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "idx_hitl_participant_time",
+      "type": "index",
+      "layer": "ops_not_retrieval",
+      "rationale": "ops log indexes",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "idx_hitl_party_time",
+      "type": "index",
+      "layer": "ops_not_retrieval",
+      "rationale": "ops log indexes",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "idx_hitl_pause_type",
+      "type": "index",
+      "layer": "ops_not_retrieval",
+      "rationale": "ops log indexes",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "idx_okf_links_bundle",
+      "type": "index",
+      "layer": "okf",
+      "rationale": "OKF bundle index",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "idx_participants_handle",
+      "type": "index",
+      "layer": "identity",
+      "rationale": "identity lookup indexes",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "idx_participants_heartbeat",
+      "type": "index",
+      "layer": "identity",
+      "rationale": "identity lookup indexes",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "idx_participants_party",
+      "type": "index",
+      "layer": "identity",
+      "rationale": "identity lookup indexes",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "idx_participants_status",
+      "type": "index",
+      "layer": "identity",
+      "rationale": "identity lookup indexes",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "idx_parties_trust_domain",
+      "type": "index",
+      "layer": "identity",
+      "rationale": "identity lookup indexes",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "idx_sdl_session_gene",
+      "type": "index",
+      "layer": "ops_not_retrieval",
+      "rationale": "ops log indexes",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "idx_sdl_session_time",
+      "type": "index",
+      "layer": "ops_not_retrieval",
+      "rationale": "ops log indexes",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "idx_symbol_defs_gene",
+      "type": "index",
+      "layer": "symbol_graph",
+      "rationale": "symbol_defs lookup indexes",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "idx_symbol_defs_symbol",
+      "type": "index",
+      "layer": "symbol_graph",
+      "rationale": "symbol_defs lookup indexes",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "sqlite_autoindex_agents_1",
+      "type": "index",
+      "layer": "identity",
+      "rationale": "identity PK/UNIQUE autoindexes",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "sqlite_autoindex_agents_2",
+      "type": "index",
+      "layer": "identity",
+      "rationale": "identity PK/UNIQUE autoindexes",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "sqlite_autoindex_gene_attribution_1",
+      "type": "index",
+      "layer": "identity",
+      "rationale": "identity PK/UNIQUE autoindexes",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "sqlite_autoindex_genome_calibration_1",
+      "type": "index",
+      "layer": "core",
+      "rationale": "genome_calibration PK autoindex",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "sqlite_autoindex_harmonic_links_1",
+      "type": "index",
+      "layer": "coact",
+      "rationale": "harmonic_links PK autoindex",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "sqlite_autoindex_hitl_events_1",
+      "type": "index",
+      "layer": "ops_not_retrieval",
+      "rationale": "hitl_events PK autoindex",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "sqlite_autoindex_participants_1",
+      "type": "index",
+      "layer": "identity",
+      "rationale": "identity PK/UNIQUE autoindexes",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "sqlite_autoindex_parties_1",
+      "type": "index",
+      "layer": "identity",
+      "rationale": "identity PK/UNIQUE autoindexes",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "sqlite_autoindex_symbol_defs_1",
+      "type": "index",
+      "layer": "symbol_graph",
+      "rationale": "symbol_defs PK autoindex",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated"
+    },
+    {
+      "name": "agents",
+      "type": "table",
+      "layer": "identity",
+      "rationale": "party/agent attribution \u2014 feeds the cross-party retrieval filter",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated",
+      "rows": 0
+    },
+    {
+      "name": "gene_attribution",
+      "type": "table",
+      "layer": "identity",
+      "rationale": "party/agent attribution \u2014 feeds the cross-party retrieval filter",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated",
+      "rows": 0
+    },
+    {
+      "name": "genes_fts",
+      "type": "table",
+      "layer": "fts5",
+      "rationale": "FTS5 shadow tables for Tier 3 content search (knowledge_store.py:2780)",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "virtual (no own b-tree; storage is in its shadow tables)",
+      "rows": 829131
+    },
+    {
+      "name": "genes_fts_vocab",
+      "type": "table",
+      "layer": "fts5",
+      "rationale": "FTS5 shadow tables for Tier 3 content search (knowledge_store.py:2780)",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "virtual (no own b-tree; storage is in its shadow tables)",
+      "rows": 672936639
+    },
+    {
+      "name": "genome_calibration",
+      "type": "table",
+      "layer": "core",
+      "rationale": "persisted ANN threshold calibration",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated",
+      "rows": 0
+    },
+    {
+      "name": "harmonic_links",
+      "type": "table",
+      "layer": "coact",
+      "rationale": "Tier 5 harmonic boost (knowledge_store.py:3119) + retrieval/expand.py",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated",
+      "rows": 0
+    },
+    {
+      "name": "hitl_events",
+      "type": "table",
+      "layer": "ops_not_retrieval",
+      "rationale": "logging + session bookkeeping; carries no retrieval signal",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated",
+      "rows": 0
+    },
+    {
+      "name": "okf_links",
+      "type": "table",
+      "layer": "okf",
+      "rationale": "OKF bundle links (okf/ subsystem)",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated",
+      "rows": 0
+    },
+    {
+      "name": "participants",
+      "type": "table",
+      "layer": "identity",
+      "rationale": "party/agent attribution \u2014 feeds the cross-party retrieval filter",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated",
+      "rows": 0
+    },
+    {
+      "name": "parties",
+      "type": "table",
+      "layer": "identity",
+      "rationale": "party/agent attribution \u2014 feeds the cross-party retrieval filter",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated",
+      "rows": 0
+    },
+    {
+      "name": "session_delivery_log",
+      "type": "table",
+      "layer": "ops_not_retrieval",
+      "rationale": "logging + session bookkeeping; carries no retrieval signal",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated",
+      "rows": 0
+    },
+    {
+      "name": "symbol_defs",
+      "type": "table",
+      "layer": "symbol_graph",
+      "rationale": "WS2 symbol definitions ([ingestion] symbol_graph)",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated",
+      "rows": 0
+    },
+    {
+      "name": "genes.embedding",
+      "type": "column",
+      "layer": "sema",
+      "rationale": "20D SEMA vectors ([ingestion] sema_embed_on_ingest / Tier 4 + cymatics)",
+      "bytes": 0,
+      "gb": 0.0,
+      "measured": "estimated",
+      "non_null_rows": 0
+    }
+  ]
+}
