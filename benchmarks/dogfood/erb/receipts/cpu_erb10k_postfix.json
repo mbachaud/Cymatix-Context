@@ -1,0 +1,198 @@
+{
+  "measured_at": "2026-08-04T23:23:00-0700",
+  "genome": "F:\\tmp\\sike-bed-pointers\\stage\\enterprise_rag_10k.db",
+  "served_db": "F:\\tmp\\sike-bed-pointers\\stage\\enterprise_rag_10k.db",
+  "bed_copied": false,
+  "arm": "read",
+  "bed_identity_sha256": null,
+  "k": 12,
+  "rounds": 1,
+  "needles": 30,
+  "port": 11492,
+  "cpu_count": 16,
+  "worker_model": "one uvicorn (BenchServer) per level, fresh process = clean session state + fresh ring; N stdlib HTTP client subprocesses share the server's encoders and its module-global 2-thread executor",
+  "note": "warmups untimed (parent + per worker); workers barrier-synced; ranks recorded per query as a fast-because-broken guard; validity gates baked into each level",
+  "canary_endpoint": "/debug/pipeline/recent?limit=1",
+  "canary_interval_s": 0.25,
+  "ring_note": "ring_tail_sample aggregates the pipeline ring's last ~128 stage events (~ the final ~12 requests of the level), not the full timed window",
+  "read_arm_residue_note": "served the real bed read_only=True: gene content is guarded, but /context's cwola logger appends telemetry rows regardless \u2014 use --copy-bed for strict no-touch runs",
+  "levels": [
+    {
+      "concurrency": 1,
+      "samples": 30,
+      "errors": 0,
+      "http_5xx": 0,
+      "median_latency_ms": 5051.6,
+      "mean_latency_ms": 6685.7,
+      "p95_latency_ms": 16188.0,
+      "max_latency_ms": 18251.2,
+      "per_worker_median_ms": [
+        5051.6
+      ],
+      "recall@12": 0.8667,
+      "wall_seconds": 200.6,
+      "overlap_fraction": 1.0,
+      "throughput_qps": 0.15,
+      "canary": {
+        "n": 750,
+        "p50_ms": 2.0,
+        "p95_ms": 17.0,
+        "max_ms": 717.9,
+        "errors": 0
+      },
+      "ring_tail_sample": {
+        "stages": {
+          "classify": {
+            "n": 16,
+            "p50_ms": 0.052,
+            "p95_ms": 0.056,
+            "max_ms": 0.056
+          },
+          "extract": {
+            "n": 16,
+            "p50_ms": 0.102,
+            "p95_ms": 0.154,
+            "max_ms": 0.154
+          },
+          "express": {
+            "n": 16,
+            "p50_ms": 4365.522,
+            "p95_ms": 8775.787,
+            "max_ms": 8775.787
+          },
+          "rerank": {
+            "n": 16,
+            "p50_ms": 4.388,
+            "p95_ms": 7.149,
+            "max_ms": 7.149
+          },
+          "splice": {
+            "n": 16,
+            "p50_ms": 0.037,
+            "p95_ms": 10802.332,
+            "max_ms": 10802.332
+          },
+          "assemble": {
+            "n": 16,
+            "p50_ms": 1.954,
+            "p95_ms": 2.694,
+            "max_ms": 2.694
+          },
+          "tail_writes": {
+            "n": 16,
+            "p50_ms": 0.516,
+            "p95_ms": 1.166,
+            "max_ms": 1.166
+          },
+          "cwola": {
+            "n": 16,
+            "p50_ms": 27.132,
+            "p95_ms": 30.974,
+            "max_ms": 30.974
+          }
+        },
+        "signals": {
+          "pki": {
+            "n": 16,
+            "p50_ms": 0.2614000113680959,
+            "p95_ms": 0.5246000364422798,
+            "max_ms": 0.5246000364422798
+          },
+          "tag_exact": {
+            "n": 16,
+            "p50_ms": 10.195399983786047,
+            "p95_ms": 25.777300004847348,
+            "max_ms": 25.777300004847348
+          },
+          "tag_prefix": {
+            "n": 16,
+            "p50_ms": 14.416599995456636,
+            "p95_ms": 32.19280007760972,
+            "max_ms": 32.19280007760972
+          },
+          "fts5": {
+            "n": 16,
+            "p50_ms": 84.14310007356107,
+            "p95_ms": 103.39800000656396,
+            "max_ms": 103.39800000656396
+          },
+          "splade": {
+            "n": 16,
+            "p50_ms": 131.60289998631924,
+            "p95_ms": 163.70369994547218,
+            "max_ms": 163.70369994547218
+          },
+          "sema_boost": {
+            "n": 16,
+            "p50_ms": 0.001500011421740055,
+            "p95_ms": 0.002400018274784088,
+            "max_ms": 0.002400018274784088
+          },
+          "dense": {
+            "n": 16,
+            "p50_ms": 219.50770006515086,
+            "p95_ms": 251.4137999387458,
+            "max_ms": 251.4137999387458
+          },
+          "lex_anchor": {
+            "n": 16,
+            "p50_ms": 9.887699969112873,
+            "p95_ms": 23.037699982523918,
+            "max_ms": 23.037699982523918
+          },
+          "body_fetch": {
+            "n": 16,
+            "p50_ms": 31.79410006850958,
+            "p95_ms": 37.34650008846074,
+            "max_ms": 37.34650008846074
+          },
+          "coact_expand": {
+            "n": 16,
+            "p50_ms": 89.20280006714165,
+            "p95_ms": 95.32069996930659,
+            "max_ms": 95.32069996930659
+          },
+          "ann_dense_leg": {
+            "n": 16,
+            "p50_ms": 192.70399992819875,
+            "p95_ms": 216.17520006839186,
+            "max_ms": 216.17520006839186
+          },
+          "ann_body_fetch": {
+            "n": 16,
+            "p50_ms": 14.853400061838329,
+            "p95_ms": 89.29199993144721,
+            "max_ms": 89.29199993144721
+          }
+        },
+        "model_load_ms": {
+          "splade": 7566.225099959411,
+          "sema": 2765.6219999771565,
+          "dense_matrix": 667.1948999864981,
+          "dense_codec": 0.02319994382560253,
+          "dense": 4291.449300013483
+        },
+        "commits": {
+          "n": 16,
+          "p50": 0.0,
+          "p95": 0.0,
+          "max": 0.0
+        },
+        "entries": 128
+      },
+      "genes_at_boot": 15888,
+      "valid": true,
+      "invalid_reasons": []
+    }
+  ],
+  "scaling_vs_c1": [
+    {
+      "concurrency": 1,
+      "median_latency_x": 1.0,
+      "p95_latency_x": 1.0,
+      "throughput_x": 1.0,
+      "canary_p95_x": 1.0
+    }
+  ],
+  "worker_logs": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\perf-slice1\\benchmarks\\dogfood\\logs\\server_scaling\\20260804-231904"
+}

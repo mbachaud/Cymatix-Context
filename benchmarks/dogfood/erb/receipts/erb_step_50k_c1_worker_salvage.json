@@ -1,0 +1,567 @@
+{
+  "worker": 0,
+  "t_start": 1785804637.2517264,
+  "t_end": 1785806013.7473712,
+  "samples": [
+    {
+      "needle": "erb_000",
+      "round": 0,
+      "latency_ms": 23188.3,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_001",
+      "round": 0,
+      "latency_ms": 38126.9,
+      "rank": null,
+      "status": 200
+    },
+    {
+      "needle": "erb_002",
+      "round": 0,
+      "latency_ms": 11405.0,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_003",
+      "round": 0,
+      "latency_ms": 15234.6,
+      "rank": 3,
+      "status": 200
+    },
+    {
+      "needle": "erb_004",
+      "round": 0,
+      "latency_ms": 13483.3,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_005",
+      "round": 0,
+      "latency_ms": 33554.8,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_006",
+      "round": 0,
+      "latency_ms": 8071.4,
+      "rank": null,
+      "status": 200
+    },
+    {
+      "needle": "erb_007",
+      "round": 0,
+      "latency_ms": 20676.1,
+      "rank": null,
+      "status": 200
+    },
+    {
+      "needle": "erb_008",
+      "round": 0,
+      "latency_ms": 14289.9,
+      "rank": null,
+      "status": 200
+    },
+    {
+      "needle": "erb_009",
+      "round": 0,
+      "latency_ms": 32645.3,
+      "rank": null,
+      "status": 200
+    },
+    {
+      "needle": "erb_010",
+      "round": 0,
+      "latency_ms": 11533.2,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_011",
+      "round": 0,
+      "latency_ms": 11136.5,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_012",
+      "round": 0,
+      "latency_ms": 23697.1,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_013",
+      "round": 0,
+      "latency_ms": 12862.6,
+      "rank": 4,
+      "status": 200
+    },
+    {
+      "needle": "erb_014",
+      "round": 0,
+      "latency_ms": 6867.9,
+      "rank": null,
+      "status": 200
+    },
+    {
+      "needle": "erb_015",
+      "round": 0,
+      "latency_ms": 29792.2,
+      "rank": null,
+      "status": 200
+    },
+    {
+      "needle": "erb_016",
+      "round": 0,
+      "latency_ms": 7049.8,
+      "rank": null,
+      "status": 200
+    },
+    {
+      "needle": "erb_017",
+      "round": 0,
+      "latency_ms": 32598.6,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_018",
+      "round": 0,
+      "latency_ms": 33591.4,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_019",
+      "round": 0,
+      "latency_ms": 17724.3,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_020",
+      "round": 0,
+      "latency_ms": 9195.0,
+      "rank": null,
+      "status": 200
+    },
+    {
+      "needle": "erb_021",
+      "round": 0,
+      "latency_ms": 26747.4,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_022",
+      "round": 0,
+      "latency_ms": 7302.7,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_023",
+      "round": 0,
+      "latency_ms": 26736.2,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_024",
+      "round": 0,
+      "latency_ms": 6687.8,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_025",
+      "round": 0,
+      "latency_ms": 9730.5,
+      "rank": 4,
+      "status": 200
+    },
+    {
+      "needle": "erb_026",
+      "round": 0,
+      "latency_ms": 7635.2,
+      "rank": 2,
+      "status": 200
+    },
+    {
+      "needle": "erb_027",
+      "round": 0,
+      "latency_ms": 20150.7,
+      "rank": 2,
+      "status": 200
+    },
+    {
+      "needle": "erb_028",
+      "round": 0,
+      "latency_ms": 26610.8,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_029",
+      "round": 0,
+      "latency_ms": 7617.4,
+      "rank": null,
+      "status": 200
+    },
+    {
+      "needle": "erb_030",
+      "round": 0,
+      "latency_ms": 21686.9,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_031",
+      "round": 0,
+      "latency_ms": 6755.0,
+      "rank": 2,
+      "status": 200
+    },
+    {
+      "needle": "erb_032",
+      "round": 0,
+      "latency_ms": 8113.4,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_033",
+      "round": 0,
+      "latency_ms": 19074.4,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_034",
+      "round": 0,
+      "latency_ms": 7567.1,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_035",
+      "round": 0,
+      "latency_ms": 22184.2,
+      "rank": null,
+      "status": 200
+    },
+    {
+      "needle": "erb_036",
+      "round": 0,
+      "latency_ms": 7439.8,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_037",
+      "round": 0,
+      "latency_ms": 39865.6,
+      "rank": null,
+      "status": 200
+    },
+    {
+      "needle": "erb_038",
+      "round": 0,
+      "latency_ms": 7479.0,
+      "rank": null,
+      "status": 200
+    },
+    {
+      "needle": "erb_039",
+      "round": 0,
+      "latency_ms": 7078.9,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_000",
+      "round": 1,
+      "latency_ms": 23177.3,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_001",
+      "round": 1,
+      "latency_ms": 37783.2,
+      "rank": null,
+      "status": 200
+    },
+    {
+      "needle": "erb_002",
+      "round": 1,
+      "latency_ms": 11003.7,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_003",
+      "round": 1,
+      "latency_ms": 13106.9,
+      "rank": 3,
+      "status": 200
+    },
+    {
+      "needle": "erb_004",
+      "round": 1,
+      "latency_ms": 13505.4,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_005",
+      "round": 1,
+      "latency_ms": 33420.4,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_006",
+      "round": 1,
+      "latency_ms": 7886.3,
+      "rank": null,
+      "status": 200
+    },
+    {
+      "needle": "erb_007",
+      "round": 1,
+      "latency_ms": 20477.4,
+      "rank": null,
+      "status": 200
+    },
+    {
+      "needle": "erb_008",
+      "round": 1,
+      "latency_ms": 13978.4,
+      "rank": null,
+      "status": 200
+    },
+    {
+      "needle": "erb_009",
+      "round": 1,
+      "latency_ms": 31221.5,
+      "rank": null,
+      "status": 200
+    },
+    {
+      "needle": "erb_010",
+      "round": 1,
+      "latency_ms": 11395.7,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_011",
+      "round": 1,
+      "latency_ms": 10951.6,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_012",
+      "round": 1,
+      "latency_ms": 23510.7,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_013",
+      "round": 1,
+      "latency_ms": 12680.1,
+      "rank": 4,
+      "status": 200
+    },
+    {
+      "needle": "erb_014",
+      "round": 1,
+      "latency_ms": 6797.1,
+      "rank": null,
+      "status": 200
+    },
+    {
+      "needle": "erb_015",
+      "round": 1,
+      "latency_ms": 29573.8,
+      "rank": null,
+      "status": 200
+    },
+    {
+      "needle": "erb_016",
+      "round": 1,
+      "latency_ms": 6948.8,
+      "rank": null,
+      "status": 200
+    },
+    {
+      "needle": "erb_017",
+      "round": 1,
+      "latency_ms": 32129.5,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_018",
+      "round": 1,
+      "latency_ms": 33392.0,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_019",
+      "round": 1,
+      "latency_ms": 17550.0,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_020",
+      "round": 1,
+      "latency_ms": 9039.7,
+      "rank": null,
+      "status": 200
+    },
+    {
+      "needle": "erb_021",
+      "round": 1,
+      "latency_ms": 26308.2,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_022",
+      "round": 1,
+      "latency_ms": 7259.9,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_023",
+      "round": 1,
+      "latency_ms": 26452.9,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_024",
+      "round": 1,
+      "latency_ms": 6541.1,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_025",
+      "round": 1,
+      "latency_ms": 9594.7,
+      "rank": 4,
+      "status": 200
+    },
+    {
+      "needle": "erb_026",
+      "round": 1,
+      "latency_ms": 7404.3,
+      "rank": 2,
+      "status": 200
+    },
+    {
+      "needle": "erb_027",
+      "round": 1,
+      "latency_ms": 20056.4,
+      "rank": 2,
+      "status": 200
+    },
+    {
+      "needle": "erb_028",
+      "round": 1,
+      "latency_ms": 26503.7,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_029",
+      "round": 1,
+      "latency_ms": 7471.4,
+      "rank": null,
+      "status": 200
+    },
+    {
+      "needle": "erb_030",
+      "round": 1,
+      "latency_ms": 21604.9,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_031",
+      "round": 1,
+      "latency_ms": 6662.1,
+      "rank": 2,
+      "status": 200
+    },
+    {
+      "needle": "erb_032",
+      "round": 1,
+      "latency_ms": 7948.9,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_033",
+      "round": 1,
+      "latency_ms": 18961.0,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_034",
+      "round": 1,
+      "latency_ms": 7548.4,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_035",
+      "round": 1,
+      "latency_ms": 22159.0,
+      "rank": null,
+      "status": 200
+    },
+    {
+      "needle": "erb_036",
+      "round": 1,
+      "latency_ms": 7189.3,
+      "rank": 1,
+      "status": 200
+    },
+    {
+      "needle": "erb_037",
+      "round": 1,
+      "latency_ms": 39723.6,
+      "rank": null,
+      "status": 200
+    },
+    {
+      "needle": "erb_038",
+      "round": 1,
+      "latency_ms": 7394.5,
+      "rank": null,
+      "status": 200
+    },
+    {
+      "needle": "erb_039",
+      "round": 1,
+      "latency_ms": 6993.5,
+      "rank": 1,
+      "status": 200
+    }
+  ]
+}

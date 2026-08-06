@@ -1,0 +1,41 @@
+loading cross-encoder...
+Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|##########| 105/105 [00:00<00:00, 5519.65it/s]
+cross-encoder loaded in 3.4s
+Loading weights:   0%|          | 0/204 [00:00<?, ?it/s]Loading weights: 100%|##########| 204/204 [00:00<00:00, 27038.65it/s]
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]Loading weights: 100%|##########| 391/391 [00:00<00:00, 28240.82it/s]
+erb_000: pool=16 base=H rerank=H pool50=H rr=668ms
+erb_001: pool=50 base=. rerank=. pool50=. rr=1846ms
+erb_003: pool=50 base=. rerank=. pool50=. rr=1883ms
+erb_008: pool=50 base=. rerank=. pool50=. rr=1850ms
+erb_009: pool=8 base=. rerank=. pool50=. rr=295ms
+erb_010: pool=13 base=H rerank=H pool50=H rr=480ms
+erb_012: pool=50 base=H rerank=H pool50=H rr=1794ms
+erb_013: pool=40 base=H rerank=H pool50=H rr=1582ms
+erb_015: pool=8 base=. rerank=. pool50=. rr=261ms
+erb_019: pool=50 base=H rerank=H pool50=H rr=1926ms
+erb_020: pool=50 base=. rerank=. pool50=. rr=1811ms
+erb_021: pool=50 base=. rerank=H pool50=H rr=1772ms  RECOVERED
+erb_022: pool=37 base=H rerank=H pool50=H rr=1240ms
+erb_024: pool=50 base=H rerank=H pool50=H rr=1911ms
+erb_029: pool=50 base=H rerank=H pool50=H rr=1970ms
+erb_031: pool=50 base=. rerank=. pool50=. rr=1842ms
+erb_033: pool=50 base=H rerank=H pool50=H rr=2013ms
+erb_036: pool=50 base=. rerank=. pool50=. rr=1810ms
+erb_038: pool=35 base=. rerank=. pool50=. rr=1431ms
+erb_039: pool=50 base=. rerank=. pool50=. rr=1985ms
+erb_042: pool=50 base=H rerank=H pool50=H rr=2027ms
+erb_050: pool=40 base=. rerank=. pool50=. rr=1643ms
+erb_066: pool=50 base=. rerank=. pool50=. rr=1799ms
+erb_068: pool=50 base=H rerank=H pool50=H rr=1784ms
+erb_072: pool=50 base=. rerank=. pool50=. rr=1997ms
+erb_073: pool=50 base=. rerank=H pool50=H rr=1784ms  RECOVERED
+erb_075: pool=50 base=H rerank=H pool50=H rr=2017ms
+erb_080: pool=50 base=. rerank=. pool50=. rr=1775ms
+erb_087: pool=8 base=. rerank=. pool50=. rr=292ms
+erb_095: pool=8 base=H rerank=H pool50=H rr=278ms
+
+recall@12 base   : 13/30 = 0.433
+recall@12 rerank : 15/30 = 0.500
+recall@50 pool   : 15/30 = 0.500  (rerank ceiling)
+rerank cost p50=1799ms p95=2013ms
+DONE

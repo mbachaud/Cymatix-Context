@@ -177,6 +177,15 @@ def _create_promoter_index(cur: sqlite3.Cursor) -> None:
         "CREATE INDEX IF NOT EXISTS idx_promoter_gene "
         "ON promoter_index(gene_id)"
     )
+    # 2026-08-03 ERB step-test fix: the tag_prefix tier drives prefix range
+    # scans on tag_value and needs gene_id in the same index to stay
+    # index-only — idx_promoter_value alone forced a table hop per matched
+    # tag (35-44s/query at 829k genes; see
+    # docs/benchmarks/2026-08-03-erb-step-curve.md).
+    cur.execute(
+        "CREATE INDEX IF NOT EXISTS idx_promoter_cover "
+        "ON promoter_index(tag_value, gene_id)"
+    )
 
 
 # ---------------------------------------------------------------------------

@@ -148,6 +148,7 @@ def get_hardware() -> HardwareInfo:
 def init_from_config(
     config_device: str = "auto",
     batch_size_overrides: Optional[Mapping[str, int]] = None,
+    layer_devices: Optional[Mapping[str, str]] = None,
 ) -> HardwareInfo:
     """One-shot init at server startup.
 
@@ -162,21 +163,68 @@ def init_from_config(
     — the call order at server startup matters.
 
     Returns the (possibly-cached) ``HardwareInfo``."""
-    global _cached_info, _config_device, _config_overrides
+    global _cached_info, _config_device, _config_overrides, _layer_devices
     if _cached_info is not None:
         return _cached_info
     _config_device = config_device
     _config_overrides = dict(batch_size_overrides) if batch_size_overrides else {}
+    _layer_devices = dict(layer_devices) if layer_devices else {}
     _cached_info = _detect()
     return _cached_info
 
 
+_layer_devices: Mapping[str, str] = {}
+_layer_resolved: Dict[str, str] = {}
+
+
+def resolve_layer_device(layer: str) -> str:
+    """Per-layer device resolution (2026-08-04 CUDA A/B enablement).
+
+    ``[hardware] {dense,splade,sema,rerank}_device`` pin individual encoder
+    layers so the GPU can serve the expensive layers while cheaper ones stay
+    on CPU (or vice versa for the low-cost operating profile).
+
+    ``"auto"`` / empty / unknown layer → the global ``get_hardware().device``
+    resolution (exactly the pre-knob behavior). An explicit device is probed
+    once (cached) and falls back to cpu with a warning if unavailable —
+    pinning ``cuda`` on a +cpu torch install must degrade, never crash.
+    """
+    cached = _layer_resolved.get(layer)
+    if cached is not None:
+        return cached
+    req = (_layer_devices.get(layer) or "auto").strip().lower()
+    if req in ("", "auto"):
+        resolved = get_hardware().device
+    elif req not in _VALID_DEVICES:
+        log.warning(
+            "[hardware] %s_device=%r is not one of %s; using global device",
+            layer, req, _VALID_DEVICES,
+        )
+        resolved = get_hardware().device
+    elif req == "cpu":
+        resolved = "cpu"
+    else:
+        ok, err = _probe(req)
+        if ok:
+            resolved = req
+        else:
+            log.warning(
+                "[hardware] %s_device=%r unavailable (%s); falling back to cpu",
+                layer, req, err,
+            )
+            resolved = "cpu"
+    _layer_resolved[layer] = resolved
+    return resolved
+
+
 def reset_for_test() -> None:
     """Clear the cached HardwareInfo + config state. Test-only."""
-    global _cached_info, _config_device, _config_overrides
+    global _cached_info, _config_device, _config_overrides, _layer_devices
     _cached_info = None
     _config_device = "auto"
     _config_overrides = {}
+    _layer_devices = {}
+    _layer_resolved.clear()
 
 
 def _detect_cuda_or_rocm(rocm: bool) -> Optional[Dict[str, Any]]:

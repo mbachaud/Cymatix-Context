@@ -75,7 +75,10 @@ MAX_ADJACENCY_HOPS = 8
 
 def _load_co_activated(genome: "Genome", gene_id: str) -> List[str]:
     """Read co_activated_with list for a single document from the DB."""
-    cur = genome.conn.cursor()
+    # Perf slice 2: request-path reads must never touch the writer
+    # connection — cross-thread interleaving with locked writes deadlocks
+    # on py3.14 (caught live in the rerank stage at c=4).
+    cur = genome.read_conn.cursor()
     row = cur.execute(
         "SELECT epigenetics FROM genes WHERE gene_id = ?", (gene_id,)
     ).fetchone()
@@ -202,7 +205,8 @@ def _load_harmonic_weights(
 ) -> Dict[tuple, float]:
     """Load harmonic_links weights for all document pairs in the neighbourhood."""
     weights: Dict[tuple, float] = {}
-    cur = genome.conn.cursor()
+    # Perf slice 2: reader connection — see _load_co_activated.
+    cur = genome.read_conn.cursor()
 
     # Check if harmonic_links table exists
     has_table = cur.execute(

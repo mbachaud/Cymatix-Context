@@ -1,0 +1,526 @@
+{
+ "dogfood/headroom": [
+  {
+   "needle": "cymatix_proxy_port",
+   "ms": 439.16100007481873,
+   "chars": 16766,
+   "answer_present": true
+  },
+  {
+   "needle": "cymatix_expression_tokens",
+   "ms": 398.22540001478046,
+   "chars": 19398,
+   "answer_present": true
+  },
+  {
+   "needle": "cymatix_cymatics_bins",
+   "ms": 413.7171999318525,
+   "chars": 15859,
+   "answer_present": true
+  },
+  {
+   "needle": "cymatix_fusion_default",
+   "ms": 439.0426999889314,
+   "chars": 20333,
+   "answer_present": true
+  },
+  {
+   "needle": "cymatix_know_emit_floor",
+   "ms": 413.2927000755444,
+   "chars": 19327,
+   "answer_present": false
+  },
+  {
+   "needle": "cymatix_max_genes",
+   "ms": 515.3129000682384,
+   "chars": 19316,
+   "answer_present": true
+  },
+  {
+   "needle": "cymatix_genome_path",
+   "ms": 444.869099999778,
+   "chars": 17988,
+   "answer_present": false
+  },
+  {
+   "needle": "cymatix_splice_aggressiveness",
+   "ms": 442.60800001211464,
+   "chars": 17406,
+   "answer_present": false
+  },
+  {
+   "needle": "scorerift_divergence_threshold",
+   "ms": 373.9299000008032,
+   "chars": 10786,
+   "answer_present": true
+  },
+  {
+   "needle": "scorerift_confidence_gate",
+   "ms": 399.2749999742955,
+   "chars": 14224,
+   "answer_present": true
+  },
+  {
+   "needle": "scorerift_import_hygiene_confidence",
+   "ms": 476.6671999823302,
+   "chars": 12728,
+   "answer_present": true
+  },
+  {
+   "needle": "driftwatch_version",
+   "ms": 454.37529997434467,
+   "chars": 16962,
+   "answer_present": true
+  },
+  {
+   "needle": "driftwatch_default_ollama_model",
+   "ms": 423.0123000452295,
+   "chars": 9115,
+   "answer_present": true
+  },
+  {
+   "needle": "driftwatch_default_inference_server",
+   "ms": 388.28259997535497,
+   "chars": 16767,
+   "answer_present": true
+  },
+  {
+   "needle": "driftwatch_default_secret",
+   "ms": 391.367300064303,
+   "chars": 57,
+   "answer_present": false
+  },
+  {
+   "needle": "mek_guardrails",
+   "ms": 374.3900000117719,
+   "chars": 9156,
+   "answer_present": true
+  },
+  {
+   "needle": "mek_source_apps",
+   "ms": 410.6764999451116,
+   "chars": 5492,
+   "answer_present": true
+  },
+  {
+   "needle": "mek_marketplace_name",
+   "ms": 395.4338999465108,
+   "chars": 6825,
+   "answer_present": true
+  }
+ ],
+ "dogfood/trim": [
+  {
+   "needle": "cymatix_proxy_port",
+   "ms": 490.7522000139579,
+   "chars": 16766,
+   "answer_present": true
+  },
+  {
+   "needle": "cymatix_expression_tokens",
+   "ms": 439.2538000829518,
+   "chars": 19398,
+   "answer_present": true
+  },
+  {
+   "needle": "cymatix_cymatics_bins",
+   "ms": 417.0317000243813,
+   "chars": 15859,
+   "answer_present": true
+  },
+  {
+   "needle": "cymatix_fusion_default",
+   "ms": 444.2766000283882,
+   "chars": 20333,
+   "answer_present": true
+  },
+  {
+   "needle": "cymatix_know_emit_floor",
+   "ms": 417.94169996865094,
+   "chars": 19327,
+   "answer_present": false
+  },
+  {
+   "needle": "cymatix_max_genes",
+   "ms": 493.9932000124827,
+   "chars": 19316,
+   "answer_present": true
+  },
+  {
+   "needle": "cymatix_genome_path",
+   "ms": 447.82970007508993,
+   "chars": 17988,
+   "answer_present": false
+  },
+  {
+   "needle": "cymatix_splice_aggressiveness",
+   "ms": 426.0361000197008,
+   "chars": 17406,
+   "answer_present": false
+  },
+  {
+   "needle": "scorerift_divergence_threshold",
+   "ms": 375.1175000797957,
+   "chars": 10786,
+   "answer_present": true
+  },
+  {
+   "needle": "scorerift_confidence_gate",
+   "ms": 381.78990001324564,
+   "chars": 14224,
+   "answer_present": true
+  },
+  {
+   "needle": "scorerift_import_hygiene_confidence",
+   "ms": 367.9002000717446,
+   "chars": 12728,
+   "answer_present": true
+  },
+  {
+   "needle": "driftwatch_version",
+   "ms": 447.5228999508545,
+   "chars": 16962,
+   "answer_present": true
+  },
+  {
+   "needle": "driftwatch_default_ollama_model",
+   "ms": 463.69930007494986,
+   "chars": 9115,
+   "answer_present": true
+  },
+  {
+   "needle": "driftwatch_default_inference_server",
+   "ms": 383.00269993487746,
+   "chars": 16767,
+   "answer_present": true
+  },
+  {
+   "needle": "driftwatch_default_secret",
+   "ms": 377.54529993981123,
+   "chars": 57,
+   "answer_present": false
+  },
+  {
+   "needle": "mek_guardrails",
+   "ms": 370.48959999810904,
+   "chars": 9156,
+   "answer_present": true
+  },
+  {
+   "needle": "mek_source_apps",
+   "ms": 360.5735000455752,
+   "chars": 5492,
+   "answer_present": true
+  },
+  {
+   "needle": "mek_marketplace_name",
+   "ms": 447.10870005656034,
+   "chars": 6825,
+   "answer_present": true
+  }
+ ],
+ "erb_100k/headroom": [
+  {
+   "needle": "erb_000",
+   "ms": 2447.5785000249743,
+   "chars": 8548
+  },
+  {
+   "needle": "erb_001",
+   "ms": 2873.036800068803,
+   "chars": 11706
+  },
+  {
+   "needle": "erb_003",
+   "ms": 10800.976800033823,
+   "chars": 24657
+  },
+  {
+   "needle": "erb_008",
+   "ms": 7886.090200045146,
+   "chars": 24913
+  },
+  {
+   "needle": "erb_009",
+   "ms": 7454.039699980058,
+   "chars": 23248
+  },
+  {
+   "needle": "erb_010",
+   "ms": 3102.1976000629365,
+   "chars": 25509
+  },
+  {
+   "needle": "erb_012",
+   "ms": 4426.635400042869,
+   "chars": 25786
+  },
+  {
+   "needle": "erb_013",
+   "ms": 8071.835400070995,
+   "chars": 22910
+  },
+  {
+   "needle": "erb_015",
+   "ms": 3330.3608000278473,
+   "chars": 25208
+  },
+  {
+   "needle": "erb_019",
+   "ms": 6971.954399952665,
+   "chars": 22894
+  },
+  {
+   "needle": "erb_020",
+   "ms": 4956.093999906443,
+   "chars": 12902
+  },
+  {
+   "needle": "erb_021",
+   "ms": 5558.076799963601,
+   "chars": 25721
+  },
+  {
+   "needle": "erb_022",
+   "ms": 3072.80449999962,
+   "chars": 26947
+  },
+  {
+   "needle": "erb_024",
+   "ms": 7830.821800045669,
+   "chars": 25188
+  },
+  {
+   "needle": "erb_029",
+   "ms": 8669.294100021943,
+   "chars": 27602
+  },
+  {
+   "needle": "erb_031",
+   "ms": 3237.390400026925,
+   "chars": 15272
+  },
+  {
+   "needle": "erb_033",
+   "ms": 4837.956200004555,
+   "chars": 16147
+  },
+  {
+   "needle": "erb_036",
+   "ms": 2708.3157000597566,
+   "chars": 17066
+  },
+  {
+   "needle": "erb_038",
+   "ms": 3242.7924999501556,
+   "chars": 22841
+  },
+  {
+   "needle": "erb_039",
+   "ms": 7768.795799929649,
+   "chars": 25197
+  },
+  {
+   "needle": "erb_042",
+   "ms": 5077.929300023243,
+   "chars": 23762
+  },
+  {
+   "needle": "erb_050",
+   "ms": 5081.429300014861,
+   "chars": 24282
+  },
+  {
+   "needle": "erb_066",
+   "ms": 6164.501500083134,
+   "chars": 22186
+  },
+  {
+   "needle": "erb_068",
+   "ms": 7303.912000032142,
+   "chars": 19085
+  },
+  {
+   "needle": "erb_072",
+   "ms": 3710.300200036727,
+   "chars": 26374
+  },
+  {
+   "needle": "erb_073",
+   "ms": 2054.874400026165,
+   "chars": 23786
+  },
+  {
+   "needle": "erb_075",
+   "ms": 9359.46209996473,
+   "chars": 29861
+  },
+  {
+   "needle": "erb_080",
+   "ms": 2637.5309999566525,
+   "chars": 15487
+  },
+  {
+   "needle": "erb_087",
+   "ms": 4582.329299999401,
+   "chars": 16211
+  },
+  {
+   "needle": "erb_095",
+   "ms": 5465.520299971104,
+   "chars": 23605
+  }
+ ],
+ "erb_100k/trim": [
+  {
+   "needle": "erb_000",
+   "ms": 2566.3878999184817,
+   "chars": 8548
+  },
+  {
+   "needle": "erb_001",
+   "ms": 2536.918699974194,
+   "chars": 11706
+  },
+  {
+   "needle": "erb_003",
+   "ms": 2941.7133000679314,
+   "chars": 25845
+  },
+  {
+   "needle": "erb_008",
+   "ms": 4730.987000046298,
+   "chars": 26250
+  },
+  {
+   "needle": "erb_009",
+   "ms": 2989.8927999893203,
+   "chars": 25457
+  },
+  {
+   "needle": "erb_010",
+   "ms": 1911.0818000044674,
+   "chars": 26077
+  },
+  {
+   "needle": "erb_012",
+   "ms": 2295.2991999918595,
+   "chars": 26378
+  },
+  {
+   "needle": "erb_013",
+   "ms": 2704.6468999469653,
+   "chars": 22910
+  },
+  {
+   "needle": "erb_015",
+   "ms": 2572.8249000385404,
+   "chars": 25978
+  },
+  {
+   "needle": "erb_019",
+   "ms": 2179.5201000059023,
+   "chars": 25526
+  },
+  {
+   "needle": "erb_020",
+   "ms": 4758.708100067452,
+   "chars": 12902
+  },
+  {
+   "needle": "erb_021",
+   "ms": 2460.1946000475436,
+   "chars": 26575
+  },
+  {
+   "needle": "erb_022",
+   "ms": 2723.748499993235,
+   "chars": 26947
+  },
+  {
+   "needle": "erb_024",
+   "ms": 2531.9164999527857,
+   "chars": 27005
+  },
+  {
+   "needle": "erb_029",
+   "ms": 2461.6164999315515,
+   "chars": 28837
+  },
+  {
+   "needle": "erb_031",
+   "ms": 3238.7522999197245,
+   "chars": 15272
+  },
+  {
+   "needle": "erb_033",
+   "ms": 3153.2335999654606,
+   "chars": 17309
+  },
+  {
+   "needle": "erb_036",
+   "ms": 2555.104099912569,
+   "chars": 17066
+  },
+  {
+   "needle": "erb_038",
+   "ms": 2958.181699970737,
+   "chars": 22841
+  },
+  {
+   "needle": "erb_039",
+   "ms": 3570.703799952753,
+   "chars": 25775
+  },
+  {
+   "needle": "erb_042",
+   "ms": 2627.654799958691,
+   "chars": 25402
+  },
+  {
+   "needle": "erb_050",
+   "ms": 2800.5045999307185,
+   "chars": 26465
+  },
+  {
+   "needle": "erb_066",
+   "ms": 2904.5901999343187,
+   "chars": 24992
+  },
+  {
+   "needle": "erb_068",
+   "ms": 3479.9139000242576,
+   "chars": 17788
+  },
+  {
+   "needle": "erb_072",
+   "ms": 2207.951199961826,
+   "chars": 25837
+  },
+  {
+   "needle": "erb_073",
+   "ms": 2093.559799948707,
+   "chars": 23786
+  },
+  {
+   "needle": "erb_075",
+   "ms": 2164.3214999930933,
+   "chars": 28390
+  },
+  {
+   "needle": "erb_080",
+   "ms": 2772.919400013052,
+   "chars": 15487
+  },
+  {
+   "needle": "erb_087",
+   "ms": 2043.6828000238165,
+   "chars": 16074
+  },
+  {
+   "needle": "erb_095",
+   "ms": 1977.612999966368,
+   "chars": 25107
+  }
+ ]
+}

@@ -379,8 +379,12 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
         """Most recent build_context stage events for the launcher's
         pipeline-viewer panel. Each event is
             { request_id, stage, ms, ts }
+        plus, on some stages (perf slice 1, W0.2/W0.3):
+            express     + { signals: {name: ms}, model_load_ms: {name: ms} }
+            tail_writes + { commits: int }   # per-request writer-commit delta
         Ordered oldest to newest. Backed by a bounded in-process ring
         (see cymatix_context.context_manager.get_recent_pipeline_events).
+        Bench-side consumer: benchmarks/dogfood/_stage_receipts.py.
         """
         try:
             from ..context_manager import (
@@ -550,6 +554,13 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
             # are talking to the process they just spawned, not a stale
             # server that lost a port-bind race. See issue #127.
             "pid": os.getpid(),
+            # Spawn-token identity (perf slice 2): on Windows a venv's
+            # python.exe launcher re-execs the interpreter as a child, so
+            # the pid above never matches the spawner's Popen.pid. The
+            # orchestrator passes a unique token via env; echoing it is
+            # the reliable "you are talking to the process you spawned"
+            # signal. None when not bench-spawned.
+            "bench_spawn_token": os.environ.get("CYMATIX_BENCH_SPAWN_TOKEN"),
             "ribosome": ribosome_model,
             "ribosome_backend": config.ribosome.effective_backend,
             "ribosome_configured_backend": configured_backend,
@@ -586,7 +597,7 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
         """Reopen knowledge store connection to see external changes."""
         cymatix.genome.refresh()
         cymatix.genome._invalidate_dense_matrix(force=True)
-        new_count = cymatix.genome.stats()["total_genes"]
+        new_count = cymatix.genome.total_genes()
         return {"refreshed": True, "genes": new_count}
 
     @app.post("/admin/genes/tombstone")
@@ -657,20 +668,27 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
             _re.compile(r'(?:\*\*|[-*])\s*([A-Za-z ]{2,30})(?:\*\*)?:\s*(.{1,80})'),
         ]
         updated = 0
-        for row in rows:
-            content = row["content"][:3000]
-            kvs = set()
-            for pat in patterns:
-                for match in pat.finditer(content):
-                    g = match.groups()
-                    if len(g) == 2 and g[0] and g[1]:
-                        kvs.add(f"{g[0].strip()[:40]}={g[1].strip()[:80]}")
-            cur.execute(
-                "UPDATE genes SET key_values = ? WHERE gene_id = ?",
-                (json_dumps(sorted(kvs)[:15]), row["gene_id"]),
-            )
-            updated += 1
-        cymatix.genome.conn.commit()
+        # W2.3 Phase A interim (cwola pattern): the UPDATE loop + commit
+        # is one writer transaction on the shared connection — serialize
+        # it via the store's write lock. The per-row regex work is pure
+        # CPU and bounded (3000 chars/row).
+        import contextlib as _contextlib
+        _wl = getattr(cymatix.genome, "_write_lock", None)
+        with (_wl if _wl is not None else _contextlib.nullcontext()):
+            for row in rows:
+                content = row["content"][:3000]
+                kvs = set()
+                for pat in patterns:
+                    for match in pat.finditer(content):
+                        g = match.groups()
+                        if len(g) == 2 and g[0] and g[1]:
+                            kvs.add(f"{g[0].strip()[:40]}={g[1].strip()[:80]}")
+                cur.execute(
+                    "UPDATE genes SET key_values = ? WHERE gene_id = ?",
+                    (json_dumps(sorted(kvs)[:15]), row["gene_id"]),
+                )
+                updated += 1
+            cymatix.genome.conn.commit()
         return {"backfilled": updated, "total": cymatix.genome.stats()["total_genes"]}
 
     @app.post("/admin/compact")
@@ -698,9 +716,15 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
         )
         cutoff = noise_cutoff if noise_cutoff >= 0 else PKI_NOISE_CUTOFF
         try:
-            result = compact_path_key_index(
-                cymatix.genome.conn, noise_cutoff=cutoff, dry_run=dry_run,
-            )
+            # W2.3 Phase A interim (cwola pattern): the compactor rewrites
+            # path_key_index + commits on the shared writer — serialize at
+            # the call site (storage.indexes stays store-agnostic).
+            import contextlib as _contextlib
+            _wl = getattr(cymatix.genome, "_write_lock", None)
+            with (_wl if _wl is not None else _contextlib.nullcontext()):
+                result = compact_path_key_index(
+                    cymatix.genome.conn, noise_cutoff=cutoff, dry_run=dry_run,
+                )
             return {"ok": True, **result}
         except Exception as exc:
             log.warning("compact-pki failed: %s", exc, exc_info=True)
@@ -1186,7 +1210,9 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
                 log.warning("swap-db: failed to close old store", exc_info=True)
 
             elapsed_ms = round((_time.time() - t0) * 1000, 1)
-            genes = new_store.stats().get("total_genes", 0)
+            # 2026-08-03 ERB fix: stats() here cost 72.7s cold on a 49GB bed and
+            # broke the bench 60s swap timeout; only the count is reported.
+            genes = new_store.total_genes()
 
             log.info(
                 "swap-db: %s -> %s (%d genes, read_only=%s, %.1fms)",

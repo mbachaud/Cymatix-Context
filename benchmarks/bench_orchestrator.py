@@ -57,6 +57,7 @@ import sys
 import time
 import urllib.error
 import urllib.request
+import uuid
 from contextlib import AbstractContextManager
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -305,6 +306,13 @@ class BenchServer(AbstractContextManager["BenchServer"]):
         self._proc: Optional[subprocess.Popen] = None
         self._current: Optional[Fixture] = None
         self._log_fh = None
+        # Spawn-token identity (perf slice 2): the pid comparison in
+        # _wait_healthy false-positives under Windows venv shims (the
+        # launcher python.exe re-execs the interpreter as a child, so
+        # Popen.pid != the server's os.getpid()). Each _spawn mints a
+        # token, passes it via CYMATIX_BENCH_SPAWN_TOKEN, and /health
+        # echoes it back as the authoritative identity.
+        self._spawn_token: Optional[str] = None
 
     @property
     def url(self) -> str:
@@ -481,6 +489,9 @@ class BenchServer(AbstractContextManager["BenchServer"]):
         # replays of the same query against the same fixture can drift
         # purely because the subprocess got a different hash seed.
         env.setdefault("PYTHONHASHSEED", "0")
+        # Fresh identity token per spawn — see __init__ / _wait_healthy.
+        self._spawn_token = uuid.uuid4().hex
+        env["CYMATIX_BENCH_SPAWN_TOKEN"] = self._spawn_token
         env.update(fixture.extra_env)
 
         # Issue #153: pin the spawned uvicorn to a single helix-context
@@ -581,17 +592,34 @@ class BenchServer(AbstractContextManager["BenchServer"]):
                 time.sleep(DEFAULT_HEALTH_POLL_S)
                 continue
             # Identity check: a stale uvicorn that won the bind race will
-            # also answer /health. If the responder's pid is not the
-            # process we just spawned, fail loudly — proceeding would run
-            # the whole bench against the wrong (e.g. blob-mode) server
-            # and silently report genes=0. See issue #127.
+            # also answer /health — proceeding would run the whole bench
+            # against the wrong (e.g. blob-mode) server and silently
+            # report genes=0 (issue #127).
+            #
+            # The spawn token is authoritative: pid equality is unusable
+            # under Windows venv shims (launcher python.exe re-execs the
+            # interpreter as a child, so Popen.pid never matches the
+            # server's os.getpid()). The pid guard remains fatal only for
+            # servers too old to echo the token.
+            responder_token = payload.get("bench_spawn_token")
+            if self._spawn_token is not None and responder_token is not None:
+                if responder_token != self._spawn_token:
+                    raise BenchServerError(
+                        f"/health answered with spawn token "
+                        f"{responder_token!r}, expected "
+                        f"{self._spawn_token!r}; a stale server is holding "
+                        "the port. Aborting rather than running the bench "
+                        "against the wrong process."
+                    )
+                return
             responder_pid = payload.get("pid")
             if expected_pid is not None and responder_pid is not None:
                 if int(responder_pid) != int(expected_pid):
                     raise BenchServerError(
                         f"/health answered by pid={responder_pid}, but the "
                         f"spawned uvicorn is pid={expected_pid}; a stale "
-                        "server is holding the port. Aborting rather than "
+                        "server is holding the port (or the target predates "
+                        "the bench_spawn_token echo). Aborting rather than "
                         "running the bench against the wrong process."
                     )
             return
@@ -642,10 +670,16 @@ class BenchServer(AbstractContextManager["BenchServer"]):
         # than to log retr=err × 50 and produce an unactionable summary.
         _probe_fixture_schema(fixture.db)
         payload = {"path": fixture.db, "read_only": fixture.read_only}
+        # /admin/swap-db calls genome.stats() server-side; its SUM(LENGTH())
+        # full scans exceed 60s cold on multi-GB beds (72.7s measured on the
+        # 49GB ERB blob), so huge-bed runs raise this via env.
+        swap_timeout_s = float(
+            os.environ.get("CYMATIX_BENCH_SWAP_TIMEOUT_S", DEFAULT_SWAP_TIMEOUT_S)
+        )
         try:
             return self._http(
                 "POST", "/admin/swap-db", payload,
-                timeout=DEFAULT_SWAP_TIMEOUT_S,
+                timeout=swap_timeout_s,
             )
         except Exception as exc:
             raise BenchServerError(

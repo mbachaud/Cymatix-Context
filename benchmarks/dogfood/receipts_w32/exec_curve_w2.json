@@ -1,0 +1,731 @@
+{
+  "measured_at": "2026-08-04T19:08:17-0700",
+  "genome": "F:\\Projects\\cymatix-context\\genomes\\dogfood\\genome.db",
+  "served_db": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\perf-slice1\\benchmarks\\dogfood\\logs\\server_scaling\\20260804-190114\\bed_copy\\genome.db",
+  "bed_copied": true,
+  "arm": "read",
+  "bed_identity_sha256": "13f8bbe3d3a37912d7686eef6fdf61a2d2cb6a584eed98863d57ddc8a2262ddd",
+  "k": 12,
+  "rounds": 2,
+  "needles": "all",
+  "port": 11492,
+  "cpu_count": 16,
+  "worker_model": "one uvicorn (BenchServer) per level, fresh process = clean session state + fresh ring; N stdlib HTTP client subprocesses share the server's encoders and its module-global 2-thread executor",
+  "note": "warmups untimed (parent + per worker); workers barrier-synced; ranks recorded per query as a fast-because-broken guard; validity gates baked into each level",
+  "canary_endpoint": "/debug/pipeline/recent?limit=1",
+  "canary_interval_s": 0.25,
+  "ring_note": "ring_tail_sample aggregates the pipeline ring's last ~128 stage events (~ the final ~12 requests of the level), not the full timed window",
+  "read_arm_residue_note": null,
+  "levels": [
+    {
+      "concurrency": 1,
+      "samples": 36,
+      "errors": 0,
+      "http_5xx": 0,
+      "median_latency_ms": 729.1,
+      "mean_latency_ms": 737.6,
+      "p95_latency_ms": 856.1,
+      "max_latency_ms": 856.8,
+      "per_worker_median_ms": [
+        729.1
+      ],
+      "recall@12": 0.5556,
+      "wall_seconds": 26.6,
+      "overlap_fraction": 1.0,
+      "throughput_qps": 1.36,
+      "canary": {
+        "n": 100,
+        "p50_ms": 2.7,
+        "p95_ms": 26.2,
+        "max_ms": 50.8,
+        "errors": 0
+      },
+      "ring_tail_sample": {
+        "stages": {
+          "splice": {
+            "n": 16,
+            "p50_ms": 0.031,
+            "p95_ms": 0.041,
+            "max_ms": 0.041
+          },
+          "assemble": {
+            "n": 16,
+            "p50_ms": 1.137,
+            "p95_ms": 1.643,
+            "max_ms": 1.643
+          },
+          "tail_writes": {
+            "n": 16,
+            "p50_ms": 0.312,
+            "p95_ms": 0.414,
+            "max_ms": 0.414
+          },
+          "cwola": {
+            "n": 16,
+            "p50_ms": 22.83,
+            "p95_ms": 24.72,
+            "max_ms": 24.72
+          },
+          "classify": {
+            "n": 16,
+            "p50_ms": 0.032,
+            "p95_ms": 0.038,
+            "max_ms": 0.038
+          },
+          "extract": {
+            "n": 16,
+            "p50_ms": 0.049,
+            "p95_ms": 0.08,
+            "max_ms": 0.08
+          },
+          "express": {
+            "n": 16,
+            "p50_ms": 686.816,
+            "p95_ms": 807.75,
+            "max_ms": 807.75
+          },
+          "rerank": {
+            "n": 16,
+            "p50_ms": 0.986,
+            "p95_ms": 1.84,
+            "max_ms": 1.84
+          }
+        },
+        "signals": {
+          "pki": {
+            "n": 16,
+            "p50_ms": 0.18069997895509005,
+            "p95_ms": 0.30640000477433205,
+            "max_ms": 0.30640000477433205
+          },
+          "tag_exact": {
+            "n": 16,
+            "p50_ms": 3.3650000113993883,
+            "p95_ms": 92.28970005642623,
+            "max_ms": 92.28970005642623
+          },
+          "tag_prefix": {
+            "n": 16,
+            "p50_ms": 4.080799990333617,
+            "p95_ms": 20.480399951338768,
+            "max_ms": 20.480399951338768
+          },
+          "fts5": {
+            "n": 16,
+            "p50_ms": 41.38219996821135,
+            "p95_ms": 58.40219999663532,
+            "max_ms": 58.40219999663532
+          },
+          "splade": {
+            "n": 16,
+            "p50_ms": 112.2359000146389,
+            "p95_ms": 167.35909995622933,
+            "max_ms": 167.35909995622933
+          },
+          "sema_boost": {
+            "n": 16,
+            "p50_ms": 0.001500011421740055,
+            "p95_ms": 0.002300017513334751,
+            "max_ms": 0.002300017513334751
+          },
+          "dense": {
+            "n": 16,
+            "p50_ms": 177.2746000206098,
+            "p95_ms": 219.3124999757856,
+            "max_ms": 219.3124999757856
+          },
+          "lex_anchor": {
+            "n": 16,
+            "p50_ms": 3.414900042116642,
+            "p95_ms": 17.077800002880394,
+            "max_ms": 17.077800002880394
+          },
+          "body_fetch": {
+            "n": 16,
+            "p50_ms": 41.32080008275807,
+            "p95_ms": 47.262500040233135,
+            "max_ms": 47.262500040233135
+          },
+          "coact_expand": {
+            "n": 16,
+            "p50_ms": 33.703100052662194,
+            "p95_ms": 40.65680003259331,
+            "max_ms": 40.65680003259331
+          },
+          "ann_dense_leg": {
+            "n": 16,
+            "p50_ms": 129.2602000758052,
+            "p95_ms": 139.62129992432892,
+            "max_ms": 139.62129992432892
+          },
+          "ann_body_fetch": {
+            "n": 16,
+            "p50_ms": 11.40379998832941,
+            "p95_ms": 18.58059992082417,
+            "max_ms": 18.58059992082417
+          }
+        },
+        "model_load_ms": {
+          "splade": 6178.70839999523,
+          "sema": 2304.391699959524,
+          "dense_matrix": 60.99360005464405,
+          "dense_codec": 0.016300007700920105,
+          "dense": 3770.214800024405
+        },
+        "commits": {
+          "n": 16,
+          "p50": 0.0,
+          "p95": 0.0,
+          "max": 0.0
+        },
+        "entries": 128
+      },
+      "genes_at_boot": 6272,
+      "valid": true,
+      "invalid_reasons": []
+    },
+    {
+      "concurrency": 2,
+      "samples": 72,
+      "errors": 0,
+      "http_5xx": 0,
+      "median_latency_ms": 1212.3,
+      "mean_latency_ms": 1219.9,
+      "p95_latency_ms": 1581.1,
+      "max_latency_ms": 1718.2,
+      "per_worker_median_ms": [
+        1209.2,
+        1215.9
+      ],
+      "recall@12": 0.5556,
+      "wall_seconds": 44.0,
+      "overlap_fraction": 0.998,
+      "throughput_qps": 1.64,
+      "canary": {
+        "n": 164,
+        "p50_ms": 3.5,
+        "p95_ms": 43.2,
+        "max_ms": 170.5,
+        "errors": 0
+      },
+      "ring_tail_sample": {
+        "stages": {
+          "rerank": {
+            "n": 17,
+            "p50_ms": 1.663,
+            "p95_ms": 17.939,
+            "max_ms": 17.939
+          },
+          "splice": {
+            "n": 15,
+            "p50_ms": 0.038,
+            "p95_ms": 0.057,
+            "max_ms": 0.057
+          },
+          "assemble": {
+            "n": 16,
+            "p50_ms": 1.514,
+            "p95_ms": 2.755,
+            "max_ms": 2.755
+          },
+          "tail_writes": {
+            "n": 16,
+            "p50_ms": 0.486,
+            "p95_ms": 0.626,
+            "max_ms": 0.626
+          },
+          "cwola": {
+            "n": 16,
+            "p50_ms": 21.675,
+            "p95_ms": 31.158,
+            "max_ms": 31.158
+          },
+          "classify": {
+            "n": 16,
+            "p50_ms": 0.038,
+            "p95_ms": 0.106,
+            "max_ms": 0.106
+          },
+          "extract": {
+            "n": 16,
+            "p50_ms": 0.058,
+            "p95_ms": 0.087,
+            "max_ms": 0.087
+          },
+          "express": {
+            "n": 16,
+            "p50_ms": 1030.361,
+            "p95_ms": 1173.786,
+            "max_ms": 1173.786
+          }
+        },
+        "signals": {
+          "pki": {
+            "n": 11,
+            "p50_ms": 0.09290000889450312,
+            "p95_ms": 0.6889000069350004,
+            "max_ms": 0.6889000069350004
+          },
+          "tag_exact": {
+            "n": 11,
+            "p50_ms": 1.2670999858528376,
+            "p95_ms": 3.835999988950789,
+            "max_ms": 3.835999988950789
+          },
+          "tag_prefix": {
+            "n": 11,
+            "p50_ms": 4.1970000602304935,
+            "p95_ms": 6.509399972856045,
+            "max_ms": 6.509399972856045
+          },
+          "fts5": {
+            "n": 11,
+            "p50_ms": 51.36979999952018,
+            "p95_ms": 62.75150005239993,
+            "max_ms": 62.75150005239993
+          },
+          "splade": {
+            "n": 11,
+            "p50_ms": 150.7068999344483,
+            "p95_ms": 163.44260005280375,
+            "max_ms": 163.44260005280375
+          },
+          "sema_boost": {
+            "n": 11,
+            "p50_ms": 0.001500011421740055,
+            "p95_ms": 0.003700028173625469,
+            "max_ms": 0.003700028173625469
+          },
+          "dense": {
+            "n": 11,
+            "p50_ms": 281.590300030075,
+            "p95_ms": 331.8142999196425,
+            "max_ms": 331.8142999196425
+          },
+          "lex_anchor": {
+            "n": 11,
+            "p50_ms": 3.638199996203184,
+            "p95_ms": 72.90269993245602,
+            "max_ms": 72.90269993245602
+          },
+          "body_fetch": {
+            "n": 11,
+            "p50_ms": 36.940000019967556,
+            "p95_ms": 66.23560003936291,
+            "max_ms": 66.23560003936291
+          },
+          "coact_expand": {
+            "n": 11,
+            "p50_ms": 50.16159999649972,
+            "p95_ms": 63.24960000347346,
+            "max_ms": 63.24960000347346
+          },
+          "ann_dense_leg": {
+            "n": 16,
+            "p50_ms": 232.62309993151575,
+            "p95_ms": 474.48040009476244,
+            "max_ms": 474.48040009476244
+          },
+          "ann_body_fetch": {
+            "n": 16,
+            "p50_ms": 24.13720008917153,
+            "p95_ms": 81.44580002408475,
+            "max_ms": 81.44580002408475
+          }
+        },
+        "model_load_ms": {
+          "splade": 6289.485599962063,
+          "sema": 2428.686600062065,
+          "dense_matrix": 63.24110005516559,
+          "dense_codec": 0.016699894331395626,
+          "dense": 3743.5234000440687
+        },
+        "commits": {
+          "n": 16,
+          "p50": 1.0,
+          "p95": 1.0,
+          "max": 1.0
+        },
+        "entries": 128
+      },
+      "genes_at_boot": 6272,
+      "valid": true,
+      "invalid_reasons": []
+    },
+    {
+      "concurrency": 4,
+      "samples": 144,
+      "errors": 0,
+      "http_5xx": 0,
+      "median_latency_ms": 2255.3,
+      "mean_latency_ms": 2252.2,
+      "p95_latency_ms": 2532.7,
+      "max_latency_ms": 2660.9,
+      "per_worker_median_ms": [
+        2277.4,
+        2267.7,
+        2250.7,
+        2256.2
+      ],
+      "recall@12": 0.5556,
+      "wall_seconds": 81.6,
+      "overlap_fraction": 0.986,
+      "throughput_qps": 1.76,
+      "canary": {
+        "n": 299,
+        "p50_ms": 3.8,
+        "p95_ms": 55.9,
+        "max_ms": 129.1,
+        "errors": 0
+      },
+      "ring_tail_sample": {
+        "stages": {
+          "tail_writes": {
+            "n": 15,
+            "p50_ms": 0.537,
+            "p95_ms": 0.609,
+            "max_ms": 0.609
+          },
+          "classify": {
+            "n": 17,
+            "p50_ms": 0.038,
+            "p95_ms": 0.088,
+            "max_ms": 0.088
+          },
+          "extract": {
+            "n": 17,
+            "p50_ms": 0.055,
+            "p95_ms": 0.095,
+            "max_ms": 0.095
+          },
+          "cwola": {
+            "n": 15,
+            "p50_ms": 27.386,
+            "p95_ms": 50.771,
+            "max_ms": 50.771
+          },
+          "express": {
+            "n": 18,
+            "p50_ms": 1066.232,
+            "p95_ms": 1137.912,
+            "max_ms": 1137.912
+          },
+          "rerank": {
+            "n": 18,
+            "p50_ms": 1.707,
+            "p95_ms": 6.425,
+            "max_ms": 6.425
+          },
+          "splice": {
+            "n": 14,
+            "p50_ms": 0.036,
+            "p95_ms": 0.057,
+            "max_ms": 0.057
+          },
+          "assemble": {
+            "n": 14,
+            "p50_ms": 1.205,
+            "p95_ms": 1.782,
+            "max_ms": 1.782
+          }
+        },
+        "signals": {
+          "pki": {
+            "n": 10,
+            "p50_ms": 0.09429990313947201,
+            "p95_ms": 0.35440002102404833,
+            "max_ms": 0.35440002102404833
+          },
+          "tag_exact": {
+            "n": 10,
+            "p50_ms": 2.2971000289544463,
+            "p95_ms": 9.972099913284183,
+            "max_ms": 9.972099913284183
+          },
+          "tag_prefix": {
+            "n": 10,
+            "p50_ms": 8.541099959984422,
+            "p95_ms": 14.03229997958988,
+            "max_ms": 14.03229997958988
+          },
+          "fts5": {
+            "n": 10,
+            "p50_ms": 63.89539991505444,
+            "p95_ms": 68.64449998829514,
+            "max_ms": 68.64449998829514
+          },
+          "splade": {
+            "n": 10,
+            "p50_ms": 135.3316999739036,
+            "p95_ms": 205.363699933514,
+            "max_ms": 205.363699933514
+          },
+          "sema_boost": {
+            "n": 10,
+            "p50_ms": 0.002200016751885414,
+            "p95_ms": 0.002600019797682762,
+            "max_ms": 0.002600019797682762
+          },
+          "dense": {
+            "n": 10,
+            "p50_ms": 291.28669993951917,
+            "p95_ms": 316.63390004541725,
+            "max_ms": 316.63390004541725
+          },
+          "lex_anchor": {
+            "n": 10,
+            "p50_ms": 1.9641000544652343,
+            "p95_ms": 4.322300083003938,
+            "max_ms": 4.322300083003938
+          },
+          "body_fetch": {
+            "n": 10,
+            "p50_ms": 65.1358999311924,
+            "p95_ms": 94.284399994649,
+            "max_ms": 94.284399994649
+          },
+          "coact_expand": {
+            "n": 10,
+            "p50_ms": 49.806099967099726,
+            "p95_ms": 66.03530002757907,
+            "max_ms": 66.03530002757907
+          },
+          "ann_dense_leg": {
+            "n": 18,
+            "p50_ms": 219.8066000128165,
+            "p95_ms": 417.3671000171453,
+            "max_ms": 417.3671000171453
+          },
+          "ann_body_fetch": {
+            "n": 18,
+            "p50_ms": 23.710700101219118,
+            "p95_ms": 48.97319991141558,
+            "max_ms": 48.97319991141558
+          }
+        },
+        "model_load_ms": {
+          "splade": 6130.4245999781415,
+          "sema": 2308.3402999909595,
+          "dense_matrix": 57.06300004385412,
+          "dense_codec": 0.019299914129078388,
+          "dense": 3615.8916000276804
+        },
+        "commits": {
+          "n": 15,
+          "p50": 3.0,
+          "p95": 4.0,
+          "max": 4.0
+        },
+        "entries": 128
+      },
+      "genes_at_boot": 6272,
+      "valid": true,
+      "invalid_reasons": []
+    },
+    {
+      "concurrency": 8,
+      "samples": 288,
+      "errors": 0,
+      "http_5xx": 0,
+      "median_latency_ms": 4517.1,
+      "mean_latency_ms": 4546.9,
+      "p95_latency_ms": 5095.4,
+      "max_latency_ms": 5269.5,
+      "per_worker_median_ms": [
+        4556.2,
+        4537.2,
+        4534.3,
+        4517.1,
+        4497.4,
+        4552.3,
+        4502.2,
+        4507.2
+      ],
+      "recall@12": 0.5556,
+      "wall_seconds": 165.5,
+      "overlap_fraction": 0.979,
+      "throughput_qps": 1.74,
+      "canary": {
+        "n": 609,
+        "p50_ms": 3.8,
+        "p95_ms": 53.3,
+        "max_ms": 133.6,
+        "errors": 0
+      },
+      "ring_tail_sample": {
+        "stages": {
+          "tail_writes": {
+            "n": 17,
+            "p50_ms": 0.47,
+            "p95_ms": 0.521,
+            "max_ms": 0.521
+          },
+          "classify": {
+            "n": 15,
+            "p50_ms": 0.037,
+            "p95_ms": 0.06,
+            "max_ms": 0.06
+          },
+          "extract": {
+            "n": 15,
+            "p50_ms": 0.048,
+            "p95_ms": 0.076,
+            "max_ms": 0.076
+          },
+          "cwola": {
+            "n": 17,
+            "p50_ms": 38.376,
+            "p95_ms": 85.442,
+            "max_ms": 85.442
+          },
+          "express": {
+            "n": 16,
+            "p50_ms": 1049.491,
+            "p95_ms": 1183.738,
+            "max_ms": 1183.738
+          },
+          "rerank": {
+            "n": 16,
+            "p50_ms": 1.457,
+            "p95_ms": 4.45,
+            "max_ms": 4.45
+          },
+          "splice": {
+            "n": 16,
+            "p50_ms": 0.033,
+            "p95_ms": 0.064,
+            "max_ms": 0.064
+          },
+          "assemble": {
+            "n": 16,
+            "p50_ms": 1.079,
+            "p95_ms": 1.274,
+            "max_ms": 1.274
+          }
+        },
+        "signals": {
+          "pki": {
+            "n": 16,
+            "p50_ms": 0.07880001794546843,
+            "p95_ms": 2.293199999257922,
+            "max_ms": 2.293199999257922
+          },
+          "tag_exact": {
+            "n": 16,
+            "p50_ms": 1.3019999023526907,
+            "p95_ms": 2.5142000522464514,
+            "max_ms": 2.5142000522464514
+          },
+          "tag_prefix": {
+            "n": 16,
+            "p50_ms": 7.30000005569309,
+            "p95_ms": 10.140500031411648,
+            "max_ms": 10.140500031411648
+          },
+          "fts5": {
+            "n": 16,
+            "p50_ms": 62.10780004039407,
+            "p95_ms": 105.15709989704192,
+            "max_ms": 105.15709989704192
+          },
+          "splade": {
+            "n": 16,
+            "p50_ms": 176.96100007742643,
+            "p95_ms": 235.17100000754,
+            "max_ms": 235.17100000754
+          },
+          "sema_boost": {
+            "n": 16,
+            "p50_ms": 0.001800013706088066,
+            "p95_ms": 0.002400018274784088,
+            "max_ms": 0.002400018274784088
+          },
+          "dense": {
+            "n": 16,
+            "p50_ms": 244.34470001142472,
+            "p95_ms": 271.4887000620365,
+            "max_ms": 271.4887000620365
+          },
+          "lex_anchor": {
+            "n": 16,
+            "p50_ms": 5.733700003474951,
+            "p95_ms": 11.519100051373243,
+            "max_ms": 11.519100051373243
+          },
+          "body_fetch": {
+            "n": 16,
+            "p50_ms": 60.75439997948706,
+            "p95_ms": 161.57120000571012,
+            "max_ms": 161.57120000571012
+          },
+          "coact_expand": {
+            "n": 16,
+            "p50_ms": 56.14050000440329,
+            "p95_ms": 81.45070006139576,
+            "max_ms": 81.45070006139576
+          },
+          "ann_dense_leg": {
+            "n": 16,
+            "p50_ms": 215.15740000177175,
+            "p95_ms": 266.5376999648288,
+            "max_ms": 266.5376999648288
+          },
+          "ann_body_fetch": {
+            "n": 16,
+            "p50_ms": 22.516800090670586,
+            "p95_ms": 109.91340002510697,
+            "max_ms": 109.91340002510697
+          }
+        },
+        "model_load_ms": {
+          "splade": 6059.168700012378,
+          "sema": 2383.480599964969,
+          "dense_matrix": 55.67819997668266,
+          "dense_codec": 0.016200006939470768,
+          "dense": 3651.6556999413297
+        },
+        "commits": {
+          "n": 17,
+          "p50": 3.0,
+          "p95": 4.0,
+          "max": 4.0
+        },
+        "entries": 128
+      },
+      "genes_at_boot": 6272,
+      "valid": true,
+      "invalid_reasons": []
+    }
+  ],
+  "scaling_vs_c1": [
+    {
+      "concurrency": 1,
+      "median_latency_x": 1.0,
+      "p95_latency_x": 1.0,
+      "throughput_x": 1.0,
+      "canary_p95_x": 1.0
+    },
+    {
+      "concurrency": 2,
+      "median_latency_x": 1.66,
+      "p95_latency_x": 1.85,
+      "throughput_x": 1.21,
+      "canary_p95_x": 1.65
+    },
+    {
+      "concurrency": 4,
+      "median_latency_x": 3.09,
+      "p95_latency_x": 2.96,
+      "throughput_x": 1.29,
+      "canary_p95_x": 2.13
+    },
+    {
+      "concurrency": 8,
+      "median_latency_x": 6.2,
+      "p95_latency_x": 5.95,
+      "throughput_x": 1.28,
+      "canary_p95_x": 2.03
+    }
+  ],
+  "worker_logs": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\perf-slice1\\benchmarks\\dogfood\\logs\\server_scaling\\20260804-190114"
+}

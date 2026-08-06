@@ -132,4 +132,6 @@ markers = [
     "requires_real_cuda: opt-in test that needs real CUDA hardware (gated by CYMATIX_TEST_CUDA=1)",
     "requires_mps: test that runs only on macOS with MPS-capable hardware",
     "slow: end-to-end test that loads SPLADE / spaCy and takes 10+ seconds",
+    "concurrency: multi-thread/process correctness test (liveness + no torn writes; never asserts absolute latency)",
+    "perf: dev-box perf measurement; excluded from default CI runs (receipts + ratio gates live in benchmarks/dogfood)",
 ]

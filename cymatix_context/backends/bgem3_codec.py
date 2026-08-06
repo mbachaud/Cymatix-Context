@@ -115,6 +115,8 @@ class BGEM3Codec:
         with self._load_lock:
             if self._model is not None:
                 return
+            import time as _time
+            _load_t0 = _time.monotonic()
             try:
                 from FlagEmbedding import BGEM3FlagModel
                 model = BGEM3FlagModel(self.model_name, use_fp16=False)
@@ -126,6 +128,14 @@ class BGEM3Codec:
             # Publish self._model last so the lock-free fast path never sees a
             # half-initialized model (self._backend is set before this).
             self._model = model
+            # Perf slice 1 (W0.2): THIS is where the ~2 GB weight load
+            # actually happens (construction is metadata-only) — record it
+            # so cold-start receipts can subtract it from express.
+            try:
+                from ..telemetry import record_model_load
+                record_model_load("dense", _time.monotonic() - _load_t0)
+            except Exception:
+                pass
             log.info("BGE-M3 loaded (%s) dim=%d", self._backend, self.dim)
 
     def encode(self, text: str, task: str = "passage") -> list[float]:

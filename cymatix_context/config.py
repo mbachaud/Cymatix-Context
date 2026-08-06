@@ -666,6 +666,14 @@ class RetrievalConfig:
     # side "scale, don't drop" verdict — the tag is not query signal, it
     # is index noise above this coverage.
     tag_df_cap: float = 0.0
+    # 2026-08-03 ERB step-test fix: the tag_df_cap discipline applied to
+    # SPLADE query terms — drop terms whose posting-list df exceeds this
+    # fraction of the corpus before the postings join (one real query
+    # vector touched 5.06M posting rows at 829k genes; flood terms carry
+    # score mass but no discrimination). 0.0 = off. Needs the
+    # splade_term_df counters (auto-maintained on ingest; older beds are
+    # capless until backfilled).
+    splade_df_cap_fraction: float = 0.0
     # Issue #202: warm ΣĒMA boost (Tier 4 Mode A) weight — NEW knob; the
     # additive literal was sim·2.0·scale and the tier previously had no
     # weight knob at all (post-fusion additive under RRF, never fused).
@@ -1000,6 +1008,15 @@ class Hardware:
     used by the picker itself.
     """
     device: str = "auto"
+    # 2026-08-04 per-layer device pins (CUDA A/B enablement): each encoder
+    # layer can be pinned independently — GPU for fast benchmarking, CPU for
+    # the cheaper-to-operate profile. "auto" inherits the global `device`
+    # resolution. rerank_device is consumed when the pre-cap cross-encoder
+    # rerank lands.
+    dense_device: str = "auto"
+    splade_device: str = "auto"
+    sema_device: str = "auto"
+    rerank_device: str = "auto"
     batch_sizes: Dict[str, int] = field(default_factory=dict)
     low_vram_threshold_gb: float = 4.0
     # #219 slice 2: when true (default), heavy encoders (ΣĒMA MiniLM,
@@ -1427,6 +1444,9 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             # Issue #327: tag-tier IDF discipline (see field docstring).
             tag_idf_enabled=bool(r.get("tag_idf_enabled", cfg.retrieval.tag_idf_enabled)),
             tag_df_cap=float(r.get("tag_df_cap", cfg.retrieval.tag_df_cap)),
+            splade_df_cap_fraction=float(
+                r.get("splade_df_cap_fraction",
+                      cfg.retrieval.splade_df_cap_fraction)),
             # Issue #202: warm ΣĒMA boost knob (new).
             sema_boost_weight=float(r.get("sema_boost_weight", cfg.retrieval.sema_boost_weight)),
             sema_cold_weight=float(r.get("sema_cold_weight", cfg.retrieval.sema_cold_weight)),
@@ -1645,6 +1665,10 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
 
     cfg.hardware = Hardware(
         device=str(hardware_device),
+        dense_device=str(hw.get("dense_device", "auto")),
+        splade_device=str(hw.get("splade_device", "auto")),
+        sema_device=str(hw.get("sema_device", "auto")),
+        rerank_device=str(hw.get("rerank_device", "auto")),
         batch_sizes=bs,
         low_vram_threshold_gb=float(hw.get("low_vram_threshold_gb", 4.0)),
         lazy_encoders=bool(hw.get("lazy_encoders", True)),

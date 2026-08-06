@@ -39,6 +39,7 @@ Trust model:
 
 from __future__ import annotations
 
+import contextlib
 import logging
 import sqlite3
 import time
@@ -91,6 +92,21 @@ class Registry:
         # Avoid import cycle — type hint KnowledgeStore lazily
         self.genome = genome
 
+    def _wlock(self):
+        """The owning store's writer lock, or a no-op context manager.
+
+        W2.3 Phase A: every Registry write executes + commits on the shared
+        ``genome.conn`` (check_same_thread=False) — unlocked, a concurrent
+        committer steals the implicit transaction ("cannot commit - no
+        transaction is active") or hard-deadlocks inside the INSERT on
+        py3.14 sqlite3 (same class as log_health, Perf slice 2). The lock
+        is an RLock, so nested acquisition (e.g. attribute_gene →
+        touch_heartbeat) is safe. getattr-guarded for test fakes that hand
+        Registry a bare object without a ``_write_lock``.
+        """
+        lock = getattr(self.genome, "_write_lock", None)
+        return lock if lock is not None else contextlib.nullcontext()
+
     # ── party / participant lifecycle ───────────────────────────────
 
     def register_participant(
@@ -114,40 +130,41 @@ class Registry:
         """
         now = time.time()
         participant_id = _new_participant_id()
-        cur = self.genome.conn.cursor()
+        with self._wlock():
+            cur = self.genome.conn.cursor()
 
-        # Ensure party row exists (trust-on-first-use).
-        cur.execute(
-            "INSERT OR IGNORE INTO parties "
-            "(party_id, display_name, trust_domain, created_at, metadata) "
-            "VALUES (?, ?, 'local', ?, NULL)",
-            (party_id, display_name or party_id, now),
-        )
+            # Ensure party row exists (trust-on-first-use).
+            cur.execute(
+                "INSERT OR IGNORE INTO parties "
+                "(party_id, display_name, trust_domain, created_at, metadata) "
+                "VALUES (?, ?, 'local', ?, NULL)",
+                (party_id, display_name or party_id, now),
+            )
 
-        cur.execute(
-            "INSERT INTO participants "
-            "(participant_id, party_id, handle, workspace, pid, started_at, "
-            " last_heartbeat, status, capabilities, metadata, agent_kind, mcp_host, "
-            " ide_detected, ide_detection_via, model_id) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?, 'active', ?, ?, ?, ?, ?, ?, ?)",
-            (
-                participant_id,
-                party_id,
-                handle,
-                workspace,
-                pid,
-                now,
-                now,
-                json_dumps(capabilities or []),
-                json_dumps(metadata) if metadata else None,
-                agent_kind,
-                mcp_host,
-                ide_detected,
-                ide_detection_via,
-                model_id,
-            ),
-        )
-        self.genome.conn.commit()
+            cur.execute(
+                "INSERT INTO participants "
+                "(participant_id, party_id, handle, workspace, pid, started_at, "
+                " last_heartbeat, status, capabilities, metadata, agent_kind, mcp_host, "
+                " ide_detected, ide_detection_via, model_id) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, 'active', ?, ?, ?, ?, ?, ?, ?)",
+                (
+                    participant_id,
+                    party_id,
+                    handle,
+                    workspace,
+                    pid,
+                    now,
+                    now,
+                    json_dumps(capabilities or []),
+                    json_dumps(metadata) if metadata else None,
+                    agent_kind,
+                    mcp_host,
+                    ide_detected,
+                    ide_detection_via,
+                    model_id,
+                ),
+            )
+            self.genome.conn.commit()
         log.info(
             "Registered participant %s (handle=%s, party=%s)",
             participant_id, handle, party_id,
@@ -184,17 +201,18 @@ class Registry:
         Returns: the org_id (which == org_handle for local-tier; SSO
         would replace this with the OAuth-issued org claim).
         """
-        cur = self.genome.conn.cursor()
         # In local-tier the handle IS the id — keeps lookup trivial and
         # the migration to SSO clean (the SSO upgrade just changes the
         # source of org_id, not the schema).
-        cur.execute(
-            "INSERT OR IGNORE INTO orgs "
-            "(org_id, display_name, trust_domain, created_at) "
-            "VALUES (?, ?, 'local', ?)",
-            (org_handle, display_name or org_handle, time.time()),
-        )
-        self.genome.conn.commit()
+        with self._wlock():
+            cur = self.genome.conn.cursor()
+            cur.execute(
+                "INSERT OR IGNORE INTO orgs "
+                "(org_id, display_name, trust_domain, created_at) "
+                "VALUES (?, ?, 'local', ?)",
+                (org_handle, display_name or org_handle, time.time()),
+            )
+            self.genome.conn.commit()
         return org_handle
 
     def local_agent(
@@ -218,32 +236,33 @@ class Registry:
 
         Returns: the agent_id (server-generated UUID).
         """
-        cur = self.genome.conn.cursor()
-        row = cur.execute(
-            "SELECT agent_id FROM agents "
-            "WHERE participant_id = ? AND handle = ? LIMIT 1",
-            (participant_id, handle),
-        ).fetchone()
-        now = time.time()
-        if row is not None:
-            agent_id = row["agent_id"]
+        with self._wlock():
+            cur = self.genome.conn.cursor()
+            row = cur.execute(
+                "SELECT agent_id FROM agents "
+                "WHERE participant_id = ? AND handle = ? LIMIT 1",
+                (participant_id, handle),
+            ).fetchone()
+            now = time.time()
+            if row is not None:
+                agent_id = row["agent_id"]
+                cur.execute(
+                    "UPDATE agents SET last_seen_at = ? WHERE agent_id = ?",
+                    (now, agent_id),
+                )
+                self.genome.conn.commit()
+                return agent_id
+
+            # New agent — generate UUID, insert, return.
+            import uuid as _uuid
+            agent_id = _uuid.uuid4().hex
             cur.execute(
-                "UPDATE agents SET last_seen_at = ? WHERE agent_id = ?",
-                (now, agent_id),
+                "INSERT INTO agents "
+                "(agent_id, participant_id, handle, kind, created_at, last_seen_at) "
+                "VALUES (?, ?, ?, ?, ?, ?)",
+                (agent_id, participant_id, handle, kind, now, now),
             )
             self.genome.conn.commit()
-            return agent_id
-
-        # New agent — generate UUID, insert, return.
-        import uuid as _uuid
-        agent_id = _uuid.uuid4().hex
-        cur.execute(
-            "INSERT INTO agents "
-            "(agent_id, participant_id, handle, kind, created_at, last_seen_at) "
-            "VALUES (?, ?, ?, ?, ?, ?)",
-            (agent_id, participant_id, handle, kind, now, now),
-        )
-        self.genome.conn.commit()
         log.info(
             "Registered agent %s (handle=%s, kind=%s, participant=%s)",
             agent_id, handle, kind, participant_id,
@@ -276,34 +295,35 @@ class Registry:
         """
         effective_org = org_id or "local"
 
-        # Ensure the org row exists (idempotent).
         cur = self.genome.conn.cursor()
-        cur.execute(
-            "INSERT OR IGNORE INTO orgs "
-            "(org_id, display_name, trust_domain, created_at) "
-            "VALUES (?, ?, 'local', ?)",
-            (effective_org, effective_org, time.time()),
-        )
-
-        # Ensure the party.org_id link is set even if the party row
-        # already existed without one (legacy upgrade path).
-        cur.execute(
-            "UPDATE parties SET org_id = ? "
-            "WHERE party_id = ? AND (org_id IS NULL OR org_id = '')",
-            (effective_org, party_id),
-        )
-        # Update the device's home timezone on every call. This is
-        # last-write-wins by design — when a laptop crosses tz, the
-        # parties.timezone reflects "where this device usually is now"
-        # while gene_attribution.authored_tz captures per-write history.
-        # Together they distinguish "device's home" from "where each
-        # document was actually authored."
-        if timezone:
+        with self._wlock():
+            # Ensure the org row exists (idempotent).
             cur.execute(
-                "UPDATE parties SET timezone = ? WHERE party_id = ?",
-                (timezone, party_id),
+                "INSERT OR IGNORE INTO orgs "
+                "(org_id, display_name, trust_domain, created_at) "
+                "VALUES (?, ?, 'local', ?)",
+                (effective_org, effective_org, time.time()),
             )
-        self.genome.conn.commit()
+
+            # Ensure the party.org_id link is set even if the party row
+            # already existed without one (legacy upgrade path).
+            cur.execute(
+                "UPDATE parties SET org_id = ? "
+                "WHERE party_id = ? AND (org_id IS NULL OR org_id = '')",
+                (effective_org, party_id),
+            )
+            # Update the device's home timezone on every call. This is
+            # last-write-wins by design — when a laptop crosses tz, the
+            # parties.timezone reflects "where this device usually is now"
+            # while gene_attribution.authored_tz captures per-write history.
+            # Together they distinguish "device's home" from "where each
+            # document was actually authored."
+            if timezone:
+                cur.execute(
+                    "UPDATE parties SET timezone = ? WHERE party_id = ?",
+                    (timezone, party_id),
+                )
+            self.genome.conn.commit()
 
         # Look up by (party_id, handle) — this is the natural local key.
         row = cur.execute(
@@ -328,16 +348,17 @@ class Registry:
         # Re-stamp the org_id on the party row that register_participant
         # just created with NULL org (it doesn't know about the org layer).
         # Also stamp the timezone on first-creation if provided.
-        cur.execute(
-            "UPDATE parties SET org_id = ? WHERE party_id = ? AND org_id IS NULL",
-            (effective_org, party_id),
-        )
-        if timezone:
+        with self._wlock():
             cur.execute(
-                "UPDATE parties SET timezone = ? WHERE party_id = ? AND timezone IS NULL",
-                (timezone, party_id),
+                "UPDATE parties SET org_id = ? WHERE party_id = ? AND org_id IS NULL",
+                (effective_org, party_id),
             )
-        self.genome.conn.commit()
+            if timezone:
+                cur.execute(
+                    "UPDATE parties SET timezone = ? WHERE party_id = ? AND timezone IS NULL",
+                    (timezone, party_id),
+                )
+            self.genome.conn.commit()
         return p.participant_id
 
     def heartbeat(self, participant_id: str) -> Optional[Tuple[float, str]]:
@@ -347,20 +368,21 @@ class Registry:
         participant_id is unknown. Unknown participants should re-register.
         """
         now = time.time()
-        cur = self.genome.conn.cursor()
-        row = cur.execute(
-            "SELECT participant_id FROM participants WHERE participant_id = ?",
-            (participant_id,),
-        ).fetchone()
-        if row is None:
-            return None
-        cur.execute(
-            "UPDATE participants "
-            "SET last_heartbeat = ?, status = 'active' "
-            "WHERE participant_id = ?",
-            (now, participant_id),
-        )
-        self.genome.conn.commit()
+        with self._wlock():
+            cur = self.genome.conn.cursor()
+            row = cur.execute(
+                "SELECT participant_id FROM participants WHERE participant_id = ?",
+                (participant_id,),
+            ).fetchone()
+            if row is None:
+                return None
+            cur.execute(
+                "UPDATE participants "
+                "SET last_heartbeat = ?, status = 'active' "
+                "WHERE participant_id = ?",
+                (now, participant_id),
+            )
+            self.genome.conn.commit()
         return (DEFAULT_TTL_S, "active")
 
     def update_announcement(
@@ -388,24 +410,25 @@ class Registry:
         — the agent has no useful action to take if the participant has
         already TTL'd out.
         """
-        cur = self.genome.conn.cursor()
-        if ide_override is not None:
-            cur.execute(
-                "UPDATE participants "
-                "SET model_id = COALESCE(?, model_id), "
-                "    ide_detected = ?, "
-                "    ide_detection_via = 'agent_override' "
-                "WHERE participant_id = ?",
-                (model_id, ide_override, participant_id),
-            )
-        else:
-            cur.execute(
-                "UPDATE participants "
-                "SET model_id = COALESCE(?, model_id) "
-                "WHERE participant_id = ?",
-                (model_id, participant_id),
-            )
-        self.genome.conn.commit()
+        with self._wlock():
+            cur = self.genome.conn.cursor()
+            if ide_override is not None:
+                cur.execute(
+                    "UPDATE participants "
+                    "SET model_id = COALESCE(?, model_id), "
+                    "    ide_detected = ?, "
+                    "    ide_detection_via = 'agent_override' "
+                    "WHERE participant_id = ?",
+                    (model_id, ide_override, participant_id),
+                )
+            else:
+                cur.execute(
+                    "UPDATE participants "
+                    "SET model_id = COALESCE(?, model_id) "
+                    "WHERE participant_id = ?",
+                    (model_id, participant_id),
+                )
+            self.genome.conn.commit()
 
     def upsert_presence_gene(
         self,
@@ -511,13 +534,18 @@ class Registry:
         caller is expected to commit as part of the surrounding write.
         """
         now = time.time()
-        cur = self.genome.conn.cursor()
-        cur.execute(
-            "UPDATE participants "
-            "SET last_heartbeat = ?, status = 'active' "
-            "WHERE participant_id = ?",
-            (now, participant_id),
-        )
+        # No commit here (caller owns it) but the UPDATE still executes on
+        # the shared writer — lock the execute; RLock nesting makes this
+        # free when the caller (attribute_gene / emit_hitl_event) already
+        # holds the lock around its own write+commit section.
+        with self._wlock():
+            cur = self.genome.conn.cursor()
+            cur.execute(
+                "UPDATE participants "
+                "SET last_heartbeat = ?, status = 'active' "
+                "WHERE participant_id = ?",
+                (now, participant_id),
+            )
 
     # ── queries ─────────────────────────────────────────────────────
 
@@ -736,16 +764,17 @@ class Registry:
             if not resolved_org:
                 resolved_org = "local"
 
-        cur.execute(
-            "INSERT OR REPLACE INTO gene_attribution "
-            "(gene_id, party_id, participant_id, authored_at, org_id, agent_id, authored_tz) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?)",
-            (gene_id, resolved_party, participant_id, now, resolved_org, agent_id, authored_tz),
-        )
-        # Implicit heartbeat — avoid round trips for clients that ingest often
-        if participant_id:
-            self.touch_heartbeat(participant_id)
-        self.genome.conn.commit()
+        with self._wlock():
+            cur.execute(
+                "INSERT OR REPLACE INTO gene_attribution "
+                "(gene_id, party_id, participant_id, authored_at, org_id, agent_id, authored_tz) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                (gene_id, resolved_party, participant_id, now, resolved_org, agent_id, authored_tz),
+            )
+            # Implicit heartbeat — avoid round trips for clients that ingest often
+            if participant_id:
+                self.touch_heartbeat(participant_id)
+            self.genome.conn.commit()
 
         return GeneAttribution(
             gene_id=gene_id,
@@ -891,39 +920,40 @@ class Registry:
         gs = genome_snapshot or {}
         risk_keywords_json = json_dumps(cs.get("risk_keywords", [])) if "risk_keywords" in cs else None
 
-        cur = self.genome.conn.cursor()
-        cur.execute(
-            """INSERT INTO hitl_events (
-                event_id, party_id, participant_id, ts,
-                pause_type, task_context, resolved_without_operator,
-                operator_tone_uncertainty, operator_risk_keywords,
-                time_since_last_risk_event, recoverability_signal,
-                genome_total_genes, genome_hetero_count, cold_cache_size,
-                metadata
-            ) VALUES (?, ?, ?, ?,   ?, ?, ?,   ?, ?, ?, ?,   ?, ?, ?,   ?)""",
-            (
-                event_id,
-                resolved_party,
-                participant_id,
-                now,
-                pause_enum.value,
-                task_context,
-                1 if resolved_without_operator else 0,
-                cs.get("tone_uncertainty"),
-                risk_keywords_json,
-                cs.get("time_since_last_risk"),
-                cs.get("recoverability"),
-                gs.get("total_genes"),
-                gs.get("hetero_count"),
-                gs.get("cold_cache_size"),
-                json_dumps(metadata) if metadata else None,
-            ),
-        )
+        with self._wlock():
+            cur = self.genome.conn.cursor()
+            cur.execute(
+                """INSERT INTO hitl_events (
+                    event_id, party_id, participant_id, ts,
+                    pause_type, task_context, resolved_without_operator,
+                    operator_tone_uncertainty, operator_risk_keywords,
+                    time_since_last_risk_event, recoverability_signal,
+                    genome_total_genes, genome_hetero_count, cold_cache_size,
+                    metadata
+                ) VALUES (?, ?, ?, ?,   ?, ?, ?,   ?, ?, ?, ?,   ?, ?, ?,   ?)""",
+                (
+                    event_id,
+                    resolved_party,
+                    participant_id,
+                    now,
+                    pause_enum.value,
+                    task_context,
+                    1 if resolved_without_operator else 0,
+                    cs.get("tone_uncertainty"),
+                    risk_keywords_json,
+                    cs.get("time_since_last_risk"),
+                    cs.get("recoverability"),
+                    gs.get("total_genes"),
+                    gs.get("hetero_count"),
+                    gs.get("cold_cache_size"),
+                    json_dumps(metadata) if metadata else None,
+                ),
+            )
 
-        # Implicit heartbeat — a HITL event is session activity.
-        if participant_id:
-            self.touch_heartbeat(participant_id)
-        self.genome.conn.commit()
+            # Implicit heartbeat — a HITL event is session activity.
+            if participant_id:
+                self.touch_heartbeat(participant_id)
+            self.genome.conn.commit()
 
         # Telemetry: counter labelled by pause_type + party. Pair with
         # cymatix_context_ellipticity to correlate HITL spikes with
@@ -1130,51 +1160,58 @@ class Registry:
         Returns a summary dict with transition counts.
         """
         now = now if now is not None else time.time()
-        cur = self.genome.conn.cursor()
 
         counts = {"active": 0, "idle": 0, "stale": 0, "gone": 0, "hard_deleted": 0}
 
-        rows = cur.execute(
-            "SELECT participant_id, last_heartbeat, status FROM participants"
-        ).fetchall()
-        for r in rows:
-            live = _status_from_last_heartbeat(r["last_heartbeat"], now)
-            counts[live] += 1
-            if live != r["status"]:
+        # W2.3 Phase A + W2.5: the whole sweep is one writer transaction
+        # (SELECTs + UPDATE/DELETE cascade + commit, all SQLite work) — hold
+        # the lock across it. The background loop now runs this body via
+        # asyncio.to_thread, so the lock is what keeps it off other
+        # threads' in-flight transactions.
+        with self._wlock():
+            cur = self.genome.conn.cursor()
+
+            rows = cur.execute(
+                "SELECT participant_id, last_heartbeat, status FROM participants"
+            ).fetchall()
+            for r in rows:
+                live = _status_from_last_heartbeat(r["last_heartbeat"], now)
+                counts[live] += 1
+                if live != r["status"]:
+                    cur.execute(
+                        "UPDATE participants SET status = ? WHERE participant_id = ?",
+                        (live, r["participant_id"]),
+                    )
+
+            # Hard-delete participants that have been gone for more than HARD_DELETE_AFTER_S.
+            # Their gene_attribution rows keep party_id but have participant_id NULLed
+            # manually (FK ON DELETE SET NULL is declared but not enforced by default).
+            hard_delete_cutoff = now - HARD_DELETE_AFTER_S
+            gone_rows = cur.execute(
+                "SELECT participant_id FROM participants "
+                "WHERE status = 'gone' AND last_heartbeat < ?",
+                (hard_delete_cutoff,),
+            ).fetchall()
+            for r in gone_rows:
+                pid = r["participant_id"]
                 cur.execute(
-                    "UPDATE participants SET status = ? WHERE participant_id = ?",
-                    (live, r["participant_id"]),
+                    "UPDATE gene_attribution SET participant_id = NULL "
+                    "WHERE participant_id = ?",
+                    (pid,),
                 )
+                # HITL events survive participant hard-delete with participant_id NULLed,
+                # same pattern as gene_attribution. Preserves the historical record for
+                # aggregate analysis while honoring the ON DELETE SET NULL contract.
+                cur.execute(
+                    "UPDATE hitl_events SET participant_id = NULL "
+                    "WHERE participant_id = ?",
+                    (pid,),
+                )
+                cur.execute(
+                    "DELETE FROM participants WHERE participant_id = ?",
+                    (pid,),
+                )
+                counts["hard_deleted"] += 1
 
-        # Hard-delete participants that have been gone for more than HARD_DELETE_AFTER_S.
-        # Their gene_attribution rows keep party_id but have participant_id NULLed
-        # manually (FK ON DELETE SET NULL is declared but not enforced by default).
-        hard_delete_cutoff = now - HARD_DELETE_AFTER_S
-        gone_rows = cur.execute(
-            "SELECT participant_id FROM participants "
-            "WHERE status = 'gone' AND last_heartbeat < ?",
-            (hard_delete_cutoff,),
-        ).fetchall()
-        for r in gone_rows:
-            pid = r["participant_id"]
-            cur.execute(
-                "UPDATE gene_attribution SET participant_id = NULL "
-                "WHERE participant_id = ?",
-                (pid,),
-            )
-            # HITL events survive participant hard-delete with participant_id NULLed,
-            # same pattern as gene_attribution. Preserves the historical record for
-            # aggregate analysis while honoring the ON DELETE SET NULL contract.
-            cur.execute(
-                "UPDATE hitl_events SET participant_id = NULL "
-                "WHERE participant_id = ?",
-                (pid,),
-            )
-            cur.execute(
-                "DELETE FROM participants WHERE participant_id = ?",
-                (pid,),
-            )
-            counts["hard_deleted"] += 1
-
-        self.genome.conn.commit()
+            self.genome.conn.commit()
         return counts

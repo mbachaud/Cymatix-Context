@@ -21,6 +21,7 @@ Performance:
 from __future__ import annotations
 
 import logging
+import sqlite3
 from typing import Dict, List, Optional, Tuple
 
 log = logging.getLogger("cymatix.splade")
@@ -40,15 +41,29 @@ def _ensure_loaded(model_name: str = "naver/splade-cocondenser-ensembledistil"):
     if _model is not None:
         return
 
+    import time as _time
+
+    # Timer starts BEFORE the torch/transformers imports — on a cold
+    # process those imports cost seconds and belong to the load bill.
+    _load_t0 = _time.monotonic()
+
     import torch
     from transformers import AutoModelForMaskedLM, AutoTokenizer
 
     from cymatix_context.hardware import get_hardware
 
-    _device = torch.device(get_hardware().device)
+    from cymatix_context.hardware import resolve_layer_device
+    _device = torch.device(resolve_layer_device("splade"))
     _tokenizer = AutoTokenizer.from_pretrained(model_name)
     _model = AutoModelForMaskedLM.from_pretrained(model_name).to(_device)
     _model.eval()
+    # Perf slice 1 (W0.2): record the lazy weight load so cold-start
+    # receipts can subtract it from the express stage.
+    try:
+        from cymatix_context.telemetry import record_model_load
+        record_model_load("splade", _time.monotonic() - _load_t0)
+    except Exception:
+        pass
     log.info("SPLADE model loaded: %s on %s", model_name, _device)
 
 
@@ -178,16 +193,57 @@ def create_splade_table(conn) -> None:
         CREATE INDEX IF NOT EXISTS idx_splade_gene
         ON splade_terms (gene_id)
     """)
+    # 2026-08-03 ERB step-test fix: idx_splade_term is NOT covering — every
+    # posting hit paid a table b-tree hop for gene_id, which at 147M rows /
+    # 829k genes measured 43s per query (60-177s in isolation). The covering
+    # index serves the same term=? lookups index-only: 3.0-4.5s measured,
+    # 111.7s -> 88.9s end-to-end median with zero query changes
+    # (docs/benchmarks/2026-08-03-erb-step-curve.md).
+    conn.execute("""
+        CREATE INDEX IF NOT EXISTS idx_splade_term_cover
+        ON splade_terms (term, gene_id, weight)
+    """)
+    # Per-term document frequency, maintained incrementally by
+    # upsert_splade_terms. Consumed by query_splade's DF cap. An empty
+    # table means "no DF data" and the cap stays inactive (legacy
+    # behavior) — old beds that predate the counters are unaffected until
+    # backfilled: INSERT INTO splade_term_df
+    #             SELECT term, COUNT(*) FROM splade_terms GROUP BY term.
+    # Gene deletes outside upsert_splade_terms can drift the counters
+    # slightly; the cap is a threshold heuristic, so drift is tolerable
+    # and a re-backfill resyncs.
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS splade_term_df (
+            term TEXT PRIMARY KEY,
+            df   INTEGER NOT NULL DEFAULT 0
+        )
+    """)
     conn.commit()
 
 
 def upsert_splade_terms(conn, gene_id: str, sparse: Dict[str, float]) -> None:
     """Store SPLADE sparse vector for a document (replaces existing entries)."""
+    old_terms = [
+        r[0] for r in conn.execute(
+            "SELECT DISTINCT term FROM splade_terms WHERE gene_id = ?",
+            (gene_id,),
+        )
+    ]
     conn.execute("DELETE FROM splade_terms WHERE gene_id = ?", (gene_id,))
+    if old_terms:
+        conn.executemany(
+            "UPDATE splade_term_df SET df = MAX(df - 1, 0) WHERE term = ?",
+            [(t,) for t in old_terms],
+        )
     if sparse:
         conn.executemany(
             "INSERT INTO splade_terms (gene_id, term, weight) VALUES (?, ?, ?)",
             [(gene_id, term, weight) for term, weight in sparse.items()],
+        )
+        conn.executemany(
+            "INSERT INTO splade_term_df (term, df) VALUES (?, 1) "
+            "ON CONFLICT(term) DO UPDATE SET df = df + 1",
+            [(term,) for term in sparse],
         )
     conn.commit()
 
@@ -197,14 +253,43 @@ def query_splade(
     query_sparse: Dict[str, float],
     limit: int = 50,
     min_score: float = 0.01,
+    max_df_fraction: float = 0.0,
+    total_docs: Optional[int] = None,
 ) -> List[Tuple[str, float]]:
     """
     Query the SPLADE inverted index with a sparse query vector.
 
     Returns [(gene_id, score)] ranked by dot-product similarity.
+
+    ``max_df_fraction`` (2026-08-03 ERB fix, the #327 tag_df_cap pattern
+    applied to SPLADE): drop query terms whose document frequency exceeds
+    ``max_df_fraction * total_docs`` before the postings join. On the
+    829k-gene ERB blob one real 58-term query vector touched 5.06M posting
+    rows, dominated by terms present in >70% of documents ('phone' 1.03M,
+    'number' 905k) that contribute score mass but no discrimination.
+    0.0 (default) disables the cap. DF comes from ``splade_term_df``
+    (maintained by ``upsert_splade_terms``); a missing/empty table means no
+    DF data and the cap stays inactive. If EVERY query term is over the
+    cap, the cap disables itself for that query rather than empty a tier.
     """
     if not query_sparse:
         return []
+
+    if max_df_fraction > 0.0 and total_docs:
+        try:
+            cap = max_df_fraction * total_docs
+            ph = ",".join("?" * len(query_sparse))
+            dfs = dict(conn.execute(
+                f"SELECT term, df FROM splade_term_df WHERE term IN ({ph})",
+                list(query_sparse),
+            ).fetchall())
+            kept = {
+                t: w for t, w in query_sparse.items() if dfs.get(t, 0) <= cap
+            }
+            if kept:
+                query_sparse = kept
+        except sqlite3.OperationalError:
+            pass  # pre-counter bed (no splade_term_df) — cap inactive
 
     # Single SQL computing the query-weighted dot product per document:
     # join the inverted index against the query vector (VALUES CTE) so

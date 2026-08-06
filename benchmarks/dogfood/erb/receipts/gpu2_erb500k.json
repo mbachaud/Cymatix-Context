@@ -1,0 +1,198 @@
+{
+  "measured_at": "2026-08-05T00:10:39-0700",
+  "genome": "F:\\tmp\\erb_carve\\erb_500k.db",
+  "served_db": "F:\\tmp\\erb_carve\\erb_500k.db",
+  "bed_copied": false,
+  "arm": "read",
+  "bed_identity_sha256": null,
+  "k": 12,
+  "rounds": 1,
+  "needles": 30,
+  "port": 11492,
+  "cpu_count": 16,
+  "worker_model": "one uvicorn (BenchServer) per level, fresh process = clean session state + fresh ring; N stdlib HTTP client subprocesses share the server's encoders and its module-global 2-thread executor",
+  "note": "warmups untimed (parent + per worker); workers barrier-synced; ranks recorded per query as a fast-because-broken guard; validity gates baked into each level",
+  "canary_endpoint": "/debug/pipeline/recent?limit=1",
+  "canary_interval_s": 0.25,
+  "ring_note": "ring_tail_sample aggregates the pipeline ring's last ~128 stage events (~ the final ~12 requests of the level), not the full timed window",
+  "read_arm_residue_note": "served the real bed read_only=True: gene content is guarded, but /context's cwola logger appends telemetry rows regardless \u2014 use --copy-bed for strict no-touch runs",
+  "levels": [
+    {
+      "concurrency": 1,
+      "samples": 30,
+      "errors": 0,
+      "http_5xx": 0,
+      "median_latency_ms": 15772.0,
+      "mean_latency_ms": 17030.9,
+      "p95_latency_ms": 27093.5,
+      "max_latency_ms": 33847.3,
+      "per_worker_median_ms": [
+        15772.0
+      ],
+      "recall@12": 0.4,
+      "wall_seconds": 510.9,
+      "overlap_fraction": 1.0,
+      "throughput_qps": 0.06,
+      "canary": {
+        "n": 1766,
+        "p50_ms": 2.0,
+        "p95_ms": 203.2,
+        "max_ms": 1068.9,
+        "errors": 0
+      },
+      "ring_tail_sample": {
+        "stages": {
+          "classify": {
+            "n": 16,
+            "p50_ms": 0.035,
+            "p95_ms": 0.048,
+            "max_ms": 0.048
+          },
+          "extract": {
+            "n": 16,
+            "p50_ms": 0.069,
+            "p95_ms": 0.086,
+            "max_ms": 0.086
+          },
+          "express": {
+            "n": 16,
+            "p50_ms": 14107.602,
+            "p95_ms": 20170.553,
+            "max_ms": 20170.553
+          },
+          "rerank": {
+            "n": 16,
+            "p50_ms": 5.11,
+            "p95_ms": 8.228,
+            "max_ms": 8.228
+          },
+          "splice": {
+            "n": 16,
+            "p50_ms": 1481.67,
+            "p95_ms": 9422.707,
+            "max_ms": 9422.707
+          },
+          "assemble": {
+            "n": 16,
+            "p50_ms": 21.657,
+            "p95_ms": 40.123,
+            "max_ms": 40.123
+          },
+          "tail_writes": {
+            "n": 16,
+            "p50_ms": 0.538,
+            "p95_ms": 1.04,
+            "max_ms": 1.04
+          },
+          "cwola": {
+            "n": 16,
+            "p50_ms": 63.191,
+            "p95_ms": 99.206,
+            "max_ms": 99.206
+          }
+        },
+        "signals": {
+          "pki": {
+            "n": 16,
+            "p50_ms": 0.10710000060498714,
+            "p95_ms": 0.866199960000813,
+            "max_ms": 0.866199960000813
+          },
+          "tag_exact": {
+            "n": 16,
+            "p50_ms": 480.6203000480309,
+            "p95_ms": 1201.245000003837,
+            "max_ms": 1201.245000003837
+          },
+          "tag_prefix": {
+            "n": 16,
+            "p50_ms": 842.6086000399664,
+            "p95_ms": 1420.0943999458104,
+            "max_ms": 1420.0943999458104
+          },
+          "fts5": {
+            "n": 16,
+            "p50_ms": 1249.1010999074206,
+            "p95_ms": 1902.5382000254467,
+            "max_ms": 1902.5382000254467
+          },
+          "splade": {
+            "n": 16,
+            "p50_ms": 2069.220699951984,
+            "p95_ms": 2961.869499995373,
+            "max_ms": 2961.869499995373
+          },
+          "sema_boost": {
+            "n": 16,
+            "p50_ms": 0.001400010660290718,
+            "p95_ms": 0.002800021320581436,
+            "max_ms": 0.002800021320581436
+          },
+          "dense": {
+            "n": 16,
+            "p50_ms": 1262.934900005348,
+            "p95_ms": 1313.8282001018524,
+            "max_ms": 1313.8282001018524
+          },
+          "lex_anchor": {
+            "n": 16,
+            "p50_ms": 654.200499993749,
+            "p95_ms": 1537.396700005047,
+            "max_ms": 1537.396700005047
+          },
+          "body_fetch": {
+            "n": 16,
+            "p50_ms": 58.36320004891604,
+            "p95_ms": 75.65450004767627,
+            "max_ms": 75.65450004767627
+          },
+          "coact_expand": {
+            "n": 16,
+            "p50_ms": 2503.052099957131,
+            "p95_ms": 2850.1265000086278,
+            "max_ms": 2850.1265000086278
+          },
+          "ann_dense_leg": {
+            "n": 16,
+            "p50_ms": 1264.2157999798656,
+            "p95_ms": 1356.4692999934778,
+            "max_ms": 1356.4692999934778
+          },
+          "ann_body_fetch": {
+            "n": 16,
+            "p50_ms": 31.616499996744096,
+            "p95_ms": 48.516100039705634,
+            "max_ms": 48.516100039705634
+          }
+        },
+        "model_load_ms": {
+          "splade": 6502.36349995248,
+          "sema": 2889.2698999261484,
+          "dense_matrix": 16489.059500047006,
+          "dense_codec": 0.03200001083314419,
+          "dense": 6334.534699912183
+        },
+        "commits": {
+          "n": 16,
+          "p50": 0.0,
+          "p95": 0.0,
+          "max": 0.0
+        },
+        "entries": 128
+      },
+      "genes_at_boot": 500000,
+      "valid": true,
+      "invalid_reasons": []
+    }
+  ],
+  "scaling_vs_c1": [
+    {
+      "concurrency": 1,
+      "median_latency_x": 1.0,
+      "p95_latency_x": 1.0,
+      "throughput_x": 1.0,
+      "canary_p95_x": 1.0
+    }
+  ],
+  "worker_logs": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\perf-slice1\\benchmarks\\dogfood\\logs\\server_scaling\\20260804-235936"
+}

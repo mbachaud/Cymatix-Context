@@ -9,7 +9,7 @@ never defined. This file pins the fixes:
     ``cymatix.pipeline.build_context`` root span;
   - the persist stage (``learn``) opens its own span and histogram point
     (it runs as a background task, outside the request root);
-  - all seven stages feed ``cymatix_pipeline_stage_seconds`` exactly once;
+  - all eight stages feed ``cymatix_pipeline_stage_seconds`` exactly once;
   - ``rrf_fused_score_histogram`` is exported, creates
     ``cymatix_rrf_fused_score``, records at the query_genes RRF call site;
   - the whole surface is a silent no-op with OTel disabled (the default
@@ -215,10 +215,10 @@ def test_persist_stage_span_and_histogram_on_learn(cymatix, monkeypatch):
     assert "persist" in [attrs.get("stage") for _, attrs in recorder.calls]
 
 
-# ── all seven stages feed cymatix_pipeline_stage_seconds once each ─────
+# ── all eight stages feed cymatix_pipeline_stage_seconds once each ─────
 
 
-def test_all_seven_stages_recorded_exactly_once(seeded_cymatix, monkeypatch):
+def test_all_eight_stages_recorded_exactly_once(seeded_cymatix, monkeypatch):
     recorder = _RecordingInstrument()
     monkeypatch.setattr(cm_mod, "_pipeline_stage_histogram", lambda: recorder)
 
@@ -228,7 +228,7 @@ def test_all_seven_stages_recorded_exactly_once(seeded_cymatix, monkeypatch):
     counts = Counter(attrs.get("stage") for _, attrs in recorder.calls)
     assert counts == Counter({
         "classify": 1, "extract": 1, "express": 1, "rerank": 1,
-        "splice": 1, "assemble": 1, "persist": 1,
+        "splice": 1, "assemble": 1, "tail_writes": 1, "persist": 1,
     }), f"stage histogram counts off: {dict(counts)}"
 
 

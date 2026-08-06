@@ -1,0 +1,34 @@
+== copy bed ==
+copy 49GB: 48s
+== splade encode (loads model once) ==
+Loading weights:   0%|          | 0/204 [00:00<?, ?it/s]Loading weights: 100%|##########| 204/204 [00:00<00:00, 42717.82it/s]
+encode 47 active terms in 10.2s
+encode 58 active terms in 0.0s
+encode 61 active terms in 0.0s
+== PHASE 1: original tag_prefix (no stat1) ==
+  orig tag_prefix 8 terms -> 52277 rows in 126.0s
+  orig tag_prefix 7 terms -> 28727 rows in 23.7s
+  orig tag_prefix 7 terms -> 7397 rows in 23.5s
+== PHASE 2: original splade (non-covering index) ==
+  orig splade 47 terms -> 100 rows in 176.6s
+  orig splade 58 terms -> 100 rows in 80.6s
+  orig splade 61 terms -> 100 rows in 59.7s
+== PHASE 3: ANALYZE (analysis_limit=400) ==
+  ANALYZE: 454s
+  post-ANALYZE tag_prefix plan: ["SCAN g USING INDEX sqlite_autoindex_genes_1", "SEARCH pi USING INDEX idx_promoter_gene (gene_id=?)"]
+  post-ANALYZE tag_prefix -> 52277 rows in 106.3s
+  post-ANALYZE tag_prefix -> 28727 rows in 23.3s
+  post-ANALYZE tag_prefix -> 7397 rows in 23.2s
+== PHASE 4: rewritten tag_prefix (drives idx_promoter_value) ==
+  rewrite tag_prefix -> 52277 rows in 17.3s
+  rewrite tag_prefix -> 28727 rows in 14.5s
+  rewrite tag_prefix -> 7397 rows in 14.3s
+== PHASE 5: covering splade index ==
+  index build (147M rows): 266s
+  post-index splade plan: ["CO-ROUTINE q", "SCAN CONSTANT ROW", "SCAN q", "SEARCH st USING COVERING INDEX idx_splade_term_cover (term=?)", "USE TEMP B-TREE FOR GROUP BY", "USE TEMP B-TREE FOR ORDER BY"]
+  covered splade 47 terms -> 100 rows in 3.0s
+  covered splade 58 terms -> 100 rows in 4.5s
+  covered splade 61 terms -> 100 rows in 3.6s
+== PHASE 6: posting-list stats for the IDF-cap argument ==
+  query-term posting lengths top10: [905429, 676810, 603761, 314112, 294254, 212205, 194626, 189900, 150747, 122166] (sum all: 5064457)
+DONE
