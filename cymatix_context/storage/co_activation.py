@@ -118,9 +118,11 @@ def expand_coactivated(
 ) -> List[Gene]:
     """Expand retrieved gene list with co-activated neighbours.
 
-    The caller (KnowledgeStore.query_docs) passes ``conn`` (always master)
-    and a ``row_to_gene`` callable so this module stays decoupled from the
-    KnowledgeStore instance.
+    The caller (KnowledgeStore.query_docs) passes ``conn`` — since perf
+    slice 2 the (per-thread) READER connection: this function only ever
+    SELECTs, and interleaving its scans with another thread on a shared
+    connection was the c=2 server wedge — so this module stays decoupled
+    from the KnowledgeStore instance.
     """
     from ..accel import parse_promoter, parse_epigenetics, json_loads
     from ..schemas import PromoterTags, EpigeneticMarkers

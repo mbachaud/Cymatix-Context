@@ -1,0 +1,132 @@
+{
+  "measured_at": "2026-07-28T23:39:51-0700",
+  "genome": "F:\\Projects\\cymatix-context\\genomes\\dogfood\\genome.db",
+  "k": 50,
+  "needles": 18,
+  "note": "retrieval only; gene_id set membership; ranks within top-k scored",
+  "arms": [
+    {
+      "name": "additive+dense_w=0.0",
+      "axis": "densecross",
+      "overrides": {
+        "retrieval.fusion_mode": "additive",
+        "retrieval.dense_additive_weight": 0.0
+      },
+      "ranks": {
+        "cymatix_proxy_port": 43,
+        "cymatix_expression_tokens": null,
+        "cymatix_cymatics_bins": null,
+        "cymatix_fusion_default": null,
+        "cymatix_know_emit_floor": null,
+        "cymatix_max_genes": null,
+        "cymatix_genome_path": null,
+        "cymatix_splice_aggressiveness": null,
+        "scorerift_divergence_threshold": 4,
+        "scorerift_confidence_gate": 1,
+        "scorerift_import_hygiene_confidence": 2,
+        "driftwatch_version": 3,
+        "driftwatch_default_ollama_model": 2,
+        "driftwatch_default_inference_server": 3,
+        "driftwatch_default_secret": 1,
+        "mek_guardrails": 12,
+        "mek_source_apps": 1,
+        "mek_marketplace_name": 1
+      },
+      "rollup": {
+        "recall@50": 0.6111,
+        "recall@1": 0.2222,
+        "recall@5": 0.5,
+        "recall@12": 0.5556,
+        "mrr": 0.3346,
+        "median_rank": 2,
+        "cymatix_recall@12": 0.0,
+        "cymatix_median_rank": 43,
+        "other_recall@12": 1.0,
+        "other_median_rank": 2.0
+      },
+      "seconds": 31.2
+    },
+    {
+      "name": "additive+dense_w=4.0",
+      "axis": "densecross",
+      "overrides": {
+        "retrieval.fusion_mode": "additive",
+        "retrieval.dense_additive_weight": 4.0
+      },
+      "ranks": {
+        "cymatix_proxy_port": 37,
+        "cymatix_expression_tokens": null,
+        "cymatix_cymatics_bins": null,
+        "cymatix_fusion_default": null,
+        "cymatix_know_emit_floor": null,
+        "cymatix_max_genes": null,
+        "cymatix_genome_path": null,
+        "cymatix_splice_aggressiveness": null,
+        "scorerift_divergence_threshold": 6,
+        "scorerift_confidence_gate": 1,
+        "scorerift_import_hygiene_confidence": 2,
+        "driftwatch_version": 3,
+        "driftwatch_default_ollama_model": 2,
+        "driftwatch_default_inference_server": 2,
+        "driftwatch_default_secret": 1,
+        "mek_guardrails": 8,
+        "mek_source_apps": 1,
+        "mek_marketplace_name": 1
+      },
+      "rollup": {
+        "recall@50": 0.6111,
+        "recall@1": 0.2222,
+        "recall@5": 0.4444,
+        "recall@12": 0.5556,
+        "mrr": 0.3418,
+        "median_rank": 2,
+        "cymatix_recall@12": 0.0,
+        "cymatix_median_rank": 37,
+        "other_recall@12": 1.0,
+        "other_median_rank": 2.0
+      },
+      "seconds": 20.2
+    },
+    {
+      "name": "additive+dense_w=16.0",
+      "axis": "densecross",
+      "overrides": {
+        "retrieval.fusion_mode": "additive",
+        "retrieval.dense_additive_weight": 16.0
+      },
+      "ranks": {
+        "cymatix_proxy_port": 31,
+        "cymatix_expression_tokens": null,
+        "cymatix_cymatics_bins": null,
+        "cymatix_fusion_default": 47,
+        "cymatix_know_emit_floor": null,
+        "cymatix_max_genes": null,
+        "cymatix_genome_path": null,
+        "cymatix_splice_aggressiveness": null,
+        "scorerift_divergence_threshold": 6,
+        "scorerift_confidence_gate": 1,
+        "scorerift_import_hygiene_confidence": 2,
+        "driftwatch_version": 3,
+        "driftwatch_default_ollama_model": 1,
+        "driftwatch_default_inference_server": 1,
+        "driftwatch_default_secret": 1,
+        "mek_guardrails": 5,
+        "mek_source_apps": 1,
+        "mek_marketplace_name": 1
+      },
+      "rollup": {
+        "recall@50": 0.6667,
+        "recall@1": 0.3333,
+        "recall@5": 0.5,
+        "recall@12": 0.5556,
+        "mrr": 0.403,
+        "median_rank": 1.5,
+        "cymatix_recall@12": 0.0,
+        "cymatix_median_rank": 39.0,
+        "other_recall@12": 1.0,
+        "other_median_rank": 1.0
+      },
+      "seconds": 20.3
+    }
+  ]
+}

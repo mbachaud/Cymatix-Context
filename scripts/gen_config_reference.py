@@ -86,6 +86,7 @@ SECTION_TO_CLASS: Dict[str, Optional[str]] = {
     "vault": "VaultConfig",
     "mem_sync": None,  # scripts/run_mem_sync.py reads this section itself
     "synonyms": None,  # free-form Dict[str, List[str]] -> CymatixConfig.synonym_map
+    "encoder_daemon": "EncoderDaemonConfig",  # Fork 1 slice 1: shared encoder daemon URL
 }
 
 # Extra named sub-tables for nested-dataclass fields, keyed by the marker

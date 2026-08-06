@@ -243,3 +243,62 @@ def test_budget_foveated_toml_override(tmp_path):
     assert cfg.budget.foveated_alpha == 2.0
     assert cfg.budget.foveated_c_min == 0.20
     assert cfg.budget.foveated_base_chars == 1500
+
+
+# ── [encoder_daemon] section (Fork 1 slice 1) ─────────────────────────
+# url="" (default) means "off" — every encoder seam stays in-process,
+# byte-identical to pre-daemon behavior. Mirrors the [server].upstream /
+# CYMATIX_SERVER_UPSTREAM three-part pattern above.
+
+
+def test_encoder_daemon_url_default_is_empty():
+    """Default is off: no cymatix.toml, no env → in-process encoders."""
+    from cymatix_context.config import CymatixConfig
+    cfg = CymatixConfig()
+    assert cfg.encoder_daemon.url == ""
+
+
+def test_encoder_daemon_url_toml_override(tmp_path):
+    """cymatix.toml [encoder_daemon] url is honored."""
+    from cymatix_context.config import load_config
+    p = tmp_path / "cymatix.toml"
+    p.write_text(
+        "[encoder_daemon]\nurl = \"http://127.0.0.1:11439\"\n",
+        encoding="utf-8",
+    )
+    cfg = load_config(str(p))
+    assert cfg.encoder_daemon.url == "http://127.0.0.1:11439"
+
+
+def test_encoder_daemon_url_env_override_wins_over_toml(tmp_path, monkeypatch):
+    """CYMATIX_ENCODER_URL beats [encoder_daemon] url from toml (env > toml > default)."""
+    from cymatix_context.config import load_config
+    p = tmp_path / "cymatix.toml"
+    p.write_text(
+        "[encoder_daemon]\nurl = \"http://toml-daemon:1\"\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("CYMATIX_ENCODER_URL", "http://env-daemon:2")
+    cfg = load_config(str(p))
+    assert cfg.encoder_daemon.url == "http://env-daemon:2"
+
+
+def test_encoder_daemon_url_env_override_applies_when_config_file_missing(tmp_path, monkeypatch):
+    """CYMATIX_ENCODER_URL must win even when cymatix.toml does not exist."""
+    from cymatix_context.config import load_config
+    monkeypatch.setenv("CYMATIX_ENCODER_URL", "http://env-daemon:2")
+    cfg = load_config(str(tmp_path / "does-not-exist.toml"))
+    assert cfg.encoder_daemon.url == "http://env-daemon:2"
+
+
+def test_encoder_daemon_url_empty_env_does_not_override_toml(tmp_path, monkeypatch):
+    """Truthiness check: CYMATIX_ENCODER_URL="" counts as unset, not a disable-override."""
+    from cymatix_context.config import load_config
+    p = tmp_path / "cymatix.toml"
+    p.write_text(
+        "[encoder_daemon]\nurl = \"http://toml-daemon:1\"\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("CYMATIX_ENCODER_URL", "")
+    cfg = load_config(str(p))
+    assert cfg.encoder_daemon.url == "http://toml-daemon:1"

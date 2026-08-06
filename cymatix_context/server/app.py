@@ -57,6 +57,12 @@ def create_app(config: Optional[CymatixConfig] = None) -> FastAPI:
     init_from_config(
         config_device=config.hardware.device,
         batch_size_overrides=config.hardware.batch_sizes,
+        layer_devices={
+            "dense": config.hardware.dense_device,
+            "splade": config.hardware.splade_device,
+            "sema": config.hardware.sema_device,
+            "rerank": config.hardware.rerank_device,
+        },
     )
 
     # ---- Cost-visibility startup warning (W2-B) ----

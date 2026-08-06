@@ -631,11 +631,19 @@ class StateCollector:
 
     # ── pipeline viewer ────────────────────────────────────────────
 
+    # Ring stages that run INSIDE another timed stage (perf slice 1:
+    # delivery_lookup/delivery_log are nested in assemble). Their ms is
+    # already inside the parent's ms — counting them in total_ms would
+    # double-book exactly the region the perf campaign is shrinking.
+    _NESTED_STAGES = frozenset({"delivery_lookup", "delivery_log"})
+
     def _pipeline_panel(self, payload: Dict[str, Any]) -> Dict[str, Any]:
         """Group raw stage events into per-request rows for the panel.
 
-        Each row carries the request id, total ms across observed stages,
-        and a per-stage timing breakdown. Sorted newest first.
+        Each row carries the request id, total ms across observed
+        top-level stages (nested sub-stages are shown in the breakdown
+        but excluded from the total), and a per-stage timing breakdown.
+        Sorted newest first.
         """
         events = payload.get("events", []) or []
         grouped: Dict[str, Dict[str, Any]] = {}
@@ -651,7 +659,8 @@ class StateCollector:
                 "total_ms": 0.0,
             })
             row["stages"][stage] = round(row["stages"].get(stage, 0.0) + ms, 3)
-            row["total_ms"] = round(row["total_ms"] + ms, 3)
+            if stage not in StateCollector._NESTED_STAGES:
+                row["total_ms"] = round(row["total_ms"] + ms, 3)
             if ts > row["ts"]:
                 row["ts"] = ts
 

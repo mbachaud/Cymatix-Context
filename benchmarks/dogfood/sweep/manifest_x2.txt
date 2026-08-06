@@ -1,0 +1,15 @@
+# sweep pass executor=2  2026-08-05T16:14:08Z
+# git 5f95e9c  daemon token e599d0a6e505453cb757795ded930da6  trim=CYMATIX_DISABLE_HEADROOM=1  n~100/level  c=1,2,4,8  daemon=ON (no OFF arms this sweep)
+erb10k x2: rc=1 wall=1824s encode_posts=1868 out=benchmarks/dogfood/sweep/n100_daemon_erb10k_x2.json
+erb50k x2: rc=1 wall=1881s encode_posts=723 out=benchmarks/dogfood/sweep/n100_daemon_erb50k_x2.json
+erb100k x2: rc=0 wall=2441s encode_posts=6845 out=benchmarks/dogfood/sweep/n100_daemon_erb100k_x2.json
+erb250k x2: rc=1 wall=4489s encode_posts=5671 out=benchmarks/dogfood/sweep/n100_daemon_erb250k_x2.json
+erb500k x2: rc=1 wall=5053s encode_posts=2313 out=benchmarks/dogfood/sweep/n100_daemon_erb500k_x2.json
+pass x2 complete 2026-08-05T20:50:39Z, daemon killed (pid 55156)
+# note: erb10k recall floor-biased — only 10/30 carve needles have gold in the 10k carve (latency unaffected); erb50k 28/30
+# sweep pass executor=2  2026-08-05T20:59:37Z  beds=erb10k,erb50k,erb250k,erb500k
+# git 5f95e9c  daemon token 86ed77178dde4a3ab71820796c29587c  trim  n~100/level (erb500k n=60)  c=1,2,4,8  level-timeout 5400  daemon=ON  10k/50k = fresh index-correct carves
+erb10k x2: rc=1 wall=113s encode_posts=440 out=benchmarks/dogfood/sweep/n100_daemon_erb10k_x2.json
+# 1b stopped by user 2026-08-05: erb250k/erb500k DROPPED from sweep (c>=4 wall-clock at those scales); ladder = dogfood,10k,50k,100k
+erb50k x2: rc=1 wall=187s encode_posts=0 out=benchmarks/dogfood/sweep/n100_daemon_erb50k_x2.json
+erb250k x2: rc=1 wall=6s encode_posts=0 out=benchmarks/dogfood/sweep/n100_daemon_erb250k_x2.json

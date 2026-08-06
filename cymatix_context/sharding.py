@@ -354,6 +354,15 @@ class ShardedGenomeAdapter:
                 continue
         return list(seen)
 
+    def total_genes(self) -> int:
+        """Bare gene count (2026-08-03 hot-path accessor, blob parity).
+
+        Sharded stats() is already registry-sums — cheap — so this simply
+        narrows it; the method exists so every hot-path consumer works
+        against either backend.
+        """
+        return int(self.stats().get("total_genes", 0))
+
     def stats(self) -> dict:
         rows = self._router.main_conn.execute(
             "SELECT category, shard_name, gene_count, byte_size "

@@ -104,7 +104,7 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
             messages=messages,
             expressed_context=context_window.expressed_context,
             ribosome_prompt=context_window.ribosome_prompt,
-            total_genes=cymatix.genome.stats()["total_genes"],
+            total_genes=cymatix.genome.total_genes(),
             cold_start_threshold=config.genome.cold_start_threshold,
         )
 
@@ -478,44 +478,73 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
             log.debug("Agent metadata enrichment failed", exc_info=True)
 
         # CWoLa label logger (STATISTICAL_FUSION sect C2)
+        # Perf slice 1 (W0.2): this block runs SQLite writes plus an extra
+        # SEMA encode synchronously on the /context hot path (campaign
+        # serialization point; W2.4 moves the sweep off-path). Ring it as
+        # its own stage, correlated to the pipeline's request id —
+        # build_context ran on an executor thread, so the id must be
+        # re-imported into this coroutine's context from window.metadata.
+        from ..context_manager import _pipeline_request_id, _stage_timer
+        _rid_token = None
         try:
-            from ..identity import cwola
-            tier_contrib_all = getattr(cymatix.genome, "last_tier_contributions", {}) or {}
-            cwola_tier_totals: dict = {}
-            for contribs in tier_contrib_all.values():
-                for tier, score in contribs.items():
-                    cwola_tier_totals[tier] = cwola_tier_totals.get(tier, 0.0) + score
-            expressed = window.expressed_gene_ids or []
-            top_gene = expressed[0] if expressed else None
+            _rid = (window.metadata or {}).get("pipeline_request_id", "")
+            if _rid:
+                _rid_token = _pipeline_request_id.set(_rid)
+        except Exception:
+            _rid_token = None
+        try:
+            with _stage_timer("cwola"):
+                from ..identity import cwola
+                # Perf slice 2 interim: cwola writes on the shared writer
+                # connection with no lock — under concurrent requests it
+                # races log_health for the implicit transaction (same
+                # unlocked-committer class). Serialize via the store's
+                # write lock until W2.3-A / W2.4 move it properly.
+                _wl = getattr(cymatix.genome, "_write_lock", None)
+                tier_contrib_all = getattr(cymatix.genome, "last_tier_contributions", {}) or {}
+                cwola_tier_totals: dict = {}
+                for contribs in tier_contrib_all.values():
+                    for tier, score in contribs.items():
+                        cwola_tier_totals[tier] = cwola_tier_totals.get(tier, 0.0) + score
+                expressed = window.expressed_gene_ids or []
+                top_gene = expressed[0] if expressed else None
 
-            # PWPC Phase 1 enrichment
-            query_sema_vec = None
-            top_candidate_sema_vec = None
-            try:
-                codec = getattr(cymatix, "_sema_codec", None)
-                if codec is not None:
-                    query_sema_vec = codec.encode(query)
-                if top_gene:
-                    gene = cymatix.genome.get_doc(top_gene)
-                    if gene is not None and gene.embedding:
-                        top_candidate_sema_vec = gene.embedding
-            except Exception:
-                log.debug("CWoLa sema enrichment failed", exc_info=True)
+                # PWPC Phase 1 enrichment
+                query_sema_vec = None
+                top_candidate_sema_vec = None
+                try:
+                    codec = getattr(cymatix, "_sema_codec", None)
+                    if codec is not None:
+                        query_sema_vec = codec.encode(query)
+                    if top_gene:
+                        gene = cymatix.genome.get_doc(top_gene)
+                        if gene is not None and gene.embedding:
+                            top_candidate_sema_vec = gene.embedding
+                except Exception:
+                    log.debug("CWoLa sema enrichment failed", exc_info=True)
 
-            cwola.log_query(
-                cymatix.genome.conn,
-                session_id=cwola_session_id,
-                party_id=cwola_party_id,
-                query=query,
-                tier_totals=cwola_tier_totals,
-                top_gene_id=top_gene,
-                ts=t0,
-                query_sema=query_sema_vec,
-                top_candidate_sema=top_candidate_sema_vec,
-            )
-            cwola.sweep_buckets(cymatix.genome.conn, now=_time.time())
+                import contextlib as _contextlib
+                with (_wl if _wl is not None else _contextlib.nullcontext()):
+                    cwola.log_query(
+                        cymatix.genome.conn,
+                        session_id=cwola_session_id,
+                        party_id=cwola_party_id,
+                        query=query,
+                        tier_totals=cwola_tier_totals,
+                        top_gene_id=top_gene,
+                        ts=t0,
+                        query_sema=query_sema_vec,
+                        top_candidate_sema=top_candidate_sema_vec,
+                    )
+                    cwola.sweep_buckets(cymatix.genome.conn, now=_time.time())
         except Exception:
             log.debug("CWoLa log_query/sweep failed", exc_info=True)
+        finally:
+            if _rid_token is not None:
+                try:
+                    _pipeline_request_id.reset(_rid_token)
+                except Exception:
+                    pass
 
         # OTel latency histogram
         try:

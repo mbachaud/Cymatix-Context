@@ -212,7 +212,7 @@ def _patched_splade(hits):
     old_encode = splade_backend.encode
     old_query = splade_backend.query_splade
     splade_backend.encode = lambda text, **kw: {}
-    splade_backend.query_splade = lambda conn, sparse, limit=20: list(hits)
+    splade_backend.query_splade = lambda conn, sparse, limit=20, **kw: list(hits)
     try:
         yield
     finally:

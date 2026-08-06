@@ -119,7 +119,7 @@ def patched_splade():
     old_query = splade_backend.query_splade
     splade_backend.encode = lambda text, **kw: {}
     splade_backend.query_splade = (
-        lambda conn, sparse, limit=20: [("gA", 30.0), ("gD", 10.0)]
+        lambda conn, sparse, limit=20, **kw: [("gA", 30.0), ("gD", 10.0)]
     )
     try:
         yield

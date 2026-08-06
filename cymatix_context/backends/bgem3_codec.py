@@ -17,6 +17,8 @@ import threading
 
 import numpy as np
 
+from . import encoder_client
+
 log = logging.getLogger("cymatix.bgem3")
 
 _QUERY_PREFIX = "Represent this sentence for searching relevant passages: "
@@ -115,6 +117,8 @@ class BGEM3Codec:
         with self._load_lock:
             if self._model is not None:
                 return
+            import time as _time
+            _load_t0 = _time.monotonic()
             try:
                 from FlagEmbedding import BGEM3FlagModel
                 model = BGEM3FlagModel(self.model_name, use_fp16=False)
@@ -126,6 +130,14 @@ class BGEM3Codec:
             # Publish self._model last so the lock-free fast path never sees a
             # half-initialized model (self._backend is set before this).
             self._model = model
+            # Perf slice 1 (W0.2): THIS is where the ~2 GB weight load
+            # actually happens (construction is metadata-only) — record it
+            # so cold-start receipts can subtract it from express.
+            try:
+                from ..telemetry import record_model_load
+                record_model_load("dense", _time.monotonic() - _load_t0)
+            except Exception:
+                pass
             log.info("BGE-M3 loaded (%s) dim=%d", self._backend, self.dim)
 
     def encode(self, text: str, task: str = "passage") -> list[float]:
@@ -261,7 +273,34 @@ def get_shared_codec(
     (legacy behavior / A-B testing). The construction lock guards only the
     cache insert; the ~2 GB model still loads lazily on first ``encode`` and is
     guarded by the instance's own ``_load_lock``.
+
+    Fork 1 slice 1: when an encoder-daemon URL is active the cached object is
+    a ``RemoteBGEM3Codec`` instead — same cache key, same ``share=False``
+    bypass, same one-instance-per-key guarantee, and the same duck-type
+    (``encode`` / ``encode_batch`` / ``similarity`` / ``dim`` /
+    ``model_name`` / ``_model``). With no URL configured this function is
+    byte-identical to its pre-daemon behavior: same class, same cache, same
+    warnings.
     """
+    url = encoder_client.active_url()
+    if url:
+        if not share:
+            return encoder_client.RemoteBGEM3Codec(
+                dim=dim, device=device, model_name=model_name, url=url,
+            )
+        key = (model_name, dim, device)
+        codec = _GLOBAL_CODECS.get(key)
+        if codec is not None:
+            return codec
+        with _GLOBAL_CODEC_LOCK:
+            codec = _GLOBAL_CODECS.get(key)
+            if codec is None:
+                codec = encoder_client.RemoteBGEM3Codec(
+                    dim=dim, device=device, model_name=model_name, url=url,
+                )
+                _GLOBAL_CODECS[key] = codec
+            return codec
+
     if not share:
         return BGEM3Codec(dim=dim, device=device, model_name=model_name)
     key = (model_name, dim, device)

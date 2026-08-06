@@ -649,6 +649,31 @@ class RetrievalConfig:
     splade_weight: float = 3.5              # leading coeff == tier cap
     tag_exact_weight: float = 3.0           # current weight × match_count
     tag_prefix_weight: float = 1.5          # current weight × match_count
+    # Issue #327 (2026-07-31 tagger A/B, docs/benchmarks/2026-07-31-tagger-
+    # ab-tag-flood.md): Tier-1 scores a flat weight per matched tag with no
+    # corpus-frequency discipline, so a tag on 25%+ of the corpus ('cymatix'
+    # on 1,596/6,276 genes) floods the pool and drowns gold. When true, each
+    # matched tag's contribution is scaled by selectivity log(N/df)/log(N)
+    # (df=1 → 1.0, ubiquitous → ~0.0) — scale, don't drop. Default off
+    # pending the A/B receipt; target set by the tagger-ablation Arm D
+    # (density-only relief reached recall@12 0.833 vs flat-tag 0.667).
+    tag_idf_enabled: bool = False
+    # #327 second iteration (2026-07-31): IDF *scaling* measured NULL on
+    # both beds — under RRF the flood is tier MEMBERSHIP, not score
+    # magnitude (flood-tied genes stay tied when scaled uniformly). This
+    # cap EXCLUDES a tag from Tier-1 when its df exceeds this fraction of
+    # the corpus (0.0 = off). Tag-side drop is not covered by the query-
+    # side "scale, don't drop" verdict — the tag is not query signal, it
+    # is index noise above this coverage.
+    tag_df_cap: float = 0.0
+    # 2026-08-03 ERB step-test fix: the tag_df_cap discipline applied to
+    # SPLADE query terms — drop terms whose posting-list df exceeds this
+    # fraction of the corpus before the postings join (one real query
+    # vector touched 5.06M posting rows at 829k genes; flood terms carry
+    # score mass but no discrimination). 0.0 = off. Needs the
+    # splade_term_df counters (auto-maintained on ingest; older beds are
+    # capless until backfilled).
+    splade_df_cap_fraction: float = 0.0
     # Issue #202: warm ΣĒMA boost (Tier 4 Mode A) weight — NEW knob; the
     # additive literal was sim·2.0·scale and the tier previously had no
     # weight knob at all (post-fusion additive under RRF, never fused).
@@ -973,6 +998,24 @@ class HeadroomConfig:
 
 
 @dataclass
+class EncoderDaemonConfig:
+    """[encoder_daemon] — optional shared BGE-M3/SPLADE/SEMA process (Fork 1 slice 1).
+
+    ``url`` empty (default) means "off": every encoder seam (dense, SPLADE,
+    SEMA) runs in-process exactly as before — the off-state is the dataclass
+    default, so byte-identical-when-off holds for free. Set ``url`` to point
+    ``cymatix_context.backends.encoder_client`` at a running
+    ``cymatix_context.encoder_daemon`` process (e.g.
+    "http://127.0.0.1:11439"); leave it empty, or leave
+    ``CYMATIX_ENCODER_URL`` unset, to keep current behavior untouched.
+    Timeouts / batch windows / retry cooldowns are env-tunable constants in
+    ``encoder_client.py``, not config surface, for this slice.
+    """
+
+    url: str = ""
+
+
+@dataclass
 class Hardware:
     """[hardware] config — see docs/specs/2026-05-04-hardware-detection-design.md.
 
@@ -988,6 +1031,15 @@ class Hardware:
     used by the picker itself.
     """
     device: str = "auto"
+    # 2026-08-04 per-layer device pins (CUDA A/B enablement): each encoder
+    # layer can be pinned independently — GPU for fast benchmarking, CPU for
+    # the cheaper-to-operate profile. "auto" inherits the global `device`
+    # resolution. rerank_device is consumed when the pre-cap cross-encoder
+    # rerank lands.
+    dense_device: str = "auto"
+    splade_device: str = "auto"
+    sema_device: str = "auto"
+    rerank_device: str = "auto"
     batch_sizes: Dict[str, int] = field(default_factory=dict)
     low_vram_threshold_gb: float = 4.0
     # #219 slice 2: when true (default), heavy encoders (ΣĒMA MiniLM,
@@ -1048,6 +1100,9 @@ class CymatixConfig:
     hardware: Hardware = field(default_factory=Hardware)
     vault: VaultConfig = field(default_factory=VaultConfig)
     synonym_map: Dict[str, List[str]] = field(default_factory=dict)
+    # Fork 1 slice 1: optional shared encoder daemon (docs/design/2026-08-05-
+    # fork1-slice1-contract.md). url="" = off = in-process (default).
+    encoder_daemon: EncoderDaemonConfig = field(default_factory=EncoderDaemonConfig)
 
 
 def _warn_unknown(section: str, raw_section: Dict[str, Any], dataclass_type: type) -> None:
@@ -1126,6 +1181,12 @@ def _apply_env_overrides(cfg: CymatixConfig) -> CymatixConfig:
                 "CYMATIX_SERVER_UPSTREAM_TIMEOUT=%r is not a float — ignoring override",
                 os.environ["CYMATIX_SERVER_UPSTREAM_TIMEOUT"],
             )
+
+    # Encoder daemon URL — same truthiness style as CYMATIX_SERVER_UPSTREAM:
+    # an empty/unset env var never disables a toml-configured url; only a
+    # non-empty value overrides.
+    if os.environ.get("CYMATIX_ENCODER_URL"):
+        cfg.encoder_daemon.url = os.environ["CYMATIX_ENCODER_URL"]
     return cfg
 
 
@@ -1238,6 +1299,15 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             bench_genome_path=s.get(
                 "bench_genome_path", cfg.server.bench_genome_path,
             ),
+        )
+
+    # Encoder daemon (Fork 1 slice 1) — parsed BEFORE _apply_env_overrides so
+    # CYMATIX_ENCODER_URL can win over a toml value below.
+    if "encoder_daemon" in raw:
+        e = raw["encoder_daemon"]
+        _warn_unknown("encoder_daemon", e, EncoderDaemonConfig)
+        cfg.encoder_daemon = EncoderDaemonConfig(
+            url=str(e.get("url", cfg.encoder_daemon.url)),
         )
 
     # CYMATIX_GENOME_PATH / CYMATIX_SERVER_* overrides (env > toml > default).
@@ -1412,6 +1482,12 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             splade_weight=float(r.get("splade_weight", cfg.retrieval.splade_weight)),
             tag_exact_weight=float(r.get("tag_exact_weight", cfg.retrieval.tag_exact_weight)),
             tag_prefix_weight=float(r.get("tag_prefix_weight", cfg.retrieval.tag_prefix_weight)),
+            # Issue #327: tag-tier IDF discipline (see field docstring).
+            tag_idf_enabled=bool(r.get("tag_idf_enabled", cfg.retrieval.tag_idf_enabled)),
+            tag_df_cap=float(r.get("tag_df_cap", cfg.retrieval.tag_df_cap)),
+            splade_df_cap_fraction=float(
+                r.get("splade_df_cap_fraction",
+                      cfg.retrieval.splade_df_cap_fraction)),
             # Issue #202: warm ΣĒMA boost knob (new).
             sema_boost_weight=float(r.get("sema_boost_weight", cfg.retrieval.sema_boost_weight)),
             sema_cold_weight=float(r.get("sema_cold_weight", cfg.retrieval.sema_cold_weight)),
@@ -1631,6 +1707,10 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
 
     cfg.hardware = Hardware(
         device=str(hardware_device),
+        dense_device=str(hw.get("dense_device", "auto")),
+        splade_device=str(hw.get("splade_device", "auto")),
+        sema_device=str(hw.get("sema_device", "auto")),
+        rerank_device=str(hw.get("rerank_device", "auto")),
         batch_sizes=bs,
         low_vram_threshold_gb=float(hw.get("low_vram_threshold_gb", 4.0)),
         lazy_encoders=bool(hw.get("lazy_encoders", True)),
