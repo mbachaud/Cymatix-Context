@@ -115,6 +115,10 @@ class TestHealthEndpoint:
         assert data["ribosome_backend"] == "litellm"
 
     def test_health_degrades_when_upstream_unreachable(self, client, monkeypatch):
+        """Active ribosome + unreachable upstream — the ONLY case that
+        degrades on the upstream axis (three-state model, 2026-07-30).
+        ``client`` has a mock compressor injected, so the runtime ribosome
+        is active and the upstream is a real dependency."""
         monkeypatch.setattr(
             server_mod,
             "_probe_upstream",
@@ -124,8 +128,62 @@ class TestHealthEndpoint:
         assert resp.status_code == 200
         data = resp.json()
         assert data["status"] == "degraded"
+        assert data["upstream_state"] == "unreachable"
         assert data["checks"]["upstream_ready"] is False
         assert "upstream model server is unreachable" in data["message"].lower()
+
+    def test_health_ok_and_upstream_state_ok_when_active_and_reachable(self, client, monkeypatch):
+        monkeypatch.setattr(
+            server_mod,
+            "_probe_upstream",
+            lambda _url, timeout_s=1.0: {"reachable": True, "probe": "/api/tags", "status_code": 200},
+        )
+        data = client.get("/health").json()
+        assert data["status"] == "ok"
+        assert data["upstream_state"] == "ok"
+        assert data["checks"]["upstream_ready"] is True
+
+    def test_health_inactive_ribosome_is_not_degraded_and_skips_probe(self, monkeypatch):
+        """Disabled ribosome → upstream is not a dependency: status stays
+        ok, upstream_state reports "inactive", and the probe is never
+        called (a down Ollama must not add probe-timeout latency to every
+        tray health poll on an LLM-free profile)."""
+        def _probe_must_not_run(_url, timeout_s=1.0):
+            raise AssertionError("_probe_upstream must not be called while ribosome is disabled")
+        monkeypatch.setattr(server_mod, "_probe_upstream", _probe_must_not_run)
+        app = create_app(CymatixConfig(
+            genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
+            server=ServerConfig(upstream="http://localhost:11434"),
+        ))
+        with TestClient(app) as default_client:
+            resp = default_client.get("/health")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data["status"] == "ok"
+        assert data["upstream_state"] == "inactive"
+        assert data["upstream_reachable"] is None
+        assert data["checks"]["upstream_ready"] is None
+        assert "inactive" in data["message"].lower()
+
+    def test_health_genome_failure_still_degrades_when_ribosome_inactive(self, monkeypatch):
+        """The genome axis is unconditional: inactive upstream must not
+        mask a broken knowledge store."""
+        def _probe_must_not_run(_url, timeout_s=1.0):
+            raise AssertionError("_probe_upstream must not be called while ribosome is disabled")
+        monkeypatch.setattr(server_mod, "_probe_upstream", _probe_must_not_run)
+        app = create_app(CymatixConfig(
+            genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
+            server=ServerConfig(upstream="http://localhost:11434"),
+        ))
+        with TestClient(app) as default_client:
+            def _boom():
+                raise RuntimeError("stats unavailable")
+            default_client.app.state.cymatix.genome.stats = _boom
+            resp = default_client.get("/health")
+        data = resp.json()
+        assert data["status"] == "degraded"
+        assert data["upstream_state"] == "inactive"
+        assert "genome stats failed" in data["message"].lower()
 
     def test_health_endpoint_includes_hardware_block(self, client, monkeypatch):
         """Task 12: /health surfaces the detected hardware + fallback state
