@@ -285,3 +285,39 @@ nuking live work.
 
 10. Cell 3 (#275 shard A/B) — due now. 850K `rrf_gate` receipt (#260 graduation cell).
 11. Once #221 is unblocked and run: README bench-number re-admission, then a fresh baseline tag.
+
+---
+
+## 2026-08-06 addendum — Fork-1 / retrieval-economics era
+
+Everything below post-dates the 2026-07-27 triage. Landed on master via
+#330 + #331 (perf instrumentation, encoder daemon + RemoteCodec); receipts
+and fixes ride PR #332. Evidence base:
+`docs/benchmarks/2026-08-06-retrieval-layer-ledger.md` (+ the fork-1
+receipts and worker-sweep docs).
+
+### New Track 4 — Retrieval-layer economics (receipts-gated)
+
+| # | Item | State |
+| --- | --- | --- |
+| #333 | SPLADE: no benefiting scale — profile default off, query-side #164 gate, compaction | Ready; 4-scale receipts in hand; splade-less 829k bed carved (34.4GB) |
+| #338 | FTS5 external-content rebuild (−8.67GB, signal-neutral) | Ready; with #333 → blob ≈28GB, RAM-cacheable |
+| #334 | PKI + tags: add gates + ladder arms (11.1GB combined, unmeasured) | Ready |
+| #336 | Splice/headroom answer-quality A/B (owns the p95 tail) | Ready; blocks trim-as-default |
+| #337 | Sema query tier removal decision (null even with vectors) | Ready; auto-gate landed |
+| #335 | Delivered-gold receipt metric + ANN `min_genes` sweep | Ready; prerequisite for #341 sequencing and the coact verdict |
+| #341 | Rerank production wiring (pre-cap top-50) | **Highest leverage** — three findings converge (near-cutoff class, erb_039, #335) |
+| #340 | Static-miss class: 99/469 needles, per-needle receipts | The recall workstream's quantified target; pairs with #260's depth sweep |
+| #339 | Wobble second source + determinism NO-GO (tracking) | Record; no action unless stability is required |
+
+### Effects on the existing tracks
+
+- **Track 1 (#275):** dense-off product decision inherits the ledger's
+  claim-1 warning — cap the non-ANN candidate list before any dense-off
+  ships, or the splice explosion applies per shard.
+- **Track 3 (#205 → #208):** Layer 1 now has its evidence base (the
+  ledger + static→dynamic map); the `fts5_candidate_depth` sweep doubles
+  as the #340 entry-path lever. #208 unchanged, still gated on #205.
+- **Operating profile (this box):** GPU encoder daemon +
+  `CYMATIX_EXECUTOR_WORKERS=4`, trim, `splade_enabled=false` on the
+  34.4GB bed — full 469-needle benchmark = 2.65h at c=1 (was 18-20h).
