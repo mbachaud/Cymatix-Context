@@ -1,0 +1,179 @@
+{
+  "tool": "benchmarks/dogfood/erb/ablation_ladder.py",
+  "stamp": "2026-08-06-splade-dogfood",
+  "bed": "F:\\Projects\\cymatix-context\\genomes\\dogfood\\genome.db",
+  "bed_bytes": 267567104,
+  "config": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\fork1-encoder-daemon\\cymatix.toml",
+  "git_sha": "d3c73ab6d8b14d72b4835244c757c9a1f2511ad9",
+  "needles_file": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\fork1-encoder-daemon\\benchmarks\\dogfood\\needles_resolved.json",
+  "gold_file": "F:\\Projects\\cymatix-context\\benchmarks\\dogfood\\gene_ids\\gold_by_needle.json",
+  "needle_count": 18,
+  "k": 12,
+  "env": {
+    "CYMATIX_ENCODER_URL": "http://127.0.0.1:11439",
+    "CYMATIX_ENCODER_URL_set": true,
+    "CYMATIX_DISABLE_HEADROOM": "1",
+    "CYMATIX_DISABLE_LEARN": "1",
+    "CYMATIX_GENOME_PATH": "F:\\Projects\\cymatix-context\\genomes\\dogfood\\genome.db"
+  },
+  "note": "Ranks read from genome.last_query_scores (post-blend; blend republishes the map at scoring/blend.py:233/:281), ties broken by gene_id ascending. delivered_gold_queries reads window.expressed_gene_ids. Each arm runs one untimed warmup query first so the lazy encoder load is not billed to p50. Latencies are wall ms on a shared box \u2014 within-run relatives only.",
+  "dropped_arms": [
+    {
+      "arm": "no_plr",
+      "knob": "[plr] enabled",
+      "reason": "Not on the build_context path. [plr] enabled is read only by server/routes_context.py:635 -> server/helpers.py:444 _compute_plr_confidence, which decorates the /context/packet response; retrieval/fusion_plr.py:31 states it 'leaves document ranking untouched'. An in-process arm would measure zero by construction, not by evidence."
+    },
+    {
+      "arm": "no_harmonic",
+      "knob": "use_harmonic / [cymatics] harmonic_links",
+      "reason": "No query-time off-switch. `use_harmonic` defaults True at context_manager.py:2895 and knowledge_store.py:2259 and is passed by NO call site (context_manager.py:1945, :1965), so Tier 5 (knowledge_store.py:3119) and _expand_coactivated (knowledge_store.py:3494) are unconditional. [cymatics] harmonic_links gates only the ingest/expression-time edge WRITE inside the `if not read_only` block at context_manager.py:2353."
+    },
+    {
+      "arm": "no_tag_prefix / tag discipline",
+      "knob": "[retrieval] tag_idf_enabled, tag_df_cap, tag_prefix_weight",
+      "reason": "Tier 1 (knowledge_store.py:2697) and Tier 2 (:2720) are unconditional. The #327 knobs default to OFF (config.py:660, :668), so flipping them is an intervention, not an ablation. The only mute is weight-zeroing (tag_prefix_weight=0.0), which silences the contribution while still paying the SQL cost \u2014 that would misreport the cost axis, so no arm is offered."
+    }
+  ],
+  "arms": [
+    {
+      "arm": "baseline",
+      "knobs_changed": {},
+      "gate": "\u2014  (shipped config, untouched)",
+      "arm_valid": true,
+      "validation": "control",
+      "validation_detail": "control arm \u2014 shipped config, no ablation to validate",
+      "recall_at_k": 0.7222,
+      "mean_rank_of_gold": 7.5,
+      "median_rank_of_gold": 3.5,
+      "gold_found_queries": 18,
+      "gold_ranks_total": 139,
+      "delivered_gold_queries": 9,
+      "queries_with_scores": 18,
+      "latency_ms": {
+        "p50": 419.752,
+        "p95": 589.619
+      },
+      "signal_ms_median": {
+        "ann_body_fetch": 18.949,
+        "ann_dense_leg": 63.202,
+        "body_fetch": 2.295,
+        "coact_expand": 6.756,
+        "dense": 63.167,
+        "fts5": 30.554,
+        "lex_anchor": 3.14,
+        "pki": 3.938,
+        "sema_boost": 0.001,
+        "splade": 64.91,
+        "tag_exact": 5.083,
+        "tag_prefix": 2.761
+      },
+      "n_queries": 18,
+      "warmup_ran": true,
+      "encoder_url": "http://127.0.0.1:11439",
+      "dense_codec_class": "RemoteBGEM3Codec",
+      "remote_dense": true,
+      "observables": {
+        "signal_keys": [
+          "ann_body_fetch",
+          "ann_dense_leg",
+          "body_fetch",
+          "coact_expand",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "sema_boost",
+          "splade",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_keys": [
+          "authority",
+          "dense",
+          "filename_anchor",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "splade",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "classifier_metadata_queries": 17,
+        "synonym_expansions": 12,
+        "cymatics_calls": 18,
+        "cold_tier_queries": 0
+      },
+      "errors": []
+    },
+    {
+      "arm": "no_splade",
+      "knobs_changed": {
+        "ingestion.splade_enabled": false
+      },
+      "gate": "knowledge_store.py:2783 `if self._splade_enabled:`",
+      "arm_valid": true,
+      "validation": "signal_absent",
+      "validation_detail": "signal_keys: ['splade'] present at baseline, absent in this arm",
+      "recall_at_k": 0.8333,
+      "mean_rank_of_gold": 6.28,
+      "median_rank_of_gold": 3.0,
+      "gold_found_queries": 18,
+      "gold_ranks_total": 139,
+      "delivered_gold_queries": 9,
+      "queries_with_scores": 18,
+      "latency_ms": {
+        "p50": 280.496,
+        "p95": 585.538
+      },
+      "signal_ms_median": {
+        "ann_body_fetch": 17.772,
+        "ann_dense_leg": 37.801,
+        "body_fetch": 2.232,
+        "coact_expand": 6.402,
+        "dense": 35.579,
+        "fts5": 28.852,
+        "lex_anchor": 2.728,
+        "pki": 3.457,
+        "sema_boost": 0.001,
+        "tag_exact": 2.274,
+        "tag_prefix": 2.498
+      },
+      "n_queries": 18,
+      "warmup_ran": true,
+      "encoder_url": "http://127.0.0.1:11439",
+      "dense_codec_class": "RemoteBGEM3Codec",
+      "remote_dense": true,
+      "observables": {
+        "signal_keys": [
+          "ann_body_fetch",
+          "ann_dense_leg",
+          "body_fetch",
+          "coact_expand",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "sema_boost",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_keys": [
+          "authority",
+          "dense",
+          "filename_anchor",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "sema_boost",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "classifier_metadata_queries": 17,
+        "synonym_expansions": 12,
+        "cymatics_calls": 18,
+        "cold_tier_queries": 0
+      },
+      "errors": []
+    }
+  ]
+}

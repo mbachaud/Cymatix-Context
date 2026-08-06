@@ -126,3 +126,37 @@ serving profiles (or the ledger's #164-generalized size gate with
 c=1 runtime ≈2.2h (469 × ~17s), before any concurrency.
 Caveat retained: n=30 of 469 needles; a 100-needle confirmation pass is
 cheap insurance before changing shipped defaults (not before bench use).
+
+## Addendum 2 (2026-08-06): sema A/B with backfilled vectors; splade curve complete
+
+**Sema, properly fed, is still null.** `scripts/backfill_sema.py` populated all
+100,000 embeddings on the 100k carve (134.6 enc/s, 743s, 0 skipped) — the
+first time the tier has ever had vectors to fire against on an ERB bed. Two
+order-reversed A/B passes (`sema_ab_100k_run{1,2}.json`, trim profile):
+r@12 0.800 and med rank 3.0 IDENTICAL in all four arm executions; baseline
+pays ~40-255ms/query for the boost path. Verdict: sema query tier confirmed
+null at 100k even with stored vectors — the earlier "no-op on vectorless
+beds" finding was not the only problem. REMOVE-CANDIDATE stands, now
+unconditional on this workload class.
+
+**The splade curve now spans four scales and never crosses zero:**
+| bed | baseline → no_splade r@12 | p50 delta |
+|---|---|---|
+| dogfood (~17k docs) | 0.722 → **0.833** (+2 needles) | −33% |
+| erb10k | 0.333 → 0.333 (10 scoreable needles) | −20% |
+| erb100k | neutral (verifier-weakened bidirectional flips) | −13% |
+| erb829k | 0.767 → 0.767 (zero flips, order-reversed ×2) | −14% |
+
+There is **no measured scale at which splade benefits** these needle sets —
+twice it measurably helps to remove it. Consequence for the threshold
+design: there is nothing to encode in `disable_above` for this workload
+family; the evidence supports `splade_enabled=false` as the profile
+default, with the #164-generalized gate reserved for workloads that
+demonstrate a win (e.g. paraphrase-heavy query classes — untested here,
+and the honest scope limit on this conclusion: all four beds share the
+needle-in-haystack bench family).
+
+**Splade-less 829k bed validated** (`erb_829k_nosplade.db`, 34.4GB, 829,131
+genes, zero splade objects): med rank 1.0 / p50 17.5s on the first-10 blob
+needles — matches the probe A/B's no_splade arm. Certified for the full
+469-needle run; 13.6GB RAM headroom on the 48GB box.
