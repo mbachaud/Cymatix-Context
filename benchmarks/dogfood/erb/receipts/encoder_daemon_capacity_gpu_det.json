@@ -1,0 +1,96 @@
+{
+  "kind": "encoder_capacity",
+  "profile_label": "gpu-deterministic",
+  "python": "F:/tmp/venv-cuda/Scripts/python.exe",
+  "port": 11439,
+  "torch_version": "2.11.0+cu128",
+  "capacity": {
+    "devices": {
+      "dense": "cuda:0",
+      "splade": "cuda:0",
+      "sema": "cuda:0"
+    },
+    "warm_encodes_per_s": {
+      "dense": 188.244,
+      "splade": 82.754,
+      "sema": 137.552
+    },
+    "bundles_per_s": {
+      "interleaved": 40.541,
+      "pipelined": 82.754
+    },
+    "max_batch": {
+      "dense": 16,
+      "splade": 8,
+      "sema": 64
+    },
+    "batch_window_ms": 2.0,
+    "deterministic": true,
+    "vector_cache": {
+      "enabled": false,
+      "size": 0,
+      "max_size": 0,
+      "hits": 0,
+      "misses": 0
+    },
+    "probe_ms": 1041.495,
+    "warm_probe_encodes": 5,
+    "loaded": {
+      "dense": true,
+      "splade": true,
+      "sema": true
+    },
+    "dense_model": "BAAI/bge-m3",
+    "dense_dim": 1024,
+    "torch_version": "2.11.0+cu128",
+    "vram_total_gb": 12.0,
+    "vram_free_gb": 6.977,
+    "system_ram_gb": 47.93,
+    "pid": 8516
+  },
+  "spawn_token_verified": true,
+  "levels": [
+    {
+      "n_clients": 1,
+      "bundles_total": 50,
+      "errors": 0,
+      "wall_s": 45.8908,
+      "bundles_per_s": 1.0895,
+      "latency_p50_ms": 917.496,
+      "latency_p95_ms": 935.431,
+      "latency_max_ms": 959.858
+    },
+    {
+      "n_clients": 2,
+      "bundles_total": 100,
+      "errors": 0,
+      "wall_s": 68.4348,
+      "bundles_per_s": 1.4612,
+      "latency_p50_ms": 984.627,
+      "latency_p95_ms": 1896.993,
+      "latency_max_ms": 2735.522
+    },
+    {
+      "n_clients": 4,
+      "bundles_total": 200,
+      "errors": 0,
+      "wall_s": 132.7771,
+      "bundles_per_s": 1.5063,
+      "latency_p50_ms": 2796.897,
+      "latency_p95_ms": 3678.824,
+      "latency_max_ms": 4697.997
+    },
+    {
+      "n_clients": 8,
+      "bundles_total": 400,
+      "errors": 0,
+      "wall_s": 264.2001,
+      "bundles_per_s": 1.514,
+      "latency_p50_ms": 5556.212,
+      "latency_p95_ms": 6529.273,
+      "latency_max_ms": 7111.037
+    }
+  ],
+  "generated_at": "2026-08-06T21:55:26.460506+00:00",
+  "env": {}
+}

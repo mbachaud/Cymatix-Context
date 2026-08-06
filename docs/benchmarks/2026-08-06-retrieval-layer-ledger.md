@@ -175,3 +175,30 @@ now quantified on the full set with per-needle receipts; the remaining
 misses are near-cutoff ranks. Slowest 10% of needles = 21% of wall
 (tail is splice/SQL-bound per the ledger's dense analysis; run predates
 the sema auto-gate so ~1 idle sema RTT/query is included).
+
+## Addendum 4 (2026-08-06): determinism profile NO-GO; synonyms movers named
+
+**Determinism profile: clean negative receipt.** Under
+`CYMATIX_ENCODER_DETERMINISTIC=1` (deterministic kernels + TF32 off +
+fixed-shape max-length padding): GPU capacity collapsed **51.4 → 1.5
+bundles/s (34×)**, dogfood x4 latencies ~4× worse at every level — and the
+c=8 recall deviation flag STILL fired (0.581 vs 0.5556). Two conclusions:
+(1) the profile as designed is unshippable — the flags stay env-gated dark
+exactly as landed; (2) the residual deviation under full determinism
+proves part of the wobble is retrieval-timing-dependent (concurrent
+session/pool state), not encode bits — the encode-side fix alone can
+never zero it. The default-on vector LRU keeps (free repeat-text
+stability; benches set `CYMATIX_ENCODER_VECTOR_CACHE=0`). Future path if
+tighter stability is ever needed: canonical-v2 fixed-shape-at-sane-length
+semantics WITHOUT deterministic kernels, cost-measured first.
+Receipts: `encoder_daemon_capacity_gpu_det.json`, `n100_gdet_dogfood_x4.json`.
+
+**Synonyms movers, named** (`synonyms_ab_100k_run{1,2}.json`, per-needle):
+no-synonyms wins +0.033 r@12 in BOTH orders (0.800→0.833) and the two
+movers reproduce the council's mechanism exactly — **erb_015** gold rank
+13→11 (expansion bloat pushes it outside k=12 today) and **erb_039** gold
+rank 29→gone (a synonym entry is the sole pool-entry path, but rank 29
+scores nothing at k=12 — that entry pays off ONLY once pre-cap rerank
+lands and converts pool presence into recall). Retune verdict: prune the
+bloating entries now (+1 needle immediately), keep the erb_039 feeder as
+a deliberate rerank-era investment, re-measure after rerank wiring.
