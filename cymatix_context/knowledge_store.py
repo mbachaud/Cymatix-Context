@@ -926,11 +926,27 @@ class KnowledgeStore:
         # (same last-query contract and the same known cross-request-global
         # caveat — W1.6 scoops all of these into a request-scoped outcome).
         self.last_signal_timings: Dict[str, float] = {}
-        # Issue #341: the last query's FULL-pool final order (not just the
-        # delivered slice), published under _last_query_scores_lock on both
-        # retrieval paths and in BOTH rerank arms — with rerank off it is the
-        # sim/fused order, so an A/B keeps an identical rank basis and the
-        # metric can never silently read a stale ordering.
+        # Issue #341: the last query's final rank order, published under
+        # _last_query_scores_lock on both retrieval paths and in BOTH rerank
+        # arms — with rerank off it is the sim/fused order, so an A/B keeps an
+        # identical rank basis and the metric can never silently read a stale
+        # ordering.
+        #
+        # KNOWN ASYMMETRY — the two paths publish different DEPTHS, and a
+        # consumer computing rank-of-gold has to know which one it is reading:
+        #
+        #   query_docs_ann  -> the FULL union pool (~pool_size, default 500)
+        #                      in final order, i.e. every candidate the ANN
+        #                      path considered, both above and below the gate.
+        #   query_docs      -> the POST-CUT list only (max_genes * 2). Ids
+        #                      that ranked below that cut are simply absent,
+        #                      so a gold document outside the cut reads as
+        #                      "not retrieved" rather than "retrieved at rank
+        #                      N" — an unmeasurable, not a zero.
+        #
+        # Deliberately not unified: widening the lex publication would mean
+        # widening the ranking itself. The ladder's A/B runs dense-on, so the
+        # ANN (full-pool) semantics are the ones the receipts actually use.
         self.last_ranked_ids: List[str] = []
         # Issue #341 companion: {"gate_kept": n, "floor_appended": n} from the
         # last query_docs_ann call (both arms). Lets the ablation ladder slice
@@ -3675,7 +3691,7 @@ class KnowledgeStore:
                     "rerank candidate load failed; falling back to fused order",
                     exc_info=True,
                 )
-                head_docs = []
+                head_docs_map, head_docs = {}, []
             xenc = self._score_rerank(query_text, head_docs)
             if xenc is not None:
                 # gene_id is the secondary key so equal cross-encoder scores
@@ -3684,19 +3700,37 @@ class KnowledgeStore:
                     range(len(head_docs)), key=lambda i: (-xenc[i], head_docs[i].gene_id)
                 )
                 reordered = [head_docs[i].gene_id for i in order]
-                _in_head = set(reordered)
-                ranked_ids = reordered + [g for g in ranked_ids if g not in _in_head]
+                # Position-preserving permutation: the reranked ids are written
+                # back into the LOADABLE slots of the head, leaving unloadable
+                # ids (ranked from a tier index whose genes row is gone — stale
+                # dense matrix, deleted doc) exactly where the OFF arm has them.
+                # Appending the reranked block and pushing unloadable ids to the
+                # tail instead would move them out of the [:limit] window, so the
+                # ON arm would deliver MORE bodies than OFF — a count-invariant
+                # break. In a self-consistent store every slot is loadable and
+                # this is byte-identical to a plain concatenation.
+                slots = [i for i, g in enumerate(head_ids) if g in head_docs_map]
+                new_head = list(head_ids)
+                for slot, gid in zip(slots, reordered):
+                    new_head[slot] = gid
+                ranked_ids = new_head + ranked_ids[depth:]
             ranked_ids = ranked_ids[:limit]
             # Timing goes through the LOCAL per-signal collector: this
             # function publishes _sig_ms wholesale into last_signal_timings on
             # exit, so a direct merge here would be clobbered.
             _sig("xenc_rerank", _xenc_t0)
 
-        # Issue #341: publish the final full-pool order unconditionally —
-        # both fusion modes, rerank on or off — so an A/B always compares two
-        # orderings produced the same way and the metric basis can never go
-        # stale. Deliberately BEFORE the walking tie-break, matching the
+        # Issue #341: publish the final order unconditionally — both fusion
+        # modes, rerank on or off — so an A/B always compares two orderings
+        # produced the same way and the metric basis can never go stale.
+        # Deliberately BEFORE the walking tie-break, matching the
         # last_query_scores publication point above.
+        #
+        # Depth caveat (see the __init__ declaration): this is the POST-CUT
+        # list (max_genes * 2), NOT the full candidate pool — query_docs_ann
+        # publishes the full union pool instead. A consumer computing
+        # rank-of-gold off this path reads a gold document below the cut as
+        # absent, which is an unmeasurable, not a rank of zero.
         with self._last_query_scores_lock:
             self.last_ranked_ids = list(ranked_ids)
 
@@ -4265,7 +4299,11 @@ class KnowledgeStore:
 
         with self._last_query_scores_lock:
             # Overwrites the inner query_docs publication with the ANN-final
-            # order (union pool, post-rerank when it ran).
+            # order: the FULL union pool (~pool_size), post-rerank when it
+            # ran, spanning candidates both above and below the gate. This is
+            # the deeper of the two publication semantics — see the
+            # last_ranked_ids declaration in __init__ for why the lex path's
+            # post-cut list is deliberately not unified with it.
             self.last_ranked_ids = final_order
             # Published on BOTH arms so the verdict can slice floor-fired needles.
             self.last_rerank_diag = {

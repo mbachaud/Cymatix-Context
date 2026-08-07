@@ -290,6 +290,22 @@ def test_last_ranked_ids_published_on_the_lex_path(lex_store_with_pool):
     assert "xenc_rerank" in g.last_signal_timings
 
 
+def test_last_ranked_ids_depth_differs_by_path(store_with_pool):
+    """Pins the documented asymmetry so it can't drift silently.
+
+    ``query_docs_ann`` publishes the FULL union pool (above and below the
+    gate); ``query_docs`` publishes only the post-cut ``max_genes * 2`` list.
+    A consumer computing rank-of-gold has to know which it is reading — on the
+    lex path a gold below the cut is absent, i.e. unmeasurable, not rank 0.
+    """
+    g = store_with_pool
+    g.query_docs_ann("query text", domains=["topic"], max_genes=8)
+    assert len(g.last_ranked_ids) == _POOL          # whole union pool
+
+    g.query_docs(["topic"], [], max_genes=8)
+    assert len(g.last_ranked_ids) == 16             # post-cut: max_genes * 2
+
+
 def test_last_ranked_ids_published_under_additive_fusion():
     store = Genome(path=":memory:", dense_embedding_enabled=False, fusion_mode="additive")
     try:
@@ -333,6 +349,42 @@ def test_lex_path_rerank_widens_pool_but_preserves_count(lex_store_with_pool):
     rr = g.query_docs(["topic"], [], max_genes=12, query_text="query text")
     assert len(rr) == len(plain_ids)
     assert rr[0].gene_id == _gid(_MARKER_IDX)
+
+
+def test_lex_count_invariant_on_a_stale_index_store():
+    """A ranked id with no ``genes`` row must not become a free ON-arm slot.
+
+    Stale-index shape: the dense leg still names a document whose row is
+    gone (matrix cached across a delete), so it ranks but body-fetches to
+    nothing. Both arms drop it — so the reranked head has to keep it in
+    *its slot* rather than pushing it past the cut, which would let one more
+    loadable document into the window on the ON arm only.
+    """
+    store = Genome(
+        path=":memory:",
+        dense_embedding_enabled=True,
+        fusion_mode="additive",
+        # Puts the phantom's cosine above the tag-exact + lex-anchor stack the
+        # real documents accumulate, so it ranks into the delivered window.
+        dense_additive_weight=40.0,
+    )
+    try:
+        _build_pool(store)
+        store.query_docs_dense_recall = lambda *a, **kw: [("g-ghost", 0.95)]
+
+        off = store.query_docs(["topic"], [], max_genes=8)
+        off_ranked = list(store.last_ranked_ids)
+        assert "g-ghost" in off_ranked[:16]      # precondition: inside the cut
+        assert len(off) < 16                     # ...and it costs a slot
+
+        store._rerank_enabled = True
+        store._rerank_scorer = _scorer_favoring(_MARKER)
+        on = store.query_docs(["topic"], [], max_genes=8, query_text="query text")
+
+        assert len(on) == len(off)               # the invariant
+        assert _MARKER in on[0].content          # rerank still did its job
+    finally:
+        store.close()
 
 
 def test_lex_scorer_failure_falls_back(lex_store_with_pool, caplog):
