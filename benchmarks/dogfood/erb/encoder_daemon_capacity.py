@@ -10,7 +10,10 @@ already captured), a SEPARATE barrier-synced phase has every client POST
 ``--rerank-pairs`` (default 50) texts to ``/encode/rerank`` once. This keeps
 bundle wall-clock — and therefore ``bundles_per_s`` and its 3.5 CPU / 30 GPU
 bars — completely unpolluted by rerank load; rerank throughput
-(``rerank_pairs_per_s``) is reported informationally only. Rerank errors
+(``rerank_pairs_per_s``) is reported informationally only, and is a
+sequential-latency proxy (sum of each client's own latency, NOT the
+n_clients-concurrent phase's wall-clock) — do not compare it against
+``bundles_per_s`` as if the two were measured the same way. Rerank errors
 fold into the level's existing ``errors`` field, so the checker's binding
 ``errors_zero`` gate covers rerank failures with no checker change.
 
@@ -37,7 +40,8 @@ Receipt JSON (``kind: "encoder_capacity"``)::
          "bundles_per_s": 3.5, "latency_p50_ms": 280.1, "latency_p95_ms": 310.4,
          "latency_max_ms": 340.2,
          # rerank_* keys (#341) present only when --rerank-pairs > 0:
-         "rerank_scores_total": 50, "rerank_pairs_per_s": 210.4,
+         "rerank_scores_total": 50,
+         "rerank_pairs_per_s": 210.4,  # sequential-latency proxy, not phase wall-clock
          "rerank_latency_p50_ms": 118.2, "rerank_latency_p95_ms": 140.6},
         ...
       ],
@@ -160,6 +164,10 @@ def aggregate_level(
         sorted_rerank_ms = sorted(rerank_ms)
         rerank_success = len(sorted_rerank_ms)
         rerank_scores_total = rerank_success * int(rerank_pairs_per_request)
+        # Sequential-latency proxy, NOT phase wall-clock: sums each client's
+        # own latency rather than timing the n_clients-concurrent phase, so
+        # this understates true concurrent throughput by roughly a factor of
+        # n_clients — informational only, never compare it against bundles_per_s.
         rerank_total_s = sum(sorted_rerank_ms) / 1000.0
         rerank_pairs_per_s = (
             round(rerank_scores_total / rerank_total_s, 4) if rerank_total_s > 0 else 0.0

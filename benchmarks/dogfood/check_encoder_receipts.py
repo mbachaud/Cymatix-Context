@@ -30,7 +30,12 @@ Kinds:
                        saturates well above it — is still visible in the
                        verdict JSON. Rerank family (#341): a level's
                        ``rerank_pairs_per_s``, when present, is surfaced as a
-                       plain NOTE (``notes[]``), never a gate entry — rerank
+                       plain NOTE (``notes[]``), never a gate entry — it is a
+                       sequential-latency proxy (sum of each client's own
+                       latency, not the concurrent phase's wall-clock) and
+                       understates true throughput by roughly a factor of
+                       n_clients, so the note is labeled accordingly and must
+                       never be compared against ``bundles_per_s``. Rerank
                        errors already fold into the level's ``errors`` field
                        (``encoder_daemon_capacity.aggregate_level``), so the
                        binding ``errors_zero`` gate covers rerank failures
@@ -188,7 +193,14 @@ def check_encoder_capacity(receipt: dict, bar: float) -> Tuple[List[dict], List[
         # level, so errors_zero covers rerank failures with no gate here.
         rerank_pairs_per_s = _num(lv, "rerank_pairs_per_s")
         if rerank_pairs_per_s is not None:
-            notes.append(f"info: rerank_pairs_per_s at {where} = {rerank_pairs_per_s}")
+            # Labeled explicitly: it's a sequential-latency proxy (sum of
+            # each client's own latency), not the concurrent phase's actual
+            # wall-clock, so it understates true throughput by roughly a
+            # factor of n_clients — never comparable to bundles_per_s.
+            notes.append(
+                f"info: rerank_pairs_per_s (sequential-latency proxy, not "
+                f"phase wall-clock) at {where} = {rerank_pairs_per_s}"
+            )
 
     # The BINDING throughput gate: saturated (max-across-levels) bundles/s
     # vs the bar. A latency-bound c=1 sitting below the bar is expected and

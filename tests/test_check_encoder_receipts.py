@@ -200,7 +200,13 @@ def test_checker_keeps_bundle_gate_binding_and_rerank_informational(tmp_path):
     assert result["verdict"] == "PASS"
     assert any(g["name"] == "capacity_bundles_per_s" for g in result["gates"])
     assert not any(g["name"].startswith("rerank") for g in result["gates"])
-    assert any("rerank_pairs_per_s" in n for n in result["notes"])
+    # The note must label the sequential-latency-proxy methodology inline —
+    # rerank_pairs_per_s sits right beside bundles_per_s in the receipt and
+    # must not be mistaken for a comparable concurrent-phase rate.
+    assert (
+        "info: rerank_pairs_per_s (sequential-latency proxy, not phase "
+        "wall-clock) at n1 = 227.27" in result["notes"]
+    )
 
 
 def test_encoder_capacity_empty_levels_exit_2(tmp_path):
