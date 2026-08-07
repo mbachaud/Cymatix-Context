@@ -2063,6 +2063,7 @@ class CymatixContextManager:
                 },
             )
 
+        # stage name kept for ring continuity; the cross-encoder now runs pre-cap in the store
         with _pipeline_stage_span("rerank"), _stage_timer("rerank"):
             candidates, _ = self._apply_candidate_refiners(
                 query,
@@ -2071,7 +2072,6 @@ class CymatixContextManager:
                 use_cymatics=True,
                 use_harmonic_bin=True,
                 use_tcm=True,
-                allow_rerank=True,
                 query_scores=query_scores,
             )
 
@@ -3138,7 +3138,6 @@ class CymatixContextManager:
         use_cymatics: bool = True,
         use_harmonic_bin: bool = True,
         use_tcm: bool = True,
-        allow_rerank: bool = True,
         query_scores: Optional[Dict[str, float]] = None,
     ) -> Tuple[List[Gene], Dict[str, Dict[str, float]]]:
         """Apply post-retrieve candidate refiners before assembly or fingerprinting.
@@ -3163,9 +3162,6 @@ class CymatixContextManager:
             use_cymatics=use_cymatics,
             use_harmonic_bin=use_harmonic_bin,
             use_tcm=use_tcm,
-            allow_rerank=allow_rerank,
-            rerank_enabled=self.config.ingestion.rerank_enabled,
-            ribosome=self.ribosome,
             tcm_session=self._tcm_session,
             ray_trace_theta=getattr(self.config.retrieval, "ray_trace_theta", False),
             theta_weight=self.config.retrieval.theta_weight,

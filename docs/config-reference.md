@@ -500,8 +500,7 @@ is governed by per-feature flags in this section.
 |---|---|---|---|
 | `backend` | `str` | `"cpu"` | "ollama" \| "cpu" \| "hybrid" |
 | `splade_enabled` | `bool` | `true` | Phase 2: SPLADE sparse expansion at index time |
-| `rerank_model` | `str` | `"cross-encoder/ms-marco-MiniLM-L-6-v2"` | Phase 3: pretrained cross-encoder HF model ID — inert while rerank_enabled=False. Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
-| `rerank_enabled` | `bool` | `false` | Phase 3: enable cross-encoder reranking |
+| `rerank_model` | `str` | `"cross-encoder/ms-marco-MiniLM-L-6-v2"` | legacy: feeds DeBERTaRibosome only; the retrieval cross-encoder reads [retrieval] rerank_model. Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
 | `colbert_enabled` | `bool` | `false` | Phase 4: ColBERT late interaction (optional) |
 | `entity_graph` | `bool` | `true` | Phase 5: entity-based co-activation links (ingest-time edges). Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
 | `dense_embed_on_ingest` | `bool` | `true` | Tier-0 PR-1 (2026-05-16): compute BGE-M3 dense vectors (genes.embedding_dense_v2) inline at ingest. Default true so a genome built by `cymatix ingest` / `/ingest` / context_manager.ingest is dense-populated without a separate backfill pass. Latency-sensitive callers can set false to defer encoding to scripts/backfill_bgem3_v2.py. This is purely the WRITE path — retrieval still gates on [retrieval] dense_embedding_enabled (default true). |
@@ -539,7 +538,6 @@ written by each path silently diverge for long passages.
 backend = "cpu"
 splade_enabled = true
 rerank_model = "cross-encoder/ms-marco-MiniLM-L-6-v2"
-rerank_enabled = false
 colbert_enabled = false
 entity_graph = true
 sema_embed_on_ingest = true
@@ -1579,8 +1577,7 @@ dashboard_path = "/dashboard"           # Appended to http://{host}:{port} for t
 [ingestion]
 backend = "cpu"                         # "ollama" (LLM, slow) | "cpu" (spaCy+regex, fast) | "hybrid"
 splade_enabled = true                   # Phase 2: SPLADE sparse expansion at index time
-rerank_model = "cross-encoder/ms-marco-MiniLM-L-6-v2"
-rerank_enabled = false                  # Phase 3: enable pretrained cross-encoder reranking
+rerank_model = "cross-encoder/ms-marco-MiniLM-L-6-v2"  # legacy: feeds DeBERTaRibosome only
 colbert_enabled = false                 # Phase 4: ColBERT late interaction (optional)
 entity_graph = true                     # Phase 5: entity-based co-activation links
 dense_passage_char_cap = 2000           # #207 dense fast-follow (2026-07-10): BGE-M3 passage char cap; must match [retrieval] dense_model's codec on all 3 encode paths

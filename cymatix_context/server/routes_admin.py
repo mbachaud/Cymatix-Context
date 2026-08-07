@@ -280,7 +280,6 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
                 use_cymatics=use_cymatics,
                 use_harmonic_bin=use_harmonic_bin,
                 use_tcm=use_tcm,
-                allow_rerank=(profile == "quality"),
             )
         except Exception:
             log.error("/debug/preview failed", exc_info=True)

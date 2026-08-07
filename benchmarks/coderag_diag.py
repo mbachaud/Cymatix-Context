@@ -144,7 +144,7 @@ def cymatix_scores(cymatix, query, n_corpus):
     )
     cands, _ = cymatix._apply_candidate_refiners(
         query, cands, n_corpus,
-        use_cymatics=False, use_harmonic_bin=False, use_tcm=True, allow_rerank=False,
+        use_cymatics=False, use_harmonic_bin=False, use_tcm=True,
     )
     raw = dict(getattr(cymatix.genome, "last_query_scores", None) or {})
     best = {}

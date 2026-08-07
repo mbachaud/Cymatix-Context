@@ -99,8 +99,7 @@ def rank_cymatix(cymatix, query, n_cands):
     cands = cymatix._retrieve(dom, ent, 400, query_text=query, include_cold=None,
                             party_id="default", use_harmonic=False, use_sr=False)
     cands, _ = cymatix._apply_candidate_refiners(query, cands, 400, use_cymatics=False,
-                                               use_harmonic_bin=False, use_tcm=True,
-                                               allow_rerank=False)
+                                               use_harmonic_bin=False, use_tcm=True)
     base_scores = dict(cymatix.genome.last_query_scores or {})
     best = {}
     for g in cands:

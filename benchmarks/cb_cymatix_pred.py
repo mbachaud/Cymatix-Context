@@ -198,7 +198,7 @@ def run_fingerprint(cymatix, q, max_results=400):
                             party_id="default", use_harmonic=False, use_sr=False)
     cands, contrib = cymatix._apply_candidate_refiners(
         q, cands, max_results, use_cymatics=False, use_harmonic_bin=False,
-        use_tcm=True, allow_rerank=False)
+        use_tcm=True)
     scores = dict(cymatix.genome.last_query_scores or {})
     ranked = sorted(cands, key=lambda g: scores.get(g.gene_id, 0.0), reverse=True)
     return ranked

@@ -162,9 +162,6 @@ def apply_candidate_refiners(
     use_cymatics: bool = True,
     use_harmonic_bin: bool = True,
     use_tcm: bool = True,
-    allow_rerank: bool = True,
-    rerank_enabled: bool = False,
-    ribosome: object = None,
     tcm_session: Optional[TCMSession] = None,
     ray_trace_theta: bool = False,
     theta_weight: float = 1.0,
@@ -241,19 +238,14 @@ def apply_candidate_refiners(
             log.debug("Cymatics blend failed", exc_info=True)
 
     if len(candidates) > max_genes:
-        if (
-            allow_rerank
-            and rerank_enabled
-            and ribosome is not None
-            and hasattr(ribosome, "rerank")
-        ):
-            try:
-                candidates = ribosome.rerank(query, candidates, k=max_genes)
-            except Exception:
-                log.warning("Re-rank failed, falling back to retrieval order", exc_info=True)
-                candidates = candidates[:max_genes]
-        else:
-            candidates = candidates[:max_genes]
+        # Issue #341 Task 7: the post-cap rerank branch that used to live
+        # here (an attribute-presence check on the ribosome object) was
+        # dead code -- it never matched DeBERTaRibosome (which only
+        # defines re_rank) and misrouted to the LLM Compressor.rerank for
+        # ollama/litellm backends. The cross-encoder now runs pre-cap
+        # inside the store (KnowledgeStore.query_docs / query_docs_ann,
+        # see scoring/rerank_combinators.py); this is a plain truncation.
+        candidates = candidates[:max_genes]
 
     if use_harmonic_bin and len(candidates) >= 3 and not _off:
         try:

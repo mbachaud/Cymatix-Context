@@ -277,8 +277,7 @@ class IngestionConfig:
     # the size-aware auto-disable knob below covers the enterprise cliff.
     # Soft-fails to a no-op when torch/transformers are absent.
     splade_enabled: bool = True     # Phase 2: SPLADE sparse expansion at index time
-    rerank_model: str = DEFAULT_RERANK_MODEL  # Phase 3: pretrained cross-encoder HF model ID — inert while rerank_enabled=False. Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass)
-    rerank_enabled: bool = False    # Phase 3: enable cross-encoder reranking
+    rerank_model: str = DEFAULT_RERANK_MODEL  # legacy: feeds DeBERTaRibosome only; the retrieval cross-encoder reads [retrieval] rerank_model. Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass)
     colbert_enabled: bool = False   # Phase 4: ColBERT late interaction (optional)
     entity_graph: bool = True       # Phase 5: entity-based co-activation links (ingest-time edges). Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass)
     # Tier-0 PR-1 (2026-05-16): compute BGE-M3 dense vectors
@@ -1385,7 +1384,6 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             backend=i.get("backend", cfg.ingestion.backend),
             splade_enabled=i.get("splade_enabled", cfg.ingestion.splade_enabled),
             rerank_model=i.get("rerank_model", cfg.ingestion.rerank_model),
-            rerank_enabled=i.get("rerank_enabled", cfg.ingestion.rerank_enabled),
             colbert_enabled=i.get("colbert_enabled", cfg.ingestion.colbert_enabled),
             entity_graph=i.get("entity_graph", cfg.ingestion.entity_graph),
             dense_embed_on_ingest=i.get(

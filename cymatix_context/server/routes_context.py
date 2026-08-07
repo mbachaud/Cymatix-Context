@@ -797,7 +797,6 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
                 use_cymatics=use_cymatics,
                 use_harmonic_bin=use_harmonic_bin,
                 use_tcm=use_tcm,
-                allow_rerank=(profile == "quality"),
             )
         except Exception as exc:
             log.warning("/fingerprint failed: %s", exc, exc_info=True)

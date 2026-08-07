@@ -256,8 +256,8 @@ route_upstream = false
 [ingestion]
 backend = "cpu"                         # "ollama" (LLM, slow) | "cpu" (spaCy+regex, fast) | "hybrid"
 splade_enabled = true                   # Phase 2: SPLADE sparse expansion at index time
+# legacy: feeds DeBERTaRibosome only; the retrieval cross-encoder reads [retrieval] rerank_model
 rerank_model = "cross-encoder/ms-marco-MiniLM-L-6-v2"
-rerank_enabled = false                  # Phase 3: enable pretrained cross-encoder reranking
 colbert_enabled = false                 # Phase 4: ColBERT late interaction (optional)
 entity_graph = true                     # Phase 5: entity-based co-activation links
 sema_embed_on_ingest = true             # #227: false = skip MiniLM SEMA at ingest (multi-worker bench OOM guard); TCM falls back to text

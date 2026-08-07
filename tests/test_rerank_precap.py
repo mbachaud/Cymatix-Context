@@ -692,3 +692,24 @@ def test_manager_dense_off_path_passes_query_text_into_query_docs(monkeypatch, s
     finally:
         mgr.close()
     assert seen["query_text"] == "what is the capital of France"
+
+
+# ═══ 9. Task 7 — dead blend rerank branch deleted ════════════════════════
+#
+# Tasks 5-6 landed the pre-cap cross-encoder seam inside KnowledgeStore
+# (sections 1-8 above). This left the OLD post-cap rerank branch in
+# ``scoring/blend.py::apply_candidate_refiners`` dead: it was gated on
+# ``hasattr(ribosome, "rerank")``, which ``DeBERTaRibosome`` never satisfies
+# (it only defines ``re_rank``) and which misroutes to the LLM
+# ``Compressor.rerank`` for ollama/litellm backends. Task 7 deletes that
+# branch and the ``allow_rerank``/``rerank_enabled``/``ribosome`` params.
+
+
+def test_blend_cap_is_unconditional_truncation():
+    import inspect
+    from cymatix_context.scoring.blend import apply_candidate_refiners
+    sig = inspect.signature(apply_candidate_refiners)
+    for gone in ("allow_rerank", "rerank_enabled", "ribosome"):
+        assert gone not in sig.parameters
+    src = inspect.getsource(apply_candidate_refiners)
+    assert 'hasattr' not in src.split("def ", 1)[-1] or "rerank" not in src
