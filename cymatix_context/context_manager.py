@@ -1010,6 +1010,14 @@ class CymatixContextManager:
             rerank_combinator=config.retrieval.rerank_combinator,
             rerank_band_delta=config.retrieval.rerank_band_delta,
             rerank_tier_weight=config.retrieval.rerank_tier_weight,
+            # Issue #341 (Task 6): query-time cross-encoder rerank seam.
+            # Fanned to the solo Genome AND every per-shard Genome via
+            # open_read_source. Default rerank_enabled=False reproduces the
+            # pre-#341 pipeline byte-for-byte. rerank_scorer is deliberately
+            # NOT threaded here — it is a DI seam for tests only.
+            rerank_enabled=config.retrieval.rerank_enabled,
+            rerank_depth=config.retrieval.rerank_depth,
+            rerank_model=config.retrieval.rerank_model,
             fts5_weight=config.retrieval.fts5_weight,
             splade_weight=config.retrieval.splade_weight,
             tag_exact_weight=config.retrieval.tag_exact_weight,
@@ -1912,9 +1920,23 @@ class CymatixContextManager:
         # => the store keeps its global rerank_combinator, so the default path
         # is byte-identical. Resolved once for the whole turn from the primary
         # query's class and threaded to every sub-query's retrieval below.
-        from .retrieval.rerank_combinators import resolve_class_combinator
+        from .retrieval.rerank_combinators import (
+            resolve_class_combinator, resolve_class_flag,
+        )
         _combinator_override = resolve_class_combinator(
             self.config.retrieval.rerank_combinator_by_class,
+            classifier_result.cls if classifier_result is not None else None,
+        )
+
+        # Issue #341 (Task 6): resolve a per-query cross-encoder rerank
+        # override from the same stage-0 classifier class. Empty map (the
+        # default) or a disabled classifier (classifier_result is None) =>
+        # None => the store keeps its global rerank_enabled, so the default
+        # path is byte-identical. Resolved once for the whole turn and
+        # threaded to every sub-query's retrieval below, same as the
+        # combinator override above.
+        _rerank_override = resolve_class_flag(
+            self.config.retrieval.rerank_enabled_by_class,
             classifier_result.cls if classifier_result is not None else None,
         )
 
@@ -1948,6 +1970,7 @@ class CymatixContextManager:
                     party_id=party_id, read_only=read_only,
                     query_type=query_type,
                     rerank_combinator=_combinator_override,
+                    rerank_override=_rerank_override,
                 )
                 with self.genome._last_query_scores_lock:
                     query_scores: Dict[str, float] = dict(
@@ -1968,6 +1991,7 @@ class CymatixContextManager:
                         party_id=party_id, read_only=read_only,
                         query_type=query_type,
                         rerank_combinator=_combinator_override,
+                        rerank_override=_rerank_override,
                     )
                     with self.genome._last_query_scores_lock:
                         scores = dict(self.genome.last_query_scores or {})
@@ -2898,6 +2922,7 @@ class CymatixContextManager:
         read_only: bool = False,
         query_type: Optional[str] = None,
         rerank_combinator: Optional[str] = None,
+        rerank_override: Optional[bool] = None,
     ) -> List[Gene]:
         """Query knowledge store + pending buffer for matching documents.
 
@@ -2909,6 +2934,17 @@ class CymatixContextManager:
         dense-on default path) and the plain ``query_docs`` branch; on the
         sharded ``query_docs`` path it rides through to each shard's own
         combinator via the router's verbatim ``**kwargs`` fan-out.
+
+        ``rerank_override`` (issue #341, Task 6): the per-query cross-encoder
+        rerank on/off override resolved from the same stage-0 classifier
+        class via ``resolve_class_flag`` / ``[retrieval] rerank_enabled_by_class``.
+        ``None`` leaves the store on its global ``rerank_enabled`` — the
+        byte-identical default. Forwarded to the dense-ANN branch as
+        ``query_docs_ann(..., rerank_override=...)`` and to the plain
+        ``query_docs`` branch as ``query_docs(..., query_text=query_text,
+        rerank_override=...)`` — ``query_text`` must accompany it there since
+        Task 5's lex-path rerank seam only fires when ``query_text`` is
+        supplied.
 
         ``query_type`` (semantic-wiring arm, PRD 2026-06-02) is forwarded to the
         sharded ``query_docs`` path so the router can broaden routing and the
@@ -2958,6 +2994,7 @@ class CymatixContextManager:
                     use_entity_graph=self.genome._entity_graph_retrieval_enabled,
                     read_only=read_only,
                     rerank_combinator=rerank_combinator,
+                    rerank_override=rerank_override,
                 )
             else:
                 candidates = self.genome.query_docs(
@@ -2971,6 +3008,8 @@ class CymatixContextManager:
                     read_only=read_only,
                     query_type=query_type,
                     rerank_combinator=rerank_combinator,
+                    query_text=query_text,
+                    rerank_override=rerank_override,
                 )
         except PromoterMismatch:
             pass

@@ -335,6 +335,42 @@ def test_lex_path_rerank_via_query_text(lex_store_with_pool):
     assert _MARKER in rr[0].content
 
 
+def test_lex_path_rerank_survives_splade_tier_shadowing(monkeypatch):
+    """Regression (Task 6 self-review, issue #341): the SPLADE tier used to
+    reassign a LOCAL variable also named ``query_text`` (``query_text = "
+    ".join(query_terms)`` for its own sparse encode), silently clobbering the
+    function parameter before the cross-encoder rerank seam read it a few
+    hundred lines later — so with SPLADE enabled (the shipped
+    ``[ingestion] splade_enabled`` default), the reranker scored against a
+    keyword bag (e.g. ``"topic"``) instead of the caller's actual question.
+    Pins that the raw ``query_text`` now survives SPLADE running in the same
+    call. ``splade_backend.encode``/``query_splade`` are monkeypatched to
+    cheap fakes so this test loads no real model (file contract)."""
+    from cymatix_context.backends import splade_backend
+
+    monkeypatch.setattr(splade_backend, "encode", lambda text, **kw: {})
+    monkeypatch.setattr(
+        splade_backend, "query_splade",
+        lambda conn, sparse, limit=20, **kw: [],
+    )
+
+    g = Genome(path=":memory:", dense_embedding_enabled=False,
+               splade_enabled=True, fusion_mode="rrf")
+    try:
+        _build_pool(g)
+        seen = {}
+
+        def spy_scorer(query, texts):
+            seen["query"] = query
+            return [1.0 if _MARKER in t else 0.01 for t in texts]
+
+        g._rerank_enabled, g._rerank_scorer = True, spy_scorer
+        g.query_docs(["topic"], [], max_genes=12, query_text="query text")
+    finally:
+        g.close()
+    assert seen["query"] == "query text"       # not "topic" (the keyword bag)
+
+
 def test_lex_path_rerank_widens_pool_but_preserves_count(lex_store_with_pool):
     """The marker sits outside the pre-seam cut; widening lets it in.
 
@@ -489,3 +525,170 @@ def test_rerank_backend_import_is_lazy():
         ln for ln in module_src.splitlines() if ln.startswith(("import ", "from "))
     ]
     assert not [ln for ln in top_level if "rerank_backend" in ln or "torch" in ln]
+
+
+# ═══ 8. Manager threading (config -> store, per-class override, query_text) ══
+#
+# Issue #341 Task 6. Mirrors ``_seeded_manager`` / ``_spy_combinator`` in
+# ``test_classifier_gated_combinator.py`` (:375 / :411) for the sibling knob:
+# ``[retrieval] rerank_enabled`` / ``rerank_depth`` / ``rerank_model`` thread
+# manager -> store construction, and ``resolve_class_flag`` (rerank_combinators.py)
+# resolves a per-turn ``rerank_override`` from the stage-0 classifier class,
+# threaded through ``_retrieve`` into ``query_docs_ann`` / ``query_docs``. The
+# dense-off ``query_docs`` branch additionally must pass ``query_text=<the raw
+# query>`` so Task 5's lex-path rerank seam can fire at all.
+
+
+def _seeded_manager_cls_gated(
+    rerank_map: dict,
+    rerank_enabled: bool = False,
+    classifier_enabled: bool = True,
+    dense_embedding_enabled: bool = True,
+):
+    """A mock-backend, in-memory-genome manager seeded so ``build_context``
+    reaches retrieval, with ``[retrieval] rerank_enabled_by_class`` /
+    ``rerank_enabled`` set for THIS test. Adapted from ``_seeded_manager`` in
+    ``test_classifier_gated_combinator.py:375`` (same corpus + classifier
+    setup). ``dense_embedding_enabled`` defaults True (the shipped default) so
+    the ANN path (``query_docs_ann``) is exercised by default; a test that
+    wants the plain lex ``query_docs`` seam instead forces it False, same as
+    the classifier-gated-combinator manager fixture does unconditionally.
+    """
+    from cymatix_context.config import (
+        BudgetConfig, ClassifierConfig, GenomeConfig, CymatixConfig,
+        RetrievalConfig, RibosomeConfig,
+    )
+    from cymatix_context.context_manager import CymatixContextManager
+    from tests.conftest import MockCompressorBackend, make_gene
+
+    cfg = CymatixConfig(
+        ribosome=RibosomeConfig(model="mock", timeout=5),
+        budget=BudgetConfig(max_genes_per_turn=4, splice_aggressiveness=0.5),
+        genome=GenomeConfig(path=":memory:", cold_start_threshold=5),
+        classifier=ClassifierConfig(enabled=classifier_enabled),
+        retrieval=RetrievalConfig(
+            fusion_mode="rrf",
+            dense_embedding_enabled=dense_embedding_enabled,
+            rerank_enabled_by_class=rerank_map,
+            rerank_enabled=rerank_enabled,
+        ),
+    )
+    mgr = CymatixContextManager(cfg)
+    mgr.ribosome.backend = MockCompressorBackend()
+    for i, (content, doms, ents) in enumerate([
+        ("what is the auth middleware path in the server module",
+         ["auth", "server"], ["middleware", "auth", "path"]),
+        ("auth middleware lives in server routes and handlers",
+         ["auth", "server"], ["middleware", "routes"]),
+        ("hello there general notes about greetings",
+         ["greeting"], ["hello"]),
+        ("more hello there phrasing examples",
+         ["greeting"], ["hello"]),
+    ]):
+        mgr.genome.upsert_gene(
+            make_gene(content, domains=doms, entities=ents,
+                      gene_id=f"seed_gene_{i:010d}"),
+        )
+    return mgr
+
+
+@pytest.fixture
+def seeded_manager_cls_gated():
+    return _seeded_manager_cls_gated
+
+
+def test_manager_config_threads_rerank_knobs_into_store(seeded_manager_cls_gated):
+    """Config -> store: [retrieval] rerank_enabled/rerank_depth/rerank_model
+    reach the constructed store verbatim (the ``open_read_source`` kwarg fan)."""
+    mgr = seeded_manager_cls_gated(rerank_map={}, rerank_enabled=True)
+    try:
+        assert mgr.genome._rerank_enabled is True
+        assert mgr.genome._rerank_depth == mgr.config.retrieval.rerank_depth
+        assert mgr.genome._rerank_model == mgr.config.retrieval.rerank_model
+    finally:
+        mgr.close()
+
+
+def test_manager_threads_per_class_rerank_override(monkeypatch, seeded_manager_cls_gated):
+    """A wh-question classes ``factual``; the map routes factual -> True, and
+    the override reaches ``query_docs_ann`` as ``rerank_override`` even
+    though the store's own global ``rerank_enabled`` is False."""
+    mgr = seeded_manager_cls_gated(rerank_map={"factual": True}, rerank_enabled=False)
+    seen = {}
+    real = mgr.genome.query_docs_ann
+
+    def spy(*a, **kw):
+        seen["override"] = kw.get("rerank_override")
+        return real(*a, **kw)
+
+    monkeypatch.setattr(mgr.genome, "query_docs_ann", spy)
+    try:
+        mgr.build_context("what is the capital of France", read_only=True)   # classifies factual
+    finally:
+        mgr.close()
+    assert seen["override"] is True
+
+
+def test_manager_unmapped_class_falls_back_to_global_rerank_flag(monkeypatch, seeded_manager_cls_gated):
+    """``hello there`` classes ``default``, which the map does not cover, so
+    the resolved override is None -> the store keeps its own global
+    ``rerank_enabled`` (byte-identical fallback, mirrors the combinator's
+    unmapped-class behavior)."""
+    mgr = seeded_manager_cls_gated(rerank_map={"factual": True}, rerank_enabled=False)
+    seen = {}
+    real = mgr.genome.query_docs_ann
+
+    def spy(*a, **kw):
+        seen["override"] = kw.get("rerank_override")
+        return real(*a, **kw)
+
+    monkeypatch.setattr(mgr.genome, "query_docs_ann", spy)
+    try:
+        mgr.build_context("hello there", read_only=True)
+    finally:
+        mgr.close()
+    assert seen["override"] is None
+
+
+def test_manager_classifier_disabled_falls_back_to_global_rerank_flag(monkeypatch, seeded_manager_cls_gated):
+    """Classifier disabled => classifier_result is None => resolve_class_flag
+    resolves None regardless of the map, so every call sees no override."""
+    mgr = seeded_manager_cls_gated(
+        rerank_map={"factual": True}, rerank_enabled=False, classifier_enabled=False,
+    )
+    seen = {}
+    real = mgr.genome.query_docs_ann
+
+    def spy(*a, **kw):
+        seen["override"] = kw.get("rerank_override")
+        return real(*a, **kw)
+
+    monkeypatch.setattr(mgr.genome, "query_docs_ann", spy)
+    try:
+        mgr.build_context("what is the capital of France", read_only=True)
+    finally:
+        mgr.close()
+    assert seen["override"] is None
+
+
+def test_manager_dense_off_path_passes_query_text_into_query_docs(monkeypatch, seeded_manager_cls_gated):
+    """The dense-off branch of ``_retrieve`` must pass ``query_text=<the raw
+    query>`` into ``query_docs`` — Task 5's lex-path rerank seam only fires
+    when ``query_text`` is supplied, so withholding it would silently keep
+    the seam inert even with rerank enabled."""
+    mgr = seeded_manager_cls_gated(
+        rerank_map={}, rerank_enabled=False, dense_embedding_enabled=False,
+    )
+    seen = {}
+    real = mgr.genome.query_docs
+
+    def spy(*a, **kw):
+        seen["query_text"] = kw.get("query_text")
+        return real(*a, **kw)
+
+    monkeypatch.setattr(mgr.genome, "query_docs", spy)
+    try:
+        mgr.build_context("what is the capital of France", read_only=True)
+    finally:
+        mgr.close()
+    assert seen["query_text"] == "what is the capital of France"

@@ -2987,8 +2987,17 @@ class KnowledgeStore:
                     "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='splade_terms'"
                 ).fetchone()[0]
                 if has_table:
-                    query_text = " ".join(query_terms)
-                    query_sparse = splade_backend.encode(query_text)
+                    # Issue #341 fix: a LOCAL keyword-bag string for SPLADE's
+                    # own sparse encoder — deliberately NOT named ``query_text``,
+                    # which is the function PARAMETER the cross-encoder rerank
+                    # seam reads (~:3695). Reusing that name here used to
+                    # silently overwrite the caller's raw query with
+                    # ``" ".join(query_terms)`` whenever SPLADE ran (the
+                    # shipped default), defeating the "raw question, not the
+                    # expanded keyword bag" contract documented on the
+                    # ``query_text`` parameter above.
+                    _splade_query_text = " ".join(query_terms)
+                    query_sparse = splade_backend.encode(_splade_query_text)
                     splade_hits = splade_backend.query_splade(
                         self.read_conn, query_sparse, limit=limit * 2,
                         max_df_fraction=self._splade_df_cap_fraction,
@@ -3066,8 +3075,12 @@ class KnowledgeStore:
                     self._build_sema_cache()
 
                 if not self._sema_vectorless:
-                    query_text = " ".join(query_terms)
-                    query_vec = self._sema_codec.encode(query_text)
+                    # Issue #341 fix: same shadowing hazard as the SPLADE tier
+                    # above — a local keyword-bag string for ΣĒMA's own dense
+                    # encode, kept out of the ``query_text`` parameter name so
+                    # it can't clobber the raw query the rerank seam reads.
+                    _sema_query_text = " ".join(query_terms)
+                    query_vec = self._sema_codec.encode(_sema_query_text)
                     top_score = max(gene_scores.values()) if gene_scores else 0
 
                     # Mode A: Boost existing candidates when confidence is weak
