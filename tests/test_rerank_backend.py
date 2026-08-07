@@ -12,6 +12,7 @@ real instead of being mocked away.
 """
 from __future__ import annotations
 
+import math
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -104,6 +105,13 @@ def test_scores_preserve_negative_logit_ordering(monkeypatch):
     monkeypatch.setattr(rerank_backend, "_recommended_batch", lambda: 16)
     s = rerank_backend.score_pairs("q", ["a", "b", "c"])
     assert s[1] > s[0] > s[2]
+    # Ordering alone is invariant under ANY monotone transform (identity
+    # included), so it cannot tell sigmoid from a passthrough of the raw
+    # logits. Pin the transform itself: sigmoid maps R -> (0, 1) open, and
+    # -1.0 must land on exactly 1/(1+e).
+    assert all(0.0 < x < 1.0 for x in s), f"scores must be sigmoid probabilities: {s}"
+    assert s[1] == pytest.approx(1.0 / (1.0 + math.exp(1.0)))   # sigmoid(-1.0)
+    assert s[0] == pytest.approx(1.0 / (1.0 + math.exp(4.0)))   # sigmoid(-4.0)
 
 
 def test_loader_uses_rerank_layer_device_and_records_model_load(monkeypatch):
@@ -119,16 +127,20 @@ def test_loader_uses_rerank_layer_device_and_records_model_load(monkeypatch):
     # Import happens inside _get_scorer as `from cymatix_context.telemetry import
     # record_model_load`, so we monkeypatch the source module attribute, not a
     # rerank_backend attribute.
+    # `seconds < 1` is the unit assertion: the model load is fully mocked
+    # (from_pretrained is patched), so the real elapsed value is sub-millisecond
+    # and a *1000 unit regression would push it past 1. A looser bound (e.g.
+    # < 100) would swallow that regression on a mocked load.
     monkeypatch.setattr(
         "cymatix_context.telemetry.record_model_load",
-        lambda name, seconds: recorded.append((name, seconds < 100)),
+        lambda name, seconds: recorded.append((name, seconds < 1)),
     )
     transformers = pytest.importorskip("transformers")
     with patch.object(transformers.AutoTokenizer, "from_pretrained", return_value=MagicMock()), \
          patch.object(transformers.AutoModelForSequenceClassification, "from_pretrained", return_value=MagicMock()):
         rerank_backend._get_scorer()
     assert seen["layer"] == "rerank"
-    assert recorded == [("rerank", True)]   # sane-seconds check catches a ms-unit regression
+    assert recorded == [("rerank", True)]   # seconds, not milliseconds (see the bound above)
 
 
 # ── remote branch (#341 Task 9): parity with splade_backend._remote_sparse ──

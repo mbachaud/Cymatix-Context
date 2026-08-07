@@ -4289,8 +4289,14 @@ class KnowledgeStore:
         # ── 5b. Issue #341: pre-cap cross-encoder rerank. ────────────────
         # The gate decides HOW MANY documents survive; with this on, the
         # cross-encoder decides WHICH. len(kept_ids) is pinned to
-        # len(gate_ids), so the delivered count — and the splice cliff that
-        # rides on it — is identical to the rerank-off arm.
+        # n_deliverable (see the comment above for why that, and not
+        # len(gate_ids)), so THIS FUNCTION returns the same number of
+        # documents on both arms. That invariance is scoped to this
+        # function's return length and nothing further: membership changes
+        # propagate to the downstream budget/assembly cuts, which are
+        # score-dependent, so the count entering splice can and does differ
+        # between arms — see docs/benchmarks/2026-08-07-rerank-wiring-receipts.md
+        # Finding 2.
         if self._rerank_effective(rerank_override) and scored:
             _xenc_t0 = time.monotonic()
             depth = min(self._rerank_depth, len(scored))
@@ -4298,7 +4304,7 @@ class KnowledgeStore:
             # (#214 floor rescues land there). The cross-encoder therefore
             # JUDGES rescued documents rather than blindly evicting them, and
             # cand_ids is always a superset of gate_ids — which is what makes
-            # the [:len(gate_ids)] cut below exact.
+            # the [:n_deliverable] cut below exact.
             head_ids = [doc.gene_id for doc, _ in scored[:depth]]
             cand_ids = head_ids + [g for g in gate_ids if g not in head_id_set]
             cand_docs = [by_id[g] for g in cand_ids if g in by_id]

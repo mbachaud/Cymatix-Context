@@ -770,15 +770,19 @@ class RetrievalConfig:
     doc_type_boost_mode: str = "additive"
 
     # ── Issue #341 — query-time cross-encoder rerank wiring ────────────
-    # Stage 3 of the 7-stage pipeline (CLAUDE.md): an optional CPU
+    # Stage 3 of the 7-stage pipeline (CLAUDE.md): an optional CPU/GPU
     # cross-encoder re-scores the retrieved candidate pool before splice.
-    # These four knobs are the seam only — default-inert (rerank_enabled
-    # False reproduces the pre-#341 pipeline byte-for-byte); the actual
-    # cross-encoder call is wired by the tasks that consume them.
+    # LIVE, not a seam stub: KnowledgeStore.query_docs_ann (pre-gate) and
+    # query_docs (post-fusion, dense-off profile) call it pre-cap and
+    # count-preserving — the store hands back the same number of documents
+    # on both arms, only the membership/order changes. Ships DEFAULT-OFF
+    # (rerank_enabled False reproduces the pre-#341 pipeline byte-for-byte);
+    # measured effect + cost live in
+    # docs/benchmarks/2026-08-07-rerank-wiring-receipts.md.
     rerank_enabled: bool = False            # Master switch; false = Stage 3 skipped entirely
     # Candidates fed through the cross-encoder before the pool is cut back
-    # to max_genes. Must be >= 1 (validated below) — rerank over zero
-    # candidates is a config error, not a silent no-op.
+    # to max_genes. Must be >= 1 (enforced in __post_init__) — rerank over
+    # zero candidates is a config error, not a silent no-op.
     rerank_depth: int = 50
     rerank_model: str = DEFAULT_RERANK_MODEL  # HF cross-encoder model ID — shares the literal with IngestionConfig.rerank_model above
     # Per-query-class override, same resolution contract as
@@ -786,7 +790,7 @@ class RetrievalConfig:
     # retrieval/rerank_combinators.py): an explicit class key wins, else
     # "default", else None (fall back to the global rerank_enabled).
     # Empty map (the default) is a no-op — every class uses the global
-    # flag. Validated at load below: unknown class key or non-bool value
+    # flag. Validated at load: an unknown class key or non-bool value
     # is a hard config error (fail loud at load, not silently at query time).
     rerank_enabled_by_class: Dict[str, bool] = field(default_factory=dict)
 

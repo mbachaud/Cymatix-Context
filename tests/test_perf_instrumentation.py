@@ -42,7 +42,7 @@ for _p in (_BENCH, _BENCH / "dogfood"):
 
 import cymatix_context.context_manager as cm_mod
 import cymatix_context.telemetry as telemetry_mod
-from cymatix_context.context_manager import _stage_timer, get_recent_pipeline_events
+from cymatix_context.context_manager import _stage_timer
 from cymatix_context.genome import Genome
 
 from tests.conftest import FakeBGEM3Codec, hash_vec, make_client, make_gene
@@ -803,9 +803,20 @@ def splice_ring_manager(tmp_path):
 
 def test_splice_ring_entry_records_candidate_count(splice_ring_manager):
     mgr = splice_ring_manager  # built per the fixture recipe above
+    # Mark-correlated drain, NOT a global scrape: a splice entry left in the
+    # process-wide ring by any earlier test would satisfy an isinstance/>=0
+    # assertion on its own, so the scrape form can pass while this call rings
+    # nothing at all. (That is exactly the leak #341's ladder had to fix with
+    # _resolve_splice_n_candidates.) A full deque rotates instead of growing,
+    # which would make a since-index mark miss every new entry — start empty.
+    cm_mod._pipeline_events.clear()
+    mark = 0
+
     mgr.build_context("what does the splice step do?", read_only=True)
-    events = [e for e in get_recent_pipeline_events(64) if e["stage"] == "splice"]
-    assert events, "splice stage must ring"
-    assert isinstance(events[-1]["n_candidates"], int)
-    assert events[-1]["n_candidates"] >= 0
+
+    events = [e for e in _ring_entries_since(mark) if e["stage"] == "splice"]
+    assert events, "splice stage must ring for THIS build_context call"
+    # The fixture seeds exactly two docs, both carrying the query's domains,
+    # and max_genes_per_turn=4 never binds — so splice sees both of them.
+    assert [e["n_candidates"] for e in events] == [2]
     assert isinstance(events[-1]["splice_target"], int)

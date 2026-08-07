@@ -243,8 +243,10 @@ def apply_candidate_refiners(
         # dead code -- it never matched DeBERTaRibosome (which only
         # defines re_rank) and misrouted to the LLM Compressor.rerank for
         # ollama/litellm backends. The cross-encoder now runs pre-cap
-        # inside the store (KnowledgeStore.query_docs / query_docs_ann,
-        # see scoring/rerank_combinators.py); this is a plain truncation.
+        # inside the store (the "5b" block in KnowledgeStore.query_docs_ann,
+        # mirrored in query_docs); the per-class flag resolution it uses is
+        # retrieval/rerank_combinators.resolve_class_flag. This is a plain
+        # truncation.
         candidates = candidates[:max_genes]
 
     if use_harmonic_bin and len(candidates) >= 3 and not _off:

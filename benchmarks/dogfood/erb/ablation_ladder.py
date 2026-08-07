@@ -1160,14 +1160,12 @@ def run_arm(
 
     hit_ranks = [r for r in first_ranks if r is not None]
     recall_val = recall_at_k(first_ranks, k)
-    # Per-needle records only exist on the receipt under --per-query, but the
-    # list is always built internally (records.append runs unconditionally
-    # above); reuse it when available, else fall back to the running
-    # delivered_gold_hits counter so the rate never depends on the flag.
-    if per_query:
-        delivered_rate = delivered_gold_rate(records)
-    else:
-        delivered_rate = (delivered_gold_hits / len(needles)) if needles else 0.0
+    # --per-query controls only whether `records` is EMITTED on the receipt;
+    # the list is always built (exactly one records.append per needle, on both
+    # the success and the error path above), so the rate never depends on the
+    # flag. delivered_gold_rate(records) == delivered_gold_hits/len(needles)
+    # by construction, including the empty case (both give 0.0).
+    delivered_rate = delivered_gold_rate(records)
     row: Dict[str, Any] = {
         "arm": arm.name,
         "knobs_changed": dict(arm.knobs),

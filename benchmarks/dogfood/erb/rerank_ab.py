@@ -67,6 +67,16 @@ meaningful per run, and it stops run 1's POSTs from being counted toward run
 divergence BETWEEN the two runs (one run silently encoding dense in-process)
 is visible in the verdict even though it does not trip the rerank floor.
 
+Known hole in this proof, stated plainly: it is a floor on POST COUNT, not a
+per-query guarantee. The ladder's ``xenc_rerank`` timing is published around
+the whole store-side rerank block, so it appears even on a query that fell
+back to the in-process scorer; and an access-log line is written for a POST
+that returned 500 as readily as one that returned 200. A *systematic* failure
+still cannot hide — the shared circuit breaker opens and the surviving POST
+count drops below ``n_queries + 1``, which REFUSES the run. So treat these
+gates as belt-and-braces against silent whole-run fallback, not as per-query
+evidence that every single pair was scored on the daemon.
+
 ────────────────────────────────────────────────────────────────────────
 Config preflight
 ────────────────────────────────────────────────────────────────────────

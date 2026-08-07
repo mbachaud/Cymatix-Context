@@ -58,8 +58,8 @@ def _remote_scores(
     url = encoder_client.active_url()
     if not url:
         return None
-    if not texts:
-        return []
+    # No empty-texts guard: score_pairs already returns [] before calling this,
+    # and this function's sole caller is score_pairs.
     if not encoder_client.should_attempt():
         return None
 
