@@ -42,7 +42,7 @@ for _p in (_BENCH, _BENCH / "dogfood"):
 
 import cymatix_context.context_manager as cm_mod
 import cymatix_context.telemetry as telemetry_mod
-from cymatix_context.context_manager import _stage_timer
+from cymatix_context.context_manager import _stage_timer, get_recent_pipeline_events
 from cymatix_context.genome import Genome
 
 from tests.conftest import FakeBGEM3Codec, hash_vec, make_client, make_gene
@@ -765,3 +765,47 @@ def test_context_turn_rings_new_stages():
     # The cwola entry must correlate to the same request as express.
     cwola = [e for e in entries if e["stage"] == "cwola"][-1]
     assert cwola["request_id"] == express["request_id"]
+
+
+# ── 9. splice stage rings n_candidates/splice_target (#341) ──────────
+
+
+@pytest.fixture
+def splice_ring_manager(tmp_path):
+    """Manager with two seeded docs whose domains match a splice query.
+
+    Mirrors ``test_concurrent_build_context_with_refiners``'s construction
+    (``make_cymatix_config`` + ``CymatixContextManager`` + a
+    ``MockCompressorBackend`` swapped onto ``mgr.ribosome.backend``) and
+    ``test_context_turn_rings_new_stages``'s explicit-domain seeding — the
+    test-env CPU tagger yields no tags, so seeding via ``mgr.ingest()``
+    would miss every tier.
+    """
+    from cymatix_context.config import BudgetConfig
+    from cymatix_context.context_manager import CymatixContextManager
+
+    from tests.conftest import MockCompressorBackend, make_cymatix_config
+
+    cfg = make_cymatix_config(budget=BudgetConfig(max_genes_per_turn=4))
+    cfg.genome.path = str(tmp_path / "g.db")
+    mgr = CymatixContextManager(cfg)
+    mgr.ribosome.backend = MockCompressorBackend()
+    for i in range(2):
+        mgr.genome.upsert_doc(make_gene(
+            f"splice pipeline compresses candidate fragments, variant {i}",
+            domains=["splice", "pipeline"], gene_id=f"splice-ring-{i}",
+        ), apply_gate=False)
+    try:
+        yield mgr
+    finally:
+        mgr.close()
+
+
+def test_splice_ring_entry_records_candidate_count(splice_ring_manager):
+    mgr = splice_ring_manager  # built per the fixture recipe above
+    mgr.build_context("what does the splice step do?", read_only=True)
+    events = [e for e in get_recent_pipeline_events(64) if e["stage"] == "splice"]
+    assert events, "splice stage must ring"
+    assert isinstance(events[-1]["n_candidates"], int)
+    assert events[-1]["n_candidates"] >= 0
+    assert isinstance(events[-1]["splice_target"], int)

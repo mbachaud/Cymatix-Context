@@ -436,6 +436,16 @@ def delivered_gold_rate(per_query: Sequence[Mapping[str, Any]]) -> float:
     return sum(r.get("delivered_gold", 0) for r in per_query) / len(per_query)
 
 
+def newest_splice_count(events: Sequence[Mapping[str, Any]]) -> Optional[int]:
+    """#341 splice-interaction receipt: the last splice-stage ring entry's
+    ``n_candidates``, or None when the splice stage never rang for *events*
+    (splice only runs when splice is active)."""
+    splice_events = [e for e in events if e.get("stage") == "splice"]
+    if not splice_events:
+        return None
+    return splice_events[-1].get("n_candidates")
+
+
 def percentile(values: Sequence[float], pct: float) -> Optional[float]:
     """Nearest-rank percentile (no interpolation). Empty -> None.
 
@@ -712,7 +722,11 @@ def run_arm(
     """
     from cymatix_context.backends import encoder_client
     from cymatix_context.config import load_config
-    from cymatix_context.context_manager import CymatixContextManager
+    from cymatix_context.context_manager import (
+        CymatixContextManager,
+        get_pipeline_ring_max,
+        get_recent_pipeline_events,
+    )
     from cymatix_context.scoring import cymatics as cymatics_mod
 
     cfg = load_config(config_path) if config_path else load_config()
@@ -795,6 +809,12 @@ def run_arm(
                         error=detail,
                     )
                     error_record.update(delivered_gold_fields([], set(gold)))
+                    # #341 splice-interaction receipt: still None on the usual
+                    # failure (splice never reached), but a build_context that
+                    # raises AFTER splice (e.g. assemble) leaves the entry
+                    # ringed — drain it the same way the success path does.
+                    ring_events = get_recent_pipeline_events(get_pipeline_ring_max())
+                    error_record["splice_n_candidates"] = newest_splice_count(ring_events)
                     records.append(error_record)
                     continue
                 wall_ms = (time.perf_counter() - t0) * 1000.0
@@ -822,6 +842,14 @@ def run_arm(
                     n_queries=len(needles), wall_ms=wall_ms, signal_ms=sig,
                 )
                 record.update(dg_fields)
+                # #341 splice-interaction receipt: the ring wraps at ~16
+                # queries (128 slots / ~8 stages per query), so it must be
+                # drained per query — the newest splice entry belongs to the
+                # build_context call just above (queries run serially here).
+                # None when splice never ran for this query (e.g. an arm
+                # that disables splice, or 0 candidates reached that stage).
+                ring_events = get_recent_pipeline_events(get_pipeline_ring_max())
+                record["splice_n_candidates"] = newest_splice_count(ring_events)
                 records.append(record)
 
                 contribs = getattr(manager.genome, "last_tier_contributions", None) or {}

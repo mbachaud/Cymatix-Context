@@ -45,3 +45,21 @@ def test_arm_level_delivered_gold_rate():
     recs = [{"delivered_gold": 1}, {"delivered_gold": 0}, {"delivered_gold": 1}]
     assert lad.delivered_gold_rate(recs) == 2 / 3
     assert lad.delivered_gold_rate([]) == 0.0
+
+
+def test_newest_splice_count_returns_last_splice_entry():
+    lad = _load_ladder()
+    events = [
+        {"stage": "express", "n_candidates": 99},
+        {"stage": "splice", "n_candidates": 3},
+        {"stage": "assemble"},
+        {"stage": "splice", "n_candidates": 5},
+    ]
+    assert lad.newest_splice_count(events) == 5
+
+
+def test_newest_splice_count_none_when_splice_never_ran():
+    lad = _load_ladder()
+    events = [{"stage": "express", "n_candidates": 99}, {"stage": "assemble"}]
+    assert lad.newest_splice_count(events) is None
+    assert lad.newest_splice_count([]) is None

@@ -2230,7 +2230,8 @@ class CymatixContextManager:
         # _stage_timer records the cymatix_pipeline_stage_seconds point
         # (replacing the former manual _splice_t0 record — exactly one
         # duration per stage), the span feeds the Tempo waterfall.
-        with _pipeline_stage_span("splice"), _stage_timer("splice"):
+        with _pipeline_stage_span("splice"), _stage_timer("splice", extra=lambda: {
+                "n_candidates": len(candidates), "splice_target": _splice_target}):
             for idx, g in enumerate(candidates):
                 src = g.source_id or ""
                 short = _shorten_source_path(

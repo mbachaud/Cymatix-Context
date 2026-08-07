@@ -427,7 +427,14 @@ def test_run_arm_emits_per_query_only_when_flag_is_set(monkeypatch, per_query):
             "M", (), {"load_config": staticmethod(lambda *a, **kw: _FakeCfg())},
         ),
         "cymatix_context.context_manager": type(
-            "M", (), {"CymatixContextManager": _FakeManager},
+            "M", (), {
+                "CymatixContextManager": _FakeManager,
+                # #341: run_arm also drains the pipeline ring for the splice
+                # candidate count — an empty ring is a legitimate "splice
+                # never rang" result (newest_splice_count -> None).
+                "get_pipeline_ring_max": staticmethod(lambda: 128),
+                "get_recent_pipeline_events": staticmethod(lambda *a, **kw: []),
+            },
         ),
         "cymatix_context.scoring.cymatics": type(
             "M", (), {"query_spectrum": staticmethod(lambda *a, **kw: None)},
