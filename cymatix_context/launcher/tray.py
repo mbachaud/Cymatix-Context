@@ -559,26 +559,24 @@ class CymatixTrayIcon:
         """Spawn the bundled install script as a fire-and-forget
         subprocess (Task 13 fix). Invoked when the user clicks
         "Install Observability..." from the install-pending submenu.
+        Windows runs the PowerShell installer; Linux/macOS run its bash
+        twin (#207 item 7 — this spawn used to be powershell.exe-only).
 
-        The install runs to completion in its own PowerShell process —
-        we never .wait() or .communicate() because that would freeze the
-        tray UI thread for the multi-minute download/extract pass. If
-        the user closes the tray before install completes, the spawned
-        subprocess keeps running.
+        The install runs to completion in its own process — we never
+        .wait() or .communicate() because that would freeze the tray UI
+        thread for the multi-minute download/extract pass. If the user
+        closes the tray before install completes, the spawned subprocess
+        keeps running.
         """
-        script_path = self._repo_root() / "scripts" / "install-native-observability.ps1"
-        cmd = [
-            "powershell.exe",
-            "-NoProfile",
-            "-ExecutionPolicy", "Bypass",
-            "-File", str(script_path),
-        ]
-        log.info("Tray: launching native-observability installer (%s)",
-                 script_path)
-        # Treat clicking Install as acknowledgment — stop the pulse so
-        # the user gets visual feedback even if the install takes a while.
-        self.stop_install_pulse()
-        try:
+        scripts_dir = self._repo_root() / "scripts"
+        if sys.platform == "win32":
+            script_path = scripts_dir / "install-native-observability.ps1"
+            cmd = [
+                "powershell.exe",
+                "-NoProfile",
+                "-ExecutionPolicy", "Bypass",
+                "-File", str(script_path),
+            ]
             # Fire-and-forget: no .wait/.communicate. creationflags=0
             # INTENTIONALLY shows the PowerShell console — the install
             # downloads ~400MB of binaries over 5-10 minutes, and a hidden
@@ -586,12 +584,32 @@ class CymatixTrayIcon:
             # Every other Popen in this module still uses CREATE_NO_WINDOW
             # (per global CLAUDE.md subprocess-safety); only the user-
             # facing install console gets visibility.
-            subprocess.Popen(cmd, creationflags=0)
+            popen_kwargs = {"creationflags": 0}
+        else:
+            script_path = scripts_dir / "install-native-observability.sh"
+            cmd = ["bash", str(script_path)]
+            popen_kwargs = {
+                "creationflags": getattr(subprocess, "CREATE_NO_WINDOW", 0),
+                "start_new_session": True,
+            }
+        log.info("Tray: launching native-observability installer (%s)",
+                 script_path)
+        # Treat clicking Install as acknowledgment — stop the pulse so
+        # the user gets visual feedback even if the install takes a while.
+        self.stop_install_pulse()
+        try:
+            subprocess.Popen(cmd, **popen_kwargs)
         except Exception:
             log.warning(
-                "Tray: failed to launch install-native-observability.ps1",
+                "Tray: failed to launch %s", script_path.name,
                 exc_info=True,
             )
+            return
+        if sys.platform != "win32":
+            # The .sh installer does not write the .install-complete
+            # sentinel (ps1-only contract) — nothing for the completion
+            # watcher to poll, so the user relaunches manually to pick
+            # up the new binaries.
             return
         # Spawn was successful — kick off the daemon watcher that polls
         # for the completion sentinel and triggers the auto-restart so
@@ -688,31 +706,44 @@ class CymatixTrayIcon:
 
     def _auto_restart_launcher(self) -> None:
         """Spawn a fresh tray launcher in a fully-detached process and
-        stop the current tray icon. The detach flags
-        (DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP) on Windows ensure
-        the new launcher survives even when the current process exits.
+        stop the current tray icon.
+
+        Windows relaunches via Start-cymatix-tray.bat (it carries the
+        canonical env setup) with DETACHED_PROCESS |
+        CREATE_NEW_PROCESS_GROUP so the new launcher survives the
+        current process exiting. Linux/macOS relaunch the module via
+        sys.executable with the current CLI args, detached via
+        start_new_session (#207 item 7 — this used to be .bat-only).
         """
         repo_root = self._repo_root()
-        bat_path = repo_root / "Start-cymatix-tray.bat"
-        if not bat_path.exists():
-            log.warning(
-                "Tray: auto-restart skipped — Start-cymatix-tray.bat not "
-                "found at %s. User must manually relaunch.",
-                bat_path,
-            )
-            return
-        # Windows detach flags. On non-Windows the named constants are
-        # still numerically valid (0x208) but Popen ignores them — the
-        # auto-restart path is Windows-only in practice (the .bat file is
-        # not portable), but keeping the constants module-level rather
-        # than os.name-gated keeps the code testable across platforms.
-        flags = DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP
+        if sys.platform == "win32":
+            bat_path = repo_root / "Start-cymatix-tray.bat"
+            if not bat_path.exists():
+                log.warning(
+                    "Tray: auto-restart skipped — Start-cymatix-tray.bat not "
+                    "found at %s. User must manually relaunch.",
+                    bat_path,
+                )
+                return
+            cmd = [str(bat_path)]
+            popen_kwargs = {
+                "creationflags": DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP,
+            }
+        else:
+            # Re-run the launcher module with the same CLI args this
+            # process was started with (--tray, --log-file, ports, ...).
+            cmd = [sys.executable, "-m", "cymatix_context.launcher.app",
+                   *sys.argv[1:]]
+            popen_kwargs = {
+                "creationflags": getattr(subprocess, "CREATE_NO_WINDOW", 0),
+                "start_new_session": True,
+            }
         try:
             subprocess.Popen(
-                [str(bat_path)],
-                creationflags=flags,
+                cmd,
                 cwd=str(repo_root),
                 close_fds=True,
+                **popen_kwargs,
             )
         except OSError:
             log.warning(

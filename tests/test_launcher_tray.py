@@ -408,14 +408,15 @@ class TestInstallPendingSubmenu:
         ), f"Install action missing from submenu: {sub_titles}"
 
     def test_install_action_invokes_powershell_visibly(
-        self, tmp_path,
+        self, tmp_path, monkeypatch,
     ):
-        """Clicking Install Observability spawns the bundled
+        """On Windows, clicking Install Observability spawns the bundled
         scripts/install-native-observability.ps1 via subprocess.Popen
         with creationflags=0 — the install console is intentionally
         VISIBLE so the user can see download progress during the
         ~5-10 minute install (UX gap fix). Fire-and-forget (no
         .wait/.communicate)."""
+        monkeypatch.setattr(tray_mod.sys, "platform", "win32")
         icon = _build_install_pending_tray(tmp_path)
         with patch(
             "cymatix_context.launcher.tray.subprocess.Popen"
@@ -445,11 +446,12 @@ class TestInstallPendingSubmenu:
         )
 
     def test_install_action_path_resolves_to_repo_script(
-        self, tmp_path,
+        self, tmp_path, monkeypatch,
     ):
         """The script path must be the repo-relative
         scripts/install-native-observability.ps1, computed from the
         tray.py module location (not cwd-dependent)."""
+        monkeypatch.setattr(tray_mod.sys, "platform", "win32")
         icon = _build_install_pending_tray(tmp_path)
         with patch(
             "cymatix_context.launcher.tray.subprocess.Popen"
@@ -549,6 +551,65 @@ class TestInstallPendingSubmenu:
         with patch(
             "cymatix_context.launcher.tray.subprocess.Popen",
             side_effect=OSError("powershell missing"),
+        ), patch("cymatix_context.launcher.tray.threading.Thread"):
+            # Should not raise
+            icon._run_install_observability(None, None)
+
+
+class TestInstallActionPosix:
+    """#207 item 7: the install spawn used to be powershell.exe-only.
+    On Linux/macOS the tray must run the bash twin
+    (scripts/install-native-observability.sh) instead."""
+
+    @pytest.mark.parametrize("platform", ["linux", "darwin"])
+    def test_install_action_spawns_sh_installer(
+        self, tmp_path, monkeypatch, platform,
+    ):
+        monkeypatch.setattr(tray_mod.sys, "platform", platform)
+        icon = _build_install_pending_tray(tmp_path)
+        with patch(
+            "cymatix_context.launcher.tray.subprocess.Popen"
+        ) as mock_popen, patch(
+            "cymatix_context.launcher.tray.threading.Thread"
+        ):
+            mock_popen.return_value = MagicMock()
+            icon._run_install_observability(None, None)
+        mock_popen.assert_called_once()
+        args, kwargs = mock_popen.call_args
+        cmd = args[0]
+        assert cmd[0] == "bash"
+        assert cmd[1].endswith("install-native-observability.sh")
+        # Detach from the tray process; CREATE_NO_WINDOW is 0 on posix
+        # so the getattr fallback keeps the call portable.
+        assert kwargs.get("start_new_session") is True
+        assert kwargs.get("creationflags", 0) == getattr(
+            tray_mod.subprocess, "CREATE_NO_WINDOW", 0
+        )
+
+    def test_install_action_posix_does_not_start_watcher(
+        self, tmp_path, monkeypatch,
+    ):
+        """The .sh installer never writes the .install-complete sentinel
+        (ps1-only contract), so there is nothing for the completion
+        watcher to poll — no watcher thread on posix."""
+        monkeypatch.setattr(tray_mod.sys, "platform", "linux")
+        icon = _build_install_pending_tray(tmp_path)
+        with patch(
+            "cymatix_context.launcher.tray.subprocess.Popen"
+        ), patch(
+            "cymatix_context.launcher.tray.threading.Thread"
+        ) as mock_thread:
+            icon._run_install_observability(None, None)
+        mock_thread.assert_not_called()
+
+    def test_install_action_posix_swallows_subprocess_errors(
+        self, tmp_path, monkeypatch,
+    ):
+        monkeypatch.setattr(tray_mod.sys, "platform", "linux")
+        icon = _build_install_pending_tray(tmp_path)
+        with patch(
+            "cymatix_context.launcher.tray.subprocess.Popen",
+            side_effect=OSError("bash missing"),
         ), patch("cymatix_context.launcher.tray.threading.Thread"):
             # Should not raise
             icon._run_install_observability(None, None)
@@ -790,8 +851,10 @@ class TestInstallCompletionWatcher:
     auto-restart path: balloon → remove sentinel → spawn fresh launcher
     detached → icon.stop()."""
 
-    def test_run_install_starts_watcher_thread(self, tmp_path):
-        """_run_install_observability must spawn a watcher daemon thread."""
+    def test_run_install_starts_watcher_thread(self, tmp_path, monkeypatch):
+        """_run_install_observability must spawn a watcher daemon thread
+        (Windows — the ps1 installer writes the sentinel)."""
+        monkeypatch.setattr(tray_mod.sys, "platform", "win32")
         icon = _build_install_pending_tray(tmp_path)
         with patch(
             "cymatix_context.launcher.tray.subprocess.Popen"
@@ -808,9 +871,10 @@ class TestInstallCompletionWatcher:
         target = kwargs.get("target")
         assert target == icon._install_completion_watcher
 
-    def test_watcher_does_not_start_if_spawn_fails(self, tmp_path):
+    def test_watcher_does_not_start_if_spawn_fails(self, tmp_path, monkeypatch):
         """If Popen raises (e.g. powershell missing), no watcher is
         scheduled — there's no install to wait for."""
+        monkeypatch.setattr(tray_mod.sys, "platform", "win32")
         icon = _build_install_pending_tray(tmp_path)
         with patch(
             "cymatix_context.launcher.tray.subprocess.Popen",
@@ -910,14 +974,15 @@ class TestInstallCompletionWatcher:
 
 
 class TestAutoRestart:
-    """The auto-restart path spawns Start-cymatix-tray.bat in a fully
-    detached process (DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP) so
-    the new tray survives the dying one, then calls icon.stop() to wind
+    """On Windows the auto-restart path spawns Start-cymatix-tray.bat in
+    a fully detached process (DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP)
+    so the new tray survives the dying one, then calls icon.stop() to wind
     down the current tray cleanly."""
 
     def test_auto_restart_spawns_detached_launcher_and_stops_icon(
-        self, tmp_path,
+        self, tmp_path, monkeypatch,
     ):
+        monkeypatch.setattr(tray_mod.sys, "platform", "win32")
         icon = _build_install_pending_tray(tmp_path)
         repo_root = tmp_path / "repo"
         repo_root.mkdir()
@@ -952,10 +1017,11 @@ class TestAutoRestart:
         # icon.stop() called after spawning the new launcher.
         icon._icon.stop.assert_called_once()
 
-    def test_auto_restart_skips_if_bat_missing(self, tmp_path):
+    def test_auto_restart_skips_if_bat_missing(self, tmp_path, monkeypatch):
         """If Start-cymatix-tray.bat doesn't exist, auto-restart logs a
         warning and skips — icon.stop is NOT called (don't kill the
         current tray when we can't bring up a replacement)."""
+        monkeypatch.setattr(tray_mod.sys, "platform", "win32")
         icon = _build_install_pending_tray(tmp_path)
         repo_root = tmp_path / "repo"
         repo_root.mkdir()
@@ -969,9 +1035,10 @@ class TestAutoRestart:
         mock_popen.assert_not_called()
         icon._icon.stop.assert_not_called()
 
-    def test_auto_restart_swallows_spawn_errors(self, tmp_path):
+    def test_auto_restart_swallows_spawn_errors(self, tmp_path, monkeypatch):
         """A failed Popen for the new launcher must not crash the
         watcher thread."""
+        monkeypatch.setattr(tray_mod.sys, "platform", "win32")
         icon = _build_install_pending_tray(tmp_path)
         repo_root = tmp_path / "repo"
         repo_root.mkdir()
@@ -987,6 +1054,61 @@ class TestAutoRestart:
             icon._auto_restart_launcher()
         # icon.stop is best-effort skipped when spawn fails — keep current
         # tray alive rather than dying with no replacement.
+        icon._icon.stop.assert_not_called()
+
+
+class TestAutoRestartPosix:
+    """#207 item 7: the auto-restart used to be .bat-only. On Linux/macOS
+    the tray relaunches itself via sys.executable -m
+    cymatix_context.launcher.app with the current CLI args, detached via
+    start_new_session so it survives the dying process."""
+
+    @pytest.mark.parametrize("platform", ["linux", "darwin"])
+    def test_auto_restart_relaunches_via_sys_executable(
+        self, tmp_path, monkeypatch, platform,
+    ):
+        monkeypatch.setattr(tray_mod.sys, "platform", platform)
+        monkeypatch.setattr(
+            tray_mod.sys, "argv", ["cymatix-launcher", "--tray", "--no-browser"],
+        )
+        icon = _build_install_pending_tray(tmp_path)
+        repo_root = tmp_path / "repo"
+        repo_root.mkdir()
+        # No .bat staged — the bat is a Windows-only concern.
+        icon._repo_root = lambda: repo_root  # type: ignore[method-assign]
+
+        with patch(
+            "cymatix_context.launcher.tray.subprocess.Popen"
+        ) as mock_popen:
+            icon._auto_restart_launcher()
+        mock_popen.assert_called_once()
+        args, kwargs = mock_popen.call_args
+        cmd = args[0]
+        assert cmd[:3] == [sys.executable, "-m", "cymatix_context.launcher.app"]
+        # The current CLI flags ride along so the relaunch matches the
+        # process it replaces.
+        assert cmd[3:] == ["--tray", "--no-browser"]
+        assert kwargs.get("start_new_session") is True
+        assert kwargs.get("close_fds") is True
+        from pathlib import Path
+        assert Path(str(kwargs.get("cwd"))) == repo_root
+        icon._icon.stop.assert_called_once()
+
+    def test_auto_restart_posix_swallows_spawn_errors(
+        self, tmp_path, monkeypatch,
+    ):
+        monkeypatch.setattr(tray_mod.sys, "platform", "linux")
+        icon = _build_install_pending_tray(tmp_path)
+        repo_root = tmp_path / "repo"
+        repo_root.mkdir()
+        icon._repo_root = lambda: repo_root  # type: ignore[method-assign]
+
+        with patch(
+            "cymatix_context.launcher.tray.subprocess.Popen",
+            side_effect=OSError("spawn failed"),
+        ):
+            # Should not raise.
+            icon._auto_restart_launcher()
         icon._icon.stop.assert_not_called()
 
 
