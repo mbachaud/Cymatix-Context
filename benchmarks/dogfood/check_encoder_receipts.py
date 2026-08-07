@@ -28,7 +28,13 @@ Kinds:
                        (same bar as limit) so the per-level shape — e.g. a
                        latency-bound c=1 sitting below the bar while c=8
                        saturates well above it — is still visible in the
-                       verdict JSON.
+                       verdict JSON. Rerank family (#341): a level's
+                       ``rerank_pairs_per_s``, when present, is surfaced as a
+                       plain NOTE (``notes[]``), never a gate entry — rerank
+                       errors already fold into the level's ``errors`` field
+                       (``encoder_daemon_capacity.aggregate_level``), so the
+                       binding ``errors_zero`` gate covers rerank failures
+                       with no checker change.
   server_scaling_ab  Two ``run_server_scaling.py`` receipts (fresh = daemon
                        on, baseline = daemon off), levels keyed by
                        ``concurrency``. Gates: c=1 ``median_latency_ms``
@@ -175,6 +181,14 @@ def check_encoder_capacity(receipt: dict, bar: float) -> Tuple[List[dict], List[
         else:
             gates.append(_gate("errors_zero", where, int(errors), 0,
                                int(errors) == 0, metric="count"))
+
+        # Rerank family (#341): informational NOTE only, never a gate — the
+        # fork's binding bar covers bundle throughput. Rerank errors already
+        # folded into `errors` above by encoder_daemon_capacity.aggregate_
+        # level, so errors_zero covers rerank failures with no gate here.
+        rerank_pairs_per_s = _num(lv, "rerank_pairs_per_s")
+        if rerank_pairs_per_s is not None:
+            notes.append(f"info: rerank_pairs_per_s at {where} = {rerank_pairs_per_s}")
 
     # The BINDING throughput gate: saturated (max-across-levels) bundles/s
     # vs the bar. A latency-bound c=1 sitting below the bar is expected and
