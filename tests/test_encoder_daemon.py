@@ -87,6 +87,29 @@ class CountingSplade:
         return {"sentinel": 9.99}
 
 
+def fake_rerank(query: str, texts, **kw) -> list:
+    """Stand-in for rerank_backend.score_pairs — constant score per text."""
+    return [0.5] * len(texts)
+
+
+class CountingRerank:
+    """fake_rerank + a call counter (cross-encoder closure parity proof)."""
+
+    def __init__(self, score: float = 0.75):
+        self.score = score
+        self.calls = 0
+        self.queries: list = []
+        self.texts: list = []
+        self.lock = threading.Lock()
+
+    def __call__(self, query: str, texts, **kw) -> list:
+        with self.lock:
+            self.calls += 1
+            self.queries.append(query)
+            self.texts.extend(texts)
+        return [self.score] * len(texts)
+
+
 class CountingSemaCodec:
     """20-dim SEMA stand-in with the LazySemaCodec-ish surface + counters."""
 
@@ -118,7 +141,7 @@ class CountingSemaCodec:
         return 384
 
 
-def make_registry(dense=None, splade=None, sema=None, **kw):
+def make_registry(dense=None, splade=None, sema=None, rerank=None, **kw):
     """An EncoderRegistry wired to fakes — the injected-registry test path."""
     from cymatix_context.encoder_daemon import EncoderRegistry
 
@@ -126,8 +149,10 @@ def make_registry(dense=None, splade=None, sema=None, **kw):
         dense_codec=dense if dense is not None else FakeBGEM3Codec(dim=8),
         splade_encode=splade if splade is not None else fake_splade,
         sema_codec=sema if sema is not None else CountingSemaCodec(),
+        rerank=rerank if rerank is not None else fake_rerank,
         dense_dim=kw.pop("dense_dim", 8),
         dense_model_name=kw.pop("dense_model_name", "fake-bge-m3"),
+        rerank_model_name=kw.pop("rerank_model_name", "fake-rerank-model"),
         **kw,
     )
 
@@ -181,25 +206,28 @@ def test_registry_sema_encode_one_delegates():
     assert sema.encode_calls == 1
 
 
-def test_registry_loaded_flags_true_when_all_three_present():
+def test_registry_loaded_flags_true_when_all_four_present():
     reg = make_registry()
-    assert reg.loaded == {"dense": True, "splade": True, "sema": True}
+    assert reg.loaded == {"dense": True, "splade": True, "sema": True, "rerank": True}
 
 
 def test_registry_loaded_flags_false_for_missing_families():
     from cymatix_context.encoder_daemon import EncoderRegistry
 
     reg = EncoderRegistry(dense_codec=FakeBGEM3Codec(dim=8))
-    assert reg.loaded == {"dense": True, "splade": False, "sema": False}
+    assert reg.loaded == {"dense": True, "splade": False, "sema": False, "rerank": False}
 
 
 def test_registry_warm_touches_every_model_once():
-    dense, splade, sema = FakeBGEM3Codec(dim=8), CountingSplade(), CountingSemaCodec()
-    reg = make_registry(dense=dense, splade=splade, sema=sema)
+    dense, splade, sema, rerank = (
+        FakeBGEM3Codec(dim=8), CountingSplade(), CountingSemaCodec(), CountingRerank(),
+    )
+    reg = make_registry(dense=dense, splade=splade, sema=sema, rerank=rerank)
     reg.warm()
     assert dense.batch_calls == 1
     assert splade.calls == 1
     assert sema.encode_calls == 1
+    assert rerank.calls == 1
 
 
 def test_registry_max_batch_defaults_are_the_daemon_defaults():
@@ -207,6 +235,24 @@ def test_registry_max_batch_defaults_are_the_daemon_defaults():
     assert reg.max_batch("dense") == 16
     assert reg.max_batch("splade") == 8
     assert reg.max_batch("sema") == 64
+    assert reg.max_batch("rerank") == 16
+
+
+def test_registry_rerank_score_batch_delegates_to_the_injected_callable():
+    rerank = CountingRerank(score=0.9)
+    reg = make_registry(rerank=rerank)
+    assert reg.rerank_score_batch("q", ["a", "b"]) == [0.9, 0.9]
+    assert rerank.calls == 1
+    assert rerank.queries == ["q"]
+    assert rerank.texts == ["a", "b"]
+
+
+def test_registry_rerank_score_one_is_a_single_pair_batch_of_one():
+    rerank = CountingRerank(score=0.42)
+    reg = make_registry(rerank=rerank)
+    assert reg.rerank_score_one("q", "a") == 0.42
+    assert rerank.calls == 1
+    assert rerank.texts == ["a"]
 
 
 def test_registry_max_batch_honors_explicit_batch_sizes():
@@ -543,6 +589,22 @@ def _app(registry=None, **kw):
     return create_encoder_app(registry if registry is not None else make_registry(), **kw)
 
 
+@pytest.fixture
+def client_ready():
+    """A TestClient already past the ready flip, on an all-fakes registry.
+
+    Injected registries bring up synchronously (``_Daemon.bring_up`` runs
+    inline, not on a startup thread), so entering the ``TestClient`` context
+    manager — which drives the FastAPI lifespan — is already past ``/ready``
+    returning 200 by the time the ``with`` block's body runs.
+    """
+    from fastapi.testclient import TestClient
+
+    with TestClient(_app(make_registry())) as client:
+        assert client.get("/ready").status_code == 200
+        yield client
+
+
 def test_batch_window_defaults_to_the_client_env_knob():
     from fastapi.testclient import TestClient
     from cymatix_context.encoder_daemon import create_encoder_app
@@ -650,10 +712,10 @@ def test_health_capacity_has_the_self_report_shape_after_ready():
         "system_ram_gb",
     ):
         assert key in cap, f"capacity report missing {key!r}: {sorted(cap)}"
-    assert sorted(cap["devices"]) == ["dense", "sema", "splade"]
-    assert sorted(cap["warm_encodes_per_s"]) == ["dense", "sema", "splade"]
+    assert sorted(cap["devices"]) == ["dense", "rerank", "sema", "splade"]
+    assert sorted(cap["warm_encodes_per_s"]) == ["dense", "rerank", "sema", "splade"]
     assert sorted(cap["bundles_per_s"]) == ["interleaved", "pipelined"]
-    assert cap["max_batch"] == {"dense": 16, "splade": 8, "sema": 64}
+    assert cap["max_batch"] == {"dense": 16, "splade": 8, "sema": 64, "rerank": 16}
     for family, rate in cap["warm_encodes_per_s"].items():
         assert isinstance(rate, float) and rate > 0.0, f"{family}: {rate!r}"
     for mode, rate in cap["bundles_per_s"].items():
@@ -824,6 +886,98 @@ def test_encode_bundle_defaults_to_query_task_and_top_k_128():
     assert splade.top_ks[-1] == 128
 
 
+# ── /encode/rerank ──────────────────────────────────────────────────
+
+
+def test_encode_rerank_returns_scores_and_model(client_ready):
+    r = client_ready.post("/encode/rerank", json={"query": "q", "texts": ["a", "b"]})
+    assert r.status_code == 200
+    body = r.json()
+    assert len(body["scores"]) == 2 and body["model"]
+
+
+def test_encode_rerank_empty_texts_short_circuits():
+    """Empty texts must return 200 without touching the scorer again.
+
+    ``rerank.calls`` is nonzero from startup (warm/probe/warm-rate all touch
+    it once each) — the assertion is a baseline delta, same idiom as the
+    dense/splade/sema empty-texts tests above.
+    """
+    from fastapi.testclient import TestClient
+
+    rerank = CountingRerank()
+    with TestClient(_app(make_registry(rerank=rerank))) as client:
+        baseline = rerank.calls
+        resp = client.post("/encode/rerank", json={"query": "q", "texts": []})
+    assert resp.status_code == 200
+    assert resp.json()["scores"] == []
+    assert rerank.calls == baseline, "empty texts must not touch the model"
+
+
+def test_encode_rerank_forwards_query_and_texts_to_the_scorer():
+    from fastapi.testclient import TestClient
+
+    rerank = CountingRerank(score=0.33)
+    with TestClient(_app(make_registry(rerank=rerank))) as client:
+        resp = client.post("/encode/rerank", json={"query": "hello", "texts": ["x", "y", "z"]})
+    assert resp.status_code == 200
+    assert resp.json()["scores"] == [0.33, 0.33, 0.33]
+    assert "hello" in rerank.queries
+    assert {"x", "y", "z"} <= set(rerank.texts)
+
+
+def test_encode_rerank_failure_returns_500_with_detail_and_the_worker_survives():
+    from fastapi.testclient import TestClient
+
+    def _rerank(query, texts, **kw):
+        if texts and texts[0] == "boom":
+            raise RuntimeError("rerank exploded")
+        return [0.5] * len(texts)
+
+    with TestClient(_app(make_registry(rerank=_rerank))) as client:
+        bad = client.post("/encode/rerank", json={"query": "q", "texts": ["boom"]})
+        good = client.post("/encode/rerank", json={"query": "q", "texts": ["fine"]})
+    assert bad.status_code == 500
+    assert "rerank exploded" in bad.json()["detail"]
+    assert good.status_code == 200, "the worker thread must survive an encode exception"
+    assert good.json()["scores"] == [0.5]
+
+
+def test_repeat_rerank_pair_hits_the_cache_and_never_reaches_the_scorer():
+    from fastapi.testclient import TestClient
+
+    rerank = CountingRerank()
+    with TestClient(_app(make_registry(rerank=rerank))) as client:
+        baseline = rerank.calls
+        first = client.post("/encode/rerank", json={"query": "q", "texts": ["alpha"]})
+        after_first = rerank.calls
+        second = client.post("/encode/rerank", json={"query": "q", "texts": ["alpha"]})
+        cache = client.get("/health").json()["capacity"]["vector_cache"]
+    assert first.json()["scores"] == second.json()["scores"]
+    assert after_first - baseline == 1
+    assert rerank.calls == after_first, "the repeat (query, text) pair must not reach the scorer"
+    assert cache["hits"] >= 1 and cache["size"] >= 1
+
+
+def test_a_different_query_misses_the_rerank_cache():
+    from fastapi.testclient import TestClient
+
+    rerank = CountingRerank()
+    with TestClient(_app(make_registry(rerank=rerank))) as client:
+        baseline = rerank.calls
+        client.post("/encode/rerank", json={"query": "q1", "texts": ["alpha"]})
+        client.post("/encode/rerank", json={"query": "q2", "texts": ["alpha"]})
+    assert rerank.calls - baseline == 2, "a different query is a different cache key"
+
+
+def test_capacity_report_includes_rerank_family_and_preserves_bundle_semantics(client_ready):
+    cap = client_ready.get("/health").json()["capacity"]
+    assert "rerank" in cap["devices"] and "rerank" in cap["max_batch"] and "rerank" in cap["loaded"]
+    assert set(cap["warm_encodes_per_s"]) >= {"dense", "splade", "sema", "rerank"}
+    assert cap["bundles_per_s"]["interleaved"] is not None  # 3-family bundle math unbroken
+    assert cap["max_batch"]["rerank"] == 16
+
+
 # ── gating + failure modes ──────────────────────────────────────────
 
 
@@ -834,6 +988,7 @@ def test_encode_bundle_defaults_to_query_task_and_top_k_128():
         ("/encode/splade", {"texts": ["a"]}),
         ("/encode/sema", {"texts": ["a"]}),
         ("/encode/bundle", {"text": "a"}),
+        ("/encode/rerank", {"query": "q", "texts": ["a"]}),
     ],
 )
 def test_encode_before_ready_is_refused_with_503(path, payload):
@@ -2069,6 +2224,12 @@ def test_vector_cache_key_covers_family_model_task_and_text():
         "splade", ("hello", 128)
     ), "top_k truncates the term set — it is part of the key"
     assert daemon.cache_key("sema", ("hello",)) != daemon.cache_key("sema", ("other",))
+    assert daemon.cache_key("rerank", ("q", "hello")) != daemon.cache_key(
+        "rerank", ("q", "other")
+    ), "the candidate text is part of the rerank key"
+    assert daemon.cache_key("rerank", ("q1", "hello")) != daemon.cache_key(
+        "rerank", ("q2", "hello")
+    ), "the query is part of the rerank key"
 
     registry.dense_model_name = "another-model"
     assert daemon.cache_key("dense", ("hello", "query")) != dense_q, (
