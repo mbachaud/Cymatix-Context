@@ -24,7 +24,7 @@ import re
 import sqlite3
 import threading
 import time
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from .accel import (
     json_loads,
@@ -490,6 +490,25 @@ def apply_ann_gate(
     return kept
 
 
+# Issue #341: chars of a document handed to the cross-encoder. The
+# tokenizer re-truncates at 256 tokens anyway (rerank_backend._MAX_LENGTH),
+# so this only bounds the string-slicing / tokenizer input cost — it is not
+# the semantic truncation point.
+_RERANK_TEXT_MAX = 2000
+
+
+def _rerank_doc_text(doc) -> str:
+    """The text the cross-encoder scores for ``doc``.
+
+    Body first; a body-less document (fragment stub, summary-only ingest)
+    falls back to its tag summary so it is still *judged* rather than
+    silently scored against the empty string.
+    """
+    return (doc.content or (doc.promoter.summary if doc.promoter else "") or "")[
+        :_RERANK_TEXT_MAX
+    ]
+
+
 class KnowledgeStore:
     """SQLite-backed document storage with tags-tag retrieval."""
 
@@ -651,6 +670,22 @@ class KnowledgeStore:
         # cross-shard merge path).
         doc_type_boost_mode: str = "additive",
         pki_weight: float = 1.0,
+        # ── Issue #341: query-time cross-encoder rerank (default-OFF) ──
+        # Pre-cap rerank seam. With rerank_enabled=False (and no per-query
+        # override) every retrieval path below is byte-identical to the
+        # pre-#341 store — the invariance suites are the receipt.
+        # ``rerank_depth`` is the candidate count fed to the cross-encoder
+        # BEFORE the max_genes cut; the cut itself is unchanged, so the
+        # returned document COUNT never depends on this knob (only which
+        # documents fill those slots).
+        rerank_enabled: bool = False,
+        rerank_depth: int = 50,
+        rerank_model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2",
+        # DI seam: a (query, texts) -> scores callable. None (the default)
+        # lazy-imports backends.rerank_backend.score_pairs on first use, so
+        # torch/transformers never enter the import graph of a store that
+        # isn't reranking. Tests inject a deterministic fake here.
+        rerank_scorer: Optional[Callable[[str, List[str]], List[float]]] = None,
         main_conn: Optional[sqlite3.Connection] = None,
         shard_name: str = "main",
         read_only: bool = False,
@@ -806,6 +841,13 @@ class KnowledgeStore:
         self._semantic_dense_additive_weight: float = float(semantic_dense_additive_weight)
         self._semantic_broaden_routing: bool = bool(semantic_broaden_routing)
         self._pki_weight: float = float(pki_weight)
+        # Issue #341: pre-cap cross-encoder rerank (see ctor params).
+        self._rerank_enabled: bool = bool(rerank_enabled)
+        self._rerank_depth: int = int(rerank_depth)
+        self._rerank_model: str = str(rerank_model)
+        self._rerank_scorer: Optional[Callable[[str, List[str]], List[float]]] = (
+            rerank_scorer
+        )
         self._threshold_dim_warned: bool = False
         # Phase 2 claims layer (2026-04-19). Optional hook — when a main.db
         # connection is supplied, upsert_gene emits literal claims into it
@@ -884,6 +926,17 @@ class KnowledgeStore:
         # (same last-query contract and the same known cross-request-global
         # caveat — W1.6 scoops all of these into a request-scoped outcome).
         self.last_signal_timings: Dict[str, float] = {}
+        # Issue #341: the last query's FULL-pool final order (not just the
+        # delivered slice), published under _last_query_scores_lock on both
+        # retrieval paths and in BOTH rerank arms — with rerank off it is the
+        # sim/fused order, so an A/B keeps an identical rank basis and the
+        # metric can never silently read a stale ordering.
+        self.last_ranked_ids: List[str] = []
+        # Issue #341 companion: {"gate_kept": n, "floor_appended": n} from the
+        # last query_docs_ann call (both arms). Lets the ablation ladder slice
+        # needles that only surfaced through the #214 dense pool floor.
+        # Written by query_docs_ann only; {} everywhere else.
+        self.last_rerank_diag: Dict[str, int] = {}
         # Perf slice 1 (W0.3): every COMMIT executed on the writer connection,
         # including raw conn.commit() calls from call sites that bypass
         # _write_lock (Registry, session_delivery, cwola). Uses the sqlite3
@@ -2312,6 +2365,58 @@ class KnowledgeStore:
         )
         return sql, params
 
+    # ── Issue #341: pre-cap cross-encoder rerank helpers ─────────────────
+
+    def _rerank_effective(self, override: Optional[bool]) -> bool:
+        """Resolve the rerank flag for ONE call.
+
+        ``None`` (the default) defers to the store's configured global; an
+        explicit bool wins in both directions, so a per-query-class override
+        (``[retrieval] rerank_enabled_by_class``, resolved upstream) can turn
+        rerank on for a class the global leaves off — and off for a class the
+        global leaves on.
+        """
+        return self._rerank_enabled if override is None else bool(override)
+
+    def _score_rerank(
+        self, query_text: str, docs: "List[Gene]"
+    ) -> "Optional[List[float]]":
+        """Score ``docs`` against ``query_text``. ``None`` = fall back.
+
+        Never raises. A missing model, an OOM, a torch import error, or a
+        scorer that returns garbage all degrade to the caller's existing
+        gate/fused order — retrieval keeps working, one WARNING gets logged,
+        and the count invariant is untouched because the caller only ever
+        *reorders* with the returned scores.
+
+        The ``rerank_backend`` import is deliberately inside this method:
+        importing ``knowledge_store`` must never pull torch/transformers into
+        the process of a store that isn't reranking.
+        """
+        try:
+            texts = [_rerank_doc_text(d) for d in docs]
+            scorer = self._rerank_scorer
+            if scorer is None:
+                from .backends.rerank_backend import score_pairs
+                scores = score_pairs(query_text, texts, model_name=self._rerank_model)
+            else:
+                scores = scorer(query_text, texts)
+            if not isinstance(scores, list) or len(scores) != len(docs):
+                log.warning(
+                    "rerank scorer returned unusable payload "
+                    "(type=%s, len=%s, expected %d); falling back",
+                    type(scores).__name__,
+                    len(scores) if hasattr(scores, "__len__") else "n/a",
+                    len(docs),
+                )
+                return None
+            return [float(s) for s in scores]
+        except Exception:
+            log.warning(
+                "rerank scoring failed; falling back to gate order", exc_info=True
+            )
+            return None
+
     def query_docs(
         self,
         domains: List[str],
@@ -2324,9 +2429,24 @@ class KnowledgeStore:
         read_only: bool = False,
         query_type: Optional[str] = None,
         rerank_combinator: Optional[str] = None,
+        query_text: Optional[str] = None,
+        rerank_override: Optional[bool] = None,
     ) -> List[Gene]:
         """
         Find documents matching the given tags signals.
+
+        ``query_text`` / ``rerank_override`` (issue #341, pre-cap
+        cross-encoder rerank): when rerank is effective for this call AND
+        ``query_text`` is supplied, the post-fusion ranking is widened to
+        ``max(limit, rerank_depth)``, the head of that widened order is
+        re-scored by a cross-encoder against ``query_text``, and the result is
+        cut back to ``limit``. The cut — and therefore the returned document
+        COUNT — is unchanged; only which documents fill the slots moves.
+        ``query_text`` is a separate parameter (not derived from
+        ``domains``/``entities``) because the cross-encoder wants the user's
+        raw question, not the expanded keyword bag. Omitting it disables the
+        seam entirely, which is how ``query_docs_ann`` suppresses a double
+        rerank on its inner lex-pool call.
 
         ``rerank_combinator`` (issue #255, classifier-gated combinator): a
         per-query override selecting the post-fusion rerank combinator for THIS
@@ -3457,6 +3577,16 @@ class KnowledgeStore:
         #   additives (sema_boost, authority, party_attr, access_rate)
         #   on top, restrict to documents that survived the bm25 shortlist
         #   filter (= present in gene_scores), then sort.
+        #
+        # Issue #341: when the pre-cap cross-encoder rerank is effective for
+        # this call, BOTH branches emit a wider ranking (max(limit,
+        # rerank_depth)) so the cross-encoder can see candidates the cut would
+        # otherwise have dropped. The widened list is cut back to ``limit``
+        # immediately after the seam below — including on the fallback path —
+        # so the returned count is identical either way. Default-off leaves
+        # _fuse_limit == limit, i.e. byte-identical to the pre-#341 branch.
+        _rerank_on = self._rerank_effective(rerank_override) and query_text is not None
+        _fuse_limit = max(limit, self._rerank_depth) if _rerank_on else limit
         if self._fusion_mode == "rrf":
             fused_scores = fuser.all_scores()
             # The bm25_shortlist filter mutated gene_scores above; honor
@@ -3494,7 +3624,7 @@ class KnowledgeStore:
                 self._rrf_k,
                 self._rerank_tier_weight,
                 self._rerank_band_delta,
-                limit,
+                _fuse_limit,
             )
             # last_query_scores semantics under RRF: the combined final
             # score, NOT the raw additive accumulator. This is what
@@ -3520,7 +3650,55 @@ class KnowledgeStore:
                 pass
         else:
             # Additive mode — pre-Stage-3 behavior, byte-identical.
-            ranked_ids = sorted(gene_scores, key=gene_scores.get, reverse=True)[:limit]
+            ranked_ids = sorted(gene_scores, key=gene_scores.get, reverse=True)[:_fuse_limit]
+
+        # ── Issue #341: pre-cap cross-encoder rerank ─────────────────────
+        # Placed AFTER the fusion branch so the legacy additive profile is
+        # covered by the same seam. Reorders the head of the (possibly
+        # widened) ranking, then cuts back to ``limit`` — the cut is what
+        # keeps ON and OFF the same length. On any scorer failure
+        # (_score_rerank -> None) the untouched widened order is cut back to
+        # exactly the OFF ranking, so a broken model costs latency, never
+        # results.
+        if _rerank_on and ranked_ids:
+            _xenc_t0 = time.monotonic()
+            depth = min(self._rerank_depth, len(ranked_ids))
+            head_ids = ranked_ids[:depth]
+            try:
+                head_docs_map = self._load_genes_by_ids(head_ids)
+                head_docs = [head_docs_map[g] for g in head_ids if g in head_docs_map]
+            except Exception:
+                # Same containment contract as _score_rerank: nothing in this
+                # seam may raise out of retrieval. An empty candidate list
+                # scores to an empty reorder, i.e. the fused order untouched.
+                log.warning(
+                    "rerank candidate load failed; falling back to fused order",
+                    exc_info=True,
+                )
+                head_docs = []
+            xenc = self._score_rerank(query_text, head_docs)
+            if xenc is not None:
+                # gene_id is the secondary key so equal cross-encoder scores
+                # break deterministically (same contract as the Fuser).
+                order = sorted(
+                    range(len(head_docs)), key=lambda i: (-xenc[i], head_docs[i].gene_id)
+                )
+                reordered = [head_docs[i].gene_id for i in order]
+                _in_head = set(reordered)
+                ranked_ids = reordered + [g for g in ranked_ids if g not in _in_head]
+            ranked_ids = ranked_ids[:limit]
+            # Timing goes through the LOCAL per-signal collector: this
+            # function publishes _sig_ms wholesale into last_signal_timings on
+            # exit, so a direct merge here would be clobbered.
+            _sig("xenc_rerank", _xenc_t0)
+
+        # Issue #341: publish the final full-pool order unconditionally —
+        # both fusion modes, rerank on or off — so an A/B always compares two
+        # orderings produced the same way and the metric basis can never go
+        # stale. Deliberately BEFORE the walking tie-break, matching the
+        # last_query_scores publication point above.
+        with self._last_query_scores_lock:
+            self.last_ranked_ids = list(ranked_ids)
 
         # Walking tie-break (opt-in via CYMATIX_WALKING_TIEBREAK=1).
         # When adjacent top-k documents have bitwise-identical fused scores,
@@ -3900,6 +4078,7 @@ class KnowledgeStore:
         *,
         pool_size: int | None = None,
         rerank_combinator: Optional[str] = None,
+        rerank_override: Optional[bool] = None,
     ) -> List[Gene]:
         """Stage 2 retrieval: parallel lex + dense recall, union, threshold cut.
 
@@ -3922,6 +4101,10 @@ class KnowledgeStore:
         mean ~0.50 over the bench fixtures, so the default was raised 0.35 ->
         0.58 (just above the p90 of unrelated pairs). ``max_genes`` remains the
         hard cap, so blast radius is bounded regardless of the threshold.
+
+        Issue #341 (``rerank_override``): step 6 re-scores the union pool with
+        a cross-encoder BEFORE the gate's count is applied — see the seam
+        below. ``None`` defers to the store's ``rerank_enabled``.
 
         Back-compat: callers that pass only positional/keyword args still
         work; ``pool_size`` is keyword-only and optional.
@@ -3950,6 +4133,12 @@ class KnowledgeStore:
             # dense-ANN path (dense-on default) honors the classifier gate too;
             # the combinator runs inside this internal query_docs call.
             rerank_combinator=rerank_combinator,
+            # Issue #341 — double-rerank suppression: deliberately NO
+            # query_text and NO rerank_override here. This call only builds the
+            # lex recall pool; reranking it would burn a cross-encoder pass on
+            # a pool that the union + gate below immediately re-orders, and
+            # would then rerank the survivors a second time. The single
+            # authoritative rerank for this path is the one at step 5b.
         )
 
         # Dense disabled -> degrade to legacy lex-only flow, capped at max_genes.
@@ -4010,7 +4199,7 @@ class KnowledgeStore:
         # without a store; with the floor disabled — or whenever >= N
         # dense-scored candidates survive — it reproduces the legacy loop
         # byte-for-byte.
-        kept_ids = apply_ann_gate(
+        gate_ids = apply_ann_gate(
             [(doc.gene_id, sim) for doc, sim in scored],
             dense_hits,
             threshold=threshold,
@@ -4019,6 +4208,69 @@ class KnowledgeStore:
             dense_pool_floor_genes=self._dense_pool_floor_genes,
         )
         by_id = {doc.gene_id: doc for doc, _ in scored}
+        kept_ids = gate_ids
+        final_order = [doc.gene_id for doc, _ in scored]
+        head_id_set = {
+            doc.gene_id
+            for doc, _ in scored[: min(self._rerank_depth, len(scored))]
+        }
+        # Gate-kept ids that sit BEYOND the sim head — i.e. what the #214
+        # floor rescued (or what a deep max_genes admitted past rerank_depth).
+        n_floor = sum(1 for g in gate_ids if g not in head_id_set)
+        # The gate's count AS DELIVERED. apply_ann_gate can hand back an id
+        # with no loaded body (a #214 floor rescue whose dense-matrix entry
+        # outlived its genes row, or a row _row_to_gene rejected); the return
+        # filter at the bottom silently drops those on BOTH arms. Pinning the
+        # rerank cut to len(gate_ids) instead would re-fill those slots from
+        # the pool and make the ON arm longer than the OFF arm — so pin it to
+        # what the OFF arm actually delivers.
+        n_deliverable = sum(1 for g in gate_ids if g in by_id)
+
+        # ── 5b. Issue #341: pre-cap cross-encoder rerank. ────────────────
+        # The gate decides HOW MANY documents survive; with this on, the
+        # cross-encoder decides WHICH. len(kept_ids) is pinned to
+        # len(gate_ids), so the delivered count — and the splice cliff that
+        # rides on it — is identical to the rerank-off arm.
+        if self._rerank_effective(rerank_override) and scored:
+            _xenc_t0 = time.monotonic()
+            depth = min(self._rerank_depth, len(scored))
+            # Candidate set = the sim head PLUS every gate-kept id beyond it
+            # (#214 floor rescues land there). The cross-encoder therefore
+            # JUDGES rescued documents rather than blindly evicting them, and
+            # cand_ids is always a superset of gate_ids — which is what makes
+            # the [:len(gate_ids)] cut below exact.
+            head_ids = [doc.gene_id for doc, _ in scored[:depth]]
+            cand_ids = head_ids + [g for g in gate_ids if g not in head_id_set]
+            cand_docs = [by_id[g] for g in cand_ids if g in by_id]
+            # Bodies for the whole pool were fetched in step 3 — no extra I/O.
+            xenc = self._score_rerank(query, cand_docs)
+            if xenc is not None:
+                order = sorted(
+                    range(len(cand_docs)),
+                    key=lambda i: (-xenc[i], cand_docs[i].gene_id),
+                )
+                ranked_cand = [cand_docs[i].gene_id for i in order]
+                # Count from the gate; order + membership from the cross-encoder.
+                kept_ids = ranked_cand[:n_deliverable]
+                _in_cand = set(ranked_cand)
+                final_order = ranked_cand + [
+                    d.gene_id for d, _ in scored if d.gene_id not in _in_cand
+                ]
+            with self._last_query_scores_lock:
+                _m = dict(getattr(self, "last_signal_timings", None) or {})
+                _m["xenc_rerank"] = (
+                    _m.get("xenc_rerank", 0.0) + (time.monotonic() - _xenc_t0) * 1000.0
+                )
+                self.last_signal_timings = _m
+
+        with self._last_query_scores_lock:
+            # Overwrites the inner query_docs publication with the ANN-final
+            # order (union pool, post-rerank when it ran).
+            self.last_ranked_ids = final_order
+            # Published on BOTH arms so the verdict can slice floor-fired needles.
+            self.last_rerank_diag = {
+                "gate_kept": len(gate_ids), "floor_appended": n_floor,
+            }
         return [by_id[gid] for gid in kept_ids if gid in by_id]
 
     def _load_genes_by_ids(self, gene_ids: list[str]) -> dict[str, Gene]:

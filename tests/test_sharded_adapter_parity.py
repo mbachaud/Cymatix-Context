@@ -157,6 +157,12 @@ ADAPTER_ONLY_DIFFERENCES_WHITELIST = frozenset({
     # per-shard KnowledgeStore.query_genes; the adapter's read path fuses via
     # the ShardRouter's own (ungated) Fuser, so it never resolves this.
     "_rrf_gate_params",
+    # Issue #341: pre-cap cross-encoder rerank helpers. Same shape as
+    # _rrf_gate_params above — called on `self` inside each per-shard
+    # KnowledgeStore's query_docs / query_docs_ann, so the rerank happens
+    # per shard before the router's cross-shard merge. The adapter never
+    # scores pairs itself.
+    "_rerank_effective", "_score_rerank",
     "_init_db", "_refresh_snapshot", "_row_to_gene",
 
     # FTS / KV / indexing helpers that operate on a single .db file's
