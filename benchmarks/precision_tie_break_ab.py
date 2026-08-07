@@ -81,7 +81,7 @@ def main() -> int:
     cfg = load_config()
     cfg.genome.path = GENOME_DB
     cfg.ribosome.query_expansion_enabled = False
-    cfg.ingestion.rerank_enabled = False
+    cfg.retrieval.rerank_enabled = False
 
     print(f"[ab] initializing CymatixContextManager...")
     t0 = time.perf_counter()
