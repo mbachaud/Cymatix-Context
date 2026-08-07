@@ -1115,8 +1115,8 @@ def test_encoder_client_round_trips_every_endpoint_against_the_daemon(monkeypatc
 
     from cymatix_context.backends.encoder_client import EncoderClient
 
-    splade, sema = CountingSplade(), CountingSemaCodec()
-    with TestClient(_app(make_registry(splade=splade, sema=sema))) as tc:
+    splade, sema, rerank = CountingSplade(), CountingSemaCodec(), CountingRerank(score=0.42)
+    with TestClient(_app(make_registry(splade=splade, sema=sema, rerank=rerank))) as tc:
         transport = _TestClientTransport(tc)
         monkeypatch.setattr(urllib.request, "urlopen", transport.urlopen)
         client = EncoderClient("http://127.0.0.1:11439", timeout_s=5.0)
@@ -1125,6 +1125,7 @@ def test_encoder_client_round_trips_every_endpoint_against_the_daemon(monkeypatc
         assert client.encode_dense(["alpha"], task="passage") == [hash_vec("alpha", 8).tolist()]
         assert client.encode_splade(["alpha"], top_k=64) == [{"sentinel": 9.99}]
         assert client.encode_sema(["alpha"]) == [[0.0] * 20]
+        assert client.encode_rerank("query text", ["alpha"]) == [0.42]
         bundle = client.encode_bundle("alpha", task="query", top_k=64)
 
     assert set(bundle) == {"dense", "splade", "sema"}

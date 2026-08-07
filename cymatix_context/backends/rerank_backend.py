@@ -9,6 +9,7 @@ import logging, threading, time
 from typing import List, Optional, Tuple
 
 from ..hardware import resolve_layer_device, recommended_batch_size
+from . import encoder_client
 # record_model_load is imported INSIDE _get_scorer, exactly like splade_backend.py:138:
 #   from cymatix_context.telemetry import record_model_load
 # (there is NO telemetry.otel_metrics module; a wrong module-level import here would make
@@ -23,10 +24,81 @@ _lock = threading.Lock()
 _scorer: Optional[Tuple[object, object, str]] = None   # (tokenizer, model, device_str)
 _scorer_model_name: Optional[str] = None
 
+# Encoder-daemon transport (#341 Task 9), as a single ``(url, client)`` tuple
+# so the rebind on a URL change is atomic — same lock-free module state as
+# splade_backend._remote_client (a benign race just rebuilds a cheap stdlib
+# client). ``None`` until the first remote encode; stays ``None`` forever when
+# no daemon URL is configured.
+_remote_client = None
+
+
 def reset_for_test() -> None:
-    global _scorer, _scorer_model_name
+    global _scorer, _scorer_model_name, _remote_client
     with _lock:
         _scorer, _scorer_model_name = None, None
+    _remote_client = None
+
+
+def _remote_scores(
+    query: str, texts: List[str], timeout_s: Optional[float] = None,
+) -> Optional[List[float]]:
+    """Daemon-scored cross-encoder scores, or ``None`` meaning "run the local body".
+
+    Mirrors ``splade_backend._remote_sparse`` exactly: reached BEFORE
+    ``_get_scorer()`` / ``import torch`` in ``score_pairs``, so a daemon
+    serving this process lets rerank run on a host with no transformers
+    installed at all.
+
+    Any failure (transport, malformed payload, wrong item count, non-numeric
+    score) records the failure on the shared circuit breaker and returns
+    ``None``, so the caller re-scores in process. ``score_pairs`` must NEVER
+    raise out of this branch — every failure degrades to the in-process
+    fallback instead.
+    """
+    url = encoder_client.active_url()
+    if not url:
+        return None
+    if not texts:
+        return []
+    if not encoder_client.should_attempt():
+        return None
+
+    global _remote_client
+    cached = _remote_client
+    if cached is None or cached[0] != url:
+        client = encoder_client.EncoderClient(
+            url, timeout_s=encoder_client.default_timeout_s(),
+        )
+        _remote_client = (url, client)
+    else:
+        client = cached[1]
+
+    # Shared one-shot readiness gate: rerank joins dense/SPLADE/SEMA on the
+    # same process-wide gate (see encoder_client.ready_gate's docstring) so a
+    # cold daemon opens the circuit exactly once, not once per seam.
+    if not encoder_client.ready_gate(client):
+        return None
+
+    try:
+        scores = client.encode_rerank(query, list(texts), timeout_s=timeout_s)
+    except Exception as exc:  # EncoderClientError + any stray transport error
+        encoder_client.record_failure()
+        log.debug("remote rerank encode failed (%s); scoring in process", exc)
+        return None
+    if not isinstance(scores, list) or len(scores) != len(texts):
+        encoder_client.record_failure()
+        log.debug("remote rerank returned an unusable payload; scoring in process")
+        return None
+    try:
+        scores = [float(s) for s in scores]
+    except (TypeError, ValueError) as exc:
+        encoder_client.record_failure()
+        log.debug(
+            "remote rerank returned non-numeric scores (%s); scoring in process", exc,
+        )
+        return None
+    encoder_client.record_success()
+    return scores
 
 def _recommended_batch() -> int:
     return recommended_batch_size("rerank")
@@ -54,7 +126,9 @@ def score_pairs(query: str, texts: List[str], *, model_name: Optional[str] = Non
                 batch_size: Optional[int] = None) -> List[float]:
     if not texts:
         return []
-    # Task 9 inserts the remote branch here.
+    remote = _remote_scores(query, texts, timeout_s=encoder_client.batch_timeout_s(len(texts)))
+    if remote is not None:
+        return remote
     tok, model, device = _get_scorer(model_name)
     import torch
     bs = batch_size or _recommended_batch()

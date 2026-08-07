@@ -23,10 +23,15 @@ from cymatix_context.backends import rerank_backend
 
 @pytest.fixture(autouse=True)
 def _fresh(monkeypatch):
+    from cymatix_context.backends import encoder_client
+
     rerank_backend.reset_for_test()
     hardware.reset_for_test()          # same autouse reset test_layer_devices uses
+    monkeypatch.delenv("CYMATIX_ENCODER_URL", raising=False)
+    encoder_client.reset_for_test()
     yield
     rerank_backend.reset_for_test()
+    encoder_client.reset_for_test()
 
 
 class _FakeEncodings(dict):
@@ -124,3 +129,124 @@ def test_loader_uses_rerank_layer_device_and_records_model_load(monkeypatch):
         rerank_backend._get_scorer()
     assert seen["layer"] == "rerank"
     assert recorded == [("rerank", True)]   # sane-seconds check catches a ms-unit regression
+
+
+# ── remote branch (#341 Task 9): parity with splade_backend._remote_sparse ──
+
+
+def test_score_pairs_off_by_default_runs_the_local_body(monkeypatch):
+    """No CYMATIX_ENCODER_URL configured -> _remote_scores is a no-op."""
+    from cymatix_context.backends import encoder_client
+
+    def _no_client(*a, **kw):
+        raise AssertionError("no EncoderClient may be built when the daemon URL is unset")
+
+    monkeypatch.setattr(encoder_client, "EncoderClient", _no_client)
+    calls = []
+    fake_tok, fake_model = _make_tokenizer_mock(calls), _make_model_mock(calls)
+    monkeypatch.setattr(rerank_backend, "_get_scorer", lambda model_name=None: (fake_tok, fake_model, "cpu"))
+    monkeypatch.setattr(rerank_backend, "_recommended_batch", lambda: 16)
+
+    scores = rerank_backend.score_pairs("q", ["a", "b"])
+    assert len(scores) == 2
+    assert [len(c) for c in calls] == [2]
+
+
+def test_score_pairs_uses_remote_scores_when_armed(monkeypatch):
+    """A configured + healthy daemon must be used instead of loading the local model."""
+    from cymatix_context.backends import encoder_client
+
+    monkeypatch.setattr(encoder_client, "active_url", lambda: "http://fake-daemon")
+    monkeypatch.setattr(encoder_client, "should_attempt", lambda: True)
+    monkeypatch.setattr(encoder_client, "ready_gate", lambda client: True)
+
+    class _FakeClient:
+        def __init__(self, url, timeout_s=10.0):
+            self.url = url
+
+        def encode_rerank(self, query, texts, timeout_s=None):
+            assert query == "q"
+            assert texts == ["a", "b"]
+            assert timeout_s is not None
+            return [1, 0]  # ints — must come back coerced to float
+
+    monkeypatch.setattr(encoder_client, "EncoderClient", _FakeClient)
+    recorded = []
+    monkeypatch.setattr(encoder_client, "record_success", lambda: recorded.append("success"))
+    monkeypatch.setattr(encoder_client, "record_failure", lambda: recorded.append("failure"))
+
+    with patch.object(rerank_backend, "_get_scorer", side_effect=AssertionError("must not load locally")):
+        scores = rerank_backend.score_pairs("q", ["a", "b"])
+
+    assert scores == [1.0, 0.0]
+    assert all(isinstance(s, float) for s in scores)
+    assert recorded == ["success"]
+
+
+def test_score_pairs_falls_back_in_process_on_remote_failure(monkeypatch):
+    """A remote transport failure must record_failure() and fall through, never raise."""
+    from cymatix_context.backends import encoder_client
+
+    monkeypatch.setattr(encoder_client, "active_url", lambda: "http://fake-daemon")
+    monkeypatch.setattr(encoder_client, "should_attempt", lambda: True)
+    monkeypatch.setattr(encoder_client, "ready_gate", lambda client: True)
+
+    class _FailingClient:
+        def __init__(self, url, timeout_s=10.0):
+            pass
+
+        def encode_rerank(self, query, texts, timeout_s=None):
+            raise encoder_client.EncoderClientError("boom")
+
+    monkeypatch.setattr(encoder_client, "EncoderClient", _FailingClient)
+    recorded = []
+    monkeypatch.setattr(encoder_client, "record_failure", lambda: recorded.append("failure"))
+    monkeypatch.setattr(encoder_client, "record_success", lambda: recorded.append("success"))
+
+    calls = []
+    fake_tok, fake_model = _make_tokenizer_mock(calls), _make_model_mock(calls)
+    monkeypatch.setattr(rerank_backend, "_get_scorer", lambda model_name=None: (fake_tok, fake_model, "cpu"))
+    monkeypatch.setattr(rerank_backend, "_recommended_batch", lambda: 16)
+
+    scores = rerank_backend.score_pairs("q", ["a", "b"])
+
+    assert len(scores) == 2
+    assert recorded == ["failure"]
+    assert [len(c) for c in calls] == [2], "fell through to the in-process batch"
+
+
+def test_score_pairs_falls_back_when_remote_shape_is_wrong(monkeypatch):
+    """A daemon returning the wrong item count must be treated as a failure, not raise."""
+    from cymatix_context.backends import encoder_client
+
+    monkeypatch.setattr(encoder_client, "active_url", lambda: "http://fake-daemon")
+    monkeypatch.setattr(encoder_client, "should_attempt", lambda: True)
+    monkeypatch.setattr(encoder_client, "ready_gate", lambda client: True)
+
+    class _ShortClient:
+        def __init__(self, url, timeout_s=10.0):
+            pass
+
+        def encode_rerank(self, query, texts, timeout_s=None):
+            return [0.5]  # only 1 score for 2 texts
+
+    monkeypatch.setattr(encoder_client, "EncoderClient", _ShortClient)
+    recorded = []
+    monkeypatch.setattr(encoder_client, "record_failure", lambda: recorded.append("failure"))
+    monkeypatch.setattr(encoder_client, "record_success", lambda: recorded.append("success"))
+
+    calls = []
+    fake_tok, fake_model = _make_tokenizer_mock(calls), _make_model_mock(calls)
+    monkeypatch.setattr(rerank_backend, "_get_scorer", lambda model_name=None: (fake_tok, fake_model, "cpu"))
+    monkeypatch.setattr(rerank_backend, "_recommended_batch", lambda: 16)
+
+    scores = rerank_backend.score_pairs("q", ["a", "b"])
+
+    assert len(scores) == 2
+    assert recorded == ["failure"]
+
+
+def test_reset_for_test_clears_the_remote_client_cache():
+    rerank_backend._remote_client = ("http://old-daemon", object())
+    rerank_backend.reset_for_test()
+    assert rerank_backend._remote_client is None

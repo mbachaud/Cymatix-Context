@@ -47,13 +47,16 @@ from tests.conftest import make_cymatix_config
 
 @pytest.fixture(autouse=True)
 def _pristine_remote_seams(monkeypatch):
-    from cymatix_context.backends import bgem3_codec, encoder_client, splade_backend
+    from cymatix_context.backends import bgem3_codec, encoder_client, rerank_backend, splade_backend
 
     bgem3_codec._GLOBAL_CODECS.clear()
     monkeypatch.setattr(splade_backend, "_model", None, raising=False)
     monkeypatch.setattr(splade_backend, "_tokenizer", None, raising=False)
     monkeypatch.setattr(splade_backend, "_device", None, raising=False)
     monkeypatch.setattr(splade_backend, "_remote_client", None, raising=False)
+    monkeypatch.setattr(rerank_backend, "_scorer", None, raising=False)
+    monkeypatch.setattr(rerank_backend, "_scorer_model_name", None, raising=False)
+    monkeypatch.setattr(rerank_backend, "_remote_client", None, raising=False)
     monkeypatch.delenv("CYMATIX_ENCODER_URL", raising=False)
     encoder_client.reset_for_test()
     yield
@@ -74,6 +77,7 @@ _DEFAULT_RESPONSES = {
     "/encode/dense": {"vectors": [[0.25, -0.5, 0.75, 1.0]], "dim": 4, "model": "fake-dense"},
     "/encode/splade": {"sparse": [{"beta": 0.5, "alpha": 0.25, "gamma": 0.1234}]},
     "/encode/sema": {"vectors": [[0.125] * 20]},
+    "/encode/rerank": {"scores": [0.9]},
 }
 
 
@@ -173,6 +177,22 @@ def _arm_local_splade(monkeypatch):
         raise _LocalSpladeSentinel(model_name)
 
     monkeypatch.setattr(splade_backend, "_ensure_loaded", _boom)
+
+
+class _LocalRerankSentinel(Exception):
+    """Raised from the LOCAL rerank body so tests can prove it was reached."""
+
+
+def _arm_local_rerank(monkeypatch):
+    """Make the local rerank body observable without torch or a real model."""
+    from cymatix_context.backends import rerank_backend
+
+    monkeypatch.setitem(sys.modules, "torch", types.ModuleType("torch"))
+
+    def _boom(model_name=None):
+        raise _LocalRerankSentinel(model_name)
+
+    monkeypatch.setattr(rerank_backend, "_get_scorer", _boom)
 
 
 class _FakeLocalDense:
@@ -294,6 +314,20 @@ def test_off_splade_encode_attribute_patch_seam_intact(monkeypatch):
     from cymatix_context.backends import splade_backend as late
 
     assert late.encode("anything") == {"sentinel": 9.99}
+
+
+def test_off_rerank_score_pairs_runs_the_local_body(monkeypatch):
+    """URL unset ⇒ no client is built and the unchanged local body runs."""
+    from cymatix_context.backends import encoder_client, rerank_backend
+
+    def _no_client(*a, **kw):
+        raise AssertionError("no EncoderClient may be built when the daemon URL is unset")
+
+    monkeypatch.setattr(encoder_client, "EncoderClient", _no_client)
+    _arm_local_rerank(monkeypatch)
+
+    with pytest.raises(_LocalRerankSentinel):
+        rerank_backend.score_pairs("q", ["hello world"])
 
 
 def test_off_manager_constructs_lazy_sema_codec(tmp_path, fake_local_sema):
@@ -429,6 +463,67 @@ def test_on_splade_import_works_without_transformers(monkeypatch, daemon_url):
     assert splade_backend.encode("hello world") == {
         "beta": 0.5, "alpha": 0.25, "gamma": 0.1234,
     }
+
+
+def test_on_rerank_score_pairs_returns_served_scores_and_sends_query_and_texts(daemon_url):
+    from cymatix_context.backends import encoder_client, rerank_backend
+
+    _DaemonHandler.responses["/encode/rerank"] = {"scores": [0.9, 0.1]}
+    encoder_client.configure(daemon_url)
+    scores = rerank_backend.score_pairs("hello", ["a", "b"])
+    assert scores == [0.9, 0.1]
+    path, body = [r for r in _DaemonHandler.received if r[0] == "/encode/rerank"][-1]
+    assert body == {"query": "hello", "texts": ["a", "b"]}
+
+
+def test_on_rerank_coerces_integer_scores_to_float(daemon_url):
+    from cymatix_context.backends import encoder_client, rerank_backend
+
+    _DaemonHandler.responses["/encode/rerank"] = {"scores": [1, 0]}
+    encoder_client.configure(daemon_url)
+    scores = rerank_backend.score_pairs("hello", ["a", "b"])
+    assert scores == [1.0, 0.0]
+    assert all(isinstance(s, float) for s in scores)
+
+
+def test_on_rerank_import_works_without_transformers(monkeypatch, daemon_url):
+    """The remote branch sits before any torch import."""
+    from cymatix_context.backends import encoder_client, rerank_backend
+
+    monkeypatch.setitem(sys.modules, "torch", None)  # `import torch` now raises
+    monkeypatch.setattr(
+        rerank_backend,
+        "_get_scorer",
+        lambda *a, **kw: pytest.fail("remote branch must precede the local load"),
+    )
+    _DaemonHandler.responses["/encode/rerank"] = {"scores": [0.42]}
+    encoder_client.configure(daemon_url)
+    assert rerank_backend.score_pairs("hello", ["world"]) == [0.42]
+
+
+def test_rerank_falls_through_to_the_local_body_on_remote_failure(daemon_url, monkeypatch):
+    from cymatix_context.backends import encoder_client, rerank_backend
+
+    _DaemonHandler.fail_paths = {"/encode/rerank"}
+    _arm_local_rerank(monkeypatch)
+    encoder_client.configure(daemon_url)
+
+    with pytest.raises(_LocalRerankSentinel):
+        rerank_backend.score_pairs("q", ["hello world"])
+    assert _paths("/encode/rerank"), "the remote was attempted before falling through"
+    assert encoder_client.should_attempt() is False, "failure must open the circuit"
+
+
+def test_rerank_falls_back_when_scores_length_mismatches_texts(daemon_url, monkeypatch):
+    from cymatix_context.backends import encoder_client, rerank_backend
+
+    _DaemonHandler.responses["/encode/rerank"] = {"scores": [0.9]}  # only 1 for 2 texts
+    _arm_local_rerank(monkeypatch)
+    encoder_client.configure(daemon_url)
+
+    with pytest.raises(_LocalRerankSentinel):
+        rerank_backend.score_pairs("q", ["a", "b"])
+    assert encoder_client.should_attempt() is False, "shape mismatch must open the circuit"
 
 
 def test_on_sema_encode_returns_served_vector(daemon_url):
@@ -753,20 +848,21 @@ def test_manager_dense_codec_routes_through_get_shared_codec():
 # ══ 6. Shared one-shot readiness gate ════════════════════════════════
 
 
-def test_shared_ready_gate_is_polled_once_across_all_three_seams(daemon_url):
-    from cymatix_context.backends import encoder_client, splade_backend
+def test_shared_ready_gate_is_polled_once_across_all_four_seams(daemon_url):
+    from cymatix_context.backends import encoder_client, rerank_backend, splade_backend
     from cymatix_context.backends.bgem3_codec import get_shared_codec
 
     encoder_client.configure(daemon_url)
     splade_backend.encode("hello")
     encoder_client.RemoteSemaCodec(url=daemon_url).encode("hello")
     get_shared_codec(dim=4, device="cpu").encode("hello")
+    rerank_backend.score_pairs("hello", ["world"])
 
     assert len(_paths("/ready")) == 1, "one daemon, one readiness question"
     assert encoder_client.ready_probed() is True
 
 
-def test_cold_daemon_gate_blocks_encodes_then_all_three_seams_recover(
+def test_cold_daemon_gate_blocks_encodes_then_all_four_seams_recover(
     daemon_url, monkeypatch, fake_local_dense, fake_local_sema
 ):
     """The startup race: a loading daemon must not permanently disable remote.
@@ -774,17 +870,19 @@ def test_cold_daemon_gate_blocks_encodes_then_all_three_seams_recover(
     SPLADE/SEMA encode ahead of dense on the ingest path. Without a shared
     gate, the first of them hammers a loading daemon, opens the process-wide
     circuit, and dense — never reaching its own gate — caches a real ~2 GB
-    in-process codec for the life of the process.
+    in-process codec for the life of the process. rerank (#341) joins the
+    same shared gate.
     """
     import time
 
-    from cymatix_context.backends import encoder_client, splade_backend
+    from cymatix_context.backends import encoder_client, rerank_backend, splade_backend
     from cymatix_context.backends.bgem3_codec import get_shared_codec
 
     monkeypatch.setenv("CYMATIX_ENCODER_READY_TIMEOUT_S", "0.2")
     _DaemonHandler.ready = False  # still loading its models
     encoder_client.configure(daemon_url)
     _arm_local_splade(monkeypatch)
+    _arm_local_rerank(monkeypatch)
 
     # SPLADE first, exactly as ingest orders it.
     with pytest.raises(_LocalSpladeSentinel):
@@ -799,6 +897,8 @@ def test_cold_daemon_gate_blocks_encodes_then_all_three_seams_recover(
     dense = get_shared_codec(dim=4, device="cpu")
     assert sema.encode("hello") == [1.0] * 20, "SEMA serves from the fallback"
     assert dense.encode("hello") == [0.5] * 4, "dense serves from the fallback"
+    with pytest.raises(_LocalRerankSentinel):
+        rerank_backend.score_pairs("hello", ["world"])
     assert not [p for p, _ in _DaemonHandler.received if p.startswith("/encode/")]
     probes = len(_paths("/ready"))
 
@@ -816,6 +916,7 @@ def test_cold_daemon_gate_blocks_encodes_then_all_three_seams_recover(
     assert dense.encode("hello") == [0.25, -0.5, 0.75, 1.0], (
         "dense must not be stuck on its cached fallback"
     )
+    assert rerank_backend.score_pairs("hello", ["world"]) == [0.9]
     assert len(_paths("/ready")) == probes, "the gate is one-shot, not re-polled"
 
 
@@ -829,18 +930,19 @@ def test_cold_daemon_race_across_seams_fires_no_encode_rpc(
     daemon the winning thread just confirmed cold — the exact outcome the gate
     exists to prevent, and one neither seam re-checks for afterwards.
     """
-    from cymatix_context.backends import encoder_client, splade_backend
+    from cymatix_context.backends import encoder_client, rerank_backend, splade_backend
     from cymatix_context.backends.bgem3_codec import get_shared_codec
 
     monkeypatch.setenv("CYMATIX_ENCODER_READY_TIMEOUT_S", "0.3")
     _DaemonHandler.ready = False  # still loading
     encoder_client.configure(daemon_url)
     _arm_local_splade(monkeypatch)
+    _arm_local_rerank(monkeypatch)
 
     sema = encoder_client.RemoteSemaCodec(url=daemon_url)
     dense = get_shared_codec(dim=4, device="cpu")
 
-    barrier = threading.Barrier(3)
+    barrier = threading.Barrier(4)
     results: dict = {}
     errors: list = []
 
@@ -858,10 +960,18 @@ def test_cold_daemon_race_across_seams_fires_no_encode_rpc(
             return "local"
         return "remote"
 
+    def _rerank_call():
+        try:
+            rerank_backend.score_pairs("hello", ["world"])
+        except _LocalRerankSentinel:
+            return "local"
+        return "remote"
+
     threads = [
         threading.Thread(target=_run, args=("splade", _splade_call), daemon=True),
         threading.Thread(target=_run, args=("sema", lambda: sema.encode("hello")), daemon=True),
         threading.Thread(target=_run, args=("dense", lambda: dense.encode("hello")), daemon=True),
+        threading.Thread(target=_run, args=("rerank", _rerank_call), daemon=True),
     ]
     for t in threads:
         t.start()
@@ -873,6 +983,7 @@ def test_cold_daemon_race_across_seams_fires_no_encode_rpc(
     assert results["splade"] == "local"
     assert results["sema"] == [1.0] * 20
     assert results["dense"] == [0.5] * 4
+    assert results["rerank"] == "local"
     assert not [p for p, _ in _DaemonHandler.received if p.startswith("/encode/")], (
         "a race loser must not RPC a daemon the winner just found cold"
     )
@@ -1051,6 +1162,9 @@ def _install_capturing_transport(monkeypatch):
         elif path == "/encode/sema":
             n = len(json.loads(req.data)["texts"])
             payload = {"vectors": [[0.1] * 20] * n}
+        elif path == "/encode/rerank":
+            n = len(json.loads(req.data)["texts"])
+            payload = {"scores": [0.1] * n}
         else:  # pragma: no cover - defensive
             raise AssertionError(f"unexpected path {path}")
         return _Resp(json.dumps(payload).encode())
@@ -1133,6 +1247,22 @@ def test_splade_encode_single_item_keeps_flat_default_timeout(monkeypatch):
     splade_backend.encode("hello world")
 
     assert _timeouts_for(calls, "/encode/splade") == [encoder_client.default_timeout_s()]
+
+
+def test_rerank_score_pairs_timeout_scales_with_text_count(monkeypatch):
+    """50 texts -> default_timeout_s() + 50*per_item_timeout_s() == 10.0 + 12.5 == 22.5s."""
+    from cymatix_context.backends import encoder_client, rerank_backend
+
+    calls = _install_capturing_transport(monkeypatch)
+    encoder_client.configure("http://127.0.0.1:1")
+    texts = [f"t{i}" for i in range(50)]
+    rerank_backend.score_pairs("q", texts)
+
+    encode_calls = _timeouts_for(calls, "/encode/rerank")
+    assert len(encode_calls) == 1
+    assert encode_calls[0] == pytest.approx(22.5)
+    assert encode_calls[0] == pytest.approx(encoder_client.batch_timeout_s(50))
+    assert encode_calls[0] > encoder_client.default_timeout_s()
 
 
 def test_batch_timeout_scaling_honors_per_item_env_knob(monkeypatch):

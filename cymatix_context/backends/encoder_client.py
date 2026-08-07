@@ -391,6 +391,18 @@ class EncoderClient:
         resp = self._post_json("/encode/sema", {"texts": texts}, timeout_s=timeout_s)
         return self._require(resp, "vectors", "/encode/sema")
 
+    def encode_rerank(
+        self, query: str, texts: List[str], timeout_s: Optional[float] = None,
+    ) -> List[float]:
+        """POST /encode/rerank {query, texts} -> scores (contract table).
+
+        See ``encode_dense`` for the ``timeout_s`` override semantics.
+        """
+        resp = self._post_json(
+            "/encode/rerank", {"query": query, "texts": texts}, timeout_s=timeout_s,
+        )
+        return self._require(resp, "scores", "/encode/rerank")
+
     def encode_bundle(self, text: str, task: str = "query", top_k: int = 128) -> Dict[str, Any]:
         """POST /encode/bundle {text, task, top_k} -> {dense, splade, sema}."""
         return self._post_json("/encode/bundle", {"text": text, "task": task, "top_k": top_k})
