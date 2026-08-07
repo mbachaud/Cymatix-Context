@@ -24,7 +24,7 @@ class TestTargetPath:
         assert installer.target_path("linux") == Path.home() / ".config" / "systemd" / "user" / "cymatix-launcher.service"
 
     def test_darwin_target(self):
-        assert installer.target_path("darwin") == Path.home() / "Library" / "LaunchAgents" / "com.swiftwing21.cymatix-launcher.plist"
+        assert installer.target_path("darwin") == Path.home() / "Library" / "LaunchAgents" / "io.cymatix.launcher.plist"
 
     def test_win32_target_is_none(self):
         assert installer.target_path("win32") is None
@@ -41,7 +41,7 @@ class TestFindTemplate:
         p = installer._find_template("darwin")
         assert p is not None
         assert p.exists()
-        assert p.name == "com.swiftwing21.cymatix-launcher.plist"
+        assert p.name == "io.cymatix.launcher.plist"
 
     def test_win32_template_is_none(self):
         assert installer._find_template("win32") is None
@@ -144,7 +144,7 @@ class TestLinuxInstallAndUninstall:
 
 class TestDarwinInstall:
     def test_darwin_install_substitutes_username_and_launcher_path(self, tmp_path):
-        fake_target = tmp_path / "LaunchAgents" / "com.swiftwing21.cymatix-launcher.plist"
+        fake_target = tmp_path / "LaunchAgents" / "io.cymatix.launcher.plist"
         fake_launcher = tmp_path / "bin" / "cymatix-launcher"
         fake_launcher.parent.mkdir(parents=True)
         fake_launcher.write_text("#!/bin/bash\necho hi")
@@ -152,7 +152,9 @@ class TestDarwinInstall:
         with patch("cymatix_context.launcher.installer.current_platform", return_value="darwin"):
             with patch("cymatix_context.launcher.installer.target_path", return_value=fake_target):
                 with patch("cymatix_context.launcher.installer.find_launcher_binary", return_value=fake_launcher):
-                    ok, msg = installer.install_service()
+                    with patch("cymatix_context.launcher.installer._legacy_darwin_plist_path",
+                               return_value=tmp_path / "LaunchAgents" / "absent-legacy.plist"):
+                        ok, msg = installer.install_service()
 
         assert ok is True
         assert fake_target.exists()
@@ -161,6 +163,113 @@ class TestDarwinInstall:
         # USERNAME placeholder should be replaced (with $HOME, not the literal string)
         assert "/Users/USERNAME" not in content
         assert "launchctl load" in msg
+
+
+class TestDarwinLegacyMigration:
+    """Pre-0.5 installs shipped com.swiftwing21.cymatix-launcher.plist.
+    install_service on darwin must auto-migrate it — detect, launchctl
+    unload, remove — before writing the io.cymatix plist, exactly as
+    documented in deploy/launchd/io.cymatix.launcher.plist (Migration
+    section). Idempotent, and non-fatal on partial failure."""
+
+    def _install(self, tmp_path, legacy, dry_run=False):
+        """Run install_service on a fake darwin with all paths tmp-rooted
+        so tests never touch the real home directory."""
+        fake_target = tmp_path / "LaunchAgents" / "io.cymatix.launcher.plist"
+        fake_launcher = tmp_path / "bin" / "cymatix-launcher"
+        fake_launcher.parent.mkdir(parents=True, exist_ok=True)
+        fake_launcher.write_text("#!/bin/bash\necho hi")
+
+        with patch("cymatix_context.launcher.installer.current_platform", return_value="darwin"):
+            with patch("cymatix_context.launcher.installer.target_path", return_value=fake_target):
+                with patch("cymatix_context.launcher.installer.find_launcher_binary", return_value=fake_launcher):
+                    with patch("cymatix_context.launcher.installer._legacy_darwin_plist_path",
+                               return_value=legacy):
+                        ok, msg = installer.install_service(dry_run=dry_run)
+        return ok, msg, fake_target
+
+    def test_legacy_plist_is_unloaded_and_removed(self, tmp_path):
+        legacy = tmp_path / "LaunchAgents" / "com.swiftwing21.cymatix-launcher.plist"
+        legacy.parent.mkdir(parents=True)
+        legacy.write_text("<plist/>")
+
+        with patch("cymatix_context.launcher.installer.subprocess.run") as mock_run:
+            ok, msg, fake_target = self._install(tmp_path, legacy)
+
+        assert ok is True
+        mock_run.assert_called_once()
+        args, kwargs = mock_run.call_args
+        assert args[0] == ["launchctl", "unload", str(legacy)]
+        # Subprocess-safety rule: no console window flash on Windows hosts.
+        assert kwargs.get("creationflags") == getattr(
+            installer.subprocess, "CREATE_NO_WINDOW", 0
+        )
+        assert not legacy.exists(), "Legacy plist must be removed after unload"
+        assert fake_target.exists(), "New io.cymatix plist must still be installed"
+        assert "com.swiftwing21" in msg
+
+    def test_migration_is_noop_when_legacy_absent(self, tmp_path):
+        legacy = tmp_path / "LaunchAgents" / "com.swiftwing21.cymatix-launcher.plist"
+        # Not written — the common (already-migrated / fresh) case.
+        with patch("cymatix_context.launcher.installer.subprocess.run") as mock_run:
+            ok, msg, fake_target = self._install(tmp_path, legacy)
+
+        assert ok is True
+        mock_run.assert_not_called()
+        assert fake_target.exists()
+        assert "com.swiftwing21" not in msg
+
+    def test_migration_survives_launchctl_failure(self, tmp_path):
+        """launchctl missing/erroring must not abort the migration —
+        the stale plist is still removed and the install proceeds."""
+        legacy = tmp_path / "LaunchAgents" / "com.swiftwing21.cymatix-launcher.plist"
+        legacy.parent.mkdir(parents=True)
+        legacy.write_text("<plist/>")
+
+        with patch("cymatix_context.launcher.installer.subprocess.run",
+                   side_effect=FileNotFoundError("no launchctl")):
+            ok, msg, fake_target = self._install(tmp_path, legacy)
+
+        assert ok is True
+        assert not legacy.exists()
+        assert fake_target.exists()
+
+    def test_migration_survives_unlink_failure(self, tmp_path):
+        """A legacy plist we can't delete is logged, not fatal — the
+        io.cymatix install must still complete."""
+        legacy = tmp_path / "LaunchAgents" / "com.swiftwing21.cymatix-launcher.plist"
+        legacy.parent.mkdir(parents=True)
+        legacy.write_text("<plist/>")
+
+        real_unlink = Path.unlink
+
+        def failing_unlink(self, *a, **kw):
+            if self.name == "com.swiftwing21.cymatix-launcher.plist":
+                raise OSError("file locked")
+            return real_unlink(self, *a, **kw)
+
+        with patch("cymatix_context.launcher.installer.subprocess.run"):
+            with patch.object(Path, "unlink", failing_unlink):
+                ok, msg, fake_target = self._install(tmp_path, legacy)
+
+        assert ok is True
+        assert legacy.exists()  # removal failed, but install went through
+        assert fake_target.exists()
+
+    def test_dry_run_previews_migration_without_side_effects(self, tmp_path):
+        legacy = tmp_path / "LaunchAgents" / "com.swiftwing21.cymatix-launcher.plist"
+        legacy.parent.mkdir(parents=True)
+        legacy.write_text("<plist/>")
+
+        with patch("cymatix_context.launcher.installer.subprocess.run") as mock_run:
+            ok, msg, fake_target = self._install(tmp_path, legacy, dry_run=True)
+
+        assert ok is True
+        mock_run.assert_not_called()
+        assert legacy.exists()
+        assert not fake_target.exists()
+        assert "dry run" in msg.lower()
+        assert "com.swiftwing21" in msg
 
 
 class TestCLIIntegration:
