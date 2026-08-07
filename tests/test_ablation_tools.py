@@ -490,6 +490,116 @@ def test_run_arm_emits_per_query_only_when_flag_is_set(monkeypatch, per_query):
     assert row["per_query"][0]["signal_ms"] == {"fts5": 2.0, "splade": 5.0}
 
 
+def test_run_arm_splice_n_candidates_does_not_leak_across_needles(monkeypatch):
+    """#341 review regression: ``context_manager._pipeline_events`` is a
+    process-lifetime global ring, never cleared between queries/arms.
+    Before the mark-correlation fix, draining "the newest splice entry" on
+    a needle whose own ``build_context`` never rings one (no-match early
+    return, abstain, pre-splice exception) silently inherited the
+    PREVIOUS needle's (or the untimed warmup's) splice count instead of
+    None. n0 here rings splice; n1 does not (simulated abstain) — n1 must
+    read None, not n0's count."""
+    needles = [
+        {"name": "n0", "query": "q0"},
+        {"name": "n1", "query": "q1"},
+    ]
+    gold = {"n0": {"g1"}, "n1": {"g9"}}
+
+    fake_ring: list = []
+    _clock = {"t": 0.0}
+
+    def _ring_append(stage, **extra):
+        _clock["t"] += 1.0
+        fake_ring.append({"stage": stage, "ts": _clock["t"], **extra})
+
+    class _FakeGenome:
+        def __init__(self):
+            self.last_query_scores = {"g1": 9.0}
+            self.last_signal_timings = {}
+            self.last_tier_contributions = {}
+            self.synonym_map = {}
+
+        def _expand_terms(self, terms):
+            return sorted(t.lower() for t in terms)
+
+    class _FakeWindow:
+        metadata = {}
+        expressed_gene_ids = ["g1"]
+
+    class _FakeManager:
+        def __init__(self, cfg):
+            self.config = cfg
+            self.genome = _FakeGenome()
+            self._last_cold_tier_used = False
+
+        def build_context(self, query, *a, **kw):
+            _ring_append("express")
+            if query == "q0":
+                _ring_append("splice", n_candidates=7, splice_target=100)
+            # q1 rings no splice entry — simulates a no-match/abstain early
+            # return that never reaches the splice stage.
+            return _FakeWindow()
+
+        def close(self):
+            pass
+
+    class _FakeCfg:
+        class _Genome:
+            path = ""
+        def __init__(self):
+            self.genome = _FakeCfg._Genome()
+            self.synonym_map = {}
+
+    fake_modules = {
+        "cymatix_context.backends.encoder_client": type(
+            "M", (), {"active_url": staticmethod(lambda: "")},
+        ),
+        "cymatix_context.config": type(
+            "M", (), {"load_config": staticmethod(lambda *a, **kw: _FakeCfg())},
+        ),
+        "cymatix_context.context_manager": type(
+            "M", (), {
+                "CymatixContextManager": _FakeManager,
+                "get_pipeline_ring_max": staticmethod(lambda: 128),
+                "get_recent_pipeline_events": staticmethod(
+                    lambda limit=32: list(fake_ring)[-limit:] if limit else list(fake_ring)
+                ),
+            },
+        ),
+        "cymatix_context.scoring.cymatics": type(
+            "M", (), {"query_spectrum": staticmethod(lambda *a, **kw: None)},
+        ),
+    }
+    real_import = __import__
+
+    def _fake_import(name, globals=None, locals=None, fromlist=(), level=0):
+        if name == "cymatix_context.backends" and "encoder_client" in (fromlist or ()):
+            return type("P", (), {
+                "encoder_client": fake_modules["cymatix_context.backends.encoder_client"],
+            })
+        if name == "cymatix_context.scoring" and "cymatics" in (fromlist or ()):
+            return type("P", (), {
+                "cymatics": fake_modules["cymatix_context.scoring.cymatics"],
+            })
+        if name in fake_modules:
+            return fake_modules[name]
+        return real_import(name, globals, locals, fromlist, level)
+
+    monkeypatch.setattr("builtins.__import__", _fake_import)
+
+    row = ladder.run_arm(
+        ladder.Arm(name="fake", knobs={}, gate="test", validation=ladder.VALIDATION_CONTROL),
+        genome_path="unused.db", config_path=None, needles=needles,
+        gold_by_needle=gold, k=12, per_query=True,
+    )
+
+    recs = row["per_query"]
+    assert recs[0]["splice_n_candidates"] == 7
+    assert recs[1]["splice_n_candidates"] is None, (
+        "n1 never rang splice — must not inherit n0's stale ring count"
+    )
+
+
 def test_call_probe_counts_and_restores_the_original():
     class _Mod:
         @staticmethod

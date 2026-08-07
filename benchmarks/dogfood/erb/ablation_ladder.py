@@ -446,6 +446,37 @@ def newest_splice_count(events: Sequence[Mapping[str, Any]]) -> Optional[int]:
     return splice_events[-1].get("n_candidates")
 
 
+def pipeline_ring_mark(events: Sequence[Mapping[str, Any]]) -> float:
+    """A monotonic mark for a ring snapshot taken immediately BEFORE a
+    ``build_context`` call: the newest entry's ``ts`` (wall-clock seconds,
+    stamped by ``context_manager._stage_timer``), or ``0.0`` when the ring
+    was empty.
+
+    ``context_manager._pipeline_events`` is a module-global, PROCESS-
+    LIFETIME deque (maxlen=128, ~8 stage events per query) — across the
+    many needles in one ``run_arm`` loop (or across arms sharing a
+    process), a needle whose own ``build_context`` never rings a splice
+    entry (no-match early return, abstain, or a pre-splice exception) must
+    not silently inherit a PRIOR needle's (or the untimed warmup's) splice
+    count (review finding, #341). A length-based "read everything past
+    index N" snapshot breaks once the deque wraps past that index; ``ts``
+    keeps correlating correctly across wraparound because it is a property
+    of the entry itself, not of its position in the deque.
+    """
+    if not events:
+        return 0.0
+    return max(float(e.get("ts", 0.0)) for e in events)
+
+
+def events_since_mark(
+    events: Sequence[Mapping[str, Any]], mark: float,
+) -> List[Mapping[str, Any]]:
+    """Entries strictly newer than *mark* (see ``pipeline_ring_mark``) —
+    i.e. rung by the ``build_context`` call that followed the mark, not by
+    whatever query last happened to ring a matching stage."""
+    return [e for e in events if float(e.get("ts", 0.0)) > mark]
+
+
 def percentile(values: Sequence[float], pct: float) -> Optional[float]:
     """Nearest-rank percentile (no interpolation). Empty -> None.
 
@@ -762,6 +793,28 @@ def run_arm(
     delivered_gold_hits = 0
     n_scored = 0
 
+    # #341 splice-interaction receipt, review fix: sentinel for "the
+    # pre-call ring mark itself could not be read" — deliberately distinct
+    # from pipeline_ring_mark's 0.0 ("ring was empty"), because falling
+    # back to 0.0 here would treat the WHOLE ring as "since this call" and
+    # reproduce the exact leak this guards against.
+    _RING_MARK_UNAVAILABLE = object()
+
+    def _resolve_splice_n_candidates(mark: Any, name: str) -> Optional[int]:
+        """Drain splice_n_candidates for one needle, correlated to *mark*
+        (see pipeline_ring_mark/events_since_mark). Degrades to None on any
+        ring-read failure rather than raising or silently falling back to
+        an unmarked (whole-ring) drain, matching run_arm's established
+        guard pattern on foreign calls (encoder_client.active_url() above)."""
+        if mark is _RING_MARK_UNAVAILABLE:
+            return None
+        try:
+            ring_events = get_recent_pipeline_events(get_pipeline_ring_max())
+            return newest_splice_count(events_since_mark(ring_events, mark))
+        except Exception as exc:  # noqa: BLE001
+            errors.append(f"{name}: splice ring drain failed: {exc}")
+            return None
+
     manager = CymatixContextManager(cfg)
     warmed = False
     try:
@@ -786,6 +839,20 @@ def run_arm(
                 name = needle["name"]
                 gold = gold_by_needle.get(name, set())
                 t0 = time.perf_counter()
+                # #341 review fix: mark the ring immediately BEFORE this
+                # call. context_manager._pipeline_events is a process-
+                # lifetime global (not reset per query/arm), so draining
+                # "the newest splice entry" without this mark would leak a
+                # PRIOR needle's (or the untimed warmup's) splice count into
+                # a needle whose own build_context never reaches splice
+                # (no-match early return, abstain, or a pre-splice
+                # exception) — see events_since_mark's docstring.
+                try:
+                    ring_mark = pipeline_ring_mark(
+                        get_recent_pipeline_events(get_pipeline_ring_max()))
+                except Exception as exc:  # noqa: BLE001
+                    errors.append(f"{name}: pipeline ring mark failed: {exc}")
+                    ring_mark = _RING_MARK_UNAVAILABLE
                 try:
                     window = manager.build_context(
                         needle["query"],
@@ -812,9 +879,9 @@ def run_arm(
                     # #341 splice-interaction receipt: still None on the usual
                     # failure (splice never reached), but a build_context that
                     # raises AFTER splice (e.g. assemble) leaves the entry
-                    # ringed — drain it the same way the success path does.
-                    ring_events = get_recent_pipeline_events(get_pipeline_ring_max())
-                    error_record["splice_n_candidates"] = newest_splice_count(ring_events)
+                    # ringed — mark-correlated drain, same as the success path.
+                    error_record["splice_n_candidates"] = _resolve_splice_n_candidates(
+                        ring_mark, name)
                     records.append(error_record)
                     continue
                 wall_ms = (time.perf_counter() - t0) * 1000.0
@@ -842,14 +909,13 @@ def run_arm(
                     n_queries=len(needles), wall_ms=wall_ms, signal_ms=sig,
                 )
                 record.update(dg_fields)
-                # #341 splice-interaction receipt: the ring wraps at ~16
-                # queries (128 slots / ~8 stages per query), so it must be
-                # drained per query — the newest splice entry belongs to the
-                # build_context call just above (queries run serially here).
-                # None when splice never ran for this query (e.g. an arm
-                # that disables splice, or 0 candidates reached that stage).
-                ring_events = get_recent_pipeline_events(get_pipeline_ring_max())
-                record["splice_n_candidates"] = newest_splice_count(ring_events)
+                # #341 splice-interaction receipt: mark-correlated drain
+                # (see ring_mark above) — only entries rung by THIS
+                # build_context call count, so a needle that never reaches
+                # splice (no-match, abstain, disabled arm) gets None
+                # instead of inheriting a prior needle's stale count.
+                record["splice_n_candidates"] = _resolve_splice_n_candidates(
+                    ring_mark, name)
                 records.append(record)
 
                 contribs = getattr(manager.genome, "last_tier_contributions", None) or {}
