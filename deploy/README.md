@@ -8,7 +8,7 @@ it" deployments.
 | Platform | File | Notes |
 |---|---|---|
 | Linux | [`systemd/cymatix-launcher.service`](systemd/cymatix-launcher.service) | User-level systemd unit. Edit `ExecStart` and copy to `~/.config/systemd/user/`. |
-| macOS | [`launchd/com.swiftwing21.cymatix-launcher.plist`](launchd/com.swiftwing21.cymatix-launcher.plist) | Per-user LaunchAgent. Edit `ProgramArguments` and copy to `~/Library/LaunchAgents/`. |
+| macOS | [`launchd/io.cymatix.launcher.plist`](launchd/io.cymatix.launcher.plist) | Per-user LaunchAgent. Edit `ProgramArguments` and copy to `~/Library/LaunchAgents/`. |
 | Windows | [`windows/README.md`](windows/README.md) | NSSM-based service install recipe. Manual setup via NSSM GUI. |
 
 These templates are deliberately **not auto-installed**. Each platform
