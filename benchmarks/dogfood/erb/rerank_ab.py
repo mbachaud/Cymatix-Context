@@ -110,6 +110,18 @@ from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
 
 # benchmarks/dogfood/erb/rerank_ab.py -> repo root is parents[3].
 REPO_ROOT = Path(__file__).resolve().parents[3]
+# Same prologue ablation_ladder.py carries, and for the same reason: run as a
+# script, sys.path[0] is THIS directory, not the repo root, so
+# `import cymatix_context` would resolve from the editable install — a
+# plain-path .pth naming the MASTER checkout, which has no #341 rerank seams
+# at all ([retrieval] rerank_enabled does not exist there). Pinning the
+# ladder CHILD's PYTHONPATH (see ladder_env) does nothing for the imports
+# this module makes ITSELF; both halves are needed. Must run BEFORE any
+# cymatix_context import — preflight_configs imports load_config lazily, so
+# "before" is satisfied by module position alone, and a source-order test
+# keeps it that way.
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 _ERB_DIR = Path(__file__).resolve().parent
 if str(_ERB_DIR) not in sys.path:
     sys.path.insert(0, str(_ERB_DIR))

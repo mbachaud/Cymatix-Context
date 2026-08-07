@@ -645,6 +645,70 @@ def test_ladder_env_sets_the_encoder_url_and_leaves_the_base_env_alone():
     assert base == {"EXISTING": "keep"}, "the caller's env must not be mutated"
 
 
+# ── review fix 5: the runner needs the prologue for its OWN imports ─────
+#
+# Round 2 pinned the ladder CHILD's env, but rerank_ab.py itself had no
+# prologue, so its own `from cymatix_context.config import load_config`
+# (inside preflight_configs) resolved from the master editable install:
+# "Unknown keys in [retrieval]: ['rerank_enabled']" then AttributeError on
+# RetrievalConfig.rerank_enabled — master has no rerank seams. Caught on
+# the first real invocation.
+
+RERANK_AB_PATH = ROOT / "benchmarks" / "dogfood" / "erb" / "rerank_ab.py"
+
+
+def test_rerank_ab_inserts_the_worktree_root_before_importing_cymatix():
+    """Source-order check: cheap, and it pins the ORDERING that matters —
+    a cymatix_context import hoisted above the prologue reintroduces the
+    bug without any test noticing."""
+    import re
+
+    source = RERANK_AB_PATH.read_text(encoding="utf-8")
+    prologue = source.find("sys.path.insert(0, str(REPO_ROOT))")
+    assert prologue != -1, "rerank_ab.py has no worktree-root sys.path prologue"
+    first_import = re.search(r"(?m)^\s*(?:from|import) cymatix_context", source)
+    assert first_import is not None, (
+        "no cymatix_context import found — if the import moved, move this test")
+    assert prologue < first_import.start(), (
+        "a cymatix_context import sits ABOVE the sys.path prologue, so it "
+        "resolves from the editable install (master), not this worktree")
+
+
+def test_rerank_ab_preflight_loads_config_from_this_worktree_as_a_script(tmp_path):
+    """The real invocation, reproduced: script invocation + scrubbed env.
+
+    Stops at the config preflight (the ON cell declares rerank_enabled=false,
+    a false premise), so it exits 2 WITHOUT spawning a daemon or touching a
+    port — safe to run while a bench is live. Before the prologue landed this
+    died with AttributeError on RetrievalConfig.rerank_enabled instead,
+    because master has no such knob.
+    """
+    import os
+    import subprocess
+
+    off = tmp_path / "off.toml"
+    off.write_text("[retrieval]\nrerank_enabled = false\n", encoding="utf-8")
+    on = tmp_path / "on.toml"
+    on.write_text("[retrieval]\nrerank_enabled = false\n", encoding="utf-8")
+
+    env = {k: v for k, v in os.environ.items() if k != "PYTHONPATH"}
+    proc = subprocess.run(
+        [sys.executable, str(RERANK_AB_PATH),
+         "--config-off", str(off), "--config-on", str(on)],
+        cwd=str(ROOT), env=env, capture_output=True, text=True, timeout=180,
+        creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+    )
+    assert proc.returncode == 2, (
+        f"expected the preflight's exit 2, got {proc.returncode}\n"
+        f"stdout:\n{proc.stdout}\nstderr:\n{proc.stderr}"
+    )
+    assert "rerank_enabled" in proc.stderr
+    assert "expected true" in proc.stderr, proc.stderr
+    # The master-resolution signature, explicitly ruled out.
+    assert "AttributeError" not in proc.stderr
+    assert "Unknown keys in [retrieval]" not in proc.stderr
+
+
 def test_rerank_ab_arg_parser_exposes_the_documented_flags():
     ab = _load_rerank_ab()
     parser = ab.build_arg_parser()
