@@ -299,13 +299,21 @@ def test_every_arm_declares_a_gate_and_an_implemented_validation():
         ladder.VALIDATION_CONTROL, ladder.VALIDATION_SIGNAL, ladder.VALIDATION_TIER,
         ladder.VALIDATION_METADATA, ladder.VALIDATION_EXPANSION,
         ladder.VALIDATION_CALL_PROBE, ladder.VALIDATION_COLD,
+        ladder.VALIDATION_SIGNAL_PRESENT,
     }
     for arm in ladder.ARMS:
         assert arm.gate, f"{arm.name} has no recorded gate file:line"
         assert arm.validation in implemented, f"{arm.name} has no validation method"
         if arm.name != "baseline":
             assert arm.knobs, f"{arm.name} changes nothing"
-            assert arm.expect_absent, f"{arm.name} declares no expected observable"
+            # #341: an arm declares an ABSENCE observable (ablation arms) or a
+            # PRESENCE one (enable arms) — never neither, and never both.
+            assert arm.expect_absent or arm.expect_present, (
+                f"{arm.name} declares no expected observable")
+            assert not (arm.expect_absent and arm.expect_present), (
+                f"{arm.name} declares both directions — pick one")
+        if arm.validation == ladder.VALIDATION_SIGNAL_PRESENT:
+            assert arm.expect_present, f"{arm.name} is an enable arm with nothing to expect"
 
 
 def test_per_query_record_shape_and_recall_contribution():
@@ -598,6 +606,114 @@ def test_run_arm_splice_n_candidates_does_not_leak_across_needles(monkeypatch):
     assert recs[1]["splice_n_candidates"] is None, (
         "n1 never rang splice — must not inherit n0's stale ring count"
     )
+
+
+def test_run_arm_final_order_fields_do_not_leak_across_needles(monkeypatch):
+    """#341: last_ranked_ids / last_rerank_diag are PROCESS-lifetime store
+    attributes, rewritten only when a query reaches its publication point.
+    n0 publishes an order; n1's query returns without publishing (no-match /
+    abstain). Without the clear-before-call discipline n1 would report n0's
+    rank as its own — a fabricated hit."""
+    needles = [{"name": "n0", "query": "q0"}, {"name": "n1", "query": "q1"}]
+    gold = {"n0": {"g1"}, "n1": {"g1"}}
+
+    class _FakeGenome:
+        def __init__(self):
+            self.last_query_scores = {"g1": 9.0}
+            self.last_signal_timings = {"xenc_rerank": 12.0}
+            self.last_tier_contributions = {}
+            self.synonym_map = {}
+            self.last_ranked_ids = []
+            self.last_rerank_diag = {}
+
+        def _expand_terms(self, terms):
+            return sorted(t.lower() for t in terms)
+
+    class _FakeWindow:
+        metadata = {}
+        expressed_gene_ids = ["g1"]
+
+    class _FakeManager:
+        def __init__(self, cfg):
+            self.config = cfg
+            self.genome = _FakeGenome()
+            self._last_cold_tier_used = False
+
+        def build_context(self, query, *a, **kw):
+            if query == "q0":
+                self.genome.last_ranked_ids = ["zz", "g1", "yy"]
+                self.genome.last_rerank_diag = {"gate_kept": 12, "floor_appended": 3}
+            # q1 publishes nothing — simulates a query that never reaches the
+            # ANN/lex publication point.
+            return _FakeWindow()
+
+        def close(self):
+            pass
+
+    class _FakeCfg:
+        class _Genome:
+            path = ""
+
+        def __init__(self):
+            self.genome = _FakeCfg._Genome()
+            self.synonym_map = {}
+
+    fake_modules = {
+        "cymatix_context.backends.encoder_client": type(
+            "M", (), {"active_url": staticmethod(lambda: "http://127.0.0.1:11439")},
+        ),
+        "cymatix_context.config": type(
+            "M", (), {"load_config": staticmethod(lambda *a, **kw: _FakeCfg())},
+        ),
+        "cymatix_context.context_manager": type(
+            "M", (), {
+                "CymatixContextManager": _FakeManager,
+                "get_pipeline_ring_max": staticmethod(lambda: 128),
+                "get_recent_pipeline_events": staticmethod(lambda *a, **kw: []),
+            },
+        ),
+        "cymatix_context.scoring.cymatics": type(
+            "M", (), {"query_spectrum": staticmethod(lambda *a, **kw: None)},
+        ),
+    }
+    real_import = __import__
+
+    def _fake_import(name, globals=None, locals=None, fromlist=(), level=0):
+        if name == "cymatix_context.backends" and "encoder_client" in (fromlist or ()):
+            return type("P", (), {
+                "encoder_client": fake_modules["cymatix_context.backends.encoder_client"],
+            })
+        if name == "cymatix_context.scoring" and "cymatics" in (fromlist or ()):
+            return type("P", (), {
+                "cymatics": fake_modules["cymatix_context.scoring.cymatics"],
+            })
+        if name in fake_modules:
+            return fake_modules[name]
+        return real_import(name, globals, locals, fromlist, level)
+
+    monkeypatch.setattr("builtins.__import__", _fake_import)
+
+    row = ladder.run_arm(
+        ladder.Arm(name="rerank_on", knobs={}, gate="test",
+                   validation=ladder.VALIDATION_CONTROL),
+        genome_path="unused.db", config_path=None, needles=needles,
+        gold_by_needle=gold, k=12, per_query=True,
+    )
+
+    recs = row["per_query"]
+    assert recs[0]["final_rank_of_first_gold"] == 2
+    assert recs[0]["final_recall_hit"] == 1
+    assert recs[0]["gate_kept"] == 12 and recs[0]["floor_appended"] == 3
+    assert recs[1]["final_rank_of_first_gold"] is None, (
+        "n1 published no order — must not inherit n0's ranked ids")
+    assert recs[1]["final_recall_hit"] == 0
+    assert recs[1]["gate_kept"] is None and recs[1]["floor_appended"] is None
+    # Arm aggregate: 1 of 2 needles hit on the final-order basis.
+    assert row["final_recall_at_k"] == 0.5
+    # ...and the score-map basis still reports both as hits, which is exactly
+    # why both bases ship: they are not interchangeable.
+    assert row["recall_at_k"] == 1.0
+    assert row["observables"]["signal_keys"] == ["xenc_rerank"]
 
 
 def test_call_probe_counts_and_restores_the_original():

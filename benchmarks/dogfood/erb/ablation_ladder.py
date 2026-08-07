@@ -58,6 +58,25 @@ KEPT
                  NO signal key. Validated by probing ``_expand_terms`` directly
                  with the baseline map's own keys.
 
+  rerank_on /    [retrieval] rerank_enabled   (#341)
+  rerank_off     config.py:778 -> context_manager.py:1018 (rerank_enabled=)
+                 -> knowledge_store.py:845 (self._rerank_enabled)
+                 -> knowledge_store.py:4281 `if self._rerank_effective(
+                 rerank_override) and scored:` (ANN path, the one the
+                 receipts use) and :3692 `if _rerank_on and ranked_ids:`
+                 (lex path).
+                 signal key: 'xenc_rerank' (knowledge_store.py:4308 ANN,
+                 :3734 lex)
+                 These are a PAIR, and only one of them is ever live for a
+                 given config: rerank_on is an ENABLE arm (the shipped
+                 default is False, so "ablating" it is a no-op) validated by
+                 signal PRESENCE, rerank_off is the ordinary ablation
+                 validated by signal absence. Whichever one matches the
+                 loaded config's current value is identity-dropped at
+                 runtime, which is exactly what makes the order-reversed A/B
+                 (benchmarks/dogfood/erb/rerank_ab.py) safe to drive from a
+                 single arm table.
+
   no_classifier  [classifier] enabled
                  config.py:886 -> context_manager.py:1801-1807 (classify_query
                  only called when enabled) -> assembly cap at :2101-2113 and
@@ -123,6 +142,13 @@ is checked twice —
      so "no hebbian" proves nothing), and it is recorded arm_valid=false with
      reason ``unfalsifiable`` rather than counted as a clean ablation.
 
+``VALIDATION_SIGNAL_PRESENT`` (#341) is the same contract with both halves
+inverted, for arms that ENABLE a layer instead of ablating one: the observable
+must be PRESENT in the arm and ABSENT at baseline. An enable arm cannot be
+validated by any of the absence kinds — "xenc_rerank never appeared" and "the
+knob never applied" are the same observation there, so an enable arm checked
+for absence is unfalsifiable by construction.
+
 Baseline therefore always runs, even if ``--arms`` omits it.
 
 ────────────────────────────────────────────────────────────────────────
@@ -134,6 +160,22 @@ Measurement caveats (on the record)
   layer republishes it (scoring/blend.py:233, :281), so cymatics / harmonic-bin
   mutations ARE reflected. It is not, however, the delivered slice, so the
   receipt also records ``delivered_gold`` from ``window.expressed_gene_ids``.
+* ``last_query_scores`` is a SCORE map, and a reorder that does not rewrite
+  scores is invisible in it — which is exactly what the cross-encoder does
+  (#341: it permutes ids, it does not republish fused scores). So the receipt
+  also records the FINAL ORDER basis from ``manager.genome.last_ranked_ids``
+  (``final_rank_of_first_gold`` / ``final_recall_hit`` per needle,
+  ``final_recall_at_k`` per arm). Both bases ship: score-rank is the
+  comparable-to-history one, final-rank is the one a rerank arm can move.
+  Depth semantics differ by retrieval path — ANN publishes the full union
+  pool, the lex path publishes the post-cut list (knowledge_store.py:940-949)
+  — and these A/Bs run dense-on, i.e. the ANN semantics.
+* ``last_ranked_ids`` / ``last_rerank_diag`` are store attributes with
+  process lifetime, so run_arm CLEARS them immediately before each
+  ``build_context`` call. A needle whose query never reaches the publication
+  point (no-match early return, abstain, exception) then reads ``None``
+  instead of inheriting the previous needle's order — the same staleness trap
+  the splice ring-mark guards against.
 * Ties are broken by ``gene_id`` ascending, not dict insertion order, so ranks
   are reproducible across arms and processes.
 * Timings are wall ms on a shared box. Treat them as within-run relatives; no
@@ -153,6 +195,13 @@ Usage::
     python benchmarks/dogfood/erb/ablation_ladder.py --stamp 20260805-1200
     python benchmarks/dogfood/erb/ablation_ladder.py --arms baseline,no_dense
     python benchmarks/dogfood/erb/ablation_ladder.py --per-query   # paired basis
+    python benchmarks/dogfood/erb/ablation_ladder.py --arms rerank_on  # #341
+
+For the #341 rerank question specifically, drive this script through
+``benchmarks/dogfood/erb/rerank_ab.py`` rather than by hand: it runs the
+ladder twice with the base value reversed (so the ON side is not always the
+second arm) and proves from the encoder daemon's own access log that the
+cross-encoder really ran out-of-process.
 
 ``--per-query`` closes an audit gap: per-arm aggregates alone cannot tell you
 WHICH needle moved between two arms, so no paired test can be run from the
@@ -188,6 +237,10 @@ os.environ.setdefault("CYMATIX_DISABLE_LEARN", "1")
 
 VALIDATION_CONTROL = "control"
 VALIDATION_SIGNAL = "signal_absent"
+# #341: the ENABLE direction — the observable must appear in the arm and be
+# absent at baseline. Every other kind here can only prove absence, which
+# makes an enable arm unfalsifiable (see the Self-validation section).
+VALIDATION_SIGNAL_PRESENT = "signal_present"
 VALIDATION_TIER = "tier_contrib_absent"
 VALIDATION_METADATA = "classifier_metadata_absent"
 VALIDATION_EXPANSION = "synonym_expansion_absent"
@@ -210,6 +263,10 @@ class Arm:
     validation: str = VALIDATION_SIGNAL
     # Observables expected to vanish. Interpreted per ``validation`` kind.
     expect_absent: Tuple[str, ...] = ()
+    # #341: observables expected to APPEAR (VALIDATION_SIGNAL_PRESENT only).
+    # An arm sets one or the other, never both — the two directions are
+    # different arms, not two halves of one.
+    expect_present: Tuple[str, ...] = ()
 
 
 ARMS: Tuple[Arm, ...] = (
@@ -278,6 +335,27 @@ ARMS: Tuple[Arm, ...] = (
         gate="knowledge_store.py:1773-1784 `_expand_terms` (called at :2305-2306)",
         validation=VALIDATION_EXPANSION,
         expect_absent=("synonym_expansion",),
+    ),
+    # #341 rerank pair. Exactly one of these survives ``arm_is_identity`` for
+    # any given config, so both can sit in the table unconditionally: with the
+    # shipped default (rerank_enabled=False) rerank_on is live and rerank_off
+    # drops; with a rerank-on config the reverse. rerank_ab.py drives both
+    # directions by pointing each run at the matching config.
+    Arm(
+        name="rerank_on",
+        knobs={"retrieval.rerank_enabled": True},
+        gate=("knowledge_store.py:4281 `if self._rerank_effective(rerank_override) "
+              "and scored:` (ANN) / :3692 (lex) — pre-gate cross-encoder (#341)"),
+        validation=VALIDATION_SIGNAL_PRESENT,
+        expect_present=("xenc_rerank",),
+    ),
+    Arm(
+        name="rerank_off",
+        knobs={"retrieval.rerank_enabled": False},
+        gate=("knowledge_store.py:4281 `if self._rerank_effective(rerank_override) "
+              "and scored:` (ANN) / :3692 (lex) — pre-gate cross-encoder (#341)"),
+        validation=VALIDATION_SIGNAL,
+        expect_absent=("xenc_rerank",),
     ),
     Arm(
         name="no_classifier",
@@ -430,6 +508,52 @@ def delivered_gold_fields(expressed_gene_ids: Sequence[str], gold: set) -> Dict[
             "delivered_gold_rank": rank}
 
 
+def final_rank_of_first_gold(
+    ranked_ids: Sequence[str], gold: Sequence[str] | set,
+) -> Optional[int]:
+    """#341: 1-based position of the first gold id in the FINAL order.
+
+    ``ranked_ids`` is ``genome.last_ranked_ids`` — the order retrieval
+    actually handed downstream, published on both rerank arms
+    (knowledge_store.py:3748 lex / :4320 ANN). A cross-encoder rerank
+    permutes ids without rewriting fused scores, so it is invisible in
+    ``last_query_scores``; this is the basis that can see it.
+
+    ``None`` when no gold appears (or the order is empty) — an
+    unmeasurable, deliberately not a sentinel rank.
+    """
+    gold_set = set(gold)
+    if not gold_set:
+        return None
+    for i, gid in enumerate(ranked_ids, start=1):
+        if gid in gold_set:
+            return i
+    return None
+
+
+def final_order_fields(
+    ranked_ids: Sequence[str],
+    gold: Sequence[str] | set,
+    k: int,
+    diag: Optional[Mapping[str, Any]] = None,
+) -> Dict[str, Any]:
+    """Per-needle final-order block: rank, hit@k, and the #341 rerank diag.
+
+    ``diag`` is ``genome.last_rerank_diag`` (``{"gate_kept", "floor_appended"}``,
+    published by query_docs_ann on BOTH arms). Missing/empty -> the two keys
+    are present and ``None``, never absent: the paired basis must have the
+    same columns on every arm or a reader cannot line the vectors up.
+    """
+    rank = final_rank_of_first_gold(ranked_ids, gold)
+    d = dict(diag or {})
+    return {
+        "final_rank_of_first_gold": rank,
+        "final_recall_hit": 1 if (rank is not None and rank <= k) else 0,
+        "gate_kept": d.get("gate_kept"),
+        "floor_appended": d.get("floor_appended"),
+    }
+
+
 def delivered_gold_rate(per_query: Sequence[Mapping[str, Any]]) -> float:
     if not per_query:
         return 0.0
@@ -537,6 +661,38 @@ def validate_arm(
         return True, (
             f"{field_name}: {sorted(fired_at_baseline)} present at baseline, "
             f"absent in this arm"
+        )
+
+    if arm.validation == VALIDATION_SIGNAL_PRESENT:
+        # The ENABLE direction (#341). Both halves inverted vs the absence
+        # kinds: present here, absent at baseline. A missing baseline bundle
+        # is NOT read as "absent at baseline" — with no control there is
+        # nothing to contrast against, so a layer that was on all along would
+        # otherwise read as a clean enable.
+        if baseline is None:
+            return False, (
+                "unfalsifiable: no baseline observables to contrast against "
+                "(the control arm did not run)"
+            )
+        arm_keys = set(observed.get("signal_keys") or ())
+        base_keys = set(baseline.get("signal_keys") or ())
+        expected = list(arm.expect_present)
+        already_at_baseline = [s for s in expected if s in base_keys]
+        if already_at_baseline:
+            return False, (
+                f"unfalsifiable: {already_at_baseline} already present in the "
+                "baseline signal_keys — the layer was on before this arm "
+                "touched anything, so its presence here proves nothing"
+            )
+        missing = [s for s in expected if s not in arm_keys]
+        if missing:
+            return False, (
+                f"enable did not take: {missing} absent from signal_keys "
+                "(knob applied, seam never ran)"
+            )
+        return True, (
+            f"signal_keys: {sorted(expected)} absent at baseline, present in "
+            "this arm"
         )
 
     if arm.validation == VALIDATION_METADATA:
@@ -735,6 +891,34 @@ def _dense_codec_name(genome: Any) -> Optional[str]:
     return type(codec).__name__ if codec is not None else None
 
 
+def _clear_rank_publication(genome: Any) -> None:
+    """Blank ``last_ranked_ids`` / ``last_rerank_diag`` before a query.
+
+    Both are store attributes with PROCESS lifetime (knowledge_store.py:950,
+    :955), rewritten only when a query reaches its publication point. Reading
+    them after a needle that never got there (no-match early return, abstain,
+    exception) would return the PREVIOUS needle's order — the same staleness
+    trap ``pipeline_ring_mark`` guards for the splice ring. Clearing first
+    turns that case into an honest ``None``.
+
+    Only attributes that already exist are touched, so a store wrapper that
+    does not publish them (e.g. ShardedGenomeAdapter, whitelisted as
+    adapter-only) neither gains a phantom attribute nor raises here; the
+    reader degrades to ``None`` fields instead.
+    """
+    if hasattr(genome, "last_ranked_ids"):
+        genome.last_ranked_ids = []
+    if hasattr(genome, "last_rerank_diag"):
+        genome.last_rerank_diag = {}
+
+
+def _read_rank_publication(genome: Any) -> Tuple[List[str], Dict[str, Any]]:
+    """Snapshot ``(last_ranked_ids, last_rerank_diag)`` defensively."""
+    ranked = list(getattr(genome, "last_ranked_ids", None) or ())
+    diag = dict(getattr(genome, "last_rerank_diag", None) or {})
+    return ranked, diag
+
+
 def run_arm(
     arm: Arm,
     *,
@@ -782,6 +966,7 @@ def run_arm(
 
     errors: List[str] = []
     first_ranks: List[Optional[int]] = []
+    final_ranks: List[Optional[int]] = []
     all_ranks: List[int] = []
     latencies: List[float] = []
     records: List[Dict[str, Any]] = []
@@ -853,6 +1038,12 @@ def run_arm(
                 except Exception as exc:  # noqa: BLE001
                     errors.append(f"{name}: pipeline ring mark failed: {exc}")
                     ring_mark = _RING_MARK_UNAVAILABLE
+                # #341: same discipline for the final-order publication —
+                # blank it so this needle can only read its OWN order.
+                try:
+                    _clear_rank_publication(manager.genome)
+                except Exception as exc:  # noqa: BLE001
+                    errors.append(f"{name}: rank publication clear failed: {exc}")
                 try:
                     window = manager.build_context(
                         needle["query"],
@@ -876,6 +1067,14 @@ def run_arm(
                         error=detail,
                     )
                     error_record.update(delivered_gold_fields([], set(gold)))
+                    # #341 final-order basis: cleared before the call, so this
+                    # is either this needle's own published order (a failure
+                    # AFTER retrieval — e.g. assemble) or empty -> None. Never
+                    # the previous needle's.
+                    err_ranked, err_diag = _read_rank_publication(manager.genome)
+                    err_final = final_order_fields(err_ranked, set(gold), k, err_diag)
+                    final_ranks.append(err_final["final_rank_of_first_gold"])
+                    error_record.update(err_final)
                     # #341 splice-interaction receipt: still None on the usual
                     # failure (splice never reached), but a build_context that
                     # raises AFTER splice (e.g. assemble) leaves the entry
@@ -909,6 +1108,14 @@ def run_arm(
                     n_queries=len(needles), wall_ms=wall_ms, signal_ms=sig,
                 )
                 record.update(dg_fields)
+                # #341: the FINAL retrieval order (post-rerank when it ran).
+                # last_query_scores cannot see a cross-encoder reorder — it
+                # permutes ids without rewriting fused scores — so the rerank
+                # A/B needs this basis, and both arms publish it.
+                ranked_ids, rerank_diag = _read_rank_publication(manager.genome)
+                final_fields = final_order_fields(ranked_ids, set(gold), k, rerank_diag)
+                final_ranks.append(final_fields["final_rank_of_first_gold"])
+                record.update(final_fields)
                 # #341 splice-interaction receipt: mark-correlated drain
                 # (see ring_mark above) — only entries rung by THIS
                 # build_context call count, so a needle that never reaches
@@ -969,6 +1176,10 @@ def run_arm(
         "validation": arm.validation,
         "validation_detail": "",    # filled by the caller
         "recall_at_k": recall_val,
+        # #341: same recall on the FINAL order (post-rerank when it ran).
+        # Reported next to recall_at_k, never instead of it — the two answer
+        # different questions and a rerank arm can move one without the other.
+        "final_recall_at_k": recall_at_k(final_ranks, k),
         "mean_rank_of_gold": (round(statistics.mean(hit_ranks), 2) if hit_ranks else None),
         "median_rank_of_gold": median_or_none(hit_ranks),
         "gold_found_queries": len(hit_ranks),
@@ -1097,7 +1308,11 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
         flag = "ok " if valid else "BAD"
         print(
+            # Both recall bases on the live line: a #341 rerank arm reorders
+            # ids without touching fused scores, so r@k can sit stone-still
+            # while fr@k moves. Printing only r@k would read as "no effect".
             f"  [{flag}] {arm.name:16s} r@{args.k}={row['recall_at_k']:.3f} "
+            f"fr@{args.k}={row['final_recall_at_k']:.3f} "
             f"med_rank={row['median_rank_of_gold']} "
             f"p50={row['latency_ms']['p50']}ms p95={row['latency_ms']['p95']}ms "
             f"-- {detail}",
@@ -1125,10 +1340,20 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "note": (
             "Ranks read from genome.last_query_scores (post-blend; blend "
             "republishes the map at scoring/blend.py:233/:281), ties broken by "
-            "gene_id ascending. delivered_gold_queries reads "
-            "window.expressed_gene_ids. Each arm runs one untimed warmup query "
-            "first so the lazy encoder load is not billed to p50. Latencies are "
-            "wall ms on a shared box — within-run relatives only."
+            "gene_id ascending. THREE bases ship side by side and answer "
+            "different questions: recall_at_k / *_rank_of_gold on the score "
+            "map; final_recall_at_k + per-needle final_rank_of_first_gold on "
+            "genome.last_ranked_ids, the FINAL order (post-rerank when it ran "
+            "— a cross-encoder permutes ids without rewriting fused scores, so "
+            "#341 arms are invisible in the score map); and "
+            "delivered_gold_queries / delivered_gold_rate / "
+            "delivered_gold_rank on window.expressed_gene_ids, the post-budget "
+            "delivery slice (#335). pool_delivery_gap is recall_at_k minus "
+            "delivered_gold_rate. Per-needle gate_kept / floor_appended come "
+            "from genome.last_rerank_diag (published on both rerank arms). "
+            "Each arm runs one untimed warmup query first so the lazy encoder "
+            "load is not billed to p50. Latencies are wall ms on a shared box "
+            "— within-run relatives only."
         ),
         "dropped_arms": dropped,
         "arms": rows,
@@ -1144,7 +1369,14 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             "reconstructs recall_at_k; recall_contribution is the pre-divided "
             "form and sums to recall_at_k up to that aggregate's 4-decimal "
             "rounding. Failed queries appear as miss records carrying 'error', "
-            "so the vectors stay the same length across arms."
+            "so the vectors stay the same length across arms. Each record also "
+            "carries delivered_gold / delivered_count / delivered_gold_rank "
+            "(#335 delivery basis), final_rank_of_first_gold / "
+            "final_recall_hit (#341 final-order basis, from "
+            "genome.last_ranked_ids), gate_kept / floor_appended (#341, from "
+            "genome.last_rerank_diag; None when the query never reached the "
+            "ANN publication point) and splice_n_candidates (ring-correlated; "
+            "None when this needle's own query never rang the splice stage)."
         )
 
     out = _resolve(args.out)
