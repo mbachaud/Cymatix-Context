@@ -59,6 +59,9 @@ class GenomeWriter:
         self._running = True
         self._stats = {"total_writes": 0, "total_batches": 0, "errors": 0}
         self._stats_lock = threading.Lock()
+        # Refined by the writer thread once it can inspect the schema
+        # (issue #338: legacy contentful vs external-content genes_fts).
+        self._fts_external = False
 
         # Start writer thread
         self._thread = threading.Thread(
@@ -129,6 +132,19 @@ class GenomeWriter:
         conn.execute("PRAGMA journal_mode=WAL")
         conn.execute("PRAGMA busy_timeout=5000")
 
+        # Issue #338: external-content genes_fts needs the delete-with-
+        # prior-values discipline; legacy contentful keeps INSERT OR
+        # REPLACE. Detected once — the form cannot change mid-run.
+        try:
+            from .storage.ddl import fts5_is_external_content
+            self._fts_external = fts5_is_external_content(conn.cursor())
+        except Exception:
+            log.warning(
+                "could not detect genes_fts form — assuming legacy",
+                exc_info=True,
+            )
+            self._fts_external = False
+
         while self._running or not self._queue.empty():
             batch = []
             deadline = time.time() + self.flush_interval
@@ -187,6 +203,15 @@ class GenomeWriter:
                     try:
                         gene_id = values[0]
 
+                        # Issue #338: external-content FTS deletes need the
+                        # PRIOR row's indexed values — capture from the
+                        # backing view before the REPLACE + tag rebuild
+                        # change what the view reproduces.
+                        prior_fts_row = None
+                        if fts_values and self._fts_external:
+                            from .storage.indexes import fetch_fts_source_row
+                            prior_fts_row = fetch_fts_source_row(cur, gene_id)
+
                         # INSERT OR REPLACE document
                         placeholders = ",".join("?" * len(values))
                         cur.execute(
@@ -207,11 +232,20 @@ class GenomeWriter:
 
                         # FTS5 sync
                         if fts_values:
-                            cur.execute(
-                                "INSERT OR REPLACE INTO genes_fts"
-                                "(gene_id, content, complement) VALUES (?, ?, ?)",
-                                fts_values,
-                            )
+                            if self._fts_external:
+                                from .storage.indexes import (
+                                    fts_delete_row,
+                                    fts_insert_from_source,
+                                )
+                                if prior_fts_row is not None:
+                                    fts_delete_row(cur, prior_fts_row)
+                                fts_insert_from_source(cur, gene_id)
+                            else:
+                                cur.execute(
+                                    "INSERT OR REPLACE INTO genes_fts"
+                                    "(gene_id, content, complement) VALUES (?, ?, ?)",
+                                    fts_values,
+                                )
 
                         future.set_result(gene_id)
                     except Exception as e:

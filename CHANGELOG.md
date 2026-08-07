@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- **perf(storage): #338 FTS5 external-content rebuild.** `genes_fts` no longer
+  stores its own full copy of every document (the `genes_fts_content` shadow —
+  8.67 GB / 18.5% of the 829K blob bed): new stores are created as
+  external-content FTS5 backed by the `genes_fts_source` view, which reproduces
+  the exact composite text the contentful table indexed, so tokenizer, BM25
+  stats, and reader queries are unchanged (receipted byte-identical on the ERB
+  10k bed: `benchmarks/dogfood/erb/receipts/fts5_external_content_migration_10k.json`).
+  Legacy contentful stores keep working untouched;
+  `scripts/migrate_fts5_external_content.py` converts them offline (idempotent,
+  `--dry-run`, `--vacuum`). Write paths follow the external-content
+  delete-with-prior-values discipline; `rebuild_fts` uses the FTS5 `'rebuild'`
+  command on migrated stores.
+
 ## 0.8.5 — 2026-07-25
 
 Completes the helix → cymatix rename as a **clean break** (0.8.0 was the soft

@@ -1,0 +1,124 @@
+{
+  "issue": 338,
+  "what": "legacy contentful genes_fts -> external-content rebuild on a COPY of the ERB 10k bed; original bed untouched",
+  "source_bed": "f:\\Projects\\helix-context\\genomes\\bench\\sike_beds\\enterprise_rag_10k.db",
+  "bed_stats": {
+    "genes": 15888,
+    "legacy_fts_rows": 15904,
+    "duplicated_gene_ids_in_legacy_index": 15,
+    "note": "the bed predates the 2026-07-18 duplicate-row fix: 16 extra stale rows inflate the legacy index's N/avgdl. The rebuild drops them, so phase A rank FLOATS shift while the ranked gene_id ORDER is compared separately; phase B controls for it."
+  },
+  "migration_report": {
+    "tool": "scripts/migrate_fts5_external_content.py",
+    "db": "C:\\Users\\max\\AppData\\Local\\Temp\\claude\\f--Projects-cymatix-context\\ac539514-a845-44f9-990b-58b76ed07f41\\scratchpad\\bed_338\\enterprise_rag_10k.db",
+    "sqlite_version": "3.50.4",
+    "dry_run": false,
+    "gene_rows": 15888,
+    "fts_rows_before": 15904,
+    "contentful_shadow": {
+      "bytes": 110514004,
+      "rows": 15904,
+      "measured": "estimated (payload bytes x 1.3 b-tree overhead)"
+    },
+    "estimated_reclaim_bytes": 110514004,
+    "file_before": {
+      "page_size": 4096,
+      "page_count": 213749,
+      "freelist_count": 43,
+      "file_bytes": 875515904,
+      "freelist_bytes": 176128
+    },
+    "rebuild_seconds": 2.85,
+    "integrity_check": "ok",
+    "fts_rows_after": 15888,
+    "vacuum_seconds": 9.66,
+    "file_after": {
+      "page_size": 4096,
+      "page_count": 178192,
+      "freelist_count": 0,
+      "file_bytes": 729874432,
+      "freelist_bytes": 0
+    },
+    "status": "migrated",
+    "message": "migrated + VACUUMed: file 0.82 GB -> 0.68 GB"
+  },
+  "storage": {
+    "audit_mode": "estimate (dbstat unavailable \u2014 see exact_error)",
+    "before": {
+      "file_bytes": 875515904,
+      "file_gb": 0.8154,
+      "fts5_layer": {
+        "bytes": 151319173,
+        "gb": 0.140927,
+        "pct_of_file": 17.28
+      }
+    },
+    "after": {
+      "file_bytes": 729874432,
+      "file_gb": 0.6797,
+      "fts5_layer": {
+        "bytes": 56058694,
+        "gb": 0.052209,
+        "pct_of_file": 7.68
+      }
+    },
+    "file_delta_bytes": 145641472,
+    "file_delta_gb": 0.1356,
+    "file_delta_pct": 16.63
+  },
+  "query_parity": {
+    "query_source": "benchmarks/dogfood/erb/needles_resolved_erb10k.json",
+    "match_discipline": "terms >2 chars, quoted, OR-joined; SELECT gene_id, rank FROM genes_fts WHERE genes_fts MATCH ? ORDER BY rank, gene_id LIMIT 50 (the reader-path shape; gene_id tie-break added for a deterministic comparison)",
+    "rank_comparison": "exact float equality (no rounding)",
+    "phase_a_as_is": {
+      "queries": 470,
+      "result_rows_compared": 23500,
+      "exact_mismatches": 470,
+      "gene_id_order_mismatches": 263,
+      "gene_id_order_mismatch_names": [
+        "erb_000",
+        "erb_001",
+        "erb_002",
+        "erb_004",
+        "erb_006",
+        "erb_007",
+        "erb_008",
+        "erb_009",
+        "erb_012",
+        "erb_015",
+        "erb_017",
+        "erb_018",
+        "erb_022",
+        "erb_023",
+        "erb_030",
+        "erb_031",
+        "erb_032",
+        "erb_033",
+        "erb_034",
+        "erb_040"
+      ],
+      "max_abs_rank_delta": 0.6391154194142956,
+      "byte_identical": false,
+      "order_identical": false
+    },
+    "phase_b_controlled": {
+      "queries": 470,
+      "result_rows_compared": 23500,
+      "exact_mismatches": 0,
+      "gene_id_order_mismatches": 0,
+      "gene_id_order_mismatch_names": [],
+      "max_abs_rank_delta": 0.0,
+      "byte_identical": true,
+      "order_identical": true,
+      "control": "legacy contentful index rebuilt clean (DELETE + the repo's rebuild_fts SELECT) before snapshot, 15888 rows \u2014 identical corpus statistics on both sides"
+    },
+    "phase_a_attribution": {
+      "check": "the phase-A migrated bed's full 470-query (gene_id, rank) results vs a THIRD copy given only a clean LEGACY contentful rebuild (DELETE + reinsert, no migration): if identical, the whole phase-A diff is the duplicate-row correction any rebuild performs, and none of it is the external-content form",
+      "byte_identical": true
+    }
+  },
+  "post_migration_checks": {
+    "fts5_integrity_check_rank1": "ok",
+    "genes_fts_vocab_rows": 12812956
+  }
+}

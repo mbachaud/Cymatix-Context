@@ -52,27 +52,130 @@ def rebuild_promoter_index(
 # FTS5 sync
 # ---------------------------------------------------------------------------
 
+def fetch_fts_source_row(
+    cur: sqlite3.Cursor, gene_id: str,
+) -> Optional[tuple]:
+    """Current ``(rowid, gene_id, content, complement)`` for *gene_id* from
+    the external-content backing view, or None.
+
+    Issue #338: on an external-content table the FTS index stores no text
+    of its own, so a delete must re-supply the EXACT token stream that was
+    indexed. Callers capture this row BEFORE mutating ``genes`` /
+    ``promoter_index`` (both feed the view) and hand it to
+    :func:`fts_delete_row` afterwards.
+    """
+    try:
+        row = cur.execute(
+            "SELECT rowid, gene_id, content, complement "
+            "FROM genes_fts_source WHERE gene_id = ?",
+            (gene_id,),
+        ).fetchone()
+    except Exception:
+        log.warning(
+            "FTS5 source-view read failed for gene %s", gene_id, exc_info=True,
+        )
+        return None
+    return tuple(row) if row is not None else None
+
+
+def fts_index_has_rowid(cur: sqlite3.Cursor, rowid: int) -> bool:
+    """True if the external-content FTS *index* contains *rowid*.
+
+    ``SELECT ... FROM genes_fts WHERE rowid = ?`` resolves through the
+    backing view, not the index, so it cannot answer this. The
+    ``genes_fts_docsize`` shadow (one row per indexed doc at the default
+    columnsize=1) can. Issuing a 'delete' for a rowid the index never
+    absorbed corrupts it, so when the shadow is unreadable we err on the
+    side of assuming membership (the common case by far).
+    """
+    try:
+        return cur.execute(
+            "SELECT 1 FROM genes_fts_docsize WHERE id = ?", (rowid,)
+        ).fetchone() is not None
+    except Exception:
+        log.warning(
+            "genes_fts_docsize probe failed — assuming rowid %d is indexed",
+            rowid, exc_info=True,
+        )
+        return True
+
+
+def fts_delete_row(cur: sqlite3.Cursor, prior_row: tuple) -> None:
+    """Remove one row from the external-content FTS index.
+
+    A plain ``DELETE FROM genes_fts`` is NOT legal on an external-content
+    table — the index must be handed the prior row's indexed values via
+    the special 'delete' insert so it can locate and remove the postings.
+    *prior_row* is the ``(rowid, gene_id, content, complement)`` tuple
+    captured by :func:`fetch_fts_source_row` before the mutation.
+    """
+    if not fts_index_has_rowid(cur, prior_row[0]):
+        # Drift (a soft-failed insert whose gene row committed): nothing
+        # to remove, and a bogus 'delete' would corrupt the index.
+        return
+    cur.execute(
+        "INSERT INTO genes_fts(genes_fts, rowid, gene_id, content, complement) "
+        "VALUES ('delete', ?, ?, ?, ?)",
+        prior_row,
+    )
+
+
+def fts_insert_from_source(cur: sqlite3.Cursor, gene_id: str) -> None:
+    """Index *gene_id*'s CURRENT view row into the external-content index.
+
+    Values are read from the backing view (not rebuilt in Python) so the
+    indexed token stream is exactly what a later delete-time view read
+    will reproduce.
+    """
+    row = fetch_fts_source_row(cur, gene_id)
+    if row is None:
+        return
+    cur.execute(
+        "INSERT INTO genes_fts(rowid, gene_id, content, complement) "
+        "VALUES (?, ?, ?, ?)",
+        row,
+    )
+
+
 def sync_fts5(
     cur: sqlite3.Cursor,
     gene_id: str,
     gene: Gene,
     fts_available: bool,
     delete_first: bool = True,
+    fts_external: bool = False,
+    prior_fts_row: Optional[tuple] = None,
 ) -> None:
     """Sync one document into the FTS5 index.  No-op if FTS5 is unavailable.
 
-    ``genes_fts`` is a plain FTS5 virtual table — FTS5 has no UNIQUE
-    constraints, so ``INSERT OR REPLACE`` silently *appends* a second row
-    on re-upsert: stale terms stay searchable and BM25 doc counts inflate
-    (bug bash 2026-07-18). Delete any prior row(s) for this gene_id first;
-    both statements run inside the caller's upsert transaction so the swap
-    stays atomic. ``delete_first=False`` lets the caller skip the delete
-    (an unindexed full scan on FTS5) when it knows the gene is new — the
-    bulk-ingest fast path.
+    Legacy contentful form: ``genes_fts`` is a plain FTS5 virtual table —
+    FTS5 has no UNIQUE constraints, so ``INSERT OR REPLACE`` silently
+    *appends* a second row on re-upsert: stale terms stay searchable and
+    BM25 doc counts inflate (bug bash 2026-07-18). Delete any prior row(s)
+    for this gene_id first; both statements run inside the caller's upsert
+    transaction so the swap stays atomic. ``delete_first=False`` lets the
+    caller skip the delete (an unindexed full scan on FTS5) when it knows
+    the gene is new — the bulk-ingest fast path.
+
+    External-content form (issue #338, ``fts_external=True``): the index
+    stores no text, so the delete must re-supply the PRIOR row's indexed
+    values — the caller captures ``prior_fts_row`` via
+    :func:`fetch_fts_source_row` BEFORE writing ``genes`` /
+    ``promoter_index`` (an INSERT OR REPLACE changes the genes rowid and
+    the new tag/content text, so a post-write view read cannot reproduce
+    what was indexed). The new row is then read back from the view so the
+    indexed stream matches future delete-time reads. ``delete_first``
+    keeps the same fast-path meaning: False skips the delete for known-new
+    genes.
     """
     if not fts_available:
         return
     try:
+        if fts_external:
+            if delete_first and prior_fts_row is not None:
+                fts_delete_row(cur, prior_fts_row)
+            fts_insert_from_source(cur, gene_id)
+            return
         tag_text = " ".join(
             [d.lower() for d in gene.promoter.domains]
             + [e.lower() for e in gene.promoter.entities]
