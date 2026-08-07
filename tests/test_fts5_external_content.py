@@ -388,6 +388,122 @@ class TestMigration:
 
 
 # ---------------------------------------------------------------------------
+# 4b. Stub-retention guard (cc-exchange 0017-joe §6, 2026-08-07)
+# ---------------------------------------------------------------------------
+
+class TestStubGuard:
+    """The contentful shadow accidentally retains pre-compression original
+    text (upsert indexes full content BEFORE compress_to_euchromatin stubs
+    the genes row, and compression never touches FTS). Rebuilding from
+    current genes.content destroys the only copy — the migration must
+    refuse on stubbed stores unless the loss is explicitly accepted."""
+
+    STUB_TEXT = "[COMPRESSED:euchromatin] source=src/original.py"
+    # compress_to_euchromatin keeps `complement` (the summary = content[:50]
+    # via make_gene), so a term is FTS-recoverable-only when it sits past
+    # that window in the raw content — like this needle.
+    STUB_DOC = (
+        "padding words push the recoverable needle well past the summary "
+        "window: uniqstubneedle"
+    )
+
+    def _migrate(self, db: Path, **kwargs):
+        from scripts.migrate_fts5_external_content import migrate
+        return migrate(db, **kwargs)
+
+    def _stubbed_legacy_store(self, tmp_path: Path) -> tuple:
+        """Legacy store whose FTS still holds a stubbed gene's original
+        text — the accidental-retention condition from the analysis."""
+        db = tmp_path / "genome.db"
+        _build_store(db)
+        g = Genome(path=str(db), synonym_map={})
+        try:
+            stub_gene = make_gene(self.STUB_DOC, gene_id="stubgene00000001")
+            g.upsert_gene(stub_gene)
+        finally:
+            g.close()
+        _downgrade_to_legacy(db)  # legacy FTS built from FULL originals
+        conn = sqlite3.connect(str(db))
+        try:
+            # Stub the genes row only — exactly what compress_to_euchromatin
+            # does (content replaced, complement/tier the summary survives).
+            conn.execute(
+                "UPDATE genes SET content = ?, compression_tier = 1, "
+                "chromatin = 1 WHERE gene_id = ?",
+                (self.STUB_TEXT, "stubgene00000001"),
+            )
+            conn.commit()
+        finally:
+            conn.close()
+        return db, "stubgene00000001"
+
+    def test_refuses_stubbed_store_without_flag(self, tmp_path):
+        db, _ = self._stubbed_legacy_store(tmp_path)
+        report = self._migrate(db)
+        assert report["status"] == "refused_stub_loss"
+        assert report["stub_guard"]["stub_rows"] == 1
+        assert report["stub_guard"]["stub_rows_marker"] == 1
+        assert report["stub_guard"]["stub_rows_tier1"] == 1
+        assert "PERMANENTLY LOST" in report["stub_warning"]
+        conn = sqlite3.connect(str(db))
+        try:
+            assert not fts5_is_external_content(conn.cursor()), (
+                "refusal must leave the legacy store untouched"
+            )
+            # The retained original is still recoverable from the shadow.
+            rows = conn.execute(
+                "SELECT gene_id FROM genes_fts WHERE genes_fts MATCH 'uniqstubneedle'"
+            ).fetchall()
+            assert rows, "original text vanished from the legacy shadow"
+        finally:
+            conn.close()
+
+    def test_dry_run_surfaces_stub_warning(self, tmp_path):
+        db, _ = self._stubbed_legacy_store(tmp_path)
+        report = self._migrate(db, dry_run=True)
+        assert report["status"] == "dry_run"
+        assert report["stub_guard"]["stub_rows"] == 1
+        assert "STUB WARNING" in report["message"]
+        conn = sqlite3.connect(str(db))
+        try:
+            assert not fts5_is_external_content(conn.cursor())
+        finally:
+            conn.close()
+
+    def test_allow_stub_loss_proceeds_and_reindexes_stub_text(self, tmp_path):
+        db, stub_gid = self._stubbed_legacy_store(tmp_path)
+        report = self._migrate(db, allow_stub_loss=True)
+        assert report["status"] == "migrated"
+        assert report["stub_loss_accepted"] is True
+        conn = sqlite3.connect(str(db))
+        try:
+            assert fts5_is_external_content(conn.cursor())
+            # The documented loss: the content-only needle is gone from the
+            # index (the complement/summary legitimately survives — real
+            # compression keeps it); the stub marker is searchable now.
+            gone = conn.execute(
+                "SELECT gene_id FROM genes_fts WHERE genes_fts MATCH 'uniqstubneedle'"
+            ).fetchall()
+            assert gone == []
+            stub = conn.execute(
+                "SELECT gene_id FROM genes_fts WHERE genes_fts MATCH 'euchromatin'"
+            ).fetchall()
+            assert [r[0] for r in stub] == [stub_gid]
+            assert _integrity_ok(conn)
+        finally:
+            conn.close()
+
+    def test_stub_free_store_needs_no_flag(self, tmp_path):
+        db = tmp_path / "genome.db"
+        _build_store(db)
+        _downgrade_to_legacy(db)
+        report = self._migrate(db)
+        assert report["status"] == "migrated"
+        assert report["stub_guard"]["stub_rows"] == 0
+        assert "stub_warning" not in report
+
+
+# ---------------------------------------------------------------------------
 # 5. Open-time drift heal on external stores
 # ---------------------------------------------------------------------------
 

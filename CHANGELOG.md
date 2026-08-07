@@ -13,7 +13,11 @@
   `scripts/migrate_fts5_external_content.py` converts them offline (idempotent,
   `--dry-run`, `--vacuum`). Write paths follow the external-content
   delete-with-prior-values discipline; `rebuild_fts` uses the FTS5 `'rebuild'`
-  command on migrated stores.
+  command on migrated stores. **Stub caveat** (cc-exchange 0017-joe §6): the
+  contentful shadow accidentally retained pre-compression original text for
+  stubbed genes; the migration refuses on stub-bearing stores unless
+  `--allow-stub-loss` is passed — signal-neutrality is conditional on a
+  stub-free store.
 
 ## 0.8.5 — 2026-07-25
 

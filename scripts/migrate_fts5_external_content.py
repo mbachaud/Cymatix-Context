@@ -16,6 +16,18 @@ Offline and idempotent:
     untouched legacy table
   - ``--dry-run`` reports the expected reclaim without touching anything
 
+STUB RETENTION WARNING (cc-exchange spark-erb-receipts 0017-joe §6,
+2026-08-07): the contentful shadow accidentally retains every gene's
+PRE-COMPRESSION original text — upsert indexes full content before
+``compress_to_euchromatin`` stubs the ``genes`` row, and compression
+never touches the FTS table. On a stubbed store this migration rebuilds
+the index from the CURRENT (stub) text and permanently destroys the only
+copy of those originals — and forecloses the proposed "serve stub
+originals from the FTS shadow" read-back path (#327 comment thread).
+The script therefore refuses to run when the store contains stubs unless
+``--allow-stub-loss`` is passed. On stub-free beds (CPU tagger, the ERB
+beds) the rebuild is byte-identical and this guard never fires.
+
 The freed pages go to the SQLite freelist. Run VACUUM afterwards (or pass
 ``--vacuum``) to shrink the file — on big beds VACUUM rewrites the whole
 database and needs up to 2x the file size in free disk.
@@ -108,6 +120,42 @@ def _shadow_bytes(conn: sqlite3.Connection) -> Dict[str, Any]:
     }
 
 
+def _stub_stats(conn: sqlite3.Connection) -> Dict[str, Any]:
+    """Count compression stubs — genes whose original text now exists ONLY
+    in the contentful FTS shadow this migration is about to drop.
+
+    ``compression_tier = 1`` was verified an exact synonym for the stub
+    set on the analyzed LLM-tagger bed (0017-joe §6); the
+    ``[COMPRESSED:%`` marker is the literal stub content
+    ``compress_to_euchromatin`` writes. Counted with OR so either signal
+    alone trips the guard — for a destructive step, over-refusing beats
+    under-refusing. Older schemas without ``compression_tier`` fall back
+    to the marker alone.
+    """
+    marker = int(conn.execute(
+        "SELECT COUNT(*) FROM genes WHERE content LIKE '[COMPRESSED:%'"
+    ).fetchone()[0])
+    try:
+        combined = int(conn.execute(
+            "SELECT COUNT(*) FROM genes "
+            "WHERE compression_tier = 1 OR content LIKE '[COMPRESSED:%'"
+        ).fetchone()[0])
+        tier = int(conn.execute(
+            "SELECT COUNT(*) FROM genes WHERE compression_tier = 1"
+        ).fetchone()[0])
+    except sqlite3.Error as exc:
+        log.warning(
+            "compression_tier unreadable (%s) — stub guard counting the "
+            "[COMPRESSED:%% marker only", exc,
+        )
+        combined, tier = marker, None
+    return {
+        "stub_rows": combined,
+        "stub_rows_marker": marker,
+        "stub_rows_tier1": tier,
+    }
+
+
 def _file_stats(conn: sqlite3.Connection) -> Dict[str, int]:
     page_size = int(conn.execute("PRAGMA page_size").fetchone()[0])
     page_count = int(conn.execute("PRAGMA page_count").fetchone()[0])
@@ -140,11 +188,14 @@ def migrate(
     db_path: Union[str, Path],
     dry_run: bool = False,
     vacuum: bool = False,
+    allow_stub_loss: bool = False,
 ) -> Dict[str, Any]:
     """Rebuild *db_path*'s genes_fts in external-content form.
 
     Returns a report dict with ``status`` one of ``migrated`` /
-    ``already_migrated`` / ``dry_run`` / ``no_fts_table``.
+    ``already_migrated`` / ``dry_run`` / ``no_fts_table`` /
+    ``refused_stub_loss`` (store has compression stubs and
+    *allow_stub_loss* was not passed — see the module docstring).
     """
     db_path = Path(db_path)
     if not db_path.exists():
@@ -188,11 +239,28 @@ def migrate(
         gene_count = int(cur.execute("SELECT COUNT(*) FROM genes").fetchone()[0])
         fts_count = int(cur.execute("SELECT COUNT(*) FROM genes_fts").fetchone()[0])
         shadow = _shadow_bytes(conn)
+        stubs = _stub_stats(conn)
         report["gene_rows"] = gene_count
         report["fts_rows_before"] = fts_count
         report["contentful_shadow"] = shadow
         report["estimated_reclaim_bytes"] = shadow["bytes"]
+        report["stub_guard"] = stubs
         report["file_before"] = _file_stats(conn)
+
+        stub_warning = None
+        if stubs["stub_rows"] > 0:
+            stub_warning = (
+                f"{stubs['stub_rows']} of {gene_count} genes are compression "
+                f"stubs (marker: {stubs['stub_rows_marker']}, "
+                f"compression_tier=1: {stubs['stub_rows_tier1']}). Their "
+                "PRE-COMPRESSION original text exists ONLY in the contentful "
+                "FTS shadow and will be PERMANENTLY LOST by this rebuild "
+                "(the external index re-indexes the current stub text). "
+                "This also forecloses the proposed serve-stub-originals-"
+                "from-FTS read-back (#327) on this store. Restore originals "
+                "first, or pass --allow-stub-loss to proceed anyway."
+            )
+            report["stub_warning"] = stub_warning
 
         if dry_run:
             report["status"] = "dry_run"
@@ -200,8 +268,18 @@ def migrate(
                 f"would rebuild genes_fts ({fts_count} rows) in external-content "
                 f"form and free ~{shadow['bytes'] / 1024 ** 3:.2f} GB "
                 f"({shadow['measured']}); nothing was modified"
+                + (f". STUB WARNING: {stub_warning}" if stub_warning else "")
             )
             return report
+
+        if stub_warning and not allow_stub_loss:
+            report["status"] = "refused_stub_loss"
+            report["message"] = f"refusing to migrate: {stub_warning}"
+            log.warning("%s", report["message"])
+            return report
+        if stub_warning:
+            report["stub_loss_accepted"] = True
+            log.warning("--allow-stub-loss: %s", stub_warning)
 
         had_vocab = cur.execute(
             "SELECT 1 FROM sqlite_master WHERE name = 'genes_fts_vocab'"
@@ -272,11 +350,18 @@ def main(argv: Optional[list] = None) -> int:
                     help="report the expected reclaim, change nothing")
     ap.add_argument("--vacuum", action="store_true",
                     help="run VACUUM after the rebuild to shrink the file")
+    ap.add_argument("--allow-stub-loss", action="store_true",
+                    help="proceed even when the store contains compression "
+                         "stubs whose original text exists only in the "
+                         "contentful FTS shadow (PERMANENTLY LOST on rebuild)")
     ap.add_argument("--out", help="also write the report JSON to this path")
     args = ap.parse_args(argv)
 
     try:
-        report = migrate(Path(args.db), dry_run=args.dry_run, vacuum=args.vacuum)
+        report = migrate(
+            Path(args.db), dry_run=args.dry_run, vacuum=args.vacuum,
+            allow_stub_loss=args.allow_stub_loss,
+        )
     except (FileNotFoundError, RuntimeError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
@@ -287,6 +372,9 @@ def main(argv: Optional[list] = None) -> int:
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
         print(f"wrote {out}", file=sys.stderr)
+    if report["status"] == "refused_stub_loss":
+        print(f"refused: {report['message']}", file=sys.stderr)
+        return 3
     return 0 if report["status"] in ("migrated", "dry_run", "already_migrated") else 1
 
 
