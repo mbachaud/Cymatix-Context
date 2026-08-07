@@ -416,6 +416,26 @@ def recall_at_k(first_ranks: Sequence[Optional[int]], k: int) -> float:
     return round(hit / len(first_ranks), 4)
 
 
+def delivered_gold_fields(expressed_gene_ids: Sequence[str], gold: set) -> Dict[str, Any]:
+    """#335: delivery-basis gold metrics. 'Delivered' = expressed_gene_ids,
+    the post-budget-trim slice (context_manager.expressed_gene_ids) — a gold
+    at pool rank 3 can still fail delivery; rank-based recall cannot see it."""
+    rank = None
+    for i, gid in enumerate(expressed_gene_ids, start=1):
+        if gid in gold:
+            rank = i
+            break
+    return {"delivered_gold": 1 if rank else 0,
+            "delivered_count": len(expressed_gene_ids),
+            "delivered_gold_rank": rank}
+
+
+def delivered_gold_rate(per_query: Sequence[Mapping[str, Any]]) -> float:
+    if not per_query:
+        return 0.0
+    return sum(r.get("delivered_gold", 0) for r in per_query) / len(per_query)
+
+
 def percentile(values: Sequence[float], pct: float) -> Optional[float]:
     """Nearest-rank percentile (no interpolation). Empty -> None.
 
@@ -767,12 +787,15 @@ def run_arm(
                     first_ranks.append(None)
                     # A failed query is still a row in the paired basis — it is
                     # a miss for THIS arm on THIS needle, and dropping it would
-                    # silently shorten the vector a paired test lines up.
-                    records.append(per_query_record(
+                    # silently shorten the vector a paired test lines up. It is
+                    # also a delivered-gold miss: nothing was delivered.
+                    error_record = per_query_record(
                         name, gold_ranks=[], first_rank=None, k=k,
                         n_queries=len(needles), wall_ms=wall_ms, signal_ms={},
                         error=detail,
-                    ))
+                    )
+                    error_record.update(delivered_gold_fields([], set(gold)))
+                    records.append(error_record)
                     continue
                 wall_ms = (time.perf_counter() - t0) * 1000.0
                 latencies.append(wall_ms)
@@ -787,10 +810,19 @@ def run_arm(
                 sig = dict(getattr(manager.genome, "last_signal_timings", None) or {})
                 per_query_signals.append(sig)
                 signal_keys.update(sig.keys())
-                records.append(per_query_record(
+                # expressed_gene_ids is the ORDERED post-budget-trim delivery
+                # slice — keep it a list (not a set) going into
+                # delivered_gold_fields, or delivered_gold_rank goes stale.
+                expressed_gene_ids = list(getattr(window, "expressed_gene_ids", None) or ())
+                dg_fields = delivered_gold_fields(expressed_gene_ids, set(gold))
+                if dg_fields["delivered_gold"]:
+                    delivered_gold_hits += 1
+                record = per_query_record(
                     name, gold_ranks=ranks, first_rank=first, k=k,
                     n_queries=len(needles), wall_ms=wall_ms, signal_ms=sig,
-                ))
+                )
+                record.update(dg_fields)
+                records.append(record)
 
                 contribs = getattr(manager.genome, "last_tier_contributions", None) or {}
                 for per_gene in contribs.values():
@@ -803,10 +835,6 @@ def run_arm(
                 # so reading it after the call is a per-query observation.
                 if getattr(manager, "_last_cold_tier_used", False):
                     cold_tier_queries += 1
-
-                delivered = set(getattr(window, "expressed_gene_ids", None) or ())
-                if delivered & set(gold):
-                    delivered_gold_hits += 1
 
         observables = {
             "signal_keys": sorted(signal_keys),
@@ -830,6 +858,15 @@ def run_arm(
             errors.append(f"manager.close failed: {exc}")
 
     hit_ranks = [r for r in first_ranks if r is not None]
+    recall_val = recall_at_k(first_ranks, k)
+    # Per-needle records only exist on the receipt under --per-query, but the
+    # list is always built internally (records.append runs unconditionally
+    # above); reuse it when available, else fall back to the running
+    # delivered_gold_hits counter so the rate never depends on the flag.
+    if per_query:
+        delivered_rate = delivered_gold_rate(records)
+    else:
+        delivered_rate = (delivered_gold_hits / len(needles)) if needles else 0.0
     row: Dict[str, Any] = {
         "arm": arm.name,
         "knobs_changed": dict(arm.knobs),
@@ -837,12 +874,14 @@ def run_arm(
         "arm_valid": None,          # filled by the caller (needs baseline)
         "validation": arm.validation,
         "validation_detail": "",    # filled by the caller
-        "recall_at_k": recall_at_k(first_ranks, k),
+        "recall_at_k": recall_val,
         "mean_rank_of_gold": (round(statistics.mean(hit_ranks), 2) if hit_ranks else None),
         "median_rank_of_gold": median_or_none(hit_ranks),
         "gold_found_queries": len(hit_ranks),
         "gold_ranks_total": len(all_ranks),
         "delivered_gold_queries": delivered_gold_hits,
+        "delivered_gold_rate": delivered_rate,
+        "pool_delivery_gap": round(recall_val - delivered_rate, 4),
         "queries_with_scores": n_scored,
         "latency_ms": {
             "p50": percentile(latencies, 50),
