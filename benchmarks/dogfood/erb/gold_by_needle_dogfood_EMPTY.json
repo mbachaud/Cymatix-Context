@@ -1,0 +1,20 @@
+{
+ "cymatix_proxy_port": [],
+ "cymatix_expression_tokens": [],
+ "cymatix_cymatics_bins": [],
+ "cymatix_fusion_default": [],
+ "cymatix_know_emit_floor": [],
+ "cymatix_max_genes": [],
+ "cymatix_genome_path": [],
+ "cymatix_splice_aggressiveness": [],
+ "scorerift_divergence_threshold": [],
+ "scorerift_confidence_gate": [],
+ "scorerift_import_hygiene_confidence": [],
+ "driftwatch_version": [],
+ "driftwatch_default_ollama_model": [],
+ "driftwatch_default_inference_server": [],
+ "driftwatch_default_secret": [],
+ "mek_guardrails": [],
+ "mek_source_apps": [],
+ "mek_marketplace_name": []
+}
