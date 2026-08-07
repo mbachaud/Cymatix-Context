@@ -254,6 +254,14 @@ class TelemetryConfig:
     logs_level: str = "INFO"            # Min level forwarded (CYMATIX_OTEL_LOGS_LEVEL)
 
 
+# Issue #341 (rerank wiring): shared literal for the default cross-encoder
+# rerank model ID. Referenced by both the pre-existing Phase 3 ingest-time
+# knob (IngestionConfig.rerank_model, right below) and the new [retrieval]
+# query-time rerank knob (RetrievalConfig.rerank_model, further down) so a
+# future model bump can't silently apply to only one of the two seams.
+DEFAULT_RERANK_MODEL: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
+
+
 @dataclass
 class IngestionConfig:
     """Controls which backend encodes raw content into documents."""
@@ -269,7 +277,7 @@ class IngestionConfig:
     # the size-aware auto-disable knob below covers the enterprise cliff.
     # Soft-fails to a no-op when torch/transformers are absent.
     splade_enabled: bool = True     # Phase 2: SPLADE sparse expansion at index time
-    rerank_model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"  # Phase 3: pretrained cross-encoder HF model ID — inert while rerank_enabled=False. Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass)
+    rerank_model: str = DEFAULT_RERANK_MODEL  # Phase 3: pretrained cross-encoder HF model ID — inert while rerank_enabled=False. Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass)
     rerank_enabled: bool = False    # Phase 3: enable cross-encoder reranking
     colbert_enabled: bool = False   # Phase 4: ColBERT late interaction (optional)
     entity_graph: bool = True       # Phase 5: entity-based co-activation links (ingest-time edges). Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass)
@@ -762,6 +770,27 @@ class RetrievalConfig:
     # Inert on blob/single-shard paths (no ShardRouter constructed).
     doc_type_boost_mode: str = "additive"
 
+    # ── Issue #341 — query-time cross-encoder rerank wiring ────────────
+    # Stage 3 of the 7-stage pipeline (CLAUDE.md): an optional CPU
+    # cross-encoder re-scores the retrieved candidate pool before splice.
+    # These four knobs are the seam only — default-inert (rerank_enabled
+    # False reproduces the pre-#341 pipeline byte-for-byte); the actual
+    # cross-encoder call is wired by the tasks that consume them.
+    rerank_enabled: bool = False            # Master switch; false = Stage 3 skipped entirely
+    # Candidates fed through the cross-encoder before the pool is cut back
+    # to max_genes. Must be >= 1 (validated below) — rerank over zero
+    # candidates is a config error, not a silent no-op.
+    rerank_depth: int = 50
+    rerank_model: str = DEFAULT_RERANK_MODEL  # HF cross-encoder model ID — shares the literal with IngestionConfig.rerank_model above
+    # Per-query-class override, same resolution contract as
+    # rerank_combinator_by_class above (see resolve_class_flag in
+    # retrieval/rerank_combinators.py): an explicit class key wins, else
+    # "default", else None (fall back to the global rerank_enabled).
+    # Empty map (the default) is a no-op — every class uses the global
+    # flag. Validated at load below: unknown class key or non-bool value
+    # is a hard config error (fail loud at load, not silently at query time).
+    rerank_enabled_by_class: Dict[str, bool] = field(default_factory=dict)
+
     def __post_init__(self) -> None:
         # #264: validate the doc-type boost mode now so a typo in
         # [retrieval] doc_type_boost_mode fails fast at config load rather
@@ -793,6 +822,30 @@ class RetrievalConfig:
                         f"{_cls!r}] = {_comb!r}: unknown combinator "
                         f"(expected one of {VALID_COMBINATORS})"
                     )
+
+        # Issue #341: rerank_enabled_by_class validation — mirrors the
+        # rerank_combinator_by_class block above (unknown class key fails
+        # loud at load). Empty map (the default) is a no-op.
+        if self.rerank_enabled_by_class:
+            from .retrieval.query_classifier import VALID_QUERY_CLASSES
+            for _cls, _flag in self.rerank_enabled_by_class.items():
+                if _cls not in VALID_QUERY_CLASSES:
+                    raise ValueError(
+                        "[retrieval] rerank_enabled_by_class: unknown query "
+                        f"class {_cls!r} (expected one of {VALID_QUERY_CLASSES})"
+                    )
+                if not isinstance(_flag, bool):
+                    raise ValueError(
+                        "[retrieval] rerank_enabled_by_class["
+                        f"{_cls!r}] = {_flag!r}: value must be a bool"
+                    )
+
+        # Issue #341: rerank_depth is a candidate count — a rerank pass over
+        # zero (or fewer) candidates is a config error, not a silent no-op.
+        if self.rerank_depth < 1:
+            raise ValueError(
+                f"[retrieval] rerank_depth must be >= 1, got {self.rerank_depth}"
+            )
 
         # blend_mode="legacy" deprecation (2026-07-13 council 3/3 CONCUR,
         # follow-up to PR #282's default flip legacy -> scale_relative on
@@ -1507,6 +1560,17 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             coact_link_boost=float(r.get("coact_link_boost", cfg.retrieval.coact_link_boost)),
             # #264: doc-type boost mode (default-inert "additive").
             doc_type_boost_mode=str(r.get("doc_type_boost_mode", cfg.retrieval.doc_type_boost_mode)),
+            # Issue #341: query-time cross-encoder rerank wiring (default-inert).
+            rerank_enabled=bool(r.get("rerank_enabled", cfg.retrieval.rerank_enabled)),
+            rerank_depth=int(r.get("rerank_depth", cfg.retrieval.rerank_depth)),
+            rerank_model=str(r.get("rerank_model", cfg.retrieval.rerank_model)),
+            rerank_enabled_by_class=dict(
+                r.get(
+                    "rerank_enabled_by_class",
+                    cfg.retrieval.rerank_enabled_by_class,
+                )
+                or {}
+            ),
         )
 
     # Stage 4 (2026-05-08) abstain config — global vs per_classifier mode.

@@ -481,6 +481,14 @@ shard_fetch_scale_with_shards = false   # true => × sqrt(n_shards), cap 10×max
 coact_reserved_slots = 0                # 0 == legacy (no reserved slice)
 coact_link_boost = 0.5                  # linked-doc score = boost × source score
 
+# Issue #341 — query-time cross-encoder rerank wiring (Stage 3 of the
+# 7-stage pipeline). Seam only, ships OFF (default-inert) — uncomment to
+# enable once a later task wires the actual cross-encoder call.
+# rerank_enabled = false                  # Master switch; false = Stage 3 skipped entirely
+# rerank_depth = 50                       # Candidates fed through the cross-encoder before the pool is cut back to max_genes
+# rerank_model = "cross-encoder/ms-marco-MiniLM-L-6-v2"  # HF cross-encoder model ID (shared literal with [ingestion] rerank_model)
+# rerank_enabled_by_class = {}            # Per-query-class override map; explicit class key wins, else "default", else the global flag above
+
 [plr]
 # Stacked PLR query-confidence head (STATISTICAL_FUSION.md §C3).
 #
