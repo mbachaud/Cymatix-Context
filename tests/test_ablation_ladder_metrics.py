@@ -603,6 +603,48 @@ def test_build_wrapper_records_non_rerank_config_deltas():
     assert w["daemon_proof_ok"] is True
 
 
+# ── review fix 4: pin the ladder subprocess to THIS worktree ────────────
+#
+# Campaign trap #1. The editable install is a plain-path .pth pointing at
+# the MASTER checkout, so sys.path ORDER decides which cymatix_context a
+# child process imports. ablation_ladder.py's own prologue happens to
+# insert its REPO_ROOT at sys.path[0] (verified: it resolves to the
+# worktree even with PYTHONPATH unset), but the RUNNER must not depend on
+# the callee's hygiene — a refactor that drops that prologue would silently
+# run the whole A/B against master, which has no rerank seams at all.
+
+
+def test_ladder_env_pins_pythonpath_to_the_worktree_when_absent():
+    ab = _load_rerank_ab()
+    out = ab.ladder_env({}, 11439)
+    assert out["PYTHONPATH"] == str(ab.REPO_ROOT)
+
+
+def test_ladder_env_prepends_the_worktree_to_an_existing_pythonpath():
+    import os
+
+    ab = _load_rerank_ab()
+    out = ab.ladder_env({"PYTHONPATH": "C:/other/lib"}, 11439)
+    assert out["PYTHONPATH"] == str(ab.REPO_ROOT) + os.pathsep + "C:/other/lib"
+
+
+def test_ladder_env_does_not_double_prepend_an_already_pinned_path():
+    import os
+
+    ab = _load_rerank_ab()
+    existing = str(ab.REPO_ROOT) + os.pathsep + "C:/other/lib"
+    assert ab.ladder_env({"PYTHONPATH": existing}, 11439)["PYTHONPATH"] == existing
+
+
+def test_ladder_env_sets_the_encoder_url_and_leaves_the_base_env_alone():
+    ab = _load_rerank_ab()
+    base = {"EXISTING": "keep"}
+    out = ab.ladder_env(base, 11439)
+    assert out["CYMATIX_ENCODER_URL"] == "http://127.0.0.1:11439"
+    assert out["EXISTING"] == "keep"
+    assert base == {"EXISTING": "keep"}, "the caller's env must not be mutated"
+
+
 def test_rerank_ab_arg_parser_exposes_the_documented_flags():
     ab = _load_rerank_ab()
     parser = ab.build_arg_parser()

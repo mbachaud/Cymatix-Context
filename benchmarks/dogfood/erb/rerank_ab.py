@@ -281,6 +281,45 @@ def arm_records_from_receipt(
     return None
 
 
+def ladder_env(base_env: Mapping[str, str], port: int) -> Dict[str, str]:
+    """Environment for the ladder subprocess: encoder URL + a PYTHONPATH
+    pinned to THIS worktree. Returns a copy; *base_env* is never mutated.
+
+    Campaign trap #1 (pin PYTHONPATH for any out-of-tree client). The
+    editable install is a plain-path ``.pth`` naming the MASTER checkout, so
+    which ``cymatix_context`` a child imports is decided purely by sys.path
+    ORDER — and a bare ``python benchmarks/.../ablation_ladder.py`` puts the
+    SCRIPT's directory at sys.path[0], not the repo root.
+
+    Measured, so the record is honest: ``ablation_ladder.py``'s own prologue
+    inserts its ``REPO_ROOT`` (= this worktree) at sys.path[0] before it
+    imports anything, and a probe replicating that prologue resolves to the
+    worktree even with PYTHONPATH unset — so the ladder is not, today,
+    running on master. This pin is defence in depth: the runner must not
+    depend on the callee's prologue surviving a refactor, and any child the
+    ladder itself spawns inherits the pin for free. Master has no rerank
+    seams at all, so the failure it guards is total (``set_dotted`` on
+    ``retrieval.rerank_enabled`` would skip, and the arm would measure
+    nothing) — and it would only surface after a full baseline arm had
+    already burned.
+
+    Prepend-and-inherit semantics copied from ``spawn_daemon`` (one idiom
+    for both children): an existing PYTHONPATH is kept behind the root, and
+    a root already at the head is left alone rather than doubled.
+    """
+    env = dict(base_env)
+    env["CYMATIX_ENCODER_URL"] = f"http://{HOST}:{port}"
+    root_str = str(REPO_ROOT)
+    existing = env.get("PYTHONPATH", "")
+    if existing:
+        head = existing.split(os.pathsep, 1)[0]
+        if head != root_str:
+            env["PYTHONPATH"] = root_str + os.pathsep + existing
+    else:
+        env["PYTHONPATH"] = root_str
+    return env
+
+
 def config_diff_paths(a: Mapping[str, Any], b: Mapping[str, Any], prefix: str = "") -> List[str]:
     """Dotted paths where two config mappings (``dataclasses.asdict`` output)
     differ. Sorted; empty when identical.
@@ -543,9 +582,12 @@ def preflight_configs(off_path: Path, on_path: Path) -> Tuple[List[str], List[st
 def _run_ladder(
     plan: RunPlan, args: argparse.Namespace, config: Path, out_path: Path, stamp: str,
 ) -> Optional[int]:
-    """Run the ladder as a subprocess with CYMATIX_ENCODER_URL pointed at the
-    daemon. stdout/stderr are INHERITED (no pipes) so the operator watches
-    progress live and no pipe can deadlock on a long run."""
+    """Run the ladder as a subprocess against the daemon, from THIS worktree.
+
+    Env comes from ``ladder_env`` (encoder URL + worktree-pinned PYTHONPATH —
+    see its docstring for the sys.path trap it guards). stdout/stderr are
+    INHERITED (no pipes) so the operator watches progress live and no pipe
+    can deadlock on a long run."""
     cmd = [
         sys.executable, LADDER_REL,
         "--genome", str(args.genome),
@@ -559,10 +601,10 @@ def _run_ladder(
         "--stamp", f"{stamp}-run{plan.run}",
         "--per-query",
     ]
-    env = os.environ.copy()
-    env["CYMATIX_ENCODER_URL"] = f"http://{HOST}:{args.port}"
+    env = ladder_env(os.environ, args.port)
     print(f"\n[run {plan.run}] {' '.join(cmd)}\n  CYMATIX_ENCODER_URL="
-          f"{env['CYMATIX_ENCODER_URL']}", flush=True)
+          f"{env['CYMATIX_ENCODER_URL']}\n  PYTHONPATH={env['PYTHONPATH']}",
+          flush=True)
     proc = subprocess.Popen(
         cmd, cwd=str(REPO_ROOT), env=env,
         creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
