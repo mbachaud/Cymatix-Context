@@ -1,0 +1,267 @@
+INFO:     Started server process [5816]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:11439 (Press CTRL+C to quit)
+INFO:     127.0.0.1:50815 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:50824 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:50825 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:50831 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:50832 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:50839 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:50846 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:50853 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:50856 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:50860 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:50861 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:50867 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:50870 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:50875 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:50877 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:50879 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:50883 - "GET /ready HTTP/1.1" 503 Service Unavailable
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 4846.35it/s]
+INFO:     127.0.0.1:50884 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:50891 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:65128 - "GET /ready HTTP/1.1" 503 Service Unavailable
+F:\Projects\cymatix-context\.claude\worktrees\fork1-rerank-wiring\cymatix_context\backends\sema.py:140: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.
+  self._embed_dim = self._model.get_sentence_embedding_dimension()
+INFO:     127.0.0.1:65132 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:65133 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:65137 - "GET /ready HTTP/1.1" 503 Service Unavailable
+Loading weights:   0%|          | 0/391 [00:00<?, ?it/s]Loading weights: 100%|##########| 391/391 [00:00<00:00, 22751.49it/s]
+INFO:     127.0.0.1:65141 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:65145 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:65149 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:65161 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:65170 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:65174 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:65175 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:65179 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:65184 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:65186 - "GET /ready HTTP/1.1" 503 Service Unavailable
+Loading weights:   0%|          | 0/204 [00:00<?, ?it/s]Loading weights: 100%|##########| 204/204 [00:00<00:00, 22285.72it/s]
+INFO:     127.0.0.1:65187 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:65195 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:65198 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:65200 - "GET /ready HTTP/1.1" 503 Service Unavailable
+Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|##########| 105/105 [00:00<00:00, 4606.71it/s]
+INFO:     127.0.0.1:65201 - "GET /ready HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:65205 - "GET /ready HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63780 - "GET /ready HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63781 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64343 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58922 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58947 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58948 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58988 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59016 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59017 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59135 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59198 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59199 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59296 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59337 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59338 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55927 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55964 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55965 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56022 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56048 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56051 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56087 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56123 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56124 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56166 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52748 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52749 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52798 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52822 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52823 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52860 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52885 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52886 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52912 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58554 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58557 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58690 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58719 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58720 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58764 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58793 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58794 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50145 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51465 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51468 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59126 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59141 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59142 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59182 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59219 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59220 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59302 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59339 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59340 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59436 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59477 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59478 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59549 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61376 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61377 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63301 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63337 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63338 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63449 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63501 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63502 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63566 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63593 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63594 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63648 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63669 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63670 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63722 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63769 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63770 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63896 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63920 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63921 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63954 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63976 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63977 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64004 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64030 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64031 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64051 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64089 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64094 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59183 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59215 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59216 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59248 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59269 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59270 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59285 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59414 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59481 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61297 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61298 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61321 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61322 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61369 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61370 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61403 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61404 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61462 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61465 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61503 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61504 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61594 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61596 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61676 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61677 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64103 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64104 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64137 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64138 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64187 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64188 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64204 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64205 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64228 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64230 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64256 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64257 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64318 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64319 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64355 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64356 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64412 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64415 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64446 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64447 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60966 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60968 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60988 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60989 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61022 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61025 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61062 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61063 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61192 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61193 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61227 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61228 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61262 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61263 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61300 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61301 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61358 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61359 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61399 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61400 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63824 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63827 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64294 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64295 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64343 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64344 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64417 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64418 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64506 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64507 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64544 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64545 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64598 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64599 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64629 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64630 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58389 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58391 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58471 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58472 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56280 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56281 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50429 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50430 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50497 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50498 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50537 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50538 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50616 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50617 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50674 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50675 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50736 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50737 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50771 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50772 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50821 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50825 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50856 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50857 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50942 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50945 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50970 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50971 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51030 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51032 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51052 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51055 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51112 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51114 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51129 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51130 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51463 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51464 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62804 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62805 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62877 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62879 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62889 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62890 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62924 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62927 - "POST /encode/rerank HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62938 - "POST /encode/sema HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62939 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62954 - "POST /encode/dense HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62955 - "POST /encode/rerank HTTP/1.1" 200 OK
