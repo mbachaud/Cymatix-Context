@@ -500,11 +500,24 @@ _RERANK_TEXT_MAX = 2000
 def _rerank_doc_text(doc) -> str:
     """The text the cross-encoder scores for ``doc``.
 
-    Body first; a body-less document (fragment stub, summary-only ingest)
-    falls back to its tag summary so it is still *judged* rather than
-    silently scored against the empty string.
+    Issue #341 sanctioned pair-text variation (829k A/B receipts,
+    2026-08-06): the 829k run landed under the recall bar, so the primary
+    form mirrors ``DeBERTaRibosome.re_rank``'s pair text exactly --
+    ``f"{summary} [{domains}]"`` -- instead of scoring raw ``content``, so
+    the pre-cap cross-encoder judges the same shape of text the ribosome's
+    own re-rank does.
+
+    Falls back to the OLD content-based form when ``doc.promoter`` is None
+    or its summary is empty: the summary+domains form assumes a summary
+    exists, and an empty one would otherwise score a garbage " []" pair
+    against every other candidate's real text.
     """
-    return (doc.content or (doc.promoter.summary if doc.promoter else "") or "")[
+    promoter = doc.promoter
+    if promoter is not None and promoter.summary:
+        domains = ", ".join(promoter.domains)
+        text = f"{promoter.summary} [{domains}]" if domains else promoter.summary
+        return text[:_RERANK_TEXT_MAX]
+    return (doc.content or (promoter.summary if promoter else "") or "")[
         :_RERANK_TEXT_MAX
     ]
 

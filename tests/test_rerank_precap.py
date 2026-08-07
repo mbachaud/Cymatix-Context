@@ -28,7 +28,7 @@ import logging
 import pytest
 
 from cymatix_context.genome import Genome
-from cymatix_context.knowledge_store import KnowledgeStore
+from cymatix_context.knowledge_store import KnowledgeStore, _rerank_doc_text
 from cymatix_context.schemas import (
     ChromatinState, EpigeneticMarkers, Gene, PromoterTags,
 )
@@ -46,13 +46,13 @@ def _gid(i: int) -> str:
     return f"g-{i:02d}"
 
 
-def _make_gene(content: str, *, gene_id: str) -> Gene:
+def _make_gene(content: str, *, gene_id: str, summary: str = "") -> Gene:
     return Gene(
         gene_id=gene_id,
         content=content,
         complement="",
         codons=[],
-        promoter=PromoterTags(domains=["topic"], entities=[]),
+        promoter=PromoterTags(domains=["topic"], entities=[], summary=summary),
         epigenetics=EpigeneticMarkers(),
         chromatin=ChromatinState.OPEN,
         is_fragment=False,
@@ -73,7 +73,14 @@ def _build_pool(store) -> None:
             f"It discusses {word} in enough detail that the body is "
             f"non-trivial prose rather than a stub."
         )
-        store.upsert_gene(_make_gene(content, gene_id=_gid(i)), apply_gate=False)
+        # Issue #341: the sanctioned pair-text variation scores
+        # ``promoter.summary`` (not ``content``) primarily, so the summary
+        # must carry the same content markers as the body for these fixtures
+        # to stay meaningful under the new form — the marker doc's summary
+        # gets the marker too, same as its content.
+        store.upsert_gene(
+            _make_gene(content, gene_id=_gid(i), summary=content), apply_gate=False
+        )
 
 
 def _canned_dense_order() -> list[str]:
@@ -713,3 +720,26 @@ def test_blend_cap_is_unconditional_truncation():
         assert gone not in sig.parameters
     src = inspect.getsource(apply_candidate_refiners)
     assert 'hasattr' not in src.split("def ", 1)[-1] or "rerank" not in src
+
+
+# ═══ 10. ``_rerank_doc_text`` pair form (#341 sanctioned variation, 829k A/Bs) ═
+#
+# The 829k A/Bs landed under the recall bar, so the pre-sanctioned variation
+# ships: mirror ``DeBERTaRibosome.re_rank``'s pair text exactly --
+# ``f"{summary} [{domains}]"`` -- instead of scoring raw ``content``. A
+# summary-less document (fragment stub, summary-only ingest gone the other
+# way) degrades gracefully back to the old content-based form rather than
+# scoring a garbage " []" pair.
+
+
+def test_rerank_doc_text_uses_summary_and_domains_when_summary_present():
+    doc = _make_gene("body text nobody should see", gene_id="g-summary")
+    doc.promoter.summary = "a concise summary of the document"
+    doc.promoter.domains = ["alpha", "beta"]
+    assert _rerank_doc_text(doc) == "a concise summary of the document [alpha, beta]"
+
+
+def test_rerank_doc_text_falls_back_to_content_when_summary_missing():
+    doc = _make_gene("the body text is what gets scored", gene_id="g-no-summary")
+    assert doc.promoter.summary == ""          # default -> no summary
+    assert _rerank_doc_text(doc) == "the body text is what gets scored"
