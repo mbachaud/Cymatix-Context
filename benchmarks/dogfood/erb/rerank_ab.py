@@ -199,7 +199,7 @@ def count_daemon_posts(log_path: Path, marker: str) -> int:
 
 
 def expected_min_rerank_posts(n_queries: int) -> int:
-    """Floor on rerank POSTs for a run: every timed needle plus the warmup.
+    """Coarse floor on rerank POSTs for a run: every needle plus the warmup.
 
     ``run_arm`` runs one untimed warmup ``build_context`` before the timed
     loop (so the lazy encoder load is not billed to p50), and that query goes
@@ -207,8 +207,78 @@ def expected_min_rerank_posts(n_queries: int) -> int:
     ``n_queries``. Stated as a floor, not an equality: the lexical and ANN
     paths both host a rerank seam, and a needle that exercises both is not a
     fault.
+
+    This is the FALLBACK basis, used only when the ladder receipt carries no
+    per-query records. It assumes every needle reaches the seam, which is
+    false for a no-match early return / abstain / empty pool — prefer
+    ``rerank_eligible_needles`` whenever the records exist.
     """
     return int(n_queries) + 1
+
+
+def rerank_eligible_needles(records: Sequence[Mapping[str, Any]]) -> int:
+    """How many needles could have produced a rerank POST at all.
+
+    ``gate_kept`` (from ``genome.last_rerank_diag``, written per needle by
+    the ladder) is the discriminator the receipt already carries:
+
+      * ``None`` / absent — the query never reached ``query_docs_ann``'s
+        publication point (no-match early return, abstain, exception), so no
+        rerank could have been attempted.
+      * ``0`` — the ANN pool was empty; ``rerank_backend.score_pairs``
+        returns ``[]`` on an empty candidate list WITHOUT issuing a POST.
+      * anything else — the seam was reachable and owes one POST.
+
+    Counting these instead of every needle makes the floor both tighter (a
+    silent in-process fallback still trips it) and non-brittle (a legitimate
+    no-match needle no longer looks like a fallback).
+
+    Edge, on the record: a store variant that reranked over a candidate set
+    whose gate kept nothing would make this one short — a LOOSER floor, never
+    a false refusal. On the current gate (``apply_ann_gate`` with the
+    min_genes floor) ``gate_kept == 0`` implies no scored candidates, so the
+    two agree.
+    """
+    return sum(
+        1 for r in records
+        if r.get("gate_kept") is not None and r.get("gate_kept") != 0
+    )
+
+
+def invalid_arms_from_receipt(payload: Optional[Mapping[str, Any]]) -> List[Dict[str, str]]:
+    """Arms the LADDER itself judged invalid (``arm_valid is False``).
+
+    The ladder exits 0 even when an arm fails self-validation, and some
+    failure modes RAISE the daemon POST count rather than lowering it — a
+    contaminated baseline that already fires ``xenc_rerank`` makes
+    ``rerank_on`` unfalsifiable while every query still reranks. Without
+    folding this verdict in, the wrapper would certify a measurement the
+    ladder had already flagged as proving nothing.
+
+    ``arm_valid is None`` (a skipped arm) is not a failure and is ignored.
+    """
+    out: List[Dict[str, str]] = []
+    for row in ((payload or {}).get("arms") or ()):
+        if row.get("arm_valid") is False:
+            out.append({
+                "arm": str(row.get("arm", "?")),
+                "validation_detail": str(row.get("validation_detail", "")),
+            })
+    return out
+
+
+def arm_records_from_receipt(
+    payload: Optional[Mapping[str, Any]], arm_name: str,
+) -> Optional[List[Mapping[str, Any]]]:
+    """The named arm's ``per_query`` records, or None when unavailable.
+
+    None means "fall back to the coarse floor" — never "zero needles".
+    """
+    for row in ((payload or {}).get("arms") or ()):
+        if row.get("arm") == arm_name:
+            records = row.get("per_query")
+            return list(records) if records else None
+    return None
 
 
 def config_diff_paths(a: Mapping[str, Any], b: Mapping[str, Any], prefix: str = "") -> List[str]:
@@ -245,17 +315,50 @@ def build_wrapper(
     config: str,
     port: int,
     config_delta_other: Sequence[str] = (),
+    on_arm_records: Optional[Sequence[Mapping[str, Any]]] = None,
+    invalid_arms: Sequence[Mapping[str, Any]] = (),
 ) -> Dict[str, Any]:
     """Build one run's wrapper receipt, including the refusal verdict.
 
     Pure on purpose: the refusal is the safety property this whole script
     exists for, so it is decided by a function that can be tested without a
     daemon. ``refusals`` is a list of reasons, empty iff ``daemon_proof_ok``.
+
+    ``on_arm_records`` are the ON side's per-needle records; when present the
+    POST floor counts only rerank-ELIGIBLE needles (see
+    ``rerank_eligible_needles``) instead of assuming all of them reached the
+    seam. ``invalid_arms`` folds the LADDER's own self-validation verdict in
+    — a daemon that served every request still proves nothing about an arm
+    the ladder marked unfalsifiable.
     """
-    expected_min = (
-        expected_min_rerank_posts(n_queries) if n_queries is not None else None
-    )
+    if on_arm_records is not None:
+        eligible = rerank_eligible_needles(on_arm_records)
+        expected_min = eligible + 1
+        basis = (
+            f"per-needle gate_kept: {eligible} of {len(on_arm_records)} needles "
+            "were rerank-eligible (gate_kept not null and not 0), + 1 untimed "
+            "warmup query"
+        )
+    elif n_queries is not None:
+        expected_min = expected_min_rerank_posts(n_queries)
+        basis = (
+            f"n_queries + 1 ({n_queries} needles + 1 untimed warmup) — "
+            "per-query records absent from the ladder receipt, so needles "
+            "that never reached the rerank seam cannot be discounted"
+        )
+    else:
+        expected_min = None
+        basis = "unknown — the ladder receipt could not be read"
+
     refusals: List[str] = []
+    for entry in invalid_arms:
+        refusals.append(
+            f"the ladder judged arm {entry.get('arm')!r} INVALID: "
+            f"{entry.get('validation_detail')} — the daemon proof cannot "
+            "certify a measurement the ladder itself flagged as proving "
+            "nothing (the ladder exits 0 regardless, and some failure modes "
+            "raise the POST count rather than lowering it)"
+        )
     if ladder_returncode is None:
         refusals.append(
             "ladder did not complete — it never started (daemon lifecycle "
@@ -268,7 +371,7 @@ def build_wrapper(
             "daemon /ready was never verified against this run's spawn token — "
             "the receipt cannot claim which process served the encodes"
         )
-    if n_queries is None:
+    if expected_min is None:
         refusals.append(
             "needle count unknown (ladder receipt missing or unreadable), so "
             "the rerank-POST floor cannot be checked"
@@ -276,13 +379,18 @@ def build_wrapper(
     elif posts_rerank < expected_min:
         refusals.append(
             f"daemon served {posts_rerank} {MARK_POST_RERANK} requests, "
-            f"expected >= {expected_min} ({n_queries} needles + 1 warmup on "
-            "the ON side) — the usual cause is encoder_client falling back to "
-            "in-process reranking, the silent-fallback trap this A/B exists "
-            "to rule out. The other cause is a needle whose retrieval "
-            "produced zero candidates (rerank_backend.score_pairs returns [] "
-            "without a POST); check the ladder receipt's per-needle records "
-            "before concluding which one happened"
+            f"expected >= {expected_min} — basis: {basis}. Needles that never "
+            "reached the seam are ALREADY discounted by that basis, so the "
+            "shortfall is encoder_client falling back to in-process "
+            "reranking: the silent-fallback trap this A/B exists to rule out"
+            if on_arm_records is not None else
+            f"daemon served {posts_rerank} {MARK_POST_RERANK} requests, "
+            f"expected >= {expected_min} — basis: {basis}. Two causes are "
+            "possible on this basis: encoder_client falling back to "
+            "in-process reranking (the silent-fallback trap), or a needle "
+            "that never reached the seam (no-match / abstain / empty pool, "
+            "which posts nothing). Re-run with --per-query receipts to "
+            "separate them"
         )
     return {
         "kind": "rerank_ab_run",
@@ -307,19 +415,26 @@ def build_wrapper(
         "daemon_log": daemon_log,
         "daemon_log_posts_rerank": posts_rerank,
         "daemon_log_posts_rerank_expected_min": expected_min,
+        "rerank_expected_basis": basis,
         "daemon_log_posts_total": posts_total,
         "spawn_token_verified": bool(spawn_token_verified),
+        # The ladder's own arm_valid verdicts, folded into daemon_proof_ok.
+        "invalid_arms": [dict(a) for a in invalid_arms],
         "daemon_proof_ok": not refusals,
         "refusals": refusals,
         "port": port,
         "note": (
             "daemon_log_posts_* are counted from THIS run's own daemon log "
             "(a fresh daemon and a fresh log per run, so counts never "
-            "accumulate across runs). daemon_log_posts_total spans every "
-            "POST /encode/* family, so a dense-leg fallback divergence "
+            "accumulate across runs). daemon_log_posts_rerank is a RUN TOTAL "
+            "spanning BOTH arms, not an ON-arm count — it is compared against "
+            "the ON side's expectation because the OFF arm reranks nothing "
+            "and therefore contributes zero. daemon_log_posts_total spans "
+            "every POST /encode/* family, so a dense-leg fallback divergence "
             "between the two runs is visible even when the rerank floor "
-            "holds. Direction: multiply any paired (arm - baseline) delta by "
-            "delta_sign to obtain (ON - OFF)."
+            "holds. daemon_proof_ok also folds in the ladder's own arm_valid "
+            "verdicts (see invalid_arms). Direction: multiply any paired "
+            "(arm - baseline) delta by delta_sign to obtain (ON - OFF)."
         ),
         "generated_at": datetime.now(timezone.utc).isoformat(),
     }
@@ -330,19 +445,25 @@ def _resolve(path_str: str) -> Path:
     return p if p.is_absolute() else (REPO_ROOT / p)
 
 
-def _needle_count(receipt_path: Path) -> Optional[int]:
-    """``needle_count`` from a ladder receipt, or None if unreadable.
-
-    Read from the receipt rather than recomputed from ``--limit`` so the
-    floor is checked against the run that actually happened.
-    """
+def _read_receipt(receipt_path: Path) -> Optional[Dict[str, Any]]:
+    """Load a ladder receipt once (needle count, arm verdicts, per-needle
+    records all come off it), or None with a warning if unreadable."""
     try:
         payload = json.loads(receipt_path.read_text(encoding="utf-8"))
     except Exception as exc:  # noqa: BLE001
         print(f"warning: could not read ladder receipt {receipt_path}: {exc}",
               file=sys.stderr)
         return None
-    value = payload.get("needle_count")
+    return payload if isinstance(payload, dict) else None
+
+
+def _needle_count(payload: Optional[Mapping[str, Any]]) -> Optional[int]:
+    """``needle_count`` from a ladder receipt payload.
+
+    Read from the receipt rather than recomputed from ``--limit`` so the
+    floor is checked against the run that actually happened.
+    """
+    value = (payload or {}).get("needle_count")
     return int(value) if isinstance(value, int) else None
 
 
@@ -390,6 +511,25 @@ def preflight_configs(off_path: Path, on_path: Path) -> Tuple[List[str], List[st
             f"--config-on ({on_path}) has [retrieval] rerank_enabled="
             f"{on.retrieval.rerank_enabled!r}, expected true"
         )
+    # A per-class override map beats the global knob at query time
+    # (context_manager resolves it into rerank_override ->
+    # KnowledgeStore._rerank_effective), so a config that names any class is
+    # not actually OFF (or ON) for that class. Worse, a map INHERITED
+    # IDENTICALLY by both cell configs produces no config_delta_other entry
+    # at all — it is invisible in the delta report while silently reranking
+    # inside the control. Refuse: an A/B cell config must carry the whole
+    # treatment in the one global knob.
+    for label, path, cfg in (("--config-off", off_path, off), ("--config-on", on_path, on)):
+        by_class = dict(getattr(cfg.retrieval, "rerank_enabled_by_class", None) or {})
+        if by_class:
+            fatal.append(
+                f"{label} ({path}) sets [retrieval] rerank_enabled_by_class="
+                f"{by_class!r}; the per-class map must be EMPTY in an A/B cell "
+                "config. It overrides the global rerank_enabled per query "
+                "class, so the OFF cell would still rerank for the classes it "
+                "names — and because both cells inherit the same map it would "
+                "not even show up in config_delta_other"
+            )
     deltas = [
         p for p in config_diff_paths(asdict(off), asdict(on))
         if p != "retrieval.rerank_enabled"
@@ -478,6 +618,10 @@ def run_one(
         print(f"error: run {plan.run} daemon lifecycle failed: "
               f"{type(exc).__name__}: {exc}", file=sys.stderr)
     finally:
+        # Both halves of the handle's lifetime are covered: spawn_daemon
+        # closes it itself if the Popen fails (so the caller never receives
+        # an orphan), and this closes it for every path after a successful
+        # spawn — including wait_ready raising or the ladder timing out.
         if log_fh is not None:
             log_fh.close()
         if proc is not None and proc.poll() is None:
@@ -497,6 +641,10 @@ def run_one(
     # served request is already on disk by the time the process is gone.
     posts_rerank = count_daemon_posts(log_path, MARK_POST_RERANK)
     posts_total = count_daemon_posts(log_path, MARK_POST_ANY)
+    # One read, three uses: the needle count, the ladder's own arm_valid
+    # verdicts, and the ON side's per-needle records (which set the POST
+    # floor). Only trusted when the ladder actually completed.
+    payload = _read_receipt(ladder_out) if rc == 0 else None
     wrapper = build_wrapper(
         plan,
         ladder_receipt_path=str(ladder_out),
@@ -504,11 +652,13 @@ def run_one(
         posts_rerank=posts_rerank,
         posts_total=posts_total,
         spawn_token_verified=spawn_token_verified,
-        n_queries=_needle_count(ladder_out) if rc == 0 else None,
+        n_queries=_needle_count(payload),
         ladder_returncode=rc,
         config=str(config),
         port=args.port,
         config_delta_other=config_delta_other,
+        on_arm_records=arm_records_from_receipt(payload, plan.on_arm),
+        invalid_arms=invalid_arms_from_receipt(payload),
     )
     wrapper_out.write_text(json.dumps(wrapper, indent=2) + "\n", encoding="utf-8")
     print(f"[run {plan.run}] wrote {wrapper_out}")

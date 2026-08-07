@@ -296,11 +296,18 @@ def spawn_daemon(python_exe: str, port: int, log_path: Path) -> Tuple[subprocess
     log_fh = log_path.open("ab")
 
     cmd = [python_exe, "-m", "cymatix_context.encoder_daemon", "--port", str(port)]
-    proc = subprocess.Popen(
-        cmd, env=env, cwd=root_str,
-        stdout=log_fh, stderr=log_fh, stdin=subprocess.DEVNULL,
-        creationflags=_NO_WINDOW,
-    )
+    try:
+        proc = subprocess.Popen(
+            cmd, env=env, cwd=root_str,
+            stdout=log_fh, stderr=log_fh, stdin=subprocess.DEVNULL,
+            creationflags=_NO_WINDOW,
+        )
+    except BaseException:
+        # The handle is opened before the spawn, so a failing Popen (bad
+        # interpreter path, exec error) would otherwise leak it: the caller
+        # never receives it and so cannot close it in its own finally.
+        log_fh.close()
+        raise
     return proc, spawn_token, log_fh
 
 

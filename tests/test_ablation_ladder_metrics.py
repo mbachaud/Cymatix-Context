@@ -369,6 +369,12 @@ def _wrapper(ab, plan, **over):
     return ab.build_wrapper(plan, **kwargs)
 
 
+def _records(n, *, gate_kept=8):
+    """n per-needle records, all rerank-eligible unless overridden."""
+    return [{"needle": f"n{i}", "gate_kept": gate_kept, "floor_appended": 0}
+            for i in range(n)]
+
+
 def test_build_wrapper_passes_when_the_daemon_carried_every_query():
     ab = _load_rerank_ab()
     w = _wrapper(ab, ab.RUN_PLANS[0])
@@ -407,6 +413,124 @@ def test_build_wrapper_run2_carries_the_inverted_direction():
     assert w["daemon_proof_ok"] is True
 
 
+# ── review fix 1: the ladder's own arm_valid verdict gates the proof ─────
+#
+# ablation_ladder exits 0 even when an arm fails self-validation, and a
+# contaminated baseline that fires xenc_rerank makes rerank_on
+# "unfalsifiable" while pushing the POST count UP — so the daemon floor
+# holds and, without this, the wrapper would publish daemon_proof_ok on a
+# measurement the ladder itself flagged as proving nothing.
+
+
+def test_build_wrapper_refuses_when_the_ladder_invalidated_an_arm():
+    ab = _load_rerank_ab()
+    w = _wrapper(ab, ab.RUN_PLANS[0], invalid_arms=[
+        {"arm": "rerank_on",
+         "validation_detail": "unfalsifiable: ['xenc_rerank'] already present "
+                              "in the baseline signal_keys"},
+    ])
+    assert w["daemon_proof_ok"] is False
+    joined = " ".join(w["refusals"])
+    assert "rerank_on" in joined and "unfalsifiable" in joined
+    assert w["invalid_arms"][0]["arm"] == "rerank_on"
+
+
+def test_invalid_arms_from_receipt_picks_only_false_verdicts():
+    ab = _load_rerank_ab()
+    payload = {"arms": [
+        {"arm": "baseline", "arm_valid": True, "validation_detail": "control"},
+        {"arm": "rerank_on", "arm_valid": False, "validation_detail": "unfalsifiable: x"},
+        {"arm": "skipped_one", "arm_valid": None, "validation_detail": ""},
+    ]}
+    out = ab.invalid_arms_from_receipt(payload)
+    assert [a["arm"] for a in out] == ["rerank_on"]
+    assert out[0]["validation_detail"].startswith("unfalsifiable")
+    assert ab.invalid_arms_from_receipt({}) == []
+    assert ab.invalid_arms_from_receipt(None) == []
+
+
+def test_arm_records_from_receipt_reads_the_on_side_arm():
+    ab = _load_rerank_ab()
+    payload = {"arms": [
+        {"arm": "baseline", "per_query": [{"needle": "n0", "gate_kept": None}]},
+        {"arm": "rerank_on", "per_query": [{"needle": "n0", "gate_kept": 9}]},
+    ]}
+    assert ab.arm_records_from_receipt(payload, "rerank_on")[0]["gate_kept"] == 9
+    assert ab.arm_records_from_receipt(payload, "baseline")[0]["gate_kept"] is None
+    # Absent arm / absent per_query / absent receipt -> None (fall back to n+1).
+    assert ab.arm_records_from_receipt(payload, "nope") is None
+    assert ab.arm_records_from_receipt({"arms": [{"arm": "x"}]}, "x") is None
+    assert ab.arm_records_from_receipt(None, "x") is None
+
+
+# ── review fix 3: the POST floor counts only rerank-ELIGIBLE needles ─────
+#
+# n_queries + 1 has zero margin and is ambiguous for a needle that
+# legitimately never reaches the seam (no-match early return, abstain,
+# empty pool). gate_kept is the discriminator the ladder receipt already
+# carries: non-null iff query_docs_ann completed, 0 iff the pool was empty.
+
+
+def test_rerank_eligible_needles_excludes_unreached_and_empty_pool():
+    ab = _load_rerank_ab()
+    records = [
+        {"gate_kept": 12},      # eligible
+        {"gate_kept": None},    # query never reached the ANN publication point
+        {"gate_kept": 0},       # empty pool: score_pairs posts nothing
+        {"gate_kept": 3},       # eligible
+        {},                     # field absent entirely -> not eligible
+    ]
+    assert ab.rerank_eligible_needles(records) == 2
+
+
+def test_expected_min_uses_eligible_count_when_records_are_present():
+    ab = _load_rerank_ab()
+    w = _wrapper(ab, ab.RUN_PLANS[0], posts_rerank=31,
+                 on_arm_records=_records(30))
+    assert w["daemon_log_posts_rerank_expected_min"] == 31
+    assert w["daemon_proof_ok"] is True
+    assert "gate_kept" in w["rerank_expected_basis"]
+
+
+def test_a_needle_that_never_reached_the_seam_lowers_the_floor():
+    # 30 needles, one of which never published a diag: 29 eligible + warmup.
+    ab = _load_rerank_ab()
+    recs = _records(29) + [{"needle": "n29", "gate_kept": None}]
+    w = _wrapper(ab, ab.RUN_PLANS[0], posts_rerank=30, on_arm_records=recs)
+    assert w["daemon_log_posts_rerank_expected_min"] == 30
+    assert w["daemon_proof_ok"] is True, "a legitimate no-match must not refuse"
+
+
+def test_an_empty_pool_needle_lowers_the_floor_too():
+    ab = _load_rerank_ab()
+    recs = _records(29) + [{"needle": "n29", "gate_kept": 0}]
+    w = _wrapper(ab, ab.RUN_PLANS[0], posts_rerank=30, on_arm_records=recs)
+    assert w["daemon_log_posts_rerank_expected_min"] == 30
+    assert w["daemon_proof_ok"] is True
+
+
+def test_a_genuine_shortfall_still_trips_the_eligible_floor():
+    # 30 eligible needles, only 25 POSTs served: five encoded in-process.
+    ab = _load_rerank_ab()
+    w = _wrapper(ab, ab.RUN_PLANS[0], posts_rerank=25, on_arm_records=_records(30))
+    assert w["daemon_log_posts_rerank_expected_min"] == 31
+    assert w["daemon_proof_ok"] is False
+    assert any("fallback" in r for r in w["refusals"])
+
+
+def test_missing_per_query_records_fall_back_to_n_plus_one_with_a_note():
+    ab = _load_rerank_ab()
+    w = _wrapper(ab, ab.RUN_PLANS[0], posts_rerank=31, on_arm_records=None)
+    assert w["daemon_log_posts_rerank_expected_min"] == 31
+    assert "per-query records absent" in w["rerank_expected_basis"]
+
+
+def test_wrapper_note_says_the_post_count_is_a_run_total():
+    ab = _load_rerank_ab()
+    note = _wrapper(ab, ab.RUN_PLANS[0])["note"]
+    assert "run total" in note.lower()
+
+
 def test_config_diff_paths_reports_every_difference_as_a_dotted_path():
     # The confound this guards: a hand-written "rerank on" toml that omits
     # [synonyms] does not inherit them from the OFF config — load_config
@@ -424,6 +548,50 @@ def test_config_diff_paths_is_empty_for_identical_configs():
     ab = _load_rerank_ab()
     cfg = {"retrieval": {"rerank_enabled": False}, "budget": {"expression_tokens": 7000}}
     assert ab.config_diff_paths(cfg, dict(cfg)) == []
+
+
+# ── review fix 2: a per-class override map defeats the global knob ──────
+#
+# [retrieval] rerank_enabled_by_class is live (context_manager ~:1939 ->
+# _rerank_effective). Inherited IDENTICALLY by both cell configs it produces
+# no config_delta_other entry at all, yet it makes the OFF side not-actually-
+# off for the classes it names — an A/B whose control silently reranks.
+
+
+def _write_toml(path: Path, body: str) -> Path:
+    path.write_text(body, encoding="utf-8")
+    return path
+
+
+def test_preflight_refuses_a_non_empty_per_class_rerank_map(tmp_path):
+    ab = _load_rerank_ab()
+    off = _write_toml(tmp_path / "off.toml",
+                      "[retrieval]\nrerank_enabled = false\n"
+                      "rerank_enabled_by_class = { factual = true }\n")
+    on = _write_toml(tmp_path / "on.toml", "[retrieval]\nrerank_enabled = true\n")
+    fatal, _ = ab.preflight_configs(off, on)
+    joined = " ".join(fatal)
+    assert "rerank_enabled_by_class" in joined
+    assert "--config-off" in joined
+
+
+def test_preflight_refuses_the_per_class_map_on_the_on_side_too(tmp_path):
+    ab = _load_rerank_ab()
+    off = _write_toml(tmp_path / "off.toml", "[retrieval]\nrerank_enabled = false\n")
+    on = _write_toml(tmp_path / "on.toml",
+                     "[retrieval]\nrerank_enabled = true\n"
+                     "rerank_enabled_by_class = { default = false }\n")
+    fatal, _ = ab.preflight_configs(off, on)
+    assert any("rerank_enabled_by_class" in f and "--config-on" in f for f in fatal)
+
+
+def test_preflight_accepts_empty_per_class_maps(tmp_path):
+    ab = _load_rerank_ab()
+    off = _write_toml(tmp_path / "off.toml", "[retrieval]\nrerank_enabled = false\n")
+    on = _write_toml(tmp_path / "on.toml", "[retrieval]\nrerank_enabled = true\n")
+    fatal, deltas = ab.preflight_configs(off, on)
+    assert fatal == []
+    assert deltas == []   # identical files apart from the one knob
 
 
 def test_build_wrapper_records_non_rerank_config_deltas():
