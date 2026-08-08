@@ -46,7 +46,12 @@ from typing import Dict, List, Optional, Tuple
 
 from .fusion import rank_by_score
 
-__all__ = ["combine_rerank", "resolve_class_combinator", "VALID_COMBINATORS"]
+__all__ = [
+    "combine_rerank",
+    "resolve_class_combinator",
+    "resolve_class_flag",
+    "VALID_COMBINATORS",
+]
 
 # The only valid operators. ``KnowledgeStore.__init__`` validates against this
 # same set so a typo in cymatix.toml fails fast at construction.
@@ -137,6 +142,28 @@ def resolve_class_combinator(
     if not mapping or cls is None:
         return None
     return mapping.get(cls)
+
+
+def resolve_class_flag(
+    mapping: Dict[str, bool], cls: Optional[str]
+) -> Optional[bool]:
+    """Resolve the per-query-class cross-encoder rerank on/off flag.
+
+    Issue #341 (query-time cross-encoder rerank wiring, default-inert). The
+    stage-0 rule-based query classifier assigns each query a ``cls``; this
+    maps it to a bool via the ``[retrieval] rerank_enabled_by_class`` config
+    map. Precedence: an explicit ``cls`` key in ``mapping`` wins; otherwise
+    the ``"default"`` key (if present) is used; otherwise ``None`` — meaning
+    "fall back to the store's global ``rerank_enabled``". Both an
+    empty/absent ``mapping`` and a ``None`` ``cls`` (classifier disabled, or
+    no class assigned) resolve to ``None``. Values are already validated as
+    bool at config load (``RetrievalConfig.__post_init__``).
+    """
+    if not mapping or cls is None:
+        return None
+    if cls in mapping:
+        return mapping[cls]
+    return mapping.get("default")
 
 
 def _sort_by_score(scores: Dict[str, float], limit: int) -> List[str]:

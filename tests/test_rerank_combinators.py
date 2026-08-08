@@ -38,6 +38,7 @@ from cymatix_context.retrieval.fusion import DEFAULT_RRF_K, Fuser
 from cymatix_context.retrieval.rerank_combinators import (
     VALID_COMBINATORS,
     combine_rerank,
+    resolve_class_flag,
 )
 
 # Store-level fixtures reuse the invariance-audit harness (which itself reuses
@@ -355,3 +356,63 @@ def test_debug_hooks_empty_under_additive_fusion_mode():
         assert g.last_rerank_additive == {}
     finally:
         g.close()
+
+
+# ═══ 8. Issue #341 — [retrieval] rerank_* config knobs ═══════════════
+#
+# Config-only wiring: RetrievalConfig.rerank_enabled / rerank_depth /
+# rerank_model / rerank_enabled_by_class, plus the resolve_class_flag
+# resolver (same precedence contract as resolve_class_combinator above).
+# Tasks 5-6 (this epic) consume these knobs to actually call a
+# cross-encoder; this task only lands the seam, default-inert.
+
+
+def test_resolve_class_flag_precedence():
+    assert resolve_class_flag({"factual": True}, "factual") is True
+    assert resolve_class_flag({"default": True}, "multi_hop") is True
+    assert resolve_class_flag({"factual": True}, "multi_hop") is None
+    assert resolve_class_flag({}, "factual") is None
+    assert resolve_class_flag({"factual": False, "default": True}, "factual") is False
+
+
+def test_retrieval_rerank_knob_defaults_and_validation(tmp_path):
+    cfg = load_config(None)
+    assert cfg.retrieval.rerank_enabled is False
+    assert cfg.retrieval.rerank_depth == 50
+    assert cfg.retrieval.rerank_model == "cross-encoder/ms-marco-MiniLM-L-6-v2"
+    assert cfg.retrieval.rerank_enabled_by_class == {}
+
+    toml = tmp_path / "cymatix.toml"
+    toml.write_text('[retrieval]\nrerank_enabled_by_class = { bogus_class = true }\n')
+    with pytest.raises(ValueError):
+        load_config(str(toml))
+
+
+def test_retrieval_rerank_enabled_by_class_rejects_non_bool_value(tmp_path):
+    toml = tmp_path / "cymatix.toml"
+    toml.write_text('[retrieval]\nrerank_enabled_by_class = { factual = 1 }\n')
+    with pytest.raises(ValueError):
+        load_config(str(toml))
+
+
+def test_retrieval_rerank_depth_rejects_less_than_one():
+    with pytest.raises(ValueError):
+        RetrievalConfig(rerank_depth=0)
+
+
+def test_config_threads_rerank_toml_to_retrieval_config(tmp_path):
+    """TOML round-trip idiom (mirrors test_config_threads_toml_to_store_attrs
+    above): rerank_enabled/rerank_depth load through load_config unchanged."""
+    toml = tmp_path / "cymatix.toml"
+    toml.write_text(textwrap.dedent("""
+        [retrieval]
+        rerank_enabled = true
+        rerank_depth = 25
+    """), encoding="utf-8")
+
+    cfg = load_config(str(toml))
+    assert cfg.retrieval.rerank_enabled is True
+    assert cfg.retrieval.rerank_depth == 25
+    # Untouched knobs stay at their defaults (default-inert).
+    assert cfg.retrieval.rerank_model == "cross-encoder/ms-marco-MiniLM-L-6-v2"
+    assert cfg.retrieval.rerank_enabled_by_class == {}

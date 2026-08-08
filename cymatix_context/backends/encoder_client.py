@@ -12,7 +12,9 @@ This module owns exactly four concerns, and nothing else:
    ``cfg.encoder_daemon.url``) over ``""`` (off).
 2. Transport — ``EncoderClient`` is a stdlib-``urllib`` HTTP client for the
    daemon's ``/encode/dense``, ``/encode/splade``, ``/encode/sema``,
-   ``/encode/bundle``, and ``/ready`` endpoints. Every request carries an
+   ``/encode/rerank``, ``/encode/bundle``, and ``/ready`` endpoints
+   (``/encode/rerank`` is #341's cross-encoder pair-scoring seam: one
+   query + N document texts in, N scores out). Every request carries an
    explicit ``timeout=``; JSON decode errors and transport failures raise
    ``EncoderClientError`` uniformly so callers (the Task 3 RemoteCodec
    classes) can catch one exception type.
@@ -25,8 +27,9 @@ This module owns exactly four concerns, and nothing else:
    ``bgem3_codec.get_shared_codec``) and ``RemoteSemaCodec`` (installed by
    ``CymatixContextManager.__init__``). Both are drop-in duck-types for the
    codec they replace and both degrade to an in-process codec when the
-   daemon is unreachable. The third seam, SPLADE, needs no class — it
-   branches inside ``splade_backend.encode`` / ``encode_batch``.
+   daemon is unreachable. The other two seams need no class — SPLADE
+   branches inside ``splade_backend.encode`` / ``encode_batch``, and
+   rerank (#341) inside ``rerank_backend._remote_scores``.
 
 Deliberately stdlib-only at import (urllib, threading, json, time, logging)
 — this module must be importable, and its classes constructible, without
@@ -136,9 +139,10 @@ def batch_timeout_s(n: int) -> float:
     exists to prevent. 0.25s/item is ~4.6x margin over that rate.
 
     Deliberately NOT used for single-item ``encode()`` calls, which keep the
-    flat ``default_timeout_s()`` — only the three whole-batch POST paths
+    flat ``default_timeout_s()`` — only the four whole-batch POST paths
     (``RemoteBGEM3Codec.encode_batch``, ``RemoteSemaCodec.encode_batch``,
-    ``splade_backend.encode_batch``'s remote branch) call this.
+    ``splade_backend.encode_batch``'s remote branch, and #341's
+    ``rerank_backend.score_pairs``, whose POST carries all N pairs) call this.
     """
     return default_timeout_s() + n * per_item_timeout_s()
 
@@ -390,6 +394,18 @@ class EncoderClient:
         """
         resp = self._post_json("/encode/sema", {"texts": texts}, timeout_s=timeout_s)
         return self._require(resp, "vectors", "/encode/sema")
+
+    def encode_rerank(
+        self, query: str, texts: List[str], timeout_s: Optional[float] = None,
+    ) -> List[float]:
+        """POST /encode/rerank {query, texts} -> scores (contract table).
+
+        See ``encode_dense`` for the ``timeout_s`` override semantics.
+        """
+        resp = self._post_json(
+            "/encode/rerank", {"query": query, "texts": texts}, timeout_s=timeout_s,
+        )
+        return self._require(resp, "scores", "/encode/rerank")
 
     def encode_bundle(self, text: str, task: str = "query", top_k: int = 128) -> Dict[str, Any]:
         """POST /encode/bundle {text, task, top_k} -> {dense, splade, sema}."""

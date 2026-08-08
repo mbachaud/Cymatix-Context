@@ -32,6 +32,14 @@ Byte-parity is the load-bearing constraint: the daemon must produce exactly
 what an in-process encode would produce, so the batcher never re-rounds,
 re-sorts, or re-groups anything the codecs return.
 
+**rerank family (#341, added on top of the above):** a fourth family —
+``backends/rerank_backend.py``'s cross-encoder — joins the registry, the
+batchers (sequential per-item, like SPLADE/SEMA), and the capacity report,
+but it never rides ``/encode/bundle``. ``BUNDLE_FAMILIES`` names the three
+families the bundle endpoint and its ``bundles_per_s`` math still cover;
+``FAMILIES = BUNDLE_FAMILIES + ("rerank",)`` is everything else (registry
+load, devices, ``max_batch``, ``loaded``, ``warm_encodes_per_s``).
+
 Determinism profile (slice 2, ``CYMATIX_ENCODER_DETERMINISTIC=1``)
 ------------------------------------------------------------------
 
@@ -135,12 +143,21 @@ SPAWN_TOKEN_ENV = "CYMATIX_ENCODER_SPAWN_TOKEN"
 REQUEST_TIMEOUT_ENV = "CYMATIX_ENCODER_REQUEST_TIMEOUT_S"
 REQUEST_TIMEOUT_DEFAULT = 30.0
 
-#: Families served by the daemon, in bundle order.
-FAMILIES: Tuple[str, ...] = ("dense", "splade", "sema")
+#: Families that ride the ``/encode/bundle`` fan-out and the
+#: ``bundles_per_s`` (interleaved/pipelined) capacity math — three models,
+#: unchanged shape since the fork-1 slice-1 contract. ``rerank`` (#341) is
+#: server-side registry/capacity plumbing only; it never joins a bundle.
+BUNDLE_FAMILIES: Tuple[str, ...] = ("dense", "splade", "sema")
+
+#: Every family the daemon serves: devices/loaded/max_batch/warm rates and
+#: the registry loop all iterate this. ``bundles_per_s`` and the
+#: ``/encode/bundle`` payload iteration deliberately use ``BUNDLE_FAMILIES``
+#: instead — see the module docstring's bundle-vs-family split.
+FAMILIES: Tuple[str, ...] = BUNDLE_FAMILIES + ("rerank",)
 
 #: Daemon-local micro-batch caps. ``hardware._BATCH_TABLE`` has no dense/sema
 #: rows, so ``recommended_batch_size`` floors them at 1 — not a real cap.
-DAEMON_MAX_BATCH: Dict[str, int] = {"dense": 16, "splade": 8, "sema": 64}
+DAEMON_MAX_BATCH: Dict[str, int] = {"dense": 16, "splade": 8, "sema": 64, "rerank": 16}
 
 #: Constant text for the readiness probe bundle and the warm-rate probes.
 PROBE_TEXT = "cymatix encoder daemon readiness probe"
@@ -374,25 +391,29 @@ class EncoderRegistry:
         dense_codec: Any = None,
         splade_encode: Optional[Callable[..., Dict[str, float]]] = None,
         sema_codec: Any = None,
+        rerank: Optional[Callable[[str, Sequence[str]], List[float]]] = None,
         *,
         dense_dim: int = 1024,
         dense_model_name: str = "BAAI/bge-m3",
         splade_model_name: str = "",
         sema_model_name: str = "",
+        rerank_model_name: str = "",
         devices: Optional[Dict[str, Optional[str]]] = None,
         batch_sizes: Optional[Dict[str, int]] = None,
     ) -> None:
         self.dense_codec = dense_codec
         self.splade_encode = splade_encode
         self.sema_codec = sema_codec
+        self.rerank = rerank
         self.dense_dim = int(dense_dim)
         self.dense_model_name = dense_model_name
         # Cache-key components only (the vector LRU must not serve a vector
         # from model A to a daemon reloaded onto model B). Default "" so the
         # fake-registry test path needs no extra wiring — family already
-        # separates the three key spaces.
+        # separates the key spaces.
         self.splade_model_name = splade_model_name
         self.sema_model_name = sema_model_name
+        self.rerank_model_name = rerank_model_name
         self.devices: Dict[str, Optional[str]] = dict(devices or {})
         self.batch_sizes: Dict[str, int] = dict(batch_sizes or {})
 
@@ -410,6 +431,14 @@ class EncoderRegistry:
         """Single-item SemaCodec.encode — 20 floats against the PRIMES anchors."""
         return self.sema_codec.encode(text)
 
+    def rerank_score_batch(self, query: str, texts: Sequence[str]) -> List[float]:
+        """Cross-encoder scores for (query, texts) — delegates to the injected callable."""
+        return list(self.rerank(query, list(texts)))
+
+    def rerank_score_one(self, query: str, text: str) -> float:
+        """Single-pair score — the per-item batcher executor's call shape."""
+        return self.rerank_score_batch(query, [text])[0]
+
     # -- metadata -------------------------------------------------------
 
     @property
@@ -423,6 +452,7 @@ class EncoderRegistry:
             "dense": self.dense_codec is not None,
             "splade": self.splade_encode is not None,
             "sema": self.sema_codec is not None,
+            "rerank": self.rerank is not None,
         }
 
     def model_name(self, family: str) -> str:
@@ -431,6 +461,7 @@ class EncoderRegistry:
             "dense": self.dense_model_name,
             "splade": self.splade_model_name,
             "sema": self.sema_model_name,
+            "rerank": self.rerank_model_name,
         }.get(family, "")
 
     def max_batch(self, family: str) -> int:
@@ -452,6 +483,8 @@ class EncoderRegistry:
             self.splade_encode_one(PROBE_TEXT, 128)
         if self.sema_codec is not None:
             self.sema_encode_one(PROBE_TEXT)
+        if self.rerank is not None:
+            self.rerank_score_batch(PROBE_TEXT, [PROBE_TEXT])
 
     # -- production construction ----------------------------------------
 
@@ -475,6 +508,7 @@ class EncoderRegistry:
 
         from .backends.bgem3_codec import get_shared_codec, shared_dense_codec_enabled
         from .backends import splade_backend
+        from .backends import rerank_backend
         from .backends.sema import SemaCodec
         from .hardware import resolve_layer_device
 
@@ -482,6 +516,7 @@ class EncoderRegistry:
         dense_model = str(cfg.retrieval.dense_model)
         splade_model = str(cfg.ingestion.splade_model)
         sema_model = str(cfg.ingestion.sema_model)
+        rerank_model = str(cfg.retrieval.rerank_model)
 
         dense_codec = get_shared_codec(
             dim=dense_dim,
@@ -494,14 +529,22 @@ class EncoderRegistry:
         def _splade_encode(text: str, top_k: int = 128) -> Dict[str, float]:
             return splade_backend.encode(text, top_k=top_k, model_name=splade_model)
 
+        def _rerank_score(query: str, texts: List[str]) -> List[float]:
+            # score_pairs owns device resolution (resolve_layer_device("rerank"))
+            # and record_model_load via its own _get_scorer — nothing here
+            # duplicates that, so this closure is just the model-name binding.
+            return rerank_backend.score_pairs(query, texts, model_name=rerank_model)
+
         return cls(
             dense_codec=dense_codec,
             splade_encode=_splade_encode,
             sema_codec=sema_codec,
+            rerank=_rerank_score,
             dense_dim=dense_dim,
             dense_model_name=dense_model,
             splade_model_name=splade_model,
             sema_model_name=sema_model,
+            rerank_model_name=rerank_model,
             devices={family: resolve_layer_device(family) for family in FAMILIES},
             batch_sizes={family: resolve_max_batch(family) for family in FAMILIES},
         )
@@ -974,10 +1017,13 @@ def build_capacity_report(
     re-reads both live on every request (the counters move after the flip).
     """
     warm = {family: _finite_rate(rates.get(family)) for family in FAMILIES}
-    usable = [r for r in warm.values() if r]
-    if len(usable) == len(FAMILIES):
-        interleaved: Optional[float] = round(1.0 / sum(1.0 / r for r in usable), 3)
-        pipelined: Optional[float] = round(min(usable), 3)
+    # bundles_per_s is quoted against /encode/bundle, which fans out to
+    # BUNDLE_FAMILIES only (rerank never joins a bundle) — see the module
+    # docstring's bundle-vs-family split.
+    bundle_usable = [warm[family] for family in BUNDLE_FAMILIES if warm.get(family)]
+    if len(bundle_usable) == len(BUNDLE_FAMILIES):
+        interleaved: Optional[float] = round(1.0 / sum(1.0 / r for r in bundle_usable), 3)
+        pipelined: Optional[float] = round(min(bundle_usable), 3)
     else:
         interleaved = pipelined = None
 
@@ -1055,6 +1101,12 @@ class _Daemon:
                 return ("splade", model, f"top_k={int(top_k)}", str(text))
             if family == "sema":
                 return ("sema", model, "", str(payload[0]))
+            if family == "rerank":
+                # Payload is (query, text): the query stands in for "task"
+                # here — it is the other axis that changes the score bytes,
+                # so it belongs in the key exactly like dense's task prefix.
+                query, text = payload
+                return ("rerank", model, str(query), str(text))
         except Exception as exc:
             log.debug("vector cache key build failed for %s: %s", family, exc)
             return None
@@ -1172,6 +1224,12 @@ class _Daemon:
                 max_batch=registry.max_batch("sema"),
                 window_s=self.window_s,
             ),
+            "rerank": _Batcher(
+                "rerank",
+                make_sequential_executor(registry.rerank_score_one),
+                max_batch=registry.max_batch("rerank"),
+                window_s=self.window_s,
+            ),
         }
         for batcher in self.batchers.values():
             batcher.start()
@@ -1183,6 +1241,7 @@ class _Daemon:
             "dense": (PROBE_TEXT, "query"),
             "splade": (PROBE_TEXT, 128),
             "sema": (PROBE_TEXT,),
+            "rerank": (PROBE_TEXT, PROBE_TEXT),
         }[family]
 
     def _probe_bundle(self) -> None:
@@ -1213,7 +1272,11 @@ class _Daemon:
         Each family is measured the way the daemon actually serves it: SPLADE
         and SEMA as WARM_PROBE_ENCODES sequential single encodes, dense as one
         ``encode_batch`` of WARM_PROBE_ENCODES texts (batching is the whole
-        reason dense is worth daemonizing).
+        reason dense is worth daemonizing). rerank is measured the same way
+        as dense — one ``rerank_score_batch`` call of WARM_PROBE_ENCODES
+        copies of the probe pair — since ``score_pairs`` batches internally
+        too; it is excluded from ``bundles_per_s`` (BUNDLE_FAMILIES only) but
+        still gets its own ``warm_encodes_per_s`` row.
         """
         probes: Dict[str, Callable[[], Any]] = {
             "dense": lambda: registry.dense_encode_batch([PROBE_TEXT] * WARM_PROBE_ENCODES, "query"),
@@ -1223,6 +1286,9 @@ class _Daemon:
             "sema": lambda: [
                 registry.sema_encode_one(PROBE_TEXT) for _ in range(WARM_PROBE_ENCODES)
             ],
+            "rerank": lambda: registry.rerank_score_batch(
+                PROBE_TEXT, [PROBE_TEXT] * WARM_PROBE_ENCODES
+            ),
         }
         rates: Dict[str, Optional[float]] = {}
         for family in FAMILIES:
@@ -1277,6 +1343,11 @@ class BundleRequest(BaseModel):
     text: str
     task: Literal["query", "passage"] = "query"
     top_k: int = 128
+
+
+class RerankRequest(BaseModel):
+    query: str
+    texts: List[str]
 
 
 def _require_ready(daemon: _Daemon) -> None:
@@ -1444,6 +1515,17 @@ def create_encoder_app(
         ]
         dense, splade, sema = _join(futures, "/encode/bundle")
         return {"dense": dense, "splade": splade, "sema": sema}
+
+    @app.post("/encode/rerank")
+    def encode_rerank(req: RerankRequest) -> Dict[str, Any]:
+        _require_ready(daemon)
+        if not req.texts:
+            return {"scores": [], "model": daemon.registry.rerank_model_name}
+        futures = [daemon.submit_cached("rerank", (req.query, text)) for text in req.texts]
+        return {
+            "scores": _join(futures, "/encode/rerank"),
+            "model": daemon.registry.rerank_model_name,
+        }
 
     return app
 

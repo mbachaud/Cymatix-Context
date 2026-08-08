@@ -305,9 +305,9 @@ receipts and worker-sweep docs).
 | #334 | PKI + tags: add gates + ladder arms (11.1GB combined, unmeasured) | Ready |
 | #336 | Splice/headroom answer-quality A/B (owns the p95 tail) | Ready; blocks trim-as-default |
 | #337 | Sema query tier removal decision (null even with vectors) | Ready; auto-gate landed |
-| #335 | Delivered-gold receipt metric + ANN `min_genes` sweep | Ready; prerequisite for #341 sequencing and the coact verdict |
-| #341 | Rerank production wiring (pre-cap top-50) | **Highest leverage** — three findings converge (near-cutoff class, erb_039, #335) |
-| #340 | Static-miss class: 99/469 needles, per-needle receipts | The recall workstream's quantified target; pairs with #260's depth sweep |
+| #335 | Delivered-gold receipt metric + ANN `min_genes` sweep | **Metric SHIPPED** (2026-08-07, in the ladder per-needle: `delivered_gold*`, `final_rank_of_first_gold`, `gate_kept`); blocker retired — re-read ANN-gate/coact/synonym verdicts on the delivery basis |
+| #341 | Rerank production wiring (pre-cap top-50) | **SHIPPED default-off** (2026-08-07): probe GO replicates (+6.7pp rank AND delivered on probe-30, 0 losses, summary+domains pair text); negative on no-headroom populations; dogfood cost +32–180% relative → gating is population-headroom-first. Receipts: `2026-08-07-rerank-wiring-receipts.md` |
+| #340 | Static-miss class: 99/469 needles, per-needle receipts | The recall workstream's quantified target; pairs with #260's depth sweep. #341 receipts confirm the boundary empirically: rank 81–516 golds pass through rerank untouched; near-cutoff (≤depth 50) is convertible |
 | #339 | Wobble second source + determinism NO-GO (tracking) | Record; no action unless stability is required |
 
 ### Effects on the existing tracks

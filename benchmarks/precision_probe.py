@@ -159,7 +159,7 @@ def main() -> int:
     cfg.genome.path = GENOME_DB
     # Double-check LLM-free defaults are in effect for this probe
     cfg.ribosome.query_expansion_enabled = False
-    cfg.ingestion.rerank_enabled = False
+    cfg.retrieval.rerank_enabled = False
 
     print(f"[probe] initializing CymatixContextManager...")
     t0 = time.perf_counter()

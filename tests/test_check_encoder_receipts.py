@@ -185,6 +185,30 @@ def test_encoder_capacity_gpu_bar_via_cli(tmp_path):
     assert result2["verdict"] == "FAIL"
 
 
+def test_checker_keeps_bundle_gate_binding_and_rerank_informational(tmp_path):
+    """Rerank fields (#341) on a level must surface as a NOTE, never a gate —
+    the binding bundle gates (capacity_bundles_per_s, errors_zero) are
+    untouched by rerank load."""
+    fresh = make_capacity_receipt([(1, 4.26, 0), (2, 5.60, 0), (4, 6.86, 0), (8, 7.02, 0)])
+    for lv in fresh["levels"]:
+        lv["rerank_scores_total"] = 100
+        lv["rerank_pairs_per_s"] = 227.27
+        lv["rerank_latency_p50_ms"] = 200.0
+        lv["rerank_latency_p95_ms"] = 240.0
+    rc, result = run_checker(tmp_path, "encoder_capacity", fresh)
+    assert rc == 0
+    assert result["verdict"] == "PASS"
+    assert any(g["name"] == "capacity_bundles_per_s" for g in result["gates"])
+    assert not any(g["name"].startswith("rerank") for g in result["gates"])
+    # The note must label the sequential-latency-proxy methodology inline —
+    # rerank_pairs_per_s sits right beside bundles_per_s in the receipt and
+    # must not be mistaken for a comparable concurrent-phase rate.
+    assert (
+        "info: rerank_pairs_per_s (sequential-latency proxy, not phase "
+        "wall-clock) at n1 = 227.27" in result["notes"]
+    )
+
+
 def test_encoder_capacity_empty_levels_exit_2(tmp_path):
     fresh = write_json(tmp_path, "empty.json", {"kind": "encoder_capacity", "levels": []})
     rc = cer.main(["--kind", "encoder_capacity", "--fresh", str(fresh)])
@@ -394,6 +418,43 @@ def test_aggregate_level_no_successful_requests_latency_is_none():
     assert stats["latency_p50_ms"] is None
     assert stats["latency_p95_ms"] is None
     assert stats["latency_max_ms"] is None
+
+
+def test_aggregate_level_with_rerank_vectors():
+    """rerank_ms/errors/pairs_per_request (#341) fold into the pure row.
+
+    n=2 successful rerank calls; nearest-rank percentile() on sorted
+    [200.0, 240.0] at p=0.50 -> idx = round(0.5 * 1) = round(0.5) = 0
+    (Python banker's rounding) -> sorted[0] == 200.0.
+    """
+    row = edc.aggregate_level(
+        2, [100.0, 120.0], 0, 1.0,
+        rerank_ms=[200.0, 240.0], rerank_errors=0, rerank_pairs_per_request=50,
+    )
+    assert row["rerank_scores_total"] == 100  # 2 successful calls * 50 pairs/call
+    assert row["rerank_pairs_per_s"] > 0
+    assert row["rerank_latency_p50_ms"] == 200.0
+    assert row["rerank_latency_p95_ms"] == 240.0
+    assert row["errors"] == 0
+
+
+def test_aggregate_level_without_rerank_omits_keys():
+    row = edc.aggregate_level(1, [100.0], 0, 1.0)
+    assert not any(k.startswith("rerank") for k in row)
+
+
+def test_aggregate_level_rerank_errors_fold_into_errors_not_bundles_total():
+    """Rerank errors count into the level's existing `errors` field (so the
+    binding errors_zero gate covers rerank with no checker change) but must
+    NOT pollute bundles_total/bundles_per_s — those stay pure bundle-phase
+    metrics per the bar-preserving design."""
+    row = edc.aggregate_level(
+        1, [100.0], 2, 1.0,
+        rerank_ms=[200.0], rerank_errors=3, rerank_pairs_per_request=10,
+    )
+    assert row["errors"] == 5  # 2 bundle errors + 3 rerank errors
+    assert row["bundles_total"] == 3  # 1 success + 2 bundle errors only
+    assert row["bundles_per_s"] == 3.0
 
 
 def test_client_text_is_deterministic_and_distinct():

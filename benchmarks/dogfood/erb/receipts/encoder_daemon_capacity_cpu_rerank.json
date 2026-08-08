@@ -1,0 +1,116 @@
+{
+  "kind": "encoder_capacity",
+  "profile_label": "cpu_rerank",
+  "python": "F:\\Projects\\cymatix-context\\.venv\\Scripts\\python.exe",
+  "port": 11439,
+  "torch_version": "2.13.0+cpu",
+  "capacity": {
+    "devices": {
+      "dense": "cpu",
+      "splade": "cpu",
+      "sema": "cpu",
+      "rerank": "cpu"
+    },
+    "warm_encodes_per_s": {
+      "dense": 20.264,
+      "splade": 22.18,
+      "sema": 135.701,
+      "rerank": 454.777
+    },
+    "bundles_per_s": {
+      "interleaved": 9.823,
+      "pipelined": 20.264
+    },
+    "max_batch": {
+      "dense": 16,
+      "splade": 8,
+      "sema": 64,
+      "rerank": 16
+    },
+    "batch_window_ms": 2.0,
+    "deterministic": false,
+    "vector_cache": {
+      "enabled": true,
+      "size": 0,
+      "max_size": 4096,
+      "hits": 0,
+      "misses": 0
+    },
+    "probe_ms": 175.583,
+    "warm_probe_encodes": 5,
+    "loaded": {
+      "dense": true,
+      "splade": true,
+      "sema": true,
+      "rerank": true
+    },
+    "dense_model": "BAAI/bge-m3",
+    "dense_dim": 1024,
+    "torch_version": "2.13.0+cpu",
+    "vram_total_gb": null,
+    "vram_free_gb": null,
+    "system_ram_gb": 47.93,
+    "pid": 27736
+  },
+  "spawn_token_verified": true,
+  "levels": [
+    {
+      "n_clients": 1,
+      "bundles_total": 50,
+      "errors": 0,
+      "wall_s": 12.2135,
+      "bundles_per_s": 4.0938,
+      "latency_p50_ms": 234.448,
+      "latency_p95_ms": 298.886,
+      "latency_max_ms": 341.195,
+      "rerank_scores_total": 50,
+      "rerank_pairs_per_s": 84.6575,
+      "rerank_latency_p50_ms": 590.615,
+      "rerank_latency_p95_ms": 590.615
+    },
+    {
+      "n_clients": 2,
+      "bundles_total": 100,
+      "errors": 0,
+      "wall_s": 11.7748,
+      "bundles_per_s": 8.4927,
+      "latency_p50_ms": 218.146,
+      "latency_p95_ms": 251.804,
+      "latency_max_ms": 271.319,
+      "rerank_scores_total": 100,
+      "rerank_pairs_per_s": 165.4409,
+      "rerank_latency_p50_ms": 4.048,
+      "rerank_latency_p95_ms": 600.397
+    },
+    {
+      "n_clients": 4,
+      "bundles_total": 200,
+      "errors": 0,
+      "wall_s": 18.696,
+      "bundles_per_s": 10.6975,
+      "latency_p50_ms": 223.732,
+      "latency_p95_ms": 432.239,
+      "latency_max_ms": 588.209,
+      "rerank_scores_total": 200,
+      "rerank_pairs_per_s": 116.7351,
+      "rerank_latency_p50_ms": 567.523,
+      "rerank_latency_p95_ms": 1132.218
+    },
+    {
+      "n_clients": 8,
+      "bundles_total": 400,
+      "errors": 0,
+      "wall_s": 34.068,
+      "bundles_per_s": 11.7412,
+      "latency_p50_ms": 267.081,
+      "latency_p95_ms": 852.421,
+      "latency_max_ms": 1181.046,
+      "rerank_scores_total": 400,
+      "rerank_pairs_per_s": 65.8538,
+      "rerank_latency_p50_ms": 639.196,
+      "rerank_latency_p95_ms": 2364.673
+    }
+  ],
+  "generated_at": "2026-08-07T07:50:03.531798+00:00",
+  "env": {}
+}

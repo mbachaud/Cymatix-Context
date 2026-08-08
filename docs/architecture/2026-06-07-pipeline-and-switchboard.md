@@ -326,7 +326,16 @@ dataclass values.
 | `seeded_edges_enabled` | retrieval | `False` | Hebbian edge evidence writeback | `config.py:296` |
 | `splade_enabled` | ingestion | `False` | write `splade_terms` + Tier-3.5 SPLADE | `config.py:218` |
 | `dense_embed_on_ingest` | ingestion | `True` | write BGE-M3 vectors at ingest | `config.py:230` |
-| `rerank_enabled` | ingestion | `False` | cross-encoder rerank refiner (needs ribosome) | `config.py:220`; `blend.py:89-93` |
+| `rerank_enabled` | retrieval | `False` | pre-cap cross-encoder rerank (count-preserving) | `config.py` `RetrievalConfig.rerank_enabled`; `knowledge_store.py` step 5b in `query_docs_ann` |
+
+> **Errata 2026-08-07 (#341).** This row used to read
+> `rerank_enabled | ingestion | blend.py:89-93`. That knob was **removed**:
+> under the `deberta` backend it was dead (the `re_rank`/`rerank` name
+> mismatch meant the cross-encoder never ran from serving) and under
+> `ollama`/`litellm` it misrouted to the LLM `Compressor.rerank`. The live
+> switch is `[retrieval] rerank_enabled`, evaluated pre-cap inside the
+> knowledge store. Receipts:
+> `docs/benchmarks/2026-08-07-rerank-wiring-receipts.md`.
 
 Env switches (not in helix.toml): `HELIX_SEMANTIC_ARM`, `HELIX_SEMANTIC_BROADEN`,
 `HELIX_SEMANTIC_DENSE_WEIGHT`, `HELIX_QUESTION_DENSE`, `HELIX_WALKING_TIEBREAK`,

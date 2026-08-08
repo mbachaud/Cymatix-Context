@@ -557,7 +557,10 @@ class StateCollector:
                    "retrieval", "Minimum cosine for a dense hit to count"),
             _entry("splade_enabled", ingestion.splade_enabled, "ingestion",
                    "SPLADE sparse expansion at index time"),
-            _entry("rerank_enabled", ingestion.rerank_enabled, "ingestion",
+            # Issue #341 Task 7: was ingestion.rerank_enabled (the dead
+            # post-cap blend branch); the live knob is the [retrieval]
+            # pre-cap cross-encoder seam landed in Tasks 5-6.
+            _entry("rerank_enabled", retrieval.rerank_enabled, "retrieval",
                    "Cross-encoder rerank on candidates"),
             _entry("decoder_mode", budget.decoder_mode, "budget",
                    "full | condensed | minimal | none — decoder prompt size"),

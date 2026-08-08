@@ -154,7 +154,7 @@ def cymatix_sid_scores(cymatix, query, n_corpus):
     cands, _ = cymatix._apply_candidate_refiners(query, cands, n_corpus,
                                                use_cymatics=False,
                                                use_harmonic_bin=False,
-                                               use_tcm=True, allow_rerank=False)
+                                               use_tcm=True)
     raw = dict(cymatix.genome.last_query_scores or {})
     best = {}
     for g in cands:

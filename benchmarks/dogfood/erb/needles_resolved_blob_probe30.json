@@ -1,0 +1,125 @@
+{
+ "needles": [
+  {
+   "name": "erb_000",
+   "query": "What are the default size limits for file uploads and total request size for the new multipart upload support on the OpenAI-compatible API endpoints?"
+  },
+  {
+   "name": "erb_001",
+   "query": "What is the name of the new metric added so SRE can track when server-side streaming sessions get finalized due to hitting the time limit?"
+  },
+  {
+   "name": "erb_003",
+   "query": "In the meeting about onboarding a SaaS product to Google Cloud Marketplace, what did the GCP team recommend for handling delays where a new subscription entitlement is not immediately available during the customer onboarding flow?"
+  },
+  {
+   "name": "erb_008",
+   "query": "In the EdgePath evaluation email thread, what alternative Year 1 pricing package did Redwood propose instead of matching the competitor's 50 percent first-year discount and migration credit?"
+  },
+  {
+   "name": "erb_009",
+   "query": "How does the new alerting approach group model-serving requests by the stages they pass through to reduce noisy alerts and speed up root cause analysis?"
+  },
+  {
+   "name": "erb_010",
+   "query": "How long is the validity period for the telemetry driven runbook author certification from the operator training bootcamp?"
+  },
+  {
+   "name": "erb_012",
+   "query": "What is the recommended two-stage process for rotating the signing credentials used by GPU image build and promotion pipelines, including how to cut over safely and roll back if something goes wrong?"
+  },
+  {
+   "name": "erb_013",
+   "query": "In the on-prem private upgrade deep dive with an air-gapped healthcare customer, what did they describe as their current rollback approach when an upgrade goes wrong?"
+  },
+  {
+   "name": "erb_015",
+   "query": "What is the company policy for how long contractor access should last by default before it expires, according to the access and permissions playbook?"
+  },
+  {
+   "name": "erb_019",
+   "query": "In the recent update to the chat completions compatibility adapter, how does the parameter normalizer handle a client sending max_tokens as null compared to leaving it out entirely?"
+  },
+  {
+   "name": "erb_020",
+   "query": "What is the expected turnaround time for security to approve access to a high risk internal tool role in Redwood's tool access governance process?"
+  },
+  {
+   "name": "erb_021",
+   "query": "What is the recommended liability cap language in the procurement legal triage SOP for vendor contracts (including the key exceptions and how the cap amount is determined)?"
+  },
+  {
+   "name": "erb_022",
+   "query": "In the customer docs plan for the opt-in quantization profile feature, what are the review roles required before the documentation can be merged?"
+  },
+  {
+   "name": "erb_024",
+   "query": "In the enterprise tenant cutover go-live runbook, what latency threshold triggers escalation based on the 95th percentile being too high, and how long does it need to be sustained?"
+  },
+  {
+   "name": "erb_029",
+   "query": "What is the operator procedure to put a private deployment tenant into local-only telemetry mode and how can you verify the mode afterward?"
+  },
+  {
+   "name": "erb_031",
+   "query": "In the security review meeting about private cloud upgrades for a financial services customer, what was the stated minimum audit log retention period they wanted?"
+  },
+  {
+   "name": "erb_033",
+   "query": "For regulated customer private VPC deployments, what is the tenant-facing monthly availability target for the inference endpoint?"
+  },
+  {
+   "name": "erb_036",
+   "query": "In the sandbox onboarding demo with NimbusApps, what median and p95 latency did the 50-concurrency 1-minute performance run report?"
+  },
+  {
+   "name": "erb_038",
+   "query": "What are the retention time windows for these lightweight kernel state snapshots (in-memory cache, indexed store, and any cold archive) used for post-incident diagnostics?"
+  },
+  {
+   "name": "erb_039",
+   "query": "In the security review call about buying an LLM inference service through AWS Marketplace, what was said about whether cross-region failover is enabled by default for the hosted endpoint?"
+  },
+  {
+   "name": "erb_042",
+   "query": "What support response time commitments did Acme approve for being shown in their AWS and Azure marketplace listing for incident priority levels?"
+  },
+  {
+   "name": "erb_050",
+   "query": "What is the sampling policy for request routes of different telemetry priority levels in the new path-based observability change?"
+  },
+  {
+   "name": "erb_066",
+   "query": "What is the default wait time used by the new tool-call batching invoker, and how does it differ between hosted and dedicated tiers?"
+  },
+  {
+   "name": "erb_068",
+   "query": "In our internal dry run of marketplace onboarding, what time window did the team suggest we describe as a normal entitlement sync delay before telling customers to contact support?"
+  },
+  {
+   "name": "erb_072",
+   "query": "How does the new v1 chat compatibility layer handle invalid tool or function schemas, and what HTTP status does it return when validation fails?"
+  },
+  {
+   "name": "erb_073",
+   "query": "What change was introduced to prevent oscillations in the new GPU scratch memory allocator that can trigger repeated micro-batch splits?"
+  },
+  {
+   "name": "erb_075",
+   "query": "What is the three-step message sequence used for the new cross-language streaming startup handshake in the SDKs?"
+  },
+  {
+   "name": "erb_080",
+   "query": "During the year end handoff meeting, what was identified as the cause of the early December latency incident impacting some p95 requests?"
+  },
+  {
+   "name": "erb_087",
+   "query": "What are the three runtime precision settings introduced for controlling fp32 vs lower precision execution, and what does each mode allow?"
+  },
+  {
+   "name": "erb_095",
+   "query": "In the OpenAI Responses v3 compatibility work, how are overly large user-provided seeds handled to keep determinism, and where is the original seed stored for auditing?"
+  }
+ ],
+ "note": "the 2026-08-04 rerank GO probe's exact 30 carve-safe needles (names from receipts/rerank_probe.txt) \u2014 #341 A/B runs apples-to-apples vs the probe"
+}
