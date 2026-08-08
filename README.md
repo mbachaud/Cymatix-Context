@@ -437,6 +437,7 @@ work as-is, no re-ingest needed.
 ## Testing
 
 ```bash
+python -m spacy download en_core_web_sm    # once; ingest-path tests skip without it (#313)
 python -m pytest tests/ -m "not live" -v   # ~2,900 tests, no external services
 ```
 
