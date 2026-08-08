@@ -60,8 +60,31 @@ def _get_nlp():
     """Load spaCy model on first use. Cached for process lifetime."""
     global _nlp
     if _nlp is None:
-        import spacy
-        _nlp = spacy.load("en_core_web_sm", disable=["lemmatizer"])
+        try:
+            import spacy
+        except ImportError as exc:
+            raise ImportError(
+                "CpuTagger requires spaCy, which is not installed. "
+                "Install with: pip install 'cymatix-context[cpu]'"
+            ) from exc
+        # Single-line messages on purpose: routes_ingest.py interpolates
+        # str(exc) into the /ingest JSON error body (issue #313).
+        try:
+            _nlp = spacy.load("en_core_web_sm", disable=["lemmatizer"])
+        except OSError as exc:
+            raise OSError(
+                "CpuTagger requires the spaCy pipeline 'en_core_web_sm', which "
+                "is not installed in this environment. The [cpu] extra installs "
+                "the spaCy library only, not the pipeline. "
+                "Install it with: python -m spacy download en_core_web_sm"
+            ) from exc
+        except Exception as exc:
+            raise RuntimeError(
+                "spaCy pipeline 'en_core_web_sm' is installed but failed to "
+                "load, usually because its version does not match the installed "
+                "spaCy minor. Reinstall a matching build with: "
+                "python -m spacy download en_core_web_sm"
+            ) from exc
         # Increase max_length for large code files
         _nlp.max_length = 200_000
 
