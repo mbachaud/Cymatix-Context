@@ -105,11 +105,17 @@ backend on `:11437`, and the system-tray icon.
 
 ```bash
 pip install -e ".[all,launcher,launcher-tray,otel]"
+python -m spacy download en_core_web_sm
 ```
 
 `[all]` already includes `launcher` and `otel`, but listing them
 explicitly documents intent and makes the line copy-paste safe even if
 the `all` bundle composition changes.
+
+The `spacy download` line is required: the extras install the spaCy
+library, but the `en_core_web_sm` pipeline is a separate artifact that
+pip never pulls in, and ingest fails outright without it (see
+[Implicit requirements](#implicit-requirements), issue #313).
 
 Then run the one-time setup (creates desktop / start-menu shortcuts and
 optionally brings up the observability stack):
@@ -390,18 +396,35 @@ has bitten at least one operator.
 
 ### spaCy NER model
 
-The `[cpu]` extra installs the spaCy *library*, not the *model*. After
+The `[cpu]` extra installs the spaCy *library*, not the *pipeline*. After
 installing `[cpu]`:
 
 ```bash
 python -m spacy download en_core_web_sm
 ```
 
-Without the model, the `CpuTagger` ingest path silently falls back to a
-keyword-only tagger. Tags become coarser, NER nodes in the
-entity graph are absent, and `/context` retrieval quality on
-entity-bearing queries degrades by 10–30 percentage points depending on
-corpus.
+Unlike the other entries in this section, this one is not a silent
+degradation: without the pipeline the `CpuTagger` ingest path fails
+outright. `_get_nlp()` raises at first ingest, every `/ingest` POST
+returns 422 with an error body naming this exact command, and nothing is
+ingested until the pipeline is installed (issue #313). The test suite
+skips its ingest-path tests with the same message.
+
+For byte-reproducible installs, pin the build instead. A pinned build
+must match the installed spaCy minor, because `--direct` skips spaCy's
+compatibility check:
+
+```bash
+python -m spacy download en_core_web_sm-3.8.0 --direct
+```
+
+`spacy download` fetches from github.com release assets and does not
+honor `PIP_INDEX_URL`. Air-gapped or proxy-restricted environments can
+install the same wheel from a local path or internal mirror:
+
+```bash
+pip install /path/to/en_core_web_sm-3.8.0-py3-none-any.whl
+```
 
 ### Ollama version + reachability
 

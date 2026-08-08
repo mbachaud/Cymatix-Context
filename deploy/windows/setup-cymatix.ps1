@@ -74,6 +74,21 @@ if (-not $SkipPipInstall) {
         # MCP SDK is a separate top-level package, not an extra.
         & python -m pip install "mcp>=1.0"
         if ($LASTEXITCODE -ne 0) { throw "pip install failed (exit $LASTEXITCODE)" }
+        # The [cpu] extra ships the spaCy library only. CpuTagger loads the
+        # en_core_web_sm pipeline at first ingest, so without it every
+        # ingest fails (#313). Unpinned on purpose: spacy download resolves
+        # the pipeline build matching the installed spaCy. Non-fatal on
+        # purpose: this fetches from github.com, which proxied or air-gapped
+        # networks block, and a missing pipeline should not abort the rest
+        # of the setup.
+        & python -m spacy download "en_core_web_sm"
+        if ($LASTEXITCODE -ne 0) {
+            Write-Warning "spaCy pipeline download failed (exit $LASTEXITCODE)."
+            Write-Warning "Ingest will fail until it is installed. Run manually:"
+            Write-Warning "  python -m spacy download en_core_web_sm"
+            Write-Warning "Offline alternative (docs/SETUP.md, Implicit requirements):"
+            Write-Warning "  pip install <path-or-mirror>/en_core_web_sm-3.8.0-py3-none-any.whl"
+        }
         Write-Host "Dependencies installed." -ForegroundColor Green
     } finally {
         Pop-Location
