@@ -76,16 +76,17 @@ if (-not $SkipPipInstall) {
         if ($LASTEXITCODE -ne 0) { throw "pip install failed (exit $LASTEXITCODE)" }
         # The [cpu] extra ships the spaCy library only. CpuTagger loads the
         # en_core_web_sm pipeline at first ingest, so without it every
-        # ingest fails (#313). Unpinned on purpose: spacy download resolves
-        # the pipeline build matching the installed spaCy. Non-fatal on
-        # purpose: this fetches from github.com, which proxied or air-gapped
-        # networks block, and a missing pipeline should not abort the rest
-        # of the setup.
-        & python -m spacy download "en_core_web_sm"
+        # ingest fails (#313). Pinned on purpose: --direct skips spaCy's
+        # compatibility check, so the pinned pipeline minor must match the
+        # spacy>=3.8 floor in pyproject.toml. Non-fatal on purpose: this
+        # fetches from github.com, which proxied or air-gapped networks
+        # block, and a missing pipeline should not abort the rest of the
+        # setup.
+        & python -m spacy download "en_core_web_sm-3.8.0" --direct
         if ($LASTEXITCODE -ne 0) {
             Write-Warning "spaCy pipeline download failed (exit $LASTEXITCODE)."
             Write-Warning "Ingest will fail until it is installed. Run manually:"
-            Write-Warning "  python -m spacy download en_core_web_sm"
+            Write-Warning "  python -m spacy download en_core_web_sm-3.8.0 --direct"
             Write-Warning "Offline alternative (docs/SETUP.md, Implicit requirements):"
             Write-Warning "  pip install <path-or-mirror>/en_core_web_sm-3.8.0-py3-none-any.whl"
         }
