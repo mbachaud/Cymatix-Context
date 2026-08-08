@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+- **perf(storage): #338 FTS5 external-content rebuild.** `genes_fts` no longer
+  stores its own full copy of every document (the `genes_fts_content` shadow —
+  8.67 GB / 18.5% of the 829K blob bed): new stores are created as
+  external-content FTS5 backed by the `genes_fts_source` view, which reproduces
+  the exact composite text the contentful table indexed, so tokenizer, BM25
+  stats, and reader queries are unchanged (receipted byte-identical on the ERB
+  10k bed: `benchmarks/dogfood/erb/receipts/fts5_external_content_migration_10k.json`).
+  Legacy contentful stores keep working untouched;
+  `scripts/migrate_fts5_external_content.py` converts them offline (idempotent,
+  `--dry-run`, `--vacuum`). Write paths follow the external-content
+  delete-with-prior-values discipline; `rebuild_fts` uses the FTS5 `'rebuild'`
+  command on migrated stores. **Stub caveat** (cc-exchange 0017-joe §6): the
+  contentful shadow accidentally retained pre-compression original text for
+  stubbed genes; the migration refuses on stub-bearing stores unless
+  `--allow-stub-loss` is passed — signal-neutrality is conditional on a
+  stub-free store.
+
 - **feat: query-time cross-encoder rerank, default-off (#341).** New
   `[retrieval] rerank_enabled` (default `false`), `rerank_depth` (`50`),
   `rerank_model` (`"cross-encoder/ms-marco-MiniLM-L-6-v2"`) and

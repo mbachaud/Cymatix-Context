@@ -1071,8 +1071,15 @@ class KnowledgeStore:
         return (self._rrf_gate_top_m, self._rrf_gate_min_score)
 
     def _init_db(self) -> None:
-        from .storage.ddl import init_db
+        from .storage.ddl import fts5_is_external_content, init_db
         self._fts_available = init_db(self.conn)
+        # Issue #338: which write discipline genes_fts needs. External-content
+        # (new stores + migrated stores) has no shadow text of its own, so
+        # deletes must re-supply the prior indexed values; legacy contentful
+        # stores keep the plain DELETE+INSERT discipline untouched.
+        self._fts_external = (
+            self._fts_available and fts5_is_external_content(self.conn.cursor())
+        )
 
     def _ensure_registry_schema(self, cur: sqlite3.Cursor) -> None:
         """Delegate to storage.ddl.ensure_registry_schema."""
@@ -1776,6 +1783,17 @@ class KnowledgeStore:
                         gene_id, prior["source_id"], gene.source_id,
                     )
 
+                # Issue #338: on an external-content FTS index the delete
+                # below must re-supply the PRIOR row's indexed values, and
+                # the INSERT OR REPLACE + promoter rebuild are about to
+                # replace both the genes rowid and the view text — capture
+                # the row now, while the view still reproduces what was
+                # indexed.
+                prior_fts_row = None
+                if self._fts_available and self._fts_external and prior is not None:
+                    from .storage.indexes import fetch_fts_source_row
+                    prior_fts_row = fetch_fts_source_row(cur, gene_id)
+
                 cur.execute(
                     "INSERT OR REPLACE INTO genes "
                     "(gene_id, content, complement, codons, promoter, epigenetics, "
@@ -1830,6 +1848,8 @@ class KnowledgeStore:
                 sync_fts5(
                     cur, gene_id, gene, self._fts_available,
                     delete_first=prior is not None,
+                    fts_external=self._fts_external,
+                    prior_fts_row=prior_fts_row,
                 )
                 sync_entity_graph(cur, gene_id, gene, self._entity_graph_enabled)
                 sync_path_key_index(cur, gene_id, gene)
@@ -5155,18 +5175,24 @@ class KnowledgeStore:
         # W2.3 Phase A: DELETE+INSERT+commit is one writer transaction —
         # hold the write lock for the whole section (all SQLite work).
         with self._write_lock:
-            # Clear and repopulate with enriched content
-            cur.execute("DELETE FROM genes_fts")
-            cur.execute(
-                "INSERT INTO genes_fts(gene_id, content, complement) "
-                "SELECT g.gene_id, "
-                "  COALESCE(g.source_id,'') || ' ' || "
-                "  COALESCE((SELECT GROUP_CONCAT(pi.tag_value, ' ') "
-                "    FROM promoter_index pi WHERE pi.gene_id = g.gene_id), '') "
-                "  || ' ' || g.content, "
-                "  COALESCE(g.complement, '') "
-                "FROM genes g"
-            )
+            if self._fts_external:
+                # Issue #338: external-content form — the special 'rebuild'
+                # command repopulates the index from the backing view in one
+                # pass (plain DELETE is not legal on this form).
+                cur.execute("INSERT INTO genes_fts(genes_fts) VALUES ('rebuild')")
+            else:
+                # Clear and repopulate with enriched content
+                cur.execute("DELETE FROM genes_fts")
+                cur.execute(
+                    "INSERT INTO genes_fts(gene_id, content, complement) "
+                    "SELECT g.gene_id, "
+                    "  COALESCE(g.source_id,'') || ' ' || "
+                    "  COALESCE((SELECT GROUP_CONCAT(pi.tag_value, ' ') "
+                    "    FROM promoter_index pi WHERE pi.gene_id = g.gene_id), '') "
+                    "  || ' ' || g.content, "
+                    "  COALESCE(g.complement, '') "
+                    "FROM genes g"
+                )
             self.conn.commit()
         count = cur.execute("SELECT COUNT(*) FROM genes_fts").fetchone()[0]
         elapsed = _time.time() - t0
@@ -5564,9 +5590,23 @@ class KnowledgeStore:
             cur = self.conn.cursor()
             try:
                 if self._fts_available:
-                    cur.execute(
-                        "DELETE FROM genes_fts WHERE gene_id = ?", (gene_id,)
-                    )
+                    if self._fts_external:
+                        # Issue #338: external-content delete discipline —
+                        # hand the index the prior indexed values via the
+                        # special 'delete' insert, read from the backing
+                        # view BEFORE the genes/promoter rows go away
+                        # (afterwards the token stream is unrecoverable).
+                        from .storage.indexes import (
+                            fetch_fts_source_row,
+                            fts_delete_row,
+                        )
+                        prior_fts_row = fetch_fts_source_row(cur, gene_id)
+                        if prior_fts_row is not None:
+                            fts_delete_row(cur, prior_fts_row)
+                    else:
+                        cur.execute(
+                            "DELETE FROM genes_fts WHERE gene_id = ?", (gene_id,)
+                        )
                 for table in optional_tables:
                     try:
                         cur.execute(

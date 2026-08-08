@@ -397,16 +397,172 @@ def _auto_repair(cur: sqlite3.Cursor, conn: sqlite3.Connection) -> None:
 # FTS5
 # ---------------------------------------------------------------------------
 
-def _create_fts5(cur: sqlite3.Cursor, conn: sqlite3.Connection) -> bool:
-    """Create and incrementally sync the FTS5 index.  Returns fts_available."""
+# Issue #338: `genes_fts` used to be a PLAIN contentful FTS5 table, which
+# stores its own full copy of every document in the `genes_fts_content`
+# shadow (8.67 GB / 18.5% of the 829K-gene blob bed — pure duplication of
+# `genes.content`). New stores are created as EXTERNAL-CONTENT tables
+# backed by this view instead: the view reproduces the EXACT composite
+# text the contentful table indexed (source_id + promoter tags + content,
+# complement), so tokenizer, BM25 stats, and column reads are identical —
+# only the redundant shadow copy is gone. Legacy contentful stores keep
+# working untouched; scripts/migrate_fts5_external_content.py converts
+# them offline.
+FTS_SOURCE_VIEW = "genes_fts_source"
+
+# The GROUP_CONCAT input is ordered by promoter_index rowid so the tag
+# token order is deterministic and stable between the insert that indexed
+# a row and the later external-content 'delete' that must reproduce the
+# SAME token stream (see storage.indexes.sync_fts5). Insertion order is
+# domains-then-entities — identical to the Python tag_text in sync_fts5.
+FTS_SOURCE_VIEW_SQL = f"""
+CREATE VIEW IF NOT EXISTS {FTS_SOURCE_VIEW} AS
+SELECT
+    g.rowid AS rowid,
+    g.gene_id AS gene_id,
+    COALESCE(g.source_id,'') || ' ' ||
+    COALESCE((SELECT GROUP_CONCAT(t.tag_value, ' ') FROM (
+        SELECT pi.tag_value FROM promoter_index pi
+        WHERE pi.gene_id = g.gene_id ORDER BY pi.rowid) t), '')
+    || ' ' || g.content AS content,
+    COALESCE(g.complement, '') AS complement
+FROM genes g
+"""
+
+FTS_EXTERNAL_CREATE_SQL = f"""
+CREATE VIRTUAL TABLE genes_fts USING fts5(
+    gene_id,
+    content,
+    complement,
+    content='{FTS_SOURCE_VIEW}',
+    content_rowid='rowid'
+)
+"""
+
+
+def fts5_is_external_content(cur: sqlite3.Cursor) -> bool:
+    """True if ``genes_fts`` exists in the external-content form."""
     try:
-        cur.execute("""
-        CREATE VIRTUAL TABLE IF NOT EXISTS genes_fts USING fts5(
-            gene_id,
-            content,
-            complement
+        row = cur.execute(
+            "SELECT sql FROM sqlite_master WHERE name = 'genes_fts'"
+        ).fetchone()
+    except Exception:
+        log.warning("could not read genes_fts form", exc_info=True)
+        return False
+    if not row or not row[0]:
+        return False
+    return "content=" in row[0].replace('"', "'").replace(" ", "")
+
+
+def fts5_index_row_count(cur: sqlite3.Cursor) -> Optional[int]:
+    """Rows actually present in the FTS *index* (external form only).
+
+    On an external-content table ``SELECT COUNT(*) FROM genes_fts`` is a
+    full scan of the backing VIEW — it always equals the genes count and
+    says nothing about index membership. The ``genes_fts_docsize`` shadow
+    (present at the default columnsize=1) has exactly one row per indexed
+    document, so it is the index-side count. Returns None when the shadow
+    is unreadable (drift heal is skipped rather than guessed at).
+    """
+    try:
+        return int(
+            cur.execute("SELECT COUNT(*) FROM genes_fts_docsize").fetchone()[0]
         )
-        """)
+    except Exception:
+        log.warning("genes_fts_docsize unreadable — skipping drift check",
+                    exc_info=True)
+        return None
+
+
+def _create_fts5_external(cur: sqlite3.Cursor, conn: sqlite3.Connection) -> None:
+    """Create the external-content form (new stores)."""
+    cur.execute(FTS_SOURCE_VIEW_SQL)
+    cur.execute(FTS_EXTERNAL_CREATE_SQL)
+    # A brand-new DB has zero genes; a DB whose FTS table went missing
+    # (crash, manual drop) may have many — 'rebuild' repopulates the
+    # index from the backing view in one pass.
+    gene_count = cur.execute("SELECT COUNT(*) FROM genes").fetchone()[0]
+    if gene_count:
+        cur.execute("INSERT INTO genes_fts(genes_fts) VALUES ('rebuild')")
+        log.info("FTS5 external-content index built: %d genes", gene_count)
+    conn.commit()
+
+
+def _sync_fts5_external(cur: sqlite3.Cursor, conn: sqlite3.Connection) -> None:
+    """Incremental open-time sync for an existing external-content store."""
+    cur.execute(FTS_SOURCE_VIEW_SQL)  # heal a manually dropped view
+    gene_count = cur.execute("SELECT COUNT(*) FROM genes").fetchone()[0]
+    fts_count = fts5_index_row_count(cur)
+    if fts_count is None:
+        return
+    delta = gene_count - fts_count
+    if delta > 0:
+        # Back-fill rows the index is missing (e.g. a soft-failed FTS
+        # insert whose gene row still committed). rowid keys both sides.
+        cur.execute(
+            f"INSERT INTO genes_fts(rowid, gene_id, content, complement) "
+            f"SELECT v.rowid, v.gene_id, v.content, v.complement "
+            f"FROM {FTS_SOURCE_VIEW} v "
+            f"WHERE NOT EXISTS ("
+            f"  SELECT 1 FROM genes_fts_docsize d WHERE d.id = v.rowid)"
+        )
+        conn.commit()
+        log.info(
+            "FTS5 incremental sync (external): +%d genes (total: %d)",
+            delta, gene_count,
+        )
+    elif delta < 0:
+        # Orphaned index entries (genes deleted without the index delete).
+        # A plain DELETE is NOT legal on an external-content table and the
+        # original token streams are gone with the genes rows, so the only
+        # sound repair is a full 'rebuild'. Small orphan counts are
+        # harmless at query time (gene_id resolves to NULL through the
+        # view and is filtered downstream) — same policy as the legacy
+        # form below.
+        orphan_ratio = -delta / max(gene_count, 1)
+        if orphan_ratio < 0.05:
+            log.info(
+                "FTS5 (external) has %d orphan index entries (%.2f%% of %d "
+                "genes); leaving as-is (harmless at query time)",
+                -delta, orphan_ratio * 100, gene_count,
+            )
+        else:
+            cur.execute("INSERT INTO genes_fts(genes_fts) VALUES ('rebuild')")
+            conn.commit()
+            log.info("FTS5 (external) rebuild: removed %d orphan entries", -delta)
+
+
+def _create_fts5(cur: sqlite3.Cursor, conn: sqlite3.Connection) -> bool:
+    """Create and incrementally sync the FTS5 index.  Returns fts_available.
+
+    Three shapes (issue #338):
+      - no ``genes_fts`` yet        -> create the external-content form
+      - existing external-content   -> incremental sync, external discipline
+      - existing legacy contentful  -> incremental sync, legacy discipline
+        (NEVER force-migrated at open; that is the offline migration
+        script's job)
+    """
+    try:
+        exists = cur.execute(
+            "SELECT 1 FROM sqlite_master WHERE name = 'genes_fts'"
+        ).fetchone() is not None
+
+        if not exists:
+            try:
+                _create_fts5_external(cur, conn)
+            except Exception:
+                # External-content over a VIEW needs SQLite >= 3.34; fall
+                # back to the legacy contentful form on older builds.
+                log.warning(
+                    "external-content FTS5 create failed — falling back to "
+                    "the legacy contentful form",
+                    exc_info=True,
+                )
+                cur.execute("DROP TABLE IF EXISTS genes_fts")
+                cur.execute(f"DROP VIEW IF EXISTS {FTS_SOURCE_VIEW}")
+                cur.execute(
+                    "CREATE VIRTUAL TABLE IF NOT EXISTS genes_fts "
+                    "USING fts5(gene_id, content, complement)"
+                )
 
         # fts5vocab "instance" shadow over genes_fts — one row per
         # (term, doc, col, offset) occurrence. Used by
@@ -427,6 +583,11 @@ def _create_fts5(cur: sqlite3.Cursor, conn: sqlite3.Connection) -> bool:
                 exc_info=True,
             )
 
+        if fts5_is_external_content(cur):
+            _sync_fts5_external(cur, conn)
+            return True
+
+        # ── Legacy contentful form below (pre-#338 behaviour, unchanged) ──
         # Incremental FTS5 sync -- only add missing documents, don't rebuild
         gene_count = cur.execute("SELECT COUNT(*) FROM genes").fetchone()[0]
         fts_count = cur.execute("SELECT COUNT(*) FROM genes_fts").fetchone()[0]
