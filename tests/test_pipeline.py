@@ -15,7 +15,7 @@ from cymatix_context.genome import Genome
 from cymatix_context.schemas import Gene, PromoterTags, EpigeneticMarkers
 from cymatix_context.server import _munge_messages
 
-from tests.conftest import MockCompressorBackend, make_gene, make_cymatix_config
+from tests.conftest import MockCompressorBackend, make_gene, make_cymatix_config, requires_spacy_model
 
 
 # -- Helpers -----------------------------------------------------------
@@ -108,6 +108,8 @@ class TestBuildContext:
             assert "---" in window.expressed_context
 
 
+# Ingest-driving tests need the en_core_web_sm pipeline (#313).
+@requires_spacy_model
 class TestIngest:
     def test_ingest_creates_genes(self, cymatix):
         gene_ids = cymatix.ingest("This is a test document about authentication.", content_type="text")

@@ -16,7 +16,7 @@ import cymatix_context.server as server_mod
 from cymatix_context.config import CymatixConfig, GenomeConfig, KnowConfig, RibosomeConfig, ServerConfig
 from cymatix_context.server import create_app
 
-from tests.conftest import make_client, make_cymatix_config
+from tests.conftest import make_client, make_cymatix_config, requires_spacy_model
 
 
 # -- Helpers -----------------------------------------------------------
@@ -405,6 +405,8 @@ class TestContextCitationEnrichment:
             assert c.get("authored_by_party") in (None, "", False)
 
 
+# Ingest-driving tests need the en_core_web_sm pipeline (#313).
+@requires_spacy_model
 class TestIngestFederationOverrides:
     def test_ingest_accepts_explicit_identity_handles(self, client):
         resp = client.post("/ingest", json={
@@ -523,6 +525,7 @@ class TestAdminComponentsEndpoint:
         assert "ribosome" not in names
 
 
+@requires_spacy_model
 class TestIngestEndpoint:
     def test_ingest_text(self, client):
         resp = client.post("/ingest", json={
@@ -585,6 +588,7 @@ class TestContextEndpoint:
             assert "description" in data[0]
             assert "content" in data[0]
 
+    @requires_spacy_model
     def test_context_can_swap_to_packet_mode(self, client):
         client.post("/ingest", json={
             "content": "Authentication config controls JWT session settings.",
@@ -921,6 +925,7 @@ class TestDebugIntrospectionEndpoints:
         extracted = resp.json()["extracted"]
         assert extracted["domains"] or extracted["entities"]
 
+    @requires_spacy_model
     def test_preview_returns_ingested_metadata_path(self, client):
         ingest = client.post("/ingest", json={
             "content": "Authentication module uses JWT refresh tokens.",
@@ -1207,6 +1212,7 @@ class TestDebugIntrospectionEndpoints:
         assert "All 2 evaluated candidates fell below" in data["response_hint"]
 
 
+@requires_spacy_model
 class TestContextPacketEndpoint:
     """POST /context/packet — agent-safe context bundle with freshness labels.
 

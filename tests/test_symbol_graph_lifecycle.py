@@ -18,7 +18,7 @@ import pytest
 from cymatix_context.encoding import tree_chunker as tc
 from cymatix_context.genome import Genome
 from cymatix_context.schemas import StructuralRelation
-from tests.conftest import make_gene
+from tests.conftest import make_gene, requires_spacy_model
 
 SYMBOL_REF = int(StructuralRelation.SYMBOL_REF)
 
@@ -155,6 +155,8 @@ _CODE = (
 @pytest.mark.skipif(
     not tc.is_available(), reason="tree-sitter (+ tree-sitter-python) not installed"
 )
+# The ingest half drives CpuTagger.pack(), which needs en_core_web_sm (#313).
+@requires_spacy_model
 def test_ingest_then_delete_leaves_zero_symbol_rows(tmp_path, monkeypatch):
     monkeypatch.delenv("CYMATIX_USE_SHARDS", raising=False)
     monkeypatch.setenv("CYMATIX_GENOME_PATH", str(tmp_path / "genome.db"))

@@ -30,6 +30,35 @@ from cymatix_context.schemas import Gene, PromoterTags, EpigeneticMarkers, Chrom
 FIXTURES_DIR = Path(__file__).parent / "fixtures"
 
 
+# ── spaCy pipeline availability (issue #313) ─────────────────────────
+#
+# The [cpu] / [dev] / [all] extras install the spaCy library; the
+# en_core_web_sm pipeline is a separate artifact (docs/SETUP.md).
+# pytest.importorskip("spacy") only sees the library, so on a fresh
+# install every test that drives ingest through CpuTagger.pack() failed
+# with OSError [E050] instead of skipping. This predicate is the
+# pipeline-level companion to that guard, same shape as the
+# tree_chunker.is_available() skipif gates in the symbol-graph tests.
+
+def _has_spacy_model(name: str = "en_core_web_sm") -> bool:
+    try:
+        import spacy.util
+    except ImportError:
+        return False
+    return spacy.util.is_package(name)
+
+
+HAS_SPACY_MODEL = _has_spacy_model()
+
+requires_spacy_model = pytest.mark.skipif(
+    not HAS_SPACY_MODEL,
+    reason=(
+        "spaCy pipeline en_core_web_sm not installed. "
+        "Install with: python -m spacy download en_core_web_sm"
+    ),
+)
+
+
 # ── Fake BGE-M3 dense codec (shared test stand-in) ───────────────────
 #
 # Tier-0 PR-3 (2026-05-16) flipped `[retrieval] dense_embedding_enabled`

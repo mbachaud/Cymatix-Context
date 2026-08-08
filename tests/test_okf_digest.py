@@ -25,6 +25,8 @@ import pytest
 from cymatix_context.okf import compute_bundle_digest, read_bundle
 from cymatix_context.okf.digest import ADAPTER_VERSION, bundle_digest_payload
 
+from tests.conftest import requires_spacy_model
+
 OKF_FIXTURES = Path(__file__).parent / "fixtures" / "okf"
 
 # Full ingest in a child process: parse → digest → ingest into an
@@ -87,6 +89,10 @@ def _run_child(script: str, bundle: Path, hashseed: str) -> dict:
 
 
 class TestSeparateProcessDeterminism:
+    # The child process ingests through CpuTagger.pack(), which needs the
+    # en_core_web_sm pipeline; the failure surfaces as a child exit-code
+    # assertion here, so the skip must happen at collection time (#313).
+    @requires_spacy_model
     @pytest.mark.parametrize("bundle", ["crypto_bitcoin", "ga4"])
     def test_sample_bundle_ingest_digest_stable_across_hashseeds(self, bundle):
         pytest.importorskip("spacy")
@@ -124,6 +130,7 @@ class TestClockIndependence:
 
 
 class TestFloatExclusion:
+    @requires_spacy_model
     def test_embeddings_vary_with_config_but_digest_does_not(self):
         pytest.importorskip("spacy")
         from cymatix_context.context_manager import CymatixContextManager

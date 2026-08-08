@@ -16,7 +16,11 @@ from __future__ import annotations
 
 import pytest
 
-from tests.conftest import make_client
+from tests.conftest import make_client, requires_spacy_model
+
+# Every test here POSTs /ingest, which reaches CpuTagger.pack() and needs
+# the en_core_web_sm pipeline (#313).
+pytestmark = requires_spacy_model
 
 
 def _all_genes(client):

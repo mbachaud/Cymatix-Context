@@ -7,9 +7,13 @@ from unittest.mock import patch
 
 import pytest
 
-from tests.conftest import make_cymatix_config, run_cli as _run
+from tests.conftest import make_cymatix_config, requires_spacy_model, run_cli as _run
 
 pytest.importorskip("spacy")
+
+# The CLI ingests here run through CpuTagger.pack(), which needs the
+# en_core_web_sm pipeline, not just the spaCy library (#313).
+pytestmark = requires_spacy_model
 
 OKF_FIXTURES = Path(__file__).parent / "fixtures" / "okf"
 

@@ -69,6 +69,7 @@ from cymatix_context.schemas import (
 # file's existing call sites are unchanged.
 from tests.conftest import FakeBGEM3Codec as _FakeCodec
 from tests.conftest import hash_vec as _hash_vec
+from tests.conftest import requires_spacy_model
 
 DIM = 1024
 
@@ -254,6 +255,9 @@ def _make_manager(*, dense_on: bool) -> CymatixContextManager:
     return mgr
 
 
+# The context_manager.ingest() paths below run CpuTagger.pack(), which
+# needs the en_core_web_sm pipeline (#313).
+@requires_spacy_model
 def test_context_manager_ingest_populates_all_strands():
     """A multi-strand document ingested through context_manager.ingest()
     yields ``genes`` rows that ALL have a non-NULL ``embedding_dense_v2``
@@ -284,6 +288,7 @@ def test_context_manager_ingest_populates_all_strands():
         mgr.genome.close()
 
 
+@requires_spacy_model
 def test_context_manager_ingest_null_when_knob_off():
     """With dense_embed_on_ingest=False the manager skips dense encoding
     entirely and every ingested row keeps a NULL column.
@@ -302,6 +307,7 @@ def test_context_manager_ingest_null_when_knob_off():
 # ── 6. small-corpus full coverage ────────────────────────────────────
 
 
+@requires_spacy_model
 def test_ingest_corpus_full_dense_coverage():
     """Ingest a small corpus of separate documents; assert
     ``COUNT(embedding_dense_v2 IS NOT NULL) == COUNT(*)``.
