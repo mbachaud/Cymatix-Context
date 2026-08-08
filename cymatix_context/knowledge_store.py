@@ -24,7 +24,7 @@ import re
 import sqlite3
 import threading
 import time
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from .accel import (
     json_loads,
@@ -490,6 +490,38 @@ def apply_ann_gate(
     return kept
 
 
+# Issue #341: chars of a document handed to the cross-encoder. The
+# tokenizer re-truncates at 256 tokens anyway (rerank_backend._MAX_LENGTH),
+# so this only bounds the string-slicing / tokenizer input cost — it is not
+# the semantic truncation point.
+_RERANK_TEXT_MAX = 2000
+
+
+def _rerank_doc_text(doc) -> str:
+    """The text the cross-encoder scores for ``doc``.
+
+    Issue #341 sanctioned pair-text variation (829k A/B receipts,
+    2026-08-06): the 829k run landed under the recall bar, so the primary
+    form mirrors ``DeBERTaRibosome.re_rank``'s pair text exactly --
+    ``f"{summary} [{domains}]"`` -- instead of scoring raw ``content``, so
+    the pre-cap cross-encoder judges the same shape of text the ribosome's
+    own re-rank does.
+
+    Falls back to the OLD content-based form when ``doc.promoter`` is None
+    or its summary is empty: the summary+domains form assumes a summary
+    exists, and an empty one would otherwise score a garbage " []" pair
+    against every other candidate's real text.
+    """
+    promoter = doc.promoter
+    if promoter is not None and promoter.summary:
+        domains = ", ".join(promoter.domains)
+        text = f"{promoter.summary} [{domains}]" if domains else promoter.summary
+        return text[:_RERANK_TEXT_MAX]
+    return (doc.content or (promoter.summary if promoter else "") or "")[
+        :_RERANK_TEXT_MAX
+    ]
+
+
 class KnowledgeStore:
     """SQLite-backed document storage with tags-tag retrieval."""
 
@@ -652,6 +684,22 @@ class KnowledgeStore:
         doc_type_boost_mode: str = "additive",
         authority_path_selectivity: bool = False,
         pki_weight: float = 1.0,
+        # ── Issue #341: query-time cross-encoder rerank (default-OFF) ──
+        # Pre-cap rerank seam. With rerank_enabled=False (and no per-query
+        # override) every retrieval path below is byte-identical to the
+        # pre-#341 store — the invariance suites are the receipt.
+        # ``rerank_depth`` is the candidate count fed to the cross-encoder
+        # BEFORE the max_genes cut; the cut itself is unchanged, so the
+        # returned document COUNT never depends on this knob (only which
+        # documents fill those slots).
+        rerank_enabled: bool = False,
+        rerank_depth: int = 50,
+        rerank_model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2",
+        # DI seam: a (query, texts) -> scores callable. None (the default)
+        # lazy-imports backends.rerank_backend.score_pairs on first use, so
+        # torch/transformers never enter the import graph of a store that
+        # isn't reranking. Tests inject a deterministic fake here.
+        rerank_scorer: Optional[Callable[[str, List[str]], List[float]]] = None,
         main_conn: Optional[sqlite3.Connection] = None,
         shard_name: str = "main",
         read_only: bool = False,
@@ -809,6 +857,13 @@ class KnowledgeStore:
         self._semantic_dense_additive_weight: float = float(semantic_dense_additive_weight)
         self._semantic_broaden_routing: bool = bool(semantic_broaden_routing)
         self._pki_weight: float = float(pki_weight)
+        # Issue #341: pre-cap cross-encoder rerank (see ctor params).
+        self._rerank_enabled: bool = bool(rerank_enabled)
+        self._rerank_depth: int = int(rerank_depth)
+        self._rerank_model: str = str(rerank_model)
+        self._rerank_scorer: Optional[Callable[[str, List[str]], List[float]]] = (
+            rerank_scorer
+        )
         self._threshold_dim_warned: bool = False
         # Phase 2 claims layer (2026-04-19). Optional hook — when a main.db
         # connection is supplied, upsert_gene emits literal claims into it
@@ -887,6 +942,33 @@ class KnowledgeStore:
         # (same last-query contract and the same known cross-request-global
         # caveat — W1.6 scoops all of these into a request-scoped outcome).
         self.last_signal_timings: Dict[str, float] = {}
+        # Issue #341: the last query's final rank order, published under
+        # _last_query_scores_lock on both retrieval paths and in BOTH rerank
+        # arms — with rerank off it is the sim/fused order, so an A/B keeps an
+        # identical rank basis and the metric can never silently read a stale
+        # ordering.
+        #
+        # KNOWN ASYMMETRY — the two paths publish different DEPTHS, and a
+        # consumer computing rank-of-gold has to know which one it is reading:
+        #
+        #   query_docs_ann  -> the FULL union pool (~pool_size, default 500)
+        #                      in final order, i.e. every candidate the ANN
+        #                      path considered, both above and below the gate.
+        #   query_docs      -> the POST-CUT list only (max_genes * 2). Ids
+        #                      that ranked below that cut are simply absent,
+        #                      so a gold document outside the cut reads as
+        #                      "not retrieved" rather than "retrieved at rank
+        #                      N" — an unmeasurable, not a zero.
+        #
+        # Deliberately not unified: widening the lex publication would mean
+        # widening the ranking itself. The ladder's A/B runs dense-on, so the
+        # ANN (full-pool) semantics are the ones the receipts actually use.
+        self.last_ranked_ids: List[str] = []
+        # Issue #341 companion: {"gate_kept": n, "floor_appended": n} from the
+        # last query_docs_ann call (both arms). Lets the ablation ladder slice
+        # needles that only surfaced through the #214 dense pool floor.
+        # Written by query_docs_ann only; {} everywhere else.
+        self.last_rerank_diag: Dict[str, int] = {}
         # Perf slice 1 (W0.3): every COMMIT executed on the writer connection,
         # including raw conn.commit() calls from call sites that bypass
         # _write_lock (Registry, session_delivery, cwola). Uses the sqlite3
@@ -897,6 +979,26 @@ class KnowledgeStore:
         self._install_commit_trace()
         self._sema_cache: Optional[Dict] = None  # Pre-materialized ΣĒMA vectors (hot tier)
         self._cold_sema_cache: Optional[Dict] = None  # Pre-materialized ΣĒMA vectors (cold tier, C.2)
+        # Council fix: sema vectorless auto-gate. When a cache build finds
+        # ZERO non-null genes.embedding rows, the relevant flag flips true
+        # and short-circuits further work for that tier: hot
+        # (_sema_vectorless) gates the query-side Tier 4 codec.encode() call
+        # in query_docs (~:2850) — a hot-tier-vectorless store cannot
+        # produce a single sema candidate there, so the remote /encode/sema
+        # RTT is pure waste; cold (_cold_sema_vectorless) gates the
+        # repeated full-table rescan in query_cold_tier. Kept as two flags
+        # rather than one shared flag because the hot and cold builds scan
+        # disjoint chromatin partitions — a cold-tier-vectorless bed can
+        # still have hot-tier vectors (and vice versa), so folding them
+        # into one flag could false-positive-gate the *other* tier's
+        # perfectly good encode call. Both share one log-once guard, since
+        # spec wants a single "sema tier idle" line per store lifetime.
+        # Cleared by invalidate_sema_cache() / invalidate_cold_sema_cache()
+        # so a bed that later gains vectors (upsert, backfill script)
+        # re-checks on its next build.
+        self._sema_vectorless: bool = False
+        self._cold_sema_vectorless: bool = False
+        self._sema_idle_logged: bool = False  # one log.info per store lifetime
         # Memoized corpus size for IDF weighting (refreshed every
         # _CORPUS_SIZE_TTL seconds). Prevents the IDF denominator from
         # collapsing to the scored-candidate count on every query.
@@ -1048,6 +1150,21 @@ class KnowledgeStore:
             else:
                 raise
 
+        if not rows:
+            # Council fix: zero non-null genes.embedding rows in the
+            # hot-tier scan -> no candidate can ever carry a vector this
+            # cache build. Flip the store-level short-circuit so Tier 4's
+            # query-side codec.encode() call (and this full-table rescan,
+            # which Mode B would otherwise retry every query) stop firing
+            # until invalidate_sema_cache() clears the flag — e.g. after an
+            # upsert or backfill script adds a vector.
+            self._sema_vectorless = True
+            if not self._sema_idle_logged:
+                log.info("sema tier idle: no stored vectors")
+                self._sema_idle_logged = True
+            self._sema_cache = None
+            return
+
         gene_ids = []
         vectors = []
         for r in rows:
@@ -1074,6 +1191,10 @@ class KnowledgeStore:
     def invalidate_sema_cache(self) -> None:
         """Mark hot-tier cache stale — rebuilt on next Mode B query."""
         self._sema_cache = None
+        # Council fix: a bed that gains vectors (upsert, backfill) must
+        # re-check on the next build instead of staying permanently
+        # gated off by a stale vectorless verdict.
+        self._sema_vectorless = False
 
     # ── Cold-tier ΣĒMA retrieval (C.2, 2026-04-10) ─────────────────────
     #
@@ -1117,6 +1238,20 @@ class KnowledgeStore:
             (int(ChromatinState.HETEROCHROMATIN),),
         ).fetchall()
 
+        if not rows:
+            # Council fix: zero non-null genes.embedding rows in the
+            # heterochromatin (cold-tier) scan -> flip the cold-only
+            # short-circuit so query_cold_tier stops re-running this
+            # full-table scan on every call until invalidate_cold_sema_cache()
+            # clears the flag (e.g. after a document is archived with a
+            # vector, or a backfill runs).
+            self._cold_sema_vectorless = True
+            if not self._sema_idle_logged:
+                log.info("sema tier idle: no stored vectors")
+                self._sema_idle_logged = True
+            self._cold_sema_cache = None
+            return
+
         gene_ids = []
         vectors = []
         for r in rows:
@@ -1142,6 +1277,8 @@ class KnowledgeStore:
     def invalidate_cold_sema_cache(self) -> None:
         """Mark cold-tier cache stale — rebuilt on next query_cold_tier call."""
         self._cold_sema_cache = None
+        # Council fix: re-check on next build instead of staying gated.
+        self._cold_sema_vectorless = False
 
     def mark_verified(
         self,
@@ -1248,6 +1385,12 @@ class KnowledgeStore:
             return []
 
         if self._cold_sema_cache is None:
+            # Council fix: skip the full-table rescan once a prior build
+            # already proved the heterochromatin tier has zero non-null
+            # embeddings — invalidate_cold_sema_cache() clears this if a
+            # later archive/backfill adds a vector.
+            if self._cold_sema_vectorless:
+                return []
             self._build_cold_sema_cache()
         if self._cold_sema_cache is None:
             return []  # Nothing in the cold tier
@@ -1752,11 +1895,12 @@ class KnowledgeStore:
             self.checkpoint("PASSIVE")
 
         # Invalidate ΣĒMA caches (new document may have embedding, and
-        # lifecycle tier changes can reshuffle hot/cold tier membership)
-        if self._sema_cache is not None:
-            self._sema_cache = None
-        if self._cold_sema_cache is not None:
-            self._cold_sema_cache = None
+        # lifecycle tier changes can reshuffle hot/cold tier membership).
+        # Routed through the invalidate_* methods (not a bare None-assign)
+        # so the sema-vectorless auto-gate flags reset too — a bed that
+        # just gained a vector must re-check on its next cache build.
+        self.invalidate_sema_cache()
+        self.invalidate_cold_sema_cache()
         # Stage 2: invalidate the in-memory dense matrix. Rebuild is full
         # (~78 MiB / sub-200 ms at 18.9k rows) on first dense recall after
         # this batch. See spec §4 "Invalidation".
@@ -2327,6 +2471,58 @@ class KnowledgeStore:
         )
         return sql, params
 
+    # ── Issue #341: pre-cap cross-encoder rerank helpers ─────────────────
+
+    def _rerank_effective(self, override: Optional[bool]) -> bool:
+        """Resolve the rerank flag for ONE call.
+
+        ``None`` (the default) defers to the store's configured global; an
+        explicit bool wins in both directions, so a per-query-class override
+        (``[retrieval] rerank_enabled_by_class``, resolved upstream) can turn
+        rerank on for a class the global leaves off — and off for a class the
+        global leaves on.
+        """
+        return self._rerank_enabled if override is None else bool(override)
+
+    def _score_rerank(
+        self, query_text: str, docs: "List[Gene]"
+    ) -> "Optional[List[float]]":
+        """Score ``docs`` against ``query_text``. ``None`` = fall back.
+
+        Never raises. A missing model, an OOM, a torch import error, or a
+        scorer that returns garbage all degrade to the caller's existing
+        gate/fused order — retrieval keeps working, one WARNING gets logged,
+        and the count invariant is untouched because the caller only ever
+        *reorders* with the returned scores.
+
+        The ``rerank_backend`` import is deliberately inside this method:
+        importing ``knowledge_store`` must never pull torch/transformers into
+        the process of a store that isn't reranking.
+        """
+        try:
+            texts = [_rerank_doc_text(d) for d in docs]
+            scorer = self._rerank_scorer
+            if scorer is None:
+                from .backends.rerank_backend import score_pairs
+                scores = score_pairs(query_text, texts, model_name=self._rerank_model)
+            else:
+                scores = scorer(query_text, texts)
+            if not isinstance(scores, list) or len(scores) != len(docs):
+                log.warning(
+                    "rerank scorer returned unusable payload "
+                    "(type=%s, len=%s, expected %d); falling back",
+                    type(scores).__name__,
+                    len(scores) if hasattr(scores, "__len__") else "n/a",
+                    len(docs),
+                )
+                return None
+            return [float(s) for s in scores]
+        except Exception:
+            log.warning(
+                "rerank scoring failed; falling back to gate order", exc_info=True
+            )
+            return None
+
     def query_docs(
         self,
         domains: List[str],
@@ -2339,9 +2535,24 @@ class KnowledgeStore:
         read_only: bool = False,
         query_type: Optional[str] = None,
         rerank_combinator: Optional[str] = None,
+        query_text: Optional[str] = None,
+        rerank_override: Optional[bool] = None,
     ) -> List[Gene]:
         """
         Find documents matching the given tags signals.
+
+        ``query_text`` / ``rerank_override`` (issue #341, pre-cap
+        cross-encoder rerank): when rerank is effective for this call AND
+        ``query_text`` is supplied, the post-fusion ranking is widened to
+        ``max(limit, rerank_depth)``, the head of that widened order is
+        re-scored by a cross-encoder against ``query_text``, and the result is
+        cut back to ``limit``. The cut — and therefore the returned document
+        COUNT — is unchanged; only which documents fill the slots moves.
+        ``query_text`` is a separate parameter (not derived from
+        ``domains``/``entities``) because the cross-encoder wants the user's
+        raw question, not the expanded keyword bag. Omitting it disables the
+        seam entirely, which is how ``query_docs_ann`` suppresses a double
+        rerank on its inner lex-pool call.
 
         ``rerank_combinator`` (issue #255, classifier-gated combinator): a
         per-query override selecting the post-fusion rerank combinator for THIS
@@ -2866,8 +3077,17 @@ class KnowledgeStore:
                     "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='splade_terms'"
                 ).fetchone()[0]
                 if has_table:
-                    query_text = " ".join(query_terms)
-                    query_sparse = splade_backend.encode(query_text)
+                    # Issue #341 fix: a LOCAL keyword-bag string for SPLADE's
+                    # own sparse encoder — deliberately NOT named ``query_text``,
+                    # which is the function PARAMETER the cross-encoder rerank
+                    # seam reads (~:3695). Reusing that name here used to
+                    # silently overwrite the caller's raw query with
+                    # ``" ".join(query_terms)`` whenever SPLADE ran (the
+                    # shipped default), defeating the "raw question, not the
+                    # expanded keyword bag" contract documented on the
+                    # ``query_text`` parameter above.
+                    _splade_query_text = " ".join(query_terms)
+                    query_sparse = splade_backend.encode(_splade_query_text)
                     splade_hits = splade_backend.query_splade(
                         self.read_conn, query_sparse, limit=limit * 2,
                         max_df_fraction=self._splade_df_cap_fraction,
@@ -2924,104 +3144,134 @@ class KnowledgeStore:
         #   B) Add new candidates via vector scan (when pool is too small)
         if self._sema_codec is not None:
             try:
-                query_text = " ".join(query_terms)
-                query_vec = self._sema_codec.encode(query_text)
-                top_score = max(gene_scores.values()) if gene_scores else 0
+                # Council fix (sema vectorless auto-gate): resolve
+                # vectorlessness BEFORE paying the codec.encode() RTT below,
+                # but only on the cycle where Mode B's undersized-pool
+                # trigger would fire anyway (same condition Mode B checks
+                # further down) — this adds no cache-build work on beds
+                # where earlier tiers already fill the pool. If a prior
+                # build already proved zero non-null genes.embedding rows,
+                # or this proactive check just did, _sema_vectorless is now
+                # true and the block below skips encode() + Mode A/B
+                # entirely: neither mode can surface a candidate without a
+                # single stored vector. invalidate_sema_cache() clears the
+                # flag on the next write, so a bed that gains vectors
+                # re-enables automatically.
+                if (
+                    len(gene_scores) < limit // 2
+                    and self._sema_cache is None
+                    and not self._sema_vectorless
+                ):
+                    self._build_sema_cache()
 
-                # Mode A: Boost existing candidates when confidence is weak
-                _sema_boost_t0 = time.monotonic()
-                if gene_scores and top_score < 20.0:
-                    existing_ids = list(gene_scores.keys())
-                    # Batched IN-clause — see _iter_in_batches.
-                    sema_rows = []
-                    for _ph, _batch in _iter_in_batches(existing_ids):
-                        sema_rows.extend(cur.execute(
-                            f"SELECT gene_id, embedding FROM genes "
-                            f"WHERE gene_id IN ({_ph}) AND embedding IS NOT NULL",
-                            _batch,
-                        ).fetchall())
+                if not self._sema_vectorless:
+                    # Issue #341 fix: same shadowing hazard as the SPLADE tier
+                    # above — a local keyword-bag string for ΣĒMA's own dense
+                    # encode, kept out of the ``query_text`` parameter name so
+                    # it can't clobber the raw query the rerank seam reads.
+                    _sema_query_text = " ".join(query_terms)
+                    query_vec = self._sema_codec.encode(_sema_query_text)
+                    top_score = max(gene_scores.values()) if gene_scores else 0
 
-                    if sema_rows:
-                        candidates_sema = []
-                        for r in sema_rows:
-                            try:
-                                vec = decode_embedding(r["embedding"])
-                                if isinstance(vec, list) and len(vec) == 20:
-                                    candidates_sema.append((r["gene_id"], vec))
-                            except Exception:
-                                continue
+                    # Mode A: Boost existing candidates when confidence is weak
+                    _sema_boost_t0 = time.monotonic()
+                    if gene_scores and top_score < 20.0:
+                        existing_ids = list(gene_scores.keys())
+                        # Batched IN-clause — see _iter_in_batches.
+                        sema_rows = []
+                        for _ph, _batch in _iter_in_batches(existing_ids):
+                            sema_rows.extend(cur.execute(
+                                f"SELECT gene_id, embedding FROM genes "
+                                f"WHERE gene_id IN ({_ph}) AND embedding IS NOT NULL",
+                                _batch,
+                            ).fetchall())
 
-                        if candidates_sema:
-                            nearest = self._sema_codec.nearest(
-                                query_vec, candidates_sema, k=len(candidates_sema),
-                            )
-                            for gid, sim in nearest:
-                                if sim > 0.3:
-                                    boost_scale = max(0.5, 1.0 - top_score / 40.0)
-                                    # #202: sema_boost_weight (default 2.0
-                                    # == legacy literal).
-                                    sema_boost = sim * self._sema_boost_weight * boost_scale
-                                    gene_scores[gid] += sema_boost
-                                    tier_contrib.setdefault(gid, {})["sema_boost"] = sema_boost
-                                    # Stage 3: post-fusion additive (re-rank class).
-                                    rerank_additive[gid] = rerank_additive.get(gid, 0.0) + sema_boost
-                                    # Issue #255 (PR-2): mirror into per-class map.
-                                    _sema_cls = rerank_by_class.setdefault("sema_boost", {})
-                                    _sema_cls[gid] = _sema_cls.get(gid, 0.0) + sema_boost
-                _sig("sema_boost", _sema_boost_t0)
+                        if sema_rows:
+                            candidates_sema = []
+                            for r in sema_rows:
+                                try:
+                                    vec = decode_embedding(r["embedding"])
+                                    if isinstance(vec, list) and len(vec) == 20:
+                                        candidates_sema.append((r["gene_id"], vec))
+                                except Exception:
+                                    continue
 
-                # Mode B: Add new candidates when pool is undersized
-                # Uses pre-materialized numpy cache for fast cosine scan
-                # instead of deserializing 7K JSON blobs per query.
-                if len(gene_scores) < limit // 2:
-                    # Build cache on first use (lazy init)
-                    if self._sema_cache is None:
-                        self._build_sema_cache()
-
-                    if self._sema_cache is not None:
-                        try:
-                            import numpy as np
-                            cache = self._sema_cache
-                            q = np.array(query_vec, dtype=np.float32)
-                            q_norm = np.linalg.norm(q)
-                            if q_norm > 1e-8:
-                                q = q / q_norm
-                                # Batch cosine similarity: (N,20) @ (20,) → (N,)
-                                sims = cache["matrix"] @ q
-                                # Mask already-scored documents
-                                existing = set(gene_scores.keys())
-                                fill_count = limit - len(gene_scores)
-                                # Get top-k indices
-                                top_idx = np.argsort(sims)[::-1]
-                                added = 0
-                                _sema_cold_ranked: List[Tuple[str, float]] = []
-                                for idx in top_idx:
-                                    if added >= fill_count:
-                                        break
-                                    gid = cache["gene_ids"][idx]
-                                    sim = float(sims[idx])
-                                    if gid in existing:
-                                        continue
-                                    if sim > 0.4:
-                                        # #202: sema_cold_weight (default
-                                        # 3.0 == legacy literal).
-                                        sema_new = sim * self._sema_cold_weight
-                                        gene_scores[gid] = sema_new
-                                        tier_contrib.setdefault(gid, {})["sema_cold"] = sema_new
-                                        # Stage 3: rank by RAW cosine
-                                        # similarity, not the weight-
-                                        # multiplied score — the
-                                        # multiplier is the additive
-                                        # weight, but rank comes from
-                                        # the cosine ordering itself.
-                                        _sema_cold_ranked.append((gid, sim))
-                                        added += 1
-                                fuser.add_tier(
-                                    "sema_cold", _sema_cold_ranked,
-                                    weight=self._sema_cold_weight,
+                            if candidates_sema:
+                                nearest = self._sema_codec.nearest(
+                                    query_vec, candidates_sema, k=len(candidates_sema),
                                 )
-                        except ImportError:
-                            pass  # numpy not available
+                                for gid, sim in nearest:
+                                    if sim > 0.3:
+                                        boost_scale = max(0.5, 1.0 - top_score / 40.0)
+                                        # #202: sema_boost_weight (default 2.0
+                                        # == legacy literal).
+                                        sema_boost = sim * self._sema_boost_weight * boost_scale
+                                        gene_scores[gid] += sema_boost
+                                        tier_contrib.setdefault(gid, {})["sema_boost"] = sema_boost
+                                        # Stage 3: post-fusion additive (re-rank class).
+                                        rerank_additive[gid] = rerank_additive.get(gid, 0.0) + sema_boost
+                                        # Issue #255 (PR-2): mirror into per-class map.
+                                        _sema_cls = rerank_by_class.setdefault("sema_boost", {})
+                                        _sema_cls[gid] = _sema_cls.get(gid, 0.0) + sema_boost
+                    _sig("sema_boost", _sema_boost_t0)
+
+                    # Mode B: Add new candidates when pool is undersized
+                    # Uses pre-materialized numpy cache for fast cosine scan
+                    # instead of deserializing 7K JSON blobs per query.
+                    if len(gene_scores) < limit // 2:
+                        # Build cache on first use (lazy init) — usually
+                        # already built by the proactive vectorless check
+                        # above; this is a no-op then. Kept for the (rare)
+                        # case where the pool shrank between that check and
+                        # here — it never does today, but stays a safe
+                        # belt-and-suspenders lazy init like before this fix.
+                        if self._sema_cache is None:
+                            self._build_sema_cache()
+
+                        if self._sema_cache is not None:
+                            try:
+                                import numpy as np
+                                cache = self._sema_cache
+                                q = np.array(query_vec, dtype=np.float32)
+                                q_norm = np.linalg.norm(q)
+                                if q_norm > 1e-8:
+                                    q = q / q_norm
+                                    # Batch cosine similarity: (N,20) @ (20,) → (N,)
+                                    sims = cache["matrix"] @ q
+                                    # Mask already-scored documents
+                                    existing = set(gene_scores.keys())
+                                    fill_count = limit - len(gene_scores)
+                                    # Get top-k indices
+                                    top_idx = np.argsort(sims)[::-1]
+                                    added = 0
+                                    _sema_cold_ranked: List[Tuple[str, float]] = []
+                                    for idx in top_idx:
+                                        if added >= fill_count:
+                                            break
+                                        gid = cache["gene_ids"][idx]
+                                        sim = float(sims[idx])
+                                        if gid in existing:
+                                            continue
+                                        if sim > 0.4:
+                                            # #202: sema_cold_weight (default
+                                            # 3.0 == legacy literal).
+                                            sema_new = sim * self._sema_cold_weight
+                                            gene_scores[gid] = sema_new
+                                            tier_contrib.setdefault(gid, {})["sema_cold"] = sema_new
+                                            # Stage 3: rank by RAW cosine
+                                            # similarity, not the weight-
+                                            # multiplied score — the
+                                            # multiplier is the additive
+                                            # weight, but rank comes from
+                                            # the cosine ordering itself.
+                                            _sema_cold_ranked.append((gid, sim))
+                                            added += 1
+                                    fuser.add_tier(
+                                        "sema_cold", _sema_cold_ranked,
+                                        weight=self._sema_cold_weight,
+                                    )
+                            except ImportError:
+                                pass  # numpy not available
             except Exception:
                 log.debug("ΣĒMA retrieval failed, continuing without")
 
@@ -3446,6 +3696,16 @@ class KnowledgeStore:
         #   additives (sema_boost, authority, party_attr, access_rate)
         #   on top, restrict to documents that survived the bm25 shortlist
         #   filter (= present in gene_scores), then sort.
+        #
+        # Issue #341: when the pre-cap cross-encoder rerank is effective for
+        # this call, BOTH branches emit a wider ranking (max(limit,
+        # rerank_depth)) so the cross-encoder can see candidates the cut would
+        # otherwise have dropped. The widened list is cut back to ``limit``
+        # immediately after the seam below — including on the fallback path —
+        # so the returned count is identical either way. Default-off leaves
+        # _fuse_limit == limit, i.e. byte-identical to the pre-#341 branch.
+        _rerank_on = self._rerank_effective(rerank_override) and query_text is not None
+        _fuse_limit = max(limit, self._rerank_depth) if _rerank_on else limit
         if self._fusion_mode == "rrf":
             fused_scores = fuser.all_scores()
             # The bm25_shortlist filter mutated gene_scores above; honor
@@ -3483,7 +3743,7 @@ class KnowledgeStore:
                 self._rrf_k,
                 self._rerank_tier_weight,
                 self._rerank_band_delta,
-                limit,
+                _fuse_limit,
             )
             # last_query_scores semantics under RRF: the combined final
             # score, NOT the raw additive accumulator. This is what
@@ -3509,7 +3769,73 @@ class KnowledgeStore:
                 pass
         else:
             # Additive mode — pre-Stage-3 behavior, byte-identical.
-            ranked_ids = sorted(gene_scores, key=gene_scores.get, reverse=True)[:limit]
+            ranked_ids = sorted(gene_scores, key=gene_scores.get, reverse=True)[:_fuse_limit]
+
+        # ── Issue #341: pre-cap cross-encoder rerank ─────────────────────
+        # Placed AFTER the fusion branch so the legacy additive profile is
+        # covered by the same seam. Reorders the head of the (possibly
+        # widened) ranking, then cuts back to ``limit`` — the cut is what
+        # keeps ON and OFF the same length. On any scorer failure
+        # (_score_rerank -> None) the untouched widened order is cut back to
+        # exactly the OFF ranking, so a broken model costs latency, never
+        # results.
+        if _rerank_on and ranked_ids:
+            _xenc_t0 = time.monotonic()
+            depth = min(self._rerank_depth, len(ranked_ids))
+            head_ids = ranked_ids[:depth]
+            try:
+                head_docs_map = self._load_genes_by_ids(head_ids)
+                head_docs = [head_docs_map[g] for g in head_ids if g in head_docs_map]
+            except Exception:
+                # Same containment contract as _score_rerank: nothing in this
+                # seam may raise out of retrieval. An empty candidate list
+                # scores to an empty reorder, i.e. the fused order untouched.
+                log.warning(
+                    "rerank candidate load failed; falling back to fused order",
+                    exc_info=True,
+                )
+                head_docs_map, head_docs = {}, []
+            xenc = self._score_rerank(query_text, head_docs)
+            if xenc is not None:
+                # gene_id is the secondary key so equal cross-encoder scores
+                # break deterministically (same contract as the Fuser).
+                order = sorted(
+                    range(len(head_docs)), key=lambda i: (-xenc[i], head_docs[i].gene_id)
+                )
+                reordered = [head_docs[i].gene_id for i in order]
+                # Position-preserving permutation: the reranked ids are written
+                # back into the LOADABLE slots of the head, leaving unloadable
+                # ids (ranked from a tier index whose genes row is gone — stale
+                # dense matrix, deleted doc) exactly where the OFF arm has them.
+                # Appending the reranked block and pushing unloadable ids to the
+                # tail instead would move them out of the [:limit] window, so the
+                # ON arm would deliver MORE bodies than OFF — a count-invariant
+                # break. In a self-consistent store every slot is loadable and
+                # this is byte-identical to a plain concatenation.
+                slots = [i for i, g in enumerate(head_ids) if g in head_docs_map]
+                new_head = list(head_ids)
+                for slot, gid in zip(slots, reordered):
+                    new_head[slot] = gid
+                ranked_ids = new_head + ranked_ids[depth:]
+            ranked_ids = ranked_ids[:limit]
+            # Timing goes through the LOCAL per-signal collector: this
+            # function publishes _sig_ms wholesale into last_signal_timings on
+            # exit, so a direct merge here would be clobbered.
+            _sig("xenc_rerank", _xenc_t0)
+
+        # Issue #341: publish the final order unconditionally — both fusion
+        # modes, rerank on or off — so an A/B always compares two orderings
+        # produced the same way and the metric basis can never go stale.
+        # Deliberately BEFORE the walking tie-break, matching the
+        # last_query_scores publication point above.
+        #
+        # Depth caveat (see the __init__ declaration): this is the POST-CUT
+        # list (max_genes * 2), NOT the full candidate pool — query_docs_ann
+        # publishes the full union pool instead. A consumer computing
+        # rank-of-gold off this path reads a gold document below the cut as
+        # absent, which is an unmeasurable, not a rank of zero.
+        with self._last_query_scores_lock:
+            self.last_ranked_ids = list(ranked_ids)
 
         # Walking tie-break (opt-in via CYMATIX_WALKING_TIEBREAK=1).
         # When adjacent top-k documents have bitwise-identical fused scores,
@@ -3889,6 +4215,7 @@ class KnowledgeStore:
         *,
         pool_size: int | None = None,
         rerank_combinator: Optional[str] = None,
+        rerank_override: Optional[bool] = None,
     ) -> List[Gene]:
         """Stage 2 retrieval: parallel lex + dense recall, union, threshold cut.
 
@@ -3911,6 +4238,10 @@ class KnowledgeStore:
         mean ~0.50 over the bench fixtures, so the default was raised 0.35 ->
         0.58 (just above the p90 of unrelated pairs). ``max_genes`` remains the
         hard cap, so blast radius is bounded regardless of the threshold.
+
+        Issue #341 (``rerank_override``): step 6 re-scores the union pool with
+        a cross-encoder BEFORE the gate's count is applied — see the seam
+        below. ``None`` defers to the store's ``rerank_enabled``.
 
         Back-compat: callers that pass only positional/keyword args still
         work; ``pool_size`` is keyword-only and optional.
@@ -3939,6 +4270,12 @@ class KnowledgeStore:
             # dense-ANN path (dense-on default) honors the classifier gate too;
             # the combinator runs inside this internal query_docs call.
             rerank_combinator=rerank_combinator,
+            # Issue #341 — double-rerank suppression: deliberately NO
+            # query_text and NO rerank_override here. This call only builds the
+            # lex recall pool; reranking it would burn a cross-encoder pass on
+            # a pool that the union + gate below immediately re-orders, and
+            # would then rerank the survivors a second time. The single
+            # authoritative rerank for this path is the one at step 5b.
         )
 
         # Dense disabled -> degrade to legacy lex-only flow, capped at max_genes.
@@ -3999,7 +4336,7 @@ class KnowledgeStore:
         # without a store; with the floor disabled — or whenever >= N
         # dense-scored candidates survive — it reproduces the legacy loop
         # byte-for-byte.
-        kept_ids = apply_ann_gate(
+        gate_ids = apply_ann_gate(
             [(doc.gene_id, sim) for doc, sim in scored],
             dense_hits,
             threshold=threshold,
@@ -4008,6 +4345,79 @@ class KnowledgeStore:
             dense_pool_floor_genes=self._dense_pool_floor_genes,
         )
         by_id = {doc.gene_id: doc for doc, _ in scored}
+        kept_ids = gate_ids
+        final_order = [doc.gene_id for doc, _ in scored]
+        head_id_set = {
+            doc.gene_id
+            for doc, _ in scored[: min(self._rerank_depth, len(scored))]
+        }
+        # Gate-kept ids that sit BEYOND the sim head — i.e. what the #214
+        # floor rescued (or what a deep max_genes admitted past rerank_depth).
+        n_floor = sum(1 for g in gate_ids if g not in head_id_set)
+        # The gate's count AS DELIVERED. apply_ann_gate can hand back an id
+        # with no loaded body (a #214 floor rescue whose dense-matrix entry
+        # outlived its genes row, or a row _row_to_gene rejected); the return
+        # filter at the bottom silently drops those on BOTH arms. Pinning the
+        # rerank cut to len(gate_ids) instead would re-fill those slots from
+        # the pool and make the ON arm longer than the OFF arm — so pin it to
+        # what the OFF arm actually delivers.
+        n_deliverable = sum(1 for g in gate_ids if g in by_id)
+
+        # ── 5b. Issue #341: pre-cap cross-encoder rerank. ────────────────
+        # The gate decides HOW MANY documents survive; with this on, the
+        # cross-encoder decides WHICH. len(kept_ids) is pinned to
+        # n_deliverable (see the comment above for why that, and not
+        # len(gate_ids)), so THIS FUNCTION returns the same number of
+        # documents on both arms. That invariance is scoped to this
+        # function's return length and nothing further: membership changes
+        # propagate to the downstream budget/assembly cuts, which are
+        # score-dependent, so the count entering splice can and does differ
+        # between arms — see docs/benchmarks/2026-08-07-rerank-wiring-receipts.md
+        # Finding 2.
+        if self._rerank_effective(rerank_override) and scored:
+            _xenc_t0 = time.monotonic()
+            depth = min(self._rerank_depth, len(scored))
+            # Candidate set = the sim head PLUS every gate-kept id beyond it
+            # (#214 floor rescues land there). The cross-encoder therefore
+            # JUDGES rescued documents rather than blindly evicting them, and
+            # cand_ids is always a superset of gate_ids — which is what makes
+            # the [:n_deliverable] cut below exact.
+            head_ids = [doc.gene_id for doc, _ in scored[:depth]]
+            cand_ids = head_ids + [g for g in gate_ids if g not in head_id_set]
+            cand_docs = [by_id[g] for g in cand_ids if g in by_id]
+            # Bodies for the whole pool were fetched in step 3 — no extra I/O.
+            xenc = self._score_rerank(query, cand_docs)
+            if xenc is not None:
+                order = sorted(
+                    range(len(cand_docs)),
+                    key=lambda i: (-xenc[i], cand_docs[i].gene_id),
+                )
+                ranked_cand = [cand_docs[i].gene_id for i in order]
+                # Count from the gate; order + membership from the cross-encoder.
+                kept_ids = ranked_cand[:n_deliverable]
+                _in_cand = set(ranked_cand)
+                final_order = ranked_cand + [
+                    d.gene_id for d, _ in scored if d.gene_id not in _in_cand
+                ]
+            with self._last_query_scores_lock:
+                _m = dict(getattr(self, "last_signal_timings", None) or {})
+                _m["xenc_rerank"] = (
+                    _m.get("xenc_rerank", 0.0) + (time.monotonic() - _xenc_t0) * 1000.0
+                )
+                self.last_signal_timings = _m
+
+        with self._last_query_scores_lock:
+            # Overwrites the inner query_docs publication with the ANN-final
+            # order: the FULL union pool (~pool_size), post-rerank when it
+            # ran, spanning candidates both above and below the gate. This is
+            # the deeper of the two publication semantics — see the
+            # last_ranked_ids declaration in __init__ for why the lex path's
+            # post-cut list is deliberately not unified with it.
+            self.last_ranked_ids = final_order
+            # Published on BOTH arms so the verdict can slice floor-fired needles.
+            self.last_rerank_diag = {
+                "gate_kept": len(gate_ids), "floor_appended": n_floor,
+            }
         return [by_id[gid] for gid in kept_ids if gid in by_id]
 
     def _load_genes_by_ids(self, gene_ids: list[str]) -> dict[str, Gene]:
@@ -4050,8 +4460,16 @@ class KnowledgeStore:
         # Perf slice 2: pure-read expansion belongs on the (per-thread)
         # reader, not the shared writer — two threads interleaving these
         # scans on one connection was the c=2 server wedge.
+        # Council fix (flag-leak): the entity_graph sub-scan inside this
+        # post-ranking expansion is a QUERY-time read and must be gated by
+        # the retrieval-side flag (_entity_graph_retrieval_enabled — same
+        # flag as Tier 5b at query_docs' entity-graph scoring block), not
+        # the write/ingest-side _entity_graph_enabled ([ingestion]
+        # entity_graph). Previously the ingest flag (default True) silently
+        # authorized this scan on every query even when the retrieval flag
+        # (default False) had Tier 5b's scoring disabled.
         return expand_coactivated(
-            genes, limit, self.read_conn, self._entity_graph_enabled,
+            genes, limit, self.read_conn, self._entity_graph_retrieval_enabled,
             symbol_expansion_cap=getattr(self, "_symbol_expansion_cap", 8),
         )
 
@@ -5132,11 +5550,10 @@ class KnowledgeStore:
                 (gene_id,),
             )
             self.conn.commit()
-        # Document moved hot → cold — both tier caches are now stale
-        if self._sema_cache is not None:
-            self._sema_cache = None
-        if self._cold_sema_cache is not None:
-            self._cold_sema_cache = None
+        # Document moved hot → cold — both tier caches (and the
+        # sema-vectorless auto-gate flags) are now stale.
+        self.invalidate_sema_cache()
+        self.invalidate_cold_sema_cache()
         # Stage 2: hot/cold transitions change the dense matrix membership too.
         self._invalidate_dense_matrix()
         log.debug("Moved gene %s to HETEROCHROMATIN (non-destructive)", gene_id)
@@ -5222,11 +5639,10 @@ class KnowledgeStore:
                 raise
 
         if deleted:
-            # Tier caches and the dense matrix indexed the dead gene.
-            if self._sema_cache is not None:
-                self._sema_cache = None
-            if self._cold_sema_cache is not None:
-                self._cold_sema_cache = None
+            # Tier caches (and the sema-vectorless auto-gate flags) indexed
+            # the dead gene.
+            self.invalidate_sema_cache()
+            self.invalidate_cold_sema_cache()
             self._invalidate_dense_matrix()
             log.debug("Deleted gene %s (+ index, symbol, and edge rows)", gene_id)
         return deleted

@@ -123,3 +123,12 @@ def test_splade_and_sema_consume_layer_resolution():
 
     assert "resolve_layer_device" in inspect.getsource(splade_backend)
     assert "resolve_layer_device" in inspect.getsource(sema)
+
+
+def test_rerank_backend_consumes_layer_resolution():
+    import inspect
+
+    from cymatix_context.backends import rerank_backend
+
+    src = inspect.getsource(rerank_backend)
+    assert 'resolve_layer_device("rerank")' in src

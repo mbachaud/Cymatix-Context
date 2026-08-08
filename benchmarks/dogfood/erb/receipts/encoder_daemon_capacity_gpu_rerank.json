@@ -1,0 +1,116 @@
+{
+  "kind": "encoder_capacity",
+  "profile_label": "gpu_rerank",
+  "python": "F:/tmp/venv-cuda/Scripts/python.exe",
+  "port": 11439,
+  "torch_version": "2.11.0+cu128",
+  "capacity": {
+    "devices": {
+      "dense": "cuda:0",
+      "splade": "cuda:0",
+      "sema": "cuda:0",
+      "rerank": "cuda:0"
+    },
+    "warm_encodes_per_s": {
+      "dense": 170.769,
+      "splade": 92.316,
+      "sema": 145.646,
+      "rerank": 804.221
+    },
+    "bundles_per_s": {
+      "interleaved": 42.455,
+      "pipelined": 92.316
+    },
+    "max_batch": {
+      "dense": 16,
+      "splade": 8,
+      "sema": 64,
+      "rerank": 16
+    },
+    "batch_window_ms": 2.0,
+    "deterministic": false,
+    "vector_cache": {
+      "enabled": true,
+      "size": 0,
+      "max_size": 4096,
+      "hits": 0,
+      "misses": 0
+    },
+    "probe_ms": 67.679,
+    "warm_probe_encodes": 5,
+    "loaded": {
+      "dense": true,
+      "splade": true,
+      "sema": true,
+      "rerank": true
+    },
+    "dense_model": "BAAI/bge-m3",
+    "dense_dim": 1024,
+    "torch_version": "2.11.0+cu128",
+    "vram_total_gb": 12.0,
+    "vram_free_gb": 7.955,
+    "system_ram_gb": 47.93,
+    "pid": 19756
+  },
+  "spawn_token_verified": true,
+  "levels": [
+    {
+      "n_clients": 1,
+      "bundles_total": 50,
+      "errors": 0,
+      "wall_s": 2.6225,
+      "bundles_per_s": 19.0661,
+      "latency_p50_ms": 47.253,
+      "latency_p95_ms": 78.572,
+      "latency_max_ms": 84.479,
+      "rerank_scores_total": 50,
+      "rerank_pairs_per_s": 176.99,
+      "rerank_latency_p50_ms": 282.502,
+      "rerank_latency_p95_ms": 282.502
+    },
+    {
+      "n_clients": 2,
+      "bundles_total": 100,
+      "errors": 0,
+      "wall_s": 2.7935,
+      "bundles_per_s": 35.7969,
+      "latency_p50_ms": 44.245,
+      "latency_p95_ms": 75.894,
+      "latency_max_ms": 79.691,
+      "rerank_scores_total": 100,
+      "rerank_pairs_per_s": 326.8139,
+      "rerank_latency_p50_ms": 3.09,
+      "rerank_latency_p95_ms": 302.895
+    },
+    {
+      "n_clients": 4,
+      "bundles_total": 200,
+      "errors": 0,
+      "wall_s": 3.7339,
+      "bundles_per_s": 53.5631,
+      "latency_p50_ms": 36.797,
+      "latency_p95_ms": 106.688,
+      "latency_max_ms": 126.171,
+      "rerank_scores_total": 200,
+      "rerank_pairs_per_s": 246.5549,
+      "rerank_latency_p50_ms": 256.555,
+      "rerank_latency_p95_ms": 544.677
+    },
+    {
+      "n_clients": 8,
+      "bundles_total": 400,
+      "errors": 0,
+      "wall_s": 5.9068,
+      "bundles_per_s": 67.7187,
+      "latency_p50_ms": 70.499,
+      "latency_p95_ms": 127.934,
+      "latency_max_ms": 363.544,
+      "rerank_scores_total": 400,
+      "rerank_pairs_per_s": 153.857,
+      "rerank_latency_p50_ms": 259.957,
+      "rerank_latency_p95_ms": 1026.296
+    }
+  ],
+  "generated_at": "2026-08-07T07:48:18.089276+00:00",
+  "env": {}
+}

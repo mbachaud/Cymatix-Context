@@ -75,6 +75,7 @@ class _CannedHandler(BaseHTTPRequestHandler):
             "splade": {"foo": 0.5},
             "sema": [0.1] * 20,
         },
+        "/encode/rerank": {"scores": [0.9, 0.1]},
     }
 
     def do_POST(self):
@@ -448,6 +449,16 @@ def test_encode_sema_posts_texts_and_parses_vectors(daemon_server):
     assert body == {"texts": ["hello world"]}
 
 
+def test_encode_rerank_posts_query_and_texts_and_parses_scores(daemon_server):
+    from cymatix_context.backends.encoder_client import EncoderClient
+    client = EncoderClient(f"http://127.0.0.1:{daemon_server}")
+    scores = client.encode_rerank("hello world", ["a", "b"])
+    assert scores == [0.9, 0.1]
+    path, body = _CannedHandler.received[-1]
+    assert path == "/encode/rerank"
+    assert body == {"query": "hello world", "texts": ["a", "b"]}
+
+
 def test_encode_bundle_posts_text_task_top_k_and_parses_whole_dict(daemon_server):
     from cymatix_context.backends.encoder_client import EncoderClient
     client = EncoderClient(f"http://127.0.0.1:{daemon_server}")
@@ -485,6 +496,20 @@ def test_encode_dense_raises_encoder_client_error_on_missing_key(empty_object_se
     client = EncoderClient(f"http://127.0.0.1:{empty_object_server}")
     with pytest.raises(EncoderClientError):
         client.encode_dense(["hello"])
+
+
+def test_encode_rerank_raises_encoder_client_error_on_malformed_json(malformed_server):
+    from cymatix_context.backends.encoder_client import EncoderClient, EncoderClientError
+    client = EncoderClient(f"http://127.0.0.1:{malformed_server}")
+    with pytest.raises(EncoderClientError):
+        client.encode_rerank("hello", ["a"])
+
+
+def test_encode_rerank_raises_encoder_client_error_on_missing_key(empty_object_server):
+    from cymatix_context.backends.encoder_client import EncoderClient, EncoderClientError
+    client = EncoderClient(f"http://127.0.0.1:{empty_object_server}")
+    with pytest.raises(EncoderClientError):
+        client.encode_rerank("hello", ["a"])
 
 
 def test_encode_dense_raises_encoder_client_error_when_unreachable():
@@ -562,6 +587,7 @@ def test_every_request_carries_explicit_timeout(monkeypatch):
             return _Resp(json.dumps({"ready": True}).encode())
         return _Resp(json.dumps({
             "vectors": [[0.1]], "sparse": [{}], "dense": [], "splade": {}, "sema": [],
+            "scores": [0.1],
         }).encode())
 
     monkeypatch.setattr(urllib.request, "urlopen", _fake_urlopen)
@@ -571,9 +597,10 @@ def test_every_request_carries_explicit_timeout(monkeypatch):
     client.encode_splade(["a"])
     client.encode_sema(["a"])
     client.encode_bundle("a")
+    client.encode_rerank("q", ["a"])
     client.is_ready()
 
-    assert len(calls) == 5
+    assert len(calls) == 6
     assert all(t is not None for _, t in calls)
 
 
@@ -614,6 +641,7 @@ def _capturing_urlopen(monkeypatch, payload):
         ("encode_dense", (["a"],), {"task": "passage"}, {"vectors": [[0.1]]}),
         ("encode_splade", (["a"],), {"top_k": 8}, {"sparse": [{}]}),
         ("encode_sema", (["a"],), {}, {"vectors": [[0.1] * 20]}),
+        ("encode_rerank", ("q", ["a"]), {}, {"scores": [0.1]}),
     ],
 )
 def test_batch_methods_accept_timeout_s_override(monkeypatch, method_name, args, kwargs, payload):
@@ -632,6 +660,7 @@ def test_batch_methods_accept_timeout_s_override(monkeypatch, method_name, args,
         ("encode_dense", (["a"],), {"task": "passage"}, {"vectors": [[0.1]]}),
         ("encode_splade", (["a"],), {"top_k": 8}, {"sparse": [{}]}),
         ("encode_sema", (["a"],), {}, {"vectors": [[0.1] * 20]}),
+        ("encode_rerank", ("q", ["a"]), {}, {"scores": [0.1]}),
     ],
 )
 def test_batch_methods_default_to_client_timeout_when_no_override(

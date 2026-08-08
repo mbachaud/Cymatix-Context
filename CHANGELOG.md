@@ -19,6 +19,34 @@
   `--allow-stub-loss` is passed — signal-neutrality is conditional on a
   stub-free store.
 
+- **feat: query-time cross-encoder rerank, default-off (#341).** New
+  `[retrieval] rerank_enabled` (default `false`), `rerank_depth` (`50`),
+  `rerank_model` (`"cross-encoder/ms-marco-MiniLM-L-6-v2"`) and
+  `rerank_enabled_by_class` (`{}`, the #255 per-class map). The cross-encoder
+  runs **pre-cap** inside the knowledge store (`query_docs_ann` pre-gate;
+  `query_docs` post-fusion on the dense-off profile) and is
+  count-preserving — the store returns the same number of documents either
+  way, only membership and order change. `[hardware] rerank_device` is now
+  actually consumed (`resolve_layer_device("rerank")` at model load). The
+  encoder daemon gained `POST /encode/rerank` with
+  `EncoderClient.encode_rerank` and a `rerank_backend` remote branch at
+  circuit/ready-gate/fallback parity with the SPLADE seam; `/ready` now
+  waits on the rerank family too. Default-off is deliberate: it pays only on
+  populations with near-cutoff rerank headroom, and costs ~270–560ms/query on
+  a GPU daemon at 829k documents (~285–315ms at 100k). Receipts and the
+  population caveat:
+  `docs/benchmarks/2026-08-07-rerank-wiring-receipts.md`.
+
+- **Breaking: removed `[ingestion] rerank_enabled`.** The knob was dead or
+  wrong on every backend: under `deberta` the serving path looked for a
+  `rerank` attribute while `DeBERTaRibosome` only defines `re_rank`, so the
+  cross-encoder never ran; under `ollama`/`litellm` it misrouted to the LLM
+  `Compressor.rerank`. The post-cap branch in `scoring/blend.py` is gone with
+  it. **Configs that set it now get no rerank** unless they also set
+  `[retrieval] rerank_enabled = true`. `[ingestion] rerank_model` is
+  unchanged (still the legacy DeBERTa constructor input).
+>>>>>>> origin/master
+
 ## 0.8.5 — 2026-07-25
 
 Completes the helix → cymatix rename as a **clean break** (0.8.0 was the soft

@@ -131,6 +131,67 @@ pipelined), effective batch sizes, torch version.
   `_CONFIG_ENV_OVERRIDES` in tests/test_config_default_honesty.py. Timeouts /
   windows / cooldowns are env-tunable constants, not config surface (slice 1).
 
+## Determinism profile (slice-2 addition, 2026-08-06)
+
+Added after slice 1 shipped; not part of the slice-1 contract above. Default
+OFF — with the env unset, every path in this section is byte-for-byte what
+slice 1 shipped, asserted by tests.
+
+Motivation: `docs/benchmarks/2026-08-05-fork1-worker-sweep.md`, "Rank
+stability under parallelism" — on CUDA, recall deviated ±0.05 from the same
+run's c=1 (overlap ≥0.975, errors 0) because the dense micro-batch **shape**
+(item count × padded token length) depends on concurrent arrival order, and
+batched-GEMM low-mantissa drift across shapes flips near-cutoff ranks.
+
+| Knob | Default | Effect |
+|---|---|---|
+| `CYMATIX_ENCODER_DETERMINISTIC` | off | Master gate for everything in this section |
+| `CYMATIX_ENCODER_TF32` | off | Re-enables TF32 matmuls inside the profile (TF32 off is part of the profile) |
+| `CYMATIX_ENCODER_FILLER_CHARS` | 4096 | Filler length; ~2x the 2000-char `dense_passage_char_cap` |
+| `CUBLAS_WORKSPACE_CONFIG` | `:4096:8` | Set by the daemon **only if unset** by the operator |
+| `CYMATIX_ENCODER_VECTOR_CACHE` | 4096 | Daemon-side vector LRU entries; 0 = off. Independent of the gate |
+
+1. **Fixed-shape dense batching.** The dense executor pads each drained
+   task-group up to exactly `max_batch` with copies of a constant filler
+   text and discards the filler rows. Both backends return rows in input
+   order, so the caller rows are the first `len(items)`. Public
+   `encode_batch` only — no model library is forked or monkey-patched.
+   SPLADE and SEMA are untouched: per-item execution is already fixed shape
+   (n=1).
+2. **Torch flags**, applied in `EncoderRegistry.load` (daemon process only,
+   first statement — the last point before torch builds a CUDA context):
+   `use_deterministic_algorithms(True, warn_only=True)`,
+   `torch.backends.cuda.matmul.allow_tf32 = False`, `CUBLAS_WORKSPACE_CONFIG`
+   if unset. Every step guarded for missing/CPU-only torch.
+   `torch.backends.cudnn.allow_tf32` is deliberately untouched (BGE-M3
+   inference is cuBLAS matmul, not cuDNN).
+3. **Vector LRU**, keyed `(family, model, task, text)` — checked before
+   enqueue, populated after a successful encode, never on failure,
+   thread-safe, bounded. The bundle route fans into the same queues so it
+   shares the cache. The readiness probe deliberately bypasses it.
+4. `/health.capacity` gains `deterministic: bool` and
+   `vector_cache: {enabled, size, max_size, hits, misses}`, both re-read
+   live on every request rather than frozen at the ready flip.
+
+**What is and is not shape-pinned (honest limits).** Item count is pinned.
+Padded token length is pinned only *by domination*: neither
+`BGEM3FlagModel.encode` nor `SentenceTransformer.encode` exposes a fixed
+pad length (both sort by length, chunk by their own `batch_size`, and
+tokenize with `padding=True` = pad-to-longest; there is no
+`padding="max_length"` knob), so the filler pins the length only while it is
+the longest member of the chunk. Consequences: (a) a caller that sends a
+passage longer than the filler silently returns that batch to a
+data-dependent shape — the daemon encodes exactly what it receives and
+cannot enforce caller caps; (b) if `max_batch` exceeds the backend's own
+encode `batch_size` (sentence-transformers: 32), our fixed batch is split
+and only the chunk holding the filler is length-pinned; (c) under
+flash-attention varlen packing sentence-transformers drops padding entirely
+and packs the chunk, so count stays pinned and padded length becomes moot
+and unpinned. The profile therefore reduces shape variance rather than
+proving bit-identity, and it costs throughput (a 2-item drain becomes a
+`max_batch`-item encode of near-max-length rows) — which is why it is off by
+default and why any rank-stability claim needs its own GPU receipt.
+
 ## Testing rules
 
 - Non-live suite must never load a real model or spawn a real process:
