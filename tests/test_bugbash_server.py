@@ -19,7 +19,7 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-from tests.conftest import make_client
+from tests.conftest import make_client, requires_spacy_model
 
 
 # ── BUG-1: /bridge/signal path traversal ─────────────────────────────
@@ -219,6 +219,8 @@ class TestSessionQueryK:
         sess.query("what is the port?")
         assert mgr.calls[0].get("max_genes", "missing") is None
 
+    # The ingest here runs CpuTagger.pack(), which needs en_core_web_sm (#313).
+    @requires_spacy_model
     def test_build_context_max_genes_override_caps_documents(self):
         client = make_client()
         cymatix = client.app.state.cymatix

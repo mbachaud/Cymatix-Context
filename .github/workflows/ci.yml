@@ -84,7 +84,7 @@ jobs:
   # skip rather than fail.
   test-full-suite:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
 
@@ -97,6 +97,25 @@ jobs:
 
       - name: Install package + test deps + tree-sitter and MCP extras
         run: pip install -e ".[dev,ast,mcp]" psutil platformdirs py-cpuinfo numpy joblib scikit-learn
+
+      # issue #313 regression gate: at this point in the job the spaCy
+      # pipeline is not installed yet, which is exactly the fresh-install
+      # state the issue describes. The suite must pass with the ingest-path
+      # tests skipping cleanly (reasons printed via -rs name the fix). The
+      # assert keeps the leg honest if a future dependency ever starts
+      # pulling the pipeline in transitively. The download step below then
+      # restores the full-coverage run.
+      - name: Assert the spaCy pipeline is absent (fresh-install state)
+        run: |
+          python - <<'PY'
+          import sys
+          import spacy.util
+          if spacy.util.is_package("en_core_web_sm"):
+              sys.exit("en_core_web_sm already installed; modelless leg would prove nothing")
+          PY
+
+      - name: Run full offline suite WITHOUT the spaCy pipeline (fresh-install gate, issue #313)
+        run: pytest tests/ -m "not live" -q -rs
 
       - name: Install spaCy model (ingest-path tests exercise the CPU tagger)
         run: python -m spacy download en_core_web_sm

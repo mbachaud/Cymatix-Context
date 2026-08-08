@@ -12,6 +12,7 @@ import pytest
 
 from cymatix_context.encoding import tree_chunker as tc
 from cymatix_context.encoding.fragments import CodonChunker
+from tests.conftest import requires_spacy_model
 
 _needs_tree_sitter = pytest.mark.skipif(
     not tc.is_available(), reason="tree-sitter (+ tree-sitter-python) not installed"
@@ -107,6 +108,8 @@ def _manager(tmp_path, monkeypatch, symbol_graph: bool):
     return CymatixContextManager(cfg)
 
 
+# The ingest drives CpuTagger.pack(), which needs en_core_web_sm (#313).
+@requires_spacy_model
 def test_flag_off_ingest_writes_zero_symbol_rows(tmp_path, monkeypatch):
     """Flag-off ingest succeeds even if the symbol extractor would explode —
     proof it is never invoked — and leaves symbol tables empty."""

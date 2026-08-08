@@ -18,9 +18,13 @@ import pytest
 from cymatix_context.context_manager import CymatixContextManager
 from cymatix_context.okf import ingest_bundle, read_bundle
 
-from tests.conftest import make_cymatix_config
+from tests.conftest import make_cymatix_config, requires_spacy_model
 
 pytest.importorskip("spacy")
+
+# The bundle ingests here run through CpuTagger.pack(), which needs the
+# en_core_web_sm pipeline, not just the spaCy library (#313).
+pytestmark = requires_spacy_model
 
 OKF_FIXTURES = Path(__file__).parent / "fixtures" / "okf"
 

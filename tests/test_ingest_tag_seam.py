@@ -21,7 +21,7 @@ from cymatix_context.context_manager import (
 )
 from cymatix_context.schemas import Gene, PromoterTags
 
-from tests.conftest import make_gene, make_cymatix_config
+from tests.conftest import make_gene, make_cymatix_config, requires_spacy_model
 
 pytest.importorskip("spacy")
 
@@ -97,6 +97,8 @@ def _strip_tagger_tags(mgr: CymatixContextManager) -> None:
     mgr._cpu_tagger.pack = stripped_pack
 
 
+# Real-tagger runs need the en_core_web_sm pipeline (#313).
+@requires_spacy_model
 class TestEquivalence:
     def test_yaml_tags_produce_identical_index_rows(self):
         # Run A: tagger produces the tags.
@@ -136,6 +138,7 @@ class TestEquivalence:
 
 
 class TestBenchNeutrality:
+    @requires_spacy_model
     def test_seam_is_noop_without_caller_tag_keys(self, monkeypatch):
         """With the seam disabled entirely, plain ingest output is identical."""
         mgr_seam = _fresh_manager()

@@ -55,7 +55,7 @@ from cymatix_context.identity.registry import (
     _status_from_last_heartbeat,
 )
 
-from tests.conftest import make_client, make_gene
+from tests.conftest import make_client, make_gene, requires_spacy_model
 
 
 # ═══ DAL unit tests ═══════════════════════════════════════════════════
@@ -1037,6 +1037,8 @@ class TestListEndpoint:
         assert handles == {"taude", "laude"}
 
 
+# Ingest-driving tests need the en_core_web_sm pipeline (#313).
+@requires_spacy_model
 class TestIngestAttribution:
     def test_ingest_with_participant_id_writes_attribution(self, client):
         reg = client.post("/sessions/register", json={
@@ -1073,6 +1075,7 @@ class TestIngestAttribution:
 
 
 class TestRecentEndpoint:
+    @requires_spacy_model
     def test_recent_returns_tagged_genes(self, client):
         reg = client.post("/sessions/register", json={
             "party_id": "max@local",

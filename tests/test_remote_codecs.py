@@ -34,7 +34,7 @@ from pathlib import Path
 
 import pytest
 
-from tests.conftest import make_cymatix_config
+from tests.conftest import make_cymatix_config, requires_spacy_model
 
 
 # ── test isolation (seam notes §7c) ─────────────────────────────────
@@ -1091,6 +1091,9 @@ def test_main_marks_the_daemon_process_before_building_the_app(monkeypatch):
 # ══ 8. --deterministic ingest profile never consults the daemon ══════
 
 
+# The deterministic ingest still runs CpuTagger.pack(), which needs the
+# en_core_web_sm pipeline (#313).
+@requires_spacy_model
 def test_deterministic_profile_never_touches_the_network(tmp_path, monkeypatch):
     """cymatix ingest --deterministic: flags gate upstream of every seam."""
     from cymatix_context.backends import encoder_client

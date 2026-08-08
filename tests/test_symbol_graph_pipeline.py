@@ -11,10 +11,16 @@ import sqlite3
 import pytest
 
 from cymatix_context.encoding import tree_chunker as tc
+from tests.conftest import requires_spacy_model
 
-pytestmark = pytest.mark.skipif(
-    not tc.is_available(), reason="tree-sitter (+ tree-sitter-python) not installed"
-)
+# Both marks apply: the end-to-end ingests here need tree-sitter for the
+# symbol extraction and the en_core_web_sm pipeline for the tagger (#313).
+pytestmark = [
+    pytest.mark.skipif(
+        not tc.is_available(), reason="tree-sitter (+ tree-sitter-python) not installed"
+    ),
+    requires_spacy_model,
+]
 
 # compute_tax is large (forces its own chunk); invoice_total is a separate chunk
 # that calls it -> a cross-chunk SYMBOL_REF edge must form.

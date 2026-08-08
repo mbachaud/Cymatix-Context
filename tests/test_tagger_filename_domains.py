@@ -15,6 +15,11 @@ import pytest
 pytest.importorskip("spacy", reason="CpuTagger imports spacy at runtime via _get_nlp()")
 
 from cymatix_context.tagger import CpuTagger
+from tests.conftest import requires_spacy_model
+
+# Every test here drives CpuTagger.pack(), which needs the en_core_web_sm
+# pipeline, not just the spaCy library the importorskip above sees (#313).
+pytestmark = requires_spacy_model
 
 _TAGGER = None
 
