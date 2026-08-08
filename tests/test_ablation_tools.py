@@ -308,6 +308,181 @@ def test_every_arm_declares_a_gate_and_an_implemented_validation():
             assert arm.expect_absent, f"{arm.name} declares no expected observable"
 
 
+def test_per_query_record_shape_and_recall_contribution():
+    rec = ladder.per_query_record(
+        "erb_000", gold_ranks=[3, 9], first_rank=3, k=12, n_queries=4,
+        wall_ms=21.4567, signal_ms={"splade": 4.2, "fts5": 1.0},
+    )
+    assert set(rec) == {
+        "needle", "gold_ranks", "rank_of_first_gold", "recall_hit",
+        "recall_contribution", "wall_ms", "signal_ms",
+    }
+    assert rec["gold_ranks"] == [3, 9]
+    assert rec["recall_hit"] == 1
+    assert rec["recall_contribution"] == 0.25
+    assert rec["rank_of_first_gold"] == 3
+    assert rec["wall_ms"] == 21.457
+    assert rec["signal_ms"] == {"fts5": 1.0, "splade": 4.2}
+    assert "error" not in rec
+
+
+def test_per_query_record_misses_and_errors_contribute_nothing():
+    miss = ladder.per_query_record(
+        "erb_001", gold_ranks=[40], first_rank=40, k=12, n_queries=4,
+        wall_ms=1.0, signal_ms={},
+    )
+    assert miss["recall_hit"] == 0 and miss["recall_contribution"] == 0.0
+    failed = ladder.per_query_record(
+        "erb_002", gold_ranks=[], first_rank=None, k=12, n_queries=4,
+        wall_ms=1.0, signal_ms={}, error="RuntimeError: boom",
+    )
+    assert failed["recall_hit"] == 0
+    assert failed["error"] == "RuntimeError: boom"
+
+
+def test_per_query_basis_reconstructs_recall_at_k():
+    # The point of the column: a receipt reader can check the aggregate
+    # against its own parts. 3 hits of 5 = 0.6, which is exact in neither
+    # thirds nor 4-dp rounding by accident — use a case that isn't.
+    first_ranks = [1, 5, None, 40, 12]
+    n = len(first_ranks)
+    records = [
+        ladder.per_query_record(
+            f"n{i}", gold_ranks=[r] if r else [], first_rank=r, k=12,
+            n_queries=n, wall_ms=1.0, signal_ms={},
+        )
+        for i, r in enumerate(first_ranks)
+    ]
+    aggregate = ladder.recall_at_k(first_ranks, 12)
+    # recall_hit is the exact integer basis — this identity holds to the bit.
+    assert sum(r["recall_hit"] for r in records) / n == aggregate
+    # recall_contribution agrees up to the aggregate's 4-decimal rounding.
+    total = sum(r["recall_contribution"] for r in records)
+    assert total == pytest.approx(aggregate, abs=5e-5)
+
+
+def test_per_query_contribution_is_unrounded_so_thirds_still_sum():
+    # 1/3 rounded to 6 dp would drift the column off recall@k; full precision
+    # keeps it inside the aggregate's own rounding.
+    first_ranks = [1, 2, None]
+    records = [
+        ladder.per_query_record(
+            f"n{i}", gold_ranks=[r] if r else [], first_rank=r, k=12,
+            n_queries=3, wall_ms=1.0, signal_ms={},
+        )
+        for i, r in enumerate(first_ranks)
+    ]
+    total = sum(r["recall_contribution"] for r in records)
+    assert total == pytest.approx(ladder.recall_at_k(first_ranks, 12), abs=5e-5)
+
+
+@pytest.mark.parametrize("per_query", [True, False])
+def test_run_arm_emits_per_query_only_when_flag_is_set(monkeypatch, per_query):
+    """Fake-arm path: stub every heavy import so no model or bed is touched."""
+    needles = [
+        {"name": "n0", "query": "q0"},
+        {"name": "n1", "query": "q1"},
+        {"name": "n2", "query": "q2"},
+    ]
+    gold = {"n0": {"g1"}, "n1": {"g9"}, "n2": {"gX"}}
+
+    class _FakeGenome:
+        def __init__(self):
+            self.last_query_scores = {"g1": 9.0, "g2": 8.0, "g9": 7.0}
+            self.last_signal_timings = {"fts5": 2.0, "splade": 5.0}
+            self.last_tier_contributions = {"g1": {"fts5": 2.0}}
+            self.synonym_map = {}
+
+        def _expand_terms(self, terms):
+            return sorted(t.lower() for t in terms)
+
+    class _FakeWindow:
+        metadata = {"classifier": {"class": "default"}}
+        expressed_gene_ids = ["g1"]
+
+    class _FakeManager:
+        def __init__(self, cfg):
+            self.config = cfg
+            self.genome = _FakeGenome()
+            self._last_cold_tier_used = False
+
+        def build_context(self, *a, **kw):
+            return _FakeWindow()
+
+        def close(self):
+            pass
+
+    class _FakeCfg:
+        class _Genome:
+            path = ""
+        def __init__(self):
+            self.genome = _FakeCfg._Genome()
+            self.synonym_map = {}
+
+    fake_modules = {
+        "cymatix_context.backends.encoder_client": type(
+            "M", (), {"active_url": staticmethod(lambda: "")},
+        ),
+        "cymatix_context.config": type(
+            "M", (), {"load_config": staticmethod(lambda *a, **kw: _FakeCfg())},
+        ),
+        "cymatix_context.context_manager": type(
+            "M", (), {"CymatixContextManager": _FakeManager},
+        ),
+        "cymatix_context.scoring.cymatics": type(
+            "M", (), {"query_spectrum": staticmethod(lambda *a, **kw: None)},
+        ),
+    }
+    real_import = __import__
+
+    def _fake_import(name, globals=None, locals=None, fromlist=(), level=0):
+        # run_arm imports these lazily inside the function body.
+        if name == "cymatix_context.backends" and "encoder_client" in (fromlist or ()):
+            return type("P", (), {
+                "encoder_client": fake_modules["cymatix_context.backends.encoder_client"],
+            })
+        if name == "cymatix_context.scoring" and "cymatics" in (fromlist or ()):
+            return type("P", (), {
+                "cymatics": fake_modules["cymatix_context.scoring.cymatics"],
+            })
+        if name in fake_modules:
+            return fake_modules[name]
+        return real_import(name, globals, locals, fromlist, level)
+
+    monkeypatch.setattr("builtins.__import__", _fake_import)
+
+    row = ladder.run_arm(
+        ladder.Arm(name="fake", knobs={}, gate="test", validation=ladder.VALIDATION_CONTROL),
+        genome_path="unused.db", config_path=None, needles=needles,
+        gold_by_needle=gold, k=12, per_query=per_query,
+    )
+
+    if not per_query:
+        assert "per_query" not in row, "flag off must leave the receipt shape unchanged"
+        return
+
+    assert len(row["per_query"]) == len(needles)
+    assert [r["needle"] for r in row["per_query"]] == ["n0", "n1", "n2"]
+    for rec in row["per_query"]:
+        assert set(rec) >= {
+            "needle", "gold_ranks", "rank_of_first_gold", "recall_hit",
+            "recall_contribution", "wall_ms", "signal_ms",
+        }
+    # n0 gold ranks 1st, n1 gold ranks 3rd, n2's gold is not in the score map.
+    assert row["per_query"][0]["gold_ranks"] == [1]
+    assert row["per_query"][1]["gold_ranks"] == [3]
+    assert row["per_query"][2]["gold_ranks"] == []
+    assert row["per_query"][2]["rank_of_first_gold"] is None
+    # The basis must reconstruct the aggregate it sits next to.
+    assert sum(r["recall_hit"] for r in row["per_query"]) / len(needles) == pytest.approx(
+        row["recall_at_k"], abs=5e-5
+    )
+    assert sum(r["recall_contribution"] for r in row["per_query"]) == pytest.approx(
+        row["recall_at_k"], abs=5e-5
+    )
+    assert row["per_query"][0]["signal_ms"] == {"fts5": 2.0, "splade": 5.0}
+
+
 def test_call_probe_counts_and_restores_the_original():
     class _Mod:
         @staticmethod

@@ -897,6 +897,26 @@ class KnowledgeStore:
         self._install_commit_trace()
         self._sema_cache: Optional[Dict] = None  # Pre-materialized ΣĒMA vectors (hot tier)
         self._cold_sema_cache: Optional[Dict] = None  # Pre-materialized ΣĒMA vectors (cold tier, C.2)
+        # Council fix: sema vectorless auto-gate. When a cache build finds
+        # ZERO non-null genes.embedding rows, the relevant flag flips true
+        # and short-circuits further work for that tier: hot
+        # (_sema_vectorless) gates the query-side Tier 4 codec.encode() call
+        # in query_docs (~:2850) — a hot-tier-vectorless store cannot
+        # produce a single sema candidate there, so the remote /encode/sema
+        # RTT is pure waste; cold (_cold_sema_vectorless) gates the
+        # repeated full-table rescan in query_cold_tier. Kept as two flags
+        # rather than one shared flag because the hot and cold builds scan
+        # disjoint chromatin partitions — a cold-tier-vectorless bed can
+        # still have hot-tier vectors (and vice versa), so folding them
+        # into one flag could false-positive-gate the *other* tier's
+        # perfectly good encode call. Both share one log-once guard, since
+        # spec wants a single "sema tier idle" line per store lifetime.
+        # Cleared by invalidate_sema_cache() / invalidate_cold_sema_cache()
+        # so a bed that later gains vectors (upsert, backfill script)
+        # re-checks on its next build.
+        self._sema_vectorless: bool = False
+        self._cold_sema_vectorless: bool = False
+        self._sema_idle_logged: bool = False  # one log.info per store lifetime
         # Memoized corpus size for IDF weighting (refreshed every
         # _CORPUS_SIZE_TTL seconds). Prevents the IDF denominator from
         # collapsing to the scored-candidate count on every query.
@@ -1041,6 +1061,21 @@ class KnowledgeStore:
             else:
                 raise
 
+        if not rows:
+            # Council fix: zero non-null genes.embedding rows in the
+            # hot-tier scan -> no candidate can ever carry a vector this
+            # cache build. Flip the store-level short-circuit so Tier 4's
+            # query-side codec.encode() call (and this full-table rescan,
+            # which Mode B would otherwise retry every query) stop firing
+            # until invalidate_sema_cache() clears the flag — e.g. after an
+            # upsert or backfill script adds a vector.
+            self._sema_vectorless = True
+            if not self._sema_idle_logged:
+                log.info("sema tier idle: no stored vectors")
+                self._sema_idle_logged = True
+            self._sema_cache = None
+            return
+
         gene_ids = []
         vectors = []
         for r in rows:
@@ -1067,6 +1102,10 @@ class KnowledgeStore:
     def invalidate_sema_cache(self) -> None:
         """Mark hot-tier cache stale — rebuilt on next Mode B query."""
         self._sema_cache = None
+        # Council fix: a bed that gains vectors (upsert, backfill) must
+        # re-check on the next build instead of staying permanently
+        # gated off by a stale vectorless verdict.
+        self._sema_vectorless = False
 
     # ── Cold-tier ΣĒMA retrieval (C.2, 2026-04-10) ─────────────────────
     #
@@ -1110,6 +1149,20 @@ class KnowledgeStore:
             (int(ChromatinState.HETEROCHROMATIN),),
         ).fetchall()
 
+        if not rows:
+            # Council fix: zero non-null genes.embedding rows in the
+            # heterochromatin (cold-tier) scan -> flip the cold-only
+            # short-circuit so query_cold_tier stops re-running this
+            # full-table scan on every call until invalidate_cold_sema_cache()
+            # clears the flag (e.g. after a document is archived with a
+            # vector, or a backfill runs).
+            self._cold_sema_vectorless = True
+            if not self._sema_idle_logged:
+                log.info("sema tier idle: no stored vectors")
+                self._sema_idle_logged = True
+            self._cold_sema_cache = None
+            return
+
         gene_ids = []
         vectors = []
         for r in rows:
@@ -1135,6 +1188,8 @@ class KnowledgeStore:
     def invalidate_cold_sema_cache(self) -> None:
         """Mark cold-tier cache stale — rebuilt on next query_cold_tier call."""
         self._cold_sema_cache = None
+        # Council fix: re-check on next build instead of staying gated.
+        self._cold_sema_vectorless = False
 
     def mark_verified(
         self,
@@ -1241,6 +1296,12 @@ class KnowledgeStore:
             return []
 
         if self._cold_sema_cache is None:
+            # Council fix: skip the full-table rescan once a prior build
+            # already proved the heterochromatin tier has zero non-null
+            # embeddings — invalidate_cold_sema_cache() clears this if a
+            # later archive/backfill adds a vector.
+            if self._cold_sema_vectorless:
+                return []
             self._build_cold_sema_cache()
         if self._cold_sema_cache is None:
             return []  # Nothing in the cold tier
@@ -1732,11 +1793,12 @@ class KnowledgeStore:
             self.checkpoint("PASSIVE")
 
         # Invalidate ΣĒMA caches (new document may have embedding, and
-        # lifecycle tier changes can reshuffle hot/cold tier membership)
-        if self._sema_cache is not None:
-            self._sema_cache = None
-        if self._cold_sema_cache is not None:
-            self._cold_sema_cache = None
+        # lifecycle tier changes can reshuffle hot/cold tier membership).
+        # Routed through the invalidate_* methods (not a bare None-assign)
+        # so the sema-vectorless auto-gate flags reset too — a bed that
+        # just gained a vector must re-check on its next cache build.
+        self.invalidate_sema_cache()
+        self.invalidate_cold_sema_cache()
         # Stage 2: invalidate the in-memory dense matrix. Rebuild is full
         # (~78 MiB / sub-200 ms at 18.9k rows) on first dense recall after
         # this batch. See spec §4 "Invalidation".
@@ -2904,104 +2966,130 @@ class KnowledgeStore:
         #   B) Add new candidates via vector scan (when pool is too small)
         if self._sema_codec is not None:
             try:
-                query_text = " ".join(query_terms)
-                query_vec = self._sema_codec.encode(query_text)
-                top_score = max(gene_scores.values()) if gene_scores else 0
+                # Council fix (sema vectorless auto-gate): resolve
+                # vectorlessness BEFORE paying the codec.encode() RTT below,
+                # but only on the cycle where Mode B's undersized-pool
+                # trigger would fire anyway (same condition Mode B checks
+                # further down) — this adds no cache-build work on beds
+                # where earlier tiers already fill the pool. If a prior
+                # build already proved zero non-null genes.embedding rows,
+                # or this proactive check just did, _sema_vectorless is now
+                # true and the block below skips encode() + Mode A/B
+                # entirely: neither mode can surface a candidate without a
+                # single stored vector. invalidate_sema_cache() clears the
+                # flag on the next write, so a bed that gains vectors
+                # re-enables automatically.
+                if (
+                    len(gene_scores) < limit // 2
+                    and self._sema_cache is None
+                    and not self._sema_vectorless
+                ):
+                    self._build_sema_cache()
 
-                # Mode A: Boost existing candidates when confidence is weak
-                _sema_boost_t0 = time.monotonic()
-                if gene_scores and top_score < 20.0:
-                    existing_ids = list(gene_scores.keys())
-                    # Batched IN-clause — see _iter_in_batches.
-                    sema_rows = []
-                    for _ph, _batch in _iter_in_batches(existing_ids):
-                        sema_rows.extend(cur.execute(
-                            f"SELECT gene_id, embedding FROM genes "
-                            f"WHERE gene_id IN ({_ph}) AND embedding IS NOT NULL",
-                            _batch,
-                        ).fetchall())
+                if not self._sema_vectorless:
+                    query_text = " ".join(query_terms)
+                    query_vec = self._sema_codec.encode(query_text)
+                    top_score = max(gene_scores.values()) if gene_scores else 0
 
-                    if sema_rows:
-                        candidates_sema = []
-                        for r in sema_rows:
-                            try:
-                                vec = decode_embedding(r["embedding"])
-                                if isinstance(vec, list) and len(vec) == 20:
-                                    candidates_sema.append((r["gene_id"], vec))
-                            except Exception:
-                                continue
+                    # Mode A: Boost existing candidates when confidence is weak
+                    _sema_boost_t0 = time.monotonic()
+                    if gene_scores and top_score < 20.0:
+                        existing_ids = list(gene_scores.keys())
+                        # Batched IN-clause — see _iter_in_batches.
+                        sema_rows = []
+                        for _ph, _batch in _iter_in_batches(existing_ids):
+                            sema_rows.extend(cur.execute(
+                                f"SELECT gene_id, embedding FROM genes "
+                                f"WHERE gene_id IN ({_ph}) AND embedding IS NOT NULL",
+                                _batch,
+                            ).fetchall())
 
-                        if candidates_sema:
-                            nearest = self._sema_codec.nearest(
-                                query_vec, candidates_sema, k=len(candidates_sema),
-                            )
-                            for gid, sim in nearest:
-                                if sim > 0.3:
-                                    boost_scale = max(0.5, 1.0 - top_score / 40.0)
-                                    # #202: sema_boost_weight (default 2.0
-                                    # == legacy literal).
-                                    sema_boost = sim * self._sema_boost_weight * boost_scale
-                                    gene_scores[gid] += sema_boost
-                                    tier_contrib.setdefault(gid, {})["sema_boost"] = sema_boost
-                                    # Stage 3: post-fusion additive (re-rank class).
-                                    rerank_additive[gid] = rerank_additive.get(gid, 0.0) + sema_boost
-                                    # Issue #255 (PR-2): mirror into per-class map.
-                                    _sema_cls = rerank_by_class.setdefault("sema_boost", {})
-                                    _sema_cls[gid] = _sema_cls.get(gid, 0.0) + sema_boost
-                _sig("sema_boost", _sema_boost_t0)
+                        if sema_rows:
+                            candidates_sema = []
+                            for r in sema_rows:
+                                try:
+                                    vec = decode_embedding(r["embedding"])
+                                    if isinstance(vec, list) and len(vec) == 20:
+                                        candidates_sema.append((r["gene_id"], vec))
+                                except Exception:
+                                    continue
 
-                # Mode B: Add new candidates when pool is undersized
-                # Uses pre-materialized numpy cache for fast cosine scan
-                # instead of deserializing 7K JSON blobs per query.
-                if len(gene_scores) < limit // 2:
-                    # Build cache on first use (lazy init)
-                    if self._sema_cache is None:
-                        self._build_sema_cache()
-
-                    if self._sema_cache is not None:
-                        try:
-                            import numpy as np
-                            cache = self._sema_cache
-                            q = np.array(query_vec, dtype=np.float32)
-                            q_norm = np.linalg.norm(q)
-                            if q_norm > 1e-8:
-                                q = q / q_norm
-                                # Batch cosine similarity: (N,20) @ (20,) → (N,)
-                                sims = cache["matrix"] @ q
-                                # Mask already-scored documents
-                                existing = set(gene_scores.keys())
-                                fill_count = limit - len(gene_scores)
-                                # Get top-k indices
-                                top_idx = np.argsort(sims)[::-1]
-                                added = 0
-                                _sema_cold_ranked: List[Tuple[str, float]] = []
-                                for idx in top_idx:
-                                    if added >= fill_count:
-                                        break
-                                    gid = cache["gene_ids"][idx]
-                                    sim = float(sims[idx])
-                                    if gid in existing:
-                                        continue
-                                    if sim > 0.4:
-                                        # #202: sema_cold_weight (default
-                                        # 3.0 == legacy literal).
-                                        sema_new = sim * self._sema_cold_weight
-                                        gene_scores[gid] = sema_new
-                                        tier_contrib.setdefault(gid, {})["sema_cold"] = sema_new
-                                        # Stage 3: rank by RAW cosine
-                                        # similarity, not the weight-
-                                        # multiplied score — the
-                                        # multiplier is the additive
-                                        # weight, but rank comes from
-                                        # the cosine ordering itself.
-                                        _sema_cold_ranked.append((gid, sim))
-                                        added += 1
-                                fuser.add_tier(
-                                    "sema_cold", _sema_cold_ranked,
-                                    weight=self._sema_cold_weight,
+                            if candidates_sema:
+                                nearest = self._sema_codec.nearest(
+                                    query_vec, candidates_sema, k=len(candidates_sema),
                                 )
-                        except ImportError:
-                            pass  # numpy not available
+                                for gid, sim in nearest:
+                                    if sim > 0.3:
+                                        boost_scale = max(0.5, 1.0 - top_score / 40.0)
+                                        # #202: sema_boost_weight (default 2.0
+                                        # == legacy literal).
+                                        sema_boost = sim * self._sema_boost_weight * boost_scale
+                                        gene_scores[gid] += sema_boost
+                                        tier_contrib.setdefault(gid, {})["sema_boost"] = sema_boost
+                                        # Stage 3: post-fusion additive (re-rank class).
+                                        rerank_additive[gid] = rerank_additive.get(gid, 0.0) + sema_boost
+                                        # Issue #255 (PR-2): mirror into per-class map.
+                                        _sema_cls = rerank_by_class.setdefault("sema_boost", {})
+                                        _sema_cls[gid] = _sema_cls.get(gid, 0.0) + sema_boost
+                    _sig("sema_boost", _sema_boost_t0)
+
+                    # Mode B: Add new candidates when pool is undersized
+                    # Uses pre-materialized numpy cache for fast cosine scan
+                    # instead of deserializing 7K JSON blobs per query.
+                    if len(gene_scores) < limit // 2:
+                        # Build cache on first use (lazy init) — usually
+                        # already built by the proactive vectorless check
+                        # above; this is a no-op then. Kept for the (rare)
+                        # case where the pool shrank between that check and
+                        # here — it never does today, but stays a safe
+                        # belt-and-suspenders lazy init like before this fix.
+                        if self._sema_cache is None:
+                            self._build_sema_cache()
+
+                        if self._sema_cache is not None:
+                            try:
+                                import numpy as np
+                                cache = self._sema_cache
+                                q = np.array(query_vec, dtype=np.float32)
+                                q_norm = np.linalg.norm(q)
+                                if q_norm > 1e-8:
+                                    q = q / q_norm
+                                    # Batch cosine similarity: (N,20) @ (20,) → (N,)
+                                    sims = cache["matrix"] @ q
+                                    # Mask already-scored documents
+                                    existing = set(gene_scores.keys())
+                                    fill_count = limit - len(gene_scores)
+                                    # Get top-k indices
+                                    top_idx = np.argsort(sims)[::-1]
+                                    added = 0
+                                    _sema_cold_ranked: List[Tuple[str, float]] = []
+                                    for idx in top_idx:
+                                        if added >= fill_count:
+                                            break
+                                        gid = cache["gene_ids"][idx]
+                                        sim = float(sims[idx])
+                                        if gid in existing:
+                                            continue
+                                        if sim > 0.4:
+                                            # #202: sema_cold_weight (default
+                                            # 3.0 == legacy literal).
+                                            sema_new = sim * self._sema_cold_weight
+                                            gene_scores[gid] = sema_new
+                                            tier_contrib.setdefault(gid, {})["sema_cold"] = sema_new
+                                            # Stage 3: rank by RAW cosine
+                                            # similarity, not the weight-
+                                            # multiplied score — the
+                                            # multiplier is the additive
+                                            # weight, but rank comes from
+                                            # the cosine ordering itself.
+                                            _sema_cold_ranked.append((gid, sim))
+                                            added += 1
+                                    fuser.add_tier(
+                                        "sema_cold", _sema_cold_ranked,
+                                        weight=self._sema_cold_weight,
+                                    )
+                            except ImportError:
+                                pass  # numpy not available
             except Exception:
                 log.debug("ΣĒMA retrieval failed, continuing without")
 
@@ -4030,8 +4118,16 @@ class KnowledgeStore:
         # Perf slice 2: pure-read expansion belongs on the (per-thread)
         # reader, not the shared writer — two threads interleaving these
         # scans on one connection was the c=2 server wedge.
+        # Council fix (flag-leak): the entity_graph sub-scan inside this
+        # post-ranking expansion is a QUERY-time read and must be gated by
+        # the retrieval-side flag (_entity_graph_retrieval_enabled — same
+        # flag as Tier 5b at query_docs' entity-graph scoring block), not
+        # the write/ingest-side _entity_graph_enabled ([ingestion]
+        # entity_graph). Previously the ingest flag (default True) silently
+        # authorized this scan on every query even when the retrieval flag
+        # (default False) had Tier 5b's scoring disabled.
         return expand_coactivated(
-            genes, limit, self.read_conn, self._entity_graph_enabled,
+            genes, limit, self.read_conn, self._entity_graph_retrieval_enabled,
             symbol_expansion_cap=getattr(self, "_symbol_expansion_cap", 8),
         )
 
@@ -5106,11 +5202,10 @@ class KnowledgeStore:
                 (gene_id,),
             )
             self.conn.commit()
-        # Document moved hot → cold — both tier caches are now stale
-        if self._sema_cache is not None:
-            self._sema_cache = None
-        if self._cold_sema_cache is not None:
-            self._cold_sema_cache = None
+        # Document moved hot → cold — both tier caches (and the
+        # sema-vectorless auto-gate flags) are now stale.
+        self.invalidate_sema_cache()
+        self.invalidate_cold_sema_cache()
         # Stage 2: hot/cold transitions change the dense matrix membership too.
         self._invalidate_dense_matrix()
         log.debug("Moved gene %s to HETEROCHROMATIN (non-destructive)", gene_id)
@@ -5182,11 +5277,10 @@ class KnowledgeStore:
                 raise
 
         if deleted:
-            # Tier caches and the dense matrix indexed the dead gene.
-            if self._sema_cache is not None:
-                self._sema_cache = None
-            if self._cold_sema_cache is not None:
-                self._cold_sema_cache = None
+            # Tier caches (and the sema-vectorless auto-gate flags) indexed
+            # the dead gene.
+            self.invalidate_sema_cache()
+            self.invalidate_cold_sema_cache()
             self._invalidate_dense_matrix()
             log.debug("Deleted gene %s (+ index, symbol, and edge rows)", gene_id)
         return deleted

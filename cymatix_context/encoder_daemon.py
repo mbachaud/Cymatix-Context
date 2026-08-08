@@ -31,6 +31,69 @@ Three pieces:
 Byte-parity is the load-bearing constraint: the daemon must produce exactly
 what an in-process encode would produce, so the batcher never re-rounds,
 re-sorts, or re-groups anything the codecs return.
+
+Determinism profile (slice 2, ``CYMATIX_ENCODER_DETERMINISTIC=1``)
+------------------------------------------------------------------
+
+``docs/benchmarks/2026-08-05-fork1-worker-sweep.md`` ("Rank stability under
+parallelism") measured recall drifting ±0.05 across concurrency levels on
+CUDA with overlap_fraction ≥0.975 and zero errors: batched-GEMM low-mantissa
+drift across *batch shapes* flips near-cutoff ranks. The driver is the shape
+of the dense micro-batch — ``(item count × padded token length)`` — which
+under concurrency depends on which requests happened to be in the queue when
+the worker drained it. Off by default; everything below is byte-for-byte
+inert unless the env gate is set.
+
+**What the gate pins, honestly:**
+
+- *Item count* — **pinned**. The dense executor pads every drained
+  task-group up to exactly ``max_batch`` with copies of a constant filler
+  text (``dense_filler_text()``) and discards the filler rows. This is done
+  with the codec's public ``encode_batch`` API only; no model library is
+  forked or monkey-patched.
+- *Padded token length* — **pinned only by domination, not by API**. Neither
+  backend's public API accepts a fixed pad length:
+  ``BGEM3FlagModel.encode`` and ``SentenceTransformer.encode`` both sort
+  inputs by length, chunk them by their own internal ``batch_size``, and
+  tokenize each chunk with ``padding=True`` (pad to the longest member).
+  There is no ``padding="max_length"`` knob on either. So the filler is a
+  deterministic ~max-length text (default 4096 chars,
+  ``CYMATIX_ENCODER_FILLER_CHARS``) — roughly 2x the 2000-char
+  ``dense_passage_char_cap`` callers apply — which makes it the longest
+  member of every batch and therefore makes the padded length a constant.
+  The pin holds while every real item is shorter than the filler; a caller
+  that sends an uncapped passage longer than the filler silently returns
+  that batch to today's data-dependent shape. The daemon encodes exactly
+  what it receives (contract, "Text caps are applied by CALLERS"), so it
+  cannot enforce this.
+- *Sub-batch chunking* — pinned only while ``max_batch`` (default 16) is
+  ≤ the backend's own encode ``batch_size`` (sentence-transformers: 32;
+  FlagEmbedding: its own default, not verifiable here — FlagEmbedding is not
+  installed in this venv). Above that the backend splits our fixed batch
+  into several chunks and only the chunk holding the filler is length-pinned.
+- *Flash-attention varlen packing* — **not pinned**. When
+  sentence-transformers can flatten inputs (flash-attn with varlen support),
+  it drops padding entirely and packs the chunk into one concatenated
+  sequence whose length varies with content. Item count stays pinned; padded
+  length becomes moot and unpinned. Not the default attention path here.
+- *Cost* — the gate trades throughput for shape stability: a 2-item drain
+  becomes a ``max_batch``-item encode of near-max-length rows. That is the
+  point, and it is why the gate is off by default.
+
+``apply_determinism_flags()`` (called at ``EncoderRegistry.load``, i.e. in
+the daemon process only) additionally sets
+``torch.use_deterministic_algorithms(True, warn_only=True)``, turns TF32 off
+for cuBLAS matmuls (``CYMATIX_ENCODER_TF32=1`` re-enables it), and sets
+``CUBLAS_WORKSPACE_CONFIG`` if the operator has not. Every step is guarded
+for a CPU-only or missing torch. ``torch.backends.cudnn.allow_tf32`` is
+deliberately untouched — BGE-M3 inference is cuBLAS matmul, not cuDNN.
+
+Daemon-side vector LRU (``CYMATIX_ENCODER_VECTOR_CACHE``, default 4096
+entries, 0 = off) is orthogonal to the gate: keyed
+``(family, model, task, text)``, checked before enqueue and populated after
+a successful encode, never on failure. A cache hit is also a determinism
+win — the same text returns the same bytes it returned the first time,
+regardless of what shape its batch would have had this turn.
 """
 
 from __future__ import annotations
@@ -43,6 +106,7 @@ import queue
 import sys
 import threading
 import time
+from collections import OrderedDict
 from concurrent.futures import Future
 from concurrent.futures import TimeoutError as FutureTimeoutError
 from contextlib import asynccontextmanager
@@ -85,9 +149,184 @@ PROBE_TEXT = "cymatix encoder daemon readiness probe"
 WARM_PROBE_ENCODES = 5
 
 
+# ── determinism profile knobs (slice 2 — see the module docstring) ───
+
+DETERMINISTIC_ENV = "CYMATIX_ENCODER_DETERMINISTIC"
+
+#: TF32 is OFF whenever the deterministic profile is on; this re-enables it
+#: for an operator who wants deterministic algorithms without the TF32 cost.
+TF32_ENV = "CYMATIX_ENCODER_TF32"
+
+#: torch requires this before the first cuBLAS handle when
+#: ``use_deterministic_algorithms`` is on; ``:4096:8`` is torch's own
+#: documented value. Only set when the operator has not set one.
+CUBLAS_WORKSPACE_ENV = "CUBLAS_WORKSPACE_CONFIG"
+CUBLAS_WORKSPACE_DEFAULT = ":4096:8"
+
+#: Filler size in characters. Default is ~2x the 2000-char
+#: ``[ingestion] dense_passage_char_cap`` callers apply, so the filler
+#: dominates every real item and the padded length becomes a constant.
+FILLER_CHARS_ENV = "CYMATIX_ENCODER_FILLER_CHARS"
+FILLER_CHARS_DEFAULT = 4096
+
+#: Deterministic ASCII unit the filler text is built from. Constant for the
+#: package's lifetime: changing it changes every deterministic-mode batch
+#: shape (and therefore the low mantissa bits this profile exists to pin).
+FILLER_UNIT = "cymatix deterministic batch shape filler token sequence "
+
+#: Daemon-side vector LRU capacity in entries; 0 disables it entirely.
+VECTOR_CACHE_ENV = "CYMATIX_ENCODER_VECTOR_CACHE"
+VECTOR_CACHE_DEFAULT = 4096
+
+_TRUE_WORDS = frozenset({"1", "true", "yes", "on"})
+_FALSE_WORDS = frozenset({"0", "false", "no", "off"})
+
+
+def _env_flag(name: str, default: bool = False) -> bool:
+    """Read a boolean env knob; malformed/unset values fall back to *default*.
+
+    Same degradation contract as ``_env_float`` (shared with the client): a
+    knob nobody set, and a knob somebody set to nonsense, must behave the
+    same way, and the nonsense case must say so once in the log.
+    """
+    raw = os.environ.get(name)
+    if raw is None or not raw.strip():
+        return default
+    value = raw.strip().lower()
+    if value in _TRUE_WORDS:
+        return True
+    if value in _FALSE_WORDS:
+        return False
+    log.warning("%s=%r is not a boolean; using default %s", name, raw, default)
+    return default
+
+
+def _env_int(name: str, default: int) -> int:
+    """Read an integer env knob; malformed/unset values fall back to *default*."""
+    raw = os.environ.get(name)
+    if raw is None or not raw.strip():
+        return default
+    try:
+        return int(raw.strip())
+    except (TypeError, ValueError):
+        log.warning("%s=%r is not an integer; using default %s", name, raw, default)
+        return default
+
+
 def request_timeout_s() -> float:
     """CYMATIX_ENCODER_REQUEST_TIMEOUT_S — per-request future wait (30.0)."""
     return _env_float(REQUEST_TIMEOUT_ENV, REQUEST_TIMEOUT_DEFAULT)
+
+
+def deterministic_enabled() -> bool:
+    """CYMATIX_ENCODER_DETERMINISTIC — the whole slice-2 gate (default off).
+
+    Read at call time, never cached: the dense executor consults it per
+    drained batch and ``/health`` reports the live value, so an operator can
+    A/B the profile against a running daemon by flipping the env of a
+    restart, and a test can monkeypatch it after the app exists.
+    """
+    return _env_flag(DETERMINISTIC_ENV, False)
+
+
+def tf32_enabled() -> bool:
+    """CYMATIX_ENCODER_TF32 — TF32 matmuls under the deterministic profile.
+
+    Default **False**: TF32's 10-bit mantissa is exactly the drift budget the
+    profile is trying to remove, so turning it off is part of the profile
+    rather than a separate opt-in. Set to 1 to keep TF32's speed and accept
+    the wider drift.
+    """
+    return _env_flag(TF32_ENV, False)
+
+
+def filler_chars() -> int:
+    """CYMATIX_ENCODER_FILLER_CHARS — filler length in characters (4096).
+
+    Clamped to ≥1: a 1-char filler still pins the item count, it just stops
+    pinning the padded length (see the module docstring's honest limits).
+    """
+    return max(1, _env_int(FILLER_CHARS_ENV, FILLER_CHARS_DEFAULT))
+
+
+def dense_filler_text() -> str:
+    """The constant filler text used to pad a dense batch to ``max_batch``.
+
+    Deterministic by construction (a repeated ASCII unit sliced to length),
+    so two daemons on the same env produce the same batch shape, and the
+    same daemon produces the same shape on every drain.
+    """
+    n = filler_chars()
+    reps = n // len(FILLER_UNIT) + 1
+    return (FILLER_UNIT * reps)[:n]
+
+
+def vector_cache_size() -> int:
+    """CYMATIX_ENCODER_VECTOR_CACHE — LRU capacity in entries (4096; 0 = off)."""
+    return max(0, _env_int(VECTOR_CACHE_ENV, VECTOR_CACHE_DEFAULT))
+
+
+def apply_determinism_flags() -> Dict[str, Any]:
+    """Apply the torch-level determinism profile. Daemon process only.
+
+    Called from ``EncoderRegistry.load`` — the last point in this process
+    where torch has not yet built a CUDA context, which matters because
+    ``CUBLAS_WORKSPACE_CONFIG`` is only read when cuBLAS initializes its
+    handle. Fully inert unless ``CYMATIX_ENCODER_DETERMINISTIC`` is set, and
+    fully guarded otherwise: no torch, a CPU-only build, or a torch version
+    without one of these attributes all degrade to a warning and a partial
+    profile rather than a daemon that will not start.
+
+    Returns a record of what was actually applied (logged, and asserted by
+    tests against a fake torch module).
+    """
+    applied: Dict[str, Any] = {
+        "enabled": deterministic_enabled(),
+        "cublas_workspace_config": None,
+        "use_deterministic_algorithms": False,
+        "allow_tf32": None,
+        "torch": False,
+    }
+    if not applied["enabled"]:
+        return applied
+
+    if not os.environ.get(CUBLAS_WORKSPACE_ENV, "").strip():
+        os.environ[CUBLAS_WORKSPACE_ENV] = CUBLAS_WORKSPACE_DEFAULT
+    applied["cublas_workspace_config"] = os.environ.get(CUBLAS_WORKSPACE_ENV)
+
+    try:
+        import torch
+    except Exception as exc:
+        log.warning(
+            "deterministic profile requested but torch is unavailable (%s); "
+            "fixed-shape batching still applies",
+            exc,
+        )
+        return applied
+    applied["torch"] = True
+
+    try:
+        torch.use_deterministic_algorithms(True, warn_only=True)
+        applied["use_deterministic_algorithms"] = True
+    except Exception as exc:
+        log.warning("torch.use_deterministic_algorithms(True) failed: %s", exc)
+
+    allow_tf32 = tf32_enabled()
+    try:
+        backends = getattr(torch, "backends", None)
+        cuda_backend = getattr(backends, "cuda", None)
+        matmul = getattr(cuda_backend, "matmul", None)
+        if matmul is None:
+            # CPU-only torch build: no cuBLAS knob to turn. Not an error.
+            log.debug("torch.backends.cuda.matmul unavailable; TF32 knob skipped")
+        else:
+            matmul.allow_tf32 = allow_tf32
+            applied["allow_tf32"] = allow_tf32
+    except Exception as exc:
+        log.warning("setting torch.backends.cuda.matmul.allow_tf32 failed: %s", exc)
+
+    log.info("encoder daemon determinism profile applied: %s", applied)
+    return applied
 
 
 def resolve_max_batch(family: str) -> int:
@@ -138,6 +377,8 @@ class EncoderRegistry:
         *,
         dense_dim: int = 1024,
         dense_model_name: str = "BAAI/bge-m3",
+        splade_model_name: str = "",
+        sema_model_name: str = "",
         devices: Optional[Dict[str, Optional[str]]] = None,
         batch_sizes: Optional[Dict[str, int]] = None,
     ) -> None:
@@ -146,6 +387,12 @@ class EncoderRegistry:
         self.sema_codec = sema_codec
         self.dense_dim = int(dense_dim)
         self.dense_model_name = dense_model_name
+        # Cache-key components only (the vector LRU must not serve a vector
+        # from model A to a daemon reloaded onto model B). Default "" so the
+        # fake-registry test path needs no extra wiring — family already
+        # separates the three key spaces.
+        self.splade_model_name = splade_model_name
+        self.sema_model_name = sema_model_name
         self.devices: Dict[str, Optional[str]] = dict(devices or {})
         self.batch_sizes: Dict[str, int] = dict(batch_sizes or {})
 
@@ -177,6 +424,14 @@ class EncoderRegistry:
             "splade": self.splade_encode is not None,
             "sema": self.sema_codec is not None,
         }
+
+    def model_name(self, family: str) -> str:
+        """Model identity for *family* — the vector LRU's key component."""
+        return {
+            "dense": self.dense_model_name,
+            "splade": self.splade_model_name,
+            "sema": self.sema_model_name,
+        }.get(family, "")
 
     def max_batch(self, family: str) -> int:
         """Effective cap for *family* (explicit wiring wins over resolution)."""
@@ -210,7 +465,14 @@ class EncoderRegistry:
         it silently CPU-pins BGE-M3); SPLADE and SEMA self-resolve their layer
         devices. torch/transformers/sentence_transformers enter the process
         here and nowhere else in this module.
+
+        Slice 2: ``apply_determinism_flags()`` runs FIRST — before any codec
+        exists, which is the last moment ``CUBLAS_WORKSPACE_CONFIG`` can
+        still be read by a not-yet-initialized cuBLAS handle. Inert unless
+        ``CYMATIX_ENCODER_DETERMINISTIC`` is set.
         """
+        apply_determinism_flags()
+
         from .backends.bgem3_codec import get_shared_codec, shared_dense_codec_enabled
         from .backends import splade_backend
         from .backends.sema import SemaCodec
@@ -219,6 +481,7 @@ class EncoderRegistry:
         dense_dim = int(cfg.retrieval.dense_embedding_dim)
         dense_model = str(cfg.retrieval.dense_model)
         splade_model = str(cfg.ingestion.splade_model)
+        sema_model = str(cfg.ingestion.sema_model)
 
         dense_codec = get_shared_codec(
             dim=dense_dim,
@@ -226,7 +489,7 @@ class EncoderRegistry:
             device=resolve_layer_device("dense"),
             share=shared_dense_codec_enabled(),
         )
-        sema_codec = SemaCodec(model_name=str(cfg.ingestion.sema_model), device=None)
+        sema_codec = SemaCodec(model_name=sema_model, device=None)
 
         def _splade_encode(text: str, top_k: int = 128) -> Dict[str, float]:
             return splade_backend.encode(text, top_k=top_k, model_name=splade_model)
@@ -237,6 +500,8 @@ class EncoderRegistry:
             sema_codec=sema_codec,
             dense_dim=dense_dim,
             dense_model_name=dense_model,
+            splade_model_name=splade_model,
+            sema_model_name=sema_model,
             devices={family: resolve_layer_device(family) for family in FAMILIES},
             batch_sizes={family: resolve_max_batch(family) for family in FAMILIES},
         )
@@ -288,6 +553,8 @@ def make_sequential_executor(
 
 def make_dense_executor(
     encode_batch: Callable[..., List[List[float]]],
+    *,
+    max_batch: Optional[int] = None,
 ) -> Callable[[List[_Item]], None]:
     """Batched executor — one ``encode_batch`` call per drained batch.
 
@@ -295,7 +562,26 @@ def make_dense_executor(
     by the codec from its ``task=`` argument, so mixing a query and a passage
     into one call would prefix the wrong texts. In the common case every item
     in a batch shares a task and this is exactly one call.
+
+    With ``CYMATIX_ENCODER_DETERMINISTIC`` set and *max_batch* wired, each
+    task group is padded up to exactly ``max_batch`` items with copies of
+    ``dense_filler_text()`` and the filler rows are discarded — the drained
+    batch's SHAPE stops depending on concurrent arrival order, which is the
+    measured cause of the ±0.05 rank wobble (module docstring). Both
+    backends return rows in input order (sentence-transformers restores its
+    internal length sort via ``argsort``; FlagEmbedding likewise), so the
+    caller rows are the first ``len(items)`` of the response. Off (the
+    default) this function is byte-for-byte what it was before slice 2.
     """
+    cap = None if max_batch is None else max(1, int(max_batch))
+
+    def _pad(texts: List[str]) -> List[str]:
+        """Deterministic-mode shape pin; identity in every other case."""
+        if cap is None or not texts or len(texts) >= cap:
+            return texts
+        if not deterministic_enabled():
+            return texts
+        return texts + [dense_filler_text()] * (cap - len(texts))
 
     def _execute(batch: List[_Item]) -> None:
         by_task: Dict[str, List[Tuple[str, "Future"]]] = {}
@@ -305,21 +591,24 @@ def make_dense_executor(
 
         for task, items in by_task.items():
             texts = [text for text, _ in items]
+            padded = _pad(texts)
             try:
-                vectors = encode_batch(texts, task)
+                vectors = encode_batch(padded, task)
             except Exception as exc:
                 log.warning("encoder daemon dense batch failed: %s", exc, exc_info=True)
                 for _, fut in items:
                     _resolve(fut, exc=exc)
                 continue
-            if vectors is None or len(vectors) != len(texts):
+            if vectors is None or len(vectors) != len(padded):
                 exc = RuntimeError(
                     f"dense encode_batch returned {0 if vectors is None else len(vectors)} "
-                    f"vectors for {len(texts)} texts"
+                    f"vectors for {len(padded)} texts"
                 )
                 for _, fut in items:
                     _resolve(fut, exc=exc)
                 continue
+            # zip() stops at the shorter side, so the filler rows past
+            # len(items) are dropped without an explicit slice.
             for (_, fut), vec in zip(items, vectors):
                 _resolve(fut, result=vec)
 
@@ -464,6 +753,82 @@ class _Batcher:
             self._queue.put(_STOP)
 
 
+# ── daemon-side vector LRU ──────────────────────────────────────────
+
+
+#: Cache key: ``(family, model_name, task, text)``. ``task`` carries whatever
+#: else changes the bytes for that family — the dense query/passage prefix,
+#: SPLADE's ``top_k`` truncation — so one key space per family cannot collide.
+_CacheKey = Tuple[str, str, str, str]
+
+
+class _VectorCache:
+    """Bounded, thread-safe LRU over encoded vectors / sparse dicts.
+
+    Checked before enqueue and populated after a successful encode, so a
+    repeat text never reaches a queue, never lands in a micro-batch, and
+    never changes another request's batch shape. Failures are never cached:
+    a daemon that briefly OOMs must retry, not memoize the error.
+
+    Sizing is in entries, not bytes. A 1024-dim fp32 dense vector is ~8 KB as
+    a Python float list, so the 4096-entry default is a ~30 MB ceiling on the
+    dense family — small next to the ~3 GB of weights this process already
+    holds, and the whole point of the daemon is that this is the only process
+    holding them.
+    """
+
+    def __init__(self, max_size: int) -> None:
+        self._max = max(0, int(max_size))
+        self._lock = threading.Lock()
+        self._entries: "OrderedDict[_CacheKey, Any]" = OrderedDict()
+        self._hits = 0
+        self._misses = 0
+
+    @property
+    def enabled(self) -> bool:
+        return self._max > 0
+
+    @property
+    def max_size(self) -> int:
+        return self._max
+
+    def get(self, key: _CacheKey) -> Tuple[bool, Any]:
+        """``(hit, value)`` — a sentinel-free lookup (None is a legal value)."""
+        if not self._max:
+            return False, None
+        with self._lock:
+            if key in self._entries:
+                self._entries.move_to_end(key)
+                self._hits += 1
+                return True, self._entries[key]
+            self._misses += 1
+            return False, None
+
+    def put(self, key: _CacheKey, value: Any) -> None:
+        if not self._max:
+            return
+        with self._lock:
+            self._entries[key] = value
+            self._entries.move_to_end(key)
+            while len(self._entries) > self._max:
+                self._entries.popitem(last=False)
+
+    def clear(self) -> None:
+        with self._lock:
+            self._entries.clear()
+
+    def stats(self) -> Dict[str, Any]:
+        """``/health.capacity.vector_cache`` — live, not a ready-flip snapshot."""
+        with self._lock:
+            return {
+                "enabled": self._max > 0,
+                "size": len(self._entries),
+                "max_size": self._max,
+                "hits": self._hits,
+                "misses": self._misses,
+            }
+
+
 # ── readiness ───────────────────────────────────────────────────────
 
 
@@ -593,6 +958,7 @@ def build_capacity_report(
     rates: Dict[str, Optional[float]],
     window_s: float,
     probe_ms: float,
+    vector_cache: Optional[_VectorCache] = None,
 ) -> Dict[str, Any]:
     """The self-report logged at the ready flip and served at /health.capacity.
 
@@ -600,6 +966,12 @@ def build_capacity_report(
     against: ``interleaved`` = 1/sum(1/rate) (one worker doing all three
     encodes back to back) and ``pipelined`` = min(rate) (three stages in
     flight at once, so the slowest model sets the ceiling).
+
+    ``deterministic`` and ``vector_cache`` are the slice-2 additions: an
+    operator reading a receipt has to be able to tell which profile produced
+    it, and a rank-stability claim measured against a warm cache is a
+    different claim from one measured against a cold one. ``/health``
+    re-reads both live on every request (the counters move after the flip).
     """
     warm = {family: _finite_rate(rates.get(family)) for family in FAMILIES}
     usable = [r for r in warm.values() if r]
@@ -616,6 +988,8 @@ def build_capacity_report(
         "bundles_per_s": {"interleaved": interleaved, "pipelined": pipelined},
         "max_batch": {family: registry.max_batch(family) for family in FAMILIES},
         "batch_window_ms": round(window_s * 1000.0, 3),
+        "deterministic": deterministic_enabled(),
+        "vector_cache": (vector_cache or _VectorCache(0)).stats(),
         "probe_ms": round(float(probe_ms), 3),
         "warm_probe_encodes": WARM_PROBE_ENCODES,
         "loaded": registry.loaded,
@@ -635,13 +1009,88 @@ def build_capacity_report(
 class _Daemon:
     """Owns the registry, the three batchers, and the readiness lifecycle."""
 
-    def __init__(self, registry: Optional[EncoderRegistry], window_s: float) -> None:
+    def __init__(
+        self,
+        registry: Optional[EncoderRegistry],
+        window_s: float,
+        *,
+        vector_cache_max: Optional[int] = None,
+    ) -> None:
         self.registry = registry
         self.window_s = window_s
         self.ready_state = ReadyState()
         self.batchers: Dict[str, _Batcher] = {}
+        # Capacity read once, at daemon construction (load time) — the LRU is
+        # allocated here and a live resize would have to evict, so unlike the
+        # per-call knobs this one is fixed for the process.
+        self.vector_cache = _VectorCache(
+            vector_cache_size() if vector_cache_max is None else vector_cache_max
+        )
         self._startup_thread: Optional[threading.Thread] = None
         self._shutdown = threading.Event()
+
+    # -- vector cache ---------------------------------------------------
+
+    def cache_key(self, family: str, payload: Tuple[Any, ...]) -> Optional[_CacheKey]:
+        """``(family, model, task, text)`` for *payload*, or None to bypass.
+
+        None means "do not consult or populate the cache": the LRU is off, or
+        the registry is not installed yet (no model identity to key on), or
+        the payload shape is not one this daemon knows how to key.
+        """
+        if not self.vector_cache.enabled:
+            return None
+        registry = self.registry
+        if registry is None:
+            return None
+        model = registry.model_name(family)
+        try:
+            if family == "dense":
+                text, task = payload
+                return ("dense", model, str(task), str(text))
+            if family == "splade":
+                text, top_k = payload
+                # top_k truncates the returned term set, so it is part of the
+                # bytes: a top_k=32 hit must never serve a top_k=128 request.
+                return ("splade", model, f"top_k={int(top_k)}", str(text))
+            if family == "sema":
+                return ("sema", model, "", str(payload[0]))
+        except Exception as exc:
+            log.debug("vector cache key build failed for %s: %s", family, exc)
+            return None
+        return None
+
+    def submit_cached(self, family: str, payload: Tuple[Any, ...]) -> "Future":
+        """Cache-checked ``submit`` — the endpoints' enqueue path.
+
+        A hit resolves a Future immediately and never touches the queue, so a
+        repeat text costs no model time and cannot perturb another request's
+        micro-batch shape. A miss enqueues normally and populates the cache
+        from the done-callback (which runs on the batcher worker thread — the
+        LRU is thread-safe). Failures are never cached.
+        """
+        key = self.cache_key(family, payload)
+        if key is not None:
+            hit, value = self.vector_cache.get(key)
+            if hit:
+                fut: "Future" = Future()
+                _resolve(fut, result=value)
+                return fut
+        future = self.batchers[family].submit(payload)
+        if key is not None:
+            future.add_done_callback(lambda f, k=key: self._cache_result(k, f))
+        return future
+
+    def _cache_result(self, key: _CacheKey, future: "Future") -> None:
+        """Populate the LRU from a resolved future — successes only."""
+        try:
+            if future.cancelled() or future.exception() is not None:
+                return
+            self.vector_cache.put(key, future.result())
+        except Exception as exc:
+            # A done-callback raising would be swallowed by concurrent.futures
+            # anyway; log it rather than lose it.
+            log.debug("vector cache populate failed: %s", exc)
 
     # -- startup --------------------------------------------------------
 
@@ -690,7 +1139,9 @@ class _Daemon:
         self._probe_bundle()
         probe_ms = (time.monotonic() - started) * 1000.0
         rates = self._warm_rates(registry)
-        capacity = build_capacity_report(registry, rates, self.window_s, probe_ms)
+        capacity = build_capacity_report(
+            registry, rates, self.window_s, probe_ms, self.vector_cache
+        )
         self.ready_state.mark_ready(probe_ms, capacity)
         log.info("encoder daemon ready in %.1f ms — capacity: %s", probe_ms, capacity)
         if self._shutdown.is_set():
@@ -703,7 +1154,9 @@ class _Daemon:
         self.batchers = {
             "dense": _Batcher(
                 "dense",
-                make_dense_executor(registry.dense_encode_batch),
+                make_dense_executor(
+                    registry.dense_encode_batch, max_batch=registry.max_batch("dense")
+                ),
                 max_batch=registry.max_batch("dense"),
                 window_s=self.window_s,
             ),
@@ -733,7 +1186,13 @@ class _Daemon:
         }[family]
 
     def _probe_bundle(self) -> None:
-        """One bundle through the real micro-batch path — the ready gate."""
+        """One bundle through the real micro-batch path — the ready gate.
+
+        Deliberately the raw batcher ``submit``, not ``submit_cached``: the
+        readiness proof must be a real encode on every bring-up, and the
+        probe's constant text would otherwise sit in the LRU forever as a
+        hit that proves nothing.
+        """
         timeout = request_timeout_s()
         futures = [self.batchers[family].submit(self._payload(family)) for family in FAMILIES]
         for future in futures:
@@ -859,6 +1318,7 @@ def create_encoder_app(
     registry: Optional[EncoderRegistry] = None,
     *,
     batch_window_ms: Optional[float] = None,
+    vector_cache_max: Optional[int] = None,
 ) -> FastAPI:
     """Build the daemon's FastAPI app.
 
@@ -868,7 +1328,9 @@ def create_encoder_app(
     line of serving, batching, probing and reporting code is shared between
     the two paths.
 
-    *batch_window_ms* overrides ``CYMATIX_ENCODER_BATCH_WINDOW_MS`` (2 ms).
+    *batch_window_ms* overrides ``CYMATIX_ENCODER_BATCH_WINDOW_MS`` (2 ms);
+    *vector_cache_max* overrides ``CYMATIX_ENCODER_VECTOR_CACHE`` (4096
+    entries, 0 = off).
     """
     # This process IS the daemon: force every encoder seam back in-process
     # before a registry can load. Otherwise an operator who exports
@@ -882,7 +1344,11 @@ def create_encoder_app(
     mark_encoder_daemon_process()
 
     window_ms = client_batch_window_ms() if batch_window_ms is None else float(batch_window_ms)
-    daemon = _Daemon(registry, window_s=max(0.0, window_ms) / 1000.0)
+    daemon = _Daemon(
+        registry,
+        window_s=max(0.0, window_ms) / 1000.0,
+        vector_cache_max=vector_cache_max,
+    )
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
@@ -920,13 +1386,20 @@ def create_encoder_app(
     @app.get("/health")
     def health() -> Dict[str, Any]:
         snapshot = daemon.ready_state.snapshot()
+        capacity = daemon.ready_state.capacity
+        if capacity:
+            # The rest of the report is a ready-flip snapshot; these two move
+            # afterwards (counters, and an env knob read per call), so serve
+            # them live rather than shipping a stale receipt.
+            capacity["vector_cache"] = daemon.vector_cache.stats()
+            capacity["deterministic"] = deterministic_enabled()
         return {
             "status": "ok",
             "ready": snapshot["ready"],
             "state": snapshot["state"],
             "pid": os.getpid(),
             "spawn_token": os.environ.get(SPAWN_TOKEN_ENV),
-            "capacity": daemon.ready_state.capacity,
+            "capacity": capacity,
         }
 
     # ---- encode endpoints (thin: validate, enqueue, join) ----
@@ -937,7 +1410,7 @@ def create_encoder_app(
         meta = daemon.registry.dense_meta
         if not req.texts:
             return {"vectors": [], **meta}
-        futures = [daemon.batchers["dense"].submit((text, req.task)) for text in req.texts]
+        futures = [daemon.submit_cached("dense", (text, req.task)) for text in req.texts]
         return {"vectors": _join(futures, "/encode/dense"), **meta}
 
     @app.post("/encode/splade")
@@ -945,7 +1418,7 @@ def create_encoder_app(
         _require_ready(daemon)
         if not req.texts:
             return {"sparse": []}
-        futures = [daemon.batchers["splade"].submit((text, req.top_k)) for text in req.texts]
+        futures = [daemon.submit_cached("splade", (text, req.top_k)) for text in req.texts]
         return {"sparse": _join(futures, "/encode/splade")}
 
     @app.post("/encode/sema")
@@ -953,7 +1426,7 @@ def create_encoder_app(
         _require_ready(daemon)
         if not req.texts:
             return {"vectors": []}
-        futures = [daemon.batchers["sema"].submit((text,)) for text in req.texts]
+        futures = [daemon.submit_cached("sema", (text,)) for text in req.texts]
         return {"vectors": _join(futures, "/encode/sema")}
 
     @app.post("/encode/bundle")
@@ -961,10 +1434,13 @@ def create_encoder_app(
         _require_ready(daemon)
         # Fan out to all three queues BEFORE joining any of them: the three
         # models then run concurrently and the bundle costs max(), not sum().
+        # Same cache-checked enqueue as the single-family routes, so the
+        # bundle path gets the LRU for free (a bundle whose text was seen by
+        # a prior /encode/dense hits on dense and misses on the other two).
         futures = [
-            daemon.batchers["dense"].submit((req.text, req.task)),
-            daemon.batchers["splade"].submit((req.text, req.top_k)),
-            daemon.batchers["sema"].submit((req.text,)),
+            daemon.submit_cached("dense", (req.text, req.task)),
+            daemon.submit_cached("splade", (req.text, req.top_k)),
+            daemon.submit_cached("sema", (req.text,)),
         ]
         dense, splade, sema = _join(futures, "/encode/bundle")
         return {"dense": dense, "splade": splade, "sema": sema}

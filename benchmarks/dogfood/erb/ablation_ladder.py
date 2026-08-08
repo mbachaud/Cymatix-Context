@@ -152,6 +152,14 @@ Usage::
 
     python benchmarks/dogfood/erb/ablation_ladder.py --stamp 20260805-1200
     python benchmarks/dogfood/erb/ablation_ladder.py --arms baseline,no_dense
+    python benchmarks/dogfood/erb/ablation_ladder.py --per-query   # paired basis
+
+``--per-query`` closes an audit gap: per-arm aggregates alone cannot tell you
+WHICH needle moved between two arms, so no paired test can be run from the
+receipt. With the flag, each arm carries one record per needle (gold ranks,
+recall contribution, wall ms, per-signal ms) in the run order every arm shares.
+Off by default, and off means the key is absent — not present-and-empty — so
+existing receipts and readers are unaffected.
 """
 
 from __future__ import annotations
@@ -536,6 +544,47 @@ def validate_arm(
     return False, f"validation='{arm.validation}': no observable implemented"
 
 
+def per_query_record(
+    needle: str,
+    *,
+    gold_ranks: Sequence[int],
+    first_rank: Optional[int],
+    k: int,
+    n_queries: int,
+    wall_ms: float,
+    signal_ms: Mapping[str, float],
+    error: Optional[str] = None,
+) -> Dict[str, Any]:
+    """One auditable row for the ``--per-query`` receipt.
+
+    Per-arm aggregates alone make the PAIRED basis unauditable: you cannot
+    reconstruct which needle moved between two arms, so a paired test (McNemar
+    on the hit vector, or a per-needle rank delta) cannot be run from the
+    receipt. This record is the missing basis.
+
+    ``recall_hit`` is the exact 0/1 vector a paired test consumes:
+    ``sum(recall_hit) / n_queries`` reconstructs ``recall_at_k`` exactly.
+    ``recall_contribution`` is the same fact pre-divided (``1/n_queries`` on a
+    hit, else 0.0) and carries FULL precision — unrounded on purpose, so the
+    column still sums to recall@k. Note the aggregate ``recall_at_k`` is itself
+    rounded to 4 decimals, so the two agree to within that rounding, not to the
+    last bit.
+    """
+    hit = first_rank is not None and first_rank <= k
+    record: Dict[str, Any] = {
+        "needle": needle,
+        "gold_ranks": list(gold_ranks),
+        "rank_of_first_gold": first_rank,
+        "recall_hit": 1 if hit else 0,
+        "recall_contribution": (1.0 / n_queries if hit and n_queries else 0.0),
+        "wall_ms": round(float(wall_ms), 3),
+        "signal_ms": {name: round(float(ms), 3) for name, ms in sorted(signal_ms.items())},
+    }
+    if error is not None:
+        record["error"] = error
+    return record
+
+
 def layer_signal_medians(per_query_signals: Sequence[Mapping[str, float]]) -> Dict[str, float]:
     """Median ms per signal across a query set. Signals missing from a query
     are OMITTED from that signal's sample, not counted as zero — a tier that
@@ -633,8 +682,14 @@ def run_arm(
     needles: Sequence[Mapping[str, str]],
     gold_by_needle: Mapping[str, set],
     k: int,
+    per_query: bool = False,
 ) -> Dict[str, Any]:
-    """Build a manager for *arm*, run every needle, return the receipt row."""
+    """Build a manager for *arm*, run every needle, return the receipt row.
+
+    ``per_query`` attaches the per-needle basis (see ``per_query_record``).
+    Off by default: the row is byte-identical to the pre-flag shape when it is
+    not set — the key is not emitted at all, not emitted empty.
+    """
     from cymatix_context.backends import encoder_client
     from cymatix_context.config import load_config
     from cymatix_context.context_manager import CymatixContextManager
@@ -664,6 +719,7 @@ def run_arm(
     first_ranks: List[Optional[int]] = []
     all_ranks: List[int] = []
     latencies: List[float] = []
+    records: List[Dict[str, Any]] = []
     per_query_signals: List[Dict[str, float]] = []
     signal_keys: set = set()
     tier_keys: set = set()
@@ -704,11 +760,22 @@ def run_arm(
                         max_genes=k,
                     )
                 except Exception as exc:  # noqa: BLE001
-                    errors.append(f"{name}: {type(exc).__name__}: {exc}")
-                    latencies.append((time.perf_counter() - t0) * 1000.0)
+                    detail = f"{type(exc).__name__}: {exc}"
+                    errors.append(f"{name}: {detail}")
+                    wall_ms = (time.perf_counter() - t0) * 1000.0
+                    latencies.append(wall_ms)
                     first_ranks.append(None)
+                    # A failed query is still a row in the paired basis — it is
+                    # a miss for THIS arm on THIS needle, and dropping it would
+                    # silently shorten the vector a paired test lines up.
+                    records.append(per_query_record(
+                        name, gold_ranks=[], first_rank=None, k=k,
+                        n_queries=len(needles), wall_ms=wall_ms, signal_ms={},
+                        error=detail,
+                    ))
                     continue
-                latencies.append((time.perf_counter() - t0) * 1000.0)
+                wall_ms = (time.perf_counter() - t0) * 1000.0
+                latencies.append(wall_ms)
 
                 scores = dict(manager.genome.last_query_scores or {})
                 if scores:
@@ -720,6 +787,10 @@ def run_arm(
                 sig = dict(getattr(manager.genome, "last_signal_timings", None) or {})
                 per_query_signals.append(sig)
                 signal_keys.update(sig.keys())
+                records.append(per_query_record(
+                    name, gold_ranks=ranks, first_rank=first, k=k,
+                    n_queries=len(needles), wall_ms=wall_ms, signal_ms=sig,
+                ))
 
                 contribs = getattr(manager.genome, "last_tier_contributions", None) or {}
                 for per_gene in contribs.values():
@@ -786,6 +857,8 @@ def run_arm(
         "observables": observables,
         "errors": errors,
     }
+    if per_query:
+        row["per_query"] = records
     return row
 
 
@@ -803,6 +876,11 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                     help="cymatix.toml to load (repo-relative ok); '' = auto-discover")
     ap.add_argument("--out", default="benchmarks/dogfood/erb/receipts/ablation_ladder.json")
     ap.add_argument("--stamp", default="", help="caller-supplied run timestamp")
+    ap.add_argument("--per-query", action="store_true", dest="per_query",
+                    help="emit the per-needle basis in each arm (needle, gold "
+                         "ranks, recall contribution, wall ms, signal ms) so "
+                         "paired arm-vs-arm tests are auditable from the "
+                         "receipt alone; off = receipt shape unchanged")
     args = ap.parse_args(argv)
 
     resolved_path = _resolve(args.resolved)
@@ -871,6 +949,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             needles=needles,
             gold_by_needle=gold_by_needle,
             k=args.k,
+            per_query=args.per_query,
         )
         if row.get("skipped"):
             rows.append(row)
@@ -921,6 +1000,19 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "dropped_arms": dropped,
         "arms": rows,
     }
+    if args.per_query:
+        # Only emitted when asked for — the default receipt shape is unchanged.
+        payload["per_query"] = True
+        payload["per_query_note"] = (
+            "each arm carries a per_query list, one record per needle in the "
+            "run order every arm shares, so arm-vs-arm comparisons can be run "
+            "PAIRED from this receipt alone. recall_hit is the exact 0/1 "
+            "vector a paired test consumes and sum(recall_hit)/n_queries "
+            "reconstructs recall_at_k; recall_contribution is the pre-divided "
+            "form and sums to recall_at_k up to that aggregate's 4-decimal "
+            "rounding. Failed queries appear as miss records carrying 'error', "
+            "so the vectors stay the same length across arms."
+        )
 
     out = _resolve(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)

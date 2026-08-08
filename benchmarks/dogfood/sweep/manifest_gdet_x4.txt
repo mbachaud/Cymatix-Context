@@ -1,0 +1,4 @@
+# sweep pass tag=gdet executor=4  2026-08-06T21:55:47Z  beds=dogfood
+# git b57bef6  daemon_py=F:/tmp/venv-cuda/Scripts/python.exe  devices={'dense': 'cuda:0', 'splade': 'cuda:0', 'sema': 'cuda:0'} | torch 2.11.0+cu128  token 40339e3cd4624880847601b505f4baa9  trim  n~100/level  c=1,2,4,8  level-timeout 5400
+dogfood x4: rc=0 wall=2511s encode_posts=8195 out=benchmarks/dogfood/sweep/n100_gdet_dogfood_x4.json
+pass gdet x4 (beds=dogfood) complete 2026-08-06T22:37:41Z, daemon killed (pid 55264)

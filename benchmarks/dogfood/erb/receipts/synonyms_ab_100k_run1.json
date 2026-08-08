@@ -1,0 +1,1657 @@
+{
+  "tool": "benchmarks/dogfood/erb/ablation_ladder.py",
+  "stamp": "2026-08-06-syn-r1",
+  "bed": "f:\\tmp\\erb_carve\\erb_100k.db",
+  "bed_bytes": 6447882240,
+  "config": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\fork1-encoder-daemon\\cymatix.toml",
+  "git_sha": "b57bef6f86c01a1b1847fac83ff294b9dfe6bf9d",
+  "needles_file": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\fork1-encoder-daemon\\benchmarks\\dogfood\\erb\\needles_resolved_carve.json",
+  "gold_file": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\fork1-encoder-daemon\\benchmarks\\dogfood\\erb\\gold_by_needle_carve.json",
+  "needle_count": 30,
+  "k": 12,
+  "env": {
+    "CYMATIX_ENCODER_URL": "http://127.0.0.1:11439",
+    "CYMATIX_ENCODER_URL_set": true,
+    "CYMATIX_DISABLE_HEADROOM": "1",
+    "CYMATIX_DISABLE_LEARN": "1",
+    "CYMATIX_GENOME_PATH": "f:\\tmp\\erb_carve\\erb_100k.db"
+  },
+  "note": "Ranks read from genome.last_query_scores (post-blend; blend republishes the map at scoring/blend.py:233/:281), ties broken by gene_id ascending. delivered_gold_queries reads window.expressed_gene_ids. Each arm runs one untimed warmup query first so the lazy encoder load is not billed to p50. Latencies are wall ms on a shared box \u2014 within-run relatives only.",
+  "dropped_arms": [
+    {
+      "arm": "no_plr",
+      "knob": "[plr] enabled",
+      "reason": "Not on the build_context path. [plr] enabled is read only by server/routes_context.py:635 -> server/helpers.py:444 _compute_plr_confidence, which decorates the /context/packet response; retrieval/fusion_plr.py:31 states it 'leaves document ranking untouched'. An in-process arm would measure zero by construction, not by evidence."
+    },
+    {
+      "arm": "no_harmonic",
+      "knob": "use_harmonic / [cymatics] harmonic_links",
+      "reason": "No query-time off-switch. `use_harmonic` defaults True at context_manager.py:2895 and knowledge_store.py:2259 and is passed by NO call site (context_manager.py:1945, :1965), so Tier 5 (knowledge_store.py:3119) and _expand_coactivated (knowledge_store.py:3494) are unconditional. [cymatics] harmonic_links gates only the ingest/expression-time edge WRITE inside the `if not read_only` block at context_manager.py:2353."
+    },
+    {
+      "arm": "no_tag_prefix / tag discipline",
+      "knob": "[retrieval] tag_idf_enabled, tag_df_cap, tag_prefix_weight",
+      "reason": "Tier 1 (knowledge_store.py:2697) and Tier 2 (:2720) are unconditional. The #327 knobs default to OFF (config.py:660, :668), so flipping them is an intervention, not an ablation. The only mute is weight-zeroing (tag_prefix_weight=0.0), which silences the contribution while still paying the SQL cost \u2014 that would misreport the cost axis, so no arm is offered."
+    }
+  ],
+  "arms": [
+    {
+      "arm": "baseline",
+      "knobs_changed": {},
+      "gate": "\u2014  (shipped config, untouched)",
+      "arm_valid": true,
+      "validation": "control",
+      "validation_detail": "control arm \u2014 shipped config, no ablation to validate",
+      "recall_at_k": 0.8,
+      "mean_rank_of_gold": 7.07,
+      "median_rank_of_gold": 3.0,
+      "gold_found_queries": 29,
+      "gold_ranks_total": 48,
+      "delivered_gold_queries": 15,
+      "queries_with_scores": 30,
+      "latency_ms": {
+        "p50": 2040.767,
+        "p95": 4292.809
+      },
+      "signal_ms_median": {
+        "ann_body_fetch": 19.619,
+        "ann_dense_leg": 85.849,
+        "body_fetch": 3.649,
+        "coact_expand": 0.107,
+        "dense": 82.463,
+        "fts5": 328.183,
+        "lex_anchor": 43.079,
+        "pki": 40.073,
+        "sema_boost": 0.001,
+        "splade": 374.874,
+        "tag_exact": 55.615,
+        "tag_prefix": 73.966
+      },
+      "n_queries": 30,
+      "warmup_ran": true,
+      "encoder_url": "http://127.0.0.1:11439",
+      "dense_codec_class": "RemoteBGEM3Codec",
+      "remote_dense": true,
+      "observables": {
+        "signal_keys": [
+          "ann_body_fetch",
+          "ann_dense_leg",
+          "body_fetch",
+          "coact_expand",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "sema_boost",
+          "splade",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_keys": [
+          "authority",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "splade",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "classifier_metadata_queries": 30,
+        "synonym_expansions": 12,
+        "cymatics_calls": 30,
+        "cold_tier_queries": 0
+      },
+      "errors": [],
+      "per_query": [
+        {
+          "needle": "erb_000",
+          "gold_ranks": [
+            1,
+            5
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 1484.528,
+          "signal_ms": {
+            "ann_body_fetch": 17.677,
+            "ann_dense_leg": 17.79,
+            "body_fetch": 2.474,
+            "coact_expand": 0.103,
+            "dense": 18.307,
+            "fts5": 293.028,
+            "lex_anchor": 29.362,
+            "pki": 114.178,
+            "sema_boost": 0.001,
+            "splade": 197.846,
+            "tag_exact": 37.043,
+            "tag_prefix": 49.055
+          }
+        },
+        {
+          "needle": "erb_001",
+          "gold_ranks": [
+            12
+          ],
+          "rank_of_first_gold": 12,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 2040.767,
+          "signal_ms": {
+            "ann_body_fetch": 19.1,
+            "ann_dense_leg": 44.297,
+            "body_fetch": 4.055,
+            "coact_expand": 0.134,
+            "dense": 190.423,
+            "fts5": 350.342,
+            "lex_anchor": 33.181,
+            "pki": 33.943,
+            "sema_boost": 0.001,
+            "splade": 381.095,
+            "tag_exact": 55.701,
+            "tag_prefix": 89.651
+          }
+        },
+        {
+          "needle": "erb_003",
+          "gold_ranks": [
+            7,
+            9
+          ],
+          "rank_of_first_gold": 7,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 2349.782,
+          "signal_ms": {
+            "ann_body_fetch": 19.345,
+            "ann_dense_leg": 55.642,
+            "body_fetch": 4.01,
+            "coact_expand": 0.115,
+            "dense": 46.606,
+            "fts5": 403.86,
+            "lex_anchor": 43.929,
+            "pki": 44.298,
+            "sema_boost": 0.001,
+            "splade": 627.452,
+            "tag_exact": 53.148,
+            "tag_prefix": 91.856
+          }
+        },
+        {
+          "needle": "erb_008",
+          "gold_ranks": [
+            5,
+            10
+          ],
+          "rank_of_first_gold": 5,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 4336.43,
+          "signal_ms": {
+            "ann_body_fetch": 20.627,
+            "ann_dense_leg": 95.306,
+            "body_fetch": 3.721,
+            "coact_expand": 0.111,
+            "dense": 82.17,
+            "fts5": 451.941,
+            "lex_anchor": 146.07,
+            "pki": 46.228,
+            "sema_boost": 0.001,
+            "splade": 742.41,
+            "tag_exact": 201.195,
+            "tag_prefix": 220.726
+          }
+        },
+        {
+          "needle": "erb_009",
+          "gold_ranks": [
+            3
+          ],
+          "rank_of_first_gold": 3,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 2384.727,
+          "signal_ms": {
+            "ann_body_fetch": 19.293,
+            "ann_dense_leg": 111.804,
+            "body_fetch": 3.546,
+            "coact_expand": 0.105,
+            "dense": 82.164,
+            "fts5": 385.953,
+            "lex_anchor": 70.721,
+            "pki": 84.738,
+            "sema_boost": 0.001,
+            "splade": 519.168,
+            "tag_exact": 56.362,
+            "tag_prefix": 84.41
+          }
+        },
+        {
+          "needle": "erb_010",
+          "gold_ranks": [
+            1,
+            2
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 1537.021,
+          "signal_ms": {
+            "ann_body_fetch": 20.268,
+            "ann_dense_leg": 86.881,
+            "body_fetch": 2.88,
+            "coact_expand": 0.111,
+            "dense": 81.971,
+            "fts5": 204.97,
+            "lex_anchor": 37.299,
+            "pki": 43.006,
+            "sema_boost": 0.001,
+            "splade": 475.944,
+            "tag_exact": 27.448,
+            "tag_prefix": 37.916
+          }
+        },
+        {
+          "needle": "erb_012",
+          "gold_ranks": [
+            1,
+            4
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 1739.367,
+          "signal_ms": {
+            "ann_body_fetch": 21.235,
+            "ann_dense_leg": 88.061,
+            "body_fetch": 4.511,
+            "coact_expand": 0.103,
+            "dense": 88.906,
+            "fts5": 306.43,
+            "lex_anchor": 12.027,
+            "pki": 30.31,
+            "sema_boost": 0.001,
+            "splade": 428.304,
+            "tag_exact": 19.342,
+            "tag_prefix": 47.488
+          }
+        },
+        {
+          "needle": "erb_013",
+          "gold_ranks": [
+            2,
+            51
+          ],
+          "rank_of_first_gold": 2,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 2115.839,
+          "signal_ms": {
+            "ann_body_fetch": 18.984,
+            "ann_dense_leg": 88.747,
+            "body_fetch": 3.057,
+            "coact_expand": 0.091,
+            "dense": 86.682,
+            "fts5": 314.446,
+            "lex_anchor": 38.254,
+            "pki": 34.791,
+            "sema_boost": 0.001,
+            "splade": 595.53,
+            "tag_exact": 67.389,
+            "tag_prefix": 68.278
+          }
+        },
+        {
+          "needle": "erb_015",
+          "gold_ranks": [
+            13
+          ],
+          "rank_of_first_gold": 13,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 1884.172,
+          "signal_ms": {
+            "ann_body_fetch": 21.134,
+            "ann_dense_leg": 75.909,
+            "body_fetch": 3.704,
+            "coact_expand": 0.136,
+            "dense": 82.587,
+            "fts5": 341.921,
+            "lex_anchor": 39.539,
+            "pki": 36.746,
+            "sema_boost": 0.001,
+            "splade": 350.163,
+            "tag_exact": 55.528,
+            "tag_prefix": 56.483
+          }
+        },
+        {
+          "needle": "erb_019",
+          "gold_ranks": [
+            3,
+            6
+          ],
+          "rank_of_first_gold": 3,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 1632.883,
+          "signal_ms": {
+            "ann_body_fetch": 16.947,
+            "ann_dense_leg": 85.542,
+            "body_fetch": 2.687,
+            "coact_expand": 0.089,
+            "dense": 90.246,
+            "fts5": 285.88,
+            "lex_anchor": 18.859,
+            "pki": 34.845,
+            "sema_boost": 0.001,
+            "splade": 500.36,
+            "tag_exact": 24.559,
+            "tag_prefix": 33.708
+          }
+        },
+        {
+          "needle": "erb_020",
+          "gold_ranks": [
+            3
+          ],
+          "rank_of_first_gold": 3,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 4292.809,
+          "signal_ms": {
+            "ann_body_fetch": 18.757,
+            "ann_dense_leg": 215.141,
+            "body_fetch": 4.115,
+            "coact_expand": 0.119,
+            "dense": 130.24,
+            "fts5": 450.896,
+            "lex_anchor": 170.541,
+            "pki": 39.286,
+            "sema_boost": 0.002,
+            "splade": 550.538,
+            "tag_exact": 229.247,
+            "tag_prefix": 264.141
+          }
+        },
+        {
+          "needle": "erb_021",
+          "gold_ranks": [
+            15,
+            57
+          ],
+          "rank_of_first_gold": 15,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 1489.0,
+          "signal_ms": {
+            "ann_body_fetch": 17.388,
+            "ann_dense_leg": 48.267,
+            "body_fetch": 2.757,
+            "coact_expand": 0.1,
+            "dense": 44.95,
+            "fts5": 251.184,
+            "lex_anchor": 31.531,
+            "pki": 72.354,
+            "sema_boost": 0.001,
+            "splade": 222.928,
+            "tag_exact": 36.482,
+            "tag_prefix": 66.612
+          }
+        },
+        {
+          "needle": "erb_022",
+          "gold_ranks": [
+            1
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 2308.176,
+          "signal_ms": {
+            "ann_body_fetch": 18.219,
+            "ann_dense_leg": 86.155,
+            "body_fetch": 3.676,
+            "coact_expand": 0.123,
+            "dense": 72.814,
+            "fts5": 375.838,
+            "lex_anchor": 62.874,
+            "pki": 35.371,
+            "sema_boost": 0.001,
+            "splade": 484.637,
+            "tag_exact": 57.887,
+            "tag_prefix": 101.031
+          }
+        },
+        {
+          "needle": "erb_024",
+          "gold_ranks": [
+            3,
+            9
+          ],
+          "rank_of_first_gold": 3,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 2285.936,
+          "signal_ms": {
+            "ann_body_fetch": 19.998,
+            "ann_dense_leg": 96.435,
+            "body_fetch": 3.297,
+            "coact_expand": 0.095,
+            "dense": 149.811,
+            "fts5": 423.014,
+            "lex_anchor": 55.289,
+            "pki": 71.294,
+            "sema_boost": 0.001,
+            "splade": 332.409,
+            "tag_exact": 69.16,
+            "tag_prefix": 71.28
+          }
+        },
+        {
+          "needle": "erb_029",
+          "gold_ranks": [
+            3,
+            5
+          ],
+          "rank_of_first_gold": 3,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 1735.711,
+          "signal_ms": {
+            "ann_body_fetch": 19.033,
+            "ann_dense_leg": 86.917,
+            "body_fetch": 3.42,
+            "coact_expand": 0.092,
+            "dense": 113.522,
+            "fts5": 230.979,
+            "lex_anchor": 40.308,
+            "pki": 39.298,
+            "sema_boost": 0.001,
+            "splade": 356.312,
+            "tag_exact": 39.561,
+            "tag_prefix": 72.659
+          }
+        },
+        {
+          "needle": "erb_031",
+          "gold_ranks": [
+            1
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 2655.616,
+          "signal_ms": {
+            "ann_body_fetch": 19.957,
+            "ann_dense_leg": 83.33,
+            "body_fetch": 3.736,
+            "coact_expand": 0.148,
+            "dense": 85.603,
+            "fts5": 378.563,
+            "lex_anchor": 84.07,
+            "pki": 39.968,
+            "sema_boost": 0.001,
+            "splade": 492.436,
+            "tag_exact": 97.85,
+            "tag_prefix": 129.245
+          }
+        },
+        {
+          "needle": "erb_033",
+          "gold_ranks": [
+            1
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 2483.39,
+          "signal_ms": {
+            "ann_body_fetch": 25.7,
+            "ann_dense_leg": 105.437,
+            "body_fetch": 4.282,
+            "coact_expand": 0.113,
+            "dense": 87.539,
+            "fts5": 352.967,
+            "lex_anchor": 85.176,
+            "pki": 45.52,
+            "sema_boost": 0.002,
+            "splade": 414.928,
+            "tag_exact": 93.151,
+            "tag_prefix": 118.99
+          }
+        },
+        {
+          "needle": "erb_036",
+          "gold_ranks": [
+            1,
+            2
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 2083.044,
+          "signal_ms": {
+            "ann_body_fetch": 25.662,
+            "ann_dense_leg": 82.128,
+            "body_fetch": 4.348,
+            "coact_expand": 0.112,
+            "dense": 89.294,
+            "fts5": 304.052,
+            "lex_anchor": 55.833,
+            "pki": 50.522,
+            "sema_boost": 0.001,
+            "splade": 533.737,
+            "tag_exact": 65.199,
+            "tag_prefix": 71.099
+          }
+        },
+        {
+          "needle": "erb_038",
+          "gold_ranks": [
+            1,
+            5
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 2735.714,
+          "signal_ms": {
+            "ann_body_fetch": 32.071,
+            "ann_dense_leg": 173.307,
+            "body_fetch": 5.448,
+            "coact_expand": 0.121,
+            "dense": 86.824,
+            "fts5": 457.615,
+            "lex_anchor": 66.358,
+            "pki": 50.332,
+            "sema_boost": 0.002,
+            "splade": 419.148,
+            "tag_exact": 75.422,
+            "tag_prefix": 119.153
+          }
+        },
+        {
+          "needle": "erb_039",
+          "gold_ranks": [
+            29
+          ],
+          "rank_of_first_gold": 29,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 3118.102,
+          "signal_ms": {
+            "ann_body_fetch": 25.755,
+            "ann_dense_leg": 83.633,
+            "body_fetch": 4.125,
+            "coact_expand": 0.096,
+            "dense": 82.339,
+            "fts5": 476.393,
+            "lex_anchor": 86.275,
+            "pki": 78.923,
+            "sema_boost": 0.002,
+            "splade": 604.511,
+            "tag_exact": 155.444,
+            "tag_prefix": 131.267
+          }
+        },
+        {
+          "needle": "erb_042",
+          "gold_ranks": [
+            1,
+            2
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 1996.243,
+          "signal_ms": {
+            "ann_body_fetch": 23.673,
+            "ann_dense_leg": 236.977,
+            "body_fetch": 6.129,
+            "coact_expand": 0.172,
+            "dense": 81.284,
+            "fts5": 285.919,
+            "lex_anchor": 42.228,
+            "pki": 48.743,
+            "sema_boost": 0.001,
+            "splade": 367.903,
+            "tag_exact": 43.368,
+            "tag_prefix": 75.273
+          }
+        },
+        {
+          "needle": "erb_050",
+          "gold_ranks": [
+            1
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 1935.089,
+          "signal_ms": {
+            "ann_body_fetch": 19.584,
+            "ann_dense_leg": 51.562,
+            "body_fetch": 3.527,
+            "coact_expand": 0.101,
+            "dense": 43.566,
+            "fts5": 350.286,
+            "lex_anchor": 70.108,
+            "pki": 39.986,
+            "sema_boost": 0.001,
+            "splade": 319.99,
+            "tag_exact": 54.787,
+            "tag_prefix": 84.253
+          }
+        },
+        {
+          "needle": "erb_066",
+          "gold_ranks": [
+            12,
+            35
+          ],
+          "rank_of_first_gold": 12,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 2141.258,
+          "signal_ms": {
+            "ann_body_fetch": 25.296,
+            "ann_dense_leg": 64.279,
+            "body_fetch": 4.833,
+            "coact_expand": 0.134,
+            "dense": 60.287,
+            "fts5": 354.559,
+            "lex_anchor": 56.143,
+            "pki": 40.159,
+            "sema_boost": 0.001,
+            "splade": 342.604,
+            "tag_exact": 59.677,
+            "tag_prefix": 102.504
+          }
+        },
+        {
+          "needle": "erb_068",
+          "gold_ranks": [
+            1,
+            2
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 2523.45,
+          "signal_ms": {
+            "ann_body_fetch": 24.611,
+            "ann_dense_leg": 76.641,
+            "body_fetch": 4.25,
+            "coact_expand": 0.108,
+            "dense": 120.681,
+            "fts5": 408.551,
+            "lex_anchor": 55.835,
+            "pki": 46.565,
+            "sema_boost": 0.002,
+            "splade": 368.653,
+            "tag_exact": 68.697,
+            "tag_prefix": 131.562
+          }
+        },
+        {
+          "needle": "erb_072",
+          "gold_ranks": [
+            19,
+            38
+          ],
+          "rank_of_first_gold": 19,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 1586.74,
+          "signal_ms": {
+            "ann_body_fetch": 18.45,
+            "ann_dense_leg": 172.924,
+            "body_fetch": 2.795,
+            "coact_expand": 0.134,
+            "dense": 85.396,
+            "fts5": 253.458,
+            "lex_anchor": 40.905,
+            "pki": 42.524,
+            "sema_boost": 0.001,
+            "splade": 305.406,
+            "tag_exact": 17.786,
+            "tag_prefix": 54.263
+          }
+        },
+        {
+          "needle": "erb_073",
+          "gold_ranks": [
+            1,
+            6
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 1177.741,
+          "signal_ms": {
+            "ann_body_fetch": 17.227,
+            "ann_dense_leg": 75.465,
+            "body_fetch": 2.785,
+            "coact_expand": 0.105,
+            "dense": 76.232,
+            "fts5": 213.872,
+            "lex_anchor": 11.553,
+            "pki": 24.924,
+            "sema_boost": 0.002,
+            "splade": 245.252,
+            "tag_exact": 16.398,
+            "tag_prefix": 28.78
+          }
+        },
+        {
+          "needle": "erb_075",
+          "gold_ranks": [
+            59
+          ],
+          "rank_of_first_gold": 59,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 1578.972,
+          "signal_ms": {
+            "ann_body_fetch": 19.653,
+            "ann_dense_leg": 254.017,
+            "body_fetch": 2.865,
+            "coact_expand": 0.097,
+            "dense": 85.916,
+            "fts5": 288.957,
+            "lex_anchor": 13.57,
+            "pki": 19.845,
+            "sema_boost": 0.001,
+            "splade": 296.113,
+            "tag_exact": 17.311,
+            "tag_prefix": 32.229
+          }
+        },
+        {
+          "needle": "erb_080",
+          "gold_ranks": [],
+          "rank_of_first_gold": null,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 1695.863,
+          "signal_ms": {
+            "ann_body_fetch": 18.619,
+            "ann_dense_leg": 54.051,
+            "body_fetch": 3.622,
+            "coact_expand": 0.107,
+            "dense": 44.366,
+            "fts5": 269.496,
+            "lex_anchor": 48.588,
+            "pki": 25.914,
+            "sema_boost": 0.002,
+            "splade": 251.668,
+            "tag_exact": 65.104,
+            "tag_prefix": 97.787
+          }
+        },
+        {
+          "needle": "erb_087",
+          "gold_ranks": [
+            2,
+            3
+          ],
+          "rank_of_first_gold": 2,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 1146.07,
+          "signal_ms": {
+            "ann_body_fetch": 23.322,
+            "ann_dense_leg": 57.983,
+            "body_fetch": 2.663,
+            "coact_expand": 0.098,
+            "dense": 48.544,
+            "fts5": 173.837,
+            "lex_anchor": 9.822,
+            "pki": 28.497,
+            "sema_boost": 0.001,
+            "splade": 327.092,
+            "tag_exact": 12.845,
+            "tag_prefix": 34.33
+          }
+        },
+        {
+          "needle": "erb_095",
+          "gold_ranks": [
+            3,
+            30
+          ],
+          "rank_of_first_gold": 3,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 1284.083,
+          "signal_ms": {
+            "ann_body_fetch": 18.929,
+            "ann_dense_leg": 94.334,
+            "body_fetch": 2.764,
+            "coact_expand": 0.1,
+            "dense": 64.249,
+            "fts5": 233.358,
+            "lex_anchor": 13.414,
+            "pki": 20.171,
+            "sema_boost": 0.001,
+            "splade": 284.633,
+            "tag_exact": 14.794,
+            "tag_prefix": 37.15
+          }
+        }
+      ]
+    },
+    {
+      "arm": "no_synonyms",
+      "knobs_changed": {
+        "synonym_map": {}
+      },
+      "gate": "knowledge_store.py:1773-1784 `_expand_terms` (called at :2305-2306)",
+      "arm_valid": true,
+      "validation": "synonym_expansion_absent",
+      "validation_detail": "_expand_terms expanded 12 probe terms at baseline, 0 here",
+      "recall_at_k": 0.8333,
+      "mean_rank_of_gold": 5.96,
+      "median_rank_of_gold": 2.5,
+      "gold_found_queries": 28,
+      "gold_ranks_total": 47,
+      "delivered_gold_queries": 15,
+      "queries_with_scores": 30,
+      "latency_ms": {
+        "p50": 1631.964,
+        "p95": 3561.451
+      },
+      "signal_ms_median": {
+        "ann_body_fetch": 19.387,
+        "ann_dense_leg": 17.282,
+        "body_fetch": 3.98,
+        "coact_expand": 0.105,
+        "dense": 17.482,
+        "fts5": 286.654,
+        "lex_anchor": 43.56,
+        "pki": 27.816,
+        "sema_boost": 0.001,
+        "splade": 270.992,
+        "tag_exact": 46.388,
+        "tag_prefix": 74.908
+      },
+      "n_queries": 30,
+      "warmup_ran": true,
+      "encoder_url": "http://127.0.0.1:11439",
+      "dense_codec_class": "RemoteBGEM3Codec",
+      "remote_dense": true,
+      "observables": {
+        "signal_keys": [
+          "ann_body_fetch",
+          "ann_dense_leg",
+          "body_fetch",
+          "coact_expand",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "sema_boost",
+          "splade",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_keys": [
+          "authority",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "splade",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "classifier_metadata_queries": 30,
+        "synonym_expansions": 0,
+        "cymatics_calls": 30,
+        "cold_tier_queries": 0
+      },
+      "errors": [],
+      "per_query": [
+        {
+          "needle": "erb_000",
+          "gold_ranks": [
+            1,
+            5
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 1396.375,
+          "signal_ms": {
+            "ann_body_fetch": 17.133,
+            "ann_dense_leg": 17.072,
+            "body_fetch": 3.262,
+            "coact_expand": 0.097,
+            "dense": 17.066,
+            "fts5": 263.771,
+            "lex_anchor": 28.197,
+            "pki": 134.431,
+            "sema_boost": 0.001,
+            "splade": 175.625,
+            "tag_exact": 34.669,
+            "tag_prefix": 51.136
+          }
+        },
+        {
+          "needle": "erb_001",
+          "gold_ranks": [
+            12
+          ],
+          "rank_of_first_gold": 12,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 1559.973,
+          "signal_ms": {
+            "ann_body_fetch": 18.716,
+            "ann_dense_leg": 17.603,
+            "body_fetch": 3.447,
+            "coact_expand": 0.094,
+            "dense": 17.278,
+            "fts5": 312.045,
+            "lex_anchor": 38.778,
+            "pki": 20.822,
+            "sema_boost": 0.001,
+            "splade": 157.098,
+            "tag_exact": 50.941,
+            "tag_prefix": 74.041
+          }
+        },
+        {
+          "needle": "erb_003",
+          "gold_ranks": [
+            7,
+            9
+          ],
+          "rank_of_first_gold": 7,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 1851.019,
+          "signal_ms": {
+            "ann_body_fetch": 18.627,
+            "ann_dense_leg": 17.285,
+            "body_fetch": 4.276,
+            "coact_expand": 0.105,
+            "dense": 17.526,
+            "fts5": 320.901,
+            "lex_anchor": 46.251,
+            "pki": 27.805,
+            "sema_boost": 0.001,
+            "splade": 304.975,
+            "tag_exact": 53.672,
+            "tag_prefix": 101.597
+          }
+        },
+        {
+          "needle": "erb_008",
+          "gold_ranks": [
+            5,
+            10
+          ],
+          "rank_of_first_gold": 5,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 3862.224,
+          "signal_ms": {
+            "ann_body_fetch": 25.478,
+            "ann_dense_leg": 17.962,
+            "body_fetch": 3.832,
+            "coact_expand": 0.108,
+            "dense": 17.707,
+            "fts5": 376.903,
+            "lex_anchor": 157.264,
+            "pki": 32.431,
+            "sema_boost": 0.001,
+            "splade": 337.611,
+            "tag_exact": 261.452,
+            "tag_prefix": 231.9
+          }
+        },
+        {
+          "needle": "erb_009",
+          "gold_ranks": [
+            3
+          ],
+          "rank_of_first_gold": 3,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 1810.891,
+          "signal_ms": {
+            "ann_body_fetch": 18.883,
+            "ann_dense_leg": 17.001,
+            "body_fetch": 2.939,
+            "coact_expand": 0.095,
+            "dense": 44.109,
+            "fts5": 332.477,
+            "lex_anchor": 29.207,
+            "pki": 61.495,
+            "sema_boost": 0.001,
+            "splade": 392.145,
+            "tag_exact": 40.595,
+            "tag_prefix": 64.404
+          }
+        },
+        {
+          "needle": "erb_010",
+          "gold_ranks": [
+            1,
+            2
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 1128.473,
+          "signal_ms": {
+            "ann_body_fetch": 19.096,
+            "ann_dense_leg": 17.198,
+            "body_fetch": 2.853,
+            "coact_expand": 0.098,
+            "dense": 17.924,
+            "fts5": 166.46,
+            "lex_anchor": 39.074,
+            "pki": 26.469,
+            "sema_boost": 0.001,
+            "splade": 201.044,
+            "tag_exact": 28.328,
+            "tag_prefix": 31.844
+          }
+        },
+        {
+          "needle": "erb_012",
+          "gold_ranks": [
+            1,
+            5
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 1256.106,
+          "signal_ms": {
+            "ann_body_fetch": 18.476,
+            "ann_dense_leg": 17.348,
+            "body_fetch": 3.019,
+            "coact_expand": 0.1,
+            "dense": 62.519,
+            "fts5": 196.132,
+            "lex_anchor": 10.912,
+            "pki": 18.47,
+            "sema_boost": 0.001,
+            "splade": 200.001,
+            "tag_exact": 10.974,
+            "tag_prefix": 42.6
+          }
+        },
+        {
+          "needle": "erb_013",
+          "gold_ranks": [
+            2,
+            51
+          ],
+          "rank_of_first_gold": 2,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 1648.965,
+          "signal_ms": {
+            "ann_body_fetch": 18.878,
+            "ann_dense_leg": 17.575,
+            "body_fetch": 4.128,
+            "coact_expand": 0.125,
+            "dense": 17.337,
+            "fts5": 300.243,
+            "lex_anchor": 46.887,
+            "pki": 18.356,
+            "sema_boost": 0.001,
+            "splade": 287.155,
+            "tag_exact": 47.148,
+            "tag_prefix": 75.347
+          }
+        },
+        {
+          "needle": "erb_015",
+          "gold_ranks": [
+            11
+          ],
+          "rank_of_first_gold": 11,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 1551.999,
+          "signal_ms": {
+            "ann_body_fetch": 19.367,
+            "ann_dense_leg": 17.087,
+            "body_fetch": 3.672,
+            "coact_expand": 0.106,
+            "dense": 187.804,
+            "fts5": 227.832,
+            "lex_anchor": 42.421,
+            "pki": 37.141,
+            "sema_boost": 0.001,
+            "splade": 272.892,
+            "tag_exact": 42.881,
+            "tag_prefix": 48.165
+          }
+        },
+        {
+          "needle": "erb_019",
+          "gold_ranks": [
+            3,
+            6
+          ],
+          "rank_of_first_gold": 3,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 1185.825,
+          "signal_ms": {
+            "ann_body_fetch": 17.535,
+            "ann_dense_leg": 17.563,
+            "body_fetch": 3.127,
+            "coact_expand": 0.1,
+            "dense": 17.406,
+            "fts5": 225.889,
+            "lex_anchor": 18.791,
+            "pki": 21.194,
+            "sema_boost": 0.001,
+            "splade": 272.62,
+            "tag_exact": 25.292,
+            "tag_prefix": 36.687
+          }
+        },
+        {
+          "needle": "erb_020",
+          "gold_ranks": [
+            3
+          ],
+          "rank_of_first_gold": 3,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 3561.451,
+          "signal_ms": {
+            "ann_body_fetch": 19.034,
+            "ann_dense_leg": 17.515,
+            "body_fetch": 4.371,
+            "coact_expand": 0.157,
+            "dense": 17.267,
+            "fts5": 370.734,
+            "lex_anchor": 163.338,
+            "pki": 24.729,
+            "sema_boost": 0.001,
+            "splade": 269.364,
+            "tag_exact": 250.839,
+            "tag_prefix": 254.252
+          }
+        },
+        {
+          "needle": "erb_021",
+          "gold_ranks": [
+            15,
+            57
+          ],
+          "rank_of_first_gold": 15,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 1321.352,
+          "signal_ms": {
+            "ann_body_fetch": 24.68,
+            "ann_dense_leg": 16.968,
+            "body_fetch": 3.545,
+            "coact_expand": 0.124,
+            "dense": 17.303,
+            "fts5": 232.343,
+            "lex_anchor": 28.464,
+            "pki": 60.48,
+            "sema_boost": 0.001,
+            "splade": 143.187,
+            "tag_exact": 39.39,
+            "tag_prefix": 71.182
+          }
+        },
+        {
+          "needle": "erb_022",
+          "gold_ranks": [
+            1
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 1906.772,
+          "signal_ms": {
+            "ann_body_fetch": 18.789,
+            "ann_dense_leg": 17.127,
+            "body_fetch": 4.69,
+            "coact_expand": 0.111,
+            "dense": 17.26,
+            "fts5": 322.482,
+            "lex_anchor": 70.67,
+            "pki": 27.547,
+            "sema_boost": 0.001,
+            "splade": 293.424,
+            "tag_exact": 83.414,
+            "tag_prefix": 96.265
+          }
+        },
+        {
+          "needle": "erb_024",
+          "gold_ranks": [
+            3,
+            12
+          ],
+          "rank_of_first_gold": 3,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 2056.763,
+          "signal_ms": {
+            "ann_body_fetch": 20.938,
+            "ann_dense_leg": 16.954,
+            "body_fetch": 3.65,
+            "coact_expand": 0.096,
+            "dense": 49.709,
+            "fts5": 370.934,
+            "lex_anchor": 55.673,
+            "pki": 49.024,
+            "sema_boost": 0.002,
+            "splade": 469.125,
+            "tag_exact": 72.589,
+            "tag_prefix": 88.896
+          }
+        },
+        {
+          "needle": "erb_029",
+          "gold_ranks": [
+            3,
+            5
+          ],
+          "rank_of_first_gold": 3,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 1402.822,
+          "signal_ms": {
+            "ann_body_fetch": 21.228,
+            "ann_dense_leg": 16.887,
+            "body_fetch": 4.176,
+            "coact_expand": 0.109,
+            "dense": 17.255,
+            "fts5": 229.338,
+            "lex_anchor": 38.334,
+            "pki": 28.722,
+            "sema_boost": 0.001,
+            "splade": 202.542,
+            "tag_exact": 44.195,
+            "tag_prefix": 76.216
+          }
+        },
+        {
+          "needle": "erb_031",
+          "gold_ranks": [
+            1
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 2279.335,
+          "signal_ms": {
+            "ann_body_fetch": 21.534,
+            "ann_dense_leg": 17.381,
+            "body_fetch": 5.257,
+            "coact_expand": 0.109,
+            "dense": 17.416,
+            "fts5": 338.815,
+            "lex_anchor": 82.198,
+            "pki": 27.666,
+            "sema_boost": 0.001,
+            "splade": 343.819,
+            "tag_exact": 100.87,
+            "tag_prefix": 133.326
+          }
+        },
+        {
+          "needle": "erb_033",
+          "gold_ranks": [
+            1
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 2153.489,
+          "signal_ms": {
+            "ann_body_fetch": 19.829,
+            "ann_dense_leg": 17.717,
+            "body_fetch": 4.912,
+            "coact_expand": 0.096,
+            "dense": 17.6,
+            "fts5": 323.845,
+            "lex_anchor": 97.915,
+            "pki": 38.06,
+            "sema_boost": 0.001,
+            "splade": 296.082,
+            "tag_exact": 123.456,
+            "tag_prefix": 120.673
+          }
+        },
+        {
+          "needle": "erb_036",
+          "gold_ranks": [
+            1,
+            2
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 1631.964,
+          "signal_ms": {
+            "ann_body_fetch": 20.71,
+            "ann_dense_leg": 17.087,
+            "body_fetch": 4.711,
+            "coact_expand": 0.105,
+            "dense": 40.934,
+            "fts5": 279.027,
+            "lex_anchor": 60.202,
+            "pki": 35.926,
+            "sema_boost": 0.001,
+            "splade": 274.977,
+            "tag_exact": 61.467,
+            "tag_prefix": 72.133
+          }
+        },
+        {
+          "needle": "erb_038",
+          "gold_ranks": [
+            1,
+            4
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 1988.248,
+          "signal_ms": {
+            "ann_body_fetch": 20.518,
+            "ann_dense_leg": 17.041,
+            "body_fetch": 4.78,
+            "coact_expand": 0.116,
+            "dense": 42.704,
+            "fts5": 354.604,
+            "lex_anchor": 44.699,
+            "pki": 29.224,
+            "sema_boost": 0.001,
+            "splade": 351.084,
+            "tag_exact": 45.629,
+            "tag_prefix": 87.31
+          }
+        },
+        {
+          "needle": "erb_039",
+          "gold_ranks": [],
+          "rank_of_first_gold": null,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 2718.686,
+          "signal_ms": {
+            "ann_body_fetch": 20.797,
+            "ann_dense_leg": 17.398,
+            "body_fetch": 5.057,
+            "coact_expand": 0.102,
+            "dense": 53.819,
+            "fts5": 416.651,
+            "lex_anchor": 84.713,
+            "pki": 32.193,
+            "sema_boost": 0.001,
+            "splade": 499.164,
+            "tag_exact": 94.938,
+            "tag_prefix": 130.655
+          }
+        },
+        {
+          "needle": "erb_042",
+          "gold_ranks": [
+            1,
+            2
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 1520.077,
+          "signal_ms": {
+            "ann_body_fetch": 19.179,
+            "ann_dense_leg": 17.223,
+            "body_fetch": 4.208,
+            "coact_expand": 0.099,
+            "dense": 17.713,
+            "fts5": 266.914,
+            "lex_anchor": 41.368,
+            "pki": 39.044,
+            "sema_boost": 0.001,
+            "splade": 238.591,
+            "tag_exact": 38.576,
+            "tag_prefix": 74.469
+          }
+        },
+        {
+          "needle": "erb_050",
+          "gold_ranks": [
+            1
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 1817.597,
+          "signal_ms": {
+            "ann_body_fetch": 19.987,
+            "ann_dense_leg": 17.526,
+            "body_fetch": 6.121,
+            "coact_expand": 0.143,
+            "dense": 17.213,
+            "fts5": 334.272,
+            "lex_anchor": 50.85,
+            "pki": 27.519,
+            "sema_boost": 0.001,
+            "splade": 208.238,
+            "tag_exact": 50.837,
+            "tag_prefix": 82.059
+          }
+        },
+        {
+          "needle": "erb_066",
+          "gold_ranks": [
+            5,
+            22
+          ],
+          "rank_of_first_gold": 5,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 2217.783,
+          "signal_ms": {
+            "ann_body_fetch": 20.112,
+            "ann_dense_leg": 17.487,
+            "body_fetch": 5.179,
+            "coact_expand": 0.125,
+            "dense": 111.65,
+            "fts5": 294.281,
+            "lex_anchor": 47.84,
+            "pki": 27.827,
+            "sema_boost": 0.001,
+            "splade": 606.325,
+            "tag_exact": 54.349,
+            "tag_prefix": 99.538
+          }
+        },
+        {
+          "needle": "erb_068",
+          "gold_ranks": [
+            1,
+            2
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 2278.132,
+          "signal_ms": {
+            "ann_body_fetch": 19.48,
+            "ann_dense_leg": 17.586,
+            "body_fetch": 5.189,
+            "coact_expand": 0.111,
+            "dense": 17.981,
+            "fts5": 413.61,
+            "lex_anchor": 57.959,
+            "pki": 37.414,
+            "sema_boost": 0.001,
+            "splade": 295.846,
+            "tag_exact": 70.793,
+            "tag_prefix": 141.386
+          }
+        },
+        {
+          "needle": "erb_072",
+          "gold_ranks": [
+            19,
+            38
+          ],
+          "rank_of_first_gold": 19,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 1295.098,
+          "signal_ms": {
+            "ann_body_fetch": 20.488,
+            "ann_dense_leg": 16.965,
+            "body_fetch": 3.054,
+            "coact_expand": 0.091,
+            "dense": 38.779,
+            "fts5": 239.161,
+            "lex_anchor": 21.506,
+            "pki": 46.854,
+            "sema_boost": 0.001,
+            "splade": 238.143,
+            "tag_exact": 16.651,
+            "tag_prefix": 49.697
+          }
+        },
+        {
+          "needle": "erb_073",
+          "gold_ranks": [
+            1,
+            6
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 958.813,
+          "signal_ms": {
+            "ann_body_fetch": 19.013,
+            "ann_dense_leg": 17.368,
+            "body_fetch": 3.021,
+            "coact_expand": 0.098,
+            "dense": 17.161,
+            "fts5": 184.323,
+            "lex_anchor": 13.026,
+            "pki": 19.415,
+            "sema_boost": 0.001,
+            "splade": 152.706,
+            "tag_exact": 40.536,
+            "tag_prefix": 32.678
+          }
+        },
+        {
+          "needle": "erb_075",
+          "gold_ranks": [
+            59
+          ],
+          "rank_of_first_gold": 59,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 1124.765,
+          "signal_ms": {
+            "ann_body_fetch": 18.32,
+            "ann_dense_leg": 17.386,
+            "body_fetch": 2.986,
+            "coact_expand": 0.11,
+            "dense": 17.163,
+            "fts5": 268.188,
+            "lex_anchor": 14.319,
+            "pki": 16.732,
+            "sema_boost": 0.001,
+            "splade": 207.862,
+            "tag_exact": 17.163,
+            "tag_prefix": 30.241
+          }
+        },
+        {
+          "needle": "erb_080",
+          "gold_ranks": [],
+          "rank_of_first_gold": null,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 1563.258,
+          "signal_ms": {
+            "ann_body_fetch": 19.407,
+            "ann_dense_leg": 17.279,
+            "body_fetch": 4.228,
+            "coact_expand": 0.104,
+            "dense": 17.438,
+            "fts5": 259.205,
+            "lex_anchor": 84.913,
+            "pki": 19.573,
+            "sema_boost": 0.001,
+            "splade": 179.253,
+            "tag_exact": 66.658,
+            "tag_prefix": 80.053
+          }
+        },
+        {
+          "needle": "erb_087",
+          "gold_ranks": [
+            2,
+            3
+          ],
+          "rank_of_first_gold": 2,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 947.97,
+          "signal_ms": {
+            "ann_body_fetch": 18.363,
+            "ann_dense_leg": 17.192,
+            "body_fetch": 2.769,
+            "coact_expand": 0.104,
+            "dense": 17.334,
+            "fts5": 159.61,
+            "lex_anchor": 12.072,
+            "pki": 24.582,
+            "sema_boost": 0.001,
+            "splade": 240.558,
+            "tag_exact": 10.9,
+            "tag_prefix": 30.549
+          }
+        },
+        {
+          "needle": "erb_095",
+          "gold_ranks": [
+            3,
+            30
+          ],
+          "rank_of_first_gold": 3,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 1060.922,
+          "signal_ms": {
+            "ann_body_fetch": 40.761,
+            "ann_dense_leg": 17.243,
+            "body_fetch": 2.769,
+            "coact_expand": 0.103,
+            "dense": 17.161,
+            "fts5": 214.423,
+            "lex_anchor": 14.833,
+            "pki": 16.662,
+            "sema_boost": 0.001,
+            "splade": 203.073,
+            "tag_exact": 12.679,
+            "tag_prefix": 34.183
+          }
+        }
+      ]
+    }
+  ],
+  "per_query": true,
+  "per_query_note": "each arm carries a per_query list, one record per needle in the run order every arm shares, so arm-vs-arm comparisons can be run PAIRED from this receipt alone. recall_hit is the exact 0/1 vector a paired test consumes and sum(recall_hit)/n_queries reconstructs recall_at_k; recall_contribution is the pre-divided form and sums to recall_at_k up to that aggregate's 4-decimal rounding. Failed queries appear as miss records carrying 'error', so the vectors stay the same length across arms."
+}
