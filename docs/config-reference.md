@@ -538,6 +538,7 @@ written by each path silently diverge for long passages.
 backend = "cpu"
 splade_enabled = true
 rerank_model = "cross-encoder/ms-marco-MiniLM-L-6-v2"
+rerank_enabled = false
 colbert_enabled = false
 entity_graph = true
 sema_embed_on_ingest = true
@@ -741,6 +742,7 @@ which stay additive) lives in
 | `coact_reserved_slots` | `int` | `0` | #223 co-activation reserved budget: reserve up to N of the final 2×max_genes output slots for newly graph-promoted (co-activated) docs so a link-discounted gold isn't truncated by lexical incumbents. 0 = legacy (no reservation). CYMATIX_SHARD_COACT_RESERVE (int) overrides. coact_link_boost is the discount a linked doc enters at (× its source doc's corrected score); 0.5 == the shipped constant. |
 | `coact_link_boost` | `float` | `0.5` |  |
 | `doc_type_boost_mode` | `str` | `"additive"` | ── #121 doc-type boost mode (#264) ─────────────────────────────── Router-only. Controls how the README/CLAUDE/INDEX summary-doc lift (#121) is applied on the cross-shard merge. DEFAULT-INERT: "additive" reproduces the shipped fixed ×DOC_TYPE_BOOST (1.15) post-multiply on the IDF-corrected score, byte-for-byte. The 1.15× multiplier was calibrated on additive/BM25-scale per-shard margins; production per-shard Genomes now score in RRF (fusion_mode="rrf"), which compresses intra-shard margins to ~1.6% so the fixed multiplier becomes decisive on nearly every candidate pair (#264). Two honest RRF-native alternatives, both bench-gated behind this knob: "off"  — skip the boost entirely (the flip case resolves because the unboosted impl file already out-ranks the README). "rank" — apply the boost as a rank-domain tier input to the cross-shard Fuser (#264 candidate b) instead of a magnitude multiply; final merge sorts primarily by the rank-fused score so a summary doc can only reorder genuine rank near-ties, never leapfrog a doc that dominates the shard ranks. Scale-free under both fusion modes. Inert on blob/single-shard paths (no ShardRouter constructed). |
+| `authority_path_selectivity` | `bool` | `false` | #327: scale the +2.0 source-authority boost by how selective the matching query term is across source paths. Off = today's behaviour byte-for-byte, where a query naming the project boosts every gene in it equally (measured: "cymatix" matches 88% of dogfood paths). |
 | `rerank_enabled` | `bool` | `false` | Master switch; false = Stage 3 skipped entirely |
 | `rerank_depth` | `int` | `50` | Candidates fed through the cross-encoder before the pool is cut back to max_genes. Must be >= 1 (enforced in __post_init__) — rerank over zero candidates is a config error, not a silent no-op. |
 | `rerank_model` | `str` | `"cross-encoder/ms-marco-MiniLM-L-6-v2"` | HF cross-encoder model ID — shares the literal with IngestionConfig.rerank_model above |
@@ -1577,7 +1579,8 @@ dashboard_path = "/dashboard"           # Appended to http://{host}:{port} for t
 [ingestion]
 backend = "cpu"                         # "ollama" (LLM, slow) | "cpu" (spaCy+regex, fast) | "hybrid"
 splade_enabled = true                   # Phase 2: SPLADE sparse expansion at index time
-rerank_model = "cross-encoder/ms-marco-MiniLM-L-6-v2"  # legacy: feeds DeBERTaRibosome only
+rerank_model = "cross-encoder/ms-marco-MiniLM-L-6-v2"
+rerank_enabled = false                  # Phase 3: enable pretrained cross-encoder reranking
 colbert_enabled = false                 # Phase 4: ColBERT late interaction (optional)
 entity_graph = true                     # Phase 5: entity-based co-activation links
 dense_passage_char_cap = 2000           # #207 dense fast-follow (2026-07-10): BGE-M3 passage char cap; must match [retrieval] dense_model's codec on all 3 encode paths

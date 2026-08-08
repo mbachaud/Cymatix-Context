@@ -470,25 +470,49 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
             genome_ready = False
             log.warning("/health genome stats failed", exc_info=True)
 
-        # Late-bind via the package module so monkeypatch in tests
-        # (``monkeypatch.setattr(server_mod, "_probe_upstream", ...)``)
-        # takes effect.
-        import cymatix_context.server as _srv
-        _probe_fn = getattr(_srv, "_probe_upstream", _helpers._probe_upstream)
-        upstream_probe = await asyncio.to_thread(
-            _probe_fn, config.server.upstream
+        # Three-state upstream semantics (2026-07-30): the upstream model
+        # server is a dependency only while a ribosome backend is live.
+        #   active + reachable   -> upstream_state "ok"
+        #   active + unreachable -> "unreachable" — the ONLY case that
+        #                           degrades on this axis
+        #   ribosome disabled    -> "inactive" — not a dependency; the
+        #                           probe is skipped so a down Ollama does
+        #                           not add probe latency to every health
+        #                           poll on an LLM-free profile
+        # Keyed on the RUNTIME backend (same signal as the `ribosome`
+        # field above), not config, so programmatically wired backends
+        # report honestly.
+        if ribosome_disabled:
+            upstream_reachable = None
+            upstream_state = "inactive"
+        else:
+            # Late-bind via the package module so monkeypatch in tests
+            # (``monkeypatch.setattr(server_mod, "_probe_upstream", ...)``)
+            # takes effect.
+            import cymatix_context.server as _srv
+            _probe_fn = getattr(_srv, "_probe_upstream", _helpers._probe_upstream)
+            upstream_probe = await asyncio.to_thread(
+                _probe_fn, config.server.upstream
+            )
+            upstream_reachable = bool(upstream_probe.get("reachable"))
+            upstream_state = "ok" if upstream_reachable else "unreachable"
+        status = (
+            "ok" if genome_ready and upstream_state != "unreachable" else "degraded"
         )
-        upstream_reachable = bool(upstream_probe.get("reachable"))
-        status = "ok" if genome_ready and upstream_reachable else "degraded"
 
-        if status == "ok":
-            message = "Cymatix and its upstream model server answered readiness checks."
-        elif not genome_ready and not upstream_reachable:
+        if not genome_ready and upstream_state == "unreachable":
             message = "Genome stats failed and the upstream model server is unreachable."
         elif not genome_ready:
             message = "Genome stats failed; inspect the local knowledge store."
-        else:
+        elif upstream_state == "unreachable":
             message = "Upstream model server is unreachable; final chat proxy calls will fail."
+        elif upstream_state == "inactive":
+            message = (
+                "Cymatix answered readiness checks; ribosome layer inactive — "
+                "upstream model server not probed (only chat-proxy calls would need it)."
+            )
+        else:
+            message = "Cymatix and its upstream model server answered readiness checks."
 
         from ..hardware import get_hardware
         hw_info = get_hardware()
@@ -567,6 +591,7 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
             "genes": total_genes,
             "upstream": config.server.upstream,
             "upstream_reachable": upstream_reachable,
+            "upstream_state": upstream_state,
             "hardware": hardware_block,
             "calibration": calibration_block,
             "know_calibration": know_calibration_block,

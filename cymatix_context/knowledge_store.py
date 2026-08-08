@@ -682,6 +682,7 @@ class KnowledgeStore:
         # solo / per-shard Genome ignores it — the boost only binds on the
         # cross-shard merge path).
         doc_type_boost_mode: str = "additive",
+        authority_path_selectivity: bool = False,
         pki_weight: float = 1.0,
         # ── Issue #341: query-time cross-encoder rerank (default-OFF) ──
         # Pre-cap rerank seam. With rerank_enabled=False (and no per-query
@@ -754,6 +755,8 @@ class KnowledgeStore:
         self._bm25_prefilter_size = int(bm25_prefilter_size)
         # A4 / #205: Tier-3 FTS content fetch depth override (0 = auto = limit*2).
         self._fts5_candidate_depth = int(fts5_candidate_depth) if fts5_candidate_depth else 0
+        # #327: scale the source-authority boost by matching-term selectivity.
+        self._authority_path_selectivity = bool(authority_path_selectivity)
         # Step 4 — BGE-M3 dense vectors + ANN threshold (2026-05-08).
         self._dense_embedding_enabled: bool = bool(dense_embedding_enabled)
         self._dense_embedding_dim: int = int(dense_embedding_dim)
@@ -1962,6 +1965,52 @@ class KnowledgeStore:
         gene_ids = list(gene_scores.keys())
         lower_terms = [t.lower() for t in query_terms]
 
+        # #327: the source-authority signal below matches query terms against
+        # the whole source_id, which includes the ingest root and repository
+        # directory. A query naming the project therefore matches EVERY gene in
+        # it: measured on the dogfood bed, "cymatix" hits 88.0% of paths while
+        # "fusion" hits 0.8%. The 88% case is a constant, not a signal — it
+        # saturates the score (4.00 of a ~4.15 total, identical across the top
+        # six) and leaves the retrieval tiers to fight over the remainder.
+        #
+        # `authority_path_selectivity` scales the boost by how selective the
+        # matching term actually is, so a term matching most of the corpus
+        # contributes ~nothing and a rare one contributes fully. This is
+        # self-limiting: it needs no stopword list and also defuses generic
+        # path tokens like "test", "src" and "docs".
+        #
+        # Default OFF — flipping it is a scoring change and stays bench-gated.
+        _selectivity_on = bool(getattr(self, "_authority_path_selectivity", False))
+        _sel_cache: Dict[str, float] = {}
+
+        def _term_selectivity(term: str) -> float:
+            """1.0 when a term is rare across source paths, ->0 when ubiquitous.
+
+            Computed once per term per query against the genes table, so the
+            cost is one COUNT per distinct term rather than per candidate.
+            """
+            if term in _sel_cache:
+                return _sel_cache[term]
+            weight = 1.0
+            try:
+                total = self.read_conn.execute(
+                    "SELECT COUNT(*) FROM genes"
+                ).fetchone()[0] or 0
+                if total > 0:
+                    hits = self.read_conn.execute(
+                        "SELECT COUNT(*) FROM genes WHERE lower(source_id) LIKE ?",
+                        (f"%{term}%",),
+                    ).fetchone()[0] or 0
+                    frac = hits / total
+                    # Linear falloff: full weight below 1% of paths, zero at
+                    # 50% or above. Deliberately not IDF's log curve — we want
+                    # a hard floor on corpus-wide terms, not a long tail.
+                    weight = 0.0 if frac >= 0.5 else max(0.0, 1.0 - (frac / 0.5))
+            except Exception:
+                weight = 1.0
+            _sel_cache[term] = weight
+            return weight
+
         # Fetch source_id, tags, signals for all candidates. Batched to stay
         # under SQLite's IN-clause placeholder cap — see _iter_in_batches.
         rows = []
@@ -1978,8 +2027,16 @@ class KnowledgeStore:
 
             # 1. Source authority: query term in path
             source = (r["source_id"] or "").lower()
-            if source and any(t in source for t in lower_terms):
-                boost += 2.0
+            if source:
+                matched = [t for t in lower_terms if t in source]
+                if matched:
+                    if _selectivity_on:
+                        # Credit the most selective term that matched, rather
+                        # than summing: a path matching both "cymatix" and
+                        # "fusion" is authoritative because of "fusion".
+                        boost += 2.0 * max(_term_selectivity(t) for t in matched)
+                    else:
+                        boost += 2.0
 
             # 2. Domain primacy: query term in top-3 tags domains
             try:
