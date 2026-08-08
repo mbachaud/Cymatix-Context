@@ -105,7 +105,7 @@ backend on `:11437`, and the system-tray icon.
 
 ```bash
 pip install -e ".[all,launcher,launcher-tray,otel]"
-python -m spacy download en_core_web_sm
+python -m spacy download en_core_web_sm-3.8.0 --direct
 ```
 
 `[all]` already includes `launcher` and `otel`, but listing them
@@ -400,23 +400,27 @@ The `[cpu]` extra installs the spaCy *library*, not the *pipeline*. After
 installing `[cpu]`:
 
 ```bash
+python -m spacy download en_core_web_sm-3.8.0 --direct
+```
+
+The build is pinned so the install is reproducible, and
+[`deploy/windows/setup-cymatix.ps1`](../deploy/windows/setup-cymatix.ps1)
+installs that same pinned build. A pinned build must match the installed
+spaCy minor, because `--direct` skips spaCy's compatibility check: the
+`3.8.0` pipeline goes with the `spacy>=3.8` floor in `pyproject.toml`. On
+a different spaCy minor, drop the version and let spaCy resolve the
+matching build from its compatibility table:
+
+```bash
 python -m spacy download en_core_web_sm
 ```
 
 Unlike the other entries in this section, this one is not a silent
 degradation: without the pipeline the `CpuTagger` ingest path fails
 outright. `_get_nlp()` raises at first ingest, every `/ingest` POST
-returns 422 with an error body naming this exact command, and nothing is
-ingested until the pipeline is installed (issue #313). The test suite
-skips its ingest-path tests with the same message.
-
-For byte-reproducible installs, pin the build instead. A pinned build
-must match the installed spaCy minor, because `--direct` skips spaCy's
-compatibility check:
-
-```bash
-python -m spacy download en_core_web_sm-3.8.0 --direct
-```
+returns 422 with an error body naming the unpinned form of this command,
+and nothing is ingested until the pipeline is installed (issue #313). The
+test suite skips its ingest-path tests with the same message.
 
 `spacy download` fetches from github.com release assets and does not
 honor `PIP_INDEX_URL`. Air-gapped or proxy-restricted environments can
