@@ -13,7 +13,9 @@ import pytest
 from fastapi.testclient import TestClient
 
 import cymatix_context.server as server_mod
-from cymatix_context.config import CymatixConfig, GenomeConfig, KnowConfig, RibosomeConfig, ServerConfig
+import cymatix_context.context_packet as context_packet_mod
+from cymatix_context.config import CymatixConfig, GenomeConfig, KnowConfig, PLRConfig, RibosomeConfig, ServerConfig
+from cymatix_context.schemas import ContextPacket
 from cymatix_context.server import create_app
 
 from tests.conftest import make_client, make_cymatix_config
@@ -1257,6 +1259,44 @@ class TestContextPacketEndpoint:
         assert resp.status_code == 400
         data = resp.json()
         assert "error" in data
+
+    def test_packet_forwards_session_delivery_controls(self, monkeypatch):
+        captured = {}
+
+        def fake_build_context_packet(query, **kwargs):
+            captured["query"] = query
+            captured.update(kwargs)
+            return ContextPacket(task_type=kwargs["task_type"], query=query)
+
+        monkeypatch.setattr(
+            context_packet_mod,
+            "build_context_packet",
+            fake_build_context_packet,
+        )
+        test_client = make_client(
+            make_cymatix_config(plr=PLRConfig(enabled=False))
+        )
+
+        response = test_client.post(
+            "/context/packet",
+            json={
+                "query": "packet delivery",
+                "session_id": "  bench-session  ",
+                "ignore_delivered": True,
+            },
+        )
+
+        assert response.status_code == 200
+        assert captured["session_id"] == "bench-session"
+        assert captured["ignore_delivered"] is True
+
+    def test_packet_rejects_non_string_session_id(self, client):
+        response = client.post(
+            "/context/packet",
+            json={"query": "packet delivery", "session_id": 42},
+        )
+
+        assert response.status_code == 400
 
     def test_packet_whitespace_only_query_returns_400(self, client):
         resp = client.post("/context/packet", json={"query": "   \n\t  "})

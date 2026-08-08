@@ -4,9 +4,89 @@ from __future__ import annotations
 
 from cymatix_context.context_packet import build_context_packet, get_refresh_targets
 from cymatix_context.genome import Genome
+from cymatix_context.identity import session_delivery
 from cymatix_context.shard_schema import init_main_db, open_main_db, register_shard, upsert_source_index
 
 from tests.conftest import make_gene
+
+
+def _delivery_test_genome(now_ts: float) -> Genome:
+    genome = Genome(":memory:")
+    gene = make_gene(
+        "Packet delivery tracking preserves this exact benchmark constraint.",
+        domains=["packet", "delivery"],
+    )
+    gene.source_id = "/repo/docs/packet-delivery.md"
+    gene.source_kind = "doc"
+    gene.volatility_class = "stable"
+    gene.authority_class = "primary"
+    gene.last_verified_at = now_ts - 60.0
+    genome.upsert_gene(gene, apply_gate=False)
+    return genome
+
+
+def test_packet_session_delivery_elides_repeats_but_opt_out_returns_full_content():
+    now_ts = 70_000.0
+    genome = _delivery_test_genome(now_ts)
+    try:
+        first = build_context_packet(
+            "packet delivery",
+            genome=genome,
+            now_ts=now_ts,
+            session_id="bench-session",
+        )
+        first_item = (first.verified + first.stale_risk)[0]
+        assert "Packet delivery tracking" in first_item.content
+
+        repeated = build_context_packet(
+            "packet delivery",
+            genome=genome,
+            now_ts=now_ts + 10.0,
+            session_id="bench-session",
+        )
+        repeated_item = (repeated.verified + repeated.stale_risk)[0]
+        assert "delivered" in repeated_item.content
+        assert "see earlier response" in repeated_item.content
+
+        opted_out = build_context_packet(
+            "packet delivery",
+            genome=genome,
+            now_ts=now_ts + 20.0,
+            session_id="bench-session",
+            ignore_delivered=True,
+        )
+        opted_out_item = (opted_out.verified + opted_out.stale_risk)[0]
+        assert opted_out_item.content == first_item.content
+
+        manifest = session_delivery.session_manifest(
+            genome.conn,
+            session_id="bench-session",
+        )
+        assert len(manifest) == 2
+        assert all(row["mode"] == "packet" for row in manifest)
+    finally:
+        genome.close()
+
+
+def test_packet_read_only_session_does_not_log_delivery():
+    now_ts = 80_000.0
+    genome = _delivery_test_genome(now_ts)
+    try:
+        packet = build_context_packet(
+            "packet delivery",
+            genome=genome,
+            now_ts=now_ts,
+            session_id="read-only-session",
+            read_only=True,
+        )
+
+        assert packet.verified or packet.stale_risk
+        assert session_delivery.session_manifest(
+            genome.conn,
+            session_id="read-only-session",
+        ) == []
+    finally:
+        genome.close()
 
 
 def test_build_context_packet_marks_recent_stable_doc_verified():

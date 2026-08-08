@@ -29,7 +29,10 @@ def test_scbench_contracts_pin_required_surfaces() -> None:
     assert cymatix["routes"]["packet"] == "/context/packet"
     assert cymatix["routes"]["tombstone"] == "/admin/genes/tombstone"
     assert cymatix["health_ready_path"] == ["checks", "genome_ready"]
-    assert cymatix["packet_session_delivery"] is False
+    assert cymatix["packet_session_delivery"] is True
+    assert "ignore_delivered" in cymatix["packet_request_fields"]
+    assert "session_id" in cymatix["packet_request_fields"]
+    assert len(cymatix["packet_session_delivery_evidence"]["tests"]) == 4
     assert cymatix["config"]["splade_enabled"] == [
         "ingestion",
         "splade_enabled",

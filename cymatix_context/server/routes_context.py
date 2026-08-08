@@ -585,6 +585,14 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
         task_type = data.get("task_type", "explain")
         max_genes = data.get("max_genes", 8)
         include_raw = bool(data.get("include_raw", False))
+        raw_session_id = data.get("session_id")
+        if raw_session_id is not None and not isinstance(raw_session_id, str):
+            return JSONResponse(
+                {"error": "session_id must be a string"},
+                status_code=400,
+            )
+        session_id = raw_session_id.strip() if raw_session_id else None
+        ignore_delivered = bool(data.get("ignore_delivered", False))
         raw_max = data.get("max_item_chars")
         try:
             max_item_chars = int(raw_max) if raw_max is not None else None
@@ -613,6 +621,8 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
             max_genes=max_genes,
             now_ts=t0,
             read_only=read_only,
+            session_id=session_id,
+            ignore_delivered=ignore_delivered,
             include_raw=include_raw,
             max_item_chars=max_item_chars,
         )

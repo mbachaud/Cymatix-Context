@@ -7,6 +7,8 @@ decide whether to trust, reread, or refresh before acting.
 
 from __future__ import annotations
 
+import contextlib
+import logging
 import math
 import sqlite3
 from pathlib import PurePath
@@ -14,7 +16,10 @@ from typing import Optional
 
 from .accel import extract_query_signals
 from .genome import file_tokens, path_tokens
+from .identity import session_delivery
 from .schemas import ContextItem, ContextPacket, Gene, RefreshTarget
+
+log = logging.getLogger("cymatix.context_packet")
 
 _HALF_LIFE_SECONDS = {
     "stable": 7 * 24 * 60 * 60,
@@ -464,6 +469,8 @@ def build_context_packet(
     max_genes: int = 8,
     now_ts: float | None = None,
     read_only: bool = False,
+    session_id: str | None = None,
+    ignore_delivered: bool = False,
     include_raw: bool = False,
     max_item_chars: int | None = None,
 ) -> ContextPacket:
@@ -488,6 +495,10 @@ def build_context_packet(
     effective_main_conn = main_conn
     if effective_main_conn is None and router is not None:
         effective_main_conn = getattr(router, "main_conn", None)
+
+    effective_session_id = session_id.strip() if session_id else None
+    delivery_read_conn = getattr(genome, "read_conn", None)
+    delivery_write_conn = getattr(genome, "conn", None)
 
     now_ts = float(now_ts) if now_ts is not None else 0.0
     if now_ts <= 0.0:
@@ -561,6 +572,67 @@ def build_context_packet(
             max_item_chars=effective_max_chars,
             prefer_raw=include_raw,
         )
+
+        if effective_session_id and delivery_read_conn is not None:
+            item_hash = session_delivery.content_hash(item.content)
+            prior = None
+            if not ignore_delivered:
+                try:
+                    prior = session_delivery.already_delivered(
+                        delivery_read_conn,
+                        session_id=effective_session_id,
+                        gene_id=doc.gene_id,
+                    )
+                except Exception:
+                    log.warning(
+                        "packet session delivery lookup failed",
+                        exc_info=True,
+                    )
+            if prior is not None and prior[2] == item_hash:
+                prior_ts, _prior_mode, _prior_hash = prior
+                try:
+                    queries_ago = session_delivery.count_queries_in_session_since(
+                        delivery_read_conn,
+                        session_id=effective_session_id,
+                        since=prior_ts,
+                    )
+                except Exception:
+                    log.warning(
+                        "packet session query count failed",
+                        exc_info=True,
+                    )
+                    queries_ago = 0
+                item = item.model_copy(
+                    update={
+                        "content": session_delivery.format_elision_stub(
+                            gene_id=doc.gene_id,
+                            delivered_at=prior_ts,
+                            now=now_ts,
+                            queries_ago=queries_ago,
+                        )
+                    }
+                )
+            elif not read_only and delivery_write_conn is not None:
+                try:
+                    write_lock = getattr(genome, "_write_lock", None)
+                    with (
+                        write_lock
+                        if write_lock is not None
+                        else contextlib.nullcontext()
+                    ):
+                        session_delivery.log_delivery(
+                            delivery_write_conn,
+                            session_id=effective_session_id,
+                            gene_id=doc.gene_id,
+                            content_hash=item_hash,
+                            mode="packet",
+                            ts=now_ts,
+                        )
+                except Exception:
+                    log.warning(
+                        "packet session delivery log failed",
+                        exc_info=True,
+                    )
         if status == "verified":
             packet.verified.append(item)
         elif status == "stale_risk":
