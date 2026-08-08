@@ -50,7 +50,10 @@ Issues = "https://github.com/mbachaud/Cymatix-Context/issues"
 # on specific features.
 accel = ["orjson>=3.9"]
 embeddings = ["numpy", "sentence-transformers"]
-cpu = ["spacy>=3.7"]
+# spacy floor tracks the en_core_web_sm pipeline build the docs and setup
+# script install (3.8.0, see docs/SETUP.md). The pipeline itself is a
+# separate artifact that pip never pulls in (#313).
+cpu = ["spacy>=3.8"]
 # MCP SDK — required for `python -m cymatix_context.mcp_server` (Claude Code,
 # Cursor, Claude Desktop integration). Core install does NOT pull this;
 # add the extra if you're a MCP host operator.
@@ -91,7 +94,7 @@ scorerift = ["scorerift"]
 # CPU-resident semantic compression for gene content. Headroom by Tejas Chopra
 # (https://github.com/chopratejas/headroom, Apache-2.0). See NOTICE.
 codec = ["headroom-ai[proxy,code]>=0.5.21"]
-dev = ["pytest", "pytest-asyncio", "numpy", "spacy>=3.7", "hypothesis>=6.0"]
+dev = ["pytest", "pytest-asyncio", "numpy", "spacy>=3.8", "hypothesis>=6.0"]
 # `all` covers the full feature surface minus contributor-only extras
 # (dev) and the LGPL launcher-tray variant. Dep bulk dominated by
 # sentence-transformers + torch + spacy + tree-sitter + headroom-ai.
@@ -99,7 +102,7 @@ all = [
     "orjson>=3.9",
     "numpy",
     "sentence-transformers",
-    "spacy>=3.7",
+    "spacy>=3.8",
     "mcp>=1.0,<2",
     "torch>=2.0",
     "transformers>=4.30",
