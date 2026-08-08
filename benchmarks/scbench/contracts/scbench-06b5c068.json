@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "repository": "SprocketLab/slop-code-bench",
+  "commit": "06b5c0687d4c05ee502e9696a4d0c22fc1eec5e0",
+  "codex_agent_class": "slop_code.agent_runner.agents.codex.agent.CodexAgent",
+  "codex_config_class": "slop_code.agent_runner.agents.codex.agent.CodexConfig",
+  "checkpoint_reset": "finish_checkpoint(reset_context=True)",
+  "lifecycle_hooks": [
+    "setup",
+    "run",
+    "finish_checkpoint",
+    "save_artifacts",
+    "cleanup"
+  ],
+  "codex_invocation": {
+    "command_prefix": [
+      "codex",
+      "exec"
+    ],
+    "json_output": true,
+    "subscription_auth_mount": "~/.codex/auth.json"
+  },
+  "artifacts": {
+    "prompt": "prompt.txt",
+    "stdout": "stdout.jsonl",
+    "stderr": "stderr.log"
+  },
+  "strict_field": "strict_pass_rate",
+  "isolated_field": "isolated_pass_rate",
+  "metric_source": "src/slop_code/metrics/checkpoint/extractors.py",
+  "source_urls": {
+    "codex_agent": "https://github.com/SprocketLab/slop-code-bench/blob/06b5c0687d4c05ee502e9696a4d0c22fc1eec5e0/src/slop_code/agent_runner/agents/codex/agent.py",
+    "metrics": "https://github.com/SprocketLab/slop-code-bench/blob/06b5c0687d4c05ee502e9696a4d0c22fc1eec5e0/src/slop_code/metrics/checkpoint/extractors.py",
+    "runner": "https://github.com/SprocketLab/slop-code-bench/blob/06b5c0687d4c05ee502e9696a4d0c22fc1eec5e0/src/slop_code/agent_runner/runner.py"
+  }
+}

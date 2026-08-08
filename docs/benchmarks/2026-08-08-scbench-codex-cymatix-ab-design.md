@@ -234,6 +234,8 @@ The pilot freezes these initial settings:
 
 The exact API fields and defaults must be revalidated after #338 is merged. Any setting that cannot be pinned explicitly becomes a required implementation-plan decision before scored runs.
 
+The post-#338 contract audit found that `/context/packet` does not yet accept or forward `session_id` and `ignore_delivered`, even though `/context` does. Packet session delivery is therefore an implementation prerequisite: scored execution is blocked until the pinned Cymatix contract records `packet_session_delivery: true` and names the tests proving full-content repeat delivery plus write suppression under `read_only=true`.
+
 The delivered-item behavior must receive special smoke coverage: a prior constraint should remain retrievable when relevant to a later checkpoint even if its exact packet item was delivered earlier. If `ignore_delivered=true` removes required memory rather than preventing repeat suppression, the setting must be corrected before the manifest is frozen. The scored pilot is not the place to tune it.
 
 ## Failure and retry semantics

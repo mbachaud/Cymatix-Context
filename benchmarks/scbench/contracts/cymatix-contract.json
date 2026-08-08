@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "base_commit": "338a84469b1c33da42bf40ea43004deadb7a5062",
+  "base_description": "origin/master after merge of Cymatix Context #338; #204 commit f675439 is an ancestor",
+  "routes": {
+    "health": "/health",
+    "ingest": "/ingest",
+    "packet": "/context/packet",
+    "stats": "/stats",
+    "tombstone": "/admin/genes/tombstone"
+  },
+  "health_ready_path": [
+    "checks",
+    "genome_ready"
+  ],
+  "packet_request_fields": [
+    "clean",
+    "include_raw",
+    "max_genes",
+    "max_item_chars",
+    "query",
+    "read_only",
+    "task_type"
+  ],
+  "packet_session_delivery": false,
+  "packet_session_delivery_evidence": {
+    "builder": "cymatix_context.context_packet.build_context_packet",
+    "route": "cymatix_context.server.routes_context.context_packet_endpoint",
+    "reason": "Neither surface accepts or forwards session_id or ignore_delivered at the pinned base commit."
+  },
+  "packet_item_fields": [
+    "authority_class",
+    "citations",
+    "claim_id",
+    "content",
+    "document_id",
+    "gene_id",
+    "kind",
+    "last_verified_at",
+    "live_truth_score",
+    "relevance_score",
+    "source_id",
+    "source_kind",
+    "status",
+    "title",
+    "volatility_class"
+  ],
+  "tombstone": {
+    "cold_tier_reachable": true,
+    "operation": "compress_to_heterochromatin",
+    "semantics": "non-destructive demotion by exact source_id"
+  },
+  "config": {
+    "ribosome_enabled": [
+      "ribosome",
+      "enabled"
+    ],
+    "splade_enabled": [
+      "ingestion",
+      "splade_enabled"
+    ]
+  }
+}
