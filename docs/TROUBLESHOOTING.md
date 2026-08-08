@@ -688,23 +688,24 @@ catch up.
 
 ---
 
-## spaCy NER model not downloaded — ingestion falls back, /context quality degrades silently
+## spaCy NER model not downloaded: ingestion fails outright, /ingest returns 422
 
-**Symptom.** `/ingest` POSTs succeed but ingested document quality drops
-visibly: tag set is sparse, entity-graph (`[ingestion] entity_graph =
-true`) edges fail to populate, and `/context` retrieval rate on
-entity-heavy queries falls. The server log shows a single
-`OSError: [E050] Can't find model 'en_core_web_sm'` at first ingest
-and then nothing further.
+**Symptom.** Every `/ingest` POST fails with HTTP 422 and nothing is
+ingested. The error body names the fix directly (`CpuTagger requires
+the spaCy pipeline 'en_core_web_sm' ... Install it with: python -m
+spacy download en_core_web_sm`); builds before the #313 fix surfaced
+the raw `OSError: [E050] Can't find model 'en_core_web_sm'` instead.
+On a fresh contributor install the same root cause shows up as the
+ingest-path tests skipping with that same message.
 
-**Cause.** `cymatix_context/tagger.py:52-64` lazy-loads
-`en_core_web_sm` on first use. The package `__init__.py:24-28`
+**Cause.** `cymatix_context/tagger.py` lazy-loads `en_core_web_sm`
+inside `_get_nlp()` on first use. The package `__init__.py`
 soft-imports `CpuTagger` so an `ImportError` at module load does not
-crash the server, but a missing *model* is a runtime error inside
+crash the server, but a missing *pipeline* is a runtime error inside
 `_get_nlp()` and surfaces only when ingestion actually runs. The
-tagger has no graceful regex fallback — when the spaCy load fails,
-the call stack unwinds and that ingest document gets none of the NER /
-noun-chunk enrichment, dropping its tag count.
+tagger has no fallback: when the spaCy load fails, the call stack
+unwinds, the ingest request returns an error, and the document is not
+ingested at all.
 
 **Fix.**
 
@@ -718,8 +719,8 @@ noun-chunk enrichment, dropping its tag count.
 2. Restart cymatix. The tagger's `_nlp` cache is process-local; in-flight
    workers will not pick up a freshly downloaded model.
 
-3. Re-ingest any documents that were ingested while the model was
-   missing:
+3. Re-send any documents whose `/ingest` POST failed while the pipeline
+   was missing; none of them were ingested. For file-based corpora:
    ```bash
    python scripts/docs_tidy_reingest.py <path>
    ```
