@@ -45,7 +45,6 @@
   it. **Configs that set it now get no rerank** unless they also set
   `[retrieval] rerank_enabled = true`. `[ingestion] rerank_model` is
   unchanged (still the legacy DeBERTa constructor input).
->>>>>>> origin/master
 
 ## 0.8.5 — 2026-07-25
 
