@@ -45,16 +45,36 @@ def _load_rerank_ab():
     return mod
 
 
+#: The three keys this helper shipped with. Wave 1 of #335 added the
+#: content-vs-stub split (delivered_gold_full / _elided / _full_rank); these
+#: three must keep BOTH their names and their values, because the committed
+#: ablation_ladder_100k.json receipt's delivered_gold_queries (the ledger's
+#: "15 vs 23 of 30") is the same quantity and has to stay comparable.
+_ORIGINAL_KEYS = {"delivered_gold", "delivered_count", "delivered_gold_rank"}
+
+
 def test_delivered_gold_fields_hit():
     lad = _load_ladder()
     out = lad.delivered_gold_fields(["a", "b", "gold1", "c"], {"gold1", "gold9"})
-    assert out == {"delivered_gold": 1, "delivered_count": 4, "delivered_gold_rank": 3}
+    assert {k: out[k] for k in _ORIGINAL_KEYS} == {
+        "delivered_gold": 1, "delivered_count": 4, "delivered_gold_rank": 3}
+    # No ``elided`` argument = the no-session case: everything delivered
+    # carried content, so the full basis matches the id basis exactly.
+    assert out == {
+        "delivered_gold": 1, "delivered_count": 4, "delivered_gold_rank": 3,
+        "delivered_gold_full": 1, "delivered_gold_elided": 0,
+        "delivered_gold_full_rank": 3,
+    }
 
 
 def test_delivered_gold_fields_miss_and_empty():
     lad = _load_ladder()
-    assert lad.delivered_gold_fields(["a", "b"], {"g"}) == {
+    miss = lad.delivered_gold_fields(["a", "b"], {"g"})
+    assert {k: miss[k] for k in _ORIGINAL_KEYS} == {
         "delivered_gold": 0, "delivered_count": 2, "delivered_gold_rank": None}
+    assert miss["delivered_gold_full"] == 0
+    assert miss["delivered_gold_elided"] == 0
+    assert miss["delivered_gold_full_rank"] is None
     assert lad.delivered_gold_fields([], {"g"})["delivered_count"] == 0
 
 

@@ -384,6 +384,211 @@ def test_per_query_contribution_is_unrounded_so_thirds_still_sum():
     assert total == pytest.approx(ladder.recall_at_k(first_ranks, 12), abs=5e-5)
 
 
+# ── #335 delivered gold ─────────────────────────────────────────────────
+#
+# The metric these tests guard exists because rank-based recall is
+# structurally blind to two real effects (2026-08-06 retrieval ledger, claim
+# 1): an admission gate that cuts candidates before the window, and a
+# post-rank pull-forward that reorders inside it. The fixtures below are
+# synthetic assembled windows — a gold that IS in the window, one that is
+# NOT despite ranking well in the pool, and one that arrives as a session
+# elision stub (id present, content absent).
+
+
+def _window(ids, *, elided=()):
+    """A synthetic assembled window: the id slice plus the text a real
+    ``_assemble`` would have produced for it. Elided ids get the production
+    stub, everything else gets a legibility header + body — so the stub
+    probe is exercised against the SAME two shapes it must tell apart."""
+    from cymatix_context.encoding.legibility import format_gene_header
+    from cymatix_context.identity.session_delivery import format_elision_stub
+
+    parts = []
+    for gid in ids:
+        if gid in elided:
+            parts.append(format_elision_stub(
+                gene_id=gid, delivered_at=1000.0, now=1045.0, queries_ago=3))
+        else:
+            header = format_gene_header(
+                gid, raw_chars=900, compressed_chars=300, combined_score=1.0,
+                tier_contrib={"fts5": 1.0}, score_stats=(0.5, 0.2))
+            parts.append(f"{header}\nbody text for {gid}")
+    return list(ids), "\n---\n".join(parts)
+
+
+def test_delivered_gold_counts_a_gold_that_reached_the_window():
+    ids, text = _window(["a", "gold1", "c"])
+    fields = ladder.delivered_gold_fields(ids, {"gold1"},
+                                          ladder.elided_gene_ids(text, ids))
+    assert fields["delivered_gold"] == 1
+    assert fields["delivered_gold_full"] == 1
+    assert fields["delivered_gold_elided"] == 0
+    assert fields["delivered_gold_rank"] == 2
+    assert fields["delivered_gold_full_rank"] == 2
+    assert fields["delivered_count"] == 3
+
+
+def test_delivered_gold_misses_a_gold_the_pool_ranked_but_the_window_dropped():
+    """The whole reason the metric exists. Gold sits at pool rank 3 — a clean
+    recall@12 hit — and never reaches the assembled window. Rank-based recall
+    reports a hit; the delivery basis must report a miss."""
+    ids, text = _window(["a", "b", "c"])
+    pool_first, pool_ranks = ladder.rank_gold(
+        {"a": 9.0, "b": 8.0, "gold1": 7.0}, {"gold1"})
+    assert (pool_first, pool_ranks) == (3, [3])          # recall@12 says HIT
+    fields = ladder.delivered_gold_fields(ids, {"gold1"},
+                                          ladder.elided_gene_ids(text, ids))
+    assert fields["delivered_gold"] == 0                  # delivery says MISS
+    assert fields["delivered_gold_full"] == 0
+    assert fields["delivered_gold_rank"] is None
+    assert fields["delivered_gold_full_rank"] is None
+
+
+def test_delivered_gold_treats_an_elision_stub_as_delivered_but_not_full():
+    """A session-elided document keeps its id in expressed_gene_ids while its
+    CONTENT never ships. delivered_gold (id basis, unchanged meaning) still
+    counts it; delivered_gold_full (content basis) must not."""
+    ids, text = _window(["a", "gold1", "c"], elided={"gold1"})
+    elided = ladder.elided_gene_ids(text, ids)
+    assert elided == {"gold1"}
+    fields = ladder.delivered_gold_fields(ids, {"gold1"}, elided)
+    assert fields["delivered_gold"] == 1
+    assert fields["delivered_gold_full"] == 0
+    assert fields["delivered_gold_elided"] == 1
+    assert fields["delivered_gold_rank"] == 2
+    assert fields["delivered_gold_full_rank"] is None
+
+
+def test_delivered_gold_full_prefers_a_content_bearing_gold_over_a_stub():
+    """Two gold documents, the earlier one elided: the query DID receive gold
+    content, so it is a full delivery — at the later rank."""
+    ids, text = _window(["gold1", "b", "gold2"], elided={"gold1"})
+    fields = ladder.delivered_gold_fields(ids, {"gold1", "gold2"},
+                                          ladder.elided_gene_ids(text, ids))
+    assert fields["delivered_gold"] == 1
+    assert fields["delivered_gold_rank"] == 1        # first gold, a stub
+    assert fields["delivered_gold_full"] == 1
+    assert fields["delivered_gold_full_rank"] == 3   # first gold with content
+    assert fields["delivered_gold_elided"] == 0
+
+
+def test_full_and_elided_partition_delivered_gold_exactly():
+    """The invariant the aggregate is read through: a delivered gold is either
+    content or stub, never both, never neither."""
+    cases = [
+        (["gold1"], set()),           # content
+        (["gold1"], {"gold1"}),       # stub
+        (["x"], set()),               # no gold delivered
+        ([], set()),                  # empty window
+    ]
+    for ids, elided in cases:
+        _ids, text = _window(ids, elided=elided)
+        f = ladder.delivered_gold_fields(_ids, {"gold1"},
+                                         ladder.elided_gene_ids(text, _ids))
+        assert f["delivered_gold_full"] + f["delivered_gold_elided"] == f["delivered_gold"]
+
+
+def test_elision_probe_is_pinned_to_the_production_stub_format():
+    """Coupling guard. A false NEGATIVE here (stub read as content) would
+    silently inflate delivered gold, and the only way it happens is
+    format_elision_stub changing shape — so the probe is fed that function's
+    real output rather than a hand-written lookalike."""
+    from cymatix_context.identity.session_delivery import format_elision_stub
+
+    stub = format_elision_stub(
+        gene_id="deadbeefcafebabe0123", delivered_at=0.0, now=90.0, queries_ago=2)
+    assert ladder.elided_gene_ids(stub, ["deadbeefcafebabe0123"]) == {
+        "deadbeefcafebabe0123"}
+
+
+def test_elision_probe_does_not_fire_on_a_legibility_header():
+    """The false-POSITIVE guard. A full delivery's legibility header is the
+    same ``[gene=<id12> ...]`` shape as a stub and differs only by the glyph
+    (◆/◇/⬦ vs ↻) — if the probe keyed on the prefix alone every delivered
+    document would read as elided and delivered_gold_full would collapse to
+    zero on every arm."""
+    from cymatix_context.encoding.legibility import format_gene_header
+
+    header = format_gene_header(
+        "deadbeefcafebabe0123", raw_chars=900, compressed_chars=300,
+        combined_score=2.0, tier_contrib={"fts5": 1.0, "dense": 0.5},
+        score_stats=(0.5, 0.2))
+    assert header.startswith("[gene=deadbeefcafe ")
+    assert ladder.elided_gene_ids(header, ["deadbeefcafebabe0123"]) == set()
+
+
+def test_elision_probe_is_empty_without_window_text():
+    # A caller with no expressed_context (or a window that failed) must get
+    # "nothing known to be elided", not a crash and not a phantom stub.
+    assert ladder.elided_gene_ids(None, ["a", "b"]) == set()
+    assert ladder.elided_gene_ids("", ["a", "b"]) == set()
+
+
+def test_delivered_gold_fields_default_reproduces_the_pre_wave1_numbers():
+    """Backward compatibility: omitting ``elided`` is the no-session case and
+    must give exactly what the committed 100k receipt's delivered_gold_queries
+    counted — id membership, nothing subtracted."""
+    fields = ladder.delivered_gold_fields(["a", "gold1"], {"gold1"})
+    assert fields["delivered_gold"] == 1
+    assert fields["delivered_gold_rank"] == 2
+    assert fields["delivered_gold_full"] == 1
+    assert fields["delivered_gold_elided"] == 0
+
+
+def test_delivered_gold_summary_is_derived_from_the_per_needle_rows():
+    rows = [
+        {"needle": "n0", "delivered_gold": 1, "delivered_gold_full": 1,
+         "delivered_gold_elided": 0, "delivered_gold_rank": 1, "delivered_count": 4},
+        {"needle": "n1", "delivered_gold": 1, "delivered_gold_full": 0,
+         "delivered_gold_elided": 1, "delivered_gold_rank": 3, "delivered_count": 4},
+        {"needle": "n2", "delivered_gold": 0, "delivered_gold_full": 0,
+         "delivered_gold_elided": 0, "delivered_gold_rank": None, "delivered_count": 2},
+        {"needle": "n3", "delivered_gold": 0, "delivered_gold_full": 0,
+         "delivered_gold_elided": 0, "delivered_gold_rank": None, "delivered_count": 0},
+    ]
+    s = ladder.delivered_gold_summary(rows)
+    assert s["delivered_gold_queries"] == 2
+    assert s["delivered_gold_rate"] == 0.5
+    assert s["delivered_gold_full_queries"] == 1
+    assert s["delivered_gold_full_rate"] == 0.25
+    assert s["delivered_gold_elided_queries"] == 1
+    # median over the queries that DELIVERED gold (1 and 3), not over misses
+    # padded with a sentinel rank.
+    assert s["delivered_gold_median_rank"] == 2.0
+    assert s["delivered_count_median"] == 3.0
+    assert ladder.delivered_gold_rate(rows) == s["delivered_gold_rate"]
+
+
+def test_delivered_gold_summary_on_an_empty_arm_is_zero_not_a_crash():
+    s = ladder.delivered_gold_summary([])
+    assert s["delivered_gold_queries"] == 0
+    assert s["delivered_gold_rate"] == 0.0
+    assert s["delivered_gold_median_rank"] is None
+
+
+def test_delivered_gold_by_needle_carries_both_bases_per_needle():
+    """The cross-tab basis a later wave needs: pool_rank next to delivered.
+    Their DISAGREEMENT is the finding — ranked-but-undelivered is the
+    admission-gate class, never-ranked is the #340 static-miss class."""
+    rows = [
+        {"needle": "erb_000", "delivered_gold": 1, "delivered_gold_full": 1,
+         "delivered_gold_rank": 2, "delivered_count": 5, "rank_of_first_gold": 1},
+        {"needle": "erb_001", "delivered_gold": 0, "delivered_gold_full": 0,
+         "delivered_gold_rank": None, "delivered_count": 5, "rank_of_first_gold": 3},
+        {"needle": "erb_002", "delivered_gold": 0, "delivered_gold_full": 0,
+         "delivered_gold_rank": None, "delivered_count": 5, "rank_of_first_gold": None},
+    ]
+    by_needle = ladder.delivered_gold_by_needle(rows)
+    assert list(by_needle) == ["erb_000", "erb_001", "erb_002"]
+    # ranked well, never delivered — invisible to recall@12 by construction
+    assert by_needle["erb_001"] == {
+        "delivered": 0, "full": 0, "delivered_rank": None,
+        "delivered_count": 5, "pool_rank": 3,
+    }
+    # never scored anywhere — the static-miss class
+    assert by_needle["erb_002"]["pool_rank"] is None
+
+
 @pytest.mark.parametrize("per_query", [True, False])
 def test_run_arm_emits_per_query_only_when_flag_is_set(monkeypatch, per_query):
     """Fake-arm path: stub every heavy import so no model or bed is touched."""
@@ -496,6 +701,145 @@ def test_run_arm_emits_per_query_only_when_flag_is_set(monkeypatch, per_query):
         row["recall_at_k"], abs=5e-5
     )
     assert row["per_query"][0]["signal_ms"] == {"fts5": 2.0, "splade": 5.0}
+
+
+def test_run_arm_delivery_receipt_is_always_on_and_records_its_posture(monkeypatch):
+    """#335 wave 1, at the run_arm seam.
+
+    Three needles whose POOL rank is identical (gold ranks 1st in the score
+    map on all three) but whose assembled WINDOW differs: n0 receives gold
+    content, n1's window drops it despite the rank, n2 receives it as a
+    session elision stub. recall@12 is 1.000 for the arm; delivered gold must
+    not be. Also pins the two contract promises later waves depend on: the
+    per-needle map ships WITHOUT ``--per-query``, and the arm records which
+    delivery posture produced the numbers."""
+    from cymatix_context.identity.session_delivery import format_elision_stub
+
+    needles = [
+        {"name": "n0", "query": "q0"},
+        {"name": "n1", "query": "q1"},
+        {"name": "n2", "query": "q2"},
+    ]
+    gold = {"n0": {"g1"}, "n1": {"g1"}, "n2": {"g1"}}
+    stub = format_elision_stub(
+        gene_id="g1", delivered_at=0.0, now=45.0, queries_ago=3)
+    # (expressed_gene_ids, expressed_context) per call, warmup first.
+    windows = [
+        (["g1", "g2"], "[gene=g1 ◆ fired=fts5 900→300c]\nwarmup"),
+        (["g1", "g2"], "[gene=g1 ◆ fired=fts5 900→300c]\ncontent for g1"),
+        (["g2", "g3"], "[gene=g2 ◇ fired=fts5 900→300c]\ncontent for g2"),
+        (["g1", "g2"], f"{stub}\n---\n[gene=g2 ◇ fired=fts5 900→300c]\nc"),
+    ]
+
+    class _FakeGenome:
+        def __init__(self):
+            # gold "g1" is rank 1 in the pool on EVERY needle.
+            self.last_query_scores = {"g1": 9.0, "g2": 8.0, "g3": 7.0}
+            self.last_signal_timings = {"fts5": 2.0}
+            self.last_tier_contributions = {}
+            self.synonym_map = {}
+
+        def _expand_terms(self, terms):
+            return sorted(t.lower() for t in terms)
+
+    class _FakeWindow:
+        def __init__(self, ids, text):
+            self.expressed_gene_ids = ids
+            self.expressed_context = text
+            self.metadata = {}
+
+    class _FakeManager:
+        def __init__(self, cfg):
+            self.config = cfg
+            self.genome = _FakeGenome()
+            self._last_cold_tier_used = False
+            self._n = 0
+
+        def build_context(self, *a, **kw):
+            # The posture the delivery_basis block claims — asserted here so
+            # the receipt cannot advertise a flag run_arm stopped passing.
+            assert kw.get("ignore_delivered") is True
+            assert kw.get("read_only") is True
+            ids, text = windows[min(self._n, len(windows) - 1)]
+            self._n += 1
+            return _FakeWindow(list(ids), text)
+
+        def close(self):
+            pass
+
+    class _FakeCfg:
+        class _Genome:
+            path = ""
+
+        class _Budget:
+            session_delivery_enabled = True
+
+        def __init__(self):
+            self.genome = _FakeCfg._Genome()
+            self.budget = _FakeCfg._Budget()
+            self.synonym_map = {}
+
+    fake_modules = {
+        "cymatix_context.config": type(
+            "M", (), {"load_config": staticmethod(lambda *a, **kw: _FakeCfg())},
+        ),
+        "cymatix_context.context_manager": type(
+            "M", (), {
+                "CymatixContextManager": _FakeManager,
+                "get_pipeline_ring_max": staticmethod(lambda: 128),
+                "get_recent_pipeline_events": staticmethod(lambda *a, **kw: []),
+            },
+        ),
+    }
+    real_import = __import__
+
+    def _fake_import(name, globals=None, locals=None, fromlist=(), level=0):
+        if name == "cymatix_context.backends" and "encoder_client" in (fromlist or ()):
+            return type("P", (), {"encoder_client": type(
+                "M", (), {"active_url": staticmethod(lambda: "")})})
+        if name == "cymatix_context.scoring" and "cymatics" in (fromlist or ()):
+            return type("P", (), {"cymatics": type(
+                "M", (), {"query_spectrum": staticmethod(lambda *a, **kw: None)})})
+        if name in fake_modules:
+            return fake_modules[name]
+        return real_import(name, globals, locals, fromlist, level)
+
+    monkeypatch.setattr("builtins.__import__", _fake_import)
+
+    row = ladder.run_arm(
+        ladder.Arm(name="fake", knobs={}, gate="test",
+                   validation=ladder.VALIDATION_CONTROL),
+        genome_path="unused.db", config_path=None, needles=needles,
+        gold_by_needle=gold, k=12, per_query=False,   # <- flag deliberately OFF
+    )
+
+    # Rank basis: perfect. Delivery basis: not. That divergence IS the metric.
+    assert row["recall_at_k"] == 1.0
+    assert row["delivered_gold_queries"] == 2          # n0 (content) + n2 (stub)
+    assert row["delivered_gold_full_queries"] == 1     # n0 only
+    assert row["delivered_gold_elided_queries"] == 1   # n2
+    assert row["pool_delivery_gap"] == pytest.approx(1.0 - 2 / 3, abs=5e-5)
+
+    # Per-needle map ships even with --per-query off.
+    assert "per_query" not in row
+    by_needle = row["delivered_gold_by_needle"]
+    assert list(by_needle) == ["n0", "n1", "n2"]
+    assert by_needle["n0"] == {"delivered": 1, "full": 1, "delivered_rank": 1,
+                               "delivered_count": 2, "pool_rank": 1}
+    # ranked 1st, delivered never — the effect recall@12 cannot express
+    assert by_needle["n1"] == {"delivered": 0, "full": 0, "delivered_rank": None,
+                               "delivered_count": 2, "pool_rank": 1}
+    assert by_needle["n2"] == {"delivered": 1, "full": 0, "delivered_rank": 1,
+                               "delivered_count": 2, "pool_rank": 1}
+
+    basis = row["delivery_basis"]
+    assert basis["ignore_delivered"] is True
+    assert basis["elision_possible"] is False
+    assert basis["session_delivery_enabled_in_config"] is True
+    # The audit field: this fixture forces a stub through, so it is non-zero
+    # here. On a real ladder run it must be 0 — ignore_delivered=True makes
+    # elision unreachable, and a non-zero count means that broke.
+    assert basis["elision_observed_queries"] == 1
 
 
 def test_run_arm_splice_n_candidates_does_not_leak_across_needles(monkeypatch):

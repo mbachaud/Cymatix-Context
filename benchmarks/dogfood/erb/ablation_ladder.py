@@ -190,6 +190,62 @@ Measurement caveats (on the record)
   stops one; it records ``encoder_client.active_url()`` and the dense codec's
   concrete class per arm so the receipt says which side the encode ran on.
 
+────────────────────────────────────────────────────────────────────────
+Delivered gold (#335) — the receipt basis rank metrics cannot see
+────────────────────────────────────────────────────────────────────────
+
+``recall_at_k`` and ``final_recall_at_k`` both grade a CANDIDATE LIST. A
+layer that changes what the model actually *receives* without changing that
+list is invisible to both by construction — which is precisely the ledger's
+open question for the ANN gate (`min_genes=1` "15 vs 23 of 30 queries reach
+the window with gold", 2026-08-06 ledger claim 1) and for coact/harmonic
+(a post-rank pull-forward). ``delivered_gold`` is the third basis: did a gold
+document survive into the ASSEMBLED WINDOW?
+
+*Stage.* ``window.expressed_gene_ids`` (context_manager.py:3564,
+``[g.gene_id for g in sorted_genes[:len(parts)]]``). This is the last thing
+``_assemble`` computes: it is post-splice (the compressor loop at
+context_manager.py:2260 has already run over every candidate), post-session-
+elision (the stub branch at :3334 appends a part like any other), and
+post-budget-trim (the drop loop at :3476 pops from ``parts`` and
+``sorted_genes`` in lockstep so the slice stays aligned). Every id in it has
+a corresponding chunk of ``window.expressed_context``; nothing else the
+manager exposes is that slice. The packet-layer freshness gate is NOT
+upstream of it — ``server/helpers.py:298`` *reads* ``expressed_gene_ids`` to
+decorate the know/miss block and never removes a document from the window —
+so an in-process ladder loses nothing by not running the HTTP route.
+
+*Matching rule.* Exact ``gene_id`` set membership against the
+``gold_by_needle_*.json`` entry for the needle. No text matching, so no
+false-positive class: the window exposes ids, and the gold sets are ids.
+The residual failure mode is upstream of this script — a gold set that names
+a chunk id the bed does not contain scores 0 delivered on every arm, which
+is the #340 static-miss class and is exactly what the per-needle map is for.
+
+*Elision.* A document already delivered in this session ships as a one-line
+stub (``identity/session_delivery.format_elision_stub``) instead of content
+— and it still appends a part, so its id IS in ``expressed_gene_ids`` while
+its content is NOT in the window. Counting that as delivered gold would be
+a lie on any repeat query. Two guards ship:
+
+  * This ladder always calls ``build_context(..., ignore_delivered=True)``,
+    which forces ``session_on=False`` at context_manager.py:3288 — elision
+    is impossible here regardless of ``[budget] session_delivery_enabled``.
+    The posture is recorded per arm under ``delivery_basis`` rather than
+    left as folklore.
+  * The metric is stub-aware anyway, because these helpers are reused by
+    harnesses that DO hold a session: ``delivered_gold_full`` counts only
+    gold shipped with content, ``delivered_gold_elided`` counts gold that
+    arrived as a stub, and the two partition ``delivered_gold`` exactly.
+    Stub detection is textual (the ``↻`` marker keyed by the id prefix
+    ``format_elision_stub`` emits) — see ``elided_gene_ids`` for the
+    failure directions.
+
+*Backward compatibility.* ``delivered_gold`` keeps its original meaning
+(id present in the delivered slice, stub or not) — the 100k receipt's
+``delivered_gold_queries`` 15/23 numbers stay comparable. Everything added
+here is a new key.
+
 Usage::
 
     python benchmarks/dogfood/erb/ablation_ladder.py --stamp 20260805-1200
@@ -494,18 +550,108 @@ def recall_at_k(first_ranks: Sequence[Optional[int]], k: int) -> float:
     return round(hit / len(first_ranks), 4)
 
 
-def delivered_gold_fields(expressed_gene_ids: Sequence[str], gold: set) -> Dict[str, Any]:
+# The glyph ``identity/session_delivery.format_elision_stub`` stamps on a
+# stub — deliberately chosen there to be distinct from the ◆/◇/⬦ confidence
+# markers a legibility header carries, which is what makes a textual probe
+# for it safe against full-delivery headers.
+_ELISION_GLYPH = "↻"
+# ``format_elision_stub``'s default ``id_width``. A stub names the document by
+# its id PREFIX, so the probe has to key on the same prefix.
+_ELISION_ID_WIDTH = 12
+
+
+def elided_gene_ids(
+    expressed_context: Optional[str],
+    gene_ids: Sequence[str],
+    id_width: int = _ELISION_ID_WIDTH,
+) -> set:
+    """#335: which of *gene_ids* were shipped as an ELISION STUB, not content.
+
+    ``expressed_gene_ids`` cannot answer this on its own: the stub branch
+    (context_manager.py:3345-3352) appends a part like any other, so an
+    elided document is indistinguishable from a delivered one by id. The
+    window text is the only place the difference survives, so this probes it
+    for the exact literal ``format_elision_stub`` emits::
+
+        [gene=<first 12 of gene_id> ↻ delivered 3 queries ago / 45s — ...]
+
+    Failure directions, both stated rather than assumed away:
+
+    * FALSE POSITIVE (a full delivery read as a stub) needs the document's
+      own spliced text to contain ``[gene=<its own id prefix> ↻``. It costs
+      one ``delivered_gold_full``, i.e. it can only ever UNDER-report full
+      delivery — the conservative direction for a metric whose job is to
+      catch a layer damaging delivery.
+    * FALSE NEGATIVE (a stub read as content) is the dangerous direction and
+      happens only if ``format_elision_stub`` changes shape. That coupling
+      is pinned by a test that feeds this probe the real function's output
+      (tests/test_ablation_tools.py), so a format change fails loudly here
+      instead of silently inflating delivered gold.
+
+    The ladder itself never exercises either path — it runs
+    ``ignore_delivered=True`` — so on a ladder receipt this returns the empty
+    set on every query, and ``delivery_basis.elision_possible`` says so.
+    """
+    if not expressed_context:
+        return set()
+    return {
+        gid for gid in gene_ids
+        if f"[gene={gid[:id_width]} {_ELISION_GLYPH}" in expressed_context
+    }
+
+
+def delivered_gold_fields(
+    expressed_gene_ids: Sequence[str],
+    gold: set,
+    elided: Optional[set] = None,
+) -> Dict[str, Any]:
     """#335: delivery-basis gold metrics. 'Delivered' = expressed_gene_ids,
-    the post-budget-trim slice (context_manager.expressed_gene_ids) — a gold
-    at pool rank 3 can still fail delivery; rank-based recall cannot see it."""
+    the post-splice / post-elision / post-budget-trim slice
+    (context_manager.py:3564) — a gold at pool rank 3 can still fail
+    delivery; rank-based recall cannot see it.
+
+    ``elided`` (optional, from ``elided_gene_ids``) splits that verdict by
+    whether the gold arrived as CONTENT or as a one-line "you already have
+    this" stub. Omitting it is the no-session case and is treated as "nothing
+    was elided", which reproduces the pre-#335-wave-1 numbers exactly.
+
+    Keys, and their invariants:
+
+    ``delivered_gold``         1 when any gold id is in the slice (stub or
+                               content). UNCHANGED meaning — the 100k
+                               receipt's ``delivered_gold_queries`` is still
+                               the same quantity.
+    ``delivered_gold_full``    1 when at least one delivered gold carried
+                               content.
+    ``delivered_gold_elided``  1 when gold was delivered but EVERY delivered
+                               gold was a stub.
+    ``delivered_gold_rank``    1-based position of the first gold in the
+                               slice (stub or content), else None.
+    ``delivered_gold_full_rank`` same for the first CONTENT-bearing gold.
+
+    ``delivered_gold_full`` and ``delivered_gold_elided`` are mutually
+    exclusive and sum to ``delivered_gold``, so an aggregate can be read as
+    a partition without re-deriving it.
+    """
+    elided_set = set(elided or ())
     rank = None
+    full_rank = None
     for i, gid in enumerate(expressed_gene_ids, start=1):
-        if gid in gold:
+        if gid not in gold:
+            continue
+        if rank is None:
             rank = i
+        if full_rank is None and gid not in elided_set:
+            full_rank = i
             break
-    return {"delivered_gold": 1 if rank else 0,
-            "delivered_count": len(expressed_gene_ids),
-            "delivered_gold_rank": rank}
+    return {
+        "delivered_gold": 1 if rank else 0,
+        "delivered_count": len(expressed_gene_ids),
+        "delivered_gold_rank": rank,
+        "delivered_gold_full": 1 if full_rank else 0,
+        "delivered_gold_elided": 1 if (rank and full_rank is None) else 0,
+        "delivered_gold_full_rank": full_rank,
+    }
 
 
 def final_rank_of_first_gold(
@@ -558,6 +704,67 @@ def delivered_gold_rate(per_query: Sequence[Mapping[str, Any]]) -> float:
     if not per_query:
         return 0.0
     return sum(r.get("delivered_gold", 0) for r in per_query) / len(per_query)
+
+
+def delivered_gold_summary(per_query: Sequence[Mapping[str, Any]]) -> Dict[str, Any]:
+    """#335 arm-level delivery aggregate, derived from the per-needle rows.
+
+    Derived — never accumulated separately — so the aggregate and the
+    per-needle basis cannot drift apart the way a hand-maintained counter
+    can. ``delivered_gold_full_queries + delivered_gold_elided_queries ==
+    delivered_gold_queries`` holds by the field invariant in
+    ``delivered_gold_fields``.
+
+    ``delivered_gold_median_rank`` is over the queries that delivered gold
+    only (None when none did) — averaging a miss in as a sentinel rank would
+    make the number move with recall instead of with delivery position.
+    """
+    n = len(per_query)
+    hits = sum(r.get("delivered_gold", 0) for r in per_query)
+    full = sum(r.get("delivered_gold_full", 0) for r in per_query)
+    elided = sum(r.get("delivered_gold_elided", 0) for r in per_query)
+    ranks = [r["delivered_gold_rank"] for r in per_query
+             if r.get("delivered_gold_rank") is not None]
+    counts = [float(r.get("delivered_count", 0)) for r in per_query]
+    return {
+        "delivered_gold_queries": hits,
+        "delivered_gold_rate": (hits / n) if n else 0.0,
+        "delivered_gold_full_queries": full,
+        "delivered_gold_full_rate": (full / n) if n else 0.0,
+        "delivered_gold_elided_queries": elided,
+        "delivered_gold_median_rank": median_or_none(ranks),
+        "delivered_count_median": median_or_none(counts),
+    }
+
+
+def delivered_gold_by_needle(
+    per_query: Sequence[Mapping[str, Any]],
+) -> Dict[str, Dict[str, Any]]:
+    """#335 per-needle delivery map, keyed by needle name. ALWAYS emitted.
+
+    Deliberately not gated on ``--per-query``: a later wave has to cross-tab
+    individual needles (the #340 static-miss class is 99 named needles), and
+    a metric whose per-needle basis depends on an optional flag is a metric
+    that will be missing from exactly the receipt someone needs. This map is
+    the small always-on subset; ``--per-query`` still carries the full row
+    (timings, signal ms, gold rank vector) for paired tests.
+
+    ``pool_rank`` sits next to ``delivered_rank`` on purpose: their
+    disagreement IS the finding. ``pool_rank`` set with ``delivered`` 0 means
+    the layer ranked gold and the window still did not carry it (the ANN-gate
+    class); ``pool_rank`` None on every arm is the static-miss class.
+    """
+    out: Dict[str, Dict[str, Any]] = {}
+    for r in per_query:
+        name = str(r.get("needle", ""))
+        out[name] = {
+            "delivered": int(r.get("delivered_gold", 0)),
+            "full": int(r.get("delivered_gold_full", 0)),
+            "delivered_rank": r.get("delivered_gold_rank"),
+            "delivered_count": r.get("delivered_count"),
+            "pool_rank": r.get("rank_of_first_gold"),
+        }
+    return out
 
 
 def newest_splice_count(events: Sequence[Mapping[str, Any]]) -> Optional[int]:
@@ -976,6 +1183,7 @@ def run_arm(
     classifier_metadata_queries = 0
     cold_tier_queries = 0
     delivered_gold_hits = 0
+    elided_queries = 0
     n_scored = 0
 
     # #341 splice-interaction receipt, review fix: sentinel for "the
@@ -1100,7 +1308,16 @@ def run_arm(
                 # slice — keep it a list (not a set) going into
                 # delivered_gold_fields, or delivered_gold_rank goes stale.
                 expressed_gene_ids = list(getattr(window, "expressed_gene_ids", None) or ())
-                dg_fields = delivered_gold_fields(expressed_gene_ids, set(gold))
+                # #335: split id-present from content-present. Under this
+                # script's ignore_delivered=True the set is always empty (see
+                # delivery_basis on the row) — computed anyway so a receipt
+                # can never quietly claim a session-elided stub as delivered
+                # gold if a future caller drops that flag.
+                elided = elided_gene_ids(
+                    getattr(window, "expressed_context", None), expressed_gene_ids)
+                if elided:
+                    elided_queries += 1
+                dg_fields = delivered_gold_fields(expressed_gene_ids, set(gold), elided)
                 if dg_fields["delivered_gold"]:
                     delivered_gold_hits += 1
                 record = per_query_record(
@@ -1166,6 +1383,26 @@ def run_arm(
     # flag. delivered_gold_rate(records) == delivered_gold_hits/len(needles)
     # by construction, including the empty case (both give 0.0).
     delivered_rate = delivered_gold_rate(records)
+    delivered_summary = delivered_gold_summary(records)
+    # #335 delivery posture, recorded rather than assumed. run_arm hard-codes
+    # ignore_delivered=True on every build_context call (warmup included),
+    # which forces session_on=False at context_manager.py:3288 — so elision
+    # cannot fire here whatever [budget] session_delivery_enabled says, and
+    # delivered_gold == delivered_gold_full on a ladder receipt.
+    # elision_observed is the audit: non-zero on a ladder run means the
+    # invariant broke and the delivered numbers need re-reading.
+    try:
+        _session_cfg = bool(getattr(cfg.budget, "session_delivery_enabled", False))
+    except Exception:  # noqa: BLE001
+        _session_cfg = False
+    delivery_basis = {
+        "source": "window.expressed_gene_ids (context_manager.py:3564)",
+        "ignore_delivered": True,
+        "session_id_passed": False,
+        "session_delivery_enabled_in_config": _session_cfg,
+        "elision_possible": False,
+        "elision_observed_queries": elided_queries,
+    }
     row: Dict[str, Any] = {
         "arm": arm.name,
         "knobs_changed": dict(arm.knobs),
@@ -1184,7 +1421,21 @@ def run_arm(
         "gold_ranks_total": len(all_ranks),
         "delivered_gold_queries": delivered_gold_hits,
         "delivered_gold_rate": delivered_rate,
+        # #335: delivered_gold counts an id in the window; delivered_gold_full
+        # counts CONTENT in the window. Identical here by the delivery_basis
+        # invariant below, different the moment a harness holds a session.
+        "delivered_gold_full_queries": delivered_summary["delivered_gold_full_queries"],
+        "delivered_gold_full_rate": round(delivered_summary["delivered_gold_full_rate"], 4),
+        "delivered_gold_elided_queries": delivered_summary["delivered_gold_elided_queries"],
+        "delivered_gold_median_rank": delivered_summary["delivered_gold_median_rank"],
+        "delivered_count_median": delivered_summary["delivered_count_median"],
+        # recall_at_k grades the pool, delivered_gold_rate grades the window;
+        # the gap is the part of the pipeline rank metrics cannot see.
         "pool_delivery_gap": round(recall_val - delivered_rate, 4),
+        "delivery_basis": delivery_basis,
+        # Always emitted (see delivered_gold_by_needle) — the per-needle
+        # cross-tab basis must not depend on --per-query.
+        "delivered_gold_by_needle": delivered_gold_by_needle(records),
         "queries_with_scores": n_scored,
         "latency_ms": {
             "p50": percentile(latencies, 50),
@@ -1311,6 +1562,11 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             # while fr@k moves. Printing only r@k would read as "no effect".
             f"  [{flag}] {arm.name:16s} r@{args.k}={row['recall_at_k']:.3f} "
             f"fr@{args.k}={row['final_recall_at_k']:.3f} "
+            # #335 on the live line: the whole point of the metric is that it
+            # can move while r@k stands still, which a receipt-only field
+            # would hide until after the run.
+            f"dg={row['delivered_gold_queries']}/{row['n_queries']} "
+            f"({row['delivered_gold_rate']:.3f}) "
             f"med_rank={row['median_rank_of_gold']} "
             f"p50={row['latency_ms']['p50']}ms p95={row['latency_ms']['p95']}ms "
             f"-- {detail}",
@@ -1344,10 +1600,21 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             "genome.last_ranked_ids, the FINAL order (post-rerank when it ran "
             "— a cross-encoder permutes ids without rewriting fused scores, so "
             "#341 arms are invisible in the score map); and "
-            "delivered_gold_queries / delivered_gold_rate / "
-            "delivered_gold_rank on window.expressed_gene_ids, the post-budget "
-            "delivery slice (#335). pool_delivery_gap is recall_at_k minus "
-            "delivered_gold_rate. Per-needle gate_kept / floor_appended come "
+            "delivered_gold_* on window.expressed_gene_ids, the assembled "
+            "window — post-splice, post-session-elision, post-budget-trim "
+            "(context_manager.py:3564) — which is the only basis that can see "
+            "an admission-shaped or post-rank layer (#335). Gold is matched by "
+            "exact gene_id, never by text. delivered_gold counts an id in the "
+            "window; delivered_gold_full counts CONTENT in it (an elided "
+            "document ships as a stub under the same id) and the two are equal "
+            "on this script, which always passes ignore_delivered=True — see "
+            "each arm's delivery_basis block, whose elision_observed_queries "
+            "must be 0. pool_delivery_gap is recall_at_k minus "
+            "delivered_gold_rate: the part of the pipeline rank metrics cannot "
+            "see. Every arm also carries delivered_gold_by_needle "
+            "(needle -> delivered / full / delivered_rank / pool_rank), "
+            "emitted unconditionally so a per-needle cross-tab never depends "
+            "on --per-query. Per-needle gate_kept / floor_appended come "
             "from genome.last_rerank_diag (published on both rerank arms). "
             "Each arm runs one untimed warmup query first so the lazy encoder "
             "load is not billed to p50. Latencies are wall ms on a shared box "
@@ -1368,8 +1635,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             "form and sums to recall_at_k up to that aggregate's 4-decimal "
             "rounding. Failed queries appear as miss records carrying 'error', "
             "so the vectors stay the same length across arms. Each record also "
-            "carries delivered_gold / delivered_count / delivered_gold_rank "
-            "(#335 delivery basis), final_rank_of_first_gold / "
+            "carries delivered_gold / delivered_count / delivered_gold_rank / "
+            "delivered_gold_full / delivered_gold_elided / "
+            "delivered_gold_full_rank (#335 delivery basis; full and elided "
+            "partition delivered_gold exactly), final_rank_of_first_gold / "
             "final_recall_hit (#341 final-order basis, from "
             "genome.last_ranked_ids), gate_kept / floor_appended (#341, from "
             "genome.last_rerank_diag; None when the query never reached the "
