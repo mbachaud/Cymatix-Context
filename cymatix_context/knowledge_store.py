@@ -684,6 +684,14 @@ class KnowledgeStore:
         doc_type_boost_mode: str = "additive",
         authority_path_selectivity: bool = False,
         pki_weight: float = 1.0,
+        # ── Issue #334: Tier-0 path_key_index retrieval gate ───────────
+        # DEFAULT TRUE == the pre-gate store, byte-for-byte: the Tier-0
+        # block used to be entered on `if q_lower_tokens:` alone. False
+        # skips the tier entirely — SQL, scoring, telemetry and the "pki"
+        # timing signal — so the ablation ladder can measure the 8.56 GB
+        # layer's cost AND its recall contribution instead of a zeroed
+        # bonus. Per-call override: query_docs(..., use_pki=False).
+        pki_enabled: bool = True,
         # ── Issue #341: query-time cross-encoder rerank (default-OFF) ──
         # Pre-cap rerank seam. With rerank_enabled=False (and no per-query
         # override) every retrieval path below is byte-identical to the
@@ -857,6 +865,8 @@ class KnowledgeStore:
         self._semantic_dense_additive_weight: float = float(semantic_dense_additive_weight)
         self._semantic_broaden_routing: bool = bool(semantic_broaden_routing)
         self._pki_weight: float = float(pki_weight)
+        # Issue #334: Tier-0 PKI retrieval gate (default on == shipped).
+        self._pki_enabled: bool = bool(pki_enabled)
         # Issue #341: pre-cap cross-encoder rerank (see ctor params).
         self._rerank_enabled: bool = bool(rerank_enabled)
         self._rerank_depth: int = int(rerank_depth)
@@ -2582,6 +2592,7 @@ class KnowledgeStore:
         use_harmonic: bool = True,
         use_sr: Optional[bool] = None,
         use_entity_graph: Optional[bool] = None,
+        use_pki: Optional[bool] = None,
         read_only: bool = False,
         query_type: Optional[str] = None,
         rerank_combinator: Optional[str] = None,
@@ -2590,6 +2601,16 @@ class KnowledgeStore:
     ) -> List[Gene]:
         """
         Find documents matching the given tags signals.
+
+        ``use_pki`` (issue #334, Tier-0 path_key_index gate): per-call
+        override of ``[retrieval] pki_enabled`` for THIS call only, mirroring
+        the ``use_sr`` shape. ``None`` (default) defers to the store's
+        ``self._pki_enabled``, which itself defaults to True — so the default
+        path is byte-identical to the pre-gate store. ``False`` skips the
+        whole Tier-0 block: its SQL, its score contribution, its telemetry
+        and its ``"pki"`` timing signal. The signal's absence is what the
+        ablation ladder validates the ``no_pki`` arm with, so the skip has to
+        be total, not a zeroed bonus.
 
         ``query_text`` / ``rerank_override`` (issue #341, pre-cap
         cross-encoder rerank): when rerank is effective for this call AND
@@ -2794,8 +2815,16 @@ class KnowledgeStore:
         # "url" or "value" would dump +8 on thousands of false-positive
         # documents, regressing retrieval (empirically observed 12% -> 6%
         # on the 2026-04-12 KV-harvest bench before this fix).
+        #
+        # Issue #334: the whole block is gated. ``pki_enabled`` resolves to
+        # True on the shipped config, so `q_lower_tokens and _pki_on` is the
+        # pre-gate `if q_lower_tokens:` unchanged. When it resolves False the
+        # tier is skipped ENTIRELY — the SELECT never runs (the layer's cost
+        # goes away, which is half of what the arm measures) and ``_sig("pki",
+        # ...)`` never fires (which is how the ladder proves the arm applied).
+        _pki_on = self._pki_enabled if use_pki is None else bool(use_pki)
         q_lower_tokens = [t.lower() for t in query_terms if t]
-        if q_lower_tokens:
+        if q_lower_tokens and _pki_on:
             _pki_t0 = time.monotonic()
             try:
                 # Group hits by (path_token, kv_key) to compute per-pair
@@ -4269,6 +4298,7 @@ class KnowledgeStore:
         use_harmonic: bool = True,
         use_sr: Optional[bool] = None,
         use_entity_graph: Optional[bool] = None,
+        use_pki: Optional[bool] = None,
         read_only: bool = False,
         *,
         pool_size: int | None = None,
@@ -4323,6 +4353,11 @@ class KnowledgeStore:
             use_harmonic=use_harmonic,
             use_sr=use_sr,
             use_entity_graph=use_entity_graph,
+            # Issue #334: the Tier-0 PKI gate lives inside this inner
+            # query_docs call — the ANN path's lex leg IS where PKI runs, so
+            # the override has to ride through here or the no_pki arm would
+            # be inert on the dense-on default path.
+            use_pki=use_pki,
             read_only=read_only,
             # Issue #255: forward the per-query combinator override so the
             # dense-ANN path (dense-on default) honors the classifier gate too;

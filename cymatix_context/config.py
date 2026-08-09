@@ -473,6 +473,25 @@ class RetrievalConfig:
     # trivially inflate gold_delivered. Lets the SIKE bedsweep isolate FTS
     # pool starvation (A4) from rank squeeze (B2) on the xl bed.
     fts5_candidate_depth: int = 0
+    # ── Issue #334: Tier-0 path_key_index (PKI) retrieval gate ─────────
+    # The PKI layer is the largest UNMEASURED storage layer in the corpus
+    # (8.56 GB on the blob bed). It shipped with no query-time off-switch,
+    # so the ablation ladder (benchmarks/dogfood/erb/ablation_ladder.py)
+    # could not arm it and its recall contribution has never been measured
+    # against a null. This knob is that off-switch, and nothing else.
+    #
+    # DEFAULT TRUE == today's behaviour, byte-for-byte. The Tier-0 block was
+    # previously entered on `if q_lower_tokens:` alone; the gate ANDs a
+    # value that is True unless an operator (or a ladder arm) says otherwise.
+    # tests/test_retrieval_layer_gates.py asserts the default reproduces a
+    # golden frozen from the pre-gate code — see that module's docstring for
+    # why (the entity_graph default-flip incident, campaign commit 1fd34b4).
+    #
+    # False removes the tier's SQL *and* its score contribution, so the arm
+    # measures the layer's true cost/impact rather than a zeroed bonus. The
+    # `use_pki` per-call override on query_docs/query_docs_ann lets a harness
+    # flip it per query without mutating global config.
+    pki_enabled: bool = True
     # Tier 5b: entity graph co-occurrence boost (Step 3C, 2026-05-08).
     # Documents sharing entity nodes with query terms get a score boost proportional
     # to entity overlap. Dark ship — flip to true for A/B.
@@ -1476,6 +1495,8 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             bm25_prefilter_enabled=bool(r.get("bm25_prefilter_enabled", cfg.retrieval.bm25_prefilter_enabled)),
             bm25_prefilter_size=int(r.get("bm25_prefilter_size", cfg.retrieval.bm25_prefilter_size)),
             fts5_candidate_depth=int(r.get("fts5_candidate_depth", cfg.retrieval.fts5_candidate_depth)),
+            # Issue #334: Tier-0 PKI gate. Default true == shipped behaviour.
+            pki_enabled=bool(r.get("pki_enabled", cfg.retrieval.pki_enabled)),
             entity_graph_retrieval_enabled=bool(r.get("entity_graph_retrieval_enabled", cfg.retrieval.entity_graph_retrieval_enabled)),
             symbol_expansion_cap=int(r.get("symbol_expansion_cap", cfg.retrieval.symbol_expansion_cap)),
             dense_embedding_enabled=bool(r.get("dense_embedding_enabled", cfg.retrieval.dense_embedding_enabled)),

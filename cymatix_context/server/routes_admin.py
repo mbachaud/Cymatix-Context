@@ -1181,6 +1181,11 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
                 dense_weight=config.retrieval.dense_weight,
                 dense_additive_weight=config.retrieval.dense_additive_weight,
                 dense_additive_min_cosine=config.retrieval.dense_additive_min_cosine,
+                # Issue #334: keep the swap path in sync with the boot path for
+                # the Tier-0 PKI gate. Without this an operator who set
+                # pki_enabled=false would silently get the tier back after a
+                # fixture swap. Default true == no behaviour change.
+                pki_enabled=config.retrieval.pki_enabled,
                 # Issues #222/#223: keep the swap path in sync with the boot
                 # path — sharded fetch depth + co-activation reserved budget.
                 shard_fetch_multiplier=config.retrieval.shard_fetch_multiplier,

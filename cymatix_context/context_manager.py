@@ -1044,6 +1044,10 @@ class CymatixContextManager:
             semantic_dense_additive_weight=config.retrieval.semantic_dense_additive_weight,
             semantic_broaden_routing=config.retrieval.semantic_broaden_routing,
             pki_weight=config.retrieval.pki_weight,
+            # Issue #334: Tier-0 PKI retrieval gate. Fanned to the solo
+            # Genome AND every per-shard Genome via open_read_source, same
+            # as the other retrieval knobs. Default true == shipped.
+            pki_enabled=config.retrieval.pki_enabled,
             # Issues #222/#223: sharded per-shard fetch depth + co-activation
             # reserved budget. Router-only knobs — fanned to ShardRouter via
             # open_read_source -> ShardedGenomeAdapter; also passed to each
@@ -2920,12 +2924,20 @@ class CymatixContextManager:
         party_id: Optional[str] = None,
         use_harmonic: bool = True,
         use_sr: Optional[bool] = None,
+        use_pki: Optional[bool] = None,
         read_only: bool = False,
         query_type: Optional[str] = None,
         rerank_combinator: Optional[str] = None,
         rerank_override: Optional[bool] = None,
     ) -> List[Gene]:
         """Query knowledge store + pending buffer for matching documents.
+
+        ``use_pki`` (issue #334): per-call override of the Tier-0
+        path_key_index gate, mirroring ``use_sr``. ``None`` (default) leaves
+        the store on its configured ``[retrieval] pki_enabled`` — the
+        byte-identical default. Forwarded to BOTH the dense-ANN branch and
+        the plain ``query_docs`` branch; on the sharded path it rides the
+        router's verbatim ``**kwargs`` fan-out to each shard.
 
         ``rerank_combinator`` (issue #255, classifier-gated combinator): the
         per-query combinator override resolved from the stage-0 query
@@ -2993,6 +3005,7 @@ class CymatixContextManager:
                     use_harmonic=use_harmonic,
                     use_sr=use_sr,
                     use_entity_graph=self.genome._entity_graph_retrieval_enabled,
+                    use_pki=use_pki,
                     read_only=read_only,
                     rerank_combinator=rerank_combinator,
                     rerank_override=rerank_override,
@@ -3006,6 +3019,7 @@ class CymatixContextManager:
                     use_harmonic=use_harmonic,
                     use_sr=use_sr,
                     use_entity_graph=self.genome._entity_graph_retrieval_enabled,
+                    use_pki=use_pki,
                     read_only=read_only,
                     query_type=query_type,
                     rerank_combinator=rerank_combinator,

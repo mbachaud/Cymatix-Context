@@ -1,0 +1,392 @@
+{
+  "_meta": {
+    "campaign": "docs/superpowers/plans/2026-08-09-ab-data-campaign.md Wave 2a/2b (#334 + retrieval-layer-ledger action 6)",
+    "generated_at_commit": "cf101bc8e1ec3305d9a3cdebd441fdb70c740930",
+    "generator": "tests/test_retrieval_layer_gates.py::_build_store / _snapshot (same corpus + queries)",
+    "purpose": "Pre-change retrieval scoring surface, frozen BEFORE the PKI/tags retrieval gates landed. The shipped-default config must reproduce these numbers exactly; a diff means a gate changed behaviour."
+  },
+  "fusion_modes": {
+    "additive": {
+      "q_no_pki_no_tags": {
+        "returned_ids": [
+          "noise-1",
+          "noise-2"
+        ],
+        "scores": {
+          "noise-1": "2.8735282917356524",
+          "noise-2": "2.803172574566049"
+        },
+        "signal_keys": [
+          "body_fetch",
+          "coact_expand",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_contrib": {
+          "noise-1": {
+            "authority": "0.5",
+            "fts5": "2.3735282917356524"
+          },
+          "noise-2": {
+            "authority": "0.5",
+            "fts5": "2.303172574566049"
+          }
+        }
+      },
+      "q_onyx": {
+        "returned_ids": [
+          "pki-c"
+        ],
+        "scores": {
+          "pki-c": "14.14823961354837"
+        },
+        "signal_keys": [
+          "body_fetch",
+          "coact_expand",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_contrib": {
+          "pki-c": {
+            "authority": "4.0",
+            "fts5": "2.6482396135483706",
+            "lex_anchor": "3.0",
+            "pki": "5.0",
+            "tag_exact": "3.0",
+            "tag_prefix": "1.5"
+          }
+        }
+      },
+      "q_pki_and_tags": {
+        "returned_ids": [
+          "tag-a",
+          "pki-b",
+          "pki-a",
+          "tag-b",
+          "fts-a"
+        ],
+        "scores": {
+          "fts-a": "3.2848839773617566",
+          "pki-a": "12.225178993829157",
+          "pki-b": "12.237432663755394",
+          "tag-a": "22.272767373818034",
+          "tag-b": "3.5"
+        },
+        "signal_keys": [
+          "body_fetch",
+          "coact_expand",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_contrib": {
+          "fts-a": {
+            "authority": "0.5",
+            "fts5": "2.7848839773617566"
+          },
+          "pki-a": {
+            "authority": "4.0",
+            "fts5": "0.7251789938291563",
+            "lex_anchor": "3.0",
+            "pki": "5.0",
+            "tag_exact": "3.0",
+            "tag_prefix": "1.5"
+          },
+          "pki-b": {
+            "authority": "4.0",
+            "fts5": "0.7374326637553941",
+            "lex_anchor": "3.0",
+            "pki": "5.0",
+            "tag_exact": "3.0",
+            "tag_prefix": "1.5"
+          },
+          "tag-a": {
+            "authority": "2.0",
+            "fts5": "5.2727673738180325",
+            "lex_anchor": "6.0",
+            "tag_exact": "6.0",
+            "tag_prefix": "3.0"
+          },
+          "tag-b": {
+            "authority": "0.5",
+            "tag_prefix": "3.0"
+          }
+        }
+      },
+      "q_pki_only": {
+        "returned_ids": [
+          "pki-b",
+          "pki-a",
+          "fts-a"
+        ],
+        "scores": {
+          "fts-a": "3.2848839773617566",
+          "pki-a": "12.225178993829157",
+          "pki-b": "12.237432663755394"
+        },
+        "signal_keys": [
+          "body_fetch",
+          "coact_expand",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_contrib": {
+          "fts-a": {
+            "authority": "0.5",
+            "fts5": "2.7848839773617566"
+          },
+          "pki-a": {
+            "authority": "4.0",
+            "fts5": "0.7251789938291563",
+            "lex_anchor": "3.0",
+            "pki": "5.0",
+            "tag_exact": "3.0",
+            "tag_prefix": "1.5"
+          },
+          "pki-b": {
+            "authority": "4.0",
+            "fts5": "0.7374326637553941",
+            "lex_anchor": "3.0",
+            "pki": "5.0",
+            "tag_exact": "3.0",
+            "tag_prefix": "1.5"
+          }
+        }
+      },
+      "q_tags_only": {
+        "returned_ids": [
+          "tag-a",
+          "tag-b"
+        ],
+        "scores": {
+          "tag-a": "22.272767373818034",
+          "tag-b": "3.5"
+        },
+        "signal_keys": [
+          "body_fetch",
+          "coact_expand",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_contrib": {
+          "tag-a": {
+            "authority": "2.0",
+            "fts5": "5.2727673738180325",
+            "lex_anchor": "6.0",
+            "tag_exact": "6.0",
+            "tag_prefix": "3.0"
+          },
+          "tag-b": {
+            "authority": "0.5",
+            "tag_prefix": "3.0"
+          }
+        }
+      }
+    },
+    "rrf": {
+      "q_no_pki_no_tags": {
+        "returned_ids": [
+          "noise-1",
+          "noise-2"
+        ],
+        "scores": {
+          "noise-1": "0.5491803278688525",
+          "noise-2": "0.5483870967741935"
+        },
+        "signal_keys": [
+          "body_fetch",
+          "coact_expand",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_contrib": {
+          "noise-1": {
+            "authority": "0.5",
+            "fts5": "2.3735282917356524"
+          },
+          "noise-2": {
+            "authority": "0.5",
+            "fts5": "2.303172574566049"
+          }
+        }
+      },
+      "q_onyx": {
+        "returned_ids": [
+          "pki-c"
+        ],
+        "scores": {
+          "pki-c": "4.163934426229508"
+        },
+        "signal_keys": [
+          "body_fetch",
+          "coact_expand",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_contrib": {
+          "pki-c": {
+            "authority": "4.0",
+            "fts5": "2.6482396135483706",
+            "lex_anchor": "3.0",
+            "pki": "5.0",
+            "tag_exact": "3.0",
+            "tag_prefix": "1.5"
+          }
+        }
+      },
+      "q_pki_and_tags": {
+        "returned_ids": [
+          "pki-a",
+          "pki-b",
+          "tag-a",
+          "fts-a",
+          "tag-b"
+        ],
+        "scores": {
+          "fts-a": "0.5483870967741935",
+          "pki-a": "4.159658611593765",
+          "pki-b": "4.158614151305684",
+          "tag-a": "2.1475409836065573",
+          "tag-b": "0.5241935483870968"
+        },
+        "signal_keys": [
+          "body_fetch",
+          "coact_expand",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_contrib": {
+          "fts-a": {
+            "authority": "0.5",
+            "fts5": "2.7848839773617566"
+          },
+          "pki-a": {
+            "authority": "4.0",
+            "fts5": "0.7251789938291563",
+            "lex_anchor": "3.0",
+            "pki": "5.0",
+            "tag_exact": "3.0",
+            "tag_prefix": "1.5"
+          },
+          "pki-b": {
+            "authority": "4.0",
+            "fts5": "0.7374326637553941",
+            "lex_anchor": "3.0",
+            "pki": "5.0",
+            "tag_exact": "3.0",
+            "tag_prefix": "1.5"
+          },
+          "tag-a": {
+            "authority": "2.0",
+            "fts5": "5.2727673738180325",
+            "lex_anchor": "6.0",
+            "tag_exact": "6.0",
+            "tag_prefix": "3.0"
+          },
+          "tag-b": {
+            "authority": "0.5",
+            "tag_prefix": "3.0"
+          }
+        }
+      },
+      "q_pki_only": {
+        "returned_ids": [
+          "pki-a",
+          "pki-b",
+          "fts-a"
+        ],
+        "scores": {
+          "fts-a": "0.5491803278688525",
+          "pki-a": "4.1623731459797035",
+          "pki-b": "4.161290322580645"
+        },
+        "signal_keys": [
+          "body_fetch",
+          "coact_expand",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_contrib": {
+          "fts-a": {
+            "authority": "0.5",
+            "fts5": "2.7848839773617566"
+          },
+          "pki-a": {
+            "authority": "4.0",
+            "fts5": "0.7251789938291563",
+            "lex_anchor": "3.0",
+            "pki": "5.0",
+            "tag_exact": "3.0",
+            "tag_prefix": "1.5"
+          },
+          "pki-b": {
+            "authority": "4.0",
+            "fts5": "0.7374326637553941",
+            "lex_anchor": "3.0",
+            "pki": "5.0",
+            "tag_exact": "3.0",
+            "tag_prefix": "1.5"
+          }
+        }
+      },
+      "q_tags_only": {
+        "returned_ids": [
+          "tag-a",
+          "tag-b"
+        ],
+        "scores": {
+          "tag-a": "2.1475409836065573",
+          "tag-b": "0.5241935483870968"
+        },
+        "signal_keys": [
+          "body_fetch",
+          "coact_expand",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_contrib": {
+          "tag-a": {
+            "authority": "2.0",
+            "fts5": "5.2727673738180325",
+            "lex_anchor": "6.0",
+            "tag_exact": "6.0",
+            "tag_prefix": "3.0"
+          },
+          "tag-b": {
+            "authority": "0.5",
+            "tag_prefix": "3.0"
+          }
+        }
+      }
+    }
+  }
+}
