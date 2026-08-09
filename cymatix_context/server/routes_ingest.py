@@ -8,13 +8,14 @@ from __future__ import annotations
 import logging
 from typing import Optional
 
-from fastapi import FastAPI, Request
+from fastapi import Depends, FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from .helpers import (
     _local_attribution_defaults,
     _local_timezone,
     _normalize_identity_token,
+    build_admin_auth,
 )
 
 log = logging.getLogger("cymatix.server")
@@ -23,7 +24,12 @@ log = logging.getLogger("cymatix.server")
 def setup_ingest_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None:
     """Register ingest routes on *app*."""
 
-    @app.post("/ingest")
+    # Same opt-in bearer guard as the /admin surface (2026-08-08 audit):
+    # /ingest and /consolidate mutate the store, so they share the token.
+    # Inert while [server] admin_token = "" (the default).
+    _admin_auth = [Depends(build_admin_auth(config))]
+
+    @app.post("/ingest", dependencies=_admin_auth)
     async def ingest_endpoint(request: Request):
         import time as _time
         cymatix._last_activity_ts = _time.time()
@@ -147,7 +153,7 @@ def setup_ingest_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None:
             response["attributed"] = attributed
         return response
 
-    @app.post("/consolidate")
+    @app.post("/consolidate", dependencies=_admin_auth)
     async def consolidate_endpoint():
         """Trigger session memory consolidation."""
         try:

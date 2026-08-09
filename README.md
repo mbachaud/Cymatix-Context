@@ -392,6 +392,21 @@ BGE-M3 backfill (one-time, after install):
 python scripts/backfill_bgem3_v2.py genomes/main/genome.db
 ```
 
+## Security
+
+The proxy binds to loopback (`127.0.0.1:11437`) by default, but a loopback
+bind is **not** authentication — any process on the same host can reach the
+port. Two opt-in knobs harden the mutating surface (both default-off; an
+untouched config behaves exactly as before):
+
+```toml
+[server]
+admin_token = "your-secret"              # /admin/*, /ingest, /consolidate demand "Authorization: Bearer your-secret" (401 otherwise)
+swap_db_roots = ["F:/cymatix/genomes"]   # /admin/swap-db may only open paths under these roots (403 otherwise)
+```
+
+Details: [docs/config-reference.md](docs/config-reference.md), `[server]`.
+
 ## Observability
 
 ```powershell

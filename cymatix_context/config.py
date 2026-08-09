@@ -159,6 +159,16 @@ class BudgetConfig:
     # caller supplies a session_id. See session_delivery.py.
     # default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass)
     session_delivery_enabled: bool = True
+    # Opt-in control-tag neutralization (2026-08-08 audit). When on, the
+    # assembly loop escapes content-sourced "<cymatix:" to "&lt;cymatix:"
+    # so a document cannot forge the genuine control tags
+    # (<cymatix:no_match/>, <cymatix:slate>) that downstream agents
+    # adopting CYMATIX_NO_MATCH_FRAGMENT trust. The genuine no-match tag
+    # is emitted on a separate parts-empty branch and is never escaped.
+    # Closes tag-forgery only — general indirect prompt injection via
+    # document text remains (inherent to context injection). Default off:
+    # byte-identical to pre-knob behavior.
+    neutralize_control_tags: bool = False
     abstain_enabled: bool = True       # NEW — see docs/specs/2026-05-02-abstain-tier-design.md
     # Foveated-splice (BROAD tier only). Off by default for the measurement
     # period — see docs/specs/2026-05-03-foveated-splice-design.md §6.3 and
@@ -225,6 +235,8 @@ class ServerConfig:
     bench_port: int = 11439
     bench_genome_path: str = "genomes/bench/bench.genome.db"
     upstream_timeout: float = 180.0     # Timeout for proxied requests to Ollama. Bumped from 120s on 2026-05-02 — observed Proxy 500s on slow gemma4:e4b GPQA queries at ~125s; 180s gives long-tail generation room without letting truly stuck requests hang. Override per-deployment via [server] in cymatix.toml.
+    admin_token: str = ""               # Opt-in bearer token for the admin surface (/admin/*, /ingest, /consolidate). Default "" = no auth — byte-identical to pre-knob behavior. When set, those routes demand "Authorization: Bearer <token>" and 401 otherwise. Loopback bind is NOT auth: any same-host process can reach the port (2026-08-08 audit).
+    swap_db_roots: List[str] = field(default_factory=list)  # Opt-in allowlist of directory roots /admin/swap-db may open. Default [] = unrestricted (today's behavior). When non-empty, a swap target resolving (os.path.realpath) outside every root is rejected 403 via os.path.commonpath; a root on a different drive never matches (2026-08-08 audit).
 
 
 @dataclass
@@ -278,7 +290,7 @@ class IngestionConfig:
     # Soft-fails to a no-op when torch/transformers are absent.
     splade_enabled: bool = True     # Phase 2: SPLADE sparse expansion at index time
     rerank_model: str = DEFAULT_RERANK_MODEL  # legacy: feeds DeBERTaRibosome only; the retrieval cross-encoder reads [retrieval] rerank_model. Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass)
-    colbert_enabled: bool = False   # Phase 4: ColBERT late interaction (optional)
+    colbert_enabled: bool = False   # Phase 4: ColBERT late interaction — parsed, not yet wired (2026-08-08 audit)
     entity_graph: bool = True       # Phase 5: entity-based co-activation links (ingest-time edges). Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass)
     # Tier-0 PR-1 (2026-05-16): compute BGE-M3 dense vectors
     # (genes.embedding_dense_v2) inline at ingest. Default true so a genome
@@ -393,10 +405,10 @@ class ContextConfig:
 class CymaticsConfig:
     """Frequency-domain re_rank + splice (CPU math replaces LLM calls)."""
     enabled: bool = True                # Master switch
-    n_bins: int = 256                   # Spectrum resolution (<2KB per spectrum)
-    peak_width: float = 3.0             # Gaussian peak width (overridden by Q-factor)
-    splice_threshold_scale: float = 0.7 # Maps splice_aggressiveness to resonance threshold
-    use_embeddings: bool = False        # Use Gene.embedding when available
+    n_bins: int = 256                   # Spectrum resolution — parsed, not yet wired (2026-08-08 audit): scoring/cymatics.py uses its module constant N_BINS
+    peak_width: float = 3.0             # Gaussian peak width — parsed, not yet wired (2026-08-08 audit): runtime derives peak width from [budget] splice_aggressiveness (context_manager aggressiveness_to_peak_width)
+    splice_threshold_scale: float = 0.7 # Maps splice_aggressiveness to resonance threshold — parsed, not yet wired (2026-08-08 audit)
+    use_embeddings: bool = False        # Use Gene.embedding when available — parsed, not yet wired (2026-08-08 audit)
     harmonic_links: bool = True         # Compute weighted co-activation edges
     distance_metric: str = "cosine"     # "cosine" (weighted dot) | "w1" (Werman 1986 circular Wasserstein-1)
 
@@ -442,7 +454,7 @@ class RetrievalConfig:
     # Three-class edge provenance (seeded / co_retrieved / cwola_validated)
     # with Laplace-smoothed co_count vs miss_count per edge.
     seeded_edges_enabled: bool = False  # Dark ship — flip to start evidence accumulation
-    seeded_edge_weight: float = 1.0     # Base weight written on seed insertion
+    seeded_edge_weight: float = 1.0     # Base weight written on seed insertion — parsed, not yet wired (2026-08-08 audit)
     # WS3: cap on referenced definitions pulled in by symbol-graph expansion
     # (SYMBOL_REF). When more than `cap` candidates reference distinct defs, keep
     # the top-`cap` by structural-centrality PageRank. 0 disables symbol
@@ -544,6 +556,11 @@ class RetrievalConfig:
     # additive path mis-scales dense (×16 semantic arm) against the FTS
     # bm25 cap (6.0). Set "additive" to restore the legacy
     # ``gene_scores += tier_score`` accumulator until v(N+2) removes it.
+    # Additive removal is BLOCKED on the sharded path: ShardedGenomeAdapter
+    # still requires additive-scale scores (rrf-native global-IDF splice —
+    # #265 deferred follow-up, #264 boost-gate migration, and a third
+    # score-scale label or recalibrated floors). Do not remove before those
+    # land; see docs/specs/2026-05-08-stage-3-rrf-fusion.md.
     # Issue #202: the per-tier weights below bind in BOTH fusion modes.
     # Under "additive" they are the tier coefficients/caps themselves
     # (defaults == the old inline literals); under "rrf" they are rank
@@ -1311,6 +1328,7 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
                 "decoder_mode_overrides", cfg.budget.decoder_mode_overrides)),
             legibility_enabled=bool(b.get("legibility_enabled", cfg.budget.legibility_enabled)),
             session_delivery_enabled=bool(b.get("session_delivery_enabled", cfg.budget.session_delivery_enabled)),
+            neutralize_control_tags=bool(b.get("neutralize_control_tags", cfg.budget.neutralize_control_tags)),
             abstain_enabled=bool(b.get("abstain_enabled", cfg.budget.abstain_enabled)),
             foveated_enabled=bool(b.get("foveated_enabled", cfg.budget.foveated_enabled)),
             foveated_alpha=float(b.get("foveated_alpha", cfg.budget.foveated_alpha)),
@@ -1355,6 +1373,8 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             bench_genome_path=s.get(
                 "bench_genome_path", cfg.server.bench_genome_path,
             ),
+            admin_token=str(s.get("admin_token", cfg.server.admin_token)),
+            swap_db_roots=list(s.get("swap_db_roots", cfg.server.swap_db_roots)),
         )
 
     # Encoder daemon (Fork 1 slice 1) — parsed BEFORE _apply_env_overrides so

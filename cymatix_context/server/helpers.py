@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import asyncio
 import getpass
+import hmac
 import logging
 import os
 import socket
@@ -69,6 +70,36 @@ _paused_ribosomes: Dict[int, object] = {}
 _KNOWN_AGENTS_DEFAULT = frozenset({
     "laude", "raude", "taude", "gemini", "codex", "claude", "manual",
 })
+
+
+# ── Admin-surface auth (opt-in, 2026-08-08 audit) ────────────────────
+
+
+def build_admin_auth(config: CymatixConfig):
+    """Bearer-token guard for the admin surface (``/admin/*``, ``/ingest``,
+    ``/consolidate``).
+
+    Returns a FastAPI dependency. With the default ``[server]
+    admin_token = ""`` the dependency returns immediately — no header is
+    read, so untouched configs behave byte-identically. When a token is
+    set, routes carrying this dependency demand ``Authorization: Bearer
+    <token>`` and 401 otherwise. The token is read off *config* at request
+    time and compared constant-time. Note the loopback default bind is
+    not auth — any same-host process can reach the port.
+    """
+
+    async def _require_admin_token(request: Request) -> None:
+        token = config.server.admin_token
+        if not token:
+            return
+        supplied = request.headers.get("authorization", "")
+        expected = f"Bearer {token}"
+        if not hmac.compare_digest(
+            supplied.encode("utf-8"), expected.encode("utf-8")
+        ):
+            raise HTTPException(status_code=401, detail="admin token required")
+
+    return _require_admin_token
 
 
 # ── Identity / attribution helpers ──────────────────────────────────
@@ -267,8 +298,23 @@ def _compute_know_or_miss_block(
     """
     # Pull retrieval scores. ``last_query_scores`` is the post-fusion
     # per-document score map (gene_id -> float). Top-1 / score-gap are
-    # derived from a sorted-desc view of this map.
-    raw_scores = cymatix.genome.last_query_scores or {}
+    # derived from a sorted-desc view of this map. Snapshot it together
+    # with the paired tier-contribution map under the store lock so a
+    # concurrent retrieval can't republish between the two reads
+    # (2026-08-08 audit W1.6a); getattr keeps lock-less genome fakes
+    # working.
+    _scores_lock = getattr(cymatix.genome, "_last_query_scores_lock", None)
+    if _scores_lock is not None:
+        with _scores_lock:
+            raw_scores = dict(cymatix.genome.last_query_scores or {})
+            tier_contrib = dict(
+                getattr(cymatix.genome, "last_tier_contributions", {}) or {}
+            )
+    else:
+        raw_scores = dict(cymatix.genome.last_query_scores or {})
+        tier_contrib = dict(
+            getattr(cymatix.genome, "last_tier_contributions", {}) or {}
+        )
     if raw_scores:
         sorted_scores = sorted(raw_scores.values(), reverse=True)
         top_score = float(sorted_scores[0])
@@ -281,8 +327,8 @@ def _compute_know_or_miss_block(
         score_gap = 0.0
         ratio = 0.0
 
-    # Lexical-dense agreement from per-tier contribution map.
-    tier_contrib = getattr(cymatix.genome, "last_tier_contributions", {}) or {}
+    # Lexical-dense agreement from per-tier contribution map (snapshotted
+    # above, atomically with raw_scores).
     lex_dense_agree = _agree_from_tier_contributions(tier_contrib, k=3)
 
     # Coordinate confidence -- promoted to first-class in Stage 6 (section 9).
@@ -499,7 +545,18 @@ def _compute_plr_confidence(
         q_sema = codec.encode(query)
 
         top_gene_id = None
-        last_scores = getattr(cymatix.genome, "last_query_scores", {}) or {}
+        # Locked snapshot — the live map is republished by concurrent
+        # retrievals (2026-08-08 audit W1.6a).
+        _scores_lock = getattr(cymatix.genome, "_last_query_scores_lock", None)
+        if _scores_lock is not None:
+            with _scores_lock:
+                last_scores = dict(
+                    getattr(cymatix.genome, "last_query_scores", {}) or {}
+                )
+        else:
+            last_scores = dict(
+                getattr(cymatix.genome, "last_query_scores", {}) or {}
+            )
         if last_scores:
             top_gene_id = max(last_scores, key=last_scores.get)
         if top_gene_id:

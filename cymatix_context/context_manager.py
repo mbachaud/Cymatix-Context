@@ -3322,6 +3322,13 @@ class CymatixContextManager:
         # (mode, content_hash) for fresh deliveries, or None for elided.
         _delivery_log_map: Dict[str, Optional[Tuple[str, str]]] = {}
 
+        # Opt-in control-tag neutralization (2026-08-08 audit): escape
+        # content-sourced "<cymatix:" so a document cannot forge the
+        # genuine no-match/slate control tags. The genuine no-match tag
+        # is emitted on the parts-empty branch below — never through
+        # this loop — so it stays unescaped.
+        neutralize_on = self.config.budget.neutralize_control_tags
+
         for g in sorted_genes:
             # Prefer compressor-spliced text; fall back to complement summary;
             # last resort is Headroom semantic compression (was content[:500]).
@@ -3330,6 +3337,8 @@ class CymatixContextManager:
                 target_chars=500,
                 content_type=g.promoter.domains,
             )
+            if neutralize_on:
+                spliced_text = spliced_text.replace("<cymatix:", "&lt;cymatix:")
             prior = _prior_deliveries.get(g.gene_id) if session_on else None
             if prior is not None:
                 # Document already delivered in this session — elide content
