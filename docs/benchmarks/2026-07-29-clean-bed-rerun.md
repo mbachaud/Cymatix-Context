@@ -20,8 +20,9 @@
 > loses to its own random-bin control** — the case against the stage rests
 > on those, and they stand unaltered.
 >
-> Harness fixed 2026-08-08; arm C must be re-run before any spread claim.
-> Full retraction: `docs/benchmarks/2026-07-29-cymatics-ablation-verdict.md`.
+> Harness fixed 2026-08-08; arm C must be re-run before any spread claim
+> (#354). Full retraction:
+> `docs/benchmarks/2026-07-29-cymatics-ablation-verdict.md`.
 
 The dogfood bed was contaminated: it ingested its own needle harness (queries
 *and* expected answers) and our bench write-ups, and `needles_dogfood.py` was

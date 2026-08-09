@@ -35,8 +35,8 @@
 > The harness is fixed as of the 2026-08-08 audit remediation
 > (`benchmarks/dogfood/ablate_cymatics.py` now overrides
 > `m._cymatics_peak_width` post-construction). **Arm C must be re-run before
-> any spread claim is made.** Tracking: the cymatics-ablation issue filed
-> 2026-08-08; the underlying dead-knob class is on #219.
+> any spread claim is made.** Tracking: #354; the underlying dead-knob class
+> is on #219.
 
 The README flags cymatics in falsifiable terms:
 
