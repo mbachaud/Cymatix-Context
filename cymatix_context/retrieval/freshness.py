@@ -42,6 +42,36 @@ log = logging.getLogger("cymatix.freshness")
 DEFAULT_CACHE_TTL_S: float = 60.0
 
 
+# Hard bound on the per-process mtime cache (2026-08-08 audit). Corpora
+# with more distinct source paths than this recycle entries instead of
+# growing without limit.
+MTIME_CACHE_MAX_ENTRIES: int = 4096
+
+
+def _evict_if_full(
+    mtime_cache: dict[str, tuple[float, float]],
+    now_ts: float,
+    cache_ttl_s: float,
+) -> None:
+    """Bound ``mtime_cache`` ahead of an insert.
+
+    Drops TTL-expired entries first — semantically invisible, they
+    would be re-stat'd on their next lookup anyway — and falls back to
+    a full clear when every entry is still within its TTL window.
+    """
+    if len(mtime_cache) < MTIME_CACHE_MAX_ENTRIES:
+        return
+    expired = [
+        path
+        for path, (_mtime, cached_at) in mtime_cache.items()
+        if (now_ts - cached_at) >= cache_ttl_s
+    ]
+    for path in expired:
+        del mtime_cache[path]
+    if len(mtime_cache) >= MTIME_CACHE_MAX_ENTRIES:
+        mtime_cache.clear()
+
+
 # Status vocabulary returned by ``revalidate_source``. Names are short
 # on purpose so callers can match-case against them directly.
 FreshnessStatus = Literal["fresh", "stale", "missing", "unknown"]
@@ -130,6 +160,7 @@ def revalidate_source(
         except FileNotFoundError:
             # Persist the negative sentinel so we don't re-stat the
             # missing file on every revalidation in the same TTL window.
+            _evict_if_full(mtime_cache, now_ts, cache_ttl_s)
             mtime_cache[source_path] = (-1.0, now_ts)
             return "missing"
         except OSError as exc:
@@ -142,6 +173,7 @@ def revalidate_source(
                 exc,
             )
             return "unknown"
+        _evict_if_full(mtime_cache, now_ts, cache_ttl_s)
         mtime_cache[source_path] = (mtime, now_ts)
 
     last_verified = getattr(gene, "last_verified_at", None)
@@ -269,6 +301,7 @@ def check_superseded(genome, gene: "Gene") -> Optional[str]:
 
 __all__ = [
     "DEFAULT_CACHE_TTL_S",
+    "MTIME_CACHE_MAX_ENTRIES",
     "FreshnessStatus",
     "revalidate_source",
     "revalidate_and_mark",

@@ -178,9 +178,12 @@ def apply_candidate_refiners(
     mutate THIS dict instead of whatever ``genome.last_query_scores``
     currently holds — a concurrent request republishing the shared map
     between retrieval and refinement can no longer cross-wire scores.
-    The mutated map is still published to ``genome.last_query_scores``
-    for legacy readers. ``None`` (default) preserves the old
-    read-from-genome behavior for direct callers.
+    A COPY of the mutated map is still published to
+    ``genome.last_query_scores`` (under ``_last_query_scores_lock`` when
+    the genome has one) for legacy readers — never an alias of the
+    request-local dict (2026-08-08 audit W1.6a). ``None`` (default)
+    preserves the read-from-genome behavior for direct callers, via a
+    locked snapshot rather than the live map.
 
     *blend_mode* selects how the three refiners combine with the fused scores;
     see the module docstring. Default agrees with ``RetrievalConfig.blend_mode``
@@ -201,10 +204,26 @@ def apply_candidate_refiners(
     _off = blend_mode == "off"
     _scale = blend_mode == "scale_relative"
 
+    # 2026-08-08 audit W1.6a: published score maps must be copies taken and
+    # installed under the store lock — never aliases of the request-local
+    # dict, never in-place mutation of the live published map. getattr keeps
+    # lock-less genome fakes (direct callers, tests) working.
     def _working_scores() -> Dict[str, float]:
         if query_scores is not None:
             return query_scores
-        return genome.last_query_scores or {}
+        _lock = getattr(genome, "_last_query_scores_lock", None)
+        if _lock is not None:
+            with _lock:
+                return dict(genome.last_query_scores or {})
+        return dict(genome.last_query_scores or {})
+
+    def _publish_scores(scores: Dict[str, float]) -> None:
+        _lock = getattr(genome, "_last_query_scores_lock", None)
+        if _lock is not None:
+            with _lock:
+                genome.last_query_scores = dict(scores)
+        else:
+            genome.last_query_scores = dict(scores)
 
     refiner_contrib: Dict[str, Dict[str, float]] = {}
 
@@ -232,7 +251,7 @@ def apply_candidate_refiners(
                     scores[doc.gene_id] = scores.get(doc.gene_id, 0) * _scale_relative_multiplier(bonus, _CYMATICS_ABS)
                 else:
                     scores[doc.gene_id] = scores.get(doc.gene_id, 0) + bonus
-            genome.last_query_scores = scores
+            _publish_scores(scores)
             candidates.sort(key=lambda g: scores.get(g.gene_id, 0), reverse=True)
         except Exception:
             log.debug("Cymatics blend failed", exc_info=True)
@@ -280,7 +299,7 @@ def apply_candidate_refiners(
                             scores[doc.gene_id] = scores.get(doc.gene_id, 0) * _scale_relative_multiplier(bonus, _HARMONIC_ABS)
                         else:
                             scores[doc.gene_id] = scores.get(doc.gene_id, 0) + bonus
-                genome.last_query_scores = scores
+                _publish_scores(scores)
                 candidates.sort(key=lambda g: scores.get(g.gene_id, 0), reverse=True)
         except Exception:
             log.debug("Harmonic bin boost failed", exc_info=True)

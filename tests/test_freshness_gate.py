@@ -43,6 +43,7 @@ from cymatix_context.agent_prompt import (
 from cymatix_context.context_manager import CymatixContextManager
 from cymatix_context.retrieval.freshness import (
     DEFAULT_CACHE_TTL_S,
+    MTIME_CACHE_MAX_ENTRIES,
     check_superseded,
     revalidate_and_mark,
     revalidate_source,
@@ -656,3 +657,63 @@ def test_synthetic_planted_stale_emits_miss_stale():
             miss_count += 1
     rate = miss_count / n
     assert rate >= 0.95, f"planted-stale demotion rate {rate:.2f} below 0.95"
+
+
+# ─────────────────────────────────────────────────────────────────────
+# mtime cache bound + /admin/refresh contract (2026-08-08 audit)
+# ─────────────────────────────────────────────────────────────────────
+
+def test_admin_refresh_clears_mtime_cache():
+    """/admin/refresh honors the documented contract: the per-process
+    mtime cache lives on the manager *so /admin/refresh can clear it*
+    (context_manager init comment) — the next revalidation re-stats."""
+    from tests.conftest import make_client
+
+    with make_client() as client:
+        cymatix = client.app.state.cymatix
+        cache_obj = cymatix._mtime_cache
+        cache_obj["/some/source.py"] = (123.0, time.time())
+
+        resp = client.post("/admin/refresh")
+        assert resp.status_code == 200
+        assert cymatix._mtime_cache == {}
+        # Cleared in place — helpers.py passes this dict by reference.
+        assert cymatix._mtime_cache is cache_obj
+
+
+def test_mtime_cache_never_exceeds_cap():
+    """Inserting more distinct paths than the cap keeps the cache
+    bounded (fallback clear when nothing is TTL-expired)."""
+    cache: dict[str, tuple[float, float]] = {}
+    t0 = 1_000_000.0
+    for i in range(MTIME_CACHE_MAX_ENTRIES + 100):
+        gene = _make_gene(
+            f"g_{i}", decay=1.0, source_id=f"/nonexistent/cap/{i}.py"
+        )
+        status = revalidate_source(gene, mtime_cache=cache, now_ts=t0)
+        assert status == "missing"
+        assert len(cache) <= MTIME_CACHE_MAX_ENTRIES
+
+
+def test_mtime_cache_evicts_ttl_expired_before_clearing(tmp_path):
+    """At the cap, TTL-expired entries are dropped first (they would be
+    re-stat'd anyway); unexpired entries survive the eviction."""
+    t0 = 1_000_000.0
+    cache: dict[str, tuple[float, float]] = {
+        f"/expired/{i}.py": (1.0, t0)
+        for i in range(MTIME_CACHE_MAX_ENTRIES - 1)
+    }
+    cache["/still/fresh.py"] = (2.0, t0 + 60.0)
+    assert len(cache) == MTIME_CACHE_MAX_ENTRIES
+
+    src = tmp_path / "new.txt"
+    src.write_text("hello")
+    gene = _make_gene("g_new", decay=1.0, source_id=str(src))
+    gene.last_verified_at = os.stat(src).st_mtime + 100.0  # fresh
+
+    # At t0+61 the t0 entries are past the 60s TTL; the t0+60 one is not.
+    status = revalidate_source(gene, mtime_cache=cache, now_ts=t0 + 61.0)
+    assert status == "fresh"
+    assert "/still/fresh.py" in cache
+    assert str(src) in cache
+    assert len(cache) == 2

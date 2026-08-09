@@ -24,7 +24,14 @@ import re
 import sqlite3
 import threading
 import time
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple
+
+if TYPE_CHECKING:
+    # Annotation-only imports: numpy and the BGE-M3 codec are heavy,
+    # optional deps loaded lazily at their call sites.
+    import numpy as np
+
+    from .backends.bgem3_codec import BGEM3Codec
 
 from .accel import (
     json_loads,
@@ -605,6 +612,12 @@ class KnowledgeStore:
         # defaults; the config default flipped in #247 with SIKE Run-2
         # receipts). Pass "additive" explicitly for the legacy
         # pre-Stage-3 accumulator (scheduled for removal in v(N+2)).
+        # Removal BLOCKED on sharded path: rrf-native global-IDF splice
+        # (#265 deferred follow-up) + #264 boost gate migration + a third
+        # scale label or recalibrated floors for ShardedGenomeAdapter
+        # (sharding.py:213-236 is a deliberate score-scale label, not an
+        # accidental hardcode -- do not flip it). See docs/ROADMAP.md
+        # Track 1.
         # Issue #202: the per-tier weights bind in BOTH fusion modes --
         # under "additive" they are the tier coefficients/caps themselves,
         # under "rrf" they are rank post-multipliers.
@@ -1442,9 +1455,13 @@ class KnowledgeStore:
                     genes.append(gene)
 
             # Expose similarity scores via last_query_scores for the
-            # caller (context_manager uses this for tier-budget decisions)
-            for gid, sim in selected_sims.items():
-                self.last_query_scores[gid] = sim
+            # caller (context_manager uses this for tier-budget decisions).
+            # Under the lock: this mutates the published map in place, so an
+            # unlocked write would tear locked snapshot readers (2026-08-08
+            # audit W1.6a).
+            with self._last_query_scores_lock:
+                for gid, sim in selected_sims.items():
+                    self.last_query_scores[gid] = sim
 
             return genes
         except Exception:

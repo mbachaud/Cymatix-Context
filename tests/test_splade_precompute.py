@@ -141,3 +141,75 @@ def test_upsert_doc_inline_encode_when_sparse_not_provided(tmp_path, monkeypatch
 
     assert calls, "splade_backend.encode should have been called once"
     assert rows == [("sentinel", 9.99)]
+
+
+# ── lazy-load concurrency (2026-08-08 audit, Task 1) ──────────────────
+
+
+def test_concurrent_ensure_loaded_constructs_once(monkeypatch):
+    """8 threads race the first _ensure_loaded; the model loads exactly once.
+
+    torch/transformers are faked via sys.modules so no real import happens;
+    the fake loader sleeps inside from_pretrained to force overlap.
+    """
+    import sys
+    import threading
+    import time
+    import types
+
+    # Import hardware BEFORE faking torch so the real module is cached.
+    from cymatix_context import hardware
+
+    constructions: list[str] = []
+
+    class _FakeModel:
+        def to(self, device):
+            return self
+
+        def eval(self):  # mirrors torch.nn.Module.eval(), not builtin eval()
+            return self
+
+    class _FakeAutoModel:
+        @staticmethod
+        def from_pretrained(name):
+            constructions.append(name)
+            time.sleep(0.05)  # widen the race window
+            return _FakeModel()
+
+    class _FakeAutoTokenizer:
+        @staticmethod
+        def from_pretrained(name):
+            return object()
+
+    fake_torch = types.ModuleType("torch")
+    fake_torch.device = lambda spec: spec
+    fake_transformers = types.ModuleType("transformers")
+    fake_transformers.AutoModelForMaskedLM = _FakeAutoModel
+    fake_transformers.AutoTokenizer = _FakeAutoTokenizer
+
+    monkeypatch.setitem(sys.modules, "torch", fake_torch)
+    monkeypatch.setitem(sys.modules, "transformers", fake_transformers)
+    monkeypatch.setattr(hardware, "resolve_layer_device", lambda layer: "cpu")
+    monkeypatch.setattr(splade_backend, "_model", None)
+    monkeypatch.setattr(splade_backend, "_tokenizer", None)
+    monkeypatch.setattr(splade_backend, "_device", None)
+
+    errors: list[Exception] = []
+    barrier = threading.Barrier(8)
+
+    def hit():
+        try:
+            barrier.wait(timeout=5)
+            splade_backend._ensure_loaded("fake/splade-model")
+        except Exception as exc:  # noqa: BLE001
+            errors.append(exc)
+
+    threads = [threading.Thread(target=hit) for _ in range(8)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join(timeout=10)
+
+    assert not errors
+    assert len(constructions) == 1
+    assert splade_backend._model is not None

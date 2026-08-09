@@ -19,6 +19,8 @@ set.
 """
 from __future__ import annotations
 
+import threading
+
 import pytest
 
 from cymatix_context.config import (
@@ -244,3 +246,119 @@ class TestPostTrimHealth:
             )
         finally:
             mgr.close()
+
+
+# ─────────────────────────────────────────────────────────────────────
+# Task 12 (2026-08-08 audit, W1.6 part a): the blend must publish COPIES
+# of score maps under the store lock — never aliases of the request-local
+# dict, never in-place mutation of the live published map.
+# ─────────────────────────────────────────────────────────────────────
+
+class _BlendGene:
+    """Minimal candidate: the blend layer only reads ``gene_id``."""
+
+    __slots__ = ("gene_id",)
+
+    def __init__(self, gene_id: str):
+        self.gene_id = gene_id
+
+
+def _patch_cymatics_flux(monkeypatch, flux: float = 1.0):
+    """Drive the cymatics refiner with a constant flux (bonus = flux * 0.5)."""
+    import cymatix_context.scoring.cymatics as cym
+
+    monkeypatch.setattr(cym, "query_spectrum", lambda *a, **k: "QSPEC")
+    monkeypatch.setattr(cym, "build_weight_vector", lambda *a, **k: "W")
+    monkeypatch.setattr(cym, "cached_doc_spectrum", lambda doc, **k: doc.gene_id)
+    monkeypatch.setattr(cym, "flux_score_dispatch", lambda q, g, w, m: flux)
+
+
+def _run_cymatics_blend(genome, query_scores=None):
+    from cymatix_context.scoring.blend import apply_candidate_refiners
+
+    source = query_scores if query_scores is not None else genome.last_query_scores
+    cands = [_BlendGene(gid) for gid in source]
+    return apply_candidate_refiners(
+        "q", cands, 32, genome=genome,
+        cymatics_enabled=True, use_cymatics=True,
+        use_harmonic_bin=False, use_tcm=False, tcm_session=None,
+        query_scores=query_scores,
+    )
+
+
+class TestPublishedScoreMapIsolation:
+    def test_blend_publishes_copy_not_alias_of_request_dict(self, monkeypatch):
+        """After the blend publishes, mutating the request-local dict must
+        NOT show through ``genome.last_query_scores`` (copy semantics)."""
+        _patch_cymatics_flux(monkeypatch)
+
+        class _Genome:
+            def __init__(self):
+                self.last_query_scores = {}
+                self._last_query_scores_lock = threading.Lock()
+
+        genome = _Genome()
+        request_scores = {"a": 5.0, "b": 3.0}
+        _run_cymatics_blend(genome, query_scores=request_scores)
+
+        assert genome.last_query_scores, "blend never published"
+        assert genome.last_query_scores is not request_scores, (
+            "blend published an ALIAS of the request-local score map"
+        )
+        request_scores["a"] = 999.0
+        assert genome.last_query_scores["a"] != 999.0, (
+            "request-local mutation leaked into the published map"
+        )
+
+    def test_blend_direct_caller_path_does_not_mutate_live_map_in_place(
+        self, monkeypatch
+    ):
+        """``query_scores=None`` (direct callers): the blend must snapshot
+        the live map, not mutate the published dict object in place — a
+        reader holding the old reference would otherwise see torn scores."""
+        _patch_cymatics_flux(monkeypatch)
+
+        class _Genome:
+            def __init__(self, scores):
+                self.last_query_scores = scores
+                self._last_query_scores_lock = threading.Lock()
+
+        pre_blend = {"a": 5.0, "b": 3.0}
+        genome = _Genome(pre_blend)
+        _run_cymatics_blend(genome, query_scores=None)
+
+        # Published map carries the blended values...
+        assert genome.last_query_scores["a"] != 5.0
+        # ...but the pre-blend dict a concurrent reader may hold is intact.
+        assert pre_blend == {"a": 5.0, "b": 3.0}, (
+            "blend mutated the previously-published map in place"
+        )
+
+    def test_blend_publishes_under_genome_lock(self, monkeypatch):
+        """Publication must happen while ``_last_query_scores_lock`` is
+        held, so locked snapshot readers never interleave mid-write."""
+        _patch_cymatics_flux(monkeypatch)
+        lock = threading.Lock()
+        held_at_publish: list = []
+
+        class _Genome:
+            def __init__(self):
+                self._last_query_scores_lock = lock
+                self._scores = {"a": 5.0, "b": 3.0}
+
+            @property
+            def last_query_scores(self):
+                return self._scores
+
+            @last_query_scores.setter
+            def last_query_scores(self, value):
+                held_at_publish.append(lock.locked())
+                self._scores = value
+
+        genome = _Genome()
+        _run_cymatics_blend(genome, query_scores={"a": 5.0, "b": 3.0})
+
+        assert held_at_publish, "blend never published"
+        assert all(held_at_publish), (
+            "blend published without holding _last_query_scores_lock"
+        )
