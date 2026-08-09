@@ -148,6 +148,99 @@ def test_coactivation_expansion_fires_when_retrieval_flag_on(genome, monkeypatch
     )
 
 
+def _link_entities(genome, pairs):
+    """Insert entity_graph rows directly.
+
+    Must run AFTER every upsert_gene for the genes involved: sync_entity_graph
+    does a ``DELETE FROM entity_graph WHERE gene_id = ?`` on each write.
+    """
+    con = genome.conn
+    for entity, gene_id in pairs:
+        con.execute(
+            "INSERT OR IGNORE INTO entity_graph (entity, gene_id) VALUES (?, ?)",
+            (entity, gene_id),
+        )
+    con.commit()
+
+
+def test_entity_graph_pull_forward_changes_delivered_set_when_pool_under_2x(genome):
+    """Characterization of the flag-leak fix's BLAST RADIUS.
+
+    The fix (gating _expand_coactivated's entity_graph sub-scan on the
+    retrieval-side flag) is NOT behaviour-neutral under shipped config: the
+    scan's pulled-forward documents are appended after the ranked list and
+    then truncated by ``result[:limit]`` in query_docs — where ``limit =
+    max_genes * 2`` (knowledge_store.py:2672), NOT max_genes. So the
+    delivered set changes on every query whose ranked pool came back shorter
+    than ``2 * max_genes`` and whose entity graph yields a neighbour. This
+    test pins that boundary in both directions so a later change cannot
+    silently widen it.
+    """
+    # gene A matches the query; gene B does not, but shares 2 entities with A.
+    gene_a = _make("pull forward anchor content", domains=["pullfwd"])
+    gene_b = _make("pull forward neighbour content", domains=["unrelateddomain"])
+    genome.upsert_gene(gene_a)
+    genome.upsert_gene(gene_b)
+    _link_entities(genome, [
+        ("pfent1", gene_a.gene_id), ("pfent2", gene_a.gene_id),
+        ("pfent1", gene_b.gene_id), ("pfent2", gene_b.gene_id),
+    ])
+
+    # Retrieval flag OFF (the shipped default, and the post-fix behaviour).
+    genome._entity_graph_enabled = True
+    genome._entity_graph_retrieval_enabled = False
+    ids_off = [g.gene_id for g in genome.query_genes(
+        domains=["pullfwd"], entities=[], max_genes=5)]
+
+    # Retrieval flag ON (== the PRE-fix shipped behaviour, where the ingest
+    # flag leaked in and authorized this read).
+    genome._entity_graph_retrieval_enabled = True
+    ids_on = [g.gene_id for g in genome.query_genes(
+        domains=["pullfwd"], entities=[], max_genes=5)]
+
+    assert gene_a.gene_id in ids_off and gene_a.gene_id in ids_on
+    assert len(ids_off) < 5 * 2, "setup must leave room under the max_genes*2 cap"
+    assert gene_b.gene_id not in ids_off, (
+        "with the read gated off, the entity-graph neighbour must not be "
+        "pulled into the delivered set"
+    )
+    assert gene_b.gene_id in ids_on, (
+        "with the read gated on, the entity-graph neighbour IS pulled into "
+        "the delivered set — this is the delta the flag-leak fix removed "
+        "under shipped config"
+    )
+
+
+def test_entity_graph_pull_forward_is_truncated_when_pool_is_full(genome):
+    """The other half of the boundary: once the ranked pool fills the real
+    cap (``limit = max_genes * 2``), query_docs' ``result[:limit]`` truncates
+    every pulled-forward document, so the flag-leak fix is delivered-set-
+    neutral there. Ten anchors at max_genes=5 saturates limit=10.
+    """
+    anchors = [
+        _make(f"full pool anchor content {i}", domains=["pullfwdfull"])
+        for i in range(10)
+    ]
+    neighbour = _make("full pool neighbour content", domains=["unrelateddomain2"])
+    for g in anchors + [neighbour]:
+        genome.upsert_gene(g)
+    _link_entities(genome, [
+        ("fpent1", anchors[0].gene_id), ("fpent2", anchors[0].gene_id),
+        ("fpent1", neighbour.gene_id), ("fpent2", neighbour.gene_id),
+    ])
+
+    genome._entity_graph_enabled = True
+    for flag in (False, True):
+        genome._entity_graph_retrieval_enabled = flag
+        ids = [g.gene_id for g in genome.query_genes(
+            domains=["pullfwdfull"], entities=[], max_genes=5)]
+        assert len(ids) == 10, "setup must saturate the max_genes*2 cap"
+        assert neighbour.gene_id not in ids, (
+            f"pulled-forward doc survived truncation with flag={flag}; the "
+            f"saturated-pool case must be delivered-set-neutral"
+        )
+
+
 def test_entity_graph_use_entity_graph_override(genome):
     """use_entity_graph=True per-call override enables Tier 5b even when flag is False."""
     gene = _make("override test gene content", domains=["override"])
