@@ -83,22 +83,16 @@ def _find_mcp_config(
 
 
 # The MCP entry key candidates, checked in this order. "cymatix-context" is
-# the documented canonical key; "cymatix-context" is the pre-rename key, kept
-# working (still resolves to the same server) so existing setups aren't
-# nagged. The suffix-less "cymatix"/"cymatix" forms are accepted but flagged
-# noncanonical.
-_MCP_NAME_CANDIDATES = ("cymatix-context", "cymatix", "cymatix-context", "cymatix")
-_MCP_NAMES_CANONICAL = ("cymatix-context", "cymatix-context")
-_MCP_NAMES_NONCANONICAL = ("cymatix", "cymatix")
+# the documented canonical key; the suffix-less "cymatix" form is accepted
+# but flagged noncanonical.
+_MCP_NAME_CANDIDATES = ("cymatix-context", "cymatix")
+_MCP_NAMES_CANONICAL = ("cymatix-context",)
+_MCP_NAMES_NONCANONICAL = ("cymatix",)
 
-# Both module paths resolve to the same server: cymatix_context.mcp_server
-# is canonical, cymatix_context.mcp_server is the back-compat shim (see
-# cymatix_context/__init__.py) that aliases to it.
 _MCP_MODULE_CANONICAL = "cymatix_context.mcp_server"
-_MCP_MODULE_LEGACY_SHIM = "cymatix_context.mcp_server"
-_MCP_MODULES_ACCEPTED = (_MCP_MODULE_CANONICAL, _MCP_MODULE_LEGACY_SHIM)
+_MCP_MODULES_ACCEPTED = (_MCP_MODULE_CANONICAL,)
 
-_MCP_ENV_VARS = ("CYMATIX_MCP_URL", "CYMATIX_MCP_URL")
+_MCP_ENV_VARS = ("CYMATIX_MCP_URL",)
 
 
 def _check_mcp_config(path: Optional[Path]) -> Dict[str, Any]:
@@ -140,19 +134,13 @@ def _check_mcp_config(path: Optional[Path]) -> Dict[str, Any]:
     env_var = next((k for k in _MCP_ENV_VARS if k in env), None)
 
     if module in _MCP_MODULES_ACCEPTED and env_var and server_name in _MCP_NAMES_CANONICAL:
-        result: Dict[str, Any] = {
+        return {
             "status": "canonical",
             "path": str(path),
             "server_name": server_name,
             "module": module,
             "env_var": env_var,
         }
-        if module == _MCP_MODULE_LEGACY_SHIM:
-            result["note"] = (
-                "`cymatix_context.mcp_server` is a compatibility shim that aliases to "
-                "`cymatix_context.mcp_server`; no change needed."
-            )
-        return result
 
     if module in _MCP_MODULES_ACCEPTED and env_var and server_name in _MCP_NAMES_NONCANONICAL:
         return {

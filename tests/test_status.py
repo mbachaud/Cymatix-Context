@@ -54,22 +54,6 @@ class TestCheckMcpConfig:
         assert result["env_var"] == "CYMATIX_MCP_URL"
         assert result["server_name"] == "cymatix-context"
 
-    def test_old_pair_still_canonical(self, tmp_path):
-        """cymatix-context + CYMATIX_MCP_URL must remain canonical — don't nag
-        working setups just because the rename shipped."""
-        cfg = tmp_path / ".mcp.json"
-        cfg.write_text(json.dumps({
-            "mcpServers": {
-                "cymatix-context": {
-                    "args": ["-m", "cymatix_context.mcp_server"],
-                    "env": {"CYMATIX_MCP_URL": "http://127.0.0.1:11437"},
-                }
-            }
-        }), encoding="utf-8")
-        result = status_mod._check_mcp_config(cfg)
-        assert result["status"] == "canonical"
-        assert result["env_var"] == "CYMATIX_MCP_URL"
-
     def test_short_server_name_is_noncanonical(self, tmp_path):
         """Right module + right env var, but the suffix-less `cymatix` key
         is flagged for rename rather than accepted silently."""
@@ -85,22 +69,6 @@ class TestCheckMcpConfig:
         result = status_mod._check_mcp_config(cfg)
         assert result["status"] == "noncanonical"
         assert "cymatix-context" in result["next_action"]
-
-    def test_legacy_shim_module_is_canonical_equivalent(self, tmp_path):
-        """`-m cymatix_context.mcp_server` aliases to the same server via the
-        compatibility shim; it should not be reported as missing/broken."""
-        cfg = tmp_path / ".mcp.json"
-        cfg.write_text(json.dumps({
-            "mcpServers": {
-                "cymatix-context": {
-                    "args": ["-m", "cymatix_context.mcp_server"],
-                    "env": {"CYMATIX_MCP_URL": "http://127.0.0.1:11437"},
-                }
-            }
-        }), encoding="utf-8")
-        result = status_mod._check_mcp_config(cfg)
-        assert result["status"] == "canonical"
-        assert "note" in result
 
     def test_missing_config_next_action_points_at_new_name(self, tmp_path):
         result = status_mod._check_mcp_config(None)
