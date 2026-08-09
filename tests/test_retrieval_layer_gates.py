@@ -6,7 +6,7 @@ Wave 2a/2b of the A/B data campaign
   * **PKI** (#334) — ``path_key_index``, 8.56 GB, the Tier-0 compound
     (path_token, kv_key) scorer at ``knowledge_store.py`` Tier 0.
   * **tags** (retrieval-layer ledger action 6) — ``promoter_index``,
-    2.58 GB, Tier 1 ``tag_exact`` + Tier 2 ``tag_prefix``  *(next commit)*.
+    2.58 GB, Tier 1 ``tag_exact`` + Tier 2 ``tag_prefix``.
 
 Both layers shipped ungated: the ablation ladder could not arm them, so
 11.1 GB of storage has never been measured against a null.
@@ -183,21 +183,24 @@ def test_shipped_default_reproduces_pre_gate_golden(golden, fusion_mode, query_n
     assert observed["signal_keys"] == expected["signal_keys"]
 
 
-def test_shipped_config_default_is_on():
-    """The knob ships TRUE == today's behaviour (no silent default flip)."""
-    assert RetrievalConfig().pki_enabled is True
+def test_shipped_config_defaults_are_on():
+    """Both knobs ship TRUE == today's behaviour (no silent default flip)."""
+    rc = RetrievalConfig()
+    assert rc.pki_enabled is True
+    assert rc.tags_enabled is True
 
 
-def test_store_ctor_default_is_on():
+def test_store_ctor_defaults_are_on():
     g = _build_store()
     try:
         assert g._pki_enabled is True
+        assert g._tags_enabled is True
     finally:
         g.close()
 
 
 def test_explicit_true_override_matches_the_default(golden):
-    """``use_pki=True`` == the default resolve.
+    """``use_pki=True`` / ``use_tags=True`` == the default resolve.
 
     Guards the ``None``-vs-``True`` branch of the per-call resolve: an
     override that took a different code path from the default would make
@@ -206,7 +209,7 @@ def test_explicit_true_override_matches_the_default(golden):
     for fusion_mode in FUSION_MODES:
         for query_name, _d, _e in QUERIES:
             expected = golden["fusion_modes"][fusion_mode][query_name]
-            observed = _run(fusion_mode, query_name, use_pki=True)
+            observed = _run(fusion_mode, query_name, use_pki=True, use_tags=True)
             assert observed["scores"] == expected["scores"], (
                 f"{fusion_mode}/{query_name}: explicit-True diverged from default"
             )
@@ -263,11 +266,12 @@ def _traced_sql(store, domains, entities):
     """Every SQL statement SQLite actually executes for one query_docs call.
 
     ``sqlite3.Connection.set_trace_callback`` fires per prepared statement, so
-    this is the real cost surface — not a mock of it.
+    this is the real cost surface — not a mock of it. Whitespace is collapsed
+    so a fingerprint can span what is a line break in the source f-string.
     """
     seen: list[str] = []
     conn = store.read_conn
-    conn.set_trace_callback(seen.append)
+    conn.set_trace_callback(lambda s: seen.append(" ".join(s.split())))
     try:
         store.query_docs(domains, entities, max_genes=6, read_only=True)
     finally:
@@ -313,10 +317,136 @@ def test_pki_gate_off_leaves_other_tiers_untouched(golden):
             )
 
 
+# ══════════════════════════════════════════════════════════════════════
+# 2b. tags gate (retrieval-layer ledger action 6)
+# ══════════════════════════════════════════════════════════════════════
+
+
 def test_tag_signals_fire_at_baseline():
-    """Baseline record for the tags gate landing in the next commit."""
     obs = _run("rrf", "q_tags_only")
     assert "tag_exact" in obs["signal_keys"]
     assert "tag_prefix" in obs["signal_keys"]
     assert "tag_exact" in obs["tier_contrib"]["tag-a"]
     assert "tag_prefix" in obs["tier_contrib"]["tag-b"]
+
+
+def test_tags_config_gate_off_removes_both_signals():
+    obs = _run("rrf", "q_tags_only", tags_enabled=False)
+    assert "tag_exact" not in obs["signal_keys"]
+    assert "tag_prefix" not in obs["signal_keys"]
+    for gid, contribs in obs["tier_contrib"].items():
+        assert "tag_exact" not in contribs, f"{gid} kept a tag_exact contribution"
+        assert "tag_prefix" not in contribs, f"{gid} kept a tag_prefix contribution"
+
+
+def test_tags_per_call_override_off_removes_both_signals():
+    obs = _run("rrf", "q_tags_only", use_tags=False)
+    assert "tag_exact" not in obs["signal_keys"]
+    assert "tag_prefix" not in obs["signal_keys"]
+
+
+def test_tags_per_call_override_on_beats_a_disabled_config():
+    obs = _run("rrf", "q_tags_only", tags_enabled=False, use_tags=True)
+    assert "tag_exact" in obs["signal_keys"]
+    assert "tag_prefix" in obs["signal_keys"]
+
+
+# SQL fingerprints identifying which tier issued a given promoter_index read.
+# The trace callback reports statements with parameters already substituted,
+# so these match on structure, not on placeholders:
+#   Tier 1      — the only `tag_value IN (...)` form
+#   Tier 2      — the only range-scan form (KnowledgeStore._tag_prefix_sql)
+#   lex_anchor  — the only equality form
+_TIER1_SQL = "tag_value IN ("
+_TIER2_SQL = "FROM promoter_index WHERE tag_value >="
+_LEX_ANCHOR_SQL = "FROM promoter_index WHERE tag_value ="
+
+
+def test_tags_gate_does_not_run_the_tier_sql():
+    """Both tag tiers' ``promoter_index`` SQL is skipped, not merely zeroed.
+
+    Weight-zeroing was the only mute previously available and it still pays
+    the SQL cost — which is precisely why the ladder dropped the arm. This
+    asserts the gate removes the query, i.e. the cost axis is real.
+    """
+    on = _build_store()
+    try:
+        baseline_sql = _traced_sql(on, ["alpha"], ["beta"])
+    finally:
+        on.close()
+    assert any(_TIER1_SQL in s for s in baseline_sql), (
+        "control: Tier 1 must query promoter_index at baseline"
+    )
+    assert any(_TIER2_SQL in s for s in baseline_sql), (
+        "control: Tier 2 must query promoter_index at baseline"
+    )
+
+    off = _build_store(tags_enabled=False)
+    try:
+        gated_sql = _traced_sql(off, ["alpha"], ["beta"])
+    finally:
+        off.close()
+    assert not any(_TIER1_SQL in s for s in gated_sql), (
+        "Tier 1 promoter_index SQL still executed with the tags gate off"
+    )
+    assert not any(_TIER2_SQL in s for s in gated_sql), (
+        "Tier 2 promoter_index SQL still executed with the tags gate off"
+    )
+
+
+def test_lex_anchor_still_reads_promoter_index_with_tags_gated_off():
+    """DOCUMENTED COUPLING — read this before interpreting a ``no_tags`` arm.
+
+    ``promoter_index`` (the 2.58 GB "tags" storage layer) is read by THREE
+    tiers, not the two the ledger names: Tier 1 ``tag_exact``, Tier 2
+    ``tag_prefix``, and the **lex_anchor** IDF boost, which issues its own
+    ``SELECT COUNT(DISTINCT gene_id) FROM promoter_index WHERE tag_value = ?``
+    per query term and then boosts the documents carrying that tag
+    (``knowledge_store.py`` lex_anchor block, signal ``lex_anchor``).
+
+    ``tags_enabled`` is deliberately scoped to Tiers 1+2 — that is the layer
+    the ledger action names, and folding a third tier into the same knob
+    would make the arm measure something the ladder could not attribute. The
+    consequence, which any storage-removal argument must respect:
+
+        a ``no_tags`` arm measures the TAG-MATCH TIERS, not the removability
+        of the promoter_index table. Dropping the table would additionally
+        take lex_anchor's IDF with it, and that is NOT what the arm probes.
+
+    This test pins the coupling so it cannot be silently "fixed" into a
+    quieter but wronger arm.
+    """
+    off = _build_store(tags_enabled=False)
+    try:
+        gated_sql = _traced_sql(off, ["alpha"], ["beta"])
+        obs = _snapshot(off, ["alpha"], ["beta"])
+    finally:
+        off.close()
+    assert any(_LEX_ANCHOR_SQL in s for s in gated_sql), (
+        "lex_anchor's promoter_index probe vanished — the tags gate has "
+        "grown beyond Tiers 1+2 and the no_tags arm now measures a "
+        "different layer than it claims"
+    )
+    assert "lex_anchor" in obs["signal_keys"]
+
+
+def test_tags_gate_off_leaves_pki_untouched():
+    """Ablating tags must not take PKI down with it (and vice versa)."""
+    obs = _run("rrf", "q_pki_only", tags_enabled=False)
+    assert "pki" in obs["signal_keys"]
+    assert obs["tier_contrib"]["pki-a"]["pki"] == repr(5.0)
+
+    obs2 = _run("rrf", "q_tags_only", pki_enabled=False)
+    assert "tag_exact" in obs2["signal_keys"]
+    assert "tag_prefix" in obs2["signal_keys"]
+
+
+# ══════════════════════════════════════════════════════════════════════
+# 3. Both gates off together — the 11.1 GB arm
+# ══════════════════════════════════════════════════════════════════════
+
+
+def test_both_gates_off_removes_all_three_signals():
+    obs = _run("rrf", "q_pki_and_tags", pki_enabled=False, tags_enabled=False)
+    for sig in ("pki", "tag_exact", "tag_prefix"):
+        assert sig not in obs["signal_keys"], f"{sig} survived the double ablation"

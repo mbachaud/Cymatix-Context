@@ -1048,6 +1048,9 @@ class CymatixContextManager:
             # Genome AND every per-shard Genome via open_read_source, same
             # as the other retrieval knobs. Default true == shipped.
             pki_enabled=config.retrieval.pki_enabled,
+            # Ledger action 6: Tier-1/2 tag retrieval gate. Same fan-out,
+            # same default-true inertness.
+            tags_enabled=config.retrieval.tags_enabled,
             # Issues #222/#223: sharded per-shard fetch depth + co-activation
             # reserved budget. Router-only knobs — fanned to ShardRouter via
             # open_read_source -> ShardedGenomeAdapter; also passed to each
@@ -2925,6 +2928,7 @@ class CymatixContextManager:
         use_harmonic: bool = True,
         use_sr: Optional[bool] = None,
         use_pki: Optional[bool] = None,
+        use_tags: Optional[bool] = None,
         read_only: bool = False,
         query_type: Optional[str] = None,
         rerank_combinator: Optional[str] = None,
@@ -2938,6 +2942,9 @@ class CymatixContextManager:
         byte-identical default. Forwarded to BOTH the dense-ANN branch and
         the plain ``query_docs`` branch; on the sharded path it rides the
         router's verbatim ``**kwargs`` fan-out to each shard.
+
+        ``use_tags`` (retrieval-layer ledger action 6): the same, for the
+        Tier-1/2 ``promoter_index`` tag layer.
 
         ``rerank_combinator`` (issue #255, classifier-gated combinator): the
         per-query combinator override resolved from the stage-0 query
@@ -3006,6 +3013,7 @@ class CymatixContextManager:
                     use_sr=use_sr,
                     use_entity_graph=self.genome._entity_graph_retrieval_enabled,
                     use_pki=use_pki,
+                    use_tags=use_tags,
                     read_only=read_only,
                     rerank_combinator=rerank_combinator,
                     rerank_override=rerank_override,
@@ -3020,6 +3028,7 @@ class CymatixContextManager:
                     use_sr=use_sr,
                     use_entity_graph=self.genome._entity_graph_retrieval_enabled,
                     use_pki=use_pki,
+                    use_tags=use_tags,
                     read_only=read_only,
                     query_type=query_type,
                     rerank_combinator=rerank_combinator,

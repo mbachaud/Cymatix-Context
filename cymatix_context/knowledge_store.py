@@ -692,6 +692,14 @@ class KnowledgeStore:
         # layer's cost AND its recall contribution instead of a zeroed
         # bonus. Per-call override: query_docs(..., use_pki=False).
         pki_enabled: bool = True,
+        # ── Ledger action 6: Tier-1/2 promoter_index (tag) retrieval gate ──
+        # DEFAULT TRUE == the pre-gate store, byte-for-byte: both tag tiers
+        # ran unconditionally. False skips Tier 1 (tag_exact) AND Tier 2
+        # (tag_prefix) entirely — SQL, scoring, fusion and both timing
+        # signals — so the ladder can measure the 2.58 GB layer instead of
+        # weight-zeroing it (which would pay the SQL cost anyway and
+        # misreport the cost axis). Per-call override: use_tags=False.
+        tags_enabled: bool = True,
         # ── Issue #341: query-time cross-encoder rerank (default-OFF) ──
         # Pre-cap rerank seam. With rerank_enabled=False (and no per-query
         # override) every retrieval path below is byte-identical to the
@@ -867,6 +875,8 @@ class KnowledgeStore:
         self._pki_weight: float = float(pki_weight)
         # Issue #334: Tier-0 PKI retrieval gate (default on == shipped).
         self._pki_enabled: bool = bool(pki_enabled)
+        # Ledger action 6: Tier-1/2 tag retrieval gate (default on == shipped).
+        self._tags_enabled: bool = bool(tags_enabled)
         # Issue #341: pre-cap cross-encoder rerank (see ctor params).
         self._rerank_enabled: bool = bool(rerank_enabled)
         self._rerank_depth: int = int(rerank_depth)
@@ -2593,6 +2603,7 @@ class KnowledgeStore:
         use_sr: Optional[bool] = None,
         use_entity_graph: Optional[bool] = None,
         use_pki: Optional[bool] = None,
+        use_tags: Optional[bool] = None,
         read_only: bool = False,
         query_type: Optional[str] = None,
         rerank_combinator: Optional[str] = None,
@@ -2611,6 +2622,14 @@ class KnowledgeStore:
         and its ``"pki"`` timing signal. The signal's absence is what the
         ablation ladder validates the ``no_pki`` arm with, so the skip has to
         be total, not a zeroed bonus.
+
+        ``use_tags`` (retrieval-layer ledger action 6, Tier-1/2 tag gate):
+        the same shape for the ``promoter_index`` tag layer. ``None``
+        (default) defers to ``self._tags_enabled``, itself default True.
+        ``False`` skips Tier 1 ``tag_exact`` AND Tier 2 ``tag_prefix``
+        together — they share one index and one storage layer, so ablating
+        one without the other would measure neither. The ``"tag_exact"`` /
+        ``"tag_prefix"`` timing signals both vanish with it.
 
         ``query_text`` / ``rerank_override`` (issue #341, pre-cap
         cross-encoder rerank): when rerank is effective for this call AND
@@ -2956,135 +2975,159 @@ class KnowledgeStore:
             except Exception as exc:
                 log.debug("filename_anchor tier skipped: %s", exc)
 
-        # ── Tier 1: exact tag match (weight: tag_exact_weight) ────
-        _tag_exact_t0 = time.monotonic()
-        placeholders = ",".join("?" * len(query_terms))
-        _effective_terms = list(query_terms)
-        if self._tag_df_cap > 0.0:
-            # #327 iteration 2: membership relief. Tags covering more than
-            # cap×N genes are index noise, not signal — they are removed
-            # from the tier's term set entirely, so flood-tied genes whose
-            # only match was the flooded tag drop out of the tier instead
-            # of staying tied at a scaled score (the measured failure of
-            # IDF scaling under RRF).
-            _cap_df_rows = cur.execute(
-                f"""
-                SELECT tag_value, COUNT(DISTINCT gene_id) AS df
-                FROM promoter_index
-                WHERE tag_value IN ({placeholders})
-                GROUP BY tag_value
-                """,
-                tuple(query_terms),
-            ).fetchall()
-            _cap_n = cur.execute("SELECT COUNT(*) FROM genes").fetchone()[0]
-            if _cap_n > 0:
-                _flooded = {r["tag_value"] for r in _cap_df_rows
-                            if r["df"] / _cap_n > self._tag_df_cap}
-                if _flooded:
-                    _effective_terms = [t for t in query_terms
-                                        if t not in _flooded]
-        if not _effective_terms:
-            _tag_exact_ranked: List[Tuple[str, float]] = []
-        elif self._tag_idf_enabled:
-            # Issue #327: per-tag selectivity scaling. A tag on 25%+ of
-            # the corpus ('cymatix' on 1,596/6,276 genes — the verified
-            # tag-flood mechanism, docs/benchmarks/2026-07-31-tagger-ab-
-            # tag-flood.md) contributes ~0 instead of a full weight;
-            # df=1 tags contribute the full weight. Scale, don't drop.
-            _eff_placeholders = ",".join("?" * len(_effective_terms))
-            _df_rows = cur.execute(
-                f"""
-                SELECT tag_value, COUNT(DISTINCT gene_id) AS df
-                FROM promoter_index
-                WHERE tag_value IN ({_eff_placeholders})
-                GROUP BY tag_value
-                """,
-                tuple(_effective_terms),
-            ).fetchall()
-            _n_genes = cur.execute("SELECT COUNT(*) FROM genes").fetchone()[0]
-            _log_n = math.log(_n_genes) if _n_genes > 1 else 1.0
-            _idf = {
-                r["tag_value"]: (
-                    math.log(_n_genes / r["df"]) / _log_n
-                    if _n_genes > 1 and r["df"] >= 1 else 1.0
+        # ── Tiers 1 + 2: promoter_index tag lookup ─────────────────
+        # Retrieval-layer ledger action 6: the tag layer (promoter_index,
+        # 2.58 GB on the blob bed) is the second-largest UNMEASURED storage
+        # layer and, like PKI, shipped with no query-time off-switch — the
+        # ladder's own authoring notes record it as DROPPED for exactly that
+        # reason ("Tier 1 and Tier 2 run unconditionally ... the only mute
+        # available is weight-zeroing, which silences the tier's
+        # contribution while still paying its SQL cost — that is not a layer
+        # ablation and would misreport the cost axis").
+        #
+        # ``tags_enabled`` is that switch. It is NOT one of the #327
+        # discipline knobs (tag_idf_enabled / tag_df_cap), which turn
+        # discipline ON and are therefore interventions rather than
+        # ablations; those still bind unchanged INSIDE this block.
+        #
+        # DEFAULT TRUE == the pre-gate store, byte-for-byte: both tiers used
+        # to run unconditionally. False skips both — every promoter_index
+        # SELECT, both score accumulations, both fuser.add_tier calls and
+        # both `_sig` timing signals — so the arm measures the layer's cost
+        # AND its contribution, and the ladder's signal-absence validation
+        # cannot pass vacuously. Per-call override: query_docs(...,
+        # use_tags=False).
+        _tags_on = self._tags_enabled if use_tags is None else bool(use_tags)
+        if _tags_on:
+            # ── Tier 1: exact tag match (weight: tag_exact_weight) ────
+            _tag_exact_t0 = time.monotonic()
+            placeholders = ",".join("?" * len(query_terms))
+            _effective_terms = list(query_terms)
+            if self._tag_df_cap > 0.0:
+                # #327 iteration 2: membership relief. Tags covering more than
+                # cap×N genes are index noise, not signal — they are removed
+                # from the tier's term set entirely, so flood-tied genes whose
+                # only match was the flooded tag drop out of the tier instead
+                # of staying tied at a scaled score (the measured failure of
+                # IDF scaling under RRF).
+                _cap_df_rows = cur.execute(
+                    f"""
+                    SELECT tag_value, COUNT(DISTINCT gene_id) AS df
+                    FROM promoter_index
+                    WHERE tag_value IN ({placeholders})
+                    GROUP BY tag_value
+                    """,
+                    tuple(query_terms),
+                ).fetchall()
+                _cap_n = cur.execute("SELECT COUNT(*) FROM genes").fetchone()[0]
+                if _cap_n > 0:
+                    _flooded = {r["tag_value"] for r in _cap_df_rows
+                                if r["df"] / _cap_n > self._tag_df_cap}
+                    if _flooded:
+                        _effective_terms = [t for t in query_terms
+                                            if t not in _flooded]
+            if not _effective_terms:
+                _tag_exact_ranked: List[Tuple[str, float]] = []
+            elif self._tag_idf_enabled:
+                # Issue #327: per-tag selectivity scaling. A tag on 25%+ of
+                # the corpus ('cymatix' on 1,596/6,276 genes — the verified
+                # tag-flood mechanism, docs/benchmarks/2026-07-31-tagger-ab-
+                # tag-flood.md) contributes ~0 instead of a full weight;
+                # df=1 tags contribute the full weight. Scale, don't drop.
+                _eff_placeholders = ",".join("?" * len(_effective_terms))
+                _df_rows = cur.execute(
+                    f"""
+                    SELECT tag_value, COUNT(DISTINCT gene_id) AS df
+                    FROM promoter_index
+                    WHERE tag_value IN ({_eff_placeholders})
+                    GROUP BY tag_value
+                    """,
+                    tuple(_effective_terms),
+                ).fetchall()
+                _n_genes = cur.execute("SELECT COUNT(*) FROM genes").fetchone()[0]
+                _log_n = math.log(_n_genes) if _n_genes > 1 else 1.0
+                _idf = {
+                    r["tag_value"]: (
+                        math.log(_n_genes / r["df"]) / _log_n
+                        if _n_genes > 1 and r["df"] >= 1 else 1.0
+                    )
+                    for r in _df_rows
+                }
+                rows = cur.execute(
+                    f"""
+                    SELECT g.gene_id, pi.tag_value
+                    FROM genes g
+                    JOIN promoter_index pi ON g.gene_id = pi.gene_id
+                    WHERE pi.tag_value IN ({_eff_placeholders})
+                      AND g.chromatin < ?
+                      {_party_filter}
+                      {_prefilter_aliased_clause}
+                    """,
+                    (*_effective_terms, int(ChromatinState.HETEROCHROMATIN),
+                     *_party_params, *_prefilter_params),
+                ).fetchall()
+                _idf_scores: Dict[str, float] = {}
+                for r in rows:
+                    _idf_scores[r["gene_id"]] = _idf_scores.get(r["gene_id"], 0.0) + \
+                        _idf.get(r["tag_value"], 1.0) * self._tag_exact_weight
+                _tag_exact_ranked = sorted(
+                    _idf_scores.items(), key=lambda kv: kv[1], reverse=True
                 )
-                for r in _df_rows
-            }
-            rows = cur.execute(
-                f"""
-                SELECT g.gene_id, pi.tag_value
-                FROM genes g
-                JOIN promoter_index pi ON g.gene_id = pi.gene_id
-                WHERE pi.tag_value IN ({_eff_placeholders})
-                  AND g.chromatin < ?
-                  {_party_filter}
-                  {_prefilter_aliased_clause}
-                """,
-                (*_effective_terms, int(ChromatinState.HETEROCHROMATIN),
-                 *_party_params, *_prefilter_params),
-            ).fetchall()
-            _idf_scores: Dict[str, float] = {}
-            for r in rows:
-                _idf_scores[r["gene_id"]] = _idf_scores.get(r["gene_id"], 0.0) + \
-                    _idf.get(r["tag_value"], 1.0) * self._tag_exact_weight
-            _tag_exact_ranked = sorted(
-                _idf_scores.items(), key=lambda kv: kv[1], reverse=True
+                for gid, tag_score in _tag_exact_ranked:
+                    gene_scores[gid] = tag_score
+                    tier_contrib.setdefault(gid, {})["tag_exact"] = tag_score
+            else:
+                _eff_placeholders = ",".join("?" * len(_effective_terms))
+                rows = cur.execute(
+                    f"""
+                    SELECT g.gene_id, COUNT(pi.tag_value) AS match_count
+                    FROM genes g
+                    JOIN promoter_index pi ON g.gene_id = pi.gene_id
+                    WHERE pi.tag_value IN ({_eff_placeholders})
+                      AND g.chromatin < ?
+                      {_party_filter}
+                      {_prefilter_aliased_clause}
+                    GROUP BY g.gene_id
+                    """,
+                    (*_effective_terms, int(ChromatinState.HETEROCHROMATIN), *_party_params, *_prefilter_params),
+                ).fetchall()
+
+                _tag_exact_ranked = []  # Stage 3 RRF
+                for r in rows:
+                    # #202: tag_exact_weight (default 3.0 == legacy literal).
+                    tag_score = r["match_count"] * self._tag_exact_weight
+                    gene_scores[r["gene_id"]] = tag_score
+                    tier_contrib.setdefault(r["gene_id"], {})["tag_exact"] = tag_score
+                    _tag_exact_ranked.append((r["gene_id"], tag_score))
+            # Stage 3: count tier — rank by raw score (= match_count ×
+            # tag_exact_weight)
+            # which is monotone in match_count, so the rank order matches
+            # the spec's "rank by match_count descending" rule (§4).
+            fuser.add_tier("tag_exact", _tag_exact_ranked, weight=self._tag_exact_weight)
+            _sig("tag_exact", _tag_exact_t0)
+
+            # ── Tier 2: prefix tag match (weight: tag_prefix_weight) ───
+            # "server" matches "serverconfig", "server_api", etc.
+            _tag_prefix_t0 = time.monotonic()
+            _tp_sql, _tp_params = self._tag_prefix_sql(
+                query_terms,
+                _party_filter,
+                tuple(_party_params),
+                _prefilter_aliased_clause,
+                tuple(_prefilter_params),
             )
-            for gid, tag_score in _tag_exact_ranked:
-                gene_scores[gid] = tag_score
-                tier_contrib.setdefault(gid, {})["tag_exact"] = tag_score
-        else:
-            _eff_placeholders = ",".join("?" * len(_effective_terms))
-            rows = cur.execute(
-                f"""
-                SELECT g.gene_id, COUNT(pi.tag_value) AS match_count
-                FROM genes g
-                JOIN promoter_index pi ON g.gene_id = pi.gene_id
-                WHERE pi.tag_value IN ({_eff_placeholders})
-                  AND g.chromatin < ?
-                  {_party_filter}
-                  {_prefilter_aliased_clause}
-                GROUP BY g.gene_id
-                """,
-                (*_effective_terms, int(ChromatinState.HETEROCHROMATIN), *_party_params, *_prefilter_params),
-            ).fetchall()
+            rows = cur.execute(_tp_sql, _tp_params).fetchall()
 
-            _tag_exact_ranked = []  # Stage 3 RRF
+            _tag_prefix_ranked: List[Tuple[str, float]] = []  # Stage 3 RRF
             for r in rows:
-                # #202: tag_exact_weight (default 3.0 == legacy literal).
-                tag_score = r["match_count"] * self._tag_exact_weight
-                gene_scores[r["gene_id"]] = tag_score
-                tier_contrib.setdefault(r["gene_id"], {})["tag_exact"] = tag_score
-                _tag_exact_ranked.append((r["gene_id"], tag_score))
-        # Stage 3: count tier — rank by raw score (= match_count ×
-        # tag_exact_weight)
-        # which is monotone in match_count, so the rank order matches
-        # the spec's "rank by match_count descending" rule (§4).
-        fuser.add_tier("tag_exact", _tag_exact_ranked, weight=self._tag_exact_weight)
-        _sig("tag_exact", _tag_exact_t0)
-
-        # ── Tier 2: prefix tag match (weight: tag_prefix_weight) ───
-        # "server" matches "serverconfig", "server_api", etc.
-        _tag_prefix_t0 = time.monotonic()
-        _tp_sql, _tp_params = self._tag_prefix_sql(
-            query_terms,
-            _party_filter,
-            tuple(_party_params),
-            _prefilter_aliased_clause,
-            tuple(_prefilter_params),
-        )
-        rows = cur.execute(_tp_sql, _tp_params).fetchall()
-
-        _tag_prefix_ranked: List[Tuple[str, float]] = []  # Stage 3 RRF
-        for r in rows:
-            gid = r["gene_id"]
-            # #202: tag_prefix_weight (default 1.5 == legacy literal).
-            prefix_score = r["match_count"] * self._tag_prefix_weight
-            gene_scores[gid] = gene_scores.get(gid, 0) + prefix_score
-            tier_contrib.setdefault(gid, {})["tag_prefix"] = prefix_score
-            _tag_prefix_ranked.append((gid, prefix_score))
-        fuser.add_tier("tag_prefix", _tag_prefix_ranked, weight=self._tag_prefix_weight)
-        _sig("tag_prefix", _tag_prefix_t0)
+                gid = r["gene_id"]
+                # #202: tag_prefix_weight (default 1.5 == legacy literal).
+                prefix_score = r["match_count"] * self._tag_prefix_weight
+                gene_scores[gid] = gene_scores.get(gid, 0) + prefix_score
+                tier_contrib.setdefault(gid, {})["tag_prefix"] = prefix_score
+                _tag_prefix_ranked.append((gid, prefix_score))
+            fuser.add_tier("tag_prefix", _tag_prefix_ranked, weight=self._tag_prefix_weight)
+            _sig("tag_prefix", _tag_prefix_t0)
 
         # ── Tier 3: FTS5 content search (cap: 2.0 × fts5_weight) ───
         if self._fts_available:
@@ -4299,6 +4342,7 @@ class KnowledgeStore:
         use_sr: Optional[bool] = None,
         use_entity_graph: Optional[bool] = None,
         use_pki: Optional[bool] = None,
+        use_tags: Optional[bool] = None,
         read_only: bool = False,
         *,
         pool_size: int | None = None,
@@ -4358,6 +4402,8 @@ class KnowledgeStore:
             # the override has to ride through here or the no_pki arm would
             # be inert on the dense-on default path.
             use_pki=use_pki,
+            # Ledger action 6: same reasoning for the tag tiers.
+            use_tags=use_tags,
             read_only=read_only,
             # Issue #255: forward the per-query combinator override so the
             # dense-ANN path (dense-on default) honors the classifier gate too;

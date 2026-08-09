@@ -491,7 +491,22 @@ class RetrievalConfig:
     # measures the layer's true cost/impact rather than a zeroed bonus. The
     # `use_pki` per-call override on query_docs/query_docs_ann lets a harness
     # flip it per query without mutating global config.
-    pki_enabled: bool = True
+    pki_enabled: bool = True   # Tier-0 path_key_index gate (#334). true == shipped behaviour; false ablates the tier (SQL + score + 'pki' signal). Per-call override: use_pki.
+    # ── Retrieval-layer ledger action 6: tag-tier (promoter_index) gate ──
+    # The tag layer is the second-largest UNMEASURED storage layer (2.58 GB
+    # on the blob bed). Tier 1 (tag_exact) and Tier 2 (tag_prefix) ran
+    # unconditionally, which is why the ablation ladder's authoring notes
+    # DROPPED the no_tag_* arm: the only mute available was weight-zeroing,
+    # which silences the score while still paying the SQL cost and so
+    # misreports the cost axis. This knob skips both tiers outright.
+    #
+    # Distinct from the #327 knobs (tag_idf_enabled / tag_df_cap): those turn
+    # tag DISCIPLINE on and are interventions, not ablations. They still bind
+    # unchanged inside the tier when tags_enabled is true.
+    #
+    # DEFAULT TRUE == today's behaviour, byte-for-byte. Per-call override:
+    # `use_tags` on query_docs / query_docs_ann.
+    tags_enabled: bool = True  # Tier-1/2 promoter_index (tag) gate, ledger action 6. true == shipped behaviour; false ablates BOTH tag tiers (SQL + score + 'tag_exact'/'tag_prefix' signals). Per-call override: use_tags. NOTE: lex_anchor also reads promoter_index and is NOT gated by this.
     # Tier 5b: entity graph co-occurrence boost (Step 3C, 2026-05-08).
     # Documents sharing entity nodes with query terms get a score boost proportional
     # to entity overlap. Dark ship — flip to true for A/B.
@@ -1497,6 +1512,8 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             fts5_candidate_depth=int(r.get("fts5_candidate_depth", cfg.retrieval.fts5_candidate_depth)),
             # Issue #334: Tier-0 PKI gate. Default true == shipped behaviour.
             pki_enabled=bool(r.get("pki_enabled", cfg.retrieval.pki_enabled)),
+            # Ledger action 6: Tier-1/2 tag gate. Default true == shipped.
+            tags_enabled=bool(r.get("tags_enabled", cfg.retrieval.tags_enabled)),
             entity_graph_retrieval_enabled=bool(r.get("entity_graph_retrieval_enabled", cfg.retrieval.entity_graph_retrieval_enabled)),
             symbol_expansion_cap=int(r.get("symbol_expansion_cap", cfg.retrieval.symbol_expansion_cap)),
             dense_embedding_enabled=bool(r.get("dense_embedding_enabled", cfg.retrieval.dense_embedding_enabled)),

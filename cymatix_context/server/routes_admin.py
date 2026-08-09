@@ -1186,6 +1186,8 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
                 # pki_enabled=false would silently get the tier back after a
                 # fixture swap. Default true == no behaviour change.
                 pki_enabled=config.retrieval.pki_enabled,
+                # Ledger action 6: same for the Tier-1/2 tag gate.
+                tags_enabled=config.retrieval.tags_enabled,
                 # Issues #222/#223: keep the swap path in sync with the boot
                 # path — sharded fetch depth + co-activation reserved budget.
                 shard_fetch_multiplier=config.retrieval.shard_fetch_multiplier,
