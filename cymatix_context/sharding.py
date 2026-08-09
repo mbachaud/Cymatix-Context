@@ -553,6 +553,9 @@ class ShardedGenomeAdapter:
     # is per-shard in V1, so the adapter mirrors this as a no-op too.
     def invalidate_cold_sema_cache(self, *_a, **_kw) -> None: pass
     def _build_sema_cache(self, *_a, **_kw) -> None: pass
+    # Sema is main-only in V1 (see _sema_cache below), so the vectorless
+    # auto-gate probe has nothing to scan here — no-op shim for surface parity.
+    def _probe_sema_vectorless(self, *_a, **_kw) -> None: pass
     def _invalidate_dense_matrix(self, *_a, **_kw) -> None: pass
     # #372: document-scoped transactions are per-connection; V1 sharding has
     # no cross-shard transaction, so both seams are no-op scopes — each shard

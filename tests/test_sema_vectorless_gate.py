@@ -130,6 +130,93 @@ def test_invalidation_reenables_encode(sema_genome):
     assert sema_genome._sema_cache is not None
 
 
+def test_vectorless_bed_with_full_candidate_pool_never_calls_encode(sema_genome):
+    """The gate must arm from EVIDENCE, not from the undersized-pool cycle.
+
+    ``_build_sema_cache()`` was the only thing that armed ``_sema_vectorless``,
+    and it runs solely on the ``len(gene_scores) < limit // 2`` cycle. On a
+    vectorless bed whose queries fill the candidate pool — the common case at
+    100k/829k, where the lexical tiers return far more than ``limit // 2``
+    candidates — the gate therefore never armed, and every query kept paying
+    the Tier 4 ``codec.encode()`` RTT that the retrieval-layer ledger asked us
+    to eliminate. The one-shot ``_probe_sema_vectorless`` scan closes the hole.
+    """
+    for i in range(12):
+        g = make_gene(f"fullpool content {i}", domains=["fullpool"])
+        sema_genome.upsert_gene(g)
+
+    genes = sema_genome.query_genes(domains=["fullpool"], entities=[], max_genes=8)
+
+    # Guard: the scenario is only meaningful if the pool really did fill.
+    assert len(genes) >= 4, (
+        "test setup no longer produces a full candidate pool; the "
+        "undersized-pool path would arm the gate for the wrong reason"
+    )
+    assert sema_genome.codec.encode_calls == 0, (
+        "codec.encode() must not fire on a vectorless bed even when the "
+        "candidate pool is full (the cache-build arming cycle never runs)"
+    )
+    assert sema_genome._sema_vectorless is True
+
+
+def test_vectorless_probe_runs_at_most_once(sema_genome, monkeypatch):
+    """The probe is evidence, not a per-query scan: it must execute once
+    per store lifetime (until an invalidation re-arms it)."""
+    for i in range(12):
+        sema_genome.upsert_gene(
+            make_gene(f"probe-once content {i}", domains=["probeonce"])
+        )
+
+    calls = {"n": 0}
+    real_probe = type(sema_genome)._probe_sema_vectorless
+
+    def _counting_probe(self):
+        calls["n"] += 1
+        return real_probe(self)
+
+    monkeypatch.setattr(type(sema_genome), "_probe_sema_vectorless", _counting_probe)
+
+    for _ in range(4):
+        sema_genome.query_genes(domains=["probeonce"], entities=[], max_genes=8)
+
+    assert sema_genome._sema_vectorless is True
+    assert sema_genome.codec.encode_calls == 0
+    # The method may be *called* per query (it is a cheap early-return once
+    # armed), but the SQL probe itself must have been marked done after the
+    # first one — _sema_probe_done is the memo.
+    assert sema_genome._sema_probe_done is True
+    assert calls["n"] >= 1
+
+
+def test_full_pool_bed_with_vectors_is_unaffected(sema_genome):
+    """A bed that HAS vectors must behave exactly as before the probe: the
+    probe finds a row, arms nothing, and encode() still fires."""
+    for i in range(12):
+        g = make_gene(f"vectored fullpool {i}", domains=["vecpool"])
+        g.embedding = [0.2] * 20
+        sema_genome.upsert_gene(g)
+
+    genes = sema_genome.query_genes(domains=["vecpool"], entities=[], max_genes=8)
+
+    assert len(genes) >= 4
+    assert sema_genome._sema_vectorless is False
+    assert sema_genome.codec.encode_calls == 1, (
+        "the vectors-present path must still pay exactly one encode() per query"
+    )
+
+
+def test_probe_memo_cleared_by_invalidation():
+    """A bed that later gains vectors must re-probe, not stay gated on a
+    stale vectorless verdict."""
+    g = Genome(path=":memory:")
+    g._sema_vectorless = True
+    g._sema_probe_done = True
+    g.invalidate_sema_cache()
+    assert g._sema_vectorless is False
+    assert g._sema_probe_done is False
+    g.close()
+
+
 def test_invalidate_sema_cache_clears_vectorless_flag_directly():
     """Unit-level: invalidate_sema_cache() clears _sema_vectorless even
     without going through a query."""
