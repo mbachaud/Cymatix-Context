@@ -549,6 +549,9 @@ class ShardedGenomeAdapter:
     def compact_genome(self, *_a, **_kw) -> dict: return {"compacted": 0, "sharded": True}
     def invalidate_sema_cache(self, *_a, **_kw) -> None: pass
     def _build_sema_cache(self, *_a, **_kw) -> None: pass
+    # Sema is main-only in V1 (see _sema_cache below), so the vectorless
+    # auto-gate probe has nothing to scan here — no-op shim for surface parity.
+    def _probe_sema_vectorless(self, *_a, **_kw) -> None: pass
     def _invalidate_dense_matrix(self, *_a, **_kw) -> None: pass
 
     # SEMA cache is main-only (not per-shard in V1); expose an empty one.

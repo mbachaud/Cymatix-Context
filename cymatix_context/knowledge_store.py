@@ -999,6 +999,12 @@ class KnowledgeStore:
         self._sema_vectorless: bool = False
         self._cold_sema_vectorless: bool = False
         self._sema_idle_logged: bool = False  # one log.info per store lifetime
+        # Memo for _probe_sema_vectorless(). The cache build above only ever
+        # runs on the undersized-pool cycle, so on a vectorless bed whose
+        # queries always fill the candidate pool the gate would never arm.
+        # The probe is the evidence path that covers that case; this flag
+        # keeps it one-shot. Cleared by invalidate_sema_cache().
+        self._sema_probe_done: bool = False
         # Memoized corpus size for IDF weighting (refreshed every
         # _CORPUS_SIZE_TTL seconds). Prevents the IDF denominator from
         # collapsing to the scored-candidate count on every query.
@@ -1188,6 +1194,47 @@ class KnowledgeStore:
         else:
             self._sema_cache = None
 
+    def _probe_sema_vectorless(self) -> None:
+        """One-shot cheap evidence probe for the sema vectorless auto-gate.
+
+        ``_build_sema_cache()`` arms ``_sema_vectorless``, but it only ever
+        runs on the undersized-pool cycle (``len(gene_scores) < limit // 2``).
+        On a vectorless bed whose queries always fill the candidate pool —
+        the common case at 100k/829k, where the lexical tiers alone return
+        far more than ``limit // 2`` candidates — the gate therefore never
+        armed, and every query kept paying the Tier 4 ``codec.encode()`` RTT
+        for a tier that provably cannot produce a candidate. This closes
+        that hole with the cheapest available evidence query.
+
+        ``LIMIT 1`` and no materialization makes this strictly cheaper than
+        the cache build's ``SELECT gene_id, embedding ... WHERE embedding IS
+        NOT NULL`` full fetch, and on a bed that HAS vectors it returns on
+        the first matching row. It runs at most once per store lifetime per
+        invalidation: ``_sema_probe_done`` memoizes the verdict either way,
+        and ``invalidate_sema_cache()`` clears it so a bed that later gains
+        vectors (upsert, backfill script) re-checks.
+
+        Fail-safe: any probe error leaves ``_sema_vectorless`` false, i.e.
+        the pre-gate behaviour where encode() fires.
+        """
+        if self._sema_probe_done or self._sema_vectorless:
+            return
+        # Marked done before the query so a persistently failing probe
+        # degrades to "gate never arms" rather than "rescan every query".
+        self._sema_probe_done = True
+        try:
+            row = self.read_conn.execute(
+                "SELECT 1 FROM genes WHERE embedding IS NOT NULL LIMIT 1"
+            ).fetchone()
+        except Exception:
+            log.debug("sema vectorless probe failed", exc_info=True)
+            return
+        if row is None:
+            self._sema_vectorless = True
+            if not self._sema_idle_logged:
+                log.info("sema tier idle: no stored vectors")
+                self._sema_idle_logged = True
+
     def invalidate_sema_cache(self) -> None:
         """Mark hot-tier cache stale — rebuilt on next Mode B query."""
         self._sema_cache = None
@@ -1195,6 +1242,9 @@ class KnowledgeStore:
         # re-check on the next build instead of staying permanently
         # gated off by a stale vectorless verdict.
         self._sema_vectorless = False
+        # ... and must re-run the one-shot probe, which is the arming path
+        # for beds whose queries never hit the undersized-pool cycle.
+        self._sema_probe_done = False
 
     # ── Cold-tier ΣĒMA retrieval (C.2, 2026-04-10) ─────────────────────
     #
@@ -3163,6 +3213,14 @@ class KnowledgeStore:
                     and not self._sema_vectorless
                 ):
                     self._build_sema_cache()
+                elif self._sema_cache is None:
+                    # Full-pool cycle: the cache build above never runs, so
+                    # it can never arm the gate here. Fall back to the
+                    # one-shot LIMIT 1 probe — otherwise a vectorless bed
+                    # whose queries always fill the pool pays the encode()
+                    # RTT forever. No-op once memoized, and a no-op on beds
+                    # with a materialized cache (those provably have vectors).
+                    self._probe_sema_vectorless()
 
                 if not self._sema_vectorless:
                     # Issue #341 fix: same shadowing hazard as the SPLADE tier
