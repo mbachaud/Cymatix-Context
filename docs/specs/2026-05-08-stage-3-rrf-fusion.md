@@ -122,7 +122,9 @@ pki_weight = 1.0
 # filename_anchor_weight, sr_weight already exist — reused as-is.
 ```
 
-**Deprecation timeline.** v(N): ship `fusion_mode = "additive"` default. v(N+1): flip default to `"rrf"`. v(N+2): remove additive code path. Document in this spec doc.
+**Deprecation timeline.** v(N): ship `fusion_mode = "additive"` default. v(N+1): flip default to `"rrf"` (shipped — #247). v(N+2): remove additive code path. Document in this spec doc.
+
+**v(N+2) removal update (2026-08-08 audit).** BLOCKED on sharded path: rrf-native global-IDF splice (#265 deferred follow-up) + #264 boost gate migration + a third scale label or recalibrated floors for `ShardedGenomeAdapter` (`sharding.py:213-236` is a deliberate score-scale label, not an accidental hardcode — do not flip it). See `docs/ROADMAP.md` Track 1 for the prerequisite list.
 
 ## 8. Tied-tier semantics
 

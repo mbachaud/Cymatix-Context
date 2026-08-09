@@ -195,6 +195,7 @@ calibration adds a per-classifier override path for `foveated_alpha`
 | `legibility_enabled` | `bool` | `true` | Sprint 1 legibility pack (AI-consumer roadmap): emit a one-line metadata header per document in expressed_context — fired tiers, confidence marker, short gene_id, compression ratio. See cymatix_context/legibility.py. Default on; flip off to restore the pre-Sprint-1 plain-dividers format (useful for bench A/B). |
 | `slate_char_budget` | `int` | `1500` | Stage 5 (2026-05-08): char-budget for the small_moe JSON answer slate. Counts the rendered string the model actually sees, INCLUDING the <cymatix:slate>...</cymatix:slate> wrapper, JSON braces, quotes, commas, and per-KV separators. Spec §5 default is 1500. Generic and frontier branches do not consult this knob. |
 | `session_delivery_enabled` | `bool` | `true` | Sprint 2 session working-set register: track delivered documents per session, elide repeats with a pointer stub so the consumer doesn't pay full token cost for content it already holds. Enabled 2026-04-19 (saves ~40% tokens on multi-turn conversations); only fires when the caller supplies a session_id. See session_delivery.py. default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
+| `neutralize_control_tags` | `bool` | `false` | Opt-in control-tag neutralization (2026-08-08 audit). When on, the assembly loop escapes content-sourced "<cymatix:" to "&lt;cymatix:" so a document cannot forge the genuine control tags (<cymatix:no_match/>, <cymatix:slate>) that downstream agents adopting CYMATIX_NO_MATCH_FRAGMENT trust. The genuine no-match tag is emitted on a separate parts-empty branch and is never escaped. Closes tag-forgery only — general indirect prompt injection via document text remains (inherent to context injection). Default off: byte-identical to pre-knob behavior. |
 | `abstain_enabled` | `bool` | `true` | NEW — see docs/specs/2026-05-02-abstain-tier-design.md |
 | `foveated_enabled` | `bool` | `false` | Foveated-splice (BROAD tier only). Off by default for the measurement period — see docs/specs/2026-05-03-foveated-splice-design.md §6.3 and docs/plans/2026-05-05-foveated-splice.md. Flip to True only after the phased α-sweep bench (§9) identifies a winning configuration. |
 | `foveated_alpha` | `float` | `1.0` | Power-law exponent for c_i = max(c_min, c_max · i^(-α)). α=0.5 = gentle decay, α=1.0 = harmonic-ish, α=2.0 = aggressive top-bias. |
@@ -211,6 +212,17 @@ calibration adds a per-classifier override path for `foveated_alpha`
 `mode` is **not** a `[budget]` key. The token-vs-cache mode lives under
 `[headroom] mode`; see that section below.
 
+**Security (opt-in, 2026-08-08 audit).** `neutralize_control_tags`
+closes control-tag forgery only: with the flag on, a document whose
+*content* contains `<cymatix:` cannot impersonate the genuine
+`<cymatix:no_match/>` / `<cymatix:slate>` control tags — the assembly
+loop escapes it to `&lt;cymatix:`, while the genuine no-match tag
+(emitted on a separate empty-assembly branch) is never escaped. It does
+NOT address general indirect prompt injection via document text, which
+is inherent to context injection. Downstream agents adopting
+`CYMATIX_NO_MATCH_FRAGMENT` (see `docs/agent-sdk-fragment.md`) should
+treat the tag as trustworthy only when this flag is on.
+
 **Example.**
 
 ```toml
@@ -224,6 +236,7 @@ decoder_mode = "condensed"
 legibility_enabled = true
 slate_char_budget = 1500
 session_delivery_enabled = true
+# neutralize_control_tags = true   # escape content-sourced "<cymatix:" (tag-forgery guard)
 abstain_enabled = true
 foveated_enabled = false
 foveated_alpha = 1.0
@@ -355,6 +368,8 @@ OpenAI-compatible upstream) at `127.0.0.1:11437` by default.
 | `bench_port` | `int` | `11439` |  |
 | `bench_genome_path` | `str` | `"genomes/bench/bench.genome.db"` |  |
 | `upstream_timeout` | `float` | `180.0` | Timeout for proxied requests to Ollama. Bumped from 120s on 2026-05-02 — observed Proxy 500s on slow gemma4:e4b GPQA queries at ~125s; 180s gives long-tail generation room without letting truly stuck requests hang. Override per-deployment via [server] in cymatix.toml. |
+| `admin_token` | `str` | `""` | Opt-in bearer token for the admin surface (/admin/*, /ingest, /consolidate). Default "" = no auth — byte-identical to pre-knob behavior. When set, those routes demand "Authorization: Bearer <token>" and 401 otherwise. Loopback bind is NOT auth: any same-host process can reach the port (2026-08-08 audit). |
+| `swap_db_roots` | `List[str]` | `[]` | Opt-in allowlist of directory roots /admin/swap-db may open. Default [] = unrestricted (today's behavior). When non-empty, a swap target resolving (os.path.realpath) outside every root is rejected 403 via os.path.commonpath; a root on a different drive never matches (2026-08-08 audit). |
 <!-- END GENERATED -->
 
 `bench_enabled` / `bench_port` / `bench_genome_path` are the v0.7.0
@@ -364,6 +379,21 @@ genome while a subagent drives the bench harness against the bench
 port. Default off; flip via `cymatix.toml`, `--bench`, or
 `CYMATIX_BENCH_ENABLED=1`.
 
+**Security (opt-in, 2026-08-08 audit).** The default loopback bind is
+*not* authentication — any process on the same host can reach the port.
+Two default-inert knobs harden the mutating surface without changing
+untouched configs:
+
+- `admin_token`: when non-empty, every `/admin/*` route plus `/ingest`
+  and `/consolidate` demands `Authorization: Bearer <token>` and returns
+  401 otherwise. Read-only routes (`/stats`, `/health`, `/context`, ...)
+  stay open.
+- `swap_db_roots`: when non-empty, `POST /admin/swap-db` only opens
+  `.db` paths that resolve (`os.path.realpath`) under one of the listed
+  roots; anything else is rejected 403 before a store is opened. Roots
+  on a different drive than the target never match (Windows
+  `os.path.commonpath` semantics).
+
 **Example.**
 
 ```toml
@@ -372,6 +402,8 @@ host = "127.0.0.1"
 port = 11437
 upstream = "http://localhost:11434"
 # upstream_timeout = 180
+# admin_token = "your-secret"              # 401s /admin/*, /ingest, /consolidate without the bearer
+# swap_db_roots = ["F:/cymatix/genomes"]   # 403s /admin/swap-db targets outside these roots
 ```
 
 **Cross-refs.** `cymatix_context/config.py` (`ServerConfig`), env
@@ -501,7 +533,7 @@ is governed by per-feature flags in this section.
 | `backend` | `str` | `"cpu"` | "ollama" \| "cpu" \| "hybrid" |
 | `splade_enabled` | `bool` | `true` | Phase 2: SPLADE sparse expansion at index time |
 | `rerank_model` | `str` | `"cross-encoder/ms-marco-MiniLM-L-6-v2"` | legacy: feeds DeBERTaRibosome only; the retrieval cross-encoder reads [retrieval] rerank_model. Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
-| `colbert_enabled` | `bool` | `false` | Phase 4: ColBERT late interaction (optional) |
+| `colbert_enabled` | `bool` | `false` | Phase 4: ColBERT late interaction — parsed, not yet wired (2026-08-08 audit) |
 | `entity_graph` | `bool` | `true` | Phase 5: entity-based co-activation links (ingest-time edges). Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
 | `dense_embed_on_ingest` | `bool` | `true` | Tier-0 PR-1 (2026-05-16): compute BGE-M3 dense vectors (genes.embedding_dense_v2) inline at ingest. Default true so a genome built by `cymatix ingest` / `/ingest` / context_manager.ingest is dense-populated without a separate backfill pass. Latency-sensitive callers can set false to defer encoding to scripts/backfill_bgem3_v2.py. This is purely the WRITE path — retrieval still gates on [retrieval] dense_embedding_enabled (default true). |
 | `sema_embed_on_ingest` | `bool` | `true` | Issue #227: compute the 20D ΣĒMA embedding at ingest (feeds TCM / cymatics via gene.embedding). Default True preserves current behaviour. Set False to skip the ingest-time SEMA encode entirely — the MiniLM model is then never materialized (TCM falls back to its text-derived path, cymatics off), which is what a lexical-only config or a multi-worker bench wants. Without this, ingest always materialized the lazy SEMA codec (#220), loading MiniLM per worker and OOMing parallel bench runs even with dense/cymatics disabled. |
@@ -604,10 +636,10 @@ ranker.
 | Key | Type | Default | Description |
 |---|---|---|---|
 | `enabled` | `bool` | `true` | Master switch |
-| `n_bins` | `int` | `256` | Spectrum resolution (<2KB per spectrum) |
-| `peak_width` | `float` | `3.0` | Gaussian peak width (overridden by Q-factor) |
-| `splice_threshold_scale` | `float` | `0.7` | Maps splice_aggressiveness to resonance threshold |
-| `use_embeddings` | `bool` | `false` | Use Gene.embedding when available |
+| `n_bins` | `int` | `256` | Spectrum resolution — parsed, not yet wired (2026-08-08 audit): scoring/cymatics.py uses its module constant N_BINS |
+| `peak_width` | `float` | `3.0` | Gaussian peak width — parsed, not yet wired (2026-08-08 audit): runtime derives peak width from [budget] splice_aggressiveness (context_manager aggressiveness_to_peak_width) |
+| `splice_threshold_scale` | `float` | `0.7` | Maps splice_aggressiveness to resonance threshold — parsed, not yet wired (2026-08-08 audit) |
+| `use_embeddings` | `bool` | `false` | Use Gene.embedding when available — parsed, not yet wired (2026-08-08 audit) |
 | `harmonic_links` | `bool` | `true` | Compute weighted co-activation edges |
 | `distance_metric` | `str` | `"cosine"` | "cosine" (weighted dot) \| "w1" (Werman 1986 circular Wasserstein-1) |
 <!-- END GENERATED -->
@@ -689,7 +721,7 @@ which stay additive) lives in
 | `ray_trace_theta` | `bool` | `false` | Dark ship |
 | `theta_weight` | `float` | `1.0` | Softmax temperature on v·document dot product |
 | `seeded_edges_enabled` | `bool` | `false` | Dark ship — flip to start evidence accumulation |
-| `seeded_edge_weight` | `float` | `1.0` | Base weight written on seed insertion |
+| `seeded_edge_weight` | `float` | `1.0` | Base weight written on seed insertion — parsed, not yet wired (2026-08-08 audit) |
 | `symbol_expansion_cap` | `int` | `8` | WS3: cap on referenced definitions pulled in by symbol-graph expansion (SYMBOL_REF). When more than `cap` candidates reference distinct defs, keep the top-`cap` by structural-centrality PageRank. 0 disables symbol expansion; <0 keeps all (unbounded — regresses budget-fill arms). Default 8 recovers the WS2 fingerprint regression while preserving the packet gain. |
 | `filename_anchor_enabled` | `bool` | `true` | Stage-1 bench flip 2026-04-22: +12pp Dewey axis-2. Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
 | `filename_anchor_weight` | `float` | `4.0` | Per-match boost (higher than Tier 1's 3.0) |

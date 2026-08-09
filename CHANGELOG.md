@@ -46,11 +46,109 @@
   `[retrieval] rerank_enabled = true`. `[ingestion] rerank_model` is
   unchanged (still the legacy DeBERTa constructor input).
 
+- **fix(concurrency): 2026-08-08 audit remediation.** SPLADE lazy load now
+  takes a module-level lock (double-checked, mirroring SEMA `_materialize`) so
+  concurrent first use constructs the model once; the freshness-gate mtime
+  cache is bounded (TTL-expired sweep at 4096 entries, clear as fallback) and
+  `POST /admin/refresh` now actually clears it, fulfilling the contract the
+  docs already claimed; `last_query_scores` publications copy the
+  request-local dict under the store lock instead of aliasing it (cold-tier
+  per-key mutations and server-side reads take the same lock).
+
+- **fix(cli): `cymatix-status` MCP-config detection de-duplicated.** The
+  rename codemod had collapsed the canonical/legacy candidate tuples into
+  duplicate pairs and left a self-referential shim note; canonical configs no
+  longer carry that note in `--json`. No detection behavior changes.
+
+- **fix(bench): gold-label + import repair.** `benchmarks/bench_needle.py`
+  gold lists restore `helix-context/helix.toml` — the honest label for the
+  frozen pre-rename beds — as the first ANY-match entry (the codemod had
+  rewritten it to a `cymatix.toml` path that exists in no bed), keeping the
+  post-rename alternative for future beds;
+  `benchmarks/bench_cymatix_rag_composition.py` imports point at the post-#90
+  module locations again.
+
+- **chore: deletions.** Removed `scripts/codemod_cymatix_rename.py`
+  (self-neutralized: it now renamed `cymatix_context` to itself; recoverable
+  at `2e3f90e`), `scripts/_write_tcm.py` (4-line dead scaffold), and the
+  never-called `filename_anchor.remove_gene` (the delete path is covered by
+  the knowledge store's `optional_tables` sweep, now regression-tested).
+
+- **ci: ruff lint job + `nli` extra.** New fast lint job (`ruff check
+  --select E9,F63,F7,F82`) with a matching `[tool.ruff.lint]` table; the test
+  job installs the `nli` extra so 4 previously silently-skipped fully-mocked
+  transformers tests (incl. the #341 rerank device-routing test) run in CI;
+  the module-level `sentence_transformers` importorskip in
+  `tests/test_pipeline.py` is scoped down so the ~20 tests that never touch
+  SemaCodec collect without it.
+
+- **feat(security): opt-in admin auth + control-tag neutralization (both
+  default-inert).** `[server] admin_token` (default `""` = no auth,
+  byte-identical to today) requires `Authorization: Bearer <token>` on
+  `/admin/*`, `/ingest`, and `/consolidate` when set; `[server] swap_db_roots`
+  (default `[]` = unrestricted) allowlists the roots swap-db may target.
+  `[budget] neutralize_control_tags` (default `false`) escapes
+  content-sourced `<cymatix:` sequences at assembly so ingested documents
+  cannot forge the no-match control tag; the genuine pipeline-emitted tag is
+  unaffected. Note the inherent limits: loopback bind is not auth, and tag
+  neutralization does not close general indirect prompt injection.
+
+## 0.8.6 — 2026-08-05
+
+Retroactive section (written 2026-08-08 from `git log v0.8.5..v0.8.6` — the
+tag shipped without a changelog entry).
+
+- **feat: shared GPU encoder daemon, default-off (#331).** New
+  `[encoder_daemon]` section with `url` (default `""` = off — every seam
+  keeps encoding in-process, byte-identical) and a `CYMATIX_ENCODER_URL` env
+  override. When set, dense/SPLADE/SEMA encoding routes through a shared
+  `python -m cymatix_context.encoder_daemon` process (default port 11439):
+  per-family micro-batcher (batch window default 2ms), `/ready` gating,
+  capacity self-report, and a client-side circuit breaker with in-process
+  fallback.
+
+- **perf: slice-1 concurrency instrumentation + write-lock sweep (#330).**
+  Sub-stage timers, commit counter, and model-load timing behind a pipeline
+  receipt ring (`_stage_receipts`); thread-local SQLite readers and the
+  W2.3-A write-lock sweep so the server can serve concurrent `/context`;
+  request-path reads moved off the writer connection; lazy env-sized request
+  executor (`CYMATIX_EXECUTOR_WORKERS`; c-curve verdict: keep 2).
+
+- **perf: ERB scale-cliff fixes.** `tag_prefix` LIKE → index range
+  predicates (6.2s → 20ms at 100k genes), `stats()` off the hot path, SPLADE
+  covering index, carve pair-filter quadratic fix. 829k-gene median query
+  111.7s → 26.1s (4.3x); the cliff is eliminated.
+
+- **perf: per-layer encoder device knobs.** `[hardware]` gains
+  `dense_device` / `splade_device` / `sema_device` / `rerank_device`
+  (default `"auto"`); BGE-M3 measures 22.7x faster batched on CUDA
+  (3080 Ti).
+
+- **feat(retrieval): #327 tag-tier DF cap + #328 `authority_path_selectivity`
+  (both default-off).** `tag_df_cap` / `splade_df_cap_fraction` (default
+  `0.0`) apply document-frequency discipline to the tag tier;
+  `authority_path_selectivity` (default `false`) lands the seam only — it
+  regresses alone.
+
+- **fix(server): three-state upstream health (#329).** An inactive ribosome
+  no longer degrades `/health`.
+
+- **fix(cli): `ingest --recursive` skips `.venv` / `node_modules` / `.git`
+  (#323, #324).**
+
+- **fix(deps): pin `mcp<2` (#325).** mcp 2.0.0 removed `mcp.server.fastmcp`
+  and broke CI.
+
+- **bench: dogfood bed rebuild + shippable gold pack (#322).** The bed is
+  rebuilt over four owned repos, excluding the harness and bench literature
+  (the old bed was ingesting its own answer key).
+
 ## 0.8.5 — 2026-07-25
 
 Completes the helix → cymatix rename as a **clean break** (0.8.0 was the soft
 rename; 0.8.5 removes all of its back-compat). **Breaking:** if you still use
 the old names, migrate or pin `cymatix-context<0.8.5` (0.8.0 keeps the aliases).
+Tagged 2026-07-27; never separately published to PyPI (folded into 0.8.6).
 
 - **rename: removed all helix back-compat.** Deleted the `helix_context` alias
   package (`import helix_context` now raises `ModuleNotFoundError`), the `helix*`

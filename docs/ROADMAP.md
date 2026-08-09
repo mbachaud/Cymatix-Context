@@ -58,6 +58,21 @@ in #292; what remains is a graduation decision, not a fix.
 all**. That is a product decision owed regardless of how the A/B lands, and it confounds every
 sharded-vs-unsharded number measured so far.
 
+**Additive removal prerequisites (sharded path)** — added 2026-08-08 (audit remediation).
+The v(N+2) removal of `fusion_mode="additive"` is BLOCKED on the sharded path until three
+prerequisites land:
+
+1. rrf-native global-IDF splice (#265 deferred follow-up);
+2. #264 boost gate migration;
+3. a third scale label or recalibrated floors for `ShardedGenomeAdapter`
+   (`sharding.py:213-236` is a deliberate score-scale label, not an accidental hardcode —
+   do not flip it).
+
+`blend_mode="legacy"` is a **separate** deprecated knob (`scoring/blend.py`) with **no
+sharding dependency** — its removal is condition-gated on its own criteria (know re-fit,
+legacy-capable tag, IBM baseline, fail-fast migration hint) and does not wait on the list
+above.
+
 ### Track 2 — Know-gate trust (#287, absorbing #239)
 
 The `/context/packet` know/miss contract is the core of the "AI is the first-class user"

@@ -81,7 +81,7 @@ def _create_genes_table(cur: sqlite3.Cursor) -> None:
         version      INTEGER,
         supersedes   TEXT,
         key_values   TEXT,    -- JSON list[str] | NULL
-        embedding_dense TEXT  -- JSON list[float] | NULL (BGE-M3, Step 4)
+        embedding_dense TEXT  -- LEGACY v1: JSON list[float] | NULL (BGE-M3, Step 4); superseded by embedding_dense_v2 BLOB — retained for pre-Stage-2 DBs (2026-08-08 audit)
     )
     """)
 
@@ -108,7 +108,7 @@ def _migrate_genes_columns(cur: sqlite3.Cursor, conn: sqlite3.Connection) -> Non
         ("authority_class", "TEXT"),
         ("support_span", "TEXT"),
         ("last_verified_at", "REAL"),
-        ("embedding_dense", "TEXT"),  # BGE-M3 dense vector (Step 4, 2026-05-08)
+        ("embedding_dense", "TEXT"),  # LEGACY v1 (Step 4, 2026-05-08): JSON-text BGE-M3 vector, superseded by embedding_dense_v2 below — kept so old DBs keep migrating (2026-08-08 audit)
         # Stage 2 (2026-05-08): BLOB column for raw little-endian fp32
         # BGE-M3 vectors at full 1024-dim. 18.9k * 1024 * 4 = 77.6 MiB raw,
         # vs ~600 MiB for JSON-encoded text. np.frombuffer is zero-copy.
