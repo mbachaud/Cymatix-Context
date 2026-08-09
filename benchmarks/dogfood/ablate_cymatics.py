@@ -120,13 +120,16 @@ def main() -> int:
         cfg.genome.path = genome
         cfg.cymatics.enabled = enabled
         if peak_width is not None:
-            # SILENTLY INERT (2026-08-08 audit): cfg.cymatics.peak_width is
-            # parsed but never read — the runtime derives its peak width from
-            # [budget] splice_aggressiveness (context_manager.py:1228,
-            # aggressiveness_to_peak_width). Arm C therefore ran identical to
-            # arm A; its numbers do NOT compare peak_width variants.
             cfg.cymatics.peak_width = peak_width
         m = CymatixContextManager(cfg)
+        if peak_width is not None:
+            # Setting cfg.cymatics.peak_width alone is INERT — the manager
+            # never reads it, deriving _cymatics_peak_width from [budget]
+            # splice_aggressiveness instead (context_manager.py:1228,
+            # aggressiveness_to_peak_width). Override the derived attribute
+            # post-construction or the arm silently duplicates arm A, which
+            # is what invalidated the 2026-07-29 verdict's finding 1.
+            m._cymatics_peak_width = peak_width
         t0 = time.time()
         ranks = _rank_all(m, needles, gold, args.k)
         dt = time.time() - t0

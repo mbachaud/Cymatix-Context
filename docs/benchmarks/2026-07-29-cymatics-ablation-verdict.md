@@ -1,18 +1,60 @@
 # Cymatics ablation — the experimental flag does NOT clear (2026-07-29)
 
+> ## ⚠️ CORRECTION 2026-08-08 — finding 1 is RETRACTED (arm C never ran)
+>
+> **Arm C was a no-op duplicate of arm A.** The harness varied the spread by
+> setting `cfg.cymatics.peak_width`, but that config field **is never read**:
+> the runtime derives its peak width from `[budget] splice_aggressiveness`
+> (`context_manager.py:1228`, `aggressiveness_to_peak_width`) and passes
+> `self._cymatics_peak_width` to the scoring call (`:2383`). Arm C therefore
+> ran with the shipped spread of 3.0, identical to arm A.
+>
+> The table below is self-corroborating on this point: arm C reports
+> **exactly** arm A's `recall@12 0.667 / MRR 0.446`, and "18/18 identical
+> ranks" is the signature of an arm that did not vary anything — not an
+> exact scientific result.
+>
+> **What is retracted:**
+> - Finding 1 ("The Gaussian spread does nothing — exactly nothing"). The
+>   experiment never collapsed the spread. The spread's contribution is
+>   **unmeasured**, not zero.
+> - "Cymatics has now been isolated against a hashed bag-of-words control
+>   and is indistinguishable from it." That control **never ran**. The
+>   README's open question is **still open**.
+> - Path 1 and path 3 under "What clears the flag" — both are premised on
+>   the retracted inertness result.
+>
+> **What still stands:** finding 2 (random-bin control, arm D) and finding 3
+> (cymatics off, arm B) — both arms used knobs that *are* read
+> (`cymatics.enabled` at `context_manager.py:1225`; arm D monkeypatches the
+> module-level `term_to_frequency`, called at `cymatics.py:143/162/330/343`).
+> The recall@12 structural argument stands. **The verdict — "the flag stays"
+> — is unchanged, and is now better supported:** the isolation that was
+> claimed to have happened did not.
+>
+> The harness is fixed as of the 2026-08-08 audit remediation
+> (`benchmarks/dogfood/ablate_cymatics.py` now overrides
+> `m._cymatics_peak_width` post-construction). **Arm C must be re-run before
+> any spread claim is made.** Tracking: the cymatics-ablation issue filed
+> 2026-08-08; the underlying dead-knob class is on #219.
+
 The README flags cymatics in falsifiable terms:
 
 > a candidate-reordering signal that has **not yet been isolated against hashed
 > bag-of-words or random-bin controls** — treat it as an experimental cheap
 > feature, not a proven one
 
-It has now been isolated against exactly those two controls, on the dogfood bed
-(6,427 genes, 18 verified needles, gene_id scoring). Harness:
+~~It has now been isolated against exactly those two controls~~ It was run
+against both controls on the dogfood bed (6,427 genes, 18 verified needles,
+gene_id scoring), **but only the random-bin control actually varied anything**
+— the hashed-BoW arm was inert (correction above). Harness:
 `benchmarks/dogfood/ablate_cymatics.py`. Data:
 `data/2026-07-29-cymatics-ablation.json`.
 
-**Verdict: the flag stays.** Two of the three findings are firm; the third is
-suggestive and explicitly not claimed as established.
+**Verdict: the flag stays.** ~~Two of the three findings are firm; the third is
+suggestive and explicitly not claimed as established.~~ **As corrected
+2026-08-08:** one finding is firm (2), one is suggestive and not claimed as
+established (3), and one is **retracted** (1).
 
 ## Arms and results
 
@@ -20,24 +62,30 @@ suggestive and explicitly not claimed as established.
 | --- | ---: | ---: | ---: |
 | **A — shipped** (MD5 bins, Gaussian spread 3.0) | 0.667 | 0.446 | — |
 | **B — cymatics off** | 0.667 | **0.484** | 11/18 |
-| **C — hashed bag-of-words** (spread collapsed) | 0.667 | 0.446 | **18/18** |
+| ~~**C — hashed bag-of-words** (spread collapsed)~~ **VOID — see correction** | 0.667 | 0.446 | **18/18** |
 | **D — random bins**, seed 0 / 1 / 2 | 0.667 | 0.446 / 0.473 / 0.473 | 16/18, 17/18, 17/18 |
 
-## 1. The Gaussian spread does nothing — exactly nothing
+## ~~1. The Gaussian spread does nothing — exactly nothing~~ RETRACTED 2026-08-08
 
-Collapsing `peak_width` from 3.0 to ~0, so each term lands in a single bin with
+> **This finding is withdrawn.** Arm C never collapsed the spread — the knob it
+> set is not read by the runtime (see the correction at the top of this file).
+> The 18/18 identity is what a duplicate of arm A produces. The spread's
+> contribution is **unmeasured**. The original text is kept below, struck, so
+> the record of what was claimed stays legible.
+
+~~Collapsing `peak_width` from 3.0 to ~0, so each term lands in a single bin with
 no spread, produces **18 of 18 identical needle ranks**. Not "no significant
-difference" — the same integer for every needle.
+difference" — the same integer for every needle.~~
 
-This is not a statistical claim, it is an exact one, and it is the direct answer
+~~This is not a statistical claim, it is an exact one, and it is the direct answer
 to the README's open question. **Cymatics has now been isolated against a hashed
 bag-of-words control and is indistinguishable from it.** The 256-bin spectrum
 with Gaussian superposition is, on this corpus, hashed BoW cosine with extra
-arithmetic.
+arithmetic.~~
 
-That does not make the feature wrong — hashed BoW cosine is a legitimate cheap
+~~That does not make the feature wrong — hashed BoW cosine is a legitimate cheap
 signal. It makes the *description* wrong wherever it implies the spectrum
-contributes something the hashing does not.
+contributes something the hashing does not.~~
 
 ## 2. Bin placement is arbitrary, as designed
 
@@ -89,30 +137,36 @@ mean 0.176 against base scores of ~4.15 (≈4%).
 
 ## What clears the flag, and what does not
 
-**Not cleared**, on this evidence. To clear it the feature would need to beat
-the hashed-BoW control, and it is byte-identical to it.
+**Not cleared**, on this evidence. ~~To clear it the feature would need to beat
+the hashed-BoW control, and it is byte-identical to it.~~ **(Corrected
+2026-08-08: the hashed-BoW control never ran — see the top of this file. The
+feature is uncleared because it has not been isolated, not because it lost.)**
 
 Three honest paths forward:
 
-1. **Correct the README** to describe what the measurement shows: it is hashed
-   bag-of-words cosine over 256 bins, and the Gaussian spread is inert. The
-   experimental flag can then be replaced by an accurate description of a cheap
-   signal with no demonstrated lift — which is a stronger position than an
-   unexplained caveat.
+1. ~~**Correct the README** to describe what the measurement shows: it is hashed
+   bag-of-words cosine over 256 bins, and the Gaussian spread is inert.~~
+   **VOID (2026-08-08)** — premised on the retracted finding 1. The README's
+   existing "not yet isolated" caveat is *accurate* and must stay. The real
+   path-1 action is to **re-run arm C on the fixed harness**.
 2. **Measure it where it can actually act.** Move the stage before candidate
    truncation, or evaluate it with a metric scoped to within-window ordering on
    a bed with many more needles. Its current position makes it nearly
    unmeasurable by construction.
-3. **Retire the spread.** If `peak_width` is provably inert, it is compute and a
-   configuration knob buying nothing. Removing it simplifies the code and makes
-   the naming honest, independently of whether the hashing stays.
+3. ~~**Retire the spread.** If `peak_width` is provably inert, it is compute and a
+   configuration knob buying nothing.~~ **VOID (2026-08-08)** — `peak_width` was
+   never shown inert; it was never varied. Retiring the spread on this evidence
+   would delete an unmeasured feature. (The *config knob* `[cymatics] peak_width`
+   is separately dead — parsed but never read — which is the #219 dead-knob
+   class, not a statement about the spread itself.)
 
 ## Caveats
 
-- **One bed, n=18.** Enough to establish the exact identity in finding 1, not
-  enough to condemn the feature on finding 3.
-- **`peak_width=0.01`, not 0** — the spread is collapsed, not mathematically
-  removed. Given 18/18 identical ranks the distinction is immaterial here.
+- **One bed, n=18.** ~~Enough to establish the exact identity in finding 1,~~ not
+  enough to condemn the feature on finding 3. (Finding 1 retracted 2026-08-08.)
+- ~~**`peak_width=0.01`, not 0** — the spread is collapsed, not mathematically
+  removed. Given 18/18 identical ranks the distinction is immaterial here.~~
+  **Moot** — the value never reached the scorer at all.
 - The bed is 88% one repository, and the corpus-frequency defect in #327 is
   live underneath all of these arms. It applies equally to every arm, so the
   *comparison* holds, but absolute numbers will move once that is fixed.

@@ -1,5 +1,28 @@
 # Clean-bed re-run — one finding strengthens, one halves (2026-07-29)
 
+> ## ⚠️ CORRECTION 2026-08-08 — arm C was inert here too; finding 1 RETRACTED
+>
+> This re-run used the same defective harness arm as the original verdict:
+> it collapsed the spread by setting `cfg.cymatics.peak_width`, a config
+> field the runtime **never reads** (peak width is derived from `[budget]
+> splice_aggressiveness` at `context_manager.py:1228`). Arm C ran with the
+> shipped spread 3.0 — a duplicate of arm A. The table shows it: arm C
+> reports **exactly** arm A's `MRR 0.459 / median 3.5`.
+>
+> **Retracted:** finding 1 ("the Gaussian spread does exactly nothing —
+> replicated") and every downstream phrase resting on it, including "its
+> distinguishing mechanism is provably inert". The spread is **unmeasured**
+> on this bed as well; the "replication" replicated a no-op.
+>
+> **Untouched:** findings 2 and 3, which are the substantive ones. Arms B
+> (`cymatics.enabled`) and D (reseeded `term_to_frequency`) both used live
+> knobs. Cymatics still **never helps a single needle on the clean bed and
+> loses to its own random-bin control** — the case against the stage rests
+> on those, and they stand unaltered.
+>
+> Harness fixed 2026-08-08; arm C must be re-run before any spread claim.
+> Full retraction: `docs/benchmarks/2026-07-29-cymatics-ablation-verdict.md`.
+
 The dogfood bed was contaminated: it ingested its own needle harness (queries
 *and* expected answers) and our bench write-ups, and `needles_dogfood.py` was
 counted as gold for all 8 cymatix needles. Details and damage assessment in the
@@ -27,15 +50,16 @@ Removing the bench literature improved the cymatix ranks markedly (41→15,
 | --- | ---: | ---: | ---: |
 | **A — shipped** (MD5 bins, spread 3.0) | 0.459 | 3.5 | — |
 | **B — off** | **0.552** | **2.5** | 15/18 |
-| **C — hashed bag-of-words** | 0.459 | 3.5 | **18/18** |
+| ~~**C — hashed bag-of-words**~~ **VOID — inert arm, see correction** | 0.459 | 3.5 | **18/18** |
 | **D — random bins** (3 seeds) | 0.487 | 3.5 | 17/18 each |
 
-Three results, all firmer than on the contaminated bed:
+Three results, all firmer than on the contaminated bed
+(**finding 1 retracted 2026-08-08 — see the correction above; 2 and 3 stand**):
 
-1. **The Gaussian spread does exactly nothing — replicated.** 18/18 identical
+1. ~~**The Gaussian spread does exactly nothing — replicated.** 18/18 identical
    ranks with the spread collapsed, on an independent corpus build. Cymatics is
    hashed bag-of-words cosine; the spectrum framing describes arithmetic that
-   changes no output.
+   changes no output.~~ **RETRACTED** — the arm never collapsed the spread.
 2. **It never helps a single needle.** Turning it off improves three
    (`driftwatch_version` 3→1, `driftwatch_default_secret` 2→1, `mek_guardrails`
    2→1) and improves nothing in the other direction. On the contaminated bed it
@@ -43,10 +67,12 @@ Three results, all firmer than on the contaminated bed:
 3. **Its own random control beats it.** Random bin assignment scores MRR 0.487
    against the shipped 0.459 — identically across all three seeds.
 
-So: never helps, demotes three, loses to random placement, and its distinguishing
-mechanism is provably inert. **The experimental flag does not clear**, and there
-is now a defensible case for deprecating the stage rather than merely relabelling
-it.
+So: never helps, demotes three, and loses to random placement. ~~and its
+distinguishing mechanism is provably inert~~ (**retracted 2026-08-08** — the
+mechanism is unmeasured, not inert). **The experimental flag does not clear**,
+and there is still a defensible case for deprecating the stage rather than
+merely relabelling it — that case now rests on the behavioural arms (never
+helps, loses to random), which is the stronger ground anyway.
 
 Standing caveat: it moves only 3 of 18 needles, so this is a small effect
 measured on one bed. It is enough to refuse to clear a flag. Removal needs a

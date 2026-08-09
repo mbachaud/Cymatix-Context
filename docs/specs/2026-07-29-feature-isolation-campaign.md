@@ -16,8 +16,14 @@ configuration implies:
 - **`dense_additive_weight`** — inert under the shipped `fusion_mode="rrf"`; it
   only moves anything under `additive`. The 4.0 default was set by #203 under
   additive, before RRF became the default.
-- **`cymatics` peak_width** — collapsing the Gaussian spread produces **18/18
-  identical ranks**. The spread is exactly inert.
+- **`cymatics` peak_width** — ~~collapsing the Gaussian spread produces **18/18
+  identical ranks**. The spread is exactly inert.~~ **CORRECTED 2026-08-08:**
+  the *knob* is inert — `[cymatics] peak_width` is parsed but never read, so
+  the arm never collapsed the spread and ran identical to the shipped arm. The
+  **spread itself is unmeasured**, not inert. Retraction detail:
+  `docs/benchmarks/2026-07-29-cymatics-ablation-verdict.md`. This is still a
+  finding of the intended kind — a knob that does not do what the
+  configuration implies — just a different one than recorded.
 
 Three findings from one small bed in two days. That rate suggests the surface is
 carrying more dead weight than anyone has counted, and counting is cheap now:
