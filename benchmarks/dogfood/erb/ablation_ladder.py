@@ -77,6 +77,44 @@ KEPT
                  (benchmarks/dogfood/erb/rerank_ab.py) safe to drive from a
                  single arm table.
 
+  no_pki         [retrieval] pki_enabled   (#334)
+                 config.py:494 -> context_manager.py:1050 (pki_enabled=)
+                 -> knowledge_store.py:877 (self._pki_enabled)
+                 -> knowledge_store.py:2844-2846 `_pki_on = self._pki_enabled
+                 if use_pki is None` / `if q_lower_tokens and _pki_on:`
+                 (Tier 0). The SELECT never runs when off, so the arm measures
+                 the layer's COST as well as its contribution.
+                 signal key: 'pki' (knowledge_store.py:2939)
+                 tier key:   'pki' (knowledge_store.py:2911)
+
+  no_tags        [retrieval] tags_enabled   (retrieval-layer ledger action 6)
+                 config.py:509 -> context_manager.py:1053 (tags_enabled=)
+                 -> knowledge_store.py:879 (self._tags_enabled)
+                 -> knowledge_store.py:3000-3001 `_tags_on = self._tags_enabled
+                 if use_tags is None` / `if _tags_on:` — one gate wrapping BOTH
+                 Tier 1 (tag_exact) and Tier 2 (tag_prefix).
+                 signal keys: 'tag_exact', 'tag_prefix'
+                 SCOPE, on the record: promoter_index has THREE readers and
+                 this gate covers two of them. The lex_anchor IDF boost issues
+                 its own probe against promoter_index and survives
+                 tags_enabled=False by design. So no_tags measures the TAG-MATCH
+                 TIERS, not the removability of the 2.58GB promoter_index
+                 table. Any storage-removal claim needs a separate lex_anchor
+                 arm; this one cannot carry it.
+
+  pki_w2 /       [retrieval] pki_weight = 2.0 / 3.0 / 4.0   (Wave 3b)
+  pki_w3 /       config.py:759 -> context_manager.py:1046 ->
+  pki_w4         knowledge_store.py:875 (self._pki_weight)
+                 -> knowledge_store.py:2934 `fuser.add_tier("pki",
+                 _pki_ranked, weight=self._pki_weight)`.
+                 NOT ablations — PKI fires in all three, so an absence
+                 observable would be false by construction. Graded by
+                 VALIDATION_REWEIGHT (see below). The Fuser is queried only
+                 under fusion_mode == "rrf"; under "additive" add_tier still
+                 runs but nothing reads the weight, so these arms would be
+                 byte-identical duplicates of baseline — the #354 failure.
+                 That condition is checked, not assumed.
+
   no_classifier  [classifier] enabled
                  config.py:886 -> context_manager.py:1801-1807 (classify_query
                  only called when enabled) -> assembly cap at :2101-2113 and
@@ -117,16 +155,15 @@ DROPPED (no query-time gate — see ``dropped_arms`` in the receipt)
                  ``if not read_only`` block, not the query-time read.
                  No clean off-switch => dropped.
 
-  no_tag_*       Tier 1 (tag_exact, knowledge_store.py:2697) and Tier 2
-                 (tag_prefix, knowledge_store.py:2720) run unconditionally.
-                 The #327 knobs are DISCIPLINE knobs whose ablated state is
-                 already the default — ``tag_idf_enabled`` (config.py:660,
-                 default False) and ``tag_df_cap`` (config.py:668, default 0.0)
-                 turn discipline ON, so flipping them is an intervention, not
-                 an ablation. The only mute available is weight-zeroing
-                 (``tag_prefix_weight = 0.0``), which silences the tier's
-                 contribution while still paying its SQL cost — that is not a
-                 layer ablation and would misreport the cost axis. Dropped.
+  no_tag_*       UN-DROPPED (Wave 3b). This entry used to read "Tier 1 and
+                 Tier 2 run unconditionally; the only mute is weight-zeroing,
+                 which would misreport the cost axis". That reasoning was
+                 correct when written and is now obsolete: ``[retrieval]
+                 tags_enabled`` (config.py:509) is a real gate wrapping both
+                 tiers' SELECTs, so the arm skips the SQL rather than muting
+                 its score. See ``no_tags`` under KEPT. The #327 discipline
+                 knobs (``tag_idf_enabled``, ``tag_df_cap``) remain
+                 interventions rather than ablations and still get no arm.
 
 ────────────────────────────────────────────────────────────────────────
 Self-validation
@@ -149,7 +186,22 @@ validated by any of the absence kinds — "xenc_rerank never appeared" and "the
 knob never applied" are the same observation there, so an enable arm checked
 for absence is unfalsifiable by construction.
 
-Baseline therefore always runs, even if ``--arms`` omits it.
+``VALIDATION_REWEIGHT`` (Wave 3b) is the third shape, for an arm that leaves a
+tier ON and only changes its RRF weight. Neither absence nor presence can grade
+that — the observable is present in the arm AND in baseline, which is the
+definition of unfalsifiable under both other kinds. So it grades the three ways
+a reweight can silently fail to apply: the tier contributed to no document at
+baseline (reweighting a silent tier changes nothing); the weight is not on the
+LIVE store, or equals baseline's (the #354 byte-identical-arm failure); or
+``fusion_mode != "rrf"``, under which ``add_tier`` still runs but the Fuser is
+never queried and the weight is inert by construction. A weight arm that passes
+this has been shown to reach the object the fuser reads, not merely to have
+been requested.
+
+Baseline therefore always runs, even if ``--arms`` omits it. It is also the
+reason validation is a SECOND pass over the collected rows rather than inline:
+under ``--reverse`` the baseline is the last arm to run, and an inline check
+would report every earlier arm as "the control arm did not run".
 
 ────────────────────────────────────────────────────────────────────────
 Measurement caveats (on the record)
@@ -297,6 +349,14 @@ VALIDATION_SIGNAL = "signal_absent"
 # absent at baseline. Every other kind here can only prove absence, which
 # makes an enable arm unfalsifiable (see the Self-validation section).
 VALIDATION_SIGNAL_PRESENT = "signal_present"
+# Wave 3b: the REWEIGHT direction — the tier stays on, only its RRF weight
+# moves. Neither absence nor presence of a signal can grade that (the signal
+# is present in every arm INCLUDING baseline), so this kind proves the
+# treatment three ways instead: the weight reached the LIVE store, it differs
+# from baseline's, and the fuser that consumes it is actually queried
+# (fusion_mode == "rrf"). Under "additive" the weight is inert — feeding an
+# inert knob and reporting the null would be the #354 trap verbatim.
+VALIDATION_REWEIGHT = "tier_reweighted"
 VALIDATION_TIER = "tier_contrib_absent"
 VALIDATION_METADATA = "classifier_metadata_absent"
 VALIDATION_EXPANSION = "synonym_expansion_absent"
@@ -421,6 +481,71 @@ ARMS: Tuple[Arm, ...] = (
         validation=VALIDATION_METADATA,
         expect_absent=("classifier",),
     ),
+    Arm(
+        name="no_pki",
+        knobs={"retrieval.pki_enabled": False},
+        gate=("knowledge_store.py:2846 `if q_lower_tokens and _pki_on:` "
+              "(resolve at :2844 `_pki_on = self._pki_enabled if use_pki is "
+              "None`) — Tier-0 path_key_index, issue #334"),
+        validation=VALIDATION_SIGNAL,
+        expect_absent=("pki",),
+    ),
+    Arm(
+        name="no_tags",
+        knobs={"retrieval.tags_enabled": False},
+        gate=("knowledge_store.py:3001 `if _tags_on:` (resolve at :3000 "
+              "`_tags_on = self._tags_enabled if use_tags is None`) — wraps "
+              "Tier 1 tag_exact AND Tier 2 tag_prefix, retrieval-layer "
+              "ledger action 6"),
+        validation=VALIDATION_SIGNAL,
+        expect_absent=("tag_exact", "tag_prefix"),
+    ),
+    # ── PKI weight sweep (Wave 3b headline hypothesis) ───────────────
+    # Under RRF, score(d) = Σ_t weight_t · 1/(k + rank_t(d)). The shipped
+    # weights are filename_anchor 4.0, splade 3.5, fts5 3.0, tag_exact 3.0,
+    # sr 1.5, tag_prefix 1.5, pki 1.0, dense 1.0 (cymatix.toml:458 for pki).
+    # That 1.0 was authored while fusion_mode still defaulted to "additive",
+    # where add_tier's weight is never read, and was not retuned when the
+    # default flipped to "rrf" (#247). So the sweep asks whether PKI — a
+    # narrow-trigger, high-magnitude tier — is underweighted as shipped.
+    #
+    # These are NOT ablations. PKI still fires in every one of them, so
+    # expect_absent=("pki",) would be false by construction and would fail
+    # validation for the right reason but the wrong measurement. There is no
+    # absence/presence observable for "tier present but reweighted", so they
+    # use VALIDATION_REWEIGHT, which grades the three ways the treatment can
+    # silently fail to apply (knob never reaches the store / weight equals
+    # baseline's / fuser never queried because fusion_mode != "rrf").
+    Arm(
+        name="pki_w2",
+        knobs={"retrieval.pki_weight": 2.0},
+        gate=("knowledge_store.py:2934 `fuser.add_tier(\"pki\", _pki_ranked, "
+              "weight=self._pki_weight)` (config.py:759 -> "
+              "context_manager.py:1046 -> knowledge_store.py:875); consumed "
+              "only when fusion_mode == 'rrf' (cymatix.toml:433)"),
+        validation=VALIDATION_REWEIGHT,
+        expect_present=("pki",),
+    ),
+    Arm(
+        name="pki_w3",
+        knobs={"retrieval.pki_weight": 3.0},
+        gate=("knowledge_store.py:2934 `fuser.add_tier(\"pki\", _pki_ranked, "
+              "weight=self._pki_weight)` (config.py:759 -> "
+              "context_manager.py:1046 -> knowledge_store.py:875); consumed "
+              "only when fusion_mode == 'rrf' (cymatix.toml:433)"),
+        validation=VALIDATION_REWEIGHT,
+        expect_present=("pki",),
+    ),
+    Arm(
+        name="pki_w4",
+        knobs={"retrieval.pki_weight": 4.0},
+        gate=("knowledge_store.py:2934 `fuser.add_tier(\"pki\", _pki_ranked, "
+              "weight=self._pki_weight)` (config.py:759 -> "
+              "context_manager.py:1046 -> knowledge_store.py:875); consumed "
+              "only when fusion_mode == 'rrf' (cymatix.toml:433)"),
+        validation=VALIDATION_REWEIGHT,
+        expect_present=("pki",),
+    ),
 )
 
 # Arms considered and rejected at authoring time, with the evidence. Copied
@@ -450,18 +575,6 @@ DROPPED_ARMS: Tuple[Dict[str, str], ...] = (
             "(knowledge_store.py:3494) are unconditional. [cymatics] "
             "harmonic_links gates only the ingest/expression-time edge WRITE "
             "inside the `if not read_only` block at context_manager.py:2353."
-        ),
-    },
-    {
-        "arm": "no_tag_prefix / tag discipline",
-        "knob": "[retrieval] tag_idf_enabled, tag_df_cap, tag_prefix_weight",
-        "reason": (
-            "Tier 1 (knowledge_store.py:2697) and Tier 2 (:2720) are "
-            "unconditional. The #327 knobs default to OFF (config.py:660, "
-            ":668), so flipping them is an intervention, not an ablation. The "
-            "only mute is weight-zeroing (tag_prefix_weight=0.0), which "
-            "silences the contribution while still paying the SQL cost — that "
-            "would misreport the cost axis, so no arm is offered."
         ),
     },
 )
@@ -828,6 +941,34 @@ def median_or_none(values: Sequence[float]) -> Optional[float]:
     return round(float(statistics.median(values)), 3)
 
 
+def store_tier_weights(store: Any) -> Dict[str, float]:
+    """Read every ``_<tier>_weight`` off a LIVE ``KnowledgeStore`` instance.
+
+    The point is to observe the weight where it is actually consumed rather
+    than where it was requested: ``knowledge_store.py:2934`` reads
+    ``self._pki_weight`` on this object, so a config path that loads but never
+    plumbs through (or plumbs into a different object, e.g. a shard router)
+    shows up here as a MISSING key instead of as a clean null result.
+
+    Reads ``vars()`` — the instance ``__dict__`` — not ``dir()``: the latter
+    would fire property getters on a foreign object mid-run. Booleans are
+    excluded because ``bool`` is an ``int`` subclass and a ``*_weight`` flag
+    would otherwise report as 1.0.
+    """
+    out: Dict[str, float] = {}
+    try:
+        attrs = dict(vars(store))
+    except TypeError:  # slots / proxy object
+        return out
+    for attr, value in attrs.items():
+        if not (attr.startswith("_") and attr.endswith("_weight")):
+            continue
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            continue
+        out[attr[1: -len("_weight")]] = float(value)
+    return out
+
+
 def validate_arm(
     arm: Arm,
     observed: Mapping[str, Any],
@@ -900,6 +1041,81 @@ def validate_arm(
         return True, (
             f"signal_keys: {sorted(expected)} absent at baseline, present in "
             "this arm"
+        )
+
+    if arm.validation == VALIDATION_REWEIGHT:
+        # Wave 3b. A reweight arm cannot be graded by signal absence OR
+        # presence — the tier is on in every arm, baseline included. What CAN
+        # be graded is whether the treatment reached the thing that consumes
+        # it, and the three ways it can silently not:
+        #   1. the tier never contributes at all -> reweighting it is a no-op
+        #      dressed as a measurement;
+        #   2. the weight never reached the LIVE store, or equals baseline's
+        #      -> the #354 byte-identical-arm failure;
+        #   3. fusion_mode != "rrf" -> add_tier still runs but the Fuser is
+        #      never queried, so the weight is inert by construction.
+        if baseline is None:
+            return False, (
+                "unfalsifiable: no baseline observables to contrast the weight "
+                "against (the control arm did not run)"
+            )
+        expected = list(arm.expect_present)
+        arm_tiers = set(observed.get("tier_keys") or ())
+        base_tiers = set(baseline.get("tier_keys") or ())
+        missing_base = [t for t in expected if t not in base_tiers]
+        if missing_base:
+            return False, (
+                f"unfalsifiable: {missing_base} contributed to no document at "
+                "baseline — reweighting a tier that never fires cannot change "
+                "any score"
+            )
+        missing_arm = [t for t in expected if t not in arm_tiers]
+        if missing_arm:
+            return False, (
+                f"reweight arm lost the tier: {missing_arm} absent from "
+                "tier_keys — this is an ablation, not a reweight"
+            )
+        arm_w = observed.get("store_tier_weights") or {}
+        base_w = baseline.get("store_tier_weights") or {}
+        moved: List[str] = []
+        for path, value in arm.knobs.items():
+            key = path.rpartition(".")[2]
+            if not key.endswith("_weight"):
+                return False, (
+                    f"reweight arm knob '{path}' is not a *_weight knob — this "
+                    "validation kind grades weights only"
+                )
+            tier = key[: -len("_weight")]
+            live = arm_w.get(tier, _MISSING)
+            if live is _MISSING:
+                return False, (
+                    f"knob '{path}' never reached the store: no _{key} "
+                    "attribute on the live KnowledgeStore instance"
+                )
+            if float(live) != float(value):
+                return False, (
+                    f"reweight did not take: live store _{key}={live}, arm "
+                    f"asked for {value}"
+                )
+            base_live = base_w.get(tier, _MISSING)
+            if base_live is not _MISSING and float(base_live) == float(live):
+                return False, (
+                    f"identity vs baseline: live store _{key}={live} matches "
+                    "the baseline arm's own value"
+                )
+            moved.append(f"_{key} {base_live} -> {live}")
+        mode = str(observed.get("fusion_mode") or "")
+        if mode != "rrf":
+            return False, (
+                f"inert treatment: fusion_mode={mode!r}. Tier weights are read "
+                "only by the Fuser (knowledge_store.py:2934 add_tier), which is "
+                "queried only under 'rrf' — under 'additive' this arm is a "
+                "byte-identical duplicate of baseline (#354)"
+            )
+        return True, (
+            "live store " + "; ".join(moved) + "; fusion_mode='rrf' (weight is "
+            f"consumed); tier {sorted(expected)} still contributing at baseline "
+            "and in this arm"
         )
 
     if arm.validation == VALIDATION_METADATA:
@@ -1117,6 +1333,14 @@ def _clear_rank_publication(genome: Any) -> None:
         genome.last_ranked_ids = []
     if hasattr(genome, "last_rerank_diag"):
         genome.last_rerank_diag = {}
+    # Wave 3b: same trap, same fix. ``last_tier_contributions`` is assigned
+    # once at the END of query_docs (knowledge_store.py:3753), so a needle
+    # that never reaches there would otherwise report the PREVIOUS needle's
+    # tiers — and the per-needle PKI firing count (#334: "which of the 141
+    # needles does this narrow-trigger tier actually fire on?") would be
+    # measuring the wrong needle.
+    if hasattr(genome, "last_tier_contributions"):
+        genome.last_tier_contributions = {}
 
 
 def _read_rank_publication(genome: Any) -> Tuple[List[str], Dict[str, Any]]:
@@ -1289,6 +1513,11 @@ def run_arm(
                     # ringed — mark-correlated drain, same as the success path.
                     error_record["splice_n_candidates"] = _resolve_splice_n_candidates(
                         ring_mark, name)
+                    # Wave 3b: a failed query fired no tier for THIS needle
+                    # (the publication was cleared before the call), so the
+                    # honest value is an empty map — same length vector as the
+                    # success path, no tier credited to a query that died.
+                    error_record["tier_genes"] = {}
                     records.append(error_record)
                     continue
                 wall_ms = (time.perf_counter() - t0) * 1000.0
@@ -1340,11 +1569,26 @@ def run_arm(
                 # instead of inheriting a prior needle's stale count.
                 record["splice_n_candidates"] = _resolve_splice_n_candidates(
                     ring_mark, name)
-                records.append(record)
 
                 contribs = getattr(manager.genome, "last_tier_contributions", None) or {}
                 for per_gene in contribs.values():
                     tier_keys.update(per_gene.keys())
+                # Wave 3b per-needle tier firing (#334). The arm-level
+                # `tier_keys` union answers "did this tier ever fire in this
+                # arm", which for a narrow-trigger tier like PKI is a
+                # statement about a handful of needles wearing a
+                # 141-needle disguise. `tier_genes` is the per-needle basis:
+                # how many documents each tier contributed to on THIS query,
+                # so a fires/does-not-fire partition can be cut from the
+                # receipt. Cleared before every call (see
+                # _clear_rank_publication), so {} means "this needle", not
+                # "the last needle that got that far".
+                tier_genes: Dict[str, int] = {}
+                for per_gene in contribs.values():
+                    for tier_name in per_gene:
+                        tier_genes[tier_name] = tier_genes.get(tier_name, 0) + 1
+                record["tier_genes"] = dict(sorted(tier_genes.items()))
+                records.append(record)
 
                 meta = getattr(window, "metadata", None) or {}
                 if "classifier" in meta:
@@ -1361,6 +1605,17 @@ def run_arm(
             "synonym_expansions": _probe_synonym_expansions(manager.genome, probe_terms),
             "cymatics_calls": cymatics_probe.count,
             "cold_tier_queries": cold_tier_queries,
+            # Wave 3b: the RRF weights as the LIVE store holds them, read off
+            # the same object knowledge_store.py:2934 reads at add_tier time —
+            # so a weight arm is graded on what the fuser saw, not on what the
+            # arm table asked for.
+            "store_tier_weights": store_tier_weights(manager.genome),
+            # A weight is inert unless the Fuser is queried, which happens only
+            # under "rrf" (knowledge_store.py:2931-2934). Recorded per arm so a
+            # sweep run against an additive config self-reports as inert
+            # instead of publishing a null.
+            "fusion_mode": str(
+                getattr(getattr(cfg, "retrieval", None), "fusion_mode", "") or ""),
         }
         remote_url = ""
         try:
@@ -1469,6 +1724,15 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                     help="cymatix.toml to load (repo-relative ok); '' = auto-discover")
     ap.add_argument("--out", default="benchmarks/dogfood/erb/receipts/ablation_ladder.json")
     ap.add_argument("--stamp", default="", help="caller-supplied run timestamp")
+    ap.add_argument("--reverse", action="store_true",
+                    help="run the selected arms in REVERSED table order. The "
+                         "second half of an order-reversed paired run: arm "
+                         "order drift (warm page cache, warm encoder) already "
+                         "inflated one published headline, and running the "
+                         "same arm set in both directions is what separates a "
+                         "layer effect from a position effect. Validation is "
+                         "deferred to a second pass so baseline-last still "
+                         "grades every arm.")
     ap.add_argument("--per-query", action="store_true", dest="per_query",
                     help="emit the per-needle basis in each arm (needle, gold "
                          "ranks, recall contribution, wall ms, signal ms) so "
@@ -1527,14 +1791,21 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         print("note: baseline is always run — it is the positive control every "
               "ablation arm validates against", file=sys.stderr)
 
+    # The run order IS a measurement parameter, not a presentation detail: a
+    # later arm reads a warmer page cache and a warmer encoder than an earlier
+    # one. --reverse is the second half of the paired design; the order is
+    # recorded on the receipt either way so a reader never has to infer it.
+    run_order: List[Arm] = list(reversed(selected)) if args.reverse else list(selected)
+
     print(f"ablation ladder: {len(selected)} arms x {len(needles)} needles, "
-          f"k={args.k}, bed={genome_path}", flush=True)
+          f"k={args.k}, bed={genome_path}"
+          f"{' [REVERSED arm order]' if args.reverse else ''}", flush=True)
     for entry in dropped:
         print(f"  DROP {entry['arm']}: {entry['reason'].splitlines()[0]}", file=sys.stderr)
 
     rows: List[Dict[str, Any]] = []
     baseline_observables: Optional[Dict[str, Any]] = None
-    for arm in selected:
+    for arm in run_order:
         row = run_arm(
             arm,
             genome_path=genome_path,
@@ -1550,17 +1821,13 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             continue
         if arm.name == "baseline":
             baseline_observables = row["observables"]
-        valid, detail = validate_arm(arm, row["observables"], baseline_observables)
-        row["arm_valid"] = valid
-        row["validation_detail"] = detail
         rows.append(row)
 
-        flag = "ok " if valid else "BAD"
         print(
             # Both recall bases on the live line: a #341 rerank arm reorders
             # ids without touching fused scores, so r@k can sit stone-still
             # while fr@k moves. Printing only r@k would read as "no effect".
-            f"  [{flag}] {arm.name:16s} r@{args.k}={row['recall_at_k']:.3f} "
+            f"  [run] {arm.name:16s} r@{args.k}={row['recall_at_k']:.3f} "
             f"fr@{args.k}={row['final_recall_at_k']:.3f} "
             # #335 on the live line: the whole point of the metric is that it
             # can move while r@k stands still, which a receipt-only field
@@ -1568,10 +1835,26 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             f"dg={row['delivered_gold_queries']}/{row['n_queries']} "
             f"({row['delivered_gold_rate']:.3f}) "
             f"med_rank={row['median_rank_of_gold']} "
-            f"p50={row['latency_ms']['p50']}ms p95={row['latency_ms']['p95']}ms "
-            f"-- {detail}",
+            f"p50={row['latency_ms']['p50']}ms p95={row['latency_ms']['p95']}ms",
             flush=True,
         )
+
+    # Validation is a SECOND pass. Every kind here grades an arm against the
+    # baseline's observables, and under --reverse the baseline is the LAST arm
+    # to run — validating inline would report every earlier arm as
+    # "unfalsifiable: the control arm did not run", which is a harness
+    # artefact masquerading as a finding. Deferring costs nothing (observables
+    # are already on the row) and makes the two directions grade identically.
+    arms_by_name = {arm.name: arm for arm in run_order}
+    for row in rows:
+        if row.get("skipped"):
+            continue
+        arm = arms_by_name[row["arm"]]
+        valid, detail = validate_arm(arm, row["observables"], baseline_observables)
+        row["arm_valid"] = valid
+        row["validation_detail"] = detail
+        print(f"  [{'ok ' if valid else 'BAD'}] {row['arm']:16s} -- {detail}",
+              flush=True)
 
     payload = {
         "tool": "benchmarks/dogfood/erb/ablation_ladder.py",
@@ -1584,6 +1867,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "gold_file": str(gold_path),
         "needle_count": len(needles),
         "k": args.k,
+        # The paired design, as data. `arms` below is in RUN order, so a
+        # reader never has to reconstruct which arm ran warm.
+        "arm_run_order": [arm.name for arm in run_order],
+        "arm_order_reversed": bool(args.reverse),
         "env": {
             "CYMATIX_ENCODER_URL": os.environ.get("CYMATIX_ENCODER_URL", "") or None,
             "CYMATIX_ENCODER_URL_set": bool(os.environ.get("CYMATIX_ENCODER_URL", "").strip()),

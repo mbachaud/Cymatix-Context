@@ -1,0 +1,635 @@
+{
+  "tool": "benchmarks/dogfood/erb/ablation_ladder.py",
+  "stamp": "",
+  "bed": "F:\\tmp\\erb_carve\\erb_100k.db",
+  "bed_bytes": 6447931392,
+  "config": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\ab-data-cymatics-pki-dff9c6\\cymatix.toml",
+  "git_sha": "cf101bc8e1ec3305d9a3cdebd441fdb70c740930",
+  "needles_file": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\ab-data-cymatics-pki-dff9c6\\benchmarks\\dogfood\\erb\\needles_resolved_carve.json",
+  "gold_file": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\ab-data-cymatics-pki-dff9c6\\benchmarks\\dogfood\\erb\\gold_by_needle_carve.json",
+  "needle_count": 30,
+  "k": 12,
+  "env": {
+    "CYMATIX_ENCODER_URL": "http://127.0.0.1:11439",
+    "CYMATIX_ENCODER_URL_set": true,
+    "CYMATIX_DISABLE_HEADROOM": null,
+    "CYMATIX_DISABLE_LEARN": "1",
+    "CYMATIX_GENOME_PATH": "F:\\tmp\\erb_carve\\erb_100k.db"
+  },
+  "note": "Ranks read from genome.last_query_scores (post-blend; blend republishes the map at scoring/blend.py:233/:281), ties broken by gene_id ascending. THREE bases ship side by side and answer different questions: recall_at_k / *_rank_of_gold on the score map; final_recall_at_k + per-needle final_rank_of_first_gold on genome.last_ranked_ids, the FINAL order (post-rerank when it ran \u2014 a cross-encoder permutes ids without rewriting fused scores, so #341 arms are invisible in the score map); and delivered_gold_* on window.expressed_gene_ids, the assembled window \u2014 post-splice, post-session-elision, post-budget-trim (context_manager.py:3564) \u2014 which is the only basis that can see an admission-shaped or post-rank layer (#335). Gold is matched by exact gene_id, never by text. delivered_gold counts an id in the window; delivered_gold_full counts CONTENT in it (an elided document ships as a stub under the same id) and the two are equal on this script, which always passes ignore_delivered=True \u2014 see each arm's delivery_basis block, whose elision_observed_queries must be 0. pool_delivery_gap is recall_at_k minus delivered_gold_rate: the part of the pipeline rank metrics cannot see. Every arm also carries delivered_gold_by_needle (needle -> delivered / full / delivered_rank / pool_rank), emitted unconditionally so a per-needle cross-tab never depends on --per-query. Per-needle gate_kept / floor_appended come from genome.last_rerank_diag (published on both rerank arms). Each arm runs one untimed warmup query first so the lazy encoder load is not billed to p50. Latencies are wall ms on a shared box \u2014 within-run relatives only.",
+  "dropped_arms": [
+    {
+      "arm": "no_plr",
+      "knob": "[plr] enabled",
+      "reason": "Not on the build_context path. [plr] enabled is read only by server/routes_context.py:635 -> server/helpers.py:444 _compute_plr_confidence, which decorates the /context/packet response; retrieval/fusion_plr.py:31 states it 'leaves document ranking untouched'. An in-process arm would measure zero by construction, not by evidence."
+    },
+    {
+      "arm": "no_harmonic",
+      "knob": "use_harmonic / [cymatics] harmonic_links",
+      "reason": "No query-time off-switch. `use_harmonic` defaults True at context_manager.py:2895 and knowledge_store.py:2259 and is passed by NO call site (context_manager.py:1945, :1965), so Tier 5 (knowledge_store.py:3119) and _expand_coactivated (knowledge_store.py:3494) are unconditional. [cymatics] harmonic_links gates only the ingest/expression-time edge WRITE inside the `if not read_only` block at context_manager.py:2353."
+    },
+    {
+      "arm": "no_tag_prefix / tag discipline",
+      "knob": "[retrieval] tag_idf_enabled, tag_df_cap, tag_prefix_weight",
+      "reason": "Tier 1 (knowledge_store.py:2697) and Tier 2 (:2720) are unconditional. The #327 knobs default to OFF (config.py:660, :668), so flipping them is an intervention, not an ablation. The only mute is weight-zeroing (tag_prefix_weight=0.0), which silences the contribution while still paying the SQL cost \u2014 that would misreport the cost axis, so no arm is offered."
+    }
+  ],
+  "arms": [
+    {
+      "arm": "baseline",
+      "knobs_changed": {},
+      "gate": "\u2014  (shipped config, untouched)",
+      "arm_valid": true,
+      "validation": "control",
+      "validation_detail": "control arm \u2014 shipped config, no ablation to validate",
+      "recall_at_k": 0.8,
+      "final_recall_at_k": 0.6,
+      "mean_rank_of_gold": 7.07,
+      "median_rank_of_gold": 3.0,
+      "gold_found_queries": 29,
+      "gold_ranks_total": 48,
+      "delivered_gold_queries": 15,
+      "delivered_gold_rate": 0.5,
+      "delivered_gold_full_queries": 15,
+      "delivered_gold_full_rate": 0.5,
+      "delivered_gold_elided_queries": 0,
+      "delivered_gold_median_rank": 1.0,
+      "delivered_count_median": 3.0,
+      "pool_delivery_gap": 0.3,
+      "delivery_basis": {
+        "source": "window.expressed_gene_ids (context_manager.py:3564)",
+        "ignore_delivered": true,
+        "session_id_passed": false,
+        "session_delivery_enabled_in_config": true,
+        "elision_possible": false,
+        "elision_observed_queries": 0
+      },
+      "delivered_gold_by_needle": {
+        "erb_000": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 2,
+          "pool_rank": 1
+        },
+        "erb_001": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 12,
+          "pool_rank": 12
+        },
+        "erb_003": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 7
+        },
+        "erb_008": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 8,
+          "pool_rank": 5
+        },
+        "erb_009": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 8,
+          "pool_rank": 3
+        },
+        "erb_010": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 4,
+          "pool_rank": 1
+        },
+        "erb_012": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 5,
+          "pool_rank": 1
+        },
+        "erb_013": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 2
+        },
+        "erb_015": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 13
+        },
+        "erb_019": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 3,
+          "delivered_count": 6,
+          "pool_rank": 3
+        },
+        "erb_020": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 3
+        },
+        "erb_021": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 15
+        },
+        "erb_022": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 1
+        },
+        "erb_024": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 3
+        },
+        "erb_029": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 3
+        },
+        "erb_031": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 1
+        },
+        "erb_033": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 1
+        },
+        "erb_036": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 12,
+          "pool_rank": 1
+        },
+        "erb_038": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 1
+        },
+        "erb_039": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 8,
+          "pool_rank": 29
+        },
+        "erb_042": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 1
+        },
+        "erb_050": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 1
+        },
+        "erb_066": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 12
+        },
+        "erb_068": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 1
+        },
+        "erb_072": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 19
+        },
+        "erb_073": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 2,
+          "delivered_count": 3,
+          "pool_rank": 1
+        },
+        "erb_075": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 59
+        },
+        "erb_080": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 12,
+          "pool_rank": null
+        },
+        "erb_087": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 2
+        },
+        "erb_095": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 2,
+          "delivered_count": 8,
+          "pool_rank": 3
+        }
+      },
+      "queries_with_scores": 30,
+      "latency_ms": {
+        "p50": 2598.818,
+        "p95": 16090.036
+      },
+      "signal_ms_median": {
+        "ann_body_fetch": 19.689,
+        "ann_dense_leg": 41.861,
+        "body_fetch": 3.56,
+        "coact_expand": 0.109,
+        "dense": 46.915,
+        "fts5": 304.318,
+        "lex_anchor": 49.011,
+        "pki": 39.175,
+        "sema_boost": 0.001,
+        "splade": 361.345,
+        "tag_exact": 51.982,
+        "tag_prefix": 74.805
+      },
+      "n_queries": 30,
+      "warmup_ran": true,
+      "encoder_url": "http://127.0.0.1:11439",
+      "dense_codec_class": "RemoteBGEM3Codec",
+      "remote_dense": true,
+      "observables": {
+        "signal_keys": [
+          "ann_body_fetch",
+          "ann_dense_leg",
+          "body_fetch",
+          "coact_expand",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "sema_boost",
+          "splade",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_keys": [
+          "authority",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "splade",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "classifier_metadata_queries": 30,
+        "synonym_expansions": 12,
+        "cymatics_calls": 30,
+        "cold_tier_queries": 0
+      },
+      "errors": []
+    },
+    {
+      "arm": "no_cymatics",
+      "knobs_changed": {
+        "cymatics.enabled": false
+      },
+      "gate": "context_manager.py:1216 -> :3119 -> scoring/blend.py:212 `if use_cymatics and cymatics_enabled ...`",
+      "arm_valid": true,
+      "validation": "cymatics_call_probe",
+      "validation_detail": "scoring.cymatics.query_spectrum called 30x at baseline, 0 here",
+      "recall_at_k": 0.8,
+      "final_recall_at_k": 0.6,
+      "mean_rank_of_gold": 6.86,
+      "median_rank_of_gold": 3.0,
+      "gold_found_queries": 29,
+      "gold_ranks_total": 47,
+      "delivered_gold_queries": 14,
+      "delivered_gold_rate": 0.4666666666666667,
+      "delivered_gold_full_queries": 14,
+      "delivered_gold_full_rate": 0.4667,
+      "delivered_gold_elided_queries": 0,
+      "delivered_gold_median_rank": 1.0,
+      "delivered_count_median": 3.0,
+      "pool_delivery_gap": 0.3333,
+      "delivery_basis": {
+        "source": "window.expressed_gene_ids (context_manager.py:3564)",
+        "ignore_delivered": true,
+        "session_id_passed": false,
+        "session_delivery_enabled_in_config": true,
+        "elision_possible": false,
+        "elision_observed_queries": 0
+      },
+      "delivered_gold_by_needle": {
+        "erb_000": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 2,
+          "pool_rank": 1
+        },
+        "erb_001": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 12,
+          "pool_rank": 12
+        },
+        "erb_003": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 7
+        },
+        "erb_008": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 8,
+          "pool_rank": 5
+        },
+        "erb_009": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 8,
+          "pool_rank": 3
+        },
+        "erb_010": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 4,
+          "pool_rank": 1
+        },
+        "erb_012": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 0,
+          "pool_rank": 1
+        },
+        "erb_013": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 4,
+          "pool_rank": 2
+        },
+        "erb_015": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 6,
+          "pool_rank": 13
+        },
+        "erb_019": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 3,
+          "delivered_count": 8,
+          "pool_rank": 3
+        },
+        "erb_020": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 3
+        },
+        "erb_021": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 15
+        },
+        "erb_022": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 1
+        },
+        "erb_024": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 4
+        },
+        "erb_029": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 3
+        },
+        "erb_031": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 1
+        },
+        "erb_033": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 1
+        },
+        "erb_036": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 12,
+          "pool_rank": 1
+        },
+        "erb_038": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 1
+        },
+        "erb_039": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 8,
+          "pool_rank": 29
+        },
+        "erb_042": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 3,
+          "delivered_count": 6,
+          "pool_rank": 1
+        },
+        "erb_050": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 1
+        },
+        "erb_066": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 12
+        },
+        "erb_068": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 1
+        },
+        "erb_072": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 19
+        },
+        "erb_073": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 2,
+          "delivered_count": 3,
+          "pool_rank": 1
+        },
+        "erb_075": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 52
+        },
+        "erb_080": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 12,
+          "pool_rank": null
+        },
+        "erb_087": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 2
+        },
+        "erb_095": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 2,
+          "delivered_count": 8,
+          "pool_rank": 3
+        }
+      },
+      "queries_with_scores": 30,
+      "latency_ms": {
+        "p50": 3294.01,
+        "p95": 16093.535
+      },
+      "signal_ms_median": {
+        "ann_body_fetch": 19.852,
+        "ann_dense_leg": 16.305,
+        "body_fetch": 4.108,
+        "coact_expand": 0.116,
+        "dense": 16.361,
+        "fts5": 291.535,
+        "lex_anchor": 49.616,
+        "pki": 31.767,
+        "sema_boost": 0.001,
+        "splade": 235.815,
+        "tag_exact": 54.404,
+        "tag_prefix": 84.978
+      },
+      "n_queries": 30,
+      "warmup_ran": true,
+      "encoder_url": "http://127.0.0.1:11439",
+      "dense_codec_class": "RemoteBGEM3Codec",
+      "remote_dense": true,
+      "observables": {
+        "signal_keys": [
+          "ann_body_fetch",
+          "ann_dense_leg",
+          "body_fetch",
+          "coact_expand",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "sema_boost",
+          "splade",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_keys": [
+          "authority",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "splade",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "classifier_metadata_queries": 29,
+        "synonym_expansions": 12,
+        "cymatics_calls": 0,
+        "cold_tier_queries": 0
+      },
+      "errors": []
+    }
+  ]
+}

@@ -287,6 +287,139 @@ def test_cold_tier_arm_validates_on_fired_flag():
     assert valid is True
 
 
+# ── VALIDATION_REWEIGHT (Wave 3b, PKI weight sweep) ─────────────────────
+#
+# The reweight kind exists because a weight arm cannot be graded by signal
+# absence OR presence: the tier is on in the arm AND at baseline, which is
+# "unfalsifiable" under both other kinds. These tests pin that it is not
+# vacuous either — each of the four ways the treatment can silently fail to
+# apply must be caught, because a reweight arm that never reweighted anything
+# is exactly the #354 retraction.
+
+
+def _rw_obs(*, weight=2.0, mode="rrf", tiers=("pki", "fts5")):
+    return {
+        "tier_keys": list(tiers),
+        "store_tier_weights": {"pki": weight, "fts5": 3.0},
+        "fusion_mode": mode,
+    }
+
+
+def test_reweight_arm_valid_when_the_weight_reached_the_live_store():
+    valid, detail = ladder.validate_arm(
+        _arm("pki_w2"), _rw_obs(weight=2.0), _rw_obs(weight=1.0))
+    assert valid is True
+    assert "_pki_weight 1.0 -> 2.0" in detail
+
+
+def test_reweight_arm_invalid_when_the_knob_never_reached_the_store():
+    # The knob loaded into the config object and was never plumbed to the
+    # KnowledgeStore the fuser reads. Nothing else in the receipt would show
+    # this — the arm would just look like a clean null.
+    observed = _rw_obs(weight=2.0)
+    observed["store_tier_weights"] = {"fts5": 3.0}
+    valid, detail = ladder.validate_arm(_arm("pki_w2"), observed, _rw_obs(weight=1.0))
+    assert valid is False
+    assert "never reached the store" in detail
+
+
+def test_reweight_arm_invalid_when_the_store_holds_a_different_weight():
+    valid, detail = ladder.validate_arm(
+        _arm("pki_w3"), _rw_obs(weight=1.0), _rw_obs(weight=1.0))
+    assert valid is False
+    assert "reweight did not take" in detail
+
+
+def test_reweight_arm_invalid_when_it_matches_baseline_exactly():
+    # #354 in miniature: an arm byte-identical to the control, reported as a
+    # measured null.
+    arm = ladder.Arm(
+        name="pki_w1", knobs={"retrieval.pki_weight": 1.0}, gate="x",
+        validation=ladder.VALIDATION_REWEIGHT, expect_present=("pki",),
+    )
+    valid, detail = ladder.validate_arm(arm, _rw_obs(weight=1.0), _rw_obs(weight=1.0))
+    assert valid is False
+    assert "identity vs baseline" in detail
+
+
+def test_reweight_arm_invalid_under_additive_fusion_where_the_weight_is_inert():
+    # add_tier still runs under "additive", so every other observable looks
+    # healthy; the Fuser is simply never queried and the weight is dead.
+    valid, detail = ladder.validate_arm(
+        _arm("pki_w4"),
+        _rw_obs(weight=4.0, mode="additive"),
+        _rw_obs(weight=1.0, mode="additive"),
+    )
+    assert valid is False
+    assert "inert treatment" in detail
+
+
+def test_reweight_arm_unfalsifiable_when_the_tier_never_fired_at_baseline():
+    valid, detail = ladder.validate_arm(
+        _arm("pki_w2"), _rw_obs(weight=2.0, tiers=("pki",)),
+        _rw_obs(weight=1.0, tiers=("fts5",)),
+    )
+    assert valid is False
+    assert "unfalsifiable" in detail
+
+
+def test_reweight_arm_invalid_when_the_tier_vanished_in_the_arm():
+    valid, detail = ladder.validate_arm(
+        _arm("pki_w2"), _rw_obs(weight=2.0, tiers=("fts5",)), _rw_obs(weight=1.0))
+    assert valid is False
+    assert "lost the tier" in detail
+
+
+def test_reweight_arm_requires_a_baseline_to_contrast_against():
+    valid, detail = ladder.validate_arm(_arm("pki_w2"), _rw_obs(weight=2.0), None)
+    assert valid is False
+    assert "unfalsifiable" in detail
+
+
+def test_store_tier_weights_reads_the_instance_dict_only():
+    class _Store:
+        def __init__(self):
+            self._pki_weight = 1.0
+            self._tag_prefix_weight = 1.5
+            self._splade_enabled = True     # not a weight
+            self._rerank_weight = True      # bool: not a real weight
+            self.pki_weight = 99.0          # not underscore-prefixed
+
+        @property
+        def _exploding_weight(self):        # must never be touched
+            raise AssertionError("property getter fired")
+
+    weights = ladder.store_tier_weights(_Store())
+    assert weights == {"pki": 1.0, "tag_prefix": 1.5}
+
+
+def test_pki_weight_sweep_arms_are_all_above_the_shipped_value():
+    # The sweep only answers "is 1.0 leaving recall on the table" if every
+    # arm actually moves off 1.0.
+    sweep = {a.name: a.knobs["retrieval.pki_weight"]
+             for a in ladder.ARMS if a.name.startswith("pki_w")}
+    assert sweep == {"pki_w2": 2.0, "pki_w3": 3.0, "pki_w4": 4.0}
+    for arm in ladder.ARMS:
+        if arm.name.startswith("pki_w"):
+            assert arm.validation == ladder.VALIDATION_REWEIGHT
+            # expect_absent=("pki",) here would be FALSE by construction: PKI
+            # still fires in a reweight arm.
+            assert not arm.expect_absent
+
+
+def test_pki_and_tags_gate_arms_declare_their_signal_observables():
+    assert _arm("no_pki").expect_absent == ("pki",)
+    assert _arm("no_tags").expect_absent == ("tag_exact", "tag_prefix")
+    assert _arm("no_pki").knobs == {"retrieval.pki_enabled": False}
+    assert _arm("no_tags").knobs == {"retrieval.tags_enabled": False}
+
+
+def test_tag_arm_is_no_longer_listed_as_dropped():
+    # Un-dropped in Wave 3b: [retrieval] tags_enabled is a real gate, so the
+    # "only mute is weight-zeroing" rationale no longer holds.
+    assert not [d for d in ladder.DROPPED_ARMS if "tag" in d["arm"]]
+
+
 def test_unknown_validation_kind_is_not_silently_valid():
     arm = ladder.Arm(name="x", knobs={}, validation="none")
     valid, detail = ladder.validate_arm(arm, {}, {})
@@ -299,7 +432,7 @@ def test_every_arm_declares_a_gate_and_an_implemented_validation():
         ladder.VALIDATION_CONTROL, ladder.VALIDATION_SIGNAL, ladder.VALIDATION_TIER,
         ladder.VALIDATION_METADATA, ladder.VALIDATION_EXPANSION,
         ladder.VALIDATION_CALL_PROBE, ladder.VALIDATION_COLD,
-        ladder.VALIDATION_SIGNAL_PRESENT,
+        ladder.VALIDATION_SIGNAL_PRESENT, ladder.VALIDATION_REWEIGHT,
     }
     for arm in ladder.ARMS:
         assert arm.gate, f"{arm.name} has no recorded gate file:line"

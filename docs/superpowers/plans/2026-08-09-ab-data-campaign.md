@@ -32,10 +32,73 @@ arm A and shipped an 18/18 "identical ranks" headline that had to be retracted.
   Partitioned by file tree so concurrent agents cannot collide: `cymatix_context/`
   is single-writer at any time (the two monoliths, #349, make this mandatory),
   `benchmarks/` is a separate lane.
-- **Lane B — measurement (strictly sequential).** GPU encoder daemon + 56.7GB bed
-  I/O is one shared resource. Every verdict run is **order-reversed paired** —
-  arm-order drift already inflated the SPLADE "+0.10 recall" headline into a
-  finding that had to be weakened.
+- **Lane B — measurement (strictly sequential, and only against a FROZEN tree).**
+  GPU encoder daemon + 56.7GB bed I/O is one shared resource. Every verdict run is
+  **order-reversed paired** — arm-order drift already inflated the SPLADE "+0.10
+  recall" headline into a finding that had to be weakened.
+
+**Lane A and Lane B must not overlap in time.** File-scope partitioning is not
+enough. Wave 0a measured this directly: during its run HEAD advanced
+`fe2ef73 → 2259cbf → cf101bc → 32e8bad` and seven tracked files went dirty,
+including `knowledge_store.py` and the ladder itself (+297 lines). A run that
+compiles its imports at T and finishes at T+9min describes a tree that no longer
+exists. **Freeze protocol: all code agents stop and commit, `git status` is clean,
+the commit SHA is recorded in the receipt, and only then does measurement start.**
+
+## Environment recipe (Wave 0a, verified)
+
+Interpreter: **`F:/tmp/venv-cuda/Scripts/python.exe`** (torch 2.11.0+cu128, CUDA
+available; RTX 3080 Ti 12GB, driver 596.36).
+Do **not** use `F:/Projects/cymatix-context/.venv` — torch 2.13.0+cpu, no CUDA.
+
+Both venvs carry an editable install pointing at a *different* checkout
+(`venv-cuda` → `perf-slice1`). The ladder wins anyway via
+`REPO_ROOT = Path(__file__).resolve().parents[3]` + `sys.path.insert`, verified by
+neutral-cwd import. **Rebinding the editable install would hijack the live
+`perf-slice1` worktree, so it was deliberately left alone.** Consequence: always
+invoke the harness by its worktree-relative path, and for ad-hoc scripts export
+`PYTHONPATH=F:/Projects/cymatix-context/.claude/worktrees/ab-data-cymatics-pki-dff9c6`.
+
+Encoder daemon (ready in 37s, all four models on `cuda:0`):
+
+```bash
+PYTHONPATH="F:/Projects/cymatix-context/.claude/worktrees/ab-data-cymatics-pki-dff9c6" \
+  "F:/tmp/venv-cuda/Scripts/python.exe" -m cymatix_context.encoder_daemon --port 11439
+```
+
+`cymatix.toml` has **no `[encoder_daemon]` section**, so consumers must export
+`CYMATIX_ENCODER_URL=http://127.0.0.1:11439` or they silently encode in-process on
+CPU and every timing figure below becomes meaningless.
+
+## Bed-completeness trap (Wave 0a)
+
+The `erb10k` / `erb50k` gold sets look bed-matched by name but are **470-needle
+supersets carved for the full corpus**. On `erb_10k.db` only 7 of the first 30
+needles have any gold present — so `r@12 = 0.233` is the arithmetic **ceiling**,
+not a score, and both arms hit it exactly. Measuring recall on 10k/50k with those
+sets measures a truncated ceiling.
+
+**Bed-complete pairings only:**
+
+| bed | docs | complete set |
+|---|---|---|
+| erb_100k / erb_250k / erb_500k | 100k–500k | **carve** (141/141 needles, 374/374 ids) |
+| erb_829k_nosplade / erb_blob / erb_blob_probe | 829k | **blob** (469/469, 1279/1279); `blob_probe30` = 30-needle subset |
+
+## Timing budget (Wave 0a, measured anchors)
+
+| bed | measured rate | 4-arm order-reversed paired |
+|---|---|---|
+| erb_10k (0.70 GB) | 2.95 s / arm-query | — |
+| erb_100k (6.45 GB) | 5.42 s / arm-query | 141 carve needles ≈ **1.7 h** |
+| erb_blob_probe (56.7 GB) | 33.7 s / arm-query | 30 `blob_probe30` needles ≈ **2.2 h** |
+
+`no_dense` is a 4× cost outlier (p50 10,498ms vs baseline 2,951ms) — arm choice
+dominates any estimate. Full 469 blob needles would be **44–66 h: do not schedule.**
+Free disk on F: 269 GB — room for one blob_probe copy plus a 100k copy, not more.
+
+Sanity anchor: Wave 0a reproduced the committed 100k baseline exactly
+(`r@12 = 0.800` vs `ablation_ladder_100k.json` `recall_at_k: 0.8`).
 
 ## Queue
 
