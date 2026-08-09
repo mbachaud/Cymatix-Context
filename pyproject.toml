@@ -124,6 +124,12 @@ cymatix-launcher = "cymatix_context.launcher.app:main"
 cymatix-status = "cymatix_context.cli.cymatix_status:main"
 cymatix-vault = "cymatix_context.vault.cli:main"
 
+[tool.ruff.lint]
+# Errors-and-undefined-names only (matches the CI lint job): syntax
+# errors (E9), invalid comparisons (F63), logic errors (F7), undefined
+# names (F82). Not a style gate.
+select = ["E9", "F63", "F7", "F82"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 markers = [

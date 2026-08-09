@@ -6,6 +6,8 @@ Validates the expression pipeline, pending buffer, history munging,
 cold-start bootstrap (Fix 3), and build_context assembly.
 """
 
+import importlib.util
+
 import pytest
 
 from cymatix_context.config import BudgetConfig
@@ -279,11 +281,14 @@ class TestMessageMunging:
 # is tested in tests/test_density_gate.py::TestColdTierRetrieval — the
 # tests below are about the wiring, not the retrieval algorithm.
 
-# Skip the whole class if sentence-transformers isn't installed (the
+# Skip only this class if sentence-transformers isn't installed (the
 # Genome.query_cold_tier path requires a SemaCodec, which loads ~400MB).
-_st_available = pytest.importorskip("sentence_transformers", reason="needs sentence-transformers")
-
-
+# Class-scoped skipif, NOT module-level importorskip: the tests above
+# never touch SemaCodec and must still run without the dependency.
+@pytest.mark.skipif(
+    importlib.util.find_spec("sentence_transformers") is None,
+    reason="needs sentence-transformers",
+)
 class TestColdTierWiring:
     """Verifies _express() correctly plumbs cold-tier retrieval."""
 

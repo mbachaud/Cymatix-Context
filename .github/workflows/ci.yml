@@ -13,6 +13,25 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Fast fail-early gate: syntax errors + undefined names only (E9/F63/
+  # F7/F82). Deliberately NOT a style linter — rule selection is pinned
+  # in [tool.ruff.lint] in pyproject.toml so local `ruff check .` and CI
+  # agree.
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install ruff
+        run: pip install ruff
+
+      - name: Ruff (errors + undefined names only)
+        run: ruff check --select E9,F63,F7,F82 .
+
   test-linux:
     runs-on: ubuntu-latest
     steps:
@@ -95,8 +114,12 @@ jobs:
       - name: Install CPU-only torch
         run: pip install --index-url https://download.pytorch.org/whl/cpu torch
 
-      - name: Install package + test deps + tree-sitter and MCP extras
-        run: pip install -e ".[dev,ast,mcp]" psutil platformdirs py-cpuinfo numpy joblib scikit-learn
+      # The [nli] extra (transformers) un-skips the fully-mocked
+      # transformers-gated tests (incl. the #341 rerank device-routing
+      # test); torch is already the CPU wheel from the step above, so no
+      # CUDA wheel gets pulled in.
+      - name: Install package + test deps + tree-sitter, MCP and NLI extras
+        run: pip install -e ".[dev,ast,mcp,nli]" psutil platformdirs py-cpuinfo numpy joblib scikit-learn
 
       - name: Install spaCy model (ingest-path tests exercise the CPU tagger)
         run: python -m spacy download en_core_web_sm
