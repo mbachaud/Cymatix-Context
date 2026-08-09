@@ -1149,12 +1149,44 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
                 splade_auto_enable_below_genes=config.ingestion.splade_auto_enable_below_genes,
                 splade_auto_disable_above_genes=config.ingestion.splade_auto_disable_above_genes,
                 entity_graph=config.ingestion.entity_graph,
+                # Tier-0 PR-1 (2026-05-16): inline BGE-M3 dense write at ingest.
+                dense_embed_on_ingest=config.ingestion.dense_embed_on_ingest,
                 sr_enabled=config.retrieval.sr_enabled,
                 sr_gamma=config.retrieval.sr_gamma,
                 sr_k_steps=config.retrieval.sr_k_steps,
                 sr_weight=config.retrieval.sr_weight,
                 sr_cap=config.retrieval.sr_cap,
                 seeded_edges_enabled=config.retrieval.seeded_edges_enabled,
+                # Drift fix (2026-08-09): the filename-anchor, pool-hygiene,
+                # entity-graph, tier-weight and rerank families. Same class of
+                # bug as the two dated fixes below (dense/ANN 2026-05-18, RRF
+                # gate #260) — the boot path
+                # (context_manager.py open_read_source) passed them and this
+                # swap path did not, so every one silently reverted to its
+                # KnowledgeStore ctor default after a hot swap. Guarded from
+                # here on by tests/test_swap_db_kwarg_drift.py, which diffs
+                # the two call sites' kwarg sets via ast.
+                #
+                # NOTE: three of these differ from the ctor default in the
+                # SHIPPED cymatix.toml — filename_anchor_enabled (True),
+                # bm25_shortlist_enabled (True) and dense_embed_on_ingest
+                # (True) all default to False on KnowledgeStore. Restoring
+                # them is the correct behaviour (a swapped store now matches a
+                # freshly booted one), but it does change post-swap retrieval
+                # for the default config, so swap-based benchmark receipts
+                # taken before this commit are not comparable to ones after.
+                filename_anchor_enabled=(
+                    config.retrieval.filename_anchor_enabled
+                    or os.environ.get("CYMATIX_FILENAME_ANCHOR_ENABLED", "").lower()
+                    in {"1", "true", "yes", "on"}
+                ),
+                filename_anchor_weight=config.retrieval.filename_anchor_weight,
+                bm25_shortlist_enabled=config.retrieval.bm25_shortlist_enabled,
+                bm25_shortlist_size=config.retrieval.bm25_shortlist_size,
+                bm25_prefilter_enabled=config.retrieval.bm25_prefilter_enabled,
+                bm25_prefilter_size=config.retrieval.bm25_prefilter_size,
+                fts5_candidate_depth=config.retrieval.fts5_candidate_depth,
+                entity_graph_retrieval_enabled=config.retrieval.entity_graph_retrieval_enabled,
                 # Tier-0 fix (2026-05-18): forward the dense / ANN / fusion
                 # retrieval knobs. Without these a hot-swapped fixture reverts
                 # to the KnowledgeStore defaults (dense_embedding_enabled=False)
@@ -1178,9 +1210,39 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
                 rrf_gate_enabled=config.retrieval.rrf_gate_enabled,
                 rrf_gate_top_m=config.retrieval.rrf_gate_top_m,
                 rrf_gate_min_score=config.retrieval.rrf_gate_min_score,
+                # Issue #255 (PR-2): post-fusion rerank combinator + its
+                # scale-free knobs. Default "additive" == shipped behavior.
+                rerank_combinator=config.retrieval.rerank_combinator,
+                rerank_band_delta=config.retrieval.rerank_band_delta,
+                rerank_tier_weight=config.retrieval.rerank_tier_weight,
+                # Issue #341 (Task 6): query-time cross-encoder rerank seam.
+                # rerank_scorer is deliberately NOT threaded — DI seam for
+                # tests only, matching the boot path.
+                rerank_enabled=config.retrieval.rerank_enabled,
+                rerank_depth=config.retrieval.rerank_depth,
+                rerank_model=config.retrieval.rerank_model,
+                fts5_weight=config.retrieval.fts5_weight,
+                splade_weight=config.retrieval.splade_weight,
+                tag_exact_weight=config.retrieval.tag_exact_weight,
+                tag_prefix_weight=config.retrieval.tag_prefix_weight,
+                # Issue #327: tag-tier IDF discipline (flag-gated, default off).
+                tag_idf_enabled=config.retrieval.tag_idf_enabled,
+                tag_df_cap=config.retrieval.tag_df_cap,
+                splade_df_cap_fraction=config.retrieval.splade_df_cap_fraction,
+                # Issue #202: warm ΣĒMA boost knob (additive-mode Tier 4A).
+                sema_boost_weight=config.retrieval.sema_boost_weight,
+                sema_cold_weight=config.retrieval.sema_cold_weight,
+                lex_anchor_weight=config.retrieval.lex_anchor_weight,
+                harmonic_weight=config.retrieval.harmonic_weight,
+                entity_graph_weight=config.retrieval.entity_graph_weight,
                 dense_weight=config.retrieval.dense_weight,
                 dense_additive_weight=config.retrieval.dense_additive_weight,
                 dense_additive_min_cosine=config.retrieval.dense_additive_min_cosine,
+                # Semantic-wiring arm (2026-06-02): scoped dense weight +
+                # broaden routing for query_type=="semantic". Default-off.
+                semantic_dense_additive_weight=config.retrieval.semantic_dense_additive_weight,
+                semantic_broaden_routing=config.retrieval.semantic_broaden_routing,
+                pki_weight=config.retrieval.pki_weight,
                 # Issue #334: keep the swap path in sync with the boot path for
                 # the Tier-0 PKI gate. Without this an operator who set
                 # pki_enabled=false would silently get the tier back after a
@@ -1194,6 +1256,11 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
                 shard_fetch_scale_with_shards=config.retrieval.shard_fetch_scale_with_shards,
                 coact_reserved_slots=config.retrieval.coact_reserved_slots,
                 coact_link_boost=config.retrieval.coact_link_boost,
+                # #264: doc-type boost mode. Router-only (ignored by the solo
+                # Genome and every per-shard Genome); binds on the cross-shard
+                # merge. Default-inert "additive" == the shipped ×1.15 multiply.
+                doc_type_boost_mode=config.retrieval.doc_type_boost_mode,
+                authority_path_selectivity=config.retrieval.authority_path_selectivity,
             )
             new_store.read_only = read_only
 
