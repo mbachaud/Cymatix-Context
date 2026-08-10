@@ -1,0 +1,28 @@
+{
+  "artifacts_dir": "agent",
+  "checkpoint_path": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\scbench-codex-ab\\benchmarks\\scbench\\campaigns\\qualification\\pairs\\file-merger-r2\\control\\scbench\\file_merger\\checkpoint_3",
+  "completed": "2026-08-10T06:27:20.354043",
+  "elapsed": 178.494391,
+  "error_message": null,
+  "had_error": false,
+  "snapshot_dir": "snapshot",
+  "started": "2026-08-10T06:24:21.859652",
+  "usage": {
+    "cost": 0.21688720000000003,
+    "current_tokens": {
+      "cache_read": 395776,
+      "cache_write": 0,
+      "input": 429326,
+      "output": 7848,
+      "reasoning": 2812
+    },
+    "net_tokens": {
+      "cache_read": 395776,
+      "cache_write": 0,
+      "input": 429326,
+      "output": 7848,
+      "reasoning": 2812
+    },
+    "steps": 19
+  }
+}

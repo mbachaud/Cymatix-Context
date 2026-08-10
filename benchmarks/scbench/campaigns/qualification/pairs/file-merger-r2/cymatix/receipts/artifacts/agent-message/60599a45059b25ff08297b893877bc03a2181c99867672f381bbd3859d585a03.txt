@@ -1,0 +1,13 @@
+Implemented in [merge_files.py](/workspace/merge_files.py).
+
+Added:
+
+- Hive-style field partitioning with null handling and percent encoding
+- Row- and byte-based sharding
+- Atomic directory output replacement and cleanup
+- Per-partition sequential filenames
+- Repeated CSV headers and exact byte-size accounting
+- Validation for partitioning/output mode and limits
+- Preservation of existing sorting, schema, compression, and format behavior
+
+`requirements.txt` required no changes. Syntax checks pass.

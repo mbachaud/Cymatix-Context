@@ -1,0 +1,564 @@
+
+
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.1.1, pluggy-1.6.0 -- /tmp/uv-cache/archive-v0/jxNcalO-vHWWsP4o/bin/python
+cachedir: .pytest_cache
+metadata: {'Python': '3.12.13', 'Platform': 'Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.41', 'Packages': {'pytest': '9.1.1', 'pluggy': '1.6.0'}, 'Plugins': {'json-report': '1.5.0', 'timeout': '2.4.0', 'json-ctrf': '0.5.3', 'metadata': '3.1.1'}}
+rootdir: /workspace
+configfile: pytest.ini
+plugins: json-report-1.5.0, timeout-2.4.0, json-ctrf-0.5.3, metadata-3.1.1
+timeout: 10.0s
+timeout method: signal
+timeout func_only: False
+collecting ... collected 104 items
+
+.evaluation_tests/test_checkpoint_1.py::test_spec_correct_cases[spec_correct/cross_family_coercion] PASSED [  0%]
+.evaluation_tests/test_checkpoint_1.py::test_spec_correct_cases[spec_correct/csv_custom_dialect] PASSED [  1%]
+.evaluation_tests/test_checkpoint_1.py::test_spec_correct_cases[spec_correct/disjoint_columns] PASSED [  2%]
+.evaluation_tests/test_checkpoint_1.py::test_spec_correct_cases[spec_correct/empty_input] PASSED [  3%]
+.evaluation_tests/test_checkpoint_1.py::test_spec_correct_cases[spec_correct/empty_string_inference] PASSED [  4%]
+.evaluation_tests/test_checkpoint_1.py::test_spec_correct_cases[spec_correct/infer_loose_basic] PASSED [  5%]
+.evaluation_tests/test_checkpoint_1.py::test_spec_correct_cases[spec_correct/infer_strict_basic] PASSED [  6%]
+.evaluation_tests/test_checkpoint_1.py::test_spec_correct_cases[spec_correct/null_ordering] PASSED [  7%]
+.evaluation_tests/test_checkpoint_1.py::test_spec_correct_cases[spec_correct/null_ordering_desc] PASSED [  8%]
+.evaluation_tests/test_checkpoint_1.py::test_spec_correct_cases[spec_correct/output_stdout] PASSED [  9%]
+.evaluation_tests/test_checkpoint_1.py::test_spec_correct_cases[spec_correct/provided_schema_basic] PASSED [ 10%]
+.evaluation_tests/test_checkpoint_1.py::test_spec_correct_cases[spec_correct/provided_schema_date_type] PASSED [ 11%]
+.evaluation_tests/test_checkpoint_1.py::test_spec_correct_cases[spec_correct/provided_schema_desc_null] PASSED [ 12%]
+.evaluation_tests/test_checkpoint_1.py::test_spec_correct_cases[spec_correct/provided_schema_keep_string] PASSED [ 13%]
+.evaluation_tests/test_checkpoint_1.py::test_spec_correct_cases[spec_correct/single_file_input] PASSED [ 14%]
+.evaluation_tests/test_checkpoint_1.py::test_spec_correct_cases[spec_correct/single_key_sort] PASSED [ 15%]
+.evaluation_tests/test_checkpoint_1.py::test_spec_correct_cases[spec_correct/type_inference_conflict] PASSED [ 16%]
+.evaluation_tests/test_checkpoint_1.py::test_spec_correct_cases[spec_correct/type_parsing_edgecases] PASSED [ 17%]
+.evaluation_tests/test_checkpoint_1.py::test_hidden_cases[hidden/all_nulls_column] PASSED [ 18%]
+.evaluation_tests/test_checkpoint_1.py::test_hidden_cases[hidden/bool_parsing_variants] PASSED [ 19%]
+.evaluation_tests/test_checkpoint_1.py::test_hidden_cases[hidden/composite_key_basic] PASSED [ 20%]
+.evaluation_tests/test_checkpoint_1.py::test_hidden_cases[hidden/composite_key_desc] PASSED [ 21%]
+.evaluation_tests/test_checkpoint_1.py::test_hidden_cases[hidden/composite_key_mixed_types] PASSED [ 22%]
+.evaluation_tests/test_checkpoint_1.py::test_hidden_cases[hidden/composite_key_nulls] PASSED [ 23%]
+.evaluation_tests/test_checkpoint_1.py::test_hidden_cases[hidden/empty_file_inference_strict] PASSED [ 24%]
+.evaluation_tests/test_checkpoint_1.py::test_hidden_cases[hidden/five_file_merge] PASSED [ 25%]
+.evaluation_tests/test_checkpoint_1.py::test_hidden_cases[hidden/float_scientific_notation] PASSED [ 25%]
+.evaluation_tests/test_checkpoint_1.py::test_hidden_cases[hidden/header_only_file] FAILED [ 26%]
+.evaluation_tests/test_checkpoint_1.py::test_hidden_cases[hidden/numeric_edge_values] PASSED [ 27%]
+.evaluation_tests/test_checkpoint_1.py::test_hidden_cases[hidden/overlapping_partial_columns] PASSED [ 28%]
+.evaluation_tests/test_checkpoint_1.py::test_hidden_cases[hidden/quoted_special_chars] PASSED [ 29%]
+.evaluation_tests/test_checkpoint_1.py::test_hidden_cases[hidden/schema_column_order] PASSED [ 30%]
+.evaluation_tests/test_checkpoint_1.py::test_hidden_cases[hidden/schema_extra_columns] PASSED [ 31%]
+.evaluation_tests/test_checkpoint_1.py::test_hidden_cases[hidden/stable_sort_verify] PASSED [ 32%]
+.evaluation_tests/test_checkpoint_1.py::test_hidden_cases[hidden/three_file_merge] PASSED [ 33%]
+.evaluation_tests/test_checkpoint_1.py::test_hidden_cases[hidden/timestamp_microseconds] PASSED [ 34%]
+.evaluation_tests/test_checkpoint_1.py::test_hidden_cases[hidden/timestamp_mixed_zones_multi_file] PASSED [ 35%]
+.evaluation_tests/test_checkpoint_1.py::test_hidden_cases[hidden/timestamp_timezone_variations] PASSED [ 36%]
+.evaluation_tests/test_checkpoint_1.py::test_hidden_cases[hidden/unicode_values] PASSED [ 37%]
+.evaluation_tests/test_checkpoint_1.py::test_error_cases[spec_errors/bool_nonstandard_strict] FAILED [ 38%]
+.evaluation_tests/test_checkpoint_1.py::test_error_cases[spec_errors/cast_fail] PASSED [ 39%]
+.evaluation_tests/test_checkpoint_1.py::test_error_cases[spec_errors/cli_missing_key] PASSED [ 40%]
+.evaluation_tests/test_checkpoint_1.py::test_error_cases[spec_errors/invalid_schema_json] PASSED [ 41%]
+.evaluation_tests/test_checkpoint_1.py::test_error_cases[spec_errors/invalid_type_in_schema] PASSED [ 42%]
+.evaluation_tests/test_checkpoint_1.py::test_error_cases[spec_errors/key_not_in_schema] PASSED [ 43%]
+.evaluation_tests/test_checkpoint_1.py::test_error_cases[spec_errors/nonexistent_input_file] PASSED [ 44%]
+.evaluation_tests/test_checkpoint_2.py::test_spec_correct_cases[spec_correct/authoritative_strategy] PASSED [ 45%]
+.evaluation_tests/test_checkpoint_2.py::test_spec_correct_cases[spec_correct/auto_mix_union] PASSED [ 46%]
+.evaluation_tests/test_checkpoint_2.py::test_spec_correct_cases[spec_correct/consensus_inference] PASSED [ 47%]
+.evaluation_tests/test_checkpoint_2.py::test_spec_correct_cases[spec_correct/gzip_auto_detect] PASSED [ 48%]
+.evaluation_tests/test_checkpoint_2.py::test_spec_correct_cases[spec_correct/gzip_csv] PASSED [ 49%]
+.evaluation_tests/test_checkpoint_2.py::test_spec_correct_cases[spec_correct/gzip_jsonl] PASSED [ 50%]
+.evaluation_tests/test_checkpoint_2.py::test_spec_correct_cases[spec_correct/jsonl_nulls_loose] FAILED [ 50%]
+.evaluation_tests/test_checkpoint_2.py::test_spec_correct_cases[spec_correct/parquet_auto_detect] PASSED [ 51%]
+.evaluation_tests/test_checkpoint_2.py::test_spec_correct_cases[spec_correct/parquet_basic] PASSED [ 52%]
+.evaluation_tests/test_checkpoint_2.py::test_spec_correct_cases[spec_correct/parquet_with_csv] PASSED [ 53%]
+.evaluation_tests/test_checkpoint_2.py::test_spec_correct_cases[spec_correct/tsv_forced_format] PASSED [ 54%]
+.evaluation_tests/test_checkpoint_2.py::test_hidden_cases[hidden/authoritative_interleaved] PASSED [ 55%]
+.evaluation_tests/test_checkpoint_2.py::test_hidden_cases[hidden/authoritative_parquet_priority] PASSED [ 56%]
+.evaluation_tests/test_checkpoint_2.py::test_hidden_cases[hidden/composite_key_mixed_formats] PASSED [ 57%]
+.evaluation_tests/test_checkpoint_2.py::test_hidden_cases[hidden/consensus_type_tie] PASSED [ 58%]
+.evaluation_tests/test_checkpoint_2.py::test_hidden_cases[hidden/cross_file_type_inference] FAILED [ 59%]
+.evaluation_tests/test_checkpoint_2.py::test_hidden_cases[hidden/five_file_mixed] PASSED [ 60%]
+.evaluation_tests/test_checkpoint_2.py::test_hidden_cases[hidden/four_format_merge] PASSED [ 61%]
+.evaluation_tests/test_checkpoint_2.py::test_hidden_cases[hidden/jsonl_booleans] PASSED [ 62%]
+.evaluation_tests/test_checkpoint_2.py::test_hidden_cases[hidden/jsonl_integer_vs_float] FAILED [ 63%]
+.evaluation_tests/test_checkpoint_2.py::test_hidden_cases[hidden/jsonl_special_chars] PASSED [ 64%]
+.evaluation_tests/test_checkpoint_2.py::test_hidden_cases[hidden/numeric_precision_formats] PASSED [ 65%]
+.evaluation_tests/test_checkpoint_2.py::test_hidden_cases[hidden/overlapping_columns_formats] PASSED [ 66%]
+.evaluation_tests/test_checkpoint_2.py::test_hidden_cases[hidden/parquet_high_precision] PASSED [ 67%]
+.evaluation_tests/test_checkpoint_2.py::test_hidden_cases[hidden/parquet_integers] PASSED [ 68%]
+.evaluation_tests/test_checkpoint_2.py::test_hidden_cases[hidden/parquet_nulls] PASSED [ 69%]
+.evaluation_tests/test_checkpoint_2.py::test_hidden_cases[hidden/tsv_all_empty_row] PASSED [ 70%]
+.evaluation_tests/test_checkpoint_2.py::test_hidden_cases[hidden/tsv_empty_fields] PASSED [ 71%]
+.evaluation_tests/test_checkpoint_2.py::test_hidden_cases[hidden/tsv_gzip] PASSED [ 72%]
+.evaluation_tests/test_checkpoint_2.py::test_hidden_cases[hidden/tsv_whitespace_values] PASSED [ 73%]
+.evaluation_tests/test_checkpoint_2.py::test_hidden_cases[hidden/unicode_jsonl] PASSED [ 74%]
+.evaluation_tests/test_checkpoint_2.py::test_hidden_cases[hidden/unicode_parquet] PASSED [ 75%]
+.evaluation_tests/test_checkpoint_2.py::test_hidden_cases[hidden/unicode_tsv] PASSED [ 75%]
+.evaluation_tests/test_checkpoint_2.py::test_hidden_cases[hidden/union_mixed_numeric] PASSED [ 76%]
+.evaluation_tests/test_checkpoint_2.py::test_error_cases[spec_errors/auto_unknown_format] PASSED [ 77%]
+.evaluation_tests/test_checkpoint_2.py::test_error_cases[spec_errors/compression_mismatch] PASSED [ 78%]
+.evaluation_tests/test_checkpoint_2.py::test_error_cases[spec_errors/jsonl_nested] PASSED [ 79%]
+.evaluation_tests/test_checkpoint_2.py::test_error_cases[spec_errors/key_missing] PASSED [ 80%]
+.evaluation_tests/test_checkpoint_2.py::test_error_cases[spec_errors/parquet_nested_error] PASSED [ 81%]
+.evaluation_tests/test_checkpoint_2.py::test_error_cases[spec_errors/tsv_embedded_tab] PASSED [ 82%]
+.evaluation_tests/test_checkpoint_3.py::test_core_cases[correct_partition_by/partition_by_country] PASSED [ 83%]
+.evaluation_tests/test_checkpoint_3.py::test_core_cases[correct_partition_by/partition_by_country_desc] PASSED [ 84%]
+.evaluation_tests/test_checkpoint_3.py::test_core_cases[correct_partition_by_sharded/partitions] PASSED [ 85%]
+.evaluation_tests/test_checkpoint_3.py::test_core_cases[correct_partition_encoding/encoding] PASSED [ 86%]
+.evaluation_tests/test_checkpoint_3.py::test_core_cases[correct_shard_rows/basic] PASSED [ 87%]
+.evaluation_tests/test_checkpoint_3.py::test_core_cases[correct_shard_rows/both_limits] PASSED [ 88%]
+.evaluation_tests/test_checkpoint_3.py::test_core_cases[correct_shard_rows/bytes_before_rows] PASSED [ 89%]
+.evaluation_tests/test_checkpoint_3.py::test_core_cases[correct_shard_rows/bytes_cut] PASSED [ 90%]
+.evaluation_tests/test_checkpoint_3.py::test_core_cases[correct_shard_rows/single_row_exceeds_bytes] PASSED [ 91%]
+.evaluation_tests/test_checkpoint_3.py::test_core_cases[correct_multi_partition_shard/multi] PASSED [ 92%]
+.evaluation_tests/test_checkpoint_3.py::test_functionality_cases[correct_partition_by_multi/multi] PASSED [ 93%]
+.evaluation_tests/test_checkpoint_3.py::test_functionality_cases[correct_partition_encoding_more/more] PASSED [ 94%]
+.evaluation_tests/test_checkpoint_3.py::test_hidden_cases[hidden/partition_typed_bool] PASSED [ 95%]
+.evaluation_tests/test_checkpoint_3.py::test_hidden_cases[hidden/partition_typed_int] PASSED [ 96%]
+.evaluation_tests/test_checkpoint_3.py::test_error_cases[spec_errors/invalid_bytes_zero] PASSED [ 97%]
+.evaluation_tests/test_checkpoint_3.py::test_error_cases[spec_errors/invalid_rows_zero] PASSED [ 98%]
+.evaluation_tests/test_checkpoint_3.py::test_error_cases[spec_errors/missing_partition_col] PASSED [ 99%]
+.evaluation_tests/test_checkpoint_3.py::test_error_cases[spec_errors/output_is_dash] PASSED [100%]
+
+=================================== FAILURES ===================================
+__________________ test_hidden_cases[hidden/header_only_file] __________________
+
+entrypoint_argv = ['uv', 'run', 'merge_files.py']
+case = {'id': 'hidden/header_only_file', 'case': {'arguments': '--output output.csv --key id data.csv empty.csv', 'input_file...'output.csv': [{'extra': None, 'id': 1, 'name': 'Alice'}, {'extra': None, 'id': 2, 'name': 'Bob'}]}, 'status_code': 0}}
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-0/test_hidden_cases_hidden_heade0')
+
+    @pytest.mark.functionality
+    @pytest.mark.parametrize("case", HIDDEN_CASES, ids=case_ids(HIDDEN_CASES))
+    def test_hidden_cases(
+        entrypoint_argv: list[str],
+        case: dict[str, object],
+        tmp_path: Path,
+    ) -> None:
+        result = run_case(entrypoint_argv, case, tmp_path)
+>       assert_case_matches(result, case, tmp_path)
+
+.evaluation_tests/test_checkpoint_1.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.evaluation_tests/conftest.py:549: in assert_case_matches
+    assert_csv_match(actual_text, file_content)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+actual_text = 'id,name\n1,Alice\n2,Bob\n'
+expected_content = [{'extra': None, 'id': 1, 'name': 'Alice'}, {'extra': None, 'id': 2, 'name': 'Bob'}]
+
+    def assert_csv_match(actual_text: str, expected_content: object) -> None:
+        parsed_actual = parse_csv_with_escapes(actual_text)
+        if isinstance(expected_content, list):
+            parsed_expected = expected_content
+        elif isinstance(expected_content, str):
+            parsed_expected = parse_csv_with_escapes(expected_content)
+        else:
+            parsed_expected = expected_content
+    
+        if not isinstance(parsed_expected, list):
+            assert parsed_actual == parsed_expected
+            return
+    
+        normalized_actual = normalize_csv_rows(parsed_actual)
+        normalized_expected = normalize_csv_rows(parsed_expected)
+        if normalized_actual == normalized_expected:
+            return
+        if _has_mixed_expected_column_types(normalized_expected):
+            assert _match_with_expected_types(
+                normalized_actual, normalized_expected
+            )
+            return
+>       assert normalized_actual == normalized_expected
+E       AssertionError: assert [{'id': 1, 'name': 'Alice'}, {'id': 2, 'name': 'Bob'}] == [{'extra': None, 'id': 1, 'name': 'Alice'}, {'extra': None, 'id': 2, 'name': 'Bob'}]
+E         
+E         At index 0 diff: {'id': 1, 'name': 'Alice'} != {'extra': None, 'id': 1, 'name': 'Alice'}
+E         
+E         Full diff:
+E           [
+E               {
+E         -         'extra': None,
+E                   'id': 1,
+E                   'name': 'Alice',
+E               },
+E               {
+E         -         'extra': None,
+E                   'id': 2,
+E                   'name': 'Bob',
+E               },
+E           ]
+
+.evaluation_tests/conftest.py:530: AssertionError
+____________ test_error_cases[spec_errors/bool_nonstandard_strict] _____________
+
+entrypoint_argv = ['uv', 'run', 'merge_files.py']
+case = {'id': 'spec_errors/bool_nonstandard_strict', 'case': {'arguments': '--output out.csv --key id --schema schema.json --...lumns': [{...}, {...}]}, 'file_type': 'json', 'path': 'schema.json'}]}, 'expected': {'status_code': 4, 'stderr': '.*'}}
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-0/test_error_cases_spec_errors_b0')
+
+    @pytest.mark.error
+    @pytest.mark.parametrize("case", ERROR_CASES, ids=case_ids(ERROR_CASES))
+    def test_error_cases(
+        entrypoint_argv: list[str],
+        case: dict[str, object],
+        tmp_path: Path,
+    ) -> None:
+        assert case["expected"].get("status_code", 0) != 0
+        result = run_case(entrypoint_argv, case, tmp_path)
+>       assert_case_matches(result, case, tmp_path)
+
+.evaluation_tests/test_checkpoint_1.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+result = CompletedProcess(args=['uv', 'run', 'merge_files.py', '--output', '/tmp/pytest-of-agent/pytest-0/test_error_cases_spec... 'fail', '/tmp/pytest-of-agent/pytest-0/test_error_cases_spec_errors_b0/data.csv'], returncode=0, stdout='', stderr='')
+case = {'id': 'spec_errors/bool_nonstandard_strict', 'case': {'arguments': '--output out.csv --key id --schema schema.json --...lumns': [{...}, {...}]}, 'file_type': 'json', 'path': 'schema.json'}]}, 'expected': {'status_code': 4, 'stderr': '.*'}}
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-0/test_error_cases_spec_errors_b0')
+
+    def assert_case_matches(
+        result: subprocess.CompletedProcess[str],
+        case: dict[str, Any],
+        tmp_path: Path,
+    ) -> None:
+        expected = case.get("expected", {})
+        expected_status = expected.get("status_code", 0)
+        if expected_status != 0:
+>           assert result.returncode != 0
+E           AssertionError: assert 0 != 0
+E            +  where 0 = CompletedProcess(args=['uv', 'run', 'merge_files.py', '--output', '/tmp/pytest-of-agent/pytest-0/test_error_cases_spec_errors_b0/out.csv', '--key', 'id', '--schema', '/tmp/pytest-of-agent/pytest-0/test_error_cases_spec_errors_b0/schema.json', '--on-type-error', 'fail', '/tmp/pytest-of-agent/pytest-0/test_error_cases_spec_errors_b0/data.csv'], returncode=0, stdout='', stderr='').returncode
+
+.evaluation_tests/conftest.py:541: AssertionError
+___________ test_spec_correct_cases[spec_correct/jsonl_nulls_loose] ____________
+
+entrypoint_argv = ['uv', 'run', 'merge_files.py']
+case = {'id': 'spec_correct/jsonl_nulls_loose', 'case': {'arguments': '--output output.csv --key id --infer loose a.jsonl b.c...s': {'output.csv': [{'amount': None, 'id': 1}, {'amount': 1.0, 'id': 2}, {'amount': 2.5, 'id': 3}]}, 'status_code': 0}}
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-0/test_spec_correct_cases_spec_c24')
+
+    @pytest.mark.parametrize("case", CORE_CASES, ids=case_ids(CORE_CASES))
+    def test_spec_correct_cases(
+        entrypoint_argv: list[str],
+        case: dict[str, object],
+        tmp_path: Path,
+    ) -> None:
+        result = run_case(entrypoint_argv, case, tmp_path)
+>       assert_case_matches(result, case, tmp_path)
+
+.evaluation_tests/test_checkpoint_2.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.evaluation_tests/conftest.py:549: in assert_case_matches
+    assert_csv_match(actual_text, file_content)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+actual_text = 'amount,id\n,1\n1,2\n,3\n'
+expected_content = [{'amount': None, 'id': 1}, {'amount': 1.0, 'id': 2}, {'amount': 2.5, 'id': 3}]
+
+    def assert_csv_match(actual_text: str, expected_content: object) -> None:
+        parsed_actual = parse_csv_with_escapes(actual_text)
+        if isinstance(expected_content, list):
+            parsed_expected = expected_content
+        elif isinstance(expected_content, str):
+            parsed_expected = parse_csv_with_escapes(expected_content)
+        else:
+            parsed_expected = expected_content
+    
+        if not isinstance(parsed_expected, list):
+            assert parsed_actual == parsed_expected
+            return
+    
+        normalized_actual = normalize_csv_rows(parsed_actual)
+        normalized_expected = normalize_csv_rows(parsed_expected)
+        if normalized_actual == normalized_expected:
+            return
+        if _has_mixed_expected_column_types(normalized_expected):
+            assert _match_with_expected_types(
+                normalized_actual, normalized_expected
+            )
+            return
+>       assert normalized_actual == normalized_expected
+E       AssertionError: assert [{'amount': None, 'id': 1}, {'amount': 1, 'id': 2}, {'amount': None, 'id': 3}] == [{'amount': None, 'id': 1}, {'amount': 1.0, 'id': 2}, {'amount': 2.5, 'id': 3}]
+E         
+E         At index 2 diff: {'amount': None, 'id': 3} != {'amount': 2.5, 'id': 3}
+E         
+E         Full diff:
+E           [
+E               {
+E                   'amount': None,
+E                   'id': 1,
+E               },
+E               {
+E         -         'amount': 1.0,
+E         ?                    --
+E         +         'amount': 1,
+E                   'id': 2,
+E               },
+E               {
+E         -         'amount': 2.5,
+E         ?                   ^^^
+E         +         'amount': None,
+E         ?                   ^^^^
+E                   'id': 3,
+E               },
+E           ]
+
+.evaluation_tests/conftest.py:530: AssertionError
+_____________ test_hidden_cases[hidden/cross_file_type_inference] ______________
+
+entrypoint_argv = ['uv', 'run', 'merge_files.py']
+case = {'id': 'hidden/cross_file_type_inference', 'case': {'arguments': '--output output.csv --key id --infer loose a.jsonl b...put.csv': [{'id': 1, 'amount': 10.0}, {'id': 2, 'amount': None}, {'id': 3, 'amount': 2.5}, {'id': 4, 'amount': 3.7}]}}}
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-0/test_hidden_cases_hidden_cross0')
+
+    @pytest.mark.functionality
+    @pytest.mark.parametrize("case", HIDDEN_CASES, ids=case_ids(HIDDEN_CASES))
+    def test_hidden_cases(
+        entrypoint_argv: list[str],
+        case: dict[str, object],
+        tmp_path: Path,
+    ) -> None:
+        result = run_case(entrypoint_argv, case, tmp_path)
+>       assert_case_matches(result, case, tmp_path)
+
+.evaluation_tests/test_checkpoint_2.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.evaluation_tests/conftest.py:549: in assert_case_matches
+    assert_csv_match(actual_text, file_content)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+actual_text = 'amount,id\n10,1\n,2\n,3\n,4\n'
+expected_content = [{'id': 1, 'amount': 10.0}, {'id': 2, 'amount': None}, {'id': 3, 'amount': 2.5}, {'id': 4, 'amount': 3.7}]
+
+    def assert_csv_match(actual_text: str, expected_content: object) -> None:
+        parsed_actual = parse_csv_with_escapes(actual_text)
+        if isinstance(expected_content, list):
+            parsed_expected = expected_content
+        elif isinstance(expected_content, str):
+            parsed_expected = parse_csv_with_escapes(expected_content)
+        else:
+            parsed_expected = expected_content
+    
+        if not isinstance(parsed_expected, list):
+            assert parsed_actual == parsed_expected
+            return
+    
+        normalized_actual = normalize_csv_rows(parsed_actual)
+        normalized_expected = normalize_csv_rows(parsed_expected)
+        if normalized_actual == normalized_expected:
+            return
+        if _has_mixed_expected_column_types(normalized_expected):
+            assert _match_with_expected_types(
+                normalized_actual, normalized_expected
+            )
+            return
+>       assert normalized_actual == normalized_expected
+E       AssertionError: assert [{'amount': 10, 'id': 1}, {'amount': None, 'id': 2}, {'amount': None, 'id': 3}, {'amount': None, 'id': 4}] == [{'amount': 10.0, 'id': 1}, {'amount': None, 'id': 2}, {'amount': 2.5, 'id': 3}, {'amount': 3.7, 'id': 4}]
+E         
+E         At index 2 diff: {'amount': None, 'id': 3} != {'amount': 2.5, 'id': 3}
+E         
+E         Full diff:
+E           [
+E               {
+E         -         'amount': 10.0,
+E         ?                     --
+E         +         'amount': 10,
+E                   'id': 1,
+E               },
+E               {
+E                   'amount': None,
+E                   'id': 2,
+E               },
+E               {
+E         -         'amount': 2.5,
+E         ?                   ^^^
+E         +         'amount': None,
+E         ?                   ^^^^
+E                   'id': 3,
+E               },
+E               {
+E         -         'amount': 3.7,
+E         ?                   ^^^
+E         +         'amount': None,
+E         ?                   ^^^^
+E                   'id': 4,
+E               },
+E           ]
+
+.evaluation_tests/conftest.py:530: AssertionError
+_______________ test_hidden_cases[hidden/jsonl_integer_vs_float] _______________
+
+entrypoint_argv = ['uv', 'run', 'merge_files.py']
+case = {'id': 'hidden/jsonl_integer_vs_float', 'case': {'arguments': '--output output.csv --key id data.jsonl', 'input_files'...id': 1, 'value': 5.0}, {'count': 20, 'id': 2, 'value': 3.5}, {'count': 15, 'id': 3, 'value': 7.0}]}, 'status_code': 0}}
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-0/test_hidden_cases_hidden_jsonl1')
+
+    @pytest.mark.functionality
+    @pytest.mark.parametrize("case", HIDDEN_CASES, ids=case_ids(HIDDEN_CASES))
+    def test_hidden_cases(
+        entrypoint_argv: list[str],
+        case: dict[str, object],
+        tmp_path: Path,
+    ) -> None:
+        result = run_case(entrypoint_argv, case, tmp_path)
+>       assert_case_matches(result, case, tmp_path)
+
+.evaluation_tests/test_checkpoint_2.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.evaluation_tests/conftest.py:549: in assert_case_matches
+    assert_csv_match(actual_text, file_content)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+actual_text = 'count,id,value\n10,1,5\n20,2,\n15,3,7\n'
+expected_content = [{'count': 10, 'id': 1, 'value': 5.0}, {'count': 20, 'id': 2, 'value': 3.5}, {'count': 15, 'id': 3, 'value': 7.0}]
+
+    def assert_csv_match(actual_text: str, expected_content: object) -> None:
+        parsed_actual = parse_csv_with_escapes(actual_text)
+        if isinstance(expected_content, list):
+            parsed_expected = expected_content
+        elif isinstance(expected_content, str):
+            parsed_expected = parse_csv_with_escapes(expected_content)
+        else:
+            parsed_expected = expected_content
+    
+        if not isinstance(parsed_expected, list):
+            assert parsed_actual == parsed_expected
+            return
+    
+        normalized_actual = normalize_csv_rows(parsed_actual)
+        normalized_expected = normalize_csv_rows(parsed_expected)
+        if normalized_actual == normalized_expected:
+            return
+        if _has_mixed_expected_column_types(normalized_expected):
+            assert _match_with_expected_types(
+                normalized_actual, normalized_expected
+            )
+            return
+>       assert normalized_actual == normalized_expected
+E       AssertionError: assert [{'count': 10, 'id': 1, 'value': 5}, {'count': 20, 'id': 2, 'value': None}, {'count': 15, 'id': 3, 'value': 7}] == [{'count': 10, 'id': 1, 'value': 5.0}, {'count': 20, 'id': 2, 'value': 3.5}, {'count': 15, 'id': 3, 'value': 7.0}]
+E         
+E         At index 1 diff: {'count': 20, 'id': 2, 'value': None} != {'count': 20, 'id': 2, 'value': 3.5}
+E         
+E         Full diff:
+E           [
+E               {
+E                   'count': 10,
+E                   'id': 1,
+E         -         'value': 5.0,
+E         ?                   --
+E         +         'value': 5,
+E               },
+E               {
+E                   'count': 20,
+E                   'id': 2,
+E         -         'value': 3.5,
+E         ?                  ^^^
+E         +         'value': None,
+E         ?                  ^^^^
+E               },
+E               {
+E                   'count': 15,
+E                   'id': 3,
+E         -         'value': 7.0,
+E         ?                   --
+E         +         'value': 7,
+E               },
+E           ]
+
+.evaluation_tests/conftest.py:530: AssertionError
+--------------------------------- JSON report ----------------------------------
+report saved to: .scbench/pytest-report.json
+=========================== short test summary info ============================
+FAILED .evaluation_tests/test_checkpoint_1.py::test_hidden_cases[hidden/header_only_file] - AssertionError: assert [{'id': 1, 'name': 'Alice'}, {'id': 2, 'name': 'Bob'}] == [{'extra': None, 'id': 1, 'name': 'Alice'}, {'extra': None, 'id': 2, 'name': 'Bob'}]
+  
+  At index 0 diff: {'id': 1, 'name': 'Alice'} != {'extra': None, 'id': 1, 'name': 'Alice'}
+  
+  Full diff:
+    [
+        {
+  -         'extra': None,
+            'id': 1,
+            'name': 'Alice',
+        },
+        {
+  -         'extra': None,
+            'id': 2,
+            'name': 'Bob',
+        },
+    ]
+FAILED .evaluation_tests/test_checkpoint_1.py::test_error_cases[spec_errors/bool_nonstandard_strict] - AssertionError: assert 0 != 0
+ +  where 0 = CompletedProcess(args=['uv', 'run', 'merge_files.py', '--output', '/tmp/pytest-of-agent/pytest-0/test_error_cases_spec_errors_b0/out.csv', '--key', 'id', '--schema', '/tmp/pytest-of-agent/pytest-0/test_error_cases_spec_errors_b0/schema.json', '--on-type-error', 'fail', '/tmp/pytest-of-agent/pytest-0/test_error_cases_spec_errors_b0/data.csv'], returncode=0, stdout='', stderr='').returncode
+FAILED .evaluation_tests/test_checkpoint_2.py::test_spec_correct_cases[spec_correct/jsonl_nulls_loose] - AssertionError: assert [{'amount': None, 'id': 1}, {'amount': 1, 'id': 2}, {'amount': None, 'id': 3}] == [{'amount': None, 'id': 1}, {'amount': 1.0, 'id': 2}, {'amount': 2.5, 'id': 3}]
+  
+  At index 2 diff: {'amount': None, 'id': 3} != {'amount': 2.5, 'id': 3}
+  
+  Full diff:
+    [
+        {
+            'amount': None,
+            'id': 1,
+        },
+        {
+  -         'amount': 1.0,
+  ?                    --
+  +         'amount': 1,
+            'id': 2,
+        },
+        {
+  -         'amount': 2.5,
+  ?                   ^^^
+  +         'amount': None,
+  ?                   ^^^^
+            'id': 3,
+        },
+    ]
+FAILED .evaluation_tests/test_checkpoint_2.py::test_hidden_cases[hidden/cross_file_type_inference] - AssertionError: assert [{'amount': 10, 'id': 1}, {'amount': None, 'id': 2}, {'amount': None, 'id': 3}, {'amount': None, 'id': 4}] == [{'amount': 10.0, 'id': 1}, {'amount': None, 'id': 2}, {'amount': 2.5, 'id': 3}, {'amount': 3.7, 'id': 4}]
+  
+  At index 2 diff: {'amount': None, 'id': 3} != {'amount': 2.5, 'id': 3}
+  
+  Full diff:
+    [
+        {
+  -         'amount': 10.0,
+  ?                     --
+  +         'amount': 10,
+            'id': 1,
+        },
+        {
+            'amount': None,
+            'id': 2,
+        },
+        {
+  -         'amount': 2.5,
+  ?                   ^^^
+  +         'amount': None,
+  ?                   ^^^^
+            'id': 3,
+        },
+        {
+  -         'amount': 3.7,
+  ?                   ^^^
+  +         'amount': None,
+  ?                   ^^^^
+            'id': 4,
+        },
+    ]
+FAILED .evaluation_tests/test_checkpoint_2.py::test_hidden_cases[hidden/jsonl_integer_vs_float] - AssertionError: assert [{'count': 10, 'id': 1, 'value': 5}, {'count': 20, 'id': 2, 'value': None}, {'count': 15, 'id': 3, 'value': 7}] == [{'count': 10, 'id': 1, 'value': 5.0}, {'count': 20, 'id': 2, 'value': 3.5}, {'count': 15, 'id': 3, 'value': 7.0}]
+  
+  At index 1 diff: {'count': 20, 'id': 2, 'value': None} != {'count': 20, 'id': 2, 'value': 3.5}
+  
+  Full diff:
+    [
+        {
+            'count': 10,
+            'id': 1,
+  -         'value': 5.0,
+  ?                   --
+  +         'value': 5,
+        },
+        {
+            'count': 20,
+            'id': 2,
+  -         'value': 3.5,
+  ?                  ^^^
+  +         'value': None,
+  ?                  ^^^^
+        },
+        {
+            'count': 15,
+            'id': 3,
+  -         'value': 7.0,
+  ?                   --
+  +         'value': 7,
+        },
+    ]
+======================== 5 failed, 99 passed in 40.00s =========================

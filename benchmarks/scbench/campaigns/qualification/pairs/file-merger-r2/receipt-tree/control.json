@@ -1,0 +1,41 @@
+{
+  "arm": "control",
+  "campaign_id": "qualification",
+  "checkpoints": [
+    {
+      "media_type": "application/json",
+      "path": "checkpoints/control-checkpoint-1.json",
+      "sha256": "e25b7c774c2f0e7121f524e3ee66b5e0f83e776eee9a19b45e698fa9c68031df",
+      "size_bytes": 2637
+    },
+    {
+      "media_type": "application/json",
+      "path": "checkpoints/control-checkpoint-2.json",
+      "sha256": "285b2278d9eb506fb76842c44705694d242ac62028ab2b4065c8e5eb5b27f48d",
+      "size_bytes": 2625
+    },
+    {
+      "media_type": "application/json",
+      "path": "checkpoints/control-checkpoint-3.json",
+      "sha256": "bfff6ac17c0b9706b4c0e5e351009d81a125b8bf0f41d025922a2b5e69ce0797",
+      "size_bytes": 2622
+    },
+    {
+      "media_type": "application/json",
+      "path": "checkpoints/control-checkpoint-4.json",
+      "sha256": "1897e9f250b40d6ccc1ff972f50ce3e8a6eee705f2a3cdce45717a7668be61c4",
+      "size_bytes": 2637
+    }
+  ],
+  "initial_sync": null,
+  "invalidation_reason": null,
+  "order_index": 2,
+  "pair_id": "file-merger-r2",
+  "problem": "file-merger",
+  "receipt_type": "arm",
+  "replicate": 2,
+  "retry_of": null,
+  "schema_version": 1,
+  "valid": true,
+  "warmup_elapsed_ms": null
+}

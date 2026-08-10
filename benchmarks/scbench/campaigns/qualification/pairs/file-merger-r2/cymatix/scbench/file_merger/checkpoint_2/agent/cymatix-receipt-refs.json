@@ -1,0 +1,147 @@
+{
+  "checkpoint": 2,
+  "initial_sync": {
+    "deleted_source_ids": [],
+    "genome_id": "qualification:file-merger-r2:2:file-merger",
+    "ingested": 0,
+    "latency_ms": 19,
+    "post_genome_checksum": "e251c213c6431938a0a60eab8fd7e7d9514bb26387ca1b620bbb8eb98d0bd07a",
+    "post_manifest_hash": "c80ede02063ecc92088b76d2b10a9376e72ea9d70685777db6adf360e443488a",
+    "pre_genome_checksum": "e251c213c6431938a0a60eab8fd7e7d9514bb26387ca1b620bbb8eb98d0bd07a",
+    "pre_manifest_hash": "c80ede02063ecc92088b76d2b10a9376e72ea9d70685777db6adf360e443488a",
+    "skipped": 0,
+    "verified": true
+  },
+  "packet": {
+    "media_type": "application/json",
+    "path": "artifacts/packet/55766fe99e8502b1e591a914e797ac85dee5412d84b61b723e3ceac5f5178414.json",
+    "sha256": "55766fe99e8502b1e591a914e797ac85dee5412d84b61b723e3ceac5f5178414",
+    "size_bytes": 19182
+  },
+  "prompt": {
+    "media_type": "text/plain",
+    "path": "artifacts/prompt/1bb363c01f43d04832a56ef20160385dbc81380890c626819bbdb0ec7a7ad348.txt",
+    "sha256": "1bb363c01f43d04832a56ef20160385dbc81380890c626819bbdb0ec7a7ad348",
+    "size_bytes": 19645
+  },
+  "query": {
+    "media_type": "text/plain",
+    "path": "artifacts/query/ff5a6a3a2bcee50c8fd3c99d0234281f41035261b287bf328adbb441e86f039e.txt",
+    "sha256": "ff5a6a3a2bcee50c8fd3c99d0234281f41035261b287bf328adbb441e86f039e",
+    "size_bytes": 1743
+  },
+  "rendered_packet": {
+    "media_type": "text/plain",
+    "path": "artifacts/rendered-packet/512d14f275ffbcc0f193d3fccdb7cbe0156b4b7c0aa51f15bb0c0598b7d8963d.txt",
+    "sha256": "512d14f275ffbcc0f193d3fccdb7cbe0156b4b7c0aa51f15bb0c0598b7d8963d",
+    "size_bytes": 14367
+  },
+  "retrieval": {
+    "budget_dropped": [],
+    "deleted_source_filtered": [],
+    "items": [
+      {
+        "content_sha256": "df2c3875637e7c90e61d255fb655e4d413189bd817cbe2e2a238c64cfc27153c",
+        "gene_id": "236ef6d2729a03df",
+        "live_truth_score": 0.9999028288462267,
+        "relevance_score": 2.5441176470588234,
+        "source_id": "repo://file-merger/merge_files.py",
+        "status": "verified"
+      },
+      {
+        "content_sha256": "0607bd1f99cd5009ae6d7f0b6bd38d5c073a23c5f22e5db1f53142bda39dfe30",
+        "gene_id": "0607bd1f99cd5009",
+        "live_truth_score": 0.9999028217168322,
+        "relevance_score": 4.15563921464108,
+        "source_id": "repo://file-merger/merge_files.py",
+        "status": "verified"
+      },
+      {
+        "content_sha256": "c17e332fa1e07a187a026871d0d668a05823910288e8b7a8531c88176c025f60",
+        "gene_id": "3495076eae8ccff5",
+        "live_truth_score": 0.999902736399423,
+        "relevance_score": 4.157018442622951,
+        "source_id": "repo://file-merger/merge_files.py",
+        "status": "verified"
+      },
+      {
+        "content_sha256": "ce767b35fdbeb8dd10b56c65c468a7a1a0376b48c991d9b0d749f2b34782ef9c",
+        "gene_id": "baa486e63758d02e",
+        "live_truth_score": 0.9999025176436906,
+        "relevance_score": 4.158101754875949,
+        "source_id": "repo://file-merger/merge_files.py",
+        "status": "verified"
+      },
+      {
+        "content_sha256": "7de6998b95088e1092611bd280027bad51b8bb0d359aefb782eeabcc8eab5495",
+        "gene_id": "39351d51d833b689",
+        "live_truth_score": 0.9999023586161178,
+        "relevance_score": 4.1606435341496155,
+        "source_id": "repo://file-merger/merge_files.py",
+        "status": "verified"
+      },
+      {
+        "content_sha256": "b88f15ce720c661772f456e3f84ff9894b1dc4722c17abe8c97c8258773cdab7",
+        "gene_id": "b88f15ce720c6617",
+        "live_truth_score": 0.8987655752879267,
+        "relevance_score": 4.1544477028347995,
+        "source_id": "conversation://qualification/file-merger-r2/2/1",
+        "status": "verified"
+      },
+      {
+        "content_sha256": "9096cbd8f0d61f53ed20b7397a9a0f4793c50d6062c5defd12dc7031b3e13096",
+        "gene_id": "4587849b8803af0d",
+        "live_truth_score": 0.8987640561062775,
+        "relevance_score": 4.15687263556116,
+        "source_id": "conversation://qualification/file-merger-r2/2/1",
+        "status": "verified"
+      },
+      {
+        "content_sha256": "eb73137b316d0a8f071e4b259d9ca08fc7487d86cc3af20a9bd07ab342a5146d",
+        "gene_id": "99e01d6bb7e99466",
+        "live_truth_score": 0.7499264804503224,
+        "relevance_score": 2.5476190476190474,
+        "source_id": "conversation://qualification/file-merger-r2/2/1",
+        "status": "verified"
+      }
+    ],
+    "latency_ms": 1777,
+    "packet_artifact": {
+      "media_type": "application/json",
+      "path": "artifacts/packet/55766fe99e8502b1e591a914e797ac85dee5412d84b61b723e3ceac5f5178414.json",
+      "sha256": "55766fe99e8502b1e591a914e797ac85dee5412d84b61b723e3ceac5f5178414",
+      "size_bytes": 19182
+    },
+    "packet_sha256": "55766fe99e8502b1e591a914e797ac85dee5412d84b61b723e3ceac5f5178414",
+    "query_artifact": {
+      "media_type": "text/plain",
+      "path": "artifacts/query/ff5a6a3a2bcee50c8fd3c99d0234281f41035261b287bf328adbb441e86f039e.txt",
+      "sha256": "ff5a6a3a2bcee50c8fd3c99d0234281f41035261b287bf328adbb441e86f039e",
+      "size_bytes": 1743
+    },
+    "query_sha256": "ff5a6a3a2bcee50c8fd3c99d0234281f41035261b287bf328adbb441e86f039e",
+    "rendered_artifact": {
+      "media_type": "text/plain",
+      "path": "artifacts/rendered-packet/512d14f275ffbcc0f193d3fccdb7cbe0156b4b7c0aa51f15bb0c0598b7d8963d.txt",
+      "sha256": "512d14f275ffbcc0f193d3fccdb7cbe0156b4b7c0aa51f15bb0c0598b7d8963d",
+      "size_bytes": 14367
+    },
+    "rendered_token_count": 3715,
+    "tokenizer": "o200k_base"
+  },
+  "schema_version": 1,
+  "session_id": "qualification:file-merger-r2:2:file-merger",
+  "sync": {
+    "deleted_source_ids": [],
+    "genome_id": "qualification:file-merger-r2:2:file-merger",
+    "ingested": 7,
+    "latency_ms": 1007,
+    "post_genome_checksum": "a61cd0834da2aeef552df27561d1b0e41f693e288db2f73b0550610d2fdf161b",
+    "post_manifest_hash": "23cb7249ceff8b6f67850d0ec3072f1d41f5b07449e36d1247189773b92810a6",
+    "pre_genome_checksum": "3a76b5fe98c2dac17a3aab533fd3666749d1f4ad3e69e25baccb42d39ace8197",
+    "pre_manifest_hash": "88ad82db56570ddc254633eec8a361b3ab6f33cdc663e2dfde72d43e1b48fa73",
+    "skipped": 0,
+    "verified": true
+  },
+  "warmup_elapsed_ms": 0
+}

@@ -1,0 +1,83 @@
+{
+  "arm": "cymatix",
+  "auth_type": "chatgpt_subscription",
+  "campaign_id": "qualification",
+  "checkpoint": 1,
+  "codex": {
+    "cached_input_tokens": 196608,
+    "exit_status": 0,
+    "input_tokens": 225380,
+    "output_tokens": 7815,
+    "rate_limit_events": [],
+    "result_artifact": {
+      "media_type": "application/jsonl",
+      "path": "artifacts/codex-output/2e260cd71e6e9f8fff12ad35c4a54802299ffac6e47a2f4e1b1f6b2dc9fee319.jsonl",
+      "sha256": "2e260cd71e6e9f8fff12ad35c4a54802299ffac6e47a2f4e1b1f6b2dc9fee319",
+      "size_bytes": 10719
+    }
+  },
+  "codex_model": "gpt-5.6-luna",
+  "codex_version": "codex-cli 0.147.0",
+  "config_hash": "56fa47c9c969b786ae3dfcdff580b9f5003cc9304c6b20cd3bd542ebc288067e",
+  "cymatix_commit": "c7b2e49ac1357909b63c6be4159341a3a9e30f43",
+  "elapsed_ms": 210614,
+  "ended_at": "2026-08-10T05:48:22.484187",
+  "host": {
+    "cpu_percent": 21.4,
+    "fingerprint": "Windows|11|AMD64|3.14.3",
+    "load": "normal",
+    "memory_percent": 48.7
+  },
+  "image_digest": "sha256:8bd6d4f3c22131d3df70631b0aa8e12813781812413a034c552466ef5fee39f2",
+  "invalidation_reason": null,
+  "order_index": 1,
+  "pair_id": "file-merger-r2",
+  "problem": "file-merger",
+  "prompt_artifact": {
+    "media_type": "text/plain",
+    "path": "artifacts/prompt/fe1cfde5256e8e2b494b35f3a7f5235c3c20c21b9a39485f65126cfe71c1e1df.txt",
+    "sha256": "fe1cfde5256e8e2b494b35f3a7f5235c3c20c21b9a39485f65126cfe71c1e1df",
+    "size_bytes": 4703
+  },
+  "reasoning_effort": "medium",
+  "receipt_type": "checkpoint",
+  "replicate": 2,
+  "retrieval": null,
+  "retry_of": null,
+  "scbench_commit": "2a2460544cb5cde1f7562cb52aae4ece898c3562",
+  "schema_version": 1,
+  "score": {
+    "erosion": 0.8727720542530756,
+    "isolated_pass_rate": 0.9782608695652174,
+    "raw_artifact": {
+      "media_type": "application/json",
+      "path": "artifacts/score/f36de533c0a93315ac24b641e4c81bd458c1737d269fe4c00645589729318b48.json",
+      "sha256": "f36de533c0a93315ac24b641e4c81bd458c1737d269fe4c00645589729318b48",
+      "size_bytes": 1815
+    },
+    "strict_pass_rate": 0.9782608695652174,
+    "verbosity": 0.5048076923076923
+  },
+  "started_at": "2026-08-10T05:44:51.870074",
+  "sync": {
+    "deleted_source_ids": [],
+    "genome_id": "qualification:file-merger-r2:2:file-merger",
+    "ingested": 6,
+    "latency_ms": 1815,
+    "post_genome_checksum": "3a76b5fe98c2dac17a3aab533fd3666749d1f4ad3e69e25baccb42d39ace8197",
+    "post_manifest_hash": "88ad82db56570ddc254633eec8a361b3ab6f33cdc663e2dfde72d43e1b48fa73",
+    "pre_genome_checksum": "e251c213c6431938a0a60eab8fd7e7d9514bb26387ca1b620bbb8eb98d0bd07a",
+    "pre_manifest_hash": "c80ede02063ecc92088b76d2b10a9376e72ea9d70685777db6adf360e443488a",
+    "skipped": 0,
+    "verified": true
+  },
+  "terminal_state": "completed",
+  "valid": true,
+  "workspace_manifest_artifact": {
+    "media_type": "application/json",
+    "path": "artifacts/workspace-manifest/905725819f38f5d30a91e849802e3b6bd1c013481fcfd02a7b9cead6f39e9296.json",
+    "sha256": "905725819f38f5d30a91e849802e3b6bd1c013481fcfd02a7b9cead6f39e9296",
+    "size_bytes": 171
+  },
+  "workspace_manifest_hash": "905725819f38f5d30a91e849802e3b6bd1c013481fcfd02a7b9cead6f39e9296"
+}

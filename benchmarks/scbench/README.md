@@ -24,19 +24,50 @@ The in-process closed-loop test uses
 python -m pytest tests\test_scbench_e2e.py -q -k closed_loop
 ```
 
-The real qualification pair uses the `calculator` problem and ChatGPT
-subscription authentication:
+The real qualification pair uses `file-merger`, ChatGPT subscription
+authentication, and replicate 2's treatment-first order. The checked-in run
+was executed with:
 
 ```powershell
-python -m cymatix_context.integrations.scbench.cli preflight --manifest benchmarks/scbench/campaigns/qualification/manifest.json
-python -m cymatix_context.integrations.scbench.cli run-pair --manifest benchmarks/scbench/campaigns/qualification/manifest.json --problem calculator --replicate 1
-python -m cymatix_context.integrations.scbench.cli verify-receipts --manifest benchmarks/scbench/campaigns/qualification/manifest.json
+$manifest = 'benchmarks/scbench/campaigns/qualification/manifest.json'
+$cymatixRoot = 'ABSOLUTE_PATH_TO_CYMATIX_WORKTREE'
+$scbenchRoot = 'ABSOLUTE_PATH_TO_SCBENCH_FORK'
+python -m cymatix_context.integrations.scbench.cli preflight --manifest $manifest --cymatix-root $cymatixRoot --scbench-root $scbenchRoot
+python -m cymatix_context.integrations.scbench.cli run-pair --manifest $manifest --problem file-merger --replicate 2 --cymatix-root $cymatixRoot --scbench-root $scbenchRoot
+python -m cymatix_context.integrations.scbench.cli verify-receipts --manifest $manifest --cymatix-root $cymatixRoot --scbench-root $scbenchRoot
 ```
 
-Receipts live under `benchmarks/scbench/campaigns/qualification`; their hashes,
-not mutable prose summaries, are the evidence of record. A rate-limit response
-invalidates the entire pair and requires a fresh pair attempt after the
-subscription window resets.
+The 2026-08-10 qualification evidence is under
+`benchmarks/scbench/campaigns/qualification/pairs/file-merger-r2`. Both arms
+completed on attempt 001 and the verifier replayed eight terminal checkpoint
+receipts. The strict pair receipt SHA-256 is
+`4fd6d88a61f093acdb3949d4c68ee949c7f11be540d1ea6701ffb3802f6bdca7`.
+
+Measured operational behavior:
+
+- pair wall time was 3,337.8 seconds (55m37.8s); treatment was 1,674.620
+  seconds and control was 1,643.883 seconds including evaluation;
+- Codex inference totaled 904.231 seconds for treatment and 866.307 seconds
+  for control;
+- the empty-workspace initial sync was verified in 19 ms and untimed warm-up
+  was 0 ms; per-checkpoint treatment sync latency was 1,815, 1,007, 1,108,
+  and 1,527 ms;
+- retrieval latency for checkpoints 2-4 was 1,777, 140, and 171 ms; rendered
+  packets were 3,715, 3,477, and 3,840 tokens against the 4,000-token ceiling;
+- checkpoint 1 prompts shared SHA-256
+  `fe1cfde5256e8e2b494b35f3a7f5235c3c20c21b9a39485f65126cfe71c1e1df`;
+  checkpoint 2 became byte-for-text equal to control after removing its one
+  Cymatix block;
+- deletion-filter observations were zero, all sync verifications passed, and
+  treatment ingest/query/packet artifacts contained no evaluation path,
+  `evaluation.json`, or hidden-data marker;
+- Codex emitted zero rate-limit events, so no subscription-window pause was
+  required.
+
+These are qualification observations, not scored results, and must not be
+pooled with the pilot. Receipt hashes, not this prose summary, are the evidence
+of record. A rate-limit response invalidates the entire pair and requires a
+fresh pair attempt after the subscription window resets.
 
 ## Treatment scope
 

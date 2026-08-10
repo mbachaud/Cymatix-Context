@@ -1,0 +1,52 @@
+{
+  "arm": "cymatix",
+  "campaign_id": "qualification",
+  "checkpoints": [
+    {
+      "media_type": "application/json",
+      "path": "checkpoints/cymatix-checkpoint-1.json",
+      "sha256": "38c3e50c83408cd359891ea72178ccca40dc8c485d8cfc54f8db3116436bffd3",
+      "size_bytes": 3192
+    },
+    {
+      "media_type": "application/json",
+      "path": "checkpoints/cymatix-checkpoint-2.json",
+      "sha256": "9c34d72d991143b17848dd4a451e06fcc5168ba90c69fd0104cd8aaf8b367ec9",
+      "size_bytes": 7091
+    },
+    {
+      "media_type": "application/json",
+      "path": "checkpoints/cymatix-checkpoint-3.json",
+      "sha256": "1153e7ce8a570ecf8192242dabec088fd859b9fc0cdf2ffb5c74c8f8809b35e6",
+      "size_bytes": 8197
+    },
+    {
+      "media_type": "application/json",
+      "path": "checkpoints/cymatix-checkpoint-4.json",
+      "sha256": "834738519099f2f9ff7a33db24420f89131813ea75ff14bbef2ca93f6281af9d",
+      "size_bytes": 8847
+    }
+  ],
+  "initial_sync": {
+    "deleted_source_ids": [],
+    "genome_id": "qualification:file-merger-r2:2:file-merger",
+    "ingested": 0,
+    "latency_ms": 19,
+    "post_genome_checksum": "e251c213c6431938a0a60eab8fd7e7d9514bb26387ca1b620bbb8eb98d0bd07a",
+    "post_manifest_hash": "c80ede02063ecc92088b76d2b10a9376e72ea9d70685777db6adf360e443488a",
+    "pre_genome_checksum": "e251c213c6431938a0a60eab8fd7e7d9514bb26387ca1b620bbb8eb98d0bd07a",
+    "pre_manifest_hash": "c80ede02063ecc92088b76d2b10a9376e72ea9d70685777db6adf360e443488a",
+    "skipped": 0,
+    "verified": true
+  },
+  "invalidation_reason": null,
+  "order_index": 1,
+  "pair_id": "file-merger-r2",
+  "problem": "file-merger",
+  "receipt_type": "arm",
+  "replicate": 2,
+  "retry_of": null,
+  "schema_version": 1,
+  "valid": true,
+  "warmup_elapsed_ms": 0
+}

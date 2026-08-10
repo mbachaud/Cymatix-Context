@@ -1,0 +1,8 @@
+Implemented:
+
+- [merge_files.py](/workspace/merge_files.py)
+- [requirements.txt](/workspace/requirements.txt)
+
+Also created and used `/workspace/.venv`.
+
+Verified schema inference, sorting, descending order, null handling, timestamp normalization, external sorting, and cast failure behavior.

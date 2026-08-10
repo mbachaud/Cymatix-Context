@@ -1,0 +1,12 @@
+Implemented the heterogeneous CSV merger in [merge_files.py](/workspace/merge_files.py) with:
+
+- CSV, TSV, JSONL/NDJSON, and Parquet support
+- Gzip detection and forced compression modes
+- Schema inference and reconciliation strategies
+- Typed casting and error policies
+- Stable external sorting under memory limits
+- Nested-value validation and specified exit codes
+- Atomic output writes
+- Parquet streaming via PyArrow
+
+Updated [requirements.txt](/workspace/requirements.txt) with `pyarrow>=14`. Mixed-format smoke tests passed.

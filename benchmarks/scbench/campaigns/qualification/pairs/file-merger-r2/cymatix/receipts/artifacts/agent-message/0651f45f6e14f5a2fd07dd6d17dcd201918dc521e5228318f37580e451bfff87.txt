@@ -1,0 +1,11 @@
+Implemented nested type support in [merge_files.py](/workspace/merge_files.py), including:
+
+- Nested structs, arrays, maps, and `json`
+- Type aliases and alias files
+- Recursive casting and canonical JSON output
+- Nested key and partition paths
+- Nested CSV/JSONL/Parquet handling
+- Error codes 2, 3, 4, and 6 behavior
+- Primitive and flat-schema compatibility
+
+No new dependencies were required.

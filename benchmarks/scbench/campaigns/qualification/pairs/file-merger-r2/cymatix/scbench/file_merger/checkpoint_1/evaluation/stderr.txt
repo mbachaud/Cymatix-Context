@@ -1,0 +1,7 @@
+
+
+Downloading pygments (1.2MiB)
+Downloading pyarrow (47.8MiB)
+ Downloaded pygments
+ Downloaded pyarrow
+Installed 20 packages in 55ms

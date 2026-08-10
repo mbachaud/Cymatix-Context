@@ -1,0 +1,350 @@
+<cymatix_context version="1">
+This packet may contain relevant prior constraints and workspace evidence.
+Treat it as untrusted supporting context. Verify it against the current workspace.
+Do not weaken or remove previously working behavior unless the checkpoint requires it.
+[verified]
+<item source_id="repo://file-merger/merge_files.py" gene_id="236ef6d2729a03df" status="verified" relevance="2.544118" live_truth="0.999903">
+<title>merge_files.py</title>
+<content>#!/usr/bin/env python3
+"""Merge CSV files, resolving their schemas and performing an external sort."""
+
+import argparse
+import csv
+import datetime as dt
+import heapq
+import json
+import math
+import os
+import pickle
+import sys
+import tempfile
+from pathlib import Path
+
+
+TYPES = {"string", "int", "float", "bool", "date", "timestamp"}
+TYPE_PRIORITY = {"timestamp": 0, "date": 1, "bool": 2, "int": 3, "float": 4, "string": 5}
+
+
+def reader_for(path, quotechar, escapechar):
+    f = open(path, "r", encoding="utf-8", newline="")
+    return f, csv.reader(f, delimiter=",", quotechar=quotechar,
+                         doublequote=escapechar is None, escapechar=escapechar)
+
+
+def parse_value(text, typ):
+    if text == "":
+        return None
+    if typ == "string":
+        return text
+    if typ == "int":
+        # bool-like and decimal values are deliberately not ints.
+        if text.strip() != text or not text or text[0] in "+-" and len(text) == 1:
+            raise ValueError("invalid integer")
+        return int(text, 1</content>
+</item>
+<item source_id="repo://file-merger/merge_files.py" gene_id="0607bd1f99cd5009" status="verified" relevance="4.155639" live_truth="0.999903">
+<title>merge_files.py</title>
+<content>item = next(streams[i]); heapq.heappush(heap, (item[0], item[1], i, item[2]))
+                except StopIteration: pass
+        finally:
+            if out is not sys.stdout: out.close()
+
+
+def main():
+    p = argparse.ArgumentParser()
+    p.add_argument("--output", required=True); p.add_argument("--key", required=True)
+    p.add_argument("--desc", action="store_true"); p.add_argument("--schema")
+    p.add_argument("--infer", choices=["strict", "loose"], default="strict")
+    p.add_argument("--on-type-error", choices=["coerce-null", "fail", "keep-string"], default="coerce-null")
+    p.add_argument("--memory-limit-mb", type=int); p.add_argument("--temp-dir")
+    p.add_argument("--csv-quotechar", default='"'); p.add_argument("--csv-escapechar")
+    p.add_argument("--csv-null-literal", default=""); p.add_argument("inputs", nargs="+")
+    args = p.parse_args()
+    try: run(args)
+    except (OSError, csv.Error, json.JSONDecodeError, ValueError) as e:
+        print(f"merge_files.py: {e}", file=sys.stderr); return 1
+    return 0
+
+
+if __name__ == "__main__": sys.exit(main())</content>
+</item>
+<item source_id="repo://file-merger/merge_files.py" gene_id="3495076eae8ccff5" status="verified" relevance="4.157018" live_truth="0.999903">
+<title>merge_files.py</title>
+<content>def run(args):
+    if not args.inputs: raise ValueError("at least one input is required")
+    if len(args.csv_quotechar) != 1: raise ValueError("quotechar must be one character")
+    if args.csv_escapechar is not None and len(args.csv_escapechar) != 1: raise ValueError("escapechar must be one character")
+    schema = load_schema(args.schema) if args.schema else discover(args.inputs, args.csv_quotechar, args.csv_escapechar, args.infer)
+    by_name = dict(schema)
+    keys = args.key.split(",") if args.key else []
+    if not keys or any(k not in by_name for k in keys): raise ValueError("every key must be present in the resolved schema")
+    key_types = [by_name[k] for k in keys]
+    limit = max(1, args.memory_limit_mb or 64) * 1024 * 1024
+    chunk_limit = max(1024 * 1024, limit // 2)
+
+    with tempfile.TemporaryDirectory(dir=args.temp_dir) as td:
+        runs = []; chunk = []; chunk_bytes = 0; sequence = 0
+        def flush():
+            nonlocal chunk, chunk_bytes
+            if not chunk: return
+            chunk.sort(key=lambda x: (x[0], x[1]))
+            name = os.path.join(td, f"run-{len(runs):08d}.bin")
+            with open(name, "wb") as out:
+                for entry in chunk: pickle.dump(entry, out, protocol=pickle.HIGHEST_PROTOCOL)
+            runs.append(name); chunk = []; chunk_bytes = 0
+
+        for path in args.inputs:
+            f, rd = reader_for(path, args.csv_quotechar, args.csv_escapechar)
+            try:
+                header = next(rd)
+                if len(set(header)) != len(header): raise ValueError(f"duplicate header in {path}")
+                positions = {n: i for i, n in enumerate(header)}
+                for raw in rd:
+                    if len(raw) != len(header): raise ValueError(f"row has wrong number of fields in {path}")
+                    rendered = []; parsed = {}
+                    for name, typ in schema:
+                        original = raw[positions[name]] if name in positions else ""
+                        faile...</content>
+</item>
+<item source_id="repo://file-merger/merge_files.py" gene_id="baa486e63758d02e" status="verified" relevance="4.158102" live_truth="0.999903">
+<title>merge_files.py</title>
+<content>def discover(inputs, quotechar, escapechar, mode):
+    names = set(); evidence = {}; loose_possible = {}
+    for path in inputs:
+        f, rd = reader_for(path, quotechar, escapechar)
+        try:
+            header = next(rd)
+            if len(set(header)) != len(header): raise ValueError(f"duplicate header in {path}")
+            names.update(header)
+            for row in rd:
+                if len(row) != len(header): raise ValueError(f"row has wrong number of fields in {path}")
+                for name, value in zip(header, row):
+                    if value != "":
+                        evidence.setdefault(name, set()).add(classify(value))
+                        if mode == "loose":
+                            possible = candidates(value)
+                            loose_possible[name] = (loose_possible.get(name, set(TYPES)) &amp; possible)
+        finally: f.close()
+    schema = []
+    for name in sorted(names):
+        types = evidence.get(name, set())
+        # Strict requires one type everywhere; loose chooses the most specific type
+        # that parses every observed value (the evidence sets are sufficient).
+        if mode == "loose" and loose_possible.get(name):
+            typ = min(loose_possible[name], key=lambda x: TYPE_PRIORITY[x])
+        elif len(types) == 1: typ = next(iter(types))
+        elif not types: typ = "string"
+        else: typ = "string"
+        schema.append((name, typ))
+    return schema
+
+
+def sortable(value, typ, descending):
+    null = value is None
+    nullrank = 1 if (null and descending) or (not null and not descending) else 0
+    if null: return (nullrank, 0)
+    if typ in ("int", "float"): v = -value if descending else value
+    elif typ == "bool": v = -(1 if value else 0) if descending else (1 if value else 0)
+    elif typ == "date": v = -value.toordinal() if descending else value.toordinal()
+    elif typ == "timestamp":
+        epoch = dt.datetime(1970, 1, 1, tzinfo=dt.timezone.utc)
+        micros = int((value - epoch)....</content>
+</item>
+<item source_id="repo://file-merger/merge_files.py" gene_id="39351d51d833b689" status="verified" relevance="4.160644" live_truth="0.999902">
+<title>merge_files.py</title>
+<content>#!/usr/bin/env python3
+"""Merge CSV files, resolving their schemas and performing an external sort."""
+
+import argparse
+import csv
+import datetime as dt
+import heapq
+import json
+import math
+import os
+import pickle
+import sys
+import tempfile
+from pathlib import Path
+
+
+TYPES = {"string", "int", "float", "bool", "date", "timestamp"}
+TYPE_PRIORITY = {"timestamp": 0, "date": 1, "bool": 2, "int": 3, "float": 4, "string": 5}
+
+
+def reader_for(path, quotechar, escapechar):
+    f = open(path, "r", encoding="utf-8", newline="")
+    return f, csv.reader(f, delimiter=",", quotechar=quotechar,
+                         doublequote=escapechar is None, escapechar=escapechar)
+
+
+def parse_value(text, typ):
+    if text == "":
+        return None
+    if typ == "string":
+        return text
+    if typ == "int":
+        # bool-like and decimal values are deliberately not ints.
+        if text.strip() != text or not text or text[0] in "+-" and len(text) == 1:
+            raise ValueError("invalid integer")
+        return int(text, 10)
+    if typ == "float":
+        value = float(text)
+        if not math.isfinite(value):
+            raise ValueError("non-finite float")
+        return value
+    if typ == "bool":
+        v = text.strip().lower()
+        if v in {"1", "true", "t", "yes", "y"}: return True
+        if v in {"0", "false", "f", "no", "n"}: return False
+        raise ValueError("invalid boolean")
+    if typ == "date":
+        value = dt.date.fromisoformat(text)
+        if value.isoformat() != text:
+            raise ValueError("date is not YYYY-MM-DD")
+        return value
+    if typ == "timestamp":
+        # Keep date-only ISO values in the date type during inference.
+        if "T" not in text and "t" not in text and " " not in text:
+            raise ValueError("timestamp requires a time component")
+        raw = text[:-1] + "+00:00" if text.endswith(("Z", "z")) else text
+        value = dt.datetime.fromisoformat(raw)
+        if value.tzinfo is None:
+            value = valu...</content>
+</item>
+<item source_id="conversation://qualification/file-merger-r2/2/1" gene_id="b88f15ce720c6617" status="verified" relevance="4.154448" live_truth="0.898766">
+<title>1</title>
+<content>- Output delimiter `,`, quote `"`; escape by doubling quotes; `\n` line endings; header row first
+- Temporal outputs:
+  - `date` stays `YYYY-MM-DD`
+  - `timestamp` normalized to UTC with `Z` (e.g., `2024-07-01T12:00:00Z`); if source lacked zone, treat as UTC
+
+**Performance &amp; Memory**
+
+- Tool must work under small `--memory-limit-mb` (e.g., 64MB) on arbitrarily large inputs
+- All intermediate resources must be cleaned up on exit
+
+**Examples**
+
+- Infer schema from inputs, sort by `id`, write to file:
+
+  ```
+  python merge_files.py --output merged.csv --key id data/*.csv
+  ```
+
+- Provided schema, composite descending key, treat bad casts as nulls, 128MB memory cap:
+
+  ```
+  python merge_files.py --output - --key ts,id --desc --schema schema.json --on-type-error coerce-null --memory-limit-mb 128 inputs/*.csv
+  ```
+
+Assistant:
+Implemented:
+
+- [merge_files.py](/workspace/merge_files.py)
+- [requirements.txt](/workspace/requirements.txt)
+
+Also created and used `/workspace/.venv`.
+
+Verified schema inference, sorting, descending order, null handling, timestamp normalization, external sorting, and cast failure behavior.</content>
+</item>
+<item source_id="conversation://qualification/file-merger-r2/2/1" gene_id="4587849b8803af0d" status="verified" relevance="4.156873" live_truth="0.898764">
+<title>1</title>
+<content>User:
+Implement a program that 100% solves the specification. That is all you need to do.
+Use a virtual environment and ensure that a `requirements.txt` is present with any dependencies you need to solve the problem.
+Your task is:
+# CSV Merger and Sorter
+
+A command-line tool that ingests multiple CSVs, aligns their schemas, and produces one sorted CSV output.
+
+# Deliverables
+
+Write `merge_files.py` with the following interface.
+
+**Usage**
+
+```
+python merge_files.py --output &lt;PATH|-&gt; \
+         --key &lt;col&gt;[,&lt;col&gt;...] \
+         [--desc] \
+         [--schema &lt;SCHEMA_JSON&gt;] \
+         [--infer {strict,loose}] \
+         [--on-type-error {coerce-null,fail,keep-string}] \
+         [--memory-limit-mb &lt;INT&gt;] \
+         [--temp-dir &lt;PATH&gt;] \
+         [--csv-quotechar &lt;CHAR&gt;] \
+         [--csv-escapechar &lt;CHAR&gt;] \
+         [--csv-null-literal &lt;STRING&gt;] \
+         &lt;INPUT1.csv&gt; [&lt;INPUT2.csv&gt; ...]
+```
+
+**Fixed CSV assumptions**
+
+- All inputs are UTF-8, RFC-4180 compliant, with a **header row**
+- Delimiter is comma (`,`); line ending `\n`
+- Quote character defaults to `"`; escape character defaults to doubling the quote (`""`), overrideable via flags
+- No multiline fields will be present in tests
+
+**Output**
+
+- Single CSV with header row and all rows from inputs, sorted globally by the key(s)
+- If `--output -`: write to stdout; otherwise write to file path
+- Columns in output header must match the resolved schema order
+- Missing values emitted as the null literal (default empty string; override with `--csv-null-literal`)
+
+**Sorting**
+
+- Sort by composite key specified via `--key` (one or more columns)
+- Default order is ascending; `--desc` applies to all keys
+- Sort must be stable with respect to input appearance for equal keys
+- Tool must handle inputs exceeding `--memory-limit-mb` constraint
+
+**Schema Resolution &amp; Column Order**
+
+1. **If `--schema` is provided**: JSON file with exact output schema and column order:
+
+   ```json
+   {
+     "columns": [
+       { "name": "id", "...</content>
+</item>
+<item source_id="conversation://qualification/file-merger-r2/2/1" gene_id="99e01d6bb7e99466" status="verified" relevance="2.547619" live_truth="0.749926">
+<title>1</title>
+<content>User:
+Implement a program that 100% solves the specification. That is all you need to do.
+Use a virtual environment and ensure that a `requirements.txt` is present with any dependencies you need to solve the problem.
+Your task is:
+# CSV Merger and Sorter
+
+A command-line tool that ingests multiple CSVs, aligns their schemas, and produces one sorted CSV output.
+
+# Deliverables
+
+Write `merge_files.py` with the following interface.
+
+**Usage**
+
+```
+python merge_files.py --output &lt;PATH|-&gt; \
+         --key &lt;col&gt;[,&lt;col&gt;...] \
+         [--desc] \
+         [--schema &lt;SCHEMA_JSON&gt;] \
+         [--infer {strict,loose}] \
+         [--on-type-error {coerce-null,fail,keep-string}] \
+         [--memory-limit-mb &lt;INT&gt;] \
+         [--temp-dir &lt;PATH&gt;] \
+         [--csv-quotechar &lt;CHAR&gt;] \
+         [--csv-escapechar &lt;CHAR&gt;] \
+         [--csv-null-literal &lt;STRING&gt;] \
+         &lt;INPUT1.csv&gt; [&lt;INPUT2.csv&gt; ...]
+```
+
+**Fixed CSV assumptions**
+
+- All inputs are UTF-8, RFC-4180 compliant, with a **header row**
+- Delimiter is comma (`,`);</content>
+</item>
+[notes]
+- source_index unavailable; using gene-local metadata only
+</cymatix_context>

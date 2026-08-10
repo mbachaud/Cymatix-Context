@@ -1,0 +1,72 @@
+{
+  "arm": "control",
+  "auth_type": "chatgpt_subscription",
+  "campaign_id": "qualification",
+  "checkpoint": 1,
+  "codex": {
+    "cached_input_tokens": 218880,
+    "exit_status": 0,
+    "input_tokens": 250661,
+    "output_tokens": 8596,
+    "rate_limit_events": [],
+    "result_artifact": {
+      "media_type": "application/jsonl",
+      "path": "artifacts/codex-output/330181869002bb24a4ca0ce7fd6e32e67c0707473f8527d055cd4bf9ae0f9dea.jsonl",
+      "sha256": "330181869002bb24a4ca0ce7fd6e32e67c0707473f8527d055cd4bf9ae0f9dea",
+      "size_bytes": 12459
+    }
+  },
+  "codex_model": "gpt-5.6-luna",
+  "codex_version": "codex-cli 0.147.0",
+  "config_hash": "56fa47c9c969b786ae3dfcdff580b9f5003cc9304c6b20cd3bd542ebc288067e",
+  "cymatix_commit": "c7b2e49ac1357909b63c6be4159341a3a9e30f43",
+  "elapsed_ms": 193481,
+  "ended_at": "2026-08-10T06:16:06.564078",
+  "host": {
+    "cpu_percent": 0.0,
+    "fingerprint": "Windows|11|AMD64|3.14.3",
+    "load": "normal",
+    "memory_percent": 48.7
+  },
+  "image_digest": "sha256:8bd6d4f3c22131d3df70631b0aa8e12813781812413a034c552466ef5fee39f2",
+  "invalidation_reason": null,
+  "order_index": 2,
+  "pair_id": "file-merger-r2",
+  "problem": "file-merger",
+  "prompt_artifact": {
+    "media_type": "text/plain",
+    "path": "artifacts/prompt/fe1cfde5256e8e2b494b35f3a7f5235c3c20c21b9a39485f65126cfe71c1e1df.txt",
+    "sha256": "fe1cfde5256e8e2b494b35f3a7f5235c3c20c21b9a39485f65126cfe71c1e1df",
+    "size_bytes": 4703
+  },
+  "reasoning_effort": "medium",
+  "receipt_type": "checkpoint",
+  "replicate": 2,
+  "retrieval": null,
+  "retry_of": null,
+  "scbench_commit": "2a2460544cb5cde1f7562cb52aae4ece898c3562",
+  "schema_version": 1,
+  "score": {
+    "erosion": 0.790780675384805,
+    "isolated_pass_rate": 0.9565217391304348,
+    "raw_artifact": {
+      "media_type": "application/json",
+      "path": "artifacts/score/9b6e166f6bb1a5bddc99a11361213eecf4354b876c5bcab4b2424f0c6f1bfcbd.json",
+      "sha256": "9b6e166f6bb1a5bddc99a11361213eecf4354b876c5bcab4b2424f0c6f1bfcbd",
+      "size_bytes": 1853
+    },
+    "strict_pass_rate": 0.9565217391304348,
+    "verbosity": 0.45081967213114754
+  },
+  "started_at": "2026-08-10T06:12:53.083241",
+  "sync": null,
+  "terminal_state": "completed",
+  "valid": true,
+  "workspace_manifest_artifact": {
+    "media_type": "application/json",
+    "path": "artifacts/workspace-manifest/e3acc4b3e4be8e0ef322b99d435c3e922bca68566e45a672ed8df9415d3e508f.json",
+    "sha256": "e3acc4b3e4be8e0ef322b99d435c3e922bca68566e45a672ed8df9415d3e508f",
+    "size_bytes": 171
+  },
+  "workspace_manifest_hash": "e3acc4b3e4be8e0ef322b99d435c3e922bca68566e45a672ed8df9415d3e508f"
+}

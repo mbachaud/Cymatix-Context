@@ -1,0 +1,190 @@
+{
+  "checkpoint": 4,
+  "initial_sync": {
+    "deleted_source_ids": [],
+    "genome_id": "qualification:file-merger-r2:2:file-merger",
+    "ingested": 0,
+    "latency_ms": 19,
+    "post_genome_checksum": "e251c213c6431938a0a60eab8fd7e7d9514bb26387ca1b620bbb8eb98d0bd07a",
+    "post_manifest_hash": "c80ede02063ecc92088b76d2b10a9376e72ea9d70685777db6adf360e443488a",
+    "pre_genome_checksum": "e251c213c6431938a0a60eab8fd7e7d9514bb26387ca1b620bbb8eb98d0bd07a",
+    "pre_manifest_hash": "c80ede02063ecc92088b76d2b10a9376e72ea9d70685777db6adf360e443488a",
+    "skipped": 0,
+    "verified": true
+  },
+  "packet": {
+    "media_type": "application/json",
+    "path": "artifacts/packet/22790953dc5fa64cf09e6ee8e22595c9ae063bcf8d5bed0d155cfbf1d13aa2d0.json",
+    "sha256": "22790953dc5fa64cf09e6ee8e22595c9ae063bcf8d5bed0d155cfbf1d13aa2d0",
+    "size_bytes": 40992
+  },
+  "prompt": {
+    "media_type": "text/plain",
+    "path": "artifacts/prompt/3786934aa81a9867b44af6b412331eec7a31c779b09d512b8d0a879022d88264.txt",
+    "sha256": "3786934aa81a9867b44af6b412331eec7a31c779b09d512b8d0a879022d88264",
+    "size_bytes": 21569
+  },
+  "query": {
+    "media_type": "text/plain",
+    "path": "artifacts/query/f10a765e5bf72439d0686d5c0f51e39efe19269be7c12e6e93c9205b0b5e5346.txt",
+    "sha256": "f10a765e5bf72439d0686d5c0f51e39efe19269be7c12e6e93c9205b0b5e5346",
+    "size_bytes": 1713
+  },
+  "rendered_packet": {
+    "media_type": "text/plain",
+    "path": "artifacts/rendered-packet/3e2aada5e9e53d50c22dcfe18ffe125af19d0d4e6c54a7cbe3a36f5b0ef6e960.txt",
+    "sha256": "3e2aada5e9e53d50c22dcfe18ffe125af19d0d4e6c54a7cbe3a36f5b0ef6e960",
+    "size_bytes": 14976
+  },
+  "retrieval": {
+    "budget_dropped": [
+      "repo://file-merger/merge_files.py",
+      "repo://file-merger/merge_files.py",
+      "repo://file-merger/merge_files.py",
+      "repo://file-merger/merge_files.py",
+      "repo://file-merger/merge_files.py",
+      "conversation://qualification/file-merger-r2/2/3",
+      "conversation://qualification/file-merger-r2/2/2",
+      "conversation://qualification/file-merger-r2/2/1",
+      "conversation://qualification/file-merger-r2/2/1",
+      "note:0"
+    ],
+    "deleted_source_filtered": [],
+    "items": [
+      {
+        "content_sha256": "38d5c9aa5f0a299a492b1af1774cf7e1544a6745269a1d3833ca9ef47a321c2c",
+        "gene_id": "2b90a672b9233529",
+        "live_truth_score": 0.9996186543658756,
+        "relevance_score": 4.12989145183175,
+        "source_id": "repo://file-merger/merge_files.py",
+        "status": "verified"
+      },
+      {
+        "content_sha256": "d6e1d6913a5d634c55ab134960ec4ec8f3807ae29d0484b4b3a77caf38161938",
+        "gene_id": "d1af63136b65d16a",
+        "live_truth_score": 0.9996184678272124,
+        "relevance_score": 4.138498432495059,
+        "source_id": "repo://file-merger/merge_files.py",
+        "status": "verified"
+      },
+      {
+        "content_sha256": "323a5a2ca2681cb285e2d5bb5f76f581b4fb1dc61faad3a09caacd19405fce1f",
+        "gene_id": "ef2134372cf5793d",
+        "live_truth_score": 0.9996181531221093,
+        "relevance_score": 4.152599826415232,
+        "source_id": "repo://file-merger/merge_files.py",
+        "status": "verified"
+      },
+      {
+        "content_sha256": "998d88df3c6b8dc52f7c9ff665af6da2b9913d3f6d103ddb19949247d0bd1fc1",
+        "gene_id": "b3325624682b807f",
+        "live_truth_score": 0.9996179042672854,
+        "relevance_score": 4.151984126984127,
+        "source_id": "repo://file-merger/merge_files.py",
+        "status": "verified"
+      },
+      {
+        "content_sha256": "60c8ef03f29c7b1d3c105fecbf4326309c691972a3f35726e1cb7ffd92a847c5",
+        "gene_id": "ea01cec0c130c1de",
+        "live_truth_score": 0.9996177188317359,
+        "relevance_score": 4.14741692131398,
+        "source_id": "repo://file-merger/merge_files.py",
+        "status": "verified"
+      },
+      {
+        "content_sha256": "ea6564bcf19361190d5e0cf13e4f7efd7ef76a9f8db60f8a547d4ddcde88293e",
+        "gene_id": "ea6564bcf1936119",
+        "live_truth_score": 0.9989978984742005,
+        "relevance_score": 4.140824928119746,
+        "source_id": "repo://file-merger/merge_files.py",
+        "status": "verified"
+      },
+      {
+        "content_sha256": "db7d983578ef3473fb32f9ea1ffb01221dd16e16a8d21d591406601fabc84316",
+        "gene_id": "7dbc54b087f3224f",
+        "live_truth_score": 0.9989978321111589,
+        "relevance_score": 4.1401113831820355,
+        "source_id": "repo://file-merger/merge_files.py",
+        "status": "verified"
+      },
+      {
+        "content_sha256": "56bae7411fa7546047a01ef3b28b39fbf4ec75d0f4cade3491ebdf1e5c40ee6f",
+        "gene_id": "4e5040255f121eaf",
+        "live_truth_score": 0.9989972092518941,
+        "relevance_score": 4.152120893631929,
+        "source_id": "repo://file-merger/merge_files.py",
+        "status": "verified"
+      },
+      {
+        "content_sha256": "0607bd1f99cd5009ae6d7f0b6bd38d5c073a23c5f22e5db1f53142bda39dfe30",
+        "gene_id": "0607bd1f99cd5009",
+        "live_truth_score": 0.998491532000931,
+        "relevance_score": 4.1408779736476715,
+        "source_id": "repo://file-merger/merge_files.py",
+        "status": "verified"
+      },
+      {
+        "content_sha256": "c17e332fa1e07a187a026871d0d668a05823910288e8b7a8531c88176c025f60",
+        "gene_id": "3495076eae8ccff5",
+        "live_truth_score": 0.998491446803941,
+        "relevance_score": 4.144147889894652,
+        "source_id": "repo://file-merger/merge_files.py",
+        "status": "verified"
+      },
+      {
+        "content_sha256": "ce767b35fdbeb8dd10b56c65c468a7a1a0376b48c991d9b0d749f2b34782ef9c",
+        "gene_id": "baa486e63758d02e",
+        "live_truth_score": 0.9984912283569665,
+        "relevance_score": 4.136997405307264,
+        "source_id": "repo://file-merger/merge_files.py",
+        "status": "verified"
+      },
+      {
+        "content_sha256": "7de6998b95088e1092611bd280027bad51b8bb0d359aefb782eeabcc8eab5495",
+        "gene_id": "39351d51d833b689",
+        "live_truth_score": 0.9984910695538494,
+        "relevance_score": 4.148058866016613,
+        "source_id": "repo://file-merger/merge_files.py",
+        "status": "verified"
+      }
+    ],
+    "latency_ms": 171,
+    "packet_artifact": {
+      "media_type": "application/json",
+      "path": "artifacts/packet/22790953dc5fa64cf09e6ee8e22595c9ae063bcf8d5bed0d155cfbf1d13aa2d0.json",
+      "sha256": "22790953dc5fa64cf09e6ee8e22595c9ae063bcf8d5bed0d155cfbf1d13aa2d0",
+      "size_bytes": 40992
+    },
+    "packet_sha256": "22790953dc5fa64cf09e6ee8e22595c9ae063bcf8d5bed0d155cfbf1d13aa2d0",
+    "query_artifact": {
+      "media_type": "text/plain",
+      "path": "artifacts/query/f10a765e5bf72439d0686d5c0f51e39efe19269be7c12e6e93c9205b0b5e5346.txt",
+      "sha256": "f10a765e5bf72439d0686d5c0f51e39efe19269be7c12e6e93c9205b0b5e5346",
+      "size_bytes": 1713
+    },
+    "query_sha256": "f10a765e5bf72439d0686d5c0f51e39efe19269be7c12e6e93c9205b0b5e5346",
+    "rendered_artifact": {
+      "media_type": "text/plain",
+      "path": "artifacts/rendered-packet/3e2aada5e9e53d50c22dcfe18ffe125af19d0d4e6c54a7cbe3a36f5b0ef6e960.txt",
+      "sha256": "3e2aada5e9e53d50c22dcfe18ffe125af19d0d4e6c54a7cbe3a36f5b0ef6e960",
+      "size_bytes": 14976
+    },
+    "rendered_token_count": 3840,
+    "tokenizer": "o200k_base"
+  },
+  "schema_version": 1,
+  "session_id": "qualification:file-merger-r2:2:file-merger",
+  "sync": {
+    "deleted_source_ids": [],
+    "genome_id": "qualification:file-merger-r2:2:file-merger",
+    "ingested": 11,
+    "latency_ms": 1527,
+    "post_genome_checksum": "298ea138b56e5cf1ea11ade20c1a3ceaacc4767abc212e9ab0ff8fdaccf189f6",
+    "post_manifest_hash": "8c7c3ae825da27478cd671fbf28418115fde3286a1343a7d4d5393d03e6ffccf",
+    "pre_genome_checksum": "d964ade2834f169dfb7178509135d0d5d1f86a986ad0ac1ee663e9201abe9c3a",
+    "pre_manifest_hash": "3dc7fd5ede77a7336f28b70e3917a01b35c3bdb347b56de7078314f7239dd293",
+    "skipped": 0,
+    "verified": true
+  },
+  "warmup_elapsed_ms": 0
+}

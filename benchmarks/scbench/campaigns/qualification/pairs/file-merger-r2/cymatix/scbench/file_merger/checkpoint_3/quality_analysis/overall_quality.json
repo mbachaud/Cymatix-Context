@@ -1,0 +1,129 @@
+{
+  "classes": {
+    "attribute_counts_mean": 2.0,
+    "attribute_counts_sum": 2,
+    "count": 1,
+    "method_counts_mean": 1.0,
+    "method_counts_sum": 1
+  },
+  "complexity": {
+    "cc_max": 70,
+    "cc_ratings": {
+      "A": 9,
+      "B": 7,
+      "C": 3,
+      "D": 2,
+      "E": 0,
+      "F": 1
+    },
+    "cc_sum": 248,
+    "mi_min": 0.0,
+    "mi_ratings": {
+      "A": 0,
+      "B": 0,
+      "C": 1
+    },
+    "mi_sum": 0.0,
+    "num_complex": 6
+  },
+  "file_count": 1,
+  "functions": {
+    "cc_concentration": 0.5386247877758913,
+    "cc_extreme_count": 1,
+    "cc_high_count": 6,
+    "cc_max": 70,
+    "cc_mean": 13.052631578947368,
+    "cc_normalized": 0.08129733206151002,
+    "cc_std": 16.222322358098378,
+    "cc_sum": 248,
+    "cc_top20": 0.5967741935483871,
+    "count": 19,
+    "depth_max": 6,
+    "extreme_cc_mean": 70.0,
+    "high_cc_mean": 30.0,
+    "lines_mean": 17.210526315789473,
+    "lines_sum": 327
+  },
+  "graph": {
+    "cyclic_dependency_mass": 0.0,
+    "dependency_entropy": 0.1567809428505069,
+    "edge_count": 20,
+    "node_count": 19,
+    "propagation_cost": 0.14619883040935672
+  },
+  "lines": {
+    "comments": 1,
+    "loc": 328,
+    "multi_comment": 0,
+    "single_comment": 5,
+    "total_lines": 354
+  },
+  "lint": {
+    "counts": {
+      "ARG001": 1,
+      "B007": 1,
+      "B904": 6,
+      "B905": 2,
+      "BLE001": 1,
+      "C901": 4,
+      "DOC201": 2,
+      "DOC501": 1,
+      "EM101": 16,
+      "EM102": 14,
+      "FURB103": 1,
+      "FURB118": 2,
+      "PERF203": 2,
+      "PLC0415": 2,
+      "PLC1901": 3,
+      "PLR0911": 3,
+      "PLR0912": 4,
+      "PLR0914": 2,
+      "PLR0915": 1,
+      "PLR0916": 1,
+      "PLR1702": 1,
+      "PLR6201": 4,
+      "PTH100": 3,
+      "PTH103": 1,
+      "PTH105": 4,
+      "PTH106": 1,
+      "PTH108": 2,
+      "PTH110": 5,
+      "PTH112": 1,
+      "PTH118": 5,
+      "PTH120": 3,
+      "PTH122": 1,
+      "PTH123": 8,
+      "S301": 1,
+      "S403": 1,
+      "SIM115": 1,
+      "TRY003": 30,
+      "TRY300": 1,
+      "TRY301": 1,
+      "UP015": 1
+    },
+    "errors": 144,
+    "fixable": 24
+  },
+  "source_files": [
+    "merge_files.py"
+  ],
+  "symbols": {
+    "classes": 1,
+    "expressions": 843,
+    "expressions_top_level": 20,
+    "functions": 18,
+    "globals": 2,
+    "imports": 3,
+    "max_imports": 3,
+    "methods": 1,
+    "statements": 230,
+    "total": 22,
+    "type_aliases": 0,
+    "variables": 2
+  },
+  "waste": {
+    "single_use_functions": 13,
+    "trivial_wrappers": 0,
+    "unused_variables": 2
+  }
+}
