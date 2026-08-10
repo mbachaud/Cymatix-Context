@@ -1,0 +1,4792 @@
+{
+  "tool": "benchmarks/dogfood/erb/ablation_ladder.py",
+  "stamp": "wave3d-blob-passA-forward-46ce3f614009ad4cb221160ac05c913dde70fa67",
+  "bed": "F:\\tmp\\erb_blob_probe.db",
+  "bed_bytes": 56724627456,
+  "config": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\ab-data-cymatics-pki-dff9c6\\cymatix.toml",
+  "git_sha": "46ce3f614009ad4cb221160ac05c913dde70fa67",
+  "needles_file": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\ab-data-cymatics-pki-dff9c6\\benchmarks\\dogfood\\erb\\needles_resolved_blob_probe30.json",
+  "gold_file": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\ab-data-cymatics-pki-dff9c6\\benchmarks\\dogfood\\erb\\gold_by_needle_blob.json",
+  "needle_count": 30,
+  "k": 12,
+  "arm_run_order": [
+    "baseline",
+    "no_pki",
+    "no_tags"
+  ],
+  "arm_order_reversed": false,
+  "env": {
+    "CYMATIX_ENCODER_URL": "http://127.0.0.1:11439",
+    "CYMATIX_ENCODER_URL_set": true,
+    "CYMATIX_DISABLE_HEADROOM": null,
+    "CYMATIX_DISABLE_LEARN": "1",
+    "CYMATIX_GENOME_PATH": "F:\\tmp\\erb_blob_probe.db"
+  },
+  "note": "Ranks read from genome.last_query_scores (post-blend; blend republishes the map at scoring/blend.py:233/:281), ties broken by gene_id ascending. THREE bases ship side by side and answer different questions: recall_at_k / *_rank_of_gold on the score map; final_recall_at_k + per-needle final_rank_of_first_gold on genome.last_ranked_ids, the FINAL order (post-rerank when it ran \u2014 a cross-encoder permutes ids without rewriting fused scores, so #341 arms are invisible in the score map); and delivered_gold_* on window.expressed_gene_ids, the assembled window \u2014 post-splice, post-session-elision, post-budget-trim (context_manager.py:3564) \u2014 which is the only basis that can see an admission-shaped or post-rank layer (#335). Gold is matched by exact gene_id, never by text. delivered_gold counts an id in the window; delivered_gold_full counts CONTENT in it (an elided document ships as a stub under the same id) and the two are equal on this script, which always passes ignore_delivered=True \u2014 see each arm's delivery_basis block, whose elision_observed_queries must be 0. pool_delivery_gap is recall_at_k minus delivered_gold_rate: the part of the pipeline rank metrics cannot see. Every arm also carries delivered_gold_by_needle (needle -> delivered / full / delivered_rank / pool_rank), emitted unconditionally so a per-needle cross-tab never depends on --per-query. Per-needle gate_kept / floor_appended come from genome.last_rerank_diag (published on both rerank arms). Each arm runs one untimed warmup query first so the lazy encoder load is not billed to p50. Latencies are wall ms on a shared box \u2014 within-run relatives only.",
+  "dropped_arms": [
+    {
+      "arm": "no_plr",
+      "knob": "[plr] enabled",
+      "reason": "Not on the build_context path. [plr] enabled is read only by server/routes_context.py:635 -> server/helpers.py:444 _compute_plr_confidence, which decorates the /context/packet response; retrieval/fusion_plr.py:31 states it 'leaves document ranking untouched'. An in-process arm would measure zero by construction, not by evidence."
+    },
+    {
+      "arm": "no_harmonic",
+      "knob": "use_harmonic / [cymatics] harmonic_links",
+      "reason": "No query-time off-switch. `use_harmonic` defaults True at context_manager.py:2895 and knowledge_store.py:2259 and is passed by NO call site (context_manager.py:1945, :1965), so Tier 5 (knowledge_store.py:3119) and _expand_coactivated (knowledge_store.py:3494) are unconditional. [cymatics] harmonic_links gates only the ingest/expression-time edge WRITE inside the `if not read_only` block at context_manager.py:2353."
+    }
+  ],
+  "arms": [
+    {
+      "arm": "baseline",
+      "knobs_changed": {},
+      "gate": "\u2014  (shipped config, untouched)",
+      "arm_valid": true,
+      "validation": "control",
+      "validation_detail": "control arm \u2014 shipped config, no ablation to validate",
+      "recall_at_k": 0.6667,
+      "final_recall_at_k": 0.4333,
+      "mean_rank_of_gold": 9.41,
+      "median_rank_of_gold": 3.0,
+      "gold_found_queries": 27,
+      "gold_ranks_total": 42,
+      "delivered_gold_queries": 11,
+      "delivered_gold_rate": 0.36666666666666664,
+      "delivered_gold_full_queries": 11,
+      "delivered_gold_full_rate": 0.3667,
+      "delivered_gold_elided_queries": 0,
+      "delivered_gold_median_rank": 1.0,
+      "delivered_count_median": 3.0,
+      "pool_delivery_gap": 0.3,
+      "delivery_basis": {
+        "source": "window.expressed_gene_ids (context_manager.py:3564)",
+        "ignore_delivered": true,
+        "session_id_passed": false,
+        "session_delivery_enabled_in_config": true,
+        "elision_possible": false,
+        "elision_observed_queries": 0
+      },
+      "delivered_gold_by_needle": {
+        "erb_000": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 2,
+          "pool_rank": 1
+        },
+        "erb_001": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 21
+        },
+        "erb_003": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 35
+        },
+        "erb_008": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 8,
+          "pool_rank": 1
+        },
+        "erb_009": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 8,
+          "pool_rank": 6
+        },
+        "erb_010": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 1
+        },
+        "erb_012": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 2
+        },
+        "erb_013": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 2
+        },
+        "erb_015": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 8,
+          "pool_rank": 17
+        },
+        "erb_019": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 2,
+          "delivered_count": 3,
+          "pool_rank": 3
+        },
+        "erb_020": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 12,
+          "pool_rank": 2
+        },
+        "erb_021": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": null
+        },
+        "erb_022": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 1
+        },
+        "erb_024": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 1
+        },
+        "erb_029": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 3,
+          "delivered_count": 3,
+          "pool_rank": 15
+        },
+        "erb_031": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 12,
+          "pool_rank": 1
+        },
+        "erb_033": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 1
+        },
+        "erb_036": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 12,
+          "pool_rank": 4
+        },
+        "erb_038": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 12,
+          "pool_rank": 2
+        },
+        "erb_039": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 8,
+          "pool_rank": null
+        },
+        "erb_042": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 2
+        },
+        "erb_050": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 3
+        },
+        "erb_066": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 5
+        },
+        "erb_068": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 2,
+          "delivered_count": 3,
+          "pool_rank": 3
+        },
+        "erb_072": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": null
+        },
+        "erb_073": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 12,
+          "pool_rank": 18
+        },
+        "erb_075": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 58
+        },
+        "erb_080": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 12,
+          "pool_rank": 37
+        },
+        "erb_087": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 10
+        },
+        "erb_095": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 2,
+          "delivered_count": 8,
+          "pool_rank": 2
+        }
+      },
+      "queries_with_scores": 30,
+      "latency_ms": {
+        "p50": 21252.976,
+        "p95": 41740.735
+      },
+      "signal_ms_median": {
+        "ann_body_fetch": 27.45,
+        "ann_dense_leg": 161.713,
+        "body_fetch": 12.956,
+        "coact_expand": 0.145,
+        "dense": 164.333,
+        "fts5": 2107.957,
+        "lex_anchor": 1171.189,
+        "pki": 148.297,
+        "splade": 4401.682,
+        "tag_exact": 983.665,
+        "tag_prefix": 1481.68
+      },
+      "n_queries": 30,
+      "warmup_ran": true,
+      "encoder_url": "http://127.0.0.1:11439",
+      "dense_codec_class": "RemoteBGEM3Codec",
+      "remote_dense": true,
+      "observables": {
+        "signal_keys": [
+          "ann_body_fetch",
+          "ann_dense_leg",
+          "body_fetch",
+          "coact_expand",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "splade",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_keys": [
+          "authority",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "splade",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "classifier_metadata_queries": 30,
+        "synonym_expansions": 12,
+        "cymatics_calls": 30,
+        "cold_tier_queries": 0,
+        "store_tier_weights": {
+          "sr": 1.5,
+          "filename_anchor": 4.0,
+          "rerank_tier": 1.0,
+          "fts5": 3.0,
+          "splade": 3.5,
+          "tag_exact": 3.0,
+          "tag_prefix": 1.5,
+          "sema_boost": 2.0,
+          "sema_cold": 3.0,
+          "lex_anchor": 1.5,
+          "harmonic": 1.0,
+          "entity_graph": 0.5,
+          "dense": 1.0,
+          "dense_additive": 4.0,
+          "semantic_dense_additive": 16.0,
+          "pki": 1.0
+        },
+        "fusion_mode": "rrf"
+      },
+      "errors": [],
+      "per_query": [
+        {
+          "needle": "erb_000",
+          "gold_ranks": [
+            1,
+            5
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 15156.263,
+          "signal_ms": {
+            "ann_body_fetch": 20.947,
+            "ann_dense_leg": 132.397,
+            "body_fetch": 8.646,
+            "coact_expand": 0.135,
+            "dense": 133.126,
+            "fts5": 2003.806,
+            "lex_anchor": 903.536,
+            "pki": 201.283,
+            "splade": 2870.961,
+            "tag_exact": 720.8,
+            "tag_prefix": 1087.871
+          },
+          "delivered_gold": 1,
+          "delivered_count": 2,
+          "delivered_gold_rank": 1,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 1,
+          "final_rank_of_first_gold": 2,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 2,
+          "tier_genes": {
+            "authority": 64632,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 73419,
+            "pki": 2992,
+            "splade": 2000,
+            "tag_exact": 73419,
+            "tag_prefix": 104154
+          }
+        },
+        {
+          "needle": "erb_001",
+          "gold_ranks": [
+            21
+          ],
+          "rank_of_first_gold": 21,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 21252.976,
+          "signal_ms": {
+            "ann_body_fetch": 26.179,
+            "ann_dense_leg": 144.882,
+            "body_fetch": 7.905,
+            "coact_expand": 0.116,
+            "dense": 172.188,
+            "fts5": 2936.666,
+            "lex_anchor": 1127.171,
+            "pki": 86.013,
+            "splade": 4424.015,
+            "tag_exact": 1193.045,
+            "tag_prefix": 1572.857
+          },
+          "delivered_gold": 0,
+          "delivered_count": 3,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 517,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 56556,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 106160,
+            "pki": 2540,
+            "splade": 2000,
+            "tag_exact": 106160,
+            "tag_prefix": 146914
+          }
+        },
+        {
+          "needle": "erb_003",
+          "gold_ranks": [
+            35
+          ],
+          "rank_of_first_gold": 35,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 26824.416,
+          "signal_ms": {
+            "ann_body_fetch": 29.465,
+            "ann_dense_leg": 160.213,
+            "body_fetch": 11.753,
+            "coact_expand": 0.144,
+            "dense": 161.564,
+            "fts5": 2802.014,
+            "lex_anchor": 1628.62,
+            "pki": 365.195,
+            "splade": 7642.152,
+            "tag_exact": 1301.023,
+            "tag_prefix": 1900.239
+          },
+          "delivered_gold": 0,
+          "delivered_count": 3,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 87,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 112905,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 111348,
+            "pki": 4800,
+            "splade": 2000,
+            "tag_exact": 111348,
+            "tag_prefix": 168382
+          }
+        },
+        {
+          "needle": "erb_008",
+          "gold_ranks": [
+            1,
+            4
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 47071.293,
+          "signal_ms": {
+            "ann_body_fetch": 31.622,
+            "ann_dense_leg": 181.125,
+            "body_fetch": 15.153,
+            "coact_expand": 0.158,
+            "dense": 171.845,
+            "fts5": 3337.079,
+            "lex_anchor": 1901.868,
+            "pki": 151.213,
+            "splade": 7719.799,
+            "tag_exact": 2266.684,
+            "tag_prefix": 2445.932
+          },
+          "delivered_gold": 0,
+          "delivered_count": 8,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 190,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 8,
+          "tier_genes": {
+            "authority": 54924,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 191863,
+            "pki": 3411,
+            "splade": 2000,
+            "tag_exact": 191863,
+            "tag_prefix": 242233
+          }
+        },
+        {
+          "needle": "erb_009",
+          "gold_ranks": [
+            6
+          ],
+          "rank_of_first_gold": 6,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 25997.317,
+          "signal_ms": {
+            "ann_body_fetch": 26.083,
+            "ann_dense_leg": 153.948,
+            "body_fetch": 12.812,
+            "coact_expand": 0.148,
+            "dense": 165.09,
+            "fts5": 2667.466,
+            "lex_anchor": 928.806,
+            "pki": 166.828,
+            "splade": 4326.782,
+            "tag_exact": 880.275,
+            "tag_prefix": 1527.429
+          },
+          "delivered_gold": 0,
+          "delivered_count": 8,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 265,
+          "final_recall_hit": 0,
+          "gate_kept": 8,
+          "floor_appended": 0,
+          "splice_n_candidates": 8,
+          "tier_genes": {
+            "authority": 73967,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 75979,
+            "pki": 5033,
+            "splade": 2000,
+            "tag_exact": 75979,
+            "tag_prefix": 134634
+          }
+        },
+        {
+          "needle": "erb_010",
+          "gold_ranks": [
+            1,
+            2
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 9864.088,
+          "signal_ms": {
+            "ann_body_fetch": 26.436,
+            "ann_dense_leg": 225.748,
+            "body_fetch": 8.083,
+            "coact_expand": 0.135,
+            "dense": 159.633,
+            "fts5": 1146.149,
+            "lex_anchor": 470.812,
+            "pki": 83.692,
+            "splade": 3440.551,
+            "tag_exact": 380.679,
+            "tag_prefix": 505.892
+          },
+          "delivered_gold": 1,
+          "delivered_count": 3,
+          "delivered_gold_rank": 1,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 1,
+          "final_rank_of_first_gold": 1,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 31873,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 31947,
+            "pki": 1459,
+            "splade": 2000,
+            "tag_exact": 31947,
+            "tag_prefix": 45370
+          }
+        },
+        {
+          "needle": "erb_012",
+          "gold_ranks": [
+            2,
+            10
+          ],
+          "rank_of_first_gold": 2,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 14862.218,
+          "signal_ms": {
+            "ann_body_fetch": 28.642,
+            "ann_dense_leg": 188.651,
+            "body_fetch": 13.822,
+            "coact_expand": 0.168,
+            "dense": 165.218,
+            "fts5": 1889.305,
+            "lex_anchor": 444.276,
+            "pki": 57.902,
+            "splade": 3657.126,
+            "tag_exact": 433.622,
+            "tag_prefix": 1150.042
+          },
+          "delivered_gold": 1,
+          "delivered_count": 3,
+          "delivered_gold_rank": 1,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 1,
+          "final_rank_of_first_gold": 1,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 59154,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 34561,
+            "pki": 1479,
+            "splade": 2000,
+            "tag_exact": 34561,
+            "tag_prefix": 102347
+          }
+        },
+        {
+          "needle": "erb_013",
+          "gold_ranks": [
+            2,
+            54
+          ],
+          "rank_of_first_gold": 2,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 17733.15,
+          "signal_ms": {
+            "ann_body_fetch": 25.069,
+            "ann_dense_leg": 156.041,
+            "body_fetch": 17.26,
+            "coact_expand": 0.153,
+            "dense": 156.266,
+            "fts5": 1899.341,
+            "lex_anchor": 1124.4,
+            "pki": 123.703,
+            "splade": 4773.56,
+            "tag_exact": 852.584,
+            "tag_prefix": 1268.955
+          },
+          "delivered_gold": 0,
+          "delivered_count": 3,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 3,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 67719,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 79207,
+            "pki": 1072,
+            "splade": 2000,
+            "tag_exact": 79207,
+            "tag_prefix": 113031
+          }
+        },
+        {
+          "needle": "erb_015",
+          "gold_ranks": [
+            17
+          ],
+          "rank_of_first_gold": 17,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 20805.044,
+          "signal_ms": {
+            "ann_body_fetch": 28.129,
+            "ann_dense_leg": 161.52,
+            "body_fetch": 16.388,
+            "coact_expand": 0.148,
+            "dense": 167.313,
+            "fts5": 1980.687,
+            "lex_anchor": 1215.207,
+            "pki": 170.039,
+            "splade": 4174.318,
+            "tag_exact": 1063.022,
+            "tag_prefix": 1190.183
+          },
+          "delivered_gold": 0,
+          "delivered_count": 8,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 251,
+          "final_recall_hit": 0,
+          "gate_kept": 8,
+          "floor_appended": 0,
+          "splice_n_candidates": 8,
+          "tier_genes": {
+            "authority": 87899,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 85535,
+            "pki": 2100,
+            "splade": 2000,
+            "tag_exact": 85535,
+            "tag_prefix": 104583
+          }
+        },
+        {
+          "needle": "erb_019",
+          "gold_ranks": [
+            3,
+            4
+          ],
+          "rank_of_first_gold": 3,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 16294.299,
+          "signal_ms": {
+            "ann_body_fetch": 25.021,
+            "ann_dense_leg": 155.775,
+            "body_fetch": 11.478,
+            "coact_expand": 0.125,
+            "dense": 160.177,
+            "fts5": 2046.102,
+            "lex_anchor": 519.551,
+            "pki": 83.564,
+            "splade": 6468.163,
+            "tag_exact": 493.788,
+            "tag_prefix": 813.087
+          },
+          "delivered_gold": 1,
+          "delivered_count": 3,
+          "delivered_gold_rank": 2,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 2,
+          "final_rank_of_first_gold": 7,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 34336,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 39718,
+            "pki": 1985,
+            "splade": 2000,
+            "tag_exact": 39718,
+            "tag_prefix": 71148
+          }
+        },
+        {
+          "needle": "erb_020",
+          "gold_ranks": [
+            2,
+            3
+          ],
+          "rank_of_first_gold": 2,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 41740.735,
+          "signal_ms": {
+            "ann_body_fetch": 27.233,
+            "ann_dense_leg": 153.809,
+            "body_fetch": 12.31,
+            "coact_expand": 0.144,
+            "dense": 161.857,
+            "fts5": 2814.878,
+            "lex_anchor": 2904.183,
+            "pki": 145.38,
+            "splade": 3917.25,
+            "tag_exact": 2324.615,
+            "tag_prefix": 3005.498
+          },
+          "delivered_gold": 0,
+          "delivered_count": 12,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 502,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 12,
+          "tier_genes": {
+            "authority": 76825,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 221881,
+            "pki": 3416,
+            "splade": 2000,
+            "tag_exact": 221881,
+            "tag_prefix": 292407
+          }
+        },
+        {
+          "needle": "erb_021",
+          "gold_ranks": [],
+          "rank_of_first_gold": null,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 12019.81,
+          "signal_ms": {
+            "ann_body_fetch": 27.088,
+            "ann_dense_leg": 161.775,
+            "body_fetch": 13.455,
+            "coact_expand": 0.156,
+            "dense": 161.017,
+            "fts5": 1397.604,
+            "lex_anchor": 689.095,
+            "pki": 140.547,
+            "splade": 1825.215,
+            "tag_exact": 624.077,
+            "tag_prefix": 1034.068
+          },
+          "delivered_gold": 0,
+          "delivered_count": 3,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 41,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 59511,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 51252,
+            "pki": 2966,
+            "splade": 2000,
+            "tag_exact": 51252,
+            "tag_prefix": 92902
+          }
+        },
+        {
+          "needle": "erb_022",
+          "gold_ranks": [
+            1
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 22070.322,
+          "signal_ms": {
+            "ann_body_fetch": 42.06,
+            "ann_dense_leg": 197.767,
+            "body_fetch": 16.982,
+            "coact_expand": 0.14,
+            "dense": 163.64,
+            "fts5": 2648.225,
+            "lex_anchor": 2005.462,
+            "pki": 165.505,
+            "splade": 4802.707,
+            "tag_exact": 1132.168,
+            "tag_prefix": 1701.991
+          },
+          "delivered_gold": 1,
+          "delivered_count": 3,
+          "delivered_gold_rank": 1,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 1,
+          "final_rank_of_first_gold": 1,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 95569,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 105615,
+            "pki": 2912,
+            "splade": 2000,
+            "tag_exact": 105615,
+            "tag_prefix": 144162
+          }
+        },
+        {
+          "needle": "erb_024",
+          "gold_ranks": [
+            1,
+            28
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 26215.45,
+          "signal_ms": {
+            "ann_body_fetch": 44.676,
+            "ann_dense_leg": 161.65,
+            "body_fetch": 8.197,
+            "coact_expand": 0.146,
+            "dense": 163.534,
+            "fts5": 3458.582,
+            "lex_anchor": 1904.318,
+            "pki": 1707.158,
+            "splade": 3419.465,
+            "tag_exact": 1689.2,
+            "tag_prefix": 1777.516
+          },
+          "delivered_gold": 1,
+          "delivered_count": 3,
+          "delivered_gold_rank": 1,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 1,
+          "final_rank_of_first_gold": 2,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 173365,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 146353,
+            "pki": 6124,
+            "splade": 2000,
+            "tag_exact": 146353,
+            "tag_prefix": 170795
+          }
+        },
+        {
+          "needle": "erb_029",
+          "gold_ranks": [
+            15,
+            57
+          ],
+          "rank_of_first_gold": 15,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 13669.804,
+          "signal_ms": {
+            "ann_body_fetch": 30.37,
+            "ann_dense_leg": 164.272,
+            "body_fetch": 12.44,
+            "coact_expand": 0.124,
+            "dense": 166.042,
+            "fts5": 1385.281,
+            "lex_anchor": 754.465,
+            "pki": 129.221,
+            "splade": 3710.262,
+            "tag_exact": 617.459,
+            "tag_prefix": 1098.823
+          },
+          "delivered_gold": 1,
+          "delivered_count": 3,
+          "delivered_gold_rank": 3,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 3,
+          "final_rank_of_first_gold": 6,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 58096,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 50392,
+            "pki": 2815,
+            "splade": 2000,
+            "tag_exact": 50392,
+            "tag_prefix": 88373
+          }
+        },
+        {
+          "needle": "erb_031",
+          "gold_ranks": [
+            1
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 33220.942,
+          "signal_ms": {
+            "ann_body_fetch": 27.995,
+            "ann_dense_leg": 160.415,
+            "body_fetch": 12.505,
+            "coact_expand": 0.165,
+            "dense": 170.458,
+            "fts5": 2450.794,
+            "lex_anchor": 2794.401,
+            "pki": 306.311,
+            "splade": 4713.162,
+            "tag_exact": 1903.552,
+            "tag_prefix": 2489.67
+          },
+          "delivered_gold": 0,
+          "delivered_count": 12,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 61,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 12,
+          "tier_genes": {
+            "authority": 103156,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 165780,
+            "pki": 4283,
+            "splade": 2000,
+            "tag_exact": 165780,
+            "tag_prefix": 216939
+          }
+        },
+        {
+          "needle": "erb_033",
+          "gold_ranks": [
+            1
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 25529.944,
+          "signal_ms": {
+            "ann_body_fetch": 27.925,
+            "ann_dense_leg": 262.94,
+            "body_fetch": 13.1,
+            "coact_expand": 0.154,
+            "dense": 157.664,
+            "fts5": 2176.441,
+            "lex_anchor": 2299.806,
+            "pki": 185.125,
+            "splade": 5096.181,
+            "tag_exact": 1595.569,
+            "tag_prefix": 1946.002
+          },
+          "delivered_gold": 1,
+          "delivered_count": 3,
+          "delivered_gold_rank": 1,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 1,
+          "final_rank_of_first_gold": 2,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 82532,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 136413,
+            "pki": 4609,
+            "splade": 2000,
+            "tag_exact": 136413,
+            "tag_prefix": 166851
+          }
+        },
+        {
+          "needle": "erb_036",
+          "gold_ranks": [
+            4
+          ],
+          "rank_of_first_gold": 4,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 25420.561,
+          "signal_ms": {
+            "ann_body_fetch": 28.678,
+            "ann_dense_leg": 164.331,
+            "body_fetch": 18.534,
+            "coact_expand": 0.129,
+            "dense": 167.283,
+            "fts5": 1770.928,
+            "lex_anchor": 1554.535,
+            "pki": 119.634,
+            "splade": 4685.166,
+            "tag_exact": 1317.564,
+            "tag_prefix": 1435.93
+          },
+          "delivered_gold": 0,
+          "delivered_count": 12,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 504,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 12,
+          "tier_genes": {
+            "authority": 44475,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 123362,
+            "pki": 1934,
+            "splade": 2000,
+            "tag_exact": 123362,
+            "tag_prefix": 134401
+          }
+        },
+        {
+          "needle": "erb_038",
+          "gold_ranks": [
+            2,
+            3
+          ],
+          "rank_of_first_gold": 2,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 39161.916,
+          "signal_ms": {
+            "ann_body_fetch": 28.794,
+            "ann_dense_leg": 160.149,
+            "body_fetch": 15.151,
+            "coact_expand": 0.143,
+            "dense": 171.363,
+            "fts5": 3418.186,
+            "lex_anchor": 2835.676,
+            "pki": 242.144,
+            "splade": 4402.198,
+            "tag_exact": 2513.471,
+            "tag_prefix": 2757.935
+          },
+          "delivered_gold": 0,
+          "delivered_count": 12,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 39,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 12,
+          "tier_genes": {
+            "authority": 139754,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 186412,
+            "pki": 6699,
+            "splade": 2000,
+            "tag_exact": 186412,
+            "tag_prefix": 237530
+          }
+        },
+        {
+          "needle": "erb_039",
+          "gold_ranks": [],
+          "rank_of_first_gold": null,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 36808.892,
+          "signal_ms": {
+            "ann_body_fetch": 31.061,
+            "ann_dense_leg": 168.778,
+            "body_fetch": 17.084,
+            "coact_expand": 0.14,
+            "dense": 164.638,
+            "fts5": 3208.062,
+            "lex_anchor": 2269.821,
+            "pki": 239.29,
+            "splade": 6089.023,
+            "tag_exact": 1607.224,
+            "tag_prefix": 2192.94
+          },
+          "delivered_gold": 0,
+          "delivered_count": 8,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": null,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 8,
+          "tier_genes": {
+            "authority": 91009,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 137953,
+            "pki": 7343,
+            "splade": 2000,
+            "tag_exact": 137953,
+            "tag_prefix": 189983
+          }
+        },
+        {
+          "needle": "erb_042",
+          "gold_ranks": [
+            2,
+            4
+          ],
+          "rank_of_first_gold": 2,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 21767.711,
+          "signal_ms": {
+            "ann_body_fetch": 28.259,
+            "ann_dense_leg": 156.771,
+            "body_fetch": 18.205,
+            "coact_expand": 0.146,
+            "dense": 158.168,
+            "fts5": 1937.042,
+            "lex_anchor": 1834.999,
+            "pki": 246.365,
+            "splade": 4393.261,
+            "tag_exact": 1318.752,
+            "tag_prefix": 1982.238
+          },
+          "delivered_gold": 1,
+          "delivered_count": 3,
+          "delivered_gold_rank": 1,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 1,
+          "final_rank_of_first_gold": 2,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 117256,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 118559,
+            "pki": 3468,
+            "splade": 2000,
+            "tag_exact": 118559,
+            "tag_prefix": 162590
+          }
+        },
+        {
+          "needle": "erb_050",
+          "gold_ranks": [
+            3
+          ],
+          "rank_of_first_gold": 3,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 19654.045,
+          "signal_ms": {
+            "ann_body_fetch": 26.4,
+            "ann_dense_leg": 154.459,
+            "body_fetch": 19.986,
+            "coact_expand": 0.158,
+            "dense": 316.043,
+            "fts5": 2629.82,
+            "lex_anchor": 1432.303,
+            "pki": 180.506,
+            "splade": 3951.267,
+            "tag_exact": 904.308,
+            "tag_prefix": 1392.999
+          },
+          "delivered_gold": 0,
+          "delivered_count": 3,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 42,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 82030,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 80061,
+            "pki": 7152,
+            "splade": 2000,
+            "tag_exact": 80061,
+            "tag_prefix": 119399
+          }
+        },
+        {
+          "needle": "erb_066",
+          "gold_ranks": [
+            5
+          ],
+          "rank_of_first_gold": 5,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 20911.0,
+          "signal_ms": {
+            "ann_body_fetch": 25.357,
+            "ann_dense_leg": 218.601,
+            "body_fetch": 17.396,
+            "coact_expand": 0.149,
+            "dense": 164.116,
+            "fts5": 2437.977,
+            "lex_anchor": 713.933,
+            "pki": 119.389,
+            "splade": 4401.167,
+            "tag_exact": 764.704,
+            "tag_prefix": 1375.175
+          },
+          "delivered_gold": 0,
+          "delivered_count": 3,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 493,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 75787,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 58620,
+            "pki": 3272,
+            "splade": 2000,
+            "tag_exact": 58620,
+            "tag_prefix": 124344
+          }
+        },
+        {
+          "needle": "erb_068",
+          "gold_ranks": [
+            3,
+            4
+          ],
+          "rank_of_first_gold": 3,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 33250.257,
+          "signal_ms": {
+            "ann_body_fetch": 27.666,
+            "ann_dense_leg": 158.978,
+            "body_fetch": 15.146,
+            "coact_expand": 0.154,
+            "dense": 172.801,
+            "fts5": 3021.379,
+            "lex_anchor": 1785.136,
+            "pki": 305.12,
+            "splade": 4669.462,
+            "tag_exact": 1436.033,
+            "tag_prefix": 2674.961
+          },
+          "delivered_gold": 1,
+          "delivered_count": 3,
+          "delivered_gold_rank": 2,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 2,
+          "final_rank_of_first_gold": 3,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 182618,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 126090,
+            "pki": 7295,
+            "splade": 2000,
+            "tag_exact": 126090,
+            "tag_prefix": 245432
+          }
+        },
+        {
+          "needle": "erb_072",
+          "gold_ranks": [],
+          "rank_of_first_gold": null,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 16430.631,
+          "signal_ms": {
+            "ann_body_fetch": 25.107,
+            "ann_dense_leg": 167.891,
+            "body_fetch": 16.359,
+            "coact_expand": 0.14,
+            "dense": 167.899,
+            "fts5": 1832.951,
+            "lex_anchor": 313.981,
+            "pki": 82.384,
+            "splade": 5523.095,
+            "tag_exact": 289.567,
+            "tag_prefix": 1695.043
+          },
+          "delivered_gold": 0,
+          "delivered_count": 3,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 459,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 42738,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 26102,
+            "pki": 2360,
+            "splade": 2000,
+            "tag_exact": 26102,
+            "tag_prefix": 97148
+          }
+        },
+        {
+          "needle": "erb_073",
+          "gold_ranks": [
+            18,
+            32
+          ],
+          "rank_of_first_gold": 18,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 20504.904,
+          "signal_ms": {
+            "ann_body_fetch": 24.773,
+            "ann_dense_leg": 166.567,
+            "body_fetch": 12.788,
+            "coact_expand": 0.133,
+            "dense": 163.573,
+            "fts5": 1469.475,
+            "lex_anchor": 536.536,
+            "pki": 65.324,
+            "splade": 2823.529,
+            "tag_exact": 502.38,
+            "tag_prefix": 863.062
+          },
+          "delivered_gold": 0,
+          "delivered_count": 12,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 17,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 12,
+          "tier_genes": {
+            "authority": 47201,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 43157,
+            "pki": 1366,
+            "splade": 2000,
+            "tag_exact": 43157,
+            "tag_prefix": 79031
+          }
+        },
+        {
+          "needle": "erb_075",
+          "gold_ranks": [
+            58
+          ],
+          "rank_of_first_gold": 58,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 14341.453,
+          "signal_ms": {
+            "ann_body_fetch": 26.519,
+            "ann_dense_leg": 155.25,
+            "body_fetch": 10.409,
+            "coact_expand": 0.16,
+            "dense": 161.59,
+            "fts5": 2169.813,
+            "lex_anchor": 418.507,
+            "pki": 73.807,
+            "splade": 5056.57,
+            "tag_exact": 396.451,
+            "tag_prefix": 692.559
+          },
+          "delivered_gold": 0,
+          "delivered_count": 3,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 8,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 45755,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 35999,
+            "pki": 1402,
+            "splade": 2000,
+            "tag_exact": 35999,
+            "tag_prefix": 61522
+          }
+        },
+        {
+          "needle": "erb_080",
+          "gold_ranks": [
+            37
+          ],
+          "rank_of_first_gold": 37,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 32990.714,
+          "signal_ms": {
+            "ann_body_fetch": 28.155,
+            "ann_dense_leg": 206.195,
+            "body_fetch": 11.457,
+            "coact_expand": 0.185,
+            "dense": 156.029,
+            "fts5": 1916.185,
+            "lex_anchor": 2612.025,
+            "pki": 245.677,
+            "splade": 3511.28,
+            "tag_exact": 2069.548,
+            "tag_prefix": 2340.364
+          },
+          "delivered_gold": 0,
+          "delivered_count": 12,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 538,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 12,
+          "tier_genes": {
+            "authority": 117536,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 181927,
+            "pki": 2845,
+            "splade": 2000,
+            "tag_exact": 181927,
+            "tag_prefix": 209624
+          }
+        },
+        {
+          "needle": "erb_087",
+          "gold_ranks": [
+            10,
+            39
+          ],
+          "rank_of_first_gold": 10,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 13096.177,
+          "signal_ms": {
+            "ann_body_fetch": 25.883,
+            "ann_dense_leg": 162.368,
+            "body_fetch": 10.584,
+            "coact_expand": 0.137,
+            "dense": 164.55,
+            "fts5": 1103.98,
+            "lex_anchor": 818.321,
+            "pki": 98.592,
+            "splade": 5053.364,
+            "tag_exact": 454.517,
+            "tag_prefix": 804.44
+          },
+          "delivered_gold": 0,
+          "delivered_count": 3,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 13,
+          "final_recall_hit": 0,
+          "gate_kept": 8,
+          "floor_appended": 1,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 55124,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 44237,
+            "pki": 590,
+            "splade": 2000,
+            "tag_exact": 44237,
+            "tag_prefix": 72875
+          }
+        },
+        {
+          "needle": "erb_095",
+          "gold_ranks": [
+            2,
+            33
+          ],
+          "rank_of_first_gold": 2,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 14648.14,
+          "signal_ms": {
+            "ann_body_fetch": 22.66,
+            "ann_dense_leg": 165.29,
+            "body_fetch": 9.477,
+            "coact_expand": 0.122,
+            "dense": 213.147,
+            "fts5": 1881.368,
+            "lex_anchor": 258.476,
+            "pki": 54.372,
+            "splade": 3087.374,
+            "tag_exact": 272.014,
+            "tag_prefix": 717.298
+          },
+          "delivered_gold": 1,
+          "delivered_count": 8,
+          "delivered_gold_rank": 2,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 2,
+          "final_rank_of_first_gold": 1,
+          "final_recall_hit": 1,
+          "gate_kept": 8,
+          "floor_appended": 0,
+          "splice_n_candidates": 8,
+          "tier_genes": {
+            "authority": 29654,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 23746,
+            "pki": 1004,
+            "splade": 2000,
+            "tag_exact": 23746,
+            "tag_prefix": 56237
+          }
+        }
+      ]
+    },
+    {
+      "arm": "no_pki",
+      "knobs_changed": {
+        "retrieval.pki_enabled": false
+      },
+      "gate": "knowledge_store.py:2846 `if q_lower_tokens and _pki_on:` (resolve at :2844 `_pki_on = self._pki_enabled if use_pki is None`) \u2014 Tier-0 path_key_index, issue #334",
+      "arm_valid": true,
+      "validation": "signal_absent",
+      "validation_detail": "signal_keys: ['pki'] present at baseline, absent in this arm",
+      "recall_at_k": 0.6667,
+      "final_recall_at_k": 0.4333,
+      "mean_rank_of_gold": 9.19,
+      "median_rank_of_gold": 3.0,
+      "gold_found_queries": 27,
+      "gold_ranks_total": 42,
+      "delivered_gold_queries": 11,
+      "delivered_gold_rate": 0.36666666666666664,
+      "delivered_gold_full_queries": 11,
+      "delivered_gold_full_rate": 0.3667,
+      "delivered_gold_elided_queries": 0,
+      "delivered_gold_median_rank": 1.0,
+      "delivered_count_median": 3.0,
+      "pool_delivery_gap": 0.3,
+      "delivery_basis": {
+        "source": "window.expressed_gene_ids (context_manager.py:3564)",
+        "ignore_delivered": true,
+        "session_id_passed": false,
+        "session_delivery_enabled_in_config": true,
+        "elision_possible": false,
+        "elision_observed_queries": 0
+      },
+      "delivered_gold_by_needle": {
+        "erb_000": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 2,
+          "pool_rank": 1
+        },
+        "erb_001": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 19
+        },
+        "erb_003": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 32
+        },
+        "erb_008": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 8,
+          "pool_rank": 2
+        },
+        "erb_009": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 8,
+          "pool_rank": 5
+        },
+        "erb_010": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 1
+        },
+        "erb_012": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 2,
+          "delivered_count": 3,
+          "pool_rank": 2
+        },
+        "erb_013": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 2
+        },
+        "erb_015": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 8,
+          "pool_rank": 15
+        },
+        "erb_019": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 2,
+          "delivered_count": 3,
+          "pool_rank": 3
+        },
+        "erb_020": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 12,
+          "pool_rank": 4
+        },
+        "erb_021": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": null
+        },
+        "erb_022": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 1
+        },
+        "erb_024": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 1
+        },
+        "erb_029": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 3,
+          "delivered_count": 3,
+          "pool_rank": 11
+        },
+        "erb_031": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 12,
+          "pool_rank": 1
+        },
+        "erb_033": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 1
+        },
+        "erb_036": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 12,
+          "pool_rank": 4
+        },
+        "erb_038": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 12,
+          "pool_rank": 1
+        },
+        "erb_039": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 8,
+          "pool_rank": null
+        },
+        "erb_042": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 2
+        },
+        "erb_050": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 2
+        },
+        "erb_066": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 5
+        },
+        "erb_068": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 2,
+          "delivered_count": 3,
+          "pool_rank": 3
+        },
+        "erb_072": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": null
+        },
+        "erb_073": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 12,
+          "pool_rank": 18
+        },
+        "erb_075": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 58
+        },
+        "erb_080": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 12,
+          "pool_rank": 36
+        },
+        "erb_087": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 16
+        },
+        "erb_095": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 2,
+          "delivered_count": 8,
+          "pool_rank": 2
+        }
+      },
+      "queries_with_scores": 30,
+      "latency_ms": {
+        "p50": 20005.487,
+        "p95": 36660.952
+      },
+      "signal_ms_median": {
+        "ann_body_fetch": 27.227,
+        "ann_dense_leg": 130.228,
+        "body_fetch": 18.736,
+        "coact_expand": 0.153,
+        "dense": 131.597,
+        "fts5": 2062.624,
+        "lex_anchor": 1299.838,
+        "splade": 3503.856,
+        "tag_exact": 987.281,
+        "tag_prefix": 1483.368
+      },
+      "n_queries": 30,
+      "warmup_ran": true,
+      "encoder_url": "http://127.0.0.1:11439",
+      "dense_codec_class": "RemoteBGEM3Codec",
+      "remote_dense": true,
+      "observables": {
+        "signal_keys": [
+          "ann_body_fetch",
+          "ann_dense_leg",
+          "body_fetch",
+          "coact_expand",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "splade",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_keys": [
+          "authority",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "splade",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "classifier_metadata_queries": 30,
+        "synonym_expansions": 12,
+        "cymatics_calls": 30,
+        "cold_tier_queries": 0,
+        "store_tier_weights": {
+          "sr": 1.5,
+          "filename_anchor": 4.0,
+          "rerank_tier": 1.0,
+          "fts5": 3.0,
+          "splade": 3.5,
+          "tag_exact": 3.0,
+          "tag_prefix": 1.5,
+          "sema_boost": 2.0,
+          "sema_cold": 3.0,
+          "lex_anchor": 1.5,
+          "harmonic": 1.0,
+          "entity_graph": 0.5,
+          "dense": 1.0,
+          "dense_additive": 4.0,
+          "semantic_dense_additive": 16.0,
+          "pki": 1.0
+        },
+        "fusion_mode": "rrf"
+      },
+      "errors": [],
+      "per_query": [
+        {
+          "needle": "erb_000",
+          "gold_ranks": [
+            1,
+            5
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 16412.211,
+          "signal_ms": {
+            "ann_body_fetch": 21.172,
+            "ann_dense_leg": 129.024,
+            "body_fetch": 14.017,
+            "coact_expand": 0.156,
+            "dense": 129.945,
+            "fts5": 2004.99,
+            "lex_anchor": 866.108,
+            "splade": 3002.442,
+            "tag_exact": 1344.301,
+            "tag_prefix": 1541.52
+          },
+          "delivered_gold": 1,
+          "delivered_count": 2,
+          "delivered_gold_rank": 1,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 1,
+          "final_rank_of_first_gold": 2,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 2,
+          "tier_genes": {
+            "authority": 64350,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 73419,
+            "splade": 2000,
+            "tag_exact": 73419,
+            "tag_prefix": 104154
+          }
+        },
+        {
+          "needle": "erb_001",
+          "gold_ranks": [
+            19
+          ],
+          "rank_of_first_gold": 19,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 20005.487,
+          "signal_ms": {
+            "ann_body_fetch": 27.461,
+            "ann_dense_leg": 131.209,
+            "body_fetch": 19.156,
+            "coact_expand": 0.153,
+            "dense": 135.452,
+            "fts5": 2663.475,
+            "lex_anchor": 1317.791,
+            "splade": 3223.834,
+            "tag_exact": 1098.631,
+            "tag_prefix": 1776.49
+          },
+          "delivered_gold": 0,
+          "delivered_count": 3,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 515,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 56495,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 106160,
+            "splade": 2000,
+            "tag_exact": 106160,
+            "tag_prefix": 146914
+          }
+        },
+        {
+          "needle": "erb_003",
+          "gold_ranks": [
+            32
+          ],
+          "rank_of_first_gold": 32,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 23021.335,
+          "signal_ms": {
+            "ann_body_fetch": 26.685,
+            "ann_dense_leg": 130.238,
+            "body_fetch": 19.578,
+            "coact_expand": 0.195,
+            "dense": 134.669,
+            "fts5": 2494.452,
+            "lex_anchor": 1659.447,
+            "splade": 4816.424,
+            "tag_exact": 1131.413,
+            "tag_prefix": 1854.512
+          },
+          "delivered_gold": 0,
+          "delivered_count": 3,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 87,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 112172,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 111348,
+            "splade": 2000,
+            "tag_exact": 111348,
+            "tag_prefix": 168382
+          }
+        },
+        {
+          "needle": "erb_008",
+          "gold_ranks": [
+            2,
+            4
+          ],
+          "rank_of_first_gold": 2,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 36170.761,
+          "signal_ms": {
+            "ann_body_fetch": 28.848,
+            "ann_dense_leg": 129.628,
+            "body_fetch": 22.51,
+            "coact_expand": 0.183,
+            "dense": 132.492,
+            "fts5": 2929.393,
+            "lex_anchor": 1933.258,
+            "splade": 5265.568,
+            "tag_exact": 1993.531,
+            "tag_prefix": 2593.967
+          },
+          "delivered_gold": 0,
+          "delivered_count": 8,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 190,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 8,
+          "tier_genes": {
+            "authority": 54843,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 191863,
+            "splade": 2000,
+            "tag_exact": 191863,
+            "tag_prefix": 242233
+          }
+        },
+        {
+          "needle": "erb_009",
+          "gold_ranks": [
+            5
+          ],
+          "rank_of_first_gold": 5,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 24166.351,
+          "signal_ms": {
+            "ann_body_fetch": 25.333,
+            "ann_dense_leg": 130.755,
+            "body_fetch": 23.19,
+            "coact_expand": 0.181,
+            "dense": 130.553,
+            "fts5": 2535.547,
+            "lex_anchor": 999.574,
+            "splade": 3248.246,
+            "tag_exact": 787.252,
+            "tag_prefix": 1512.636
+          },
+          "delivered_gold": 0,
+          "delivered_count": 8,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 265,
+          "final_recall_hit": 0,
+          "gate_kept": 8,
+          "floor_appended": 0,
+          "splice_n_candidates": 8,
+          "tier_genes": {
+            "authority": 73747,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 75979,
+            "splade": 2000,
+            "tag_exact": 75979,
+            "tag_prefix": 134634
+          }
+        },
+        {
+          "needle": "erb_010",
+          "gold_ranks": [
+            1,
+            2
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 8152.787,
+          "signal_ms": {
+            "ann_body_fetch": 26.057,
+            "ann_dense_leg": 130.645,
+            "body_fetch": 7.335,
+            "coact_expand": 0.112,
+            "dense": 129.952,
+            "fts5": 1041.764,
+            "lex_anchor": 559.703,
+            "splade": 2199.576,
+            "tag_exact": 325.304,
+            "tag_prefix": 506.84
+          },
+          "delivered_gold": 1,
+          "delivered_count": 3,
+          "delivered_gold_rank": 1,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 1,
+          "final_rank_of_first_gold": 1,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 31858,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 31947,
+            "splade": 2000,
+            "tag_exact": 31947,
+            "tag_prefix": 45370
+          }
+        },
+        {
+          "needle": "erb_012",
+          "gold_ranks": [
+            2,
+            9
+          ],
+          "rank_of_first_gold": 2,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 13338.916,
+          "signal_ms": {
+            "ann_body_fetch": 24.953,
+            "ann_dense_leg": 129.81,
+            "body_fetch": 12.122,
+            "coact_expand": 0.149,
+            "dense": 130.385,
+            "fts5": 1705.658,
+            "lex_anchor": 444.381,
+            "splade": 2506.61,
+            "tag_exact": 367.833,
+            "tag_prefix": 1136.876
+          },
+          "delivered_gold": 1,
+          "delivered_count": 3,
+          "delivered_gold_rank": 2,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 2,
+          "final_rank_of_first_gold": 1,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 59005,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 34561,
+            "splade": 2000,
+            "tag_exact": 34561,
+            "tag_prefix": 102347
+          }
+        },
+        {
+          "needle": "erb_013",
+          "gold_ranks": [
+            2,
+            54
+          ],
+          "rank_of_first_gold": 2,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 16150.065,
+          "signal_ms": {
+            "ann_body_fetch": 25.747,
+            "ann_dense_leg": 133.012,
+            "body_fetch": 15.001,
+            "coact_expand": 0.164,
+            "dense": 131.543,
+            "fts5": 1753.031,
+            "lex_anchor": 1065.095,
+            "splade": 3591.254,
+            "tag_exact": 925.6,
+            "tag_prefix": 1243.647
+          },
+          "delivered_gold": 0,
+          "delivered_count": 3,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 3,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 67692,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 79207,
+            "splade": 2000,
+            "tag_exact": 79207,
+            "tag_prefix": 113031
+          }
+        },
+        {
+          "needle": "erb_015",
+          "gold_ranks": [
+            15
+          ],
+          "rank_of_first_gold": 15,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 19161.317,
+          "signal_ms": {
+            "ann_body_fetch": 28.539,
+            "ann_dense_leg": 131.602,
+            "body_fetch": 14.025,
+            "coact_expand": 0.135,
+            "dense": 132.807,
+            "fts5": 1814.714,
+            "lex_anchor": 1281.886,
+            "splade": 3416.458,
+            "tag_exact": 816.134,
+            "tag_prefix": 1153.467
+          },
+          "delivered_gold": 0,
+          "delivered_count": 8,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 251,
+          "final_recall_hit": 0,
+          "gate_kept": 8,
+          "floor_appended": 0,
+          "splice_n_candidates": 8,
+          "tier_genes": {
+            "authority": 87796,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 85535,
+            "splade": 2000,
+            "tag_exact": 85535,
+            "tag_prefix": 104583
+          }
+        },
+        {
+          "needle": "erb_019",
+          "gold_ranks": [
+            3,
+            8
+          ],
+          "rank_of_first_gold": 3,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 14664.589,
+          "signal_ms": {
+            "ann_body_fetch": 27.194,
+            "ann_dense_leg": 129.201,
+            "body_fetch": 11.707,
+            "coact_expand": 0.143,
+            "dense": 134.392,
+            "fts5": 1819.6,
+            "lex_anchor": 625.454,
+            "splade": 5379.839,
+            "tag_exact": 435.079,
+            "tag_prefix": 812.784
+          },
+          "delivered_gold": 1,
+          "delivered_count": 3,
+          "delivered_gold_rank": 2,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 2,
+          "final_rank_of_first_gold": 7,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 34321,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 39718,
+            "splade": 2000,
+            "tag_exact": 39718,
+            "tag_prefix": 71148
+          }
+        },
+        {
+          "needle": "erb_020",
+          "gold_ranks": [
+            4,
+            6
+          ],
+          "rank_of_first_gold": 4,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 40164.667,
+          "signal_ms": {
+            "ann_body_fetch": 27.749,
+            "ann_dense_leg": 129.04,
+            "body_fetch": 24.118,
+            "coact_expand": 0.152,
+            "dense": 129.55,
+            "fts5": 2620.499,
+            "lex_anchor": 2868.35,
+            "splade": 2899.853,
+            "tag_exact": 2420.015,
+            "tag_prefix": 3031.362
+          },
+          "delivered_gold": 0,
+          "delivered_count": 12,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 503,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 12,
+          "tier_genes": {
+            "authority": 76384,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 221881,
+            "splade": 2000,
+            "tag_exact": 221881,
+            "tag_prefix": 292407
+          }
+        },
+        {
+          "needle": "erb_021",
+          "gold_ranks": [],
+          "rank_of_first_gold": null,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 11146.748,
+          "signal_ms": {
+            "ann_body_fetch": 30.311,
+            "ann_dense_leg": 130.214,
+            "body_fetch": 17.538,
+            "coact_expand": 0.156,
+            "dense": 129.889,
+            "fts5": 1277.779,
+            "lex_anchor": 653.788,
+            "splade": 1329.88,
+            "tag_exact": 556.906,
+            "tag_prefix": 1016.675
+          },
+          "delivered_gold": 0,
+          "delivered_count": 3,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 41,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 59486,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 51252,
+            "splade": 2000,
+            "tag_exact": 51252,
+            "tag_prefix": 92902
+          }
+        },
+        {
+          "needle": "erb_022",
+          "gold_ranks": [
+            1
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 20618.993,
+          "signal_ms": {
+            "ann_body_fetch": 24.923,
+            "ann_dense_leg": 129.473,
+            "body_fetch": 18.315,
+            "coact_expand": 0.194,
+            "dense": 134.567,
+            "fts5": 2437.028,
+            "lex_anchor": 1953.224,
+            "splade": 3986.461,
+            "tag_exact": 1048.963,
+            "tag_prefix": 1676.168
+          },
+          "delivered_gold": 1,
+          "delivered_count": 3,
+          "delivered_gold_rank": 1,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 1,
+          "final_rank_of_first_gold": 1,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 95475,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 105615,
+            "splade": 2000,
+            "tag_exact": 105615,
+            "tag_prefix": 144162
+          }
+        },
+        {
+          "needle": "erb_024",
+          "gold_ranks": [
+            1,
+            28
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 23153.37,
+          "signal_ms": {
+            "ann_body_fetch": 27.905,
+            "ann_dense_leg": 130.634,
+            "body_fetch": 23.054,
+            "coact_expand": 0.202,
+            "dense": 131.492,
+            "fts5": 3292.128,
+            "lex_anchor": 1862.7,
+            "splade": 2611.925,
+            "tag_exact": 1581.476,
+            "tag_prefix": 1889.333
+          },
+          "delivered_gold": 1,
+          "delivered_count": 3,
+          "delivered_gold_rank": 1,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 1,
+          "final_rank_of_first_gold": 2,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 172543,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 146353,
+            "splade": 2000,
+            "tag_exact": 146353,
+            "tag_prefix": 170795
+          }
+        },
+        {
+          "needle": "erb_029",
+          "gold_ranks": [
+            11,
+            57
+          ],
+          "rank_of_first_gold": 11,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 12731.112,
+          "signal_ms": {
+            "ann_body_fetch": 25.554,
+            "ann_dense_leg": 129.142,
+            "body_fetch": 14.908,
+            "coact_expand": 0.146,
+            "dense": 129.762,
+            "fts5": 1289.848,
+            "lex_anchor": 787.757,
+            "splade": 3221.736,
+            "tag_exact": 521.391,
+            "tag_prefix": 967.769
+          },
+          "delivered_gold": 1,
+          "delivered_count": 3,
+          "delivered_gold_rank": 3,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 3,
+          "final_rank_of_first_gold": 6,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 58069,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 50392,
+            "splade": 2000,
+            "tag_exact": 50392,
+            "tag_prefix": 88373
+          }
+        },
+        {
+          "needle": "erb_031",
+          "gold_ranks": [
+            1
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 31716.193,
+          "signal_ms": {
+            "ann_body_fetch": 31.152,
+            "ann_dense_leg": 131.375,
+            "body_fetch": 27.058,
+            "coact_expand": 0.18,
+            "dense": 133.393,
+            "fts5": 2405.981,
+            "lex_anchor": 2838.077,
+            "splade": 4320.808,
+            "tag_exact": 1806.824,
+            "tag_prefix": 2529.419
+          },
+          "delivered_gold": 0,
+          "delivered_count": 12,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 61,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 12,
+          "tier_genes": {
+            "authority": 102617,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 165780,
+            "splade": 2000,
+            "tag_exact": 165780,
+            "tag_prefix": 216939
+          }
+        },
+        {
+          "needle": "erb_033",
+          "gold_ranks": [
+            1
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 24305.198,
+          "signal_ms": {
+            "ann_body_fetch": 28.482,
+            "ann_dense_leg": 129.323,
+            "body_fetch": 21.659,
+            "coact_expand": 0.174,
+            "dense": 134.453,
+            "fts5": 2133.994,
+            "lex_anchor": 2344.467,
+            "splade": 4526.275,
+            "tag_exact": 1517.31,
+            "tag_prefix": 1977.826
+          },
+          "delivered_gold": 1,
+          "delivered_count": 3,
+          "delivered_gold_rank": 1,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 1,
+          "final_rank_of_first_gold": 2,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 82395,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 136413,
+            "splade": 2000,
+            "tag_exact": 136413,
+            "tag_prefix": 166851
+          }
+        },
+        {
+          "needle": "erb_036",
+          "gold_ranks": [
+            4
+          ],
+          "rank_of_first_gold": 4,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 24131.718,
+          "signal_ms": {
+            "ann_body_fetch": 29.652,
+            "ann_dense_leg": 131.447,
+            "body_fetch": 21.5,
+            "coact_expand": 0.226,
+            "dense": 134.223,
+            "fts5": 1594.613,
+            "lex_anchor": 1604.386,
+            "splade": 4140.609,
+            "tag_exact": 1249.684,
+            "tag_prefix": 1454.099
+          },
+          "delivered_gold": 0,
+          "delivered_count": 12,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 504,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 12,
+          "tier_genes": {
+            "authority": 44353,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 123362,
+            "splade": 2000,
+            "tag_exact": 123362,
+            "tag_prefix": 134401
+          }
+        },
+        {
+          "needle": "erb_038",
+          "gold_ranks": [
+            1,
+            9
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 36660.952,
+          "signal_ms": {
+            "ann_body_fetch": 27.26,
+            "ann_dense_leg": 129.691,
+            "body_fetch": 26.513,
+            "coact_expand": 0.148,
+            "dense": 131.272,
+            "fts5": 3010.721,
+            "lex_anchor": 2843.382,
+            "splade": 3392.951,
+            "tag_exact": 2216.005,
+            "tag_prefix": 2766.029
+          },
+          "delivered_gold": 0,
+          "delivered_count": 12,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 39,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 12,
+          "tier_genes": {
+            "authority": 139633,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 186412,
+            "splade": 2000,
+            "tag_exact": 186412,
+            "tag_prefix": 237530
+          }
+        },
+        {
+          "needle": "erb_039",
+          "gold_ranks": [],
+          "rank_of_first_gold": null,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 34753.825,
+          "signal_ms": {
+            "ann_body_fetch": 29.776,
+            "ann_dense_leg": 131.154,
+            "body_fetch": 27.644,
+            "coact_expand": 0.15,
+            "dense": 131.652,
+            "fts5": 3025.043,
+            "lex_anchor": 2309.065,
+            "splade": 5084.959,
+            "tag_exact": 1438.179,
+            "tag_prefix": 2108.782
+          },
+          "delivered_gold": 0,
+          "delivered_count": 8,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": null,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 8,
+          "tier_genes": {
+            "authority": 90242,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 137953,
+            "splade": 2000,
+            "tag_exact": 137953,
+            "tag_prefix": 189983
+          }
+        },
+        {
+          "needle": "erb_042",
+          "gold_ranks": [
+            2,
+            3
+          ],
+          "rank_of_first_gold": 2,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 20702.201,
+          "signal_ms": {
+            "ann_body_fetch": 28.644,
+            "ann_dense_leg": 130.691,
+            "body_fetch": 24.255,
+            "coact_expand": 0.146,
+            "dense": 131.515,
+            "fts5": 1899.567,
+            "lex_anchor": 1949.48,
+            "splade": 3830.36,
+            "tag_exact": 1227.51,
+            "tag_prefix": 1950.753
+          },
+          "delivered_gold": 1,
+          "delivered_count": 3,
+          "delivered_gold_rank": 1,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 1,
+          "final_rank_of_first_gold": 2,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 117049,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 118559,
+            "splade": 2000,
+            "tag_exact": 118559,
+            "tag_prefix": 162590
+          }
+        },
+        {
+          "needle": "erb_050",
+          "gold_ranks": [
+            2
+          ],
+          "rank_of_first_gold": 2,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 17879.944,
+          "signal_ms": {
+            "ann_body_fetch": 27.57,
+            "ann_dense_leg": 130.714,
+            "body_fetch": 17.824,
+            "coact_expand": 0.149,
+            "dense": 133.032,
+            "fts5": 2497.628,
+            "lex_anchor": 1433.203,
+            "splade": 3213.643,
+            "tag_exact": 834.875,
+            "tag_prefix": 1376.603
+          },
+          "delivered_gold": 0,
+          "delivered_count": 3,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 42,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 81953,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 80061,
+            "splade": 2000,
+            "tag_exact": 80061,
+            "tag_prefix": 119399
+          }
+        },
+        {
+          "needle": "erb_066",
+          "gold_ranks": [
+            5
+          ],
+          "rank_of_first_gold": 5,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 19646.886,
+          "signal_ms": {
+            "ann_body_fetch": 24.724,
+            "ann_dense_leg": 129.185,
+            "body_fetch": 19.47,
+            "coact_expand": 0.152,
+            "dense": 132.947,
+            "fts5": 2346.093,
+            "lex_anchor": 703.593,
+            "splade": 4025.223,
+            "tag_exact": 691.699,
+            "tag_prefix": 1334.477
+          },
+          "delivered_gold": 0,
+          "delivered_count": 3,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 493,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 75592,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 58620,
+            "splade": 2000,
+            "tag_exact": 58620,
+            "tag_prefix": 124344
+          }
+        },
+        {
+          "needle": "erb_068",
+          "gold_ranks": [
+            3,
+            4
+          ],
+          "rank_of_first_gold": 3,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 32303.629,
+          "signal_ms": {
+            "ann_body_fetch": 26.649,
+            "ann_dense_leg": 129.955,
+            "body_fetch": 30.836,
+            "coact_expand": 0.218,
+            "dense": 130.033,
+            "fts5": 2895.383,
+            "lex_anchor": 1764.028,
+            "splade": 4323.618,
+            "tag_exact": 1347.59,
+            "tag_prefix": 2768.537
+          },
+          "delivered_gold": 1,
+          "delivered_count": 3,
+          "delivered_gold_rank": 2,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 2,
+          "final_rank_of_first_gold": 3,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 182422,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 126090,
+            "splade": 2000,
+            "tag_exact": 126090,
+            "tag_prefix": 245432
+          }
+        },
+        {
+          "needle": "erb_072",
+          "gold_ranks": [],
+          "rank_of_first_gold": null,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 14816.412,
+          "signal_ms": {
+            "ann_body_fetch": 24.861,
+            "ann_dense_leg": 129.584,
+            "body_fetch": 17.495,
+            "coact_expand": 0.142,
+            "dense": 132.373,
+            "fts5": 1708.894,
+            "lex_anchor": 315.314,
+            "splade": 4596.711,
+            "tag_exact": 263.718,
+            "tag_prefix": 1112.148
+          },
+          "delivered_gold": 0,
+          "delivered_count": 3,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 459,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 42694,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 26102,
+            "splade": 2000,
+            "tag_exact": 26102,
+            "tag_prefix": 97148
+          }
+        },
+        {
+          "needle": "erb_073",
+          "gold_ranks": [
+            18,
+            38
+          ],
+          "rank_of_first_gold": 18,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 19686.686,
+          "signal_ms": {
+            "ann_body_fetch": 27.8,
+            "ann_dense_leg": 132.368,
+            "body_fetch": 11.913,
+            "coact_expand": 0.125,
+            "dense": 130.388,
+            "fts5": 1419.36,
+            "lex_anchor": 525.161,
+            "splade": 2334.763,
+            "tag_exact": 453.687,
+            "tag_prefix": 859.458
+          },
+          "delivered_gold": 0,
+          "delivered_count": 12,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 17,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 12,
+          "tier_genes": {
+            "authority": 47153,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 43157,
+            "splade": 2000,
+            "tag_exact": 43157,
+            "tag_prefix": 79031
+          }
+        },
+        {
+          "needle": "erb_075",
+          "gold_ranks": [
+            58
+          ],
+          "rank_of_first_gold": 58,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 13410.193,
+          "signal_ms": {
+            "ann_body_fetch": 25.206,
+            "ann_dense_leg": 129.599,
+            "body_fetch": 10.275,
+            "coact_expand": 0.156,
+            "dense": 133.757,
+            "fts5": 2120.258,
+            "lex_anchor": 410.413,
+            "splade": 4475.984,
+            "tag_exact": 368.421,
+            "tag_prefix": 685.007
+          },
+          "delivered_gold": 0,
+          "delivered_count": 3,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 8,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 45746,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 35999,
+            "splade": 2000,
+            "tag_exact": 35999,
+            "tag_prefix": 61522
+          }
+        },
+        {
+          "needle": "erb_080",
+          "gold_ranks": [
+            36
+          ],
+          "rank_of_first_gold": 36,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 32151.116,
+          "signal_ms": {
+            "ann_body_fetch": 29.573,
+            "ann_dense_leg": 130.395,
+            "body_fetch": 25.534,
+            "coact_expand": 0.154,
+            "dense": 131.11,
+            "fts5": 1880.567,
+            "lex_anchor": 2610.553,
+            "splade": 3023.616,
+            "tag_exact": 2128.371,
+            "tag_prefix": 2316.264
+          },
+          "delivered_gold": 0,
+          "delivered_count": 12,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 537,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 12,
+          "tier_genes": {
+            "authority": 117379,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 181927,
+            "splade": 2000,
+            "tag_exact": 181927,
+            "tag_prefix": 209624
+          }
+        },
+        {
+          "needle": "erb_087",
+          "gold_ranks": [
+            16,
+            38
+          ],
+          "rank_of_first_gold": 16,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 12483.169,
+          "signal_ms": {
+            "ann_body_fetch": 25.998,
+            "ann_dense_leg": 131.957,
+            "body_fetch": 13.028,
+            "coact_expand": 0.144,
+            "dense": 132.588,
+            "fts5": 1023.704,
+            "lex_anchor": 834.713,
+            "splade": 4391.181,
+            "tag_exact": 447.175,
+            "tag_prefix": 803.469
+          },
+          "delivered_gold": 0,
+          "delivered_count": 3,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 16,
+          "final_recall_hit": 0,
+          "gate_kept": 8,
+          "floor_appended": 1,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 55102,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 44237,
+            "splade": 2000,
+            "tag_exact": 44237,
+            "tag_prefix": 72875
+          }
+        },
+        {
+          "needle": "erb_095",
+          "gold_ranks": [
+            2,
+            32
+          ],
+          "rank_of_first_gold": 2,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 13976.557,
+          "signal_ms": {
+            "ann_body_fetch": 22.833,
+            "ann_dense_leg": 130.217,
+            "body_fetch": 10.411,
+            "coact_expand": 0.146,
+            "dense": 131.274,
+            "fts5": 1489.671,
+            "lex_anchor": 277.86,
+            "splade": 2823.665,
+            "tag_exact": 268.702,
+            "tag_prefix": 755.304
+          },
+          "delivered_gold": 1,
+          "delivered_count": 8,
+          "delivered_gold_rank": 2,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 2,
+          "final_rank_of_first_gold": 1,
+          "final_recall_hit": 1,
+          "gate_kept": 8,
+          "floor_appended": 0,
+          "splice_n_candidates": 8,
+          "tier_genes": {
+            "authority": 29631,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 23746,
+            "splade": 2000,
+            "tag_exact": 23746,
+            "tag_prefix": 56237
+          }
+        }
+      ]
+    },
+    {
+      "arm": "no_tags",
+      "knobs_changed": {
+        "retrieval.tags_enabled": false
+      },
+      "gate": "knowledge_store.py:3001 `if _tags_on:` (resolve at :3000 `_tags_on = self._tags_enabled if use_tags is None`) \u2014 wraps Tier 1 tag_exact AND Tier 2 tag_prefix, retrieval-layer ledger action 6",
+      "arm_valid": true,
+      "validation": "signal_absent",
+      "validation_detail": "signal_keys: ['tag_exact', 'tag_prefix'] present at baseline, absent in this arm",
+      "recall_at_k": 0.7,
+      "final_recall_at_k": 0.4333,
+      "mean_rank_of_gold": 9.41,
+      "median_rank_of_gold": 3.0,
+      "gold_found_queries": 27,
+      "gold_ranks_total": 42,
+      "delivered_gold_queries": 11,
+      "delivered_gold_rate": 0.36666666666666664,
+      "delivered_gold_full_queries": 11,
+      "delivered_gold_full_rate": 0.3667,
+      "delivered_gold_elided_queries": 0,
+      "delivered_gold_median_rank": 1.0,
+      "delivered_count_median": 3.0,
+      "pool_delivery_gap": 0.3333,
+      "delivery_basis": {
+        "source": "window.expressed_gene_ids (context_manager.py:3564)",
+        "ignore_delivered": true,
+        "session_id_passed": false,
+        "session_delivery_enabled_in_config": true,
+        "elision_possible": false,
+        "elision_observed_queries": 0
+      },
+      "delivered_gold_by_needle": {
+        "erb_000": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 2,
+          "pool_rank": 1
+        },
+        "erb_001": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 21
+        },
+        "erb_003": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 36
+        },
+        "erb_008": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 8,
+          "pool_rank": 1
+        },
+        "erb_009": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 8,
+          "pool_rank": 6
+        },
+        "erb_010": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 1
+        },
+        "erb_012": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 2,
+          "delivered_count": 3,
+          "pool_rank": 2
+        },
+        "erb_013": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 2
+        },
+        "erb_015": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 8,
+          "pool_rank": 17
+        },
+        "erb_019": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 2,
+          "delivered_count": 3,
+          "pool_rank": 3
+        },
+        "erb_020": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 12,
+          "pool_rank": 1
+        },
+        "erb_021": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": null
+        },
+        "erb_022": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 1
+        },
+        "erb_024": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 1
+        },
+        "erb_029": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 3,
+          "delivered_count": 3,
+          "pool_rank": 12
+        },
+        "erb_031": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 12,
+          "pool_rank": 1
+        },
+        "erb_033": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 1
+        },
+        "erb_036": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 12,
+          "pool_rank": 5
+        },
+        "erb_038": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 12,
+          "pool_rank": 2
+        },
+        "erb_039": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 8,
+          "pool_rank": null
+        },
+        "erb_042": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 1,
+          "delivered_count": 3,
+          "pool_rank": 2
+        },
+        "erb_050": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 4
+        },
+        "erb_066": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 4
+        },
+        "erb_068": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 2,
+          "delivered_count": 3,
+          "pool_rank": 2
+        },
+        "erb_072": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": null
+        },
+        "erb_073": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 12,
+          "pool_rank": 17
+        },
+        "erb_075": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 58
+        },
+        "erb_080": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 12,
+          "pool_rank": 37
+        },
+        "erb_087": {
+          "delivered": 0,
+          "full": 0,
+          "delivered_rank": null,
+          "delivered_count": 3,
+          "pool_rank": 11
+        },
+        "erb_095": {
+          "delivered": 1,
+          "full": 1,
+          "delivered_rank": 2,
+          "delivered_count": 8,
+          "pool_rank": 5
+        }
+      },
+      "queries_with_scores": 30,
+      "latency_ms": {
+        "p50": 16275.514,
+        "p95": 29996.882
+      },
+      "signal_ms_median": {
+        "ann_body_fetch": 27.627,
+        "ann_dense_leg": 115.526,
+        "body_fetch": 3.161,
+        "coact_expand": 0.116,
+        "dense": 117.785,
+        "fts5": 2150.448,
+        "lex_anchor": 1290.743,
+        "pki": 131.249,
+        "splade": 3592.53
+      },
+      "n_queries": 30,
+      "warmup_ran": true,
+      "encoder_url": "http://127.0.0.1:11439",
+      "dense_codec_class": "RemoteBGEM3Codec",
+      "remote_dense": true,
+      "observables": {
+        "signal_keys": [
+          "ann_body_fetch",
+          "ann_dense_leg",
+          "body_fetch",
+          "coact_expand",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "splade"
+        ],
+        "tier_keys": [
+          "authority",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "splade"
+        ],
+        "classifier_metadata_queries": 30,
+        "synonym_expansions": 12,
+        "cymatics_calls": 30,
+        "cold_tier_queries": 0,
+        "store_tier_weights": {
+          "sr": 1.5,
+          "filename_anchor": 4.0,
+          "rerank_tier": 1.0,
+          "fts5": 3.0,
+          "splade": 3.5,
+          "tag_exact": 3.0,
+          "tag_prefix": 1.5,
+          "sema_boost": 2.0,
+          "sema_cold": 3.0,
+          "lex_anchor": 1.5,
+          "harmonic": 1.0,
+          "entity_graph": 0.5,
+          "dense": 1.0,
+          "dense_additive": 4.0,
+          "semantic_dense_additive": 16.0,
+          "pki": 1.0
+        },
+        "fusion_mode": "rrf"
+      },
+      "errors": [],
+      "per_query": [
+        {
+          "needle": "erb_000",
+          "gold_ranks": [
+            1,
+            5
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 13274.025,
+          "signal_ms": {
+            "ann_body_fetch": 23.329,
+            "ann_dense_leg": 115.387,
+            "body_fetch": 3.107,
+            "coact_expand": 0.145,
+            "dense": 139.383,
+            "fts5": 2808.886,
+            "lex_anchor": 866.576,
+            "pki": 256.927,
+            "splade": 3303.434
+          },
+          "delivered_gold": 1,
+          "delivered_count": 2,
+          "delivered_gold_rank": 1,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 1,
+          "final_rank_of_first_gold": 2,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 2,
+          "tier_genes": {
+            "authority": 57744,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 73419,
+            "pki": 2992,
+            "splade": 2000
+          }
+        },
+        {
+          "needle": "erb_001",
+          "gold_ranks": [
+            21
+          ],
+          "rank_of_first_gold": 21,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 14895.047,
+          "signal_ms": {
+            "ann_body_fetch": 28.725,
+            "ann_dense_leg": 117.959,
+            "body_fetch": 3.04,
+            "coact_expand": 0.102,
+            "dense": 134.398,
+            "fts5": 2594.532,
+            "lex_anchor": 1247.566,
+            "pki": 77.105,
+            "splade": 3134.24
+          },
+          "delivered_gold": 0,
+          "delivered_count": 3,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 518,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 39245,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 106160,
+            "pki": 2540,
+            "splade": 2000
+          }
+        },
+        {
+          "needle": "erb_003",
+          "gold_ranks": [
+            36
+          ],
+          "rank_of_first_gold": 36,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 17881.136,
+          "signal_ms": {
+            "ann_body_fetch": 29.188,
+            "ann_dense_leg": 116.566,
+            "body_fetch": 3.451,
+            "coact_expand": 0.115,
+            "dense": 119.092,
+            "fts5": 2571.843,
+            "lex_anchor": 1799.705,
+            "pki": 325.819,
+            "splade": 4856.32
+          },
+          "delivered_gold": 0,
+          "delivered_count": 3,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 87,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 98506,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 111348,
+            "pki": 4800,
+            "splade": 2000
+          }
+        },
+        {
+          "needle": "erb_008",
+          "gold_ranks": [
+            1,
+            4
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 29587.92,
+          "signal_ms": {
+            "ann_body_fetch": 29.513,
+            "ann_dense_leg": 114.988,
+            "body_fetch": 3.256,
+            "coact_expand": 0.112,
+            "dense": 116.844,
+            "fts5": 2957.458,
+            "lex_anchor": 2118.351,
+            "pki": 121.148,
+            "splade": 5300.013
+          },
+          "delivered_gold": 0,
+          "delivered_count": 8,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 190,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 8,
+          "tier_genes": {
+            "authority": 52209,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 191863,
+            "pki": 3411,
+            "splade": 2000
+          }
+        },
+        {
+          "needle": "erb_009",
+          "gold_ranks": [
+            6
+          ],
+          "rank_of_first_gold": 6,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 19196.634,
+          "signal_ms": {
+            "ann_body_fetch": 26.811,
+            "ann_dense_leg": 115.837,
+            "body_fetch": 2.855,
+            "coact_expand": 0.104,
+            "dense": 106.766,
+            "fts5": 2548.566,
+            "lex_anchor": 873.536,
+            "pki": 154.802,
+            "splade": 3229.816
+          },
+          "delivered_gold": 0,
+          "delivered_count": 8,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 265,
+          "final_recall_hit": 0,
+          "gate_kept": 8,
+          "floor_appended": 0,
+          "splice_n_candidates": 8,
+          "tier_genes": {
+            "authority": 60367,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 75979,
+            "pki": 5033,
+            "splade": 2000
+          }
+        },
+        {
+          "needle": "erb_010",
+          "gold_ranks": [
+            1,
+            2
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 6712.217,
+          "signal_ms": {
+            "ann_body_fetch": 26.476,
+            "ann_dense_leg": 115.381,
+            "body_fetch": 2.4,
+            "coact_expand": 0.108,
+            "dense": 114.788,
+            "fts5": 1064.286,
+            "lex_anchor": 464.923,
+            "pki": 63.473,
+            "splade": 2217.95
+          },
+          "delivered_gold": 1,
+          "delivered_count": 3,
+          "delivered_gold_rank": 1,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 1,
+          "final_rank_of_first_gold": 1,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 27293,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 31947,
+            "pki": 1459,
+            "splade": 2000
+          }
+        },
+        {
+          "needle": "erb_012",
+          "gold_ranks": [
+            2,
+            10
+          ],
+          "rank_of_first_gold": 2,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 8565.183,
+          "signal_ms": {
+            "ann_body_fetch": 25.871,
+            "ann_dense_leg": 115.665,
+            "body_fetch": 2.635,
+            "coact_expand": 0.139,
+            "dense": 117.822,
+            "fts5": 1723.378,
+            "lex_anchor": 427.499,
+            "pki": 44.773,
+            "splade": 2487.376
+          },
+          "delivered_gold": 1,
+          "delivered_count": 3,
+          "delivered_gold_rank": 2,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 2,
+          "final_rank_of_first_gold": 1,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 17436,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 34561,
+            "pki": 1479,
+            "splade": 2000
+          }
+        },
+        {
+          "needle": "erb_013",
+          "gold_ranks": [
+            2,
+            54
+          ],
+          "rank_of_first_gold": 2,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 12811.029,
+          "signal_ms": {
+            "ann_body_fetch": 28.204,
+            "ann_dense_leg": 118.276,
+            "body_fetch": 3.092,
+            "coact_expand": 0.122,
+            "dense": 119.575,
+            "fts5": 1823.004,
+            "lex_anchor": 1120.473,
+            "pki": 106.611,
+            "splade": 3687.36
+          },
+          "delivered_gold": 0,
+          "delivered_count": 3,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 3,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 59939,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 79207,
+            "pki": 1072,
+            "splade": 2000
+          }
+        },
+        {
+          "needle": "erb_015",
+          "gold_ranks": [
+            17
+          ],
+          "rank_of_first_gold": 17,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 16673.361,
+          "signal_ms": {
+            "ann_body_fetch": 27.608,
+            "ann_dense_leg": 116.24,
+            "body_fetch": 3.29,
+            "coact_expand": 0.111,
+            "dense": 108.436,
+            "fts5": 1853.601,
+            "lex_anchor": 1333.92,
+            "pki": 152.032,
+            "splade": 3497.7
+          },
+          "delivered_gold": 0,
+          "delivered_count": 8,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 251,
+          "final_recall_hit": 0,
+          "gate_kept": 8,
+          "floor_appended": 0,
+          "splice_n_candidates": 8,
+          "tier_genes": {
+            "authority": 82129,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 85535,
+            "pki": 2100,
+            "splade": 2000
+          }
+        },
+        {
+          "needle": "erb_019",
+          "gold_ranks": [
+            3,
+            4
+          ],
+          "rank_of_first_gold": 3,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 12098.094,
+          "signal_ms": {
+            "ann_body_fetch": 24.735,
+            "ann_dense_leg": 116.81,
+            "body_fetch": 2.809,
+            "coact_expand": 0.131,
+            "dense": 118.934,
+            "fts5": 1849.675,
+            "lex_anchor": 508.065,
+            "pki": 68.569,
+            "splade": 5516.24
+          },
+          "delivered_gold": 1,
+          "delivered_count": 3,
+          "delivered_gold_rank": 2,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 2,
+          "final_rank_of_first_gold": 7,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 29676,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 39718,
+            "pki": 1985,
+            "splade": 2000
+          }
+        },
+        {
+          "needle": "erb_020",
+          "gold_ranks": [
+            1,
+            3
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 31616.297,
+          "signal_ms": {
+            "ann_body_fetch": 26.854,
+            "ann_dense_leg": 114.943,
+            "body_fetch": 3.09,
+            "coact_expand": 0.172,
+            "dense": 113.97,
+            "fts5": 2643.586,
+            "lex_anchor": 3053.934,
+            "pki": 130.28,
+            "splade": 2942.796
+          },
+          "delivered_gold": 0,
+          "delivered_count": 12,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 501,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 12,
+          "tier_genes": {
+            "authority": 55414,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 221881,
+            "pki": 3416,
+            "splade": 2000
+          }
+        },
+        {
+          "needle": "erb_021",
+          "gold_ranks": [],
+          "rank_of_first_gold": null,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 7671.785,
+          "signal_ms": {
+            "ann_body_fetch": 30.085,
+            "ann_dense_leg": 116.126,
+            "body_fetch": 4.348,
+            "coact_expand": 0.172,
+            "dense": 116.337,
+            "fts5": 1305.533,
+            "lex_anchor": 786.948,
+            "pki": 112.142,
+            "splade": 1334.331
+          },
+          "delivered_gold": 0,
+          "delivered_count": 3,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 41,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 43448,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 51252,
+            "pki": 2966,
+            "splade": 2000
+          }
+        },
+        {
+          "needle": "erb_022",
+          "gold_ranks": [
+            1
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 16275.514,
+          "signal_ms": {
+            "ann_body_fetch": 24.79,
+            "ann_dense_leg": 115.348,
+            "body_fetch": 2.515,
+            "coact_expand": 0.104,
+            "dense": 118.754,
+            "fts5": 2427.193,
+            "lex_anchor": 2124.31,
+            "pki": 150.786,
+            "splade": 3982.069
+          },
+          "delivered_gold": 1,
+          "delivered_count": 3,
+          "delivered_gold_rank": 1,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 1,
+          "final_rank_of_first_gold": 1,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 88638,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 105615,
+            "pki": 2912,
+            "splade": 2000
+          }
+        },
+        {
+          "needle": "erb_024",
+          "gold_ranks": [
+            1,
+            29
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 20342.521,
+          "signal_ms": {
+            "ann_body_fetch": 29.14,
+            "ann_dense_leg": 114.822,
+            "body_fetch": 3.206,
+            "coact_expand": 0.124,
+            "dense": 116.623,
+            "fts5": 3199.967,
+            "lex_anchor": 2004.496,
+            "pki": 1695.145,
+            "splade": 2595.96
+          },
+          "delivered_gold": 1,
+          "delivered_count": 3,
+          "delivered_gold_rank": 1,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 1,
+          "final_rank_of_first_gold": 2,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 149240,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 146353,
+            "pki": 6124,
+            "splade": 2000
+          }
+        },
+        {
+          "needle": "erb_029",
+          "gold_ranks": [
+            12,
+            57
+          ],
+          "rank_of_first_gold": 12,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 9546.486,
+          "signal_ms": {
+            "ann_body_fetch": 27.848,
+            "ann_dense_leg": 115.117,
+            "body_fetch": 2.425,
+            "coact_expand": 0.108,
+            "dense": 116.5,
+            "fts5": 1302.415,
+            "lex_anchor": 881.109,
+            "pki": 88.811,
+            "splade": 3189.909
+          },
+          "delivered_gold": 1,
+          "delivered_count": 3,
+          "delivered_gold_rank": 3,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 3,
+          "final_rank_of_first_gold": 6,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 43651,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 50392,
+            "pki": 2815,
+            "splade": 2000
+          }
+        },
+        {
+          "needle": "erb_031",
+          "gold_ranks": [
+            1
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 25459.403,
+          "signal_ms": {
+            "ann_body_fetch": 27.58,
+            "ann_dense_leg": 115.364,
+            "body_fetch": 2.958,
+            "coact_expand": 0.118,
+            "dense": 117.749,
+            "fts5": 2466.499,
+            "lex_anchor": 2997.459,
+            "pki": 212.233,
+            "splade": 4287.326
+          },
+          "delivered_gold": 0,
+          "delivered_count": 12,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 61,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 12,
+          "tier_genes": {
+            "authority": 91462,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 165780,
+            "pki": 4283,
+            "splade": 2000
+          }
+        },
+        {
+          "needle": "erb_033",
+          "gold_ranks": [
+            1
+          ],
+          "rank_of_first_gold": 1,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 19694.67,
+          "signal_ms": {
+            "ann_body_fetch": 27.602,
+            "ann_dense_leg": 116.931,
+            "body_fetch": 3.038,
+            "coact_expand": 0.105,
+            "dense": 118.669,
+            "fts5": 2151.582,
+            "lex_anchor": 2430.555,
+            "pki": 169.567,
+            "splade": 4537.81
+          },
+          "delivered_gold": 1,
+          "delivered_count": 3,
+          "delivered_gold_rank": 1,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 1,
+          "final_rank_of_first_gold": 2,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 77672,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 136413,
+            "pki": 4609,
+            "splade": 2000
+          }
+        },
+        {
+          "needle": "erb_036",
+          "gold_ranks": [
+            5
+          ],
+          "rank_of_first_gold": 5,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 20975.074,
+          "signal_ms": {
+            "ann_body_fetch": 29.796,
+            "ann_dense_leg": 105.481,
+            "body_fetch": 3.188,
+            "coact_expand": 0.125,
+            "dense": 116.647,
+            "fts5": 1598.176,
+            "lex_anchor": 1653.403,
+            "pki": 109.175,
+            "splade": 4145.746
+          },
+          "delivered_gold": 0,
+          "delivered_count": 12,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 504,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 12,
+          "tier_genes": {
+            "authority": 43145,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 123362,
+            "pki": 1934,
+            "splade": 2000
+          }
+        },
+        {
+          "needle": "erb_038",
+          "gold_ranks": [
+            2,
+            3
+          ],
+          "rank_of_first_gold": 2,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 29996.882,
+          "signal_ms": {
+            "ann_body_fetch": 29.642,
+            "ann_dense_leg": 117.053,
+            "body_fetch": 4.314,
+            "coact_expand": 0.15,
+            "dense": 116.946,
+            "fts5": 3028.935,
+            "lex_anchor": 3053.637,
+            "pki": 245.984,
+            "splade": 3391.572
+          },
+          "delivered_gold": 0,
+          "delivered_count": 12,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 39,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 12,
+          "tier_genes": {
+            "authority": 117153,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 186412,
+            "pki": 6699,
+            "splade": 2000
+          }
+        },
+        {
+          "needle": "erb_039",
+          "gold_ranks": [],
+          "rank_of_first_gold": null,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 28790.426,
+          "signal_ms": {
+            "ann_body_fetch": 27.453,
+            "ann_dense_leg": 114.051,
+            "body_fetch": 3.294,
+            "coact_expand": 0.105,
+            "dense": 119.571,
+            "fts5": 3071.411,
+            "lex_anchor": 2351.564,
+            "pki": 214.894,
+            "splade": 5060.721
+          },
+          "delivered_gold": 0,
+          "delivered_count": 8,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": null,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 8,
+          "tier_genes": {
+            "authority": 73169,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 137953,
+            "pki": 7343,
+            "splade": 2000
+          }
+        },
+        {
+          "needle": "erb_042",
+          "gold_ranks": [
+            2,
+            5
+          ],
+          "rank_of_first_gold": 2,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 15573.027,
+          "signal_ms": {
+            "ann_body_fetch": 26.957,
+            "ann_dense_leg": 114.678,
+            "body_fetch": 3.295,
+            "coact_expand": 0.104,
+            "dense": 137.452,
+            "fts5": 1911.418,
+            "lex_anchor": 1918.221,
+            "pki": 227.201,
+            "splade": 3820.43
+          },
+          "delivered_gold": 1,
+          "delivered_count": 3,
+          "delivered_gold_rank": 1,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 1,
+          "final_rank_of_first_gold": 2,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 102517,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 118559,
+            "pki": 3468,
+            "splade": 2000
+          }
+        },
+        {
+          "needle": "erb_050",
+          "gold_ranks": [
+            4
+          ],
+          "rank_of_first_gold": 4,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 14157.606,
+          "signal_ms": {
+            "ann_body_fetch": 27.647,
+            "ann_dense_leg": 116.041,
+            "body_fetch": 3.175,
+            "coact_expand": 0.103,
+            "dense": 116.66,
+            "fts5": 2588.177,
+            "lex_anchor": 1409.728,
+            "pki": 169.581,
+            "splade": 3226.124
+          },
+          "delivered_gold": 0,
+          "delivered_count": 3,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 42,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 75180,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 80061,
+            "pki": 7152,
+            "splade": 2000
+          }
+        },
+        {
+          "needle": "erb_066",
+          "gold_ranks": [
+            4
+          ],
+          "rank_of_first_gold": 4,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 14752.24,
+          "signal_ms": {
+            "ann_body_fetch": 25.374,
+            "ann_dense_leg": 115.982,
+            "body_fetch": 4.003,
+            "coact_expand": 0.15,
+            "dense": 111.309,
+            "fts5": 2367.519,
+            "lex_anchor": 812.983,
+            "pki": 107.746,
+            "splade": 4155.942
+          },
+          "delivered_gold": 0,
+          "delivered_count": 3,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 493,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 46507,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 58620,
+            "pki": 3272,
+            "splade": 2000
+          }
+        },
+        {
+          "needle": "erb_068",
+          "gold_ranks": [
+            2,
+            3
+          ],
+          "rank_of_first_gold": 2,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 23430.842,
+          "signal_ms": {
+            "ann_body_fetch": 28.433,
+            "ann_dense_leg": 116.102,
+            "body_fetch": 3.473,
+            "coact_expand": 0.103,
+            "dense": 117.891,
+            "fts5": 2948.815,
+            "lex_anchor": 1772.344,
+            "pki": 373.946,
+            "splade": 4328.892
+          },
+          "delivered_gold": 1,
+          "delivered_count": 3,
+          "delivered_gold_rank": 2,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 2,
+          "final_rank_of_first_gold": 3,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 114226,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 126090,
+            "pki": 7295,
+            "splade": 2000
+          }
+        },
+        {
+          "needle": "erb_072",
+          "gold_ranks": [],
+          "rank_of_first_gold": null,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 10201.497,
+          "signal_ms": {
+            "ann_body_fetch": 29.437,
+            "ann_dense_leg": 115.351,
+            "body_fetch": 3.213,
+            "coact_expand": 0.108,
+            "dense": 119.673,
+            "fts5": 1741.035,
+            "lex_anchor": 417.818,
+            "pki": 61.861,
+            "splade": 4625.945
+          },
+          "delivered_gold": 0,
+          "delivered_count": 3,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 459,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 24896,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 26102,
+            "pki": 2360,
+            "splade": 2000
+          }
+        },
+        {
+          "needle": "erb_073",
+          "gold_ranks": [
+            17,
+            32
+          ],
+          "rank_of_first_gold": 17,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 16809.202,
+          "signal_ms": {
+            "ann_body_fetch": 35.32,
+            "ann_dense_leg": 116.1,
+            "body_fetch": 3.914,
+            "coact_expand": 0.15,
+            "dense": 106.274,
+            "fts5": 1409.82,
+            "lex_anchor": 521.332,
+            "pki": 49.213,
+            "splade": 2344.382
+          },
+          "delivered_gold": 0,
+          "delivered_count": 12,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 17,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 12,
+          "tier_genes": {
+            "authority": 29074,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 43157,
+            "pki": 1366,
+            "splade": 2000
+          }
+        },
+        {
+          "needle": "erb_075",
+          "gold_ranks": [
+            58
+          ],
+          "rank_of_first_gold": 58,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 11433.403,
+          "signal_ms": {
+            "ann_body_fetch": 25.94,
+            "ann_dense_leg": 114.613,
+            "body_fetch": 3.029,
+            "coact_expand": 0.124,
+            "dense": 119.821,
+            "fts5": 2149.314,
+            "lex_anchor": 412.007,
+            "pki": 132.217,
+            "splade": 4530.527
+          },
+          "delivered_gold": 0,
+          "delivered_count": 3,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 8,
+          "final_recall_hit": 1,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 35393,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 35999,
+            "pki": 1402,
+            "splade": 2000
+          }
+        },
+        {
+          "needle": "erb_080",
+          "gold_ranks": [
+            37
+          ],
+          "rank_of_first_gold": 37,
+          "recall_hit": 0,
+          "recall_contribution": 0.0,
+          "wall_ms": 26923.734,
+          "signal_ms": {
+            "ann_body_fetch": 28.362,
+            "ann_dense_leg": 115.976,
+            "body_fetch": 3.166,
+            "coact_expand": 0.135,
+            "dense": 121.429,
+            "fts5": 1899.997,
+            "lex_anchor": 2789.559,
+            "pki": 246.668,
+            "splade": 3026.852
+          },
+          "delivered_gold": 0,
+          "delivered_count": 12,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 537,
+          "final_recall_hit": 0,
+          "gate_kept": 12,
+          "floor_appended": 0,
+          "splice_n_candidates": 12,
+          "tier_genes": {
+            "authority": 113491,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 181927,
+            "pki": 2845,
+            "splade": 2000
+          }
+        },
+        {
+          "needle": "erb_087",
+          "gold_ranks": [
+            11,
+            38
+          ],
+          "rank_of_first_gold": 11,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 9696.633,
+          "signal_ms": {
+            "ann_body_fetch": 24.39,
+            "ann_dense_leg": 115.043,
+            "body_fetch": 3.156,
+            "coact_expand": 0.114,
+            "dense": 118.424,
+            "fts5": 1042.982,
+            "lex_anchor": 813.43,
+            "pki": 89.958,
+            "splade": 4394.909
+          },
+          "delivered_gold": 0,
+          "delivered_count": 3,
+          "delivered_gold_rank": null,
+          "delivered_gold_full": 0,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": null,
+          "final_rank_of_first_gold": 14,
+          "final_recall_hit": 0,
+          "gate_kept": 8,
+          "floor_appended": 1,
+          "splice_n_candidates": 3,
+          "tier_genes": {
+            "authority": 42648,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 44237,
+            "pki": 590,
+            "splade": 2000
+          }
+        },
+        {
+          "needle": "erb_095",
+          "gold_ranks": [
+            5,
+            32
+          ],
+          "rank_of_first_gold": 5,
+          "recall_hit": 1,
+          "recall_contribution": 0.03333333333333333,
+          "wall_ms": 11428.388,
+          "signal_ms": {
+            "ann_body_fetch": 28.525,
+            "ann_dense_leg": 114.636,
+            "body_fetch": 2.232,
+            "coact_expand": 0.117,
+            "dense": 117.238,
+            "fts5": 1476.456,
+            "lex_anchor": 273.89,
+            "pki": 44.304,
+            "splade": 2804.554
+          },
+          "delivered_gold": 1,
+          "delivered_count": 8,
+          "delivered_gold_rank": 2,
+          "delivered_gold_full": 1,
+          "delivered_gold_elided": 0,
+          "delivered_gold_full_rank": 2,
+          "final_rank_of_first_gold": 1,
+          "final_recall_hit": 1,
+          "gate_kept": 8,
+          "floor_appended": 0,
+          "splice_n_candidates": 8,
+          "tier_genes": {
+            "authority": 19441,
+            "dense": 500,
+            "fts5": 2000,
+            "lex_anchor": 23746,
+            "pki": 1004,
+            "splade": 2000
+          }
+        }
+      ]
+    }
+  ],
+  "per_query": true,
+  "per_query_note": "each arm carries a per_query list, one record per needle in the run order every arm shares, so arm-vs-arm comparisons can be run PAIRED from this receipt alone. recall_hit is the exact 0/1 vector a paired test consumes and sum(recall_hit)/n_queries reconstructs recall_at_k; recall_contribution is the pre-divided form and sums to recall_at_k up to that aggregate's 4-decimal rounding. Failed queries appear as miss records carrying 'error', so the vectors stay the same length across arms. Each record also carries delivered_gold / delivered_count / delivered_gold_rank / delivered_gold_full / delivered_gold_elided / delivered_gold_full_rank (#335 delivery basis; full and elided partition delivered_gold exactly), final_rank_of_first_gold / final_recall_hit (#341 final-order basis, from genome.last_ranked_ids), gate_kept / floor_appended (#341, from genome.last_rerank_diag; None when the query never reached the ANN publication point) and splice_n_candidates (ring-correlated; None when this needle's own query never rang the splice stage)."
+}
