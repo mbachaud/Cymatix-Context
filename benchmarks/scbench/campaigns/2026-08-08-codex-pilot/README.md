@@ -23,6 +23,11 @@ The treatment is deliberately model-free: SPLADE and ribosome are disabled even 
 
 The manifest freezes seed `20260808`, all eight graduation gates, and symmetric retry semantics. Operational failures invalidate the checkpoint pair and require a clean paired rerun; subscription rate limits pause the campaign; failed attempts and clean workspace/genome state must be receipted; favorable-attempt selection is prohibited.
 
+`preflight.json` is a mutable, local execution-authorization receipt and is
+ignored by Git. It must be regenerated after the campaign metadata commit and
+immediately before any scored command; the committed manifest remains the
+immutable input.
+
 ## Execution checklist
 
 - [x] Verify the fork contract and pin reasoning effort in the rendered Codex command.
