@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "campaign_id": "qualification",
+  "cymatix_commit": "8db7e8098fde60f2711adfcfc7e013de6629bfbd",
+  "scbench_commit": "90575d39e52063cc421d8dc7f77a229604649d2f",
+  "codex_version": "codex-cli 0.130.0",
+  "codex_model": "gpt-5.6-luna",
+  "reasoning_effort": "medium",
+  "auth_type": "chatgpt_subscription",
+  "num_workers": 1,
+  "concurrent_evaluation": false,
+  "problems": [
+    "file-merger"
+  ],
+  "replicates": [
+    {
+      "id": 1,
+      "order": [
+        "control",
+        "cymatix"
+      ]
+    },
+    {
+      "id": 2,
+      "order": [
+        "cymatix",
+        "control"
+      ]
+    }
+  ],
+  "treatment": {
+    "max_genes": 8,
+    "include_raw": true,
+    "max_item_chars": 2000,
+    "max_packet_tokens": 4000,
+    "tokenizer": "o200k_base",
+    "ignore_delivered": true,
+    "read_only": false,
+    "splade_enabled": false,
+    "ribosome_enabled": false
+  },
+  "source_policy": {
+    "extensions": [
+      ".c",
+      ".cc",
+      ".cpp",
+      ".cs",
+      ".css",
+      ".go",
+      ".h",
+      ".hpp",
+      ".html",
+      ".java",
+      ".js",
+      ".json",
+      ".jsx",
+      ".md",
+      ".php",
+      ".py",
+      ".rb",
+      ".rs",
+      ".sh",
+      ".sql",
+      ".toml",
+      ".ts",
+      ".tsx",
+      ".yaml",
+      ".yml"
+    ],
+    "excluded_directories": [
+      ".git",
+      ".mypy_cache",
+      ".pytest_cache",
+      ".tox",
+      ".venv",
+      "__pycache__",
+      "benchmarks",
+      "build",
+      "dist",
+      "evaluation",
+      "node_modules",
+      "receipts",
+      "venv"
+    ],
+    "excluded_names": [
+      ".env",
+      ".env.local",
+      "auth.json",
+      "evaluation.json"
+    ],
+    "max_file_bytes": 1000000
+  }
+}
