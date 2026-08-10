@@ -184,6 +184,7 @@ class FakeCommandRunner:
         self.cymatix_status = ""
         self.scbench_status = ""
         self.committed_cymatix_paths: tuple[str, ...] = ()
+        self.spacy_available = True
 
     def __call__(self, command, **kwargs):
         command = [str(part) for part in command]
@@ -241,6 +242,13 @@ class FakeCommandRunner:
                 0,
                 "Logged in using ChatGPT\n",
                 "",
+            )
+        if executable in {"python", "python.exe"} and command[1:2] == ["-c"]:
+            return subprocess.CompletedProcess(
+                command,
+                0 if self.spacy_available else 1,
+                "3.8.7\n" if self.spacy_available else "",
+                "" if self.spacy_available else "No module named 'spacy'\n",
             )
         if executable == "docker" and command[1] == "info":
             return subprocess.CompletedProcess(command, 0, '"27.0"\n', "")
@@ -362,8 +370,19 @@ def test_preflight_records_exact_clean_subscription_environment(layout):
     assert receipt.observed["auth_type"] == "chatgpt_subscription"
     assert receipt.observed["reasoning_effort"] == "medium"
     assert receipt.observed["docker_image_digest"] == "sha256:same-image"
+    assert receipt.observed["spacy_version"] == "3.8.7"
     assert receipt.observed["checkpoint_counts"] == {"file-backup": 2}
     assert (layout.manifest.parent / "preflight.json").exists()
+
+
+def test_preflight_rejects_missing_sidecar_conversation_dependency(layout):
+    """A code-only smoke test must not hide a broken conversation ingest path."""
+    fake = FakeCommandRunner(layout)
+    fake.spacy_available = False
+    runner = _runner(layout, fake)
+
+    with pytest.raises(PreflightError, match="sidecar NLP dependency"):
+        runner.preflight()
 
 
 @pytest.mark.skipif(sys.platform != "win32", reason="Windows command-shim contract")

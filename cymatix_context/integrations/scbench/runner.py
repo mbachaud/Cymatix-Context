@@ -441,6 +441,25 @@ class CampaignRunner:
         record("Codex login", login_ok and "logged in" in login_status.casefold())
         record("Codex auth file", self.auth_path.is_file())
 
+        sidecar_python_candidates = (
+            self.scbench_root / ".venv" / "Scripts" / "python.exe",
+            self.scbench_root / ".venv" / "bin" / "python",
+        )
+        sidecar_python = next(
+            (path for path in sidecar_python_candidates if path.is_file()),
+            Path(sys.executable),
+        )
+        spacy_ok, spacy_version = probe_text(
+            [
+                str(sidecar_python),
+                "-c",
+                "import spacy; print(spacy.__version__)",
+            ],
+            self.scbench_root,
+        )
+        observed["spacy_version"] = spacy_version
+        record("sidecar NLP dependency", spacy_ok and bool(spacy_version))
+
         docker_ok, docker_version = probe_text(
             ["docker", "info", "--format", "{{json .ServerVersion}}"],
             self.scbench_root,

@@ -1,0 +1,1 @@
+# No third-party dependencies; merge_files.py uses Python's standard library.

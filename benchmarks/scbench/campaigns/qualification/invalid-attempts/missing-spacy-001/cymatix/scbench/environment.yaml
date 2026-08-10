@@ -1,0 +1,45 @@
+commands:
+  agent_command: python
+  command: uv run
+  entry_file: '{entry_file}.py'
+docker:
+  binary: docker
+  extra_mounts: {}
+  image: ghcr.io/astral-sh/uv:python3.12-trixie-slim
+  mount_workspace: true
+  network: null
+  user: null
+  workdir: /workspace
+environment:
+  env:
+    PIP_CACHE_DIR: /tmp/pip-cache-dir
+    PIP_CONFIG_FILE: /tmp/pip-conf
+    UV_CACHE_DIR: /tmp/uv-cache
+  include_os_env: false
+name: python3.12
+setup:
+  commands: []
+  eval_commands:
+  - uv init
+  - uv add -r requirements.txt
+  resume_commands:
+  - python -m venv .venv || true
+  - .venv/bin/pip install -r requirements.txt 2>/dev/null || true
+snapshot:
+  archive_save_dir: null
+  compression: gz
+  ignore_globs:
+  - .opencode/*
+  - .venv/*
+  - '*.pyc'
+  - .claude/*
+  - .venv-*/*
+  - __pycache__/*
+  - .pytest_cache/*
+  - .ruff_cache/*
+  - .mypy_cache/*
+  - node_modules/*
+  - .evaluation_tests/*
+  - venv/*
+  keep_globs: null
+type: docker

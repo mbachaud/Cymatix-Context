@@ -1,0 +1,52 @@
+hardware candidate cuda failed
+Traceback (most recent call last):
+  File "F:\Projects\cymatix-context\.claude\worktrees\scbench-codex-ab\cymatix_context\hardware.py", line 321, in _detect
+    d = fn()
+  File "F:\Projects\cymatix-context\.claude\worktrees\scbench-codex-ab\cymatix_context\hardware.py", line 297, in <lambda>
+    ("cuda", lambda: _detect_cuda_or_rocm(rocm=False)),
+                     ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "F:\Projects\cymatix-context\.claude\worktrees\scbench-codex-ab\cymatix_context\hardware.py", line 234, in _detect_cuda_or_rocm
+    import torch
+ModuleNotFoundError: No module named 'torch'
+hardware candidate rocm failed
+Traceback (most recent call last):
+  File "F:\Projects\cymatix-context\.claude\worktrees\scbench-codex-ab\cymatix_context\hardware.py", line 321, in _detect
+    d = fn()
+  File "F:\Projects\cymatix-context\.claude\worktrees\scbench-codex-ab\cymatix_context\hardware.py", line 298, in <lambda>
+    ("rocm", lambda: _detect_cuda_or_rocm(rocm=True)),
+                     ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "F:\Projects\cymatix-context\.claude\worktrees\scbench-codex-ab\cymatix_context\hardware.py", line 234, in _detect_cuda_or_rocm
+    import torch
+ModuleNotFoundError: No module named 'torch'
+hardware candidate mps failed
+Traceback (most recent call last):
+  File "F:\Projects\cymatix-context\.claude\worktrees\scbench-codex-ab\cymatix_context\hardware.py", line 321, in _detect
+    d = fn()
+  File "F:\Projects\cymatix-context\.claude\worktrees\scbench-codex-ab\cymatix_context\hardware.py", line 274, in _detect_mps
+    import torch
+ModuleNotFoundError: No module named 'torch'
+INFO:     Started server process [28548]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:56097 (Press CTRL+C to quit)
+Ingest failed: No module named 'spacy'
+Traceback (most recent call last):
+  File "F:\Projects\cymatix-context\.claude\worktrees\scbench-codex-ab\cymatix_context\server\routes_ingest.py", line 116, in ingest_endpoint
+    gene_ids = await cymatix.ingest_async(content, content_type, metadata)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\Projects\cymatix-context\.claude\worktrees\scbench-codex-ab\cymatix_context\context_manager.py", line 1606, in ingest_async
+    return await loop.run_in_executor(_get_executor(), self.ingest, content, content_type, metadata)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\concurrent\futures\thread.py", line 59, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "F:\Projects\cymatix-context\.claude\worktrees\scbench-codex-ab\cymatix_context\context_manager.py", line 1387, in ingest
+    gene = self._cpu_tagger.pack(
+        strand.content,
+    ...<2 lines>...
+        sequence_index=strand.sequence_index,
+    )
+  File "F:\Projects\cymatix-context\.claude\worktrees\scbench-codex-ab\cymatix_context\tagger.py", line 289, in pack
+    nlp = _get_nlp()
+  File "F:\Projects\cymatix-context\.claude\worktrees\scbench-codex-ab\cymatix_context\tagger.py", line 63, in _get_nlp
+    import spacy
+ModuleNotFoundError: No module named 'spacy'
