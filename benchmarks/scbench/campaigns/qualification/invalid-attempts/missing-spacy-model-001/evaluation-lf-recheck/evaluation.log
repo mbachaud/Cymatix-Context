@@ -1,0 +1,103 @@
+{"snapshot_dir": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\scbench-codex-ab\\benchmarks\\scbench\\campaigns\\qualification\\invalid-attempts\\missing-spacy-model-001\\cymatix\\scbench\\file_merger\\checkpoint_1\\snapshot", "save_dir": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\scbench-codex-ab\\benchmarks\\scbench\\campaigns\\qualification\\invalid-attempts\\missing-spacy-model-001\\evaluation-lf-recheck", "problem_name": "file_merger", "checkpoint_num": 1, "env_config": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\scbench-codex-ab\\benchmarks\\scbench\\campaigns\\qualification\\invalid-attempts\\missing-spacy-model-001\\cymatix\\scbench\\environment.yaml", "event": "Evaluating a single snapshot", "timestamp": "2026-08-10 11:09:45", "level": "info"}
+{"event": "Building base image for environment 'python3.12' base_image='ghcr.io/astral-sh/uv:python3.12-trixie-slim' image_name='slop-code:python3.12'", "timestamp": "2026-08-10 11:09:45", "level": "info"}
+{"event": "Checking if image exists image_name='slop-code:python3.12'", "timestamp": "2026-08-10 11:09:45", "level": "info"}
+{"event": "Found image found_image='sha256:54e11a2e7b79dfb5bef3f04e724ec66884b6806eaaa90f452652fb44a511f4a7' image_name='slop-code:python3.12'", "timestamp": "2026-08-10 11:09:45", "level": "debug"}
+{"event": "Found stale image; rebuilding image_name='slop-code:python3.12'", "timestamp": "2026-08-10 11:09:45", "level": "info"}
+{"event": "Making docker context docker_file='FROM ghcr.io/astral-sh/uv:python3.12-trixie-slim\\n\\n# --- Base setup -------------------------------------------------------------\\nENV DEBIAN_FRONTEND=noninteractive\\nENV HOME=/tmp/agent_home\\n\\nRUN apt-get update \\\\\\n    && apt-get upgrade -y \\\\\\n    && apt-get install -y --no-install-recommends build-essential \\\\\\n    && apt-get install -y --no-install-recommends \\\\\\n        bzip2 \\\\\\n        tar \\\\\\n        gzip \\\\\\n        zip \\\\\\n        unzip \\\\\\n        curl \\\\\\n        ca-certificates \\\\\\n        gnupg \\\\\\n        default-jre-headless \\\\\\n        netcat-openbsd \\\\\\n        protobuf-compiler \\\\\\n        procps \\\\\\n        git \\\\\\n        graphviz \\\\\\n        rabbitmq-server \\\\\\n        redis-server \\\\\\n        docker-cli \\\\\\n    && apt-get install -y --no-install-recommends \\\\\\n        libasound2 \\\\\\n        libatk-bridge2.0-0 \\\\\\n        libatk1.0-0 \\\\\\n        libcairo2 \\\\\\n        libcups2 \\\\\\n        libdbus-1-3 \\\\\\n        libdrm2 \\\\\\n        libgbm1 \\\\\\n        libglib2.0-0 \\\\\\n        libgtk-3-0 \\\\\\n        libnspr4 \\\\\\n        libnss3 \\\\\\n        libpango-1.0-0 \\\\\\n        libx11-6 \\\\\\n        libx11-xcb1 \\\\\\n        libxcb1 \\\\\\n        libxcomposite1 \\\\\\n        libxdamage1 \\\\\\n        libxext6 \\\\\\n        libxfixes3 \\\\\\n        libxkbcommon0 \\\\\\n        libxrandr2 \\\\\\n        libxshmfence1 \\\\\\n        libxss1 \\\\\\n        libxtst6 \\\\\\n        fonts-liberation \\\\\\n        xdg-utils \\\\\\n    && (apt-get install -y --no-install-recommends docker-compose-plugin \\\\\\n        || apt-get install -y --no-install-recommends docker-compose-v2 \\\\\\n        || apt-get install -y --no-install-recommends docker-compose) \\\\\\n    && mkdir -p /usr/local/lib/docker/cli-plugins /usr/lib/docker/cli-plugins \\\\\\n    && if [ -x /usr/bin/docker-compose ]; then \\\\\\n        ln -sf /usr/bin/docker-compose /usr/local/lib/docker/cli-plugins/docker-compose; \\\\\\n        ln -sf /usr/bin/docker-compose /usr/lib/docker/cli-plugins/docker-compose; \\\\\\n    fi \\\\\\n    && rm -rf /var/lib/apt/lists/*\\n\\n# Install MinIO server binary (S3-compatible object storage for testing)\\nRUN curl -sSL https://dl.min.io/server/minio/release/linux-amd64/minio \\\\\\n    -o /usr/local/bin/minio && chmod +x /usr/local/bin/minio\\n\\n# Install Node via nvm and make it the default\\nENV NVM_DIR=/usr/local/nvm\\nENV NODE_VERSION=22.21.1\\n\\nSHELL [\"/bin/bash\", \"-lc\"]\\n# Install Node via nvm and make it the default\\nRUN mkdir -p \"$NVM_DIR\" \\\\\\n    && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash\\n\\nRUN . \"$NVM_DIR/nvm.sh\" \\\\\\n    && nvm install \"$NODE_VERSION\" \\\\\\n    && nvm alias default \"$NODE_VERSION\" \\\\\\n    && nvm use $NODE_VERSION\\n\\nRUN . \"$NVM_DIR/nvm.sh\" \\\\\\n  && nvm use $NODE_VERSION \\\\\\n  && NODE_PATH=\"$(nvm which node)\" \\\\\\n  && NODE_BIN_DIR=\"$(dirname \"$NODE_PATH\")\" \\\\\\n  && ln -s \"$NODE_BIN_DIR/node\" /usr/local/bin/node \\\\\\n  && ln -s \"$NODE_BIN_DIR/npm\" /usr/local/bin/npm \\\\\\n  && ln -s \"$NODE_BIN_DIR/npx\" /usr/local/bin/npx\\n\\n\\n# Install Rust\\nRUN curl --proto \\'=https\\' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y\\nENV PATH=\"/tmp/agent_home/.cargo/bin:${PATH}\"\\n\\n\\n    ENV PIP_CACHE_DIR=/tmp/pip-cache-dir\\n\\n    ENV PIP_CONFIG_FILE=/tmp/pip-conf\\n\\n    ENV UV_CACHE_DIR=/tmp/uv-cache\\n\\n\\n# Create non-root user and workspace\\nRUN groupadd -g 1000 agent && \\\\\\n    useradd -m -u 1000 -g 1000 -d \"$HOME\" -s /bin/bash agent && \\\\\\n    (getent group docker >/dev/null || groupadd docker) && \\\\\\n    usermod -aG docker agent && \\\\\\n    mkdir -p /workspace && \\\\\\n    chown agent:agent \\\\\\n        \"$HOME\" \\\\\\n        \"$HOME/.cargo\" \\\\\\n        \"$HOME/.cargo/bin\" \\\\\\n        \"$HOME/.rustup\" \\\\\\n        \"$HOME/.rustup/downloads\" \\\\\\n        \"$HOME/.rustup/tmp\" \\\\\\n        \"$HOME/.rustup/update-hashes\" \\\\\\n        /workspace\\nENV CARGO_HOME=$HOME/.cargo\\nENV RUSTUP_HOME=$HOME/.rustup\\n\\nLABEL io.slop-code.base-image-hash=\"d636e185b623\"\\n' extra_arcs=None", "timestamp": "2026-08-10 11:09:45", "level": "debug"}
+{"event": "Building image image_name='slop-code:python3.12'", "timestamp": "2026-08-10 11:09:45", "level": "info"}
+{"event": "{'stream': 'Step 1/20 : FROM ghcr.io/astral-sh/uv:python3.12-trixie-slim'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': '\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> 13a15bf8da80\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': 'Step 2/20 : ENV DEBIAN_FRONTEND=noninteractive'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': '\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> Using cache\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> 047d897b6d4c\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': 'Step 3/20 : ENV HOME=/tmp/agent_home'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': '\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> Using cache\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> 3c078c1c7a44\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': 'Step 4/20 : RUN apt-get update     && apt-get upgrade -y     && apt-get install -y --no-install-recommends build-essential     && apt-get install -y --no-install-recommends         bzip2         tar         gzip         zip         unzip         curl         ca-certificates         gnupg         default-jre-headless         netcat-openbsd         protobuf-compiler         procps         git         graphviz         rabbitmq-server         redis-server         docker-cli     && apt-get install -y --no-install-recommends         libasound2         libatk-bridge2.0-0         libatk1.0-0         libcairo2         libcups2         libdbus-1-3         libdrm2         libgbm1         libglib2.0-0         libgtk-3-0         libnspr4         libnss3         libpango-1.0-0         libx11-6         libx11-xcb1         libxcb1         libxcomposite1         libxdamage1         libxext6         libxfixes3         libxkbcommon0         libxrandr2         libxshmfence1         libxss1         libxtst6         fonts-liberation         xdg-utils     && (apt-get install -y --no-install-recommends docker-compose-plugin         || apt-get install -y --no-install-recommends docker-compose-v2         || apt-get install -y --no-install-recommends docker-compose)     && mkdir -p /usr/local/lib/docker/cli-plugins /usr/lib/docker/cli-plugins     && if [ -x /usr/bin/docker-compose ]; then         ln -sf /usr/bin/docker-compose /usr/local/lib/docker/cli-plugins/docker-compose;         ln -sf /usr/bin/docker-compose /usr/lib/docker/cli-plugins/docker-compose;     fi     && rm -rf /var/lib/apt/lists/*'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': '\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> Using cache\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> 3521f1e1887f\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': 'Step 5/20 : RUN curl -sSL https://dl.min.io/server/minio/release/linux-amd64/minio     -o /usr/local/bin/minio && chmod +x /usr/local/bin/minio'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': '\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> Using cache\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> 3ef21e654235\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': 'Step 6/20 : ENV NVM_DIR=/usr/local/nvm'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': '\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> Using cache\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> 6cc6c56f1e71\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': 'Step 7/20 : ENV NODE_VERSION=22.21.1'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': '\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> Using cache\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> f927d668c85e\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': 'Step 8/20 : SHELL [\"/bin/bash\", \"-lc\"]'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': '\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> Using cache\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> 6a08edb32a1b\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': 'Step 9/20 : RUN mkdir -p \"$NVM_DIR\"     && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': '\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> Using cache\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> 3bd2f8063f65\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': 'Step 10/20 : RUN . \"$NVM_DIR/nvm.sh\"     && nvm install \"$NODE_VERSION\"     && nvm alias default \"$NODE_VERSION\"     && nvm use $NODE_VERSION'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': '\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> Using cache\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> f6575fae4feb\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': 'Step 11/20 : RUN . \"$NVM_DIR/nvm.sh\"   && nvm use $NODE_VERSION   && NODE_PATH=\"$(nvm which node)\"   && NODE_BIN_DIR=\"$(dirname \"$NODE_PATH\")\"   && ln -s \"$NODE_BIN_DIR/node\" /usr/local/bin/node   && ln -s \"$NODE_BIN_DIR/npm\" /usr/local/bin/npm   && ln -s \"$NODE_BIN_DIR/npx\" /usr/local/bin/npx'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': '\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> Using cache\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> 362061067f3a\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': \"Step 12/20 : RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y\"}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': '\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> Using cache\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> db0277cd4591\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': 'Step 13/20 : ENV PATH=\"/tmp/agent_home/.cargo/bin:${PATH}\"'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': '\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> Using cache\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> 719fcc03da20\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': 'Step 14/20 : ENV PIP_CACHE_DIR=/tmp/pip-cache-dir'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': '\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> Running in 702041b932bd\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> Removed intermediate container 702041b932bd\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> cd44fcc69248\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': 'Step 15/20 : ENV PIP_CONFIG_FILE=/tmp/pip-conf'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': '\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> Running in e83f698c7a64\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> Removed intermediate container e83f698c7a64\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> f722c3caac0f\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': 'Step 16/20 : ENV UV_CACHE_DIR=/tmp/uv-cache'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': '\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> Running in 1fcc4d3464f3\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> Removed intermediate container 1fcc4d3464f3\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> 64c8016c4053\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': 'Step 17/20 : RUN groupadd -g 1000 agent &&     useradd -m -u 1000 -g 1000 -d \"$HOME\" -s /bin/bash agent &&     (getent group docker >/dev/null || groupadd docker) &&     usermod -aG docker agent &&     mkdir -p /workspace &&     chown agent:agent         \"$HOME\"         \"$HOME/.cargo\"         \"$HOME/.cargo/bin\"         \"$HOME/.rustup\"         \"$HOME/.rustup/downloads\"         \"$HOME/.rustup/tmp\"         \"$HOME/.rustup/update-hashes\"         /workspace'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': '\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> Running in 82e854ca716d\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': '\\x1b[91museradd: warning: the home directory /tmp/agent_home already exists.\\nuseradd: Not copying any file from skel directory into it.\\n\\x1b[0m'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> Removed intermediate container 82e854ca716d\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> 25168d706e5d\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': 'Step 18/20 : ENV CARGO_HOME=$HOME/.cargo'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': '\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> Running in 12d3857c896a\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> Removed intermediate container 12d3857c896a\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> 495f46f218ef\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': 'Step 19/20 : ENV RUSTUP_HOME=$HOME/.rustup'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': '\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> Running in 1f1de417c81c\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> Removed intermediate container 1f1de417c81c\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> 749c533ea4bf\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': 'Step 20/20 : LABEL io.slop-code.base-image-hash=\"d636e185b623\"'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': '\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> Running in 219e2f2f3915\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> Removed intermediate container 219e2f2f3915\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': ' ---> 4476e57b3a96\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'aux': {'ID': 'sha256:4476e57b3a969c86dab0c66aaf4cdc6948de80fa0915ae03a038fb46aa92b68e'}}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': 'Successfully built 4476e57b3a96\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "{'stream': 'Successfully tagged slop-code:python3.12\\n'}", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "Finished building image image_id='sha256:4476e57b3a969c86dab0c66aaf4cdc6948de80fa0915ae03a038fb46aa92b68e' image_name='slop-code:python3.12'", "timestamp": "2026-08-10 11:11:00", "level": "info"}
+{"event": "Evaluating checkpoint checkpoint='checkpoint_1' problem='file_merger' snapshot='F:\\\\Projects\\\\cymatix-context\\\\.claude\\\\worktrees\\\\scbench-codex-ab\\\\benchmarks\\\\scbench\\\\campaigns\\\\qualification\\\\invalid-attempts\\\\missing-spacy-model-001\\\\cymatix\\\\scbench\\\\file_merger\\\\checkpoint_1\\\\snapshot'", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "Snapshotting directory compression='gz' cwd=WindowsPath('F:/Projects/cymatix-context/.claude/worktrees/scbench-codex-ab/benchmarks/scbench/campaigns/qualification/invalid-attempts/missing-spacy-model-001/cymatix/scbench/file_merger/checkpoint_1/snapshot') ignore_globs={'.ruff_cache/*', 'tests/assets', 'venv/*', '.opencode/*', '.evaluation_tests/*', 'tests/assets/*', '.pytest_cache/*', '.mypy_cache/*', 'node_modules/*', '*.pyc', '.venv-*/*', '.claude/*', '.venv/*', '__pycache__/*'} keep_globs=None save_path=WindowsPath('C:/Users/max/AppData/Local/Temp/slop_code_120056f4')", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "Creating archive archive_path='C:\\\\Users\\\\max\\\\AppData\\\\Local\\\\Temp\\\\slop_code_120056f4\\\\20260810T041100.8d81b348.snapshot.tar.gz' num_matched_paths=2 num_other_paths=0", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "Calculating checksum archive_path='C:\\\\Users\\\\max\\\\AppData\\\\Local\\\\Temp\\\\slop_code_120056f4\\\\20260810T041100.8d81b348.snapshot.tar.gz' size='0.0039 MB'", "timestamp": "2026-08-10 11:11:00", "level": "debug"}
+{"event": "No static assets to materialize for tests", "timestamp": "2026-08-10 11:11:00", "level": "debug"}

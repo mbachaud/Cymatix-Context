@@ -179,6 +179,7 @@ class FakeCommandRunner:
         self.fail_arms: set[str] = set()
         self.rate_limit_arms: set[str] = set()
         self.reported_error_arms: set[str] = set()
+        self.infrastructure_failure_arms: set[str] = set()
         self.cymatix_head = CYMATIX_HEAD
         self.scbench_head = SCBENCH_HEAD
         self.cymatix_status = ""
@@ -318,6 +319,16 @@ class FakeCommandRunner:
             agent_dir.mkdir()
             (checkpoint / "inference_result.json").write_text(
                 json.dumps({"had_error": arm in self.reported_error_arms}),
+                encoding="utf-8",
+            )
+            infrastructure_failure = arm in self.infrastructure_failure_arms
+            (checkpoint / "evaluation.json").write_text(
+                json.dumps(
+                    {
+                        "infrastructure_failure": infrastructure_failure,
+                        "pytest_collected": 0 if infrastructure_failure else 2,
+                    }
+                ),
                 encoding="utf-8",
             )
             (checkpoint / "snapshot" / "state.txt").write_text(
@@ -597,6 +608,19 @@ def test_reported_inference_error_stops_before_mate(layout):
     runner.preflight()
 
     with pytest.raises(PairInvalidError, match="reported an inference error"):
+        runner.run_pair(PairSpec(problem="file-backup", replicate=1))
+
+    assert fake.arm_order == ["control"]
+
+
+def test_evaluation_infrastructure_failure_stops_before_mate(layout):
+    """Zero-collected evaluation is invalid infrastructure, not a benchmark miss."""
+    fake = FakeCommandRunner(layout)
+    fake.infrastructure_failure_arms.add("control")
+    runner = _runner(layout, fake)
+    runner.preflight()
+
+    with pytest.raises(PairInvalidError, match="evaluation infrastructure"):
         runner.run_pair(PairSpec(problem="file-backup", replicate=1))
 
     assert fake.arm_order == ["control"]

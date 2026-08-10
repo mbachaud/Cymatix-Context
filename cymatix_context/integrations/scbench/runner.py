@@ -722,6 +722,7 @@ class CampaignRunner:
             agent = checkpoint / "agent"
             required = (
                 checkpoint / "inference_result.json",
+                checkpoint / "evaluation.json",
                 agent / "prompt.txt",
                 agent / "stdout.jsonl",
                 agent / "stderr.log",
@@ -734,6 +735,16 @@ class CampaignRunner:
             if inference.get("had_error") is not False:
                 raise PairInvalidError(
                     f"{arm}: {checkpoint_name} reported an inference error"
+                )
+            evaluation = _load_json(checkpoint / "evaluation.json")
+            collected = evaluation.get("pytest_collected")
+            if (
+                evaluation.get("infrastructure_failure") is not False
+                or not isinstance(collected, int)
+                or collected <= 0
+            ):
+                raise PairInvalidError(
+                    f"{arm}: {checkpoint_name} evaluation infrastructure failed"
                 )
             prompt = (agent / "prompt.txt").read_text(encoding="utf-8")
             refs = agent / "cymatix-receipt-refs.json"
