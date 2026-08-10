@@ -478,7 +478,25 @@ can address it.
    served the call. An hour of Wave 3b data was discarded to this. **Launch runs
    detached and check daemon liveness before AND after**; a receipt that says
    `remote_dense: true` is not proof the daemon served it.
-4. **Two receipt-comparability breaks — older receipts do not describe the
+4. **The FIRST arm in a pass pays a cold-cache tax on per-signal timings** —
+   which is precisely what order-reversal exists to expose. `splade` own-cost
+   median, same bed, same arm, by position: 829k baseline **4402ms when it ran
+   first** (pass A) vs **3528ms when it ran last** (pass B); 100k baseline
+   **292ms first** vs **239ms last**. Any single-pass per-signal cost figure is
+   inflated for whichever arm ran first. **Steady-state own-costs from the
+   last-position readings: splade ~3.5s @829k / ~239ms @100k; the ledger's
+   earlier "~400ms at 100k, ~3s at 829k" was in the right band but read off
+   first-position runs.**
+5. **The two blob 30-needle subsets are NOT the same 30 needles.** The splade
+   blob A/B (Addendum 1, `splade_ab_blob_run{1,2}.json`, baseline r@12 **0.767**)
+   used `needles_resolved_blob.json[:30]` — the *first* 30 of the 469. Wave 3d
+   used `needles_resolved_blob_probe30.json` — the 2026-08-04 rerank GO probe's
+   carve-safe 30, which shares only part of that prefix. That is why the Wave 3d
+   blob baseline is **0.667**, not 0.767. **This is a different needle set, not a
+   regression, and the two receipts must not be differenced.** Both are valid on
+   their own set; neither is the 469-needle truth (`full469_nosplade_c1.json`,
+   r@12 0.676).
+6. **Two receipt-comparability breaks — older receipts do not describe the
    current tree.**
    - **entity_graph flag fix `1fd34b4`** (2026-08-06 09:42, in master) flipped
      the co-activation entity_graph sub-scan **ON to OFF** for the shipped-config
