@@ -328,7 +328,7 @@ receipts prove the leak rather than assume it: in the `no_tags` arm
 `lex_anchor` still fires 141/141 (100k) and 30/30 (829k) at **median 12437 and
 82798 genes — byte-identical to baseline's `lex_anchor` counts**. The table is
 still fully read. The 2.58GB storage decision needs its own **`no_lex_anchor`
-arm** — filed as a follow-up.
+arm** — filed as **#355**.
 
 **Treatment impurity worth recording:** `no_tags` is not a clean subtraction. In
 that arm `sema_boost` acquires real candidate counts on **68/141 queries**
@@ -339,7 +339,7 @@ sema cycle. Part of the `no_tags` movement is therefore *sema firing*, not
 70843 to 56579 at 829k).
 
 **Open question, unresolved:** the gate wraps both tiers together, so
-`tag_exact` vs `tag_prefix` attribution is unknown. Follow-up arm filed.
+`tag_exact` vs `tag_prefix` attribution is unknown. Follow-up arm filed as **#356**.
 
 ### #354 cymatics — retraction CONFIRMED by direct evidence; re-run verdict null
 
@@ -372,7 +372,7 @@ max(0.5, 2.0 - 1.5 * 0.3) = 1.55`. The retracted receipts advertised 3.0 while
 the scorer ran 1.55 — the same drift class as the retraction itself. Worse, the
 derivation's own docstring calls the advertised value degenerate ("width >= 3.0
 collapses to 0.22" dynamic range), so the TOML advertises a value the code
-considers outside the useful zone. Follow-up filed.
+considers outside the useful zone. Follow-up filed as **#357**.
 
 **Re-run, six arms x 141 carve needles, `wave3d_cymatics_354_100k_carve.json`:**
 
@@ -519,7 +519,7 @@ can address it.
 | Layer | was | now | confirming test |
 |---|---|---|---|
 | pki | INSUFFICIENT-EVIDENCE (no off-switch) | **REMOVE-CANDIDATE** — 8.56GB; neutral-to-positive to remove at 100k **and** 829k, zero delivery flips, both arm orders; weight sweep says 1.0 is at/above optimal | `wave3b_ladder_100k_pass{A,B}`, `wave3d_ladder_blob_pass{A,B}` |
-| tags (Tiers 1+2) | KEEP pending gate+arm | **TRIM-CANDIDATE for the tier, NOT the table** — r@12 +0.014 (100k) / +0.033 (829k), p50 -11...-23%; delivered-gold **non-replicating** (+1 genuine at 100k, flat at 829k) | same; a `no_lex_anchor` arm is still owed before any storage action |
+| tags (Tiers 1+2) | KEEP pending gate+arm | **TRIM-CANDIDATE for the tier, NOT the table** — r@12 +0.014 (100k) / +0.033 (829k), p50 -11...-23%; delivered-gold **non-replicating** (+1 genuine at 100k, flat at 829k) | same; a `no_lex_anchor` arm (**#355**) is still owed before any storage action |
 | cymatics | KEEP-CHEAP ("+33% p50" REFUTED) | **KEEP-CHEAP, now measured** — r@12/r@5 identical across on/off/random/collapsed; MRR effect at or below a 0.0035 control band; **indistinguishable from random binning** | `wave3d_cymatics_354_100k_carve.json` |
 
 **Standing scope limits.** 141 carve needles at 100k and **30 of 469** blob
@@ -529,3 +529,17 @@ one-needle movements. The PKI verdict is the better-supported of the two — it
 replicates at both scales in the same direction with zero delivery flips; the
 tags verdict is explicitly **split**, and its storage half is **not measured at
 all**.
+
+### Follow-ups filed
+
+| issue | gap |
+|---|---|
+| **#355** | `no_lex_anchor` arm — the real 2.58GB `promoter_index` decision, which the Tiers-1+2 gate cannot make |
+| **#356** | split the tags gate for `tag_exact` vs `tag_prefix` attribution |
+| **#357** | `[cymatics] peak_width = 3.0` is dead config; the scorer runs 1.55 |
+
+Surfaced and **not** filed, pending a decision on where it belongs: the
+delivered-gold **empty-window class** (2/141 queries at 100k discard a rank-1
+gold document at `delivered_count = 0` / `splice_n_candidates = None`) — raised
+on #335 rather than opened separately, since it may be the same abstain/assembly
+surface as that issue's ANN-gate tuning tension.
