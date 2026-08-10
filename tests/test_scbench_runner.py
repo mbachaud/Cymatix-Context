@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import subprocess
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -195,6 +196,9 @@ class FakeCommandRunner:
             0,
         )
 
+        if Path(command[0]).name.casefold() in {"cmd", "cmd.exe"}:
+            assert command[1:4] == ["/d", "/s", "/c"]
+            command = command[4:]
         executable = Path(command[0]).name.casefold()
         cwd = Path(kwargs["cwd"])
         if executable == "git" and command[1:3] == ["rev-parse", "HEAD"]:
@@ -360,6 +364,24 @@ def test_preflight_records_exact_clean_subscription_environment(layout):
     assert receipt.observed["docker_image_digest"] == "sha256:same-image"
     assert receipt.observed["checkpoint_counts"] == {"file-backup": 2}
     assert (layout.manifest.parent / "preflight.json").exists()
+
+
+@pytest.mark.skipif(sys.platform != "win32", reason="Windows command-shim contract")
+def test_preflight_invokes_codex_through_windows_command_processor(layout):
+    """CreateProcess cannot execute npm's extensionless/command shim directly."""
+    fake = FakeCommandRunner(layout)
+    runner = _runner(layout, fake)
+
+    runner.preflight()
+
+    codex_calls = [
+        command
+        for command, _kwargs in fake.calls
+        if "codex" in command and "--version" in command
+    ]
+    assert len(codex_calls) == 1
+    assert Path(codex_calls[0][0]).name.casefold() in {"cmd", "cmd.exe"}
+    assert codex_calls[0][1:4] == ["/d", "/s", "/c"]
 
 
 def test_preflight_mismatch_writes_invalid_receipt_and_blocks_execution(layout):

@@ -8,6 +8,7 @@ import logging
 import os
 import shutil
 import subprocess
+import sys
 import tempfile
 from datetime import UTC, datetime
 from pathlib import Path
@@ -239,8 +240,17 @@ class CampaignRunner:
         self._preflight: PreflightReceipt | None = None
 
     def _probe(self, command: list[str], *, cwd: Path) -> subprocess.CompletedProcess[Any]:
+        probe_command = command
+        if sys.platform == "win32" and Path(command[0]).name.casefold() == "codex":
+            probe_command = [
+                os.environ.get("COMSPEC", "cmd.exe"),
+                "/d",
+                "/s",
+                "/c",
+                *command,
+            ]
         return self.run_command(
-            command,
+            probe_command,
             cwd=cwd,
             check=False,
             timeout=self.probe_timeout_s,
