@@ -1,0 +1,143 @@
+{
+  "classes": {
+    "attribute_counts_mean": 1.6666666666666667,
+    "attribute_counts_sum": 10,
+    "count": 6,
+    "method_counts_mean": 1.6666666666666667,
+    "method_counts_sum": 10
+  },
+  "complexity": {
+    "cc_max": 105,
+    "cc_ratings": {
+      "A": 32,
+      "B": 3,
+      "C": 11,
+      "D": 3,
+      "E": 1,
+      "F": 2
+    },
+    "cc_sum": 488,
+    "mi_min": 0.0,
+    "mi_ratings": {
+      "A": 0,
+      "B": 0,
+      "C": 1
+    },
+    "mi_sum": 0.0,
+    "num_complex": 17
+  },
+  "file_count": 1,
+  "functions": {
+    "cc_concentration": 0.6085650665423852,
+    "cc_extreme_count": 3,
+    "cc_high_count": 16,
+    "cc_max": 105,
+    "cc_mean": 11.487804878048781,
+    "cc_normalized": 0.060861382702025325,
+    "cc_std": 18.146793037916524,
+    "cc_sum": 471,
+    "cc_top20": 0.6496815286624203,
+    "count": 41,
+    "depth_max": 5,
+    "extreme_cc_mean": 63.333333333333336,
+    "high_cc_mean": 24.5625,
+    "lines_mean": 15.365853658536585,
+    "lines_sum": 630
+  },
+  "graph": {
+    "cyclic_dependency_mass": 0.0,
+    "dependency_entropy": 0.1270208165676701,
+    "edge_count": 44,
+    "node_count": 37,
+    "propagation_cost": 0.04054054054054054
+  },
+  "lines": {
+    "comments": 11,
+    "loc": 588,
+    "multi_comment": 0,
+    "single_comment": 13,
+    "total_lines": 637
+  },
+  "lint": {
+    "counts": {
+      "B007": 3,
+      "B904": 10,
+      "B905": 1,
+      "BLE001": 14,
+      "C901": 7,
+      "DOC201": 1,
+      "DOC402": 1,
+      "DOC501": 3,
+      "EM101": 17,
+      "EM102": 21,
+      "FBT002": 4,
+      "FBT003": 3,
+      "FURB103": 2,
+      "PERF203": 2,
+      "PLC0415": 3,
+      "PLC1901": 1,
+      "PLR0124": 1,
+      "PLR0911": 4,
+      "PLR0912": 3,
+      "PLR0913": 3,
+      "PLR0914": 1,
+      "PLR0915": 2,
+      "PLR0917": 3,
+      "PLR2004": 1,
+      "PLR6201": 3,
+      "PTH100": 3,
+      "PTH103": 2,
+      "PTH105": 4,
+      "PTH108": 6,
+      "PTH110": 1,
+      "PTH112": 3,
+      "PTH114": 2,
+      "PTH118": 4,
+      "PTH119": 1,
+      "PTH120": 2,
+      "PTH122": 1,
+      "PTH123": 9,
+      "RET504": 2,
+      "RSE102": 3,
+      "RUF034": 1,
+      "RUF059": 1,
+      "S110": 3,
+      "S301": 3,
+      "S403": 1,
+      "SIM105": 7,
+      "SIM115": 2,
+      "SIM211": 1,
+      "SLF001": 1,
+      "TRY003": 38,
+      "TRY004": 1,
+      "TRY300": 1,
+      "TRY301": 4,
+      "UP015": 1,
+      "UP031": 4
+    },
+    "errors": 226,
+    "fixable": 33
+  },
+  "source_files": [
+    "merge_files.py"
+  ],
+  "symbols": {
+    "classes": 6,
+    "expressions": 1665,
+    "expressions_top_level": 28,
+    "functions": 31,
+    "globals": 5,
+    "imports": 4,
+    "max_imports": 4,
+    "methods": 10,
+    "statements": 482,
+    "total": 52,
+    "type_aliases": 0,
+    "variables": 5
+  },
+  "waste": {
+    "single_use_functions": 16,
+    "trivial_wrappers": 3,
+    "unused_variables": 8
+  }
+}

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -18,6 +19,7 @@ from cymatix_context.integrations.scbench.agent import (
     CymatixCodexAgent,
     CymatixCodexConfig,
 )
+import cymatix_context.integrations.scbench.agent as agent_mod
 from cymatix_context.integrations.scbench.coordinator import PreparedPrompt
 from cymatix_context.integrations.scbench.receipts import ArtifactRef
 
@@ -235,3 +237,37 @@ def test_cleanup_closes_coordinator_and_codex_resources(tmp_path):
     agent.cleanup()
 
     assert agent.coordinator.closed is True
+
+
+def test_setup_failure_closes_partially_initialized_coordinator(monkeypatch, tmp_path):
+    """A failed initial sync must not leave the spawned sidecar running."""
+    agent = _adapter(tmp_path)
+
+    class FailingCoordinator:
+        instance = None
+
+        def __init__(self, **_kwargs):
+            self.closed = False
+            FailingCoordinator.instance = self
+
+        def initialize(self):
+            raise RuntimeError("forced initialization failure")
+
+        def close(self):
+            self.closed = True
+
+    monkeypatch.setattr(CodexAgent, "setup", lambda _self, _session: None)
+    monkeypatch.setattr(CodexAgent, "cleanup", lambda _self: None)
+    monkeypatch.setattr(
+        agent_mod.CampaignConfig,
+        "load",
+        lambda _path: SimpleNamespace(reasoning_effort="medium"),
+    )
+    monkeypatch.setattr(agent, "_verify_reasoning_effort", lambda _campaign: None)
+    monkeypatch.setattr(agent_mod, "TreatmentCoordinator", FailingCoordinator)
+
+    with pytest.raises(RuntimeError, match="forced initialization failure"):
+        agent.setup(SimpleNamespace(working_dir=tmp_path))
+
+    assert FailingCoordinator.instance is not None
+    assert FailingCoordinator.instance.closed is True

@@ -143,6 +143,7 @@ class CymatixCodexAgent(CodexAgent):
 
     def setup(self, session) -> None:
         super().setup(session)
+        coordinator: TreatmentCoordinator | None = None
         try:
             campaign = CampaignConfig.load(self.campaign_manifest)
             self._verify_reasoning_effort(campaign)
@@ -155,13 +156,16 @@ class CymatixCodexAgent(CodexAgent):
                 workspace_root=session.working_dir,
                 receipt_root=self.receipt_root,
             )
-            coordinator.initialize()
             self.coordinator = coordinator
+            coordinator.initialize()
         except Exception:
             self.log.error(
                 "agent.codex_cymatix.setup_failed",
                 exc_info=True,
             )
+            if coordinator is not None:
+                coordinator.close()
+                self.coordinator = None
             super().cleanup()
             raise
 

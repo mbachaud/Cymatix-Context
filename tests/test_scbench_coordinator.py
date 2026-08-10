@@ -171,6 +171,33 @@ def test_checkpoint_one_is_aa_sentinel(tmp_path):
     assert client.packet_calls == []
 
 
+def test_initialization_accepts_empty_create_from_scratch_workspace(tmp_path):
+    """Checkpoint one may legitimately create every allowlisted source."""
+    client = FakeClient()
+    workspace = tmp_path / "file-backup"
+    workspace.mkdir()
+    coordinator = TreatmentCoordinator(
+        campaign=_campaign(),
+        pair_id="file-backup-r1",
+        replicate=1,
+        problem="file-backup",
+        workspace_root=workspace,
+        receipt_root=tmp_path / "receipts",
+        client=client,
+        warmup_enabled=False,
+    )
+
+    coordinator.initialize()
+    prepared = coordinator.before_checkpoint("create the initial implementation")
+
+    assert coordinator.initial_sync is not None
+    assert coordinator.initial_sync.ingested == 0
+    assert coordinator.initial_sync.verified is True
+    assert client.source_calls == []
+    assert prepared.prompt == "create the initial implementation"
+    assert prepared.packet is None
+
+
 def test_initialization_warms_packet_path_without_scored_prompt(tmp_path):
     """Skipping warm-up would put model/server startup only in treatment timing."""
     client = FakeClient()

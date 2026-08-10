@@ -258,8 +258,6 @@ class TreatmentCoordinator:
                 self.problem,
                 self.campaign.source_policy,
             )
-            if not manifest.sources:
-                raise RuntimeError("initial workspace has no allowlisted sources")
 
             started = time.monotonic()
             ingested = 0
@@ -267,8 +265,9 @@ class TreatmentCoordinator:
                 verification = self._client.ingest_source(source)
                 ingested += verification.count
             after_stats = self._stats()
-            if ingested <= 0 or (
-                after_stats["total_genes"] <= before_stats["total_genes"]
+            if manifest.sources and (
+                ingested <= 0
+                or after_stats["total_genes"] <= before_stats["total_genes"]
             ):
                 raise RuntimeError("initial ingest did not grow the genome")
 

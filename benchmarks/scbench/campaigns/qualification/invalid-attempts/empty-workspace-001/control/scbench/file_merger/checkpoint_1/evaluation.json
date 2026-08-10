@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "problem_name": "file_merger",
+  "problem_version": 1,
+  "checkpoint_name": "checkpoint_1",
+  "checkpoint_version": 1,
+  "duration": 5.929761648178101,
+  "entrypoint": "uv run merge_files.py",
+  "tests": {},
+  "pass_counts": {
+    "Core": 0,
+    "Functionality": 0,
+    "Regression": 0,
+    "Error": 0
+  },
+  "total_counts": {
+    "Core": 0,
+    "Functionality": 0,
+    "Regression": 0,
+    "Error": 0
+  },
+  "pytest_exit_code": 4,
+  "pytest_collected": 0,
+  "test_collection_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "infrastructure_failure": true
+}

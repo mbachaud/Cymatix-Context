@@ -1,0 +1,2 @@
+# Used for streaming Parquet row-group reads.
+pyarrow>=14
