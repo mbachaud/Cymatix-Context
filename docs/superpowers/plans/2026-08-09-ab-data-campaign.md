@@ -150,12 +150,16 @@ the blend.
 
 Two consequences worth stating before any measurement:
 
-1. **PKI is a precision instrument with a narrow trigger.** A layer that fires
-   rarely but decisively will look "neutral" on aggregate recall@12 while being
-   the sole reason a small class of queries works at all. This is precisely the
-   #340 static-miss hypothesis: needles whose *body text* never lexically matches
-   the query, but whose path/key structure does. The arm must be graded per-needle,
-   not only in aggregate.
+1. ~~**PKI is a precision instrument with a narrow trigger.**~~ **REFUTED
+   2026-08-09 — see [ledger addendum 5](../../benchmarks/2026-08-06-retrieval-layer-ledger.md#addendum-5-2026-08-09-pki--tags-armed-and-measured-at-two-scales-354-re-run-methodology-results).**
+   The hypothesis was that a layer firing rarely but decisively would look
+   "neutral" on aggregate recall@12 while being the sole reason a small class of
+   queries works at all — the #340 static-miss class: needles whose *body text*
+   never lexically matches the query, but whose path/key structure does. Measured:
+   PKI fires on **141/141** needles at 100k (median 900 candidate genes/query) and
+   **30/30** at 829k (median 2939). It is a broad, weak tier, not a narrow decisive
+   one. The per-needle grading the plan demanded is what killed the hypothesis: the
+   static-miss set is bit-identical with PKI on, off, and at weights 2/3/4.
 2. **The storage case and the recall case are independent.** #165 already proved
    on the Onyx corpus that `idx_pki_lookup` is never used (EQP: the live lookup
    rides `sqlite_autoindex_path_key_index_1`, of which it is a strict prefix) and
@@ -173,8 +177,13 @@ Two consequences worth stating before any measurement:
 - **Relax the AND.** Both legs come from one token pool; a path-only match at
   lower weight would widen the trigger — at obvious precision risk, which is why
   it needs the delivered-gold metric to grade.
-- **`_pki_weight` under RRF.** The tier is fed to the fuser with a weight that
-  appears untuned since the additive→RRF switch.
+- ~~**`_pki_weight` under RRF.**~~ **TESTED AND CLOSED 2026-08-09.** The
+  commit-record half is true — `pki_weight = 1.0` was authored in the Stage-3 RRF
+  PR (`e2be503`, #55) while `fusion_mode` still defaulted to `"additive"`, and
+  became load-bearing uncalibrated when `e4889f6` (#247) flipped the default. The
+  implied half is false: a w2/w3/w4 sweep regresses **monotonically** (14 / 28 /
+  33 needles worse) and r@12 drops to 0.6738 at w4. Shipped 1.0 is at or above
+  optimal.
 - **Cross-read with #327.** Authority boost is IDF-*blind* and grants +2.0 to 88%
   of its own corpus by matching query terms against the absolute path. PKI solves
   the same matching problem IDF-*aware*. #327's fix may simply be to adopt PKI's
@@ -190,3 +199,45 @@ Two consequences worth stating before any measurement:
   rather than forcing the work.
 - No behaviour changes as a side effect of adding a gate. Shipped defaults must
   resolve byte-identically, or every arm that runs afterwards is poisoned.
+
+## Outcome (2026-08-09, Wave 4)
+
+Evidence recorded in
+[ledger addendum 5](../../benchmarks/2026-08-06-retrieval-layer-ledger.md).
+Verdicts, with the confirming receipt named:
+
+| Wave | Item | Outcome |
+|---|---|---|
+| 0a | env provenance, GPU daemon, bed inventory, timing budget | done; `wave0a_*.json` |
+| 0b | entity_graph read-path flag leak | fixed in master (`1fd34b4`) — and it **breaks comparability** with every pre-2026-08-06 receipt |
+| 0c | sema query-side auto-gate | armed by probe (`2259cbf`) |
+| 1 | delivered-gold receipt metric (#335) | shipped (`ab03426`); first use surfaced an **empty-window class** (2/141 queries at 100k discard a rank-1 gold) |
+| 2a | PKI gate + `no_pki` arm (#334) | shipped (`32e8bad`) |
+| 2b | tags gate + `no_tags` arm | shipped (`085cec6`) — **Tiers 1+2 only**; `lex_anchor` still reads `promoter_index` |
+| 2c | coact/harmonic arm | **not run** — deferred |
+| 2d | synonyms retune arm | **not run** — Addendum 4 already named the movers |
+| 3a | #354 cymatics arm-C re-run | done; retraction **confirmed at the read site**, re-run verdict **null** |
+| 3b | ladder @100k, order-reversed paired | done, 141 carve needles |
+| 3c | static-miss cross-tab | done — static-miss set **bit-identical across all six arms** |
+| 3d | PKI + tags @blob (829k) | done, 30 `blob_probe30` needles, both orders |
+| 3e | splice/headroom quality A/B | **not run** — still needs an answer-quality judge (#336) |
+| 4a | PKI amplification design | **cancelled by the data.** The tier fires on 100% of needles at both scales and every weight increase regresses. There is nothing to amplify; the design task is replaced by a removal decision. |
+| 4b | ledger update, issue comments, follow-ups | done |
+
+**Hypotheses this plan carried that the data refuted:** the "narrow-trigger
+rescue tier" framing of PKI (fires on 141/141 and 30/30), and the implication
+that an uncalibrated `pki_weight = 1.0` meant PKI was underweighted (raising it
+only regresses).
+
+**What the campaign added to the plan's own method rules:** order-reversal is a
+measured non-effect on rank/delivery metrics (bit-identical per-needle, both
+beds) and moves only wall time — but the reversal is what established that, so
+retain it whenever latency is the claim. `--reverse` did not exist before this
+campaign (`7294526`). And `RemoteCodec`'s silent CPU degradation means the
+freeze protocol needs a companion rule: **check encoder-daemon liveness before
+and after every run**; `remote_dense: true` in a receipt is not proof the daemon
+served the query.
+
+**Still owed** (filed as issues): a `no_lex_anchor` arm for the real 2.58GB tags
+storage decision; `tag_exact` vs `tag_prefix` attribution; the `[cymatics]
+peak_width` 3.0-vs-1.55 config/doc mismatch.
