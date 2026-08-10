@@ -12,7 +12,12 @@ candidate spectra by cosine, and use the result to reorder candidates.
 
 Three things could be carrying the signal, and they are separable:
 
-* **A — shipped.** MD5 bins, Gaussian spread (``peak_width`` 3.0).
+* **A — shipped.** MD5 bins, Gaussian spread as the runtime actually derives
+  it: ``aggressiveness_to_peak_width([budget] splice_aggressiveness)``, which
+  is **1.55** at the shipped ``splice_aggressiveness = 0.3`` — NOT the 3.0
+  that ``[cymatics] peak_width`` advertises. That field is parsed and never
+  read (context_manager.py:1233-1239); this arm's label is derived at run
+  time so it can never drift from the value the scorer sees again.
 * **B — off.** Does the stage contribute anything at all? If A == B the
   feature is inert and the flag is moot.
 * **C — hashed bag-of-words.** Same MD5 bins, spread collapsed to a single
@@ -89,16 +94,28 @@ def main() -> int:
     ap.add_argument("--seeds", type=int, default=3,
                     help="random-bin control seeds (variance estimate)")
     ap.add_argument("--out", default="benchmarks/dogfood/cymatics_ablation.json")
+    # 2026-08-09: the needle/gold pair used to be hardcoded to the dogfood bed.
+    # That bed is gitignored and absent from a fresh worktree, and the only
+    # committed dogfood gold file (erb/gold_by_needle_dogfood_EMPTY.json) has
+    # zero ids for all 18 needles — a 0.000 recall ceiling, not a score. Making
+    # the pair configurable lets the arms run against a bed-complete pairing
+    # (see docs/superpowers/plans/2026-08-09-ab-data-campaign.md). Defaults are
+    # unchanged, so an invocation that worked before still resolves identically.
+    ap.add_argument("--resolved", default="benchmarks/dogfood/needles_resolved.json")
+    ap.add_argument("--gold", default="benchmarks/dogfood/gene_ids/gold_by_needle.json")
     args = ap.parse_args()
 
-    genome = str(REPO_ROOT / args.genome)
+    genome = args.genome if os.path.isabs(args.genome) else str(REPO_ROOT / args.genome)
     os.environ["CYMATIX_GENOME_PATH"] = genome
     os.environ["CYMATIX_DISABLE_LEARN"] = "1"
 
-    needles = json.loads((REPO_ROOT / "benchmarks/dogfood/needles_resolved.json")
+    def _resolve(p: str) -> Path:
+        return Path(p) if os.path.isabs(p) else REPO_ROOT / p
+
+    needles = json.loads(_resolve(args.resolved)
                          .read_text(encoding="utf-8"))["needles"]
     gold = {k: set(v) for k, v in json.loads(
-        (REPO_ROOT / "benchmarks/dogfood/gene_ids/gold_by_needle.json")
+        _resolve(args.gold)
         .read_text(encoding="utf-8")).items()}
 
     from cymatix_context.config import load_config
@@ -122,6 +139,14 @@ def main() -> int:
         if peak_width is not None:
             cfg.cymatics.peak_width = peak_width
         m = CymatixContextManager(cfg)
+        if peak_width is not None:
+            # Setting cfg.cymatics.peak_width alone is INERT — the manager
+            # never reads it, deriving _cymatics_peak_width from [budget]
+            # splice_aggressiveness instead (context_manager.py:1228,
+            # aggressiveness_to_peak_width). Override the derived attribute
+            # post-construction or the arm silently duplicates arm A, which
+            # is what invalidated the 2026-07-29 verdict's finding 1.
+            m._cymatics_peak_width = peak_width
         t0 = time.time()
         ranks = _rank_all(m, needles, gold, args.k)
         dt = time.time() - t0
@@ -131,9 +156,16 @@ def main() -> int:
         return {"label": label, "ranks": ranks, "rollup": roll,
                 "seconds": round(dt, 1)}
 
-    print(f"cymatics ablation — {len(needles)} needles, k={args.k}\n")
+    # Derive arm A's advertised spread from the same mapping the runtime uses,
+    # so the label cannot drift from the scorer again (the 2026-08-08 retraction
+    # shipped an "A ... spread 3.0" label while the scorer ran at 1.55).
+    _shipped_pw = cy.aggressiveness_to_peak_width(
+        load_config().budget.splice_aggressiveness
+    )
+    print(f"cymatics ablation — {len(needles)} needles, k={args.k}, "
+          f"bed={genome}, shipped spread={_shipped_pw}\n")
     arms = []
-    arms.append(run("A shipped (md5 bins, spread 3.0)"))
+    arms.append(run(f"A shipped (md5 bins, spread {_shipped_pw})"))
     arms.append(run("B cymatics OFF", enabled=False))
     arms.append(run("C hashed bag-of-words (no spread)", peak_width=0.01))
     for s in range(args.seeds):
