@@ -1,0 +1,86 @@
+{
+  "classes": {
+    "attribute_counts_mean": 0.0,
+    "attribute_counts_sum": 0,
+    "count": 0,
+    "method_counts_mean": 0.0,
+    "method_counts_sum": 0
+  },
+  "complexity": {
+    "cc_max": 0,
+    "cc_ratings": {
+      "A": 0,
+      "B": 0,
+      "C": 0,
+      "D": 0,
+      "E": 0,
+      "F": 0
+    },
+    "cc_sum": 0,
+    "mi_min": 0.0,
+    "mi_ratings": {
+      "A": 0,
+      "B": 0,
+      "C": 0
+    },
+    "mi_sum": 0.0,
+    "num_complex": 0
+  },
+  "file_count": 0,
+  "functions": {
+    "cc_concentration": 0.0,
+    "cc_extreme_count": 0,
+    "cc_high_count": 0,
+    "cc_max": 0,
+    "cc_mean": 0.0,
+    "cc_normalized": 0.0,
+    "cc_std": 0.0,
+    "cc_sum": 0,
+    "cc_top20": 0.0,
+    "count": 0,
+    "depth_max": 0,
+    "extreme_cc_mean": 0.0,
+    "high_cc_mean": 0.0,
+    "lines_mean": 0.0,
+    "lines_sum": 0
+  },
+  "graph": {
+    "cyclic_dependency_mass": 0.0,
+    "dependency_entropy": 0.0,
+    "edge_count": 0,
+    "node_count": 0,
+    "propagation_cost": 0.0
+  },
+  "lines": {
+    "comments": 0,
+    "loc": 0,
+    "multi_comment": 0,
+    "single_comment": 0,
+    "total_lines": 0
+  },
+  "lint": {
+    "counts": {},
+    "errors": 0,
+    "fixable": 0
+  },
+  "source_files": null,
+  "symbols": {
+    "classes": 0,
+    "expressions": 0,
+    "expressions_top_level": 0,
+    "functions": 0,
+    "globals": 0,
+    "imports": 0,
+    "max_imports": 0,
+    "methods": 0,
+    "statements": 0,
+    "total": 0,
+    "type_aliases": 0,
+    "variables": 0
+  },
+  "waste": {
+    "single_use_functions": 0,
+    "trivial_wrappers": 0,
+    "unused_variables": 0
+  }
+}

@@ -1,0 +1,172 @@
+{
+  "model": "gpt-5.6-luna",
+  "thinking": "medium",
+  "prompt": "just-solve",
+  "agent_type": "codex",
+  "agent_version": "0.130.0",
+  "num_problems": 1,
+  "num_checkpoints": 1,
+  "expected_checkpoints": 4,
+  "costs": {
+    "checkpoint": {
+      "mean": 0.0,
+      "stddev": null,
+      "min": 0.0,
+      "max": 0.0,
+      "median": 0.0,
+      "count": 1
+    },
+    "problem": {
+      "mean": 0.0,
+      "stddev": null,
+      "min": 0.0,
+      "max": 0.0,
+      "median": 0.0,
+      "count": 1
+    },
+    "total": 0.0
+  },
+  "time": {
+    "checkpoint": {
+      "mean": 0.015667,
+      "stddev": null,
+      "min": 0.015667,
+      "max": 0.015667,
+      "median": 0.015667,
+      "count": 1
+    },
+    "problem": {
+      "mean": 0.015667,
+      "stddev": null,
+      "min": 0.015667,
+      "max": 0.015667,
+      "median": 0.015667,
+      "count": 1
+    }
+  },
+  "tokens": {
+    "input": 0,
+    "output": 0,
+    "cache_read": 0,
+    "cache_write": 0,
+    "reasoning": 0,
+    "problem": {
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "reasoning": 0.0
+    },
+    "checkpoint": {
+      "input": 0.0,
+      "output": 0.0,
+      "cache_read": 0.0,
+      "cache_write": 0.0,
+      "reasoning": 0.0
+    }
+  },
+  "steps": {
+    "checkpoint": {
+      "mean": 0.0,
+      "stddev": null,
+      "min": 0.0,
+      "max": 0.0,
+      "median": 0.0,
+      "count": 1
+    },
+    "problem": {
+      "mean": 0.0,
+      "stddev": null,
+      "min": 0.0,
+      "max": 0.0,
+      "median": 0.0,
+      "count": 1
+    }
+  },
+  "checkpoints_solved": 0,
+  "checkpoints_iso_solved": 0,
+  "checkpoints_core_solved": 0,
+  "problem_solved": 0.0,
+  "problem_partial": 0.0,
+  "pct_checkpoints_solved": 0.0,
+  "pct_checkpoints_iso_solved": 0.0,
+  "pct_problems_solved": 0.0,
+  "pct_problems_partial": 0.0,
+  "pct_checkpoints_core_solved": 0.0,
+  "pass_rates": {
+    "problem": {
+      "core": 0.0,
+      "total": 0.0,
+      "error": 0.0,
+      "functionality": 0.0,
+      "regression": 0.0
+    },
+    "checkpoint": {
+      "core": 0.0,
+      "total": 0.0,
+      "error": 0.0,
+      "functionality": 0.0,
+      "regression": 0.0
+    }
+  },
+  "cc": {
+    "high_count": {
+      "mean": 0.0,
+      "stddev": null,
+      "min": 0.0,
+      "max": 0.0,
+      "median": 0.0,
+      "count": 1
+    },
+    "high_mean": {
+      "mean": 0.0,
+      "stddev": null,
+      "min": 0.0,
+      "max": 0.0,
+      "median": 0.0,
+      "count": 1
+    },
+    "max": {
+      "mean": 0.0,
+      "stddev": null,
+      "min": 0.0,
+      "max": 0.0,
+      "median": 0.0,
+      "count": 1
+    }
+  },
+  "ratios": {
+    "rubric": {
+      "mean": null,
+      "stddev": null,
+      "min": null,
+      "max": null,
+      "median": null,
+      "count": 0
+    },
+    "lint": {
+      "mean": null,
+      "stddev": null,
+      "min": null,
+      "max": null,
+      "median": null,
+      "count": 0
+    }
+  },
+  "verbosity": {
+    "mean": null,
+    "stddev": null,
+    "min": null,
+    "max": null,
+    "median": null,
+    "count": 0
+  },
+  "erosion": {
+    "mean": null,
+    "stddev": null,
+    "min": null,
+    "max": null,
+    "median": null,
+    "count": 0
+  }
+}
