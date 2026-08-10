@@ -81,3 +81,13 @@ that qualification.
 cannot self-reference its own Git commit, preflight permits later commits only
 when every changed path is the active campaign directory or this README; it
 also records the exact observed HEAD and rejects any subsequent drift.
+
+## Frozen eight-problem pilot
+
+The scored pilot inputs are frozen in
+[`campaigns/2026-08-08-codex-pilot/manifest.json`](campaigns/2026-08-08-codex-pilot/manifest.json),
+with the operator checklist and usage projection in its
+[`README.md`](campaigns/2026-08-08-codex-pilot/README.md). Preflight
+independently recounts the pinned SCBench catalog and rejects any drift from 40
+checkpoints per arm and 32 checkpoint-2+ primary checkpoints per arm. Scored
+`run-pair` execution remains blocked pending explicit operator confirmation.
