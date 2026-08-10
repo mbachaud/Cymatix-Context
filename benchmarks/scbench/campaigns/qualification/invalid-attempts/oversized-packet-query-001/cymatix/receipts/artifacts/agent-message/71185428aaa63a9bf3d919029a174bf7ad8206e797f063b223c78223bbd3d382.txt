@@ -1,0 +1,9 @@
+Implemented:
+
+- [merge_files.py](/workspace/merge_files.py)
+- [requirements.txt](/workspace/requirements.txt)
+- `.venv/` virtual environment
+
+The tool supports schema inference, casting, null handling, stable composite sorting, descending order, custom CSV options, type-error policies, and external sorting under memory limits.
+
+Validated with syntax checks and a 15,000-row, 1MB-memory test.

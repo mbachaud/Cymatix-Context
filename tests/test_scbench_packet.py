@@ -102,6 +102,22 @@ def test_build_retrieval_query_is_exact_and_rejects_evaluation_paths():
         )
 
 
+def test_build_retrieval_query_bounds_large_prompt_without_losing_its_tail():
+    prompt = " ".join(f"requirement-{index}" for index in range(1_000))
+
+    query = build_retrieval_query(
+        problem="file-merger",
+        checkpoint_index=2,
+        original_prompt=prompt,
+    )
+
+    assert "requirement-0" in query
+    assert "requirement-999" in query
+    assert "requirement-500" not in query
+    assert len(query.split()) <= 225
+    assert "[... retrieval query truncated ...]" in query
+
+
 def test_renderer_filters_deleted_source_and_rejects_unknown_scheme():
     live = _manifest("src/live.py")
     packet = _packet(

@@ -23,6 +23,8 @@ _HEADER_LINES = (
 )
 _FOOTER = "</cymatix_context>"
 _ITEM_CATEGORIES = ("verified", "stale_risk", "contradictions")
+_MAX_RETRIEVAL_PROMPT_TERMS = 200
+_RETRIEVAL_TRUNCATION_MARKER = "[... retrieval query truncated ...]"
 
 
 class PacketIntegrityError(RuntimeError):
@@ -73,11 +75,24 @@ def build_retrieval_query(
                 "original prompt contains a configured evaluation path"
             )
 
+    prompt_terms = original_prompt.split()
+    if len(prompt_terms) > _MAX_RETRIEVAL_PROMPT_TERMS:
+        half_budget = _MAX_RETRIEVAL_PROMPT_TERMS // 2
+        retrieval_prompt = " ".join(
+            (
+                *prompt_terms[:half_budget],
+                _RETRIEVAL_TRUNCATION_MARKER,
+                *prompt_terms[-half_budget:],
+            )
+        )
+    else:
+        retrieval_prompt = original_prompt
+
     return (
         f"Problem: {problem}\n"
         f"Checkpoint: {checkpoint_index}\n"
         "Current request:\n"
-        f"{original_prompt}\n\n"
+        f"{retrieval_prompt}\n\n"
         "Retrieve prior constraints, decisions, affected code, and behavior "
         "that must remain working."
     )

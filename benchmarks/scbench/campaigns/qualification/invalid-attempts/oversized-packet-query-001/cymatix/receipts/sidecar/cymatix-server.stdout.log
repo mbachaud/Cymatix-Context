@@ -1,0 +1,9 @@
+INFO:     127.0.0.1:56839 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56845 - "GET /stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56845 - "GET /stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60052 - "GET /stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60052 - "POST /ingest HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60052 - "POST /ingest HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60052 - "GET /stats HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60052 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53996 - "POST /context/packet HTTP/1.1" 500 Internal Server Error

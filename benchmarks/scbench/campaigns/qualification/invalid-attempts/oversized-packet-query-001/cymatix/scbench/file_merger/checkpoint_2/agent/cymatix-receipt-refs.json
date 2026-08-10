@@ -1,0 +1,14 @@
+{
+  "checkpoint": 1,
+  "packet": null,
+  "prompt": {
+    "media_type": "text/plain",
+    "path": "artifacts/prompt/20fc7795dc56f8798926b1781cb1bb0584bb7c103f8d1ca71c003ef0cc366d5c.txt",
+    "sha256": "20fc7795dc56f8798926b1781cb1bb0584bb7c103f8d1ca71c003ef0cc366d5c",
+    "size_bytes": 4583
+  },
+  "query": null,
+  "rendered_packet": null,
+  "schema_version": 1,
+  "session_id": "qualification:file-merger-r2:2:file-merger"
+}

@@ -1,0 +1,28 @@
+{
+  "artifacts_dir": "agent",
+  "checkpoint_path": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\scbench-codex-ab\\benchmarks\\scbench\\campaigns\\qualification\\pairs\\file-merger-r2\\cymatix\\scbench\\file_merger\\checkpoint_2",
+  "completed": "2026-08-10T04:23:06.735855",
+  "elapsed": 0.033961,
+  "error_message": "Traceback (most recent call last):\n  File \"F:\\Projects\\cymatix-context\\.claude\\worktrees\\scbench-codex-ab\\cymatix_context\\integrations\\scbench\\coordinator.py\", line 347, in before_checkpoint\n    response = self._client_or_raise().context_packet(\n        query,\n    ...<2 lines>...\n        treatment=self.campaign.treatment,\n    )\n  File \"F:\\Projects\\cymatix-context\\.claude\\worktrees\\scbench-codex-ab\\cymatix_context\\integrations\\scbench\\client.py\", line 197, in context_packet\n    payload = self._json_object(\n        self._client.post(\n    ...<12 lines>...\n        \"context packet\",\n    )\n  File \"F:\\Projects\\cymatix-context\\.claude\\worktrees\\scbench-codex-ab\\cymatix_context\\integrations\\scbench\\client.py\", line 63, in _json_object\n    response.raise_for_status()\n    ~~~~~~~~~~~~~~~~~~~~~~~~~^^\n  File \"F:\\Projects\\slop-code-bench-cymatix\\.venv\\Lib\\site-packages\\httpx\\_models.py\", line 829, in raise_for_status\n    raise HTTPStatusError(message, request=request, response=self)\nhttpx.HTTPStatusError: Server error '500 Internal Server Error' for url 'http://127.0.0.1:56837/context/packet'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"F:\\Projects\\slop-code-bench-cymatix\\src\\slop_code\\agent_runner\\agent.py\", line 411, in run_checkpoint\n    self.run(task)\n    ~~~~~~~~^^^^^^\n  File \"F:\\Projects\\cymatix-context\\.claude\\worktrees\\scbench-codex-ab\\cymatix_context\\integrations\\scbench\\agent.py\", line 199, in run\n    prepared = coordinator.before_checkpoint(task)\n  File \"F:\\Projects\\cymatix-context\\.claude\\worktrees\\scbench-codex-ab\\cymatix_context\\integrations\\scbench\\coordinator.py\", line 361, in before_checkpoint\n    raise self._invalidate(\"packet\", exc) from exc\ncymatix_context.integrations.scbench.coordinator.TreatmentInvalidError: packet failure: Server error '500 Internal Server Error' for url 'http://127.0.0.1:56837/context/packet'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500\n",
+  "had_error": true,
+  "snapshot_dir": "snapshot",
+  "started": "2026-08-10T04:23:06.701894",
+  "usage": {
+    "cost": 0.0,
+    "current_tokens": {
+      "cache_read": 0,
+      "cache_write": 0,
+      "input": 0,
+      "output": 0,
+      "reasoning": 0
+    },
+    "net_tokens": {
+      "cache_read": 0,
+      "cache_write": 0,
+      "input": 0,
+      "output": 0,
+      "reasoning": 0
+    },
+    "steps": 0
+  }
+}
