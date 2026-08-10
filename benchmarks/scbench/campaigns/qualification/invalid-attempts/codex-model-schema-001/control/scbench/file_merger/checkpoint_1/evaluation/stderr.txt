@@ -1,0 +1,20 @@
+error: unrecognized subcommand 'init'
+
+  tip: a similar subcommand exists: 'init'
+
+Usage: uv [OPTIONS] <COMMAND>
+
+For more information, try '--help'.
+error: No `pyproject.toml` found in current directory or any parent directory
+HANDLE_ENTRY.sh: line 4: $'\r': command not found
+HANDLE_ENTRY.sh: line 5: $'\r': command not found
+Downloading pygments (1.2MiB)
+Downloading pyarrow (47.8MiB)
+ Downloaded pygments
+ Downloaded pyarrow
+Installed 20 packages in 55ms
+ERROR: usage: pytest [options] [file_or_dir] [file_or_dir] [...]
+pytest: error: unrecognized arguments: --checkpoint=checkpoint_1
+  inifile: /workspace/pytest.ini
+  rootdir: /workspace
+
