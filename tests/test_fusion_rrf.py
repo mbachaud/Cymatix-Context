@@ -437,30 +437,104 @@ def test_rrf_overhead_under_two_ms():
     )
 
 
-def test_rrf_pure_fuser_under_synthetic_worst_case():
-    """Soft ceiling on synthetic worst-case (not a §12 contract).
+# ─── Synthetic worst-case soft ceiling (self-calibrating) ─────────────
 
-    12 tiers × 500 ids each, weights varied, then top_k(12). This is
-    the upper-bound shape from spec §12 — most real queries hit 6 or
-    fewer tiers with 50-100 ids. We allow 8ms here so flaky CI doesn't
-    break the suite while still catching gross regressions.
+# The Fuser's worst-case cost is dominated by the per-tier
+# ``sorted(ranked_ids, key=(-score, gene_id))`` that ``add_tier`` has to do
+# anyway. Gating on *that* instead of on an absolute millisecond count makes
+# the ceiling machine- and load-independent: a busy box inflates the Fuser and
+# the bare sort by the same factor, so the ratio holds where a wall-clock
+# number does not.
+#
+# Measured 2026-08-09 (16-core win32, CPython) over 50 estimator runs spanning
+# idle and full CPU saturation: ratio 2.00-2.08, stdev 0.02. The same box
+# failed the old ``p50 <= 8ms`` gate on 9 of 10 runs under that load.
+#
+# 3.0 leaves ~44% headroom over the worst observed sample and trips on a
+# >=1.5x regression (two extra sort passes, a per-tier ``top_k``, an O(n*m)
+# accumulate). A single redundant sort — 1.28x — slips through; that is below
+# what any timing test at this data size resolves, and the old absolute gate
+# did not catch it either. Widen the data shape, not this constant, if you
+# need a finer floor.
+_FUSER_SORT_RATIO_CEILING = 3.0
+
+
+def _sort_key(pair):
+    """Mirror of ``Fuser.add_tier``'s internal ordering."""
+    return (-float(pair[1]), str(pair[0]))
+
+
+def _worst_case_tiers():
+    """12 tiers × 500 ids from a 2000-id pool — the spec §12 upper-bound shape.
+
+    Built once, *outside* every timed region. The previous version paid
+    ``rng.sample`` + score generation inside the clock, which measured ~35% of
+    the reported number and contributed most of its variance.
     """
     rng = random.Random(0xC0FFEE)
     pool = [f"g-{i:04d}" for i in range(2000)]
-    samples = []
-    for _trial in range(30):
-        f = Fuser(k=60)
-        t0 = time.perf_counter_ns()
-        for tier_idx in range(12):
-            tier_pool = rng.sample(pool, 500)
-            ranked = [(gid, rng.random()) for gid in tier_pool]
-            f.add_tier(f"t{tier_idx}", ranked, weight=1.0 + tier_idx * 0.1)
-        f.top_k(12)
-        samples.append((time.perf_counter_ns() - t0) / 1e6)
-    samples.sort()
-    p50 = samples[len(samples) // 2]
-    assert p50 <= 8.0, (
-        f"synthetic worst-case Fuser p50 {p50:.3f}ms regressed beyond 8ms"
+    return [
+        [(gid, rng.random()) for gid in rng.sample(pool, 500)]
+        for _ in range(12)
+    ]
+
+
+def _time_fuser_ms(tiers):
+    f = Fuser(k=60)
+    t0 = time.perf_counter_ns()
+    for tier_idx, ranked in enumerate(tiers):
+        f.add_tier(f"t{tier_idx}", ranked, weight=1.0 + tier_idx * 0.1)
+    f.top_k(12)
+    return (time.perf_counter_ns() - t0) / 1e6
+
+
+def _time_baseline_sort_ms(tiers):
+    """Calibration op: only the sorts ``add_tier`` must perform, no RRF math.
+
+    Same data, same key, same process, adjacent in time — so it absorbs
+    whatever this machine and this moment's load are doing to ``sorted``.
+    """
+    t0 = time.perf_counter_ns()
+    for ranked in tiers:
+        sorted(ranked, key=_sort_key)
+    return (time.perf_counter_ns() - t0) / 1e6
+
+
+def test_rrf_pure_fuser_under_synthetic_worst_case():
+    """Soft ceiling on synthetic worst-case (not a §12 contract).
+
+    12 tiers × 500 ids each, weights varied, then top_k(12) — the upper-bound
+    shape from spec §12; most real queries hit 6 or fewer tiers with 50-100
+    ids. Asserts the Fuser stays within a fixed multiple of its own sort cost
+    rather than within an absolute millisecond budget, which is what let this
+    test flake under unrelated machine load.
+    """
+    tiers = _worst_case_tiers()
+
+    # Warm-up. The first ~10 iterations run measurably cold and were the sole
+    # source of the >2.4 ratio outliers seen while tuning this ceiling.
+    for _ in range(15):
+        _time_fuser_ms(tiers)
+        _time_baseline_sort_ms(tiers)
+
+    # Best-of-N, not p50. Both quantities are deterministic pure-CPU work, so
+    # interference is strictly additive and the minimum is the cleanest
+    # estimator of true cost. Taking it on both sides cancels the scheduler.
+    # (A per-trial paired ratio was tried and is worse — it pairs one side's
+    # clean sample against the other's dirty one, reaching 0.15 under load.)
+    fuser_ms = min(_time_fuser_ms(tiers) for _ in range(20))
+    sort_ms = min(_time_baseline_sort_ms(tiers) for _ in range(20))
+    ratio = fuser_ms / sort_ms
+
+    assert ratio <= _FUSER_SORT_RATIO_CEILING, (
+        f"synthetic worst-case Fuser cost {ratio:.2f}x its own sort budget, "
+        f"ceiling {_FUSER_SORT_RATIO_CEILING:.1f}x "
+        f"(fuser={fuser_ms:.3f}ms sort={sort_ms:.3f}ms). The absolute ms here "
+        f"is machine-dependent, the ratio is not — this is a real regression."
+    )
+    print(
+        f"Fuser worst-case: {fuser_ms:.3f}ms vs {sort_ms:.3f}ms sort baseline "
+        f"= {ratio:.2f}x (ceiling {_FUSER_SORT_RATIO_CEILING:.1f}x)"
     )
 
 
