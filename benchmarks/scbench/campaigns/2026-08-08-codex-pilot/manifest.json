@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "campaign_id": "2026-08-08-codex-pilot",
-  "cymatix_commit": "03aaf061066df93ca8dab35826bf1c92c270578b",
+  "cymatix_commit": "0b125eabebb03c3566befa81be94443119877abd",
   "scbench_commit": "2a2460544cb5cde1f7562cb52aae4ece898c3562",
   "codex_version": "codex-cli 0.147.0",
   "codex_model": "gpt-5.6-luna",
