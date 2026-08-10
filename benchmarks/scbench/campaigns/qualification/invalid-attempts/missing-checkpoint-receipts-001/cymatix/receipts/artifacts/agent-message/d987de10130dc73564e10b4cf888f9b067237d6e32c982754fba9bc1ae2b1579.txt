@@ -1,0 +1,7 @@
+Implemented and verified:
+
+- [merge_files.py](/workspace/merge_files.py)
+- [requirements.txt](/workspace/requirements.txt)
+- Virtual environment: `/workspace/.venv`
+
+Includes schema inference, casting, null handling, stable composite sorting, external merge runs, custom CSV options, timestamp normalization, and cleanup.

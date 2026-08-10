@@ -216,6 +216,22 @@ class CymatixCodexAgent(CodexAgent):
             "schema_version": 1,
             "session_id": coordinator.session_id,
             "checkpoint": prepared.checkpoint_index,
+            "warmup_elapsed_ms": coordinator.warmup_elapsed_ms,
+            "initial_sync": (
+                coordinator.initial_sync.model_dump(mode="json")
+                if coordinator.initial_sync is not None
+                else None
+            ),
+            "sync": (
+                coordinator.last_sync.model_dump(mode="json")
+                if coordinator.last_sync is not None
+                else None
+            ),
+            "retrieval": (
+                prepared.retrieval.model_dump(mode="json")
+                if prepared.retrieval is not None
+                else None
+            ),
             "prompt": prepared.prompt_artifact.model_dump(mode="json"),
             "query": (
                 prepared.query_artifact.model_dump(mode="json")

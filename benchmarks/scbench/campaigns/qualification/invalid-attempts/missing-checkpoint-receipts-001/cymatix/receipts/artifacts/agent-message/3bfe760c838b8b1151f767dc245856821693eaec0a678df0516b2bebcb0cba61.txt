@@ -1,0 +1,11 @@
+Implemented partitioned and sharded output in `merge_files.py`, including:
+
+- Hive-style field partitions with percent-encoding and `_null`
+- Row- and byte-based file splitting
+- Deterministic `part-xxxxx.csv` naming
+- Global/per-partition sorting
+- Atomic directory writes and cleanup on failure
+- Inline or file-based schema JSON
+- Memory-conscious external merge behavior
+
+No new dependencies were required; `requirements.txt` remains unchanged.

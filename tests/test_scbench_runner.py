@@ -22,6 +22,12 @@ from cymatix_context.integrations.scbench.runner import (
     PreflightError,
     build_scbench_command,
 )
+from cymatix_context.integrations.scbench.receipts import (
+    ArmReceipt,
+    CheckpointReceipt,
+    verify_receipt_tree,
+    write_artifact,
+)
 
 
 CYMATIX_HEAD = "1" * 40
@@ -180,6 +186,7 @@ class FakeCommandRunner:
         self.rate_limit_arms: set[str] = set()
         self.reported_error_arms: set[str] = set()
         self.infrastructure_failure_arms: set[str] = set()
+        self.omit_retrieval_checkpoints: set[int] = set()
         self.cymatix_head = CYMATIX_HEAD
         self.scbench_head = SCBENCH_HEAD
         self.cymatix_status = ""
@@ -294,9 +301,25 @@ class FakeCommandRunner:
         run_root = Path(save_dir) / save_template
         problem_root = run_root / "file_backup"
         problem_root.mkdir(parents=True)
+        checkpoint_results = []
+        for index in (1, 2):
+            checkpoint_results.append(
+                {
+                    "checkpoint": f"checkpoint_{index}",
+                    "strict_pass_rate": 1.0,
+                    "isolated_pass_rate": 1.0,
+                    "erosion": 0.01 * index,
+                    "verbosity": 0.02 * index,
+                    "started": f"2026-08-10T12:00:0{index}Z",
+                    "ended": f"2026-08-10T12:00:1{index}Z",
+                    "duration": 10.0,
+                    "input": 100 * index,
+                    "output": 20 * index,
+                    "cache_read": 50 * index,
+                }
+            )
         (run_root / "checkpoint_results.jsonl").write_text(
-            '{"checkpoint":"checkpoint_1"}\n'
-            '{"checkpoint":"checkpoint_2"}\n',
+            "".join(json.dumps(item) + "\n" for item in checkpoint_results),
             encoding="utf-8",
         )
         (problem_root / "run_info.yaml").write_text(
@@ -318,7 +341,21 @@ class FakeCommandRunner:
             (checkpoint / "snapshot").mkdir(parents=True)
             agent_dir.mkdir()
             (checkpoint / "inference_result.json").write_text(
-                json.dumps({"had_error": arm in self.reported_error_arms}),
+                json.dumps(
+                    {
+                        "had_error": arm in self.reported_error_arms,
+                        "started": f"2026-08-10T12:00:0{index}Z",
+                        "completed": f"2026-08-10T12:00:1{index}Z",
+                        "elapsed": 10.0,
+                        "usage": {
+                            "current_tokens": {
+                                "input": 100 * index,
+                                "output": 20 * index,
+                                "cache_read": 50 * index,
+                            }
+                        },
+                    }
+                ),
                 encoding="utf-8",
             )
             infrastructure_failure = arm in self.infrastructure_failure_arms
@@ -348,8 +385,86 @@ class FakeCommandRunner:
             (agent_dir / "stdout.jsonl").write_text("{}\n", encoding="utf-8")
             (agent_dir / "stderr.log").write_text("", encoding="utf-8")
             if arm == "cymatix":
+                receipt_root = Path(
+                    next(
+                        value.split("=", 1)[1]
+                        for value in command
+                        if value.startswith("agent.receipt_root=")
+                    )
+                )
+                prompt_ref = write_artifact(
+                    receipt_root,
+                    "prompt",
+                    prompt,
+                    media_type="text/plain",
+                )
+                retrieval = None
+                if index > 1 and index not in self.omit_retrieval_checkpoints:
+                    query_ref = write_artifact(
+                        receipt_root,
+                        "query",
+                        "bounded query",
+                        media_type="text/plain",
+                    )
+                    packet_ref = write_artifact(
+                        receipt_root,
+                        "packet",
+                        "{}",
+                        media_type="application/json",
+                    )
+                    rendered_ref = write_artifact(
+                        receipt_root,
+                        "rendered-packet",
+                        '<cymatix_context version="1">prior constraint</cymatix_context>',
+                        media_type="text/plain",
+                    )
+                    retrieval = {
+                        "query_artifact": query_ref.model_dump(mode="json"),
+                        "query_sha256": query_ref.sha256,
+                        "packet_artifact": packet_ref.model_dump(mode="json"),
+                        "packet_sha256": packet_ref.sha256,
+                        "rendered_artifact": rendered_ref.model_dump(mode="json"),
+                        "rendered_token_count": 12,
+                        "tokenizer": "o200k_base",
+                        "latency_ms": 17,
+                        "items": [],
+                        "deleted_source_filtered": ["repo://file-backup/deleted.py"],
+                        "budget_dropped": [],
+                    }
+                sync = {
+                    "pre_manifest_hash": str(index - 1) * 64,
+                    "post_manifest_hash": str(index) * 64,
+                    "genome_id": "campaign-1:file-backup-r1:1:file-backup",
+                    "pre_genome_checksum": "3" * 64,
+                    "post_genome_checksum": "4" * 64,
+                    "ingested": 1,
+                    "skipped": 0,
+                    "deleted_source_ids": [],
+                    "latency_ms": 12,
+                    "verified": True,
+                }
                 (agent_dir / "cymatix-receipt-refs.json").write_text(
-                    json.dumps({"checkpoint": index}),
+                    json.dumps(
+                        {
+                            "schema_version": 1,
+                            "session_id": "campaign-1:file-backup-r1:1:file-backup",
+                            "checkpoint": index,
+                            "warmup_elapsed_ms": 9,
+                            "initial_sync": {
+                                **sync,
+                                "pre_manifest_hash": "a" * 64,
+                                "post_manifest_hash": "b" * 64,
+                            },
+                            "sync": sync,
+                            "retrieval": retrieval,
+                            "prompt": prompt_ref.model_dump(mode="json"),
+                            "query": retrieval["query_artifact"] if retrieval else None,
+                            "packet": retrieval["packet_artifact"] if retrieval else None,
+                            "rendered_packet": (
+                                retrieval["rendered_artifact"] if retrieval else None
+                            ),
+                        }
+                    ),
                     encoding="utf-8",
                 )
 
@@ -704,6 +819,63 @@ def test_verify_receipts_detects_log_tampering(layout):
 
     with pytest.raises(PairInvalidError, match="hash mismatch"):
         runner.verify_receipts()
+
+
+def test_pair_persists_replayable_checkpoint_receipt_tree(layout):
+    """A pair-only receipt cannot prove prompt, retrieval, sync, or score cells."""
+    fake = FakeCommandRunner(layout)
+    runner = _runner(layout, fake)
+    runner.preflight()
+
+    runner.run_pair(PairSpec(problem="file-backup", replicate=1))
+    runner.verify_receipts()
+
+    receipt_root = layout.output_root / "file-backup-r1" / "receipt-tree"
+    replayed = verify_receipt_tree(receipt_root)
+    checkpoints = [
+        item for item in replayed if isinstance(item, CheckpointReceipt)
+    ]
+    arms = [item for item in replayed if isinstance(item, ArmReceipt)]
+    assert len(checkpoints) == 4
+    assert len(arms) == 2
+    control_cp1 = next(
+        item
+        for item in checkpoints
+        if item.arm == "control" and item.checkpoint == 1
+    )
+    treatment_cp1 = next(
+        item
+        for item in checkpoints
+        if item.arm == "cymatix" and item.checkpoint == 1
+    )
+    treatment_cp2 = next(
+        item
+        for item in checkpoints
+        if item.arm == "cymatix" and item.checkpoint == 2
+    )
+    assert control_cp1.prompt_artifact.sha256 == treatment_cp1.prompt_artifact.sha256
+    assert treatment_cp2.retrieval is not None
+    assert treatment_cp2.retrieval.latency_ms == 17
+    assert treatment_cp2.retrieval.rendered_token_count == 12
+    assert treatment_cp2.sync is not None and treatment_cp2.sync.verified is True
+
+
+def test_pair_rejects_missing_treatment_retrieval_receipt(layout):
+    """A later treatment checkpoint without retrieval telemetry is not replayable."""
+    fake = FakeCommandRunner(layout)
+    fake.omit_retrieval_checkpoints.add(2)
+    runner = _runner(layout, fake)
+    runner.preflight()
+
+    with pytest.raises(PairInvalidError, match="missing treatment retrieval"):
+        runner.run_pair(PairSpec(problem="file-backup", replicate=1))
+
+    pair = json.loads(
+        (layout.output_root / "file-backup-r1" / "pair.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert pair["valid"] is False
 
 
 def test_verify_receipts_detects_early_snapshot_tampering(layout):

@@ -200,9 +200,24 @@ class ArmReceipt(_FrozenModel):
     arm: Arm
     order_index: int = Field(ge=1, le=2)
     checkpoints: tuple[ArtifactRef, ...]
+    initial_sync: SyncReceipt | None = None
+    warmup_elapsed_ms: int | None = Field(default=None, ge=0)
     valid: bool
     invalidation_reason: str | None
     retry_of: str | None
+
+    @model_validator(mode="after")
+    def _validate_lifecycle_metadata(self) -> "ArmReceipt":
+        has_lifecycle = (
+            self.initial_sync is not None or self.warmup_elapsed_ms is not None
+        )
+        if self.arm == "control" and has_lifecycle:
+            raise ValueError("control arm cannot contain treatment lifecycle metadata")
+        if self.arm == "cymatix" and (
+            self.initial_sync is None or self.warmup_elapsed_ms is None
+        ):
+            raise ValueError("treatment arm requires initial sync and warm-up metadata")
+        return self
 
 
 class PairReceipt(_FrozenModel):

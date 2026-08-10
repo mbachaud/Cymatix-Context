@@ -1,0 +1,71 @@
+author: Gabriel Orlanski
+category: data-processing
+checkpoints:
+  checkpoint_1:
+    env: {}
+    include_prior_tests: true
+    name: checkpoint_1
+    order: 1
+    state: Core Tests
+    timeout: 10.0
+    version: 1
+  checkpoint_2:
+    env: {}
+    include_prior_tests: true
+    name: checkpoint_2
+    order: 2
+    state: Core Tests
+    timeout: 10.0
+    version: 1
+  checkpoint_3:
+    env: {}
+    include_prior_tests: true
+    name: checkpoint_3
+    order: 3
+    state: Core Tests
+    timeout: 10.0
+    version: 1
+  checkpoint_4:
+    env: {}
+    include_prior_tests: true
+    name: checkpoint_4
+    order: 4
+    state: Core Tests
+    timeout: 10.0
+    version: 1
+description: 'CLI that merges data files (CSV, TSV, JSONL, Parquet) into sorted,
+
+  partitioned CSV output. Handles schema alignment, compression, and
+
+  external sorting. Adds Hive-style partitioning, file sharding, and
+
+  nested type support.
+
+  '
+design_doc: design_doc.md
+difficulty: Medium
+entry_file: merge_files
+env: {}
+inspiration: null
+markers: {}
+name: file_merger
+path: C:\Users\max\.cache\scbench\problems\file_merger
+static_assets: {}
+tags:
+- csv
+- tsv
+- jsonl
+- parquet
+- cli-tools
+- schema-resolution
+- type-inference
+- external-sorting
+- memory-constrained
+- partitioning
+- nested-types
+- etl-pipeline
+test_dependencies:
+- pyyaml
+- pyarrow
+timeout: 10.0
+version: 1

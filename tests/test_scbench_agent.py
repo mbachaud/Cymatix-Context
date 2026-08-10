@@ -21,7 +21,11 @@ from cymatix_context.integrations.scbench.agent import (
 )
 import cymatix_context.integrations.scbench.agent as agent_mod
 from cymatix_context.integrations.scbench.coordinator import PreparedPrompt
-from cymatix_context.integrations.scbench.receipts import ArtifactRef
+from cymatix_context.integrations.scbench.receipts import (
+    ArtifactRef,
+    RetrievalReceipt,
+    SyncReceipt,
+)
 
 
 def _artifact(path: str, digest: str) -> ArtifactRef:
@@ -34,6 +38,9 @@ def _artifact(path: str, digest: str) -> ArtifactRef:
 
 
 def _prepared() -> PreparedPrompt:
+    query = _artifact("artifacts/query/b.txt", "b" * 64)
+    packet = _artifact("artifacts/packet/c.json", "c" * 64)
+    rendered = _artifact("artifacts/rendered-packet/d.txt", "d" * 64)
     return PreparedPrompt(
         original_prompt="cp2",
         prompt=(
@@ -43,11 +50,19 @@ def _prepared() -> PreparedPrompt:
         packet=None,
         checkpoint_index=2,
         prompt_artifact=_artifact("artifacts/prompt/a.txt", "a" * 64),
-        query_artifact=_artifact("artifacts/query/b.txt", "b" * 64),
-        packet_artifact=_artifact("artifacts/packet/c.json", "c" * 64),
-        rendered_packet_artifact=_artifact(
-            "artifacts/rendered-packet/d.txt",
-            "d" * 64,
+        query_artifact=query,
+        packet_artifact=packet,
+        rendered_packet_artifact=rendered,
+        retrieval=RetrievalReceipt(
+            query_artifact=query,
+            query_sha256=query.sha256,
+            packet_artifact=packet,
+            packet_sha256=packet.sha256,
+            rendered_artifact=rendered,
+            rendered_token_count=321,
+            tokenizer="o200k_base",
+            latency_ms=17,
+            deleted_source_filtered=("repo://p/deleted.py",),
         ),
     )
 
@@ -60,6 +75,9 @@ class FakeCoordinator:
         self.finished = 0
         self.closed = False
         self.session_id = "campaign:file-backup-r1:1:file-backup"
+        self.warmup_elapsed_ms = 9
+        self.initial_sync = _sync("0", "1")
+        self.last_sync = _sync("1", "2")
 
     def before_checkpoint(self, prompt):
         self.before_prompts.append(prompt)
@@ -73,6 +91,20 @@ class FakeCoordinator:
 
     def close(self):
         self.closed = True
+
+
+def _sync(before: str, after: str) -> SyncReceipt:
+    return SyncReceipt(
+        pre_manifest_hash=before * 64,
+        post_manifest_hash=after * 64,
+        genome_id="campaign:file-backup-r1:1:file-backup",
+        pre_genome_checksum="3" * 64,
+        post_genome_checksum="4" * 64,
+        ingested=1,
+        skipped=0,
+        latency_ms=12,
+        verified=True,
+    )
 
 
 def _adapter(tmp_path: Path) -> CymatixCodexAgent:
@@ -227,6 +259,14 @@ def test_save_artifacts_keeps_native_files_and_adds_only_receipt_refs(tmp_path):
     assert references["session_id"] == agent.coordinator.session_id
     assert references["checkpoint"] == 2
     assert references["prompt"]["sha256"] == "a" * 64
+    assert references["warmup_elapsed_ms"] == 9
+    assert references["initial_sync"]["verified"] is True
+    assert references["sync"]["post_manifest_hash"] == "2" * 64
+    assert references["retrieval"]["latency_ms"] == 17
+    assert references["retrieval"]["rendered_token_count"] == 321
+    assert references["retrieval"]["deleted_source_filtered"] == [
+        "repo://p/deleted.py"
+    ]
     assert "prior constraint" not in serialized
 
 

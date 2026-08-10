@@ -1,0 +1,2 @@
+# Required for streamed Parquet row-group reads.
+pyarrow>=12

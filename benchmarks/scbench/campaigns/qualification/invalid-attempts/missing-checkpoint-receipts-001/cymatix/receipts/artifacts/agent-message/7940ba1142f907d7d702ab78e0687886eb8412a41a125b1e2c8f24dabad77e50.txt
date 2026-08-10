@@ -1,0 +1,3 @@
+Implemented nested types, recursive casting, canonical JSON output, aliases, nested field paths, nested key/partition validation, JSONL/Parquet handling, and error code 4 support in `merge_files.py`.
+
+Verified with compilation and end-to-end nested JSONL/CSV tests. No new dependencies were required.

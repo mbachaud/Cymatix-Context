@@ -1,0 +1,1 @@
+{"manifest_hash":"1d878294eb36873b115aed5b2b3167b55515e63e5a70a7668458eff3219c474b","problem":"file-merger","sources":[{"content_type":"code","relative_path":"merge_files.py","sha256":"ca07bb1b14f11caba53f97e4bf6ea8e1c70dc44954656e7a0a82e516dbc9065a","size_bytes":10584,"source_id":"repo://file-merger/merge_files.py"}]}

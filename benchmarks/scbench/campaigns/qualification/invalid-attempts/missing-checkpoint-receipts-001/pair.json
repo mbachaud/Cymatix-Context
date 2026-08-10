@@ -1,0 +1,20 @@
+{
+  "arms": {
+    "control": "pairs/file-merger-r2/control/attempt-001.json",
+    "cymatix": "pairs/file-merger-r2/cymatix/attempt-001.json"
+  },
+  "campaign_id": "qualification",
+  "config_hash": "ae23d57fb9076d73e6c572691bd6c34f7a89aeafc2297615200cfe8be7b8b3dc",
+  "generated_at": "2026-08-10T12:24:51.660975+00:00",
+  "invalidation_reason": null,
+  "order": [
+    "cymatix",
+    "control"
+  ],
+  "pair_id": "file-merger-r2",
+  "problem": "file-merger",
+  "receipt_type": "pair_run",
+  "replicate": 2,
+  "schema_version": 1,
+  "valid": true
+}

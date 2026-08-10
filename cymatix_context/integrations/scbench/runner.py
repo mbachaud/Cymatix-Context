@@ -6,6 +6,7 @@ import hashlib
 import json
 import logging
 import os
+import platform
 import shutil
 import subprocess
 import sys
@@ -18,6 +19,20 @@ import yaml
 from pydantic import BaseModel, ConfigDict
 
 from .config import Arm, CampaignConfig, PairSpec
+from .receipts import (
+    ArmReceipt,
+    ArtifactRef,
+    CheckpointReceipt,
+    CodexReceipt,
+    HostObservation,
+    PairReceipt as EvidencePairReceipt,
+    RetrievalReceipt,
+    ScoreReceipt,
+    SyncReceipt,
+    atomic_write_receipt,
+    verify_receipt_tree,
+    write_artifact,
+)
 
 
 log = logging.getLogger("cymatix.scbench.runner")
@@ -779,6 +794,331 @@ class CampaignRunner:
             evidence[files_hash_key] = _sha256_bytes(snapshot_manifest)
         return evidence
 
+    def _host_observation(self) -> HostObservation:
+        fingerprint = "|".join(
+            (
+                platform.system(),
+                platform.release(),
+                platform.machine(),
+                platform.python_version(),
+            )
+        )
+        try:
+            import psutil
+
+            cpu_percent = float(psutil.cpu_percent(interval=None))
+            memory_percent = float(psutil.virtual_memory().percent)
+            pressure = max(cpu_percent, memory_percent)
+            load: Literal["idle", "normal", "busy", "unknown"] = (
+                "idle" if pressure < 25 else "normal" if pressure < 75 else "busy"
+            )
+        except Exception:
+            log.warning("host load observation unavailable", exc_info=True)
+            cpu_percent = None
+            memory_percent = None
+            load = "unknown"
+        return HostObservation(
+            fingerprint=fingerprint,
+            load=load,
+            cpu_percent=cpu_percent,
+            memory_percent=memory_percent,
+        )
+
+    @staticmethod
+    def _receipt_file_ref(root: Path, path: Path) -> ArtifactRef:
+        payload = path.read_bytes()
+        return ArtifactRef(
+            path=path.relative_to(root).as_posix(),
+            sha256=_sha256_bytes(payload),
+            size_bytes=len(payload),
+            media_type="application/json",
+        )
+
+    @staticmethod
+    def _copy_retrieval_artifact(
+        source_root: Path,
+        receipt_root: Path,
+        category: str,
+        raw: Any,
+    ) -> ArtifactRef:
+        reference = ArtifactRef.model_validate(raw)
+        source = source_root.joinpath(*Path(reference.path).parts).resolve()
+        resolved_root = source_root.resolve()
+        if not source.is_relative_to(resolved_root) or not source.is_file():
+            raise PairInvalidError(f"treatment artifact is missing: {reference.path}")
+        payload = source.read_bytes()
+        if (
+            _sha256_bytes(payload) != reference.sha256
+            or len(payload) != reference.size_bytes
+        ):
+            raise PairInvalidError(
+                f"treatment artifact hash mismatch: {reference.path}"
+            )
+        return write_artifact(
+            receipt_root,
+            category,
+            payload,
+            media_type=reference.media_type,
+        )
+
+    @staticmethod
+    def _snapshot_manifest(snapshot: Path) -> bytes:
+        entries = {
+            path.relative_to(snapshot).as_posix(): _sha256_file(path)
+            for path in sorted(snapshot.rglob("*"))
+            if path.is_file()
+        }
+        return _canonical_json(entries)
+
+    @staticmethod
+    def _rate_limit_events(stdout_path: Path) -> tuple[str, ...]:
+        markers = ("429", "rate limit", "rate_limit", "usage limit")
+        events: list[str] = []
+        for line in stdout_path.read_text(
+            encoding="utf-8", errors="replace"
+        ).splitlines():
+            folded = line.casefold()
+            if not any(marker in folded for marker in markers):
+                continue
+            try:
+                event = json.loads(line)
+            except Exception:
+                log.warning("malformed Codex rate-limit event", exc_info=True)
+                event = line
+            if isinstance(event, dict):
+                reached = event.get("rate_limit_reached_type")
+                if reached:
+                    events.append(str(reached))
+            elif "429" in folded or "usage limit" in folded:
+                events.append(str(event)[:500])
+        return tuple(events)
+
+    def _write_checkpoint_receipts(
+        self,
+        pair: PairSpec,
+        arm: Arm,
+        run_root: Path,
+        *,
+        retry_of: str | None,
+    ) -> ArmReceipt:
+        pair_root = self.output_root / _pair_id(pair)
+        receipt_root = pair_root / "receipt-tree"
+        checkpoint_root = receipt_root / "checkpoints"
+        checkpoint_root.mkdir(parents=True, exist_ok=True)
+        result_rows: dict[str, dict[str, Any]] = {}
+        for line in (run_root / "checkpoint_results.jsonl").read_text(
+            encoding="utf-8"
+        ).splitlines():
+            if not line.strip():
+                continue
+            row = json.loads(line)
+            if not isinstance(row, dict) or not isinstance(row.get("checkpoint"), str):
+                raise PairInvalidError("checkpoint result row is invalid")
+            result_rows[row["checkpoint"]] = row
+
+        preflight = PreflightReceipt.model_validate(
+            _load_json(self.campaign_root / "preflight.json")
+        )
+        image_digest = str(preflight.observed.get("docker_image_digest", ""))
+        if not image_digest:
+            raise PairInvalidError("preflight omitted Docker image digest")
+        host = self._host_observation()
+        problem_root = run_root / _problem_slug(pair.problem)
+        source_receipt_root = run_root.parent / "receipts"
+        checkpoint_refs: list[ArtifactRef] = []
+        initial_sync: SyncReceipt | None = None
+        warmup_elapsed_ms: int | None = None
+        order_index = self.campaign.arm_order(pair.replicate).index(arm) + 1
+
+        for index, checkpoint_name in enumerate(
+            self._checkpoint_names(pair.problem), start=1
+        ):
+            result = result_rows.get(checkpoint_name)
+            if result is None:
+                raise PairInvalidError(f"missing result row: {checkpoint_name}")
+            checkpoint = problem_root / checkpoint_name
+            agent = checkpoint / "agent"
+            inference = _load_json(checkpoint / "inference_result.json")
+            prompt_ref = write_artifact(
+                receipt_root,
+                "prompt",
+                (agent / "prompt.txt").read_bytes(),
+                media_type="text/plain",
+            )
+            codex_ref = write_artifact(
+                receipt_root,
+                "codex-output",
+                (agent / "stdout.jsonl").read_bytes(),
+                media_type="application/jsonl",
+            )
+            score_ref = write_artifact(
+                receipt_root,
+                "score",
+                _canonical_json(result),
+                media_type="application/json",
+            )
+            workspace_ref = write_artifact(
+                receipt_root,
+                "workspace-manifest",
+                self._snapshot_manifest(checkpoint / "snapshot"),
+                media_type="application/json",
+            )
+
+            sync: SyncReceipt | None = None
+            retrieval: RetrievalReceipt | None = None
+            if arm == "cymatix":
+                references = _load_json(agent / "cymatix-receipt-refs.json")
+                if references.get("checkpoint") != index:
+                    raise PairInvalidError(
+                        f"treatment receipt checkpoint mismatch: {checkpoint_name}"
+                    )
+                adapter_prompt = self._copy_retrieval_artifact(
+                    source_receipt_root,
+                    receipt_root,
+                    "adapter-prompt",
+                    references.get("prompt"),
+                )
+                normalized_prompt = (
+                    (agent / "prompt.txt")
+                    .read_text(encoding="utf-8")
+                    .replace("\r\n", "\n")
+                    .replace("\r", "\n")
+                    .encode("utf-8")
+                )
+                if _sha256_bytes(normalized_prompt) != adapter_prompt.sha256:
+                    raise PairInvalidError(
+                        f"treatment prompt reference mismatch: {checkpoint_name}"
+                    )
+                observed_initial_sync = SyncReceipt.model_validate(
+                    references.get("initial_sync")
+                )
+                observed_warmup_ms = int(references["warmup_elapsed_ms"])
+                if initial_sync is None:
+                    initial_sync = observed_initial_sync
+                    warmup_elapsed_ms = observed_warmup_ms
+                elif (
+                    observed_initial_sync != initial_sync
+                    or observed_warmup_ms != warmup_elapsed_ms
+                ):
+                    raise PairInvalidError(
+                        "treatment initial sync or warm-up changed between checkpoints"
+                    )
+                sync = SyncReceipt.model_validate(references.get("sync"))
+                raw_retrieval = references.get("retrieval")
+                if index == 1 and raw_retrieval is not None:
+                    raise PairInvalidError(
+                        "checkpoint 1 cannot contain treatment retrieval metadata"
+                    )
+                if index > 1 and raw_retrieval is None:
+                    raise PairInvalidError(
+                        f"missing treatment retrieval receipt: {checkpoint_name}"
+                    )
+                if raw_retrieval is not None:
+                    if not isinstance(raw_retrieval, dict):
+                        raise PairInvalidError("treatment retrieval receipt is invalid")
+                    retrieval_data = dict(raw_retrieval)
+                    retrieval_data["query_artifact"] = self._copy_retrieval_artifact(
+                        source_receipt_root,
+                        receipt_root,
+                        "retrieval-query",
+                        retrieval_data.get("query_artifact"),
+                    ).model_dump(mode="json")
+                    retrieval_data["packet_artifact"] = self._copy_retrieval_artifact(
+                        source_receipt_root,
+                        receipt_root,
+                        "retrieval-packet",
+                        retrieval_data.get("packet_artifact"),
+                    ).model_dump(mode="json")
+                    retrieval_data["rendered_artifact"] = self._copy_retrieval_artifact(
+                        source_receipt_root,
+                        receipt_root,
+                        "rendered-packet",
+                        retrieval_data.get("rendered_artifact"),
+                    ).model_dump(mode="json")
+                    retrieval_data["query_sha256"] = retrieval_data[
+                        "query_artifact"
+                    ]["sha256"]
+                    retrieval_data["packet_sha256"] = retrieval_data[
+                        "packet_artifact"
+                    ]["sha256"]
+                    retrieval = RetrievalReceipt.model_validate(retrieval_data)
+
+            usage = inference.get("usage", {}).get("current_tokens", {})
+            codex = CodexReceipt(
+                exit_status=0,
+                input_tokens=int(result.get("input", usage.get("input", 0))),
+                output_tokens=int(result.get("output", usage.get("output", 0))),
+                cached_input_tokens=int(
+                    result.get("cache_read", usage.get("cache_read", 0))
+                ),
+                rate_limit_events=self._rate_limit_events(agent / "stdout.jsonl"),
+                result_artifact=codex_ref,
+            )
+            score = ScoreReceipt(
+                strict_pass_rate=float(result["strict_pass_rate"]),
+                isolated_pass_rate=float(result["isolated_pass_rate"]),
+                erosion=float(result["erosion"]),
+                verbosity=float(result["verbosity"]),
+                raw_artifact=score_ref,
+            )
+            started_at = str(result.get("started", inference.get("started", "")))
+            ended_at = str(result.get("ended", inference.get("completed", "")))
+            elapsed_s = float(result.get("duration", inference.get("elapsed", 0)))
+            checkpoint_receipt = CheckpointReceipt(
+                campaign_id=self.campaign.campaign_id,
+                pair_id=_pair_id(pair),
+                replicate=pair.replicate,
+                arm=arm,
+                order_index=order_index,
+                problem=pair.problem,
+                checkpoint=index,
+                config_hash=self.campaign.config_hash(),
+                cymatix_commit=self.campaign.cymatix_commit,
+                scbench_commit=self.campaign.scbench_commit,
+                codex_version=self.campaign.codex_version,
+                codex_model=self.campaign.codex_model,
+                reasoning_effort=self.campaign.reasoning_effort,
+                image_digest=image_digest,
+                auth_type=self.campaign.auth_type,
+                host=host,
+                started_at=started_at,
+                ended_at=ended_at,
+                elapsed_ms=max(0, round(elapsed_s * 1000)),
+                workspace_manifest_hash=workspace_ref.sha256,
+                workspace_manifest_artifact=workspace_ref,
+                prompt_artifact=prompt_ref,
+                sync=sync,
+                retrieval=retrieval,
+                codex=codex,
+                score=score,
+                terminal_state="completed",
+                valid=True,
+                invalidation_reason=None,
+                retry_of=retry_of,
+            )
+            checkpoint_path = checkpoint_root / f"{arm}-checkpoint-{index}.json"
+            atomic_write_receipt(checkpoint_path, checkpoint_receipt)
+            checkpoint_refs.append(
+                self._receipt_file_ref(receipt_root, checkpoint_path)
+            )
+
+        arm_receipt = ArmReceipt(
+            campaign_id=self.campaign.campaign_id,
+            pair_id=_pair_id(pair),
+            problem=pair.problem,
+            replicate=pair.replicate,
+            arm=arm,
+            order_index=order_index,
+            checkpoints=tuple(checkpoint_refs),
+            initial_sync=initial_sync,
+            warmup_elapsed_ms=warmup_elapsed_ms,
+            valid=True,
+            invalidation_reason=None,
+            retry_of=retry_of,
+        )
+        atomic_write_receipt(receipt_root / f"{arm}.json", arm_receipt)
+        return arm_receipt
+
     def _checkpoint_count(self, problem: str) -> int:
         return len(self._checkpoint_names(problem))
 
@@ -991,6 +1331,54 @@ class CampaignRunner:
                 _write_json(pair_root / "pair.json", pair_receipt)
                 raise PairInvalidError(receipt.invalidation_reason or f"{arm} invalid")
 
+        try:
+            arm_receipts: dict[Arm, ArmReceipt] = {}
+            for arm in ("control", "cymatix"):
+                attempt_relative = arms[arm]
+                attempt_receipt = ArmAttemptReceipt.model_validate(
+                    _load_json(self.campaign_root / attempt_relative)
+                )
+                arm_receipts[arm] = self._write_checkpoint_receipts(
+                    pair,
+                    arm,
+                    self.campaign_root / attempt_receipt.output_path,
+                    retry_of=attempt_receipt.retry_of,
+                )
+            evidence_pair = EvidencePairReceipt(
+                campaign_id=self.campaign.campaign_id,
+                pair_id=_pair_id(pair),
+                problem=pair.problem,
+                replicate=pair.replicate,
+                order=order,
+                control=arm_receipts["control"],
+                cymatix=arm_receipts["cymatix"],
+                valid=True,
+                invalidation_reason=None,
+                retry_of=None,
+            )
+            atomic_write_receipt(
+                pair_root / "receipt-tree" / "pair.json",
+                evidence_pair,
+            )
+            verify_receipt_tree(pair_root / "receipt-tree")
+        except Exception as exc:
+            log.warning("checkpoint receipt assembly failed", exc_info=True)
+            invalidation = f"checkpoint receipt assembly failed: {exc}"
+            pair_receipt = PairRunReceipt(
+                campaign_id=self.campaign.campaign_id,
+                config_hash=self.campaign.config_hash(),
+                pair_id=_pair_id(pair),
+                problem=pair.problem,
+                replicate=pair.replicate,
+                order=order,
+                arms=arms,
+                valid=False,
+                invalidation_reason=invalidation,
+                generated_at=_now(),
+            )
+            _write_json(pair_root / "pair.json", pair_receipt)
+            raise PairInvalidError(invalidation) from exc
+
         pair_receipt = PairRunReceipt(
             campaign_id=self.campaign.campaign_id,
             config_hash=self.campaign.config_hash(),
@@ -1045,5 +1433,16 @@ class CampaignRunner:
                 if not attempt.valid or attempt.arm != arm:
                     raise PairInvalidError(f"invalid selected arm receipt: {attempt_path}")
                 self._verify_evidence_hashes(attempt.evidence_hashes)
+            replayed = verify_receipt_tree(path.parent / "receipt-tree")
+            checkpoint_receipts = [
+                receipt
+                for receipt in replayed
+                if isinstance(receipt, CheckpointReceipt)
+            ]
+            expected = self._checkpoint_count(pair.problem) * 2
+            if len(checkpoint_receipts) != expected:
+                raise PairInvalidError(
+                    f"checkpoint receipt count mismatch: {path}"
+                )
             verified.append(pair)
         return tuple(verified)

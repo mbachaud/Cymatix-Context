@@ -1,0 +1,127 @@
+{
+  "classes": {
+    "attribute_counts_mean": 0.75,
+    "attribute_counts_sum": 3,
+    "count": 4,
+    "method_counts_mean": 0.5,
+    "method_counts_sum": 2
+  },
+  "complexity": {
+    "cc_max": 69,
+    "cc_ratings": {
+      "A": 12,
+      "B": 5,
+      "C": 5,
+      "D": 2,
+      "E": 0,
+      "F": 1
+    },
+    "cc_sum": 242,
+    "mi_min": 0.0,
+    "mi_ratings": {
+      "A": 0,
+      "B": 0,
+      "C": 1
+    },
+    "mi_sum": 0.0,
+    "num_complex": 8
+  },
+  "file_count": 1,
+  "functions": {
+    "cc_concentration": 0.5041322314049587,
+    "cc_extreme_count": 1,
+    "cc_high_count": 8,
+    "cc_max": 69,
+    "cc_mean": 12.1,
+    "cc_normalized": 0.07638606796343361,
+    "cc_std": 14.955724128591244,
+    "cc_sum": 242,
+    "cc_top20": 0.5578512396694215,
+    "count": 20,
+    "depth_max": 7,
+    "extreme_cc_mean": 69.0,
+    "high_cc_mean": 22.875,
+    "lines_mean": 17.35,
+    "lines_sum": 347
+  },
+  "graph": {
+    "cyclic_dependency_mass": 0.0,
+    "dependency_entropy": 0.17568587992199203,
+    "edge_count": 19,
+    "node_count": 17,
+    "propagation_cost": 0.08823529411764706
+  },
+  "lines": {
+    "comments": 3,
+    "loc": 332,
+    "multi_comment": 0,
+    "single_comment": 4,
+    "total_lines": 358
+  },
+  "lint": {
+    "counts": {
+      "B904": 7,
+      "B905": 2,
+      "BLE001": 2,
+      "C901": 4,
+      "EM101": 18,
+      "EM102": 1,
+      "F841": 1,
+      "N818": 1,
+      "PERF203": 2,
+      "PLC0415": 1,
+      "PLC1901": 1,
+      "PLR0124": 1,
+      "PLR0911": 1,
+      "PLR0912": 2,
+      "PLR0914": 1,
+      "PLR0915": 2,
+      "PLR0916": 1,
+      "PLR1702": 1,
+      "PLR6201": 5,
+      "PTH100": 3,
+      "PTH103": 2,
+      "PTH105": 4,
+      "PTH106": 1,
+      "PTH108": 1,
+      "PTH113": 1,
+      "PTH118": 3,
+      "PTH119": 2,
+      "PTH120": 1,
+      "PTH122": 1,
+      "PTH123": 8,
+      "S301": 2,
+      "S403": 1,
+      "SIM105": 2,
+      "SIM115": 4,
+      "TRY003": 19,
+      "TRY203": 1,
+      "TRY300": 1,
+      "UP015": 1
+    },
+    "errors": 112,
+    "fixable": 18
+  },
+  "source_files": [
+    "merge_files.py"
+  ],
+  "symbols": {
+    "classes": 4,
+    "expressions": 887,
+    "expressions_top_level": 21,
+    "functions": 18,
+    "globals": 1,
+    "imports": 3,
+    "max_imports": 3,
+    "methods": 2,
+    "statements": 244,
+    "total": 25,
+    "type_aliases": 0,
+    "variables": 1
+  },
+  "waste": {
+    "single_use_functions": 11,
+    "trivial_wrappers": 1,
+    "unused_variables": 10
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "problem_name": "file_merger",
+  "problem_version": 1,
+  "checkpoint_name": "checkpoint_1",
+  "checkpoint_version": 1,
+  "duration": 23.300411462783813,
+  "entrypoint": "uv run merge_files.py",
+  "tests": {
+    "checkpoint_1-Error": {
+      "passed": [
+        "test_error_cases[spec_errors/cast_fail]",
+        "test_error_cases[spec_errors/cli_missing_key]",
+        "test_error_cases[spec_errors/invalid_schema_json]",
+        "test_error_cases[spec_errors/invalid_type_in_schema]",
+        "test_error_cases[spec_errors/key_not_in_schema]",
+        "test_error_cases[spec_errors/nonexistent_input_file]"
+      ],
+      "failed": [
+        "test_error_cases[spec_errors/bool_nonstandard_strict]"
+      ],
+      "skipped": []
+    },
+    "checkpoint_1-Functionality": {
+      "passed": [
+        "test_hidden_cases[hidden/all_nulls_column]",
+        "test_hidden_cases[hidden/bool_parsing_variants]",
+        "test_hidden_cases[hidden/composite_key_basic]",
+        "test_hidden_cases[hidden/composite_key_desc]",
+        "test_hidden_cases[hidden/composite_key_mixed_types]",
+        "test_hidden_cases[hidden/composite_key_nulls]",
+        "test_hidden_cases[hidden/empty_file_inference_strict]",
+        "test_hidden_cases[hidden/five_file_merge]",
+        "test_hidden_cases[hidden/float_scientific_notation]",
+        "test_hidden_cases[hidden/header_only_file]",
+        "test_hidden_cases[hidden/numeric_edge_values]",
+        "test_hidden_cases[hidden/overlapping_partial_columns]",
+        "test_hidden_cases[hidden/quoted_special_chars]",
+        "test_hidden_cases[hidden/schema_column_order]",
+        "test_hidden_cases[hidden/schema_extra_columns]",
+        "test_hidden_cases[hidden/stable_sort_verify]",
+        "test_hidden_cases[hidden/three_file_merge]",
+        "test_hidden_cases[hidden/timestamp_microseconds]",
+        "test_hidden_cases[hidden/timestamp_mixed_zones_multi_file]",
+        "test_hidden_cases[hidden/timestamp_timezone_variations]",
+        "test_hidden_cases[hidden/unicode_values]"
+      ],
+      "failed": [],
+      "skipped": []
+    },
+    "checkpoint_1-Core": {
+      "passed": [
+        "test_spec_correct_cases[spec_correct/cross_family_coercion]",
+        "test_spec_correct_cases[spec_correct/csv_custom_dialect]",
+        "test_spec_correct_cases[spec_correct/disjoint_columns]",
+        "test_spec_correct_cases[spec_correct/empty_input]",
+        "test_spec_correct_cases[spec_correct/empty_string_inference]",
+        "test_spec_correct_cases[spec_correct/infer_loose_basic]",
+        "test_spec_correct_cases[spec_correct/infer_strict_basic]",
+        "test_spec_correct_cases[spec_correct/null_ordering]",
+        "test_spec_correct_cases[spec_correct/null_ordering_desc]",
+        "test_spec_correct_cases[spec_correct/output_stdout]",
+        "test_spec_correct_cases[spec_correct/provided_schema_basic]",
+        "test_spec_correct_cases[spec_correct/provided_schema_date_type]",
+        "test_spec_correct_cases[spec_correct/provided_schema_desc_null]",
+        "test_spec_correct_cases[spec_correct/provided_schema_keep_string]",
+        "test_spec_correct_cases[spec_correct/single_file_input]",
+        "test_spec_correct_cases[spec_correct/single_key_sort]",
+        "test_spec_correct_cases[spec_correct/type_inference_conflict]",
+        "test_spec_correct_cases[spec_correct/type_parsing_edgecases]"
+      ],
+      "failed": [],
+      "skipped": []
+    }
+  },
+  "pass_counts": {
+    "Core": 18,
+    "Functionality": 21,
+    "Regression": 0,
+    "Error": 6
+  },
+  "total_counts": {
+    "Core": 18,
+    "Functionality": 21,
+    "Regression": 0,
+    "Error": 7
+  },
+  "pytest_exit_code": 1,
+  "pytest_collected": 46,
+  "test_collection_hash": "f1d341e088bf2cd407c9233e3659b5a88ac9ba94e45e4e94292b667ebbe19c89",
+  "infrastructure_failure": false
+}

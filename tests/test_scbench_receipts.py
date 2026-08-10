@@ -215,6 +215,18 @@ def test_verify_receipt_tree_requires_paired_checkpoint_symmetry(tmp_path):
             arm="cymatix",
             order_index=2,
             checkpoints=(),
+            initial_sync=SyncReceipt(
+                pre_manifest_hash="0" * 64,
+                post_manifest_hash="1" * 64,
+                genome_id="genome-file-backup-r1",
+                pre_genome_checksum="2" * 64,
+                post_genome_checksum="3" * 64,
+                ingested=0,
+                skipped=0,
+                latency_ms=1,
+                verified=True,
+            ),
+            warmup_elapsed_ms=0,
             valid=True,
             invalidation_reason=None,
             retry_of=None,
@@ -228,6 +240,38 @@ def test_verify_receipt_tree_requires_paired_checkpoint_symmetry(tmp_path):
 
     with pytest.raises(ReceiptIntegrityError, match="paired checkpoint"):
         verify_receipt_tree(tmp_path)
+
+
+def test_arm_receipt_requires_treatment_only_warmup_metadata():
+    """Warm-up and initial sync are treatment lifecycle observations."""
+    with pytest.raises(ValueError, match="control arm cannot contain"):
+        ArmReceipt(
+            campaign_id="campaign-1",
+            pair_id="file-backup-r1",
+            problem="file-backup",
+            replicate=1,
+            arm="control",
+            order_index=1,
+            checkpoints=(),
+            warmup_elapsed_ms=1,
+            valid=True,
+            invalidation_reason=None,
+            retry_of=None,
+        )
+
+    with pytest.raises(ValueError, match="treatment arm requires"):
+        ArmReceipt(
+            campaign_id="campaign-1",
+            pair_id="file-backup-r1",
+            problem="file-backup",
+            replicate=1,
+            arm="cymatix",
+            order_index=2,
+            checkpoints=(),
+            valid=True,
+            invalidation_reason=None,
+            retry_of=None,
+        )
 
 
 def test_redact_secrets_preserves_shape_without_secret_values():

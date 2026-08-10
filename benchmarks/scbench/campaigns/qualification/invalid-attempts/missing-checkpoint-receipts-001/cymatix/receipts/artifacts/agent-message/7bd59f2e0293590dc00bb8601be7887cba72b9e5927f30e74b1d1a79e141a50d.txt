@@ -1,0 +1,6 @@
+Implemented the heterogeneous CSV merger in:
+
+- [merge_files.py](/workspace/merge_files.py)
+- [requirements.txt](/workspace/requirements.txt)
+
+Supports CSV, TSV, JSONL, Parquet, gzip handling, schema strategies, casting, stable external sorting, custom CSV output, validation, and specified exit codes.

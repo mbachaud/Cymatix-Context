@@ -1,0 +1,463 @@
+Starting Slop Code CLI
+	Seed: 42
+	Verbose: 0
+--------------------------------
+Output directory: F:\Projects\cymatix-context\.claude\worktrees\scbench-codex-ab\benchmarks\scbench\campaigns\qualification\pairs\file-merger-r2\cymatix\scbench
+Using model: codex_auth/gpt-5.6-luna
+[08/10/26 04:28:57] INFO     Starting agent run                                
+                             agent_config='F:\\Projects\\slop-code-bench-cymati
+                             x\\configs\\agents\\codex_cymatix.yaml'           
+                             environment_config='F:\\Projects\\slop-code-bench-
+                             cymatix\\configs\\environments\\docker-python3.12-
+                             uv.yaml' model='codex_auth/gpt-5.6-luna'          
+                             one_shot=False pass_policy='any'                  
+                             problem_names=['file_merger']                     
+                             prompt_path='F:\\Projects\\slop-code-bench-cymatix
+                             \\configs\\prompts\\just-solve.jinja'             
+                             thinking='medium'                                 
+                    INFO     Building base image for environment 'python3.12'  
+                             base_image='ghcr.io/astral-sh/uv:python3.12-trixie
+                             -slim' image_name='slop-code:python3.12'          
+                    INFO     Checking if image exists                          
+                             image_name='slop-code:python3.12'                 
+                    INFO     Found current image and not forcing build         
+                    INFO     Checking if image exists                          
+                             image_name='slop-code:codex_cymatix-0.147.0-python
+                             3.12'                                             
+                    INFO     Found image and not forcing build                 
+                    INFO     Starting agent runs num_problems=1 num_workers=1  
+                    INFO     Starting run problems queue monitor               
+                             problem_names=['file_merger']                     
+[08/10/26 04:28:59] INFO     'file_merger': progress update                    
+                             checkpoint='STARTING' cost=0.0 elapsed=1.076112   
+                             state='initialized' steps=0 total_steps=0         
+                    INFO     'file_merger': progress update                    
+                             checkpoint='STARTING' cost=0.0 elapsed=1.088823   
+                             state='initialized' steps=0 total_steps=0         
+[08/10/26 04:29:01] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=3.018507 state='running' steps=0          
+                             total_steps=0                                     
+[08/10/26 04:29:04] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=5.746618 state='running' steps=1          
+                             total_steps=1                                     
+[08/10/26 04:29:08] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=9.265179 state='running' steps=2          
+                             total_steps=2                                     
+[08/10/26 04:29:11] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=13.049421 state='running' steps=3         
+                             total_steps=3                                     
+[08/10/26 04:29:32] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=33.400244 state='running' steps=4         
+                             total_steps=4                                     
+[08/10/26 04:30:24] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=85.791689 state='running' steps=5         
+                             total_steps=5                                     
+[08/10/26 04:30:52] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=113.209564 state='running' steps=6        
+                             total_steps=6                                     
+[08/10/26 04:30:56] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=117.509622 state='running' steps=7        
+                             total_steps=7                                     
+[08/10/26 04:31:01] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=123.120733 state='running' steps=8        
+                             total_steps=8                                     
+[08/10/26 04:31:15] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=136.663831 state='running' steps=9        
+                             total_steps=9                                     
+[08/10/26 04:31:22] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=143.610284 state='running' steps=10       
+                             total_steps=10                                    
+[08/10/26 04:31:23] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=144.231105 state='running' steps=11       
+                             total_steps=11                                    
+[08/10/26 04:31:25] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=146.17013 state='running' steps=12        
+                             total_steps=12                                    
+[08/10/26 04:31:36] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=157.551911 state='running' steps=13       
+                             total_steps=13                                    
+[08/10/26 04:31:47] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=168.677819 state='running' steps=14       
+                             total_steps=14                                    
+[08/10/26 04:31:53] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=174.552284 state='running' steps=15       
+                             total_steps=15                                    
+[08/10/26 04:31:58] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=179.640713 state='running' steps=16       
+                             total_steps=16                                    
+                    INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=179.996741 state='running' steps=17       
+                             total_steps=17                                    
+[08/10/26 04:32:04] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=185.87388 state='running' steps=18        
+                             total_steps=18                                    
+[08/10/26 04:32:05] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.07524            
+                             elapsed=186.755835 state='running' steps=18       
+                             total_steps=18                                    
+[08/10/26 04:32:07] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.07524            
+                             elapsed=188.430503 state='evaluating' steps=18    
+                             total_steps=18                                    
+[08/10/26 04:33:06] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_2' cost=0.07524            
+                             elapsed=247.305975 state='running' steps=0        
+                             total_steps=18                                    
+[08/10/26 04:33:26] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_2' cost=0.07524            
+                             elapsed=267.722115 state='running' steps=1        
+                             total_steps=19                                    
+[08/10/26 04:33:28] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_2' cost=0.07524            
+                             elapsed=269.915142 state='running' steps=2        
+                             total_steps=20                                    
+[08/10/26 04:33:30] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_2' cost=0.07524            
+                             elapsed=271.849243 state='running' steps=3        
+                             total_steps=21                                    
+[08/10/26 04:33:35] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_2' cost=0.07524            
+                             elapsed=276.143012 state='running' steps=4        
+                             total_steps=22                                    
+[08/10/26 04:33:42] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_2' cost=0.07524            
+                             elapsed=283.585056 state='running' steps=5        
+                             total_steps=23                                    
+[08/10/26 04:34:57] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_2' cost=0.07524            
+                             elapsed=359.0815 state='running' steps=6          
+                             total_steps=24                                    
+[08/10/26 04:35:09] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_2' cost=0.07524            
+                             elapsed=371.01949 state='running' steps=7         
+                             total_steps=25                                    
+[08/10/26 04:35:12] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_2' cost=0.07524            
+                             elapsed=373.214766 state='running' steps=8        
+                             total_steps=26                                    
+[08/10/26 04:35:17] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_2' cost=0.07524            
+                             elapsed=378.566378 state='running' steps=9        
+                             total_steps=27                                    
+[08/10/26 04:35:23] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_2' cost=0.07524            
+                             elapsed=384.178915 state='running' steps=10       
+                             total_steps=28                                    
+[08/10/26 04:35:30] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_2' cost=0.07524            
+                             elapsed=391.367164 state='running' steps=11       
+                             total_steps=29                                    
+                    INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_2' cost=0.07524            
+                             elapsed=391.724128 state='running' steps=12       
+                             total_steps=30                                    
+[08/10/26 04:35:44] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_2' cost=0.07524            
+                             elapsed=405.487023 state='running' steps=13       
+                             total_steps=31                                    
+[08/10/26 04:35:57] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_2' cost=0.07524            
+                             elapsed=418.192217 state='running' steps=14       
+                             total_steps=32                                    
+                    INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_2' cost=0.07524            
+                             elapsed=418.811824 state='running' steps=15       
+                             total_steps=33                                    
+[08/10/26 04:36:16] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_2' cost=0.07524            
+                             elapsed=438.083486 state='running' steps=16       
+                             total_steps=34                                    
+[08/10/26 04:36:24] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_2' cost=0.07524            
+                             elapsed=446.055215 state='running' steps=17       
+                             total_steps=35                                    
+[08/10/26 04:36:25] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_2' cost=0.07524            
+                             elapsed=446.411723 state='running' steps=18       
+                             total_steps=36                                    
+[08/10/26 04:36:36] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_2' cost=0.07524            
+                             elapsed=457.272923 state='running' steps=19       
+                             total_steps=37                                    
+                    INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_2' cost=0.26593            
+                             elapsed=457.892859 state='running' steps=19       
+                             total_steps=37                                    
+[08/10/26 04:36:37] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_2' cost=0.26593            
+                             elapsed=458.776842 state='evaluating' steps=19    
+                             total_steps=37                                    
+[08/10/26 04:39:54] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_3' cost=0.26593            
+                             elapsed=655.895414 state='running' steps=0        
+                             total_steps=37                                    
+[08/10/26 04:40:00] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_3' cost=0.26593            
+                             elapsed=661.528664 state='running' steps=1        
+                             total_steps=38                                    
+[08/10/26 04:40:04] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_3' cost=0.26593            
+                             elapsed=665.303121 state='running' steps=2        
+                             total_steps=39                                    
+[08/10/26 04:40:05] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_3' cost=0.26593            
+                             elapsed=666.710021 state='running' steps=3        
+                             total_steps=40                                    
+[08/10/26 04:40:08] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_3' cost=0.26593            
+                             elapsed=669.952335 state='running' steps=4        
+                             total_steps=41                                    
+[08/10/26 04:40:20] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_3' cost=0.26593            
+                             elapsed=681.866579 state='running' steps=5        
+                             total_steps=42                                    
+[08/10/26 04:40:22] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_3' cost=0.26593            
+                             elapsed=684.060558 state='running' steps=6        
+                             total_steps=43                                    
+[08/10/26 04:41:11] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_3' cost=0.26593            
+                             elapsed=733.024608 state='running' steps=7        
+                             total_steps=44                                    
+[08/10/26 04:41:24] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_3' cost=0.26593            
+                             elapsed=745.724523 state='running' steps=8        
+                             total_steps=45                                    
+[08/10/26 04:41:32] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_3' cost=0.26593            
+                             elapsed=753.179016 state='running' steps=9        
+                             total_steps=46                                    
+[08/10/26 04:41:40] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_3' cost=0.26593            
+                             elapsed=761.949061 state='running' steps=10       
+                             total_steps=47                                    
+[08/10/26 04:42:01] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_3' cost=0.26593            
+                             elapsed=782.26281 state='running' steps=11        
+                             total_steps=48                                    
+[08/10/26 04:42:05] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_3' cost=0.26593            
+                             elapsed=786.823066 state='running' steps=12       
+                             total_steps=49                                    
+[08/10/26 04:42:11] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_3' cost=0.26593            
+                             elapsed=792.698557 state='running' steps=13       
+                             total_steps=50                                    
+[08/10/26 04:42:22] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_3' cost=0.26593            
+                             elapsed=803.302129 state='running' steps=14       
+                             total_steps=51                                    
+[08/10/26 04:42:30] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_3' cost=0.26593            
+                             elapsed=812.061018 state='running' steps=15       
+                             total_steps=52                                    
+[08/10/26 04:42:31] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_3' cost=0.44844            
+                             elapsed=812.940965 state='running' steps=15       
+                             total_steps=52                                    
+[08/10/26 04:42:32] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_3' cost=0.44844            
+                             elapsed=814.088477 state='evaluating' steps=15    
+                             total_steps=52                                    
+[08/10/26 04:46:24] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1045.662361 state='running' steps=0       
+                             total_steps=52                                    
+[08/10/26 04:46:30] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1051.554012 state='running' steps=1       
+                             total_steps=53                                    
+[08/10/26 04:46:33] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1055.060544 state='running' steps=2       
+                             total_steps=54                                    
+[08/10/26 04:46:35] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1056.468376 state='running' steps=3       
+                             total_steps=55                                    
+[08/10/26 04:46:38] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1059.717901 state='running' steps=4       
+                             total_steps=56                                    
+[08/10/26 04:46:50] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1071.365735 state='running' steps=5       
+                             total_steps=57                                    
+[08/10/26 04:47:16] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1097.484977 state='running' steps=6       
+                             total_steps=58                                    
+[08/10/26 04:47:51] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1133.050973 state='running' steps=7       
+                             total_steps=59                                    
+[08/10/26 04:48:18] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1159.140439 state='running' steps=8       
+                             total_steps=60                                    
+[08/10/26 04:48:32] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1173.415666 state='running' steps=9       
+                             total_steps=61                                    
+[08/10/26 04:48:37] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1178.499162 state='running' steps=10      
+                             total_steps=62                                    
+[08/10/26 04:48:41] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1182.529387 state='running' steps=11      
+                             total_steps=63                                    
+[08/10/26 04:48:46] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1187.875878 state='running' steps=12      
+                             total_steps=64                                    
+[08/10/26 04:48:54] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1196.111391 state='running' steps=13      
+                             total_steps=65                                    
+[08/10/26 04:49:04] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1205.405011 state='running' steps=14      
+                             total_steps=66                                    
+[08/10/26 04:49:16] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1217.5786 state='running' steps=15        
+                             total_steps=67                                    
+[08/10/26 04:49:21] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1222.133461 state='running' steps=16      
+                             total_steps=68                                    
+[08/10/26 04:49:26] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1227.48203 state='running' steps=17       
+                             total_steps=69                                    
+[08/10/26 04:49:31] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1232.30465 state='running' steps=18       
+                             total_steps=70                                    
+[08/10/26 04:49:34] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1235.289414 state='running' steps=19      
+                             total_steps=71                                    
+[08/10/26 04:49:41] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1243.007208 state='running' steps=20      
+                             total_steps=72                                    
+[08/10/26 04:49:51] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1252.557593 state='running' steps=21      
+                             total_steps=73                                    
+[08/10/26 04:49:55] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1256.850871 state='running' steps=22      
+                             total_steps=74                                    
+[08/10/26 04:50:04] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1265.620793 state='running' steps=23      
+                             total_steps=75                                    
+[08/10/26 04:50:17] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1279.111473 state='running' steps=24      
+                             total_steps=76                                    
+[08/10/26 04:50:22] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1283.141376 state='running' steps=25      
+                             total_steps=77                                    
+[08/10/26 04:50:24] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1285.863274 state='running' steps=26      
+                             total_steps=78                                    
+[08/10/26 04:50:35] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1296.466353 state='running' steps=27      
+                             total_steps=79                                    
+[08/10/26 04:50:38] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1299.188513 state='running' steps=28      
+                             total_steps=80                                    
+[08/10/26 04:50:44] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1305.594969 state='running' steps=29      
+                             total_steps=81                                    
+[08/10/26 04:50:47] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1308.581047 state='running' steps=30      
+                             total_steps=82                                    
+[08/10/26 04:50:52] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1313.928194 state='running' steps=31      
+                             total_steps=83                                    
+[08/10/26 04:51:00] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.44844            
+                             elapsed=1321.889685 state='running' steps=32      
+                             total_steps=84                                    
+[08/10/26 04:51:01] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.87311            
+                             elapsed=1322.770642 state='running' steps=32      
+                             total_steps=84                                    
+[08/10/26 04:51:03] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=0.87311            
+                             elapsed=1324.443342 state='evaluating' steps=32   
+                             total_steps=84                                    
+[08/10/26 04:55:40] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_4' cost=1.29777            
+                             elapsed=1601.728953 state='completed' steps=32    
+                             total_steps=116                                   
+[08/10/26 04:55:43] INFO     Agent runs completed failed=0 successful=1 total=1
+
+All 1 problems completed successfully!
+[08/10/26 04:55:47] INFO     Updated checkpoint results                        
+                             path='F:\\Projects\\cymatix-context\\.claude\\work
+                             trees\\scbench-codex-ab\\benchmarks\\scbench\\camp
+                             aigns\\qualification\\pairs\\file-merger-r2\\cymat
+                             ix\\scbench\\checkpoint_results.jsonl'            
+                             report_count=4                                    
+
+                       Run Summary                       
+┌──────────────────────────────┬────────────────────────┐
+│ Metric                       │                  Value │
+├──────────────────────────────┼────────────────────────┤
+│ Problems ran                 │                      1 │
+│ Checkpoints                  │                      4 │
+│ Total cost                   │                $0.8731 │
+│ Mean cost / chkpt            │     $0.2183 +/- 0.1473 │
+│ Mean time / chkpt            │        208.5 +/- 51.7s │
+│ Mean input tokens / chkpt    │                473,916 │
+│ Mean output tokens / chkpt   │                  9,070 │
+│ Mean steps / chkpt           │           21.0 +/- 7.5 │
+├──────────────────────────────┼────────────────────────┤
+│ % checkpoints solved         │                   0.0% │
+│ % checkpoints iso solved     │                  25.0% │
+│ % checkpoints core solved    │                  50.0% │
+│ % problems solved            │                   0.0% │
+│ % problems partial           │                   0.0% │
+│ Mean test pass rate          │                  0.921 │
+├──────────────────────────────┼────────────────────────┤
+│ Mean lint:loc                │      0.3110 +/- 0.0391 │
+│ Mean verbosity score         │      0.4904 +/- 0.2217 │
+│ Mean erosion score           │      0.8322 +/- 0.0680 │
+└──────────────────────────────┴────────────────────────┘
+                    INFO     Saved run summary                                 
+                             path='F:\\Projects\\cymatix-context\\.claude\\work
+                             trees\\scbench-codex-ab\\benchmarks\\scbench\\camp
+                             aigns\\qualification\\pairs\\file-merger-r2\\cymat
+                             ix\\scbench\\result.json'                         

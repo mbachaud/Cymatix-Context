@@ -1,0 +1,29 @@
+{
+  "checkpoint": 3,
+  "packet": {
+    "media_type": "application/json",
+    "path": "artifacts/packet/0aa2d9854a342531f5c78a3ec5245360d75f44f8547aeb942f2f488afbd2a762.json",
+    "sha256": "0aa2d9854a342531f5c78a3ec5245360d75f44f8547aeb942f2f488afbd2a762",
+    "size_bytes": 36140
+  },
+  "prompt": {
+    "media_type": "text/plain",
+    "path": "artifacts/prompt/26b830801f38beab7d7e05601b933428b9ca46e6c9f200d465c0b0a918e51a30.txt",
+    "sha256": "26b830801f38beab7d7e05601b933428b9ca46e6c9f200d465c0b0a918e51a30",
+    "size_bytes": 18747
+  },
+  "query": {
+    "media_type": "text/plain",
+    "path": "artifacts/query/4acf42ce3a3c160f5aad63c9484451c9d65ca2ad959a76e452104440429b91f7.txt",
+    "sha256": "4acf42ce3a3c160f5aad63c9484451c9d65ca2ad959a76e452104440429b91f7",
+    "size_bytes": 1773
+  },
+  "rendered_packet": {
+    "media_type": "text/plain",
+    "path": "artifacts/rendered-packet/14bc0ed02cba6b2f5bf5aff4a28676aac35e2c48cf782fb75cc1035ec7bd15e3.txt",
+    "sha256": "14bc0ed02cba6b2f5bf5aff4a28676aac35e2c48cf782fb75cc1035ec7bd15e3",
+    "size_bytes": 13864
+  },
+  "schema_version": 1,
+  "session_id": "qualification:file-merger-r2:2:file-merger"
+}

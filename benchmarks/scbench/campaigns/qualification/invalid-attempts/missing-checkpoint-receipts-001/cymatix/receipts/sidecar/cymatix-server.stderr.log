@@ -1,0 +1,31 @@
+hardware candidate cuda failed
+Traceback (most recent call last):
+  File "F:\Projects\cymatix-context\.claude\worktrees\scbench-codex-ab\cymatix_context\hardware.py", line 321, in _detect
+    d = fn()
+  File "F:\Projects\cymatix-context\.claude\worktrees\scbench-codex-ab\cymatix_context\hardware.py", line 297, in <lambda>
+    ("cuda", lambda: _detect_cuda_or_rocm(rocm=False)),
+                     ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "F:\Projects\cymatix-context\.claude\worktrees\scbench-codex-ab\cymatix_context\hardware.py", line 234, in _detect_cuda_or_rocm
+    import torch
+ModuleNotFoundError: No module named 'torch'
+hardware candidate rocm failed
+Traceback (most recent call last):
+  File "F:\Projects\cymatix-context\.claude\worktrees\scbench-codex-ab\cymatix_context\hardware.py", line 321, in _detect
+    d = fn()
+  File "F:\Projects\cymatix-context\.claude\worktrees\scbench-codex-ab\cymatix_context\hardware.py", line 298, in <lambda>
+    ("rocm", lambda: _detect_cuda_or_rocm(rocm=True)),
+                     ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "F:\Projects\cymatix-context\.claude\worktrees\scbench-codex-ab\cymatix_context\hardware.py", line 234, in _detect_cuda_or_rocm
+    import torch
+ModuleNotFoundError: No module named 'torch'
+hardware candidate mps failed
+Traceback (most recent call last):
+  File "F:\Projects\cymatix-context\.claude\worktrees\scbench-codex-ab\cymatix_context\hardware.py", line 321, in _detect
+    d = fn()
+  File "F:\Projects\cymatix-context\.claude\worktrees\scbench-codex-ab\cymatix_context\hardware.py", line 274, in _detect_mps
+    import torch
+ModuleNotFoundError: No module named 'torch'
+INFO:     Started server process [4484]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:65067 (Press CTRL+C to quit)
