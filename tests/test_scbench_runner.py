@@ -501,6 +501,80 @@ def test_preflight_records_exact_clean_subscription_environment(layout):
     assert (layout.manifest.parent / "preflight.json").exists()
 
 
+def test_preflight_independently_validates_frozen_checkpoint_totals(layout):
+    data = layout.campaign.model_dump(mode="json")
+    data.update(
+        {
+            "docker_image_digest": "sha256:same-image",
+            "problem_groups": {
+                "easy": ["file-backup"],
+                "medium": [],
+                "hard": [],
+            },
+            "expected_checkpoints": 2,
+            "primary_checkpoints": 1,
+            "bootstrap_seed": 20260808,
+            "retry_policy": {},
+            "graduation_thresholds": {},
+        }
+    )
+    campaign = CampaignConfig.model_validate(data)
+    layout.manifest.write_text(
+        json.dumps(campaign.model_dump(mode="json")), encoding="utf-8"
+    )
+    frozen_layout = HarnessLayout(
+        campaign=campaign,
+        manifest=layout.manifest,
+        cymatix_root=layout.cymatix_root,
+        scbench_root=layout.scbench_root,
+        problem_root=layout.problem_root,
+        output_root=layout.output_root,
+        auth_path=layout.auth_path,
+    )
+
+    receipt = _runner(frozen_layout, FakeCommandRunner(frozen_layout)).preflight()
+
+    assert receipt.observed["expected_checkpoints"] == 2
+    assert receipt.observed["primary_checkpoints"] == 1
+    assert receipt.checks["frozen checkpoint totals"] is True
+    assert receipt.checks["frozen Docker image digest"] is True
+
+
+def test_preflight_rejects_frozen_checkpoint_count_drift(layout):
+    data = layout.campaign.model_dump(mode="json")
+    data.update(
+        {
+            "docker_image_digest": "sha256:same-image",
+            "problem_groups": {
+                "easy": ["file-backup"],
+                "medium": [],
+                "hard": [],
+            },
+            "expected_checkpoints": 3,
+            "primary_checkpoints": 2,
+            "bootstrap_seed": 20260808,
+            "retry_policy": {},
+            "graduation_thresholds": {},
+        }
+    )
+    campaign = CampaignConfig.model_validate(data)
+    layout.manifest.write_text(
+        json.dumps(campaign.model_dump(mode="json")), encoding="utf-8"
+    )
+    frozen_layout = HarnessLayout(
+        campaign=campaign,
+        manifest=layout.manifest,
+        cymatix_root=layout.cymatix_root,
+        scbench_root=layout.scbench_root,
+        problem_root=layout.problem_root,
+        output_root=layout.output_root,
+        auth_path=layout.auth_path,
+    )
+
+    with pytest.raises(PreflightError, match="frozen checkpoint totals"):
+        _runner(frozen_layout, FakeCommandRunner(frozen_layout)).preflight()
+
+
 def test_preflight_rejects_missing_sidecar_conversation_dependency(layout):
     """A code-only smoke test must not hide a broken conversation ingest path."""
     fake = FakeCommandRunner(layout)

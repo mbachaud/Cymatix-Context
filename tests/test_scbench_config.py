@@ -45,6 +45,44 @@ def valid_campaign_dict() -> dict:
     }
 
 
+def frozen_pilot_dict() -> dict:
+    data = valid_campaign_dict()
+    data.update(
+        {
+            "docker_image_digest": "sha256:" + "c" * 64,
+            "problem_groups": {
+                "easy": ["file-backup"],
+                "medium": ["database-migration"],
+                "hard": [],
+            },
+            "expected_checkpoints": 9,
+            "primary_checkpoints": 7,
+            "bootstrap_seed": 20260808,
+            "retry_policy": {
+                "agent_max_retries": 0,
+                "invalid_checkpoint_pair_action": "clean_paired_rerun",
+                "rate_limit_action": "pause_campaign",
+                "resume_boundary": "clean_checkpoint",
+                "record_failed_attempt": True,
+                "prove_workspace_and_genome_state": True,
+                "same_policy_both_arms": True,
+                "favorable_attempt_selection": False,
+            },
+            "graduation_thresholds": {
+                "net_prevented_events_min": 2,
+                "relative_regression_reduction_min": 0.15,
+                "isolated_solve_difference_min": -0.025,
+                "median_erosion_delta_max": 0.03,
+                "median_verbosity_delta_max": 0.03,
+                "median_input_token_ratio_max": 1.25,
+                "median_elapsed_ratio_max": 1.30,
+                "unresolved_integrity_failures_max": 0,
+            },
+        }
+    )
+    return data
+
+
 def test_campaign_accepts_frozen_balanced_configuration():
     campaign = CampaignConfig.model_validate(valid_campaign_dict())
 
@@ -111,4 +149,37 @@ def test_campaign_models_forbid_unknown_fields():
     data["unreviewed_knob"] = True
 
     with pytest.raises(ValueError, match="Extra inputs are not permitted"):
+        CampaignConfig.model_validate(data)
+
+
+def test_campaign_accepts_complete_frozen_pilot_design():
+    campaign = CampaignConfig.model_validate(frozen_pilot_dict())
+
+    assert campaign.expected_checkpoints == 9
+    assert campaign.primary_checkpoints == 7
+    assert campaign.bootstrap_seed == 20260808
+    assert campaign.graduation_thresholds.net_prevented_events_min == 2
+
+
+def test_campaign_rejects_partial_frozen_pilot_design():
+    data = frozen_pilot_dict()
+    del data["bootstrap_seed"]
+
+    with pytest.raises(ValueError, match="pilot fields must be set together"):
+        CampaignConfig.model_validate(data)
+
+
+def test_campaign_rejects_problem_group_drift():
+    data = frozen_pilot_dict()
+    data["problem_groups"]["hard"] = ["unfrozen-problem"]
+
+    with pytest.raises(ValueError, match="problem_groups must exactly partition problems"):
+        CampaignConfig.model_validate(data)
+
+
+def test_campaign_rejects_primary_checkpoint_arithmetic_drift():
+    data = frozen_pilot_dict()
+    data["primary_checkpoints"] = 8
+
+    with pytest.raises(ValueError, match="primary_checkpoints must equal"):
         CampaignConfig.model_validate(data)

@@ -498,6 +498,13 @@ class CampaignRunner:
                 digests.append(digest)
         observed["docker_image_digest"] = digests[0] if digests else ""
         record("Docker image parity", len(digests) == 2 and len(set(digests)) == 1)
+        if self.campaign.docker_image_digest is not None:
+            record(
+                "frozen Docker image digest",
+                len(digests) == 2
+                and len(set(digests)) == 1
+                and digests[0] == self.campaign.docker_image_digest,
+            )
 
         checkpoint_counts: dict[str, int] = {}
         for problem in self.campaign.problems:
@@ -514,6 +521,19 @@ class CampaignRunner:
                 log.warning("problem validation failed: %s", problem, exc_info=True)
             record(f"problem {problem}", valid_problem)
         observed["checkpoint_counts"] = checkpoint_counts
+        observed_checkpoint_total = sum(checkpoint_counts.values())
+        observed_primary_total = observed_checkpoint_total - len(
+            self.campaign.problems
+        )
+        observed["expected_checkpoints"] = observed_checkpoint_total
+        observed["primary_checkpoints"] = observed_primary_total
+        if self.campaign.expected_checkpoints is not None:
+            record(
+                "frozen checkpoint totals",
+                len(checkpoint_counts) == len(self.campaign.problems)
+                and observed_checkpoint_total == self.campaign.expected_checkpoints
+                and observed_primary_total == self.campaign.primary_checkpoints,
+            )
 
         output_empty = not self.output_root.exists() or not any(self.output_root.iterdir())
         record("campaign output empty", output_empty)

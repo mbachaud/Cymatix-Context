@@ -104,6 +104,67 @@ class PairSpec(_FrozenModel):
     replicate: Literal[1, 2]
 
 
+class ProblemGroups(_FrozenModel):
+    """Predeclared pilot strata; each problem appears exactly once."""
+
+    easy: tuple[str, ...]
+    medium: tuple[str, ...]
+    hard: tuple[str, ...]
+
+    def flattened(self) -> tuple[str, ...]:
+        return self.easy + self.medium + self.hard
+
+
+class RetryPolicy(_FrozenModel):
+    """Symmetric operational invalidation and retry rules."""
+
+    agent_max_retries: Literal[0] = 0
+    invalid_checkpoint_pair_action: Literal["clean_paired_rerun"] = (
+        "clean_paired_rerun"
+    )
+    rate_limit_action: Literal["pause_campaign"] = "pause_campaign"
+    resume_boundary: Literal["clean_checkpoint"] = "clean_checkpoint"
+    record_failed_attempt: Literal[True] = True
+    prove_workspace_and_genome_state: Literal[True] = True
+    same_policy_both_arms: Literal[True] = True
+    favorable_attempt_selection: Literal[False] = False
+    invalidation_reasons: tuple[str, ...] = (
+        "initial_or_incremental_ingest_failure",
+        "genome_not_ready",
+        "packet_http_schema_renderer_or_ceiling_failure",
+        "source_or_conversation_verification_failure",
+        "workspace_or_prompt_hash_mismatch",
+        "missing_codex_result_or_corrupt_scbench_score",
+        "excluded_evaluation_data_contamination",
+        "unrecorded_version_or_configuration_drift",
+    )
+
+
+class GraduationThresholds(_FrozenModel):
+    """The eight immutable pilot graduation gates from the approved design."""
+
+    net_prevented_events_min: Literal[2] = 2
+    relative_regression_reduction_min: Literal[0.15] = 0.15
+    isolated_solve_difference_min: Literal[-0.025] = -0.025
+    median_erosion_delta_max: Literal[0.03] = 0.03
+    median_verbosity_delta_max: Literal[0.03] = 0.03
+    median_input_token_ratio_max: Literal[1.25] = 1.25
+    median_elapsed_ratio_max: Literal[1.30] = 1.30
+    unresolved_integrity_failures_max: Literal[0] = 0
+
+
+class CampaignMetadata(_FrozenModel):
+    """Durable links and evidence identifiers that do not alter execution."""
+
+    design_path: str = Field(min_length=1)
+    plan_path: str = Field(min_length=1)
+    qualification_pair_receipt_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    qualification_operational_receipt_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    fork_repository: str = Field(min_length=1)
+    fork_branch: str = Field(min_length=1)
+    tracking_issue_url: str | None = None
+
+
 class CampaignConfig(_FrozenModel):
     """Canonical configuration shared by the runner, receipts, and analysis."""
 
@@ -121,6 +182,17 @@ class CampaignConfig(_FrozenModel):
     replicates: tuple[ReplicateSpec, ...]
     treatment: TreatmentConfig
     source_policy: SourcePolicy
+    docker_image_digest: str | None = Field(
+        default=None,
+        pattern=r"^sha256:.+$",
+    )
+    problem_groups: ProblemGroups | None = None
+    expected_checkpoints: int | None = Field(default=None, gt=0)
+    primary_checkpoints: int | None = Field(default=None, gt=0)
+    bootstrap_seed: Literal[20260808] | None = None
+    retry_policy: RetryPolicy | None = None
+    graduation_thresholds: GraduationThresholds | None = None
+    metadata: CampaignMetadata | None = None
 
     @model_validator(mode="after")
     def _validate_experimental_design(self) -> "CampaignConfig":
@@ -139,6 +211,33 @@ class CampaignConfig(_FrozenModel):
             raise ValueError(
                 "replicates must contain exactly the AB and BA orders"
             )
+
+        pilot_fields = (
+            self.docker_image_digest,
+            self.problem_groups,
+            self.expected_checkpoints,
+            self.primary_checkpoints,
+            self.bootstrap_seed,
+            self.retry_policy,
+            self.graduation_thresholds,
+        )
+        if any(value is not None for value in pilot_fields) and not all(
+            value is not None for value in pilot_fields
+        ):
+            raise ValueError("pilot fields must be set together")
+        if self.problem_groups is not None:
+            if self.problem_groups.flattened() != normalized:
+                raise ValueError(
+                    "problem_groups must exactly partition problems in manifest order"
+                )
+            assert self.expected_checkpoints is not None
+            assert self.primary_checkpoints is not None
+            expected_primary = self.expected_checkpoints - len(normalized)
+            if self.primary_checkpoints != expected_primary:
+                raise ValueError(
+                    "primary_checkpoints must equal expected_checkpoints minus "
+                    "one sentinel checkpoint per problem"
+                )
         return self
 
     @classmethod
