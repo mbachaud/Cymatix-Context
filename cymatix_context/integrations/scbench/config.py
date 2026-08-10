@@ -247,7 +247,7 @@ class CampaignConfig(_FrozenModel):
 
     def config_hash(self) -> str:
         canonical = json.dumps(
-            self.model_dump(mode="json"),
+            self.model_dump(mode="json", exclude_none=True),
             sort_keys=True,
             separators=(",", ":"),
         ).encode("utf-8")

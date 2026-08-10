@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 
 import pytest
@@ -142,6 +143,15 @@ def test_campaign_hash_is_canonical_and_ignores_manifest_location(tmp_path):
 
     assert left.config_hash() == right.config_hash()
     assert len(left.config_hash()) == 64
+
+
+def test_optional_pilot_fields_do_not_change_legacy_manifest_hash():
+    data = valid_campaign_dict()
+    expected = hashlib.sha256(
+        json.dumps(data, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
+
+    assert CampaignConfig.model_validate(data).config_hash() == expected
 
 
 def test_campaign_models_forbid_unknown_fields():

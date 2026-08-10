@@ -934,6 +934,24 @@ def test_pair_persists_replayable_checkpoint_receipt_tree(layout):
     assert treatment_cp2.sync is not None and treatment_cp2.sync.verified is True
 
 
+def test_historical_receipt_replay_does_not_require_live_environment_freshness(
+    layout,
+):
+    """Content-addressed evidence must remain verifiable after checkouts move."""
+    fake = FakeCommandRunner(layout)
+    runner = _runner(layout, fake)
+    runner.preflight()
+    runner.run_pair(PairSpec(problem="file-backup", replicate=1))
+    fake.scbench_head = "9" * 40
+    fake.cymatix_status = " M cymatix_context/context_packet.py\n"
+
+    verified = runner.verify_receipts()
+
+    assert len(verified) == 1
+    with pytest.raises(PreflightError, match="environment drift"):
+        runner.run_pair(PairSpec(problem="file-backup", replicate=2))
+
+
 def test_pair_rejects_missing_treatment_retrieval_receipt(layout):
     """A later treatment checkpoint without retrieval telemetry is not replayable."""
     fake = FakeCommandRunner(layout)

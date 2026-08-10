@@ -562,7 +562,8 @@ class CampaignRunner:
             raise PreflightError("preflight failed: " + ", ".join(errors))
         return receipt
 
-    def _require_preflight(self) -> PreflightReceipt:
+    def _require_recorded_preflight(self) -> PreflightReceipt:
+        """Load configuration-matched preflight evidence without live probes."""
         receipt = self._preflight
         if receipt is None and self.preflight_path.is_file():
             try:
@@ -573,6 +574,11 @@ class CampaignRunner:
             raise PreflightError("preflight has not been completed")
         if not receipt.valid or receipt.config_hash != self.campaign.config_hash():
             raise PreflightError("valid preflight for this campaign is required")
+        return receipt
+
+    def _require_preflight(self) -> PreflightReceipt:
+        """Require recorded preflight evidence and a still-fresh live environment."""
+        receipt = self._require_recorded_preflight()
         drift = self._preflight_drift_errors(receipt)
         if drift:
             raise PreflightError("preflight environment drift: " + ", ".join(drift))
@@ -1436,7 +1442,7 @@ class CampaignRunner:
 
     def verify_receipts(self) -> tuple[PairRunReceipt, ...]:
         """Verify all final pair receipts and their selected evidence chains."""
-        self._require_preflight()
+        self._require_recorded_preflight()
         pair_paths = sorted(self.output_root.glob("*-r[12]/pair.json"))
         if not pair_paths:
             raise PairInvalidError("no pair receipts found")
