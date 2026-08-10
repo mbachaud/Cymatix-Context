@@ -453,7 +453,11 @@ class CampaignRunner:
             [
                 str(sidecar_python),
                 "-c",
-                "import spacy; print(spacy.__version__)",
+                (
+                    "import spacy; "
+                    "spacy.load('en_core_web_sm', disable=['lemmatizer']); "
+                    "print(spacy.__version__)"
+                ),
             ],
             self.scbench_root,
         )
