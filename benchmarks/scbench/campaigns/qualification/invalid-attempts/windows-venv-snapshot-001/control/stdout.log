@@ -1,0 +1,413 @@
+Starting Slop Code CLI
+	Seed: 42
+	Verbose: 0
+--------------------------------
+Output directory: F:\Projects\cymatix-context\.claude\worktrees\scbench-codex-ab\benchmarks\scbench\campaigns\qualification\pairs\file-merger-r1\control\scbench
+Using model: codex_auth/gpt-5.6-luna
+[08/10/26 02:15:57] INFO     Starting agent run                                
+                             agent_config='F:\\Projects\\slop-code-bench-cymati
+                             x\\configs\\agents\\codex.yaml'                   
+                             environment_config='F:\\Projects\\slop-code-bench-
+                             cymatix\\configs\\environments\\docker-python3.12-
+                             uv.yaml' model='codex_auth/gpt-5.6-luna'          
+                             one_shot=False pass_policy='any'                  
+                             problem_names=['file_merger']                     
+                             prompt_path='F:\\Projects\\slop-code-bench-cymatix
+                             \\configs\\prompts\\just-solve.jinja'             
+                             thinking='medium'                                 
+                    INFO     Building base image for environment 'python3.12'  
+                             base_image='ghcr.io/astral-sh/uv:python3.12-trixie
+                             -slim' image_name='slop-code:python3.12'          
+                    INFO     Checking if image exists                          
+                             image_name='slop-code:python3.12'                 
+                    INFO     Found current image and not forcing build         
+                    INFO     Checking if image exists                          
+                             image_name='slop-code:codex-0.147.0-python3.12'   
+[08/10/26 02:15:58] INFO     Found image and not forcing build                 
+                    INFO     Starting agent runs num_problems=1 num_workers=1  
+                    INFO     Starting run problems queue monitor               
+                             problem_names=['file_merger']                     
+[08/10/26 02:16:00] INFO     'file_merger': progress update                    
+                             checkpoint='STARTING' cost=0.0 elapsed=1.078134   
+                             state='initialized' steps=0 total_steps=0         
+                    INFO     'file_merger': progress update                    
+                             checkpoint='STARTING' cost=0.0 elapsed=1.092067   
+                             state='initialized' steps=0 total_steps=0         
+                    INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=1.192819 state='running' steps=0          
+                             total_steps=0                                     
+[08/10/26 02:16:03] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=4.184029 state='running' steps=1          
+                             total_steps=1                                     
+[08/10/26 02:16:08] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=8.758024 state='running' steps=2          
+                             total_steps=2                                     
+[08/10/26 02:16:10] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=10.695176 state='running' steps=3         
+                             total_steps=3                                     
+[08/10/26 02:17:37] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=98.263086 state='running' steps=4         
+                             total_steps=4                                     
+[08/10/26 02:17:46] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=107.033608 state='running' steps=5        
+                             total_steps=5                                     
+[08/10/26 02:18:04] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=125.293872 state='running' steps=6        
+                             total_steps=6                                     
+[08/10/26 02:18:07] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=128.286352 state='running' steps=7        
+                             total_steps=7                                     
+[08/10/26 02:18:11] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=131.807518 state='running' steps=8        
+                             total_steps=8                                     
+[08/10/26 02:18:15] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=135.852928 state='running' steps=9        
+                             total_steps=9                                     
+[08/10/26 02:18:18] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=139.362885 state='running' steps=10       
+                             total_steps=10                                    
+[08/10/26 02:18:29] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=150.226639 state='running' steps=11       
+                             total_steps=11                                    
+[08/10/26 02:18:35] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=156.099282 state='running' steps=12       
+                             total_steps=12                                    
+[08/10/26 02:18:52] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=172.740859 state='running' steps=13       
+                             total_steps=13                                    
+[08/10/26 02:18:58] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=178.619186 state='running' steps=14       
+                             total_steps=14                                    
+[08/10/26 02:19:05] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=186.33825 state='running' steps=15        
+                             total_steps=15                                    
+[08/10/26 02:19:09] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=189.843103 state='running' steps=16       
+                             total_steps=16                                    
+[08/10/26 02:19:11] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=191.775368 state='running' steps=17       
+                             total_steps=17                                    
+[08/10/26 02:19:19] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=200.271768 state='running' steps=18       
+                             total_steps=18                                    
+[08/10/26 02:19:23] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=204.039989 state='running' steps=19       
+                             total_steps=19                                    
+[08/10/26 02:19:28] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=208.859188 state='running' steps=20       
+                             total_steps=20                                    
+[08/10/26 02:19:33] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=214.474562 state='running' steps=21       
+                             total_steps=21                                    
+[08/10/26 02:19:40] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.0                
+                             elapsed=221.399351 state='running' steps=22       
+                             total_steps=22                                    
+[08/10/26 02:19:41] INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.27379            
+                             elapsed=222.018845 state='running' steps=22       
+                             total_steps=22                                    
+                    INFO     'file_merger': progress update                    
+                             checkpoint='checkpoint_1' cost=0.27379            
+                             elapsed=222.119746 state='error' steps=22         
+                             total_steps=22                                    
+                    ERROR    file_merger state checkpoint='checkpoint_1'       
+                             checkpoint_cost=0.2737862 elapsed=222.121491      
+                             error_message="[Errno 22] Invalid argument:       
+                             'C:\\\\Users\\\\max\\\\AppData\\\\Local\\\\Temp\\\
+                             \tmprwqm6e1z\\\\.venv-test\\\\bin\\\\python'"     
+                             error_traceback='Traceback (most recent call      
+                             last):\n  File                                    
+                             "F:\\Projects\\slop-code-bench-cymatix\\src\\slop_
+                             code\\agent_runner\\runner.py", line 626, in run\n
+                             self.results = self._run_problem()\n              
+                             ~~~~~~~~~~~~~~~~~^^\n  File                       
+                             "F:\\Projects\\slop-code-bench-cymatix\\src\\slop_
+                             code\\agent_runner\\runner.py", line 1068, in     
+                             _run_problem\n    summary =                       
+                             self._run_checkpoint(\n        checkpoint,\n      
+                             checkpoint_save_dir,\n        idx == 0,\n    )\n  
+                             File                                              
+                             "F:\\Projects\\slop-code-bench-cymatix\\src\\slop_
+                             code\\agent_runner\\runner.py", line 728, in      
+                             _run_checkpoint\n    snapshot_dir, result, diff = 
+                             run_checkpoint(\n                                 
+                             ~~~~~~~~~~~~~~^\n        agent=self.agent,\n      
+                             ^^^^^^^^^^^^^^^^^\n    ...<11 lines>...\n         
+                             model_name=self.run_spec.model_name,\n            
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n     
+                             ^\n  File                                         
+                             "F:\\Projects\\slop-code-bench-cymatix\\src\\slop_
+                             code\\agent_runner\\runner.py", line 430, in      
+                             run_checkpoint\n    snapshot_dir, result, diff =  
+                             _run_inference(\n                                 
+                             ~~~~~~~~~~~~~~^\n                                 
+                             checkpoint_name=checkpoint.name,\n                
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<5       
+                             lines>...\n                                       
+                             compress_artifacts=compress_artifacts,\n          
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n   
+                             ^\n  File                                         
+                             "F:\\Projects\\slop-code-bench-cymatix\\src\\slop_
+                             code\\agent_runner\\runner.py", line 392, in      
+                             _run_inference\n    diff =                        
+                             session.finish_checkpoint(snapshot_dir)\n  File   
+                             "F:\\Projects\\slop-code-bench-cymatix\\src\\slop_
+                             code\\execution\\session.py", line 317, in        
+                             finish_checkpoint\n    old_snapshot =             
+                             self.workspace.update_snapshot()\n  File          
+                             "F:\\Projects\\slop-code-bench-cymatix\\src\\slop_
+                             code\\execution\\workspace.py", line 297, in      
+                             update_snapshot\n    self._initial_snapshot =     
+                             self._snapshot_fn(self.working_dir)\n             
+                             ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File       
+                             "F:\\Projects\\slop-code-bench-cymatix\\src\\slop_
+                             code\\execution\\session.py", line 366, in        
+                             snapshot_fn\n    return                           
+                             Snapshot.from_environment_spec(\n                 
+                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n                 
+                             cwd=cwd,\n        ^^^^^^^^\n                      
+                             env_spec=spec,\n        ^^^^^^^^^^^^^^\n          
+                             static_assets=static_assets,\n                    
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File
+                             "F:\\Projects\\slop-code-bench-cymatix\\src\\slop_
+                             code\\execution\\snapshot.py", line 484, in       
+                             from_environment_spec\n    return                 
+                             cls.from_directory(\n                             
+                             ~~~~~~~~~~~~~~~~~~^\n        cwd=cwd,\n           
+                             ^^^^^^^^\n    ...<4 lines>...\n                   
+                             keep_globs=env_spec.snapshot.keep_globs,\n        
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n 
+                             ^\n  File                                         
+                             "F:\\Projects\\slop-code-bench-cymatix\\src\\slop_
+                             code\\execution\\snapshot.py", line 316, in       
+                             from_directory\n    tf.add(\n    ~~~~~~^\n        
+                             abs_path,\n        ^^^^^^^^^\n                    
+                             arcname=rel_path.as_posix(),\n                    
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n                    
+                             recursive=False,\n        ^^^^^^^^^^^^^^^^\n      
+                             )\n    ^\n  File                                  
+                             "C:\\Users\\max\\AppData\\Roaming\\uv\\python\\cpy
+                             thon-3.13-windows-x86_64-none\\Lib\\tarfile.py",  
+                             line 2281, in add\n    with bltn_open(name, "rb") 
+                             as f:\n         ~~~~~~~~~^^^^^^^^^^^^\nOSError:   
+                             [Errno 22] Invalid argument:                      
+                             \'C:\\\\Users\\\\max\\\\AppData\\\\Local\\\\Temp\\
+                             \\tmprwqm6e1z\\\\.venv-test\\\\bin\\\\python\'\n' 
+                             error_type='OSError' generated_tokens=9781        
+                             input_tokens=449077 net_cost=0.2737862            
+                             prior_cost=0 reasoning_tokens=3218                
+                             started=datetime.datetime(2026, 8, 10, 2, 15, 59, 
+                             393164) state='error' steps=22 total_cost=0       
+                             total_steps=0 total_tokens=458858                 
+[08/10/26 02:19:43] INFO     Agent runs completed failed=1 successful=0 total=1
+
+Completed with 1 failure(s) out of 1 problems.
+  - file_merger: OSError: [WinError 1920] The file cannot be accessed by the system: 'C:\\Users\\max\\AppData\\Local\\Temp\\tmprwqm6e1z\\.venv\\lib64'
+Traceback (most recent call last):
+  File "F:\Projects\slop-code-bench-cymatix\src\slop_code\agent_runner\runner.py", line 626, in run
+    self.results = self._run_problem()
+                   ~~~~~~~~~~~~~~~~~^^
+  File "F:\Projects\slop-code-bench-cymatix\src\slop_code\agent_runner\runner.py", line 1068, in _run_problem
+    summary = self._run_checkpoint(
+        checkpoint,
+        checkpoint_save_dir,
+        idx == 0,
+    )
+  File "F:\Projects\slop-code-bench-cymatix\src\slop_code\agent_runner\runner.py", line 728, in _run_checkpoint
+    snapshot_dir, result, diff = run_checkpoint(
+                                 ~~~~~~~~~~~~~~^
+        agent=self.agent,
+        ^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+        model_name=self.run_spec.model_name,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "F:\Projects\slop-code-bench-cymatix\src\slop_code\agent_runner\runner.py", line 430, in run_checkpoint
+    snapshot_dir, result, diff = _run_inference(
+                                 ~~~~~~~~~~~~~~^
+        checkpoint_name=checkpoint.name,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+        compress_artifacts=compress_artifacts,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "F:\Projects\slop-code-bench-cymatix\src\slop_code\agent_runner\runner.py", line 392, in _run_inference
+    diff = session.finish_checkpoint(snapshot_dir)
+  File "F:\Projects\slop-code-bench-cymatix\src\slop_code\execution\session.py", line 317, in finish_checkpoint
+    old_snapshot = self.workspace.update_snapshot()
+  File "F:\Projects\slop-code-bench-cymatix\src\slop_code\execution\workspace.py", line 297, in update_snapshot
+    self._initial_snapshot = self._snapshot_fn(self.working_dir)
+                             ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "F:\Projects\slop-code-bench-cymatix\src\slop_code\execution\session.py", line 366, in snapshot_fn
+    return Snapshot.from_environment_spec(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        cwd=cwd,
+        ^^^^^^^^
+        env_spec=spec,
+        ^^^^^^^^^^^^^^
+        static_assets=static_assets,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "F:\Projects\slop-code-bench-cymatix\src\slop_code\execution\snapshot.py", line 484, in from_environment_spec
+    return cls.from_directory(
+           ~~~~~~~~~~~~~~~~~~^
+        cwd=cwd,
+        ^^^^^^^^
+    ...<4 lines>...
+        keep_globs=env_spec.snapshot.keep_globs,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "F:\Projects\slop-code-bench-cymatix\src\slop_code\execution\snapshot.py", line 316, in from_directory
+    tf.add(
+    ~~~~~~^
+        abs_path,
+        ^^^^^^^^^
+        arcname=rel_path.as_posix(),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        recursive=False,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\max\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\tarfile.py", line 2281, in add
+    with bltn_open(name, "rb") as f:
+         ~~~~~~~~~^^^^^^^^^^^^
+OSError: [Errno 22] Invalid argument: 'C:\\Users\\max\\AppData\\Local\\Temp\\tmprwqm6e1z\\.venv-test\\bin\\python'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "F:\Projects\slop-code-bench-cymatix\src\slop_code\entrypoints\problem_runner\driver.py", line 78, in _run_problem_worker
+    results = run_agent_on_problem(
+        problem_config=problem_config,
+    ...<3 lines>...
+        output_path=prob_save_dir,
+    )
+  File "F:\Projects\slop-code-bench-cymatix\src\slop_code\entrypoints\problem_runner\worker.py", line 186, in run_agent_on_problem
+    return runner.run_agent(
+           ~~~~~~~~~~~~~~~~^
+        run_spec=run_spec,
+        ^^^^^^^^^^^^^^^^^^
+    ...<12 lines>...
+        resume_info=resume_info,
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "F:\Projects\slop-code-bench-cymatix\src\slop_code\agent_runner\runner.py", line 1232, in run_agent
+    return runner.run()
+           ~~~~~~~~~~^^
+  File "F:\Projects\slop-code-bench-cymatix\src\slop_code\agent_runner\runner.py", line 641, in run
+    results = self.finish()
+  File "F:\Projects\slop-code-bench-cymatix\src\slop_code\agent_runner\runner.py", line 673, in finish
+    self._session.__exit__(None, None, None)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "F:\Projects\slop-code-bench-cymatix\src\slop_code\execution\session.py", line 203, in __exit__
+    self.cleanup()
+    ~~~~~~~~~~~~^^
+  File "F:\Projects\slop-code-bench-cymatix\src\slop_code\execution\session.py", line 194, in cleanup
+    self.workspace.cleanup()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "F:\Projects\slop-code-bench-cymatix\src\slop_code\execution\workspace.py", line 333, in cleanup
+    self._temp_dir.cleanup()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\max\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\tempfile.py", line 955, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\tempfile.py", line 935, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\max\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\shutil.py", line 790, in rmtree
+    return _rmtree_unsafe(path, onexc)
+  File "C:\Users\max\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\shutil.py", line 613, in _rmtree_unsafe
+    for dirpath, dirnames, filenames in results:
+                                        ^^^^^^^
+  File "<frozen os>", line 372, in walk
+  File "C:\Users\max\AppData\Roaming\uv\python\cpython-3.13-windows-x86_64-none\Lib\shutil.py", line 611, in onerror
+    onexc(os.scandir, err.filename, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen os>", line 369, in walk
+OSError: [WinError 1920] The file cannot be accessed by the system: 'C:\\Users\\max\\AppData\\Local\\Temp\\tmprwqm6e1z\\.venv\\lib64'
+
+                    WARNING  Evaluation file not found                         
+                             checkpoint_dir='F:\\Projects\\cymatix-context\\.cl
+                             aude\\worktrees\\scbench-codex-ab\\benchmarks\\scb
+                             ench\\campaigns\\qualification\\pairs\\file-merger
+                             -r1\\control\\scbench\\file_merger\\checkpoint_1' 
+                             eval_file='F:\\Projects\\cymatix-context\\.claude\
+                             \worktrees\\scbench-codex-ab\\benchmarks\\scbench\
+                             \campaigns\\qualification\\pairs\\file-merger-r1\\
+                             control\\scbench\\file_merger\\checkpoint_1\\evalu
+                             ation.json'                                       
+                    WARNING  Checkpoint directory not found                    
+                             checkpoint_dir='F:\\Projects\\cymatix-context\\.cl
+                             aude\\worktrees\\scbench-codex-ab\\benchmarks\\scb
+                             ench\\campaigns\\qualification\\pairs\\file-merger
+                             -r1\\control\\scbench\\file_merger\\checkpoint_2' 
+                    WARNING  Checkpoint directory not found                    
+                             checkpoint_dir='F:\\Projects\\cymatix-context\\.cl
+                             aude\\worktrees\\scbench-codex-ab\\benchmarks\\scb
+                             ench\\campaigns\\qualification\\pairs\\file-merger
+                             -r1\\control\\scbench\\file_merger\\checkpoint_3' 
+                    WARNING  Checkpoint directory not found                    
+                             checkpoint_dir='F:\\Projects\\cymatix-context\\.cl
+                             aude\\worktrees\\scbench-codex-ab\\benchmarks\\scb
+                             ench\\campaigns\\qualification\\pairs\\file-merger
+                             -r1\\control\\scbench\\file_merger\\checkpoint_4' 
+                    INFO     Updated checkpoint results                        
+                             path='F:\\Projects\\cymatix-context\\.claude\\work
+                             trees\\scbench-codex-ab\\benchmarks\\scbench\\camp
+                             aigns\\qualification\\pairs\\file-merger-r1\\contr
+                             ol\\scbench\\checkpoint_results.jsonl'            
+                             report_count=1                                    
+
+                       Run Summary                       
+┌──────────────────────────────┬────────────────────────┐
+│ Metric                       │                  Value │
+├──────────────────────────────┼────────────────────────┤
+│ Problems ran                 │                      1 │
+│ Checkpoints                  │                      1 │
+│ Total cost                   │                $0.0000 │
+│ Mean cost / chkpt            │                   $N/A │
+│ Mean time / chkpt            │                    N/A │
+│ Mean input tokens / chkpt    │                      0 │
+│ Mean output tokens / chkpt   │                      0 │
+│ Mean steps / chkpt           │                    N/A │
+├──────────────────────────────┼────────────────────────┤
+│ % checkpoints solved         │                   0.0% │
+│ % checkpoints iso solved     │                   0.0% │
+│ % checkpoints core solved    │                   0.0% │
+│ % problems solved            │                   0.0% │
+│ % problems partial           │                   0.0% │
+│ Mean test pass rate          │                  0.000 │
+└──────────────────────────────┴────────────────────────┘
+                    INFO     Saved run summary                                 
+                             path='F:\\Projects\\cymatix-context\\.claude\\work
+                             trees\\scbench-codex-ab\\benchmarks\\scbench\\camp
+                             aigns\\qualification\\pairs\\file-merger-r1\\contr
+                             ol\\scbench\\result.json'                         
