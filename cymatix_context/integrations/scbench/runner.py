@@ -256,6 +256,41 @@ class CampaignRunner:
             raise ValueError(f"YAML object required: {path}")
         return value
 
+    def _cymatix_baseline_valid(self, head: str) -> bool:
+        """Allow only committed campaign metadata after the implementation pin."""
+        baseline = self.campaign.cymatix_commit
+        if head == baseline:
+            return True
+        try:
+            ancestor = self._probe(
+                ["git", "merge-base", "--is-ancestor", baseline, head],
+                cwd=self.cymatix_root,
+            )
+            if ancestor.returncode != 0:
+                return False
+            changed = self._probe(
+                ["git", "diff", "--name-only", baseline, head, "--"],
+                cwd=self.cymatix_root,
+            )
+            if changed.returncode != 0:
+                return False
+            campaign_prefix = (
+                self.campaign_root.relative_to(self.cymatix_root).as_posix() + "/"
+            )
+            allowed_files = {"benchmarks/scbench/README.md"}
+            paths = tuple(
+                line.strip().replace("\\", "/")
+                for line in (changed.stdout or "").splitlines()
+                if line.strip()
+            )
+            return bool(paths) and all(
+                path.startswith(campaign_prefix) or path in allowed_files
+                for path in paths
+            )
+        except Exception:
+            log.warning("Cymatix implementation baseline validation failed", exc_info=True)
+            return False
+
     def preflight(self) -> PreflightReceipt:
         """Observe and strictly validate every frozen campaign dependency."""
         checks: dict[str, bool] = {}
@@ -291,7 +326,11 @@ class CampaignRunner:
             ["git", "rev-parse", "HEAD"], self.cymatix_root
         )
         observed["cymatix_commit"] = cymatix_head
-        record("Cymatix commit", cymatix_ok and cymatix_head == self.campaign.cymatix_commit)
+        observed["cymatix_baseline_commit"] = self.campaign.cymatix_commit
+        record(
+            "Cymatix commit",
+            cymatix_ok and self._cymatix_baseline_valid(cymatix_head),
+        )
         scbench_ok, scbench_head = probe_text(
             ["git", "rev-parse", "HEAD"], self.scbench_root
         )
@@ -491,7 +530,11 @@ class CampaignRunner:
             errors.append("campaign manifest drift")
 
         for label, root, expected in (
-            ("Cymatix", self.cymatix_root, self.campaign.cymatix_commit),
+            (
+                "Cymatix",
+                self.cymatix_root,
+                str(receipt.observed.get("cymatix_commit", "")),
+            ),
             ("SCBench", self.scbench_root, self.campaign.scbench_commit),
         ):
             head = probe(["git", "rev-parse", "HEAD"], root)
@@ -783,7 +826,19 @@ class CampaignRunner:
             evidence[self._relative(stdout_path)] = _sha256_file(stdout_path)
             evidence[self._relative(stderr_path)] = _sha256_file(stderr_path)
             if exit_code != 0:
-                invalidation = f"{arm} process exited with status {exit_code}"
+                stderr_text = stderr_path.read_text(encoding="utf-8", errors="replace")
+                failure_text = stderr_text.casefold()
+                rate_limit_markers = (
+                    "429",
+                    "rate limit",
+                    "rate_limit",
+                    "usage limit",
+                    "quota exceeded",
+                )
+                if any(marker in failure_text for marker in rate_limit_markers):
+                    invalidation = f"{arm} rate limit invalidation (status {exit_code})"
+                else:
+                    invalidation = f"{arm} process exited with status {exit_code}"
             else:
                 try:
                     evidence.update(self._terminal_evidence(pair, arm, run_root))

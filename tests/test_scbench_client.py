@@ -47,7 +47,8 @@ def test_ingest_source_sends_provenance_and_verifies_count():
             "content": "VALUE = 1",
             "content_type": "code",
             "metadata": {
-                "path": "app.py",
+                "path": "repo://p/app.py",
+                "relative_path": "app.py",
                 "source_id": "repo://p/app.py",
                 "problem": "p",
                 "content_sha256": "a" * 64,

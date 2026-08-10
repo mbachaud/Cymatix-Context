@@ -176,11 +176,13 @@ class FakeCommandRunner:
         self.calls: list[tuple[list[str], dict]] = []
         self.arm_order: list[str] = []
         self.fail_arms: set[str] = set()
+        self.rate_limit_arms: set[str] = set()
         self.reported_error_arms: set[str] = set()
         self.cymatix_head = CYMATIX_HEAD
         self.scbench_head = SCBENCH_HEAD
         self.cymatix_status = ""
         self.scbench_status = ""
+        self.committed_cymatix_paths: tuple[str, ...] = ()
 
     def __call__(self, command, **kwargs):
         command = [str(part) for part in command]
@@ -214,6 +216,14 @@ class FakeCommandRunner:
             "--is-ancestor",
         ]:
             return subprocess.CompletedProcess(command, 0, "", "")
+        if executable == "git" and command[1:3] == ["diff", "--name-only"]:
+            paths = (
+                self.committed_cymatix_paths
+                if cwd == self.layout.cymatix_root
+                else ()
+            )
+            output = "".join(f"{path}\n" for path in paths)
+            return subprocess.CompletedProcess(command, 0, output, "")
         if executable == "codex" and command[1:] == ["--version"]:
             return subprocess.CompletedProcess(
                 command,
@@ -244,11 +254,14 @@ class FakeCommandRunner:
                 else "control"
             )
             self.arm_order.append(arm)
+            if arm in self.rate_limit_arms:
+                kwargs["stderr"].write("HTTP 429: usage limit reached\n")
+                kwargs["stderr"].flush()
             if arm not in self.fail_arms:
                 self._write_terminal_artifacts(command, arm)
             return subprocess.CompletedProcess(
                 command,
-                1 if arm in self.fail_arms else 0,
+                1 if arm in self.fail_arms or arm in self.rate_limit_arms else 0,
                 None,
                 None,
             )
@@ -367,6 +380,64 @@ def test_preflight_mismatch_writes_invalid_receipt_and_blocks_execution(layout):
     assert "SCBench commit" in data["errors"]
 
 
+def test_preflight_accepts_metadata_only_commit_after_cymatix_baseline(layout):
+    """A committed manifest cannot self-reference its own exact Git commit."""
+    baseline = "3" * 40
+    campaign = layout.campaign.model_copy(update={"cymatix_commit": baseline})
+    layout.manifest.write_text(
+        json.dumps(campaign.model_dump(mode="json")),
+        encoding="utf-8",
+    )
+    fake = FakeCommandRunner(layout)
+    fake.committed_cymatix_paths = (
+        "benchmarks/scbench/campaigns/campaign-1/manifest.json",
+        "benchmarks/scbench/README.md",
+    )
+    runner = CampaignRunner(
+        campaign,
+        manifest_path=layout.manifest,
+        cymatix_root=layout.cymatix_root,
+        scbench_root=layout.scbench_root,
+        problem_root=layout.problem_root,
+        output_root=layout.output_root,
+        auth_path=layout.auth_path,
+        run_command=fake,
+        min_free_disk_bytes=1,
+    )
+
+    receipt = runner.preflight()
+
+    assert receipt.valid is True
+    assert receipt.observed["cymatix_baseline_commit"] == baseline
+    assert receipt.observed["cymatix_commit"] == CYMATIX_HEAD
+
+
+def test_preflight_rejects_committed_source_drift_after_cymatix_baseline(layout):
+    """Baseline ancestry is insufficient when later commits alter implementation."""
+    baseline = "3" * 40
+    campaign = layout.campaign.model_copy(update={"cymatix_commit": baseline})
+    layout.manifest.write_text(
+        json.dumps(campaign.model_dump(mode="json")),
+        encoding="utf-8",
+    )
+    fake = FakeCommandRunner(layout)
+    fake.committed_cymatix_paths = ("cymatix_context/context_packet.py",)
+    runner = CampaignRunner(
+        campaign,
+        manifest_path=layout.manifest,
+        cymatix_root=layout.cymatix_root,
+        scbench_root=layout.scbench_root,
+        problem_root=layout.problem_root,
+        output_root=layout.output_root,
+        auth_path=layout.auth_path,
+        run_command=fake,
+        min_free_disk_bytes=1,
+    )
+
+    with pytest.raises(PreflightError, match="Cymatix commit"):
+        runner.preflight()
+
+
 def test_execution_rechecks_preflight_environment_for_drift(layout):
     """A valid receipt must not authorize execution after its checkout moves."""
     fake = FakeCommandRunner(layout)
@@ -462,6 +533,28 @@ def test_reported_inference_error_stops_before_mate(layout):
     with pytest.raises(PairInvalidError, match="reported an inference error"):
         runner.run_pair(PairSpec(problem="file-backup", replicate=1))
 
+    assert fake.arm_order == ["control"]
+
+
+def test_rate_limit_invalidates_pair_and_is_recorded(layout):
+    """A subscription limit must pause the campaign, never become a model miss."""
+    fake = FakeCommandRunner(layout)
+    fake.rate_limit_arms.add("control")
+    runner = _runner(layout, fake)
+    runner.preflight()
+
+    with pytest.raises(PairInvalidError, match="rate limit"):
+        runner.run_pair(PairSpec(problem="file-backup", replicate=1))
+
+    attempt = json.loads(
+        (
+            layout.output_root
+            / "file-backup-r1"
+            / "control"
+            / "attempt-001.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert "rate limit" in attempt["invalidation_reason"]
     assert fake.arm_order == ["control"]
 
 

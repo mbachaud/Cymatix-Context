@@ -124,7 +124,8 @@ class CymatixClient:
                 "content": source.content,
                 "content_type": source.content_type,
                 "metadata": {
-                    "path": source.relative_path,
+                    "path": source.source_id,
+                    "relative_path": source.relative_path,
                     "source_id": source.source_id,
                     "problem": problem,
                     "content_sha256": source.sha256,
