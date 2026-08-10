@@ -193,10 +193,10 @@ def build_scbench_command(
     if arm == "cymatix":
         command.extend(
             [
-                f"campaign_manifest={manifest_path.resolve().as_posix()}",
-                f"pair_id={_pair_id(pair)}",
-                f"replicate={pair.replicate}",
-                f"receipt_root={(arm_root / 'receipts').resolve().as_posix()}",
+                f"agent.campaign_manifest={manifest_path.resolve().as_posix()}",
+                f"agent.pair_id={_pair_id(pair)}",
+                f"agent.replicate={pair.replicate}",
+                f"agent.receipt_root={(arm_root / 'receipts').resolve().as_posix()}",
             ]
         )
     return command

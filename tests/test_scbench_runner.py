@@ -511,6 +511,31 @@ def test_scbench_command_is_sequential_and_disables_concurrent_eval(layout):
     assert "codex.yaml" in command[command.index("--agent") + 1]
 
 
+def test_treatment_command_targets_loaded_agent_config_fields(layout):
+    """SCBench only applies custom YAML fields through explicit agent.* overrides."""
+    pair = PairSpec(problem="file-backup", replicate=1)
+    command = build_scbench_command(
+        layout.campaign,
+        pair,
+        "cymatix",
+        scbench_root=layout.scbench_root,
+        manifest_path=layout.manifest,
+        arm_root=layout.output_root / "pair" / "cymatix",
+    )
+
+    overrides = {
+        value.split("=", 1)[0]
+        for value in command
+        if value.startswith("agent.")
+    }
+    assert overrides == {
+        "agent.campaign_manifest",
+        "agent.pair_id",
+        "agent.replicate",
+        "agent.receipt_root",
+    }
+
+
 def test_pair_runner_inverts_arm_order_by_replicate(layout):
     """Running both replicates in AB order would retain an order confound."""
     fake = FakeCommandRunner(layout)

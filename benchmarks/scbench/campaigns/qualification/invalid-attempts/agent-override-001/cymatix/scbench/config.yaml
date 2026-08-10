@@ -1,0 +1,78 @@
+agent:
+  binary: codex
+  campaign_manifest: benchmarks/scbench/campaigns/__SET_BY_HARNESS__/manifest.json
+  cost_limits:
+    cost_limit: 0
+    max_retries: 0
+    net_cost_limit: 0
+    step_limit: 0
+  env: {}
+  extra_args: []
+  pair_id: __SET_BY_HARNESS__
+  receipt_root: outputs/scbench-receipts
+  replicate: 1
+  timeout: 7200
+  type: codex_cymatix
+  version: 0.147.0
+agent_config_path: F:\Projects\slop-code-bench-cymatix\configs\agents\codex_cymatix.yaml
+environment:
+  commands:
+    agent_command: python
+    command: uv run
+    entry_file: '{entry_file}.py'
+  docker:
+    image: ghcr.io/astral-sh/uv:python3.12-trixie-slim
+    mount_workspace: true
+    workdir: /workspace
+  environment:
+    env:
+      PIP_CACHE_DIR: /tmp/pip-cache-dir
+      PIP_CONFIG_FILE: /tmp/pip-conf
+      UV_CACHE_DIR: /tmp/uv-cache
+  name: python3.12
+  setup:
+    eval_commands:
+    - uv init
+    - uv add -r requirements.txt
+    resume_commands:
+    - python -m venv .venv || true
+    - .venv/bin/pip install -r requirements.txt 2>/dev/null || true
+  type: docker
+environment_config_path: F:\Projects\slop-code-bench-cymatix\configs\environments\docker-python3.12-uv.yaml
+model:
+  name: gpt-5.6-luna
+  provider: codex_auth
+one_shot:
+  enabled: false
+  include_first_prefix: false
+  prefix: ''
+output_path: F:/Projects/cymatix-context/.claude/worktrees/scbench-codex-ab/benchmarks/scbench/campaigns/qualification/pairs/file-merger-r1/cymatix/scbench
+pass_policy: any
+problems:
+- file_merger
+prompt_content: 'Implement a program that 100% solves the specification. That is all
+  you need to do.
+
+  {% if not is_continuation -%}
+
+  Use a virtual environment and ensure that a `requirements.txt` is present with any
+  dependencies you need to solve the problem.
+
+  {% else -%}
+
+  Keep using the same virtual environment you started with, update `requirements.txt`
+  with any new dependencies you need.
+
+  {% endif -%}
+
+
+  Your task is:
+
+  {{ spec.strip() }}
+
+  '
+prompt_path: F:\Projects\slop-code-bench-cymatix\configs\prompts\just-solve.jinja
+save_dir: F:/Projects/cymatix-context/.claude/worktrees/scbench-codex-ab/benchmarks/scbench/campaigns/qualification/pairs/file-merger-r1/cymatix
+save_template: scbench
+thinking: medium
+thinking_max_tokens: null

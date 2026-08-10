@@ -1,0 +1,2 @@
+# Parquet support (CSV/TSV/JSONL use the standard library).
+pyarrow>=14

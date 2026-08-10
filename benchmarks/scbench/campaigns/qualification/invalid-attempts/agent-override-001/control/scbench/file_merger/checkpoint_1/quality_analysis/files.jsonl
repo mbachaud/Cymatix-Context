@@ -1,0 +1,1 @@
+{"file_path": "merge_files.py", "loc": 307, "total_lines": 351, "comments": 3, "multi_comment": 0, "single_comment": 5, "lint_errors": 81, "lint_fixable": 8, "mi": 11.444989942740927, "depth": 1, "is_entry_language": true, "import_count": 13, "global_count": 3, "symbol_count": 21, "single_use_count": 12, "trivial_wrapper_count": 1, "unused_variable_count": 4}
