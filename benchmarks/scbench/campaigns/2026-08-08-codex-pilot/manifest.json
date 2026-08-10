@@ -154,6 +154,6 @@
     "qualification_operational_receipt_sha256": "30e42d0f606f2e5a0c5af38a802449c7d9c9ea4e0811340799fe11cbcbb55f54",
     "fork_repository": "https://github.com/mbachaud/slop-code-bench",
     "fork_branch": "cymatix/codex-ab",
-    "tracking_issue_url": null
+    "tracking_issue_url": "https://github.com/mbachaud/Cymatix-Context/issues/359"
   }
 }

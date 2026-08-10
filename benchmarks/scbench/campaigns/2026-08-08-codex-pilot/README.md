@@ -35,7 +35,7 @@ immutable input.
 - [x] Independently recount the eight pinned problem configs as 40 total / 32 primary checkpoints per arm.
 - [x] Pin matching control and treatment Docker image digests.
 - [x] Run pilot preflight and the final contract/config/qualification tests.
-- [ ] Obtain operator confirmation of the frozen campaign commit, fork commit, Docker digest, projected subscription usage, and runtime.
+- [x] Obtain operator confirmation of the frozen campaign commit, fork commit, Docker digest, projected subscription usage, and runtime.
 - [ ] Execute the 16 order-balanced problem/replicate pairs without tuning.
 - [ ] Verify all receipts, run the predeclared paired analysis, and record one graduate/stop decision.
 
@@ -45,4 +45,5 @@ The one-pair qualification consumed 3,772,264 input tokens (including 3,450,880 
 
 ## Tracking
 
-Campaign issue: pending creation. No GitHub Project is used for the pilot.
+Campaign issue: [#359](https://github.com/mbachaud/Cymatix-Context/issues/359).
+No GitHub Project is used for the pilot.
