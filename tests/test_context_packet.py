@@ -89,6 +89,49 @@ def test_packet_read_only_session_does_not_log_delivery():
         genome.close()
 
 
+def test_packet_session_delivery_disabled_does_not_elide_or_log():
+    """`[budget] session_delivery_enabled = false` must switch the packet
+    working-set off even when the caller supplies a session_id.
+
+    Regression: the packet path originally gated on session_id alone, so a
+    deployment with the feature off still got elision stubs and delivery-log
+    writes. /context has always gated on the config flag
+    (context_manager.py `session_on`); this keeps the two paths in step.
+    """
+    now_ts = 90_000.0
+    genome = _delivery_test_genome(now_ts)
+    try:
+        first = build_context_packet(
+            "packet delivery",
+            genome=genome,
+            now_ts=now_ts,
+            session_id="disabled-session",
+            session_delivery_enabled=False,
+        )
+        first_item = (first.verified + first.stale_risk)[0]
+        assert "Packet delivery tracking" in first_item.content
+
+        repeated = build_context_packet(
+            "packet delivery",
+            genome=genome,
+            now_ts=now_ts + 10.0,
+            session_id="disabled-session",
+            session_delivery_enabled=False,
+        )
+        repeated_item = (repeated.verified + repeated.stale_risk)[0]
+        # No stub: the second call returns the same full content.
+        assert repeated_item.content == first_item.content
+        assert "see earlier response" not in repeated_item.content
+
+        # And nothing was written to the delivery log.
+        assert session_delivery.session_manifest(
+            genome.conn,
+            session_id="disabled-session",
+        ) == []
+    finally:
+        genome.close()
+
+
 def test_build_context_packet_marks_recent_stable_doc_verified():
     now_ts = 10_000.0
     genome = Genome(":memory:")

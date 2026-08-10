@@ -471,6 +471,7 @@ def build_context_packet(
     read_only: bool = False,
     session_id: str | None = None,
     ignore_delivered: bool = False,
+    session_delivery_enabled: bool = True,
     include_raw: bool = False,
     max_item_chars: int | None = None,
 ) -> ContextPacket:
@@ -496,7 +497,15 @@ def build_context_packet(
     if effective_main_conn is None and router is not None:
         effective_main_conn = getattr(router, "main_conn", None)
 
-    effective_session_id = session_id.strip() if session_id else None
+    # Session working-set elision mirrors the /context gate in
+    # context_manager.py (``session_on``): the subsystem is config-owned, so
+    # a caller passing session_id is not on its own enough to opt in. Callers
+    # that hold a config must forward ``[budget] session_delivery_enabled``;
+    # without that the packet path would elide content and write delivery
+    # rows on deployments that switched the feature off.
+    effective_session_id = (
+        session_id.strip() if (session_id and session_delivery_enabled) else None
+    )
     delivery_read_conn = getattr(genome, "read_conn", None)
     delivery_write_conn = getattr(genome, "conn", None)
 

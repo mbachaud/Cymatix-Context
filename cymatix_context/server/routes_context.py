@@ -623,6 +623,7 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
             read_only=read_only,
             session_id=session_id,
             ignore_delivered=ignore_delivered,
+            session_delivery_enabled=config.budget.session_delivery_enabled,
             include_raw=include_raw,
             max_item_chars=max_item_chars,
         )

@@ -14,7 +14,7 @@ from fastapi.testclient import TestClient
 
 import cymatix_context.server as server_mod
 import cymatix_context.context_packet as context_packet_mod
-from cymatix_context.config import CymatixConfig, GenomeConfig, KnowConfig, PLRConfig, RibosomeConfig, ServerConfig
+from cymatix_context.config import BudgetConfig, CymatixConfig, GenomeConfig, KnowConfig, PLRConfig, RibosomeConfig, ServerConfig
 from cymatix_context.schemas import ContextPacket
 from cymatix_context.server import create_app
 
@@ -1289,6 +1289,43 @@ class TestContextPacketEndpoint:
         assert response.status_code == 200
         assert captured["session_id"] == "bench-session"
         assert captured["ignore_delivered"] is True
+        assert captured["session_delivery_enabled"] is True
+
+    def test_packet_forwards_disabled_session_delivery_config(self, monkeypatch):
+        """`[budget] session_delivery_enabled = false` reaches the builder.
+
+        Without this the packet path would elide and write delivery rows on
+        deployments that switched the working-set off — /context has always
+        honored the flag.
+        """
+        captured = {}
+
+        def fake_build_context_packet(query, **kwargs):
+            captured.update(kwargs)
+            return ContextPacket(task_type=kwargs["task_type"], query=query)
+
+        monkeypatch.setattr(
+            context_packet_mod,
+            "build_context_packet",
+            fake_build_context_packet,
+        )
+        test_client = make_client(
+            make_cymatix_config(
+                plr=PLRConfig(enabled=False),
+                budget=BudgetConfig(
+                    max_genes_per_turn=4,
+                    session_delivery_enabled=False,
+                ),
+            )
+        )
+
+        response = test_client.post(
+            "/context/packet",
+            json={"query": "packet delivery", "session_id": "bench-session"},
+        )
+
+        assert response.status_code == 200
+        assert captured["session_delivery_enabled"] is False
 
     def test_packet_rejects_non_string_session_id(self, client):
         response = client.post(
