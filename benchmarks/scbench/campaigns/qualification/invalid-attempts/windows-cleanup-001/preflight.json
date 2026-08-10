@@ -1,0 +1,53 @@
+{
+  "campaign_id": "qualification",
+  "checks": {
+    "Codex auth file": true,
+    "Codex login": true,
+    "Cymatix commit": true,
+    "Cymatix worktree clean": true,
+    "Docker daemon": true,
+    "Docker image codex": true,
+    "Docker image codex_cymatix": true,
+    "Docker image parity": true,
+    "SCBench commit": true,
+    "SCBench worktree clean": true,
+    "agent Codex version": true,
+    "agent configuration symmetry": true,
+    "agent retries disabled": true,
+    "campaign manifest": true,
+    "campaign output empty": true,
+    "contract cymatix-contract.json": true,
+    "contract scbench-06b5c068.json": true,
+    "free disk space": true,
+    "host Codex version": true,
+    "model identity": true,
+    "model provider": true,
+    "problem file-merger": true,
+    "reasoning effort": true
+  },
+  "config_hash": "e4bbbcb08b28804d6efba8394be626c308d532b6dc1c4fc896de6930b198a319",
+  "contract_hashes": {
+    "cymatix-contract.json": "802352a252b00bb4e7f7ff16eefcea7dcc6df61060409dd8c407c9f7b50cd786",
+    "scbench-06b5c068.json": "9d5f47c3d890b59d0889eae24264bfaf8a5eabe2184587abbf19467716bc40f2"
+  },
+  "errors": [],
+  "generated_at": "2026-08-10T09:25:43.140861+00:00",
+  "observed": {
+    "auth_type": "chatgpt_subscription",
+    "checkpoint_counts": {
+      "file-merger": 4
+    },
+    "codex_login_status": "Logged in using ChatGPT",
+    "codex_version": "codex-cli 0.147.0",
+    "cymatix_baseline_commit": "823b4202887d4448d386522b7c41ded6a9931ead",
+    "cymatix_commit": "ac4797ced4d9fc0640d4d8406ef63cba2eca9025",
+    "docker_image_digest": "sha256:8bd6d4f3c22131d3df70631b0aa8e12813781812413a034c552466ef5fee39f2",
+    "docker_version": "\"29.6.2\"",
+    "free_disk_bytes": 337218830336,
+    "reasoning_effort": "medium",
+    "scbench_commit": "babf7bf5b3d3d6abed06fe0a501c68d0902d323e"
+  },
+  "receipt_type": "preflight",
+  "schema_version": 1,
+  "valid": true
+}

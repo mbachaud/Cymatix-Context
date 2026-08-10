@@ -1,0 +1,121 @@
+{
+  "classes": {
+    "attribute_counts_mean": 2.0,
+    "attribute_counts_sum": 4,
+    "count": 2,
+    "method_counts_mean": 1.5,
+    "method_counts_sum": 3
+  },
+  "complexity": {
+    "cc_max": 46,
+    "cc_ratings": {
+      "A": 14,
+      "B": 5,
+      "C": 4,
+      "D": 1,
+      "E": 1,
+      "F": 1
+    },
+    "cc_sum": 215,
+    "mi_min": 0.0,
+    "mi_ratings": {
+      "A": 0,
+      "B": 0,
+      "C": 1
+    },
+    "mi_sum": 0.0,
+    "num_complex": 7
+  },
+  "file_count": 1,
+  "functions": {
+    "cc_concentration": 0.5373200442967885,
+    "cc_extreme_count": 2,
+    "cc_high_count": 7,
+    "cc_max": 46,
+    "cc_mean": 10.238095238095237,
+    "cc_normalized": 0.062007571660356954,
+    "cc_std": 11.682913857016844,
+    "cc_sum": 215,
+    "cc_top20": 0.627906976744186,
+    "count": 21,
+    "depth_max": 7,
+    "extreme_cc_mean": 38.5,
+    "high_cc_mean": 22.428571428571427,
+    "lines_mean": 12.666666666666666,
+    "lines_sum": 266
+  },
+  "graph": {
+    "cyclic_dependency_mass": 0.0,
+    "dependency_entropy": 0.09404792529672157,
+    "edge_count": 20,
+    "node_count": 21,
+    "propagation_cost": 0.06904761904761905
+  },
+  "lines": {
+    "comments": 3,
+    "loc": 271,
+    "multi_comment": 0,
+    "single_comment": 4,
+    "total_lines": 296
+  },
+  "lint": {
+    "counts": {
+      "B904": 7,
+      "B905": 2,
+      "BLE001": 1,
+      "C408": 2,
+      "C901": 4,
+      "EM101": 11,
+      "EM102": 14,
+      "PERF203": 3,
+      "PLC0415": 1,
+      "PLC1901": 3,
+      "PLR0124": 1,
+      "PLR0911": 1,
+      "PLR0912": 4,
+      "PLR0914": 1,
+      "PLR0915": 1,
+      "PLR1702": 2,
+      "PLR6201": 6,
+      "PTH100": 1,
+      "PTH105": 1,
+      "PTH108": 3,
+      "PTH118": 2,
+      "PTH120": 1,
+      "PTH122": 1,
+      "PTH123": 7,
+      "RUF021": 1,
+      "S301": 1,
+      "S403": 1,
+      "SIM115": 1,
+      "TRY003": 25,
+      "TRY300": 1,
+      "TRY301": 1,
+      "UP015": 1
+    },
+    "errors": 112,
+    "fixable": 13
+  },
+  "source_files": [
+    "merge_files.py"
+  ],
+  "symbols": {
+    "classes": 2,
+    "expressions": 657,
+    "expressions_top_level": 16,
+    "functions": 18,
+    "globals": 3,
+    "imports": 2,
+    "max_imports": 2,
+    "methods": 3,
+    "statements": 214,
+    "total": 26,
+    "type_aliases": 0,
+    "variables": 3
+  },
+  "waste": {
+    "single_use_functions": 13,
+    "trivial_wrappers": 0,
+    "unused_variables": 3
+  }
+}

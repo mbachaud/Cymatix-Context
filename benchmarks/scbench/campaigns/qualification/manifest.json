@@ -2,7 +2,7 @@
   "schema_version": 1,
   "campaign_id": "qualification",
   "cymatix_commit": "823b4202887d4448d386522b7c41ded6a9931ead",
-  "scbench_commit": "babf7bf5b3d3d6abed06fe0a501c68d0902d323e",
+  "scbench_commit": "b85ccbd960b066aa64758b68f4261e8508f5cc1c",
   "codex_version": "codex-cli 0.147.0",
   "codex_model": "gpt-5.6-luna",
   "reasoning_effort": "medium",

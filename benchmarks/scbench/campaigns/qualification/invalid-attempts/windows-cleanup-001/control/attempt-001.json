@@ -1,0 +1,41 @@
+{
+  "arm": "control",
+  "attempt": 1,
+  "attempt_id": "attempt-001",
+  "campaign_id": "qualification",
+  "command": [
+    "F:\\Projects\\slop-code-bench-cymatix\\.venv\\Scripts\\slop-code.exe",
+    "run",
+    "--agent",
+    "F:/Projects/slop-code-bench-cymatix/configs/agents/codex.yaml",
+    "--model",
+    "codex_auth/gpt-5.6-luna",
+    "--problem",
+    "file_merger",
+    "--num-workers",
+    "1",
+    "--no-concurrent-evaluation",
+    "--no-live-progress",
+    "--evaluate",
+    "thinking=medium",
+    "save_dir=F:/Projects/cymatix-context/.claude/worktrees/scbench-codex-ab/benchmarks/scbench/campaigns/qualification/pairs/file-merger-r1/control",
+    "save_template=scbench"
+  ],
+  "command_sha256": "d36750eb4797e2d4722eabc92a8fa552ce7c275c4af90e326edd3c545101a659",
+  "config_hash": "e4bbbcb08b28804d6efba8394be626c308d532b6dc1c4fc896de6930b198a319",
+  "evidence_hashes": {
+    "pairs/file-merger-r1/control/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pairs/file-merger-r1/control/stdout.log": "6e62d6e07db0a57d60296896c4a6bff7f2ec2481ce046af902a60c4c8cc4173b"
+  },
+  "exit_code": 0,
+  "generated_at": "2026-08-10T09:48:57.165999+00:00",
+  "invalidation_reason": "control terminal verification failed: [Errno 2] No such file or directory: 'F:\\\\Projects\\\\cymatix-context\\\\.claude\\\\worktrees\\\\scbench-codex-ab\\\\benchmarks\\\\scbench\\\\campaigns\\\\qualification\\\\pairs\\\\file-merger-r1\\\\control\\\\scbench\\\\file_merger\\\\run_info.yaml'",
+  "output_path": "pairs/file-merger-r1/control/scbench",
+  "pair_id": "file-merger-r1",
+  "problem": "file-merger",
+  "receipt_type": "arm_attempt",
+  "replicate": 1,
+  "retry_of": null,
+  "schema_version": 1,
+  "valid": false
+}

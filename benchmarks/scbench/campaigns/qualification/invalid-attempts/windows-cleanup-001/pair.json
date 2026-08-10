@@ -1,0 +1,19 @@
+{
+  "arms": {
+    "control": "pairs/file-merger-r1/control/attempt-001.json"
+  },
+  "campaign_id": "qualification",
+  "config_hash": "e4bbbcb08b28804d6efba8394be626c308d532b6dc1c4fc896de6930b198a319",
+  "generated_at": "2026-08-10T09:48:57.180688+00:00",
+  "invalidation_reason": "control terminal verification failed: [Errno 2] No such file or directory: 'F:\\\\Projects\\\\cymatix-context\\\\.claude\\\\worktrees\\\\scbench-codex-ab\\\\benchmarks\\\\scbench\\\\campaigns\\\\qualification\\\\pairs\\\\file-merger-r1\\\\control\\\\scbench\\\\file_merger\\\\run_info.yaml'",
+  "order": [
+    "control",
+    "cymatix"
+  ],
+  "pair_id": "file-merger-r1",
+  "problem": "file-merger",
+  "receipt_type": "pair_run",
+  "replicate": 1,
+  "schema_version": 1,
+  "valid": false
+}
