@@ -1,0 +1,19 @@
+{
+  "arms": {
+    "cymatix": "pairs/file-merger-r2/cymatix/attempt-001.json"
+  },
+  "campaign_id": "qualification",
+  "config_hash": "7ed511959794a042b85d7e562153b23ea015b9ca01690cd2c5a3292126fa3e17",
+  "generated_at": "2026-08-10T10:49:18.940641+00:00",
+  "invalidation_reason": "cymatix terminal verification failed: cymatix: expected 4 checkpoint results, got 1",
+  "order": [
+    "cymatix",
+    "control"
+  ],
+  "pair_id": "file-merger-r2",
+  "problem": "file-merger",
+  "receipt_type": "pair_run",
+  "replicate": 2,
+  "schema_version": 1,
+  "valid": false
+}

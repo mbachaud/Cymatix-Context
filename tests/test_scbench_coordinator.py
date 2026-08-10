@@ -184,7 +184,7 @@ def test_initialization_accepts_empty_create_from_scratch_workspace(tmp_path):
         workspace_root=workspace,
         receipt_root=tmp_path / "receipts",
         client=client,
-        warmup_enabled=False,
+        warmup_enabled=True,
     )
 
     coordinator.initialize()
@@ -194,6 +194,8 @@ def test_initialization_accepts_empty_create_from_scratch_workspace(tmp_path):
     assert coordinator.initial_sync.ingested == 0
     assert coordinator.initial_sync.verified is True
     assert client.source_calls == []
+    assert client.packet_calls == []
+    assert coordinator.warmup_elapsed_ms == 0
     assert prepared.prompt == "create the initial implementation"
     assert prepared.packet is None
 

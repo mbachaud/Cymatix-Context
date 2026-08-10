@@ -291,7 +291,7 @@ class TreatmentCoordinator:
             self.last_sync = sync
             self._manifest = manifest
 
-            if self.warmup_enabled:
+            if self.warmup_enabled and manifest.sources:
                 warmup_started = time.monotonic()
                 warmup = self._client.context_packet(
                     "SCBench unscored warm-up packet verification",

@@ -1,0 +1,23 @@
+[ribosome]
+enabled = false
+query_expansion_enabled = false
+query_decomposition_enabled = false
+
+[genome]
+path = "F:/Projects/cymatix-context/.claude/worktrees/scbench-codex-ab/benchmarks/scbench/campaigns/qualification/pairs/file-merger-r2/cymatix/receipts/sidecar/cymatix.genome.db"
+
+[server]
+host = "127.0.0.1"
+port = 64962
+
+[budget]
+max_genes_per_turn = 8
+session_delivery_enabled = true
+
+[ingestion]
+splade_enabled = false
+dense_embed_on_ingest = false
+sema_embed_on_ingest = false
+
+[retrieval]
+dense_embedding_enabled = false
