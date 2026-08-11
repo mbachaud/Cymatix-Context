@@ -331,11 +331,7 @@ class CampaignRunner:
         def probe_text(command: list[str], cwd: Path) -> tuple[bool, str]:
             try:
                 result = self._probe(command, cwd=cwd)
-                output = (
-                    result.stdout
-                    if result.returncode == 0
-                    else result.stdout or result.stderr
-                ) or ""
+                output = result.stdout or result.stderr or ""
                 return result.returncode == 0, output.strip()
             except Exception:
                 log.warning("preflight probe failed: %s", command, exc_info=True)
@@ -370,8 +366,15 @@ class CampaignRunner:
             ("Cymatix worktree clean", self.cymatix_root),
             ("SCBench worktree clean", self.scbench_root),
         ):
-            ok, status = probe_text(["git", "status", "--porcelain"], root)
-            record(label, ok and not status)
+            try:
+                status_result = self._probe(
+                    ["git", "status", "--porcelain"], cwd=root
+                )
+                status = (status_result.stdout or "").strip()
+                record(label, status_result.returncode == 0 and not status)
+            except Exception:
+                log.warning("worktree status probe failed: %s", root, exc_info=True)
+                record(label, False)
 
         contract_specs = (
             ("cymatix-contract.json", self.cymatix_root, "base_commit"),
