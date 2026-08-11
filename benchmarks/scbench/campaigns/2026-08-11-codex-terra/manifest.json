@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "campaign_id": "2026-08-11-codex-terra",
-  "cymatix_commit": "0b125eabebb03c3566befa81be94443119877abd",
+  "cymatix_commit": "88c29f5354644de36eb799d0511c72e9db4d2851",
   "scbench_commit": "bb40ec5e057631af871d3ade790019018870de4c",
   "codex_version": "codex-cli 0.147.0",
   "codex_model": "gpt-5.6-terra",
