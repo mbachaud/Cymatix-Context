@@ -331,7 +331,11 @@ class CampaignRunner:
         def probe_text(command: list[str], cwd: Path) -> tuple[bool, str]:
             try:
                 result = self._probe(command, cwd=cwd)
-                output = result.stdout or result.stderr or ""
+                output = (
+                    result.stdout
+                    if result.returncode == 0
+                    else result.stdout or result.stderr
+                ) or ""
                 return result.returncode == 0, output.strip()
             except Exception:
                 log.warning("preflight probe failed: %s", command, exc_info=True)

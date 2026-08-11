@@ -191,6 +191,7 @@ class FakeCommandRunner:
         self.scbench_head = SCBENCH_HEAD
         self.cymatix_status = ""
         self.scbench_status = ""
+        self.git_status_stderr = ""
         self.committed_cymatix_paths: tuple[str, ...] = ()
         self.spacy_available = True
 
@@ -223,7 +224,9 @@ class FakeCommandRunner:
                 if cwd == self.layout.cymatix_root
                 else self.scbench_status
             )
-            return subprocess.CompletedProcess(command, 0, status, "")
+            return subprocess.CompletedProcess(
+                command, 0, status, self.git_status_stderr
+            )
         if executable == "git" and command[1:3] == [
             "merge-base",
             "--is-ancestor",
@@ -499,6 +502,16 @@ def test_preflight_records_exact_clean_subscription_environment(layout):
     assert receipt.observed["spacy_version"] == "3.8.7"
     assert receipt.observed["checkpoint_counts"] == {"file-backup": 2}
     assert (layout.manifest.parent / "preflight.json").exists()
+
+
+def test_preflight_does_not_treat_git_warning_as_worktree_changes(layout):
+    fake = FakeCommandRunner(layout)
+    fake.git_status_stderr = "warning: inaccessible ignored temp directory\n"
+
+    receipt = _runner(layout, fake).preflight()
+
+    assert receipt.checks["Cymatix worktree clean"] is True
+    assert receipt.checks["SCBench worktree clean"] is True
 
 
 def test_preflight_independently_validates_frozen_checkpoint_totals(layout):
