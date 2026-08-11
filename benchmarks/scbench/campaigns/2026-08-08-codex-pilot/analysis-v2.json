@@ -1,0 +1,105 @@
+{
+  "all_checkpoint_count": 80,
+  "analysis_metric_version": "paired_regression_v2",
+  "control_isolated_solve_rate": 0.125,
+  "control_regression_passed": 4285,
+  "cymatix_isolated_solve_rate": 0.140625,
+  "cymatix_regression_passed": 4290,
+  "erosion_interval": {
+    "accepted_samples": 10000,
+    "iterations": 10000,
+    "lower": -0.04656539593646253,
+    "rejected_samples": 0,
+    "seed": 20260808,
+    "upper": 0.06797400088201194
+  },
+  "gate_passed": true,
+  "gates": [
+    {
+      "description": "The problem-clustered regression interval does not detect Cymatix harm.",
+      "gate_id": "regression_safety",
+      "observed": 0.020547945205479423,
+      "status": "pass",
+      "threshold": "upper >= 0"
+    },
+    {
+      "description": "Isolated solve rate is no worse than control by more than 2.5 percentage points.",
+      "gate_id": "isolated_solve_noninferiority",
+      "observed": 0.015625,
+      "status": "pass",
+      "threshold": ">= -0.025"
+    },
+    {
+      "description": "The clustered erosion interval is not entirely above +0.03.",
+      "gate_id": "erosion_noninferiority",
+      "observed": -0.04656539593646253,
+      "status": "pass",
+      "threshold": "lower <= 0.03"
+    },
+    {
+      "description": "The clustered verbosity interval is not entirely above +0.03.",
+      "gate_id": "verbosity_noninferiority",
+      "observed": -0.09845080475716539,
+      "status": "pass",
+      "threshold": "lower <= 0.03"
+    },
+    {
+      "description": "Median input tokens increase by no more than 25%.",
+      "gate_id": "median_input_token_ratio",
+      "observed": 1.0835296467480175,
+      "status": "pass",
+      "threshold": "<= 1.25"
+    },
+    {
+      "description": "Median checkpoint elapsed time increases by no more than 30%.",
+      "gate_id": "median_elapsed_ratio",
+      "observed": 1.0281399323853833,
+      "status": "pass",
+      "threshold": "<= 1.30"
+    },
+    {
+      "description": "There are zero unresolved integrity or operational failures.",
+      "gate_id": "integrity_failures",
+      "observed": 0,
+      "status": "pass",
+      "threshold": "== 0"
+    }
+  ],
+  "integrity_failure_count": 0,
+  "isolated_solve_difference": 0.015625,
+  "median_elapsed_ratio": 1.0281399323853833,
+  "median_erosion_delta": 0.03084718887326976,
+  "median_input_token_ratio": 1.0835296467480175,
+  "median_regression_delta": 0.0,
+  "median_verbosity_delta": 0.030608551156244473,
+  "operational_invalidations": [],
+  "primary_checkpoint_count": 64,
+  "regression_head_to_head": {
+    "control_better": 23,
+    "cymatix_better": 24,
+    "tied": 17
+  },
+  "regression_interval": {
+    "accepted_samples": 10000,
+    "iterations": 10000,
+    "lower": -0.035172272354388856,
+    "rejected_samples": 0,
+    "seed": 20260808,
+    "upper": 0.020547945205479423
+  },
+  "regression_total_each": 5908,
+  "strict_head_to_head": {
+    "control_better": 28,
+    "cymatix_better": 35,
+    "tied": 17
+  },
+  "verbosity_interval": {
+    "accepted_samples": 10000,
+    "iterations": 10000,
+    "lower": -0.09845080475716539,
+    "rejected_samples": 0,
+    "seed": 20260808,
+    "upper": 0.1588552546621596
+  },
+  "verdict": "no_detectable_difference"
+}

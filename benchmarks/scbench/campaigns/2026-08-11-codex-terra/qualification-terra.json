@@ -1,0 +1,15 @@
+{
+  "auth_type": "chatgpt_subscription",
+  "codex_version": "codex-cli 0.147.0",
+  "completed_at_utc": "2026-08-11T19:47:15.9891762Z",
+  "ephemeral": true,
+  "input_tokens": 18975,
+  "model": "gpt-5.6-terra",
+  "output_tokens": 10,
+  "prompt": "Reply exactly TERRA_SUBSCRIPTION_OK. Do not use tools.",
+  "reasoning_effort": "medium",
+  "response": "TERRA_SUBSCRIPTION_OK",
+  "sandbox": "read-only",
+  "success": true,
+  "thread_id": "019ff25d-29a4-7512-8bfc-d52026d4ac11"
+}

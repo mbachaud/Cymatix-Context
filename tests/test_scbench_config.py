@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from pathlib import Path
 
 import pytest
 
@@ -193,3 +194,25 @@ def test_campaign_rejects_primary_checkpoint_arithmetic_drift():
 
     with pytest.raises(ValueError, match="primary_checkpoints must equal"):
         CampaignConfig.model_validate(data)
+
+
+def test_terra_manifest_freezes_replication_model_order_and_size():
+    manifest = (
+        Path(__file__).parents[1]
+        / "benchmarks"
+        / "scbench"
+        / "campaigns"
+        / "2026-08-11-codex-terra"
+        / "manifest.json"
+    )
+
+    campaign = CampaignConfig.load(manifest)
+
+    assert campaign.codex_model == "gpt-5.6-terra"
+    assert campaign.reasoning_effort == "medium"
+    assert campaign.auth_type == "chatgpt_subscription"
+    assert campaign.arm_order(1) == ("control", "cymatix")
+    assert campaign.arm_order(2) == ("cymatix", "control")
+    assert campaign.expected_checkpoints == 40
+    assert campaign.primary_checkpoints == 32
+    assert len(campaign.problems) == 8

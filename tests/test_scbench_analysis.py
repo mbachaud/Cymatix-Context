@@ -14,12 +14,15 @@ from cymatix_context.integrations.scbench.analysis import (
     CheckpointResult,
     PairedDataset,
     analyze_campaign,
+    analyze_campaign_v2,
     clustered_bootstrap,
+    compute_paired_regression_v2,
     compute_pilot_summary,
     load_arm_results,
     pair_checkpoints,
     regression_event,
     render_markdown,
+    write_analysis_v2_summary,
 )
 from cymatix_context.integrations.scbench.config import CampaignConfig, SourcePolicy
 
@@ -40,6 +43,8 @@ def _checkpoint(
     input_tokens: int | None = 100,
     elapsed: float | None = 10.0,
     metric_version: str = "0.1.3",
+    regression_passed: int | None = None,
+    regression_total: int | None = None,
 ) -> CheckpointResult:
     return CheckpointResult(
         problem=problem,
@@ -51,6 +56,8 @@ def _checkpoint(
         metric_version=metric_version,
         strict_pass_rate=strict,
         isolated_pass_rate=isolated,
+        regression_passed=regression_passed,
+        regression_total=regression_total,
         erosion=erosion,
         verbosity=verbosity,
         input_tokens=input_tokens,
@@ -113,6 +120,125 @@ def test_regression_event_requires_isolated_pass_and_strict_failure():
     assert not regression_event(
         {"isolated_pass_rate": 1.0, "strict_pass_rate": 1.0}
     )
+
+
+def test_loader_preserves_direct_regression_test_counters(tmp_path):
+    """Dropping prior-test counters would force v2 back onto strict-score proxies."""
+    result = {
+        "problem": "execution_server",
+        "checkpoint": "checkpoint_2",
+        "idx": 2,
+        "state": "ran",
+        "strict_pass_rate": 0.98,
+        "isolated_pass_rate": 1.0,
+        "regression_passed": 44,
+        "regression_total": 45,
+        "scb_check_version": "0.1.3",
+    }
+    path = tmp_path / "checkpoint_results.jsonl"
+    path.write_text(json.dumps(result) + "\n", encoding="utf-8")
+
+    loaded = load_arm_results(
+        path,
+        arm="control",
+        replicate=1,
+        scbench_commit=SCBENCH_COMMIT,
+        expected_problem="execution-server",
+    )
+
+    assert loaded.checkpoints[0].regression_passed == 44
+    assert loaded.checkpoints[0].regression_total == 45
+
+
+def test_v2_uses_direct_regression_counters_not_isolated_eligibility():
+    """A stronger current-checkpoint solve must not create a regression penalty."""
+    control = _checkpoint(
+        problem="execution-server",
+        checkpoint=2,
+        arm="control",
+        strict=0.9703,
+        isolated=0.9535,
+        regression_passed=57,
+        regression_total=58,
+    )
+    cymatix = _checkpoint(
+        problem="execution-server",
+        checkpoint=2,
+        arm="cymatix",
+        strict=0.9901,
+        isolated=1.0,
+        regression_passed=57,
+        regression_total=58,
+    )
+    dataset = pair_checkpoints(_arm("control", [control]), _arm("cymatix", [cymatix]))
+
+    summary = compute_paired_regression_v2(dataset, bootstrap_iterations=100)
+
+    assert regression_event(control) is False
+    assert regression_event(cymatix) is True
+    assert summary.median_regression_delta == 0.0
+    assert summary.regression_head_to_head == {
+        "cymatix_better": 0,
+        "control_better": 0,
+        "tied": 1,
+    }
+    assert summary.verdict == "no_detectable_difference"
+
+
+def test_v2_rejects_cross_arm_regression_denominator_drift():
+    """Different prior-test sets cannot support a paired preservation estimate."""
+    control = _checkpoint(
+        problem="p",
+        checkpoint=2,
+        arm="control",
+        strict=1.0,
+        regression_passed=9,
+        regression_total=10,
+    )
+    cymatix = _checkpoint(
+        problem="p",
+        checkpoint=2,
+        arm="cymatix",
+        strict=1.0,
+        regression_passed=10,
+        regression_total=11,
+    )
+    dataset = pair_checkpoints(_arm("control", [control]), _arm("cymatix", [cymatix]))
+
+    with pytest.raises(AnalysisIntegrityError, match="regression denominator"):
+        compute_paired_regression_v2(dataset, bootstrap_iterations=100)
+
+
+def test_v2_detects_problem_clustered_regression_benefit(tmp_path):
+    """Removing the paired delta or cluster interval would erase a real benefit."""
+    control = _checkpoint(
+        problem="p",
+        checkpoint=2,
+        arm="control",
+        strict=0.9,
+        regression_passed=9,
+        regression_total=10,
+    )
+    cymatix = _checkpoint(
+        problem="p",
+        checkpoint=2,
+        arm="cymatix",
+        strict=1.0,
+        regression_passed=10,
+        regression_total=10,
+    )
+    dataset = pair_checkpoints(_arm("control", [control]), _arm("cymatix", [cymatix]))
+
+    summary = compute_paired_regression_v2(dataset, bootstrap_iterations=100)
+    json_path, markdown_path = write_analysis_v2_summary(summary, tmp_path)
+
+    assert summary.median_regression_delta == pytest.approx(0.1)
+    assert summary.regression_interval.lower == pytest.approx(0.1)
+    assert summary.regression_interval.upper == pytest.approx(0.1)
+    assert summary.verdict == "benefit_detected"
+    assert summary.gate_passed is True
+    assert json_path.name == "analysis-v2.json"
+    assert markdown_path.name == "analysis-v2.md"
 
 
 def test_official_fixture_loader_keeps_checkpoint_one_as_secondary():
@@ -384,6 +510,8 @@ def _campaign_tree(tmp_path: Path) -> tuple[Path, Path]:
                     "state": "ran",
                     "strict_pass_rate": 1.0,
                     "isolated_pass_rate": 1.0,
+                    "regression_passed": 1,
+                    "regression_total": 1,
                     "erosion": 0.1,
                     "verbosity": 0.1,
                     "input": 100,
@@ -397,6 +525,8 @@ def _campaign_tree(tmp_path: Path) -> tuple[Path, Path]:
                     "state": "ran",
                     "strict_pass_rate": 0.5 if arm == "control" else 1.0,
                     "isolated_pass_rate": 1.0,
+                    "regression_passed": 9 if arm == "control" else 10,
+                    "regression_total": 10,
                     "erosion": 0.2 if arm == "control" else 0.21,
                     "verbosity": 0.2 if arm == "control" else 0.21,
                     "input": 100 if arm == "control" else 110,
@@ -460,6 +590,21 @@ def test_campaign_analysis_writes_reports_from_selected_valid_pairs(tmp_path):
     assert summary.graduated is True
     assert (tmp_path / "analysis.json").is_file()
     assert (tmp_path / "analysis.md").is_file()
+
+
+def test_campaign_v2_writes_distinct_reports_without_touching_v1(tmp_path):
+    """Re-analysis must preserve the preregistered v1 record byte-for-byte."""
+    manifest, _results = _campaign_tree(tmp_path)
+    (tmp_path / "analysis.json").write_bytes(b"frozen-v1-json\n")
+    (tmp_path / "analysis.md").write_bytes(b"frozen-v1-markdown\n")
+
+    summary = analyze_campaign_v2(manifest, bootstrap_iterations=100)
+
+    assert summary.verdict == "benefit_detected"
+    assert (tmp_path / "analysis.json").read_bytes() == b"frozen-v1-json\n"
+    assert (tmp_path / "analysis.md").read_bytes() == b"frozen-v1-markdown\n"
+    assert (tmp_path / "analysis-v2.json").is_file()
+    assert (tmp_path / "analysis-v2.md").is_file()
 
 
 def test_campaign_analysis_rejects_tampered_official_results(tmp_path):

@@ -119,6 +119,22 @@ def test_analysis_gate_failure_returns_four(monkeypatch, capsys):
     assert "graduation gate failed" in capsys.readouterr().err
 
 
+def test_analysis_v2_dispatches_corrected_analyzer(monkeypatch, capsys):
+    calls: list[Path] = []
+
+    def succeed(manifest: Path) -> object:
+        calls.append(manifest)
+        return {"gate_passed": True, "verdict": "no_detectable_difference"}
+
+    monkeypatch.setattr(cli, "_run_analysis_v2", succeed)
+
+    code = cli.main(["analyze-v2", "--manifest", "manifest.json"])
+
+    assert code == 0
+    assert calls == [Path("manifest.json")]
+    assert "no_detectable_difference" in capsys.readouterr().out
+
+
 def test_malformed_manifest_returns_two(tmp_path, capsys):
     manifest = tmp_path / "manifest.json"
     manifest.write_text("{}", encoding="utf-8")

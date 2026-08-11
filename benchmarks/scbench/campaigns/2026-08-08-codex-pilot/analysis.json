@@ -1,0 +1,95 @@
+{
+  "all_checkpoint_count": 80,
+  "bootstrap": {
+    "accepted_samples": 9001,
+    "iterations": 10000,
+    "lower": -0.2857142857142857,
+    "rejected_samples": 999,
+    "seed": 20260808,
+    "upper": 0.0
+  },
+  "control_isolated_passes": 8,
+  "control_isolated_solve_rate": 0.125,
+  "control_regression_events": 5,
+  "control_regression_rate": 0.625,
+  "cymatix_isolated_passes": 9,
+  "cymatix_isolated_solve_rate": 0.140625,
+  "cymatix_regression_events": 7,
+  "cymatix_regression_rate": 0.7777777777777778,
+  "event_cells": {
+    "both": 5,
+    "control_only": 0,
+    "cymatix_only": 2,
+    "neither": 57
+  },
+  "gates": [
+    {
+      "description": "At least two net regression events are prevented by Cymatix.",
+      "gate_id": "net_prevented_events",
+      "observed": -2,
+      "status": "fail",
+      "threshold": ">= 2"
+    },
+    {
+      "description": "The relative reduction in regression rate is at least 15%.",
+      "gate_id": "relative_regression_reduction",
+      "observed": -0.24444444444444446,
+      "status": "fail",
+      "threshold": ">= 0.15"
+    },
+    {
+      "description": "Isolated solve rate is no worse than control by more than 2.5 percentage points.",
+      "gate_id": "isolated_solve_noninferiority",
+      "observed": 0.015625,
+      "status": "pass",
+      "threshold": ">= -0.025"
+    },
+    {
+      "description": "Median paired erosion is no worse than control by more than 0.03.",
+      "gate_id": "median_erosion_delta",
+      "observed": 0.03084718887326976,
+      "status": "fail",
+      "threshold": "<= 0.03"
+    },
+    {
+      "description": "Median paired verbosity is no worse than control by more than 0.03.",
+      "gate_id": "median_verbosity_delta",
+      "observed": 0.030608551156244473,
+      "status": "fail",
+      "threshold": "<= 0.03"
+    },
+    {
+      "description": "Median input tokens increase by no more than 25%.",
+      "gate_id": "median_input_token_ratio",
+      "observed": 1.0835296467480175,
+      "status": "pass",
+      "threshold": "<= 1.25"
+    },
+    {
+      "description": "Median checkpoint elapsed time increases by no more than 30%.",
+      "gate_id": "median_elapsed_ratio",
+      "observed": 1.0281399323853833,
+      "status": "pass",
+      "threshold": "<= 1.30"
+    },
+    {
+      "description": "There are zero unresolved ingest, packet, version, receipt-integrity, or evaluation-contamination failures.",
+      "gate_id": "integrity_failures",
+      "observed": 0,
+      "status": "pass",
+      "threshold": "== 0"
+    }
+  ],
+  "graduated": false,
+  "integrity_failure_count": 0,
+  "isolated_solve_difference": 0.015625,
+  "median_elapsed_ratio": 1.0281399323853833,
+  "median_erosion_delta": 0.03084718887326976,
+  "median_input_token_ratio": 1.0835296467480175,
+  "median_verbosity_delta": 0.030608551156244473,
+  "net_prevented_events": -2,
+  "operational_invalidations": [],
+  "primary_checkpoint_count": 64,
+  "relative_regression_reduction": -0.24444444444444446,
+  "treatment_effect": -0.1527777777777778
+}

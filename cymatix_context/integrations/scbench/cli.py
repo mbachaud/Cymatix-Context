@@ -53,6 +53,9 @@ def _build_parser() -> argparse.ArgumentParser:
     analyze = subparsers.add_parser("analyze")
     _add_manifest_argument(analyze)
 
+    analyze_v2 = subparsers.add_parser("analyze-v2")
+    _add_manifest_argument(analyze_v2)
+
     for command in (preflight, run_pair, verify):
         command.add_argument("--cymatix-root", type=Path)
         command.add_argument("--scbench-root", type=Path)
@@ -125,12 +128,23 @@ def _run_analysis(manifest: Path) -> object:
     return result
 
 
+def _run_analysis_v2(manifest: Path) -> object:
+    """Run the corrected paired-regression analysis and enforce its safety gates."""
+    from .analysis import analyze_campaign_v2
+
+    result = analyze_campaign_v2(manifest.resolve())
+    if result.gate_passed is not True:
+        raise RuntimeError("analysis v2 safety gate did not pass")
+    return result
+
+
 def main(argv: list[str] | None = None) -> int:
     """Dispatch one harness operation and return its documented exit code."""
     args = _build_parser().parse_args(argv)
-    if args.command == "analyze":
+    if args.command in ("analyze", "analyze-v2"):
         try:
-            _print_result(_run_analysis(args.manifest))
+            operation = _run_analysis if args.command == "analyze" else _run_analysis_v2
+            _print_result(operation(args.manifest))
             return EXIT_OK
         except Exception as exc:
             log.warning("SCBench analysis failed", exc_info=True)

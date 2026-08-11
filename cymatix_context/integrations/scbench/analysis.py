@@ -13,7 +13,7 @@ import tempfile
 from collections import defaultdict
 from collections.abc import Mapping, Sequence
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any, Callable, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -42,6 +42,8 @@ class CheckpointResult(_FrozenModel):
     metric_version: str = Field(min_length=1)
     strict_pass_rate: float = Field(ge=0, le=1)
     isolated_pass_rate: float = Field(ge=0, le=1)
+    regression_passed: int | None = Field(default=None, ge=0)
+    regression_total: int | None = Field(default=None, ge=0)
     erosion: float | None = None
     verbosity: float | None = None
     input_tokens: int | None = Field(default=None, ge=0)
@@ -152,6 +154,38 @@ class PilotSummary(_FrozenModel):
     bootstrap: BootstrapInterval | None = None
 
 
+RegressionVerdict = Literal[
+    "benefit_detected", "harm_detected", "no_detectable_difference"
+]
+
+
+class PairedRegressionV2Summary(_FrozenModel):
+    analysis_metric_version: Literal["paired_regression_v2"] = "paired_regression_v2"
+    all_checkpoint_count: int = Field(ge=0)
+    primary_checkpoint_count: int = Field(ge=0)
+    control_regression_passed: int = Field(ge=0)
+    cymatix_regression_passed: int = Field(ge=0)
+    regression_total_each: int = Field(ge=0)
+    median_regression_delta: float | None
+    regression_interval: BootstrapInterval
+    regression_head_to_head: dict[str, int]
+    strict_head_to_head: dict[str, int]
+    control_isolated_solve_rate: float | None
+    cymatix_isolated_solve_rate: float | None
+    isolated_solve_difference: float | None
+    median_erosion_delta: float | None
+    erosion_interval: BootstrapInterval
+    median_verbosity_delta: float | None
+    verbosity_interval: BootstrapInterval
+    median_input_token_ratio: float | None
+    median_elapsed_ratio: float | None
+    integrity_failure_count: int = Field(ge=0)
+    operational_invalidations: tuple[str, ...]
+    gates: tuple[GateResult, ...]
+    verdict: RegressionVerdict
+    gate_passed: bool
+
+
 def _is_number(value: Any) -> bool:
     return isinstance(value, (int, float)) and not isinstance(value, bool)
 
@@ -233,6 +267,22 @@ def load_arm_results(
 
         input_value = optional_number("input")
         duration_value = optional_number("duration")
+
+        def optional_count(name: str) -> int | None:
+            value = record.get(name)
+            if value is None:
+                return None
+            if (
+                not _is_number(value)
+                or int(value) != value
+                or int(value) < 0
+            ):
+                raise AnalysisIntegrityError(
+                    f"official field {name!r} is not a non-negative integer "
+                    f"at line {line_number}"
+                )
+            return int(value)
+
         checkpoint_result = CheckpointResult(
             problem=str(problem),
             checkpoint=str(checkpoint),
@@ -243,6 +293,8 @@ def load_arm_results(
             metric_version=str(metric_version),
             strict_pass_rate=float(strict_rate),
             isolated_pass_rate=float(isolated_rate),
+            regression_passed=optional_count("regression_passed"),
+            regression_total=optional_count("regression_total"),
             erosion=optional_number("erosion"),
             verbosity=optional_number("verbosity"),
             input_tokens=int(input_value) if input_value is not None else None,
@@ -600,6 +652,304 @@ def clustered_bootstrap(
     )
 
 
+def _regression_delta(pair: PairedCheckpoint) -> float:
+    control_passed = pair.control.regression_passed
+    control_total = pair.control.regression_total
+    cymatix_passed = pair.cymatix.regression_passed
+    cymatix_total = pair.cymatix.regression_total
+    identity = f"{pair.problem}/{pair.control.checkpoint}/r{pair.control.replicate}"
+    if None in (control_passed, control_total, cymatix_passed, cymatix_total):
+        raise AnalysisIntegrityError(
+            f"missing direct regression counters for {identity}"
+        )
+    assert control_passed is not None
+    assert control_total is not None
+    assert cymatix_passed is not None
+    assert cymatix_total is not None
+    if control_total <= 0 or cymatix_total <= 0:
+        raise AnalysisIntegrityError(
+            f"regression denominator must be positive for {identity}"
+        )
+    if control_total != cymatix_total:
+        raise AnalysisIntegrityError(
+            f"regression denominator differs across arms for {identity}"
+        )
+    if control_passed > control_total or cymatix_passed > cymatix_total:
+        raise AnalysisIntegrityError(
+            f"regression passed count exceeds denominator for {identity}"
+        )
+    return cymatix_passed / cymatix_total - control_passed / control_total
+
+
+def _clustered_median_interval(
+    dataset: PairedDataset,
+    extractor: Callable[[PairedCheckpoint], float | None],
+    *,
+    iterations: int,
+    seed: int,
+) -> BootstrapInterval:
+    if iterations <= 0:
+        raise ValueError("iterations must be positive")
+    grouped: dict[str, list[PairedCheckpoint]] = defaultdict(list)
+    for pair in dataset.primary_pairs:
+        grouped[pair.problem].append(pair)
+    problems = sorted(grouped)
+    if not problems:
+        return BootstrapInterval(
+            seed=seed,
+            iterations=iterations,
+            lower=None,
+            upper=None,
+            accepted_samples=0,
+            rejected_samples=iterations,
+        )
+    generator = random.Random(seed)
+    estimates: list[float] = []
+    rejected = 0
+    for _iteration in range(iterations):
+        values: list[float] = []
+        for problem in generator.choices(problems, k=len(problems)):
+            for pair in grouped[problem]:
+                value = extractor(pair)
+                if value is not None:
+                    values.append(value)
+        estimate = _median(values)
+        if estimate is None:
+            rejected += 1
+        else:
+            estimates.append(estimate)
+    return BootstrapInterval(
+        seed=seed,
+        iterations=iterations,
+        lower=_percentile(estimates, 0.025) if estimates else None,
+        upper=_percentile(estimates, 0.975) if estimates else None,
+        accepted_samples=len(estimates),
+        rejected_samples=rejected,
+    )
+
+
+def _head_to_head(deltas: Sequence[float]) -> dict[str, int]:
+    result = {"cymatix_better": 0, "control_better": 0, "tied": 0}
+    for delta in deltas:
+        if math.isclose(delta, 0.0, abs_tol=1e-12):
+            result["tied"] += 1
+        elif delta > 0:
+            result["cymatix_better"] += 1
+        else:
+            result["control_better"] += 1
+    return result
+
+
+def compute_paired_regression_v2(
+    dataset: PairedDataset,
+    *,
+    integrity_failures: int = 0,
+    bootstrap_iterations: int = 10_000,
+    seed: int = 20260808,
+) -> PairedRegressionV2Summary:
+    """Compute the paired raw-regression estimand without arm-specific eligibility."""
+    primary = dataset.primary_pairs
+    regression_deltas = [_regression_delta(pair) for pair in primary]
+    regression_interval = _clustered_median_interval(
+        dataset,
+        _regression_delta,
+        iterations=bootstrap_iterations,
+        seed=seed,
+    )
+    erosion_interval = _clustered_median_interval(
+        dataset,
+        lambda pair: (
+            pair.cymatix.erosion - pair.control.erosion
+            if pair.control.erosion is not None and pair.cymatix.erosion is not None
+            else None
+        ),
+        iterations=bootstrap_iterations,
+        seed=seed,
+    )
+    verbosity_interval = _clustered_median_interval(
+        dataset,
+        lambda pair: (
+            pair.cymatix.verbosity - pair.control.verbosity
+            if pair.control.verbosity is not None
+            and pair.cymatix.verbosity is not None
+            else None
+        ),
+        iterations=bootstrap_iterations,
+        seed=seed,
+    )
+
+    lower = regression_interval.lower
+    upper = regression_interval.upper
+    if lower is not None and lower > 0:
+        verdict: RegressionVerdict = "benefit_detected"
+    elif upper is not None and upper < 0:
+        verdict = "harm_detected"
+    else:
+        verdict = "no_detectable_difference"
+
+    pair_count = len(primary)
+    control_isolated = sum(_pass(pair.control.isolated_pass_rate) for pair in primary)
+    cymatix_isolated = sum(_pass(pair.cymatix.isolated_pass_rate) for pair in primary)
+    control_isolated_rate = _rate(control_isolated, pair_count)
+    cymatix_isolated_rate = _rate(cymatix_isolated, pair_count)
+    isolated_difference = (
+        cymatix_isolated_rate - control_isolated_rate
+        if control_isolated_rate is not None and cymatix_isolated_rate is not None
+        else None
+    )
+    erosion_deltas = [
+        pair.cymatix.erosion - pair.control.erosion
+        for pair in primary
+        if pair.control.erosion is not None and pair.cymatix.erosion is not None
+    ]
+    verbosity_deltas = [
+        pair.cymatix.verbosity - pair.control.verbosity
+        for pair in primary
+        if pair.control.verbosity is not None and pair.cymatix.verbosity is not None
+    ]
+    input_ratios = [
+        pair.cymatix.input_tokens / pair.control.input_tokens
+        for pair in primary
+        if pair.control.input_tokens is not None
+        and pair.cymatix.input_tokens is not None
+        and pair.control.input_tokens > 0
+    ]
+    elapsed_ratios = [
+        pair.cymatix.elapsed_seconds / pair.control.elapsed_seconds
+        for pair in primary
+        if pair.control.elapsed_seconds is not None
+        and pair.cymatix.elapsed_seconds is not None
+        and pair.control.elapsed_seconds > 0
+    ]
+    median_erosion = _median(erosion_deltas)
+    median_verbosity = _median(verbosity_deltas)
+    median_input = _median(input_ratios)
+    median_elapsed = _median(elapsed_ratios)
+    total_integrity_failures = integrity_failures + len(
+        dataset.operational_invalidations
+    )
+
+    gates = (
+        _gate(
+            "regression_safety",
+            "The problem-clustered regression interval does not detect Cymatix harm.",
+            upper,
+            "upper >= 0",
+            upper >= 0 if upper is not None else None,
+        ),
+        _gate(
+            "isolated_solve_noninferiority",
+            "Isolated solve rate is no worse than control by more than 2.5 percentage points.",
+            isolated_difference,
+            ">= -0.025",
+            isolated_difference >= -0.025 if isolated_difference is not None else None,
+        ),
+        _gate(
+            "erosion_noninferiority",
+            "The clustered erosion interval is not entirely above +0.03.",
+            erosion_interval.lower,
+            "lower <= 0.03",
+            erosion_interval.lower <= 0.03
+            if erosion_interval.lower is not None
+            else None,
+        ),
+        _gate(
+            "verbosity_noninferiority",
+            "The clustered verbosity interval is not entirely above +0.03.",
+            verbosity_interval.lower,
+            "lower <= 0.03",
+            verbosity_interval.lower <= 0.03
+            if verbosity_interval.lower is not None
+            else None,
+        ),
+        _gate(
+            "median_input_token_ratio",
+            "Median input tokens increase by no more than 25%.",
+            median_input,
+            "<= 1.25",
+            median_input <= 1.25 if median_input is not None else None,
+        ),
+        _gate(
+            "median_elapsed_ratio",
+            "Median checkpoint elapsed time increases by no more than 30%.",
+            median_elapsed,
+            "<= 1.30",
+            median_elapsed <= 1.30 if median_elapsed is not None else None,
+        ),
+        _gate(
+            "integrity_failures",
+            "There are zero unresolved integrity or operational failures.",
+            total_integrity_failures,
+            "== 0",
+            total_integrity_failures == 0,
+        ),
+    )
+    return PairedRegressionV2Summary(
+        all_checkpoint_count=len(dataset.pairs),
+        primary_checkpoint_count=pair_count,
+        control_regression_passed=sum(
+            pair.control.regression_passed or 0 for pair in primary
+        ),
+        cymatix_regression_passed=sum(
+            pair.cymatix.regression_passed or 0 for pair in primary
+        ),
+        regression_total_each=sum(pair.control.regression_total or 0 for pair in primary),
+        median_regression_delta=_median(regression_deltas),
+        regression_interval=regression_interval,
+        regression_head_to_head=_head_to_head(regression_deltas),
+        strict_head_to_head=_head_to_head(
+            [pair.cymatix.strict_pass_rate - pair.control.strict_pass_rate for pair in dataset.pairs]
+        ),
+        control_isolated_solve_rate=control_isolated_rate,
+        cymatix_isolated_solve_rate=cymatix_isolated_rate,
+        isolated_solve_difference=isolated_difference,
+        median_erosion_delta=median_erosion,
+        erosion_interval=erosion_interval,
+        median_verbosity_delta=median_verbosity,
+        verbosity_interval=verbosity_interval,
+        median_input_token_ratio=median_input,
+        median_elapsed_ratio=median_elapsed,
+        integrity_failure_count=total_integrity_failures,
+        operational_invalidations=dataset.operational_invalidations,
+        gates=gates,
+        verdict=verdict,
+        gate_passed=all(gate.status == "pass" for gate in gates),
+    )
+
+
+def render_markdown_v2(summary: PairedRegressionV2Summary) -> str:
+    """Render the corrected analysis with its interval and head-to-head counts."""
+    interval = summary.regression_interval
+    lines = [
+        "# SCBench paired regression analysis v2",
+        "",
+        f"Verdict: **{summary.verdict}**",
+        f"Safety gates passed: **{'yes' if summary.gate_passed else 'no'}**",
+        "",
+        "## Corrected regression estimand",
+        "",
+        f"- Median paired delta (Cymatix - control): {summary.median_regression_delta}",
+        f"- Problem-clustered 95% interval: [{interval.lower}, {interval.upper}]",
+        f"- Prior tests passed: control {summary.control_regression_passed}/{summary.regression_total_each}; Cymatix {summary.cymatix_regression_passed}/{summary.regression_total_each}",
+        f"- Head to head: {summary.regression_head_to_head}",
+        f"- Strict-score head to head (all checkpoints): {summary.strict_head_to_head}",
+        "",
+        "## Safety gates",
+        "",
+        "| Gate | Status | Observed | Threshold |",
+        "|---|---|---:|---|",
+    ]
+    for gate in summary.gates:
+        observed = "n/a" if gate.observed is None else str(gate.observed)
+        lines.append(
+            f"| {gate.description} | {gate.status} | {observed} | {gate.threshold} |"
+        )
+    if summary.operational_invalidations:
+        lines.extend(["", "## Operational invalidations", ""])
+        lines.extend(f"- {item}" for item in summary.operational_invalidations)
+    return "\n".join(lines) + "\n"
+
+
 def render_markdown(summary: PilotSummary) -> str:
     """Render a stable human-readable summary without hiding opposing cells."""
     cells = summary.event_cells
@@ -668,6 +1018,20 @@ def write_analysis_summary(summary: PilotSummary, output_root: Path) -> tuple[Pa
     return json_path, markdown_path
 
 
+def write_analysis_v2_summary(
+    summary: PairedRegressionV2Summary, output_root: Path
+) -> tuple[Path, Path]:
+    """Persist corrected analysis without overwriting the frozen v1 artifacts."""
+    json_path = output_root / "analysis-v2.json"
+    markdown_path = output_root / "analysis-v2.md"
+    payload = (
+        json.dumps(summary.model_dump(mode="json"), sort_keys=True, indent=2) + "\n"
+    ).encode("utf-8")
+    _atomic_write(json_path, payload)
+    _atomic_write(markdown_path, render_markdown_v2(summary).encode("utf-8"))
+    return json_path, markdown_path
+
+
 def _safe_campaign_path(campaign_root: Path, relative: str) -> Path:
     path = campaign_root.joinpath(*Path(relative).parts).resolve()
     if not path.is_relative_to(campaign_root.resolve()):
@@ -708,8 +1072,10 @@ def _verify_attempt_evidence(
             raise AnalysisIntegrityError(f"evidence hash mismatch: {relative}")
 
 
-def analyze_campaign(manifest_path: Path) -> PilotSummary:
-    """Load verified pair outputs for a frozen campaign and write its summaries."""
+def _load_verified_campaign_dataset(
+    manifest_path: Path,
+) -> tuple[PairedDataset, Path]:
+    """Load selected campaign evidence once for either analysis version."""
     campaign = CampaignConfig.load(manifest_path)
     campaign_root = manifest_path.resolve().parent
     preflight_path = campaign_root / "preflight.json"
@@ -803,9 +1169,31 @@ def analyze_campaign(manifest_path: Path) -> PilotSummary:
         pairs=tuple(combined_pairs),
         operational_invalidations=tuple(invalidations),
     )
+    return dataset, campaign_root
+
+
+def analyze_campaign(manifest_path: Path) -> PilotSummary:
+    """Run the frozen version-1 analysis and write its original filenames."""
+    dataset, campaign_root = _load_verified_campaign_dataset(manifest_path)
     summary = compute_pilot_summary(dataset)
     summary = summary.model_copy(
         update={"bootstrap": clustered_bootstrap(dataset, seed=20260808)}
     )
     write_analysis_summary(summary, campaign_root)
+    return summary
+
+
+def analyze_campaign_v2(
+    manifest_path: Path,
+    *,
+    bootstrap_iterations: int = 10_000,
+) -> PairedRegressionV2Summary:
+    """Run corrected paired-regression analysis beside immutable v1 artifacts."""
+    dataset, campaign_root = _load_verified_campaign_dataset(manifest_path)
+    summary = compute_paired_regression_v2(
+        dataset,
+        bootstrap_iterations=bootstrap_iterations,
+        seed=20260808,
+    )
+    write_analysis_v2_summary(summary, campaign_root)
     return summary
