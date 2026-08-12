@@ -560,6 +560,121 @@ class ShardedGenomeAdapter:
         self._router.close()
 
 
+def build_genome_kwargs(config, sema_codec=None) -> dict:
+    """Every config-driven ``KnowledgeStore`` constructor kwarg, in one place.
+
+    Single source of truth for BOTH store-construction paths — boot
+    (``ContextManager.__init__``) and hot-swap (``/admin/swap-db``). Before
+    this existed each path hand-listed the kwargs and the swap copy kept
+    drifting behind boot, silently resetting knobs to their constructor
+    defaults after a fixture swap (the 2026-08-09 receipt-invalidation
+    class: filename_anchor/bm25; earlier instances: dense/ANN 2026-05-18,
+    #214, #222/#223, #260). A knob added here reaches both paths; a knob
+    added to ``KnowledgeStore.__init__`` but not here fails
+    tests/test_swap_db_knob_sync.py's structural guard.
+
+    Returns everything except ``genome_path`` (caller-specific) and the
+    non-config plumbing args (``read_only``, ``main_conn``, ``shard_name``,
+    ``mem_plan``, ``rerank_scorer``).
+    """
+    retrieval = config.retrieval
+    ingestion = config.ingestion
+    return dict(
+        synonym_map=config.synonym_map,
+        sema_codec=sema_codec,
+        splade_enabled=ingestion.splade_enabled,
+        splade_model=ingestion.splade_model,  # #207 item 1
+        splade_content_cap=ingestion.splade_content_cap,  # #207 item 3
+        dense_model=retrieval.dense_model,  # #207 dense fast-follow
+        dense_passage_char_cap=ingestion.dense_passage_char_cap,  # #207
+        deny_list_extra=ingestion.deny_list_extra,  # #207 item 5
+        locale_demotion_enabled=ingestion.locale_demotion_enabled,  # #207 item 5
+        # Issue #164: size-aware SPLADE auto-toggle thresholds.
+        splade_auto_enable_below_genes=ingestion.splade_auto_enable_below_genes,
+        splade_auto_disable_above_genes=ingestion.splade_auto_disable_above_genes,
+        entity_graph=ingestion.entity_graph,
+        # Tier-0 PR-1 (2026-05-16): inline BGE-M3 dense write at ingest.
+        dense_embed_on_ingest=ingestion.dense_embed_on_ingest,
+        sr_enabled=retrieval.sr_enabled,
+        sr_gamma=retrieval.sr_gamma,
+        sr_k_steps=retrieval.sr_k_steps,
+        sr_weight=retrieval.sr_weight,
+        sr_cap=retrieval.sr_cap,
+        seeded_edges_enabled=retrieval.seeded_edges_enabled,
+        filename_anchor_enabled=(
+            retrieval.filename_anchor_enabled
+            or os.environ.get("CYMATIX_FILENAME_ANCHOR_ENABLED", "").lower()
+            in {"1", "true", "yes", "on"}
+        ),
+        filename_anchor_weight=retrieval.filename_anchor_weight,
+        bm25_shortlist_enabled=retrieval.bm25_shortlist_enabled,
+        bm25_shortlist_size=retrieval.bm25_shortlist_size,
+        bm25_prefilter_enabled=retrieval.bm25_prefilter_enabled,
+        bm25_prefilter_size=retrieval.bm25_prefilter_size,
+        fts5_candidate_depth=retrieval.fts5_candidate_depth,
+        entity_graph_retrieval_enabled=retrieval.entity_graph_retrieval_enabled,
+        dense_embedding_enabled=retrieval.dense_embedding_enabled,
+        dense_embedding_dim=retrieval.dense_embedding_dim,
+        ann_similarity_threshold=retrieval.ann_similarity_threshold,
+        ann_threshold_min_genes=retrieval.ann_threshold_min_genes,
+        ann_threshold_max_genes=retrieval.ann_threshold_max_genes,
+        # Stage 4 (2026-05-08): margin-over-random calibration mode.
+        ann_threshold_mode=retrieval.ann_threshold_mode,
+        ann_threshold_sigma_multiplier=retrieval.ann_threshold_sigma_multiplier,
+        # Issue #214: dense pool floor.
+        dense_pool_floor_genes=retrieval.dense_pool_floor_genes,
+        dense_pool_size=retrieval.dense_pool_size,
+        # Stage 3 (2026-05-08): RRF fusion + per-tier weights.
+        fusion_mode=retrieval.fusion_mode,
+        rrf_k=retrieval.rrf_k,
+        # Issue #260: rank/confidence-gated RRF. Default-inert.
+        rrf_gate_enabled=retrieval.rrf_gate_enabled,
+        rrf_gate_top_m=retrieval.rrf_gate_top_m,
+        rrf_gate_min_score=retrieval.rrf_gate_min_score,
+        # Issue #255 (PR-2): post-fusion rerank combinator + knobs.
+        rerank_combinator=retrieval.rerank_combinator,
+        rerank_band_delta=retrieval.rerank_band_delta,
+        rerank_tier_weight=retrieval.rerank_tier_weight,
+        # Issue #341 (Task 6): query-time cross-encoder rerank seam.
+        # rerank_scorer is deliberately NOT threaded — test-only DI seam.
+        rerank_enabled=retrieval.rerank_enabled,
+        rerank_depth=retrieval.rerank_depth,
+        rerank_model=retrieval.rerank_model,
+        fts5_weight=retrieval.fts5_weight,
+        splade_weight=retrieval.splade_weight,
+        tag_exact_weight=retrieval.tag_exact_weight,
+        tag_prefix_weight=retrieval.tag_prefix_weight,
+        # Issue #327: tag-tier IDF discipline (flag-gated, default off).
+        tag_idf_enabled=retrieval.tag_idf_enabled,
+        tag_df_cap=retrieval.tag_df_cap,
+        splade_df_cap_fraction=retrieval.splade_df_cap_fraction,
+        # Issue #202: ΣĒMA boost knobs (additive-mode Tier 4A).
+        sema_boost_weight=retrieval.sema_boost_weight,
+        sema_cold_weight=retrieval.sema_cold_weight,
+        lex_anchor_weight=retrieval.lex_anchor_weight,
+        harmonic_weight=retrieval.harmonic_weight,
+        entity_graph_weight=retrieval.entity_graph_weight,
+        dense_weight=retrieval.dense_weight,
+        # Tier-0 PR-3 (2026-05-16): additive-mode dense merge weight + floor.
+        dense_additive_weight=retrieval.dense_additive_weight,
+        dense_additive_min_cosine=retrieval.dense_additive_min_cosine,
+        # Semantic-wiring arm (2026-06-02): scoped dense weight + broaden
+        # routing for query_type=="semantic" under CYMATIX_SEMANTIC_ARM.
+        semantic_dense_additive_weight=retrieval.semantic_dense_additive_weight,
+        semantic_broaden_routing=retrieval.semantic_broaden_routing,
+        pki_weight=retrieval.pki_weight,
+        # Issues #222/#223: sharded per-shard fetch depth + co-activation
+        # reserved budget (router-only; per-shard Genomes ignore them).
+        shard_fetch_multiplier=retrieval.shard_fetch_multiplier,
+        shard_fetch_scale_with_shards=retrieval.shard_fetch_scale_with_shards,
+        coact_reserved_slots=retrieval.coact_reserved_slots,
+        coact_link_boost=retrieval.coact_link_boost,
+        # #264: doc-type boost mode (router-only; binds on cross-shard merge).
+        doc_type_boost_mode=retrieval.doc_type_boost_mode,
+        authority_path_selectivity=retrieval.authority_path_selectivity,
+    )
+
+
 def open_read_source(genome_path: str, **genome_kwargs: Any):
     """Factory: return a ``Genome`` or a ``ShardedGenomeAdapter``.
 
