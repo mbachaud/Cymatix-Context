@@ -218,3 +218,33 @@ or `/admin/compact-pki`; (2) an HTTP-driven A/B where the client supplies
 still perturb tag/FTS tiers) — the in-process ladder is unaffected; (3) with
 the gate off the `pki` telemetry series goes silent, not zero. Tags arm
 (action item 6, other half) still open.
+
+## Addendum 6 (2026-08-12): first PKI measurement — active null at 100k
+
+Three ladder passes on erb_100k (30 carve needles, k=12, GPU daemon,
+vector LRU off, `--per-query`; receipts `pki_ab_100k_run1.json` +
+`run2_pkioff_base` / `run3_bothoff_base` — the reversed-base passes give
+each OFF state a first-position measurement, rerank_ab.py style):
+
+| arm | r@12 | med rank | p50 | delivered-gold |
+|---|---|---|---|---|
+| baseline (pki on) | 0.800 | 3.0 | 2306ms | 0.500 |
+| no_pki | **0.833** (both orders) | 3.0 | 2064/2283ms | 0.500 |
+| no_splade_no_pki | **0.867** (both orders) | 4.0 | 1692/1670ms | 0.500 |
+
+**This is an ACTIVE null, not a sema-style vacuous one:** the bed's
+path_key_index is fully populated (15.87M rows, 3.02M distinct pairs,
+99,733/100k genes with key_values), `pki` appears in baseline tier_keys
+(bonus > 0 fired), and the tier costs median 42.5ms/query (max 141ms).
+PKI never rescued a needle in either order; its one k=12 effect is
+displacing erb_015 (rank 13→12 on removal — the same pool-bloat mover
+the synonyms A/B named). erb_021 (15→8) needs the combined splade+pki
+removal. Honest limits: (1) delivered-gold is FLAT at 0.500 across all
+arms and pool_delivery_gap widens 0.300→0.333→0.367 — the rank-level
+wins do not reach the assembled window (the dense-gate delivery tension,
+again); (2) n=30, one bed, needle-family queries — PKI's designed class
+(KV/config lookup) may still pay elsewhere; (3) read gate ≠ storage win.
+
+**Verdict update: INSUFFICIENT-EVIDENCE → TRIM/REMOVE-CANDIDATE at 100k**,
+pending the B3 blob-scale pass on the collaborator's beds (#333/#334) —
+the same 100k-neutral → blob-confirm path splade walked before its REMOVE.
