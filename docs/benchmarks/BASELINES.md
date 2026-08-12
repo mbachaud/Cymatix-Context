@@ -29,6 +29,15 @@ wobble, spark-erb-receipts 0018 gap G5, is unresolved).
 | 2026-08-11-codex-terra | `9312cde` (execution tree; manifest implementation pin `aef12732`) | `bench/scbench-terra-2026-08-11` | `bb40ec5e` (branch `cymatix/codex-ab`) | `ae88fa1d8272ec920d5e43f2d1443d3483e8b20a1459a2d4bd2cac983ab50dfa` | model gpt-5.6-terra, effort medium, docker `sha256:8bd6d4f3c22131d3df70631b0aa8e12813781812413a034c552466ef5fee39f2`, seed 20260808; unchanged from luna except model; from `benchmarks/scbench/campaigns/2026-08-11-codex-terra/README.md` and manifest | in flight | `benchmarks/scbench/campaigns/2026-08-11-codex-terra/` |
 | codex-sol (planned) | — | — | — | — | — | reserved (weekly-usage window permitting) | — |
 
+## Code pins
+
+Board cards in cc-exchange pin `v0.8.6` -- that is a CODE pin (the tree you
+run), not a campaign row. v0.8.6 is the verified-clean venv on the
+collaborator's box (spark-erb-receipts 0018 item 1). Campaign rows above
+freeze measurement baselines; code pins freeze the tree a card executes. A
+card's receipts cite both: its code pin and, when comparing to a campaign,
+that campaign's row.
+
 Notes: the terra manifest pins `aef12732` as the frozen implementation
 baseline; the run executes from `9312cde` (tree verified clean,
 `git describe` = `v0.8.6-104-g9312cde`). Both are recorded; the tag anchors

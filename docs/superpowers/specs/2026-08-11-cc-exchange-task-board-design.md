@@ -108,7 +108,7 @@ Ordered by delivered-gold leverage within lane.
 
 | id | issue | class | brief |
 |---|---|---|---|
-| C1-rank-hash-instrumentation | #339 | fork-pr + receipts | His G5 made settleable: add rank-hash / byte-diff instrumentation to the serving path (fork PR), then re-run the c>1 one-sided recall degradation (0/12/36, p≈1e-11) to separate retrieval-timing from encode drift. `graded_by: receipts-only`. |
+| C1-rank-hash-instrumentation | #339 | fork-pr | His G5 made settleable: add rank-hash / byte-diff instrumentation to the serving path (fork PR), then re-run the c>1 one-sided recall degradation (0/12/36, p≈1e-11) to separate retrieval-timing from encode drift. `graded_by: receipts-only`. |
 | C2-cymatics-armC-rerun | #354 | verification | Independent re-run of the retracted cymatics spread arm C on his bed with the fixed harness (`m._cymatics_peak_width` override). Confirms or refutes the spread null that was never actually tested. `graded_by: receipts-only`. |
 | C3-know-gate-redteam | #287 | verification | Adversarial probe of the know-gate V2 feature set (`top_dominance` + `coordinate_crispness`) on his beds: find inputs where V2 confidence is high and containment fails, before recalibration ships. |
 | C4-n4-bracket | 0018 §5 | receipts | Joe's own N4 offer, accepted as a card: w=1 arm, 3× repeats at decision points, one open-loop capacity arm, re-run `A_w2` under the fixed driver. ≤2h on e92c. `graded_by: receipts-only`. |
@@ -194,8 +194,9 @@ in Joe's G5 / #339 is unresolved).
 - **Fork-PR review load** — capped at 2 concurrent; Max is the merge gate.
 - **Board/claims drift** — BOARD.md mirror can lag claim files; the lifecycle names
   claim files authoritative for claim state, so drift is cosmetic.
-- **Baseline staleness** — #332/#343 land later and re-baseline everything; the
-  ledger's status column plus per-card `pin:` keeps old receipts comparable within
-  their own row (never across rows).
+- **Baseline staleness** — master is already ~52 commits past v0.8.6 (#332
+  merged 2026-08-08; #343 closed with its rerank commits landing via another
+  route; #346 FTS5 rebuild); the ledger's status column plus per-card `pin:`
+  keeps old receipts comparable within their own row (never across rows).
 - **Terra in flight** — tag `9312cde` now, before the branch advances; the run
   itself is untouched.
