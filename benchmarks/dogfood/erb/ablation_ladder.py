@@ -284,6 +284,24 @@ ARMS: Tuple[Arm, ...] = (
         expect_absent=("splade",),
     ),
     Arm(
+        name="no_pki",
+        knobs={"retrieval.pki_enabled": False},
+        gate=("knowledge_store.py `if q_lower_tokens and self._pki_enabled:` "
+              "(Tier 0 path-key compound index)"),
+        validation=VALIDATION_SIGNAL,
+        expect_absent=("pki",),
+    ),
+    Arm(
+        name="no_splade_no_pki",
+        knobs={
+            "ingestion.splade_enabled": False,
+            "retrieval.pki_enabled": False,
+        },
+        gate="both gates above (B3 combined arm, issues #333/#334)",
+        validation=VALIDATION_SIGNAL,
+        expect_absent=("splade", "pki"),
+    ),
+    Arm(
         name="no_dense",
         knobs={"retrieval.dense_embedding_enabled": False},
         gate=("knowledge_store.py:2972 / :3757 `if self._dense_embedding_enabled` "

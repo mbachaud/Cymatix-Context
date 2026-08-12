@@ -737,6 +737,7 @@ which stay additive) lives in
 | `semantic_dense_additive_weight` | `float` | `16.0` | Semantic-wiring arm (2026-06-02; PRD docs/prds/2026-06-02-semantic-wiring-arm.md). When query_type=="semantic" AND env CYMATIX_SEMANTIC_ARM=1, the per-shard dense term is scaled by semantic_dense_additive_weight (instead of dense_additive_weight) AND routing broadens to all healthy shards. The two fire together or not at all. Default-off (env unset) => byte-identical baseline; lexical/tag/SPLADE tiers are never touched (additive KEEP-BOTH). |
 | `semantic_broaden_routing` | `bool` | `true` |  |
 | `pki_weight` | `float` | `1.0` | PKI tier, RRF participant |
+| `pki_enabled` | `bool` | `true` | Tier-0 read gate; False skips path_key_index entirely |
 | `shard_fetch_multiplier` | `float` | `2.0` | ── Sharded-retrieval fetch depth + co-activation budget (#222/#223) ── These bind ONLY on the sharded read path (ShardRouter); blob mode never constructs a router, so they are inert there. Threaded to the router via open_read_source -> ShardedGenomeAdapter -> ShardRouter (mirrors semantic_broaden_routing). Defaults reproduce the dark-shipped env-knob behaviour byte-for-byte and keep the sharded merge identical to today. #222 per-shard fetch depth: the router fetches max_genes * multiplier candidates per shard before the cross-shard merge. multiplier=2.0 is the legacy flat 2× cut. scale_with_shards amplifies the multiplier by sqrt(n_shards) (clamped to 10×max_genes) so populous many-shard corpora oversample each shard deeply enough that a mid-shard gold survives to the merge. CYMATIX_SHARD_FETCH_FACTOR (int) overrides. |
 | `shard_fetch_scale_with_shards` | `bool` | `false` |  |
 | `coact_reserved_slots` | `int` | `0` | #223 co-activation reserved budget: reserve up to N of the final 2×max_genes output slots for newly graph-promoted (co-activated) docs so a link-discounted gold isn't truncated by lexical incumbents. 0 = legacy (no reservation). CYMATIX_SHARD_COACT_RESERVE (int) overrides. coact_link_boost is the discount a linked doc enters at (× its source doc's corrected score); 0.5 == the shipped constant. |
@@ -775,7 +776,7 @@ authoritative?" semantics survive unchanged. The split:
 
 | Tier | RRF participant? | Weight knob |
 |---|---|---|
-| `pki` (path-key compound) | yes | `pki_weight` |
+| `pki` (path-key compound) | yes | `pki_weight` (gate: `pki_enabled`) |
 | `filename_anchor` | yes | `filename_anchor_weight` (reused) |
 | `tag_exact` | yes | `tag_exact_weight` |
 | `tag_prefix` | yes | `tag_prefix_weight` |
@@ -855,6 +856,7 @@ dense_additive_min_cosine = 0.15       # additive-mode only; unused under rrf
 semantic_dense_additive_weight = 16.0
 semantic_broaden_routing = true
 pki_weight = 1.0
+pki_enabled = true
 ```
 
 **Migration notes.**
@@ -1691,6 +1693,7 @@ harmonic_weight = 1.0                   # Tier 5 per-link weight
 entity_graph_weight = 0.5               # Tier 5b entity boost
 dense_weight = 1.0                      # Stage 2 dense recall, RRF participant
 pki_weight = 1.0                        # path-key-index tier, RRF participant
+pki_enabled = true                      # Tier-0 read gate; false skips path_key_index entirely (ablation)
 # Note: filename_anchor_weight (above) and sr_weight (above) are reused.
 
 [plr]
