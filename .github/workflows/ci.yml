@@ -103,8 +103,10 @@ jobs:
       # state the issue describes. The suite must pass with the ingest-path
       # tests skipping cleanly (reasons printed via -rs name the fix). The
       # assert keeps the leg honest if a future dependency ever starts
-      # pulling the pipeline in transitively. The download step below then
-      # restores the full-coverage run.
+      # pulling the pipeline in transitively. The focused test runs before
+      # the suite, because the suite only proves those tests skip -- it
+      # never checks what the fresh-install user is actually told. The
+      # download step below then restores the full-coverage run.
       - name: Assert the spaCy pipeline is absent (fresh-install state)
         run: |
           python - <<'PY'
@@ -113,6 +115,9 @@ jobs:
           if spacy.util.is_package("en_core_web_sm"):
               sys.exit("en_core_web_sm already installed; modelless leg would prove nothing")
           PY
+
+      - name: Assert the missing-pipeline error itself (issue #313)
+        run: pytest tests/test_spacy_pipeline_missing.py -q -rs
 
       - name: Run full offline suite WITHOUT the spaCy pipeline (fresh-install gate, issue #313)
         run: pytest tests/ -m "not live" -q -rs
