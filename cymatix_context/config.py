@@ -723,6 +723,7 @@ class RetrievalConfig:
     semantic_dense_additive_weight: float = 16.0
     semantic_broaden_routing: bool = True
     pki_weight: float = 1.0                 # PKI tier, RRF participant
+    pki_enabled: bool = True                # Tier-0 read gate; False skips path_key_index entirely
     # Note: filename_anchor_weight, sr_weight reuse their existing knobs above.
 
     # ── Sharded-retrieval fetch depth + co-activation budget (#222/#223) ──
@@ -1558,6 +1559,7 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             semantic_dense_additive_weight=float(r.get("semantic_dense_additive_weight", cfg.retrieval.semantic_dense_additive_weight)),
             semantic_broaden_routing=bool(r.get("semantic_broaden_routing", cfg.retrieval.semantic_broaden_routing)),
             pki_weight=float(r.get("pki_weight", cfg.retrieval.pki_weight)),
+            pki_enabled=bool(r.get("pki_enabled", cfg.retrieval.pki_enabled)),
             # Issues #222/#223: sharded per-shard fetch depth + co-activation
             # reserved budget. Router-only knobs (blob mode ignores them);
             # defaults reproduce the dark-shipped env-knob behaviour.

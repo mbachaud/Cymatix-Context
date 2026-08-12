@@ -456,6 +456,7 @@ dense_additive_weight = 4.0
 # gentle so it removes only noise-grade hits, not weak-but-real matches.
 dense_additive_min_cosine = 0.15
 pki_weight = 1.0                        # path-key-index tier, RRF participant
+pki_enabled = true                      # Tier-0 read gate; false skips path_key_index entirely (ablation)
 # Note: filename_anchor_weight (above) and sr_weight (above) are reused.
 
 # ── Sharded-retrieval fetch depth + co-activation budget (#222/#223) ──

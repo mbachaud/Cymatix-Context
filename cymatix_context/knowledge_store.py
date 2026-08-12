@@ -684,6 +684,11 @@ class KnowledgeStore:
         doc_type_boost_mode: str = "additive",
         authority_path_selectivity: bool = False,
         pki_weight: float = 1.0,
+        # Tier-0 read gate. True is byte-identical to the pre-gate store;
+        # False skips the path_key_index read entirely (no SQL, no signal
+        # timing, no RRF tier) so the ablation ladder can measure the
+        # layer the 2026-08-06 ledger flagged as "no off-switch exists".
+        pki_enabled: bool = True,
         # ── Issue #341: query-time cross-encoder rerank (default-OFF) ──
         # Pre-cap rerank seam. With rerank_enabled=False (and no per-query
         # override) every retrieval path below is byte-identical to the
@@ -857,6 +862,7 @@ class KnowledgeStore:
         self._semantic_dense_additive_weight: float = float(semantic_dense_additive_weight)
         self._semantic_broaden_routing: bool = bool(semantic_broaden_routing)
         self._pki_weight: float = float(pki_weight)
+        self._pki_enabled: bool = bool(pki_enabled)
         # Issue #341: pre-cap cross-encoder rerank (see ctor params).
         self._rerank_enabled: bool = bool(rerank_enabled)
         self._rerank_depth: int = int(rerank_depth)
@@ -2745,7 +2751,7 @@ class KnowledgeStore:
         # documents, regressing retrieval (empirically observed 12% -> 6%
         # on the 2026-04-12 KV-harvest bench before this fix).
         q_lower_tokens = [t.lower() for t in query_terms if t]
-        if q_lower_tokens:
+        if q_lower_tokens and self._pki_enabled:
             _pki_t0 = time.monotonic()
             try:
                 # Group hits by (path_token, kv_key) to compute per-pair

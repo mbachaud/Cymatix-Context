@@ -663,6 +663,9 @@ def build_genome_kwargs(config, sema_codec=None) -> dict:
         semantic_dense_additive_weight=retrieval.semantic_dense_additive_weight,
         semantic_broaden_routing=retrieval.semantic_broaden_routing,
         pki_weight=retrieval.pki_weight,
+        # Tier-0 PKI read gate (PR #361): threaded here so boot AND
+        # /admin/swap-db inherit it via the shared builder.
+        pki_enabled=retrieval.pki_enabled,
         # Issues #222/#223: sharded per-shard fetch depth + co-activation
         # reserved budget (router-only; per-shard Genomes ignore them).
         shard_fetch_multiplier=retrieval.shard_fetch_multiplier,

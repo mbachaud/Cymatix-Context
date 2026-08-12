@@ -202,3 +202,19 @@ scores nothing at k=12 — that entry pays off ONLY once pre-cap rerank
 lands and converts pool presence into recall). Retune verdict: prune the
 bloating entries now (+1 needle immediately), keep the erb_039 feeder as
 a deliberate rerank-era investment, re-measure after rerank wiring.
+
+## Addendum 5 (2026-08-12): PKI read gate lands — action item 6, pki half
+
+`[retrieval] pki_enabled` (default `true`, byte-identical) now gates the
+single query-time PKI read (Tier 0 in `query_docs`); `false` skips the
+`path_key_index` SQL entirely — no signal timing, no RRF tier, no page-cache
+touch. Ladder arm `no_pki` added (`VALIDATION_SIGNAL`, `expect_absent=("pki",)`
+— the `pki` key is written in a `finally` on every termed query, so the
+baseline arm falsifies). The knob is threaded boot + `/admin/swap-db`
+(swap-drift regression test in `tests/test_pki_gate.py`). Three scope notes:
+(1) the read gate does NOT shrink the 8.56GB — that needs a write-side gate
+or `/admin/compact-pki`; (2) an HTTP-driven A/B where the client supplies
+`session_context` is not a pure PKI ablation (injected project path-tokens
+still perturb tag/FTS tiers) — the in-process ladder is unaffected; (3) with
+the gate off the `pki` telemetry series goes silent, not zero. Tags arm
+(action item 6, other half) still open.
