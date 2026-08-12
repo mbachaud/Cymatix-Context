@@ -1132,63 +1132,27 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
         old_path = str(cymatix.genome.path)
 
         try:
-            from ..sharding import open_read_source
+            from ..context_manager import _apply_symbol_expansion_cap
+            from ..sharding import build_genome_kwargs, open_read_source
 
+            # 2026-08-12 audit: construct the swapped store from the SAME
+            # shared kwargs-builder the boot path uses. The previous
+            # hand-copied kwargs list here drifted behind boot four separate
+            # times (dense/ANN 2026-05-18, #214, #222/#223, #260) and was
+            # missing 32 knobs at audit time (filename_anchor/bm25 among
+            # them — the 2026-08-09 receipt invalidations). See
+            # tests/test_swap_db_knob_sync.py for the per-knob contract.
             new_store = open_read_source(
                 genome_path=path,
-                synonym_map=config.synonym_map,
-                sema_codec=getattr(cymatix, "_sema_codec", None),
-                splade_enabled=config.ingestion.splade_enabled,
-                splade_model=config.ingestion.splade_model,  # #207 item 1
-                splade_content_cap=config.ingestion.splade_content_cap,  # #207 item 3
-                dense_model=config.retrieval.dense_model,  # #207 dense fast-follow
-                dense_passage_char_cap=config.ingestion.dense_passage_char_cap,  # #207 dense fast-follow
-                deny_list_extra=config.ingestion.deny_list_extra,  # #207 item 5
-                locale_demotion_enabled=config.ingestion.locale_demotion_enabled,  # #207 item 5
-                # Issue #164: size-aware SPLADE auto-toggle thresholds.
-                splade_auto_enable_below_genes=config.ingestion.splade_auto_enable_below_genes,
-                splade_auto_disable_above_genes=config.ingestion.splade_auto_disable_above_genes,
-                entity_graph=config.ingestion.entity_graph,
-                sr_enabled=config.retrieval.sr_enabled,
-                sr_gamma=config.retrieval.sr_gamma,
-                sr_k_steps=config.retrieval.sr_k_steps,
-                sr_weight=config.retrieval.sr_weight,
-                sr_cap=config.retrieval.sr_cap,
-                seeded_edges_enabled=config.retrieval.seeded_edges_enabled,
-                # Tier-0 fix (2026-05-18): forward the dense / ANN / fusion
-                # retrieval knobs. Without these a hot-swapped fixture reverts
-                # to the KnowledgeStore defaults (dense_embedding_enabled=False)
-                # and dense recall silently goes dark — the boot path
-                # (context_manager.open_read_source) passes them, but this
-                # swap path had drifted out of sync.
-                dense_embedding_enabled=config.retrieval.dense_embedding_enabled,
-                dense_embedding_dim=config.retrieval.dense_embedding_dim,
-                ann_similarity_threshold=config.retrieval.ann_similarity_threshold,
-                ann_threshold_min_genes=config.retrieval.ann_threshold_min_genes,
-                ann_threshold_max_genes=config.retrieval.ann_threshold_max_genes,
-                ann_threshold_mode=config.retrieval.ann_threshold_mode,
-                ann_threshold_sigma_multiplier=config.retrieval.ann_threshold_sigma_multiplier,
-                # Issue #214: dense pool floor (keep the swap path in sync).
-                dense_pool_floor_genes=config.retrieval.dense_pool_floor_genes,
-                dense_pool_size=config.retrieval.dense_pool_size,
-                fusion_mode=config.retrieval.fusion_mode,
-                rrf_k=config.retrieval.rrf_k,
-                # Issue #260: keep the hot-swap path in sync with the boot path
-                # so an enabled RRF gate survives a fixture swap. Default-inert.
-                rrf_gate_enabled=config.retrieval.rrf_gate_enabled,
-                rrf_gate_top_m=config.retrieval.rrf_gate_top_m,
-                rrf_gate_min_score=config.retrieval.rrf_gate_min_score,
-                dense_weight=config.retrieval.dense_weight,
-                dense_additive_weight=config.retrieval.dense_additive_weight,
-                dense_additive_min_cosine=config.retrieval.dense_additive_min_cosine,
-                # Issues #222/#223: keep the swap path in sync with the boot
-                # path — sharded fetch depth + co-activation reserved budget.
-                shard_fetch_multiplier=config.retrieval.shard_fetch_multiplier,
-                shard_fetch_scale_with_shards=config.retrieval.shard_fetch_scale_with_shards,
-                coact_reserved_slots=config.retrieval.coact_reserved_slots,
-                coact_link_boost=config.retrieval.coact_link_boost,
+                **build_genome_kwargs(
+                    config, sema_codec=getattr(cymatix, "_sema_codec", None)
+                ),
             )
             new_store.read_only = read_only
+            # Boot applies this post-construction (WS3); mirror it here.
+            _apply_symbol_expansion_cap(
+                new_store, config.retrieval.symbol_expansion_cap
+            )
 
             # Rebuild caches on the new store
             new_store.invalidate_sema_cache()

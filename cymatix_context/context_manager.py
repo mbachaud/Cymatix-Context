@@ -946,118 +946,16 @@ class CymatixContextManager:
         # CYMATIX_USE_SHARDS=1 and the configured path is a routing DB. Writes
         # become no-ops in that mode; suitable for read-heavy serving and
         # benchmarks until ingest-time sharding (spec Task 6) lands.
-        from .sharding import open_read_source
+        # Every config-driven constructor knob comes from the shared
+        # build_genome_kwargs — the single source of truth this path shares
+        # with /admin/swap-db, so a hot-swapped store is constructed exactly
+        # like the boot store (the 2026-08-09 receipt-invalidation drift
+        # class: knobs threaded here but hand-copied out of sync in the
+        # swap path silently reset to constructor defaults after a swap).
+        from .sharding import build_genome_kwargs, open_read_source
         self.genome = open_read_source(
             genome_path=config.genome.path,
-            synonym_map=config.synonym_map,
-            sema_codec=self._sema_codec,
-            splade_enabled=config.ingestion.splade_enabled,
-            splade_model=config.ingestion.splade_model,  # #207 item 1
-            splade_content_cap=config.ingestion.splade_content_cap,  # #207 item 3
-            dense_model=config.retrieval.dense_model,  # #207 dense fast-follow
-            dense_passage_char_cap=config.ingestion.dense_passage_char_cap,  # #207 dense fast-follow
-            deny_list_extra=config.ingestion.deny_list_extra,  # #207 item 5
-            locale_demotion_enabled=config.ingestion.locale_demotion_enabled,  # #207 item 5
-            # Issue #164: size-aware SPLADE auto-toggle thresholds. Both
-            # default 0 (toggle off); see IngestionConfig docstring.
-            splade_auto_enable_below_genes=config.ingestion.splade_auto_enable_below_genes,
-            splade_auto_disable_above_genes=config.ingestion.splade_auto_disable_above_genes,
-            entity_graph=config.ingestion.entity_graph,
-            # Tier-0 PR-1 (2026-05-16): inline BGE-M3 dense write at ingest.
-            dense_embed_on_ingest=config.ingestion.dense_embed_on_ingest,
-            sr_enabled=config.retrieval.sr_enabled,
-            sr_gamma=config.retrieval.sr_gamma,
-            sr_k_steps=config.retrieval.sr_k_steps,
-            sr_weight=config.retrieval.sr_weight,
-            sr_cap=config.retrieval.sr_cap,
-            seeded_edges_enabled=config.retrieval.seeded_edges_enabled,
-            filename_anchor_enabled=(
-                config.retrieval.filename_anchor_enabled
-                or os.environ.get("CYMATIX_FILENAME_ANCHOR_ENABLED", "").lower()
-                in {"1", "true", "yes", "on"}
-            ),
-            filename_anchor_weight=config.retrieval.filename_anchor_weight,
-            bm25_shortlist_enabled=config.retrieval.bm25_shortlist_enabled,
-            bm25_shortlist_size=config.retrieval.bm25_shortlist_size,
-            bm25_prefilter_enabled=config.retrieval.bm25_prefilter_enabled,
-            bm25_prefilter_size=config.retrieval.bm25_prefilter_size,
-            fts5_candidate_depth=config.retrieval.fts5_candidate_depth,
-            entity_graph_retrieval_enabled=config.retrieval.entity_graph_retrieval_enabled,
-            dense_embedding_enabled=config.retrieval.dense_embedding_enabled,
-            dense_embedding_dim=config.retrieval.dense_embedding_dim,
-            ann_similarity_threshold=config.retrieval.ann_similarity_threshold,
-            ann_threshold_min_genes=config.retrieval.ann_threshold_min_genes,
-            ann_threshold_max_genes=config.retrieval.ann_threshold_max_genes,
-            # Stage 4 (2026-05-08): margin-over-random calibration mode.
-            ann_threshold_mode=config.retrieval.ann_threshold_mode,
-            ann_threshold_sigma_multiplier=config.retrieval.ann_threshold_sigma_multiplier,
-            # Issue #214: dense pool floor — the dense leg can no longer be
-            # threshold-gated to zero during pool construction. Fanned to the
-            # solo Genome AND every per-shard Genome via open_read_source.
-            dense_pool_floor_genes=config.retrieval.dense_pool_floor_genes,
-            dense_pool_size=config.retrieval.dense_pool_size,
-            # Stage 3 (2026-05-08): RRF fusion + per-tier weights.
-            fusion_mode=config.retrieval.fusion_mode,
-            rrf_k=config.retrieval.rrf_k,
-            # Issue #260: rank/confidence-gated RRF. Fanned to the solo Genome
-            # AND every per-shard Genome via open_read_source. Default-inert.
-            rrf_gate_enabled=config.retrieval.rrf_gate_enabled,
-            rrf_gate_top_m=config.retrieval.rrf_gate_top_m,
-            rrf_gate_min_score=config.retrieval.rrf_gate_min_score,
-            # Issue #255 (PR-2): post-fusion rerank combinator + its scale-free
-            # knobs. Fanned to the solo Genome AND every per-shard Genome via
-            # open_read_source. Default "additive" == shipped behavior.
-            rerank_combinator=config.retrieval.rerank_combinator,
-            rerank_band_delta=config.retrieval.rerank_band_delta,
-            rerank_tier_weight=config.retrieval.rerank_tier_weight,
-            # Issue #341 (Task 6): query-time cross-encoder rerank seam.
-            # Fanned to the solo Genome AND every per-shard Genome via
-            # open_read_source. Default rerank_enabled=False reproduces the
-            # pre-#341 pipeline byte-for-byte. rerank_scorer is deliberately
-            # NOT threaded here — it is a DI seam for tests only.
-            rerank_enabled=config.retrieval.rerank_enabled,
-            rerank_depth=config.retrieval.rerank_depth,
-            rerank_model=config.retrieval.rerank_model,
-            fts5_weight=config.retrieval.fts5_weight,
-            splade_weight=config.retrieval.splade_weight,
-            tag_exact_weight=config.retrieval.tag_exact_weight,
-            tag_prefix_weight=config.retrieval.tag_prefix_weight,
-            # Issue #327: tag-tier IDF discipline (flag-gated, default off).
-            tag_idf_enabled=config.retrieval.tag_idf_enabled,
-            tag_df_cap=config.retrieval.tag_df_cap,
-            splade_df_cap_fraction=config.retrieval.splade_df_cap_fraction,
-            # Issue #202: warm ΣĒMA boost knob (new; additive-mode Tier 4A).
-            sema_boost_weight=config.retrieval.sema_boost_weight,
-            sema_cold_weight=config.retrieval.sema_cold_weight,
-            lex_anchor_weight=config.retrieval.lex_anchor_weight,
-            harmonic_weight=config.retrieval.harmonic_weight,
-            entity_graph_weight=config.retrieval.entity_graph_weight,
-            dense_weight=config.retrieval.dense_weight,
-            # Tier-0 PR-3 (2026-05-16): additive-mode dense merge weight.
-            dense_additive_weight=config.retrieval.dense_additive_weight,
-            # Tier-0 review fix (2026-05-16): additive-mode dense merge noise floor.
-            dense_additive_min_cosine=config.retrieval.dense_additive_min_cosine,
-            # Semantic-wiring arm (2026-06-02): scoped dense weight + broaden
-            # routing for query_type=="semantic" under CYMATIX_SEMANTIC_ARM.
-            # Fanned to the solo Genome AND every per-shard Genome (open_read_source
-            # -> ShardedGenomeAdapter -> ShardRouter -> Genome). Default-off.
-            semantic_dense_additive_weight=config.retrieval.semantic_dense_additive_weight,
-            semantic_broaden_routing=config.retrieval.semantic_broaden_routing,
-            pki_weight=config.retrieval.pki_weight,
-            # Issues #222/#223: sharded per-shard fetch depth + co-activation
-            # reserved budget. Router-only knobs — fanned to ShardRouter via
-            # open_read_source -> ShardedGenomeAdapter; also passed to each
-            # per-shard Genome (ignored there). Defaults reproduce the
-            # dark-shipped env-knob behaviour byte-for-byte.
-            shard_fetch_multiplier=config.retrieval.shard_fetch_multiplier,
-            shard_fetch_scale_with_shards=config.retrieval.shard_fetch_scale_with_shards,
-            coact_reserved_slots=config.retrieval.coact_reserved_slots,
-            coact_link_boost=config.retrieval.coact_link_boost,
-            # #264: doc-type boost mode. Router-only (ignored by the solo
-            # Genome and every per-shard Genome); binds on the cross-shard
-            # merge. Default-inert "additive" == the shipped ×1.15 multiply.
-            doc_type_boost_mode=config.retrieval.doc_type_boost_mode,
-            authority_path_selectivity=config.retrieval.authority_path_selectivity,
+            **build_genome_kwargs(config, sema_codec=self._sema_codec),
         )
 
         # WS3: hand the symbol-expansion cap to the genome's co-activation
