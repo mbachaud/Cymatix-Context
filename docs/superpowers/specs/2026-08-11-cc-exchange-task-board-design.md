@@ -154,6 +154,22 @@ Rules the ledger states explicitly (from the 2026-08-09 receipt invalidations):
 compare arms only within their own run's baseline; measurement runs against a
 frozen tag, never a moving branch.
 
+**Standard bench profile (decision 2026-08-11).** Future testing runs the GPU
+encoder daemon ON with per-box worker counts — shipped defaults stay untouched
+(daemon off, workers 2; flips remain receipt-gated PRs):
+
+| box | daemon | workers | receipt |
+|---|---|---|---|
+| max rig (8C/16T x86) | ON (`CYMATIX_ENCODER_URL=http://127.0.0.1:11439`) | 4 | 0015 / `61ea459`: scaling only unlocks with daemon ON, x4 sweet spot |
+| Joe GB10 Grace (e92c) | ON | 2 | 0018: x4/x8 does NOT reproduce; ON beats OFF 1.16–1.31×, w2 c-curve positive |
+
+Every BASELINES.md row and card `pin:` records the profile actually used.
+Exceptions: (a) SCBench model-free treatment arms — SPLADE/dense disabled, the
+daemon has nothing to encode; Terra's frozen env is not modified in flight;
+(b) #339/C1 determinism cards, which manipulate these knobs and pin their own
+values; (c) any arm at c>1 keeps the recall validity gate (the one-sided wobble
+in Joe's G5 / #339 is unresolved).
+
 ## 7. Rollout
 
 1. **Cymatix repo** (this branch): this spec; `docs/benchmarks/BASELINES.md`; the
