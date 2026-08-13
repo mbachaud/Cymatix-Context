@@ -293,6 +293,13 @@ class ContextPacket(BaseModel):
     coordinate_confidence: float = 0.0
     file_coverage: float = 0.0
 
+    # Phase 0.1/0.5 (2026-08-12 refinement campaign) — optional
+    # delivery-visibility block: delivered ids in final order plus
+    # which constraint (assembly cap vs token budget) truncated
+    # delivery. Optional/None-safe so pre-existing readers are
+    # unaffected; forward ref — defined below next to Know/MissBlock.
+    delivery: Optional["DeliveryBlock"] = None
+
 
 # ── Claims layer (see docs/specs/2026-04-17-agent-context-index-build-spec.md) ──
 
@@ -666,6 +673,58 @@ class MissBlock(BaseModel):
                 )
             )
         return out
+
+
+# Phase 0.1/0.5 (2026-08-12 refinement campaign): which constraint
+# actually truncated delivery. "assembly_cap" = the document-count cap
+# (the classifier's assembly_max_genes_cap on the pipeline; the
+# ``max_genes`` request parameter on the packet path); "token_budget" =
+# assembly's budget-eviction loop trimmed below the cap; "none" = every
+# pool candidate above the floor was delivered (or the constraint
+# cannot be determined — the safe degrade).
+CAP_BINDINGS: tuple = ("assembly_cap", "token_budget", "none")
+
+_CAP_BINDING_SET = frozenset(CAP_BINDINGS)
+
+
+class DeliveryBlock(BaseModel):
+    """Delivery-visibility block (refinement campaign Phase 0.1 + 0.5).
+
+    Serve-side counterpart of the ablation ladder's delivered-gold
+    math: the ladder computes delivered-gold from
+    ``window.expressed_gene_ids``; this block serves the delivered ids
+    in final order so any harness can compute delivered-gold /
+    pool_delivery_gap exactly by joining ``delivered_gene_ids`` with
+    its gold set (gold itself is unknowable at serve time).
+
+    ``cap_binding`` answers the question the 2026-07-30 Gemma
+    expression campaign could not: did the assembly cap (not the token
+    budget) truncate delivery? Optional on ``ContextPacket`` — old
+    readers see ``delivery: null`` and are unaffected.
+    """
+
+    model_config = {"extra": "forbid"}
+
+    # Scored candidate pool size for this query (post-floor).
+    pool_size: int = Field(default=0, ge=0)
+    # Number of documents actually delivered.
+    delivered_count: int = Field(default=0, ge=0)
+    # Final delivered order — the ladder's join basis.
+    delivered_gene_ids: List[str] = Field(default_factory=list)
+    # Which constraint truncated delivery; one of CAP_BINDINGS.
+    # Validated at runtime (not via Literal) so future one-line tuple
+    # extensions don't require a pydantic type bump — same trade-off
+    # as MissBlock.reason above.
+    cap_binding: str = "none"
+
+    @model_validator(mode="after")
+    def _validate_cap_binding(self) -> "DeliveryBlock":
+        if self.cap_binding not in _CAP_BINDING_SET:
+            raise ValueError(
+                f"DeliveryBlock.cap_binding {self.cap_binding!r} not in "
+                f"CAP_BINDINGS ({sorted(CAP_BINDINGS)})"
+            )
+        return self
 
 
 class ContextResponseEnvelope(BaseModel):

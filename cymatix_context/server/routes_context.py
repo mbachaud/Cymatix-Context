@@ -318,6 +318,15 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
             "context_health": health.model_dump(),
         })
 
+        # Phase 0.1/0.5 (2026-08-12 refinement campaign): serve the
+        # pipeline's delivery-visibility block — delivered ids in final
+        # order + which constraint (assembly cap vs token budget)
+        # truncated delivery. Additive key; absent on paths that never
+        # reach assembly (e.g. abstain windows).
+        _delivery_meta = (window.metadata or {}).get("delivery")
+        if _delivery_meta is not None:
+            response["delivery"] = _delivery_meta
+
         # Agent-mode fields: structured metadata for programmatic use
         try:
             # Snapshot scores under the lock so we don't see a torn view
