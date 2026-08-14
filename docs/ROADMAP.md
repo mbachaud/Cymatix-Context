@@ -8,13 +8,14 @@
 >
 > Detailed specs still live in their own files; this doc is the sequencing layer on top.
 
-## Status snapshot (2026-07-27)
+## Status snapshot (2026-07-27; release facts updated 2026-08-14)
 
-- **Version:** 0.8.5 on master. The helix → cymatix rename is a **completed clean break** —
+- **Version:** 0.8.6 on master (tagged 2026-08-05). The helix → cymatix rename is a
+  **completed clean break** —
   no alias package, no `helix*` console scripts, no `HELIX_*` env mirror, no `helix.toml`
   fallback, no `helix_*` MCP tools. `tests/test_no_helix_leftovers.py` is the standing guard.
-- **Release state:** `pyproject.toml` and `CHANGELOG.md` say 0.8.5; the **tag and GitHub
-  Release are still owed** (`publish.yml` fires on `release: published`, not on tag push).
+- **Release state:** ~~tag and GitHub Release still owed~~ — **done**: v0.8.5 and v0.8.6
+  are both tagged; the v0.8.6 GitHub Release published 2026-08-06.
 - **Test baseline:** green. The long-standing sharded-adapter parity failure was fixed on
   master by `a0f3fe3` (2026-07-22).
 - **Open issues:** 15. Two are closable on sight (#311, #307); the rest are triaged below.
@@ -259,7 +260,8 @@ nuking live work.
 
 **Now — release + unblock the collaborator (nothing here needs the rig):**
 
-1. Tag `v0.8.5` and publish the GitHub Release (triggers `publish.yml` → PyPI).
+1. ~~Tag `v0.8.5` and publish the GitHub Release~~ — **done** (v0.8.5 tagged; v0.8.6
+   followed 2026-08-05, Release published 2026-08-06).
 2. Close #311 and #307.
 3. **Reply on `sike-run1`**: gold pack + the decontam ruling + the two small confirms + the
    `CYMATIX_USE_SHARDS` rename note. This is the single highest-leverage item on the board —
