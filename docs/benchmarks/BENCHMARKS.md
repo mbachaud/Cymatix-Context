@@ -1,5 +1,11 @@
 # Helix Context Benchmarks
 
+> **Historical (pre-rename, figures frozen at 2026-05-28).** This is the helix-era
+> methodology + results snapshot, kept under its original title as a point-in-time
+> record. For current campaign baselines and rules, see
+> [`BASELINES.md`](BASELINES.md); for the biology→software name mapping, see
+> `docs/ROSETTA.md`.
+
 **Last updated:** 2026-05-28 *(Layer 3 / EnterpriseRAG-Bench added; Layer 1+2 figures unchanged since 2026-04-10)*
 
 Helix solves a specific problem: **agents drowning in RAG search context.** A typical RAG
