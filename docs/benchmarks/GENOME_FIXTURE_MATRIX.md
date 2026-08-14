@@ -110,7 +110,7 @@ ingest path (`scripts/ingest_all.py`) produces:
 - **`fingerprint_index`** — one row per gene_id, used by
   `ShardRouter.route` to decide which shards to open for a query.
 - **`source_index`** — one row per (gene_id, shard_name), used by
-  `helix_context/context_packet.py::_lookup_source_row` for packet
+  `cymatix_context/context_packet.py::_lookup_source_row` for packet
   freshness and authority decisions (PR #113).
 
 `source_index` rows are written alongside the fingerprint payload from the
@@ -134,9 +134,9 @@ A real ingest path will overwrite the row on its next observation cycle.
 ## Sharded `harmonic_links` seeding (issue #223)
 
 Before this fix, every sharded fixture this builder produced shipped
-**zero** `harmonic_links` rows — `seed_edges()` (`helix_context/retrieval/seeded_edges.py`)
+**zero** `harmonic_links` rows — `seed_edges()` (`cymatix_context/retrieval/seeded_edges.py`)
 existed but was only ever called from tests, and co-activation writes are
-no-ops on the read-heavy sharded adapter (`helix_context/sharding.py`,
+no-ops on the read-heavy sharded adapter (`cymatix_context/sharding.py`,
 `ShardedGenomeAdapter.upsert_doc`). That left
 `ShardRouter._expand_cross_shard_coactivation` (#120) — and the
 `coact_reserved_slots` / `coact_link_boost` knobs gated behind it (#223,
@@ -144,7 +144,7 @@ PR #270) — permanently unreachable in any sharded receipt: a null result
 from that path was a fixture artifact, not a measurement.
 
 `build_profile_sharded` now seeds two edge classes automatically
-(`HELIX_BFM_SEED_EDGES=0` to disable, default on):
+(`CYMATIX_BFM_SEED_EDGES=0` to disable, default on):
 
 - **Intra-shard** — inside `_build_one_shard`, right after a shard's
   ingest completes, `seed_edges()` runs over that shard's own gene_ids
