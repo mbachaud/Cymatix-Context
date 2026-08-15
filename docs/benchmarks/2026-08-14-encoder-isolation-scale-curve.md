@@ -86,6 +86,26 @@ Receipts: `benchmarks/dogfood/erb/receipts/enc_iso_{100k,250k,500k,829k}_run{1,2
   (final set is not a strict subset of the candidate top-k slice); it is consistent
   across arms and does not affect arm-vs-floor deltas.
 
+## 2026-08-15 addendum — full-469 dense confirmation (hardening step 1: DONE)
+
+The 30-probe result hardened on the full blob needle set (469 needles, two repeat runs,
+identical output both runs — `enc_iso_829k_dense_confirm_run{1,2}.json`):
+
+| arm | r@12 | fr@12 | med_rank | p50 |
+|---|---|---|---|---|
+| baseline (all-off floor) | 0.659 | 0.663 | 3.0 | ~22–26s |
+| dense_on | 0.678 | **0.456** | 2.0 | ~19s |
+
+- **Delivered recall −0.207** (0.663 → 0.456): ~97 of 469 needles lose gold from the
+  final window when dense is enabled. At n=469 the one-needle band is ±0.002 — this is
+  not noise of any kind.
+- The mechanism in full view: dense **adds** +0.019 pool recall (~9 needles found that
+  lexical misses) and ranks the gold it keeps *higher* (med_rank 2.0 vs 3.0) — but its
+  scores flood the final top-12 with plausible-but-wrong candidates on ~10× more
+  needles than it rescues.
+- The 30-probe estimate (−0.200) matched the full-set truth (−0.207) almost exactly;
+  the probe floor (0.767) vs full floor (0.663) confirms the probe set skews easy.
+
 ## Implication
 
 The receipt-backed case for flipping `dense_embedding_enabled` default-off is now a
