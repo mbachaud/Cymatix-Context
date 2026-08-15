@@ -111,7 +111,7 @@ Pick extras for the features you turn on:
 | Extra | Enables | Pull |
 |---|---|---|
 | *(core)* | HTTP server, `/context`, `/context/packet`, FTS5 retrieval | light |
-| `embeddings` | BGE-M3 dense recall (default-on retrieval stage) | torch via sentence-transformers |
+| `embeddings` | BGE-M3 dense recall (opt-in; default-off since 2026-08-15 — [receipts](docs/benchmarks/2026-08-14-encoder-isolation-scale-curve.md)) | torch via sentence-transformers |
 | `cpu` | spaCy NER ingest tagging | spacy |
 | `mcp` | `python -m cymatix_context.mcp_server` (Claude Code / Cursor / Desktop) | mcp SDK |
 | `otel` | Grafana/Tempo/Loki observability | opentelemetry |
@@ -129,7 +129,8 @@ Then:
 # 1. Ingest your project
 cymatix ingest path/to/your/project/ --recursive
 
-# 2. One-time dense backfill (BGE-M3 vectors; retrieval is weak without it)
+# 2. Optional: dense backfill (only used if you opt in to dense recall with
+#    [retrieval] dense_embedding_enabled = true — default off since 2026-08-15)
 python scripts/backfill_bgem3_v2.py genomes/main/genome.db
 
 # 3. Query from the CLI — no server needed
@@ -196,7 +197,7 @@ Seven stages per turn, all LLM-free except optional splice:
 │ 1. Extract   │  heuristic keyword + entity extraction
 └──────┬───────┘
        ▼
-┌──────────────┐  FTS5 BM25 + BGE-M3 dense (1024-dim) + tags
+┌──────────────┐  FTS5 BM25 + tags (+ opt-in BGE-M3 dense)
 │ 2. Retrieve  │  + synonym expansion + co-activation + SR
 │              │  + cymatics 256-bin spectrum scoring
 │              │  ranked via RRF (default) or additive fusion
@@ -427,7 +428,7 @@ work as-is, no re-ingest needed.
 ## Gotchas
 
 - **Knowledge store path** is `genomes/main/genome.db` (not project root). Delete to start fresh.
-- **BGE-M3 backfill** is one-time post-install — `embedding_dense_v2 IS NULL` until you run `scripts/backfill_bgem3_v2.py`. Low retrieval rate without it.
+- **BGE-M3 backfill** only matters if you opt in to dense recall (`[retrieval] dense_embedding_enabled = true`; default off since 2026-08-15 — four-scale receipts measured dense displacing gold from delivery). With dense on, `embedding_dense_v2 IS NULL` until you run `scripts/backfill_bgem3_v2.py`.
 - **Fusion mode** defaults to `"rrf"` (since 2026-07-06; +12pp gold delivery vs additive on the hardest bed). `"additive"` remains as the legacy accumulator, scheduled for condition-gated removal. Under RRF the abstain gates run ratio-only.
 - **Sharded scale gap**: the sharded adapter currently trails the unsharded engine by ~31pp recall@10 on xl (dense recall and co-activation not yet at parity) — [#275](https://github.com/mbachaud/Cymatix-Context/issues/275). Prefer the unsharded engine for accuracy-sensitive corpora until this is closed.
 - **Session delivery** (`session_delivery_enabled = true`) tracks delivered docs per session, elides repeats. ~40% token savings on multi-turn. Pass `ignore_delivered: true` in `/context` body for benchmarks.

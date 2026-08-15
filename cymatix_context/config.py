@@ -286,7 +286,7 @@ class IngestionConfig:
     # dense-populated without a separate backfill pass. Latency-sensitive
     # callers can set false to defer encoding to scripts/backfill_bgem3_v2.py.
     # This is purely the WRITE path — retrieval still gates on
-    # [retrieval] dense_embedding_enabled (default true).
+    # [retrieval] dense_embedding_enabled (default false since 2026-08-15).
     dense_embed_on_ingest: bool = True
     # Issue #227: compute the 20D ΣĒMA embedding at ingest (feeds TCM / cymatics
     # via gene.embedding). Default True preserves current behaviour. Set False to
@@ -482,7 +482,14 @@ class RetrievalConfig:
     # PR-1 computes embedding_dense_v2 at ingest and PR-3 decoupled dense
     # recall from fusion_mode, so dense recall is now a shipped retrieval
     # signal in both additive and RRF mode.
-    dense_embedding_enabled: bool = True
+    # 2026-08-15 default flip -> False: four-scale isolation receipts (100k/
+    # 250k/500k carves + 829k blob, n=469 confirm, every pair replicated)
+    # measured dense DISPLACING gold from the delivered top-k at every scale
+    # (final recall -0.20..-0.33 vs the lexical floor) while adding at most
+    # +0.02 pool recall. Opt back in per-store with
+    # [retrieval] dense_embedding_enabled = true. Receipts:
+    # docs/benchmarks/2026-08-14-encoder-isolation-scale-curve.md
+    dense_embedding_enabled: bool = False
     # Stage 2 (2026-05-08): default dim raised from 256 -> 1024. Full BGE-M3
     # Matryoshka. dim=256 collapsed random-pair cosine to ~0.6, sabotaging
     # threshold semantics.

@@ -386,7 +386,13 @@ entity_graph_retrieval_enabled = false
 # embedding_dense_v2 at ingest and PR-3 decoupled dense recall from
 # fusion_mode (knowledge_store.query_docs), so dense recall now fires as a
 # retrieval signal under the shipped additive default — not only under RRF.
-dense_embedding_enabled = true
+# 2026-08-15: flipped back to false. Four-scale isolation receipts (100k/250k/
+# 500k carves + 829k blob at n=469, every pair replicated) measured dense
+# displacing gold from the delivered top-k at every scale (final recall
+# -0.20..-0.33 vs the lexical floor) for at most +0.02 pool recall. Set true
+# to opt back in. Receipts:
+# docs/benchmarks/2026-08-14-encoder-isolation-scale-curve.md
+dense_embedding_enabled = false
 dense_embedding_dim = 1024
 # Stage 4 / Issue #139 (2026-05-18): recalibrated 0.35 -> 0.58 for dim=1024.
 # 0.35 was a dim-256 value. Measured over the dim-1024 BGE-M3 v2 vectors in

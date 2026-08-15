@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **retrieval: `[retrieval] dense_embedding_enabled` default flipped `true` →
+  `false`.** Four-scale isolation receipts (100k/250k/500k carves + the 829k
+  blob at the full 469-needle set, every order-reversed pair replicated
+  exactly) measured BGE-M3 dense recall *displacing gold documents from the
+  delivered top-k* at every scale — final recall −0.20..−0.33 vs the lexical
+  floor (−0.207 at n=469, ~97/469 needles) — while adding at most +0.02
+  candidate-pool recall. Dense is now opt-in per store; beds with backfilled
+  vectors are unaffected until you set the flag. Existing configs that
+  explicitly set `dense_embedding_enabled = true` keep their behavior.
+  Receipts + method: `docs/benchmarks/2026-08-14-encoder-isolation-scale-curve.md`.
 - **perf(storage): #338 FTS5 external-content rebuild.** `genes_fts` no longer
   stores its own full copy of every document (the `genes_fts_content` shadow —
   8.67 GB / 18.5% of the 829K blob bed): new stores are created as
