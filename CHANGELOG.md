@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **ingestion: `[ingestion] splade_enabled` default flipped `true` → `false`.**
+  The n=469 isolation receipts on the 829k blob measured query-side SPLADE
+  over the full 147M-row expansion index as null-to-negative vs the lexical
+  floor (pool −0.004, delivered −0.006, ~15% slower; both repeats identical),
+  and the ingest-side bed A/B showed the expansion index contributes nothing
+  passively — the all-off floor is byte-identical with and without it. With
+  dense also flipped (below), **the default retrieval path is now fully
+  neural-free**. Opt back in per store with `splade_enabled = true`; existing
+  beds keep their expansion tables (unused until opted in). Receipts:
+  `docs/benchmarks/2026-08-14-encoder-isolation-scale-curve.md`.
 - **retrieval: `[retrieval] dense_embedding_enabled` default flipped `true` →
   `false`.** Four-scale isolation receipts (100k/250k/500k carves + the 829k
   blob at the full 469-needle set, every order-reversed pair replicated

@@ -276,7 +276,15 @@ class IngestionConfig:
     # shipped toml (every bench this month) ran true — so toml wins here;
     # the size-aware auto-disable knob below covers the enterprise cliff.
     # Soft-fails to a no-op when torch/transformers are absent.
-    splade_enabled: bool = True     # Phase 2: SPLADE sparse expansion at index time
+    # 2026-08-16 default flip -> False: n=469 isolation receipts on the 829k
+    # blob measured query-side SPLADE over the full 147M-row expansion index
+    # as null-to-negative vs the lexical floor (pool -0.004, delivered
+    # -0.006, ~15% slower; both repeats identical), and the ingest-side A/B
+    # (nosplade bed) showed the expansion index contributes nothing
+    # passively — floors byte-identical across beds. Opt back in with
+    # [ingestion] splade_enabled = true. Receipts:
+    # docs/benchmarks/2026-08-14-encoder-isolation-scale-curve.md
+    splade_enabled: bool = False    # Phase 2: SPLADE sparse expansion at index time
     rerank_model: str = DEFAULT_RERANK_MODEL  # legacy: feeds DeBERTaRibosome only; the retrieval cross-encoder reads [retrieval] rerank_model. Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass)
     colbert_enabled: bool = False   # Phase 4: ColBERT late interaction (optional)
     entity_graph: bool = True       # Phase 5: entity-based co-activation links (ingest-time edges). Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass)

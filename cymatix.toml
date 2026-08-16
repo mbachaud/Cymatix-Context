@@ -255,7 +255,12 @@ route_upstream = false
 
 [ingestion]
 backend = "cpu"                         # "ollama" (LLM, slow) | "cpu" (spaCy+regex, fast) | "hybrid"
-splade_enabled = true                   # Phase 2: SPLADE sparse expansion at index time
+# 2026-08-16: flipped to false. n=469 blob isolation receipts: query-side
+# SPLADE over the full expansion index is null-to-negative vs the lexical
+# floor, and the ingest-side A/B showed the 147M-row index contributes
+# nothing passively (floors byte-identical with/without it). Set true to opt
+# in. Receipts: docs/benchmarks/2026-08-14-encoder-isolation-scale-curve.md
+splade_enabled = false                  # Phase 2: SPLADE sparse expansion at index time
 # legacy: feeds DeBERTaRibosome only; the retrieval cross-encoder reads [retrieval] rerank_model
 rerank_model = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 colbert_enabled = false                 # Phase 4: ColBERT late interaction (optional)

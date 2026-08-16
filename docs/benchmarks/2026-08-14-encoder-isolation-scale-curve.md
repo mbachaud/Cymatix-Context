@@ -134,6 +134,31 @@ both predate the 2026-08-09 receipt-invalidation boundary.)
   invalidated all-on data hinted +9pp. That cell decides `splade_enabled` and the #333
   storage reclaim (~8.5 GB/bed).
 
+## 2026-08-16 addendum 3 — blob-bed `splade_on` at n=469: the SPLADE verdict
+
+The last open cell (query-side SPLADE over the real 147M-row expansion index, full
+needle set). Receipts: `enc_iso_829k_splade_confirm_run{1,2}.json` — both repeats
+identical:
+
+| arm | r@12 | fr@12 | med_rank | p50 |
+|---|---|---|---|---|
+| floor | 0.659 | 0.663 | 3.0 | ~24.3s |
+| splade_on | 0.655 | **0.657** | 3.0 | ~27–29s |
+
+**Null-to-negative**: −0.004 pool (~2 needles), −0.006 delivered (~3 needles), ~15%
+slower, at full statistical power. The +9pp hint from the pre-invalidation all-on data
+does not reproduce under current config. Combined with addendum 2 (the index contributes
+nothing passively), the complete SPLADE account at 829k: ingest-side expansions cost
+~8.5 GB/bed and query-side reading of them costs latency and a transformer encode for
+zero-to-negative retrieval effect. (The floor has now replicated byte-identically
+across 6 independent runs and two beds: 0.659 / 0.663 / 3.0.)
+
+**Action taken**: `[ingestion] splade_enabled` default flipped `false` (2026-08-16),
+joining the dense flip — the default retrieval path is now fully neural-free. The #333
+storage-reclaim case (dropping `splade_terms` from existing beds) now has its receipt.
+Remaining scale caveat: SPLADE's one delivered needle at 250k (addendum: the main table)
+suggests a mid-scale niche; anyone chasing it should re-run the 250k pair ingest-side.
+
 ## Implication
 
 The receipt-backed case for flipping `dense_embedding_enabled` default-off is now a

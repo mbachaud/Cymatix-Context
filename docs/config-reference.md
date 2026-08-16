@@ -499,7 +499,7 @@ is governed by per-feature flags in this section.
 | Key | Type | Default | Description |
 |---|---|---|---|
 | `backend` | `str` | `"cpu"` | "ollama" \| "cpu" \| "hybrid" |
-| `splade_enabled` | `bool` | `true` | Phase 2: SPLADE sparse expansion at index time |
+| `splade_enabled` | `bool` | `false` | Phase 2: SPLADE sparse expansion at index time |
 | `rerank_model` | `str` | `"cross-encoder/ms-marco-MiniLM-L-6-v2"` | legacy: feeds DeBERTaRibosome only; the retrieval cross-encoder reads [retrieval] rerank_model. Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
 | `colbert_enabled` | `bool` | `false` | Phase 4: ColBERT late interaction (optional) |
 | `entity_graph` | `bool` | `true` | Phase 5: entity-based co-activation links (ingest-time edges). Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
