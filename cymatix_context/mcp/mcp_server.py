@@ -115,7 +115,11 @@ import urllib.error
 import urllib.request
 from typing import Any, Dict, List, Optional
 
-from mcp.server.fastmcp import FastMCP
+# mcp 2.x home of the ergonomic server API (FastMCP's successor). The class
+# is re-exported at ``mcp.server.MCPServer``; we import from the defining
+# submodule so the test guards (`importorskip("mcp.server.mcpserver")`) track
+# exactly what this module needs. See docs/design/2026-08-16-mcp-2x-migration.md.
+from mcp.server.mcpserver import MCPServer
 
 log = logging.getLogger("cymatix.mcp")
 
@@ -165,7 +169,7 @@ def _default_party_id() -> str:
         return "unknown-host"
 
 
-mcp = FastMCP("cymatix")
+mcp = MCPServer("cymatix")
 
 
 # ── HTTP helper ──────────────────────────────────────────────────────
@@ -209,7 +213,7 @@ def _http(method: str, path: str, body: Optional[Dict] = None) -> Dict[str, Any]
     except Exception as exc:
         # Unexpected errors surface as real MCP errors (isError=true)
         # so hosts can distinguish them from structured transport
-        # failures above. FastMCP wraps raised exceptions for us.
+        # failures above. MCPServer wraps raised exceptions for us.
         log.warning(
             "cymatix-mcp _http(%s %s) unexpected failure", method, path, exc_info=True
         )
@@ -1039,18 +1043,18 @@ def _mcp_full_surface() -> bool:
     return os.environ.get("CYMATIX_MCP_FULL", "").strip().lower() in _TRUTHY
 
 
-def _apply_mcp_profile(server: FastMCP = mcp) -> List[str]:
+def _apply_mcp_profile(server: MCPServer = mcp) -> List[str]:
     """Prune non-core tools from ``server`` unless the full surface is requested.
 
     Returns the names removed (empty list when the full surface is active).
-    Uses FastMCP's public ``remove_tool``; any failure is non-fatal and falls
+    Uses MCPServer's public ``remove_tool``; any failure is non-fatal and falls
     back to leaving the full surface exposed (correctness over token savings).
     """
     if _mcp_full_surface():
         return []
     try:
         names = list(server._tool_manager._tools.keys())
-    except Exception:  # pragma: no cover - FastMCP internal shape changed
+    except Exception:  # pragma: no cover - MCPServer internal shape changed
         log.warning("could not enumerate MCP tools; exposing full surface")
         return []
     keep = _effective_core_tools()
