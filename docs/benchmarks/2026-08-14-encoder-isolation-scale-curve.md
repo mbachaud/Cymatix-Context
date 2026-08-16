@@ -106,6 +106,34 @@ identical output both runs — `enc_iso_829k_dense_confirm_run{1,2}.json`):
 - The 30-probe estimate (−0.200) matched the full-set truth (−0.207) almost exactly;
   the probe floor (0.767) vs full floor (0.663) confirms the probe set skews easy.
 
+## 2026-08-15 addendum 2 — ingest-side SPLADE A/B (nosplade bed, n=469)
+
+Bed pair: `erb_blob.db` (147,115,451 `splade_terms` rows) vs
+`erb_carve/erb_829k_nosplade.db` (zero splade tables; **identical** 829,131 genes and
+identical dense backfill, 809,255 — single-variable pair, verified). Same 469 needles,
+same all-off base config. Receipts: `enc_iso_829k_nosplade_run{1,2}.json` vs the
+dense-confirm baselines. (The older all-on-frame receipts — `full469_nosplade_c1` 0.6759
+vs `splade_ab_blob` 0.7667 — are NOT a usable A/B: n=469 vs n=30 needle mismatch, and
+both predate the 2026-08-09 receipt-invalidation boundary.)
+
+| bed | arm | r@12 | fr@12 | med_rank |
+|---|---|---|---|---|
+| blob (expansions present) | floor | 0.659 | 0.663 | 3.0 |
+| nosplade | floor | 0.659 | 0.663 | 3.0 |
+| nosplade | splade_on | 0.659 | 0.663 | 3.0 |
+
+- **The floors are byte-identical across beds** (both repeats): removing the 147M-row
+  expansion index changes nothing about non-splade retrieval — SPLADE storage is cleanly
+  separated (no FTS leakage), and the expansions contribute nothing passively.
+- **`splade_on` over the empty index validated and did nothing**: boot created the empty
+  `splade_terms` table, the query-side tier ran (signal key present — validation PASS),
+  and every metric stayed identical. The SPLADE pathway is wholly ingest-dependent, and
+  an empty index is a proven no-op rather than an error.
+- Remaining open cell for the SPLADE default decision: **blob-bed `splade_on` at n=469**
+  (query-side over the real expansions, full power). At n=30 it measured zero; the
+  invalidated all-on data hinted +9pp. That cell decides `splade_enabled` and the #333
+  storage reclaim (~8.5 GB/bed).
+
 ## Implication
 
 The receipt-backed case for flipping `dense_embedding_enabled` default-off is now a
