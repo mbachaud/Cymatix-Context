@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **feat(mcp): migrate the MCP server to mcp 2.x and lift the #325 pin (#326).**
+  `cymatix_context/mcp/mcp_server.py` now uses `mcp.server.mcpserver.MCPServer`
+  (2.x home of the removed `mcp.server.fastmcp.FastMCP`); requirement is
+  `mcp>=2,<3` in both the `mcp` and `all` extras. Tool surface is unchanged —
+  lean 5-tool core, `CYMATIX_MCP_FULL=1` opt-in, schemas byte-identical vs 1.x.
+  Spec: `docs/design/2026-08-16-mcp-2x-migration.md`.
+
 - **perf(storage): #338 FTS5 external-content rebuild.** `genes_fts` no longer
   stores its own full copy of every document (the `genes_fts_content` shadow —
   8.67 GB / 18.5% of the 829K blob bed): new stores are created as
