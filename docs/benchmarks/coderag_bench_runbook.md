@@ -1,5 +1,12 @@
 # CodeRAG-Bench Step-2 Runbook
 
+> **Historical protocol (helix 0.6.x era, pre-rename — kept verbatim as the record of
+> how the frozen CodeRAG receipts were produced).** The `helix063` venv, `HELIX_CONFIG`,
+> `helix.toml`, and the `helix_context` package no longer exist in the current tree, and
+> `benchmarks/coderag_bench_helix.py` is now `benchmarks/coderag_bench_cymatix.py`.
+> Treat the commands below as a reproduction record, not paste-ready; see
+> `docs/ROSETTA.md` for the full name mapping.
+
 **Benchmark:** CodeRAG-Bench (arXiv 2406.14497, NAACL'25 Findings)
 **Primary metric:** NDCG@10 — the paper's own primary; lower ranks penalised by 1/log2(rank+1)
 **Supporting metrics:** Recall@{1,5,10}, Precision@{1,5,10}

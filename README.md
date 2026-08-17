@@ -3,7 +3,7 @@
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![PyPI version](https://img.shields.io/pypi/v/cymatix-context.svg)](https://pypi.org/project/cymatix-context/)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
-[![Tests: 2900+](https://img.shields.io/badge/tests-2900%2B-brightgreen.svg)](tests/)
+[![Tests: 4000+](https://img.shields.io/badge/tests-4000%2B-brightgreen.svg)](tests/)
 [![LLM-free pipeline](https://img.shields.io/badge/pipeline-LLM--free-brightgreen.svg)](docs/architecture/PIPELINE_LANES.md)
 [![Paper: Agentome](https://img.shields.io/badge/paper-Agentome-purple.svg)](https://mbachaud.substack.com/p/agentome)
 
@@ -227,7 +227,7 @@ Seven stages per turn, all LLM-free except optional splice:
 - **Caller model class**: `/context` accepts `caller_model_class: "generic" | "small_moe" | "frontier"` to select render branch (ordering, assembly cap, decoder mode). See [docs/api/context-endpoint.md §7](docs/api/context-endpoint.md).
 
 <details>
-<summary><strong>Configuration (17 sections in cymatix.toml)</strong></summary>
+<summary><strong>Configuration (cymatix.toml)</strong></summary>
 
 | Section | Key settings |
 |---------|-------------|
@@ -237,7 +237,9 @@ Seven stages per turn, all LLM-free except optional splice:
 | `[session]` | Synthetic session windows, default party_id |
 | `[genome]` | `path` (`genomes/main/genome.db`), compact_interval, replicas |
 | `[server]` | host, port, upstream |
+| `[telemetry]` | OTel export: enabled (default off), endpoint, sampler_ratio, redact_query |
 | `[headroom]` | Optional Headroom proxy lifecycle |
+| `[encoder_daemon]` | url (default `""` = off) — route dense/SPLADE/SEMA encoding through a shared daemon |
 | `[ingestion]` | `backend` (`"cpu"` / `"ollama"`), splade_enabled, entity_graph |
 | `[context]` | Cold-tier retrieval: enabled, k, min_cosine |
 | `[cymatics]` | Frequency-domain scoring, harmonic_links, distance_metric |
@@ -439,7 +441,7 @@ work as-is, no re-ingest needed.
 
 ```bash
 python -m spacy download en_core_web_sm    # once; ingest-path tests skip without it (#313)
-python -m pytest tests/ -m "not live" -v   # ~2,900 tests, no external services
+python -m pytest tests/ -m "not live" -v   # ~4,100 tests, no external services
 ```
 
 ## Documentation

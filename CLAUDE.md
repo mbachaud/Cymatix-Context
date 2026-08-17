@@ -34,7 +34,7 @@ A transparent OpenAI-compatible proxy that intercepts LLM requests and injects c
 
 0. **Classify** — rule-based query classifier picks decoder mode + assembly cap (no model call)
 1. **Extract** — heuristic keyword extraction from query (no model call)
-2. **Retrieve** — FTS5 lexical + tag lookup + synonym expansion + co-activation + cymatics 256-bin spectrum scoring (all algorithmic, no model inference); BGE-M3 dense recall (`[retrieval] dense_embedding_enabled`, **default OFF since 2026-08-15** — four-scale isolation receipts measured dense displacing gold from the delivered top-k at every scale, −0.20..−0.33 final recall; see `docs/benchmarks/2026-08-14-encoder-isolation-scale-curve.md`; set true to opt in) and SPLADE sparse expansion (`[ingestion] splade_enabled`, **default OFF since 2026-08-16** — n=469 receipts measured it null-to-negative over the full expansion index, and the index contributes nothing passively) are both **opt-in** — the default retrieval path is now fully algorithmic/neural-free (see `docs/design/2026-07-05-efficiency-cost-reduction.md` and `docs/benchmarks/2026-08-14-encoder-isolation-scale-curve.md`); ranks via Reciprocal Rank Fusion when `[retrieval] fusion_mode = "rrf"` (default: `"additive"`)
+2. **Retrieve** — FTS5 lexical + tag lookup + synonym expansion + co-activation + cymatics 256-bin spectrum scoring (all algorithmic, no model inference); BGE-M3 dense recall (`[retrieval] dense_embedding_enabled`, **default OFF since 2026-08-15** — four-scale isolation receipts measured dense displacing gold from the delivered top-k at every scale, −0.20..−0.33 final recall; see `docs/benchmarks/2026-08-14-encoder-isolation-scale-curve.md`; set true to opt in) and SPLADE sparse expansion (`[ingestion] splade_enabled`, **default OFF since 2026-08-16** — n=469 receipts measured it null-to-negative over the full expansion index, and the index contributes nothing passively) are both **opt-in** — the default retrieval path is now fully algorithmic/neural-free (see `docs/design/2026-07-05-efficiency-cost-reduction.md` and `docs/benchmarks/2026-08-14-encoder-isolation-scale-curve.md`); ranks via Reciprocal Rank Fusion when `[retrieval] fusion_mode = "rrf"` (the default since 2026-07-06; `"additive"` is the legacy accumulator)
 3. **Re-rank** — CPU model scores candidates by relevance (optional, off by default)
 4. **Splice** — CPU model compresses each candidate, keeping high-value fragments (batched)
 5. **Assemble** — join spliced parts, enforce token budget, attach per-document legibility headers (fired tiers, confidence marker, compression ratio), elide already-delivered documents via session working-set register
@@ -142,7 +142,7 @@ GET  /vault/status         — Obsidian vault export state
 ## Testing
 
 ```bash
-# ~2,750 tests, no external services needed
+# ~4,100 tests, no external services needed
 python -m pytest tests/ -m "not live" -v
 
 # Live tests (requires Ollama running)

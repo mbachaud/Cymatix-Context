@@ -12,7 +12,7 @@ server (`cymatix-server`, port 11437) and read from `genomes/`.
 The matrix runner is the headline bench. It runs **50 needles** across the
 **6 frozen genome fixtures** (`small`, `medium`, `large`, `xl`, plus
 `medium-sharded` and `xl-sharded`), answering each needle with a real
-`claude -p` subprocess (Haiku by default) wired to the helix-context MCP.
+`claude -p` subprocess (Haiku by default) wired to the cymatix-context MCP.
 Per needle it also calls `/context` directly for a retrieval-only metric,
 then scores the agent answer in `{-1, 0, +1}`.
 

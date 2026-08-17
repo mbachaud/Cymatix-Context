@@ -1,5 +1,12 @@
 # Code-track regression log + knob-impact map
 
+> **Historical log (helix-era entries kept verbatim).** Method notes reference the
+> pre-rename environment: `cb_helix_pred.py` is now `benchmarks/cb_cymatix_pred.py`, and
+> `helix_probe_nosema.toml` no longer exists in the tree (the lexical variant survives as
+> `docs/benchmarks/cymatix_probe_lexical.toml`). Old OTel metric names renamed:
+> `helix_context_latency_seconds` → `cymatix_context_latency_seconds`,
+> `helix_pipeline_stage_seconds` → `cymatix_pipeline_stage_seconds`.
+
 Living record of ContextBench Step-0 results by build/config, and which knobs
 move which arm/metric. All numbers: `gold_smoke_4repo.parquet` (26 tasks),
 official evaluator, lexical config, SEMA-off, micro-avg over the common task set.

@@ -14,7 +14,13 @@ from typing import Optional
 
 from .accel import extract_query_signals
 from .genome import file_tokens, path_tokens
-from .schemas import ContextItem, ContextPacket, Gene, RefreshTarget
+from .schemas import (
+    ContextItem,
+    ContextPacket,
+    DeliveryBlock,
+    Gene,
+    RefreshTarget,
+)
 
 _HALF_LIFE_SECONDS = {
     "stable": 7 * 24 * 60 * 60,
@@ -600,6 +606,43 @@ def build_context_packet(
         import logging
         logging.getLogger("cymatix.context_packet").warning(
             "Stage-6 know/miss attach failed", exc_info=True
+        )
+
+    # ── Phase 0.1 serve-side (2026-08-12 refinement campaign): delivery-
+    # visibility block. ``delivered_gene_ids`` is the packet's FINAL item
+    # order (verified then stale_risk, post-sort) so a harness can compute
+    # delivered-gold / pool_delivery_gap by joining with its gold set.
+    # ``pool_size`` is the scored candidate pool (``last_query_scores``
+    # covers every scored candidate, not just the returned top-k).
+    #
+    # cap_binding on this path: the packet's assembly cap is the
+    # ``max_genes`` parameter — build_context_packet applies no classifier
+    # cap and no token budget (see benchmarks/cb_dpacket_clamp_rescore.py),
+    # so "token_budget" is never emitted here; it is reserved for the
+    # pipeline surface (window.metadata["delivery"] / the /context route),
+    # where [budget] expression_tokens actually binds. Soft-fail: any
+    # exception leaves ``delivery`` as None and old consumers see no change.
+    try:
+        delivered_ids = [
+            item.gene_id
+            for item in (*packet.verified, *packet.stale_risk)
+            if item.gene_id
+        ]
+        pool_size = max(len(score_map), len(genes))
+        if len(genes) >= max(1, int(max_genes)) and pool_size > len(genes):
+            cap_binding = "assembly_cap"
+        else:
+            cap_binding = "none"
+        packet.delivery = DeliveryBlock(
+            pool_size=pool_size,
+            delivered_count=len(delivered_ids),
+            delivered_gene_ids=delivered_ids,
+            cap_binding=cap_binding,
+        )
+    except Exception:
+        import logging
+        logging.getLogger("cymatix.context_packet").warning(
+            "delivery block attach failed", exc_info=True
         )
 
     return packet
