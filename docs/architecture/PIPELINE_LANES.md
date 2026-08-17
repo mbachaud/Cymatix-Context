@@ -1,10 +1,28 @@
-# Pipeline Lanes — Data In / Data Out (v2)
+# Pipeline Lanes — Data In / Data Out (v3)
 
 > *"Where do tags get added? What tools fire when? Who writes to what?"*
 
 A swim-lane reference for the cymatix-context pipeline. Four flows
 (ingest, context, packet, fingerprint), each broken down by which
 component does what, what tools fire, and what gets written / read.
+
+**v3, updated 2026-08-16.** Deltas since v2:
+
+- **Tier 0 PKI read gate** — `[retrieval] pki_enabled` (default on)
+  skips `path_key_index` entirely when false; the `no_pki` ladder arms
+  A/B it (first receipt: active null at 100k, +0.033 r@12 on removal).
+- **Packet delivery-visibility block** (PR #363) —
+  `ContextPacket.delivery` optionally reports `pool_size /
+  delivered_count / delivered_gene_ids / cap_binding` so any harness
+  can compute delivered-gold exactly by joining against its gold set.
+- **Encoder defaults off** (PR #365) — `[retrieval]
+  dense_embedding_enabled` (2026-08-15) and `[ingestion]
+  splade_enabled` (2026-08-16) both default `false` after the
+  four-scale isolation receipts: dense displaced gold from the
+  delivered top-k at every scale (−0.20..−0.33 vs the lexical floor),
+  SPLADE was null-to-negative. Both are opt-in now; the default path
+  is fully neural-free. Receipts:
+  [`docs/benchmarks/2026-08-14-encoder-isolation-scale-curve.md`](../benchmarks/2026-08-14-encoder-isolation-scale-curve.md).
 
 **v2, updated 2026-04-18**, after the SIKE pathway reframe. The
 additions since v1:
@@ -93,7 +111,8 @@ Lanes:
 - **RIBOSOME** — `cymatix_context/ribosome.py` answer-generation only
   (Claude Haiku via `[ribosome] backend = "claude"`); **not on the
   ingest path** since 2026-04-09 CPU pipeline commit
-- **ENCODERS** — SPLADE / SEMA / cymatics (numerical, deterministic)
+- **ENCODERS** — SPLADE (default off since 2026-08-16) / SEMA /
+  cymatics (numerical, deterministic)
 - **PACKET BUILDER** — `cymatix_context/context_packet.py` — weighing
   layer that labels retrieval results by freshness + coord confidence
 - **GENOME** — SQLite tables: `genes`, `promoter_index`, `genes_fts`,
@@ -144,7 +163,7 @@ client POST /ingest
   │             ─► domains        (regex)
   │             ─► key_values     ("key=value" list)
   │
-  ├─► Encoders  ─► SPLADE sparse    (ModernBERT, deterministic)
+  ├─► Encoders  ─► SPLADE sparse    (ModernBERT; default off 2026-08-16)
   │             ─► SEMA 20D
   │             ─► cymatics 256-bin spectrum
   │
@@ -176,11 +195,12 @@ client POST /context (query, session_context)
   ├─► Step 1b: session_context path_tokens   → injected into entities
   │
   ├─► Genome.query_genes (12 signals + 1 octave gate):
-  │     Tier 0  path_key_index            (PKI compound, IDF-weighted)
+  │     Tier 0  path_key_index            (PKI; gate: pki_enabled, default on)
   │     Tier 1  exact promoter tag        (3.0)
   │     Tier 2  prefix promoter tag       (1.5)
   │     Tier 3  FTS5 content              (≤6.0 cap)
-  │     Tier 3.5 SPLADE sparse            (≤3.5)
+  │     Tier 3.5 SPLADE sparse            (≤3.5; default off 2026-08-16)
+  │     Stage-2 dense recall (BGE-M3)     (default off 2026-08-15)
   │     Tier 4  SEMA cold-tier            (cosine fallback)
   │     Tier 5  harmonic boost            (≤3.0)
   │     +     cymatics resonance          (Gaussian overlap)
@@ -255,6 +275,10 @@ client POST /context/packet (query, task_type, max_genes)
           contradictions:    [ContextItem]     (empty until Phase 2 claims land)
           refresh_targets:   [RefreshTarget]   prioritized reread list
           working_set_id,
+          delivery:          DeliveryBlock?    pool_size, delivered_count,
+                                               delivered_gene_ids (final order),
+                                               cap_binding: assembly_cap |
+                                               token_budget | none  (PR #363)
           notes:             ["coord_conf=X..."]  threshold warnings
         }
 ```
@@ -399,7 +423,7 @@ for the authoritative design.
 | `path_token` | `path_tokens(source_id)` | ingest | path_key_index Tier 0 + packet coord_confidence |
 | `cymatics spectrum` | term-hashed Gaussian | ingest | resonance + flux + harmonic bins |
 | `embedding (SEMA)` | sentence-transformer | ingest | Tier 4 cold-tier |
-| `SPLADE terms` | ModernBERT sparse | ingest | Tier 3.5 |
+| `SPLADE terms` | ModernBERT sparse | ingest | Tier 3.5 (default off since 2026-08-16) |
 | `chromatin tier` | density_gate at ingest | ingest | hot/warm/cold partitioning |
 | `source_kind` (new) | `provenance.infer_source_kind` | ingest | packet specificity + volatility |
 | `volatility_class` (new) | `provenance.infer_volatility` | ingest | packet freshness half-life |
@@ -412,10 +436,11 @@ for the authoritative design.
 
 | Table | Read by | Purpose |
 |---|---|---|
-| `path_key_index` | `/context` Tier 0 | compound (path, key) lookup |
+| `path_key_index` | `/context` Tier 0 | compound (path, key) lookup — gated by `[retrieval] pki_enabled` |
 | `promoter_index` | `/context` Tier 1, 2 | tag exact / prefix match |
 | `genes_fts` | `/context` Tier 3 | FTS5 full-text |
 | `genes.embedding` | `/context` Tier 4 | SEMA cold-tier cosine scan |
+| `embedding_dense_v2` | `/context` Stage-2 dense recall | BGE-M3 dense (default off since 2026-08-15) |
 | `harmonic_links` | `/context` Tier 5 | mutual reinforcement |
 | `entity_graph` | `/context` post-rank | co-activation pull-forward |
 | `gene_attribution` | `/context` filter | party_id scoping (octave gate) |

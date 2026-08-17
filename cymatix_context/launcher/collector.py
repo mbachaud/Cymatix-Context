@@ -555,6 +555,8 @@ class StateCollector:
                    "retrieval", "BGE-M3 dense recall participates in ranking"),
             _entry("ann_similarity_threshold", retrieval.ann_similarity_threshold,
                    "retrieval", "Minimum cosine for a dense hit to count"),
+            _entry("pki_enabled", retrieval.pki_enabled, "retrieval",
+                   "Tier-0 path_key_index read gate"),
             _entry("splade_enabled", ingestion.splade_enabled, "ingestion",
                    "SPLADE sparse expansion at index time"),
             # Issue #341 Task 7: was ingestion.rerank_enabled (the dead
