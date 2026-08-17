@@ -15,7 +15,12 @@ from pathlib import Path
 
 import pytest
 
-pytest.importorskip("mcp", reason="mcp SDK extra not installed")
+pytest.importorskip(
+    "mcp.server.mcpserver",
+    reason="mcp SDK extra not installed, or too old to expose "
+           "mcp.server.mcpserver (mcp 2.x home of MCPServer) — the spawned "
+           "subprocess would die on import, failing the test spuriously",
+)
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 

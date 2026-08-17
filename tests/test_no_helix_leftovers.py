@@ -141,7 +141,11 @@ def test_load_config_reads_cymatix_toml(tmp_path, monkeypatch):
 
 
 def test_mcp_server_identifies_as_cymatix():
-    pytest.importorskip("mcp", reason="mcp SDK extra not installed")
+    pytest.importorskip(
+        "mcp.server.mcpserver",
+        reason="mcp SDK extra not installed, or too old to expose "
+               "mcp.server.mcpserver (mcp 2.x home of MCPServer)",
+    )
     from cymatix_context.mcp.mcp_server import mcp
 
     assert mcp.name == "cymatix"

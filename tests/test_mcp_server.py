@@ -3,9 +3,9 @@
 import pytest
 
 pytest.importorskip(
-    "mcp.server.fastmcp",
-    reason="mcp SDK extra not installed, or too new to expose "
-           "mcp.server.fastmcp (removed in mcp 2.0 — see pyproject pin)",
+    "mcp.server.mcpserver",
+    reason="mcp SDK extra not installed, or too old to expose "
+           "mcp.server.mcpserver (mcp 2.x home of MCPServer — see pyproject floor)",
 )
 
 import pytest
