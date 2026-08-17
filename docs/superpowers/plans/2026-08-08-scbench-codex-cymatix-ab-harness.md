@@ -15,7 +15,7 @@
 - Both arms must use the same ChatGPT subscription login, Codex CLI version, model, reasoning effort, Docker image, prompt template, problem revision, and sequential host execution.
 - Arm A uses SCBench's unmodified `CodexAgent`; Arm B subclasses that class but may only change the prompt and perform Cymatix side effects around `super().run()`.
 - Checkpoint 1 receives no packet. Checkpoints 2+ receive one deterministic packet with `max_genes=8`, `include_raw=true`, `max_item_chars=2000`, and at most 4,000 `o200k_base` tokens.
-- Arm B uses `read_only=false`, `ignore_delivered=true`, a unique problem-run `session_id`, SPLADE disabled, ribosome disabled, and model-free Cymatix retrieval.
+- Arm B uses `read_only=false`, `ignore_delivered=true`, a unique problem-run `session_id`, SPLADE disabled, ribosome disabled, BGE-M3 dense encoding disabled (`[retrieval] dense_embedding_enabled = false` and `[ingestion] dense_embed_on_ingest = false` — both default on and must be pinned off), and model-free Cymatix retrieval.
 - Only agent-visible checkpoint prompts, final Codex agent messages, and allowlisted workspace files may be ingested. Hidden tests and hidden tests' paths, grader output, evaluation artifacts, tool traces, reasoning items, credentials, benchmark receipts, and genomes are prohibited.
 - Every HTTP request must have an explicit 10–30 second timeout. Every caught broad exception must use `except Exception:` and log at warning level or higher.
 - Every Python `subprocess.Popen` and `subprocess.run` call must pass `creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0)` on Windows.
@@ -74,11 +74,11 @@ Run in the isolated benchmark worktree:
 git fetch origin
 git rebase origin/master
 git merge-base --is-ancestor f675439 HEAD
-git log --oneline --all --grep="#338"
+git log --oneline --grep="#338" HEAD
 git rev-parse HEAD
 ```
 
-Expected: the #204 commit is an ancestor, the merged #338 commit is present, and `git rev-parse HEAD` returns the commit to store as `cymatix_commit`.
+Expected: the #204 commit (`f675439`, the SPLADE scale-curve bench commit) is an ancestor, and the #338 merge appears in HEAD's own history — the `--grep` search is deliberately scoped to `HEAD` because an `--all` search matches unmerged refs and proves nothing about the pinned base; confirm the matched merge with `git merge-base --is-ancestor <338-merge-sha> HEAD`. `git rev-parse HEAD` returns the commit to store as `cymatix_commit`.
 
 - [ ] **Step 2: Write the failing contract test**
 
@@ -104,7 +104,7 @@ Expected: FAIL because both contract JSON files are absent.
 
 - [ ] **Step 4: Create the contract receipts from inspected source**
 
-`cymatix-contract.json` must contain the rebased commit, route paths, accepted packet fields, health readiness path, packet item fields, session-delivery behavior, tombstone semantics, and the config keys that disable SPLADE and ribosome. `scbench-06b5c068.json` must contain the upstream commit, Codex adapter class path, `run()`/`finish_checkpoint()`/`save_artifacts()` hooks, output filenames, and official strict/isolated fields.
+`cymatix-contract.json` must contain the rebased commit, route paths, accepted packet fields, health readiness path, packet item fields, session-delivery behavior, tombstone semantics, and the config keys that disable SPLADE, ribosome, and BGE-M3 dense encoding (`dense_embedding_enabled`, `dense_embed_on_ingest`). `scbench-06b5c068.json` must contain the upstream commit, Codex adapter class path, `run()`/`finish_checkpoint()`/`save_artifacts()` hooks, output filenames, and official strict/isolated fields.
 
 If rebased `/context/packet` still ignores `session_id` and `ignore_delivered`, set `packet_session_delivery` to `false` and retain Task 2. If #338 already implements and tests both fields, set it to `true`, record the proving test names, and mark Task 2 as satisfied by those exact tests rather than duplicating the implementation.
 
@@ -117,7 +117,7 @@ Add a paragraph under “Cymatix treatment settings” stating that packet sessi
 Run:
 
 ```bash
-python -m pytest tests/test_scbench_contracts.py tests/test_context_packet.py tests/test_server.py -q -k "packet or health or ingest or tombstone"
+python -m pytest tests/test_scbench_contracts.py tests/test_context_packet.py tests/test_server.py -q -k "packet or health or ingest or tombstone or contracts"
 ```
 
 Expected: PASS with no collection errors.
@@ -406,7 +406,7 @@ Expected: FAIL because `client.py` does not exist.
 
 - [ ] **Step 3: Implement the typed client**
 
-Use one `httpx.Client(timeout=httpx.Timeout(timeout_s), transport=transport)`, where `transport: httpx.BaseTransport | None = None` exists solely for deterministic tests. Implement `health()`, `stats()`, `ingest_source()`, `ingest_conversation()`, `tombstone()`, `context_packet()`, and `wait_ready()`. Every response must call `raise_for_status()`, validate its JSON shape, and raise `CymatixProtocolError` on missing fields. Source ingest metadata must contain `path`, `source_id`, `problem`, `content_sha256`, and `source_kind="code"`; conversation source IDs use `conversation://{campaign}/{pair}/{replicate}/{checkpoint}`.
+Use one `httpx.Client(timeout=httpx.Timeout(timeout_s), transport=transport)`, where `transport: httpx.BaseTransport | None = None` exists solely for deterministic tests. Implement `health()`, `stats()`, `ingest_source()`, `ingest_conversation()`, `tombstone()`, `context_packet()`, and `wait_ready()`. Every response must call `raise_for_status()`, validate its JSON shape, and raise `CymatixProtocolError` on missing fields. Source ingest metadata must set **both** `path` and `source_id` to the canonical `repo://{problem}/{relative}` ID — the server resolves provenance as `metadata.get("path") or metadata.get("source_id")` (`context_manager.py`, `encoding/fragments.py`), so a filesystem value in `path` would shadow the canonical ID, silently break tombstone matching (`WHERE source_id = ?` returns zero rows yet HTTP 200), and fail the renderer's `repo://` scheme filter on every packet. Record the filesystem path under a separate `fs_path` key. Metadata must also contain `problem`, `content_sha256`, and `source_kind="code"`; conversation source IDs use `conversation://{campaign}/{pair}/{replicate}/{checkpoint}`.
 
 - [ ] **Step 4: Write failing sidecar lifecycle tests**
 
@@ -414,8 +414,11 @@ Use one `httpx.Client(timeout=httpx.Timeout(timeout_s), transport=transport)`, w
 def test_server_process_pins_model_free_config(tmp_path):
     process = CymatixServerProcess.for_run(tmp_path, port=19191)
     text = process.render_config()
-    assert "splade_enabled = false" in text
-    assert "enabled = false" in text
+    cfg = tomllib.loads(text)
+    assert cfg["ingestion"]["splade_enabled"] is False
+    assert cfg["ribosome"]["enabled"] is False
+    assert cfg["retrieval"]["dense_embedding_enabled"] is False
+    assert cfg["ingestion"]["dense_embed_on_ingest"] is False
     assert str(process.genome_path).replace("\\", "/") in text.replace("\\", "/")
 
 
@@ -503,7 +506,7 @@ Reject prompts containing configured evaluation-root paths before hashing or tra
 
 - [ ] **Step 4: Implement rendering and token trimming**
 
-Use `tiktoken.get_encoding("o200k_base")`. Preserve server category and item order, filter absent `repo://` sources, allow the current run's `conversation://` sources, reject every other scheme, render fixed XML delimiters from the design, and drop complete lowest-priority items from the end until the token count is at most 4,000. Never truncate the fixed instruction header or split a UTF-8 code point. A header that alone exceeds the ceiling raises `PacketIntegrityError`.
+Use `tiktoken.get_encoding("o200k_base")`. Preserve server category and item order, filter absent `repo://` sources, allow the current run's `conversation://` sources, reject every other scheme, render fixed XML delimiters from the design, and drop complete lowest-priority items from the end until the token count is at most 4,000. Record `delivered_item_count` and `budget_dropped_item_count` on `RenderedPacket` and in receipts: at `max_genes=8 × max_item_chars=2000` (~16,000 chars) the 4,000-token ceiling binds before `max_genes` on code-heavy packets, so drops are expected behavior that must be observable per checkpoint, never silent. Never truncate the fixed instruction header or split a UTF-8 code point. A header that alone exceeds the ceiling raises `PacketIntegrityError`.
 
 - [ ] **Step 5: Freeze the golden**
 
@@ -562,7 +565,7 @@ Include every field listed in the design's receipt section. Use explicit `valid`
 
 - [ ] **Step 4: Implement atomic persistence and verification**
 
-Write UTF-8 JSON to a sibling temporary file, flush and `os.fsync`, then `os.replace`. `verify_receipt_tree()` recalculates all artifact hashes, verifies pair symmetry, checks that every checkpoint has exactly one terminal state, and ensures no Cymatix fields appear in control prompts.
+Write UTF-8 JSON to a sibling temporary file, flush and `os.fsync`, then `os.replace`. `verify_receipt_tree()` recalculates all artifact hashes, verifies pair symmetry on the checkpoint-1 initial-workspace hash and the pre-injection base-prompt hashes only (post-checkpoint-1 workspaces and the injected treatment prompt legitimately diverge), checks that every checkpoint has exactly one terminal state, and ensures no Cymatix fields appear in control prompts.
 
 - [ ] **Step 5: Run tests**
 
@@ -619,7 +622,7 @@ Expected: FAIL because `coordinator.py` does not exist.
 
 - [ ] **Step 3: Implement initialization and warm-up**
 
-Create a fresh genome/server, wait for readiness, scan and ingest the entire allowlisted workspace, assert initial gene growth, and make one unscored packet call. Record warm-up separately. Any failed verification transitions the coordinator to `INVALID` and makes later calls raise `TreatmentInvalidError`.
+Create a fresh genome/server, wait for readiness, scan and ingest the entire allowlisted workspace, assert initial gene growth (dense encoding is pinned off in the sidecar config, so gene-count checks are sufficient; a configuration with dense enabled would additionally need a non-NULL `embedding_dense_v2` coverage assertion, because ingest encoding soft-fails to NULL), and make one unscored packet call. Record warm-up separately. Any failed verification transitions the coordinator to `INVALID` and makes later calls raise `TreatmentInvalidError`.
 
 - [ ] **Step 4: Implement before-checkpoint behavior**
 
@@ -690,7 +693,9 @@ def test_adapter_calls_super_with_prepared_prompt(monkeypatch, adapter):
         packet=rendered_packet(),
     )
     adapter.run("cp2")
-    run.assert_called_once_with(adapter, adapter.coordinator.before_checkpoint.return_value.prompt)
+    # a class-attribute Mock is not a descriptor: super().run(prompt) invokes it
+    # unbound, so only the prompt argument is recorded — never self
+    run.assert_called_once_with(adapter.coordinator.before_checkpoint.return_value.prompt)
 
 
 def test_adapter_learns_only_last_agent_message(adapter):
@@ -702,7 +707,7 @@ def test_adapter_learns_only_last_agent_message(adapter):
 
 - [ ] **Step 3: Implement the optional adapter module**
 
-Define `CymatixCodexConfig(CodexConfig)` with `type: Literal["codex_cymatix"]`, `campaign_manifest`, `pair_id`, `replicate`, and `receipt_root`. Define `CymatixCodexAgent(CodexAgent)` with matching constructor fields and override `_from_config`, `setup`, `run`, `finish_checkpoint`, `save_artifacts`, and `cleanup`. `run` must call the coordinator before `super().run()`, parse only `item.completed/item.type="agent_message"` events from `_last_command.stdout`, then call `after_checkpoint` before returning. `save_artifacts` calls `super()` first and adds only Cymatix receipt references. End the module with `register_agent("codex_cymatix", CymatixCodexAgent)`; the config subclass registers itself through `AgentConfigBase.__init_subclass__`.
+Define `CymatixCodexConfig(CodexConfig)` with `type: Literal["codex_cymatix"]`, `campaign_manifest`, `pair_id`, `replicate`, and `receipt_root`. Define `CymatixCodexAgent(CodexAgent)` with matching constructor fields and override `_from_config`, `setup`, `run`, `finish_checkpoint`, `save_artifacts`, and `cleanup`. `run` must call the coordinator before `super().run()`, parse only `item.completed/item.type="agent_message"` events from `_last_command.stdout`, then call `after_checkpoint` before returning — passing `PreparedPrompt.original_prompt`, never `.prompt`, which contains the injected packet. `save_artifacts` calls `super()` first and adds only Cymatix receipt references. End the module with `register_agent("codex_cymatix", CymatixCodexAgent)`; the config subclass registers itself through `AgentConfigBase.__init_subclass__`.
 
 - [ ] **Step 4: Run Cymatix adapter tests**
 
@@ -729,7 +734,7 @@ Run in the SCBench fork:
 
 ```bash
 python -m pytest tests/agent_runner/agents/codex_agent_test.py tests/agent_runner/agents/codex_cymatix_agent_test.py -q
-slop-code run --agent configs/agents/codex_cymatix.yaml --problem file_backup --dry-run --num-workers 1
+slop-code run --agent configs/agents/codex_cymatix.yaml --problem file-backup --dry-run --num-workers 1
 ```
 
 Expected: all tests PASS; dry-run resolves `codex_cymatix` without starting Codex.
@@ -789,11 +794,11 @@ Expected: FAIL because runner and CLI modules do not exist.
 
 - [ ] **Step 3: Implement preflight**
 
-Check exact Cymatix and SCBench commits, clean fork state, Codex version and `codex login status`, Docker availability, auth file existence without reading its contents, problem/checkpoint counts, model/reasoning symmetry, output-root emptiness, contract hashes, and free disk. Emit a machine-readable preflight receipt and refuse scored execution on any mismatch.
+Check exact Cymatix and SCBench commits, clean fork state, Codex version and `codex login status`, Docker availability, auth file existence without reading its contents, problem/checkpoint counts, model/reasoning symmetry, emptiness of the target `{problem}-r{replicate}` pair directory only (never the campaign root — completed pairs and preserved failed attempts from other pairs must not block execution, and resume validates its preserved attempts instead), contract hashes, and free disk. Emit a machine-readable preflight receipt and refuse scored execution on any mismatch.
 
 - [ ] **Step 4: Implement paired execution**
 
-Invoke `slop-code run` separately for each problem/arm with an argument list, explicit cwd, captured log files, `check=False`, explicit timeout, and the Windows no-window creation flag. Control uses `codex`; treatment uses `codex_cymatix`. Pin output directories to `{campaign}/pairs/{problem}-r{replicate}/{arm}/scbench`. After each arm, verify terminal artifacts before starting its mate.
+Invoke `slop-code run` separately for each problem/arm with an argument list, explicit cwd, captured log files, `check=False`, explicit timeout, and the Windows no-window creation flag. Agent configs are passed to `--agent` as YAML paths, matching the documented dry-run commands: control uses the stock `configs/agents/codex.yaml`, treatment uses `configs/agents/codex_cymatix.yaml` (the registered type names inside them are `codex` and `codex_cymatix`). Pin output directories to `{campaign}/pairs/{problem}-r{replicate}/{arm}/scbench`. After each arm, verify terminal artifacts before starting its mate.
 
 - [ ] **Step 5: Implement clean resume**
 
@@ -851,6 +856,19 @@ def test_primary_effect_is_control_minus_cymatix():
     assert summary.control_regression_rate == 0.5
     assert summary.cymatix_regression_rate == 0.25
     assert summary.treatment_effect == 0.25
+
+
+def test_primary_rates_share_paired_denominator():
+    # treatment isolated-solves four extra checkpoints; those discordant cells
+    # must not enter the primary denominator and dilute its regression rate
+    summary = compute_pilot_summary(synthetic_pairs(control_events=4,
+                                                    cymatix_events=4,
+                                                    isolated_control=8,
+                                                    isolated_cymatix=12,
+                                                    isolated_both=8))
+    assert summary.paired_denominator == 8
+    assert summary.treatment_effect == 0.0
+    assert summary.isolated_discordant == 4
 ```
 
 - [ ] **Step 2: Run tests to verify they fail**
@@ -861,7 +879,7 @@ Expected: FAIL because `analysis.py` does not exist.
 
 - [ ] **Step 3: Implement official-field loading and pairing**
 
-Require exact `(problem, checkpoint, replicate)` matches; discard checkpoint 1 only from the primary population, not from secondary reporting. Define pass as `math.isclose(rate, 1.0)`. Missing checkpoints count as operational invalidations, not failures or passes. Validate SCBench commit and metric-version symmetry from receipts.
+Require exact `(problem, checkpoint, replicate)` matches; discard checkpoint 1 only from the primary population, not from secondary reporting. Restrict the primary regression-rate denominators to matched checkpoints where both arms isolated-passed (the design's shared paired denominator); count and report isolated-discordant checkpoints separately. Define pass as `math.isclose(rate, 1.0)`. Missing checkpoints count as operational invalidations, not failures or passes. Validate SCBench commit and metric-version symmetry from receipts.
 
 - [ ] **Step 4: Implement pilot gates**
 
@@ -889,6 +907,7 @@ git commit -m "feat(bench): analyze paired regression resistance"
 **Files:**
 - Create: `benchmarks/scbench/fixtures/qualification/src/state.py`
 - Create: `benchmarks/scbench/fixtures/qualification/README.md`
+- Create: `benchmarks/scbench/campaigns/qualification/manifest.json`
 - Create: `tests/test_scbench_e2e.py`
 - Modify: `benchmarks/scbench/README.md`
 
@@ -905,10 +924,12 @@ def test_closed_loop_remembers_prior_constraint_without_eval_data(tmp_path):
         coordinator.initialize()
         coordinator.before_checkpoint("Keep VALUE compatible")
         coordinator.after_checkpoint("Keep VALUE compatible",
-                                     "I preserved VALUE = 1")
+                                     "I preserved VALUE = 1 (decision token QUAL-CONV-7Q4)")
         coordinator.finish_checkpoint()
         prepared = coordinator.before_checkpoint("Add a new accessor")
-        assert "VALUE" in prepared.prompt
+        # the token exists only in the assistant message, never in any workspace
+        # file, so source retrieval alone cannot satisfy this assertion
+        assert "QUAL-CONV-7Q4" in prepared.prompt
         assert "evaluation.json" not in prepared.prompt
         assert "hidden" not in prepared.prompt.lower()
 ```
@@ -935,11 +956,13 @@ Expected: all tests PASS.
 
 - [ ] **Step 5: Run one real, explicitly non-scored Codex qualification pair**
 
+First write `benchmarks/scbench/campaigns/qualification/manifest.json`: a single-problem, single-replicate campaign (problem `file-backup`, order control→cymatix) marked `scored=false`, reusing the pilot's treatment limits verbatim. It exists solely for this gate and is never analyzed with pilot data.
+
 With Docker Desktop running and the fork installed:
 
 ```bash
 python -m cymatix_context.integrations.scbench.cli preflight --manifest benchmarks/scbench/campaigns/qualification/manifest.json
-python -m cymatix_context.integrations.scbench.cli run-pair --manifest benchmarks/scbench/campaigns/qualification/manifest.json --problem calculator --replicate 1
+python -m cymatix_context.integrations.scbench.cli run-pair --manifest benchmarks/scbench/campaigns/qualification/manifest.json --problem file-backup --replicate 1
 python -m cymatix_context.integrations.scbench.cli verify-receipts --manifest benchmarks/scbench/campaigns/qualification/manifest.json
 ```
 
@@ -979,7 +1002,7 @@ Set the exact commits and versions from preflight; list:
 }
 ```
 
-Include AB/BA replicates, `expected_checkpoints=40`, `primary_checkpoints=32`, all treatment limits, retry rules, bootstrap seed `20260808`, and every graduation threshold from the design. The validation command must independently count checkpoints from the pinned SCBench problem catalog and fail unless the totals are 40 and 32.
+Include AB/BA replicates, `expected_checkpoints=40`, `primary_checkpoints=32`, all treatment limits, retry rules, bootstrap seed `20260808`, and every graduation threshold from the design. The validation command must independently count checkpoints from the pinned SCBench problem catalog and fail if the manifest's recorded `expected_checkpoints`/`primary_checkpoints` do not match the verified catalog count — on mismatch, update and re-freeze the manifest with the verified totals (per the design, a mismatch invalidates the manifest, not the benchmark). Catalog counts are per single pass; with the AB/BA replicates each arm scores twice these totals (80/64 observations per arm at the expected counts).
 
 - [ ] **Step 2: Run final pre-pilot verification**
 
@@ -1043,7 +1066,7 @@ Run in the SCBench fork:
 
 ```bash
 python -m pytest tests/agent_runner/agents/codex_agent_test.py tests/agent_runner/agents/codex_cymatix_agent_test.py -q
-slop-code run --agent configs/agents/codex_cymatix.yaml --problem file_backup --dry-run --num-workers 1
+slop-code run --agent configs/agents/codex_cymatix.yaml --problem file-backup --dry-run --num-workers 1
 git diff --check
 ```
 

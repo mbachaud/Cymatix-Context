@@ -14,7 +14,7 @@ Run a paired, checkpoint-level A/B benchmark on SCBench:
 - **Arm B — treatment:** the same Codex configuration plus the full Cymatix closed loop:
   1. synchronize the current workspace into a fresh run genome;
   2. retrieve and inject one deterministic, bounded context packet before each checkpoint after the first;
-  3. ingest the agent-visible checkpoint prompt and final Codex response as conversation memory after each checkpoint.
+  3. ingest the pre-injection checkpoint prompt (never the packet-augmented prompt) and final Codex response as conversation memory after each checkpoint.
 
 The primary outcome is **regression resistance**, not raw checkpoint solve rate. The first checkpoint is an A/A sentinel because no prior work exists to preserve. Checkpoints 2 and later form the primary analysis population.
 
@@ -67,6 +67,8 @@ treatment_effect = regression_rate_control - regression_rate_cymatix
 
 A positive treatment effect favors Cymatix. Conditioning on isolated pass distinguishes preservation failures from inability to solve the current task.
 
+Both rates share one paired denominator: the primary regression rates are computed only over matched checkpoints where **both** arms isolated-passed. Isolated-discordant checkpoints are excluded from the primary estimand and reported separately. This prevents an arm that merely isolated-solves more checkpoints from mechanically shifting its regression rate through a larger denominator.
+
 The paired event-level analysis must also report the four cells for each matched checkpoint: neither regressed, control only, treatment only, and both regressed. The full-suite confidence interval will use a paired bootstrap clustered by problem so checkpoints within one trajectory are not treated as independent.
 
 ### Secondary outcomes
@@ -103,7 +105,7 @@ The initial stratified pilot uses eight SCBench problems:
 | Medium | `database-migration`, `trajectory-api`, `layered-config-synthesizer` |
 | Hard | `dag-execution`, `recli` |
 
-This is expected to produce 40 checkpoints per arm and 32 checkpoints per arm in the checkpoint-2+ primary population. The exact checkpoint count must be verified against the pinned SCBench commit before execution and recorded in the campaign manifest. A mismatch invalidates the manifest, not the benchmark result.
+The pinned catalog is expected to contain 40 checkpoints across the eight problems, 32 of them in the checkpoint-2+ primary population; with two replicates per arm this yields 80 scored checkpoint observations per arm (64 primary). The exact catalog count must be verified against the pinned SCBench commit before execution and recorded in the campaign manifest. A mismatch invalidates the manifest, not the benchmark result — update and re-freeze the manifest with the verified count.
 
 The problem list, all settings, and graduation gates are frozen before the first scored run. Smoke tests use separate, explicitly non-scored problem instances.
 
@@ -151,7 +153,7 @@ Arm B uses the identical Codex invocation and checkpoint prompt, with a bounded 
 2. Start or reset the Cymatix server against that genome.
 3. Wait for `checks.genome_ready`; overall health status alone is insufficient.
 4. Recursively ingest all eligible repository source files through `/ingest`.
-5. Verify that the source manifest and genome counts changed as expected. A returned gene ID alone is not proof of a successful write.
+5. Verify that the source manifest and genome counts changed as expected. A returned gene ID alone is not proof of a successful write. With dense encoding pinned off, count-based verification suffices; any configuration that enables dense embedding must additionally assert non-NULL `embedding_dense_v2` coverage, because ingest-time encoding is soft-fail — a failed encoder logs a warning and stores NULL while gene counts still grow.
 6. Warm the context-packet path with an unscored request and record warm-up latency separately.
 
 Checkpoint 1 receives no retrieved packet and is treated as an A/A sentinel. After Codex completes it, the harness performs the post-checkpoint learning and workspace synchronization described below.
@@ -163,7 +165,7 @@ Checkpoint 1 receives no retrieved packet and is treated as an A/A sentinel. Aft
    - current checkpoint prompt;
    - problem identifier and checkpoint number;
    - a fixed regression-resistance instruction asking for prior constraints, decisions, and affected code.
-3. Request `/context/packet` with the pinned retrieval parameters, unique session ID, and `ignore_delivered=true`.
+3. Request `/context/packet` with the pinned retrieval parameters, unique session ID, and `ignore_delivered=true`. Packet session delivery is an implementation prerequisite: the current endpoint accepts neither field (they are silently dropped), so scored execution is blocked until the implementation plan's Task 2 lands and the contract receipt records `packet_session_delivery=true`.
 4. Validate and render the packet into the fixed treatment block.
 5. Append the treatment block to the original SCBench prompt and invoke Codex.
 
@@ -172,7 +174,7 @@ The query builder must not read grader output, hidden tests, reference patches, 
 #### After every checkpoint
 
 1. Record the final Codex response exactly as exposed to the harness.
-2. Ingest the agent-visible checkpoint prompt and final response through `/ingest` with `content_type: conversation` and stable checkpoint metadata.
+2. Ingest the pre-injection original checkpoint prompt and final response through `/ingest` with `content_type: conversation` and stable checkpoint metadata. Never ingest the packet-augmented prompt: re-ingesting rendered packets would feed retrieval its own output and degenerate later packets into echoes of earlier ones.
 3. Hash the workspace manifest and ingest changed or newly created eligible source files through `/ingest`.
 4. Detect deleted paths and update the harness manifest.
 5. Verify expected source/conversation count or checksum changes.
@@ -225,11 +227,12 @@ The pilot freezes these initial settings:
 - `max_genes: 8`;
 - raw evidence enabled;
 - `max_item_chars: 2000`;
-- an overall rendered-packet ceiling of approximately 4,000 Codex input tokens, enforced by the renderer rather than estimated only after execution;
-- `ignore_delivered: true` with an explicit problem-run session ID;
+- an overall rendered-packet ceiling of approximately 4,000 Codex input tokens, enforced by the renderer rather than estimated only after execution — at the pinned `max_genes × max_item_chars` product this ceiling binds before `max_genes` on code-heavy packets, so the delivered item count is per-checkpoint data recorded in receipts, not a constant;
+- `ignore_delivered: true` with an explicit problem-run session ID (requires the packet session-delivery extension — implementation plan Task 2; the pre-extension endpoint silently ignores both fields);
 - context calls are not read-only, so supported delivery-tail writes remain enabled;
 - SPLADE disabled;
-- model-free retrieval and synthesis only;
+- BGE-M3 dense encoding disabled: `[retrieval] dense_embedding_enabled = false` and `[ingestion] dense_embed_on_ingest = false` — both default on, so they must be pinned off explicitly;
+- model-free retrieval and synthesis only — every model-backed stage above must be pinned off for this label to hold;
 - ribosome or other model-backed refinement disabled unless both arms can use it without changing the Codex-only cost boundary.
 
 The exact API fields and defaults must be revalidated after #338 is merged. Any setting that cannot be pinned explicitly becomes a required implementation-plan decision before scored runs.
@@ -246,7 +249,7 @@ The following invalidate the affected checkpoint pair and require a clean paired
 - genome-not-ready state;
 - packet HTTP, schema, renderer, or ceiling failure;
 - source/conversation verification failure;
-- workspace or prompt hash mismatch between paired arms;
+- checkpoint-1 initial-workspace hash mismatch, or pre-injection base-prompt hash mismatch, between paired arms — later workspaces and the injected treatment prompt necessarily diverge; that divergence is the experiment, not an invalidation;
 - missing Codex result or corrupt SCBench score;
 - packet contamination by excluded evaluation data;
 - unrecorded version or configuration drift.
