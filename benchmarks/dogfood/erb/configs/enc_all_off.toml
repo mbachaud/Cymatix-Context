@@ -255,11 +255,6 @@ route_upstream = false
 
 [ingestion]
 backend = "cpu"                         # "ollama" (LLM, slow) | "cpu" (spaCy+regex, fast) | "hybrid"
-# 2026-08-16: flipped to false. n=469 blob isolation receipts: query-side
-# SPLADE over the full expansion index is null-to-negative vs the lexical
-# floor, and the ingest-side A/B showed the 147M-row index contributes
-# nothing passively (floors byte-identical with/without it). Set true to opt
-# in. Receipts: docs/benchmarks/2026-08-14-encoder-isolation-scale-curve.md
 splade_enabled = false                  # Phase 2: SPLADE sparse expansion at index time
 # legacy: feeds DeBERTaRibosome only; the retrieval cross-encoder reads [retrieval] rerank_model
 rerank_model = "cross-encoder/ms-marco-MiniLM-L-6-v2"
@@ -391,12 +386,6 @@ entity_graph_retrieval_enabled = false
 # embedding_dense_v2 at ingest and PR-3 decoupled dense recall from
 # fusion_mode (knowledge_store.query_docs), so dense recall now fires as a
 # retrieval signal under the shipped additive default — not only under RRF.
-# 2026-08-15: flipped back to false. Four-scale isolation receipts (100k/250k/
-# 500k carves + 829k blob at n=469, every pair replicated) measured dense
-# displacing gold from the delivered top-k at every scale (final recall
-# -0.20..-0.33 vs the lexical floor) for at most +0.02 pool recall. Set true
-# to opt back in. Receipts:
-# docs/benchmarks/2026-08-14-encoder-isolation-scale-curve.md
 dense_embedding_enabled = false
 dense_embedding_dim = 1024
 # Stage 4 / Issue #139 (2026-05-18): recalibrated 0.35 -> 0.58 for dim=1024.
@@ -467,7 +456,7 @@ dense_additive_weight = 4.0
 # gentle so it removes only noise-grade hits, not weak-but-real matches.
 dense_additive_min_cosine = 0.15
 pki_weight = 1.0                        # path-key-index tier, RRF participant
-pki_enabled = true                      # Tier-0 read gate; false skips path_key_index entirely (ablation)
+pki_enabled = false                     # Tier-0 read gate; false skips path_key_index entirely (ablation)
 # Note: filename_anchor_weight (above) and sr_weight (above) are reused.
 
 # ── Sharded-retrieval fetch depth + co-activation budget (#222/#223) ──

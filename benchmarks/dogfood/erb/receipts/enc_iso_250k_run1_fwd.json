@@ -1,0 +1,294 @@
+{
+  "tool": "benchmarks/dogfood/erb/ablation_ladder.py",
+  "stamp": "20260814-enc-iso-250k-r1",
+  "bed": "f:\\tmp\\erb_carve\\erb_250k.db",
+  "bed_bytes": 15826972672,
+  "config": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\dazzling-cerf-ef8705\\benchmarks\\dogfood\\erb\\configs\\enc_all_off.toml",
+  "git_sha": "fe9a74d70ed18ec6ae4908a93234be8813424e22",
+  "needles_file": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\dazzling-cerf-ef8705\\benchmarks\\dogfood\\erb\\needles_resolved_carve.json",
+  "gold_file": "F:\\Projects\\cymatix-context\\.claude\\worktrees\\dazzling-cerf-ef8705\\benchmarks\\dogfood\\erb\\gold_by_needle_carve.json",
+  "needle_count": 30,
+  "k": 12,
+  "env": {
+    "CYMATIX_ENCODER_URL": null,
+    "CYMATIX_ENCODER_URL_set": false,
+    "CYMATIX_DISABLE_HEADROOM": null,
+    "CYMATIX_DISABLE_LEARN": "1",
+    "CYMATIX_GENOME_PATH": "f:\\tmp\\erb_carve\\erb_250k.db"
+  },
+  "note": "Ranks read from genome.last_query_scores (post-blend; blend republishes the map at scoring/blend.py:233/:281), ties broken by gene_id ascending. THREE bases ship side by side and answer different questions: recall_at_k / *_rank_of_gold on the score map; final_recall_at_k + per-needle final_rank_of_first_gold on genome.last_ranked_ids, the FINAL order (post-rerank when it ran \u2014 a cross-encoder permutes ids without rewriting fused scores, so #341 arms are invisible in the score map); and delivered_gold_queries / delivered_gold_rate / delivered_gold_rank on window.expressed_gene_ids, the post-budget delivery slice (#335). pool_delivery_gap is recall_at_k minus delivered_gold_rate. Per-needle gate_kept / floor_appended come from genome.last_rerank_diag (published on both rerank arms). Each arm runs one untimed warmup query first so the lazy encoder load is not billed to p50. Latencies are wall ms on a shared box \u2014 within-run relatives only.",
+  "dropped_arms": [
+    {
+      "arm": "no_plr",
+      "knob": "[plr] enabled",
+      "reason": "Not on the build_context path. [plr] enabled is read only by server/routes_context.py:635 -> server/helpers.py:444 _compute_plr_confidence, which decorates the /context/packet response; retrieval/fusion_plr.py:31 states it 'leaves document ranking untouched'. An in-process arm would measure zero by construction, not by evidence."
+    },
+    {
+      "arm": "no_harmonic",
+      "knob": "use_harmonic / [cymatics] harmonic_links",
+      "reason": "No query-time off-switch. `use_harmonic` defaults True at context_manager.py:2895 and knowledge_store.py:2259 and is passed by NO call site (context_manager.py:1945, :1965), so Tier 5 (knowledge_store.py:3119) and _expand_coactivated (knowledge_store.py:3494) are unconditional. [cymatics] harmonic_links gates only the ingest/expression-time edge WRITE inside the `if not read_only` block at context_manager.py:2353."
+    },
+    {
+      "arm": "no_tag_prefix / tag discipline",
+      "knob": "[retrieval] tag_idf_enabled, tag_df_cap, tag_prefix_weight",
+      "reason": "Tier 1 (knowledge_store.py:2697) and Tier 2 (:2720) are unconditional. The #327 knobs default to OFF (config.py:660, :668), so flipping them is an intervention, not an ablation. The only mute is weight-zeroing (tag_prefix_weight=0.0), which silences the contribution while still paying the SQL cost \u2014 that would misreport the cost axis, so no arm is offered."
+    }
+  ],
+  "arms": [
+    {
+      "arm": "baseline",
+      "knobs_changed": {},
+      "gate": "\u2014  (shipped config, untouched)",
+      "arm_valid": true,
+      "validation": "control",
+      "validation_detail": "control arm \u2014 shipped config, no ablation to validate",
+      "recall_at_k": 0.8,
+      "final_recall_at_k": 0.8,
+      "mean_rank_of_gold": 5.74,
+      "median_rank_of_gold": 4.0,
+      "gold_found_queries": 27,
+      "gold_ranks_total": 42,
+      "delivered_gold_queries": 24,
+      "delivered_gold_rate": 0.8,
+      "pool_delivery_gap": 0.0,
+      "queries_with_scores": 30,
+      "latency_ms": {
+        "p50": 12366.52,
+        "p95": 24023.604
+      },
+      "signal_ms_median": {
+        "body_fetch": 17.748,
+        "coact_expand": 0.135,
+        "fts5": 717.307,
+        "lex_anchor": 187.025,
+        "sema_boost": 0.002,
+        "tag_exact": 215.062,
+        "tag_prefix": 277.987
+      },
+      "n_queries": 30,
+      "warmup_ran": true,
+      "encoder_url": "",
+      "dense_codec_class": null,
+      "remote_dense": false,
+      "observables": {
+        "signal_keys": [
+          "body_fetch",
+          "coact_expand",
+          "fts5",
+          "lex_anchor",
+          "sema_boost",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_keys": [
+          "authority",
+          "fts5",
+          "lex_anchor",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "classifier_metadata_queries": 30,
+        "synonym_expansions": 12,
+        "cymatics_calls": 30,
+        "cold_tier_queries": 0
+      },
+      "errors": []
+    },
+    {
+      "arm": "dense_on",
+      "knobs_changed": {
+        "retrieval.dense_embedding_enabled": true
+      },
+      "gate": "knowledge_store.py:2972 / :3757 `if self._dense_embedding_enabled` + context_manager.py:2946 ANN-branch selector",
+      "arm_valid": true,
+      "validation": "signal_present",
+      "validation_detail": "signal_keys: ['ann_dense_leg', 'dense'] absent at baseline, present in this arm",
+      "recall_at_k": 0.8333,
+      "final_recall_at_k": 0.5333,
+      "mean_rank_of_gold": 7.29,
+      "median_rank_of_gold": 3.5,
+      "gold_found_queries": 28,
+      "gold_ranks_total": 44,
+      "delivered_gold_queries": 14,
+      "delivered_gold_rate": 0.4666666666666667,
+      "pool_delivery_gap": 0.3666,
+      "queries_with_scores": 30,
+      "latency_ms": {
+        "p50": 5097.063,
+        "p95": 23205.911
+      },
+      "signal_ms_median": {
+        "ann_body_fetch": 27.346,
+        "ann_dense_leg": 189.201,
+        "body_fetch": 6.473,
+        "coact_expand": 0.154,
+        "dense": 227.079,
+        "fts5": 740.218,
+        "lex_anchor": 200.433,
+        "sema_boost": 0.002,
+        "tag_exact": 172.955,
+        "tag_prefix": 285.486
+      },
+      "n_queries": 30,
+      "warmup_ran": true,
+      "encoder_url": "",
+      "dense_codec_class": "BGEM3Codec",
+      "remote_dense": false,
+      "observables": {
+        "signal_keys": [
+          "ann_body_fetch",
+          "ann_dense_leg",
+          "body_fetch",
+          "coact_expand",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "sema_boost",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_keys": [
+          "authority",
+          "dense",
+          "fts5",
+          "lex_anchor",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "classifier_metadata_queries": 30,
+        "synonym_expansions": 12,
+        "cymatics_calls": 30,
+        "cold_tier_queries": 0
+      },
+      "errors": []
+    },
+    {
+      "arm": "splade_on",
+      "knobs_changed": {
+        "ingestion.splade_enabled": true
+      },
+      "gate": "knowledge_store.py:2783 `if self._splade_enabled:`",
+      "arm_valid": true,
+      "validation": "signal_present",
+      "validation_detail": "signal_keys: ['splade'] absent at baseline, present in this arm",
+      "recall_at_k": 0.8333,
+      "final_recall_at_k": 0.8333,
+      "mean_rank_of_gold": 5.74,
+      "median_rank_of_gold": 2.0,
+      "gold_found_queries": 27,
+      "gold_ranks_total": 42,
+      "delivered_gold_queries": 20,
+      "delivered_gold_rate": 0.6666666666666666,
+      "pool_delivery_gap": 0.1666,
+      "queries_with_scores": 30,
+      "latency_ms": {
+        "p50": 15760.816,
+        "p95": 23691.754
+      },
+      "signal_ms_median": {
+        "body_fetch": 5.815,
+        "coact_expand": 0.154,
+        "fts5": 715.677,
+        "lex_anchor": 239.61,
+        "sema_boost": 0.002,
+        "splade": 1025.098,
+        "tag_exact": 206.333,
+        "tag_prefix": 273.911
+      },
+      "n_queries": 30,
+      "warmup_ran": true,
+      "encoder_url": "",
+      "dense_codec_class": null,
+      "remote_dense": false,
+      "observables": {
+        "signal_keys": [
+          "body_fetch",
+          "coact_expand",
+          "fts5",
+          "lex_anchor",
+          "sema_boost",
+          "splade",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_keys": [
+          "authority",
+          "fts5",
+          "lex_anchor",
+          "splade",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "classifier_metadata_queries": 30,
+        "synonym_expansions": 12,
+        "cymatics_calls": 30,
+        "cold_tier_queries": 0
+      },
+      "errors": []
+    },
+    {
+      "arm": "pki_on",
+      "knobs_changed": {
+        "retrieval.pki_enabled": true
+      },
+      "gate": "knowledge_store.py `if q_lower_tokens and self._pki_enabled:` (Tier 0 path-key compound index)",
+      "arm_valid": true,
+      "validation": "signal_present",
+      "validation_detail": "signal_keys: ['pki'] absent at baseline, present in this arm",
+      "recall_at_k": 0.8333,
+      "final_recall_at_k": 0.8,
+      "mean_rank_of_gold": 5.44,
+      "median_rank_of_gold": 3.0,
+      "gold_found_queries": 27,
+      "gold_ranks_total": 42,
+      "delivered_gold_queries": 24,
+      "delivered_gold_rate": 0.8,
+      "pool_delivery_gap": 0.0333,
+      "queries_with_scores": 30,
+      "latency_ms": {
+        "p50": 12661.121,
+        "p95": 19486.742
+      },
+      "signal_ms_median": {
+        "body_fetch": 5.519,
+        "coact_expand": 0.147,
+        "fts5": 697.783,
+        "lex_anchor": 204.682,
+        "pki": 62.55,
+        "sema_boost": 0.003,
+        "tag_exact": 228.711,
+        "tag_prefix": 294.876
+      },
+      "n_queries": 30,
+      "warmup_ran": true,
+      "encoder_url": "",
+      "dense_codec_class": null,
+      "remote_dense": false,
+      "observables": {
+        "signal_keys": [
+          "body_fetch",
+          "coact_expand",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "sema_boost",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "tier_keys": [
+          "authority",
+          "fts5",
+          "lex_anchor",
+          "pki",
+          "tag_exact",
+          "tag_prefix"
+        ],
+        "classifier_metadata_queries": 30,
+        "synonym_expansions": 12,
+        "cymatics_calls": 30,
+        "cold_tier_queries": 0
+      },
+      "errors": []
+    }
+  ]
+}
