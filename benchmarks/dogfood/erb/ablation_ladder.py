@@ -375,6 +375,36 @@ ARMS: Tuple[Arm, ...] = (
         validation=VALIDATION_SIGNAL,
         expect_absent=("xenc_rerank",),
     ),
+    # Encoder-isolation enable trio (bench/encoder-isolation-ab). The INVERSE
+    # of the no_* ladder: run against the all-off base config
+    # (configs/enc_all_off.toml — dense/splade/pki all false, everything else
+    # shipped) so each arm measures ONE layer's marginal contribution over the
+    # lexical floor, complementing the abundant all-on data. Against the
+    # shipped all-on config each arm is an identity transform and drops via
+    # ``arm_is_identity``, exactly like the rerank pair above.
+    Arm(
+        name="dense_on",
+        knobs={"retrieval.dense_embedding_enabled": True},
+        gate=("knowledge_store.py:2972 / :3757 `if self._dense_embedding_enabled` "
+              "+ context_manager.py:2946 ANN-branch selector"),
+        validation=VALIDATION_SIGNAL_PRESENT,
+        expect_present=("dense", "ann_dense_leg"),
+    ),
+    Arm(
+        name="splade_on",
+        knobs={"ingestion.splade_enabled": True},
+        gate="knowledge_store.py:2783 `if self._splade_enabled:`",
+        validation=VALIDATION_SIGNAL_PRESENT,
+        expect_present=("splade",),
+    ),
+    Arm(
+        name="pki_on",
+        knobs={"retrieval.pki_enabled": True},
+        gate=("knowledge_store.py `if q_lower_tokens and self._pki_enabled:` "
+              "(Tier 0 path-key compound index)"),
+        validation=VALIDATION_SIGNAL_PRESENT,
+        expect_present=("pki",),
+    ),
     Arm(
         name="no_classifier",
         knobs={"classifier.enabled": False},
