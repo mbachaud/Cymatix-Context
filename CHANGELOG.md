@@ -53,6 +53,33 @@
   `[retrieval] rerank_enabled = true`. `[ingestion] rerank_model` is
   unchanged (still the legacy DeBERTa constructor input).
 
+## 0.8.6 — 2026-08-05
+
+GPU encoder daemon, executor sizing, ERB scale fixes. (This header was added
+retroactively on 2026-08-14 — the tag and GitHub Release shipped 2026-08-05/06
+without a changelog section.)
+
+- **feat: `[encoder_daemon]` — shared GPU encoder daemon (fork1 slice 1).**
+  New `cymatix_context.encoder_daemon` FastAPI process (default port 11439)
+  with an `EncoderRegistry` + per-family micro-batcher; dense/SPLADE/SEMA
+  seams route through it when `[encoder_daemon] url` (or
+  `CYMATIX_ENCODER_URL`) is set, byte-identical when off. Client side ships
+  `RemoteBGEM3Codec`/`RemoteSemaCodec` drop-ins with URL resolution, a circuit
+  breaker, readiness gating, and text-count-scaled batch timeouts.
+  `CYMATIX_ENCODER_BATCH_WINDOW_MS` default lowered 8 ms → 2 ms
+  (receipt-driven).
+- **perf(hardware): per-layer encoder device knobs + CUDA A/B** — BGE-M3
+  22.7× batched on a 3080 Ti; deconfounded GPU-vs-CPU ladder receipts
+  (−41% at dogfood scale, wash at ERB scale). GPU-daemon worker sweep found
+  the x4 executor sweet spot.
+- **feat(retrieval): #327 `authority_path_selectivity` knob** (default-off —
+  it regresses alone; the seam landed, not the fix).
+- **fix(server): #329 three-state upstream health** — an inactive ribosome no
+  longer degrades `/health`.
+- **bench(erb): per-layer ablation ladder + storage audit** — 7 arms survive
+  gate verification (3 dropped ungateable, 3 identity); blob-scale storage
+  audit receipts.
+
 ## 0.8.5 — 2026-07-25
 
 Completes the helix → cymatix rename as a **clean break** (0.8.0 was the soft

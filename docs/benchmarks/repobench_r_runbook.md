@@ -1,5 +1,13 @@
 # RepoBench-R Step-1 Runbook
 
+> **Historical protocol (helix 0.6.x era, pre-rename — kept verbatim as the record of
+> how the frozen RepoBench-R receipts were produced).** The `helix063` venv and
+> `HELIX_CONFIG` no longer exist in the current tree; renamed files:
+> `repobench_r_helix.py` → `benchmarks/repobench_r_cymatix.py`,
+> `repobench_r_helix_global.py` → `benchmarks/repobench_r_cymatix_global.py`,
+> `docs/benchmarks/helix_probe_lexical.toml` → `docs/benchmarks/cymatix_probe_lexical.toml`.
+> Treat the commands below as a reproduction record, not paste-ready.
+
 **Dataset:** `tianyang/repobench-r` (CC-BY-4.0, HuggingFace)
 **Metric:** acc@k — gold snippet in top-k of the ranked candidate pool
 **Settings:** XF-F (`python_cff`, `java_cff`) and XF-R (`python_cfr`, `java_cfr`)

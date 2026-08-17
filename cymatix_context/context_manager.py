@@ -2021,6 +2021,11 @@ class CymatixContextManager:
         #   frontier  → max(12, classifier_cap*2) (frontier callers have 200k+ contexts)
         #   generic   → unchanged (regression baseline; classifier_cap as-is)
         candidate_pool_size = len(candidates)
+        # Phase 0.5 (2026-08-12 refinement campaign): record the assembly
+        # cap that actually truncated the candidate list (None when no cap
+        # trim fired). Read below when the window's delivery-visibility
+        # block decides cap_binding.
+        _applied_assembly_cap: Optional[int] = None
         _classifier_cap = (
             classifier_result.assembly_max_genes_cap
             if classifier_result is not None and classifier_result.assembly_max_genes_cap is not None
@@ -2034,6 +2039,7 @@ class CymatixContextManager:
                 classifier_result.cls if classifier_result is not None else "n/a",
             )
             candidates = candidates[:_classifier_cap]
+            _applied_assembly_cap = _classifier_cap
         # Stage 5 §4: per-class assembly cap applied on top of (or instead of)
         # classifier cap. Generic skips this block entirely so the generic
         # branch stays byte-identical to pre-Stage-5.
@@ -2041,6 +2047,7 @@ class CymatixContextManager:
             _moe_cap = min(_classifier_cap, 4) if _classifier_cap is not None else 4
             if len(candidates) > _moe_cap:
                 candidates = candidates[:_moe_cap]
+                _applied_assembly_cap = _moe_cap
         elif caller_model_class == "frontier":
             _frontier_cap = (
                 max(12, _classifier_cap * 2) if _classifier_cap is not None else 12
@@ -2053,6 +2060,7 @@ class CymatixContextManager:
             # classifier cap was None (no truncation happened upstream).
             if _classifier_cap is None and len(candidates) > _frontier_cap:
                 candidates = candidates[:_frontier_cap]
+                _applied_assembly_cap = _frontier_cap
 
         # Foveated-splice (spec §4-5): for BROAD only, replace uniform per-document
         # compression with a rank-scaled power-law schedule AND reverse the
@@ -2250,6 +2258,38 @@ class CymatixContextManager:
             }
             if classifier_result.reason:
                 window.metadata["classifier"]["reason"] = classifier_result.reason
+
+        # Phase 0.1/0.5 (2026-08-12 refinement campaign): delivery-
+        # visibility block. Records the scored candidate pool, the
+        # delivered ids in final order (the ablation ladder's
+        # delivered-gold basis), and which constraint actually truncated
+        # delivery:
+        #   * budget eviction trimmed below the cap  -> "token_budget"
+        #   * delivered count equals the applied assembly cap and the
+        #     pool had more eligible candidates      -> "assembly_cap"
+        #   * otherwise (incl. sub-cap limiters like splice drops or
+        #     session elision, where neither constraint was binding)
+        #                                            -> "none"
+        # Served on /context as a top-level ``delivery`` key.
+        if window.metadata is not None:
+            _delivered_ids = list(window.expressed_gene_ids or [])
+            _n_budget_evicted = int(window.metadata.get("budget_evicted", 0) or 0)
+            if _n_budget_evicted > 0:
+                _cap_binding = "token_budget"
+            elif (
+                _applied_assembly_cap is not None
+                and len(_delivered_ids) == _applied_assembly_cap
+                and candidate_pool_size > _applied_assembly_cap
+            ):
+                _cap_binding = "assembly_cap"
+            else:
+                _cap_binding = "none"
+            window.metadata["delivery"] = {
+                "pool_size": int(candidate_pool_size),
+                "delivered_count": len(_delivered_ids),
+                "delivered_gene_ids": _delivered_ids,
+                "cap_binding": _cap_binding,
+            }
 
         # Touch retrieved documents (update signals).
         # Read-only contract (Stage 1): clean=true ⇒ read_only=True ⇒ skip
@@ -3345,6 +3385,10 @@ class CymatixContextManager:
         est_tokens = estimate_tokens(decoder_prompt) + estimate_tokens(expressed_wrapped)
         budget = self.config.budget.ribosome_tokens + self.config.budget.expression_tokens
 
+        # Phase 0.5 (2026-08-12): minimal trim-site recording — how many
+        # documents the budget-eviction loop dropped. Surfaced via
+        # window.metadata["budget_evicted"] for the delivery block.
+        _budget_evicted = 0
         if est_tokens > budget and len(parts) > 1:
             # Default path: drop the lowest-SCORED document regardless of
             # its position in the assembled prompt. Position-based pop()
@@ -3382,6 +3426,11 @@ class CymatixContextManager:
                     )
                     parts.pop(worst_idx)
                     sorted_genes.pop(worst_idx)
+                # Phase 0.5 (2026-08-12): count budget evictions so the
+                # delivery-visibility block can report cap_binding =
+                # "token_budget" when this loop (not the classifier cap)
+                # is what truncated delivery.
+                _budget_evicted += 1
                 expressed = "\n---\n".join(parts)
                 expressed_wrapped = f"<expressed_context>\n{expressed}\n</expressed_context>"
                 est_tokens = estimate_tokens(decoder_prompt) + estimate_tokens(expressed_wrapped)
@@ -3469,6 +3518,9 @@ class CymatixContextManager:
                 "raw_chars": total_raw,
                 "compressed_chars": compressed_chars,
                 "moe_mode": bool(answer_slate),
+                # Phase 0.5 (2026-08-12): documents dropped by the
+                # budget-eviction loop above (0 = budget never bound).
+                "budget_evicted": _budget_evicted,
             },
         )
 
