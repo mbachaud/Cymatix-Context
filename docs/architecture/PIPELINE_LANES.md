@@ -8,9 +8,11 @@ component does what, what tools fire, and what gets written / read.
 
 **v3, updated 2026-08-16.** Deltas since v2:
 
-- **Tier 0 PKI read gate** — `[retrieval] pki_enabled` (default on)
-  skips `path_key_index` entirely when false; the `no_pki` ladder arms
-  A/B it (first receipt: active null at 100k, +0.033 r@12 on removal).
+- **Tier 0 PKI read gate** — `[retrieval] pki_enabled` (default off
+  since 2026-08-17, #370: delivery-null at full power — the n=469
+  exact-default confirm measured PKI on as −1 delivered needle vs
+  `no_pki`) skips `path_key_index` entirely when false; the
+  `no_pki`/`pki_on` ladder arms A/B it.
 - **Packet delivery-visibility block** (PR #363) —
   `ContextPacket.delivery` optionally reports `pool_size /
   delivered_count / delivered_gene_ids / cap_binding` so any harness
@@ -195,7 +197,7 @@ client POST /context (query, session_context)
   ├─► Step 1b: session_context path_tokens   → injected into entities
   │
   ├─► Genome.query_genes (12 signals + 1 octave gate):
-  │     Tier 0  path_key_index            (PKI; gate: pki_enabled, default on)
+  │     Tier 0  path_key_index            (PKI; gate: pki_enabled, default off 2026-08-17)
   │     Tier 1  exact promoter tag        (3.0)
   │     Tier 2  prefix promoter tag       (1.5)
   │     Tier 3  FTS5 content              (≤6.0 cap)

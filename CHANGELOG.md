@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- **retrieval: `[retrieval] pki_enabled` default flipped `true` → `false`
+  (#370).** The 829k exact-shipped-default confirm at full statistical power
+  (n=469, delivered basis,
+  `benchmarks/dogfood/erb/receipts/postflip_default_confirm_829k.json`)
+  measured PKI on as **−1 delivered needle** vs `no_pki` (263/469 = 0.5608 vs
+  264/469 = 0.5629; r@12 0.6546 vs 0.6588, fr@12 0.6588 vs 0.6631) —
+  null-to-hair-negative. Honest caveat: the earlier n=30 cells were
+  delivered-identical at 250k/500k/829k-probe but the 100k cell was **+1
+  delivered needle for PKI** (the one positive cell, replicated in both run
+  orders); the full-power n=469 cell is −1. Opt back in per store with
+  `pki_enabled = true` — one config line. Note the flip does NOT reclaim the
+  8.56 GB `path_key_index` on existing beds; the scorer-neutral compaction is
+  #370's other checkbox and stays open. Receipts:
+  `docs/benchmarks/2026-08-14-encoder-isolation-scale-curve.md`.
 - **feat(mcp): migrate the MCP server to mcp 2.x and lift the #325 pin (#326).**
   `cymatix_context/mcp/mcp_server.py` now uses `mcp.server.mcpserver.MCPServer`
   (2.x home of the removed `mcp.server.fastmcp.FastMCP`); requirement is

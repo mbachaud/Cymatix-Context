@@ -738,7 +738,16 @@ class RetrievalConfig:
     semantic_dense_additive_weight: float = 16.0
     semantic_broaden_routing: bool = True
     pki_weight: float = 1.0                 # PKI tier, RRF participant
-    pki_enabled: bool = True                # Tier-0 read gate; False skips path_key_index entirely
+    # 2026-08-17 default flip -> False (#370): the 829k exact-shipped-default
+    # confirm at full statistical power (n=469, delivered basis,
+    # benchmarks/dogfood/erb/receipts/postflip_default_confirm_829k.json)
+    # measured PKI on as -1 delivered needle vs no_pki (263/469 = 0.5608 vs
+    # 264/469 = 0.5629; r@12 0.6546 vs 0.6588) — null-to-hair-negative.
+    # Earlier n=30 cells: delivered-identical at 250k/500k/829k-probe, +1
+    # delivered needle at 100k (the one positive cell; isolation-curve
+    # finding 4). Opt back in per-store with [retrieval] pki_enabled = true.
+    # Receipts: docs/benchmarks/2026-08-14-encoder-isolation-scale-curve.md
+    pki_enabled: bool = False               # Tier-0 read gate; False skips path_key_index entirely
     # Note: filename_anchor_weight, sr_weight reuse their existing knobs above.
 
     # ── Sharded-retrieval fetch depth + co-activation budget (#222/#223) ──

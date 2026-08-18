@@ -2,11 +2,17 @@
 2026-08-06 retrieval-layer ledger flagged as missing ("unmeasured — no
 off-switch exists").
 
-Contract: default ON keeps Tier 0 byte-identical (the ``pki`` signal is
+Contract: ON keeps Tier 0 byte-identical (the ``pki`` signal is
 timed on every query, rare path×key pairs contribute score); OFF skips
 the ``path_key_index`` read entirely — no ``pki`` signal in
 ``last_signal_timings`` (the ablation-ladder observable), no ``pki``
 tier contribution, other tiers untouched.
+
+Defaults: the store-constructor default stays ON (direct ``Genome()``
+call sites keep their behavior); the *config* default flipped OFF on
+2026-08-17 (#370) — the n=469 exact-shipped-default confirm measured
+PKI on as -1 delivered needle vs no_pki
+(benchmarks/dogfood/erb/receipts/postflip_default_confirm_829k.json).
 """
 
 from __future__ import annotations
@@ -86,8 +92,11 @@ def test_pki_disabled_skips_tier_entirely():
 # ── config threading ───────────────────────────────────────────────────
 
 
-def test_retrieval_config_default_is_enabled():
-    assert CymatixConfig().retrieval.pki_enabled is True
+def test_retrieval_config_default_is_disabled():
+    # 2026-08-17 default flip (#370): delivery-null at full power (n=469
+    # confirm: PKI on = -1 delivered needle vs no_pki). Opt-in via
+    # [retrieval] pki_enabled = true.
+    assert CymatixConfig().retrieval.pki_enabled is False
 
 
 def test_toml_can_disable_pki(tmp_path):
@@ -95,6 +104,15 @@ def test_toml_can_disable_pki(tmp_path):
     toml.write_text("[retrieval]\npki_enabled = false\n", encoding="utf-8")
     cfg = load_config(str(toml))
     assert cfg.retrieval.pki_enabled is False
+
+
+def test_toml_can_enable_pki(tmp_path):
+    """Post-flip the opt-in direction is the load-bearing path: an explicit
+    ``pki_enabled = true`` must win over the False default."""
+    toml = tmp_path / "cymatix.toml"
+    toml.write_text("[retrieval]\npki_enabled = true\n", encoding="utf-8")
+    cfg = load_config(str(toml))
+    assert cfg.retrieval.pki_enabled is True
 
 
 # ── ablation-ladder arm ────────────────────────────────────────────────

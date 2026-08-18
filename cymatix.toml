@@ -467,7 +467,14 @@ dense_additive_weight = 4.0
 # gentle so it removes only noise-grade hits, not weak-but-real matches.
 dense_additive_min_cosine = 0.15
 pki_weight = 1.0                        # path-key-index tier, RRF participant
-pki_enabled = true                      # Tier-0 read gate; false skips path_key_index entirely (ablation)
+# 2026-08-17: flipped to false (#370). The 829k exact-shipped-default confirm
+# at full power (n=469, delivered basis) measured PKI on as -1 delivered
+# needle vs no_pki (263/469 vs 264/469) — null-to-hair-negative. Earlier
+# n=30 cells were delivered-identical at 250k/500k/829k-probe; the one
+# positive cell was +1 delivered needle at 100k. Set true to opt in.
+# Receipts: benchmarks/dogfood/erb/receipts/postflip_default_confirm_829k.json
+# + docs/benchmarks/2026-08-14-encoder-isolation-scale-curve.md
+pki_enabled = false                     # Tier-0 read gate; false skips path_key_index entirely (ablation)
 # Note: filename_anchor_weight (above) and sr_weight (above) are reused.
 
 # ── Sharded-retrieval fetch depth + co-activation budget (#222/#223) ──
