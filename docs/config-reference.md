@@ -306,6 +306,7 @@ shard router.
 | `cold_start_threshold` | `int` | `10` | Fix 3: documents needed before history stripping |
 | `replicas` | `List[str]` | `[]` | Read-only clone paths |
 | `replica_sync_interval` | `int` | `100` | Sync replicas every N inserts |
+| `synchronous` | `str` | `"NORMAL"` | Writer PRAGMA synchronous (OFF\|NORMAL\|FULL\|EXTRA). WAL-safe NORMAL skips the per-commit fsync SQLite's FULL default pays — #372 |
 <!-- END GENERATED -->
 
 `path`'s generated default (`genome.db`, the bare code-default) differs

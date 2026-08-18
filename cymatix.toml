@@ -176,6 +176,11 @@ cold_start_threshold = 10              # genes needed before history stripping k
 # the shard router in phase 2 (sharding changes the replication shape).
 replicas = []
 replica_sync_interval = 100             # sync replicas every N inserts
+# Writer-connection PRAGMA synchronous (#372). SQLite's own default is FULL
+# (one fsync per commit — ingest commits per strand, so a 10-chunk file paid
+# 12-22 fsyncs). Under WAL, NORMAL only fsyncs at checkpoint; worst case on
+# an OS crash is losing the last commit, never corruption. OFF|NORMAL|FULL|EXTRA.
+synchronous = "NORMAL"
 # No time-based decay. Genes never expire.
 # Compaction only detects source file changes (mtime vs last_accessed).
 # Irrelevant data is handled by splice (intron/exon) at expression time.

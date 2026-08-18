@@ -208,6 +208,7 @@ class GenomeConfig:
     cold_start_threshold: int = 10      # Fix 3: documents needed before history stripping
     replicas: List[str] = field(default_factory=list)  # Read-only clone paths
     replica_sync_interval: int = 100    # Sync replicas every N inserts
+    synchronous: str = "NORMAL"         # Writer PRAGMA synchronous (OFF|NORMAL|FULL|EXTRA). WAL-safe NORMAL skips the per-commit fsync SQLite's FULL default pays — #372
 
 
 @dataclass
@@ -1364,6 +1365,7 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             cold_start_threshold=int(g.get("cold_start_threshold", cfg.genome.cold_start_threshold)),
             replicas=g.get("replicas", cfg.genome.replicas),
             replica_sync_interval=int(g.get("replica_sync_interval", cfg.genome.replica_sync_interval)),
+            synchronous=str(g.get("synchronous", cfg.genome.synchronous)),
         )
 
     # Server

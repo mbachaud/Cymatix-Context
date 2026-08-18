@@ -704,6 +704,11 @@ class KnowledgeStore:
         # lazy-imports backends.rerank_backend.score_pairs on first use, so
         # torch/transformers never enter the import graph of a store that
         # isn't reranking. Tests inject a deterministic fake here.
+        # Issue #372: writer-connection PRAGMA synchronous. SQLite's default
+        # is FULL (every commit fsyncs); under WAL, NORMAL only fsyncs on
+        # checkpoint — worst case on OS crash is losing the last commit, not
+        # corruption. In-repo precedent: scripts/backfill_filename_domains.py.
+        synchronous: str = "NORMAL",
         rerank_scorer: Optional[Callable[[str, List[str]], List[float]]] = None,
         main_conn: Optional[sqlite3.Connection] = None,
         shard_name: str = "main",
@@ -909,6 +914,19 @@ class KnowledgeStore:
         self.conn.row_factory = sqlite3.Row
         self.conn.execute("PRAGMA journal_mode=WAL")
         self.conn.execute("PRAGMA busy_timeout=30000")  # 30s retry on lock
+        # Issue #372: default NORMAL — under WAL a per-commit fsync (FULL,
+        # SQLite's own default) is not needed for corruption-safety, and
+        # ingest currently commits per strand. Invalid values fall back
+        # loudly to NORMAL rather than silently to SQLite's FULL.
+        _sync = str(synchronous or "NORMAL").upper()
+        if _sync not in {"OFF", "NORMAL", "FULL", "EXTRA"}:
+            log.warning(
+                "[genome] synchronous=%r is not a valid SQLite level "
+                "(OFF|NORMAL|FULL|EXTRA) — falling back to NORMAL", synchronous
+            )
+            _sync = "NORMAL"
+        self._synchronous = _sync
+        self.conn.execute(f"PRAGMA synchronous={_sync}")
         # Cap WAL file size — without this, SQLite resets (zero-fills) the
         # WAL on truncate but keeps the high-water-mark size on disk.
         self.conn.execute("PRAGMA journal_size_limit=67108864")  # 64 MB
