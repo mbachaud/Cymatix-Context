@@ -45,7 +45,7 @@
 # ──────────────────────────────────────────────────────────────────────
 [ribosome]
 enabled = false                          # Explicit opt-in. Backend string is ignored entirely while this is false.
-backend = "none"                         # Disabled-state placeholder. Live options: "litellm" | "deberta" | "claude". See the "To turn the ribosome ON" runbook above.
+backend = "none"                         # Disabled-state placeholder. Live options: "litellm" | "deberta" (any other string, including "claude" and legacy "ollama", dispatches the no-op DisabledBackend). See the "To turn the ribosome ON" runbook above.
 model = "gemma4:e2b"                     # Ollama model used by "deberta" backend's pack/replicate fallback (light, ~2GB VRAM)
 base_url = "http://localhost:11434"
 timeout = 120                            # Increased for bulk ingestion

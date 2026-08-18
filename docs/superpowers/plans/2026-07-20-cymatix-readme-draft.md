@@ -209,7 +209,7 @@ Seven stages per turn, all LLM-free except optional splice:
 
 | Section | Key settings |
 |---------|-------------|
-| `[ribosome]` | `enabled`, `backend` (`"none"` / `"litellm"` / `"claude"` / `"deberta"`), query_expansion |
+| `[ribosome]` | `enabled`, `backend` (`"none"` default / `"litellm"` / `"deberta"` — only litellm and deberta are honored when enabled; any other value, including legacy `"ollama"` and `"claude"`, dispatches the no-op DisabledBackend), query_expansion |
 | `[hardware]` | Device auto-detection (CUDA → ROCm → MPS → CPU) |
 | `[budget]` | `expression_tokens` (7k default), `max_genes_per_turn`, splice_aggressiveness, `legibility_enabled`, `session_delivery_enabled` |
 | `[session]` | Synthetic session windows, default party_id |
