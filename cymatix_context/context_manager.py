@@ -1122,10 +1122,15 @@ class CymatixContextManager:
         # Cymatics (frequency-domain re_rank + splice, replaces LLM calls)
         self._use_cymatics = config.cymatics.enabled
         if self._use_cymatics:
-            from .scoring.cymatics import aggressiveness_to_peak_width
-            self._cymatics_peak_width = aggressiveness_to_peak_width(
-                config.budget.splice_aggressiveness
-            )
+            # #357: [cymatics] peak_width, when explicitly set, overrides the
+            # Q-factor derivation (previously it was parsed but never read).
+            if config.cymatics.peak_width is not None:
+                self._cymatics_peak_width = float(config.cymatics.peak_width)
+            else:
+                from .scoring.cymatics import aggressiveness_to_peak_width
+                self._cymatics_peak_width = aggressiveness_to_peak_width(
+                    config.budget.splice_aggressiveness
+                )
         else:
             self._cymatics_peak_width = 3.0
 

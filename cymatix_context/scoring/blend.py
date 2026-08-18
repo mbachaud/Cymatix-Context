@@ -156,7 +156,7 @@ def apply_candidate_refiners(
     *,
     genome: Genome,
     cymatics_enabled: bool = True,
-    cymatics_peak_width: float = 3.0,
+    cymatics_peak_width: float = 1.55,  # #357: shipped effective width (aggressiveness_to_peak_width(0.3)); the manager always passes its configured/derived value explicitly
     cymatics_distance_metric: str = "cosine",
     synonym_map: Optional[Dict] = None,
     use_cymatics: bool = True,
