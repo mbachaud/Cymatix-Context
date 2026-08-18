@@ -216,7 +216,7 @@ Seven stages per turn, all LLM-free except optional splice:
 | `[genome]` | `path` (`genomes/main/genome.db`), compact_interval, replicas |
 | `[server]` | host, port, upstream |
 | `[headroom]` | Optional Headroom proxy lifecycle |
-| `[ingestion]` | `backend` (`"cpu"` / `"ollama"`), splade_enabled, entity_graph |
+| `[ingestion]` | `backend` (`"cpu"` / `"ollama"` / `"hybrid"`), splade_enabled, entity_graph |
 | `[context]` | Cold-tier retrieval: enabled, k, min_cosine |
 | `[cymatics]` | Frequency-domain scoring, harmonic_links, distance_metric |
 | `[classifier]` | Rule-based query classification thresholds |

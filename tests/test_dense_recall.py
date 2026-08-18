@@ -345,7 +345,8 @@ def test_dense_recall_empty_v2_returns_empty_with_warn(dense_genome, caplog):
 
 
 def _additive_dense_genome(dense_additive_weight: float = 4.0) -> Genome:
-    """In-memory genome: dense ON, additive fusion (the shipped default)."""
+    """In-memory genome: dense ON, additive fusion (explicit opt-ins; the
+    shipped defaults are dense OFF since 2026-08-15 and RRF fusion)."""
     g = Genome(
         path=":memory:",
         dense_embedding_enabled=True,

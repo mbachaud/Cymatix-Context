@@ -71,7 +71,7 @@ function Start-CymatixOnBed {
     param([string]$bedPath, [string]$srvLog)
     $env:CYMATIX_GENOME_PATH = $bedPath
     # 2026-07-03 fix: serve beds with the LEXICAL probe config (dense OFF).
-    # Master's default has dense_embedding_enabled=true, which put BGE-M3
+    # Master's default then had dense_embedding_enabled=true, which put BGE-M3
     # on the same 12GB GPU the ollama 26b/31b consumers were using -->
     # 30-60s/query --> the runner's httpx calls ALL hit ReadTimeout and
     # every needle scored zero delivery. SIKE needles are lexical-designed;

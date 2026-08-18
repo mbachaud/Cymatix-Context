@@ -200,7 +200,7 @@ The script is idempotent: rows that already carry a correctly-sized `embedding_d
 
 ## After the backfill
 
-Once `coverage=100%`, dense recall is active under the default `[retrieval] dense_embedding_enabled = true`. The next step in the Stage 2 → Stage 4 calibration sequence is to recalibrate `ann_similarity_threshold` at 1024-dim using `scripts/calibrate_thresholds.py` — the shipped default of `0.35` (`cymatix.toml`) is a legacy value calibrated at dim=256 and should be re-derived. See `docs/operator-runbooks.md` Runbook 2 for that procedure.
+Once `coverage=100%`, dense recall is active once you opt in with `[retrieval] dense_embedding_enabled = true` (default false since 2026-08-15). The next step in the Stage 2 → Stage 4 calibration sequence is to recalibrate `ann_similarity_threshold` at 1024-dim using `scripts/calibrate_thresholds.py` — the shipped default of `0.35` (`cymatix.toml`) is a legacy value calibrated at dim=256 and should be re-derived. See `docs/operator-runbooks.md` Runbook 2 for that procedure.
 
 The `ann_threshold_max_genes` cap of `12` (`cymatix.toml`) is a known candidate pool collapse bug on single-shard stores (issue tracked in the 2026-06-06 handoff). Until a fix ships, consider raising it to 500 via `cymatix.toml` if dense retrieval returns fewer candidates than expected:
 

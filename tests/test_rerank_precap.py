@@ -556,7 +556,8 @@ def _seeded_manager_cls_gated(
     reaches retrieval, with ``[retrieval] rerank_enabled_by_class`` /
     ``rerank_enabled`` set for THIS test. Adapted from ``_seeded_manager`` in
     ``test_classifier_gated_combinator.py:375`` (same corpus + classifier
-    setup). ``dense_embedding_enabled`` defaults True (the shipped default) so
+    setup). ``dense_embedding_enabled`` defaults True here (the shipped
+    default is False since 2026-08-15) so
     the ANN path (``query_docs_ann``) is exercised by default; a test that
     wants the plain lex ``query_docs`` seam instead forces it False, same as
     the classifier-gated-combinator manager fixture does unconditionally.

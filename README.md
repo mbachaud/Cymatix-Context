@@ -231,7 +231,7 @@ Seven stages per turn, all LLM-free except optional splice:
 
 | Section | Key settings |
 |---------|-------------|
-| `[ribosome]` | `enabled`, `backend` (`"none"` / `"litellm"` / `"claude"` / `"deberta"`), query_expansion |
+| `[ribosome]` | `enabled`, `backend` (`"none"` / `"litellm"` / `"deberta"` — only litellm/deberta honored when enabled; `"claude"` and legacy `"ollama"` dispatch disabled), query_expansion |
 | `[hardware]` | Device auto-detection (CUDA → ROCm → MPS → CPU) |
 | `[budget]` | `expression_tokens` (7k default), `max_genes_per_turn`, splice_aggressiveness, `legibility_enabled`, `session_delivery_enabled` |
 | `[session]` | Synthetic session windows, default party_id |
@@ -240,7 +240,7 @@ Seven stages per turn, all LLM-free except optional splice:
 | `[telemetry]` | OTel export: enabled (default off), endpoint, sampler_ratio, redact_query |
 | `[headroom]` | Optional Headroom proxy lifecycle |
 | `[encoder_daemon]` | url (default `""` = off) — route dense/SPLADE/SEMA encoding through a shared daemon |
-| `[ingestion]` | `backend` (`"cpu"` / `"ollama"`), splade_enabled, entity_graph |
+| `[ingestion]` | `backend` (`"cpu"` / `"ollama"` / `"hybrid"`), splade_enabled, entity_graph |
 | `[context]` | Cold-tier retrieval: enabled, k, min_cosine |
 | `[cymatics]` | Frequency-domain scoring, harmonic_links, distance_metric |
 | `[classifier]` | Rule-based query classification thresholds |
@@ -299,7 +299,7 @@ Full schema: [docs/api/endpoints.md](docs/api/endpoints.md).
 </details>
 
 <details>
-<summary><strong>Package structure (15 packages)</strong></summary>
+<summary><strong>Package structure (16 packages)</strong></summary>
 
 | Package | Purpose |
 |---------|---------|
@@ -308,6 +308,7 @@ Full schema: [docs/api/endpoints.md](docs/api/endpoints.md).
 | `cli/` | `cymatix` CLI: query, packet, gene, neighbors, ingest, diag, config, status |
 | `encoding/` | Chunking, fragments, legibility headers, Headroom bridge |
 | `identity/` | CWoLa logger, session delivery, registry, provenance, claims |
+| `okf/` | Open Knowledge Format (OKF v0.1) bundle reader, canonical digest, ingest adapter |
 | `pipeline/` | Tier logic, stage helpers |
 | `retrieval/` | Expand, freshness, RRF/additive fusion, PLR, intent router, SR, seeded edges, query classifier |
 | `scoring/` | Cymatics, know-calibration, know-decision, ray-trace, TCM |

@@ -46,7 +46,7 @@ The pipeline emits a **know/miss agent contract** on `/context/packet`: every re
 
 ## Package Structure (post-PR #90)
 
-After the repo restructure, `cymatix_context/` is organized into 15 sub-packages plus a handful of top-level orchestration modules. (The old `helix_context` alias package was removed in 0.8.5.)
+After the repo restructure, `cymatix_context/` is organized into 16 sub-packages plus a handful of top-level orchestration modules. (The old `helix_context` alias package was removed in 0.8.5.)
 
 | Package | Purpose |
 |---------|---------|
@@ -55,6 +55,7 @@ After the repo restructure, `cymatix_context/` is organized into 15 sub-packages
 | `cli/` | `cymatix` CLI: query, packet, ingest, gene, neighbors, diag, config, status |
 | `encoding/` | Chunking, fragment encoding, legibility headers, Headroom bridge |
 | `identity/` | CWoLa logger, session delivery, registry, provenance, claims |
+| `okf/` | Open Knowledge Format (OKF v0.1) bundle reader, canonical digest, ingest adapter (`cymatix ingest --okf`) |
 | `pipeline/` | Tier logic, pipeline-stage helpers |
 | `retrieval/` | Expand, freshness gate, RRF/additive fusion, PLR, intent router, SR, seeded edges, query classifier, tie-break |
 | `scoring/` | Cymatics, know-calibration, know-decision, ray-trace, TCM, blending |
@@ -76,7 +77,7 @@ All config lives in `cymatix.toml` (the `helix.toml` fallback was removed in 0.8
 
 | Section | Key settings |
 |---------|-------------|
-| `[ribosome]` | model, backend (`"ollama"` / `"claude"` / `"litellm"` / `"none"`), timeout, query_expansion_enabled |
+| `[ribosome]` | model, backend (`"none"` default / `"litellm"` / `"deberta"` — only litellm and deberta are honored when enabled; any other value, including legacy `"ollama"` and `"claude"`, dispatches the no-op DisabledBackend), timeout, query_expansion_enabled |
 | `[hardware]` | device auto-detection (CUDA, MPS, ROCm, CPU) |
 | `[budget]` | expression_tokens (default 7000 — code and cymatix.toml unified in the 2026-06-12 default-honesty pass), max_genes_per_turn, splice_aggressiveness, decoder_mode, legibility_enabled, session_delivery_enabled |
 | `[session]` | synthetic_session_enabled, synthetic_session_window_s, default_party_id |

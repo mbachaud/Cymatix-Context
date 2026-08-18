@@ -577,7 +577,7 @@ class StateCollector:
                    "classifier",
                    "Rule-based query classifier picks decoder mode"),
             _entry("ribosome_backend", ribosome.effective_backend, "ribosome",
-                   "ollama | claude | litellm | disabled"),
+                   "litellm | deberta | disabled"),
         ]
 
         return {
