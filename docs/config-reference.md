@@ -821,7 +821,7 @@ bm25_prefilter_size = 200
 fts5_candidate_depth = 0
 # Tier 5b entity graph (dark)
 entity_graph_retrieval_enabled = false
-# Stage 2 dense recall — shipped on since Tier-0 PR-3 (2026-05-16)
+# Stage 2 dense recall — opt-in (default off since 2026-08-15); this example enables it
 dense_embedding_enabled = true
 dense_embedding_dim = 1024
 dense_model = "BAAI/bge-m3"           # #207 dense fast-follow (2026-07-10)

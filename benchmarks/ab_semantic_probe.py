@@ -28,8 +28,8 @@ probe base so no decoder / model-splice runs):
             no-op under RRF (see ``cymatix_context.retrieval.fusion.Fuser``).
   fused   : ``dense_embedding_enabled = True``, ``splade_enabled = True`` at
             shipped weights -> the full retrieval stack (dense + SPLADE + FTS +
-            tag + filename anchor), i.e. shipped RETRIEVAL defaults minus the
-            LLM decoder.
+            tag + filename anchor), i.e. the pre-2026-08-15 shipped RETRIEVAL
+            defaults minus the LLM decoder (dense + SPLADE default OFF now).
 
 QUESTIONS (``--questions``): a sweep-queries JSON list of
 ``{"query": str, "gold_ids": [bed_gene_id]}`` -- built by

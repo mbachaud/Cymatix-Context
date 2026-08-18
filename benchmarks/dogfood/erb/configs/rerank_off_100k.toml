@@ -31,7 +31,7 @@
 # ──────────────────────────────────────────────────────────────────────
 [ribosome]
 enabled = false                          # Explicit opt-in. Backend string is ignored entirely while this is false.
-backend = "none"                         # Disabled-state placeholder. Live options: "litellm" | "deberta" | "claude". See the "To turn the ribosome ON" runbook above.
+backend = "none"                         # Disabled-state placeholder. Live options: "litellm" | "deberta" (any other string, including "claude" and legacy "ollama", dispatches the no-op DisabledBackend). See the "To turn the ribosome ON" runbook above.
 model = "gemma4:e2b"                     # Ollama model used by "deberta" backend's pack/replicate fallback (light, ~2GB VRAM)
 base_url = "http://localhost:11434"
 timeout = 120                            # Increased for bulk ingestion
@@ -265,7 +265,7 @@ sema_embed_on_ingest = true             # #227: false = skip MiniLM SEMA at inge
 # so every ingested genome is dense-populated without a separate backfill.
 # Set false for latency-sensitive callers to defer encoding to
 # scripts/backfill_bgem3_v2.py. Write path only — retrieval still gates on
-# [retrieval] dense_embedding_enabled (default true).
+# [retrieval] dense_embedding_enabled (default false since 2026-08-15).
 dense_embed_on_ingest = true            # Tier-0 PR-1 (2026-05-16)
 
 # ── Issue #164: size-aware SPLADE auto-toggle (opt-in) ──────────────────
