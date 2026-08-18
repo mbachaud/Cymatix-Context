@@ -85,7 +85,7 @@ All config lives in `cymatix.toml` (the `helix.toml` fallback was removed in 0.8
 | `[server]` | host, port, upstream |
 | `[telemetry]` | OTel export defaults: enabled (default false), endpoint (`"localhost:4317"`), insecure, sampler_ratio, redact_query, logs_enabled, logs_level. Precedence: `CYMATIX_OTEL_*` env > toml > default (env wins both directions); the tray launcher auto-exports `CYMATIX_OTEL_ENABLED=1` once the observability stack's collector port is up |
 | `[headroom]` | route_upstream toggle for Headroom proxy integration |
-| `[encoder_daemon]` | url (default `""` = off — every seam encodes in-process, byte-identical to today; set to route dense/SPLADE/SEMA encoding through a shared `cymatix_context.encoder_daemon` process instead, e.g. `"http://127.0.0.1:11439"`; `CYMATIX_ENCODER_URL` env wins over the TOML value; start the daemon with `python -m cymatix_context.encoder_daemon`, default port 11439) |
+| `[encoder_daemon]` | url (default `""` = off — every seam encodes in-process, byte-identical to today; set to route dense/SPLADE/SEMA encoding through a shared `cymatix_context.encoder_daemon` process instead, e.g. `"http://127.0.0.1:11440"`; `CYMATIX_ENCODER_URL` env wins over the TOML value; start the daemon with `python -m cymatix_context.encoder_daemon`, default port 11440 — distinct from `[server] bench_port` 11439, see #376) |
 | `[ingestion]` | backend (`"cpu"` / `"ollama"` / `"hybrid"`), splade_enabled, rerank_model, entity_graph, sema_embed_on_ingest (#227: false = no MiniLM load at ingest; TCM falls back to text) |
 | `[context]` | cold_tier_enabled, cold_tier_k, cold_tier_min_cosine |
 | `[cymatics]` | enabled, distance_metric (`"cosine"` / `"w1"`), harmonic_links |

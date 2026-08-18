@@ -1279,7 +1279,9 @@ each holding their own weights. `url` empty (the default, and not present in
 the shipped `cymatix.toml`) means "off": every seam runs in-process exactly
 as before, so byte-identical-when-off holds for free. Set `url` (or export
 `CYMATIX_ENCODER_URL`, which wins over the TOML value) to point at a running
-daemon, e.g. `"http://127.0.0.1:11439"`. Timeouts, the micro-batch window,
+daemon, e.g. `"http://127.0.0.1:11440"` (the daemon's default port; 11439 is
+`[server] bench_port` — the two must not collide, see issue #376). Timeouts,
+the micro-batch window,
 and the circuit-breaker retry cooldown are env-tunable constants in
 `encoder_client.py` for this slice, not config surface.
 
@@ -1295,7 +1297,7 @@ and the circuit-breaker retry cooldown are env-tunable constants in
 
 ```toml
 [encoder_daemon]
-url = "http://127.0.0.1:11439"
+url = "http://127.0.0.1:11440"
 ```
 
 **Cross-refs.** `cymatix_context/config.py` (`EncoderDaemonConfig`),

@@ -1087,7 +1087,7 @@ class EncoderDaemonConfig:
     default, so byte-identical-when-off holds for free. Set ``url`` to point
     ``cymatix_context.backends.encoder_client`` at a running
     ``cymatix_context.encoder_daemon`` process (e.g.
-    "http://127.0.0.1:11439"); leave it empty, or leave
+    "http://127.0.0.1:11440"); leave it empty, or leave
     ``CYMATIX_ENCODER_URL`` unset, to keep current behavior untouched.
     Timeouts / batch windows / retry cooldowns are env-tunable constants in
     ``encoder_client.py``, not config surface, for this slice.
