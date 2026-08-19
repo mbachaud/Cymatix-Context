@@ -1057,6 +1057,11 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
     async def admin_sema_rebuild():
         """Force-rebuild the SEMA vector cache."""
         cymatix.genome.invalidate_sema_cache()
+        # #339 rider: also drop the cold-tier cache (and its vectorless
+        # gate) — it scans the disjoint heterochromatin partition and is
+        # lazily rebuilt by query_cold_tier, so without this a forced
+        # rebuild left stale cold vectors serving until process restart.
+        cymatix.genome.invalidate_cold_sema_cache()
         cymatix.genome._build_sema_cache()
         cache = cymatix.genome._sema_cache
         return {
@@ -1095,6 +1100,10 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
         # 3. Rebuild SEMA vector cache
         try:
             cymatix.genome.invalidate_sema_cache()
+            # #339 rider: the refresh() above reopened the WAL snapshot to
+            # see external writers, so the cold-tier cache may be stale
+            # too. Invalidate it (query_cold_tier lazy-rebuilds).
+            cymatix.genome.invalidate_cold_sema_cache()
             cymatix.genome._build_sema_cache()
             cache = cymatix.genome._sema_cache
             if cache:
@@ -1157,6 +1166,13 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
             # Rebuild caches on the new store
             new_store.invalidate_sema_cache()
             new_store._build_sema_cache()
+            # #339 rider: deliberately NO invalidate_cold_sema_cache() here.
+            # new_store is freshly constructed by open_read_source(), so its
+            # cold-tier cache is unbuilt (_cold_sema_cache=None,
+            # _cold_sema_vectorless=False at __init__) — there is no stale
+            # cold state to drop, and the old store's caches die with
+            # old_store.close() below. query_cold_tier lazy-builds from the
+            # swapped-in db on first use.
 
             # Atomic swap
             old_store = cymatix.genome

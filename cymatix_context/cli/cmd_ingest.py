@@ -111,7 +111,11 @@ def _build_parser() -> argparse.ArgumentParser:
              "encodes at ingest so the store contains no float tensors. "
              "Embeddings are backfilled per host afterwards "
              "(scripts/backfill_bgem3_v2.py) as per-host artifacts — they "
-             "are never covered by the OKF interop claim. Only with --okf.",
+             "are never covered by the OKF interop claim. Only with --okf. "
+             "Unrelated to the encoder daemon's "
+             "CYMATIX_ENCODER_DETERMINISTIC bench profile "
+             "(encoder_daemon.py), which pins encode batch shapes on a "
+             "running daemon — the two features share an adjective only.",
     )
     return parser
 
