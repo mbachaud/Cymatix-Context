@@ -159,6 +159,16 @@ class BudgetConfig:
     # caller supplies a session_id. See session_delivery.py.
     # default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass)
     session_delivery_enabled: bool = True
+    # Opt-in control-tag neutralization (2026-08-08 audit). When on, the
+    # assembly loop escapes content-sourced "<cymatix:" to "&lt;cymatix:"
+    # so a document cannot forge the genuine control tags
+    # (<cymatix:no_match/>, <cymatix:slate>) that downstream agents
+    # adopting CYMATIX_NO_MATCH_FRAGMENT trust. The genuine no-match tag
+    # is emitted on a separate parts-empty branch and is never escaped.
+    # Closes tag-forgery only — general indirect prompt injection via
+    # document text remains (inherent to context injection). Default off:
+    # byte-identical to pre-knob behavior.
+    neutralize_control_tags: bool = False
     abstain_enabled: bool = True       # NEW — see docs/specs/2026-05-02-abstain-tier-design.md
     # Foveated-splice (BROAD tier only). Off by default for the measurement
     # period — see docs/specs/2026-05-03-foveated-splice-design.md §6.3 and
@@ -226,6 +236,8 @@ class ServerConfig:
     bench_port: int = 11439
     bench_genome_path: str = "genomes/bench/bench.genome.db"
     upstream_timeout: float = 180.0     # Timeout for proxied requests to Ollama. Bumped from 120s on 2026-05-02 — observed Proxy 500s on slow gemma4:e4b GPQA queries at ~125s; 180s gives long-tail generation room without letting truly stuck requests hang. Override per-deployment via [server] in cymatix.toml.
+    admin_token: str = ""               # Opt-in bearer token for the admin surface (/admin/*, /ingest, /consolidate). Default "" = no auth — byte-identical to pre-knob behavior. When set, those routes demand "Authorization: Bearer <token>" and 401 otherwise. Loopback bind is NOT auth: any same-host process can reach the port (2026-08-08 audit).
+    swap_db_roots: List[str] = field(default_factory=list)  # Opt-in allowlist of directory roots /admin/swap-db may open. Default [] = unrestricted (today's behavior). When non-empty, a swap target resolving (os.path.realpath) outside every root is rejected 403 via os.path.commonpath; a root on a different drive never matches (2026-08-08 audit).
 
 
 @dataclass
@@ -1337,6 +1349,7 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
                 "decoder_mode_overrides", cfg.budget.decoder_mode_overrides)),
             legibility_enabled=bool(b.get("legibility_enabled", cfg.budget.legibility_enabled)),
             session_delivery_enabled=bool(b.get("session_delivery_enabled", cfg.budget.session_delivery_enabled)),
+            neutralize_control_tags=bool(b.get("neutralize_control_tags", cfg.budget.neutralize_control_tags)),
             abstain_enabled=bool(b.get("abstain_enabled", cfg.budget.abstain_enabled)),
             foveated_enabled=bool(b.get("foveated_enabled", cfg.budget.foveated_enabled)),
             foveated_alpha=float(b.get("foveated_alpha", cfg.budget.foveated_alpha)),
@@ -1382,6 +1395,8 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             bench_genome_path=s.get(
                 "bench_genome_path", cfg.server.bench_genome_path,
             ),
+            admin_token=str(s.get("admin_token", cfg.server.admin_token)),
+            swap_db_roots=list(s.get("swap_db_roots", cfg.server.swap_db_roots)),
         )
 
     # Encoder daemon (Fork 1 slice 1) — parsed BEFORE _apply_env_overrides so

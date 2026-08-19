@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import asyncio
 import getpass
+import hmac
 import logging
 import os
 import socket
@@ -69,6 +70,36 @@ _paused_ribosomes: Dict[int, object] = {}
 _KNOWN_AGENTS_DEFAULT = frozenset({
     "laude", "raude", "taude", "gemini", "codex", "claude", "manual",
 })
+
+
+# ── Admin-surface auth (opt-in, 2026-08-08 audit) ────────────────────
+
+
+def build_admin_auth(config: CymatixConfig):
+    """Bearer-token guard for the admin surface (``/admin/*``, ``/ingest``,
+    ``/consolidate``).
+
+    Returns a FastAPI dependency. With the default ``[server]
+    admin_token = ""`` the dependency returns immediately — no header is
+    read, so untouched configs behave byte-identically. When a token is
+    set, routes carrying this dependency demand ``Authorization: Bearer
+    <token>`` and 401 otherwise. The token is read off *config* at request
+    time and compared constant-time. Note the loopback default bind is
+    not auth — any same-host process can reach the port.
+    """
+
+    async def _require_admin_token(request: Request) -> None:
+        token = config.server.admin_token
+        if not token:
+            return
+        supplied = request.headers.get("authorization", "")
+        expected = f"Bearer {token}"
+        if not hmac.compare_digest(
+            supplied.encode("utf-8"), expected.encode("utf-8")
+        ):
+            raise HTTPException(status_code=401, detail="admin token required")
+
+    return _require_admin_token
 
 
 # ── Identity / attribution helpers ──────────────────────────────────

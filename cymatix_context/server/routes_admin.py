@@ -10,13 +10,14 @@ import logging
 import os
 from typing import Dict, Optional
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 
 from . import helpers as _helpers
 from .helpers import (
     _merge_tier_contributions,
     _paused_ribosomes,
+    build_admin_auth,
 )
 from ..backends.sema_codec import decode_embedding
 
@@ -26,6 +27,11 @@ log = logging.getLogger("cymatix.server")
 def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -> None:
     """Register admin, health, stats, debug, bridge, and replication routes."""
     from ..accel import json_dumps, json_loads
+
+    # Opt-in bearer guard (2026-08-08 audit): attached to every /admin/*
+    # route below. Inert while [server] admin_token = "" (the default) —
+    # the dependency returns before reading any header.
+    _admin_auth = [Depends(build_admin_auth(config))]
 
     # -- Stats endpoint ------------------------------------------------
 
@@ -398,7 +404,7 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
 
     # -- Active genome path (launcher dashboard) ---
 
-    @app.get("/admin/genome")
+    @app.get("/admin/genome", dependencies=_admin_auth)
     async def admin_genome_endpoint():
         """Describe the genome file the running process actually opened.
 
@@ -616,7 +622,7 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
 
     # ---- Admin: knowledge store management ----
 
-    @app.post("/admin/refresh")
+    @app.post("/admin/refresh", dependencies=_admin_auth)
     async def admin_refresh():
         """Reopen knowledge store connection to see external changes."""
         cymatix.genome.refresh()
@@ -624,7 +630,7 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
         new_count = cymatix.genome.total_genes()
         return {"refreshed": True, "genes": new_count}
 
-    @app.post("/admin/genes/tombstone")
+    @app.post("/admin/genes/tombstone", dependencies=_admin_auth)
     async def admin_genes_tombstone(request: Request):
         """Demote every gene matching ``source_id`` to HETEROCHROMATIN.
 
@@ -660,7 +666,7 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
             "gene_ids": tombstoned,
         }
 
-    @app.post("/admin/vacuum")
+    @app.post("/admin/vacuum", dependencies=_admin_auth)
     async def admin_vacuum():
         """Reclaim free pages from the knowledge store database."""
         try:
@@ -673,7 +679,7 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
                 status_code=500,
             )
 
-    @app.post("/admin/kv-backfill")
+    @app.post("/admin/kv-backfill", dependencies=_admin_auth)
     async def admin_kv_backfill():
         """Run CPU regex KV extraction on documents missing key_values."""
         import re as _re
@@ -715,7 +721,7 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
             cymatix.genome.conn.commit()
         return {"backfilled": updated, "total": cymatix.genome.stats()["total_genes"]}
 
-    @app.post("/admin/compact")
+    @app.post("/admin/compact", dependencies=_admin_auth)
     async def admin_compact(dry_run: bool = False, density_threshold: float = 0.3, access_threshold: int = 5):
         """Run compaction sweep."""
         result = cymatix.genome.compact_genome(
@@ -725,7 +731,7 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
         )
         return result
 
-    @app.post("/admin/compact-pki")
+    @app.post("/admin/compact-pki", dependencies=_admin_auth)
     async def admin_compact_pki(dry_run: bool = False, noise_cutoff: int = -1):
         """Issue #165 Option-B: compact ``path_key_index``.
 
@@ -756,13 +762,13 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
                 {"ok": False, "error": str(exc)}, status_code=500,
             )
 
-    @app.post("/admin/checkpoint")
+    @app.post("/admin/checkpoint", dependencies=_admin_auth)
     async def admin_checkpoint(mode: str = "PASSIVE"):
         """Force a WAL checkpoint."""
         cymatix.genome.checkpoint(mode)
         return {"checkpointed": True, "mode": mode}
 
-    @app.post("/admin/ribosome/pause")
+    @app.post("/admin/ribosome/pause", dependencies=_admin_auth)
     async def admin_ribosome_pause():
         """Disable the compressor's LLM calls without unloading or restarting."""
         backend = cymatix.ribosome.backend
@@ -796,7 +802,7 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
             ),
         }
 
-    @app.post("/admin/ribosome/resume")
+    @app.post("/admin/ribosome/resume", dependencies=_admin_auth)
     async def admin_ribosome_resume():
         """Restore the compressor backend after /admin/ribosome/pause."""
         backend = cymatix.ribosome.backend
@@ -814,7 +820,7 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
             "model": getattr(backend, "model", "unknown"),
         }
 
-    @app.get("/admin/ribosome/status")
+    @app.get("/admin/ribosome/status", dependencies=_admin_auth)
     async def admin_ribosome_status():
         """Check whether the compressor is currently paused."""
         backend = cymatix.ribosome.backend
@@ -824,7 +830,7 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
             "backend_type": type(backend).__name__,
         }
 
-    @app.post("/admin/shutdown")
+    @app.post("/admin/shutdown", dependencies=_admin_auth)
     async def admin_shutdown(request: Request):
         """Graceful shutdown."""
         import os as _os
@@ -863,7 +869,7 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
             "hint": "Poll GET /stats -- connection refused means shutdown complete.",
         }
 
-    @app.post("/admin/announce_restart")
+    @app.post("/admin/announce_restart", dependencies=_admin_auth)
     async def admin_announce_restart(request: Request):
         """Announce an intentional server restart to other sessions."""
         try:
@@ -911,7 +917,7 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
             "hint": "Sleep ~750ms before killing the server to let observers see the signal.",
         }
 
-    @app.get("/admin/components")
+    @app.get("/admin/components", dependencies=_admin_auth)
     async def admin_components():
         """Return active subsystems with running/idle status + loaded-ness.
 
@@ -1053,7 +1059,7 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
             "idle_threshold_s": idle_threshold_s,
         }
 
-    @app.post("/admin/sema/rebuild")
+    @app.post("/admin/sema/rebuild", dependencies=_admin_auth)
     async def admin_sema_rebuild():
         """Force-rebuild the SEMA vector cache."""
         cymatix.genome.invalidate_sema_cache()
@@ -1065,7 +1071,7 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
             "memory_kb": (cache["matrix"].nbytes // 1024) if cache else 0,
         }
 
-    @app.post("/admin/reload")
+    @app.post("/admin/reload", dependencies=_admin_auth)
     async def admin_reload():
         """Hot-reload server runtime state without killing the process."""
         changes = {}
@@ -1110,7 +1116,7 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
 
     # ---- Admin: hot-swap knowledge store .db file ----
 
-    @app.post("/admin/swap-db")
+    @app.post("/admin/swap-db", dependencies=_admin_auth)
     async def admin_swap_db(request: Request):
         """Hot-swap the knowledge store .db file without restarting.
 
@@ -1127,6 +1133,28 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
             return JSONResponse(
                 {"error": f"path not found: {path}"}, status_code=400,
             )
+
+        # Opt-in allowlist (2026-08-08 audit): a non-empty [server]
+        # swap_db_roots restricts which paths this endpoint may open.
+        # Default [] keeps today's unrestricted behavior.
+        roots = [r for r in getattr(config.server, "swap_db_roots", []) if r]
+        if roots:
+            resolved = _os.path.realpath(path)
+            allowed = False
+            for root in roots:
+                root_resolved = _os.path.realpath(root)
+                try:
+                    if _os.path.commonpath([root_resolved, resolved]) == root_resolved:
+                        allowed = True
+                        break
+                except ValueError:
+                    # Different drives (Windows) or abs/rel mix — no match.
+                    continue
+            if not allowed:
+                return JSONResponse(
+                    {"error": f"path outside [server] swap_db_roots: {path}"},
+                    status_code=403,
+                )
 
         t0 = _time.time()
         old_path = str(cymatix.genome.path)
