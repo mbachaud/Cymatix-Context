@@ -405,7 +405,11 @@ def merge_chunks(chunk_paths: Sequence[str], out_path: str, stamp: str) -> int:
         return 2
     chunks = [json.loads(_resolve(p).read_text(encoding="utf-8")) for p in chunk_paths]
     base = chunks[0]
-    identity = ("tool", "bed", "bed_bytes", "config", "git_sha", "k",
+    # bed_bytes is deliberately NOT an identity field: log_health appends to
+    # the bed's health_log outside the learn gate (observability, not
+    # learning — see context_manager's tail_writes block), so the file grows
+    # a few KB per chunk. Per-chunk bytes land in the provenance block.
+    identity = ("tool", "bed", "config", "git_sha", "k",
                 "needles_file", "gold_file")
     for i, c in enumerate(chunks[1:], start=2):
         for key in identity:
@@ -476,7 +480,8 @@ def merge_chunks(chunk_paths: Sequence[str], out_path: str, stamp: str) -> int:
     payload["chunks"] = [
         {"path": str(p), "stamp": c.get("stamp"),
          "offset": c.get("offset"), "limit": c.get("limit"),
-         "needle_count": c.get("needle_count")}
+         "needle_count": c.get("needle_count"),
+         "bed_bytes": c.get("bed_bytes")}
         for p, c in zip(chunk_paths, chunks)
     ]
     payload["arms"] = arms_out
