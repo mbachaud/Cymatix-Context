@@ -273,12 +273,16 @@ rerank_model = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 colbert_enabled = false                 # Phase 4: ColBERT late interaction (optional)
 entity_graph = true                     # Phase 5: entity-based co-activation links
 sema_embed_on_ingest = true             # #227: false = skip MiniLM SEMA at ingest (multi-worker bench OOM guard); TCM falls back to text
-# Compute BGE-M3 dense vectors (genes.embedding_dense_v2) inline at ingest
-# so every ingested genome is dense-populated without a separate backfill.
-# Set false for latency-sensitive callers to defer encoding to
-# scripts/backfill_bgem3_v2.py. Write path only — retrieval still gates on
-# [retrieval] dense_embedding_enabled (default false since 2026-08-15).
-dense_embed_on_ingest = true            # Tier-0 PR-1 (2026-05-16)
+# Compute BGE-M3 dense vectors (genes.embedding_dense_v2) inline at ingest.
+# Default off since 2026-08-19 (#371): at shipped retrieval defaults
+# ([retrieval] dense_embedding_enabled = false since 2026-08-15) nothing
+# reads the vectors — the inline ~2 GB BGE-M3 encode was a dead write
+# (PR #379 harness smoke: 126.8 s -> 20.9 s wall on 12 files, 4084 ms ->
+# 494 ms steady per-file, 3.47 GB -> 0.82 GB peak RSS). Set true to
+# re-opt-in, then run scripts/backfill_bgem3_v2.py if vectors are missing
+# for pre-existing docs; dense RETRIEVAL additionally requires
+# [retrieval] dense_embedding_enabled = true.
+dense_embed_on_ingest = false           # default off since 2026-08-19 (#371)
 
 # ── Issue #164: size-aware SPLADE auto-toggle (opt-in) ──────────────────
 # SPLADE's value follows a corpus-regime curve: useful below ~50K genes,
