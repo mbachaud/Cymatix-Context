@@ -1,0 +1,38 @@
+{
+  "tool": "sema_embed_on_ingest A/B (ingest-side isolation) — consumer audit + dogfood bed parity",
+  "issue": 371,
+  "status": "PARTIAL — consumer audit complete; beds building (crash-resilient rerun v2)",
+  "stamp": "2026-08-19",
+  "git_sha": "bcdd1a1",
+  "question": "should [ingestion] sema_embed_on_ingest default flip to false? (dense half already flipped in PR #392)",
+  "prior_evidence": {
+    "serve_side_half": "benchmarks/dogfood/erb/receipts/sema_ab_100k_run1.json — 100k bed, vectors PRESENT, knob false at serve: r@12 0.800=0.800, delivered 15/30 = 15/30, med_rank 3.0=3.0, p50 2229.8->1975.4 ms. Serve-side removal of sema_boost was null-to-positive-latency.",
+    "cold_start": "SEMA/MiniLM alone is 97.7% of the first-request bill (~9.7s) — cold-start receipt",
+    "ingest_cost": "PR #379 smoke (run_ingest_throughput.py) — per-arm ingest wall/RSS known"
+  },
+  "consumer_audit": [
+    {"consumer": "Tier 4 sema_boost post-fusion re-rank (weight 2.0)", "site": "knowledge_store.py:3169-3239; codec ctor context_manager.py:903-935", "gating": "LIVE at shipped defaults (knob=true). #227 global-off: flip removes the codec entirely; vectorless auto-gate (knowledge_store.py:1007/1185) short-circuits the tier on a sema-off bed", "class": "LIVE — the one retrieval-path consumer the flip removes", "graded_by": "end-to-end A/B recall/delivered + per-arm sema_boost signal presence"},
+    {"consumer": "TCM doc->context vector fast path", "site": "scoring/tcm.py:118-125; bonus blend.py:288 (w=0.3, fires only at session depth>0)", "gating": "LIVE in multi-turn sessions only; designed text/tag-hash fallback (#227, tests/test_sema_embed_knob.py)", "class": "fallback-capable", "graded_by": "functional fallback parity; quality unresolvable at dogfood scale (tie-breaker only)"},
+    {"consumer": "Cymatics spectra", "site": "scoring/cymatics.py doc_spectrum — inputs are TAGS/fragment meanings; [cymatics] use_embeddings=false default (config.py:408)", "gating": "does NOT read gene.embedding at shipped defaults", "class": "NOT a consumer (issue #371's 'cymatics loses its input' is inaccurate on master)", "graded_by": "static audit; end-to-end A/B covers indirect effects"},
+    {"consumer": "Cold-tier retrieval query_cold_tier (cosine over stored SEMA)", "site": "knowledge_store.py:1249+", "gating": "[context] cold_tier_enabled=false (config.py:394, cymatix.toml:323)", "class": "GATED OFF at defaults", "graded_by": "opt-in present-vs-empty check on both beds"},
+    {"consumer": "Ingest-time heterochromatin compress guard", "site": "context_manager.py:1365 — compress_to_heterochromatin only if embedding is not None", "gating": "LIVE at ingest", "class": "behavior change: sema-off bed keeps content on hetero-demoted rows (bytes only; hot retrieval filters chromatin<2 regardless)", "graded_by": "bed-shape counts per arm"},
+    {"consumer": "Density-gate sweep — score-based demotions skip without embedding (deny-list still demotes)", "site": "knowledge_store.py:5749-5818", "gating": "maintenance/compact path", "class": "behavior change: stale docs stay OPEN (recall-conservative; loses compression)", "graded_by": "bed-shape stats; skipped_no_embedding rider"},
+    {"consumer": "PLR query-confidence cos_qc feature", "site": "server/helpers.py:508-530", "gating": "LIVE ([plr] enabled default since 2026-06-12; artifact ships at training/models/stacked_plr.joblib); cos_qc degrades to None gracefully", "class": "LIVE — one input feature degrades to None", "graded_by": "packet know/PLR parity per arm"},
+    {"consumer": "CWoLa logging cosine enrichment", "site": "routes_context.py:543; identity/cwola.py", "gating": "telemetry only", "class": "telemetry-only", "graded_by": "not graded"},
+    {"consumer": "/debug/neighbors + admin sema endpoints", "site": "api.py:444; routes_admin.py:59/171", "gating": "on-demand diagnostics", "class": "diagnostic", "graded_by": "not graded"},
+    {"consumer": "Freshness gate", "site": "cymatix_context/retrieval/", "gating": "grep-verified: no gene.embedding reads", "class": "NOT a consumer", "graded_by": "static audit"}
+  ],
+  "method": {
+    "arms": {
+      "A_sema_on": {"overrides": {"ingestion.dense_embed_on_ingest": false, "ingestion.sema_embed_on_ingest": true}, "world": "open PR #392 (dense ingest off, sema on)"},
+      "B_sema_off": {"overrides": {"ingestion.dense_embed_on_ingest": false, "ingestion.sema_embed_on_ingest": false}, "world": "proposed flip"}
+    },
+    "corpus": "scripts/build_dogfood_genome.py 4-repo curated corpus, snapshotted at T0 to f:/tmp/sema_ab/corpus so both arms ingest byte-identical content in identical order",
+    "needles": "benchmarks/dogfood/needles_resolved.json (18 needles, 61 gold files); gold gene_ids resolved per bed via emit_gene_ids.py logic",
+    "grading": "in-process build_context (read_only, ignore_delivered, max_genes=12, CYMATIX_DISABLE_LEARN=1, PYTHONHASHSEED=0) — both bases recorded: score-map top-12 (pool) and window.expressed_gene_ids (delivered); plus build_context_packet know/PLR parity; plus cold-tier opt-in probe; plus bed-shape counts",
+    "power_caveat": "n=18 needles — one needle = 5.6pp. Effects smaller than ~2 needles are not resolvable at dogfood scale."
+  },
+  "beds": null,
+  "results": null,
+  "verdict": null
+}
