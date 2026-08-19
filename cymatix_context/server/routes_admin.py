@@ -971,6 +971,10 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
                 "kind": "encoder",
                 "status": _status(sema_loaded),
                 "loaded": sema_loaded,
+                # #376: "daemon" / "in-process" — the transport the last
+                # encode actually used; None for a purely local codec or
+                # before the first encode.
+                "transport": getattr(sema, "last_transport", None),
             })
 
         if getattr(cymatix, "_cpu_tagger", None) is not None:
@@ -1012,18 +1016,31 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
             or getattr(config.ingestion, "dense_embed_on_ingest", False)
         )
         if dense_enabled:
+            dense_holders = (
+                getattr(cymatix, "_dense_codec", None),
+                getattr(cymatix.genome, "_dense_codec", None),
+            )
             dense_loaded = any(
                 holder is not None and getattr(holder, "_model", None) is not None
-                for holder in (
-                    getattr(cymatix, "_dense_codec", None),
-                    getattr(cymatix.genome, "_dense_codec", None),
-                )
+                for holder in dense_holders
+            )
+            # #376: the transport the last dense encode actually used, not
+            # the wrapper class — "daemon" / "in-process"; None for a purely
+            # local codec or before the first encode.
+            dense_transport = next(
+                (
+                    t
+                    for t in (getattr(h, "last_transport", None) for h in dense_holders)
+                    if t is not None
+                ),
+                None,
             )
             components.append({
                 "name": "dense_bgem3",
                 "kind": "encoder",
                 "status": _status(dense_loaded),
                 "loaded": dense_loaded,
+                "transport": dense_transport,
             })
 
         if getattr(cymatix.genome, "_entity_graph_enabled", False):
