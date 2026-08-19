@@ -39,7 +39,21 @@
   exactly) measured BGE-M3 dense recall *displacing gold documents from the
   delivered top-k* at every scale — final recall −0.20..−0.33 vs the lexical
   floor (−0.207 at n=469, ~97/469 needles) — while adding at most +0.02
-  candidate-pool recall. Dense is now opt-in per store; beds with backfilled
+  candidate-pool recall. **Disclosed cost (#374):** the same receipts measure
+  a p50 latency regression from the flip — the dense-off floor is **×2.5–2.6
+  slower than dense_on at 100k** (p50 10.4s/9.7s vs 3.9s/3.8s,
+  `benchmarks/dogfood/erb/receipts/enc_iso_100k_run{1_fwd,2_rev}.json`),
+  ×2.3–2.4 at 250k, ×1.27–1.37 at 500k, and ×1.09–1.10 at 829k on the n=30
+  pairs (×1.15–1.38 on the full-power n=469
+  `enc_iso_829k_dense_confirm_run{1,2}.json` pair). Mechanism (retrieval-layer
+  ledger claim 1, `docs/benchmarks/2026-08-06-retrieval-layer-ledger.md`):
+  dense was load-bearing as a *latency device* — its ANN gate capped the
+  candidate list feeding splice, and dense-off degrades the median query to an
+  uncapped lex pool. The ledger's precondition — "cap the non-ANN branch's
+  candidate list before dense-skip is viable" — has **not** landed (the
+  2026-08-12 refinement plan kept dense load-bearing until it did); the
+  lex-branch cap stays open in the ledger's claim-1 line, alongside the
+  related #336 splice char-target dynamics. Dense is now opt-in per store; beds with backfilled
   vectors are unaffected until you set the flag. Existing configs that
   explicitly set `dense_embedding_enabled = true` keep their behavior.
   Receipts + method: `docs/benchmarks/2026-08-14-encoder-isolation-scale-curve.md`.
