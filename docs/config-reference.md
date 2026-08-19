@@ -306,6 +306,7 @@ shard router.
 | `cold_start_threshold` | `int` | `10` | Fix 3: documents needed before history stripping |
 | `replicas` | `List[str]` | `[]` | Read-only clone paths |
 | `replica_sync_interval` | `int` | `100` | Sync replicas every N inserts |
+| `synchronous` | `str` | `"NORMAL"` | Writer PRAGMA synchronous (OFF\|NORMAL\|FULL\|EXTRA). WAL-safe NORMAL skips the per-commit fsync SQLite's FULL default pays — #372 |
 <!-- END GENERATED -->
 
 `path`'s generated default (`genome.db`, the bare code-default) differs
@@ -605,7 +606,7 @@ ranker.
 |---|---|---|---|
 | `enabled` | `bool` | `true` | Master switch |
 | `n_bins` | `int` | `256` | Spectrum resolution (<2KB per spectrum) |
-| `peak_width` | `float` | `3.0` | Gaussian peak width (overridden by Q-factor) |
+| `peak_width` | `Optional[float]` | `None` | Explicit Gaussian peak-width override; unset (None) derives from [budget] splice_aggressiveness (1.55 at shipped 0.3) — #357 |
 | `splice_threshold_scale` | `float` | `0.7` | Maps splice_aggressiveness to resonance threshold |
 | `use_embeddings` | `bool` | `false` | Use Gene.embedding when available |
 | `harmonic_links` | `bool` | `true` | Compute weighted co-activation edges |
@@ -618,7 +619,7 @@ ranker.
 [cymatics]
 enabled = true
 n_bins = 256
-peak_width = 3.0
+# peak_width = 1.55   # optional explicit override; unset derives from [budget] splice_aggressiveness (#357)
 use_embeddings = false
 harmonic_links = true
 distance_metric = "cosine"
@@ -1279,7 +1280,9 @@ each holding their own weights. `url` empty (the default, and not present in
 the shipped `cymatix.toml`) means "off": every seam runs in-process exactly
 as before, so byte-identical-when-off holds for free. Set `url` (or export
 `CYMATIX_ENCODER_URL`, which wins over the TOML value) to point at a running
-daemon, e.g. `"http://127.0.0.1:11439"`. Timeouts, the micro-batch window,
+daemon, e.g. `"http://127.0.0.1:11440"` (the daemon's default port; 11439 is
+`[server] bench_port` — the two must not collide, see issue #376). Timeouts,
+the micro-batch window,
 and the circuit-breaker retry cooldown are env-tunable constants in
 `encoder_client.py` for this slice, not config surface.
 
@@ -1295,7 +1298,7 @@ and the circuit-breaker retry cooldown are env-tunable constants in
 
 ```toml
 [encoder_daemon]
-url = "http://127.0.0.1:11439"
+url = "http://127.0.0.1:11440"
 ```
 
 **Cross-refs.** `cymatix_context/config.py` (`EncoderDaemonConfig`),
@@ -1604,7 +1607,7 @@ fingerprint_mode_profile = "balanced"   # "fast" | "balanced" | "quality" for PO
 [cymatics]
 enabled = true                          # Blended as bonus (0.5 max), not used to re-sort
 n_bins = 256                            # Spectrum resolution (256 bins = <2KB per spectrum)
-peak_width = 3.0                        # Gaussian peak width — overridden by Q-factor from splice_aggressiveness
+# peak_width = 1.55                     # #357: optional explicit override; unset (default) derives from [budget] splice_aggressiveness (1.55 at shipped 0.3)
 use_embeddings = false                  # Use Gene.embedding when populated (requires sentence-transformers)
 harmonic_links = true                   # Compute weighted co-activation edges between expressed genes
 distance_metric = "cosine"              # "cosine" (weighted dot) | "w1" (Werman 1986 circular Wasserstein-1; Singh 2020 CMD)

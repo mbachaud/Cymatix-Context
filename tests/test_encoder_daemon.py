@@ -1399,11 +1399,24 @@ def test_ready_gate_eight_thread_first_use_race_blocks_until_ready_flips(monkeyp
 # ── main() / CLI ────────────────────────────────────────────────────
 
 
-def test_default_port_is_11439():
+def test_default_port_is_11440():
     from cymatix_context.encoder_daemon import DEFAULT_HOST, DEFAULT_PORT
 
-    assert DEFAULT_PORT == 11439
+    assert DEFAULT_PORT == 11440
     assert DEFAULT_HOST == "127.0.0.1"
+
+
+def test_default_port_does_not_collide_with_server_ports():
+    """Issue #376 ratchet: the daemon default must never share a port with
+    the backend or the ERB bench lane — RemoteCodec degrades silently to
+    in-process encoding on a wrong listener, so a collision looks like a
+    working run with wrong provenance."""
+    from cymatix_context.config import ServerConfig
+    from cymatix_context.encoder_daemon import DEFAULT_PORT
+
+    srv = ServerConfig()
+    assert DEFAULT_PORT != srv.port
+    assert DEFAULT_PORT != srv.bench_port
 
 
 def test_arg_parser_defaults():
@@ -1411,7 +1424,7 @@ def test_arg_parser_defaults():
 
     args = build_arg_parser().parse_args([])
     assert args.host == "127.0.0.1"
-    assert args.port == 11439
+    assert args.port == 11440
     assert args.log_level == "info"
 
 
@@ -1447,7 +1460,7 @@ def test_main_inits_hardware_before_building_the_app(monkeypatch):
     assert sorted(hw_kwargs["layer_devices"]) == ["dense", "rerank", "sema", "splade"]
     assert order[2][1] == "APP"
     assert order[2][2]["host"] == "127.0.0.1"
-    assert order[2][2]["port"] == 11439
+    assert order[2][2]["port"] == 11440
 
 
 # ── import hygiene ──────────────────────────────────────────────────

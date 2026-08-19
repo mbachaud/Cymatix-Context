@@ -15,6 +15,8 @@ Covers:
 
 from __future__ import annotations
 
+import importlib.util
+
 import pytest
 
 from cymatix_context.genome import (
@@ -724,19 +726,22 @@ class TestHeterochromatinNonDestructive:
 # ── C.2 — cold-tier retrieval via ΣĒMA cosine ─────────────────────────
 
 
+@pytest.mark.skipif(
+    importlib.util.find_spec("sentence_transformers") is None,
+    reason="needs sentence-transformers",
+)
 class TestColdTierRetrieval:
     """Verifies query_cold_tier() returns heterochromatin genes with full
     content when the query matches their ΣĒMA signature.
 
     Requires sentence-transformers to load the SemaCodec (~400MB model).
     Module-scoped fixture caches the codec across tests.
-    """
 
-    # Skip the whole class if sentence-transformers isn't installed
-    pytestmark = pytest.mark.skipif(
-        pytest.importorskip("sentence_transformers", reason="needs sentence-transformers") is None,
-        reason="needs sentence-transformers",
-    )
+    Issue #352: the previous class-body ``pytest.importorskip`` raised
+    Skipped at import time, which pytest reports as a module-level skip —
+    taking down every test in the file, including the ~37 that never touch
+    sentence-transformers. find_spec probes without importing.
+    """
 
     @pytest.fixture(scope="class")
     def codec(self):

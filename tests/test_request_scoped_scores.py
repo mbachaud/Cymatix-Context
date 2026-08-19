@@ -244,3 +244,125 @@ class TestPostTrimHealth:
             )
         finally:
             mgr.close()
+
+
+# ─────────────────────────────────────────────────────────────────────
+# W1.6b (issue #350): the know/miss builder reads the WINDOW snapshot
+# ─────────────────────────────────────────────────────────────────────
+
+class TestKnowMissWindowSnapshot:
+    """Issue #350: ``_compute_know_or_miss_block`` must compute reported
+    confidence from the request-scoped snapshot ``build_context`` attaches
+    to the window — the genome-global ``last_query_scores`` may already
+    hold a CONCURRENT request's publication by the time the route reads it
+    (W1.6a made that read atomic; this makes it correctly attributed)."""
+
+    SCORES_A = {"g-A1": 10.0, "g-A2": 2.0}
+    SCORES_B = {"g-B1": 0.42}
+
+    def _env(self):
+        from types import SimpleNamespace
+
+        from cymatix_context.genome import Genome
+
+        genome = Genome(path=":memory:")
+        mgr = SimpleNamespace(
+            genome=genome,
+            config=None,  # -> load_calibration_from_toml() fallback
+            _mtime_cache={},
+            _cold_tier_peek=lambda q, k=3, min_cosine=0.4: [],
+            _last_cold_peek_targets=[],
+        )
+        window = SimpleNamespace(
+            expressed_gene_ids=["g-A1", "g-A2"],
+            context_health=SimpleNamespace(
+                freshness_min=None, genes_expressed=3, status="healthy",
+            ),
+            retrieval_scores=None,
+            tier_contributions=None,
+        )
+        return genome, mgr, window
+
+    def _spy_decide(self, monkeypatch):
+        import cymatix_context.server.helpers as helpers
+
+        captured = {}
+        real = helpers.decide_know_or_miss
+
+        def spy(window=None, **kw):
+            captured.update(
+                top_score=kw.get("top_score"), score_gap=kw.get("score_gap"),
+            )
+            return real(window=window, **kw)
+
+        monkeypatch.setattr(helpers, "decide_know_or_miss", spy)
+        return captured
+
+    @staticmethod
+    def _publish(genome, scores):
+        # Byte-identical to the store's publication seam.
+        with genome._last_query_scores_lock:
+            genome.last_query_scores = dict(scores)
+
+    def test_window_snapshot_wins_over_concurrent_publication(self, monkeypatch):
+        """B publishes between A's retrieval and A's know/miss build; A's
+        window carries A's snapshot -> A's confidence comes from A."""
+        import cymatix_context.server.helpers as helpers
+
+        genome, mgr, window = self._env()
+        captured = self._spy_decide(monkeypatch)
+        try:
+            self._publish(genome, self.SCORES_A)   # A's retrieval
+            window.retrieval_scores = dict(self.SCORES_A)
+            window.tier_contributions = {}
+            self._publish(genome, self.SCORES_B)   # B publishes mid-A
+            helpers._compute_know_or_miss_block(
+                cymatix=mgr, window=window, query="query A",
+            )
+            assert captured["top_score"] == 10.0
+            assert captured["score_gap"] == 8.0
+        finally:
+            genome.close()
+
+    def test_legacy_window_falls_back_to_genome_global(self, monkeypatch):
+        """A window without a snapshot (packet-path callers) keeps the
+        pre-#350 genome-global read."""
+        import cymatix_context.server.helpers as helpers
+
+        genome, mgr, window = self._env()
+        captured = self._spy_decide(monkeypatch)
+        try:
+            self._publish(genome, self.SCORES_B)
+            helpers._compute_know_or_miss_block(
+                cymatix=mgr, window=window, query="query A",
+            )
+            assert captured["top_score"] == 0.42
+        finally:
+            genome.close()
+
+    def test_build_context_attaches_excluded_snapshot(self):
+        """build_context attaches the request-scoped snapshot to the window,
+        and the fields never serialize into responses (exclude=True)."""
+        mgr = _make_manager()
+        mgr.ribosome.backend = MockCompressorBackend()
+        try:
+            genes = _make_genes(GENE_IDS)
+            scores = dict(zip(GENE_IDS, SCORES))
+
+            def fake_retrieve(domains, entities, max_genes, **_kwargs):
+                mgr.genome.last_query_scores = dict(scores)
+                return list(genes)
+
+            mgr._retrieve = fake_retrieve
+            mgr._express = fake_retrieve
+            mgr._apply_candidate_refiners = (
+                lambda q, cands, mg, **_kw: (list(cands), {})
+            )
+            win = mgr.build_context("anything")
+            assert win.retrieval_scores == scores
+            assert win.tier_contributions == {}
+            dumped = win.model_dump()
+            assert "retrieval_scores" not in dumped
+            assert "tier_contributions" not in dumped
+        finally:
+            mgr.close()

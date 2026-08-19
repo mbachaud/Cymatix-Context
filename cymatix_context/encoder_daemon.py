@@ -136,7 +136,7 @@ log = logging.getLogger("cymatix.encoder_daemon")
 # ── constants ───────────────────────────────────────────────────────
 
 DEFAULT_HOST = "127.0.0.1"
-DEFAULT_PORT = 11439  # 11437 = backend, 11491-11493 = bench harnesses.
+DEFAULT_PORT = 11440  # 11437 = backend, 11439 = [server] bench_port (ERB bench lane), 11491-11493 = bench harnesses. Issue #376: the daemon must not share 11439 with the bench lane — RemoteCodec degrades silently on a wrong listener.
 
 SPAWN_TOKEN_ENV = "CYMATIX_ENCODER_SPAWN_TOKEN"
 

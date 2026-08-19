@@ -235,6 +235,15 @@ class ContextWindow(BaseModel):
     compression_ratio: float = 0.0
     context_health: ContextHealth = Field(default_factory=ContextHealth)
     metadata: dict = Field(default_factory=dict)
+    # Issue #350 (W1.6b): request-scoped retrieval snapshot, captured by
+    # build_context under _last_query_scores_lock right after retrieval.
+    # Server-layer readers (know/miss, citation scores, tier totals) prefer
+    # these over the genome-global last_query_scores / last_tier_contributions,
+    # which under concurrent serving may already hold ANOTHER request's
+    # publication — cross-request contamination of reported confidence.
+    # exclude=True: internal plumbing, never serialized into responses.
+    retrieval_scores: Optional[dict] = Field(default=None, exclude=True, repr=False)
+    tier_contributions: Optional[dict] = Field(default=None, exclude=True, repr=False)
 
 
 class ContextItem(BaseModel):

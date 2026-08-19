@@ -704,6 +704,11 @@ class KnowledgeStore:
         # lazy-imports backends.rerank_backend.score_pairs on first use, so
         # torch/transformers never enter the import graph of a store that
         # isn't reranking. Tests inject a deterministic fake here.
+        # Issue #372: writer-connection PRAGMA synchronous. SQLite's default
+        # is FULL (every commit fsyncs); under WAL, NORMAL only fsyncs on
+        # checkpoint — worst case on OS crash is losing the last commit, not
+        # corruption. In-repo precedent: scripts/backfill_filename_domains.py.
+        synchronous: str = "NORMAL",
         rerank_scorer: Optional[Callable[[str, List[str]], List[float]]] = None,
         main_conn: Optional[sqlite3.Connection] = None,
         shard_name: str = "main",
@@ -909,6 +914,19 @@ class KnowledgeStore:
         self.conn.row_factory = sqlite3.Row
         self.conn.execute("PRAGMA journal_mode=WAL")
         self.conn.execute("PRAGMA busy_timeout=30000")  # 30s retry on lock
+        # Issue #372: default NORMAL — under WAL a per-commit fsync (FULL,
+        # SQLite's own default) is not needed for corruption-safety, and
+        # ingest currently commits per strand. Invalid values fall back
+        # loudly to NORMAL rather than silently to SQLite's FULL.
+        _sync = str(synchronous or "NORMAL").upper()
+        if _sync not in {"OFF", "NORMAL", "FULL", "EXTRA"}:
+            log.warning(
+                "[genome] synchronous=%r is not a valid SQLite level "
+                "(OFF|NORMAL|FULL|EXTRA) — falling back to NORMAL", synchronous
+            )
+            _sync = "NORMAL"
+        self._synchronous = _sync
+        self.conn.execute(f"PRAGMA synchronous={_sync}")
         # Cap WAL file size — without this, SQLite resets (zero-fills) the
         # WAL on truncate but keeps the high-water-mark size on disk.
         self.conn.execute("PRAGMA journal_size_limit=67108864")  # 64 MB
@@ -3785,6 +3803,15 @@ class KnowledgeStore:
         # (_score_rerank -> None) the untouched widened order is cut back to
         # exactly the OFF ranking, so a broken model costs latency, never
         # results.
+        # Issue #342: snapshot the fusion-order top-``limit`` BEFORE the
+        # rerank seam. Hebbian edge evidence must accrue from this order, not
+        # the reranked one — the rerank changes both order and membership of
+        # the delivered set, so writing evidence from ``ranked_ids`` after
+        # the seam would make an ON arm mutate harmonic_links differently
+        # from OFF on the identical query (persistent cross-arm
+        # contamination on any shared A/B bed, plus a feedback loop between
+        # the cross-encoder's opinions and the seeded-edge graph).
+        _evidence_ids = list(ranked_ids[:limit])
         if _rerank_on and ranked_ids:
             _xenc_t0 = time.monotonic()
             depth = min(self._rerank_depth, len(ranked_ids))
@@ -3868,7 +3895,10 @@ class KnowledgeStore:
         # gate: documents outside gene_scores are ignored (topical-orthogonal
         # queries should not punish the edge). Soft-fails — logger
         # hiccups never perturb the retrieval result.
-        if self._seeded_edges_enabled and ranked_ids and not read_only:
+        # Issue #342: evidence accrues from the pre-rerank fusion order
+        # (_evidence_ids), keeping ON/OFF rerank arms byte-identical in
+        # store mutations — the invariant the isolation receipts assume.
+        if self._seeded_edges_enabled and _evidence_ids and not read_only:
             _hebbian_t0 = time.monotonic()
             try:
                 from .retrieval.seeded_edges import update_edge_evidence
@@ -3878,7 +3908,7 @@ class KnowledgeStore:
                 # plus trivial counter math; no model calls inside.
                 with self._write_lock:
                     update_edge_evidence(
-                        self, gene_scores, ranked_ids, max_genes=max_genes,
+                        self, gene_scores, _evidence_ids, max_genes=max_genes,
                     )
             except Exception:
                 log.debug("Hebbian edge update failed", exc_info=True)

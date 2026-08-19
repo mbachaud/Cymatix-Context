@@ -208,6 +208,7 @@ class GenomeConfig:
     cold_start_threshold: int = 10      # Fix 3: documents needed before history stripping
     replicas: List[str] = field(default_factory=list)  # Read-only clone paths
     replica_sync_interval: int = 100    # Sync replicas every N inserts
+    synchronous: str = "NORMAL"         # Writer PRAGMA synchronous (OFF|NORMAL|FULL|EXTRA). WAL-safe NORMAL skips the per-commit fsync SQLite's FULL default pays — #372
 
 
 @dataclass
@@ -402,7 +403,7 @@ class CymaticsConfig:
     """Frequency-domain re_rank + splice (CPU math replaces LLM calls)."""
     enabled: bool = True                # Master switch
     n_bins: int = 256                   # Spectrum resolution (<2KB per spectrum)
-    peak_width: float = 3.0             # Gaussian peak width (overridden by Q-factor)
+    peak_width: Optional[float] = None  # Explicit Gaussian peak-width override; unset (None) derives from [budget] splice_aggressiveness (1.55 at shipped 0.3) — #357
     splice_threshold_scale: float = 0.7 # Maps splice_aggressiveness to resonance threshold
     use_embeddings: bool = False        # Use Gene.embedding when available
     harmonic_links: bool = True         # Compute weighted co-activation edges
@@ -1087,7 +1088,7 @@ class EncoderDaemonConfig:
     default, so byte-identical-when-off holds for free. Set ``url`` to point
     ``cymatix_context.backends.encoder_client`` at a running
     ``cymatix_context.encoder_daemon`` process (e.g.
-    "http://127.0.0.1:11439"); leave it empty, or leave
+    "http://127.0.0.1:11440"); leave it empty, or leave
     ``CYMATIX_ENCODER_URL`` unset, to keep current behavior untouched.
     Timeouts / batch windows / retry cooldowns are env-tunable constants in
     ``encoder_client.py``, not config surface, for this slice.
@@ -1364,6 +1365,7 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             cold_start_threshold=int(g.get("cold_start_threshold", cfg.genome.cold_start_threshold)),
             replicas=g.get("replicas", cfg.genome.replicas),
             replica_sync_interval=int(g.get("replica_sync_interval", cfg.genome.replica_sync_interval)),
+            synchronous=str(g.get("synchronous", cfg.genome.synchronous)),
         )
 
     # Server
@@ -1473,7 +1475,10 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
         cfg.cymatics = CymaticsConfig(
             enabled=cy.get("enabled", cfg.cymatics.enabled),
             n_bins=int(cy.get("n_bins", cfg.cymatics.n_bins)),
-            peak_width=float(cy.get("peak_width", cfg.cymatics.peak_width)),
+            # #357: honour an explicit override; absent key keeps the
+            # derived-from-splice_aggressiveness behaviour (None).
+            peak_width=(float(cy["peak_width"]) if cy.get("peak_width") is not None
+                        else cfg.cymatics.peak_width),
             splice_threshold_scale=float(cy.get("splice_threshold_scale", cfg.cymatics.splice_threshold_scale)),
             use_embeddings=cy.get("use_embeddings", cfg.cymatics.use_embeddings),
             harmonic_links=cy.get("harmonic_links", cfg.cymatics.harmonic_links),

@@ -229,13 +229,24 @@ def test_boundary_at_score_floor_does_not_abstain(abstain_manager):
 def test_boundary_at_ratio_floor_does_not_abstain(abstain_manager):
     """ratio == 1.8 (the abstain ratio floor) does NOT trigger ABSTAIN.
 
-    Isolates the ratio-axis strict-< by holding top_score = 1.5 — well
+    Isolates the ratio-axis strict-< by holding top_score = 1.125 — well
     below the FOCUSED floor so the score axis WOULD trigger ABSTAIN if
     it were the only check. The ratio axis must catch this and force
     fall-through to BROAD. Confirms the gate uses strict `<` (not `<=`)
     on ratio.
+
+    Issue #384: the seeds are exact binary fractions (top 1.125, mean
+    0.625, rest 0.5, n=5) so the gate's recomputed ``top/(sum/n)`` is
+    exactly 1.8 on every interpreter. The previous seeding
+    (top_score=1.5, n=8) put the recomputed mean one ulp off 0.625/1.5's
+    quotient, and whether the ratio landed at 1.7999999999999998 (naive
+    sum, CPython <= 3.11 -> ABSTAIN) or 1.8000000000000003 (Neumaier
+    sum, CPython >= 3.12 -> BROAD) depended on the interpreter's
+    builtin ``sum()``.
     """
-    candidates, scores = _weak_setup(abstain_manager, top_score=1.5, ratio=1.8)
+    candidates, scores = _weak_setup(
+        abstain_manager, top_score=1.125, ratio=1.8, n=5
+    )
     _stub_express(abstain_manager, candidates=candidates, scores=scores)
     win = abstain_manager.build_context("anything")
     assert win.metadata["budget_tier"] == "broad"

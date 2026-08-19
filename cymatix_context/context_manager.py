@@ -1122,10 +1122,15 @@ class CymatixContextManager:
         # Cymatics (frequency-domain re_rank + splice, replaces LLM calls)
         self._use_cymatics = config.cymatics.enabled
         if self._use_cymatics:
-            from .scoring.cymatics import aggressiveness_to_peak_width
-            self._cymatics_peak_width = aggressiveness_to_peak_width(
-                config.budget.splice_aggressiveness
-            )
+            # #357: [cymatics] peak_width, when explicitly set, overrides the
+            # Q-factor derivation (previously it was parsed but never read).
+            if config.cymatics.peak_width is not None:
+                self._cymatics_peak_width = float(config.cymatics.peak_width)
+            else:
+                from .scoring.cymatics import aggressiveness_to_peak_width
+                self._cymatics_peak_width = aggressiveness_to_peak_width(
+                    config.budget.splice_aggressiveness
+                )
         else:
             self._cymatics_peak_width = 3.0
 
@@ -1949,7 +1954,7 @@ class CymatixContextManager:
                 genes_expressed=0,
                 status=empty_status,
             )
-            return ContextWindow(
+            _empty_win = ContextWindow(
                 ribosome_prompt=effective_decoder_prompt,
                 expressed_context=_no_match_token(no_match_reason),
                 total_estimated_tokens=estimate_tokens(effective_decoder_prompt),
@@ -1961,6 +1966,10 @@ class CymatixContextManager:
                     "no_match_reason": no_match_reason,
                 },
             )
+            # #350: request-scoped snapshot for the server-layer readers.
+            _empty_win.retrieval_scores = query_scores
+            _empty_win.tier_contributions = tier_contribs
+            return _empty_win
 
         # stage name kept for ring continuity; the cross-encoder now runs pre-cap in the store
         with _pipeline_stage_span("rerank"), _stage_timer("rerank"):
@@ -1997,13 +2006,17 @@ class CymatixContextManager:
             abstain_ratio_threshold_rrf_norm=_abstain_cfg.ratio_threshold_rrf_norm,
         )
         if _tier.abstain:
-            return self._build_abstain_window(
+            _abstain_win = self._build_abstain_window(
                 query=query,
                 effective_decoder_prompt=effective_decoder_prompt,
                 top_score=_tier.abstain_top_score,
                 ratio=_tier.abstain_ratio,
                 reason="score_below_floor",
             )
+            # #350: request-scoped snapshot for the server-layer readers.
+            _abstain_win.retrieval_scores = query_scores
+            _abstain_win.tier_contributions = tier_contribs
+            return _abstain_win
         candidates = _tier.candidates
         budget_tier = _tier.budget_tier
         budget_tokens_est = _tier.budget_tokens_est
@@ -2366,6 +2379,15 @@ class CymatixContextManager:
             window.metadata["pipeline_request_id"] = _pipeline_request_id.get()
         except Exception:
             pass
+
+        # Issue #350 (W1.6b): attach the request-scoped snapshot captured
+        # under the lock right after retrieval, so the server layer's
+        # know/miss, citation-score, and tier-total readers report THIS
+        # request's confidence — the genome-global last_query_scores may
+        # already hold a concurrent request's publication by the time the
+        # route reads it.
+        window.retrieval_scores = query_scores
+        window.tier_contributions = tier_contribs
 
         return window
 
