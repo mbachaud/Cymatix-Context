@@ -281,11 +281,18 @@ class TestMessageMunging:
 # is tested in tests/test_density_gate.py::TestColdTierRetrieval — the
 # tests below are about the wiring, not the retrieval algorithm.
 
-# Skip the whole class if sentence-transformers isn't installed (the
+# Skip only THIS class if sentence-transformers isn't installed (the
 # Genome.query_cold_tier path requires a SemaCodec, which loads ~400MB).
-_st_available = pytest.importorskip("sentence_transformers", reason="needs sentence-transformers")
+# Issue #352: pytest.importorskip evaluated at module scope raises Skipped
+# at import time, taking down every test in the file — including the ~20
+# above that never touch the dependency. find_spec probes without
+# importing, and the skipif is scoped to the one class that needs it.
+import importlib.util as _ilu
+
+_ST_AVAILABLE = _ilu.find_spec("sentence_transformers") is not None
 
 
+@pytest.mark.skipif(not _ST_AVAILABLE, reason="needs sentence-transformers")
 class TestColdTierWiring:
     """Verifies _express() correctly plumbs cold-tier retrieval."""
 
