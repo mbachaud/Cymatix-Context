@@ -372,8 +372,15 @@ def store_relation(
 def store_relations_batch(
     conn: sqlite3.Connection,
     relations: list,
+    commit: bool = True,
 ) -> None:
-    """Store multiple typed relations. Each item: (id_a, id_b, relation, confidence)."""
+    """Store multiple typed relations. Each item: (id_a, id_b, relation, confidence).
+
+    ``commit=False`` (issue #372) leaves transaction control to the caller —
+    KnowledgeStore.store_relations_batch passes False so the batch can fold
+    into a document-scoped ``deferred_commits()`` transaction. The default
+    stays True for direct callers of this storage helper.
+    """
     now = time.time()
     conn.executemany(
         "INSERT OR REPLACE INTO gene_relations "
@@ -381,7 +388,8 @@ def store_relations_batch(
         "VALUES (?, ?, ?, ?, ?)",
         [(a, b, r, c, now) for a, b, r, c in relations],
     )
-    conn.commit()
+    if commit:
+        conn.commit()
 
 
 def get_relations(conn: sqlite3.Connection, gene_id: str) -> list:

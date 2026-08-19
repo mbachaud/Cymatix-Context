@@ -24,6 +24,7 @@ import re
 import sqlite3
 import threading
 import time
+from contextlib import contextmanager
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from .accel import (
@@ -946,6 +947,14 @@ class KnowledgeStore:
         # another request's half-written gene. RLock so a locked caller can
         # re-enter upsert paths without deadlocking.
         self._write_lock = threading.RLock()
+        # Issue #372: document-scoped transaction state. _defer_depth > 0
+        # means a deferred_commits() scope is open on the thread that holds
+        # _write_lock — write units then run as SAVEPOINTs and the single
+        # durable commit (one fsync) happens at scope exit. All three fields
+        # are only mutated with _write_lock held.
+        self._defer_depth = 0
+        self._savepoint_seq = 0
+        self._pending_checkpoint: Optional[str] = None
         self.last_query_scores: Dict[str, float] = {}  # Retrieval scores from last query
         self._last_query_scores_lock = threading.Lock()
         # Issue #255 (PR-2) debug hooks: the eligible-restricted pre-combination
@@ -1672,6 +1681,100 @@ class KnowledgeStore:
 
     # ── Upsert ──────────────────────────────────────────────────────
 
+    @contextmanager
+    def deferred_commits(self):
+        """Document-scoped write transaction (issue #372).
+
+        Holds ``_write_lock`` for the whole scope and folds every write
+        unit executed inside — strand upserts, tier demotions, the parent
+        doc, relation/symbol batches — into ONE durable commit at scope
+        exit: one fsync per document instead of one per strand (a 10-chunk
+        file used to pay 12-22).
+
+        Crash semantics: on any exception the WHOLE document rolls back.
+        Partial-document rollback is acceptable and preferable to the
+        partial-strand states per-strand commits leave behind (e.g. a
+        committed gene with no CHUNK_OF edges) — the caller retries the
+        document, never repairs half of one.
+
+        Inner write units keep their own atomicity via SAVEPOINTs (see
+        ``_write_unit``), so a swallowed inner failure — parent-doc
+        creation, symbol-graph emission — can neither commit half a unit
+        nor destroy the strands already staged.
+
+        Reentrant: nested scopes join the outermost transaction. Holding
+        ``_write_lock`` across the per-strand cache invalidations inside
+        the scope is deadlock-free because no ``_dense_matrix_lock``
+        holder ever acquires ``_write_lock`` (``_ensure_dense_matrix``
+        reads without it).
+        """
+        if self.read_only:
+            yield self  # upserts no-op in read_only; nothing to defer
+            return
+        with self._write_lock:
+            outermost = self._defer_depth == 0
+            if outermost and not self.conn.in_transaction:
+                # Take SQLite's write lock up front (write_queue.GenomeWriter
+                # precedent: one BEGIN IMMEDIATE per batch) and pin
+                # conn.in_transaction so python-sqlite3 cannot auto-commit
+                # between units. If the shared conn is already mid-
+                # transaction we join it — the same hazard every commit on
+                # this connection has today (bug bash 2026-07-18 notes).
+                self.conn.execute("BEGIN IMMEDIATE")
+            self._defer_depth += 1
+            try:
+                yield self
+            except BaseException:
+                if outermost:
+                    self.conn.rollback()
+                    self._pending_checkpoint = None
+                raise
+            else:
+                if outermost:
+                    self.conn.commit()
+                    # Checkpoint cadence deferred by upsert_doc while the
+                    # transaction was open — run it now that it can advance.
+                    pending, self._pending_checkpoint = (
+                        self._pending_checkpoint, None)
+                    if pending:
+                        self.checkpoint(pending)
+            finally:
+                self._defer_depth -= 1
+
+    @contextmanager
+    def _write_unit(self):
+        """One atomic write unit on the shared writer connection.
+
+        Must be entered with ``_write_lock`` held. Outside a
+        ``deferred_commits()`` scope this is exactly the historical
+        commit-per-call behavior: commit on success, rollback on failure
+        (bug bash 2026-07-18 — a partial unit must never ride along with
+        the next caller's commit). Inside a scope the unit becomes a
+        SAVEPOINT: released on success, rolled back to on failure — unit
+        atomicity is preserved while the durable commit (and its fsync)
+        waits for scope exit.
+        """
+        if self._defer_depth > 0:
+            self._savepoint_seq += 1
+            name = f"cymatix_unit_{self._savepoint_seq}"
+            self.conn.execute(f'SAVEPOINT "{name}"')
+            try:
+                yield
+            except Exception:
+                self.conn.execute(f'ROLLBACK TO "{name}"')
+                self.conn.execute(f'RELEASE "{name}"')
+                raise
+            else:
+                self.conn.execute(f'RELEASE "{name}"')
+        else:
+            try:
+                yield
+            except Exception:
+                self.conn.rollback()
+                raise
+            else:
+                self.conn.commit()
+
     def upsert_doc(
         self,
         gene: Gene,
@@ -1780,7 +1883,10 @@ class KnowledgeStore:
         # not silently swept into the next caller's commit.
         with self._write_lock:
             cur = self.conn.cursor()
-            try:
+            # Issue #372: commit/rollback discipline lives in _write_unit —
+            # commit-per-call standalone (unchanged behavior), SAVEPOINT
+            # inside a deferred_commits() document scope.
+            with self._write_unit():
                 # Probe the existing row once: feeds the FTS5 delete-first
                 # guard below (fresh inserts skip the unindexed FTS scan) and
                 # makes cross-source content-hash collisions loud. Gene IDs
@@ -1901,22 +2007,34 @@ class KnowledgeStore:
                     content_cap=self._splade_content_cap,
                     model_name=self._splade_model,
                 )
-
-                # Single atomic commit — document + tags + FTS5 + entity graph + SPLADE
-                self.conn.commit()
-            except Exception:
-                # Discard the partial transaction so it cannot ride along
-                # with the next caller's commit (bug bash 2026-07-18).
-                self.conn.rollback()
-                raise
+                # _write_unit commits on exit (document + tags + FTS5 +
+                # entity graph + SPLADE, single atomic commit) and rolls
+                # back on failure so a partial unit cannot ride along with
+                # the next caller's commit (bug bash 2026-07-18).
 
         # Periodic WAL checkpoint to prevent data loss on crash
         # PASSIVE every 50 documents (~non-blocking), TRUNCATE every 500 (resets WAL)
         self._upsert_count += 1
+        _ckpt_mode: Optional[str] = None
         if self._upsert_count % 500 == 0:
-            self.checkpoint("TRUNCATE")
+            _ckpt_mode = "TRUNCATE"
         elif self._upsert_count % 50 == 0:
-            self.checkpoint("PASSIVE")
+            _ckpt_mode = "PASSIVE"
+        if _ckpt_mode is not None:
+            # Re-acquire the (reentrant) write lock: _defer_depth and
+            # _pending_checkpoint are only touched with it held. checkpoint()
+            # takes the same lock internally, so lock scope is unchanged for
+            # the standalone path.
+            with self._write_lock:
+                if self._defer_depth > 0:
+                    # Issue #372: inside a document transaction wal_checkpoint
+                    # cannot advance (this connection holds the write txn) —
+                    # stash the strongest requested mode and run it right
+                    # after the document commits (deferred_commits scope exit).
+                    if self._pending_checkpoint != "TRUNCATE":
+                        self._pending_checkpoint = _ckpt_mode
+                else:
+                    self.checkpoint(_ckpt_mode)
 
         # Invalidate ΣĒMA caches (new document may have embedding, and
         # lifecycle tier changes can reshuffle hot/cold tier membership).
@@ -4692,19 +4810,18 @@ class KnowledgeStore:
     ) -> None:
         """Delegate to storage.co_activation.store_relations_batch.
 
-        WS2 review FIX-1: the delegate executes + commits on the shared
-        write connection. Hold the write lock for the whole operation
-        (mirrors upsert_doc, bug bash 2026-07-18) so this commit can never
-        publish another thread's half-written upsert — and roll back on
-        failure so a partial batch is not swept into the next commit.
+        WS2 review FIX-1: the delegate executes on the shared write
+        connection. Hold the write lock for the whole operation (mirrors
+        upsert_doc, bug bash 2026-07-18) so this commit can never publish
+        another thread's half-written upsert. Issue #372: commit/rollback
+        moved up into _write_unit (delegate called with commit=False) so
+        the batch folds into a deferred_commits() document scope — the
+        CHUNK_OF edges land in the SAME commit as the strands they join.
         """
         from .storage.co_activation import store_relations_batch
         with self._write_lock:
-            try:
-                store_relations_batch(self.conn, relations)
-            except Exception:
-                self.conn.rollback()
-                raise
+            with self._write_unit():
+                store_relations_batch(self.conn, relations, commit=False)
 
     def get_relations(self, gene_id: str) -> list:
         """Delegate to storage.co_activation.get_relations."""
@@ -4718,20 +4835,18 @@ class KnowledgeStore:
 
         WS2 review FIX-1: executes + commits on the shared write connection,
         so it must hold the write lock for the whole operation (mirrors
-        upsert_doc, bug bash 2026-07-18) and roll back on failure.
+        upsert_doc, bug bash 2026-07-18) and roll back on failure — both
+        via _write_unit since #372, so the rows fold into a
+        deferred_commits() document scope when one is open.
         """
         if not rows:
             return
         with self._write_lock:
-            try:
+            with self._write_unit():
                 self.conn.executemany(
                     "INSERT OR IGNORE INTO symbol_defs (symbol, gene_id, kind) VALUES (?, ?, ?)",
                     rows,
                 )
-                self.conn.commit()
-            except Exception:
-                self.conn.rollback()
-                raise
 
     def resolve_symbol(self, symbol: str) -> list:
         """gene_ids of chunks that define ``symbol`` (for symbol-aware expansion)."""
@@ -5528,11 +5643,14 @@ class KnowledgeStore:
             if not row or not row["complement"]:
                 return False
 
-            cur.execute(
-                "UPDATE genes SET content = ?, compression_tier = 1 WHERE gene_id = ?",
-                (f"[COMPRESSED:euchromatin] source={row['source_id'] or 'unknown'}", gene_id),
-            )
-            self.conn.commit()
+            # Issue #372: _write_unit = commit here standalone, SAVEPOINT
+            # inside a deferred_commits() document scope (per-strand tier
+            # demotion folds into the document's single commit).
+            with self._write_unit():
+                cur.execute(
+                    "UPDATE genes SET content = ?, compression_tier = 1 WHERE gene_id = ?",
+                    (f"[COMPRESSED:euchromatin] source={row['source_id'] or 'unknown'}", gene_id),
+                )
         log.debug("Compressed gene %s to EUCHROMATIN", gene_id)
         return True
 
@@ -5580,12 +5698,14 @@ class KnowledgeStore:
             if not row:
                 return False
 
-            cur.execute(
-                "UPDATE genes SET chromatin = 2, compression_tier = 2 "
-                "WHERE gene_id = ?",
-                (gene_id,),
-            )
-            self.conn.commit()
+            # Issue #372: _write_unit = commit here standalone, SAVEPOINT
+            # inside a deferred_commits() document scope.
+            with self._write_unit():
+                cur.execute(
+                    "UPDATE genes SET chromatin = 2, compression_tier = 2 "
+                    "WHERE gene_id = ?",
+                    (gene_id,),
+                )
         # Document moved hot → cold — both tier caches (and the
         # sema-vectorless auto-gate flags) are now stale.
         self.invalidate_sema_cache()
