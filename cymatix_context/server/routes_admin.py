@@ -726,7 +726,9 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
         return result
 
     @app.post("/admin/compact-pki")
-    async def admin_compact_pki(dry_run: bool = False, noise_cutoff: int = -1):
+    async def admin_compact_pki(
+        dry_run: bool = False, noise_cutoff: int = -1, drop: bool = False,
+    ):
         """Issue #165 Option-B: compact ``path_key_index``.
 
         Drops the dead ``idx_pki_lookup``, prunes rows in pairs above the
@@ -734,11 +736,21 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
         by the scorer), and rebuilds the table WITHOUT ROWID. Follow with
         ``/admin/vacuum`` to reclaim the freed pages. ``dry_run=true``
         reports what would change without touching the DB.
+
+        Issue #370: ``drop=true`` drops the table entirely — the reclaim
+        path for pki-off stores, where the scorer never reads it. Refused
+        with 409 while ``[retrieval] pki_enabled = true``. The drop only
+        frees pages to the freelist; call ``/admin/vacuum`` after or
+        nothing shrinks on disk. Runbook 10 in docs/operator-runbooks.md.
         """
         from ..storage.indexes import (
             PKI_NOISE_CUTOFF, compact_path_key_index,
         )
         cutoff = noise_cutoff if noise_cutoff >= 0 else PKI_NOISE_CUTOFF
+        # #370 guard input: the live store's effective Tier-0 read gate
+        # (build_genome_kwargs threads [retrieval] pki_enabled into it).
+        # Unknown attribute defaults to True — i.e. refuse the drop.
+        pki_on = bool(getattr(cymatix.genome, "_pki_enabled", True))
         try:
             # W2.3 Phase A interim (cwola pattern): the compactor rewrites
             # path_key_index + commits on the shared writer — serialize at
@@ -748,8 +760,16 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
             with (_wl if _wl is not None else _contextlib.nullcontext()):
                 result = compact_path_key_index(
                     cymatix.genome.conn, noise_cutoff=cutoff, dry_run=dry_run,
+                    drop=drop, pki_enabled=pki_on,
                 )
             return {"ok": True, **result}
+        except ValueError as exc:
+            # #370 refuse-to-drop guard: the config forbids it — client
+            # error (flip the knob first), not a server fault.
+            log.warning("compact-pki drop refused: %s", exc)
+            return JSONResponse(
+                {"ok": False, "error": str(exc)}, status_code=409,
+            )
         except Exception as exc:
             log.warning("compact-pki failed: %s", exc, exc_info=True)
             return JSONResponse(
