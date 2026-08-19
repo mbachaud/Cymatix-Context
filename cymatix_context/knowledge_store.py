@@ -3803,6 +3803,15 @@ class KnowledgeStore:
         # (_score_rerank -> None) the untouched widened order is cut back to
         # exactly the OFF ranking, so a broken model costs latency, never
         # results.
+        # Issue #342: snapshot the fusion-order top-``limit`` BEFORE the
+        # rerank seam. Hebbian edge evidence must accrue from this order, not
+        # the reranked one — the rerank changes both order and membership of
+        # the delivered set, so writing evidence from ``ranked_ids`` after
+        # the seam would make an ON arm mutate harmonic_links differently
+        # from OFF on the identical query (persistent cross-arm
+        # contamination on any shared A/B bed, plus a feedback loop between
+        # the cross-encoder's opinions and the seeded-edge graph).
+        _evidence_ids = list(ranked_ids[:limit])
         if _rerank_on and ranked_ids:
             _xenc_t0 = time.monotonic()
             depth = min(self._rerank_depth, len(ranked_ids))
@@ -3886,7 +3895,10 @@ class KnowledgeStore:
         # gate: documents outside gene_scores are ignored (topical-orthogonal
         # queries should not punish the edge). Soft-fails — logger
         # hiccups never perturb the retrieval result.
-        if self._seeded_edges_enabled and ranked_ids and not read_only:
+        # Issue #342: evidence accrues from the pre-rerank fusion order
+        # (_evidence_ids), keeping ON/OFF rerank arms byte-identical in
+        # store mutations — the invariant the isolation receipts assume.
+        if self._seeded_edges_enabled and _evidence_ids and not read_only:
             _hebbian_t0 = time.monotonic()
             try:
                 from .retrieval.seeded_edges import update_edge_evidence
@@ -3896,7 +3908,7 @@ class KnowledgeStore:
                 # plus trivial counter math; no model calls inside.
                 with self._write_lock:
                     update_edge_evidence(
-                        self, gene_scores, ranked_ids, max_genes=max_genes,
+                        self, gene_scores, _evidence_ids, max_genes=max_genes,
                     )
             except Exception:
                 log.debug("Hebbian edge update failed", exc_info=True)
