@@ -241,7 +241,7 @@ values that override `budget.foveated_alpha` when
 `[abstain].mode = "per_classifier"`.
 
 **Cross-refs.** `[abstain]` (Stage-4 per-classifier overrides),
-`[cymatics] splice_threshold_scale` (consumes `splice_aggressiveness`),
+`[cymatics] peak_width` (derives from `splice_aggressiveness` when unset),
 `docs/archive/specs/2026-05-02-abstain-tier-design.md` (ABSTAIN tier
 design), `docs/archive/specs/2026-05-03-foveated-splice-design.md`
 (foveated schedule), `cymatix_context/config.py:120-162`
@@ -502,7 +502,6 @@ is governed by per-feature flags in this section.
 | `backend` | `str` | `"cpu"` | "ollama" \| "cpu" \| "hybrid" |
 | `splade_enabled` | `bool` | `false` | Phase 2: SPLADE sparse expansion at index time |
 | `rerank_model` | `str` | `"cross-encoder/ms-marco-MiniLM-L-6-v2"` | legacy: feeds DeBERTaRibosome only; the retrieval cross-encoder reads [retrieval] rerank_model. Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
-| `colbert_enabled` | `bool` | `false` | Phase 4: ColBERT late interaction (optional) |
 | `entity_graph` | `bool` | `true` | Phase 5: entity-based co-activation links (ingest-time edges). Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
 | `dense_embed_on_ingest` | `bool` | `true` | Tier-0 PR-1 (2026-05-16): compute BGE-M3 dense vectors (genes.embedding_dense_v2) inline at ingest. Default true so a genome built by `cymatix ingest` / `/ingest` / context_manager.ingest is dense-populated without a separate backfill pass. Latency-sensitive callers can set false to defer encoding to scripts/backfill_bgem3_v2.py. This is purely the WRITE path — retrieval still gates on [retrieval] dense_embedding_enabled (default false since 2026-08-15). |
 | `sema_embed_on_ingest` | `bool` | `true` | Issue #227: compute the 20D ΣĒMA embedding at ingest (feeds TCM / cymatics via gene.embedding). Default True preserves current behaviour. Set False to skip the ingest-time SEMA encode entirely — the MiniLM model is then never materialized (TCM falls back to its text-derived path, cymatics off), which is what a lexical-only config or a multi-worker bench wants. Without this, ingest always materialized the lazy SEMA codec (#220), loading MiniLM per worker and OOMing parallel bench runs even with dense/cymatics disabled. |
@@ -540,7 +539,7 @@ backend = "cpu"
 splade_enabled = true
 rerank_model = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 rerank_enabled = false
-colbert_enabled = false
+# colbert_enabled REMOVED (#219 slice 5): parsed but zero readers ever shipped
 entity_graph = true
 sema_embed_on_ingest = true
 dense_embed_on_ingest = true
@@ -605,10 +604,7 @@ ranker.
 | Key | Type | Default | Description |
 |---|---|---|---|
 | `enabled` | `bool` | `true` | Master switch |
-| `n_bins` | `int` | `256` | Spectrum resolution (<2KB per spectrum) |
 | `peak_width` | `Optional[float]` | `None` | Explicit Gaussian peak-width override; unset (None) derives from [budget] splice_aggressiveness (1.55 at shipped 0.3) — #357 |
-| `splice_threshold_scale` | `float` | `0.7` | Maps splice_aggressiveness to resonance threshold |
-| `use_embeddings` | `bool` | `false` | Use Gene.embedding when available |
 | `harmonic_links` | `bool` | `true` | Compute weighted co-activation edges |
 | `distance_metric` | `str` | `"cosine"` | "cosine" (weighted dot) \| "w1" (Werman 1986 circular Wasserstein-1) |
 <!-- END GENERATED -->
@@ -618,12 +614,18 @@ ranker.
 ```toml
 [cymatics]
 enabled = true
-n_bins = 256
 # peak_width = 1.55   # optional explicit override; unset derives from [budget] splice_aggressiveness (#357)
-use_embeddings = false
 harmonic_links = true
 distance_metric = "cosine"
 ```
+
+**Removed knobs (#219 slice 5, 2026-08-19).** `n_bins`,
+`use_embeddings`, and `splice_threshold_scale` were parsed with zero
+runtime readers — silent no-op knobs. The spectrum resolution is the
+module constant `scoring/cymatics.N_BINS` (256); the splice threshold
+derives from `[budget] splice_aggressiveness`; no embedding path ever
+read `use_embeddings`. Configs still carrying them get a startup
+warning (`_warn_unknown`), not a failure.
 
 **Cross-refs.** `cymatix_context/config.py`
 (`CymaticsConfig`).
@@ -682,15 +684,14 @@ which stay additive) lives in
 <!-- BEGIN GENERATED: config-tables:retrieval -->
 | Key | Type | Default | Description |
 |---|---|---|---|
-| `sr_enabled` | `bool` | `false` | Successor Representation (Stachenfeld 2017) - lazy on-demand SR rows via truncated power series over co-activation graph. 2026-06-12 default-honesty pass: stays FALSE on both sides. cymatix.toml had flipped this true (2026-04-22 Stage-1 bench), but the evidence roadmap measured SR at zero effect on retrieval outcomes, so the shipped toml was aligned back to the code default (the inverse of the usual toml-wins rule: measured-zero features default off). |
+| `sr_enabled` | `bool` | `false` | EXPERIMENTAL, off by default (#219 slice 5) — Successor Representation (Stachenfeld 2017): lazy on-demand SR rows via truncated power series over the co-activation graph, adding a gamma-discounted future-occupancy boost per candidate (wired: knowledge_store.query_genes via retrieval/sr.py). Off because the evidence roadmap measured SR at ZERO effect on retrieval outcomes while costing co-activation walks per query (2026-06-12 default-honesty pass; the 2026-04-22 Stage-1 toml flip to true was reverted to match). Graduates to default-on only with a fresh isolation receipt showing a delivered-recall gain on a current bed (delivered basis, both run orders — the 2026-08 receipt bar). |
 | `sr_gamma` | `float` | `0.85` | Discount factor (5-10 hop horizon at 0.9) |
 | `sr_k_steps` | `int` | `4` | Power-series truncation depth |
 | `sr_weight` | `float` | `1.5` | Per-document contribution multiplier |
 | `sr_cap` | `float` | `3.0` | Max per-document SR boost (matches harmonic cap) |
-| `ray_trace_theta` | `bool` | `false` | Dark ship |
+| `ray_trace_theta` | `bool` | `false` | EXPERIMENTAL, off by default (#219 slice 5) — theta alternation (Wang/Foster/Pfeiffer 2020): biases fore/aft ray_trace neighbor sampling by the current TCM velocity vector (wired: threaded into the ray-trace scorer from context_manager). Off because it requires a TCM velocity input the default pipeline does not populate (Sprint 1 item 3 never landed), so flipping it today biases on a zero vector, and no receipt has ever measured it. Graduates only after TCM velocity is populated end-to-end AND an isolation receipt shows a delivered gain. |
 | `theta_weight` | `float` | `1.0` | Softmax temperature on v·document dot product |
-| `seeded_edges_enabled` | `bool` | `false` | Dark ship — flip to start evidence accumulation |
-| `seeded_edge_weight` | `float` | `1.0` | Base weight written on seed insertion |
+| `seeded_edges_enabled` | `bool` | `false` | EXPERIMENTAL, off by default (#219 slice 5) — Sprint 4 seeded co-activation edges with Hebbian evidence decay: three-class edge provenance (seeded / co_retrieved / cwola_validated), Laplace-smoothed co_count vs miss_count per edge (wired: post-retrieval evidence update in knowledge_store via retrieval/seeded_edges.py; seeds inserted by scripts/backfill_seeded_edges.py). Off because flipping it starts evidence WRITES on every retrieval (write amplification on read-heavy serving) and no receipt has measured the edges improving delivered recall. Flip to start evidence accumulation; graduates only with an isolation receipt showing the edges earn their writes. |
 | `symbol_expansion_cap` | `int` | `8` | WS3: cap on referenced definitions pulled in by symbol-graph expansion (SYMBOL_REF). When more than `cap` candidates reference distinct defs, keep the top-`cap` by structural-centrality PageRank. 0 disables symbol expansion; <0 keeps all (unbounded — regresses budget-fill arms). Default 8 recovers the WS2 fingerprint regression while preserving the packet gain. |
 | `filename_anchor_enabled` | `bool` | `true` | Stage-1 bench flip 2026-04-22: +12pp Dewey axis-2. Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
 | `filename_anchor_weight` | `float` | `4.0` | Per-match boost (higher than Tier 1's 3.0) |
@@ -798,18 +799,23 @@ authoritative?" semantics survive unchanged. The split:
 
 ```toml
 [retrieval]
-# Tier 5.5 Successor Representation — measured zero effect; stays off
+# EXPERIMENTAL, off by default — Tier 5.5 Successor Representation:
+# measured zero effect on retrieval outcomes; re-flip only with a fresh
+# isolation receipt (#219 slice 5)
 sr_enabled = false
 sr_gamma = 0.85
 sr_k_steps = 4
 sr_weight = 1.5
 sr_cap = 3.0
-# Theta alternation (dark)
+# EXPERIMENTAL, off by default — theta alternation: requires a TCM velocity
+# input the default pipeline does not populate; never measured (#219 slice 5)
 ray_trace_theta = false
 theta_weight = 1.0
-# Seeded edges (dark)
+# EXPERIMENTAL, off by default — seeded co-activation edges: flipping starts
+# evidence writes on every retrieval; never measured (#219 slice 5).
+# seeded_edge_weight REMOVED — parsed but never read (the insertion weight
+# is hardcoded in scripts/backfill_seeded_edges.py)
 seeded_edges_enabled = false
-seeded_edge_weight = 1.0
 # Tier 0.5 filename anchor
 filename_anchor_enabled = true
 filename_anchor_weight = 4.0
@@ -916,7 +922,7 @@ for the scope trade-off.
 |---|---|---|---|
 | `enabled` | `bool` | `true` | default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) — bench-gated #74; soft-no-op without artifact |
 | `model_path` | `str` | `"training/models/stacked_plr.joblib"` |  |
-| `expected_sha256` | `str` | `""` | SHA256 of the artifact — when set, load refuses to proceed unless the file's digest matches. Empty string = trust the sidecar .sha256 next to the artifact (written by the trainer). Set a pinned hex digest in cymatix.toml if you want explicit operator-level pinning. |
+| `expected_sha256` | `str` | `""` | SHA256 of the artifact — when set, load refuses to proceed unless the file's digest matches. Empty string = trust the sidecar .sha256 next to the artifact (written by the trainer). Set a pinned hex digest in cymatix.toml if you want explicit operator-level pinning. Wired through the server's get_fuser call since #219 slice 5 — before that it was parsed but never passed, so a configured pin silently did nothing (only the sidecar path was live). |
 | `high_risk_threshold` | `float` | `0.5` | Threshold the fuser's `prob_B` is compared against to emit a coarse "likely-to-re-query" boolean alongside the log-odds. 0.5 is the symmetric default; tune only with bench evidence. |
 <!-- END GENERATED -->
 
@@ -1586,7 +1592,6 @@ backend = "cpu"                         # "ollama" (LLM, slow) | "cpu" (spaCy+re
 splade_enabled = true                   # Phase 2: SPLADE sparse expansion at index time
 rerank_model = "cross-encoder/ms-marco-MiniLM-L-6-v2"
 rerank_enabled = false                  # Phase 3: enable pretrained cross-encoder reranking
-colbert_enabled = false                 # Phase 4: ColBERT late interaction (optional)
 entity_graph = true                     # Phase 5: entity-based co-activation links
 dense_passage_char_cap = 2000           # #207 dense fast-follow (2026-07-10): BGE-M3 passage char cap; must match [retrieval] dense_model's codec on all 3 encode paths
 
@@ -1606,9 +1611,7 @@ fingerprint_mode_profile = "balanced"   # "fast" | "balanced" | "quality" for PO
 
 [cymatics]
 enabled = true                          # Blended as bonus (0.5 max), not used to re-sort
-n_bins = 256                            # Spectrum resolution (256 bins = <2KB per spectrum)
 # peak_width = 1.55                     # #357: optional explicit override; unset (default) derives from [budget] splice_aggressiveness (1.55 at shipped 0.3)
-use_embeddings = false                  # Use Gene.embedding when populated (requires sentence-transformers)
 harmonic_links = true                   # Compute weighted co-activation edges between expressed genes
 distance_metric = "cosine"              # "cosine" (weighted dot) | "w1" (Werman 1986 circular Wasserstein-1; Singh 2020 CMD)
 
@@ -1620,20 +1623,26 @@ distance_metric = "cosine"              # "cosine" (weighted dot) | "w1" (Werman
 enabled = true
 
 [retrieval]
-# Tier 5.5 — Successor Representation (Stachenfeld 2017). γ-discounted
-# future-occupancy boost over co-activation graph. Lazy.
-sr_enabled = true                       # Stage-1 bench flip (2026-04-22); research review flagged this as dark-shipped signal-positive
+# EXPERIMENTAL, off by default — Tier 5.5 Successor Representation
+# (Stachenfeld 2017). γ-discounted future-occupancy boost over the
+# co-activation graph. Lazy. Measured at zero retrieval effect (2026-06-12
+# default-honesty pass); re-flip only with a fresh isolation receipt.
+sr_enabled = false
 sr_gamma = 0.85                         # 5-10 hop horizon (Stachenfeld grid-cell sweet spot)
 sr_k_steps = 4                          # Power-series truncation (cap runaway propagation)
 sr_weight = 1.5                         # Per-gene SR contribution multiplier
 sr_cap = 3.0                            # Max per-gene SR boost (matches harmonic cap)
-# Theta alternation (Wang/Foster/Pfeiffer 2020) — bias ray_trace neighbor
-# direction. Fore on even bounces, aft on odd.
-ray_trace_theta = false                 # Dark ship — requires TCM velocity input (Sprint 1 item 3)
+# EXPERIMENTAL, off by default — theta alternation (Wang/Foster/Pfeiffer
+# 2020): bias ray_trace neighbor direction, fore on even bounces, aft on
+# odd. Requires a TCM velocity input the default pipeline does not populate
+# (Sprint 1 item 3); never measured.
+ray_trace_theta = false
 theta_weight = 1.0                      # Softmax temperature on v·gene_input_vector
-# Sprint 4 — seeded co-activation edges (Hebbian dense-rank weighting).
-seeded_edges_enabled = false            # Dark ship — flip to start accumulating co_count / miss_count
-seeded_edge_weight = 1.0                # Base weight stamped at seed insertion
+# EXPERIMENTAL, off by default — Sprint 4 seeded co-activation edges
+# (Hebbian dense-rank weighting). Flipping starts co_count / miss_count
+# evidence writes on every retrieval; never measured. (seeded_edge_weight
+# was REMOVED in #219 slice 5 — parsed but never read.)
+seeded_edges_enabled = false
 # Tier 0.5 filename-anchor (2026-04-15 Dewey-pivot spike).
 # Dewey bench 2026-04-14: filename-as-primary-anchor gave +24pp
 # retrieval over full path-token bag. Boosts genes whose filename
