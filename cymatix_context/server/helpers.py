@@ -265,10 +265,18 @@ def _compute_know_or_miss_block(
       * ``health.freshness_min`` plumbed through to ``compute_confidence``
         for the beta5 contribution.
     """
-    # Pull retrieval scores. ``last_query_scores`` is the post-fusion
-    # per-document score map (gene_id -> float). Top-1 / score-gap are
-    # derived from a sorted-desc view of this map.
-    raw_scores = cymatix.genome.last_query_scores or {}
+    # Pull retrieval scores. Issue #350 (W1.6b): prefer the request-scoped
+    # snapshot the pipeline attached to the window — the genome-global
+    # ``last_query_scores`` may already hold a CONCURRENT request's
+    # publication by the time this runs, so reading it here reported the
+    # wrong request's confidence. The genome-global map stays as the
+    # fallback for windows that predate the snapshot (e.g. packet-path
+    # callers that never ran build_context).
+    _win_scores = getattr(window, "retrieval_scores", None)
+    raw_scores = (
+        _win_scores if _win_scores is not None
+        else (cymatix.genome.last_query_scores or {})
+    )
     if raw_scores:
         sorted_scores = sorted(raw_scores.values(), reverse=True)
         top_score = float(sorted_scores[0])
@@ -281,8 +289,13 @@ def _compute_know_or_miss_block(
         score_gap = 0.0
         ratio = 0.0
 
-    # Lexical-dense agreement from per-tier contribution map.
-    tier_contrib = getattr(cymatix.genome, "last_tier_contributions", {}) or {}
+    # Lexical-dense agreement from per-tier contribution map. #350: same
+    # window-first read as raw_scores above.
+    _win_contrib = getattr(window, "tier_contributions", None)
+    tier_contrib = (
+        _win_contrib if _win_contrib is not None
+        else (getattr(cymatix.genome, "last_tier_contributions", {}) or {})
+    )
     lex_dense_agree = _agree_from_tier_contributions(tier_contrib, k=3)
 
     # Coordinate confidence -- promoted to first-class in Stage 6 (section 9).

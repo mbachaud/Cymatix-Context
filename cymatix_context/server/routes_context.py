@@ -329,16 +329,19 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
 
         # Agent-mode fields: structured metadata for programmatic use
         try:
-            # Snapshot scores under the lock so we don't see a torn view
-            # of last_query_scores while another /context call is
-            # mid-write (the writer holds the same lock; see
-            # ShardRouter.query_genes / ShardedGenomeAdapter.query_docs).
-            _lock = getattr(cymatix.genome, "_last_query_scores_lock", None)
-            if _lock is not None:
-                with _lock:
-                    scores = dict(cymatix.genome.last_query_scores or {})
+            # Issue #350 (W1.6b): prefer the request-scoped snapshot the
+            # pipeline attached to the window — the genome-global map may
+            # already hold a concurrent request's publication. Locked
+            # genome-global read stays as the legacy fallback.
+            if getattr(window, "retrieval_scores", None) is not None:
+                scores = dict(window.retrieval_scores)
             else:
-                scores = dict(cymatix.genome.last_query_scores or {})
+                _lock = getattr(cymatix.genome, "_last_query_scores_lock", None)
+                if _lock is not None:
+                    with _lock:
+                        scores = dict(cymatix.genome.last_query_scores or {})
+                else:
+                    scores = dict(cymatix.genome.last_query_scores or {})
             # Fetch source_id for retrieved documents for citation
             gene_ids = window.expressed_gene_ids or []
             citations = []
@@ -466,7 +469,12 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
             # Activation profile: per-tier score breakdown
             if verbose:
                 try:
-                    tier_contrib = getattr(cymatix.genome, "last_tier_contributions", {}) or {}
+                    # #350: window-first read (see the scores snapshot above).
+                    tier_contrib = (
+                        window.tier_contributions
+                        if getattr(window, "tier_contributions", None) is not None
+                        else (getattr(cymatix.genome, "last_tier_contributions", {}) or {})
+                    )
                     expressed_ids = set(window.expressed_gene_ids or [])
                     activation = {
                         gid: contribs
@@ -510,7 +518,12 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
                 # unlocked-committer class). Serialize via the store's
                 # write lock until W2.3-A / W2.4 move it properly.
                 _wl = getattr(cymatix.genome, "_write_lock", None)
-                tier_contrib_all = getattr(cymatix.genome, "last_tier_contributions", {}) or {}
+                # #350: window-first read (see the scores snapshot above).
+                tier_contrib_all = (
+                    window.tier_contributions
+                    if getattr(window, "tier_contributions", None) is not None
+                    else (getattr(cymatix.genome, "last_tier_contributions", {}) or {})
+                )
                 cwola_tier_totals: dict = {}
                 for contribs in tier_contrib_all.values():
                     for tier, score in contribs.items():
