@@ -930,6 +930,82 @@ significant changes to the knowledge store corpus.
    side-by-side `.json` provenance report, and that the `computed_at`
    timestamps match the calibration run logs.
 
+---
+
+## Runbook 10: `path_key_index` drop/reclaim on pki-off stores (#370)
+
+Since the `pki_enabled` default flip (PR #381), the Tier-0 scorer never
+reads `path_key_index` on a default-config store — but the rows are
+still on disk (8.56 GB, 18.5% of the 829k blob bed). `drop=true` on
+`/admin/compact-pki` drops the table entirely and, together with a
+VACUUM, reclaims the bytes. Scorer-neutrality is structural: a pki-off
+store issues no SQL against the table, so retrieval output is
+byte-identical before and after.
+
+### When to drop
+
+- Only on stores whose effective config has `[retrieval] pki_enabled =
+  false`. The endpoint refuses with **409** otherwise — flip the knob
+  (and restart) first, or use the prune-only compaction (Runbook: the
+  #165 `drop=false` mode, ~21% reduction) if you intend to keep PKI on.
+- **Between bench campaigns only, never mid-campaign.** Same caution as
+  the #338 FTS-migration note recorded on #377: a storage-shape change
+  under a frozen campaign row invalidates its byte-size comparisons.
+  After the drop + VACUUM, **record the new bed bytes in that bed's
+  `docs/benchmarks/BASELINES.md` row** so later receipts compare against
+  the post-drop footprint.
+- Stop or pause writers if you want the reclaim numbers to be exact;
+  the drop itself is transactional either way.
+
+### Drop command
+
+```bash
+# Dry run: report row count, touch nothing
+curl -X POST "http://127.0.0.1:11437/admin/compact-pki?drop=true&dry_run=true"
+
+# Apply: drop the table (pages go to the freelist — file size unchanged!)
+curl -X POST "http://127.0.0.1:11437/admin/compact-pki?drop=true"
+
+# Reclaim on disk: the drop alone reclaims NOTHING — VACUUM rewrites
+# the file without the freed pages (Runbook 5 for wall time / caveats)
+curl -X POST http://127.0.0.1:11437/admin/vacuum
+```
+
+The drop response carries `{"ok": true, "dropped": true, "rows_before":
+..., "hint": ...}`. On a pki-on store it is `{"ok": false, "error":
+"refusing to drop path_key_index: ... pki_enabled ..."}` with 409.
+
+### What the drop does NOT do
+
+- It is **not a write gate**: the DDL bootstrap recreates an empty
+  `path_key_index` on the next store open, and upserts repopulate it
+  for newly-ingested genes. On a frozen bench bed the drop is final;
+  on a live-ingest store the index regrows — re-run between ingest
+  waves if the store keeps ingesting with PKI off.
+- It does not touch `promoter_index` (a different table — #355's
+  `lex_anchor` decision).
+
+### Rebuild path (if PKI is ever re-enabled)
+
+Set `[retrieval] pki_enabled = true`, restart, then rebuild the index
+from the `genes` table (pure regex + SQL, no model calls):
+
+```bash
+python scripts/backfill_path_key_index.py --db genomes/main/genome.db          # dry run
+python scripts/backfill_path_key_index.py --db genomes/main/genome.db --apply --backup
+```
+
+### Verification
+
+```bash
+# table gone (post-drop) / repopulated (post-backfill)
+sqlite3 genomes/main/genome.db \
+  "SELECT name FROM sqlite_master WHERE type='table' AND name='path_key_index'"
+# retrieval still green (pki-off never read the table)
+curl -s -X POST http://127.0.0.1:11437/context \
+     -H "Content-Type: application/json" -d '{"query": "post-drop probe"}'
+```
+
 7. **Spot-check `/health`** — confirm `calibration.ann_threshold` is
    present and `calibration.abstain_classes` has all five known
    classifier classes:

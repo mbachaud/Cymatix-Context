@@ -656,8 +656,13 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
         live_cfg = getattr(cymatix, "config", config)
         if live_cfg.plr.enabled:
             try:
+                # #350 (W1.6b): thread the packet's request-scoped snapshot
+                # through — the genome-global maps may already hold a
+                # concurrent request's publication.
                 plr_block = _compute_plr_confidence(
                     cymatix, live_cfg, str(query), now_ts=t0,
+                    retrieval_scores=getattr(packet, "retrieval_scores", None),
+                    tier_contributions=getattr(packet, "tier_contributions", None),
                 )
                 if plr_block is not None:
                     payload["plr_confidence"] = plr_block
@@ -812,6 +817,25 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
                 use_sr=use_sr,
                 query_type=query_type,
             )
+            # Issue #350 (W1.6b): snapshot scores + tier contributions
+            # atomically under the writer lock IMMEDIATELY after THIS
+            # request's retrieval — the request-scoped capture the pipeline
+            # does at context_manager.py (2026-07-18 bugbash). The old
+            # post-refiner read left the whole refiner stage as a window
+            # for a concurrent request to republish the genome-global
+            # maps under this response's feet.
+            _lock = getattr(cymatix.genome, "_last_query_scores_lock", None)
+            if _lock is not None:
+                with _lock:
+                    base_scores = dict(cymatix.genome.last_query_scores or {})
+                    _tier_contribs = dict(getattr(cymatix.genome, "last_tier_contributions", {}) or {})
+            else:
+                base_scores = dict(cymatix.genome.last_query_scores or {})
+                _tier_contribs = dict(getattr(cymatix.genome, "last_tier_contributions", {}) or {})
+            # query_scores= threads the snapshot through the refiners so
+            # the cymatics/harmonic mutations land in THIS request's map
+            # (byte-identical single-request: the refiners used to mutate
+            # the genome-global map and we read it afterwards).
             candidates, refiner_contrib = cymatix._apply_candidate_refiners(
                 query,
                 candidates,
@@ -819,6 +843,7 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
                 use_cymatics=use_cymatics,
                 use_harmonic_bin=use_harmonic_bin,
                 use_tcm=use_tcm,
+                query_scores=base_scores,
             )
         except Exception as exc:
             log.warning("/fingerprint failed: %s", exc, exc_info=True)
@@ -827,17 +852,6 @@ def setup_context_routes(app: FastAPI, cymatix, config, registry, **_kw) -> None
                 status_code=500,
             )
 
-        # Snapshot scores + tier contributions atomically under the
-        # writer lock so the (base_scores, last_tier_contributions) pair
-        # comes from the same /context call.
-        _lock = getattr(cymatix.genome, "_last_query_scores_lock", None)
-        if _lock is not None:
-            with _lock:
-                base_scores = dict(cymatix.genome.last_query_scores or {})
-                _tier_contribs = dict(getattr(cymatix.genome, "last_tier_contributions", {}) or {})
-        else:
-            base_scores = dict(cymatix.genome.last_query_scores or {})
-            _tier_contribs = dict(getattr(cymatix.genome, "last_tier_contributions", {}) or {})
         merged_tiers = _merge_tier_contributions(
             _tier_contribs,
             refiner_contrib,

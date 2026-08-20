@@ -366,3 +366,316 @@ class TestKnowMissWindowSnapshot:
             assert "tier_contributions" not in dumped
         finally:
             mgr.close()
+
+
+# ─────────────────────────────────────────────────────────────────────
+# W1.6b remainder (issue #350): /fingerprint snapshots at its own
+# retrieval step
+# ─────────────────────────────────────────────────────────────────────
+
+class TestFingerprintSnapshot:
+    """Issue #350: ``/fingerprint`` has no build_context window — it must
+    capture (scores, tier_contributions) atomically under the store lock
+    IMMEDIATELY after its own ``_retrieve`` and thread the map through the
+    refiners, so a concurrent request republishing the genome-global maps
+    during the refiner stage cannot contaminate the response."""
+
+    SCORES_A = {"g-A1": 10.0, "g-A2": 2.0}
+    TIERS_A = {"g-A1": {"fts5": 10.0}, "g-A2": {"fts5": 2.0}}
+    SCORES_B = {"g-B1": 0.42}
+    TIERS_B = {"g-B1": {"fts5": 0.42}}
+
+    def _client_with_contaminating_refiners(self, monkeypatch):
+        from tests.conftest import make_client
+
+        from cymatix_context.schemas import Gene, PromoterTags
+
+        client = make_client()
+        cymatix = client.app.state.cymatix
+
+        genes = [
+            Gene(
+                gene_id=gid,
+                content=f"content-{gid}",
+                complement=f"summary-{gid}",
+                codons=[],
+                promoter=PromoterTags(
+                    domains=[], entities=[], intent="", summary="",
+                ),
+                source_id=f"src/{gid}.py",
+            )
+            for gid in self.SCORES_A
+        ]
+
+        def fake_retrieve(domains, entities, max_results, **_kw):
+            # Publication seam: THIS request's retrieval publishes A.
+            with cymatix.genome._last_query_scores_lock:
+                cymatix.genome.last_query_scores = dict(self.SCORES_A)
+                cymatix.genome.last_tier_contributions = {
+                    k: dict(v) for k, v in self.TIERS_A.items()
+                }
+            return list(genes)
+
+        def contaminating_refiners(query, candidates, max_results, **_kw):
+            # Concurrent request B republishes the genome-global maps
+            # while THIS request is still in its refiner stage — the
+            # exact window the pre-#350 post-refiner read was exposed to.
+            with cymatix.genome._last_query_scores_lock:
+                cymatix.genome.last_query_scores = dict(self.SCORES_B)
+                cymatix.genome.last_tier_contributions = {
+                    k: dict(v) for k, v in self.TIERS_B.items()
+                }
+            return list(candidates), {g.gene_id: {} for g in candidates}
+
+        monkeypatch.setattr(cymatix, "_retrieve", fake_retrieve)
+        monkeypatch.setattr(cymatix, "_express", fake_retrieve)
+        monkeypatch.setattr(
+            cymatix, "_apply_candidate_refiners", contaminating_refiners,
+        )
+        return client
+
+    def test_fingerprint_scores_immune_to_concurrent_publication(
+        self, monkeypatch,
+    ):
+        client = self._client_with_contaminating_refiners(monkeypatch)
+        resp = client.post("/fingerprint", json={
+            "query": "anything", "max_results": 10, "profile": "fast",
+        })
+        assert resp.status_code == 200
+        data = resp.json()
+        by_id = {row["gene_id"]: row for row in data["fingerprints"]}
+        assert set(by_id) == set(self.SCORES_A), (
+            "Fingerprint rows do not match this request's candidates."
+        )
+        for gid, expected in self.SCORES_A.items():
+            assert by_id[gid]["score"] == pytest.approx(expected), (
+                "Fingerprint score came from a concurrent request's map "
+                f"(gene {gid}: {by_id[gid]['score']})."
+            )
+            assert by_id[gid]["tier_contributions"] == {
+                "fts5": pytest.approx(self.TIERS_A[gid]["fts5"])
+            }
+
+
+# ─────────────────────────────────────────────────────────────────────
+# W1.6b remainder (issue #350): the packet path snapshots at its own
+# retrieval step (build_context_packet never runs build_context)
+# ─────────────────────────────────────────────────────────────────────
+
+class TestPacketRetrievalSnapshot:
+    """Issue #350: ``build_context_packet``'s top_score / score_gap /
+    lexical_dense_agree inputs and its attached snapshot must come from
+    the (scores, tier_contributions) pair captured atomically under the
+    store lock right after ITS query_docs() call — not from the
+    genome-global maps a concurrent request may republish mid-build."""
+
+    SCORES_A = {"g-A1": 10.0, "g-A2": 2.0}
+    TIERS_A = {
+        "g-A1": {"fts5": 0.9, "splade": 0.8},
+        "g-A2": {"fts5": 0.2},
+    }
+    SCORES_B = {"g-B1": 0.42}
+    TIERS_B = {"g-B1": {"fts5": 0.42}}
+
+    def _genome_publishing_a(self):
+        from tests.conftest import make_gene
+
+        from cymatix_context.genome import Genome
+
+        genome = Genome(path=":memory:")
+        genes = [
+            make_gene(f"packet content for {gid}", gene_id=gid)
+            for gid in self.SCORES_A
+        ]
+
+        def fake_query_docs(*, domains, entities, max_genes, read_only=False):
+            # Publication seam: THIS request's retrieval publishes A.
+            with genome._last_query_scores_lock:
+                genome.last_query_scores = dict(self.SCORES_A)
+                genome.last_tier_contributions = {
+                    k: dict(v) for k, v in self.TIERS_A.items()
+                }
+            return list(genes)
+
+        genome.query_docs = fake_query_docs
+        return genome
+
+    def _clobber_with_b(self, genome):
+        with genome._last_query_scores_lock:
+            # In-place mutation first (the mode a concurrent request's
+            # refiners produce when they run with query_scores=None —
+            # they mutate the live dict the pre-#350 packet reader still
+            # aliased), then republication by assignment. The packet's
+            # snapshot must be immune to both contamination modes.
+            genome.last_query_scores.clear()
+            genome.last_query_scores.update(self.SCORES_B)
+            genome.last_tier_contributions.clear()
+            genome.last_tier_contributions.update(self.TIERS_B)
+            genome.last_query_scores = dict(self.SCORES_B)
+            genome.last_tier_contributions = {
+                k: dict(v) for k, v in self.TIERS_B.items()
+            }
+
+    def test_packet_know_computed_from_retrieval_step_snapshot(
+        self, monkeypatch,
+    ):
+        """B publishes between the packet's retrieval and its know/miss
+        build; the know inputs must come from A's snapshot."""
+        import cymatix_context.context_packet as cp
+        from cymatix_context.scoring import know_decision
+
+        genome = self._genome_publishing_a()
+        captured = {}
+        real_decide = know_decision.decide_know_or_miss
+
+        def spy(window=None, **kw):
+            captured.update(
+                top_score=kw.get("top_score"),
+                score_gap=kw.get("score_gap"),
+                lexical_dense_agree=kw.get("lexical_dense_agree"),
+            )
+            return real_decide(window=window, **kw)
+
+        monkeypatch.setattr(know_decision, "decide_know_or_miss", spy)
+
+        real_signals = cp._coordinate_signals
+
+        def clobbering_signals(query, genes):
+            # Simulate concurrent request B publishing mid-packet-build
+            # (after retrieval, before the know/miss computation).
+            self._clobber_with_b(genome)
+            return real_signals(query, genes)
+
+        monkeypatch.setattr(cp, "_coordinate_signals", clobbering_signals)
+        try:
+            cp.build_context_packet(
+                "query A",
+                task_type="explain",
+                genome=genome,
+                now_ts=10_000.0,
+            )
+            assert captured["top_score"] == 10.0, (
+                "Packet know/miss inputs came from a concurrent request's "
+                f"score map (top_score={captured.get('top_score')})."
+            )
+            assert captured["score_gap"] == 8.0
+            # TIERS_A has lexical+dense agreeing on g-A1; B's map (fts5
+            # only) has no dense signal. A contaminated tier read flips
+            # this to False.
+            assert captured["lexical_dense_agree"] is True, (
+                "Packet lexical_dense_agree was computed from a concurrent "
+                "request's tier map."
+            )
+        finally:
+            genome.close()
+
+    def test_packet_attaches_excluded_snapshot(self):
+        """build_context_packet attaches the request-scoped snapshot to
+        the packet for the server-layer PLR reader, and the fields never
+        serialize into responses (exclude=True)."""
+        from cymatix_context.context_packet import build_context_packet
+
+        genome = self._genome_publishing_a()
+        try:
+            packet = build_context_packet(
+                "query A", genome=genome, now_ts=10_000.0,
+            )
+            # Contaminate AFTER the build: the attached snapshot must be
+            # a copy, not an alias of the genome-global maps.
+            self._clobber_with_b(genome)
+            assert packet.retrieval_scores == self.SCORES_A
+            assert packet.tier_contributions == self.TIERS_A
+            dumped = packet.model_dump()
+            assert "retrieval_scores" not in dumped
+            assert "tier_contributions" not in dumped
+        finally:
+            genome.close()
+
+
+# ─────────────────────────────────────────────────────────────────────
+# W1.6b remainder (issue #350): the packet-path PLR reader prefers the
+# packet's snapshot
+# ─────────────────────────────────────────────────────────────────────
+
+class TestPlrSnapshot:
+    """Issue #350: ``_compute_plr_confidence`` runs AFTER
+    ``build_context_packet`` returns — the genome-global maps may already
+    hold a concurrent request's publication, so it must prefer the
+    snapshot the route threads through from ``packet.retrieval_scores`` /
+    ``packet.tier_contributions`` (genome-global stays as the legacy
+    fallback for callers that pass nothing)."""
+
+    SCORES_A = {"g-A1": 10.0, "g-A2": 2.0}
+    TIERS_A = {
+        "g-A1": {"fts5": 0.9, "splade": 0.7},
+        "g-A2": {"fts5": 0.3},
+    }
+    SCORES_B = {"g-B1": 0.42}
+    TIERS_B = {"g-B1": {"fts5": 0.42}}
+
+    def _env(self, monkeypatch):
+        from types import SimpleNamespace
+
+        import cymatix_context.retrieval.fusion_plr as fusion_plr
+
+        captured = {}
+
+        class _FakeFuser:
+            meta = {"label_set": ["clean", "artifact"]}
+
+            def query_confidence(self, tier_totals, window_features, cos_qc):
+                captured["tier_totals"] = dict(tier_totals)
+                return {"prob_B": 0.25, "logit": -1.1, "score_A": 0.75}
+
+        monkeypatch.setattr(fusion_plr, "get_fuser", lambda _path: _FakeFuser())
+
+        class _Codec:
+            def encode(self, text):
+                return [1.0, 0.0]
+
+        def _get_doc(gid):
+            captured["top_gene_id"] = gid
+            return None
+
+        genome = SimpleNamespace(
+            last_query_scores=dict(self.SCORES_B),
+            last_tier_contributions={
+                k: dict(v) for k, v in self.TIERS_B.items()
+            },
+            get_doc=_get_doc,
+        )
+        cymatix = SimpleNamespace(genome=genome, _sema_codec=_Codec())
+        config = SimpleNamespace(
+            plr=SimpleNamespace(model_path="unused", high_risk_threshold=0.5),
+        )
+        return cymatix, config, captured
+
+    def test_plr_prefers_packet_snapshot(self, monkeypatch):
+        """The genome-global maps hold B (a concurrent publication); the
+        threaded snapshot holds A — PLR features must come from A."""
+        import cymatix_context.server.helpers as helpers
+
+        cymatix, config, captured = self._env(monkeypatch)
+        out = helpers._compute_plr_confidence(
+            cymatix, config, "query A",
+            retrieval_scores=dict(self.SCORES_A),
+            tier_contributions={k: dict(v) for k, v in self.TIERS_A.items()},
+        )
+        assert out is not None
+        assert captured["tier_totals"] == {
+            "fts5": pytest.approx(1.2), "splade": pytest.approx(0.7),
+        }, "PLR tier_totals came from the genome-global (contaminated) map."
+        assert captured["top_gene_id"] == "g-A1", (
+            "PLR top-gene lookup used the genome-global (contaminated) map."
+        )
+
+    def test_plr_falls_back_to_genome_global(self, monkeypatch):
+        """Legacy direct callers that pass no snapshot keep the pre-#350
+        genome-global read."""
+        import cymatix_context.server.helpers as helpers
+
+        cymatix, config, captured = self._env(monkeypatch)
+        out = helpers._compute_plr_confidence(cymatix, config, "query A")
+        assert out is not None
+        assert captured["tier_totals"] == {"fts5": pytest.approx(0.42)}
+        assert captured["top_gene_id"] == "g-B1"

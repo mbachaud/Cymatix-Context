@@ -548,6 +548,10 @@ class ShardedGenomeAdapter:
     def vacuum(self, *_a, **_kw) -> dict: return {"vacuumed": 0, "sharded": True}
     def compact_genome(self, *_a, **_kw) -> dict: return {"compacted": 0, "sharded": True}
     def invalidate_sema_cache(self, *_a, **_kw) -> None: pass
+    # #339 rider: routes_admin now invalidates the cold-tier cache beside
+    # the hot one on /admin/sema/rebuild + /admin/reload; cold-tier state
+    # is per-shard in V1, so the adapter mirrors this as a no-op too.
+    def invalidate_cold_sema_cache(self, *_a, **_kw) -> None: pass
     def _build_sema_cache(self, *_a, **_kw) -> None: pass
     def _invalidate_dense_matrix(self, *_a, **_kw) -> None: pass
 

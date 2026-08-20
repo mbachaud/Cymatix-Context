@@ -80,6 +80,10 @@ REQUIRED_CALLER_SURFACE = frozenset({
     "_sema_cache",
     "_build_sema_cache",
     "invalidate_sema_cache",
+    # #339 rider: /admin/sema/rebuild and /admin/reload now invalidate the
+    # cold-tier cache beside the hot one, so the adapter must expose it
+    # (no-op — cold-tier state is per-shard in V1).
+    "invalidate_cold_sema_cache",
     "_invalidate_dense_matrix",
 
     # Document write surface (no-ops on adapter, but must exist)
@@ -185,9 +189,10 @@ ADAPTER_ONLY_DIFFERENCES_WHITELIST = frozenset({
     "query_docs_dense_recall", "query_genes_dense_recall",
 
     # Cold-tier internals — adapter exposes query_cold_tier as a no-op
-    # but the underlying state is per-shard.
+    # but the underlying state is per-shard. (invalidate_cold_sema_cache
+    # moved to REQUIRED_CALLER_SURFACE — #339 rider: routes_admin calls it.)
     "_cold_tier_enabled", "_cold_tier_k", "_cold_tier_min_cosine",
-    "_build_cold_sema_cache", "invalidate_cold_sema_cache",
+    "_build_cold_sema_cache",
 
     # Schema / DDL — handled at shard creation time, not at adapter time.
     "_ensure_schema", "_apply_indexes", "ddl_version",
