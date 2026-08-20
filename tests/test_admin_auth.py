@@ -204,3 +204,51 @@ class TestSwapDbAllowlist:
             "/admin/swap-db", json={"path": str(allowed / "nope.db")}
         )
         assert resp.status_code == 400
+
+
+# -- #351 decision 1: non-loopback + empty token startup warning ------------
+
+
+class TestExposureStartupWarning:
+    """create_app warns (warning ONLY — the bind is honored) when
+    ``[server] host`` is non-loopback while ``[server] admin_token`` is
+    empty: that configuration leaves the admin surface + /ingest reachable
+    by anyone on the network with no auth."""
+
+    def _build(self, caplog, **server_overrides):
+        import logging
+
+        with caplog.at_level(logging.WARNING, logger="cymatix.server"):
+            client = make_client(
+                config=make_cymatix_config(server=_server(**server_overrides))
+            )
+        return client, [
+            r.message for r in caplog.records
+            if "NETWORK-EXPOSED ADMIN SURFACE" in r.message
+        ]
+
+    def test_warns_on_nonloopback_bind_with_empty_token(self, caplog):
+        _, hits = self._build(caplog, host="0.0.0.0")
+        assert len(hits) == 1
+        # The warning names both knobs so the fix is copy-pasteable.
+        assert "[server] host" in hits[0]
+        assert "[server] admin_token" in hits[0]
+
+    def test_warns_on_lan_ip_bind_with_empty_token(self, caplog):
+        _, hits = self._build(caplog, host="192.168.1.50")
+        assert len(hits) == 1
+
+    def test_silent_on_loopback_hosts(self, caplog):
+        for host in ("127.0.0.1", "localhost", "::1", "LOCALHOST"):
+            _, hits = self._build(caplog, host=host)
+            assert hits == [], f"warning fired for loopback host {host!r}"
+
+    def test_silent_when_token_set(self, caplog):
+        _, hits = self._build(caplog, host="0.0.0.0", admin_token="secret")
+        assert hits == []
+
+    def test_warning_does_not_refuse_the_bind(self, caplog):
+        """No behavior change: the app still builds and serves routes."""
+        client, hits = self._build(caplog, host="0.0.0.0")
+        assert len(hits) == 1
+        assert client.get("/health").status_code == 200

@@ -36,6 +36,40 @@ each flip receipt-gated (entries below). Release-gate tracker: #377.
   migration + vacuum); receipt-comparability flag recorded on #370; new bed
   bytes and reproduction notes in `docs/benchmarks/BASELINES.md`
   (bed-state note, 2026-08-20).
+- **security: `[budget] neutralize_control_tags` default flipped `false` →
+  `true` (#351 decision 2).** Scope: assembly-time escaping of `<cymatix:`
+  control tags in retrieved content — a document whose content contains the
+  literal `<cymatix:` can no longer forge the genuine
+  `<cymatix:no_match/>` / `<cymatix:slate>` control tags that downstream
+  agents adopting `CYMATIX_NO_MATCH_FRAGMENT` trust (the escape rewrites it
+  to `&lt;cymatix:`; the genuine no-match tag, emitted on the separate
+  parts-empty branch, is never escaped). The escape runs strictly AFTER
+  retrieval/fusion/tie-break/rank publication, so retrieval metrics are
+  unchangeable by construction; the flip gate was the delivered basis and
+  assembled bytes. Receipt
+  (`benchmarks/dogfood/erb/receipts/neutralize_ab_100k.json`, 141-needle
+  100k-carve replay, both arms explicit): r@12 0.6879 = 0.6879, fr@12
+  0.6950 = 0.6950, delivered_gold_rate 0.6099 = 0.6099, per-needle
+  ranks/delivered ids identical, **141/141 windows byte-identical**, and
+  the 5 genuine abstain-tag windows untouched in both arms. The bed carries
+  zero control-tag docs (receipt `bed_control_tag_scan`), so the positive
+  case — the escape fires where a tag exists and only there — is carried by
+  the synthetic assembly-function A/B unit tests in
+  `tests/test_control_tag_neutralization.py`. Opt out with
+  `neutralize_control_tags = false` (documents legitimately containing the
+  literal `<cymatix:` string then ship verbatim — byte-identical to
+  pre-knob behavior). Scope limit unchanged: closes tag forgery only;
+  general indirect prompt injection via document text is inherent to
+  context injection.
+- **security: startup warning on non-loopback bind with empty
+  `admin_token` (#351 decision 1).** `create_app` now logs a prominent
+  `NETWORK-EXPOSED ADMIN SURFACE` warning when `[server] host` is not
+  loopback (`127.0.0.1` / `localhost` / `::1`) while `[server] admin_token`
+  is empty — that configuration leaves `/admin/*` (including
+  `/admin/shutdown` and `/admin/swap-db`), `/ingest` and `/consolidate`
+  reachable by anyone on the network with no authentication. Warning only:
+  the bind is honored unchanged, loopback binds and token-set configs stay
+  silent.
 
 - **ingestion: `[ingestion] sema_embed_on_ingest` default flipped `true` →
   `false` (#371).** Ingest-time behavior change only — this completes #371's

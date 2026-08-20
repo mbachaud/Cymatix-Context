@@ -99,6 +99,17 @@ legibility_enabled = true
 # that don't supply one). Set to false to restore pre-MVP dark behavior.
 # See cymatix_context/session_delivery.py.
 session_delivery_enabled = true
+# Control-tag neutralization (2026-08-08 audit): escape content-sourced
+# "<cymatix:" to "&lt;cymatix:" in the assembly loop so an ingested
+# document cannot forge the genuine no-match/slate control tags that
+# downstream agents adopting CYMATIX_NO_MATCH_FRAGMENT trust. The genuine
+# no-match tag (parts-empty branch) is never escaped. Default true since
+# 2026-08-19 (#351): the escape runs at assembly time, after retrieval/
+# fusion/rank publication — the 141-needle 100k-carve A/B measured the
+# delivered basis and assembled window bytes identical across arms
+# (benchmarks/dogfood/erb/receipts/neutralize_ab_100k.json). Set false to
+# opt out (docs legitimately containing literal "<cymatix:" ship verbatim).
+neutralize_control_tags = true
 # Confidence-gated context attachment (ABSTAIN tier). When true (default),
 # build_context returns a marker-only ContextWindow when post-refinement
 # retrieval is weak on BOTH absolute score (top_score < 2.5) AND ratio

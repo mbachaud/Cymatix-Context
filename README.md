@@ -440,6 +440,16 @@ admin_token = "your-secret"              # /admin/*, /ingest, /consolidate deman
 swap_db_roots = ["F:/cymatix/genomes"]   # /admin/swap-db may only open paths under these roots (403 otherwise)
 ```
 
+Since 2026-08-19 (#351) the server also logs a prominent
+`NETWORK-EXPOSED ADMIN SURFACE` warning at startup when `[server] host`
+is non-loopback while `admin_token` is empty (warning only — the bind is
+honored), and `[budget] neutralize_control_tags` defaults **on**:
+retrieved content containing the literal `<cymatix:` string is escaped
+to `&lt;cymatix:` at assembly time so an ingested document cannot forge
+the genuine no-match/slate control tags (receipt-gated flip — delivered
+basis and window bytes measured identical across arms; set it to
+`false` to opt out).
+
 Details: [docs/config-reference.md](docs/config-reference.md), `[server]`.
 
 ## Observability
