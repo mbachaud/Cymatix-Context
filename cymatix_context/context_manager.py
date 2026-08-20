@@ -63,6 +63,7 @@ log = logging.getLogger("cymatix.context_manager")
 # so the dashboard can group events back into per-request rows.
 
 import collections as _collections
+import contextlib as _contextlib
 import contextvars as _contextvars
 import time as _time
 import uuid as _uuid
@@ -221,6 +222,37 @@ class _stage_timer:
                     _pipeline_events.append(entry)
         except Exception:
             pass
+
+def _record_ingest_stage(
+    stage: str, seconds: float, extra: Optional[dict] = None,
+) -> None:
+    """Ingest counterpart of ``_stage_timer`` (issue #372).
+
+    Same histogram (cymatix_pipeline_stage_seconds), same ring, but records
+    an externally-measured duration — the tag/upsert stages are accumulated
+    across a per-strand loop, so a with-block cannot capture them as one
+    observation. Reserved ring keys win over ``extra`` keys, mirroring
+    ``_stage_timer.__exit__``. Never raises: telemetry must not break ingest.
+    """
+    try:
+        _pipeline_stage_histogram().record(seconds, {"stage": stage})
+    except Exception:
+        pass  # never let telemetry break the pipeline
+    try:
+        if _pipeline_ring_enabled():
+            rid = _pipeline_request_id.get()
+            if rid:
+                entry = dict(extra or {})
+                entry.update({
+                    "request_id": rid,
+                    "stage": stage,
+                    "ms": round(seconds * 1000.0, 3),
+                    "ts": _time.time(),
+                })
+                _pipeline_events.append(entry)
+    except Exception:
+        pass
+
 
 def _model_load_ms_snapshot() -> dict:
     """Cumulative encoder-load ms by model name (perf slice 1, W0.2)."""
@@ -1228,7 +1260,19 @@ class CymatixContextManager:
         Call for documents, files, or conversation history.
         Returns list of gene_ids created.
         """
+        # Ingest stage timers (issue #372): tag this call with a request id
+        # so the ring attributes the ingest_* stage entries, mirroring
+        # build_context. Stages recorded at the bottom: ingest_chunk,
+        # ingest_encode (only when an encoder actually ran), ingest_tag,
+        # ingest_upsert, ingest_commit — the commit entry carries the
+        # per-document commit-count delta (W0.3 trace-hook counter).
+        if _pipeline_ring_enabled():
+            _pipeline_request_id.set("ing" + _uuid.uuid4().hex[:9])
+        _commit_c0 = getattr(self.genome, "commit_count", 0)
+
+        _t0 = _time.monotonic()
         strands = self.chunker.chunk(content, content_type=content_type, metadata=metadata)
+        _chunk_s = _time.monotonic() - _t0
         gene_ids = []
         total_strands = len(strands)
 
@@ -1240,14 +1284,19 @@ class CymatixContextManager:
         if metadata:
             source_path = metadata.get("path") or metadata.get("source_id")
 
-        # Batch-encode ΣĒMA vectors if codec available
+        # Batch-encode ΣĒMA vectors if codec available. _encode_s accumulates
+        # across BOTH encoder blocks (sema + dense) into the single
+        # encode-if-enabled ingest stage (#372).
+        _encode_s = 0.0
         sema_vectors = None
         if self._sema_codec is not None:
+            _t0 = _time.monotonic()
             try:
                 texts = [s.content[:1000] for s in strands]  # Cap for encoder
                 sema_vectors = self._sema_codec.encode_batch(texts)
             except Exception:
                 log.debug("ΣĒMA batch encoding failed, skipping")
+            _encode_s += _time.monotonic() - _t0
 
         # Batch-encode BGE-M3 dense vectors (Tier-0 PR-1, 2026-05-16). One
         # codec call for every strand of the document — far cheaper than the
@@ -1263,6 +1312,7 @@ class CymatixContextManager:
         dense_vectors = None
         dense_codec = self._get_dense_codec()
         if dense_codec is not None:
+            _t0 = _time.monotonic()
             try:
                 cap = self.config.ingestion.dense_passage_char_cap
                 dense_texts = [s.content[:cap] for s in strands]
@@ -1276,6 +1326,7 @@ class CymatixContextManager:
                     exc_info=True,
                 )
                 dense_vectors = None
+            _encode_s += _time.monotonic() - _t0
 
         use_cpu = (
             self._cpu_tagger is not None
@@ -1285,6 +1336,13 @@ class CymatixContextManager:
         # WS2: (gene_id, defs, refs) per code chunk, for symbol-graph emission.
         chunk_syms: List[tuple] = []
 
+        # ── Pass 1 (tag): pack every strand into a Gene BEFORE any write.
+        # Issue #372 restructure — tagging (a CPU-model call per strand) must
+        # not run inside the document write transaction below, where it would
+        # hold the store's write lock; same never-encode-under-the-lock rule
+        # as upsert_doc's dense encode.
+        _t0 = _time.monotonic()
+        prepared: List[tuple] = []  # (strand, gene, dense_vec)
         for i, strand in enumerate(strands):
             if use_cpu:
                 gene = self._cpu_tagger.pack(
@@ -1342,64 +1400,105 @@ class CymatixContextManager:
                 if dense_vectors is not None and i < len(dense_vectors)
                 else None
             )
+            prepared.append((strand, gene, dense_vec))
+        _tag_s = _time.monotonic() - _t0
 
-            # Density gate now lives in genome.upsert_doc() itself so that
-            # bulk ingest scripts (ingest_steam.py, ingest_all.py, etc.)
-            # that call upsert_gene directly also respect it. The gate
-            # reads the final lifecycle tier back onto the document object
-            # and sets compression_tier accordingly during the INSERT.
-            # See cymatix_context/genome.py:apply_density_gate for the logic.
-            gid = self.genome.upsert_doc(gene, embedding_dense_v2=dense_vec)
-            gene_ids.append(gid)
+        # ── Pass 2 (upsert): ONE transaction per document (issue #372).
+        # deferred_commits() folds the per-strand upserts, tier demotions,
+        # parent doc, and CHUNK_OF/symbol edges into a single durable commit
+        # — one fsync per document instead of one per strand. Crash
+        # semantics: an exception rolls the WHOLE document back; partial-
+        # document rollback is acceptable and preferable to the old
+        # partial-strand states (a committed gene with no CHUNK_OF edges).
+        # Stores without the seam (e.g. the sharded read adapter) fall back
+        # to the historical commit-per-call behavior via nullcontext.
+        _txn_factory = getattr(self.genome, "deferred_commits", None)
+        _txn = _txn_factory() if callable(_txn_factory) else _contextlib.nullcontext()
+        _t0 = _time.monotonic()
+        _upsert_s = 0.0
+        with _txn:
+            for strand, gene, dense_vec in prepared:
+                # Density gate now lives in genome.upsert_doc() itself so that
+                # bulk ingest scripts (ingest_steam.py, ingest_all.py, etc.)
+                # that call upsert_gene directly also respect it. The gate
+                # reads the final lifecycle tier back onto the document object
+                # and sets compression_tier accordingly during the INSERT.
+                # See cymatix_context/genome.py:apply_density_gate for the logic.
+                gid = self.genome.upsert_doc(gene, embedding_dense_v2=dense_vec)
+                gene_ids.append(gid)
 
-            # WS2: stash this chunk's symbols (set on the strand metadata by the
-            # symbol-aware code chunker) keyed by gene id, for emission below.
-            _sm = getattr(strand, "metadata", None) or {}
-            if _sm.get("defs") or _sm.get("refs"):
-                chunk_syms.append((gid, _sm.get("defs", []), _sm.get("refs", [])))
+                # WS2: stash this chunk's symbols (set on the strand metadata by the
+                # symbol-aware code chunker) keyed by gene id, for emission below.
+                _sm = getattr(strand, "metadata", None) or {}
+                if _sm.get("defs") or _sm.get("refs"):
+                    chunk_syms.append((gid, _sm.get("defs", []), _sm.get("refs", [])))
 
-            # If the gate demoted the document to heterochromatin, the content
-            # column is still populated — compress_to_heterochromatin()
-            # drops it and strips SPLADE/FTS indices. Run this post-insert
-            # for consistency with the historical behavior.
-            if gene.chromatin == ChromatinState.HETEROCHROMATIN and gene.embedding is not None:
-                self.genome.compress_to_heterochromatin(gid)
-            elif gene.chromatin == ChromatinState.EUCHROMATIN:
-                self.genome.compress_to_euchromatin(gid)
+                # If the gate demoted the document to heterochromatin, the content
+                # column is still populated — compress_to_heterochromatin()
+                # drops it and strips SPLADE/FTS indices. Run this post-insert
+                # for consistency with the historical behavior.
+                if gene.chromatin == ChromatinState.HETEROCHROMATIN and gene.embedding is not None:
+                    self.genome.compress_to_heterochromatin(gid)
+                elif gene.chromatin == ChromatinState.EUCHROMATIN:
+                    self.genome.compress_to_euchromatin(gid)
 
-        # Layered fingerprints: create a parent document when a file chunks
-        # into N >= 2 strands. Parent aggregates child fingerprints at
-        # query time so multi-chunk hits surface the whole file.
-        # See docs/FUTURE/LAYERED_FINGERPRINTS.md.
-        if len(gene_ids) >= 2 and source_path:
-            try:
-                parent_gid = self._upsert_parent_doc(
-                    source_path=source_path,
-                    child_gene_ids=gene_ids,
-                    original_content=content,
-                )
-                if parent_gid:
-                    log.debug("Created parent gene %s for %d chunks of %s",
-                              parent_gid, len(gene_ids), source_path)
-            except Exception:
-                log.warning("Parent gene creation failed for %s — chunks still ingested",
-                            source_path, exc_info=True)
+            # Layered fingerprints: create a parent document when a file chunks
+            # into N >= 2 strands. Parent aggregates child fingerprints at
+            # query time so multi-chunk hits surface the whole file.
+            # See docs/FUTURE/LAYERED_FINGERPRINTS.md. Inside the document
+            # transaction: a failure rolls back only its own SAVEPOINT write
+            # units, so the already-staged strands really are "still
+            # ingested" — they commit at scope exit.
+            if len(gene_ids) >= 2 and source_path:
+                try:
+                    parent_gid = self._upsert_parent_doc(
+                        source_path=source_path,
+                        child_gene_ids=gene_ids,
+                        original_content=content,
+                    )
+                    if parent_gid:
+                        log.debug("Created parent gene %s for %d chunks of %s",
+                                  parent_gid, len(gene_ids), source_path)
+                except Exception:
+                    log.warning("Parent gene creation failed for %s — chunks still ingested",
+                                source_path, exc_info=True)
 
-        # WS2: build the symbol graph from this file's chunks — index symbol
-        # definitions and emit referencing-chunk -> defining-chunk edges
-        # (intra-file resolution; high precision). Best-effort: never break ingest.
-        if (content_type == "code" and chunk_syms
-                and getattr(self.config.ingestion, "symbol_graph", False)):
-            try:
-                self._emit_symbol_graph(chunk_syms)
-            except Exception:
-                log.warning(
-                    "symbol-graph emission failed for %s — chunks still ingested",
-                    source_path, exc_info=True,
-                )
+            # WS2: build the symbol graph from this file's chunks — index symbol
+            # definitions and emit referencing-chunk -> defining-chunk edges
+            # (intra-file resolution; high precision). Best-effort: never break ingest.
+            if (content_type == "code" and chunk_syms
+                    and getattr(self.config.ingestion, "symbol_graph", False)):
+                try:
+                    self._emit_symbol_graph(chunk_syms)
+                except Exception:
+                    log.warning(
+                        "symbol-graph emission failed for %s — chunks still ingested",
+                        source_path, exc_info=True,
+                    )
+            _upsert_s = _time.monotonic() - _t0
+        # The scope exit above pays the document's single durable commit
+        # (plus any WAL checkpoint the cadence deferred), so commit time is
+        # everything after the body finished. On the nullcontext fallback
+        # commits happened per call inside _upsert_s and _commit_s ≈ 0.
+        _commit_s = _time.monotonic() - _t0 - _upsert_s
+        _commits = getattr(self.genome, "commit_count", 0) - _commit_c0
 
-        log.info("Ingested %d strands from %s content (%d chars)",
-                 len(gene_ids), content_type, len(content))
+        _record_ingest_stage("ingest_chunk", _chunk_s)
+        if _encode_s > 0.0:
+            _record_ingest_stage("ingest_encode", _encode_s)
+        _record_ingest_stage("ingest_tag", _tag_s)
+        _record_ingest_stage("ingest_upsert", _upsert_s)
+        _record_ingest_stage("ingest_commit", _commit_s,
+                             extra={"commits": _commits})
+
+        log.info(
+            "Ingested %d strands from %s content (%d chars) — chunk %.1fms "
+            "encode %.1fms tag %.1fms upsert %.1fms commit %.1fms "
+            "(%d commits)",
+            len(gene_ids), content_type, len(content),
+            _chunk_s * 1000.0, _encode_s * 1000.0, _tag_s * 1000.0,
+            _upsert_s * 1000.0, _commit_s * 1000.0, _commits,
+        )
         return gene_ids
 
     @staticmethod
