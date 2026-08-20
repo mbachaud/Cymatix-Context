@@ -2,6 +2,41 @@
 
 ## Unreleased
 
+## 0.9.0 (2026-08-20)
+
+The post-flip release: the shipped default retrieval path is now fully
+algorithmic — `dense_embedding_enabled`, `splade_enabled`, `pki_enabled`,
+`dense_embed_on_ingest`, and `sema_embed_on_ingest` all default `false`,
+each flip receipt-gated (entries below). Release-gate tracker: #377.
+
+**Release-notes disclosures:**
+
+- **know surface:** KnowBlock never fires at shipped defaults (max confidence
+  ≈0.28 vs emit_floor 0.45; the `lexical_dense_agree` calibration feature is
+  structurally dead on the neural-free path) — fail-safe direction (0%
+  false-KNOW); recalibration tracked as #287 in the 0.9.x backlog (receipts:
+  `benchmarks/dogfood/erb/receipts/postflip_know_abstain_sanity_*.json`).
+- **p50 latency:** the dense-off default carries the measured p50 regression
+  disclosed under #374 (see the `dense_embedding_enabled` entry below —
+  ×2.5–2.6 at 100k shrinking to ×1.09–1.38 at 829k); the mitigation (lex-branch
+  candidate cap) has not landed and stays open on the retrieval-layer ledger.
+
+**Known deferred (0.9.x):**
+
+- Deferred work is sequenced in #377's 0.9.x deferral-ledger comment
+  (2026-08-19) — #366, #349, #344, #340, #336, #287, #275, #260, #205, #373,
+  #356, #355, plus the #351 knob decisions.
+- entity_graph layer ships ON but has never been ablated on the delivered
+  basis (ledger REMOVE-CANDIDATE); the arm is tracked in #377's 0.9.x backlog.
+
+**Ops:**
+
+- **ops(beds): 2026-08-20 bench-bed maintenance** — 36.6 GB reclaimed across
+  the two 829k benchmark beds (`path_key_index` drop + FTS5 external-content
+  migration + vacuum); receipt-comparability flag recorded on #370; new bed
+  bytes and reproduction notes in `docs/benchmarks/BASELINES.md`
+  (bed-state note, 2026-08-20).
+
 - **ingestion: `[ingestion] sema_embed_on_ingest` default flipped `true` →
   `false` (#371).** Ingest-time behavior change only — this completes #371's
   sema half (the dense half is the entry below). Consumer audit first
