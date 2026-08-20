@@ -7,7 +7,7 @@ packages = ["cymatix_context"]
 
 [project]
 name = "cymatix-context"
-version = "0.8.6"
+version = "0.9.0"
 description = "Coordinate index layer for LLM context — Cymatix weighs, doesn't retrieve"
 readme = "README.md"
 requires-python = ">=3.11"

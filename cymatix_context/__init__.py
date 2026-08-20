@@ -7,7 +7,7 @@ context like a knowledge store instead of a flat text buffer.
 
 # Single source of truth is pyproject.toml; tests/test_version.py pins
 # this string to it so the two can't drift.
-__version__ = "0.8.6"
+__version__ = "0.9.0"
 
 # GB10 / Grace+Blackwell (aarch64, sm_121) platform handshake — default-OFF.
 # When CYMATIX_CUDA_LAUNCH_BLOCKING=1, force synchronous CUDA launches BEFORE any

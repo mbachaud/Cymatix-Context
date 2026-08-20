@@ -234,3 +234,77 @@ def test_get_fuser_force_reload_clears_error(tmp_path: Path, trained_artifact: P
     fuser = fusion_plr.get_fuser(trained_artifact, force_reload=True)
     assert fuser is not None
     assert fusion_plr.last_load_error() is None
+
+
+# ──────────────────────────────────────────────────────────────────────
+# [plr] expected_sha256 wiring (#219 slice 5)
+# ──────────────────────────────────────────────────────────────────────
+
+def test_get_fuser_rejects_mismatched_expected_sha256(trained_artifact: Path):
+    """A configured pin that doesn't match the artifact must refuse to load,
+    even when a VALID sidecar .sha256 sits next to the artifact (the explicit
+    pin outranks the sidecar) — this is the operator-level guarantee that
+    was silently unenforced before the #219 slice-5 wiring."""
+    bad = "0" * 64
+    assert fusion_plr.get_fuser(trained_artifact, expected_sha256=bad) is None
+    assert fusion_plr.last_load_error() is not None
+    assert "sha256 mismatch" in fusion_plr.last_load_error()
+
+
+def test_get_fuser_accepts_matching_expected_sha256(trained_artifact: Path):
+    digest = hashlib.sha256(trained_artifact.read_bytes()).hexdigest()
+    fuser = fusion_plr.get_fuser(trained_artifact, expected_sha256=digest)
+    assert fuser is not None
+    assert fusion_plr.last_load_error() is None
+
+
+def test_get_fuser_empty_sha256_keeps_sidecar_path(trained_artifact: Path):
+    """The shipped default `expected_sha256 = ""` must stay byte-identical to
+    the pre-wiring behavior: empty means "trust the sidecar", so a corrupted
+    sidecar still rejects the load (i.e. "" is normalized to None rather than
+    disabling verification)."""
+    # Baseline: "" with a valid sidecar loads fine.
+    assert fusion_plr.get_fuser(trained_artifact, expected_sha256="") is not None
+
+    # Corrupt the sidecar: "" must still consult it and refuse.
+    (trained_artifact.with_suffix(trained_artifact.suffix + ".sha256")).write_text(
+        "1111111111111111111111111111111111111111111111111111111111111111  x\n",
+        encoding="utf-8",
+    )
+    assert (
+        fusion_plr.get_fuser(trained_artifact, expected_sha256="", force_reload=True)
+        is None
+    )
+    assert "sha256 mismatch" in fusion_plr.last_load_error()
+
+
+def test_compute_plr_confidence_threads_config_pin(trained_artifact: Path, monkeypatch):
+    """The server helper must pass [plr] expected_sha256 into get_fuser —
+    the production call site that #219 slice 5 wired. A mismatched pin means
+    no fuser, so the helper returns None (packet ships without
+    plr_confidence)."""
+    from cymatix_context.config import CymatixConfig
+    from cymatix_context.server import helpers as server_helpers
+
+    cfg = CymatixConfig()
+    cfg.plr.model_path = str(trained_artifact)
+    cfg.plr.expected_sha256 = "f" * 64  # deliberately wrong
+
+    seen: dict = {}
+    real_get_fuser = fusion_plr.get_fuser
+
+    def spy(model_path, *, expected_sha256=None, force_reload=False):
+        seen["expected_sha256"] = expected_sha256
+        return real_get_fuser(
+            model_path, expected_sha256=expected_sha256, force_reload=force_reload
+        )
+
+    monkeypatch.setattr(fusion_plr, "get_fuser", spy)
+
+    class _StubManager:  # minimal surface _compute_plr_confidence touches
+        genome = type("G", (), {"last_tier_contributions": {}})()
+
+    out = server_helpers._compute_plr_confidence(_StubManager(), cfg, "q")
+    assert seen["expected_sha256"] == "f" * 64
+    assert out is None
+    assert "sha256 mismatch" in fusion_plr.last_load_error()

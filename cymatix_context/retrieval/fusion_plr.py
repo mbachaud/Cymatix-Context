@@ -232,12 +232,23 @@ _load_attempted: bool = False
 _load_error: Optional[str] = None
 
 
-def get_fuser(model_path: str | Path, *, force_reload: bool = False) -> Optional[StackedPLRFuser]:
+def get_fuser(
+    model_path: str | Path,
+    *,
+    expected_sha256: Optional[str] = None,
+    force_reload: bool = False,
+) -> Optional[StackedPLRFuser]:
     """Return the process-wide PLR fuser, loading on first call.
 
     Returns None when loading fails — callers treat that as "PLR unavailable"
     and skip attaching `plr_confidence`. The failure is cached in
     `_load_error` so we don't thrash the disk on every request.
+
+    `expected_sha256` threads `[plr] expected_sha256` through to
+    `StackedPLRFuser.load` (#219 slice 5 — the knob was parsed but never
+    passed, so operator-level hash pinning silently did nothing). Empty or
+    None falls back to the sidecar `.sha256` path, byte-identical to the
+    pre-wiring behavior at the shipped default "".
     """
     global _fuser, _load_attempted, _load_error
     if force_reload:
@@ -248,7 +259,7 @@ def get_fuser(model_path: str | Path, *, force_reload: bool = False) -> Optional
         return _fuser
     _load_attempted = True
     try:
-        _fuser = StackedPLRFuser.load(model_path)
+        _fuser = StackedPLRFuser.load(model_path, expected_sha256=expected_sha256 or None)
         _load_error = None
     except PLRLoadError as exc:
         _load_error = str(exc)

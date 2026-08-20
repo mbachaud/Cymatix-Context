@@ -40,21 +40,49 @@ exposes the binned vector directly.
 
 In multi-turn sessions, the session delivery register elides already-seen
 documents — observed **37× reduction** on repeated retrievals within a
-conversation (~40% token savings on typical multi-turn work).
+conversation (~40% token savings on typical multi-turn work). *Both
+multi-turn figures are **unverified design estimates** — from ad-hoc session
+traces, not a receipted benchmark; a production
+`cymatix_session_tokens_saved_total` counter to measure them is pending.*
 
 Reproducer: `python benchmarks/bench_rag_vs_sike_tokens.py` against your own knowledge store.
 
 *Caveat: the "vs standard RAG" denominator (top-5 @ 1500 tokens) is a
 configurable baseline, and the 37× multi-turn figure is elision of
-already-delivered documents, not compression of new content. The decision-useful
+already-delivered documents, not compression of new content — and it remains
+an unverified design estimate pending the `cymatix_session_tokens_saved_total`
+counter. The decision-useful
 claim is **equal-or-better task completion at fewer input tokens**; a same-harness
 baseline/ablation frontier (BM25 / BGE-M3 / BM25+dense RRF / Cymatix full /
 Cymatix minus-cymatics), paired with correctness, is future work — not yet
 published.*
 
 **External benchmark** — [EnterpriseRAG-Bench](https://github.com/onyx-dot-app/EnterpriseRAG-Bench)
-(Onyx, 500 questions over a ~500K-document enterprise corpus), July 2026,
-scored under ERB's official judge protocol and submitted to the leaderboard:
+(Onyx, 500 questions over a ~500K-document enterprise corpus).
+
+**Shipped-defaults operating point (0.9.0, 2026-08-20)** — what an untouched
+install does today. The default retrieval path is fully algorithmic — dense,
+SPLADE, and PKI all default-off since 2026-08-15..19, each flip
+receipt-gated (the optional cross-encoder rerank has always shipped
+default-off) — measured on the 829K-fragment ERB bed at full needle power:
+
+| metric (829k bed, n=469, delivered basis) | score |
+|---|---|
+| Gold-document delivery | **56.5%** (265/469) |
+| recall@12 | **0.659** |
+| final recall@12 | **0.663** |
+
+Receipt: `benchmarks/dogfood/erb/receipts/sema_readgate_829k_n469.json`.
+Latency honesty (disclosed in the CHANGELOG, #374): turning dense off costs
+p50 latency — dense's ANN gate was load-bearing as a candidate-list cap —
+×2.5–2.6 at 100k fragments, shrinking to ×1.09–1.38 at the 829k operating
+point; the mitigation (a lex-branch candidate cap) has not yet landed.
+
+**All-encoders-on 0.8.x operating point (July 2026, no longer the shipped
+default)** — scored under ERB's official judge protocol and submitted to the
+leaderboard. These numbers were measured under **additive fusion + dense +
+SPLADE ON**, a configuration that no longer ships by default (every layer
+remains available opt-in):
 
 | ERB official metric | score |
 |---|---|
@@ -67,10 +95,13 @@ a single consumer desktop**, and retrieval ran with **zero LLM calls on the
 retrieval path**. The claim is that operating point — local, LLM-free, at
 scale — not a leaderboard win. Quote the delivery and correctness numbers as
 a pair: gold-document delivery was 55% at 829K-fragment scale (82% at 50K)
-and delivery is *not* a graded pass — end-to-end correctness is the 41.6%
-above. When the gold document *was* delivered, the answer was correct 79% of
-the time, so retrieval breadth at extreme scale, not answer synthesis, is
-the current ceiling. Full methodology + repro:
+under that same all-encoders-on config, and delivery is *not* a graded pass —
+end-to-end correctness is the 41.6% above. When the gold document *was*
+delivered, the answer was correct 79% of the time, so retrieval breadth at
+extreme scale, not answer synthesis, is the current ceiling. The end-to-end
+judge protocol has not yet been re-run on the 0.9.0 shipped defaults — the
+delivered-basis table above is the retrieval-layer measurement of the shipped
+world. Full methodology + repro:
 [docs/benchmarks/2026-07-10-erb-blob-829k-reproduction.md](docs/benchmarks/2026-07-10-erb-blob-829k-reproduction.md).
 
 **Scale caveat:** the 829K-fragment operating point above runs the *unsharded*
@@ -459,7 +490,7 @@ work as-is, no re-ingest needed.
 - **BGE-M3 backfill** only matters if you opt in to dense recall (`[retrieval] dense_embedding_enabled = true`; default off since 2026-08-15 — four-scale receipts measured dense displacing gold from delivery). With dense on, `embedding_dense_v2 IS NULL` until you run `scripts/backfill_bgem3_v2.py`.
 - **Fusion mode** defaults to `"rrf"` (since 2026-07-06; +12pp gold delivery vs additive on the hardest bed). `"additive"` remains as the legacy accumulator, scheduled for condition-gated removal. Under RRF the abstain gates run ratio-only.
 - **Sharded scale gap**: the sharded adapter currently trails the unsharded engine by ~31pp recall@10 on xl (dense recall and co-activation not yet at parity) — [#275](https://github.com/mbachaud/Cymatix-Context/issues/275). Prefer the unsharded engine for accuracy-sensitive corpora until this is closed.
-- **Session delivery** (`session_delivery_enabled = true`) tracks delivered docs per session, elides repeats. ~40% token savings on multi-turn. Pass `ignore_delivered: true` in `/context` body for benchmarks.
+- **Session delivery** (`session_delivery_enabled = true`) tracks delivered docs per session, elides repeats. ~40% token savings on multi-turn (unverified design estimate — pending the `cymatix_session_tokens_saved_total` counter). Pass `ignore_delivered: true` in `/context` body for benchmarks.
 - **know/miss contract** requires the agent prompt fragment to be honored — without it, frontier models confabulate. Import `cymatix_context.agent_prompt.full_fragment()`.
 - **Naming lexicon**: biology terms (gene, genome, ribosome) have canonical software equivalents (document, knowledge store, compressor). Both work in code; new code uses software terms. See [docs/ROSETTA.md](docs/ROSETTA.md).
 
@@ -467,7 +498,7 @@ work as-is, no re-ingest needed.
 
 ```bash
 python -m spacy download en_core_web_sm    # once; ingest-path tests skip without it (#313)
-python -m pytest tests/ -m "not live" -v   # ~4,100 tests, no external services
+python -m pytest tests/ -m "not live" -v   # ~4,165 tests, no external services
 ```
 
 ## Documentation

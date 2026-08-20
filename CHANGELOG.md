@@ -2,6 +2,40 @@
 
 ## Unreleased
 
+## 0.9.0 (2026-08-20)
+
+The post-flip release: the shipped default retrieval path is now fully
+algorithmic — `dense_embedding_enabled`, `splade_enabled`, `pki_enabled`,
+`dense_embed_on_ingest`, and `sema_embed_on_ingest` all default `false`,
+each flip receipt-gated (entries below). Release-gate tracker: #377.
+
+**Release-notes disclosures:**
+
+- **know surface:** KnowBlock never fires at shipped defaults (max confidence
+  ≈0.28 vs emit_floor 0.45; the `lexical_dense_agree` calibration feature is
+  structurally dead on the neural-free path) — fail-safe direction (0%
+  false-KNOW); recalibration tracked as #287 in the 0.9.x backlog (receipts:
+  `benchmarks/dogfood/erb/receipts/postflip_know_abstain_sanity_*.json`).
+- **p50 latency:** the dense-off default carries the measured p50 regression
+  disclosed under #374 (see the `dense_embedding_enabled` entry below —
+  ×2.5–2.6 at 100k shrinking to ×1.09–1.38 at 829k); the mitigation (lex-branch
+  candidate cap) has not landed and stays open on the retrieval-layer ledger.
+
+**Known deferred (0.9.x):**
+
+- Deferred work is sequenced in #377's 0.9.x deferral-ledger comment
+  (2026-08-19) — #366, #349, #344, #340, #336, #287, #275, #260, #205, #373,
+  #356, #355, plus the #351 knob decisions.
+- entity_graph layer ships ON but has never been ablated on the delivered
+  basis (ledger REMOVE-CANDIDATE); the arm is tracked in #377's 0.9.x backlog.
+
+**Ops:**
+
+- **ops(beds): 2026-08-20 bench-bed maintenance** — 36.6 GB reclaimed across
+  the two 829k benchmark beds (`path_key_index` drop + FTS5 external-content
+  migration + vacuum); receipt-comparability flag recorded on #370; new bed
+  bytes and reproduction notes in `docs/benchmarks/BASELINES.md`
+  (bed-state note, 2026-08-20).
 - **security: `[budget] neutralize_control_tags` default flipped `false` →
   `true` (#351 decision 2).** Scope: assembly-time escaping of `<cymatix:`
   control tags in retrieved content — a document whose content contains the
@@ -82,6 +116,39 @@
   #371 (`sema_embed_on_ingest`) was deliberately NOT flipped here — it
   needed its own receipt, which landed via PRs #399/#400 (see the entry
   above).
+- **config: #219 slice 5 — dark-feature labels, dead-knob removal, and the
+  `[plr] expected_sha256` wiring gap.** The default-honesty pass for knobs
+  the loader accepted but the runtime ignored or half-honored:
+  - **Removed five dead knobs** (parsed with ZERO runtime readers — verified
+    repo-wide, the only Python references were `config.py`'s own parse
+    lines): `[ingestion] colbert_enabled` (Phase-4 scaffold, never
+    implemented), `[retrieval] seeded_edge_weight` (the seed-insertion
+    weight is hardcoded `0.7 + 0.3*cos` in
+    `scripts/backfill_seeded_edges.py`), and `[cymatics] n_bins` /
+    `use_embeddings` / `splice_threshold_scale` (the spectrum resolution is
+    the module constant `scoring/cymatics.N_BINS`; the splice threshold
+    derives from `[budget] splice_aggressiveness`; no embedding path ever
+    read `use_embeddings`). The loader warns-and-ignores unknown keys
+    (`_warn_unknown`), so existing configs still carrying them get a startup
+    WARNING, not a failure — remove the lines to silence it.
+  - **Wired `[plr] expected_sha256`** (previously parsed but never passed):
+    the server's `get_fuser` call now threads the configured pin through to
+    `StackedPLRFuser.load`, so an operator-pinned artifact hash actually
+    verifies and a mismatch refuses to load (PLR soft-fails to
+    "unavailable", packets ship without `plr_confidence`). Byte-identical at
+    the shipped default `""` — empty falls back to the sidecar-`.sha256`
+    path exactly as before.
+  - **Labeled the three dark-but-wired features EXPERIMENTAL** with evidence
+    and graduation criteria instead of bare "Dark ship" comments:
+    `[retrieval] sr_enabled` (measured zero retrieval effect),
+    `ray_trace_theta` (requires a TCM velocity input the default pipeline
+    does not populate; never measured), `seeded_edges_enabled` (starts
+    evidence writes on every retrieval; never measured). All three stay
+    default-off; each graduates only with a fresh isolation receipt.
+  - `docs/config-reference.md` regenerated; its "Default cymatix.toml"
+    appendix no longer shows `sr_enabled = true` (stale since the
+    2026-06-12 honesty pass).
+
 - **retrieval: `[retrieval] pki_enabled` default flipped `true` → `false`
   (#370).** The 829k exact-shipped-default confirm at full statistical power
   (n=469, delivered basis,

@@ -307,7 +307,10 @@ class IngestionConfig:
     # docs/benchmarks/2026-08-14-encoder-isolation-scale-curve.md
     splade_enabled: bool = False    # Phase 2: SPLADE sparse expansion at index time
     rerank_model: str = DEFAULT_RERANK_MODEL  # legacy: feeds DeBERTaRibosome only; the retrieval cross-encoder reads [retrieval] rerank_model. Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass)
-    colbert_enabled: bool = False   # Phase 4: ColBERT late interaction (optional)
+    # colbert_enabled REMOVED (#219 slice 5, 2026-08-19): parsed since the
+    # Phase-4 scaffold but ZERO readers ever shipped — a silent no-op knob.
+    # The loader warns-and-ignores unknown keys, so configs still carrying it
+    # get a startup warning, not a failure.
     entity_graph: bool = True       # Phase 5: entity-based co-activation links (ingest-time edges). Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass)
     # Tier-0 PR-1 (2026-05-16): compute BGE-M3 dense vectors
     # (genes.embedding_dense_v2) inline at ingest. This is purely the WRITE
@@ -443,10 +446,14 @@ class ContextConfig:
 class CymaticsConfig:
     """Frequency-domain re_rank + splice (CPU math replaces LLM calls)."""
     enabled: bool = True                # Master switch
-    n_bins: int = 256                   # Spectrum resolution (<2KB per spectrum)
+    # n_bins / splice_threshold_scale / use_embeddings REMOVED (#219 slice 5,
+    # 2026-08-19): all three were parsed with ZERO runtime readers — silent
+    # no-op knobs (the spectrum resolution is the module constant
+    # scoring/cymatics.N_BINS; the splice threshold derives from
+    # [budget] splice_aggressiveness; no embedding path ever read
+    # use_embeddings). The loader warns-and-ignores unknown keys, so configs
+    # still carrying them get a startup warning, not a failure.
     peak_width: Optional[float] = None  # Explicit Gaussian peak-width override; unset (None) derives from [budget] splice_aggressiveness (1.55 at shipped 0.3) — #357
-    splice_threshold_scale: float = 0.7 # Maps splice_aggressiveness to resonance threshold
-    use_embeddings: bool = False        # Use Gene.embedding when available
     harmonic_links: bool = True         # Compute weighted co-activation edges
     distance_metric: str = "cosine"     # "cosine" (weighted dot) | "w1" (Werman 1986 circular Wasserstein-1)
 
@@ -472,27 +479,42 @@ class SessionConfig:
 @dataclass
 class RetrievalConfig:
     """Tier 5.5 SR + theta ray_trace bias (Sprint 2)."""
-    # Successor Representation (Stachenfeld 2017) - lazy on-demand SR rows
-    # via truncated power series over co-activation graph.
-    # 2026-06-12 default-honesty pass: stays FALSE on both sides. cymatix.toml
-    # had flipped this true (2026-04-22 Stage-1 bench), but the evidence
-    # roadmap measured SR at zero effect on retrieval outcomes, so the
-    # shipped toml was aligned back to the code default (the inverse of the
-    # usual toml-wins rule: measured-zero features default off).
+    # EXPERIMENTAL, off by default (#219 slice 5) — Successor Representation
+    # (Stachenfeld 2017): lazy on-demand SR rows via truncated power series
+    # over the co-activation graph, adding a gamma-discounted
+    # future-occupancy boost per candidate (wired: knowledge_store.query_genes
+    # via retrieval/sr.py). Off because the evidence roadmap measured SR at
+    # ZERO effect on retrieval outcomes while costing co-activation walks per
+    # query (2026-06-12 default-honesty pass; the 2026-04-22 Stage-1 toml
+    # flip to true was reverted to match). Graduates to default-on only with
+    # a fresh isolation receipt showing a delivered-recall gain on a current
+    # bed (delivered basis, both run orders — the 2026-08 receipt bar).
     sr_enabled: bool = False
     sr_gamma: float = 0.85              # Discount factor (5-10 hop horizon at 0.9)
     sr_k_steps: int = 4                 # Power-series truncation depth
     sr_weight: float = 1.5              # Per-document contribution multiplier
     sr_cap: float = 3.0                 # Max per-document SR boost (matches harmonic cap)
-    # Theta alternation (Wang/Foster/Pfeiffer 2020) — fore/aft ray_trace
-    # sampling biased by the current TCM velocity vector.
-    ray_trace_theta: bool = False       # Dark ship
+    # EXPERIMENTAL, off by default (#219 slice 5) — theta alternation
+    # (Wang/Foster/Pfeiffer 2020): biases fore/aft ray_trace neighbor
+    # sampling by the current TCM velocity vector (wired: threaded into the
+    # ray-trace scorer from context_manager). Off because it requires a TCM
+    # velocity input the default pipeline does not populate (Sprint 1 item 3
+    # never landed), so flipping it today biases on a zero vector, and no
+    # receipt has ever measured it. Graduates only after TCM velocity is
+    # populated end-to-end AND an isolation receipt shows a delivered gain.
+    ray_trace_theta: bool = False
     theta_weight: float = 1.0           # Softmax temperature on v·document dot product
-    # Sprint 4 — seeded co-activation edges with Hebbian evidence decay.
-    # Three-class edge provenance (seeded / co_retrieved / cwola_validated)
-    # with Laplace-smoothed co_count vs miss_count per edge.
-    seeded_edges_enabled: bool = False  # Dark ship — flip to start evidence accumulation
-    seeded_edge_weight: float = 1.0     # Base weight written on seed insertion
+    # EXPERIMENTAL, off by default (#219 slice 5) — Sprint 4 seeded
+    # co-activation edges with Hebbian evidence decay: three-class edge
+    # provenance (seeded / co_retrieved / cwola_validated), Laplace-smoothed
+    # co_count vs miss_count per edge (wired: post-retrieval evidence update
+    # in knowledge_store via retrieval/seeded_edges.py; seeds inserted by
+    # scripts/backfill_seeded_edges.py). Off because flipping it starts
+    # evidence WRITES on every retrieval (write amplification on read-heavy
+    # serving) and no receipt has measured the edges improving delivered
+    # recall. Flip to start evidence accumulation; graduates only with an
+    # isolation receipt showing the edges earn their writes.
+    seeded_edges_enabled: bool = False
     # WS3: cap on referenced definitions pulled in by symbol-graph expansion
     # (SYMBOL_REF). When more than `cap` candidates reference distinct defs, keep
     # the top-`cap` by structural-centrality PageRank. 0 disables symbol
@@ -1079,7 +1101,10 @@ class PLRConfig:
     # SHA256 of the artifact — when set, load refuses to proceed unless the
     # file's digest matches. Empty string = trust the sidecar .sha256 next
     # to the artifact (written by the trainer). Set a pinned hex digest in
-    # cymatix.toml if you want explicit operator-level pinning.
+    # cymatix.toml if you want explicit operator-level pinning. Wired
+    # through the server's get_fuser call since #219 slice 5 — before that
+    # it was parsed but never passed, so a configured pin silently did
+    # nothing (only the sidecar path was live).
     expected_sha256: str = ""
     # Threshold the fuser's `prob_B` is compared against to emit a coarse
     # "likely-to-re-query" boolean alongside the log-odds. 0.5 is the
@@ -1464,7 +1489,6 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             backend=i.get("backend", cfg.ingestion.backend),
             splade_enabled=i.get("splade_enabled", cfg.ingestion.splade_enabled),
             rerank_model=i.get("rerank_model", cfg.ingestion.rerank_model),
-            colbert_enabled=i.get("colbert_enabled", cfg.ingestion.colbert_enabled),
             entity_graph=i.get("entity_graph", cfg.ingestion.entity_graph),
             dense_embed_on_ingest=i.get(
                 "dense_embed_on_ingest", cfg.ingestion.dense_embed_on_ingest
@@ -1518,13 +1542,10 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
         _warn_unknown("cymatics", cy, CymaticsConfig)
         cfg.cymatics = CymaticsConfig(
             enabled=cy.get("enabled", cfg.cymatics.enabled),
-            n_bins=int(cy.get("n_bins", cfg.cymatics.n_bins)),
             # #357: honour an explicit override; absent key keeps the
             # derived-from-splice_aggressiveness behaviour (None).
             peak_width=(float(cy["peak_width"]) if cy.get("peak_width") is not None
                         else cfg.cymatics.peak_width),
-            splice_threshold_scale=float(cy.get("splice_threshold_scale", cfg.cymatics.splice_threshold_scale)),
-            use_embeddings=cy.get("use_embeddings", cfg.cymatics.use_embeddings),
             harmonic_links=cy.get("harmonic_links", cfg.cymatics.harmonic_links),
             distance_metric=str(cy.get("distance_metric", cfg.cymatics.distance_metric)).lower(),
         )
@@ -1542,7 +1563,6 @@ def load_config(path: Optional[str] = None) -> CymatixConfig:
             ray_trace_theta=bool(r.get("ray_trace_theta", cfg.retrieval.ray_trace_theta)),
             theta_weight=float(r.get("theta_weight", cfg.retrieval.theta_weight)),
             seeded_edges_enabled=bool(r.get("seeded_edges_enabled", cfg.retrieval.seeded_edges_enabled)),
-            seeded_edge_weight=float(r.get("seeded_edge_weight", cfg.retrieval.seeded_edge_weight)),
             filename_anchor_enabled=bool(r.get("filename_anchor_enabled", cfg.retrieval.filename_anchor_enabled)),
             filename_anchor_weight=float(r.get("filename_anchor_weight", cfg.retrieval.filename_anchor_weight)),
             bm25_shortlist_enabled=bool(r.get("bm25_shortlist_enabled", cfg.retrieval.bm25_shortlist_enabled)),
