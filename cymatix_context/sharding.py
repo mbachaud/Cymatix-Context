@@ -554,6 +554,16 @@ class ShardedGenomeAdapter:
     def invalidate_cold_sema_cache(self, *_a, **_kw) -> None: pass
     def _build_sema_cache(self, *_a, **_kw) -> None: pass
     def _invalidate_dense_matrix(self, *_a, **_kw) -> None: pass
+    # #372: document-scoped transactions are per-connection; V1 sharding has
+    # no cross-shard transaction, so both seams are no-op scopes — each shard
+    # store keeps the historical commit-per-call behavior (the same semantics
+    # context_manager's nullcontext fallback provided before these existed).
+    def deferred_commits(self):
+        import contextlib
+        return contextlib.nullcontext()
+    def _write_unit(self, *_a, **_kw):
+        import contextlib
+        return contextlib.nullcontext()
 
     # SEMA cache is main-only (not per-shard in V1); expose an empty one.
     _sema_cache: dict = {}
