@@ -137,6 +137,13 @@ Added after slice 1 shipped; not part of the slice-1 contract above. Default
 OFF — with the env unset, every path in this section is byte-for-byte what
 slice 1 shipped, asserted by tests.
 
+> **Naming note (#339 rider):** `CYMATIX_ENCODER_DETERMINISTIC` (this
+> profile — how a running daemon encodes) is unrelated to
+> `cymatix ingest --deterministic` (the OKF deterministic-ingest profile —
+> whether ingest encodes at all; see `docs/INTEGRATING_WITH_EXISTING_RAG.md`,
+> "Determinism — the canonical digest"). The shared adjective is a
+> coincidence.
+
 Motivation: `docs/benchmarks/2026-08-05-fork1-worker-sweep.md`, "Rank
 stability under parallelism" — on CUDA, recall deviated ±0.05 from the same
 run's c=1 (overlap ≥0.975, errors 0) because the dense micro-batch **shape**

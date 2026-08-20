@@ -332,11 +332,15 @@ def test_off_rerank_score_pairs_runs_the_local_body(monkeypatch):
 
 def test_off_manager_constructs_lazy_sema_codec(tmp_path, fake_local_sema):
     from cymatix_context.backends.sema import LazySemaCodec
-    from cymatix_context.config import GenomeConfig
+    from cymatix_context.config import GenomeConfig, IngestionConfig
     from cymatix_context.context_manager import CymatixContextManager
 
+    # sema_embed_on_ingest defaults False since the 2026-08-19 flip (#371);
+    # opt in explicitly — this test is about WHICH codec class a sema-enabled
+    # manager builds when the daemon URL is unset (the lazy local one).
     cfg = make_cymatix_config(
         genome=GenomeConfig(path=str(tmp_path / "genome.db"), cold_start_threshold=5),
+        ingestion=IngestionConfig(sema_embed_on_ingest=True),
     )
     mgr = CymatixContextManager(cfg)
     assert isinstance(mgr._sema_codec, LazySemaCodec)
@@ -588,12 +592,19 @@ def test_on_manager_constructs_remote_sema_codec_without_sentence_transformers(
     """With a URL set the daemon owns the model — sema_available() is not required."""
     from cymatix_context.backends import encoder_client
     from cymatix_context.backends import sema as sema_mod
-    from cymatix_context.config import EncoderDaemonConfig, GenomeConfig
+    from cymatix_context.config import (
+        EncoderDaemonConfig,
+        GenomeConfig,
+        IngestionConfig,
+    )
     from cymatix_context.context_manager import CymatixContextManager
 
     monkeypatch.setattr(sema_mod, "sema_available", lambda: False)
+    # Explicit opt-in: sema_embed_on_ingest defaults False since 2026-08-19
+    # (#371); the daemon-ownership property under test needs the knob on.
     cfg = make_cymatix_config(
         genome=GenomeConfig(path=str(tmp_path / "genome.db"), cold_start_threshold=5),
+        ingestion=IngestionConfig(sema_embed_on_ingest=True),
         encoder_daemon=EncoderDaemonConfig(url=daemon_url),
     )
     mgr = CymatixContextManager(cfg)
@@ -646,6 +657,73 @@ def test_dense_fallback_publishes_model_for_the_components_probe(dead_url, fake_
     assert codec._model is None
     codec.encode("hello")
     assert codec._model == "local-weights"
+
+
+def test_dense_remote_failure_warns_loud_once_with_url_and_error(
+    daemon_url, fake_local_dense, monkeypatch, caplog
+):
+    """#376: the fallback is loud — one WARNING naming the URL and the error.
+
+    A repeat of the SAME failure class after the cooldown demotes to DEBUG,
+    so a flapping daemon cannot spam a long ingest.
+    """
+    from cymatix_context.backends import encoder_client
+
+    clock = [1_000.0]
+    monkeypatch.setattr(encoder_client.time, "monotonic", lambda: clock[0])
+    _DaemonHandler.fail_paths = {"/encode/dense"}
+
+    codec = encoder_client.RemoteBGEM3Codec(dim=4, device="cpu", url=daemon_url)
+    with caplog.at_level(logging.WARNING, logger="cymatix.encoder_client"):
+        codec.encode("hello")
+        clock[0] += encoder_client.retry_cooldown_s()
+        codec.encode("world")  # cooldown elapsed: the RPC re-fails identically
+
+    loud = [r for r in caplog.records if daemon_url in r.getMessage()]
+    assert len(loud) == 1, (
+        f"expected exactly one loud fallback; got {[r.getMessage() for r in loud]}"
+    )
+    assert loud[0].levelno == logging.WARNING
+    message = loud[0].getMessage()
+    assert "EncoderClientError" in message, "the warning must name the error"
+    assert "fell back in-process" in message
+
+
+def test_dense_unusable_payload_warns_loud_with_url(daemon_url, fake_local_dense, caplog):
+    """A wrong-dim daemon is a named failure class, not a silent fallback."""
+    from cymatix_context.backends import encoder_client
+
+    _DaemonHandler.responses["/encode/dense"] = {"vectors": [[1.0, 0.0]], "dim": 2}
+    codec = encoder_client.RemoteBGEM3Codec(dim=4, device="cpu", url=daemon_url)
+    with caplog.at_level(logging.WARNING, logger="cymatix.encoder_client"):
+        assert codec.encode("hello") == [0.5] * 4
+    loud = [r for r in caplog.records if daemon_url in r.getMessage()]
+    assert len(loud) == 1
+    assert "unusable-payload" in loud[0].getMessage()
+
+
+def test_dense_last_transport_flips_daemon_to_in_process_and_back(
+    daemon_url, fake_local_dense, monkeypatch
+):
+    """#376: provenance records the transport actually used, per call."""
+    from cymatix_context.backends import encoder_client
+
+    clock = [1_000.0]
+    monkeypatch.setattr(encoder_client.time, "monotonic", lambda: clock[0])
+
+    codec = encoder_client.RemoteBGEM3Codec(dim=4, device="cpu", url=daemon_url)
+    assert codec.last_transport is None, "no encode yet"
+    codec.encode("hello")
+    assert codec.last_transport == "daemon"
+
+    _DaemonHandler.fail_paths = {"/encode/dense"}
+    codec.encode("world")
+    assert codec.last_transport == "in-process"
+
+    _DaemonHandler.fail_paths = set()
+    clock[0] += encoder_client.retry_cooldown_s()
+    codec.encode("again")
+    assert codec.last_transport == "daemon", "recovery is visible in provenance"
 
 
 def test_dense_encode_never_raises_when_the_fallback_also_fails(dead_url, monkeypatch):
@@ -749,6 +827,25 @@ def test_sema_loaded_is_truthful_after_a_fallback_load(dead_url, fake_local_sema
     codec.encode("hello")
     assert codec.loaded is True
     assert codec.peek() is not None
+
+
+def test_sema_last_transport_flips_daemon_to_in_process(
+    daemon_url, fake_local_sema, monkeypatch
+):
+    """#376: the SEMA seam records its per-call transport too."""
+    from cymatix_context.backends import encoder_client
+
+    clock = [1_000.0]
+    monkeypatch.setattr(encoder_client.time, "monotonic", lambda: clock[0])
+
+    codec = encoder_client.RemoteSemaCodec(url=daemon_url)
+    assert codec.last_transport is None, "no encode yet"
+    codec.encode("hello")
+    assert codec.last_transport == "daemon"
+
+    _DaemonHandler.fail_paths = {"/encode/sema"}
+    codec.encode("world")
+    assert codec.last_transport == "in-process"
 
 
 # ══ 4. Singleton semantics for the remote codec ══════════════════════

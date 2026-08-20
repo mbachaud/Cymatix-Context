@@ -2,6 +2,51 @@
 
 ## Unreleased
 
+- **ingestion: `[ingestion] sema_embed_on_ingest` default flipped `true` →
+  `false` (#371).** Ingest-time behavior change only — this completes #371's
+  sema half (the dense half is the entry below). Consumer audit first
+  (PR #399): at shipped defaults the ONLY live retrieval-path consumer of
+  `gene.embedding` is the Tier-4 `sema_boost` re-rank — cymatics reads tags
+  (`[cymatics] use_embeddings` off), cold tier is opt-in, TCM's tag-hash
+  fallback is clean, and the freshness gate / packet know/PLR read no
+  embeddings. Deciding cell (PR #400,
+  `benchmarks/dogfood/erb/receipts/sema_readgate_829k_n469.json` — `no_sema`
+  read-gate arm on the 829k bed, n=469, delivered basis, paired per-needle):
+  a wash — delivered gold 264/469 → 265/469 (+1 needle), r@12/fr@12/median/
+  mean rank byte-identical, 0 recall flips, 0 final-rank moves, abstain set
+  byte-identical (16/469, all pre-existing). The dogfood-scale A/B (PR #399,
+  n=18) had measured −2 delivered needles (one `[abstain]` floor coupling,
+  one budget-boundary cut); the coupling does not reproduce at 829k. Riders:
+  cold start −~9.7 s (the SEMA/MiniLM load was 97.7% of first-request
+  latency, `cold_start_postflip.json`), ingest wall 835.9 s → 761.5 s on the
+  1,181-file dogfood corpus, −0.48% bed bytes. Re-opt-in story: set
+  `sema_embed_on_ingest = true` — new ingests embed; docs ingested while the
+  knob was off have NULL `gene.embedding` until `scripts/backfill_sema.py`
+  (or re-ingest/consolidate), and TCM's tag-hash fallback covers vectorless
+  docs by design (#227). Explicit `sema_embed_on_ingest = true` configs keep
+  their behavior. Follow-up (not a flip blocker): `[abstain]`
+  floor-recalibration is tracked on #371's closing comment / the #377
+  ledger — 13/16 delivered-adjacent floor abstains pre-exist at shipped
+  defaults and are not moved by this knob.
+- **ingestion: `[ingestion] dense_embed_on_ingest` default flipped `true` →
+  `false` (#371).** Ingest-time behavior change only — retrieval is untouched:
+  at shipped defaults (`[retrieval] dense_embedding_enabled = false` since
+  2026-08-15) nothing reads `embedding_dense_v2`, and the sharded read path
+  hard-wires dense off, so the inline BGE-M3 encode (~2 GB model load, one
+  *unbatched* extra encode per multi-chunk file for the layered-fingerprint
+  parent) was a dead write. PR #379's harness smoke
+  (`benchmarks/dogfood/run_ingest_throughput.py`, 12 files, CPU encode):
+  defaults 126.8 s wall / 4084 ms steady per-file / 3.47 GB peak RSS vs
+  `no_dense_ingest` 20.9 s / 494 ms / 0.82 GB — a 6.1× wall speedup and
+  −2.6 GB RSS from this knob alone. Re-opt-in story: set
+  `dense_embed_on_ingest = true` to resume writing vectors at ingest; docs
+  ingested while the knob was off have NULL vectors, so re-enabling dense
+  RETRIEVAL on such a bed additionally requires `scripts/backfill_bgem3_v2.py`.
+  Existing beds with backfilled vectors are unaffected, and explicit
+  `dense_embed_on_ingest = true` configs keep their behavior. The sema half of
+  #371 (`sema_embed_on_ingest`) was deliberately NOT flipped here — it
+  needed its own receipt, which landed via PRs #399/#400 (see the entry
+  above).
 - **config: #219 slice 5 — dark-feature labels, dead-knob removal, and the
   `[plr] expected_sha256` wiring gap.** The default-honesty pass for knobs
   the loader accepted but the runtime ignored or half-honored:

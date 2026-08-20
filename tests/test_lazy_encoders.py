@@ -32,6 +32,7 @@ from cymatix_context.config import (
     GenomeConfig,
     Hardware,
     CymatixConfig,
+    IngestionConfig,
     RibosomeConfig,
     ServerConfig,
     load_config,
@@ -155,10 +156,14 @@ def _config(tmp_path, **hardware_kwargs) -> CymatixConfig:
     # file's own genome path (a real tmp file, not ":memory:") and the
     # [hardware] override are passed explicitly since the lazy-encoder
     # suite needs per-test hardware knobs make_cymatix_config doesn't cover.
+    # sema_embed_on_ingest defaults False since the 2026-08-19 flip (#371);
+    # this suite verifies HOW the SEMA codec loads (lazily) when configured,
+    # so it opts the knob back in explicitly.
     return make_cymatix_config(
         genome=GenomeConfig(path=str(tmp_path / "genome.db"), cold_start_threshold=5),
         server=ServerConfig(upstream="http://localhost:11434"),
         hardware=Hardware(**hardware_kwargs),
+        ingestion=IngestionConfig(sema_embed_on_ingest=True),
     )
 
 
@@ -406,6 +411,35 @@ def test_admin_components_reports_unloaded_without_loading(tmp_path, fake_sema):
     assert by_name2["sema"]["loaded"] is True
     assert by_name2["sema"]["status"] in ("running", "idle")
     assert fake_sema.constructions == 1
+
+
+def test_admin_components_surfaces_last_transport(tmp_path, fake_sema, monkeypatch):
+    """#376: the readout names the transport the last encode actually used."""
+    from fastapi.testclient import TestClient
+
+    from cymatix_context.backends import encoder_client
+    from cymatix_context.server import create_app
+
+    app = create_app(_config(tmp_path))
+    client = TestClient(app)
+    by_name = {c["name"]: c for c in client.get("/admin/components").json()["components"]}
+    # A purely local codec carries no last_transport -> None.
+    assert by_name["sema"]["transport"] is None
+
+    # Swap in the remote wrapper pointed at a dead daemon: the readout must
+    # show the transport the encode actually used, not the wrapper class.
+    monkeypatch.setenv("CYMATIX_ENCODER_READY_TIMEOUT_S", "0.2")
+    encoder_client.reset_for_test()
+    try:
+        remote = encoder_client.RemoteSemaCodec(url="http://127.0.0.1:1")
+        app.state.cymatix._sema_codec = remote
+        remote.encode("hello")  # dead daemon -> in-process fallback
+        by_name = {
+            c["name"]: c for c in client.get("/admin/components").json()["components"]
+        }
+        assert by_name["sema"]["transport"] == "in-process"
+    finally:
+        encoder_client.reset_for_test()
 
 
 def test_admin_components_lazy_deberta_listed_unloaded(tmp_path, fake_deberta, fake_sema):

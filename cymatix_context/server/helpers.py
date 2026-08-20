@@ -460,13 +460,21 @@ def _compute_plr_confidence(
     query: str,
     *,
     now_ts: Optional[float] = None,
+    retrieval_scores: Optional[dict] = None,
+    tier_contributions: Optional[dict] = None,
 ) -> Optional[dict]:
     """Score the just-completed retrieval with the PLR query-quality head.
 
-    Called after ``build_context_packet`` so ``cymatix.genome.last_tier_contributions``
-    reflects the current query. Returns a dict suitable for JSON serialization
-    (prob_B, logit, score_A, high_risk, artifact_label_set) or None when the
-    fuser can't be loaded / scored.
+    Called after ``build_context_packet``. Issue #350 (W1.6b):
+    ``retrieval_scores`` / ``tier_contributions`` are the request-scoped
+    snapshot the packet builder captured under the store lock right after
+    its retrieval (``packet.retrieval_scores`` / ``packet.tier_contributions``)
+    — prefer them, because the genome-global ``last_query_scores`` /
+    ``last_tier_contributions`` may already hold a CONCURRENT request's
+    publication by the time this runs. ``None`` (legacy direct callers)
+    falls back to the genome-global read. Returns a dict suitable for JSON
+    serialization (prob_B, logit, score_A, high_risk, artifact_label_set)
+    or None when the fuser can't be loaded / scored.
 
     This is a **query-level** head. Every candidate in a given retrieval has
     the same feature vector, so callers should treat ``plr_confidence`` as a
@@ -489,7 +497,12 @@ def _compute_plr_confidence(
 
     # 1. Aggregate tier_totals across all documents in the current retrieval.
     #    Mirrors the CWoLa-logger aggregation at server.py ~line 898.
-    tier_contrib_all = getattr(cymatix.genome, "last_tier_contributions", {}) or {}
+    #    #350: snapshot-first read (see docstring).
+    tier_contrib_all = (
+        tier_contributions
+        if tier_contributions is not None
+        else (getattr(cymatix.genome, "last_tier_contributions", {}) or {})
+    )
     tier_totals: dict[str, float] = {}
     for contribs in tier_contrib_all.values():
         for tier, score in contribs.items():
@@ -518,7 +531,12 @@ def _compute_plr_confidence(
         q_sema = codec.encode(query)
 
         top_gene_id = None
-        last_scores = getattr(cymatix.genome, "last_query_scores", {}) or {}
+        # #350: snapshot-first read (see docstring).
+        last_scores = (
+            retrieval_scores
+            if retrieval_scores is not None
+            else (getattr(cymatix.genome, "last_query_scores", {}) or {})
+        )
         if last_scores:
             top_gene_id = max(last_scores, key=last_scores.get)
         if top_gene_id:

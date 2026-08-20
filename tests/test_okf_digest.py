@@ -139,9 +139,13 @@ class TestFloatExclusion:
 
         path = OKF_FIXTURES / "type_only"
 
-        default_cfg = make_cymatix_config()
-        mgr_default = CymatixContextManager(default_cfg)
-        res_default = ingest_bundle(mgr_default, path)
+        # Embedding-bearing arm: dense_embed_on_ingest defaults False since
+        # the 2026-08-19 flip (#371), so the float-exclusion property is
+        # exercised by opting the write path back in explicitly.
+        dense_cfg = make_cymatix_config()
+        dense_cfg.ingestion.dense_embed_on_ingest = True
+        mgr_dense = CymatixContextManager(dense_cfg)
+        res_dense = ingest_bundle(mgr_dense, path)
 
         det_cfg = make_cymatix_config()
         det_cfg.ingestion.sema_embed_on_ingest = False
@@ -150,19 +154,19 @@ class TestFloatExclusion:
         mgr_det = CymatixContextManager(det_cfg)
         res_det = ingest_bundle(mgr_det, path)
 
-        assert res_default.digest == res_det.digest
+        assert res_dense.digest == res_det.digest
 
-        dense_default = mgr_default.genome.conn.execute(
+        dense_on = mgr_dense.genome.conn.execute(
             "SELECT embedding_dense_v2 FROM genes WHERE gene_id = ?",
-            (res_default.gene_ids[0],),
+            (res_dense.gene_ids[0],),
         ).fetchone()[0]
         dense_det = mgr_det.genome.conn.execute(
             "SELECT embedding_dense_v2 FROM genes WHERE gene_id = ?",
             (res_det.gene_ids[0],),
         ).fetchone()[0]
-        # Default config stores a float vector; the deterministic-ingest
-        # profile stores NULL — and neither is visible to the digest.
-        assert dense_default is not None
+        # The dense-opted config stores a float vector; the deterministic-
+        # ingest profile stores NULL — and neither is visible to the digest.
+        assert dense_on is not None
         assert dense_det is None
 
 

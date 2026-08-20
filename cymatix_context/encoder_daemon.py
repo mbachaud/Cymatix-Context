@@ -168,6 +168,12 @@ WARM_PROBE_ENCODES = 5
 
 # ── determinism profile knobs (slice 2 — see the module docstring) ───
 
+#: Bench determinism profile for a running encoder daemon (fixed-shape
+#: batching + deterministic kernels + TF32 off). NOT related to
+#: ``cymatix ingest --deterministic`` (cli/cmd_ingest.py), the OKF
+#: deterministic-ingest profile that skips encoder calls at ingest
+#: entirely — the two features share an adjective only. This knob shapes
+#: HOW the daemon encodes; the ingest flag decides WHETHER ingest encodes.
 DETERMINISTIC_ENV = "CYMATIX_ENCODER_DETERMINISTIC"
 
 #: TF32 is OFF whenever the deterministic profile is on; this re-enables it

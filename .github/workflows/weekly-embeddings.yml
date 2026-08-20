@@ -1,0 +1,87 @@
+# Issue #352: the genuinely model-dependent tests stay skipped in required
+# CI because no required job installs the embeddings extra (sentence-
+# transformers pulls a ~90-400 MB HuggingFace model download and adds a
+# network-flake failure mode). Decision: run them here, in a separate
+# NON-REQUIRED weekly job — the issue's own proposed alternative — so the
+# coverage exists but a HF outage can never block a PR.
+#
+# Non-required by construction: triggered only on schedule/dispatch, never
+# on pull_request or push, so it can never appear in branch-protection
+# contexts and must never be added to them.
+name: Weekly embeddings suite
+
+on:
+  schedule:
+    # Mondays 05:23 UTC — quiet slot, off the on-the-hour GHA rush.
+    - cron: "23 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  weekly-embeddings:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    # Explicit: a red run must show as red in the run history. The job is
+    # kept off the merge path by its triggers, not by swallowing failures.
+    continue-on-error: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Amortize the weekly model downloads (SemaCodec MiniLM et al.).
+      # pyproject.toml is the closest lockfile-ish input we have: the extras
+      # pin the library versions that decide which model revisions get
+      # resolved. restore-keys lets an unrelated pyproject edit still reuse
+      # the previously cached models.
+      - name: Cache HuggingFace models
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-models-${{ runner.os }}-${{ hashFiles('pyproject.toml') }}
+          restore-keys: |
+            hf-models-${{ runner.os }}-
+
+      # Same CPU-only torch trick as ci.yml: install it first so the
+      # embeddings/nli extras don't drag in the multi-GB CUDA wheel.
+      - name: Install CPU-only torch
+        run: pip install --index-url https://download.pytorch.org/whl/cpu torch
+
+      # Full-suite extras (dev,ast,mcp — see ci.yml test-full-suite) PLUS the
+      # two extras under decision in #352: embeddings (sentence-transformers,
+      # the actual model dependency) and nli (transformers — its tests are
+      # fully mocked, so installing it is free).
+      - name: Install package + test deps + embeddings and nli extras
+        run: pip install -e ".[dev,ast,mcp,embeddings,nli]" psutil platformdirs py-cpuinfo numpy joblib scikit-learn
+
+      # Keep the job honest: if the extras install ever silently breaks, the
+      # gated tests would skip and the job would go green while proving
+      # nothing. Fail loudly instead.
+      - name: Assert the model deps are importable (job must not silently skip)
+        run: python -c "import sentence_transformers, transformers"
+
+      # The enumerated model-gated files (find_spec / importorskip on
+      # sentence_transformers or transformers), not the whole suite:
+      #   test_sema.py                 module-level importorskip (22 tests)
+      #   test_density_gate.py         TestColdTierRetrieval class skipif
+      #   test_pipeline.py             cold-tier class skipifs
+      #   test_perf_instrumentation.py importorskip in 2 tests
+      #   test_rerank_backend.py       importorskip (mocked, #341 device routing)
+      #   test_nli_backend.py          importorskip (mocked)
+      #   test_deberta_backend.py      importorskip (mocked)
+      # -rs prints any remaining skips so drift in the gating is visible.
+      - name: Run the model-gated test files
+        run: >
+          pytest
+          tests/test_sema.py
+          tests/test_density_gate.py
+          tests/test_pipeline.py
+          tests/test_perf_instrumentation.py
+          tests/test_rerank_backend.py
+          tests/test_nli_backend.py
+          tests/test_deberta_backend.py
+          -m "not live" -v -rs

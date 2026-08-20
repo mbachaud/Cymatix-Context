@@ -8,6 +8,11 @@ column is populated, never that recall uses it.
 
 Cases covered:
 
+0. ``test_default_is_false`` / ``test_toml_can_enable`` /
+   ``test_toml_omitted_keeps_default_false`` — the 2026-08-19 default flip
+   (#371): ``dense_embed_on_ingest`` defaults False (dead write at
+   neural-free retrieval defaults; PR #379 receipt), an explicit toml
+   ``true`` still opts in.
 1. ``test_upsert_doc_explicit_vector_persists_blob`` — an explicit
    ``embedding_dense_v2=`` arg is packed and stored; round-trips at
    ``dim*4`` bytes.
@@ -56,7 +61,7 @@ from cymatix_context.backends.bgem3_codec import (
     BGEM3Codec,
     vec_to_blob,
 )
-from cymatix_context.config import CymatixConfig
+from cymatix_context.config import CymatixConfig, IngestionConfig, load_config
 from cymatix_context.context_manager import CymatixContextManager
 from cymatix_context.genome import Genome
 from cymatix_context.schemas import (
@@ -93,6 +98,32 @@ def _blob_len(genome: Genome, gene_id: str):
         (gene_id,),
     ).fetchone()
     return row[0] if row else None
+
+
+# ── 0. config default (2026-08-19 flip, #371) ────────────────────────
+
+
+def test_default_is_false():
+    """2026-08-19 default flip (#371): with [retrieval]
+    dense_embedding_enabled false since 2026-08-15 nothing reads
+    embedding_dense_v2, so the inline BGE-M3 write is off by default
+    (PR #379 harness smoke: 126.8 s -> 20.9 s wall on 12 files)."""
+    assert IngestionConfig().dense_embed_on_ingest is False
+    assert CymatixConfig().ingestion.dense_embed_on_ingest is False
+
+
+def test_toml_can_enable(tmp_path):
+    """An explicit ``dense_embed_on_ingest = true`` must win over the
+    flipped default — the re-opt-in path."""
+    p = tmp_path / "cymatix.toml"
+    p.write_text("[ingestion]\ndense_embed_on_ingest = true\n", encoding="utf-8")
+    assert load_config(str(p)).ingestion.dense_embed_on_ingest is True
+
+
+def test_toml_omitted_keeps_default_false(tmp_path):
+    p = tmp_path / "cymatix.toml"
+    p.write_text('[ingestion]\nbackend = "cpu"\n', encoding="utf-8")
+    assert load_config(str(p)).ingestion.dense_embed_on_ingest is False
 
 
 # ── 1. explicit vector persists ──────────────────────────────────────
