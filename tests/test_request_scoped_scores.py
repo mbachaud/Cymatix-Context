@@ -627,7 +627,9 @@ class TestPlrSnapshot:
                 captured["tier_totals"] = dict(tier_totals)
                 return {"prob_B": 0.25, "logit": -1.1, "score_A": 0.75}
 
-        monkeypatch.setattr(fusion_plr, "get_fuser", lambda _path: _FakeFuser())
+        monkeypatch.setattr(
+            fusion_plr, "get_fuser", lambda _path, **_kw: _FakeFuser()
+        )
 
         class _Codec:
             def encode(self, text):

@@ -487,10 +487,11 @@ def _compute_plr_confidence(
         return None
     # #219 slice 5: thread [plr] expected_sha256 through — a configured pin
     # now actually verifies (empty "" -> None keeps the sidecar-.sha256 path
-    # byte-identical to the pre-wiring default).
+    # byte-identical to the pre-wiring default). getattr: duck-typed test
+    # configs (SimpleNamespace plr stubs) predate the field.
     fuser = fusion_plr.get_fuser(
         config.plr.model_path,
-        expected_sha256=config.plr.expected_sha256 or None,
+        expected_sha256=getattr(config.plr, "expected_sha256", "") or None,
     )
     if fuser is None:
         return None
