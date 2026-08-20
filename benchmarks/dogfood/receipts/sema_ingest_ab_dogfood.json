@@ -1,38 +1,79 @@
 {
   "tool": "sema_embed_on_ingest A/B (ingest-side isolation) — consumer audit + dogfood bed parity",
   "issue": 371,
-  "status": "PARTIAL — consumer audit complete; beds building (crash-resilient rerun v2)",
+  "status": "COMPLETE",
   "stamp": "2026-08-19",
-  "git_sha": "bcdd1a1",
-  "question": "should [ingestion] sema_embed_on_ingest default flip to false? (dense half already flipped in PR #392)",
+  "git_sha": "bcdd1a135b41a88554e08d41d62b6545eec76150",
+  "question": "should [ingestion] sema_embed_on_ingest default flip to false? (dense half already flipped in open PR #392)",
+  "verdict": "ESCALATE — dogfood scale cannot resolve the one live consumer's delta. Arm B loses 2/18 delivered needles (deterministic, replicated in both run orders), but the equivalent serve-world isolation at 100k/n=30 (sema_ab_100k_run1.json) measured ZERO delivered delta; pooled evidence is -2/48 (~-4pp), inside noise. Deciding cell named below.",
+  "verdict_detail": {
+    "why_not_FLIP": "not parity: delivered_gold_rate 0.7222 -> 0.6111 (-2 needles), pool r@12 0.8889 -> 0.8333 (-1 needle). Both effects are the Tier 4 sema_boost tier's removal (#227 global-off), deterministic and exactly replicated across two grade runs per arm.",
+    "why_not_KEEP": "final-order r@12 is IDENTICAL (0.8889 both arms), packet delivered is IDENTICAL (0.8333), and the prior read-gate isolation on the 100k erb bed (n=30) measured delivered 15/30 = 15/30 with the same serve world (knob false = codec never materializes = stored vectors unread, so the read-gate arm is A/B-equivalent for every retrieval-path consumer). One of the two dogfood losses is an [abstain] floor-calibration coupling, not lost retrieval (gold still at final rank 8; assembly withheld everything with abstain_reason=score_below_floor — the floor was calibrated with sema_boost's ~2.0-weighted score mass present). n=18: one needle = 5.6pp; a 2-needle delta on one bed contradicted by a 0-delta on another bed is not a KEEP receipt.",
+    "deciding_cell": "no_sema read-gate arm on the 829k blob at n=469, delivered basis — the postflip_default_confirm_829k.json convention (bed f:/tmp/erb_blob.db + ablation_ladder.py no_sema arm + 469-needle set; NOT touched by this run per ERB-bed freeze). Because #227 knob-false removes the codec, the read-gate arm equals the ingest-side arm on the whole retrieval path; the only ingest-side residuals (bed shape, TCM/PLR/CWoLa side-features) all measured parity or designed-fallback-clean here. If n=469 delivered delta is null-to-hair like PKI (#370), flip WITH an [abstain] floor recalibration note; if it reproduces at -5pp+, keep.",
+    "if_flipped_anyway": "pair the flip with an [abstain] recalibration pass — score_below_floor was tuned against a score distribution that included sema_boost mass on every query."
+  },
   "prior_evidence": {
-    "serve_side_half": "benchmarks/dogfood/erb/receipts/sema_ab_100k_run1.json — 100k bed, vectors PRESENT, knob false at serve: r@12 0.800=0.800, delivered 15/30 = 15/30, med_rank 3.0=3.0, p50 2229.8->1975.4 ms. Serve-side removal of sema_boost was null-to-positive-latency.",
-    "cold_start": "SEMA/MiniLM alone is 97.7% of the first-request bill (~9.7s) — cold-start receipt",
-    "ingest_cost": "PR #379 smoke (run_ingest_throughput.py) — per-arm ingest wall/RSS known"
+    "serve_side_half": "benchmarks/dogfood/erb/receipts/sema_ab_100k_run1.json — 100k erb bed, vectors PRESENT, knob false at serve: r@12 0.800=0.800, delivered 15/30 = 15/30, med_rank 3.0=3.0, p50 2229.8->1975.4 ms",
+    "cold_start": "SEMA/MiniLM is 97.7% of the first-request bill (~9.7s) — the flip's motivating win",
+    "ingest_cost": "PR #379 smoke (run_ingest_throughput.py); this run's rider: arm A 835.9s vs arm B 761.5s corpus build wall (chunked, see caveats)"
   },
   "consumer_audit": [
-    {"consumer": "Tier 4 sema_boost post-fusion re-rank (weight 2.0)", "site": "knowledge_store.py:3169-3239; codec ctor context_manager.py:903-935", "gating": "LIVE at shipped defaults (knob=true). #227 global-off: flip removes the codec entirely; vectorless auto-gate (knowledge_store.py:1007/1185) short-circuits the tier on a sema-off bed", "class": "LIVE — the one retrieval-path consumer the flip removes", "graded_by": "end-to-end A/B recall/delivered + per-arm sema_boost signal presence"},
-    {"consumer": "TCM doc->context vector fast path", "site": "scoring/tcm.py:118-125; bonus blend.py:288 (w=0.3, fires only at session depth>0)", "gating": "LIVE in multi-turn sessions only; designed text/tag-hash fallback (#227, tests/test_sema_embed_knob.py)", "class": "fallback-capable", "graded_by": "functional fallback parity; quality unresolvable at dogfood scale (tie-breaker only)"},
-    {"consumer": "Cymatics spectra", "site": "scoring/cymatics.py doc_spectrum — inputs are TAGS/fragment meanings; [cymatics] use_embeddings=false default (config.py:408)", "gating": "does NOT read gene.embedding at shipped defaults", "class": "NOT a consumer (issue #371's 'cymatics loses its input' is inaccurate on master)", "graded_by": "static audit; end-to-end A/B covers indirect effects"},
-    {"consumer": "Cold-tier retrieval query_cold_tier (cosine over stored SEMA)", "site": "knowledge_store.py:1249+", "gating": "[context] cold_tier_enabled=false (config.py:394, cymatix.toml:323)", "class": "GATED OFF at defaults", "graded_by": "opt-in present-vs-empty check on both beds"},
-    {"consumer": "Ingest-time heterochromatin compress guard", "site": "context_manager.py:1365 — compress_to_heterochromatin only if embedding is not None", "gating": "LIVE at ingest", "class": "behavior change: sema-off bed keeps content on hetero-demoted rows (bytes only; hot retrieval filters chromatin<2 regardless)", "graded_by": "bed-shape counts per arm"},
-    {"consumer": "Density-gate sweep — score-based demotions skip without embedding (deny-list still demotes)", "site": "knowledge_store.py:5749-5818", "gating": "maintenance/compact path", "class": "behavior change: stale docs stay OPEN (recall-conservative; loses compression)", "graded_by": "bed-shape stats; skipped_no_embedding rider"},
-    {"consumer": "PLR query-confidence cos_qc feature", "site": "server/helpers.py:508-530", "gating": "LIVE ([plr] enabled default since 2026-06-12; artifact ships at training/models/stacked_plr.joblib); cos_qc degrades to None gracefully", "class": "LIVE — one input feature degrades to None", "graded_by": "packet know/PLR parity per arm"},
-    {"consumer": "CWoLa logging cosine enrichment", "site": "routes_context.py:543; identity/cwola.py", "gating": "telemetry only", "class": "telemetry-only", "graded_by": "not graded"},
-    {"consumer": "/debug/neighbors + admin sema endpoints", "site": "api.py:444; routes_admin.py:59/171", "gating": "on-demand diagnostics", "class": "diagnostic", "graded_by": "not graded"},
-    {"consumer": "Freshness gate", "site": "cymatix_context/retrieval/", "gating": "grep-verified: no gene.embedding reads", "class": "NOT a consumer", "graded_by": "static audit"}
+    {"consumer": "Tier 4 sema_boost post-fusion re-rank (weight 2.0)", "site": "knowledge_store.py:3169-3239; codec ctor context_manager.py:903-935", "gating": "LIVE at shipped defaults (knob=true). #227 global-off: flip removes the codec entirely; vectorless auto-gate (knowledge_store.py:1007/1185) short-circuits the tier on a sema-off bed", "class": "LIVE — the one retrieval-path consumer the flip removes", "result": "fired 18/18 queries in arm A, 0/18 in arm B (arm-valid). Its removal is the entire measured delta: pool -1 needle, delivered -2 needles, final-order 0."},
+    {"consumer": "TCM doc->context vector fast path", "site": "scoring/tcm.py:118-125 (gene_input_vector); bonus blend.py:288 (w=0.3, fires only at session depth>0)", "gating": "LIVE in multi-turn sessions only; designed text/tag-hash fallback (#227, tests/test_sema_embed_knob.py)", "class": "fallback-capable", "result": "PARITY (functional): arm A 5/5 gold genes take the embedding fast path; arm B 5/5 take the tag-hash fallback, all unit-norm, zero errors. Bonus QUALITY at depth>0 is not resolvable at dogfood scale (tie-breaker, weight 0.3)."},
+    {"consumer": "Cymatics spectra", "site": "scoring/cymatics.py doc_spectrum — inputs are TAGS/fragment meanings; [cymatics] use_embeddings=false default (config.py:408)", "gating": "does NOT read gene.embedding at shipped defaults", "class": "NOT a consumer (issue #371's 'cymatics loses its input' is inaccurate on master)", "result": "static audit closes it; end-to-end A/B (which includes harmonic/cymatics paths) shows no cymatics-attributable delta — final-order identical"},
+    {"consumer": "Cold-tier retrieval query_cold_tier (cosine over stored SEMA)", "site": "knowledge_store.py:1249+", "gating": "[context] cold_tier_enabled=false (config.py:394, cymatix.toml:323)", "class": "GATED OFF at defaults", "result": "opt-in probe: arm A returns 3/3/3 docs on 3 probes; arm B returns 0/0/0, no crash (codec-absent early return). Present-vs-empty exactly as designed. An opt-in cold-tier user MUST keep sema on — documented re-opt-in dependency, same shape as the dense backfill gotcha."},
+    {"consumer": "Ingest-time heterochromatin compress guard", "site": "context_manager.py:1365 — compress_to_heterochromatin only if embedding is not None", "gating": "LIVE at ingest", "class": "behavior change candidate", "result": "NO drift on this corpus: chromatin {open:6758, eu:24, hetero:6} and compression_tier distributions byte-identical across arms; hetero_with_content 6=6 (C.1 keeps content non-destructively anyway)"},
+    {"consumer": "Density-gate sweep — score-based demotions skip without embedding (deny-list still demotes)", "site": "knowledge_store.py:5749-5818", "gating": "maintenance/compact path", "class": "behavior change: on a sema-off bed, score-based demotions skip (skipped_no_embedding), stale docs stay OPEN — recall-conservative, loses compression", "result": "not exercised by a single-build bed (identical distributions); flagged as a long-lived-bed rider, not measurable here"},
+    {"consumer": "PLR query-confidence cos_qc feature", "site": "server/helpers.py:508-530", "gating": "LIVE ([plr] enabled default; artifact ships at training/models/stacked_plr.joblib); cos_qc degrades to None gracefully", "class": "LIVE — one input feature degrades to None", "result": "packet know/miss PARITY: know=null, miss.reason='sparse' on 18/18 needles in BOTH arms; packet delivered gold 0.8333 = 0.8333"},
+    {"consumer": "CWoLa logging cosine enrichment", "site": "routes_context.py:543; identity/cwola.py", "gating": "telemetry only", "class": "telemetry-only", "result": "not graded (no retrieval effect)"},
+    {"consumer": "/debug/neighbors + admin sema endpoints", "site": "api.py:444; routes_admin.py:59/171", "gating": "on-demand diagnostics", "class": "diagnostic", "result": "not graded"},
+    {"consumer": "Freshness gate", "site": "cymatix_context/retrieval/", "gating": "grep-verified: no gene.embedding reads", "class": "NOT a consumer", "result": "static audit closes it"}
   ],
   "method": {
     "arms": {
-      "A_sema_on": {"overrides": {"ingestion.dense_embed_on_ingest": false, "ingestion.sema_embed_on_ingest": true}, "world": "open PR #392 (dense ingest off, sema on)"},
-      "B_sema_off": {"overrides": {"ingestion.dense_embed_on_ingest": false, "ingestion.sema_embed_on_ingest": false}, "world": "proposed flip"}
+      "A_sema_on": {"overrides": {"ingestion.dense_embed_on_ingest": false, "ingestion.sema_embed_on_ingest": true}, "world": "open PR #392 (dense ingest off, sema on)", "config": "f:/tmp/sema_ab/armA.toml", "config_sha256": "d1e5af05ac1ea2c8aef4d48f38e328ceb6da1a54f7e95cc4290c0dd08578afb8"},
+      "B_sema_off": {"overrides": {"ingestion.dense_embed_on_ingest": false, "ingestion.sema_embed_on_ingest": false}, "world": "proposed flip", "config": "f:/tmp/sema_ab/armB.toml", "config_sha256": "0624b8833824c191b4cf9865a0b08503b812d1f1a0d8448f23e8b840c15f1c5c"},
+      "base": "shipped cymatix.toml at bcdd1a1, only the two [ingestion] knob lines edited per arm"
     },
-    "corpus": "scripts/build_dogfood_genome.py 4-repo curated corpus, snapshotted at T0 to f:/tmp/sema_ab/corpus so both arms ingest byte-identical content in identical order",
-    "needles": "benchmarks/dogfood/needles_resolved.json (18 needles, 61 gold files); gold gene_ids resolved per bed via emit_gene_ids.py logic",
-    "grading": "in-process build_context (read_only, ignore_delivered, max_genes=12, CYMATIX_DISABLE_LEARN=1, PYTHONHASHSEED=0) — both bases recorded: score-map top-12 (pool) and window.expressed_gene_ids (delivered); plus build_context_packet know/PLR parity; plus cold-tier opt-in probe; plus bed-shape counts",
-    "power_caveat": "n=18 needles — one needle = 5.6pp. Effects smaller than ~2 needles are not resolvable at dogfood scale."
+    "corpus": {
+      "source": "scripts/build_dogfood_genome.py collect() over the four owned repos, PLUS top-level .claude/.serena exclusion (the main checkout carries 36,091 worktree-dupe files under .claude/worktrees — the exact contamination EXCLUDE_DIRS predates)",
+      "snapshot": "byte-frozen at T0 to f:/tmp/sema_ab/corpus + corpus_manifest.json so both arms ingest identical bytes in identical order",
+      "files": 1181,
+      "total_bytes": 21183943,
+      "identity_sha256": "104c01a41b0ff3c4fcaa15eff2665b7db459fdd6aec900d81aabab8fd4f77bf9"
+    },
+    "needles": "benchmarks/dogfood/needles_resolved.json — 18 needles, 61 gold files; gold gene_ids resolved per bed via emit_gene_ids.py",
+    "grading": "in-process build_context (read_only, ignore_delivered, session_id per needle, max_genes=12, CYMATIX_DISABLE_LEARN=1, PYTHONHASHSEED=0), three bases per needle: pool (last_query_scores top-12), final order (last_ranked_ids top-12), delivered (window.expressed_gene_ids — #375 basis); plus build_context_packet (max_genes=8) know/PLR + packet-delivered; plus query_cold_tier opt-in probe; plus TCM gene_input_vector parity; plus bed-shape SQL",
+    "replication": "each arm graded twice (order run1 A->B, run2 B->A): all rank/delivery/signal fields byte-identical across runs — the pipeline is deterministic on a fixed bed; only latency varies (page cache)"
   },
-  "beds": null,
-  "results": null,
-  "verdict": null
+  "beds": {
+    "A": {"path": "f:/tmp/sema_ab/armA/genome.db", "bytes": 108003328, "genes": 6788, "sema_nonnull": 6026, "dense_nonnull": 0, "arm_valid": true, "build_wall_s_chunked": 835.9, "ingest_errors": 0},
+    "B": {"path": "f:/tmp/sema_ab/armB/genome.db", "bytes": 107487232, "genes": 6788, "sema_nonnull": 0, "dense_nonnull": 0, "arm_valid": true, "build_wall_s_chunked": 761.5, "ingest_errors": 0},
+    "equivalence_proof": "emit_gene_ids identity digest IDENTICAL across beds (b1951b8d7cffb0e56394df16da94c0005fd3334c6d78099e6449827fd5516e95, 6,788 genes) and gold digest IDENTICAL (96c9aeeb..., 453 gold genes) — gene_ids are content-derived, so the beds differ ONLY in the embedding column and its downstream shape",
+    "bytes_delta": "-516,096 B (-0.48%) — 20-dim JSON vectors are cheap; bed-size is not a flip argument"
+  },
+  "results": {
+    "rollup": {
+      "pool_recall_at_12": {"A": 0.8889, "B": 0.8333, "delta_needles": -1},
+      "final_recall_at_12": {"A": 0.8889, "B": 0.8889, "delta_needles": 0},
+      "delivered_gold_rate": {"A": 0.7222, "B": 0.6111, "delta_needles": -2},
+      "packet_delivered_gold_rate": {"A": 0.8333, "B": 0.8333, "delta_needles": 0},
+      "know_miss_parity": "know=null + miss.reason='sparse' on 18/18 in both arms",
+      "median_latency_ms": {"run1": {"A": 103.5, "B": 84.3}, "run2": {"A": 72.4, "B": 70.0}, "note": "B never slower; rider only"},
+      "sema_boost_fired_queries": {"A": 18, "B": 0}
+    },
+    "flipped_needles": [
+      {"name": "cymatix_proxy_port", "mechanism": "ABSTAIN FLIP: arm A delivers 5 docs incl. gold; arm B delivers 0 with abstain_reason=score_below_floor while gold sits at final rank 8 — the [abstain] floor was calibrated against scores that include sema_boost mass. Calibration coupling, not lost retrieval."},
+      {"name": "cymatix_expression_tokens", "mechanism": "SEAT-BOUNDARY CUT: both arms deliver 5 docs; gold pool rank 5 (A) vs 7 (B) — without the sema_boost additive, gold drops below the 5-seat budget cut."},
+      {"name": "cymatix_splice_aggressiveness", "mechanism": "pool-only: rank 11 (A) -> out of pool top-12 (B); not delivered in either arm (both abstain), so no delivered impact"}
+    ],
+    "grade_files": ["f:/tmp/sema_ab/grade_armA.json", "f:/tmp/sema_ab/grade_armB.json", "f:/tmp/sema_ab/grade_armA_run1.json", "f:/tmp/sema_ab/grade_armB_run1.json"]
+  },
+  "caveats": [
+    "n=18 needles: one needle = 5.6pp. The -2 delivered needles are deterministic on THIS bed but the same serve-world isolation on the 100k erb bed (n=30) measured 0 delta — the effect is bed/corpus-dependent and the pooled evidence (-2/48) is inside the noise band.",
+    "Build wall times are chunked (2 subprocess chunks per arm, model load re-paid per chunk) — throughput rider only; the calibrated ingest-cost receipt is PR #379's run_ingest_throughput.py.",
+    "The corpus includes benchmarks/snow/results payloads (echo-gene-adjacent; the builder's EXCLUDE_PREFIXES misses them). Identical in both arms, so A/B-neutral; flagged for builder hygiene along with the .claude/worktrees gap.",
+    "know/miss emitted miss='sparse' on all 18 needles in both arms on this fresh bed — know-confidence parity is therefore trivially satisfied; a bed with know-positive traffic would sharpen the PLR cos_qc check.",
+    "Density-gate sweep behavior on LONG-LIVED sema-off beds (score-based demotions skip; stale docs stay OPEN) is structurally guaranteed by knowledge_store.py:5795-5802 but not exercised by a single-build bed."
+  ]
 }
