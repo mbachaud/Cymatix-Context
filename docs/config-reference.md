@@ -195,6 +195,7 @@ calibration adds a per-classifier override path for `foveated_alpha`
 | `legibility_enabled` | `bool` | `true` | Sprint 1 legibility pack (AI-consumer roadmap): emit a one-line metadata header per document in expressed_context — fired tiers, confidence marker, short gene_id, compression ratio. See cymatix_context/legibility.py. Default on; flip off to restore the pre-Sprint-1 plain-dividers format (useful for bench A/B). |
 | `slate_char_budget` | `int` | `1500` | Stage 5 (2026-05-08): char-budget for the small_moe JSON answer slate. Counts the rendered string the model actually sees, INCLUDING the <cymatix:slate>...</cymatix:slate> wrapper, JSON braces, quotes, commas, and per-KV separators. Spec §5 default is 1500. Generic and frontier branches do not consult this knob. |
 | `session_delivery_enabled` | `bool` | `true` | Sprint 2 session working-set register: track delivered documents per session, elide repeats with a pointer stub so the consumer doesn't pay full token cost for content it already holds. Enabled 2026-04-19 (saves ~40% tokens on multi-turn conversations); only fires when the caller supplies a session_id. See session_delivery.py. default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass) |
+| `neutralize_control_tags` | `bool` | `false` | Opt-in control-tag neutralization (2026-08-08 audit). When on, the assembly loop escapes content-sourced "<cymatix:" to "&lt;cymatix:" so a document cannot forge the genuine control tags (<cymatix:no_match/>, <cymatix:slate>) that downstream agents adopting CYMATIX_NO_MATCH_FRAGMENT trust. The genuine no-match tag is emitted on a separate parts-empty branch and is never escaped. Closes tag-forgery only — general indirect prompt injection via document text remains (inherent to context injection). Default off: byte-identical to pre-knob behavior. |
 | `abstain_enabled` | `bool` | `true` | NEW — see docs/specs/2026-05-02-abstain-tier-design.md |
 | `foveated_enabled` | `bool` | `false` | Foveated-splice (BROAD tier only). Off by default for the measurement period — see docs/specs/2026-05-03-foveated-splice-design.md §6.3 and docs/plans/2026-05-05-foveated-splice.md. Flip to True only after the phased α-sweep bench (§9) identifies a winning configuration. |
 | `foveated_alpha` | `float` | `1.0` | Power-law exponent for c_i = max(c_min, c_max · i^(-α)). α=0.5 = gentle decay, α=1.0 = harmonic-ish, α=2.0 = aggressive top-bias. |
@@ -211,6 +212,17 @@ calibration adds a per-classifier override path for `foveated_alpha`
 `mode` is **not** a `[budget]` key. The token-vs-cache mode lives under
 `[headroom] mode`; see that section below.
 
+**Security (opt-in, 2026-08-08 audit).** `neutralize_control_tags`
+closes control-tag forgery only: with the flag on, a document whose
+*content* contains `<cymatix:` cannot impersonate the genuine
+`<cymatix:no_match/>` / `<cymatix:slate>` control tags — the assembly
+loop escapes it to `&lt;cymatix:`, while the genuine no-match tag
+(emitted on a separate empty-assembly branch) is never escaped. It does
+NOT address general indirect prompt injection via document text, which
+is inherent to context injection. Downstream agents adopting
+`CYMATIX_NO_MATCH_FRAGMENT` (see `docs/agent-sdk-fragment.md`) should
+treat the tag as trustworthy only when this flag is on.
+
 **Example.**
 
 ```toml
@@ -224,6 +236,7 @@ decoder_mode = "condensed"
 legibility_enabled = true
 slate_char_budget = 1500
 session_delivery_enabled = true
+# neutralize_control_tags = true   # escape content-sourced "<cymatix:" (tag-forgery guard)
 abstain_enabled = true
 foveated_enabled = false
 foveated_alpha = 1.0
@@ -356,6 +369,8 @@ OpenAI-compatible upstream) at `127.0.0.1:11437` by default.
 | `bench_port` | `int` | `11439` |  |
 | `bench_genome_path` | `str` | `"genomes/bench/bench.genome.db"` |  |
 | `upstream_timeout` | `float` | `180.0` | Timeout for proxied requests to Ollama. Bumped from 120s on 2026-05-02 — observed Proxy 500s on slow gemma4:e4b GPQA queries at ~125s; 180s gives long-tail generation room without letting truly stuck requests hang. Override per-deployment via [server] in cymatix.toml. |
+| `admin_token` | `str` | `""` | Opt-in bearer token for the admin surface (/admin/*, /ingest, /consolidate). Default "" = no auth — byte-identical to pre-knob behavior. When set, those routes demand "Authorization: Bearer <token>" and 401 otherwise. Loopback bind is NOT auth: any same-host process can reach the port (2026-08-08 audit). |
+| `swap_db_roots` | `List[str]` | `[]` | Opt-in allowlist of directory roots /admin/swap-db may open. Default [] = unrestricted (today's behavior). When non-empty, a swap target resolving (os.path.realpath) outside every root is rejected 403 via os.path.commonpath; a root on a different drive never matches (2026-08-08 audit). |
 <!-- END GENERATED -->
 
 `bench_enabled` / `bench_port` / `bench_genome_path` are the v0.7.0
@@ -365,6 +380,21 @@ genome while a subagent drives the bench harness against the bench
 port. Default off; flip via `cymatix.toml`, `--bench`, or
 `CYMATIX_BENCH_ENABLED=1`.
 
+**Security (opt-in, 2026-08-08 audit).** The default loopback bind is
+*not* authentication — any process on the same host can reach the port.
+Two default-inert knobs harden the mutating surface without changing
+untouched configs:
+
+- `admin_token`: when non-empty, every `/admin/*` route plus `/ingest`
+  and `/consolidate` demands `Authorization: Bearer <token>` and returns
+  401 otherwise. Read-only routes (`/stats`, `/health`, `/context`, ...)
+  stay open.
+- `swap_db_roots`: when non-empty, `POST /admin/swap-db` only opens
+  `.db` paths that resolve (`os.path.realpath`) under one of the listed
+  roots; anything else is rejected 403 before a store is opened. Roots
+  on a different drive than the target never match (Windows
+  `os.path.commonpath` semantics).
+
 **Example.**
 
 ```toml
@@ -373,6 +403,8 @@ host = "127.0.0.1"
 port = 11437
 upstream = "http://localhost:11434"
 # upstream_timeout = 180
+# admin_token = "your-secret"              # 401s /admin/*, /ingest, /consolidate without the bearer
+# swap_db_roots = ["F:/cymatix/genomes"]   # 403s /admin/swap-db targets outside these roots
 ```
 
 **Cross-refs.** `cymatix_context/config.py` (`ServerConfig`), env
