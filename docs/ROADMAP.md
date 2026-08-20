@@ -8,9 +8,11 @@
 >
 > Detailed specs still live in their own files; this doc is the sequencing layer on top.
 
-## Status snapshot (2026-07-27; release facts updated 2026-08-14)
+## Status snapshot (2026-07-27; release facts updated 2026-08-20)
 
-- **Version:** 0.8.6 on master (tagged 2026-08-05). The helix → cymatix rename is a
+- **Version:** 0.9.0 on master (version bumped 2026-08-20 in the v0.9.0
+  release-prep pass, gate tracker #377; previous release v0.8.6, tagged
+  2026-08-05). The helix → cymatix rename is a
   **completed clean break** —
   no alias package, no `helix*` console scripts, no `HELIX_*` env mirror, no `helix.toml`
   fallback, no `helix_*` MCP tools. `tests/test_no_helix_leftovers.py` is the standing guard.

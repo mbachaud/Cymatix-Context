@@ -1,6 +1,6 @@
 # Cymatix Context
 
-Knowledge-store-based context compression for local LLMs. v0.8.6 (clean break in 0.8.5: renamed from helix-context in July 2026; the old helix CLI/env/import names, `helix.toml`, and `helix_*` MCP tools are removed — cymatix only).
+Knowledge-store-based context compression for local LLMs. v0.9.0 (clean break in 0.8.5: renamed from helix-context in July 2026; the old helix CLI/env/import names, `helix.toml`, and `helix_*` MCP tools are removed — cymatix only).
 
 ## Quick Start
 
@@ -90,7 +90,7 @@ All config lives in `cymatix.toml` (the `helix.toml` fallback was removed in 0.8
 | `[context]` | cold_tier_enabled, cold_tier_k, cold_tier_min_cosine |
 | `[cymatics]` | enabled, distance_metric (`"cosine"` / `"w1"`), harmonic_links |
 | `[classifier]` | Rule-based query classifier: `enabled` toggle only; per-class caps/decoder hints are code constants pending #205 |
-| `[retrieval]` | fusion_mode (`"rrf"` default / `"additive"` legacy), sr_enabled, sr_gamma, ray_trace_theta, seeded_edges_enabled, fts5_candidate_depth (#205: FTS content-tier fetch depth; 0 = auto = max_genes*4), blend_mode (`"scale_relative"` default / `"legacy"` DEPRECATED-FOR-REMOVAL, condition-gated — not calendar-based; target v(N+2) at earliest) |
+| `[retrieval]` | fusion_mode (`"rrf"` default / `"additive"` legacy), dense_embedding_enabled (**default false since 2026-08-15**), pki_enabled (**default false since 2026-08-19**, #370 — −1 delivered needle at n=469; the flip does not reclaim an existing path_key_index table), sr_enabled, sr_gamma, ray_trace_theta, seeded_edges_enabled, fts5_candidate_depth (#205: FTS content-tier fetch depth; 0 = auto = max_genes*4), blend_mode (`"scale_relative"` default / `"legacy"` DEPRECATED-FOR-REMOVAL, condition-gated — not calendar-based; target v(N+2) at earliest) |
 | `[plr]` | Piecewise linear reranker: enabled, model_path |
 | `[know]` | KnowBlock confidence logistic: emit_floor, betas, s_ref, g_ref, stale_after_days (+ calibrated_at / calibrated_on_n written by scripts/calibrate_know_confidence.py) |
 | `[mem_sync]` | Auto-memory-to-cymatix sync: watch_dirs, sync_interval_s |
@@ -143,7 +143,7 @@ GET  /vault/status         — Obsidian vault export state
 ## Testing
 
 ```bash
-# ~4,100 tests, no external services needed
+# ~4,165 tests, no external services needed
 python -m pytest tests/ -m "not live" -v
 
 # Live tests (requires Ollama running)
@@ -175,6 +175,6 @@ See [`docs/architecture/OBSERVABILITY.md`](docs/architecture/OBSERVABILITY.md) f
 - **Synonym map is critical:** If queries return "no relevant context", check that query keywords map to the tags assigned at ingest. Add synonyms in `[synonyms]`.
 - **Stage 2 backfill:** only relevant if you opt in to dense (`[retrieval] dense_embedding_enabled = true`, default off since 2026-08-15). Ingest-time dense writes are also off by default (`[ingestion] dense_embed_on_ingest = false` since 2026-08-19, #371), so BGE-M3 vectors (`embedding_dense_v2`) are NULL until you run `scripts/backfill_bgem3_v2.py` (or re-ingest with the knob on) — the dense tier retrieves nothing without them.
 - **Fusion mode:** Default is `"rrf"` (Reciprocal Rank Fusion) since 2026-07-06 — SIKE Run-2 measured +12pp gold_delivered over additive on xl. Set `fusion_mode = "additive"` in `[retrieval]` to restore the legacy pre-Stage-3 accumulator (scheduled for removal in v(N+2)). Under RRF the abstain gates run ratio-only (absolute floors were additive-calibrated).
-- **Session delivery:** `session_delivery_enabled = true` tracks what documents each session has already received and elides repeats. Saves ~40% tokens on multi-turn conversations. Flip to false or pass `ignore_delivered: true` in /context body for benchmarks.
+- **Session delivery:** `session_delivery_enabled = true` tracks what documents each session has already received and elides repeats. Saves ~40% tokens on multi-turn conversations (unverified design estimate — pending the `cymatix_session_tokens_saved_total` counter). Flip to false or pass `ignore_delivered: true` in /context body for benchmarks.
 - **Continue IDE:** Use Chat mode, not Agent mode. The proxy doesn't handle tool routing.
 - **Naming lexicon:** Biology terms (gene, genome, ribosome, chromatin, splice) have canonical software equivalents (document, knowledge store, compressor, etc.). See `docs/ROSETTA.md` for the full mapping. Both vocabularies work in code (back-compat shims); new code should use the software terms.
