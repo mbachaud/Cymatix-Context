@@ -273,6 +273,22 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
                 use_harmonic=use_harmonic,
                 use_sr=use_sr,
             )
+            # Issue #350 (W1.6b): snapshot scores + tier contributions
+            # atomically under the writer lock IMMEDIATELY after THIS
+            # request's retrieval (request-scoped capture, mirroring
+            # /fingerprint) — the old post-refiner unlocked read could
+            # hand this response a concurrent request's maps.
+            _lock = getattr(cymatix.genome, "_last_query_scores_lock", None)
+            if _lock is not None:
+                with _lock:
+                    scores = dict(cymatix.genome.last_query_scores or {})
+                    _tier_contribs = dict(getattr(cymatix.genome, "last_tier_contributions", {}) or {})
+            else:
+                scores = dict(cymatix.genome.last_query_scores or {})
+                _tier_contribs = dict(getattr(cymatix.genome, "last_tier_contributions", {}) or {})
+            # query_scores= threads the snapshot through the refiners so
+            # the cymatics/harmonic mutations land in THIS request's map
+            # (byte-identical single-request; see /fingerprint).
             candidates, refiner_contrib = cymatix._apply_candidate_refiners(
                 query,
                 candidates,
@@ -280,14 +296,14 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
                 use_cymatics=use_cymatics,
                 use_harmonic_bin=use_harmonic_bin,
                 use_tcm=use_tcm,
+                query_scores=scores,
             )
         except Exception:
             log.error("/debug/preview failed", exc_info=True)
             raise HTTPException(status_code=500, detail="Internal error")
 
-        scores = dict(cymatix.genome.last_query_scores or {})
         merged_tiers = _merge_tier_contributions(
-            getattr(cymatix.genome, "last_tier_contributions", {}) or {},
+            _tier_contribs,
             refiner_contrib,
         )
 

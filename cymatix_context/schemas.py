@@ -309,6 +309,17 @@ class ContextPacket(BaseModel):
     # unaffected; forward ref — defined below next to Know/MissBlock.
     delivery: Optional["DeliveryBlock"] = None
 
+    # Issue #350 (W1.6b): request-scoped retrieval snapshot, captured by
+    # build_context_packet under _last_query_scores_lock right after its
+    # query_docs() call — the packet-path mirror of ContextWindow.
+    # retrieval_scores / tier_contributions above. Server-layer readers
+    # (the PLR query-confidence head) prefer these over the genome-global
+    # last_query_scores / last_tier_contributions, which under concurrent
+    # serving may already hold ANOTHER request's publication.
+    # exclude=True: internal plumbing, never serialized into responses.
+    retrieval_scores: Optional[dict] = Field(default=None, exclude=True, repr=False)
+    tier_contributions: Optional[dict] = Field(default=None, exclude=True, repr=False)
+
 
 # ── Claims layer (see docs/specs/2026-04-17-agent-context-index-build-spec.md) ──
 
