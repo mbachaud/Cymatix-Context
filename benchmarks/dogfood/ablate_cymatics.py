@@ -12,7 +12,12 @@ candidate spectra by cosine, and use the result to reorder candidates.
 
 Three things could be carrying the signal, and they are separable:
 
-* **A — shipped.** MD5 bins, Gaussian spread (``peak_width`` 3.0).
+* **A — shipped.** MD5 bins, Gaussian spread at the value the scorer actually
+  runs: **1.55**, derived as ``aggressiveness_to_peak_width([budget]
+  splice_aggressiveness)`` at the shipped 0.3. Post-#357 an explicit
+  ``[cymatics] peak_width`` overrides the derivation, but the shipped config
+  leaves it unset — the old "3.0" label here advertised a value the scorer
+  never saw (the #354 drift class).
 * **B — off.** Does the stage contribute anything at all? If A == B the
   feature is inert and the flag is moot.
 * **C — hashed bag-of-words.** Same MD5 bins, spread collapsed to a single
@@ -133,7 +138,10 @@ def main() -> int:
 
     print(f"cymatics ablation — {len(needles)} needles, k={args.k}\n")
     arms = []
-    arms.append(run("A shipped (md5 bins, spread 3.0)"))
+    # Label fix (#354/#357): the shipped scorer runs peak_width 1.55 — derived
+    # from [budget] splice_aggressiveness = 0.3; [cymatics] peak_width is unset
+    # in the shipped config — not the 3.0 this label used to claim.
+    arms.append(run("A shipped (md5 bins, spread 1.55)"))
     arms.append(run("B cymatics OFF", enabled=False))
     arms.append(run("C hashed bag-of-words (no spread)", peak_width=0.01))
     for s in range(args.seeds):

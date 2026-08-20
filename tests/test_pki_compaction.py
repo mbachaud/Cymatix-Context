@@ -211,3 +211,212 @@ def test_scorer_and_compactor_share_cutoff():
     assert "from .storage.indexes import" in src
     assert "PKI_NOISE_CUTOFF = 200" not in src  # no local shadow
     assert PKI_NOISE_CUTOFF == 200
+
+
+# ── issue #370: drop/reclaim mode on pki-off stores ────────────────────
+
+
+def _pki_gene(content: str, gene_id: str):
+    """Gene with source_id + key_values (i.e. PKI-row-eligible)."""
+    from cymatix_context.schemas import (
+        ChromatinState, EpigeneticMarkers, Gene, PromoterTags,
+    )
+    return Gene(
+        gene_id=gene_id,
+        content=content,
+        complement="",
+        codons=[],
+        promoter=PromoterTags(domains=["alpha"], entities=[]),
+        epigenetics=EpigeneticMarkers(),
+        chromatin=ChromatinState.OPEN,
+        is_fragment=False,
+        source_id="F:/Projects/demoproj/settings/config.py",
+        key_values=["port=8080", "model=llava"],
+    )
+
+
+def test_drop_refused_when_pki_enabled(tmp_path):
+    """The guard: drop=True + pki_enabled=True raises, names the knob,
+    and leaves the table byte-identical."""
+    conn = _legacy_db(tmp_path / "g.db")
+    with pytest.raises(ValueError, match=r"pki_enabled"):
+        compact_path_key_index(conn, drop=True, pki_enabled=True)
+    assert "path_key_index" in _names(conn, "table")
+    assert conn.execute(
+        "SELECT COUNT(*) FROM path_key_index").fetchone()[0] == 27
+
+
+def test_drop_refused_by_default(tmp_path):
+    """pki_enabled defaults to True — a bare drop=True must refuse (a
+    caller that forgets to thread the store flag cannot drop by accident)."""
+    conn = _legacy_db(tmp_path / "g.db")
+    with pytest.raises(ValueError, match=r"pki_enabled"):
+        compact_path_key_index(conn, drop=True)
+    assert "path_key_index" in _names(conn, "table")
+
+
+def test_drop_succeeds_when_pki_disabled(tmp_path):
+    conn = _legacy_db(tmp_path / "g.db")
+    report = compact_path_key_index(conn, drop=True, pki_enabled=False)
+    assert report["dropped"] is True
+    assert report["rows_before"] == 27
+    tables = _names(conn, "table")
+    idx = _names(conn, "index")
+    assert "path_key_index" not in tables
+    # DROP TABLE takes the indexes down with it
+    assert "idx_pki_gene" not in idx
+    assert "idx_pki_lookup" not in idx
+    assert "sqlite_autoindex_path_key_index_1" not in idx
+    # honest reclaim wording: the drop alone frees nothing on disk
+    assert "vacuum" in report["hint"].lower()
+    assert "backfill_path_key_index" in report["hint"]
+
+
+def test_drop_dry_run_reports_without_dropping(tmp_path):
+    conn = _legacy_db(tmp_path / "g.db")
+    report = compact_path_key_index(
+        conn, drop=True, pki_enabled=False, dry_run=True,
+    )
+    assert report["would_drop"] is True
+    assert report["rows_before"] == 27
+    assert "dropped" not in report
+    assert "path_key_index" in _names(conn, "table")
+
+
+def test_drop_no_table_is_graceful(tmp_path):
+    conn = sqlite3.connect(str(tmp_path / "empty.db"))
+    report = compact_path_key_index(conn, drop=True, pki_enabled=False)
+    assert report["skipped"] == "no path_key_index table"
+
+
+def test_sync_noops_after_drop(tmp_path):
+    """Post-drop upserts must not abort: sync_path_key_index degrades to
+    a no-op when the table is gone (same optional-table treatment as
+    delete_gene)."""
+    from cymatix_context.storage.indexes import sync_path_key_index
+    conn = sqlite3.connect(str(tmp_path / "g.db"))
+    gene = _pki_gene("post-drop upsert body", "pd-0")
+    # no path_key_index table at all — must not raise
+    sync_path_key_index(conn.cursor(), "pd-0", gene)
+    assert "path_key_index" not in _names(conn, "table")
+
+
+# ── #370 server seam: /admin/compact-pki?drop=true ─────────────────────
+
+
+def _pki_client(tmp_path, pki_enabled: bool):
+    from cymatix_context.config import GenomeConfig, RetrievalConfig
+    from tests.conftest import make_client, make_cymatix_config
+    config = make_cymatix_config(
+        genome=GenomeConfig(
+            path=str(tmp_path / "pki-drop.db"), cold_start_threshold=5,
+        ),
+        retrieval=RetrievalConfig(pki_enabled=pki_enabled),
+    )
+    return make_client(config=config)
+
+
+def test_admin_drop_refused_when_pki_on(tmp_path):
+    client = _pki_client(tmp_path, pki_enabled=True)
+    genome = client.app.state.cymatix.genome
+    genome.upsert_gene(_pki_gene("guard fixture", "guard-0"), apply_gate=False)
+
+    resp = client.post("/admin/compact-pki?drop=true")
+    assert resp.status_code == 409
+    body = resp.json()
+    assert body["ok"] is False
+    assert "pki_enabled" in body["error"]
+    # table untouched
+    row = genome.conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type='table' "
+        "AND name='path_key_index'").fetchone()
+    assert row is not None
+
+
+def test_admin_drop_pki_off_then_query_green(tmp_path):
+    """Drop succeeds on a pki-off store; /context stays green post-drop
+    (scorer-neutral: the pki-off read path never touches the table) and
+    subsequent ingest upserts don't abort."""
+    client = _pki_client(tmp_path, pki_enabled=False)
+    genome = client.app.state.cymatix.genome
+    genome.upsert_gene(
+        _pki_gene("the splice stage compresses candidates", "drop-0"),
+        apply_gate=False,
+    )
+
+    resp = client.post("/admin/compact-pki?drop=true")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["ok"] is True
+    assert body["dropped"] is True
+    row = genome.conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type='table' "
+        "AND name='path_key_index'").fetchone()
+    assert row is None
+
+    # retrieval still green post-drop
+    q = client.post("/context", json={"query": "splice stage candidates"})
+    assert q.status_code == 200
+
+    # the write path degrades to a no-op instead of aborting the upsert
+    genome.upsert_gene(
+        _pki_gene("ingest after the drop", "drop-1"), apply_gate=False,
+    )
+    assert genome.conn.execute(
+        "SELECT COUNT(*) FROM genes WHERE gene_id='drop-1'"
+    ).fetchone()[0] == 1
+
+
+def test_admin_drop_dry_run_via_route(tmp_path):
+    client = _pki_client(tmp_path, pki_enabled=False)
+    resp = client.post("/admin/compact-pki?drop=true&dry_run=true")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["would_drop"] is True
+    row = client.app.state.cymatix.genome.conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type='table' "
+        "AND name='path_key_index'").fetchone()
+    assert row is not None
+
+
+# ── #370 rebuild story: backfill script recreates after a drop ──────────
+
+
+def test_backfill_script_recreates_after_drop(tmp_path):
+    """scripts/backfill_path_key_index.py rebuilds the index from the
+    genes table if pki is ever re-enabled."""
+    import importlib.util
+    from pathlib import Path
+
+    from cymatix_context.genome import Genome
+
+    db_path = str(tmp_path / "rebuild.db")
+    genome = Genome(db_path, pki_enabled=False)
+    genome.upsert_gene(
+        _pki_gene("rebuild fixture body", "rb-0"), apply_gate=False,
+    )
+    pre = genome.conn.execute(
+        "SELECT COUNT(*) FROM path_key_index").fetchone()[0]
+    assert pre > 0  # write path still populated it
+    report = compact_path_key_index(
+        genome.conn, drop=True, pki_enabled=False,
+    )
+    assert report["dropped"] is True
+    genome.conn.close()
+
+    spec = importlib.util.spec_from_file_location(
+        "backfill_path_key_index",
+        Path(__file__).resolve().parent.parent
+        / "scripts" / "backfill_path_key_index.py",
+    )
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    stats = mod.backfill(db_path, dry_run=False)
+    assert stats["rows_inserted"] > 0
+    assert stats["post_rows"] == pre  # byte-for-byte row recovery
+
+    conn = sqlite3.connect(db_path)
+    assert "path_key_index" in _names(conn, "table")
+    assert conn.execute(
+        "SELECT COUNT(*) FROM path_key_index").fetchone()[0] == pre
+    conn.close()
