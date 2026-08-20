@@ -2,6 +2,24 @@
 
 ## Unreleased
 
+- **ingestion: `[ingestion] dense_embed_on_ingest` default flipped `true` →
+  `false` (#371).** Ingest-time behavior change only — retrieval is untouched:
+  at shipped defaults (`[retrieval] dense_embedding_enabled = false` since
+  2026-08-15) nothing reads `embedding_dense_v2`, and the sharded read path
+  hard-wires dense off, so the inline BGE-M3 encode (~2 GB model load, one
+  *unbatched* extra encode per multi-chunk file for the layered-fingerprint
+  parent) was a dead write. PR #379's harness smoke
+  (`benchmarks/dogfood/run_ingest_throughput.py`, 12 files, CPU encode):
+  defaults 126.8 s wall / 4084 ms steady per-file / 3.47 GB peak RSS vs
+  `no_dense_ingest` 20.9 s / 494 ms / 0.82 GB — a 6.1× wall speedup and
+  −2.6 GB RSS from this knob alone. Re-opt-in story: set
+  `dense_embed_on_ingest = true` to resume writing vectors at ingest; docs
+  ingested while the knob was off have NULL vectors, so re-enabling dense
+  RETRIEVAL on such a bed additionally requires `scripts/backfill_bgem3_v2.py`.
+  Existing beds with backfilled vectors are unaffected, and explicit
+  `dense_embed_on_ingest = true` configs keep their behavior. The sema half of
+  #371 (`sema_embed_on_ingest`) is deliberately NOT flipped — it feeds
+  TCM/cymatics/cold-tier and needs its own bed-quality receipt.
 - **retrieval: `[retrieval] pki_enabled` default flipped `true` → `false`
   (#370).** The 829k exact-shipped-default confirm at full statistical power
   (n=469, delivered basis,

@@ -290,13 +290,20 @@ class IngestionConfig:
     colbert_enabled: bool = False   # Phase 4: ColBERT late interaction (optional)
     entity_graph: bool = True       # Phase 5: entity-based co-activation links (ingest-time edges). Default aligned with shipped cymatix.toml (2026-06-12 default-honesty pass)
     # Tier-0 PR-1 (2026-05-16): compute BGE-M3 dense vectors
-    # (genes.embedding_dense_v2) inline at ingest. Default true so a genome
-    # built by `cymatix ingest` / `/ingest` / context_manager.ingest is
-    # dense-populated without a separate backfill pass. Latency-sensitive
-    # callers can set false to defer encoding to scripts/backfill_bgem3_v2.py.
-    # This is purely the WRITE path — retrieval still gates on
-    # [retrieval] dense_embedding_enabled (default false since 2026-08-15).
-    dense_embed_on_ingest: bool = True
+    # (genes.embedding_dense_v2) inline at ingest. This is purely the WRITE
+    # path — retrieval gates on [retrieval] dense_embedding_enabled
+    # (default false since 2026-08-15).
+    # 2026-08-19 default flip -> False (#371): at shipped retrieval defaults
+    # nothing reads embedding_dense_v2 (the sharded read path hard-wires
+    # dense off, sharding.py), so the inline ~2 GB BGE-M3 load was a dead
+    # write — structurally retrieval-neutral to drop. PR #379's harness
+    # smoke (run_ingest_throughput.py, 12 files, CPU encode): defaults
+    # 126.8 s wall / 4084 ms steady per-file / 3.47 GB peak RSS vs
+    # no_dense_ingest 20.9 s / 494 ms / 0.82 GB. Opt back in with
+    # [ingestion] dense_embed_on_ingest = true; re-enabling dense RETRIEVAL
+    # on a bed ingested while this was off additionally needs
+    # scripts/backfill_bgem3_v2.py to fill the missing vectors.
+    dense_embed_on_ingest: bool = False
     # Issue #227: compute the 20D ΣĒMA embedding at ingest (feeds TCM / cymatics
     # via gene.embedding). Default True preserves current behaviour. Set False to
     # skip the ingest-time SEMA encode entirely — the MiniLM model is then never
