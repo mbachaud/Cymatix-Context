@@ -270,7 +270,8 @@ backend = "cpu"                         # "ollama" (LLM, slow) | "cpu" (spaCy+re
 splade_enabled = false                  # Phase 2: SPLADE sparse expansion at index time
 # legacy: feeds DeBERTaRibosome only; the retrieval cross-encoder reads [retrieval] rerank_model
 rerank_model = "cross-encoder/ms-marco-MiniLM-L-6-v2"
-colbert_enabled = false                 # Phase 4: ColBERT late interaction (optional)
+# colbert_enabled REMOVED (#219 slice 5, 2026-08-19): parsed since the
+# Phase-4 scaffold but zero readers ever shipped — a silent no-op knob.
 entity_graph = true                     # Phase 5: entity-based co-activation links
 # Compute the 20D MiniLM SEMA embedding (gene.embedding) inline at ingest
 # (the #227 knob). Default off since 2026-08-19 (#371): at shipped defaults
@@ -344,12 +345,15 @@ fingerprint_mode_profile = "balanced"   # "fast" | "balanced" | "quality" for PO
 
 [cymatics]
 enabled = true                          # Blended as bonus (0.5 max), not used to re-sort
-n_bins = 256                            # Spectrum resolution (256 bins = <2KB per spectrum)
+# n_bins / use_embeddings / splice_threshold_scale REMOVED (#219 slice 5,
+# 2026-08-19): all three were parsed with zero runtime readers — silent
+# no-op knobs. The spectrum resolution is the module constant
+# scoring/cymatics.N_BINS (256); the splice threshold derives from
+# [budget] splice_aggressiveness; no embedding path ever read use_embeddings.
 # peak_width = 1.55                     # #357: optional explicit override. Unset (the default), the scorer derives
 #                                       # the width from [budget] splice_aggressiveness (1.55 at shipped 0.3).
 #                                       # The old shipped value 3.0 was parsed-but-never-read dead config; setting
 #                                       # a value here now genuinely overrides the derivation.
-use_embeddings = false                  # Use Gene.embedding when populated (requires sentence-transformers)
 harmonic_links = true                   # Compute weighted co-activation edges between expressed genes
 distance_metric = "cosine"              # "cosine" (weighted dot) | "w1" (Werman 1986 circular Wasserstein-1; Singh 2020 CMD)
 
@@ -369,26 +373,32 @@ enabled = true
 # packet gain. See docs/benchmarks/code-track-regression-log.md.
 symbol_expansion_cap = 8
 
-# Tier 5.5 — Successor Representation (Stachenfeld 2017). γ-discounted
-# future-occupancy boost over the co-activation graph. Lazy, on-demand.
-# 2026-06-12 default-honesty pass: flipped back to false, matching the code
-# default (the inverse of the usual toml-wins rule). The 2026-04-22 Stage-1
-# bench flip turned SR on, but the evidence roadmap subsequently measured SR
-# at ZERO effect on retrieval outcomes — a knob that costs co-activation
-# walks per query and moves nothing defaults off. Re-flip only with fresh
-# bench evidence.
+# EXPERIMENTAL, off by default — Tier 5.5 Successor Representation
+# (Stachenfeld 2017). γ-discounted future-occupancy boost over the
+# co-activation graph. Lazy, on-demand. Off because the evidence roadmap
+# measured SR at ZERO effect on retrieval outcomes while costing
+# co-activation walks per query (2026-06-12 default-honesty pass reverted
+# the 2026-04-22 Stage-1 flip to true). Graduates to default-on only with a
+# fresh isolation receipt showing a delivered-recall gain (#219 slice 5).
 sr_enabled = false
 sr_gamma = 0.85                         # 5-10 hop horizon (Stachenfeld grid-cell sweet spot)
 sr_k_steps = 4                          # Power-series truncation (cap runaway propagation)
 sr_weight = 1.5                         # Per-gene SR contribution multiplier
 sr_cap = 3.0                            # Max per-gene SR boost (matches harmonic cap)
-# Theta alternation (Wang/Foster/Pfeiffer 2020) — bias ray_trace neighbor
-# sampling by TCM velocity direction. Fore sweep on even bounces, aft on odd.
-ray_trace_theta = false                 # Dark ship — requires TCM velocity input (Sprint 1 item 3)
+# EXPERIMENTAL, off by default — theta alternation (Wang/Foster/Pfeiffer
+# 2020): bias ray_trace neighbor sampling by TCM velocity direction (fore
+# sweep on even bounces, aft on odd). Off because it requires a TCM velocity
+# input the default pipeline does not populate (Sprint 1 item 3 never
+# landed) and no receipt has ever measured it (#219 slice 5).
+ray_trace_theta = false
 theta_weight = 1.0                      # Softmax temperature on v·gene_input_vector
-# Sprint 4 — Seeded co-activation edges (Hebbian evidence decay, dense-rank miss weighting).
-seeded_edges_enabled = false            # Dark ship — flip to start accumulating co_count / miss_count
-seeded_edge_weight = 1.0                # Base weight stamped at seed insertion
+# EXPERIMENTAL, off by default — Sprint 4 seeded co-activation edges
+# (Hebbian evidence decay, dense-rank miss weighting). Off because flipping
+# it starts co_count / miss_count evidence WRITES on every retrieval and no
+# receipt has measured the edges improving delivered recall (#219 slice 5).
+# The seed-insertion weight is hardcoded in scripts/backfill_seeded_edges.py
+# (the old seeded_edge_weight knob here was parsed but never read — REMOVED).
+seeded_edges_enabled = false
 # Tier 0.5 filename-anchor (2026-04-15 Dewey-pivot spike).
 # Dewey bench 2026-04-14: filename-as-primary-anchor gave +24pp
 # retrieval over full path-token bag. Boosts genes whose filename
