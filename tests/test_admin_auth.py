@@ -20,7 +20,11 @@ from fastapi.routing import APIRoute
 from cymatix_context.config import GenomeConfig, ServerConfig
 from cymatix_context.knowledge_store import KnowledgeStore
 
-from tests.conftest import make_client, make_cymatix_config
+from tests.conftest import (
+    make_client,
+    make_cymatix_config,
+    requires_spacy_model,
+)
 
 
 def _server(**overrides) -> ServerConfig:
@@ -51,6 +55,7 @@ class TestDefaultInert:
         assert client.post("/admin/refresh").status_code == 200
         assert client.get("/admin/ribosome/status").status_code == 200
 
+    @requires_spacy_model
     def test_ingest_and_consolidate_open_without_header(self):
         client = make_client()
         resp = client.post(
@@ -99,6 +104,11 @@ class TestBearerToken:
         assert (
             client.get("/admin/ribosome/status", headers=headers).status_code == 200
         )
+
+    @requires_spacy_model
+    def test_correct_token_admits_ingest(self):
+        client = self._client()
+        headers = {"Authorization": "Bearer secret"}
         resp = client.post(
             "/ingest", json={"content": "admitted with bearer"}, headers=headers
         )

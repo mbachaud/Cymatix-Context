@@ -279,6 +279,22 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
                 use_harmonic=use_harmonic,
                 use_sr=use_sr,
             )
+            # Issue #350 (W1.6b): snapshot scores + tier contributions
+            # atomically under the writer lock IMMEDIATELY after THIS
+            # request's retrieval (request-scoped capture, mirroring
+            # /fingerprint) — the old post-refiner unlocked read could
+            # hand this response a concurrent request's maps.
+            _lock = getattr(cymatix.genome, "_last_query_scores_lock", None)
+            if _lock is not None:
+                with _lock:
+                    scores = dict(cymatix.genome.last_query_scores or {})
+                    _tier_contribs = dict(getattr(cymatix.genome, "last_tier_contributions", {}) or {})
+            else:
+                scores = dict(cymatix.genome.last_query_scores or {})
+                _tier_contribs = dict(getattr(cymatix.genome, "last_tier_contributions", {}) or {})
+            # query_scores= threads the snapshot through the refiners so
+            # the cymatics/harmonic mutations land in THIS request's map
+            # (byte-identical single-request; see /fingerprint).
             candidates, refiner_contrib = cymatix._apply_candidate_refiners(
                 query,
                 candidates,
@@ -286,14 +302,14 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
                 use_cymatics=use_cymatics,
                 use_harmonic_bin=use_harmonic_bin,
                 use_tcm=use_tcm,
+                query_scores=scores,
             )
         except Exception:
             log.error("/debug/preview failed", exc_info=True)
             raise HTTPException(status_code=500, detail="Internal error")
 
-        scores = dict(cymatix.genome.last_query_scores or {})
         merged_tiers = _merge_tier_contributions(
-            getattr(cymatix.genome, "last_tier_contributions", {}) or {},
+            _tier_contribs,
             refiner_contrib,
         )
 
@@ -732,7 +748,9 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
         return result
 
     @app.post("/admin/compact-pki", dependencies=_admin_auth)
-    async def admin_compact_pki(dry_run: bool = False, noise_cutoff: int = -1):
+    async def admin_compact_pki(
+        dry_run: bool = False, noise_cutoff: int = -1, drop: bool = False,
+    ):
         """Issue #165 Option-B: compact ``path_key_index``.
 
         Drops the dead ``idx_pki_lookup``, prunes rows in pairs above the
@@ -740,11 +758,21 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
         by the scorer), and rebuilds the table WITHOUT ROWID. Follow with
         ``/admin/vacuum`` to reclaim the freed pages. ``dry_run=true``
         reports what would change without touching the DB.
+
+        Issue #370: ``drop=true`` drops the table entirely — the reclaim
+        path for pki-off stores, where the scorer never reads it. Refused
+        with 409 while ``[retrieval] pki_enabled = true``. The drop only
+        frees pages to the freelist; call ``/admin/vacuum`` after or
+        nothing shrinks on disk. Runbook 10 in docs/operator-runbooks.md.
         """
         from ..storage.indexes import (
             PKI_NOISE_CUTOFF, compact_path_key_index,
         )
         cutoff = noise_cutoff if noise_cutoff >= 0 else PKI_NOISE_CUTOFF
+        # #370 guard input: the live store's effective Tier-0 read gate
+        # (build_genome_kwargs threads [retrieval] pki_enabled into it).
+        # Unknown attribute defaults to True — i.e. refuse the drop.
+        pki_on = bool(getattr(cymatix.genome, "_pki_enabled", True))
         try:
             # W2.3 Phase A interim (cwola pattern): the compactor rewrites
             # path_key_index + commits on the shared writer — serialize at
@@ -754,8 +782,16 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
             with (_wl if _wl is not None else _contextlib.nullcontext()):
                 result = compact_path_key_index(
                     cymatix.genome.conn, noise_cutoff=cutoff, dry_run=dry_run,
+                    drop=drop, pki_enabled=pki_on,
                 )
             return {"ok": True, **result}
+        except ValueError as exc:
+            # #370 refuse-to-drop guard: the config forbids it — client
+            # error (flip the knob first), not a server fault.
+            log.warning("compact-pki drop refused: %s", exc)
+            return JSONResponse(
+                {"ok": False, "error": str(exc)}, status_code=409,
+            )
         except Exception as exc:
             log.warning("compact-pki failed: %s", exc, exc_info=True)
             return JSONResponse(
@@ -977,6 +1013,10 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
                 "kind": "encoder",
                 "status": _status(sema_loaded),
                 "loaded": sema_loaded,
+                # #376: "daemon" / "in-process" — the transport the last
+                # encode actually used; None for a purely local codec or
+                # before the first encode.
+                "transport": getattr(sema, "last_transport", None),
             })
 
         if getattr(cymatix, "_cpu_tagger", None) is not None:
@@ -1018,18 +1058,31 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
             or getattr(config.ingestion, "dense_embed_on_ingest", False)
         )
         if dense_enabled:
+            dense_holders = (
+                getattr(cymatix, "_dense_codec", None),
+                getattr(cymatix.genome, "_dense_codec", None),
+            )
             dense_loaded = any(
                 holder is not None and getattr(holder, "_model", None) is not None
-                for holder in (
-                    getattr(cymatix, "_dense_codec", None),
-                    getattr(cymatix.genome, "_dense_codec", None),
-                )
+                for holder in dense_holders
+            )
+            # #376: the transport the last dense encode actually used, not
+            # the wrapper class — "daemon" / "in-process"; None for a purely
+            # local codec or before the first encode.
+            dense_transport = next(
+                (
+                    t
+                    for t in (getattr(h, "last_transport", None) for h in dense_holders)
+                    if t is not None
+                ),
+                None,
             )
             components.append({
                 "name": "dense_bgem3",
                 "kind": "encoder",
                 "status": _status(dense_loaded),
                 "loaded": dense_loaded,
+                "transport": dense_transport,
             })
 
         if getattr(cymatix.genome, "_entity_graph_enabled", False):
@@ -1063,6 +1116,11 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
     async def admin_sema_rebuild():
         """Force-rebuild the SEMA vector cache."""
         cymatix.genome.invalidate_sema_cache()
+        # #339 rider: also drop the cold-tier cache (and its vectorless
+        # gate) — it scans the disjoint heterochromatin partition and is
+        # lazily rebuilt by query_cold_tier, so without this a forced
+        # rebuild left stale cold vectors serving until process restart.
+        cymatix.genome.invalidate_cold_sema_cache()
         cymatix.genome._build_sema_cache()
         cache = cymatix.genome._sema_cache
         return {
@@ -1101,6 +1159,10 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
         # 3. Rebuild SEMA vector cache
         try:
             cymatix.genome.invalidate_sema_cache()
+            # #339 rider: the refresh() above reopened the WAL snapshot to
+            # see external writers, so the cold-tier cache may be stale
+            # too. Invalidate it (query_cold_tier lazy-rebuilds).
+            cymatix.genome.invalidate_cold_sema_cache()
             cymatix.genome._build_sema_cache()
             cache = cymatix.genome._sema_cache
             if cache:
@@ -1185,6 +1247,13 @@ def setup_admin_routes(app: FastAPI, cymatix, config, registry, bridge, **_kw) -
             # Rebuild caches on the new store
             new_store.invalidate_sema_cache()
             new_store._build_sema_cache()
+            # #339 rider: deliberately NO invalidate_cold_sema_cache() here.
+            # new_store is freshly constructed by open_read_source(), so its
+            # cold-tier cache is unbuilt (_cold_sema_cache=None,
+            # _cold_sema_vectorless=False at __init__) — there is no stale
+            # cold state to drop, and the old store's caches die with
+            # old_store.close() below. query_cold_tier lazy-builds from the
+            # swapped-in db on first use.
 
             # Atomic swap
             old_store = cymatix.genome

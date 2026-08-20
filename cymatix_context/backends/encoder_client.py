@@ -273,6 +273,45 @@ def record_success() -> None:
     _circuit.record_success()
 
 
+# ── loud fallback (#376) ─────────────────────────────────────────────
+#
+# The circuit's warn-once fires only when a failure opens the circuit and
+# names neither the daemon URL nor the error, so a port collision (something
+# that is not the daemon answering on the daemon's port) looks like a clean
+# run with wrong provenance — Wave 3b lost an hour of bench data to exactly
+# this class of silent fallback. Warn once per (url, seam, error class) per
+# process; repeats of the same failure demote to DEBUG so a flapping daemon
+# cannot spam a long ingest.
+
+_FALLBACK_WARNED: set = set()
+_fallback_warn_lock = threading.Lock()
+
+
+def _warn_fallback(seam: str, url: str, error_class: str, detail: str) -> None:
+    """Rate-limited loud fallback: WARNING once per (url, seam, error class)."""
+    key = (url, seam, error_class)
+    with _fallback_warn_lock:
+        first = key not in _FALLBACK_WARNED
+        _FALLBACK_WARNED.add(key)
+    if first:
+        log.warning(
+            "remote %s encode via encoder daemon %s failed (%s: %s) — "
+            "encoding fell back in-process",
+            seam,
+            url,
+            error_class,
+            detail,
+        )
+    else:
+        log.debug(
+            "remote %s encode via %s failed again (%s: %s); encoding in process",
+            seam,
+            url,
+            error_class,
+            detail,
+        )
+
+
 # ── shared one-shot readiness gate ──────────────────────────────────
 #
 # Process-wide, not per-codec: the daemon is one process holding all three
@@ -338,6 +377,7 @@ def reset_for_test() -> None:
     _ready_probed = False
     _ready_result = None
     _circuit.reset()
+    _FALLBACK_WARNED.clear()
 
 
 # ── Transport ──────────────────────────────────────────────────────
@@ -531,6 +571,11 @@ class RemoteBGEM3Codec:
         self._client = EncoderClient(url, timeout_s=default_timeout_s())
         self._fallback: Optional[Any] = None
         self._fallback_lock = threading.Lock()
+        # #376: the transport the LAST encode actually used ("daemon" /
+        # "in-process"), not the wrapper class — surfaced next to the
+        # ``_model`` residency probe on GET /admin/components. None until
+        # the first non-empty encode.
+        self.last_transport: Optional[str] = None
 
     @property
     def _model(self) -> Any:
@@ -548,7 +593,9 @@ class RemoteBGEM3Codec:
     def encode(self, text: str, task: str = "passage") -> List[float]:
         vectors = self._encode_remote([text], task)
         if vectors is not None:
+            self.last_transport = "daemon"
             return vectors[0]
+        self.last_transport = "in-process"
         try:
             return self._local().encode(text, task=task)
         except Exception:
@@ -570,7 +617,9 @@ class RemoteBGEM3Codec:
         # encode() uses.
         vectors = self._encode_remote(list(texts), task, timeout_s=batch_timeout_s(len(texts)))
         if vectors is not None:
+            self.last_transport = "daemon"
             return vectors
+        self.last_transport = "in-process"
         try:
             return self._local().encode_batch(list(texts), task=task)
         except Exception:
@@ -607,14 +656,15 @@ class RemoteBGEM3Codec:
             vectors = self._client.encode_dense(texts, task=task, timeout_s=timeout_s)
         except Exception as exc:  # EncoderClientError + any stray transport error
             record_failure()
-            log.debug("remote dense encode failed (%s); encoding in process", exc)
+            _warn_fallback("dense", self.url, type(exc).__name__, str(exc))
             return None
         if not self._usable(vectors, len(texts)):
             record_failure()
-            log.debug(
-                "remote dense encode returned an unusable payload for dim=%d; "
-                "encoding in process",
-                self.dim,
+            _warn_fallback(
+                "dense",
+                self.url,
+                "unusable-payload",
+                f"expected {len(texts)} vectors of dim {self.dim}",
             )
             return None
         record_success()
@@ -692,6 +742,10 @@ class RemoteSemaCodec:
         self._local: Optional[Any] = None
         self._local_lock = threading.Lock()
         self._remote_ok = False
+        # #376: the transport the LAST encode actually used ("daemon" /
+        # "in-process") — surfaced on GET /admin/components. None until the
+        # first non-empty encode.
+        self.last_transport: Optional[str] = None
 
     # -- residency reporting (GET /admin/components) -----------------------
 
@@ -722,7 +776,9 @@ class RemoteSemaCodec:
     def encode(self, text: str) -> List[float]:
         vectors = self._encode_remote([text])
         if vectors is not None:
+            self.last_transport = "daemon"
             return vectors[0]
+        self.last_transport = "in-process"
         return self._fallback().encode(text)
 
     def encode_batch(self, texts: List[str], batch_size: int = 64) -> List[List[float]]:
@@ -732,7 +788,9 @@ class RemoteSemaCodec:
         # POST — see RemoteBGEM3Codec.encode_batch for the same rationale.
         vectors = self._encode_remote(list(texts), timeout_s=batch_timeout_s(len(texts)))
         if vectors is not None:
+            self.last_transport = "daemon"
             return vectors
+        self.last_transport = "in-process"
         return self._fallback().encode_batch(list(texts), batch_size=batch_size)
 
     def signature(self, text: str, top_k: int = 5) -> List[Any]:
@@ -795,11 +853,13 @@ class RemoteSemaCodec:
             vectors = self._client.encode_sema(texts, timeout_s=timeout_s)
         except Exception as exc:  # EncoderClientError + any stray transport error
             record_failure()
-            log.debug("remote ΣĒMA encode failed (%s); encoding in process", exc)
+            _warn_fallback("sema", self.url, type(exc).__name__, str(exc))
             return None
         if not self._usable(vectors, len(texts)):
             record_failure()
-            log.debug("remote ΣĒMA returned an unusable payload; encoding in process")
+            _warn_fallback(
+                "sema", self.url, "unusable-payload", f"expected {len(texts)} 20-d vectors",
+            )
             return None
         record_success()
         self._remote_ok = True

@@ -423,6 +423,33 @@ def _refresh_target(item: ContextItem, task_type: str) -> RefreshTarget | None:
     )
 
 
+def _snapshot_retrieval_state(handle) -> tuple[dict, dict]:
+    """Atomic request-scoped snapshot of the handle's last-query maps.
+
+    Issue #350 (W1.6b): ``last_query_scores`` / ``last_tier_contributions``
+    are handle-global and republished by EVERY retrieval, so they must be
+    captured under ``_last_query_scores_lock`` immediately after THIS
+    request's ``query_docs()`` — a concurrent request publishing between
+    retrieval and the read would otherwise hand the packet another
+    request's numbers. Copies, taken in ONE lock hold, so the
+    (scores, tier_contributions) pair comes from the same query. The
+    ``getattr`` defaults keep this graceful for handles without the lock
+    or the attributes (fakes/older stores) — same shape as the /context
+    route reader at server/routes_context.py.
+    """
+    lock = getattr(handle, "_last_query_scores_lock", None)
+    if lock is not None:
+        with lock:
+            return (
+                dict(getattr(handle, "last_query_scores", None) or {}),
+                dict(getattr(handle, "last_tier_contributions", None) or {}),
+            )
+    return (
+        dict(getattr(handle, "last_query_scores", None) or {}),
+        dict(getattr(handle, "last_tier_contributions", None) or {}),
+    )
+
+
 def _query_genes(
     query: str,
     *,
@@ -430,7 +457,7 @@ def _query_genes(
     router=None,
     max_genes: int = 8,
     read_only: bool = False,
-) -> tuple[list[Gene], dict]:
+) -> tuple[list[Gene], dict, dict]:
     domains, entities = extract_query_signals(query)
     if not domains and not entities and query.strip():
         fallback = query.strip().lower()
@@ -444,8 +471,8 @@ def _query_genes(
             max_genes=max_genes,
             read_only=read_only,
         )
-        score_map = dict(getattr(router, "last_query_scores", {}))
-        return genes, score_map
+        score_map, tier_contributions = _snapshot_retrieval_state(router)
+        return genes, score_map, tier_contributions
 
     if genome is not None:
         genes = genome.query_docs(
@@ -454,8 +481,8 @@ def _query_genes(
             max_genes=max_genes,
             read_only=read_only,
         )
-        score_map = dict(getattr(genome, "last_query_scores", {}))
-        return genes, score_map
+        score_map, tier_contributions = _snapshot_retrieval_state(genome)
+        return genes, score_map, tier_contributions
 
     raise ValueError("build_context_packet requires a genome or router")
 
@@ -500,25 +527,25 @@ def build_context_packet(
         import time
         now_ts = time.time()
 
-    genes, score_map = _query_genes(
+    # Issue #350 (W1.6b): _query_genes captures (score_map,
+    # tier_contributions) atomically under _last_query_scores_lock right
+    # after query_docs() — the packet's top_score / score_gap / agreement
+    # signals and the delivery block below all read THIS request's maps,
+    # not whatever a concurrent request last published to the
+    # genome/router-global attributes.
+    genes, score_map, tier_contributions = _query_genes(
         query,
         genome=genome,
         router=router,
         max_genes=max_genes,
         read_only=read_only,
     )
-    # Per-tier contribution map for the Stage 6 lexical_dense_agree
-    # signal. _query_genes prefers the router over the genome; mirror
-    # that precedence here so we read the handle that actually ran the
-    # query. ``last_tier_contributions`` is set by knowledge_store.py /
-    # shard_router.py after query_docs(). ``getattr`` default keeps this
-    # graceful when the attribute is absent (same shape as the /context
-    # route at server/helpers.py:265).
-    _retrieval_handle = router if router is not None else genome
-    tier_contributions = (
-        getattr(_retrieval_handle, "last_tier_contributions", {}) or {}
-    )
     packet = ContextPacket(task_type=task_type, query=query)
+    # #350: attach the request-scoped snapshot for the server-layer
+    # readers (the /context/packet route's PLR query-confidence head).
+    # exclude=True fields — never serialized into responses.
+    packet.retrieval_scores = score_map
+    packet.tier_contributions = tier_contributions
 
     if effective_main_conn is None:
         packet.notes.append("source_index unavailable; using gene-local metadata only")

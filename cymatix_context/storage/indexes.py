@@ -241,6 +241,8 @@ def compact_path_key_index(
     conn: sqlite3.Connection,
     noise_cutoff: int = PKI_NOISE_CUTOFF,
     dry_run: bool = False,
+    drop: bool = False,
+    pki_enabled: bool = True,
 ) -> Dict:
     """Issue #165 Option-B compaction for ``path_key_index``.
 
@@ -270,15 +272,80 @@ def compact_path_key_index(
     knowable globally), but stay inert at query time thanks to the same
     cutoff — re-run compaction periodically on bulk-ingest corpora.
 
+    **Drop mode (issue #370).** With ``drop=True`` the table (and its
+    indexes) is dropped entirely instead of compacted — the reclaim path
+    for stores that run with ``[retrieval] pki_enabled = false``, where
+    the Tier-0 scorer never reads the index and the bytes are pure dead
+    weight (8.56 GB / 18.5% of the 829k blob bed). Scorer-neutrality is
+    structural: a pki-off store issues no SQL against this table.
+
+    Guards and caveats:
+
+    - The caller MUST pass the store's effective ``pki_enabled`` flag.
+      ``drop=True`` with ``pki_enabled=True`` raises ``ValueError`` —
+      dropping a table the scorer still reads is never allowed.
+    - The drop only moves pages to the SQLite freelist; run ``VACUUM``
+      (``/admin/vacuum``) afterwards or no bytes are reclaimed on disk.
+    - The DDL bootstrap (``storage.ddl._create_path_key_index``)
+      recreates an EMPTY table on the next store open, and upserts
+      repopulate it for newly-ingested genes — the drop reclaims the
+      historical rows, it is not a write gate. Re-run between ingest
+      waves, or rebuild the full index with
+      ``scripts/backfill_path_key_index.py --apply`` if ``pki_enabled``
+      is ever flipped back on.
+
     Returns a report dict; with ``dry_run=True`` nothing is modified.
     """
     cur = conn.cursor()
+
+    if drop and pki_enabled:
+        raise ValueError(
+            "refusing to drop path_key_index: this store runs with "
+            "[retrieval] pki_enabled = true, so the Tier-0 scorer still "
+            "reads the table. Set pki_enabled = false in cymatix.toml "
+            "(and restart) before dropping, or run the prune-only "
+            "compaction (drop=false) instead. (issue #370)"
+        )
 
     def _exists(kind: str, name: str) -> bool:
         return cur.execute(
             "SELECT 1 FROM sqlite_master WHERE type=? AND name=?",
             (kind, name),
         ).fetchone() is not None
+
+    if drop:
+        report = {"dry_run": dry_run, "drop": True}
+        if not _exists("table", "path_key_index"):
+            report["skipped"] = "no path_key_index table"
+            return report
+        rows_before = cur.execute(
+            "SELECT COUNT(*) FROM path_key_index").fetchone()[0]
+        report["rows_before"] = rows_before
+        if dry_run:
+            report["would_drop"] = True
+            return report
+        try:
+            cur.execute("BEGIN IMMEDIATE")
+            # DROP TABLE takes idx_pki_gene / idx_pki_lookup /
+            # the PK autoindex down with it.
+            cur.execute("DROP TABLE path_key_index")
+            conn.commit()
+        except sqlite3.Error:
+            conn.rollback()
+            raise
+        report["dropped"] = True
+        report["hint"] = (
+            "pages moved to the SQLite freelist — run VACUUM "
+            "(/admin/vacuum) to reclaim them on disk; rebuild with "
+            "scripts/backfill_path_key_index.py --apply if "
+            "[retrieval] pki_enabled is re-enabled"
+        )
+        log.info(
+            "path_key_index dropped (#370 reclaim, pki-off store): "
+            "%d rows released to the freelist — VACUUM to shrink the file",
+            rows_before,
+        )
+        return report
 
     report: Dict = {
         "dry_run": dry_run,
@@ -377,23 +444,39 @@ def sync_path_key_index(
     gene_id: str,
     gene: Gene,
 ) -> None:
-    """Populate the compound (path_token, kv_key) -> gene_id index."""
+    """Populate the compound (path_token, kv_key) -> gene_id index.
+
+    Issue #370: on a pki-off store the operator may have dropped the
+    table entirely (``compact_path_key_index(drop=True)``). A missing
+    table degrades to a no-op — same optional-table treatment as
+    ``delete_gene`` — instead of aborting the whole upsert transaction.
+    The DDL bootstrap recreates the (empty) table on the next store open.
+    """
     # Import module-level helpers from the parent package.  These are
     # standalone functions that were always module-level in knowledge_store.py.
     from ..knowledge_store import path_tokens, _kv_keys_from_list
 
-    cur.execute("DELETE FROM path_key_index WHERE gene_id = ?", (gene_id,))
-    if gene.source_id and gene.key_values:
-        p_tokens = path_tokens(gene.source_id)
-        kv_keys = _kv_keys_from_list(gene.key_values)
-        if p_tokens and kv_keys:
-            for pt in p_tokens:
-                for kk in kv_keys:
-                    cur.execute(
-                        "INSERT OR IGNORE INTO path_key_index "
-                        "(path_token, kv_key, gene_id) VALUES (?, ?, ?)",
-                        (pt, kk, gene_id),
-                    )
+    try:
+        cur.execute("DELETE FROM path_key_index WHERE gene_id = ?", (gene_id,))
+        if gene.source_id and gene.key_values:
+            p_tokens = path_tokens(gene.source_id)
+            kv_keys = _kv_keys_from_list(gene.key_values)
+            if p_tokens and kv_keys:
+                for pt in p_tokens:
+                    for kk in kv_keys:
+                        cur.execute(
+                            "INSERT OR IGNORE INTO path_key_index "
+                            "(path_token, kv_key, gene_id) VALUES (?, ?, ?)",
+                            (pt, kk, gene_id),
+                        )
+    except sqlite3.OperationalError as exc:
+        if "no such table" in str(exc).lower():
+            log.debug(
+                "path_key_index sync skipped for gene %s "
+                "(table dropped, #370): %s", gene_id, exc,
+            )
+            return
+        raise
 
 
 # ---------------------------------------------------------------------------
