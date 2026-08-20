@@ -277,6 +277,12 @@ documented **deterministic-ingest profile** — `cymatix ingest --okf
 `cymatix.toml`: embeddings are backfilled per host afterward, as
 per-host artifacts never covered by the interop claim.
 
+(Naming note: this ingest profile is unrelated to the encoder
+daemon's `CYMATIX_ENCODER_DETERMINISTIC` bench profile, which pins
+encode batch shapes on a running daemon — see
+`docs/design/2026-08-05-fork1-slice1-contract.md`, "Determinism
+profile". The two features share an adjective only.)
+
 The integration is ingest-only: Cymatix reads OKF bundles.
 
 ---
