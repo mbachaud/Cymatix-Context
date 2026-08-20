@@ -32,6 +32,7 @@ from cymatix_context.config import (
     GenomeConfig,
     Hardware,
     CymatixConfig,
+    IngestionConfig,
     RibosomeConfig,
     ServerConfig,
     load_config,
@@ -155,10 +156,14 @@ def _config(tmp_path, **hardware_kwargs) -> CymatixConfig:
     # file's own genome path (a real tmp file, not ":memory:") and the
     # [hardware] override are passed explicitly since the lazy-encoder
     # suite needs per-test hardware knobs make_cymatix_config doesn't cover.
+    # sema_embed_on_ingest defaults False since the 2026-08-19 flip (#371);
+    # this suite verifies HOW the SEMA codec loads (lazily) when configured,
+    # so it opts the knob back in explicitly.
     return make_cymatix_config(
         genome=GenomeConfig(path=str(tmp_path / "genome.db"), cold_start_threshold=5),
         server=ServerConfig(upstream="http://localhost:11434"),
         hardware=Hardware(**hardware_kwargs),
+        ingestion=IngestionConfig(sema_embed_on_ingest=True),
     )
 
 

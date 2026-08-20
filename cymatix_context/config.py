@@ -304,14 +304,28 @@ class IngestionConfig:
     # on a bed ingested while this was off additionally needs
     # scripts/backfill_bgem3_v2.py to fill the missing vectors.
     dense_embed_on_ingest: bool = False
-    # Issue #227: compute the 20D ΣĒMA embedding at ingest (feeds TCM / cymatics
-    # via gene.embedding). Default True preserves current behaviour. Set False to
-    # skip the ingest-time SEMA encode entirely — the MiniLM model is then never
-    # materialized (TCM falls back to its text-derived path, cymatics off), which
-    # is what a lexical-only config or a multi-worker bench wants. Without this,
-    # ingest always materialized the lazy SEMA codec (#220), loading MiniLM per
-    # worker and OOMing parallel bench runs even with dense/cymatics disabled.
-    sema_embed_on_ingest: bool = True
+    # Issue #227 knob: compute the 20D ΣĒMA embedding at ingest (writes
+    # gene.embedding; False = the MiniLM model is never materialized and the
+    # Tier-4 sema_boost block is gated off — TCM falls back to its tag-hash/
+    # text path by design, #227).
+    # 2026-08-19 default flip -> False (#371): the consumer audit (PR #399)
+    # found the ONLY live retrieval-path consumer of gene.embedding at
+    # shipped defaults is the Tier-4 sema_boost re-rank (cymatics reads tags,
+    # cold tier is opt-in, freshness gate / packet know/PLR read no
+    # embeddings), and the deciding read-gate cell on the 829k bed at n=469,
+    # delivered basis (PR #400,
+    # benchmarks/dogfood/erb/receipts/sema_readgate_829k_n469.json) measured
+    # the flip as a wash: delivered 264/469 -> 265/469 (+1 needle), r@12 /
+    # fr@12 / median+mean rank byte-identical, 0 recall flips, 0 final-rank
+    # moves, abstain set byte-identical (16/469, all pre-existing). Riders:
+    # ~9.7 s cold start removed (the SEMA/MiniLM load was 97.7% of
+    # first-request latency, cold_start_postflip.json), ingest wall
+    # 835.9 s -> 761.5 s on the 1,181-file dogfood corpus, -0.48% bed bytes.
+    # Opt back in with [ingestion] sema_embed_on_ingest = true — new ingests
+    # then embed; docs ingested while the knob was off have NULL
+    # gene.embedding until scripts/backfill_sema.py (or re-ingest/
+    # consolidate).
+    sema_embed_on_ingest: bool = False
     # WS2 (symbol graph): at ingest, index symbol definitions and emit
     # referencing-chunk -> defining-chunk SYMBOL_REF edges (code only).
     # Resolution is intra-file (high precision). Off = WS1-only chunking, at

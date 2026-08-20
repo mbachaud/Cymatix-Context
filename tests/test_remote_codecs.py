@@ -332,11 +332,15 @@ def test_off_rerank_score_pairs_runs_the_local_body(monkeypatch):
 
 def test_off_manager_constructs_lazy_sema_codec(tmp_path, fake_local_sema):
     from cymatix_context.backends.sema import LazySemaCodec
-    from cymatix_context.config import GenomeConfig
+    from cymatix_context.config import GenomeConfig, IngestionConfig
     from cymatix_context.context_manager import CymatixContextManager
 
+    # sema_embed_on_ingest defaults False since the 2026-08-19 flip (#371);
+    # opt in explicitly — this test is about WHICH codec class a sema-enabled
+    # manager builds when the daemon URL is unset (the lazy local one).
     cfg = make_cymatix_config(
         genome=GenomeConfig(path=str(tmp_path / "genome.db"), cold_start_threshold=5),
+        ingestion=IngestionConfig(sema_embed_on_ingest=True),
     )
     mgr = CymatixContextManager(cfg)
     assert isinstance(mgr._sema_codec, LazySemaCodec)
@@ -588,12 +592,19 @@ def test_on_manager_constructs_remote_sema_codec_without_sentence_transformers(
     """With a URL set the daemon owns the model — sema_available() is not required."""
     from cymatix_context.backends import encoder_client
     from cymatix_context.backends import sema as sema_mod
-    from cymatix_context.config import EncoderDaemonConfig, GenomeConfig
+    from cymatix_context.config import (
+        EncoderDaemonConfig,
+        GenomeConfig,
+        IngestionConfig,
+    )
     from cymatix_context.context_manager import CymatixContextManager
 
     monkeypatch.setattr(sema_mod, "sema_available", lambda: False)
+    # Explicit opt-in: sema_embed_on_ingest defaults False since 2026-08-19
+    # (#371); the daemon-ownership property under test needs the knob on.
     cfg = make_cymatix_config(
         genome=GenomeConfig(path=str(tmp_path / "genome.db"), cold_start_threshold=5),
+        ingestion=IngestionConfig(sema_embed_on_ingest=True),
         encoder_daemon=EncoderDaemonConfig(url=daemon_url),
     )
     mgr = CymatixContextManager(cfg)
